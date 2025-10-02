@@ -1,7 +1,7 @@
 {
   "name": "typescript-backend",
   "version": "1.0.0",
-  "description": "TypeScript module backend for Fullstack Academy",
+  "description": "TypeScript module backend for GlassCode Academy",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
@@ -20,6 +20,6 @@
     "academy",
     "education"
   ],
-  "author": "Fullstack Academy",
+  "author": "GlassCode Academy",
   "license": "MIT"
 }

@@ -1,0 +1,60 @@
+# Docker ignore file for Fullstack Academy
+.git
+.gitignore
+README.md
+LICENSE
+*.md
+
+# Node.js dependencies
+node_modules/
+
+# Build outputs
+*/bin/
+*/obj/
+*/out/
+
+# IDE files
+.vscode/
+.idea/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Environment files
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Log files
+*.log
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Next.js
+/.next/
+/out/
+
+# NPM
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+package-lock.json
+yarn.lock
+
+# Testing
+coverage/
+*.lcov
+
+# Temporary files
+*.tmp
+*.temp

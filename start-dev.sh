@@ -1,9 +1,9 @@
 #!/bin/bash
 
-# Development startup script for Fullstack Academy application
+# Development startup script for GlassCode Academy application
 # Starts both backend and frontend servers in development mode
 
-echo "Starting Fullstack Academy application in development mode..."
+echo "Starting GlassCode Academy application in development mode..."
 
 # Function to clean up background processes on exit
 cleanup() {
@@ -19,13 +19,13 @@ trap cleanup SIGINT SIGTERM
 
 # Start the .NET backend in development mode
 echo "Starting .NET backend on port 5023..."
-cd /Users/veland/dotNetQuiz/dot-net-quiz/backend
+cd /Users/veland/GlassCodeAcademy/glasscode/backend
 dotnet run &
 BACKEND_PID=$!
 
 # Start the Next.js frontend in development mode
 echo "Starting Next.js frontend on port 3000..."
-cd /Users/veland/dotNetQuiz/dot-net-quiz/frontend
+cd /Users/veland/GlassCodeAcademy/glasscode/frontend
 npm run dev &
 FRONTEND_PID=$!
 

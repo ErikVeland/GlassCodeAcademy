@@ -1,4 +1,4 @@
-# Fullstack Academy Gateway
+# GlassCode Academy Gateway
 
 This directory contains the gateway configuration that routes requests to the appropriate technology-specific modules.
 

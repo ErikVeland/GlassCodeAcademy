@@ -59,8 +59,8 @@ This document summarizes the comprehensive migration and enhancement of the DotN
 - `/content/quizzes/database-systems.json` - Enhanced industry context and explanations
 
 ### Design System Files
-- `/dot-net-quiz/frontend/src/styles/liquid-glass.scss` - Enhanced Liquid Glass design system implementation
-- `/dot-net-quiz/frontend/src/app/page.tsx` - Updated homepage for 4-tier layout with edge-to-edge compliance
+- `/glasscode/frontend/src/styles/liquid-glass.scss` - Enhanced Liquid Glass design system implementation
+- `/glasscode/frontend/src/app/page.tsx` - Updated homepage for 4-tier layout with edge-to-edge compliance
 
 ### Validation Scripts
 - `/scripts/validate-content-thresholds.sh` - Content threshold validation

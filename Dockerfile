@@ -1,8 +1,8 @@
 # Simple Dockerfile for .NET Backend Only
 FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
 WORKDIR /src
-COPY dot-net-quiz/backend/. ./dot-net-quiz/backend/
-WORKDIR /src/dot-net-quiz/backend
+COPY glasscode/backend/. ./glasscode/backend/
+WORKDIR /src/glasscode/backend
 RUN dotnet restore
 RUN dotnet publish -c Release -o /app
 

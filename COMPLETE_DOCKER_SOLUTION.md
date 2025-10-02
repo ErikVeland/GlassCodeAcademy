@@ -60,8 +60,8 @@ Created scripts to help manage and switch between Dockerfile versions:
 The optimized standard Dockerfiles should work in most cases:
 
 1. Ensure the current Dockerfiles are in place:
-   - `dot-net-quiz/frontend/Dockerfile`
-   - `dot-net-quiz/backend/Dockerfile`
+   - `glasscode/frontend/Dockerfile`
+   - `glasscode/backend/Dockerfile`
 
 2. Push changes to repository
 3. Trigger deployment on Render
@@ -87,10 +87,10 @@ Additional troubleshooting steps:
 ## Files Created
 
 ### Dockerfiles
-- `dot-net-quiz/frontend/Dockerfile` - Optimized standard Dockerfile
-- `dot-net-quiz/backend/Dockerfile` - Updated standard Dockerfile
-- `dot-net-quiz/frontend/Dockerfile.alternative` - Alternative approach
-- `dot-net-quiz/backend/Dockerfile.alternative` - Alternative approach
+- `glasscode/frontend/Dockerfile` - Optimized standard Dockerfile
+- `glasscode/backend/Dockerfile` - Updated standard Dockerfile
+- `glasscode/frontend/Dockerfile.alternative` - Alternative approach
+- `glasscode/backend/Dockerfile.alternative` - Alternative approach
 
 ### Scripts
 - `scripts/switch-dockerfiles.js` - Switch between Dockerfile versions

@@ -424,7 +424,7 @@ class FinalContentValidator {
     });
 
     if (this.results.summary.readyForProduction) {
-      console.log('\n🎉 CONGRATULATIONS! Your Fullstack Academy platform is ready for production deployment!');
+      console.log('\n🎉 CONGRATULATIONS! Your GlassCode Academy platform is ready for production deployment!');
     } else {
       console.log('\n⚡ Please address the issues above before production deployment.');
     }

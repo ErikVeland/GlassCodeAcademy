@@ -1,5 +1,5 @@
 /**
- * Fullstack Academy Test Runner
+ * GlassCode Academy Test Runner
  * Runs all module tests
  */
 
@@ -10,7 +10,7 @@ const { testCssModules } = require('./test-css-modules');
 const { testDesignSystem } = require('./test-design-system');
 
 async function runAllTests() {
-  console.log('🚀 Starting Fullstack Academy Test Suite\n');
+  console.log('🚀 Starting GlassCode Academy Test Suite\n');
   
   const results = [];
   
@@ -76,7 +76,7 @@ async function runAllTests() {
   
   console.log('\n' + '='.repeat(30));
   if (allPassed) {
-    console.log('🎉 All tests passed! The Fullstack Academy platform is ready for deployment.');
+    console.log('🎉 All tests passed! The GlassCode Academy platform is ready for deployment.');
     return true;
   } else {
     console.log('❌ Some tests failed. Please review the output above and fix the issues.');

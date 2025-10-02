@@ -1,4 +1,4 @@
-# Fullstack Academy Design System
+# GlassCode Academy Design System
 
 This document outlines the shared design system that ensures consistency across all technology-specific modules while allowing each to use its own stack.
 

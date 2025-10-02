@@ -70,16 +70,16 @@
 - `/design-system/scss/design-system.scss` - Imported new SCSS files
 
 ### Frontend Components
-- `/dot-net-quiz/frontend/src/components/BreadcrumbNavigation.tsx` - Breadcrumb navigation
-- `/dot-net-quiz/frontend/src/components/CompleteProgressTracker.tsx` - Progress dashboard
-- `/dot-net-quiz/frontend/src/components/SearchFilterSystem.tsx` - Enhanced search/filter
+- `/glasscode/frontend/src/components/BreadcrumbNavigation.tsx` - Breadcrumb navigation
+- `/glasscode/frontend/src/components/CompleteProgressTracker.tsx` - Progress dashboard
+- `/glasscode/frontend/src/components/SearchFilterSystem.tsx` - Enhanced search/filter
 
 ### Frontend Hooks
-- `/dot-net-quiz/frontend/src/hooks/useProgressTrackingComplete.ts` - Enhanced progress tracking
+- `/glasscode/frontend/src/hooks/useProgressTrackingComplete.ts` - Enhanced progress tracking
 
 ### Frontend Pages
-- `/dot-net-quiz/frontend/src/app/progress/page.tsx` - Progress tracking page
-- `/dot-net-quiz/frontend/src/app/page.tsx` - Updated homepage with glassmorphism
+- `/glasscode/frontend/src/app/progress/page.tsx` - Progress tracking page
+- `/glasscode/frontend/src/app/page.tsx` - Updated homepage with glassmorphism
 
 ## Remaining Tasks
 

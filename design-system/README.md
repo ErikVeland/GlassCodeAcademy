@@ -1,4 +1,4 @@
-# Fullstack Academy Design System
+# GlassCode Academy Design System
 
 This directory contains shared design system assets that can be used across all technology modules.
 

@@ -7,7 +7,7 @@ This is the Tailwind CSS learning module, built with pure HTML and Tailwind CSS 
 - Responsive design using Tailwind CSS utility classes
 - Interactive lessons with code examples
 - Quiz system with multiple-choice questions
-- Implementation of the Fullstack Academy Design System
+- Implementation of the GlassCode Academy Design System
 - Mobile-friendly interface
 - No build step required (uses CDN)
 
@@ -20,7 +20,7 @@ This is the Tailwind CSS learning module, built with pure HTML and Tailwind CSS 
 
 ## Design System Implementation
 
-This module implements the Fullstack Academy Design System with:
+This module implements the GlassCode Academy Design System with:
 - Consistent color palette (indigo as primary color for Tailwind CSS)
 - Responsive grid layout
 - Accessible components
@@ -76,7 +76,7 @@ The module uses static HTML with mock data. In a real implementation, it would c
 ## Customization
 
 The module uses Tailwind CSS via CDN with a custom configuration that:
-- Sets up the Fullstack Academy color palette
+- Sets up the GlassCode Academy color palette
 - Configures the Inter font as the primary font
 - Extends the theme with custom colors
 

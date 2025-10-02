@@ -1,7 +1,7 @@
 {
   "name": "sass-module",
   "version": "1.0.0",
-  "description": "SASS learning module for Fullstack Academy",
+  "description": "SASS learning module for GlassCode Academy",
   "main": "index.js",
   "scripts": {
     "build": "sass scss/style.scss css/style.css",

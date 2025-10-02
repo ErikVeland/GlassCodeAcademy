@@ -1,6 +1,6 @@
-# Laravel Backend for Fullstack Academy
+# Laravel Backend for GlassCode Academy
 
-This is the Laravel backend module for Fullstack Academy that provides RESTful API endpoints for Laravel-specific content. The Laravel backend represents a complete, standalone Laravel application structure that is integrated with the .NET backend through a sophisticated pattern.
+This is the Laravel backend module for GlassCode Academy that provides RESTful API endpoints for Laravel-specific content. The Laravel backend represents a complete, standalone Laravel application structure that is integrated with the .NET backend through a sophisticated pattern.
 
 ## Features
 
@@ -67,9 +67,9 @@ The Laravel backend is integrated with the .NET backend through a sophisticated 
 3. **GraphQL Integration**: The .NET backend loads content from JSON files and exposes it through GraphQL
 4. **Future Migration Path**: This structure enables a smooth migration path to a fully Laravel-powered backend
 
-## Fullstack Academy Technology Ecosystem
+## GlassCode Academy Technology Ecosystem
 
-While this Laravel backend focuses specifically on Laravel content, it's part of a broader technology ecosystem in Fullstack Academy that includes:
+While this Laravel backend focuses specifically on Laravel content, it's part of a broader technology ecosystem in GlassCode Academy that includes:
 
 ### Backend Technologies
 - .NET, Next.js, and GraphQL (core modules)

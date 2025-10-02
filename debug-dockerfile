@@ -1,8 +1,8 @@
 # Debug Dockerfile to understand the build issue
 FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
 WORKDIR /src
-COPY dot-net-quiz/backend/. ./dot-net-quiz/backend/
-WORKDIR /src/dot-net-quiz/backend
+COPY glasscode/backend/. ./glasscode/backend/
+WORKDIR /src/glasscode/backend
 
 # Debug information
 RUN echo "Current directory:"

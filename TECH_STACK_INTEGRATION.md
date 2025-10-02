@@ -1,10 +1,10 @@
-# Fullstack Academy - Technology Stack Integration
+# GlassCode Academy - Technology Stack Integration
 
-This document provides a comprehensive overview of the technology stack used in Fullstack Academy and how the different components integrate with each other.
+This document provides a comprehensive overview of the technology stack used in GlassCode Academy and how the different components integrate with each other.
 
 ## Overview
 
-Fullstack Academy is a full-stack educational platform built with a polyglot approach, combining multiple technologies to create a unified learning experience. The platform allows users to learn different web frameworks and technologies through interactive lessons and quizzes.
+GlassCode Academy is a full-stack educational platform built with a polyglot approach, combining multiple technologies to create a unified learning experience. The platform allows users to learn different web frameworks and technologies through interactive lessons and quizzes.
 
 ## Current Architecture
 

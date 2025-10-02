@@ -1,7 +1,7 @@
 {
     "name": "fullstack-academy/laravel-module",
     "type": "project",
-    "description": "Laravel learning module for Fullstack Academy",
+    "description": "Laravel learning module for GlassCode Academy",
     "keywords": ["framework", "laravel"],
     "license": "MIT",
     "require": {

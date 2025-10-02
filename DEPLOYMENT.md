@@ -1,6 +1,6 @@
-# Fullstack Academy Deployment Guide
+# GlassCode Academy Deployment Guide
 
-This guide provides detailed instructions for deploying the Fullstack Academy application to various platforms.
+This guide provides detailed instructions for deploying the GlassCode Academy application to various platforms.
 
 ## Docker Deployment (Recommended)
 
@@ -18,14 +18,14 @@ Build and run each service separately:
 
 **Backend:**
 ```bash
-cd dot-net-quiz/backend
+cd glasscode/backend
 docker build -t fullstack-backend .
 docker run -p 8080:8080 fullstack-backend
 ```
 
 **Frontend:**
 ```bash
-cd dot-net-quiz/frontend
+cd glasscode/frontend
 docker build -t fullstack-frontend .
 docker run -p 3000:3000 fullstack-frontend
 ```
@@ -67,7 +67,7 @@ docker run -p 3000:3000 fullstack-frontend
    - Go to your Web App in the Azure Portal
    - Navigate to "Deployment Center"
    - Select "ZIP Deploy"
-   - Upload the deployment package: `dot-net-quiz/backend/publish.zip`
+   - Upload the deployment package: `glasscode/backend/publish.zip`
 
 ### GitHub Actions Deployment (Recommended)
 
@@ -89,8 +89,8 @@ docker run -p 3000:3000 fullstack-frontend
 3. Connect your GitHub repository
 4. Configure the service:
    - Framework Preset: .NET
-   - Build Command: `cd dot-net-quiz/backend && dotnet publish -c Release -o ./publish`
-   - Start Command: `cd dot-net-quiz/backend/publish && dotnet backend.dll`
+   - Build Command: `cd glasscode/backend && dotnet publish -c Release -o ./publish`
+   - Start Command: `cd glasscode/backend/publish && dotnet backend.dll`
 
 ## Troubleshooting
 
@@ -131,7 +131,7 @@ The backend is configured to allow CORS from:
 - `https://your-render-domain.onrender.com` (Render deployment)
 - `https://your-custom-domain.com` (custom domain)
 
-To add your frontend domain, update the CORS policy in `dot-net-quiz/backend/Program.cs`.
+To add your frontend domain, update the CORS policy in `glasscode/backend/Program.cs`.
 
 ### Environment Variables
 The application uses the following environment variables:

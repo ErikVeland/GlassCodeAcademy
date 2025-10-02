@@ -7,7 +7,7 @@ This is the frontend for the Node.js learning module, built with plain HTML, CSS
 - Responsive design using CSS Grid and Flexbox
 - Interactive lessons with code examples
 - Quiz system with multiple-choice questions
-- Implementation of the Fullstack Academy Design System
+- Implementation of the GlassCode Academy Design System
 - Mobile-friendly interface
 
 ## Pages
@@ -19,7 +19,7 @@ This is the frontend for the Node.js learning module, built with plain HTML, CSS
 
 ## Design System Implementation
 
-This frontend implements the Fullstack Academy Design System with:
+This frontend implements the GlassCode Academy Design System with:
 - Consistent color palette (green as primary color for Node.js)
 - Responsive grid layout
 - Accessible components

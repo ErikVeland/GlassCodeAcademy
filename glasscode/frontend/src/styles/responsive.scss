@@ -1,0 +1,368 @@
+// Responsive Design System for GlassCode Academy
+// Mobile-first approach with SCSS mixins
+@use "sass:map";
+
+// Breakpoints following user's SCSS preference
+$breakpoints: (
+  'mobile': 0,
+  'tablet': 768px,
+  'desktop': 1024px,
+  'wide': 1440px
+);
+
+@mixin respond-to($breakpoint) {
+  @if map.has-key($breakpoints, $breakpoint) {
+    @media (min-width: map.get($breakpoints, $breakpoint)) {
+      @content;
+    }
+  }
+}
+
+// Glass morphism effect mixin
+@mixin glass-morphism($opacity: 0.8, $blur: 12px) {
+  background: rgba(255, 255, 255, $opacity);
+  backdrop-filter: blur($blur);
+  -webkit-backdrop-filter: blur($blur);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  
+  @media (prefers-color-scheme: dark) {
+    background: rgba(31, 41, 55, $opacity);
+    border: 1px solid rgba(75, 85, 99, 0.3);
+  }
+}
+
+// Mobile-first responsive grid
+.learning-paths-grid {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: 1fr;
+  
+  @include respond-to('tablet') {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+  }
+  
+  @include respond-to('desktop') {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2rem;
+  }
+  
+  @include respond-to('wide') {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+// Tier section layout
+.tier-section {
+  margin-bottom: 4rem;
+  
+  @include respond-to('tablet') {
+    margin-bottom: 5rem;
+  }
+  
+  @include respond-to('desktop') {
+    margin-bottom: 6rem;
+  }
+}
+
+// Tier header styling
+.tier-header {
+  font-size: 1.5rem;
+  text-align: center;
+  margin-bottom: 2rem;
+  
+  @include respond-to('tablet') {
+    font-size: 2rem;
+    margin-bottom: 2.5rem;
+  }
+  
+  @include respond-to('desktop') {
+    font-size: 2.5rem;
+    margin-bottom: 3rem;
+  }
+}
+
+// Module card responsive design
+.module-card {
+  @include glass-morphism(0.9, 8px);
+  min-height: 44px; // WCAG AA touch target size
+  padding: 1rem;
+  border-radius: 0.75rem;
+  transition: all 0.3s ease;
+  
+  @include respond-to('tablet') {
+    padding: 1.5rem;
+    border-radius: 1rem;
+  }
+  
+  @include respond-to('desktop') {
+    padding: 2rem;
+    border-radius: 1.25rem;
+  }
+  
+  &:hover {
+    transform: translateY(-2px) scale(1.02);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+    
+    @include respond-to('desktop') {
+      transform: translateY(-4px) scale(1.03);
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+    }
+  }
+  
+  .action-buttons {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: 1rem;
+    
+    @include respond-to('tablet') {
+      gap: 0.75rem;
+      margin-top: 1.5rem;
+    }
+    
+    button, a {
+      min-width: 44px;
+      min-height: 44px;
+      padding: 0.75rem 1rem;
+      font-size: 0.875rem;
+      border-radius: 0.5rem;
+      transition: all 0.2s ease;
+      
+      @include respond-to('tablet') {
+        padding: 0.875rem 1.25rem;
+        font-size: 0.9375rem;
+        border-radius: 0.625rem;
+      }
+      
+      @include respond-to('desktop') {
+        padding: 1rem 1.5rem;
+        font-size: 1rem;
+        border-radius: 0.75rem;
+      }
+    }
+  }
+}
+
+// Progress ring responsive sizing
+.progress-ring {
+  width: 48px;
+  height: 48px;
+  
+  @include respond-to('tablet') {
+    width: 56px;
+    height: 56px;
+  }
+  
+  @include respond-to('desktop') {
+    width: 64px;
+    height: 64px;
+  }
+}
+
+// Navigation dropdown responsive
+.navigation-dropdown {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  margin-top: 0.5rem;
+  min-width: 280px;
+  max-width: 90vw;
+  border-radius: 0.75rem;
+  @include glass-morphism(0.95, 16px);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  z-index: 50;
+  
+  @include respond-to('tablet') {
+    min-width: 320px;
+    border-radius: 1rem;
+  }
+  
+  @include respond-to('desktop') {
+    min-width: 380px;
+    border-radius: 1.25rem;
+  }
+}
+
+// Search filter system responsive
+.search-filter-container {
+  width: 100%;
+  margin-bottom: 2rem;
+  
+  .search-input {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    font-size: 1rem;
+    border-radius: 0.75rem;
+    @include glass-morphism(0.9, 8px);
+    border: 1px solid rgba(156, 163, 175, 0.3);
+    
+    @include respond-to('tablet') {
+      padding: 1rem 1.25rem;
+      font-size: 1.125rem;
+      border-radius: 1rem;
+    }
+    
+    &:focus {
+      outline: none;
+      border-color: rgba(59, 130, 246, 0.5);
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+    }
+  }
+  
+  .filter-tabs {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.75rem;
+    margin-top: 1rem;
+    
+    @include respond-to('tablet') {
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1rem;
+    }
+    
+    select {
+      padding: 0.5rem 0.75rem;
+      font-size: 0.875rem;
+      border-radius: 0.5rem;
+      @include glass-morphism(0.8, 6px);
+      border: 1px solid rgba(156, 163, 175, 0.3);
+      
+      @include respond-to('tablet') {
+        padding: 0.625rem 1rem;
+        font-size: 0.9375rem;
+        border-radius: 0.625rem;
+      }
+    }
+  }
+}
+
+// Gamification dashboard responsive
+.gamification-dashboard {
+  width: 100%;
+  margin-bottom: 3rem;
+  
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+    margin-bottom: 2rem;
+    
+    @include respond-to('tablet') {
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1.5rem;
+    }
+  }
+  
+  .achievements-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1rem;
+    
+    @include respond-to('tablet') {
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1.5rem;
+    }
+    
+    @include respond-to('desktop') {
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2rem;
+    }
+  }
+}
+
+// Adaptive typography
+.adaptive-text {
+  &.heading-large {
+    font-size: 2rem;
+    line-height: 1.2;
+    
+    @include respond-to('tablet') {
+      font-size: 2.5rem;
+    }
+    
+    @include respond-to('desktop') {
+      font-size: 3rem;
+    }
+    
+    @include respond-to('wide') {
+      font-size: 3.5rem;
+    }
+  }
+  
+  &.heading-medium {
+    font-size: 1.5rem;
+    line-height: 1.3;
+    
+    @include respond-to('tablet') {
+      font-size: 1.875rem;
+    }
+    
+    @include respond-to('desktop') {
+      font-size: 2.25rem;
+    }
+  }
+  
+  &.body-text {
+    font-size: 1rem;
+    line-height: 1.6;
+    
+    @include respond-to('tablet') {
+      font-size: 1.125rem;
+      line-height: 1.7;
+    }
+    
+    @include respond-to('desktop') {
+      font-size: 1.25rem;
+      line-height: 1.8;
+    }
+  }
+}
+
+// Accessibility enhancements
+.high-contrast {
+  .module-card {
+    border: 2px solid currentColor;
+    
+    &:focus-within {
+      outline: 3px solid #005fcc;
+      outline-offset: 2px;
+    }
+  }
+  
+  .navigation-dropdown {
+    border: 2px solid currentColor;
+  }
+}
+
+.reduced-motion {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+.keyboard-navigation {
+  .module-card:focus-within,
+  .search-input:focus,
+  .filter-tabs select:focus,
+  button:focus,
+  a:focus {
+    outline: 2px solid #005fcc;
+    outline-offset: 2px;
+  }
+}
+
+// Print styles
+@media print {
+  .module-card {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+  
+  .navigation-dropdown,
+  .search-filter-container,
+  .gamification-dashboard {
+    display: none;
+  }
+}

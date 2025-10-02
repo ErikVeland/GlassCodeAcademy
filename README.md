@@ -86,8 +86,8 @@ graph TB
 ## Directory Structure
 
 ```
-dotNetQuiz/
-├── dot-net-quiz/
+GlassCodeAcademy/
+├── glasscode/
 │   ├── backend/
 │   │   ├── Controllers/
 │   │   ├── Data/ (JSON files with content for all technologies)
@@ -183,7 +183,7 @@ All data is accessed through GraphQL queries and mutations:
 
 ### Backend Setup
 ```bash
-cd dot-net-quiz/backend
+cd glasscode/backend
 dotnet restore
 dotnet run
 ```
@@ -192,7 +192,7 @@ The backend will start on `http://localhost:5022`
 
 ### Frontend Setup
 ```bash
-cd dot-net-quiz/frontend
+cd glasscode/frontend
 npm install
 npm run dev
 ```
@@ -223,14 +223,14 @@ Build and run each service separately:
 
 **Backend:**
 ```bash
-cd dot-net-quiz/backend
+cd glasscode/backend
 docker build -t fullstack-backend .
 docker run -p 8080:8080 fullstack-backend
 ```
 
 **Frontend:**
 ```bash
-cd dot-net-quiz/frontend
+cd glasscode/frontend
 docker build -t fullstack-frontend .
 docker run -p 3000:3000 fullstack-frontend
 ```

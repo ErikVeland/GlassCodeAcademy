@@ -7,7 +7,7 @@ This is the SASS learning module, built with pure HTML and SASS stylesheets.
 - Responsive design using SASS stylesheets
 - Interactive lessons with code examples
 - Quiz system with multiple-choice questions
-- Implementation of the Fullstack Academy Design System
+- Implementation of the GlassCode Academy Design System
 - Mobile-friendly interface
 - Modular SASS architecture with partials
 
@@ -20,7 +20,7 @@ This is the SASS learning module, built with pure HTML and SASS stylesheets.
 
 ## Design System Implementation
 
-This module implements the Fullstack Academy Design System with:
+This module implements the GlassCode Academy Design System with:
 - Consistent color palette (violet as primary color for SASS)
 - Responsive grid layout
 - Accessible components

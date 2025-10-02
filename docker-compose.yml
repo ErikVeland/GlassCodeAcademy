@@ -4,7 +4,7 @@ services:
   # .NET Backend Service
   backend:
     build:
-      context: ./dot-net-quiz/backend
+      context: ./glasscode/backend
       dockerfile: Dockerfile
     ports:
       - "8080:8080"
@@ -17,7 +17,7 @@ services:
   # Next.js Frontend Service
   frontend:
     build:
-      context: ./dot-net-quiz/frontend
+      context: ./glasscode/frontend
       dockerfile: Dockerfile
     ports:
       - "3000:3000"
