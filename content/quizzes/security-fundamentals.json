@@ -1,0 +1,444 @@
+{
+  "moduleSlug": "security-fundamentals",
+  "title": "Security Best Practices Assessment",
+  "description": "Comprehensive quiz covering key concepts from the Security Best Practices module",
+  "totalQuestions": 20,
+  "passingScore": 70,
+  "timeLimit": 30,
+  "questions": [
+    {
+      "id": "security-fundamentals-q1",
+      "question": "What are the performance considerations when using Security?",
+      "topic": "Authentication",
+      "difficulty": "Intermediate",
+      "choices": [
+        "Option A - Placeholder answer",
+        "Option B - Placeholder answer",
+        "Option C - Placeholder answer",
+        "Option D - Placeholder answer"
+      ],
+      "correctIndex": 0,
+      "explanation": "This question tests understanding of Security concepts. The correct answer demonstrates proper implementation of Security Best Practices principles. Review the lesson materials for detailed explanations of these concepts.",
+      "industryContext": "In professional development, understanding Security is crucial for building scalable and maintainable applications.",
+      "tags": [
+        "quality",
+        "intermediate"
+      ],
+      "estimatedTime": 90,
+      "questionType": "multiple-choice"
+    },
+    {
+      "id": "security-fundamentals-q2",
+      "question": "How do you troubleshoot complex Security issues?",
+      "topic": "Authorization",
+      "difficulty": "Advanced",
+      "choices": [
+        "Option A - Placeholder answer",
+        "Option B - Placeholder answer",
+        "Option C - Placeholder answer",
+        "Option D - Placeholder answer"
+      ],
+      "correctIndex": 0,
+      "explanation": "This question tests understanding of Security concepts. The correct answer demonstrates proper implementation of Security Best Practices principles. Review the lesson materials for detailed explanations of these concepts.",
+      "industryContext": "In professional development, understanding Security is crucial for building scalable and maintainable applications.",
+      "tags": [
+        "quality",
+        "advanced"
+      ],
+      "estimatedTime": 90,
+      "questionType": "multiple-choice"
+    },
+    {
+      "id": "security-fundamentals-q3",
+      "question": "How would you optimize Security for large-scale applications?",
+      "topic": "Security",
+      "difficulty": "Advanced",
+      "choices": [
+        "Option A - Placeholder answer",
+        "Option B - Placeholder answer",
+        "Option C - Placeholder answer",
+        "Option D - Placeholder answer"
+      ],
+      "correctIndex": 0,
+      "explanation": "This question tests understanding of Security concepts. The correct answer demonstrates proper implementation of Security Best Practices principles. Review the lesson materials for detailed explanations of these concepts.",
+      "industryContext": "In professional development, understanding Security is crucial for building scalable and maintainable applications.",
+      "tags": [
+        "quality",
+        "advanced"
+      ],
+      "estimatedTime": 90,
+      "questionType": "multiple-choice"
+    },
+    {
+      "id": "security-fundamentals-q4",
+      "question": "Your web application stores user passwords. Which approach provides the BEST security?",
+      "topic": "Authentication",
+      "difficulty": "Beginner",
+      "choices": [
+        "Hash passwords using bcrypt with a salt and appropriate work factor",
+        "Encrypt passwords using AES-256 with a secret key",
+        "Store passwords in plain text but use HTTPS for transmission",
+        "Use MD5 hashing for fast password verification"
+      ],
+      "correctIndex": 0,
+      "explanation": "bcrypt with salt and appropriate work factor (cost parameter) is the gold standard for password storage. It's designed to be slow and resistant to rainbow table attacks. AES encryption is reversible (not suitable for passwords), plain text is never acceptable, and MD5 is cryptographically broken and too fast for password hashing.",
+      "industryContext": "Password security breaches are among the most common and damaging security incidents. Proper password hashing is a fundamental requirement for any application handling user credentials.",
+      "tags": [
+        "authentication",
+        "password-security",
+        "beginner"
+      ],
+      "estimatedTime": 90,
+      "questionType": "multiple-choice"
+    },
+    {
+      "id": "security-fundamentals-q5",
+      "question": "A security audit reveals that your API is vulnerable to SQL injection attacks. You need to fix this immediately. What's the MOST effective solution?",
+      "topic": "Authorization",
+      "difficulty": "Advanced",
+      "choices": [
+        "Replace all SQL queries with parameterized queries/prepared statements",
+        "Add input validation to reject special characters like quotes",
+        "Implement rate limiting to slow down potential attacks",
+        "Use stored procedures exclusively for all database operations"
+      ],
+      "correctIndex": 0,
+      "explanation": "Parameterized queries (prepared statements) completely separate SQL code from user data, making SQL injection impossible regardless of input content. Input validation can be bypassed, rate limiting doesn't prevent the vulnerability, and while stored procedures can help, they don't automatically prevent SQL injection if used incorrectly.",
+      "industryContext": "SQL injection consistently ranks as one of the top web application security risks (OWASP Top 10). A single SQL injection vulnerability can lead to complete database compromise, making this knowledge critical for any developer working with databases.",
+      "tags": [
+        "sql-injection",
+        "database-security",
+        "advanced"
+      ],
+      "estimatedTime": 120,
+      "questionType": "multiple-choice"
+    },
+    {
+      "id": "security-fundamentals-q6",
+      "question": "Your e-commerce application handles credit card payments. Which security implementation approach is MOST critical for PCI DSS compliance?",
+      "topic": "Security",
+      "difficulty": "Intermediate",
+      "choices": [
+        "Use a certified payment processor (like Stripe/PayPal) and never store card data",
+        "Encrypt all card data with AES-256 and store it securely",
+        "Hash credit card numbers using bcrypt before storing",
+        "Store card data in a separate database with limited access"
+      ],
+      "correctIndex": 0,
+      "explanation": "The safest and most compliant approach is to never store sensitive card data yourself. Use certified payment processors that handle PCI DSS compliance. This reduces your compliance scope from Level 1 (most stringent) to Level 4 (least stringent) and eliminates the risk of card data breaches from your systems.",
+      "industryContext": "PCI DSS compliance is legally required for businesses processing credit cards. Non-compliance can result in fines up to $500,000 per incident, plus liability for fraud losses. Using certified processors is the industry standard approach.",
+      "tags": [
+        "pci-dss",
+        "payment-security",
+        "intermediate"
+      ],
+      "estimatedTime": 120,
+      "questionType": "multiple-choice"
+    },
+    {
+      "id": "security-fundamentals-q7",
+      "question": "Which of the following is a key feature of Security Best Practices?",
+      "topic": "Authentication",
+      "difficulty": "Beginner",
+      "choices": [
+        "Option A - Placeholder answer",
+        "Option B - Placeholder answer",
+        "Option C - Placeholder answer",
+        "Option D - Placeholder answer"
+      ],
+      "correctIndex": 0,
+      "explanation": "This question tests understanding of Security concepts. The correct answer demonstrates proper implementation of Security Best Practices principles. Review the lesson materials for detailed explanations of these concepts.",
+      "industryContext": "In professional development, understanding Security is crucial for building scalable and maintainable applications.",
+      "tags": [
+        "quality",
+        "beginner"
+      ],
+      "estimatedTime": 90,
+      "questionType": "multiple-choice"
+    },
+    {
+      "id": "security-fundamentals-q8",
+      "question": "How do you troubleshoot complex Security issues?",
+      "topic": "Authorization",
+      "difficulty": "Advanced",
+      "choices": [
+        "Option A - Placeholder answer",
+        "Option B - Placeholder answer",
+        "Option C - Placeholder answer",
+        "Option D - Placeholder answer"
+      ],
+      "correctIndex": 0,
+      "explanation": "This question tests understanding of Security concepts. The correct answer demonstrates proper implementation of Security Best Practices principles. Review the lesson materials for detailed explanations of these concepts.",
+      "industryContext": "In professional development, understanding Security is crucial for building scalable and maintainable applications.",
+      "tags": [
+        "quality",
+        "advanced"
+      ],
+      "estimatedTime": 90,
+      "questionType": "multiple-choice"
+    },
+    {
+      "id": "security-fundamentals-q9",
+      "question": "How do you implement Security in a production environment?",
+      "topic": "Security",
+      "difficulty": "Intermediate",
+      "choices": [
+        "Option A - Placeholder answer",
+        "Option B - Placeholder answer",
+        "Option C - Placeholder answer",
+        "Option D - Placeholder answer"
+      ],
+      "correctIndex": 0,
+      "explanation": "This question tests understanding of Security concepts. The correct answer demonstrates proper implementation of Security Best Practices principles. Review the lesson materials for detailed explanations of these concepts.",
+      "industryContext": "In professional development, understanding Security is crucial for building scalable and maintainable applications.",
+      "tags": [
+        "quality",
+        "intermediate"
+      ],
+      "estimatedTime": 90,
+      "questionType": "multiple-choice"
+    },
+    {
+      "id": "security-fundamentals-q10",
+      "question": "What are the trade-offs between different Security approaches?",
+      "topic": "Authentication",
+      "difficulty": "Advanced",
+      "choices": [
+        "Option A - Placeholder answer",
+        "Option B - Placeholder answer",
+        "Option C - Placeholder answer",
+        "Option D - Placeholder answer"
+      ],
+      "correctIndex": 0,
+      "explanation": "This question tests understanding of Security concepts. The correct answer demonstrates proper implementation of Security Best Practices principles. Review the lesson materials for detailed explanations of these concepts.",
+      "industryContext": "In professional development, understanding Security is crucial for building scalable and maintainable applications.",
+      "tags": [
+        "quality",
+        "advanced"
+      ],
+      "estimatedTime": 90,
+      "questionType": "multiple-choice"
+    },
+    {
+      "id": "security-fundamentals-q11",
+      "question": "Which pattern is most effective for Security architecture?",
+      "topic": "Authorization",
+      "difficulty": "Intermediate",
+      "choices": [
+        "Option A - Placeholder answer",
+        "Option B - Placeholder answer",
+        "Option C - Placeholder answer",
+        "Option D - Placeholder answer"
+      ],
+      "correctIndex": 0,
+      "explanation": "This question tests understanding of Security concepts. The correct answer demonstrates proper implementation of Security Best Practices principles. Review the lesson materials for detailed explanations of these concepts.",
+      "industryContext": "In professional development, understanding Security is crucial for building scalable and maintainable applications.",
+      "tags": [
+        "quality",
+        "intermediate"
+      ],
+      "estimatedTime": 90,
+      "questionType": "multiple-choice"
+    },
+    {
+      "id": "security-fundamentals-q12",
+      "question": "How would you optimize Security for large-scale applications?",
+      "topic": "Security",
+      "difficulty": "Advanced",
+      "choices": [
+        "Option A - Placeholder answer",
+        "Option B - Placeholder answer",
+        "Option C - Placeholder answer",
+        "Option D - Placeholder answer"
+      ],
+      "correctIndex": 0,
+      "explanation": "This question tests understanding of Security concepts. The correct answer demonstrates proper implementation of Security Best Practices principles. Review the lesson materials for detailed explanations of these concepts.",
+      "industryContext": "In professional development, understanding Security is crucial for building scalable and maintainable applications.",
+      "tags": [
+        "quality",
+        "advanced"
+      ],
+      "estimatedTime": 90,
+      "questionType": "multiple-choice"
+    },
+    {
+      "id": "security-fundamentals-q13",
+      "question": "What are the trade-offs between different Security approaches?",
+      "topic": "Authentication",
+      "difficulty": "Advanced",
+      "choices": [
+        "Option A - Placeholder answer",
+        "Option B - Placeholder answer",
+        "Option C - Placeholder answer",
+        "Option D - Placeholder answer"
+      ],
+      "correctIndex": 0,
+      "explanation": "This question tests understanding of Security concepts. The correct answer demonstrates proper implementation of Security Best Practices principles. Review the lesson materials for detailed explanations of these concepts.",
+      "industryContext": "In professional development, understanding Security is crucial for building scalable and maintainable applications.",
+      "tags": [
+        "quality",
+        "advanced"
+      ],
+      "estimatedTime": 90,
+      "questionType": "multiple-choice"
+    },
+    {
+      "id": "security-fundamentals-q14",
+      "question": "When should you use Security in development?",
+      "topic": "Authorization",
+      "difficulty": "Beginner",
+      "choices": [
+        "Option A - Placeholder answer",
+        "Option B - Placeholder answer",
+        "Option C - Placeholder answer",
+        "Option D - Placeholder answer"
+      ],
+      "correctIndex": 0,
+      "explanation": "This question tests understanding of Security concepts. The correct answer demonstrates proper implementation of Security Best Practices principles. Review the lesson materials for detailed explanations of these concepts.",
+      "industryContext": "In professional development, understanding Security is crucial for building scalable and maintainable applications.",
+      "tags": [
+        "quality",
+        "beginner"
+      ],
+      "estimatedTime": 90,
+      "questionType": "multiple-choice"
+    },
+    {
+      "id": "security-fundamentals-q15",
+      "question": "What is the primary purpose of Security?",
+      "topic": "Security",
+      "difficulty": "Beginner",
+      "choices": [
+        "Option A - Placeholder answer",
+        "Option B - Placeholder answer",
+        "Option C - Placeholder answer",
+        "Option D - Placeholder answer"
+      ],
+      "correctIndex": 0,
+      "explanation": "This question tests understanding of Security concepts. The correct answer demonstrates proper implementation of Security Best Practices principles. Review the lesson materials for detailed explanations of these concepts.",
+      "industryContext": "In professional development, understanding Security is crucial for building scalable and maintainable applications.",
+      "tags": [
+        "quality",
+        "beginner"
+      ],
+      "estimatedTime": 90,
+      "questionType": "multiple-choice"
+    },
+    {
+      "id": "security-fundamentals-q16",
+      "question": "Which of the following is a key feature of Security Best Practices?",
+      "topic": "Authentication",
+      "difficulty": "Beginner",
+      "choices": [
+        "Option A - Placeholder answer",
+        "Option B - Placeholder answer",
+        "Option C - Placeholder answer",
+        "Option D - Placeholder answer"
+      ],
+      "correctIndex": 0,
+      "explanation": "This question tests understanding of Security concepts. The correct answer demonstrates proper implementation of Security Best Practices principles. Review the lesson materials for detailed explanations of these concepts.",
+      "industryContext": "In professional development, understanding Security is crucial for building scalable and maintainable applications.",
+      "tags": [
+        "quality",
+        "beginner"
+      ],
+      "estimatedTime": 90,
+      "questionType": "multiple-choice"
+    },
+    {
+      "id": "security-fundamentals-q17",
+      "question": "When should you use Security in development?",
+      "topic": "Authorization",
+      "difficulty": "Beginner",
+      "choices": [
+        "Option A - Placeholder answer",
+        "Option B - Placeholder answer",
+        "Option C - Placeholder answer",
+        "Option D - Placeholder answer"
+      ],
+      "correctIndex": 0,
+      "explanation": "This question tests understanding of Security concepts. The correct answer demonstrates proper implementation of Security Best Practices principles. Review the lesson materials for detailed explanations of these concepts.",
+      "industryContext": "In professional development, understanding Security is crucial for building scalable and maintainable applications.",
+      "tags": [
+        "quality",
+        "beginner"
+      ],
+      "estimatedTime": 90,
+      "questionType": "multiple-choice"
+    },
+    {
+      "id": "security-fundamentals-q18",
+      "question": "What is the primary purpose of Security?",
+      "topic": "Security",
+      "difficulty": "Beginner",
+      "choices": [
+        "Option A - Placeholder answer",
+        "Option B - Placeholder answer",
+        "Option C - Placeholder answer",
+        "Option D - Placeholder answer"
+      ],
+      "correctIndex": 0,
+      "explanation": "This question tests understanding of Security concepts. The correct answer demonstrates proper implementation of Security Best Practices principles. Review the lesson materials for detailed explanations of these concepts.",
+      "industryContext": "In professional development, understanding Security is crucial for building scalable and maintainable applications.",
+      "tags": [
+        "quality",
+        "beginner"
+      ],
+      "estimatedTime": 90,
+      "questionType": "multiple-choice"
+    },
+    {
+      "id": "security-fundamentals-q19",
+      "question": "Which of the following is a key feature of Security Best Practices?",
+      "topic": "Authentication",
+      "difficulty": "Beginner",
+      "choices": [
+        "Option A - Placeholder answer",
+        "Option B - Placeholder answer",
+        "Option C - Placeholder answer",
+        "Option D - Placeholder answer"
+      ],
+      "correctIndex": 0,
+      "explanation": "This question tests understanding of Security concepts. The correct answer demonstrates proper implementation of Security Best Practices principles. Review the lesson materials for detailed explanations of these concepts.",
+      "industryContext": "In professional development, understanding Security is crucial for building scalable and maintainable applications.",
+      "tags": [
+        "quality",
+        "beginner"
+      ],
+      "estimatedTime": 90,
+      "questionType": "multiple-choice"
+    },
+    {
+      "id": "security-fundamentals-q20",
+      "question": "When should you use Security in development?",
+      "topic": "Authorization",
+      "difficulty": "Beginner",
+      "choices": [
+        "Option A - Placeholder answer",
+        "Option B - Placeholder answer",
+        "Option C - Placeholder answer",
+        "Option D - Placeholder answer"
+      ],
+      "correctIndex": 0,
+      "explanation": "This question tests understanding of Security concepts. The correct answer demonstrates proper implementation of Security Best Practices principles. Review the lesson materials for detailed explanations of these concepts.",
+      "industryContext": "In professional development, understanding Security is crucial for building scalable and maintainable applications.",
+      "tags": [
+        "quality",
+        "beginner"
+      ],
+      "estimatedTime": 90,
+      "questionType": "multiple-choice"
+    }
+  ],
+  "metadata": {
+    "difficulty": "Advanced",
+    "estimatedTime": "30 minutes",
+    "topics": [
+      "Security",
+      "Authentication",
+      "Authorization"
+    ],
+    "lastUpdated": "2025-10-01T06:42:16.318Z",
+    "version": "1.0.0"
+  }
+}

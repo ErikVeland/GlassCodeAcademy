@@ -1,0 +1,29 @@
+{
+  "module": "graphql-advanced",
+  "sources": [
+    {
+      "title": "GraphQL Official Documentation",
+      "url": "https://graphql.org/learn/"
+    },
+    {
+      "title": "GraphQL Specification",
+      "url": "https://spec.graphql.org/"
+    },
+    {
+      "title": "Apollo GraphQL Documentation",
+      "url": "https://www.apollographql.com/docs/"
+    },
+    {
+      "title": "GraphQL Best Practices",
+      "url": "https://graphql.org/learn/best-practices/"
+    },
+    {
+      "title": "GraphQL Schema Design",
+      "url": "https://graphql.org/learn/schema/"
+    },
+    {
+      "title": "GraphQL Security Best Practices",
+      "url": "https://www.apollographql.com/blog/graphql/security/security-for-graphql/"
+    }
+  ]
+}

@@ -1,0 +1,757 @@
+[
+  {
+    "id": "vue-advanced-lesson-1",
+    "moduleSlug": "vue-advanced",
+    "title": "Vue Instance and Lifecycle",
+    "order": 1,
+    "objectives": [
+      "Master component creation and usage",
+      "Understand state management and lifecycle",
+      "Implement practical solutions"
+    ],
+    "intro": "Welcome to this comprehensive lesson on Core Concepts.\n\nLearn about the Vue instance and its lifecycle hooks, which control the behavior of components throughout their existence.\n\nThroughout this lesson, you'll gain hands-on experience with practical implementations and real-world scenarios. We'll explore both the theoretical foundations and practical applications, ensuring you can immediately apply what you learn.\n\nThis lesson is designed to build upon previous concepts while introducing new techniques that will enhance your development skills. By the end, you'll have a solid understanding of the key principles and be ready to tackle more advanced topics.\n\nThe knowledge gained here will serve as a foundation for subsequent lessons and real-world projects.",
+    "code": {
+      "example": "const app = Vue.createApp({\n  data() {\n    return {\n      message: 'Hello Vue!'\n    }\n  },\n  // Lifecycle hooks\n  beforeCreate() {\n    console.log('Before create - data and events are not set up yet')\n  },\n  created() {\n    console.log('Created - data and events are active, but DOM not mounted')\n    // Good place for API calls\n  },\n  beforeMount() {\n    console.log('Before mount - template and render functions about to be compiled')\n  },\n  mounted() {\n    console.log('Component is mounted!')\n    // Good place for DOM manipulation\n  },\n  beforeUpdate() {\n    console.log('Before update - called when data changes, before DOM update')\n  },\n  updated() {\n    console.log('Updated - called after DOM update')\n  },\n  beforeUnmount() {\n    console.log('Before unmount - called before component is destroyed')\n  },\n  unmounted() {\n    console.log('Unmounted - called after component is destroyed')\n  }\n})\n\napp.mount('#app')",
+      "explanation": "This example produces: Hello Vue!\nComponent lifecycle logs in console showing the order of execution\n\nThe code demonstrates practical implementation techniques and shows how the concepts work in real scenarios. Pay attention to the structure and patterns used, as these represent industry best practices.",
+      "language": "javascript"
+    },
+    "pitfalls": [
+      {
+        "mistake": "Not following best practices",
+        "solution": "Review documentation and community guidelines",
+        "severity": "medium"
+      },
+      {
+        "mistake": "Skipping error handling",
+        "solution": "Implement proper error boundaries and validation",
+        "severity": "low"
+      }
+    ],
+    "exercises": [
+      {
+        "title": "Practice: Vue Instance and Lifecycle",
+        "description": "Apply the concepts from this lesson on Core Concepts",
+        "checkpoints": [
+          "Understand the core concept",
+          "Implement the example code",
+          "Experiment with variations"
+        ]
+      }
+    ],
+    "next": [],
+    "estimatedMinutes": 25,
+    "difficulty": "Intermediate",
+    "tags": [
+      "Core Concepts",
+      "vue"
+    ],
+    "legacy": {
+      "originalId": 1,
+      "originalTopic": "Core Concepts",
+      "migrated": "2025-10-01T06:41:13.488Z"
+    },
+    "lastUpdated": "2025-10-01T06:41:13.488Z",
+    "version": "1.0.0"
+  },
+  {
+    "id": "vue-advanced-lesson-2",
+    "moduleSlug": "vue-advanced",
+    "title": "Template Syntax and Directives",
+    "order": 2,
+    "objectives": [
+      "Implement practical solutions",
+      "Build foundational understanding"
+    ],
+    "intro": "Welcome to this comprehensive lesson on Core Concepts.\n\nLearn how to use Vue's powerful template syntax for data binding, conditional rendering, and list rendering with built-in directives.\n\nThroughout this lesson, you'll gain hands-on experience with practical implementations and real-world scenarios. We'll explore both the theoretical foundations and practical applications, ensuring you can immediately apply what you learn.\n\nThis lesson is designed to build upon previous concepts while introducing new techniques that will enhance your development skills. By the end, you'll have a solid understanding of the key principles and be ready to tackle more advanced topics.\n\nThe knowledge gained here will serve as a foundation for subsequent lessons and real-world projects.",
+    "code": {
+      "example": "<div id=\"app\">\n  <!-- Text interpolation -->\n  <p>{{ message }}</p>\n  \n  <!-- Raw HTML (be careful with XSS) -->\n  <p v-html=\"rawHtml\"></p>\n  \n  <!-- Attribute binding -->\n  <div v-bind:id=\"dynamicId\">Bound ID</div>\n  <button v-bind:disabled=\"isButtonDisabled\">Button</button>\n  \n  <!-- Conditional rendering -->\n  <p v-if=\"seen\">Now you see me</p>\n  <p v-else>Now you don't</p>\n  \n  <!-- List rendering -->\n  <ul>\n    <li v-for=\"item in items\" :key=\"item.id\">\n      {{ item.text }}\n    </li>\n  </ul>\n  \n  <!-- Event handling -->\n  <button v-on:click=\"reverseMessage\">Reverse Message</button>\n  <button @click=\"counter += 1\">Count: {{ counter }}</button>\n  \n  <!-- Two-way binding -->\n  <input v-model=\"userInput\" placeholder=\"Type something\">\n  <p>You typed: {{ userInput }}</p>\n</div>\n\nconst app = Vue.createApp({\n  data() {\n    return {\n      message: 'Hello Vue!',\n      rawHtml: '<span style=\"color: red\">This is red</span>',\n      dynamicId: 'dynamic-id',\n      isButtonDisabled: false,\n      seen: true,\n      counter: 0,\n      userInput: '',\n      items: [\n        { id: 1, text: 'Item 1' },\n        { id: 2, text: 'Item 2' },\n        { id: 3, text: 'Item 3' }\n      ]\n    }\n  },\n  methods: {\n    reverseMessage() {\n      this.message = this.message.split('').reverse().join('')\n    }\n  }\n})",
+      "explanation": "This example produces: Interactive component with text interpolation, attribute binding, conditional rendering, list rendering, event handling, and two-way binding\n\nThe code demonstrates practical implementation techniques and shows how the concepts work in real scenarios. Pay attention to the structure and patterns used, as these represent industry best practices.",
+      "language": "javascript"
+    },
+    "pitfalls": [
+      {
+        "mistake": "Not following best practices",
+        "solution": "Review documentation and community guidelines",
+        "severity": "medium"
+      },
+      {
+        "mistake": "Skipping error handling",
+        "solution": "Implement proper error boundaries and validation",
+        "severity": "low"
+      }
+    ],
+    "exercises": [
+      {
+        "title": "Practice: Template Syntax and Directives",
+        "description": "Apply the concepts from this lesson on Core Concepts",
+        "checkpoints": [
+          "Understand the core concept",
+          "Implement the example code",
+          "Experiment with variations"
+        ]
+      }
+    ],
+    "next": [],
+    "estimatedMinutes": 25,
+    "difficulty": "Intermediate",
+    "tags": [
+      "Core Concepts",
+      "vue"
+    ],
+    "legacy": {
+      "originalId": 2,
+      "originalTopic": "Core Concepts",
+      "migrated": "2025-10-01T06:41:13.488Z"
+    },
+    "lastUpdated": "2025-10-01T06:41:13.488Z",
+    "version": "1.0.0"
+  },
+  {
+    "id": "vue-advanced-lesson-3",
+    "moduleSlug": "vue-advanced",
+    "title": "Component Basics and Communication",
+    "order": 3,
+    "objectives": [
+      "Master component creation and usage",
+      "Implement practical solutions"
+    ],
+    "intro": "Welcome to this comprehensive lesson on Components.\n\nLearn how to create and use Vue components with props for parent-to-child communication and events for child-to-parent communication.\n\nThroughout this lesson, you'll gain hands-on experience with practical implementations and real-world scenarios. We'll explore both the theoretical foundations and practical applications, ensuring you can immediately apply what you learn.\n\nThis lesson is designed to build upon previous concepts while introducing new techniques that will enhance your development skills. By the end, you'll have a solid understanding of the key principles and be ready to tackle more advanced topics.\n\nThe knowledge gained here will serve as a foundation for subsequent lessons and real-world projects.",
+    "code": {
+      "example": "// Define a child component\nconst BlogPost = {\n  template: `\n    <div class=\"blog-post\">\n      <h3>{{ title }}</h3>\n      <p>{{ content }}</p>\n      <button @click=\"$emit('enlarge-text', 0.1)\">Enlarge text</button>\n      <button @click=\"$emit('delete-post')\">Delete</button>\n    </div>\n  `,\n  // Declare props\n  props: ['title', 'content'],\n  // Emits declaration (optional but recommended)\n  emits: ['enlarge-text', 'delete-post']\n}\n\nconst app = Vue.createApp({\n  data() {\n    return {\n      posts: [\n        { id: 1, title: 'My Journey with Vue', content: 'Content of post 1...' },\n        { id: 2, title: 'Blogging with Vue', content: 'Content of post 2...' },\n        { id: 3, title: 'Why Vue is Great', content: 'Content of post 3...' }\n      ],\n      postFontSize: 1\n    }\n  },\n  components: {\n    BlogPost\n  },\n  methods: {\n    onEnlargeText(enlargeAmount) {\n      this.postFontSize += enlargeAmount\n    },\n    onDeletePost() {\n      // Handle delete logic\n      console.log('Post deleted')\n    }\n  }\n})\n\n// In template:\n// <div :style=\"{ fontSize: postFontSize + 'em' }\">\n//   <blog-post\n//     v-for=\"post in posts\"\n//     :key=\"post.id\"\n//     :title=\"post.title\"\n//     :content=\"post.content\"\n//     @enlarge-text=\"onEnlargeText\"\n//     @delete-post=\"onDeletePost\"\n//   ></blog-post>\n// </div>",
+      "explanation": "This example produces: A list of blog posts with interactive buttons to enlarge text or delete posts, demonstrating component communication\n\nThe code demonstrates practical implementation techniques and shows how the concepts work in real scenarios. Pay attention to the structure and patterns used, as these represent industry best practices.",
+      "language": "javascript"
+    },
+    "pitfalls": [
+      {
+        "mistake": "Not using keys in lists",
+        "solution": "Always provide unique keys for list items",
+        "severity": "high"
+      },
+      {
+        "mistake": "Mutating props directly",
+        "solution": "Props are read-only, create new objects for updates",
+        "severity": "medium"
+      }
+    ],
+    "exercises": [
+      {
+        "title": "Practice: Component Basics and Communication",
+        "description": "Apply the concepts from this lesson on Components",
+        "checkpoints": [
+          "Understand the core concept",
+          "Implement the example code",
+          "Experiment with variations"
+        ]
+      }
+    ],
+    "next": [],
+    "estimatedMinutes": 25,
+    "difficulty": "Beginner",
+    "tags": [
+      "Components",
+      "vue"
+    ],
+    "legacy": {
+      "originalId": 3,
+      "originalTopic": "Components",
+      "migrated": "2025-10-01T06:41:13.488Z"
+    },
+    "lastUpdated": "2025-10-01T06:41:13.488Z",
+    "version": "1.0.0"
+  },
+  {
+    "id": "vue-advanced-lesson-4",
+    "moduleSlug": "vue-advanced",
+    "title": "Slots and Dynamic Components",
+    "order": 4,
+    "objectives": [
+      "Master component creation and usage",
+      "Implement practical solutions"
+    ],
+    "intro": "Welcome to this comprehensive lesson on Components.\n\nLearn how to use slots for content distribution and dynamic components for flexible UI composition.\n\nThroughout this lesson, you'll gain hands-on experience with practical implementations and real-world scenarios. We'll explore both the theoretical foundations and practical applications, ensuring you can immediately apply what you learn.\n\nThis lesson is designed to build upon previous concepts while introducing new techniques that will enhance your development skills. By the end, you'll have a solid understanding of the key principles and be ready to tackle more advanced topics.\n\nThe knowledge gained here will serve as a foundation for subsequent lessons and real-world projects.",
+    "code": {
+      "example": "// Component with slots\nconst BaseLayout = {\n  template: `\n    <div class=\"container\">\n      <header>\n        <slot name=\"header\">Default header</slot>\n      </header>\n      <main>\n        <slot></slot>\n      </main>\n      <footer>\n        <slot name=\"footer\">Default footer</slot>\n      </footer>\n    </div>\n  `\n}\n\n// Dynamic component example\nconst Home = {\n  template: `<div>Home Component</div>`\n}\n\nconst About = {\n  template: `<div>About Component</div>`\n}\n\nconst Contact = {\n  template: `<div>Contact Component</div>`\n}\n\nconst app = Vue.createApp({\n  data() {\n    return {\n      currentComponent: 'Home'\n    }\n  },\n  components: {\n    BaseLayout,\n    Home,\n    About,\n    Contact\n  }\n})\n\n// In template:\n// <base-layout>\n//   <template #header>\n//     <h1>Here might be a page title</h1>\n//   </template>\n// \n//   <p>A paragraph for the main content.</p>\n//   <p>And another one.</p>\n// \n//   <template #footer>\n//     <p>Here's some contact info</p>\n//   </template>\n// </base-layout>\n// \n// <!-- Dynamic component -->\n// <component :is=\"currentComponent\"></component>\n// <button @click=\"currentComponent = 'Home'\">Home</button>\n// <button @click=\"currentComponent = 'About'\">About</button>\n// <button @click=\"currentComponent = 'Contact'\">Contact</button>",
+      "explanation": "This example produces: Flexible layout component with named slots and dynamic component switching\n\nThe code demonstrates practical implementation techniques and shows how the concepts work in real scenarios. Pay attention to the structure and patterns used, as these represent industry best practices.",
+      "language": "javascript"
+    },
+    "pitfalls": [
+      {
+        "mistake": "Not using keys in lists",
+        "solution": "Always provide unique keys for list items",
+        "severity": "high"
+      },
+      {
+        "mistake": "Mutating props directly",
+        "solution": "Props are read-only, create new objects for updates",
+        "severity": "medium"
+      }
+    ],
+    "exercises": [
+      {
+        "title": "Practice: Slots and Dynamic Components",
+        "description": "Apply the concepts from this lesson on Components",
+        "checkpoints": [
+          "Understand the core concept",
+          "Implement the example code",
+          "Experiment with variations"
+        ]
+      }
+    ],
+    "next": [],
+    "estimatedMinutes": 25,
+    "difficulty": "Intermediate",
+    "tags": [
+      "Components",
+      "vue"
+    ],
+    "legacy": {
+      "originalId": 4,
+      "originalTopic": "Components",
+      "migrated": "2025-10-01T06:41:13.488Z"
+    },
+    "lastUpdated": "2025-10-01T06:41:13.488Z",
+    "version": "1.0.0"
+  },
+  {
+    "id": "vue-advanced-lesson-5",
+    "moduleSlug": "vue-advanced",
+    "title": "Reactive References and Composables",
+    "order": 5,
+    "objectives": [
+      "Implement practical solutions",
+      "Build foundational understanding"
+    ],
+    "intro": "Welcome to this comprehensive lesson on Composition API.\n\nLearn how to use reactive references with the Composition API and create reusable composables for complex logic.\n\nThroughout this lesson, you'll gain hands-on experience with practical implementations and real-world scenarios. We'll explore both the theoretical foundations and practical applications, ensuring you can immediately apply what you learn.\n\nThis lesson is designed to build upon previous concepts while introducing new techniques that will enhance your development skills. By the end, you'll have a solid understanding of the key principles and be ready to tackle more advanced topics.\n\nThe knowledge gained here will serve as a foundation for subsequent lessons and real-world projects.",
+    "code": {
+      "example": "const { createApp, ref, reactive, computed, watch, onMounted } = Vue\n\n// Reusable composable function\nfunction useCounter(initialValue = 0) {\n  const count = ref(initialValue)\n  const increment = () => count.value++\n  const decrement = () => count.value--\n  const reset = () => count.value = initialValue\n  \n  const isEven = computed(() => count.value % 2 === 0)\n  \n  watch(count, (newVal, oldVal) => {\n    console.log(`Count changed from ${oldVal} to ${newVal}`)\n  })\n  \n  return { count, increment, decrement, reset, isEven }\n}\n\nconst app = createApp({\n  setup() {\n    // Using reactive references\n    const message = ref('Hello Vue 3!')\n    const user = reactive({\n      name: 'John Doe',\n      age: 30,\n      email: 'john@example.com'\n    })\n    \n    // Using computed property\n    const userInfo = computed(() => {\n      return `${user.name} (${user.age}) - ${user.email}`\n    })\n    \n    // Using composable\n    const { count, increment, decrement, reset, isEven } = useCounter(10)\n    \n    // Lifecycle hook\n    onMounted(() => {\n      console.log('Component mounted!')\n    })\n    \n    // Methods\n    const updateUser = () => {\n      user.name = 'Jane Doe'\n      user.age = 25\n    }\n    \n    return {\n      message,\n      user,\n      userInfo,\n      count,\n      increment,\n      decrement,\n      reset,\n      isEven,\n      updateUser\n    }\n  }\n})",
+      "explanation": "This example produces: Reactive component with computed properties, watchers, and reusable composable functions\n\nThe code demonstrates practical implementation techniques and shows how the concepts work in real scenarios. Pay attention to the structure and patterns used, as these represent industry best practices.",
+      "language": "javascript"
+    },
+    "pitfalls": [
+      {
+        "mistake": "Not following best practices",
+        "solution": "Review documentation and community guidelines",
+        "severity": "medium"
+      },
+      {
+        "mistake": "Skipping error handling",
+        "solution": "Implement proper error boundaries and validation",
+        "severity": "low"
+      }
+    ],
+    "exercises": [
+      {
+        "title": "Practice: Reactive References and Composables",
+        "description": "Apply the concepts from this lesson on Composition API",
+        "checkpoints": [
+          "Understand the core concept",
+          "Implement the example code",
+          "Experiment with variations"
+        ]
+      }
+    ],
+    "next": [],
+    "estimatedMinutes": 25,
+    "difficulty": "Advanced",
+    "tags": [
+      "Composition API",
+      "vue"
+    ],
+    "legacy": {
+      "originalId": 5,
+      "originalTopic": "Composition API",
+      "migrated": "2025-10-01T06:41:13.488Z"
+    },
+    "lastUpdated": "2025-10-01T06:41:13.488Z",
+    "version": "1.0.0"
+  },
+  {
+    "id": "vue-advanced-lesson-6",
+    "moduleSlug": "vue-advanced",
+    "title": "Pinia State Management",
+    "order": 6,
+    "objectives": [
+      "Understand state management and lifecycle",
+      "Implement practical solutions"
+    ],
+    "intro": "Welcome to this comprehensive lesson on State Management.\n\nLearn modern state management with Pinia for Vue 3 applications.\n\nThroughout this lesson, you'll gain hands-on experience with practical implementations and real-world scenarios. We'll explore both the theoretical foundations and practical applications, ensuring you can immediately apply what you learn.\n\nThis lesson is designed to build upon previous concepts while introducing new techniques that will enhance your development skills. By the end, you'll have a solid understanding of the key principles and be ready to tackle more advanced topics.\n\nThe knowledge gained here will serve as a foundation for subsequent lessons and real-world projects.",
+    "code": {
+      "example": "// stores/counter.js\nimport { defineStore } from 'pinia'\n\nexport const useCounterStore = defineStore('counter', {\n  state: () => ({\n    count: 0,\n    name: 'Eduardo'\n  }),\n  getters: {\n    doubleCount: (state) => state.count * 2\n  },\n  actions: {\n    increment() {\n      this.count++\n    }\n  }\n})\n\n// Component usage\nimport { useCounterStore } from '@/stores/counter'\n\nexport default {\n  setup() {\n    const counter = useCounterStore()\n    return { counter }\n  }\n}",
+      "explanation": "This example produces: Centralized state management with reactive stores\n\nThe code demonstrates practical implementation techniques and shows how the concepts work in real scenarios. Pay attention to the structure and patterns used, as these represent industry best practices.",
+      "language": "javascript"
+    },
+    "pitfalls": [
+      {
+        "mistake": "Not following best practices",
+        "solution": "Review documentation and community guidelines",
+        "severity": "medium"
+      },
+      {
+        "mistake": "Skipping error handling",
+        "solution": "Implement proper error boundaries and validation",
+        "severity": "low"
+      }
+    ],
+    "exercises": [
+      {
+        "title": "Practice: Pinia State Management",
+        "description": "Apply the concepts from this lesson on State Management",
+        "checkpoints": [
+          "Understand the core concept",
+          "Implement the example code",
+          "Experiment with variations"
+        ]
+      }
+    ],
+    "next": [],
+    "estimatedMinutes": 25,
+    "difficulty": "Intermediate",
+    "tags": [
+      "State Management",
+      "vue"
+    ],
+    "legacy": {
+      "originalId": 6,
+      "originalTopic": "State Management",
+      "migrated": "2025-10-01T06:41:13.488Z"
+    },
+    "lastUpdated": "2025-10-01T06:41:13.488Z",
+    "version": "1.0.0"
+  },
+  {
+    "id": "vue-advanced-lesson-7",
+    "moduleSlug": "vue-advanced",
+    "title": "Vue Router Navigation",
+    "order": 7,
+    "objectives": [
+      "Implement practical solutions",
+      "Build foundational understanding"
+    ],
+    "intro": "Welcome to this comprehensive lesson on Routing.\n\nLearn client-side routing with Vue Router for single-page applications.\n\nThroughout this lesson, you'll gain hands-on experience with practical implementations and real-world scenarios. We'll explore both the theoretical foundations and practical applications, ensuring you can immediately apply what you learn.\n\nThis lesson is designed to build upon previous concepts while introducing new techniques that will enhance your development skills. By the end, you'll have a solid understanding of the key principles and be ready to tackle more advanced topics.\n\nThe knowledge gained here will serve as a foundation for subsequent lessons and real-world projects.",
+    "code": {
+      "example": "import { createRouter, createWebHistory } from 'vue-router'\nimport Home from './views/Home.vue'\nimport About from './views/About.vue'\n\nconst routes = [\n  { path: '/', component: Home },\n  { path: '/about', component: About },\n  { path: '/user/:id', component: UserProfile, props: true }\n]\n\nconst router = createRouter({\n  history: createWebHistory(),\n  routes\n})\n\n// Navigation guards\nrouter.beforeEach((to, from, next) => {\n  console.log('Navigating to:', to.path)\n  next()\n})\n\nexport default router",
+      "explanation": "This example produces: Single-page application with dynamic routing and navigation guards\n\nThe code demonstrates practical implementation techniques and shows how the concepts work in real scenarios. Pay attention to the structure and patterns used, as these represent industry best practices.",
+      "language": "javascript"
+    },
+    "pitfalls": [
+      {
+        "mistake": "Not following best practices",
+        "solution": "Review documentation and community guidelines",
+        "severity": "medium"
+      },
+      {
+        "mistake": "Skipping error handling",
+        "solution": "Implement proper error boundaries and validation",
+        "severity": "low"
+      }
+    ],
+    "exercises": [
+      {
+        "title": "Practice: Vue Router Navigation",
+        "description": "Apply the concepts from this lesson on Routing",
+        "checkpoints": [
+          "Understand the core concept",
+          "Implement the example code",
+          "Experiment with variations"
+        ]
+      }
+    ],
+    "next": [],
+    "estimatedMinutes": 25,
+    "difficulty": "Intermediate",
+    "tags": [
+      "Routing",
+      "vue"
+    ],
+    "legacy": {
+      "originalId": 7,
+      "originalTopic": "Routing",
+      "migrated": "2025-10-01T06:41:13.488Z"
+    },
+    "lastUpdated": "2025-10-01T06:41:13.488Z",
+    "version": "1.0.0"
+  },
+  {
+    "id": "vue-advanced-lesson-8",
+    "moduleSlug": "vue-advanced",
+    "title": "Form Handling and Validation",
+    "order": 8,
+    "objectives": [
+      "Implement practical solutions",
+      "Build foundational understanding"
+    ],
+    "intro": "Welcome to this comprehensive lesson on Forms.\n\nLearn comprehensive form handling with validation in Vue applications.\n\nThroughout this lesson, you'll gain hands-on experience with practical implementations and real-world scenarios. We'll explore both the theoretical foundations and practical applications, ensuring you can immediately apply what you learn.\n\nThis lesson is designed to build upon previous concepts while introducing new techniques that will enhance your development skills. By the end, you'll have a solid understanding of the key principles and be ready to tackle more advanced topics.\n\nThe knowledge gained here will serve as a foundation for subsequent lessons and real-world projects.",
+    "code": {
+      "example": "<template>\n  <form @submit.prevent=\"submitForm\">\n    <input v-model=\"form.email\" :class=\"{ error: errors.email }\" />\n    <span v-if=\"errors.email\">{{ errors.email }}</span>\n    <button type=\"submit\" :disabled=\"!isValid\">Submit</button>\n  </form>\n</template>\n\n<script setup>\nimport { reactive, computed } from 'vue'\n\nconst form = reactive({\n  email: '',\n  password: ''\n})\n\nconst errors = reactive({})\n\nconst isValid = computed(() => {\n  return form.email && form.password && !Object.keys(errors).length\n})\n\nconst validateEmail = () => {\n  const emailRegex = /^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/\n  errors.email = emailRegex.test(form.email) ? '' : 'Invalid email'\n}\n</script>",
+      "explanation": "This example produces: Reactive form with real-time validation and error handling\n\nThe code demonstrates practical implementation techniques and shows how the concepts work in real scenarios. Pay attention to the structure and patterns used, as these represent industry best practices.",
+      "language": "javascript"
+    },
+    "pitfalls": [
+      {
+        "mistake": "Not following best practices",
+        "solution": "Review documentation and community guidelines",
+        "severity": "medium"
+      },
+      {
+        "mistake": "Skipping error handling",
+        "solution": "Implement proper error boundaries and validation",
+        "severity": "low"
+      }
+    ],
+    "exercises": [
+      {
+        "title": "Practice: Form Handling and Validation",
+        "description": "Apply the concepts from this lesson on Forms",
+        "checkpoints": [
+          "Understand the core concept",
+          "Implement the example code",
+          "Experiment with variations"
+        ]
+      }
+    ],
+    "next": [],
+    "estimatedMinutes": 25,
+    "difficulty": "Intermediate",
+    "tags": [
+      "Forms",
+      "vue"
+    ],
+    "legacy": {
+      "originalId": 8,
+      "originalTopic": "Forms",
+      "migrated": "2025-10-01T06:41:13.488Z"
+    },
+    "lastUpdated": "2025-10-01T06:41:13.488Z",
+    "version": "1.0.0"
+  },
+  {
+    "id": "vue-advanced-lesson-9",
+    "moduleSlug": "vue-advanced",
+    "title": "Performance Optimization",
+    "order": 9,
+    "objectives": [
+      "Implement practical solutions",
+      "Build foundational understanding"
+    ],
+    "intro": "Welcome to this comprehensive lesson on Performance.\n\nLearn techniques to optimize Vue application performance.\n\nThroughout this lesson, you'll gain hands-on experience with practical implementations and real-world scenarios. We'll explore both the theoretical foundations and practical applications, ensuring you can immediately apply what you learn.\n\nThis lesson is designed to build upon previous concepts while introducing new techniques that will enhance your development skills. By the end, you'll have a solid understanding of the key principles and be ready to tackle more advanced topics.\n\nThe knowledge gained here will serve as a foundation for subsequent lessons and real-world projects.",
+    "code": {
+      "example": "// Lazy loading components\nconst AsyncComponent = defineAsyncComponent(() => import('./HeavyComponent.vue'))\n\n// Memoization with computed\nconst expensiveValue = computed(() => {\n  return heavyCalculation(props.data)\n})\n\n// Virtual scrolling for large lists\n<template>\n  <RecycleScroller\n    class=\"scroller\"\n    :items=\"items\"\n    :item-size=\"32\"\n    key-field=\"id\"\n    v-slot=\"{ item }\"\n  >\n    <div class=\"user\">{{ item.name }}</div>\n  </RecycleScroller>\n</template>",
+      "explanation": "This example produces: Optimized application with lazy loading and virtual scrolling\n\nThe code demonstrates practical implementation techniques and shows how the concepts work in real scenarios. Pay attention to the structure and patterns used, as these represent industry best practices.",
+      "language": "javascript"
+    },
+    "pitfalls": [
+      {
+        "mistake": "Not following best practices",
+        "solution": "Review documentation and community guidelines",
+        "severity": "medium"
+      },
+      {
+        "mistake": "Skipping error handling",
+        "solution": "Implement proper error boundaries and validation",
+        "severity": "low"
+      }
+    ],
+    "exercises": [
+      {
+        "title": "Practice: Performance Optimization",
+        "description": "Apply the concepts from this lesson on Performance",
+        "checkpoints": [
+          "Understand the core concept",
+          "Implement the example code",
+          "Experiment with variations"
+        ]
+      }
+    ],
+    "next": [],
+    "estimatedMinutes": 25,
+    "difficulty": "Advanced",
+    "tags": [
+      "Performance",
+      "vue"
+    ],
+    "legacy": {
+      "originalId": 9,
+      "originalTopic": "Performance",
+      "migrated": "2025-10-01T06:41:13.488Z"
+    },
+    "lastUpdated": "2025-10-01T06:41:13.488Z",
+    "version": "1.0.0"
+  },
+  {
+    "id": "vue-advanced-lesson-10",
+    "moduleSlug": "vue-advanced",
+    "title": "Component Testing",
+    "order": 10,
+    "objectives": [
+      "Master component creation and usage",
+      "Implement practical solutions"
+    ],
+    "intro": "Welcome to this comprehensive lesson on Testing.\n\nLearn how to test Vue components using Vue Test Utils and Vitest.\n\nThroughout this lesson, you'll gain hands-on experience with practical implementations and real-world scenarios. We'll explore both the theoretical foundations and practical applications, ensuring you can immediately apply what you learn.\n\nThis lesson is designed to build upon previous concepts while introducing new techniques that will enhance your development skills. By the end, you'll have a solid understanding of the key principles and be ready to tackle more advanced topics.\n\nThe knowledge gained here will serve as a foundation for subsequent lessons and real-world projects.",
+    "code": {
+      "example": "// Counter.test.js\nimport { mount } from '@vue/test-utils'\nimport Counter from '@/components/Counter.vue'\n\ndescribe('Counter', () => {\n  test('increments count when button is clicked', async () => {\n    const wrapper = mount(Counter)\n    \n    expect(wrapper.text()).toContain('0')\n    \n    await wrapper.find('button').trigger('click')\n    \n    expect(wrapper.text()).toContain('1')\n  })\n  \n  test('accepts initial count prop', () => {\n    const wrapper = mount(Counter, {\n      props: { initialCount: 5 }\n    })\n    \n    expect(wrapper.text()).toContain('5')\n  })\n})",
+      "explanation": "This example produces: ✓ increments count when button is clicked\n✓ accepts initial count prop\n\nThe code demonstrates practical implementation techniques and shows how the concepts work in real scenarios. Pay attention to the structure and patterns used, as these represent industry best practices.",
+      "language": "javascript"
+    },
+    "pitfalls": [
+      {
+        "mistake": "Not following best practices",
+        "solution": "Review documentation and community guidelines",
+        "severity": "medium"
+      },
+      {
+        "mistake": "Skipping error handling",
+        "solution": "Implement proper error boundaries and validation",
+        "severity": "low"
+      }
+    ],
+    "exercises": [
+      {
+        "title": "Practice: Component Testing",
+        "description": "Apply the concepts from this lesson on Testing",
+        "checkpoints": [
+          "Understand the core concept",
+          "Implement the example code",
+          "Experiment with variations"
+        ]
+      }
+    ],
+    "next": [],
+    "estimatedMinutes": 25,
+    "difficulty": "Intermediate",
+    "tags": [
+      "Testing",
+      "vue"
+    ],
+    "legacy": {
+      "originalId": 10,
+      "originalTopic": "Testing",
+      "migrated": "2025-10-01T06:41:13.488Z"
+    },
+    "lastUpdated": "2025-10-01T06:41:13.488Z",
+    "version": "1.0.0"
+  },
+  {
+    "id": "vue-advanced-lesson-11",
+    "moduleSlug": "vue-advanced",
+    "title": "Teleport and Portal Patterns",
+    "order": 11,
+    "objectives": [
+      "Master component creation and usage",
+      "Implement practical solutions"
+    ],
+    "intro": "Welcome to this comprehensive lesson on Teleport.\n\nLearn how to use Teleport for rendering components outside the normal DOM hierarchy.\n\nThroughout this lesson, you'll gain hands-on experience with practical implementations and real-world scenarios. We'll explore both the theoretical foundations and practical applications, ensuring you can immediately apply what you learn.\n\nThis lesson is designed to build upon previous concepts while introducing new techniques that will enhance your development skills. By the end, you'll have a solid understanding of the key principles and be ready to tackle more advanced topics.\n\nThe knowledge gained here will serve as a foundation for subsequent lessons and real-world projects.",
+    "code": {
+      "example": "<template>\n  <div>\n    <button @click=\"showModal = true\">Open Modal</button>\n    \n    <Teleport to=\"body\">\n      <div v-if=\"showModal\" class=\"modal\">\n        <div class=\"modal-content\">\n          <h2>Modal Title</h2>\n          <p>Modal content here</p>\n          <button @click=\"showModal = false\">Close</button>\n        </div>\n      </div>\n    </Teleport>\n  </div>\n</template>\n\n<script setup>\nimport { ref } from 'vue'\nconst showModal = ref(false)\n</script>",
+      "explanation": "This example produces: Modal component rendered outside component hierarchy using Teleport\n\nThe code demonstrates practical implementation techniques and shows how the concepts work in real scenarios. Pay attention to the structure and patterns used, as these represent industry best practices.",
+      "language": "javascript"
+    },
+    "pitfalls": [
+      {
+        "mistake": "Not following best practices",
+        "solution": "Review documentation and community guidelines",
+        "severity": "medium"
+      },
+      {
+        "mistake": "Skipping error handling",
+        "solution": "Implement proper error boundaries and validation",
+        "severity": "low"
+      }
+    ],
+    "exercises": [
+      {
+        "title": "Practice: Teleport and Portal Patterns",
+        "description": "Apply the concepts from this lesson on Teleport",
+        "checkpoints": [
+          "Understand the core concept",
+          "Implement the example code",
+          "Experiment with variations"
+        ]
+      }
+    ],
+    "next": [],
+    "estimatedMinutes": 25,
+    "difficulty": "Intermediate",
+    "tags": [
+      "Teleport",
+      "vue"
+    ],
+    "legacy": {
+      "originalId": 11,
+      "originalTopic": "Teleport",
+      "migrated": "2025-10-01T06:41:13.488Z"
+    },
+    "lastUpdated": "2025-10-01T06:41:13.488Z",
+    "version": "1.0.0"
+  },
+  {
+    "id": "vue-advanced-lesson-12",
+    "moduleSlug": "vue-advanced",
+    "title": "Custom Directives and Plugins",
+    "order": 12,
+    "objectives": [
+      "Implement practical solutions",
+      "Build foundational understanding"
+    ],
+    "intro": "Welcome to this comprehensive lesson on Advanced.\n\nLearn how to create custom directives and plugins to extend Vue functionality.\n\nThroughout this lesson, you'll gain hands-on experience with practical implementations and real-world scenarios. We'll explore both the theoretical foundations and practical applications, ensuring you can immediately apply what you learn.\n\nThis lesson is designed to build upon previous concepts while introducing new techniques that will enhance your development skills. By the end, you'll have a solid understanding of the key principles and be ready to tackle more advanced topics.\n\nThe knowledge gained here will serve as a foundation for subsequent lessons and real-world projects.",
+    "code": {
+      "example": "// Custom directive\nconst vFocus = {\n  mounted(el) {\n    el.focus()\n  }\n}\n\n// Plugin\nconst myPlugin = {\n  install(app, options) {\n    app.config.globalProperties.$translate = (key) => {\n      return key.split('.').reduce((o, i) => o[i], options)\n    }\n    \n    app.provide('i18n', options)\n    \n    app.directive('focus', vFocus)\n  }\n}\n\n// Usage\napp.use(myPlugin, { hello: 'Bonjour!' })\n\n// In component\n<input v-focus />\n<p>{{ $translate('hello') }}</p>",
+      "explanation": "This example produces: Custom functionality with directives and plugins extending Vue capabilities\n\nThe code demonstrates practical implementation techniques and shows how the concepts work in real scenarios. Pay attention to the structure and patterns used, as these represent industry best practices.",
+      "language": "javascript"
+    },
+    "pitfalls": [
+      {
+        "mistake": "Not following best practices",
+        "solution": "Review documentation and community guidelines",
+        "severity": "medium"
+      },
+      {
+        "mistake": "Skipping error handling",
+        "solution": "Implement proper error boundaries and validation",
+        "severity": "low"
+      }
+    ],
+    "exercises": [
+      {
+        "title": "Practice: Custom Directives and Plugins",
+        "description": "Apply the concepts from this lesson on Advanced",
+        "checkpoints": [
+          "Understand the core concept",
+          "Implement the example code",
+          "Experiment with variations"
+        ]
+      }
+    ],
+    "next": [],
+    "estimatedMinutes": 25,
+    "difficulty": "Advanced",
+    "tags": [
+      "Advanced",
+      "vue"
+    ],
+    "legacy": {
+      "originalId": 12,
+      "originalTopic": "Advanced",
+      "migrated": "2025-10-01T06:41:13.488Z"
+    },
+    "lastUpdated": "2025-10-01T06:41:13.488Z",
+    "version": "1.0.0"
+  },
+  {
+    "id": "vue-advanced-lesson-13",
+    "moduleSlug": "vue-advanced",
+    "title": "Advanced Component Patterns",
+    "order": 13,
+    "objectives": [
+      "Master advanced component composition patterns",
+      "Implement render functions and JSX",
+      "Create flexible component APIs with provide/inject"
+    ],
+    "intro": "Advanced component patterns in Vue enable the creation of highly flexible and reusable components that can adapt to various use cases while maintaining clean APIs. This lesson explores sophisticated techniques that go beyond basic component composition to create powerful, developer-friendly component libraries.\n\nYou'll learn to implement render functions for maximum flexibility, leverage provide/inject for dependency injection, and create component patterns that solve complex UI challenges. These patterns are essential for building design systems, component libraries, and applications with complex component hierarchies.\n\nWe'll explore practical examples including compound components, renderless components, and higher-order components that demonstrate real-world applications of these patterns. You'll also learn when to use each pattern and how to balance flexibility with simplicity.\n\nMastering these advanced patterns will enable you to create components that are not only reusable but also maintainable and easy to work with, even as your application grows in complexity.",
+    "code": {
+      "example": "// Render function component\nconst DynamicHeading = {\n  props: ['level', 'text'],\n  render() {\n    const tag = `h${this.level}`\n    return h(tag, {\n      class: `heading-${this.level}`\n    }, this.text)\n  }\n}\n\n// Renderless component pattern\nconst DataProvider = {\n  props: ['url'],\n  setup(props, { slots }) {\n    const data = ref(null)\n    const loading = ref(false)\n    const error = ref(null)\n\n    const fetchData = async () => {\n      loading.value = true\n      try {\n        const response = await fetch(props.url)\n        data.value = await response.json()\n      } catch (err) {\n        error.value = err.message\n      } finally {\n        loading.value = false\n      }\n    }\n\n    onMounted(fetchData)\n\n    return () => slots.default({\n      data: data.value,\n      loading: loading.value,\n      error: error.value,\n      refetch: fetchData\n    })\n  }\n}\n\n// Provide/Inject pattern for theme\nconst ThemeProvider = {\n  setup(props, { slots }) {\n    const theme = reactive({\n      primaryColor: '#007bff',\n      secondaryColor: '#6c757d',\n      spacing: {\n        sm: '0.5rem',\n        md: '1rem',\n        lg: '1.5rem'\n      }\n    })\n\n    provide('theme', theme)\n\n    return () => slots.default()\n  }\n}\n\n// Consumer component\nconst ThemedButton = {\n  setup() {\n    const theme = inject('theme')\n\n    const buttonStyle = computed(() => ({\n      backgroundColor: theme.primaryColor,\n      padding: theme.spacing.md,\n      border: 'none',\n      borderRadius: '4px',\n      color: 'white',\n      cursor: 'pointer'\n    }))\n\n    return { buttonStyle }\n  },\n  template: `\n    <button :style=\"buttonStyle\">\n      <slot></slot>\n    </button>\n  `\n}\n\n// Compound component pattern\nconst Card = {\n  name: 'Card',\n  template: `\n    <div class=\"card\">\n      <slot></slot>\n    </div>\n  `\n}\n\nconst CardHeader = {\n  name: 'CardHeader',\n  template: `\n    <div class=\"card-header\">\n      <slot></slot>\n    </div>\n  `\n}\n\nconst CardBody = {\n  name: 'CardBody',\n  template: `\n    <div class=\"card-body\">\n      <slot></slot>\n    </div>\n  `\n}\n\nconst CardFooter = {\n  name: 'CardFooter',\n  template: `\n    <div class=\"card-footer\">\n      <slot></slot>\n    </div>\n  `\n}\n\n// Higher-order component for loading state\nconst withLoading = (WrappedComponent) => {\n  return {\n    props: ['loading', ...Object.keys(WrappedComponent.props || {})],\n    setup(props, context) {\n      const wrappedProps = computed(() => {\n        const { loading, ...rest } = props\n        return rest\n      })\n\n      return () => {\n        if (props.loading) {\n          return h('div', { class: 'loading-spinner' }, 'Loading...')\n        }\n        return h(WrappedComponent, wrappedProps.value, context.slots)\n      }\n    }\n  }\n}\n\n// Usage examples:\n// <theme-provider>\n//   <themed-button>Click me</themed-button>\n// </theme-provider>\n\n// <data-provider url=\"/api/users\" v-slot=\"{ data, loading, error }\">\n//   <div v-if=\"loading\">Loading...</div>\n//   <div v-else-if=\"error\">Error: {{ error }}</div>\n//   <ul v-else>\n//     <li v-for=\"user in data\" :key=\"user.id\">{{ user.name }}</li>\n//   </ul>\n// </data-provider>\n\n// <card>\n//   <card-header>Card Title</card-header>\n//   <card-body>Card content goes here</card-body>\n//   <card-footer>Card footer</card-footer>\n// </card>",
+      "explanation": "This example demonstrates advanced Vue component patterns including render functions for dynamic HTML generation, renderless components for logic reuse, provide/inject for dependency injection, compound components for flexible APIs, and higher-order components for cross-cutting concerns like loading states.",
+      "language": "javascript"
+    },
+    "pitfalls": [
+      {
+        "mistake": "Overusing render functions when templates would suffice",
+        "solution": "Use render functions only when you need dynamic tag names or complex conditional rendering",
+        "severity": "medium"
+      },
+      {
+        "mistake": "Creating overly complex component APIs",
+        "solution": "Balance flexibility with simplicity, provide sensible defaults",
+        "severity": "medium"
+      },
+      {
+        "mistake": "Not properly typing provide/inject with TypeScript",
+        "solution": "Use injection keys and type definitions for better type safety",
+        "severity": "low"
+      }
+    ],
+    "exercises": [
+      {
+        "title": "Build a Flexible Data Table Component",
+        "description": "Create a reusable data table using advanced patterns including compound components for header/body/footer, renderless logic for sorting/filtering, and provide/inject for configuration",
+        "checkpoints": [
+          "Implement compound component pattern for table structure",
+          "Create renderless component for data logic",
+          "Use provide/inject for table configuration",
+          "Add render function for dynamic cell rendering"
+        ]
+      }
+    ],
+    "next": ["vue-advanced-lesson-14"],
+    "estimatedMinutes": 45,
+    "difficulty": "Advanced",
+    "tags": [
+      "Advanced Patterns",
+      "Render Functions",
+      "Provide/Inject",
+      "Component Design",
+      "vue"
+    ],
+    "lastUpdated": "2025-01-27T10:15:00.000Z",
+    "version": "1.0.0"
+  },
+  {
+    "id": "vue-advanced-lesson-14",
+    "moduleSlug": "vue-advanced",
+    "title": "Vue 3 Ecosystem and Production Deployment",
+    "order": 14,
+    "objectives": [
+      "Master Vue 3 ecosystem tools and libraries",
+      "Implement production-ready build and deployment strategies",
+      "Optimize applications for performance and SEO"
+    ],
+    "intro": "Building production-ready Vue applications requires mastery of the Vue ecosystem and deployment best practices. This comprehensive lesson covers the essential tools, libraries, and strategies needed to take your Vue applications from development to production successfully.\n\nYou'll explore the modern Vue ecosystem including Vite for lightning-fast development and building, Vue Router for sophisticated routing needs, Pinia for state management, and various UI libraries. We'll also cover testing strategies, performance optimization techniques, and SEO considerations for Vue applications.\n\nDeployment strategies vary significantly based on your application needs, from static site generation with Nuxt.js to server-side rendering and traditional SPA deployments. You'll learn to choose the right approach and implement it effectively with proper monitoring and error handling.\n\nBy the end of this lesson, you'll have the knowledge to architect, build, and deploy robust Vue applications that perform well in production environments and provide excellent user experiences across different devices and network conditions.",
+    "code": {
+      "example": "// vite.config.js - Production optimization\nimport { defineConfig } from 'vite'\nimport vue from '@vitejs/plugin-vue'\nimport { resolve } from 'path'\n\nexport default defineConfig({\n  plugins: [vue()],\n  resolve: {\n    alias: {\n      '@': resolve(__dirname, 'src')\n    }\n  },\n  build: {\n    target: 'esnext',\n    minify: 'terser',\n    terserOptions: {\n      compress: {\n        drop_console: true,\n        drop_debugger: true\n      }\n    },\n    rollupOptions: {\n      output: {\n        manualChunks: {\n          'vendor': ['vue', 'vue-router', 'pinia'],\n          'ui': ['@headlessui/vue', '@heroicons/vue']\n        }\n      }\n    },\n    chunkSizeWarningLimit: 1000\n  },\n  server: {\n    port: 3000,\n    proxy: {\n      '/api': {\n        target: 'http://localhost:8000',\n        changeOrigin: true\n      }\n    }\n  }\n})\n\n// Production-ready router configuration\n// router/index.js\nimport { createRouter, createWebHistory } from 'vue-router'\nimport { useAuthStore } from '@/stores/auth'\n\nconst router = createRouter({\n  history: createWebHistory(import.meta.env.BASE_URL),\n  routes: [\n    {\n      path: '/',\n      name: 'Home',\n      component: () => import('@/views/HomeView.vue'),\n      meta: { requiresAuth: false }\n    },\n    {\n      path: '/dashboard',\n      name: 'Dashboard',\n      component: () => import('@/views/DashboardView.vue'),\n      meta: { requiresAuth: true }\n    },\n    {\n      path: '/login',\n      name: 'Login',\n      component: () => import('@/views/LoginView.vue'),\n      meta: { guest: true }\n    },\n    {\n      path: '/:pathMatch(.*)*',\n      name: 'NotFound',\n      component: () => import('@/views/NotFoundView.vue')\n    }\n  ],\n  scrollBehavior(to, from, savedPosition) {\n    if (savedPosition) {\n      return savedPosition\n    } else {\n      return { top: 0 }\n    }\n  }\n})\n\n// Global navigation guard\nrouter.beforeEach(async (to, from, next) => {\n  const authStore = useAuthStore()\n  \n  // Check if route requires authentication\n  if (to.meta.requiresAuth && !authStore.isAuthenticated) {\n    next({ name: 'Login', query: { redirect: to.fullPath } })\n    return\n  }\n  \n  // Redirect authenticated users away from guest-only pages\n  if (to.meta.guest && authStore.isAuthenticated) {\n    next({ name: 'Dashboard' })\n    return\n  }\n  \n  next()\n})\n\nexport default router\n\n// Production-ready Pinia store\n// stores/auth.js\nimport { defineStore } from 'pinia'\nimport { ref, computed } from 'vue'\nimport api from '@/services/api'\n\nexport const useAuthStore = defineStore('auth', () => {\n  const user = ref(null)\n  const token = ref(localStorage.getItem('token'))\n  const isLoading = ref(false)\n  const error = ref(null)\n\n  const isAuthenticated = computed(() => !!token.value && !!user.value)\n\n  const login = async (credentials) => {\n    isLoading.value = true\n    error.value = null\n    \n    try {\n      const response = await api.post('/auth/login', credentials)\n      const { token: authToken, user: userData } = response.data\n      \n      token.value = authToken\n      user.value = userData\n      localStorage.setItem('token', authToken)\n      \n      return { success: true }\n    } catch (err) {\n      error.value = err.response?.data?.message || 'Login failed'\n      return { success: false, error: error.value }\n    } finally {\n      isLoading.value = false\n    }\n  }\n\n  const logout = () => {\n    user.value = null\n    token.value = null\n    localStorage.removeItem('token')\n  }\n\n  const checkAuth = async () => {\n    if (!token.value) return\n\n    try {\n      const response = await api.get('/auth/me')\n      user.value = response.data\n    } catch (err) {\n      logout()\n    }\n  }\n\n  return {\n    user: readonly(user),\n    token: readonly(token),\n    isLoading: readonly(isLoading),\n    error: readonly(error),\n    isAuthenticated,\n    login,\n    logout,\n    checkAuth\n  }\n})\n\n// Error boundary composable\n// composables/useErrorHandler.js\nimport { ref, onErrorCaptured } from 'vue'\n\nexport function useErrorHandler() {\n  const error = ref(null)\n  const isError = ref(false)\n\n  const handleError = (err) => {\n    error.value = err\n    isError.value = true\n    \n    // Log to external service\n    if (import.meta.env.PROD) {\n      console.error('Production error:', err)\n      // Send to error tracking service\n      // Sentry.captureException(err)\n    }\n  }\n\n  const clearError = () => {\n    error.value = null\n    isError.value = false\n  }\n\n  onErrorCaptured((err) => {\n    handleError(err)\n    return false\n  })\n\n  return {\n    error: readonly(error),\n    isError: readonly(isError),\n    handleError,\n    clearError\n  }\n}\n\n// Docker deployment configuration\n# Dockerfile\nFROM node:18-alpine AS build\n\nWORKDIR /app\nCOPY package*.json ./\nRUN npm ci --only=production\n\nCOPY . .\nRUN npm run build\n\nFROM nginx:alpine AS production\nCOPY --from=build /app/dist /usr/share/nginx/html\nCOPY nginx.conf /etc/nginx/nginx.conf\n\nEXPOSE 80\nCMD [\"nginx\", \"-g\", \"daemon off;\"]",
+      "explanation": "This comprehensive example shows production-ready Vue 3 application setup including Vite configuration for optimized builds, router with authentication guards, Pinia store with error handling, error boundary composable, and Docker deployment configuration for scalable production deployment.",
+      "language": "javascript"
+    },
+    "pitfalls": [
+      {
+        "mistake": "Not implementing proper error boundaries",
+        "solution": "Use error boundaries and global error handlers to gracefully handle runtime errors",
+        "severity": "high"
+      },
+      {
+        "mistake": "Ignoring bundle size optimization",
+        "solution": "Implement code splitting, tree shaking, and analyze bundle sizes regularly",
+        "severity": "medium"
+      },
+      {
+        "mistake": "Not setting up proper monitoring and logging",
+        "solution": "Implement error tracking, performance monitoring, and user analytics",
+        "severity": "medium"
+      }
+    ],
+    "exercises": [
+      {
+        "title": "Deploy a Production-Ready Vue Application",
+        "description": "Create a complete Vue application with authentication, error handling, performance optimization, and deploy it using modern CI/CD practices",
+        "checkpoints": [
+          "Set up Vite with production optimizations",
+          "Implement authentication with Pinia",
+          "Add error boundaries and monitoring",
+          "Configure Docker deployment with Nginx",
+          "Set up CI/CD pipeline for automated deployment"
+        ]
+      }
+    ],
+    "next": [],
+    "estimatedMinutes": 50,
+    "difficulty": "Advanced",
+    "tags": [
+      "Ecosystem",
+      "Deployment",
+      "Production",
+      "Vite",
+      "Performance",
+      "vue"
+    ],
+    "lastUpdated": "2025-01-27T10:15:00.000Z",
+    "version": "1.0.0"
+  }
+]

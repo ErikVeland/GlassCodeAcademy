@@ -1,0 +1,29 @@
+{
+  "module": "security-fundamentals",
+  "sources": [
+    {
+      "title": "OWASP Top Ten",
+      "url": "https://owasp.org/www-project-top-ten/"
+    },
+    {
+      "title": "OWASP Cheat Sheet Series",
+      "url": "https://cheatsheetseries.owasp.org/"
+    },
+    {
+      "title": "NIST Cybersecurity Framework",
+      "url": "https://www.nist.gov/cyberframework"
+    },
+    {
+      "title": "Web Security Guidelines",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/Security"
+    },
+    {
+      "title": "The Web Application Hacker's Handbook",
+      "url": "https://www.amazon.com/Web-Application-Hackers-Handbook-Exploiting/dp/1118026470"
+    },
+    {
+      "title": "Security Headers Documentation",
+      "url": "https://securityheaders.com/"
+    }
+  ]
+}

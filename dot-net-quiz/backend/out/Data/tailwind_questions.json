@@ -1,0 +1,104 @@
+[
+  {
+    "id": 1,
+    "topic": "Basics",
+    "type": "multiple-choice",
+    "question": "What is Tailwind CSS?",
+    "choices": [
+      "A utility-first CSS framework",
+      "A component-based CSS framework",
+      "A CSS preprocessor",
+      "A JavaScript framework"
+    ],
+    "correctAnswer": 0,
+    "explanation": "Tailwind CSS is a utility-first CSS framework that provides low-level utility classes to build designs without writing custom CSS."
+  },
+  {
+    "id": 2,
+    "topic": "Basics",
+    "type": "multiple-choice",
+    "question": "How do you add padding to an element in Tailwind CSS?",
+    "choices": [
+      "p-4",
+      "m-4",
+      "w-4",
+      "h-4"
+    ],
+    "correctAnswer": 0,
+    "explanation": "In Tailwind, p-* classes are used for padding. The number represents the spacing scale where p-4 equals 1rem (16px)."
+  },
+  {
+    "id": 3,
+    "topic": "Layout",
+    "type": "open-ended",
+    "question": "How does Tailwind's mobile-first responsive design approach work?",
+    "choices": null,
+    "correctAnswer": null,
+    "explanation": "Tailwind uses a mobile-first approach where unprefixed classes apply to all screen sizes, and responsive prefixes (sm:, md:, lg:, xl:) apply to specific breakpoints and larger screens. This means styles stack as the screen size increases."
+  },
+  {
+    "id": 4,
+    "topic": "Layout",
+    "type": "multiple-choice",
+    "question": "Which class is used to create a flex container in Tailwind?",
+    "choices": [
+      "flex",
+      "grid",
+      "block",
+      "inline"
+    ],
+    "correctAnswer": 0,
+    "explanation": "The flex class creates a flex container in Tailwind CSS, enabling flexbox layout for its children."
+  },
+  {
+    "id": 5,
+    "topic": "Customization",
+    "type": "multiple-choice",
+    "question": "Where do you customize Tailwind's default theme?",
+    "choices": [
+      "tailwind.config.js",
+      "package.json",
+      "postcss.config.js",
+      "styles.css"
+    ],
+    "correctAnswer": 0,
+    "explanation": "Tailwind's configuration file (tailwind.config.js) is where you customize the default theme, add plugins, and configure other options."
+  },
+  {
+    "id": 6,
+    "topic": "Utilities",
+    "type": "multiple-choice",
+    "question": "How do you make text bold in Tailwind CSS?",
+    "choices": [
+      "font-bold",
+      "text-bold",
+      "bold",
+      "font-weight-bold"
+    ],
+    "correctAnswer": 0,
+    "explanation": "The font-bold class makes text bold in Tailwind CSS. Tailwind uses the font-* naming convention for font weight utilities."
+  },
+  {
+    "id": 7,
+    "topic": "Responsive",
+    "type": "open-ended",
+    "question": "What are the default breakpoints in Tailwind CSS?",
+    "choices": null,
+    "correctAnswer": null,
+    "explanation": "Tailwind's default breakpoints are: sm (640px), md (768px), lg (1024px), xl (1280px), and 2xl (1536px). These can be customized in the tailwind.config.js file."
+  },
+  {
+    "id": 8,
+    "topic": "Colors",
+    "type": "multiple-choice",
+    "question": "How do you set a background color to blue-500 in Tailwind?",
+    "choices": [
+      "bg-blue-500",
+      "background-blue-500",
+      "color-blue-500",
+      "blue-500-bg"
+    ],
+    "correctAnswer": 0,
+    "explanation": "In Tailwind, background colors are set using the bg-* naming convention, so bg-blue-500 sets the background color to the 500 shade of blue."
+  }
+]

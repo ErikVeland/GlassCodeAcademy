@@ -1,0 +1,84 @@
+// Fullstack Academy Design System Mixins
+
+// Breakpoint mixins
+@mixin breakpoint($breakpoint) {
+  @if $breakpoint == sm {
+    @media (min-width: $breakpoint-sm) {
+      @content;
+    }
+  } @else if $breakpoint == md {
+    @media (min-width: $breakpoint-md) {
+      @content;
+    }
+  } @else if $breakpoint == lg {
+    @media (min-width: $breakpoint-lg) {
+      @content;
+    }
+  } @else if $breakpoint == xl {
+    @media (min-width: $breakpoint-xl) {
+      @content;
+    }
+  } @else if $breakpoint == 2xl {
+    @media (min-width: $breakpoint-2xl) {
+      @content;
+    }
+  }
+}
+
+// Dark mode mixin
+@mixin dark-mode {
+  @media (prefers-color-scheme: dark) {
+    @content;
+  }
+  
+  .dark & {
+    @content;
+  }
+}
+
+// Button mixin
+@mixin button-base {
+  display: inline-block;
+  font-weight: $font-weight-medium;
+  text-align: center;
+  vertical-align: middle;
+  user-select: none;
+  border: 1px solid transparent;
+  padding: $spacing-2 $spacing-4;
+  font-size: $font-size-base;
+  line-height: 1.5;
+  border-radius: $border-radius-md;
+  transition: all 0.2s;
+  cursor: pointer;
+}
+
+// Card mixin
+@mixin card-base {
+  background: $bg-primary;
+  border-radius: $border-radius-lg;
+  box-shadow: $shadow-base;
+  padding: $spacing-6;
+  transition: box-shadow 0.2s;
+}
+
+// Form input mixin
+@mixin form-input-base {
+  width: 100%;
+  border: 1px solid $border-color;
+  border-radius: $border-radius-md;
+  padding: $spacing-2 $spacing-3;
+  transition: border-color 0.2s;
+  
+  &:focus {
+    outline: none;
+    border-color: $color-primary;
+    box-shadow: 0 0 0 3px rgba($color-primary, 0.2);
+  }
+}
+
+// Alert mixin
+@mixin alert-base {
+  padding: $spacing-4;
+  border-radius: $border-radius-md;
+  margin-bottom: $spacing-4;
+}

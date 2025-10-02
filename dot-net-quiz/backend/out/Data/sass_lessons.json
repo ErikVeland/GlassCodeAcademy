@@ -1,0 +1,42 @@
+[
+  {
+    "id": 1,
+    "topic": "Basics",
+    "title": "Introduction to SASS",
+    "description": "Learn the fundamentals of SASS and how it extends CSS with powerful features.",
+    "codeExample": "// SCSS syntax\n$font-stack: Helvetica, sans-serif;\n$primary-color: #333;\n\nbody {\n  font: 100% $font-stack;\n  color: $primary-color;\n}\n\n// Compiled CSS output\nbody {\n  font: 100% Helvetica, sans-serif;\n  color: #333;\n}",
+    "output": "body {\n  font: 100% Helvetica, sans-serif;\n  color: #333;\n}"
+  },
+  {
+    "id": 2,
+    "topic": "Basics",
+    "title": "Variables in SASS",
+    "description": "Learn how to use variables to store and reuse values throughout your stylesheet.",
+    "codeExample": "// Defining variables\n$primary-color: #3498db;\n$secondary-color: #2ecc71;\n$font-size-large: 1.5rem;\n$border-radius: 4px;\n\n// Using variables\n.button {\n  background-color: $primary-color;\n  color: white;\n  font-size: $font-size-large;\n  border-radius: $border-radius;\n  padding: 10px 20px;\n  \n  &:hover {\n    background-color: $secondary-color;\n  }\n}",
+    "output": ".button {\n  background-color: #3498db;\n  color: white;\n  font-size: 1.5rem;\n  border-radius: 4px;\n  padding: 10px 20px;\n}\n\n.button:hover {\n  background-color: #2ecc71;\n}"
+  },
+  {
+    "id": 3,
+    "topic": "Nesting",
+    "title": "Nesting in SASS",
+    "description": "Learn how to nest selectors and properties to write more organized CSS.",
+    "codeExample": "// SASS nesting\nnav {\n  ul {\n    margin: 0;\n    padding: 0;\n    list-style: none;\n    \n    li { \n      display: inline-block;\n      \n      a {\n        display: block;\n        padding: 6px 12px;\n        text-decoration: none;\n      }\n    }\n  }\n}\n\n// Compiled CSS\nnav ul {\n  margin: 0;\n  padding: 0;\n  list-style: none;\n}\nnav ul li {\n  display: inline-block;\n}\nnav ul li a {\n  display: block;\n  padding: 6px 12px;\n  text-decoration: none;\n}",
+    "output": "nav ul {\n  margin: 0;\n  padding: 0;\n  list-style: none;\n}\nnav ul li {\n  display: inline-block;\n}\nnav ul li a {\n  display: block;\n  padding: 6px 12px;\n  text-decoration: none;\n}"
+  },
+  {
+    "id": 4,
+    "topic": "Mixins",
+    "title": "Creating and Using Mixins",
+    "description": "Learn how to create reusable blocks of CSS with mixins in SASS.",
+    "codeExample": "// Defining a mixin\n@mixin button-style($bg-color, $text-color: white) {\n  background-color: $bg-color;\n  color: $text-color;\n  padding: 10px 15px;\n  border: none;\n  border-radius: 4px;\n  cursor: pointer;\n  \n  &:hover {\n    background-color: darken($bg-color, 10%);\n  }\n}\n\n// Using mixins\n.primary-button {\n  @include button-style(#3498db);\n}\n\n.success-button {\n  @include button-style(#2ecc71, #333);\n}",
+    "output": ".primary-button {\n  background-color: #3498db;\n  color: white;\n  padding: 10px 15px;\n  border: none;\n  border-radius: 4px;\n  cursor: pointer;\n}\n\n.primary-button:hover {\n  background-color: #217dbb;\n}\n\n.success-button {\n  background-color: #2ecc71;\n  color: #333;\n  padding: 10px 15px;\n  border: none;\n  border-radius: 4px;\n  cursor: pointer;\n}\n\n.success-button:hover {\n  background-color: #25a25a;\n}"
+  },
+  {
+    "id": 5,
+    "topic": "Functions",
+    "title": "SASS Functions and Operations",
+    "description": "Learn how to use built-in functions and create custom functions in SASS.",
+    "codeExample": "// Built-in functions\n$base-color: #3498db;\n\n.card {\n  background-color: lighten($base-color, 20%);\n  border-color: darken($base-color, 15%);\n  font-size: 16px * 1.2;\n  width: 200px + 50px;\n}\n\n// Custom function\n@function calculate-rem($size) {\n  $rem-size: $size / 16px;\n  @return #{$rem-size}rem;\n}\n\n.text {\n  font-size: calculate-rem(18px);\n}",
+    "output": ".card {\n  background-color: #aed6f1;\n  border-color: #1d6fa5;\n  font-size: 19.2px;\n  width: 250px;\n}\n\n.text {\n  font-size: 1.125rem;\n}"
+  }
+]

@@ -1,0 +1,554 @@
+[
+  {
+    "id": "version-control-lesson-1",
+    "moduleSlug": "version-control",
+    "title": "Git Fundamentals and Setup",
+    "order": 1,
+    "objectives": [
+      "Understand what version control is and why it's essential",
+      "Install and configure Git with proper user settings",
+      "Learn basic Git terminology and concepts"
+    ],
+    "intro": "Version control is the foundation of modern software development, allowing developers to track changes, collaborate effectively, and maintain project history safely. Git is the most widely used version control system in the industry.\n\nIn this lesson, you'll learn why version control is crucial for any development project, from solo work to large team collaborations. You'll understand how Git tracks file changes over time and enables multiple developers to work on the same codebase without conflicts.\n\nGit's distributed nature means every developer has a complete copy of the project history, making it robust and flexible. You'll discover how this differs from older centralized systems and why it's become the industry standard.\n\nProper Git configuration is essential for professional development workflows. You'll learn to set up your identity, configure helpful settings, and understand the basic Git workflow that you'll use throughout your development career.\n\nBy the end of this lesson, you'll have Git installed and configured correctly, understand fundamental concepts like repositories and commits, and be ready to start tracking your code changes professionally. This foundation is critical for all software development work.",
+    "code": {
+      "example": "# Git Installation and Configuration\n\n# Install Git (varies by operating system)\n# Windows: Download from git-scm.com\n# macOS: brew install git\n# Linux: sudo apt-get install git (Ubuntu/Debian)\n\n# Configure your identity (required for commits)\ngit config --global user.name \"Your Name\"\ngit config --global user.email \"your.email@example.com\"\n\n# Configure helpful settings\ngit config --global init.defaultBranch main\ngit config --global core.editor \"code --wait\"  # Use VS Code as editor\ngit config --global pull.rebase false  # Use merge strategy for pulls\n\n# Check your configuration\ngit config --list\n\n# Get help for any Git command\ngit help <command>\ngit <command> --help\n\n# Initialize a new Git repository\nmkdir my-project\ncd my-project\ngit init\n\n# Check repository status\ngit status\n\n# Create a simple README file\necho \"# My Project\" > README.md\n\n# Add file to staging area\ngit add README.md\n\n# Create your first commit\ngit commit -m \"Initial commit: Add README\"\n\n# View commit history\ngit log\ngit log --oneline  # Compact view\n\n# Check current branch\ngit branch\n\n# View repository status\ngit status",
+      "explanation": "This example shows the complete Git setup process from installation to first commit. Notice the global configuration settings that will apply to all your Git repositories, and the basic workflow of add, commit, and status checking.",
+      "language": "javascript"
+    },
+    "pitfalls": [
+      {
+        "mistake": "Not configuring user.name and user.email before first commit",
+        "solution": "Always configure your Git identity with 'git config --global user.name' and 'user.email'",
+        "severity": "high"
+      },
+      {
+        "mistake": "Using 'git add .' without checking what files are being added",
+        "solution": "Use 'git status' first to see changes, then add files selectively or use 'git add -A' intentionally",
+        "severity": "medium"
+      },
+      {
+        "mistake": "Working without a .gitignore file",
+        "solution": "Create a .gitignore file to exclude build files, dependencies, and sensitive information",
+        "severity": "medium"
+      }
+    ],
+    "exercises": [
+      {
+        "title": "Setup Your First Git Repository",
+        "description": "Create a complete Git repository with proper configuration and initial commit.",
+        "checkpoints": [
+          "Install Git and verify the installation with 'git --version'",
+          "Configure your global Git settings (name, email, default branch)",
+          "Initialize a new repository and create a README.md file",
+          "Make your first commit and view the project history"
+        ]
+      }
+    ],
+    "next": [],
+    "estimatedMinutes": 30,
+    "difficulty": "Beginner",
+    "tags": [
+      "Git",
+      "GitHub",
+      "Version Control"
+    ],
+    "lastUpdated": "2025-10-01T06:42:16.316Z",
+    "version": "1.0.0"
+  },
+  {
+    "id": "version-control-lesson-2",
+    "moduleSlug": "version-control",
+    "title": "Branching and Merging",
+    "order": 2,
+    "objectives": [
+      "Create and switch between Git branches effectively",
+      "Merge branches and resolve basic conflicts",
+      "Understand different branching strategies and workflows"
+    ],
+    "intro": "Branching is one of Git's most powerful features, allowing developers to work on different features simultaneously without interfering with each other's code. Understanding branching is essential for professional development workflows.\n\nIn this lesson, you'll learn how branches allow you to experiment with new features, fix bugs, or try different approaches while keeping your main codebase stable. Each branch represents an independent line of development that can be merged back when ready.\n\nMerging combines changes from different branches, and while Git handles most merges automatically, you'll learn to resolve conflicts when the same code is modified in different ways. This skill is crucial for team collaboration.\n\nYou'll explore different branching strategies used in the industry, from simple feature branches to more complex workflows like Git Flow. Understanding these patterns helps you choose the right approach for your projects.\n\nBy mastering branching and merging, you'll be able to work confidently on multiple features simultaneously, collaborate effectively with team members, and maintain a clean, organized project history that reflects your development process.",
+    "code": {
+      "example": "# Git Branching and Merging Workflow\n\n# View all branches (local and remote)\ngit branch -a\n\n# Create a new branch for feature development\ngit branch feature/user-authentication\n# OR create and switch in one command\ngit checkout -b feature/user-authentication\n# OR using newer syntax\ngit switch -c feature/user-authentication\n\n# Switch between branches\ngit checkout main\ngit switch feature/user-authentication\n\n# Make changes and commit on feature branch\necho \"function login() { /* TODO */ }\" > auth.js\ngit add auth.js\ngit commit -m \"Add basic authentication function\"\n\n# Switch back to main and create another branch\ngit switch main\ngit switch -c feature/user-profile\n\n# Make different changes\necho \"function getUserProfile() { /* TODO */ }\" > profile.js\ngit add profile.js\ngit commit -m \"Add user profile function\"\n\n# Merge feature branch into main\ngit switch main\ngit merge feature/user-authentication\n\n# If there's a merge conflict, you'll see something like:\n# <<<<<<< HEAD\n# Your changes\n# =======\n# Incoming changes\n# >>>>>>> feature/user-authentication\n\n# Resolve conflicts by editing the file, then:\ngit add <conflicted-file>\ngit commit -m \"Resolve merge conflict\"\n\n# Delete merged branch (optional)\ngit branch -d feature/user-authentication\n\n# View branch history with graph\ngit log --oneline --graph --all\n\n# Create a merge commit even for fast-forward merges\ngit merge --no-ff feature/user-profile\n\n# Rebase instead of merge (alternative workflow)\ngit switch feature/user-profile\ngit rebase main\ngit switch main\ngit merge feature/user-profile  # This will be fast-forward\n\n# Undo a merge (if needed)\ngit reset --hard HEAD~1\n\n# View differences between branches\ngit diff main..feature/user-profile",
+      "explanation": "This example demonstrates the complete branching workflow including creating branches, making commits, merging, and handling conflicts. Notice the different merge strategies and how to maintain a clean project history.",
+      "language": "javascript"
+    },
+    "pitfalls": [
+      {
+        "mistake": "Working directly on the main branch for all changes",
+        "solution": "Create feature branches for new work and keep main stable and deployable",
+        "severity": "high"
+      },
+      {
+        "mistake": "Force pushing to shared branches",
+        "solution": "Never use 'git push --force' on branches that others are working on",
+        "severity": "high"
+      },
+      {
+        "mistake": "Not testing merged code before pushing",
+        "solution": "Always test the merged result before pushing to ensure functionality",
+        "severity": "medium"
+      }
+    ],
+    "exercises": [
+      {
+        "title": "Feature Branch Workflow",
+        "description": "Practice the complete feature branch workflow with merge conflict resolution.",
+        "checkpoints": [
+          "Create two feature branches with conflicting changes to the same file",
+          "Merge the first branch successfully into main",
+          "Attempt to merge the second branch and resolve the conflict",
+          "View the project history with git log --graph to see the branch structure"
+        ]
+      }
+    ],
+    "next": [],
+    "estimatedMinutes": 30,
+    "difficulty": "Beginner",
+    "tags": [
+      "Git",
+      "GitHub",
+      "Version Control"
+    ],
+    "lastUpdated": "2025-10-01T06:42:16.316Z",
+    "version": "1.0.0"
+  },
+  {
+    "id": "version-control-lesson-3",
+    "moduleSlug": "version-control",
+    "title": "Getting Started",
+    "order": 3,
+    "objectives": [
+      "Apply advanced Git techniques",
+      "Optimize performance and efficiency",
+      "Integrate with external systems"
+    ],
+    "intro": "Welcome to Getting Started in the Version Control with Git module. \n\nThis lesson is part of the foundational tier, designed for beginner level learners. Throughout this lesson, you'll explore essential concepts and practical applications that form the foundation of modern devops development.\n\nGit workflows, branching, merging, and collaboration This lesson builds upon previous concepts while introducing new techniques that will enhance your understanding and practical skills.\n\nBy the end of this lesson, you'll have hands-on experience with Git and GitHub, along with best practices for implementing these technologies in real-world scenarios. The knowledge gained here will prepare you for more advanced topics in subsequent lessons.\n\nKey areas we'll cover include practical implementation techniques, common challenges developers face, and proven solutions that industry professionals use daily. This lesson balances theoretical understanding with practical application, ensuring you can immediately apply what you learn.",
+    "code": {
+      "example": "// Example Git implementation\n// TODO: Add specific code example for Version Control with Git\n\nfunction example() {\n    // Placeholder implementation\n    console.log('Version Control with Git example');\n}\n\nexport default example;",
+      "explanation": "This example demonstrates the key concepts covered in this lesson.",
+      "language": "javascript"
+    },
+    "pitfalls": [
+      {
+        "mistake": "Not following Git best practices",
+        "solution": "Review official documentation and established patterns for Git",
+        "severity": "medium"
+      },
+      {
+        "mistake": "Skipping error handling in implementation",
+        "solution": "Always implement proper error handling and validation",
+        "severity": "high"
+      },
+      {
+        "mistake": "Ignoring performance implications",
+        "solution": "Consider performance impact of your implementation choices",
+        "severity": "low"
+      }
+    ],
+    "exercises": [
+      {
+        "title": "Practice Getting Started",
+        "description": "Apply the concepts learned in this lesson through hands-on practice.",
+        "checkpoints": [
+          "Complete the basic implementation",
+          "Test your solution",
+          "Identify areas for improvement"
+        ]
+      }
+    ],
+    "next": [],
+    "estimatedMinutes": 30,
+    "difficulty": "Beginner",
+    "tags": [
+      "Git",
+      "GitHub",
+      "Version Control"
+    ],
+    "lastUpdated": "2025-10-01T06:42:16.316Z",
+    "version": "1.0.0"
+  },
+  {
+    "id": "version-control-lesson-4",
+    "moduleSlug": "version-control",
+    "title": "Core Fundamentals",
+    "order": 4,
+    "objectives": [
+      "Apply advanced Git techniques",
+      "Optimize performance and efficiency",
+      "Integrate with external systems"
+    ],
+    "intro": "Welcome to Core Fundamentals in the Version Control with Git module. \n\nThis lesson is part of the foundational tier, designed for beginner level learners. Throughout this lesson, you'll explore essential concepts and practical applications that form the foundation of modern devops development.\n\nGit workflows, branching, merging, and collaboration This lesson builds upon previous concepts while introducing new techniques that will enhance your understanding and practical skills.\n\nBy the end of this lesson, you'll have hands-on experience with Git and GitHub, along with best practices for implementing these technologies in real-world scenarios. The knowledge gained here will prepare you for more advanced topics in subsequent lessons.\n\nKey areas we'll cover include practical implementation techniques, common challenges developers face, and proven solutions that industry professionals use daily. This lesson balances theoretical understanding with practical application, ensuring you can immediately apply what you learn.",
+    "code": {
+      "example": "// Example Git implementation\n// TODO: Add specific code example for Version Control with Git\n\nfunction example() {\n    // Placeholder implementation\n    console.log('Version Control with Git example');\n}\n\nexport default example;",
+      "explanation": "This example demonstrates the key concepts covered in this lesson.",
+      "language": "javascript"
+    },
+    "pitfalls": [
+      {
+        "mistake": "Not following Git best practices",
+        "solution": "Review official documentation and established patterns for Git",
+        "severity": "medium"
+      },
+      {
+        "mistake": "Skipping error handling in implementation",
+        "solution": "Always implement proper error handling and validation",
+        "severity": "high"
+      },
+      {
+        "mistake": "Ignoring performance implications",
+        "solution": "Consider performance impact of your implementation choices",
+        "severity": "low"
+      }
+    ],
+    "exercises": [
+      {
+        "title": "Practice Core Fundamentals",
+        "description": "Apply the concepts learned in this lesson through hands-on practice.",
+        "checkpoints": [
+          "Complete the basic implementation",
+          "Test your solution",
+          "Identify areas for improvement"
+        ]
+      }
+    ],
+    "next": [],
+    "estimatedMinutes": 30,
+    "difficulty": "Beginner",
+    "tags": [
+      "Git",
+      "GitHub",
+      "Version Control"
+    ],
+    "lastUpdated": "2025-10-01T06:42:16.316Z",
+    "version": "1.0.0"
+  },
+  {
+    "id": "version-control-lesson-5",
+    "moduleSlug": "version-control",
+    "title": "Essential Patterns",
+    "order": 5,
+    "objectives": [
+      "Apply advanced Git techniques",
+      "Optimize performance and efficiency",
+      "Integrate with external systems"
+    ],
+    "intro": "Welcome to Essential Patterns in the Version Control with Git module. \n\nThis lesson is part of the foundational tier, designed for beginner level learners. Throughout this lesson, you'll explore essential concepts and practical applications that form the foundation of modern devops development.\n\nGit workflows, branching, merging, and collaboration This lesson builds upon previous concepts while introducing new techniques that will enhance your understanding and practical skills.\n\nBy the end of this lesson, you'll have hands-on experience with Git and GitHub, along with best practices for implementing these technologies in real-world scenarios. The knowledge gained here will prepare you for more advanced topics in subsequent lessons.\n\nKey areas we'll cover include practical implementation techniques, common challenges developers face, and proven solutions that industry professionals use daily. This lesson balances theoretical understanding with practical application, ensuring you can immediately apply what you learn.",
+    "code": {
+      "example": "// Example Git implementation\n// TODO: Add specific code example for Version Control with Git\n\nfunction example() {\n    // Placeholder implementation\n    console.log('Version Control with Git example');\n}\n\nexport default example;",
+      "explanation": "This example demonstrates the key concepts covered in this lesson.",
+      "language": "javascript"
+    },
+    "pitfalls": [
+      {
+        "mistake": "Not following Git best practices",
+        "solution": "Review official documentation and established patterns for Git",
+        "severity": "medium"
+      },
+      {
+        "mistake": "Skipping error handling in implementation",
+        "solution": "Always implement proper error handling and validation",
+        "severity": "high"
+      },
+      {
+        "mistake": "Ignoring performance implications",
+        "solution": "Consider performance impact of your implementation choices",
+        "severity": "low"
+      }
+    ],
+    "exercises": [
+      {
+        "title": "Practice Essential Patterns",
+        "description": "Apply the concepts learned in this lesson through hands-on practice.",
+        "checkpoints": [
+          "Complete the basic implementation",
+          "Test your solution",
+          "Identify areas for improvement"
+        ]
+      }
+    ],
+    "next": [],
+    "estimatedMinutes": 30,
+    "difficulty": "Beginner",
+    "tags": [
+      "Git",
+      "GitHub",
+      "Version Control"
+    ],
+    "lastUpdated": "2025-10-01T06:42:16.316Z",
+    "version": "1.0.0"
+  },
+  {
+    "id": "version-control-lesson-6",
+    "moduleSlug": "version-control",
+    "title": "Building Blocks",
+    "order": 6,
+    "objectives": [
+      "Apply advanced Git techniques",
+      "Optimize performance and efficiency",
+      "Integrate with external systems"
+    ],
+    "intro": "Welcome to Building Blocks in the Version Control with Git module. \n\nThis lesson is part of the foundational tier, designed for beginner level learners. Throughout this lesson, you'll explore essential concepts and practical applications that form the foundation of modern devops development.\n\nGit workflows, branching, merging, and collaboration This lesson builds upon previous concepts while introducing new techniques that will enhance your understanding and practical skills.\n\nBy the end of this lesson, you'll have hands-on experience with Git and GitHub, along with best practices for implementing these technologies in real-world scenarios. The knowledge gained here will prepare you for more advanced topics in subsequent lessons.\n\nKey areas we'll cover include practical implementation techniques, common challenges developers face, and proven solutions that industry professionals use daily. This lesson balances theoretical understanding with practical application, ensuring you can immediately apply what you learn.",
+    "code": {
+      "example": "// Example Git implementation\n// TODO: Add specific code example for Version Control with Git\n\nfunction example() {\n    // Placeholder implementation\n    console.log('Version Control with Git example');\n}\n\nexport default example;",
+      "explanation": "This example demonstrates the key concepts covered in this lesson.",
+      "language": "javascript"
+    },
+    "pitfalls": [
+      {
+        "mistake": "Not following Git best practices",
+        "solution": "Review official documentation and established patterns for Git",
+        "severity": "medium"
+      },
+      {
+        "mistake": "Skipping error handling in implementation",
+        "solution": "Always implement proper error handling and validation",
+        "severity": "high"
+      },
+      {
+        "mistake": "Ignoring performance implications",
+        "solution": "Consider performance impact of your implementation choices",
+        "severity": "low"
+      }
+    ],
+    "exercises": [
+      {
+        "title": "Practice Building Blocks",
+        "description": "Apply the concepts learned in this lesson through hands-on practice.",
+        "checkpoints": [
+          "Complete the basic implementation",
+          "Test your solution",
+          "Identify areas for improvement"
+        ]
+      }
+    ],
+    "next": [],
+    "estimatedMinutes": 30,
+    "difficulty": "Beginner",
+    "tags": [
+      "Git",
+      "GitHub",
+      "Version Control"
+    ],
+    "lastUpdated": "2025-10-01T06:42:16.316Z",
+    "version": "1.0.0"
+  },
+  {
+    "id": "version-control-lesson-7",
+    "moduleSlug": "version-control",
+    "title": "First Steps",
+    "order": 7,
+    "objectives": [
+      "Apply advanced Git techniques",
+      "Optimize performance and efficiency",
+      "Integrate with external systems"
+    ],
+    "intro": "Welcome to First Steps in the Version Control with Git module. \n\nThis lesson is part of the foundational tier, designed for beginner level learners. Throughout this lesson, you'll explore essential concepts and practical applications that form the foundation of modern devops development.\n\nGit workflows, branching, merging, and collaboration This lesson builds upon previous concepts while introducing new techniques that will enhance your understanding and practical skills.\n\nBy the end of this lesson, you'll have hands-on experience with Git and GitHub, along with best practices for implementing these technologies in real-world scenarios. The knowledge gained here will prepare you for more advanced topics in subsequent lessons.\n\nKey areas we'll cover include practical implementation techniques, common challenges developers face, and proven solutions that industry professionals use daily. This lesson balances theoretical understanding with practical application, ensuring you can immediately apply what you learn.",
+    "code": {
+      "example": "// Example Git implementation\n// TODO: Add specific code example for Version Control with Git\n\nfunction example() {\n    // Placeholder implementation\n    console.log('Version Control with Git example');\n}\n\nexport default example;",
+      "explanation": "This example demonstrates the key concepts covered in this lesson.",
+      "language": "javascript"
+    },
+    "pitfalls": [
+      {
+        "mistake": "Not following Git best practices",
+        "solution": "Review official documentation and established patterns for Git",
+        "severity": "medium"
+      },
+      {
+        "mistake": "Skipping error handling in implementation",
+        "solution": "Always implement proper error handling and validation",
+        "severity": "high"
+      },
+      {
+        "mistake": "Ignoring performance implications",
+        "solution": "Consider performance impact of your implementation choices",
+        "severity": "low"
+      }
+    ],
+    "exercises": [
+      {
+        "title": "Practice First Steps",
+        "description": "Apply the concepts learned in this lesson through hands-on practice.",
+        "checkpoints": [
+          "Complete the basic implementation",
+          "Test your solution",
+          "Identify areas for improvement"
+        ]
+      }
+    ],
+    "next": [],
+    "estimatedMinutes": 30,
+    "difficulty": "Beginner",
+    "tags": [
+      "Git",
+      "GitHub",
+      "Version Control"
+    ],
+    "lastUpdated": "2025-10-01T06:42:16.316Z",
+    "version": "1.0.0"
+  },
+  {
+    "id": "version-control-lesson-8",
+    "moduleSlug": "version-control",
+    "title": "Understanding Basics",
+    "order": 8,
+    "objectives": [
+      "Apply advanced Git techniques",
+      "Optimize performance and efficiency",
+      "Integrate with external systems"
+    ],
+    "intro": "Welcome to Understanding Basics in the Version Control with Git module. \n\nThis lesson is part of the foundational tier, designed for beginner level learners. Throughout this lesson, you'll explore essential concepts and practical applications that form the foundation of modern devops development.\n\nGit workflows, branching, merging, and collaboration This lesson builds upon previous concepts while introducing new techniques that will enhance your understanding and practical skills.\n\nBy the end of this lesson, you'll have hands-on experience with Git and GitHub, along with best practices for implementing these technologies in real-world scenarios. The knowledge gained here will prepare you for more advanced topics in subsequent lessons.\n\nKey areas we'll cover include practical implementation techniques, common challenges developers face, and proven solutions that industry professionals use daily. This lesson balances theoretical understanding with practical application, ensuring you can immediately apply what you learn.",
+    "code": {
+      "example": "// Example Git implementation\n// TODO: Add specific code example for Version Control with Git\n\nfunction example() {\n    // Placeholder implementation\n    console.log('Version Control with Git example');\n}\n\nexport default example;",
+      "explanation": "This example demonstrates the key concepts covered in this lesson.",
+      "language": "javascript"
+    },
+    "pitfalls": [
+      {
+        "mistake": "Not following Git best practices",
+        "solution": "Review official documentation and established patterns for Git",
+        "severity": "medium"
+      },
+      {
+        "mistake": "Skipping error handling in implementation",
+        "solution": "Always implement proper error handling and validation",
+        "severity": "high"
+      },
+      {
+        "mistake": "Ignoring performance implications",
+        "solution": "Consider performance impact of your implementation choices",
+        "severity": "low"
+      }
+    ],
+    "exercises": [
+      {
+        "title": "Practice Understanding Basics",
+        "description": "Apply the concepts learned in this lesson through hands-on practice.",
+        "checkpoints": [
+          "Complete the basic implementation",
+          "Test your solution",
+          "Identify areas for improvement"
+        ]
+      }
+    ],
+    "next": [],
+    "estimatedMinutes": 30,
+    "difficulty": "Beginner",
+    "tags": [
+      "Git",
+      "GitHub",
+      "Version Control"
+    ],
+    "lastUpdated": "2025-10-01T06:42:16.316Z",
+    "version": "1.0.0"
+  },
+  {
+    "id": "version-control-lesson-9",
+    "moduleSlug": "version-control",
+    "title": "Key Concepts",
+    "order": 9,
+    "objectives": [
+      "Apply advanced Git techniques",
+      "Optimize performance and efficiency",
+      "Integrate with external systems"
+    ],
+    "intro": "Welcome to Key Concepts in the Version Control with Git module. \n\nThis lesson is part of the foundational tier, designed for beginner level learners. Throughout this lesson, you'll explore essential concepts and practical applications that form the foundation of modern devops development.\n\nGit workflows, branching, merging, and collaboration This lesson builds upon previous concepts while introducing new techniques that will enhance your understanding and practical skills.\n\nBy the end of this lesson, you'll have hands-on experience with Git and GitHub, along with best practices for implementing these technologies in real-world scenarios. The knowledge gained here will prepare you for more advanced topics in subsequent lessons.\n\nKey areas we'll cover include practical implementation techniques, common challenges developers face, and proven solutions that industry professionals use daily. This lesson balances theoretical understanding with practical application, ensuring you can immediately apply what you learn.",
+    "code": {
+      "example": "// Example Git implementation\n// TODO: Add specific code example for Version Control with Git\n\nfunction example() {\n    // Placeholder implementation\n    console.log('Version Control with Git example');\n}\n\nexport default example;",
+      "explanation": "This example demonstrates the key concepts covered in this lesson.",
+      "language": "javascript"
+    },
+    "pitfalls": [
+      {
+        "mistake": "Not following Git best practices",
+        "solution": "Review official documentation and established patterns for Git",
+        "severity": "medium"
+      },
+      {
+        "mistake": "Skipping error handling in implementation",
+        "solution": "Always implement proper error handling and validation",
+        "severity": "high"
+      },
+      {
+        "mistake": "Ignoring performance implications",
+        "solution": "Consider performance impact of your implementation choices",
+        "severity": "low"
+      }
+    ],
+    "exercises": [
+      {
+        "title": "Practice Key Concepts",
+        "description": "Apply the concepts learned in this lesson through hands-on practice.",
+        "checkpoints": [
+          "Complete the basic implementation",
+          "Test your solution",
+          "Identify areas for improvement"
+        ]
+      }
+    ],
+    "next": [],
+    "estimatedMinutes": 30,
+    "difficulty": "Beginner",
+    "tags": [
+      "Git",
+      "GitHub",
+      "Version Control"
+    ],
+    "lastUpdated": "2025-10-01T06:42:16.316Z",
+    "version": "1.0.0"
+  },
+  {
+    "id": "version-control-lesson-10",
+    "moduleSlug": "version-control",
+    "title": "Foundation Knowledge",
+    "order": 10,
+    "objectives": [
+      "Apply advanced Git techniques",
+      "Optimize performance and efficiency",
+      "Integrate with external systems"
+    ],
+    "intro": "Welcome to Foundation Knowledge in the Version Control with Git module. \n\nThis lesson is part of the foundational tier, designed for beginner level learners. Throughout this lesson, you'll explore essential concepts and practical applications that form the foundation of modern devops development.\n\nGit workflows, branching, merging, and collaboration This lesson builds upon previous concepts while introducing new techniques that will enhance your understanding and practical skills.\n\nBy the end of this lesson, you'll have hands-on experience with Git and GitHub, along with best practices for implementing these technologies in real-world scenarios. The knowledge gained here will prepare you for more advanced topics in subsequent lessons.\n\nKey areas we'll cover include practical implementation techniques, common challenges developers face, and proven solutions that industry professionals use daily. This lesson balances theoretical understanding with practical application, ensuring you can immediately apply what you learn.",
+    "code": {
+      "example": "// Example Git implementation\n// TODO: Add specific code example for Version Control with Git\n\nfunction example() {\n    // Placeholder implementation\n    console.log('Version Control with Git example');\n}\n\nexport default example;",
+      "explanation": "This example demonstrates the key concepts covered in this lesson.",
+      "language": "javascript"
+    },
+    "pitfalls": [
+      {
+        "mistake": "Not following Git best practices",
+        "solution": "Review official documentation and established patterns for Git",
+        "severity": "medium"
+      },
+      {
+        "mistake": "Skipping error handling in implementation",
+        "solution": "Always implement proper error handling and validation",
+        "severity": "high"
+      },
+      {
+        "mistake": "Ignoring performance implications",
+        "solution": "Consider performance impact of your implementation choices",
+        "severity": "low"
+      }
+    ],
+    "exercises": [
+      {
+        "title": "Practice Foundation Knowledge",
+        "description": "Apply the concepts learned in this lesson through hands-on practice.",
+        "checkpoints": [
+          "Complete the basic implementation",
+          "Test your solution",
+          "Identify areas for improvement"
+        ]
+      }
+    ],
+    "next": [],
+    "estimatedMinutes": 30,
+    "difficulty": "Beginner",
+    "tags": [
+      "Git",
+      "GitHub",
+      "Version Control"
+    ],
+    "lastUpdated": "2025-10-01T06:42:16.316Z",
+    "version": "1.0.0"
+  }
+]

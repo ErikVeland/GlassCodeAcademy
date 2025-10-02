@@ -1,0 +1,889 @@
+[
+  {
+    "id": "laravel-fundamentals-lesson-1",
+    "moduleSlug": "laravel-fundamentals",
+    "title": "Basic Routing in Laravel",
+    "order": 1,
+    "objectives": [
+      "Implement practical solutions",
+      "Build foundational understanding"
+    ],
+    "intro": "Welcome to the foundational world of Laravel routing - the cornerstone of web application navigation and request handling in one of PHP's most elegant frameworks. Laravel's routing system provides an intuitive, expressive syntax that transforms complex URL patterns into clean, maintainable code structures that power modern web applications.\n\nRouting in Laravel serves as the traffic control system for your application, determining how incoming HTTP requests are directed to the appropriate controllers, closures, or resources. Understanding Laravel's routing capabilities is essential for building scalable web applications, as it provides the foundation for RESTful APIs, resource controllers, and complex application architectures.\n\nIn this comprehensive introduction, you'll master the fundamental concepts of route definition, from basic GET and POST routes to more advanced patterns involving route parameters, middleware integration, and route model binding. Laravel's routing system supports HTTP verbs, route groups, and subdomain routing, providing flexibility for everything from simple websites to complex enterprise applications.\n\nThe knowledge you gain here forms the backbone of Laravel development, enabling you to create intuitive URL structures, implement proper separation of concerns, and build applications that follow web standards and best practices. Every subsequent Laravel concept builds upon these routing fundamentals.\n\nBy the end of this lesson, you'll confidently navigate Laravel's routing landscape, understanding how to structure URLs that are both user-friendly and SEO-optimized while maintaining clean, readable code that scales with your application's growth.",
+    "code": {
+      "example": "<?php\n// routes/web.php\n\nuse Illuminate\\Support\\Facades\\Route;\n\nRoute::get('/', function () {\n    return view('welcome');\n});\n\nRoute::get('/users', function () {\n    return 'All users';\n});",
+      "explanation": "This example produces: Route definitions registered successfully\n\nThe code demonstrates practical implementation techniques and shows how the concepts work in real scenarios. Pay attention to the structure and patterns used, as these represent industry best practices.",
+      "language": "php"
+    },
+    "pitfalls": [
+      {
+        "mistake": "Not following best practices",
+        "solution": "Review documentation and community guidelines",
+        "severity": "medium"
+      },
+      {
+        "mistake": "Skipping error handling",
+        "solution": "Implement proper error boundaries and validation",
+        "severity": "low"
+      }
+    ],
+    "exercises": [
+      {
+        "title": "Practice: Basic Routing in Laravel",
+        "description": "Apply the concepts from this lesson on Routing",
+        "checkpoints": [
+          "Understand the core concept",
+          "Implement the example code",
+          "Experiment with variations"
+        ]
+      }
+    ],
+    "next": [],
+    "estimatedMinutes": 25,
+    "difficulty": "Beginner",
+    "tags": [
+      "Routing",
+      "laravel"
+    ],
+    "legacy": {
+      "originalId": 1,
+      "originalTopic": "Routing",
+      "migrated": "2025-10-01T06:41:13.484Z"
+    },
+    "lastUpdated": "2025-10-01T06:41:13.484Z",
+    "version": "1.0.0"
+  },
+  {
+    "id": "laravel-fundamentals-lesson-2",
+    "moduleSlug": "laravel-fundamentals",
+    "title": "Route Parameters",
+    "order": 2,
+    "objectives": [
+      "Implement practical solutions",
+      "Build foundational understanding"
+    ],
+    "intro": "Welcome to this comprehensive lesson on Routing.\n\nLearn how to capture segments of the URI in Laravel routes.\n\nThroughout this lesson, you'll gain hands-on experience with practical implementations and real-world scenarios. We'll explore both the theoretical foundations and practical applications, ensuring you can immediately apply what you learn.\n\nThis lesson is designed to build upon previous concepts while introducing new techniques that will enhance your development skills. By the end, you'll have a solid understanding of the key principles and be ready to tackle more advanced topics.\n\nThe knowledge gained here will serve as a foundation for subsequent lessons and real-world projects.",
+    "code": {
+      "example": "<?php\n// routes/web.php\n\nuse Illuminate\\Support\\Facades\\Route;\n\nRoute::get('/user/{id}', function ($id) {\n    return 'User '.$id;\n});\n\nRoute::get('/posts/{post}/comments/{comment}', function ($postId, $commentId) {\n    //\n});",
+      "explanation": "This example produces: Route with parameters registered successfully\n\nThe code demonstrates practical implementation techniques and shows how the concepts work in real scenarios. Pay attention to the structure and patterns used, as these represent industry best practices.",
+      "language": "php"
+    },
+    "pitfalls": [
+      {
+        "mistake": "Not following best practices",
+        "solution": "Review documentation and community guidelines",
+        "severity": "medium"
+      },
+      {
+        "mistake": "Skipping error handling",
+        "solution": "Implement proper error boundaries and validation",
+        "severity": "low"
+      }
+    ],
+    "exercises": [
+      {
+        "title": "Practice: Route Parameters",
+        "description": "Apply the concepts from this lesson on Routing",
+        "checkpoints": [
+          "Understand the core concept",
+          "Implement the example code",
+          "Experiment with variations"
+        ]
+      }
+    ],
+    "next": [],
+    "estimatedMinutes": 25,
+    "difficulty": "Intermediate",
+    "tags": [
+      "Routing",
+      "laravel"
+    ],
+    "legacy": {
+      "originalId": 2,
+      "originalTopic": "Routing",
+      "migrated": "2025-10-01T06:41:13.484Z"
+    },
+    "lastUpdated": "2025-10-01T06:41:13.484Z",
+    "version": "1.0.0"
+  },
+  {
+    "id": "laravel-fundamentals-lesson-3",
+    "moduleSlug": "laravel-fundamentals",
+    "title": "Introduction to Eloquent",
+    "order": 3,
+    "objectives": [
+      "Implement practical solutions",
+      "Build foundational understanding"
+    ],
+    "intro": "Welcome to this comprehensive lesson on Eloquent ORM.\n\nLearn how to work with database records using Eloquent ORM.\n\nThroughout this lesson, you'll gain hands-on experience with practical implementations and real-world scenarios. We'll explore both the theoretical foundations and practical applications, ensuring you can immediately apply what you learn.\n\nThis lesson is designed to build upon previous concepts while introducing new techniques that will enhance your development skills. By the end, you'll have a solid understanding of the key principles and be ready to tackle more advanced topics.\n\nThe knowledge gained here will serve as a foundation for subsequent lessons and real-world projects.",
+    "code": {
+      "example": "<?php\n// app/Models/User.php\n\nnamespace App\\Models;\n\nuse Illuminate\\Database\\Eloquent\\Factories\\HasFactory;\nuse Illuminate\\Database\\Eloquent\\Model;\n\nclass User extends Model\n{\n    use HasFactory;\n\n    protected $fillable = [\n        'name',\n        'email',\n        'password',\n    ];\n}",
+      "explanation": "This example produces: Eloquent model created successfully\n\nThe code demonstrates practical implementation techniques and shows how the concepts work in real scenarios. Pay attention to the structure and patterns used, as these represent industry best practices.",
+      "language": "php"
+    },
+    "pitfalls": [
+      {
+        "mistake": "Not following best practices",
+        "solution": "Review documentation and community guidelines",
+        "severity": "medium"
+      },
+      {
+        "mistake": "Skipping error handling",
+        "solution": "Implement proper error boundaries and validation",
+        "severity": "low"
+      }
+    ],
+    "exercises": [
+      {
+        "title": "Practice: Introduction to Eloquent",
+        "description": "Apply the concepts from this lesson on Eloquent ORM",
+        "checkpoints": [
+          "Understand the core concept",
+          "Implement the example code",
+          "Experiment with variations"
+        ]
+      }
+    ],
+    "next": [],
+    "estimatedMinutes": 25,
+    "difficulty": "Beginner",
+    "tags": [
+      "Eloquent ORM",
+      "laravel"
+    ],
+    "legacy": {
+      "originalId": 3,
+      "originalTopic": "Eloquent ORM",
+      "migrated": "2025-10-01T06:41:13.484Z"
+    },
+    "lastUpdated": "2025-10-01T06:41:13.484Z",
+    "version": "1.0.0"
+  },
+  {
+    "id": "laravel-fundamentals-lesson-4",
+    "moduleSlug": "laravel-fundamentals",
+    "title": "Querying Models",
+    "order": 4,
+    "objectives": [
+      "Implement practical solutions",
+      "Build foundational understanding"
+    ],
+    "intro": "Welcome to this comprehensive lesson on Eloquent ORM.\n\nLearn how to retrieve records from the database using Eloquent.\n\nThroughout this lesson, you'll gain hands-on experience with practical implementations and real-world scenarios. We'll explore both the theoretical foundations and practical applications, ensuring you can immediately apply what you learn.\n\nThis lesson is designed to build upon previous concepts while introducing new techniques that will enhance your development skills. By the end, you'll have a solid understanding of the key principles and be ready to tackle more advanced topics.\n\nThe knowledge gained here will serve as a foundation for subsequent lessons and real-world projects.",
+    "code": {
+      "example": "<?php\n// Retrieving models\n\nuse App\\Models\\User;\n\n$users = User::all();\n\n$user = User::find(1);\n\n$users = User::where('active', 1)->orderBy('name')->get();",
+      "explanation": "This example produces: Users retrieved successfully\n\nThe code demonstrates practical implementation techniques and shows how the concepts work in real scenarios. Pay attention to the structure and patterns used, as these represent industry best practices.",
+      "language": "php"
+    },
+    "pitfalls": [
+      {
+        "mistake": "Not following best practices",
+        "solution": "Review documentation and community guidelines",
+        "severity": "medium"
+      },
+      {
+        "mistake": "Skipping error handling",
+        "solution": "Implement proper error boundaries and validation",
+        "severity": "low"
+      }
+    ],
+    "exercises": [
+      {
+        "title": "Practice: Querying Models",
+        "description": "Apply the concepts from this lesson on Eloquent ORM",
+        "checkpoints": [
+          "Understand the core concept",
+          "Implement the example code",
+          "Experiment with variations"
+        ]
+      }
+    ],
+    "next": [],
+    "estimatedMinutes": 25,
+    "difficulty": "Intermediate",
+    "tags": [
+      "Eloquent ORM",
+      "laravel"
+    ],
+    "legacy": {
+      "originalId": 4,
+      "originalTopic": "Eloquent ORM",
+      "migrated": "2025-10-01T06:41:13.484Z"
+    },
+    "lastUpdated": "2025-10-01T06:41:13.484Z",
+    "version": "1.0.0"
+  },
+  {
+    "id": "laravel-fundamentals-lesson-5",
+    "moduleSlug": "laravel-fundamentals",
+    "title": "Blade Basics",
+    "order": 5,
+    "objectives": [
+      "Implement practical solutions",
+      "Build foundational understanding"
+    ],
+    "intro": "Welcome to this comprehensive lesson on Blade Templates.\n\nLearn how to create dynamic views using Blade templating engine.\n\nThroughout this lesson, you'll gain hands-on experience with practical implementations and real-world scenarios. We'll explore both the theoretical foundations and practical applications, ensuring you can immediately apply what you learn.\n\nThis lesson is designed to build upon previous concepts while introducing new techniques that will enhance your development skills. By the end, you'll have a solid understanding of the key principles and be ready to tackle more advanced topics.\n\nThe knowledge gained here will serve as a foundation for subsequent lessons and real-world projects.",
+    "code": {
+      "example": "<!-- resources/views/welcome.blade.php -->\n\n<!DOCTYPE html>\n<html>\n<head>\n    <title>App Name - @yield('title')</title>\n</head>\n<body>\n    @section('sidebar')\n        This is the master sidebar.\n    @show\n\n    <div class=\"container\">\n        @yield('content')\n    </div>\n</body>\n</html>",
+      "explanation": "This example produces: Blade template rendered successfully\n\nThe code demonstrates practical implementation techniques and shows how the concepts work in real scenarios. Pay attention to the structure and patterns used, as these represent industry best practices.",
+      "language": "php"
+    },
+    "pitfalls": [
+      {
+        "mistake": "Not following best practices",
+        "solution": "Review documentation and community guidelines",
+        "severity": "medium"
+      },
+      {
+        "mistake": "Skipping error handling",
+        "solution": "Implement proper error boundaries and validation",
+        "severity": "low"
+      }
+    ],
+    "exercises": [
+      {
+        "title": "Practice: Blade Basics",
+        "description": "Apply the concepts from this lesson on Blade Templates",
+        "checkpoints": [
+          "Understand the core concept",
+          "Implement the example code",
+          "Experiment with variations"
+        ]
+      }
+    ],
+    "next": [],
+    "estimatedMinutes": 25,
+    "difficulty": "Beginner",
+    "tags": [
+      "Blade Templates",
+      "laravel"
+    ],
+    "legacy": {
+      "originalId": 5,
+      "originalTopic": "Blade Templates",
+      "migrated": "2025-10-01T06:41:13.484Z"
+    },
+    "lastUpdated": "2025-10-01T06:41:13.484Z",
+    "version": "1.0.0"
+  },
+  {
+    "id": "laravel-fundamentals-lesson-6",
+    "moduleSlug": "laravel-fundamentals",
+    "title": "Blade Control Structures",
+    "order": 6,
+    "objectives": [
+      "Implement practical solutions",
+      "Build foundational understanding"
+    ],
+    "intro": "Welcome to this comprehensive lesson on Blade Templates.\n\nLearn how to use control structures in Blade templates.\n\nThroughout this lesson, you'll gain hands-on experience with practical implementations and real-world scenarios. We'll explore both the theoretical foundations and practical applications, ensuring you can immediately apply what you learn.\n\nThis lesson is designed to build upon previous concepts while introducing new techniques that will enhance your development skills. By the end, you'll have a solid understanding of the key principles and be ready to tackle more advanced topics.\n\nThe knowledge gained here will serve as a foundation for subsequent lessons and real-world projects.",
+    "code": {
+      "example": "@if (count($records) === 1)\n    I have one record!\n@elseif (count($records) > 1)\n    I have multiple records!\n@else\n    I don't have any records!\n@endif\n\n@foreach ($users as $user)\n    <p>This is user {{ $user->id }}</p>\n@endforeach",
+      "explanation": "This example produces: Blade control structures executed successfully\n\nThe code demonstrates practical implementation techniques and shows how the concepts work in real scenarios. Pay attention to the structure and patterns used, as these represent industry best practices.",
+      "language": "php"
+    },
+    "pitfalls": [
+      {
+        "mistake": "Not following best practices",
+        "solution": "Review documentation and community guidelines",
+        "severity": "medium"
+      },
+      {
+        "mistake": "Skipping error handling",
+        "solution": "Implement proper error boundaries and validation",
+        "severity": "low"
+      }
+    ],
+    "exercises": [
+      {
+        "title": "Practice: Blade Control Structures",
+        "description": "Apply the concepts from this lesson on Blade Templates",
+        "checkpoints": [
+          "Understand the core concept",
+          "Implement the example code",
+          "Experiment with variations"
+        ]
+      }
+    ],
+    "next": [],
+    "estimatedMinutes": 25,
+    "difficulty": "Intermediate",
+    "tags": [
+      "Blade Templates",
+      "laravel"
+    ],
+    "legacy": {
+      "originalId": 6,
+      "originalTopic": "Blade Templates",
+      "migrated": "2025-10-01T06:41:13.484Z"
+    },
+    "lastUpdated": "2025-10-01T06:41:13.484Z",
+    "version": "1.0.0"
+  },
+  {
+    "id": "laravel-fundamentals-lesson-7",
+    "moduleSlug": "laravel-fundamentals",
+    "title": "Creating Middleware",
+    "order": 7,
+    "objectives": [
+      "Implement practical solutions",
+      "Build foundational understanding"
+    ],
+    "intro": "Welcome to this comprehensive lesson on Middleware.\n\nLearn how to create and register custom middleware in Laravel.\n\nThroughout this lesson, you'll gain hands-on experience with practical implementations and real-world scenarios. We'll explore both the theoretical foundations and practical applications, ensuring you can immediately apply what you learn.\n\nThis lesson is designed to build upon previous concepts while introducing new techniques that will enhance your development skills. By the end, you'll have a solid understanding of the key principles and be ready to tackle more advanced topics.\n\nThe knowledge gained here will serve as a foundation for subsequent lessons and real-world projects.",
+    "code": {
+      "example": "<?php\n// app/Http/Middleware/EnsureTokenIsValid.php\n\nnamespace App\\Http\\Middleware;\n\nuse Closure;\n\nclass EnsureTokenIsValid\n{\n    public function handle($request, Closure $next)\n    {\n        if ($request->input('token') !== 'my-secret-token') {\n            return redirect('home');\n        }\n\n        return $next($request);\n    }\n}",
+      "explanation": "This example produces: Middleware created successfully\n\nThe code demonstrates practical implementation techniques and shows how the concepts work in real scenarios. Pay attention to the structure and patterns used, as these represent industry best practices.",
+      "language": "php"
+    },
+    "pitfalls": [
+      {
+        "mistake": "Not following best practices",
+        "solution": "Review documentation and community guidelines",
+        "severity": "medium"
+      },
+      {
+        "mistake": "Skipping error handling",
+        "solution": "Implement proper error boundaries and validation",
+        "severity": "low"
+      }
+    ],
+    "exercises": [
+      {
+        "title": "Practice: Creating Middleware",
+        "description": "Apply the concepts from this lesson on Middleware",
+        "checkpoints": [
+          "Understand the core concept",
+          "Implement the example code",
+          "Experiment with variations"
+        ]
+      }
+    ],
+    "next": [],
+    "estimatedMinutes": 25,
+    "difficulty": "Advanced",
+    "tags": [
+      "Middleware",
+      "laravel"
+    ],
+    "legacy": {
+      "originalId": 7,
+      "originalTopic": "Middleware",
+      "migrated": "2025-10-01T06:41:13.484Z"
+    },
+    "lastUpdated": "2025-10-01T06:41:13.484Z",
+    "version": "1.0.0"
+  },
+  {
+    "id": "laravel-fundamentals-lesson-8",
+    "moduleSlug": "laravel-fundamentals",
+    "title": "Registering Middleware",
+    "order": 8,
+    "objectives": [
+      "Implement practical solutions",
+      "Build foundational understanding"
+    ],
+    "intro": "Welcome to this comprehensive lesson on Middleware.\n\nLearn how to register middleware in Laravel applications.\n\nThroughout this lesson, you'll gain hands-on experience with practical implementations and real-world scenarios. We'll explore both the theoretical foundations and practical applications, ensuring you can immediately apply what you learn.\n\nThis lesson is designed to build upon previous concepts while introducing new techniques that will enhance your development skills. By the end, you'll have a solid understanding of the key principles and be ready to tackle more advanced topics.\n\nThe knowledge gained here will serve as a foundation for subsequent lessons and real-world projects.",
+    "code": {
+      "example": "<?php\n// app/Http/Kernel.php\n\nprotected $routeMiddleware = [\n    // ...\n    'token' => \\App\\Http\\Middleware\\EnsureTokenIsValid::class,\n];\n\n// In routes\nRoute::get('/profile', function () {\n    //\n})->middleware('token');",
+      "explanation": "This example produces: Middleware registered successfully\n\nThe code demonstrates practical implementation techniques and shows how the concepts work in real scenarios. Pay attention to the structure and patterns used, as these represent industry best practices.",
+      "language": "php"
+    },
+    "pitfalls": [
+      {
+        "mistake": "Not following best practices",
+        "solution": "Review documentation and community guidelines",
+        "severity": "medium"
+      },
+      {
+        "mistake": "Skipping error handling",
+        "solution": "Implement proper error boundaries and validation",
+        "severity": "low"
+      }
+    ],
+    "exercises": [
+      {
+        "title": "Practice: Registering Middleware",
+        "description": "Apply the concepts from this lesson on Middleware",
+        "checkpoints": [
+          "Understand the core concept",
+          "Implement the example code",
+          "Experiment with variations"
+        ]
+      }
+    ],
+    "next": [],
+    "estimatedMinutes": 25,
+    "difficulty": "Intermediate",
+    "tags": [
+      "Middleware",
+      "laravel"
+    ],
+    "legacy": {
+      "originalId": 8,
+      "originalTopic": "Middleware",
+      "migrated": "2025-10-01T06:41:13.484Z"
+    },
+    "lastUpdated": "2025-10-01T06:41:13.484Z",
+    "version": "1.0.0"
+  },
+  {
+    "id": "laravel-fundamentals-lesson-9",
+    "moduleSlug": "laravel-fundamentals",
+    "title": "Migrations",
+    "order": 9,
+    "objectives": [
+      "Implement practical solutions",
+      "Build foundational understanding"
+    ],
+    "intro": "Welcome to this comprehensive lesson on Database.\n\nLearn how to create and run database migrations in Laravel.\n\nThroughout this lesson, you'll gain hands-on experience with practical implementations and real-world scenarios. We'll explore both the theoretical foundations and practical applications, ensuring you can immediately apply what you learn.\n\nThis lesson is designed to build upon previous concepts while introducing new techniques that will enhance your development skills. By the end, you'll have a solid understanding of the key principles and be ready to tackle more advanced topics.\n\nThe knowledge gained here will serve as a foundation for subsequent lessons and real-world projects.",
+    "code": {
+      "example": "<?php\n// Creating a migration\nphp artisan make:migration create_flights_table\n\n// Migration file\nSchema::create('flights', function (Blueprint $table) {\n    $table->id();\n    $table->string('name');\n    $table->text('description');\n    $table->timestamps();\n});",
+      "explanation": "This example produces: Migration created and executed successfully\n\nThe code demonstrates practical implementation techniques and shows how the concepts work in real scenarios. Pay attention to the structure and patterns used, as these represent industry best practices.",
+      "language": "php"
+    },
+    "pitfalls": [
+      {
+        "mistake": "Not following best practices",
+        "solution": "Review documentation and community guidelines",
+        "severity": "medium"
+      },
+      {
+        "mistake": "Skipping error handling",
+        "solution": "Implement proper error boundaries and validation",
+        "severity": "low"
+      }
+    ],
+    "exercises": [
+      {
+        "title": "Practice: Migrations",
+        "description": "Apply the concepts from this lesson on Database",
+        "checkpoints": [
+          "Understand the core concept",
+          "Implement the example code",
+          "Experiment with variations"
+        ]
+      }
+    ],
+    "next": [],
+    "estimatedMinutes": 25,
+    "difficulty": "Intermediate",
+    "tags": [
+      "Database",
+      "laravel"
+    ],
+    "legacy": {
+      "originalId": 9,
+      "originalTopic": "Database",
+      "migrated": "2025-10-01T06:41:13.484Z"
+    },
+    "lastUpdated": "2025-10-01T06:41:13.484Z",
+    "version": "1.0.0"
+  },
+  {
+    "id": "laravel-fundamentals-lesson-10",
+    "moduleSlug": "laravel-fundamentals",
+    "title": "Seeding Data",
+    "order": 10,
+    "objectives": [
+      "Implement practical solutions",
+      "Build foundational understanding"
+    ],
+    "intro": "Welcome to this comprehensive lesson on Database.\n\nLearn how to seed your database with test data in Laravel.\n\nThroughout this lesson, you'll gain hands-on experience with practical implementations and real-world scenarios. We'll explore both the theoretical foundations and practical applications, ensuring you can immediately apply what you learn.\n\nThis lesson is designed to build upon previous concepts while introducing new techniques that will enhance your development skills. By the end, you'll have a solid understanding of the key principles and be ready to tackle more advanced topics.\n\nThe knowledge gained here will serve as a foundation for subsequent lessons and real-world projects.",
+    "code": {
+      "example": "<?php\n// Creating a seeder\nphp artisan make:seeder UsersTableSeeder\n\n// In the seeder\npublic function run()\n{\n    DB::table('users')->insert([\n        'name' => Str::random(10),\n        'email' => Str::random(10).'@gmail.com',\n        'password' => Hash::make('password'),\n    ]);\n}",
+      "explanation": "This example produces: Database seeded successfully\n\nThe code demonstrates practical implementation techniques and shows how the concepts work in real scenarios. Pay attention to the structure and patterns used, as these represent industry best practices.",
+      "language": "php"
+    },
+    "pitfalls": [
+      {
+        "mistake": "Not following best practices",
+        "solution": "Review documentation and community guidelines",
+        "severity": "medium"
+      },
+      {
+        "mistake": "Skipping error handling",
+        "solution": "Implement proper error boundaries and validation",
+        "severity": "low"
+      }
+    ],
+    "exercises": [
+      {
+        "title": "Practice: Seeding Data",
+        "description": "Apply the concepts from this lesson on Database",
+        "checkpoints": [
+          "Understand the core concept",
+          "Implement the example code",
+          "Experiment with variations"
+        ]
+      }
+    ],
+    "next": [],
+    "estimatedMinutes": 25,
+    "difficulty": "Intermediate",
+    "tags": [
+      "Database",
+      "laravel"
+    ],
+    "legacy": {
+      "originalId": 10,
+      "originalTopic": "Database",
+      "migrated": "2025-10-01T06:41:13.484Z"
+    },
+    "lastUpdated": "2025-10-01T06:41:13.484Z",
+    "version": "1.0.0"
+  },
+  {
+    "id": "laravel-fundamentals-lesson-11",
+    "moduleSlug": "laravel-fundamentals",
+    "title": "Laravel Breeze",
+    "order": 11,
+    "objectives": [
+      "Implement practical solutions",
+      "Build foundational understanding"
+    ],
+    "intro": "Welcome to this comprehensive lesson on Authentication.\n\nLearn how to implement authentication using Laravel Breeze.\n\nThroughout this lesson, you'll gain hands-on experience with practical implementations and real-world scenarios. We'll explore both the theoretical foundations and practical applications, ensuring you can immediately apply what you learn.\n\nThis lesson is designed to build upon previous concepts while introducing new techniques that will enhance your development skills. By the end, you'll have a solid understanding of the key principles and be ready to tackle more advanced topics.\n\nThe knowledge gained here will serve as a foundation for subsequent lessons and real-world projects.",
+    "code": {
+      "example": "// Install Laravel Breeze\ncomposer require laravel/breeze --dev\n\n// Install Breeze scaffolding\nphp artisan breeze:install\n\n// Run migrations\nphp artisan migrate",
+      "explanation": "This example produces: Authentication scaffolding installed successfully\n\nThe code demonstrates practical implementation techniques and shows how the concepts work in real scenarios. Pay attention to the structure and patterns used, as these represent industry best practices.",
+      "language": "php"
+    },
+    "pitfalls": [
+      {
+        "mistake": "Not following best practices",
+        "solution": "Review documentation and community guidelines",
+        "severity": "medium"
+      },
+      {
+        "mistake": "Skipping error handling",
+        "solution": "Implement proper error boundaries and validation",
+        "severity": "low"
+      }
+    ],
+    "exercises": [
+      {
+        "title": "Practice: Laravel Breeze",
+        "description": "Apply the concepts from this lesson on Authentication",
+        "checkpoints": [
+          "Understand the core concept",
+          "Implement the example code",
+          "Experiment with variations"
+        ]
+      }
+    ],
+    "next": [],
+    "estimatedMinutes": 25,
+    "difficulty": "Intermediate",
+    "tags": [
+      "Authentication",
+      "laravel"
+    ],
+    "legacy": {
+      "originalId": 11,
+      "originalTopic": "Authentication",
+      "migrated": "2025-10-01T06:41:13.484Z"
+    },
+    "lastUpdated": "2025-10-01T06:41:13.484Z",
+    "version": "1.0.0"
+  },
+  {
+    "id": "laravel-fundamentals-lesson-12",
+    "moduleSlug": "laravel-fundamentals",
+    "title": "API Authentication",
+    "order": 12,
+    "objectives": [
+      "Implement practical solutions",
+      "Build foundational understanding"
+    ],
+    "intro": "Welcome to this comprehensive lesson on Authentication.\n\nLearn how to authenticate API requests in Laravel.\n\nThroughout this lesson, you'll gain hands-on experience with practical implementations and real-world scenarios. We'll explore both the theoretical foundations and practical applications, ensuring you can immediately apply what you learn.\n\nThis lesson is designed to build upon previous concepts while introducing new techniques that will enhance your development skills. By the end, you'll have a solid understanding of the key principles and be ready to tackle more advanced topics.\n\nThe knowledge gained here will serve as a foundation for subsequent lessons and real-world projects.",
+    "code": {
+      "example": "<?php\n// In routes/api.php\n\nRoute::middleware('auth:sanctum')->get('/user', function (Request $request) {\n    return $request->user();\n});\n\n// In controller\npublic function index(Request $request)\n{\n    return $request->user();\n}",
+      "explanation": "This example produces: API authentication configured successfully\n\nThe code demonstrates practical implementation techniques and shows how the concepts work in real scenarios. Pay attention to the structure and patterns used, as these represent industry best practices.",
+      "language": "php"
+    },
+    "pitfalls": [
+      {
+        "mistake": "Not following best practices",
+        "solution": "Review documentation and community guidelines",
+        "severity": "medium"
+      },
+      {
+        "mistake": "Skipping error handling",
+        "solution": "Implement proper error boundaries and validation",
+        "severity": "low"
+      }
+    ],
+    "exercises": [
+      {
+        "title": "Practice: API Authentication",
+        "description": "Apply the concepts from this lesson on Authentication",
+        "checkpoints": [
+          "Understand the core concept",
+          "Implement the example code",
+          "Experiment with variations"
+        ]
+      }
+    ],
+    "next": [],
+    "estimatedMinutes": 25,
+    "difficulty": "Intermediate",
+    "tags": [
+      "Authentication",
+      "laravel"
+    ],
+    "legacy": {
+      "originalId": 12,
+      "originalTopic": "Authentication",
+      "migrated": "2025-10-01T06:41:13.484Z"
+    },
+    "lastUpdated": "2025-10-01T06:41:13.484Z",
+    "version": "1.0.0"
+  },
+  {
+    "id": "laravel-fundamentals-lesson-13",
+    "moduleSlug": "laravel-fundamentals",
+    "title": "Form Validation",
+    "order": 13,
+    "objectives": [
+      "Implement comprehensive form validation in Laravel applications",
+      "Create custom validation rules and error handling",
+      "Understand validation request classes and their benefits"
+    ],
+    "intro": "Form validation is a critical aspect of web application security and user experience in Laravel development. This comprehensive lesson will teach you how to implement robust validation systems that protect your application from malicious input while providing clear feedback to users.\n\nYou'll learn to use Laravel's powerful validation features, including built-in rules, custom validation logic, and validation request classes. We'll explore both server-side and client-side validation techniques, ensuring your applications maintain data integrity and security.\n\nBy mastering Laravel's validation system, you'll be able to create forms that handle edge cases gracefully, provide meaningful error messages, and maintain excellent user experience. This knowledge is essential for building production-ready applications that users can trust.\n\nThe validation techniques covered here will serve as the foundation for secure data handling in all your Laravel projects, from simple contact forms to complex multi-step registration processes.",
+    "code": {
+      "example": "<?php\n// In Controller\npublic function store(Request $request)\n{\n    $validated = $request->validate([\n        'name' => 'required|string|max:255',\n        'email' => 'required|email|unique:users',\n        'password' => 'required|min:8|confirmed',\n        'age' => 'required|integer|min:18|max:120',\n        'terms' => 'accepted'\n    ]);\n\n    User::create($validated);\n    return redirect()->route('users.index')->with('success', 'User created successfully');\n}\n\n// Form Request Class\nclass StoreUserRequest extends FormRequest\n{\n    public function rules()\n    {\n        return [\n            'name' => 'required|string|max:255',\n            'email' => 'required|email|unique:users,email',\n            'password' => 'required|min:8|regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)/',\n        ];\n    }\n\n    public function messages()\n    {\n        return [\n            'password.regex' => 'Password must contain uppercase, lowercase, and numbers',\n        ];\n    }\n}",
+      "explanation": "This example demonstrates comprehensive form validation including required fields, email validation, password confirmation, and custom validation rules. The FormRequest class provides organized validation logic with custom error messages, making the code more maintainable and reusable across different controllers.",
+      "language": "php"
+    },
+    "pitfalls": [
+      {
+        "mistake": "Not validating file uploads properly",
+        "solution": "Always validate file types, sizes, and use secure upload handling",
+        "severity": "high"
+      },
+      {
+        "mistake": "Trusting client-side validation only",
+        "solution": "Always implement server-side validation as the primary security measure",
+        "severity": "high"
+      },
+      {
+        "mistake": "Not providing clear error messages",
+        "solution": "Create user-friendly validation messages that guide users to correct inputs",
+        "severity": "medium"
+      }
+    ],
+    "exercises": [
+      {
+        "title": "Build a User Registration Form",
+        "description": "Create a complete user registration form with comprehensive validation including password strength, email uniqueness, and profile image upload validation",
+        "checkpoints": [
+          "Implement FormRequest class with all validation rules",
+          "Add custom validation for password strength",
+          "Create user-friendly error messages",
+          "Test validation with various input scenarios"
+        ]
+      }
+    ],
+    "next": [],
+    "estimatedMinutes": 35,
+    "difficulty": "Intermediate",
+    "tags": [
+      "Validation",
+      "Forms",
+      "Security",
+      "Laravel"
+    ],
+    "legacy": {
+      "originalId": 13,
+      "originalTopic": "Form Validation",
+      "migrated": "2025-01-27T10:15:00.000Z"
+    },
+    "lastUpdated": "2025-01-27T10:15:00.000Z",
+    "version": "1.0.0"
+  },
+  {
+    "id": "laravel-fundamentals-lesson-14",
+    "moduleSlug": "laravel-fundamentals",
+    "title": "Eloquent Relationships",
+    "order": 14,
+    "objectives": [
+      "Master one-to-many and many-to-many relationships in Eloquent",
+      "Implement efficient relationship queries with eager loading",
+      "Understand pivot tables and relationship constraints"
+    ],
+    "intro": "Eloquent relationships are the backbone of database interactions in Laravel, enabling you to define and work with complex data structures efficiently. This lesson provides comprehensive coverage of Laravel's relationship system, from basic one-to-one connections to complex many-to-many associations.\n\nYou'll learn to design database schemas that reflect real-world relationships, implement efficient queries that avoid the N+1 problem, and leverage Laravel's powerful relationship features for clean, maintainable code. Understanding relationships is crucial for building scalable applications that handle complex data interactions.\n\nWe'll explore practical scenarios like user-post relationships, role-based permissions, and tagging systems. You'll discover how to optimize relationship queries, handle pivot table data, and implement relationship constraints that maintain data integrity.\n\nMastering Eloquent relationships will dramatically improve your ability to build sophisticated applications with clean, expressive code that accurately models complex business logic and data structures.",
+    "code": {
+      "example": "<?php\n// User Model (One-to-Many)\nclass User extends Model\n{\n    public function posts()\n    {\n        return $this->hasMany(Post::class);\n    }\n\n    public function roles()\n    {\n        return $this->belongsToMany(Role::class)->withPivot('assigned_at');\n    }\n}\n\n// Post Model\nclass Post extends Model\n{\n    public function user()\n    {\n        return $this->belongsTo(User::class);\n    }\n\n    public function tags()\n    {\n        return $this->belongsToMany(Tag::class);\n    }\n}\n\n// Efficient Relationship Queries\n$users = User::with(['posts', 'roles'])->get(); // Eager loading\n\n$userPosts = User::find(1)->posts()->where('published', true)->get();\n\n// Many-to-Many with Pivot Data\n$user->roles()->attach($roleId, ['assigned_at' => now()]);\n$user->roles()->wherePivot('assigned_at', '>', Carbon::yesterday())->get();",
+      "explanation": "This example demonstrates the three main relationship types in Laravel: one-to-many (User-Posts), many-to-many (User-Roles), and many-to-many with pivot data (Posts-Tags). Eager loading prevents N+1 query problems, while pivot table methods enable complex relationship management.",
+      "language": "php"
+    },
+    "pitfalls": [
+      {
+        "mistake": "N+1 query problem when accessing relationships",
+        "solution": "Use eager loading with with() method or lazy eager loading with load()",
+        "severity": "high"
+      },
+      {
+        "mistake": "Not defining inverse relationships",
+        "solution": "Always define both sides of relationships for proper Eloquent functionality",
+        "severity": "medium"
+      },
+      {
+        "mistake": "Incorrectly naming foreign keys",
+        "solution": "Follow Laravel conventions or explicitly specify foreign key names",
+        "severity": "medium"
+      }
+    ],
+    "exercises": [
+      {
+        "title": "Build a Blog System with Relationships",
+        "description": "Create a complete blog system with Users, Posts, Categories, and Tags, implementing all relationship types and optimized queries",
+        "checkpoints": [
+          "Define all model relationships correctly",
+          "Implement efficient queries with eager loading",
+          "Create pivot table for post-tag relationships",
+          "Build controllers that demonstrate relationship usage"
+        ]
+      }
+    ],
+    "next": [],
+    "estimatedMinutes": 40,
+    "difficulty": "Intermediate",
+    "tags": [
+      "Eloquent",
+      "Relationships",
+      "Database",
+      "ORM",
+      "Laravel"
+    ],
+    "legacy": {
+      "originalId": 14,
+      "originalTopic": "Eloquent Relationships",
+      "migrated": "2025-01-27T10:15:00.000Z"
+    },
+    "lastUpdated": "2025-01-27T10:15:00.000Z",
+    "version": "1.0.0"
+  },
+  {
+    "id": "laravel-fundamentals-lesson-15",
+    "moduleSlug": "laravel-fundamentals",
+    "title": "File Storage and Uploads",
+    "order": 15,
+    "objectives": [
+      "Implement secure file upload handling in Laravel applications",
+      "Configure and use different storage drivers (local, S3, etc.)",
+      "Handle file validation, processing, and storage organization"
+    ],
+    "intro": "File storage and uploads are essential features in modern web applications, from user profile pictures to document management systems. This comprehensive lesson covers Laravel's powerful filesystem abstraction, enabling you to handle files securely and efficiently across different storage environments.\n\nYou'll learn to implement robust file upload systems that validate file types and sizes, process images, and organize files in logical directory structures. We'll explore Laravel's unified API for different storage drivers, making it easy to switch between local storage, cloud services like Amazon S3, and CDN integration.\n\nSecurity is paramount when handling user uploads, so we'll cover best practices for preventing malicious file uploads, implementing proper access controls, and sanitizing file names. You'll also learn to optimize file storage for performance and scalability.\n\nBy the end of this lesson, you'll be confident in building file management features that scale from simple personal projects to enterprise applications handling thousands of uploads daily.",
+    "code": {
+      "example": "<?php\n// File Upload Controller\nclass FileUploadController extends Controller\n{\n    public function store(Request $request)\n    {\n        $request->validate([\n            'avatar' => 'required|image|mimes:jpeg,png,jpg|max:2048',\n            'document' => 'required|file|mimes:pdf,doc,docx|max:10240'\n        ]);\n\n        // Store avatar with custom name\n        $avatarPath = $request->file('avatar')->store('avatars', 'public');\n        \n        // Store document on S3\n        $documentPath = $request->file('document')->store('documents', 's3');\n\n        // Save file info to database\n        UserFile::create([\n            'user_id' => auth()->id(),\n            'avatar_path' => $avatarPath,\n            'document_path' => $documentPath,\n            'original_name' => $request->file('document')->getClientOriginalName()\n        ]);\n\n        return back()->with('success', 'Files uploaded successfully');\n    }\n\n    public function download($fileId)\n    {\n        $file = UserFile::findOrFail($fileId);\n        \n        // Check permissions\n        $this->authorize('download', $file);\n        \n        return Storage::disk('s3')->download($file->document_path, $file->original_name);\n    }\n}\n\n// In config/filesystems.php\n'disks' => [\n    's3' => [\n        'driver' => 's3',\n        'key' => env('AWS_ACCESS_KEY_ID'),\n        'secret' => env('AWS_SECRET_ACCESS_KEY'),\n        'region' => env('AWS_DEFAULT_REGION'),\n        'bucket' => env('AWS_BUCKET'),\n    ],\n];",
+      "explanation": "This example shows comprehensive file handling including validation, multiple storage drivers, organized directory structure, and secure download functionality. The code demonstrates both local and cloud storage integration with proper security measures.",
+      "language": "php"
+    },
+    "pitfalls": [
+      {
+        "mistake": "Not validating file types and sizes",
+        "solution": "Always implement strict file validation to prevent security vulnerabilities",
+        "severity": "high"
+      },
+      {
+        "mistake": "Storing files in publicly accessible directories without access control",
+        "solution": "Use Laravel's storage system with proper disk configuration and authorization",
+        "severity": "high"
+      },
+      {
+        "mistake": "Not handling file upload errors gracefully",
+        "solution": "Implement proper error handling and user feedback for upload failures",
+        "severity": "medium"
+      }
+    ],
+    "exercises": [
+      {
+        "title": "Build a Document Management System",
+        "description": "Create a secure document upload and management system with different file types, access controls, and cloud storage integration",
+        "checkpoints": [
+          "Implement file upload with comprehensive validation",
+          "Configure multiple storage drivers (local and cloud)",
+          "Create access control for file downloads",
+          "Build file organization and search functionality"
+        ]
+      }
+    ],
+    "next": [],
+    "estimatedMinutes": 45,
+    "difficulty": "Intermediate",
+    "tags": [
+      "File Storage",
+      "Uploads",
+      "Security",
+      "Cloud Storage",
+      "Laravel"
+    ],
+    "legacy": {
+      "originalId": 15,
+      "originalTopic": "File Storage",
+      "migrated": "2025-01-27T10:15:00.000Z"
+    },
+    "lastUpdated": "2025-01-27T10:15:00.000Z",
+    "version": "1.0.0"
+  },
+  {
+    "id": "laravel-fundamentals-lesson-16",
+    "moduleSlug": "laravel-fundamentals",
+    "title": "Laravel Artisan Commands",
+    "order": 16,
+    "objectives": [
+      "Create custom Artisan commands for application automation",
+      "Understand command scheduling and background task execution",
+      "Implement command-line interfaces for administrative tasks"
+    ],
+    "intro": "Laravel's Artisan command-line interface is a powerful tool for automating tasks, managing your application, and creating custom administrative utilities. This lesson teaches you to harness Artisan's full potential by creating custom commands that streamline your development workflow and application maintenance.\n\nYou'll learn to build sophisticated command-line tools that can process data, generate reports, perform maintenance tasks, and integrate with external systems. We'll explore command arguments, options, interactive prompts, and progress indicators that create professional command-line experiences.\n\nCommand scheduling is another crucial aspect we'll cover, enabling you to automate repetitive tasks like data backups, email notifications, and system cleanups. You'll discover how to create robust, error-resistant commands that handle edge cases and provide detailed logging.\n\nMastering Artisan commands will significantly improve your productivity and enable you to build applications with powerful administrative capabilities that can be automated and scheduled for optimal performance.",
+    "code": {
+      "example": "<?php\n// Creating a custom command\nphp artisan make:command ProcessUserData\n\n// In app/Console/Commands/ProcessUserData.php\nclass ProcessUserData extends Command\n{\n    protected $signature = 'users:process {--inactive : Process only inactive users} {--limit=100 : Limit number of users}';\n    protected $description = 'Process user data and generate reports';\n\n    public function handle()\n    {\n        $limit = $this->option('limit');\n        $onlyInactive = $this->option('inactive');\n        \n        $query = User::query();\n        if ($onlyInactive) {\n            $query->where('last_login_at', '<', now()->subDays(30));\n        }\n        \n        $users = $query->limit($limit)->get();\n        \n        $this->info(\"Processing {$users->count()} users...\");\n        \n        $bar = $this->output->createProgressBar($users->count());\n        $bar->start();\n        \n        foreach ($users as $user) {\n            // Process user data\n            $this->processUserData($user);\n            $bar->advance();\n        }\n        \n        $bar->finish();\n        $this->newLine();\n        $this->info('User processing completed successfully!');\n        \n        return Command::SUCCESS;\n    }\n    \n    private function processUserData(User $user)\n    {\n        // Simulate data processing\n        sleep(1);\n        \n        // Log processing\n        $this->line(\"Processed user: {$user->email}\");\n    }\n}\n\n// In app/Console/Kernel.php - Scheduling\nprotected function schedule(Schedule $schedule)\n{\n    $schedule->command('users:process --inactive')\n             ->daily()\n             ->at('02:00')\n             ->emailOutputTo('admin@example.com');\n             \n    $schedule->command('backup:run')\n             ->weekly()\n             ->sundays()\n             ->at('01:00');\n}",
+      "explanation": "This example demonstrates a comprehensive custom Artisan command with options, arguments, progress bars, and interactive output. The command includes scheduling configuration for automated execution, showing how to build professional command-line tools for application management.",
+      "language": "php"
+    },
+    "pitfalls": [
+      {
+        "mistake": "Not handling command failures gracefully",
+        "solution": "Implement proper error handling and return appropriate exit codes",
+        "severity": "medium"
+      },
+      {
+        "mistake": "Creating commands that consume too much memory",
+        "solution": "Use chunking and proper memory management for large data processing",
+        "severity": "medium"
+      },
+      {
+        "mistake": "Not providing clear command documentation",
+        "solution": "Write descriptive command descriptions and use meaningful argument names",
+        "severity": "low"
+      }
+    ],
+    "exercises": [
+      {
+        "title": "Build a Data Export Command",
+        "description": "Create a comprehensive data export command that can export different data types with various format options and scheduling capabilities",
+        "checkpoints": [
+          "Create command with multiple options and arguments",
+          "Implement progress tracking and user feedback",
+          "Add error handling and logging",
+          "Configure command scheduling for automated exports"
+        ]
+      }
+    ],
+    "next": [],
+    "estimatedMinutes": 35,
+    "difficulty": "Intermediate",
+    "tags": [
+      "Artisan",
+      "Commands",
+      "Automation",
+      "CLI",
+      "Laravel"
+    ],
+    "legacy": {
+      "originalId": 16,
+      "originalTopic": "Artisan Commands",
+      "migrated": "2025-01-27T10:15:00.000Z"
+    },
+    "lastUpdated": "2025-01-27T10:15:00.000Z",
+    "version": "1.0.0"
+  }
+]

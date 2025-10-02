@@ -1,0 +1,72 @@
+[
+  {
+    "id": 1,
+    "topic": "Basics",
+    "type": "multiple-choice",
+    "question": "What is Node.js?",
+    "choices": [
+      "A front-end JavaScript framework",
+      "A back-end JavaScript runtime environment",
+      "A database management system",
+      "A CSS preprocessor"
+    ],
+    "correctAnswer": 1,
+    "explanation": "Node.js is a back-end JavaScript runtime environment that allows you to run JavaScript on the server."
+  },
+  {
+    "id": 2,
+    "topic": "Modules",
+    "type": "multiple-choice",
+    "question": "Which function is used to export modules in Node.js?",
+    "choices": [
+      "export",
+      "exports",
+      "module.exports",
+      "Both B and C"
+    ],
+    "correctAnswer": 3,
+    "explanation": "Both 'exports' and 'module.exports' can be used to export modules, but 'module.exports' is more commonly used."
+  },
+  {
+    "id": 3,
+    "topic": "NPM",
+    "type": "multiple-choice",
+    "question": "What does NPM stand for?",
+    "choices": [
+      "Node Package Manager",
+      "Node Project Manager",
+      "Node Programming Module",
+      "None of the above"
+    ],
+    "correctAnswer": 0,
+    "explanation": "NPM stands for Node Package Manager, which is used to manage dependencies in Node.js projects."
+  },
+  {
+    "id": 4,
+    "topic": "Async",
+    "type": "multiple-choice",
+    "question": "Which of the following is NOT a way to handle asynchronous operations in Node.js?",
+    "choices": [
+      "Callbacks",
+      "Promises",
+      "Async/Await",
+      "Synchronous functions"
+    ],
+    "correctAnswer": 3,
+    "explanation": "Synchronous functions block the execution thread and are not a way to handle asynchronous operations."
+  },
+  {
+    "id": 5,
+    "topic": "Express",
+    "type": "multiple-choice",
+    "question": "Which method is used to define a route in Express.js?",
+    "choices": [
+      "route()",
+      "get()",
+      "define()",
+      "path()"
+    ],
+    "correctAnswer": 1,
+    "explanation": "The get() method is used to define a GET route in Express.js. Other methods like post(), put(), delete() are also used for different HTTP methods."
+  }
+]

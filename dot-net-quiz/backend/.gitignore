@@ -1,0 +1,88 @@
+# .NET Core
+*.dll
+*.exe
+*.pdb
+*.so
+*.dylib
+*.lib
+*.a
+*.obj
+*.o
+*.rsp
+*.tlog
+*.lastbuildstate
+*.cache
+*.nupkg
+*.nupkg.metadata
+*.nuget.props
+*.nuget.targets
+project.lock.json
+project.assets.json
+packages.lock.json
+artifacts/
+**/bin/
+**/obj/
+**/Debug/
+**/Release/
+.nuget/packages/
+*.dbmdl
+*.jfm
+
+# ASP.NET Core
+appsettings.*.json
+**/Properties/**/launchSettings.json
+.bundle/
+.csx/
+*.build
+*.dotnet
+.runtimeconfig.json
+.runtimeconfig.dev.json
+
+# Visual Studio
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+*.vspscc
+*.vssscc
+*.vcxitems.filters
+*.vcxproj.filters
+
+# Rider
+.idea/*
+*.sln.iml
+
+# IDE specific files
+*.swp
+*.swo
+*~
+
+# Logs
+logs
+*.log
+
+# Temp files
+tmp/
+temp/
+*.tmp
+*.temp
+
+# Cache files
+.cache/
+
+# Database
+*.db
+*.sqlite
+*.sqlite3
+
+# Miscellaneous
+*.bak
+*.backup
+.DS_Store
+*.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db

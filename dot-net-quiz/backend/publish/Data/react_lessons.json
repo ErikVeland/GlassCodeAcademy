@@ -1,0 +1,42 @@
+[
+  {
+    "id": 1,
+    "topic": "Components",
+    "title": "React Components Basics",
+    "description": "Learn how to create and use React components.",
+    "codeExample": "function Welcome(props) {\n  return <h1>Hello, {props.name}</h1>;\n}\n\nfunction App() {\n  return (\n    <div>\n      <Welcome name=\"Sara\" />\n      <Welcome name=\"Cahal\" />\n      <Welcome name=\"Edite\" />\n    </div>\n  );\n}",
+    "output": "Hello, Sara\nHello, Cahal\nHello, Edite"
+  },
+  {
+    "id": 2,
+    "topic": "Components",
+    "title": "Component State and Lifecycle",
+    "description": "Learn how to manage state and handle component lifecycle events in React.",
+    "codeExample": "class Clock extends React.Component {\n  constructor(props) {\n    super(props);\n    this.state = {date: new Date()};\n  }\n\n  componentDidMount() {\n    this.timerID = setInterval(\n      () => this.tick(),\n      1000\n    );\n  }\n\n  componentWillUnmount() {\n    clearInterval(this.timerID);\n  }\n\n  tick() {\n    this.setState({\n      date: new Date()\n    });\n  }\n\n  render() {\n    return (\n      <div>\n        <h1>Hello, world!</h1>\n        <h2>It is {this.state.date.toLocaleTimeString()}.</h2>\n      </div>\n    );\n  }\n}",
+    "output": "Hello, world!\nIt is [current time]"
+  },
+  {
+    "id": 3,
+    "topic": "Hooks",
+    "title": "Introduction to React Hooks",
+    "description": "Learn how to use React Hooks to manage state and side effects in functional components.",
+    "codeExample": "import React, { useState, useEffect } from 'react';\n\nfunction Example() {\n  const [count, setCount] = useState(0);\n\n  useEffect(() => {\n    document.title = `You clicked ${count} times`;\n  });\n\n  return (\n    <div>\n      <p>You clicked {count} times</p>\n      <button onClick={() => setCount(count + 1)}>\n        Click me\n      </button>\n    </div>\n  );\n}",
+    "output": "You clicked 0 times\n[Button: Click me]"
+  },
+  {
+    "id": 4,
+    "topic": "Hooks",
+    "title": "Custom Hooks",
+    "description": "Learn how to create custom hooks to reuse stateful logic between components.",
+    "codeExample": "import { useState, useEffect } from 'react';\n\nfunction useFriendStatus(friendID) {\n  const [isOnline, setIsOnline] = useState(null);\n\n  useEffect(() => {\n    function handleStatusChange(status) {\n      setIsOnline(status.isOnline);\n    }\n\n    ChatAPI.subscribeToFriendStatus(friendID, handleStatusChange);\n    return () => {\n      ChatAPI.unsubscribeFromFriendStatus(friendID, handleStatusChange);\n    };\n  });\n\n  return isOnline;\n}\n\nfunction FriendStatus(props) {\n  const isOnline = useFriendStatus(props.friend.id);\n\n  if (isOnline === null) {\n    return 'Loading...';\n  }\n  return isOnline ? 'Online' : 'Offline';\n}",
+    "output": "Loading... or Online/Offline based on friend status"
+  },
+  {
+    "id": 5,
+    "topic": "Context",
+    "title": "React Context API",
+    "description": "Learn how to use React Context to share data between components without prop drilling.",
+    "codeExample": "const themes = {\n  light: {\n    foreground: '#000000',\n    background: '#eeeeee',\n  },\n  dark: {\n    foreground: '#ffffff',\n    background: '#222222',\n  },\n};\n\nconst ThemeContext = React.createContext(themes.light);\n\nfunction App() {\n  return (\n    <ThemeContext.Provider value={themes.dark}>\n      <Toolbar />\n    </ThemeContext.Provider>\n  );\n}\n\nfunction Toolbar(props) {\n  return (\n    <div>\n      <ThemedButton />\n    </div>\n  );\n}\n\nfunction ThemedButton() {\n  const theme = React.useContext(ThemeContext);\n  return (\n    <button style={{ background: theme.background, color: theme.foreground }}>\n      I am styled by theme context!\n    </button>\n  );\n}",
+    "output": "Button with dark theme styling"
+  }
+]

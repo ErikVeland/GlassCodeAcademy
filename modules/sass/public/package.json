@@ -1,0 +1,13 @@
+{
+  "name": "sass-module",
+  "version": "1.0.0",
+  "description": "SASS learning module for Fullstack Academy",
+  "main": "index.js",
+  "scripts": {
+    "build": "sass scss/style.scss css/style.css",
+    "watch": "sass scss/style.scss css/style.css --watch"
+  },
+  "devDependencies": {
+    "sass": "^1.58.0"
+  }
+}

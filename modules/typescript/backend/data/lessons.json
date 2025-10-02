@@ -1,0 +1,42 @@
+[
+  {
+    "id": 1,
+    "topic": "Basic Types",
+    "title": "Primitive Types",
+    "description": "Learn about TypeScript's primitive types including string, number, and boolean.",
+    "codeExample": "let isDone: boolean = false\nlet decimal: number = 6\nlet color: string = \"blue\"\n\ncolor = 'red'  // Still valid\n\nlet fullName: string = `Bob Bobbington`\nlet sentence: string = `Hello, my name is ${fullName}`",
+    "output": "Variables with explicit type annotations for primitive types"
+  },
+  {
+    "id": 2,
+    "topic": "Basic Types",
+    "title": "Arrays and Tuples",
+    "description": "Learn how to work with arrays and tuples in TypeScript.",
+    "codeExample": "// Arrays\nlet list: number[] = [1, 2, 3]\nlet list2: Array<number> = [1, 2, 3]\n\n// Tuples\nlet x: [string, number]\nx = ['hello', 10]  // OK\n// x = [10, 'hello']  // Error\n\nconsole.log(x[0].substring(1))  // OK\n// console.log(x[1].substring(1))  // Error, 'number' does not have 'substring'",
+    "output": "Type-safe arrays and fixed-length arrays with known types"
+  },
+  {
+    "id": 3,
+    "topic": "Interfaces",
+    "title": "Interface Declaration",
+    "description": "Learn how to define interfaces to describe the shape of objects.",
+    "codeExample": "interface Person {\n  firstName: string\n  lastName: string\n}\n\nfunction greeter(person: Person) {\n  return \"Hello, \" + person.firstName + \" \" + person.lastName\n}\n\nlet user = { firstName: \"Jane\", lastName: \"User\" }\n\ngreeter(user)",
+    "output": "Hello, Jane User"
+  },
+  {
+    "id": 4,
+    "topic": "Classes",
+    "title": "Class Implementation",
+    "description": "Learn how to implement classes with access modifiers in TypeScript.",
+    "codeExample": "class Animal {\n  private name: string\n  protected age: number\n  public species: string\n  \n  constructor(theName: string, theAge: number, theSpecies: string) {\n    this.name = theName\n    this.age = theAge\n    this.species = theSpecies\n  }\n  \n  public move(distanceInMeters: number = 0) {\n    console.log(`${this.name} moved ${distanceInMeters}m.`)\n  }\n}\n\nclass Dog extends Animal {\n  bark() {\n    console.log('Woof! Woof!')\n  }\n  \n  move(distanceInMeters = 5) {\n    console.log('Running...')\n    super.move(distanceInMeters)\n  }\n}",
+    "output": "Classes with proper encapsulation and inheritance"
+  },
+  {
+    "id": 5,
+    "topic": "Generics",
+    "title": "Generic Types",
+    "description": "Learn how to create reusable components with generics.",
+    "codeExample": "function identity<T>(arg: T): T {\n  return arg\n}\n\nlet output1 = identity<string>(\"myString\")\nlet output2 = identity(\"myString\")  // Type argument inferred\n\ninterface GenericIdentityFn<T> {\n  (arg: T): T\n}\n\nfunction identity2<T>(arg: T): T {\n  return arg\n}\n\nlet myIdentity: GenericIdentityFn<number> = identity2",
+    "output": "Type-safe generic functions and interfaces"
+  }
+]

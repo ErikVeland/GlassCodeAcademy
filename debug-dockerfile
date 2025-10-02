@@ -1,0 +1,24 @@
+# Debug Dockerfile to understand the build issue
+FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
+WORKDIR /src
+COPY dot-net-quiz/backend/. ./dot-net-quiz/backend/
+WORKDIR /src/dot-net-quiz/backend
+
+# Debug information
+RUN echo "Current directory:"
+RUN pwd
+RUN echo "Listing files:"
+RUN ls -la
+RUN echo "Listing Models directory:"
+RUN ls -la Models/
+RUN echo "Listing Controllers directory:"
+RUN ls -la Controllers/
+RUN echo "Checking backend.csproj:"
+RUN cat backend.csproj
+
+# Try to build with verbose output
+RUN dotnet restore -v d
+RUN dotnet build -v d
+
+# Try to publish with verbose output
+RUN dotnet publish -c Release -o /app -v d

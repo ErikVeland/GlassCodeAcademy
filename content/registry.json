@@ -1,0 +1,656 @@
+{
+  "version": "1.0.0",
+  "lastUpdated": "2025-10-01T00:00:00Z",
+  "schema": {
+    "version": "1.0",
+    "validateOnBuild": true,
+    "strictMode": false
+  },
+  "tiers": {
+    "foundational": {
+      "level": 1,
+      "title": "Foundational",
+      "description": "Build essential programming skills and concepts",
+      "focusArea": "Programming basics, web fundamentals, version control",
+      "color": "from-blue-500 to-cyan-500",
+      "learningObjectives": [
+        "Master basic programming concepts",
+        "Understand web development fundamentals", 
+        "Learn version control workflows"
+      ]
+    },
+    "core": {
+      "level": 2,
+      "title": "Core Technologies",
+      "description": "Master primary development technologies",
+      "focusArea": "Essential technologies (.NET, React, Database, Backend frameworks)",
+      "color": "from-green-500 to-emerald-500",
+      "learningObjectives": [
+        "Master core backend technologies",
+        "Build sophisticated frontend applications",
+        "Design and optimize database systems"
+      ]
+    },
+    "specialized": {
+      "level": 3,
+      "title": "Specialized Skills", 
+      "description": "Develop expertise in modern development practices",
+      "focusArea": "Advanced frameworks (Next.js, GraphQL, DevOps)",
+      "color": "from-purple-500 to-violet-500",
+      "learningObjectives": [
+        "Master advanced frontend frameworks",
+        "Build scalable API architectures",
+        "Implement modern DevOps practices"
+      ]
+    },
+    "quality": {
+      "level": 4,
+      "title": "Quality & Testing",
+      "description": "Professional quality assurance capabilities",
+      "focusArea": "Testing, performance, security",
+      "color": "from-orange-500 to-red-500",
+      "learningObjectives": [
+        "Implement comprehensive testing strategies",
+        "Optimize application performance",
+        "Secure applications with best practices"
+      ]
+    }
+  },
+  "modules": [
+    {
+      "slug": "programming-fundamentals",
+      "title": "Programming Fundamentals",
+      "description": "Variables, data types, control structures, and basic algorithms",
+      "tier": "foundational",
+      "track": "Programming",
+      "order": 1,
+      "icon": "💻",
+      "difficulty": "Beginner",
+      "estimatedHours": 40,
+      "category": "programming",
+      "technologies": ["Logic", "Algorithms", "Data Structures"],
+      "prerequisites": [],
+      "thresholds": {
+        "requiredLessons": 12,
+        "requiredQuestions": 15
+      },
+      "legacySlugs": ["programming-basics", "fundamentals"],
+      "status": "active",
+      "metadata": {
+        "thresholds": {
+          "minLessons": 12,
+          "minQuizQuestions": 15,
+          "passingScore": 70
+        }
+      },
+      "routes": {
+        "overview": "/modules/programming-fundamentals",
+        "lessons": "/modules/programming-fundamentals/lessons",
+        "quiz": "/modules/programming-fundamentals/quiz"
+      }
+    },
+    {
+      "slug": "web-fundamentals", 
+      "title": "Web Development Basics",
+      "description": "HTML5, CSS3, JavaScript fundamentals, and DOM manipulation",
+      "tier": "foundational",
+      "track": "Frontend",
+      "order": 2,
+      "icon": "🌐",
+      "difficulty": "Beginner",
+      "estimatedHours": 50,
+      "category": "web",
+      "technologies": ["HTML5", "CSS3", "JavaScript", "DOM"],
+      "prerequisites": ["programming-fundamentals"],
+      "thresholds": {
+        "requiredLessons": 15,
+        "requiredQuestions": 20
+      },
+      "legacySlugs": ["web-basics", "html-css-js"],
+      "status": "active",
+      "metadata": {
+        "thresholds": {
+          "minLessons": 15,
+          "minQuizQuestions": 20,
+          "passingScore": 70
+        }
+      },
+      "routes": {
+        "overview": "/modules/web-fundamentals",
+        "lessons": "/modules/web-fundamentals/lessons", 
+        "quiz": "/modules/web-fundamentals/quiz"
+      }
+    },
+    {
+      "slug": "version-control",
+      "title": "Version Control with Git",
+      "description": "Git workflows, branching, merging, and collaboration",
+      "tier": "foundational",
+      "track": "DevOps",
+      "order": 3,
+      "icon": "📝",
+      "difficulty": "Beginner",
+      "estimatedHours": 20,
+      "category": "devops",
+      "technologies": ["Git", "GitHub", "Version Control"],
+      "prerequisites": [],
+      "thresholds": {
+        "requiredLessons": 10,
+        "requiredQuestions": 15
+      },
+      "legacySlugs": ["git", "version-control-basics"],
+      "status": "active",
+      "metadata": {
+        "thresholds": {
+          "minLessons": 10,
+          "minQuizQuestions": 15,
+          "passingScore": 70
+        }
+      },
+      "routes": {
+        "overview": "/modules/version-control",
+        "lessons": "/modules/version-control/lessons",
+        "quiz": "/modules/version-control/quiz"
+      }
+    },
+    {
+      "slug": "dotnet-fundamentals",
+      "title": ".NET Core Fundamentals", 
+      "description": "C#, ASP.NET Core, Entity Framework, and enterprise patterns",
+      "tier": "core",
+      "track": "Backend",
+      "order": 1,
+      "icon": "⚡",
+      "difficulty": "Intermediate",
+      "estimatedHours": 80,
+      "category": "backend",
+      "technologies": ["C#", "ASP.NET Core", "Entity Framework"],
+      "prerequisites": ["programming-fundamentals"],
+      "thresholds": {
+        "requiredLessons": 18,
+        "requiredQuestions": 25
+      },
+      "legacySlugs": ["dotnet", "dot-net", "csharp"],
+      "status": "active",
+      "metadata": {
+        "thresholds": {
+          "minLessons": 18,
+          "minQuizQuestions": 25,
+          "passingScore": 70
+        }
+      },
+      "routes": {
+        "overview": "/modules/dotnet-fundamentals",
+        "lessons": "/dotnet/lessons",
+        "quiz": "/dotnet/interview"
+      }
+    },
+    {
+      "slug": "react-fundamentals",
+      "title": "React Development",
+      "description": "Components, hooks, state management, and modern patterns",
+      "tier": "core", 
+      "track": "Frontend",
+      "order": 2,
+      "icon": "⚛️",
+      "difficulty": "Intermediate", 
+      "estimatedHours": 60,
+      "category": "frontend",
+      "technologies": ["React", "JSX", "Hooks", "State Management"],
+      "prerequisites": ["web-fundamentals"],
+      "thresholds": {
+        "requiredLessons": 15,
+        "requiredQuestions": 20
+      },
+      "legacySlugs": ["react", "reactjs"],
+      "status": "active",
+      "metadata": {
+        "thresholds": {
+          "minLessons": 15,
+          "minQuizQuestions": 20,
+          "passingScore": 70
+        }
+      },
+      "routes": {
+        "overview": "/modules/react-fundamentals",
+        "lessons": "/react/lessons",
+        "quiz": "/react/interview"
+      }
+    },
+    {
+      "slug": "database-systems",
+      "title": "Database Systems",
+      "description": "SQL, NoSQL, design patterns, and optimization",
+      "tier": "core",
+      "track": "Backend",
+      "order": 3,
+      "icon": "🗄️",
+      "difficulty": "Intermediate",
+      "estimatedHours": 70,
+      "category": "database",
+      "technologies": ["SQL", "NoSQL", "Database Design"],
+      "prerequisites": ["programming-fundamentals"],
+      "thresholds": {
+        "requiredLessons": 16,
+        "requiredQuestions": 22
+      },
+      "legacySlugs": ["database", "sql", "db"],
+      "status": "active",
+      "metadata": {
+        "thresholds": {
+          "minLessons": 16,
+          "minQuizQuestions": 22,
+          "passingScore": 70
+        }
+      },
+      "routes": {
+        "overview": "/modules/database-systems",
+        "lessons": "/database/lessons",
+        "quiz": "/database/interview"
+      }
+    },
+    {
+      "slug": "typescript-fundamentals",
+      "title": "TypeScript Development",
+      "description": "Static typing, advanced types, and modern JavaScript patterns",
+      "tier": "core",
+      "track": "Frontend",
+      "order": 4,
+      "icon": "📘",
+      "difficulty": "Intermediate",
+      "estimatedHours": 50,
+      "category": "frontend",
+      "technologies": ["TypeScript", "JavaScript", "Static Typing"],
+      "prerequisites": ["web-fundamentals"],
+      "thresholds": {
+        "requiredLessons": 14,
+        "requiredQuestions": 18
+      },
+      "legacySlugs": ["typescript", "ts"],
+      "status": "active",
+      "metadata": {
+        "thresholds": {
+          "minLessons": 14,
+          "minQuizQuestions": 18,
+          "passingScore": 70
+        }
+      },
+      "routes": {
+        "overview": "/modules/typescript-fundamentals",
+        "lessons": "/typescript/lessons",
+        "quiz": "/typescript/interview"
+      }
+    },
+    {
+      "slug": "node-fundamentals",
+      "title": "Node.js Development",
+      "description": "Server-side JavaScript, APIs, and runtime environments",
+      "tier": "core",
+      "track": "Backend",
+      "order": 5,
+      "icon": "💚",
+      "difficulty": "Intermediate",
+      "estimatedHours": 60,
+      "category": "backend", 
+      "technologies": ["Node.js", "npm", "Express"],
+      "prerequisites": ["web-fundamentals"],
+      "thresholds": {
+        "requiredLessons": 15,
+        "requiredQuestions": 20
+      },
+      "legacySlugs": ["node", "nodejs"],
+      "status": "active",
+      "metadata": {
+        "thresholds": {
+          "minLessons": 15,
+          "minQuizQuestions": 20,
+          "passingScore": 70
+        }
+      },
+      "routes": {
+        "overview": "/modules/node-fundamentals",
+        "lessons": "/node/lessons",
+        "quiz": "/node/interview"
+      }
+    },
+    {
+      "slug": "laravel-fundamentals",
+      "title": "Laravel Framework",
+      "description": "PHP, Eloquent ORM, and rapid application development",
+      "tier": "core",
+      "track": "Backend",
+      "order": 6,
+      "icon": "🎨",
+      "difficulty": "Intermediate",
+      "estimatedHours": 70,
+      "category": "backend",
+      "technologies": ["PHP", "Laravel", "Eloquent ORM"],
+      "prerequisites": ["programming-fundamentals", "web-fundamentals"],
+      "thresholds": {
+        "requiredLessons": 16,
+        "requiredQuestions": 22
+      },
+      "legacySlugs": ["laravel", "php"],
+      "status": "active",
+      "metadata": {
+        "thresholds": {
+          "minLessons": 16,
+          "minQuizQuestions": 22,
+          "passingScore": 70
+        }
+      },
+      "routes": {
+        "overview": "/modules/laravel-fundamentals",
+        "lessons": "/laravel/lessons",
+        "quiz": "/laravel/interview"
+      }
+    },
+    {
+      "slug": "nextjs-advanced",
+      "title": "Next.js Full-Stack Framework",
+      "description": "Full-stack React framework with SSR and API routes",
+      "tier": "specialized",
+      "track": "Frontend",
+      "order": 1,
+      "icon": "⭐",
+      "difficulty": "Advanced",
+      "estimatedHours": 50,
+      "category": "frontend",
+      "technologies": ["Next.js", "SSR", "API Routes"],
+      "prerequisites": ["react-fundamentals"],
+      "thresholds": {
+        "requiredLessons": 14,
+        "requiredQuestions": 18
+      },
+      "legacySlugs": ["nextjs", "next"],
+      "status": "active",
+      "metadata": {
+        "thresholds": {
+          "minLessons": 14,
+          "minQuizQuestions": 18,
+          "passingScore": 70
+        }
+      },
+      "routes": {
+        "overview": "/modules/nextjs-advanced",
+        "lessons": "/nextjs/lessons",
+        "quiz": "/nextjs/interview"
+      }
+    },
+    {
+      "slug": "graphql-advanced",
+      "title": "GraphQL Development",
+      "description": "Modern API query language with schemas and resolvers",
+      "tier": "specialized",
+      "track": "Backend",
+      "order": 2,
+      "icon": "🔗",
+      "difficulty": "Advanced",
+      "estimatedHours": 50,
+      "category": "backend",
+      "technologies": ["GraphQL", "Schemas", "Resolvers"],
+      "prerequisites": ["dotnet-fundamentals"],
+      "thresholds": {
+        "requiredLessons": 13,
+        "requiredQuestions": 17
+      },
+      "legacySlugs": ["graphql", "gql"],
+      "status": "active",
+      "metadata": {
+        "thresholds": {
+          "minLessons": 13,
+          "minQuizQuestions": 17,
+          "passingScore": 70
+        }
+      },
+      "routes": {
+        "overview": "/modules/graphql-advanced",
+        "lessons": "/graphql/lessons",
+        "quiz": "/graphql/interview"
+      }
+    },
+    {
+      "slug": "sass-advanced",
+      "title": "Sass/SCSS Development",
+      "description": "Advanced CSS preprocessor techniques and methodologies",
+      "tier": "specialized",
+      "track": "Frontend",
+      "order": 3,
+      "icon": "🎨",
+      "difficulty": "Advanced",
+      "estimatedHours": 35,
+      "category": "frontend",
+      "technologies": ["Sass", "SCSS", "CSS"],
+      "prerequisites": ["web-fundamentals"],
+      "thresholds": {
+        "requiredLessons": 12,
+        "requiredQuestions": 15
+      },
+      "legacySlugs": ["sass", "scss"],
+      "status": "active",
+      "metadata": {
+        "thresholds": {
+          "minLessons": 12,
+          "minQuizQuestions": 15,
+          "passingScore": 70
+        }
+      },
+      "routes": {
+        "overview": "/modules/sass-advanced",
+        "lessons": "/sass/lessons",
+        "quiz": "/sass/interview"
+      }
+    },
+    {
+      "slug": "tailwind-advanced",
+      "title": "Tailwind CSS Framework",
+      "description": "Utility-first CSS framework and design system patterns",
+      "tier": "specialized",
+      "track": "Frontend",
+      "order": 4,
+      "icon": "🌊",
+      "difficulty": "Advanced",
+      "estimatedHours": 40,
+      "category": "frontend",
+      "technologies": ["Tailwind CSS", "Utility Classes", "Design Systems"],
+      "prerequisites": ["web-fundamentals"],
+      "thresholds": {
+        "requiredLessons": 13,
+        "requiredQuestions": 16
+      },
+      "legacySlugs": ["tailwind", "tailwindcss"],
+      "status": "active",
+      "metadata": {
+        "thresholds": {
+          "minLessons": 13,
+          "minQuizQuestions": 16,
+          "passingScore": 70
+        }
+      },
+      "routes": {
+        "overview": "/modules/tailwind-advanced",
+        "lessons": "/tailwind/lessons",
+        "quiz": "/tailwind/interview"
+      }
+    },
+    {
+      "slug": "vue-advanced",
+      "title": "Vue.js Framework",
+      "description": "Progressive JavaScript framework for user interfaces",
+      "tier": "specialized",
+      "track": "Frontend",
+      "order": 5,
+      "icon": "💚",
+      "difficulty": "Advanced",
+      "estimatedHours": 55,
+      "category": "frontend",
+      "technologies": ["Vue.js", "Vuex", "Vue Router"],
+      "prerequisites": ["web-fundamentals"],
+      "thresholds": {
+        "requiredLessons": 14,
+        "requiredQuestions": 18
+      },
+      "legacySlugs": ["vue", "vuejs"],
+      "status": "active",
+      "metadata": {
+        "thresholds": {
+          "minLessons": 14,
+          "minQuizQuestions": 18,
+          "passingScore": 70
+        }
+      },
+      "routes": {
+        "overview": "/modules/vue-advanced",
+        "lessons": "/vue/lessons",
+        "quiz": "/vue/interview"
+      }
+    },
+    {
+      "slug": "testing-fundamentals",
+      "title": "Software Testing Fundamentals",
+      "description": "Unit testing, integration testing, and TDD practices",
+      "tier": "quality",
+      "track": "Testing",
+      "order": 1,
+      "icon": "🧪",
+      "difficulty": "Intermediate",
+      "estimatedHours": 50,
+      "category": "testing",
+      "technologies": ["Unit Testing", "TDD", "Integration Testing"],
+      "prerequisites": ["dotnet-fundamentals"],
+      "thresholds": {
+        "requiredLessons": 14,
+        "requiredQuestions": 18
+      },
+      "legacySlugs": ["testing", "unit-testing"],
+      "status": "active",
+      "metadata": {
+        "thresholds": {
+          "minLessons": 14,
+          "minQuizQuestions": 18,
+          "passingScore": 70
+        }
+      },
+      "routes": {
+        "overview": "/modules/testing-fundamentals",
+        "lessons": "/testing/lessons",
+        "quiz": "/testing/interview"
+      }
+    },
+    {
+      "slug": "e2e-testing",
+      "title": "End-to-End Testing",
+      "description": "Cypress, Playwright, and automated testing strategies",
+      "tier": "quality",
+      "track": "Testing",
+      "order": 2,
+      "icon": "🎯",
+      "difficulty": "Advanced",
+      "estimatedHours": 40,
+      "category": "testing",
+      "technologies": ["Cypress", "Playwright", "E2E Testing"],
+      "prerequisites": ["react-fundamentals", "testing-fundamentals"],
+      "thresholds": {
+        "requiredLessons": 12,
+        "requiredQuestions": 15
+      },
+      "legacySlugs": ["e2e", "cypress", "playwright"],
+      "status": "active",
+      "metadata": {
+        "thresholds": {
+          "minLessons": 12,
+          "minQuizQuestions": 15,
+          "passingScore": 70
+        }
+      },
+      "routes": {
+        "overview": "/modules/e2e-testing",
+        "lessons": "/modules/e2e-testing/lessons",
+        "quiz": "/modules/e2e-testing/quiz"
+      }
+    },
+    {
+      "slug": "performance-optimization",
+      "title": "Performance Optimization",
+      "description": "Profiling, monitoring, and optimization techniques",
+      "tier": "quality",
+      "track": "Performance",
+      "order": 3,
+      "icon": "⚡",
+      "difficulty": "Advanced",
+      "estimatedHours": 45,
+      "category": "frontend",
+      "technologies": ["Performance", "Profiling", "Optimization"],
+      "prerequisites": ["react-fundamentals", "nextjs-advanced"],
+      "thresholds": {
+        "requiredLessons": 13,
+        "requiredQuestions": 16
+      },
+      "legacySlugs": ["performance", "optimization"],
+      "status": "active",
+      "metadata": {
+        "thresholds": {
+          "minLessons": 13,
+          "minQuizQuestions": 16,
+          "passingScore": 70
+        }
+      },
+      "routes": {
+        "overview": "/modules/performance-optimization",
+        "lessons": "/modules/performance-optimization/lessons",
+        "quiz": "/modules/performance-optimization/quiz"
+      }
+    },
+    {
+      "slug": "security-fundamentals",
+      "title": "Security Best Practices",
+      "description": "Authentication, authorization, and security patterns",
+      "tier": "quality",
+      "track": "Security",
+      "order": 4,
+      "icon": "🔒",
+      "difficulty": "Advanced",
+      "estimatedHours": 60,
+      "category": "backend",
+      "technologies": ["Security", "Authentication", "Authorization"],
+      "prerequisites": ["dotnet-fundamentals", "database-systems"],
+      "thresholds": {
+        "requiredLessons": 15,
+        "requiredQuestions": 20
+      },
+      "legacySlugs": ["security", "auth"],
+      "status": "active",
+      "metadata": {
+        "thresholds": {
+          "minLessons": 15,
+          "minQuizQuestions": 20,
+          "passingScore": 70
+        }
+      },
+      "routes": {
+        "overview": "/modules/security-fundamentals",
+        "lessons": "/modules/security-fundamentals/lessons",
+        "quiz": "/modules/security-fundamentals/quiz"
+      }
+    }
+  ],
+  "globalSettings": {
+    "contentThresholds": {
+      "strictMode": false,
+      "developmentMode": true,
+      "minimumLessonsPerModule": 12,
+      "minimumQuestionsPerModule": 15,
+      "requiredSchemaCompliance": 100
+    },
+    "routingRules": {
+      "enableLegacyRedirects": true,
+      "generate404Fallbacks": true,
+      "requireContentThresholds": false
+    },
+    "seoSettings": {
+      "generateSitemap": true,
+      "includeLastModified": true,
+      "excludeContentPending": false
+    }
+  }
+}

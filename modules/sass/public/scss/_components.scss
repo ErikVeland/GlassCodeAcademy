@@ -1,0 +1,210 @@
+// Buttons
+.btn {
+  @include button-base;
+  
+  &.btn-primary {
+    background-color: $primary-color;
+    color: $white;
+    
+    &:hover {
+      background-color: darken($primary-color, 10%);
+    }
+    
+    &:disabled {
+      background-color: lighten($primary-color, 20%);
+      cursor: not-allowed;
+    }
+  }
+  
+  &.btn-secondary {
+    background-color: $white;
+    color: $primary-color;
+    border-color: $primary-color;
+    
+    &:hover {
+      background-color: $gray-50;
+    }
+  }
+  
+  &.btn-copy {
+    background-color: $gray-700;
+    color: $white;
+    font-size: $font-size-sm;
+    padding: $spacing-1 $spacing-3;
+    
+    &:hover {
+      background-color: $gray-600;
+    }
+  }
+}
+
+// Cards
+.card {
+  @include card-base;
+  
+  &.card-topic {
+    background-color: $primary-color;
+    color: $white;
+  }
+}
+
+.cards {
+  display: grid;
+  grid-template-columns: repeat(1, 1fr);
+  gap: $spacing-8;
+  
+  @include breakpoint(md) {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.cards-grid {
+  display: grid;
+  grid-template-columns: repeat(1, 1fr);
+  gap: $spacing-6;
+  
+  @include breakpoint(md) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  @include breakpoint(lg) {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: $spacing-2;
+}
+
+.card-title {
+  font-size: $font-size-xl;
+  font-weight: $font-weight-semibold;
+  color: $gray-900;
+  margin-bottom: $spacing-1;
+}
+
+.card-topic {
+  font-size: $font-size-sm;
+  color: $gray-500;
+  margin-bottom: $spacing-1;
+}
+
+.card-description {
+  color: $gray-600;
+  margin-bottom: $spacing-4;
+}
+
+// Badges
+.badge {
+  @include badge-base;
+  
+  &.badge-beginner {
+    background-color: #D1FAE5;
+    color: #065F46;
+  }
+  
+  &.badge-intermediate {
+    background-color: #FEF3C7;
+    color: #92400E;
+  }
+  
+  &.badge-advanced {
+    background-color: #FEE2E2;
+    color: #991B1B;
+  }
+  
+  &.badge-topic {
+    background-color: $primary-color;
+    color: $white;
+  }
+}
+
+// Forms
+.search-box {
+  margin-bottom: $spacing-8;
+}
+
+.search-input {
+  width: 100%;
+  
+  @include breakpoint(md) {
+    width: 33.333333%;
+  }
+  
+  padding: $spacing-2 $spacing-3;
+  border: 1px solid $gray-300;
+  border-radius: $border-radius-md;
+  transition: border-color 0.2s;
+  
+  &:focus {
+    @include focus-ring;
+    border-color: $primary-color;
+  }
+}
+
+// Code examples
+.code-example {
+  border: 1px solid $gray-200;
+  border-radius: $border-radius-lg;
+  overflow: hidden;
+  margin-bottom: $spacing-6;
+}
+
+.code-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: $gray-800;
+  color: $gray-200;
+  padding: $spacing-2 $spacing-4;
+}
+
+.code-title {
+  font-size: $font-size-sm;
+  font-weight: $font-weight-medium;
+}
+
+.code-block {
+  background-color: $gray-50;
+  padding: $spacing-4;
+  margin: 0;
+}
+
+.code-content {
+  margin: 0;
+}
+
+// Quiz options
+.options {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-3;
+  margin-bottom: $spacing-6;
+}
+
+.option {
+  display: block;
+  text-align: left;
+  padding: $spacing-4;
+  border: 1px solid $gray-200;
+  border-radius: $border-radius-md;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  
+  &:hover {
+    background-color: $gray-50;
+  }
+}
+
+.option-input {
+  margin-right: $spacing-3;
+  height: $spacing-4;
+  width: $spacing-4;
+}
+
+.option-text {
+  vertical-align: middle;
+}

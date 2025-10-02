@@ -1,0 +1,67 @@
+[
+  {
+    "id": 1,
+    "topic": "Core Concepts",
+    "type": "multiple-choice",
+    "question": "What is the correct way to create a Vue application?",
+    "choices": [
+      "Vue.createApp({})",
+      "new Vue({})",
+      "Vue.app({})",
+      "Vue.init({})"
+    ],
+    "correctAnswer": 0,
+    "explanation": "In Vue 3, applications are created using Vue.createApp({}). This is different from Vue 2 where new Vue({}) was used."
+  },
+  {
+    "id": 2,
+    "topic": "Core Concepts",
+    "type": "multiple-choice",
+    "question": "Which directive is used for two-way data binding in Vue?",
+    "choices": [
+      "v-model",
+      "v-bind",
+      "v-on",
+      "v-show"
+    ],
+    "correctAnswer": 0,
+    "explanation": "The v-model directive is used for two-way data binding between form inputs and application state."
+  },
+  {
+    "id": 3,
+    "topic": "Components",
+    "type": "open-ended",
+    "question": "What are props in Vue and how are they used?",
+    "choices": null,
+    "correctAnswer": null,
+    "explanation": "Props are custom attributes you can register on a component. When a value is passed to a prop attribute, it becomes a property on that component instance. Props are used to pass data from parent components to child components."
+  },
+  {
+    "id": 4,
+    "topic": "Components",
+    "type": "multiple-choice",
+    "question": "How do you define a global component in Vue 3?",
+    "choices": [
+      "app.component('my-component', MyComponent)",
+      "Vue.component('my-component', MyComponent)",
+      "MyComponent.component('my-component')",
+      "component('my-component', MyComponent)"
+    ],
+    "correctAnswer": 0,
+    "explanation": "In Vue 3, global components are registered using app.component() where app is the application instance returned by Vue.createApp()."
+  },
+  {
+    "id": 5,
+    "topic": "Composition API",
+    "type": "multiple-choice",
+    "question": "What is the purpose of the setup() function in the Composition API?",
+    "choices": [
+      "It's the entry point for Composition API logic",
+      "It replaces the data option entirely",
+      "It's used only for async operations",
+      "It's deprecated in Vue 3"
+    ],
+    "correctAnswer": 0,
+    "explanation": "The setup() function is the entry point for Composition API logic. It's executed before the component is created, once the props are resolved."
+  }
+]

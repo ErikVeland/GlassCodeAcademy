@@ -1,0 +1,98 @@
+[
+  {
+    "id": 1,
+    "topic": "Routing",
+    "title": "Basic Routing in Laravel",
+    "description": "Learn how to define routes in Laravel applications.",
+    "codeExample": "<?php\n// routes/web.php\n\nuse Illuminate\\Support\\Facades\\Route;\n\nRoute::get('/', function () {\n    return view('welcome');\n});\n\nRoute::get('/users', function () {\n    return 'All users';\n});",
+    "output": "Route definitions registered successfully"
+  },
+  {
+    "id": 2,
+    "topic": "Routing",
+    "title": "Route Parameters",
+    "description": "Learn how to capture segments of the URI in Laravel routes.",
+    "codeExample": "<?php\n// routes/web.php\n\nuse Illuminate\\Support\\Facades\\Route;\n\nRoute::get('/user/{id}', function ($id) {\n    return 'User '.$id;\n});\n\nRoute::get('/posts/{post}/comments/{comment}', function ($postId, $commentId) {\n    //\n});",
+    "output": "Route with parameters registered successfully"
+  },
+  {
+    "id": 3,
+    "topic": "Eloquent ORM",
+    "title": "Introduction to Eloquent",
+    "description": "Learn how to work with database records using Eloquent ORM.",
+    "codeExample": "<?php\n// app/Models/User.php\n\nnamespace App\\Models;\n\nuse Illuminate\\Database\\Eloquent\\Factories\\HasFactory;\nuse Illuminate\\Database\\Eloquent\\Model;\n\nclass User extends Model\n{\n    use HasFactory;\n\n    protected $fillable = [\n        'name',\n        'email',\n        'password',\n    ];\n}",
+    "output": "Eloquent model created successfully"
+  },
+  {
+    "id": 4,
+    "topic": "Eloquent ORM",
+    "title": "Querying Models",
+    "description": "Learn how to retrieve records from the database using Eloquent.",
+    "codeExample": "<?php\n// Retrieving models\n\nuse App\\Models\\User;\n\n$users = User::all();\n\n$user = User::find(1);\n\n$users = User::where('active', 1)->orderBy('name')->get();",
+    "output": "Users retrieved successfully"
+  },
+  {
+    "id": 5,
+    "topic": "Blade Templates",
+    "title": "Blade Basics",
+    "description": "Learn how to create dynamic views using Blade templating engine.",
+    "codeExample": "<!-- resources/views/welcome.blade.php -->\n\n<!DOCTYPE html>\n<html>\n<head>\n    <title>App Name - @yield('title')</title>\n</head>\n<body>\n    @section('sidebar')\n        This is the master sidebar.\n    @show\n\n    <div class=\"container\">\n        @yield('content')\n    </div>\n</body>\n</html>",
+    "output": "Blade template rendered successfully"
+  },
+  {
+    "id": 6,
+    "topic": "Blade Templates",
+    "title": "Blade Control Structures",
+    "description": "Learn how to use control structures in Blade templates.",
+    "codeExample": "@if (count($records) === 1)\n    I have one record!\n@elseif (count($records) > 1)\n    I have multiple records!\n@else\n    I don't have any records!\n@endif\n\n@foreach ($users as $user)\n    <p>This is user {{ $user->id }}</p>\n@endforeach",
+    "output": "Blade control structures executed successfully"
+  },
+  {
+    "id": 7,
+    "topic": "Middleware",
+    "title": "Creating Middleware",
+    "description": "Learn how to create and register custom middleware in Laravel.",
+    "codeExample": "<?php\n// app/Http/Middleware/EnsureTokenIsValid.php\n\nnamespace App\\Http\\Middleware;\n\nuse Closure;\n\nclass EnsureTokenIsValid\n{\n    public function handle($request, Closure $next)\n    {\n        if ($request->input('token') !== 'my-secret-token') {\n            return redirect('home');\n        }\n\n        return $next($request);\n    }\n}",
+    "output": "Middleware created successfully"
+  },
+  {
+    "id": 8,
+    "topic": "Middleware",
+    "title": "Registering Middleware",
+    "description": "Learn how to register middleware in Laravel applications.",
+    "codeExample": "<?php\n// app/Http/Kernel.php\n\nprotected $routeMiddleware = [\n    // ...\n    'token' => \\App\\Http\\Middleware\\EnsureTokenIsValid::class,\n];\n\n// In routes\nRoute::get('/profile', function () {\n    //\n})->middleware('token');",
+    "output": "Middleware registered successfully"
+  },
+  {
+    "id": 9,
+    "topic": "Database",
+    "title": "Migrations",
+    "description": "Learn how to create and run database migrations in Laravel.",
+    "codeExample": "<?php\n// Creating a migration\nphp artisan make:migration create_flights_table\n\n// Migration file\nSchema::create('flights', function (Blueprint $table) {\n    $table->id();\n    $table->string('name');\n    $table->text('description');\n    $table->timestamps();\n});",
+    "output": "Migration created and executed successfully"
+  },
+  {
+    "id": 10,
+    "topic": "Database",
+    "title": "Seeding Data",
+    "description": "Learn how to seed your database with test data in Laravel.",
+    "codeExample": "<?php\n// Creating a seeder\nphp artisan make:seeder UsersTableSeeder\n\n// In the seeder\npublic function run()\n{\n    DB::table('users')->insert([\n        'name' => Str::random(10),\n        'email' => Str::random(10).'@gmail.com',\n        'password' => Hash::make('password'),\n    ]);\n}",
+    "output": "Database seeded successfully"
+  },
+  {
+    "id": 11,
+    "topic": "Authentication",
+    "title": "Laravel Breeze",
+    "description": "Learn how to implement authentication using Laravel Breeze.",
+    "codeExample": "// Install Laravel Breeze\ncomposer require laravel/breeze --dev\n\n// Install Breeze scaffolding\nphp artisan breeze:install\n\n// Run migrations\nphp artisan migrate",
+    "output": "Authentication scaffolding installed successfully"
+  },
+  {
+    "id": 12,
+    "topic": "Authentication",
+    "title": "API Authentication",
+    "description": "Learn how to authenticate API requests in Laravel.",
+    "codeExample": "<?php\n// In routes/api.php\n\nRoute::middleware('auth:sanctum')->get('/user', function (Request $request) {\n    return $request->user();\n});\n\n// In controller\npublic function index(Request $request)\n{\n    return $request->user();\n}",
+    "output": "API authentication configured successfully"
+  }
+]

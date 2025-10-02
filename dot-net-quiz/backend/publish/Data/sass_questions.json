@@ -1,0 +1,104 @@
+[
+  {
+    "id": 1,
+    "topic": "Basics",
+    "type": "multiple-choice",
+    "question": "What is SASS?",
+    "choices": [
+      "A CSS preprocessor that extends CSS with programming features",
+      "A JavaScript framework",
+      "A CSS framework like Bootstrap",
+      "A build tool for web applications"
+    ],
+    "correctAnswer": 0,
+    "explanation": "SASS (Syntactically Awesome Style Sheets) is a CSS preprocessor that adds features like variables, nesting, and mixins to CSS, which are then compiled into regular CSS."
+  },
+  {
+    "id": 2,
+    "topic": "Basics",
+    "type": "multiple-choice",
+    "question": "What symbol is used to define a variable in SASS?",
+    "choices": [
+      "$",
+      "@",
+      "%",
+      "#"
+    ],
+    "correctAnswer": 0,
+    "explanation": "In SASS, variables are defined using the $ symbol followed by the variable name."
+  },
+  {
+    "id": 3,
+    "topic": "Nesting",
+    "type": "open-ended",
+    "question": "How does nesting work in SASS and what are its benefits?",
+    "choices": null,
+    "correctAnswer": null,
+    "explanation": "Nesting in SASS allows you to write selectors inside other selectors, creating a visual hierarchy that mirrors the HTML structure. This makes stylesheets more organized and easier to read, and reduces repetition in selector names."
+  },
+  {
+    "id": 4,
+    "topic": "Nesting",
+    "type": "multiple-choice",
+    "question": "How do you reference the parent selector in a nested rule in SASS?",
+    "choices": [
+      "&",
+      "$parent",
+      ":parent",
+      "::parent"
+    ],
+    "correctAnswer": 0,
+    "explanation": "The & symbol is used to reference the parent selector in nested SASS rules, commonly used for pseudo-classes and modifiers."
+  },
+  {
+    "id": 5,
+    "topic": "Mixins",
+    "type": "multiple-choice",
+    "question": "What is a mixin in SASS?",
+    "choices": [
+      "A reusable block of CSS declarations",
+      "A function that returns a value",
+      "A variable that stores CSS properties",
+      "A selector that combines multiple classes"
+    ],
+    "correctAnswer": 0,
+    "explanation": "A mixin in SASS is a reusable block of CSS declarations that can be included in other stylesheets. Mixins can also take arguments to make them more flexible."
+  },
+  {
+    "id": 6,
+    "topic": "Functions",
+    "type": "multiple-choice",
+    "question": "Which function is used to make a color lighter in SASS?",
+    "choices": [
+      "lighten()",
+      "brighten()",
+      "fade-in()",
+      "adjust-color()"
+    ],
+    "correctAnswer": 0,
+    "explanation": "The lighten() function in SASS is used to make a color lighter by increasing its lightness value."
+  },
+  {
+    "id": 7,
+    "topic": "Compilation",
+    "type": "open-ended",
+    "question": "What is the difference between .scss and .sass syntax?",
+    "choices": null,
+    "correctAnswer": null,
+    "explanation": "SASS offers two syntaxes: .scss (Sassy CSS) which is CSS-compatible and uses braces and semicolons, and .sass (indented syntax) which uses indentation instead of braces and line breaks instead of semicolons. Both compile to the same CSS."
+  },
+  {
+    "id": 8,
+    "topic": "Extend",
+    "type": "multiple-choice",
+    "question": "What is the purpose of @extend in SASS?",
+    "choices": [
+      "To share CSS properties between selectors",
+      "To import external stylesheets",
+      "To create reusable functions",
+      "To define variables"
+    ],
+    "correctAnswer": 0,
+    "explanation": "The @extend directive in SASS allows one selector to inherit the styles of another selector, reducing code duplication by sharing CSS properties."
+  }
+]

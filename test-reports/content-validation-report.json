@@ -1,0 +1,241 @@
+{
+  "timestamp": "2025-10-02T04:37:31.869Z",
+  "results": {
+    "lessons": {
+      "database-systems": {
+        "valid": true,
+        "errors": [],
+        "warnings": []
+      },
+      "dotnet-fundamentals": {
+        "valid": true,
+        "errors": [],
+        "warnings": []
+      },
+      "e2e-testing": {
+        "valid": true,
+        "errors": [],
+        "warnings": []
+      },
+      "graphql-advanced": {
+        "valid": true,
+        "errors": [],
+        "warnings": []
+      },
+      "laravel-fundamentals": {
+        "valid": true,
+        "errors": [],
+        "warnings": []
+      },
+      "nextjs-advanced": {
+        "valid": true,
+        "errors": [],
+        "warnings": []
+      },
+      "node-fundamentals": {
+        "valid": true,
+        "errors": [],
+        "warnings": []
+      },
+      "performance-optimization": {
+        "valid": true,
+        "errors": [],
+        "warnings": []
+      },
+      "programming-fundamentals": {
+        "valid": true,
+        "errors": [],
+        "warnings": []
+      },
+      "react-fundamentals": {
+        "valid": true,
+        "errors": [],
+        "warnings": []
+      },
+      "sass-advanced": {
+        "valid": true,
+        "errors": [],
+        "warnings": []
+      },
+      "security-fundamentals": {
+        "valid": true,
+        "errors": [],
+        "warnings": []
+      },
+      "tailwind-advanced": {
+        "valid": true,
+        "errors": [],
+        "warnings": []
+      },
+      "testing-fundamentals": {
+        "valid": true,
+        "errors": [],
+        "warnings": []
+      },
+      "typescript-fundamentals": {
+        "valid": true,
+        "errors": [],
+        "warnings": []
+      },
+      "version-control": {
+        "valid": true,
+        "errors": [],
+        "warnings": []
+      },
+      "vue-advanced": {
+        "valid": true,
+        "errors": [],
+        "warnings": []
+      },
+      "web-fundamentals": {
+        "valid": true,
+        "errors": [],
+        "warnings": []
+      }
+    },
+    "quizzes": {
+      "database-systems": {
+        "valid": true,
+        "errors": [],
+        "warnings": []
+      },
+      "dotnet-fundamentals": {
+        "valid": true,
+        "errors": [],
+        "warnings": []
+      },
+      "e2e-testing": {
+        "valid": true,
+        "errors": [],
+        "warnings": [
+          "Missing required question types: open-ended"
+        ]
+      },
+      "graphql-advanced": {
+        "valid": true,
+        "errors": [],
+        "warnings": []
+      },
+      "laravel-fundamentals": {
+        "valid": true,
+        "errors": [],
+        "warnings": [
+          "Questions count (35) above maximum (30)"
+        ]
+      },
+      "nextjs-advanced": {
+        "valid": true,
+        "errors": [],
+        "warnings": [
+          "Missing required question types: open-ended"
+        ]
+      },
+      "node-fundamentals": {
+        "valid": true,
+        "errors": [],
+        "warnings": []
+      },
+      "performance-optimization": {
+        "valid": true,
+        "errors": [],
+        "warnings": [
+          "Missing required question types: open-ended"
+        ]
+      },
+      "programming-fundamentals": {
+        "valid": true,
+        "errors": [],
+        "warnings": [
+          "Missing required question types: open-ended"
+        ]
+      },
+      "react-fundamentals": {
+        "valid": true,
+        "errors": [],
+        "warnings": []
+      },
+      "sass-advanced": {
+        "valid": true,
+        "errors": [],
+        "warnings": []
+      },
+      "security-fundamentals": {
+        "valid": true,
+        "errors": [],
+        "warnings": [
+          "Missing required question types: open-ended"
+        ]
+      },
+      "tailwind-advanced": {
+        "valid": true,
+        "errors": [],
+        "warnings": []
+      },
+      "testing-fundamentals": {
+        "valid": true,
+        "errors": [],
+        "warnings": []
+      },
+      "typescript-fundamentals": {
+        "valid": true,
+        "errors": [],
+        "warnings": []
+      },
+      "version-control": {
+        "valid": true,
+        "errors": [],
+        "warnings": [
+          "Missing required question types: open-ended"
+        ]
+      },
+      "vue-advanced": {
+        "valid": true,
+        "errors": [],
+        "warnings": []
+      },
+      "web-fundamentals": {
+        "valid": true,
+        "errors": [],
+        "warnings": [
+          "Missing required question types: open-ended"
+        ]
+      }
+    },
+    "summary": {
+      "totalLessons": 18,
+      "validLessons": 18,
+      "totalQuizzes": 18,
+      "validQuizzes": 18,
+      "errors": [],
+      "warnings": []
+    }
+  },
+  "qualityGates": {
+    "passed": true,
+    "configuration": {
+      "lesson": {
+        "minIntroLength": 100,
+        "minObjectives": 2,
+        "minPitfalls": 1,
+        "minExercises": 1,
+        "requiredSections": [
+          "title",
+          "intro",
+          "code",
+          "pitfalls",
+          "exercises",
+          "objectives"
+        ]
+      },
+      "quiz": {
+        "minQuestions": 15,
+        "maxQuestions": 30,
+        "requiredQuestionTypes": [
+          "multiple-choice",
+          "open-ended"
+        ],
+        "minExplanationLength": 50
+      }
+    }
+  }
+}

@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tailwind CSS Lessons - Fullstack Academy</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#3B82F6',
+                        secondary: '#10B981',
+                        accent: '#8B5CF6',
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                },
+            },
+        }
+    </script>
+</head>
+<body class="bg-gray-50 font-sans">
+    <header class="bg-indigo-500 text-white shadow-md">
+        <div class="container mx-auto px-4 py-4">
+            <div class="flex justify-between items-center">
+                <a href="/" class="text-2xl font-bold">Tailwind CSS Learning Module</a>
+                <nav>
+                    <ul class="flex space-x-6">
+                        <li><a href="/" class="hover:text-indigo-200">Home</a></li>
+                        <li><a href="lessons.html" class="hover:text-indigo-200">Lessons</a></li>
+                        <li><a href="quiz.html" class="hover:text-indigo-200">Quiz</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </header>
+    
+    <main class="container mx-auto px-4 py-8">
+        <h1 class="text-3xl font-bold text-gray-900 mb-8">Tailwind CSS Lessons</h1>
+        
+        <div class="mb-8">
+            <input
+                type="text"
+                placeholder="Search lessons..."
+                class="w-full md:w-1/3 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+            />
+        </div>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300">
+                <div class="p-6">
+                    <div class="flex justify-between items-start mb-2">
+                        <h3 class="text-xl font-semibold text-gray-900">Utility-First Fundamentals</h3>
+                        <span class="px-2 py-1 text-xs font-medium rounded-full bg-green-100 text-green-800">
+                            Beginner
+                        </span>
+                    </div>
+                    
+                    <p class="text-sm text-gray-500 mb-1">Basics</p>
+                    <p class="text-gray-600 mb-4">Learn the core concepts of utility-first CSS with Tailwind.</p>
+                    
+                    <a 
+                        href="lesson-detail.html" 
+                        class="inline-block bg-indigo-500 hover:bg-indigo-600 text-white font-medium py-2 px-4 rounded-lg transition-colors duration-300"
+                    >
+                        Start Lesson
+                    </a>
+                </div>
+            </div>
+            
+            <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300">
+                <div class="p-6">
+                    <div class="flex justify-between items-start mb-2">
+                        <h3 class="text-xl font-semibold text-gray-900">Responsive Design</h3>
+                        <span class="px-2 py-1 text-xs font-medium rounded-full bg-yellow-100 text-yellow-800">
+                            Intermediate
+                        </span>
+                    </div>
+                    
+                    <p class="text-sm text-gray-500 mb-1">Layout</p>
+                    <p class="text-gray-600 mb-4">Master responsive design with Tailwind's breakpoints.</p>
+                    
+                    <a 
+                        href="lesson-detail.html" 
+                        class="inline-block bg-indigo-500 hover:bg-indigo-600 text-white font-medium py-2 px-4 rounded-lg transition-colors duration-300"
+                    >
+                        Start Lesson
+                    </a>
+                </div>
+            </div>
+            
+            <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300">
+                <div class="p-6">
+                    <div class="flex justify-between items-start mb-2">
+                        <h3 class="text-xl font-semibold text-gray-900">Customization</h3>
+                        <span class="px-2 py-1 text-xs font-medium rounded-full bg-red-100 text-red-800">
+                            Advanced
+                        </span>
+                    </div>
+                    
+                    <p class="text-sm text-gray-500 mb-1">Configuration</p>
+                    <p class="text-gray-600 mb-4">Learn how to customize Tailwind for your project.</p>
+                    
+                    <a 
+                        href="lesson-detail.html" 
+                        class="inline-block bg-indigo-500 hover:bg-indigo-600 text-white font-medium py-2 px-4 rounded-lg transition-colors duration-300"
+                    >
+                        Start Lesson
+                    </a>
+                </div>
+            </div>
+        </div>
+    </main>
+    
+    <footer class="bg-white border-t border-gray-200 mt-12">
+        <div class="container mx-auto px-4 py-6">
+            <div class="text-center text-gray-600">
+                <p>Tailwind CSS Learning Module &copy; <span id="current-year"></span> Fullstack Academy</p>
+            </div>
+        </div>
+    </footer>
+    
+    <script>
+        document.getElementById('current-year').textContent = new Date().getFullYear();
+    </script>
+</body>
+</html>

@@ -1,0 +1,42 @@
+[
+  {
+    "id": 1,
+    "topic": "Basics",
+    "title": "Introduction to Tailwind CSS",
+    "description": "Learn the fundamentals of Tailwind CSS and how it differs from traditional CSS frameworks.",
+    "codeExample": "<!-- Traditional CSS -->\n<button class=\"btn btn-blue\">Click me</button>\n\n<style>\n  .btn {\n    padding: 0.5rem 1rem;\n    border-radius: 0.25rem;\n    font-weight: 500;\n  }\n  .btn-blue {\n    background-color: #3b82f6;\n    color: white;\n  }\n</style>\n\n<!-- Tailwind CSS -->\n<button class=\"px-4 py-2 bg-blue-500 text-white font-medium rounded\">Click me</button>",
+    "output": "Button with blue background and white text, padding, and rounded corners"
+  },
+  {
+    "id": 2,
+    "topic": "Basics",
+    "title": "Utility-First Fundamentals",
+    "description": "Learn how to build designs using Tailwind's utility classes instead of writing custom CSS.",
+    "codeExample": "<!-- Building a card component with utility classes -->\n<div class=\"max-w-sm rounded overflow-hidden shadow-lg\">\n  <img class=\"w-full\" src=\"/img/card-top.jpg\" alt=\"Sunset in the mountains\">\n  <div class=\"px-6 py-4\">\n    <div class=\"font-bold text-xl mb-2\">The Coldest Sunset</div>\n    <p class=\"text-gray-700 text-base\">\n      Lorem ipsum dolor sit amet, consectetur adipisicing elit.\n    </p>\n  </div>\n  <div class=\"px-6 pt-4 pb-2\">\n    <span class=\"inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2\">#photography</span>\n  </div>\n</div>",
+    "output": "Card component with image, title, description, and tag"
+  },
+  {
+    "id": 3,
+    "topic": "Layout",
+    "title": "Flexbox and Grid",
+    "description": "Learn how to create layouts using Tailwind's flexbox and grid utilities.",
+    "codeExample": "<!-- Flexbox example -->\n<div class=\"flex items-center justify-between\">\n  <div>Left content</div>\n  <div>Center content</div>\n  <div>Right content</div>\n</div>\n\n<!-- Grid example -->\n<div class=\"grid grid-cols-3 gap-4\">\n  <div class=\"bg-gray-200 p-4\">Column 1</div>\n  <div class=\"bg-gray-300 p-4\">Column 2</div>\n  <div class=\"bg-gray-400 p-4\">Column 3</div>\n</div>",
+    "output": "Flexbox layout with evenly spaced items and grid layout with three columns"
+  },
+  {
+    "id": 4,
+    "topic": "Layout",
+    "title": "Responsive Design",
+    "description": "Learn how to make your designs responsive using Tailwind's responsive prefixes.",
+    "codeExample": "<!-- Responsive design with breakpoints -->\n<div class=\"grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4\">\n  <div class=\"bg-blue-500 p-4 text-white\">Card 1</div>\n  <div class=\"bg-green-500 p-4 text-white\">Card 2</div>\n  <div class=\"bg-red-500 p-4 text-white\">Card 3</div>\n</div>\n\n<!-- Responsive text sizing -->\n<h1 class=\"text-lg sm:text-xl md:text-2xl lg:text-3xl xl:text-4xl\">\n  Responsive Heading\n</h1>",
+    "output": "Grid that changes from 1 column on mobile to 2 on medium screens to 3 on large screens, and heading that scales with screen size"
+  },
+  {
+    "id": 5,
+    "topic": "Customization",
+    "title": "Customizing Tailwind",
+    "description": "Learn how to customize Tailwind's default theme and add your own utility classes.",
+    "codeExample": "// tailwind.config.js\nmodule.exports = {\n  theme: {\n    extend: {\n      colors: {\n        'brand-blue': '#1971c2',\n        'brand-green': '#2b8a3e',\n      },\n      spacing: {\n        '128': '32rem',\n      }\n    }\n  },\n  plugins: [\n    function({ addUtilities }) {\n      const newUtilities = {\n        '.text-shadow': {\n          textShadow: '1px 1px 2px rgba(0, 0, 0, 0.5)'\n        }\n      }\n      addUtilities(newUtilities)\n    }\n  ]\n}",
+    "output": "Custom color palette and spacing scale added to Tailwind configuration"
+  }
+]

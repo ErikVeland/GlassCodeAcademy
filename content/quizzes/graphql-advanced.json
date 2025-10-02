@@ -1,0 +1,457 @@
+{
+  "moduleSlug": "graphql-advanced",
+  "title": "GraphQL Advanced Assessment",
+  "description": "Comprehensive assessment covering key concepts from the graphql-advanced module",
+  "totalQuestions": 20,
+  "passingScore": 70,
+  "timeLimit": 30,
+  "questions": [
+    {
+      "id": "graphql-advanced-q1",
+      "question": "What is GraphQL?",
+      "topic": "GraphQL Fundamentals",
+      "difficulty": "Beginner",
+      "choices": [
+        "A query language for APIs and a runtime for executing queries",
+        "A database management system",
+        "A REST API framework",
+        "A JavaScript library for building user interfaces"
+      ],
+      "correctIndex": 0,
+      "explanation": "GraphQL is a query language for APIs and a runtime for executing those queries by using a type system you define for your data. It provides a more efficient, powerful and flexible alternative to REST.",
+      "industryContext": "GraphQL is widely adopted by companies like Facebook, GitHub, and Shopify for building efficient APIs that reduce over-fetching and under-fetching of data.",
+      "tags": [
+        "GraphQL Fundamentals",
+        "beginner",
+        "graphql"
+      ],
+      "questionType": "multiple-choice",
+      "estimatedTime": 60
+    },
+    {
+      "id": "graphql-advanced-q2",
+      "question": "Which of the following is NOT a core operation type in GraphQL?",
+      "topic": "GraphQL Fundamentals",
+      "difficulty": "Intermediate",
+      "choices": [
+        "Query",
+        "Mutation",
+        "Subscription",
+        "Transaction"
+      ],
+      "correctIndex": 3,
+      "explanation": "GraphQL has three core operation types: Query (for reading data), Mutation (for modifying data), and Subscription (for real-time data). Transaction is not a GraphQL operation type.",
+      "industryContext": "Understanding GraphQL operation types is essential for building robust APIs that support various client requirements including real-time data updates.",
+      "tags": [
+        "GraphQL Fundamentals",
+        "intermediate",
+        "graphql"
+      ],
+      "questionType": "multiple-choice",
+      "estimatedTime": 60
+    },
+    {
+      "id": "graphql-advanced-q3",
+      "question": "What are the main advantages of GraphQL over REST APIs?",
+      "topic": "GraphQL Fundamentals",
+      "difficulty": "Intermediate",
+      "choices": [
+        "Clients can request exactly the data they need, avoiding over-fetching and under-fetching",
+        "GraphQL uses multiple endpoints while REST uses a single endpoint",
+        "REST provides better type safety than GraphQL",
+        "GraphQL is only suitable for mobile applications"
+      ],
+      "correctIndex": 0,
+      "explanation": "GraphQL's main advantages over REST include: 1) Clients can request exactly the data they need, avoiding over-fetching and under-fetching, 2) Single endpoint for all operations instead of multiple URLs, 3) Strong type system provides better tooling and validation, 4) Real-time subscriptions built-in, 5) Introspection allows for automatic documentation and tooling.",
+      "industryContext": "Companies migrating from REST to GraphQL often see significant performance improvements and reduced network overhead, especially in mobile applications where bandwidth is limited.",
+      "tags": [
+        "GraphQL Fundamentals",
+        "intermediate",
+        "graphql"
+      ],
+      "questionType": "multiple-choice",
+      "estimatedTime": 90
+    },
+    {
+      "id": "graphql-advanced-q4",
+      "question": "In GraphQL schema definition, what does the exclamation mark (!) indicate?",
+      "topic": "Schema Design",
+      "difficulty": "Intermediate",
+      "choices": [
+        "The field is required and cannot be null",
+        "The field is deprecated",
+        "The field is an array",
+        "The field is a custom scalar"
+      ],
+      "correctIndex": 0,
+      "explanation": "The exclamation mark (!) in GraphQL schema definition indicates that a field is non-nullable, meaning it must always return a value and cannot be null.",
+      "industryContext": "Proper use of nullability in GraphQL schemas is crucial for building reliable client applications that can handle data validation and error states effectively.",
+      "tags": [
+        "Schema Design",
+        "intermediate",
+        "graphql"
+      ],
+      "questionType": "multiple-choice",
+      "estimatedTime": 60
+    },
+    {
+      "id": "graphql-advanced-q5",
+      "question": "What is the purpose of resolvers in GraphQL?",
+      "topic": "Schema Design",
+      "difficulty": "Beginner",
+      "choices": [
+        "To fetch data for each field in a query",
+        "To define the schema structure",
+        "To validate user input",
+        "To handle authentication"
+      ],
+      "correctIndex": 0,
+      "explanation": "Resolvers are functions that fetch the actual data for each field in a GraphQL query. They define how to retrieve data from databases, APIs, or other sources for each field in the schema.",
+      "industryContext": "Resolver design is critical for GraphQL performance optimization, as inefficient resolvers can lead to the N+1 problem and slow query execution.",
+      "tags": [
+        "Schema Design",
+        "beginner",
+        "graphql"
+      ],
+      "questionType": "multiple-choice",
+      "estimatedTime": 60
+    },
+    {
+      "id": "graphql-advanced-q6",
+      "question": "What is the difference between a GraphQL query and a mutation?",
+      "topic": "GraphQL Operations",
+      "difficulty": "Beginner",
+      "choices": [
+        "Queries are used for reading data while mutations are used for modifying data",
+        "Queries are executed sequentially while mutations are executed in parallel",
+        "Mutations are used for reading data while queries are used for modifying data",
+        "There is no difference, they are interchangeable"
+      ],
+      "correctIndex": 0,
+      "explanation": "Queries are used for reading/fetching data and should be side-effect free, while mutations are used for modifying data (create, update, delete operations). Queries can be executed in parallel, but mutations are executed sequentially to ensure data consistency.",
+      "industryContext": "Understanding the distinction between queries and mutations is fundamental for building GraphQL APIs that follow best practices and maintain data integrity.",
+      "tags": [
+        "GraphQL Operations",
+        "beginner",
+        "graphql"
+      ],
+      "questionType": "multiple-choice",
+      "estimatedTime": 75
+    },
+    {
+      "id": "graphql-advanced-q7",
+      "question": "How do you pass variables to a GraphQL query?",
+      "topic": "GraphQL Operations",
+      "difficulty": "Beginner",
+      "choices": [
+        "Using the variables object alongside the query",
+        "Directly interpolating values in the query string",
+        "Using query parameters in the URL",
+        "Variables cannot be used in GraphQL"
+      ],
+      "correctIndex": 0,
+      "explanation": "Variables are passed to GraphQL queries using a variables object that is sent alongside the query. The query defines variable types and names using $ syntax, and values are provided in the variables object.",
+      "industryContext": "Using variables in GraphQL queries is essential for security (preventing injection attacks) and reusability of query templates in client applications.",
+      "tags": [
+        "GraphQL Operations",
+        "beginner",
+        "graphql"
+      ],
+      "questionType": "multiple-choice",
+      "estimatedTime": 60
+    },
+    {
+      "id": "graphql-advanced-q8",
+      "question": "What are GraphQL subscriptions used for?",
+      "topic": "Real-time Data",
+      "difficulty": "Intermediate",
+      "choices": [
+        "Real-time data updates from the server to clients",
+        "Batch processing of multiple queries",
+        "Caching query results",
+        "Authentication and authorization"
+      ],
+      "correctIndex": 0,
+      "explanation": "GraphQL subscriptions provide a way to stream real-time data from the server to clients when specific events occur. They use the WebSocket protocol to maintain a persistent connection between client and server.",
+      "industryContext": "Real-time features like live notifications, chat applications, and collaborative tools rely heavily on GraphQL subscriptions for efficient data delivery.",
+      "tags": [
+        "Real-time Data",
+        "intermediate",
+        "graphql"
+      ],
+      "questionType": "multiple-choice",
+      "estimatedTime": 75
+    },
+    {
+      "id": "graphql-advanced-q9",
+      "question": "What is the N+1 problem in GraphQL and how can it be solved?",
+      "topic": "Performance Optimization",
+      "difficulty": "Advanced",
+      "choices": [
+        "Multiple database queries for related data; solved with DataLoader pattern",
+        "Network latency issues; solved with CDN caching",
+        "Memory leaks in resolvers; solved with garbage collection",
+        "Schema validation errors; solved with stricter type definitions"
+      ],
+      "correctIndex": 0,
+      "explanation": "The N+1 problem occurs when resolving nested fields results in multiple database queries - one for the parent records and N additional queries for related data. It can be solved using the DataLoader pattern, which batches and caches database requests to minimize the number of round trips to the database.",
+      "industryContext": "Performance optimization is critical for production GraphQL APIs serving thousands of requests per second, where the N+1 problem can severely impact response times and database load.",
+      "tags": [
+        "Performance Optimization",
+        "advanced",
+        "graphql"
+      ],
+      "questionType": "multiple-choice",
+      "estimatedTime": 120
+    },
+    {
+      "id": "graphql-advanced-q10",
+      "question": "What is schema stitching in GraphQL?",
+      "topic": "Advanced Concepts",
+      "difficulty": "Advanced",
+      "choices": [
+        "Combining multiple GraphQL schemas into a single unified schema",
+        "Breaking a large schema into smaller pieces",
+        "Validating schema against business rules",
+        "Optimizing schema for better performance"
+      ],
+      "correctIndex": 0,
+      "explanation": "Schema stitching is a technique for combining multiple GraphQL schemas into a single unified schema. This allows you to create a single GraphQL endpoint that can delegate parts of queries to different underlying services, enabling microservices architecture with GraphQL.",
+      "industryContext": "Schema stitching is commonly used in large organizations with multiple teams owning different services, allowing them to maintain independent GraphQL APIs while providing a unified experience to clients.",
+      "tags": [
+        "Advanced Concepts",
+        "advanced",
+        "graphql"
+      ],
+      "questionType": "multiple-choice",
+      "estimatedTime": 90
+    },
+    {
+      "id": "graphql-advanced-q11",
+      "question": "Which directive is used to mark a field as deprecated in GraphQL?",
+      "topic": "Schema Design",
+      "difficulty": "Intermediate",
+      "choices": [
+        "@deprecated",
+        "@obsolete",
+        "@remove",
+        "@legacy"
+      ],
+      "correctIndex": 0,
+      "explanation": "The @deprecated directive is used to mark GraphQL fields, arguments, or enum values as deprecated. It can include a reason string to explain why the element is deprecated and what should be used instead.",
+      "industryContext": "Proper API versioning and deprecation strategies are essential for maintaining backward compatibility while evolving GraphQL APIs in production environments.",
+      "tags": [
+        "Schema Design",
+        "intermediate",
+        "graphql"
+      ],
+      "questionType": "multiple-choice",
+      "estimatedTime": 60
+    },
+    {
+      "id": "graphql-advanced-q12",
+      "question": "What is the purpose of GraphQL fragments?",
+      "topic": "Client Usage",
+      "difficulty": "Beginner",
+      "choices": [
+        "To reuse parts of queries and avoid duplication",
+        "To encrypt sensitive data in queries",
+        "To compress query payloads",
+        "To cache query results on the server"
+      ],
+      "correctIndex": 0,
+      "explanation": "GraphQL fragments allow you to define reusable parts of queries that can be shared across multiple queries or nested within other queries. This helps avoid duplication and makes client code more maintainable.",
+      "industryContext": "Fragments are extensively used in real-world GraphQL applications to create reusable components that can compose complex queries from smaller, well-defined pieces.",
+      "tags": [
+        "Client Usage",
+        "beginner",
+        "graphql"
+      ],
+      "questionType": "multiple-choice",
+      "estimatedTime": 60
+    },
+    {
+      "id": "graphql-advanced-q13",
+      "question": "What is GraphQL introspection?",
+      "topic": "Development Tools",
+      "difficulty": "Intermediate",
+      "choices": [
+        "The ability to query a GraphQL schema for information about itself",
+        "A tool for testing GraphQL APIs",
+        "A method for optimizing query performance",
+        "A technique for securing GraphQL endpoints"
+      ],
+      "correctIndex": 0,
+      "explanation": "GraphQL introspection allows clients to query the schema for information about what queries, mutations, and types are available. This enables powerful development tools like GraphiQL and GraphQL Playground, as well as automatic documentation generation.",
+      "industryContext": "Introspection is a key feature that enables the rich ecosystem of GraphQL development tools and provides the foundation for automatic client code generation and type safety.",
+      "tags": [
+        "Development Tools",
+        "intermediate",
+        "graphql"
+      ],
+      "questionType": "multiple-choice",
+      "estimatedTime": 75
+    },
+    {
+      "id": "graphql-advanced-q14",
+      "question": "Which of the following is a built-in scalar type in GraphQL?",
+      "topic": "Schema Design",
+      "difficulty": "Beginner",
+      "choices": [
+        "ID",
+        "Date",
+        "Timestamp",
+        "UUID"
+      ],
+      "correctIndex": 0,
+      "explanation": "GraphQL has five built-in scalar types: Int, Float, String, Boolean, and ID. While Date, Timestamp, and UUID are commonly used, they are custom scalar types that need to be defined in the schema.",
+      "industryContext": "Understanding GraphQL's type system is fundamental for designing robust APIs that provide appropriate data types for client applications to consume effectively.",
+      "tags": [
+        "Schema Design",
+        "beginner",
+        "graphql"
+      ],
+      "questionType": "multiple-choice",
+      "estimatedTime": 45
+    },
+    {
+      "id": "graphql-advanced-q15",
+      "question": "What is the purpose of GraphQL interfaces?",
+      "topic": "Schema Design",
+      "difficulty": "Intermediate",
+      "choices": [
+        "To define common fields that multiple types can implement",
+        "To create private fields that are not visible in the schema",
+        "To optimize query execution performance",
+        "To handle authentication and authorization"
+      ],
+      "correctIndex": 0,
+      "explanation": "GraphQL interfaces define a common set of fields that multiple object types can implement. This allows you to define fields that can return different types as long as they conform to the same interface, enabling polymorphic queries.",
+      "industryContext": "Interfaces are essential for modeling complex domain relationships in GraphQL schemas and enabling flexible query patterns that can work with multiple related types.",
+      "tags": [
+        "Schema Design",
+        "intermediate",
+        "graphql"
+      ],
+      "questionType": "multiple-choice",
+      "estimatedTime": 75
+    },
+    {
+      "id": "graphql-advanced-q16",
+      "question": "How does GraphQL handle error handling?",
+      "topic": "Error Handling",
+      "difficulty": "Intermediate",
+      "choices": [
+        "Errors are returned alongside successful data in the response",
+        "Errors cause the entire query to fail",
+        "Errors are logged server-side but not sent to clients",
+        "GraphQL does not have built-in error handling"
+      ],
+      "correctIndex": 0,
+      "explanation": "GraphQL includes errors in a dedicated 'errors' array in the response alongside successful data. This allows partial results to be returned even when some fields fail, providing better user experience and more granular error information.",
+      "industryContext": "Proper error handling in GraphQL APIs is crucial for building resilient client applications that can gracefully handle partial failures and provide meaningful feedback to users.",
+      "tags": [
+        "Error Handling",
+        "intermediate",
+        "graphql"
+      ],
+      "questionType": "multiple-choice",
+      "estimatedTime": 75
+    },
+    {
+      "id": "graphql-advanced-q17",
+      "question": "What is the purpose of GraphQL unions?",
+      "topic": "Schema Design",
+      "difficulty": "Advanced",
+      "choices": [
+        "To define a field that can return one of several object types",
+        "To combine multiple fields into a single field",
+        "To create a hierarchy of types",
+        "To optimize memory usage in resolvers"
+      ],
+      "correctIndex": 0,
+      "explanation": "GraphQL unions allow you to define a field that can return one of several different object types. Unlike interfaces, unions don't require the types to share common fields, making them suitable for representing truly disparate types in a single field.",
+      "industryContext": "Unions are particularly useful for search results, notification systems, and other scenarios where a field might return completely different types of objects based on runtime conditions.",
+      "tags": [
+        "Schema Design",
+        "advanced",
+        "graphql"
+      ],
+      "questionType": "multiple-choice",
+      "estimatedTime": 90
+    },
+    {
+      "id": "graphql-advanced-q18",
+      "question": "What is GraphQL caching typically implemented at?",
+      "topic": "Performance",
+      "difficulty": "Intermediate",
+      "choices": [
+        "Client-side and CDN level, not at the GraphQL server level",
+        "Server-side resolvers",
+        "Database level",
+        "Network level"
+      ],
+      "correctIndex": 0,
+      "explanation": "GraphQL caching is typically implemented at the client-side and CDN level because GraphQL uses a single endpoint with POST requests, making HTTP-level caching challenging. Client libraries like Apollo Client provide sophisticated caching mechanisms, and CDNs can cache based on query structure and variables.",
+      "industryContext": "Caching strategy is critical for GraphQL performance, especially since the flexibility of GraphQL queries makes traditional HTTP caching less effective than in REST APIs.",
+      "tags": [
+        "Performance",
+        "intermediate",
+        "graphql"
+      ],
+      "questionType": "multiple-choice",
+      "estimatedTime": 90
+    },
+    {
+      "id": "graphql-advanced-q19",
+      "question": "What is the purpose of GraphQL's 'selection set'?",
+      "topic": "Query Structure",
+      "difficulty": "Intermediate",
+      "choices": [
+        "To specify which fields to include in the query response",
+        "To define the order of field execution",
+        "To validate query syntax",
+        "To optimize database queries"
+      ],
+      "correctIndex": 0,
+      "explanation": "The selection set in GraphQL specifies which fields to include in the query response. It's the set of fields enclosed in curly braces {} that follows a field name, allowing clients to request exactly the data they need.",
+      "industryContext": "Selection sets are the core mechanism that enables GraphQL's key advantage of preventing over-fetching and under-fetching of data compared to traditional REST APIs.",
+      "tags": [
+        "Query Structure",
+        "intermediate",
+        "graphql"
+      ],
+      "questionType": "multiple-choice",
+      "estimatedTime": 60
+    },
+    {
+      "id": "graphql-advanced-q20",
+      "question": "Which company originally developed GraphQL?",
+      "topic": "History",
+      "difficulty": "Beginner",
+      "choices": [
+        "Facebook",
+        "Google",
+        "Microsoft",
+        "Amazon"
+      ],
+      "correctIndex": 0,
+      "explanation": "GraphQL was originally developed by Facebook (now Meta) in 2012 to address the challenges of fetching data for their mobile applications. It was open-sourced in 2015 and has since become a widely adopted standard for API development.",
+      "industryContext": "Understanding GraphQL's origins at Facebook provides context for its design philosophy focused on mobile-first development and efficient data fetching in bandwidth-constrained environments.",
+      "tags": [
+        "History",
+        "beginner",
+        "graphql"
+      ],
+      "questionType": "multiple-choice",
+      "estimatedTime": 45
+    }
+  ],
+  "metadata": {
+    "migrated": true,
+    "originalQuestionCount": 15,
+    "migrationDate": "2025-10-01T06:41:13.486Z",
+    "lastUpdated": "2025-10-02T10:00:00.000Z",
+    "version": "1.1.0"
+  }
+}

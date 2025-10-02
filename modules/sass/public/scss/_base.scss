@@ -1,0 +1,85 @@
+// Base styles
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: $font-family;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: $gray-50;
+  color: $gray-900;
+  line-height: 1.5;
+}
+
+// Container
+.container {
+  width: 100%;
+  margin-right: auto;
+  margin-left: auto;
+  padding-right: $spacing-4;
+  padding-left: $spacing-4;
+  
+  @include breakpoint(md) {
+    max-width: $breakpoint-md;
+  }
+  
+  @include breakpoint(lg) {
+    max-width: $timing-sm;
+  }
+  
+  @include breakpoint(xl) {
+    max-width: $breakpoint-lg;
+  }
+}
+
+// Typography
+h1, h2, h3, h4, h5, h6 {
+  margin-top: 0;
+  margin-bottom: $spacing-4;
+  font-weight: $font-weight-bold;
+  line-height: 1.2;
+}
+
+p {
+  margin-top: 0;
+  margin-bottom: $spacing-4;
+}
+
+// Links
+a {
+  color: $primary-color;
+  text-decoration: none;
+  
+  &:hover {
+    color: darken($primary-color, 10%);
+  }
+}
+
+// Lists
+ul, ol {
+  margin-top: 0;
+  margin-bottom: $spacing-4;
+  padding-left: $spacing-6;
+}
+
+// Code
+code {
+  font-family: 'Courier New', Courier, monospace;
+  font-size: $font-size-sm;
+  background-color: $gray-200;
+  padding: $spacing-1 $spacing-2;
+  border-radius: $border-radius-sm;
+}
+
+pre {
+  margin-top: 0;
+  margin-bottom: $spacing-4;
+  overflow-x: auto;
+  
+  code {
+    background-color: transparent;
+    padding: 0;
+  }
+}

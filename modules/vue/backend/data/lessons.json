@@ -1,0 +1,42 @@
+[
+  {
+    "id": 1,
+    "topic": "Core Concepts",
+    "title": "Vue Instance and Lifecycle",
+    "description": "Learn about the Vue instance and its lifecycle hooks.",
+    "codeExample": "const app = Vue.createApp({\n  data() {\n    return {\n      message: 'Hello Vue!'\n    }\n  },\n  mounted() {\n    console.log('Component is mounted!')\n  }\n})\n\napp.mount('#app')",
+    "output": "Hello Vue!\nComponent is mounted! (in console)"
+  },
+  {
+    "id": 2,
+    "topic": "Core Concepts",
+    "title": "Template Syntax",
+    "description": "Learn how to use Vue's template syntax for data binding and directives.",
+    "codeExample": "<div id=\"app\">\n  <p>{{ message }}</p>\n  <p v-if=\"seen\">Now you see me</p>\n  <p v-for=\"item in items\" :key=\"item.id\">{{ item.text }}</p>\n  <button v-on:click=\"reverseMessage\">Reverse Message</button>\n</div>\n\nconst app = Vue.createApp({\n  data() {\n    return {\n      message: 'Hello Vue!',\n      seen: true,\n      items: [\n        { id: 1, text: 'Item 1' },\n        { id: 2, text: 'Item 2' }\n      ]\n    }\n  },\n  methods: {\n    reverseMessage() {\n      this.message = this.message.split('').reverse().join('')\n    }\n  }\n})",
+    "output": "Hello Vue!\nNow you see me\nItem 1\nItem 2\n[Button: Reverse Message]"
+  },
+  {
+    "id": 3,
+    "topic": "Components",
+    "title": "Component Basics",
+    "description": "Learn how to create and use Vue components.",
+    "codeExample": "const TodoItem = {\n  template: `<li>{{ todo.text }}</li>`,\n  props: ['todo']\n}\n\nconst app = Vue.createApp({\n  data() {\n    return {\n      groceryList: [\n        { id: 0, text: 'Vegetables' },\n        { id: 1, text: 'Cheese' }\n      ]\n    }\n  }\n})\n\napp.component('todo-item', TodoItem)\napp.mount('#app')",
+    "output": "<ul>\n  <li>Vegetables</li>\n  <li>Cheese</li>\n</ul>"
+  },
+  {
+    "id": 4,
+    "topic": "Components",
+    "title": "Slots",
+    "description": "Learn how to use slots for content distribution in Vue components.",
+    "codeExample": "const AlertBox = {\n  template: `\n    <div class=\"alert-box\">\n      <strong>Error!</strong>\n      <slot></slot>\n    </div>\n  `\n}\n\nconst app = Vue.createApp({\n  components: {\n    AlertBox\n  }\n})\n\n// In template:\n// <alert-box>\n//   Something bad happened.\n// </alert-box>",
+    "output": "<div class=\"alert-box\">\n  <strong>Error!</strong>\n  Something bad happened.\n</div>"
+  },
+  {
+    "id": 5,
+    "topic": "Composition API",
+    "title": "Reactive References",
+    "description": "Learn how to use reactive references with the Composition API.",
+    "codeExample": "const { createApp, ref } = Vue\n\nconst app = createApp({\n  setup() {\n    const count = ref(0)\n    \n    function increment() {\n      count.value++\n    }\n    \n    return {\n      count,\n      increment\n    }\n  }\n})",
+    "output": "Reactive count variable that can be updated with increment function"
+  }
+]

@@ -1,0 +1,98 @@
+[
+  {
+    "id": 1,
+    "topic": "Getting Started",
+    "title": "Introduction to .NET and C#",
+    "description": "Learn the fundamentals of .NET framework and C# programming language, including its history, features, and development environment setup.",
+    "codeExample": "using System;\n\nnamespace HelloWorld\n{\n    class Program\n    {\n        static void Main(string[] args)\n        {\n            Console.WriteLine(\"Hello, .NET World!\");\n            Console.WriteLine(\"Welcome to C# Programming\");\n        }\n    }\n}",
+    "output": "Hello, .NET World!\nWelcome to C# Programming"
+  },
+  {
+    "id": 2,
+    "topic": "Getting Started",
+    "title": "Variables and Data Types",
+    "description": "Understand different data types in C# including value types, reference types, and how to declare and initialize variables.",
+    "codeExample": "using System;\n\nclass Program\n{\n    static void Main()\n    {\n        // Value types\n        int age = 25;\n        double salary = 75000.50;\n        bool isEmployed = true;\n        char grade = 'A';\n        \n        // Reference types\n        string name = \"John Doe\";\n        \n        Console.WriteLine($\"Name: {name}\");\n        Console.WriteLine($\"Age: {age}\");\n        Console.WriteLine($\"Salary: {salary:C}\");\n        Console.WriteLine($\"Is Employed: {isEmployed}\");\n        Console.WriteLine($\"Grade: {grade}\");\n    }\n}",
+    "output": "Name: John Doe\nAge: 25\nSalary: $75,000.50\nIs Employed: True\nGrade: A"
+  },
+  {
+    "id": 3,
+    "topic": "Core Concepts",
+    "title": "Control Flow - Conditional Statements",
+    "description": "Learn about conditional statements in C# including if-else, switch statements, and ternary operators for decision making.",
+    "codeExample": "using System;\n\nclass Program\n{\n    static void Main()\n    {\n        int score = 85;\n        \n        // If-else statement\n        if (score >= 90)\n        {\n            Console.WriteLine(\"Grade: A\");\n        }\n        else if (score >= 80)\n        {\n            Console.WriteLine(\"Grade: B\");\n        }\n        else if (score >= 70)\n        {\n            Console.WriteLine(\"Grade: C\");\n        }\n        else\n        {\n            Console.WriteLine(\"Grade: F\");\n        }\n        \n        // Ternary operator\n        string result = score >= 60 ? \"Pass\" : \"Fail\";\n        Console.WriteLine($\"Result: {result}\");\n        \n        // Switch statement\n        DayOfWeek today = DateTime.Now.DayOfWeek;\n        switch (today)\n        {\n            case DayOfWeek.Monday:\n                Console.WriteLine(\"Start of work week!\");\n                break;\n            case DayOfWeek.Friday:\n                Console.WriteLine(\"TGIF!\");\n                break;\n            default:\n                Console.WriteLine($\"It's {today}\");\n                break;\n        }\n    }\n}",
+    "output": "Grade: B\nResult: Pass\nIt's [Current Day]"
+  },
+  {
+    "id": 4,
+    "topic": "Core Concepts",
+    "title": "Loops and Iteration",
+    "description": "Master different loop constructs in C# including for, while, do-while, and foreach loops for repetitive tasks.",
+    "codeExample": "using System;\nusing System.Collections.Generic;\n\nclass Program\n{\n    static void Main()\n    {\n        // For loop\n        Console.WriteLine(\"For loop:\");\n        for (int i = 1; i <= 5; i++)\n        {\n            Console.WriteLine($\"Count: {i}\");\n        }\n        \n        // While loop\n        Console.WriteLine(\"\\nWhile loop:\");\n        int j = 1;\n        while (j <= 3)\n        {\n            Console.WriteLine($\"While iteration: {j}\");\n            j++;\n        }\n        \n        // Foreach loop\n        Console.WriteLine(\"\\nForeach loop:\");\n        List<string> fruits = new List<string> { \"Apple\", \"Banana\", \"Orange\" };\n        foreach (string fruit in fruits)\n        {\n            Console.WriteLine($\"Fruit: {fruit}\");\n        }\n    }\n}",
+    "output": "For loop:\nCount: 1\nCount: 2\nCount: 3\nCount: 4\nCount: 5\n\nWhile loop:\nWhile iteration: 1\nWhile iteration: 2\nWhile iteration: 3\n\nForeach loop:\nFruit: Apple\nFruit: Banana\nFruit: Orange"
+  },
+  {
+    "id": 5,
+    "topic": "Object-Oriented Programming",
+    "title": "Classes and Objects",
+    "description": "Introduction to object-oriented programming concepts including classes, objects, constructors, and access modifiers.",
+    "codeExample": "using System;\n\npublic class Person\n{\n    // Fields\n    private string name;\n    private int age;\n    \n    // Constructor\n    public Person(string name, int age)\n    {\n        this.name = name;\n        this.age = age;\n    }\n    \n    // Properties\n    public string Name\n    {\n        get { return name; }\n        set { name = value; }\n    }\n    \n    public int Age\n    {\n        get { return age; }\n        set { age = value >= 0 ? value : 0; }\n    }\n    \n    // Method\n    public void Introduce()\n    {\n        Console.WriteLine($\"Hi, I'm {name} and I'm {age} years old.\");\n    }\n}\n\nclass Program\n{\n    static void Main()\n    {\n        Person person1 = new Person(\"Alice\", 30);\n        Person person2 = new Person(\"Bob\", 25);\n        \n        person1.Introduce();\n        person2.Introduce();\n        \n        // Using properties\n        person1.Age = 31;\n        Console.WriteLine($\"Updated age: {person1.Age}\");\n    }\n}",
+    "output": "Hi, I'm Alice and I'm 30 years old.\nHi, I'm Bob and I'm 25 years old.\nUpdated age: 31"
+  },
+  {
+    "id": 6,
+    "topic": "Object-Oriented Programming",
+    "title": "Inheritance and Polymorphism",
+    "description": "Learn about inheritance, method overriding, virtual methods, and polymorphism in C# to create extensible and maintainable code.",
+    "codeExample": "using System;\n\npublic abstract class Animal\n{\n    public string Name { get; set; }\n    \n    public Animal(string name)\n    {\n        Name = name;\n    }\n    \n    public virtual void MakeSound()\n    {\n        Console.WriteLine($\"{Name} makes a sound\");\n    }\n    \n    public abstract void Move();\n}\n\npublic class Dog : Animal\n{\n    public Dog(string name) : base(name) { }\n    \n    public override void MakeSound()\n    {\n        Console.WriteLine($\"{Name} barks: Woof!\");\n    }\n    \n    public override void Move()\n    {\n        Console.WriteLine($\"{Name} runs on four legs\");\n    }\n}\n\npublic class Bird : Animal\n{\n    public Bird(string name) : base(name) { }\n    \n    public override void MakeSound()\n    {\n        Console.WriteLine($\"{Name} chirps: Tweet!\");\n    }\n    \n    public override void Move()\n    {\n        Console.WriteLine($\"{Name} flies with wings\");\n    }\n}\n\nclass Program\n{\n    static void Main()\n    {\n        Animal[] animals = { new Dog(\"Buddy\"), new Bird(\"Tweety\") };\n        \n        foreach (Animal animal in animals)\n        {\n            animal.MakeSound();\n            animal.Move();\n            Console.WriteLine();\n        }\n    }\n}",
+    "output": "Buddy barks: Woof!\nBuddy runs on four legs\n\nTweety chirps: Tweet!\nTweety flies with wings"
+  },
+  {
+    "id": 7,
+    "topic": "Collections and LINQ",
+    "title": "Working with Collections",
+    "description": "Explore various collection types in C# including Arrays, Lists, Dictionaries, and their common operations.",
+    "codeExample": "using System;\nusing System.Collections.Generic;\nusing System.Linq;\n\nclass Program\n{\n    static void Main()\n    {\n        // List<T>\n        List<int> numbers = new List<int> { 1, 2, 3, 4, 5 };\n        numbers.Add(6);\n        Console.WriteLine($\"List count: {numbers.Count}\");\n        \n        // Dictionary<TKey, TValue>\n        Dictionary<string, int> ages = new Dictionary<string, int>\n        {\n            { \"Alice\", 30 },\n            { \"Bob\", 25 },\n            { \"Charlie\", 35 }\n        };\n        \n        Console.WriteLine($\"Alice's age: {ages[\"Alice\"]}\");\n        \n        // Array\n        string[] names = { \"Alice\", \"Bob\", \"Charlie\" };\n        Console.WriteLine($\"Array length: {names.Length}\");\n        \n        // Iterating through collections\n        Console.WriteLine(\"\\nNames in dictionary:\");\n        foreach (var kvp in ages)\n        {\n            Console.WriteLine($\"{kvp.Key}: {kvp.Value}\");\n        }\n    }\n}",
+    "output": "List count: 6\nAlice's age: 30\nArray length: 3\n\nNames in dictionary:\nAlice: 30\nBob: 25\nCharlie: 35"
+  },
+  {
+    "id": 8,
+    "topic": "Collections and LINQ",
+    "title": "LINQ (Language Integrated Query)",
+    "description": "Master LINQ for querying and manipulating data collections using method syntax and query syntax.",
+    "codeExample": "using System;\nusing System.Collections.Generic;\nusing System.Linq;\n\npublic class Student\n{\n    public string Name { get; set; }\n    public int Grade { get; set; }\n    public string Subject { get; set; }\n}\n\nclass Program\n{\n    static void Main()\n    {\n        List<Student> students = new List<Student>\n        {\n            new Student { Name = \"Alice\", Grade = 85, Subject = \"Math\" },\n            new Student { Name = \"Bob\", Grade = 92, Subject = \"Science\" },\n            new Student { Name = \"Charlie\", Grade = 78, Subject = \"Math\" },\n            new Student { Name = \"Diana\", Grade = 96, Subject = \"Science\" }\n        };\n        \n        // LINQ Method Syntax\n        var highGrades = students\n            .Where(s => s.Grade >= 90)\n            .Select(s => s.Name)\n            .ToList();\n        \n        Console.WriteLine(\"Students with grades >= 90:\");\n        foreach (var name in highGrades)\n        {\n            Console.WriteLine(name);\n        }\n        \n        // LINQ Query Syntax\n        var mathStudents = from student in students\n                          where student.Subject == \"Math\"\n                          orderby student.Grade descending\n                          select student;\n        \n        Console.WriteLine(\"\\nMath students (by grade):\");\n        foreach (var student in mathStudents)\n        {\n            Console.WriteLine($\"{student.Name}: {student.Grade}\");\n        }\n        \n        // Aggregation\n        double averageGrade = students.Average(s => s.Grade);\n        Console.WriteLine($\"\\nAverage grade: {averageGrade:F1}\");\n    }\n}",
+    "output": "Students with grades >= 90:\nBob\nDiana\n\nMath students (by grade):\nAlice: 85\nCharlie: 78\n\nAverage grade: 87.8"
+  },
+  {
+    "id": 9,
+    "topic": "Exception Handling",
+    "title": "Exception Handling with Try-Catch",
+    "description": "Learn how to handle exceptions gracefully using try-catch-finally blocks and custom exceptions.",
+    "codeExample": "using System;\n\nclass Program\n{\n    static void Main()\n    {\n        try\n        {\n            Console.Write(\"Enter a number: \");\n            string input = \"10\"; // Simulated input\n            int number = int.Parse(input);\n            \n            Console.Write(\"Enter divisor: \");\n            string divisorInput = \"0\"; // Simulated input\n            int divisor = int.Parse(divisorInput);\n            \n            int result = Divide(number, divisor);\n            Console.WriteLine($\"Result: {result}\");\n        }\n        catch (DivideByZeroException ex)\n        {\n            Console.WriteLine($\"Error: {ex.Message}\");\n        }\n        catch (FormatException ex)\n        {\n            Console.WriteLine($\"Invalid input format: {ex.Message}\");\n        }\n        catch (Exception ex)\n        {\n            Console.WriteLine($\"Unexpected error: {ex.Message}\");\n        }\n        finally\n        {\n            Console.WriteLine(\"Operation completed.\");\n        }\n    }\n    \n    static int Divide(int a, int b)\n    {\n        if (b == 0)\n            throw new DivideByZeroException(\"Cannot divide by zero!\");\n        return a / b;\n    }\n}",
+    "output": "Enter a number: Enter divisor: Error: Cannot divide by zero!\nOperation completed."
+  },
+  {
+    "id": 10,
+    "topic": "File I/O",
+    "title": "File Operations",
+    "description": "Learn how to read from and write to files using various file I/O operations in C#.",
+    "codeExample": "using System;\nusing System.IO;\n\nclass Program\n{\n    static void Main()\n    {\n        string fileName = \"sample.txt\";\n        \n        try\n        {\n            // Writing to file\n            string[] lines = {\n                \"Hello, World!\",\n                \"This is a sample file.\",\n                \"Created with C#\"\n            };\n            \n            File.WriteAllLines(fileName, lines);\n            Console.WriteLine($\"File '{fileName}' created successfully.\");\n            \n            // Reading from file\n            if (File.Exists(fileName))\n            {\n                string[] readLines = File.ReadAllLines(fileName);\n                Console.WriteLine(\"\\nFile contents:\");\n                for (int i = 0; i < readLines.Length; i++)\n                {\n                    Console.WriteLine($\"Line {i + 1}: {readLines[i]}\");\n                }\n            }\n            \n            // File information\n            FileInfo fileInfo = new FileInfo(fileName);\n            Console.WriteLine($\"\\nFile size: {fileInfo.Length} bytes\");\n            Console.WriteLine($\"Created: {fileInfo.CreationTime}\");\n        }\n        catch (IOException ex)\n        {\n            Console.WriteLine($\"File operation error: {ex.Message}\");\n        }\n    }\n}",
+    "output": "File 'sample.txt' created successfully.\n\nFile contents:\nLine 1: Hello, World!\nLine 2: This is a sample file.\nLine 3: Created with C#\n\nFile size: 54 bytes\nCreated: [Current DateTime]"
+  },
+  {
+    "id": 11,
+    "topic": "Async Programming",
+    "title": "Asynchronous Programming with async/await",
+    "description": "Understand asynchronous programming patterns using async/await keywords for non-blocking operations.",
+    "codeExample": "using System;\nusing System.Net.Http;\nusing System.Threading.Tasks;\n\nclass Program\n{\n    static async Task Main(string[] args)\n    {\n        Console.WriteLine(\"Starting async operations...\");\n        \n        // Simulating multiple async operations\n        Task<string> task1 = SimulateWorkAsync(\"Task 1\", 2000);\n        Task<string> task2 = SimulateWorkAsync(\"Task 2\", 1000);\n        Task<string> task3 = SimulateWorkAsync(\"Task 3\", 1500);\n        \n        // Wait for all tasks to complete\n        string[] results = await Task.WhenAll(task1, task2, task3);\n        \n        Console.WriteLine(\"\\nAll tasks completed:\");\n        foreach (string result in results)\n        {\n            Console.WriteLine(result);\n        }\n        \n        // Sequential vs parallel execution example\n        DateTime start = DateTime.Now;\n        await SequentialExecution();\n        TimeSpan sequentialTime = DateTime.Now - start;\n        \n        start = DateTime.Now;\n        await ParallelExecution();\n        TimeSpan parallelTime = DateTime.Now - start;\n        \n        Console.WriteLine($\"\\nSequential time: {sequentialTime.TotalMilliseconds}ms\");\n        Console.WriteLine($\"Parallel time: {parallelTime.TotalMilliseconds}ms\");\n    }\n    \n    static async Task<string> SimulateWorkAsync(string taskName, int delayMs)\n    {\n        Console.WriteLine($\"{taskName} started\");\n        await Task.Delay(delayMs);\n        Console.WriteLine($\"{taskName} completed\");\n        return $\"{taskName} result\";\n    }\n    \n    static async Task SequentialExecution()\n    {\n        await Task.Delay(500);\n        await Task.Delay(500);\n    }\n    \n    static async Task ParallelExecution()\n    {\n        Task t1 = Task.Delay(500);\n        Task t2 = Task.Delay(500);\n        await Task.WhenAll(t1, t2);\n    }\n}",
+    "output": "Starting async operations...\nTask 1 started\nTask 2 started\nTask 3 started\nTask 2 completed\nTask 3 completed\nTask 1 completed\n\nAll tasks completed:\nTask 1 result\nTask 2 result\nTask 3 result\n\nSequential time: 1000ms\nParallel time: 500ms"
+  },
+  {
+    "id": 12,
+    "topic": "Advanced Features",
+    "title": "Delegates and Events",
+    "description": "Learn about delegates, events, and functional programming concepts in C# for creating flexible and decoupled code.",
+    "codeExample": "using System;\n\n// Delegate declaration\npublic delegate void NotificationHandler(string message);\n\npublic class Publisher\n{\n    // Event based on delegate\n    public event NotificationHandler OnNotification;\n    \n    public void SendNotification(string message)\n    {\n        Console.WriteLine($\"Publishing: {message}\");\n        OnNotification?.Invoke(message);\n    }\n}\n\npublic class Subscriber\n{\n    public string Name { get; set; }\n    \n    public Subscriber(string name)\n    {\n        Name = name;\n    }\n    \n    public void HandleNotification(string message)\n    {\n        Console.WriteLine($\"{Name} received: {message}\");\n    }\n}\n\nclass Program\n{\n    static void Main()\n    {\n        Publisher publisher = new Publisher();\n        \n        Subscriber sub1 = new Subscriber(\"Alice\");\n        Subscriber sub2 = new Subscriber(\"Bob\");\n        \n        // Subscribe to event\n        publisher.OnNotification += sub1.HandleNotification;\n        publisher.OnNotification += sub2.HandleNotification;\n        \n        // Anonymous method\n        publisher.OnNotification += (msg) => Console.WriteLine($\"Anonymous: {msg}\");\n        \n        // Trigger events\n        publisher.SendNotification(\"Hello World!\");\n        publisher.SendNotification(\"Another message\");\n        \n        // Unsubscribe\n        publisher.OnNotification -= sub1.HandleNotification;\n        \n        Console.WriteLine(\"\\nAfter unsubscribing Alice:\");\n        publisher.SendNotification(\"Final message\");\n    }\n}",
+    "output": "Publishing: Hello World!\nAlice received: Hello World!\nBob received: Hello World!\nAnonymous: Hello World!\nPublishing: Another message\nAlice received: Another message\nBob received: Another message\nAnonymous: Another message\n\nAfter unsubscribing Alice:\nPublishing: Final message\nBob received: Final message\nAnonymous: Final message"
+  }
+]

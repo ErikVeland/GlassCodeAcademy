@@ -1,0 +1,247 @@
+[
+  {
+    "id": 1,
+    "topic": "GraphQL Fundamentals",
+    "type": "multiple-choice",
+    "question": "What is GraphQL?",
+    "choices": [
+      "A query language for APIs and a runtime for executing queries",
+      "A database management system",
+      "A REST API framework",
+      "A JavaScript library for building user interfaces"
+    ],
+    "correctAnswer": 0,
+    "explanation": "GraphQL is a query language for APIs and a runtime for executing those queries by using a type system you define for your data. It provides a more efficient, powerful and flexible alternative to REST."
+  },
+  {
+    "id": 2,
+    "topic": "GraphQL Fundamentals",
+    "type": "multiple-choice",
+    "question": "Which of the following is NOT a core operation type in GraphQL?",
+    "choices": [
+      "Query",
+      "Mutation", 
+      "Subscription",
+      "Transaction"
+    ],
+    "correctAnswer": 3,
+    "explanation": "GraphQL has three core operation types: Query (for reading data), Mutation (for modifying data), and Subscription (for real-time data). Transaction is not a GraphQL operation type."
+  },
+  {
+    "id": 3,
+    "topic": "GraphQL Fundamentals",
+    "type": "open-ended",
+    "question": "Explain the main advantages of GraphQL over REST APIs.",
+    "choices": null,
+    "correctAnswer": null,
+    "explanation": "GraphQL offers several advantages over REST: 1) Clients can request exactly the data they need, avoiding over-fetching and under-fetching, 2) Single endpoint for all operations instead of multiple URLs, 3) Strong type system provides better tooling and validation, 4) Real-time subscriptions built-in, 5) Introspection allows for automatic documentation and tooling."
+  },
+  {
+    "id": 4,
+    "topic": "Schema Design",
+    "type": "multiple-choice",
+    "question": "In GraphQL schema definition, what does the exclamation mark (!) indicate?",
+    "choices": [
+      "The field is required and cannot be null",
+      "The field is deprecated",
+      "The field is an array",
+      "The field is a custom scalar"
+    ],
+    "correctAnswer": 0,
+    "explanation": "The exclamation mark (!) in GraphQL schema definition indicates that a field is non-nullable, meaning it must always return a value and cannot be null."
+  },
+  {
+    "id": 5,
+    "topic": "Schema Design", 
+    "type": "multiple-choice",
+    "question": "What is the purpose of resolvers in GraphQL?",
+    "choices": [
+      "To define the schema structure",
+      "To fetch data for each field in a query",
+      "To validate user input",
+      "To handle authentication"
+    ],
+    "correctAnswer": 1,
+    "explanation": "Resolvers are functions that fetch the actual data for each field in a GraphQL query. They define how to retrieve data from databases, APIs, or other sources for each field in the schema."
+  },
+  {
+    "id": 6,
+    "topic": "GraphQL Operations",
+    "type": "open-ended",
+    "question": "What is the difference between a GraphQL query and a mutation?",
+    "choices": null,
+    "correctAnswer": null,
+    "explanation": "Queries are used for reading/fetching data and should be side-effect free, while mutations are used for modifying data (create, update, delete operations). Queries can be executed in parallel, but mutations are executed sequentially to ensure data consistency."
+  },
+  {
+    "id": 7,
+    "topic": "GraphQL Operations",
+    "type": "multiple-choice",
+    "question": "How do you pass variables to a GraphQL query?",
+    "choices": [
+      "Using the variables object alongside the query",
+      "Directly interpolating values in the query string",
+      "Using query parameters in the URL",
+      "Variables cannot be used in GraphQL"
+    ],
+    "correctAnswer": 0,
+    "explanation": "Variables are passed to GraphQL queries using a variables object that is sent alongside the query. The query defines variable types and names using $ syntax, and values are provided in the variables object."
+  },
+  {
+    "id": 8,
+    "topic": "GraphQL Operations",
+    "type": "multiple-choice",
+    "question": "What are GraphQL subscriptions used for?",
+    "choices": [
+      "Real-time data updates and live connections",
+      "Batching multiple queries together",
+      "Caching query results",
+      "User authentication"
+    ],
+    "correctAnswer": 0,
+    "explanation": "GraphQL subscriptions are used for real-time data updates, allowing clients to receive live updates when specific events occur on the server, typically implemented using WebSockets."
+  },
+  {
+    "id": 9,
+    "topic": "Performance Optimization",
+    "type": "open-ended", 
+    "question": "What is the N+1 query problem in GraphQL and how can it be solved?",
+    "choices": null,
+    "correctAnswer": null,
+    "explanation": "The N+1 query problem occurs when fetching a list of N items requires N+1 database queries (1 for the list + N queries for related data). It can be solved using DataLoader, which batches and caches database requests, or by using more efficient database queries with joins."
+  },
+  {
+    "id": 10,
+    "topic": "Performance Optimization",
+    "type": "multiple-choice",
+    "question": "What is DataLoader used for in GraphQL?",
+    "choices": [
+      "Batching and caching data requests to solve N+1 queries",
+      "Loading GraphQL schema definitions",
+      "Validating incoming queries",
+      "Handling user authentication"
+    ],
+    "correctAnswer": 0,
+    "explanation": "DataLoader is a utility for batching and caching data fetching operations. It helps solve the N+1 query problem by collecting individual loads and batching them into single requests."
+  },
+  {
+    "id": 11,
+    "topic": "Schema Design",
+    "type": "multiple-choice",
+    "question": "What is a GraphQL interface?",
+    "choices": [
+      "A way to define common fields that multiple types can implement",
+      "A method for connecting to external APIs",
+      "A type of scalar value",
+      "A security mechanism"
+    ],
+    "correctAnswer": 0,
+    "explanation": "A GraphQL interface defines a set of common fields that multiple object types can implement, similar to interfaces in programming languages. It allows for polymorphic queries and better schema organization."
+  },
+  {
+    "id": 12,
+    "topic": "Schema Design",
+    "type": "open-ended",
+    "question": "When would you use a union type in GraphQL?",
+    "choices": null,
+    "correctAnswer": null,
+    "explanation": "Union types are used when a field can return one of several different types. Common use cases include search results that can return different types of objects, polymorphic relationships, or error handling where a field might return either a success object or an error object."
+  },
+  {
+    "id": 13,
+    "topic": "Performance Optimization",
+    "type": "multiple-choice",
+    "question": "What is query depth limiting in GraphQL?",
+    "choices": [
+      "A security measure to prevent deeply nested queries that could cause performance issues",
+      "A way to limit the number of fields in a query",
+      "A method for caching query results",
+      "A technique for optimizing resolver performance"
+    ],
+    "correctAnswer": 0,
+    "explanation": "Query depth limiting is a security measure that prevents clients from sending deeply nested queries that could consume excessive server resources. It sets a maximum depth for query nesting."
+  },
+  {
+    "id": 14,
+    "topic": "Testing and Tools",
+    "type": "multiple-choice",
+    "question": "What is GraphQL Playground?",
+    "choices": [
+      "An in-browser IDE for exploring GraphQL APIs",
+      "A testing framework for GraphQL",
+      "A GraphQL schema validation tool",
+      "A performance monitoring tool"
+    ],
+    "correctAnswer": 0,
+    "explanation": "GraphQL Playground is an in-browser IDE for exploring GraphQL APIs. It provides features like query execution, schema exploration, documentation browsing, and query history."
+  },
+  {
+    "id": 15,
+    "topic": "Testing and Tools",
+    "type": "open-ended",
+    "question": "How would you test a GraphQL API effectively?",
+    "choices": null,
+    "correctAnswer": null,
+    "explanation": "GraphQL APIs should be tested at multiple levels: 1) Unit tests for individual resolvers, 2) Integration tests for complete queries/mutations, 3) Schema validation tests, 4) Performance tests for complex queries, 5) Security tests for rate limiting and authentication. Tools like Jest, Apollo Server Testing, and GraphQL testing utilities help automate these tests."
+  },
+  {
+    "id": 16,
+    "topic": "Production Deployment",
+    "type": "multiple-choice",
+    "question": "Which of the following is a security best practice for GraphQL APIs?",
+    "choices": [
+      "All of the above",
+      "Implement query depth limiting",
+      "Use authentication and authorization",
+      "Disable introspection in production"
+    ],
+    "correctAnswer": 0,
+    "explanation": "All mentioned practices are important for GraphQL security: query depth limiting prevents expensive queries, authentication/authorization controls access, and disabling introspection in production prevents schema discovery by unauthorized users."
+  },
+  {
+    "id": 17,
+    "topic": "Production Deployment",
+    "type": "open-ended",
+    "question": "What considerations should you make when deploying GraphQL to production?",
+    "choices": null,
+    "correctAnswer": null,
+    "explanation": "Production GraphQL deployment requires: 1) Security measures (authentication, authorization, rate limiting, query complexity analysis), 2) Performance optimization (DataLoader, caching, query analysis), 3) Monitoring and logging, 4) Error handling and reporting, 5) Schema versioning strategy, 6) Disabling development features like introspection and playground."
+  },
+  {
+    "id": 18,
+    "topic": "GraphQL Operations",
+    "type": "multiple-choice",
+    "question": "What are fragments in GraphQL?",
+    "choices": [
+      "Reusable units of query logic that can be included in multiple queries",
+      "Broken query parts that cause errors",
+      "A type of mutation operation",
+      "Database transaction components"
+    ],
+    "correctAnswer": 0,
+    "explanation": "Fragments are reusable units of query logic that allow you to define a set of fields once and include them in multiple queries. They help reduce duplication and improve query maintainability."
+  },
+  {
+    "id": 19,
+    "topic": "Schema Design",
+    "type": "multiple-choice",
+    "question": "What is the purpose of input types in GraphQL?",
+    "choices": [
+      "To define the structure of data passed as arguments to mutations and queries",
+      "To handle user authentication",
+      "To define database schemas",
+      "To validate query syntax"
+    ],
+    "correctAnswer": 0,
+    "explanation": "Input types define the structure of complex data that can be passed as arguments to GraphQL mutations and queries. They ensure type safety for input validation and provide clear documentation for required data structures."
+  },
+  {
+    "id": 20,
+    "topic": "Performance Optimization",
+    "type": "open-ended",
+    "question": "Explain query complexity analysis in GraphQL and why it's important.",
+    "choices": null,
+    "correctAnswer": null,
+    "explanation": "Query complexity analysis assigns complexity scores to GraphQL operations based on the fields requested and their relationships. It's important because it helps prevent expensive queries from overwhelming the server, provides a standardized way to rate-limit based on resource usage rather than just request count, and helps identify potentially problematic queries before they impact performance."
+  }
+]

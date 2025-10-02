@@ -1,0 +1,29 @@
+{
+  "module": "tailwind-advanced",
+  "sources": [
+    {
+      "title": "Tailwind CSS Official Documentation",
+      "url": "https://tailwindcss.com/docs"
+    },
+    {
+      "title": "Tailwind CSS GitHub Repository",
+      "url": "https://github.com/tailwindlabs/tailwindcss"
+    },
+    {
+      "title": "Tailwind CSS Best Practices",
+      "url": "https://tailwindcss.com/docs/optimizing-for-production"
+    },
+    {
+      "title": "Tailwind UI Components",
+      "url": "https://tailwindui.com/components"
+    },
+    {
+      "title": "Tailwind CSS Plugins",
+      "url": "https://tailwindcss.com/docs/plugins"
+    },
+    {
+      "title": "Tailwind CSS Customization",
+      "url": "https://tailwindcss.com/docs/theme"
+    }
+  ]
+}

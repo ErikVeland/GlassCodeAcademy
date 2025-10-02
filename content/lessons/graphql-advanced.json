@@ -1,0 +1,696 @@
+[
+  {
+    "id": "graphql-advanced-lesson-1",
+    "moduleSlug": "graphql-advanced",
+    "title": "Introduction to GraphQL and Query Language Basics",
+    "order": 1,
+    "objectives": [
+      "Implement practical solutions",
+      "Build foundational understanding"
+    ],
+    "intro": "Welcome to this comprehensive lesson on GraphQL Fundamentals.\n\nLearn what GraphQL is and how it differs from REST APIs, understanding the core concepts of queries, mutations, and subscriptions. GraphQL provides a flexible alternative to REST by allowing clients to request exactly the data they need.\n\nThroughout this lesson, you'll gain hands-on experience with practical implementations and real-world scenarios. We'll explore both the theoretical foundations and practical applications, ensuring you can immediately apply what you learn.\n\nThis lesson is designed to build upon previous concepts while introducing new techniques that will enhance your development skills. By the end, you'll have a solid understanding of the key principles and be ready to tackle more advanced topics.\n\nThe knowledge gained here will serve as a foundation for subsequent lessons and real-world projects.",
+    "code": {
+      "example": "# Basic GraphQL query\nquery GetUser {\n  user(id: \"123\") {\n    id\n    name\n    email\n    posts {\n      title\n      content\n    }\n  }\n}\n\n# Query with variables\nquery GetUserPosts($userId: ID!, $limit: Int) {\n  user(id: $userId) {\n    name\n    posts(limit: $limit) {\n      title\n      publishedAt\n    }\n  }\n}",
+      "explanation": "This example produces: {\n  \"data\": {\n    \"user\": {\n      \"id\": \"123\",\n      \"name\": \"John Doe\",\n      \"email\": \"john@example.com\",\n      \"posts\": [\n        {\n          \"title\": \"Getting Started with GraphQL\",\n          \"content\": \"GraphQL is a query language...\"\n        }\n      ]\n    }\n  }\n}\n\nThe code demonstrates practical implementation techniques and shows how the concepts work in real scenarios. Pay attention to the structure and patterns used, as these represent industry best practices.",
+      "language": "graphql"
+    },
+    "pitfalls": [
+      {
+        "mistake": "Not following best practices",
+        "solution": "Review documentation and community guidelines",
+        "severity": "medium"
+      },
+      {
+        "mistake": "Skipping error handling",
+        "solution": "Implement proper error boundaries and validation",
+        "severity": "low"
+      }
+    ],
+    "exercises": [
+      {
+        "title": "Practice: Introduction to GraphQL and Query Language Basics",
+        "description": "Apply the concepts from this lesson on GraphQL Fundamentals",
+        "checkpoints": [
+          "Understand the core concept",
+          "Implement the example code",
+          "Experiment with variations"
+        ]
+      }
+    ],
+    "next": [],
+    "estimatedMinutes": 25,
+    "difficulty": "Beginner",
+    "tags": [
+      "GraphQL Fundamentals",
+      "graphql"
+    ],
+    "legacy": {
+      "originalId": 1,
+      "originalTopic": "GraphQL Fundamentals",
+      "migrated": "2025-10-01T06:41:13.485Z"
+    },
+    "lastUpdated": "2025-10-01T06:41:13.485Z",
+    "version": "1.0.0"
+  },
+  {
+    "id": "graphql-advanced-lesson-2",
+    "moduleSlug": "graphql-advanced",
+    "title": "Schema Definition Language and Type System",
+    "order": 2,
+    "objectives": [
+      "Implement practical solutions",
+      "Build foundational understanding"
+    ],
+    "intro": "Welcome to this comprehensive lesson on GraphQL Fundamentals.\n\nLearn how to define GraphQL schemas using the Schema Definition Language, including scalar types, object types, and relationships. The GraphQL type system is strongly typed and serves as a contract between client and server.\n\nThroughout this lesson, you'll gain hands-on experience with practical implementations and real-world scenarios. We'll explore both the theoretical foundations and practical applications, ensuring you can immediately apply what you learn.\n\nThis lesson is designed to build upon previous concepts while introducing new techniques that will enhance your development skills. By the end, you'll have a solid understanding of the key principles and be ready to tackle more advanced topics.\n\nThe knowledge gained here will serve as a foundation for subsequent lessons and real-world projects.",
+    "code": {
+      "example": "# GraphQL Schema Definition\ntype User {\n  id: ID!\n  name: String!\n  email: String!\n  posts: [Post!]!\n}\n\ntype Post {\n  id: ID!\n  title: String!\n  content: String!\n  author: User!\n  publishedAt: DateTime\n}\n\nscalar DateTime\n\ntype Query {\n  user(id: ID!): User\n  users(limit: Int): [User!]!\n  post(id: ID!): Post\n}\n\ntype Mutation {\n  createUser(input: CreateUserInput!): User!\n  updateUser(id: ID!, input: UpdateUserInput!): User!\n}\n\ninput CreateUserInput {\n  name: String!\n  email: String!\n}",
+      "explanation": "This example produces: Schema successfully defines type system with User, Post types, including relationships and input types for mutations\n\nThe code demonstrates practical implementation techniques and shows how the concepts work in real scenarios. Pay attention to the structure and patterns used, as these represent industry best practices.",
+      "language": "graphql"
+    },
+    "pitfalls": [
+      {
+        "mistake": "Not following best practices",
+        "solution": "Review documentation and community guidelines",
+        "severity": "medium"
+      },
+      {
+        "mistake": "Skipping error handling",
+        "solution": "Implement proper error boundaries and validation",
+        "severity": "low"
+      }
+    ],
+    "exercises": [
+      {
+        "title": "Practice: Schema Definition Language and Type System",
+        "description": "Apply the concepts from this lesson on GraphQL Fundamentals",
+        "checkpoints": [
+          "Understand the core concept",
+          "Implement the example code",
+          "Experiment with variations"
+        ]
+      }
+    ],
+    "next": [],
+    "estimatedMinutes": 25,
+    "difficulty": "Intermediate",
+    "tags": [
+      "GraphQL Fundamentals",
+      "graphql"
+    ],
+    "legacy": {
+      "originalId": 2,
+      "originalTopic": "GraphQL Fundamentals",
+      "migrated": "2025-10-01T06:41:13.485Z"
+    },
+    "lastUpdated": "2025-10-01T06:41:13.485Z",
+    "version": "1.0.0"
+  },
+  {
+    "id": "graphql-advanced-lesson-3",
+    "moduleSlug": "graphql-advanced",
+    "title": "Queries and Field Selection",
+    "order": 3,
+    "objectives": [
+      "Implement practical solutions",
+      "Build foundational understanding"
+    ],
+    "intro": "Welcome to this comprehensive lesson on GraphQL Operations.\n\nLearn how to write efficient GraphQL queries with field selection, nested queries, and aliases. GraphQL's field selection allows clients to request exactly the data they need, improving performance and reducing bandwidth usage.\n\nThroughout this lesson, you'll gain hands-on experience with practical implementations and real-world scenarios. We'll explore both the theoretical foundations and practical applications, ensuring you can immediately apply what you learn.\n\nThis lesson is designed to build upon previous concepts while introducing new techniques that will enhance your development skills. By the end, you'll have a solid understanding of the key principles and be ready to tackle more advanced topics.\n\nThe knowledge gained here will serve as a foundation for subsequent lessons and real-world projects.",
+    "code": {
+      "example": "# Field selection and nested queries\nquery UserDashboard {\n  currentUser {\n    id\n    name\n    email\n    posts(limit: 5) {\n      id\n      title\n      publishedAt\n      comments(first: 3) {\n        content\n        author {\n          name\n        }\n      }\n    }\n  }\n}\n\n# Using aliases\nquery MultipleUsers {\n  admin: user(id: \"1\") {\n    name\n    role\n  }\n  author: user(id: \"2\") {\n    name\n    posts {\n      title\n    }\n  }\n}",
+      "explanation": "This example produces: {\n  \"data\": {\n    \"currentUser\": {\n      \"id\": \"123\",\n      \"name\": \"John Doe\",\n      \"email\": \"john@example.com\",\n      \"posts\": [\n        {\n          \"id\": \"456\",\n          \"title\": \"GraphQL Best Practices\",\n          \"publishedAt\": \"2024-01-15T10:00:00Z\"\n        }\n      ]\n    }\n  }\n}\n\nThe code demonstrates practical implementation techniques and shows how the concepts work in real scenarios. Pay attention to the structure and patterns used, as these represent industry best practices.",
+      "language": "graphql"
+    },
+    "pitfalls": [
+      {
+        "mistake": "Not following best practices",
+        "solution": "Review documentation and community guidelines",
+        "severity": "medium"
+      },
+      {
+        "mistake": "Skipping error handling",
+        "solution": "Implement proper error boundaries and validation",
+        "severity": "low"
+      }
+    ],
+    "exercises": [
+      {
+        "title": "Practice: Queries and Field Selection",
+        "description": "Apply the concepts from this lesson on GraphQL Operations",
+        "checkpoints": [
+          "Understand the core concept",
+          "Implement the example code",
+          "Experiment with variations"
+        ]
+      }
+    ],
+    "next": [],
+    "estimatedMinutes": 25,
+    "difficulty": "Advanced",
+    "tags": [
+      "GraphQL Operations",
+      "graphql"
+    ],
+    "legacy": {
+      "originalId": 3,
+      "originalTopic": "GraphQL Operations",
+      "migrated": "2025-10-01T06:41:13.485Z"
+    },
+    "lastUpdated": "2025-10-01T06:41:13.485Z",
+    "version": "1.0.0"
+  },
+  {
+    "id": "graphql-advanced-lesson-4",
+    "moduleSlug": "graphql-advanced",
+    "title": "Mutations and Data Modification",
+    "order": 4,
+    "objectives": [
+      "Implement practical solutions",
+      "Build foundational understanding"
+    ],
+    "intro": "Welcome to this comprehensive lesson on GraphQL Operations.\n\nLearn how to perform data modifications using GraphQL mutations, including creating, updating, and deleting data. Mutations provide a standardized way to modify server-side data while maintaining GraphQL's type safety.\n\nThroughout this lesson, you'll gain hands-on experience with practical implementations and real-world scenarios. We'll explore both the theoretical foundations and practical applications, ensuring you can immediately apply what you learn.\n\nThis lesson is designed to build upon previous concepts while introducing new techniques that will enhance your development skills. By the end, you'll have a solid understanding of the key principles and be ready to tackle more advanced topics.\n\nThe knowledge gained here will serve as a foundation for subsequent lessons and real-world projects.",
+    "code": {
+      "example": "# Create user mutation\nmutation CreateUser($input: CreateUserInput!) {\n  createUser(input: $input) {\n    id\n    name\n    email\n    createdAt\n  }\n}\n\n# Update user mutation\nmutation UpdateUser($id: ID!, $input: UpdateUserInput!) {\n  updateUser(id: $id, input: $input) {\n    id\n    name\n    email\n    updatedAt\n  }\n}\n\n# Multiple mutations\nmutation CreatePostAndNotify($postInput: CreatePostInput!) {\n  createPost(input: $postInput) {\n    id\n    title\n  }\n  sendNotification {\n    success\n  }\n}",
+      "explanation": "This example produces: {\n  \"data\": {\n    \"createUser\": {\n      \"id\": \"789\",\n      \"name\": \"Jane Smith\",\n      \"email\": \"jane@example.com\",\n      \"createdAt\": \"2024-01-15T12:00:00Z\"\n    }\n  }\n}\n\nThe code demonstrates practical implementation techniques and shows how the concepts work in real scenarios. Pay attention to the structure and patterns used, as these represent industry best practices.",
+      "language": "graphql"
+    },
+    "pitfalls": [
+      {
+        "mistake": "Not following best practices",
+        "solution": "Review documentation and community guidelines",
+        "severity": "medium"
+      },
+      {
+        "mistake": "Skipping error handling",
+        "solution": "Implement proper error boundaries and validation",
+        "severity": "low"
+      }
+    ],
+    "exercises": [
+      {
+        "title": "Practice: Mutations and Data Modification",
+        "description": "Apply the concepts from this lesson on GraphQL Operations",
+        "checkpoints": [
+          "Understand the core concept",
+          "Implement the example code",
+          "Experiment with variations"
+        ]
+      }
+    ],
+    "next": [],
+    "estimatedMinutes": 25,
+    "difficulty": "Intermediate",
+    "tags": [
+      "GraphQL Operations",
+      "graphql"
+    ],
+    "legacy": {
+      "originalId": 4,
+      "originalTopic": "GraphQL Operations",
+      "migrated": "2025-10-01T06:41:13.485Z"
+    },
+    "lastUpdated": "2025-10-01T06:41:13.485Z",
+    "version": "1.0.0"
+  },
+  {
+    "id": "graphql-advanced-lesson-5",
+    "moduleSlug": "graphql-advanced",
+    "title": "Subscriptions and Real-time Data",
+    "order": 5,
+    "objectives": [
+      "Implement practical solutions",
+      "Build foundational understanding"
+    ],
+    "intro": "Welcome to this comprehensive lesson on GraphQL Operations.\n\nLearn how to implement real-time functionality using GraphQL subscriptions for live data updates. Subscriptions allow clients to receive automatic updates when specific events occur on the server.\n\nThroughout this lesson, you'll gain hands-on experience with practical implementations and real-world scenarios. We'll explore both the theoretical foundations and practical applications, ensuring you can immediately apply what you learn.\n\nThis lesson is designed to build upon previous concepts while introducing new techniques that will enhance your development skills. By the end, you'll have a solid understanding of the key principles and be ready to tackle more advanced topics.\n\nThe knowledge gained here will serve as a foundation for subsequent lessons and real-world projects.",
+    "code": {
+      "example": "# Basic subscription\nsubscription CommentAdded($postId: ID!) {\n  commentAdded(postId: $postId) {\n    id\n    content\n    author {\n      name\n    }\n    createdAt\n  }\n}\n\n# Real-time chat\nsubscription ChatMessages($roomId: ID!) {\n  messageAdded(roomId: $roomId) {\n    id\n    content\n    sender {\n      name\n    }\n    timestamp\n  }\n}\n\n# User status updates\nsubscription UserStatusUpdates {\n  userStatusChanged {\n    userId\n    status\n    lastSeen\n  }\n}",
+      "explanation": "This example produces: Real-time WebSocket connection established:\n{\n  \"data\": {\n    \"commentAdded\": {\n      \"id\": \"comment_123\",\n      \"content\": \"Great article!\",\n      \"author\": {\n        \"name\": \"Alice Johnson\"\n      },\n      \"createdAt\": \"2024-01-15T14:30:00Z\"\n    }\n  }\n}\n\nThe code demonstrates practical implementation techniques and shows how the concepts work in real scenarios. Pay attention to the structure and patterns used, as these represent industry best practices.",
+      "language": "graphql"
+    },
+    "pitfalls": [
+      {
+        "mistake": "Not following best practices",
+        "solution": "Review documentation and community guidelines",
+        "severity": "medium"
+      },
+      {
+        "mistake": "Skipping error handling",
+        "solution": "Implement proper error boundaries and validation",
+        "severity": "low"
+      }
+    ],
+    "exercises": [
+      {
+        "title": "Practice: Subscriptions and Real-time Data",
+        "description": "Apply the concepts from this lesson on GraphQL Operations",
+        "checkpoints": [
+          "Understand the core concept",
+          "Implement the example code",
+          "Experiment with variations"
+        ]
+      }
+    ],
+    "next": [],
+    "estimatedMinutes": 25,
+    "difficulty": "Intermediate",
+    "tags": [
+      "GraphQL Operations",
+      "graphql"
+    ],
+    "legacy": {
+      "originalId": 5,
+      "originalTopic": "GraphQL Operations",
+      "migrated": "2025-10-01T06:41:13.485Z"
+    },
+    "lastUpdated": "2025-10-01T06:41:13.485Z",
+    "version": "1.0.0"
+  },
+  {
+    "id": "graphql-advanced-lesson-6",
+    "moduleSlug": "graphql-advanced",
+    "title": "Resolvers and Data Fetching",
+    "order": 6,
+    "objectives": [
+      "Implement practical solutions",
+      "Build foundational understanding"
+    ],
+    "intro": "Welcome to this comprehensive lesson on Schema Design.\n\nLearn how to implement GraphQL resolvers to fetch and transform data from various sources including databases, REST APIs, and microservices. Resolvers are the heart of GraphQL servers.\n\nThroughout this lesson, you'll gain hands-on experience with practical implementations and real-world scenarios. We'll explore both the theoretical foundations and practical applications, ensuring you can immediately apply what you learn.\n\nThis lesson is designed to build upon previous concepts while introducing new techniques that will enhance your development skills. By the end, you'll have a solid understanding of the key principles and be ready to tackle more advanced topics.\n\nThe knowledge gained here will serve as a foundation for subsequent lessons and real-world projects.",
+    "code": {
+      "example": "// GraphQL resolver implementation\nconst resolvers = {\n  Query: {\n    user: async (parent, args, context) => {\n      return await context.dataSources.userAPI.getUserById(args.id);\n    },\n    posts: async (parent, args, context) => {\n      return await context.dataSources.postAPI.getPosts(args);\n    }\n  },\n  \n  User: {\n    posts: async (user, args, context) => {\n      return await context.loaders.postsByAuthor.load(user.id);\n    }\n  },\n  \n  Post: {\n    author: async (post, args, context) => {\n      return await context.loaders.user.load(post.authorId);\n    }\n  },\n  \n  Mutation: {\n    createUser: async (parent, args, context) => {\n      const user = await context.dataSources.userAPI.createUser(args.input);\n      context.pubsub.publish('USER_CREATED', { userCreated: user });\n      return user;\n    }\n  }\n};",
+      "explanation": "This example produces: Resolvers successfully fetch and return data from various sources with proper data loading optimization\n\nThe code demonstrates practical implementation techniques and shows how the concepts work in real scenarios. Pay attention to the structure and patterns used, as these represent industry best practices.",
+      "language": "graphql"
+    },
+    "pitfalls": [
+      {
+        "mistake": "Not following best practices",
+        "solution": "Review documentation and community guidelines",
+        "severity": "medium"
+      },
+      {
+        "mistake": "Skipping error handling",
+        "solution": "Implement proper error boundaries and validation",
+        "severity": "low"
+      }
+    ],
+    "exercises": [
+      {
+        "title": "Practice: Resolvers and Data Fetching",
+        "description": "Apply the concepts from this lesson on Schema Design",
+        "checkpoints": [
+          "Understand the core concept",
+          "Implement the example code",
+          "Experiment with variations"
+        ]
+      }
+    ],
+    "next": [],
+    "estimatedMinutes": 25,
+    "difficulty": "Intermediate",
+    "tags": [
+      "Schema Design",
+      "graphql"
+    ],
+    "legacy": {
+      "originalId": 6,
+      "originalTopic": "Schema Design",
+      "migrated": "2025-10-01T06:41:13.485Z"
+    },
+    "lastUpdated": "2025-10-01T06:41:13.485Z",
+    "version": "1.0.0"
+  },
+  {
+    "id": "graphql-advanced-lesson-7",
+    "moduleSlug": "graphql-advanced",
+    "title": "Advanced Schema Patterns",
+    "order": 7,
+    "objectives": [
+      "Implement practical solutions",
+      "Build foundational understanding"
+    ],
+    "intro": "Welcome to this comprehensive lesson on Schema Design.\n\nLearn advanced GraphQL schema design patterns including interfaces, unions, custom scalars, and schema stitching for building maintainable and scalable GraphQL APIs.\n\nThroughout this lesson, you'll gain hands-on experience with practical implementations and real-world scenarios. We'll explore both the theoretical foundations and practical applications, ensuring you can immediately apply what you learn.\n\nThis lesson is designed to build upon previous concepts while introducing new techniques that will enhance your development skills. By the end, you'll have a solid understanding of the key principles and be ready to tackle more advanced topics.\n\nThe knowledge gained here will serve as a foundation for subsequent lessons and real-world projects.",
+    "code": {
+      "example": "# Interface for common fields\ninterface Node {\n  id: ID!\n  createdAt: DateTime!\n}\n\n# Union types\nunion SearchResult = User | Post | Comment\n\n# Implementing interface\ntype User implements Node {\n  id: ID!\n  createdAt: DateTime!\n  name: String!\n  email: String!\n}\n\n# Enums for type safety\nenum PostStatus {\n  DRAFT\n  PUBLISHED\n  ARCHIVED\n}\n\n# Custom scalars\nscalar DateTime\nscalar EmailAddress\n\n# Pagination pattern\ntype PostConnection {\n  edges: [PostEdge!]!\n  pageInfo: PageInfo!\n}\n\ntype PostEdge {\n  node: Post!\n  cursor: String!\n}\n\ntype PageInfo {\n  hasNextPage: Boolean!\n  hasPreviousPage: Boolean!\n}",
+      "explanation": "This example produces: Advanced schema with interfaces, unions, custom scalars, and pagination patterns successfully defined\n\nThe code demonstrates practical implementation techniques and shows how the concepts work in real scenarios. Pay attention to the structure and patterns used, as these represent industry best practices.",
+      "language": "graphql"
+    },
+    "pitfalls": [
+      {
+        "mistake": "Not following best practices",
+        "solution": "Review documentation and community guidelines",
+        "severity": "medium"
+      },
+      {
+        "mistake": "Skipping error handling",
+        "solution": "Implement proper error boundaries and validation",
+        "severity": "low"
+      }
+    ],
+    "exercises": [
+      {
+        "title": "Practice: Advanced Schema Patterns",
+        "description": "Apply the concepts from this lesson on Schema Design",
+        "checkpoints": [
+          "Understand the core concept",
+          "Implement the example code",
+          "Experiment with variations"
+        ]
+      }
+    ],
+    "next": [],
+    "estimatedMinutes": 25,
+    "difficulty": "Advanced",
+    "tags": [
+      "Schema Design",
+      "graphql"
+    ],
+    "legacy": {
+      "originalId": 7,
+      "originalTopic": "Schema Design",
+      "migrated": "2025-10-01T06:41:13.485Z"
+    },
+    "lastUpdated": "2025-10-01T06:41:13.485Z",
+    "version": "1.0.0"
+  },
+  {
+    "id": "graphql-advanced-lesson-8",
+    "moduleSlug": "graphql-advanced",
+    "title": "DataLoader and N+1 Query Problem",
+    "order": 8,
+    "objectives": [
+      "Implement practical solutions",
+      "Build foundational understanding"
+    ],
+    "intro": "Welcome to this comprehensive lesson on Performance Optimization.\n\nLearn how to solve the N+1 query problem using DataLoader for efficient data fetching. DataLoader provides batching and caching to optimize database access patterns.\n\nThroughout this lesson, you'll gain hands-on experience with practical implementations and real-world scenarios. We'll explore both the theoretical foundations and practical applications, ensuring you can immediately apply what you learn.\n\nThis lesson is designed to build upon previous concepts while introducing new techniques that will enhance your development skills. By the end, you'll have a solid understanding of the key principles and be ready to tackle more advanced topics.\n\nThe knowledge gained here will serve as a foundation for subsequent lessons and real-world projects.",
+    "code": {
+      "example": "// DataLoader implementation\nconst DataLoader = require('dataloader');\n\nconst createLoaders = () => {\n  const batchUsers = async (userIds) => {\n    const users = await User.findByIds(userIds);\n    return userIds.map(id => \n      users.find(user => user.id === id) || null\n    );\n  };\n  \n  return {\n    user: new DataLoader(batchUsers),\n    postsByAuthor: new DataLoader(async (authorIds) => {\n      const posts = await Post.findWhere({ authorId: { $in: authorIds } });\n      return authorIds.map(id => posts.filter(p => p.authorId === id));\n    })\n  };\n};\n\n// Using in resolvers\nconst resolvers = {\n  Post: {\n    author: async (post, args, context) => {\n      return await context.loaders.user.load(post.authorId);\n    }\n  }\n};",
+      "explanation": "This example produces: DataLoader reduces N+1 queries from 1+N to 2 queries total, achieving 90% query reduction\n\nThe code demonstrates practical implementation techniques and shows how the concepts work in real scenarios. Pay attention to the structure and patterns used, as these represent industry best practices.",
+      "language": "graphql"
+    },
+    "pitfalls": [
+      {
+        "mistake": "Not following best practices",
+        "solution": "Review documentation and community guidelines",
+        "severity": "medium"
+      },
+      {
+        "mistake": "Skipping error handling",
+        "solution": "Implement proper error boundaries and validation",
+        "severity": "low"
+      }
+    ],
+    "exercises": [
+      {
+        "title": "Practice: DataLoader and N+1 Query Problem",
+        "description": "Apply the concepts from this lesson on Performance Optimization",
+        "checkpoints": [
+          "Understand the core concept",
+          "Implement the example code",
+          "Experiment with variations"
+        ]
+      }
+    ],
+    "next": [],
+    "estimatedMinutes": 25,
+    "difficulty": "Intermediate",
+    "tags": [
+      "Performance Optimization",
+      "graphql"
+    ],
+    "legacy": {
+      "originalId": 8,
+      "originalTopic": "Performance Optimization",
+      "migrated": "2025-10-01T06:41:13.485Z"
+    },
+    "lastUpdated": "2025-10-01T06:41:13.485Z",
+    "version": "1.0.0"
+  },
+  {
+    "id": "graphql-advanced-lesson-9",
+    "moduleSlug": "graphql-advanced",
+    "title": "Query Complexity Analysis and Rate Limiting",
+    "order": 9,
+    "objectives": [
+      "Implement practical solutions",
+      "Build foundational understanding"
+    ],
+    "intro": "Welcome to this comprehensive lesson on Performance Optimization.\n\nLearn how to implement query complexity analysis and rate limiting to protect your GraphQL API from expensive or malicious queries.\n\nThroughout this lesson, you'll gain hands-on experience with practical implementations and real-world scenarios. We'll explore both the theoretical foundations and practical applications, ensuring you can immediately apply what you learn.\n\nThis lesson is designed to build upon previous concepts while introducing new techniques that will enhance your development skills. By the end, you'll have a solid understanding of the key principles and be ready to tackle more advanced topics.\n\nThe knowledge gained here will serve as a foundation for subsequent lessons and real-world projects.",
+    "code": {
+      "example": "// Query complexity analysis\nconst depthLimit = require('graphql-depth-limit');\nconst costAnalysis = require('graphql-cost-analysis');\n\nconst server = new ApolloServer({\n  typeDefs,\n  resolvers,\n  plugins: [\n    {\n      requestDidStart() {\n        return {\n          didResolveOperation({ document }) {\n            const depthLimitResult = depthLimit(10)(document);\n            if (depthLimitResult) {\n              throw new Error('Query depth limit exceeded');\n            }\n          }\n        };\n      }\n    }\n  ],\n  validationRules: [\n    costAnalysis({\n      maximumCost: 1000,\n      defaultCost: 1,\n      costMap: {\n        User: {\n          posts: { complexity: 2, multipliers: ['first'] }\n        }\n      }\n    })\n  ]\n});",
+      "explanation": "This example produces: Query complexity analysis prevents expensive queries and protects server resources\n\nThe code demonstrates practical implementation techniques and shows how the concepts work in real scenarios. Pay attention to the structure and patterns used, as these represent industry best practices.",
+      "language": "graphql"
+    },
+    "pitfalls": [
+      {
+        "mistake": "Not following best practices",
+        "solution": "Review documentation and community guidelines",
+        "severity": "medium"
+      },
+      {
+        "mistake": "Skipping error handling",
+        "solution": "Implement proper error boundaries and validation",
+        "severity": "low"
+      }
+    ],
+    "exercises": [
+      {
+        "title": "Practice: Query Complexity Analysis and Rate Limiting",
+        "description": "Apply the concepts from this lesson on Performance Optimization",
+        "checkpoints": [
+          "Understand the core concept",
+          "Implement the example code",
+          "Experiment with variations"
+        ]
+      }
+    ],
+    "next": [],
+    "estimatedMinutes": 25,
+    "difficulty": "Advanced",
+    "tags": [
+      "Performance Optimization",
+      "graphql"
+    ],
+    "legacy": {
+      "originalId": 9,
+      "originalTopic": "Performance Optimization",
+      "migrated": "2025-10-01T06:41:13.485Z"
+    },
+    "lastUpdated": "2025-10-01T06:41:13.485Z",
+    "version": "1.0.0"
+  },
+  {
+    "id": "graphql-advanced-lesson-10",
+    "moduleSlug": "graphql-advanced",
+    "title": "GraphQL Testing Strategies",
+    "order": 10,
+    "objectives": [
+      "Implement practical solutions",
+      "Build foundational understanding"
+    ],
+    "intro": "Welcome to this comprehensive lesson on Testing and Tools.\n\nLearn how to test GraphQL APIs effectively using various testing approaches including unit tests, integration tests, and end-to-end testing with proper mocking.\n\nThroughout this lesson, you'll gain hands-on experience with practical implementations and real-world scenarios. We'll explore both the theoretical foundations and practical applications, ensuring you can immediately apply what you learn.\n\nThis lesson is designed to build upon previous concepts while introducing new techniques that will enhance your development skills. By the end, you'll have a solid understanding of the key principles and be ready to tackle more advanced topics.\n\nThe knowledge gained here will serve as a foundation for subsequent lessons and real-world projects.",
+    "code": {
+      "example": "// GraphQL testing with Jest\nconst { createTestClient } = require('apollo-server-testing');\nconst { ApolloServer } = require('apollo-server');\n\ndescribe('GraphQL API Tests', () => {\n  let server, query, mutate;\n  \n  beforeAll(() => {\n    server = new ApolloServer({ typeDefs, resolvers });\n    const testClient = createTestClient(server);\n    query = testClient.query;\n    mutate = testClient.mutate;\n  });\n  \n  test('should fetch user by ID', async () => {\n    const GET_USER = gql`\n      query GetUser($id: ID!) {\n        user(id: $id) {\n          id\n          name\n          email\n        }\n      }\n    `;\n    \n    const result = await query({\n      query: GET_USER,\n      variables: { id: '1' }\n    });\n    \n    expect(result.data.user).toEqual({\n      id: '1',\n      name: 'John Doe',\n      email: 'john@example.com'\n    });\n  });\n  \n  test('should create user', async () => {\n    const CREATE_USER = gql`\n      mutation CreateUser($input: CreateUserInput!) {\n        createUser(input: $input) {\n          id\n          name\n        }\n      }\n    `;\n    \n    const result = await mutate({\n      mutation: CREATE_USER,\n      variables: {\n        input: { name: 'Jane Doe', email: 'jane@example.com' }\n      }\n    });\n    \n    expect(result.data.createUser.name).toBe('Jane Doe');\n  });\n});",
+      "explanation": "This example produces: All GraphQL tests pass with proper query and mutation validation\n\nThe code demonstrates practical implementation techniques and shows how the concepts work in real scenarios. Pay attention to the structure and patterns used, as these represent industry best practices.",
+      "language": "graphql"
+    },
+    "pitfalls": [
+      {
+        "mistake": "Not following best practices",
+        "solution": "Review documentation and community guidelines",
+        "severity": "medium"
+      },
+      {
+        "mistake": "Skipping error handling",
+        "solution": "Implement proper error boundaries and validation",
+        "severity": "low"
+      }
+    ],
+    "exercises": [
+      {
+        "title": "Practice: GraphQL Testing Strategies",
+        "description": "Apply the concepts from this lesson on Testing and Tools",
+        "checkpoints": [
+          "Understand the core concept",
+          "Implement the example code",
+          "Experiment with variations"
+        ]
+      }
+    ],
+    "next": [],
+    "estimatedMinutes": 25,
+    "difficulty": "Intermediate",
+    "tags": [
+      "Testing and Tools",
+      "graphql"
+    ],
+    "legacy": {
+      "originalId": 10,
+      "originalTopic": "Testing and Tools",
+      "migrated": "2025-10-01T06:41:13.485Z"
+    },
+    "lastUpdated": "2025-10-01T06:41:13.485Z",
+    "version": "1.0.0"
+  },
+  {
+    "id": "graphql-advanced-lesson-11",
+    "moduleSlug": "graphql-advanced",
+    "title": "GraphQL Development Tools and Debugging",
+    "order": 11,
+    "objectives": [
+      "Implement practical solutions",
+      "Build foundational understanding"
+    ],
+    "intro": "Welcome to this comprehensive lesson on Testing and Tools.\n\nLearn how to use GraphQL development tools including GraphQL Playground, Apollo Studio, and debugging techniques for building and maintaining GraphQL APIs.\n\nThroughout this lesson, you'll gain hands-on experience with practical implementations and real-world scenarios. We'll explore both the theoretical foundations and practical applications, ensuring you can immediately apply what you learn.\n\nThis lesson is designed to build upon previous concepts while introducing new techniques that will enhance your development skills. By the end, you'll have a solid understanding of the key principles and be ready to tackle more advanced topics.\n\nThe knowledge gained here will serve as a foundation for subsequent lessons and real-world projects.",
+    "code": {
+      "example": "// GraphQL Playground setup\nconst { ApolloServer } = require('apollo-server-express');\nconst express = require('express');\n\nconst server = new ApolloServer({\n  typeDefs,\n  resolvers,\n  introspection: true, // Enable for development\n  playground: {\n    settings: {\n      'editor.theme': 'dark',\n      'editor.reuseHeaders': true,\n      'tracing.hideTracingResponse': false,\n    }\n  },\n  tracing: true, // Enable Apollo tracing\n  plugins: [\n    {\n      requestDidStart() {\n        return {\n          willSendResponse(requestContext) {\n            console.log('Query executed:', requestContext.request.query);\n            console.log('Variables:', requestContext.request.variables);\n          }\n        };\n      }\n    }\n  ]\n});\n\n// Apollo Studio integration\nconst server2 = new ApolloServer({\n  typeDefs,\n  resolvers,\n  plugins: [\n    require('apollo-server-plugin-response-cache')(),\n    {\n      requestDidStart() {\n        return {\n          didResolveOperation(requestContext) {\n            // Log to Apollo Studio\n            console.log('Operation:', requestContext.request.operationName);\n          }\n        };\n      }\n    }\n  ]\n});",
+      "explanation": "This example produces: GraphQL Playground and Apollo Studio successfully configured for development and monitoring\n\nThe code demonstrates practical implementation techniques and shows how the concepts work in real scenarios. Pay attention to the structure and patterns used, as these represent industry best practices.",
+      "language": "graphql"
+    },
+    "pitfalls": [
+      {
+        "mistake": "Not following best practices",
+        "solution": "Review documentation and community guidelines",
+        "severity": "medium"
+      },
+      {
+        "mistake": "Skipping error handling",
+        "solution": "Implement proper error boundaries and validation",
+        "severity": "low"
+      }
+    ],
+    "exercises": [
+      {
+        "title": "Practice: GraphQL Development Tools and Debugging",
+        "description": "Apply the concepts from this lesson on Testing and Tools",
+        "checkpoints": [
+          "Understand the core concept",
+          "Implement the example code",
+          "Experiment with variations"
+        ]
+      }
+    ],
+    "next": [],
+    "estimatedMinutes": 25,
+    "difficulty": "Intermediate",
+    "tags": [
+      "Testing and Tools",
+      "graphql"
+    ],
+    "legacy": {
+      "originalId": 11,
+      "originalTopic": "Testing and Tools",
+      "migrated": "2025-10-01T06:41:13.485Z"
+    },
+    "lastUpdated": "2025-10-01T06:41:13.485Z",
+    "version": "1.0.0"
+  },
+  {
+    "id": "graphql-advanced-lesson-12",
+    "moduleSlug": "graphql-advanced",
+    "title": "GraphQL Security and Production Best Practices",
+    "order": 12,
+    "objectives": [
+      "Implement practical solutions",
+      "Build foundational understanding"
+    ],
+    "intro": "Welcome to this comprehensive lesson on Production Deployment.\n\nLearn essential security practices and production deployment strategies for GraphQL APIs including authentication, authorization, and monitoring.\n\nThroughout this lesson, you'll gain hands-on experience with practical implementations and real-world scenarios. We'll explore both the theoretical foundations and practical applications, ensuring you can immediately apply what you learn.\n\nThis lesson is designed to build upon previous concepts while introducing new techniques that will enhance your development skills. By the end, you'll have a solid understanding of the key principles and be ready to tackle more advanced topics.\n\nThe knowledge gained here will serve as a foundation for subsequent lessons and real-world projects.",
+    "code": {
+      "example": "// Security implementation\nconst { shield, rule, and, or } = require('graphql-shield');\nconst jwt = require('jsonwebtoken');\n\n// Authentication rule\nconst isAuthenticated = rule({ cache: 'contextual' })(\n  async (parent, args, context) => {\n    return context.user !== null;\n  }\n);\n\n// Authorization rule\nconst isOwner = rule({ cache: 'strict' })(\n  async (parent, args, context) => {\n    return context.user.id === args.id;\n  }\n);\n\n// Permission shield\nconst permissions = shield({\n  Query: {\n    user: isAuthenticated,\n    users: and(isAuthenticated, isAdmin),\n    posts: isAuthenticated\n  },\n  Mutation: {\n    createPost: isAuthenticated,\n    updatePost: and(isAuthenticated, isOwner),\n    deletePost: and(isAuthenticated, isOwner)\n  }\n});\n\n// Production server setup\nconst server = new ApolloServer({\n  typeDefs,\n  resolvers,\n  middlewares: [permissions],\n  context: ({ req }) => {\n    const token = req.headers.authorization?.replace('Bearer ', '');\n    const user = token ? jwt.verify(token, process.env.JWT_SECRET) : null;\n    return { user };\n  },\n  introspection: process.env.NODE_ENV !== 'production',\n  playground: process.env.NODE_ENV !== 'production',\n  formatError: (error) => {\n    console.error(error);\n    return process.env.NODE_ENV === 'production' \n      ? new Error('Internal server error')\n      : error;\n  }\n});",
+      "explanation": "This example produces: Secure GraphQL API with authentication, authorization, and production-ready error handling\n\nThe code demonstrates practical implementation techniques and shows how the concepts work in real scenarios. Pay attention to the structure and patterns used, as these represent industry best practices.",
+      "language": "graphql"
+    },
+    "pitfalls": [
+      {
+        "mistake": "Not following best practices",
+        "solution": "Review documentation and community guidelines",
+        "severity": "medium"
+      },
+      {
+        "mistake": "Skipping error handling",
+        "solution": "Implement proper error boundaries and validation",
+        "severity": "low"
+      }
+    ],
+    "exercises": [
+      {
+        "title": "Practice: GraphQL Security and Production Best Practices",
+        "description": "Apply the concepts from this lesson on Production Deployment",
+        "checkpoints": [
+          "Understand the core concept",
+          "Implement the example code",
+          "Experiment with variations"
+        ]
+      }
+    ],
+    "next": [],
+    "estimatedMinutes": 25,
+    "difficulty": "Intermediate",
+    "tags": [
+      "Production Deployment",
+      "graphql"
+    ],
+    "legacy": {
+      "originalId": 12,
+      "originalTopic": "Production Deployment",
+      "migrated": "2025-10-01T06:41:13.485Z"
+    },
+    "lastUpdated": "2025-10-01T06:41:13.485Z",
+    "version": "1.0.0"
+  },
+  {
+    "id": "graphql-advanced-lesson-13",
+    "moduleSlug": "graphql-advanced",
+    "title": "GraphQL Federation and Microservices Architecture",
+    "order": 13,
+    "objectives": [
+      "Understand GraphQL Federation concepts and implementation",
+      "Learn to compose schemas from multiple services",
+      "Implement federated GraphQL architecture for microservices"
+    ],
+    "intro": "Welcome to this comprehensive lesson on GraphQL Federation and Microservices Architecture.\n\nLearn how to implement GraphQL Federation to compose schemas from multiple microservices, enabling distributed GraphQL architectures. Federation allows different teams to own and develop their GraphQL schemas independently while providing a unified API gateway.\n\nThroughout this lesson, you'll gain hands-on experience with practical implementations and real-world scenarios. We'll explore both the theoretical foundations and practical applications, ensuring you can immediately apply what you learn.\n\nThis lesson is designed to build upon previous concepts while introducing new techniques that will enhance your development skills. By the end, you'll have a solid understanding of the key principles and be ready to tackle more advanced topics.\n\nThe knowledge gained here will serve as a foundation for subsequent lessons and real-world projects.",
+    "code": {
+      "example": "// User Service Schema\ntype User @key(fields: \"id\") {\n  id: ID!\n  name: String!\n  email: String!\n}\n\nextend type Query {\n  user(id: ID!): User\n  users: [User!]!\n}\n\n// Posts Service Schema\ntype Post @key(fields: \"id\") {\n  id: ID!\n  title: String!\n  content: String!\n  authorId: ID!\n  author: User\n}\n\nextend type User @key(fields: \"id\") {\n  id: ID! @external\n  posts: [Post!]!\n}\n\nextend type Query {\n  post(id: ID!): Post\n  posts: [Post!]!\n}\n\n// Gateway Configuration\nconst { ApolloGateway } = require('@apollo/gateway');\nconst { ApolloServer } = require('apollo-server');\n\nconst gateway = new ApolloGateway({\n  serviceList: [\n    { name: 'users', url: 'http://localhost:4001/graphql' },\n    { name: 'posts', url: 'http://localhost:4002/graphql' },\n    { name: 'comments', url: 'http://localhost:4003/graphql' }\n  ],\n  buildService: ({ url }) => {\n    return new RemoteGraphQLDataSource({\n      url,\n      willSendRequest: ({ request, context }) => {\n        request.http.headers.set('user-id', context.userId);\n      }\n    });\n  }\n});\n\nconst server = new ApolloServer({\n  gateway,\n  subscriptions: false,\n  context: ({ req }) => {\n    return {\n      userId: req.headers['user-id']\n    };\n  }\n});\n\n// User Service Resolver\nconst resolvers = {\n  User: {\n    __resolveReference: (reference) => {\n      return users.find(user => user.id === reference.id);\n    }\n  },\n  Query: {\n    user: (parent, { id }) => users.find(user => user.id === id),\n    users: () => users\n  }\n};\n\n// Posts Service Resolver\nconst resolvers = {\n  Post: {\n    __resolveReference: (reference) => {\n      return posts.find(post => post.id === reference.id);\n    },\n    author: (post) => {\n      return { __typename: 'User', id: post.authorId };\n    }\n  },\n  User: {\n    posts: (user) => posts.filter(post => post.authorId === user.id)\n  },\n  Query: {\n    post: (parent, { id }) => posts.find(post => post.id === id),\n    posts: () => posts\n  }\n};\n\n// Federated Query Example\nquery GetUserWithPosts {\n  user(id: \"1\") {\n    id\n    name\n    email\n    posts {\n      id\n      title\n      content\n    }\n  }\n}",
+      "explanation": "This example demonstrates GraphQL Federation implementation with multiple services (users, posts) that compose into a single federated schema. The gateway handles query planning and execution across services.\n\nThe code demonstrates practical implementation techniques and shows how the concepts work in real scenarios. Pay attention to the structure and patterns used, as these represent industry best practices.",
+      "language": "javascript"
+    },
+    "pitfalls": [
+      {
+        "mistake": "Not properly handling entity resolution across services",
+        "solution": "Implement proper __resolveReference methods and use @key directives correctly",
+        "severity": "high"
+      },
+      {
+        "mistake": "Creating circular dependencies between federated services",
+        "solution": "Design clear service boundaries and avoid tight coupling between services",
+        "severity": "medium"
+      },
+      {
+        "mistake": "Not implementing proper error handling in federated queries",
+        "solution": "Handle partial failures gracefully and provide meaningful error messages",
+        "severity": "medium"
+      }
+    ],
+    "exercises": [
+      {
+        "title": "Practice: GraphQL Federation and Microservices Architecture",
+        "description": "Implement a federated GraphQL architecture with multiple microservices",
+        "checkpoints": [
+          "Set up multiple GraphQL services with federated schemas",
+          "Configure Apollo Gateway for service composition",
+          "Implement entity resolution across services",
+          "Test federated queries and handle errors",
+          "Deploy federated architecture to production"
+        ]
+      }
+    ],
+    "next": [],
+    "estimatedMinutes": 50,
+    "difficulty": "Advanced",
+    "tags": [
+      "Federation",
+      "Microservices",
+      "Architecture",
+      "graphql"
+    ],
+    "lastUpdated": "2025-10-01T06:41:13.485Z",
+    "version": "1.0.0"
+  }
+]

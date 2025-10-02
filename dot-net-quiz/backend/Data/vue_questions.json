@@ -1,0 +1,167 @@
+[
+  {
+    "id": 1,
+    "topic": "Core Concepts",
+    "type": "multiple-choice",
+    "question": "What is the correct way to create a Vue application in Vue 3?",
+    "choices": [
+      "Vue.createApp({})",
+      "new Vue({})",
+      "Vue.app({})",
+      "Vue.init({})"
+    ],
+    "correctAnswer": 0,
+    "explanation": "In Vue 3, applications are created using Vue.createApp({}). This is different from Vue 2 where new Vue({}) was used. The new API provides better modularity and allows creating multiple Vue applications on the same page."
+  },
+  {
+    "id": 2,
+    "topic": "Core Concepts",
+    "type": "multiple-choice",
+    "question": "Which directive is used for two-way data binding in Vue?",
+    "choices": [
+      "v-model",
+      "v-bind",
+      "v-on",
+      "v-show"
+    ],
+    "correctAnswer": 0,
+    "explanation": "The v-model directive is used for two-way data binding between form inputs and application state. It automatically picks the correct way to update the element based on the input type."
+  },
+  {
+    "id": 3,
+    "topic": "Components",
+    "type": "open-ended",
+    "question": "What are props in Vue and how are they used? How do they differ from the data property?",
+    "choices": null,
+    "correctAnswer": null,
+    "explanation": "Props are custom attributes you can register on a component to pass data from parent components to child components. They are used to pass data down the component tree. Props are read-only in the child component, while data properties are mutable within the component. Props are defined in the parent component's template, while data properties are defined within the component itself."
+  },
+  {
+    "id": 4,
+    "topic": "Components",
+    "type": "multiple-choice",
+    "question": "How do you define a global component in Vue 3?",
+    "choices": [
+      "app.component('my-component', MyComponent)",
+      "Vue.component('my-component', MyComponent)",
+      "MyComponent.component('my-component')",
+      "component('my-component', MyComponent)"
+    ],
+    "correctAnswer": 0,
+    "explanation": "In Vue 3, global components are registered using app.component() where app is the application instance returned by Vue.createApp(). This is different from Vue 2 where Vue.component() was used. The new approach provides better encapsulation."
+  },
+  {
+    "id": 5,
+    "topic": "Composition API",
+    "type": "multiple-choice",
+    "question": "What is the purpose of the setup() function in the Composition API?",
+    "choices": [
+      "It's the entry point for Composition API logic",
+      "It replaces the data option entirely",
+      "It's used only for async operations",
+      "It's deprecated in Vue 3"
+    ],
+    "correctAnswer": 0,
+    "explanation": "The setup() function is the entry point for Composition API logic. It's executed before the component is created, once the props are resolved. It's where you define reactive state, computed properties, watchers, and lifecycle hooks when using the Composition API."
+  },
+  {
+    "id": 6,
+    "topic": "Reactivity",
+    "type": "multiple-choice",
+    "question": "What is the difference between ref and reactive in Vue 3?",
+    "choices": [
+      "ref is for primitive values, reactive is for objects",
+      "ref is for objects, reactive is for primitive values",
+      "Both work the same way",
+      "ref is deprecated in Vue 3"
+    ],
+    "correctAnswer": 0,
+    "explanation": "ref is used to create a reactive reference that can hold any value (primitive or object), and you access its value with .value. reactive is used to create a reactive object, but it only works with objects and arrays, not primitive values. For primitives, you must use ref."
+  },
+  {
+    "id": 7,
+    "topic": "Lifecycle",
+    "type": "open-ended",
+    "question": "Explain the Vue component lifecycle hooks and when you would use each one.",
+    "choices": null,
+    "correctAnswer": null,
+    "explanation": "Vue component lifecycle hooks include: created (for initializing data and events), mounted (for DOM manipulation and API calls), updated (for operations after DOM updates), and unmounted (for cleanup). In Composition API, these are onMounted, onUpdated, onUnmounted, etc. Use created for data initialization, mounted for DOM-dependent operations, updated for post-render updates, and unmounted for cleanup."
+  },
+  {
+    "id": 8,
+    "topic": "Directives",
+    "type": "multiple-choice",
+    "question": "What is the difference between v-if and v-show?",
+    "choices": [
+      "v-if conditionally renders elements, v-show toggles CSS display property",
+      "v-if is for lists, v-show is for single elements",
+      "v-if is faster than v-show",
+      "There is no difference"
+    ],
+    "correctAnswer": 0,
+    "explanation": "v-if conditionally renders elements by actually adding or removing them from the DOM based on the condition. v-show simply toggles the CSS display property to show or hide elements. v-if has higher toggle costs but v-show has higher initial render costs. Use v-if for rarely changed conditions and v-show for frequently toggled elements."
+  },
+  {
+    "id": 9,
+    "topic": "Composition API",
+    "type": "multiple-choice",
+    "question": "What is the main advantage of Vue 3's Composition API?",
+    "choices": ["Better logic reuse and TypeScript support", "Faster rendering", "Smaller bundle size", "Automatic optimization"],
+    "correctAnswer": 0,
+    "explanation": "The Composition API provides better logic reuse through composables, improved TypeScript support, and cleaner organization of component logic."
+  },
+  {
+    "id": 10,
+    "topic": "Reactivity",
+    "type": "multiple-choice",
+    "question": "What is the difference between ref() and reactive() in Vue 3?",
+    "choices": ["ref() for primitives, reactive() for objects", "ref() is faster than reactive()", "reactive() is deprecated", "No functional difference"],
+    "correctAnswer": 0,
+    "explanation": "ref() is used for primitive values and returns a reactive reference, while reactive() is used for objects and makes them deeply reactive."
+  },
+  {
+    "id": 11,
+    "topic": "Performance",
+    "type": "open-ended",
+    "question": "How can you optimize Vue application performance?",
+    "choices": null,
+    "correctAnswer": null,
+    "explanation": "Optimize Vue apps through: lazy loading components, using v-show vs v-if appropriately, implementing virtual scrolling, optimizing computed properties, using keep-alive for cached components, and minimizing reactivity overhead."
+  },
+  {
+    "id": 12,
+    "topic": "State Management",
+    "type": "multiple-choice",
+    "question": "What is Pinia and how does it relate to Vuex?",
+    "choices": ["Pinia is the recommended state management for Vue 3, replacing Vuex", "Pinia is a Vue component library", "Pinia is a testing framework", "Pinia is a UI framework"],
+    "correctAnswer": 0,
+    "explanation": "Pinia is the official state management solution for Vue 3, offering better TypeScript support, simpler API, and improved devtools compared to Vuex."
+  },
+  {
+    "id": 13,
+    "topic": "Testing",
+    "type": "multiple-choice",
+    "question": "Which tool is recommended for testing Vue components?",
+    "choices": ["Vue Test Utils with Vitest", "Jest only", "Selenium", "Cypress only"],
+    "correctAnswer": 0,
+    "explanation": "Vue Test Utils provides utilities for testing Vue components, often paired with Vitest for fast unit testing in Vue 3 projects."
+  },
+  {
+    "id": 14,
+    "topic": "Advanced",
+    "type": "open-ended",
+    "question": "What are Teleports in Vue 3 and when would you use them?",
+    "choices": null,
+    "correctAnswer": null,
+    "explanation": "Teleports allow rendering component templates in different parts of the DOM tree, outside the component hierarchy. Use for modals, tooltips, or notifications that need to escape parent containers."
+  },
+  {
+    "id": 15,
+    "topic": "Directives",
+    "type": "multiple-choice",
+    "question": "How do you create a custom directive in Vue 3?",
+    "choices": ["Using app.directive() method", "Using Vue.directive()", "Using @directive decorator", "Using defineDirective()"],
+    "correctAnswer": 0,
+    "explanation": "In Vue 3, custom directives are created using app.directive(name, definition) where definition is an object with lifecycle hooks."
+  }
+]

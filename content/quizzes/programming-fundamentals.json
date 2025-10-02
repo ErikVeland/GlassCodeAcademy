@@ -1,0 +1,336 @@
+{
+  "moduleSlug": "programming-fundamentals",
+  "title": "Programming Fundamentals Assessment",
+  "description": "Comprehensive quiz covering key concepts from the Programming Fundamentals module",
+  "totalQuestions": 15,
+  "passingScore": 70,
+  "timeLimit": 30,
+  "questions": [
+    {
+      "id": "programming-fundamentals-q1",
+      "question": "Which variable declaration is most appropriate for storing a user's age that might change over time?",
+      "topic": "Variables",
+      "difficulty": "Beginner",
+      "choices": [
+        "let age = 25;",
+        "const age = 25;",
+        "var age = 25;",
+        "age = 25;"
+      ],
+      "correctIndex": 0,
+      "explanation": "'let' is the correct choice because the user's age might change (when they have a birthday), so we need a variable that can be reassigned. 'const' is for constants that never change, 'var' has scope issues and should be avoided in modern JavaScript, and declaring without a keyword creates a global variable which is dangerous.",
+      "industryContext": "In professional development, choosing the right variable declaration prevents bugs and makes code intentions clear to other developers.",
+      "tags": [
+        "foundational",
+        "beginner"
+      ],
+      "estimatedTime": 90,
+      "questionType": "multiple-choice"
+    },
+    {
+      "id": "programming-fundamentals-q2",
+      "question": "What will this code output?\n\nlet x = 5;\nif (x > 3) {\n    console.log('A');\n} else if (x > 7) {\n    console.log('B');\n} else {\n    console.log('C');\n}",
+      "topic": "Control Structures",
+      "difficulty": "Beginner",
+      "choices": [
+        "A",
+        "B",
+        "C",
+        "Nothing (no output)"
+      ],
+      "correctIndex": 0,
+      "explanation": "The code will output 'A'. Since x = 5 and 5 > 3 is true, the first condition is met and 'A' is logged. The else if condition (x > 7) is never checked because the first condition was already true. In if-else chains, only the first true condition executes.",
+      "industryContext": "Understanding conditional flow is crucial for implementing business logic, user authentication, and decision-making features in applications.",
+      "tags": [
+        "foundational",
+        "beginner"
+      ],
+      "estimatedTime": 90,
+      "questionType": "multiple-choice"
+    },
+    {
+      "id": "programming-fundamentals-q3",
+      "question": "Which function definition follows best practices for a function that calculates the total price including tax?",
+      "topic": "Functions",
+      "difficulty": "Intermediate",
+      "choices": [
+        "function calculateTotalPrice(price, taxRate) { return price + (price * taxRate); }",
+        "function calc(p, t) { return p + p * t; }",
+        "function calculatePrice() { return price + tax; }",
+        "const calculate = () => { console.log(price * 1.08); }"
+      ],
+      "correctIndex": 0,
+      "explanation": "Option A follows best practices with a descriptive function name, clear parameter names, and returns a value instead of just logging. Option B uses unclear abbreviations, Option C relies on global variables which is bad practice, and Option D doesn't return a value and hardcodes the tax rate.",
+      "industryContext": "Clear function names and proper parameter handling are essential for maintainable code in team environments and large applications.",
+      "tags": [
+        "foundational",
+        "intermediate"
+      ],
+      "estimatedTime": 90,
+      "questionType": "multiple-choice"
+    },
+    {
+      "id": "programming-fundamentals-q4",
+      "question": "What is wrong with this loop and how would you fix it?\n\nlet i = 0;\nwhile (i < 10) {\n    console.log(i);\n    // Missing something here\n}",
+      "topic": "Control Structures",
+      "difficulty": "Beginner",
+      "choices": [
+        "Missing i++ or i = i + 1 to increment the counter",
+        "Should use for loop instead of while loop",
+        "The condition should be i <= 10",
+        "Need to declare i inside the loop"
+      ],
+      "correctIndex": 0,
+      "explanation": "The loop is missing the increment statement (i++ or i = i + 1). Without incrementing i, the condition i < 10 will always be true, creating an infinite loop that will crash the program. The counter variable must be updated inside the loop body.",
+      "industryContext": "Infinite loops are a common bug that can crash applications or freeze user interfaces. Always ensure loop conditions will eventually become false.",
+      "tags": [
+        "foundational",
+        "beginner"
+      ],
+      "estimatedTime": 90,
+      "questionType": "multiple-choice"
+    },
+    {
+      "id": "programming-fundamentals-q5",
+      "question": "Which data type should you use to store whether a user is currently logged in?",
+      "topic": "Data Types",
+      "difficulty": "Beginner",
+      "choices": [
+        "boolean",
+        "string",
+        "number",
+        "array"
+      ],
+      "correctIndex": 0,
+      "explanation": "Boolean is the correct data type for true/false values like login status. A boolean can only be true or false, making it perfect for yes/no, on/off, or logged-in/logged-out states. Strings and numbers could work but waste memory and allow invalid values.",
+      "industryContext": "Using appropriate data types prevents bugs, saves memory, and makes code self-documenting. Booleans are essential for feature flags, user permissions, and application state.",
+      "tags": [
+        "foundational",
+        "beginner"
+      ],
+      "estimatedTime": 90,
+      "questionType": "multiple-choice"
+    },
+    {
+      "id": "programming-fundamentals-q6",
+      "question": "What will happen when this function is called with calculateDiscount(100)?\n\nfunction calculateDiscount(price, discountRate = 0.1) {\n    return price * discountRate;\n}",
+      "topic": "Functions",
+      "difficulty": "Intermediate",
+      "choices": [
+        "Returns 10 (using default discount rate of 0.1)",
+        "Returns an error because discountRate is missing",
+        "Returns 0 because discountRate is undefined",
+        "Returns 100 because no discount is applied"
+      ],
+      "correctIndex": 0,
+      "explanation": "The function will return 10. When discountRate is not provided, it uses the default value of 0.1. So 100 * 0.1 = 10. Default parameters allow functions to work even when some arguments are omitted, making them more flexible and user-friendly.",
+      "industryContext": "Default parameters are essential for creating flexible APIs and functions that work in multiple scenarios without requiring all arguments every time.",
+      "tags": [
+        "foundational",
+        "intermediate"
+      ],
+      "estimatedTime": 90,
+      "questionType": "multiple-choice"
+    },
+    {
+      "id": "programming-fundamentals-q7",
+      "question": "What are the performance considerations when using Logic?",
+      "topic": "Algorithms",
+      "difficulty": "Intermediate",
+      "choices": [
+        "Option A - Placeholder answer",
+        "Option B - Placeholder answer",
+        "Option C - Placeholder answer",
+        "Option D - Placeholder answer"
+      ],
+      "correctIndex": 0,
+      "explanation": "This question tests understanding of Logic concepts. The correct answer demonstrates proper implementation of Programming Fundamentals principles. Review the lesson materials for detailed explanations of these concepts.",
+      "industryContext": "In professional development, understanding Logic is crucial for building scalable and maintainable applications.",
+      "tags": [
+        "foundational",
+        "intermediate"
+      ],
+      "estimatedTime": 90,
+      "questionType": "multiple-choice"
+    },
+    {
+      "id": "programming-fundamentals-q8",
+      "question": "How do you troubleshoot complex Logic issues?",
+      "topic": "Data Structures",
+      "difficulty": "Advanced",
+      "choices": [
+        "Option A - Placeholder answer",
+        "Option B - Placeholder answer",
+        "Option C - Placeholder answer",
+        "Option D - Placeholder answer"
+      ],
+      "correctIndex": 0,
+      "explanation": "This question tests understanding of Logic concepts. The correct answer demonstrates proper implementation of Programming Fundamentals principles. Review the lesson materials for detailed explanations of these concepts.",
+      "industryContext": "In professional development, understanding Logic is crucial for building scalable and maintainable applications.",
+      "tags": [
+        "foundational",
+        "advanced"
+      ],
+      "estimatedTime": 90,
+      "questionType": "multiple-choice"
+    },
+    {
+      "id": "programming-fundamentals-q9",
+      "question": "How would you optimize Logic for large-scale applications?",
+      "topic": "Logic",
+      "difficulty": "Advanced",
+      "choices": [
+        "Option A - Placeholder answer",
+        "Option B - Placeholder answer",
+        "Option C - Placeholder answer",
+        "Option D - Placeholder answer"
+      ],
+      "correctIndex": 0,
+      "explanation": "This question tests understanding of Logic concepts. The correct answer demonstrates proper implementation of Programming Fundamentals principles. Review the lesson materials for detailed explanations of these concepts.",
+      "industryContext": "In professional development, understanding Logic is crucial for building scalable and maintainable applications.",
+      "tags": [
+        "foundational",
+        "advanced"
+      ],
+      "estimatedTime": 90,
+      "questionType": "multiple-choice"
+    },
+    {
+      "id": "programming-fundamentals-q10",
+      "question": "Which of the following is a key feature of Programming Fundamentals?",
+      "topic": "Algorithms",
+      "difficulty": "Beginner",
+      "choices": [
+        "Option A - Placeholder answer",
+        "Option B - Placeholder answer",
+        "Option C - Placeholder answer",
+        "Option D - Placeholder answer"
+      ],
+      "correctIndex": 0,
+      "explanation": "This question tests understanding of Logic concepts. The correct answer demonstrates proper implementation of Programming Fundamentals principles. Review the lesson materials for detailed explanations of these concepts.",
+      "industryContext": "In professional development, understanding Logic is crucial for building scalable and maintainable applications.",
+      "tags": [
+        "foundational",
+        "beginner"
+      ],
+      "estimatedTime": 90,
+      "questionType": "multiple-choice"
+    },
+    {
+      "id": "programming-fundamentals-q11",
+      "question": "When should you use Logic in development?",
+      "topic": "Data Structures",
+      "difficulty": "Beginner",
+      "choices": [
+        "Option A - Placeholder answer",
+        "Option B - Placeholder answer",
+        "Option C - Placeholder answer",
+        "Option D - Placeholder answer"
+      ],
+      "correctIndex": 0,
+      "explanation": "This question tests understanding of Logic concepts. The correct answer demonstrates proper implementation of Programming Fundamentals principles. Review the lesson materials for detailed explanations of these concepts.",
+      "industryContext": "In professional development, understanding Logic is crucial for building scalable and maintainable applications.",
+      "tags": [
+        "foundational",
+        "beginner"
+      ],
+      "estimatedTime": 90,
+      "questionType": "multiple-choice"
+    },
+    {
+      "id": "programming-fundamentals-q12",
+      "question": "How do you implement Logic in a production environment?",
+      "topic": "Logic",
+      "difficulty": "Intermediate",
+      "choices": [
+        "Option A - Placeholder answer",
+        "Option B - Placeholder answer",
+        "Option C - Placeholder answer",
+        "Option D - Placeholder answer"
+      ],
+      "correctIndex": 0,
+      "explanation": "This question tests understanding of Logic concepts. The correct answer demonstrates proper implementation of Programming Fundamentals principles. Review the lesson materials for detailed explanations of these concepts.",
+      "industryContext": "In professional development, understanding Logic is crucial for building scalable and maintainable applications.",
+      "tags": [
+        "foundational",
+        "intermediate"
+      ],
+      "estimatedTime": 90,
+      "questionType": "multiple-choice"
+    },
+    {
+      "id": "programming-fundamentals-q13",
+      "question": "What are the performance considerations when using Logic?",
+      "topic": "Algorithms",
+      "difficulty": "Intermediate",
+      "choices": [
+        "Option A - Placeholder answer",
+        "Option B - Placeholder answer",
+        "Option C - Placeholder answer",
+        "Option D - Placeholder answer"
+      ],
+      "correctIndex": 0,
+      "explanation": "This question tests understanding of Logic concepts. The correct answer demonstrates proper implementation of Programming Fundamentals principles. Review the lesson materials for detailed explanations of these concepts.",
+      "industryContext": "In professional development, understanding Logic is crucial for building scalable and maintainable applications.",
+      "tags": [
+        "foundational",
+        "intermediate"
+      ],
+      "estimatedTime": 90,
+      "questionType": "multiple-choice"
+    },
+    {
+      "id": "programming-fundamentals-q14",
+      "question": "Which pattern is most effective for Logic architecture?",
+      "topic": "Data Structures",
+      "difficulty": "Intermediate",
+      "choices": [
+        "Option A - Placeholder answer",
+        "Option B - Placeholder answer",
+        "Option C - Placeholder answer",
+        "Option D - Placeholder answer"
+      ],
+      "correctIndex": 0,
+      "explanation": "This question tests understanding of Logic concepts. The correct answer demonstrates proper implementation of Programming Fundamentals principles. Review the lesson materials for detailed explanations of these concepts.",
+      "industryContext": "In professional development, understanding Logic is crucial for building scalable and maintainable applications.",
+      "tags": [
+        "foundational",
+        "intermediate"
+      ],
+      "estimatedTime": 90,
+      "questionType": "multiple-choice"
+    },
+    {
+      "id": "programming-fundamentals-q15",
+      "question": "How do you implement Logic in a production environment?",
+      "topic": "Logic",
+      "difficulty": "Intermediate",
+      "choices": [
+        "Option A - Placeholder answer",
+        "Option B - Placeholder answer",
+        "Option C - Placeholder answer",
+        "Option D - Placeholder answer"
+      ],
+      "correctIndex": 0,
+      "explanation": "This question tests understanding of Logic concepts. The correct answer demonstrates proper implementation of Programming Fundamentals principles. Review the lesson materials for detailed explanations of these concepts.",
+      "industryContext": "In professional development, understanding Logic is crucial for building scalable and maintainable applications.",
+      "tags": [
+        "foundational",
+        "intermediate"
+      ],
+      "estimatedTime": 90,
+      "questionType": "multiple-choice"
+    }
+  ],
+  "metadata": {
+    "difficulty": "Beginner",
+    "estimatedTime": "23 minutes",
+    "topics": [
+      "Logic",
+      "Algorithms",
+      "Data Structures"
+    ],
+    "lastUpdated": "2025-10-01T06:42:16.315Z",
+    "version": "1.0.0"
+  }
+}

@@ -1,0 +1,196 @@
+{
+  "timestamp": "2025-10-01T07:21:58.734Z",
+  "totalModules": 18,
+  "validModules": 0,
+  "totalLessons": 221,
+  "validLessons": 89,
+  "totalQuizzes": null,
+  "validQuizzes": 0,
+  "issues": [
+    {
+      "severity": "critical",
+      "type": "quizzes-missing",
+      "message": "Module programming-fundamentals: Quizzes file not found",
+      "timestamp": "2025-10-01T07:21:58.749Z"
+    },
+    {
+      "severity": "critical",
+      "type": "quizzes-missing",
+      "message": "Module web-fundamentals: Quizzes file not found",
+      "timestamp": "2025-10-01T07:21:58.750Z"
+    },
+    {
+      "severity": "critical",
+      "type": "quizzes-missing",
+      "message": "Module version-control: Quizzes file not found",
+      "timestamp": "2025-10-01T07:21:58.750Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-count",
+      "message": "Module dotnet-fundamentals: Only 12 lessons (requires 18)",
+      "timestamp": "2025-10-01T07:21:58.751Z"
+    },
+    {
+      "severity": "critical",
+      "type": "quizzes-missing",
+      "message": "Module dotnet-fundamentals: Quizzes file not found",
+      "timestamp": "2025-10-01T07:21:58.751Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-count",
+      "message": "Module react-fundamentals: Only 12 lessons (requires 15)",
+      "timestamp": "2025-10-01T07:21:58.751Z"
+    },
+    {
+      "severity": "critical",
+      "type": "quizzes-missing",
+      "message": "Module react-fundamentals: Quizzes file not found",
+      "timestamp": "2025-10-01T07:21:58.752Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-count",
+      "message": "Module database-systems: Only 12 lessons (requires 16)",
+      "timestamp": "2025-10-01T07:21:58.752Z"
+    },
+    {
+      "severity": "critical",
+      "type": "quizzes-missing",
+      "message": "Module database-systems: Quizzes file not found",
+      "timestamp": "2025-10-01T07:21:58.752Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-count",
+      "message": "Module typescript-fundamentals: Only 12 lessons (requires 14)",
+      "timestamp": "2025-10-01T07:21:58.753Z"
+    },
+    {
+      "severity": "critical",
+      "type": "quizzes-missing",
+      "message": "Module typescript-fundamentals: Quizzes file not found",
+      "timestamp": "2025-10-01T07:21:58.753Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-count",
+      "message": "Module node-fundamentals: Only 12 lessons (requires 15)",
+      "timestamp": "2025-10-01T07:21:58.753Z"
+    },
+    {
+      "severity": "critical",
+      "type": "quizzes-missing",
+      "message": "Module node-fundamentals: Quizzes file not found",
+      "timestamp": "2025-10-01T07:21:58.754Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-count",
+      "message": "Module laravel-fundamentals: Only 12 lessons (requires 16)",
+      "timestamp": "2025-10-01T07:21:58.754Z"
+    },
+    {
+      "severity": "critical",
+      "type": "quizzes-missing",
+      "message": "Module laravel-fundamentals: Quizzes file not found",
+      "timestamp": "2025-10-01T07:21:58.754Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-count",
+      "message": "Module nextjs-advanced: Only 12 lessons (requires 14)",
+      "timestamp": "2025-10-01T07:21:58.755Z"
+    },
+    {
+      "severity": "critical",
+      "type": "quizzes-missing",
+      "message": "Module nextjs-advanced: Quizzes file not found",
+      "timestamp": "2025-10-01T07:21:58.755Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-count",
+      "message": "Module graphql-advanced: Only 12 lessons (requires 13)",
+      "timestamp": "2025-10-01T07:21:58.755Z"
+    },
+    {
+      "severity": "critical",
+      "type": "quizzes-missing",
+      "message": "Module graphql-advanced: Quizzes file not found",
+      "timestamp": "2025-10-01T07:21:58.755Z"
+    },
+    {
+      "severity": "critical",
+      "type": "quizzes-missing",
+      "message": "Module sass-advanced: Quizzes file not found",
+      "timestamp": "2025-10-01T07:21:58.756Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-count",
+      "message": "Module tailwind-advanced: Only 12 lessons (requires 13)",
+      "timestamp": "2025-10-01T07:21:58.756Z"
+    },
+    {
+      "severity": "critical",
+      "type": "quizzes-missing",
+      "message": "Module tailwind-advanced: Quizzes file not found",
+      "timestamp": "2025-10-01T07:21:58.756Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-count",
+      "message": "Module vue-advanced: Only 12 lessons (requires 14)",
+      "timestamp": "2025-10-01T07:21:58.756Z"
+    },
+    {
+      "severity": "critical",
+      "type": "quizzes-missing",
+      "message": "Module vue-advanced: Quizzes file not found",
+      "timestamp": "2025-10-01T07:21:58.757Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-count",
+      "message": "Module testing-fundamentals: Only 12 lessons (requires 14)",
+      "timestamp": "2025-10-01T07:21:58.757Z"
+    },
+    {
+      "severity": "critical",
+      "type": "quizzes-missing",
+      "message": "Module testing-fundamentals: Quizzes file not found",
+      "timestamp": "2025-10-01T07:21:58.757Z"
+    },
+    {
+      "severity": "critical",
+      "type": "quizzes-missing",
+      "message": "Module e2e-testing: Quizzes file not found",
+      "timestamp": "2025-10-01T07:21:58.757Z"
+    },
+    {
+      "severity": "critical",
+      "type": "quizzes-missing",
+      "message": "Module performance-optimization: Quizzes file not found",
+      "timestamp": "2025-10-01T07:21:58.758Z"
+    },
+    {
+      "severity": "critical",
+      "type": "quizzes-missing",
+      "message": "Module security-fundamentals: Quizzes file not found",
+      "timestamp": "2025-10-01T07:21:58.758Z"
+    }
+  ],
+  "warnings": [],
+  "summary": {
+    "overallCompliance": 13,
+    "readyForProduction": false,
+    "criticalIssues": 18,
+    "recommendations": [
+      "🔴 Address all critical issues before production deployment",
+      "🟡 Improve content quality to reach 90%+ compliance",
+      "📚 Add more lessons to modules below threshold"
+    ]
+  }
+}

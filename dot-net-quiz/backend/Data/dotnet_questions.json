@@ -1,0 +1,262 @@
+[
+  {
+    "id": 1,
+    "question": "What is the difference between .NET Framework and .NET Core?",
+    "options": [
+      ".NET Core is a subset of .NET Framework",
+      ".NET Framework is cross-platform while .NET Core is Windows-only",
+      ".NET Core is cross-platform and open-source while .NET Framework is Windows-only",
+      "There is no difference between them"
+    ],
+    "correctAnswer": 2,
+    "difficulty": "Basic",
+    "explanation": ".NET Core is a cross-platform, open-source framework that can run on Windows, macOS, and Linux, while .NET Framework is Windows-only and proprietary."
+  },
+  {
+    "id": 2,
+    "question": "Which keyword is used to declare a constant in C#?",
+    "options": [
+      "final",
+      "const",
+      "readonly",
+      "static"
+    ],
+    "correctAnswer": 1,
+    "difficulty": "Basic",
+    "explanation": "The 'const' keyword is used to declare compile-time constants in C#. The value must be assigned at declaration and cannot be changed."
+  },
+  {
+    "id": 3,
+    "question": "What is the correct way to declare a nullable integer in C#?",
+    "options": [
+      "int? number;",
+      "nullable int number;",
+      "int number = null;",
+      "Nullable<int> number;"
+    ],
+    "correctAnswer": 0,
+    "difficulty": "Basic",
+    "explanation": "int? is the shorthand syntax for Nullable<int>, which allows value types to hold null values."
+  },
+  {
+    "id": 4,
+    "question": "Which access modifier makes a member accessible only within the same class?",
+    "options": [
+      "public",
+      "protected",
+      "internal",
+      "private"
+    ],
+    "correctAnswer": 3,
+    "difficulty": "Basic",
+    "explanation": "The 'private' access modifier restricts access to the member only within the same class where it's declared."
+  },
+  {
+    "id": 5,
+    "question": "What does the 'virtual' keyword indicate in C#?",
+    "options": [
+      "The method cannot be overridden",
+      "The method can be overridden in derived classes",
+      "The method must be overridden in derived classes",
+      "The method is abstract"
+    ],
+    "correctAnswer": 1,
+    "difficulty": "Intermediate",
+    "explanation": "The 'virtual' keyword allows a method to be overridden in derived classes using the 'override' keyword, enabling polymorphism."
+  },
+  {
+    "id": 6,
+    "question": "Which LINQ method would you use to filter a collection?",
+    "options": [
+      "Select",
+      "Where",
+      "OrderBy",
+      "GroupBy"
+    ],
+    "correctAnswer": 1,
+    "difficulty": "Intermediate",
+    "explanation": "The 'Where' method is used to filter collections based on a specified condition, returning only elements that match the criteria."
+  },
+  {
+    "id": 7,
+    "question": "What is the purpose of the 'using' statement in C#?",
+    "options": [
+      "To import namespaces only",
+      "To ensure proper disposal of resources",
+      "To declare variables",
+      "To define aliases for types"
+    ],
+    "correctAnswer": 1,
+    "difficulty": "Intermediate",
+    "explanation": "The 'using' statement ensures that IDisposable objects are properly disposed of when they go out of scope, even if an exception occurs."
+  },
+  {
+    "id": 8,
+    "question": "Which keyword is used to prevent inheritance of a class in C#?",
+    "options": [
+      "static",
+      "sealed",
+      "abstract",
+      "virtual"
+    ],
+    "correctAnswer": 1,
+    "difficulty": "Intermediate",
+    "explanation": "The 'sealed' keyword prevents a class from being inherited by other classes, making it the final class in the inheritance hierarchy."
+  },
+  {
+    "id": 9,
+    "question": "What is the difference between IEnumerable and IQueryable?",
+    "options": [
+      "No difference, they are identical",
+      "IEnumerable is for in-memory collections, IQueryable is for remote data sources",
+      "IQueryable is faster than IEnumerable",
+      "IEnumerable supports LINQ, IQueryable doesn't"
+    ],
+    "correctAnswer": 1,
+    "difficulty": "Advanced",
+    "explanation": "IEnumerable is for in-memory collections and executes queries locally, while IQueryable is designed for remote data sources and can translate queries to other formats like SQL."
+  },
+  {
+    "id": 10,
+    "question": "In async programming, what does 'await' do?",
+    "options": [
+      "Blocks the current thread until the task completes",
+      "Returns control to the caller while waiting for the task to complete",
+      "Cancels the asynchronous operation",
+      "Creates a new thread for the operation"
+    ],
+    "correctAnswer": 1,
+    "difficulty": "Advanced",
+    "explanation": "'await' asynchronously waits for the task to complete, returning control to the caller and resuming execution when the task finishes, without blocking the thread."
+  },
+  {
+    "id": 11,
+    "question": "What is the purpose of the 'yield' keyword in C#?",
+    "options": [
+      "To return multiple values from a method",
+      "To create iterator methods that return IEnumerable",
+      "To pause execution of a method",
+      "To throw an exception"
+    ],
+    "correctAnswer": 1,
+    "difficulty": "Advanced",
+    "explanation": "The 'yield' keyword is used to create iterator methods that return IEnumerable or IEnumerator, allowing lazy evaluation of sequences."
+  },
+  {
+    "id": 12,
+    "question": "Which design pattern is commonly used for dependency injection in .NET?",
+    "options": [
+      "Singleton Pattern",
+      "Factory Pattern",
+      "Inversion of Control (IoC) Container",
+      "Observer Pattern"
+    ],
+    "correctAnswer": 2,
+    "difficulty": "Advanced",
+    "explanation": "IoC containers implement the Inversion of Control principle for dependency injection, managing object creation and dependency resolution automatically."
+  },
+  {
+    "id": 13,
+    "question": "What is the difference between 'ref' and 'out' parameters?",
+    "options": [
+      "No difference, they are interchangeable",
+      "'ref' requires initialization before passing, 'out' doesn't",
+      "'out' requires initialization before passing, 'ref' doesn't",
+      "Both require initialization before passing"
+    ],
+    "correctAnswer": 1,
+    "difficulty": "Intermediate",
+    "explanation": "'ref' parameters must be initialized before being passed to a method, while 'out' parameters don't need initialization but must be assigned a value within the method."
+  },
+  {
+    "id": 14,
+    "question": "Which collection type provides the best performance for frequent insertions and deletions at arbitrary positions?",
+    "options": [
+      "Array",
+      "List<T>",
+      "LinkedList<T>",
+      "Dictionary<TKey, TValue>"
+    ],
+    "correctAnswer": 2,
+    "difficulty": "Advanced",
+    "explanation": "LinkedList<T> provides O(1) insertion and deletion at arbitrary positions when you have a reference to the node, unlike List<T> which requires O(n) for insertions/deletions in the middle."
+  },
+  {
+    "id": 15,
+    "question": "What is the purpose of the 'ConfigureAwait(false)' method?",
+    "options": [
+      "To make async methods run synchronously",
+      "To prevent deadlocks by not capturing the synchronization context",
+      "To improve performance of async operations",
+      "To cancel async operations"
+    ],
+    "correctAnswer": 1,
+    "difficulty": "Advanced",
+    "explanation": "ConfigureAwait(false) prevents capturing the current synchronization context, which can help avoid deadlocks in library code and improve performance."
+  },
+  {
+    "id": 16,
+    "question": "Which attribute is used to specify that a property should be serialized with a different name in JSON?",
+    "options": [
+      "[JsonProperty]",
+      "[JsonPropertyName]",
+      "[DataMember]",
+      "[JsonField]"
+    ],
+    "correctAnswer": 1,
+    "difficulty": "Intermediate",
+    "explanation": "In System.Text.Json, [JsonPropertyName] is used to specify a different property name during JSON serialization/deserialization."
+  },
+  {
+    "id": 17,
+    "question": "What is the difference between 'var' and 'dynamic' in C#?",
+    "options": [
+      "No difference, they are the same",
+      "'var' is compile-time type inference, 'dynamic' is runtime type resolution",
+      "'dynamic' is compile-time type inference, 'var' is runtime type resolution",
+      "Both are runtime type resolution"
+    ],
+    "correctAnswer": 1,
+    "difficulty": "Intermediate",
+    "explanation": "'var' uses compile-time type inference where the type is determined at compile time, while 'dynamic' defers type checking to runtime."
+  },
+  {
+    "id": 18,
+    "question": "Which method is called when an object is about to be garbage collected?",
+    "options": [
+      "Dispose()",
+      "Finalize()",
+      "Close()",
+      "Destroy()"
+    ],
+    "correctAnswer": 1,
+    "difficulty": "Advanced",
+    "explanation": "The Finalize() method (implemented via destructor syntax ~ClassName()) is called by the garbage collector before an object is collected."
+  },
+  {
+    "id": 19,
+    "question": "What is the purpose of the 'lock' statement in C#?",
+    "options": [
+      "To prevent memory leaks",
+      "To ensure thread safety by providing mutual exclusion",
+      "To lock files from being accessed",
+      "To prevent garbage collection"
+    ],
+    "correctAnswer": 1,
+    "difficulty": "Advanced",
+    "explanation": "The 'lock' statement provides mutual exclusion, ensuring that only one thread can execute the locked code block at a time, preventing race conditions."
+  },
+  {
+    "id": 20,
+    "question": "Which interface should a class implement to support the 'foreach' loop?",
+    "options": [
+      "IEnumerable",
+      "ICollection",
+      "IList",
+      "IComparable"
+    ],
+    "correctAnswer": 0,
+    "difficulty": "Intermediate",
+    "explanation": "A class must implement IEnumerable (or IEnumerable<T>) to support iteration with foreach loops, providing the GetEnumerator() method."
+  }
+]

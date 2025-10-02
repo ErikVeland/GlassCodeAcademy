@@ -1,0 +1,11 @@
+User-agent: *
+Allow: /
+
+# Sitemap
+Sitemap: https://fullstack-academy.com/sitemap.xml
+
+# Disallow development/admin paths
+Disallow: /api/
+Disallow: /_next/
+Disallow: /debug/
+Disallow: /test/

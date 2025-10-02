@@ -1,0 +1,827 @@
+[
+  {
+    "id": "security-fundamentals-lesson-1",
+    "moduleSlug": "security-fundamentals",
+    "title": "Web Security Fundamentals",
+    "order": 1,
+    "objectives": [
+      "Understand common web security vulnerabilities and threats",
+      "Learn authentication and authorization best practices",
+      "Implement secure coding practices to prevent attacks"
+    ],
+    "intro": "Web security is critical for protecting applications and user data from malicious attacks. Understanding security fundamentals helps developers build robust applications that resist common vulnerabilities and protect sensitive information.\n\nIn this lesson, you'll learn about the OWASP Top 10 security risks including injection attacks, broken authentication, sensitive data exposure, and security misconfigurations. These represent the most critical security issues facing web applications today.\n\nAuthentication and authorization form the backbone of application security. You'll understand the difference between these concepts and learn to implement secure login systems, session management, and access controls that protect user accounts and data.\n\nSecure coding practices prevent vulnerabilities at the source. You'll discover input validation techniques, output encoding, secure storage methods, and proper error handling that make applications resilient against attacks.\n\nBy mastering these security fundamentals, you'll be equipped to identify potential vulnerabilities early, implement robust security measures, and follow industry best practices that protect both applications and users from cyber threats.",
+    "code": {
+      "example": "// Web Security Best Practices Implementation\n\n// 1. Input Validation and Sanitization\nfunction validateAndSanitizeInput(input, type) {\n  // Remove potentially harmful characters\n  const sanitized = input.replace(/<script[^>]*>.*?</script>/gi, '');\n  \n  switch (type) {\n    case 'email':\n      const emailRegex = /^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/;\n      if (!emailRegex.test(sanitized)) {\n        throw new Error('Invalid email format');\n      }\n      break;\n    \n    case 'username':\n      const usernameRegex = /^[a-zA-Z0-9_]{3,20}$/;\n      if (!usernameRegex.test(sanitized)) {\n        throw new Error('Username must be 3-20 characters, alphanumeric and underscore only');\n      }\n      break;\n      \n    case 'password':\n      if (sanitized.length < 8) {\n        throw new Error('Password must be at least 8 characters');\n      }\n      break;\n  }\n  \n  return sanitized;\n}\n\n// 2. Secure Authentication Implementation\nconst bcrypt = require('bcrypt');\nconst jwt = require('jsonwebtoken');\n\nclass AuthService {\n  static async hashPassword(password) {\n    const saltRounds = 12; // Increased for better security\n    return await bcrypt.hash(password, saltRounds);\n  }\n  \n  static async verifyPassword(password, hashedPassword) {\n    return await bcrypt.compare(password, hashedPassword);\n  }\n  \n  static generateToken(user) {\n    const payload = {\n      userId: user.id,\n      email: user.email,\n      role: user.role\n    };\n    \n    return jwt.sign(payload, process.env.JWT_SECRET, {\n      expiresIn: '15m', // Short-lived tokens\n      issuer: 'your-app-name',\n      audience: 'your-app-users'\n    });\n  }\n  \n  static verifyToken(token) {\n    try {\n      return jwt.verify(token, process.env.JWT_SECRET, {\n        issuer: 'your-app-name',\n        audience: 'your-app-users'\n      });\n    } catch (error) {\n      throw new Error('Invalid or expired token');\n    }\n  }\n}\n\n// 3. Authorization Middleware\nfunction authorize(requiredRole) {\n  return (req, res, next) => {\n    try {\n      const token = req.headers.authorization?.split(' ')[1];\n      \n      if (!token) {\n        return res.status(401).json({ error: 'Access token required' });\n      }\n      \n      const decoded = AuthService.verifyToken(token);\n      \n      if (requiredRole && decoded.role !== requiredRole) {\n        return res.status(403).json({ error: 'Insufficient permissions' });\n      }\n      \n      req.user = decoded;\n      next();\n    } catch (error) {\n      return res.status(401).json({ error: 'Invalid token' });\n    }\n  };\n}\n\n// 4. SQL Injection Prevention\nconst mysql = require('mysql2/promise');\n\nclass UserRepository {\n  static async findByEmail(email) {\n    // Use parameterized queries to prevent SQL injection\n    const query = 'SELECT * FROM users WHERE email = ? AND active = 1';\n    const [rows] = await db.execute(query, [email]);\n    return rows[0];\n  }\n  \n  static async createUser(userData) {\n    const query = `\n      INSERT INTO users (email, password_hash, name, role, created_at) \n      VALUES (?, ?, ?, ?, NOW())\n    `;\n    \n    const [result] = await db.execute(query, [\n      userData.email,\n      userData.passwordHash,\n      userData.name,\n      userData.role || 'user'\n    ]);\n    \n    return result.insertId;\n  }\n}\n\n// 5. Security Headers Middleware\nfunction securityHeaders(req, res, next) {\n  // Prevent XSS attacks\n  res.setHeader('X-XSS-Protection', '1; mode=block');\n  \n  // Prevent MIME type sniffing\n  res.setHeader('X-Content-Type-Options', 'nosniff');\n  \n  // Prevent clickjacking\n  res.setHeader('X-Frame-Options', 'DENY');\n  \n  // HTTPS enforcement\n  res.setHeader('Strict-Transport-Security', 'max-age=31536000; includeSubDomains');\n  \n  // Content Security Policy\n  res.setHeader('Content-Security-Policy', \n    \"default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline';\");\n  \n  next();\n}\n\n// Usage Examples\napp.use(securityHeaders);\napp.post('/api/login', async (req, res) => {\n  try {\n    const email = validateAndSanitizeInput(req.body.email, 'email');\n    const password = validateAndSanitizeInput(req.body.password, 'password');\n    \n    const user = await UserRepository.findByEmail(email);\n    \n    if (!user || !await AuthService.verifyPassword(password, user.password_hash)) {\n      return res.status(401).json({ error: 'Invalid credentials' });\n    }\n    \n    const token = AuthService.generateToken(user);\n    res.json({ token, user: { id: user.id, email: user.email, role: user.role } });\n  } catch (error) {\n    res.status(400).json({ error: error.message });\n  }\n});\n\napp.get('/api/admin/users', authorize('admin'), (req, res) => {\n  // Only admin users can access this endpoint\n  res.json({ message: 'Admin access granted' });\n});",
+      "explanation": "This comprehensive example demonstrates essential web security practices including input validation, secure authentication with bcrypt and JWT, authorization middleware, SQL injection prevention, and security headers implementation.",
+      "language": "javascript"
+    },
+    "pitfalls": [
+      {
+        "mistake": "Not following Security best practices",
+        "solution": "Review official documentation and established patterns for Security",
+        "severity": "medium"
+      },
+      {
+        "mistake": "Skipping error handling in implementation",
+        "solution": "Always implement proper error handling and validation",
+        "severity": "high"
+      },
+      {
+        "mistake": "Ignoring performance implications",
+        "solution": "Consider performance impact of your implementation choices",
+        "severity": "low"
+      }
+    ],
+    "exercises": [
+      {
+        "title": "Practice Testing Fundamentals",
+        "description": "Apply the concepts learned in this lesson through hands-on practice.",
+        "checkpoints": [
+          "Complete the basic implementation",
+          "Test your solution",
+          "Identify areas for improvement"
+        ]
+      }
+    ],
+    "next": [],
+    "estimatedMinutes": 30,
+    "difficulty": "Advanced",
+    "tags": [
+      "Security",
+      "Authentication",
+      "Authorization"
+    ],
+    "lastUpdated": "2025-10-01T06:42:16.318Z",
+    "version": "1.0.0"
+  },
+  {
+    "id": "security-fundamentals-lesson-2",
+    "moduleSlug": "security-fundamentals",
+    "title": "Quality Assurance",
+    "order": 2,
+    "objectives": [
+      "Implement basic Security patterns",
+      "Create simple applications using core concepts",
+      "Debug common issues effectively"
+    ],
+    "intro": "Welcome to Quality Assurance in the Security Best Practices module. \n\nThis lesson is part of the quality tier, designed for advanced level learners. Throughout this lesson, you'll explore essential concepts and practical applications that form the foundation of modern security development.\n\nAuthentication, authorization, and security patterns This lesson builds upon previous concepts while introducing new techniques that will enhance your understanding and practical skills.\n\nBy the end of this lesson, you'll have hands-on experience with Security and Authentication, along with best practices for implementing these technologies in real-world scenarios. The knowledge gained here will prepare you for more advanced topics in subsequent lessons.\n\nKey areas we'll cover include practical implementation techniques, common challenges developers face, and proven solutions that industry professionals use daily. This lesson balances theoretical understanding with practical application, ensuring you can immediately apply what you learn.",
+    "code": {
+      "example": "// Example Security implementation\n// TODO: Add specific code example for Security Best Practices\n\npublic class Example\n{\n    public void DemonstrateCoreSecurityConcepts()\n    {\n        // Placeholder implementation\n        Console.WriteLine(\"Security Best Practices example\");\n    }\n}",
+      "explanation": "This example demonstrates the key concepts covered in this lesson.",
+      "language": "javascript"
+    },
+    "pitfalls": [
+      {
+        "mistake": "Not following Security best practices",
+        "solution": "Review official documentation and established patterns for Security",
+        "severity": "medium"
+      },
+      {
+        "mistake": "Skipping error handling in implementation",
+        "solution": "Always implement proper error handling and validation",
+        "severity": "high"
+      },
+      {
+        "mistake": "Ignoring performance implications",
+        "solution": "Consider performance impact of your implementation choices",
+        "severity": "low"
+      }
+    ],
+    "exercises": [
+      {
+        "title": "Practice Quality Assurance",
+        "description": "Apply the concepts learned in this lesson through hands-on practice.",
+        "checkpoints": [
+          "Complete the basic implementation",
+          "Test your solution",
+          "Identify areas for improvement"
+        ]
+      }
+    ],
+    "next": [],
+    "estimatedMinutes": 30,
+    "difficulty": "Advanced",
+    "tags": [
+      "Security",
+      "Authentication",
+      "Authorization"
+    ],
+    "lastUpdated": "2025-10-01T06:42:16.318Z",
+    "version": "1.0.0"
+  },
+  {
+    "id": "security-fundamentals-lesson-3",
+    "moduleSlug": "security-fundamentals",
+    "title": "Automated Testing",
+    "order": 3,
+    "objectives": [
+      "Apply advanced Security techniques",
+      "Optimize performance and efficiency",
+      "Integrate with external systems"
+    ],
+    "intro": "Welcome to Automated Testing in the Security Best Practices module. \n\nThis lesson is part of the quality tier, designed for advanced level learners. Throughout this lesson, you'll explore essential concepts and practical applications that form the foundation of modern security development.\n\nAuthentication, authorization, and security patterns This lesson builds upon previous concepts while introducing new techniques that will enhance your understanding and practical skills.\n\nBy the end of this lesson, you'll have hands-on experience with Security and Authentication, along with best practices for implementing these technologies in real-world scenarios. The knowledge gained here will prepare you for more advanced topics in subsequent lessons.\n\nKey areas we'll cover include practical implementation techniques, common challenges developers face, and proven solutions that industry professionals use daily. This lesson balances theoretical understanding with practical application, ensuring you can immediately apply what you learn.",
+    "code": {
+      "example": "// Example Security implementation\n// TODO: Add specific code example for Security Best Practices\n\npublic class Example\n{\n    public void DemonstrateCoreSecurityConcepts()\n    {\n        // Placeholder implementation\n        Console.WriteLine(\"Security Best Practices example\");\n    }\n}",
+      "explanation": "This example demonstrates the key concepts covered in this lesson.",
+      "language": "javascript"
+    },
+    "pitfalls": [
+      {
+        "mistake": "Not following Security best practices",
+        "solution": "Review official documentation and established patterns for Security",
+        "severity": "medium"
+      },
+      {
+        "mistake": "Skipping error handling in implementation",
+        "solution": "Always implement proper error handling and validation",
+        "severity": "high"
+      },
+      {
+        "mistake": "Ignoring performance implications",
+        "solution": "Consider performance impact of your implementation choices",
+        "severity": "low"
+      }
+    ],
+    "exercises": [
+      {
+        "title": "Practice Automated Testing",
+        "description": "Apply the concepts learned in this lesson through hands-on practice.",
+        "checkpoints": [
+          "Complete the basic implementation",
+          "Test your solution",
+          "Identify areas for improvement"
+        ]
+      }
+    ],
+    "next": [],
+    "estimatedMinutes": 30,
+    "difficulty": "Advanced",
+    "tags": [
+      "Security",
+      "Authentication",
+      "Authorization"
+    ],
+    "lastUpdated": "2025-10-01T06:42:16.318Z",
+    "version": "1.0.0"
+  },
+  {
+    "id": "security-fundamentals-lesson-4",
+    "moduleSlug": "security-fundamentals",
+    "title": "Performance Testing",
+    "order": 4,
+    "objectives": [
+      "Apply advanced Security techniques",
+      "Optimize performance and efficiency",
+      "Integrate with external systems"
+    ],
+    "intro": "Welcome to Performance Testing in the Security Best Practices module. \n\nThis lesson is part of the quality tier, designed for advanced level learners. Throughout this lesson, you'll explore essential concepts and practical applications that form the foundation of modern security development.\n\nAuthentication, authorization, and security patterns This lesson builds upon previous concepts while introducing new techniques that will enhance your understanding and practical skills.\n\nBy the end of this lesson, you'll have hands-on experience with Security and Authentication, along with best practices for implementing these technologies in real-world scenarios. The knowledge gained here will prepare you for more advanced topics in subsequent lessons.\n\nKey areas we'll cover include practical implementation techniques, common challenges developers face, and proven solutions that industry professionals use daily. This lesson balances theoretical understanding with practical application, ensuring you can immediately apply what you learn.",
+    "code": {
+      "example": "// Example Security implementation\n// TODO: Add specific code example for Security Best Practices\n\npublic class Example\n{\n    public void DemonstrateCoreSecurityConcepts()\n    {\n        // Placeholder implementation\n        Console.WriteLine(\"Security Best Practices example\");\n    }\n}",
+      "explanation": "This example demonstrates the key concepts covered in this lesson.",
+      "language": "javascript"
+    },
+    "pitfalls": [
+      {
+        "mistake": "Not following Security best practices",
+        "solution": "Review official documentation and established patterns for Security",
+        "severity": "medium"
+      },
+      {
+        "mistake": "Skipping error handling in implementation",
+        "solution": "Always implement proper error handling and validation",
+        "severity": "high"
+      },
+      {
+        "mistake": "Ignoring performance implications",
+        "solution": "Consider performance impact of your implementation choices",
+        "severity": "low"
+      }
+    ],
+    "exercises": [
+      {
+        "title": "Practice Performance Testing",
+        "description": "Apply the concepts learned in this lesson through hands-on practice.",
+        "checkpoints": [
+          "Complete the basic implementation",
+          "Test your solution",
+          "Identify areas for improvement"
+        ]
+      }
+    ],
+    "next": [],
+    "estimatedMinutes": 30,
+    "difficulty": "Advanced",
+    "tags": [
+      "Security",
+      "Authentication",
+      "Authorization"
+    ],
+    "lastUpdated": "2025-10-01T06:42:16.318Z",
+    "version": "1.0.0"
+  },
+  {
+    "id": "security-fundamentals-lesson-5",
+    "moduleSlug": "security-fundamentals",
+    "title": "Security Testing",
+    "order": 5,
+    "objectives": [
+      "Apply advanced Security techniques",
+      "Optimize performance and efficiency",
+      "Integrate with external systems"
+    ],
+    "intro": "Welcome to Security Testing in the Security Best Practices module. \n\nThis lesson is part of the quality tier, designed for advanced level learners. Throughout this lesson, you'll explore essential concepts and practical applications that form the foundation of modern security development.\n\nAuthentication, authorization, and security patterns This lesson builds upon previous concepts while introducing new techniques that will enhance your understanding and practical skills.\n\nBy the end of this lesson, you'll have hands-on experience with Security and Authentication, along with best practices for implementing these technologies in real-world scenarios. The knowledge gained here will prepare you for more advanced topics in subsequent lessons.\n\nKey areas we'll cover include practical implementation techniques, common challenges developers face, and proven solutions that industry professionals use daily. This lesson balances theoretical understanding with practical application, ensuring you can immediately apply what you learn.",
+    "code": {
+      "example": "// Example Security implementation\n// TODO: Add specific code example for Security Best Practices\n\npublic class Example\n{\n    public void DemonstrateCoreSecurityConcepts()\n    {\n        // Placeholder implementation\n        Console.WriteLine(\"Security Best Practices example\");\n    }\n}",
+      "explanation": "This example demonstrates the key concepts covered in this lesson.",
+      "language": "javascript"
+    },
+    "pitfalls": [
+      {
+        "mistake": "Not following Security best practices",
+        "solution": "Review official documentation and established patterns for Security",
+        "severity": "medium"
+      },
+      {
+        "mistake": "Skipping error handling in implementation",
+        "solution": "Always implement proper error handling and validation",
+        "severity": "high"
+      },
+      {
+        "mistake": "Ignoring performance implications",
+        "solution": "Consider performance impact of your implementation choices",
+        "severity": "low"
+      }
+    ],
+    "exercises": [
+      {
+        "title": "Practice Security Testing",
+        "description": "Apply the concepts learned in this lesson through hands-on practice.",
+        "checkpoints": [
+          "Complete the basic implementation",
+          "Test your solution",
+          "Identify areas for improvement"
+        ]
+      }
+    ],
+    "next": [],
+    "estimatedMinutes": 30,
+    "difficulty": "Advanced",
+    "tags": [
+      "Security",
+      "Authentication",
+      "Authorization"
+    ],
+    "lastUpdated": "2025-10-01T06:42:16.318Z",
+    "version": "1.0.0"
+  },
+  {
+    "id": "security-fundamentals-lesson-6",
+    "moduleSlug": "security-fundamentals",
+    "title": "Code Quality",
+    "order": 6,
+    "objectives": [
+      "Apply advanced Security techniques",
+      "Optimize performance and efficiency",
+      "Integrate with external systems"
+    ],
+    "intro": "Welcome to Code Quality in the Security Best Practices module. \n\nThis lesson is part of the quality tier, designed for advanced level learners. Throughout this lesson, you'll explore essential concepts and practical applications that form the foundation of modern security development.\n\nAuthentication, authorization, and security patterns This lesson builds upon previous concepts while introducing new techniques that will enhance your understanding and practical skills.\n\nBy the end of this lesson, you'll have hands-on experience with Security and Authentication, along with best practices for implementing these technologies in real-world scenarios. The knowledge gained here will prepare you for more advanced topics in subsequent lessons.\n\nKey areas we'll cover include practical implementation techniques, common challenges developers face, and proven solutions that industry professionals use daily. This lesson balances theoretical understanding with practical application, ensuring you can immediately apply what you learn.",
+    "code": {
+      "example": "// Example Security implementation\n// TODO: Add specific code example for Security Best Practices\n\npublic class Example\n{\n    public void DemonstrateCoreSecurityConcepts()\n    {\n        // Placeholder implementation\n        Console.WriteLine(\"Security Best Practices example\");\n    }\n}",
+      "explanation": "This example demonstrates the key concepts covered in this lesson.",
+      "language": "javascript"
+    },
+    "pitfalls": [
+      {
+        "mistake": "Not following Security best practices",
+        "solution": "Review official documentation and established patterns for Security",
+        "severity": "medium"
+      },
+      {
+        "mistake": "Skipping error handling in implementation",
+        "solution": "Always implement proper error handling and validation",
+        "severity": "high"
+      },
+      {
+        "mistake": "Ignoring performance implications",
+        "solution": "Consider performance impact of your implementation choices",
+        "severity": "low"
+      }
+    ],
+    "exercises": [
+      {
+        "title": "Practice Code Quality",
+        "description": "Apply the concepts learned in this lesson through hands-on practice.",
+        "checkpoints": [
+          "Complete the basic implementation",
+          "Test your solution",
+          "Identify areas for improvement"
+        ]
+      }
+    ],
+    "next": [],
+    "estimatedMinutes": 30,
+    "difficulty": "Advanced",
+    "tags": [
+      "Security",
+      "Authentication",
+      "Authorization"
+    ],
+    "lastUpdated": "2025-10-01T06:42:16.318Z",
+    "version": "1.0.0"
+  },
+  {
+    "id": "security-fundamentals-lesson-7",
+    "moduleSlug": "security-fundamentals",
+    "title": "Review Processes",
+    "order": 7,
+    "objectives": [
+      "Apply advanced Security techniques",
+      "Optimize performance and efficiency",
+      "Integrate with external systems"
+    ],
+    "intro": "Welcome to Review Processes in the Security Best Practices module. \n\nThis lesson is part of the quality tier, designed for advanced level learners. Throughout this lesson, you'll explore essential concepts and practical applications that form the foundation of modern security development.\n\nAuthentication, authorization, and security patterns This lesson builds upon previous concepts while introducing new techniques that will enhance your understanding and practical skills.\n\nBy the end of this lesson, you'll have hands-on experience with Security and Authentication, along with best practices for implementing these technologies in real-world scenarios. The knowledge gained here will prepare you for more advanced topics in subsequent lessons.\n\nKey areas we'll cover include practical implementation techniques, common challenges developers face, and proven solutions that industry professionals use daily. This lesson balances theoretical understanding with practical application, ensuring you can immediately apply what you learn.",
+    "code": {
+      "example": "// Example Security implementation\n// TODO: Add specific code example for Security Best Practices\n\npublic class Example\n{\n    public void DemonstrateCoreSecurityConcepts()\n    {\n        // Placeholder implementation\n        Console.WriteLine(\"Security Best Practices example\");\n    }\n}",
+      "explanation": "This example demonstrates the key concepts covered in this lesson.",
+      "language": "javascript"
+    },
+    "pitfalls": [
+      {
+        "mistake": "Not following Security best practices",
+        "solution": "Review official documentation and established patterns for Security",
+        "severity": "medium"
+      },
+      {
+        "mistake": "Skipping error handling in implementation",
+        "solution": "Always implement proper error handling and validation",
+        "severity": "high"
+      },
+      {
+        "mistake": "Ignoring performance implications",
+        "solution": "Consider performance impact of your implementation choices",
+        "severity": "low"
+      }
+    ],
+    "exercises": [
+      {
+        "title": "Practice Review Processes",
+        "description": "Apply the concepts learned in this lesson through hands-on practice.",
+        "checkpoints": [
+          "Complete the basic implementation",
+          "Test your solution",
+          "Identify areas for improvement"
+        ]
+      }
+    ],
+    "next": [],
+    "estimatedMinutes": 30,
+    "difficulty": "Advanced",
+    "tags": [
+      "Security",
+      "Authentication",
+      "Authorization"
+    ],
+    "lastUpdated": "2025-10-01T06:42:16.318Z",
+    "version": "1.0.0"
+  },
+  {
+    "id": "security-fundamentals-lesson-8",
+    "moduleSlug": "security-fundamentals",
+    "title": "Continuous Integration",
+    "order": 8,
+    "objectives": [
+      "Apply advanced Security techniques",
+      "Optimize performance and efficiency",
+      "Integrate with external systems"
+    ],
+    "intro": "Welcome to Continuous Integration in the Security Best Practices module. \n\nThis lesson is part of the quality tier, designed for advanced level learners. Throughout this lesson, you'll explore essential concepts and practical applications that form the foundation of modern security development.\n\nAuthentication, authorization, and security patterns This lesson builds upon previous concepts while introducing new techniques that will enhance your understanding and practical skills.\n\nBy the end of this lesson, you'll have hands-on experience with Security and Authentication, along with best practices for implementing these technologies in real-world scenarios. The knowledge gained here will prepare you for more advanced topics in subsequent lessons.\n\nKey areas we'll cover include practical implementation techniques, common challenges developers face, and proven solutions that industry professionals use daily. This lesson balances theoretical understanding with practical application, ensuring you can immediately apply what you learn.",
+    "code": {
+      "example": "// Example Security implementation\n// TODO: Add specific code example for Security Best Practices\n\npublic class Example\n{\n    public void DemonstrateCoreSecurityConcepts()\n    {\n        // Placeholder implementation\n        Console.WriteLine(\"Security Best Practices example\");\n    }\n}",
+      "explanation": "This example demonstrates the key concepts covered in this lesson.",
+      "language": "javascript"
+    },
+    "pitfalls": [
+      {
+        "mistake": "Not following Security best practices",
+        "solution": "Review official documentation and established patterns for Security",
+        "severity": "medium"
+      },
+      {
+        "mistake": "Skipping error handling in implementation",
+        "solution": "Always implement proper error handling and validation",
+        "severity": "high"
+      },
+      {
+        "mistake": "Ignoring performance implications",
+        "solution": "Consider performance impact of your implementation choices",
+        "severity": "low"
+      }
+    ],
+    "exercises": [
+      {
+        "title": "Practice Continuous Integration",
+        "description": "Apply the concepts learned in this lesson through hands-on practice.",
+        "checkpoints": [
+          "Complete the basic implementation",
+          "Test your solution",
+          "Identify areas for improvement"
+        ]
+      }
+    ],
+    "next": [],
+    "estimatedMinutes": 30,
+    "difficulty": "Advanced",
+    "tags": [
+      "Security",
+      "Authentication",
+      "Authorization"
+    ],
+    "lastUpdated": "2025-10-01T06:42:16.318Z",
+    "version": "1.0.0"
+  },
+  {
+    "id": "security-fundamentals-lesson-9",
+    "moduleSlug": "security-fundamentals",
+    "title": "Monitoring Setup",
+    "order": 9,
+    "objectives": [
+      "Apply advanced Security techniques",
+      "Optimize performance and efficiency",
+      "Integrate with external systems"
+    ],
+    "intro": "Welcome to Monitoring Setup in the Security Best Practices module. \n\nThis lesson is part of the quality tier, designed for advanced level learners. Throughout this lesson, you'll explore essential concepts and practical applications that form the foundation of modern security development.\n\nAuthentication, authorization, and security patterns This lesson builds upon previous concepts while introducing new techniques that will enhance your understanding and practical skills.\n\nBy the end of this lesson, you'll have hands-on experience with Security and Authentication, along with best practices for implementing these technologies in real-world scenarios. The knowledge gained here will prepare you for more advanced topics in subsequent lessons.\n\nKey areas we'll cover include practical implementation techniques, common challenges developers face, and proven solutions that industry professionals use daily. This lesson balances theoretical understanding with practical application, ensuring you can immediately apply what you learn.",
+    "code": {
+      "example": "// Example Security implementation\n// TODO: Add specific code example for Security Best Practices\n\npublic class Example\n{\n    public void DemonstrateCoreSecurityConcepts()\n    {\n        // Placeholder implementation\n        Console.WriteLine(\"Security Best Practices example\");\n    }\n}",
+      "explanation": "This example demonstrates the key concepts covered in this lesson.",
+      "language": "javascript"
+    },
+    "pitfalls": [
+      {
+        "mistake": "Not following Security best practices",
+        "solution": "Review official documentation and established patterns for Security",
+        "severity": "medium"
+      },
+      {
+        "mistake": "Skipping error handling in implementation",
+        "solution": "Always implement proper error handling and validation",
+        "severity": "high"
+      },
+      {
+        "mistake": "Ignoring performance implications",
+        "solution": "Consider performance impact of your implementation choices",
+        "severity": "low"
+      }
+    ],
+    "exercises": [
+      {
+        "title": "Practice Monitoring Setup",
+        "description": "Apply the concepts learned in this lesson through hands-on practice.",
+        "checkpoints": [
+          "Complete the basic implementation",
+          "Test your solution",
+          "Identify areas for improvement"
+        ]
+      }
+    ],
+    "next": [],
+    "estimatedMinutes": 30,
+    "difficulty": "Advanced",
+    "tags": [
+      "Security",
+      "Authentication",
+      "Authorization"
+    ],
+    "lastUpdated": "2025-10-01T06:42:16.318Z",
+    "version": "1.0.0"
+  },
+  {
+    "id": "security-fundamentals-lesson-10",
+    "moduleSlug": "security-fundamentals",
+    "title": "Debugging Techniques",
+    "order": 10,
+    "objectives": [
+      "Apply advanced Security techniques",
+      "Optimize performance and efficiency",
+      "Integrate with external systems"
+    ],
+    "intro": "Welcome to Debugging Techniques in the Security Best Practices module. \n\nThis lesson is part of the quality tier, designed for advanced level learners. Throughout this lesson, you'll explore essential concepts and practical applications that form the foundation of modern security development.\n\nAuthentication, authorization, and security patterns This lesson builds upon previous concepts while introducing new techniques that will enhance your understanding and practical skills.\n\nBy the end of this lesson, you'll have hands-on experience with Security and Authentication, along with best practices for implementing these technologies in real-world scenarios. The knowledge gained here will prepare you for more advanced topics in subsequent lessons.\n\nKey areas we'll cover include practical implementation techniques, common challenges developers face, and proven solutions that industry professionals use daily. This lesson balances theoretical understanding with practical application, ensuring you can immediately apply what you learn.",
+    "code": {
+      "example": "// Example Security implementation\n// TODO: Add specific code example for Security Best Practices\n\npublic class Example\n{\n    public void DemonstrateCoreSecurityConcepts()\n    {\n        // Placeholder implementation\n        Console.WriteLine(\"Security Best Practices example\");\n    }\n}",
+      "explanation": "This example demonstrates the key concepts covered in this lesson.",
+      "language": "javascript"
+    },
+    "pitfalls": [
+      {
+        "mistake": "Not following Security best practices",
+        "solution": "Review official documentation and established patterns for Security",
+        "severity": "medium"
+      },
+      {
+        "mistake": "Skipping error handling in implementation",
+        "solution": "Always implement proper error handling and validation",
+        "severity": "high"
+      },
+      {
+        "mistake": "Ignoring performance implications",
+        "solution": "Consider performance impact of your implementation choices",
+        "severity": "low"
+      }
+    ],
+    "exercises": [
+      {
+        "title": "Practice Debugging Techniques",
+        "description": "Apply the concepts learned in this lesson through hands-on practice.",
+        "checkpoints": [
+          "Complete the basic implementation",
+          "Test your solution",
+          "Identify areas for improvement"
+        ]
+      }
+    ],
+    "next": [],
+    "estimatedMinutes": 30,
+    "difficulty": "Advanced",
+    "tags": [
+      "Security",
+      "Authentication",
+      "Authorization"
+    ],
+    "lastUpdated": "2025-10-01T06:42:16.318Z",
+    "version": "1.0.0"
+  },
+  {
+    "id": "security-fundamentals-lesson-11",
+    "moduleSlug": "security-fundamentals",
+    "title": "Optimization Methods",
+    "order": 11,
+    "objectives": [
+      "Apply advanced Security techniques",
+      "Optimize performance and efficiency",
+      "Integrate with external systems"
+    ],
+    "intro": "Welcome to Optimization Methods in the Security Best Practices module. \n\nThis lesson is part of the quality tier, designed for advanced level learners. Throughout this lesson, you'll explore essential concepts and practical applications that form the foundation of modern security development.\n\nAuthentication, authorization, and security patterns This lesson builds upon previous concepts while introducing new techniques that will enhance your understanding and practical skills.\n\nBy the end of this lesson, you'll have hands-on experience with Security and Authentication, along with best practices for implementing these technologies in real-world scenarios. The knowledge gained here will prepare you for more advanced topics in subsequent lessons.\n\nKey areas we'll cover include practical implementation techniques, common challenges developers face, and proven solutions that industry professionals use daily. This lesson balances theoretical understanding with practical application, ensuring you can immediately apply what you learn.",
+    "code": {
+      "example": "// Example Security implementation\n// TODO: Add specific code example for Security Best Practices\n\npublic class Example\n{\n    public void DemonstrateCoreSecurityConcepts()\n    {\n        // Placeholder implementation\n        Console.WriteLine(\"Security Best Practices example\");\n    }\n}",
+      "explanation": "This example demonstrates the key concepts covered in this lesson.",
+      "language": "javascript"
+    },
+    "pitfalls": [
+      {
+        "mistake": "Not following Security best practices",
+        "solution": "Review official documentation and established patterns for Security",
+        "severity": "medium"
+      },
+      {
+        "mistake": "Skipping error handling in implementation",
+        "solution": "Always implement proper error handling and validation",
+        "severity": "high"
+      },
+      {
+        "mistake": "Ignoring performance implications",
+        "solution": "Consider performance impact of your implementation choices",
+        "severity": "low"
+      }
+    ],
+    "exercises": [
+      {
+        "title": "Practice Optimization Methods",
+        "description": "Apply the concepts learned in this lesson through hands-on practice.",
+        "checkpoints": [
+          "Complete the basic implementation",
+          "Test your solution",
+          "Identify areas for improvement"
+        ]
+      }
+    ],
+    "next": [],
+    "estimatedMinutes": 30,
+    "difficulty": "Advanced",
+    "tags": [
+      "Security",
+      "Authentication",
+      "Authorization"
+    ],
+    "lastUpdated": "2025-10-01T06:42:16.318Z",
+    "version": "1.0.0"
+  },
+  {
+    "id": "security-fundamentals-lesson-12",
+    "moduleSlug": "security-fundamentals",
+    "title": "Quality Standards",
+    "order": 12,
+    "objectives": [
+      "Apply advanced Security techniques",
+      "Optimize performance and efficiency",
+      "Integrate with external systems"
+    ],
+    "intro": "Welcome to Quality Standards in the Security Best Practices module. \n\nThis lesson is part of the quality tier, designed for advanced level learners. Throughout this lesson, you'll explore essential concepts and practical applications that form the foundation of modern security development.\n\nAuthentication, authorization, and security patterns This lesson builds upon previous concepts while introducing new techniques that will enhance your understanding and practical skills.\n\nBy the end of this lesson, you'll have hands-on experience with Security and Authentication, along with best practices for implementing these technologies in real-world scenarios. The knowledge gained here will prepare you for more advanced topics in subsequent lessons.\n\nKey areas we'll cover include practical implementation techniques, common challenges developers face, and proven solutions that industry professionals use daily. This lesson balances theoretical understanding with practical application, ensuring you can immediately apply what you learn.",
+    "code": {
+      "example": "// Example Security implementation\n// TODO: Add specific code example for Security Best Practices\n\npublic class Example\n{\n    public void DemonstrateCoreSecurityConcepts()\n    {\n        // Placeholder implementation\n        Console.WriteLine(\"Security Best Practices example\");\n    }\n}",
+      "explanation": "This example demonstrates the key concepts covered in this lesson.",
+      "language": "javascript"
+    },
+    "pitfalls": [
+      {
+        "mistake": "Not following Security best practices",
+        "solution": "Review official documentation and established patterns for Security",
+        "severity": "medium"
+      },
+      {
+        "mistake": "Skipping error handling in implementation",
+        "solution": "Always implement proper error handling and validation",
+        "severity": "high"
+      },
+      {
+        "mistake": "Ignoring performance implications",
+        "solution": "Consider performance impact of your implementation choices",
+        "severity": "low"
+      }
+    ],
+    "exercises": [
+      {
+        "title": "Practice Quality Standards",
+        "description": "Apply the concepts learned in this lesson through hands-on practice.",
+        "checkpoints": [
+          "Complete the basic implementation",
+          "Test your solution",
+          "Identify areas for improvement"
+        ]
+      }
+    ],
+    "next": [],
+    "estimatedMinutes": 30,
+    "difficulty": "Advanced",
+    "tags": [
+      "Security",
+      "Authentication",
+      "Authorization"
+    ],
+    "lastUpdated": "2025-10-01T06:42:16.318Z",
+    "version": "1.0.0"
+  },
+  {
+    "id": "security-fundamentals-lesson-13",
+    "moduleSlug": "security-fundamentals",
+    "title": "Lesson 13",
+    "order": 13,
+    "objectives": [
+      "Apply advanced Security techniques",
+      "Optimize performance and efficiency",
+      "Integrate with external systems"
+    ],
+    "intro": "Welcome to Lesson 13 in the Security Best Practices module. \n\nThis lesson is part of the quality tier, designed for advanced level learners. Throughout this lesson, you'll explore essential concepts and practical applications that form the foundation of modern security development.\n\nAuthentication, authorization, and security patterns This lesson builds upon previous concepts while introducing new techniques that will enhance your understanding and practical skills.\n\nBy the end of this lesson, you'll have hands-on experience with Security and Authentication, along with best practices for implementing these technologies in real-world scenarios. The knowledge gained here will prepare you for more advanced topics in subsequent lessons.\n\nKey areas we'll cover include practical implementation techniques, common challenges developers face, and proven solutions that industry professionals use daily. This lesson balances theoretical understanding with practical application, ensuring you can immediately apply what you learn.",
+    "code": {
+      "example": "// Example Security implementation\n// TODO: Add specific code example for Security Best Practices\n\npublic class Example\n{\n    public void DemonstrateCoreSecurityConcepts()\n    {\n        // Placeholder implementation\n        Console.WriteLine(\"Security Best Practices example\");\n    }\n}",
+      "explanation": "This example demonstrates the key concepts covered in this lesson.",
+      "language": "javascript"
+    },
+    "pitfalls": [
+      {
+        "mistake": "Not following Security best practices",
+        "solution": "Review official documentation and established patterns for Security",
+        "severity": "medium"
+      },
+      {
+        "mistake": "Skipping error handling in implementation",
+        "solution": "Always implement proper error handling and validation",
+        "severity": "high"
+      },
+      {
+        "mistake": "Ignoring performance implications",
+        "solution": "Consider performance impact of your implementation choices",
+        "severity": "low"
+      }
+    ],
+    "exercises": [
+      {
+        "title": "Practice Lesson 13",
+        "description": "Apply the concepts learned in this lesson through hands-on practice.",
+        "checkpoints": [
+          "Complete the basic implementation",
+          "Test your solution",
+          "Identify areas for improvement"
+        ]
+      }
+    ],
+    "next": [],
+    "estimatedMinutes": 30,
+    "difficulty": "Advanced",
+    "tags": [
+      "Security",
+      "Authentication",
+      "Authorization"
+    ],
+    "lastUpdated": "2025-10-01T06:42:16.318Z",
+    "version": "1.0.0"
+  },
+  {
+    "id": "security-fundamentals-lesson-14",
+    "moduleSlug": "security-fundamentals",
+    "title": "Lesson 14",
+    "order": 14,
+    "objectives": [
+      "Apply advanced Security techniques",
+      "Optimize performance and efficiency",
+      "Integrate with external systems"
+    ],
+    "intro": "Welcome to Lesson 14 in the Security Best Practices module. \n\nThis lesson is part of the quality tier, designed for advanced level learners. Throughout this lesson, you'll explore essential concepts and practical applications that form the foundation of modern security development.\n\nAuthentication, authorization, and security patterns This lesson builds upon previous concepts while introducing new techniques that will enhance your understanding and practical skills.\n\nBy the end of this lesson, you'll have hands-on experience with Security and Authentication, along with best practices for implementing these technologies in real-world scenarios. The knowledge gained here will prepare you for more advanced topics in subsequent lessons.\n\nKey areas we'll cover include practical implementation techniques, common challenges developers face, and proven solutions that industry professionals use daily. This lesson balances theoretical understanding with practical application, ensuring you can immediately apply what you learn.",
+    "code": {
+      "example": "// Example Security implementation\n// TODO: Add specific code example for Security Best Practices\n\npublic class Example\n{\n    public void DemonstrateCoreSecurityConcepts()\n    {\n        // Placeholder implementation\n        Console.WriteLine(\"Security Best Practices example\");\n    }\n}",
+      "explanation": "This example demonstrates the key concepts covered in this lesson.",
+      "language": "javascript"
+    },
+    "pitfalls": [
+      {
+        "mistake": "Not following Security best practices",
+        "solution": "Review official documentation and established patterns for Security",
+        "severity": "medium"
+      },
+      {
+        "mistake": "Skipping error handling in implementation",
+        "solution": "Always implement proper error handling and validation",
+        "severity": "high"
+      },
+      {
+        "mistake": "Ignoring performance implications",
+        "solution": "Consider performance impact of your implementation choices",
+        "severity": "low"
+      }
+    ],
+    "exercises": [
+      {
+        "title": "Practice Lesson 14",
+        "description": "Apply the concepts learned in this lesson through hands-on practice.",
+        "checkpoints": [
+          "Complete the basic implementation",
+          "Test your solution",
+          "Identify areas for improvement"
+        ]
+      }
+    ],
+    "next": [],
+    "estimatedMinutes": 30,
+    "difficulty": "Advanced",
+    "tags": [
+      "Security",
+      "Authentication",
+      "Authorization"
+    ],
+    "lastUpdated": "2025-10-01T06:42:16.318Z",
+    "version": "1.0.0"
+  },
+  {
+    "id": "security-fundamentals-lesson-15",
+    "moduleSlug": "security-fundamentals",
+    "title": "Lesson 15",
+    "order": 15,
+    "objectives": [
+      "Apply advanced Security techniques",
+      "Optimize performance and efficiency",
+      "Integrate with external systems"
+    ],
+    "intro": "Welcome to Lesson 15 in the Security Best Practices module. \n\nThis lesson is part of the quality tier, designed for advanced level learners. Throughout this lesson, you'll explore essential concepts and practical applications that form the foundation of modern security development.\n\nAuthentication, authorization, and security patterns This lesson builds upon previous concepts while introducing new techniques that will enhance your understanding and practical skills.\n\nBy the end of this lesson, you'll have hands-on experience with Security and Authentication, along with best practices for implementing these technologies in real-world scenarios. The knowledge gained here will prepare you for more advanced topics in subsequent lessons.\n\nKey areas we'll cover include practical implementation techniques, common challenges developers face, and proven solutions that industry professionals use daily. This lesson balances theoretical understanding with practical application, ensuring you can immediately apply what you learn.",
+    "code": {
+      "example": "// Example Security implementation\n// TODO: Add specific code example for Security Best Practices\n\npublic class Example\n{\n    public void DemonstrateCoreSecurityConcepts()\n    {\n        // Placeholder implementation\n        Console.WriteLine(\"Security Best Practices example\");\n    }\n}",
+      "explanation": "This example demonstrates the key concepts covered in this lesson.",
+      "language": "javascript"
+    },
+    "pitfalls": [
+      {
+        "mistake": "Not following Security best practices",
+        "solution": "Review official documentation and established patterns for Security",
+        "severity": "medium"
+      },
+      {
+        "mistake": "Skipping error handling in implementation",
+        "solution": "Always implement proper error handling and validation",
+        "severity": "high"
+      },
+      {
+        "mistake": "Ignoring performance implications",
+        "solution": "Consider performance impact of your implementation choices",
+        "severity": "low"
+      }
+    ],
+    "exercises": [
+      {
+        "title": "Practice Lesson 15",
+        "description": "Apply the concepts learned in this lesson through hands-on practice.",
+        "checkpoints": [
+          "Complete the basic implementation",
+          "Test your solution",
+          "Identify areas for improvement"
+        ]
+      }
+    ],
+    "next": [],
+    "estimatedMinutes": 30,
+    "difficulty": "Advanced",
+    "tags": [
+      "Security",
+      "Authentication",
+      "Authorization"
+    ],
+    "lastUpdated": "2025-10-01T06:42:16.318Z",
+    "version": "1.0.0"
+  }
+]

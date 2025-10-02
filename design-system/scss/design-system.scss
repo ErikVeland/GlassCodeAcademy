@@ -1,0 +1,26 @@
+// Fullstack Academy Design System
+// Main SCSS file that imports all components
+
+@import 'variables';
+@import 'mixins';
+@import 'components';
+@import 'glassmorphism';
+
+// Dark Mode
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg-primary: #1F2937;
+    --bg-secondary: #111827;
+    --text-primary: #F9FAFB;
+    --text-secondary: #D1D5DB;
+    --border-color: #374151;
+  }
+}
+
+.dark {
+  --bg-primary: #1F2937;
+  --bg-secondary: #111827;
+  --text-primary: #F9FAFB;
+  --text-secondary: #D1D5DB;
+  --border-color: #374151;
+}

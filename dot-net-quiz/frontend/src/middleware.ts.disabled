@@ -1,0 +1,95 @@
+import { NextRequest, NextResponse } from 'next/server';
+
+export async function middleware(request: NextRequest) {
+  const { pathname } = request.nextUrl;
+
+  // Handle legacy redirects
+  if (await shouldRedirect(pathname)) {
+    const redirectUrl = await getRedirectUrl(pathname);
+    if (redirectUrl) {
+      return NextResponse.redirect(new URL(redirectUrl, request.url), 301);
+    }
+  }
+
+  // Skip content registry checks in middleware to avoid edge runtime issues
+  // Content validation will happen at page level instead
+
+  return NextResponse.next();
+}
+
+async function shouldRedirect(pathname: string): Promise<boolean> {
+  // List of legacy patterns that should be redirected
+  const legacyPatterns = [
+    /^\/react($|\/)/,
+    /^\/dotnet($|\/)/,
+    /^\/database($|\/)/,
+    /^\/typescript($|\/)/,
+    /^\/node($|\/)/,
+    /^\/laravel($|\/)/,
+    /^\/graphql($|\/)/,
+    /^\/sass($|\/)/,
+    /^\/tailwind($|\/)/,
+    /^\/vue($|\/)/,
+    /^\/testing($|\/)/,
+    /^\/lessons($|\/)/,
+    /^\/interview($|\/)/,
+  ];
+
+  return legacyPatterns.some(pattern => pattern.test(pathname));
+}
+
+async function getRedirectUrl(pathname: string): Promise<string | null> {
+  // Legacy route mappings
+  const legacyMappings: Record<string, string> = {
+    '/react': '/modules/react-fundamentals',
+    '/react/lessons': '/modules/react-fundamentals/lessons',
+    '/react/interview': '/modules/react-fundamentals/quiz',
+    '/dotnet': '/modules/dotnet-fundamentals',
+    '/dotnet/lessons': '/modules/dotnet-fundamentals/lessons',
+    '/dotnet/interview': '/modules/dotnet-fundamentals/quiz',
+    '/database': '/modules/database-systems',
+    '/database/lessons': '/modules/database-systems/lessons',
+    '/database/interview': '/modules/database-systems/quiz',
+    '/typescript': '/modules/typescript-fundamentals',
+    '/typescript/lessons': '/modules/typescript-fundamentals/lessons',
+    '/typescript/interview': '/modules/typescript-fundamentals/quiz',
+    '/node': '/modules/node-fundamentals',
+    '/node/lessons': '/modules/node-fundamentals/lessons',
+    '/node/interview': '/modules/node-fundamentals/quiz',
+    '/laravel': '/modules/laravel-fundamentals',
+    '/laravel/lessons': '/modules/laravel-fundamentals/lessons',
+    '/laravel/interview': '/modules/laravel-fundamentals/quiz',
+    '/graphql': '/modules/graphql-advanced',
+    '/graphql/lessons': '/modules/graphql-advanced/lessons',
+    '/graphql/interview': '/modules/graphql-advanced/quiz',
+    '/sass': '/modules/sass-advanced',
+    '/sass/lessons': '/modules/sass-advanced/lessons',
+    '/sass/interview': '/modules/sass-advanced/quiz',
+    '/tailwind': '/modules/tailwind-advanced',
+    '/tailwind/lessons': '/modules/tailwind-advanced/lessons',
+    '/tailwind/interview': '/modules/tailwind-advanced/quiz',
+    '/vue': '/modules/vue-advanced',
+    '/vue/lessons': '/modules/vue-advanced/lessons',
+    '/vue/interview': '/modules/vue-advanced/quiz',
+    '/testing': '/modules/testing-fundamentals',
+    '/testing/lessons': '/modules/testing-fundamentals/lessons',
+    '/testing/interview': '/modules/testing-fundamentals/quiz',
+    '/lessons': '/',
+    '/interview': '/',
+  };
+
+  return legacyMappings[pathname] || null;
+}
+
+export const config = {
+  matcher: [
+    /*
+     * Match all request paths except for the ones starting with:
+     * - api (API routes)
+     * - _next/static (static files)
+     * - _next/image (image optimization files)
+     * - favicon.ico (favicon file)
+     */
+    '/((?!api|_next/static|_next/image|favicon.ico).*)',
+  ],
+};

@@ -1,0 +1,32 @@
+[
+  {
+    "id": 1,
+    "topic": "Basics",
+    "title": "Node.js Fundamentals",
+    "description": "Learn the basics of Node.js and its runtime environment.",
+    "content": "Node.js is an open-source, cross-platform JavaScript runtime environment that executes JavaScript code outside of a web browser. Node.js lets developers use JavaScript to write command line tools and for server-side scripting.\n\nKey features of Node.js:\n1. Asynchronous and event-driven\n2. Fast code execution\n3. Single-threaded but highly scalable\n4. No buffering\n5. License: MIT",
+    "codeExample": "const http = require('http');\n\nconst server = http.createServer((req, res) => {\n  res.statusCode = 200;\n  res.setHeader('Content-Type', 'text/plain');\n  res.end('Hello World');\n});\n\nserver.listen(3000, '127.0.0.1', () => {\n  console.log('Server running at http://127.0.0.1:3000/');\n});",
+    "output": "Server running at http://127.0.0.1:3000/",
+    "difficulty": "Beginner"
+  },
+  {
+    "id": 2,
+    "topic": "Modules",
+    "title": "Node.js Modules",
+    "description": "Learn how to create and use modules in Node.js.",
+    "content": "In Node.js, modules are reusable blocks of code that can be exported and imported when needed. There are three types of modules:\n1. Core Modules - Built into Node.js (fs, http, path, etc.)\n2. Local Modules - Created locally in your Node.js application\n3. Third-party Modules - Installed using npm",
+    "codeExample": "// math.js\nfunction add(a, b) {\n  return a + b;\n}\n\nfunction subtract(a, b) {\n  return a - b;\n}\n\nmodule.exports = { add, subtract };\n\n// app.js\nconst { add, subtract } = require('./math');\n\nconsole.log(add(5, 3)); // 8\nconsole.log(subtract(5, 3)); // 2",
+    "output": "8\n2",
+    "difficulty": "Intermediate"
+  },
+  {
+    "id": 3,
+    "topic": "Express",
+    "title": "Express.js Framework",
+    "description": "Learn how to build web applications with Express.js.",
+    "content": "Express.js is a minimal and flexible Node.js web application framework that provides a robust set of features for web and mobile applications. It facilitates the rapid development of Node based Web applications.\n\nKey features:\n1. Middleware\n2. Routing\n3. Template engines\n4. Error handling\n5. Debugging",
+    "codeExample": "const express = require('express');\nconst app = express();\nconst port = 3000;\n\napp.get('/', (req, res) => {\n  res.send('Hello World!');\n});\n\napp.get('/users/:userId/books/:bookId', (req, res) => {\n  res.send(req.params);\n});\n\napp.listen(port, () => {\n  console.log(`Example app listening at http://localhost:${port}`);\n});",
+    "output": "Example app listening at http://localhost:3000\n// For /users/34/books/8989 route: {\"userId\":\"34\",\"bookId\":\"8989\"}",
+    "difficulty": "Intermediate"
+  }
+]

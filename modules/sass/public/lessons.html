@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SASS Lessons - Fullstack Academy</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <a href="/" class="logo">SASS Learning Module</a>
+                <nav class="nav">
+                    <ul class="nav-list">
+                        <li><a href="/" class="nav-link">Home</a></li>
+                        <li><a href="lessons.html" class="nav-link active">Lessons</a></li>
+                        <li><a href="quiz.html" class="nav-link">Quiz</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </header>
+    
+    <main class="main">
+        <div class="container">
+            <h1 class="page-title">SASS Lessons</h1>
+            
+            <div class="search-box">
+                <input
+                    type="text"
+                    placeholder="Search lessons..."
+                    class="search-input"
+                />
+            </div>
+            
+            <div class="cards-grid">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Variables and Nesting</h3>
+                        <span class="badge badge-beginner">
+                            Beginner
+                        </span>
+                    </div>
+                    
+                    <p class="card-topic">Basics</p>
+                    <p class="card-description">Learn how to use variables and nesting in SASS.</p>
+                    
+                    <a 
+                        href="lesson-detail.html" 
+                        class="btn btn-primary"
+                    >
+                        Start Lesson
+                    </a>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Mixins and Functions</h3>
+                        <span class="badge badge-intermediate">
+                            Intermediate
+                        </span>
+                    </div>
+                    
+                    <p class="card-topic">Advanced</p>
+                    <p class="card-description">Master mixins and functions for reusable code.</p>
+                    
+                    <a 
+                        href="lesson-detail.html" 
+                        class="btn btn-primary"
+                    >
+                        Start Lesson
+                    </a>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Inheritance and Modules</h3>
+                        <span class="badge badge-advanced">
+                            Advanced
+                        </span>
+                    </div>
+                    
+                    <p class="card-topic">Organization</p>
+                    <p class="card-description">Learn how to organize your SASS code with inheritance and modules.</p>
+                    
+                    <a 
+                        href="lesson-detail.html" 
+                        class="btn btn-primary"
+                    >
+                        Start Lesson
+                    </a>
+                </div>
+            </div>
+        </div>
+    </main>
+    
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <p class="footer-text">SASS Learning Module &copy; <span id="current-year"></span> Fullstack Academy</p>
+            </div>
+        </div>
+    </footer>
+    
+    <script>
+        document.getElementById('current-year').textContent = new Date().getFullYear();
+    </script>
+</body>
+</html>

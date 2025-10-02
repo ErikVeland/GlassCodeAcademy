@@ -1,0 +1,829 @@
+[
+  {
+    "id": "web-fundamentals-lesson-1",
+    "moduleSlug": "web-fundamentals",
+    "title": "HTML5 Semantic Elements",
+    "order": 1,
+    "objectives": [
+      "Understand HTML5 document structure and semantic elements",
+      "Create accessible and SEO-friendly markup",
+      "Learn proper HTML5 form elements and validation"
+    ],
+    "intro": "HTML5 semantic elements provide meaningful structure to web documents, making them accessible to screen readers and search engines while improving code maintainability.\n\nIn this lesson, you'll learn about semantic elements like header, nav, main, article, section, and footer that replace generic div elements. These elements convey meaning about the content they contain, making your websites more accessible.\n\nProper HTML structure is the foundation of web development. You'll discover how semantic markup improves SEO rankings, helps assistive technologies understand your content, and creates a logical document outline.\n\nHTML5 also introduced new form input types and validation attributes that enhance user experience without requiring JavaScript. You'll learn about email, date, number inputs and built-in validation features.\n\nBy mastering semantic HTML5, you'll create websites that are accessible to all users, rank better in search engines, and provide a solid foundation for CSS styling and JavaScript interactions. This knowledge is essential for modern web development.",
+    "code": {
+      "example": "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n    <meta charset=\"UTF-8\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n    <title>Semantic HTML5 Example</title>\n</head>\n<body>\n    <!-- Main page header -->\n    <header>\n        <h1>My Blog</h1>\n        <nav>\n            <ul>\n                <li><a href=\"#home\">Home</a></li>\n                <li><a href=\"#about\">About</a></li>\n                <li><a href=\"#contact\">Contact</a></li>\n            </ul>\n        </nav>\n    </header>\n\n    <!-- Main content area -->\n    <main>\n        <article>\n            <header>\n                <h2>Understanding Semantic HTML</h2>\n                <time datetime=\"2024-01-15\">January 15, 2024</time>\n            </header>\n            <p>Semantic HTML provides meaning to web content...</p>\n            <section>\n                <h3>Benefits of Semantic HTML</h3>\n                <ul>\n                    <li>Better accessibility</li>\n                    <li>Improved SEO</li>\n                    <li>Cleaner code structure</li>\n                </ul>\n            </section>\n        </article>\n\n        <!-- Contact form with HTML5 validation -->\n        <section>\n            <h3>Contact Form</h3>\n            <form action=\"/submit\" method=\"post\">\n                <div>\n                    <label for=\"name\">Name:</label>\n                    <input type=\"text\" id=\"name\" name=\"name\" required>\n                </div>\n                <div>\n                    <label for=\"email\">Email:</label>\n                    <input type=\"email\" id=\"email\" name=\"email\" required>\n                </div>\n                <div>\n                    <label for=\"phone\">Phone:</label>\n                    <input type=\"tel\" id=\"phone\" name=\"phone\" pattern=\"[0-9]{3}-[0-9]{3}-[0-9]{4}\">\n                </div>\n                <div>\n                    <label for=\"birthdate\">Birth Date:</label>\n                    <input type=\"date\" id=\"birthdate\" name=\"birthdate\">\n                </div>\n                <button type=\"submit\">Submit</button>\n            </form>\n        </section>\n    </main>\n\n    <!-- Sidebar content -->\n    <aside>\n        <section>\n            <h3>Related Articles</h3>\n            <ul>\n                <li><a href=\"#\">CSS Grid Layout</a></li>\n                <li><a href=\"#\">JavaScript ES6</a></li>\n            </ul>\n        </section>\n    </aside>\n\n    <!-- Page footer -->\n    <footer>\n        <p>&copy; 2024 My Blog. All rights reserved.</p>\n    </footer>\n</body>\n</html>",
+      "explanation": "This example demonstrates semantic HTML5 elements including header, nav, main, article, section, aside, and footer. Notice the proper nesting, accessibility features like labels and ARIA attributes, and HTML5 form validation.",
+      "language": "javascript"
+    },
+    "pitfalls": [
+      {
+        "mistake": "Using div elements instead of semantic HTML5 elements",
+        "solution": "Use header, nav, main, article, section, aside, footer for better accessibility and SEO",
+        "severity": "medium"
+      },
+      {
+        "mistake": "Missing alt attributes on images",
+        "solution": "Always include descriptive alt text for images to support screen readers",
+        "severity": "high"
+      },
+      {
+        "mistake": "Not associating form labels with input elements",
+        "solution": "Use the 'for' attribute on labels to connect them with input 'id' attributes",
+        "severity": "high"
+      }
+    ],
+    "exercises": [
+      {
+        "title": "Build a Semantic Blog Post",
+        "description": "Create a complete blog post page using semantic HTML5 elements and proper form validation.",
+        "checkpoints": [
+          "Use semantic elements (header, nav, main, article, aside, footer)",
+          "Create a contact form with HTML5 input types and validation",
+          "Include proper heading hierarchy (h1, h2, h3)",
+          "Validate your HTML using the W3C validator"
+        ]
+      }
+    ],
+    "next": [],
+    "estimatedMinutes": 30,
+    "difficulty": "Beginner",
+    "tags": [
+      "HTML5",
+      "CSS3",
+      "JavaScript"
+    ],
+    "lastUpdated": "2025-10-01T06:42:16.315Z",
+    "version": "1.0.0"
+  },
+  {
+    "id": "web-fundamentals-lesson-2",
+    "moduleSlug": "web-fundamentals",
+    "title": "CSS3 Layout and Styling",
+    "order": 2,
+    "objectives": [
+      "Master CSS3 layout techniques (Flexbox and Grid)",
+      "Implement responsive design with media queries",
+      "Apply modern CSS3 features and animations"
+    ],
+    "intro": "CSS3 provides powerful layout systems and styling capabilities that make creating beautiful, responsive websites easier than ever. Modern CSS eliminates the need for complex float-based layouts.\n\nIn this lesson, you'll master Flexbox for one-dimensional layouts and CSS Grid for two-dimensional layouts. These layout systems are essential for creating professional, responsive designs that work across all devices.\n\nResponsive design ensures your websites look great on smartphones, tablets, and desktops. You'll learn media queries, flexible units, and responsive design patterns that adapt to different screen sizes.\n\nCSS3 also introduces powerful visual effects including transitions, animations, transforms, and advanced selectors. These features help create engaging user experiences without requiring JavaScript.\n\nBy the end of this lesson, you'll confidently create responsive layouts, implement smooth animations, and use modern CSS3 features to build visually appealing websites that work perfectly across all devices and browsers.",
+    "code": {
+      "example": "/* Modern CSS3 Layout and Styling */\n\n/* CSS Reset and Base Styles */\n* {\n    margin: 0;\n    padding: 0;\n    box-sizing: border-box;\n}\n\nbody {\n    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;\n    line-height: 1.6;\n    color: #333;\n}\n\n/* Flexbox Layout for Navigation */\n.navbar {\n    display: flex;\n    justify-content: space-between;\n    align-items: center;\n    padding: 1rem 2rem;\n    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);\n    color: white;\n}\n\n.nav-links {\n    display: flex;\n    list-style: none;\n    gap: 2rem;\n}\n\n.nav-links a {\n    color: white;\n    text-decoration: none;\n    transition: opacity 0.3s ease;\n}\n\n.nav-links a:hover {\n    opacity: 0.8;\n}\n\n/* CSS Grid Layout for Main Content */\n.container {\n    display: grid;\n    grid-template-columns: 1fr 300px;\n    grid-template-rows: auto 1fr auto;\n    grid-template-areas:\n        'header header'\n        'main sidebar'\n        'footer footer';\n    min-height: 100vh;\n    gap: 2rem;\n    padding: 2rem;\n}\n\n.header { grid-area: header; }\n.main { grid-area: main; }\n.sidebar { grid-area: sidebar; }\n.footer { grid-area: footer; }\n\n/* Card Component with Modern CSS */\n.card {\n    background: white;\n    border-radius: 12px;\n    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);\n    padding: 2rem;\n    transition: transform 0.3s ease, box-shadow 0.3s ease;\n}\n\n.card:hover {\n    transform: translateY(-5px);\n    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);\n}\n\n/* CSS3 Animations */\n@keyframes fadeInUp {\n    from {\n        opacity: 0;\n        transform: translateY(30px);\n    }\n    to {\n        opacity: 1;\n        transform: translateY(0);\n    }\n}\n\n.animate-in {\n    animation: fadeInUp 0.6s ease forwards;\n}\n\n/* Responsive Design with Media Queries */\n@media (max-width: 768px) {\n    .container {\n        grid-template-columns: 1fr;\n        grid-template-areas:\n            'header'\n            'main'\n            'sidebar'\n            'footer';\n    }\n    \n    .navbar {\n        flex-direction: column;\n        gap: 1rem;\n    }\n    \n    .nav-links {\n        flex-direction: column;\n        text-align: center;\n        gap: 1rem;\n    }\n}\n\n/* Modern CSS Features */\n.button {\n    background: linear-gradient(45deg, #667eea, #764ba2);\n    color: white;\n    border: none;\n    padding: 1rem 2rem;\n    border-radius: 8px;\n    cursor: pointer;\n    font-weight: 600;\n    transition: all 0.3s ease;\n    position: relative;\n    overflow: hidden;\n}\n\n.button::before {\n    content: '';\n    position: absolute;\n    top: 0;\n    left: -100%;\n    width: 100%;\n    height: 100%;\n    background: rgba(255, 255, 255, 0.2);\n    transition: left 0.5s ease;\n}\n\n.button:hover::before {\n    left: 100%;\n}",
+      "explanation": "This example demonstrates modern CSS3 features including Flexbox, Grid, gradients, animations, transitions, media queries, and advanced selectors. Notice the responsive design patterns and modern visual effects.",
+      "language": "javascript"
+    },
+    "pitfalls": [
+      {
+        "mistake": "Using floats instead of Flexbox or Grid for layout",
+        "solution": "Use modern layout systems like Flexbox for 1D layouts and Grid for 2D layouts",
+        "severity": "medium"
+      },
+      {
+        "mistake": "Not using relative units (rem, em, %) for responsive design",
+        "solution": "Use relative units and avoid fixed pixel values for better responsiveness",
+        "severity": "medium"
+      },
+      {
+        "mistake": "Missing vendor prefixes for CSS3 properties",
+        "solution": "Use autoprefixer or include vendor prefixes for older browser support",
+        "severity": "low"
+      }
+    ],
+    "exercises": [
+      {
+        "title": "Responsive Portfolio Layout",
+        "description": "Create a responsive portfolio website using CSS Grid and Flexbox with animations.",
+        "checkpoints": [
+          "Build a responsive navigation using Flexbox",
+          "Create a portfolio grid layout using CSS Grid",
+          "Add CSS3 animations and transitions",
+          "Test responsiveness across different screen sizes"
+        ]
+      }
+    ],
+    "next": [],
+    "estimatedMinutes": 30,
+    "difficulty": "Beginner",
+    "tags": [
+      "HTML5",
+      "CSS3",
+      "JavaScript"
+    ],
+    "lastUpdated": "2025-10-01T06:42:16.315Z",
+    "version": "1.0.0"
+  },
+  {
+    "id": "web-fundamentals-lesson-3",
+    "moduleSlug": "web-fundamentals",
+    "title": "Getting Started",
+    "order": 3,
+    "objectives": [
+      "Apply advanced HTML5 techniques",
+      "Optimize performance and efficiency",
+      "Integrate with external systems"
+    ],
+    "intro": "Welcome to Getting Started in the Web Development Basics module. \n\nThis lesson is part of the foundational tier, designed for beginner level learners. Throughout this lesson, you'll explore essential concepts and practical applications that form the foundation of modern frontend development.\n\nHTML5, CSS3, JavaScript fundamentals, and DOM manipulation This lesson builds upon previous concepts while introducing new techniques that will enhance your understanding and practical skills.\n\nBy the end of this lesson, you'll have hands-on experience with HTML5 and CSS3, along with best practices for implementing these technologies in real-world scenarios. The knowledge gained here will prepare you for more advanced topics in subsequent lessons.\n\nKey areas we'll cover include practical implementation techniques, common challenges developers face, and proven solutions that industry professionals use daily. This lesson balances theoretical understanding with practical application, ensuring you can immediately apply what you learn.",
+    "code": {
+      "example": "// Example HTML5 implementation\n// TODO: Add specific code example for Web Development Basics\n\nfunction example() {\n    // Placeholder implementation\n    console.log('Web Development Basics example');\n}\n\nexport default example;",
+      "explanation": "This example demonstrates the key concepts covered in this lesson.",
+      "language": "javascript"
+    },
+    "pitfalls": [
+      {
+        "mistake": "Not following HTML5 best practices",
+        "solution": "Review official documentation and established patterns for HTML5",
+        "severity": "medium"
+      },
+      {
+        "mistake": "Skipping error handling in implementation",
+        "solution": "Always implement proper error handling and validation",
+        "severity": "high"
+      },
+      {
+        "mistake": "Ignoring performance implications",
+        "solution": "Consider performance impact of your implementation choices",
+        "severity": "low"
+      }
+    ],
+    "exercises": [
+      {
+        "title": "Practice Getting Started",
+        "description": "Apply the concepts learned in this lesson through hands-on practice.",
+        "checkpoints": [
+          "Complete the basic implementation",
+          "Test your solution",
+          "Identify areas for improvement"
+        ]
+      }
+    ],
+    "next": [],
+    "estimatedMinutes": 30,
+    "difficulty": "Beginner",
+    "tags": [
+      "HTML5",
+      "CSS3",
+      "JavaScript"
+    ],
+    "lastUpdated": "2025-10-01T06:42:16.315Z",
+    "version": "1.0.0"
+  },
+  {
+    "id": "web-fundamentals-lesson-4",
+    "moduleSlug": "web-fundamentals",
+    "title": "Core Fundamentals",
+    "order": 4,
+    "objectives": [
+      "Apply advanced HTML5 techniques",
+      "Optimize performance and efficiency",
+      "Integrate with external systems"
+    ],
+    "intro": "Welcome to Core Fundamentals in the Web Development Basics module. \n\nThis lesson is part of the foundational tier, designed for beginner level learners. Throughout this lesson, you'll explore essential concepts and practical applications that form the foundation of modern frontend development.\n\nHTML5, CSS3, JavaScript fundamentals, and DOM manipulation This lesson builds upon previous concepts while introducing new techniques that will enhance your understanding and practical skills.\n\nBy the end of this lesson, you'll have hands-on experience with HTML5 and CSS3, along with best practices for implementing these technologies in real-world scenarios. The knowledge gained here will prepare you for more advanced topics in subsequent lessons.\n\nKey areas we'll cover include practical implementation techniques, common challenges developers face, and proven solutions that industry professionals use daily. This lesson balances theoretical understanding with practical application, ensuring you can immediately apply what you learn.",
+    "code": {
+      "example": "// Example HTML5 implementation\n// TODO: Add specific code example for Web Development Basics\n\nfunction example() {\n    // Placeholder implementation\n    console.log('Web Development Basics example');\n}\n\nexport default example;",
+      "explanation": "This example demonstrates the key concepts covered in this lesson.",
+      "language": "javascript"
+    },
+    "pitfalls": [
+      {
+        "mistake": "Not following HTML5 best practices",
+        "solution": "Review official documentation and established patterns for HTML5",
+        "severity": "medium"
+      },
+      {
+        "mistake": "Skipping error handling in implementation",
+        "solution": "Always implement proper error handling and validation",
+        "severity": "high"
+      },
+      {
+        "mistake": "Ignoring performance implications",
+        "solution": "Consider performance impact of your implementation choices",
+        "severity": "low"
+      }
+    ],
+    "exercises": [
+      {
+        "title": "Practice Core Fundamentals",
+        "description": "Apply the concepts learned in this lesson through hands-on practice.",
+        "checkpoints": [
+          "Complete the basic implementation",
+          "Test your solution",
+          "Identify areas for improvement"
+        ]
+      }
+    ],
+    "next": [],
+    "estimatedMinutes": 30,
+    "difficulty": "Beginner",
+    "tags": [
+      "HTML5",
+      "CSS3",
+      "JavaScript"
+    ],
+    "lastUpdated": "2025-10-01T06:42:16.315Z",
+    "version": "1.0.0"
+  },
+  {
+    "id": "web-fundamentals-lesson-5",
+    "moduleSlug": "web-fundamentals",
+    "title": "Essential Patterns",
+    "order": 5,
+    "objectives": [
+      "Apply advanced HTML5 techniques",
+      "Optimize performance and efficiency",
+      "Integrate with external systems"
+    ],
+    "intro": "Welcome to Essential Patterns in the Web Development Basics module. \n\nThis lesson is part of the foundational tier, designed for beginner level learners. Throughout this lesson, you'll explore essential concepts and practical applications that form the foundation of modern frontend development.\n\nHTML5, CSS3, JavaScript fundamentals, and DOM manipulation This lesson builds upon previous concepts while introducing new techniques that will enhance your understanding and practical skills.\n\nBy the end of this lesson, you'll have hands-on experience with HTML5 and CSS3, along with best practices for implementing these technologies in real-world scenarios. The knowledge gained here will prepare you for more advanced topics in subsequent lessons.\n\nKey areas we'll cover include practical implementation techniques, common challenges developers face, and proven solutions that industry professionals use daily. This lesson balances theoretical understanding with practical application, ensuring you can immediately apply what you learn.",
+    "code": {
+      "example": "// Example HTML5 implementation\n// TODO: Add specific code example for Web Development Basics\n\nfunction example() {\n    // Placeholder implementation\n    console.log('Web Development Basics example');\n}\n\nexport default example;",
+      "explanation": "This example demonstrates the key concepts covered in this lesson.",
+      "language": "javascript"
+    },
+    "pitfalls": [
+      {
+        "mistake": "Not following HTML5 best practices",
+        "solution": "Review official documentation and established patterns for HTML5",
+        "severity": "medium"
+      },
+      {
+        "mistake": "Skipping error handling in implementation",
+        "solution": "Always implement proper error handling and validation",
+        "severity": "high"
+      },
+      {
+        "mistake": "Ignoring performance implications",
+        "solution": "Consider performance impact of your implementation choices",
+        "severity": "low"
+      }
+    ],
+    "exercises": [
+      {
+        "title": "Practice Essential Patterns",
+        "description": "Apply the concepts learned in this lesson through hands-on practice.",
+        "checkpoints": [
+          "Complete the basic implementation",
+          "Test your solution",
+          "Identify areas for improvement"
+        ]
+      }
+    ],
+    "next": [],
+    "estimatedMinutes": 30,
+    "difficulty": "Beginner",
+    "tags": [
+      "HTML5",
+      "CSS3",
+      "JavaScript"
+    ],
+    "lastUpdated": "2025-10-01T06:42:16.315Z",
+    "version": "1.0.0"
+  },
+  {
+    "id": "web-fundamentals-lesson-6",
+    "moduleSlug": "web-fundamentals",
+    "title": "Building Blocks",
+    "order": 6,
+    "objectives": [
+      "Apply advanced HTML5 techniques",
+      "Optimize performance and efficiency",
+      "Integrate with external systems"
+    ],
+    "intro": "Welcome to Building Blocks in the Web Development Basics module. \n\nThis lesson is part of the foundational tier, designed for beginner level learners. Throughout this lesson, you'll explore essential concepts and practical applications that form the foundation of modern frontend development.\n\nHTML5, CSS3, JavaScript fundamentals, and DOM manipulation This lesson builds upon previous concepts while introducing new techniques that will enhance your understanding and practical skills.\n\nBy the end of this lesson, you'll have hands-on experience with HTML5 and CSS3, along with best practices for implementing these technologies in real-world scenarios. The knowledge gained here will prepare you for more advanced topics in subsequent lessons.\n\nKey areas we'll cover include practical implementation techniques, common challenges developers face, and proven solutions that industry professionals use daily. This lesson balances theoretical understanding with practical application, ensuring you can immediately apply what you learn.",
+    "code": {
+      "example": "<!-- HTML5 Semantic Structure -->\n<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n  <meta charset=\"UTF-8\">\n  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n  <title>Interactive Web Component</title>\n  <style>\n    /* CSS3 Building Blocks */\n    .container {\n      max-width: 800px;\n      margin: 0 auto;\n      padding: 20px;\n      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;\n    }\n    \n    .card {\n      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);\n      border-radius: 12px;\n      padding: 24px;\n      margin: 16px 0;\n      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);\n      transition: transform 0.3s ease, box-shadow 0.3s ease;\n      position: relative;\n      overflow: hidden;\n    }\n    \n    .card:hover {\n      transform: translateY(-4px);\n      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);\n    }\n    \n    .card::before {\n      content: '';\n      position: absolute;\n      top: 0;\n      left: 0;\n      right: 0;\n      height: 3px;\n      background: linear-gradient(90deg, #ff6b6b, #4ecdc4, #45b7d1);\n    }\n    \n    .card-title {\n      color: white;\n      margin: 0 0 16px 0;\n      font-size: 1.5rem;\n      font-weight: 600;\n    }\n    \n    .card-content {\n      color: rgba(255, 255, 255, 0.9);\n      line-height: 1.6;\n    }\n    \n    .interactive-button {\n      background: rgba(255, 255, 255, 0.2);\n      border: 2px solid rgba(255, 255, 255, 0.3);\n      color: white;\n      padding: 12px 24px;\n      border-radius: 8px;\n      cursor: pointer;\n      transition: all 0.3s ease;\n      margin-top: 16px;\n      backdrop-filter: blur(10px);\n    }\n    \n    .interactive-button:hover {\n      background: rgba(255, 255, 255, 0.3);\n      border-color: rgba(255, 255, 255, 0.5);\n      transform: scale(1.02);\n    }\n    \n    .progress-bar {\n      width: 100%;\n      height: 8px;\n      background: rgba(255, 255, 255, 0.2);\n      border-radius: 4px;\n      margin: 16px 0;\n      overflow: hidden;\n    }\n    \n    .progress-fill {\n      height: 100%;\n      background: linear-gradient(90deg, #ff6b6b, #4ecdc4);\n      border-radius: 4px;\n      width: 0%;\n      transition: width 0.5s ease;\n    }\n    \n    @media (max-width: 768px) {\n      .container {\n        padding: 12px;\n      }\n      \n      .card {\n        padding: 16px;\n        margin: 12px 0;\n      }\n    }\n  </style>\n</head>\n<body>\n  <div class=\"container\">\n    <header>\n      <h1>Modern Web Building Blocks</h1>\n    </header>\n    \n    <main>\n      <article class=\"card\" id=\"interactive-card\">\n        <h2 class=\"card-title\">Interactive Component</h2>\n        <div class=\"card-content\">\n          <p>This component demonstrates HTML5 semantic structure, CSS3 modern styling, and JavaScript interactivity.</p>\n          <div class=\"progress-bar\">\n            <div class=\"progress-fill\" id=\"progress\"></div>\n          </div>\n          <button class=\"interactive-button\" onclick=\"animateProgress()\">\n            Animate Progress\n          </button>\n          <button class=\"interactive-button\" onclick=\"toggleTheme()\">\n            Toggle Theme\n          </button>\n        </div>\n      </article>\n    </main>\n  </div>\n\n  <script>\n    // JavaScript Building Blocks\n    let currentProgress = 0;\n    let isDarkTheme = false;\n    \n    // Progressive enhancement\n    document.addEventListener('DOMContentLoaded', function() {\n      console.log('DOM fully loaded - ready for interaction');\n      \n      // Add smooth scrolling behavior\n      document.documentElement.style.scrollBehavior = 'smooth';\n      \n      // Initialize progress bar\n      updateProgress(25);\n    });\n    \n    function animateProgress() {\n      const progressBar = document.getElementById('progress');\n      const targetProgress = Math.min(currentProgress + 25, 100);\n      \n      // Animate progress incrementally\n      const animationDuration = 500;\n      const steps = 20;\n      const increment = (targetProgress - currentProgress) / steps;\n      let step = 0;\n      \n      const animation = setInterval(() => {\n        step++;\n        currentProgress += increment;\n        progressBar.style.width = currentProgress + '%';\n        \n        if (step >= steps) {\n          clearInterval(animation);\n          currentProgress = targetProgress;\n          \n          // Reset if at 100%\n          if (currentProgress >= 100) {\n            setTimeout(() => {\n              currentProgress = 0;\n              progressBar.style.width = '0%';\n            }, 1000);\n          }\n        }\n      }, animationDuration / steps);\n    }\n    \n    function updateProgress(value) {\n      const progressBar = document.getElementById('progress');\n      currentProgress = Math.max(0, Math.min(100, value));\n      progressBar.style.width = currentProgress + '%';\n    }\n    \n    function toggleTheme() {\n      const card = document.getElementById('interactive-card');\n      const body = document.body;\n      \n      isDarkTheme = !isDarkTheme;\n      \n      if (isDarkTheme) {\n        body.style.backgroundColor = '#1a1a1a';\n        body.style.color = '#ffffff';\n        card.style.background = 'linear-gradient(135deg, #2c3e50 0%, #34495e 100%)';\n      } else {\n        body.style.backgroundColor = '';\n        body.style.color = '';\n        card.style.background = 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)';\n      }\n      \n      // Provide visual feedback\n      const button = event.target;\n      button.textContent = isDarkTheme ? 'Light Theme' : 'Toggle Theme';\n      \n      // Add animation class\n      card.style.transform = 'scale(1.02)';\n      setTimeout(() => {\n        card.style.transform = '';\n      }, 200);\n    }\n    \n    // Touch/mobile support\n    document.addEventListener('touchstart', function() {}, {passive: true});\n    \n    // Keyboard accessibility\n    document.addEventListener('keydown', function(e) {\n      if (e.key === 'Enter' || e.key === ' ') {\n        if (e.target.classList.contains('interactive-button')) {\n          e.target.click();\n        }\n      }\n    });\n  </script>\n</body>\n</html>",
+      "explanation": "This comprehensive example demonstrates the fundamental building blocks of modern web development: semantic HTML5 structure with proper document outline, CSS3 features including gradients, transitions, responsive design, and accessibility considerations, plus JavaScript for DOM manipulation, event handling, animations, and progressive enhancement. The code showcases real-world patterns used in production websites.",
+      "language": "javascript"
+    },
+    "pitfalls": [
+      {
+        "mistake": "Not following HTML5 best practices",
+        "solution": "Review official documentation and established patterns for HTML5",
+        "severity": "medium"
+      },
+      {
+        "mistake": "Skipping error handling in implementation",
+        "solution": "Always implement proper error handling and validation",
+        "severity": "high"
+      },
+      {
+        "mistake": "Ignoring performance implications",
+        "solution": "Consider performance impact of your implementation choices",
+        "severity": "low"
+      }
+    ],
+    "exercises": [
+      {
+        "title": "Practice Building Blocks",
+        "description": "Apply the concepts learned in this lesson through hands-on practice.",
+        "checkpoints": [
+          "Complete the basic implementation",
+          "Test your solution",
+          "Identify areas for improvement"
+        ]
+      }
+    ],
+    "next": [],
+    "estimatedMinutes": 30,
+    "difficulty": "Beginner",
+    "tags": [
+      "HTML5",
+      "CSS3",
+      "JavaScript"
+    ],
+    "lastUpdated": "2025-10-01T06:42:16.315Z",
+    "version": "1.0.0"
+  },
+  {
+    "id": "web-fundamentals-lesson-7",
+    "moduleSlug": "web-fundamentals",
+    "title": "First Steps",
+    "order": 7,
+    "objectives": [
+      "Apply advanced HTML5 techniques",
+      "Optimize performance and efficiency",
+      "Integrate with external systems"
+    ],
+    "intro": "Welcome to First Steps in the Web Development Basics module. \n\nThis lesson is part of the foundational tier, designed for beginner level learners. Throughout this lesson, you'll explore essential concepts and practical applications that form the foundation of modern frontend development.\n\nHTML5, CSS3, JavaScript fundamentals, and DOM manipulation This lesson builds upon previous concepts while introducing new techniques that will enhance your understanding and practical skills.\n\nBy the end of this lesson, you'll have hands-on experience with HTML5 and CSS3, along with best practices for implementing these technologies in real-world scenarios. The knowledge gained here will prepare you for more advanced topics in subsequent lessons.\n\nKey areas we'll cover include practical implementation techniques, common challenges developers face, and proven solutions that industry professionals use daily. This lesson balances theoretical understanding with practical application, ensuring you can immediately apply what you learn.",
+    "code": {
+      "example": "// Example HTML5 implementation\n// TODO: Add specific code example for Web Development Basics\n\nfunction example() {\n    // Placeholder implementation\n    console.log('Web Development Basics example');\n}\n\nexport default example;",
+      "explanation": "This example demonstrates the key concepts covered in this lesson.",
+      "language": "javascript"
+    },
+    "pitfalls": [
+      {
+        "mistake": "Not following HTML5 best practices",
+        "solution": "Review official documentation and established patterns for HTML5",
+        "severity": "medium"
+      },
+      {
+        "mistake": "Skipping error handling in implementation",
+        "solution": "Always implement proper error handling and validation",
+        "severity": "high"
+      },
+      {
+        "mistake": "Ignoring performance implications",
+        "solution": "Consider performance impact of your implementation choices",
+        "severity": "low"
+      }
+    ],
+    "exercises": [
+      {
+        "title": "Practice First Steps",
+        "description": "Apply the concepts learned in this lesson through hands-on practice.",
+        "checkpoints": [
+          "Complete the basic implementation",
+          "Test your solution",
+          "Identify areas for improvement"
+        ]
+      }
+    ],
+    "next": [],
+    "estimatedMinutes": 30,
+    "difficulty": "Beginner",
+    "tags": [
+      "HTML5",
+      "CSS3",
+      "JavaScript"
+    ],
+    "lastUpdated": "2025-10-01T06:42:16.315Z",
+    "version": "1.0.0"
+  },
+  {
+    "id": "web-fundamentals-lesson-8",
+    "moduleSlug": "web-fundamentals",
+    "title": "Understanding Basics",
+    "order": 8,
+    "objectives": [
+      "Apply advanced HTML5 techniques",
+      "Optimize performance and efficiency",
+      "Integrate with external systems"
+    ],
+    "intro": "Welcome to Understanding Basics in the Web Development Basics module. \n\nThis lesson is part of the foundational tier, designed for beginner level learners. Throughout this lesson, you'll explore essential concepts and practical applications that form the foundation of modern frontend development.\n\nHTML5, CSS3, JavaScript fundamentals, and DOM manipulation This lesson builds upon previous concepts while introducing new techniques that will enhance your understanding and practical skills.\n\nBy the end of this lesson, you'll have hands-on experience with HTML5 and CSS3, along with best practices for implementing these technologies in real-world scenarios. The knowledge gained here will prepare you for more advanced topics in subsequent lessons.\n\nKey areas we'll cover include practical implementation techniques, common challenges developers face, and proven solutions that industry professionals use daily. This lesson balances theoretical understanding with practical application, ensuring you can immediately apply what you learn.",
+    "code": {
+      "example": "// Example HTML5 implementation\n// TODO: Add specific code example for Web Development Basics\n\nfunction example() {\n    // Placeholder implementation\n    console.log('Web Development Basics example');\n}\n\nexport default example;",
+      "explanation": "This example demonstrates the key concepts covered in this lesson.",
+      "language": "javascript"
+    },
+    "pitfalls": [
+      {
+        "mistake": "Not following HTML5 best practices",
+        "solution": "Review official documentation and established patterns for HTML5",
+        "severity": "medium"
+      },
+      {
+        "mistake": "Skipping error handling in implementation",
+        "solution": "Always implement proper error handling and validation",
+        "severity": "high"
+      },
+      {
+        "mistake": "Ignoring performance implications",
+        "solution": "Consider performance impact of your implementation choices",
+        "severity": "low"
+      }
+    ],
+    "exercises": [
+      {
+        "title": "Practice Understanding Basics",
+        "description": "Apply the concepts learned in this lesson through hands-on practice.",
+        "checkpoints": [
+          "Complete the basic implementation",
+          "Test your solution",
+          "Identify areas for improvement"
+        ]
+      }
+    ],
+    "next": [],
+    "estimatedMinutes": 30,
+    "difficulty": "Beginner",
+    "tags": [
+      "HTML5",
+      "CSS3",
+      "JavaScript"
+    ],
+    "lastUpdated": "2025-10-01T06:42:16.315Z",
+    "version": "1.0.0"
+  },
+  {
+    "id": "web-fundamentals-lesson-9",
+    "moduleSlug": "web-fundamentals",
+    "title": "Key Concepts",
+    "order": 9,
+    "objectives": [
+      "Apply advanced HTML5 techniques",
+      "Optimize performance and efficiency",
+      "Integrate with external systems"
+    ],
+    "intro": "Welcome to Key Concepts in the Web Development Basics module. \n\nThis lesson is part of the foundational tier, designed for beginner level learners. Throughout this lesson, you'll explore essential concepts and practical applications that form the foundation of modern frontend development.\n\nHTML5, CSS3, JavaScript fundamentals, and DOM manipulation This lesson builds upon previous concepts while introducing new techniques that will enhance your understanding and practical skills.\n\nBy the end of this lesson, you'll have hands-on experience with HTML5 and CSS3, along with best practices for implementing these technologies in real-world scenarios. The knowledge gained here will prepare you for more advanced topics in subsequent lessons.\n\nKey areas we'll cover include practical implementation techniques, common challenges developers face, and proven solutions that industry professionals use daily. This lesson balances theoretical understanding with practical application, ensuring you can immediately apply what you learn.",
+    "code": {
+      "example": "// Example HTML5 implementation\n// TODO: Add specific code example for Web Development Basics\n\nfunction example() {\n    // Placeholder implementation\n    console.log('Web Development Basics example');\n}\n\nexport default example;",
+      "explanation": "This example demonstrates the key concepts covered in this lesson.",
+      "language": "javascript"
+    },
+    "pitfalls": [
+      {
+        "mistake": "Not following HTML5 best practices",
+        "solution": "Review official documentation and established patterns for HTML5",
+        "severity": "medium"
+      },
+      {
+        "mistake": "Skipping error handling in implementation",
+        "solution": "Always implement proper error handling and validation",
+        "severity": "high"
+      },
+      {
+        "mistake": "Ignoring performance implications",
+        "solution": "Consider performance impact of your implementation choices",
+        "severity": "low"
+      }
+    ],
+    "exercises": [
+      {
+        "title": "Practice Key Concepts",
+        "description": "Apply the concepts learned in this lesson through hands-on practice.",
+        "checkpoints": [
+          "Complete the basic implementation",
+          "Test your solution",
+          "Identify areas for improvement"
+        ]
+      }
+    ],
+    "next": [],
+    "estimatedMinutes": 30,
+    "difficulty": "Beginner",
+    "tags": [
+      "HTML5",
+      "CSS3",
+      "JavaScript"
+    ],
+    "lastUpdated": "2025-10-01T06:42:16.315Z",
+    "version": "1.0.0"
+  },
+  {
+    "id": "web-fundamentals-lesson-10",
+    "moduleSlug": "web-fundamentals",
+    "title": "Foundation Knowledge",
+    "order": 10,
+    "objectives": [
+      "Apply advanced HTML5 techniques",
+      "Optimize performance and efficiency",
+      "Integrate with external systems"
+    ],
+    "intro": "Welcome to Foundation Knowledge in the Web Development Basics module. \n\nThis lesson is part of the foundational tier, designed for beginner level learners. Throughout this lesson, you'll explore essential concepts and practical applications that form the foundation of modern frontend development.\n\nHTML5, CSS3, JavaScript fundamentals, and DOM manipulation This lesson builds upon previous concepts while introducing new techniques that will enhance your understanding and practical skills.\n\nBy the end of this lesson, you'll have hands-on experience with HTML5 and CSS3, along with best practices for implementing these technologies in real-world scenarios. The knowledge gained here will prepare you for more advanced topics in subsequent lessons.\n\nKey areas we'll cover include practical implementation techniques, common challenges developers face, and proven solutions that industry professionals use daily. This lesson balances theoretical understanding with practical application, ensuring you can immediately apply what you learn.",
+    "code": {
+      "example": "// Example HTML5 implementation\n// TODO: Add specific code example for Web Development Basics\n\nfunction example() {\n    // Placeholder implementation\n    console.log('Web Development Basics example');\n}\n\nexport default example;",
+      "explanation": "This example demonstrates the key concepts covered in this lesson.",
+      "language": "javascript"
+    },
+    "pitfalls": [
+      {
+        "mistake": "Not following HTML5 best practices",
+        "solution": "Review official documentation and established patterns for HTML5",
+        "severity": "medium"
+      },
+      {
+        "mistake": "Skipping error handling in implementation",
+        "solution": "Always implement proper error handling and validation",
+        "severity": "high"
+      },
+      {
+        "mistake": "Ignoring performance implications",
+        "solution": "Consider performance impact of your implementation choices",
+        "severity": "low"
+      }
+    ],
+    "exercises": [
+      {
+        "title": "Practice Foundation Knowledge",
+        "description": "Apply the concepts learned in this lesson through hands-on practice.",
+        "checkpoints": [
+          "Complete the basic implementation",
+          "Test your solution",
+          "Identify areas for improvement"
+        ]
+      }
+    ],
+    "next": [],
+    "estimatedMinutes": 30,
+    "difficulty": "Beginner",
+    "tags": [
+      "HTML5",
+      "CSS3",
+      "JavaScript"
+    ],
+    "lastUpdated": "2025-10-01T06:42:16.315Z",
+    "version": "1.0.0"
+  },
+  {
+    "id": "web-fundamentals-lesson-11",
+    "moduleSlug": "web-fundamentals",
+    "title": "Practical Applications",
+    "order": 11,
+    "objectives": [
+      "Apply advanced HTML5 techniques",
+      "Optimize performance and efficiency",
+      "Integrate with external systems"
+    ],
+    "intro": "Welcome to Practical Applications in the Web Development Basics module. \n\nThis lesson is part of the foundational tier, designed for beginner level learners. Throughout this lesson, you'll explore essential concepts and practical applications that form the foundation of modern frontend development.\n\nHTML5, CSS3, JavaScript fundamentals, and DOM manipulation This lesson builds upon previous concepts while introducing new techniques that will enhance your understanding and practical skills.\n\nBy the end of this lesson, you'll have hands-on experience with HTML5 and CSS3, along with best practices for implementing these technologies in real-world scenarios. The knowledge gained here will prepare you for more advanced topics in subsequent lessons.\n\nKey areas we'll cover include practical implementation techniques, common challenges developers face, and proven solutions that industry professionals use daily. This lesson balances theoretical understanding with practical application, ensuring you can immediately apply what you learn.",
+    "code": {
+      "example": "// Example HTML5 implementation\n// TODO: Add specific code example for Web Development Basics\n\nfunction example() {\n    // Placeholder implementation\n    console.log('Web Development Basics example');\n}\n\nexport default example;",
+      "explanation": "This example demonstrates the key concepts covered in this lesson.",
+      "language": "javascript"
+    },
+    "pitfalls": [
+      {
+        "mistake": "Not following HTML5 best practices",
+        "solution": "Review official documentation and established patterns for HTML5",
+        "severity": "medium"
+      },
+      {
+        "mistake": "Skipping error handling in implementation",
+        "solution": "Always implement proper error handling and validation",
+        "severity": "high"
+      },
+      {
+        "mistake": "Ignoring performance implications",
+        "solution": "Consider performance impact of your implementation choices",
+        "severity": "low"
+      }
+    ],
+    "exercises": [
+      {
+        "title": "Practice Practical Applications",
+        "description": "Apply the concepts learned in this lesson through hands-on practice.",
+        "checkpoints": [
+          "Complete the basic implementation",
+          "Test your solution",
+          "Identify areas for improvement"
+        ]
+      }
+    ],
+    "next": [],
+    "estimatedMinutes": 30,
+    "difficulty": "Beginner",
+    "tags": [
+      "HTML5",
+      "CSS3",
+      "JavaScript"
+    ],
+    "lastUpdated": "2025-10-01T06:42:16.315Z",
+    "version": "1.0.0"
+  },
+  {
+    "id": "web-fundamentals-lesson-12",
+    "moduleSlug": "web-fundamentals",
+    "title": "Review and Practice",
+    "order": 12,
+    "objectives": [
+      "Apply advanced HTML5 techniques",
+      "Optimize performance and efficiency",
+      "Integrate with external systems"
+    ],
+    "intro": "Welcome to Review and Practice in the Web Development Basics module. \n\nThis lesson is part of the foundational tier, designed for beginner level learners. Throughout this lesson, you'll explore essential concepts and practical applications that form the foundation of modern frontend development.\n\nHTML5, CSS3, JavaScript fundamentals, and DOM manipulation This lesson builds upon previous concepts while introducing new techniques that will enhance your understanding and practical skills.\n\nBy the end of this lesson, you'll have hands-on experience with HTML5 and CSS3, along with best practices for implementing these technologies in real-world scenarios. The knowledge gained here will prepare you for more advanced topics in subsequent lessons.\n\nKey areas we'll cover include practical implementation techniques, common challenges developers face, and proven solutions that industry professionals use daily. This lesson balances theoretical understanding with practical application, ensuring you can immediately apply what you learn.",
+    "code": {
+      "example": "// Example HTML5 implementation\n// TODO: Add specific code example for Web Development Basics\n\nfunction example() {\n    // Placeholder implementation\n    console.log('Web Development Basics example');\n}\n\nexport default example;",
+      "explanation": "This example demonstrates the key concepts covered in this lesson.",
+      "language": "javascript"
+    },
+    "pitfalls": [
+      {
+        "mistake": "Not following HTML5 best practices",
+        "solution": "Review official documentation and established patterns for HTML5",
+        "severity": "medium"
+      },
+      {
+        "mistake": "Skipping error handling in implementation",
+        "solution": "Always implement proper error handling and validation",
+        "severity": "high"
+      },
+      {
+        "mistake": "Ignoring performance implications",
+        "solution": "Consider performance impact of your implementation choices",
+        "severity": "low"
+      }
+    ],
+    "exercises": [
+      {
+        "title": "Practice Review and Practice",
+        "description": "Apply the concepts learned in this lesson through hands-on practice.",
+        "checkpoints": [
+          "Complete the basic implementation",
+          "Test your solution",
+          "Identify areas for improvement"
+        ]
+      }
+    ],
+    "next": [],
+    "estimatedMinutes": 30,
+    "difficulty": "Beginner",
+    "tags": [
+      "HTML5",
+      "CSS3",
+      "JavaScript"
+    ],
+    "lastUpdated": "2025-10-01T06:42:16.315Z",
+    "version": "1.0.0"
+  },
+  {
+    "id": "web-fundamentals-lesson-13",
+    "moduleSlug": "web-fundamentals",
+    "title": "Lesson 13",
+    "order": 13,
+    "objectives": [
+      "Apply advanced HTML5 techniques",
+      "Optimize performance and efficiency",
+      "Integrate with external systems"
+    ],
+    "intro": "Welcome to Lesson 13 in the Web Development Basics module. \n\nThis lesson is part of the foundational tier, designed for beginner level learners. Throughout this lesson, you'll explore essential concepts and practical applications that form the foundation of modern frontend development.\n\nHTML5, CSS3, JavaScript fundamentals, and DOM manipulation This lesson builds upon previous concepts while introducing new techniques that will enhance your understanding and practical skills.\n\nBy the end of this lesson, you'll have hands-on experience with HTML5 and CSS3, along with best practices for implementing these technologies in real-world scenarios. The knowledge gained here will prepare you for more advanced topics in subsequent lessons.\n\nKey areas we'll cover include practical implementation techniques, common challenges developers face, and proven solutions that industry professionals use daily. This lesson balances theoretical understanding with practical application, ensuring you can immediately apply what you learn.",
+    "code": {
+      "example": "// Example HTML5 implementation\n// TODO: Add specific code example for Web Development Basics\n\nfunction example() {\n    // Placeholder implementation\n    console.log('Web Development Basics example');\n}\n\nexport default example;",
+      "explanation": "This example demonstrates the key concepts covered in this lesson.",
+      "language": "javascript"
+    },
+    "pitfalls": [
+      {
+        "mistake": "Not following HTML5 best practices",
+        "solution": "Review official documentation and established patterns for HTML5",
+        "severity": "medium"
+      },
+      {
+        "mistake": "Skipping error handling in implementation",
+        "solution": "Always implement proper error handling and validation",
+        "severity": "high"
+      },
+      {
+        "mistake": "Ignoring performance implications",
+        "solution": "Consider performance impact of your implementation choices",
+        "severity": "low"
+      }
+    ],
+    "exercises": [
+      {
+        "title": "Practice Lesson 13",
+        "description": "Apply the concepts learned in this lesson through hands-on practice.",
+        "checkpoints": [
+          "Complete the basic implementation",
+          "Test your solution",
+          "Identify areas for improvement"
+        ]
+      }
+    ],
+    "next": [],
+    "estimatedMinutes": 30,
+    "difficulty": "Beginner",
+    "tags": [
+      "HTML5",
+      "CSS3",
+      "JavaScript"
+    ],
+    "lastUpdated": "2025-10-01T06:42:16.315Z",
+    "version": "1.0.0"
+  },
+  {
+    "id": "web-fundamentals-lesson-14",
+    "moduleSlug": "web-fundamentals",
+    "title": "Lesson 14",
+    "order": 14,
+    "objectives": [
+      "Apply advanced HTML5 techniques",
+      "Optimize performance and efficiency",
+      "Integrate with external systems"
+    ],
+    "intro": "Welcome to Lesson 14 in the Web Development Basics module. \n\nThis lesson is part of the foundational tier, designed for beginner level learners. Throughout this lesson, you'll explore essential concepts and practical applications that form the foundation of modern frontend development.\n\nHTML5, CSS3, JavaScript fundamentals, and DOM manipulation This lesson builds upon previous concepts while introducing new techniques that will enhance your understanding and practical skills.\n\nBy the end of this lesson, you'll have hands-on experience with HTML5 and CSS3, along with best practices for implementing these technologies in real-world scenarios. The knowledge gained here will prepare you for more advanced topics in subsequent lessons.\n\nKey areas we'll cover include practical implementation techniques, common challenges developers face, and proven solutions that industry professionals use daily. This lesson balances theoretical understanding with practical application, ensuring you can immediately apply what you learn.",
+    "code": {
+      "example": "// Example HTML5 implementation\n// TODO: Add specific code example for Web Development Basics\n\nfunction example() {\n    // Placeholder implementation\n    console.log('Web Development Basics example');\n}\n\nexport default example;",
+      "explanation": "This example demonstrates the key concepts covered in this lesson.",
+      "language": "javascript"
+    },
+    "pitfalls": [
+      {
+        "mistake": "Not following HTML5 best practices",
+        "solution": "Review official documentation and established patterns for HTML5",
+        "severity": "medium"
+      },
+      {
+        "mistake": "Skipping error handling in implementation",
+        "solution": "Always implement proper error handling and validation",
+        "severity": "high"
+      },
+      {
+        "mistake": "Ignoring performance implications",
+        "solution": "Consider performance impact of your implementation choices",
+        "severity": "low"
+      }
+    ],
+    "exercises": [
+      {
+        "title": "Practice Lesson 14",
+        "description": "Apply the concepts learned in this lesson through hands-on practice.",
+        "checkpoints": [
+          "Complete the basic implementation",
+          "Test your solution",
+          "Identify areas for improvement"
+        ]
+      }
+    ],
+    "next": [],
+    "estimatedMinutes": 30,
+    "difficulty": "Beginner",
+    "tags": [
+      "HTML5",
+      "CSS3",
+      "JavaScript"
+    ],
+    "lastUpdated": "2025-10-01T06:42:16.315Z",
+    "version": "1.0.0"
+  },
+  {
+    "id": "web-fundamentals-lesson-15",
+    "moduleSlug": "web-fundamentals",
+    "title": "Lesson 15",
+    "order": 15,
+    "objectives": [
+      "Apply advanced HTML5 techniques",
+      "Optimize performance and efficiency",
+      "Integrate with external systems"
+    ],
+    "intro": "Welcome to Lesson 15 in the Web Development Basics module. \n\nThis lesson is part of the foundational tier, designed for beginner level learners. Throughout this lesson, you'll explore essential concepts and practical applications that form the foundation of modern frontend development.\n\nHTML5, CSS3, JavaScript fundamentals, and DOM manipulation This lesson builds upon previous concepts while introducing new techniques that will enhance your understanding and practical skills.\n\nBy the end of this lesson, you'll have hands-on experience with HTML5 and CSS3, along with best practices for implementing these technologies in real-world scenarios. The knowledge gained here will prepare you for more advanced topics in subsequent lessons.\n\nKey areas we'll cover include practical implementation techniques, common challenges developers face, and proven solutions that industry professionals use daily. This lesson balances theoretical understanding with practical application, ensuring you can immediately apply what you learn.",
+    "code": {
+      "example": "// Example HTML5 implementation\n// TODO: Add specific code example for Web Development Basics\n\nfunction example() {\n    // Placeholder implementation\n    console.log('Web Development Basics example');\n}\n\nexport default example;",
+      "explanation": "This example demonstrates the key concepts covered in this lesson.",
+      "language": "javascript"
+    },
+    "pitfalls": [
+      {
+        "mistake": "Not following HTML5 best practices",
+        "solution": "Review official documentation and established patterns for HTML5",
+        "severity": "medium"
+      },
+      {
+        "mistake": "Skipping error handling in implementation",
+        "solution": "Always implement proper error handling and validation",
+        "severity": "high"
+      },
+      {
+        "mistake": "Ignoring performance implications",
+        "solution": "Consider performance impact of your implementation choices",
+        "severity": "low"
+      }
+    ],
+    "exercises": [
+      {
+        "title": "Practice Lesson 15",
+        "description": "Apply the concepts learned in this lesson through hands-on practice.",
+        "checkpoints": [
+          "Complete the basic implementation",
+          "Test your solution",
+          "Identify areas for improvement"
+        ]
+      }
+    ],
+    "next": [],
+    "estimatedMinutes": 30,
+    "difficulty": "Beginner",
+    "tags": [
+      "HTML5",
+      "CSS3",
+      "JavaScript"
+    ],
+    "lastUpdated": "2025-10-01T06:42:16.315Z",
+    "version": "1.0.0"
+  }
+]

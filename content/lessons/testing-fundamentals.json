@@ -1,0 +1,750 @@
+[
+  {
+    "id": "testing-fundamentals-lesson-1",
+    "moduleSlug": "testing-fundamentals",
+    "title": "Testing Pyramid and Test Strategies",
+    "order": 1,
+    "objectives": [
+      "Implement practical solutions",
+      "Build foundational understanding"
+    ],
+    "intro": "Welcome to this comprehensive lesson on Testing Fundamentals.\n\nLearn about the testing pyramid and how to develop a comprehensive testing strategy that balances different types of tests for optimal coverage and performance.\n\nThroughout this lesson, you'll gain hands-on experience with practical implementations and real-world scenarios. We'll explore both the theoretical foundations and practical applications, ensuring you can immediately apply what you learn.\n\nThis lesson is designed to build upon previous concepts while introducing new techniques that will enhance your development skills. By the end, you'll have a solid understanding of the key principles and be ready to tackle more advanced topics.\n\nThe knowledge gained here will serve as a foundation for subsequent lessons and real-world projects.",
+    "code": {
+      "example": "// Unit test example with Jest\nfunction calculateTotal(items, taxRate = 0.1) {\n  const subtotal = items.reduce((sum, item) => sum + item.price * item.quantity, 0);\n  return subtotal * (1 + taxRate);\n}\n\ndescribe('calculateTotal', () => {\n  test('calculates total correctly with default tax', () => {\n    const items = [\n      { price: 10, quantity: 2 },  // $20\n      { price: 15, quantity: 1 }   // $15\n    ];  // Subtotal: $35, Tax: $3.50, Total: $38.50\n    \n    expect(calculateTotal(items)).toBeCloseTo(38.5);\n  });\n\n  test('calculates total with custom tax rate', () => {\n    const items = [{ price: 100, quantity: 1 }];\n    expect(calculateTotal(items, 0.05)).toBeCloseTo(105);\n  });\n\n  test('handles empty items array', () => {\n    expect(calculateTotal([])).toBeCloseTo(0);\n  });\n});\n\n// Integration test example with Supertest\nconst request = require('supertest');\nconst app = require('../app');\n\ndescribe('API Integration Tests', () => {\n  describe('GET /api/users', () => {\n    test('responds with JSON array of users', async () => {\n      const response = await request(app)\n        .get('/api/users')\n        .expect(200)\n        .expect('Content-Type', /json/);\n        \n      expect(response.body).toBeInstanceOf(Array);\n      expect(response.body[0]).toHaveProperty('id');\n      expect(response.body[0]).toHaveProperty('name');\n    });\n  });\n  \n  describe('POST /api/users', () => {\n    test('creates a new user with valid data', async () => {\n      const newUser = {\n        name: 'John Doe',\n        email: 'john@example.com'\n      };\n      \n      const response = await request(app)\n        .post('/api/users')\n        .send(newUser)\n        .expect(201)\n        .expect('Content-Type', /json/);\n        \n      expect(response.body).toMatchObject({\n        id: expect.any(Number),\n        name: 'John Doe',\n        email: 'john@example.com'\n      });\n    });\n  });\n});",
+      "explanation": "This example produces: Comprehensive unit tests covering normal cases, edge cases, and boundary conditions, along with integration tests for API endpoints\n\nThe code demonstrates practical implementation techniques and shows how the concepts work in real scenarios. Pay attention to the structure and patterns used, as these represent industry best practices.",
+      "language": "javascript"
+    },
+    "pitfalls": [
+      {
+        "mistake": "Not following best practices",
+        "solution": "Review documentation and community guidelines",
+        "severity": "medium"
+      },
+      {
+        "mistake": "Skipping error handling",
+        "solution": "Implement proper error boundaries and validation",
+        "severity": "low"
+      }
+    ],
+    "exercises": [
+      {
+        "title": "Practice: Testing Pyramid and Test Strategies",
+        "description": "Apply the concepts from this lesson on Testing Fundamentals",
+        "checkpoints": [
+          "Understand the core concept",
+          "Implement the example code",
+          "Experiment with variations"
+        ]
+      }
+    ],
+    "next": [],
+    "estimatedMinutes": 25,
+    "difficulty": "Advanced",
+    "tags": [
+      "Testing Fundamentals",
+      "testing"
+    ],
+    "legacy": {
+      "originalId": 1,
+      "originalTopic": "Testing Fundamentals",
+      "migrated": "2025-10-01T06:41:13.489Z"
+    },
+    "lastUpdated": "2025-10-01T06:41:13.489Z",
+    "version": "1.0.0"
+  },
+  {
+    "id": "testing-fundamentals-lesson-2",
+    "moduleSlug": "testing-fundamentals",
+    "title": "Test Structure, Mocking, and Best Practices",
+    "order": 2,
+    "objectives": [
+      "Implement practical solutions",
+      "Build foundational understanding"
+    ],
+    "intro": "Welcome to this comprehensive lesson on Unit Testing.\n\nLearn how to structure tests using the Arrange-Act-Assert pattern, use mocks effectively, and follow best practices for maintainable test code.\n\nThroughout this lesson, you'll gain hands-on experience with practical implementations and real-world scenarios. We'll explore both the theoretical foundations and practical applications, ensuring you can immediately apply what you learn.\n\nThis lesson is designed to build upon previous concepts while introducing new techniques that will enhance your development skills. By the end, you'll have a solid understanding of the key principles and be ready to tackle more advanced topics.\n\nThe knowledge gained here will serve as a foundation for subsequent lessons and real-world projects.",
+    "code": {
+      "example": "// Arrange-Act-Assert pattern with proper test structure\nclass ShoppingCart {\n  constructor() {\n    this.items = [];\n  }\n  \n  addItem(item) {\n    this.items.push(item);\n  }\n  \n  calculateTotal() {\n    return this.items.reduce((total, item) => total + (item.price * item.quantity), 0);\n  }\n  \n  getItemCount() {\n    return this.items.reduce((count, item) => count + item.quantity, 0);\n  }\n  \n  clear() {\n    this.items = [];\n  }\n}\n\ndescribe('ShoppingCart', () => {\n  let cart;\n  \n  beforeEach(() => {\n    // Arrange - Set up fresh state for each test\n    cart = new ShoppingCart();\n  });\n  \n  afterEach(() => {\n    // Clean up after each test if needed\n    cart.clear();\n  });\n  \n  test('calculates total correctly with multiple items', () => {\n    // Arrange\n    cart.addItem({ name: 'Apple', price: 1.5, quantity: 3 });\n    cart.addItem({ name: 'Banana', price: 0.75, quantity: 2 });\n    \n    // Act\n    const total = cart.calculateTotal();\n    \n    // Assert\n    expect(total).toBeCloseTo(6.0); // (1.5 * 3) + (0.75 * 2) = 4.5 + 1.5 = 6.0\n  });\n  \n  test('returns correct item count', () => {\n    // Arrange\n    cart.addItem({ name: 'Book', price: 20, quantity: 1 });\n    cart.addItem({ name: 'Pen', price: 2, quantity: 5 });\n    \n    // Act\n    const count = cart.getItemCount();\n    \n    // Assert\n    expect(count).toBe(6); // 1 + 5 = 6\n  });\n  \n  test('starts with zero items', () => {\n    // Act & Assert\n    expect(cart.getItemCount()).toBe(0);\n    expect(cart.calculateTotal()).toBe(0);\n  });\n});\n\n// Using mocks to isolate units of code\nconst database = require('../database');\nconst emailService = require('../emailService');\nconst userService = require('../userService');\n\n// Mock external dependencies\njest.mock('../database');\njest.mock('../emailService');\n\ndescribe('User service', () => {\n  beforeEach(() => {\n    // Clear all mocks before each test\n    jest.clearAllMocks();\n  });\n  \n  test('sends welcome email after user creation', async () => {\n    // Arrange\n    const userData = { email: 'test@example.com', name: 'Test User' };\n    const mockUser = { id: 1, ...userData };\n    \n    // Mock database save operation\n    database.saveUser.mockResolvedValue(mockUser);\n    \n    // Act\n    const user = await userService.createUser(userData);\n    \n    // Assert\n    expect(database.saveUser).toHaveBeenCalledWith(userData);\n    expect(emailService.sendWelcomeEmail).toHaveBeenCalledWith(mockUser);\n    expect(user).toEqual(mockUser);\n  });\n  \n  test('handles database errors gracefully', async () => {\n    // Arrange\n    const userData = { email: 'test@example.com', name: 'Test User' };\n    const dbError = new Error('Database connection failed');\n    \n    database.saveUser.mockRejectedValue(dbError);\n    \n    // Act & Assert\n    await expect(userService.createUser(userData)).rejects.toThrow('Database connection failed');\n    expect(emailService.sendWelcomeEmail).not.toHaveBeenCalled();\n  });\n});",
+      "explanation": "This example produces: Well-structured tests with clear separation of concerns, proper use of beforeEach/afterEach, and effective mocking strategies\n\nThe code demonstrates practical implementation techniques and shows how the concepts work in real scenarios. Pay attention to the structure and patterns used, as these represent industry best practices.",
+      "language": "javascript"
+    },
+    "pitfalls": [
+      {
+        "mistake": "Not following best practices",
+        "solution": "Review documentation and community guidelines",
+        "severity": "medium"
+      },
+      {
+        "mistake": "Skipping error handling",
+        "solution": "Implement proper error boundaries and validation",
+        "severity": "low"
+      }
+    ],
+    "exercises": [
+      {
+        "title": "Practice: Test Structure, Mocking, and Best Practices",
+        "description": "Apply the concepts from this lesson on Unit Testing",
+        "checkpoints": [
+          "Understand the core concept",
+          "Implement the example code",
+          "Experiment with variations"
+        ]
+      }
+    ],
+    "next": [],
+    "estimatedMinutes": 25,
+    "difficulty": "Intermediate",
+    "tags": [
+      "Unit Testing",
+      "testing"
+    ],
+    "legacy": {
+      "originalId": 2,
+      "originalTopic": "Unit Testing",
+      "migrated": "2025-10-01T06:41:13.489Z"
+    },
+    "lastUpdated": "2025-10-01T06:41:13.489Z",
+    "version": "1.0.0"
+  },
+  {
+    "id": "testing-fundamentals-lesson-3",
+    "moduleSlug": "testing-fundamentals",
+    "title": "Advanced Mocking and Testing Asynchronous Code",
+    "order": 3,
+    "objectives": [
+      "Implement practical solutions",
+      "Build foundational understanding"
+    ],
+    "intro": "Welcome to this comprehensive lesson on Unit Testing.\n\nLearn advanced mocking techniques and how to effectively test asynchronous code, promises, and complex interactions.\n\nThroughout this lesson, you'll gain hands-on experience with practical implementations and real-world scenarios. We'll explore both the theoretical foundations and practical applications, ensuring you can immediately apply what you learn.\n\nThis lesson is designed to build upon previous concepts while introducing new techniques that will enhance your development skills. By the end, you'll have a solid understanding of the key principles and be ready to tackle more advanced topics.\n\nThe knowledge gained here will serve as a foundation for subsequent lessons and real-world projects.",
+    "code": {
+      "example": "// Testing asynchronous code with async/await\nconst apiClient = require('../apiClient');\n\njest.mock('../apiClient');\n\ndescribe('API Service', () => {\n  beforeEach(() => {\n    jest.clearAllMocks();\n  });\n  \n  test('fetches user data successfully', async () => {\n    // Arrange\n    const userId = 123;\n    const mockUser = { id: 123, name: 'John Doe', email: 'john@example.com' };\n    apiClient.getUser.mockResolvedValue(mockUser);\n    \n    // Act\n    const user = await apiClient.getUser(userId);\n    \n    // Assert\n    expect(apiClient.getUser).toHaveBeenCalledWith(userId);\n    expect(user).toEqual(mockUser);\n  });\n  \n  test('handles API errors gracefully', async () => {\n    // Arrange\n    const userId = 123;\n    const apiError = new Error('User not found');\n    apiClient.getUser.mockRejectedValue(apiError);\n    \n    // Act & Assert\n    await expect(apiClient.getUser(userId)).rejects.toThrow('User not found');\n  });\n  \n  test('retries failed requests', async () => {\n    // Arrange\n    const userId = 123;\n    const networkError = new Error('Network error');\n    const mockUser = { id: 123, name: 'John Doe' };\n    \n    // First call fails, second succeeds\n    apiClient.getUser\n      .mockRejectedValueOnce(networkError)\n      .mockResolvedValueOnce(mockUser);\n    \n    // Act\n    const user = await apiClient.getUser(userId);\n    \n    // Assert\n    expect(apiClient.getUser).toHaveBeenCalledTimes(2);\n    expect(user).toEqual(mockUser);\n  });\n});\n\n// Mocking modules with complex behavior\nconst fs = require('fs');\nconst fileProcessor = require('../fileProcessor');\n\njest.mock('fs');\n\ndescribe('File Processor', () => {\n  beforeEach(() => {\n    jest.clearAllMocks();\n  });\n  \n  test('processes file successfully', async () => {\n    // Arrange\n    const filePath = '/path/to/file.txt';\n    const fileContent = 'Hello, World!';\n    const processedContent = 'HELLO, WORLD!';\n    \n    // Mock fs.readFile to return specific content\n    fs.readFile.mockImplementation((path, encoding, callback) => {\n      callback(null, fileContent);\n    });\n    \n    // Act\n    const result = await fileProcessor.processFile(filePath);\n    \n    // Assert\n    expect(fs.readFile).toHaveBeenCalledWith(\n      filePath, \n      'utf8', \n      expect.any(Function)\n    );\n    expect(result).toBe(processedContent);\n  });\n  \n  test('handles file read errors', async () => {\n    // Arrange\n    const filePath = '/path/to/nonexistent.txt';\n    const fileError = new Error('ENOENT: no such file or directory');\n    \n    fs.readFile.mockImplementation((path, encoding, callback) => {\n      callback(fileError, null);\n    });\n    \n    // Act & Assert\n    await expect(fileProcessor.processFile(filePath)).rejects.toThrow('File processing failed');\n  });\n});\n\n// Testing time-dependent code\njest.useFakeTimers();\n\nfunction delayedGreeting(name, delay) {\n  return new Promise(resolve => {\n    setTimeout(() => {\n      resolve(`Hello, ${name}!`);\n    }, delay);\n  });\n}\n\ntest('resolves after specified delay', async () => {\n  // Arrange\n  const name = 'John';\n  const delay = 5000;\n  \n  // Act\n  const greetingPromise = delayedGreeting(name, delay);\n  \n  // Fast-forward until all timers are executed\n  jest.advanceTimersByTime(delay);\n  \n  // Assert\n  await expect(greetingPromise).resolves.toBe('Hello, John!');\n});",
+      "explanation": "This example produces: Advanced testing techniques for asynchronous code, complex mocking scenarios, and time-dependent functionality\n\nThe code demonstrates practical implementation techniques and shows how the concepts work in real scenarios. Pay attention to the structure and patterns used, as these represent industry best practices.",
+      "language": "javascript"
+    },
+    "pitfalls": [
+      {
+        "mistake": "Not following best practices",
+        "solution": "Review documentation and community guidelines",
+        "severity": "medium"
+      },
+      {
+        "mistake": "Skipping error handling",
+        "solution": "Implement proper error boundaries and validation",
+        "severity": "low"
+      }
+    ],
+    "exercises": [
+      {
+        "title": "Practice: Advanced Mocking and Testing Asynchronous Code",
+        "description": "Apply the concepts from this lesson on Unit Testing",
+        "checkpoints": [
+          "Understand the core concept",
+          "Implement the example code",
+          "Experiment with variations"
+        ]
+      }
+    ],
+    "next": [],
+    "estimatedMinutes": 25,
+    "difficulty": "Advanced",
+    "tags": [
+      "Unit Testing",
+      "testing"
+    ],
+    "legacy": {
+      "originalId": 3,
+      "originalTopic": "Unit Testing",
+      "migrated": "2025-10-01T06:41:13.489Z"
+    },
+    "lastUpdated": "2025-10-01T06:41:13.489Z",
+    "version": "1.0.0"
+  },
+  {
+    "id": "testing-fundamentals-lesson-4",
+    "moduleSlug": "testing-fundamentals",
+    "title": "API Testing and Database Integration Tests",
+    "order": 4,
+    "objectives": [
+      "Implement practical solutions",
+      "Build foundational understanding"
+    ],
+    "intro": "Welcome to this comprehensive lesson on Integration Testing.\n\nLearn how to write comprehensive integration tests for APIs and database interactions, including setup and teardown strategies.\n\nThroughout this lesson, you'll gain hands-on experience with practical implementations and real-world scenarios. We'll explore both the theoretical foundations and practical applications, ensuring you can immediately apply what you learn.\n\nThis lesson is designed to build upon previous concepts while introducing new techniques that will enhance your development skills. By the end, you'll have a solid understanding of the key principles and be ready to tackle more advanced topics.\n\nThe knowledge gained here will serve as a foundation for subsequent lessons and real-world projects.",
+    "code": {
+      "example": "// Testing REST API endpoints with different scenarios\nconst request = require('supertest');\nconst app = require('../app');\nconst db = require('../database');\n\n// Setup and teardown for integration tests\ndescribe('User API Integration Tests', () => {\n  beforeAll(async () => {\n    // Setup database connection\n    await db.connect();\n  });\n  \n  afterAll(async () => {\n    // Close database connection\n    await db.close();\n  });\n  \n  beforeEach(async () => {\n    // Clear test data before each test\n    await db.clearUsers();\n  });\n  \n  describe('POST /api/users', () => {\n    test('creates a new user with valid data', async () => {\n      const userData = {\n        name: 'John Doe',\n        email: 'john@example.com',\n        password: 'password123'\n      };\n      \n      const response = await request(app)\n        .post('/api/users')\n        .send(userData)\n        .expect(201)\n        .expect('Content-Type', /json/);\n        \n      expect(response.body).toMatchObject({\n        id: expect.any(Number),\n        name: userData.name,\n        email: userData.email\n      });\n      \n      // Password should not be returned\n      expect(response.body).not.toHaveProperty('password');\n      \n      // Verify user was actually saved to database\n      const savedUser = await db.findUserById(response.body.id);\n      expect(savedUser).toMatchObject({\n        name: userData.name,\n        email: userData.email\n      });\n    });\n    \n    test('returns 400 for invalid email', async () => {\n      const invalidData = {\n        name: 'John Doe',\n        email: 'invalid-email',\n        password: 'password123'\n      };\n      \n      const response = await request(app)\n        .post('/api/users')\n        .send(invalidData)\n        .expect(400)\n        .expect('Content-Type', /json/);\n        \n      expect(response.body).toHaveProperty('error');\n      \n      // Verify no user was created\n      const users = await db.findAllUsers();\n      expect(users).toHaveLength(0);\n    });\n    \n    test('returns 409 for duplicate email', async () => {\n      // First, create a user\n      await db.createUser({\n        name: 'Existing User',\n        email: 'duplicate@example.com',\n        password: 'password123'\n      });\n      \n      // Try to create another user with same email\n      const userData = {\n        name: 'New User',\n        email: 'duplicate@example.com',\n        password: 'password456'\n      };\n      \n      const response = await request(app)\n        .post('/api/users')\n        .send(userData)\n        .expect(409)\n        .expect('Content-Type', /json/);\n        \n      expect(response.body).toHaveProperty('error', 'Email already exists');\n    });\n  });\n  \n  describe('GET /api/users/:id', () => {\n    test('returns user by ID', async () => {\n      // First, create a user\n      const user = await db.createUser({\n        name: 'Test User',\n        email: 'test@example.com',\n        password: 'password123'\n      });\n      \n      const response = await request(app)\n        .get(`/api/users/${user.id}`)\n        .expect(200)\n        .expect('Content-Type', /json/);\n        \n      expect(response.body).toMatchObject({\n        id: user.id,\n        name: user.name,\n        email: user.email\n      });\n    });\n    \n    test('returns 404 for non-existent user', async () => {\n      await request(app)\n        .get('/api/users/99999')\n        .expect(404);\n    });\n  });\n});",
+      "explanation": "This example produces: Comprehensive API integration tests covering success cases, validation errors, and edge cases with proper database setup and teardown\n\nThe code demonstrates practical implementation techniques and shows how the concepts work in real scenarios. Pay attention to the structure and patterns used, as these represent industry best practices.",
+      "language": "javascript"
+    },
+    "pitfalls": [
+      {
+        "mistake": "Not following best practices",
+        "solution": "Review documentation and community guidelines",
+        "severity": "medium"
+      },
+      {
+        "mistake": "Skipping error handling",
+        "solution": "Implement proper error boundaries and validation",
+        "severity": "low"
+      }
+    ],
+    "exercises": [
+      {
+        "title": "Practice: API Testing and Database Integration Tests",
+        "description": "Apply the concepts from this lesson on Integration Testing",
+        "checkpoints": [
+          "Understand the core concept",
+          "Implement the example code",
+          "Experiment with variations"
+        ]
+      }
+    ],
+    "next": [],
+    "estimatedMinutes": 25,
+    "difficulty": "Intermediate",
+    "tags": [
+      "Integration Testing",
+      "testing"
+    ],
+    "legacy": {
+      "originalId": 4,
+      "originalTopic": "Integration Testing",
+      "migrated": "2025-10-01T06:41:13.489Z"
+    },
+    "lastUpdated": "2025-10-01T06:41:13.489Z",
+    "version": "1.0.0"
+  },
+  {
+    "id": "testing-fundamentals-lesson-5",
+    "moduleSlug": "testing-fundamentals",
+    "title": "Cypress Advanced Patterns and Best Practices",
+    "order": 5,
+    "objectives": [
+      "Implement practical solutions",
+      "Build foundational understanding"
+    ],
+    "intro": "Welcome to this comprehensive lesson on End-to-End Testing.\n\nLearn advanced Cypress patterns, custom commands, and best practices for robust end-to-end testing of web applications.\n\nThroughout this lesson, you'll gain hands-on experience with practical implementations and real-world scenarios. We'll explore both the theoretical foundations and practical applications, ensuring you can immediately apply what you learn.\n\nThis lesson is designed to build upon previous concepts while introducing new techniques that will enhance your development skills. By the end, you'll have a solid understanding of the key principles and be ready to tackle more advanced topics.\n\nThe knowledge gained here will serve as a foundation for subsequent lessons and real-world projects.",
+    "code": {
+      "example": "// Cypress E2E test with custom commands and advanced patterns\ndescribe('E-Commerce Application', () => {\n  beforeEach(() => {\n    // Custom command to reset database and seed test data\n    cy.task('seedDatabase');\n    cy.visit('/');\n  });\n  \n  afterEach(() => {\n    // Take screenshot on test failure\n    if (this.currentTest.state === 'failed') {\n      cy.screenshot(`failure-${this.currentTest.title}`);\n    }\n  });\n  \n  it('allows users to complete a purchase flow', () => {\n    // Custom command for login\n    cy.login('user@example.com', 'password123');\n    \n    // Navigate to products page\n    cy.get('[data-cy=nav-products]').click();\n    \n    // Search for a product\n    cy.get('[data-cy=search-input]').type('laptop');\n    cy.get('[data-cy=search-button]').click();\n    \n    // Add product to cart\n    cy.get('[data-cy=product-item]').first().within(() => {\n      cy.get('[data-cy=add-to-cart]').click();\n    });\n    \n    // Go to cart\n    cy.get('[data-cy=cart-link]').click();\n    \n    // Verify cart contents\n    cy.get('[data-cy=cart-items]').should('have.length', 1);\n    cy.get('[data-cy=cart-total]').should('contain', '$999.99');\n    \n    // Proceed to checkout\n    cy.get('[data-cy=checkout-button]').click();\n    \n    // Fill shipping information\n    cy.get('[data-cy=shipping-form]').within(() => {\n      cy.get('[data-cy=first-name]').type('John');\n      cy.get('[data-cy=last-name]').type('Doe');\n      cy.get('[data-cy=address]').type('123 Main St');\n      cy.get('[data-cy=city]').type('New York');\n      cy.get('[data-cy=zip-code]').type('10001');\n      cy.get('[data-cy=submit]').click();\n    });\n    \n    // Confirm order\n    cy.get('[data-cy=order-summary]').should('be.visible');\n    cy.get('[data-cy=confirm-order]').click();\n    \n    // Verify success message\n    cy.get('[data-cy=order-success]').should('contain', 'Order placed successfully');\n    cy.get('[data-cy=order-number]').should('contain', 'ORD-');\n  });\n  \n  it('shows error for invalid coupon code', () => {\n    cy.login('user@example.com', 'password123');\n    \n    // Add item to cart\n    cy.get('[data-cy=nav-products]').click();\n    cy.get('[data-cy=product-item]').first().within(() => {\n      cy.get('[data-cy=add-to-cart]').click();\n    });\n    \n    // Go to cart\n    cy.get('[data-cy=cart-link]').click();\n    \n    // Apply invalid coupon\n    cy.get('[data-cy=coupon-input]').type('INVALID');\n    cy.get('[data-cy=apply-coupon]').click();\n    \n    // Verify error message\n    cy.get('[data-cy=coupon-error]').should('be.visible')\n      .and('contain', 'Invalid coupon code');\n  });\n  \n  it('handles network errors gracefully', () => {\n    // Intercept API calls and simulate network failure\n    cy.intercept('POST', '/api/checkout', {\n      statusCode: 500,\n      body: { error: 'Internal server error' }\n    }).as('checkoutRequest');\n    \n    cy.login('user@example.com', 'password123');\n    \n    // Add item to cart and proceed to checkout\n    cy.get('[data-cy=nav-products]').click();\n    cy.get('[data-cy=product-item]').first().within(() => {\n      cy.get('[data-cy=add-to-cart]').click();\n    });\n    cy.get('[data-cy=cart-link]').click();\n    cy.get('[data-cy=checkout-button]').click();\n    \n    // Fill shipping information\n    cy.get('[data-cy=shipping-form]').within(() => {\n      cy.get('[data-cy=first-name]').type('John');\n      cy.get('[data-cy=last-name]').type('Doe');\n      cy.get('[data-cy=address]').type('123 Main St');\n      cy.get('[data-cy=city]').type('New York');\n      cy.get('[data-cy=zip-code]').type('10001');\n      cy.get('[data-cy=submit]').click();\n    });\n    \n    // Confirm order (will fail due to network error)\n    cy.get('[data-cy=confirm-order]').click();\n    \n    // Verify error handling\n    cy.get('[data-cy=error-message]').should('be.visible')\n      .and('contain', 'Unable to process your order');\n  });\n});\n\n// Custom Cypress commands (in cypress/support/commands.js)\nCypress.Commands.add('login', (email, password) => {\n  cy.visit('/login');\n  cy.get('[data-cy=email]').type(email);\n  cy.get('[data-cy=password]').type(password);\n  cy.get('[data-cy=submit]').click();\n  cy.get('[data-cy=dashboard]').should('be.visible');\n});\n\n// Custom tasks for database operations (in cypress/plugins/index.js)\nmodule.exports = (on, config) => {\n  on('task', {\n    seedDatabase() {\n      // Reset database and insert test data\n      return seedDatabase();\n    },\n    \n    resetDatabase() {\n      // Clear all data\n      return resetDatabase();\n    }\n  });\n};",
+      "explanation": "This example produces: Advanced end-to-end tests with custom commands, proper error handling, network interception, and comprehensive user flow testing\n\nThe code demonstrates practical implementation techniques and shows how the concepts work in real scenarios. Pay attention to the structure and patterns used, as these represent industry best practices.",
+      "language": "javascript"
+    },
+    "pitfalls": [
+      {
+        "mistake": "Not following best practices",
+        "solution": "Review documentation and community guidelines",
+        "severity": "medium"
+      },
+      {
+        "mistake": "Skipping error handling",
+        "solution": "Implement proper error boundaries and validation",
+        "severity": "low"
+      }
+    ],
+    "exercises": [
+      {
+        "title": "Practice: Cypress Advanced Patterns and Best Practices",
+        "description": "Apply the concepts from this lesson on End-to-End Testing",
+        "checkpoints": [
+          "Understand the core concept",
+          "Implement the example code",
+          "Experiment with variations"
+        ]
+      }
+    ],
+    "next": [],
+    "estimatedMinutes": 25,
+    "difficulty": "Advanced",
+    "tags": [
+      "End-to-End Testing",
+      "testing"
+    ],
+    "legacy": {
+      "originalId": 5,
+      "originalTopic": "End-to-End Testing",
+      "migrated": "2025-10-01T06:41:13.489Z"
+    },
+    "lastUpdated": "2025-10-01T06:41:13.489Z",
+    "version": "1.0.0"
+  },
+  {
+    "id": "testing-fundamentals-lesson-6",
+    "moduleSlug": "testing-fundamentals",
+    "title": "Load Testing and Performance Metrics",
+    "order": 6,
+    "objectives": [
+      "Implement practical solutions",
+      "Build foundational understanding"
+    ],
+    "intro": "Welcome to this comprehensive lesson on Performance Testing.\n\nLearn how to conduct load testing and measure application performance under various conditions.\n\nThroughout this lesson, you'll gain hands-on experience with practical implementations and real-world scenarios. We'll explore both the theoretical foundations and practical applications, ensuring you can immediately apply what you learn.\n\nThis lesson is designed to build upon previous concepts while introducing new techniques that will enhance your development skills. By the end, you'll have a solid understanding of the key principles and be ready to tackle more advanced topics.\n\nThe knowledge gained here will serve as a foundation for subsequent lessons and real-world projects.",
+    "code": {
+      "example": "// Performance testing with Jest\nconst { performance } = require('perf_hooks');\n\nfunction measurePerformance(fn, iterations = 1000) {\n  const times = [];\n  \n  for (let i = 0; i < iterations; i++) {\n    const start = performance.now();\n    fn();\n    const end = performance.now();\n    times.push(end - start);\n  }\n  \n  const avg = times.reduce((sum, time) => sum + time, 0) / times.length;\n  const min = Math.min(...times);\n  const max = Math.max(...times);\n  \n  return { avg, min, max };\n}\n\ndescribe('Performance Tests', () => {\n  test('array processing completes within acceptable time', () => {\n    const largeArray = Array.from({ length: 10000 }, (_, i) => i);\n    \n    const stats = measurePerformance(() => {\n      largeArray.filter(n => n % 2 === 0).map(n => n * 2);\n    }, 100);\n    \n    expect(stats.avg).toBeLessThan(5);\n    expect(stats.max).toBeLessThan(20);\n  });\n});",
+      "explanation": "This example produces: Performance measurement tools for identifying bottlenecks and ensuring acceptable response times\n\nThe code demonstrates practical implementation techniques and shows how the concepts work in real scenarios. Pay attention to the structure and patterns used, as these represent industry best practices.",
+      "language": "javascript"
+    },
+    "pitfalls": [
+      {
+        "mistake": "Not following best practices",
+        "solution": "Review documentation and community guidelines",
+        "severity": "medium"
+      },
+      {
+        "mistake": "Skipping error handling",
+        "solution": "Implement proper error boundaries and validation",
+        "severity": "low"
+      }
+    ],
+    "exercises": [
+      {
+        "title": "Practice: Load Testing and Performance Metrics",
+        "description": "Apply the concepts from this lesson on Performance Testing",
+        "checkpoints": [
+          "Understand the core concept",
+          "Implement the example code",
+          "Experiment with variations"
+        ]
+      }
+    ],
+    "next": [],
+    "estimatedMinutes": 25,
+    "difficulty": "Advanced",
+    "tags": [
+      "Performance Testing",
+      "testing"
+    ],
+    "legacy": {
+      "originalId": 6,
+      "originalTopic": "Performance Testing",
+      "migrated": "2025-10-01T06:41:13.489Z"
+    },
+    "lastUpdated": "2025-10-01T06:41:13.489Z",
+    "version": "1.0.0"
+  },
+  {
+    "id": "testing-fundamentals-lesson-7",
+    "moduleSlug": "testing-fundamentals",
+    "title": "Test Data Factories and Fixtures",
+    "order": 7,
+    "objectives": [
+      "Implement practical solutions",
+      "Build foundational understanding"
+    ],
+    "intro": "Welcome to this comprehensive lesson on Test Data Management.\n\nLearn how to manage test data effectively using factories, fixtures, and data builders.\n\nThroughout this lesson, you'll gain hands-on experience with practical implementations and real-world scenarios. We'll explore both the theoretical foundations and practical applications, ensuring you can immediately apply what you learn.\n\nThis lesson is designed to build upon previous concepts while introducing new techniques that will enhance your development skills. By the end, you'll have a solid understanding of the key principles and be ready to tackle more advanced topics.\n\nThe knowledge gained here will serve as a foundation for subsequent lessons and real-world projects.",
+    "code": {
+      "example": "// Test data factory pattern\nclass UserFactory {\n  static create(overrides = {}) {\n    return {\n      id: Math.floor(Math.random() * 10000),\n      name: 'John Doe',\n      email: `user${Date.now()}@example.com`,\n      age: 25,\n      isActive: true,\n      createdAt: new Date(),\n      ...overrides\n    };\n  }\n  \n  static createMany(count, overrides = {}) {\n    return Array.from({ length: count }, (_, index) => \n      this.create({ ...overrides, id: index + 1 })\n    );\n  }\n  \n  static createAdmin(overrides = {}) {\n    return this.create({\n      role: 'admin',\n      permissions: ['read', 'write', 'delete'],\n      ...overrides\n    });\n  }\n}\n\n// Builder pattern for complex objects\nclass OrderBuilder {\n  constructor() {\n    this.order = {\n      id: Math.floor(Math.random() * 10000),\n      status: 'pending',\n      items: [],\n      total: 0\n    };\n  }\n  \n  withItem(name, price, quantity = 1) {\n    const item = { name, price, quantity };\n    this.order.items.push(item);\n    this.order.total += price * quantity;\n    return this;\n  }\n  \n  build() {\n    return { ...this.order };\n  }\n}\n\n// Usage in tests\nconst order = new OrderBuilder()\n  .withItem('Laptop', 999.99)\n  .withItem('Mouse', 29.99, 2)\n  .build();",
+      "explanation": "This example produces: Flexible test data creation with factories and builders for maintainable test suites\n\nThe code demonstrates practical implementation techniques and shows how the concepts work in real scenarios. Pay attention to the structure and patterns used, as these represent industry best practices.",
+      "language": "javascript"
+    },
+    "pitfalls": [
+      {
+        "mistake": "Not following best practices",
+        "solution": "Review documentation and community guidelines",
+        "severity": "medium"
+      },
+      {
+        "mistake": "Skipping error handling",
+        "solution": "Implement proper error boundaries and validation",
+        "severity": "low"
+      }
+    ],
+    "exercises": [
+      {
+        "title": "Practice: Test Data Factories and Fixtures",
+        "description": "Apply the concepts from this lesson on Test Data Management",
+        "checkpoints": [
+          "Understand the core concept",
+          "Implement the example code",
+          "Experiment with variations"
+        ]
+      }
+    ],
+    "next": [],
+    "estimatedMinutes": 25,
+    "difficulty": "Intermediate",
+    "tags": [
+      "Test Data Management",
+      "testing"
+    ],
+    "legacy": {
+      "originalId": 7,
+      "originalTopic": "Test Data Management",
+      "migrated": "2025-10-01T06:41:13.489Z"
+    },
+    "lastUpdated": "2025-10-01T06:41:13.489Z",
+    "version": "1.0.0"
+  },
+  {
+    "id": "testing-fundamentals-lesson-8",
+    "moduleSlug": "testing-fundamentals",
+    "title": "Visual Regression Testing",
+    "order": 8,
+    "objectives": [
+      "Implement practical solutions",
+      "Build foundational understanding"
+    ],
+    "intro": "Welcome to this comprehensive lesson on Visual Testing.\n\nLearn how to implement visual regression testing to catch UI changes.\n\nThroughout this lesson, you'll gain hands-on experience with practical implementations and real-world scenarios. We'll explore both the theoretical foundations and practical applications, ensuring you can immediately apply what you learn.\n\nThis lesson is designed to build upon previous concepts while introducing new techniques that will enhance your development skills. By the end, you'll have a solid understanding of the key principles and be ready to tackle more advanced topics.\n\nThe knowledge gained here will serve as a foundation for subsequent lessons and real-world projects.",
+    "code": {
+      "example": "// Visual testing with Puppeteer\nconst puppeteer = require('puppeteer');\nconst pixelmatch = require('pixelmatch');\nconst { PNG } = require('pngjs');\nconst fs = require('fs');\n\nclass VisualTester {\n  async captureScreenshot(url, filename) {\n    const browser = await puppeteer.launch();\n    const page = await browser.newPage();\n    await page.setViewport({ width: 1200, height: 800 });\n    await page.goto(url);\n    await page.screenshot({ path: filename });\n    await browser.close();\n  }\n  \n  async compareScreenshots(baseline, current, diff) {\n    const img1 = PNG.sync.read(fs.readFileSync(baseline));\n    const img2 = PNG.sync.read(fs.readFileSync(current));\n    const { width, height } = img1;\n    const diffImg = new PNG({ width, height });\n    \n    const numDiffPixels = pixelmatch(\n      img1.data, img2.data, diffImg.data, width, height\n    );\n    \n    fs.writeFileSync(diff, PNG.sync.write(diffImg));\n    return (numDiffPixels / (width * height)) * 100;\n  }\n}\n\n// Test usage\ntest('homepage visual regression', async () => {\n  const tester = new VisualTester();\n  await tester.captureScreenshot('http://localhost:3000', 'current.png');\n  \n  if (fs.existsSync('baseline.png')) {\n    const diffPercent = await tester.compareScreenshots(\n      'baseline.png', 'current.png', 'diff.png'\n    );\n    expect(diffPercent).toBeLessThan(2);\n  }\n});",
+      "explanation": "This example produces: Visual regression testing with screenshot comparison and diff generation\n\nThe code demonstrates practical implementation techniques and shows how the concepts work in real scenarios. Pay attention to the structure and patterns used, as these represent industry best practices.",
+      "language": "javascript"
+    },
+    "pitfalls": [
+      {
+        "mistake": "Not following best practices",
+        "solution": "Review documentation and community guidelines",
+        "severity": "medium"
+      },
+      {
+        "mistake": "Skipping error handling",
+        "solution": "Implement proper error boundaries and validation",
+        "severity": "low"
+      }
+    ],
+    "exercises": [
+      {
+        "title": "Practice: Visual Regression Testing",
+        "description": "Apply the concepts from this lesson on Visual Testing",
+        "checkpoints": [
+          "Understand the core concept",
+          "Implement the example code",
+          "Experiment with variations"
+        ]
+      }
+    ],
+    "next": [],
+    "estimatedMinutes": 25,
+    "difficulty": "Intermediate",
+    "tags": [
+      "Visual Testing",
+      "testing"
+    ],
+    "legacy": {
+      "originalId": 8,
+      "originalTopic": "Visual Testing",
+      "migrated": "2025-10-01T06:41:13.489Z"
+    },
+    "lastUpdated": "2025-10-01T06:41:13.489Z",
+    "version": "1.0.0"
+  },
+  {
+    "id": "testing-fundamentals-lesson-9",
+    "moduleSlug": "testing-fundamentals",
+    "title": "Security Vulnerability Testing",
+    "order": 9,
+    "objectives": [
+      "Implement practical solutions",
+      "Build foundational understanding"
+    ],
+    "intro": "Welcome to this comprehensive lesson on Security Testing.\n\nLearn how to test for common security vulnerabilities.\n\nThroughout this lesson, you'll gain hands-on experience with practical implementations and real-world scenarios. We'll explore both the theoretical foundations and practical applications, ensuring you can immediately apply what you learn.\n\nThis lesson is designed to build upon previous concepts while introducing new techniques that will enhance your development skills. By the end, you'll have a solid understanding of the key principles and be ready to tackle more advanced topics.\n\nThe knowledge gained here will serve as a foundation for subsequent lessons and real-world projects.",
+    "code": {
+      "example": "// Security testing examples\nconst request = require('supertest');\nconst app = require('../app');\n\ndescribe('Security Tests', () => {\n  test('prevents SQL injection', async () => {\n    const maliciousPayload = {\n      email: \"'; DROP TABLE users; --\",\n      password: \"password\"\n    };\n    \n    const response = await request(app)\n      .post('/api/auth/login')\n      .send(maliciousPayload)\n      .expect(400);\n    \n    expect(response.body.error).toContain('Invalid');\n  });\n  \n  test('sanitizes XSS attempts', async () => {\n    const xssPayload = {\n      name: '<script>alert(\"XSS\")</script>',\n      bio: '<img src=x onerror=alert(\"XSS\")>'\n    };\n    \n    const response = await request(app)\n      .post('/api/users/profile')\n      .set('Authorization', 'Bearer valid-token')\n      .send(xssPayload)\n      .expect(200);\n    \n    expect(response.body.name).not.toContain('<script>');\n    expect(response.body.name).toBe('&lt;script&gt;alert(\"XSS\")&lt;/script&gt;');\n  });\n  \n  test('enforces rate limiting', async () => {\n    const attempts = [];\n    for (let i = 0; i < 6; i++) {\n      attempts.push(\n        request(app)\n          .post('/api/auth/login')\n          .send({ email: 'test@example.com', password: 'wrong' })\n      );\n    }\n    \n    const responses = await Promise.all(attempts);\n    expect(responses[5].status).toBe(429);\n  });\n});",
+      "explanation": "This example produces: Security testing covering SQL injection, XSS protection, and rate limiting\n\nThe code demonstrates practical implementation techniques and shows how the concepts work in real scenarios. Pay attention to the structure and patterns used, as these represent industry best practices.",
+      "language": "javascript"
+    },
+    "pitfalls": [
+      {
+        "mistake": "Not following best practices",
+        "solution": "Review documentation and community guidelines",
+        "severity": "medium"
+      },
+      {
+        "mistake": "Skipping error handling",
+        "solution": "Implement proper error boundaries and validation",
+        "severity": "low"
+      }
+    ],
+    "exercises": [
+      {
+        "title": "Practice: Security Vulnerability Testing",
+        "description": "Apply the concepts from this lesson on Security Testing",
+        "checkpoints": [
+          "Understand the core concept",
+          "Implement the example code",
+          "Experiment with variations"
+        ]
+      }
+    ],
+    "next": [],
+    "estimatedMinutes": 25,
+    "difficulty": "Intermediate",
+    "tags": [
+      "Security Testing",
+      "testing"
+    ],
+    "legacy": {
+      "originalId": 9,
+      "originalTopic": "Security Testing",
+      "migrated": "2025-10-01T06:41:13.489Z"
+    },
+    "lastUpdated": "2025-10-01T06:41:13.489Z",
+    "version": "1.0.0"
+  },
+  {
+    "id": "testing-fundamentals-lesson-10",
+    "moduleSlug": "testing-fundamentals",
+    "title": "Code Coverage Analysis",
+    "order": 10,
+    "objectives": [
+      "Implement practical solutions",
+      "Build foundational understanding"
+    ],
+    "intro": "Welcome to this comprehensive lesson on Test Coverage.\n\nLearn how to measure and analyze test coverage effectively.\n\nThroughout this lesson, you'll gain hands-on experience with practical implementations and real-world scenarios. We'll explore both the theoretical foundations and practical applications, ensuring you can immediately apply what you learn.\n\nThis lesson is designed to build upon previous concepts while introducing new techniques that will enhance your development skills. By the end, you'll have a solid understanding of the key principles and be ready to tackle more advanced topics.\n\nThe knowledge gained here will serve as a foundation for subsequent lessons and real-world projects.",
+    "code": {
+      "example": "// Jest coverage configuration\nmodule.exports = {\n  collectCoverage: true,\n  coverageDirectory: 'coverage',\n  coverageReporters: ['text', 'lcov', 'html'],\n  collectCoverageFrom: [\n    'src/**/*.{js,jsx}',\n    '!src/**/*.test.{js,jsx}'\n  ],\n  coverageThreshold: {\n    global: {\n      branches: 80,\n      functions: 80,\n      lines: 80,\n      statements: 80\n    }\n  }\n};\n\n// Example testing all branches\nfunction calculateDiscount(price, customerType, loyaltyYears) {\n  let discount = 0;\n  \n  if (customerType === 'premium') {\n    discount += 0.2;\n  } else if (customerType === 'gold') {\n    discount += 0.15;\n  }\n  \n  if (loyaltyYears >= 5) {\n    discount += 0.05;\n  }\n  \n  return price * (1 - Math.min(discount, 0.3));\n}\n\n// Comprehensive test coverage\ndescribe('calculateDiscount', () => {\n  test('premium customer discount', () => {\n    expect(calculateDiscount(100, 'premium', 0)).toBe(80);\n  });\n  \n  test('gold customer discount', () => {\n    expect(calculateDiscount(100, 'gold', 0)).toBe(85);\n  });\n  \n  test('loyalty bonus', () => {\n    expect(calculateDiscount(100, 'premium', 5)).toBe(75);\n  });\n  \n  test('discount cap', () => {\n    expect(calculateDiscount(100, 'premium', 10)).toBe(70);\n  });\n});",
+      "explanation": "This example produces: Code coverage configuration with branch testing and threshold enforcement\n\nThe code demonstrates practical implementation techniques and shows how the concepts work in real scenarios. Pay attention to the structure and patterns used, as these represent industry best practices.",
+      "language": "javascript"
+    },
+    "pitfalls": [
+      {
+        "mistake": "Not following best practices",
+        "solution": "Review documentation and community guidelines",
+        "severity": "medium"
+      },
+      {
+        "mistake": "Skipping error handling",
+        "solution": "Implement proper error boundaries and validation",
+        "severity": "low"
+      }
+    ],
+    "exercises": [
+      {
+        "title": "Practice: Code Coverage Analysis",
+        "description": "Apply the concepts from this lesson on Test Coverage",
+        "checkpoints": [
+          "Understand the core concept",
+          "Implement the example code",
+          "Experiment with variations"
+        ]
+      }
+    ],
+    "next": [],
+    "estimatedMinutes": 25,
+    "difficulty": "Intermediate",
+    "tags": [
+      "Test Coverage",
+      "testing"
+    ],
+    "legacy": {
+      "originalId": 10,
+      "originalTopic": "Test Coverage",
+      "migrated": "2025-10-01T06:41:13.489Z"
+    },
+    "lastUpdated": "2025-10-01T06:41:13.489Z",
+    "version": "1.0.0"
+  },
+  {
+    "id": "testing-fundamentals-lesson-11",
+    "moduleSlug": "testing-fundamentals",
+    "title": "API Contract Testing",
+    "order": 11,
+    "objectives": [
+      "Implement practical solutions",
+      "Build foundational understanding"
+    ],
+    "intro": "Welcome to this comprehensive lesson on Contract Testing.\n\nLearn how to implement contract testing for API compatibility.\n\nThroughout this lesson, you'll gain hands-on experience with practical implementations and real-world scenarios. We'll explore both the theoretical foundations and practical applications, ensuring you can immediately apply what you learn.\n\nThis lesson is designed to build upon previous concepts while introducing new techniques that will enhance your development skills. By the end, you'll have a solid understanding of the key principles and be ready to tackle more advanced topics.\n\nThe knowledge gained here will serve as a foundation for subsequent lessons and real-world projects.",
+    "code": {
+      "example": "// Consumer contract test with Pact\nconst { Pact } = require('@pact-foundation/pact');\nconst { like, eachLike } = require('@pact-foundation/pact').Matchers;\n\nconst mockProvider = new Pact({\n  consumer: 'UserInterface',\n  provider: 'UserService',\n  port: 1234\n});\n\ndescribe('User Service Contract', () => {\n  beforeAll(() => mockProvider.setup());\n  afterEach(() => mockProvider.verify());\n  afterAll(() => mockProvider.finalize());\n  \n  test('gets users successfully', async () => {\n    await mockProvider\n      .given('users exist')\n      .uponReceiving('a request for users')\n      .withRequest({\n        method: 'GET',\n        path: '/api/users'\n      })\n      .willRespondWith({\n        status: 200,\n        body: eachLike({\n          id: like(1),\n          name: like('John Doe'),\n          email: like('john@example.com')\n        })\n      });\n    \n    const users = await getUsersFromAPI();\n    expect(users).toBeInstanceOf(Array);\n    expect(users[0]).toHaveProperty('id');\n  });\n  \n  test('creates user successfully', async () => {\n    await mockProvider\n      .given('user can be created')\n      .uponReceiving('a request to create user')\n      .withRequest({\n        method: 'POST',\n        path: '/api/users',\n        body: {\n          name: 'New User',\n          email: 'new@example.com'\n        }\n      })\n      .willRespondWith({\n        status: 201,\n        body: {\n          id: like(123),\n          name: 'New User',\n          email: 'new@example.com'\n        }\n      });\n    \n    const user = await createUser({ name: 'New User', email: 'new@example.com' });\n    expect(user.id).toBeDefined();\n  });\n});",
+      "explanation": "This example produces: Contract testing ensuring API compatibility between consumer and provider services\n\nThe code demonstrates practical implementation techniques and shows how the concepts work in real scenarios. Pay attention to the structure and patterns used, as these represent industry best practices.",
+      "language": "javascript"
+    },
+    "pitfalls": [
+      {
+        "mistake": "Not following best practices",
+        "solution": "Review documentation and community guidelines",
+        "severity": "medium"
+      },
+      {
+        "mistake": "Skipping error handling",
+        "solution": "Implement proper error boundaries and validation",
+        "severity": "low"
+      }
+    ],
+    "exercises": [
+      {
+        "title": "Practice: API Contract Testing",
+        "description": "Apply the concepts from this lesson on Contract Testing",
+        "checkpoints": [
+          "Understand the core concept",
+          "Implement the example code",
+          "Experiment with variations"
+        ]
+      }
+    ],
+    "next": [],
+    "estimatedMinutes": 25,
+    "difficulty": "Intermediate",
+    "tags": [
+      "Contract Testing",
+      "testing"
+    ],
+    "legacy": {
+      "originalId": 11,
+      "originalTopic": "Contract Testing",
+      "migrated": "2025-10-01T06:41:13.489Z"
+    },
+    "lastUpdated": "2025-10-01T06:41:13.489Z",
+    "version": "1.0.0"
+  },
+  {
+    "id": "testing-fundamentals-lesson-12",
+    "moduleSlug": "testing-fundamentals",
+    "title": "Continuous Integration Testing Strategies",
+    "order": 12,
+    "objectives": [
+      "Implement practical solutions",
+      "Build foundational understanding"
+    ],
+    "intro": "Welcome to this comprehensive lesson on CI/CD Testing.\n\nLearn how to implement effective testing strategies in CI/CD pipelines.\n\nThroughout this lesson, you'll gain hands-on experience with practical implementations and real-world scenarios. We'll explore both the theoretical foundations and practical applications, ensuring you can immediately apply what you learn.\n\nThis lesson is designed to build upon previous concepts while introducing new techniques that will enhance your development skills. By the end, you'll have a solid understanding of the key principles and be ready to tackle more advanced topics.\n\nThe knowledge gained here will serve as a foundation for subsequent lessons and real-world projects.",
+    "code": {
+      "example": "# GitHub Actions workflow for testing\nname: Test Pipeline\n\non:\n  push:\n    branches: [main, develop]\n  pull_request:\n    branches: [main]\n\njobs:\n  test:\n    runs-on: ubuntu-latest\n    \n    services:\n      postgres:\n        image: postgres:13\n        env:\n          POSTGRES_PASSWORD: postgres\n        options: >-\n          --health-cmd pg_isready\n          --health-interval 10s\n          --health-timeout 5s\n          --health-retries 5\n    \n    steps:\n    - uses: actions/checkout@v3\n    \n    - name: Setup Node.js\n      uses: actions/setup-node@v3\n      with:\n        node-version: '18'\n        cache: 'npm'\n    \n    - name: Install dependencies\n      run: npm ci\n    \n    - name: Run linting\n      run: npm run lint\n    \n    - name: Run unit tests\n      run: npm run test:unit -- --coverage\n    \n    - name: Run integration tests\n      run: npm run test:integration\n      env:\n        DATABASE_URL: postgres://postgres:postgres@localhost:5432/test\n    \n    - name: Build application\n      run: npm run build\n    \n    - name: Run E2E tests\n      run: npm run test:e2e\n    \n    - name: Upload coverage to Codecov\n      uses: codecov/codecov-action@v3\n      with:\n        file: ./coverage/lcov.info\n    \n    - name: Run security audit\n      run: npm audit --audit-level high\n    \n    - name: Check bundle size\n      run: npm run bundlesize\n\n# Package.json test scripts\n{\n  \"scripts\": {\n    \"test\": \"jest\",\n    \"test:unit\": \"jest --testPathPattern=unit\",\n    \"test:integration\": \"jest --testPathPattern=integration\",\n    \"test:e2e\": \"cypress run\",\n    \"test:watch\": \"jest --watch\",\n    \"test:coverage\": \"jest --coverage\",\n    \"lint\": \"eslint src/\",\n    \"bundlesize\": \"bundlesize\"\n  }\n}\n\n// Test configuration for different environments\nconst config = {\n  development: {\n    testTimeout: 10000,\n    setupFilesAfterEnv: ['<rootDir>/src/setupTests.js']\n  },\n  ci: {\n    testTimeout: 30000,\n    maxWorkers: 2,\n    collectCoverage: true,\n    coverageReporters: ['lcov', 'text-summary']\n  },\n  production: {\n    testTimeout: 60000,\n    bail: 1,\n    verbose: false\n  }\n};\n\nmodule.exports = config[process.env.NODE_ENV] || config.development;",
+      "explanation": "This example produces: Complete CI/CD testing pipeline with unit, integration, E2E tests, and quality gates\n\nThe code demonstrates practical implementation techniques and shows how the concepts work in real scenarios. Pay attention to the structure and patterns used, as these represent industry best practices.",
+      "language": "javascript"
+    },
+    "pitfalls": [
+      {
+        "mistake": "Not following best practices",
+        "solution": "Review documentation and community guidelines",
+        "severity": "medium"
+      },
+      {
+        "mistake": "Skipping error handling",
+        "solution": "Implement proper error boundaries and validation",
+        "severity": "low"
+      }
+    ],
+    "exercises": [
+      {
+        "title": "Practice: Continuous Integration Testing Strategies",
+        "description": "Apply the concepts from this lesson on CI/CD Testing",
+        "checkpoints": [
+          "Understand the core concept",
+          "Implement the example code",
+          "Experiment with variations"
+        ]
+      }
+    ],
+    "next": [],
+    "estimatedMinutes": 25,
+    "difficulty": "Intermediate",
+    "tags": [
+      "CI/CD Testing",
+      "testing"
+    ],
+    "legacy": {
+      "originalId": 12,
+      "originalTopic": "CI/CD Testing",
+      "migrated": "2025-10-01T06:41:13.489Z"
+    },
+    "lastUpdated": "2025-10-01T06:41:13.489Z",
+    "version": "1.0.0"
+  },
+  {
+    "id": "testing-fundamentals-lesson-13",
+    "moduleSlug": "testing-fundamentals",
+    "title": "Test-Driven Development (TDD) Practice",
+    "order": 13,
+    "objectives": [
+      "Master the TDD red-green-refactor cycle",
+      "Write tests that drive design decisions",
+      "Understand when and why to use TDD effectively"
+    ],
+    "intro": "Test-Driven Development (TDD) is a development methodology where you write tests before writing production code. This lesson explores the TDD cycle and its benefits.\n\nTDD follows a simple three-step cycle: Red (write a failing test), Green (write minimal code to pass), and Refactor (improve the code while keeping tests green). This approach leads to better design, higher test coverage, and more confidence in your code.\n\nYou'll learn when TDD is most effective, common pitfalls to avoid, and how to structure your development workflow around test-first thinking. TDD isn't just about testing - it's a design methodology that leads to cleaner, more maintainable code.\n\nBy practicing TDD, you'll develop a deeper understanding of your requirements and create more focused, purposeful code. The discipline of writing tests first forces you to think about interfaces and behavior before implementation details.\n\nThis lesson includes hands-on exercises where you'll implement features using strict TDD practices, experiencing firsthand how tests can drive good design decisions.",
+    "code": {
+      "example": "// TDD Example: Building a Calculator with strict Red-Green-Refactor\n\n// STEP 1: RED - Write failing test\ndescribe('Calculator', () => {\n  test('should add two numbers', () => {\n    const calculator = new Calculator();\n    const result = calculator.add(2, 3);\n    expect(result).toBe(5);\n  });\n});\n\n// This test fails because Calculator doesn't exist yet\n\n// STEP 2: GREEN - Minimal code to pass\nclass Calculator {\n  add(a, b) {\n    return 5; // Hard-coded to pass the test\n  }\n}\n\n// STEP 3: RED - Add more specific test\ntest('should add different numbers', () => {\n  const calculator = new Calculator();\n  expect(calculator.add(1, 4)).toBe(5);\n  expect(calculator.add(10, 15)).toBe(25);\n});\n\n// STEP 4: GREEN - Real implementation\nclass Calculator {\n  add(a, b) {\n    return a + b;\n  }\n}\n\n// STEP 5: REFACTOR - Improve the tests\ndescribe('Calculator', () => {\n  let calculator;\n  \n  beforeEach(() => {\n    calculator = new Calculator();\n  });\n  \n  describe('addition', () => {\n    test('adds positive numbers', () => {\n      expect(calculator.add(2, 3)).toBe(5);\n      expect(calculator.add(10, 15)).toBe(25);\n    });\n    \n    test('adds negative numbers', () => {\n      expect(calculator.add(-2, -3)).toBe(-5);\n      expect(calculator.add(-5, 3)).toBe(-2);\n    });\n    \n    test('adds zero', () => {\n      expect(calculator.add(0, 5)).toBe(5);\n      expect(calculator.add(5, 0)).toBe(5);\n    });\n    \n    test('adds decimal numbers', () => {\n      expect(calculator.add(1.5, 2.3)).toBeCloseTo(3.8);\n    });\n  });\n});\n\n// TDD for more complex functionality\ndescribe('User Registration (TDD)', () => {\n  // RED: Start with the simplest failing test\n  test('creates user with valid email and password', () => {\n    const userService = new UserService();\n    const user = userService.register('test@example.com', 'password123');\n    \n    expect(user).toHaveProperty('id');\n    expect(user.email).toBe('test@example.com');\n    expect(user).not.toHaveProperty('password'); // Never expose password\n  });\n  \n  // GREEN: Implement minimal UserService\n  // RED: Add validation tests\n  test('throws error for invalid email', () => {\n    const userService = new UserService();\n    \n    expect(() => {\n      userService.register('invalid-email', 'password123');\n    }).toThrow('Invalid email format');\n  });\n  \n  test('throws error for weak password', () => {\n    const userService = new UserService();\n    \n    expect(() => {\n      userService.register('test@example.com', '123');\n    }).toThrow('Password must be at least 8 characters');\n  });\n});\n\n// Final implementation driven by tests\nclass UserService {\n  constructor() {\n    this.users = [];\n    this.nextId = 1;\n  }\n  \n  register(email, password) {\n    this.validateEmail(email);\n    this.validatePassword(password);\n    \n    const user = {\n      id: this.nextId++,\n      email: email,\n      hashedPassword: this.hashPassword(password)\n    };\n    \n    this.users.push(user);\n    \n    // Return user without password\n    return {\n      id: user.id,\n      email: user.email\n    };\n  }\n  \n  validateEmail(email) {\n    const emailRegex = /^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/;\n    if (!emailRegex.test(email)) {\n      throw new Error('Invalid email format');\n    }\n  }\n  \n  validatePassword(password) {\n    if (password.length < 8) {\n      throw new Error('Password must be at least 8 characters');\n    }\n  }\n  \n  hashPassword(password) {\n    // Simplified hashing (use bcrypt in real apps)\n    return 'hashed_' + password;\n  }\n}",
+      "explanation": "This example demonstrates the full TDD cycle: writing failing tests first, implementing minimal code to pass, then refactoring. Notice how tests drive the design and reveal requirements that might be missed otherwise.",
+      "language": "javascript"
+    },
+    "pitfalls": [
+      {
+        "mistake": "Writing too much production code before getting tests to pass",
+        "solution": "Stick to minimal implementation - only write enough code to make the current test pass",
+        "severity": "high"
+      },
+      {
+        "mistake": "Skipping the refactor step",
+        "solution": "Always refactor after getting tests to pass - this is where code quality improves",
+        "severity": "medium"
+      },
+      {
+        "mistake": "Writing tests that are too complex initially",
+        "solution": "Start with the simplest possible test and add complexity gradually",
+        "severity": "medium"
+      }
+    ],
+    "exercises": [
+      {
+        "title": "TDD Banking System",
+        "description": "Build a simple banking system using strict TDD practices",
+        "checkpoints": [
+          "Create Account class with deposit functionality",
+          "Add withdrawal with overdraft protection",
+          "Implement transfer between accounts",
+          "Add transaction history tracking"
+        ]
+      }
+    ],
+    "next": [],
+    "estimatedMinutes": 35,
+    "difficulty": "Intermediate",
+    "tags": [
+      "TDD",
+      "Unit Testing",
+      "Design"
+    ],
+    "lastUpdated": "2025-10-01T13:30:00.000Z",
+    "version": "1.0.0"
+  },
+  {
+    "id": "testing-fundamentals-lesson-14",
+    "moduleSlug": "testing-fundamentals",
+    "title": "Testing Best Practices and Code Coverage",
+    "order": 14,
+    "objectives": [
+      "Understand different types of code coverage metrics",
+      "Learn when high coverage is valuable and when it's misleading",
+      "Master best practices for maintainable test suites"
+    ],
+    "intro": "Code coverage is a useful metric for understanding how much of your code is exercised by tests, but it's important to understand what it measures and what it doesn't.\n\nThis lesson explores different types of coverage (line, branch, function, statement) and how to interpret coverage reports effectively. You'll learn why 100% coverage isn't always the goal and how to focus on meaningful testing.\n\nWe'll cover best practices for organizing test suites, naming conventions, test data management, and strategies for keeping tests fast and reliable. Good tests are documentation for your code and should make future changes easier, not harder.\n\nYou'll also learn about test smells - patterns that indicate your tests might be too fragile, too coupled to implementation details, or not providing sufficient value. Recognizing these patterns helps you write better tests.\n\nBy the end of this lesson, you'll understand how to balance test quantity with test quality, create tests that provide real confidence in your code, and build test suites that support rather than hinder development velocity.",
+    "code": {
+      "example": "// Understanding code coverage types\n\n// Example function to test\nfunction processUser(user) {\n  // Line coverage: Are these lines executed?\n  if (!user) {\n    throw new Error('User is required');\n  }\n  \n  if (!user.email) {\n    throw new Error('Email is required');\n  }\n  \n  // Branch coverage: Are both true/false branches tested?\n  if (user.age >= 18) {\n    user.status = 'adult';\n  } else {\n    user.status = 'minor';\n  }\n  \n  // Function coverage: Is this function called?\n  const result = validateAndFormat(user);\n  \n  return result;\n}\n\nfunction validateAndFormat(user) {\n  user.email = user.email.toLowerCase();\n  return user;\n}\n\n// Tests demonstrating different coverage types\ndescribe('processUser - Coverage Examples', () => {\n  test('processes valid adult user', () => {\n    const user = { email: 'TEST@EXAMPLE.COM', age: 25 };\n    const result = processUser(user);\n    \n    expect(result.status).toBe('adult');\n    expect(result.email).toBe('test@example.com');\n  });\n  \n  // This test alone gives:\n  // - Line coverage: ~80% (doesn't hit minor branch)\n  // - Branch coverage: ~50% (only adult branch)\n  // - Function coverage: 100% (both functions called)\n  \n  test('processes valid minor user', () => {\n    const user = { email: 'CHILD@EXAMPLE.COM', age: 16 };\n    const result = processUser(user);\n    \n    expect(result.status).toBe('minor');\n  });\n  \n  // Now we have 100% branch coverage\n  \n  test('throws error for null user', () => {\n    expect(() => processUser(null)).toThrow('User is required');\n  });\n  \n  test('throws error for user without email', () => {\n    expect(() => processUser({ age: 25 })).toThrow('Email is required');\n  });\n  \n  // Now we have 100% line coverage\n});\n\n// Best practices for test organization\ndescribe('User Management Service', () => {\n  let userService;\n  let mockDatabase;\n  \n  beforeEach(() => {\n    // Fresh setup for each test\n    mockDatabase = {\n      save: jest.fn(),\n      findById: jest.fn(),\n      findByEmail: jest.fn()\n    };\n    userService = new UserService(mockDatabase);\n  });\n  \n  describe('user creation', () => {\n    test('creates user with valid data', async () => {\n      // Arrange\n      const userData = createValidUserData();\n      mockDatabase.save.mockResolvedValue({ id: 1, ...userData });\n      \n      // Act\n      const user = await userService.createUser(userData);\n      \n      // Assert\n      expect(user).toMatchObject({\n        id: expect.any(Number),\n        email: userData.email\n      });\n    });\n    \n    // Group related tests together\n    describe('validation errors', () => {\n      test('rejects invalid email format', async () => {\n        const userData = createValidUserData({ email: 'invalid-email' });\n        \n        await expect(userService.createUser(userData))\n          .rejects.toThrow('Invalid email format');\n      });\n      \n      test('rejects duplicate email', async () => {\n        const userData = createValidUserData();\n        mockDatabase.findByEmail.mockResolvedValue({ id: 1 });\n        \n        await expect(userService.createUser(userData))\n          .rejects.toThrow('Email already exists');\n      });\n    });\n  });\n  \n  describe('user retrieval', () => {\n    test('finds user by ID', async () => {\n      const userId = 1;\n      const mockUser = { id: userId, email: 'test@example.com' };\n      mockDatabase.findById.mockResolvedValue(mockUser);\n      \n      const user = await userService.findUser(userId);\n      \n      expect(user).toEqual(mockUser);\n      expect(mockDatabase.findById).toHaveBeenCalledWith(userId);\n    });\n  });\n});\n\n// Helper functions for test data\nfunction createValidUserData(overrides = {}) {\n  return {\n    email: 'test@example.com',\n    name: 'Test User',\n    age: 25,\n    ...overrides\n  };\n}\n\n// Example of coverage report interpretation\n/*\nCoverage Report:\n┌─────────────────┬───────────┬───────────┬───────────┬───────────┐\n│ File            │  % Stmts  │ % Branch  │ % Funcs   │ % Lines   │\n├─────────────────┼───────────┼───────────┼───────────┼───────────┤\n│ userService.js  │   95.83   │   87.5    │   100     │   95.83   │\n│ validator.js    │   100     │   100     │   100     │   100     │\n│ database.js     │   75      │   66.67   │   80      │   75      │\n└─────────────────┴───────────┴───────────┴───────────┴───────────┘\n\nAnalysis:\n- userService.js: Good coverage but missing some edge cases (87.5% branch)\n- validator.js: Perfect coverage (but check if tests are meaningful)\n- database.js: Low coverage suggests untested error paths\n*/",
+      "explanation": "This example shows how different types of coverage work, best practices for test organization, and how to interpret coverage reports to identify gaps in testing.",
+      "language": "javascript"
+    },
+    "pitfalls": [
+      {
+        "mistake": "Focusing only on coverage percentage without considering test quality",
+        "solution": "Aim for meaningful tests that verify behavior, not just code execution",
+        "severity": "high"
+      },
+      {
+        "mistake": "Writing tests that are too tightly coupled to implementation details",
+        "solution": "Test public interfaces and behaviors, not internal implementation",
+        "severity": "high"
+      },
+      {
+        "mistake": "Ignoring slow or flaky tests",
+        "solution": "Fix or remove tests that don't provide reliable feedback",
+        "severity": "medium"
+      }
+    ],
+    "exercises": [
+      {
+        "title": "Test Suite Analysis",
+        "description": "Analyze and improve an existing test suite's coverage and quality",
+        "checkpoints": [
+          "Generate coverage report for existing code",
+          "Identify untested branches and edge cases",
+          "Add meaningful tests to improve coverage",
+          "Refactor tests for better maintainability"
+        ]
+      }
+    ],
+    "next": [],
+    "estimatedMinutes": 30,
+    "difficulty": "Intermediate",
+    "tags": [
+      "Code Coverage",
+      "Best Practices",
+      "Test Quality"
+    ],
+    "lastUpdated": "2025-10-01T13:30:00.000Z",
+    "version": "1.0.0"
+  }
+]

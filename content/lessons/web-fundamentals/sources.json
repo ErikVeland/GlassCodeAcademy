@@ -1,0 +1,29 @@
+{
+  "module": "web-fundamentals",
+  "sources": [
+    {
+      "title": "MDN Web Docs - HTML Guide",
+      "url": "https://developer.mozilla.org/en-US/docs/Learn/HTML"
+    },
+    {
+      "title": "MDN Web Docs - CSS Guide",
+      "url": "https://developer.mozilla.org/en-US/docs/Learn/CSS"
+    },
+    {
+      "title": "W3C Standards",
+      "url": "https://www.w3.org/standards/"
+    },
+    {
+      "title": "Web.dev - Modern Web Development",
+      "url": "https://web.dev/"
+    },
+    {
+      "title": "CSS Tricks",
+      "url": "https://css-tricks.com/"
+    },
+    {
+      "title": "Can I Use - Browser Support Tables",
+      "url": "https://caniuse.com/"
+    }
+  ]
+}

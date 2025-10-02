@@ -1,0 +1,752 @@
+[
+  {
+    "id": "typescript-fundamentals-lesson-1",
+    "moduleSlug": "typescript-fundamentals",
+    "title": "Primitive Types and Type Annotations",
+    "order": 1,
+    "objectives": [
+      "Implement practical solutions",
+      "Build foundational understanding"
+    ],
+    "intro": "Welcome to this comprehensive lesson on Basic Types.\n\nLearn about TypeScript's primitive types including string, number, and boolean, along with advanced types like any, unknown, and never.\n\nThroughout this lesson, you'll gain hands-on experience with practical implementations and real-world scenarios. We'll explore both the theoretical foundations and practical applications, ensuring you can immediately apply what you learn.\n\nThis lesson is designed to build upon previous concepts while introducing new techniques that will enhance your development skills. By the end, you'll have a solid understanding of the key principles and be ready to tackle more advanced topics.\n\nThe knowledge gained here will serve as a foundation for subsequent lessons and real-world projects.",
+    "code": {
+      "example": "// Primitive types with explicit annotations\nlet isDone: boolean = false\nlet decimal: number = 6\nlet hex: number = 0xf00d\nlet binary: number = 0b1010\nlet octal: number = 0o744\nlet color: string = \"blue\"\n\ncolor = 'red'  // Still valid\n\nlet fullName: string = `Bob Bobbington`\nlet sentence: string = `Hello, my name is ${fullName}`\n\n// Special types\nlet notSure: any = 4  // Can be anything (avoid when possible)\nnotSure = \"maybe a string instead\"\nnotSure = false\n\nlet uncertain: unknown = 4  // Safer than any\n// uncertain.toFixed(); // Error: Object is of type 'unknown'\nif (typeof uncertain === 'number') {\n  uncertain.toFixed()  // OK\n}\n\nfunction fail(): never {\n  throw new Error(\"Something failed\")\n}",
+      "explanation": "This example produces: Variables with explicit type annotations for various primitive types, demonstrating the difference between any and unknown\n\nThe code demonstrates practical implementation techniques and shows how the concepts work in real scenarios. Pay attention to the structure and patterns used, as these represent industry best practices.",
+      "language": "typescript"
+    },
+    "pitfalls": [
+      {
+        "mistake": "Not following best practices",
+        "solution": "Review documentation and community guidelines",
+        "severity": "medium"
+      },
+      {
+        "mistake": "Skipping error handling",
+        "solution": "Implement proper error boundaries and validation",
+        "severity": "low"
+      }
+    ],
+    "exercises": [
+      {
+        "title": "Practice: Primitive Types and Type Annotations",
+        "description": "Apply the concepts from this lesson on Basic Types",
+        "checkpoints": [
+          "Understand the core concept",
+          "Implement the example code",
+          "Experiment with variations"
+        ]
+      }
+    ],
+    "next": [],
+    "estimatedMinutes": 25,
+    "difficulty": "Advanced",
+    "tags": [
+      "Basic Types",
+      "typescript"
+    ],
+    "legacy": {
+      "originalId": 1,
+      "originalTopic": "Basic Types",
+      "migrated": "2025-10-01T06:41:13.482Z"
+    },
+    "lastUpdated": "2025-10-01T06:41:13.482Z",
+    "version": "1.0.0"
+  },
+  {
+    "id": "typescript-fundamentals-lesson-2",
+    "moduleSlug": "typescript-fundamentals",
+    "title": "Arrays, Tuples, and Enums",
+    "order": 2,
+    "objectives": [
+      "Implement practical solutions",
+      "Build foundational understanding"
+    ],
+    "intro": "Welcome to this comprehensive lesson on Basic Types.\n\nLearn how to work with arrays, tuples, and enums in TypeScript for more precise type safety.\n\nThroughout this lesson, you'll gain hands-on experience with practical implementations and real-world scenarios. We'll explore both the theoretical foundations and practical applications, ensuring you can immediately apply what you learn.\n\nThis lesson is designed to build upon previous concepts while introducing new techniques that will enhance your development skills. By the end, you'll have a solid understanding of the key principles and be ready to tackle more advanced topics.\n\nThe knowledge gained here will serve as a foundation for subsequent lessons and real-world projects.",
+    "code": {
+      "example": "// Arrays\nlet list: number[] = [1, 2, 3]\nlet list2: Array<number> = [1, 2, 3]\n\n// Tuples - fixed-length arrays with known types\nlet x: [string, number]\nx = ['hello', 10]  // OK\n// x = [10, 'hello']  // Error\n\nconsole.log(x[0].substring(1))  // OK\n// console.log(x[1].substring(1))  // Error, 'number' does not have 'substring'\n\nx[3] = 'world'  // OK, 'string' can be assigned to (string | number)\nx[5] = 100  // OK, 'number' can be assigned to (string | number)\n// x[6] = true  // Error, 'boolean' isn't (string | number)\n\n// Enums\nenum Color { Red, Green, Blue }\nlet c: Color = Color.Green\n\nenum Color2 { Red = 1, Green, Blue }\nlet c2: Color2 = Color2.Green\n\nenum Color3 { Red = 1, Green = 2, Blue = 4 }\nlet c3: Color3 = Color3.Green\n\n// String enums\nenum Direction {\n  Up = \"UP\",\n  Down = \"DOWN\",\n  Left = \"LEFT\",\n  Right = \"RIGHT\",\n}",
+      "explanation": "This example produces: Type-safe arrays, tuples with fixed types, and enums for named constants\n\nThe code demonstrates practical implementation techniques and shows how the concepts work in real scenarios. Pay attention to the structure and patterns used, as these represent industry best practices.",
+      "language": "typescript"
+    },
+    "pitfalls": [
+      {
+        "mistake": "Not following best practices",
+        "solution": "Review documentation and community guidelines",
+        "severity": "medium"
+      },
+      {
+        "mistake": "Skipping error handling",
+        "solution": "Implement proper error boundaries and validation",
+        "severity": "low"
+      }
+    ],
+    "exercises": [
+      {
+        "title": "Practice: Arrays, Tuples, and Enums",
+        "description": "Apply the concepts from this lesson on Basic Types",
+        "checkpoints": [
+          "Understand the core concept",
+          "Implement the example code",
+          "Experiment with variations"
+        ]
+      }
+    ],
+    "next": [],
+    "estimatedMinutes": 25,
+    "difficulty": "Intermediate",
+    "tags": [
+      "Basic Types",
+      "typescript"
+    ],
+    "legacy": {
+      "originalId": 2,
+      "originalTopic": "Basic Types",
+      "migrated": "2025-10-01T06:41:13.482Z"
+    },
+    "lastUpdated": "2025-10-01T06:41:13.482Z",
+    "version": "1.0.0"
+  },
+  {
+    "id": "typescript-fundamentals-lesson-3",
+    "moduleSlug": "typescript-fundamentals",
+    "title": "Interface Declaration and Extension",
+    "order": 3,
+    "objectives": [
+      "Implement practical solutions",
+      "Build foundational understanding"
+    ],
+    "intro": "Welcome to this comprehensive lesson on Interfaces.\n\nLearn how to define interfaces to describe the shape of objects, including optional properties, readonly properties, and extending interfaces.\n\nThroughout this lesson, you'll gain hands-on experience with practical implementations and real-world scenarios. We'll explore both the theoretical foundations and practical applications, ensuring you can immediately apply what you learn.\n\nThis lesson is designed to build upon previous concepts while introducing new techniques that will enhance your development skills. By the end, you'll have a solid understanding of the key principles and be ready to tackle more advanced topics.\n\nThe knowledge gained here will serve as a foundation for subsequent lessons and real-world projects.",
+    "code": {
+      "example": "// Basic interface\ninterface Person {\n  firstName: string\n  lastName: string\n  age?: number  // Optional property\n  readonly ssn: string  // Readonly property\n}\n\nfunction greeter(person: Person) {\n  // person.ssn = \"123-45-6789\"  // Error! Cannot assign to 'ssn'\n  return `Hello, ${person.firstName} ${person.lastName}${person.age ? `, age ${person.age}` : ''}`\n}\n\nlet user = { firstName: \"Jane\", lastName: \"User\", ssn: \"123-45-6789\", age: 25 }\n\ngreeter(user)\n\n// Extending interfaces\ninterface Shape {\n  color: string\n}\n\ninterface Square extends Shape {\n  sideLength: number\n}\n\nlet square = <Square>{ color: \"blue\", sideLength: 10 }\n\n// Multiple inheritance\ninterface PenStroke {\n  penWidth: number\n}\n\ninterface Square2 extends Shape, PenStroke {\n  sideLength: number\n}\n\nlet square2 = <Square2>{ color: \"blue\", sideLength: 10, penWidth: 5.0 }",
+      "explanation": "This example produces: Type-safe object manipulation with interfaces, showing optional and readonly properties, and interface extension\n\nThe code demonstrates practical implementation techniques and shows how the concepts work in real scenarios. Pay attention to the structure and patterns used, as these represent industry best practices.",
+      "language": "typescript"
+    },
+    "pitfalls": [
+      {
+        "mistake": "Not following best practices",
+        "solution": "Review documentation and community guidelines",
+        "severity": "medium"
+      },
+      {
+        "mistake": "Skipping error handling",
+        "solution": "Implement proper error boundaries and validation",
+        "severity": "low"
+      }
+    ],
+    "exercises": [
+      {
+        "title": "Practice: Interface Declaration and Extension",
+        "description": "Apply the concepts from this lesson on Interfaces",
+        "checkpoints": [
+          "Understand the core concept",
+          "Implement the example code",
+          "Experiment with variations"
+        ]
+      }
+    ],
+    "next": [],
+    "estimatedMinutes": 25,
+    "difficulty": "Intermediate",
+    "tags": [
+      "Interfaces",
+      "typescript"
+    ],
+    "legacy": {
+      "originalId": 3,
+      "originalTopic": "Interfaces",
+      "migrated": "2025-10-01T06:41:13.482Z"
+    },
+    "lastUpdated": "2025-10-01T06:41:13.482Z",
+    "version": "1.0.0"
+  },
+  {
+    "id": "typescript-fundamentals-lesson-4",
+    "moduleSlug": "typescript-fundamentals",
+    "title": "Class Implementation with Access Modifiers and Abstract Classes",
+    "order": 4,
+    "objectives": [
+      "Implement practical solutions",
+      "Build foundational understanding"
+    ],
+    "intro": "Welcome to this comprehensive lesson on Classes.\n\nLearn how to implement classes with access modifiers in TypeScript, including abstract classes and method overriding.\n\nThroughout this lesson, you'll gain hands-on experience with practical implementations and real-world scenarios. We'll explore both the theoretical foundations and practical applications, ensuring you can immediately apply what you learn.\n\nThis lesson is designed to build upon previous concepts while introducing new techniques that will enhance your development skills. By the end, you'll have a solid understanding of the key principles and be ready to tackle more advanced topics.\n\nThe knowledge gained here will serve as a foundation for subsequent lessons and real-world projects.",
+    "code": {
+      "example": "abstract class Department {\n  // Public by default\n  name: string\n  \n  // Protected - accessible within class and subclasses\n  protected employees: string[] = []\n  \n  // Private - only accessible within this class\n  private readonly id: string\n  \n  constructor(id: string, n: string) {\n    this.id = id\n    this.name = n\n  }\n  \n  // Abstract method - must be implemented in derived classes\n  abstract describe(): void\n  \n  addEmployee(employee: string) {\n    this.employees.push(employee)\n  }\n  \n  printEmployeeInformation() {\n    console.log(`Department: ${this.name} (${this.id})`)\n    console.log('Employees:', this.employees)\n  }\n}\n\nclass ITDepartment extends Department {\n  admins: string[]\n  \n  constructor(id: string, admins: string[]) {\n    super(id, 'IT')  // Call parent constructor\n    this.admins = admins\n  }\n  \n  describe() {\n    console.log(`IT Department - ID: ${this.id}`)\n  }\n  \n  addEmployee(name: string) {\n    if (name === 'Bill') {\n      return  // Don't add Bill\n    }\n    super.addEmployee(name)  // Call parent method\n  }\n}\n\nlet it = new ITDepartment('d1', ['Max'])\nit.addEmployee('Max')\nit.addEmployee('Bill')  // Won't be added\nit.printEmployeeInformation()\nit.describe()",
+      "explanation": "This example produces: Class hierarchy with proper encapsulation, abstract classes, and method overriding\n\nThe code demonstrates practical implementation techniques and shows how the concepts work in real scenarios. Pay attention to the structure and patterns used, as these represent industry best practices.",
+      "language": "typescript"
+    },
+    "pitfalls": [
+      {
+        "mistake": "Not following best practices",
+        "solution": "Review documentation and community guidelines",
+        "severity": "medium"
+      },
+      {
+        "mistake": "Skipping error handling",
+        "solution": "Implement proper error boundaries and validation",
+        "severity": "low"
+      }
+    ],
+    "exercises": [
+      {
+        "title": "Practice: Class Implementation with Access Modifiers and Abstract Classes",
+        "description": "Apply the concepts from this lesson on Classes",
+        "checkpoints": [
+          "Understand the core concept",
+          "Implement the example code",
+          "Experiment with variations"
+        ]
+      }
+    ],
+    "next": [],
+    "estimatedMinutes": 25,
+    "difficulty": "Intermediate",
+    "tags": [
+      "Classes",
+      "typescript"
+    ],
+    "legacy": {
+      "originalId": 4,
+      "originalTopic": "Classes",
+      "migrated": "2025-10-01T06:41:13.482Z"
+    },
+    "lastUpdated": "2025-10-01T06:41:13.482Z",
+    "version": "1.0.0"
+  },
+  {
+    "id": "typescript-fundamentals-lesson-5",
+    "moduleSlug": "typescript-fundamentals",
+    "title": "Generic Types and Constraints",
+    "order": 5,
+    "objectives": [
+      "Master component creation and usage",
+      "Implement practical solutions"
+    ],
+    "intro": "Welcome to this comprehensive lesson on Generics.\n\nLearn how to create reusable components with generics, including generic constraints for more precise type safety.\n\nThroughout this lesson, you'll gain hands-on experience with practical implementations and real-world scenarios. We'll explore both the theoretical foundations and practical applications, ensuring you can immediately apply what you learn.\n\nThis lesson is designed to build upon previous concepts while introducing new techniques that will enhance your development skills. By the end, you'll have a solid understanding of the key principles and be ready to tackle more advanced topics.\n\nThe knowledge gained here will serve as a foundation for subsequent lessons and real-world projects.",
+    "code": {
+      "example": "// Simple generic function\nfunction identity<T>(arg: T): T {\n  return arg\n}\n\nlet output1 = identity<string>(\"myString\")\nlet output2 = identity(\"myString\")  // Type argument inferred\n\n// Generic interface\ninterface GenericIdentityFn<T> {\n  (arg: T): T\n}\n\nfunction identity2<T>(arg: T): T {\n  return arg\n}\n\nlet myIdentity: GenericIdentityFn<number> = identity2\n\n// Generic class\nclass GenericNumber<T> {\n  zeroValue: T\n  add: (x: T, y: T) => T\n}\n\nlet myGenericNumber = new GenericNumber<number>()\nmyGenericNumber.zeroValue = 0\nmyGenericNumber.add = function(x, y) {\n  return x + y\n}\n\n// Generic constraints\ninterface Lengthwise {\n  length: number\n}\n\nfunction loggingIdentity<T extends Lengthwise>(arg: T): T {\n  console.log(arg.length)  // Now we know it has a .length property\n  return arg\n}\n\nloggingIdentity(\"hello\")  // OK - string has length\nloggingIdentity([1, 2, 3])  // OK - array has length\n// loggingIdentity(3)  // Error - number doesn't have length\n\n// Using type parameters in generic constraints\nfunction getProperty<T, K extends keyof T>(obj: T, key: K) {\n  return obj[key]\n}\n\nlet x = { a: 1, b: 2, c: 3, d: 4 }\ngetProperty(x, \"a\")  // OK\n// getProperty(x, \"m\")  // Error - Argument of type '\"m\"' is not assignable to parameter of type '\"a\" | \"b\" | \"c\" | \"d\"'",
+      "explanation": "This example produces: Type-safe generic functions, interfaces, and classes with constraints for flexible yet safe type usage\n\nThe code demonstrates practical implementation techniques and shows how the concepts work in real scenarios. Pay attention to the structure and patterns used, as these represent industry best practices.",
+      "language": "typescript"
+    },
+    "pitfalls": [
+      {
+        "mistake": "Not following best practices",
+        "solution": "Review documentation and community guidelines",
+        "severity": "medium"
+      },
+      {
+        "mistake": "Skipping error handling",
+        "solution": "Implement proper error boundaries and validation",
+        "severity": "low"
+      }
+    ],
+    "exercises": [
+      {
+        "title": "Practice: Generic Types and Constraints",
+        "description": "Apply the concepts from this lesson on Generics",
+        "checkpoints": [
+          "Understand the core concept",
+          "Implement the example code",
+          "Experiment with variations"
+        ]
+      }
+    ],
+    "next": [],
+    "estimatedMinutes": 25,
+    "difficulty": "Intermediate",
+    "tags": [
+      "Generics",
+      "typescript"
+    ],
+    "legacy": {
+      "originalId": 5,
+      "originalTopic": "Generics",
+      "migrated": "2025-10-01T06:41:13.482Z"
+    },
+    "lastUpdated": "2025-10-01T06:41:13.482Z",
+    "version": "1.0.0"
+  },
+  {
+    "id": "typescript-fundamentals-lesson-6",
+    "moduleSlug": "typescript-fundamentals",
+    "title": "Union, Intersection, and Conditional Types",
+    "order": 6,
+    "objectives": [
+      "Implement practical solutions",
+      "Build foundational understanding"
+    ],
+    "intro": "Welcome to this comprehensive lesson on Advanced Types.\n\nLearn about advanced type compositions including union types, intersection types, and conditional types.\n\nThroughout this lesson, you'll gain hands-on experience with practical implementations and real-world scenarios. We'll explore both the theoretical foundations and practical applications, ensuring you can immediately apply what you learn.\n\nThis lesson is designed to build upon previous concepts while introducing new techniques that will enhance your development skills. By the end, you'll have a solid understanding of the key principles and be ready to tackle more advanced topics.\n\nThe knowledge gained here will serve as a foundation for subsequent lessons and real-world projects.",
+    "code": {
+      "example": "// Union types\ntype StringOrNumber = string | number\n\nfunction printId(id: StringOrNumber) {\n  if (typeof id === 'string') {\n    console.log(`ID (string): ${id.toUpperCase()}`)\n  } else {\n    console.log(`ID (number): ${id.toFixed(2)}`)\n  }\n}\n\nprintId('abc123')\nprintId(12345)\n\n// Intersection types\ninterface Person {\n  name: string\n}\n\ninterface Employee {\n  employeeId: number\n}\n\ntype PersonEmployee = Person & Employee\n\nconst worker: PersonEmployee = {\n  name: 'John Doe',\n  employeeId: 12345\n}\n\n// Discriminated unions\ninterface Square {\n  kind: 'square'\n  size: number\n}\n\ninterface Rectangle {\n  kind: 'rectangle'\n  width: number\n  height: number\n}\n\ninterface Circle {\n  kind: 'circle'\n  radius: number\n}\n\ntype Shape = Square | Rectangle | Circle\n\nfunction getArea(shape: Shape): number {\n  switch (shape.kind) {\n    case 'square':\n      return shape.size * shape.size\n    case 'rectangle':\n      return shape.width * shape.height\n    case 'circle':\n      return Math.PI * shape.radius ** 2\n    default:\n      const _exhaustiveCheck: never = shape\n      return _exhaustiveCheck\n  }\n}\n\n// Conditional types\ntype NonNullable<T> = T extends null | undefined ? never : T\ntype StringsOnly<T> = T extends string ? T : never\n\ntype A = NonNullable<string | null>  // string\ntype B = StringsOnly<string | number>  // string",
+      "explanation": "This example produces: ID (string): ABC123\nID (number): 12345.00\nDemonstrates union types, intersection types, and type-safe discriminated unions\n\nThe code demonstrates practical implementation techniques and shows how the concepts work in real scenarios. Pay attention to the structure and patterns used, as these represent industry best practices.",
+      "language": "typescript"
+    },
+    "pitfalls": [
+      {
+        "mistake": "Not following best practices",
+        "solution": "Review documentation and community guidelines",
+        "severity": "medium"
+      },
+      {
+        "mistake": "Skipping error handling",
+        "solution": "Implement proper error boundaries and validation",
+        "severity": "low"
+      }
+    ],
+    "exercises": [
+      {
+        "title": "Practice: Union, Intersection, and Conditional Types",
+        "description": "Apply the concepts from this lesson on Advanced Types",
+        "checkpoints": [
+          "Understand the core concept",
+          "Implement the example code",
+          "Experiment with variations"
+        ]
+      }
+    ],
+    "next": [],
+    "estimatedMinutes": 25,
+    "difficulty": "Advanced",
+    "tags": [
+      "Advanced Types",
+      "typescript"
+    ],
+    "legacy": {
+      "originalId": 6,
+      "originalTopic": "Advanced Types",
+      "migrated": "2025-10-01T06:41:13.482Z"
+    },
+    "lastUpdated": "2025-10-01T06:41:13.482Z",
+    "version": "1.0.0"
+  },
+  {
+    "id": "typescript-fundamentals-lesson-7",
+    "moduleSlug": "typescript-fundamentals",
+    "title": "Type Guards and Type Assertions",
+    "order": 7,
+    "objectives": [
+      "Implement practical solutions",
+      "Build foundational understanding"
+    ],
+    "intro": "Welcome to this comprehensive lesson on Type Guards.\n\nLearn how to narrow types using type guards and safely assert types in TypeScript.\n\nThroughout this lesson, you'll gain hands-on experience with practical implementations and real-world scenarios. We'll explore both the theoretical foundations and practical applications, ensuring you can immediately apply what you learn.\n\nThis lesson is designed to build upon previous concepts while introducing new techniques that will enhance your development skills. By the end, you'll have a solid understanding of the key principles and be ready to tackle more advanced topics.\n\nThe knowledge gained here will serve as a foundation for subsequent lessons and real-world projects.",
+    "code": {
+      "example": "// Type predicate functions\nfunction isString(value: unknown): value is string {\n  return typeof value === 'string'\n}\n\nfunction isNumber(value: unknown): value is number {\n  return typeof value === 'number'\n}\n\n// Using type guards\nfunction processValue(value: unknown) {\n  if (isString(value)) {\n    // TypeScript knows value is string here\n    console.log(`String length: ${value.length}`)\n  } else if (isNumber(value)) {\n    // TypeScript knows value is number here\n    console.log(`Number fixed: ${value.toFixed(2)}`)\n  } else {\n    console.log('Unknown type')\n  }\n}\n\nprocessValue('Hello')\nprocessValue(42.123)\nprocessValue(true)\n\n// instanceof type guard\nclass Bird {\n  fly() {\n    console.log('Flying!')\n  }\n  layEggs() {\n    console.log('Laying eggs!')\n  }\n}\n\nclass Fish {\n  swim() {\n    console.log('Swimming!')\n  }\n  layEggs() {\n    console.log('Laying eggs!')\n  }\n}\n\nfunction getAnimal(): Bird | Fish {\n  return Math.random() > 0.5 ? new Bird() : new Fish()\n}\n\nfunction moveAnimal(animal: Bird | Fish) {\n  if (animal instanceof Bird) {\n    animal.fly()  // TypeScript knows it's a Bird\n  } else {\n    animal.swim()  // TypeScript knows it's a Fish\n  }\n  animal.layEggs()  // Available on both\n}\n\n// Type assertions\nconst someValue: unknown = 'this is a string'\nconst strLength: number = (someValue as string).length\n\n// Non-null assertion operator\nfunction processName(name: string | null) {\n  // We know name is not null here\n  console.log(name!.charAt(0))\n}",
+      "explanation": "This example produces: String length: 5\nNumber fixed: 42.12\nUnknown type\nFlying! or Swimming!\nLaying eggs!\n\nThe code demonstrates practical implementation techniques and shows how the concepts work in real scenarios. Pay attention to the structure and patterns used, as these represent industry best practices.",
+      "language": "typescript"
+    },
+    "pitfalls": [
+      {
+        "mistake": "Not following best practices",
+        "solution": "Review documentation and community guidelines",
+        "severity": "medium"
+      },
+      {
+        "mistake": "Skipping error handling",
+        "solution": "Implement proper error boundaries and validation",
+        "severity": "low"
+      }
+    ],
+    "exercises": [
+      {
+        "title": "Practice: Type Guards and Type Assertions",
+        "description": "Apply the concepts from this lesson on Type Guards",
+        "checkpoints": [
+          "Understand the core concept",
+          "Implement the example code",
+          "Experiment with variations"
+        ]
+      }
+    ],
+    "next": [],
+    "estimatedMinutes": 25,
+    "difficulty": "Intermediate",
+    "tags": [
+      "Type Guards",
+      "typescript"
+    ],
+    "legacy": {
+      "originalId": 7,
+      "originalTopic": "Type Guards",
+      "migrated": "2025-10-01T06:41:13.482Z"
+    },
+    "lastUpdated": "2025-10-01T06:41:13.482Z",
+    "version": "1.0.0"
+  },
+  {
+    "id": "typescript-fundamentals-lesson-8",
+    "moduleSlug": "typescript-fundamentals",
+    "title": "Built-in Utility Types",
+    "order": 8,
+    "objectives": [
+      "Implement practical solutions",
+      "Build foundational understanding"
+    ],
+    "intro": "Welcome to this comprehensive lesson on Utility Types.\n\nLearn about TypeScript's built-in utility types for transforming types efficiently.\n\nThroughout this lesson, you'll gain hands-on experience with practical implementations and real-world scenarios. We'll explore both the theoretical foundations and practical applications, ensuring you can immediately apply what you learn.\n\nThis lesson is designed to build upon previous concepts while introducing new techniques that will enhance your development skills. By the end, you'll have a solid understanding of the key principles and be ready to tackle more advanced topics.\n\nThe knowledge gained here will serve as a foundation for subsequent lessons and real-world projects.",
+    "code": {
+      "example": "interface User {\n  id: number\n  name: string\n  email: string\n  age: number\n  isActive: boolean\n}\n\n// Partial - makes all properties optional\ntype PartialUser = Partial<User>\nconst updateUser: PartialUser = {\n  name: 'John Doe'  // Only name is provided\n}\n\n// Required - makes all properties required\ninterface OptionalUser {\n  id?: number\n  name?: string\n  email?: string\n}\n\ntype RequiredUser = Required<OptionalUser>\n// All properties are now required\n\n// Pick - creates a type by picking specific properties\ntype UserSummary = Pick<User, 'id' | 'name' | 'email'>\nconst summary: UserSummary = {\n  id: 1,\n  name: 'Jane',\n  email: 'jane@example.com'\n  // age and isActive are not included\n}\n\n// Omit - creates a type by omitting specific properties\ntype PublicUser = Omit<User, 'id' | 'isActive'>\nconst publicInfo: PublicUser = {\n  name: 'Bob',\n  email: 'bob@example.com',\n  age: 30\n  // id and isActive are omitted\n}\n\n// Record - creates an object type with specific keys and values\ntype UserRoles = Record<'admin' | 'user' | 'guest', string[]>\nconst roles: UserRoles = {\n  admin: ['read', 'write', 'delete'],\n  user: ['read', 'write'],\n  guest: ['read']\n}\n\n// Exclude and Extract\ntype T1 = Exclude<'a' | 'b' | 'c', 'a'>  // 'b' | 'c'\ntype T2 = Extract<'a' | 'b' | 'c', 'a' | 'f'>  // 'a'\n\n// ReturnType - extracts return type of function\nfunction getUser() {\n  return { id: 1, name: 'John' }\n}\n\ntype UserReturnType = ReturnType<typeof getUser>  // { id: number, name: string }\n\n// Parameters - extracts parameter types\nfunction createUser(name: string, age: number, email: string) {\n  return { name, age, email }\n}\n\ntype CreateUserParams = Parameters<typeof createUser>  // [string, number, string]",
+      "explanation": "This example produces: Demonstrates various utility types for flexible type transformations and code reuse\n\nThe code demonstrates practical implementation techniques and shows how the concepts work in real scenarios. Pay attention to the structure and patterns used, as these represent industry best practices.",
+      "language": "typescript"
+    },
+    "pitfalls": [
+      {
+        "mistake": "Not following best practices",
+        "solution": "Review documentation and community guidelines",
+        "severity": "medium"
+      },
+      {
+        "mistake": "Skipping error handling",
+        "solution": "Implement proper error boundaries and validation",
+        "severity": "low"
+      }
+    ],
+    "exercises": [
+      {
+        "title": "Practice: Built-in Utility Types",
+        "description": "Apply the concepts from this lesson on Utility Types",
+        "checkpoints": [
+          "Understand the core concept",
+          "Implement the example code",
+          "Experiment with variations"
+        ]
+      }
+    ],
+    "next": [],
+    "estimatedMinutes": 25,
+    "difficulty": "Intermediate",
+    "tags": [
+      "Utility Types",
+      "typescript"
+    ],
+    "legacy": {
+      "originalId": 8,
+      "originalTopic": "Utility Types",
+      "migrated": "2025-10-01T06:41:13.482Z"
+    },
+    "lastUpdated": "2025-10-01T06:41:13.482Z",
+    "version": "1.0.0"
+  },
+  {
+    "id": "typescript-fundamentals-lesson-9",
+    "moduleSlug": "typescript-fundamentals",
+    "title": "Decorators and Metadata",
+    "order": 9,
+    "objectives": [
+      "Implement practical solutions",
+      "Build foundational understanding"
+    ],
+    "intro": "Welcome to this comprehensive lesson on Decorators.\n\nLearn how to use decorators for meta-programming in TypeScript.\n\nThroughout this lesson, you'll gain hands-on experience with practical implementations and real-world scenarios. We'll explore both the theoretical foundations and practical applications, ensuring you can immediately apply what you learn.\n\nThis lesson is designed to build upon previous concepts while introducing new techniques that will enhance your development skills. By the end, you'll have a solid understanding of the key principles and be ready to tackle more advanced topics.\n\nThe knowledge gained here will serve as a foundation for subsequent lessons and real-world projects.",
+    "code": {
+      "example": "// Enable decorators in tsconfig.json:\n// \"experimentalDecorators\": true,\n// \"emitDecoratorMetadata\": true\n\n// Class decorator\nfunction sealed(constructor: Function) {\n  Object.seal(constructor)\n  Object.seal(constructor.prototype)\n}\n\n// Method decorator\nfunction enumerable(value: boolean) {\n  return function (target: any, propertyKey: string, descriptor: PropertyDescriptor) {\n    descriptor.enumerable = value\n  }\n}\n\n// Property decorator\nfunction format(formatString: string) {\n  return function (target: any, propertyKey: string) {\n    let value = target[propertyKey]\n    \n    const getter = function () {\n      return `${formatString} ${value}`\n    }\n    \n    const setter = function (newVal: string) {\n      value = newVal\n    }\n    \n    Object.defineProperty(target, propertyKey, {\n      get: getter,\n      set: setter,\n      enumerable: true,\n      configurable: true\n    })\n  }\n}\n\n// Parameter decorator\nfunction required(target: any, propertyKey: string, parameterIndex: number) {\n  const existingRequiredParameters: number[] = Reflect.getOwnMetadata('required', target, propertyKey) || []\n  existingRequiredParameters.push(parameterIndex)\n  Reflect.defineMetadata('required', existingRequiredParameters, target, propertyKey)\n}\n\n// Usage of decorators\n@sealed\nclass Greeter {\n  @format('Hello')\n  greeting: string\n  \n  constructor(message: string) {\n    this.greeting = message\n  }\n  \n  @enumerable(false)\n  greet(@required name: string) {\n    return `${this.greeting}, ${name}!`\n  }\n}\n\nconst greeter = new Greeter('world')\nconsole.log(greeter.greet('TypeScript'))\n\n// Decorator factory example\nfunction log(prefix: string) {\n  return function (target: any, propertyName: string, descriptor: PropertyDescriptor) {\n    const method = descriptor.value\n    \n    descriptor.value = function (...args: any[]) {\n      console.log(`${prefix}: Calling ${propertyName} with args:`, args)\n      const result = method.apply(this, args)\n      console.log(`${prefix}: ${propertyName} returned:`, result)\n      return result\n    }\n  }\n}\n\nclass Calculator {\n  @log('CALC')\n  add(a: number, b: number): number {\n    return a + b\n  }\n}\n\nconst calc = new Calculator()\ncalc.add(2, 3)",
+      "explanation": "This example produces: Hello world, TypeScript!\nCALC: Calling add with args: [2, 3]\nCALC: add returned: 5\n\nThe code demonstrates practical implementation techniques and shows how the concepts work in real scenarios. Pay attention to the structure and patterns used, as these represent industry best practices.",
+      "language": "typescript"
+    },
+    "pitfalls": [
+      {
+        "mistake": "Not following best practices",
+        "solution": "Review documentation and community guidelines",
+        "severity": "medium"
+      },
+      {
+        "mistake": "Skipping error handling",
+        "solution": "Implement proper error boundaries and validation",
+        "severity": "low"
+      }
+    ],
+    "exercises": [
+      {
+        "title": "Practice: Decorators and Metadata",
+        "description": "Apply the concepts from this lesson on Decorators",
+        "checkpoints": [
+          "Understand the core concept",
+          "Implement the example code",
+          "Experiment with variations"
+        ]
+      }
+    ],
+    "next": [],
+    "estimatedMinutes": 25,
+    "difficulty": "Intermediate",
+    "tags": [
+      "Decorators",
+      "typescript"
+    ],
+    "legacy": {
+      "originalId": 9,
+      "originalTopic": "Decorators",
+      "migrated": "2025-10-01T06:41:13.482Z"
+    },
+    "lastUpdated": "2025-10-01T06:41:13.482Z",
+    "version": "1.0.0"
+  },
+  {
+    "id": "typescript-fundamentals-lesson-10",
+    "moduleSlug": "typescript-fundamentals",
+    "title": "Module System and Namespaces",
+    "order": 10,
+    "objectives": [
+      "Implement practical solutions",
+      "Build foundational understanding"
+    ],
+    "intro": "Welcome to this comprehensive lesson on Modules.\n\nLearn about TypeScript's module system, import/export statements, and namespaces.\n\nThroughout this lesson, you'll gain hands-on experience with practical implementations and real-world scenarios. We'll explore both the theoretical foundations and practical applications, ensuring you can immediately apply what you learn.\n\nThis lesson is designed to build upon previous concepts while introducing new techniques that will enhance your development skills. By the end, you'll have a solid understanding of the key principles and be ready to tackle more advanced topics.\n\nThe knowledge gained here will serve as a foundation for subsequent lessons and real-world projects.",
+    "code": {
+      "example": "// math.ts - Module with multiple exports\nexport function add(x: number, y: number): number {\n  return x + y\n}\n\nexport function subtract(x: number, y: number): number {\n  return x - y\n}\n\nexport const PI = 3.14159\n\n// Default export\nexport default class Calculator {\n  multiply(x: number, y: number): number {\n    return x * y\n  }\n}\n\n// utils.ts - Re-exports\nexport { add, subtract } from './math'\nexport { default as Calculator } from './math'\n\n// app.ts - Various import syntaxes\nimport Calculator, { add, subtract, PI } from './math'\nimport * as MathUtils from './math'\nimport { add as addition } from './math'\n\nconst calc = new Calculator()\nconsole.log(add(5, 3))\nconsole.log(subtract(10, 4))\nconsole.log(calc.multiply(3, 4))\nconsole.log(PI)\n\n// Using namespace alias\nconsole.log(MathUtils.add(1, 2))\nconsole.log(addition(2, 3))\n\n// Namespace declaration (legacy approach)\nnamespace Geometry {\n  export interface Point {\n    x: number\n    y: number\n  }\n  \n  export function distance(p1: Point, p2: Point): number {\n    const dx = p1.x - p2.x\n    const dy = p1.y - p2.y\n    return Math.sqrt(dx * dx + dy * dy)\n  }\n  \n  export namespace Circle {\n    export function area(radius: number): number {\n      return Math.PI * radius * radius\n    }\n    \n    export function circumference(radius: number): number {\n      return 2 * Math.PI * radius\n    }\n  }\n}\n\n// Using namespace\nconst p1: Geometry.Point = { x: 0, y: 0 }\nconst p2: Geometry.Point = { x: 3, y: 4 }\nconsole.log(Geometry.distance(p1, p2))  // 5\nconsole.log(Geometry.Circle.area(5))    // ~78.54\n\n// Dynamic imports\nasync function loadMath() {\n  const mathModule = await import('./math')\n  console.log(mathModule.add(10, 20))\n}",
+      "explanation": "This example produces: 8\n6\n12\n3.14159\n3\n5\n5\n78.54\n30 (from dynamic import)\n\nThe code demonstrates practical implementation techniques and shows how the concepts work in real scenarios. Pay attention to the structure and patterns used, as these represent industry best practices.",
+      "language": "typescript"
+    },
+    "pitfalls": [
+      {
+        "mistake": "Not following best practices",
+        "solution": "Review documentation and community guidelines",
+        "severity": "medium"
+      },
+      {
+        "mistake": "Skipping error handling",
+        "solution": "Implement proper error boundaries and validation",
+        "severity": "low"
+      }
+    ],
+    "exercises": [
+      {
+        "title": "Practice: Module System and Namespaces",
+        "description": "Apply the concepts from this lesson on Modules",
+        "checkpoints": [
+          "Understand the core concept",
+          "Implement the example code",
+          "Experiment with variations"
+        ]
+      }
+    ],
+    "next": [],
+    "estimatedMinutes": 25,
+    "difficulty": "Intermediate",
+    "tags": [
+      "Modules",
+      "typescript"
+    ],
+    "legacy": {
+      "originalId": 10,
+      "originalTopic": "Modules",
+      "migrated": "2025-10-01T06:41:13.482Z"
+    },
+    "lastUpdated": "2025-10-01T06:41:13.482Z",
+    "version": "1.0.0"
+  },
+  {
+    "id": "typescript-fundamentals-lesson-11",
+    "moduleSlug": "typescript-fundamentals",
+    "title": "Promises, Async/Await with TypeScript",
+    "order": 11,
+    "objectives": [
+      "Implement practical solutions",
+      "Build foundational understanding"
+    ],
+    "intro": "Welcome to this comprehensive lesson on Async Programming.\n\nLearn how to work with asynchronous code in TypeScript using Promises and async/await.\n\nThroughout this lesson, you'll gain hands-on experience with practical implementations and real-world scenarios. We'll explore both the theoretical foundations and practical applications, ensuring you can immediately apply what you learn.\n\nThis lesson is designed to build upon previous concepts while introducing new techniques that will enhance your development skills. By the end, you'll have a solid understanding of the key principles and be ready to tackle more advanced topics.\n\nThe knowledge gained here will serve as a foundation for subsequent lessons and real-world projects.",
+    "code": {
+      "example": "// Typed Promise functions\nfunction fetchUser(id: number): Promise<{ id: number; name: string; email: string }> {\n  return new Promise((resolve, reject) => {\n    setTimeout(() => {\n      if (id > 0) {\n        resolve({\n          id,\n          name: `User ${id}`,\n          email: `user${id}@example.com`\n        })\n      } else {\n        reject(new Error('Invalid user ID'))\n      }\n    }, 1000)\n  })\n}\n\n// Generic Promise wrapper\nfunction delay<T>(ms: number, value: T): Promise<T> {\n  return new Promise(resolve => {\n    setTimeout(() => resolve(value), ms)\n  })\n}\n\n// Async/await with error handling\nasync function getUserInfo(id: number): Promise<string> {\n  try {\n    const user = await fetchUser(id)\n    const greeting = await delay(500, `Hello, ${user.name}!`)\n    return greeting\n  } catch (error) {\n    throw new Error(`Failed to get user info: ${error.message}`)\n  }\n}\n\n// Promise combinators with types\ninterface ApiResponse<T> {\n  data: T\n  status: number\n  timestamp: Date\n}\n\nasync function fetchMultipleUsers(ids: number[]): Promise<ApiResponse<any>[]> {\n  const promises = ids.map(id => \n    fetchUser(id).then(user => ({\n      data: user,\n      status: 200,\n      timestamp: new Date()\n    })).catch(error => ({\n      data: null,\n      status: 404,\n      timestamp: new Date(),\n      error: error.message\n    }))\n  )\n  \n  return Promise.all(promises)\n}\n\n// Async iterators\nasync function* generateNumbers(): AsyncIterableIterator<number> {\n  for (let i = 1; i <= 5; i++) {\n    await delay(100, null)\n    yield i\n  }\n}\n\n// Usage examples\nasync function main() {\n  try {\n    // Single user\n    const greeting = await getUserInfo(1)\n    console.log(greeting)\n    \n    // Multiple users\n    const responses = await fetchMultipleUsers([1, 2, -1])\n    console.log('Responses:', responses.length)\n    \n    // Async iteration\n    for await (const num of generateNumbers()) {\n      console.log(`Generated: ${num}`)\n    }\n    \n  } catch (error) {\n    console.error('Error:', error.message)\n  }\n}\n\nmain()",
+      "explanation": "This example produces: Hello, User 1!\nResponses: 3\nGenerated: 1\nGenerated: 2\nGenerated: 3\nGenerated: 4\nGenerated: 5\n\nThe code demonstrates practical implementation techniques and shows how the concepts work in real scenarios. Pay attention to the structure and patterns used, as these represent industry best practices.",
+      "language": "typescript"
+    },
+    "pitfalls": [
+      {
+        "mistake": "Not following best practices",
+        "solution": "Review documentation and community guidelines",
+        "severity": "medium"
+      },
+      {
+        "mistake": "Skipping error handling",
+        "solution": "Implement proper error boundaries and validation",
+        "severity": "low"
+      }
+    ],
+    "exercises": [
+      {
+        "title": "Practice: Promises, Async/Await with TypeScript",
+        "description": "Apply the concepts from this lesson on Async Programming",
+        "checkpoints": [
+          "Understand the core concept",
+          "Implement the example code",
+          "Experiment with variations"
+        ]
+      }
+    ],
+    "next": [],
+    "estimatedMinutes": 25,
+    "difficulty": "Intermediate",
+    "tags": [
+      "Async Programming",
+      "typescript"
+    ],
+    "legacy": {
+      "originalId": 11,
+      "originalTopic": "Async Programming",
+      "migrated": "2025-10-01T06:41:13.482Z"
+    },
+    "lastUpdated": "2025-10-01T06:41:13.482Z",
+    "version": "1.0.0"
+  },
+  {
+    "id": "typescript-fundamentals-lesson-12",
+    "moduleSlug": "typescript-fundamentals",
+    "title": "Testing TypeScript Code",
+    "order": 12,
+    "objectives": [
+      "Implement practical solutions",
+      "Build foundational understanding"
+    ],
+    "intro": "Welcome to this comprehensive lesson on Testing.\n\nLearn how to write comprehensive tests for TypeScript code using Jest and type-safe testing patterns.\n\nThroughout this lesson, you'll gain hands-on experience with practical implementations and real-world scenarios. We'll explore both the theoretical foundations and practical applications, ensuring you can immediately apply what you learn.\n\nThis lesson is designed to build upon previous concepts while introducing new techniques that will enhance your development skills. By the end, you'll have a solid understanding of the key principles and be ready to tackle more advanced topics.\n\nThe knowledge gained here will serve as a foundation for subsequent lessons and real-world projects.",
+    "code": {
+      "example": "// user.ts - Code to test\nexport interface User {\n  id: number\n  name: string\n  email: string\n  age: number\n}\n\nexport class UserService {\n  private users: User[] = []\n  \n  addUser(user: Omit<User, 'id'>): User {\n    const newUser: User = {\n      ...user,\n      id: Math.max(0, ...this.users.map(u => u.id)) + 1\n    }\n    this.users.push(newUser)\n    return newUser\n  }\n  \n  getUser(id: number): User | undefined {\n    return this.users.find(user => user.id === id)\n  }\n  \n  updateUser(id: number, updates: Partial<User>): User | null {\n    const userIndex = this.users.findIndex(user => user.id === id)\n    if (userIndex === -1) return null\n    \n    this.users[userIndex] = { ...this.users[userIndex], ...updates }\n    return this.users[userIndex]\n  }\n  \n  deleteUser(id: number): boolean {\n    const userIndex = this.users.findIndex(user => user.id === id)\n    if (userIndex === -1) return false\n    \n    this.users.splice(userIndex, 1)\n    return true\n  }\n  \n  getAllUsers(): User[] {\n    return [...this.users]\n  }\n}\n\n// user.test.ts - Comprehensive tests\nimport { UserService, User } from './user'\n\ndescribe('UserService', () => {\n  let userService: UserService\n  \n  beforeEach(() => {\n    userService = new UserService()\n  })\n  \n  describe('addUser', () => {\n    it('should add a user with auto-generated id', () => {\n      const userData = { name: 'John Doe', email: 'john@example.com', age: 30 }\n      const user = userService.addUser(userData)\n      \n      expect(user.id).toBe(1)\n      expect(user.name).toBe('John Doe')\n      expect(user.email).toBe('john@example.com')\n      expect(user.age).toBe(30)\n    })\n    \n    it('should increment id for subsequent users', () => {\n      userService.addUser({ name: 'User 1', email: 'user1@test.com', age: 25 })\n      const secondUser = userService.addUser({ name: 'User 2', email: 'user2@test.com', age: 35 })\n      \n      expect(secondUser.id).toBe(2)\n    })\n  })\n  \n  describe('getUser', () => {\n    it('should return user by id', () => {\n      const addedUser = userService.addUser({ name: 'Test User', email: 'test@example.com', age: 28 })\n      const foundUser = userService.getUser(addedUser.id)\n      \n      expect(foundUser).toEqual(addedUser)\n    })\n    \n    it('should return undefined for non-existent user', () => {\n      const user = userService.getUser(999)\n      expect(user).toBeUndefined()\n    })\n  })\n  \n  describe('updateUser', () => {\n    it('should update existing user partially', () => {\n      const user = userService.addUser({ name: 'Original Name', email: 'original@test.com', age: 25 })\n      const updated = userService.updateUser(user.id, { name: 'Updated Name', age: 26 })\n      \n      expect(updated).toMatchObject({\n        id: user.id,\n        name: 'Updated Name',\n        email: 'original@test.com',\n        age: 26\n      })\n    })\n    \n    it('should return null for non-existent user', () => {\n      const result = userService.updateUser(999, { name: 'New Name' })\n      expect(result).toBeNull()\n    })\n  })\n})",
+      "explanation": "This example produces: ✓ UserService › addUser › should add a user with auto-generated id\n✓ UserService › addUser › should increment id for subsequent users\n✓ UserService › getUser › should return user by id\n✓ UserService › getUser › should return undefined for non-existent user\n✓ UserService › updateUser › should update existing user partially\n✓ UserService › updateUser › should return null for non-existent user\n\nThe code demonstrates practical implementation techniques and shows how the concepts work in real scenarios. Pay attention to the structure and patterns used, as these represent industry best practices.",
+      "language": "typescript"
+    },
+    "pitfalls": [
+      {
+        "mistake": "Not following best practices",
+        "solution": "Review documentation and community guidelines",
+        "severity": "medium"
+      },
+      {
+        "mistake": "Skipping error handling",
+        "solution": "Implement proper error boundaries and validation",
+        "severity": "low"
+      }
+    ],
+    "exercises": [
+      {
+        "title": "Practice: Testing TypeScript Code",
+        "description": "Apply the concepts from this lesson on Testing",
+        "checkpoints": [
+          "Understand the core concept",
+          "Implement the example code",
+          "Experiment with variations"
+        ]
+      }
+    ],
+    "next": [],
+    "estimatedMinutes": 25,
+    "difficulty": "Intermediate",
+    "tags": [
+      "Testing",
+      "typescript"
+    ],
+    "legacy": {
+      "originalId": 12,
+      "originalTopic": "Testing",
+      "migrated": "2025-10-01T06:41:13.482Z"
+    },
+    "lastUpdated": "2025-10-01T06:41:13.482Z",
+    "version": "1.0.0"
+  },
+  {
+    "id": "typescript-fundamentals-lesson-13",
+    "moduleSlug": "typescript-fundamentals",
+    "title": "Advanced TypeScript Patterns and Utility Types",
+    "order": 13,
+    "objectives": [
+      "Master utility types and conditional types",
+      "Implement advanced TypeScript patterns",
+      "Understand mapped types and template literal types"
+    ],
+    "intro": "Welcome to this comprehensive lesson on Advanced TypeScript Patterns and Utility Types.\n\nLearn how to leverage TypeScript's advanced type system features to create more robust and maintainable code.\n\nThroughout this lesson, you'll gain hands-on experience with practical implementations and real-world scenarios. We'll explore both the theoretical foundations and practical applications, ensuring you can immediately apply what you learn.\n\nThis lesson is designed to build upon previous concepts while introducing new techniques that will enhance your development skills. By the end, you'll have a solid understanding of the key principles and be ready to tackle more advanced topics.\n\nThe knowledge gained here will serve as a foundation for subsequent lessons and real-world projects.",
+    "code": {
+      "example": "// Utility Types\ninterface User {\n  id: number;\n  name: string;\n  email: string;\n  age: number;\n  isActive: boolean;\n}\n\n// Partial - makes all properties optional\ntype UserUpdate = Partial<User>;\nconst updateUser = (id: number, updates: UserUpdate) => {\n  // Only update the provided fields\n};\n\n// Pick - select specific properties\ntype UserSummary = Pick<User, 'id' | 'name' | 'email'>;\n\n// Omit - exclude specific properties\ntype CreateUser = Omit<User, 'id'>;\n\n// Record - create object type with specific keys and values\ntype UserRoles = Record<'admin' | 'user' | 'guest', string[]>;\nconst permissions: UserRoles = {\n  admin: ['read', 'write', 'delete'],\n  user: ['read', 'write'],\n  guest: ['read']\n};\n\n// Conditional Types\ntype ApiResponse<T> = T extends string ? string : T extends number ? number : never;\n\n// Mapped Types\ntype Optional<T> = {\n  [K in keyof T]?: T[K];\n};\n\ntype Readonly<T> = {\n  readonly [K in keyof T]: T[K];\n};\n\n// Template Literal Types\ntype Color = 'red' | 'green' | 'blue';\ntype Size = 'small' | 'medium' | 'large';\ntype ThemeClass = `${Color}-${Size}`;\n// Results in: 'red-small' | 'red-medium' | 'red-large' | 'green-small' | etc.\n\n// Advanced Pattern: Discriminated Unions\ninterface LoadingState {\n  status: 'loading';\n}\n\ninterface SuccessState {\n  status: 'success';\n  data: any;\n}\n\ninterface ErrorState {\n  status: 'error';\n  error: string;\n}\n\ntype AsyncState = LoadingState | SuccessState | ErrorState;\n\nfunction handleState(state: AsyncState) {\n  switch (state.status) {\n    case 'loading':\n      console.log('Loading...');\n      break;\n    case 'success':\n      console.log('Data:', state.data); // TypeScript knows data exists\n      break;\n    case 'error':\n      console.log('Error:', state.error); // TypeScript knows error exists\n      break;\n  }\n}\n\n// Advanced Pattern: Builder Pattern with TypeScript\nclass QueryBuilder<T> {\n  private conditions: string[] = [];\n  private orderBy: string = '';\n  private limitCount: number = 0;\n\n  where(condition: keyof T, operator: string, value: any): this {\n    this.conditions.push(`${String(condition)} ${operator} '${value}'`);\n    return this;\n  }\n\n  order(field: keyof T, direction: 'ASC' | 'DESC' = 'ASC'): this {\n    this.orderBy = `ORDER BY ${String(field)} ${direction}`;\n    return this;\n  }\n\n  limit(count: number): this {\n    this.limitCount = count;\n    return this;\n  }\n\n  build(): string {\n    let query = 'SELECT * FROM table';\n    if (this.conditions.length > 0) {\n      query += ` WHERE ${this.conditions.join(' AND ')}`;\n    }\n    if (this.orderBy) {\n      query += ` ${this.orderBy}`;\n    }\n    if (this.limitCount > 0) {\n      query += ` LIMIT ${this.limitCount}`;\n    }\n    return query;\n  }\n}\n\n// Usage\nconst query = new QueryBuilder<User>()\n  .where('age', '>', 18)\n  .where('isActive', '=', true)\n  .order('name', 'ASC')\n  .limit(10)\n  .build();",
+      "explanation": "This example demonstrates advanced TypeScript patterns including utility types (Partial, Pick, Omit, Record), conditional types, mapped types, template literal types, discriminated unions, and the builder pattern with proper type safety.\n\nThe code demonstrates practical implementation techniques and shows how the concepts work in real scenarios. Pay attention to the structure and patterns used, as these represent industry best practices.",
+      "language": "typescript"
+    },
+    "pitfalls": [
+      {
+        "mistake": "Overusing complex types that hurt readability",
+        "solution": "Balance type safety with code readability. Use meaningful names and document complex types",
+        "severity": "medium"
+      },
+      {
+        "mistake": "Not leveraging utility types for DRY code",
+        "solution": "Use built-in utility types like Partial, Pick, and Omit to avoid duplicating type definitions",
+        "severity": "medium"
+      },
+      {
+        "mistake": "Misusing conditional types for simple scenarios",
+        "solution": "Use conditional types for truly conditional logic, not as a replacement for union types",
+        "severity": "low"
+      }
+    ],
+    "exercises": [
+      {
+        "title": "Practice: Advanced TypeScript Patterns and Utility Types",
+        "description": "Implement advanced TypeScript patterns to create type-safe and maintainable code",
+        "checkpoints": [
+          "Create utility types for common data transformations",
+          "Implement discriminated unions for state management",
+          "Build type-safe APIs using template literal types",
+          "Create reusable patterns with conditional and mapped types"
+        ]
+      }
+    ],
+    "next": [],
+    "estimatedMinutes": 40,
+    "difficulty": "Advanced",
+    "tags": [
+      "Advanced Types",
+      "Utility Types",
+      "typescript"
+    ],
+    "lastUpdated": "2025-10-01T06:41:13.482Z",
+    "version": "1.0.0"
+  },
+  {
+    "id": "typescript-fundamentals-lesson-14",
+    "moduleSlug": "typescript-fundamentals",
+    "title": "TypeScript in Production and Migration Strategies",
+    "order": 14,
+    "objectives": [
+      "Understand production TypeScript configuration",
+      "Learn migration strategies from JavaScript to TypeScript",
+      "Implement build optimization and deployment practices"
+    ],
+    "intro": "Welcome to this comprehensive lesson on TypeScript in Production and Migration Strategies.\n\nLearn how to successfully deploy TypeScript applications to production and migrate existing JavaScript codebases.\n\nThroughout this lesson, you'll gain hands-on experience with practical implementations and real-world scenarios. We'll explore both the theoretical foundations and practical applications, ensuring you can immediately apply what you learn.\n\nThis lesson is designed to build upon previous concepts while introducing new techniques that will enhance your development skills. By the end, you'll have a solid understanding of the key principles and be ready to tackle more advanced topics.\n\nThe knowledge gained here will serve as a foundation for subsequent lessons and real-world projects.",
+    "code": {
+      "example": "// Production tsconfig.json\n{\n  \"compilerOptions\": {\n    \"target\": \"ES2020\",\n    \"module\": \"ESNext\",\n    \"moduleResolution\": \"node\",\n    \"lib\": [\"ES2020\", \"DOM\"],\n    \"outDir\": \"./dist\",\n    \"rootDir\": \"./src\",\n    \"strict\": true,\n    \"noImplicitAny\": true,\n    \"strictNullChecks\": true,\n    \"strictFunctionTypes\": true,\n    \"noImplicitReturns\": true,\n    \"noFallthroughCasesInSwitch\": true,\n    \"noUncheckedIndexedAccess\": true,\n    \"exactOptionalPropertyTypes\": true,\n    \"allowSyntheticDefaultImports\": true,\n    \"esModuleInterop\": true,\n    \"forceConsistentCasingInFileNames\": true,\n    \"skipLibCheck\": true,\n    \"declaration\": true,\n    \"declarationMap\": true,\n    \"sourceMap\": false,\n    \"removeComments\": true,\n    \"importHelpers\": true,\n    \"downlevelIteration\": true\n  },\n  \"include\": [\"src/**/*\"],\n  \"exclude\": [\"node_modules\", \"dist\", \"**/*.test.ts\"]\n}\n\n// Migration Strategy: Gradual adoption\n// 1. Start with JavaScript files and .d.ts declarations\n// types/legacy.d.ts\ndeclare module 'legacy-library' {\n  export function legacyFunction(param: any): any;\n  export const LEGACY_CONSTANT: string;\n}\n\n// 2. Add TypeScript gradually, file by file\n// utils/validation.ts (new TypeScript file)\nexport interface ValidationRule {\n  field: string;\n  required?: boolean;\n  minLength?: number;\n  maxLength?: number;\n  pattern?: RegExp;\n}\n\nexport interface ValidationResult {\n  isValid: boolean;\n  errors: string[];\n}\n\nexport class Validator {\n  private rules: ValidationRule[] = [];\n\n  addRule(rule: ValidationRule): this {\n    this.rules.push(rule);\n    return this;\n  }\n\n  validate(data: Record<string, any>): ValidationResult {\n    const errors: string[] = [];\n\n    for (const rule of this.rules) {\n      const value = data[rule.field];\n\n      if (rule.required && (value === undefined || value === null || value === '')) {\n        errors.push(`${rule.field} is required`);\n        continue;\n      }\n\n      if (typeof value === 'string') {\n        if (rule.minLength && value.length < rule.minLength) {\n          errors.push(`${rule.field} must be at least ${rule.minLength} characters`);\n        }\n        if (rule.maxLength && value.length > rule.maxLength) {\n          errors.push(`${rule.field} must be no more than ${rule.maxLength} characters`);\n        }\n        if (rule.pattern && !rule.pattern.test(value)) {\n          errors.push(`${rule.field} format is invalid`);\n        }\n      }\n    }\n\n    return {\n      isValid: errors.length === 0,\n      errors\n    };\n  }\n}\n\n// 3. Build configuration for production\n// webpack.config.js\nconst path = require('path');\n\nmodule.exports = {\n  entry: './src/index.ts',\n  module: {\n    rules: [\n      {\n        test: /\\.ts$/,\n        use: 'ts-loader',\n        exclude: /node_modules/,\n      },\n    ],\n  },\n  resolve: {\n    extensions: ['.ts', '.js'],\n  },\n  output: {\n    filename: 'bundle.js',\n    path: path.resolve(__dirname, 'dist'),\n  },\n  optimization: {\n    usedExports: true,\n    sideEffects: false,\n  },\n};\n\n// CI/CD Integration\n// .github/workflows/typescript.yml\n/*\nname: TypeScript CI\non: [push, pull_request]\njobs:\n  build:\n    runs-on: ubuntu-latest\n    steps:\n    - uses: actions/checkout@v2\n    - name: Setup Node.js\n      uses: actions/setup-node@v2\n      with:\n        node-version: '16'\n    - name: Install dependencies\n      run: npm ci\n    - name: TypeScript type check\n      run: npx tsc --noEmit\n    - name: Lint\n      run: npm run lint\n    - name: Test\n      run: npm test\n    - name: Build\n      run: npm run build\n*/\n\n// Performance monitoring in production\ninterface PerformanceMetrics {\n  buildTime: number;\n  bundleSize: number;\n  typeCheckTime: number;\n}\n\nclass TypeScriptMetrics {\n  static measureBuildPerformance(): PerformanceMetrics {\n    const start = Date.now();\n    // Build process timing logic\n    const buildTime = Date.now() - start;\n    \n    return {\n      buildTime,\n      bundleSize: this.getBundleSize(),\n      typeCheckTime: this.getTypeCheckTime()\n    };\n  }\n\n  private static getBundleSize(): number {\n    // Logic to measure bundle size\n    return 0;\n  }\n\n  private static getTypeCheckTime(): number {\n    // Logic to measure type checking time\n    return 0;\n  }\n}",
+      "explanation": "This example demonstrates production-ready TypeScript configuration, migration strategies for converting JavaScript projects, build optimization, and deployment practices including CI/CD integration.\n\nThe code demonstrates practical implementation techniques and shows how the concepts work in real scenarios. Pay attention to the structure and patterns used, as these represent industry best practices.",
+      "language": "typescript"
+    },
+    "pitfalls": [
+      {
+        "mistake": "Enabling strict mode too early in migration",
+        "solution": "Gradually enable strict TypeScript options during migration to avoid overwhelming the team",
+        "severity": "medium"
+      },
+      {
+        "mistake": "Not configuring proper build optimization",
+        "solution": "Use tree shaking, code splitting, and proper bundling for production builds",
+        "severity": "medium"
+      },
+      {
+        "mistake": "Missing type checking in CI/CD pipeline",
+        "solution": "Always include TypeScript type checking as part of your automated build process",
+        "severity": "high"
+      }
+    ],
+    "exercises": [
+      {
+        "title": "Practice: TypeScript in Production and Migration Strategies",
+        "description": "Set up a production-ready TypeScript project and implement migration strategies",
+        "checkpoints": [
+          "Configure production TypeScript settings",
+          "Set up build optimization and bundling",
+          "Implement gradual migration strategy",
+          "Configure CI/CD pipeline with type checking",
+          "Monitor and optimize build performance"
+        ]
+      }
+    ],
+    "next": [],
+    "estimatedMinutes": 45,
+    "difficulty": "Advanced",
+    "tags": [
+      "Production",
+      "Migration",
+      "Build Tools",
+      "typescript"
+    ],
+    "lastUpdated": "2025-10-01T06:41:13.482Z",
+    "version": "1.0.0"
+  }
+]

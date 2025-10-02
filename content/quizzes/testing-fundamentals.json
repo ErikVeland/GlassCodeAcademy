@@ -1,0 +1,476 @@
+{
+  "moduleSlug": "testing-fundamentals",
+  "title": "Testing Fundamentals Assessment",
+  "description": "Comprehensive assessment covering key concepts from the testing-fundamentals module",
+  "totalQuestions": 18,
+  "passingScore": 70,
+  "timeLimit": 23,
+  "questions": [
+    {
+      "id": "testing-fundamentals-q1",
+      "question": "What is the purpose of the testing pyramid?",
+      "topic": "Testing Fundamentals",
+      "difficulty": "Beginner",
+      "choices": [
+        "To guide the distribution of different types of tests in a project",
+        "To measure the performance of test execution",
+        "To organize test files in a directory structure",
+        "To prioritize bug fixes in software development"
+      ],
+      "correctIndex": 0,
+      "explanation": "The testing pyramid is a conceptual model that guides teams on how to distribute different types of tests. It suggests having many unit tests (fast and cheap), fewer integration tests, and even fewer end-to-end tests (slow and expensive). This distribution optimizes for fast feedback and cost-effectiveness.",
+      "industryContext": "These skills are valuable in professional development environments.",
+      "tags": [
+        "Testing Fundamentals",
+        "beginner",
+        "testing"
+      ],
+      "questionType": "multiple-choice",
+      "estimatedTime": 90,
+      "legacy": {
+        "originalId": 1,
+        "originalType": "multiple-choice",
+        "migrated": "2025-10-01T06:41:13.489Z"
+      }
+    },
+    {
+      "id": "testing-fundamentals-q2",
+      "question": "Which type of test typically runs the fastest?",
+      "topic": "Testing Fundamentals",
+      "difficulty": "Intermediate",
+      "choices": [
+        "Unit tests",
+        "Integration tests",
+        "End-to-end tests",
+        "Manual tests"
+      ],
+      "correctIndex": 0,
+      "explanation": "Unit tests typically run the fastest because they test small units of code in isolation without external dependencies like databases or network calls. They're executed in memory and can run in milliseconds, making them ideal for continuous integration pipelines.",
+      "industryContext": "These skills are valuable in professional development environments.",
+      "tags": [
+        "Testing Fundamentals",
+        "intermediate",
+        "testing"
+      ],
+      "questionType": "multiple-choice",
+      "estimatedTime": 90,
+      "legacy": {
+        "originalId": 2,
+        "originalType": "multiple-choice",
+        "migrated": "2025-10-01T06:41:13.489Z"
+      }
+    },
+    {
+      "id": "testing-fundamentals-q3",
+      "question": "What is the difference between a mock and a stub in testing? When would you use each?",
+      "topic": "Unit Testing",
+      "difficulty": "Beginner",
+      "choices": [
+        "Open-ended question - no multiple choice",
+        "This is a conceptual question",
+        "Answer requires explanation",
+        "Multiple approaches possible"
+      ],
+      "correctIndex": 0,
+      "explanation": "A stub provides canned answers to calls made during the test, usually not responding at all to anything outside what's programmed in for the test. A mock is a stub with added behavior verification - it knows what methods should be called and with what arguments, and can verify this during the test. Use stubs when you need to control indirect inputs, and mocks when you need to verify interactions between objects.",
+      "industryContext": "These skills are valuable in professional development environments.",
+      "tags": [
+        "Unit Testing",
+        "beginner",
+        "testing"
+      ],
+      "questionType": "open-ended",
+      "estimatedTime": 180,
+      "legacy": {
+        "originalId": 3,
+        "originalType": "open-ended",
+        "migrated": "2025-10-01T06:41:13.489Z"
+      }
+    },
+    {
+      "id": "testing-fundamentals-q4",
+      "question": "What is the main focus of integration testing?",
+      "topic": "Integration Testing",
+      "difficulty": "Beginner",
+      "choices": [
+        "Testing interactions between different modules or services",
+        "Testing individual functions in isolation",
+        "Testing the user interface",
+        "Testing database performance"
+      ],
+      "correctIndex": 0,
+      "explanation": "Integration testing focuses on verifying the interactions between different modules, services, or components to ensure they work together correctly. This includes testing database connections, API integrations, and communication between different layers of an application.",
+      "industryContext": "These skills are valuable in professional development environments.",
+      "tags": [
+        "Integration Testing",
+        "beginner",
+        "testing"
+      ],
+      "questionType": "multiple-choice",
+      "estimatedTime": 90,
+      "legacy": {
+        "originalId": 4,
+        "originalType": "multiple-choice",
+        "migrated": "2025-10-01T06:41:13.489Z"
+      }
+    },
+    {
+      "id": "testing-fundamentals-q5",
+      "question": "What is a key advantage of end-to-end testing?",
+      "topic": "End-to-End Testing",
+      "difficulty": "Beginner",
+      "choices": [
+        "It tests the entire system from the user's perspective",
+        "It runs faster than unit tests",
+        "It's easier to maintain than other test types",
+        "It provides detailed code coverage reports"
+      ],
+      "correctIndex": 0,
+      "explanation": "End-to-end testing validates the entire system workflow from the user's perspective, ensuring that all integrated components work together as expected in a production-like environment. This helps catch issues that might not be apparent in unit or integration tests.",
+      "industryContext": "These skills are valuable in professional development environments.",
+      "tags": [
+        "End-to-End Testing",
+        "beginner",
+        "testing"
+      ],
+      "questionType": "multiple-choice",
+      "estimatedTime": 90,
+      "legacy": {
+        "originalId": 5,
+        "originalType": "multiple-choice",
+        "migrated": "2025-10-01T06:41:13.489Z"
+      }
+    },
+    {
+      "id": "testing-fundamentals-q6",
+      "question": "What is the purpose of the Arrange-Act-Assert pattern in testing?",
+      "topic": "Test Patterns",
+      "difficulty": "Beginner",
+      "choices": [
+        "To structure tests in a clear, readable format",
+        "To make tests run faster",
+        "To reduce the number of test cases needed",
+        "To eliminate the need for test documentation"
+      ],
+      "correctIndex": 0,
+      "explanation": "The Arrange-Act-Assert (AAA) pattern structures tests into three clear sections: Arrange (set up preconditions and inputs), Act (execute the code under test), and Assert (verify the outcomes). This pattern makes tests more readable, maintainable, and easier to debug.",
+      "industryContext": "These skills are valuable in professional development environments.",
+      "tags": [
+        "Test Patterns",
+        "beginner",
+        "testing"
+      ],
+      "questionType": "multiple-choice",
+      "estimatedTime": 90,
+      "legacy": {
+        "originalId": 6,
+        "originalType": "multiple-choice",
+        "migrated": "2025-10-01T06:41:13.489Z"
+      }
+    },
+    {
+      "id": "testing-fundamentals-q7",
+      "question": "What is test isolation and why is it important? How do you achieve it?",
+      "topic": "Mocking",
+      "difficulty": "Beginner",
+      "choices": [
+        "Each test runs independently using fresh data, mocks, and setup/teardown to ensure reliability",
+        "Tests run in parallel to save time",
+        "All tests share the same database for consistency",
+        "Tests are grouped by functionality for better organization"
+      ],
+      "correctIndex": 0,
+      "explanation": "Test isolation means each test can run independently without being affected by other tests. It's important because it ensures tests are reliable, repeatable, and can be run in any order. You achieve it by using fresh test data for each test, mocking external dependencies, avoiding shared state between tests, and using setup/teardown methods to prepare and clean up the test environment. Isolated tests prevent cascading failures and make it easier to identify the root cause of test failures.",
+      "industryContext": "Test isolation is a fundamental principle in professional software development that ensures test reliability and maintainability. Without proper isolation, tests can become flaky, making it difficult to trust test results and slowing down development processes.",
+      "tags": [
+        "Mocking",
+        "beginner",
+        "testing"
+      ],
+      "questionType": "multiple-choice",
+      "estimatedTime": 90,
+      "legacy": {
+        "originalId": 7,
+        "originalType": "open-ended",
+        "migrated": "2025-10-01T06:41:13.489Z"
+      }
+    },
+    {
+      "id": "testing-fundamentals-q8",
+      "question": "What does code coverage measure and what are its limitations?",
+      "topic": "Code Coverage",
+      "difficulty": "Intermediate",
+      "choices": [
+        "The percentage of code executed by tests, but doesn't measure test quality",
+        "The number of bugs found in the code",
+        "The speed of test execution",
+        "The complexity of the code"
+      ],
+      "correctIndex": 0,
+      "explanation": "Code coverage measures the percentage of code executed by tests, including lines, branches, and functions. However, it doesn't measure test quality or correctness - 100% coverage doesn't guarantee bug-free code. Tests could execute all code paths but still have incorrect assertions. It's a useful metric for identifying untested code but shouldn't be the sole measure of test effectiveness.",
+      "industryContext": "These skills are valuable in professional development environments.",
+      "tags": [
+        "Code Coverage",
+        "intermediate",
+        "testing"
+      ],
+      "questionType": "multiple-choice",
+      "estimatedTime": 90,
+      "legacy": {
+        "originalId": 8,
+        "originalType": "multiple-choice",
+        "migrated": "2025-10-01T06:41:13.489Z"
+      }
+    },
+    {
+      "id": "testing-fundamentals-q9",
+      "question": "What is the testing pyramid?",
+      "topic": "Test Types",
+      "difficulty": "Beginner",
+      "choices": [
+        "More unit tests, fewer integration tests, fewest E2E tests",
+        "Equal amounts of all test types",
+        "More E2E tests than unit tests",
+        "Only integration tests"
+      ],
+      "correctIndex": 0,
+      "explanation": "The testing pyramid suggests having many fast, cheap unit tests at the base, fewer integration tests in the middle, and fewest expensive E2E tests at the top.",
+      "industryContext": "These skills are valuable in professional development environments.",
+      "tags": [
+        "Test Types",
+        "beginner",
+        "testing"
+      ],
+      "questionType": "multiple-choice",
+      "estimatedTime": 90,
+      "legacy": {
+        "originalId": 9,
+        "originalType": "multiple-choice",
+        "migrated": "2025-10-01T06:41:13.489Z"
+      }
+    },
+    {
+      "id": "testing-fundamentals-q10",
+      "question": "What is the difference between mocks, stubs, and spies?",
+      "topic": "Mocking",
+      "difficulty": "Beginner",
+      "choices": [
+        "Mocks verify behavior, stubs provide responses, spies record calls",
+        "All are the same thing",
+        "Mocks are fastest",
+        "Stubs are most reliable"
+      ],
+      "correctIndex": 0,
+      "explanation": "Mocks verify that specific methods were called with expected parameters. Stubs provide predetermined responses. Spies record information about function calls for later verification.",
+      "industryContext": "These skills are valuable in professional development environments.",
+      "tags": [
+        "Mocking",
+        "beginner",
+        "testing"
+      ],
+      "questionType": "multiple-choice",
+      "estimatedTime": 90,
+      "legacy": {
+        "originalId": 10,
+        "originalType": "multiple-choice",
+        "migrated": "2025-10-01T06:41:13.489Z"
+      }
+    },
+    {
+      "id": "testing-fundamentals-q11",
+      "question": "What are the different types of code coverage and what do they measure?",
+      "topic": "Coverage",
+      "difficulty": "Intermediate",
+      "choices": [
+        "Line coverage (executed lines), branch coverage (taken branches), and function coverage (called functions)",
+        "Speed coverage (execution time), memory coverage (RAM usage), and disk coverage (storage)",
+        "Frontend coverage (UI tests), backend coverage (API tests), and database coverage (queries)",
+        "Unit coverage (unit tests), integration coverage (integration tests), and E2E coverage (end-to-end tests)"
+      ],
+      "correctIndex": 0,
+      "explanation": "Line coverage: percentage of code lines executed. Branch coverage: percentage of code branches taken (if/else, switch statements). Function coverage: percentage of functions called. Statement coverage: percentage of statements executed. Condition coverage: percentage of boolean conditions evaluated to both true and false. These metrics help identify untested code paths but don't guarantee code correctness.",
+      "industryContext": "Understanding different types of code coverage is essential for professional software developers to effectively measure test quality and identify gaps in test coverage. Different coverage types provide insights into different aspects of code execution paths.",
+      "tags": [
+        "Coverage",
+        "intermediate",
+        "testing"
+      ],
+      "questionType": "multiple-choice",
+      "estimatedTime": 90,
+      "legacy": {
+        "originalId": 11,
+        "originalType": "open-ended",
+        "migrated": "2025-10-01T06:41:13.489Z"
+      }
+    },
+    {
+      "id": "testing-fundamentals-q12",
+      "question": "What is load testing?",
+      "topic": "Performance Testing",
+      "difficulty": "Beginner",
+      "choices": [
+        "Testing system behavior under expected load conditions",
+        "Testing code loading speed",
+        "Testing database loads",
+        "Testing file loading"
+      ],
+      "correctIndex": 0,
+      "explanation": "Load testing evaluates system performance under expected user load to identify bottlenecks and ensure the application can handle normal traffic volumes.",
+      "industryContext": "These skills are valuable in professional development environments.",
+      "tags": [
+        "Performance Testing",
+        "beginner",
+        "testing"
+      ],
+      "questionType": "multiple-choice",
+      "estimatedTime": 90,
+      "legacy": {
+        "originalId": 12,
+        "originalType": "multiple-choice",
+        "migrated": "2025-10-01T06:41:13.489Z"
+      }
+    },
+    {
+      "id": "testing-fundamentals-q13",
+      "question": "What is the TDD cycle?",
+      "topic": "TDD",
+      "difficulty": "Beginner",
+      "choices": [
+        "Red, Green, Refactor",
+        "Write, Test, Deploy",
+        "Plan, Code, Test",
+        "Design, Implement, Verify"
+      ],
+      "correctIndex": 0,
+      "explanation": "TDD follows Red (write failing test), Green (make test pass with minimal code), Refactor (improve code while keeping tests passing) cycle.",
+      "industryContext": "These skills are valuable in professional development environments.",
+      "tags": [
+        "TDD",
+        "beginner",
+        "testing"
+      ],
+      "questionType": "multiple-choice",
+      "estimatedTime": 90,
+      "legacy": {
+        "originalId": 13,
+        "originalType": "multiple-choice",
+        "migrated": "2025-10-01T06:41:13.489Z"
+      }
+    },
+    {
+      "id": "testing-fundamentals-q14",
+      "question": "What should you test when testing REST APIs?",
+      "topic": "API Testing",
+      "difficulty": "Intermediate",
+      "choices": [
+        "HTTP status codes, response structure, authentication, input validation, and error handling",
+        "Only the happy path scenarios with valid inputs",
+        "UI elements and visual design aspects",
+        "Database schema and table structures"
+      ],
+      "correctIndex": 0,
+      "explanation": "When testing REST APIs, you should test: HTTP status codes to ensure proper responses, response data structure and content for correctness, request/response headers for proper metadata, authentication and authorization for security, input validation for data integrity, error handling for robustness, performance under load for scalability, and edge cases like invalid data or missing parameters. Comprehensive API testing ensures reliability, security, and proper functionality.",
+      "industryContext": "API testing is critical for modern web applications that rely on RESTful services. Professional developers must understand comprehensive API testing strategies to ensure system reliability, security, and performance in production environments.",
+      "tags": [
+        "API Testing",
+        "intermediate",
+        "testing"
+      ],
+      "questionType": "multiple-choice",
+      "estimatedTime": 90,
+      "legacy": {
+        "originalId": 14,
+        "originalType": "open-ended",
+        "migrated": "2025-10-01T06:41:13.489Z"
+      }
+    },
+    {
+      "id": "testing-fundamentals-q15",
+      "question": "What makes a good unit test?",
+      "topic": "Best Practices",
+      "difficulty": "Intermediate",
+      "choices": [
+        "Fast, isolated, repeatable, and focused on single behavior",
+        "Complex and comprehensive",
+        "Tests multiple functions at once",
+        "Requires manual setup"
+      ],
+      "correctIndex": 0,
+      "explanation": "Good unit tests are FIRST: Fast, Independent/Isolated, Repeatable, Self-validating, and Timely. They should test one specific behavior and be easy to understand and maintain.",
+      "industryContext": "These skills are valuable in professional development environments.",
+      "tags": [
+        "Best Practices",
+        "intermediate",
+        "testing"
+      ],
+      "questionType": "multiple-choice",
+      "estimatedTime": 90,
+      "legacy": {
+        "originalId": 15,
+        "originalType": "multiple-choice",
+        "migrated": "2025-10-01T06:41:13.489Z"
+      }
+    },
+    {
+      "id": "testing-fundamentals-q16",
+      "question": "In Test-Driven Development (TDD), what is the correct order of the red-green-refactor cycle?",
+      "topic": "TDD",
+      "difficulty": "Beginner",
+      "choices": [
+        "Write failing test, write minimal code to pass, refactor code while keeping tests green",
+        "Write code, write test, refactor test",
+        "Refactor existing code, write test, make test pass",
+        "Write comprehensive tests, implement all features, optimize performance"
+      ],
+      "correctIndex": 0,
+      "explanation": "TDD follows the red-green-refactor cycle: First write a failing test (red), then write the minimal code needed to make it pass (green), finally refactor the code to improve quality while keeping all tests passing. This cycle ensures you always have tests driving your design.",
+      "industryContext": "TDD is widely used in agile development environments and helps ensure high test coverage while driving better design decisions.",
+      "tags": ["TDD", "Testing Strategy", "beginner"],
+      "questionType": "multiple-choice",
+      "estimatedTime": 90
+    },
+    {
+      "id": "testing-fundamentals-q17",
+      "question": "What does 100% code coverage guarantee about your software?",
+      "topic": "Code Coverage",
+      "difficulty": "Intermediate",
+      "choices": [
+        "That every line of code has been executed, but not that the code is correct",
+        "That the software is completely bug-free",
+        "That all possible user scenarios have been tested",
+        "That the code will perform well under load"
+      ],
+      "correctIndex": 0,
+      "explanation": "100% code coverage only means every line has been executed during testing, not that the code is correct or bug-free. It doesn't guarantee that all edge cases are handled, that assertions are meaningful, or that the code behaves correctly in all scenarios. Coverage is a useful metric but should be combined with other quality measures.",
+      "industryContext": "Understanding the limitations of code coverage helps teams focus on writing meaningful tests rather than just achieving high coverage numbers.",
+      "tags": ["Code Coverage", "Testing Quality", "intermediate"],
+      "questionType": "multiple-choice",
+      "estimatedTime": 120
+    },
+    {
+      "id": "testing-fundamentals-q18",
+      "question": "Which testing approach is most effective for catching integration issues between microservices?",
+      "topic": "Integration Testing",
+      "difficulty": "Advanced",
+      "choices": [
+        "Contract testing with tools like Pact or consumer-driven contracts",
+        "Unit testing each service in isolation",
+        "Manual testing of the entire system",
+        "Load testing individual services"
+      ],
+      "correctIndex": 0,
+      "explanation": "Contract testing ensures that services can communicate correctly by testing the contracts (APIs) between them. Tools like Pact allow consumer services to define expectations for provider services, catching integration issues early without requiring complex test environments. This is more effective than unit tests (which test in isolation) or manual testing (which is slow and error-prone).",
+      "industryContext": "Contract testing is essential in microservices architectures where services are developed by different teams and deployed independently.",
+      "tags": ["Integration Testing", "Microservices", "advanced"],
+      "questionType": "multiple-choice",
+      "estimatedTime": 120
+    }
+  ],
+  "metadata": {
+    "migrated": true,
+    "originalQuestionCount": 15,
+    "migrationDate": "2025-10-01T06:41:13.490Z",
+    "lastUpdated": "2025-10-01T06:41:13.490Z",
+    "version": "1.0.0"
+  }
+}

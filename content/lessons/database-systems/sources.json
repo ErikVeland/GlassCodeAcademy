@@ -1,0 +1,29 @@
+{
+  "module": "database-systems",
+  "sources": [
+    {
+      "title": "Microsoft SQL Server Documentation",
+      "url": "https://learn.microsoft.com/en-us/sql/sql-server/"
+    },
+    {
+      "title": "PostgreSQL Official Documentation",
+      "url": "https://www.postgresql.org/docs/"
+    },
+    {
+      "title": "MongoDB Documentation",
+      "url": "https://www.mongodb.com/docs/"
+    },
+    {
+      "title": "Database Design Best Practices",
+      "url": "https://learn.microsoft.com/en-us/azure/architecture/data-guide/"
+    },
+    {
+      "title": "ACID Properties in Databases",
+      "url": "https://learn.microsoft.com/en-us/sql/relational-databases/databases/database-transaction-log-architecture-and-management-guide/"
+    },
+    {
+      "title": "Database Normalization",
+      "url": "https://learn.microsoft.com/en-us/office/troubleshoot/access/database-normalization-description"
+    }
+  ]
+}

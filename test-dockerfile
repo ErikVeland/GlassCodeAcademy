@@ -1,0 +1,17 @@
+# Test Dockerfile to debug the issue
+FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
+WORKDIR /src
+COPY dot-net-quiz/backend/. ./dot-net-quiz/backend/
+WORKDIR /src/dot-net-quiz/backend
+
+# List files to debug
+RUN ls -la
+RUN ls -la Models/
+RUN cat Models/InterviewQuestion.cs
+RUN cat Models/Lesson.cs
+
+# Restore dependencies
+RUN dotnet restore
+
+# Build and publish
+RUN dotnet publish -c Release -o /app

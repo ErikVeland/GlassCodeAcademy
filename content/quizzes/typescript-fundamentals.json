@@ -1,0 +1,488 @@
+{
+  "moduleSlug": "typescript-fundamentals",
+  "title": "Typescript Fundamentals Assessment",
+  "description": "Comprehensive assessment covering key concepts from the typescript-fundamentals module",
+  "totalQuestions": 18,
+  "passingScore": 70,
+  "timeLimit": 23,
+  "questions": [
+    {
+      "id": "typescript-fundamentals-q1",
+      "question": "How do you define a variable with an explicit type annotation in TypeScript?",
+      "topic": "Basic Types",
+      "difficulty": "Beginner",
+      "choices": [
+        "let myVar: string = \"hello\"",
+        "let myVar string = \"hello\"",
+        "let myVar = string \"hello\"",
+        "let myVar := string = \"hello\""
+      ],
+      "correctIndex": 0,
+      "explanation": "In TypeScript, type annotations are specified using a colon (:) after the variable name, followed by the type. This provides compile-time type checking and better tooling support.",
+      "industryContext": "TypeScript is increasingly adopted in large codebases for better maintainability.",
+      "tags": [
+        "Basic Types",
+        "beginner",
+        "typescript"
+      ],
+      "questionType": "multiple-choice",
+      "estimatedTime": 90,
+      "legacy": {
+        "originalId": 1,
+        "originalType": "multiple-choice",
+        "migrated": "2025-10-01T06:41:13.483Z"
+      }
+    },
+    {
+      "id": "typescript-fundamentals-q2",
+      "question": "Which of the following is the correct way to define an array of strings?",
+      "topic": "Basic Types",
+      "difficulty": "Intermediate",
+      "choices": [
+        "let arr: string[] = ['a', 'b', 'c']",
+        "let arr: Array<string> = ['a', 'b', 'c']",
+        "Both A and B",
+        "let arr: [string] = ['a', 'b', 'c']"
+      ],
+      "correctIndex": 2,
+      "explanation": "Both syntaxes are valid in TypeScript. You can use string[] (array literal syntax) or Array<string> (generic syntax) to define an array of strings. The array literal syntax is more common.",
+      "industryContext": "TypeScript is increasingly adopted in large codebases for better maintainability.",
+      "tags": [
+        "Basic Types",
+        "intermediate",
+        "typescript"
+      ],
+      "questionType": "multiple-choice",
+      "estimatedTime": 90,
+      "legacy": {
+        "originalId": 2,
+        "originalType": "multiple-choice",
+        "migrated": "2025-10-01T06:41:13.483Z"
+      }
+    },
+    {
+      "id": "typescript-fundamentals-q3",
+      "question": "What is the difference between an interface and a type alias in TypeScript? When would you use each?",
+      "topic": "Interfaces",
+      "difficulty": "Beginner",
+      "choices": [
+        "Open-ended question - no multiple choice",
+        "This is a conceptual question",
+        "Answer requires explanation",
+        "Multiple approaches possible"
+      ],
+      "correctIndex": 0,
+      "explanation": "Interfaces create a new name that can be used everywhere and can be extended and implemented. Type aliases don't create a new name and cannot be extended or implemented. Use interfaces for defining object shapes and type aliases for complex types like union types. Interfaces are preferred for object shapes because they support declaration merging.",
+      "industryContext": "TypeScript is increasingly adopted in large codebases for better maintainability.",
+      "tags": [
+        "Interfaces",
+        "beginner",
+        "typescript"
+      ],
+      "questionType": "open-ended",
+      "estimatedTime": 180,
+      "legacy": {
+        "originalId": 3,
+        "originalType": "open-ended",
+        "migrated": "2025-10-01T06:41:13.483Z"
+      }
+    },
+    {
+      "id": "typescript-fundamentals-q4",
+      "question": "Which access modifier makes a property or method accessible only within the same class?",
+      "topic": "Classes",
+      "difficulty": "Intermediate",
+      "choices": [
+        "private",
+        "protected",
+        "public",
+        "internal"
+      ],
+      "correctIndex": 0,
+      "explanation": "The private access modifier restricts access to the containing class only. Protected allows access in the containing class and subclasses, while public allows access from anywhere. TypeScript also supports # syntax for truly private fields.",
+      "industryContext": "TypeScript is increasingly adopted in large codebases for better maintainability.",
+      "tags": [
+        "Classes",
+        "intermediate",
+        "typescript"
+      ],
+      "questionType": "multiple-choice",
+      "estimatedTime": 90,
+      "legacy": {
+        "originalId": 4,
+        "originalType": "multiple-choice",
+        "migrated": "2025-10-01T06:41:13.483Z"
+      }
+    },
+    {
+      "id": "typescript-fundamentals-q5",
+      "question": "What is the purpose of generics in TypeScript?",
+      "topic": "Generics",
+      "difficulty": "Beginner",
+      "choices": [
+        "To create reusable components that work with multiple types",
+        "To enforce strict typing at runtime",
+        "To automatically convert JavaScript to TypeScript",
+        "To provide better IDE support"
+      ],
+      "correctIndex": 0,
+      "explanation": "Generics allow you to create reusable components that work with a variety of types rather than a single type, providing type safety while maintaining flexibility. They help catch type-related errors at compile time.",
+      "industryContext": "TypeScript is increasingly adopted in large codebases for better maintainability.",
+      "tags": [
+        "Generics",
+        "beginner",
+        "typescript"
+      ],
+      "questionType": "multiple-choice",
+      "estimatedTime": 90,
+      "legacy": {
+        "originalId": 5,
+        "originalType": "multiple-choice",
+        "migrated": "2025-10-01T06:41:13.483Z"
+      }
+    },
+    {
+      "id": "typescript-fundamentals-q6",
+      "question": "What is the difference between 'any' and 'unknown' types in TypeScript?",
+      "topic": "Type System",
+      "difficulty": "Beginner",
+      "choices": [
+        "'any' bypasses type checking, 'unknown' requires type checking before usage",
+        "'unknown' bypasses type checking, 'any' requires type checking",
+        "Both work exactly the same way",
+        "'any' is for strings, 'unknown' is for numbers"
+      ],
+      "correctIndex": 0,
+      "explanation": "The 'any' type bypasses all type checking, essentially opting out of type safety. The 'unknown' type is safer - it requires type checking (narrowing) before you can perform operations on it. 'unknown' is the type-safe counterpart of 'any'.",
+      "industryContext": "TypeScript is increasingly adopted in large codebases for better maintainability.",
+      "tags": [
+        "Type System",
+        "beginner",
+        "typescript"
+      ],
+      "questionType": "multiple-choice",
+      "estimatedTime": 90,
+      "legacy": {
+        "originalId": 6,
+        "originalType": "multiple-choice",
+        "migrated": "2025-10-01T06:41:13.483Z"
+      }
+    },
+    {
+      "id": "typescript-fundamentals-q7",
+      "question": "Explain the concept of 'declaration merging' in TypeScript and when it's useful.",
+      "topic": "Interfaces",
+      "difficulty": "Intermediate",
+      "choices": [
+        "Combining multiple declarations with the same name, useful for extending interfaces and global objects",
+        "Merging multiple TypeScript files into one",
+        "Combining different data types into a single type",
+        "Merging arrays and objects during runtime"
+      ],
+      "correctIndex": 0,
+      "explanation": "Declaration merging allows TypeScript to combine multiple declarations with the same name into a single definition. This is particularly useful for interfaces, where multiple interface declarations with the same name are merged into one. It's commonly used to extend existing types or add properties to global objects without modifying the original definition. For example, you can extend the Window interface to add custom properties to the global window object.",
+      "industryContext": "Declaration merging is an important TypeScript feature for extending existing types and working with global objects in large codebases. Professional TypeScript developers use this feature to augment third-party library types or extend built-in JavaScript objects with custom properties.",
+      "tags": [
+        "Interfaces",
+        "intermediate",
+        "typescript"
+      ],
+      "questionType": "multiple-choice",
+      "estimatedTime": 90,
+      "legacy": {
+        "originalId": 7,
+        "originalType": "open-ended",
+        "migrated": "2025-10-01T06:41:13.483Z"
+      }
+    },
+    {
+      "id": "typescript-fundamentals-q8",
+      "question": "What is a discriminated union in TypeScript?",
+      "topic": "Advanced Types",
+      "difficulty": "Beginner",
+      "choices": [
+        "A union type with a common field that can be used to narrow the type",
+        "A union of string literals",
+        "A union that can only contain primitive types",
+        "A union that discriminates against certain types"
+      ],
+      "correctIndex": 0,
+      "explanation": "A discriminated union is a pattern where you use a union of types with a common literal type field (the discriminant) that allows TypeScript to narrow the type in switch statements or conditional checks. This provides type safety for working with variant data structures.",
+      "industryContext": "TypeScript is increasingly adopted in large codebases for better maintainability.",
+      "tags": [
+        "Advanced Types",
+        "beginner",
+        "typescript"
+      ],
+      "questionType": "multiple-choice",
+      "estimatedTime": 90,
+      "legacy": {
+        "originalId": 8,
+        "originalType": "multiple-choice",
+        "migrated": "2025-10-01T06:41:13.483Z"
+      }
+    },
+    {
+      "id": "typescript-fundamentals-q9",
+      "question": "What is a mapped type in TypeScript?",
+      "topic": "Advanced Types",
+      "difficulty": "Beginner",
+      "choices": [
+        "A type that transforms properties of another type",
+        "A type for mapping functions",
+        "A geographic mapping type",
+        "A type for Map objects"
+      ],
+      "correctIndex": 0,
+      "explanation": "Mapped types allow you to create new types by transforming properties of an existing type, such as making all properties optional with Partial<T>.",
+      "industryContext": "TypeScript is increasingly adopted in large codebases for better maintainability.",
+      "tags": [
+        "Advanced Types",
+        "beginner",
+        "typescript"
+      ],
+      "questionType": "multiple-choice",
+      "estimatedTime": 90,
+      "legacy": {
+        "originalId": 9,
+        "originalType": "multiple-choice",
+        "migrated": "2025-10-01T06:41:13.483Z"
+      }
+    },
+    {
+      "id": "typescript-fundamentals-q10",
+      "question": "What does the Pick<T, K> utility type do?",
+      "topic": "Utility Types",
+      "difficulty": "Intermediate",
+      "choices": [
+        "Creates a type with selected properties from T",
+        "Removes properties from T",
+        "Picks random properties",
+        "Validates property selection"
+      ],
+      "correctIndex": 0,
+      "explanation": "Pick<T, K> constructs a type by picking the set of properties K from type T, creating a new type with only the specified properties.",
+      "industryContext": "TypeScript is increasingly adopted in large codebases for better maintainability.",
+      "tags": [
+        "Utility Types",
+        "intermediate",
+        "typescript"
+      ],
+      "questionType": "multiple-choice",
+      "estimatedTime": 90,
+      "legacy": {
+        "originalId": 10,
+        "originalType": "multiple-choice",
+        "migrated": "2025-10-01T06:41:13.483Z"
+      }
+    },
+    {
+      "id": "typescript-fundamentals-q11",
+      "question": "What are type predicates and how do they work?",
+      "topic": "Type Guards",
+      "difficulty": "Intermediate",
+      "choices": [
+        "Functions that return boolean and use 'is' keyword to narrow types in conditional blocks",
+        "Functions that predict future variable values",
+        "Functions that validate user input at runtime",
+        "Functions that generate random types"
+      ],
+      "correctIndex": 0,
+      "explanation": "Type predicates are functions that return a boolean and use the 'is' keyword to tell TypeScript the type of a variable. They narrow types within conditional blocks, improving type safety. For example: function isString(value: unknown): value is string { return typeof value === 'string'; } This allows TypeScript to understand that after calling isString(value), the value is definitely a string.",
+      "industryContext": "Type predicates are essential for professional TypeScript development, especially when working with union types and unknown values. They provide a way to create custom type guards that help TypeScript understand complex type relationships and improve code safety.",
+      "tags": [
+        "Type Guards",
+        "intermediate",
+        "typescript"
+      ],
+      "questionType": "multiple-choice",
+      "estimatedTime": 90,
+      "legacy": {
+        "originalId": 11,
+        "originalType": "open-ended",
+        "migrated": "2025-10-01T06:41:13.483Z"
+      }
+    },
+    {
+      "id": "typescript-fundamentals-q12",
+      "question": "What is the difference between 'import * as' and 'import {}'?",
+      "topic": "Modules",
+      "difficulty": "Beginner",
+      "choices": [
+        "'import * as' imports everything as namespace, 'import {}' imports specific exports",
+        "No difference in functionality",
+        "'import * as' is faster",
+        "'import {}' imports everything"
+      ],
+      "correctIndex": 0,
+      "explanation": "'import * as name' imports all exports as a namespace object, while 'import { specific }' imports only specific named exports.",
+      "industryContext": "TypeScript is increasingly adopted in large codebases for better maintainability.",
+      "tags": [
+        "Modules",
+        "beginner",
+        "typescript"
+      ],
+      "questionType": "multiple-choice",
+      "estimatedTime": 90,
+      "legacy": {
+        "originalId": 12,
+        "originalType": "multiple-choice",
+        "migrated": "2025-10-01T06:41:13.483Z"
+      }
+    },
+    {
+      "id": "typescript-fundamentals-q13",
+      "question": "What are decorators in TypeScript?",
+      "topic": "Decorators",
+      "difficulty": "Intermediate",
+      "choices": [
+        "Functions that modify classes, methods, or properties",
+        "UI design patterns",
+        "Error handling mechanisms",
+        "Performance optimization tools"
+      ],
+      "correctIndex": 0,
+      "explanation": "Decorators are functions that can modify or observe classes, methods, properties, or parameters, providing meta-programming capabilities.",
+      "industryContext": "TypeScript is increasingly adopted in large codebases for better maintainability.",
+      "tags": [
+        "Decorators",
+        "intermediate",
+        "typescript"
+      ],
+      "questionType": "multiple-choice",
+      "estimatedTime": 90,
+      "legacy": {
+        "originalId": 13,
+        "originalType": "multiple-choice",
+        "migrated": "2025-10-01T06:41:13.483Z"
+      }
+    },
+    {
+      "id": "typescript-fundamentals-q14",
+      "question": "How do conditional types work in TypeScript?",
+      "topic": "Conditional Types",
+      "difficulty": "Intermediate",
+      "choices": [
+        "Use ternary syntax 'T extends U ? X : Y' to select types based on conditions",
+        "Use if-else statements to conditionally compile code",
+        "Use switch statements to select different type implementations",
+        "Use try-catch blocks to handle type errors"
+      ],
+      "correctIndex": 0,
+      "explanation": "Conditional types use the ternary operator syntax 'T extends U ? X : Y' to select types based on conditions, enabling powerful type transformations and generic constraints. They work at the type level and are evaluated during compilation. For example, Extract<T, U> = T extends U ? T : never. This enables advanced type manipulation and inference patterns.",
+      "industryContext": "Conditional types are a powerful TypeScript feature used in advanced type definitions and utility types. Professional TypeScript developers use them to create sophisticated type transformations and build type-safe APIs with complex generic constraints.",
+      "tags": [
+        "Conditional Types",
+        "intermediate",
+        "typescript"
+      ],
+      "questionType": "multiple-choice",
+      "estimatedTime": 90,
+      "legacy": {
+        "originalId": 14,
+        "originalType": "open-ended",
+        "migrated": "2025-10-01T06:41:13.483Z"
+      }
+    },
+    {
+      "id": "typescript-fundamentals-q15",
+      "question": "What is tree shaking in TypeScript projects?",
+      "topic": "Performance",
+      "difficulty": "Beginner",
+      "choices": [
+        "Removing unused code during bundling",
+        "Optimizing type checking",
+        "Cleaning up imports",
+        "Reducing file sizes"
+      ],
+      "correctIndex": 0,
+      "explanation": "Tree shaking eliminates unused code from the final bundle, reducing bundle size and improving performance in production applications.",
+      "industryContext": "TypeScript is increasingly adopted in large codebases for better maintainability.",
+      "tags": [
+        "Performance",
+        "beginner",
+        "typescript"
+      ],
+      "questionType": "multiple-choice",
+      "estimatedTime": 90,
+      "legacy": {
+        "originalId": 15,
+        "originalType": "multiple-choice",
+        "migrated": "2025-10-01T06:41:13.483Z"
+      }
+    },
+    {
+      "id": "typescript-fundamentals-q16",
+      "question": "Which utility type removes all properties from a type T that are assignable to type U?",
+      "topic": "Advanced Types",
+      "difficulty": "Advanced",
+      "choices": [
+        "Omit<T, U>",
+        "Exclude<T, U>",
+        "Extract<T, U>",
+        "Pick<T, U>"
+      ],
+      "correctIndex": 1,
+      "explanation": "Exclude<T, U> constructs a type by excluding from T all union members that are assignable to U. Omit works on object properties, while Exclude works on union types.",
+      "industryContext": "Utility types are essential for advanced TypeScript development and are commonly used in large-scale applications.",
+      "tags": [
+        "Advanced Types",
+        "advanced",
+        "typescript"
+      ],
+      "questionType": "multiple-choice",
+      "estimatedTime": 120
+    },
+    {
+      "id": "typescript-fundamentals-q17",
+      "question": "What are the key considerations when migrating a JavaScript project to TypeScript?",
+      "topic": "Migration",
+      "difficulty": "Advanced",
+      "choices": [
+        "Gradual adoption, tsconfig setup, type definitions, and CI/CD integration",
+        "Rewriting everything from scratch in TypeScript",
+        "Simply changing file extensions from .js to .ts",
+        "Removing all existing JavaScript libraries"
+      ],
+      "correctIndex": 0,
+      "explanation": "Key considerations when migrating a JavaScript project to TypeScript include: gradual adoption by renaming .js to .ts files incrementally to minimize disruption, configuring tsconfig.json with appropriate strictness levels that balance type safety with migration effort, adding type definitions (@types packages) for third-party libraries, creating .d.ts files for legacy JavaScript code, setting up proper build tools (webpack, rollup) to handle TypeScript compilation, establishing team conventions for type usage and naming, and implementing type checking in CI/CD pipelines to prevent type errors from reaching production.",
+      "industryContext": "Many companies migrate existing JavaScript codebases to TypeScript to improve maintainability and developer experience. Professional TypeScript migration requires careful planning and execution to minimize disruption while maximizing the benefits of type safety.",
+      "tags": [
+        "Migration",
+        "advanced",
+        "typescript"
+      ],
+      "questionType": "multiple-choice",
+      "estimatedTime": 90
+    },
+    {
+      "id": "typescript-fundamentals-q18",
+      "question": "What is the purpose of the 'satisfies' operator introduced in TypeScript 4.9?",
+      "topic": "Advanced Types",
+      "difficulty": "Advanced",
+      "choices": [
+        "To check that a type satisfies a constraint without widening the type",
+        "To convert between incompatible types",
+        "To create intersection types",
+        "To enable strict null checks"
+      ],
+      "correctIndex": 0,
+      "explanation": "The 'satisfies' operator allows you to validate that a type satisfies a certain constraint without changing the inferred type of the expression. This provides type safety while preserving the original type information for better IDE support and type narrowing.",
+      "industryContext": "The satisfies operator helps maintain type safety while preserving precise type information, which is crucial for modern TypeScript development.",
+      "tags": [
+        "Advanced Types",
+        "advanced",
+        "typescript"
+      ],
+      "questionType": "multiple-choice",
+      "estimatedTime": 120
+    }
+  ],
+  "metadata": {
+    "migrated": true,
+    "originalQuestionCount": 15,
+    "migrationDate": "2025-10-01T06:41:13.483Z",
+    "lastUpdated": "2025-10-01T06:41:13.483Z",
+    "version": "1.0.0"
+  }
+}

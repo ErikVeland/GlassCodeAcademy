@@ -1,0 +1,67 @@
+[
+  {
+    "id": 1,
+    "topic": "Database Fundamentals",
+    "type": "multiple-choice",
+    "question": "What is a primary key in a relational database?",
+    "choices": [
+      "A unique identifier for each row in a table",
+      "A key used to encrypt database records",
+      "The first column in a table",
+      "A key used for sorting records"
+    ],
+    "correctAnswer": 0,
+    "explanation": "A primary key is a column or set of columns that uniquely identifies each row in a table. It must contain unique values and cannot contain NULL values."
+  },
+  {
+    "id": 2,
+    "topic": "Database Fundamentals",
+    "type": "multiple-choice",
+    "question": "Which normal form eliminates transitive dependencies?",
+    "choices": [
+      "Third Normal Form (3NF)",
+      "First Normal Form (1NF)",
+      "Second Normal Form (2NF)",
+      "Boyce-Codd Normal Form (BCNF)"
+    ],
+    "correctAnswer": 0,
+    "explanation": "Third Normal Form (3NF) eliminates transitive dependencies, where non-key attributes depend on other non-key attributes."
+  },
+  {
+    "id": 3,
+    "topic": "SQL",
+    "type": "open-ended",
+    "question": "What is the difference between INNER JOIN and LEFT JOIN?",
+    "choices": null,
+    "correctAnswer": null,
+    "explanation": "INNER JOIN returns only rows that have matching values in both tables. LEFT JOIN returns all rows from the left table and matching rows from the right table. If there's no match, NULL values are returned for columns from the right table."
+  },
+  {
+    "id": 4,
+    "topic": "Data Modeling",
+    "type": "multiple-choice",
+    "question": "What does an ER diagram represent?",
+    "choices": [
+      "Entities, relationships, and attributes in a database",
+      "Error reports in a database system",
+      "Execution plans for database queries",
+      "Encryption rules for database security"
+    ],
+    "correctAnswer": 0,
+    "explanation": "An Entity-Relationship (ER) diagram is a visual representation of data that describes how entities relate to each other within a database."
+  },
+  {
+    "id": 5,
+    "topic": "ORM Integration",
+    "type": "multiple-choice",
+    "question": "What is the purpose of a DbContext in Entity Framework Core?",
+    "choices": [
+      "To act as a bridge between the domain and the database",
+      "To encrypt database connections",
+      "To manage user authentication",
+      "To optimize SQL queries"
+    ],
+    "correctAnswer": 0,
+    "explanation": "DbContext in Entity Framework Core acts as a bridge between your domain or entity classes and the database. It's responsible for database connections, querying, and change tracking."
+  }
+]

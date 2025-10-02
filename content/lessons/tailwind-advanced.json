@@ -1,0 +1,696 @@
+[
+  {
+    "id": "tailwind-advanced-lesson-1",
+    "moduleSlug": "tailwind-advanced",
+    "title": "Introduction to Tailwind CSS",
+    "order": 1,
+    "objectives": [
+      "Implement practical solutions",
+      "Build foundational understanding"
+    ],
+    "intro": "Welcome to this comprehensive lesson on Basics.\n\nLearn the fundamentals of Tailwind CSS and how it differs from traditional CSS frameworks.\n\nThroughout this lesson, you'll gain hands-on experience with practical implementations and real-world scenarios. We'll explore both the theoretical foundations and practical applications, ensuring you can immediately apply what you learn.\n\nThis lesson is designed to build upon previous concepts while introducing new techniques that will enhance your development skills. By the end, you'll have a solid understanding of the key principles and be ready to tackle more advanced topics.\n\nThe knowledge gained here will serve as a foundation for subsequent lessons and real-world projects.",
+    "code": {
+      "example": "<!-- Traditional CSS -->\n<button class=\"btn btn-blue\">Click me</button>\n\n<style>\n  .btn {\n    padding: 0.5rem 1rem;\n    border-radius: 0.25rem;\n    font-weight: 500;\n  }\n  .btn-blue {\n    background-color: #3b82f6;\n    color: white;\n  }\n</style>\n\n<!-- Tailwind CSS -->\n<button class=\"px-4 py-2 bg-blue-500 text-white font-medium rounded\">Click me</button>",
+      "explanation": "This example produces: Button with blue background and white text, padding, and rounded corners\n\nThe code demonstrates practical implementation techniques and shows how the concepts work in real scenarios. Pay attention to the structure and patterns used, as these represent industry best practices.",
+      "language": "css"
+    },
+    "pitfalls": [
+      {
+        "mistake": "Not following best practices",
+        "solution": "Review documentation and community guidelines",
+        "severity": "medium"
+      },
+      {
+        "mistake": "Skipping error handling",
+        "solution": "Implement proper error boundaries and validation",
+        "severity": "low"
+      }
+    ],
+    "exercises": [
+      {
+        "title": "Practice: Introduction to Tailwind CSS",
+        "description": "Apply the concepts from this lesson on Basics",
+        "checkpoints": [
+          "Understand the core concept",
+          "Implement the example code",
+          "Experiment with variations"
+        ]
+      }
+    ],
+    "next": [],
+    "estimatedMinutes": 25,
+    "difficulty": "Beginner",
+    "tags": [
+      "Basics",
+      "tailwind"
+    ],
+    "legacy": {
+      "originalId": 1,
+      "originalTopic": "Basics",
+      "migrated": "2025-10-01T06:41:13.487Z"
+    },
+    "lastUpdated": "2025-10-01T06:41:13.487Z",
+    "version": "1.0.0"
+  },
+  {
+    "id": "tailwind-advanced-lesson-2",
+    "moduleSlug": "tailwind-advanced",
+    "title": "Utility-First Fundamentals",
+    "order": 2,
+    "objectives": [
+      "Implement practical solutions",
+      "Build foundational understanding"
+    ],
+    "intro": "Welcome to this comprehensive lesson on Basics.\n\nLearn how to build designs using Tailwind's utility classes instead of writing custom CSS.\n\nThroughout this lesson, you'll gain hands-on experience with practical implementations and real-world scenarios. We'll explore both the theoretical foundations and practical applications, ensuring you can immediately apply what you learn.\n\nThis lesson is designed to build upon previous concepts while introducing new techniques that will enhance your development skills. By the end, you'll have a solid understanding of the key principles and be ready to tackle more advanced topics.\n\nThe knowledge gained here will serve as a foundation for subsequent lessons and real-world projects.",
+    "code": {
+      "example": "<!-- Building a card component with utility classes -->\n<div class=\"max-w-sm rounded overflow-hidden shadow-lg\">\n  <img class=\"w-full\" src=\"/img/card-top.jpg\" alt=\"Sunset in the mountains\">\n  <div class=\"px-6 py-4\">\n    <div class=\"font-bold text-xl mb-2\">The Coldest Sunset</div>\n    <p class=\"text-gray-700 text-base\">\n      Lorem ipsum dolor sit amet, consectetur adipisicing elit.\n    </p>\n  </div>\n  <div class=\"px-6 pt-4 pb-2\">\n    <span class=\"inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2\">#photography</span>\n  </div>\n</div>",
+      "explanation": "This example produces: Card component with image, title, description, and tag\n\nThe code demonstrates practical implementation techniques and shows how the concepts work in real scenarios. Pay attention to the structure and patterns used, as these represent industry best practices.",
+      "language": "css"
+    },
+    "pitfalls": [
+      {
+        "mistake": "Not following best practices",
+        "solution": "Review documentation and community guidelines",
+        "severity": "medium"
+      },
+      {
+        "mistake": "Skipping error handling",
+        "solution": "Implement proper error boundaries and validation",
+        "severity": "low"
+      }
+    ],
+    "exercises": [
+      {
+        "title": "Practice: Utility-First Fundamentals",
+        "description": "Apply the concepts from this lesson on Basics",
+        "checkpoints": [
+          "Understand the core concept",
+          "Implement the example code",
+          "Experiment with variations"
+        ]
+      }
+    ],
+    "next": [],
+    "estimatedMinutes": 25,
+    "difficulty": "Beginner",
+    "tags": [
+      "Basics",
+      "tailwind"
+    ],
+    "legacy": {
+      "originalId": 2,
+      "originalTopic": "Basics",
+      "migrated": "2025-10-01T06:41:13.487Z"
+    },
+    "lastUpdated": "2025-10-01T06:41:13.487Z",
+    "version": "1.0.0"
+  },
+  {
+    "id": "tailwind-advanced-lesson-3",
+    "moduleSlug": "tailwind-advanced",
+    "title": "Flexbox and Grid",
+    "order": 3,
+    "objectives": [
+      "Implement practical solutions",
+      "Build foundational understanding"
+    ],
+    "intro": "Welcome to this comprehensive lesson on Layout.\n\nLearn how to create layouts using Tailwind's flexbox and grid utilities.\n\nThroughout this lesson, you'll gain hands-on experience with practical implementations and real-world scenarios. We'll explore both the theoretical foundations and practical applications, ensuring you can immediately apply what you learn.\n\nThis lesson is designed to build upon previous concepts while introducing new techniques that will enhance your development skills. By the end, you'll have a solid understanding of the key principles and be ready to tackle more advanced topics.\n\nThe knowledge gained here will serve as a foundation for subsequent lessons and real-world projects.",
+    "code": {
+      "example": "<!-- Flexbox example -->\n<div class=\"flex items-center justify-between\">\n  <div>Left content</div>\n  <div>Center content</div>\n  <div>Right content</div>\n</div>\n\n<!-- Grid example -->\n<div class=\"grid grid-cols-3 gap-4\">\n  <div class=\"bg-gray-200 p-4\">Column 1</div>\n  <div class=\"bg-gray-300 p-4\">Column 2</div>\n  <div class=\"bg-gray-400 p-4\">Column 3</div>\n</div>",
+      "explanation": "This example produces: Flexbox layout with evenly spaced items and grid layout with three columns\n\nThe code demonstrates practical implementation techniques and shows how the concepts work in real scenarios. Pay attention to the structure and patterns used, as these represent industry best practices.",
+      "language": "css"
+    },
+    "pitfalls": [
+      {
+        "mistake": "Not following best practices",
+        "solution": "Review documentation and community guidelines",
+        "severity": "medium"
+      },
+      {
+        "mistake": "Skipping error handling",
+        "solution": "Implement proper error boundaries and validation",
+        "severity": "low"
+      }
+    ],
+    "exercises": [
+      {
+        "title": "Practice: Flexbox and Grid",
+        "description": "Apply the concepts from this lesson on Layout",
+        "checkpoints": [
+          "Understand the core concept",
+          "Implement the example code",
+          "Experiment with variations"
+        ]
+      }
+    ],
+    "next": [],
+    "estimatedMinutes": 25,
+    "difficulty": "Intermediate",
+    "tags": [
+      "Layout",
+      "tailwind"
+    ],
+    "legacy": {
+      "originalId": 3,
+      "originalTopic": "Layout",
+      "migrated": "2025-10-01T06:41:13.487Z"
+    },
+    "lastUpdated": "2025-10-01T06:41:13.487Z",
+    "version": "1.0.0"
+  },
+  {
+    "id": "tailwind-advanced-lesson-4",
+    "moduleSlug": "tailwind-advanced",
+    "title": "Responsive Design",
+    "order": 4,
+    "objectives": [
+      "Implement practical solutions",
+      "Build foundational understanding"
+    ],
+    "intro": "Welcome to this comprehensive lesson on Layout.\n\nLearn how to make your designs responsive using Tailwind's responsive prefixes.\n\nThroughout this lesson, you'll gain hands-on experience with practical implementations and real-world scenarios. We'll explore both the theoretical foundations and practical applications, ensuring you can immediately apply what you learn.\n\nThis lesson is designed to build upon previous concepts while introducing new techniques that will enhance your development skills. By the end, you'll have a solid understanding of the key principles and be ready to tackle more advanced topics.\n\nThe knowledge gained here will serve as a foundation for subsequent lessons and real-world projects.",
+    "code": {
+      "example": "<!-- Responsive design with breakpoints -->\n<div class=\"grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4\">\n  <div class=\"bg-blue-500 p-4 text-white\">Card 1</div>\n  <div class=\"bg-green-500 p-4 text-white\">Card 2</div>\n  <div class=\"bg-red-500 p-4 text-white\">Card 3</div>\n</div>\n\n<!-- Responsive text sizing -->\n<h1 class=\"text-lg sm:text-xl md:text-2xl lg:text-3xl xl:text-4xl\">\n  Responsive Heading\n</h1>",
+      "explanation": "This example produces: Grid that changes from 1 column on mobile to 2 on medium screens to 3 on large screens, and heading that scales with screen size\n\nThe code demonstrates practical implementation techniques and shows how the concepts work in real scenarios. Pay attention to the structure and patterns used, as these represent industry best practices.",
+      "language": "css"
+    },
+    "pitfalls": [
+      {
+        "mistake": "Not following best practices",
+        "solution": "Review documentation and community guidelines",
+        "severity": "medium"
+      },
+      {
+        "mistake": "Skipping error handling",
+        "solution": "Implement proper error boundaries and validation",
+        "severity": "low"
+      }
+    ],
+    "exercises": [
+      {
+        "title": "Practice: Responsive Design",
+        "description": "Apply the concepts from this lesson on Layout",
+        "checkpoints": [
+          "Understand the core concept",
+          "Implement the example code",
+          "Experiment with variations"
+        ]
+      }
+    ],
+    "next": [],
+    "estimatedMinutes": 25,
+    "difficulty": "Intermediate",
+    "tags": [
+      "Layout",
+      "tailwind"
+    ],
+    "legacy": {
+      "originalId": 4,
+      "originalTopic": "Layout",
+      "migrated": "2025-10-01T06:41:13.487Z"
+    },
+    "lastUpdated": "2025-10-01T06:41:13.487Z",
+    "version": "1.0.0"
+  },
+  {
+    "id": "tailwind-advanced-lesson-5",
+    "moduleSlug": "tailwind-advanced",
+    "title": "Customizing Tailwind",
+    "order": 5,
+    "objectives": [
+      "Implement practical solutions",
+      "Build foundational understanding"
+    ],
+    "intro": "Welcome to this comprehensive lesson on Customization.\n\nLearn how to customize Tailwind's default theme and add your own utility classes.\n\nThroughout this lesson, you'll gain hands-on experience with practical implementations and real-world scenarios. We'll explore both the theoretical foundations and practical applications, ensuring you can immediately apply what you learn.\n\nThis lesson is designed to build upon previous concepts while introducing new techniques that will enhance your development skills. By the end, you'll have a solid understanding of the key principles and be ready to tackle more advanced topics.\n\nThe knowledge gained here will serve as a foundation for subsequent lessons and real-world projects.",
+    "code": {
+      "example": "// tailwind.config.js\nmodule.exports = {\n  theme: {\n    extend: {\n      colors: {\n        'brand-blue': '#1971c2',\n        'brand-green': '#2b8a3e',\n      },\n      spacing: {\n        '128': '32rem',\n      }\n    }\n  },\n  plugins: [\n    function({ addUtilities }) {\n      const newUtilities = {\n        '.text-shadow': {\n          textShadow: '1px 1px 2px rgba(0, 0, 0, 0.5)'\n        }\n      }\n      addUtilities(newUtilities)\n    }\n  ]\n}",
+      "explanation": "This example produces: Custom color palette and spacing scale added to Tailwind configuration\n\nThe code demonstrates practical implementation techniques and shows how the concepts work in real scenarios. Pay attention to the structure and patterns used, as these represent industry best practices.",
+      "language": "css"
+    },
+    "pitfalls": [
+      {
+        "mistake": "Not following best practices",
+        "solution": "Review documentation and community guidelines",
+        "severity": "medium"
+      },
+      {
+        "mistake": "Skipping error handling",
+        "solution": "Implement proper error boundaries and validation",
+        "severity": "low"
+      }
+    ],
+    "exercises": [
+      {
+        "title": "Practice: Customizing Tailwind",
+        "description": "Apply the concepts from this lesson on Customization",
+        "checkpoints": [
+          "Understand the core concept",
+          "Implement the example code",
+          "Experiment with variations"
+        ]
+      }
+    ],
+    "next": [],
+    "estimatedMinutes": 25,
+    "difficulty": "Advanced",
+    "tags": [
+      "Customization",
+      "tailwind"
+    ],
+    "legacy": {
+      "originalId": 5,
+      "originalTopic": "Customization",
+      "migrated": "2025-10-01T06:41:13.487Z"
+    },
+    "lastUpdated": "2025-10-01T06:41:13.487Z",
+    "version": "1.0.0"
+  },
+  {
+    "id": "tailwind-advanced-lesson-6",
+    "moduleSlug": "tailwind-advanced",
+    "title": "Building Reusable Components",
+    "order": 6,
+    "objectives": [
+      "Master component creation and usage",
+      "Implement practical solutions"
+    ],
+    "intro": "Welcome to this comprehensive lesson on Components.\n\nLearn how to create reusable components with Tailwind CSS.\n\nThroughout this lesson, you'll gain hands-on experience with practical implementations and real-world scenarios. We'll explore both the theoretical foundations and practical applications, ensuring you can immediately apply what you learn.\n\nThis lesson is designed to build upon previous concepts while introducing new techniques that will enhance your development skills. By the end, you'll have a solid understanding of the key principles and be ready to tackle more advanced topics.\n\nThe knowledge gained here will serve as a foundation for subsequent lessons and real-world projects.",
+    "code": {
+      "example": "<!-- Button component variations -->\n<button class=\"btn btn-primary\">Primary</button>\n<button class=\"btn btn-secondary\">Secondary</button>\n\n@layer components {\n  .btn {\n    @apply px-4 py-2 rounded font-medium focus:outline-none focus:ring-2;\n  }\n  .btn-primary {\n    @apply bg-blue-500 text-white hover:bg-blue-600 focus:ring-blue-300;\n  }\n  .btn-secondary {\n    @apply bg-gray-500 text-white hover:bg-gray-600 focus:ring-gray-300;\n  }\n}",
+      "explanation": "This example produces: Reusable button components with consistent styling and hover states\n\nThe code demonstrates practical implementation techniques and shows how the concepts work in real scenarios. Pay attention to the structure and patterns used, as these represent industry best practices.",
+      "language": "css"
+    },
+    "pitfalls": [
+      {
+        "mistake": "Not using keys in lists",
+        "solution": "Always provide unique keys for list items",
+        "severity": "high"
+      },
+      {
+        "mistake": "Mutating props directly",
+        "solution": "Props are read-only, create new objects for updates",
+        "severity": "medium"
+      }
+    ],
+    "exercises": [
+      {
+        "title": "Practice: Building Reusable Components",
+        "description": "Apply the concepts from this lesson on Components",
+        "checkpoints": [
+          "Understand the core concept",
+          "Implement the example code",
+          "Experiment with variations"
+        ]
+      }
+    ],
+    "next": [],
+    "estimatedMinutes": 25,
+    "difficulty": "Intermediate",
+    "tags": [
+      "Components",
+      "tailwind"
+    ],
+    "legacy": {
+      "originalId": 6,
+      "originalTopic": "Components",
+      "migrated": "2025-10-01T06:41:13.487Z"
+    },
+    "lastUpdated": "2025-10-01T06:41:13.487Z",
+    "version": "1.0.0"
+  },
+  {
+    "id": "tailwind-advanced-lesson-7",
+    "moduleSlug": "tailwind-advanced",
+    "title": "Styling Forms",
+    "order": 7,
+    "objectives": [
+      "Implement practical solutions",
+      "Build foundational understanding"
+    ],
+    "intro": "Welcome to this comprehensive lesson on Forms.\n\nLearn how to style forms and form controls with Tailwind.\n\nThroughout this lesson, you'll gain hands-on experience with practical implementations and real-world scenarios. We'll explore both the theoretical foundations and practical applications, ensuring you can immediately apply what you learn.\n\nThis lesson is designed to build upon previous concepts while introducing new techniques that will enhance your development skills. By the end, you'll have a solid understanding of the key principles and be ready to tackle more advanced topics.\n\nThe knowledge gained here will serve as a foundation for subsequent lessons and real-world projects.",
+    "code": {
+      "example": "<form class=\"max-w-md mx-auto\">\n  <div class=\"mb-4\">\n    <label class=\"block text-gray-700 text-sm font-bold mb-2\">\n      Email\n    </label>\n    <input class=\"w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500\" type=\"email\">\n  </div>\n  <button class=\"w-full bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600\">\n    Submit\n  </button>\n</form>",
+      "explanation": "This example produces: Styled form with input field and submit button\n\nThe code demonstrates practical implementation techniques and shows how the concepts work in real scenarios. Pay attention to the structure and patterns used, as these represent industry best practices.",
+      "language": "css"
+    },
+    "pitfalls": [
+      {
+        "mistake": "Not following best practices",
+        "solution": "Review documentation and community guidelines",
+        "severity": "medium"
+      },
+      {
+        "mistake": "Skipping error handling",
+        "solution": "Implement proper error boundaries and validation",
+        "severity": "low"
+      }
+    ],
+    "exercises": [
+      {
+        "title": "Practice: Styling Forms",
+        "description": "Apply the concepts from this lesson on Forms",
+        "checkpoints": [
+          "Understand the core concept",
+          "Implement the example code",
+          "Experiment with variations"
+        ]
+      }
+    ],
+    "next": [],
+    "estimatedMinutes": 25,
+    "difficulty": "Intermediate",
+    "tags": [
+      "Forms",
+      "tailwind"
+    ],
+    "legacy": {
+      "originalId": 7,
+      "originalTopic": "Forms",
+      "migrated": "2025-10-01T06:41:13.487Z"
+    },
+    "lastUpdated": "2025-10-01T06:41:13.487Z",
+    "version": "1.0.0"
+  },
+  {
+    "id": "tailwind-advanced-lesson-8",
+    "moduleSlug": "tailwind-advanced",
+    "title": "Animations and Transitions",
+    "order": 8,
+    "objectives": [
+      "Implement practical solutions",
+      "Build foundational understanding"
+    ],
+    "intro": "Welcome to this comprehensive lesson on Animation.\n\nLearn how to add animations and transitions using Tailwind.\n\nThroughout this lesson, you'll gain hands-on experience with practical implementations and real-world scenarios. We'll explore both the theoretical foundations and practical applications, ensuring you can immediately apply what you learn.\n\nThis lesson is designed to build upon previous concepts while introducing new techniques that will enhance your development skills. By the end, you'll have a solid understanding of the key principles and be ready to tackle more advanced topics.\n\nThe knowledge gained here will serve as a foundation for subsequent lessons and real-world projects.",
+    "code": {
+      "example": "<!-- Hover animations -->\n<div class=\"transform transition duration-300 hover:scale-105\">\n  Hover to scale\n</div>\n\n<!-- Loading spinner -->\n<div class=\"animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500\"></div>\n\n<!-- Custom animation -->\n@keyframes bounce {\n  0%, 100% { transform: translateY(-25%); }\n  50% { transform: none; }\n}\n\n.animate-bounce { animation: bounce 1s infinite; }",
+      "explanation": "This example produces: Elements with hover effects, loading spinner, and bounce animation\n\nThe code demonstrates practical implementation techniques and shows how the concepts work in real scenarios. Pay attention to the structure and patterns used, as these represent industry best practices.",
+      "language": "css"
+    },
+    "pitfalls": [
+      {
+        "mistake": "Not following best practices",
+        "solution": "Review documentation and community guidelines",
+        "severity": "medium"
+      },
+      {
+        "mistake": "Skipping error handling",
+        "solution": "Implement proper error boundaries and validation",
+        "severity": "low"
+      }
+    ],
+    "exercises": [
+      {
+        "title": "Practice: Animations and Transitions",
+        "description": "Apply the concepts from this lesson on Animation",
+        "checkpoints": [
+          "Understand the core concept",
+          "Implement the example code",
+          "Experiment with variations"
+        ]
+      }
+    ],
+    "next": [],
+    "estimatedMinutes": 25,
+    "difficulty": "Intermediate",
+    "tags": [
+      "Animation",
+      "tailwind"
+    ],
+    "legacy": {
+      "originalId": 8,
+      "originalTopic": "Animation",
+      "migrated": "2025-10-01T06:41:13.487Z"
+    },
+    "lastUpdated": "2025-10-01T06:41:13.487Z",
+    "version": "1.0.0"
+  },
+  {
+    "id": "tailwind-advanced-lesson-9",
+    "moduleSlug": "tailwind-advanced",
+    "title": "Dark Mode Implementation",
+    "order": 9,
+    "objectives": [
+      "Implement practical solutions",
+      "Build foundational understanding"
+    ],
+    "intro": "Welcome to this comprehensive lesson on Dark Mode.\n\nLearn how to implement dark mode with Tailwind CSS.\n\nThroughout this lesson, you'll gain hands-on experience with practical implementations and real-world scenarios. We'll explore both the theoretical foundations and practical applications, ensuring you can immediately apply what you learn.\n\nThis lesson is designed to build upon previous concepts while introducing new techniques that will enhance your development skills. By the end, you'll have a solid understanding of the key principles and be ready to tackle more advanced topics.\n\nThe knowledge gained here will serve as a foundation for subsequent lessons and real-world projects.",
+    "code": {
+      "example": "<!-- Dark mode configuration -->\nmodule.exports = {\n  darkMode: 'class',\n  // ...\n}\n\n<!-- Dark mode styles -->\n<div class=\"bg-white dark:bg-gray-800 text-gray-900 dark:text-white\">\n  <h1 class=\"text-gray-900 dark:text-white\">Title</h1>\n  <p class=\"text-gray-600 dark:text-gray-300\">Content</p>\n</div>\n\n<!-- Toggle dark mode -->\n<button onclick=\"document.documentElement.classList.toggle('dark')\">\n  Toggle Dark Mode\n</button>",
+      "explanation": "This example produces: Component with light and dark mode styling variations\n\nThe code demonstrates practical implementation techniques and shows how the concepts work in real scenarios. Pay attention to the structure and patterns used, as these represent industry best practices.",
+      "language": "css"
+    },
+    "pitfalls": [
+      {
+        "mistake": "Not following best practices",
+        "solution": "Review documentation and community guidelines",
+        "severity": "medium"
+      },
+      {
+        "mistake": "Skipping error handling",
+        "solution": "Implement proper error boundaries and validation",
+        "severity": "low"
+      }
+    ],
+    "exercises": [
+      {
+        "title": "Practice: Dark Mode Implementation",
+        "description": "Apply the concepts from this lesson on Dark Mode",
+        "checkpoints": [
+          "Understand the core concept",
+          "Implement the example code",
+          "Experiment with variations"
+        ]
+      }
+    ],
+    "next": [],
+    "estimatedMinutes": 25,
+    "difficulty": "Intermediate",
+    "tags": [
+      "Dark Mode",
+      "tailwind"
+    ],
+    "legacy": {
+      "originalId": 9,
+      "originalTopic": "Dark Mode",
+      "migrated": "2025-10-01T06:41:13.487Z"
+    },
+    "lastUpdated": "2025-10-01T06:41:13.487Z",
+    "version": "1.0.0"
+  },
+  {
+    "id": "tailwind-advanced-lesson-10",
+    "moduleSlug": "tailwind-advanced",
+    "title": "Performance Optimization",
+    "order": 10,
+    "objectives": [
+      "Implement practical solutions",
+      "Build foundational understanding"
+    ],
+    "intro": "Welcome to this comprehensive lesson on Optimization.\n\nLearn how to optimize Tailwind CSS for production.\n\nThroughout this lesson, you'll gain hands-on experience with practical implementations and real-world scenarios. We'll explore both the theoretical foundations and practical applications, ensuring you can immediately apply what you learn.\n\nThis lesson is designed to build upon previous concepts while introducing new techniques that will enhance your development skills. By the end, you'll have a solid understanding of the key principles and be ready to tackle more advanced topics.\n\nThe knowledge gained here will serve as a foundation for subsequent lessons and real-world projects.",
+    "code": {
+      "example": "// Production optimization\nmodule.exports = {\n  content: ['./src/**/*.{html,js,jsx,ts,tsx}'],\n  theme: { extend: {} },\n  plugins: [],\n}\n\n// PurgeCSS configuration\nconst purgecss = require('@fullhuman/postcss-purgecss')\n\nmodule.exports = {\n  plugins: [\n    require('tailwindcss'),\n    require('autoprefixer'),\n    ...(process.env.NODE_ENV === 'production' ? [purgecss] : [])\n  ]\n}",
+      "explanation": "This example produces: Optimized build configuration for smaller CSS bundles in production\n\nThe code demonstrates practical implementation techniques and shows how the concepts work in real scenarios. Pay attention to the structure and patterns used, as these represent industry best practices.",
+      "language": "css"
+    },
+    "pitfalls": [
+      {
+        "mistake": "Not following best practices",
+        "solution": "Review documentation and community guidelines",
+        "severity": "medium"
+      },
+      {
+        "mistake": "Skipping error handling",
+        "solution": "Implement proper error boundaries and validation",
+        "severity": "low"
+      }
+    ],
+    "exercises": [
+      {
+        "title": "Practice: Performance Optimization",
+        "description": "Apply the concepts from this lesson on Optimization",
+        "checkpoints": [
+          "Understand the core concept",
+          "Implement the example code",
+          "Experiment with variations"
+        ]
+      }
+    ],
+    "next": [],
+    "estimatedMinutes": 25,
+    "difficulty": "Advanced",
+    "tags": [
+      "Optimization",
+      "tailwind"
+    ],
+    "legacy": {
+      "originalId": 10,
+      "originalTopic": "Optimization",
+      "migrated": "2025-10-01T06:41:13.487Z"
+    },
+    "lastUpdated": "2025-10-01T06:41:13.487Z",
+    "version": "1.0.0"
+  },
+  {
+    "id": "tailwind-advanced-lesson-11",
+    "moduleSlug": "tailwind-advanced",
+    "title": "Using Tailwind Plugins",
+    "order": 11,
+    "objectives": [
+      "Implement practical solutions",
+      "Build foundational understanding"
+    ],
+    "intro": "Welcome to this comprehensive lesson on Plugins.\n\nLearn how to extend Tailwind with plugins.\n\nThroughout this lesson, you'll gain hands-on experience with practical implementations and real-world scenarios. We'll explore both the theoretical foundations and practical applications, ensuring you can immediately apply what you learn.\n\nThis lesson is designed to build upon previous concepts while introducing new techniques that will enhance your development skills. By the end, you'll have a solid understanding of the key principles and be ready to tackle more advanced topics.\n\nThe knowledge gained here will serve as a foundation for subsequent lessons and real-world projects.",
+    "code": {
+      "example": "// Install and configure plugins\nnpm install @tailwindcss/forms @tailwindcss/typography\n\n// tailwind.config.js\nmodule.exports = {\n  plugins: [\n    require('@tailwindcss/forms'),\n    require('@tailwindcss/typography'),\n  ],\n}\n\n<!-- Typography plugin usage -->\n<article class=\"prose lg:prose-xl\">\n  <h1>Article Title</h1>\n  <p>Article content with beautiful typography.</p>\n</article>",
+      "explanation": "This example produces: Enhanced forms and typography styling with official Tailwind plugins\n\nThe code demonstrates practical implementation techniques and shows how the concepts work in real scenarios. Pay attention to the structure and patterns used, as these represent industry best practices.",
+      "language": "css"
+    },
+    "pitfalls": [
+      {
+        "mistake": "Not following best practices",
+        "solution": "Review documentation and community guidelines",
+        "severity": "medium"
+      },
+      {
+        "mistake": "Skipping error handling",
+        "solution": "Implement proper error boundaries and validation",
+        "severity": "low"
+      }
+    ],
+    "exercises": [
+      {
+        "title": "Practice: Using Tailwind Plugins",
+        "description": "Apply the concepts from this lesson on Plugins",
+        "checkpoints": [
+          "Understand the core concept",
+          "Implement the example code",
+          "Experiment with variations"
+        ]
+      }
+    ],
+    "next": [],
+    "estimatedMinutes": 25,
+    "difficulty": "Intermediate",
+    "tags": [
+      "Plugins",
+      "tailwind"
+    ],
+    "legacy": {
+      "originalId": 11,
+      "originalTopic": "Plugins",
+      "migrated": "2025-10-01T06:41:13.487Z"
+    },
+    "lastUpdated": "2025-10-01T06:41:13.487Z",
+    "version": "1.0.0"
+  },
+  {
+    "id": "tailwind-advanced-lesson-12",
+    "moduleSlug": "tailwind-advanced",
+    "title": "Framework Integration",
+    "order": 12,
+    "objectives": [
+      "Implement practical solutions",
+      "Build foundational understanding"
+    ],
+    "intro": "Welcome to this comprehensive lesson on Integration.\n\nLearn how to integrate Tailwind with popular frameworks.\n\nThroughout this lesson, you'll gain hands-on experience with practical implementations and real-world scenarios. We'll explore both the theoretical foundations and practical applications, ensuring you can immediately apply what you learn.\n\nThis lesson is designed to build upon previous concepts while introducing new techniques that will enhance your development skills. By the end, you'll have a solid understanding of the key principles and be ready to tackle more advanced topics.\n\nThe knowledge gained here will serve as a foundation for subsequent lessons and real-world projects.",
+    "code": {
+      "example": "// React integration\nimport './tailwind.css'\n\nfunction Button({ children, variant = 'primary' }) {\n  const baseClasses = 'px-4 py-2 rounded font-medium'\n  const variants = {\n    primary: 'bg-blue-500 text-white hover:bg-blue-600',\n    secondary: 'bg-gray-200 text-gray-800 hover:bg-gray-300'\n  }\n  \n  return (\n    <button className={`${baseClasses} ${variants[variant]}`}>\n      {children}\n    </button>\n  )\n}\n\n// Vue integration\n<template>\n  <button :class=\"buttonClasses\">\n    <slot />\n  </button>\n</template>\n\n<script>\nexport default {\n  computed: {\n    buttonClasses() {\n      return 'px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600'\n    }\n  }\n}\n</script>",
+      "explanation": "This example produces: Tailwind CSS integrated with React and Vue components for reusable styling\n\nThe code demonstrates practical implementation techniques and shows how the concepts work in real scenarios. Pay attention to the structure and patterns used, as these represent industry best practices.",
+      "language": "css"
+    },
+    "pitfalls": [
+      {
+        "mistake": "Not following best practices",
+        "solution": "Review documentation and community guidelines",
+        "severity": "medium"
+      },
+      {
+        "mistake": "Skipping error handling",
+        "solution": "Implement proper error boundaries and validation",
+        "severity": "low"
+      }
+    ],
+    "exercises": [
+      {
+        "title": "Practice: Framework Integration",
+        "description": "Apply the concepts from this lesson on Integration",
+        "checkpoints": [
+          "Understand the core concept",
+          "Implement the example code",
+          "Experiment with variations"
+        ]
+      }
+    ],
+    "next": [],
+    "estimatedMinutes": 25,
+    "difficulty": "Intermediate",
+    "tags": [
+      "Integration",
+      "tailwind"
+    ],
+    "legacy": {
+      "originalId": 12,
+      "originalTopic": "Integration",
+      "migrated": "2025-10-01T06:41:13.487Z"
+    },
+    "lastUpdated": "2025-10-01T06:41:13.487Z",
+    "version": "1.0.0"
+  },
+  {
+    "id": "tailwind-advanced-lesson-13",
+    "moduleSlug": "tailwind-advanced",
+    "title": "Advanced Tailwind CSS Patterns and Best Practices",
+    "order": 13,
+    "objectives": [
+      "Master advanced Tailwind CSS patterns and techniques",
+      "Implement scalable design systems with Tailwind",
+      "Optimize Tailwind CSS for production applications"
+    ],
+    "intro": "Welcome to this comprehensive lesson on Advanced Tailwind CSS Patterns and Best Practices.\n\nLearn advanced techniques for building scalable, maintainable design systems with Tailwind CSS. This lesson covers complex patterns, performance optimization, and production-ready strategies.\n\nThroughout this lesson, you'll gain hands-on experience with practical implementations and real-world scenarios. We'll explore both the theoretical foundations and practical applications, ensuring you can immediately apply what you learn.\n\nThis lesson is designed to build upon previous concepts while introducing new techniques that will enhance your development skills. By the end, you'll have a solid understanding of the key principles and be ready to tackle more advanced topics.\n\nThe knowledge gained here will serve as a foundation for subsequent lessons and real-world projects.",
+    "code": {
+      "example": "<!-- Advanced Component Patterns -->\n<!-- Configurable Button Component with Variants -->\n<div class=\"space-y-4\">\n  <!-- Primary Button -->\n  <button class=\"group relative inline-flex items-center justify-center px-4 py-2 text-sm font-medium rounded-md text-white bg-blue-600 border border-transparent hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-200\">\n    <svg class=\"w-4 h-4 mr-2 transition-transform duration-200 group-hover:scale-110\" fill=\"none\" stroke=\"currentColor\" viewBox=\"0 0 24 24\">\n      <path stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\" d=\"M12 6v6m0 0v6m0-6h6m-6 0H6\"></path>\n    </svg>\n    Add Item\n  </button>\n\n  <!-- Outline Button with Loading State -->\n  <button class=\"group relative inline-flex items-center justify-center px-4 py-2 text-sm font-medium rounded-md text-blue-700 bg-transparent border border-blue-300 hover:bg-blue-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 transition-all duration-200\">\n    <div class=\"hidden group-disabled:inline-flex absolute inset-0 items-center justify-center\">\n      <svg class=\"animate-spin h-4 w-4 text-blue-600\" xmlns=\"http://www.w3.org/2000/svg\" fill=\"none\" viewBox=\"0 0 24 24\">\n        <circle class=\"opacity-25\" cx=\"12\" cy=\"12\" r=\"10\" stroke=\"currentColor\" stroke-width=\"4\"></circle>\n        <path class=\"opacity-75\" fill=\"currentColor\" d=\"m4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z\"></path>\n      </svg>\n    </div>\n    <span class=\"group-disabled:invisible\">Save Changes</span>\n  </button>\n</div>\n\n<!-- Advanced Layout Patterns -->\n<!-- Sticky Header with Backdrop Blur -->\n<header class=\"sticky top-0 z-50 w-full border-b bg-white/80 backdrop-blur-md supports-[backdrop-filter]:bg-white/60\">\n  <div class=\"container flex h-16 items-center space-x-4 sm:justify-between sm:space-x-0\">\n    <div class=\"flex gap-6 md:gap-10\">\n      <a class=\"flex items-center space-x-2\" href=\"/\">\n        <span class=\"inline-block font-bold\">Logo</span>\n      </a>\n      <nav class=\"hidden gap-6 md:flex\">\n        <a class=\"flex items-center text-sm font-medium text-muted-foreground hover:text-foreground transition-colors\" href=\"/docs\">Documentation</a>\n      </nav>\n    </div>\n  </div>\n</header>\n\n<!-- Complex Grid Layout with Auto-fit -->\n<div class=\"grid gap-6 auto-fit-minmax-300 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4\">\n  <div class=\"group overflow-hidden rounded-lg border bg-card text-card-foreground shadow transition-all hover:shadow-lg\">\n    <div class=\"aspect-video overflow-hidden bg-muted\">\n      <img class=\"h-full w-full object-cover transition-transform duration-200 group-hover:scale-105\" src=\"/placeholder.jpg\" alt=\"Card image\" />\n    </div>\n    <div class=\"p-6\">\n      <h3 class=\"font-semibold leading-none tracking-tight\">Card Title</h3>\n      <p class=\"text-sm text-muted-foreground mt-2\">Card description goes here.</p>\n    </div>\n  </div>\n</div>\n\n<!-- Advanced Form Patterns with Validation States -->\n<form class=\"space-y-6\">\n  <div class=\"space-y-2\">\n    <label class=\"text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70\" for=\"email\">\n      Email\n    </label>\n    <input \n      class=\"peer flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 invalid:border-red-500 invalid:ring-red-500\"\n      id=\"email\"\n      type=\"email\"\n      placeholder=\"Enter your email\"\n      required\n    />\n    <p class=\"text-sm text-red-600 hidden peer-invalid:block\">Please enter a valid email address.</p>\n  </div>\n</form>\n\n<!-- Advanced Animation Patterns -->\n<div class=\"relative overflow-hidden\">\n  <!-- Staggered Animation with CSS Variables -->\n  <div class=\"grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3\">\n    <div class=\"animate-fade-in-up [animation-delay:0ms] opacity-0 [animation-fill-mode:forwards]\">\n      <div class=\"h-32 bg-gradient-to-br from-purple-400 to-blue-600 rounded-lg\"></div>\n    </div>\n    <div class=\"animate-fade-in-up [animation-delay:100ms] opacity-0 [animation-fill-mode:forwards]\">\n      <div class=\"h-32 bg-gradient-to-br from-pink-400 to-red-600 rounded-lg\"></div>\n    </div>\n    <div class=\"animate-fade-in-up [animation-delay:200ms] opacity-0 [animation-fill-mode:forwards]\">\n      <div class=\"h-32 bg-gradient-to-br from-green-400 to-blue-600 rounded-lg\"></div>\n    </div>\n  </div>\n</div>\n\n<!-- CSS Additions for Custom Animations -->\n<style>\n@keyframes fade-in-up {\n  from {\n    opacity: 0;\n    transform: translateY(20px);\n  }\n  to {\n    opacity: 1;\n    transform: translateY(0);\n  }\n}\n\n.animate-fade-in-up {\n  animation: fade-in-up 0.6s ease-out;\n}\n\n.auto-fit-minmax-300 {\n  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));\n}\n</style>\n\n<!-- Tailwind Config for Custom Utilities -->\n/*\nmodule.exports = {\n  theme: {\n    extend: {\n      animation: {\n        'fade-in-up': 'fade-in-up 0.6s ease-out',\n      },\n      keyframes: {\n        'fade-in-up': {\n          'from': {\n            opacity: '0',\n            transform: 'translateY(20px)',\n          },\n          'to': {\n            opacity: '1',\n            transform: 'translateY(0)',\n          },\n        }\n      }\n    }\n  }\n}\n*/",
+      "explanation": "This example demonstrates advanced Tailwind CSS patterns including configurable components with variants, complex layouts with backdrop blur effects, advanced form validation states, staggered animations, and custom utility integration. These patterns are essential for building production-ready applications.\n\nThe code demonstrates practical implementation techniques and shows how the concepts work in real scenarios. Pay attention to the structure and patterns used, as these represent industry best practices.",
+      "language": "html"
+    },
+    "pitfalls": [
+      {
+        "mistake": "Over-engineering components with too many utility classes",
+        "solution": "Extract commonly used patterns into reusable components or use @apply directive for complex combinations",
+        "severity": "medium"
+      },
+      {
+        "mistake": "Not optimizing for production bundle size",
+        "solution": "Use PurgeCSS properly and configure content paths to remove unused styles",
+        "severity": "high"
+      },
+      {
+        "mistake": "Inconsistent design tokens across the application",
+        "solution": "Define consistent spacing, colors, and typography scales in Tailwind config",
+        "severity": "medium"
+      }
+    ],
+    "exercises": [
+      {
+        "title": "Practice: Advanced Tailwind CSS Patterns and Best Practices",
+        "description": "Implement a comprehensive design system using advanced Tailwind CSS techniques",
+        "checkpoints": [
+          "Create configurable component variants with Tailwind utilities",
+          "Implement complex layouts with responsive design patterns",
+          "Build advanced form components with validation states",
+          "Create custom animations and integrate with Tailwind config",
+          "Optimize for production and implement design system consistency"
+        ]
+      }
+    ],
+    "next": [],
+    "estimatedMinutes": 50,
+    "difficulty": "Advanced",
+    "tags": [
+      "Advanced Patterns",
+      "Design Systems",
+      "Performance",
+      "tailwind"
+    ],
+    "lastUpdated": "2025-10-01T06:41:13.487Z",
+    "version": "1.0.0"
+  }
+]

@@ -1,0 +1,98 @@
+[
+  {
+    "id": 1,
+    "topic": "GraphQL Fundamentals",
+    "title": "Introduction to GraphQL and Query Language Basics",
+    "description": "Learn what GraphQL is and how it differs from REST APIs, understanding the core concepts of queries, mutations, and subscriptions. GraphQL provides a flexible alternative to REST by allowing clients to request exactly the data they need.",
+    "codeExample": "# Basic GraphQL query\nquery GetUser {\n  user(id: \"123\") {\n    id\n    name\n    email\n    posts {\n      title\n      content\n    }\n  }\n}\n\n# Query with variables\nquery GetUserPosts($userId: ID!, $limit: Int) {\n  user(id: $userId) {\n    name\n    posts(limit: $limit) {\n      title\n      publishedAt\n    }\n  }\n}",
+    "output": "{\n  \"data\": {\n    \"user\": {\n      \"id\": \"123\",\n      \"name\": \"John Doe\",\n      \"email\": \"john@example.com\",\n      \"posts\": [\n        {\n          \"title\": \"Getting Started with GraphQL\",\n          \"content\": \"GraphQL is a query language...\"\n        }\n      ]\n    }\n  }\n}"
+  },
+  {
+    "id": 2,
+    "topic": "GraphQL Fundamentals", 
+    "title": "Schema Definition Language and Type System",
+    "description": "Learn how to define GraphQL schemas using the Schema Definition Language, including scalar types, object types, and relationships. The GraphQL type system is strongly typed and serves as a contract between client and server.",
+    "codeExample": "# GraphQL Schema Definition\ntype User {\n  id: ID!\n  name: String!\n  email: String!\n  posts: [Post!]!\n}\n\ntype Post {\n  id: ID!\n  title: String!\n  content: String!\n  author: User!\n  publishedAt: DateTime\n}\n\nscalar DateTime\n\ntype Query {\n  user(id: ID!): User\n  users(limit: Int): [User!]!\n  post(id: ID!): Post\n}\n\ntype Mutation {\n  createUser(input: CreateUserInput!): User!\n  updateUser(id: ID!, input: UpdateUserInput!): User!\n}\n\ninput CreateUserInput {\n  name: String!\n  email: String!\n}",
+    "output": "Schema successfully defines type system with User, Post types, including relationships and input types for mutations"
+  },
+  {
+    "id": 3,
+    "topic": "GraphQL Operations",
+    "title": "Queries and Field Selection",
+    "description": "Learn how to write efficient GraphQL queries with field selection, nested queries, and aliases. GraphQL's field selection allows clients to request exactly the data they need, improving performance and reducing bandwidth usage.",
+    "codeExample": "# Field selection and nested queries\nquery UserDashboard {\n  currentUser {\n    id\n    name\n    email\n    posts(limit: 5) {\n      id\n      title\n      publishedAt\n      comments(first: 3) {\n        content\n        author {\n          name\n        }\n      }\n    }\n  }\n}\n\n# Using aliases\nquery MultipleUsers {\n  admin: user(id: \"1\") {\n    name\n    role\n  }\n  author: user(id: \"2\") {\n    name\n    posts {\n      title\n    }\n  }\n}",
+    "output": "{\n  \"data\": {\n    \"currentUser\": {\n      \"id\": \"123\",\n      \"name\": \"John Doe\",\n      \"email\": \"john@example.com\",\n      \"posts\": [\n        {\n          \"id\": \"456\",\n          \"title\": \"GraphQL Best Practices\",\n          \"publishedAt\": \"2024-01-15T10:00:00Z\"\n        }\n      ]\n    }\n  }\n}"
+  },
+  {
+    "id": 4,
+    "topic": "GraphQL Operations",
+    "title": "Mutations and Data Modification", 
+    "description": "Learn how to perform data modifications using GraphQL mutations, including creating, updating, and deleting data. Mutations provide a standardized way to modify server-side data while maintaining GraphQL's type safety.",
+    "codeExample": "# Create user mutation\nmutation CreateUser($input: CreateUserInput!) {\n  createUser(input: $input) {\n    id\n    name\n    email\n    createdAt\n  }\n}\n\n# Update user mutation\nmutation UpdateUser($id: ID!, $input: UpdateUserInput!) {\n  updateUser(id: $id, input: $input) {\n    id\n    name\n    email\n    updatedAt\n  }\n}\n\n# Multiple mutations\nmutation CreatePostAndNotify($postInput: CreatePostInput!) {\n  createPost(input: $postInput) {\n    id\n    title\n  }\n  sendNotification {\n    success\n  }\n}",
+    "output": "{\n  \"data\": {\n    \"createUser\": {\n      \"id\": \"789\",\n      \"name\": \"Jane Smith\",\n      \"email\": \"jane@example.com\",\n      \"createdAt\": \"2024-01-15T12:00:00Z\"\n    }\n  }\n}"
+  },
+  {
+    "id": 5,
+    "topic": "GraphQL Operations", 
+    "title": "Subscriptions and Real-time Data",
+    "description": "Learn how to implement real-time functionality using GraphQL subscriptions for live data updates. Subscriptions allow clients to receive automatic updates when specific events occur on the server.",
+    "codeExample": "# Basic subscription\nsubscription CommentAdded($postId: ID!) {\n  commentAdded(postId: $postId) {\n    id\n    content\n    author {\n      name\n    }\n    createdAt\n  }\n}\n\n# Real-time chat\nsubscription ChatMessages($roomId: ID!) {\n  messageAdded(roomId: $roomId) {\n    id\n    content\n    sender {\n      name\n    }\n    timestamp\n  }\n}\n\n# User status updates\nsubscription UserStatusUpdates {\n  userStatusChanged {\n    userId\n    status\n    lastSeen\n  }\n}",
+    "output": "Real-time WebSocket connection established:\n{\n  \"data\": {\n    \"commentAdded\": {\n      \"id\": \"comment_123\",\n      \"content\": \"Great article!\",\n      \"author\": {\n        \"name\": \"Alice Johnson\"\n      },\n      \"createdAt\": \"2024-01-15T14:30:00Z\"\n    }\n  }\n}"
+  },
+  {
+    "id": 6,
+    "topic": "Schema Design",
+    "title": "Resolvers and Data Fetching",
+    "description": "Learn how to implement GraphQL resolvers to fetch and transform data from various sources including databases, REST APIs, and microservices. Resolvers are the heart of GraphQL servers.",
+    "codeExample": "// GraphQL resolver implementation\nconst resolvers = {\n  Query: {\n    user: async (parent, args, context) => {\n      return await context.dataSources.userAPI.getUserById(args.id);\n    },\n    posts: async (parent, args, context) => {\n      return await context.dataSources.postAPI.getPosts(args);\n    }\n  },\n  \n  User: {\n    posts: async (user, args, context) => {\n      return await context.loaders.postsByAuthor.load(user.id);\n    }\n  },\n  \n  Post: {\n    author: async (post, args, context) => {\n      return await context.loaders.user.load(post.authorId);\n    }\n  },\n  \n  Mutation: {\n    createUser: async (parent, args, context) => {\n      const user = await context.dataSources.userAPI.createUser(args.input);\n      context.pubsub.publish('USER_CREATED', { userCreated: user });\n      return user;\n    }\n  }\n};",
+    "output": "Resolvers successfully fetch and return data from various sources with proper data loading optimization"
+  },
+  {
+    "id": 7,
+    "topic": "Schema Design",
+    "title": "Advanced Schema Patterns",
+    "description": "Learn advanced GraphQL schema design patterns including interfaces, unions, custom scalars, and schema stitching for building maintainable and scalable GraphQL APIs.",
+    "codeExample": "# Interface for common fields\ninterface Node {\n  id: ID!\n  createdAt: DateTime!\n}\n\n# Union types\nunion SearchResult = User | Post | Comment\n\n# Implementing interface\ntype User implements Node {\n  id: ID!\n  createdAt: DateTime!\n  name: String!\n  email: String!\n}\n\n# Enums for type safety\nenum PostStatus {\n  DRAFT\n  PUBLISHED\n  ARCHIVED\n}\n\n# Custom scalars\nscalar DateTime\nscalar EmailAddress\n\n# Pagination pattern\ntype PostConnection {\n  edges: [PostEdge!]!\n  pageInfo: PageInfo!\n}\n\ntype PostEdge {\n  node: Post!\n  cursor: String!\n}\n\ntype PageInfo {\n  hasNextPage: Boolean!\n  hasPreviousPage: Boolean!\n}",
+    "output": "Advanced schema with interfaces, unions, custom scalars, and pagination patterns successfully defined"
+  },
+  {
+    "id": 8,
+    "topic": "Performance Optimization",
+    "title": "DataLoader and N+1 Query Problem",
+    "description": "Learn how to solve the N+1 query problem using DataLoader for efficient data fetching. DataLoader provides batching and caching to optimize database access patterns.",
+    "codeExample": "// DataLoader implementation\nconst DataLoader = require('dataloader');\n\nconst createLoaders = () => {\n  const batchUsers = async (userIds) => {\n    const users = await User.findByIds(userIds);\n    return userIds.map(id => \n      users.find(user => user.id === id) || null\n    );\n  };\n  \n  return {\n    user: new DataLoader(batchUsers),\n    postsByAuthor: new DataLoader(async (authorIds) => {\n      const posts = await Post.findWhere({ authorId: { $in: authorIds } });\n      return authorIds.map(id => posts.filter(p => p.authorId === id));\n    })\n  };\n};\n\n// Using in resolvers\nconst resolvers = {\n  Post: {\n    author: async (post, args, context) => {\n      return await context.loaders.user.load(post.authorId);\n    }\n  }\n};",
+    "output": "DataLoader reduces N+1 queries from 1+N to 2 queries total, achieving 90% query reduction"
+  },
+  {
+    "id": 9,
+    "topic": "Performance Optimization",
+    "title": "Query Complexity Analysis and Rate Limiting",
+    "description": "Learn how to implement query complexity analysis and rate limiting to protect your GraphQL API from expensive or malicious queries.",
+    "codeExample": "// Query complexity analysis\nconst depthLimit = require('graphql-depth-limit');\nconst costAnalysis = require('graphql-cost-analysis');\n\nconst server = new ApolloServer({\n  typeDefs,\n  resolvers,\n  plugins: [\n    {\n      requestDidStart() {\n        return {\n          didResolveOperation({ document }) {\n            const depthLimitResult = depthLimit(10)(document);\n            if (depthLimitResult) {\n              throw new Error('Query depth limit exceeded');\n            }\n          }\n        };\n      }\n    }\n  ],\n  validationRules: [\n    costAnalysis({\n      maximumCost: 1000,\n      defaultCost: 1,\n      costMap: {\n        User: {\n          posts: { complexity: 2, multipliers: ['first'] }\n        }\n      }\n    })\n  ]\n});",
+    "output": "Query complexity analysis prevents expensive queries and protects server resources"
+  },
+  {
+    "id": 10,
+    "topic": "Testing and Tools",
+    "title": "GraphQL Testing Strategies",
+    "description": "Learn how to test GraphQL APIs effectively using various testing approaches including unit tests, integration tests, and end-to-end testing with proper mocking.",
+    "codeExample": "// GraphQL testing with Jest\nconst { createTestClient } = require('apollo-server-testing');\nconst { ApolloServer } = require('apollo-server');\n\ndescribe('GraphQL API Tests', () => {\n  let server, query, mutate;\n  \n  beforeAll(() => {\n    server = new ApolloServer({ typeDefs, resolvers });\n    const testClient = createTestClient(server);\n    query = testClient.query;\n    mutate = testClient.mutate;\n  });\n  \n  test('should fetch user by ID', async () => {\n    const GET_USER = gql`\n      query GetUser($id: ID!) {\n        user(id: $id) {\n          id\n          name\n          email\n        }\n      }\n    `;\n    \n    const result = await query({\n      query: GET_USER,\n      variables: { id: '1' }\n    });\n    \n    expect(result.data.user).toEqual({\n      id: '1',\n      name: 'John Doe',\n      email: 'john@example.com'\n    });\n  });\n  \n  test('should create user', async () => {\n    const CREATE_USER = gql`\n      mutation CreateUser($input: CreateUserInput!) {\n        createUser(input: $input) {\n          id\n          name\n        }\n      }\n    `;\n    \n    const result = await mutate({\n      mutation: CREATE_USER,\n      variables: {\n        input: { name: 'Jane Doe', email: 'jane@example.com' }\n      }\n    });\n    \n    expect(result.data.createUser.name).toBe('Jane Doe');\n  });\n});",
+    "output": "All GraphQL tests pass with proper query and mutation validation"
+  },
+  {
+    "id": 11,
+    "topic": "Testing and Tools",
+    "title": "GraphQL Development Tools and Debugging",
+    "description": "Learn how to use GraphQL development tools including GraphQL Playground, Apollo Studio, and debugging techniques for building and maintaining GraphQL APIs.",
+    "codeExample": "// GraphQL Playground setup\nconst { ApolloServer } = require('apollo-server-express');\nconst express = require('express');\n\nconst server = new ApolloServer({\n  typeDefs,\n  resolvers,\n  introspection: true, // Enable for development\n  playground: {\n    settings: {\n      'editor.theme': 'dark',\n      'editor.reuseHeaders': true,\n      'tracing.hideTracingResponse': false,\n    }\n  },\n  tracing: true, // Enable Apollo tracing\n  plugins: [\n    {\n      requestDidStart() {\n        return {\n          willSendResponse(requestContext) {\n            console.log('Query executed:', requestContext.request.query);\n            console.log('Variables:', requestContext.request.variables);\n          }\n        };\n      }\n    }\n  ]\n});\n\n// Apollo Studio integration\nconst server2 = new ApolloServer({\n  typeDefs,\n  resolvers,\n  plugins: [\n    require('apollo-server-plugin-response-cache')(),\n    {\n      requestDidStart() {\n        return {\n          didResolveOperation(requestContext) {\n            // Log to Apollo Studio\n            console.log('Operation:', requestContext.request.operationName);\n          }\n        };\n      }\n    }\n  ]\n});",
+    "output": "GraphQL Playground and Apollo Studio successfully configured for development and monitoring"
+  },
+  {
+    "id": 12,
+    "topic": "Production Deployment",
+    "title": "GraphQL Security and Production Best Practices",
+    "description": "Learn essential security practices and production deployment strategies for GraphQL APIs including authentication, authorization, and monitoring.",
+    "codeExample": "// Security implementation\nconst { shield, rule, and, or } = require('graphql-shield');\nconst jwt = require('jsonwebtoken');\n\n// Authentication rule\nconst isAuthenticated = rule({ cache: 'contextual' })(\n  async (parent, args, context) => {\n    return context.user !== null;\n  }\n);\n\n// Authorization rule\nconst isOwner = rule({ cache: 'strict' })(\n  async (parent, args, context) => {\n    return context.user.id === args.id;\n  }\n);\n\n// Permission shield\nconst permissions = shield({\n  Query: {\n    user: isAuthenticated,\n    users: and(isAuthenticated, isAdmin),\n    posts: isAuthenticated\n  },\n  Mutation: {\n    createPost: isAuthenticated,\n    updatePost: and(isAuthenticated, isOwner),\n    deletePost: and(isAuthenticated, isOwner)\n  }\n});\n\n// Production server setup\nconst server = new ApolloServer({\n  typeDefs,\n  resolvers,\n  middlewares: [permissions],\n  context: ({ req }) => {\n    const token = req.headers.authorization?.replace('Bearer ', '');\n    const user = token ? jwt.verify(token, process.env.JWT_SECRET) : null;\n    return { user };\n  },\n  introspection: process.env.NODE_ENV !== 'production',\n  playground: process.env.NODE_ENV !== 'production',\n  formatError: (error) => {\n    console.error(error);\n    return process.env.NODE_ENV === 'production' \n      ? new Error('Internal server error')\n      : error;\n  }\n});",
+    "output": "Secure GraphQL API with authentication, authorization, and production-ready error handling"
+  }
+]

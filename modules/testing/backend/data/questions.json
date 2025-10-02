@@ -1,0 +1,67 @@
+[
+  {
+    "id": 1,
+    "topic": "Testing Fundamentals",
+    "type": "multiple-choice",
+    "question": "What is the purpose of the testing pyramid?",
+    "choices": [
+      "To guide the distribution of different types of tests in a project",
+      "To measure the performance of test execution",
+      "To organize test files in a directory structure",
+      "To prioritize bug fixes in software development"
+    ],
+    "correctAnswer": 0,
+    "explanation": "The testing pyramid is a conceptual model that guides teams on how to distribute different types of tests. It suggests having many unit tests, fewer integration tests, and even fewer end-to-end tests."
+  },
+  {
+    "id": 2,
+    "topic": "Testing Fundamentals",
+    "type": "multiple-choice",
+    "question": "Which type of test typically runs the fastest?",
+    "choices": [
+      "Unit tests",
+      "Integration tests",
+      "End-to-end tests",
+      "Manual tests"
+    ],
+    "correctAnswer": 0,
+    "explanation": "Unit tests typically run the fastest because they test small units of code in isolation without external dependencies like databases or network calls."
+  },
+  {
+    "id": 3,
+    "topic": "Unit Testing",
+    "type": "open-ended",
+    "question": "What is the difference between a mock and a stub in testing?",
+    "choices": null,
+    "correctAnswer": null,
+    "explanation": "A stub provides canned answers to calls made during the test, usually not responding at all to anything outside what's programmed in for the test. A mock is a stub with added behavior verification - it knows what methods should be called and with what arguments, and can verify this during the test."
+  },
+  {
+    "id": 4,
+    "topic": "Integration Testing",
+    "type": "multiple-choice",
+    "question": "What is the main focus of integration testing?",
+    "choices": [
+      "Testing interactions between different modules or services",
+      "Testing individual functions in isolation",
+      "Testing the user interface",
+      "Testing database performance"
+    ],
+    "correctAnswer": 0,
+    "explanation": "Integration testing focuses on verifying the interactions between different modules, services, or components to ensure they work together correctly."
+  },
+  {
+    "id": 5,
+    "topic": "End-to-End Testing",
+    "type": "multiple-choice",
+    "question": "What is a key advantage of end-to-end testing?",
+    "choices": [
+      "It tests the entire system from the user's perspective",
+      "It runs faster than unit tests",
+      "It's easier to maintain than other test types",
+      "It provides detailed code coverage reports"
+    ],
+    "correctAnswer": 0,
+    "explanation": "End-to-end testing validates the entire system workflow from the user's perspective, ensuring that all integrated components work together as expected in a production-like environment."
+  }
+]

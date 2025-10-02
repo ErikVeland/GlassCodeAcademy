@@ -1,0 +1,29 @@
+{
+  "module": "react-fundamentals",
+  "sources": [
+    {
+      "title": "React Official Documentation",
+      "url": "https://reactjs.org/docs/getting-started.html"
+    },
+    {
+      "title": "React GitHub Repository",
+      "url": "https://github.com/facebook/react"
+    },
+    {
+      "title": "React RFCs",
+      "url": "https://github.com/reactjs/rfcs"
+    },
+    {
+      "title": "Create React App Documentation",
+      "url": "https://create-react-app.dev/"
+    },
+    {
+      "title": "React Hooks Documentation",
+      "url": "https://reactjs.org/docs/hooks-intro.html"
+    },
+    {
+      "title": "React Testing Library",
+      "url": "https://testing-library.com/docs/react-testing-library/intro/"
+    }
+  ]
+}

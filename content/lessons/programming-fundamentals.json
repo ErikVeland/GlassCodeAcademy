@@ -1,0 +1,665 @@
+[
+  {
+    "id": "programming-fundamentals-lesson-1",
+    "moduleSlug": "programming-fundamentals",
+    "title": "Variables and Data Types",
+    "order": 1,
+    "objectives": [
+      "Understand different data types in programming (numbers, strings, booleans)",
+      "Learn how to declare and initialize variables",
+      "Master variable naming conventions and best practices"
+    ],
+    "intro": "Variables are fundamental building blocks in programming that store and manage data in your applications. Understanding data types is crucial for writing efficient and bug-free code.\n\nIn this lesson, you'll learn about primitive data types including numbers, strings, and booleans. We'll explore how different programming languages handle these types and when to use each one effectively.\n\nVariables act as containers that hold values which can change during program execution. Proper variable management is essential for memory efficiency and code readability. You'll discover naming conventions that make your code self-documenting and easier to maintain.\n\nBy the end of this lesson, you'll confidently declare variables, choose appropriate data types, and follow industry-standard naming practices. These skills form the foundation for all programming concepts you'll learn throughout your development journey.\n\nWe'll cover practical examples showing how variables store different types of information, from user input to calculation results. Understanding these fundamentals will prepare you for more complex topics like functions, arrays, and object-oriented programming.",
+    "code": {
+      "example": "// Variable declarations with different data types\n\n// Numbers (integers and floating-point)\nlet age = 25;\nlet price = 19.99;\nlet temperature = -5;\n\n// Strings (text data)\nlet firstName = \"John\";\nlet lastName = \"Doe\";\nlet message = `Hello, ${firstName} ${lastName}!`;\n\n// Booleans (true/false values)\nlet isLoggedIn = true;\nlet hasPermission = false;\nlet isValidEmail = email.includes('@');\n\n// Constants (values that don't change)\nconst PI = 3.14159;\nconst MAX_USERS = 100;\n\n// Variable naming conventions\nlet userName = \"camelCase for variables\";\nconst API_URL = \"UPPER_CASE for constants\";\nlet is_valid = false; // avoid snake_case in JavaScript\n\nconsole.log(`Age: ${age}, Price: $${price}, User: ${firstName}`);",
+      "explanation": "This example demonstrates proper variable declaration, different data types, and naming conventions. Notice how we use 'let' for variables that can change, 'const' for constants, and template literals for string interpolation.",
+      "language": "javascript"
+    },
+    "pitfalls": [
+      {
+        "mistake": "Not following Logic best practices",
+        "solution": "Review official documentation and established patterns for Logic",
+        "severity": "medium"
+      },
+      {
+        "mistake": "Skipping error handling in implementation",
+        "solution": "Always implement proper error handling and validation",
+        "severity": "high"
+      },
+      {
+        "mistake": "Ignoring performance implications",
+        "solution": "Consider performance impact of your implementation choices",
+        "severity": "low"
+      }
+    ],
+    "exercises": [
+      {
+        "title": "Variable Declaration Practice",
+        "description": "Create a simple program that declares variables for a user profile and displays the information.",
+        "checkpoints": [
+          "Declare variables for name, age, email, and account status",
+          "Use appropriate data types for each variable",
+          "Display the user information using template literals",
+          "Verify your variable names follow naming conventions"
+        ]
+      }
+    ],
+    "next": [],
+    "estimatedMinutes": 30,
+    "difficulty": "Beginner",
+    "tags": [
+      "Logic",
+      "Algorithms",
+      "Data Structures"
+    ],
+    "lastUpdated": "2025-10-01T06:42:16.313Z",
+    "version": "1.0.0"
+  },
+  {
+    "id": "programming-fundamentals-lesson-2",
+    "moduleSlug": "programming-fundamentals",
+    "title": "Control Structures",
+    "order": 2,
+    "objectives": [
+      "Master if statements and conditional logic",
+      "Implement loops for repetitive tasks (for, while, do-while)",
+      "Use switch statements for multiple conditions"
+    ],
+    "intro": "Control structures are the building blocks that control the flow of your program execution. They determine which code runs when, based on conditions and repetition needs.\n\nIn this lesson, you'll learn how to make decisions in your code using if statements, else clauses, and complex conditional logic. These structures allow your programs to respond dynamically to different situations and user inputs.\n\nLoops are essential for performing repetitive tasks efficiently. Instead of writing the same code multiple times, you'll use for loops, while loops, and do-while loops to iterate through data and repeat operations.\n\nSwitch statements provide a clean way to handle multiple possible values for a single variable. This is particularly useful when dealing with user choices, menu systems, or processing different types of data.\n\nBy mastering these control structures, you'll be able to create programs that make intelligent decisions and handle repetitive tasks automatically. These concepts are fundamental to all programming languages and essential for building any meaningful application.",
+    "code": {
+      "example": "// Conditional statements (if/else)\nlet age = 18;\nlet hasLicense = true;\n\nif (age >= 18 && hasLicense) {\n    console.log('Can drive legally');\n} else if (age >= 16) {\n    console.log('Can drive with supervision');\n} else {\n    console.log('Too young to drive');\n}\n\n// Switch statement for multiple conditions\nlet dayOfWeek = 'Monday';\nswitch (dayOfWeek) {\n    case 'Monday':\n    case 'Tuesday':\n    case 'Wednesday':\n    case 'Thursday':\n    case 'Friday':\n        console.log('Weekday');\n        break;\n    case 'Saturday':\n    case 'Sunday':\n        console.log('Weekend');\n        break;\n    default:\n        console.log('Invalid day');\n}\n\n// For loop for counting\nfor (let i = 1; i <= 5; i++) {\n    console.log(`Count: ${i}`);\n}\n\n// While loop for unknown iterations\nlet password = '';\nwhile (password !== 'secret') {\n    password = prompt('Enter password:');\n    if (password !== 'secret') {\n        console.log('Incorrect password, try again');\n    }\n}\n\n// Array iteration\nlet fruits = ['apple', 'banana', 'orange'];\nfor (let fruit of fruits) {\n    console.log(`I like ${fruit}`);\n}",
+      "explanation": "This example shows different control structures: if/else for decisions, switch for multiple conditions, for loops for counting, while loops for unknown iterations, and array iteration.",
+      "language": "javascript"
+    },
+    "pitfalls": [
+      {
+        "mistake": "Using assignment (=) instead of comparison (===) in conditions",
+        "solution": "Always use === for comparison and = for assignment. Use === instead of == for strict equality",
+        "severity": "high"
+      },
+      {
+        "mistake": "Forgetting break statements in switch cases",
+        "solution": "Always include break statements to prevent fall-through behavior unless intentional",
+        "severity": "medium"
+      },
+      {
+        "mistake": "Creating infinite loops by forgetting to update loop variables",
+        "solution": "Ensure loop conditions will eventually become false by updating variables inside the loop",
+        "severity": "high"
+      }
+    ],
+    "exercises": [
+      {
+        "title": "Grade Calculator",
+        "description": "Create a program that determines letter grades based on numeric scores and calculates class statistics.",
+        "checkpoints": [
+          "Use if/else statements to convert numeric grades to letters (A, B, C, D, F)",
+          "Implement a loop to process multiple student grades",
+          "Use a switch statement to count how many of each letter grade",
+          "Calculate and display the class average"
+        ]
+      }
+    ],
+    "next": [],
+    "estimatedMinutes": 30,
+    "difficulty": "Beginner",
+    "tags": [
+      "Logic",
+      "Algorithms",
+      "Data Structures"
+    ],
+    "lastUpdated": "2025-10-01T06:42:16.314Z",
+    "version": "1.0.0"
+  },
+  {
+    "id": "programming-fundamentals-lesson-3",
+    "moduleSlug": "programming-fundamentals",
+    "title": "Functions and Methods",
+    "order": 3,
+    "objectives": [
+      "Understand function syntax and parameter passing",
+      "Learn about return values and scope",
+      "Master function best practices and naming conventions"
+    ],
+    "intro": "Functions are reusable blocks of code that perform specific tasks, making your programs modular, organized, and easier to maintain. They are essential for writing clean, efficient code.\n\nIn this lesson, you'll learn how to define functions, pass data through parameters, and return results. Functions help eliminate code duplication and make your programs easier to test and debug.\n\nScope is a crucial concept that determines where variables can be accessed in your code. Understanding local and global scope prevents common bugs and helps you write more predictable functions.\n\nYou'll discover different types of functions including arrow functions, anonymous functions, and higher-order functions. These concepts prepare you for advanced programming patterns and modern development practices.\n\nBy the end of this lesson, you'll confidently create functions that solve specific problems, accept input parameters, return meaningful results, and follow industry naming conventions. Functions are the building blocks of larger applications.",
+    "code": {
+      "example": "// Basic function declaration\nfunction greetUser(name, timeOfDay) {\n    return `Good ${timeOfDay}, ${name}!`;\n}\n\n// Function expression\nconst calculateArea = function(length, width) {\n    return length * width;\n};\n\n// Arrow function (ES6+)\nconst multiply = (a, b) => a * b;\n\n// Function with default parameters\nfunction createUser(name, role = 'user', active = true) {\n    return {\n        name: name,\n        role: role,\n        active: active,\n        createdAt: new Date()\n    };\n}\n\n// Higher-order function (function that takes another function)\nfunction processNumbers(numbers, operation) {\n    return numbers.map(operation);\n}\n\n// Usage examples\nconsole.log(greetUser('Alice', 'morning'));\nconst roomArea = calculateArea(10, 12);\nconst product = multiply(5, 3);\n\nconst newUser = createUser('Bob');\nconst adminUser = createUser('Carol', 'admin');\n\nconst doubled = processNumbers([1, 2, 3, 4], x => x * 2);\nconsole.log(doubled); // [2, 4, 6, 8]\n\n// Function scope example\nlet globalVar = 'I am global';\n\nfunction demonstrateScope() {\n    let localVar = 'I am local';\n    console.log(globalVar); // Can access global\n    console.log(localVar);  // Can access local\n}\n\n// console.log(localVar); // Error: localVar is not defined",
+      "explanation": "This example demonstrates function declarations, expressions, arrow functions, parameters with defaults, return values, higher-order functions, and variable scope.",
+      "language": "javascript"
+    },
+    "pitfalls": [
+      {
+        "mistake": "Modifying global variables inside functions",
+        "solution": "Use parameters and return values instead of relying on global variables",
+        "severity": "high"
+      },
+      {
+        "mistake": "Creating functions that do too many things",
+        "solution": "Follow the single responsibility principle - each function should do one thing well",
+        "severity": "medium"
+      },
+      {
+        "mistake": "Not handling missing or invalid parameters",
+        "solution": "Validate parameters and provide default values or error handling",
+        "severity": "medium"
+      }
+    ],
+    "exercises": [
+      {
+        "title": "Calculator Functions",
+        "description": "Build a set of calculator functions that demonstrate parameter passing and return values.",
+        "checkpoints": [
+          "Create functions for basic math operations (add, subtract, multiply, divide)",
+          "Implement input validation to handle invalid numbers",
+          "Build a main function that uses all the math functions",
+          "Add error handling for division by zero"
+        ]
+      }
+    ],
+    "next": [],
+    "estimatedMinutes": 30,
+    "difficulty": "Beginner",
+    "tags": [
+      "Logic",
+      "Algorithms",
+      "Data Structures"
+    ],
+    "lastUpdated": "2025-10-01T06:42:16.314Z",
+    "version": "1.0.0"
+  },
+  {
+    "id": "programming-fundamentals-lesson-4",
+    "moduleSlug": "programming-fundamentals",
+    "title": "Core Fundamentals",
+    "order": 4,
+    "objectives": [
+      "Apply advanced Logic techniques",
+      "Optimize performance and efficiency",
+      "Integrate with external systems"
+    ],
+    "intro": "Welcome to Core Fundamentals in the Programming Fundamentals module. \n\nThis lesson is part of the foundational tier, designed for beginner level learners. Throughout this lesson, you'll explore essential concepts and practical applications that form the foundation of modern programming development.\n\nVariables, data types, control structures, and basic algorithms This lesson builds upon previous concepts while introducing new techniques that will enhance your understanding and practical skills.\n\nBy the end of this lesson, you'll have hands-on experience with Logic and Algorithms, along with best practices for implementing these technologies in real-world scenarios. The knowledge gained here will prepare you for more advanced topics in subsequent lessons.\n\nKey areas we'll cover include practical implementation techniques, common challenges developers face, and proven solutions that industry professionals use daily. This lesson balances theoretical understanding with practical application, ensuring you can immediately apply what you learn.",
+    "code": {
+      "example": "// Example Logic implementation\n// TODO: Add specific code example for Programming Fundamentals\n\nfunction example() {\n    // Placeholder implementation\n    console.log('Programming Fundamentals example');\n}\n\nexport default example;",
+      "explanation": "This example demonstrates the key concepts covered in this lesson.",
+      "language": "javascript"
+    },
+    "pitfalls": [
+      {
+        "mistake": "Not following Logic best practices",
+        "solution": "Review official documentation and established patterns for Logic",
+        "severity": "medium"
+      },
+      {
+        "mistake": "Skipping error handling in implementation",
+        "solution": "Always implement proper error handling and validation",
+        "severity": "high"
+      },
+      {
+        "mistake": "Ignoring performance implications",
+        "solution": "Consider performance impact of your implementation choices",
+        "severity": "low"
+      }
+    ],
+    "exercises": [
+      {
+        "title": "Practice Core Fundamentals",
+        "description": "Apply the concepts learned in this lesson through hands-on practice.",
+        "checkpoints": [
+          "Complete the basic implementation",
+          "Test your solution",
+          "Identify areas for improvement"
+        ]
+      }
+    ],
+    "next": [],
+    "estimatedMinutes": 30,
+    "difficulty": "Beginner",
+    "tags": [
+      "Logic",
+      "Algorithms",
+      "Data Structures"
+    ],
+    "lastUpdated": "2025-10-01T06:42:16.314Z",
+    "version": "1.0.0"
+  },
+  {
+    "id": "programming-fundamentals-lesson-5",
+    "moduleSlug": "programming-fundamentals",
+    "title": "Essential Patterns",
+    "order": 5,
+    "objectives": [
+      "Apply advanced Logic techniques",
+      "Optimize performance and efficiency",
+      "Integrate with external systems"
+    ],
+    "intro": "Welcome to Essential Patterns in the Programming Fundamentals module. \n\nThis lesson is part of the foundational tier, designed for beginner level learners. Throughout this lesson, you'll explore essential concepts and practical applications that form the foundation of modern programming development.\n\nVariables, data types, control structures, and basic algorithms This lesson builds upon previous concepts while introducing new techniques that will enhance your understanding and practical skills.\n\nBy the end of this lesson, you'll have hands-on experience with Logic and Algorithms, along with best practices for implementing these technologies in real-world scenarios. The knowledge gained here will prepare you for more advanced topics in subsequent lessons.\n\nKey areas we'll cover include practical implementation techniques, common challenges developers face, and proven solutions that industry professionals use daily. This lesson balances theoretical understanding with practical application, ensuring you can immediately apply what you learn.",
+    "code": {
+      "example": "// Example Logic implementation\n// TODO: Add specific code example for Programming Fundamentals\n\nfunction example() {\n    // Placeholder implementation\n    console.log('Programming Fundamentals example');\n}\n\nexport default example;",
+      "explanation": "This example demonstrates the key concepts covered in this lesson.",
+      "language": "javascript"
+    },
+    "pitfalls": [
+      {
+        "mistake": "Not following Logic best practices",
+        "solution": "Review official documentation and established patterns for Logic",
+        "severity": "medium"
+      },
+      {
+        "mistake": "Skipping error handling in implementation",
+        "solution": "Always implement proper error handling and validation",
+        "severity": "high"
+      },
+      {
+        "mistake": "Ignoring performance implications",
+        "solution": "Consider performance impact of your implementation choices",
+        "severity": "low"
+      }
+    ],
+    "exercises": [
+      {
+        "title": "Practice Essential Patterns",
+        "description": "Apply the concepts learned in this lesson through hands-on practice.",
+        "checkpoints": [
+          "Complete the basic implementation",
+          "Test your solution",
+          "Identify areas for improvement"
+        ]
+      }
+    ],
+    "next": [],
+    "estimatedMinutes": 30,
+    "difficulty": "Beginner",
+    "tags": [
+      "Logic",
+      "Algorithms",
+      "Data Structures"
+    ],
+    "lastUpdated": "2025-10-01T06:42:16.314Z",
+    "version": "1.0.0"
+  },
+  {
+    "id": "programming-fundamentals-lesson-6",
+    "moduleSlug": "programming-fundamentals",
+    "title": "Building Blocks",
+    "order": 6,
+    "objectives": [
+      "Apply advanced Logic techniques",
+      "Optimize performance and efficiency",
+      "Integrate with external systems"
+    ],
+    "intro": "Welcome to Building Blocks in the Programming Fundamentals module. \n\nThis lesson is part of the foundational tier, designed for beginner level learners. Throughout this lesson, you'll explore essential concepts and practical applications that form the foundation of modern programming development.\n\nVariables, data types, control structures, and basic algorithms This lesson builds upon previous concepts while introducing new techniques that will enhance your understanding and practical skills.\n\nBy the end of this lesson, you'll have hands-on experience with Logic and Algorithms, along with best practices for implementing these technologies in real-world scenarios. The knowledge gained here will prepare you for more advanced topics in subsequent lessons.\n\nKey areas we'll cover include practical implementation techniques, common challenges developers face, and proven solutions that industry professionals use daily. This lesson balances theoretical understanding with practical application, ensuring you can immediately apply what you learn.",
+    "code": {
+      "example": "// Example Logic implementation\n// TODO: Add specific code example for Programming Fundamentals\n\nfunction example() {\n    // Placeholder implementation\n    console.log('Programming Fundamentals example');\n}\n\nexport default example;",
+      "explanation": "This example demonstrates the key concepts covered in this lesson.",
+      "language": "javascript"
+    },
+    "pitfalls": [
+      {
+        "mistake": "Not following Logic best practices",
+        "solution": "Review official documentation and established patterns for Logic",
+        "severity": "medium"
+      },
+      {
+        "mistake": "Skipping error handling in implementation",
+        "solution": "Always implement proper error handling and validation",
+        "severity": "high"
+      },
+      {
+        "mistake": "Ignoring performance implications",
+        "solution": "Consider performance impact of your implementation choices",
+        "severity": "low"
+      }
+    ],
+    "exercises": [
+      {
+        "title": "Practice Building Blocks",
+        "description": "Apply the concepts learned in this lesson through hands-on practice.",
+        "checkpoints": [
+          "Complete the basic implementation",
+          "Test your solution",
+          "Identify areas for improvement"
+        ]
+      }
+    ],
+    "next": [],
+    "estimatedMinutes": 30,
+    "difficulty": "Beginner",
+    "tags": [
+      "Logic",
+      "Algorithms",
+      "Data Structures"
+    ],
+    "lastUpdated": "2025-10-01T06:42:16.314Z",
+    "version": "1.0.0"
+  },
+  {
+    "id": "programming-fundamentals-lesson-7",
+    "moduleSlug": "programming-fundamentals",
+    "title": "First Steps",
+    "order": 7,
+    "objectives": [
+      "Apply advanced Logic techniques",
+      "Optimize performance and efficiency",
+      "Integrate with external systems"
+    ],
+    "intro": "Welcome to First Steps in the Programming Fundamentals module. \n\nThis lesson is part of the foundational tier, designed for beginner level learners. Throughout this lesson, you'll explore essential concepts and practical applications that form the foundation of modern programming development.\n\nVariables, data types, control structures, and basic algorithms This lesson builds upon previous concepts while introducing new techniques that will enhance your understanding and practical skills.\n\nBy the end of this lesson, you'll have hands-on experience with Logic and Algorithms, along with best practices for implementing these technologies in real-world scenarios. The knowledge gained here will prepare you for more advanced topics in subsequent lessons.\n\nKey areas we'll cover include practical implementation techniques, common challenges developers face, and proven solutions that industry professionals use daily. This lesson balances theoretical understanding with practical application, ensuring you can immediately apply what you learn.",
+    "code": {
+      "example": "// Example Logic implementation\n// TODO: Add specific code example for Programming Fundamentals\n\nfunction example() {\n    // Placeholder implementation\n    console.log('Programming Fundamentals example');\n}\n\nexport default example;",
+      "explanation": "This example demonstrates the key concepts covered in this lesson.",
+      "language": "javascript"
+    },
+    "pitfalls": [
+      {
+        "mistake": "Not following Logic best practices",
+        "solution": "Review official documentation and established patterns for Logic",
+        "severity": "medium"
+      },
+      {
+        "mistake": "Skipping error handling in implementation",
+        "solution": "Always implement proper error handling and validation",
+        "severity": "high"
+      },
+      {
+        "mistake": "Ignoring performance implications",
+        "solution": "Consider performance impact of your implementation choices",
+        "severity": "low"
+      }
+    ],
+    "exercises": [
+      {
+        "title": "Practice First Steps",
+        "description": "Apply the concepts learned in this lesson through hands-on practice.",
+        "checkpoints": [
+          "Complete the basic implementation",
+          "Test your solution",
+          "Identify areas for improvement"
+        ]
+      }
+    ],
+    "next": [],
+    "estimatedMinutes": 30,
+    "difficulty": "Beginner",
+    "tags": [
+      "Logic",
+      "Algorithms",
+      "Data Structures"
+    ],
+    "lastUpdated": "2025-10-01T06:42:16.314Z",
+    "version": "1.0.0"
+  },
+  {
+    "id": "programming-fundamentals-lesson-8",
+    "moduleSlug": "programming-fundamentals",
+    "title": "Understanding Basics",
+    "order": 8,
+    "objectives": [
+      "Apply advanced Logic techniques",
+      "Optimize performance and efficiency",
+      "Integrate with external systems"
+    ],
+    "intro": "Welcome to Understanding Basics in the Programming Fundamentals module. \n\nThis lesson is part of the foundational tier, designed for beginner level learners. Throughout this lesson, you'll explore essential concepts and practical applications that form the foundation of modern programming development.\n\nVariables, data types, control structures, and basic algorithms This lesson builds upon previous concepts while introducing new techniques that will enhance your understanding and practical skills.\n\nBy the end of this lesson, you'll have hands-on experience with Logic and Algorithms, along with best practices for implementing these technologies in real-world scenarios. The knowledge gained here will prepare you for more advanced topics in subsequent lessons.\n\nKey areas we'll cover include practical implementation techniques, common challenges developers face, and proven solutions that industry professionals use daily. This lesson balances theoretical understanding with practical application, ensuring you can immediately apply what you learn.",
+    "code": {
+      "example": "// Example Logic implementation\n// TODO: Add specific code example for Programming Fundamentals\n\nfunction example() {\n    // Placeholder implementation\n    console.log('Programming Fundamentals example');\n}\n\nexport default example;",
+      "explanation": "This example demonstrates the key concepts covered in this lesson.",
+      "language": "javascript"
+    },
+    "pitfalls": [
+      {
+        "mistake": "Not following Logic best practices",
+        "solution": "Review official documentation and established patterns for Logic",
+        "severity": "medium"
+      },
+      {
+        "mistake": "Skipping error handling in implementation",
+        "solution": "Always implement proper error handling and validation",
+        "severity": "high"
+      },
+      {
+        "mistake": "Ignoring performance implications",
+        "solution": "Consider performance impact of your implementation choices",
+        "severity": "low"
+      }
+    ],
+    "exercises": [
+      {
+        "title": "Practice Understanding Basics",
+        "description": "Apply the concepts learned in this lesson through hands-on practice.",
+        "checkpoints": [
+          "Complete the basic implementation",
+          "Test your solution",
+          "Identify areas for improvement"
+        ]
+      }
+    ],
+    "next": [],
+    "estimatedMinutes": 30,
+    "difficulty": "Beginner",
+    "tags": [
+      "Logic",
+      "Algorithms",
+      "Data Structures"
+    ],
+    "lastUpdated": "2025-10-01T06:42:16.314Z",
+    "version": "1.0.0"
+  },
+  {
+    "id": "programming-fundamentals-lesson-9",
+    "moduleSlug": "programming-fundamentals",
+    "title": "Key Concepts",
+    "order": 9,
+    "objectives": [
+      "Apply advanced Logic techniques",
+      "Optimize performance and efficiency",
+      "Integrate with external systems"
+    ],
+    "intro": "Welcome to Key Concepts in the Programming Fundamentals module. \n\nThis lesson is part of the foundational tier, designed for beginner level learners. Throughout this lesson, you'll explore essential concepts and practical applications that form the foundation of modern programming development.\n\nVariables, data types, control structures, and basic algorithms This lesson builds upon previous concepts while introducing new techniques that will enhance your understanding and practical skills.\n\nBy the end of this lesson, you'll have hands-on experience with Logic and Algorithms, along with best practices for implementing these technologies in real-world scenarios. The knowledge gained here will prepare you for more advanced topics in subsequent lessons.\n\nKey areas we'll cover include practical implementation techniques, common challenges developers face, and proven solutions that industry professionals use daily. This lesson balances theoretical understanding with practical application, ensuring you can immediately apply what you learn.",
+    "code": {
+      "example": "// Example Logic implementation\n// TODO: Add specific code example for Programming Fundamentals\n\nfunction example() {\n    // Placeholder implementation\n    console.log('Programming Fundamentals example');\n}\n\nexport default example;",
+      "explanation": "This example demonstrates the key concepts covered in this lesson.",
+      "language": "javascript"
+    },
+    "pitfalls": [
+      {
+        "mistake": "Not following Logic best practices",
+        "solution": "Review official documentation and established patterns for Logic",
+        "severity": "medium"
+      },
+      {
+        "mistake": "Skipping error handling in implementation",
+        "solution": "Always implement proper error handling and validation",
+        "severity": "high"
+      },
+      {
+        "mistake": "Ignoring performance implications",
+        "solution": "Consider performance impact of your implementation choices",
+        "severity": "low"
+      }
+    ],
+    "exercises": [
+      {
+        "title": "Practice Key Concepts",
+        "description": "Apply the concepts learned in this lesson through hands-on practice.",
+        "checkpoints": [
+          "Complete the basic implementation",
+          "Test your solution",
+          "Identify areas for improvement"
+        ]
+      }
+    ],
+    "next": [],
+    "estimatedMinutes": 30,
+    "difficulty": "Beginner",
+    "tags": [
+      "Logic",
+      "Algorithms",
+      "Data Structures"
+    ],
+    "lastUpdated": "2025-10-01T06:42:16.314Z",
+    "version": "1.0.0"
+  },
+  {
+    "id": "programming-fundamentals-lesson-10",
+    "moduleSlug": "programming-fundamentals",
+    "title": "Foundation Knowledge",
+    "order": 10,
+    "objectives": [
+      "Apply advanced Logic techniques",
+      "Optimize performance and efficiency",
+      "Integrate with external systems"
+    ],
+    "intro": "Welcome to Foundation Knowledge in the Programming Fundamentals module. \n\nThis lesson is part of the foundational tier, designed for beginner level learners. Throughout this lesson, you'll explore essential concepts and practical applications that form the foundation of modern programming development.\n\nVariables, data types, control structures, and basic algorithms This lesson builds upon previous concepts while introducing new techniques that will enhance your understanding and practical skills.\n\nBy the end of this lesson, you'll have hands-on experience with Logic and Algorithms, along with best practices for implementing these technologies in real-world scenarios. The knowledge gained here will prepare you for more advanced topics in subsequent lessons.\n\nKey areas we'll cover include practical implementation techniques, common challenges developers face, and proven solutions that industry professionals use daily. This lesson balances theoretical understanding with practical application, ensuring you can immediately apply what you learn.",
+    "code": {
+      "example": "// Example Logic implementation\n// TODO: Add specific code example for Programming Fundamentals\n\nfunction example() {\n    // Placeholder implementation\n    console.log('Programming Fundamentals example');\n}\n\nexport default example;",
+      "explanation": "This example demonstrates the key concepts covered in this lesson.",
+      "language": "javascript"
+    },
+    "pitfalls": [
+      {
+        "mistake": "Not following Logic best practices",
+        "solution": "Review official documentation and established patterns for Logic",
+        "severity": "medium"
+      },
+      {
+        "mistake": "Skipping error handling in implementation",
+        "solution": "Always implement proper error handling and validation",
+        "severity": "high"
+      },
+      {
+        "mistake": "Ignoring performance implications",
+        "solution": "Consider performance impact of your implementation choices",
+        "severity": "low"
+      }
+    ],
+    "exercises": [
+      {
+        "title": "Practice Foundation Knowledge",
+        "description": "Apply the concepts learned in this lesson through hands-on practice.",
+        "checkpoints": [
+          "Complete the basic implementation",
+          "Test your solution",
+          "Identify areas for improvement"
+        ]
+      }
+    ],
+    "next": [],
+    "estimatedMinutes": 30,
+    "difficulty": "Beginner",
+    "tags": [
+      "Logic",
+      "Algorithms",
+      "Data Structures"
+    ],
+    "lastUpdated": "2025-10-01T06:42:16.314Z",
+    "version": "1.0.0"
+  },
+  {
+    "id": "programming-fundamentals-lesson-11",
+    "moduleSlug": "programming-fundamentals",
+    "title": "Practical Applications",
+    "order": 11,
+    "objectives": [
+      "Apply advanced Logic techniques",
+      "Optimize performance and efficiency",
+      "Integrate with external systems"
+    ],
+    "intro": "Welcome to Practical Applications in the Programming Fundamentals module. \n\nThis lesson is part of the foundational tier, designed for beginner level learners. Throughout this lesson, you'll explore essential concepts and practical applications that form the foundation of modern programming development.\n\nVariables, data types, control structures, and basic algorithms This lesson builds upon previous concepts while introducing new techniques that will enhance your understanding and practical skills.\n\nBy the end of this lesson, you'll have hands-on experience with Logic and Algorithms, along with best practices for implementing these technologies in real-world scenarios. The knowledge gained here will prepare you for more advanced topics in subsequent lessons.\n\nKey areas we'll cover include practical implementation techniques, common challenges developers face, and proven solutions that industry professionals use daily. This lesson balances theoretical understanding with practical application, ensuring you can immediately apply what you learn.",
+    "code": {
+      "example": "// Example Logic implementation\n// TODO: Add specific code example for Programming Fundamentals\n\nfunction example() {\n    // Placeholder implementation\n    console.log('Programming Fundamentals example');\n}\n\nexport default example;",
+      "explanation": "This example demonstrates the key concepts covered in this lesson.",
+      "language": "javascript"
+    },
+    "pitfalls": [
+      {
+        "mistake": "Not following Logic best practices",
+        "solution": "Review official documentation and established patterns for Logic",
+        "severity": "medium"
+      },
+      {
+        "mistake": "Skipping error handling in implementation",
+        "solution": "Always implement proper error handling and validation",
+        "severity": "high"
+      },
+      {
+        "mistake": "Ignoring performance implications",
+        "solution": "Consider performance impact of your implementation choices",
+        "severity": "low"
+      }
+    ],
+    "exercises": [
+      {
+        "title": "Practice Practical Applications",
+        "description": "Apply the concepts learned in this lesson through hands-on practice.",
+        "checkpoints": [
+          "Complete the basic implementation",
+          "Test your solution",
+          "Identify areas for improvement"
+        ]
+      }
+    ],
+    "next": [],
+    "estimatedMinutes": 30,
+    "difficulty": "Beginner",
+    "tags": [
+      "Logic",
+      "Algorithms",
+      "Data Structures"
+    ],
+    "lastUpdated": "2025-10-01T06:42:16.314Z",
+    "version": "1.0.0"
+  },
+  {
+    "id": "programming-fundamentals-lesson-12",
+    "moduleSlug": "programming-fundamentals",
+    "title": "Review and Practice",
+    "order": 12,
+    "objectives": [
+      "Apply advanced Logic techniques",
+      "Optimize performance and efficiency",
+      "Integrate with external systems"
+    ],
+    "intro": "Welcome to Review and Practice in the Programming Fundamentals module. \n\nThis lesson is part of the foundational tier, designed for beginner level learners. Throughout this lesson, you'll explore essential concepts and practical applications that form the foundation of modern programming development.\n\nVariables, data types, control structures, and basic algorithms This lesson builds upon previous concepts while introducing new techniques that will enhance your understanding and practical skills.\n\nBy the end of this lesson, you'll have hands-on experience with Logic and Algorithms, along with best practices for implementing these technologies in real-world scenarios. The knowledge gained here will prepare you for more advanced topics in subsequent lessons.\n\nKey areas we'll cover include practical implementation techniques, common challenges developers face, and proven solutions that industry professionals use daily. This lesson balances theoretical understanding with practical application, ensuring you can immediately apply what you learn.",
+    "code": {
+      "example": "// Example Logic implementation\n// TODO: Add specific code example for Programming Fundamentals\n\nfunction example() {\n    // Placeholder implementation\n    console.log('Programming Fundamentals example');\n}\n\nexport default example;",
+      "explanation": "This example demonstrates the key concepts covered in this lesson.",
+      "language": "javascript"
+    },
+    "pitfalls": [
+      {
+        "mistake": "Not following Logic best practices",
+        "solution": "Review official documentation and established patterns for Logic",
+        "severity": "medium"
+      },
+      {
+        "mistake": "Skipping error handling in implementation",
+        "solution": "Always implement proper error handling and validation",
+        "severity": "high"
+      },
+      {
+        "mistake": "Ignoring performance implications",
+        "solution": "Consider performance impact of your implementation choices",
+        "severity": "low"
+      }
+    ],
+    "exercises": [
+      {
+        "title": "Practice Review and Practice",
+        "description": "Apply the concepts learned in this lesson through hands-on practice.",
+        "checkpoints": [
+          "Complete the basic implementation",
+          "Test your solution",
+          "Identify areas for improvement"
+        ]
+      }
+    ],
+    "next": [],
+    "estimatedMinutes": 30,
+    "difficulty": "Beginner",
+    "tags": [
+      "Logic",
+      "Algorithms",
+      "Data Structures"
+    ],
+    "lastUpdated": "2025-10-01T06:42:16.314Z",
+    "version": "1.0.0"
+  }
+]

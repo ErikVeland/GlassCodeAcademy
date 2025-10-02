@@ -1,0 +1,32 @@
+[
+  {
+    "id": 1,
+    "topic": "Components",
+    "title": "React Components Basics",
+    "description": "Learn how to create and use React components.",
+    "content": "React components are the building blocks of any React application. They allow you to split your UI into independent, reusable pieces, and think about each piece in isolation.\n\nThere are two types of components in React:\n1. Function components\n2. Class components\n\nIn modern React, function components are preferred, especially with the introduction of hooks.",
+    "codeExample": "function Welcome(props) {\n  return <h1>Hello, {props.name}</h1>;\n}\n\nfunction App() {\n  return (\n    <div>\n      <Welcome name=\"Sara\" />\n      <Welcome name=\"Cahal\" />\n      <Welcome name=\"Edite\" />\n    </div>\n  );\n}",
+    "output": "Hello, Sara\nHello, Cahal\nHello, Edite",
+    "difficulty": "Beginner"
+  },
+  {
+    "id": 2,
+    "topic": "Hooks",
+    "title": "Understanding React Hooks",
+    "description": "Master the useState and useEffect hooks.",
+    "content": "Hooks are functions that let you 'hook into' React state and lifecycle features from function components. They were introduced in React 16.8.\n\nThe most commonly used hooks are:\n1. useState - for managing state\n2. useEffect - for side effects\n3. useContext - for context\n4. useReducer - for complex state logic",
+    "codeExample": "import React, { useState, useEffect } from 'react';\n\nfunction Counter() {\n  const [count, setCount] = useState(0);\n\n  useEffect(() => {\n    document.title = `You clicked ${count} times`;\n  }, [count]);\n\n  return (\n    <div>\n      <p>You clicked {count} times</p>\n      <button onClick={() => setCount(count + 1)}>\n        Click me\n      </button>\n    </div>\n  );\n}",
+    "output": "You clicked 0 times\n[Button: Click me]",
+    "difficulty": "Intermediate"
+  },
+  {
+    "id": 3,
+    "topic": "State Management",
+    "title": "Advanced State Management",
+    "description": "Learn context API and state management patterns.",
+    "content": "As your application grows, state management becomes more complex. React provides several solutions:\n1. Context API - for global state\n2. useReducer - for complex state logic\n3. Third-party libraries like Redux or Zustand\n\nThe Context API is built into React and is sufficient for many use cases.",
+    "codeExample": "import React, { createContext, useContext, useReducer } from 'react';\n\nconst StateContext = createContext();\n\nfunction reducer(state, action) {\n  switch (action.type) {\n    case 'increment':\n      return { count: state.count + 1 };\n    case 'decrement':\n      return { count: state.count - 1 };\n    default:\n      throw new Error();\n  }\n}\n\nexport function StateProvider({ children }) {\n  const [state, dispatch] = useReducer(reducer, { count: 0 });\n  return (\n    <StateContext.Provider value={{ state, dispatch }}>\n      {children}\n    </StateContext.Provider>\n  );\n}\n\nexport function useGlobalState() {\n  return useContext(StateContext);\n}",
+    "output": "// Context Provider implementation\n// Provides global state to child components",
+    "difficulty": "Advanced"
+  }
+]

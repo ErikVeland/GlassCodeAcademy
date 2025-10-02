@@ -1,0 +1,29 @@
+{
+  "module": "laravel-fundamentals",
+  "sources": [
+    {
+      "title": "Laravel Official Documentation",
+      "url": "https://laravel.com/docs"
+    },
+    {
+      "title": "Laravel API Documentation",
+      "url": "https://laravel.com/api"
+    },
+    {
+      "title": "Laravel News",
+      "url": "https://laravel-news.com/"
+    },
+    {
+      "title": "Laravel Best Practices",
+      "url": "https://github.com/alexeymezenin/laravel-best-practices"
+    },
+    {
+      "title": "Laravel Security Documentation",
+      "url": "https://laravel.com/docs/master/security"
+    },
+    {
+      "title": "Laravel Sanctum Documentation",
+      "url": "https://laravel.com/docs/master/sanctum"
+    }
+  ]
+}

@@ -1,0 +1,336 @@
+{
+  "moduleSlug": "version-control",
+  "title": "Version Control with Git Assessment",
+  "description": "Comprehensive quiz covering key concepts from the Version Control with Git module",
+  "totalQuestions": 15,
+  "passingScore": 70,
+  "timeLimit": 30,
+  "questions": [
+    {
+      "id": "version-control-q1",
+      "question": "Which command is used to create a new Git repository in the current directory?",
+      "topic": "Git",
+      "difficulty": "Beginner",
+      "choices": [
+        "git init",
+        "git create",
+        "git new",
+        "git start"
+      ],
+      "correctIndex": 0,
+      "explanation": "The 'git init' command initializes a new Git repository in the current directory, creating a .git folder that contains all the repository metadata. This is the first step in version controlling any project.",
+      "industryContext": "Every software project should be version controlled from the start. 'git init' is often the first command developers run when starting a new project.",
+      "tags": [
+        "foundational",
+        "beginner"
+      ],
+      "estimatedTime": 90,
+      "questionType": "multiple-choice"
+    },
+    {
+      "id": "version-control-q2",
+      "question": "What is the correct workflow to commit changes in Git?",
+      "topic": "Git",
+      "difficulty": "Beginner",
+      "choices": [
+        "git add → git commit",
+        "git commit → git add",
+        "git push → git commit",
+        "git commit only (no add needed)"
+      ],
+      "correctIndex": 0,
+      "explanation": "The correct Git workflow is to first stage changes with 'git add' (adding them to the staging area), then commit them with 'git commit'. This two-step process allows you to carefully control which changes are included in each commit.",
+      "industryContext": "The staging area is a key feature that sets Git apart from other version control systems, allowing developers to craft precise, logical commits.",
+      "tags": [
+        "foundational",
+        "beginner"
+      ],
+      "estimatedTime": 90,
+      "questionType": "multiple-choice"
+    },
+    {
+      "id": "version-control-q3",
+      "question": "Which command creates a new branch AND switches to it immediately?",
+      "topic": "Git",
+      "difficulty": "Intermediate",
+      "choices": [
+        "git checkout -b feature-branch",
+        "git branch feature-branch",
+        "git switch feature-branch",
+        "git create feature-branch"
+      ],
+      "correctIndex": 0,
+      "explanation": "'git checkout -b feature-branch' creates a new branch called 'feature-branch' and immediately switches to it. The newer equivalent is 'git switch -c feature-branch'. Option B only creates the branch without switching to it.",
+      "industryContext": "Feature branches are essential for team development, allowing developers to work on different features simultaneously without interfering with each other's code.",
+      "tags": [
+        "foundational",
+        "intermediate"
+      ],
+      "estimatedTime": 90,
+      "questionType": "multiple-choice"
+    },
+    {
+      "id": "version-control-q4",
+      "question": "What happens when you encounter a merge conflict in Git?",
+      "topic": "Git",
+      "difficulty": "Intermediate",
+      "choices": [
+        "Git stops the merge and requires manual resolution",
+        "Git automatically chooses the newer version",
+        "Git automatically chooses the older version",
+        "Git creates two separate files"
+      ],
+      "correctIndex": 0,
+      "explanation": "When Git encounters a merge conflict (same lines modified in different ways), it stops the merge process and marks the conflicted sections in the files. You must manually edit the files to resolve conflicts, then add and commit the resolved files.",
+      "industryContext": "Merge conflicts are common in team development. Learning to resolve them efficiently is a crucial skill for collaborative software development.",
+      "tags": [
+        "foundational",
+        "intermediate"
+      ],
+      "estimatedTime": 90,
+      "questionType": "multiple-choice"
+    },
+    {
+      "id": "version-control-q5",
+      "question": "Which file is used to specify which files Git should ignore?",
+      "topic": "Git",
+      "difficulty": "Beginner",
+      "choices": [
+        ".gitignore",
+        ".gitexclude",
+        "ignore.txt",
+        ".ignore"
+      ],
+      "correctIndex": 0,
+      "explanation": "The '.gitignore' file contains patterns for files and directories that Git should not track. This is essential for excluding build artifacts, dependencies, IDE files, and sensitive information from version control.",
+      "industryContext": "Every project should have a .gitignore file to prevent accidentally committing temporary files, build outputs, or sensitive information like API keys.",
+      "tags": [
+        "foundational",
+        "beginner"
+      ],
+      "estimatedTime": 90,
+      "questionType": "multiple-choice"
+    },
+    {
+      "id": "version-control-q6",
+      "question": "How do you implement Git in a production environment?",
+      "topic": "Git",
+      "difficulty": "Intermediate",
+      "choices": [
+        "Option A - Placeholder answer",
+        "Option B - Placeholder answer",
+        "Option C - Placeholder answer",
+        "Option D - Placeholder answer"
+      ],
+      "correctIndex": 0,
+      "explanation": "This question tests understanding of Git concepts. The correct answer demonstrates proper implementation of Version Control with Git principles. Review the lesson materials for detailed explanations of these concepts.",
+      "industryContext": "In professional development, understanding Git is crucial for building scalable and maintainable applications.",
+      "tags": [
+        "foundational",
+        "intermediate"
+      ],
+      "estimatedTime": 90,
+      "questionType": "multiple-choice"
+    },
+    {
+      "id": "version-control-q7",
+      "question": "Which of the following is a key feature of Version Control with Git?",
+      "topic": "GitHub",
+      "difficulty": "Beginner",
+      "choices": [
+        "Option A - Placeholder answer",
+        "Option B - Placeholder answer",
+        "Option C - Placeholder answer",
+        "Option D - Placeholder answer"
+      ],
+      "correctIndex": 0,
+      "explanation": "This question tests understanding of Git concepts. The correct answer demonstrates proper implementation of Version Control with Git principles. Review the lesson materials for detailed explanations of these concepts.",
+      "industryContext": "In professional development, understanding Git is crucial for building scalable and maintainable applications.",
+      "tags": [
+        "foundational",
+        "beginner"
+      ],
+      "estimatedTime": 90,
+      "questionType": "multiple-choice"
+    },
+    {
+      "id": "version-control-q8",
+      "question": "Which pattern is most effective for Git architecture?",
+      "topic": "Version Control",
+      "difficulty": "Intermediate",
+      "choices": [
+        "Option A - Placeholder answer",
+        "Option B - Placeholder answer",
+        "Option C - Placeholder answer",
+        "Option D - Placeholder answer"
+      ],
+      "correctIndex": 0,
+      "explanation": "This question tests understanding of Git concepts. The correct answer demonstrates proper implementation of Version Control with Git principles. Review the lesson materials for detailed explanations of these concepts.",
+      "industryContext": "In professional development, understanding Git is crucial for building scalable and maintainable applications.",
+      "tags": [
+        "foundational",
+        "intermediate"
+      ],
+      "estimatedTime": 90,
+      "questionType": "multiple-choice"
+    },
+    {
+      "id": "version-control-q9",
+      "question": "What is the primary purpose of Git?",
+      "topic": "Git",
+      "difficulty": "Beginner",
+      "choices": [
+        "Option A - Placeholder answer",
+        "Option B - Placeholder answer",
+        "Option C - Placeholder answer",
+        "Option D - Placeholder answer"
+      ],
+      "correctIndex": 0,
+      "explanation": "This question tests understanding of Git concepts. The correct answer demonstrates proper implementation of Version Control with Git principles. Review the lesson materials for detailed explanations of these concepts.",
+      "industryContext": "In professional development, understanding Git is crucial for building scalable and maintainable applications.",
+      "tags": [
+        "foundational",
+        "beginner"
+      ],
+      "estimatedTime": 90,
+      "questionType": "multiple-choice"
+    },
+    {
+      "id": "version-control-q10",
+      "question": "What are the trade-offs between different Git approaches?",
+      "topic": "GitHub",
+      "difficulty": "Advanced",
+      "choices": [
+        "Option A - Placeholder answer",
+        "Option B - Placeholder answer",
+        "Option C - Placeholder answer",
+        "Option D - Placeholder answer"
+      ],
+      "correctIndex": 0,
+      "explanation": "This question tests understanding of Git concepts. The correct answer demonstrates proper implementation of Version Control with Git principles. Review the lesson materials for detailed explanations of these concepts.",
+      "industryContext": "In professional development, understanding Git is crucial for building scalable and maintainable applications.",
+      "tags": [
+        "foundational",
+        "advanced"
+      ],
+      "estimatedTime": 90,
+      "questionType": "multiple-choice"
+    },
+    {
+      "id": "version-control-q11",
+      "question": "When should you use Git in development?",
+      "topic": "Version Control",
+      "difficulty": "Beginner",
+      "choices": [
+        "Option A - Placeholder answer",
+        "Option B - Placeholder answer",
+        "Option C - Placeholder answer",
+        "Option D - Placeholder answer"
+      ],
+      "correctIndex": 0,
+      "explanation": "This question tests understanding of Git concepts. The correct answer demonstrates proper implementation of Version Control with Git principles. Review the lesson materials for detailed explanations of these concepts.",
+      "industryContext": "In professional development, understanding Git is crucial for building scalable and maintainable applications.",
+      "tags": [
+        "foundational",
+        "beginner"
+      ],
+      "estimatedTime": 90,
+      "questionType": "multiple-choice"
+    },
+    {
+      "id": "version-control-q12",
+      "question": "What is the primary purpose of Git?",
+      "topic": "Git",
+      "difficulty": "Beginner",
+      "choices": [
+        "Option A - Placeholder answer",
+        "Option B - Placeholder answer",
+        "Option C - Placeholder answer",
+        "Option D - Placeholder answer"
+      ],
+      "correctIndex": 0,
+      "explanation": "This question tests understanding of Git concepts. The correct answer demonstrates proper implementation of Version Control with Git principles. Review the lesson materials for detailed explanations of these concepts.",
+      "industryContext": "In professional development, understanding Git is crucial for building scalable and maintainable applications.",
+      "tags": [
+        "foundational",
+        "beginner"
+      ],
+      "estimatedTime": 90,
+      "questionType": "multiple-choice"
+    },
+    {
+      "id": "version-control-q13",
+      "question": "Which of the following is a key feature of Version Control with Git?",
+      "topic": "GitHub",
+      "difficulty": "Beginner",
+      "choices": [
+        "Option A - Placeholder answer",
+        "Option B - Placeholder answer",
+        "Option C - Placeholder answer",
+        "Option D - Placeholder answer"
+      ],
+      "correctIndex": 0,
+      "explanation": "This question tests understanding of Git concepts. The correct answer demonstrates proper implementation of Version Control with Git principles. Review the lesson materials for detailed explanations of these concepts.",
+      "industryContext": "In professional development, understanding Git is crucial for building scalable and maintainable applications.",
+      "tags": [
+        "foundational",
+        "beginner"
+      ],
+      "estimatedTime": 90,
+      "questionType": "multiple-choice"
+    },
+    {
+      "id": "version-control-q14",
+      "question": "When should you use Git in development?",
+      "topic": "Version Control",
+      "difficulty": "Beginner",
+      "choices": [
+        "Option A - Placeholder answer",
+        "Option B - Placeholder answer",
+        "Option C - Placeholder answer",
+        "Option D - Placeholder answer"
+      ],
+      "correctIndex": 0,
+      "explanation": "This question tests understanding of Git concepts. The correct answer demonstrates proper implementation of Version Control with Git principles. Review the lesson materials for detailed explanations of these concepts.",
+      "industryContext": "In professional development, understanding Git is crucial for building scalable and maintainable applications.",
+      "tags": [
+        "foundational",
+        "beginner"
+      ],
+      "estimatedTime": 90,
+      "questionType": "multiple-choice"
+    },
+    {
+      "id": "version-control-q15",
+      "question": "What is the primary purpose of Git?",
+      "topic": "Git",
+      "difficulty": "Beginner",
+      "choices": [
+        "Option A - Placeholder answer",
+        "Option B - Placeholder answer",
+        "Option C - Placeholder answer",
+        "Option D - Placeholder answer"
+      ],
+      "correctIndex": 0,
+      "explanation": "This question tests understanding of Git concepts. The correct answer demonstrates proper implementation of Version Control with Git principles. Review the lesson materials for detailed explanations of these concepts.",
+      "industryContext": "In professional development, understanding Git is crucial for building scalable and maintainable applications.",
+      "tags": [
+        "foundational",
+        "beginner"
+      ],
+      "estimatedTime": 90,
+      "questionType": "multiple-choice"
+    }
+  ],
+  "metadata": {
+    "difficulty": "Beginner",
+    "estimatedTime": "23 minutes",
+    "topics": [
+      "Git",
+      "GitHub",
+      "Version Control"
+    ],
+    "lastUpdated": "2025-10-01T06:42:16.316Z",
+    "version": "1.0.0"
+  }
+}

@@ -1,0 +1,42 @@
+[
+  {
+    "id": 1,
+    "topic": "Basics",
+    "title": "Introduction to Node.js",
+    "description": "Learn the fundamentals of Node.js and how it enables server-side JavaScript.",
+    "codeExample": "// Basic Node.js server\nconst http = require('http');\n\nconst server = http.createServer((req, res) => {\n  res.statusCode = 200;\n  res.setHeader('Content-Type', 'text/plain');\n  res.end('Hello World!');\n});\n\nserver.listen(3000, '127.0.0.1', () => {\n  console.log('Server running at http://127.0.0.1:3000/');\n});",
+    "output": "Server running at http://127.0.0.1:3000/"
+  },
+  {
+    "id": 2,
+    "topic": "Basics",
+    "title": "Node.js Modules",
+    "description": "Learn how to create and use modules in Node.js.",
+    "codeExample": "// math.js\nfunction add(a, b) {\n  return a + b;\n}\n\nfunction subtract(a, b) {\n  return a - b;\n}\n\nmodule.exports = { add, subtract };\n\n// app.js\nconst { add, subtract } = require('./math');\n\nconsole.log(add(5, 3)); // 8\nconsole.log(subtract(5, 3)); // 2",
+    "output": "8\n2"
+  },
+  {
+    "id": 3,
+    "topic": "Express",
+    "title": "Building REST APIs with Express",
+    "description": "Learn how to create RESTful APIs using the Express.js framework.",
+    "codeExample": "const express = require('express');\nconst app = express();\n\n// Middleware to parse JSON\napp.use(express.json());\n\n// GET request\napp.get('/users', (req, res) => {\n  res.json([{ id: 1, name: 'John' }, { id: 2, name: 'Jane' }]);\n});\n\n// POST request\napp.post('/users', (req, res) => {\n  const user = req.body;\n  res.status(201).json({ id: 3, ...user });\n});\n\napp.listen(3000, () => console.log('Server started on port 3000'));",
+    "output": "Server started on port 3000"
+  },
+  {
+    "id": 4,
+    "topic": "Express",
+    "title": "Middleware in Express",
+    "description": "Learn how to use and create middleware functions in Express.js.",
+    "codeExample": "const express = require('express');\nconst app = express();\n\n// Custom middleware\nconst logger = (req, res, next) => {\n  console.log(`${req.method} ${req.url}`);\n  next();\n};\n\n// Application-level middleware\napp.use(logger);\n\n// Route-specific middleware\nconst auth = (req, res, next) => {\n  const token = req.header('Authorization');\n  if (token === 'secret-token') {\n    next();\n  } else {\n    res.status(401).json({ error: 'Unauthorized' });\n  }\n};\n\napp.get('/protected', auth, (req, res) => {\n  res.json({ message: 'Protected data' });\n});",
+    "output": "GET /protected\n401 {\"error\": \"Unauthorized\"} (without token) or 200 {\"message\": \"Protected data\"} (with token)"
+  },
+  {
+    "id": 5,
+    "topic": "Database",
+    "title": "Working with Databases in Node.js",
+    "description": "Learn how to connect and interact with databases using Node.js.",
+    "codeExample": "const { MongoClient } = require('mongodb');\n\nasync function main() {\n  const uri = 'mongodb://localhost:27017';\n  const client = new MongoClient(uri);\n  \n  try {\n    await client.connect();\n    const database = client.db('myDatabase');\n    const collection = database.collection('users');\n    \n    // Insert a document\n    const user = { name: 'John', email: 'john@example.com' };\n    const result = await collection.insertOne(user);\n    console.log(`New user created with id: ${result.insertedId}`);\n    \n    // Find documents\n    const users = await collection.find({}).toArray();\n    console.log('Users:', users);\n  } finally {\n    await client.close();\n  }\n}\n\nmain().catch(console.error);",
+    "output": "New user created with id: [ObjectId]\nUsers: [{ name: 'John', email: 'john@example.com' }]"
+  }
+]

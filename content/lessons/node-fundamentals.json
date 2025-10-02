@@ -1,0 +1,813 @@
+[
+  {
+    "id": "node-fundamentals-lesson-1",
+    "moduleSlug": "node-fundamentals",
+    "title": "Introduction to Node.js",
+    "order": 1,
+    "objectives": [
+      "Implement practical solutions",
+      "Build foundational understanding"
+    ],
+    "intro": "Welcome to this comprehensive lesson on Basics.\n\nLearn the fundamentals of Node.js and how it enables server-side JavaScript.\n\nThroughout this lesson, you'll gain hands-on experience with practical implementations and real-world scenarios. We'll explore both the theoretical foundations and practical applications, ensuring you can immediately apply what you learn.\n\nThis lesson is designed to build upon previous concepts while introducing new techniques that will enhance your development skills. By the end, you'll have a solid understanding of the key principles and be ready to tackle more advanced topics.\n\nThe knowledge gained here will serve as a foundation for subsequent lessons and real-world projects.",
+    "code": {
+      "example": "// Basic Node.js server\nconst http = require('http');\n\nconst server = http.createServer((req, res) => {\n  res.statusCode = 200;\n  res.setHeader('Content-Type', 'text/plain');\n  res.end('Hello World!');\n});\n\nserver.listen(3000, '127.0.0.1', () => {\n  console.log('Server running at http://127.0.0.1:3000/');\n});",
+      "explanation": "This example produces: Server running at http://127.0.0.1:3000/\n\nThe code demonstrates practical implementation techniques and shows how the concepts work in real scenarios. Pay attention to the structure and patterns used, as these represent industry best practices.",
+      "language": "javascript"
+    },
+    "pitfalls": [
+      {
+        "mistake": "Not following best practices",
+        "solution": "Review documentation and community guidelines",
+        "severity": "medium"
+      },
+      {
+        "mistake": "Skipping error handling",
+        "solution": "Implement proper error boundaries and validation",
+        "severity": "low"
+      }
+    ],
+    "exercises": [
+      {
+        "title": "Practice: Introduction to Node.js",
+        "description": "Apply the concepts from this lesson on Basics",
+        "checkpoints": [
+          "Understand the core concept",
+          "Implement the example code",
+          "Experiment with variations"
+        ]
+      }
+    ],
+    "next": [],
+    "estimatedMinutes": 25,
+    "difficulty": "Beginner",
+    "tags": [
+      "Basics",
+      "node"
+    ],
+    "legacy": {
+      "originalId": 1,
+      "originalTopic": "Basics",
+      "migrated": "2025-10-01T06:41:13.484Z"
+    },
+    "lastUpdated": "2025-10-01T06:41:13.484Z",
+    "version": "1.0.0"
+  },
+  {
+    "id": "node-fundamentals-lesson-2",
+    "moduleSlug": "node-fundamentals",
+    "title": "Node.js Modules",
+    "order": 2,
+    "objectives": [
+      "Implement practical solutions",
+      "Build foundational understanding"
+    ],
+    "intro": "Welcome to this comprehensive lesson on Basics.\n\nLearn how to create and use modules in Node.js.\n\nThroughout this lesson, you'll gain hands-on experience with practical implementations and real-world scenarios. We'll explore both the theoretical foundations and practical applications, ensuring you can immediately apply what you learn.\n\nThis lesson is designed to build upon previous concepts while introducing new techniques that will enhance your development skills. By the end, you'll have a solid understanding of the key principles and be ready to tackle more advanced topics.\n\nThe knowledge gained here will serve as a foundation for subsequent lessons and real-world projects.",
+    "code": {
+      "example": "// math.js\nfunction add(a, b) {\n  return a + b;\n}\n\nfunction subtract(a, b) {\n  return a - b;\n}\n\nmodule.exports = { add, subtract };\n\n// app.js\nconst { add, subtract } = require('./math');\n\nconsole.log(add(5, 3)); // 8\nconsole.log(subtract(5, 3)); // 2",
+      "explanation": "This example produces: 8\n2\n\nThe code demonstrates practical implementation techniques and shows how the concepts work in real scenarios. Pay attention to the structure and patterns used, as these represent industry best practices.",
+      "language": "javascript"
+    },
+    "pitfalls": [
+      {
+        "mistake": "Not following best practices",
+        "solution": "Review documentation and community guidelines",
+        "severity": "medium"
+      },
+      {
+        "mistake": "Skipping error handling",
+        "solution": "Implement proper error boundaries and validation",
+        "severity": "low"
+      }
+    ],
+    "exercises": [
+      {
+        "title": "Practice: Node.js Modules",
+        "description": "Apply the concepts from this lesson on Basics",
+        "checkpoints": [
+          "Understand the core concept",
+          "Implement the example code",
+          "Experiment with variations"
+        ]
+      }
+    ],
+    "next": [],
+    "estimatedMinutes": 25,
+    "difficulty": "Intermediate",
+    "tags": [
+      "Basics",
+      "node"
+    ],
+    "legacy": {
+      "originalId": 2,
+      "originalTopic": "Basics",
+      "migrated": "2025-10-01T06:41:13.484Z"
+    },
+    "lastUpdated": "2025-10-01T06:41:13.484Z",
+    "version": "1.0.0"
+  },
+  {
+    "id": "node-fundamentals-lesson-3",
+    "moduleSlug": "node-fundamentals",
+    "title": "Building REST APIs with Express",
+    "order": 3,
+    "objectives": [
+      "Implement practical solutions",
+      "Build foundational understanding"
+    ],
+    "intro": "Welcome to this comprehensive lesson on Express.\n\nLearn how to create RESTful APIs using the Express.js framework.\n\nThroughout this lesson, you'll gain hands-on experience with practical implementations and real-world scenarios. We'll explore both the theoretical foundations and practical applications, ensuring you can immediately apply what you learn.\n\nThis lesson is designed to build upon previous concepts while introducing new techniques that will enhance your development skills. By the end, you'll have a solid understanding of the key principles and be ready to tackle more advanced topics.\n\nThe knowledge gained here will serve as a foundation for subsequent lessons and real-world projects.",
+    "code": {
+      "example": "const express = require('express');\nconst app = express();\n\n// Middleware to parse JSON\napp.use(express.json());\n\n// GET request\napp.get('/users', (req, res) => {\n  res.json([{ id: 1, name: 'John' }, { id: 2, name: 'Jane' }]);\n});\n\n// POST request\napp.post('/users', (req, res) => {\n  const user = req.body;\n  res.status(201).json({ id: 3, ...user });\n});\n\napp.listen(3000, () => console.log('Server started on port 3000'));",
+      "explanation": "This example produces: Server started on port 3000\n\nThe code demonstrates practical implementation techniques and shows how the concepts work in real scenarios. Pay attention to the structure and patterns used, as these represent industry best practices.",
+      "language": "javascript"
+    },
+    "pitfalls": [
+      {
+        "mistake": "Not following best practices",
+        "solution": "Review documentation and community guidelines",
+        "severity": "medium"
+      },
+      {
+        "mistake": "Skipping error handling",
+        "solution": "Implement proper error boundaries and validation",
+        "severity": "low"
+      }
+    ],
+    "exercises": [
+      {
+        "title": "Practice: Building REST APIs with Express",
+        "description": "Apply the concepts from this lesson on Express",
+        "checkpoints": [
+          "Understand the core concept",
+          "Implement the example code",
+          "Experiment with variations"
+        ]
+      }
+    ],
+    "next": [],
+    "estimatedMinutes": 25,
+    "difficulty": "Intermediate",
+    "tags": [
+      "Express",
+      "node"
+    ],
+    "legacy": {
+      "originalId": 3,
+      "originalTopic": "Express",
+      "migrated": "2025-10-01T06:41:13.484Z"
+    },
+    "lastUpdated": "2025-10-01T06:41:13.484Z",
+    "version": "1.0.0"
+  },
+  {
+    "id": "node-fundamentals-lesson-4",
+    "moduleSlug": "node-fundamentals",
+    "title": "Middleware in Express",
+    "order": 4,
+    "objectives": [
+      "Implement practical solutions",
+      "Build foundational understanding"
+    ],
+    "intro": "Welcome to this comprehensive lesson on Express.\n\nLearn how to use and create middleware functions in Express.js.\n\nThroughout this lesson, you'll gain hands-on experience with practical implementations and real-world scenarios. We'll explore both the theoretical foundations and practical applications, ensuring you can immediately apply what you learn.\n\nThis lesson is designed to build upon previous concepts while introducing new techniques that will enhance your development skills. By the end, you'll have a solid understanding of the key principles and be ready to tackle more advanced topics.\n\nThe knowledge gained here will serve as a foundation for subsequent lessons and real-world projects.",
+    "code": {
+      "example": "const express = require('express');\nconst app = express();\n\n// Custom middleware\nconst logger = (req, res, next) => {\n  console.log(`${req.method} ${req.url}`);\n  next();\n};\n\n// Application-level middleware\napp.use(logger);\n\n// Route-specific middleware\nconst auth = (req, res, next) => {\n  const token = req.header('Authorization');\n  if (token === 'secret-token') {\n    next();\n  } else {\n    res.status(401).json({ error: 'Unauthorized' });\n  }\n};\n\napp.get('/protected', auth, (req, res) => {\n  res.json({ message: 'Protected data' });\n});",
+      "explanation": "This example produces: GET /protected\n401 {\"error\": \"Unauthorized\"} (without token) or 200 {\"message\": \"Protected data\"} (with token)\n\nThe code demonstrates practical implementation techniques and shows how the concepts work in real scenarios. Pay attention to the structure and patterns used, as these represent industry best practices.",
+      "language": "javascript"
+    },
+    "pitfalls": [
+      {
+        "mistake": "Not following best practices",
+        "solution": "Review documentation and community guidelines",
+        "severity": "medium"
+      },
+      {
+        "mistake": "Skipping error handling",
+        "solution": "Implement proper error boundaries and validation",
+        "severity": "low"
+      }
+    ],
+    "exercises": [
+      {
+        "title": "Practice: Middleware in Express",
+        "description": "Apply the concepts from this lesson on Express",
+        "checkpoints": [
+          "Understand the core concept",
+          "Implement the example code",
+          "Experiment with variations"
+        ]
+      }
+    ],
+    "next": [],
+    "estimatedMinutes": 25,
+    "difficulty": "Intermediate",
+    "tags": [
+      "Express",
+      "node"
+    ],
+    "legacy": {
+      "originalId": 4,
+      "originalTopic": "Express",
+      "migrated": "2025-10-01T06:41:13.484Z"
+    },
+    "lastUpdated": "2025-10-01T06:41:13.484Z",
+    "version": "1.0.0"
+  },
+  {
+    "id": "node-fundamentals-lesson-5",
+    "moduleSlug": "node-fundamentals",
+    "title": "Working with Databases in Node.js",
+    "order": 5,
+    "objectives": [
+      "Implement practical solutions",
+      "Build foundational understanding"
+    ],
+    "intro": "Welcome to this comprehensive lesson on Database.\n\nLearn how to connect and interact with databases using Node.js.\n\nThroughout this lesson, you'll gain hands-on experience with practical implementations and real-world scenarios. We'll explore both the theoretical foundations and practical applications, ensuring you can immediately apply what you learn.\n\nThis lesson is designed to build upon previous concepts while introducing new techniques that will enhance your development skills. By the end, you'll have a solid understanding of the key principles and be ready to tackle more advanced topics.\n\nThe knowledge gained here will serve as a foundation for subsequent lessons and real-world projects.",
+    "code": {
+      "example": "const { MongoClient } = require('mongodb');\n\nasync function main() {\n  const uri = 'mongodb://localhost:27017';\n  const client = new MongoClient(uri);\n  \n  try {\n    await client.connect();\n    const database = client.db('myDatabase');\n    const collection = database.collection('users');\n    \n    // Insert a document\n    const user = { name: 'John', email: 'john@example.com' };\n    const result = await collection.insertOne(user);\n    console.log(`New user created with id: ${result.insertedId}`);\n    \n    // Find documents\n    const users = await collection.find({}).toArray();\n    console.log('Users:', users);\n  } finally {\n    await client.close();\n  }\n}\n\nmain().catch(console.error);",
+      "explanation": "This example produces: New user created with id: [ObjectId]\nUsers: [{ name: 'John', email: 'john@example.com' }]\n\nThe code demonstrates practical implementation techniques and shows how the concepts work in real scenarios. Pay attention to the structure and patterns used, as these represent industry best practices.",
+      "language": "javascript"
+    },
+    "pitfalls": [
+      {
+        "mistake": "Not following best practices",
+        "solution": "Review documentation and community guidelines",
+        "severity": "medium"
+      },
+      {
+        "mistake": "Skipping error handling",
+        "solution": "Implement proper error boundaries and validation",
+        "severity": "low"
+      }
+    ],
+    "exercises": [
+      {
+        "title": "Practice: Working with Databases in Node.js",
+        "description": "Apply the concepts from this lesson on Database",
+        "checkpoints": [
+          "Understand the core concept",
+          "Implement the example code",
+          "Experiment with variations"
+        ]
+      }
+    ],
+    "next": [],
+    "estimatedMinutes": 25,
+    "difficulty": "Intermediate",
+    "tags": [
+      "Database",
+      "node"
+    ],
+    "legacy": {
+      "originalId": 5,
+      "originalTopic": "Database",
+      "migrated": "2025-10-01T06:41:13.484Z"
+    },
+    "lastUpdated": "2025-10-01T06:41:13.484Z",
+    "version": "1.0.0"
+  },
+  {
+    "id": "node-fundamentals-lesson-6",
+    "moduleSlug": "node-fundamentals",
+    "title": "Promises and Async/Await",
+    "order": 6,
+    "objectives": [
+      "Build foundational understanding",
+      "Build foundational understanding"
+    ],
+    "intro": "Welcome to this comprehensive lesson on Async Programming.\n\nMaster asynchronous programming patterns in Node.js using Promises and async/await.\n\nThroughout this lesson, you'll gain hands-on experience with practical implementations and real-world scenarios. We'll explore both the theoretical foundations and practical applications, ensuring you can immediately apply what you learn.\n\nThis lesson is designed to build upon previous concepts while introducing new techniques that will enhance your development skills. By the end, you'll have a solid understanding of the key principles and be ready to tackle more advanced topics.\n\nThe knowledge gained here will serve as a foundation for subsequent lessons and real-world projects.",
+    "code": {
+      "example": "// Promise-based function\nfunction fetchData() {\n  return new Promise((resolve, reject) => {\n    setTimeout(() => {\n      resolve('Data fetched successfully');\n    }, 1000);\n  });\n}\n\n// Using async/await\nasync function getData() {\n  try {\n    const data = await fetchData();\n    console.log(data);\n    return data;\n  } catch (error) {\n    console.error('Error:', error);\n  }\n}\n\n// Using Promises\nfetchData()\n  .then(data => console.log(data))\n  .catch(error => console.error(error));\n\ngetData();",
+      "explanation": "This example produces: Data fetched successfully\nData fetched successfully\n\nThe code demonstrates practical implementation techniques and shows how the concepts work in real scenarios. Pay attention to the structure and patterns used, as these represent industry best practices.",
+      "language": "javascript"
+    },
+    "pitfalls": [
+      {
+        "mistake": "Not following best practices",
+        "solution": "Review documentation and community guidelines",
+        "severity": "medium"
+      },
+      {
+        "mistake": "Skipping error handling",
+        "solution": "Implement proper error boundaries and validation",
+        "severity": "low"
+      }
+    ],
+    "exercises": [
+      {
+        "title": "Practice: Promises and Async/Await",
+        "description": "Apply the concepts from this lesson on Async Programming",
+        "checkpoints": [
+          "Understand the core concept",
+          "Implement the example code",
+          "Experiment with variations"
+        ]
+      }
+    ],
+    "next": [],
+    "estimatedMinutes": 25,
+    "difficulty": "Intermediate",
+    "tags": [
+      "Async Programming",
+      "node"
+    ],
+    "legacy": {
+      "originalId": 6,
+      "originalTopic": "Async Programming",
+      "migrated": "2025-10-01T06:41:13.484Z"
+    },
+    "lastUpdated": "2025-10-01T06:41:13.484Z",
+    "version": "1.0.0"
+  },
+  {
+    "id": "node-fundamentals-lesson-7",
+    "moduleSlug": "node-fundamentals",
+    "title": "File System Operations",
+    "order": 7,
+    "objectives": [
+      "Implement practical solutions",
+      "Build foundational understanding"
+    ],
+    "intro": "Welcome to this comprehensive lesson on File System.\n\nLearn how to work with files and directories using Node.js fs module.\n\nThroughout this lesson, you'll gain hands-on experience with practical implementations and real-world scenarios. We'll explore both the theoretical foundations and practical applications, ensuring you can immediately apply what you learn.\n\nThis lesson is designed to build upon previous concepts while introducing new techniques that will enhance your development skills. By the end, you'll have a solid understanding of the key principles and be ready to tackle more advanced topics.\n\nThe knowledge gained here will serve as a foundation for subsequent lessons and real-world projects.",
+    "code": {
+      "example": "const fs = require('fs').promises;\nconst path = require('path');\n\nasync function fileOperations() {\n  try {\n    // Write to file\n    await fs.writeFile('example.txt', 'Hello Node.js!');\n    console.log('File written successfully');\n    \n    // Read from file\n    const data = await fs.readFile('example.txt', 'utf8');\n    console.log('File content:', data);\n    \n    // Check if file exists\n    try {\n      await fs.access('example.txt');\n      console.log('File exists');\n    } catch {\n      console.log('File does not exist');\n    }\n    \n    // Delete file\n    await fs.unlink('example.txt');\n    console.log('File deleted');\n  } catch (error) {\n    console.error('File operation error:', error);\n  }\n}\n\nfileOperations();",
+      "explanation": "This example produces: File written successfully\nFile content: Hello Node.js!\nFile exists\nFile deleted\n\nThe code demonstrates practical implementation techniques and shows how the concepts work in real scenarios. Pay attention to the structure and patterns used, as these represent industry best practices.",
+      "language": "javascript"
+    },
+    "pitfalls": [
+      {
+        "mistake": "Not following best practices",
+        "solution": "Review documentation and community guidelines",
+        "severity": "medium"
+      },
+      {
+        "mistake": "Skipping error handling",
+        "solution": "Implement proper error boundaries and validation",
+        "severity": "low"
+      }
+    ],
+    "exercises": [
+      {
+        "title": "Practice: File System Operations",
+        "description": "Apply the concepts from this lesson on File System",
+        "checkpoints": [
+          "Understand the core concept",
+          "Implement the example code",
+          "Experiment with variations"
+        ]
+      }
+    ],
+    "next": [],
+    "estimatedMinutes": 25,
+    "difficulty": "Intermediate",
+    "tags": [
+      "File System",
+      "node"
+    ],
+    "legacy": {
+      "originalId": 7,
+      "originalTopic": "File System",
+      "migrated": "2025-10-01T06:41:13.484Z"
+    },
+    "lastUpdated": "2025-10-01T06:41:13.484Z",
+    "version": "1.0.0"
+  },
+  {
+    "id": "node-fundamentals-lesson-8",
+    "moduleSlug": "node-fundamentals",
+    "title": "Error Handling and Debugging",
+    "order": 8,
+    "objectives": [
+      "Implement practical solutions",
+      "Build foundational understanding"
+    ],
+    "intro": "Welcome to this comprehensive lesson on Error Handling.\n\nLearn best practices for error handling and debugging in Node.js applications.\n\nThroughout this lesson, you'll gain hands-on experience with practical implementations and real-world scenarios. We'll explore both the theoretical foundations and practical applications, ensuring you can immediately apply what you learn.\n\nThis lesson is designed to build upon previous concepts while introducing new techniques that will enhance your development skills. By the end, you'll have a solid understanding of the key principles and be ready to tackle more advanced topics.\n\nThe knowledge gained here will serve as a foundation for subsequent lessons and real-world projects.",
+    "code": {
+      "example": "// Custom error class\nclass ValidationError extends Error {\n  constructor(message) {\n    super(message);\n    this.name = 'ValidationError';\n  }\n}\n\n// Function with error handling\nfunction validateUser(user) {\n  if (!user.name) {\n    throw new ValidationError('Name is required');\n  }\n  if (!user.email) {\n    throw new ValidationError('Email is required');\n  }\n  return true;\n}\n\n// Express error middleware\nfunction errorHandler(err, req, res, next) {\n  console.error(err.stack);\n  \n  if (err instanceof ValidationError) {\n    return res.status(400).json({ error: err.message });\n  }\n  \n  res.status(500).json({ error: 'Internal server error' });\n}\n\n// Usage example\ntry {\n  validateUser({ name: 'John' }); // Missing email\n} catch (error) {\n  console.log('Caught error:', error.message);\n}",
+      "explanation": "This example produces: Caught error: Email is required\n\nThe code demonstrates practical implementation techniques and shows how the concepts work in real scenarios. Pay attention to the structure and patterns used, as these represent industry best practices.",
+      "language": "javascript"
+    },
+    "pitfalls": [
+      {
+        "mistake": "Not following best practices",
+        "solution": "Review documentation and community guidelines",
+        "severity": "medium"
+      },
+      {
+        "mistake": "Skipping error handling",
+        "solution": "Implement proper error boundaries and validation",
+        "severity": "low"
+      }
+    ],
+    "exercises": [
+      {
+        "title": "Practice: Error Handling and Debugging",
+        "description": "Apply the concepts from this lesson on Error Handling",
+        "checkpoints": [
+          "Understand the core concept",
+          "Implement the example code",
+          "Experiment with variations"
+        ]
+      }
+    ],
+    "next": [],
+    "estimatedMinutes": 25,
+    "difficulty": "Intermediate",
+    "tags": [
+      "Error Handling",
+      "node"
+    ],
+    "legacy": {
+      "originalId": 8,
+      "originalTopic": "Error Handling",
+      "migrated": "2025-10-01T06:41:13.484Z"
+    },
+    "lastUpdated": "2025-10-01T06:41:13.484Z",
+    "version": "1.0.0"
+  },
+  {
+    "id": "node-fundamentals-lesson-9",
+    "moduleSlug": "node-fundamentals",
+    "title": "Working with Streams",
+    "order": 9,
+    "objectives": [
+      "Implement practical solutions",
+      "Build foundational understanding"
+    ],
+    "intro": "Welcome to this comprehensive lesson on Streams.\n\nLearn how to handle large data efficiently using Node.js streams.\n\nThroughout this lesson, you'll gain hands-on experience with practical implementations and real-world scenarios. We'll explore both the theoretical foundations and practical applications, ensuring you can immediately apply what you learn.\n\nThis lesson is designed to build upon previous concepts while introducing new techniques that will enhance your development skills. By the end, you'll have a solid understanding of the key principles and be ready to tackle more advanced topics.\n\nThe knowledge gained here will serve as a foundation for subsequent lessons and real-world projects.",
+    "code": {
+      "example": "const fs = require('fs');\nconst { Transform } = require('stream');\n\n// Create a transform stream\nconst upperCaseTransform = new Transform({\n  transform(chunk, encoding, callback) {\n    this.push(chunk.toString().toUpperCase());\n    callback();\n  }\n});\n\n// Reading and transforming data with streams\nfunction processLargeFile() {\n  const readStream = fs.createReadStream('input.txt');\n  const writeStream = fs.createWriteStream('output.txt');\n  \n  readStream\n    .pipe(upperCaseTransform)\n    .pipe(writeStream)\n    .on('finish', () => {\n      console.log('File processing completed');\n    })\n    .on('error', (error) => {\n      console.error('Stream error:', error);\n    });\n}\n\n// Create readable stream from array\nconst { Readable } = require('stream');\n\nconst arrayStream = new Readable({\n  read() {\n    this.push('data chunk ');\n    this.push(null); // End the stream\n  }\n});\n\narrayStream.on('data', (chunk) => {\n  console.log('Received:', chunk.toString());\n});",
+      "explanation": "This example produces: Received: data chunk \nFile processing completed\n\nThe code demonstrates practical implementation techniques and shows how the concepts work in real scenarios. Pay attention to the structure and patterns used, as these represent industry best practices.",
+      "language": "javascript"
+    },
+    "pitfalls": [
+      {
+        "mistake": "Not following best practices",
+        "solution": "Review documentation and community guidelines",
+        "severity": "medium"
+      },
+      {
+        "mistake": "Skipping error handling",
+        "solution": "Implement proper error boundaries and validation",
+        "severity": "low"
+      }
+    ],
+    "exercises": [
+      {
+        "title": "Practice: Working with Streams",
+        "description": "Apply the concepts from this lesson on Streams",
+        "checkpoints": [
+          "Understand the core concept",
+          "Implement the example code",
+          "Experiment with variations"
+        ]
+      }
+    ],
+    "next": [],
+    "estimatedMinutes": 25,
+    "difficulty": "Intermediate",
+    "tags": [
+      "Streams",
+      "node"
+    ],
+    "legacy": {
+      "originalId": 9,
+      "originalTopic": "Streams",
+      "migrated": "2025-10-01T06:41:13.484Z"
+    },
+    "lastUpdated": "2025-10-01T06:41:13.484Z",
+    "version": "1.0.0"
+  },
+  {
+    "id": "node-fundamentals-lesson-10",
+    "moduleSlug": "node-fundamentals",
+    "title": "Testing with Jest",
+    "order": 10,
+    "objectives": [
+      "Implement practical solutions",
+      "Build foundational understanding"
+    ],
+    "intro": "Welcome to this comprehensive lesson on Testing.\n\nLearn how to write and run tests for Node.js applications using Jest.\n\nThroughout this lesson, you'll gain hands-on experience with practical implementations and real-world scenarios. We'll explore both the theoretical foundations and practical applications, ensuring you can immediately apply what you learn.\n\nThis lesson is designed to build upon previous concepts while introducing new techniques that will enhance your development skills. By the end, you'll have a solid understanding of the key principles and be ready to tackle more advanced topics.\n\nThe knowledge gained here will serve as a foundation for subsequent lessons and real-world projects.",
+    "code": {
+      "example": "// math.js\nfunction add(a, b) {\n  return a + b;\n}\n\nfunction divide(a, b) {\n  if (b === 0) {\n    throw new Error('Division by zero');\n  }\n  return a / b;\n}\n\nmodule.exports = { add, divide };\n\n// math.test.js\nconst { add, divide } = require('./math');\n\ndescribe('Math functions', () => {\n  test('adds 1 + 2 to equal 3', () => {\n    expect(add(1, 2)).toBe(3);\n  });\n  \n  test('divides 10 / 2 to equal 5', () => {\n    expect(divide(10, 2)).toBe(5);\n  });\n  \n  test('throws error on division by zero', () => {\n    expect(() => divide(10, 0)).toThrow('Division by zero');\n  });\n  \n  test('async test example', async () => {\n    const result = await Promise.resolve(42);\n    expect(result).toBe(42);\n  });\n});",
+      "explanation": "This example produces: PASS math.test.js\n✓ adds 1 + 2 to equal 3\n✓ divides 10 / 2 to equal 5\n✓ throws error on division by zero\n✓ async test example\n\nThe code demonstrates practical implementation techniques and shows how the concepts work in real scenarios. Pay attention to the structure and patterns used, as these represent industry best practices.",
+      "language": "javascript"
+    },
+    "pitfalls": [
+      {
+        "mistake": "Not following best practices",
+        "solution": "Review documentation and community guidelines",
+        "severity": "medium"
+      },
+      {
+        "mistake": "Skipping error handling",
+        "solution": "Implement proper error boundaries and validation",
+        "severity": "low"
+      }
+    ],
+    "exercises": [
+      {
+        "title": "Practice: Testing with Jest",
+        "description": "Apply the concepts from this lesson on Testing",
+        "checkpoints": [
+          "Understand the core concept",
+          "Implement the example code",
+          "Experiment with variations"
+        ]
+      }
+    ],
+    "next": [],
+    "estimatedMinutes": 25,
+    "difficulty": "Intermediate",
+    "tags": [
+      "Testing",
+      "node"
+    ],
+    "legacy": {
+      "originalId": 10,
+      "originalTopic": "Testing",
+      "migrated": "2025-10-01T06:41:13.484Z"
+    },
+    "lastUpdated": "2025-10-01T06:41:13.484Z",
+    "version": "1.0.0"
+  },
+  {
+    "id": "node-fundamentals-lesson-11",
+    "moduleSlug": "node-fundamentals",
+    "title": "Security Best Practices",
+    "order": 11,
+    "objectives": [
+      "Implement practical solutions",
+      "Build foundational understanding"
+    ],
+    "intro": "Welcome to this comprehensive lesson on Security.\n\nLearn essential security practices for Node.js applications.\n\nThroughout this lesson, you'll gain hands-on experience with practical implementations and real-world scenarios. We'll explore both the theoretical foundations and practical applications, ensuring you can immediately apply what you learn.\n\nThis lesson is designed to build upon previous concepts while introducing new techniques that will enhance your development skills. By the end, you'll have a solid understanding of the key principles and be ready to tackle more advanced topics.\n\nThe knowledge gained here will serve as a foundation for subsequent lessons and real-world projects.",
+    "code": {
+      "example": "const express = require('express');\nconst helmet = require('helmet');\nconst rateLimit = require('express-rate-limit');\nconst bcrypt = require('bcrypt');\nconst jwt = require('jsonwebtoken');\n\nconst app = express();\n\n// Security middleware\napp.use(helmet()); // Sets various HTTP headers\napp.use(express.json({ limit: '10mb' })); // Limit body size\n\n// Rate limiting\nconst limiter = rateLimit({\n  windowMs: 15 * 60 * 1000, // 15 minutes\n  max: 100 // limit each IP to 100 requests per windowMs\n});\napp.use(limiter);\n\n// Password hashing\nasync function hashPassword(password) {\n  const saltRounds = 12;\n  return await bcrypt.hash(password, saltRounds);\n}\n\n// JWT token creation\nfunction createToken(userId) {\n  return jwt.sign({ userId }, process.env.JWT_SECRET, { expiresIn: '1h' });\n}\n\n// Input validation\nfunction validateEmail(email) {\n  const emailRegex = /^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/;\n  return emailRegex.test(email);\n}\n\nconsole.log('Security measures implemented');",
+      "explanation": "This example produces: Security measures implemented\n\nThe code demonstrates practical implementation techniques and shows how the concepts work in real scenarios. Pay attention to the structure and patterns used, as these represent industry best practices.",
+      "language": "javascript"
+    },
+    "pitfalls": [
+      {
+        "mistake": "Not following best practices",
+        "solution": "Review documentation and community guidelines",
+        "severity": "medium"
+      },
+      {
+        "mistake": "Skipping error handling",
+        "solution": "Implement proper error boundaries and validation",
+        "severity": "low"
+      }
+    ],
+    "exercises": [
+      {
+        "title": "Practice: Security Best Practices",
+        "description": "Apply the concepts from this lesson on Security",
+        "checkpoints": [
+          "Understand the core concept",
+          "Implement the example code",
+          "Experiment with variations"
+        ]
+      }
+    ],
+    "next": [],
+    "estimatedMinutes": 25,
+    "difficulty": "Intermediate",
+    "tags": [
+      "Security",
+      "node"
+    ],
+    "legacy": {
+      "originalId": 11,
+      "originalTopic": "Security",
+      "migrated": "2025-10-01T06:41:13.484Z"
+    },
+    "lastUpdated": "2025-10-01T06:41:13.484Z",
+    "version": "1.0.0"
+  },
+  {
+    "id": "node-fundamentals-lesson-12",
+    "moduleSlug": "node-fundamentals",
+    "title": "Performance Optimization",
+    "order": 12,
+    "objectives": [
+      "Implement practical solutions",
+      "Build foundational understanding"
+    ],
+    "intro": "Welcome to this comprehensive lesson on Performance.\n\nLearn techniques to optimize Node.js application performance.\n\nThroughout this lesson, you'll gain hands-on experience with practical implementations and real-world scenarios. We'll explore both the theoretical foundations and practical applications, ensuring you can immediately apply what you learn.\n\nThis lesson is designed to build upon previous concepts while introducing new techniques that will enhance your development skills. By the end, you'll have a solid understanding of the key principles and be ready to tackle more advanced topics.\n\nThe knowledge gained here will serve as a foundation for subsequent lessons and real-world projects.",
+    "code": {
+      "example": "const cluster = require('cluster');\nconst os = require('os');\nconst express = require('express');\n\n// Clustering for multi-core utilization\nif (cluster.isMaster) {\n  const numCPUs = os.cpus().length;\n  console.log(`Master process ${process.pid} is running`);\n  \n  // Fork workers\n  for (let i = 0; i < numCPUs; i++) {\n    cluster.fork();\n  }\n  \n  cluster.on('exit', (worker, code, signal) => {\n    console.log(`Worker ${worker.process.pid} died`);\n    cluster.fork(); // Replace dead worker\n  });\n} else {\n  const app = express();\n  \n  // Memory-efficient caching\n  const cache = new Map();\n  const MAX_CACHE_SIZE = 1000;\n  \n  function setCache(key, value) {\n    if (cache.size >= MAX_CACHE_SIZE) {\n      const firstKey = cache.keys().next().value;\n      cache.delete(firstKey);\n    }\n    cache.set(key, value);\n  }\n  \n  // Optimized route with caching\n  app.get('/expensive-operation/:id', (req, res) => {\n    const id = req.params.id;\n    \n    if (cache.has(id)) {\n      return res.json(cache.get(id));\n    }\n    \n    // Simulate expensive operation\n    const result = { id, data: 'Processed data', timestamp: Date.now() };\n    setCache(id, result);\n    res.json(result);\n  });\n  \n  app.listen(3000, () => {\n    console.log(`Worker ${process.pid} started`);\n  });\n}",
+      "explanation": "This example produces: Master process [PID] is running\nWorker [PID] started\nWorker [PID] started...\n\nThe code demonstrates practical implementation techniques and shows how the concepts work in real scenarios. Pay attention to the structure and patterns used, as these represent industry best practices.",
+      "language": "javascript"
+    },
+    "pitfalls": [
+      {
+        "mistake": "Not following best practices",
+        "solution": "Review documentation and community guidelines",
+        "severity": "medium"
+      },
+      {
+        "mistake": "Skipping error handling",
+        "solution": "Implement proper error boundaries and validation",
+        "severity": "low"
+      }
+    ],
+    "exercises": [
+      {
+        "title": "Practice: Performance Optimization",
+        "description": "Apply the concepts from this lesson on Performance",
+        "checkpoints": [
+          "Understand the core concept",
+          "Implement the example code",
+          "Experiment with variations"
+        ]
+      }
+    ],
+    "next": [],
+    "estimatedMinutes": 25,
+    "difficulty": "Advanced",
+    "tags": [
+      "Performance",
+      "node"
+    ],
+    "legacy": {
+      "originalId": 12,
+      "originalTopic": "Performance",
+      "migrated": "2025-10-01T06:41:13.484Z"
+    },
+    "lastUpdated": "2025-10-01T06:41:13.484Z",
+    "version": "1.0.0"
+  },
+  {
+    "id": "node-fundamentals-lesson-13",
+    "moduleSlug": "node-fundamentals",
+    "title": "Advanced Security Practices in Node.js",
+    "order": 13,
+    "objectives": [
+      "Implement comprehensive security measures in Node.js applications",
+      "Understand and prevent common security vulnerabilities",
+      "Configure secure authentication and authorization systems"
+    ],
+    "intro": "Welcome to this comprehensive lesson on Advanced Security Practices in Node.js.\n\nLearn how to secure Node.js applications against common vulnerabilities and implement robust security measures. Security is critical for production applications and requires understanding of various attack vectors and defensive strategies.\n\nThroughout this lesson, you'll gain hands-on experience with practical implementations and real-world scenarios. We'll explore both the theoretical foundations and practical applications, ensuring you can immediately apply what you learn.\n\nThis lesson is designed to build upon previous concepts while introducing new techniques that will enhance your development skills. By the end, you'll have a solid understanding of the key principles and be ready to tackle more advanced topics.\n\nThe knowledge gained here will serve as a foundation for subsequent lessons and real-world projects.",
+    "code": {
+      "example": "const express = require('express');\nconst helmet = require('helmet');\nconst rateLimit = require('express-rate-limit');\nconst bcrypt = require('bcrypt');\nconst jwt = require('jsonwebtoken');\nconst xss = require('xss');\nconst validator = require('validator');\n\nconst app = express();\n\n// Security middleware\napp.use(helmet({\n  contentSecurityPolicy: {\n    directives: {\n      defaultSrc: [\"'self'\"],\n      styleSrc: [\"'self'\", \"'unsafe-inline'\"],\n      scriptSrc: [\"'self'\"],\n      imgSrc: [\"'self'\", \"data:\", \"https:\"]\n    }\n  }\n}));\n\n// Rate limiting\nconst limiter = rateLimit({\n  windowMs: 15 * 60 * 1000, // 15 minutes\n  max: 100, // limit each IP to 100 requests per windowMs\n  message: 'Too many requests from this IP'\n});\napp.use('/api/', limiter);\n\n// Input validation and sanitization\nfunction validateInput(req, res, next) {\n  const { email, password, name } = req.body;\n  \n  // Validate email\n  if (!validator.isEmail(email)) {\n    return res.status(400).json({ error: 'Invalid email format' });\n  }\n  \n  // Validate password strength\n  if (!validator.isStrongPassword(password, {\n    minLength: 8,\n    minLowercase: 1,\n    minUppercase: 1,\n    minNumbers: 1,\n    minSymbols: 1\n  })) {\n    return res.status(400).json({ error: 'Password too weak' });\n  }\n  \n  // Sanitize name input\n  req.body.name = xss(name);\n  \n  next();\n}\n\n// Secure authentication\nclass AuthService {\n  static async hashPassword(password) {\n    const saltRounds = 12;\n    return await bcrypt.hash(password, saltRounds);\n  }\n  \n  static async verifyPassword(password, hash) {\n    return await bcrypt.compare(password, hash);\n  }\n  \n  static generateToken(userId) {\n    return jwt.sign(\n      { userId, iat: Date.now() },\n      process.env.JWT_SECRET,\n      { expiresIn: '24h' }\n    );\n  }\n  \n  static verifyToken(token) {\n    try {\n      return jwt.verify(token, process.env.JWT_SECRET);\n    } catch (error) {\n      throw new Error('Invalid token');\n    }\n  }\n}\n\n// Authentication middleware\nfunction authenticate(req, res, next) {\n  const authHeader = req.headers.authorization;\n  \n  if (!authHeader || !authHeader.startsWith('Bearer ')) {\n    return res.status(401).json({ error: 'No token provided' });\n  }\n  \n  const token = authHeader.substring(7);\n  \n  try {\n    const decoded = AuthService.verifyToken(token);\n    req.user = decoded;\n    next();\n  } catch (error) {\n    return res.status(401).json({ error: 'Invalid token' });\n  }\n}\n\n// SQL injection prevention with parameterized queries\nconst mysql = require('mysql2/promise');\n\nclass UserRepository {\n  static async findByEmail(email) {\n    const connection = await mysql.createConnection({\n      host: process.env.DB_HOST,\n      user: process.env.DB_USER,\n      password: process.env.DB_PASSWORD,\n      database: process.env.DB_NAME\n    });\n    \n    // Safe parameterized query\n    const [rows] = await connection.execute(\n      'SELECT * FROM users WHERE email = ?',\n      [email]\n    );\n    \n    await connection.end();\n    return rows[0];\n  }\n}\n\n// Secure routes\napp.post('/api/register', validateInput, async (req, res) => {\n  try {\n    const { email, password, name } = req.body;\n    \n    // Check if user exists\n    const existingUser = await UserRepository.findByEmail(email);\n    if (existingUser) {\n      return res.status(409).json({ error: 'User already exists' });\n    }\n    \n    // Hash password\n    const hashedPassword = await AuthService.hashPassword(password);\n    \n    // Create user (implementation depends on your database)\n    const user = await UserRepository.create({\n      email,\n      password: hashedPassword,\n      name\n    });\n    \n    // Generate token\n    const token = AuthService.generateToken(user.id);\n    \n    res.status(201).json({\n      message: 'User created successfully',\n      token\n    });\n  } catch (error) {\n    console.error('Registration error:', error);\n    res.status(500).json({ error: 'Internal server error' });\n  }\n});\n\napp.get('/api/profile', authenticate, (req, res) => {\n  res.json({\n    message: 'Protected profile data',\n    userId: req.user.userId\n  });\n});\n\n// Error handling middleware\napp.use((error, req, res, next) => {\n  console.error('Unhandled error:', error);\n  res.status(500).json({ error: 'Internal server error' });\n});\n\napp.listen(3000, () => {\n  console.log('Secure server running on port 3000');\n});",
+      "explanation": "This example demonstrates comprehensive security practices including helmet for security headers, rate limiting, input validation and sanitization, secure password hashing, JWT authentication, and SQL injection prevention with parameterized queries.\n\nThe code demonstrates practical implementation techniques and shows how the concepts work in real scenarios. Pay attention to the structure and patterns used, as these represent industry best practices.",
+      "language": "javascript"
+    },
+    "pitfalls": [
+      {
+        "mistake": "Storing passwords in plain text",
+        "solution": "Always hash passwords using bcrypt with appropriate salt rounds",
+        "severity": "high"
+      },
+      {
+        "mistake": "Not validating and sanitizing user input",
+        "solution": "Implement comprehensive input validation and XSS protection",
+        "severity": "high"
+      },
+      {
+        "mistake": "Using weak JWT secrets or not setting expiration",
+        "solution": "Use strong, randomly generated secrets and set appropriate token expiration times",
+        "severity": "medium"
+      }
+    ],
+    "exercises": [
+      {
+        "title": "Practice: Advanced Security Practices in Node.js",
+        "description": "Implement comprehensive security measures in a Node.js application",
+        "checkpoints": [
+          "Set up security middleware (helmet, rate limiting)",
+          "Implement secure authentication with password hashing",
+          "Add input validation and sanitization",
+          "Prevent SQL injection with parameterized queries",
+          "Test security measures and conduct vulnerability assessment"
+        ]
+      }
+    ],
+    "next": [],
+    "estimatedMinutes": 45,
+    "difficulty": "Advanced",
+    "tags": [
+      "Security",
+      "Authentication",
+      "Validation",
+      "node"
+    ],
+    "lastUpdated": "2025-10-01T06:41:13.484Z",
+    "version": "1.0.0"
+  },
+  {
+    "id": "node-fundamentals-lesson-14",
+    "moduleSlug": "node-fundamentals",
+    "title": "Microservices Architecture with Node.js",
+    "order": 14,
+    "objectives": [
+      "Understand microservices architecture principles",
+      "Implement service communication patterns",
+      "Deploy and orchestrate Node.js microservices"
+    ],
+    "intro": "Welcome to this comprehensive lesson on Microservices Architecture with Node.js.\n\nLearn how to design, implement, and deploy microservices using Node.js. Microservices architecture enables building scalable, maintainable applications by breaking them into smaller, independent services.\n\nThroughout this lesson, you'll gain hands-on experience with practical implementations and real-world scenarios. We'll explore both the theoretical foundations and practical applications, ensuring you can immediately apply what you learn.\n\nThis lesson is designed to build upon previous concepts while introducing new techniques that will enhance your development skills. By the end, you'll have a solid understanding of the key principles and be ready to tackle more advanced topics.\n\nThe knowledge gained here will serve as a foundation for subsequent lessons and real-world projects.",
+    "code": {
+      "example": "// User Service (users-service.js)\nconst express = require('express');\nconst axios = require('axios');\nconst app = express();\n\napp.use(express.json());\n\nconst users = [\n  { id: 1, name: 'John Doe', email: 'john@example.com' },\n  { id: 2, name: 'Jane Smith', email: 'jane@example.com' }\n];\n\napp.get('/health', (req, res) => {\n  res.json({ status: 'healthy', service: 'users' });\n});\n\napp.get('/users', (req, res) => {\n  res.json(users);\n});\n\napp.get('/users/:id', (req, res) => {\n  const user = users.find(u => u.id === parseInt(req.params.id));\n  if (!user) {\n    return res.status(404).json({ error: 'User not found' });\n  }\n  res.json(user);\n});\n\napp.listen(3001, () => console.log('Users service on port 3001'));\n\n// Orders Service (orders-service.js)\nconst express = require('express');\nconst axios = require('axios');\nconst app = express();\n\napp.use(express.json());\n\nconst orders = [\n  { id: 1, userId: 1, product: 'Laptop', amount: 999.99 },\n  { id: 2, userId: 2, product: 'Phone', amount: 599.99 }\n];\n\napp.get('/health', (req, res) => {\n  res.json({ status: 'healthy', service: 'orders' });\n});\n\napp.get('/orders', async (req, res) => {\n  try {\n    // Enrich orders with user data\n    const enrichedOrders = await Promise.all(\n      orders.map(async (order) => {\n        try {\n          const userResponse = await axios.get(\n            `http://users-service:3001/users/${order.userId}`,\n            { timeout: 5000 }\n          );\n          return {\n            ...order,\n            user: userResponse.data\n          };\n        } catch (error) {\n          console.error(`Failed to fetch user ${order.userId}:`, error.message);\n          return {\n            ...order,\n            user: { error: 'User data unavailable' }\n          };\n        }\n      })\n    );\n    \n    res.json(enrichedOrders);\n  } catch (error) {\n    res.status(500).json({ error: 'Failed to fetch orders' });\n  }\n});\n\napp.listen(3002, () => console.log('Orders service on port 3002'));\n\n// API Gateway (gateway.js)\nconst express = require('express');\nconst { createProxyMiddleware } = require('http-proxy-middleware');\nconst app = express();\n\napp.use(express.json());\n\n// Service discovery\nconst services = {\n  users: 'http://users-service:3001',\n  orders: 'http://orders-service:3002'\n};\n\n// Health check aggregator\napp.get('/health', async (req, res) => {\n  const healthChecks = await Promise.allSettled(\n    Object.entries(services).map(async ([name, url]) => {\n      try {\n        const response = await axios.get(`${url}/health`);\n        return { service: name, status: 'healthy', ...response.data };\n      } catch (error) {\n        return { service: name, status: 'unhealthy', error: error.message };\n      }\n    })\n  );\n  \n  res.json({\n    overall: healthChecks.every(hc => hc.value?.status === 'healthy') ? 'healthy' : 'degraded',\n    services: healthChecks.map(hc => hc.value)\n  });\n});\n\n// Route proxying\napp.use('/api/users', createProxyMiddleware({\n  target: services.users,\n  changeOrigin: true,\n  pathRewrite: { '^/api/users': '/users' },\n  onError: (err, req, res) => {\n    res.status(503).json({ error: 'Users service unavailable' });\n  }\n}));\n\napp.use('/api/orders', createProxyMiddleware({\n  target: services.orders,\n  changeOrigin: true,\n  pathRewrite: { '^/api/orders': '/orders' },\n  onError: (err, req, res) => {\n    res.status(503).json({ error: 'Orders service unavailable' });\n  }\n}));\n\napp.listen(3000, () => console.log('API Gateway on port 3000'));\n\n// Docker Compose (docker-compose.yml)\n/*\nversion: '3.8'\nservices:\n  users-service:\n    build: ./users-service\n    ports:\n      - \"3001:3001\"\n    environment:\n      - NODE_ENV=production\n    healthcheck:\n      test: [\"CMD\", \"curl\", \"-f\", \"http://localhost:3001/health\"]\n      interval: 30s\n      timeout: 10s\n      retries: 3\n\n  orders-service:\n    build: ./orders-service\n    ports:\n      - \"3002:3002\"\n    depends_on:\n      - users-service\n    environment:\n      - NODE_ENV=production\n    healthcheck:\n      test: [\"CMD\", \"curl\", \"-f\", \"http://localhost:3002/health\"]\n      interval: 30s\n      timeout: 10s\n      retries: 3\n\n  gateway:\n    build: ./gateway\n    ports:\n      - \"3000:3000\"\n    depends_on:\n      - users-service\n      - orders-service\n    environment:\n      - NODE_ENV=production\n*/",
+      "explanation": "This example demonstrates a complete microservices architecture with separate user and order services, an API gateway for routing, service communication with circuit breakers, and Docker orchestration for deployment.\n\nThe code demonstrates practical implementation techniques and shows how the concepts work in real scenarios. Pay attention to the structure and patterns used, as these represent industry best practices.",
+      "language": "javascript"
+    },
+    "pitfalls": [
+      {
+        "mistake": "Creating too many small services (nano-services)",
+        "solution": "Design services around business domains, not just code organization",
+        "severity": "medium"
+      },
+      {
+        "mistake": "Not implementing proper service communication patterns",
+        "solution": "Use circuit breakers, timeouts, and fallback mechanisms for resilient communication",
+        "severity": "high"
+      },
+      {
+        "mistake": "Lack of distributed tracing and monitoring",
+        "solution": "Implement comprehensive logging, monitoring, and distributed tracing across services",
+        "severity": "medium"
+      }
+    ],
+    "exercises": [
+      {
+        "title": "Practice: Microservices Architecture with Node.js",
+        "description": "Design and implement a microservices architecture using Node.js",
+        "checkpoints": [
+          "Design service boundaries based on business domains",
+          "Implement service communication with circuit breakers",
+          "Set up API gateway for routing and load balancing",
+          "Configure Docker containers and orchestration",
+          "Implement monitoring and health checks"
+        ]
+      }
+    ],
+    "next": [],
+    "estimatedMinutes": 50,
+    "difficulty": "Advanced",
+    "tags": [
+      "Microservices",
+      "Architecture",
+      "Docker",
+      "node"
+    ],
+    "lastUpdated": "2025-10-01T06:41:13.484Z",
+    "version": "1.0.0"
+  },
+  {
+    "id": "node-fundamentals-lesson-15",
+    "moduleSlug": "node-fundamentals",
+    "title": "Production Deployment and DevOps for Node.js",
+    "order": 15,
+    "objectives": [
+      "Configure production-ready Node.js applications",
+      "Implement CI/CD pipelines for Node.js deployment",
+      "Monitor and maintain Node.js applications in production"
+    ],
+    "intro": "Welcome to this comprehensive lesson on Production Deployment and DevOps for Node.js.\n\nLearn how to deploy Node.js applications to production environments with proper configuration, monitoring, and automation. Production deployment requires careful consideration of performance, security, and reliability.\n\nThroughout this lesson, you'll gain hands-on experience with practical implementations and real-world scenarios. We'll explore both the theoretical foundations and practical applications, ensuring you can immediately apply what you learn.\n\nThis lesson is designed to build upon previous concepts while introducing new techniques that will enhance your development skills. By the end, you'll have a solid understanding of the key principles and be ready to tackle more advanced topics.\n\nThe knowledge gained here will serve as a foundation for subsequent lessons and real-world projects.",
+    "code": {
+      "example": "// Production configuration (config/production.js)\nmodule.exports = {\n  port: process.env.PORT || 3000,\n  nodeEnv: 'production',\n  database: {\n    host: process.env.DB_HOST,\n    port: process.env.DB_PORT || 5432,\n    name: process.env.DB_NAME,\n    user: process.env.DB_USER,\n    password: process.env.DB_PASSWORD,\n    ssl: true,\n    pool: {\n      min: 5,\n      max: 20,\n      acquireTimeoutMillis: 60000,\n      idleTimeoutMillis: 600000\n    }\n  },\n  redis: {\n    host: process.env.REDIS_HOST,\n    port: process.env.REDIS_PORT || 6379,\n    password: process.env.REDIS_PASSWORD\n  },\n  jwt: {\n    secret: process.env.JWT_SECRET,\n    expiresIn: '24h'\n  },\n  logging: {\n    level: 'info',\n    format: 'json'\n  }\n};\n\n// Production server setup (server.js)\nconst express = require('express');\nconst cluster = require('cluster');\nconst os = require('os');\nconst winston = require('winston');\nconst helmet = require('helmet');\nconst compression = require('compression');\nconst cors = require('cors');\nconst config = require('./config/production');\n\n// Configure Winston logger\nconst logger = winston.createLogger({\n  level: config.logging.level,\n  format: winston.format.combine(\n    winston.format.timestamp(),\n    winston.format.errors({ stack: true }),\n    winston.format.json()\n  ),\n  transports: [\n    new winston.transports.Console(),\n    new winston.transports.File({ filename: 'logs/error.log', level: 'error' }),\n    new winston.transports.File({ filename: 'logs/combined.log' })\n  ]\n});\n\nif (cluster.isMaster) {\n  // Master process - create worker processes\n  const numCPUs = os.cpus().length;\n  logger.info(`Master process starting with ${numCPUs} workers`);\n  \n  for (let i = 0; i < numCPUs; i++) {\n    cluster.fork();\n  }\n  \n  cluster.on('exit', (worker, code, signal) => {\n    logger.error(`Worker ${worker.process.pid} died. Restarting...`);\n    cluster.fork();\n  });\n} else {\n  // Worker process\n  const app = express();\n  \n  // Production middleware\n  app.use(helmet());\n  app.use(compression());\n  app.use(cors());\n  app.use(express.json({ limit: '10mb' }));\n  \n  // Request logging\n  app.use((req, res, next) => {\n    logger.info({\n      method: req.method,\n      url: req.url,\n      ip: req.ip,\n      userAgent: req.get('User-Agent')\n    });\n    next();\n  });\n  \n  // Health check endpoint\n  app.get('/health', (req, res) => {\n    res.json({\n      status: 'healthy',\n      timestamp: new Date().toISOString(),\n      uptime: process.uptime(),\n      memory: process.memoryUsage(),\n      pid: process.pid\n    });\n  });\n  \n  // Graceful shutdown\n  process.on('SIGTERM', () => {\n    logger.info('SIGTERM received, shutting down gracefully');\n    server.close(() => {\n      logger.info('Process terminated');\n      process.exit(0);\n    });\n  });\n  \n  const server = app.listen(config.port, () => {\n    logger.info(`Worker ${process.pid} listening on port ${config.port}`);\n  });\n}\n\n// Dockerfile\n/*\nFROM node:18-alpine\n\nWORKDIR /app\n\n# Copy package files\nCOPY package*.json ./\n\n# Install dependencies\nRUN npm ci --only=production && npm cache clean --force\n\n# Copy application code\nCOPY . .\n\n# Create non-root user\nRUN addgroup -g 1001 -S nodejs\nRUN adduser -S nodejs -u 1001\n\n# Change ownership\nRUN chown -R nodejs:nodejs /app\nUSER nodejs\n\nEXPOSE 3000\n\nHEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \\\n  CMD node healthcheck.js\n\nCMD [\"node\", \"server.js\"]\n*/\n\n// CI/CD Pipeline (GitHub Actions)\n/*\nname: Deploy to Production\n\non:\n  push:\n    branches: [main]\n\njobs:\n  test:\n    runs-on: ubuntu-latest\n    steps:\n      - uses: actions/checkout@v2\n      - name: Setup Node.js\n        uses: actions/setup-node@v2\n        with:\n          node-version: '18'\n          cache: 'npm'\n      - name: Install dependencies\n        run: npm ci\n      - name: Run tests\n        run: npm test\n      - name: Run security audit\n        run: npm audit --audit-level=high\n\n  deploy:\n    needs: test\n    runs-on: ubuntu-latest\n    steps:\n      - uses: actions/checkout@v2\n      - name: Build Docker image\n        run: docker build -t myapp:${{ github.sha }} .\n      - name: Deploy to production\n        run: |\n          # Deploy to your production environment\n          # This could be AWS ECS, Kubernetes, etc.\n*/\n\n// Monitoring with Prometheus metrics\nconst promClient = require('prom-client');\n\n// Create metrics\nconst httpRequestDuration = new promClient.Histogram({\n  name: 'http_request_duration_seconds',\n  help: 'Duration of HTTP requests in seconds',\n  labelNames: ['method', 'status_code', 'route']\n});\n\nconst httpRequestsTotal = new promClient.Counter({\n  name: 'http_requests_total',\n  help: 'Total number of HTTP requests',\n  labelNames: ['method', 'status_code', 'route']\n});\n\n// Middleware to collect metrics\napp.use((req, res, next) => {\n  const start = Date.now();\n  \n  res.on('finish', () => {\n    const duration = (Date.now() - start) / 1000;\n    const route = req.route ? req.route.path : req.path;\n    \n    httpRequestDuration\n      .labels(req.method, res.statusCode, route)\n      .observe(duration);\n    \n    httpRequestsTotal\n      .labels(req.method, res.statusCode, route)\n      .inc();\n  });\n  \n  next();\n});\n\n// Metrics endpoint\napp.get('/metrics', (req, res) => {\n  res.set('Content-Type', promClient.register.contentType);\n  res.end(promClient.register.metrics());\n});",
+      "explanation": "This example demonstrates comprehensive production deployment including clustering for scalability, structured logging with Winston, Docker containerization, CI/CD pipeline configuration, and monitoring with Prometheus metrics.\n\nThe code demonstrates practical implementation techniques and shows how the concepts work in real scenarios. Pay attention to the structure and patterns used, as these represent industry best practices.",
+      "language": "javascript"
+    },
+    "pitfalls": [
+      {
+        "mistake": "Not implementing proper logging in production",
+        "solution": "Use structured logging with appropriate log levels and centralized log aggregation",
+        "severity": "high"
+      },
+      {
+        "mistake": "Running single-threaded in production",
+        "solution": "Use cluster mode or PM2 to utilize multiple CPU cores",
+        "severity": "medium"
+      },
+      {
+        "mistake": "Not implementing health checks and graceful shutdown",
+        "solution": "Implement comprehensive health checks and handle SIGTERM for graceful shutdown",
+        "severity": "high"
+      }
+    ],
+    "exercises": [
+      {
+        "title": "Practice: Production Deployment and DevOps for Node.js",
+        "description": "Deploy a Node.js application to production with proper DevOps practices",
+        "checkpoints": [
+          "Configure production environment variables and settings",
+          "Implement clustering and process management",
+          "Set up Docker containerization and health checks",
+          "Configure CI/CD pipeline with automated testing",
+          "Implement monitoring, logging, and alerting"
+        ]
+      }
+    ],
+    "next": [],
+    "estimatedMinutes": 55,
+    "difficulty": "Advanced",
+    "tags": [
+      "Production",
+      "DevOps",
+      "Deployment",
+      "Monitoring",
+      "node"
+    ],
+    "lastUpdated": "2025-10-01T06:41:13.484Z",
+    "version": "1.0.0"
+  }
+]

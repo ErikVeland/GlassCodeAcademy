@@ -1,0 +1,29 @@
+{
+  "module": "typescript-fundamentals",
+  "sources": [
+    {
+      "title": "TypeScript Official Documentation",
+      "url": "https://www.typescriptlang.org/docs/"
+    },
+    {
+      "title": "TypeScript Handbook",
+      "url": "https://www.typescriptlang.org/docs/handbook/intro.html"
+    },
+    {
+      "title": "TypeScript Deep Dive",
+      "url": "https://basarat.gitbook.io/typescript/"
+    },
+    {
+      "title": "Effective TypeScript",
+      "url": "https://effectivetypescript.com/"
+    },
+    {
+      "title": "TypeScript Evolution",
+      "url": "https://mariusschulz.com/blog/series/typescript-evolution"
+    },
+    {
+      "title": "TypeScript Playground",
+      "url": "https://www.typescriptlang.org/play"
+    }
+  ]
+}

@@ -1,0 +1,442 @@
+{
+  "moduleSlug": "web-fundamentals",
+  "title": "Web Development Basics Assessment",
+  "description": "Comprehensive quiz covering key concepts from the Web Development Basics module",
+  "totalQuestions": 20,
+  "passingScore": 70,
+  "timeLimit": 30,
+  "questions": [
+    {
+      "id": "web-fundamentals-q1",
+      "question": "Which HTML5 element should be used to wrap the main navigation links of a website?",
+      "topic": "HTML5",
+      "difficulty": "Beginner",
+      "choices": [
+        "<nav>",
+        "<div>",
+        "<header>",
+        "<menu>"
+      ],
+      "correctIndex": 0,
+      "explanation": "The <nav> element is specifically designed for navigation links. It provides semantic meaning that helps screen readers and search engines understand the purpose of the content. Using <div> provides no semantic value, while <header> is for page headers and <menu> is for interactive commands.",
+      "industryContext": "Semantic HTML improves website accessibility for users with disabilities and helps search engines better understand and rank your content.",
+      "tags": [
+        "foundational",
+        "beginner"
+      ],
+      "estimatedTime": 90,
+      "questionType": "multiple-choice"
+    },
+    {
+      "id": "web-fundamentals-q2",
+      "question": "What is the correct CSS to center a div horizontally and vertically using Flexbox?",
+      "topic": "CSS3",
+      "difficulty": "Intermediate",
+      "choices": [
+        "display: flex; justify-content: center; align-items: center;",
+        "display: flex; align-content: center; justify-items: center;",
+        "display: block; text-align: center; vertical-align: middle;",
+        "display: grid; place-items: center;"
+      ],
+      "correctIndex": 0,
+      "explanation": "With Flexbox, 'justify-content: center' centers items horizontally (main axis) and 'align-items: center' centers them vertically (cross axis). Option D would work with CSS Grid, but the question specifically asks about Flexbox.",
+      "industryContext": "Flexbox is the most common method for centering content in modern web development, replacing older techniques like floats and positioning.",
+      "tags": [
+        "foundational",
+        "intermediate"
+      ],
+      "estimatedTime": 90,
+      "questionType": "multiple-choice"
+    },
+    {
+      "id": "web-fundamentals-q3",
+      "question": "Which JavaScript method is used to select an element by its ID?",
+      "topic": "JavaScript",
+      "difficulty": "Beginner",
+      "choices": [
+        "document.getElementById('myId')",
+        "document.querySelector('#myId')",
+        "document.getElementByClass('myId')",
+        "Both A and B are correct"
+      ],
+      "correctIndex": 3,
+      "explanation": "Both document.getElementById('myId') and document.querySelector('#myId') can select an element by ID. getElementById is the traditional method, while querySelector is more flexible and can use any CSS selector. Option C is incorrect because it should be getElementsByClassName and it's for classes, not IDs.",
+      "industryContext": "DOM manipulation is fundamental to interactive web development. Understanding different selection methods helps you choose the most efficient approach for your needs.",
+      "tags": [
+        "foundational",
+        "beginner"
+      ],
+      "estimatedTime": 90,
+      "questionType": "multiple-choice"
+    },
+    {
+      "id": "web-fundamentals-q4",
+      "question": "What does this CSS media query do?\n\n@media (max-width: 768px) { /* styles */ }",
+      "topic": "CSS3",
+      "difficulty": "Beginner",
+      "choices": [
+        "Applies styles when screen width is 768px or less",
+        "Applies styles when screen width is exactly 768px",
+        "Applies styles when screen width is more than 768px",
+        "Only applies to tablets with 768px width"
+      ],
+      "correctIndex": 0,
+      "explanation": "The 'max-width: 768px' media query applies styles when the viewport width is 768 pixels or smaller. This is commonly used for mobile-first responsive design to apply mobile styles on smaller screens.",
+      "industryContext": "Media queries are essential for responsive web design, ensuring websites work well on mobile devices, tablets, and desktops. 768px is a common breakpoint for tablet/mobile design.",
+      "tags": [
+        "foundational",
+        "beginner"
+      ],
+      "estimatedTime": 90,
+      "questionType": "multiple-choice"
+    },
+    {
+      "id": "web-fundamentals-q5",
+      "question": "Which input type provides built-in email validation in HTML5?",
+      "topic": "HTML5",
+      "difficulty": "Beginner",
+      "choices": [
+        "<input type=\"email\">",
+        "<input type=\"text\" pattern=\"email\">",
+        "<input type=\"validation\" format=\"email\">",
+        "<input type=\"text\" validate=\"email\">"
+      ],
+      "correctIndex": 0,
+      "explanation": "HTML5 introduced the 'email' input type which automatically validates that the entered text follows email format (contains @ symbol and valid structure). Modern browsers will show validation errors if the format is incorrect.",
+      "industryContext": "HTML5 form validation reduces the need for custom JavaScript validation and provides better user experience with instant feedback on form inputs.",
+      "tags": [
+        "foundational",
+        "beginner"
+      ],
+      "estimatedTime": 90,
+      "questionType": "multiple-choice"
+    },
+    {
+      "id": "web-fundamentals-q6",
+      "question": "How do you implement HTML5 in a production environment?",
+      "topic": "JavaScript",
+      "difficulty": "Intermediate",
+      "choices": [
+        "Option A - Placeholder answer",
+        "Option B - Placeholder answer",
+        "Option C - Placeholder answer",
+        "Option D - Placeholder answer"
+      ],
+      "correctIndex": 0,
+      "explanation": "This question tests understanding of HTML5 concepts. The correct answer demonstrates proper implementation of Web Development Basics principles. Review the lesson materials for detailed explanations of these concepts.",
+      "industryContext": "In professional development, understanding HTML5 is crucial for building scalable and maintainable applications.",
+      "tags": [
+        "foundational",
+        "intermediate"
+      ],
+      "estimatedTime": 90,
+      "questionType": "multiple-choice"
+    },
+    {
+      "id": "web-fundamentals-q7",
+      "question": "What are the performance considerations when using HTML5?",
+      "topic": "DOM",
+      "difficulty": "Intermediate",
+      "choices": [
+        "Option A - Placeholder answer",
+        "Option B - Placeholder answer",
+        "Option C - Placeholder answer",
+        "Option D - Placeholder answer"
+      ],
+      "correctIndex": 0,
+      "explanation": "This question tests understanding of HTML5 concepts. The correct answer demonstrates proper implementation of Web Development Basics principles. Review the lesson materials for detailed explanations of these concepts.",
+      "industryContext": "In professional development, understanding HTML5 is crucial for building scalable and maintainable applications.",
+      "tags": [
+        "foundational",
+        "intermediate"
+      ],
+      "estimatedTime": 90,
+      "questionType": "multiple-choice"
+    },
+    {
+      "id": "web-fundamentals-q8",
+      "question": "Which pattern is most effective for HTML5 architecture?",
+      "topic": "HTML5",
+      "difficulty": "Intermediate",
+      "choices": [
+        "Option A - Placeholder answer",
+        "Option B - Placeholder answer",
+        "Option C - Placeholder answer",
+        "Option D - Placeholder answer"
+      ],
+      "correctIndex": 0,
+      "explanation": "This question tests understanding of HTML5 concepts. The correct answer demonstrates proper implementation of Web Development Basics principles. Review the lesson materials for detailed explanations of these concepts.",
+      "industryContext": "In professional development, understanding HTML5 is crucial for building scalable and maintainable applications.",
+      "tags": [
+        "foundational",
+        "intermediate"
+      ],
+      "estimatedTime": 90,
+      "questionType": "multiple-choice"
+    },
+    {
+      "id": "web-fundamentals-q9",
+      "question": "How do you implement HTML5 in a production environment?",
+      "topic": "CSS3",
+      "difficulty": "Intermediate",
+      "choices": [
+        "Option A - Placeholder answer",
+        "Option B - Placeholder answer",
+        "Option C - Placeholder answer",
+        "Option D - Placeholder answer"
+      ],
+      "correctIndex": 0,
+      "explanation": "This question tests understanding of HTML5 concepts. The correct answer demonstrates proper implementation of Web Development Basics principles. Review the lesson materials for detailed explanations of these concepts.",
+      "industryContext": "In professional development, understanding HTML5 is crucial for building scalable and maintainable applications.",
+      "tags": [
+        "foundational",
+        "intermediate"
+      ],
+      "estimatedTime": 90,
+      "questionType": "multiple-choice"
+    },
+    {
+      "id": "web-fundamentals-q10",
+      "question": "Which of the following is a key feature of Web Development Basics?",
+      "topic": "JavaScript",
+      "difficulty": "Beginner",
+      "choices": [
+        "Option A - Placeholder answer",
+        "Option B - Placeholder answer",
+        "Option C - Placeholder answer",
+        "Option D - Placeholder answer"
+      ],
+      "correctIndex": 0,
+      "explanation": "This question tests understanding of HTML5 concepts. The correct answer demonstrates proper implementation of Web Development Basics principles. Review the lesson materials for detailed explanations of these concepts.",
+      "industryContext": "In professional development, understanding HTML5 is crucial for building scalable and maintainable applications.",
+      "tags": [
+        "foundational",
+        "beginner"
+      ],
+      "estimatedTime": 90,
+      "questionType": "multiple-choice"
+    },
+    {
+      "id": "web-fundamentals-q11",
+      "question": "Which pattern is most effective for HTML5 architecture?",
+      "topic": "DOM",
+      "difficulty": "Intermediate",
+      "choices": [
+        "Option A - Placeholder answer",
+        "Option B - Placeholder answer",
+        "Option C - Placeholder answer",
+        "Option D - Placeholder answer"
+      ],
+      "correctIndex": 0,
+      "explanation": "This question tests understanding of HTML5 concepts. The correct answer demonstrates proper implementation of Web Development Basics principles. Review the lesson materials for detailed explanations of these concepts.",
+      "industryContext": "In professional development, understanding HTML5 is crucial for building scalable and maintainable applications.",
+      "tags": [
+        "foundational",
+        "intermediate"
+      ],
+      "estimatedTime": 90,
+      "questionType": "multiple-choice"
+    },
+    {
+      "id": "web-fundamentals-q12",
+      "question": "How would you optimize HTML5 for large-scale applications?",
+      "topic": "HTML5",
+      "difficulty": "Advanced",
+      "choices": [
+        "Option A - Placeholder answer",
+        "Option B - Placeholder answer",
+        "Option C - Placeholder answer",
+        "Option D - Placeholder answer"
+      ],
+      "correctIndex": 0,
+      "explanation": "This question tests understanding of HTML5 concepts. The correct answer demonstrates proper implementation of Web Development Basics principles. Review the lesson materials for detailed explanations of these concepts.",
+      "industryContext": "In professional development, understanding HTML5 is crucial for building scalable and maintainable applications.",
+      "tags": [
+        "foundational",
+        "advanced"
+      ],
+      "estimatedTime": 90,
+      "questionType": "multiple-choice"
+    },
+    {
+      "id": "web-fundamentals-q13",
+      "question": "What are the performance considerations when using HTML5?",
+      "topic": "CSS3",
+      "difficulty": "Intermediate",
+      "choices": [
+        "Option A - Placeholder answer",
+        "Option B - Placeholder answer",
+        "Option C - Placeholder answer",
+        "Option D - Placeholder answer"
+      ],
+      "correctIndex": 0,
+      "explanation": "This question tests understanding of HTML5 concepts. The correct answer demonstrates proper implementation of Web Development Basics principles. Review the lesson materials for detailed explanations of these concepts.",
+      "industryContext": "In professional development, understanding HTML5 is crucial for building scalable and maintainable applications.",
+      "tags": [
+        "foundational",
+        "intermediate"
+      ],
+      "estimatedTime": 90,
+      "questionType": "multiple-choice"
+    },
+    {
+      "id": "web-fundamentals-q14",
+      "question": "When should you use HTML5 in development?",
+      "topic": "JavaScript",
+      "difficulty": "Beginner",
+      "choices": [
+        "Option A - Placeholder answer",
+        "Option B - Placeholder answer",
+        "Option C - Placeholder answer",
+        "Option D - Placeholder answer"
+      ],
+      "correctIndex": 0,
+      "explanation": "This question tests understanding of HTML5 concepts. The correct answer demonstrates proper implementation of Web Development Basics principles. Review the lesson materials for detailed explanations of these concepts.",
+      "industryContext": "In professional development, understanding HTML5 is crucial for building scalable and maintainable applications.",
+      "tags": [
+        "foundational",
+        "beginner"
+      ],
+      "estimatedTime": 90,
+      "questionType": "multiple-choice"
+    },
+    {
+      "id": "web-fundamentals-q15",
+      "question": "How do you implement HTML5 in a production environment?",
+      "topic": "DOM",
+      "difficulty": "Intermediate",
+      "choices": [
+        "Option A - Placeholder answer",
+        "Option B - Placeholder answer",
+        "Option C - Placeholder answer",
+        "Option D - Placeholder answer"
+      ],
+      "correctIndex": 0,
+      "explanation": "This question tests understanding of HTML5 concepts. The correct answer demonstrates proper implementation of Web Development Basics principles. Review the lesson materials for detailed explanations of these concepts.",
+      "industryContext": "In professional development, understanding HTML5 is crucial for building scalable and maintainable applications.",
+      "tags": [
+        "foundational",
+        "intermediate"
+      ],
+      "estimatedTime": 90,
+      "questionType": "multiple-choice"
+    },
+    {
+      "id": "web-fundamentals-q16",
+      "question": "Which of the following is a key feature of Web Development Basics?",
+      "topic": "HTML5",
+      "difficulty": "Beginner",
+      "choices": [
+        "Option A - Placeholder answer",
+        "Option B - Placeholder answer",
+        "Option C - Placeholder answer",
+        "Option D - Placeholder answer"
+      ],
+      "correctIndex": 0,
+      "explanation": "This question tests understanding of HTML5 concepts. The correct answer demonstrates proper implementation of Web Development Basics principles. Review the lesson materials for detailed explanations of these concepts.",
+      "industryContext": "In professional development, understanding HTML5 is crucial for building scalable and maintainable applications.",
+      "tags": [
+        "foundational",
+        "beginner"
+      ],
+      "estimatedTime": 90,
+      "questionType": "multiple-choice"
+    },
+    {
+      "id": "web-fundamentals-q17",
+      "question": "How do you troubleshoot complex HTML5 issues?",
+      "topic": "CSS3",
+      "difficulty": "Advanced",
+      "choices": [
+        "Option A - Placeholder answer",
+        "Option B - Placeholder answer",
+        "Option C - Placeholder answer",
+        "Option D - Placeholder answer"
+      ],
+      "correctIndex": 0,
+      "explanation": "This question tests understanding of HTML5 concepts. The correct answer demonstrates proper implementation of Web Development Basics principles. Review the lesson materials for detailed explanations of these concepts.",
+      "industryContext": "In professional development, understanding HTML5 is crucial for building scalable and maintainable applications.",
+      "tags": [
+        "foundational",
+        "advanced"
+      ],
+      "estimatedTime": 90,
+      "questionType": "multiple-choice"
+    },
+    {
+      "id": "web-fundamentals-q18",
+      "question": "How do you implement HTML5 in a production environment?",
+      "topic": "JavaScript",
+      "difficulty": "Intermediate",
+      "choices": [
+        "Option A - Placeholder answer",
+        "Option B - Placeholder answer",
+        "Option C - Placeholder answer",
+        "Option D - Placeholder answer"
+      ],
+      "correctIndex": 0,
+      "explanation": "This question tests understanding of HTML5 concepts. The correct answer demonstrates proper implementation of Web Development Basics principles. Review the lesson materials for detailed explanations of these concepts.",
+      "industryContext": "In professional development, understanding HTML5 is crucial for building scalable and maintainable applications.",
+      "tags": [
+        "foundational",
+        "intermediate"
+      ],
+      "estimatedTime": 90,
+      "questionType": "multiple-choice"
+    },
+    {
+      "id": "web-fundamentals-q19",
+      "question": "Which of the following is a key feature of Web Development Basics?",
+      "topic": "DOM",
+      "difficulty": "Beginner",
+      "choices": [
+        "Option A - Placeholder answer",
+        "Option B - Placeholder answer",
+        "Option C - Placeholder answer",
+        "Option D - Placeholder answer"
+      ],
+      "correctIndex": 0,
+      "explanation": "This question tests understanding of HTML5 concepts. The correct answer demonstrates proper implementation of Web Development Basics principles. Review the lesson materials for detailed explanations of these concepts.",
+      "industryContext": "In professional development, understanding HTML5 is crucial for building scalable and maintainable applications.",
+      "tags": [
+        "foundational",
+        "beginner"
+      ],
+      "estimatedTime": 90,
+      "questionType": "multiple-choice"
+    },
+    {
+      "id": "web-fundamentals-q20",
+      "question": "When should you use HTML5 in development?",
+      "topic": "HTML5",
+      "difficulty": "Beginner",
+      "choices": [
+        "Option A - Placeholder answer",
+        "Option B - Placeholder answer",
+        "Option C - Placeholder answer",
+        "Option D - Placeholder answer"
+      ],
+      "correctIndex": 0,
+      "explanation": "This question tests understanding of HTML5 concepts. The correct answer demonstrates proper implementation of Web Development Basics principles. Review the lesson materials for detailed explanations of these concepts.",
+      "industryContext": "In professional development, understanding HTML5 is crucial for building scalable and maintainable applications.",
+      "tags": [
+        "foundational",
+        "beginner"
+      ],
+      "estimatedTime": 90,
+      "questionType": "multiple-choice"
+    }
+  ],
+  "metadata": {
+    "difficulty": "Beginner",
+    "estimatedTime": "30 minutes",
+    "topics": [
+      "HTML5",
+      "CSS3",
+      "JavaScript",
+      "DOM"
+    ],
+    "lastUpdated": "2025-10-01T06:42:16.315Z",
+    "version": "1.0.0"
+  }
+}

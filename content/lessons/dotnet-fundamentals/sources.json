@@ -1,0 +1,29 @@
+{
+  "module": "dotnet-fundamentals",
+  "sources": [
+    {
+      "title": "Microsoft .NET Documentation",
+      "url": "https://learn.microsoft.com/en-us/dotnet/"
+    },
+    {
+      "title": "C# Programming Guide",
+      "url": "https://learn.microsoft.com/en-us/dotnet/csharp/programming-guide/"
+    },
+    {
+      "title": "Microsoft .NET GitHub Repository",
+      "url": "https://github.com/dotnet"
+    },
+    {
+      "title": "C# Language Specification",
+      "url": "https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/language-specification/"
+    },
+    {
+      "title": "Entity Framework Core Documentation",
+      "url": "https://learn.microsoft.com/en-us/ef/core/"
+    },
+    {
+      "title": "ASP.NET Core Documentation",
+      "url": "https://learn.microsoft.com/en-us/aspnet/core/"
+    }
+  ]
+}

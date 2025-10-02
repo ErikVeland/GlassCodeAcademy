@@ -1,0 +1,357 @@
+{
+  "moduleSlug": "performance-optimization",
+  "title": "Performance Optimization Assessment",
+  "description": "Comprehensive quiz covering key concepts from the Performance Optimization module",
+  "totalQuestions": 16,
+  "passingScore": 70,
+  "timeLimit": 30,
+  "questions": [
+    {
+      "id": "performance-optimization-q1",
+      "question": "What are the trade-offs between different Performance approaches?",
+      "topic": "Profiling",
+      "difficulty": "Advanced",
+      "choices": [
+        "Option A - Placeholder answer",
+        "Option B - Placeholder answer",
+        "Option C - Placeholder answer",
+        "Option D - Placeholder answer"
+      ],
+      "correctIndex": 0,
+      "explanation": "This question tests understanding of Performance concepts. The correct answer demonstrates proper implementation of Performance Optimization principles. Review the lesson materials for detailed explanations of these concepts.",
+      "industryContext": "In professional development, understanding Performance is crucial for building scalable and maintainable applications.",
+      "tags": [
+        "quality",
+        "advanced"
+      ],
+      "estimatedTime": 90,
+      "questionType": "multiple-choice"
+    },
+    {
+      "id": "performance-optimization-q2",
+      "question": "When should you use Performance in development?",
+      "topic": "Optimization",
+      "difficulty": "Beginner",
+      "choices": [
+        "Option A - Placeholder answer",
+        "Option B - Placeholder answer",
+        "Option C - Placeholder answer",
+        "Option D - Placeholder answer"
+      ],
+      "correctIndex": 0,
+      "explanation": "This question tests understanding of Performance concepts. The correct answer demonstrates proper implementation of Performance Optimization principles. Review the lesson materials for detailed explanations of these concepts.",
+      "industryContext": "In professional development, understanding Performance is crucial for building scalable and maintainable applications.",
+      "tags": [
+        "quality",
+        "beginner"
+      ],
+      "estimatedTime": 90,
+      "questionType": "multiple-choice"
+    },
+    {
+      "id": "performance-optimization-q3",
+      "question": "How do you implement Performance in a production environment?",
+      "topic": "Performance",
+      "difficulty": "Intermediate",
+      "choices": [
+        "Option A - Placeholder answer",
+        "Option B - Placeholder answer",
+        "Option C - Placeholder answer",
+        "Option D - Placeholder answer"
+      ],
+      "correctIndex": 0,
+      "explanation": "This question tests understanding of Performance concepts. The correct answer demonstrates proper implementation of Performance Optimization principles. Review the lesson materials for detailed explanations of these concepts.",
+      "industryContext": "In professional development, understanding Performance is crucial for building scalable and maintainable applications.",
+      "tags": [
+        "quality",
+        "intermediate"
+      ],
+      "estimatedTime": 90,
+      "questionType": "multiple-choice"
+    },
+    {
+      "id": "performance-optimization-q4",
+      "question": "What are the trade-offs between different Performance approaches?",
+      "topic": "Profiling",
+      "difficulty": "Advanced",
+      "choices": [
+        "Option A - Placeholder answer",
+        "Option B - Placeholder answer",
+        "Option C - Placeholder answer",
+        "Option D - Placeholder answer"
+      ],
+      "correctIndex": 0,
+      "explanation": "This question tests understanding of Performance concepts. The correct answer demonstrates proper implementation of Performance Optimization principles. Review the lesson materials for detailed explanations of these concepts.",
+      "industryContext": "In professional development, understanding Performance is crucial for building scalable and maintainable applications.",
+      "tags": [
+        "quality",
+        "advanced"
+      ],
+      "estimatedTime": 90,
+      "questionType": "multiple-choice"
+    },
+    {
+      "id": "performance-optimization-q5",
+      "question": "Which pattern is most effective for Performance architecture?",
+      "topic": "Optimization",
+      "difficulty": "Intermediate",
+      "choices": [
+        "Option A - Placeholder answer",
+        "Option B - Placeholder answer",
+        "Option C - Placeholder answer",
+        "Option D - Placeholder answer"
+      ],
+      "correctIndex": 0,
+      "explanation": "This question tests understanding of Performance concepts. The correct answer demonstrates proper implementation of Performance Optimization principles. Review the lesson materials for detailed explanations of these concepts.",
+      "industryContext": "In professional development, understanding Performance is crucial for building scalable and maintainable applications.",
+      "tags": [
+        "quality",
+        "intermediate"
+      ],
+      "estimatedTime": 90,
+      "questionType": "multiple-choice"
+    },
+    {
+      "id": "performance-optimization-q6",
+      "question": "What is the primary purpose of Performance?",
+      "topic": "Performance",
+      "difficulty": "Beginner",
+      "choices": [
+        "Option A - Placeholder answer",
+        "Option B - Placeholder answer",
+        "Option C - Placeholder answer",
+        "Option D - Placeholder answer"
+      ],
+      "correctIndex": 0,
+      "explanation": "This question tests understanding of Performance concepts. The correct answer demonstrates proper implementation of Performance Optimization principles. Review the lesson materials for detailed explanations of these concepts.",
+      "industryContext": "In professional development, understanding Performance is crucial for building scalable and maintainable applications.",
+      "tags": [
+        "quality",
+        "beginner"
+      ],
+      "estimatedTime": 90,
+      "questionType": "multiple-choice"
+    },
+    {
+      "id": "performance-optimization-q7",
+      "question": "What are the performance considerations when using Performance?",
+      "topic": "Profiling",
+      "difficulty": "Intermediate",
+      "choices": [
+        "Option A - Placeholder answer",
+        "Option B - Placeholder answer",
+        "Option C - Placeholder answer",
+        "Option D - Placeholder answer"
+      ],
+      "correctIndex": 0,
+      "explanation": "This question tests understanding of Performance concepts. The correct answer demonstrates proper implementation of Performance Optimization principles. Review the lesson materials for detailed explanations of these concepts.",
+      "industryContext": "In professional development, understanding Performance is crucial for building scalable and maintainable applications.",
+      "tags": [
+        "quality",
+        "intermediate"
+      ],
+      "estimatedTime": 90,
+      "questionType": "multiple-choice"
+    },
+    {
+      "id": "performance-optimization-q8",
+      "question": "When should you use Performance in development?",
+      "topic": "Optimization",
+      "difficulty": "Beginner",
+      "choices": [
+        "Option A - Placeholder answer",
+        "Option B - Placeholder answer",
+        "Option C - Placeholder answer",
+        "Option D - Placeholder answer"
+      ],
+      "correctIndex": 0,
+      "explanation": "This question tests understanding of Performance concepts. The correct answer demonstrates proper implementation of Performance Optimization principles. Review the lesson materials for detailed explanations of these concepts.",
+      "industryContext": "In professional development, understanding Performance is crucial for building scalable and maintainable applications.",
+      "tags": [
+        "quality",
+        "beginner"
+      ],
+      "estimatedTime": 90,
+      "questionType": "multiple-choice"
+    },
+    {
+      "id": "performance-optimization-q9",
+      "question": "What is the primary purpose of Performance?",
+      "topic": "Performance",
+      "difficulty": "Beginner",
+      "choices": [
+        "Option A - Placeholder answer",
+        "Option B - Placeholder answer",
+        "Option C - Placeholder answer",
+        "Option D - Placeholder answer"
+      ],
+      "correctIndex": 0,
+      "explanation": "This question tests understanding of Performance concepts. The correct answer demonstrates proper implementation of Performance Optimization principles. Review the lesson materials for detailed explanations of these concepts.",
+      "industryContext": "In professional development, understanding Performance is crucial for building scalable and maintainable applications.",
+      "tags": [
+        "quality",
+        "beginner"
+      ],
+      "estimatedTime": 90,
+      "questionType": "multiple-choice"
+    },
+    {
+      "id": "performance-optimization-q10",
+      "question": "What are the performance considerations when using Performance?",
+      "topic": "Profiling",
+      "difficulty": "Intermediate",
+      "choices": [
+        "Option A - Placeholder answer",
+        "Option B - Placeholder answer",
+        "Option C - Placeholder answer",
+        "Option D - Placeholder answer"
+      ],
+      "correctIndex": 0,
+      "explanation": "This question tests understanding of Performance concepts. The correct answer demonstrates proper implementation of Performance Optimization principles. Review the lesson materials for detailed explanations of these concepts.",
+      "industryContext": "In professional development, understanding Performance is crucial for building scalable and maintainable applications.",
+      "tags": [
+        "quality",
+        "intermediate"
+      ],
+      "estimatedTime": 90,
+      "questionType": "multiple-choice"
+    },
+    {
+      "id": "performance-optimization-q11",
+      "question": "When should you use Performance in development?",
+      "topic": "Optimization",
+      "difficulty": "Beginner",
+      "choices": [
+        "Option A - Placeholder answer",
+        "Option B - Placeholder answer",
+        "Option C - Placeholder answer",
+        "Option D - Placeholder answer"
+      ],
+      "correctIndex": 0,
+      "explanation": "This question tests understanding of Performance concepts. The correct answer demonstrates proper implementation of Performance Optimization principles. Review the lesson materials for detailed explanations of these concepts.",
+      "industryContext": "In professional development, understanding Performance is crucial for building scalable and maintainable applications.",
+      "tags": [
+        "quality",
+        "beginner"
+      ],
+      "estimatedTime": 90,
+      "questionType": "multiple-choice"
+    },
+    {
+      "id": "performance-optimization-q12",
+      "question": "What is the primary purpose of Performance?",
+      "topic": "Performance",
+      "difficulty": "Beginner",
+      "choices": [
+        "Option A - Placeholder answer",
+        "Option B - Placeholder answer",
+        "Option C - Placeholder answer",
+        "Option D - Placeholder answer"
+      ],
+      "correctIndex": 0,
+      "explanation": "This question tests understanding of Performance concepts. The correct answer demonstrates proper implementation of Performance Optimization principles. Review the lesson materials for detailed explanations of these concepts.",
+      "industryContext": "In professional development, understanding Performance is crucial for building scalable and maintainable applications.",
+      "tags": [
+        "quality",
+        "beginner"
+      ],
+      "estimatedTime": 90,
+      "questionType": "multiple-choice"
+    },
+    {
+      "id": "performance-optimization-q13",
+      "question": "What are the performance considerations when using Performance?",
+      "topic": "Profiling",
+      "difficulty": "Intermediate",
+      "choices": [
+        "Option A - Placeholder answer",
+        "Option B - Placeholder answer",
+        "Option C - Placeholder answer",
+        "Option D - Placeholder answer"
+      ],
+      "correctIndex": 0,
+      "explanation": "This question tests understanding of Performance concepts. The correct answer demonstrates proper implementation of Performance Optimization principles. Review the lesson materials for detailed explanations of these concepts.",
+      "industryContext": "In professional development, understanding Performance is crucial for building scalable and maintainable applications.",
+      "tags": [
+        "quality",
+        "intermediate"
+      ],
+      "estimatedTime": 90,
+      "questionType": "multiple-choice"
+    },
+    {
+      "id": "performance-optimization-q14",
+      "question": "How do you troubleshoot complex Performance issues?",
+      "topic": "Optimization",
+      "difficulty": "Advanced",
+      "choices": [
+        "Option A - Placeholder answer",
+        "Option B - Placeholder answer",
+        "Option C - Placeholder answer",
+        "Option D - Placeholder answer"
+      ],
+      "correctIndex": 0,
+      "explanation": "This question tests understanding of Performance concepts. The correct answer demonstrates proper implementation of Performance Optimization principles. Review the lesson materials for detailed explanations of these concepts.",
+      "industryContext": "In professional development, understanding Performance is crucial for building scalable and maintainable applications.",
+      "tags": [
+        "quality",
+        "advanced"
+      ],
+      "estimatedTime": 90,
+      "questionType": "multiple-choice"
+    },
+    {
+      "id": "performance-optimization-q15",
+      "question": "What is the primary purpose of Performance?",
+      "topic": "Performance",
+      "difficulty": "Beginner",
+      "choices": [
+        "Option A - Placeholder answer",
+        "Option B - Placeholder answer",
+        "Option C - Placeholder answer",
+        "Option D - Placeholder answer"
+      ],
+      "correctIndex": 0,
+      "explanation": "This question tests understanding of Performance concepts. The correct answer demonstrates proper implementation of Performance Optimization principles. Review the lesson materials for detailed explanations of these concepts.",
+      "industryContext": "In professional development, understanding Performance is crucial for building scalable and maintainable applications.",
+      "tags": [
+        "quality",
+        "beginner"
+      ],
+      "estimatedTime": 90,
+      "questionType": "multiple-choice"
+    },
+    {
+      "id": "performance-optimization-q16",
+      "question": "What are the performance considerations when using Performance?",
+      "topic": "Profiling",
+      "difficulty": "Intermediate",
+      "choices": [
+        "Option A - Placeholder answer",
+        "Option B - Placeholder answer",
+        "Option C - Placeholder answer",
+        "Option D - Placeholder answer"
+      ],
+      "correctIndex": 0,
+      "explanation": "This question tests understanding of Performance concepts. The correct answer demonstrates proper implementation of Performance Optimization principles. Review the lesson materials for detailed explanations of these concepts.",
+      "industryContext": "In professional development, understanding Performance is crucial for building scalable and maintainable applications.",
+      "tags": [
+        "quality",
+        "intermediate"
+      ],
+      "estimatedTime": 90,
+      "questionType": "multiple-choice"
+    }
+  ],
+  "metadata": {
+    "difficulty": "Advanced",
+    "estimatedTime": "24 minutes",
+    "topics": [
+      "Performance",
+      "Profiling",
+      "Optimization"
+    ],
+    "lastUpdated": "2025-10-01T06:42:16.317Z",
+    "version": "1.0.0"
+  }
+}

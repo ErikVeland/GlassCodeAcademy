@@ -1,0 +1,62 @@
+<% include('layouts/main') %>
+
+<div class="max-w-4xl mx-auto">
+    <nav class="mb-6 text-sm text-gray-500">
+        <a href="/lessons">Lessons</a> / 
+        <span><%= lesson.topic %></span> / 
+        <span class="text-gray-900"><%= lesson.title %></span>
+    </nav>
+    
+    <div class="bg-white rounded-lg shadow-md p-6 mb-8">
+        <div class="flex justify-between items-start mb-4">
+            <h1 class="text-3xl font-bold text-gray-900"><%= lesson.title %></h1>
+            <span class="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-medium">
+                <%= lesson.topic %>
+            </span>
+        </div>
+        
+        <p class="text-gray-600 mb-6"><%= lesson.description %></p>
+        
+        <div class="prose max-w-none mb-8">
+            <p class="mb-4"><%= lesson.content %></p>
+        </div>
+        
+        <div class="border border-gray-200 rounded-lg overflow-hidden mb-6">
+            <div class="bg-gray-800 text-gray-200 px-4 py-2 flex justify-between items-center">
+                <span class="text-sm font-medium">Example Code</span>
+                <button 
+                    onclick="copyCode()"
+                    class="text-sm bg-gray-700 hover:bg-gray-600 px-3 py-1 rounded"
+                >
+                    Copy
+                </button>
+            </div>
+            <pre class="bg-gray-50 p-4 overflow-x-auto"><code class="language-js text-sm"><%= lesson.codeExample %></code></pre>
+            
+            <% if (lesson.output) { %>
+                <div class="border-t border-gray-200">
+                    <div class="bg-gray-100 px-4 py-2">
+                        <span class="text-sm font-medium text-gray-700">Output</span>
+                    </div>
+                    <pre class="bg-white p-4 border-l-4 border-blue-500"><code class="text-sm"><%= lesson.output %></code></pre>
+                </div>
+            <% } %>
+        </div>
+        
+        <div class="flex justify-between mt-8">
+            <button class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-medium py-2 px-4 rounded-lg">
+                ← Previous Lesson
+            </button>
+            <button class="bg-blue-500 hover:bg-blue-600 text-white font-medium py-2 px-4 rounded-lg">
+                Next Lesson →
+            </button>
+        </div>
+    </div>
+</div>
+
+<script>
+function copyCode() {
+    // In a real implementation, this would copy the code to clipboard
+    alert('Code copied to clipboard!');
+}
+</script>

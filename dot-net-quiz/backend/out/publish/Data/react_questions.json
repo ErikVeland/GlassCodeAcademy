@@ -1,0 +1,104 @@
+[
+  {
+    "id": 1,
+    "topic": "Components",
+    "type": "multiple-choice",
+    "question": "What is the correct way to create a React component?",
+    "choices": [
+      "function MyComponent() { return <div>Hello</div>; }",
+      "class MyComponent { render() { return <div>Hello</div>; } }",
+      "MyComponent() => { return <div>Hello</div>; }",
+      "const MyComponent = { <div>Hello</div> }"
+    ],
+    "correctAnswer": 0,
+    "explanation": "In modern React, functional components are the preferred way to create components. They are simpler and can use hooks for state and side effects."
+  },
+  {
+    "id": 2,
+    "topic": "Components",
+    "type": "multiple-choice",
+    "question": "How do you pass data to a React component?",
+    "choices": [
+      "Using props",
+      "Using state",
+      "Using context",
+      "Using refs"
+    ],
+    "correctAnswer": 0,
+    "explanation": "Props are used to pass data from a parent component to a child component in React."
+  },
+  {
+    "id": 3,
+    "topic": "Hooks",
+    "type": "open-ended",
+    "question": "What are React Hooks and why were they introduced?",
+    "choices": null,
+    "correctAnswer": null,
+    "explanation": "React Hooks are functions that let you 'hook into' React state and lifecycle features from function components. They were introduced to allow using state and other React features without writing a class, making components simpler and easier to reuse."
+  },
+  {
+    "id": 4,
+    "topic": "Hooks",
+    "type": "multiple-choice",
+    "question": "Which hook is used to manage state in a functional component?",
+    "choices": [
+      "useState",
+      "useEffect",
+      "useContext",
+      "useReducer"
+    ],
+    "correctAnswer": 0,
+    "explanation": "The useState hook is used to add state to functional components in React."
+  },
+  {
+    "id": 5,
+    "topic": "Context",
+    "type": "multiple-choice",
+    "question": "What is the purpose of React Context?",
+    "choices": [
+      "To share data between components without prop drilling",
+      "To manage component state",
+      "To handle side effects",
+      "To optimize component performance"
+    ],
+    "correctAnswer": 0,
+    "explanation": "React Context provides a way to pass data through the component tree without having to pass props down manually at every level."
+  },
+  {
+    "id": 6,
+    "topic": "Lifecycle",
+    "type": "multiple-choice",
+    "question": "Which method is called after a component is rendered for the first time?",
+    "choices": [
+      "componentDidMount",
+      "componentDidUpdate",
+      "componentWillUnmount",
+      "render"
+    ],
+    "correctAnswer": 0,
+    "explanation": "componentDidMount is called immediately after a component is mounted (inserted into the tree)."
+  },
+  {
+    "id": 7,
+    "topic": "Rendering",
+    "type": "open-ended",
+    "question": "What is the virtual DOM and how does it improve React performance?",
+    "choices": null,
+    "correctAnswer": null,
+    "explanation": "The virtual DOM is a lightweight JavaScript representation of the actual DOM. React uses it to optimize updates by comparing the virtual DOM with the real DOM and only updating the parts that have changed, reducing expensive DOM operations."
+  },
+  {
+    "id": 8,
+    "topic": "State",
+    "type": "multiple-choice",
+    "question": "How do you update state in a functional component?",
+    "choices": [
+      "Using the setter function returned by useState",
+      "Directly modifying the state variable",
+      "Using this.setState",
+      "Using forceUpdate"
+    ],
+    "correctAnswer": 0,
+    "explanation": "When using useState, you get a state variable and a setter function. You must use the setter function to update state."
+  }
+]

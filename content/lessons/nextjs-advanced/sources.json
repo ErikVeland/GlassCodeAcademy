@@ -1,0 +1,29 @@
+{
+  "module": "nextjs-advanced",
+  "sources": [
+    {
+      "title": "Next.js Official Documentation",
+      "url": "https://nextjs.org/docs"
+    },
+    {
+      "title": "Next.js GitHub Repository",
+      "url": "https://github.com/vercel/next.js"
+    },
+    {
+      "title": "Next.js Examples",
+      "url": "https://github.com/vercel/next.js/tree/canary/examples"
+    },
+    {
+      "title": "Next.js Blog",
+      "url": "https://nextjs.org/blog"
+    },
+    {
+      "title": "Next.js Learn Course",
+      "url": "https://nextjs.org/learn"
+    },
+    {
+      "title": "Next.js API Routes Documentation",
+      "url": "https://nextjs.org/docs/api-routes/introduction"
+    }
+  ]
+}

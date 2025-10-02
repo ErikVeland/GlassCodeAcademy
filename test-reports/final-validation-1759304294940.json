@@ -1,0 +1,76 @@
+{
+  "timestamp": "2025-10-01T07:38:14.925Z",
+  "totalModules": 18,
+  "validModules": 13,
+  "totalLessons": 237,
+  "validLessons": 177,
+  "totalQuizzes": 320,
+  "validQuizzes": 270,
+  "issues": [
+    {
+      "severity": "medium",
+      "type": "lesson-count",
+      "message": "Module database-systems: Only 12 lessons (requires 16)",
+      "timestamp": "2025-10-01T07:38:14.934Z"
+    },
+    {
+      "severity": "medium",
+      "type": "quiz-count",
+      "message": "Module database-systems: Only 15 quiz questions (requires 22)",
+      "timestamp": "2025-10-01T07:38:14.934Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-count",
+      "message": "Module laravel-fundamentals: Only 12 lessons (requires 16)",
+      "timestamp": "2025-10-01T07:38:14.936Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-count",
+      "message": "Module nextjs-advanced: Only 12 lessons (requires 14)",
+      "timestamp": "2025-10-01T07:38:14.937Z"
+    },
+    {
+      "severity": "medium",
+      "type": "quiz-count",
+      "message": "Module nextjs-advanced: Only 5 quiz questions (requires 18)",
+      "timestamp": "2025-10-01T07:38:14.937Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-count",
+      "message": "Module vue-advanced: Only 12 lessons (requires 14)",
+      "timestamp": "2025-10-01T07:38:14.938Z"
+    },
+    {
+      "severity": "medium",
+      "type": "quiz-count",
+      "message": "Module vue-advanced: Only 15 quiz questions (requires 18)",
+      "timestamp": "2025-10-01T07:38:14.938Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-count",
+      "message": "Module testing-fundamentals: Only 12 lessons (requires 14)",
+      "timestamp": "2025-10-01T07:38:14.939Z"
+    },
+    {
+      "severity": "medium",
+      "type": "quiz-count",
+      "message": "Module testing-fundamentals: Only 15 quiz questions (requires 18)",
+      "timestamp": "2025-10-01T07:38:14.939Z"
+    }
+  ],
+  "warnings": [],
+  "summary": {
+    "overallCompliance": 77,
+    "readyForProduction": false,
+    "criticalIssues": 0,
+    "recommendations": [
+      "🟡 Improve content quality to reach 90%+ compliance",
+      "📚 Add more lessons to modules below threshold",
+      "❓ Add more quiz questions to meet minimum requirements"
+    ]
+  }
+}

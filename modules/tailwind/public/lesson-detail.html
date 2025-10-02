@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Utility-First Fundamentals - Fullstack Academy</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#3B82F6',
+                        secondary: '#10B981',
+                        accent: '#8B5CF6',
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                },
+            },
+        }
+    </script>
+</head>
+<body class="bg-gray-50 font-sans">
+    <header class="bg-indigo-500 text-white shadow-md">
+        <div class="container mx-auto px-4 py-4">
+            <div class="flex justify-between items-center">
+                <a href="/" class="text-2xl font-bold">Tailwind CSS Learning Module</a>
+                <nav>
+                    <ul class="flex space-x-6">
+                        <li><a href="/" class="hover:text-indigo-200">Home</a></li>
+                        <li><a href="lessons.html" class="hover:text-indigo-200">Lessons</a></li>
+                        <li><a href="quiz.html" class="hover:text-indigo-200">Quiz</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </header>
+    
+    <main class="container mx-auto px-4 py-8">
+        <div class="max-w-4xl mx-auto">
+            <nav class="mb-6 text-sm text-gray-500">
+                <a href="lessons.html">Lessons</a> / 
+                <span>Basics</span> / 
+                <span class="text-gray-900">Utility-First Fundamentals</span>
+            </nav>
+            
+            <div class="bg-white rounded-lg shadow-md p-6 mb-8">
+                <div class="flex justify-between items-start mb-4">
+                    <h1 class="text-3xl font-bold text-gray-900">Utility-First Fundamentals</h1>
+                    <span class="bg-indigo-100 text-indigo-800 px-3 py-1 rounded-full text-sm font-medium">
+                        Basics
+                    </span>
+                </div>
+                
+                <p class="text-gray-600 mb-6">Learn the core concepts of utility-first CSS with Tailwind.</p>
+                
+                <div class="prose max-w-none mb-8">
+                    <p class="mb-4">Traditional CSS frameworks like Bootstrap provide pre-designed components that you can use directly in your HTML. Tailwind takes a different approach by providing low-level utility classes that you can compose to build any design, without ever writing a line of custom CSS.</p>
+                    
+                    <p class="mb-4">Key benefits of utility-first CSS:</p>
+                    <ol class="list-decimal list-inside mb-4">
+                        <li>You don't need to write custom CSS</li>
+                        <li>Your CSS stops growing</li>
+                        <li>Easy to maintain and refactor</li>
+                        <li>Custom designs without fighting a framework</li>
+                        <li>Everything is reusable</li>
+                    </ol>
+                </div>
+                
+                <div class="border border-gray-200 rounded-lg overflow-hidden mb-6">
+                    <div class="bg-gray-800 text-gray-200 px-4 py-2 flex justify-between items-center">
+                        <span class="text-sm font-medium">Example Code</span>
+                        <button 
+                            onclick="copyCode()"
+                            class="text-sm bg-gray-700 hover:bg-gray-600 px-3 py-1 rounded"
+                        >
+                            Copy
+                        </button>
+                    </div>
+                    <pre class="bg-gray-50 p-4 overflow-x-auto"><code class="language-html text-sm">&lt;!-- Instead of writing custom CSS --&gt;
+&lt;div class="chat-notification"&gt;
+  &lt;div class="chat-notification-logo-wrapper"&gt;
+    &lt;img class="chat-notification-logo" src="/img/logo.svg" alt="ChitChat Logo"&gt;
+  &lt;/div&gt;
+  &lt;div class="chat-notification-content"&gt;
+    &lt;h4 class="chat-notification-title"&gt;ChitChat&lt;/h4&gt;
+    &lt;p class="chat-notification-message"&gt;You have a new message!&lt;/p&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+
+&lt;!-- You write utility classes directly in your HTML --&gt;
+&lt;div class="p-6 max-w-sm mx-auto bg-white rounded-xl shadow-lg flex items-center space-x-4"&gt;
+  &lt;div class="shrink-0"&gt;
+    &lt;img class="h-12 w-12" src="/img/logo.svg" alt="ChitChat Logo"&gt;
+  &lt;/div&gt;
+  &lt;div&gt;
+    &lt;div class="text-xl font-medium text-black"&gt;ChitChat&lt;/div&gt;
+    &lt;p class="text-gray-500"&gt;You have a new message!&lt;/p&gt;
+  &lt;/div&gt;
+&lt;/div&gt;</code></pre>
+                </div>
+                
+                <div class="flex justify-between mt-8">
+                    <button class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-medium py-2 px-4 rounded-lg">
+                        ← Previous Lesson
+                    </button>
+                    <button class="bg-indigo-500 hover:bg-indigo-600 text-white font-medium py-2 px-4 rounded-lg">
+                        Next Lesson →
+                    </button>
+                </div>
+            </div>
+        </div>
+    </main>
+    
+    <footer class="bg-white border-t border-gray-200 mt-12">
+        <div class="container mx-auto px-4 py-6">
+            <div class="text-center text-gray-600">
+                <p>Tailwind CSS Learning Module &copy; <span id="current-year"></span> Fullstack Academy</p>
+            </div>
+        </div>
+    </footer>
+    
+    <script>
+        document.getElementById('current-year').textContent = new Date().getFullYear();
+        
+        function copyCode() {
+            // In a real implementation, this would copy the code to clipboard
+            alert('Code copied to clipboard!');
+        }
+    </script>
+</body>
+</html>

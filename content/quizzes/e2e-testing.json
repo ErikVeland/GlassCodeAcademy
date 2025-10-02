@@ -1,0 +1,336 @@
+{
+  "moduleSlug": "e2e-testing",
+  "title": "End-to-End Testing Assessment",
+  "description": "Comprehensive quiz covering key concepts from the End-to-End Testing module",
+  "totalQuestions": 15,
+  "passingScore": 70,
+  "timeLimit": 30,
+  "questions": [
+    {
+      "id": "e2e-testing-q1",
+      "question": "What is the primary advantage of end-to-end testing over unit testing?",
+      "topic": "E2E Testing",
+      "difficulty": "Beginner",
+      "choices": [
+        "Tests complete user workflows from UI to database",
+        "Runs faster than unit tests",
+        "Easier to write and maintain",
+        "Provides better code coverage metrics"
+      ],
+      "correctIndex": 0,
+      "explanation": "E2E testing validates complete user workflows by testing the entire application stack from frontend to backend, catching integration issues that unit tests miss. While E2E tests are slower and more complex, they provide high confidence that features work correctly for users.",
+      "industryContext": "E2E tests are crucial for validating critical user journeys in production applications, ensuring all components work together correctly in real-world scenarios.",
+      "tags": [
+        "quality",
+        "beginner"
+      ],
+      "questionType": "multiple-choice",
+      "estimatedTime": 90
+    },
+    {
+      "id": "e2e-testing-q2",
+      "question": "Which Cypress command is used to visit a page and wait for it to load?",
+      "topic": "Cypress",
+      "difficulty": "Beginner",
+      "choices": [
+        "cy.visit('/page')",
+        "cy.goto('/page')",
+        "cy.navigate('/page')",
+        "cy.open('/page')"
+      ],
+      "correctIndex": 0,
+      "explanation": "'cy.visit()' is the Cypress command to navigate to a URL. It automatically waits for the page to load and handles many common loading scenarios, making it the standard way to start E2E tests.",
+      "industryContext": "Cypress's automatic waiting features eliminate many flaky test issues common in other testing tools, making tests more reliable and maintainable.",
+      "tags": [
+        "quality",
+        "beginner"
+      ],
+      "questionType": "multiple-choice",
+      "estimatedTime": 90
+    },
+    {
+      "id": "e2e-testing-q3",
+      "question": "What is the recommended selector strategy for reliable E2E tests?",
+      "topic": "E2E Testing",
+      "difficulty": "Intermediate",
+      "choices": [
+        "Use data-testid attributes specifically for testing",
+        "Use CSS class names from styling",
+        "Use text content that might change",
+        "Use complex CSS selectors with multiple levels"
+      ],
+      "correctIndex": 0,
+      "explanation": "data-testid attributes are the most reliable selectors because they're specifically designed for testing and won't change when styling or content updates. This makes tests more stable and maintainable over time.",
+      "industryContext": "Stable selectors are crucial for reducing test maintenance overhead in fast-moving development environments where UI changes frequently.",
+      "tags": [
+        "quality",
+        "intermediate"
+      ],
+      "questionType": "multiple-choice",
+      "estimatedTime": 90
+    },
+    {
+      "id": "e2e-testing-q4",
+      "question": "Which browsers does Playwright support out of the box?",
+      "topic": "Playwright",
+      "difficulty": "Beginner",
+      "choices": [
+        "Chromium, Firefox, and WebKit (Safari)",
+        "Only Chrome and Firefox",
+        "Only Chromium-based browsers",
+        "All browsers including Internet Explorer"
+      ],
+      "correctIndex": 0,
+      "explanation": "Playwright supports Chromium, Firefox, and WebKit (Safari) browsers with a single API, enabling comprehensive cross-browser testing to ensure applications work consistently across different browsers.",
+      "industryContext": "Cross-browser testing is essential for web applications as users access sites from various browsers, each with different rendering engines and JavaScript implementations.",
+      "tags": [
+        "quality",
+        "beginner"
+      ],
+      "questionType": "multiple-choice",
+      "estimatedTime": 90
+    },
+    {
+      "id": "e2e-testing-q5",
+      "question": "What should you do when an E2E test fails intermittently?",
+      "topic": "E2E Testing",
+      "difficulty": "Intermediate",
+      "choices": [
+        "Investigate timing issues and improve wait conditions",
+        "Just increase the number of retries",
+        "Ignore it if it passes most of the time",
+        "Rewrite it as a unit test instead"
+      ],
+      "correctIndex": 0,
+      "explanation": "Intermittent failures often indicate timing issues, race conditions, or inadequate wait conditions. Investigating and fixing the root cause makes tests more reliable than simply adding retries, which mask underlying problems.",
+      "industryContext": "Flaky tests reduce confidence in test suites and can hide real bugs. Investing time to make tests reliable pays off in reduced maintenance and increased trust in the test results.",
+      "tags": [
+        "quality",
+        "intermediate"
+      ],
+      "questionType": "multiple-choice",
+      "estimatedTime": 90
+    },
+    {
+      "id": "e2e-testing-q6",
+      "question": "What is the primary purpose of Cypress?",
+      "topic": "Cypress",
+      "difficulty": "Beginner",
+      "choices": [
+        "Option A - Placeholder answer",
+        "Option B - Placeholder answer",
+        "Option C - Placeholder answer",
+        "Option D - Placeholder answer"
+      ],
+      "correctIndex": 0,
+      "explanation": "This question tests understanding of Cypress concepts. The correct answer demonstrates proper implementation of End-to-End Testing principles. Review the lesson materials for detailed explanations of these concepts.",
+      "industryContext": "In professional development, understanding Cypress is crucial for building scalable and maintainable applications.",
+      "tags": [
+        "quality",
+        "beginner"
+      ],
+      "questionType": "multiple-choice",
+      "estimatedTime": 90
+    },
+    {
+      "id": "e2e-testing-q7",
+      "question": "What are the performance considerations when using Cypress?",
+      "topic": "Playwright",
+      "difficulty": "Intermediate",
+      "choices": [
+        "Option A - Placeholder answer",
+        "Option B - Placeholder answer",
+        "Option C - Placeholder answer",
+        "Option D - Placeholder answer"
+      ],
+      "correctIndex": 0,
+      "explanation": "This question tests understanding of Cypress concepts. The correct answer demonstrates proper implementation of End-to-End Testing principles. Review the lesson materials for detailed explanations of these concepts.",
+      "industryContext": "In professional development, understanding Cypress is crucial for building scalable and maintainable applications.",
+      "tags": [
+        "quality",
+        "intermediate"
+      ],
+      "questionType": "multiple-choice",
+      "estimatedTime": 90
+    },
+    {
+      "id": "e2e-testing-q8",
+      "question": "When should you use Cypress in development?",
+      "topic": "E2E Testing",
+      "difficulty": "Beginner",
+      "choices": [
+        "Option A - Placeholder answer",
+        "Option B - Placeholder answer",
+        "Option C - Placeholder answer",
+        "Option D - Placeholder answer"
+      ],
+      "correctIndex": 0,
+      "explanation": "This question tests understanding of Cypress concepts. The correct answer demonstrates proper implementation of End-to-End Testing principles. Review the lesson materials for detailed explanations of these concepts.",
+      "industryContext": "In professional development, understanding Cypress is crucial for building scalable and maintainable applications.",
+      "tags": [
+        "quality",
+        "beginner"
+      ],
+      "questionType": "multiple-choice",
+      "estimatedTime": 90
+    },
+    {
+      "id": "e2e-testing-q9",
+      "question": "What is the primary purpose of Cypress?",
+      "topic": "Cypress",
+      "difficulty": "Beginner",
+      "choices": [
+        "Option A - Placeholder answer",
+        "Option B - Placeholder answer",
+        "Option C - Placeholder answer",
+        "Option D - Placeholder answer"
+      ],
+      "correctIndex": 0,
+      "explanation": "This question tests understanding of Cypress concepts. The correct answer demonstrates proper implementation of End-to-End Testing principles. Review the lesson materials for detailed explanations of these concepts.",
+      "industryContext": "In professional development, understanding Cypress is crucial for building scalable and maintainable applications.",
+      "tags": [
+        "quality",
+        "beginner"
+      ],
+      "questionType": "multiple-choice",
+      "estimatedTime": 90
+    },
+    {
+      "id": "e2e-testing-q10",
+      "question": "Which of the following is a key feature of End-to-End Testing?",
+      "topic": "Playwright",
+      "difficulty": "Beginner",
+      "choices": [
+        "Option A - Placeholder answer",
+        "Option B - Placeholder answer",
+        "Option C - Placeholder answer",
+        "Option D - Placeholder answer"
+      ],
+      "correctIndex": 0,
+      "explanation": "This question tests understanding of Cypress concepts. The correct answer demonstrates proper implementation of End-to-End Testing principles. Review the lesson materials for detailed explanations of these concepts.",
+      "industryContext": "In professional development, understanding Cypress is crucial for building scalable and maintainable applications.",
+      "tags": [
+        "quality",
+        "beginner"
+      ],
+      "questionType": "multiple-choice",
+      "estimatedTime": 90
+    },
+    {
+      "id": "e2e-testing-q11",
+      "question": "Which pattern is most effective for Cypress architecture?",
+      "topic": "E2E Testing",
+      "difficulty": "Intermediate",
+      "choices": [
+        "Option A - Placeholder answer",
+        "Option B - Placeholder answer",
+        "Option C - Placeholder answer",
+        "Option D - Placeholder answer"
+      ],
+      "correctIndex": 0,
+      "explanation": "This question tests understanding of Cypress concepts. The correct answer demonstrates proper implementation of End-to-End Testing principles. Review the lesson materials for detailed explanations of these concepts.",
+      "industryContext": "In professional development, understanding Cypress is crucial for building scalable and maintainable applications.",
+      "tags": [
+        "quality",
+        "intermediate"
+      ],
+      "questionType": "multiple-choice",
+      "estimatedTime": 90
+    },
+    {
+      "id": "e2e-testing-q12",
+      "question": "How do you implement Cypress in a production environment?",
+      "topic": "Cypress",
+      "difficulty": "Intermediate",
+      "choices": [
+        "Option A - Placeholder answer",
+        "Option B - Placeholder answer",
+        "Option C - Placeholder answer",
+        "Option D - Placeholder answer"
+      ],
+      "correctIndex": 0,
+      "explanation": "This question tests understanding of Cypress concepts. The correct answer demonstrates proper implementation of End-to-End Testing principles. Review the lesson materials for detailed explanations of these concepts.",
+      "industryContext": "In professional development, understanding Cypress is crucial for building scalable and maintainable applications.",
+      "tags": [
+        "quality",
+        "intermediate"
+      ],
+      "questionType": "multiple-choice",
+      "estimatedTime": 90
+    },
+    {
+      "id": "e2e-testing-q13",
+      "question": "What are the trade-offs between different Cypress approaches?",
+      "topic": "Playwright",
+      "difficulty": "Advanced",
+      "choices": [
+        "Option A - Placeholder answer",
+        "Option B - Placeholder answer",
+        "Option C - Placeholder answer",
+        "Option D - Placeholder answer"
+      ],
+      "correctIndex": 0,
+      "explanation": "This question tests understanding of Cypress concepts. The correct answer demonstrates proper implementation of End-to-End Testing principles. Review the lesson materials for detailed explanations of these concepts.",
+      "industryContext": "In professional development, understanding Cypress is crucial for building scalable and maintainable applications.",
+      "tags": [
+        "quality",
+        "advanced"
+      ],
+      "questionType": "multiple-choice",
+      "estimatedTime": 90
+    },
+    {
+      "id": "e2e-testing-q14",
+      "question": "Which pattern is most effective for Cypress architecture?",
+      "topic": "E2E Testing",
+      "difficulty": "Intermediate",
+      "choices": [
+        "Option A - Placeholder answer",
+        "Option B - Placeholder answer",
+        "Option C - Placeholder answer",
+        "Option D - Placeholder answer"
+      ],
+      "correctIndex": 0,
+      "explanation": "This question tests understanding of Cypress concepts. The correct answer demonstrates proper implementation of End-to-End Testing principles. Review the lesson materials for detailed explanations of these concepts.",
+      "industryContext": "In professional development, understanding Cypress is crucial for building scalable and maintainable applications.",
+      "tags": [
+        "quality",
+        "intermediate"
+      ],
+      "questionType": "multiple-choice",
+      "estimatedTime": 90
+    },
+    {
+      "id": "e2e-testing-q15",
+      "question": "How do you implement Cypress in a production environment?",
+      "topic": "Cypress",
+      "difficulty": "Intermediate",
+      "choices": [
+        "Option A - Placeholder answer",
+        "Option B - Placeholder answer",
+        "Option C - Placeholder answer",
+        "Option D - Placeholder answer"
+      ],
+      "correctIndex": 0,
+      "explanation": "This question tests understanding of Cypress concepts. The correct answer demonstrates proper implementation of End-to-End Testing principles. Review the lesson materials for detailed explanations of these concepts.",
+      "industryContext": "In professional development, understanding Cypress is crucial for building scalable and maintainable applications.",
+      "tags": [
+        "quality",
+        "intermediate"
+      ],
+      "questionType": "multiple-choice",
+      "estimatedTime": 90
+    }
+  ],
+  "metadata": {
+    "difficulty": "Advanced",
+    "estimatedTime": "23 minutes",
+    "topics": [
+      "Cypress",
+      "Playwright",
+      "E2E Testing"
+    ],
+    "lastUpdated": "2025-10-01T06:42:16.317Z",
+    "version": "1.0.0"
+  }
+}

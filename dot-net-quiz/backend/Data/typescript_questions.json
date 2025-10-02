@@ -1,0 +1,167 @@
+[
+  {
+    "id": 1,
+    "topic": "Basic Types",
+    "type": "multiple-choice",
+    "question": "How do you define a variable with an explicit type annotation in TypeScript?",
+    "choices": [
+      "let myVar: string = \"hello\"",
+      "let myVar string = \"hello\"",
+      "let myVar = string \"hello\"",
+      "let myVar := string = \"hello\""
+    ],
+    "correctAnswer": 0,
+    "explanation": "In TypeScript, type annotations are specified using a colon (:) after the variable name, followed by the type. This provides compile-time type checking and better tooling support."
+  },
+  {
+    "id": 2,
+    "topic": "Basic Types",
+    "type": "multiple-choice",
+    "question": "Which of the following is the correct way to define an array of strings?",
+    "choices": [
+      "let arr: string[] = ['a', 'b', 'c']",
+      "let arr: Array<string> = ['a', 'b', 'c']",
+      "Both A and B",
+      "let arr: [string] = ['a', 'b', 'c']"
+    ],
+    "correctAnswer": 2,
+    "explanation": "Both syntaxes are valid in TypeScript. You can use string[] (array literal syntax) or Array<string> (generic syntax) to define an array of strings. The array literal syntax is more common."
+  },
+  {
+    "id": 3,
+    "topic": "Interfaces",
+    "type": "open-ended",
+    "question": "What is the difference between an interface and a type alias in TypeScript? When would you use each?",
+    "choices": null,
+    "correctAnswer": null,
+    "explanation": "Interfaces create a new name that can be used everywhere and can be extended and implemented. Type aliases don't create a new name and cannot be extended or implemented. Use interfaces for defining object shapes and type aliases for complex types like union types. Interfaces are preferred for object shapes because they support declaration merging."
+  },
+  {
+    "id": 4,
+    "topic": "Classes",
+    "type": "multiple-choice",
+    "question": "Which access modifier makes a property or method accessible only within the same class?",
+    "choices": [
+      "private",
+      "protected",
+      "public",
+      "internal"
+    ],
+    "correctAnswer": 0,
+    "explanation": "The private access modifier restricts access to the containing class only. Protected allows access in the containing class and subclasses, while public allows access from anywhere. TypeScript also supports # syntax for truly private fields."
+  },
+  {
+    "id": 5,
+    "topic": "Generics",
+    "type": "multiple-choice",
+    "question": "What is the purpose of generics in TypeScript?",
+    "choices": [
+      "To create reusable components that work with multiple types",
+      "To enforce strict typing at runtime",
+      "To automatically convert JavaScript to TypeScript",
+      "To provide better IDE support"
+    ],
+    "correctAnswer": 0,
+    "explanation": "Generics allow you to create reusable components that work with a variety of types rather than a single type, providing type safety while maintaining flexibility. They help catch type-related errors at compile time."
+  },
+  {
+    "id": 6,
+    "topic": "Type System",
+    "type": "multiple-choice",
+    "question": "What is the difference between 'any' and 'unknown' types in TypeScript?",
+    "choices": [
+      "'any' bypasses type checking, 'unknown' requires type checking before usage",
+      "'unknown' bypasses type checking, 'any' requires type checking",
+      "Both work exactly the same way",
+      "'any' is for strings, 'unknown' is for numbers"
+    ],
+    "correctAnswer": 0,
+    "explanation": "The 'any' type bypasses all type checking, essentially opting out of type safety. The 'unknown' type is safer - it requires type checking (narrowing) before you can perform operations on it. 'unknown' is the type-safe counterpart of 'any'."
+  },
+  {
+    "id": 7,
+    "topic": "Interfaces",
+    "type": "open-ended",
+    "question": "Explain the concept of 'declaration merging' in TypeScript and when it's useful.",
+    "choices": null,
+    "correctAnswer": null,
+    "explanation": "Declaration merging allows TypeScript to combine multiple declarations with the same name into a single definition. This is particularly useful for interfaces, where multiple interface declarations with the same name are merged into one. It's commonly used to extend existing types or add properties to global objects without modifying the original definition."
+  },
+  {
+    "id": 8,
+    "topic": "Advanced Types",
+    "type": "multiple-choice",
+    "question": "What is a discriminated union in TypeScript?",
+    "choices": [
+      "A union type with a common field that can be used to narrow the type",
+      "A union of string literals",
+      "A union that can only contain primitive types",
+      "A union that discriminates against certain types"
+    ],
+    "correctAnswer": 0,
+    "explanation": "A discriminated union is a pattern where you use a union of types with a common literal type field (the discriminant) that allows TypeScript to narrow the type in switch statements or conditional checks. This provides type safety for working with variant data structures."
+  },
+  {
+    "id": 9,
+    "topic": "Advanced Types",
+    "type": "multiple-choice",
+    "question": "What is a mapped type in TypeScript?",
+    "choices": ["A type that transforms properties of another type", "A type for mapping functions", "A geographic mapping type", "A type for Map objects"],
+    "correctAnswer": 0,
+    "explanation": "Mapped types allow you to create new types by transforming properties of an existing type, such as making all properties optional with Partial<T>."
+  },
+  {
+    "id": 10,
+    "type": "multiple-choice",
+    "topic": "Utility Types",
+    "question": "What does the Pick<T, K> utility type do?",
+    "choices": ["Creates a type with selected properties from T", "Removes properties from T", "Picks random properties", "Validates property selection"],
+    "correctAnswer": 0,
+    "explanation": "Pick<T, K> constructs a type by picking the set of properties K from type T, creating a new type with only the specified properties."
+  },
+  {
+    "id": 11,
+    "topic": "Type Guards",
+    "type": "open-ended",
+    "question": "What are type predicates and how do they work?",
+    "choices": null,
+    "correctAnswer": null,
+    "explanation": "Type predicates are functions that return a boolean and use the 'is' keyword to tell TypeScript the type of a variable. They narrow types within conditional blocks, improving type safety."
+  },
+  {
+    "id": 12,
+    "topic": "Modules",
+    "type": "multiple-choice",
+    "question": "What is the difference between 'import * as' and 'import {}'?",
+    "choices": ["'import * as' imports everything as namespace, 'import {}' imports specific exports", "No difference in functionality", "'import * as' is faster", "'import {}' imports everything"],
+    "correctAnswer": 0,
+    "explanation": "'import * as name' imports all exports as a namespace object, while 'import { specific }' imports only specific named exports."
+  },
+  {
+    "id": 13,
+    "topic": "Decorators",
+    "type": "multiple-choice",
+    "question": "What are decorators in TypeScript?",
+    "choices": ["Functions that modify classes, methods, or properties", "UI design patterns", "Error handling mechanisms", "Performance optimization tools"],
+    "correctAnswer": 0,
+    "explanation": "Decorators are functions that can modify or observe classes, methods, properties, or parameters, providing meta-programming capabilities."
+  },
+  {
+    "id": 14,
+    "topic": "Conditional Types",
+    "type": "open-ended",
+    "question": "How do conditional types work in TypeScript?",
+    "choices": null,
+    "correctAnswer": null,
+    "explanation": "Conditional types use the ternary operator syntax 'T extends U ? X : Y' to select types based on conditions, enabling powerful type transformations and generic constraints."
+  },
+  {
+    "id": 15,
+    "topic": "Performance",
+    "type": "multiple-choice",
+    "question": "What is tree shaking in TypeScript projects?",
+    "choices": ["Removing unused code during bundling", "Optimizing type checking", "Cleaning up imports", "Reducing file sizes"],
+    "correctAnswer": 0,
+    "explanation": "Tree shaking eliminates unused code from the final bundle, reducing bundle size and improving performance in production applications."
+  }
+]

@@ -1,0 +1,2993 @@
+{
+  "timestamp": "2025-10-01T07:17:53.960Z",
+  "totalModules": 18,
+  "validModules": 0,
+  "totalLessons": 221,
+  "validLessons": 0,
+  "totalQuizzes": null,
+  "validQuizzes": 0,
+  "issues": [
+    {
+      "severity": "high",
+      "type": "tier-missing",
+      "message": "Missing tier definition: advanced",
+      "timestamp": "2025-10-01T07:17:53.972Z"
+    },
+    {
+      "severity": "high",
+      "type": "tier-missing",
+      "message": "Missing tier definition: professional",
+      "timestamp": "2025-10-01T07:17:53.972Z"
+    },
+    {
+      "severity": "high",
+      "type": "module-field",
+      "message": "Module programming-fundamentals: Missing field metadata",
+      "timestamp": "2025-10-01T07:17:53.972Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module programming-fundamentals, Lesson programming-fundamentals-lesson-1: Missing field content",
+      "timestamp": "2025-10-01T07:17:53.972Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module programming-fundamentals, Lesson programming-fundamentals-lesson-1: Missing field estimatedTime",
+      "timestamp": "2025-10-01T07:17:53.972Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module programming-fundamentals, Lesson programming-fundamentals-lesson-2: Missing field content",
+      "timestamp": "2025-10-01T07:17:53.972Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module programming-fundamentals, Lesson programming-fundamentals-lesson-2: Missing field estimatedTime",
+      "timestamp": "2025-10-01T07:17:53.972Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module programming-fundamentals, Lesson programming-fundamentals-lesson-3: Missing field content",
+      "timestamp": "2025-10-01T07:17:53.973Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module programming-fundamentals, Lesson programming-fundamentals-lesson-3: Missing field estimatedTime",
+      "timestamp": "2025-10-01T07:17:53.973Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module programming-fundamentals, Lesson programming-fundamentals-lesson-4: Missing field content",
+      "timestamp": "2025-10-01T07:17:53.973Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module programming-fundamentals, Lesson programming-fundamentals-lesson-4: Missing field estimatedTime",
+      "timestamp": "2025-10-01T07:17:53.973Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module programming-fundamentals, Lesson programming-fundamentals-lesson-5: Missing field content",
+      "timestamp": "2025-10-01T07:17:53.973Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module programming-fundamentals, Lesson programming-fundamentals-lesson-5: Missing field estimatedTime",
+      "timestamp": "2025-10-01T07:17:53.973Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module programming-fundamentals, Lesson programming-fundamentals-lesson-6: Missing field content",
+      "timestamp": "2025-10-01T07:17:53.973Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module programming-fundamentals, Lesson programming-fundamentals-lesson-6: Missing field estimatedTime",
+      "timestamp": "2025-10-01T07:17:53.973Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module programming-fundamentals, Lesson programming-fundamentals-lesson-7: Missing field content",
+      "timestamp": "2025-10-01T07:17:53.973Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module programming-fundamentals, Lesson programming-fundamentals-lesson-7: Missing field estimatedTime",
+      "timestamp": "2025-10-01T07:17:53.973Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module programming-fundamentals, Lesson programming-fundamentals-lesson-8: Missing field content",
+      "timestamp": "2025-10-01T07:17:53.973Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module programming-fundamentals, Lesson programming-fundamentals-lesson-8: Missing field estimatedTime",
+      "timestamp": "2025-10-01T07:17:53.973Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module programming-fundamentals, Lesson programming-fundamentals-lesson-9: Missing field content",
+      "timestamp": "2025-10-01T07:17:53.973Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module programming-fundamentals, Lesson programming-fundamentals-lesson-9: Missing field estimatedTime",
+      "timestamp": "2025-10-01T07:17:53.973Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module programming-fundamentals, Lesson programming-fundamentals-lesson-10: Missing field content",
+      "timestamp": "2025-10-01T07:17:53.973Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module programming-fundamentals, Lesson programming-fundamentals-lesson-10: Missing field estimatedTime",
+      "timestamp": "2025-10-01T07:17:53.973Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module programming-fundamentals, Lesson programming-fundamentals-lesson-11: Missing field content",
+      "timestamp": "2025-10-01T07:17:53.973Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module programming-fundamentals, Lesson programming-fundamentals-lesson-11: Missing field estimatedTime",
+      "timestamp": "2025-10-01T07:17:53.973Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module programming-fundamentals, Lesson programming-fundamentals-lesson-12: Missing field content",
+      "timestamp": "2025-10-01T07:17:53.973Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module programming-fundamentals, Lesson programming-fundamentals-lesson-12: Missing field estimatedTime",
+      "timestamp": "2025-10-01T07:17:53.974Z"
+    },
+    {
+      "severity": "critical",
+      "type": "quizzes-missing",
+      "message": "Module programming-fundamentals: Quizzes file not found",
+      "timestamp": "2025-10-01T07:17:53.974Z"
+    },
+    {
+      "severity": "high",
+      "type": "module-field",
+      "message": "Module web-fundamentals: Missing field metadata",
+      "timestamp": "2025-10-01T07:17:53.974Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module web-fundamentals, Lesson web-fundamentals-lesson-1: Missing field content",
+      "timestamp": "2025-10-01T07:17:53.975Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module web-fundamentals, Lesson web-fundamentals-lesson-1: Missing field estimatedTime",
+      "timestamp": "2025-10-01T07:17:53.975Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module web-fundamentals, Lesson web-fundamentals-lesson-2: Missing field content",
+      "timestamp": "2025-10-01T07:17:53.975Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module web-fundamentals, Lesson web-fundamentals-lesson-2: Missing field estimatedTime",
+      "timestamp": "2025-10-01T07:17:53.975Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module web-fundamentals, Lesson web-fundamentals-lesson-3: Missing field content",
+      "timestamp": "2025-10-01T07:17:53.975Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module web-fundamentals, Lesson web-fundamentals-lesson-3: Missing field estimatedTime",
+      "timestamp": "2025-10-01T07:17:53.975Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module web-fundamentals, Lesson web-fundamentals-lesson-4: Missing field content",
+      "timestamp": "2025-10-01T07:17:53.975Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module web-fundamentals, Lesson web-fundamentals-lesson-4: Missing field estimatedTime",
+      "timestamp": "2025-10-01T07:17:53.975Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module web-fundamentals, Lesson web-fundamentals-lesson-5: Missing field content",
+      "timestamp": "2025-10-01T07:17:53.975Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module web-fundamentals, Lesson web-fundamentals-lesson-5: Missing field estimatedTime",
+      "timestamp": "2025-10-01T07:17:53.975Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module web-fundamentals, Lesson web-fundamentals-lesson-6: Missing field content",
+      "timestamp": "2025-10-01T07:17:53.975Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module web-fundamentals, Lesson web-fundamentals-lesson-6: Missing field estimatedTime",
+      "timestamp": "2025-10-01T07:17:53.975Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module web-fundamentals, Lesson web-fundamentals-lesson-7: Missing field content",
+      "timestamp": "2025-10-01T07:17:53.975Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module web-fundamentals, Lesson web-fundamentals-lesson-7: Missing field estimatedTime",
+      "timestamp": "2025-10-01T07:17:53.975Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module web-fundamentals, Lesson web-fundamentals-lesson-8: Missing field content",
+      "timestamp": "2025-10-01T07:17:53.975Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module web-fundamentals, Lesson web-fundamentals-lesson-8: Missing field estimatedTime",
+      "timestamp": "2025-10-01T07:17:53.975Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module web-fundamentals, Lesson web-fundamentals-lesson-9: Missing field content",
+      "timestamp": "2025-10-01T07:17:53.975Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module web-fundamentals, Lesson web-fundamentals-lesson-9: Missing field estimatedTime",
+      "timestamp": "2025-10-01T07:17:53.975Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module web-fundamentals, Lesson web-fundamentals-lesson-10: Missing field content",
+      "timestamp": "2025-10-01T07:17:53.975Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module web-fundamentals, Lesson web-fundamentals-lesson-10: Missing field estimatedTime",
+      "timestamp": "2025-10-01T07:17:53.975Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module web-fundamentals, Lesson web-fundamentals-lesson-11: Missing field content",
+      "timestamp": "2025-10-01T07:17:53.975Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module web-fundamentals, Lesson web-fundamentals-lesson-11: Missing field estimatedTime",
+      "timestamp": "2025-10-01T07:17:53.975Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module web-fundamentals, Lesson web-fundamentals-lesson-12: Missing field content",
+      "timestamp": "2025-10-01T07:17:53.975Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module web-fundamentals, Lesson web-fundamentals-lesson-12: Missing field estimatedTime",
+      "timestamp": "2025-10-01T07:17:53.975Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module web-fundamentals, Lesson web-fundamentals-lesson-13: Missing field content",
+      "timestamp": "2025-10-01T07:17:53.975Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module web-fundamentals, Lesson web-fundamentals-lesson-13: Missing field estimatedTime",
+      "timestamp": "2025-10-01T07:17:53.975Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module web-fundamentals, Lesson web-fundamentals-lesson-14: Missing field content",
+      "timestamp": "2025-10-01T07:17:53.975Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module web-fundamentals, Lesson web-fundamentals-lesson-14: Missing field estimatedTime",
+      "timestamp": "2025-10-01T07:17:53.975Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module web-fundamentals, Lesson web-fundamentals-lesson-15: Missing field content",
+      "timestamp": "2025-10-01T07:17:53.975Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module web-fundamentals, Lesson web-fundamentals-lesson-15: Missing field estimatedTime",
+      "timestamp": "2025-10-01T07:17:53.975Z"
+    },
+    {
+      "severity": "critical",
+      "type": "quizzes-missing",
+      "message": "Module web-fundamentals: Quizzes file not found",
+      "timestamp": "2025-10-01T07:17:53.976Z"
+    },
+    {
+      "severity": "high",
+      "type": "module-field",
+      "message": "Module version-control: Missing field metadata",
+      "timestamp": "2025-10-01T07:17:53.976Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module version-control, Lesson version-control-lesson-1: Missing field content",
+      "timestamp": "2025-10-01T07:17:53.976Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module version-control, Lesson version-control-lesson-1: Missing field estimatedTime",
+      "timestamp": "2025-10-01T07:17:53.976Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module version-control, Lesson version-control-lesson-2: Missing field content",
+      "timestamp": "2025-10-01T07:17:53.976Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module version-control, Lesson version-control-lesson-2: Missing field estimatedTime",
+      "timestamp": "2025-10-01T07:17:53.976Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module version-control, Lesson version-control-lesson-3: Missing field content",
+      "timestamp": "2025-10-01T07:17:53.976Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module version-control, Lesson version-control-lesson-3: Missing field estimatedTime",
+      "timestamp": "2025-10-01T07:17:53.976Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module version-control, Lesson version-control-lesson-4: Missing field content",
+      "timestamp": "2025-10-01T07:17:53.976Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module version-control, Lesson version-control-lesson-4: Missing field estimatedTime",
+      "timestamp": "2025-10-01T07:17:53.976Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module version-control, Lesson version-control-lesson-5: Missing field content",
+      "timestamp": "2025-10-01T07:17:53.976Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module version-control, Lesson version-control-lesson-5: Missing field estimatedTime",
+      "timestamp": "2025-10-01T07:17:53.976Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module version-control, Lesson version-control-lesson-6: Missing field content",
+      "timestamp": "2025-10-01T07:17:53.976Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module version-control, Lesson version-control-lesson-6: Missing field estimatedTime",
+      "timestamp": "2025-10-01T07:17:53.976Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module version-control, Lesson version-control-lesson-7: Missing field content",
+      "timestamp": "2025-10-01T07:17:53.976Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module version-control, Lesson version-control-lesson-7: Missing field estimatedTime",
+      "timestamp": "2025-10-01T07:17:53.976Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module version-control, Lesson version-control-lesson-8: Missing field content",
+      "timestamp": "2025-10-01T07:17:53.976Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module version-control, Lesson version-control-lesson-8: Missing field estimatedTime",
+      "timestamp": "2025-10-01T07:17:53.976Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module version-control, Lesson version-control-lesson-9: Missing field content",
+      "timestamp": "2025-10-01T07:17:53.976Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module version-control, Lesson version-control-lesson-9: Missing field estimatedTime",
+      "timestamp": "2025-10-01T07:17:53.976Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module version-control, Lesson version-control-lesson-10: Missing field content",
+      "timestamp": "2025-10-01T07:17:53.976Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module version-control, Lesson version-control-lesson-10: Missing field estimatedTime",
+      "timestamp": "2025-10-01T07:17:53.976Z"
+    },
+    {
+      "severity": "critical",
+      "type": "quizzes-missing",
+      "message": "Module version-control: Quizzes file not found",
+      "timestamp": "2025-10-01T07:17:53.976Z"
+    },
+    {
+      "severity": "high",
+      "type": "module-field",
+      "message": "Module dotnet-fundamentals: Missing field metadata",
+      "timestamp": "2025-10-01T07:17:53.976Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module dotnet-fundamentals, Lesson dotnet-fundamentals-lesson-1: Missing field content",
+      "timestamp": "2025-10-01T07:17:53.977Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module dotnet-fundamentals, Lesson dotnet-fundamentals-lesson-1: Missing field estimatedTime",
+      "timestamp": "2025-10-01T07:17:53.977Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module dotnet-fundamentals, Lesson dotnet-fundamentals-lesson-2: Missing field content",
+      "timestamp": "2025-10-01T07:17:53.977Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module dotnet-fundamentals, Lesson dotnet-fundamentals-lesson-2: Missing field estimatedTime",
+      "timestamp": "2025-10-01T07:17:53.977Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module dotnet-fundamentals, Lesson dotnet-fundamentals-lesson-3: Missing field content",
+      "timestamp": "2025-10-01T07:17:53.977Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module dotnet-fundamentals, Lesson dotnet-fundamentals-lesson-3: Missing field estimatedTime",
+      "timestamp": "2025-10-01T07:17:53.977Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module dotnet-fundamentals, Lesson dotnet-fundamentals-lesson-4: Missing field content",
+      "timestamp": "2025-10-01T07:17:53.977Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module dotnet-fundamentals, Lesson dotnet-fundamentals-lesson-4: Missing field estimatedTime",
+      "timestamp": "2025-10-01T07:17:53.977Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module dotnet-fundamentals, Lesson dotnet-fundamentals-lesson-5: Missing field content",
+      "timestamp": "2025-10-01T07:17:53.977Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module dotnet-fundamentals, Lesson dotnet-fundamentals-lesson-5: Missing field estimatedTime",
+      "timestamp": "2025-10-01T07:17:53.977Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module dotnet-fundamentals, Lesson dotnet-fundamentals-lesson-6: Missing field content",
+      "timestamp": "2025-10-01T07:17:53.977Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module dotnet-fundamentals, Lesson dotnet-fundamentals-lesson-6: Missing field estimatedTime",
+      "timestamp": "2025-10-01T07:17:53.977Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module dotnet-fundamentals, Lesson dotnet-fundamentals-lesson-7: Missing field content",
+      "timestamp": "2025-10-01T07:17:53.977Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module dotnet-fundamentals, Lesson dotnet-fundamentals-lesson-7: Missing field estimatedTime",
+      "timestamp": "2025-10-01T07:17:53.977Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module dotnet-fundamentals, Lesson dotnet-fundamentals-lesson-8: Missing field content",
+      "timestamp": "2025-10-01T07:17:53.977Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module dotnet-fundamentals, Lesson dotnet-fundamentals-lesson-8: Missing field estimatedTime",
+      "timestamp": "2025-10-01T07:17:53.977Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module dotnet-fundamentals, Lesson dotnet-fundamentals-lesson-9: Missing field content",
+      "timestamp": "2025-10-01T07:17:53.977Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module dotnet-fundamentals, Lesson dotnet-fundamentals-lesson-9: Missing field estimatedTime",
+      "timestamp": "2025-10-01T07:17:53.977Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module dotnet-fundamentals, Lesson dotnet-fundamentals-lesson-10: Missing field content",
+      "timestamp": "2025-10-01T07:17:53.977Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module dotnet-fundamentals, Lesson dotnet-fundamentals-lesson-10: Missing field estimatedTime",
+      "timestamp": "2025-10-01T07:17:53.977Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module dotnet-fundamentals, Lesson dotnet-fundamentals-lesson-11: Missing field content",
+      "timestamp": "2025-10-01T07:17:53.977Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module dotnet-fundamentals, Lesson dotnet-fundamentals-lesson-11: Missing field estimatedTime",
+      "timestamp": "2025-10-01T07:17:53.977Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module dotnet-fundamentals, Lesson dotnet-fundamentals-lesson-12: Missing field content",
+      "timestamp": "2025-10-01T07:17:53.977Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module dotnet-fundamentals, Lesson dotnet-fundamentals-lesson-12: Missing field estimatedTime",
+      "timestamp": "2025-10-01T07:17:53.977Z"
+    },
+    {
+      "severity": "critical",
+      "type": "quizzes-missing",
+      "message": "Module dotnet-fundamentals: Quizzes file not found",
+      "timestamp": "2025-10-01T07:17:53.978Z"
+    },
+    {
+      "severity": "high",
+      "type": "module-field",
+      "message": "Module react-fundamentals: Missing field metadata",
+      "timestamp": "2025-10-01T07:17:53.978Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module react-fundamentals, Lesson react-fundamentals-lesson-1: Missing field content",
+      "timestamp": "2025-10-01T07:17:53.978Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module react-fundamentals, Lesson react-fundamentals-lesson-1: Missing field estimatedTime",
+      "timestamp": "2025-10-01T07:17:53.978Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module react-fundamentals, Lesson react-fundamentals-lesson-2: Missing field content",
+      "timestamp": "2025-10-01T07:17:53.978Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module react-fundamentals, Lesson react-fundamentals-lesson-2: Missing field estimatedTime",
+      "timestamp": "2025-10-01T07:17:53.978Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module react-fundamentals, Lesson react-fundamentals-lesson-3: Missing field content",
+      "timestamp": "2025-10-01T07:17:53.978Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module react-fundamentals, Lesson react-fundamentals-lesson-3: Missing field estimatedTime",
+      "timestamp": "2025-10-01T07:17:53.978Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module react-fundamentals, Lesson react-fundamentals-lesson-4: Missing field content",
+      "timestamp": "2025-10-01T07:17:53.978Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module react-fundamentals, Lesson react-fundamentals-lesson-4: Missing field estimatedTime",
+      "timestamp": "2025-10-01T07:17:53.978Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module react-fundamentals, Lesson react-fundamentals-lesson-5: Missing field content",
+      "timestamp": "2025-10-01T07:17:53.978Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module react-fundamentals, Lesson react-fundamentals-lesson-5: Missing field estimatedTime",
+      "timestamp": "2025-10-01T07:17:53.978Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module react-fundamentals, Lesson react-fundamentals-lesson-6: Missing field content",
+      "timestamp": "2025-10-01T07:17:53.978Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module react-fundamentals, Lesson react-fundamentals-lesson-6: Missing field estimatedTime",
+      "timestamp": "2025-10-01T07:17:53.978Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module react-fundamentals, Lesson react-fundamentals-lesson-7: Missing field content",
+      "timestamp": "2025-10-01T07:17:53.978Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module react-fundamentals, Lesson react-fundamentals-lesson-7: Missing field estimatedTime",
+      "timestamp": "2025-10-01T07:17:53.978Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module react-fundamentals, Lesson react-fundamentals-lesson-8: Missing field content",
+      "timestamp": "2025-10-01T07:17:53.978Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module react-fundamentals, Lesson react-fundamentals-lesson-8: Missing field estimatedTime",
+      "timestamp": "2025-10-01T07:17:53.978Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module react-fundamentals, Lesson react-fundamentals-lesson-9: Missing field content",
+      "timestamp": "2025-10-01T07:17:53.978Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module react-fundamentals, Lesson react-fundamentals-lesson-9: Missing field estimatedTime",
+      "timestamp": "2025-10-01T07:17:53.978Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module react-fundamentals, Lesson react-fundamentals-lesson-10: Missing field content",
+      "timestamp": "2025-10-01T07:17:53.978Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module react-fundamentals, Lesson react-fundamentals-lesson-10: Missing field estimatedTime",
+      "timestamp": "2025-10-01T07:17:53.978Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module react-fundamentals, Lesson react-fundamentals-lesson-11: Missing field content",
+      "timestamp": "2025-10-01T07:17:53.978Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module react-fundamentals, Lesson react-fundamentals-lesson-11: Missing field estimatedTime",
+      "timestamp": "2025-10-01T07:17:53.978Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module react-fundamentals, Lesson react-fundamentals-lesson-12: Missing field content",
+      "timestamp": "2025-10-01T07:17:53.978Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module react-fundamentals, Lesson react-fundamentals-lesson-12: Missing field estimatedTime",
+      "timestamp": "2025-10-01T07:17:53.978Z"
+    },
+    {
+      "severity": "critical",
+      "type": "quizzes-missing",
+      "message": "Module react-fundamentals: Quizzes file not found",
+      "timestamp": "2025-10-01T07:17:53.979Z"
+    },
+    {
+      "severity": "high",
+      "type": "module-field",
+      "message": "Module database-systems: Missing field metadata",
+      "timestamp": "2025-10-01T07:17:53.979Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module database-systems, Lesson database-systems-lesson-1: Missing field content",
+      "timestamp": "2025-10-01T07:17:53.979Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module database-systems, Lesson database-systems-lesson-1: Missing field estimatedTime",
+      "timestamp": "2025-10-01T07:17:53.979Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module database-systems, Lesson database-systems-lesson-2: Missing field content",
+      "timestamp": "2025-10-01T07:17:53.979Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module database-systems, Lesson database-systems-lesson-2: Missing field estimatedTime",
+      "timestamp": "2025-10-01T07:17:53.979Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module database-systems, Lesson database-systems-lesson-3: Missing field content",
+      "timestamp": "2025-10-01T07:17:53.979Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module database-systems, Lesson database-systems-lesson-3: Missing field estimatedTime",
+      "timestamp": "2025-10-01T07:17:53.979Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module database-systems, Lesson database-systems-lesson-4: Missing field content",
+      "timestamp": "2025-10-01T07:17:53.979Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module database-systems, Lesson database-systems-lesson-4: Missing field estimatedTime",
+      "timestamp": "2025-10-01T07:17:53.979Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module database-systems, Lesson database-systems-lesson-5: Missing field content",
+      "timestamp": "2025-10-01T07:17:53.979Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module database-systems, Lesson database-systems-lesson-5: Missing field estimatedTime",
+      "timestamp": "2025-10-01T07:17:53.979Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module database-systems, Lesson database-systems-lesson-6: Missing field content",
+      "timestamp": "2025-10-01T07:17:53.979Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module database-systems, Lesson database-systems-lesson-6: Missing field estimatedTime",
+      "timestamp": "2025-10-01T07:17:53.979Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module database-systems, Lesson database-systems-lesson-7: Missing field content",
+      "timestamp": "2025-10-01T07:17:53.979Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module database-systems, Lesson database-systems-lesson-7: Missing field estimatedTime",
+      "timestamp": "2025-10-01T07:17:53.979Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module database-systems, Lesson database-systems-lesson-8: Missing field content",
+      "timestamp": "2025-10-01T07:17:53.979Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module database-systems, Lesson database-systems-lesson-8: Missing field estimatedTime",
+      "timestamp": "2025-10-01T07:17:53.979Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module database-systems, Lesson database-systems-lesson-9: Missing field content",
+      "timestamp": "2025-10-01T07:17:53.979Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module database-systems, Lesson database-systems-lesson-9: Missing field estimatedTime",
+      "timestamp": "2025-10-01T07:17:53.979Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module database-systems, Lesson database-systems-lesson-10: Missing field content",
+      "timestamp": "2025-10-01T07:17:53.979Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module database-systems, Lesson database-systems-lesson-10: Missing field estimatedTime",
+      "timestamp": "2025-10-01T07:17:53.979Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module database-systems, Lesson database-systems-lesson-11: Missing field content",
+      "timestamp": "2025-10-01T07:17:53.979Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module database-systems, Lesson database-systems-lesson-11: Missing field estimatedTime",
+      "timestamp": "2025-10-01T07:17:53.980Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module database-systems, Lesson database-systems-lesson-12: Missing field content",
+      "timestamp": "2025-10-01T07:17:53.980Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module database-systems, Lesson database-systems-lesson-12: Missing field estimatedTime",
+      "timestamp": "2025-10-01T07:17:53.980Z"
+    },
+    {
+      "severity": "critical",
+      "type": "quizzes-missing",
+      "message": "Module database-systems: Quizzes file not found",
+      "timestamp": "2025-10-01T07:17:53.980Z"
+    },
+    {
+      "severity": "high",
+      "type": "module-field",
+      "message": "Module typescript-fundamentals: Missing field metadata",
+      "timestamp": "2025-10-01T07:17:53.980Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module typescript-fundamentals, Lesson typescript-fundamentals-lesson-1: Missing field content",
+      "timestamp": "2025-10-01T07:17:53.980Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module typescript-fundamentals, Lesson typescript-fundamentals-lesson-1: Missing field estimatedTime",
+      "timestamp": "2025-10-01T07:17:53.980Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module typescript-fundamentals, Lesson typescript-fundamentals-lesson-2: Missing field content",
+      "timestamp": "2025-10-01T07:17:53.980Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module typescript-fundamentals, Lesson typescript-fundamentals-lesson-2: Missing field estimatedTime",
+      "timestamp": "2025-10-01T07:17:53.980Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module typescript-fundamentals, Lesson typescript-fundamentals-lesson-3: Missing field content",
+      "timestamp": "2025-10-01T07:17:53.981Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module typescript-fundamentals, Lesson typescript-fundamentals-lesson-3: Missing field estimatedTime",
+      "timestamp": "2025-10-01T07:17:53.981Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module typescript-fundamentals, Lesson typescript-fundamentals-lesson-4: Missing field content",
+      "timestamp": "2025-10-01T07:17:53.981Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module typescript-fundamentals, Lesson typescript-fundamentals-lesson-4: Missing field estimatedTime",
+      "timestamp": "2025-10-01T07:17:53.981Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module typescript-fundamentals, Lesson typescript-fundamentals-lesson-5: Missing field content",
+      "timestamp": "2025-10-01T07:17:53.981Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module typescript-fundamentals, Lesson typescript-fundamentals-lesson-5: Missing field estimatedTime",
+      "timestamp": "2025-10-01T07:17:53.981Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module typescript-fundamentals, Lesson typescript-fundamentals-lesson-6: Missing field content",
+      "timestamp": "2025-10-01T07:17:53.981Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module typescript-fundamentals, Lesson typescript-fundamentals-lesson-6: Missing field estimatedTime",
+      "timestamp": "2025-10-01T07:17:53.981Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module typescript-fundamentals, Lesson typescript-fundamentals-lesson-7: Missing field content",
+      "timestamp": "2025-10-01T07:17:53.981Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module typescript-fundamentals, Lesson typescript-fundamentals-lesson-7: Missing field estimatedTime",
+      "timestamp": "2025-10-01T07:17:53.981Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module typescript-fundamentals, Lesson typescript-fundamentals-lesson-8: Missing field content",
+      "timestamp": "2025-10-01T07:17:53.981Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module typescript-fundamentals, Lesson typescript-fundamentals-lesson-8: Missing field estimatedTime",
+      "timestamp": "2025-10-01T07:17:53.981Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module typescript-fundamentals, Lesson typescript-fundamentals-lesson-9: Missing field content",
+      "timestamp": "2025-10-01T07:17:53.981Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module typescript-fundamentals, Lesson typescript-fundamentals-lesson-9: Missing field estimatedTime",
+      "timestamp": "2025-10-01T07:17:53.981Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module typescript-fundamentals, Lesson typescript-fundamentals-lesson-10: Missing field content",
+      "timestamp": "2025-10-01T07:17:53.981Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module typescript-fundamentals, Lesson typescript-fundamentals-lesson-10: Missing field estimatedTime",
+      "timestamp": "2025-10-01T07:17:53.981Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module typescript-fundamentals, Lesson typescript-fundamentals-lesson-11: Missing field content",
+      "timestamp": "2025-10-01T07:17:53.981Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module typescript-fundamentals, Lesson typescript-fundamentals-lesson-11: Missing field estimatedTime",
+      "timestamp": "2025-10-01T07:17:53.981Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module typescript-fundamentals, Lesson typescript-fundamentals-lesson-12: Missing field content",
+      "timestamp": "2025-10-01T07:17:53.981Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module typescript-fundamentals, Lesson typescript-fundamentals-lesson-12: Missing field estimatedTime",
+      "timestamp": "2025-10-01T07:17:53.981Z"
+    },
+    {
+      "severity": "critical",
+      "type": "quizzes-missing",
+      "message": "Module typescript-fundamentals: Quizzes file not found",
+      "timestamp": "2025-10-01T07:17:53.981Z"
+    },
+    {
+      "severity": "high",
+      "type": "module-field",
+      "message": "Module node-fundamentals: Missing field metadata",
+      "timestamp": "2025-10-01T07:17:53.981Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module node-fundamentals, Lesson node-fundamentals-lesson-1: Missing field content",
+      "timestamp": "2025-10-01T07:17:53.981Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module node-fundamentals, Lesson node-fundamentals-lesson-1: Missing field estimatedTime",
+      "timestamp": "2025-10-01T07:17:53.981Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module node-fundamentals, Lesson node-fundamentals-lesson-2: Missing field content",
+      "timestamp": "2025-10-01T07:17:53.981Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module node-fundamentals, Lesson node-fundamentals-lesson-2: Missing field estimatedTime",
+      "timestamp": "2025-10-01T07:17:53.981Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module node-fundamentals, Lesson node-fundamentals-lesson-3: Missing field content",
+      "timestamp": "2025-10-01T07:17:53.981Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module node-fundamentals, Lesson node-fundamentals-lesson-3: Missing field estimatedTime",
+      "timestamp": "2025-10-01T07:17:53.981Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module node-fundamentals, Lesson node-fundamentals-lesson-4: Missing field content",
+      "timestamp": "2025-10-01T07:17:53.981Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module node-fundamentals, Lesson node-fundamentals-lesson-4: Missing field estimatedTime",
+      "timestamp": "2025-10-01T07:17:53.981Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module node-fundamentals, Lesson node-fundamentals-lesson-5: Missing field content",
+      "timestamp": "2025-10-01T07:17:53.981Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module node-fundamentals, Lesson node-fundamentals-lesson-5: Missing field estimatedTime",
+      "timestamp": "2025-10-01T07:17:53.981Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module node-fundamentals, Lesson node-fundamentals-lesson-6: Missing field content",
+      "timestamp": "2025-10-01T07:17:53.981Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module node-fundamentals, Lesson node-fundamentals-lesson-6: Missing field estimatedTime",
+      "timestamp": "2025-10-01T07:17:53.982Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module node-fundamentals, Lesson node-fundamentals-lesson-7: Missing field content",
+      "timestamp": "2025-10-01T07:17:53.982Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module node-fundamentals, Lesson node-fundamentals-lesson-7: Missing field estimatedTime",
+      "timestamp": "2025-10-01T07:17:53.982Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module node-fundamentals, Lesson node-fundamentals-lesson-8: Missing field content",
+      "timestamp": "2025-10-01T07:17:53.982Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module node-fundamentals, Lesson node-fundamentals-lesson-8: Missing field estimatedTime",
+      "timestamp": "2025-10-01T07:17:53.982Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module node-fundamentals, Lesson node-fundamentals-lesson-9: Missing field content",
+      "timestamp": "2025-10-01T07:17:53.982Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module node-fundamentals, Lesson node-fundamentals-lesson-9: Missing field estimatedTime",
+      "timestamp": "2025-10-01T07:17:53.982Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module node-fundamentals, Lesson node-fundamentals-lesson-10: Missing field content",
+      "timestamp": "2025-10-01T07:17:53.982Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module node-fundamentals, Lesson node-fundamentals-lesson-10: Missing field estimatedTime",
+      "timestamp": "2025-10-01T07:17:53.982Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module node-fundamentals, Lesson node-fundamentals-lesson-11: Missing field content",
+      "timestamp": "2025-10-01T07:17:53.982Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module node-fundamentals, Lesson node-fundamentals-lesson-11: Missing field estimatedTime",
+      "timestamp": "2025-10-01T07:17:53.982Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module node-fundamentals, Lesson node-fundamentals-lesson-12: Missing field content",
+      "timestamp": "2025-10-01T07:17:53.982Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module node-fundamentals, Lesson node-fundamentals-lesson-12: Missing field estimatedTime",
+      "timestamp": "2025-10-01T07:17:53.982Z"
+    },
+    {
+      "severity": "critical",
+      "type": "quizzes-missing",
+      "message": "Module node-fundamentals: Quizzes file not found",
+      "timestamp": "2025-10-01T07:17:53.982Z"
+    },
+    {
+      "severity": "high",
+      "type": "module-field",
+      "message": "Module laravel-fundamentals: Missing field metadata",
+      "timestamp": "2025-10-01T07:17:53.982Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module laravel-fundamentals, Lesson laravel-fundamentals-lesson-1: Missing field content",
+      "timestamp": "2025-10-01T07:17:53.982Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module laravel-fundamentals, Lesson laravel-fundamentals-lesson-1: Missing field estimatedTime",
+      "timestamp": "2025-10-01T07:17:53.982Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module laravel-fundamentals, Lesson laravel-fundamentals-lesson-2: Missing field content",
+      "timestamp": "2025-10-01T07:17:53.982Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module laravel-fundamentals, Lesson laravel-fundamentals-lesson-2: Missing field estimatedTime",
+      "timestamp": "2025-10-01T07:17:53.982Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module laravel-fundamentals, Lesson laravel-fundamentals-lesson-3: Missing field content",
+      "timestamp": "2025-10-01T07:17:53.982Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module laravel-fundamentals, Lesson laravel-fundamentals-lesson-3: Missing field estimatedTime",
+      "timestamp": "2025-10-01T07:17:53.982Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module laravel-fundamentals, Lesson laravel-fundamentals-lesson-4: Missing field content",
+      "timestamp": "2025-10-01T07:17:53.982Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module laravel-fundamentals, Lesson laravel-fundamentals-lesson-4: Missing field estimatedTime",
+      "timestamp": "2025-10-01T07:17:53.982Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module laravel-fundamentals, Lesson laravel-fundamentals-lesson-5: Missing field content",
+      "timestamp": "2025-10-01T07:17:53.982Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module laravel-fundamentals, Lesson laravel-fundamentals-lesson-5: Missing field estimatedTime",
+      "timestamp": "2025-10-01T07:17:53.982Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module laravel-fundamentals, Lesson laravel-fundamentals-lesson-6: Missing field content",
+      "timestamp": "2025-10-01T07:17:53.982Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module laravel-fundamentals, Lesson laravel-fundamentals-lesson-6: Missing field estimatedTime",
+      "timestamp": "2025-10-01T07:17:53.982Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module laravel-fundamentals, Lesson laravel-fundamentals-lesson-7: Missing field content",
+      "timestamp": "2025-10-01T07:17:53.982Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module laravel-fundamentals, Lesson laravel-fundamentals-lesson-7: Missing field estimatedTime",
+      "timestamp": "2025-10-01T07:17:53.982Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module laravel-fundamentals, Lesson laravel-fundamentals-lesson-8: Missing field content",
+      "timestamp": "2025-10-01T07:17:53.982Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module laravel-fundamentals, Lesson laravel-fundamentals-lesson-8: Missing field estimatedTime",
+      "timestamp": "2025-10-01T07:17:53.983Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module laravel-fundamentals, Lesson laravel-fundamentals-lesson-9: Missing field content",
+      "timestamp": "2025-10-01T07:17:53.983Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module laravel-fundamentals, Lesson laravel-fundamentals-lesson-9: Missing field estimatedTime",
+      "timestamp": "2025-10-01T07:17:53.983Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module laravel-fundamentals, Lesson laravel-fundamentals-lesson-10: Missing field content",
+      "timestamp": "2025-10-01T07:17:53.983Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module laravel-fundamentals, Lesson laravel-fundamentals-lesson-10: Missing field estimatedTime",
+      "timestamp": "2025-10-01T07:17:53.983Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module laravel-fundamentals, Lesson laravel-fundamentals-lesson-11: Missing field content",
+      "timestamp": "2025-10-01T07:17:53.983Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module laravel-fundamentals, Lesson laravel-fundamentals-lesson-11: Missing field estimatedTime",
+      "timestamp": "2025-10-01T07:17:53.983Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module laravel-fundamentals, Lesson laravel-fundamentals-lesson-12: Missing field content",
+      "timestamp": "2025-10-01T07:17:53.983Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module laravel-fundamentals, Lesson laravel-fundamentals-lesson-12: Missing field estimatedTime",
+      "timestamp": "2025-10-01T07:17:53.983Z"
+    },
+    {
+      "severity": "critical",
+      "type": "quizzes-missing",
+      "message": "Module laravel-fundamentals: Quizzes file not found",
+      "timestamp": "2025-10-01T07:17:53.983Z"
+    },
+    {
+      "severity": "high",
+      "type": "module-field",
+      "message": "Module nextjs-advanced: Missing field metadata",
+      "timestamp": "2025-10-01T07:17:53.983Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module nextjs-advanced, Lesson nextjs-advanced-lesson-1: Missing field content",
+      "timestamp": "2025-10-01T07:17:53.983Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module nextjs-advanced, Lesson nextjs-advanced-lesson-1: Missing field estimatedTime",
+      "timestamp": "2025-10-01T07:17:53.983Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module nextjs-advanced, Lesson nextjs-advanced-lesson-2: Missing field content",
+      "timestamp": "2025-10-01T07:17:53.983Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module nextjs-advanced, Lesson nextjs-advanced-lesson-2: Missing field estimatedTime",
+      "timestamp": "2025-10-01T07:17:53.983Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module nextjs-advanced, Lesson nextjs-advanced-lesson-3: Missing field content",
+      "timestamp": "2025-10-01T07:17:53.983Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module nextjs-advanced, Lesson nextjs-advanced-lesson-3: Missing field estimatedTime",
+      "timestamp": "2025-10-01T07:17:53.983Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module nextjs-advanced, Lesson nextjs-advanced-lesson-4: Missing field content",
+      "timestamp": "2025-10-01T07:17:53.983Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module nextjs-advanced, Lesson nextjs-advanced-lesson-4: Missing field estimatedTime",
+      "timestamp": "2025-10-01T07:17:53.983Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module nextjs-advanced, Lesson nextjs-advanced-lesson-5: Missing field content",
+      "timestamp": "2025-10-01T07:17:53.983Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module nextjs-advanced, Lesson nextjs-advanced-lesson-5: Missing field estimatedTime",
+      "timestamp": "2025-10-01T07:17:53.983Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module nextjs-advanced, Lesson nextjs-advanced-lesson-6: Missing field content",
+      "timestamp": "2025-10-01T07:17:53.983Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module nextjs-advanced, Lesson nextjs-advanced-lesson-6: Missing field estimatedTime",
+      "timestamp": "2025-10-01T07:17:53.983Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module nextjs-advanced, Lesson nextjs-advanced-lesson-7: Missing field content",
+      "timestamp": "2025-10-01T07:17:53.983Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module nextjs-advanced, Lesson nextjs-advanced-lesson-7: Missing field estimatedTime",
+      "timestamp": "2025-10-01T07:17:53.983Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module nextjs-advanced, Lesson nextjs-advanced-lesson-8: Missing field content",
+      "timestamp": "2025-10-01T07:17:53.983Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module nextjs-advanced, Lesson nextjs-advanced-lesson-8: Missing field estimatedTime",
+      "timestamp": "2025-10-01T07:17:53.983Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module nextjs-advanced, Lesson nextjs-advanced-lesson-9: Missing field content",
+      "timestamp": "2025-10-01T07:17:53.983Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module nextjs-advanced, Lesson nextjs-advanced-lesson-9: Missing field estimatedTime",
+      "timestamp": "2025-10-01T07:17:53.983Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module nextjs-advanced, Lesson nextjs-advanced-lesson-10: Missing field content",
+      "timestamp": "2025-10-01T07:17:53.983Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module nextjs-advanced, Lesson nextjs-advanced-lesson-10: Missing field estimatedTime",
+      "timestamp": "2025-10-01T07:17:53.983Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module nextjs-advanced, Lesson nextjs-advanced-lesson-11: Missing field content",
+      "timestamp": "2025-10-01T07:17:53.983Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module nextjs-advanced, Lesson nextjs-advanced-lesson-11: Missing field estimatedTime",
+      "timestamp": "2025-10-01T07:17:53.983Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module nextjs-advanced, Lesson nextjs-advanced-lesson-12: Missing field content",
+      "timestamp": "2025-10-01T07:17:53.983Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module nextjs-advanced, Lesson nextjs-advanced-lesson-12: Missing field estimatedTime",
+      "timestamp": "2025-10-01T07:17:53.983Z"
+    },
+    {
+      "severity": "critical",
+      "type": "quizzes-missing",
+      "message": "Module nextjs-advanced: Quizzes file not found",
+      "timestamp": "2025-10-01T07:17:53.984Z"
+    },
+    {
+      "severity": "high",
+      "type": "module-field",
+      "message": "Module graphql-advanced: Missing field metadata",
+      "timestamp": "2025-10-01T07:17:53.984Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module graphql-advanced, Lesson graphql-advanced-lesson-1: Missing field content",
+      "timestamp": "2025-10-01T07:17:53.984Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module graphql-advanced, Lesson graphql-advanced-lesson-1: Missing field estimatedTime",
+      "timestamp": "2025-10-01T07:17:53.984Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module graphql-advanced, Lesson graphql-advanced-lesson-2: Missing field content",
+      "timestamp": "2025-10-01T07:17:53.984Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module graphql-advanced, Lesson graphql-advanced-lesson-2: Missing field estimatedTime",
+      "timestamp": "2025-10-01T07:17:53.984Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module graphql-advanced, Lesson graphql-advanced-lesson-3: Missing field content",
+      "timestamp": "2025-10-01T07:17:53.984Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module graphql-advanced, Lesson graphql-advanced-lesson-3: Missing field estimatedTime",
+      "timestamp": "2025-10-01T07:17:53.984Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module graphql-advanced, Lesson graphql-advanced-lesson-4: Missing field content",
+      "timestamp": "2025-10-01T07:17:53.984Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module graphql-advanced, Lesson graphql-advanced-lesson-4: Missing field estimatedTime",
+      "timestamp": "2025-10-01T07:17:53.984Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module graphql-advanced, Lesson graphql-advanced-lesson-5: Missing field content",
+      "timestamp": "2025-10-01T07:17:53.984Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module graphql-advanced, Lesson graphql-advanced-lesson-5: Missing field estimatedTime",
+      "timestamp": "2025-10-01T07:17:53.984Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module graphql-advanced, Lesson graphql-advanced-lesson-6: Missing field content",
+      "timestamp": "2025-10-01T07:17:53.984Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module graphql-advanced, Lesson graphql-advanced-lesson-6: Missing field estimatedTime",
+      "timestamp": "2025-10-01T07:17:53.984Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module graphql-advanced, Lesson graphql-advanced-lesson-7: Missing field content",
+      "timestamp": "2025-10-01T07:17:53.984Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module graphql-advanced, Lesson graphql-advanced-lesson-7: Missing field estimatedTime",
+      "timestamp": "2025-10-01T07:17:53.984Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module graphql-advanced, Lesson graphql-advanced-lesson-8: Missing field content",
+      "timestamp": "2025-10-01T07:17:53.984Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module graphql-advanced, Lesson graphql-advanced-lesson-8: Missing field estimatedTime",
+      "timestamp": "2025-10-01T07:17:53.984Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module graphql-advanced, Lesson graphql-advanced-lesson-9: Missing field content",
+      "timestamp": "2025-10-01T07:17:53.984Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module graphql-advanced, Lesson graphql-advanced-lesson-9: Missing field estimatedTime",
+      "timestamp": "2025-10-01T07:17:53.984Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module graphql-advanced, Lesson graphql-advanced-lesson-10: Missing field content",
+      "timestamp": "2025-10-01T07:17:53.984Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module graphql-advanced, Lesson graphql-advanced-lesson-10: Missing field estimatedTime",
+      "timestamp": "2025-10-01T07:17:53.984Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module graphql-advanced, Lesson graphql-advanced-lesson-11: Missing field content",
+      "timestamp": "2025-10-01T07:17:53.984Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module graphql-advanced, Lesson graphql-advanced-lesson-11: Missing field estimatedTime",
+      "timestamp": "2025-10-01T07:17:53.984Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module graphql-advanced, Lesson graphql-advanced-lesson-12: Missing field content",
+      "timestamp": "2025-10-01T07:17:53.984Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module graphql-advanced, Lesson graphql-advanced-lesson-12: Missing field estimatedTime",
+      "timestamp": "2025-10-01T07:17:53.984Z"
+    },
+    {
+      "severity": "critical",
+      "type": "quizzes-missing",
+      "message": "Module graphql-advanced: Quizzes file not found",
+      "timestamp": "2025-10-01T07:17:53.985Z"
+    },
+    {
+      "severity": "high",
+      "type": "module-field",
+      "message": "Module sass-advanced: Missing field metadata",
+      "timestamp": "2025-10-01T07:17:53.985Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module sass-advanced, Lesson sass-advanced-lesson-1: Missing field content",
+      "timestamp": "2025-10-01T07:17:53.985Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module sass-advanced, Lesson sass-advanced-lesson-1: Missing field estimatedTime",
+      "timestamp": "2025-10-01T07:17:53.985Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module sass-advanced, Lesson sass-advanced-lesson-2: Missing field content",
+      "timestamp": "2025-10-01T07:17:53.985Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module sass-advanced, Lesson sass-advanced-lesson-2: Missing field estimatedTime",
+      "timestamp": "2025-10-01T07:17:53.985Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module sass-advanced, Lesson sass-advanced-lesson-3: Missing field content",
+      "timestamp": "2025-10-01T07:17:53.985Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module sass-advanced, Lesson sass-advanced-lesson-3: Missing field estimatedTime",
+      "timestamp": "2025-10-01T07:17:53.985Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module sass-advanced, Lesson sass-advanced-lesson-4: Missing field content",
+      "timestamp": "2025-10-01T07:17:53.985Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module sass-advanced, Lesson sass-advanced-lesson-4: Missing field estimatedTime",
+      "timestamp": "2025-10-01T07:17:53.985Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module sass-advanced, Lesson sass-advanced-lesson-5: Missing field content",
+      "timestamp": "2025-10-01T07:17:53.985Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module sass-advanced, Lesson sass-advanced-lesson-5: Missing field estimatedTime",
+      "timestamp": "2025-10-01T07:17:53.985Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module sass-advanced, Lesson sass-advanced-lesson-6: Missing field content",
+      "timestamp": "2025-10-01T07:17:53.985Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module sass-advanced, Lesson sass-advanced-lesson-6: Missing field estimatedTime",
+      "timestamp": "2025-10-01T07:17:53.985Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module sass-advanced, Lesson sass-advanced-lesson-7: Missing field content",
+      "timestamp": "2025-10-01T07:17:53.985Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module sass-advanced, Lesson sass-advanced-lesson-7: Missing field estimatedTime",
+      "timestamp": "2025-10-01T07:17:53.985Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module sass-advanced, Lesson sass-advanced-lesson-8: Missing field content",
+      "timestamp": "2025-10-01T07:17:53.985Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module sass-advanced, Lesson sass-advanced-lesson-8: Missing field estimatedTime",
+      "timestamp": "2025-10-01T07:17:53.985Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module sass-advanced, Lesson sass-advanced-lesson-9: Missing field content",
+      "timestamp": "2025-10-01T07:17:53.985Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module sass-advanced, Lesson sass-advanced-lesson-9: Missing field estimatedTime",
+      "timestamp": "2025-10-01T07:17:53.985Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module sass-advanced, Lesson sass-advanced-lesson-10: Missing field content",
+      "timestamp": "2025-10-01T07:17:53.985Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module sass-advanced, Lesson sass-advanced-lesson-10: Missing field estimatedTime",
+      "timestamp": "2025-10-01T07:17:53.985Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module sass-advanced, Lesson sass-advanced-lesson-11: Missing field content",
+      "timestamp": "2025-10-01T07:17:53.985Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module sass-advanced, Lesson sass-advanced-lesson-11: Missing field estimatedTime",
+      "timestamp": "2025-10-01T07:17:53.985Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module sass-advanced, Lesson sass-advanced-lesson-12: Missing field content",
+      "timestamp": "2025-10-01T07:17:53.985Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module sass-advanced, Lesson sass-advanced-lesson-12: Missing field estimatedTime",
+      "timestamp": "2025-10-01T07:17:53.985Z"
+    },
+    {
+      "severity": "critical",
+      "type": "quizzes-missing",
+      "message": "Module sass-advanced: Quizzes file not found",
+      "timestamp": "2025-10-01T07:17:53.985Z"
+    },
+    {
+      "severity": "high",
+      "type": "module-field",
+      "message": "Module tailwind-advanced: Missing field metadata",
+      "timestamp": "2025-10-01T07:17:53.985Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module tailwind-advanced, Lesson tailwind-advanced-lesson-1: Missing field content",
+      "timestamp": "2025-10-01T07:17:53.986Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module tailwind-advanced, Lesson tailwind-advanced-lesson-1: Missing field estimatedTime",
+      "timestamp": "2025-10-01T07:17:53.986Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module tailwind-advanced, Lesson tailwind-advanced-lesson-2: Missing field content",
+      "timestamp": "2025-10-01T07:17:53.986Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module tailwind-advanced, Lesson tailwind-advanced-lesson-2: Missing field estimatedTime",
+      "timestamp": "2025-10-01T07:17:53.986Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module tailwind-advanced, Lesson tailwind-advanced-lesson-3: Missing field content",
+      "timestamp": "2025-10-01T07:17:53.986Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module tailwind-advanced, Lesson tailwind-advanced-lesson-3: Missing field estimatedTime",
+      "timestamp": "2025-10-01T07:17:53.986Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module tailwind-advanced, Lesson tailwind-advanced-lesson-4: Missing field content",
+      "timestamp": "2025-10-01T07:17:53.986Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module tailwind-advanced, Lesson tailwind-advanced-lesson-4: Missing field estimatedTime",
+      "timestamp": "2025-10-01T07:17:53.986Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module tailwind-advanced, Lesson tailwind-advanced-lesson-5: Missing field content",
+      "timestamp": "2025-10-01T07:17:53.986Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module tailwind-advanced, Lesson tailwind-advanced-lesson-5: Missing field estimatedTime",
+      "timestamp": "2025-10-01T07:17:53.986Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module tailwind-advanced, Lesson tailwind-advanced-lesson-6: Missing field content",
+      "timestamp": "2025-10-01T07:17:53.986Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module tailwind-advanced, Lesson tailwind-advanced-lesson-6: Missing field estimatedTime",
+      "timestamp": "2025-10-01T07:17:53.986Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module tailwind-advanced, Lesson tailwind-advanced-lesson-7: Missing field content",
+      "timestamp": "2025-10-01T07:17:53.986Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module tailwind-advanced, Lesson tailwind-advanced-lesson-7: Missing field estimatedTime",
+      "timestamp": "2025-10-01T07:17:53.986Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module tailwind-advanced, Lesson tailwind-advanced-lesson-8: Missing field content",
+      "timestamp": "2025-10-01T07:17:53.986Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module tailwind-advanced, Lesson tailwind-advanced-lesson-8: Missing field estimatedTime",
+      "timestamp": "2025-10-01T07:17:53.986Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module tailwind-advanced, Lesson tailwind-advanced-lesson-9: Missing field content",
+      "timestamp": "2025-10-01T07:17:53.986Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module tailwind-advanced, Lesson tailwind-advanced-lesson-9: Missing field estimatedTime",
+      "timestamp": "2025-10-01T07:17:53.986Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module tailwind-advanced, Lesson tailwind-advanced-lesson-10: Missing field content",
+      "timestamp": "2025-10-01T07:17:53.986Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module tailwind-advanced, Lesson tailwind-advanced-lesson-10: Missing field estimatedTime",
+      "timestamp": "2025-10-01T07:17:53.986Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module tailwind-advanced, Lesson tailwind-advanced-lesson-11: Missing field content",
+      "timestamp": "2025-10-01T07:17:53.986Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module tailwind-advanced, Lesson tailwind-advanced-lesson-11: Missing field estimatedTime",
+      "timestamp": "2025-10-01T07:17:53.986Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module tailwind-advanced, Lesson tailwind-advanced-lesson-12: Missing field content",
+      "timestamp": "2025-10-01T07:17:53.986Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module tailwind-advanced, Lesson tailwind-advanced-lesson-12: Missing field estimatedTime",
+      "timestamp": "2025-10-01T07:17:53.986Z"
+    },
+    {
+      "severity": "critical",
+      "type": "quizzes-missing",
+      "message": "Module tailwind-advanced: Quizzes file not found",
+      "timestamp": "2025-10-01T07:17:53.986Z"
+    },
+    {
+      "severity": "high",
+      "type": "module-field",
+      "message": "Module vue-advanced: Missing field metadata",
+      "timestamp": "2025-10-01T07:17:53.986Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module vue-advanced, Lesson vue-advanced-lesson-1: Missing field content",
+      "timestamp": "2025-10-01T07:17:53.986Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module vue-advanced, Lesson vue-advanced-lesson-1: Missing field estimatedTime",
+      "timestamp": "2025-10-01T07:17:53.986Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module vue-advanced, Lesson vue-advanced-lesson-2: Missing field content",
+      "timestamp": "2025-10-01T07:17:53.986Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module vue-advanced, Lesson vue-advanced-lesson-2: Missing field estimatedTime",
+      "timestamp": "2025-10-01T07:17:53.986Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module vue-advanced, Lesson vue-advanced-lesson-3: Missing field content",
+      "timestamp": "2025-10-01T07:17:53.986Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module vue-advanced, Lesson vue-advanced-lesson-3: Missing field estimatedTime",
+      "timestamp": "2025-10-01T07:17:53.986Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module vue-advanced, Lesson vue-advanced-lesson-4: Missing field content",
+      "timestamp": "2025-10-01T07:17:53.986Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module vue-advanced, Lesson vue-advanced-lesson-4: Missing field estimatedTime",
+      "timestamp": "2025-10-01T07:17:53.986Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module vue-advanced, Lesson vue-advanced-lesson-5: Missing field content",
+      "timestamp": "2025-10-01T07:17:53.986Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module vue-advanced, Lesson vue-advanced-lesson-5: Missing field estimatedTime",
+      "timestamp": "2025-10-01T07:17:53.986Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module vue-advanced, Lesson vue-advanced-lesson-6: Missing field content",
+      "timestamp": "2025-10-01T07:17:53.986Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module vue-advanced, Lesson vue-advanced-lesson-6: Missing field estimatedTime",
+      "timestamp": "2025-10-01T07:17:53.986Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module vue-advanced, Lesson vue-advanced-lesson-7: Missing field content",
+      "timestamp": "2025-10-01T07:17:53.987Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module vue-advanced, Lesson vue-advanced-lesson-7: Missing field estimatedTime",
+      "timestamp": "2025-10-01T07:17:53.987Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module vue-advanced, Lesson vue-advanced-lesson-8: Missing field content",
+      "timestamp": "2025-10-01T07:17:53.987Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module vue-advanced, Lesson vue-advanced-lesson-8: Missing field estimatedTime",
+      "timestamp": "2025-10-01T07:17:53.987Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module vue-advanced, Lesson vue-advanced-lesson-9: Missing field content",
+      "timestamp": "2025-10-01T07:17:53.987Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module vue-advanced, Lesson vue-advanced-lesson-9: Missing field estimatedTime",
+      "timestamp": "2025-10-01T07:17:53.987Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module vue-advanced, Lesson vue-advanced-lesson-10: Missing field content",
+      "timestamp": "2025-10-01T07:17:53.987Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module vue-advanced, Lesson vue-advanced-lesson-10: Missing field estimatedTime",
+      "timestamp": "2025-10-01T07:17:53.987Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module vue-advanced, Lesson vue-advanced-lesson-11: Missing field content",
+      "timestamp": "2025-10-01T07:17:53.987Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module vue-advanced, Lesson vue-advanced-lesson-11: Missing field estimatedTime",
+      "timestamp": "2025-10-01T07:17:53.987Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module vue-advanced, Lesson vue-advanced-lesson-12: Missing field content",
+      "timestamp": "2025-10-01T07:17:53.987Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module vue-advanced, Lesson vue-advanced-lesson-12: Missing field estimatedTime",
+      "timestamp": "2025-10-01T07:17:53.987Z"
+    },
+    {
+      "severity": "critical",
+      "type": "quizzes-missing",
+      "message": "Module vue-advanced: Quizzes file not found",
+      "timestamp": "2025-10-01T07:17:53.987Z"
+    },
+    {
+      "severity": "high",
+      "type": "module-field",
+      "message": "Module testing-fundamentals: Missing field metadata",
+      "timestamp": "2025-10-01T07:17:53.987Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module testing-fundamentals, Lesson testing-fundamentals-lesson-1: Missing field content",
+      "timestamp": "2025-10-01T07:17:53.988Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module testing-fundamentals, Lesson testing-fundamentals-lesson-1: Missing field estimatedTime",
+      "timestamp": "2025-10-01T07:17:53.988Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module testing-fundamentals, Lesson testing-fundamentals-lesson-2: Missing field content",
+      "timestamp": "2025-10-01T07:17:53.988Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module testing-fundamentals, Lesson testing-fundamentals-lesson-2: Missing field estimatedTime",
+      "timestamp": "2025-10-01T07:17:53.988Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module testing-fundamentals, Lesson testing-fundamentals-lesson-3: Missing field content",
+      "timestamp": "2025-10-01T07:17:53.988Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module testing-fundamentals, Lesson testing-fundamentals-lesson-3: Missing field estimatedTime",
+      "timestamp": "2025-10-01T07:17:53.988Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module testing-fundamentals, Lesson testing-fundamentals-lesson-4: Missing field content",
+      "timestamp": "2025-10-01T07:17:53.988Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module testing-fundamentals, Lesson testing-fundamentals-lesson-4: Missing field estimatedTime",
+      "timestamp": "2025-10-01T07:17:53.988Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module testing-fundamentals, Lesson testing-fundamentals-lesson-5: Missing field content",
+      "timestamp": "2025-10-01T07:17:53.988Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module testing-fundamentals, Lesson testing-fundamentals-lesson-5: Missing field estimatedTime",
+      "timestamp": "2025-10-01T07:17:53.988Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module testing-fundamentals, Lesson testing-fundamentals-lesson-6: Missing field content",
+      "timestamp": "2025-10-01T07:17:53.988Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module testing-fundamentals, Lesson testing-fundamentals-lesson-6: Missing field estimatedTime",
+      "timestamp": "2025-10-01T07:17:53.988Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module testing-fundamentals, Lesson testing-fundamentals-lesson-7: Missing field content",
+      "timestamp": "2025-10-01T07:17:53.988Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module testing-fundamentals, Lesson testing-fundamentals-lesson-7: Missing field estimatedTime",
+      "timestamp": "2025-10-01T07:17:53.988Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module testing-fundamentals, Lesson testing-fundamentals-lesson-8: Missing field content",
+      "timestamp": "2025-10-01T07:17:53.988Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module testing-fundamentals, Lesson testing-fundamentals-lesson-8: Missing field estimatedTime",
+      "timestamp": "2025-10-01T07:17:53.988Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module testing-fundamentals, Lesson testing-fundamentals-lesson-9: Missing field content",
+      "timestamp": "2025-10-01T07:17:53.988Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module testing-fundamentals, Lesson testing-fundamentals-lesson-9: Missing field estimatedTime",
+      "timestamp": "2025-10-01T07:17:53.988Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module testing-fundamentals, Lesson testing-fundamentals-lesson-10: Missing field content",
+      "timestamp": "2025-10-01T07:17:53.988Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module testing-fundamentals, Lesson testing-fundamentals-lesson-10: Missing field estimatedTime",
+      "timestamp": "2025-10-01T07:17:53.988Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module testing-fundamentals, Lesson testing-fundamentals-lesson-11: Missing field content",
+      "timestamp": "2025-10-01T07:17:53.988Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module testing-fundamentals, Lesson testing-fundamentals-lesson-11: Missing field estimatedTime",
+      "timestamp": "2025-10-01T07:17:53.988Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module testing-fundamentals, Lesson testing-fundamentals-lesson-12: Missing field content",
+      "timestamp": "2025-10-01T07:17:53.988Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module testing-fundamentals, Lesson testing-fundamentals-lesson-12: Missing field estimatedTime",
+      "timestamp": "2025-10-01T07:17:53.988Z"
+    },
+    {
+      "severity": "critical",
+      "type": "quizzes-missing",
+      "message": "Module testing-fundamentals: Quizzes file not found",
+      "timestamp": "2025-10-01T07:17:53.988Z"
+    },
+    {
+      "severity": "high",
+      "type": "module-field",
+      "message": "Module e2e-testing: Missing field metadata",
+      "timestamp": "2025-10-01T07:17:53.988Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module e2e-testing, Lesson e2e-testing-lesson-1: Missing field content",
+      "timestamp": "2025-10-01T07:17:53.988Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module e2e-testing, Lesson e2e-testing-lesson-1: Missing field estimatedTime",
+      "timestamp": "2025-10-01T07:17:53.988Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module e2e-testing, Lesson e2e-testing-lesson-2: Missing field content",
+      "timestamp": "2025-10-01T07:17:53.988Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module e2e-testing, Lesson e2e-testing-lesson-2: Missing field estimatedTime",
+      "timestamp": "2025-10-01T07:17:53.988Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module e2e-testing, Lesson e2e-testing-lesson-3: Missing field content",
+      "timestamp": "2025-10-01T07:17:53.988Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module e2e-testing, Lesson e2e-testing-lesson-3: Missing field estimatedTime",
+      "timestamp": "2025-10-01T07:17:53.988Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module e2e-testing, Lesson e2e-testing-lesson-4: Missing field content",
+      "timestamp": "2025-10-01T07:17:53.988Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module e2e-testing, Lesson e2e-testing-lesson-4: Missing field estimatedTime",
+      "timestamp": "2025-10-01T07:17:53.988Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module e2e-testing, Lesson e2e-testing-lesson-5: Missing field content",
+      "timestamp": "2025-10-01T07:17:53.988Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module e2e-testing, Lesson e2e-testing-lesson-5: Missing field estimatedTime",
+      "timestamp": "2025-10-01T07:17:53.988Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module e2e-testing, Lesson e2e-testing-lesson-6: Missing field content",
+      "timestamp": "2025-10-01T07:17:53.988Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module e2e-testing, Lesson e2e-testing-lesson-6: Missing field estimatedTime",
+      "timestamp": "2025-10-01T07:17:53.988Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module e2e-testing, Lesson e2e-testing-lesson-7: Missing field content",
+      "timestamp": "2025-10-01T07:17:53.988Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module e2e-testing, Lesson e2e-testing-lesson-7: Missing field estimatedTime",
+      "timestamp": "2025-10-01T07:17:53.988Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module e2e-testing, Lesson e2e-testing-lesson-8: Missing field content",
+      "timestamp": "2025-10-01T07:17:53.989Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module e2e-testing, Lesson e2e-testing-lesson-8: Missing field estimatedTime",
+      "timestamp": "2025-10-01T07:17:53.989Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module e2e-testing, Lesson e2e-testing-lesson-9: Missing field content",
+      "timestamp": "2025-10-01T07:17:53.989Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module e2e-testing, Lesson e2e-testing-lesson-9: Missing field estimatedTime",
+      "timestamp": "2025-10-01T07:17:53.989Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module e2e-testing, Lesson e2e-testing-lesson-10: Missing field content",
+      "timestamp": "2025-10-01T07:17:53.989Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module e2e-testing, Lesson e2e-testing-lesson-10: Missing field estimatedTime",
+      "timestamp": "2025-10-01T07:17:53.989Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module e2e-testing, Lesson e2e-testing-lesson-11: Missing field content",
+      "timestamp": "2025-10-01T07:17:53.989Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module e2e-testing, Lesson e2e-testing-lesson-11: Missing field estimatedTime",
+      "timestamp": "2025-10-01T07:17:53.989Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module e2e-testing, Lesson e2e-testing-lesson-12: Missing field content",
+      "timestamp": "2025-10-01T07:17:53.989Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module e2e-testing, Lesson e2e-testing-lesson-12: Missing field estimatedTime",
+      "timestamp": "2025-10-01T07:17:53.989Z"
+    },
+    {
+      "severity": "critical",
+      "type": "quizzes-missing",
+      "message": "Module e2e-testing: Quizzes file not found",
+      "timestamp": "2025-10-01T07:17:53.989Z"
+    },
+    {
+      "severity": "high",
+      "type": "module-field",
+      "message": "Module performance-optimization: Missing field metadata",
+      "timestamp": "2025-10-01T07:17:53.989Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module performance-optimization, Lesson performance-optimization-lesson-1: Missing field content",
+      "timestamp": "2025-10-01T07:17:53.989Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module performance-optimization, Lesson performance-optimization-lesson-1: Missing field estimatedTime",
+      "timestamp": "2025-10-01T07:17:53.989Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module performance-optimization, Lesson performance-optimization-lesson-2: Missing field content",
+      "timestamp": "2025-10-01T07:17:53.989Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module performance-optimization, Lesson performance-optimization-lesson-2: Missing field estimatedTime",
+      "timestamp": "2025-10-01T07:17:53.989Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module performance-optimization, Lesson performance-optimization-lesson-3: Missing field content",
+      "timestamp": "2025-10-01T07:17:53.989Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module performance-optimization, Lesson performance-optimization-lesson-3: Missing field estimatedTime",
+      "timestamp": "2025-10-01T07:17:53.989Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module performance-optimization, Lesson performance-optimization-lesson-4: Missing field content",
+      "timestamp": "2025-10-01T07:17:53.989Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module performance-optimization, Lesson performance-optimization-lesson-4: Missing field estimatedTime",
+      "timestamp": "2025-10-01T07:17:53.989Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module performance-optimization, Lesson performance-optimization-lesson-5: Missing field content",
+      "timestamp": "2025-10-01T07:17:53.989Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module performance-optimization, Lesson performance-optimization-lesson-5: Missing field estimatedTime",
+      "timestamp": "2025-10-01T07:17:53.989Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module performance-optimization, Lesson performance-optimization-lesson-6: Missing field content",
+      "timestamp": "2025-10-01T07:17:53.989Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module performance-optimization, Lesson performance-optimization-lesson-6: Missing field estimatedTime",
+      "timestamp": "2025-10-01T07:17:53.989Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module performance-optimization, Lesson performance-optimization-lesson-7: Missing field content",
+      "timestamp": "2025-10-01T07:17:53.989Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module performance-optimization, Lesson performance-optimization-lesson-7: Missing field estimatedTime",
+      "timestamp": "2025-10-01T07:17:53.989Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module performance-optimization, Lesson performance-optimization-lesson-8: Missing field content",
+      "timestamp": "2025-10-01T07:17:53.989Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module performance-optimization, Lesson performance-optimization-lesson-8: Missing field estimatedTime",
+      "timestamp": "2025-10-01T07:17:53.989Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module performance-optimization, Lesson performance-optimization-lesson-9: Missing field content",
+      "timestamp": "2025-10-01T07:17:53.989Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module performance-optimization, Lesson performance-optimization-lesson-9: Missing field estimatedTime",
+      "timestamp": "2025-10-01T07:17:53.989Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module performance-optimization, Lesson performance-optimization-lesson-10: Missing field content",
+      "timestamp": "2025-10-01T07:17:53.989Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module performance-optimization, Lesson performance-optimization-lesson-10: Missing field estimatedTime",
+      "timestamp": "2025-10-01T07:17:53.989Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module performance-optimization, Lesson performance-optimization-lesson-11: Missing field content",
+      "timestamp": "2025-10-01T07:17:53.989Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module performance-optimization, Lesson performance-optimization-lesson-11: Missing field estimatedTime",
+      "timestamp": "2025-10-01T07:17:53.989Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module performance-optimization, Lesson performance-optimization-lesson-12: Missing field content",
+      "timestamp": "2025-10-01T07:17:53.989Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module performance-optimization, Lesson performance-optimization-lesson-12: Missing field estimatedTime",
+      "timestamp": "2025-10-01T07:17:53.989Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module performance-optimization, Lesson performance-optimization-lesson-13: Missing field content",
+      "timestamp": "2025-10-01T07:17:53.989Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module performance-optimization, Lesson performance-optimization-lesson-13: Missing field estimatedTime",
+      "timestamp": "2025-10-01T07:17:53.989Z"
+    },
+    {
+      "severity": "critical",
+      "type": "quizzes-missing",
+      "message": "Module performance-optimization: Quizzes file not found",
+      "timestamp": "2025-10-01T07:17:53.990Z"
+    },
+    {
+      "severity": "high",
+      "type": "module-field",
+      "message": "Module security-fundamentals: Missing field metadata",
+      "timestamp": "2025-10-01T07:17:53.990Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module security-fundamentals, Lesson security-fundamentals-lesson-1: Missing field content",
+      "timestamp": "2025-10-01T07:17:53.990Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module security-fundamentals, Lesson security-fundamentals-lesson-1: Missing field estimatedTime",
+      "timestamp": "2025-10-01T07:17:53.990Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module security-fundamentals, Lesson security-fundamentals-lesson-2: Missing field content",
+      "timestamp": "2025-10-01T07:17:53.990Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module security-fundamentals, Lesson security-fundamentals-lesson-2: Missing field estimatedTime",
+      "timestamp": "2025-10-01T07:17:53.990Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module security-fundamentals, Lesson security-fundamentals-lesson-3: Missing field content",
+      "timestamp": "2025-10-01T07:17:53.990Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module security-fundamentals, Lesson security-fundamentals-lesson-3: Missing field estimatedTime",
+      "timestamp": "2025-10-01T07:17:53.990Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module security-fundamentals, Lesson security-fundamentals-lesson-4: Missing field content",
+      "timestamp": "2025-10-01T07:17:53.990Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module security-fundamentals, Lesson security-fundamentals-lesson-4: Missing field estimatedTime",
+      "timestamp": "2025-10-01T07:17:53.990Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module security-fundamentals, Lesson security-fundamentals-lesson-5: Missing field content",
+      "timestamp": "2025-10-01T07:17:53.990Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module security-fundamentals, Lesson security-fundamentals-lesson-5: Missing field estimatedTime",
+      "timestamp": "2025-10-01T07:17:53.990Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module security-fundamentals, Lesson security-fundamentals-lesson-6: Missing field content",
+      "timestamp": "2025-10-01T07:17:53.990Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module security-fundamentals, Lesson security-fundamentals-lesson-6: Missing field estimatedTime",
+      "timestamp": "2025-10-01T07:17:53.991Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module security-fundamentals, Lesson security-fundamentals-lesson-7: Missing field content",
+      "timestamp": "2025-10-01T07:17:53.991Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module security-fundamentals, Lesson security-fundamentals-lesson-7: Missing field estimatedTime",
+      "timestamp": "2025-10-01T07:17:53.991Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module security-fundamentals, Lesson security-fundamentals-lesson-8: Missing field content",
+      "timestamp": "2025-10-01T07:17:53.991Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module security-fundamentals, Lesson security-fundamentals-lesson-8: Missing field estimatedTime",
+      "timestamp": "2025-10-01T07:17:53.991Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module security-fundamentals, Lesson security-fundamentals-lesson-9: Missing field content",
+      "timestamp": "2025-10-01T07:17:53.991Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module security-fundamentals, Lesson security-fundamentals-lesson-9: Missing field estimatedTime",
+      "timestamp": "2025-10-01T07:17:53.991Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module security-fundamentals, Lesson security-fundamentals-lesson-10: Missing field content",
+      "timestamp": "2025-10-01T07:17:53.991Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module security-fundamentals, Lesson security-fundamentals-lesson-10: Missing field estimatedTime",
+      "timestamp": "2025-10-01T07:17:53.991Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module security-fundamentals, Lesson security-fundamentals-lesson-11: Missing field content",
+      "timestamp": "2025-10-01T07:17:53.991Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module security-fundamentals, Lesson security-fundamentals-lesson-11: Missing field estimatedTime",
+      "timestamp": "2025-10-01T07:17:53.991Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module security-fundamentals, Lesson security-fundamentals-lesson-12: Missing field content",
+      "timestamp": "2025-10-01T07:17:53.991Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module security-fundamentals, Lesson security-fundamentals-lesson-12: Missing field estimatedTime",
+      "timestamp": "2025-10-01T07:17:53.991Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module security-fundamentals, Lesson security-fundamentals-lesson-13: Missing field content",
+      "timestamp": "2025-10-01T07:17:53.991Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module security-fundamentals, Lesson security-fundamentals-lesson-13: Missing field estimatedTime",
+      "timestamp": "2025-10-01T07:17:53.991Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module security-fundamentals, Lesson security-fundamentals-lesson-14: Missing field content",
+      "timestamp": "2025-10-01T07:17:53.991Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module security-fundamentals, Lesson security-fundamentals-lesson-14: Missing field estimatedTime",
+      "timestamp": "2025-10-01T07:17:53.991Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module security-fundamentals, Lesson security-fundamentals-lesson-15: Missing field content",
+      "timestamp": "2025-10-01T07:17:53.991Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-field",
+      "message": "Module security-fundamentals, Lesson security-fundamentals-lesson-15: Missing field estimatedTime",
+      "timestamp": "2025-10-01T07:17:53.991Z"
+    },
+    {
+      "severity": "critical",
+      "type": "quizzes-missing",
+      "message": "Module security-fundamentals: Quizzes file not found",
+      "timestamp": "2025-10-01T07:17:53.991Z"
+    }
+  ],
+  "warnings": [
+    {
+      "type": "module-thresholds",
+      "message": "Module programming-fundamentals: Missing threshold configuration",
+      "timestamp": "2025-10-01T07:17:53.974Z"
+    },
+    {
+      "type": "module-thresholds",
+      "message": "Module web-fundamentals: Missing threshold configuration",
+      "timestamp": "2025-10-01T07:17:53.976Z"
+    },
+    {
+      "type": "module-thresholds",
+      "message": "Module version-control: Missing threshold configuration",
+      "timestamp": "2025-10-01T07:17:53.976Z"
+    },
+    {
+      "type": "module-thresholds",
+      "message": "Module dotnet-fundamentals: Missing threshold configuration",
+      "timestamp": "2025-10-01T07:17:53.978Z"
+    },
+    {
+      "type": "module-thresholds",
+      "message": "Module react-fundamentals: Missing threshold configuration",
+      "timestamp": "2025-10-01T07:17:53.979Z"
+    },
+    {
+      "type": "module-thresholds",
+      "message": "Module database-systems: Missing threshold configuration",
+      "timestamp": "2025-10-01T07:17:53.980Z"
+    },
+    {
+      "type": "module-thresholds",
+      "message": "Module typescript-fundamentals: Missing threshold configuration",
+      "timestamp": "2025-10-01T07:17:53.981Z"
+    },
+    {
+      "type": "module-thresholds",
+      "message": "Module node-fundamentals: Missing threshold configuration",
+      "timestamp": "2025-10-01T07:17:53.982Z"
+    },
+    {
+      "type": "module-thresholds",
+      "message": "Module laravel-fundamentals: Missing threshold configuration",
+      "timestamp": "2025-10-01T07:17:53.983Z"
+    },
+    {
+      "type": "module-thresholds",
+      "message": "Module nextjs-advanced: Missing threshold configuration",
+      "timestamp": "2025-10-01T07:17:53.984Z"
+    },
+    {
+      "type": "module-thresholds",
+      "message": "Module graphql-advanced: Missing threshold configuration",
+      "timestamp": "2025-10-01T07:17:53.985Z"
+    },
+    {
+      "type": "module-thresholds",
+      "message": "Module sass-advanced: Missing threshold configuration",
+      "timestamp": "2025-10-01T07:17:53.985Z"
+    },
+    {
+      "type": "module-thresholds",
+      "message": "Module tailwind-advanced: Missing threshold configuration",
+      "timestamp": "2025-10-01T07:17:53.986Z"
+    },
+    {
+      "type": "module-thresholds",
+      "message": "Module vue-advanced: Missing threshold configuration",
+      "timestamp": "2025-10-01T07:17:53.987Z"
+    },
+    {
+      "type": "module-thresholds",
+      "message": "Module testing-fundamentals: Missing threshold configuration",
+      "timestamp": "2025-10-01T07:17:53.988Z"
+    },
+    {
+      "type": "module-thresholds",
+      "message": "Module e2e-testing: Missing threshold configuration",
+      "timestamp": "2025-10-01T07:17:53.989Z"
+    },
+    {
+      "type": "module-thresholds",
+      "message": "Module performance-optimization: Missing threshold configuration",
+      "timestamp": "2025-10-01T07:17:53.990Z"
+    },
+    {
+      "type": "module-thresholds",
+      "message": "Module security-fundamentals: Missing threshold configuration",
+      "timestamp": "2025-10-01T07:17:53.991Z"
+    }
+  ],
+  "summary": {
+    "overallCompliance": 0,
+    "readyForProduction": false,
+    "criticalIssues": 38,
+    "recommendations": [
+      "🔴 Address all critical issues before production deployment",
+      "🟡 Improve content quality to reach 90%+ compliance",
+      "⚠️  Review and address content quality warnings"
+    ]
+  }
+}

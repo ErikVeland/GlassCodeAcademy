@@ -1,0 +1,310 @@
+# GraphQL Schema for dotNetQuiz
+
+type Query {
+  # .NET Lessons
+  dotNetLessons(
+    topic: String
+    sortBy: String
+    sortOrder: String
+    limit: Int
+    offset: Int
+  ): [Lesson!]!
+
+  # Next.js Lessons
+  nextJsLessons(
+    topic: String
+    sortBy: String
+    sortOrder: String
+    limit: Int
+    offset: Int
+  ): [Lesson!]!
+
+  # GraphQL Lessons
+  graphQLLessons(
+    topic: String
+    sortBy: String
+    sortOrder: String
+    limit: Int
+    offset: Int
+  ): [Lesson!]!
+
+  # Laravel Lessons
+  laravelLessons(
+    topic: String
+    sortBy: String
+    sortOrder: String
+    limit: Int
+    offset: Int
+  ): [LaravelLesson!]!
+
+  # .NET Interview Questions
+  dotNetInterviewQuestions(
+    topic: String
+    sortBy: String
+    sortOrder: String
+    limit: Int
+    offset: Int
+  ): [InterviewQuestion!]!
+
+  # Next.js Interview Questions
+  nextJsInterviewQuestions(
+    topic: String
+    sortBy: String
+    sortOrder: String
+    limit: Int
+    offset: Int
+  ): [InterviewQuestion!]!
+
+  # GraphQL Interview Questions
+  graphQLInterviewQuestions(
+    topic: String
+    sortBy: String
+    sortOrder: String
+    limit: Int
+    offset: Int
+  ): [InterviewQuestion!]!
+
+  # Laravel Interview Questions
+  laravelInterviewQuestions(
+    topic: String
+    sortBy: String
+    sortOrder: String
+    limit: Int
+    offset: Int
+  ): [LaravelInterviewQuestion!]!
+
+  # React Lessons
+  reactLessons(
+    topic: String
+    sortBy: String
+    sortOrder: String
+    limit: Int
+    offset: Int
+  ): [ReactLesson!]!
+
+  # React Interview Questions
+  reactInterviewQuestions(
+    topic: String
+    sortBy: String
+    sortOrder: String
+    limit: Int
+    offset: Int
+  ): [ReactInterviewQuestion!]!
+
+  # Tailwind Lessons
+  tailwindLessons(
+    topic: String
+    sortBy: String
+    sortOrder: String
+    limit: Int
+    offset: Int
+  ): [TailwindLesson!]!
+
+  # Tailwind Interview Questions
+  tailwindInterviewQuestions(
+    topic: String
+    sortBy: String
+    sortOrder: String
+    limit: Int
+    offset: Int
+  ): [TailwindInterviewQuestion!]!
+
+  # Node.js Lessons
+  nodeLessons(
+    topic: String
+    sortBy: String
+    sortOrder: String
+    limit: Int
+    offset: Int
+  ): [NodeLesson!]!
+
+  # Node.js Interview Questions
+  nodeInterviewQuestions(
+    topic: String
+    sortBy: String
+    sortOrder: String
+    limit: Int
+    offset: Int
+  ): [NodeInterviewQuestion!]!
+
+  # SASS Lessons
+  sassLessons(
+    topic: String
+    sortBy: String
+    sortOrder: String
+    limit: Int
+    offset: Int
+  ): [SassLesson!]!
+
+  # SASS Interview Questions
+  sassInterviewQuestions(
+    topic: String
+    sortBy: String
+    sortOrder: String
+    limit: Int
+    offset: Int
+  ): [SassInterviewQuestion!]!
+}
+
+type Mutation {
+  # Submit an answer to an interview question
+  submitAnswer(questionId: Int!, answerIndex: Int!): AnswerResult!
+
+  # Submit an answer to a Laravel interview question
+  submitLaravelAnswer(questionId: Int!, answerIndex: Int!): AnswerResult!
+
+  # Submit an answer to a React interview question
+  submitReactAnswer(questionId: Int!, answerIndex: Int!): AnswerResult!
+
+  # Submit an answer to a Tailwind interview question
+  submitTailwindAnswer(questionId: Int!, answerIndex: Int!): AnswerResult!
+
+  # Submit an answer to a Node.js interview question
+  submitNodeAnswer(questionId: Int!, answerIndex: Int!): AnswerResult!
+
+  # Submit an answer to a SASS interview question
+  submitSassAnswer(questionId: Int!, answerIndex: Int!): AnswerResult!
+
+  # Track progress for a lesson
+  trackProgress(userId: Int!, lessonId: Int!, module: String!): ProgressResult!
+}
+
+# Represents a learning lesson with code examples
+type Lesson {
+  id: Int!
+  topic: String
+  title: String!
+  description: String!
+  codeExample: String!
+  output: String!
+}
+
+# Represents an interview question with multiple choice or open-ended format
+type InterviewQuestion {
+  id: Int!
+  topic: String
+  type: String
+  question: String!
+  choices: [String!]
+  correctAnswer: Int
+  explanation: String
+}
+
+# Represents a Laravel learning lesson with code examples
+type LaravelLesson {
+  id: Int!
+  topic: String
+  title: String!
+  description: String!
+  codeExample: String!
+  output: String!
+}
+
+# Represents a Laravel interview question with multiple choice or open-ended format
+type LaravelInterviewQuestion {
+  id: Int!
+  topic: String
+  type: String
+  question: String!
+  choices: [String!]
+  correctAnswer: Int
+  explanation: String
+}
+
+# Represents the result of answering a question
+type AnswerResult {
+  isCorrect: Boolean!
+  explanation: String
+}
+
+# Represents a user's progress on a lesson
+type ProgressResult {
+  userId: Int!
+  lessonId: Int!
+  module: String!
+  status: String!
+}
+
+# Represents a React learning lesson with code examples
+type ReactLesson {
+  id: Int!
+  topic: String
+  title: String!
+  description: String!
+  codeExample: String!
+  output: String!
+}
+
+# Represents a React interview question with multiple choice or open-ended format
+type ReactInterviewQuestion {
+  id: Int!
+  topic: String
+  type: String
+  question: String!
+  choices: [String!]
+  correctAnswer: Int
+  explanation: String
+}
+
+# Represents a Tailwind CSS learning lesson with code examples
+type TailwindLesson {
+  id: Int!
+  topic: String
+  title: String!
+  description: String!
+  codeExample: String!
+  output: String!
+}
+
+# Represents a Tailwind CSS interview question with multiple choice or open-ended format
+type TailwindInterviewQuestion {
+  id: Int!
+  topic: String
+  type: String
+  question: String!
+  choices: [String!]
+  correctAnswer: Int
+  explanation: String
+}
+
+# Represents a Node.js learning lesson with code examples
+type NodeLesson {
+  id: Int!
+  topic: String
+  title: String!
+  description: String!
+  codeExample: String!
+  output: String!
+}
+
+# Represents a Node.js interview question with multiple choice or open-ended format
+type NodeInterviewQuestion {
+  id: Int!
+  topic: String
+  type: String
+  question: String!
+  choices: [String!]
+  correctAnswer: Int
+  explanation: String
+}
+
+# Represents a SASS learning lesson with code examples
+type SassLesson {
+  id: Int!
+  topic: String
+  title: String!
+  description: String!
+  codeExample: String!
+  output: String!
+}
+
+# Represents a SASS interview question with multiple choice or open-ended format
+type SassInterviewQuestion {
+  id: Int!
+  topic: String
+  type: String
+  question: String!
+  choices: [String!]
+  correctAnswer: Int
+  explanation: String
+}

@@ -1,0 +1,42 @@
+[
+  {
+    "id": 1,
+    "topic": "Database Fundamentals",
+    "title": "Relational Model",
+    "description": "Learn about the relational model and its core concepts.",
+    "codeExample": "-- Creating a simple table\nCREATE TABLE users (\n  id INT PRIMARY KEY AUTO_INCREMENT,\n  name VARCHAR(100) NOT NULL,\n  email VARCHAR(100) UNIQUE,\n  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP\n);\n\n-- Inserting data\nINSERT INTO users (name, email) VALUES \n('John Doe', 'john@example.com'),\n('Jane Smith', 'jane@example.com');\n\n-- Querying data\nSELECT * FROM users WHERE email = 'john@example.com';",
+    "output": "Table created with proper constraints and sample data inserted"
+  },
+  {
+    "id": 2,
+    "topic": "Database Fundamentals",
+    "title": "Keys and Constraints",
+    "description": "Learn about primary keys, foreign keys, and other constraints.",
+    "codeExample": "-- Table with primary and foreign keys\nCREATE TABLE orders (\n  id INT PRIMARY KEY AUTO_INCREMENT,\n  user_id INT,\n  product_name VARCHAR(100),\n  quantity INT DEFAULT 1,\n  order_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,\n  FOREIGN KEY (user_id) REFERENCES users(id)\n);\n\n-- Adding constraints\nALTER TABLE users \nADD CONSTRAINT chk_email CHECK (email LIKE '%@%');\n\n-- Unique constraint\nALTER TABLE users \nADD CONSTRAINT uk_email UNIQUE (email);",
+    "output": "Tables with proper relationships and constraints enforced"
+  },
+  {
+    "id": 3,
+    "topic": "SQL",
+    "title": "Joins and Subqueries",
+    "description": "Learn how to combine data from multiple tables using joins and subqueries.",
+    "codeExample": "-- Inner join\nSELECT u.name, o.product_name, o.quantity\nFROM users u\nINNER JOIN orders o ON u.id = o.user_id;\n\n-- Left join\nSELECT u.name, o.product_name\nFROM users u\nLEFT JOIN orders o ON u.id = o.user_id;\n\n-- Subquery\nSELECT name FROM users \nWHERE id IN (SELECT user_id FROM orders WHERE quantity > 1);",
+    "output": "Combined data from multiple tables with different join types"
+  },
+  {
+    "id": 4,
+    "topic": "Data Modeling",
+    "title": "ER Diagrams",
+    "description": "Learn how to create Entity-Relationship diagrams for database design.",
+    "codeExample": "-- One-to-Many relationship\nCREATE TABLE departments (\n  id INT PRIMARY KEY AUTO_INCREMENT,\n  name VARCHAR(100)\n);\n\nCREATE TABLE employees (\n  id INT PRIMARY KEY AUTO_INCREMENT,\n  name VARCHAR(100),\n  department_id INT,\n  FOREIGN KEY (department_id) REFERENCES departments(id)\n);\n\n-- Many-to-Many relationship\nCREATE TABLE students (\n  id INT PRIMARY KEY AUTO_INCREMENT,\n  name VARCHAR(100)\n);\n\nCREATE TABLE courses (\n  id INT PRIMARY KEY AUTO_INCREMENT,\n  title VARCHAR(100)\n);\n\nCREATE TABLE enrollments (\n  student_id INT,\n  course_id INT,\n  PRIMARY KEY (student_id, course_id),\n  FOREIGN KEY (student_id) REFERENCES students(id),\n  FOREIGN KEY (course_id) REFERENCES courses(id)\n);",
+    "output": "Properly normalized database schema with relationship tables"
+  },
+  {
+    "id": 5,
+    "topic": "ORM Integration",
+    "title": "Entity Framework Core Basics",
+    "description": "Learn how to use Entity Framework Core for database operations.",
+    "codeExample": "// Entity classes\npublic class Blog\n{\n    public int BlogId { get; set; }\n    public string Url { get; set; }\n    public List<Post> Posts { get; } = new();\n}\n\npublic class Post\n{\n    public int PostId { get; set; }\n    public string Title { get; set; }\n    public string Content { get; set; }\n    public int BlogId { get; set; }\n    public Blog Blog { get; set; }\n}\n\n// DbContext\npublic class BloggingContext : DbContext\n{\n    public DbSet<Blog> Blogs { get; set; }\n    public DbSet<Post> Posts { get; set; }\n}",
+    "output": "C# entity classes and DbContext for ORM operations"
+  }
+]

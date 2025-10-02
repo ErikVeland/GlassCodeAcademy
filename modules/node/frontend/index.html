@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Node.js Learning Module - Fullstack Academy</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="bg-gray-50">
+    <header class="bg-green-500 text-white shadow-md">
+        <div class="container mx-auto px-4 py-4">
+            <div class="flex justify-between items-center">
+                <a href="/" class="text-2xl font-bold">Node.js Learning Module</a>
+                <nav>
+                    <ul class="flex space-x-6">
+                        <li><a href="/" class="hover:text-green-200">Home</a></li>
+                        <li><a href="lessons.html" class="hover:text-green-200">Lessons</a></li>
+                        <li><a href="quiz.html" class="hover:text-green-200">Quiz</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </header>
+    
+    <main class="container mx-auto px-4 py-8">
+        <div class="max-w-4xl mx-auto">
+            <div class="text-center mb-12">
+                <h1 class="text-4xl font-bold text-gray-900 mb-4">Learn Node.js with Fullstack Academy</h1>
+                <p class="text-xl text-gray-600 mb-8">
+                    Master Node.js concepts through interactive lessons and quizzes
+                </p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
+                <div class="bg-white rounded-lg shadow-md p-6">
+                    <h2 class="text-2xl font-semibold text-gray-900 mb-4">Interactive Lessons</h2>
+                    <p class="text-gray-600 mb-4">
+                        Learn Node.js concepts with hands-on examples and code snippets
+                    </p>
+                    <a href="lessons.html" class="text-green-500 hover:text-green-700 font-medium">
+                        Start Learning →
+                    </a>
+                </div>
+                
+                <div class="bg-white rounded-lg shadow-md p-6">
+                    <h2 class="text-2xl font-semibold text-gray-900 mb-4">Practice Quizzes</h2>
+                    <p class="text-gray-600 mb-4">
+                        Test your knowledge with interactive quizzes and get instant feedback
+                    </p>
+                    <a href="quiz.html" class="text-green-500 hover:text-green-700 font-medium">
+                        Take Quiz →
+                    </a>
+                </div>
+                
+                <div class="bg-white rounded-lg shadow-md p-6">
+                    <h2 class="text-2xl font-semibold text-gray-900 mb-4">Track Progress</h2>
+                    <p class="text-gray-600 mb-4">
+                        Monitor your learning progress and earn certificates
+                    </p>
+                    <a href="lessons.html" class="text-green-500 hover:text-green-700 font-medium">
+                        View Progress →
+                    </a>
+                </div>
+            </div>
+        </div>
+    </main>
+    
+    <footer class="bg-white border-t border-gray-200 mt-12">
+        <div class="container mx-auto px-4 py-6">
+            <div class="text-center text-gray-600">
+                <p>Node.js Learning Module &copy; <span id="current-year"></span> Fullstack Academy</p>
+            </div>
+        </div>
+    </footer>
+    
+    <script>
+        document.getElementById('current-year').textContent = new Date().getFullYear();
+    </script>
+</body>
+</html>

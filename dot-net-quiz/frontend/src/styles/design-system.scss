@@ -1,0 +1,1179 @@
+// Fullstack Academy Design System
+// SCSS implementation for 4-tier learning structure
+
+// =============================================
+// Variables - Tier-based Color Palette
+// =============================================
+
+// 4-Tier Learning Structure Colors
+$tier-foundational-primary: #3B82F6; // Blue
+$tier-foundational-secondary: #06B6D4; // Cyan
+$tier-foundational-gradient: linear-gradient(135deg, #3B82F6 0%, #06B6D4 100%);
+
+$tier-core-primary: #10B981; // Emerald
+$tier-core-secondary: #059669; // Green
+$tier-core-gradient: linear-gradient(135deg, #10B981 0%, #059669 100%);
+
+$tier-specialized-primary: #8B5CF6; // Violet
+$tier-specialized-secondary: #7C3AED; // Purple
+$tier-specialized-gradient: linear-gradient(135deg, #8B5CF6 0%, #7C3AED 100%);
+
+$tier-quality-primary: #F59E0B; // Amber
+$tier-quality-secondary: #EF4444; // Red
+$tier-quality-gradient: linear-gradient(135deg, #F59E0B 0%, #EF4444 100%);
+
+// Tier Gradient Mixins
+@mixin tier-gradient($tier) {
+  @if $tier == 'foundational' {
+    background: $tier-foundational-gradient;
+  } @else if $tier == 'core' {
+    background: $tier-core-gradient;
+  } @else if $tier == 'specialized' {
+    background: $tier-specialized-gradient;
+  } @else if $tier == 'quality' {
+    background: $tier-quality-gradient;
+  }
+}
+
+// Typography Hierarchy
+$font-family-primary: 'Geist', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+$font-family-mono: 'Geist Mono', 'Fira Code', monospace;
+
+// Responsive Typography using clamp()
+$hero-title-size: clamp(2rem, 5vw, 3.5rem);
+$tier-title-size: 2rem;
+$module-title-size: 1.25rem;
+$body-text-size: 1rem;
+$meta-text-size: 0.875rem;
+
+$font-weight-regular: 400;
+$font-weight-medium: 500;
+$font-weight-semibold: 600;
+$font-weight-bold: 700;
+$font-weight-extrabold: 800;
+
+// Glass Morphism Variables
+$glass-bg-light: rgba(255, 255, 255, 0.1);
+$glass-bg-dark: rgba(31, 41, 55, 0.1);
+$glass-border-light: rgba(255, 255, 255, 0.2);
+$glass-border-dark: rgba(75, 85, 99, 0.3);
+$glass-blur: 10px;
+
+// Breakpoints (Mobile-first)
+$breakpoint-mobile: 0;
+$breakpoint-tablet: 601px;
+$breakpoint-desktop: 1025px;
+$breakpoint-large: 1441px;
+
+// Animation Properties
+$animation-duration-fast: 0.2s;
+$animation-duration-normal: 0.3s;
+$animation-duration-slow: 0.5s;
+$animation-duration-path: 3s;
+$animation-easing: ease;
+$animation-easing-bounce: cubic-bezier(0.68, -0.55, 0.265, 1.55);
+
+// Spacing System (8px grid)
+$spacing-xs: 0.25rem; // 4px
+$spacing-sm: 0.5rem;  // 8px
+$spacing-md: 1rem;    // 16px
+$spacing-lg: 1.5rem;  // 24px
+$spacing-xl: 2rem;    // 32px
+$spacing-2xl: 3rem;   // 48px
+$spacing-3xl: 4rem;   // 64px
+
+// Border Radius
+$border-radius-sm: 0.5rem;
+$border-radius-md: 0.75rem;
+$border-radius-lg: 1rem;
+$border-radius-xl: 1.25rem;
+
+// Shadows
+$shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.1);
+$shadow-md: 0 4px 8px rgba(0, 0, 0, 0.1);
+$shadow-lg: 0 8px 16px rgba(0, 0, 0, 0.1);
+$shadow-xl: 0 12px 24px rgba(0, 0, 0, 0.15);
+
+// =============================================
+// Mixins
+// =============================================
+
+// Responsive Breakpoint Mixin
+@mixin breakpoint($size) {
+  @if $size == 'tablet' {
+    @media (min-width: $breakpoint-tablet) {
+      @content;
+    }
+  } @else if $size == 'desktop' {
+    @media (min-width: $breakpoint-desktop) {
+      @content;
+    }
+  } @else if $size == 'large' {
+    @media (min-width: $breakpoint-large) {
+      @content;
+    }
+  }
+}
+
+// Glass Morphism Mixin
+@mixin glass-morphism($opacity: 0.1, $blur: $glass-blur) {
+  background: rgba(255, 255, 255, $opacity);
+  backdrop-filter: blur($blur);
+  -webkit-backdrop-filter: blur($blur);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  
+  @media (prefers-color-scheme: dark) {
+    background: rgba(31, 41, 55, $opacity);
+    border: 1px solid rgba(75, 85, 99, 0.3);
+  }
+}
+
+// Tier Color Mixin
+@mixin tier-gradient($tier) {
+  @if $tier == 'foundational' {
+    background: $tier-foundational-gradient;
+  } @else if $tier == 'core' {
+    background: $tier-core-gradient;
+  } @else if $tier == 'specialized' {
+    background: $tier-specialized-gradient;
+  } @else if $tier == 'quality' {
+    background: $tier-quality-gradient;
+  }
+}
+
+// Animation Mixins
+@mixin smooth-transition($duration: $animation-duration-normal, $easing: $animation-easing) {
+  transition: all $duration $easing;
+}
+
+@mixin hover-lift {
+  @include smooth-transition();
+  
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: $shadow-lg;
+  }
+  
+  @include breakpoint('desktop') {
+    &:hover {
+      transform: translateY(-6px);
+      box-shadow: $shadow-xl;
+    }
+  }
+}
+
+// Typography Mixins
+@mixin typography-hero {
+  font-family: $font-family-primary;
+  font-size: $hero-title-size;
+  font-weight: $font-weight-extrabold;
+  line-height: 1.2;
+  color: white;
+}
+
+@mixin typography-tier-title {
+  font-family: $font-family-primary;
+  font-size: $tier-title-size;
+  font-weight: $font-weight-bold;
+  line-height: 1.3;
+  color: white;
+}
+
+@mixin typography-module-title {
+  font-family: $font-family-primary;
+  font-size: $module-title-size;
+  font-weight: $font-weight-semibold;
+  line-height: 1.4;
+}
+
+@mixin typography-body {
+  font-family: $font-family-primary;
+  font-size: $body-text-size;
+  font-weight: $font-weight-regular;
+  line-height: 1.6;
+}
+
+@mixin typography-meta {
+  font-family: $font-family-primary;
+  font-size: $meta-text-size;
+  font-weight: $font-weight-medium;
+  line-height: 1.5;
+}
+
+@mixin typography-heading {
+  font-family: $font-family-primary;
+  font-size: 1.25rem;
+  font-weight: $font-weight-semibold;
+  line-height: 1.4;
+}
+
+// =============================================
+// Base Styles
+// =============================================
+
+:root {
+  --font-primary: #{$font-family-primary};
+  --font-mono: #{$font-family-mono};
+  
+  // Tier colors as CSS custom properties for JS access
+  --tier-foundational-primary: #{$tier-foundational-primary};
+  --tier-foundational-secondary: #{$tier-foundational-secondary};
+  --tier-core-primary: #{$tier-core-primary};
+  --tier-core-secondary: #{$tier-core-secondary};
+  --tier-specialized-primary: #{$tier-specialized-primary};
+  --tier-specialized-secondary: #{$tier-specialized-secondary};
+  --tier-quality-primary: #{$tier-quality-primary};
+  --tier-quality-secondary: #{$tier-quality-secondary};
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: $font-family-primary;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+}
+
+// =============================================
+// Component Styles
+// =============================================
+
+// Hero Section
+.hero-section {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: $spacing-xl;
+  padding: $spacing-xl $spacing-lg;
+  max-width: 1200px;
+  margin: 0 auto;
+  align-items: center;
+  
+  @include breakpoint('tablet') {
+    grid-template-columns: 1fr 1fr;
+    gap: $spacing-2xl;
+    padding: $spacing-3xl $spacing-xl;
+  }
+  
+  .hero-content {
+    color: white;
+    text-align: center;
+    
+    @include breakpoint('tablet') {
+      text-align: left;
+    }
+  }
+  
+  .hero-title {
+    @include typography-hero;
+    margin-bottom: $spacing-md;
+    
+    .hero-subtitle {
+      display: block;
+      font-size: 0.7em;
+      opacity: 0.9;
+      font-weight: $font-weight-semibold;
+      margin-top: $spacing-sm;
+    }
+  }
+  
+  .hero-description {
+    @include typography-body;
+    font-size: 1.125rem;
+    opacity: 0.9;
+    margin-bottom: $spacing-xl;
+    color: white;
+  }
+  
+  .hero-stats {
+    display: flex;
+    gap: $spacing-xl;
+    justify-content: center;
+    
+    @include breakpoint('tablet') {
+      justify-content: flex-start;
+    }
+    
+    .stat-item {
+      text-align: center;
+      
+      .stat-number {
+        display: block;
+        font-size: 2rem;
+        font-weight: $font-weight-extrabold;
+        color: #FDE68A;
+      }
+      
+      .stat-label {
+        @include typography-meta;
+        opacity: 0.8;
+        color: white;
+      }
+    }
+  }
+}
+
+// Learning Path Visualization
+.learning-path-visualization {
+  width: 100%;
+  max-width: 400px;
+  margin: 0 auto;
+  
+  .path-svg {
+    width: 100%;
+    height: auto;
+  }
+  
+  .learning-path {
+    stroke-dasharray: 1000;
+    stroke-dashoffset: 1000;
+    animation: drawPath $animation-duration-path ease-in-out forwards;
+  }
+  
+  .tier-node {
+    opacity: 0;
+    animation: fadeInNode 0.5s ease-in-out forwards;
+    
+    &:nth-child(3) { animation-delay: 0.5s; }
+    &:nth-child(4) { animation-delay: 1s; }
+    &:nth-child(5) { animation-delay: 1.5s; }
+    &:nth-child(6) { animation-delay: 2s; }
+  }
+}
+
+@keyframes drawPath {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes fadeInNode {
+  to {
+    opacity: 1;
+  }
+}
+
+// Tier Sections
+.tier-section {
+  margin-bottom: $spacing-3xl;
+  
+  @include breakpoint('tablet') {
+    margin-bottom: 5rem;
+  }
+  
+  @include breakpoint('desktop') {
+    margin-bottom: 6rem;
+  }
+  
+  // New integrated tier container with colored gradient background
+  .tier-container {
+    padding: $spacing-xl;
+    border-radius: $border-radius-xl;
+    color: white;
+    position: relative;
+    overflow: hidden;
+    
+    @include breakpoint('tablet') {
+      padding: $spacing-2xl;
+    }
+    
+    // Glass morphism overlay
+    &::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(12px);
+      border-radius: inherit;
+      z-index: 0;
+    }
+    
+    // Ensure content is above the glass overlay
+    > * {
+      position: relative;
+      z-index: 1;
+    }
+  }
+  
+  // Tier-specific gradient backgrounds
+  &[data-tier="foundational"] .tier-container {
+    @include tier-gradient('foundational');
+  }
+  
+  &[data-tier="core"] .tier-container {
+    @include tier-gradient('core');
+  }
+  
+  &[data-tier="specialized"] .tier-container {
+    @include tier-gradient('specialized');
+  }
+  
+  &[data-tier="quality"] .tier-container {
+    @include tier-gradient('quality');
+  }
+  
+  // Direct tier container gradient classes for immediate application
+  .tier-container {
+    &.tier-foundational {
+      @include tier-gradient('foundational');
+    }
+    
+    &.tier-core {
+      @include tier-gradient('core');
+    }
+    
+    &.tier-specialized {
+      @include tier-gradient('specialized');
+    }
+    
+    &.tier-quality {
+      @include tier-gradient('quality');
+    }
+  }
+  
+  // Tier header with improved layout
+  .tier-header {
+    margin-bottom: $spacing-xl;
+    
+    .tier-header-content {
+      display: flex;
+      align-items: flex-start;
+      gap: $spacing-xl;
+      margin-bottom: $spacing-lg;
+      
+      @include breakpoint('mobile-only') {
+        flex-direction: column;
+        gap: $spacing-lg;
+      }
+      
+      .tier-main-info {
+        flex: 1;
+        
+        .tier-title {
+          @include typography-tier-title;
+          margin-bottom: $spacing-sm;
+          display: flex;
+          align-items: center;
+          gap: $spacing-sm;
+          
+          .tier-level {
+            font-size: 0.875rem;
+            background: rgba(255, 255, 255, 0.2);
+            padding: $spacing-xs $spacing-sm;
+            border-radius: $border-radius-sm;
+            font-weight: $font-weight-medium;
+          }
+        }
+        
+        .tier-description {
+          @include typography-body;
+          font-size: 1.125rem;
+          opacity: 0.9;
+          margin: 0 0 $spacing-sm 0;
+        }
+        
+        .tier-focus-area {
+          @include typography-body;
+          font-size: 1rem;
+          opacity: 0.8;
+          margin: 0;
+          
+          strong {
+            font-weight: $font-weight-semibold;
+          }
+        }
+      }
+      
+      // Unified progress summary widget
+      .tier-progress-summary {
+        display: flex;
+        align-items: center;
+        gap: $spacing-lg;
+        background: rgba(255, 255, 255, 0.1);
+        padding: $spacing-lg;
+        border-radius: $border-radius-lg;
+        backdrop-filter: blur(8px);
+        
+        @include breakpoint('mobile-only') {
+          flex-direction: column;
+          gap: $spacing-md;
+          text-align: center;
+        }
+        
+        .tier-progress-ring {
+          flex-shrink: 0;
+          
+          .circular-chart {
+            width: 64px;
+            height: 64px;
+            
+            .circle-bg {
+              fill: none;
+              stroke: rgba(255, 255, 255, 0.2);
+              stroke-width: 3.8;
+            }
+            
+            .circle {
+              fill: none;
+              stroke: currentColor;
+              stroke-width: 3.8;
+              stroke-linecap: round;
+              transform: rotate(-90deg);
+              transform-origin: 50% 50%;
+              transition: stroke-dasharray 0.5s ease;
+            }
+            
+            .percentage {
+              fill: white;
+              font-size: 0.5rem;
+              font-weight: $font-weight-bold;
+              text-anchor: middle;
+              dominant-baseline: middle;
+            }
+          }
+        }
+        
+        // Unified stats widget
+        .tier-stats {
+          display: flex;
+          flex-direction: column;
+          gap: $spacing-xs;
+          min-width: 120px;
+          
+          .stat-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.05);
+            padding: $spacing-xs $spacing-sm;
+            border-radius: $border-radius-sm;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            
+            .stat-number {
+              font-size: 1rem;
+              font-weight: $font-weight-bold;
+              line-height: 1.2;
+              color: white;
+            }
+            
+            .stat-label {
+              font-size: 0.75rem;
+              opacity: 0.8;
+              line-height: 1.1;
+              margin-left: $spacing-sm;
+              color: rgba(255, 255, 255, 0.8);
+            }
+          }
+        }
+      }
+    }
+    
+    // Learning objectives section
+    .learning-objectives {
+      .objectives-title {
+        font-family: $font-family-primary;
+        font-size: 1.125rem;
+        font-weight: $font-weight-semibold;
+        line-height: 1.4;
+        margin-bottom: $spacing-md;
+        color: white;
+      }
+      
+      .objectives-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        display: grid;
+        gap: $spacing-sm;
+        
+        @include breakpoint('tablet') {
+          grid-template-columns: repeat(2, 1fr);
+          gap: $spacing-md;
+        }
+        
+        .objective-item {
+          display: flex;
+          align-items: flex-start;
+          gap: $spacing-sm;
+          font-size: 0.9375rem;
+          line-height: 1.4;
+          
+          .objective-icon {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 0.875rem;
+            margin-top: 2px;
+            flex-shrink: 0;
+          }
+        }
+      }
+    }
+  }
+  
+  // Modules grid integrated within the tier container
+  .modules-grid {
+    margin-top: $spacing-xl;
+  }
+  
+  // Tier completion celebration
+  .tier-completion-celebration {
+    margin-top: $spacing-xl;
+    text-align: center;
+    background: rgba(255, 255, 255, 0.1);
+    padding: $spacing-xl;
+    border-radius: $border-radius-lg;
+    backdrop-filter: blur(8px);
+    
+    .celebration-content {
+      .celebration-icon {
+        font-size: 3rem;
+        margin-bottom: $spacing-md;
+        display: block;
+      }
+      
+      .celebration-title {
+        font-family: $font-family-primary;
+        font-size: 1.25rem;
+        font-weight: $font-weight-semibold;
+        line-height: 1.4;
+        margin-bottom: $spacing-sm;
+        color: white;
+      }
+      
+      .celebration-message {
+        @include typography-body;
+        opacity: 0.9;
+        margin-bottom: $spacing-lg;
+      }
+      
+      .next-tier-button {
+        background: rgba(255, 255, 255, 0.2);
+        color: white;
+        border: none;
+        padding: $spacing-md $spacing-lg;
+        border-radius: $border-radius-md;
+        font-weight: $font-weight-medium;
+        cursor: pointer;
+        transition: all $animation-duration-fast ease;
+        
+        &:hover {
+          background: rgba(255, 255, 255, 0.3);
+          transform: translateY(-2px);
+        }
+      }
+    }
+  }
+}
+
+// Module Grid
+.modules-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: $spacing-lg;
+  
+  @include breakpoint('tablet') {
+    grid-template-columns: repeat(2, 1fr);
+    gap: $spacing-xl;
+  }
+  
+  @include breakpoint('desktop') {
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: $spacing-xl;
+  }
+  
+  // When inside tier-container, add proper spacing
+  .tier-container & {
+    margin-top: $spacing-xl;
+    padding-top: $spacing-lg;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+  }
+}
+
+// Module Cards
+.module-card {
+  @include glass-morphism(0.1, $glass-blur);
+  @include hover-lift;
+  padding: $spacing-lg;
+  border-radius: $border-radius-lg;
+  color: white;
+  text-decoration: none;
+  display: block;
+  
+  @include breakpoint('tablet') {
+    padding: $spacing-xl;
+    border-radius: $border-radius-xl;
+  }
+  
+  .module-header {
+    display: flex;
+    align-items: center;
+    gap: $spacing-md;
+    margin-bottom: $spacing-md;
+    
+    .module-icon {
+      font-size: 2rem;
+      flex-shrink: 0;
+      margin-right: $spacing-xs; // Extra space after icon
+    }
+    
+    .module-info {
+      flex: 1;
+      min-width: 0; // Allows text truncation
+      
+      .module-title {
+        @include typography-module-title;
+        color: white;
+        margin-bottom: $spacing-xs;
+        line-height: 1.3;
+      }
+      
+      .difficulty-badge {
+        @include typography-meta;
+        font-size: 0.75rem;
+        padding: $spacing-xs $spacing-sm;
+        border-radius: $border-radius-sm;
+        font-weight: $font-weight-medium;
+        
+        &.beginner {
+          background: rgba(34, 197, 94, 0.2);
+          color: #86EFAC;
+        }
+        
+        &.intermediate {
+          background: rgba(251, 191, 36, 0.2);
+          color: #FDE68A;
+        }
+        
+        &.advanced {
+          background: rgba(239, 68, 68, 0.2);
+          color: #FCA5A5;
+        }
+      }
+    }
+  }
+  
+  .module-description {
+    @include typography-body;
+    color: rgba(255, 255, 255, 0.9);
+    margin-bottom: $spacing-md;
+  }
+  
+  // Pill-shaped technology tags
+  .technologies-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: $spacing-xs;
+    margin-bottom: $spacing-md;
+    
+    .tech-pill {
+      @include typography-meta;
+      font-size: 0.75rem;
+      padding: $spacing-xs $spacing-sm;
+      background: rgba(255, 255, 255, 0.15);
+      color: white;
+      border-radius: 9999px; // Full pill shape
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      font-weight: $font-weight-medium;
+      transition: all $animation-duration-fast ease;
+      
+      &:hover {
+        background: rgba(255, 255, 255, 0.25);
+        transform: translateY(-1px);
+      }
+      
+      &.tech-pill-more {
+        background: rgba(255, 255, 255, 0.1);
+        font-style: italic;
+        opacity: 0.8;
+      }
+    }
+  }
+  
+  .module-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: $spacing-md;
+    gap: $spacing-md;
+    
+    .estimated-time {
+      @include typography-meta;
+      color: rgba(255, 255, 255, 0.8);
+      display: flex;
+      align-items: center;
+      gap: $spacing-xs;
+      background: rgba(255, 255, 255, 0.05);
+      padding: $spacing-xs $spacing-sm;
+      border-radius: $border-radius-sm;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      white-space: nowrap;
+    }
+    
+    .progress-indicator {
+      display: flex;
+      align-items: center;
+      gap: $spacing-sm;
+      background: rgba(255, 255, 255, 0.05);
+      padding: $spacing-xs $spacing-sm;
+      border-radius: $border-radius-sm;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      
+      .progress-bar {
+        width: 80px;
+        height: 8px;
+        background: rgba(255, 255, 255, 0.2);
+        border-radius: 4px;
+        overflow: hidden;
+        backdrop-filter: blur(4px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        
+        .progress-fill {
+          height: 100%;
+          border-radius: 4px;
+          transition: width $animation-duration-slow ease;
+          background: linear-gradient(90deg, rgba(255, 255, 255, 0.8), rgba(255, 255, 255, 0.6));
+          box-shadow: 0 0 8px rgba(255, 255, 255, 0.3);
+        }
+      }
+      
+      .progress-text {
+        @include typography-meta;
+        font-size: 0.75rem;
+        font-weight: $font-weight-semibold;
+        color: white;
+        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+        min-width: 35px;
+        text-align: right;
+      }
+    }
+  }
+}
+
+// Quick Actions
+.quick-actions {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: $spacing-xl $spacing-lg;
+  
+  h2 {
+    @include typography-tier-title;
+    text-align: center;
+    margin-bottom: $spacing-xl;
+    color: white;
+  }
+  
+  .actions-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: $spacing-lg;
+    
+    @include breakpoint('tablet') {
+      grid-template-columns: repeat(2, 1fr);
+      gap: $spacing-xl;
+    }
+    
+    @include breakpoint('desktop') {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+  
+  .action-card {
+    @include glass-morphism(0.1, $glass-blur);
+    @include hover-lift;
+    padding: $spacing-lg;
+    border-radius: $border-radius-lg;
+    text-align: center;
+    color: white;
+    text-decoration: none;
+    display: block;
+    
+    @include breakpoint('tablet') {
+      padding: $spacing-xl;
+    }
+    
+    .action-icon {
+      font-size: 3rem;
+      display: block;
+      margin-bottom: $spacing-md;
+    }
+    
+    h3 {
+      @include typography-module-title;
+      color: white;
+      margin-bottom: $spacing-sm;
+    }
+    
+    p {
+      @include typography-body;
+      color: rgba(255, 255, 255, 0.9);
+      margin: 0;
+    }
+  }
+}
+
+// =============================================
+// Accessibility Enhancements
+// =============================================
+
+// High Contrast Mode
+@media (prefers-contrast: high) {
+  .module-card, .action-card {
+    border: 2px solid currentColor;
+    
+    &:focus-within {
+      outline: 3px solid #005fcc;
+      outline-offset: 2px;
+    }
+  }
+}
+
+// Reduced Motion
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  
+  .learning-path {
+    stroke-dasharray: none;
+    stroke-dashoffset: 0;
+  }
+  
+  .tier-node {
+    opacity: 1;
+    animation: none;
+  }
+}
+
+// Focus Indicators
+.module-card, .action-card {
+  &:focus-visible {
+    outline: 2px solid #005fcc;
+    outline-offset: 2px;
+  }
+}
+
+// =============================================
+// Dark Mode Enhancements
+// =============================================
+
+@media (prefers-color-scheme: dark) {
+  .hero-section .hero-stats .stat-number {
+    color: #FCD34D; // Slightly adjusted for better contrast
+  }
+  
+  .module-card, .action-card {
+    background: rgba(31, 41, 55, 0.15);
+    border-color: rgba(75, 85, 99, 0.4);
+  }
+}
+
+// Question count badge styling
+.question-count-badge {
+  @include typography-meta;
+  font-size: 0.75rem;
+  padding: $spacing-xs $spacing-sm;
+  background: rgba(255, 255, 255, 0.15);
+  color: white;
+  border-radius: $border-radius-sm;
+  font-weight: $font-weight-medium;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+// Interview prep page specific styles
+.interview-prep-page {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+}
+
+// Interview tier stats styling
+.tier-stats-summary {
+  display: flex;
+  align-items: center;
+  gap: $spacing-lg;
+  background: rgba(255, 255, 255, 0.1);
+  padding: $spacing-lg;
+  border-radius: $border-radius-lg;
+  backdrop-filter: blur(8px);
+  
+  @include breakpoint('mobile-only') {
+    flex-direction: column;
+    gap: $spacing-md;
+    text-align: center;
+  }
+}
+
+// Search input wrapper for interview prep
+.search-input-wrapper {
+  position: relative;
+  max-width: 600px;
+  margin: 0 auto;
+  
+  .search-input {
+    width: 100%;
+    padding: 1rem 3rem 1rem 1rem;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 0.75rem;
+    color: white;
+    font-size: 1rem;
+    backdrop-filter: blur(10px);
+    
+    &::placeholder {
+      color: rgba(255, 255, 255, 0.6);
+    }
+    
+    &:focus {
+      outline: none;
+      border-color: rgba(59, 130, 246, 0.5);
+      box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+    }
+  }
+  
+  .search-icon {
+    position: absolute;
+    right: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    opacity: 0.6;
+  }
+}
+
+// Filter containers
+.filters-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 2rem;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+  
+  .filter-group {
+    .filter-label {
+      display: block;
+      font-size: 0.875rem;
+      font-weight: 600;
+      margin-bottom: 0.75rem;
+      opacity: 0.9;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: rgba(255, 255, 255, 0.9);
+    }
+    
+    .filter-select {
+      width: 100%;
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 0.5rem;
+      color: white;
+      padding: 0.75rem;
+      font-size: 0.875rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      
+      &:focus {
+        outline: none;
+        border-color: rgba(59, 130, 246, 0.5);
+        box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+      }
+      
+      option {
+        background: #1f2937;
+        color: white;
+      }
+    }
+  }
+}
+
+// Filter results styling
+.filter-results {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  background: rgba(59, 130, 246, 0.1);
+  border: 1px solid rgba(59, 130, 246, 0.2);
+  border-radius: 0.5rem;
+  color: white;
+  margin: 0 auto 1.5rem;
+  max-width: 1200px;
+  
+  .results-text {
+    font-size: 0.875rem;
+  }
+  
+  .clear-filters-button {
+    background: transparent;
+    border: 1px solid rgba(59, 130, 246, 0.3);
+    color: #93C5FD;
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    font-size: 0.875rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    
+    &:hover {
+      background: rgba(59, 130, 246, 0.2);
+      color: white;
+    }
+  }
+}
+
+// Interview path visualization
+.interview-path-visualization {
+  width: 100%;
+  max-width: 400px;
+  margin: 0 auto;
+  
+  .path-svg {
+    width: 100%;
+    height: auto;
+  }
+}
+
+// =============================================
+// Print Styles
+// =============================================
+
+@media print {
+  .module-card, .action-card {
+    break-inside: avoid;
+    page-break-inside: avoid;
+    background: white !important;
+    color: black !important;
+    border: 1px solid #ccc !important;
+  }
+  
+  .hero-visual, .learning-path-visualization {
+    display: none;
+  }
+}
+
+// =============================================
+// Utility Classes
+// =============================================
+
+.glass-morphism {
+  @include glass-morphism();
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}

@@ -1,0 +1,568 @@
+{
+  "moduleSlug": "dotnet-fundamentals",
+  "title": "Dotnet Fundamentals Assessment",
+  "description": "Comprehensive assessment covering key concepts from the dotnet-fundamentals module",
+  "totalQuestions": 25,
+  "passingScore": 70,
+  "timeLimit": 30,
+  "questions": [
+    {
+      "id": "dotnet-fundamentals-q1",
+      "question": "What is the difference between .NET Framework and .NET Core?",
+      "topic": "General",
+      "difficulty": "Beginner",
+      "choices": [
+        ".NET Core is cross-platform and open-source, while .NET Framework is Windows-only and proprietary",
+        ".NET Framework is cross-platform, while .NET Core only works on Windows",
+        "Both are identical except for naming conventions",
+        ".NET Core is deprecated, while .NET Framework is actively developed"
+      ],
+      "correctIndex": 0,
+      "explanation": ".NET Core is a cross-platform, open-source framework that can run on Windows, macOS, and Linux, while .NET Framework is Windows-only and proprietary. .NET Core was later unified into .NET 5 and later versions, which are cross-platform.",
+      "industryContext": "Understanding the evolution of .NET platforms is crucial for making informed decisions about technology stacks in enterprise applications. Modern .NET development focuses on cross-platform capabilities.",
+      "tags": [
+        "beginner",
+        "dotnet",
+        "platforms"
+      ],
+      "questionType": "multiple-choice",
+      "estimatedTime": 60
+    },
+    {
+      "id": "dotnet-fundamentals-q2",
+      "question": "Which keyword is used to declare a compile-time constant in C#?",
+      "topic": "Variables",
+      "difficulty": "Beginner",
+      "choices": [
+        "const",
+        "readonly",
+        "static",
+        "final"
+      ],
+      "correctIndex": 0,
+      "explanation": "The 'const' keyword is used to declare compile-time constants in C#. The value must be assigned at declaration and cannot be changed. Constants are implicitly static and their values are embedded directly into the IL (Intermediate Language) code.",
+      "industryContext": "Constants are essential for defining values that should never change throughout the application lifecycle, such as mathematical constants, configuration values, or API endpoints.",
+      "tags": [
+        "beginner",
+        "dotnet",
+        "variables"
+      ],
+      "questionType": "multiple-choice",
+      "estimatedTime": 45
+    },
+    {
+      "id": "dotnet-fundamentals-q3",
+      "question": "What is the correct way to declare a nullable integer in C#?",
+      "topic": "Data Types",
+      "difficulty": "Beginner",
+      "choices": [
+        "int?",
+        "int!",
+        "nullable<int>",
+        "int*"
+      ],
+      "correctIndex": 0,
+      "explanation": "int? is the shorthand syntax for Nullable<int>, which allows value types to hold null values. This is particularly useful when working with databases or APIs that may return null values for numeric fields.",
+      "industryContext": "Nullable types are essential when working with databases, web APIs, and scenarios where the absence of a value is meaningful. They help prevent runtime exceptions and make code more robust.",
+      "tags": [
+        "beginner",
+        "dotnet",
+        "datatypes"
+      ],
+      "questionType": "multiple-choice",
+      "estimatedTime": 45
+    },
+    {
+      "id": "dotnet-fundamentals-q4",
+      "question": "Which access modifier makes a member accessible only within the same class?",
+      "topic": "Object-Oriented Programming",
+      "difficulty": "Beginner",
+      "choices": [
+        "private",
+        "protected",
+        "internal",
+        "public"
+      ],
+      "correctIndex": 0,
+      "explanation": "The 'private' access modifier restricts access to the member only within the same class where it's declared. This is the most restrictive access level and is the default for class members if no modifier is specified.",
+      "industryContext": "Proper use of access modifiers is fundamental to encapsulation, which is a core principle of object-oriented programming. Encapsulation helps maintain data integrity and reduces coupling between components.",
+      "tags": [
+        "beginner",
+        "dotnet",
+        "oop"
+      ],
+      "questionType": "multiple-choice",
+      "estimatedTime": 45
+    },
+    {
+      "id": "dotnet-fundamentals-q5",
+      "question": "What does the 'virtual' keyword indicate in C#?",
+      "topic": "Object-Oriented Programming",
+      "difficulty": "Intermediate",
+      "choices": [
+        "The method can be overridden in derived classes",
+        "The method cannot be overridden",
+        "The method is static",
+        "The method is abstract"
+      ],
+      "correctIndex": 0,
+      "explanation": "The 'virtual' keyword allows a method to be overridden in derived classes using the 'override' keyword, enabling polymorphism. This is a key feature of object-oriented programming that allows derived classes to provide specific implementations of base class methods.",
+      "industryContext": "Polymorphism through virtual methods is essential for creating flexible and extensible code architectures. It allows frameworks and libraries to provide default behavior while enabling customization through inheritance.",
+      "tags": [
+        "intermediate",
+        "dotnet",
+        "oop"
+      ],
+      "questionType": "multiple-choice",
+      "estimatedTime": 60
+    },
+    {
+      "id": "dotnet-fundamentals-q6",
+      "question": "Which LINQ method would you use to filter a collection based on a condition?",
+      "topic": "LINQ",
+      "difficulty": "Intermediate",
+      "choices": [
+        "Where",
+        "Select",
+        "OrderBy",
+        "GroupBy"
+      ],
+      "correctIndex": 0,
+      "explanation": "The 'Where' method is used to filter collections based on a specified condition, returning only elements that match the criteria. It's one of the most commonly used LINQ methods for data filtering operations.",
+      "industryContext": "LINQ (Language Integrated Query) is a powerful feature in C# that allows developers to query collections using SQL-like syntax. Filtering data is one of the most common operations in data processing applications.",
+      "tags": [
+        "intermediate",
+        "dotnet",
+        "linq"
+      ],
+      "questionType": "multiple-choice",
+      "estimatedTime": 45
+    },
+    {
+      "id": "dotnet-fundamentals-q7",
+      "question": "What is the primary purpose of the 'using' statement in C#?",
+      "topic": "Resource Management",
+      "difficulty": "Beginner",
+      "choices": [
+        "Ensures proper disposal of IDisposable objects",
+        "Imports namespaces",
+        "Creates aliases for types",
+        "Defines code regions"
+      ],
+      "correctIndex": 0,
+      "explanation": "The 'using' statement ensures that IDisposable objects are properly disposed of when they go out of scope, even if an exception occurs. This is crucial for managing resources like file handles, database connections, and network streams.",
+      "industryContext": "Proper resource management is critical for application performance and stability. Failure to dispose of resources properly can lead to memory leaks, file locking issues, and database connection pool exhaustion.",
+      "tags": [
+        "beginner",
+        "dotnet",
+        "resources"
+      ],
+      "questionType": "multiple-choice",
+      "estimatedTime": 60
+    },
+    {
+      "id": "dotnet-fundamentals-q8",
+      "question": "Which keyword is used to prevent inheritance of a class in C#?",
+      "topic": "Object-Oriented Programming",
+      "difficulty": "Beginner",
+      "choices": [
+        "sealed",
+        "final",
+        "static",
+        "abstract"
+      ],
+      "correctIndex": 0,
+      "explanation": "The 'sealed' keyword prevents a class from being inherited by other classes, making it the final class in the inheritance hierarchy. This is useful when you want to ensure that a class cannot be extended, which can be important for security or design reasons.",
+      "industryContext": "Sealing classes is an important design decision that affects the extensibility of your code. It's commonly used in framework development to prevent unintended inheritance that could break functionality or security assumptions.",
+      "tags": [
+        "beginner",
+        "dotnet",
+        "oop"
+      ],
+      "questionType": "multiple-choice",
+      "estimatedTime": 45
+    },
+    {
+      "id": "dotnet-fundamentals-q9",
+      "question": "What is the difference between IEnumerable and IQueryable?",
+      "topic": "LINQ",
+      "difficulty": "Intermediate",
+      "choices": [
+        "IEnumerable executes queries in-memory while IQueryable can translate queries to other formats like SQL",
+        "IEnumerable is for databases while IQueryable is for collections",
+        "IEnumerable is faster than IQueryable",
+        "There is no difference, they are interchangeable"
+      ],
+      "correctIndex": 0,
+      "explanation": "IEnumerable is for in-memory collections and executes queries locally, while IQueryable is designed for remote data sources and can translate queries to other formats like SQL. This makes IQueryable more efficient for database queries as filtering happens on the database server.",
+      "industryContext": "Understanding the difference between IEnumerable and IQueryable is crucial for performance optimization when working with Entity Framework and other ORM tools. Using the wrong interface can result in retrieving entire tables into memory.",
+      "tags": [
+        "intermediate",
+        "dotnet",
+        "linq"
+      ],
+      "questionType": "multiple-choice",
+      "estimatedTime": 75
+    },
+    {
+      "id": "dotnet-fundamentals-q10",
+      "question": "In async programming, what does 'await' do?",
+      "topic": "Asynchronous Programming",
+      "difficulty": "Intermediate",
+      "choices": [
+        "Asynchronously waits for a task to complete without blocking the calling thread",
+        "Blocks the calling thread until the task completes",
+        "Cancels the current task",
+        "Creates a new thread to execute the task"
+      ],
+      "correctIndex": 0,
+      "explanation": "'await' asynchronously waits for the task to complete, returning control to the caller and resuming execution when the task finishes, without blocking the thread. This enables responsive UI applications and efficient resource utilization in server applications.",
+      "industryContext": "Asynchronous programming is essential for building responsive user interfaces and scalable server applications. Proper use of async/await prevents thread pool starvation and improves application throughput.",
+      "tags": [
+        "intermediate",
+        "dotnet",
+        "async"
+      ],
+      "questionType": "multiple-choice",
+      "estimatedTime": 60
+    },
+    {
+      "id": "dotnet-fundamentals-q11",
+      "question": "What is the purpose of the 'yield' keyword in C#?",
+      "topic": "Collections",
+      "difficulty": "Intermediate",
+      "choices": [
+        "To create iterator methods that return sequences lazily",
+        "To break out of a loop",
+        "To return a value from a method",
+        "To skip to the next iteration of a loop"
+      ],
+      "correctIndex": 0,
+      "explanation": "The 'yield' keyword is used to create iterator methods that return IEnumerable or IEnumerator, allowing lazy evaluation of sequences. This means elements are generated on-demand rather than all at once, which can be more memory-efficient for large datasets.",
+      "industryContext": "Iterator methods with 'yield' are commonly used in data processing pipelines, custom collections, and scenarios where memory efficiency is important. They enable the creation of fluent APIs and reactive programming patterns.",
+      "tags": [
+        "intermediate",
+        "dotnet",
+        "collections"
+      ],
+      "questionType": "multiple-choice",
+      "estimatedTime": 75
+    },
+    {
+      "id": "dotnet-fundamentals-q12",
+      "question": "Which design pattern is commonly implemented by dependency injection containers?",
+      "topic": "Design Patterns",
+      "difficulty": "Intermediate",
+      "choices": [
+        "Inversion of Control",
+        "Singleton",
+        "Factory",
+        "Observer"
+      ],
+      "correctIndex": 0,
+      "explanation": "IoC (Inversion of Control) containers implement the Inversion of Control principle for dependency injection, managing object creation and dependency resolution automatically. This decouples components and makes code more testable and maintainable.",
+      "industryContext": "Dependency injection and Inversion of Control are fundamental patterns in modern software development. They enable loose coupling, improve testability, and support the SOLID principles of object-oriented design.",
+      "tags": [
+        "intermediate",
+        "dotnet",
+        "patterns"
+      ],
+      "questionType": "multiple-choice",
+      "estimatedTime": 60
+    },
+    {
+      "id": "dotnet-fundamentals-q13",
+      "question": "What is the difference between 'ref' and 'out' parameters?",
+      "topic": "Methods",
+      "difficulty": "Intermediate",
+      "choices": [
+        "'ref' parameters must be initialized before passing, 'out' parameters don't need initialization but must be assigned within the method",
+        "'out' parameters must be initialized before passing, 'ref' parameters don't need initialization",
+        "There is no difference, they are interchangeable",
+        "'ref' parameters are for value types, 'out' parameters are for reference types"
+      ],
+      "correctIndex": 0,
+      "explanation": "'ref' parameters must be initialized before being passed to a method, while 'out' parameters are considered unassigned and must be assigned a value within the method before it returns. Both allow methods to return multiple values.",
+      "industryContext": "Understanding parameter passing mechanisms is important for performance optimization and API design. While ref and out parameters are still used, modern C# favors tuples and out variables for returning multiple values.",
+      "tags": [
+        "intermediate",
+        "dotnet",
+        "methods"
+      ],
+      "questionType": "multiple-choice",
+      "estimatedTime": 75
+    },
+    {
+      "id": "dotnet-fundamentals-q14",
+      "question": "Which collection type provides the best performance for frequent insertions and deletions at arbitrary positions?",
+      "topic": "Collections",
+      "difficulty": "Advanced",
+      "choices": [
+        "LinkedList<T>",
+        "List<T>",
+        "Array",
+        "Dictionary<TKey, TValue>"
+      ],
+      "correctIndex": 0,
+      "explanation": "LinkedList<T> provides O(1) insertion and deletion at arbitrary positions when you have a reference to the node, unlike List<T> which requires O(n) for insertions/deletions in the middle due to element shifting.",
+      "industryContext": "Choosing the right collection type is crucial for performance-critical applications. Understanding the time complexity of operations helps developers make informed decisions about data structures for specific use cases.",
+      "tags": [
+        "advanced",
+        "dotnet",
+        "collections"
+      ],
+      "questionType": "multiple-choice",
+      "estimatedTime": 90
+    },
+    {
+      "id": "dotnet-fundamentals-q15",
+      "question": "What is the purpose of the 'ConfigureAwait(false)' method?",
+      "topic": "Asynchronous Programming",
+      "difficulty": "Intermediate",
+      "choices": [
+        "Prevents capturing the current synchronization context to avoid deadlocks",
+        "Configures the task to run on a specific thread",
+        "Cancels the current task",
+        "Forces the task to complete synchronously"
+      ],
+      "correctIndex": 0,
+      "explanation": "ConfigureAwait(false) prevents capturing the current synchronization context, which can help avoid deadlocks in library code and improve performance by allowing continuations to run on any thread pool thread.",
+      "industryContext": "ConfigureAwait is essential for library developers to prevent deadlocks when calling async methods from contexts with synchronization constraints. It's less critical in application code that uses async/await throughout.",
+      "tags": [
+        "intermediate",
+        "dotnet",
+        "async"
+      ],
+      "questionType": "multiple-choice",
+      "estimatedTime": 75
+    },
+    {
+      "id": "dotnet-fundamentals-q16",
+      "question": "Which attribute is used to specify that a property should be serialized with a different name in JSON?",
+      "topic": "Serialization",
+      "difficulty": "Intermediate",
+      "choices": [
+        "[JsonPropertyName]",
+        "[JsonConverter]",
+        "[JsonIgnore]",
+        "[JsonProperty]"
+      ],
+      "correctIndex": 0,
+      "explanation": "In System.Text.Json, [JsonPropertyName] is used to specify a different property name during JSON serialization/deserialization. This is useful when you need to match external APIs or follow different naming conventions than those used in your C# code.",
+      "industryContext": "JSON serialization attributes are essential when working with REST APIs, microservices, and external systems. Proper use of serialization attributes ensures data compatibility and clean API contracts.",
+      "tags": [
+        "intermediate",
+        "dotnet",
+        "serialization"
+      ],
+      "questionType": "multiple-choice",
+      "estimatedTime": 60
+    },
+    {
+      "id": "dotnet-fundamentals-q17",
+      "question": "What is the difference between 'var' and 'dynamic' in C#?",
+      "topic": "Variables",
+      "difficulty": "Intermediate",
+      "choices": [
+        "'var' uses compile-time type inference while 'dynamic' defers type checking to runtime",
+        "'dynamic' uses compile-time type inference while 'var' defers type checking to runtime",
+        "There is no difference, they are interchangeable",
+        "'var' is for value types while 'dynamic' is for reference types"
+      ],
+      "correctIndex": 0,
+      "explanation": "'var' uses compile-time type inference where the type is determined at compile time, while 'dynamic' defers type checking to runtime. This means 'dynamic' can lead to runtime exceptions if methods or properties don't exist.",
+      "industryContext": "Understanding when to use 'var' vs 'dynamic' is important for code maintainability and performance. 'var' provides type safety while 'dynamic' should be used sparingly, typically when working with dynamic data structures or COM interop.",
+      "tags": [
+        "intermediate",
+        "dotnet",
+        "variables"
+      ],
+      "questionType": "multiple-choice",
+      "estimatedTime": 75
+    },
+    {
+      "id": "dotnet-fundamentals-q18",
+      "question": "Which method is called when an object is about to be garbage collected?",
+      "topic": "Memory Management",
+      "difficulty": "Intermediate",
+      "choices": [
+        "Finalize()",
+        "Dispose()",
+        "Close()",
+        "Destroy()"
+      ],
+      "correctIndex": 0,
+      "explanation": "The Finalize() method (implemented via destructor syntax ~ClassName()) is called by the garbage collector before an object is collected. However, relying on finalizers is generally discouraged in favor of implementing IDisposable for deterministic resource cleanup.",
+      "industryContext": "Understanding the .NET garbage collection lifecycle is important for memory management and resource cleanup. Proper implementation of IDisposable is preferred over finalizers for deterministic resource management.",
+      "tags": [
+        "intermediate",
+        "dotnet",
+        "memory"
+      ],
+      "questionType": "multiple-choice",
+      "estimatedTime": 60
+    },
+    {
+      "id": "dotnet-fundamentals-q19",
+      "question": "What is the purpose of the 'lock' statement in C#?",
+      "topic": "Threading",
+      "difficulty": "Intermediate",
+      "choices": [
+        "To provide mutual exclusion and prevent race conditions in multithreaded code",
+        "To improve application performance",
+        "To serialize object state",
+        "To prevent memory leaks"
+      ],
+      "correctIndex": 0,
+      "explanation": "The 'lock' statement provides mutual exclusion, ensuring that only one thread can execute the locked code block at a time, preventing race conditions. It's essential for thread-safe operations on shared resources.",
+      "industryContext": "Thread synchronization is critical in multi-threaded applications, web servers, and parallel processing scenarios. Proper use of locking mechanisms prevents data corruption and ensures application reliability.",
+      "tags": [
+        "intermediate",
+        "dotnet",
+        "threading"
+      ],
+      "questionType": "multiple-choice",
+      "estimatedTime": 60
+    },
+    {
+      "id": "dotnet-fundamentals-q20",
+      "question": "Which interface should a class implement to support the 'foreach' loop?",
+      "topic": "Collections",
+      "difficulty": "Beginner",
+      "choices": [
+        "IEnumerable",
+        "ICollection",
+        "IList",
+        "IDictionary"
+      ],
+      "correctIndex": 0,
+      "explanation": "A class must implement IEnumerable (or IEnumerable<T>) to support iteration with foreach loops, providing the GetEnumerator() method. This is the foundation for making custom collections work with standard C# iteration syntax.",
+      "industryContext": "Implementing IEnumerable is fundamental for creating custom collections that integrate seamlessly with LINQ and standard C# iteration patterns. It's a key part of the .NET collection framework design.",
+      "tags": [
+        "beginner",
+        "dotnet",
+        "collections"
+      ],
+      "questionType": "multiple-choice",
+      "estimatedTime": 45
+    },
+    {
+      "id": "dotnet-fundamentals-q21",
+      "question": "What is the primary benefit of using Entity Framework in .NET applications?",
+      "topic": "Entity Framework",
+      "difficulty": "Beginner",
+      "choices": [
+        "It provides an Object-Relational Mapping (ORM) layer for database operations",
+        "It improves application security",
+        "It makes applications run faster",
+        "It reduces memory usage"
+      ],
+      "correctIndex": 0,
+      "explanation": "Entity Framework is an Object-Relational Mapping (ORM) framework that allows developers to work with databases using .NET objects instead of writing raw SQL queries, increasing productivity and maintainability.",
+      "industryContext": "Entity Framework is widely used in enterprise .NET applications for data access, making database operations more intuitive and maintainable. It abstracts database interactions and enables LINQ-based queries.",
+      "tags": [
+        "beginner",
+        "dotnet",
+        "entity-framework"
+      ],
+      "questionType": "multiple-choice",
+      "estimatedTime": 45
+    },
+    {
+      "id": "dotnet-fundamentals-q22",
+      "question": "Which C# feature allows you to define a method that can be called with a variable number of arguments?",
+      "topic": "Methods",
+      "difficulty": "Intermediate",
+      "choices": [
+        "params",
+        "optional parameters",
+        "method overloading",
+        "extension methods"
+      ],
+      "correctIndex": 0,
+      "explanation": "The 'params' keyword allows you to specify a method parameter that takes a variable number of arguments. The parameter must be a single-dimensional array and must be the last parameter in the method signature.",
+      "industryContext": "The params keyword is commonly used in utility methods, logging functions, and APIs that need to accept flexible argument lists. It provides a clean syntax for methods that can work with varying numbers of inputs.",
+      "tags": [
+        "intermediate",
+        "dotnet",
+        "methods"
+      ],
+      "questionType": "multiple-choice",
+      "estimatedTime": 60
+    },
+    {
+      "id": "dotnet-fundamentals-q23",
+      "question": "What is the purpose of the 'async' keyword in C# method declarations?",
+      "topic": "Asynchronous Programming",
+      "difficulty": "Beginner",
+      "choices": [
+        "To indicate that a method contains await expressions and returns a Task",
+        "To make the method run faster",
+        "To enable parallel execution",
+        "To mark the method as a background thread"
+      ],
+      "correctIndex": 0,
+      "explanation": "The 'async' keyword indicates that a method contains await expressions and returns a Task or Task<T>. It enables the method to be awaited by other code and is required when using await expressions within the method.",
+      "industryContext": "The async/await pattern is fundamental to modern .NET development, enabling responsive UIs and scalable server applications. Proper use of async methods prevents blocking and improves application performance.",
+      "tags": [
+        "beginner",
+        "dotnet",
+        "async"
+      ],
+      "questionType": "multiple-choice",
+      "estimatedTime": 45
+    },
+    {
+      "id": "dotnet-fundamentals-q24",
+      "question": "Which statement about value types and reference types is correct?",
+      "topic": "Data Types",
+      "difficulty": "Intermediate",
+      "choices": [
+        "Value types are stored on the stack and contain their data directly, while reference types are stored on the heap and contain references to data",
+        "Value types are stored on the heap and contain references to data, while reference types are stored on the stack and contain their data directly",
+        "Both value types and reference types are stored on the heap",
+        "Both value types and reference types are stored on the stack"
+      ],
+      "correctIndex": 0,
+      "explanation": "Value types (like int, bool, struct) are typically stored on the stack and contain their data directly, while reference types (like classes, arrays) are stored on the heap and variables contain references to the actual data. This affects performance and memory management.",
+      "industryContext": "Understanding memory allocation differences between value and reference types is crucial for performance optimization and avoiding common pitfalls like unintended mutations in reference types.",
+      "tags": [
+        "intermediate",
+        "dotnet",
+        "datatypes"
+      ],
+      "questionType": "multiple-choice",
+      "estimatedTime": 75
+    },
+    {
+      "id": "dotnet-fundamentals-q25",
+      "question": "What is the primary purpose of the 'using' directive in C#?",
+      "topic": "Namespaces",
+      "difficulty": "Beginner",
+      "choices": [
+        "To import namespaces and avoid fully qualified type names",
+        "To dispose of resources",
+        "To define code regions",
+        "To create aliases for assemblies"
+      ],
+      "correctIndex": 0,
+      "explanation": "The 'using' directive imports namespaces, allowing you to use types without fully qualified names. This improves code readability and reduces verbosity when working with types from other namespaces.",
+      "industryContext": "Proper namespace management through using directives is essential for code organization and readability. It's a fundamental aspect of C# development that affects code maintainability.",
+      "tags": [
+        "beginner",
+        "dotnet",
+        "namespaces"
+      ],
+      "questionType": "multiple-choice",
+      "estimatedTime": 30
+    }
+  ],
+  "metadata": {
+    "migrated": true,
+    "originalQuestionCount": 20,
+    "totalQuestions": 25,
+    "migrationDate": "2025-10-01T06:41:13.481Z",
+    "lastUpdated": "2025-10-02T10:00:00.000Z",
+    "version": "1.1.0"
+  }
+}

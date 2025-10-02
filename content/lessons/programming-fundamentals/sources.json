@@ -1,0 +1,29 @@
+{
+  "module": "programming-fundamentals",
+  "sources": [
+    {
+      "title": "MDN Web Docs - JavaScript Guide",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide"
+    },
+    {
+      "title": "W3Schools - JavaScript Tutorial",
+      "url": "https://www.w3schools.com/js/"
+    },
+    {
+      "title": "Eloquent JavaScript",
+      "url": "https://eloquentjavascript.net/"
+    },
+    {
+      "title": "JavaScript.info - The Modern JavaScript Tutorial",
+      "url": "https://javascript.info/"
+    },
+    {
+      "title": "Clean Code: A Handbook of Agile Software Craftsmanship",
+      "url": "https://www.amazon.com/Clean-Code-Handbook-Software-Craftsmanship/dp/0132350882"
+    },
+    {
+      "title": "You Don't Know JS",
+      "url": "https://github.com/getify/You-Dont-Know-JS"
+    }
+  ]
+}

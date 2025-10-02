@@ -1,0 +1,192 @@
+[
+  {
+    "id": 1,
+    "topic": "Database Fundamentals",
+    "type": "multiple-choice",
+    "question": "What is a primary key in a relational database?",
+    "choices": [
+      "A unique identifier for each row in a table",
+      "A key used to encrypt database records",
+      "The first column in a table",
+      "A key used for sorting records"
+    ],
+    "correctAnswer": 0,
+    "explanation": "A primary key is a column or set of columns that uniquely identifies each row in a table. It must contain unique values and cannot contain NULL values. Primary keys are essential for entity integrity and are used to establish relationships between tables."
+  },
+  {
+    "id": 2,
+    "topic": "Database Fundamentals",
+    "type": "multiple-choice",
+    "question": "Which normal form eliminates transitive dependencies?",
+    "choices": [
+      "Third Normal Form (3NF)",
+      "First Normal Form (1NF)",
+      "Second Normal Form (2NF)",
+      "Boyce-Codd Normal Form (BCNF)"
+    ],
+    "correctAnswer": 0,
+    "explanation": "Third Normal Form (3NF) eliminates transitive dependencies, where non-key attributes depend on other non-key attributes. A table is in 3NF if it is in 2NF and all non-key attributes are functionally dependent only on the primary key."
+  },
+  {
+    "id": 3,
+    "topic": "SQL",
+    "type": "open-ended",
+    "question": "What is the difference between INNER JOIN and LEFT JOIN? When would you use each?",
+    "choices": null,
+    "correctAnswer": null,
+    "explanation": "INNER JOIN returns only rows that have matching values in both tables. LEFT JOIN returns all rows from the left table and matching rows from the right table. If there's no match, NULL values are returned for columns from the right table. Use INNER JOIN when you only want records that exist in both tables, and LEFT JOIN when you want all records from the first table regardless of whether they have matches in the second table."
+  },
+  {
+    "id": 4,
+    "topic": "Data Modeling",
+    "type": "multiple-choice",
+    "question": "What does an ER diagram represent?",
+    "choices": [
+      "Entities, relationships, and attributes in a database",
+      "Error reports in a database system",
+      "Execution plans for database queries",
+      "Encryption rules for database security"
+    ],
+    "correctAnswer": 0,
+    "explanation": "An Entity-Relationship (ER) diagram is a visual representation of data that describes how entities relate to each other within a database. It shows entities (tables), attributes (columns), and relationships (foreign keys) between entities, helping to design and understand database structure."
+  },
+  {
+    "id": 5,
+    "topic": "ORM Integration",
+    "type": "multiple-choice",
+    "question": "What is the purpose of a DbContext in Entity Framework Core?",
+    "choices": [
+      "To act as a bridge between the domain and the database",
+      "To encrypt database connections",
+      "To manage user authentication",
+      "To optimize SQL queries"
+    ],
+    "correctAnswer": 0,
+    "explanation": "DbContext in Entity Framework Core acts as a bridge between your domain or entity classes and the database. It's responsible for database connections, querying, change tracking, and saving changes. It provides LINQ-to-Entities queries and manages the unit of work pattern."
+  },
+  {
+    "id": 6,
+    "topic": "Performance",
+    "type": "multiple-choice",
+    "question": "What is the N+1 query problem and how can it be avoided?",
+    "choices": [
+      "Executing one query to get parent records and N queries to get related data for each parent; use eager loading",
+      "A syntax error in SQL queries",
+      "A problem with database indexing",
+      "A network connectivity issue"
+    ],
+    "correctAnswer": 0,
+    "explanation": "The N+1 query problem occurs when you execute one query to get a set of parent records and then N additional queries to get related data for each parent record. This can be avoided by using eager loading (JOINs) to fetch all needed data in a single query, or by using techniques like batch loading."
+  },
+  {
+    "id": 7,
+    "topic": "Transactions",
+    "type": "open-ended",
+    "question": "Explain ACID properties in database transactions.",
+    "choices": null,
+    "correctAnswer": null,
+    "explanation": "ACID stands for Atomicity, Consistency, Isolation, and Durability. Atomicity ensures transactions are all-or-nothing. Consistency ensures transactions bring the database from one valid state to another. Isolation ensures concurrent transactions don't interfere with each other. Durability ensures committed transactions are permanently recorded even in system failures."
+  },
+  {
+    "id": 8,
+    "topic": "Indexing",
+    "type": "multiple-choice",
+    "question": "When should you consider adding an index to a database column?",
+    "choices": [
+      "When the column is frequently used in WHERE clauses, JOINs, or ORDER BY clauses",
+      "When the column contains large text data",
+      "When the table has fewer than 100 rows",
+      "When the column is updated frequently"
+    ],
+    "correctAnswer": 0,
+    "explanation": "Indexes should be added to columns that are frequently used in WHERE clauses, JOIN conditions, or ORDER BY clauses as they significantly improve query performance. However, indexes come with overhead for INSERT, UPDATE, and DELETE operations, so they should be used judiciously."
+  },
+  {
+    "id": 9,
+    "topic": "NoSQL",
+    "type": "multiple-choice",
+    "question": "What is the main advantage of document databases like MongoDB over relational databases?",
+    "choices": [
+      "Schema flexibility and ability to store nested data structures",
+      "Better performance for all types of queries",
+      "Stronger consistency guarantees",
+      "Better support for complex transactions"
+    ],
+    "correctAnswer": 0,
+    "explanation": "Document databases like MongoDB offer schema flexibility, allowing you to store varied document structures without predefined schemas. They excel at storing nested, hierarchical data and can evolve the data model without complex migrations, making them suitable for agile development and varied data structures."
+  },
+  {
+    "id": 10,
+    "topic": "Security",
+    "type": "multiple-choice",
+    "question": "Which technique is most effective for preventing SQL injection attacks?",
+    "choices": [
+      "Using parameterized queries or prepared statements",
+      "Validating input length only",
+      "Using stored procedures exclusively",
+      "Encrypting all database data"
+    ],
+    "correctAnswer": 0,
+    "explanation": "Parameterized queries (prepared statements) are the most effective defense against SQL injection. They separate SQL code from data, ensuring user input is treated as data rather than executable code. This prevents malicious SQL code from being executed regardless of what users input."
+  },
+  {
+    "id": 11,
+    "topic": "Backup and Recovery",
+    "type": "open-ended",
+    "question": "What is the difference between full, incremental, and differential backups? When would you use each?",
+    "choices": null,
+    "correctAnswer": null,
+    "explanation": "Full backup copies all data and provides complete restore capability but takes longest time and space. Incremental backup copies only changes since last backup (any type), fastest but requires all incremental backups for restore. Differential backup copies changes since last full backup, moderate time but only needs full + latest differential for restore. Use full for weekly/monthly, incremental for daily frequent backups, differential for balanced approach."
+  },
+  {
+    "id": 12,
+    "topic": "Performance",
+    "type": "multiple-choice",
+    "question": "What is database sharding?",
+    "choices": [
+      "Horizontally partitioning data across multiple servers",
+      "Creating backup copies of the database",
+      "Optimizing database queries",
+      "Compressing database files"
+    ],
+    "correctAnswer": 0,
+    "explanation": "Database sharding is a horizontal partitioning technique where data is distributed across multiple database servers (shards). Each shard contains a subset of the data based on a sharding key. This improves performance and scalability by distributing load across multiple servers, though it adds complexity to queries and transactions."
+  },
+  {
+    "id": 13,
+    "topic": "Replication",
+    "type": "multiple-choice",
+    "question": "In master-slave database replication, what is the primary purpose of read replicas?",
+    "choices": [
+      "To distribute read queries and improve performance",
+      "To provide backup storage only",
+      "To handle all write operations",
+      "To encrypt database traffic"
+    ],
+    "correctAnswer": 0,
+    "explanation": "Read replicas in master-slave replication are designed to handle read queries, distributing the read workload away from the master database. This improves overall system performance by allowing the master to focus on write operations while replicas handle reads. Read replicas also provide geographic distribution and can serve as backup for disaster recovery."
+  },
+  {
+    "id": 14,
+    "topic": "Constraints",
+    "type": "open-ended",
+    "question": "What are CHECK constraints and provide an example of when you would use them?",
+    "choices": null,
+    "correctAnswer": null,
+    "explanation": "CHECK constraints enforce domain integrity by limiting the values that can be placed in a column. They define a condition that each row must satisfy. Example: a CHECK constraint on an age column to ensure values are between 0 and 150 (age >= 0 AND age <= 150), or on a status column to only allow specific values like 'active', 'inactive', 'pending'. They help maintain data quality at the database level."
+  },
+  {
+    "id": 15,
+    "topic": "Advanced Topics",
+    "type": "multiple-choice",
+    "question": "What is the CAP theorem in distributed databases?",
+    "choices": [
+      "You can only guarantee two of: Consistency, Availability, and Partition tolerance",
+      "All distributed systems must have Consistency, Availability, and Performance",
+      "Databases must choose between Cost, Accuracy, and Performance",
+      "Systems need Caching, APIs, and Partitioning"
+    ],
+    "correctAnswer": 0,
+    "explanation": "The CAP theorem states that in a distributed database system, you can only guarantee two out of three properties: Consistency (all nodes see the same data simultaneously), Availability (system remains operational), and Partition tolerance (system continues despite network failures). This fundamental limitation guides the design of distributed databases and helps understand trade-offs in system architecture."
+  }
+]

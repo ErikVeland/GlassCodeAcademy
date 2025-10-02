@@ -1,0 +1,67 @@
+[
+  {
+    "id": 1,
+    "topic": "Basic Types",
+    "type": "multiple-choice",
+    "question": "How do you define a variable with an explicit type annotation in TypeScript?",
+    "choices": [
+      "let myVar: string = \"hello\"",
+      "let myVar string = \"hello\"",
+      "let myVar = string \"hello\"",
+      "let myVar := string = \"hello\""
+    ],
+    "correctAnswer": 0,
+    "explanation": "In TypeScript, type annotations are specified using a colon (:) after the variable name, followed by the type."
+  },
+  {
+    "id": 2,
+    "topic": "Basic Types",
+    "type": "multiple-choice",
+    "question": "Which of the following is the correct way to define an array of strings?",
+    "choices": [
+      "let arr: string[] = ['a', 'b', 'c']",
+      "let arr: Array<string> = ['a', 'b', 'c']",
+      "Both A and B",
+      "let arr: [string] = ['a', 'b', 'c']"
+    ],
+    "correctAnswer": 2,
+    "explanation": "Both syntaxes are valid in TypeScript. You can use string[] or Array<string> to define an array of strings."
+  },
+  {
+    "id": 3,
+    "topic": "Interfaces",
+    "type": "open-ended",
+    "question": "What is the difference between an interface and a type alias in TypeScript?",
+    "choices": null,
+    "correctAnswer": null,
+    "explanation": "Interfaces create a new name that can be used everywhere, while type aliases don't create a new name. Interfaces can be extended and implemented, while type aliases cannot. Type aliases can represent primitives, unions, and tuples, while interfaces cannot."
+  },
+  {
+    "id": 4,
+    "topic": "Classes",
+    "type": "multiple-choice",
+    "question": "Which access modifier makes a property or method accessible only within the same class?",
+    "choices": [
+      "private",
+      "protected",
+      "public",
+      "internal"
+    ],
+    "correctAnswer": 0,
+    "explanation": "The private access modifier restricts access to the containing class only. protected allows access in the containing class and subclasses, while public allows access from anywhere."
+  },
+  {
+    "id": 5,
+    "topic": "Generics",
+    "type": "multiple-choice",
+    "question": "What is the purpose of generics in TypeScript?",
+    "choices": [
+      "To create reusable components that work with multiple types",
+      "To enforce strict typing at runtime",
+      "To automatically convert JavaScript to TypeScript",
+      "To provide better IDE support"
+    ],
+    "correctAnswer": 0,
+    "explanation": "Generics allow you to create reusable components that work with a variety of types rather than a single type, providing type safety while maintaining flexibility."
+  }
+]

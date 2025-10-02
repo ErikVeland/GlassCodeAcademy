@@ -1,0 +1,638 @@
+[
+  {
+    "id": "sass-advanced-lesson-1",
+    "moduleSlug": "sass-advanced",
+    "title": "Introduction to SASS",
+    "order": 1,
+    "objectives": [
+      "Implement practical solutions",
+      "Build foundational understanding"
+    ],
+    "intro": "Welcome to this comprehensive lesson on Basics.\n\nLearn the fundamentals of SASS and how it extends CSS with powerful features.\n\nThroughout this lesson, you'll gain hands-on experience with practical implementations and real-world scenarios. We'll explore both the theoretical foundations and practical applications, ensuring you can immediately apply what you learn.\n\nThis lesson is designed to build upon previous concepts while introducing new techniques that will enhance your development skills. By the end, you'll have a solid understanding of the key principles and be ready to tackle more advanced topics.\n\nThe knowledge gained here will serve as a foundation for subsequent lessons and real-world projects.",
+    "code": {
+      "example": "// SCSS syntax\n$font-stack: Helvetica, sans-serif;\n$primary-color: #333;\n\nbody {\n  font: 100% $font-stack;\n  color: $primary-color;\n}\n\n// Compiled CSS output\nbody {\n  font: 100% Helvetica, sans-serif;\n  color: #333;\n}",
+      "explanation": "This example produces: body {\n  font: 100% Helvetica, sans-serif;\n  color: #333;\n}\n\nThe code demonstrates practical implementation techniques and shows how the concepts work in real scenarios. Pay attention to the structure and patterns used, as these represent industry best practices.",
+      "language": "scss"
+    },
+    "pitfalls": [
+      {
+        "mistake": "Not following best practices",
+        "solution": "Review documentation and community guidelines",
+        "severity": "medium"
+      },
+      {
+        "mistake": "Skipping error handling",
+        "solution": "Implement proper error boundaries and validation",
+        "severity": "low"
+      }
+    ],
+    "exercises": [
+      {
+        "title": "Practice: Introduction to SASS",
+        "description": "Apply the concepts from this lesson on Basics",
+        "checkpoints": [
+          "Understand the core concept",
+          "Implement the example code",
+          "Experiment with variations"
+        ]
+      }
+    ],
+    "next": [],
+    "estimatedMinutes": 25,
+    "difficulty": "Beginner",
+    "tags": [
+      "Basics",
+      "sass"
+    ],
+    "legacy": {
+      "originalId": 1,
+      "originalTopic": "Basics",
+      "migrated": "2025-10-01T06:41:13.486Z"
+    },
+    "lastUpdated": "2025-10-01T06:41:13.486Z",
+    "version": "1.0.0"
+  },
+  {
+    "id": "sass-advanced-lesson-2",
+    "moduleSlug": "sass-advanced",
+    "title": "Variables in SASS",
+    "order": 2,
+    "objectives": [
+      "Implement practical solutions",
+      "Build foundational understanding"
+    ],
+    "intro": "Welcome to this comprehensive lesson on Basics.\n\nLearn how to use variables to store and reuse values throughout your stylesheet.\n\nThroughout this lesson, you'll gain hands-on experience with practical implementations and real-world scenarios. We'll explore both the theoretical foundations and practical applications, ensuring you can immediately apply what you learn.\n\nThis lesson is designed to build upon previous concepts while introducing new techniques that will enhance your development skills. By the end, you'll have a solid understanding of the key principles and be ready to tackle more advanced topics.\n\nThe knowledge gained here will serve as a foundation for subsequent lessons and real-world projects.",
+    "code": {
+      "example": "// Defining variables\n$primary-color: #3498db;\n$secondary-color: #2ecc71;\n$font-size-large: 1.5rem;\n$border-radius: 4px;\n\n// Using variables\n.button {\n  background-color: $primary-color;\n  color: white;\n  font-size: $font-size-large;\n  border-radius: $border-radius;\n  padding: 10px 20px;\n  \n  &:hover {\n    background-color: $secondary-color;\n  }\n}",
+      "explanation": "This example produces: .button {\n  background-color: #3498db;\n  color: white;\n  font-size: 1.5rem;\n  border-radius: 4px;\n  padding: 10px 20px;\n}\n\n.button:hover {\n  background-color: #2ecc71;\n}\n\nThe code demonstrates practical implementation techniques and shows how the concepts work in real scenarios. Pay attention to the structure and patterns used, as these represent industry best practices.",
+      "language": "scss"
+    },
+    "pitfalls": [
+      {
+        "mistake": "Not following best practices",
+        "solution": "Review documentation and community guidelines",
+        "severity": "medium"
+      },
+      {
+        "mistake": "Skipping error handling",
+        "solution": "Implement proper error boundaries and validation",
+        "severity": "low"
+      }
+    ],
+    "exercises": [
+      {
+        "title": "Practice: Variables in SASS",
+        "description": "Apply the concepts from this lesson on Basics",
+        "checkpoints": [
+          "Understand the core concept",
+          "Implement the example code",
+          "Experiment with variations"
+        ]
+      }
+    ],
+    "next": [],
+    "estimatedMinutes": 25,
+    "difficulty": "Intermediate",
+    "tags": [
+      "Basics",
+      "sass"
+    ],
+    "legacy": {
+      "originalId": 2,
+      "originalTopic": "Basics",
+      "migrated": "2025-10-01T06:41:13.486Z"
+    },
+    "lastUpdated": "2025-10-01T06:41:13.486Z",
+    "version": "1.0.0"
+  },
+  {
+    "id": "sass-advanced-lesson-3",
+    "moduleSlug": "sass-advanced",
+    "title": "Nesting in SASS",
+    "order": 3,
+    "objectives": [
+      "Implement practical solutions",
+      "Build foundational understanding"
+    ],
+    "intro": "Welcome to this comprehensive lesson on Nesting.\n\nLearn how to nest selectors and properties to write more organized CSS.\n\nThroughout this lesson, you'll gain hands-on experience with practical implementations and real-world scenarios. We'll explore both the theoretical foundations and practical applications, ensuring you can immediately apply what you learn.\n\nThis lesson is designed to build upon previous concepts while introducing new techniques that will enhance your development skills. By the end, you'll have a solid understanding of the key principles and be ready to tackle more advanced topics.\n\nThe knowledge gained here will serve as a foundation for subsequent lessons and real-world projects.",
+    "code": {
+      "example": "// SASS nesting\nnav {\n  ul {\n    margin: 0;\n    padding: 0;\n    list-style: none;\n    \n    li { \n      display: inline-block;\n      \n      a {\n        display: block;\n        padding: 6px 12px;\n        text-decoration: none;\n      }\n    }\n  }\n}\n\n// Compiled CSS\nnav ul {\n  margin: 0;\n  padding: 0;\n  list-style: none;\n}\nnav ul li {\n  display: inline-block;\n}\nnav ul li a {\n  display: block;\n  padding: 6px 12px;\n  text-decoration: none;\n}",
+      "explanation": "This example produces: nav ul {\n  margin: 0;\n  padding: 0;\n  list-style: none;\n}\nnav ul li {\n  display: inline-block;\n}\nnav ul li a {\n  display: block;\n  padding: 6px 12px;\n  text-decoration: none;\n}\n\nThe code demonstrates practical implementation techniques and shows how the concepts work in real scenarios. Pay attention to the structure and patterns used, as these represent industry best practices.",
+      "language": "scss"
+    },
+    "pitfalls": [
+      {
+        "mistake": "Not following best practices",
+        "solution": "Review documentation and community guidelines",
+        "severity": "medium"
+      },
+      {
+        "mistake": "Skipping error handling",
+        "solution": "Implement proper error boundaries and validation",
+        "severity": "low"
+      }
+    ],
+    "exercises": [
+      {
+        "title": "Practice: Nesting in SASS",
+        "description": "Apply the concepts from this lesson on Nesting",
+        "checkpoints": [
+          "Understand the core concept",
+          "Implement the example code",
+          "Experiment with variations"
+        ]
+      }
+    ],
+    "next": [],
+    "estimatedMinutes": 25,
+    "difficulty": "Intermediate",
+    "tags": [
+      "Nesting",
+      "sass"
+    ],
+    "legacy": {
+      "originalId": 3,
+      "originalTopic": "Nesting",
+      "migrated": "2025-10-01T06:41:13.486Z"
+    },
+    "lastUpdated": "2025-10-01T06:41:13.486Z",
+    "version": "1.0.0"
+  },
+  {
+    "id": "sass-advanced-lesson-4",
+    "moduleSlug": "sass-advanced",
+    "title": "Creating and Using Mixins",
+    "order": 4,
+    "objectives": [
+      "Implement practical solutions",
+      "Build foundational understanding"
+    ],
+    "intro": "Welcome to this comprehensive lesson on Mixins.\n\nLearn how to create reusable blocks of CSS with mixins in SASS.\n\nThroughout this lesson, you'll gain hands-on experience with practical implementations and real-world scenarios. We'll explore both the theoretical foundations and practical applications, ensuring you can immediately apply what you learn.\n\nThis lesson is designed to build upon previous concepts while introducing new techniques that will enhance your development skills. By the end, you'll have a solid understanding of the key principles and be ready to tackle more advanced topics.\n\nThe knowledge gained here will serve as a foundation for subsequent lessons and real-world projects.",
+    "code": {
+      "example": "// Defining a mixin\n@mixin button-style($bg-color, $text-color: white) {\n  background-color: $bg-color;\n  color: $text-color;\n  padding: 10px 15px;\n  border: none;\n  border-radius: 4px;\n  cursor: pointer;\n  \n  &:hover {\n    background-color: darken($bg-color, 10%);\n  }\n}\n\n// Using mixins\n.primary-button {\n  @include button-style(#3498db);\n}\n\n.success-button {\n  @include button-style(#2ecc71, #333);\n}",
+      "explanation": "This example produces: .primary-button {\n  background-color: #3498db;\n  color: white;\n  padding: 10px 15px;\n  border: none;\n  border-radius: 4px;\n  cursor: pointer;\n}\n\n.primary-button:hover {\n  background-color: #217dbb;\n}\n\n.success-button {\n  background-color: #2ecc71;\n  color: #333;\n  padding: 10px 15px;\n  border: none;\n  border-radius: 4px;\n  cursor: pointer;\n}\n\n.success-button:hover {\n  background-color: #25a25a;\n}\n\nThe code demonstrates practical implementation techniques and shows how the concepts work in real scenarios. Pay attention to the structure and patterns used, as these represent industry best practices.",
+      "language": "scss"
+    },
+    "pitfalls": [
+      {
+        "mistake": "Not following best practices",
+        "solution": "Review documentation and community guidelines",
+        "severity": "medium"
+      },
+      {
+        "mistake": "Skipping error handling",
+        "solution": "Implement proper error boundaries and validation",
+        "severity": "low"
+      }
+    ],
+    "exercises": [
+      {
+        "title": "Practice: Creating and Using Mixins",
+        "description": "Apply the concepts from this lesson on Mixins",
+        "checkpoints": [
+          "Understand the core concept",
+          "Implement the example code",
+          "Experiment with variations"
+        ]
+      }
+    ],
+    "next": [],
+    "estimatedMinutes": 25,
+    "difficulty": "Intermediate",
+    "tags": [
+      "Mixins",
+      "sass"
+    ],
+    "legacy": {
+      "originalId": 4,
+      "originalTopic": "Mixins",
+      "migrated": "2025-10-01T06:41:13.486Z"
+    },
+    "lastUpdated": "2025-10-01T06:41:13.486Z",
+    "version": "1.0.0"
+  },
+  {
+    "id": "sass-advanced-lesson-5",
+    "moduleSlug": "sass-advanced",
+    "title": "SASS Functions and Operations",
+    "order": 5,
+    "objectives": [
+      "Implement practical solutions",
+      "Build foundational understanding"
+    ],
+    "intro": "Welcome to this comprehensive lesson on Functions.\n\nLearn how to use built-in functions and create custom functions in SASS.\n\nThroughout this lesson, you'll gain hands-on experience with practical implementations and real-world scenarios. We'll explore both the theoretical foundations and practical applications, ensuring you can immediately apply what you learn.\n\nThis lesson is designed to build upon previous concepts while introducing new techniques that will enhance your development skills. By the end, you'll have a solid understanding of the key principles and be ready to tackle more advanced topics.\n\nThe knowledge gained here will serve as a foundation for subsequent lessons and real-world projects.",
+    "code": {
+      "example": "// Built-in functions\n$base-color: #3498db;\n\n.card {\n  background-color: lighten($base-color, 20%);\n  border-color: darken($base-color, 15%);\n  font-size: 16px * 1.2;\n  width: 200px + 50px;\n}\n\n// Custom function\n@function calculate-rem($size) {\n  $rem-size: $size / 16px;\n  @return #{$rem-size}rem;\n}\n\n.text {\n  font-size: calculate-rem(18px);\n}",
+      "explanation": "This example produces: .card {\n  background-color: #aed6f1;\n  border-color: #1d6fa5;\n  font-size: 19.2px;\n  width: 250px;\n}\n\n.text {\n  font-size: 1.125rem;\n}\n\nThe code demonstrates practical implementation techniques and shows how the concepts work in real scenarios. Pay attention to the structure and patterns used, as these represent industry best practices.",
+      "language": "scss"
+    },
+    "pitfalls": [
+      {
+        "mistake": "Not following best practices",
+        "solution": "Review documentation and community guidelines",
+        "severity": "medium"
+      },
+      {
+        "mistake": "Skipping error handling",
+        "solution": "Implement proper error boundaries and validation",
+        "severity": "low"
+      }
+    ],
+    "exercises": [
+      {
+        "title": "Practice: SASS Functions and Operations",
+        "description": "Apply the concepts from this lesson on Functions",
+        "checkpoints": [
+          "Understand the core concept",
+          "Implement the example code",
+          "Experiment with variations"
+        ]
+      }
+    ],
+    "next": [],
+    "estimatedMinutes": 25,
+    "difficulty": "Advanced",
+    "tags": [
+      "Functions",
+      "sass"
+    ],
+    "legacy": {
+      "originalId": 5,
+      "originalTopic": "Functions",
+      "migrated": "2025-10-01T06:41:13.486Z"
+    },
+    "lastUpdated": "2025-10-01T06:41:13.486Z",
+    "version": "1.0.0"
+  },
+  {
+    "id": "sass-advanced-lesson-6",
+    "moduleSlug": "sass-advanced",
+    "title": "Control Directives and Loops",
+    "order": 6,
+    "objectives": [
+      "Implement practical solutions",
+      "Build foundational understanding"
+    ],
+    "intro": "Welcome to this comprehensive lesson on Control Directives.\n\nLearn how to use control directives like @if, @for, @each, and @while in SASS.\n\nThroughout this lesson, you'll gain hands-on experience with practical implementations and real-world scenarios. We'll explore both the theoretical foundations and practical applications, ensuring you can immediately apply what you learn.\n\nThis lesson is designed to build upon previous concepts while introducing new techniques that will enhance your development skills. By the end, you'll have a solid understanding of the key principles and be ready to tackle more advanced topics.\n\nThe knowledge gained here will serve as a foundation for subsequent lessons and real-world projects.",
+    "code": {
+      "example": "// @if directive\n@mixin respond-to($breakpoint) {\n  @if $breakpoint == small {\n    @media (max-width: 767px) { @content; }\n  }\n  @else if $breakpoint == medium {\n    @media (min-width: 768px) and (max-width: 1023px) { @content; }\n  }\n  @else if $breakpoint == large {\n    @media (min-width: 1024px) { @content; }\n  }\n}\n\n// @for loop\n@for $i from 1 through 4 {\n  .column-#{$i} {\n    width: percentage($i / 4);\n  }\n}\n\n// @each loop\n$colors: (primary: #3498db, success: #2ecc71, danger: #e74c3c);\n\n@each $name, $color in $colors {\n  .btn-#{$name} {\n    background-color: $color;\n    \n    &:hover {\n      background-color: darken($color, 10%);\n    }\n  }\n}\n\n// @while loop\n$columns: 12;\n$i: 1;\n\n@while $i <= $columns {\n  .grid-#{$i} {\n    width: percentage($i / $columns);\n  }\n  $i: $i + 1;\n}",
+      "explanation": "This example produces: Responsive mixins, column widths, colored buttons, and grid system generated programmatically\n\nThe code demonstrates practical implementation techniques and shows how the concepts work in real scenarios. Pay attention to the structure and patterns used, as these represent industry best practices.",
+      "language": "scss"
+    },
+    "pitfalls": [
+      {
+        "mistake": "Not following best practices",
+        "solution": "Review documentation and community guidelines",
+        "severity": "medium"
+      },
+      {
+        "mistake": "Skipping error handling",
+        "solution": "Implement proper error boundaries and validation",
+        "severity": "low"
+      }
+    ],
+    "exercises": [
+      {
+        "title": "Practice: Control Directives and Loops",
+        "description": "Apply the concepts from this lesson on Control Directives",
+        "checkpoints": [
+          "Understand the core concept",
+          "Implement the example code",
+          "Experiment with variations"
+        ]
+      }
+    ],
+    "next": [],
+    "estimatedMinutes": 25,
+    "difficulty": "Intermediate",
+    "tags": [
+      "Control Directives",
+      "sass"
+    ],
+    "legacy": {
+      "originalId": 6,
+      "originalTopic": "Control Directives",
+      "migrated": "2025-10-01T06:41:13.486Z"
+    },
+    "lastUpdated": "2025-10-01T06:41:13.486Z",
+    "version": "1.0.0"
+  },
+  {
+    "id": "sass-advanced-lesson-7",
+    "moduleSlug": "sass-advanced",
+    "title": "Inheritance with @extend",
+    "order": 7,
+    "objectives": [
+      "Implement practical solutions",
+      "Build foundational understanding"
+    ],
+    "intro": "Welcome to this comprehensive lesson on Advanced Features.\n\nLearn how to use @extend to share styles between selectors and create efficient CSS.\n\nThroughout this lesson, you'll gain hands-on experience with practical implementations and real-world scenarios. We'll explore both the theoretical foundations and practical applications, ensuring you can immediately apply what you learn.\n\nThis lesson is designed to build upon previous concepts while introducing new techniques that will enhance your development skills. By the end, you'll have a solid understanding of the key principles and be ready to tackle more advanced topics.\n\nThe knowledge gained here will serve as a foundation for subsequent lessons and real-world projects.",
+    "code": {
+      "example": "// Base styles\n%button-base {\n  padding: 10px 15px;\n  border: none;\n  border-radius: 4px;\n  cursor: pointer;\n  font-weight: bold;\n  text-align: center;\n  text-decoration: none;\n  display: inline-block;\n  transition: all 0.3s ease;\n}\n\n%message-shared {\n  border: 1px solid #ccc;\n  padding: 10px;\n  color: #333;\n  border-radius: 4px;\n  margin-bottom: 15px;\n}\n\n// Extending base styles\n.button {\n  @extend %button-base;\n  background-color: #3498db;\n  color: white;\n  \n  &:hover {\n    background-color: darken(#3498db, 10%);\n  }\n}\n\n.button-large {\n  @extend .button;\n  padding: 15px 25px;\n  font-size: 1.2em;\n}\n\n.success {\n  @extend %message-shared;\n  border-color: #d4edda;\n  background-color: #d1ecf1;\n  color: #155724;\n}\n\n.error {\n  @extend %message-shared;\n  border-color: #f5c6cb;\n  background-color: #f8d7da;\n  color: #721c24;\n}",
+      "explanation": "This example produces: Efficient CSS with shared styles using @extend, creating maintainable button and message components\n\nThe code demonstrates practical implementation techniques and shows how the concepts work in real scenarios. Pay attention to the structure and patterns used, as these represent industry best practices.",
+      "language": "scss"
+    },
+    "pitfalls": [
+      {
+        "mistake": "Not following best practices",
+        "solution": "Review documentation and community guidelines",
+        "severity": "medium"
+      },
+      {
+        "mistake": "Skipping error handling",
+        "solution": "Implement proper error boundaries and validation",
+        "severity": "low"
+      }
+    ],
+    "exercises": [
+      {
+        "title": "Practice: Inheritance with @extend",
+        "description": "Apply the concepts from this lesson on Advanced Features",
+        "checkpoints": [
+          "Understand the core concept",
+          "Implement the example code",
+          "Experiment with variations"
+        ]
+      }
+    ],
+    "next": [],
+    "estimatedMinutes": 25,
+    "difficulty": "Intermediate",
+    "tags": [
+      "Advanced Features",
+      "sass"
+    ],
+    "legacy": {
+      "originalId": 7,
+      "originalTopic": "Advanced Features",
+      "migrated": "2025-10-01T06:41:13.486Z"
+    },
+    "lastUpdated": "2025-10-01T06:41:13.486Z",
+    "version": "1.0.0"
+  },
+  {
+    "id": "sass-advanced-lesson-8",
+    "moduleSlug": "sass-advanced",
+    "title": "Organizing Code with Partials and @import",
+    "order": 8,
+    "objectives": [
+      "Implement practical solutions",
+      "Build foundational understanding"
+    ],
+    "intro": "Welcome to this comprehensive lesson on Partials.\n\nLearn how to organize SASS code using partials and the @import directive.\n\nThroughout this lesson, you'll gain hands-on experience with practical implementations and real-world scenarios. We'll explore both the theoretical foundations and practical applications, ensuring you can immediately apply what you learn.\n\nThis lesson is designed to build upon previous concepts while introducing new techniques that will enhance your development skills. By the end, you'll have a solid understanding of the key principles and be ready to tackle more advanced topics.\n\nThe knowledge gained here will serve as a foundation for subsequent lessons and real-world projects.",
+    "code": {
+      "example": "// _variables.scss\n$primary-color: #3498db;\n$secondary-color: #2ecc71;\n$font-family: 'Helvetica Neue', Arial, sans-serif;\n$border-radius: 4px;\n\n// _mixins.scss\n@mixin flex-center {\n  display: flex;\n  justify-content: center;\n  align-items: center;\n}\n\n@mixin card-shadow($level: 1) {\n  @if $level == 1 {\n    box-shadow: 0 2px 4px rgba(0,0,0,0.1);\n  } @else if $level == 2 {\n    box-shadow: 0 4px 8px rgba(0,0,0,0.15);\n  } @else if $level == 3 {\n    box-shadow: 0 8px 16px rgba(0,0,0,0.2);\n  }\n}\n\n// _components.scss\n@import 'variables';\n@import 'mixins';\n\n.card {\n  background: white;\n  border-radius: $border-radius;\n  padding: 20px;\n  @include card-shadow(2);\n  \n  &__header {\n    border-bottom: 1px solid #eee;\n    padding-bottom: 15px;\n    margin-bottom: 15px;\n  }\n  \n  &__title {\n    font-family: $font-family;\n    color: $primary-color;\n    margin: 0;\n  }\n}\n\n// main.scss\n@import 'variables';\n@import 'mixins';\n@import 'components';\n\nbody {\n  font-family: $font-family;\n  line-height: 1.6;\n  color: #333;\n}\n\n.container {\n  max-width: 1200px;\n  margin: 0 auto;\n  padding: 20px;\n  @include flex-center;\n  flex-direction: column;\n}",
+      "explanation": "This example produces: Modular SASS architecture with organized partials for variables, mixins, and components\n\nThe code demonstrates practical implementation techniques and shows how the concepts work in real scenarios. Pay attention to the structure and patterns used, as these represent industry best practices.",
+      "language": "scss"
+    },
+    "pitfalls": [
+      {
+        "mistake": "Not following best practices",
+        "solution": "Review documentation and community guidelines",
+        "severity": "medium"
+      },
+      {
+        "mistake": "Skipping error handling",
+        "solution": "Implement proper error boundaries and validation",
+        "severity": "low"
+      }
+    ],
+    "exercises": [
+      {
+        "title": "Practice: Organizing Code with Partials and @import",
+        "description": "Apply the concepts from this lesson on Partials",
+        "checkpoints": [
+          "Understand the core concept",
+          "Implement the example code",
+          "Experiment with variations"
+        ]
+      }
+    ],
+    "next": [],
+    "estimatedMinutes": 25,
+    "difficulty": "Intermediate",
+    "tags": [
+      "Partials",
+      "sass"
+    ],
+    "legacy": {
+      "originalId": 8,
+      "originalTopic": "Partials",
+      "migrated": "2025-10-01T06:41:13.486Z"
+    },
+    "lastUpdated": "2025-10-01T06:41:13.486Z",
+    "version": "1.0.0"
+  },
+  {
+    "id": "sass-advanced-lesson-9",
+    "moduleSlug": "sass-advanced",
+    "title": "Working with Maps and Lists",
+    "order": 9,
+    "objectives": [
+      "Implement practical solutions",
+      "Build foundational understanding"
+    ],
+    "intro": "Welcome to this comprehensive lesson on Maps and Lists.\n\nLearn how to use SASS maps and lists for advanced data structures and dynamic styles.\n\nThroughout this lesson, you'll gain hands-on experience with practical implementations and real-world scenarios. We'll explore both the theoretical foundations and practical applications, ensuring you can immediately apply what you learn.\n\nThis lesson is designed to build upon previous concepts while introducing new techniques that will enhance your development skills. By the end, you'll have a solid understanding of the key principles and be ready to tackle more advanced topics.\n\nThe knowledge gained here will serve as a foundation for subsequent lessons and real-world projects.",
+    "code": {
+      "example": "// SASS Lists\n$font-sizes: 12px, 14px, 16px, 18px, 24px, 32px;\n$font-weights: normal, bold, 100, 200, 300, 400, 500, 600, 700, 800, 900;\n\n// SASS Maps\n$breakpoints: (\n  small: 480px,\n  medium: 768px,\n  large: 1024px,\n  xlarge: 1200px\n);\n\n$theme-colors: (\n  primary: (\n    base: #3498db,\n    light: #5dade2,\n    dark: #2980b9\n  ),\n  secondary: (\n    base: #95a5a6,\n    light: #bdc3c7,\n    dark: #7f8c8d\n  )\n);\n\n// Functions to work with maps\n@function color($color-name, $tone: base) {\n  @return map-get(map-get($theme-colors, $color-name), $tone);\n}\n\n@function breakpoint($bp-name) {\n  @return map-get($breakpoints, $bp-name);\n}\n\n// Mixins using maps\n@mixin respond-above($breakpoint) {\n  @media (min-width: #{map-get($breakpoints, $breakpoint)}) {\n    @content;\n  }\n}\n\n// Generate utility classes from lists\n@each $size in $font-sizes {\n  .font-size-#{$size} {\n    font-size: $size;\n  }\n}\n\n// Generate color classes from maps\n@each $color-name, $color-map in $theme-colors {\n  .bg-#{$color-name} {\n    background-color: map-get($color-map, base);\n    \n    &-light {\n      background-color: map-get($color-map, light);\n    }\n    \n    &-dark {\n      background-color: map-get($color-map, dark);\n    }\n  }\n}\n\n// Usage examples\n.header {\n  background-color: color(primary);\n  color: white;\n  \n  @include respond-above(medium) {\n    padding: 20px;\n  }\n}",
+      "explanation": "This example produces: Dynamic utility classes, responsive design system, and theme color management using SASS data structures\n\nThe code demonstrates practical implementation techniques and shows how the concepts work in real scenarios. Pay attention to the structure and patterns used, as these represent industry best practices.",
+      "language": "scss"
+    },
+    "pitfalls": [
+      {
+        "mistake": "Not following best practices",
+        "solution": "Review documentation and community guidelines",
+        "severity": "medium"
+      },
+      {
+        "mistake": "Skipping error handling",
+        "solution": "Implement proper error boundaries and validation",
+        "severity": "low"
+      }
+    ],
+    "exercises": [
+      {
+        "title": "Practice: Working with Maps and Lists",
+        "description": "Apply the concepts from this lesson on Maps and Lists",
+        "checkpoints": [
+          "Understand the core concept",
+          "Implement the example code",
+          "Experiment with variations"
+        ]
+      }
+    ],
+    "next": [],
+    "estimatedMinutes": 25,
+    "difficulty": "Advanced",
+    "tags": [
+      "Maps and Lists",
+      "sass"
+    ],
+    "legacy": {
+      "originalId": 9,
+      "originalTopic": "Maps and Lists",
+      "migrated": "2025-10-01T06:41:13.486Z"
+    },
+    "lastUpdated": "2025-10-01T06:41:13.486Z",
+    "version": "1.0.0"
+  },
+  {
+    "id": "sass-advanced-lesson-10",
+    "moduleSlug": "sass-advanced",
+    "title": "SASS Architecture and BEM Methodology",
+    "order": 10,
+    "objectives": [
+      "Implement practical solutions",
+      "Build foundational understanding"
+    ],
+    "intro": "Welcome to this comprehensive lesson on Architecture.\n\nLearn how to structure large SASS projects using the 7-1 pattern and BEM methodology.\n\nThroughout this lesson, you'll gain hands-on experience with practical implementations and real-world scenarios. We'll explore both the theoretical foundations and practical applications, ensuring you can immediately apply what you learn.\n\nThis lesson is designed to build upon previous concepts while introducing new techniques that will enhance your development skills. By the end, you'll have a solid understanding of the key principles and be ready to tackle more advanced topics.\n\nThe knowledge gained here will serve as a foundation for subsequent lessons and real-world projects.",
+    "code": {
+      "example": "// 7-1 SASS Architecture\n/*\nsass/\n|\n|– abstracts/\n|   |– _variables.scss    // Sass Variables\n|   |– _functions.scss    // Sass Functions\n|   |– _mixins.scss       // Sass Mixins\n|   |– _placeholders.scss // Sass Placeholders\n|\n|– base/\n|   |– _reset.scss        // Reset/normalize\n|   |– _typography.scss   // Typography rules\n|\n|– components/\n|   |– _buttons.scss      // Buttons\n|   |– _carousel.scss     // Carousel\n|   |– _cover.scss        // Cover\n|   |– _dropdown.scss     // Dropdown\n|\n|– layout/\n|   |– _navigation.scss   // Navigation\n|   |– _grid.scss         // Grid system\n|   |– _header.scss       // Header\n|   |– _footer.scss       // Footer\n|   |– _sidebar.scss      // Sidebar\n|   |– _forms.scss        // Forms\n|\n|– pages/\n|   |– _home.scss         // Home specific styles\n|   |– _contact.scss      // Contact specific styles\n|\n|– themes/\n|   |– _theme.scss        // Default theme\n|   |– _admin.scss        // Admin theme\n|\n|– vendors/\n|   |– _bootstrap.scss    // Bootstrap\n|   |– _jquery-ui.scss    // jQuery UI\n|\n`– main.scss              // Main Sass file\n*/\n\n// BEM Methodology Example\n// Block__Element--Modifier\n\n.card {\n  background: white;\n  border-radius: 8px;\n  box-shadow: 0 2px 8px rgba(0,0,0,0.1);\n  padding: 20px;\n  \n  // Element\n  &__header {\n    border-bottom: 1px solid #eee;\n    padding-bottom: 15px;\n    margin-bottom: 15px;\n  }\n  \n  &__title {\n    font-size: 1.5rem;\n    font-weight: bold;\n    margin: 0;\n    color: #333;\n  }\n  \n  &__body {\n    line-height: 1.6;\n  }\n  \n  &__footer {\n    border-top: 1px solid #eee;\n    padding-top: 15px;\n    margin-top: 15px;\n    text-align: right;\n  }\n  \n  // Modifiers\n  &--featured {\n    border: 2px solid #3498db;\n    box-shadow: 0 4px 16px rgba(52, 152, 219, 0.2);\n  }\n  \n  &--large {\n    padding: 30px;\n    \n    .card__title {\n      font-size: 2rem;\n    }\n  }\n  \n  &--compact {\n    padding: 10px;\n    \n    .card__header {\n      padding-bottom: 8px;\n      margin-bottom: 8px;\n    }\n  }\n}\n\n// Main SASS file structure\n@import 'abstracts/variables';\n@import 'abstracts/functions';\n@import 'abstracts/mixins';\n@import 'abstracts/placeholders';\n\n@import 'base/reset';\n@import 'base/typography';\n\n@import 'layout/navigation';\n@import 'layout/grid';\n@import 'layout/header';\n@import 'layout/footer';\n\n@import 'components/buttons';\n@import 'components/carousel';\n@import 'components/dropdown';",
+      "explanation": "This example produces: Scalable SASS architecture with organized file structure and BEM naming convention for maintainable code\n\nThe code demonstrates practical implementation techniques and shows how the concepts work in real scenarios. Pay attention to the structure and patterns used, as these represent industry best practices.",
+      "language": "scss"
+    },
+    "pitfalls": [
+      {
+        "mistake": "Not following best practices",
+        "solution": "Review documentation and community guidelines",
+        "severity": "medium"
+      },
+      {
+        "mistake": "Skipping error handling",
+        "solution": "Implement proper error boundaries and validation",
+        "severity": "low"
+      }
+    ],
+    "exercises": [
+      {
+        "title": "Practice: SASS Architecture and BEM Methodology",
+        "description": "Apply the concepts from this lesson on Architecture",
+        "checkpoints": [
+          "Understand the core concept",
+          "Implement the example code",
+          "Experiment with variations"
+        ]
+      }
+    ],
+    "next": [],
+    "estimatedMinutes": 25,
+    "difficulty": "Intermediate",
+    "tags": [
+      "Architecture",
+      "sass"
+    ],
+    "legacy": {
+      "originalId": 10,
+      "originalTopic": "Architecture",
+      "migrated": "2025-10-01T06:41:13.486Z"
+    },
+    "lastUpdated": "2025-10-01T06:41:13.486Z",
+    "version": "1.0.0"
+  },
+  {
+    "id": "sass-advanced-lesson-11",
+    "moduleSlug": "sass-advanced",
+    "title": "SASS Performance and Optimization",
+    "order": 11,
+    "objectives": [
+      "Implement practical solutions",
+      "Build foundational understanding"
+    ],
+    "intro": "Welcome to this comprehensive lesson on Optimization.\n\nLearn best practices for optimizing SASS compilation and output CSS performance.\n\nThroughout this lesson, you'll gain hands-on experience with practical implementations and real-world scenarios. We'll explore both the theoretical foundations and practical applications, ensuring you can immediately apply what you learn.\n\nThis lesson is designed to build upon previous concepts while introducing new techniques that will enhance your development skills. By the end, you'll have a solid understanding of the key principles and be ready to tackle more advanced topics.\n\nThe knowledge gained here will serve as a foundation for subsequent lessons and real-world projects.",
+    "code": {
+      "example": "// Efficient variable organization\n$colors: (\n  primary: #3498db,\n  secondary: #2ecc71,\n  accent: #e74c3c,\n  neutral: #95a5a6\n) !default;\n\n// Optimized mixin for performance\n@mixin generate-spacing($property, $sizes: (5, 10, 15, 20, 25, 30)) {\n  @each $size in $sizes {\n    .#{str-slice($property, 1, 1)}-#{$size} {\n      #{$property}: #{$size}px;\n    }\n  }\n}\n\n// Generate utilities efficiently\n@include generate-spacing('margin');\n@include generate-spacing('padding');\n\n// Conditional compilation\n$include-print-styles: false !default;\n$include-ie-support: false !default;\n\n@if $include-print-styles {\n  @media print {\n    .no-print { display: none; }\n    .print-only { display: block; }\n  }\n}\n\n@if $include-ie-support {\n  .ie-fallback {\n    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#3498db', endColorstr='#2980b9');\n  }\n}\n\n// Optimize selector nesting (max 3 levels)\n.navigation {\n  ul {\n    li {\n      a {\n        // This is the maximum recommended nesting depth\n        text-decoration: none;\n        \n        // Use parent selector instead of deeper nesting\n        &:hover,\n        &:focus {\n          color: #3498db;\n        }\n      }\n    }\n  }\n}\n\n// Efficient placeholder usage\n%clearfix {\n  &::after {\n    content: '';\n    display: table;\n    clear: both;\n  }\n}\n\n%sr-only {\n  position: absolute;\n  width: 1px;\n  height: 1px;\n  padding: 0;\n  margin: -1px;\n  overflow: hidden;\n  clip: rect(0, 0, 0, 0);\n  border: 0;\n}\n\n// Use placeholders for shared styles\n.row {\n  @extend %clearfix;\n}\n\n.screen-reader-text {\n  @extend %sr-only;\n}\n\n// Performance monitoring mixin\n@mixin performance-critical {\n  /* Critical CSS - inline this */\n  @content;\n}\n\n@include performance-critical {\n  body {\n    font-family: system-ui, -apple-system, sans-serif;\n    line-height: 1.6;\n  }\n  \n  .header {\n    background: #fff;\n    position: sticky;\n    top: 0;\n  }\n}",
+      "explanation": "This example produces: Optimized SASS code with efficient compilation, conditional includes, and performance-conscious patterns\n\nThe code demonstrates practical implementation techniques and shows how the concepts work in real scenarios. Pay attention to the structure and patterns used, as these represent industry best practices.",
+      "language": "scss"
+    },
+    "pitfalls": [
+      {
+        "mistake": "Not following best practices",
+        "solution": "Review documentation and community guidelines",
+        "severity": "medium"
+      },
+      {
+        "mistake": "Skipping error handling",
+        "solution": "Implement proper error boundaries and validation",
+        "severity": "low"
+      }
+    ],
+    "exercises": [
+      {
+        "title": "Practice: SASS Performance and Optimization",
+        "description": "Apply the concepts from this lesson on Optimization",
+        "checkpoints": [
+          "Understand the core concept",
+          "Implement the example code",
+          "Experiment with variations"
+        ]
+      }
+    ],
+    "next": [],
+    "estimatedMinutes": 25,
+    "difficulty": "Advanced",
+    "tags": [
+      "Optimization",
+      "sass"
+    ],
+    "legacy": {
+      "originalId": 11,
+      "originalTopic": "Optimization",
+      "migrated": "2025-10-01T06:41:13.486Z"
+    },
+    "lastUpdated": "2025-10-01T06:41:13.486Z",
+    "version": "1.0.0"
+  },
+  {
+    "id": "sass-advanced-lesson-12",
+    "moduleSlug": "sass-advanced",
+    "title": "Modern SASS Features and CSS Grid Integration",
+    "order": 12,
+    "objectives": [
+      "Implement practical solutions",
+      "Build foundational understanding"
+    ],
+    "intro": "Welcome to this comprehensive lesson on Modern Features.\n\nLearn about modern SASS features and how to integrate with CSS Grid and other modern CSS technologies.\n\nThroughout this lesson, you'll gain hands-on experience with practical implementations and real-world scenarios. We'll explore both the theoretical foundations and practical applications, ensuring you can immediately apply what you learn.\n\nThis lesson is designed to build upon previous concepts while introducing new techniques that will enhance your development skills. By the end, you'll have a solid understanding of the key principles and be ready to tackle more advanced topics.\n\nThe knowledge gained here will serve as a foundation for subsequent lessons and real-world projects.",
+    "code": {
+      "example": "// Modern SASS with CSS Custom Properties\n:root {\n  --color-primary: #{color(primary)};\n  --color-secondary: #{color(secondary)};\n  --spacing-unit: 1rem;\n  --border-radius: 8px;\n}\n\n// CSS Grid helpers\n@mixin grid-container($columns: 12, $gap: 1rem) {\n  display: grid;\n  grid-template-columns: repeat($columns, 1fr);\n  gap: $gap;\n}\n\n@mixin grid-item($column-start: auto, $column-end: auto, $row-start: auto, $row-end: auto) {\n  grid-column: $column-start / $column-end;\n  grid-row: $row-start / $row-end;\n}\n\n// Modern layout system\n.layout {\n  @include grid-container(12, 2rem);\n  min-height: 100vh;\n  \n  &__header {\n    @include grid-item(1, -1, 1, 2);\n    background: var(--color-primary);\n    color: white;\n    padding: var(--spacing-unit);\n  }\n  \n  &__sidebar {\n    @include grid-item(1, 4, 2, -1);\n    background: #f8f9fa;\n    padding: var(--spacing-unit);\n    \n    @media (max-width: 768px) {\n      @include grid-item(1, -1, 2, 3);\n    }\n  }\n  \n  &__main {\n    @include grid-item(4, -1, 2, -1);\n    padding: var(--spacing-unit);\n    \n    @media (max-width: 768px) {\n      @include grid-item(1, -1, 3, -1);\n    }\n  }\n}\n\n// Container queries preparation\n@mixin container-query($min-width) {\n  @container (min-width: #{$min-width}) {\n    @content;\n  }\n}\n\n.card {\n  container-type: inline-size;\n  background: white;\n  border-radius: var(--border-radius);\n  padding: var(--spacing-unit);\n  \n  @include container-query(300px) {\n    .card__content {\n      display: flex;\n      gap: 1rem;\n    }\n  }\n}\n\n// Modern color functions\n@function get-contrast-color($color) {\n  $lightness: lightness($color);\n  @return if($lightness > 50%, #000, #fff);\n}\n\n@mixin theme-colors($theme-map) {\n  @each $name, $color in $theme-map {\n    .bg-#{$name} {\n      background-color: $color;\n      color: get-contrast-color($color);\n    }\n    \n    .text-#{$name} {\n      color: $color;\n    }\n    \n    .border-#{$name} {\n      border-color: $color;\n    }\n  }\n}\n\n// Generate modern color system\n@include theme-colors($colors);\n\n// CSS logical properties with SASS\n@mixin logical-spacing($block-start: 0, $inline-end: 0, $block-end: 0, $inline-start: 0) {\n  padding-block-start: $block-start;\n  padding-inline-end: $inline-end;\n  padding-block-end: $block-end;\n  padding-inline-start: $inline-start;\n}\n\n.content {\n  @include logical-spacing(2rem, 1rem, 2rem, 1rem);\n  margin-inline: auto;\n  max-inline-size: 80ch;\n}",
+      "explanation": "This example produces: Modern SASS integration with CSS Grid, custom properties, container queries, and logical properties for future-proof styling\n\nThe code demonstrates practical implementation techniques and shows how the concepts work in real scenarios. Pay attention to the structure and patterns used, as these represent industry best practices.",
+      "language": "scss"
+    },
+    "pitfalls": [
+      {
+        "mistake": "Not following best practices",
+        "solution": "Review documentation and community guidelines",
+        "severity": "medium"
+      },
+      {
+        "mistake": "Skipping error handling",
+        "solution": "Implement proper error boundaries and validation",
+        "severity": "low"
+      }
+    ],
+    "exercises": [
+      {
+        "title": "Practice: Modern SASS Features and CSS Grid Integration",
+        "description": "Apply the concepts from this lesson on Modern Features",
+        "checkpoints": [
+          "Understand the core concept",
+          "Implement the example code",
+          "Experiment with variations"
+        ]
+      }
+    ],
+    "next": [],
+    "estimatedMinutes": 25,
+    "difficulty": "Intermediate",
+    "tags": [
+      "Modern Features",
+      "sass"
+    ],
+    "legacy": {
+      "originalId": 12,
+      "originalTopic": "Modern Features",
+      "migrated": "2025-10-01T06:41:13.486Z"
+    },
+    "lastUpdated": "2025-10-01T06:41:13.486Z",
+    "version": "1.0.0"
+  }
+]

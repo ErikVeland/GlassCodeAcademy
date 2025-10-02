@@ -1,0 +1,113 @@
+{
+  "timestamp": "2025-10-01T07:31:55.699Z",
+  "totalModules": 18,
+  "validModules": 9,
+  "totalLessons": 218,
+  "validLessons": 122,
+  "totalQuizzes": 314,
+  "validQuizzes": 234,
+  "issues": [
+    {
+      "severity": "medium",
+      "type": "lesson-count",
+      "message": "Module database-systems: Only 12 lessons (requires 16)",
+      "timestamp": "2025-10-01T07:31:55.712Z"
+    },
+    {
+      "severity": "medium",
+      "type": "quiz-count",
+      "message": "Module database-systems: Only 15 quiz questions (requires 22)",
+      "timestamp": "2025-10-01T07:31:55.713Z"
+    },
+    {
+      "severity": "critical",
+      "type": "lessons-missing",
+      "message": "Module typescript-fundamentals: Lessons file not found",
+      "timestamp": "2025-10-01T07:31:55.714Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-count",
+      "message": "Module node-fundamentals: Only 12 lessons (requires 15)",
+      "timestamp": "2025-10-01T07:31:55.714Z"
+    },
+    {
+      "severity": "medium",
+      "type": "quiz-count",
+      "message": "Module node-fundamentals: Only 15 quiz questions (requires 20)",
+      "timestamp": "2025-10-01T07:31:55.715Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-count",
+      "message": "Module laravel-fundamentals: Only 12 lessons (requires 16)",
+      "timestamp": "2025-10-01T07:31:55.715Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-count",
+      "message": "Module nextjs-advanced: Only 12 lessons (requires 14)",
+      "timestamp": "2025-10-01T07:31:55.716Z"
+    },
+    {
+      "severity": "medium",
+      "type": "quiz-count",
+      "message": "Module nextjs-advanced: Only 5 quiz questions (requires 18)",
+      "timestamp": "2025-10-01T07:31:55.716Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-count",
+      "message": "Module graphql-advanced: Only 12 lessons (requires 13)",
+      "timestamp": "2025-10-01T07:31:55.717Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-count",
+      "message": "Module tailwind-advanced: Only 12 lessons (requires 13)",
+      "timestamp": "2025-10-01T07:31:55.719Z"
+    },
+    {
+      "severity": "medium",
+      "type": "quiz-count",
+      "message": "Module tailwind-advanced: Only 15 quiz questions (requires 16)",
+      "timestamp": "2025-10-01T07:31:55.719Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-count",
+      "message": "Module vue-advanced: Only 12 lessons (requires 14)",
+      "timestamp": "2025-10-01T07:31:55.719Z"
+    },
+    {
+      "severity": "medium",
+      "type": "quiz-count",
+      "message": "Module vue-advanced: Only 15 quiz questions (requires 18)",
+      "timestamp": "2025-10-01T07:31:55.720Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-count",
+      "message": "Module testing-fundamentals: Only 12 lessons (requires 14)",
+      "timestamp": "2025-10-01T07:31:55.720Z"
+    },
+    {
+      "severity": "medium",
+      "type": "quiz-count",
+      "message": "Module testing-fundamentals: Only 15 quiz questions (requires 18)",
+      "timestamp": "2025-10-01T07:31:55.720Z"
+    }
+  ],
+  "warnings": [],
+  "summary": {
+    "overallCompliance": 60,
+    "readyForProduction": false,
+    "criticalIssues": 1,
+    "recommendations": [
+      "🔴 Address all critical issues before production deployment",
+      "🟡 Improve content quality to reach 90%+ compliance",
+      "📚 Add more lessons to modules below threshold",
+      "❓ Add more quiz questions to meet minimum requirements"
+    ]
+  }
+}

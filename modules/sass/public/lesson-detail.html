@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Variables and Nesting - Fullstack Academy</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <a href="/" class="logo">SASS Learning Module</a>
+                <nav class="nav">
+                    <ul class="nav-list">
+                        <li><a href="/" class="nav-link">Home</a></li>
+                        <li><a href="lessons.html" class="nav-link">Lessons</a></li>
+                        <li><a href="quiz.html" class="nav-link">Quiz</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </header>
+    
+    <main class="main">
+        <div class="container">
+            <nav class="breadcrumb">
+                <a href="lessons.html" class="breadcrumb-link">Lessons</a> / 
+                <span class="breadcrumb-text">Basics</span> / 
+                <span class="breadcrumb-current">Variables and Nesting</span>
+            </nav>
+            
+            <div class="lesson-content">
+                <div class="lesson-header">
+                    <h1 class="lesson-title">Variables and Nesting</h1>
+                    <span class="badge badge-topic">
+                        Basics
+                    </span>
+                </div>
+                
+                <p class="lesson-description">Learn how to use variables and nesting in SASS.</p>
+                
+                <div class="lesson-body">
+                    <p class="lesson-text">SASS variables allow you to store information that you want to reuse throughout your stylesheet. You can store things like colors, font stacks, or any CSS value you think you'll want to reuse. SASS uses the $ symbol to make something a variable.</p>
+                    
+                    <p class="lesson-text">Nesting in SASS allows you to write selectors that mimic the hierarchical structure of your HTML, making your code more organized and easier to read.</p>
+                    
+                    <div class="code-example">
+                        <div class="code-header">
+                            <span class="code-title">Example Code</span>
+                            <button 
+                                onclick="copyCode()"
+                                class="btn btn-copy"
+                            >
+                                Copy
+                            </button>
+                        </div>
+                        <pre class="code-block"><code class="code-content">$font-stack: Helvetica, sans-serif;
+$primary-color: #333;
+
+body {
+  font: 100% $font-stack;
+  color: $primary-color;
+}
+
+nav {
+  ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  li { 
+    display: inline-block;
+  }
+
+  a {
+    display: block;
+    padding: 6px 12px;
+    text-decoration: none;
+  }
+}</code></pre>
+                    </div>
+                </div>
+                
+                <div class="lesson-navigation">
+                    <button class="btn btn-secondary">
+                        ← Previous Lesson
+                    </button>
+                    <button class="btn btn-primary">
+                        Next Lesson →
+                    </button>
+                </div>
+            </div>
+        </div>
+    </main>
+    
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <p class="footer-text">SASS Learning Module &copy; <span id="current-year"></span> Fullstack Academy</p>
+            </div>
+        </div>
+    </footer>
+    
+    <script>
+        document.getElementById('current-year').textContent = new Date().getFullYear();
+        
+        function copyCode() {
+            // In a real implementation, this would copy the code to clipboard
+            alert('Code copied to clipboard!');
+        }
+    </script>
+</body>
+</html>

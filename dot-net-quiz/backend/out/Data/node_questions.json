@@ -1,0 +1,104 @@
+[
+  {
+    "id": 1,
+    "topic": "Basics",
+    "type": "multiple-choice",
+    "question": "What is Node.js?",
+    "choices": [
+      "A JavaScript runtime built on Chrome's V8 JavaScript engine",
+      "A CSS framework",
+      "A database management system",
+      "A front-end framework"
+    ],
+    "correctAnswer": 0,
+    "explanation": "Node.js is a JavaScript runtime that allows you to run JavaScript on the server-side, built on Chrome's V8 JavaScript engine."
+  },
+  {
+    "id": 2,
+    "topic": "Basics",
+    "type": "multiple-choice",
+    "question": "How do you import a module in Node.js?",
+    "choices": [
+      "require()",
+      "import",
+      "include",
+      "load"
+    ],
+    "correctAnswer": 0,
+    "explanation": "In Node.js, modules are imported using the require() function. The import statement is used in ES6 modules."
+  },
+  {
+    "id": 3,
+    "topic": "Express",
+    "type": "open-ended",
+    "question": "What is Express.js and why is it used?",
+    "choices": null,
+    "correctAnswer": null,
+    "explanation": "Express.js is a minimal and flexible Node.js web application framework that provides a robust set of features for web and mobile applications. It simplifies the process of building web servers and APIs by providing helpful utilities and middleware."
+  },
+  {
+    "id": 4,
+    "topic": "Express",
+    "type": "multiple-choice",
+    "question": "Which method is used to handle GET requests in Express?",
+    "choices": [
+      "app.get()",
+      "app.post()",
+      "app.put()",
+      "app.delete()"
+    ],
+    "correctAnswer": 0,
+    "explanation": "In Express.js, app.get() is used to define a route handler for GET requests."
+  },
+  {
+    "id": 5,
+    "topic": "Middleware",
+    "type": "multiple-choice",
+    "question": "What is middleware in Express.js?",
+    "choices": [
+      "Functions that have access to the request and response objects",
+      "Database connection utilities",
+      "Template engines",
+      "Routing functions"
+    ],
+    "correctAnswer": 0,
+    "explanation": "Middleware functions in Express.js are functions that have access to the request object, the response object, and the next middleware function in the application's request-response cycle."
+  },
+  {
+    "id": 6,
+    "topic": "Async",
+    "type": "multiple-choice",
+    "question": "How do you handle asynchronous operations in Node.js?",
+    "choices": [
+      "Using callbacks, promises, or async/await",
+      "Using synchronous functions only",
+      "Using threads",
+      "Using global variables"
+    ],
+    "correctAnswer": 0,
+    "explanation": "Node.js handles asynchronous operations using callbacks, promises, or the more modern async/await syntax."
+  },
+  {
+    "id": 7,
+    "topic": "NPM",
+    "type": "open-ended",
+    "question": "What is NPM and what is it used for?",
+    "choices": null,
+    "correctAnswer": null,
+    "explanation": "NPM (Node Package Manager) is the default package manager for Node.js. It is used to install, share, and manage packages (libraries and tools) in Node.js projects. It also helps with dependency management and script execution."
+  },
+  {
+    "id": 8,
+    "topic": "Event Loop",
+    "type": "multiple-choice",
+    "question": "What is the event loop in Node.js?",
+    "choices": [
+      "A mechanism that handles asynchronous operations",
+      "A loop that executes synchronous code",
+      "A database query optimizer",
+      "A memory management system"
+    ],
+    "correctAnswer": 0,
+    "explanation": "The event loop in Node.js is a mechanism that handles asynchronous operations by continuously checking the call stack and callback queue to execute callbacks when the call stack is empty."
+  }
+]

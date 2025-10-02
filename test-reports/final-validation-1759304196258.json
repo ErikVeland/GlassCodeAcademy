@@ -1,0 +1,88 @@
+{
+  "timestamp": "2025-10-01T07:36:36.229Z",
+  "totalModules": 18,
+  "validModules": 12,
+  "totalLessons": 236,
+  "validLessons": 164,
+  "totalQuizzes": 319,
+  "validQuizzes": 254,
+  "issues": [
+    {
+      "severity": "medium",
+      "type": "lesson-count",
+      "message": "Module database-systems: Only 12 lessons (requires 16)",
+      "timestamp": "2025-10-01T07:36:36.250Z"
+    },
+    {
+      "severity": "medium",
+      "type": "quiz-count",
+      "message": "Module database-systems: Only 15 quiz questions (requires 22)",
+      "timestamp": "2025-10-01T07:36:36.250Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-count",
+      "message": "Module laravel-fundamentals: Only 12 lessons (requires 16)",
+      "timestamp": "2025-10-01T07:36:36.252Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-count",
+      "message": "Module nextjs-advanced: Only 12 lessons (requires 14)",
+      "timestamp": "2025-10-01T07:36:36.253Z"
+    },
+    {
+      "severity": "medium",
+      "type": "quiz-count",
+      "message": "Module nextjs-advanced: Only 5 quiz questions (requires 18)",
+      "timestamp": "2025-10-01T07:36:36.253Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-count",
+      "message": "Module tailwind-advanced: Only 12 lessons (requires 13)",
+      "timestamp": "2025-10-01T07:36:36.255Z"
+    },
+    {
+      "severity": "medium",
+      "type": "quiz-count",
+      "message": "Module tailwind-advanced: Only 15 quiz questions (requires 16)",
+      "timestamp": "2025-10-01T07:36:36.255Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-count",
+      "message": "Module vue-advanced: Only 12 lessons (requires 14)",
+      "timestamp": "2025-10-01T07:36:36.255Z"
+    },
+    {
+      "severity": "medium",
+      "type": "quiz-count",
+      "message": "Module vue-advanced: Only 15 quiz questions (requires 18)",
+      "timestamp": "2025-10-01T07:36:36.256Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-count",
+      "message": "Module testing-fundamentals: Only 12 lessons (requires 14)",
+      "timestamp": "2025-10-01T07:36:36.256Z"
+    },
+    {
+      "severity": "medium",
+      "type": "quiz-count",
+      "message": "Module testing-fundamentals: Only 15 quiz questions (requires 18)",
+      "timestamp": "2025-10-01T07:36:36.256Z"
+    }
+  ],
+  "warnings": [],
+  "summary": {
+    "overallCompliance": 72,
+    "readyForProduction": false,
+    "criticalIssues": 0,
+    "recommendations": [
+      "🟡 Improve content quality to reach 90%+ compliance",
+      "📚 Add more lessons to modules below threshold",
+      "❓ Add more quiz questions to meet minimum requirements"
+    ]
+  }
+}

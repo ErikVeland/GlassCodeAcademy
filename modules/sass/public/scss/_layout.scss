@@ -1,0 +1,203 @@
+// Header
+.header {
+  background-color: $primary-color;
+  color: $white;
+  box-shadow: $shadow-md;
+}
+
+.header-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: $spacing-4 0;
+}
+
+.logo {
+  font-size: $font-size-2xl;
+  font-weight: $font-weight-bold;
+  color: $white;
+  text-decoration: none;
+}
+
+.nav-list {
+  display: flex;
+  list-style: none;
+  gap: $spacing-6;
+}
+
+.nav-link {
+  color: $white;
+  text-decoration: none;
+  opacity: 0.8;
+  
+  &:hover,
+  &.active {
+    opacity: 1;
+  }
+}
+
+// Main content
+.main {
+  padding: $spacing-8 0;
+}
+
+// Hero section
+.hero {
+  text-align: center;
+  margin-bottom: $spacing-12;
+}
+
+.hero-title {
+  font-size: $font-size-4xl;
+  font-weight: $font-weight-bold;
+  color: $gray-900;
+  margin-bottom: $spacing-4;
+}
+
+.hero-description {
+  font-size: $font-size-xl;
+  color: $gray-600;
+  margin-bottom: $spacing-8;
+}
+
+// Page titles
+.page-title {
+  font-size: $font-size-3xl;
+  font-weight: $font-weight-bold;
+  color: $gray-900;
+  margin-bottom: $spacing-2;
+}
+
+.page-description {
+  color: $gray-600;
+  margin-bottom: $spacing-8;
+}
+
+// Lesson content
+.lesson-content {
+  @include card-base;
+  margin-bottom: $spacing-8;
+}
+
+.lesson-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: $spacing-4;
+}
+
+.lesson-title {
+  font-size: $font-size-3xl;
+  font-weight: $font-weight-bold;
+  color: $gray-900;
+  margin-bottom: 0;
+}
+
+.lesson-description {
+  color: $gray-600;
+  margin-bottom: $spacing-6;
+}
+
+.lesson-body {
+  margin-bottom: $spacing-8;
+}
+
+.lesson-text {
+  margin-bottom: $spacing-4;
+}
+
+.lesson-navigation {
+  display: flex;
+  justify-content: space-between;
+}
+
+// Breadcrumb
+.breadcrumb {
+  margin-bottom: $spacing-6;
+  font-size: $font-size-sm;
+  color: $gray-500;
+}
+
+.breadcrumb-link {
+  color: $primary-color;
+  text-decoration: none;
+  
+  &:hover {
+    color: darken($primary-color, 10%);
+  }
+}
+
+.breadcrumb-text {
+  color: $gray-500;
+}
+
+.breadcrumb-current {
+  color: $gray-900;
+}
+
+// Quiz
+.quiz-container {
+  max-width: 48rem;
+  margin: 0 auto;
+}
+
+.quiz-content {
+  @include card-base;
+}
+
+.question-text {
+  font-size: $font-size-xl;
+  font-weight: $font-weight-semibold;
+  color: $gray-900;
+  margin-bottom: $spacing-6;
+}
+
+.quiz-navigation {
+  display: flex;
+  justify-content: space-between;
+  margin-top: $spacing-8;
+}
+
+// Progress
+.progress {
+  margin-bottom: $spacing-6;
+}
+
+.progress-info {
+  display: flex;
+  justify-content: space-between;
+  font-size: $font-size-sm;
+  color: $gray-600;
+  margin-bottom: $spacing-1;
+}
+
+.progress-bar {
+  width: 100%;
+  height: $spacing-2;
+  background-color: $gray-200;
+  border-radius: $border-radius-full;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background-color: $primary-color;
+  border-radius: $border-radius-full;
+}
+
+// Footer
+.footer {
+  background-color: $white;
+  border-top: 1px solid $gray-200;
+  margin-top: $spacing-12;
+}
+
+.footer-content {
+  padding: $spacing-6 0;
+  text-align: center;
+}
+
+.footer-text {
+  color: $gray-600;
+  margin: 0;
+}

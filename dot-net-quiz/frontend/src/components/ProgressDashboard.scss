@@ -1,0 +1,667 @@
+@import '../styles/variables';
+@import '../styles/mixins';
+
+.progress-dashboard {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+  font-family: $font-family-base;
+
+  &.loading {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 400px;
+    font-size: 1.2rem;
+    color: $color-text-secondary;
+  }
+}
+
+.dashboard-header {
+  margin-bottom: 2rem;
+
+  h1 {
+    color: $color-text-primary;
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    background: linear-gradient(135deg, $color-primary, $color-accent);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+}
+
+.dashboard-summary {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 2rem;
+  align-items: center;
+  background: $color-glass-bg;
+  backdrop-filter: blur(20px);
+  border: 1px solid $color-glass-border;
+  border-radius: $border-radius-lg;
+  padding: 2rem;
+  box-shadow: $shadow-lg;
+
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+    text-align: center;
+  }
+}
+
+.summary-card {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .summary-info {
+    h2 {
+      color: $color-text-primary;
+      font-size: 1.5rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+
+    p {
+      color: $color-text-secondary;
+      font-size: 1rem;
+      margin: 0;
+    }
+  }
+}
+
+.quick-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+  gap: 1.5rem;
+
+  @media (max-width: 768px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.stat-item {
+  text-align: center;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: $border-radius-md;
+  padding: 1rem;
+  border: 1px solid $color-glass-border;
+
+  .stat-value {
+    display: block;
+    font-size: 2rem;
+    font-weight: 700;
+    color: $color-primary;
+    margin-bottom: 0.25rem;
+  }
+
+  .stat-label {
+    display: block;
+    font-size: 0.875rem;
+    color: $color-text-secondary;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+}
+
+// Progress Components
+.progress-circular,
+.progress-radial {
+  position: relative;
+  display: inline-block;
+
+  &.progress-small {
+    svg { width: 60px; height: 60px; }
+  }
+
+  &.progress-medium {
+    svg { width: 80px; height: 80px; }
+  }
+
+  &.progress-large {
+    svg { width: 120px; height: 120px; }
+  }
+
+  .progress-center-label {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+
+    .percentage {
+      font-size: 1rem;
+      font-weight: 600;
+      color: $color-text-primary;
+    }
+  }
+}
+
+.progress-linear {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+
+  &.progress-small .progress-track {
+    height: 6px;
+  }
+
+  &.progress-medium .progress-track {
+    height: 8px;
+  }
+
+  &.progress-large .progress-track {
+    height: 12px;
+  }
+
+  .progress-track {
+    flex: 1;
+    background: $color-glass-border;
+    border-radius: 10px;
+    overflow: hidden;
+    position: relative;
+
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, $color-primary, $color-accent);
+      border-radius: inherit;
+      position: relative;
+
+      &::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+        animation: shimmer 2s infinite;
+      }
+    }
+  }
+
+  .progress-label {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: $color-text-primary;
+    min-width: 3rem;
+    text-align: right;
+  }
+}
+
+@keyframes shimmer {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+// Dashboard Tabs
+.dashboard-tabs {
+  display: flex;
+  background: $color-glass-bg;
+  border-radius: $border-radius-lg;
+  padding: 0.5rem;
+  margin-bottom: 2rem;
+  border: 1px solid $color-glass-border;
+  overflow-x: auto;
+
+  @media (max-width: 768px) {
+    margin-bottom: 1rem;
+  }
+}
+
+.tab-button {
+  background: none;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: $border-radius-md;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: $color-text-secondary;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+
+  &:hover {
+    color: $color-text-primary;
+    background: rgba(255, 255, 255, 0.05);
+  }
+
+  &.active {
+    background: $color-primary;
+    color: white;
+    box-shadow: $shadow-sm;
+  }
+}
+
+// Dashboard Content
+.dashboard-content {
+  background: $color-glass-bg;
+  backdrop-filter: blur(20px);
+  border: 1px solid $color-glass-border;
+  border-radius: $border-radius-lg;
+  padding: 2rem;
+  box-shadow: $shadow-lg;
+}
+
+// Overview Tab
+.progress-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  gap: 2rem;
+
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+}
+
+.grid-item {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid $color-glass-border;
+  border-radius: $border-radius-lg;
+  padding: 1.5rem;
+
+  h3 {
+    color: $color-text-primary;
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    border-bottom: 1px solid $color-glass-border;
+    padding-bottom: 0.5rem;
+  }
+}
+
+// Streak Info
+.streak-info {
+  .streak-current {
+    display: flex;
+    align-items: baseline;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+
+    .streak-number {
+      font-size: 3rem;
+      font-weight: 700;
+      color: $color-primary;
+      line-height: 1;
+    }
+
+    .streak-label {
+      font-size: 1rem;
+      color: $color-text-secondary;
+    }
+  }
+
+  .streak-status {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+
+    .status-indicator {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+
+      &.active { background: $color-success; }
+      &.pending { background: $color-warning; }
+      &.broken { background: $color-error; }
+      &.new { background: $color-text-secondary; }
+    }
+
+    .status-message {
+      font-size: 0.875rem;
+      color: $color-text-secondary;
+    }
+  }
+
+  .streak-motivation {
+    font-size: 0.875rem;
+    color: $color-text-primary;
+    font-style: italic;
+    margin: 0;
+  }
+}
+
+// Recent Achievements
+.recent-achievements {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.achievement-badge {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem;
+  border-radius: $border-radius-md;
+  border: 1px solid $color-glass-border;
+  transition: all 0.2s ease;
+
+  &.earned {
+    background: rgba(79, 70, 229, 0.1);
+    border-color: $color-primary;
+  }
+
+  &.locked {
+    opacity: 0.6;
+    background: rgba(255, 255, 255, 0.02);
+  }
+
+  &.achievement-small {
+    padding: 0.75rem;
+    
+    .badge-icon { font-size: 1.5rem; }
+    .badge-title { font-size: 0.875rem; }
+    .badge-description { font-size: 0.75rem; }
+  }
+
+  &.achievement-medium {
+    .badge-icon { font-size: 2rem; }
+    .badge-title { font-size: 1rem; }
+    .badge-description { font-size: 0.875rem; }
+  }
+
+  &.achievement-large {
+    padding: 1.5rem;
+    
+    .badge-icon { font-size: 2.5rem; }
+    .badge-title { font-size: 1.25rem; }
+    .badge-description { font-size: 1rem; }
+  }
+
+  .badge-icon {
+    flex-shrink: 0;
+  }
+
+  .badge-info {
+    flex: 1;
+
+    .badge-title {
+      color: $color-text-primary;
+      font-weight: 600;
+      margin-bottom: 0.25rem;
+    }
+
+    .badge-description {
+      color: $color-text-secondary;
+      margin-bottom: 0.25rem;
+    }
+
+    .badge-date {
+      font-size: 0.75rem;
+      color: $color-text-tertiary;
+    }
+  }
+}
+
+// Performance Metrics
+.metrics-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.metric {
+  .metric-label {
+    display: block;
+    font-size: 0.875rem;
+    color: $color-text-secondary;
+    margin-bottom: 0.5rem;
+  }
+}
+
+// Tier Progress
+.tier-progress-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.5rem;
+}
+
+.tier-progress-card {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid $color-glass-border;
+  border-radius: $border-radius-lg;
+  padding: 1.5rem;
+
+  .tier-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+
+    .tier-title {
+      color: $color-text-primary;
+      font-size: 1.125rem;
+      font-weight: 600;
+      margin: 0;
+    }
+
+    .tier-count {
+      font-size: 0.875rem;
+      color: $color-text-secondary;
+      background: rgba(255, 255, 255, 0.1);
+      padding: 0.25rem 0.75rem;
+      border-radius: $border-radius-sm;
+    }
+  }
+
+  .tier-modules {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(12px, 1fr));
+    gap: 0.5rem;
+    margin-top: 1rem;
+  }
+
+  .module-indicator {
+    width: 12px;
+    height: 12px;
+    border-radius: 2px;
+    border: 1px solid $color-glass-border;
+
+    &.completed {
+      background: $color-success;
+      border-color: $color-success;
+    }
+
+    &.in-progress {
+      background: $color-warning;
+      border-color: $color-warning;
+    }
+
+    &.pending {
+      background: rgba(255, 255, 255, 0.1);
+    }
+  }
+}
+
+// Achievements Grid
+.achievements-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1rem;
+}
+
+// Streaks Tab
+.streak-details {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+}
+
+.streak-overview {
+  .streak-stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+    margin-top: 1rem;
+  }
+
+  .streak-stat {
+    text-align: center;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: $border-radius-md;
+    padding: 1rem;
+    border: 1px solid $color-glass-border;
+
+    .stat-value {
+      display: block;
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: $color-primary;
+      margin-bottom: 0.25rem;
+    }
+
+    .stat-label {
+      display: block;
+      font-size: 0.75rem;
+      color: $color-text-secondary;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+  }
+}
+
+.milestones-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.milestone {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem;
+  border-radius: $border-radius-md;
+  border: 1px solid $color-glass-border;
+
+  &.achieved {
+    background: rgba(34, 197, 94, 0.1);
+    border-color: $color-success;
+  }
+
+  &.pending {
+    opacity: 0.7;
+  }
+
+  .milestone-icon {
+    font-size: 1.5rem;
+    flex-shrink: 0;
+  }
+
+  .milestone-info {
+    flex: 1;
+
+    h4 {
+      color: $color-text-primary;
+      font-size: 1rem;
+      font-weight: 600;
+      margin-bottom: 0.25rem;
+    }
+
+    p {
+      color: $color-text-secondary;
+      font-size: 0.875rem;
+      margin-bottom: 0.25rem;
+    }
+
+    .milestone-threshold {
+      font-size: 0.75rem;
+      color: $color-text-tertiary;
+      background: rgba(255, 255, 255, 0.1);
+      padding: 0.125rem 0.5rem;
+      border-radius: $border-radius-sm;
+    }
+  }
+}
+
+.activity-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-top: 1rem;
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.activity-item {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 1rem;
+  align-items: center;
+  padding: 0.75rem;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: $border-radius-sm;
+  border: 1px solid $color-glass-border;
+
+  .activity-date {
+    font-size: 0.75rem;
+    color: $color-text-tertiary;
+    white-space: nowrap;
+  }
+
+  .activity-description {
+    font-size: 0.875rem;
+    color: $color-text-secondary;
+  }
+
+  .activity-points {
+    font-size: 0.75rem;
+    color: $color-success;
+    font-weight: 600;
+  }
+}
+
+// Responsive Design
+@media (max-width: 768px) {
+  .progress-dashboard {
+    padding: 1rem;
+  }
+
+  .dashboard-content {
+    padding: 1rem;
+  }
+
+  .progress-grid,
+  .tier-progress-grid,
+  .achievements-grid,
+  .streak-details {
+    grid-template-columns: 1fr;
+  }
+
+  .dashboard-summary {
+    padding: 1rem;
+  }
+
+  .summary-card {
+    flex-direction: column;
+  }
+
+  .quick-stats {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 480px) {
+  .dashboard-header h1 {
+    font-size: 2rem;
+  }
+
+  .quick-stats {
+    grid-template-columns: 1fr;
+  }
+
+  .tab-button {
+    padding: 0.5rem 1rem;
+    font-size: 0.8rem;
+  }
+}

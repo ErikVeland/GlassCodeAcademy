@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SASS Quiz - Fullstack Academy</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <a href="/" class="logo">SASS Learning Module</a>
+                <nav class="nav">
+                    <ul class="nav-list">
+                        <li><a href="/" class="nav-link">Home</a></li>
+                        <li><a href="lessons.html" class="nav-link">Lessons</a></li>
+                        <li><a href="quiz.html" class="nav-link active">Quiz</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </header>
+    
+    <main class="main">
+        <div class="container">
+            <div class="quiz-container">
+                <h1 class="page-title">SASS Quiz</h1>
+                <p class="page-description">Test your knowledge of SASS concepts</p>
+                
+                <div class="quiz-content">
+                    <div class="progress">
+                        <div class="progress-info">
+                            <span class="progress-text">Question 1 of 5</span>
+                            <span class="progress-percent">0% Complete</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 0%"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="question">
+                        <h2 class="question-text">What symbol is used to declare a variable in SASS?</h2>
+                        
+                        <div class="options">
+                            <label class="option">
+                                <input type="radio" name="question-1" class="option-input">
+                                <span class="option-text">#</span>
+                            </label>
+                            
+                            <label class="option">
+                                <input type="radio" name="question-1" class="option-input">
+                                <span class="option-text">$</span>
+                            </label>
+                            
+                            <label class="option">
+                                <input type="radio" name="question-1" class="option-input">
+                                <span class="option-text">@</span>
+                            </label>
+                            
+                            <label class="option">
+                                <input type="radio" name="question-1" class="option-input">
+                                <span class="option-text">&</span>
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div class="quiz-navigation">
+                        <button class="btn btn-secondary" disabled>
+                            ← Previous
+                        </button>
+                        
+                        <button class="btn btn-primary">
+                            Next →
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <p class="footer-text">SASS Learning Module &copy; <span id="current-year"></span> Fullstack Academy</p>
+            </div>
+        </div>
+    </footer>
+    
+    <script>
+        document.getElementById('current-year').textContent = new Date().getFullYear();
+    </script>
+</body>
+</html>

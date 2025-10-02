@@ -1,0 +1,42 @@
+[
+  {
+    "id": 1,
+    "topic": "Testing Fundamentals",
+    "title": "Testing Pyramid",
+    "description": "Learn about the testing pyramid and different types of tests.",
+    "codeExample": "// Unit test example with Jest\nfunction add(a, b) {\n  return a + b;\n}\n\ndescribe('add function', () => {\n  test('adds 1 + 2 to equal 3', () => {\n    expect(add(1, 2)).toBe(3);\n  });\n\n  test('adds -1 + 1 to equal 0', () => {\n    expect(add(-1, 1)).toBe(0);\n  });\n});\n\n// Integration test example\nconst request = require('supertest');\nconst app = require('../app');\n\ndescribe('GET /api/users', () => {\n  test('responds with JSON array', async () => {\n    const response = await request(app).get('/api/users');\n    expect(response.status).toBe(200);\n    expect(response.body).toBeInstanceOf(Array);\n  });\n});",
+    "output": "Unit tests for pure functions and integration tests for API endpoints"
+  },
+  {
+    "id": 2,
+    "topic": "Unit Testing",
+    "title": "Test Structure",
+    "description": "Learn how to structure tests using the Arrange-Act-Assert pattern.",
+    "codeExample": "// Arrange-Act-Assert pattern\ndescribe('ShoppingCart', () => {\n  test('calculates total correctly', () => {\n    // Arrange\n    const cart = new ShoppingCart();\n    cart.addItem({ name: 'Apple', price: 1.5 });\n    cart.addItem({ name: 'Banana', price: 0.75 });\n    \n    // Act\n    const total = cart.calculateTotal();\n    \n    // Assert\n    expect(total).toBe(2.25);\n  });\n});\n\n// Using beforeEach for setup\ndescribe('User authentication', () => {\n  let user;\n  \n  beforeEach(() => {\n    user = new User('test@example.com', 'password123');\n  });\n  \n  test('validates correct password', () => {\n    expect(user.validatePassword('password123')).toBe(true);\n  });\n});",
+    "output": "Well-structured tests with clear separation of concerns"
+  },
+  {
+    "id": 3,
+    "topic": "Unit Testing",
+    "title": "Mocking",
+    "description": "Learn how to use mocks to isolate units of code during testing.",
+    "codeExample": "// Mocking external dependencies\nconst database = require('../database');\nconst emailService = require('../emailService');\n\njest.mock('../database');\njest.mock('../emailService');\n\nconst userService = require('../userService');\n\ndescribe('User service', () => {\n  beforeEach(() => {\n    // Clear all mocks before each test\n    jest.clearAllMocks();\n  });\n  \n  test('sends welcome email after user creation', async () => {\n    // Mock database save operation\n    database.saveUser.mockResolvedValue({ id: 1, email: 'test@example.com' });\n    \n    // Act\n    const user = await userService.createUser('test@example.com');\n    \n    // Assert\n    expect(database.saveUser).toHaveBeenCalledWith('test@example.com');\n    expect(emailService.sendWelcomeEmail).toHaveBeenCalledWith('test@example.com');\n  });\n});",
+    "output": "Tests that isolate the unit under test by mocking dependencies"
+  },
+  {
+    "id": 4,
+    "topic": "Integration Testing",
+    "title": "API Testing",
+    "description": "Learn how to test API endpoints with integration tests.",
+    "codeExample": "// Testing REST API endpoints\nconst request = require('supertest');\nconst app = require('../app');\n\ndescribe('POST /api/users', () => {\n  test('creates a new user with valid data', async () => {\n    const userData = {\n      name: 'John Doe',\n      email: 'john@example.com',\n      password: 'password123'\n    };\n    \n    const response = await request(app)\n      .post('/api/users')\n      .send(userData)\n      .expect(201);\n      \n    expect(response.body).toHaveProperty('id');\n    expect(response.body.name).toBe(userData.name);\n    expect(response.body.email).toBe(userData.email);\n    // Password should not be returned\n    expect(response.body).not.toHaveProperty('password');\n  });\n  \n  test('returns 400 for invalid email', async () => {\n    const invalidData = {\n      name: 'John Doe',\n      email: 'invalid-email',\n      password: 'password123'\n    };\n    \n    await request(app)\n      .post('/api/users')\n      .send(invalidData)\n      .expect(400);\n  });\n});",
+    "output": "Comprehensive API tests covering success and error cases"
+  },
+  {
+    "id": 5,
+    "topic": "End-to-End Testing",
+    "title": "Cypress Basics",
+    "description": "Learn how to write end-to-end tests with Cypress.",
+    "codeExample": "// Cypress E2E test example\ndescribe('Login Flow', () => {\n  beforeEach(() => {\n    cy.visit('/login');\n  });\n  \n  it('successfully logs in with valid credentials', () => {\n    cy.get('[data-cy=email]').type('user@example.com');\n    cy.get('[data-cy=password]').type('password123');\n    cy.get('[data-cy=submit]').click();\n    \n    cy.url().should('include', '/dashboard');\n    cy.get('[data-cy=welcome-message]').should('contain', 'Welcome');\n  });\n  \n  it('shows error for invalid credentials', () => {\n    cy.get('[data-cy=email]').type('user@example.com');\n    cy.get('[data-cy=password]').type('wrongpassword');\n    cy.get('[data-cy=submit]').click();\n    \n    cy.get('[data-cy=error-message]').should('be.visible');\n    cy.url().should('include', '/login');\n  });\n});",
+    "output": "Browser-based tests that simulate real user interactions"
+  }
+]

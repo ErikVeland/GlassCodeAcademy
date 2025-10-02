@@ -1,0 +1,317 @@
+[
+  {
+    "id": 1,
+    "topic": "Routing",
+    "type": "multiple-choice",
+    "question": "Which method is used to define a GET route in Laravel?",
+    "choices": ["Route::get()", "Route::post()", "Route::put()", "Route::delete()"],
+    "correctAnswer": 0,
+    "explanation": "In Laravel, Route::get() is used to define a GET route. This is the most common HTTP method for retrieving data."
+  },
+  {
+    "id": 2,
+    "topic": "Eloquent ORM",
+    "type": "multiple-choice",
+    "question": "Which method is used to retrieve all records from a model?",
+    "choices": ["Model::all()", "Model::get()", "Model::find()", "Model::first()"],
+    "correctAnswer": 0,
+    "explanation": "The all() method retrieves all records from the model's associated database table."
+  },
+  {
+    "id": 3,
+    "topic": "Blade Templates",
+    "type": "multiple-choice",
+    "question": "Which directive is used to extend a Blade layout?",
+    "choices": ["@extends", "@include", "@yield", "@section"],
+    "correctAnswer": 0,
+    "explanation": "The @extends directive is used to specify which layout the child view should inherit from."
+  },
+  {
+    "id": 4,
+    "topic": "Database",
+    "type": "multiple-choice",
+    "question": "Which artisan command is used to create a new migration?",
+    "choices": ["php artisan make:migration", "php artisan create:migration", "php artisan generate:migration", "php artisan new:migration"],
+    "correctAnswer": 0,
+    "explanation": "The php artisan make:migration command is used to create a new migration file in Laravel."
+  },
+  {
+    "id": 5,
+    "topic": "Authentication",
+    "type": "multiple-choice",
+    "question": "Which middleware is used to authenticate users in Laravel?",
+    "choices": ["auth", "guest", "verified", "throttle"],
+    "correctAnswer": 0,
+    "explanation": "The auth middleware is used to ensure that only authenticated users can access certain routes."
+  },
+  {
+    "id": 6,
+    "topic": "Routing",
+    "type": "multiple-choice",
+    "question": "How do you define a route parameter in Laravel?",
+    "choices": ["/user/{id}", "/user/:id", "/user/[id]", "/user/<id>"],
+    "correctAnswer": 0,
+    "explanation": "In Laravel, curly braces {} are used to define route parameters."
+  },
+  {
+    "id": 7,
+    "topic": "Eloquent ORM",
+    "type": "open-ended",
+    "question": "What is Eloquent ORM in Laravel?",
+    "choices": null,
+    "correctAnswer": null,
+    "explanation": "Eloquent ORM is Laravel's implementation of the Active Record pattern. It provides a beautiful, simple ActiveRecord implementation for working with your database. Each database table has a corresponding 'Model' which is used to interact with that table."
+  },
+  {
+    "id": 8,
+    "topic": "Blade Templates",
+    "type": "multiple-choice",
+    "question": "Which Blade directive is used to display data that might be null?",
+    "choices": ["{{ $variable ?? 'default' }}", "{{ $variable ?: 'default' }}", "{{ $variable ? 'default' }}", "{{ $variable | 'default' }}"],
+    "correctAnswer": 0,
+    "explanation": "The ?? operator in Blade is the null coalescing operator, which displays the default value if the variable is null."
+  },
+  {
+    "id": 9,
+    "topic": "Middleware",
+    "type": "open-ended",
+    "question": "What is middleware in Laravel?",
+    "choices": null,
+    "correctAnswer": null,
+    "explanation": "Middleware acts as a filter for HTTP requests entering your application. It can examine the request and decide whether to allow it to proceed or redirect the user somewhere else. Common uses include authentication, CSRF protection, and logging."
+  },
+  {
+    "id": 10,
+    "topic": "Database",
+    "type": "multiple-choice",
+    "question": "Which method is used to run database migrations?",
+    "choices": ["php artisan migrate", "php artisan run:migrations", "php artisan db:migrate", "php artisan execute:migrations"],
+    "correctAnswer": 0,
+    "explanation": "The php artisan migrate command is used to run all outstanding migrations."
+  },
+  {
+    "id": 11,
+    "topic": "Authentication",
+    "type": "multiple-choice",
+    "question": "Which Laravel package provides a simple way to add authentication to your application?",
+    "choices": ["Laravel Breeze", "Laravel Cashier", "Laravel Dusk", "Laravel Envoy"],
+    "correctAnswer": 0,
+    "explanation": "Laravel Breeze is a simple, minimal implementation of Laravel's authentication features including login, registration, password reset, email verification, and password confirmation."
+  },
+  {
+    "id": 12,
+    "topic": "Routing",
+    "type": "open-ended",
+    "question": "What is route model binding in Laravel?",
+    "choices": null,
+    "correctAnswer": null,
+    "explanation": "Route model binding provides a convenient way to inject model instances into your routes. Laravel will automatically resolve Eloquent models defined in routes or controller methods whose type-hinted variable names match a route segment name."
+  },
+  {
+    "id": 13,
+    "topic": "Eloquent ORM",
+    "type": "multiple-choice",
+    "question": "Which method is used to create a new record in the database using Eloquent?",
+    "choices": ["Model::create()", "Model::save()", "Model::insert()", "Model::make()"],
+    "correctAnswer": 0,
+    "explanation": "The create() method creates and saves a new model instance in a single operation. It requires the $fillable property to be set on the model."
+  },
+  {
+    "id": 14,
+    "topic": "Blade Templates",
+    "type": "multiple-choice",
+    "question": "Which Blade directive is used to include a view?",
+    "choices": ["@include", "@extend", "@yield", "@section"],
+    "correctAnswer": 0,
+    "explanation": "The @include directive is used to include another Blade view within the current view."
+  },
+  {
+    "id": 15,
+    "topic": "Middleware",
+    "type": "multiple-choice",
+    "question": "Where are route middleware registered in Laravel?",
+    "choices": ["app/Http/Kernel.php", "routes/web.php", "config/app.php", "app/Providers/AppServiceProvider.php"],
+    "correctAnswer": 0,
+    "explanation": "Route middleware are registered in the $routeMiddleware property of the app/Http/Kernel.php file."
+  },
+  {
+    "id": 16,
+    "topic": "Database",
+    "type": "open-ended",
+    "question": "What are Laravel migrations?",
+    "choices": null,
+    "correctAnswer": null,
+    "explanation": "Migrations are like version control for your database, allowing your team to define and share the application's database schema definition. They are typically paired with Laravel's schema builder to build your application's database schema."
+  },
+  {
+    "id": 17,
+    "topic": "Authentication",
+    "type": "multiple-choice",
+    "question": "Which Laravel feature provides API token authentication?",
+    "choices": ["Laravel Sanctum", "Laravel Passport", "Laravel Breeze", "Laravel Fortify"],
+    "correctAnswer": 0,
+    "explanation": "Laravel Sanctum provides a simple way to authenticate single page applications and mobile applications with Laravel. It provides a way to issue API tokens to users."
+  },
+  {
+    "id": 18,
+    "topic": "Routing",
+    "type": "multiple-choice",
+    "question": "Which method is used to define a POST route in Laravel?",
+    "choices": ["Route::post()", "Route::get()", "Route::put()", "Route::patch()"],
+    "correctAnswer": 0,
+    "explanation": "Route::post() is used to define a POST route, typically used for creating resources."
+  },
+  {
+    "id": 19,
+    "topic": "Eloquent ORM",
+    "type": "multiple-choice",
+    "question": "How do you define a relationship between two models in Eloquent?",
+    "choices": ["By defining a method that returns a relationship method", "By adding a foreign key column", "By creating a pivot table", "By using the with() method"],
+    "correctAnswer": 0,
+    "explanation": "In Eloquent, relationships are defined as methods on your Eloquent model classes. These methods return instances of relationships like hasOne, hasMany, belongsTo, etc."
+  },
+  {
+    "id": 20,
+    "topic": "Blade Templates",
+    "type": "multiple-choice",
+    "question": "Which Blade directive is used to define a section?",
+    "choices": ["@section", "@yield", "@include", "@extends"],
+    "correctAnswer": 0,
+    "explanation": "The @section directive is used to define a section of content, while @yield is used to display that content in the layout."
+  },
+  {
+    "id": 21,
+    "topic": "Validation",
+    "type": "multiple-choice",
+    "question": "Which method is used to validate request data in Laravel controllers?",
+    "choices": ["$request->validate()", "$this->validate()", "Validator::make()", "All of the above"],
+    "correctAnswer": 3,
+    "explanation": "In Laravel, you can validate request data using $request->validate(), $this->validate(), or Validator::make(). All three methods are valid approaches."
+  },
+  {
+    "id": 22,
+    "topic": "Events",
+    "type": "multiple-choice",
+    "question": "Which artisan command generates a new event and listener?",
+    "choices": ["php artisan make:event", "php artisan make:listener", "Both A and B", "php artisan make:event-listener"],
+    "correctAnswer": 2,
+    "explanation": "You need to use both php artisan make:event and php artisan make:listener to create an event and its corresponding listener."
+  },
+  {
+    "id": 23,
+    "topic": "Queues",
+    "type": "multiple-choice",
+    "question": "Which method is used to dispatch a job to the queue?",
+    "choices": ["dispatch()", "queue()", "send()", "process()"],
+    "correctAnswer": 0,
+    "explanation": "The dispatch() method is used to dispatch a job to the queue in Laravel. You can call it on the job instance or use the dispatch() helper function."
+  },
+  {
+    "id": 24,
+    "topic": "Caching",
+    "type": "multiple-choice",
+    "question": "Which facade is used to interact with the cache in Laravel?",
+    "choices": ["Cache", "Storage", "Session", "Config"],
+    "correctAnswer": 0,
+    "explanation": "The Cache facade is used to interact with the cache in Laravel. It provides methods like Cache::get(), Cache::put(), Cache::remember(), etc."
+  },
+  {
+    "id": 25,
+    "topic": "Testing",
+    "type": "multiple-choice",
+    "question": "Which base class should feature tests extend in Laravel?",
+    "choices": ["Tests\\TestCase", "PHPUnit\\Framework\\TestCase", "Tests\\Feature\\TestCase", "Tests\\Unit\\TestCase"],
+    "correctAnswer": 0,
+    "explanation": "Feature tests in Laravel should extend the Tests\\TestCase base class, which provides additional testing helpers specific to Laravel applications."
+  },
+  {
+    "id": 26,
+    "topic": "Collections",
+    "type": "multiple-choice",
+    "question": "Which method is used to transform each item in a collection?",
+    "choices": ["map()", "filter()", "reduce()", "each()"],
+    "correctAnswer": 0,
+    "explanation": "The map() method is used to transform each item in a collection by applying a callback function to each item and returning a new collection with the transformed items."
+  },
+  {
+    "id": 27,
+    "topic": "Artisan",
+    "type": "multiple-choice",
+    "question": "How do you list all available Artisan commands?",
+    "choices": ["php artisan list", "php artisan help", "php artisan commands", "php artisan show"],
+    "correctAnswer": 0,
+    "explanation": "The php artisan list command displays all available Artisan commands along with their descriptions and usage information."
+  },
+  {
+    "id": 28,
+    "topic": "Database",
+    "type": "multiple-choice",
+    "question": "Which method is used to define a foreign key constraint in Laravel migrations?",
+    "choices": ["foreign()", "references()", "on()", "All of the above"],
+    "correctAnswer": 3,
+    "explanation": "To define a foreign key constraint, you use a combination of foreign(), references(), and on() methods: $table->foreign('user_id')->references('id')->on('users');"
+  },
+  {
+    "id": 29,
+    "topic": "Eloquent ORM",
+    "type": "multiple-choice",
+    "question": "How do you eager load relationships to avoid the N+1 query problem?",
+    "choices": ["with()", "load()", "join()", "attach()"],
+    "correctAnswer": 0,
+    "explanation": "The with() method is used to eager load relationships when querying models to avoid the N+1 query problem. Example: User::with('posts')->get();"
+  },
+  {
+    "id": 30,
+    "topic": "Security",
+    "type": "multiple-choice",
+    "question": "Which middleware is used to prevent CSRF attacks in Laravel?",
+    "choices": ["VerifyCsrfToken", "EncryptCookies", "RedirectIfAuthenticated", "TrimStrings"],
+    "correctAnswer": 0,
+    "explanation": "The VerifyCsrfToken middleware is used to prevent CSRF (Cross-Site Request Forgery) attacks by validating CSRF tokens on incoming requests."
+  },
+  {
+    "id": 31,
+    "topic": "File Storage",
+    "type": "multiple-choice",
+    "question": "Which method is used to store uploaded files in Laravel?",
+    "choices": ["$request->file('photo')->store()", "$request->store('photo')", "Storage::save()", "File::upload()"],
+    "correctAnswer": 0,
+    "explanation": "The store() method is used to store uploaded files. You can call it on the uploaded file instance: $request->file('photo')->store('images');"
+  },
+  {
+    "id": 32,
+    "topic": "Notifications",
+    "type": "multiple-choice",
+    "question": "Which method is used to send a notification immediately?",
+    "choices": ["notify()", "send()", "queue()", "dispatch()"],
+    "correctAnswer": 0,
+    "explanation": "The notify() method is used to send a notification immediately to a notifiable entity (like a user): $user->notify(new InvoicePaid($invoice));"
+  },
+  {
+    "id": 33,
+    "topic": "API Resources",
+    "type": "multiple-choice",
+    "question": "Which artisan command generates a new API resource class?",
+    "choices": ["php artisan make:resource", "php artisan make:api-resource", "php artisan make:json", "php artisan make:transformer"],
+    "correctAnswer": 0,
+    "explanation": "The php artisan make:resource command generates a new API resource class that can be used to transform models into JSON responses."
+  },
+  {
+    "id": 34,
+    "topic": "Service Container",
+    "type": "multiple-choice",
+    "question": "Which method is used to bind a class to the service container?",
+    "choices": ["bind()", "register()", "resolve()", "make()"],
+    "correctAnswer": 0,
+    "explanation": "The bind() method is used to bind a class or interface to the service container: $this->app->bind('HelpSpot\\Api\\Contracts\\Repository', 'HelpSpot\\Api\\Repositories\\RedisRepository');"
+  },
+  {
+    "id": 35,
+    "topic": "Task Scheduling",
+    "type": "multiple-choice",
+    "question": "Where are scheduled tasks defined in Laravel?",
+    "choices": ["app/Console/Kernel.php", "routes/console.php", "config/app.php", "app/Providers/AppServiceProvider.php"],
+    "correctAnswer": 0,
+    "explanation": "Scheduled tasks are defined in the schedule() method of the app/Console/Kernel.php file using the scheduler instance."
+  }
+]

@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0">
+  <channel>
+    <title>Fullstack Learning Platform</title>
+    <description>Master fullstack development with structured learning paths</description>
+    <link>https://fullstack-academy.com</link>
+    <lastBuildDate>Wed, 01 Oct 2025 06:46:39 GMT</lastBuildDate>
+    <language>en-US</language>
+    <item>
+      <title>.NET Core Fundamentals</title>
+      <link>https://fullstack-academy.com/modules/dotnet-fundamentals</link>
+      <description>C#, ASP.NET Core, Entity Framework, and enterprise patterns</description>
+      <pubDate>Wed, 01 Oct 2025 06:46:39 GMT</pubDate>
+      <guid>https://fullstack-academy.com/modules/dotnet-fundamentals</guid>
+    </item>
+    <item>
+      <title>React Development</title>
+      <link>https://fullstack-academy.com/modules/react-fundamentals</link>
+      <description>Components, hooks, state management, and modern patterns</description>
+      <pubDate>Wed, 01 Oct 2025 06:46:39 GMT</pubDate>
+      <guid>https://fullstack-academy.com/modules/react-fundamentals</guid>
+    </item>
+    <item>
+      <title>Database Systems</title>
+      <link>https://fullstack-academy.com/modules/database-systems</link>
+      <description>SQL, NoSQL, design patterns, and optimization</description>
+      <pubDate>Wed, 01 Oct 2025 06:46:39 GMT</pubDate>
+      <guid>https://fullstack-academy.com/modules/database-systems</guid>
+    </item>
+    <item>
+      <title>TypeScript Development</title>
+      <link>https://fullstack-academy.com/modules/typescript-fundamentals</link>
+      <description>Static typing, advanced types, and modern JavaScript patterns</description>
+      <pubDate>Wed, 01 Oct 2025 06:46:39 GMT</pubDate>
+      <guid>https://fullstack-academy.com/modules/typescript-fundamentals</guid>
+    </item>
+    <item>
+      <title>Node.js Development</title>
+      <link>https://fullstack-academy.com/modules/node-fundamentals</link>
+      <description>Server-side JavaScript, APIs, and runtime environments</description>
+      <pubDate>Wed, 01 Oct 2025 06:46:39 GMT</pubDate>
+      <guid>https://fullstack-academy.com/modules/node-fundamentals</guid>
+    </item>
+    <item>
+      <title>Laravel Framework</title>
+      <link>https://fullstack-academy.com/modules/laravel-fundamentals</link>
+      <description>PHP, Eloquent ORM, and rapid application development</description>
+      <pubDate>Wed, 01 Oct 2025 06:46:39 GMT</pubDate>
+      <guid>https://fullstack-academy.com/modules/laravel-fundamentals</guid>
+    </item>
+    <item>
+      <title>Next.js Full-Stack Framework</title>
+      <link>https://fullstack-academy.com/modules/nextjs-advanced</link>
+      <description>Full-stack React framework with SSR and API routes</description>
+      <pubDate>Wed, 01 Oct 2025 06:46:39 GMT</pubDate>
+      <guid>https://fullstack-academy.com/modules/nextjs-advanced</guid>
+    </item>
+    <item>
+      <title>GraphQL Development</title>
+      <link>https://fullstack-academy.com/modules/graphql-advanced</link>
+      <description>Modern API query language with schemas and resolvers</description>
+      <pubDate>Wed, 01 Oct 2025 06:46:39 GMT</pubDate>
+      <guid>https://fullstack-academy.com/modules/graphql-advanced</guid>
+    </item>
+    <item>
+      <title>Sass/SCSS Development</title>
+      <link>https://fullstack-academy.com/modules/sass-advanced</link>
+      <description>Advanced CSS preprocessor techniques and methodologies</description>
+      <pubDate>Wed, 01 Oct 2025 06:46:39 GMT</pubDate>
+      <guid>https://fullstack-academy.com/modules/sass-advanced</guid>
+    </item>
+    <item>
+      <title>Tailwind CSS Framework</title>
+      <link>https://fullstack-academy.com/modules/tailwind-advanced</link>
+      <description>Utility-first CSS framework and design system patterns</description>
+      <pubDate>Wed, 01 Oct 2025 06:46:39 GMT</pubDate>
+      <guid>https://fullstack-academy.com/modules/tailwind-advanced</guid>
+    </item>
+    <item>
+      <title>Vue.js Framework</title>
+      <link>https://fullstack-academy.com/modules/vue-advanced</link>
+      <description>Progressive JavaScript framework for user interfaces</description>
+      <pubDate>Wed, 01 Oct 2025 06:46:39 GMT</pubDate>
+      <guid>https://fullstack-academy.com/modules/vue-advanced</guid>
+    </item>
+    <item>
+      <title>Software Testing Fundamentals</title>
+      <link>https://fullstack-academy.com/modules/testing-fundamentals</link>
+      <description>Unit testing, integration testing, and TDD practices</description>
+      <pubDate>Wed, 01 Oct 2025 06:46:39 GMT</pubDate>
+      <guid>https://fullstack-academy.com/modules/testing-fundamentals</guid>
+    </item>
+  </channel>
+</rss>

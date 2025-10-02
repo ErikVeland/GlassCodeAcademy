@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Node.js Fundamentals - Fullstack Academy</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="bg-gray-50">
+    <header class="bg-green-500 text-white shadow-md">
+        <div class="container mx-auto px-4 py-4">
+            <div class="flex justify-between items-center">
+                <a href="/" class="text-2xl font-bold">Node.js Learning Module</a>
+                <nav>
+                    <ul class="flex space-x-6">
+                        <li><a href="/" class="hover:text-green-200">Home</a></li>
+                        <li><a href="lessons.html" class="hover:text-green-200">Lessons</a></li>
+                        <li><a href="quiz.html" class="hover:text-green-200">Quiz</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </header>
+    
+    <main class="container mx-auto px-4 py-8">
+        <div class="max-w-4xl mx-auto">
+            <nav class="mb-6 text-sm text-gray-500">
+                <a href="lessons.html">Lessons</a> / 
+                <span>Basics</span> / 
+                <span class="text-gray-900">Node.js Fundamentals</span>
+            </nav>
+            
+            <div class="bg-white rounded-lg shadow-md p-6 mb-8">
+                <div class="flex justify-between items-start mb-4">
+                    <h1 class="text-3xl font-bold text-gray-900">Node.js Fundamentals</h1>
+                    <span class="bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm font-medium">
+                        Basics
+                    </span>
+                </div>
+                
+                <p class="text-gray-600 mb-6">Learn the basics of Node.js and its runtime environment.</p>
+                
+                <div class="prose max-w-none mb-8">
+                    <p class="mb-4">Node.js is an open-source, cross-platform JavaScript runtime environment that executes JavaScript code outside of a web browser. Node.js lets developers use JavaScript to write command line tools and for server-side scripting.</p>
+                    
+                    <p class="mb-4">Key features of Node.js:</p>
+                    <ol class="list-decimal list-inside mb-4">
+                        <li>Asynchronous and event-driven</li>
+                        <li>Fast code execution</li>
+                        <li>Single-threaded but highly scalable</li>
+                        <li>No buffering</li>
+                        <li>License: MIT</li>
+                    </ol>
+                </div>
+                
+                <div class="border border-gray-200 rounded-lg overflow-hidden mb-6">
+                    <div class="bg-gray-800 text-gray-200 px-4 py-2 flex justify-between items-center">
+                        <span class="text-sm font-medium">Example Code</span>
+                        <button 
+                            onclick="copyCode()"
+                            class="text-sm bg-gray-700 hover:bg-gray-600 px-3 py-1 rounded"
+                        >
+                            Copy
+                        </button>
+                    </div>
+                    <pre class="bg-gray-50 p-4 overflow-x-auto"><code class="language-js text-sm">const http = require('http');
+
+const server = http.createServer((req, res) => {
+  res.statusCode = 200;
+  res.setHeader('Content-Type', 'text/plain');
+  res.end('Hello World');
+});
+
+server.listen(3000, '127.0.0.1', () => {
+  console.log('Server running at http://127.0.0.1:3000/');
+});</code></pre>
+                    
+                    <div class="border-t border-gray-200">
+                        <div class="bg-gray-100 px-4 py-2">
+                            <span class="text-sm font-medium text-gray-700">Output</span>
+                        </div>
+                        <pre class="bg-white p-4 border-l-4 border-green-500"><code class="text-sm">Server running at http://127.0.0.1:3000/</code></pre>
+                    </div>
+                </div>
+                
+                <div class="flex justify-between mt-8">
+                    <button class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-medium py-2 px-4 rounded-lg">
+                        ← Previous Lesson
+                    </button>
+                    <button class="bg-green-500 hover:bg-green-600 text-white font-medium py-2 px-4 rounded-lg">
+                        Next Lesson →
+                    </button>
+                </div>
+            </div>
+        </div>
+    </main>
+    
+    <footer class="bg-white border-t border-gray-200 mt-12">
+        <div class="container mx-auto px-4 py-6">
+            <div class="text-center text-gray-600">
+                <p>Node.js Learning Module &copy; <span id="current-year"></span> Fullstack Academy</p>
+            </div>
+        </div>
+    </footer>
+    
+    <script>
+        document.getElementById('current-year').textContent = new Date().getFullYear();
+        
+        function copyCode() {
+            // In a real implementation, this would copy the code to clipboard
+            alert('Code copied to clipboard!');
+        }
+    </script>
+</body>
+</html>

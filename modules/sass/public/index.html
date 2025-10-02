@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SASS Learning Module - Fullstack Academy</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <a href="/" class="logo">SASS Learning Module</a>
+                <nav class="nav">
+                    <ul class="nav-list">
+                        <li><a href="/" class="nav-link active">Home</a></li>
+                        <li><a href="lessons.html" class="nav-link">Lessons</a></li>
+                        <li><a href="quiz.html" class="nav-link">Quiz</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </header>
+    
+    <main class="main">
+        <div class="container">
+            <div class="hero">
+                <h1 class="hero-title">Learn SASS with Fullstack Academy</h1>
+                <p class="hero-description">
+                    Master SASS concepts through interactive lessons and quizzes
+                </p>
+            </div>
+            
+            <div class="cards">
+                <div class="card">
+                    <h2 class="card-title">Interactive Lessons</h2>
+                    <p class="card-description">
+                        Learn SASS concepts with hands-on examples and code snippets
+                    </p>
+                    <a href="lessons.html" class="btn btn-primary">
+                        Start Learning →
+                    </a>
+                </div>
+                
+                <div class="card">
+                    <h2 class="card-title">Practice Quizzes</h2>
+                    <p class="card-description">
+                        Test your knowledge with interactive quizzes and get instant feedback
+                    </p>
+                    <a href="quiz.html" class="btn btn-primary">
+                        Take Quiz →
+                    </a>
+                </div>
+                
+                <div class="card">
+                    <h2 class="card-title">Track Progress</h2>
+                    <p class="card-description">
+                        Monitor your learning progress and earn certificates
+                    </p>
+                    <a href="lessons.html" class="btn btn-primary">
+                        View Progress →
+                    </a>
+                </div>
+            </div>
+        </div>
+    </main>
+    
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <p class="footer-text">SASS Learning Module &copy; <span id="current-year"></span> Fullstack Academy</p>
+            </div>
+        </div>
+    </footer>
+    
+    <script>
+        document.getElementById('current-year').textContent = new Date().getFullYear();
+    </script>
+</body>
+</html>

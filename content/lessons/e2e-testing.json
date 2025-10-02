@@ -1,0 +1,664 @@
+[
+  {
+    "id": "e2e-testing-lesson-1",
+    "moduleSlug": "e2e-testing",
+    "title": "Introduction to End-to-End Testing",
+    "order": 1,
+    "objectives": [
+      "Understand the purpose and benefits of end-to-end testing",
+      "Learn the difference between E2E, integration, and unit testing",
+      "Set up Cypress for automated browser testing"
+    ],
+    "intro": "End-to-end testing validates complete user workflows by testing applications from the user's perspective, ensuring all components work together correctly in real-world scenarios.\n\nIn this lesson, you'll learn why E2E testing is crucial for catching integration issues that unit tests miss. E2E tests simulate real user interactions, testing the entire application stack from frontend to backend and database.\n\nCypress and Playwright are leading tools for modern E2E testing, providing powerful APIs for browser automation, debugging capabilities, and excellent developer experience. These tools make writing reliable, maintainable tests much easier.\n\nYou'll understand the testing pyramid concept, where E2E tests form the top layer providing high-confidence validation of critical user journeys. While E2E tests are slower and more complex than unit tests, they catch issues that other testing levels miss.\n\nBy the end of this lesson, you'll have Cypress set up and understand when to use E2E testing versus other testing strategies. You'll know how to identify the most important user flows to test and create a solid foundation for building comprehensive test suites.",
+    "code": {
+      "example": "// cypress/e2e/user-login.cy.js\n// Basic Cypress E2E test for user login flow\n\ndescribe('User Authentication', () => {\n  beforeEach(() => {\n    // Visit the application before each test\n    cy.visit('/login');\n  });\n\n  it('should successfully log in with valid credentials', () => {\n    // Enter username\n    cy.get('[data-testid=\"username-input\"]')\n      .type('john.doe@example.com');\n    \n    // Enter password\n    cy.get('[data-testid=\"password-input\"]')\n      .type('securePassword123');\n    \n    // Submit the form\n    cy.get('[data-testid=\"login-button\"]')\n      .click();\n    \n    // Verify successful login\n    cy.url().should('include', '/dashboard');\n    cy.get('[data-testid=\"user-menu\"]')\n      .should('contain', 'Welcome, John');\n    \n    // Check that auth token is stored\n    cy.window()\n      .its('localStorage')\n      .invoke('getItem', 'authToken')\n      .should('exist');\n  });\n\n  it('should show error message for invalid credentials', () => {\n    cy.get('[data-testid=\"username-input\"]')\n      .type('invalid@example.com');\n    \n    cy.get('[data-testid=\"password-input\"]')\n      .type('wrongpassword');\n    \n    cy.get('[data-testid=\"login-button\"]')\n      .click();\n    \n    // Should remain on login page\n    cy.url().should('include', '/login');\n    \n    // Error message should appear\n    cy.get('[data-testid=\"error-message\"]')\n      .should('be.visible')\n      .and('contain', 'Invalid credentials');\n  });\n\n  it('should handle empty form submission', () => {\n    cy.get('[data-testid=\"login-button\"]')\n      .click();\n    \n    // Validation errors should appear\n    cy.get('[data-testid=\"username-error\"]')\n      .should('contain', 'Username is required');\n    \n    cy.get('[data-testid=\"password-error\"]')\n      .should('contain', 'Password is required');\n  });\n});\n\n// cypress.config.js - Basic Cypress configuration\nmodule.exports = {\n  e2e: {\n    baseUrl: 'http://localhost:3000',\n    viewportWidth: 1280,\n    viewportHeight: 720,\n    defaultCommandTimeout: 10000,\n    video: false,\n    screenshotOnRunFailure: true,\n    setupNodeEvents(on, config) {\n      // implement node event listeners here\n    },\n  },\n};",
+      "explanation": "This example shows a complete Cypress E2E test for user authentication, including setup, positive and negative test cases, and proper element selection using data-testid attributes for reliable testing.",
+      "language": "javascript"
+    },
+    "pitfalls": [
+      {
+        "mistake": "Testing implementation details instead of user behavior",
+        "solution": "Focus on testing what users actually do, not internal component methods or state",
+        "severity": "high"
+      },
+      {
+        "mistake": "Creating overly complex E2E tests that are brittle and hard to maintain",
+        "solution": "Keep tests simple, focused on critical paths, and use page object models for reusability",
+        "severity": "medium"
+      },
+      {
+        "mistake": "Not using proper selectors and relying on CSS classes or text content",
+        "solution": "Use data-testid attributes or role-based selectors for stable, accessible test targeting",
+        "severity": "medium"
+      }
+    ],
+    "exercises": [
+      {
+        "title": "Build Your First E2E Test Suite",
+        "description": "Create a comprehensive E2E test suite for a simple todo application covering key user workflows.",
+        "checkpoints": [
+          "Set up Cypress and configure it for your application",
+          "Write tests for adding, editing, and deleting todos",
+          "Test filtering functionality (all, active, completed)",
+          "Implement proper assertions and error handling"
+        ]
+      }
+    ],
+    "next": [],
+    "estimatedMinutes": 30,
+    "difficulty": "Advanced",
+    "tags": [
+      "Cypress",
+      "Playwright",
+      "E2E Testing"
+    ],
+    "lastUpdated": "2025-10-01T06:42:16.317Z",
+    "version": "1.0.0"
+  },
+  {
+    "id": "e2e-testing-lesson-2",
+    "moduleSlug": "e2e-testing",
+    "title": "Playwright for Cross-Browser Testing",
+    "order": 2,
+    "objectives": [
+      "Set up Playwright for multi-browser E2E testing",
+      "Understand Playwright's advantages over other testing tools",
+      "Implement advanced testing patterns with Playwright"
+    ],
+    "intro": "Playwright is a powerful end-to-end testing framework that enables reliable testing across Chromium, Firefox, and WebKit browsers with a single API. It provides superior performance and debugging capabilities compared to traditional tools.\n\nIn this lesson, you'll learn why Playwright has become the preferred choice for modern E2E testing. Its auto-wait functionality eliminates flaky tests, while built-in browser automation provides more reliable and faster test execution.\n\nPlaywright's unique features include network interception, mobile device emulation, and native support for modern web features like service workers and web components. These capabilities make it ideal for testing complex, modern web applications.\n\nYou'll discover Playwright's powerful debugging tools including trace viewer, inspector, and codegen for automatically generating test code. These features significantly speed up test development and troubleshooting processes.\n\nBy mastering Playwright, you'll be able to create robust, cross-browser test suites that run consistently across different environments, catch browser-specific bugs, and provide confidence in your application's compatibility across the web ecosystem.",
+    "code": {
+      "example": "// tests/e2e/shopping-cart.spec.js\n// Playwright E2E test for e-commerce shopping cart\n\nconst { test, expect } = require('@playwright/test');\n\ntest.describe('Shopping Cart Functionality', () => {\n  test.beforeEach(async ({ page }) => {\n    // Navigate to the products page\n    await page.goto('/products');\n    \n    // Wait for products to load\n    await page.waitForSelector('[data-testid=\"product-grid\"]');\n  });\n\n  test('should add product to cart and proceed to checkout', async ({ page }) => {\n    // Add first product to cart\n    await page.click('[data-testid=\"product-1\"] [data-testid=\"add-to-cart\"]');\n    \n    // Verify cart badge updates\n    await expect(page.locator('[data-testid=\"cart-badge\"]')).toContainText('1');\n    \n    // Open cart\n    await page.click('[data-testid=\"cart-icon\"]');\n    \n    // Verify product in cart\n    await expect(page.locator('[data-testid=\"cart-item\"]')).toBeVisible();\n    await expect(page.locator('[data-testid=\"cart-total\"]')).toContainText('$29.99');\n    \n    // Proceed to checkout\n    await page.click('[data-testid=\"checkout-button\"]');\n    \n    // Verify on checkout page\n    await expect(page).toHaveURL(/.*checkout/);\n    await expect(page.locator('h1')).toContainText('Checkout');\n  });\n\n  test('should handle empty cart scenario', async ({ page }) => {\n    // Go directly to cart\n    await page.click('[data-testid=\"cart-icon\"]');\n    \n    // Verify empty cart message\n    await expect(page.locator('[data-testid=\"empty-cart-message\"]'))\n      .toContainText('Your cart is empty');\n    \n    // Checkout button should be disabled\n    await expect(page.locator('[data-testid=\"checkout-button\"]'))\n      .toBeDisabled();\n  });\n\n  test('should work across different browsers', async ({ browserName, page }) => {\n    console.log(`Running on ${browserName}`);\n    \n    // Test core functionality\n    await page.click('[data-testid=\"product-1\"] [data-testid=\"add-to-cart\"]');\n    await expect(page.locator('[data-testid=\"cart-badge\"]')).toContainText('1');\n    \n    // Browser-specific behavior could be tested here\n    if (browserName === 'webkit') {\n      // Safari-specific tests\n    }\n  });\n\n  test('should handle network failures gracefully', async ({ page }) => {\n    // Intercept and block network request\n    await page.route('**/api/cart', route => {\n      route.abort();\n    });\n    \n    // Try to add to cart\n    await page.click('[data-testid=\"product-1\"] [data-testid=\"add-to-cart\"]');\n    \n    // Verify error handling\n    await expect(page.locator('[data-testid=\"error-toast\"]'))\n      .toContainText('Failed to add item to cart');\n  });\n});\n\n// playwright.config.js\nmodule.exports = {\n  testDir: './tests/e2e',\n  timeout: 30000,\n  fullyParallel: true,\n  forbidOnly: !!process.env.CI,\n  retries: process.env.CI ? 2 : 0,\n  workers: process.env.CI ? 1 : undefined,\n  reporter: 'html',\n  use: {\n    baseURL: 'http://localhost:3000',\n    trace: 'on-first-retry',\n    video: 'retain-on-failure',\n    screenshot: 'only-on-failure',\n  },\n  projects: [\n    {\n      name: 'chromium',\n      use: { ...devices['Desktop Chrome'] },\n    },\n    {\n      name: 'firefox',\n      use: { ...devices['Desktop Firefox'] },\n    },\n    {\n      name: 'webkit',\n      use: { ...devices['Desktop Safari'] },\n    },\n  ],\n};",
+      "explanation": "This example demonstrates Playwright's capabilities including cross-browser testing, network interception, auto-waiting, and robust selectors. Notice the configuration for running tests across multiple browsers.",
+      "language": "javascript"
+    },
+    "pitfalls": [
+      {
+        "mistake": "Not configuring proper timeouts for different browsers",
+        "solution": "Set appropriate timeouts and retries in playwright.config.js for browser differences",
+        "severity": "medium"
+      },
+      {
+        "mistake": "Ignoring browser-specific behavior and edge cases",
+        "solution": "Test critical functionality across all target browsers and handle browser-specific issues",
+        "severity": "high"
+      },
+      {
+        "mistake": "Not using Playwright's auto-waiting features effectively",
+        "solution": "Rely on Playwright's built-in waiting instead of arbitrary delays or manual waits",
+        "severity": "medium"
+      }
+    ],
+    "exercises": [
+      {
+        "title": "Cross-Browser E-commerce Testing",
+        "description": "Build a comprehensive Playwright test suite for an e-commerce application that runs across multiple browsers.",
+        "checkpoints": [
+          "Set up Playwright with Chromium, Firefox, and WebKit browsers",
+          "Create tests for product search, cart functionality, and checkout process",
+          "Implement network interception to test offline scenarios",
+          "Add visual regression testing with screenshot comparisons"
+        ]
+      }
+    ],
+    "next": [],
+    "estimatedMinutes": 30,
+    "difficulty": "Advanced",
+    "tags": [
+      "Cypress",
+      "Playwright",
+      "E2E Testing"
+    ],
+    "lastUpdated": "2025-10-01T06:42:16.317Z",
+    "version": "1.0.0"
+  },
+  {
+    "id": "e2e-testing-lesson-3",
+    "moduleSlug": "e2e-testing",
+    "title": "Automated Testing",
+    "order": 3,
+    "objectives": [
+      "Apply advanced Cypress techniques",
+      "Optimize performance and efficiency",
+      "Integrate with external systems"
+    ],
+    "intro": "Welcome to Automated Testing in the End-to-End Testing module. \n\nThis lesson is part of the quality tier, designed for advanced level learners. Throughout this lesson, you'll explore essential concepts and practical applications that form the foundation of modern testing development.\n\nCypress, Playwright, and automated testing strategies This lesson builds upon previous concepts while introducing new techniques that will enhance your understanding and practical skills.\n\nBy the end of this lesson, you'll have hands-on experience with Cypress and Playwright, along with best practices for implementing these technologies in real-world scenarios. The knowledge gained here will prepare you for more advanced topics in subsequent lessons.\n\nKey areas we'll cover include practical implementation techniques, common challenges developers face, and proven solutions that industry professionals use daily. This lesson balances theoretical understanding with practical application, ensuring you can immediately apply what you learn.",
+    "code": {
+      "example": "// Example Cypress test\n// TODO: Add specific test example for End-to-End Testing\n\ndescribe('End-to-End Testing', () => {\n    it('should demonstrate core concepts', () => {\n        // Test implementation\n        expect(true).toBe(true);\n    });\n});",
+      "explanation": "This example demonstrates the key concepts covered in this lesson.",
+      "language": "javascript"
+    },
+    "pitfalls": [
+      {
+        "mistake": "Not following Cypress best practices",
+        "solution": "Review official documentation and established patterns for Cypress",
+        "severity": "medium"
+      },
+      {
+        "mistake": "Skipping error handling in implementation",
+        "solution": "Always implement proper error handling and validation",
+        "severity": "high"
+      },
+      {
+        "mistake": "Ignoring performance implications",
+        "solution": "Consider performance impact of your implementation choices",
+        "severity": "low"
+      }
+    ],
+    "exercises": [
+      {
+        "title": "Practice Automated Testing",
+        "description": "Apply the concepts learned in this lesson through hands-on practice.",
+        "checkpoints": [
+          "Complete the basic implementation",
+          "Test your solution",
+          "Identify areas for improvement"
+        ]
+      }
+    ],
+    "next": [],
+    "estimatedMinutes": 30,
+    "difficulty": "Advanced",
+    "tags": [
+      "Cypress",
+      "Playwright",
+      "E2E Testing"
+    ],
+    "lastUpdated": "2025-10-01T06:42:16.317Z",
+    "version": "1.0.0"
+  },
+  {
+    "id": "e2e-testing-lesson-4",
+    "moduleSlug": "e2e-testing",
+    "title": "Performance Testing",
+    "order": 4,
+    "objectives": [
+      "Apply advanced Cypress techniques",
+      "Optimize performance and efficiency",
+      "Integrate with external systems"
+    ],
+    "intro": "Welcome to Performance Testing in the End-to-End Testing module. \n\nThis lesson is part of the quality tier, designed for advanced level learners. Throughout this lesson, you'll explore essential concepts and practical applications that form the foundation of modern testing development.\n\nCypress, Playwright, and automated testing strategies This lesson builds upon previous concepts while introducing new techniques that will enhance your understanding and practical skills.\n\nBy the end of this lesson, you'll have hands-on experience with Cypress and Playwright, along with best practices for implementing these technologies in real-world scenarios. The knowledge gained here will prepare you for more advanced topics in subsequent lessons.\n\nKey areas we'll cover include practical implementation techniques, common challenges developers face, and proven solutions that industry professionals use daily. This lesson balances theoretical understanding with practical application, ensuring you can immediately apply what you learn.",
+    "code": {
+      "example": "// Example Cypress test\n// TODO: Add specific test example for End-to-End Testing\n\ndescribe('End-to-End Testing', () => {\n    it('should demonstrate core concepts', () => {\n        // Test implementation\n        expect(true).toBe(true);\n    });\n});",
+      "explanation": "This example demonstrates the key concepts covered in this lesson.",
+      "language": "javascript"
+    },
+    "pitfalls": [
+      {
+        "mistake": "Not following Cypress best practices",
+        "solution": "Review official documentation and established patterns for Cypress",
+        "severity": "medium"
+      },
+      {
+        "mistake": "Skipping error handling in implementation",
+        "solution": "Always implement proper error handling and validation",
+        "severity": "high"
+      },
+      {
+        "mistake": "Ignoring performance implications",
+        "solution": "Consider performance impact of your implementation choices",
+        "severity": "low"
+      }
+    ],
+    "exercises": [
+      {
+        "title": "Practice Performance Testing",
+        "description": "Apply the concepts learned in this lesson through hands-on practice.",
+        "checkpoints": [
+          "Complete the basic implementation",
+          "Test your solution",
+          "Identify areas for improvement"
+        ]
+      }
+    ],
+    "next": [],
+    "estimatedMinutes": 30,
+    "difficulty": "Advanced",
+    "tags": [
+      "Cypress",
+      "Playwright",
+      "E2E Testing"
+    ],
+    "lastUpdated": "2025-10-01T06:42:16.317Z",
+    "version": "1.0.0"
+  },
+  {
+    "id": "e2e-testing-lesson-5",
+    "moduleSlug": "e2e-testing",
+    "title": "Security Testing",
+    "order": 5,
+    "objectives": [
+      "Apply advanced Cypress techniques",
+      "Optimize performance and efficiency",
+      "Integrate with external systems"
+    ],
+    "intro": "Welcome to Security Testing in the End-to-End Testing module. \n\nThis lesson is part of the quality tier, designed for advanced level learners. Throughout this lesson, you'll explore essential concepts and practical applications that form the foundation of modern testing development.\n\nCypress, Playwright, and automated testing strategies This lesson builds upon previous concepts while introducing new techniques that will enhance your understanding and practical skills.\n\nBy the end of this lesson, you'll have hands-on experience with Cypress and Playwright, along with best practices for implementing these technologies in real-world scenarios. The knowledge gained here will prepare you for more advanced topics in subsequent lessons.\n\nKey areas we'll cover include practical implementation techniques, common challenges developers face, and proven solutions that industry professionals use daily. This lesson balances theoretical understanding with practical application, ensuring you can immediately apply what you learn.",
+    "code": {
+      "example": "// Example Cypress test\n// TODO: Add specific test example for End-to-End Testing\n\ndescribe('End-to-End Testing', () => {\n    it('should demonstrate core concepts', () => {\n        // Test implementation\n        expect(true).toBe(true);\n    });\n});",
+      "explanation": "This example demonstrates the key concepts covered in this lesson.",
+      "language": "javascript"
+    },
+    "pitfalls": [
+      {
+        "mistake": "Not following Cypress best practices",
+        "solution": "Review official documentation and established patterns for Cypress",
+        "severity": "medium"
+      },
+      {
+        "mistake": "Skipping error handling in implementation",
+        "solution": "Always implement proper error handling and validation",
+        "severity": "high"
+      },
+      {
+        "mistake": "Ignoring performance implications",
+        "solution": "Consider performance impact of your implementation choices",
+        "severity": "low"
+      }
+    ],
+    "exercises": [
+      {
+        "title": "Practice Security Testing",
+        "description": "Apply the concepts learned in this lesson through hands-on practice.",
+        "checkpoints": [
+          "Complete the basic implementation",
+          "Test your solution",
+          "Identify areas for improvement"
+        ]
+      }
+    ],
+    "next": [],
+    "estimatedMinutes": 30,
+    "difficulty": "Advanced",
+    "tags": [
+      "Cypress",
+      "Playwright",
+      "E2E Testing"
+    ],
+    "lastUpdated": "2025-10-01T06:42:16.317Z",
+    "version": "1.0.0"
+  },
+  {
+    "id": "e2e-testing-lesson-6",
+    "moduleSlug": "e2e-testing",
+    "title": "Code Quality",
+    "order": 6,
+    "objectives": [
+      "Apply advanced Cypress techniques",
+      "Optimize performance and efficiency",
+      "Integrate with external systems"
+    ],
+    "intro": "Welcome to Code Quality in the End-to-End Testing module. \n\nThis lesson is part of the quality tier, designed for advanced level learners. Throughout this lesson, you'll explore essential concepts and practical applications that form the foundation of modern testing development.\n\nCypress, Playwright, and automated testing strategies This lesson builds upon previous concepts while introducing new techniques that will enhance your understanding and practical skills.\n\nBy the end of this lesson, you'll have hands-on experience with Cypress and Playwright, along with best practices for implementing these technologies in real-world scenarios. The knowledge gained here will prepare you for more advanced topics in subsequent lessons.\n\nKey areas we'll cover include practical implementation techniques, common challenges developers face, and proven solutions that industry professionals use daily. This lesson balances theoretical understanding with practical application, ensuring you can immediately apply what you learn.",
+    "code": {
+      "example": "// Example Cypress test\n// TODO: Add specific test example for End-to-End Testing\n\ndescribe('End-to-End Testing', () => {\n    it('should demonstrate core concepts', () => {\n        // Test implementation\n        expect(true).toBe(true);\n    });\n});",
+      "explanation": "This example demonstrates the key concepts covered in this lesson.",
+      "language": "javascript"
+    },
+    "pitfalls": [
+      {
+        "mistake": "Not following Cypress best practices",
+        "solution": "Review official documentation and established patterns for Cypress",
+        "severity": "medium"
+      },
+      {
+        "mistake": "Skipping error handling in implementation",
+        "solution": "Always implement proper error handling and validation",
+        "severity": "high"
+      },
+      {
+        "mistake": "Ignoring performance implications",
+        "solution": "Consider performance impact of your implementation choices",
+        "severity": "low"
+      }
+    ],
+    "exercises": [
+      {
+        "title": "Practice Code Quality",
+        "description": "Apply the concepts learned in this lesson through hands-on practice.",
+        "checkpoints": [
+          "Complete the basic implementation",
+          "Test your solution",
+          "Identify areas for improvement"
+        ]
+      }
+    ],
+    "next": [],
+    "estimatedMinutes": 30,
+    "difficulty": "Advanced",
+    "tags": [
+      "Cypress",
+      "Playwright",
+      "E2E Testing"
+    ],
+    "lastUpdated": "2025-10-01T06:42:16.317Z",
+    "version": "1.0.0"
+  },
+  {
+    "id": "e2e-testing-lesson-7",
+    "moduleSlug": "e2e-testing",
+    "title": "Review Processes",
+    "order": 7,
+    "objectives": [
+      "Apply advanced Cypress techniques",
+      "Optimize performance and efficiency",
+      "Integrate with external systems"
+    ],
+    "intro": "Welcome to Review Processes in the End-to-End Testing module. \n\nThis lesson is part of the quality tier, designed for advanced level learners. Throughout this lesson, you'll explore essential concepts and practical applications that form the foundation of modern testing development.\n\nCypress, Playwright, and automated testing strategies This lesson builds upon previous concepts while introducing new techniques that will enhance your understanding and practical skills.\n\nBy the end of this lesson, you'll have hands-on experience with Cypress and Playwright, along with best practices for implementing these technologies in real-world scenarios. The knowledge gained here will prepare you for more advanced topics in subsequent lessons.\n\nKey areas we'll cover include practical implementation techniques, common challenges developers face, and proven solutions that industry professionals use daily. This lesson balances theoretical understanding with practical application, ensuring you can immediately apply what you learn.",
+    "code": {
+      "example": "// Example Cypress test\n// TODO: Add specific test example for End-to-End Testing\n\ndescribe('End-to-End Testing', () => {\n    it('should demonstrate core concepts', () => {\n        // Test implementation\n        expect(true).toBe(true);\n    });\n});",
+      "explanation": "This example demonstrates the key concepts covered in this lesson.",
+      "language": "javascript"
+    },
+    "pitfalls": [
+      {
+        "mistake": "Not following Cypress best practices",
+        "solution": "Review official documentation and established patterns for Cypress",
+        "severity": "medium"
+      },
+      {
+        "mistake": "Skipping error handling in implementation",
+        "solution": "Always implement proper error handling and validation",
+        "severity": "high"
+      },
+      {
+        "mistake": "Ignoring performance implications",
+        "solution": "Consider performance impact of your implementation choices",
+        "severity": "low"
+      }
+    ],
+    "exercises": [
+      {
+        "title": "Practice Review Processes",
+        "description": "Apply the concepts learned in this lesson through hands-on practice.",
+        "checkpoints": [
+          "Complete the basic implementation",
+          "Test your solution",
+          "Identify areas for improvement"
+        ]
+      }
+    ],
+    "next": [],
+    "estimatedMinutes": 30,
+    "difficulty": "Advanced",
+    "tags": [
+      "Cypress",
+      "Playwright",
+      "E2E Testing"
+    ],
+    "lastUpdated": "2025-10-01T06:42:16.317Z",
+    "version": "1.0.0"
+  },
+  {
+    "id": "e2e-testing-lesson-8",
+    "moduleSlug": "e2e-testing",
+    "title": "Continuous Integration",
+    "order": 8,
+    "objectives": [
+      "Apply advanced Cypress techniques",
+      "Optimize performance and efficiency",
+      "Integrate with external systems"
+    ],
+    "intro": "Welcome to Continuous Integration in the End-to-End Testing module. \n\nThis lesson is part of the quality tier, designed for advanced level learners. Throughout this lesson, you'll explore essential concepts and practical applications that form the foundation of modern testing development.\n\nCypress, Playwright, and automated testing strategies This lesson builds upon previous concepts while introducing new techniques that will enhance your understanding and practical skills.\n\nBy the end of this lesson, you'll have hands-on experience with Cypress and Playwright, along with best practices for implementing these technologies in real-world scenarios. The knowledge gained here will prepare you for more advanced topics in subsequent lessons.\n\nKey areas we'll cover include practical implementation techniques, common challenges developers face, and proven solutions that industry professionals use daily. This lesson balances theoretical understanding with practical application, ensuring you can immediately apply what you learn.",
+    "code": {
+      "example": "// Example Cypress test\n// TODO: Add specific test example for End-to-End Testing\n\ndescribe('End-to-End Testing', () => {\n    it('should demonstrate core concepts', () => {\n        // Test implementation\n        expect(true).toBe(true);\n    });\n});",
+      "explanation": "This example demonstrates the key concepts covered in this lesson.",
+      "language": "javascript"
+    },
+    "pitfalls": [
+      {
+        "mistake": "Not following Cypress best practices",
+        "solution": "Review official documentation and established patterns for Cypress",
+        "severity": "medium"
+      },
+      {
+        "mistake": "Skipping error handling in implementation",
+        "solution": "Always implement proper error handling and validation",
+        "severity": "high"
+      },
+      {
+        "mistake": "Ignoring performance implications",
+        "solution": "Consider performance impact of your implementation choices",
+        "severity": "low"
+      }
+    ],
+    "exercises": [
+      {
+        "title": "Practice Continuous Integration",
+        "description": "Apply the concepts learned in this lesson through hands-on practice.",
+        "checkpoints": [
+          "Complete the basic implementation",
+          "Test your solution",
+          "Identify areas for improvement"
+        ]
+      }
+    ],
+    "next": [],
+    "estimatedMinutes": 30,
+    "difficulty": "Advanced",
+    "tags": [
+      "Cypress",
+      "Playwright",
+      "E2E Testing"
+    ],
+    "lastUpdated": "2025-10-01T06:42:16.317Z",
+    "version": "1.0.0"
+  },
+  {
+    "id": "e2e-testing-lesson-9",
+    "moduleSlug": "e2e-testing",
+    "title": "Monitoring Setup",
+    "order": 9,
+    "objectives": [
+      "Apply advanced Cypress techniques",
+      "Optimize performance and efficiency",
+      "Integrate with external systems"
+    ],
+    "intro": "Welcome to Monitoring Setup in the End-to-End Testing module. \n\nThis lesson is part of the quality tier, designed for advanced level learners. Throughout this lesson, you'll explore essential concepts and practical applications that form the foundation of modern testing development.\n\nCypress, Playwright, and automated testing strategies This lesson builds upon previous concepts while introducing new techniques that will enhance your understanding and practical skills.\n\nBy the end of this lesson, you'll have hands-on experience with Cypress and Playwright, along with best practices for implementing these technologies in real-world scenarios. The knowledge gained here will prepare you for more advanced topics in subsequent lessons.\n\nKey areas we'll cover include practical implementation techniques, common challenges developers face, and proven solutions that industry professionals use daily. This lesson balances theoretical understanding with practical application, ensuring you can immediately apply what you learn.",
+    "code": {
+      "example": "// Example Cypress test\n// TODO: Add specific test example for End-to-End Testing\n\ndescribe('End-to-End Testing', () => {\n    it('should demonstrate core concepts', () => {\n        // Test implementation\n        expect(true).toBe(true);\n    });\n});",
+      "explanation": "This example demonstrates the key concepts covered in this lesson.",
+      "language": "javascript"
+    },
+    "pitfalls": [
+      {
+        "mistake": "Not following Cypress best practices",
+        "solution": "Review official documentation and established patterns for Cypress",
+        "severity": "medium"
+      },
+      {
+        "mistake": "Skipping error handling in implementation",
+        "solution": "Always implement proper error handling and validation",
+        "severity": "high"
+      },
+      {
+        "mistake": "Ignoring performance implications",
+        "solution": "Consider performance impact of your implementation choices",
+        "severity": "low"
+      }
+    ],
+    "exercises": [
+      {
+        "title": "Practice Monitoring Setup",
+        "description": "Apply the concepts learned in this lesson through hands-on practice.",
+        "checkpoints": [
+          "Complete the basic implementation",
+          "Test your solution",
+          "Identify areas for improvement"
+        ]
+      }
+    ],
+    "next": [],
+    "estimatedMinutes": 30,
+    "difficulty": "Advanced",
+    "tags": [
+      "Cypress",
+      "Playwright",
+      "E2E Testing"
+    ],
+    "lastUpdated": "2025-10-01T06:42:16.317Z",
+    "version": "1.0.0"
+  },
+  {
+    "id": "e2e-testing-lesson-10",
+    "moduleSlug": "e2e-testing",
+    "title": "Debugging Techniques",
+    "order": 10,
+    "objectives": [
+      "Apply advanced Cypress techniques",
+      "Optimize performance and efficiency",
+      "Integrate with external systems"
+    ],
+    "intro": "Welcome to Debugging Techniques in the End-to-End Testing module. \n\nThis lesson is part of the quality tier, designed for advanced level learners. Throughout this lesson, you'll explore essential concepts and practical applications that form the foundation of modern testing development.\n\nCypress, Playwright, and automated testing strategies This lesson builds upon previous concepts while introducing new techniques that will enhance your understanding and practical skills.\n\nBy the end of this lesson, you'll have hands-on experience with Cypress and Playwright, along with best practices for implementing these technologies in real-world scenarios. The knowledge gained here will prepare you for more advanced topics in subsequent lessons.\n\nKey areas we'll cover include practical implementation techniques, common challenges developers face, and proven solutions that industry professionals use daily. This lesson balances theoretical understanding with practical application, ensuring you can immediately apply what you learn.",
+    "code": {
+      "example": "// Example Cypress test\n// TODO: Add specific test example for End-to-End Testing\n\ndescribe('End-to-End Testing', () => {\n    it('should demonstrate core concepts', () => {\n        // Test implementation\n        expect(true).toBe(true);\n    });\n});",
+      "explanation": "This example demonstrates the key concepts covered in this lesson.",
+      "language": "javascript"
+    },
+    "pitfalls": [
+      {
+        "mistake": "Not following Cypress best practices",
+        "solution": "Review official documentation and established patterns for Cypress",
+        "severity": "medium"
+      },
+      {
+        "mistake": "Skipping error handling in implementation",
+        "solution": "Always implement proper error handling and validation",
+        "severity": "high"
+      },
+      {
+        "mistake": "Ignoring performance implications",
+        "solution": "Consider performance impact of your implementation choices",
+        "severity": "low"
+      }
+    ],
+    "exercises": [
+      {
+        "title": "Practice Debugging Techniques",
+        "description": "Apply the concepts learned in this lesson through hands-on practice.",
+        "checkpoints": [
+          "Complete the basic implementation",
+          "Test your solution",
+          "Identify areas for improvement"
+        ]
+      }
+    ],
+    "next": [],
+    "estimatedMinutes": 30,
+    "difficulty": "Advanced",
+    "tags": [
+      "Cypress",
+      "Playwright",
+      "E2E Testing"
+    ],
+    "lastUpdated": "2025-10-01T06:42:16.317Z",
+    "version": "1.0.0"
+  },
+  {
+    "id": "e2e-testing-lesson-11",
+    "moduleSlug": "e2e-testing",
+    "title": "Optimization Methods",
+    "order": 11,
+    "objectives": [
+      "Apply advanced Cypress techniques",
+      "Optimize performance and efficiency",
+      "Integrate with external systems"
+    ],
+    "intro": "Welcome to Optimization Methods in the End-to-End Testing module. \n\nThis lesson is part of the quality tier, designed for advanced level learners. Throughout this lesson, you'll explore essential concepts and practical applications that form the foundation of modern testing development.\n\nCypress, Playwright, and automated testing strategies This lesson builds upon previous concepts while introducing new techniques that will enhance your understanding and practical skills.\n\nBy the end of this lesson, you'll have hands-on experience with Cypress and Playwright, along with best practices for implementing these technologies in real-world scenarios. The knowledge gained here will prepare you for more advanced topics in subsequent lessons.\n\nKey areas we'll cover include practical implementation techniques, common challenges developers face, and proven solutions that industry professionals use daily. This lesson balances theoretical understanding with practical application, ensuring you can immediately apply what you learn.",
+    "code": {
+      "example": "// Example Cypress test\n// TODO: Add specific test example for End-to-End Testing\n\ndescribe('End-to-End Testing', () => {\n    it('should demonstrate core concepts', () => {\n        // Test implementation\n        expect(true).toBe(true);\n    });\n});",
+      "explanation": "This example demonstrates the key concepts covered in this lesson.",
+      "language": "javascript"
+    },
+    "pitfalls": [
+      {
+        "mistake": "Not following Cypress best practices",
+        "solution": "Review official documentation and established patterns for Cypress",
+        "severity": "medium"
+      },
+      {
+        "mistake": "Skipping error handling in implementation",
+        "solution": "Always implement proper error handling and validation",
+        "severity": "high"
+      },
+      {
+        "mistake": "Ignoring performance implications",
+        "solution": "Consider performance impact of your implementation choices",
+        "severity": "low"
+      }
+    ],
+    "exercises": [
+      {
+        "title": "Practice Optimization Methods",
+        "description": "Apply the concepts learned in this lesson through hands-on practice.",
+        "checkpoints": [
+          "Complete the basic implementation",
+          "Test your solution",
+          "Identify areas for improvement"
+        ]
+      }
+    ],
+    "next": [],
+    "estimatedMinutes": 30,
+    "difficulty": "Advanced",
+    "tags": [
+      "Cypress",
+      "Playwright",
+      "E2E Testing"
+    ],
+    "lastUpdated": "2025-10-01T06:42:16.317Z",
+    "version": "1.0.0"
+  },
+  {
+    "id": "e2e-testing-lesson-12",
+    "moduleSlug": "e2e-testing",
+    "title": "Quality Standards",
+    "order": 12,
+    "objectives": [
+      "Apply advanced Cypress techniques",
+      "Optimize performance and efficiency",
+      "Integrate with external systems"
+    ],
+    "intro": "Welcome to Quality Standards in the End-to-End Testing module. \n\nThis lesson is part of the quality tier, designed for advanced level learners. Throughout this lesson, you'll explore essential concepts and practical applications that form the foundation of modern testing development.\n\nCypress, Playwright, and automated testing strategies This lesson builds upon previous concepts while introducing new techniques that will enhance your understanding and practical skills.\n\nBy the end of this lesson, you'll have hands-on experience with Cypress and Playwright, along with best practices for implementing these technologies in real-world scenarios. The knowledge gained here will prepare you for more advanced topics in subsequent lessons.\n\nKey areas we'll cover include practical implementation techniques, common challenges developers face, and proven solutions that industry professionals use daily. This lesson balances theoretical understanding with practical application, ensuring you can immediately apply what you learn.",
+    "code": {
+      "example": "// Example Cypress test\n// TODO: Add specific test example for End-to-End Testing\n\ndescribe('End-to-End Testing', () => {\n    it('should demonstrate core concepts', () => {\n        // Test implementation\n        expect(true).toBe(true);\n    });\n});",
+      "explanation": "This example demonstrates the key concepts covered in this lesson.",
+      "language": "javascript"
+    },
+    "pitfalls": [
+      {
+        "mistake": "Not following Cypress best practices",
+        "solution": "Review official documentation and established patterns for Cypress",
+        "severity": "medium"
+      },
+      {
+        "mistake": "Skipping error handling in implementation",
+        "solution": "Always implement proper error handling and validation",
+        "severity": "high"
+      },
+      {
+        "mistake": "Ignoring performance implications",
+        "solution": "Consider performance impact of your implementation choices",
+        "severity": "low"
+      }
+    ],
+    "exercises": [
+      {
+        "title": "Practice Quality Standards",
+        "description": "Apply the concepts learned in this lesson through hands-on practice.",
+        "checkpoints": [
+          "Complete the basic implementation",
+          "Test your solution",
+          "Identify areas for improvement"
+        ]
+      }
+    ],
+    "next": [],
+    "estimatedMinutes": 30,
+    "difficulty": "Advanced",
+    "tags": [
+      "Cypress",
+      "Playwright",
+      "E2E Testing"
+    ],
+    "lastUpdated": "2025-10-01T06:42:16.317Z",
+    "version": "1.0.0"
+  }
+]
