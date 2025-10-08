@@ -62,19 +62,42 @@ EOF
 rollback() {
     log "⏪ Rolling back to previous version..."
     if [ -n "${BACKUP_DIR:-}" ] && [ -d "$BACKUP_DIR" ]; then
-        rm -rf "$APP_DIR"
-        mv "$BACKUP_DIR" "$APP_DIR"
-        chown -R "$DEPLOY_USER":"$DEPLOY_USER" "$APP_DIR"
-        systemctl daemon-reload
-        systemctl restart ${APP_NAME}-dotnet ${APP_NAME}-frontend || true
-        log "✅ Rollback complete. Services restarted from backup."
+        # Stop services before rollback
+        log "⏹️  Stopping services..."
+        systemctl stop ${APP_NAME}-frontend ${APP_NAME}-dotnet 2>/dev/null || true
+        
+        # Remove current application content but preserve the directory structure
+        log "🗑️  Removing current application content..."
+        if [ -d "$APP_DIR" ]; then
+            # Remove all contents but keep the directory
+            rm -rf "$APP_DIR"/*
+        else
+            # Recreate the directory if it doesn't exist
+            mkdir -p "$APP_DIR"
+        fi
+        
+        # Restore from backup
+        log "🔄 Restoring from backup..."
+        if cp -r "$BACKUP_DIR"/* "$APP_DIR"/; then
+            # Restore ownership
+            chown -R "$DEPLOY_USER":"$DEPLOY_USER" "$APP_DIR"
+            
+            # Restart services
+            log "🚀 Restarting services from backup..."
+            systemctl daemon-reload
+            systemctl restart ${APP_NAME}-dotnet ${APP_NAME}-frontend 2>/dev/null || true
+            
+            log "✅ Rollback complete. Services restarted from backup."
+        else
+            log "❌ ERROR: Failed to restore from backup!"
+        fi
     else
         log "❌ No valid backup found — rollback not possible!"
     fi
     exit 1
 }
 
-trap rollback ERR
+trap 'rollback' ERR INT TERM
 
 ### 1. Preconditions
 if [ ! -d "$APP_DIR" ]; then
@@ -93,6 +116,8 @@ log "✅ Services stopped"
 
 ### 3. Backup
 BACKUP_DIR="/srv/academy-backup-$(date +%Y%m%d-%H%M%S)"
+# Ensure backup directory parent exists
+mkdir -p "$(dirname "$BACKUP_DIR")"
 cp -r "$APP_DIR" "$BACKUP_DIR"
 log "💾 Backup created at $BACKUP_DIR"
 
