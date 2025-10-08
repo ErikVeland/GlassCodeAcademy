@@ -4,26 +4,23 @@ import { useState, useEffect } from 'react';
 import { notFound, useRouter } from 'next/navigation';
 import Link from 'next/link';
 
-interface QuizStartPageProps {
-  params: { moduleSlug: string };
-}
-
-export default function QuizStartPage({ params }: QuizStartPageProps) {
+// For client components in Next.js 15, params are still Promises that need to be awaited
+export default function QuizStartPage({ params }: { params: Promise<{ moduleSlug: string }> }) {
   const router = useRouter();
-  const { moduleSlug } = params;
+  const [resolvedParams, setResolvedParams] = useState<{ moduleSlug: string } | null>(null);
   const [quizData, setQuizData] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
+  // Resolve the params promise
   useEffect(() => {
-    // In a real implementation, this would fetch quiz data
-    // For now, we'll simulate with mock data
-    const fetchQuizData = async () => {
+    const resolveParams = async () => {
       try {
-        // Simulate API call
-        await new Promise(resolve => setTimeout(resolve, 1000));
+        const { moduleSlug } = await params;
+        setResolvedParams({ moduleSlug });
         
-        // Mock quiz data
+        // In a real implementation, this would fetch quiz data
+        // For now, we'll simulate with mock data
         const mockQuiz = {
           title: "Programming Fundamentals Quiz",
           totalQuestions: 15,
@@ -46,13 +43,14 @@ export default function QuizStartPage({ params }: QuizStartPageProps) {
       }
     };
 
-    fetchQuizData();
-  }, [moduleSlug]);
+    resolveParams();
+  }, [params]);
 
   const handleStartQuiz = () => {
+    if (!resolvedParams) return;
     // In a real implementation, this would start the actual quiz
     // For now, we'll redirect to a placeholder
-    router.push(`/modules/${moduleSlug}/quiz/question/1`);
+    router.push(`/modules/${resolvedParams.moduleSlug}/quiz/question/1`);
   };
 
   if (loading) {
@@ -66,7 +64,7 @@ export default function QuizStartPage({ params }: QuizStartPageProps) {
     );
   }
 
-  if (error) {
+  if (!resolvedParams || error) {
     return (
       <div className="max-w-4xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
         <div className="glass-morphism p-12 rounded-xl text-center">
@@ -75,10 +73,10 @@ export default function QuizStartPage({ params }: QuizStartPageProps) {
             Error Loading Quiz
           </h2>
           <p className="text-gray-600 dark:text-gray-300 mb-6">
-            {error}
+            {error || "Failed to load quiz"}
           </p>
           <Link
-            href={`/modules/${moduleSlug}/quiz`}
+            href={`/modules/${resolvedParams?.moduleSlug || ''}/quiz`}
             className="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
           >
             ← Back to Quiz Overview
@@ -87,6 +85,8 @@ export default function QuizStartPage({ params }: QuizStartPageProps) {
       </div>
     );
   }
+
+  const { moduleSlug } = resolvedParams;
 
   return (
     <div className="max-w-4xl mx-auto py-12 px-4 sm:px-6 lg:px-8">

@@ -3,6 +3,7 @@ import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import { contentRegistry } from '@/lib/contentRegistry';
 
+// For server components in Next.js 15, params are still Promises that need to be awaited
 interface QuizPageProps {
   params: Promise<{ moduleSlug: string }>;
 }
@@ -47,6 +48,9 @@ export default async function QuizPage({ params }: QuizPageProps) {
   if (!thresholds.quizValid && process.env.NODE_ENV === 'production') {
     notFound();
   }
+
+  // Get passing score from module metadata or default to 70
+  const passingScore = module.metadata?.thresholds?.passingScore || 70;
 
   return (
     <>
@@ -122,7 +126,7 @@ export default async function QuizPage({ params }: QuizPageProps) {
                 </div>
                 <div className="bg-purple-50 dark:bg-purple-900/30 p-4 rounded-lg">
                   <div className="text-2xl font-bold text-purple-600 dark:text-purple-300">
-                    {module.metadata.thresholds.passingScore}%
+                    {passingScore}%
                   </div>
                   <div className="text-sm text-gray-600 dark:text-gray-300">
                     Passing Score

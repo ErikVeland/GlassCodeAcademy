@@ -36,7 +36,7 @@ async function fetchProgrammingLessons() {
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { moduleSlug: string } }
+  { params }: { params: Promise<{ moduleSlug: string }> }
 ) {
   try {
     const { moduleSlug } = await params;

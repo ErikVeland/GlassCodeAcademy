@@ -30,6 +30,13 @@ interface Module {
     lessons: string;
     quiz: string;
   };
+  metadata?: {
+    thresholds?: {
+      minLessons?: number;
+      minQuizQuestions?: number;
+      passingScore?: number;
+    };
+  };
 }
 
 interface Tier {

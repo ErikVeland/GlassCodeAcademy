@@ -4,49 +4,60 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 
-interface QuizResultsPageProps {
-  params: { moduleSlug: string };
-}
-
-export default function QuizResultsPage({ params }: QuizResultsPageProps) {
+// For client components in Next.js 15, params are still Promises that need to be awaited
+export default function QuizResultsPage({ params }: { params: Promise<{ moduleSlug: string }> }) {
   const router = useRouter();
-  const { moduleSlug } = params;
+  const [resolvedParams, setResolvedParams] = useState<{ moduleSlug: string } | null>(null);
   const [results, setResults] = useState<any>(null);
   const [loading, setLoading] = useState(true);
 
+  // Resolve the params promise
   useEffect(() => {
-    // Mock results data - in a real implementation, this would come from the quiz session
-    const mockResults = {
-      totalQuestions: 15,
-      correctAnswers: 12,
-      score: 80,
-      passingScore: 70,
-      timeTaken: "22:30",
-      timeLimit: "30:00",
-      passed: true,
-      categoryScores: [
-        { category: "Variables & Data Types", correct: 3, total: 3 },
-        { category: "Control Structures", correct: 2, total: 3 },
-        { category: "Functions & Scope", correct: 2, total: 2 },
-        { category: "Data Structures", correct: 2, total: 2 },
-        { category: "Error Handling", correct: 1, total: 2 },
-        { category: "Algorithms", correct: 2, total: 3 }
-      ]
+    const resolveParams = async () => {
+      try {
+        const { moduleSlug } = await params;
+        setResolvedParams({ moduleSlug });
+        
+        // Mock results data - in a real implementation, this would come from the quiz session
+        const mockResults = {
+          totalQuestions: 15,
+          correctAnswers: 12,
+          score: 80,
+          passingScore: 70,
+          timeTaken: "22:30",
+          timeLimit: "30:00",
+          passed: true,
+          categoryScores: [
+            { category: "Variables & Data Types", correct: 3, total: 3 },
+            { category: "Control Structures", correct: 2, total: 3 },
+            { category: "Functions & Scope", correct: 2, total: 2 },
+            { category: "Data Structures", correct: 2, total: 2 },
+            { category: "Error Handling", correct: 1, total: 2 },
+            { category: "Algorithms", correct: 2, total: 3 }
+          ]
+        };
+
+        // Simulate loading
+        setTimeout(() => {
+          setResults(mockResults);
+          setLoading(false);
+        }, 1000);
+      } catch (error) {
+        console.error('Error resolving params:', error);
+      }
     };
 
-    // Simulate loading
-    setTimeout(() => {
-      setResults(mockResults);
-      setLoading(false);
-    }, 1000);
-  }, [moduleSlug]);
+    resolveParams();
+  }, [params]);
 
   const handleRetakeQuiz = () => {
-    router.push(`/modules/${moduleSlug}/quiz/start`);
+    if (!resolvedParams) return;
+    router.push(`/modules/${resolvedParams.moduleSlug}/quiz/start`);
   };
 
   const handleReviewLessons = () => {
-    router.push(`/modules/${moduleSlug}/lessons`);
+    if (!resolvedParams) return;
+    router.push(`/modules/${resolvedParams.moduleSlug}/lessons`);
   };
 
   if (loading) {
@@ -60,7 +71,7 @@ export default function QuizResultsPage({ params }: QuizResultsPageProps) {
     );
   }
 
-  if (!results) {
+  if (!resolvedParams || !results) {
     return (
       <div className="max-w-4xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
         <div className="glass-morphism p-12 rounded-xl text-center">
@@ -72,7 +83,7 @@ export default function QuizResultsPage({ params }: QuizResultsPageProps) {
             Unable to load quiz results. Please try again.
           </p>
           <Link
-            href={`/modules/${moduleSlug}/quiz`}
+            href={`/modules/${resolvedParams?.moduleSlug || ''}/quiz`}
             className="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
           >
             ← Back to Quiz
@@ -81,6 +92,8 @@ export default function QuizResultsPage({ params }: QuizResultsPageProps) {
       </div>
     );
   }
+
+  const { moduleSlug } = resolvedParams;
 
   return (
     <div className="max-w-4xl mx-auto py-12 px-4 sm:px-6 lg:px-8">

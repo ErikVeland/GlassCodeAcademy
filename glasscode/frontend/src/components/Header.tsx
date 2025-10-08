@@ -5,9 +5,8 @@ import { useState, useRef, useEffect } from "react";
 import { usePathname } from "next/navigation";
 import MobileMenu from './MobileMenu';
 import DarkModeToggle from './DarkModeToggle';
-// import { useProgressTracking } from '../hooks/useProgressTracking';
 import { useProgressTracking } from '../hooks/useProgressTracking';
-// import { AccessibilityPanel, useAccessibility } from './AccessibilityProvider';
+import { contentRegistry } from '@/lib/contentRegistry';
 
 interface NavigationModule {
   id: string;
@@ -36,6 +35,7 @@ export default function Header() {
   const [isSpecializedOpen, setIsSpecializedOpen] = useState(false);
   const [isQualityOpen, setIsQualityOpen] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
+  const [tierGroups, setTierGroups] = useState<Record<string, TierGroup> | null>(null);
   const foundationalRef = useRef<HTMLDivElement>(null);
   const coreRef = useRef<HTMLDivElement>(null);
   const specializedRef = useRef<HTMLDivElement>(null);
@@ -43,59 +43,158 @@ export default function Header() {
   const pathname = usePathname();
   const { progress, calculateOverallProgress, getCompletedModulesCount, getTierProgress } = useProgressTracking();
 
-  // Enhanced 4-tier navigation structure matching homepage design
-  const tierGroups: Record<string, TierGroup> = {
-    foundational: {
-      tier: 'foundational',
-      title: 'Foundational',
-      description: 'Build essential programming skills',
-      color: 'from-blue-500 to-cyan-500',
-      icon: '🏗️',
-      modules: [
-        { id: 'programming-basics', title: 'Programming Fundamentals', lessonsPath: '/fundamentals/programming-basics', quizPath: '/fundamentals/programming-basics/quiz', progress: 0, tier: 'foundational', category: 'backend', icon: '💻', estimatedTime: '2-3 weeks' },
-        { id: 'web-fundamentals', title: 'Web Development Basics', lessonsPath: '/fundamentals/web-basics', quizPath: '/fundamentals/web-basics/quiz', progress: 0, tier: 'foundational', category: 'frontend', icon: '🌐', estimatedTime: '3-4 weeks' },
-        { id: 'version-control', title: 'Version Control with Git', lessonsPath: '/fundamentals/git', quizPath: '/fundamentals/git/quiz', progress: 0, tier: 'foundational', category: 'backend', icon: '📝', estimatedTime: '1-2 weeks' }
-      ]
-    },
-    core: {
-      tier: 'core',
-      title: 'Core Technologies',
-      description: 'Master primary development technologies',
-      color: 'from-green-500 to-emerald-500',
-      icon: '⚙️',
-      modules: [
-        { id: 'dotnet', title: '.NET Core', lessonsPath: '/lessons', quizPath: '/interview', progress: 0, tier: 'core', category: 'backend', icon: '⚡', estimatedTime: '6-8 weeks' },
-        { id: 'laravel', title: 'Laravel', lessonsPath: '/laravel/lessons', quizPath: '/laravel/interview', progress: 0, tier: 'core', category: 'backend', icon: '🎨', estimatedTime: '5-6 weeks' },
-        { id: 'react', title: 'React', lessonsPath: '/react/lessons', quizPath: '/react/interview', progress: 0, tier: 'core', category: 'frontend', icon: '⚛️', estimatedTime: '4-6 weeks' },
-        { id: 'database', title: 'Databases', lessonsPath: '/database/lessons', quizPath: '/database/interview', progress: 0, tier: 'core', category: 'backend', icon: '🗄️', estimatedTime: '4-5 weeks' }
-      ]
-    },
-    specialized: {
-      tier: 'specialized',
-      title: 'Specialized Skills',
-      description: 'Advanced frameworks and modern practices',
-      color: 'from-purple-500 to-violet-500',
-      icon: '💎',
-      modules: [
-        { id: 'nextjs', title: 'Next.js', lessonsPath: '/nextjs/lessons', quizPath: '/nextjs/interview', progress: 0, tier: 'specialized', category: 'frontend', icon: '⭐', estimatedTime: '3-4 weeks' },
-        { id: 'graphql', title: 'GraphQL', lessonsPath: '/graphql/lessons', quizPath: '/graphql/interview', progress: 0, tier: 'specialized', category: 'backend', icon: '🔗', estimatedTime: '3-4 weeks' },
-        { id: 'node', title: 'Node.js', lessonsPath: '/node/lessons', quizPath: '/node/interview', progress: 0, tier: 'specialized', category: 'backend', icon: '💻', estimatedTime: '4-5 weeks' },
-        { id: 'typescript', title: 'TypeScript', lessonsPath: '/typescript/lessons', quizPath: '/typescript/interview', progress: 0, tier: 'specialized', category: 'frontend', icon: '🔵', estimatedTime: '3-4 weeks' },
-        { id: 'tailwind', title: 'Tailwind CSS', lessonsPath: '/tailwind/lessons', quizPath: '/tailwind/interview', progress: 0, tier: 'specialized', category: 'frontend', icon: '🎨', estimatedTime: '2-3 weeks' },
-        { id: 'sass', title: 'SASS', lessonsPath: '/sass/lessons', quizPath: '/sass/interview', progress: 0, tier: 'specialized', category: 'frontend', icon: '🎨', estimatedTime: '2-3 weeks' }
-      ]
-    },
-    quality: {
-      tier: 'quality',
-      title: 'Quality & Testing',
-      description: 'Professional quality assurance',
-      color: 'from-orange-500 to-red-500',
-      icon: '🛡️',
-      modules: [
-        { id: 'testing', title: 'Testing & QA', lessonsPath: '/testing/lessons', quizPath: '/testing/interview', progress: 0, tier: 'quality', category: 'quality', icon: '🧪', estimatedTime: '3-4 weeks' }
-      ]
-    }
-  };
+  // Load registry data on component mount
+  useEffect(() => {
+    const loadRegistryData = async () => {
+      try {
+        const registry = await contentRegistry.loadRegistry();
+        const modules = await contentRegistry.getModules();
+        
+        // Create tier groups with actual module data from registry
+        const tierGroupsData: Record<string, TierGroup> = {
+          foundational: {
+            tier: 'foundational',
+            title: 'Foundational',
+            description: 'Build essential programming skills',
+            color: 'from-blue-500 to-cyan-500',
+            icon: '🏗️',
+            modules: modules
+              .filter(module => module.tier === 'foundational')
+              .map(module => ({
+                id: module.slug,
+                title: module.title,
+                lessonsPath: module.routes.lessons,
+                quizPath: module.routes.quiz,
+                progress: 0,
+                tier: 'foundational' as const,
+                category: module.track.toLowerCase() as 'backend' | 'frontend' | 'quality',
+                icon: module.icon,
+                estimatedTime: `${module.estimatedHours} hours`
+              }))
+          },
+          core: {
+            tier: 'core',
+            title: 'Core Technologies',
+            description: 'Master primary development technologies',
+            color: 'from-green-500 to-emerald-500',
+            icon: '⚙️',
+            modules: modules
+              .filter(module => module.tier === 'core')
+              .map(module => ({
+                id: module.slug,
+                title: module.title,
+                lessonsPath: module.routes.lessons,
+                quizPath: module.routes.quiz,
+                progress: 0,
+                tier: 'core' as const,
+                category: module.track.toLowerCase() as 'backend' | 'frontend' | 'quality',
+                icon: module.icon,
+                estimatedTime: `${module.estimatedHours} hours`
+              }))
+          },
+          specialized: {
+            tier: 'specialized',
+            title: 'Specialized Skills',
+            description: 'Advanced frameworks and modern practices',
+            color: 'from-purple-500 to-violet-500',
+            icon: '💎',
+            modules: modules
+              .filter(module => module.tier === 'specialized')
+              .map(module => ({
+                id: module.slug,
+                title: module.title,
+                lessonsPath: module.routes.lessons,
+                quizPath: module.routes.quiz,
+                progress: 0,
+                tier: 'specialized' as const,
+                category: module.track.toLowerCase() as 'backend' | 'frontend' | 'quality',
+                icon: module.icon,
+                estimatedTime: `${module.estimatedHours} hours`
+              }))
+          },
+          quality: {
+            tier: 'quality',
+            title: 'Quality & Testing',
+            description: 'Professional quality assurance',
+            color: 'from-orange-500 to-red-500',
+            icon: '🛡️',
+            modules: modules
+              .filter(module => module.tier === 'quality')
+              .map(module => ({
+                id: module.slug,
+                title: module.title,
+                lessonsPath: module.routes.lessons,
+                quizPath: module.routes.quiz,
+                progress: 0,
+                tier: 'quality' as const,
+                category: module.track.toLowerCase() as 'backend' | 'frontend' | 'quality',
+                icon: module.icon,
+                estimatedTime: `${module.estimatedHours} hours`
+              }))
+          }
+        };
+        
+        setTierGroups(tierGroupsData);
+      } catch (error) {
+        console.error('Failed to load registry data:', error);
+        // Fallback to hardcoded data if registry fails to load
+        setTierGroups({
+          foundational: {
+            tier: 'foundational',
+            title: 'Foundational',
+            description: 'Build essential programming skills',
+            color: 'from-blue-500 to-cyan-500',
+            icon: '🏗️',
+            modules: [
+              { id: 'programming-basics', title: 'Programming Fundamentals', lessonsPath: '/programming/lessons', quizPath: '/programming/interview', progress: 0, tier: 'foundational', category: 'backend', icon: '💻', estimatedTime: '40 hours' },
+              { id: 'web-fundamentals', title: 'Web Development Basics', lessonsPath: '/web/lessons', quizPath: '/web/interview', progress: 0, tier: 'foundational', category: 'frontend', icon: '🌐', estimatedTime: '50 hours' },
+              { id: 'version-control', title: 'Version Control with Git', lessonsPath: '/version/lessons', quizPath: '/version/interview', progress: 0, tier: 'foundational', category: 'backend', icon: '📝', estimatedTime: '20 hours' }
+            ]
+          },
+          core: {
+            tier: 'core',
+            title: 'Core Technologies',
+            description: 'Master primary development technologies',
+            color: 'from-green-500 to-emerald-500',
+            icon: '⚙️',
+            modules: [
+              { id: 'dotnet', title: '.NET Core', lessonsPath: '/dotnet/lessons', quizPath: '/dotnet/interview', progress: 0, tier: 'core', category: 'backend', icon: '⚡', estimatedTime: '80 hours' },
+              { id: 'laravel', title: 'Laravel', lessonsPath: '/modules/laravel-fundamentals/lessons', quizPath: '/modules/laravel-fundamentals/quiz', progress: 0, tier: 'core', category: 'backend', icon: '🎨', estimatedTime: '70 hours' },
+              { id: 'react', title: 'React', lessonsPath: '/modules/react-fundamentals/lessons', quizPath: '/modules/react-fundamentals/quiz', progress: 0, tier: 'core', category: 'frontend', icon: '⚛️', estimatedTime: '60 hours' },
+              { id: 'database', title: 'Databases', lessonsPath: '/modules/database-systems/lessons', quizPath: '/modules/database-systems/quiz', progress: 0, tier: 'core', category: 'backend', icon: '🗄️', estimatedTime: '70 hours' }
+            ]
+          },
+          specialized: {
+            tier: 'specialized',
+            title: 'Specialized Skills',
+            description: 'Advanced frameworks and modern practices',
+            color: 'from-purple-500 to-violet-500',
+            icon: '💎',
+            modules: [
+              { id: 'nextjs', title: 'Next.js', lessonsPath: '/modules/nextjs-advanced/lessons', quizPath: '/modules/nextjs-advanced/quiz', progress: 0, tier: 'specialized', category: 'frontend', icon: '⭐', estimatedTime: '50 hours' },
+              { id: 'graphql', title: 'GraphQL', lessonsPath: '/modules/graphql-advanced/lessons', quizPath: '/modules/graphql-advanced/quiz', progress: 0, tier: 'specialized', category: 'backend', icon: '🔗', estimatedTime: '50 hours' },
+              { id: 'node', title: 'Node.js', lessonsPath: '/modules/node-fundamentals/lessons', quizPath: '/modules/node-fundamentals/quiz', progress: 0, tier: 'specialized', category: 'backend', icon: '💚', estimatedTime: '60 hours' },
+              { id: 'typescript', title: 'TypeScript', lessonsPath: '/modules/typescript-fundamentals/lessons', quizPath: '/modules/typescript-fundamentals/quiz', progress: 0, tier: 'specialized', category: 'frontend', icon: '🔵', estimatedTime: '50 hours' },
+              { id: 'tailwind', title: 'Tailwind CSS', lessonsPath: '/modules/tailwind-advanced/lessons', quizPath: '/modules/tailwind-advanced/quiz', progress: 0, tier: 'specialized', category: 'frontend', icon: '🎨', estimatedTime: '35 hours' },
+              { id: 'sass', title: 'SASS', lessonsPath: '/modules/sass-advanced/lessons', quizPath: '/modules/sass-advanced/quiz', progress: 0, tier: 'specialized', category: 'frontend', icon: '🎨', estimatedTime: '35 hours' }
+            ]
+          },
+          quality: {
+            tier: 'quality',
+            title: 'Quality & Testing',
+            description: 'Professional quality assurance',
+            color: 'from-orange-500 to-red-500',
+            icon: '🛡️',
+            modules: [
+              { id: 'testing', title: 'Testing & QA', lessonsPath: '/modules/testing-fundamentals/lessons', quizPath: '/modules/testing-fundamentals/quiz', progress: 0, tier: 'quality', category: 'quality', icon: '🧪', estimatedTime: '50 hours' }
+            ]
+          }
+        });
+      }
+    };
+
+    loadRegistryData();
+  }, []);
 
   // Close dropdowns when clicking outside
   useEffect(() => {
@@ -174,6 +273,43 @@ export default function Header() {
       }, 0);
     }
   };
+
+  // Show loading state while registry data is loading
+  if (!tierGroups) {
+    return (
+      <header className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm shadow dark:shadow-gray-700 w-full border-b border-gray-200 dark:border-gray-700 relative z-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between h-16 items-center">
+            <div className="flex-shrink-0 flex items-center">
+              <Link 
+                href="/" 
+                className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent focus:outline-none focus:ring-2 focus:ring-blue-500 rounded"
+                aria-label="GlassCode Academy Home"
+              >
+                GlassCode Academy
+              </Link>
+            </div>
+            
+            {/* Loading placeholder for desktop menu */}
+            <div className="hidden md:flex md:items-center md:space-x-6">
+              <div className="h-8 w-24 bg-gray-200 dark:bg-gray-700 rounded animate-pulse"></div>
+              <div className="h-8 w-24 bg-gray-200 dark:bg-gray-700 rounded animate-pulse"></div>
+              <div className="h-8 w-24 bg-gray-200 dark:bg-gray-700 rounded animate-pulse"></div>
+              <div className="h-8 w-24 bg-gray-200 dark:bg-gray-700 rounded animate-pulse"></div>
+              <div className="h-8 w-24 bg-gray-200 dark:bg-gray-700 rounded animate-pulse"></div>
+            </div>
+            
+            <div className="flex items-center">
+              <div className="h-6 w-6 bg-gray-200 dark:bg-gray-700 rounded-full animate-pulse"></div>
+              <div className="md:hidden ml-2">
+                <div className="h-6 w-6 bg-gray-200 dark:bg-gray-700 rounded animate-pulse"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </header>
+    );
+  }
 
   return (
     <header className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm shadow dark:shadow-gray-700 w-full border-b border-gray-200 dark:border-gray-700 relative z-50">

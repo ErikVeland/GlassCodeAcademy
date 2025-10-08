@@ -4,58 +4,68 @@ import { useState, useEffect } from 'react';
 import { notFound, useRouter } from 'next/navigation';
 import Link from 'next/link';
 
-interface QuizQuestionPageProps {
-  params: { moduleSlug: string; questionId: string };
-}
-
-export default function QuizQuestionPage({ params }: QuizQuestionPageProps) {
+// For client components in Next.js 15, params are still Promises that need to be awaited
+export default function QuizQuestionPage({ params }: { params: Promise<{ moduleSlug: string; questionId: string }> }) {
   const router = useRouter();
-  const { moduleSlug, questionId } = params;
+  const [resolvedParams, setResolvedParams] = useState<{ moduleSlug: string; questionId: string } | null>(null);
   const [questionData, setQuestionData] = useState<any>(null);
   const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null);
   const [showExplanation, setShowExplanation] = useState(false);
   const [isCorrect, setIsCorrect] = useState<boolean | null>(null);
   const [loading, setLoading] = useState(true);
 
-  // Parse question ID
-  const questionIndex = parseInt(questionId) - 1;
-  
-  // Mock quiz data - in a real implementation, this would come from an API
-  const mockQuizData = {
-    totalQuestions: 15,
-    questions: Array.from({ length: 15 }, (_, i) => ({
-      id: i + 1,
-      type: i % 3 === 0 ? 'multiple-choice' : i % 3 === 1 ? 'true-false' : 'scenario',
-      question: `This is a sample question ${i + 1} about programming concepts. What is the correct answer to this important concept?`,
-      choices: [
-        `Option A for question ${i + 1}`,
-        `Option B for question ${i + 1}`,
-        `Option C for question ${i + 1}`,
-        `Option D for question ${i + 1}`
-      ],
-      correctAnswer: `Option ${String.fromCharCode(65 + (i % 4))} for question ${i + 1}`,
-      explanation: `This explanation describes why the correct answer is what it is for question ${i + 1}. Understanding this concept is crucial for mastering the material.`
-    }))
-  };
-
+  // Resolve the params promise
   useEffect(() => {
-    // Validate question ID
-    if (isNaN(questionIndex) || questionIndex < 0 || questionIndex >= mockQuizData.totalQuestions) {
-      notFound();
-      return;
-    }
+    const resolveParams = async () => {
+      try {
+        const { moduleSlug, questionId } = await params;
+        setResolvedParams({ moduleSlug, questionId });
+        
+        // Parse question ID
+        const questionIndex = parseInt(questionId) - 1;
+        
+        // Mock quiz data - in a real implementation, this would come from an API
+        const mockQuizData = {
+          totalQuestions: 15,
+          questions: Array.from({ length: 15 }, (_, i) => ({
+            id: i + 1,
+            type: i % 3 === 0 ? 'multiple-choice' : i % 3 === 1 ? 'true-false' : 'scenario',
+            question: `This is a sample question ${i + 1} about programming concepts. What is the correct answer to this important concept?`,
+            choices: [
+              `Option A for question ${i + 1}`,
+              `Option B for question ${i + 1}`,
+              `Option C for question ${i + 1}`,
+              `Option D for question ${i + 1}`
+            ],
+            correctAnswer: `Option ${String.fromCharCode(65 + (i % 4))} for question ${i + 1}`,
+            explanation: `This explanation describes why the correct answer is what it is for question ${i + 1}. Understanding this concept is crucial for mastering the material.`
+          }))
+        };
 
-    // Set current question data
-    setQuestionData(mockQuizData.questions[questionIndex]);
-    setLoading(false);
-  }, [questionId, questionIndex]);
+        // Validate question ID
+        if (isNaN(questionIndex) || questionIndex < 0 || questionIndex >= mockQuizData.totalQuestions) {
+          notFound();
+          return;
+        }
+
+        // Set current question data
+        setQuestionData(mockQuizData.questions[questionIndex]);
+        setLoading(false);
+      } catch (error) {
+        console.error('Error resolving params:', error);
+        notFound();
+      }
+    };
+
+    resolveParams();
+  }, [params]);
 
   const handleAnswerSelect = (answer: string) => {
     setSelectedAnswer(answer);
   };
 
   const handleSubmit = () => {
-    if (!selectedAnswer) return;
+    if (!selectedAnswer || !questionData) return;
     
     const correct = selectedAnswer === questionData.correctAnswer;
     setIsCorrect(correct);
@@ -63,7 +73,12 @@ export default function QuizQuestionPage({ params }: QuizQuestionPageProps) {
   };
 
   const handleNextQuestion = () => {
-    if (questionIndex < mockQuizData.totalQuestions - 1) {
+    if (!resolvedParams) return;
+    
+    const { moduleSlug, questionId } = resolvedParams;
+    const questionIndex = parseInt(questionId) - 1;
+    
+    if (questionIndex < 14) { // 15 questions total (0-14)
       router.push(`/modules/${moduleSlug}/quiz/question/${questionIndex + 2}`);
     } else {
       // Quiz completed - redirect to results
@@ -72,6 +87,11 @@ export default function QuizQuestionPage({ params }: QuizQuestionPageProps) {
   };
 
   const handlePreviousQuestion = () => {
+    if (!resolvedParams) return;
+    
+    const { moduleSlug, questionId } = resolvedParams;
+    const questionIndex = parseInt(questionId) - 1;
+    
     if (questionIndex > 0) {
       router.push(`/modules/${moduleSlug}/quiz/question/${questionIndex}`);
     }
@@ -88,10 +108,18 @@ export default function QuizQuestionPage({ params }: QuizQuestionPageProps) {
     );
   }
 
-  if (!questionData) {
+  if (!resolvedParams || !questionData) {
     notFound();
     return null;
   }
+
+  const { moduleSlug, questionId } = resolvedParams;
+  const questionIndex = parseInt(questionId) - 1;
+  
+  // Mock quiz data for navigation buttons
+  const mockQuizData = {
+    totalQuestions: 15
+  };
 
   return (
     <div className="max-w-4xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
