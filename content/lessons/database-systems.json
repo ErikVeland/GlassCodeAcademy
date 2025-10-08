@@ -749,7 +749,11 @@
     "next": [],
     "estimatedMinutes": 35,
     "difficulty": "Advanced",
-    "tags": ["Security", "Access Control", "SQL Injection"],
+    "tags": [
+      "Security",
+      "Access Control",
+      "SQL Injection"
+    ],
     "lastUpdated": "2025-10-01T12:00:00.000Z",
     "version": "1.0.0"
   },
@@ -801,7 +805,11 @@
     "next": [],
     "estimatedMinutes": 40,
     "difficulty": "Advanced",
-    "tags": ["Performance", "Optimization", "Indexing"],
+    "tags": [
+      "Performance",
+      "Optimization",
+      "Indexing"
+    ],
     "lastUpdated": "2025-10-01T12:00:00.000Z",
     "version": "1.0.0"
   },
@@ -853,7 +861,11 @@
     "next": [],
     "estimatedMinutes": 35,
     "difficulty": "Intermediate",
-    "tags": ["NoSQL", "MongoDB", "Document Database"],
+    "tags": [
+      "NoSQL",
+      "MongoDB",
+      "Document Database"
+    ],
     "lastUpdated": "2025-10-01T12:00:00.000Z",
     "version": "1.0.0"
   },
@@ -905,7 +917,11 @@
     "next": [],
     "estimatedMinutes": 45,
     "difficulty": "Advanced",
-    "tags": ["Administration", "Backup", "Monitoring"],
+    "tags": [
+      "Administration",
+      "Backup",
+      "Monitoring"
+    ],
     "lastUpdated": "2025-10-01T12:00:00.000Z",
     "version": "1.0.0"
   }
