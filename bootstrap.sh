@@ -169,7 +169,16 @@ log "✅ .NET backend published"
 ### 10. Build Frontend (Next.js)
 log "🎨 Building frontend..."
 cd "$APP_DIR/glasscode/frontend"
-sudo -u "$DEPLOY_USER" npm ci
+
+# Use npm ci if package-lock.json exists, otherwise use npm install
+if [ -f "package-lock.json" ]; then
+    log "📦 Using npm ci (package-lock.json found)"
+    sudo -u "$DEPLOY_USER" npm ci
+else
+    log "⚠️  package-lock.json not found, using npm install"
+    sudo -u "$DEPLOY_USER" npm install
+fi
+
 cat > .env.production <<EOF
 NEXT_PUBLIC_API_BASE=$NEXT_PUBLIC_API_BASE
 NEXT_PUBLIC_BASE_URL=$NEXT_PUBLIC_BASE_URL
