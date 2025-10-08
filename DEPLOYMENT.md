@@ -39,172 +39,126 @@ For production deployments, we recommend using our standalone server setup which
 - Domain name pointing to your server (glasscode.academy)
 - SSH access to the server
 
+### Configuration
+
+Before running the deployment scripts, you can customize the deployment by creating a `.env` file:
+
+```bash
+# Copy the example configuration file
+cp .env.example .env
+
+# Edit the configuration for your environment
+nano .env
+```
+
+The available configuration options are:
+- `APP_NAME`: Application name (used for service names)
+- `DEPLOY_USER`: System user to run the application
+- `APP_DIR`: Directory where the application will be installed
+- `REPO`: Git repository to clone
+- `DOMAIN`: Domain name for the application
+- `EMAIL`: Email for SSL certificate registration
+
 ### Automated Deployment Script
 
 Use the provided bootstrap script to automatically set up your GlassCode Academy server:
 
 ```bash
-#!/usr/bin/env bash
-set -euo pipefail
+# Download the bootstrap script
+curl -O https://raw.githubusercontent.com/ErikVeland/GlassCodeAcademy/main/bootstrap.sh
 
-### CONFIG ###
-APP_NAME="glasscode"
-DEPLOY_USER="deploy"
-APP_DIR="/srv/academy"
-REPO="git@github.com:ErikVeland/GlassCodeAcademy.git"
-DOMAIN="glasscode.academy"
-EMAIL="erik@veland.au"
+# Make it executable
+chmod +x bootstrap.sh
 
-echo "=== Bootstrap Script for $APP_NAME ==="
-
-### 1. Create deploy user if not exists
-if ! id "$DEPLOY_USER" &>/dev/null; then
-    echo "Creating deploy user..."
-    adduser --disabled-password --gecos "" "$DEPLOY_USER"
-    usermod -aG sudo "$DEPLOY_USER"
-fi
-
-### 2. Install base packages
-echo "Installing base packages..."
-apt-get update
-apt-get install -y \
-    curl gnupg2 ca-certificates lsb-release apt-transport-https \
-    build-essential pkg-config unzip zip jq git \
-    nginx certbot python3-certbot-nginx ufw fail2ban
-
-### 3. Install Node.js (20 LTS)
-echo "Installing Node.js..."
-curl -fsSL https://deb.nodesource.com/setup_20.x | bash -
-apt-get install -y nodejs
-
-### 4. Install .NET SDK 9 (fallback to 8 if needed)
-echo "Installing .NET..."
-curl -sSL https://packages.microsoft.com/config/ubuntu/24.04/packages-microsoft-prod.deb -o packages-microsoft-prod.deb
-dpkg -i packages-microsoft-prod.deb
-rm -f packages-microsoft-prod.deb
-apt-get update
-if ! apt-get install -y dotnet-sdk-9.0 aspnetcore-runtime-9.0; then
-    echo ".NET 9 not found, trying .NET 8..."
-    apt-get install -y dotnet-sdk-8.0 aspnetcore-runtime-8.0
-fi
-
-### 5. Setup directories
-echo "Setting up directories..."
-mkdir -p "$APP_DIR"
-chown -R "$DEPLOY_USER":"$DEPLOY_USER" "$APP_DIR"
-
-### 6. Clone or update repo
-echo "Fetching repository..."
-if [ ! -d "$APP_DIR/.git" ]; then
-    sudo -u "$DEPLOY_USER" git clone "$REPO" "$APP_DIR"
-else
-    cd "$APP_DIR"
-    sudo -u "$DEPLOY_USER" git reset --hard
-    sudo -u "$DEPLOY_USER" git pull
-fi
-
-### 7. Build Backend (.NET)
-echo "Building backend..."
-cd "$APP_DIR/glasscode/backend"
-dotnet restore
-dotnet build -c Release
-
-### 8. Build Frontend (Next.js)
-echo "Building frontend..."
-cd "$APP_DIR/glasscode/frontend"
-sudo -u "$DEPLOY_USER" npm install
-sudo -u "$DEPLOY_USER" npm run build
-
-### 9. Create systemd services
-echo "Creating systemd services..."
-
-cat >/etc/systemd/system/${APP_NAME}-dotnet.service <<EOF
-[Unit]
-Description=$APP_NAME .NET Backend
-After=network.target
-
-[Service]
-WorkingDirectory=$APP_DIR/glasscode/backend
-ExecStart=/usr/bin/dotnet run --no-build --urls http://0.0.0.0:8080
-Restart=always
-User=$DEPLOY_USER
-Environment=DOTNET_ROOT=/usr/share/dotnet
-Environment=ASPNETCORE_URLS=http://0.0.0.0:8080
-
-[Install]
-WantedBy=multi-user.target
-EOF
-
-cat >/etc/systemd/system/${APP_NAME}-frontend.service <<EOF
-[Unit]
-Description=$APP_NAME Next.js Frontend
-After=network.target
-
-[Service]
-WorkingDirectory=$APP_DIR/glasscode/frontend
-ExecStart=/usr/bin/npm run start -- -p 3000
-Restart=always
-User=$DEPLOY_USER
-Environment=NODE_ENV=production
-
-[Install]
-WantedBy=multi-user.target
-EOF
-
-systemctl daemon-reexec
-systemctl enable ${APP_NAME}-dotnet ${APP_NAME}-frontend
-systemctl restart ${APP_NAME}-dotnet ${APP_NAME}-frontend
-
-### 10. Configure Nginx (www → non-www redirect + reverse proxy)
-echo "Configuring Nginx..."
-cat >/etc/nginx/sites-available/$APP_NAME <<EOF
-server {
-    listen 80;
-    server_name www.$DOMAIN;
-    return 301 https://$DOMAIN\$request_uri;
-}
-
-server {
-    listen 80;
-    server_name $DOMAIN;
-
-    location /api {
-        proxy_pass http://127.0.0.1:8080;
-        proxy_http_version 1.1;
-        proxy_set_header Upgrade \$http_upgrade;
-        proxy_set_header Connection keep-alive;
-        proxy_set_header Host \$host;
-        proxy_cache_bypass \$http_upgrade;
-    }
-
-    location / {
-        proxy_pass http://127.0.0.1:3000;
-        proxy_http_version 1.1;
-        proxy_set_header Upgrade \$http_upgrade;
-        proxy_set_header Connection keep-alive;
-        proxy_set_header Host \$host;
-        proxy_cache_bypass \$http_upgrade;
-    }
-}
-EOF
-
-ln -sf /etc/nginx/sites-available/$APP_NAME /etc/nginx/sites-enabled/
-nginx -t && systemctl reload nginx
-
-### 11. Enable TLS
-echo "Setting up TLS..."
-certbot --nginx -d $DOMAIN -d www.$DOMAIN --non-interactive --agree-tos -m $EMAIL || true
-
-### 12. Firewall rules
-echo "Configuring UFW..."
-ufw allow OpenSSH
-ufw allow 80
-ufw allow 443
-ufw --force enable
-
-echo "=== Deployment Complete! ==="
-echo "Visit https://$DOMAIN"
+# Run the script
+./bootstrap.sh
 ```
+
+Or run it directly:
+```bash
+curl -s https://raw.githubusercontent.com/ErikVeland/GlassCodeAcademy/main/bootstrap.sh | bash
+```
+
+The bootstrap script will:
+1. Install all required dependencies (Node.js, .NET, NGINX, etc.)
+2. Create a dedicated deploy user
+3. Clone the repository
+4. Build both frontend and backend applications
+5. Set up systemd services for automatic startup
+6. Configure NGINX as a reverse proxy
+7. Set up SSL certificates with Let's Encrypt
+8. Configure firewall rules
+9. Perform health checks
+
+### Updating the Application
+
+To update the application to the latest version, use the update script:
+
+```bash
+# Download the update script
+curl -O https://raw.githubusercontent.com/ErikVeland/GlassCodeAcademy/main/update.sh
+
+# Make it executable
+chmod +x update.sh
+
+# Run the update script
+./update.sh
+```
+
+The update script will:
+1. Backup the current installation
+2. Pull the latest changes from the repository
+3. Update the global.json file with the current .NET SDK version
+4. Update dependencies and rebuild the application
+5. Restart services
+6. Perform health checks
+
+### Manual Steps (if not using bootstrap)
+
+If you prefer to set up the server manually, follow these steps:
+
+1. **Create deploy user**
+   ```bash
+   sudo adduser --disabled-password --gecos "" deploy
+   sudo usermod -aG sudo deploy
+   ```
+
+2. **Install dependencies**
+   ```bash
+   # Node.js
+   curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
+   sudo apt-get install -y nodejs
+   
+   # .NET
+   curl -sSL https://packages.microsoft.com/config/ubuntu/24.04/packages-microsoft-prod.deb -o packages-microsoft-prod.deb
+   sudo dpkg -i packages-microsoft-prod.deb
+   sudo apt-get update
+   sudo apt-get install -y dotnet-sdk-9.0 aspnetcore-runtime-9.0
+   ```
+
+3. **Clone repository**
+   ```bash
+   sudo -u deploy git clone git@github.com:ErikVeland/GlassCodeAcademy.git /srv/academy
+   ```
+
+4. **Build applications**
+   ```bash
+   # Backend
+   cd /srv/academy/glasscode/backend
+   sudo -u deploy dotnet restore
+   sudo -u deploy dotnet build -c Release
+   
+   # Frontend
+   cd /srv/academy/glasscode/frontend
+   sudo -u deploy npm ci
+   sudo -u deploy npm run build
+   ```
+
+5. **Set up systemd services**
+   Create `/etc/systemd/system/glasscode-dotnet.service` and `/etc/systemd/system/glasscode-frontend.service` as shown in the bootstrap script.
+
+6. **Configure NGINX**
+   Create NGINX configuration as shown in the bootstrap script.
 
 ## Cloud Deployment Options
 

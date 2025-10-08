@@ -199,116 +199,114 @@ npm run dev
 
 The frontend will start on `http://localhost:3000`
 
-## Development Workflow
+## Production Deployment
 
-1. **Backend Development**: Modify C# files in the backend directory
-2. **Frontend Development**: Modify TypeScript/React files in the frontend directory
-3. **GraphQL Schema**: Changes to the GraphQL schema require updates to both the backend types and frontend queries
+For production deployments, we provide a turn-key bootstrap script that automates the entire setup process:
 
-## Deployment
+### Automated Deployment
 
-### Docker Deployment (Recommended)
+1. **Configure your environment**
+   ```bash
+   # Copy the example configuration file
+   cp .env.example .env
+   
+   # Edit the configuration for your environment
+   nano .env
+   ```
 
-This application is designed for Docker deployment using either docker-compose or individual container deployment.
+2. **Run the bootstrap script**
+   ```bash
+   # Make the script executable
+   chmod +x bootstrap.sh
+   
+   # Run the bootstrap script
+   ./bootstrap.sh
+   ```
 
-#### Using Docker Compose (Local Development)
+The bootstrap script will:
+1. Install all required dependencies (Node.js, .NET, NGINX, etc.)
+2. Create a dedicated deploy user
+3. Clone the repository
+4. Build both frontend and backend applications
+5. Set up systemd services for automatic startup
+6. Configure NGINX as a reverse proxy
+7. Set up SSL certificates with Let's Encrypt
+8. Configure firewall rules
+9. Perform health checks
+
+### Configuration Options
+
+The deployment can be customized using the `.env` configuration file:
+
+- `APP_NAME`: Application name (used for service names)
+- `DEPLOY_USER`: System user to run the application
+- `APP_DIR`: Directory where the application will be installed
+- `REPO`: Git repository to clone
+- `DOMAIN`: Domain name for the application
+- `EMAIL`: Email for SSL certificate registration
+
+### Updating the Application
+
+To update the application to the latest version:
+
 ```bash
-docker-compose up --build
+# Make the update script executable
+chmod +x update.sh
+
+# Run the update script
+./update.sh
 ```
 
-This will start both the frontend (on port 3000) and backend (on port 8080) services.
+The update script will:
+1. Backup the current installation
+2. Pull the latest changes from the repository
+3. Update dependencies and rebuild the application
+4. Restart services
+5. Perform health checks
 
-#### Individual Container Deployment
-Build and run each service separately:
+### Manual Steps (if not using bootstrap)
 
-**Backend:**
-```bash
-cd glasscode/backend
-docker build -t fullstack-backend .
-docker run -p 8080:8080 fullstack-backend
-```
+If you prefer to set up the server manually, follow these steps:
 
-**Frontend:**
-```bash
-cd glasscode/frontend
-docker build -t fullstack-frontend .
-docker run -p 3000:3000 fullstack-frontend
-```
+1. **Create deploy user**
+   ```bash
+   sudo adduser --disabled-password --gecos "" deploy
+   sudo usermod -aG sudo deploy
+   ```
 
-### Cloud Deployment Options
+2. **Install dependencies**
+   ```bash
+   # Node.js
+   curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
+   sudo apt-get install -y nodejs
+   
+   # .NET
+   curl -sSL https://packages.microsoft.com/config/ubuntu/24.04/packages-microsoft-prod.deb -o packages-microsoft-prod.deb
+   sudo dpkg -i packages-microsoft-prod.deb
+   sudo apt-get update
+   sudo apt-get install -y dotnet-sdk-9.0 aspnetcore-runtime-9.0
+   ```
 
-#### Render.com (Recommended)
-1. Fork this repository to your GitHub account
-2. Create a new Web Service on Render for each component:
-   - Backend service using the Docker runtime
-   - Frontend service using the Docker runtime
-3. Configure environment variables as needed
-4. Set up the services to communicate with each other
+3. **Clone repository**
+   ```bash
+   sudo -u deploy git clone git@github.com:ErikVeland/GlassCodeAcademy.git /srv/academy
+   ```
 
-#### Other Options
-- AWS ECS
-- Google Cloud Run
-- Azure Container Instances
-- DigitalOcean App Platform
+4. **Build applications**
+   ```bash
+   # Backend
+   cd /srv/academy/glasscode/backend
+   sudo -u deploy dotnet restore
+   sudo -u deploy dotnet build -c Release
+   
+   # Frontend
+   cd /srv/academy/glasscode/frontend
+   sudo -u deploy npm ci
+   sudo -u deploy npm run build
+   ```
 
-### Local Development
+5. **Set up systemd services**
+   Create `/etc/systemd/system/glasscode-dotnet.service` and `/etc/systemd/system/glasscode-frontend.service` as shown in the bootstrap script.
 
-#### Frontend
-```bash
-npm run build
-```
-
-#### Backend
-```bash
-dotnet publish
-```
-
-The application expects the backend API at `http://localhost:5022` by default (configurable via environment variables).
-
-## Contributing
-
-1. Fork the repository
-2. Create a feature branch
-3. Commit your changes
-4. Push to the branch
-5. Create a pull request
-
-## License
-
-This project is licensed under the MIT License.
-
-## Troubleshooting
-
-### Common Issues
-
-1. **Port Conflicts**: If ports 5022 or 3000 are in use, the applications will automatically select available ports
-2. **GraphQL Schema Errors**: Ensure all GraphQL types are properly registered in Program.cs
-3. **CORS Issues**: CORS policies are configured for localhost development
-
-### Testing GraphQL Endpoints
-
-Test Laravel lessons query:
-```bash
-curl -X POST -H "Content-Type: application/json" -d '{"query":"{ laravelLessons { id title topic } }"}' http://localhost:5022/graphql
-```
-
-Test React lessons query:
-```bash
-curl -X POST -H "Content-Type: application/json" -d '{"query":"{ reactLessons { id title topic } }"}' http://localhost:5022/graphql
-```
-
-Test Tailwind lessons query:
-```bash
-curl -X POST -H "Content-Type: application/json" -d '{"query":"{ tailwindLessons { id title topic } }"}' http://localhost:5022/graphql
-```
-
-Test Node.js lessons query:
-```bash
-curl -X POST -H "Content-Type: application/json" -d '{"query":"{ nodeLessons { id title topic } }"}' http://localhost:5022/graphql
-```
-
-Test SASS lessons query:
-```bash
-curl -X POST -H "Content-Type: application/json" -d '{"query":"{ sassLessons { id title topic } }"}' http://localhost:5022/graphql
-
-```
+6. **Configure NGINX**
+   Create NGINX configuration as shown in the bootstrap script.
