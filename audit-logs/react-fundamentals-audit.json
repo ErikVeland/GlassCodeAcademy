@@ -1,0 +1,48 @@
+{
+  "moduleSlug": "react-fundamentals",
+  "title": "React Development",
+  "tier": "core",
+  "track": "Frontend",
+  "timestamp": "2025-10-07T04:10:07.602Z",
+  "content": {
+    "lessons": {
+      "required": 15,
+      "actual": 0,
+      "status": "unknown"
+    },
+    "quizzes": {
+      "required": 20,
+      "actual": 0,
+      "status": "unknown"
+    }
+  },
+  "validation": {
+    "issues": [],
+    "warnings": []
+  },
+  "accessibility": {
+    "issues": 0,
+    "severity": "compliant"
+  },
+  "quizAnalysis": {
+    "totalQuestions": 20,
+    "difficultyDistribution": {
+      "beginner": 9,
+      "intermediate": 10,
+      "advanced": 1
+    },
+    "targetDistribution": {
+      "beginner": 6,
+      "intermediate": 10,
+      "advanced": 4
+    },
+    "topicsCovered": 14,
+    "duplicationRate": 80
+  },
+  "sources": [],
+  "routes": {
+    "overview": "/modules/react-fundamentals",
+    "lessons": "/modules/react-fundamentals/lessons",
+    "quiz": "/modules/react-fundamentals/quiz"
+  }
+}

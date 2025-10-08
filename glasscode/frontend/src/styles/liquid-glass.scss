@@ -218,14 +218,18 @@
 }
 
 /* Accessibility Enhancements */
-.glass-morphism:focus-within {
+/* Remove focus-within that was applying focus to all glass containers */
+/* Only apply focus styles to actionable elements */
+.glass-interactive:focus,
+.glass-button:focus,
+.glass-filter-tag:focus,
+.glass-nav-item:focus,
+.glass-search-input:focus {
   outline: 2px solid var(--focus-ring);
   outline-offset: 2px;
 }
 
 .glass-interactive:focus {
-  outline: 2px solid var(--focus-ring);
-  outline-offset: 2px;
   box-shadow: 
     0 0 0 2px var(--focus-ring-offset),
     0 0 0 4px var(--focus-ring),
@@ -503,4 +507,55 @@
   margin-left: calc(50% - 50vw);
   margin-right: calc(50% - 50vw);
   margin-top: auto;
+}
+
+/* Glass Navigation Components */
+.glass-nav-container {
+  @apply glass-morphism;
+  padding: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.glass-nav-item {
+  @extend .glass-interactive;
+  padding: 0.75rem 1rem;
+  border-radius: 0.75rem;
+  margin-bottom: 0.5rem;
+  color: white;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  
+  @media (prefers-color-scheme: dark) {
+    color: #f3f4f6;
+  }
+  
+  &.active {
+    background: rgba(59, 130, 246, 0.2);
+    border-color: rgba(59, 130, 246, 0.4);
+  }
+  
+  &:hover:not(.active) {
+    background: rgba(255, 255, 255, 0.1);
+    
+    @media (prefers-color-scheme: dark) {
+      background: rgba(255, 255, 255, 0.05);
+    }
+  }
+}
+
+// Accessibility Enhancements
+// Only apply focus styles to actionable elements, not container divs
+.glass-interactive:focus,
+.glass-button:focus,
+.glass-filter-tag:focus,
+.glass-nav-item:focus {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: 2px;
+  
+  @media (prefers-contrast: high) {
+    outline: 2px solid #000000;
+    outline-offset: 2px;
+  }
 }

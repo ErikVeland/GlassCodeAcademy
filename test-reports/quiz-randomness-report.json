@@ -1,0 +1,288 @@
+{
+  "timestamp": "2025-10-07T04:09:18.526Z",
+  "summary": {
+    "totalModules": 16,
+    "goodDistributionModules": 1,
+    "avgQuestions": 21,
+    "avgDistribution": {
+      "beginner": 8,
+      "intermediate": 8,
+      "advanced": 2
+    },
+    "avgDuplication": 77.25
+  },
+  "modules": [
+    {
+      "module": "dotnet-fundamentals",
+      "totalQuestions": 25,
+      "avgDistribution": {
+        "beginner": 8,
+        "intermediate": 11,
+        "advanced": 1
+      },
+      "targetDistribution": {
+        "beginner": 6,
+        "intermediate": 10,
+        "advanced": 4
+      },
+      "isDistributionGood": false,
+      "topicsCovered": 15,
+      "duplicationRate": 75
+    },
+    {
+      "module": "e2e-testing",
+      "totalQuestions": 15,
+      "avgDistribution": {
+        "beginner": 7,
+        "intermediate": 7,
+        "advanced": 1
+      },
+      "targetDistribution": {
+        "beginner": 6,
+        "intermediate": 10,
+        "advanced": 4
+      },
+      "isDistributionGood": false,
+      "topicsCovered": 3,
+      "duplicationRate": 80
+    },
+    {
+      "module": "graphql-advanced",
+      "totalQuestions": 20,
+      "avgDistribution": {
+        "beginner": 7,
+        "intermediate": 10,
+        "advanced": 3
+      },
+      "targetDistribution": {
+        "beginner": 6,
+        "intermediate": 10,
+        "advanced": 4
+      },
+      "isDistributionGood": true,
+      "topicsCovered": 12,
+      "duplicationRate": 80
+    },
+    {
+      "module": "laravel-fundamentals",
+      "totalQuestions": 35,
+      "avgDistribution": {
+        "beginner": 4,
+        "intermediate": 16,
+        "advanced": 0
+      },
+      "targetDistribution": {
+        "beginner": 6,
+        "intermediate": 10,
+        "advanced": 4
+      },
+      "isDistributionGood": false,
+      "topicsCovered": 19,
+      "duplicationRate": 65
+    },
+    {
+      "module": "nextjs-advanced",
+      "totalQuestions": 18,
+      "avgDistribution": {
+        "beginner": 4,
+        "intermediate": 9,
+        "advanced": 5
+      },
+      "targetDistribution": {
+        "beginner": 6,
+        "intermediate": 10,
+        "advanced": 4
+      },
+      "isDistributionGood": false,
+      "topicsCovered": 16,
+      "duplicationRate": 80
+    },
+    {
+      "module": "node-fundamentals",
+      "totalQuestions": 20,
+      "avgDistribution": {
+        "beginner": 11,
+        "intermediate": 4,
+        "advanced": 5
+      },
+      "targetDistribution": {
+        "beginner": 6,
+        "intermediate": 10,
+        "advanced": 4
+      },
+      "isDistributionGood": false,
+      "topicsCovered": 15,
+      "duplicationRate": 80
+    },
+    {
+      "module": "performance-optimization",
+      "totalQuestions": 48,
+      "avgDistribution": {
+        "beginner": 7,
+        "intermediate": 8,
+        "advanced": 5
+      },
+      "targetDistribution": {
+        "beginner": 6,
+        "intermediate": 10,
+        "advanced": 4
+      },
+      "isDistributionGood": false,
+      "topicsCovered": 14,
+      "duplicationRate": 56
+    },
+    {
+      "module": "programming-fundamentals",
+      "totalQuestions": 15,
+      "avgDistribution": {
+        "beginner": 8,
+        "intermediate": 7,
+        "advanced": 0
+      },
+      "targetDistribution": {
+        "beginner": 6,
+        "intermediate": 10,
+        "advanced": 4
+      },
+      "isDistributionGood": false,
+      "topicsCovered": 10,
+      "duplicationRate": 80
+    },
+    {
+      "module": "react-fundamentals",
+      "totalQuestions": 20,
+      "avgDistribution": {
+        "beginner": 9,
+        "intermediate": 10,
+        "advanced": 1
+      },
+      "targetDistribution": {
+        "beginner": 6,
+        "intermediate": 10,
+        "advanced": 4
+      },
+      "isDistributionGood": false,
+      "topicsCovered": 14,
+      "duplicationRate": 80
+    },
+    {
+      "module": "sass-advanced",
+      "totalQuestions": 15,
+      "avgDistribution": {
+        "beginner": 8,
+        "intermediate": 7,
+        "advanced": 0
+      },
+      "targetDistribution": {
+        "beginner": 6,
+        "intermediate": 10,
+        "advanced": 4
+      },
+      "isDistributionGood": false,
+      "topicsCovered": 11,
+      "duplicationRate": 80
+    },
+    {
+      "module": "security-fundamentals",
+      "totalQuestions": 20,
+      "avgDistribution": {
+        "beginner": 9,
+        "intermediate": 4,
+        "advanced": 7
+      },
+      "targetDistribution": {
+        "beginner": 6,
+        "intermediate": 10,
+        "advanced": 4
+      },
+      "isDistributionGood": false,
+      "topicsCovered": 3,
+      "duplicationRate": 80
+    },
+    {
+      "module": "testing-fundamentals",
+      "totalQuestions": 18,
+      "avgDistribution": {
+        "beginner": 11,
+        "intermediate": 6,
+        "advanced": 1
+      },
+      "targetDistribution": {
+        "beginner": 6,
+        "intermediate": 10,
+        "advanced": 4
+      },
+      "isDistributionGood": false,
+      "topicsCovered": 13,
+      "duplicationRate": 80
+    },
+    {
+      "module": "typescript-fundamentals",
+      "totalQuestions": 18,
+      "avgDistribution": {
+        "beginner": 8,
+        "intermediate": 7,
+        "advanced": 3
+      },
+      "targetDistribution": {
+        "beginner": 6,
+        "intermediate": 10,
+        "advanced": 4
+      },
+      "isDistributionGood": false,
+      "topicsCovered": 13,
+      "duplicationRate": 80
+    },
+    {
+      "module": "version-control",
+      "totalQuestions": 15,
+      "avgDistribution": {
+        "beginner": 10,
+        "intermediate": 4,
+        "advanced": 1
+      },
+      "targetDistribution": {
+        "beginner": 6,
+        "intermediate": 10,
+        "advanced": 4
+      },
+      "isDistributionGood": false,
+      "topicsCovered": 3,
+      "duplicationRate": 80
+    },
+    {
+      "module": "vue-advanced",
+      "totalQuestions": 18,
+      "avgDistribution": {
+        "beginner": 9,
+        "intermediate": 8,
+        "advanced": 1
+      },
+      "targetDistribution": {
+        "beginner": 6,
+        "intermediate": 10,
+        "advanced": 4
+      },
+      "isDistributionGood": false,
+      "topicsCovered": 11,
+      "duplicationRate": 80
+    },
+    {
+      "module": "web-fundamentals",
+      "totalQuestions": 20,
+      "avgDistribution": {
+        "beginner": 9,
+        "intermediate": 9,
+        "advanced": 2
+      },
+      "targetDistribution": {
+        "beginner": 6,
+        "intermediate": 10,
+        "advanced": 4
+      },
+      "isDistributionGood": false,
+      "topicsCovered": 4,
+      "duplicationRate": 80
+    }
+  ]
+}

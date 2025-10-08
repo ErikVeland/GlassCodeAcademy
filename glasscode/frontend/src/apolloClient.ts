@@ -38,8 +38,8 @@ export const createApolloClient = () => {
   // For local development, use the backend service name from docker-compose
   if (typeof window !== 'undefined' && window.location.hostname === 'localhost') {
     // When running in Docker, the backend is accessible via the service name 'backend'
-    // When running locally without Docker, it's on localhost:8080
-    baseUrl = window.location.port === '3000' ? 'http://localhost:8080' : 'http://backend:8080';
+    // When running locally without Docker, it's on localhost:5023
+    baseUrl = window.location.port === '3000' ? 'http://localhost:5023' : 'http://backend:8080';
   }
   
   const graphqlUrl = `${baseUrl}/graphql`;

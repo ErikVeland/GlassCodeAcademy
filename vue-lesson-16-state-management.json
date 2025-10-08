@@ -1,0 +1,60 @@
+{
+  "id": "vue-lesson-16-state-management",
+  "moduleSlug": "vue-advanced",
+  "title": "Advanced State Management with Pinia",
+  "order": 16,
+  "objectives": [
+    "Master advanced Pinia patterns for complex state management",
+    "Implement modular store architectures with proper separation of concerns",
+    "Create type-safe stores with TypeScript integration",
+    "Optimize store performance and handle large-scale state"
+  ],
+  "intro": "Advanced state management with Pinia goes beyond basic store creation to encompass sophisticated patterns for managing complex application state at scale. This comprehensive lesson explores advanced techniques for organizing stores, handling asynchronous operations, and optimizing performance in large Vue applications.\n\nYou'll learn to implement modular store architectures that maintain clear separation of concerns, create type-safe stores with comprehensive TypeScript integration, and optimize store performance for large-scale applications. We'll explore advanced patterns for handling complex state transitions, managing side effects, and creating reusable store logic.\n\nThe lesson covers practical implementation strategies for organizing large store hierarchies, implementing proper error handling, and creating stores that integrate seamlessly with Vue's reactivity system. You'll discover how to balance centralized state management with component-local state, implement proper store testing strategies, and optimize stores for performance.\n\nBy mastering advanced state management patterns, you'll be able to create Vue applications with predictable state management that scales effectively and provides excellent developer experience.",
+  "code": {
+    "example": "// Advanced Pinia State Management Patterns\n\n// Modular store with namespaced modules\n// stores/user.js\nimport { defineStore } from 'pinia'\nimport { ref, computed, reactive } from 'vue'\nimport api from '@/services/api'\n\nexport const useUserStore = defineStore('user', () => {\n  // State\n  const currentUser = ref(null)\n  const users = ref([])\n  const loading = reactive({\n    fetch: false,\n    create: false,\n    update: false,\n    delete: false\n  })\n  const error = ref(null)\n  \n  // Getters\n  const isAuthenticated = computed(() => !!currentUser.value)\n  const userCount = computed(() => users.value.length)\n  const getUserById = computed(() => (id) => {\n    return users.value.find(user => user.id === id)\n  })\n  \n  // Actions\n  const fetchUsers = async () => {\n    loading.fetch = true\n    error.value = null\n    \n    try {\n      const response = await api.get('/users')\n      users.value = response.data\n    } catch (err) {\n      error.value = err.message\n      console.error('Failed to fetch users:', err)\n    } finally {\n      loading.fetch = false\n    }\n  }\n  \n  const fetchUser = async (id) => {\n    loading.fetch = true\n    error.value = null\n    \n    try {\n      const response = await api.get(`/users/${id}`)\n      const user = response.data\n      \n      // Update or add user to list\n      const index = users.value.findIndex(u => u.id === id)\n      if (index !== -1) {\n        users.value[index] = user\n      } else {\n        users.value.push(user)\n      }\n      \n      return user\n    } catch (err) {\n      error.value = err.message\n      console.error(`Failed to fetch user ${id}:`, err)\n      throw err\n    } finally {\n      loading.fetch = false\n    }\n  }\n  \n  const createUser = async (userData) => {\n    loading.create = true\n    error.value = null\n    \n    try {\n      const response = await api.post('/users', userData)\n      const newUser = response.data\n      users.value.push(newUser)\n      \n      // If this is the first user or we're registering, set as current\n      if (!currentUser.value || userData.isRegistering) {\n        currentUser.value = newUser\n      }\n      \n      return newUser\n    } catch (err) {\n      error.value = err.message\n      console.error('Failed to create user:', err)\n      throw err\n    } finally {\n      loading.create = false\n    }\n  }\n  \n  const updateUser = async (id, userData) => {\n    loading.update = true\n    error.value = null\n    \n    try {\n      const response = await api.put(`/users/${id}`, userData)\n      const updatedUser = response.data\n      \n      // Update in list\n      const index = users.value.findIndex(u => u.id === id)\n      if (index !== -1) {\n        users.value[index] = updatedUser\n      }\n      \n      // Update current user if it's the same\n      if (currentUser.value && currentUser.value.id === id) {\n        currentUser.value = updatedUser\n      }\n      \n      return updatedUser\n    } catch (err) {\n      error.value = err.message\n      console.error(`Failed to update user ${id}:`, err)\n      throw err\n    } finally {\n      loading.update = false\n    }\n  }\n  \n  const deleteUser = async (id) => {\n    loading.delete = true\n    error.value = null\n    \n    try {\n      await api.delete(`/users/${id}`)\n      \n      // Remove from list\n      const index = users.value.findIndex(u => u.id === id)\n      if (index !== -1) {\n        users.value.splice(index, 1)\n      }\n      \n      // Clear current user if it's the same\n      if (currentUser.value && currentUser.value.id === id) {\n        currentUser.value = null\n      }\n    } catch (err) {\n      error.value = err.message\n      console.error(`Failed to delete user ${id}:`, err)\n      throw err\n    } finally {\n      loading.delete = false\n    }\n  }\n  \n  const login = async (credentials) => {\n    try {\n      const response = await api.post('/auth/login', credentials)\n      const { user, token } = response.data\n      \n      currentUser.value = user\n      localStorage.setItem('authToken', token)\n      \n      return user\n    } catch (err) {\n      error.value = err.message\n      console.error('Login failed:', err)\n      throw err\n    }\n  }\n  \n  const logout = () => {\n    currentUser.value = null\n    localStorage.removeItem('authToken')\n    \n    // Optionally clear other user-related data\n    users.value = []\n  }\n  \n  const $reset = () => {\n    currentUser.value = null\n    users.value = []\n    Object.keys(loading).forEach(key => loading[key] = false)\n    error.value = null\n  }\n  \n  return {\n    // State\n    currentUser: readonly(currentUser),\n    users: readonly(users),\n    loading: readonly(loading),\n    error: readonly(error),\n    \n    // Getters\n    isAuthenticated: readonly(isAuthenticated),\n    userCount: readonly(userCount),\n    getUserById: readonly(getUserById),\n    \n    // Actions\n    fetchUsers,\n    fetchUser,\n    createUser,\n    updateUser,\n    deleteUser,\n    login,\n    logout,\n    $reset\n  }\n})\n\n// Store with persistence plugin\n// stores/settings.js\nimport { defineStore } from 'pinia'\nimport { ref, watch } from 'vue'\n\nexport const useSettingsStore = defineStore('settings', () => {\n  // State\n  const theme = ref(localStorage.getItem('theme') || 'light')\n  const language = ref(localStorage.getItem('language') || 'en')\n  const notifications = ref(JSON.parse(localStorage.getItem('notifications') || 'true'))\n  \n  // Persist settings to localStorage\n  watch(theme, (newTheme) => {\n    localStorage.setItem('theme', newTheme)\n    document.documentElement.setAttribute('data-theme', newTheme)\n  })\n  \n  watch(language, (newLanguage) => {\n    localStorage.setItem('language', newLanguage)\n  })\n  \n  watch(notifications, (newNotifications) => {\n    localStorage.setItem('notifications', JSON.stringify(newNotifications))\n  })\n  \n  // Actions\n  const setTheme = (newTheme) => {\n    theme.value = newTheme\n  }\n  \n  const setLanguage = (newLanguage) => {\n    language.value = newLanguage\n  }\n  \n  const setNotifications = (enabled) => {\n    notifications.value = enabled\n  }\n  \n  const $reset = () => {\n    theme.value = 'light'\n    language.value = 'en'\n    notifications.value = true\n  }\n  \n  return {\n    // State\n    theme: readonly(theme),\n    language: readonly(language),\n    notifications: readonly(notifications),\n    \n    // Actions\n    setTheme,\n    setLanguage,\n    setNotifications,\n    $reset\n  }\n})\n\n// Usage examples:\n// In a component\n// import { useUserStore, useSettingsStore } from '@/stores'\n// \n// const userStore = useUserStore()\n// const settingsStore = useSettingsStore()\n// \n// // Fetch users on component mount\n// onMounted(() => {\n//   userStore.fetchUsers()\n// })\n// \n// // Reactive computed properties\n// const users = computed(() => userStore.users)\n// const isLoading = computed(() => userStore.loading.fetch)\n// const currentUser = computed(() => userStore.currentUser)\n// \n// // Actions\n// const handleLogin = async (credentials) => {\n//   try {\n//     await userStore.login(credentials)\n//     router.push('/dashboard')\n//   } catch (error) {\n//     // Handle login error\n//     console.error('Login failed:', error)\n//   }\n// }\n// \n// const handleThemeChange = (newTheme) => {\n//   settingsStore.setTheme(newTheme)\n// }",
+    "explanation": "This example demonstrates advanced Pinia state management patterns including:\n\n1. A comprehensive user store with CRUD operations and loading states\n2. A settings store with automatic persistence to localStorage\n3. Proper error handling and state management\n4. Reactive getters and computed properties\n5. TypeScript-friendly APIs with clear return types\n6. Store reset functionality for testing and cleanup\n\nThese patterns enable developers to create robust, scalable state management solutions that integrate seamlessly with Vue's reactivity system.",
+    "language": "javascript"
+  },
+  "pitfalls": [
+    {
+      "mistake": "Putting too much logic in stores instead of keeping them focused on state management",
+      "solution": "Keep stores focused on state, use composables for complex logic, and implement proper separation of concerns",
+      "severity": "medium"
+    },
+    {
+      "mistake": "Not handling asynchronous operations properly in stores",
+      "solution": "Implement proper loading states, error handling, and cancellation patterns for async operations",
+      "severity": "high"
+    },
+    {
+      "mistake": "Creating stores that are too large and hard to maintain",
+      "solution": "Break large stores into smaller, focused modules and use store composition patterns",
+      "severity": "medium"
+    }
+  ],
+  "exercises": [
+    {
+      "title": "Build a Comprehensive Store Architecture",
+      "description": "Create a modular store architecture with proper separation of concerns and advanced features",
+      "checkpoints": [
+        "Implement a user store with authentication and CRUD operations",
+        "Create a settings store with persistence and reactive updates",
+        "Build a cart store with complex state management",
+        "Implement proper error handling and loading states",
+        "Add store testing and reset functionality"
+      ]
+    }
+  ],
+  "next": ["vue-lesson-17-routing-navigation"],
+  "estimatedMinutes": 55,
+  "difficulty": "Advanced",
+  "tags": [
+    "Pinia",
+    "State Management",
+    "Stores",
+    "Persistence",
+    "Vue 3"
+  ],
+  "lastUpdated": "2025-10-03T10:00:00Z",
+  "version": "1.0.0"
+}

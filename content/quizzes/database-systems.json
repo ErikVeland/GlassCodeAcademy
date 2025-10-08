@@ -398,7 +398,7 @@
       "difficulty": "Intermediate",
       "choices": [
         "SELECT * FROM users WHERE email = ?",
-        "SELECT * FROM users WHERE email = '" + email + "'",
+        "SELECT * FROM users WHERE email = '' + email + ''",
         "SELECT * FROM users WHERE email = $email",
         "SELECT * FROM users WHERE email = email"
       ],

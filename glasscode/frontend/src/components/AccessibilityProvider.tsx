@@ -251,7 +251,15 @@ export const AccessibilityProvider: React.FC<AccessibilityProviderProps> = ({ ch
         }
         
         /* Enhanced focus indicators */
-        .enhanced-focus *:focus {
+        /* Remove the overly broad focus selector that was applying focus to all elements */
+        /* Only apply enhanced focus to actionable elements */
+        .enhanced-focus button:focus,
+        .enhanced-focus a:focus,
+        .enhanced-focus input:focus,
+        .enhanced-focus select:focus,
+        .enhanced-focus textarea:focus,
+        .enhanced-focus [role="button"]:focus,
+        .enhanced-focus [tabindex]:not([tabindex="-1"]):focus {
           outline: 3px solid #005fcc;
           outline-offset: 2px;
         }

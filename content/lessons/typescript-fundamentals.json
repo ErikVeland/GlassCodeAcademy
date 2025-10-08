@@ -5,43 +5,53 @@
     "title": "Primitive Types and Type Annotations",
     "order": 1,
     "objectives": [
-      "Implement practical solutions",
-      "Build foundational understanding"
+      "Understand TypeScript's primitive types including string, number, boolean, and symbol",
+      "Apply explicit type annotations to variables and function parameters",
+      "Differentiate between any, unknown, and never types for robust type safety"
     ],
-    "intro": "Welcome to this comprehensive lesson on Basic Types.\n\nLearn about TypeScript's primitive types including string, number, and boolean, along with advanced types like any, unknown, and never.\n\nThroughout this lesson, you'll gain hands-on experience with practical implementations and real-world scenarios. We'll explore both the theoretical foundations and practical applications, ensuring you can immediately apply what you learn.\n\nThis lesson is designed to build upon previous concepts while introducing new techniques that will enhance your development skills. By the end, you'll have a solid understanding of the key principles and be ready to tackle more advanced topics.\n\nThe knowledge gained here will serve as a foundation for subsequent lessons and real-world projects.",
+    "intro": "TypeScript's type system is built upon a foundation of primitive types that provide the essential building blocks for type safety in JavaScript applications. Unlike JavaScript's dynamic typing, TypeScript enables developers to catch type-related errors at compile time, significantly reducing runtime errors and improving code maintainability.\n\nPrimitive types in TypeScript include string, number, boolean, and symbol, each with specific characteristics and use cases. Understanding these types is crucial for leveraging TypeScript's full potential, as they form the basis for more complex type compositions. Type annotations allow developers to explicitly define the expected types of variables, function parameters, and return values, creating self-documenting code that's easier to understand and maintain.\n\nThe any type, while providing flexibility, should be used sparingly as it bypasses TypeScript's type checking, effectively turning TypeScript code back into regular JavaScript. The unknown type offers a safer alternative by requiring type checking before usage, while the never type represents values that never occur, such as functions that always throw exceptions or never return.\n\nThis lesson will explore the practical application of primitive types in real-world scenarios, including best practices for type annotations, the appropriate use of special types, and techniques for maintaining type safety while working with external JavaScript libraries. You'll learn to write more robust code that leverages TypeScript's type system to prevent common programming errors.\n\nBy mastering primitive types and type annotations, you'll establish a solid foundation for understanding more advanced TypeScript features and create applications that are both more reliable and easier to refactor as requirements evolve.",
     "code": {
-      "example": "// Primitive types with explicit annotations\nlet isDone: boolean = false\nlet decimal: number = 6\nlet hex: number = 0xf00d\nlet binary: number = 0b1010\nlet octal: number = 0o744\nlet color: string = \"blue\"\n\ncolor = 'red'  // Still valid\n\nlet fullName: string = `Bob Bobbington`\nlet sentence: string = `Hello, my name is ${fullName}`\n\n// Special types\nlet notSure: any = 4  // Can be anything (avoid when possible)\nnotSure = \"maybe a string instead\"\nnotSure = false\n\nlet uncertain: unknown = 4  // Safer than any\n// uncertain.toFixed(); // Error: Object is of type 'unknown'\nif (typeof uncertain === 'number') {\n  uncertain.toFixed()  // OK\n}\n\nfunction fail(): never {\n  throw new Error(\"Something failed\")\n}",
-      "explanation": "This example produces: Variables with explicit type annotations for various primitive types, demonstrating the difference between any and unknown\n\nThe code demonstrates practical implementation techniques and shows how the concepts work in real scenarios. Pay attention to the structure and patterns used, as these represent industry best practices.",
+      "example": "// Primitive types with explicit annotations\nlet isDone: boolean = false\nlet decimal: number = 6\nlet hex: number = 0xf00d\nlet binary: number = 0b1010\nlet octal: number = 0o744\nlet color: string = \"blue\"\nlet big: bigint = 100n\n\n// String manipulation with template literals\nlet fullName: string = `Bob Bobbington`\nlet sentence: string = `Hello, my name is ${fullName}`\nlet multiline: string = `This is a\nmultiline string\nwith interpolation: ${decimal}`\n\n// Boolean logic with explicit typing\nlet hasPermission: boolean = true\nlet isAdmin: boolean = false\nlet canAccess: boolean = hasPermission && !isAdmin\n\n// Number formats and operations\nlet integer: number = 42\nlet float: number = 3.14159\nlet scientific: number = 1e6\nlet negative: number = -42\nlet result: number = integer * float\n\n// Special types with type safety\nlet notSure: any = 4\nnotSure = \"maybe a string instead\"\nnotSure = false\n\n// Safer alternative to any\nlet uncertain: unknown = 4\n// uncertain.toFixed(); // Error: Object is of type 'unknown'\nif (typeof uncertain === 'number') {\n  uncertain.toFixed()  // OK\n}\n\n// Never type for functions that never return\nfunction fail(message: string): never {\n  throw new Error(message)\n}\n\n// Never type for exhaustive checks\nfunction handleValue(value: string | number): string {\n  if (typeof value === 'string') {\n    return value.toUpperCase()\n  } else if (typeof value === 'number') {\n    return value.toFixed(2)\n  } else {\n    // This will cause a compile error if all cases aren't handled\n    const check: never = value\n    return check\n  }\n}\n\n// Type inference with explicit annotations\nlet inferredString = \"inferred\"  // Type string\nlet explicitString: string = \"explicit\"  // Explicitly typed\n\n// Function with typed parameters and return type\nfunction addNumbers(a: number, b: number): number {\n  return a + b\n}\n\n// Array type annotations\nlet list: number[] = [1, 2, 3]\nlet list2: Array<string> = [\"a\", \"b\", \"c\"]",
+      "explanation": "This example demonstrates comprehensive usage of TypeScript's primitive types:\n\n1. **Boolean Types**: Explicit boolean declarations with logical operations\n2. **Number Types**: Various number formats including integers, floats, scientific notation, and BigInt\n3. **String Types**: Template literals with interpolation and multiline strings\n4. **Any Type**: Flexible but unsafe typing (use sparingly)\n5. **Unknown Type**: Type-safe alternative to any requiring type checking\n6. **Never Type**: For functions that never return or exhaustive type checking\n7. **Type Inference**: Automatic type detection with option for explicit annotations\n8. **Function Types**: Typed parameters and return values\n9. **Array Types**: Two syntax approaches for typed arrays\n\nThe output shows how TypeScript provides compile-time type checking while maintaining JavaScript's flexibility. The unknown type prevents unsafe operations until type checking is performed, and the never type helps with exhaustive checks in conditional logic.",
       "language": "typescript"
     },
     "pitfalls": [
       {
-        "mistake": "Not following best practices",
-        "solution": "Review documentation and community guidelines",
+        "mistake": "Overusing the any type which bypasses type checking",
+        "solution": "Use unknown instead of any when the type is unknown, and provide explicit type annotations whenever possible to maintain type safety",
+        "severity": "high"
+      },
+      {
+        "mistake": "Not leveraging type inference when explicit annotations aren't necessary",
+        "solution": "Allow TypeScript to infer types when the intent is clear, but use explicit annotations for function parameters and complex object structures",
         "severity": "medium"
       },
       {
-        "mistake": "Skipping error handling",
-        "solution": "Implement proper error boundaries and validation",
-        "severity": "low"
+        "mistake": "Misunderstanding the difference between null, undefined, and their type annotations",
+        "solution": "Configure strictNullChecks in tsconfig.json and use union types (string | null) when values can be null or undefined",
+        "severity": "medium"
       }
     ],
     "exercises": [
       {
-        "title": "Practice: Primitive Types and Type Annotations",
-        "description": "Apply the concepts from this lesson on Basic Types",
+        "title": "Type Safety Practice with Primitive Types",
+        "description": "Create a type-safe user profile system using primitive types and explicit annotations",
         "checkpoints": [
-          "Understand the core concept",
-          "Implement the example code",
-          "Experiment with variations"
+          "Declare variables for user profile data (name, age, email, isActive) with appropriate primitive types",
+          "Create a function that validates user data with typed parameters and return values",
+          "Implement a safe data processing function using unknown type for external input",
+          "Use template literals to generate formatted user information strings",
+          "Demonstrate the difference between any and unknown with practical examples"
         ]
       }
     ],
     "next": [],
-    "estimatedMinutes": 25,
-    "difficulty": "Advanced",
+    "estimatedMinutes": 30,
+    "difficulty": "Beginner",
     "tags": [
       "Basic Types",
+      "Type Annotations",
+      "Type Safety",
       "typescript"
     ],
     "legacy": {
@@ -49,8 +59,8 @@
       "originalTopic": "Basic Types",
       "migrated": "2025-10-01T06:41:13.482Z"
     },
-    "lastUpdated": "2025-10-01T06:41:13.482Z",
-    "version": "1.0.0"
+    "lastUpdated": "2025-10-03T10:00:00.000Z",
+    "version": "1.1.0"
   },
   {
     "id": "typescript-fundamentals-lesson-2",
@@ -58,43 +68,54 @@
     "title": "Arrays, Tuples, and Enums",
     "order": 2,
     "objectives": [
-      "Implement practical solutions",
-      "Build foundational understanding"
+      "Manipulate arrays with type-safe operations including push, pop, map, and filter",
+      "Implement tuples for fixed-length collections with known element types",
+      "Create and use enums for named constants with both numeric and string values"
     ],
-    "intro": "Welcome to this comprehensive lesson on Basic Types.\n\nLearn how to work with arrays, tuples, and enums in TypeScript for more precise type safety.\n\nThroughout this lesson, you'll gain hands-on experience with practical implementations and real-world scenarios. We'll explore both the theoretical foundations and practical applications, ensuring you can immediately apply what you learn.\n\nThis lesson is designed to build upon previous concepts while introducing new techniques that will enhance your development skills. By the end, you'll have a solid understanding of the key principles and be ready to tackle more advanced topics.\n\nThe knowledge gained here will serve as a foundation for subsequent lessons and real-world projects.",
+    "intro": "Working with collections of data is fundamental to most applications, and TypeScript provides powerful tools for ensuring type safety when working with arrays, tuples, and enums. These collection types enable developers to create more predictable and maintainable code by catching potential errors at compile time rather than runtime.\n\nArrays in TypeScript offer the flexibility of JavaScript arrays while adding compile-time type checking. TypeScript arrays can be declared using either the square bracket syntax (number[]) or the generic Array<T> syntax, both providing the same functionality with different visual preferences. Array methods like map, filter, and reduce maintain type information, ensuring that transformations produce correctly typed results.\n\nTuples extend arrays by allowing you to express an array with a fixed number of elements whose types are known and can be different. This is particularly useful for representing values with mixed types, such as coordinate pairs, HTTP responses [status, data], or function return values. Tuples provide precise type checking for each position, preventing accidental access to non-existent indices.\n\nEnums provide a way to define a set of named constants, making code more readable and maintainable. TypeScript supports both numeric and string enums, with the option to set specific values or allow automatic numbering. Enums are compiled to JavaScript objects, making them suitable for runtime value checks while maintaining compile-time type safety.\n\nThis lesson will explore practical applications of these collection types in real-world scenarios, including data processing pipelines, API response handling, and configuration management. You'll learn advanced patterns for working with collections while maintaining type safety and performance.\n\nBy mastering arrays, tuples, and enums, you'll be able to create more robust applications that handle collections of data with confidence, reducing bugs and improving code clarity.",
     "code": {
-      "example": "// Arrays\nlet list: number[] = [1, 2, 3]\nlet list2: Array<number> = [1, 2, 3]\n\n// Tuples - fixed-length arrays with known types\nlet x: [string, number]\nx = ['hello', 10]  // OK\n// x = [10, 'hello']  // Error\n\nconsole.log(x[0].substring(1))  // OK\n// console.log(x[1].substring(1))  // Error, 'number' does not have 'substring'\n\nx[3] = 'world'  // OK, 'string' can be assigned to (string | number)\nx[5] = 100  // OK, 'number' can be assigned to (string | number)\n// x[6] = true  // Error, 'boolean' isn't (string | number)\n\n// Enums\nenum Color { Red, Green, Blue }\nlet c: Color = Color.Green\n\nenum Color2 { Red = 1, Green, Blue }\nlet c2: Color2 = Color2.Green\n\nenum Color3 { Red = 1, Green = 2, Blue = 4 }\nlet c3: Color3 = Color3.Green\n\n// String enums\nenum Direction {\n  Up = \"UP\",\n  Down = \"DOWN\",\n  Left = \"LEFT\",\n  Right = \"RIGHT\",\n}",
-      "explanation": "This example produces: Type-safe arrays, tuples with fixed types, and enums for named constants\n\nThe code demonstrates practical implementation techniques and shows how the concepts work in real scenarios. Pay attention to the structure and patterns used, as these represent industry best practices.",
+      "example": "// Arrays with type annotations and operations\nlet numbers: number[] = [1, 2, 3, 4, 5]\nlet strings: Array<string> = ['hello', 'world']\n\n// Array operations with type safety\nnumbers.push(6)  // OK\n// numbers.push('invalid')  // Error: Argument of type 'string' is not assignable to parameter of type 'number'\n\n// Map with preserved types\nlet doubled: number[] = numbers.map(n => n * 2)\nlet stringLengths: number[] = strings.map(s => s.length)\n\n// Filter with type-safe predicates\nlet evens: number[] = numbers.filter(n => n % 2 === 0)\n\n// Reduce with accumulator type\nlet sum: number = numbers.reduce((acc, n) => acc + n, 0)\n\n// Multi-dimensional arrays\nlet matrix: number[][] = [\n  [1, 2, 3],\n  [4, 5, 6],\n  [7, 8, 9]\n]\n\n// Tuples - fixed-length arrays with known types\nlet coordinate: [number, number] = [10, 20]\nlet httpResponse: [number, string] = [200, 'OK']\nlet complexTuple: [string, number, boolean] = ['result', 42, true]\n\n// Accessing tuple elements with type safety\nconsole.log(coordinate[0].toFixed(2))  // OK - number\nconsole.log(httpResponse[1].toUpperCase())  // OK - string\n// console.log(complexTuple[0].toFixed())  // Error - string doesn't have toFixed\n\n// Destructuring tuples\nlet [x, y] = coordinate\nlet [status, message] = httpResponse\n\n// Enums with numeric values\nenum HttpStatus {\n  OK = 200,\n  NotFound = 404,\n  ServerError = 500\n}\n\nlet responseStatus: HttpStatus = HttpStatus.OK\n\n// Enums with string values (more common)\nenum Direction {\n  Up = \"UP\",\n  Down = \"DOWN\",\n  Left = \"LEFT\",\n  Right = \"RIGHT\"\n}\n\nlet move: Direction = Direction.Up\n\n// Enums with auto-incrementing values\nenum LogLevel {\n  Debug,  // 0\n  Info,   // 1\n  Warn,   // 2\n  Error   // 3\n}\n\nlet logLevel: LogLevel = LogLevel.Warn\n\n// Reverse mapping for numeric enums\nconsole.log(HttpStatus[200])  // \"OK\"\nconsole.log(LogLevel[1])      // \"Info\"\n\n// Union types with enums\ntype Movement = Direction.Up | Direction.Down\nlet verticalMove: Movement = Direction.Up\n\n// Const enums for performance (compile-time inlining)\nconst enum ScreenMode {\n  Light,\n  Dark\n}\n\nlet mode = ScreenMode.Dark  // Compiled to direct value assignment",
+      "explanation": "This example demonstrates comprehensive usage of TypeScript's collection types:\n\n1. **Arrays**: Multiple declaration syntaxes with type-safe operations\n2. **Array Methods**: Map, filter, and reduce with preserved type information\n3. **Multi-dimensional Arrays**: Nested arrays with proper typing\n4. **Tuples**: Fixed-length collections with specific element types\n5. **Tuple Destructuring**: Extracting values with type preservation\n6. **Numeric Enums**: Explicit and auto-incrementing values with reverse mapping\n7. **String Enums**: More common pattern with explicit string values\n8. **Union Types with Enums**: Restricting allowed enum values\n9. **Const Enums**: Performance optimization for constant values\n\nThe output shows how TypeScript provides compile-time safety while maintaining JavaScript's flexibility. Tuples prevent accessing invalid indices, and enums provide runtime values while maintaining compile-time type checking.",
       "language": "typescript"
     },
     "pitfalls": [
       {
-        "mistake": "Not following best practices",
-        "solution": "Review documentation and community guidelines",
+        "mistake": "Not understanding tuple behavior with additional elements",
+        "solution": "Remember that tuples allow additional elements of union types after defined positions, which can lead to unexpected behavior. Use readonly tuples or explicit length checking when precise element counts are required.",
         "severity": "medium"
       },
       {
-        "mistake": "Skipping error handling",
-        "solution": "Implement proper error boundaries and validation",
-        "severity": "low"
+        "mistake": "Overusing enums when simple constants would suffice",
+        "solution": "Use enums when you need a set of related constants with runtime values. For simple constants, consider using const assertions or object literals with as const.",
+        "severity": "medium"
+      },
+      {
+        "mistake": "Modifying arrays in ways that bypass TypeScript's type checking",
+        "solution": "Use immutable array methods (map, filter, slice) instead of mutable ones (push, pop, splice) when possible, and consider using readonly arrays to enforce immutability.",
+        "severity": "medium"
       }
     ],
     "exercises": [
       {
-        "title": "Practice: Arrays, Tuples, and Enums",
-        "description": "Apply the concepts from this lesson on Basic Types",
+        "title": "Collection Processing Pipeline",
+        "description": "Build a type-safe data processing pipeline using arrays, tuples, and enums",
         "checkpoints": [
-          "Understand the core concept",
-          "Implement the example code",
-          "Experiment with variations"
+          "Create a data processing function that takes an array of user data and returns processed results with type safety",
+          "Implement a coordinate system using tuples for position tracking",
+          "Design an API response handler using enums for status codes",
+          "Build a configuration system using string enums for environment settings",
+          "Create a data transformation pipeline that preserves types through map and filter operations"
         ]
       }
     ],
     "next": [],
-    "estimatedMinutes": 25,
-    "difficulty": "Intermediate",
+    "estimatedMinutes": 35,
+    "difficulty": "Beginner",
     "tags": [
-      "Basic Types",
+      "Arrays",
+      "Tuples",
+      "Enums",
+      "Collections",
       "typescript"
     ],
     "legacy": {
@@ -102,8 +123,8 @@
       "originalTopic": "Basic Types",
       "migrated": "2025-10-01T06:41:13.482Z"
     },
-    "lastUpdated": "2025-10-01T06:41:13.482Z",
-    "version": "1.0.0"
+    "lastUpdated": "2025-10-03T10:00:00.000Z",
+    "version": "1.1.0"
   },
   {
     "id": "typescript-fundamentals-lesson-3",
@@ -111,43 +132,53 @@
     "title": "Interface Declaration and Extension",
     "order": 3,
     "objectives": [
-      "Implement practical solutions",
-      "Build foundational understanding"
+      "Define interfaces to describe object shapes with required, optional, and readonly properties",
+      "Extend interfaces to create more specific object shapes through inheritance",
+      "Implement interface merging and declaration merging for flexible type definitions"
     ],
-    "intro": "Welcome to this comprehensive lesson on Interfaces.\n\nLearn how to define interfaces to describe the shape of objects, including optional properties, readonly properties, and extending interfaces.\n\nThroughout this lesson, you'll gain hands-on experience with practical implementations and real-world scenarios. We'll explore both the theoretical foundations and practical applications, ensuring you can immediately apply what you learn.\n\nThis lesson is designed to build upon previous concepts while introducing new techniques that will enhance your development skills. By the end, you'll have a solid understanding of the key principles and be ready to tackle more advanced topics.\n\nThe knowledge gained here will serve as a foundation for subsequent lessons and real-world projects.",
+    "intro": "Interfaces are one of TypeScript's most powerful features, providing a way to define contracts for object shapes and enabling powerful type checking capabilities. They serve as blueprints that describe the structure of objects, making code more predictable and self-documenting while enabling excellent IDE support with autocomplete and error detection.\n\nUnlike traditional object-oriented programming languages where interfaces are limited to class contracts, TypeScript interfaces can describe almost any shape of JavaScript objects, from simple objects to complex function types. This flexibility makes interfaces essential for working with existing JavaScript libraries and APIs while maintaining type safety.\n\nInterfaces support various modifiers including optional properties (marked with ?), readonly properties (marked with readonly), and index signatures for dynamic property access. These features allow you to accurately model the flexibility of JavaScript objects while maintaining compile-time type safety. Interface extension enables you to build upon existing interfaces, creating more specific contracts through inheritance.\n\nThis lesson will explore practical applications of interfaces in real-world scenarios, including API response modeling, configuration objects, and function parameter contracts. You'll learn advanced patterns such as interface merging, which allows multiple interface declarations with the same name to be combined, and how to use interfaces with function types and callable signatures.\n\nBy mastering interfaces, you'll be able to create more maintainable and robust TypeScript applications that accurately model your data structures while providing excellent development experience through IDE support and compile-time error detection.",
     "code": {
-      "example": "// Basic interface\ninterface Person {\n  firstName: string\n  lastName: string\n  age?: number  // Optional property\n  readonly ssn: string  // Readonly property\n}\n\nfunction greeter(person: Person) {\n  // person.ssn = \"123-45-6789\"  // Error! Cannot assign to 'ssn'\n  return `Hello, ${person.firstName} ${person.lastName}${person.age ? `, age ${person.age}` : ''}`\n}\n\nlet user = { firstName: \"Jane\", lastName: \"User\", ssn: \"123-45-6789\", age: 25 }\n\ngreeter(user)\n\n// Extending interfaces\ninterface Shape {\n  color: string\n}\n\ninterface Square extends Shape {\n  sideLength: number\n}\n\nlet square = <Square>{ color: \"blue\", sideLength: 10 }\n\n// Multiple inheritance\ninterface PenStroke {\n  penWidth: number\n}\n\ninterface Square2 extends Shape, PenStroke {\n  sideLength: number\n}\n\nlet square2 = <Square2>{ color: \"blue\", sideLength: 10, penWidth: 5.0 }",
-      "explanation": "This example produces: Type-safe object manipulation with interfaces, showing optional and readonly properties, and interface extension\n\nThe code demonstrates practical implementation techniques and shows how the concepts work in real scenarios. Pay attention to the structure and patterns used, as these represent industry best practices.",
+      "example": "// Basic interface with various property modifiers\ninterface User {\n  readonly id: number  // Cannot be changed after creation\n  firstName: string\n  lastName: string\n  email: string\n  age?: number  // Optional property\n  isActive: boolean\n}\n\n// Function using interface\nfunction createUser(user: User): User {\n  // user.id = 123  // Error! Cannot assign to readonly property\n  return {\n    ...user,\n    id: Math.floor(Math.random() * 1000000)\n  }\n}\n\n// Object implementing interface\nconst user: User = {\n  id: 1,\n  firstName: 'Jane',\n  lastName: 'Doe',\n  email: 'jane@example.com',\n  // age is optional\n  isActive: true\n}\n\n// Extending interfaces\ninterface BaseEntity {\n  readonly id: number\n  createdAt: Date\n  updatedAt: Date\n}\n\ninterface Product extends BaseEntity {\n  name: string\n  price: number\n  category: string\n  tags?: string[]  // Optional array\n}\n\ninterface DiscountedProduct extends Product {\n  discountPercentage: number\n  discountedPrice: number\n}\n\n// Multiple interface inheritance\ninterface Timestamped {\n  createdAt: Date\n  updatedAt: Date\n}\n\ninterface Named {\n  name: string\n}\n\ninterface Entity extends Timestamped, Named {\n  id: number\n}\n\n// Index signatures for dynamic properties\ninterface FlexibleUser {\n  name: string\n  [key: string]: any  // Allow additional properties\n}\n\n// Function interfaces\ninterface MathOperation {\n  (a: number, b: number): number\n}\n\nconst add: MathOperation = (a, b) => a + b\nconst multiply: MathOperation = (a, b) => a * b\n\n// Interface with method signatures\ninterface ShoppingCart {\n  items: string[]\n  addItem(item: string): void\n  removeItem(item: string): boolean\n  getItems(): string[]\n  getTotalItemCount(): number\n}\n\n// Interface merging (multiple declarations with same name are merged)\ninterface Window {\n  customProperty: string\n}\n\ninterface Window {\n  anotherProperty: number\n}\n\n// Now Window has both properties\n// const win: Window = { customProperty: 'test', anotherProperty: 42 }\n\n// Interface for array-like objects\ninterface StringArray {\n  [index: number]: string\n}\n\nconst myArray: StringArray = ['hello', 'world']\nconst secondItem = myArray[1]  // string\n\n// Hybrid types (objects that act as both function and object)\ninterface Counter {\n  (start: number): string\n  interval: number\n  reset(): void\n}",
+      "explanation": "This example demonstrates comprehensive interface usage in TypeScript:\n\n1. **Basic Interfaces**: Required, optional, and readonly properties\n2. **Interface Functions**: Using interfaces with functions and parameters\n3. **Interface Extension**: Single and multiple inheritance\n4. **Index Signatures**: Dynamic property access\n5. **Function Interfaces**: Typing function signatures\n6. **Method Signatures**: Interfaces with methods\n7. **Interface Merging**: Multiple declarations with same name\n8. **Array-like Interfaces**: Typing objects that behave like arrays\n9. **Hybrid Types**: Objects that act as both functions and objects\n\nThe output shows how interfaces provide compile-time type checking while maintaining JavaScript's flexibility. Readonly properties prevent accidental mutations, optional properties allow for flexible object structures, and interface extension enables code reuse.",
       "language": "typescript"
     },
     "pitfalls": [
       {
-        "mistake": "Not following best practices",
-        "solution": "Review documentation and community guidelines",
+        "mistake": "Using classes instead of interfaces when only type checking is needed",
+        "solution": "Use interfaces for pure type checking and contracts. Use classes when you need implementation details, constructors, or runtime behavior.",
         "severity": "medium"
       },
       {
-        "mistake": "Skipping error handling",
-        "solution": "Implement proper error boundaries and validation",
+        "mistake": "Not leveraging interface merging for extending global types",
+        "solution": "Use interface merging to add properties to global types like Window or Document without modifying the original declarations.",
+        "severity": "medium"
+      },
+      {
+        "mistake": "Over-engineering interfaces with too many optional properties",
+        "solution": "Consider breaking large interfaces with many optional properties into smaller, more specific interfaces that can be combined as needed.",
         "severity": "low"
       }
     ],
     "exercises": [
       {
-        "title": "Practice: Interface Declaration and Extension",
-        "description": "Apply the concepts from this lesson on Interfaces",
+        "title": "API Contract Design with Interfaces",
+        "description": "Design type-safe API contracts using interfaces for request/response objects",
         "checkpoints": [
-          "Understand the core concept",
-          "Implement the example code",
-          "Experiment with variations"
+          "Create interfaces for a user management API with request and response objects",
+          "Implement interface inheritance for base entities and specific resource types",
+          "Design flexible configuration interfaces with optional properties and index signatures",
+          "Build function interfaces for API service methods with proper error handling",
+          "Use interface merging to extend global browser objects with custom properties"
         ]
       }
     ],
     "next": [],
-    "estimatedMinutes": 25,
+    "estimatedMinutes": 40,
     "difficulty": "Intermediate",
     "tags": [
       "Interfaces",
+      "Type Contracts",
+      "Object Shapes",
       "typescript"
     ],
     "legacy": {
@@ -155,8 +186,8 @@
       "originalTopic": "Interfaces",
       "migrated": "2025-10-01T06:41:13.482Z"
     },
-    "lastUpdated": "2025-10-01T06:41:13.482Z",
-    "version": "1.0.0"
+    "lastUpdated": "2025-10-03T10:00:00.000Z",
+    "version": "1.1.0"
   },
   {
     "id": "typescript-fundamentals-lesson-4",
@@ -164,43 +195,54 @@
     "title": "Class Implementation with Access Modifiers and Abstract Classes",
     "order": 4,
     "objectives": [
-      "Implement practical solutions",
-      "Build foundational understanding"
+      "Implement classes with proper encapsulation using public, private, and protected access modifiers",
+      "Create abstract classes to define common behavior and enforce implementation contracts",
+      "Apply inheritance, method overriding, and polymorphism in object-oriented design"
     ],
-    "intro": "Welcome to this comprehensive lesson on Classes.\n\nLearn how to implement classes with access modifiers in TypeScript, including abstract classes and method overriding.\n\nThroughout this lesson, you'll gain hands-on experience with practical implementations and real-world scenarios. We'll explore both the theoretical foundations and practical applications, ensuring you can immediately apply what you learn.\n\nThis lesson is designed to build upon previous concepts while introducing new techniques that will enhance your development skills. By the end, you'll have a solid understanding of the key principles and be ready to tackle more advanced topics.\n\nThe knowledge gained here will serve as a foundation for subsequent lessons and real-world projects.",
+    "intro": "TypeScript classes provide a powerful object-oriented programming model that builds upon JavaScript's prototype-based inheritance while adding compile-time type checking and classical inheritance features. Classes in TypeScript support access modifiers, abstract classes, and other object-oriented concepts that make code more organized, maintainable, and reusable.\n\nAccess modifiers control the visibility of class members, enabling proper encapsulation and information hiding. Public members are accessible from anywhere, private members are only accessible within the class itself, and protected members are accessible within the class and its subclasses. These modifiers help create well-defined interfaces while hiding implementation details.\n\nAbstract classes serve as blueprints for other classes, defining common properties and methods while preventing direct instantiation. They can contain both implemented methods that provide shared functionality and abstract methods that must be implemented by derived classes. This pattern is essential for creating flexible and extensible class hierarchies.\n\nInheritance allows classes to extend other classes, inheriting their properties and methods while adding or overriding functionality. Method overriding enables subclasses to provide specific implementations of methods defined in their parent classes, supporting polymorphism where objects of different classes can be treated uniformly through their common interface.\n\nThis lesson will explore practical applications of classes in real-world scenarios, including domain modeling, service layer implementation, and framework development. You'll learn advanced patterns such as parameter properties, accessors, static members, and how to effectively combine classes with interfaces for maximum flexibility.\n\nBy mastering TypeScript classes, you'll be able to create well-structured applications that leverage object-oriented principles while maintaining type safety and excellent tooling support.",
     "code": {
-      "example": "abstract class Department {\n  // Public by default\n  name: string\n  \n  // Protected - accessible within class and subclasses\n  protected employees: string[] = []\n  \n  // Private - only accessible within this class\n  private readonly id: string\n  \n  constructor(id: string, n: string) {\n    this.id = id\n    this.name = n\n  }\n  \n  // Abstract method - must be implemented in derived classes\n  abstract describe(): void\n  \n  addEmployee(employee: string) {\n    this.employees.push(employee)\n  }\n  \n  printEmployeeInformation() {\n    console.log(`Department: ${this.name} (${this.id})`)\n    console.log('Employees:', this.employees)\n  }\n}\n\nclass ITDepartment extends Department {\n  admins: string[]\n  \n  constructor(id: string, admins: string[]) {\n    super(id, 'IT')  // Call parent constructor\n    this.admins = admins\n  }\n  \n  describe() {\n    console.log(`IT Department - ID: ${this.id}`)\n  }\n  \n  addEmployee(name: string) {\n    if (name === 'Bill') {\n      return  // Don't add Bill\n    }\n    super.addEmployee(name)  // Call parent method\n  }\n}\n\nlet it = new ITDepartment('d1', ['Max'])\nit.addEmployee('Max')\nit.addEmployee('Bill')  // Won't be added\nit.printEmployeeInformation()\nit.describe()",
-      "explanation": "This example produces: Class hierarchy with proper encapsulation, abstract classes, and method overriding\n\nThe code demonstrates practical implementation techniques and shows how the concepts work in real scenarios. Pay attention to the structure and patterns used, as these represent industry best practices.",
+      "example": "// Base class with access modifiers\nabstract class Entity {\n  // Public by default - accessible everywhere\n  id: number\n  \n  // Protected - accessible in this class and subclasses\n  protected createdAt: Date\n  \n  // Private - only accessible in this class\n  private _version: number = 1\n  \n  // Parameter properties - shorthand for declaring and initializing\n  constructor(\n    id: number,\n    protected readonly name: string  // readonly protected property\n  ) {\n    this.id = id\n    this.createdAt = new Date()\n  }\n  \n  // Abstract method - must be implemented by subclasses\n  abstract save(): Promise<void>\n  \n  // Concrete method - can be overridden\n  validate(): boolean {\n    return this.id > 0 && this.name.length > 0\n  }\n  \n  // Getter and setter\n  get version(): number {\n    return this._version\n  }\n  \n  protected incrementVersion(): void {\n    this._version++\n  }\n  \n  // Static method\n  static generateId(): number {\n    return Math.floor(Math.random() * 1000000)\n  }\n}\n\n// Concrete implementation\nclass User extends Entity {\n  private _email: string\n  public isActive: boolean = true\n  \n  constructor(\n    id: number,\n    name: string,\n    email: string\n  ) {\n    super(id, name)  // Call parent constructor\n    this._email = email\n  }\n  \n  // Implement abstract method\n  async save(): Promise<void> {\n    if (!this.validate()) {\n      throw new Error('Invalid user data')\n    }\n    \n    // Save logic here\n    this.incrementVersion()  // Protected method from parent\n    console.log(`User ${this.name} saved with version ${this.version}`)\n  }\n  \n  // Override parent method\n  validate(): boolean {\n    return super.validate() && this._email.includes('@')\n  }\n  \n  // Getter and setter for private property\n  get email(): string {\n    return this._email\n  }\n  \n  set email(value: string) {\n    if (!value.includes('@')) {\n      throw new Error('Invalid email format')\n    }\n    this._email = value\n    this.incrementVersion()  // Protected method\n  }\n  \n  // Method specific to User\n  deactivate(): void {\n    this.isActive = false\n    this.incrementVersion()\n  }\n}\n\n// Another concrete implementation\nclass Product extends Entity {\n  constructor(\n    id: number,\n    name: string,\n    public price: number  // Public parameter property\n  ) {\n    super(id, name)\n  }\n  \n  async save(): Promise<void> {\n    if (!this.validate()) {\n      throw new Error('Invalid product data')\n    }\n    \n    // Save logic here\n    this.incrementVersion()\n    console.log(`Product ${this.name} saved with version ${this.version}`)\n  }\n  \n  // Override parent method\n  validate(): boolean {\n    return super.validate() && this.price > 0\n  }\n}\n\n// Usage examples\nconst user = new User(1, 'John Doe', 'john@example.com')\nconst product = new Product(Entity.generateId(), 'Laptop', 999.99)\n\n// Polymorphism - treating different objects uniformly\nconst entities: Entity[] = [user, product]\n\nasync function saveAll(entities: Entity[]): Promise<void> {\n  for (const entity of entities) {\n    await entity.save()  // Calls the appropriate save method\n  }\n}\n\n// Access control examples\nconsole.log(user.id)        // OK - public\nconsole.log(user.name)      // OK - protected but accessible in constructor\n// console.log(user._email) // Error! private property\nconsole.log(user.email)     // OK - using getter\n\nuser.email = 'new@example.com'  // OK - using setter\n// user.createdAt = new Date()  // Error! protected property\n\n// Static method usage\nconst newId = Entity.generateId()",
+      "explanation": "This example demonstrates comprehensive class usage in TypeScript:\n\n1. **Access Modifiers**: Public, private, and protected with parameter properties\n2. **Abstract Classes**: Base class with abstract and concrete methods\n3. **Inheritance**: Extending base classes with super() calls\n4. **Method Overriding**: Custom implementations in subclasses\n5. **Getters and Setters**: Property access control\n6. **Static Members**: Class-level methods and properties\n7. **Polymorphism**: Treating different objects through common interface\n8. **Encapsulation**: Information hiding with private members\n\nThe output shows how TypeScript provides compile-time access control while maintaining JavaScript's flexibility. Private properties prevent external access, protected properties allow subclass access, and polymorphism enables treating different objects uniformly.",
       "language": "typescript"
     },
     "pitfalls": [
       {
-        "mistake": "Not following best practices",
-        "solution": "Review documentation and community guidelines",
+        "mistake": "Overusing inheritance instead of composition for code reuse",
+        "solution": "Favor composition over inheritance when possible. Use inheritance for 'is-a' relationships and composition for 'has-a' relationships.",
         "severity": "medium"
       },
       {
-        "mistake": "Skipping error handling",
-        "solution": "Implement proper error boundaries and validation",
-        "severity": "low"
+        "mistake": "Not properly implementing abstract methods in derived classes",
+        "solution": "Ensure all abstract methods are implemented in concrete subclasses, and use abstract base classes to define common contracts.",
+        "severity": "high"
+      },
+      {
+        "mistake": "Making everything public, breaking encapsulation",
+        "solution": "Use private for implementation details, protected for subclass access, and public only for intended external interfaces.",
+        "severity": "medium"
       }
     ],
     "exercises": [
       {
-        "title": "Practice: Class Implementation with Access Modifiers and Abstract Classes",
-        "description": "Apply the concepts from this lesson on Classes",
+        "title": "Domain Modeling with TypeScript Classes",
+        "description": "Create a type-safe domain model using classes, inheritance, and abstract base classes",
         "checkpoints": [
-          "Understand the core concept",
-          "Implement the example code",
-          "Experiment with variations"
+          "Design an abstract base class for domain entities with common properties and methods",
+          "Implement concrete classes for different entity types with proper encapsulation",
+          "Create a polymorphic service that can operate on different entity types",
+          "Implement validation logic using method overriding in subclasses",
+          "Use parameter properties and accessors to reduce boilerplate code"
         ]
       }
     ],
     "next": [],
-    "estimatedMinutes": 25,
+    "estimatedMinutes": 45,
     "difficulty": "Intermediate",
     "tags": [
       "Classes",
+      "OOP",
+      "Inheritance",
+      "Encapsulation",
       "typescript"
     ],
     "legacy": {
@@ -208,8 +250,8 @@
       "originalTopic": "Classes",
       "migrated": "2025-10-01T06:41:13.482Z"
     },
-    "lastUpdated": "2025-10-01T06:41:13.482Z",
-    "version": "1.0.0"
+    "lastUpdated": "2025-10-03T10:00:00.000Z",
+    "version": "1.1.0"
   },
   {
     "id": "typescript-fundamentals-lesson-5",
@@ -217,43 +259,53 @@
     "title": "Generic Types and Constraints",
     "order": 5,
     "objectives": [
-      "Master component creation and usage",
-      "Implement practical solutions"
+      "Create reusable components using generic types to maintain type safety across different data types",
+      "Apply generic constraints to limit acceptable types and access specific properties or methods",
+      "Implement generic interfaces, classes, and functions for flexible and type-safe code"
     ],
-    "intro": "Welcome to this comprehensive lesson on Generics.\n\nLearn how to create reusable components with generics, including generic constraints for more precise type safety.\n\nThroughout this lesson, you'll gain hands-on experience with practical implementations and real-world scenarios. We'll explore both the theoretical foundations and practical applications, ensuring you can immediately apply what you learn.\n\nThis lesson is designed to build upon previous concepts while introducing new techniques that will enhance your development skills. By the end, you'll have a solid understanding of the key principles and be ready to tackle more advanced topics.\n\nThe knowledge gained here will serve as a foundation for subsequent lessons and real-world projects.",
+    "intro": "Generics are a fundamental feature of TypeScript that enable you to create reusable components while preserving type information. They provide a way to create functions, interfaces, and classes that work with multiple types without sacrificing type safety. Generics are essential for building flexible libraries and frameworks that can work with a variety of data types while maintaining compile-time type checking.\n\nGeneric functions allow you to write code that works with any type, while generic constraints enable you to limit the acceptable types and access specific properties or methods. This combination provides both flexibility and type safety, ensuring that your generic components can only be used with compatible types.\n\nGeneric interfaces and classes enable you to define type-safe data structures and services that work with multiple types. This is particularly useful for collections, data processing pipelines, and API clients where the same operations need to work with different data types.\n\nThis lesson will explore practical applications of generics in real-world scenarios, including data transformation utilities, type-safe APIs, and flexible data structures. You'll learn advanced patterns such as conditional types with generics, generic type inference, and how to create generic utility types that can be reused across your application.\n\nBy mastering generics, you'll be able to create more flexible and reusable code that maintains type safety across different data types, making your TypeScript applications more robust and maintainable.",
     "code": {
-      "example": "// Simple generic function\nfunction identity<T>(arg: T): T {\n  return arg\n}\n\nlet output1 = identity<string>(\"myString\")\nlet output2 = identity(\"myString\")  // Type argument inferred\n\n// Generic interface\ninterface GenericIdentityFn<T> {\n  (arg: T): T\n}\n\nfunction identity2<T>(arg: T): T {\n  return arg\n}\n\nlet myIdentity: GenericIdentityFn<number> = identity2\n\n// Generic class\nclass GenericNumber<T> {\n  zeroValue: T\n  add: (x: T, y: T) => T\n}\n\nlet myGenericNumber = new GenericNumber<number>()\nmyGenericNumber.zeroValue = 0\nmyGenericNumber.add = function(x, y) {\n  return x + y\n}\n\n// Generic constraints\ninterface Lengthwise {\n  length: number\n}\n\nfunction loggingIdentity<T extends Lengthwise>(arg: T): T {\n  console.log(arg.length)  // Now we know it has a .length property\n  return arg\n}\n\nloggingIdentity(\"hello\")  // OK - string has length\nloggingIdentity([1, 2, 3])  // OK - array has length\n// loggingIdentity(3)  // Error - number doesn't have length\n\n// Using type parameters in generic constraints\nfunction getProperty<T, K extends keyof T>(obj: T, key: K) {\n  return obj[key]\n}\n\nlet x = { a: 1, b: 2, c: 3, d: 4 }\ngetProperty(x, \"a\")  // OK\n// getProperty(x, \"m\")  // Error - Argument of type '\"m\"' is not assignable to parameter of type '\"a\" | \"b\" | \"c\" | \"d\"'",
-      "explanation": "This example produces: Type-safe generic functions, interfaces, and classes with constraints for flexible yet safe type usage\n\nThe code demonstrates practical implementation techniques and shows how the concepts work in real scenarios. Pay attention to the structure and patterns used, as these represent industry best practices.",
+      "example": "// Simple generic function\nfunction identity<T>(arg: T): T {\n  return arg\n}\n\n// Usage with explicit type argument\nlet output1 = identity<string>(\"myString\")\n// Usage with type inference\nlet output2 = identity(\"myString\")  // T is inferred as string\n\n// Generic interface\ninterface GenericIdentityFn<T> {\n  (arg: T): T\n}\n\nlet myIdentity: GenericIdentityFn<number> = identity\n\n// Generic class\nclass GenericNumber<T> {\n  zeroValue: T\n  add: (x: T, y: T) => T\n  \n  constructor(zeroValue: T) {\n    this.zeroValue = zeroValue\n    this.add = (x, y) => {\n      // This won't work for all types, but shows the concept\n      return (x as any) + (y as any)\n    }\n  }\n}\n\nlet myGenericNumber = new GenericNumber<number>(0)\nconsole.log(myGenericNumber.add(10, 20))  // 30\n\n// Generic constraints - limiting acceptable types\ninterface Lengthwise {\n  length: number\n}\n\nfunction loggingIdentity<T extends Lengthwise>(arg: T): T {\n  console.log(`Length: ${arg.length}`)  // Now we know it has a .length property\n  return arg\n}\n\n// These work because they have length property\nloggingIdentity(\"hello\")        // string has length\nloggingIdentity([1, 2, 3])       // array has length\nloggingIdentity({ length: 5 })   // object has length property\n\n// This would error:\n// loggingIdentity(3)  // Error - number doesn't have length\n\n// Using type parameters in generic constraints\nfunction getProperty<T, K extends keyof T>(obj: T, key: K): T[K] {\n  return obj[key]\n}\n\nlet x = { a: 1, b: 2, c: 3, d: 4 }\nlet aValue = getProperty(x, \"a\")  // number\nlet bValue = getProperty(x, \"b\")  // number\n// let mValue = getProperty(x, \"m\")  // Error - \"m\" is not a key of x\n\n// Generic utility function with multiple constraints\ninterface HasName {\n  name: string\n}\n\nfunction findByName<T extends HasName>(items: T[], name: string): T | undefined {\n  return items.find(item => item.name === name)\n}\n\nconst users = [\n  { name: 'Alice', age: 30 },\n  { name: 'Bob', age: 25 }\n]\n\nconst foundUser = findByName(users, 'Alice')  // Type is { name: string, age: number } | undefined\n\n// Generic class with multiple type parameters\nclass KeyValuePair<K, V> {\n  constructor(\n    public key: K,\n    public value: V\n  ) {}\n  \n  display(): void {\n    console.log(`Key: ${this.key}, Value: ${this.value}`)\n  }\n}\n\nconst stringNumberPair = new KeyValuePair<string, number>('age', 30)\nconst booleanStringPair = new KeyValuePair<boolean, string>(true, 'active')\n\n// Generic interface with default type\ninterface Repository<T = any> {\n  findById(id: string): Promise<T | null>\n  findAll(): Promise<T[]>\n  create(data: Partial<T>): Promise<T>\n  update(id: string, data: Partial<T>): Promise<T | null>\n  delete(id: string): Promise<boolean>\n}\n\n// Using the generic interface\ninterface User {\n  id: string\n  name: string\n  email: string\n}\n\nconst userRepository: Repository<User> = {\n  findById: async (id) => null,\n  findAll: async () => [],\n  create: async (data) => ({ id: '1', name: 'Test', email: 'test@example.com', ...data } as User),\n  update: async (id, data) => null,\n  delete: async (id) => true\n}\n\n// Generic type alias\ntype Container<T> = {\n  value: T\n  timestamp: Date\n  isValid: boolean\n}\n\nconst stringContainer: Container<string> = {\n  value: 'hello',\n  timestamp: new Date(),\n  isValid: true\n}",
+      "explanation": "This example demonstrates comprehensive generic usage in TypeScript:\n\n1. **Generic Functions**: Type-safe functions that work with any type\n2. **Generic Interfaces**: Interfaces that can be parameterized with types\n3. **Generic Classes**: Classes with type parameters for flexible instantiation\n4. **Generic Constraints**: Limiting acceptable types with extends\n5. **Keyof Constraints**: Using keyof operator for type-safe property access\n6. **Multiple Type Parameters**: Generic components with multiple type variables\n7. **Default Generic Types**: Providing default types for generic parameters\n8. **Generic Type Aliases**: Type aliases with generic parameters\n\nThe output shows how generics provide type safety while maintaining flexibility. Type inference reduces boilerplate, constraints ensure compatibility, and multiple type parameters enable complex generic components.",
       "language": "typescript"
     },
     "pitfalls": [
       {
-        "mistake": "Not following best practices",
-        "solution": "Review documentation and community guidelines",
+        "mistake": "Over-constraining generics, making them less reusable",
+        "solution": "Use the minimal constraints necessary for your generic components to work. Add constraints only when you need to access specific properties or methods.",
         "severity": "medium"
       },
       {
-        "mistake": "Skipping error handling",
-        "solution": "Implement proper error boundaries and validation",
-        "severity": "low"
+        "mistake": "Not leveraging type inference, requiring explicit type arguments",
+        "solution": "Allow TypeScript to infer generic types when possible by structuring your function parameters to provide sufficient information for inference.",
+        "severity": "medium"
+      },
+      {
+        "mistake": "Using any instead of generics for flexible functions",
+        "solution": "Use generics to maintain type safety while providing flexibility. Generics preserve type information through the call chain, unlike any which loses type information.",
+        "severity": "high"
       }
     ],
     "exercises": [
       {
-        "title": "Practice: Generic Types and Constraints",
-        "description": "Apply the concepts from this lesson on Generics",
+        "title": "Generic Data Processing Pipeline",
+        "description": "Create a type-safe data processing pipeline using generics and generic constraints",
         "checkpoints": [
-          "Understand the core concept",
-          "Implement the example code",
-          "Experiment with variations"
+          "Implement a generic map function that maintains type information through transformations",
+          "Create a generic filter function with constraints for type-safe filtering",
+          "Design a generic repository interface with CRUD operations",
+          "Build a generic validation system using constraints to access required properties",
+          "Implement a generic caching mechanism with type-safe key-value storage"
         ]
       }
     ],
     "next": [],
-    "estimatedMinutes": 25,
+    "estimatedMinutes": 40,
     "difficulty": "Intermediate",
     "tags": [
       "Generics",
+      "Type Safety",
+      "Reusability",
       "typescript"
     ],
     "legacy": {
@@ -261,8 +313,8 @@
       "originalTopic": "Generics",
       "migrated": "2025-10-01T06:41:13.482Z"
     },
-    "lastUpdated": "2025-10-01T06:41:13.482Z",
-    "version": "1.0.0"
+    "lastUpdated": "2025-10-03T10:00:00.000Z",
+    "version": "1.1.0"
   },
   {
     "id": "typescript-fundamentals-lesson-6",
@@ -270,43 +322,54 @@
     "title": "Union, Intersection, and Conditional Types",
     "order": 6,
     "objectives": [
-      "Implement practical solutions",
-      "Build foundational understanding"
+      "Combine types using union and intersection types for flexible type compositions",
+      "Implement discriminated unions for type-safe handling of variant data structures",
+      "Create conditional types that transform types based on type relationships"
     ],
-    "intro": "Welcome to this comprehensive lesson on Advanced Types.\n\nLearn about advanced type compositions including union types, intersection types, and conditional types.\n\nThroughout this lesson, you'll gain hands-on experience with practical implementations and real-world scenarios. We'll explore both the theoretical foundations and practical applications, ensuring you can immediately apply what you learn.\n\nThis lesson is designed to build upon previous concepts while introducing new techniques that will enhance your development skills. By the end, you'll have a solid understanding of the key principles and be ready to tackle more advanced topics.\n\nThe knowledge gained here will serve as a foundation for subsequent lessons and real-world projects.",
+    "intro": "Union, intersection, and conditional types are advanced TypeScript features that enable sophisticated type transformations and compositions. These features allow you to create more precise and flexible type definitions that can adapt to complex data structures and varying requirements. Understanding these concepts is essential for building type-safe libraries and working with complex APIs.\n\nUnion types represent a value that can be one of several types, using the | operator to combine types. They're particularly useful for function parameters that accept multiple types, optional properties, and handling different response formats from APIs. Type narrowing through type guards allows you to safely work with union types by checking the actual type at runtime.\n\nIntersection types combine multiple types into one, using the & operator to merge type definitions. They're ideal for extending existing types, combining interfaces, and creating complex object shapes that satisfy multiple contracts. Intersection types enable powerful mixin patterns and help with code organization.\n\nConditional types enable you to express type transformations that depend on type relationships, using the T extends U ? X : Y syntax. They're fundamental to many of TypeScript's built-in utility types and allow you to create sophisticated type-level logic that adapts based on the input types.\n\nThis lesson will explore practical applications of these advanced types in real-world scenarios, including API response handling, state management, and library development. You'll learn advanced patterns such as discriminated unions for variant types, distributive conditional types, and how to create your own utility types.\n\nBy mastering union, intersection, and conditional types, you'll be able to create more precise and flexible type definitions that adapt to complex requirements while maintaining compile-time type safety.",
     "code": {
-      "example": "// Union types\ntype StringOrNumber = string | number\n\nfunction printId(id: StringOrNumber) {\n  if (typeof id === 'string') {\n    console.log(`ID (string): ${id.toUpperCase()}`)\n  } else {\n    console.log(`ID (number): ${id.toFixed(2)}`)\n  }\n}\n\nprintId('abc123')\nprintId(12345)\n\n// Intersection types\ninterface Person {\n  name: string\n}\n\ninterface Employee {\n  employeeId: number\n}\n\ntype PersonEmployee = Person & Employee\n\nconst worker: PersonEmployee = {\n  name: 'John Doe',\n  employeeId: 12345\n}\n\n// Discriminated unions\ninterface Square {\n  kind: 'square'\n  size: number\n}\n\ninterface Rectangle {\n  kind: 'rectangle'\n  width: number\n  height: number\n}\n\ninterface Circle {\n  kind: 'circle'\n  radius: number\n}\n\ntype Shape = Square | Rectangle | Circle\n\nfunction getArea(shape: Shape): number {\n  switch (shape.kind) {\n    case 'square':\n      return shape.size * shape.size\n    case 'rectangle':\n      return shape.width * shape.height\n    case 'circle':\n      return Math.PI * shape.radius ** 2\n    default:\n      const _exhaustiveCheck: never = shape\n      return _exhaustiveCheck\n  }\n}\n\n// Conditional types\ntype NonNullable<T> = T extends null | undefined ? never : T\ntype StringsOnly<T> = T extends string ? T : never\n\ntype A = NonNullable<string | null>  // string\ntype B = StringsOnly<string | number>  // string",
-      "explanation": "This example produces: ID (string): ABC123\nID (number): 12345.00\nDemonstrates union types, intersection types, and type-safe discriminated unions\n\nThe code demonstrates practical implementation techniques and shows how the concepts work in real scenarios. Pay attention to the structure and patterns used, as these represent industry best practices.",
+      "example": "// Union types - representing values that can be multiple types\ntype StringOrNumber = string | number\ntype Status = 'pending' | 'approved' | 'rejected'\ntype ApiResponse<T> = { data: T; status: 'success' } | { error: string; status: 'error' }\n\nfunction printId(id: StringOrNumber) {\n  if (typeof id === 'string') {\n    // TypeScript knows id is string here\n    console.log(`ID (string): ${id.toUpperCase()}`)\n  } else {\n    // TypeScript knows id is number here\n    console.log(`ID (number): ${id.toFixed(2)}`)\n  }\n}\n\n// Union with literal types for finite sets\nfunction handleStatus(status: Status): string {\n  switch (status) {\n    case 'pending':\n      return 'Request is pending approval'\n    case 'approved':\n      return 'Request approved'\n    case 'rejected':\n      return 'Request rejected'\n    // TypeScript ensures all cases are handled\n  }\n}\n\n// Intersection types - combining multiple types\ninterface Person {\n  name: string\n  age: number\n}\n\ninterface Employee {\n  employeeId: number\n  department: string\n}\n\ninterface Manager {\n  reports: string[]\n  level: 'junior' | 'senior'\n}\n\n// Combine multiple interfaces\ntype EmployeePerson = Person & Employee\ntype ManagerEmployee = EmployeePerson & Manager\n\nconst manager: ManagerEmployee = {\n  name: 'Alice Johnson',\n  age: 35,\n  employeeId: 12345,\n  department: 'Engineering',\n  reports: ['Bob', 'Carol'],\n  level: 'senior'\n}\n\n// Discriminated unions - type-safe variant handling\ninterface LoadingState {\n  status: 'loading'\n}\n\ninterface SuccessState<T> {\n  status: 'success'\n  data: T\n}\n\ninterface ErrorState {\n  status: 'error'\n  message: string\n  code: number\n}\n\ntype AsyncState<T> = LoadingState | SuccessState<T> | ErrorState\n\nfunction handleAsyncState<T>(state: AsyncState<T>): string {\n  switch (state.status) {\n    case 'loading':\n      return 'Loading...'\n    case 'success':\n      // TypeScript knows state is SuccessState<T> here\n      return `Success: ${JSON.stringify(state.data)}`\n    case 'error':\n      // TypeScript knows state is ErrorState here\n      return `Error ${state.code}: ${state.message}`\n    default:\n      // Exhaustive check - if all cases are handled, type is never\n      const _exhaustive: never = state\n      return _exhaustive\n  }\n}\n\n// Conditional types - transforming types based on conditions\ntype NonNullable<T> = T extends null | undefined ? never : T\ntype StringsOnly<T> = T extends string ? T : never\ntype Without<T, U> = T extends U ? never : T\n\n// Distributive conditional types\ntype Diff<T, U> = T extends U ? never : T\ntype Filter<T, U> = T extends U ? T : never\n\ntype A = NonNullable<string | null | undefined>  // string\ntype B = StringsOnly<string | number | boolean>  // string\ntype C = Without<'a' | 'b' | 'c', 'a'>  // 'b' | 'c'\n\n// Conditional types with inference\ntype ReturnType<T> = T extends (...args: any[]) => infer R ? R : any\ntype ParamType<T> = T extends (arg: infer P) => any ? P : any\n\nfunction createUser(name: string, age: number): { name: string; age: number } {\n  return { name, age }\n}\n\ntype UserReturnType = ReturnType<typeof createUser>  // { name: string; age: number }\ntype CreateUserParam = ParamType<typeof createUser>  // Error: Can't infer single param from multiple params\n\n// Advanced conditional type with multiple constraints\ntype Flatten<T> = T extends Array<infer U> ? U : T\ntype StringKeys<T> = T extends { [K in keyof T]: string } ? keyof T : never\n\ntype Numbers = Flatten<number[]>  // number\ntype NotArray = Flatten<string>   // string\n\ninterface StringMap {\n  name: string\n  email: string\n  id: string\n}\n\ntype StringProperties = StringKeys<StringMap>  // 'name' | 'email' | 'id'",
+      "explanation": "This example demonstrates advanced type composition in TypeScript:\n\n1. **Union Types**: Combining types with | operator and type narrowing\n2. **Literal Types**: Finite sets of allowed values\n3. **Intersection Types**: Merging multiple type definitions\n4. **Discriminated Unions**: Type-safe handling of variant data structures\n5. **Conditional Types**: Transforming types based on type relationships\n6. **Distributive Types**: Conditional types that distribute over union types\n7. **Infer Keyword**: Extracting type information within conditional types\n8. **Exhaustive Checks**: Ensuring all union cases are handled\n\nThe output shows how these advanced types provide compile-time safety while maintaining JavaScript's flexibility. Discriminated unions enable type-safe state handling, and conditional types allow for sophisticated type transformations.",
       "language": "typescript"
     },
     "pitfalls": [
       {
-        "mistake": "Not following best practices",
-        "solution": "Review documentation and community guidelines",
+        "mistake": "Overcomplicating type definitions with unnecessary union or intersection types",
+        "solution": "Use union types when a value can legitimately be multiple types, and intersection types when you need to combine multiple contracts. Avoid creating complex type compositions that hurt readability.",
         "severity": "medium"
       },
       {
-        "mistake": "Skipping error handling",
-        "solution": "Implement proper error boundaries and validation",
-        "severity": "low"
+        "mistake": "Not properly handling all cases in discriminated unions",
+        "solution": "Use exhaustive checks with never type to ensure all union cases are handled, and leverage TypeScript's error reporting when cases are missing.",
+        "severity": "high"
+      },
+      {
+        "mistake": "Misunderstanding distributive conditional types behavior",
+        "solution": "Remember that conditional types distribute over union types, which can lead to unexpected results. Use explicit array wrappers [] to prevent distribution when needed.",
+        "severity": "medium"
       }
     ],
     "exercises": [
       {
-        "title": "Practice: Union, Intersection, and Conditional Types",
-        "description": "Apply the concepts from this lesson on Advanced Types",
+        "title": "Advanced Type Composition Patterns",
+        "description": "Create sophisticated type definitions using union, intersection, and conditional types",
         "checkpoints": [
-          "Understand the core concept",
-          "Implement the example code",
-          "Experiment with variations"
+          "Implement a type-safe state management system using discriminated unions",
+          "Create utility types for common type transformations using conditional types",
+          "Design flexible API response types that handle multiple response formats",
+          "Build a configuration system with type-safe option combinations using intersection types",
+          "Implement exhaustive type checking for complex union types"
         ]
       }
     ],
     "next": [],
-    "estimatedMinutes": 25,
+    "estimatedMinutes": 45,
     "difficulty": "Advanced",
     "tags": [
-      "Advanced Types",
+      "Union Types",
+      "Intersection Types",
+      "Conditional Types",
+      "Type Composition",
       "typescript"
     ],
     "legacy": {
@@ -314,8 +377,8 @@
       "originalTopic": "Advanced Types",
       "migrated": "2025-10-01T06:41:13.482Z"
     },
-    "lastUpdated": "2025-10-01T06:41:13.482Z",
-    "version": "1.0.0"
+    "lastUpdated": "2025-10-03T10:00:00.000Z",
+    "version": "1.1.0"
   },
   {
     "id": "typescript-fundamentals-lesson-7",
@@ -323,43 +386,53 @@
     "title": "Type Guards and Type Assertions",
     "order": 7,
     "objectives": [
-      "Implement practical solutions",
-      "Build foundational understanding"
+      "Implement custom type guard functions to narrow types at runtime",
+      "Apply built-in type guards including typeof, instanceof, and in operators",
+      "Use type assertions and the non-null assertion operator safely and appropriately"
     ],
-    "intro": "Welcome to this comprehensive lesson on Type Guards.\n\nLearn how to narrow types using type guards and safely assert types in TypeScript.\n\nThroughout this lesson, you'll gain hands-on experience with practical implementations and real-world scenarios. We'll explore both the theoretical foundations and practical applications, ensuring you can immediately apply what you learn.\n\nThis lesson is designed to build upon previous concepts while introducing new techniques that will enhance your development skills. By the end, you'll have a solid understanding of the key principles and be ready to tackle more advanced topics.\n\nThe knowledge gained here will serve as a foundation for subsequent lessons and real-world projects.",
+    "intro": "Type guards and type assertions are essential techniques for working with TypeScript's type system when dealing with values of unknown or union types. Type guards enable you to narrow types at runtime, allowing TypeScript to provide more precise type information in specific code branches. This is particularly important when working with API responses, user input, or any external data that doesn't have compile-time type information.\n\nCustom type guard functions use the value is Type syntax to create reusable type-checking logic that narrows types within conditional blocks. Built-in type guards include typeof for primitive types, instanceof for class instances, and the in operator for checking object properties. These built-in guards work with TypeScript's control flow analysis to automatically narrow types in conditional branches.\n\nType assertions allow you to tell TypeScript that you know more about a value's type than it can infer, but they should be used carefully as they bypass type checking. The non-null assertion operator (!) is a specialized assertion that tells TypeScript a value is not null or undefined, but it can cause runtime errors if used incorrectly.\n\nThis lesson will explore practical applications of type guards and assertions in real-world scenarios, including API response handling, form validation, and error handling. You'll learn advanced patterns such as user-defined type guards, type predicates with generics, and safe assertion techniques that minimize runtime errors.\n\nBy mastering type guards and assertions, you'll be able to work confidently with dynamic data while maintaining TypeScript's compile-time safety guarantees, creating more robust applications that handle uncertainty gracefully.",
     "code": {
-      "example": "// Type predicate functions\nfunction isString(value: unknown): value is string {\n  return typeof value === 'string'\n}\n\nfunction isNumber(value: unknown): value is number {\n  return typeof value === 'number'\n}\n\n// Using type guards\nfunction processValue(value: unknown) {\n  if (isString(value)) {\n    // TypeScript knows value is string here\n    console.log(`String length: ${value.length}`)\n  } else if (isNumber(value)) {\n    // TypeScript knows value is number here\n    console.log(`Number fixed: ${value.toFixed(2)}`)\n  } else {\n    console.log('Unknown type')\n  }\n}\n\nprocessValue('Hello')\nprocessValue(42.123)\nprocessValue(true)\n\n// instanceof type guard\nclass Bird {\n  fly() {\n    console.log('Flying!')\n  }\n  layEggs() {\n    console.log('Laying eggs!')\n  }\n}\n\nclass Fish {\n  swim() {\n    console.log('Swimming!')\n  }\n  layEggs() {\n    console.log('Laying eggs!')\n  }\n}\n\nfunction getAnimal(): Bird | Fish {\n  return Math.random() > 0.5 ? new Bird() : new Fish()\n}\n\nfunction moveAnimal(animal: Bird | Fish) {\n  if (animal instanceof Bird) {\n    animal.fly()  // TypeScript knows it's a Bird\n  } else {\n    animal.swim()  // TypeScript knows it's a Fish\n  }\n  animal.layEggs()  // Available on both\n}\n\n// Type assertions\nconst someValue: unknown = 'this is a string'\nconst strLength: number = (someValue as string).length\n\n// Non-null assertion operator\nfunction processName(name: string | null) {\n  // We know name is not null here\n  console.log(name!.charAt(0))\n}",
-      "explanation": "This example produces: String length: 5\nNumber fixed: 42.12\nUnknown type\nFlying! or Swimming!\nLaying eggs!\n\nThe code demonstrates practical implementation techniques and shows how the concepts work in real scenarios. Pay attention to the structure and patterns used, as these represent industry best practices.",
+      "example": "// typeof type guards for primitive types\nfunction padLeft(value: string, padding: string | number) {\n  if (typeof padding === 'number') {\n    // TypeScript knows padding is number here\n    return ' '.repeat(padding) + value\n  }\n  if (typeof padding === 'string') {\n    // TypeScript knows padding is string here\n    return padding + value\n  }\n  throw new Error('Expected string or number')\n}\n\n// instanceof type guards for class instances\nclass Bird {\n  fly() {\n    console.log('Flying!')\n  }\n  layEggs() {\n    console.log('Laying eggs!')\n  }\n}\n\nclass Fish {\n  swim() {\n    console.log('Swimming!')\n  }\n  layEggs() {\n    console.log('Laying eggs!')\n  }\n}\n\nfunction moveAnimal(animal: Bird | Fish) {\n  if (animal instanceof Bird) {\n    // TypeScript knows animal is Bird here\n    animal.fly()\n  } else {\n    // TypeScript knows animal is Fish here\n    animal.swim()\n  }\n  // This method exists on both types\n  animal.layEggs()\n}\n\n// in operator type guards for object properties\ninterface Admin {\n  name: string\n  privileges: string[]\n}\n\ninterface Employee {\n  name: string\n  startDate: Date\n}\n\ntype UnknownEmployee = Employee | Admin\n\nfunction printEmployeeInformation(emp: UnknownEmployee) {\n  console.log(`Name: ${emp.name}`)\n  \n  if ('privileges' in emp) {\n    // TypeScript knows emp is Admin here\n    console.log(`Privileges: ${emp.privileges.join(', ')}`)\n  }\n  \n  if ('startDate' in emp) {\n    // TypeScript knows emp is Employee here\n    console.log(`Start Date: ${emp.startDate}`)\n  }\n}\n\n// Custom type guard functions\nfunction isString(value: unknown): value is string {\n  return typeof value === 'string'\n}\n\nfunction isNumber(value: unknown): value is number {\n  return typeof value === 'number'\n}\n\nfunction isStringArray(value: unknown): value is string[] {\n  return Array.isArray(value) && value.every(isString)\n}\n\n// Using custom type guards\nfunction processValue(value: unknown) {\n  if (isString(value)) {\n    // TypeScript knows value is string here\n    console.log(`String length: ${value.length}`)\n  } else if (isNumber(value)) {\n    // TypeScript knows value is number here\n    console.log(`Number fixed: ${value.toFixed(2)}`)\n  } else if (isStringArray(value)) {\n    // TypeScript knows value is string[] here\n    console.log(`Array joined: ${value.join(', ')}`)\n  } else {\n    console.log('Unknown type')\n  }\n}\n\n// Type assertions - telling TypeScript you know more\nconst someValue: unknown = 'this is a string'\n\n// Angle bracket syntax (not allowed in JSX)\nconst strLength1: number = (<string>someValue).length\n\n// as syntax (preferred and works in JSX)\nconst strLength2: number = (someValue as string).length\n\n// Non-null assertion operator\nfunction processName(name: string | null) {\n  // Only use ! when you're certain the value is not null\n  console.log(name!.charAt(0))  // Dangerous if name is actually null\n  \n  // Safer approach with type guard\n  if (name !== null) {\n    console.log(name.charAt(0))  // TypeScript knows name is string here\n  }\n}\n\n// Definite assignment assertion\nclass UserAccount {\n  // Tell TypeScript this will be assigned later\n  username!: string\n  \n  constructor() {\n    // Simulate async initialization\n    setTimeout(() => {\n      this.username = 'john_doe'\n    }, 0)\n  }\n}\n\n// Type assertion with object literals\ninterface Config {\n  apiUrl: string\n  timeout: number\n  retries: number\n}\n\n// Asserting a more specific type\nconst config = {\n  apiUrl: 'https://api.example.com',\n  timeout: 5000,\n  retries: 3,\n  // Extra property that doesn't exist in Config\n  debug: true\n} as Config  // This removes the extra property from type checking",
+      "explanation": "This example demonstrates comprehensive type guard and assertion usage in TypeScript:\n\n1. **typeof Guards**: Checking primitive types at runtime\n2. **instanceof Guards**: Checking class instance types\n3. **in Operator Guards**: Checking for object properties\n4. **Custom Type Guards**: User-defined functions with type predicates\n5. **Type Assertions**: Telling TypeScript about types it can't infer\n6. **Non-null Assertions**: Asserting values are not null or undefined\n7. **Definite Assignment**: Telling TypeScript variables will be assigned later\n\nThe output shows how type guards enable safe access to type-specific properties and methods. Type assertions bypass type checking but should be used carefully to avoid runtime errors.",
       "language": "typescript"
     },
     "pitfalls": [
       {
-        "mistake": "Not following best practices",
-        "solution": "Review documentation and community guidelines",
-        "severity": "medium"
+        "mistake": "Overusing type assertions which bypass type safety",
+        "solution": "Use type guards instead of assertions when possible to maintain type safety. Only use assertions when you're absolutely certain about the type and TypeScript can't infer it.",
+        "severity": "high"
       },
       {
-        "mistake": "Skipping error handling",
-        "solution": "Implement proper error boundaries and validation",
-        "severity": "low"
+        "mistake": "Using non-null assertion operator (!) without proper validation",
+        "solution": "Use type guards to check for null/undefined values instead of asserting they don't exist. The ! operator can cause runtime errors if the value is actually null.",
+        "severity": "high"
+      },
+      {
+        "mistake": "Not creating reusable custom type guards for complex type checking",
+        "solution": "Create custom type guard functions for complex type checking logic to avoid repeating typeof and instanceof checks throughout your code.",
+        "severity": "medium"
       }
     ],
     "exercises": [
       {
-        "title": "Practice: Type Guards and Type Assertions",
-        "description": "Apply the concepts from this lesson on Type Guards",
+        "title": "Safe API Response Handling with Type Guards",
+        "description": "Implement robust API response handling using type guards and safe assertions",
         "checkpoints": [
-          "Understand the core concept",
-          "Implement the example code",
-          "Experiment with variations"
+          "Create custom type guards for different API response types",
+          "Implement a type-safe API client that narrows response types using guards",
+          "Design error handling that distinguishes between network errors and invalid responses",
+          "Build a form validation system using type guards for input validation",
+          "Create utility functions for safe property access using the in operator"
         ]
       }
     ],
     "next": [],
-    "estimatedMinutes": 25,
+    "estimatedMinutes": 40,
     "difficulty": "Intermediate",
     "tags": [
       "Type Guards",
+      "Type Assertions",
+      "Type Narrowing",
       "typescript"
     ],
     "legacy": {
@@ -367,8 +440,8 @@
       "originalTopic": "Type Guards",
       "migrated": "2025-10-01T06:41:13.482Z"
     },
-    "lastUpdated": "2025-10-01T06:41:13.482Z",
-    "version": "1.0.0"
+    "lastUpdated": "2025-10-03T10:00:00.000Z",
+    "version": "1.1.0"
   },
   {
     "id": "typescript-fundamentals-lesson-8",
@@ -376,43 +449,53 @@
     "title": "Built-in Utility Types",
     "order": 8,
     "objectives": [
-      "Implement practical solutions",
-      "Build foundational understanding"
+      "Apply TypeScript's built-in utility types to transform and manipulate existing types",
+      "Create flexible type definitions using Partial, Pick, Omit, and Record utility types",
+      "Extract type information from functions and existing types using ReturnType and Parameters"
     ],
-    "intro": "Welcome to this comprehensive lesson on Utility Types.\n\nLearn about TypeScript's built-in utility types for transforming types efficiently.\n\nThroughout this lesson, you'll gain hands-on experience with practical implementations and real-world scenarios. We'll explore both the theoretical foundations and practical applications, ensuring you can immediately apply what you learn.\n\nThis lesson is designed to build upon previous concepts while introducing new techniques that will enhance your development skills. By the end, you'll have a solid understanding of the key principles and be ready to tackle more advanced topics.\n\nThe knowledge gained here will serve as a foundation for subsequent lessons and real-world projects.",
+    "intro": "TypeScript's built-in utility types are powerful tools that enable you to transform and manipulate existing types without creating new type definitions from scratch. These utility types provide common type transformations that are frequently needed in application development, making your code more concise and maintainable while preserving type safety.\n\nThe Partial utility type makes all properties of a type optional, which is particularly useful for update operations where you only want to specify the properties that are changing. Pick and Omit allow you to create new types by selecting or excluding specific properties from existing types, enabling you to create precisely the type shapes you need for different scenarios.\n\nRecord creates object types with specific keys and value types, making it easy to define dictionary-like structures with compile-time type checking. ReturnType and Parameters extract type information from existing functions, enabling you to maintain type consistency between related functions and avoid duplicating type definitions.\n\nThis lesson will explore practical applications of utility types in real-world scenarios, including API client development, form handling, configuration management, and data transformation pipelines. You'll learn advanced patterns such as combining multiple utility types, creating custom utility types, and leveraging utility types for better code organization.\n\nBy mastering built-in utility types, you'll be able to create more flexible and maintainable TypeScript applications with less boilerplate code while maintaining strong type safety guarantees.",
     "code": {
-      "example": "interface User {\n  id: number\n  name: string\n  email: string\n  age: number\n  isActive: boolean\n}\n\n// Partial - makes all properties optional\ntype PartialUser = Partial<User>\nconst updateUser: PartialUser = {\n  name: 'John Doe'  // Only name is provided\n}\n\n// Required - makes all properties required\ninterface OptionalUser {\n  id?: number\n  name?: string\n  email?: string\n}\n\ntype RequiredUser = Required<OptionalUser>\n// All properties are now required\n\n// Pick - creates a type by picking specific properties\ntype UserSummary = Pick<User, 'id' | 'name' | 'email'>\nconst summary: UserSummary = {\n  id: 1,\n  name: 'Jane',\n  email: 'jane@example.com'\n  // age and isActive are not included\n}\n\n// Omit - creates a type by omitting specific properties\ntype PublicUser = Omit<User, 'id' | 'isActive'>\nconst publicInfo: PublicUser = {\n  name: 'Bob',\n  email: 'bob@example.com',\n  age: 30\n  // id and isActive are omitted\n}\n\n// Record - creates an object type with specific keys and values\ntype UserRoles = Record<'admin' | 'user' | 'guest', string[]>\nconst roles: UserRoles = {\n  admin: ['read', 'write', 'delete'],\n  user: ['read', 'write'],\n  guest: ['read']\n}\n\n// Exclude and Extract\ntype T1 = Exclude<'a' | 'b' | 'c', 'a'>  // 'b' | 'c'\ntype T2 = Extract<'a' | 'b' | 'c', 'a' | 'f'>  // 'a'\n\n// ReturnType - extracts return type of function\nfunction getUser() {\n  return { id: 1, name: 'John' }\n}\n\ntype UserReturnType = ReturnType<typeof getUser>  // { id: number, name: string }\n\n// Parameters - extracts parameter types\nfunction createUser(name: string, age: number, email: string) {\n  return { name, age, email }\n}\n\ntype CreateUserParams = Parameters<typeof createUser>  // [string, number, string]",
-      "explanation": "This example produces: Demonstrates various utility types for flexible type transformations and code reuse\n\nThe code demonstrates practical implementation techniques and shows how the concepts work in real scenarios. Pay attention to the structure and patterns used, as these represent industry best practices.",
+      "example": "interface User {\n  id: number\n  name: string\n  email: string\n  age: number\n  isActive: boolean\n  createdAt: Date\n  updatedAt: Date\n}\n\n// Partial - makes all properties optional\n// Useful for update operations where not all fields are required\ntype UserUpdate = Partial<User>\n\nfunction updateUser(id: number, updates: UserUpdate): Promise<User> {\n  // Only the provided fields will be updated\n  console.log(`Updating user ${id} with:`, updates)\n  return Promise.resolve({} as User)  // Mock implementation\n}\n\n// Usage\nupdateUser(1, { name: 'John Doe', age: 30 })  // Only updating name and age\n\n// Required - makes all properties required\ninterface OptionalUser {\n  id?: number\n  name?: string\n  email?: string\n}\n\ntype RequiredUser = Required<OptionalUser>\n// All properties are now required\n\n// Pick - creates a type by picking specific properties\n// Useful for creating summary views or API responses\ntype UserSummary = Pick<User, 'id' | 'name' | 'email'>\n\nfunction getUserSummary(user: User): UserSummary {\n  return {\n    id: user.id,\n    name: user.name,\n    email: user.email\n  }\n}\n\n// Omit - creates a type by omitting specific properties\n// Useful for excluding sensitive data or internal fields\ntype PublicUser = Omit<User, 'id' | 'isActive' | 'createdAt' | 'updatedAt'>\n\nfunction getPublicUser(user: User): PublicUser {\n  return {\n    name: user.name,\n    email: user.email,\n    age: user.age\n  }\n}\n\n// Record - creates an object type with specific keys and values\n// Useful for configuration objects and dictionaries\ntype UserRoles = Record<'admin' | 'user' | 'guest', string[]>\n\nconst defaultPermissions: UserRoles = {\n  admin: ['read', 'write', 'delete'],\n  user: ['read', 'write'],\n  guest: ['read']\n}\n\n// Exclude and Extract - for working with union types\ntype Status = 'pending' | 'approved' | 'rejected' | 'draft'\ntype ActiveStatus = Exclude<Status, 'draft'>  // 'pending' | 'approved' | 'rejected'\ntype DraftStatus = Extract<Status, 'draft'>    // 'draft'\n\n// Readonly - makes all properties readonly\ntype ReadonlyUser = Readonly<User>\n\nfunction processUser(user: ReadonlyUser): void {\n  // user.name = 'New Name'  // Error! Cannot assign to readonly property\n  console.log(`Processing user: ${user.name}`)\n}\n\n// ReturnType - extracts return type of function\nfunction getUser(id: number) {\n  return {\n    id,\n    name: 'John Doe',\n    email: 'john@example.com',\n    isActive: true\n  }\n}\n\ntype UserReturnType = ReturnType<typeof getUser>  // { id: number, name: string, email: string, isActive: boolean }\n\n// Parameters - extracts parameter types\nfunction createUser(name: string, age: number, email: string) {\n  return { name, age, email }\n}\n\ntype CreateUserParams = Parameters<typeof createUser>  // [string, number, string]\n\n// Combining utility types\ntype UserPreferences = {\n  theme: 'light' | 'dark'\n  notifications: boolean\n  language: string\n}\n\n// Make preferences partially updateable and readonly\ntype UpdateablePreferences = Partial<Readonly<UserPreferences>>\n\n// Complex example: API response handling\ninterface ApiResponse<T> {\n  data: T\n  status: number\n  message: string\n  timestamp: string\n}\n\n// Create a success response type\ntype SuccessResponse<T> = Pick<ApiResponse<T>, 'data' | 'status'> & {\n  success: true\n}\n\n// Create an error response type\ntype ErrorResponse = Pick<ApiResponse<never>, 'status' | 'message' | 'timestamp'> & {\n  success: false\n  error: string\n}\n\ntype UserApiResponse = SuccessResponse<User> | ErrorResponse",
+      "explanation": "This example demonstrates comprehensive usage of TypeScript's built-in utility types:\n\n1. **Partial**: Making all properties optional for flexible updates\n2. **Required**: Making all properties required\n3. **Pick**: Selecting specific properties for focused types\n4. **Omit**: Excluding specific properties for data privacy\n5. **Record**: Creating dictionary-like object types\n6. **Exclude/Extract**: Working with union types\n7. **Readonly**: Making properties immutable\n8. **ReturnType**: Extracting function return types\n9. **Parameters**: Extracting function parameter types\n10. **Combining Utilities**: Using multiple utility types together\n\nThe output shows how utility types reduce boilerplate code while maintaining type safety. Partial is perfect for update operations, Pick and Omit create precise type shapes, and Record simplifies dictionary creation.",
       "language": "typescript"
     },
     "pitfalls": [
       {
-        "mistake": "Not following best practices",
-        "solution": "Review documentation and community guidelines",
+        "mistake": "Manually recreating type definitions instead of using utility types",
+        "solution": "Use built-in utility types like Partial, Pick, and Omit to transform existing types rather than creating new interfaces from scratch.",
         "severity": "medium"
       },
       {
-        "mistake": "Skipping error handling",
-        "solution": "Implement proper error boundaries and validation",
+        "mistake": "Not understanding that utility types create new types rather than modifying existing ones",
+        "solution": "Remember that utility types return new types and don't modify the original types. Use them to create variations of existing types as needed.",
+        "severity": "medium"
+      },
+      {
+        "mistake": "Overusing complex combinations of utility types that hurt readability",
+        "solution": "While utility types can be combined, prefer creating named type aliases for complex combinations to improve code readability and maintainability.",
         "severity": "low"
       }
     ],
     "exercises": [
       {
-        "title": "Practice: Built-in Utility Types",
-        "description": "Apply the concepts from this lesson on Utility Types",
+        "title": "Utility Types for API Client Development",
+        "description": "Create a type-safe API client using TypeScript's built-in utility types",
         "checkpoints": [
-          "Understand the core concept",
-          "Implement the example code",
-          "Experiment with variations"
+          "Design request and response types using utility types for flexibility",
+          "Implement partial update functionality using the Partial utility type",
+          "Create public and private data representations using Pick and Omit",
+          "Build configuration objects using Record utility type",
+          "Extract function types for consistent API client interfaces"
         ]
       }
     ],
     "next": [],
-    "estimatedMinutes": 25,
+    "estimatedMinutes": 40,
     "difficulty": "Intermediate",
     "tags": [
       "Utility Types",
+      "Type Transformation",
+      "Type Safety",
       "typescript"
     ],
     "legacy": {
@@ -420,8 +503,8 @@
       "originalTopic": "Utility Types",
       "migrated": "2025-10-01T06:41:13.482Z"
     },
-    "lastUpdated": "2025-10-01T06:41:13.482Z",
-    "version": "1.0.0"
+    "lastUpdated": "2025-10-03T10:00:00.000Z",
+    "version": "1.1.0"
   },
   {
     "id": "typescript-fundamentals-lesson-9",
@@ -429,43 +512,53 @@
     "title": "Decorators and Metadata",
     "order": 9,
     "objectives": [
-      "Implement practical solutions",
-      "Build foundational understanding"
+      "Implement class, method, property, and parameter decorators for meta-programming",
+      "Apply decorator factories to create configurable decorators",
+      "Use reflection and metadata APIs to access runtime type information"
     ],
-    "intro": "Welcome to this comprehensive lesson on Decorators.\n\nLearn how to use decorators for meta-programming in TypeScript.\n\nThroughout this lesson, you'll gain hands-on experience with practical implementations and real-world scenarios. We'll explore both the theoretical foundations and practical applications, ensuring you can immediately apply what you learn.\n\nThis lesson is designed to build upon previous concepts while introducing new techniques that will enhance your development skills. By the end, you'll have a solid understanding of the key principles and be ready to tackle more advanced topics.\n\nThe knowledge gained here will serve as a foundation for subsequent lessons and real-world projects.",
+    "intro": "Decorators are a powerful feature in TypeScript that enable meta-programming by allowing you to annotate and modify classes, methods, properties, and parameters at design time. They provide a way to add behavior to existing code declaratively, making it possible to implement cross-cutting concerns like logging, validation, and serialization without cluttering business logic. Decorators are widely used in modern frameworks like Angular and NestJS to provide dependency injection, routing, and other framework features.\n\nClass decorators are applied to class constructors and can be used to modify or replace the class definition. Method decorators can observe, modify, or replace method definitions, making them ideal for implementing aspects like logging, caching, and access control. Property decorators are applied to property declarations and can be used to observe or modify property access. Parameter decorators are applied to method or constructor parameters and can be used to gather information about parameters for dependency injection or validation.\n\nDecorator factories enable you to create configurable decorators that can accept parameters, making them more flexible and reusable. They work by returning a decorator function, allowing you to customize the decorator's behavior based on the provided parameters. The reflection and metadata APIs provide access to design-time type information, enabling more sophisticated meta-programming scenarios.\n\nThis lesson will explore practical applications of decorators in real-world scenarios, including framework development, aspect-oriented programming, and code generation. You'll learn advanced patterns such as combining multiple decorators, creating decorator composition utilities, and using metadata for runtime type inspection.\n\nBy mastering decorators and metadata, you'll be able to create more declarative and maintainable TypeScript applications while leveraging the power of meta-programming for cross-cutting concerns.",
     "code": {
-      "example": "// Enable decorators in tsconfig.json:\n// \"experimentalDecorators\": true,\n// \"emitDecoratorMetadata\": true\n\n// Class decorator\nfunction sealed(constructor: Function) {\n  Object.seal(constructor)\n  Object.seal(constructor.prototype)\n}\n\n// Method decorator\nfunction enumerable(value: boolean) {\n  return function (target: any, propertyKey: string, descriptor: PropertyDescriptor) {\n    descriptor.enumerable = value\n  }\n}\n\n// Property decorator\nfunction format(formatString: string) {\n  return function (target: any, propertyKey: string) {\n    let value = target[propertyKey]\n    \n    const getter = function () {\n      return `${formatString} ${value}`\n    }\n    \n    const setter = function (newVal: string) {\n      value = newVal\n    }\n    \n    Object.defineProperty(target, propertyKey, {\n      get: getter,\n      set: setter,\n      enumerable: true,\n      configurable: true\n    })\n  }\n}\n\n// Parameter decorator\nfunction required(target: any, propertyKey: string, parameterIndex: number) {\n  const existingRequiredParameters: number[] = Reflect.getOwnMetadata('required', target, propertyKey) || []\n  existingRequiredParameters.push(parameterIndex)\n  Reflect.defineMetadata('required', existingRequiredParameters, target, propertyKey)\n}\n\n// Usage of decorators\n@sealed\nclass Greeter {\n  @format('Hello')\n  greeting: string\n  \n  constructor(message: string) {\n    this.greeting = message\n  }\n  \n  @enumerable(false)\n  greet(@required name: string) {\n    return `${this.greeting}, ${name}!`\n  }\n}\n\nconst greeter = new Greeter('world')\nconsole.log(greeter.greet('TypeScript'))\n\n// Decorator factory example\nfunction log(prefix: string) {\n  return function (target: any, propertyName: string, descriptor: PropertyDescriptor) {\n    const method = descriptor.value\n    \n    descriptor.value = function (...args: any[]) {\n      console.log(`${prefix}: Calling ${propertyName} with args:`, args)\n      const result = method.apply(this, args)\n      console.log(`${prefix}: ${propertyName} returned:`, result)\n      return result\n    }\n  }\n}\n\nclass Calculator {\n  @log('CALC')\n  add(a: number, b: number): number {\n    return a + b\n  }\n}\n\nconst calc = new Calculator()\ncalc.add(2, 3)",
-      "explanation": "This example produces: Hello world, TypeScript!\nCALC: Calling add with args: [2, 3]\nCALC: add returned: 5\n\nThe code demonstrates practical implementation techniques and shows how the concepts work in real scenarios. Pay attention to the structure and patterns used, as these represent industry best practices.",
+      "example": "// Enable decorators in tsconfig.json:\n// \"experimentalDecorators\": true,\n// \"emitDecoratorMetadata\": true\n\n// Required for metadata support\nimport 'reflect-metadata'\n\n// Class decorator - seals the constructor and prototype\nfunction sealed<T extends { new (...args: any[]): {} }>(constructor: T) {\n  Object.seal(constructor)\n  Object.seal(constructor.prototype)\n  console.log(`Sealed class: ${constructor.name}`)\n  return constructor\n}\n\n// Method decorator - makes method enumerable or not\nfunction enumerable(value: boolean) {\n  return function (target: any, propertyKey: string, descriptor: PropertyDescriptor) {\n    console.log(`Setting enumerable for ${propertyKey}: ${value}`)\n    descriptor.enumerable = value\n  }\n}\n\n// Property decorator - adds formatting behavior\nfunction format(formatString: string) {\n  return function (target: any, propertyKey: string) {\n    let value: any\n    \n    const getter = function () {\n      return `${formatString} ${value}`\n    }\n    \n    const setter = function (newVal: any) {\n      value = newVal\n    }\n    \n    Object.defineProperty(target, propertyKey, {\n      get: getter,\n      set: setter,\n      enumerable: true,\n      configurable: true\n    })\n  }\n}\n\n// Parameter decorator - marks parameters as required\nfunction required(target: any, propertyKey: string, parameterIndex: number) {\n  // Store metadata about required parameters\n  const existingRequiredParameters: number[] = Reflect.getMetadata('required', target, propertyKey) || []\n  existingRequiredParameters.push(parameterIndex)\n  Reflect.defineMetadata('required', existingRequiredParameters, target, propertyKey)\n}\n\n// Decorator factory for validation\nfunction validate() {\n  return function (target: any, propertyName: string, descriptor: PropertyDescriptor) {\n    const method = descriptor.value\n    \n    descriptor.value = function (...args: any[]) {\n      // Check required parameters\n      const requiredParameters: number[] = Reflect.getMetadata('required', target, propertyName) || []\n      for (const index of requiredParameters) {\n        if (index < args.length && (args[index] === null || args[index] === undefined)) {\n          throw new Error(`Parameter at index ${index} is required`)\n        }\n      }\n      \n      return method.apply(this, args)\n    }\n  }\n}\n\n// Decorator factory for logging\nfunction log(prefix: string = 'LOG') {\n  return function (target: any, propertyName: string, descriptor: PropertyDescriptor) {\n    const method = descriptor.value\n    \n    descriptor.value = function (...args: any[]) {\n      console.log(`${prefix}: Calling ${propertyName} with args:`, args)\n      try {\n        const result = method.apply(this, args)\n        console.log(`${prefix}: ${propertyName} returned:`, result)\n        return result\n      } catch (error) {\n        console.error(`${prefix}: ${propertyName} threw error:`, error)\n        throw error\n      }\n    }\n  }\n}\n\n// Decorator for automatic property binding\nfunction bind(target: any, propertyKey: string, descriptor: PropertyDescriptor) {\n  return {\n    configurable: true,\n    get() {\n      const bound = descriptor.value.bind(this)\n      Object.defineProperty(this, propertyKey, {\n        value: bound,\n        configurable: true,\n        writable: true\n      })\n      return bound\n    }\n  }\n}\n\n// Usage of decorators\n@sealed\nclass Greeter {\n  @format('Hello')\n  greeting: string\n  \n  constructor(message: string) {\n    this.greeting = message\n  }\n  \n  @enumerable(false)\n  @log('GREETER')\n  @validate()\n  greet(@required name: string, title?: string) {\n    const greeting = title ? `${title} ${name}` : name\n    return `${this.greeting}, ${greeting}!`\n  }\n  \n  @bind\n  getGreeting() {\n    return this.greeting\n  }\n}\n\nconst greeter = new Greeter('world')\nconsole.log(greeter.greet('TypeScript'))\nconsole.log('Enumerable methods:', Object.keys(greeter.__proto__))\n\nclass Calculator {\n  @log('CALC')\n  add(a: number, b: number): number {\n    if (typeof a !== 'number' || typeof b !== 'number') {\n      throw new Error('Arguments must be numbers')\n    }\n    return a + b\n  }\n  \n  @log('CALC')\n  divide(a: number, b: number): number {\n    if (b === 0) {\n      throw new Error('Division by zero')\n    }\n    return a / b\n  }\n}\n\nconst calc = new Calculator()\nconsole.log('Addition result:', calc.add(2, 3))\ntry {\n  calc.divide(10, 0)\n} catch (error) {\n  console.log('Caught error:', error.message)\n}",
+      "explanation": "This example demonstrates comprehensive decorator usage in TypeScript:\n\n1. **Class Decorators**: Modifying or replacing class definitions\n2. **Method Decorators**: Observing or modifying method definitions\n3. **Property Decorators**: Observing or modifying property access\n4. **Parameter Decorators**: Gathering information about parameters\n5. **Decorator Factories**: Creating configurable decorators\n6. **Metadata APIs**: Using reflection for runtime type information\n7. **Decorator Composition**: Applying multiple decorators to the same element\n8. **Error Handling**: Implementing robust decorator logic\n\nThe output shows how decorators enable meta-programming while maintaining type safety. Class decorators can modify class behavior, method decorators can add cross-cutting concerns, and parameter decorators can enable validation.",
       "language": "typescript"
     },
     "pitfalls": [
       {
-        "mistake": "Not following best practices",
-        "solution": "Review documentation and community guidelines",
+        "mistake": "Not enabling experimentalDecorators and emitDecoratorMetadata in tsconfig.json",
+        "solution": "Ensure both compiler options are set to true in your TypeScript configuration to use decorators and metadata APIs.",
+        "severity": "high"
+      },
+      {
+        "mistake": "Overusing decorators which can make code harder to understand",
+        "solution": "Use decorators for cross-cutting concerns like logging, validation, and dependency injection. Avoid using them for business logic that would be clearer as regular code.",
         "severity": "medium"
       },
       {
-        "mistake": "Skipping error handling",
-        "solution": "Implement proper error boundaries and validation",
-        "severity": "low"
+        "mistake": "Not handling errors properly in decorator implementations",
+        "solution": "Implement proper error handling in decorators to avoid silent failures, and ensure decorators don't swallow exceptions from the original code.",
+        "severity": "medium"
       }
     ],
     "exercises": [
       {
-        "title": "Practice: Decorators and Metadata",
-        "description": "Apply the concepts from this lesson on Decorators",
+        "title": "Framework-like Decorators for API Development",
+        "description": "Create a set of decorators for building a REST API framework with validation, logging, and routing",
         "checkpoints": [
-          "Understand the core concept",
-          "Implement the example code",
-          "Experiment with variations"
+          "Implement route decorators for HTTP methods (GET, POST, PUT, DELETE)",
+          "Create validation decorators for request parameters and body data",
+          "Build logging decorators that capture request/response information",
+          "Design dependency injection decorators for service classes",
+          "Implement error handling decorators that transform exceptions to HTTP responses"
         ]
       }
     ],
     "next": [],
-    "estimatedMinutes": 25,
-    "difficulty": "Intermediate",
+    "estimatedMinutes": 45,
+    "difficulty": "Advanced",
     "tags": [
       "Decorators",
+      "Meta-programming",
+      "Reflection",
       "typescript"
     ],
     "legacy": {
@@ -473,8 +566,8 @@
       "originalTopic": "Decorators",
       "migrated": "2025-10-01T06:41:13.482Z"
     },
-    "lastUpdated": "2025-10-01T06:41:13.482Z",
-    "version": "1.0.0"
+    "lastUpdated": "2025-10-03T10:00:00.000Z",
+    "version": "1.1.0"
   },
   {
     "id": "typescript-fundamentals-lesson-10",
@@ -482,43 +575,53 @@
     "title": "Module System and Namespaces",
     "order": 10,
     "objectives": [
-      "Implement practical solutions",
-      "Build foundational understanding"
+      "Organize code using ES modules with import/export statements for modern applications",
+      "Implement module re-exports and wildcard imports for flexible code organization",
+      "Use dynamic imports for code splitting and lazy loading of modules"
     ],
-    "intro": "Welcome to this comprehensive lesson on Modules.\n\nLearn about TypeScript's module system, import/export statements, and namespaces.\n\nThroughout this lesson, you'll gain hands-on experience with practical implementations and real-world scenarios. We'll explore both the theoretical foundations and practical applications, ensuring you can immediately apply what you learn.\n\nThis lesson is designed to build upon previous concepts while introducing new techniques that will enhance your development skills. By the end, you'll have a solid understanding of the key principles and be ready to tackle more advanced topics.\n\nThe knowledge gained here will serve as a foundation for subsequent lessons and real-world projects.",
+    "intro": "TypeScript's module system provides powerful tools for organizing code into reusable, maintainable units that can be shared across projects. The modern ES module system with import/export statements has largely replaced the legacy namespace approach, offering better tooling support, tree shaking capabilities, and alignment with JavaScript standards. Understanding how to effectively structure your code using modules is essential for building scalable applications.\n\nES modules enable you to export individual functions, classes, and variables from modules, as well as create default exports for the primary export of a module. Import statements allow you to bring in specific exports, all exports, or default exports from other modules, with aliasing support for avoiding naming conflicts. Re-exports enable you to create umbrella modules that aggregate exports from multiple other modules.\n\nDynamic imports provide a way to load modules asynchronously, enabling code splitting and lazy loading for better application performance. This is particularly useful for loading large libraries only when needed or implementing feature-based code splitting in single-page applications.\n\nThis lesson will explore practical applications of the module system in real-world scenarios, including library development, application architecture, and performance optimization. You'll learn advanced patterns such as module augmentation, declaration merging, and how to effectively structure large TypeScript projects using modules.\n\nBy mastering the module system, you'll be able to create well-organized TypeScript applications that are easy to maintain, test, and scale while taking advantage of modern bundling and optimization techniques.",
     "code": {
-      "example": "// math.ts - Module with multiple exports\nexport function add(x: number, y: number): number {\n  return x + y\n}\n\nexport function subtract(x: number, y: number): number {\n  return x - y\n}\n\nexport const PI = 3.14159\n\n// Default export\nexport default class Calculator {\n  multiply(x: number, y: number): number {\n    return x * y\n  }\n}\n\n// utils.ts - Re-exports\nexport { add, subtract } from './math'\nexport { default as Calculator } from './math'\n\n// app.ts - Various import syntaxes\nimport Calculator, { add, subtract, PI } from './math'\nimport * as MathUtils from './math'\nimport { add as addition } from './math'\n\nconst calc = new Calculator()\nconsole.log(add(5, 3))\nconsole.log(subtract(10, 4))\nconsole.log(calc.multiply(3, 4))\nconsole.log(PI)\n\n// Using namespace alias\nconsole.log(MathUtils.add(1, 2))\nconsole.log(addition(2, 3))\n\n// Namespace declaration (legacy approach)\nnamespace Geometry {\n  export interface Point {\n    x: number\n    y: number\n  }\n  \n  export function distance(p1: Point, p2: Point): number {\n    const dx = p1.x - p2.x\n    const dy = p1.y - p2.y\n    return Math.sqrt(dx * dx + dy * dy)\n  }\n  \n  export namespace Circle {\n    export function area(radius: number): number {\n      return Math.PI * radius * radius\n    }\n    \n    export function circumference(radius: number): number {\n      return 2 * Math.PI * radius\n    }\n  }\n}\n\n// Using namespace\nconst p1: Geometry.Point = { x: 0, y: 0 }\nconst p2: Geometry.Point = { x: 3, y: 4 }\nconsole.log(Geometry.distance(p1, p2))  // 5\nconsole.log(Geometry.Circle.area(5))    // ~78.54\n\n// Dynamic imports\nasync function loadMath() {\n  const mathModule = await import('./math')\n  console.log(mathModule.add(10, 20))\n}",
-      "explanation": "This example produces: 8\n6\n12\n3.14159\n3\n5\n5\n78.54\n30 (from dynamic import)\n\nThe code demonstrates practical implementation techniques and shows how the concepts work in real scenarios. Pay attention to the structure and patterns used, as these represent industry best practices.",
+      "example": "// math.ts - Module with multiple named exports and a default export\nexport function add(x: number, y: number): number {\n  return x + y\n}\n\nexport function subtract(x: number, y: number): number {\n  return x - y\n}\n\nexport function multiply(x: number, y: number): number {\n  return x * y\n}\n\nexport function divide(x: number, y: number): number {\n  if (y === 0) {\n    throw new Error('Division by zero')\n  }\n  return x / y\n}\n\nexport const PI = 3.14159\nexport const E = 2.71828\n\n// Default export - the main export of this module\nexport default class Calculator {\n  add(x: number, y: number): number {\n    return x + y\n  }\n  \n  subtract(x: number, y: number): number {\n    return x - y\n  }\n  \n  multiply(x: number, y: number): number {\n    return x * y\n  }\n  \n  divide(x: number, y: number): number {\n    if (y === 0) {\n      throw new Error('Division by zero')\n    }\n    return x / y\n  }\n}\n\n// constants.ts - Another module\nexport const MAX_SAFE_INTEGER = Number.MAX_SAFE_INTEGER\nexport const MIN_SAFE_INTEGER = Number.MIN_SAFE_INTEGER\nexport const POSITIVE_INFINITY = Number.POSITIVE_INFINITY\n\n// utils.ts - Re-exports and aggregations\n// Re-export specific functions from math module\nexport { add, subtract, multiply, divide } from './math'\n// Re-export with renaming\nexport { PI as PI_CONSTANT, E as E_CONSTANT } from './math'\n// Re-export default as named\nexport { default as Calculator } from './math'\n// Re-export everything from constants\nexport * from './constants'\n\n// app.ts - Various import syntaxes\n// Default import\nimport Calculator from './math'\n// Named imports\nimport { add, subtract, PI } from './math'\n// Named imports with aliases\nimport { multiply as mult, divide as div } from './math'\n// Mixed default and named imports\nimport Calc, { add as addition, PI as pi } from './math'\n// Import all exports into a namespace\nimport * as MathUtils from './math'\n// Type-only imports (TypeScript 3.8+)\nimport type { Calculator as CalcType } from './math'\n\n// Using the imports\nconst calc = new Calculator()\nconsole.log('Addition:', add(5, 3))           // 8\nconsole.log('Subtraction:', subtract(10, 4))   // 6\nconsole.log('Multiplication:', mult(3, 4))     // 12\nconsole.log('Division:', div(15, 3))          // 5\nconsole.log('PI:', PI)                         // 3.14159\n\n// Using namespace import\nconsole.log('Namespace add:', MathUtils.add(1, 2))     // 3\nconsole.log('Namespace PI:', MathUtils.PI)             // 3.14159\n\n// Dynamic imports for code splitting\nasync function loadMathModule() {\n  // Load module only when needed\n  const mathModule = await import('./math')\n  console.log('Dynamic import add:', mathModule.add(10, 20))  // 30\n  return new mathModule.default()\n}\n\n// Conditional dynamic import\nasync function loadCalculator(condition: boolean) {\n  if (condition) {\n    const { default: Calc, PI } = await import('./math')\n    console.log('Conditional PI:', PI)\n    return new Calc()\n  }\n  return null\n}\n\n// Module augmentation - extending existing modules\ndeclare module './math' {\n  interface Calculator {\n    power(base: number, exponent: number): number\n  }\n}\n\n// Adding methods to existing classes (in the same module)\nCalculator.prototype.power = function(base: number, exponent: number): number {\n  return Math.pow(base, exponent)\n}\n\n// Using the augmented method\nconst enhancedCalc = new Calculator()\nconsole.log('Power:', enhancedCalc.power(2, 3))  // 8\n\n// Barrel exports - index.ts files that re-export everything\n// index.ts\n// export * from './math'\n// export * from './constants'\n// export * from './utils'\n\n// Consumer of barrel export\n// import { Calculator, add, PI, MAX_SAFE_INTEGER } from './index'\n\n// Side effect imports\n// import './module-with-side-effects'\n\n// Demonstrate dynamic import usage\nloadMathModule().then(calculator => {\n  if (calculator) {\n    console.log('Dynamic calculator add:', calculator.add(7, 8))  // 15\n  }\n})",
+      "explanation": "This example demonstrates comprehensive module system usage in TypeScript:\n\n1. **Named Exports**: Exporting multiple functions and constants from a module\n2. **Default Exports**: Primary export of a module (often a class)\n3. **Named Imports**: Importing specific exports with optional aliasing\n4. **Namespace Imports**: Importing all exports into a namespace object\n5. **Re-exports**: Aggregating and re-exporting from other modules\n6. **Dynamic Imports**: Asynchronously loading modules for code splitting\n7. **Type-only Imports**: Importing only type information (no runtime code)\n8. **Module Augmentation**: Extending existing modules with new capabilities\n9. **Barrel Exports**: Index files that aggregate multiple module exports\n\nThe output shows how the module system provides flexible code organization while maintaining type safety. Dynamic imports enable lazy loading, and re-exports allow for convenient module aggregations.",
       "language": "typescript"
     },
     "pitfalls": [
       {
-        "mistake": "Not following best practices",
-        "solution": "Review documentation and community guidelines",
+        "mistake": "Mixing default and named imports incorrectly",
+        "solution": "Remember that default imports don't use curly braces, while named imports do. You can combine both in a single import statement, but the default import must come first.",
         "severity": "medium"
       },
       {
-        "mistake": "Skipping error handling",
-        "solution": "Implement proper error boundaries and validation",
-        "severity": "low"
+        "mistake": "Creating circular dependencies between modules",
+        "solution": "Design your module architecture to avoid circular dependencies by creating clear dependency hierarchies and using dependency inversion when necessary.",
+        "severity": "high"
+      },
+      {
+        "mistake": "Overusing namespace imports (*) which can hurt tree shaking",
+        "solution": "Use specific named imports instead of namespace imports when you only need a few exports, to enable better tree shaking and bundle optimization.",
+        "severity": "medium"
       }
     ],
     "exercises": [
       {
-        "title": "Practice: Module System and Namespaces",
-        "description": "Apply the concepts from this lesson on Modules",
+        "title": "Modular Application Architecture",
+        "description": "Design a modular TypeScript application using ES modules with proper code organization",
         "checkpoints": [
-          "Understand the core concept",
-          "Implement the example code",
-          "Experiment with variations"
+          "Create a core module with shared utilities and types",
+          "Implement feature modules with specific responsibilities using named and default exports",
+          "Design an index module that provides a clean public API through re-exports",
+          "Implement lazy loading for optional features using dynamic imports",
+          "Create type-only imports for dependency injection interfaces"
         ]
       }
     ],
     "next": [],
-    "estimatedMinutes": 25,
+    "estimatedMinutes": 40,
     "difficulty": "Intermediate",
     "tags": [
       "Modules",
+      "ES Modules",
+      "Code Organization",
       "typescript"
     ],
     "legacy": {
@@ -526,8 +629,8 @@
       "originalTopic": "Modules",
       "migrated": "2025-10-01T06:41:13.482Z"
     },
-    "lastUpdated": "2025-10-01T06:41:13.482Z",
-    "version": "1.0.0"
+    "lastUpdated": "2025-10-03T10:00:00.000Z",
+    "version": "1.1.0"
   },
   {
     "id": "typescript-fundamentals-lesson-11",
@@ -535,43 +638,210 @@
     "title": "Promises, Async/Await with TypeScript",
     "order": 11,
     "objectives": [
-      "Implement practical solutions",
-      "Build foundational understanding"
+      "Create and consume typed Promise-based asynchronous operations with proper error handling",
+      "Implement async/await patterns for readable asynchronous code with sequential and parallel execution",
+      "Use advanced Promise combinators and async iteration for complex asynchronous workflows"
     ],
-    "intro": "Welcome to this comprehensive lesson on Async Programming.\n\nLearn how to work with asynchronous code in TypeScript using Promises and async/await.\n\nThroughout this lesson, you'll gain hands-on experience with practical implementations and real-world scenarios. We'll explore both the theoretical foundations and practical applications, ensuring you can immediately apply what you learn.\n\nThis lesson is designed to build upon previous concepts while introducing new techniques that will enhance your development skills. By the end, you'll have a solid understanding of the key principles and be ready to tackle more advanced topics.\n\nThe knowledge gained here will serve as a foundation for subsequent lessons and real-world projects.",
+    "intro": "Asynchronous programming is fundamental to modern web development, and TypeScript provides powerful tools for working with asynchronous operations while maintaining type safety. Promises represent the eventual completion or failure of asynchronous operations, and when combined with TypeScript's type system, they enable you to catch potential errors at compile time rather than runtime. The async/await syntax builds on Promises to provide a more readable and maintainable approach to asynchronous programming.\n\nTyped Promises allow you to specify the expected return types of asynchronous operations, making your code more predictable and enabling better IDE support with autocomplete and error detection. Error handling with Promises and async/await requires careful consideration to ensure that errors are properly caught and handled, preventing unhandled promise rejections that can crash your application.\n\nAsync/await patterns enable you to write asynchronous code that looks and behaves more like synchronous code, making it easier to understand and maintain. You can combine sequential and parallel execution patterns to optimize performance while maintaining readability. Advanced Promise combinators like Promise.all, Promise.race, and Promise.allSettled provide powerful tools for managing multiple asynchronous operations.\n\nThis lesson will explore practical applications of asynchronous programming in real-world scenarios, including API client development, data fetching, and complex workflow management. You'll learn advanced patterns such as async middleware, cancellation tokens, and how to create type-safe asynchronous utilities.\n\nBy mastering Promises and async/await with TypeScript, you'll be able to create robust and maintainable asynchronous applications that handle errors gracefully while providing excellent development experience through type safety.",
     "code": {
-      "example": "// Typed Promise functions\nfunction fetchUser(id: number): Promise<{ id: number; name: string; email: string }> {\n  return new Promise((resolve, reject) => {\n    setTimeout(() => {\n      if (id > 0) {\n        resolve({\n          id,\n          name: `User ${id}`,\n          email: `user${id}@example.com`\n        })\n      } else {\n        reject(new Error('Invalid user ID'))\n      }\n    }, 1000)\n  })\n}\n\n// Generic Promise wrapper\nfunction delay<T>(ms: number, value: T): Promise<T> {\n  return new Promise(resolve => {\n    setTimeout(() => resolve(value), ms)\n  })\n}\n\n// Async/await with error handling\nasync function getUserInfo(id: number): Promise<string> {\n  try {\n    const user = await fetchUser(id)\n    const greeting = await delay(500, `Hello, ${user.name}!`)\n    return greeting\n  } catch (error) {\n    throw new Error(`Failed to get user info: ${error.message}`)\n  }\n}\n\n// Promise combinators with types\ninterface ApiResponse<T> {\n  data: T\n  status: number\n  timestamp: Date\n}\n\nasync function fetchMultipleUsers(ids: number[]): Promise<ApiResponse<any>[]> {\n  const promises = ids.map(id => \n    fetchUser(id).then(user => ({\n      data: user,\n      status: 200,\n      timestamp: new Date()\n    })).catch(error => ({\n      data: null,\n      status: 404,\n      timestamp: new Date(),\n      error: error.message\n    }))\n  )\n  \n  return Promise.all(promises)\n}\n\n// Async iterators\nasync function* generateNumbers(): AsyncIterableIterator<number> {\n  for (let i = 1; i <= 5; i++) {\n    await delay(100, null)\n    yield i\n  }\n}\n\n// Usage examples\nasync function main() {\n  try {\n    // Single user\n    const greeting = await getUserInfo(1)\n    console.log(greeting)\n    \n    // Multiple users\n    const responses = await fetchMultipleUsers([1, 2, -1])\n    console.log('Responses:', responses.length)\n    \n    // Async iteration\n    for await (const num of generateNumbers()) {\n      console.log(`Generated: ${num}`)\n    }\n    \n  } catch (error) {\n    console.error('Error:', error.message)\n  }\n}\n\nmain()",
-      "explanation": "This example produces: Hello, User 1!\nResponses: 3\nGenerated: 1\nGenerated: 2\nGenerated: 3\nGenerated: 4\nGenerated: 5\n\nThe code demonstrates practical implementation techniques and shows how the concepts work in real scenarios. Pay attention to the structure and patterns used, as these represent industry best practices.",
+      "example": "// Typed Promise functions with proper error handling\ninterface User {\n  id: number\n  name: string\n  email: string\n  createdAt: Date\n}\n\nfunction fetchUser(id: number): Promise<User> {\n  return new Promise((resolve, reject) => {\n    // Simulate API call\n    setTimeout(() => {\n      if (id > 0) {\n        resolve({\n          id,\n          name: `User ${id}`,
+          email: `user${id}@example.com`,
+          createdAt: new Date()
+        })
+      } else {
+        reject(new Error(`Invalid user ID: ${id}`))
+      }
+    }, 1000)
+  })
+}
+
+// Generic Promise wrapper with type safety
+function delay<T>(ms: number, value: T): Promise<T> {
+  return new Promise(resolve => {
+    setTimeout(() => resolve(value), ms)
+  })
+}
+
+// Async/await with sequential execution
+async function getUserProfile(userId: number): Promise<User> {
+  try {
+    // Sequential operations - each waits for the previous one
+    const user = await fetchUser(userId)
+    await delay(500, null)  // Simulate additional processing
+    return user
+  } catch (error) {
+    // Proper error handling with type safety
+    if (error instanceof Error) {
+      throw new Error(`Failed to get user profile: ${error.message}`)
+    }
+    throw new Error('Unknown error occurred while fetching user profile')
+  }
+}
+
+// Parallel execution with Promise.all
+async function fetchMultipleUsers(userIds: number[]): Promise<User[]> {
+  try {
+    // All requests happen in parallel
+    const users = await Promise.all(userIds.map(id => fetchUser(id)))
+    return users
+  } catch (error) {
+    throw new Error(`Failed to fetch users: ${error instanceof Error ? error.message : 'Unknown error'}`)
+  }
+}
+
+// Error handling with Promise.allSettled
+async function fetchUsersWithErrorHandling(userIds: number[]): Promise<{
+  successful: User[]
+  failed: { id: number; error: string }[]
+}> {
+  // Promise.allSettled never rejects, it returns results for all promises
+  const results = await Promise.allSettled(userIds.map(id => fetchUser(id)))
+  
+  const successful: User[] = []
+  const failed: { id: number; error: string }[] = []
+  
+  results.forEach((result, index) => {
+    if (result.status === 'fulfilled') {
+      successful.push(result.value)
+    } else {
+      failed.push({
+        id: userIds[index],
+        error: result.reason instanceof Error ? result.reason.message : 'Unknown error'
+      })
+    }
+  })
+  
+  return { successful, failed }
+}
+
+// Promise combinators with proper typing
+interface ApiResponse<T> {
+  data: T
+  status: number
+  message: string
+  timestamp: Date
+}
+
+async function fetchWithTimeout<T>(
+  promise: Promise<T>, 
+  timeoutMs: number
+): Promise<T> {
+  const timeoutPromise = new Promise<never>((_, reject) => {
+    setTimeout(() => reject(new Error('Request timeout')), timeoutMs)
+  })
+  
+  // Race between the actual promise and timeout
+  return Promise.race([promise, timeoutPromise])
+}
+
+// Async iterators for streaming data
+async function* fetchUsersStream(userIds: number[]): AsyncIterableIterator<User> {
+  for (const id of userIds) {
+    try {
+      const user = await fetchUser(id)
+      yield user
+    } catch (error) {
+      // Log error but continue with next user
+      console.error(`Failed to fetch user ${id}:`, error instanceof Error ? error.message : 'Unknown error')
+    }
+  }
+}
+
+// Advanced pattern: Async middleware
+interface AsyncMiddleware<T> {
+  (input: T): Promise<T>
+}
+
+async function applyMiddleware<T>(
+  input: T,
+  middlewares: AsyncMiddleware<T>[]
+): Promise<T> {
+  let result = input
+  for (const middleware of middlewares) {
+    result = await middleware(result)
+  }
+  return result
+}
+
+// Usage examples
+async function main() {
+  try {
+    // Sequential execution
+    console.log('Fetching user profile...')
+    const userProfile = await getUserProfile(1)
+    console.log('User profile:', userProfile.name)
+    
+    // Parallel execution
+    console.log('Fetching multiple users...')
+    const multipleUsers = await fetchMultipleUsers([1, 2, 3])
+    console.log(`Fetched ${multipleUsers.length} users`)
+    
+    // Error handling with allSettled
+    console.log('Fetching users with error handling...')
+    const { successful, failed } = await fetchUsersWithErrorHandling([1, -1, 3])
+    console.log(`Successful: ${successful.length}, Failed: ${failed.length}`)
+    
+    // Async iteration
+    console.log('Streaming users...')
+    for await (const user of fetchUsersStream([1, 2, 3])) {
+      console.log(`Streamed user: ${user.name}`)
+    }
+    
+    // Timeout handling
+    console.log('Fetching with timeout...')
+    try {
+      const userWithTimeout = await fetchWithTimeout(fetchUser(1), 2000)
+      console.log('Fetched with timeout:', userWithTimeout.name)
+    } catch (error) {
+      console.log('Timeout error:', error instanceof Error ? error.message : 'Unknown error')
+    }
+    
+  } catch (error) {
+    console.error('Main error:', error instanceof Error ? error.message : 'Unknown error')
+  }
+}
+
+main()",
+      "explanation": "This example demonstrates comprehensive async/await and Promise usage in TypeScript:\n\n1. **Typed Promises**: Functions that return typed Promise objects\n2. **Sequential Execution**: Async/await for operations that must happen in order\n3. **Parallel Execution**: Promise.all for concurrent operations\n4. **Error Handling**: Proper try/catch with type-safe error handling\n5. **Promise Combinators**: allSettled for partial failure handling, race for timeouts\n6. **Async Iterators**: for await syntax for streaming data\n7. **Generic Utilities**: Reusable async functions with type parameters\n8. **Advanced Patterns**: Middleware composition with async functions\n\nThe output shows how TypeScript provides compile-time safety for asynchronous operations. Type checking prevents incorrect usage of Promise results, and proper error handling ensures robust applications.",
       "language": "typescript"
     },
     "pitfalls": [
       {
-        "mistake": "Not following best practices",
-        "solution": "Review documentation and community guidelines",
+        "mistake": "Forgetting to handle Promise rejections which can cause unhandled promise rejection warnings",
+        "solution": "Always use try/catch with async/await or .catch() with Promises, and consider using Promise.allSettled when you need to handle partial failures.",
+        "severity": "high"
+      },
+      {
+        "mistake": "Using Promise.all when a single rejection should not fail the entire operation",
+        "solution": "Use Promise.allSettled when you want to wait for all promises to settle regardless of rejections, then handle successes and failures separately.",
         "severity": "medium"
       },
       {
-        "mistake": "Skipping error handling",
-        "solution": "Implement proper error boundaries and validation",
-        "severity": "low"
+        "mistake": "Not implementing proper timeout handling for long-running async operations",
+        "solution": "Use Promise.race with a timeout promise to prevent operations from hanging indefinitely, especially for network requests.",
+        "severity": "medium"
       }
     ],
     "exercises": [
       {
-        "title": "Practice: Promises, Async/Await with TypeScript",
-        "description": "Apply the concepts from this lesson on Async Programming",
+        "title": "Robust API Client with Async Patterns",
+        "description": "Create a type-safe API client using advanced async/await patterns and Promise combinators",
         "checkpoints": [
-          "Understand the core concept",
-          "Implement the example code",
-          "Experiment with variations"
+          "Implement sequential and parallel data fetching with proper error handling",
+          "Create timeout and retry mechanisms for unreliable network requests",
+          "Design a streaming data processor using async iterators",
+          "Build a request queue that manages concurrent operations with limits",
+          "Implement cancellation support for long-running operations"
         ]
       }
     ],
     "next": [],
-    "estimatedMinutes": 25,
+    "estimatedMinutes": 45,
     "difficulty": "Intermediate",
     "tags": [
-      "Async Programming",
+      "Async/Await",
+      "Promises",
+      "Error Handling",
       "typescript"
     ],
     "legacy": {
@@ -579,8 +849,8 @@
       "originalTopic": "Async Programming",
       "migrated": "2025-10-01T06:41:13.482Z"
     },
-    "lastUpdated": "2025-10-01T06:41:13.482Z",
-    "version": "1.0.0"
+    "lastUpdated": "2025-10-03T10:00:00.000Z",
+    "version": "1.1.0"
   },
   {
     "id": "typescript-fundamentals-lesson-12",
@@ -588,43 +858,84 @@
     "title": "Testing TypeScript Code",
     "order": 12,
     "objectives": [
-      "Implement practical solutions",
-      "Build foundational understanding"
+      "Write type-safe unit tests with Jest that leverage TypeScript's type system for better test reliability",
+      "Implement comprehensive test coverage including edge cases, error conditions, and asynchronous operations",
+      "Create test utilities and fixtures that maintain type safety while reducing test boilerplate"
     ],
-    "intro": "Welcome to this comprehensive lesson on Testing.\n\nLearn how to write comprehensive tests for TypeScript code using Jest and type-safe testing patterns.\n\nThroughout this lesson, you'll gain hands-on experience with practical implementations and real-world scenarios. We'll explore both the theoretical foundations and practical applications, ensuring you can immediately apply what you learn.\n\nThis lesson is designed to build upon previous concepts while introducing new techniques that will enhance your development skills. By the end, you'll have a solid understanding of the key principles and be ready to tackle more advanced topics.\n\nThe knowledge gained here will serve as a foundation for subsequent lessons and real-world projects.",
+    "intro": "Testing is a critical practice for ensuring code quality, preventing regressions, and enabling confident refactoring in TypeScript applications. TypeScript's type system provides additional safety for tests by catching type-related errors at compile time, but effective testing requires understanding how to leverage both TypeScript's type system and testing frameworks like Jest. Well-written tests serve as documentation for your code and provide a safety net for future changes.\n\nType-safe testing involves writing tests that benefit from TypeScript's type checking while maintaining the flexibility to test edge cases and error conditions. This includes using proper type annotations for test data, leveraging TypeScript's type inference for cleaner test code, and using type guards when testing functions with union types. Mocking and spying techniques should maintain type safety while allowing you to isolate units of code for testing.\n\nComprehensive test coverage includes testing not just the happy path but also edge cases, error conditions, and asynchronous operations. This means testing boundary conditions, invalid inputs, and error handling to ensure your code behaves correctly under all circumstances. Asynchronous testing requires special attention to ensure promises are properly awaited and errors are correctly caught and asserted.\n\nThis lesson will explore practical testing patterns in real-world scenarios, including API client testing, service layer testing, and integration testing. You'll learn advanced patterns such as custom matchers, test utilities, and how to structure test suites for maintainability.\n\nBy mastering testing with TypeScript, you'll be able to create more reliable applications with confidence that changes won't introduce regressions while maintaining excellent development experience through type safety.",
     "code": {
-      "example": "// user.ts - Code to test\nexport interface User {\n  id: number\n  name: string\n  email: string\n  age: number\n}\n\nexport class UserService {\n  private users: User[] = []\n  \n  addUser(user: Omit<User, 'id'>): User {\n    const newUser: User = {\n      ...user,\n      id: Math.max(0, ...this.users.map(u => u.id)) + 1\n    }\n    this.users.push(newUser)\n    return newUser\n  }\n  \n  getUser(id: number): User | undefined {\n    return this.users.find(user => user.id === id)\n  }\n  \n  updateUser(id: number, updates: Partial<User>): User | null {\n    const userIndex = this.users.findIndex(user => user.id === id)\n    if (userIndex === -1) return null\n    \n    this.users[userIndex] = { ...this.users[userIndex], ...updates }\n    return this.users[userIndex]\n  }\n  \n  deleteUser(id: number): boolean {\n    const userIndex = this.users.findIndex(user => user.id === id)\n    if (userIndex === -1) return false\n    \n    this.users.splice(userIndex, 1)\n    return true\n  }\n  \n  getAllUsers(): User[] {\n    return [...this.users]\n  }\n}\n\n// user.test.ts - Comprehensive tests\nimport { UserService, User } from './user'\n\ndescribe('UserService', () => {\n  let userService: UserService\n  \n  beforeEach(() => {\n    userService = new UserService()\n  })\n  \n  describe('addUser', () => {\n    it('should add a user with auto-generated id', () => {\n      const userData = { name: 'John Doe', email: 'john@example.com', age: 30 }\n      const user = userService.addUser(userData)\n      \n      expect(user.id).toBe(1)\n      expect(user.name).toBe('John Doe')\n      expect(user.email).toBe('john@example.com')\n      expect(user.age).toBe(30)\n    })\n    \n    it('should increment id for subsequent users', () => {\n      userService.addUser({ name: 'User 1', email: 'user1@test.com', age: 25 })\n      const secondUser = userService.addUser({ name: 'User 2', email: 'user2@test.com', age: 35 })\n      \n      expect(secondUser.id).toBe(2)\n    })\n  })\n  \n  describe('getUser', () => {\n    it('should return user by id', () => {\n      const addedUser = userService.addUser({ name: 'Test User', email: 'test@example.com', age: 28 })\n      const foundUser = userService.getUser(addedUser.id)\n      \n      expect(foundUser).toEqual(addedUser)\n    })\n    \n    it('should return undefined for non-existent user', () => {\n      const user = userService.getUser(999)\n      expect(user).toBeUndefined()\n    })\n  })\n  \n  describe('updateUser', () => {\n    it('should update existing user partially', () => {\n      const user = userService.addUser({ name: 'Original Name', email: 'original@test.com', age: 25 })\n      const updated = userService.updateUser(user.id, { name: 'Updated Name', age: 26 })\n      \n      expect(updated).toMatchObject({\n        id: user.id,\n        name: 'Updated Name',\n        email: 'original@test.com',\n        age: 26\n      })\n    })\n    \n    it('should return null for non-existent user', () => {\n      const result = userService.updateUser(999, { name: 'New Name' })\n      expect(result).toBeNull()\n    })\n  })\n})",
-      "explanation": "This example produces: ✓ UserService › addUser › should add a user with auto-generated id\n✓ UserService › addUser › should increment id for subsequent users\n✓ UserService › getUser › should return user by id\n✓ UserService › getUser › should return undefined for non-existent user\n✓ UserService › updateUser › should update existing user partially\n✓ UserService › updateUser › should return null for non-existent user\n\nThe code demonstrates practical implementation techniques and shows how the concepts work in real scenarios. Pay attention to the structure and patterns used, as these represent industry best practices.",
+      "example": "// user-service.ts - Code to test with proper typing\nexport interface User {\n  id: number\n  name: string\n  email: string\n  age: number\n  createdAt: Date\n  updatedAt: Date\n}\n\nexport interface UserCreationData {\n  name: string\n  email: string\n  age: number\n}\n\nexport interface UserRepository {\n  findById(id: number): Promise<User | null>\n  findAll(): Promise<User[]>\n  create(userData: UserCreationData): Promise<User>\n  update(id: number, updates: Partial<User>): Promise<User | null>\n  delete(id: number): Promise<boolean>\n}\n\nexport class UserService {\n  constructor(private repository: UserRepository) {}\n  \n  async createUser(userData: UserCreationData): Promise<User> {\n    // Validate input\n    if (!userData.name?.trim()) {\n      throw new Error('Name is required')\n    }\n    \n    if (!userData.email?.includes('@')) {\n      throw new Error('Valid email is required')\n    }\n    \n    if (userData.age < 0 || userData.age > 150) {\n      throw new Error('Age must be between 0 and 150')\n    }\n    \n    const user: User = {\n      ...userData,\n      id: 0, // Will be set by repository\n      createdAt: new Date(),\n      updatedAt: new Date()\n    }\n    \n    return this.repository.create(userData)\n  }\n  \n  async getUser(id: number): Promise<User> {\n    if (id <= 0) {\n      throw new Error('Invalid user ID')\n    }\n    \n    const user = await this.repository.findById(id)\n    if (!user) {\n      throw new Error(`User with ID ${id} not found`)\n    }\n    \n    return user\n  }\n  \n  async updateUser(id: number, updates: Partial<User>): Promise<User> {\n    const user = await this.getUser(id)\n    \n    // Validate updates\n    if (updates.age !== undefined && (updates.age < 0 || updates.age > 150)) {\n      throw new Error('Age must be between 0 and 150')\n    }\n    \n    const updatedUser = {\n      ...user,\n      ...updates,\n      updatedAt: new Date()\n    }\n    \n    const result = await this.repository.update(id, updatedUser)\n    if (!result) {\n      throw new Error(`Failed to update user with ID ${id}`)\n    }\n    \n    return result\n  }\n  \n  async deleteUser(id: number): Promise<boolean> {\n    if (id <= 0) {\n      throw new Error('Invalid user ID')\n    }\n    \n    return this.repository.delete(id)\n  }\n}\n\n// user-service.test.ts - Comprehensive tests with type safety\nimport { UserService, User, UserCreationData, UserRepository } from './user-service'\n\n// Mock repository implementation\nclass MockUserRepository implements UserRepository {\n  private users: User[] = []\n  private nextId = 1\n  \n  async findById(id: number): Promise<User | null> {\n    return this.users.find(user => user.id === id) || null\n  }\n  \n  async findAll(): Promise<User[]> {\n    return [...this.users]\n  }\n  \n  async create(userData: UserCreationData): Promise<User> {\n    const user: User = {\n      ...userData,\n      id: this.nextId++,\n      createdAt: new Date(),\n      updatedAt: new Date()\n    }\n    this.users.push(user)\n    return user\n  }\n  \n  async update(id: number, updates: Partial<User>): Promise<User | null> {\n    const index = this.users.findIndex(user => user.id === id)\n    if (index === -1) return null\n    \n    this.users[index] = { ...this.users[index], ...updates }\n    return this.users[index]\n  }\n  \n  async delete(id: number): Promise<boolean> {\n    const initialLength = this.users.length\n    this.users = this.users.filter(user => user.id !== id)\n    return this.users.length < initialLength\n  }\n}\n\n// Test utilities\nconst createTestUser = (overrides: Partial<UserCreationData> = {}): UserCreationData => ({\n  name: 'Test User',\n  email: 'test@example.com',\n  age: 25,\n  ...overrides\n})\n\ndescribe('UserService', () => {\n  let userService: UserService\n  let mockRepository: jest.Mocked<UserRepository>\n  \n  beforeEach(() => {\n    mockRepository = new MockUserRepository() as jest.Mocked<UserRepository>\n    userService = new UserService(mockRepository)\n  })\n  \n  describe('createUser', () => {\n    it('should create a user with valid data', async () => {\n      const userData = createTestUser({ name: 'John Doe', email: 'john@example.com' })\n      \n      const user = await userService.createUser(userData)\n      \n      expect(user.name).toBe('John Doe')\n      expect(user.email).toBe('john@example.com')\n      expect(user.age).toBe(25)\n      expect(user.id).toBeGreaterThan(0)\n      expect(user.createdAt).toBeInstanceOf(Date)\n      expect(user.updatedAt).toBeInstanceOf(Date)\n    })\n    \n    it('should throw error for invalid email', async () => {\n      const userData = createTestUser({ email: 'invalid-email' })\n      \n      await expect(userService.createUser(userData))\n        .rejects\n        .toThrow('Valid email is required')\n    })\n    \n    it('should throw error for missing name', async () => {\n      const userData = createTestUser({ name: '' })\n      \n      await expect(userService.createUser(userData))\n        .rejects\n        .toThrow('Name is required')\n    })\n    \n    it('should throw error for invalid age', async () => {\n      const userData = createTestUser({ age: -5 })\n      \n      await expect(userService.createUser(userData))\n        .rejects\n        .toThrow('Age must be between 0 and 150')\n    })\n  })\n  \n  describe('getUser', () => {\n    it('should return user by id', async () => {\n      // Setup\n      const userData = createTestUser()\n      const createdUser = await userService.createUser(userData)\n      \n      // Test\n      const user = await userService.getUser(createdUser.id)\n      \n      expect(user).toEqual(createdUser)\n    })\n    \n    it('should throw error for non-existent user', async () => {\n      await expect(userService.getUser(999))\n        .rejects\n        .toThrow('User with ID 999 not found')\n    })\n    \n    it('should throw error for invalid user ID', async () => {\n      await expect(userService.getUser(-1))\n        .rejects\n        .toThrow('Invalid user ID')\n    })\n  })\n  \n  describe('updateUser', () => {\n    it('should update existing user partially', async () => {\n      // Setup\n      const userData = createTestUser({ name: 'Original Name', email: 'original@test.com', age: 25 })\n      const createdUser = await userService.createUser(userData)\n      \n      // Test\n      const updates = { name: 'Updated Name', age: 26 }\n      const updatedUser = await userService.updateUser(createdUser.id, updates)\n      \n      expect(updatedUser.name).toBe('Updated Name')\n      expect(updatedUser.email).toBe('original@test.com')  // Unchanged\n      expect(updatedUser.age).toBe(26)\n      expect(updatedUser.updatedAt.getTime()).toBeGreaterThan(createdUser.updatedAt.getTime())\n    })\n    \n    it('should throw error for invalid age update', async () => {\n      // Setup\n      const userData = createTestUser()\n      const createdUser = await userService.createUser(userData)\n      \n      // Test\n      const invalidUpdates = { age: 200 }\n      await expect(userService.updateUser(createdUser.id, invalidUpdates))\n        .rejects\n        .toThrow('Age must be between 0 and 150')\n    })\n  })\n  \n  describe('deleteUser', () => {\n    it('should delete existing user', async () => {\n      // Setup\n      const userData = createTestUser()\n      const createdUser = await userService.createUser(userData)\n      \n      // Test\n      const result = await userService.deleteUser(createdUser.id)\n      \n      expect(result).toBe(true)\n      await expect(userService.getUser(createdUser.id))\n        .rejects\n        .toThrow(/not found/)
+    })
+    
+    it('should return false for non-existent user', async () => {
+      const result = await userService.deleteUser(999)
+      expect(result).toBe(false)
+    })
+  })
+  
+  // Async testing examples
+  describe('Async operations', () => {
+    it('handles async operations with resolves', async () => {
+      const userData = createTestUser()
+      await expect(userService.createUser(userData)).resolves.toHaveProperty('name', 'Test User')
+    })
+    
+    it('tests async error with rejects', async () => {
+      await expect(userService.getUser(-1)).rejects.toThrow('Invalid user ID')
+    })
+    
+    it('tests with done callback for callback-based async code', (done) => {
+      setTimeout(() => {
+        try {
+          expect(1 + 1).toBe(2)
+          done()
+        } catch (error) {
+          done(error)
+        }
+      }, 10)
+    })
+  })
+})",
+      "explanation": "This example demonstrates comprehensive testing patterns with TypeScript:\n\n1. **Type-Safe Tests**: Using TypeScript types for test data and assertions\n2. **Input Validation Testing**: Testing both valid and invalid inputs\n3. **Error Condition Testing**: Verifying proper error messages and handling\n4. **Mock Implementation**: Creating type-safe mock objects for dependencies\n5. **Test Utilities**: Helper functions for creating test data\n6. **Async Testing**: Multiple approaches for testing asynchronous code\n7. **Edge Case Testing**: Boundary conditions and error scenarios\n8. **Test Organization**: Structured test suites with descriptive names\n\nThe output shows Jest's test runner output with passing tests and proper error assertions. Type safety helps catch issues at compile time while comprehensive test coverage ensures runtime correctness.",
       "language": "typescript"
     },
     "pitfalls": [
       {
-        "mistake": "Not following best practices",
-        "solution": "Review documentation and community guidelines",
-        "severity": "medium"
+        "mistake": "Testing implementation details instead of behavior",
+        "solution": "Focus on testing what a function does rather than how it does it, making tests more resilient to refactoring while still maintaining type safety.",
+        "severity": "high"
       },
       {
-        "mistake": "Skipping error handling",
-        "solution": "Implement proper error boundaries and validation",
-        "severity": "low"
+        "mistake": "Not testing edge cases and error conditions",
+        "solution": "Test boundary conditions, invalid inputs, and error scenarios to ensure robust error handling, using TypeScript's type system to catch type-related issues.",
+        "severity": "high"
+      },
+      {
+        "mistake": "Creating tests that depend on external state or execution order",
+        "solution": "Ensure tests are isolated and can run independently in any order by using proper setup/teardown and mock implementations.",
+        "severity": "medium"
       }
     ],
     "exercises": [
       {
-        "title": "Practice: Testing TypeScript Code",
-        "description": "Apply the concepts from this lesson on Testing",
+        "title": "Comprehensive API Service Testing",
+        "description": "Create a complete test suite for an API service including unit, integration, and contract tests",
         "checkpoints": [
-          "Understand the core concept",
-          "Implement the example code",
-          "Experiment with variations"
+          "Write unit tests for service layer functions with comprehensive mocking",
+          "Implement integration tests for API endpoints with a test database",
+          "Create contract tests that verify API responses match expected schemas",
+          "Add performance tests for critical endpoints",
+          "Configure test coverage reporting and set minimum coverage thresholds"
         ]
       }
     ],
     "next": [],
-    "estimatedMinutes": 25,
+    "estimatedMinutes": 45,
     "difficulty": "Intermediate",
     "tags": [
       "Testing",
+      "Jest",
+      "Type Safety",
       "typescript"
     ],
     "legacy": {
@@ -632,8 +943,8 @@
       "originalTopic": "Testing",
       "migrated": "2025-10-01T06:41:13.482Z"
     },
-    "lastUpdated": "2025-10-01T06:41:13.482Z",
-    "version": "1.0.0"
+    "lastUpdated": "2025-10-03T10:00:00.000Z",
+    "version": "1.1.0"
   },
   {
     "id": "typescript-fundamentals-lesson-13",

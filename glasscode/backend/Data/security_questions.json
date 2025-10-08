@@ -1,0 +1,262 @@
+[
+  {
+    "id": 1,
+    "question": "Which of the following is the most effective method to prevent SQL injection attacks?",
+    "topic": "Security",
+    "choices": [
+      "Using parameterized queries or prepared statements",
+      "Escaping single quotes in user input",
+      "Validating input length",
+      "Using stored procedures"
+    ],
+    "correctIndex": 0,
+    "explanation": "Parameterized queries or prepared statements are the most effective method to prevent SQL injection because they separate the SQL code from the data, ensuring that user input is treated as data rather than executable code. While escaping quotes and input validation help, they can be bypassed by sophisticated attacks."
+  },
+  {
+    "id": 2,
+    "question": "What is the primary purpose of salting passwords before hashing?",
+    "topic": "Security",
+    "choices": [
+      "To prevent rainbow table attacks",
+      "To make passwords longer",
+      "To encrypt the password",
+      "To compress the password"
+    ],
+    "correctIndex": 0,
+    "explanation": "Salting passwords adds a unique random value to each password before hashing, which prevents rainbow table attacks. Rainbow tables are precomputed tables of hash values for common passwords, but when a unique salt is added to each password, the resulting hash is unique even for identical passwords."
+  },
+  {
+    "id": 3,
+    "question": "Which HTTP security header prevents clickjacking attacks?",
+    "topic": "Security",
+    "choices": [
+      "X-Frame-Options",
+      "X-XSS-Protection",
+      "X-Content-Type-Options",
+      "Strict-Transport-Security"
+    ],
+    "correctIndex": 0,
+    "explanation": "X-Frame-Options header prevents clickjacking by controlling whether a page can be displayed in a frame, iframe, or object. Setting it to 'DENY' or 'SAMEORIGIN' prevents other sites from embedding your page in a frame, which is how clickjacking attacks typically work."
+  },
+  {
+    "id": 4,
+    "question": "What is the main difference between authentication and authorization?",
+    "topic": "Security",
+    "choices": [
+      "Authentication verifies identity, authorization determines permissions",
+      "Authentication is for users, authorization is for admins",
+      "Authentication uses passwords, authorization uses tokens",
+      "Authentication is client-side, authorization is server-side"
+    ],
+    "correctIndex": 0,
+    "explanation": "Authentication is the process of verifying who a user is (typically through credentials like username/password), while authorization is the process of determining what resources or actions an authenticated user is permitted to access or perform."
+  },
+  {
+    "id": 5,
+    "question": "Which of the following is NOT one of the OWASP Top 10 security risks?",
+    "topic": "Security",
+    "choices": [
+      "Cross-Site Scripting (XSS)",
+      "SQL Injection",
+      "Buffer Overflow",
+      "Broken Access Control"
+    ],
+    "correctIndex": 2,
+    "explanation": "Buffer Overflow is a low-level programming vulnerability that is more common in languages like C/C++, but it's not typically listed in the OWASP Top 10, which focuses on web application security risks. Cross-Site Scripting, SQL Injection, and Broken Access Control are all part of the OWASP Top 10."
+  },
+  {
+    "id": 6,
+    "question": "What is the recommended approach for handling failed login attempts?",
+    "topic": "Security",
+    "choices": [
+      "Implement account lockout with exponential backoff",
+      "Immediately lock the account permanently",
+      "Allow unlimited attempts without restrictions",
+      "Show detailed error messages about why login failed"
+    ],
+    "correctIndex": 0,
+    "explanation": "Implementing account lockout with exponential backoff (increasing delays between attempts) is the recommended approach. It prevents brute force attacks while avoiding denial of service through permanent lockouts. Detailed error messages should be avoided as they can help attackers."
+  },
+  {
+    "id": 7,
+    "question": "Which Content Security Policy (CSP) directive controls which scripts can be executed?",
+    "topic": "Security",
+    "choices": [
+      "script-src",
+      "default-src",
+      "object-src",
+      "frame-src"
+    ],
+    "correctIndex": 0,
+    "explanation": "The script-src directive in Content Security Policy specifically controls which sources are allowed to execute JavaScript. This helps prevent XSS attacks by restricting where scripts can be loaded from and what types of scripts can be executed."
+  },
+  {
+    "id": 8,
+    "question": "What is the primary purpose of using HTTPS instead of HTTP?",
+    "topic": "Security",
+    "choices": [
+      "To encrypt data in transit between client and server",
+      "To make websites load faster",
+      "To improve search engine rankings",
+      "To reduce server load"
+    ],
+    "correctIndex": 0,
+    "explanation": "HTTPS (HTTP Secure) encrypts data in transit between the client and server using TLS/SSL encryption. This prevents eavesdropping, tampering, and man-in-the-middle attacks. While HTTPS can have SEO benefits, its primary purpose is security."
+  },
+  {
+    "id": 9,
+    "question": "Which type of attack is prevented by validating file uploads for both extension and content?",
+    "topic": "Security",
+    "choices": [
+      "Malicious file upload attacks",
+      "SQL injection",
+      "Cross-site scripting",
+      "Session fixation"
+    ],
+    "correctIndex": 0,
+    "explanation": "Validating both file extensions and content prevents malicious file upload attacks where attackers try to upload executable files (like PHP scripts) disguised with innocent extensions (.jpg) or upload files that contain malicious code that could be executed by the server."
+  },
+  {
+    "id": 10,
+    "question": "What is the purpose of the 'Secure' flag on cookies?",
+    "topic": "Security",
+    "choices": [
+      "Ensures cookies are only sent over HTTPS connections",
+      "Encrypts the cookie content",
+      "Prevents JavaScript access to cookies",
+      "Makes cookies expire faster"
+    ],
+    "correctIndex": 0,
+    "explanation": "The 'Secure' flag on cookies ensures they are only transmitted over HTTPS connections, preventing them from being sent over unencrypted HTTP connections where they could be intercepted. This is crucial for protecting sensitive session tokens and other authentication data."
+  },
+  {
+    "id": 11,
+    "question": "Which of the following is the most secure method for storing session data?",
+    "topic": "Security",
+    "choices": [
+      "Server-side storage with session IDs in cookies",
+      "Storing all session data in client-side cookies",
+      "URL parameters",
+      "Hidden form fields"
+    ],
+    "correctIndex": 0,
+    "explanation": "Server-side storage with session IDs in cookies is the most secure method. It keeps sensitive session data on the server where it can't be tampered with, while only sending a session identifier to the client. Client-side storage exposes data to the user, and URL parameters can be logged or shared."
+  },
+  {
+    "id": 12,
+    "question": "What does the principle of least privilege entail?",
+    "topic": "Security",
+    "choices": [
+      "Users and processes should have only the minimum permissions necessary",
+      "Users should have access to all system resources",
+      "Administrators should have limited access",
+      "Permissions should be granted based on seniority"
+    ],
+    "correctIndex": 0,
+    "explanation": "The principle of least privilege states that users, processes, and systems should only have the minimum permissions necessary to perform their required functions. This minimizes the potential damage from security breaches or accidental actions."
+  },
+  {
+    "id": 13,
+    "question": "Which method is most effective for preventing Cross-Site Request Forgery (CSRF) attacks?",
+    "topic": "Security",
+    "choices": [
+      "Using anti-CSRF tokens",
+      "Validating the Referer header",
+      "Checking the User-Agent header",
+      "Requiring HTTPS"
+    ],
+    "correctIndex": 0,
+    "explanation": "Anti-CSRF tokens are the most effective method for preventing CSRF attacks. They are unique, unpredictable values generated by the server and sent to the client, then required with each state-changing request. Header validation can be bypassed, and HTTPS doesn't prevent CSRF."
+  },
+  {
+    "id": 14,
+    "question": "What is the primary benefit of using bcrypt over MD5 for password hashing?",
+    "topic": "Security",
+    "choices": [
+      "bcrypt is intentionally slow and resistant to brute force attacks",
+      "bcrypt produces shorter hash values",
+      "bcrypt is faster to compute",
+      "bcrypt doesn't require a salt"
+    ],
+    "correctIndex": 0,
+    "explanation": "bcrypt is intentionally designed to be slow and computationally expensive, making brute force attacks much more difficult. It also automatically handles salting. MD5 is fast but cryptographically broken, making it unsuitable for password hashing."
+  },
+  {
+    "id": 15,
+    "question": "Which security measure helps prevent directory traversal attacks?",
+    "topic": "Security",
+    "choices": [
+      "Validating and sanitizing file paths",
+      "Using HTTPS",
+      "Implementing CSRF tokens",
+      "Setting cookie expiration dates"
+    ],
+    "correctIndex": 0,
+    "explanation": "Validating and sanitizing file paths prevents directory traversal attacks (like ../../etc/passwd) by ensuring that file access is restricted to intended directories. This involves checking for dangerous path sequences and resolving paths to ensure they're within allowed boundaries."
+  },
+  {
+    "id": 16,
+    "question": "What is the purpose of input validation in security?",
+    "topic": "Security",
+    "choices": [
+      "To prevent injection attacks and ensure data integrity",
+      "To improve user interface design",
+      "To increase database performance",
+      "To reduce network bandwidth usage"
+    ],
+    "correctIndex": 0,
+    "explanation": "Input validation is a fundamental security practice that prevents injection attacks (SQL, XSS, command injection) by ensuring that user-supplied data conforms to expected formats and types. It also helps maintain data integrity in the application."
+  },
+  {
+    "id": 17,
+    "question": "Which security header prevents MIME type sniffing?",
+    "topic": "Security",
+    "choices": [
+      "X-Content-Type-Options: nosniff",
+      "X-Frame-Options: DENY",
+      "X-XSS-Protection: 1",
+      "Strict-Transport-Security"
+    ],
+    "correctIndex": 0,
+    "explanation": "X-Content-Type-Options: nosniff prevents browsers from MIME-sniffing a response away from the declared content type. This helps prevent certain types of attacks where a file with one extension is interpreted as a different content type by the browser."
+  },
+  {
+    "id": 18,
+    "question": "What is the recommended approach for handling sensitive data in logs?",
+    "topic": "Security",
+    "choices": [
+      "Never log sensitive data like passwords or credit card numbers",
+      "Encrypt all log files",
+      "Log everything for debugging purposes",
+      "Store logs in a public location"
+    ],
+    "correctIndex": 0,
+    "explanation": "Sensitive data should never be logged, regardless of encryption or storage location. This includes passwords, credit card numbers, social security numbers, and other personally identifiable information. Even encrypted logs can be compromised, and logging sensitive data creates unnecessary risk."
+  },
+  {
+    "id": 19,
+    "question": "Which of the following is a characteristic of a secure JWT (JSON Web Token)?",
+    "topic": "Security",
+    "choices": [
+      "Signed with a strong secret and has a short expiration time",
+      "Contains the user's password for verification",
+      "Never expires for user convenience",
+      "Stored in localStorage without additional security measures"
+    ],
+    "correctIndex": 0,
+    "explanation": "Secure JWTs should be signed with a strong secret (or use asymmetric cryptography) and have short expiration times to limit the window of opportunity for attackers. They should never contain passwords, should expire reasonably quickly, and should be stored securely (HttpOnly, Secure cookies are preferred over localStorage)."
+  },
+  {
+    "id": 20,
+    "question": "What is the primary defense against Cross-Site Scripting (XSS) attacks?",
+    "topic": "Security",
+    "choices": [
+      "Output encoding and input validation",
+      "Using HTTPS",
+      "Implementing CSRF tokens",
+      "Setting cookie expiration dates"
+    ],
+    "correctIndex": 0,
+    "explanation": "The primary defense against XSS attacks is proper output encoding (escaping) combined with input validation. This ensures that user-supplied data is treated as data rather than executable code when rendered in web pages. While HTTPS and CSRF tokens are important for other security aspects, they don't prevent XSS."
+  }
+]

@@ -1,0 +1,60 @@
+{
+  "id": "tailwind-lesson-14-advanced-customization",
+  "moduleSlug": "tailwind-advanced",
+  "title": "Advanced Customization Techniques",
+  "order": 14,
+  "objectives": [
+    "Master advanced theme customization with complex design tokens",
+    "Implement custom utility classes and variants",
+    "Create sophisticated plugin systems for Tailwind extensions",
+    "Optimize Tailwind configuration for large-scale applications"
+  ],
+  "intro": "Advanced customization techniques in Tailwind CSS enable developers to create highly tailored design systems that meet specific project requirements while maintaining the framework's utility-first approach. This comprehensive lesson explores sophisticated customization patterns that go beyond basic theme extensions to create powerful, maintainable design systems.\n\nYou'll learn to implement complex theme configurations using nested design tokens, create custom utility classes that extend Tailwind's capabilities, and develop plugin systems that encapsulate reusable functionality. We'll explore advanced configuration patterns that optimize Tailwind for large-scale applications with complex design requirements.\n\nThe lesson covers practical implementation strategies for managing design consistency across large teams, creating themeable components, and implementing sophisticated responsive design patterns. You'll discover how to balance customization with maintainability to create design systems that scale effectively.\n\nBy mastering these advanced customization techniques, you'll be able to create Tailwind configurations that perfectly match your design requirements while maintaining the framework's performance and developer experience benefits.",
+  "code": {
+    "example": "// Advanced Tailwind Configuration with Complex Themes\n\n// tailwind.config.js\nconst plugin = require('tailwindcss/plugin')\n\nmodule.exports = {\n  content: [\n    './src/**/*.{js,jsx,ts,tsx}',\n    './public/index.html'\n  ],\n  theme: {\n    extend: {\n      // Complex color palette with semantic naming\n      colors: {\n        brand: {\n          primary: {\n            50: '#eff6ff',\n            100: '#dbeafe',\n            200: '#bfdbfe',\n            300: '#93c5fd',\n            400: '#60a5fa',\n            500: '#3b82f6',\n            600: '#2563eb',\n            700: '#1d4ed8',\n            800: '#1e40af',\n            900: '#1e3a8a',\n          },\n          secondary: {\n            50: '#f0f9ff',\n            100: '#e0f2fe',\n            200: '#bae6fd',\n            300: '#7dd3fc',\n            400: '#38bdf8',\n            500: '#0ea5e9',\n            600: '#0284c7',\n            700: '#0369a1',\n            800: '#075985',\n            900: '#0c4a6e',\n          }\n        },\n        status: {\n          success: '#10b981',\n          warning: '#f59e0b',\n          error: '#ef4444',\n          info: '#3b82f6'\n        }\n      },\n      \n      // Advanced typography scale\n      fontSize: {\n        'xs': ['0.75rem', { lineHeight: '1rem' }],\n        'sm': ['0.875rem', { lineHeight: '1.25rem' }],\n        'base': ['1rem', { lineHeight: '1.5rem' }],\n        'lg': ['1.125rem', { lineHeight: '1.75rem' }],\n        'xl': ['1.25rem', { lineHeight: '1.75rem' }],\n        '2xl': ['1.5rem', { lineHeight: '2rem' }],\n        '3xl': ['1.875rem', { lineHeight: '2.25rem' }],\n        '4xl': ['2.25rem', { lineHeight: '2.5rem' }],\n        '5xl': ['3rem', { lineHeight: '1' }],\n        '6xl': ['3.75rem', { lineHeight: '1' }],\n        '7xl': ['4.5rem', { lineHeight: '1' }],\n        '8xl': ['6rem', { lineHeight: '1' }],\n        '9xl': ['8rem', { lineHeight: '1' }],\n      },\n      \n      // Custom spacing scale\n      spacing: {\n        '72': '18rem',\n        '80': '20rem',\n        '88': '22rem',\n        '96': '24rem',\n        '104': '26rem',\n        '112': '28rem',\n        '120': '30rem',\n        '128': '32rem',\n        '136': '34rem',\n        '144': '36rem',\n      },\n      \n      // Custom shadows\n      boxShadow: {\n        'xs': '0 0 0 1px rgba(0, 0, 0, 0.05)',\n        'inner-lg': 'inset 0 2px 4px 0 rgba(0, 0, 0, 0.06)',\n        'inner-xl': 'inset 0 4px 6px 0 rgba(0, 0, 0, 0.06)',\n        'inner-2xl': 'inset 0 10px 15px 0 rgba(0, 0, 0, 0.06)',\n      },\n      \n      // Custom animation utilities\n      keyframes: {\n        'fade-in': {\n          '0%': { opacity: '0' },\n          '100%': { opacity: '1' },\n        },\n        'slide-in': {\n          '0%': { transform: 'translateX(-100%)' },\n          '100%': { transform: 'translateX(0)' },\n        },\n        'pulse-slow': {\n          '0%, 100%': { opacity: '1' },\n          '50%': { opacity: '0.5' },\n        }\n      },\n      animation: {\n        'fade-in': 'fade-in 0.3s ease-out',\n        'slide-in': 'slide-in 0.3s ease-out',\n        'pulse-slow': 'pulse-slow 2s cubic-bezier(0.4, 0, 0.6, 1) infinite',\n      }\n    }\n  },\n  \n  // Custom variants\n  variants: {\n    extend: {\n      opacity: ['disabled'],\n      backgroundColor: ['active'],\n      textColor: ['visited'],\n      display: ['group-hover'],\n    }\n  },\n  \n  // Advanced plugins\n  plugins: [\n    // Custom utility plugin\n    plugin(function({ addUtilities, theme }) {\n      const newUtilities = {\n        '.text-shadow': {\n          textShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',\n        },\n        '.text-shadow-md': {\n          textShadow: '0 4px 8px rgba(0, 0, 0, 0.12), 0 2px 4px rgba(0, 0, 0, 0.08)',\n        },\n        '.text-shadow-lg': {\n          textShadow: '0 15px 30px rgba(0, 0, 0, 0.11), 0 5px 15px rgba(0, 0, 0, 0.08)',\n        },\n        '.border-gradient': {\n          border: 'double 2px transparent',\n          borderRadius: '8px',\n          backgroundImage: 'linear-gradient(white, white), linear-gradient(to right, #3b82f6, #0ea5e9)',\n          backgroundOrigin: 'border-box',\n          backgroundClip: 'padding-box, border-box',\n        }\n      }\n      addUtilities(newUtilities)\n    }),\n    \n    // Component plugin\n    plugin(function({ addComponents, theme }) {\n      const buttons = {\n        '.btn': {\n          padding: '.5rem 1rem',\n          borderRadius: '.25rem',\n          fontWeight: '600',\n          transition: 'all 0.2s ease',\n          '&:focus': {\n            outline: '2px solid transparent',\n            outlineOffset: '2px',\n          }\n        },\n        '.btn-primary': {\n          backgroundColor: theme('colors.brand.primary.500'),\n          color: '#fff',\n          '&:hover': {\n            backgroundColor: theme('colors.brand.primary.600'),\n          },\n          '&:focus': {\n            boxShadow: '0 0 0 3px rgba(59, 130, 246, 0.5)',\n          }\n        },\n        '.btn-secondary': {\n          backgroundColor: theme('colors.brand.secondary.500'),\n          color: '#fff',\n          '&:hover': {\n            backgroundColor: theme('colors.brand.secondary.600'),\n          },\n          '&:focus': {\n            boxShadow: '0 0 0 3px rgba(14, 165, 233, 0.5)',\n          }\n        }\n      }\n      addComponents(buttons)\n    }),\n    \n    // Custom variant plugin\n    plugin(function({ addVariant }) {\n      addVariant('children', '& > *')\n      addVariant('scrollbar', '&::-webkit-scrollbar')\n      addVariant('scrollbar-thumb', '&::-webkit-scrollbar-thumb')\n      addVariant('scrollbar-track', '&::-webkit-scrollbar-track')\n    })\n  ]\n}\n\n// Usage examples:\n// <div class=\"text-shadow-lg text-4xl font-bold\">Stylish Heading</div>\n// <button class=\"btn btn-primary\">Primary Button</button>\n// <div class=\"children:p-4 children:border children:rounded\">\n//   <p>Child 1</p>\n//   <p>Child 2</p>\n// </div>",
+    "explanation": "This example demonstrates advanced Tailwind customization techniques including complex theme configuration with semantic color palettes, custom typography scales, extended spacing systems, and custom animation utilities. The configuration also shows how to create custom plugins for utilities, components, and variants.\n\nKey features include:\n1. Nested color system with semantic naming\n2. Extended typography scale with line heights\n3. Custom spacing and shadow utilities\n4. Custom animation keyframes and utilities\n5. Plugin system for custom utilities, components, and variants\n\nThis configuration allows for highly customized design systems while maintaining Tailwind's performance benefits.",
+    "language": "javascript"
+  },
+  "pitfalls": [
+    {
+      "mistake": "Over-customizing Tailwind configuration leading to bloated CSS output",
+      "solution": "Use content purging and only extend what's actually needed",
+      "severity": "high"
+    },
+    {
+      "mistake": "Creating inconsistent naming conventions in theme extensions",
+      "solution": "Establish clear naming conventions and document them",
+      "severity": "medium"
+    },
+    {
+      "mistake": "Writing overly complex plugins that are hard to maintain",
+      "solution": "Keep plugins focused and well-documented, break complex functionality into multiple plugins",
+      "severity": "medium"
+    }
+  ],
+  "exercises": [
+    {
+      "title": "Build an Advanced Tailwind Configuration",
+      "description": "Create a comprehensive Tailwind configuration for a design system with custom colors, typography, spacing, and plugins",
+      "checkpoints": [
+        "Implement a semantic color system with proper contrast ratios",
+        "Create custom typography scales with line heights",
+        "Extend spacing and shadow utilities",
+        "Build custom plugins for utilities and components",
+        "Optimize configuration for production builds"
+      ]
+    }
+  ],
+  "next": ["tailwind-lesson-15-design-systems"],
+  "estimatedMinutes": 50,
+  "difficulty": "Advanced",
+  "tags": [
+    "Customization",
+    "Configuration",
+    "Plugins",
+    "Design Systems",
+    "Tailwind CSS"
+  ],
+  "lastUpdated": "2025-10-03T10:00:00Z",
+  "version": "1.0.0"
+}

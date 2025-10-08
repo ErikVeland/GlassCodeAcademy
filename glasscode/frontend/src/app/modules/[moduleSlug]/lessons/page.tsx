@@ -1,7 +1,7 @@
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
-import { contentRegistry } from '@/lib/contentRegistry';
+import { contentRegistry, getLessonGroups } from '@/lib/contentRegistry';
 
 interface LessonsPageProps {
   params: Promise<{ moduleSlug: string }>;
@@ -43,6 +43,7 @@ export default async function LessonsPage({ params }: LessonsPageProps) {
 
   const lessons = await contentRegistry.getModuleLessons(module.slug);
   const thresholds = await contentRegistry.checkModuleThresholds(module.slug);
+  const lessonGroups = getLessonGroups(module.slug, lessons);
 
   if (!thresholds.lessonsValid && process.env.NODE_ENV === 'production') {
     notFound();
@@ -84,51 +85,53 @@ export default async function LessonsPage({ params }: LessonsPageProps) {
                   {module.title} Lessons
                 </h1>
                 <p className="text-gray-600 dark:text-gray-300">
-                  {lessons?.length || 0} lessons available
+                  {lessonGroups.length} lesson groups available
                 </p>
               </div>
             </div>
           </div>
         </header>
 
-        {/* Lessons List */}
-        {lessons && lessons.length > 0 ? (
+        {/* Lesson Groups List */}
+        {lessonGroups && lessonGroups.length > 0 ? (
           <div className="space-y-6">
-            {lessons.map((lesson, index) => (
-              <div key={lesson.id} className="glass-morphism p-6 rounded-xl">
+            {lessonGroups.map((group, groupIndex) => (
+              <div key={group.id} className="glass-morphism p-6 rounded-xl">
                 <div className="flex items-start justify-between">
                   <div className="flex-1">
                     <div className="flex items-center gap-3 mb-3">
                       <span className="flex items-center justify-center w-8 h-8 bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 rounded-full text-sm font-bold">
-                        {lesson.order || index + 1}
+                        {group.order}
                       </span>
                       <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
-                        {lesson.title}
+                        {group.title}
                       </h2>
                       <span className="px-2 py-1 bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300 rounded text-sm">
-                        {lesson.estimatedMinutes || 30} min
+                        {group.lessons.length} lessons
                       </span>
                     </div>
                     
-                    {lesson.objectives && (
-                      <div className="mb-4">
-                        <h3 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                          Learning Objectives:
-                        </h3>
-                        <ul className="text-sm text-gray-600 dark:text-gray-400 space-y-1">
-                          {lesson.objectives.slice(0, 2).map((objective: string, objIndex: number) => (
-                            <li key={objIndex} className="flex items-center gap-2">
-                              <span className="text-green-500">•</span>
-                              {objective}
-                            </li>
-                          ))}
-                        </ul>
-                      </div>
-                    )}
+                    <p className="text-gray-600 dark:text-gray-300 mb-4">
+                      {group.description}
+                    </p>
 
-                    {lesson.tags && (
+                    <div className="mb-4">
+                      <h3 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                        Lessons in this group:
+                      </h3>
+                      <ul className="text-sm text-gray-600 dark:text-gray-400 space-y-1">
+                        {group.lessons.map((lesson: any, lessonIndex: number) => (
+                          <li key={lesson.id} className="flex items-center gap-2">
+                            <span className="text-blue-500">•</span>
+                            {lesson.title}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+
+                    {group.lessons[0] && (
                       <div className="flex flex-wrap gap-2 mb-4">
-                        {lesson.tags.slice(0, 3).map((tag: string) => (
+                        {group.lessons[0].tags?.slice(0, 3).map((tag: string) => (
                           <span
                             key={tag}
                             className="px-2 py-1 bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 rounded text-xs"
@@ -141,13 +144,15 @@ export default async function LessonsPage({ params }: LessonsPageProps) {
                   </div>
                   
                   <div className="ml-6">
-                    <Link
-                      href={`${module.routes.lessons}/${lesson.order || index + 1}`}
-                      className="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
-                    >
-                      Start Lesson
-                      <span className="ml-2">→</span>
-                    </Link>
+                    {group.lessons[0] && (
+                      <Link
+                        href={`${module.routes.lessons}/${group.lessons[0].order}`}
+                        className="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                      >
+                        Start Group
+                        <span className="ml-2">→</span>
+                      </Link>
+                    )}
                   </div>
                 </div>
               </div>

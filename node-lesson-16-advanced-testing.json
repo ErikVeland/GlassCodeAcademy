@@ -1,0 +1,59 @@
+{
+  "id": "node-fundamentals-lesson-16",
+  "moduleSlug": "node-fundamentals",
+  "title": "Advanced Testing Strategies with Jest and Supertest",
+  "order": 16,
+  "objectives": [
+    "Implement comprehensive testing strategies including unit, integration, and end-to-end testing",
+    "Utilize advanced Jest features like mocks, spies, and custom matchers",
+    "Create realistic API testing scenarios with Supertest",
+    "Implement test coverage analysis and quality metrics"
+  ],
+  "intro": "Advanced testing strategies are essential for building reliable, maintainable Node.js applications that can evolve over time without breaking existing functionality. This comprehensive lesson explores sophisticated testing techniques that go beyond basic unit testing to include integration testing, contract testing, and comprehensive test coverage strategies.\n\nYou'll learn to implement advanced Jest features including custom matchers, sophisticated mocking strategies, and test environment configurations that enable realistic testing scenarios. We'll explore integration testing patterns that verify interactions between different components and services, ensuring your application works correctly as a cohesive system.\n\nAPI testing with Supertest enables you to create realistic HTTP request scenarios that test your Express routes and middleware comprehensively. We'll cover advanced testing patterns for authentication, error handling, and edge cases that are often missed in basic testing approaches.\n\nBy mastering advanced testing strategies, you'll be able to build confidence in your code changes, reduce bugs in production, and maintain high-quality software that scales effectively. This knowledge is crucial for professional Node.js developers working on complex applications with multiple contributors.",
+  "code": {
+    "example": "// Advanced Jest Testing with Mocks and Spies\nconst database = require('./database');\nconst emailService = require('./emailService');\nconst userService = require('./userService');\n\ndescribe('User Service', () => {\n  // Mocking external dependencies\n  beforeEach(() => {\n    jest.clearAllMocks();\n  });\n  \n  describe('createUser', () => {\n    it('should create a user and send welcome email', async () => {\n      // Mock database operations\n      const mockUser = { id: 1, name: 'John Doe', email: 'john@example.com' };\n      jest.spyOn(database, 'insert').mockResolvedValue(mockUser);\n      \n      // Mock email service\n      jest.spyOn(emailService, 'sendWelcomeEmail').mockResolvedValue(true);\n      \n      // Test the function\n      const result = await userService.createUser({\n        name: 'John Doe',\n        email: 'john@example.com'\n      });\n      \n      // Assertions\n      expect(result).toEqual(mockUser);\n      expect(database.insert).toHaveBeenCalledWith('users', {\n        name: 'John Doe',\n        email: 'john@example.com'\n      });\n      expect(emailService.sendWelcomeEmail).toHaveBeenCalledWith(mockUser);\n    });\n    \n    it('should handle database errors gracefully', async () => {\n      // Mock database error\n      jest.spyOn(database, 'insert').mockRejectedValue(new Error('Database connection failed'));\n      \n      // Test error handling\n      await expect(userService.createUser({\n        name: 'John Doe',\n        email: 'john@example.com'\n      })).rejects.toThrow('Database connection failed');\n    });\n  });\n});\n\n// API Testing with Supertest\nconst request = require('supertest');\nconst app = require('../app');\n\ndescribe('API Endpoints', () => {\n  describe('POST /api/users', () => {\n    it('should create a new user with valid data', async () => {\n      const userData = {\n        name: 'Jane Smith',\n        email: 'jane@example.com',\n        password: 'securePassword123'\n      };\n      \n      const response = await request(app)\n        .post('/api/users')\n        .send(userData)\n        .expect(201);\n      \n      expect(response.body).toMatchObject({\n        id: expect.any(Number),\n        name: 'Jane Smith',\n        email: 'jane@example.com'\n      });\n      expect(response.body).not.toHaveProperty('password');\n    });\n    \n    it('should return 400 for invalid user data', async () => {\n      const invalidData = {\n        name: 'Jane Smith'\n        // Missing required email and password\n      };\n      \n      const response = await request(app)\n        .post('/api/users')\n        .send(invalidData)\n        .expect(400);\n      \n      expect(response.body).toHaveProperty('error');\n    });\n  });\n  \n  describe('Authentication Tests', () => {\n    it('should protect routes requiring authentication', async () => {\n      await request(app)\n        .get('/api/profile')\n        .expect(401);\n    });\n    \n    it('should allow access with valid token', async () => {\n      // First create a user and get token\n      const loginResponse = await request(app)\n        .post('/api/login')\n        .send({ email: 'user@example.com', password: 'password' });\n      \n      const token = loginResponse.body.token;\n      \n      // Test protected route\n      await request(app)\n        .get('/api/profile')\n        .set('Authorization', `Bearer ${token}`)\n        .expect(200);\n    });\n  });\n});\n\n// Custom Jest Matchers\nexpect.extend({\n  toBeWithinRange(received, floor, ceiling) {\n    const pass = received >= floor && received <= ceiling;\n    if (pass) {\n      return {\n        message: () => `expected ${received} not to be within range ${floor} - ${ceiling}`,\n        pass: true,\n      };\n    } else {\n      return {\n        message: () => `expected ${received} to be within range ${floor} - ${ceiling}`,\n        pass: false,\n      };\n    }\n  },\n});\n\n// Using custom matcher\nexpect(user.age).toBeWithinRange(18, 120);",
+    "explanation": "This example demonstrates advanced testing strategies including sophisticated mocking with Jest spies, realistic API testing with Supertest, custom matchers for domain-specific assertions, and comprehensive error handling tests. These techniques enable thorough testing of complex application logic while maintaining clean, readable test code.",
+    "language": "javascript"
+  },
+  "pitfalls": [
+    {
+      "mistake": "Creating overly complex mocks that don't reflect real-world scenarios",
+      "solution": "Keep mocks simple and focused on the specific behavior being tested, using realistic data and error conditions",
+      "severity": "medium"
+    },
+    {
+      "mistake": "Not testing error conditions and edge cases",
+      "solution": "Ensure comprehensive test coverage including error paths, boundary conditions, and unexpected inputs",
+      "severity": "high"
+    },
+    {
+      "mistake": "Writing tests that are too implementation-specific and break with refactoring",
+      "solution": "Focus on testing behavior and outcomes rather than implementation details, using public APIs for testing",
+      "severity": "medium"
+    }
+  ],
+  "exercises": [
+    {
+      "title": "Implement Comprehensive Testing for a User Management API",
+      "description": "Create a full testing suite for a user management API including unit tests with mocks, integration tests for database operations, API tests with Supertest, and custom matchers for domain-specific assertions",
+      "checkpoints": [
+        "Implement unit tests with Jest spies and mocks for service layer",
+        "Create integration tests for database operations with realistic data",
+        "Build API tests with Supertest covering all HTTP methods and status codes",
+        "Develop custom matchers for user validation and implement test coverage analysis"
+      ]
+    }
+  ],
+  "next": [],
+  "estimatedMinutes": 50,
+  "difficulty": "Advanced",
+  "tags": [
+    "Testing",
+    "Jest",
+    "Supertest",
+    "Quality Assurance",
+    "Node.js"
+  ],
+  "lastUpdated": "2025-10-03T00:00:00.000Z",
+  "version": "1.0.0"
+}

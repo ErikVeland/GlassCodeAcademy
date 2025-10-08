@@ -1,0 +1,334 @@
+{
+  "moduleSlug": "nextjs-advanced",
+  "title": "Next.js Full-Stack Framework Assessment",
+  "description": "Comprehensive assessment covering advanced Next.js concepts including SSR, SSG, API routes, and deployment",
+  "totalQuestions": 18,
+  "passingScore": 75,
+  "timeLimit": 30,
+  "questions": [
+    {
+      "id": "nextjs-advanced-q1",
+      "question": "What is the main difference between SSR and SSG in Next.js?",
+      "topic": "Rendering Methods",
+      "difficulty": "Intermediate",
+      "choices": [
+        "SSR renders pages at request time, SSG renders pages at build time",
+        "SSR is for dynamic content, SSG is for static content only",
+        "SSR uses getServerSideProps, SSG uses getStaticProps",
+        "All of the above"
+      ],
+      "correctIndex": 3,
+      "explanation": "All statements are correct. SSR renders pages on each request using getServerSideProps, while SSG pre-renders pages at build time using getStaticProps. The choice depends on how dynamic your content needs to be.",
+      "industryContext": "Next.js is widely adopted in enterprise applications for its flexibility in choosing the right rendering strategy based on content requirements.",
+      "tags": ["SSR", "SSG", "Rendering", "Performance"],
+      "questionType": "multiple-choice",
+      "estimatedTime": 120
+    },
+    {
+      "id": "nextjs-advanced-q2",
+      "question": "Which Next.js feature allows you to update statically generated pages after deployment?",
+      "topic": "Static Generation",
+      "difficulty": "Advanced",
+      "choices": [
+        "Server-Side Rendering",
+        "Incremental Static Regeneration (ISR)",
+        "Client-Side Rendering",
+        "Dynamic Imports"
+      ],
+      "correctIndex": 1,
+      "explanation": "Incremental Static Regeneration (ISR) allows you to update static content after deployment by setting a revalidate value in getStaticProps. This combines the benefits of static generation with the ability to update content.",
+      "industryContext": "ISR is crucial for e-commerce and content sites that need fast loading times but occasionally updated content.",
+      "tags": ["ISR", "Static Generation", "Performance"],
+      "questionType": "multiple-choice",
+      "estimatedTime": 90
+    },
+    {
+      "id": "nextjs-advanced-q3",
+      "question": "How do you create a dynamic API route in Next.js?",
+      "topic": "API Routes",
+      "difficulty": "Intermediate",
+      "choices": [
+        "Create a file named [param].js in the pages/api directory",
+        "Use the useRouter hook in an API file",
+        "Add dynamic: true to the API function",
+        "Use getServerSideProps in the API route"
+      ],
+      "correctIndex": 0,
+      "explanation": "Dynamic API routes in Next.js use square brackets in the filename, such as [id].js or [slug].js. The parameter name becomes available in req.query.",
+      "industryContext": "Dynamic API routes are essential for RESTful APIs and CRUD operations in full-stack applications.",
+      "tags": ["API Routes", "Dynamic Routing", "Backend"],
+      "questionType": "multiple-choice",
+      "estimatedTime": 90
+    },
+    {
+      "id": "nextjs-advanced-q4",
+      "question": "What is the correct way to optimize images in Next.js?",
+      "topic": "Image Optimization",
+      "difficulty": "Intermediate",
+      "choices": [
+        "Use the HTML img tag with manual optimization",
+        "Use the Next.js Image component with automatic optimization",
+        "Use CSS background-image for all images",
+        "Manually convert all images to WebP format"
+      ],
+      "correctIndex": 1,
+      "explanation": "The Next.js Image component provides automatic optimization including lazy loading, responsive images, modern format serving (WebP, AVIF), and size optimization based on device.",
+      "industryContext": "Image optimization is critical for Core Web Vitals and user experience, especially on mobile devices and slow connections.",
+      "tags": ["Images", "Performance", "Optimization", "Core Web Vitals"],
+      "questionType": "multiple-choice",
+      "estimatedTime": 90
+    },
+    {
+      "id": "nextjs-advanced-q5",
+      "question": "Which function should you use to fetch data on the server before rendering a page?",
+      "topic": "Data Fetching",
+      "difficulty": "Beginner",
+      "choices": [
+        "getServerSideProps",
+        "getStaticProps",
+        "useEffect",
+        "Both A and B"
+      ],
+      "correctIndex": 3,
+      "explanation": "Both getServerSideProps (for SSR) and getStaticProps (for SSG) can fetch data on the server before rendering. The choice depends on whether you need data at request time or build time.",
+      "industryContext": "Server-side data fetching is essential for SEO and initial page load performance in production applications.",
+      "tags": ["Data Fetching", "SSR", "SSG", "Performance"],
+      "questionType": "multiple-choice",
+      "estimatedTime": 90
+    },
+    {
+      "id": "nextjs-advanced-q6",
+      "question": "Which Next.js middleware function runs at the Edge Runtime?",
+      "topic": "Middleware",
+      "difficulty": "Advanced",
+      "choices": [
+        "middleware.ts in the root directory",
+        "_middleware.js in pages directory",
+        "api/middleware.js",
+        "components/middleware.tsx"
+      ],
+      "correctIndex": 0,
+      "explanation": "Next.js middleware runs at the Edge Runtime and should be defined in a middleware.ts file in the root directory. It executes before requests are completed and can modify responses.",
+      "industryContext": "Edge middleware is crucial for authentication, redirects, and performance optimization in modern web applications.",
+      "tags": ["Middleware", "Edge Runtime", "Performance"],
+      "questionType": "multiple-choice",
+      "estimatedTime": 90
+    },
+    {
+      "id": "nextjs-advanced-q7",
+      "question": "What is the purpose of the revalidate property in getStaticProps?",
+      "topic": "ISR",
+      "difficulty": "Intermediate",
+      "choices": [
+        "To enable Incremental Static Regeneration",
+        "To set cache headers for the page",
+        "To validate form data",
+        "To check user authentication"
+      ],
+      "correctIndex": 0,
+      "explanation": "The revalidate property in getStaticProps enables Incremental Static Regeneration (ISR), allowing static pages to be updated in the background after the specified number of seconds.",
+      "industryContext": "ISR is essential for sites that need static performance with fresh content, like news sites and e-commerce platforms.",
+      "tags": ["ISR", "Static Generation", "Performance"],
+      "questionType": "multiple-choice",
+      "estimatedTime": 90
+    },
+    {
+      "id": "nextjs-advanced-q8",
+      "question": "How do you create a catch-all dynamic route in Next.js?",
+      "topic": "Routing",
+      "difficulty": "Intermediate",
+      "choices": [
+        "[...slug].js",
+        "[slug*].js",
+        "[slug+].js",
+        "[*slug].js"
+      ],
+      "correctIndex": 0,
+      "explanation": "Catch-all routes in Next.js use the [...slug].js syntax with three dots before the parameter name. This captures multiple path segments as an array.",
+      "industryContext": "Catch-all routes are useful for CMSs, documentation sites, and flexible routing structures.",
+      "tags": ["Routing", "Dynamic Routes", "File System"],
+      "questionType": "multiple-choice",
+      "estimatedTime": 90
+    },
+    {
+      "id": "nextjs-advanced-q9",
+      "question": "Which Next.js configuration enables automatic image optimization?",
+      "topic": "Image Optimization",
+      "difficulty": "Beginner",
+      "choices": [
+        "It's enabled by default with the Image component",
+        "images: { optimize: true }",
+        "experimental: { imageOptimization: true }",
+        "plugins: ['@next/image-optimizer']"
+      ],
+      "correctIndex": 0,
+      "explanation": "Next.js Image optimization is enabled by default when using the next/image component. No additional configuration is required for basic optimization.",
+      "industryContext": "Automatic image optimization significantly improves Core Web Vitals and user experience across devices.",
+      "tags": ["Images", "Performance", "Optimization"],
+      "questionType": "multiple-choice",
+      "estimatedTime": 90
+    },
+    {
+      "id": "nextjs-advanced-q10",
+      "question": "What is the correct way to implement API authentication in Next.js?",
+      "topic": "API Security",
+      "difficulty": "Advanced",
+      "choices": [
+        "Check authentication in each API route handler",
+        "Use middleware to protect API routes",
+        "Implement a higher-order function for authentication",
+        "All of the above"
+      ],
+      "correctIndex": 3,
+      "explanation": "All approaches are valid for API authentication in Next.js. You can check auth in individual handlers, use middleware for route protection, or create reusable HOFs for authentication logic.",
+      "industryContext": "Proper API authentication is critical for security in production applications handling sensitive data.",
+      "tags": ["Authentication", "Security", "API Routes"],
+      "questionType": "multiple-choice",
+      "estimatedTime": 120
+    },
+    {
+      "id": "nextjs-advanced-q11",
+      "question": "Which deployment platform is specifically optimized for Next.js?",
+      "topic": "Deployment",
+      "difficulty": "Beginner",
+      "choices": [
+        "Vercel",
+        "Netlify",
+        "AWS",
+        "Heroku"
+      ],
+      "correctIndex": 0,
+      "explanation": "Vercel is the platform created by the Next.js team and is specifically optimized for Next.js applications, offering zero-config deployments and automatic optimizations.",
+      "industryContext": "While Next.js can deploy anywhere, Vercel provides the best developer experience and performance optimizations.",
+      "tags": ["Deployment", "Vercel", "Performance"],
+      "questionType": "multiple-choice",
+      "estimatedTime": 60
+    },
+    {
+      "id": "nextjs-advanced-q12",
+      "question": "How do you enable internationalization (i18n) in Next.js?",
+      "topic": "Internationalization",
+      "difficulty": "Intermediate",
+      "choices": [
+        "Configure i18n in next.config.js",
+        "Install react-intl package",
+        "Use the useTranslation hook",
+        "Add locale files to public directory"
+      ],
+      "correctIndex": 0,
+      "explanation": "Next.js i18n is enabled by configuring the i18n object in next.config.js with locales and defaultLocale. This enables automatic locale detection and routing.",
+      "industryContext": "Built-in i18n support is essential for applications targeting global markets and multilingual audiences.",
+      "tags": ["i18n", "Internationalization", "Configuration"],
+      "questionType": "multiple-choice",
+      "estimatedTime": 90
+    },
+    {
+      "id": "nextjs-advanced-q13",
+      "question": "What is the difference between fallback: false and fallback: 'blocking' in getStaticPaths?",
+      "topic": "Static Generation",
+      "difficulty": "Advanced",
+      "choices": [
+        "false shows 404 for missing paths, 'blocking' renders them on-demand",
+        "false disables ISR, 'blocking' enables it",
+        "false is for development, 'blocking' is for production",
+        "false uses client-side rendering, 'blocking' uses server-side rendering"
+      ],
+      "correctIndex": 0,
+      "explanation": "fallback: false returns 404 for paths not returned by getStaticPaths, while fallback: 'blocking' renders new paths on-demand server-side and caches them for future requests.",
+      "industryContext": "Understanding fallback behavior is crucial for balancing build times with content availability in large-scale applications.",
+      "tags": ["Static Generation", "getStaticPaths", "Performance"],
+      "questionType": "multiple-choice",
+      "estimatedTime": 120
+    },
+    {
+      "id": "nextjs-advanced-q14",
+      "question": "Which Next.js feature helps prevent layout shift during navigation?",
+      "topic": "Performance",
+      "difficulty": "Intermediate",
+      "choices": [
+        "Automatic code splitting",
+        "Link prefetching",
+        "Image optimization",
+        "CSS-in-JS"
+      ],
+      "correctIndex": 1,
+      "explanation": "Link prefetching automatically prefetches pages in the viewport, loading them before navigation to prevent layout shifts and improve perceived performance.",
+      "industryContext": "Link prefetching is a key optimization for improving Core Web Vitals and user experience in single-page applications.",
+      "tags": ["Performance", "Navigation", "Core Web Vitals"],
+      "questionType": "multiple-choice",
+      "estimatedTime": 90
+    },
+    {
+      "id": "nextjs-advanced-q15",
+      "question": "How do you implement custom error pages in Next.js?",
+      "topic": "Error Handling",
+      "difficulty": "Intermediate",
+      "choices": [
+        "Create _error.js in the pages directory",
+        "Create 404.js and 500.js in pages directory",
+        "Use error boundaries in components",
+        "All of the above"
+      ],
+      "correctIndex": 3,
+      "explanation": "Next.js supports custom error pages through _error.js for general errors, specific files like 404.js and 500.js for HTTP errors, and React error boundaries for component-level errors.",
+      "industryContext": "Proper error handling improves user experience and helps with debugging in production applications.",
+      "tags": ["Error Handling", "User Experience", "Pages"],
+      "questionType": "multiple-choice",
+      "estimatedTime": 90
+    },
+    {
+      "id": "nextjs-advanced-q16",
+      "question": "What is the purpose of the next.config.js file?",
+      "topic": "Configuration",
+      "difficulty": "Beginner",
+      "choices": [
+        "To configure Next.js build and runtime behavior",
+        "To define environment variables",
+        "To set up API routes",
+        "To configure database connections"
+      ],
+      "correctIndex": 0,
+      "explanation": "next.config.js is the configuration file for Next.js that allows you to customize build behavior, webpack configuration, redirects, headers, and other framework settings.",
+      "industryContext": "Proper configuration is essential for optimizing performance, security, and deployment settings in production applications.",
+      "tags": ["Configuration", "Build", "Optimization"],
+      "questionType": "multiple-choice",
+      "estimatedTime": 60
+    },
+    {
+      "id": "nextjs-advanced-q17",
+      "question": "Which approach is recommended for styling in Next.js applications?",
+      "topic": "Styling",
+      "difficulty": "Intermediate",
+      "choices": [
+        "CSS Modules for component-scoped styles",
+        "Styled-components for CSS-in-JS",
+        "Tailwind CSS for utility-first styling",
+        "All approaches are supported and valid"
+      ],
+      "correctIndex": 3,
+      "explanation": "Next.js supports multiple styling approaches including CSS Modules, styled-components, Tailwind CSS, and regular CSS. The choice depends on project requirements and team preferences.",
+      "industryContext": "Flexible styling options allow teams to choose the approach that best fits their workflow and design system requirements.",
+      "tags": ["Styling", "CSS", "Design Systems"],
+      "questionType": "multiple-choice",
+      "estimatedTime": 90
+    },
+    {
+      "id": "nextjs-advanced-q18",
+      "question": "How do you implement real-time features in Next.js applications?",
+      "topic": "Real-time Features",
+      "difficulty": "Advanced",
+      "choices": [
+        "Use WebSockets with a custom server",
+        "Integrate Socket.io with Next.js",
+        "Use Server-Sent Events (SSE)",
+        "All of the above are viable approaches"
+      ],
+      "correctIndex": 3,
+      "explanation": "Next.js supports multiple approaches for real-time features: WebSockets with custom servers, Socket.io integration, Server-Sent Events, and third-party services like Pusher or Ably.",
+      "industryContext": "Real-time features are essential for modern applications like chat systems, live updates, collaborative tools, and real-time dashboards.",
+      "tags": ["Real-time", "WebSockets", "Socket.io", "SSE"],
+      "questionType": "multiple-choice",
+      "estimatedTime": 120
+    }
+  ]
+}

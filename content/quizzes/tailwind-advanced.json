@@ -72,7 +72,7 @@
         "Requires separate CSS files for each screen size"
       ],
       "correctIndex": 0,
-      "explanation": "Tailwind uses a mobile-first approach where unprefixed classes apply to all screen sizes, and responsive prefixes (sm:, md:, lg:, xl:) apply to specific breakpoints and larger screens. This means styles stack as the screen size increases. For example, <div class="text-sm md:text-base lg:text-lg"> will be text-sm on mobile, text-base on medium screens and larger, and text-lg on large screens and larger. This approach reduces CSS bloat and makes responsive design more intuitive.",
+      "explanation": "Tailwind uses a mobile-first approach where unprefixed classes apply to all screen sizes, and responsive prefixes (sm:, md:, lg:, xl:) apply to specific breakpoints and larger screens. This means styles stack as the screen size increases. For example, <div class=\"text-sm md:text-base lg:text-lg\"> will be text-sm on mobile, text-base on medium screens and larger, and text-lg on large screens and larger. This approach reduces CSS bloat and makes responsive design more intuitive.",
       "industryContext": "Understanding Tailwind's mobile-first responsive approach is crucial for professional frontend developers building modern, responsive web applications. This methodology aligns with current web development best practices and helps create consistent, maintainable responsive designs.",
       "tags": [
         "Layout",

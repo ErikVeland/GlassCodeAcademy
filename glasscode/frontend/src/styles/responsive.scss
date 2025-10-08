@@ -323,10 +323,6 @@ $breakpoints: (
   .module-card {
     border: 2px solid currentColor;
     
-    &:focus-within {
-      outline: 3px solid #005fcc;
-      outline-offset: 2px;
-    }
   }
   
   .navigation-dropdown {
@@ -343,7 +339,6 @@ $breakpoints: (
 }
 
 .keyboard-navigation {
-  .module-card:focus-within,
   .search-input:focus,
   .filter-tabs select:focus,
   button:focus,

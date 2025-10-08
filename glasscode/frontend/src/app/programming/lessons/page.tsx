@@ -211,40 +211,42 @@ export default function ProgrammingLessonsPage() {
                             explanation="In this Programming Fundamentals module, core programming concepts are taught using fundamental programming constructs and logic." 
                         />
 
-                        <div className="flex justify-between mt-6 gap-4">
-                            {/* Previous button (always left) */}
-                            {currentLessonIndex! > 0 ? (
-                                <button
-                                    className="w-1/2 bg-blue-600 dark:bg-blue-700 text-white px-4 py-2 rounded shadow hover:bg-blue-700 dark:hover:bg-blue-600 transition-colors duration-150 flex items-center"
-                                    onClick={() => setSelectedIndex(currentLessonIndex! - 1)}
-                                >
-                                    <span className="mr-2">←</span> {currentTopicLessons[currentLessonIndex! - 1].title}
-                                </button>
-                            ) : (
-                                <button
-                                    className="w-1/2 bg-gray-300 dark:bg-gray-600 text-gray-400 dark:text-gray-400 px-4 py-2 rounded shadow cursor-not-allowed"
-                                    disabled
-                                >
-                                    &nbsp;
-                                </button>
-                            )}
-                            {/* Next button (always right) */}
-                            {currentLessonIndex! < currentTopicLessons.length - 1 ? (
-                                <button
-                                    className="w-1/2 bg-blue-600 dark:bg-blue-700 text-white px-4 py-2 rounded shadow hover:bg-blue-700 dark:hover:bg-blue-600 transition-colors duration-150 flex items-center justify-end"
-                                    onClick={() => setSelectedIndex(currentLessonIndex! + 1)}
-                                >
-                                    {currentTopicLessons[currentLessonIndex! + 1].title} <span className="ml-2">→</span>
-                                </button>
-                            ) : (
-                                <button
-                                    className="w-1/2 bg-gray-300 dark:bg-gray-600 text-gray-400 dark:text-gray-400 px-4 py-2 rounded shadow cursor-not-allowed"
-                                    disabled
-                                >
-                                    &nbsp;
-                                </button>
-                            )}
-                        </div>
+                        {currentTopicLessons.length > 1 && (
+                            <div className="flex justify-between mt-6 gap-4">
+                                {/* Previous button (always left) */}
+                                {currentLessonIndex! > 0 ? (
+                                    <button
+                                        className="w-1/2 bg-blue-600 dark:bg-blue-700 text-white px-4 py-2 rounded shadow hover:bg-blue-700 dark:hover:bg-blue-600 transition-colors duration-150 flex items-center"
+                                        onClick={() => setSelectedIndex(currentLessonIndex! - 1)}
+                                    >
+                                        <span className="mr-2">←</span> {currentTopicLessons[currentLessonIndex! - 1].title}
+                                    </button>
+                                ) : (
+                                    <button
+                                        className="w-1/2 bg-gray-300 dark:bg-gray-600 text-gray-400 dark:text-gray-400 px-4 py-2 rounded shadow cursor-not-allowed"
+                                        disabled
+                                    >
+                                        &nbsp;
+                                    </button>
+                                )}
+                                {/* Next button (always right) */}
+                                {currentLessonIndex! < currentTopicLessons.length - 1 ? (
+                                    <button
+                                        className="w-1/2 bg-blue-600 dark:bg-blue-700 text-white px-4 py-2 rounded shadow hover:bg-blue-700 dark:hover:bg-blue-600 transition-colors duration-150 flex items-center justify-end"
+                                        onClick={() => setSelectedIndex(currentLessonIndex! + 1)}
+                                    >
+                                        {currentTopicLessons[currentLessonIndex! + 1].title} <span className="ml-2">→</span>
+                                    </button>
+                                ) : (
+                                    <button
+                                        className="w-1/2 bg-gray-300 dark:bg-gray-600 text-gray-400 dark:text-gray-400 px-4 py-2 rounded shadow cursor-not-allowed"
+                                        disabled
+                                    >
+                                        &nbsp;
+                                    </button>
+                                )}
+                            </div>
+                        )}
                         {currentLessonIndex === currentTopicLessons.length - 1 && topicGroups.length > 1 && (
                             <>
                                 {isLastCategory ? (

@@ -1,0 +1,48 @@
+{
+  "moduleSlug": "performance-optimization",
+  "title": "Performance Optimization",
+  "tier": "quality",
+  "track": "Performance",
+  "timestamp": "2025-10-07T04:10:07.620Z",
+  "content": {
+    "lessons": {
+      "required": 13,
+      "actual": 13,
+      "status": "complete"
+    },
+    "quizzes": {
+      "required": 16,
+      "actual": 48,
+      "status": "complete"
+    }
+  },
+  "validation": {
+    "issues": [],
+    "warnings": []
+  },
+  "accessibility": {
+    "issues": 0,
+    "severity": "compliant"
+  },
+  "quizAnalysis": {
+    "totalQuestions": 48,
+    "difficultyDistribution": {
+      "beginner": 7,
+      "intermediate": 8,
+      "advanced": 5
+    },
+    "targetDistribution": {
+      "beginner": 6,
+      "intermediate": 10,
+      "advanced": 4
+    },
+    "topicsCovered": 14,
+    "duplicationRate": 56
+  },
+  "sources": [],
+  "routes": {
+    "overview": "/modules/performance-optimization",
+    "lessons": "/modules/performance-optimization/lessons",
+    "quiz": "/modules/performance-optimization/quiz"
+  }
+}

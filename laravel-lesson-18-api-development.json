@@ -1,0 +1,61 @@
+{
+  "id": "laravel-fundamentals-lesson-18",
+  "moduleSlug": "laravel-fundamentals",
+  "title": "API Development with Sanctum and Passport",
+  "order": 18,
+  "objectives": [
+    "Implement RESTful API authentication with Laravel Sanctum",
+    "Create secure API endpoints with token-based authentication",
+    "Build comprehensive API resource controllers and request validation",
+    "Implement API rate limiting and CORS configuration"
+  ],
+  "intro": "API development is a cornerstone of modern web applications, enabling seamless integration between frontend applications, mobile apps, and third-party services. This comprehensive lesson covers Laravel's powerful tools for building secure, scalable APIs including Sanctum for simple token-based authentication and Passport for full OAuth2 implementation.\n\nYou'll learn to implement RESTful API design principles with proper HTTP status codes, resource representations, and error handling. We'll explore both Sanctum for first-party API authentication and Passport for complex OAuth2 scenarios, helping you choose the right tool for your specific use case.\n\nSecurity is paramount in API development, so we'll cover best practices for token management, rate limiting to prevent abuse, CORS configuration for cross-origin requests, and request validation to ensure data integrity. You'll also learn to implement comprehensive API documentation and testing strategies.\n\nBy mastering API development with Laravel, you'll be able to build robust backend services that power modern applications while maintaining security, performance, and scalability. This knowledge is essential for full-stack developers and backend specialists working on distributed systems.",
+  "code": {
+    "example": "<?php\n// Sanctum API Authentication\n\n// In config/sanctum.php\n'stateful' => explode(',', env('SANCTUM_STATEFUL_DOMAINS', sprintf(\n    '%s%s',\n    'localhost,localhost:3000,127.0.0.1,127.0.0.1:8000,::1',\n    env('APP_URL') ? ','.parse_url(env('APP_URL'), PHP_URL_HOST) : ''\n))),\n\n// In routes/api.php\nuse App\\Http\\Controllers\\Api\\PostController;\n\nRoute::middleware('auth:sanctum')->group(function () {\n    Route::apiResource('posts', PostController::class);\n    Route::post('/posts/{post}/publish', [PostController::class, 'publish']);\n});\n\n// In App\\Http\\Controllers\\Api\\PostController.php\nclass PostController extends Controller\n{\n    public function index(Request $request)\n    {\n        $posts = $request->user()->posts()\n            ->with('tags')\n            ->paginate(15);\n        \n        return PostResource::collection($posts);\n    }\n    \n    public function store(StorePostRequest $request)\n    {\n        $post = $request->user()->posts()->create($request->validated());\n        \n        return new PostResource($post);\n    }\n    \n    public function show(Post $post)\n    {\n        $this->authorize('view', $post);\n        \n        return new PostResource($post->load('tags', 'comments'));\n    }\n}\n\n// In App\\Http\\Requests\\StorePostRequest.php\nclass StorePostRequest extends FormRequest\n{\n    public function authorize()\n    {\n        return true; // Sanctum handles authentication\n    }\n    \n    public function rules()\n    {\n        return [\n            'title' => 'required|string|max:255',\n            'content' => 'required|string',\n            'status' => 'required|in:draft,published,archived',\n            'tags' => 'array',\n            'tags.*' => 'exists:tags,id',\n        ];\n    }\n}\n\n// In App\\Http\\Resources\\PostResource.php\nclass PostResource extends JsonResource\n{\n    public function toArray($request)\n    {\n        return [\n            'id' => $this->id,\n            'title' => $this->title,\n            'content' => $this->content,\n            'status' => $this->status,\n            'created_at' => $this->created_at->toIso8601String(),\n            'updated_at' => $this->updated_at->toIso8601String(),\n            'tags' => TagResource::collection($this->whenLoaded('tags')),\n            'comments_count' => $this->whenCounted('comments'),\n        ];\n    }\n}\n\n// In App\\Models\\User.php\nclass User extends Authenticatable\n{\n    use HasApiTokens;\n    \n    public function posts()\n    {\n        return $this->hasMany(Post::class);\n    }\n}\n\n// Client-side usage with JavaScript\n/*\n// Login and get CSRF cookie\nawait fetch('/sanctum/csrf-cookie');\n\n// Login\nconst loginResponse = await fetch('/login', {\n    method: 'POST',\n    headers: {\n        'Content-Type': 'application/json',\n        'X-Requested-With': 'XMLHttpRequest',\n    },\n    body: JSON.stringify({\n        email: 'user@example.com',\n        password: 'password',\n    }),\n});\n\n// Make authenticated API request\nconst postsResponse = await fetch('/api/posts', {\n    headers: {\n        'Authorization': `Bearer ${token}`,\n        'Content-Type': 'application/json',\n    },\n});\n*/",
+    "explanation": "This example demonstrates comprehensive API development with Laravel Sanctum including token-based authentication, RESTful resource controllers, form request validation, and API resource responses. The code shows proper API structure with authentication middleware, resource collections, and client-side usage patterns for JavaScript applications.",
+    "language": "php"
+  },
+  "pitfalls": [
+    {
+      "mistake": "Not properly configuring CORS for API requests from frontend applications",
+      "solution": "Configure CORS middleware correctly in config/cors.php and ensure frontend and backend domains are properly configured",
+      "severity": "high"
+    },
+    {
+      "mistake": "Exposing sensitive user information in API responses",
+      "solution": "Use API resources to carefully control which attributes are exposed and implement proper authorization checks",
+      "severity": "high"
+    },
+    {
+      "mistake": "Not implementing proper rate limiting for API endpoints",
+      "solution": "Configure rate limiting in RouteServiceProvider and apply appropriate middleware to API routes",
+      "severity": "medium"
+    }
+  ],
+  "exercises": [
+    {
+      "title": "Build a Complete Blogging API with Authentication",
+      "description": "Create a full-featured blogging API with user authentication using Sanctum, implement CRUD operations for posts with proper validation, add API resource responses, configure rate limiting and CORS, and test API endpoints with a frontend client",
+      "checkpoints": [
+        "Implement Sanctum authentication with token management",
+        "Create RESTful API controllers with proper request validation",
+        "Build API resources for consistent JSON responses",
+        "Configure rate limiting and CORS for API security",
+        "Test API with a JavaScript frontend client"
+      ]
+    }
+  ],
+  "next": [],
+  "estimatedMinutes": 50,
+  "difficulty": "Advanced",
+  "tags": [
+    "API",
+    "Sanctum",
+    "Passport",
+    "Authentication",
+    "REST",
+    "Laravel"
+  ],
+  "lastUpdated": "2025-10-03T00:00:00.000Z",
+  "version": "1.0.0"
+}

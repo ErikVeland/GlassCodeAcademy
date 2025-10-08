@@ -149,4 +149,71 @@ public class GraphQLQuery
         var questions = GetDotNetQuestions();
         return questions.FirstOrDefault(q => q.Id == id);
     }
+
+    // Programming Lessons
+    public static IEnumerable<GraphQLLessonType> GetProgrammingLessons()
+    {
+        var jsonPath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Data", "programming_lessons.json");
+        if (!System.IO.File.Exists(jsonPath))
+        {
+            return new List<GraphQLLessonType>();
+        }
+
+        var jsonContent = System.IO.File.ReadAllText(jsonPath);
+        var lessons = System.Text.Json.JsonSerializer.Deserialize<List<ProgrammingLesson>>(jsonContent, new JsonSerializerOptions
+        {
+            PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+            PropertyNameCaseInsensitive = true
+        });
+        
+        return lessons?.Select(l => new GraphQLLessonType
+        {
+            Id = l.Id,
+            Topic = l.Topic,
+            Title = l.Title,
+            Description = l.Description,
+            CodeExample = l.CodeExample,
+            Output = l.Output
+        }) ?? new List<GraphQLLessonType>();
+    }
+
+    public static GraphQLLessonType? GetProgrammingLesson(int id)
+    {
+        var lessons = GetProgrammingLessons();
+        return lessons.FirstOrDefault(l => l.Id == id);
+    }
+
+    // Programming Questions
+    public static IEnumerable<GraphQLInterviewQuestionType> GetProgrammingQuestions()
+    {
+        var jsonPath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Data", "programming_questions.json");
+        if (!System.IO.File.Exists(jsonPath))
+        {
+            return new List<GraphQLInterviewQuestionType>();
+        }
+
+        var jsonContent = System.IO.File.ReadAllText(jsonPath);
+        var questions = System.Text.Json.JsonSerializer.Deserialize<List<ProgrammingInterviewQuestion>>(jsonContent, new JsonSerializerOptions
+        {
+            PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+            PropertyNameCaseInsensitive = true
+        });
+        
+        return questions?.Select(q => new GraphQLInterviewQuestionType
+        {
+            Id = q.Id,
+            Topic = q.Topic,
+            Type = q.Type,
+            Question = q.Question,
+            Choices = q.Choices,
+            CorrectAnswer = q.CorrectAnswer,
+            Explanation = q.Explanation
+        }) ?? new List<GraphQLInterviewQuestionType>();
+    }
+
+    public static GraphQLInterviewQuestionType? GetProgrammingQuestion(int id)
+    {
+        var questions = GetProgrammingQuestions();
+        return questions.FirstOrDefault(q => q.Id == id);
+    }
 }

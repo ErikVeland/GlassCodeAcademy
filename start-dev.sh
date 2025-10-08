@@ -23,6 +23,14 @@ cd /Users/veland/GlassCodeAcademy/glasscode/backend
 dotnet run &
 BACKEND_PID=$!
 
+# Copy the latest registry.json to the frontend public directory
+echo "Copying latest registry.json to frontend..."
+cp /Users/veland/GlassCodeAcademy/content/registry.json /Users/veland/GlassCodeAcademy/glasscode/frontend/public/registry.json
+
+# Convert and copy the programming fundamentals lessons to the backend data directory
+echo "Converting and copying programming fundamentals lessons to backend..."
+node /Users/veland/GlassCodeAcademy/scripts/convert-programming-lessons.js
+
 # Start the Next.js frontend in development mode
 echo "Starting Next.js frontend on port 3000..."
 cd /Users/veland/GlassCodeAcademy/glasscode/frontend

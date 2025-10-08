@@ -1,0 +1,48 @@
+{
+  "moduleSlug": "tailwind-advanced",
+  "title": "Tailwind CSS Framework",
+  "tier": "specialized",
+  "track": "Frontend",
+  "timestamp": "2025-10-07T04:10:07.614Z",
+  "content": {
+    "lessons": {
+      "required": 13,
+      "actual": 13,
+      "status": "complete"
+    },
+    "quizzes": {
+      "required": 16,
+      "actual": 0,
+      "status": "unknown"
+    }
+  },
+  "validation": {
+    "issues": [],
+    "warnings": []
+  },
+  "accessibility": {
+    "issues": 0,
+    "severity": "compliant"
+  },
+  "quizAnalysis": {
+    "totalQuestions": 0,
+    "difficultyDistribution": {
+      "beginner": 0,
+      "intermediate": 0,
+      "advanced": 0
+    },
+    "targetDistribution": {
+      "beginner": 6,
+      "intermediate": 10,
+      "advanced": 4
+    },
+    "topicsCovered": 0,
+    "duplicationRate": 0
+  },
+  "sources": [],
+  "routes": {
+    "overview": "/modules/tailwind-advanced",
+    "lessons": "/modules/tailwind-advanced/lessons",
+    "quiz": "/modules/tailwind-advanced/quiz"
+  }
+}

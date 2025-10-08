@@ -16,9 +16,11 @@ builder.WebHost.UseKestrel(options =>
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowFrontend",
-        policy => policy.AllowAnyOrigin()
-                        .AllowAnyHeader()
-                        .AllowAnyMethod());
+        policy => policy
+            .WithOrigins("http://localhost:3000", "http://localhost:3001", "http://192.168.6.238:3000", "http://192.168.6.238:3001")
+            .AllowAnyHeader()
+            .AllowAnyMethod()
+            .AllowCredentials());
 });
 
 // Add authorization services
@@ -63,9 +65,34 @@ builder.Services.AddGraphQLServer()
     // DotNet GraphQL types
     .AddType<backend.GraphQL.DotNetLessonType>()
     .AddType<backend.GraphQL.DotNetInterviewQuestionType>()
+    // Programming Fundamentals GraphQL types
+    .AddType<backend.GraphQL.ProgrammingLessonType>()
+    .AddType<backend.GraphQL.ProgrammingInterviewQuestionType>()
+    // Next.js GraphQL types
+    .AddType<backend.GraphQL.NextJsLessonType>()
+    .AddType<backend.GraphQL.NextJsInterviewQuestionType>()
+    // Performance Optimization GraphQL types
+    .AddType<backend.GraphQL.PerformanceLessonType>()
+    .AddType<backend.GraphQL.PerformanceInterviewQuestionType>()
+    // Security Fundamentals GraphQL types
+    .AddType<backend.GraphQL.SecurityLessonType>()
+    .AddType<backend.GraphQL.SecurityInterviewQuestionType>()
+    // Version Control GraphQL types
+    .AddType<backend.GraphQL.VersionLessonType>()
+    .AddType<backend.GraphQL.VersionInterviewQuestionType>()
     .ModifyRequestOptions(opt => opt.IncludeExceptionDetails = true);
 
 var app = builder.Build();
+
+// Middleware to check for unlock parameter
+app.Use(async (context, next) =>
+{
+    if (context.Request.Query.ContainsKey("unlock"))
+    {
+        AppState.IsUnlocked = true;
+    }
+    await next();
+});
 
 app.UseHttpsRedirection();
 app.UseCors("AllowFrontend");
@@ -78,18 +105,76 @@ app.MapGraphQL("/graphql"); // Keep original GraphQL endpoint
 app.MapBananaCakePop("/graphql-ui");
 
 // Health check endpoint
-app.MapGet("/api/health", () => Results.Ok(new { status = "healthy", timestamp = DateTime.UtcNow }));
+app.MapGet("/api/health", () => Results.Ok(new { status = "healthy", timestamp = DateTime.UtcNow, unlocked = AppState.IsUnlocked }));
 
 app.Run();
 
-// Configure JSON serializer options for camelCase to PascalCase conversion
-public static class JsonSerializerOptionsConfig
+// Application state management
+public static class AppState
 {
-    public static readonly JsonSerializerOptions Options = new JsonSerializerOptions
+    public static bool IsUnlocked { get; set; } = false;
+}
+
+// Helper methods for generating test data when unlocked
+public static class TestDataGenerator
+{
+    public static List<T> GenerateTestLessons<T>(string moduleName) where T : new()
     {
-        PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
-        PropertyNameCaseInsensitive = true
-    };
+        var lessons = new List<T>();
+        var properties = typeof(T).GetProperties();
+        
+        for (int i = 1; i <= 5; i++)
+        {
+            var lesson = new T();
+            foreach (var prop in properties)
+            {
+                if (prop.Name == "Id")
+                    prop.SetValue(lesson, i);
+                else if (prop.Name == "Title")
+                    prop.SetValue(lesson, $"{moduleName} Test Lesson {i}");
+                else if (prop.Name == "Topic")
+                    prop.SetValue(lesson, "Test Topic");
+                else if (prop.Name == "Description")
+                    prop.SetValue(lesson, $"This is a test lesson for {moduleName} module.");
+                else if (prop.Name == "CodeExample")
+                    prop.SetValue(lesson, "console.log('Hello World');");
+                else if (prop.Name == "Output")
+                    prop.SetValue(lesson, "Hello World");
+            }
+            lessons.Add(lesson);
+        }
+        return lessons;
+    }
+    
+    public static List<T> GenerateTestQuestions<T>(string moduleName) where T : new()
+    {
+        var questions = new List<T>();
+        var properties = typeof(T).GetProperties();
+        
+        for (int i = 1; i <= 5; i++)
+        {
+            var question = new T();
+            foreach (var prop in properties)
+            {
+                if (prop.Name == "Id")
+                    prop.SetValue(question, i);
+                else if (prop.Name == "Question")
+                    prop.SetValue(question, $"What is {moduleName} feature #{i}?");
+                else if (prop.Name == "Topic")
+                    prop.SetValue(question, "Test Topic");
+                else if (prop.Name == "Type")
+                    prop.SetValue(question, "multiple-choice");
+                else if (prop.Name == "Choices")
+                    prop.SetValue(question, new string[] { "Option A", "Option B", "Option C", "Option D" });
+                else if (prop.Name == "CorrectAnswer")
+                    prop.SetValue(question, 0);
+                else if (prop.Name == "Explanation")
+                    prop.SetValue(question, $"This is a test explanation for {moduleName} question #{i}.");
+            }
+            questions.Add(question);
+        }
+        return questions;
+    }
 }
 
 // GraphQL Query type using DataService
@@ -99,17 +184,11 @@ public class Query {
     public IEnumerable<Lesson> DotNetLessons(string? topic = null, string? sortBy = null, string? sortOrder = null, int? limit = null, int? offset = null)
         => backend.Services.DataService.ApplyQuery(_dataService.DotNetLessons, topic, sortBy, sortOrder, limit, offset);
     
-    public IEnumerable<Lesson> NextJsLessons(string? topic = null, string? sortBy = null, string? sortOrder = null, int? limit = null, int? offset = null)
-        => backend.Services.DataService.ApplyQuery(_dataService.NextJsLessons, topic, sortBy, sortOrder, limit, offset);
-    
     public IEnumerable<Lesson> GraphQLLessons(string? topic = null, string? sortBy = null, string? sortOrder = null, int? limit = null, int? offset = null)
         => backend.Services.DataService.ApplyQuery(_dataService.GraphQLLessons, topic, sortBy, sortOrder, limit, offset);
     
     public IEnumerable<InterviewQuestion> DotNetInterviewQuestions(string? topic = null, string? sortBy = null, string? sortOrder = null, int? limit = null, int? offset = null)
         => backend.Services.DataService.ApplyQuery(_dataService.DotNetInterviewQuestions, topic, sortBy, sortOrder, limit, offset);
-    
-    public IEnumerable<InterviewQuestion> NextJsInterviewQuestions(string? topic = null, string? sortBy = null, string? sortOrder = null, int? limit = null, int? offset = null)
-        => backend.Services.DataService.ApplyQuery(_dataService.NextJsInterviewQuestions, topic, sortBy, sortOrder, limit, offset);
     
     public IEnumerable<InterviewQuestion> GraphQLInterviewQuestions(string? topic = null, string? sortBy = null, string? sortOrder = null, int? limit = null, int? offset = null)
         => backend.Services.DataService.ApplyQuery(_dataService.GraphQLInterviewQuestions, topic, sortBy, sortOrder, limit, offset);
@@ -117,298 +196,346 @@ public class Query {
     // Laravel content queries - loading from JSON files
     public IEnumerable<LaravelLesson> LaravelLessons(string? topic = null, string? sortBy = null, string? sortOrder = null, int? limit = null, int? offset = null)
     {
-        // Load Laravel lessons from JSON file
-        var jsonPath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Data", "laravel_lessons.json");
-        if (!File.Exists(jsonPath))
+        // Use cached data from DataService instead of loading JSON file on every request
+        var lessons = _dataService.LaravelLessons;
+        if (AppState.IsUnlocked && (!lessons.Any() || lessons.Count() == 0))
         {
-            // Return empty collection if file not found
-            return new List<LaravelLesson>();
+            lessons = TestDataGenerator.GenerateTestLessons<LaravelLesson>("Laravel");
         }
-
-        var jsonContent = File.ReadAllText(jsonPath);
-        var lessons = System.Text.Json.JsonSerializer.Deserialize<List<LaravelLesson>>(jsonContent, JsonSerializerOptionsConfig.Options);
-        
-        return backend.Services.DataService.ApplyQuery(lessons ?? new List<LaravelLesson>(), topic, sortBy, sortOrder, limit, offset);
+        return backend.Services.DataService.ApplyQuery(lessons, topic, sortBy, sortOrder, limit, offset);
     }
     
     public IEnumerable<LaravelInterviewQuestion> LaravelInterviewQuestions(string? topic = null, string? sortBy = null, string? sortOrder = null, int? limit = null, int? offset = null)
     {
-        // Load Laravel interview questions from JSON file
-        var jsonPath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Data", "laravel_questions.json");
-        if (!File.Exists(jsonPath))
+        // Use cached data from DataService instead of loading JSON file on every request
+        var questions = _dataService.LaravelInterviewQuestions;
+        if (AppState.IsUnlocked && (!questions.Any() || questions.Count() == 0))
         {
-            // Return empty collection if file not found
-            return new List<LaravelInterviewQuestion>();
+            questions = TestDataGenerator.GenerateTestQuestions<LaravelInterviewQuestion>("Laravel");
         }
-
-        var jsonContent = File.ReadAllText(jsonPath);
-        var questions = System.Text.Json.JsonSerializer.Deserialize<List<LaravelInterviewQuestion>>(jsonContent, JsonSerializerOptionsConfig.Options);
-        
-        return backend.Services.DataService.ApplyQuery(questions ?? new List<LaravelInterviewQuestion>(), topic, sortBy, sortOrder, limit, offset);
+        return backend.Services.DataService.ApplyQuery(questions, topic, sortBy, sortOrder, limit, offset);
     }
     
     // React content queries
     public IEnumerable<ReactLesson> ReactLessons(string? topic = null, string? sortBy = null, string? sortOrder = null, int? limit = null, int? offset = null)
     {
-        // Load React lessons from JSON file
-        var jsonPath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Data", "react_lessons.json");
-        if (!File.Exists(jsonPath))
+        // Use cached data from DataService instead of loading JSON file on every request
+        var lessons = _dataService.ReactLessons;
+        if (AppState.IsUnlocked && (!lessons.Any() || lessons.Count() == 0))
         {
-            // Return empty collection if file not found
-            return new List<ReactLesson>();
+            lessons = TestDataGenerator.GenerateTestLessons<ReactLesson>("React");
         }
-
-        var jsonContent = File.ReadAllText(jsonPath);
-        var lessons = System.Text.Json.JsonSerializer.Deserialize<List<ReactLesson>>(jsonContent, JsonSerializerOptionsConfig.Options);
-        
-        return backend.Services.DataService.ApplyQuery(lessons ?? new List<ReactLesson>(), topic, sortBy, sortOrder, limit, offset);
+        return backend.Services.DataService.ApplyQuery(lessons, topic, sortBy, sortOrder, limit, offset);
     }
     
     public IEnumerable<ReactInterviewQuestion> ReactInterviewQuestions(string? topic = null, string? sortBy = null, string? sortOrder = null, int? limit = null, int? offset = null)
     {
-        // Load React interview questions from JSON file
-        var jsonPath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Data", "react_questions.json");
-        if (!File.Exists(jsonPath))
+        // Use cached data from DataService instead of loading JSON file on every request
+        var questions = _dataService.ReactInterviewQuestions;
+        if (AppState.IsUnlocked && (!questions.Any() || questions.Count() == 0))
         {
-            // Return empty collection if file not found
-            return new List<ReactInterviewQuestion>();
+            questions = TestDataGenerator.GenerateTestQuestions<ReactInterviewQuestion>("React");
         }
-
-        var jsonContent = File.ReadAllText(jsonPath);
-        var questions = System.Text.Json.JsonSerializer.Deserialize<List<ReactInterviewQuestion>>(jsonContent, JsonSerializerOptionsConfig.Options);
-        
-        return backend.Services.DataService.ApplyQuery(questions ?? new List<ReactInterviewQuestion>(), topic, sortBy, sortOrder, limit, offset);
+        return backend.Services.DataService.ApplyQuery(questions, topic, sortBy, sortOrder, limit, offset);
     }
     
     // Tailwind content queries
     public IEnumerable<TailwindLesson> TailwindLessons(string? topic = null, string? sortBy = null, string? sortOrder = null, int? limit = null, int? offset = null)
     {
-        // Load Tailwind lessons from JSON file
-        var jsonPath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Data", "tailwind_lessons.json");
-        if (!File.Exists(jsonPath))
+        // Use cached data from DataService instead of loading JSON file on every request
+        var lessons = _dataService.TailwindLessons;
+        if (AppState.IsUnlocked && (!lessons.Any() || lessons.Count() == 0))
         {
-            // Return empty collection if file not found
-            return new List<TailwindLesson>();
+            lessons = TestDataGenerator.GenerateTestLessons<TailwindLesson>("Tailwind");
         }
-
-        var jsonContent = File.ReadAllText(jsonPath);
-        var lessons = System.Text.Json.JsonSerializer.Deserialize<List<TailwindLesson>>(jsonContent, JsonSerializerOptionsConfig.Options);
-        
-        return backend.Services.DataService.ApplyQuery(lessons ?? new List<TailwindLesson>(), topic, sortBy, sortOrder, limit, offset);
+        return backend.Services.DataService.ApplyQuery(lessons, topic, sortBy, sortOrder, limit, offset);
     }
     
     public IEnumerable<TailwindInterviewQuestion> TailwindInterviewQuestions(string? topic = null, string? sortBy = null, string? sortOrder = null, int? limit = null, int? offset = null)
     {
-        // Load Tailwind interview questions from JSON file
-        var jsonPath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Data", "tailwind_questions.json");
-        if (!File.Exists(jsonPath))
+        // Use cached data from DataService instead of loading JSON file on every request
+        var questions = _dataService.TailwindInterviewQuestions;
+        if (AppState.IsUnlocked && (!questions.Any() || questions.Count() == 0))
         {
-            // Return empty collection if file not found
-            return new List<TailwindInterviewQuestion>();
+            questions = TestDataGenerator.GenerateTestQuestions<TailwindInterviewQuestion>("Tailwind");
         }
-
-        var jsonContent = File.ReadAllText(jsonPath);
-        var questions = System.Text.Json.JsonSerializer.Deserialize<List<TailwindInterviewQuestion>>(jsonContent, JsonSerializerOptionsConfig.Options);
-        
-        return backend.Services.DataService.ApplyQuery(questions ?? new List<TailwindInterviewQuestion>(), topic, sortBy, sortOrder, limit, offset);
+        return backend.Services.DataService.ApplyQuery(questions, topic, sortBy, sortOrder, limit, offset);
     }
     
     // Node.js content queries
     public IEnumerable<NodeLesson> NodeLessons(string? topic = null, string? sortBy = null, string? sortOrder = null, int? limit = null, int? offset = null)
     {
-        // Load Node lessons from JSON file
-        var jsonPath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Data", "node_lessons.json");
-        if (!File.Exists(jsonPath))
+        // Use cached data from DataService instead of loading JSON file on every request
+        var lessons = _dataService.NodeLessons;
+        if (AppState.IsUnlocked && (!lessons.Any() || lessons.Count() == 0))
         {
-            // Return empty collection if file not found
-            return new List<NodeLesson>();
+            lessons = TestDataGenerator.GenerateTestLessons<NodeLesson>("Node.js");
         }
-
-        var jsonContent = File.ReadAllText(jsonPath);
-        var lessons = System.Text.Json.JsonSerializer.Deserialize<List<NodeLesson>>(jsonContent, JsonSerializerOptionsConfig.Options);
-        
-        return backend.Services.DataService.ApplyQuery(lessons ?? new List<NodeLesson>(), topic, sortBy, sortOrder, limit, offset);
+        return backend.Services.DataService.ApplyQuery(lessons, topic, sortBy, sortOrder, limit, offset);
     }
     
     public IEnumerable<NodeInterviewQuestion> NodeInterviewQuestions(string? topic = null, string? sortBy = null, string? sortOrder = null, int? limit = null, int? offset = null)
     {
-        // Load Node interview questions from JSON file
-        var jsonPath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Data", "node_questions.json");
-        if (!File.Exists(jsonPath))
+        // Use cached data from DataService instead of loading JSON file on every request
+        var questions = _dataService.NodeInterviewQuestions;
+        if (AppState.IsUnlocked && (!questions.Any() || questions.Count() == 0))
         {
-            // Return empty collection if file not found
-            return new List<NodeInterviewQuestion>();
+            questions = TestDataGenerator.GenerateTestQuestions<NodeInterviewQuestion>("Node.js");
         }
-
-        var jsonContent = File.ReadAllText(jsonPath);
-        var questions = System.Text.Json.JsonSerializer.Deserialize<List<NodeInterviewQuestion>>(jsonContent, JsonSerializerOptionsConfig.Options);
-        
-        return backend.Services.DataService.ApplyQuery(questions ?? new List<NodeInterviewQuestion>(), topic, sortBy, sortOrder, limit, offset);
+        return backend.Services.DataService.ApplyQuery(questions, topic, sortBy, sortOrder, limit, offset);
     }
     
     // SASS content queries
     public IEnumerable<SassLesson> SassLessons(string? topic = null, string? sortBy = null, string? sortOrder = null, int? limit = null, int? offset = null)
     {
-        // Load SASS lessons from JSON file
-        var jsonPath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Data", "sass_lessons.json");
-        if (!File.Exists(jsonPath))
+        // Use cached data from DataService instead of loading JSON file on every request
+        var lessons = _dataService.SassLessons;
+        if (AppState.IsUnlocked && (!lessons.Any() || lessons.Count() == 0))
         {
-            // Return empty collection if file not found
-            return new List<SassLesson>();
+            lessons = TestDataGenerator.GenerateTestLessons<SassLesson>("SASS");
         }
-
-        var jsonContent = File.ReadAllText(jsonPath);
-        var lessons = System.Text.Json.JsonSerializer.Deserialize<List<SassLesson>>(jsonContent, JsonSerializerOptionsConfig.Options);
-        
-        return backend.Services.DataService.ApplyQuery(lessons ?? new List<SassLesson>(), topic, sortBy, sortOrder, limit, offset);
+        return backend.Services.DataService.ApplyQuery(lessons, topic, sortBy, sortOrder, limit, offset);
     }
     
     public IEnumerable<SassInterviewQuestion> SassInterviewQuestions(string? topic = null, string? sortBy = null, string? sortOrder = null, int? limit = null, int? offset = null)
     {
-        // Load SASS interview questions from JSON file
-        var jsonPath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Data", "sass_questions.json");
-        if (!File.Exists(jsonPath))
+        // Use cached data from DataService instead of loading JSON file on every request
+        var questions = _dataService.SassInterviewQuestions;
+        if (AppState.IsUnlocked && (!questions.Any() || questions.Count() == 0))
         {
-            // Return empty collection if file not found
-            return new List<SassInterviewQuestion>();
+            questions = TestDataGenerator.GenerateTestQuestions<SassInterviewQuestion>("SASS");
         }
-
-        var jsonContent = File.ReadAllText(jsonPath);
-        var questions = System.Text.Json.JsonSerializer.Deserialize<List<SassInterviewQuestion>>(jsonContent, JsonSerializerOptionsConfig.Options);
-        
-        return backend.Services.DataService.ApplyQuery(questions ?? new List<SassInterviewQuestion>(), topic, sortBy, sortOrder, limit, offset);
+        return backend.Services.DataService.ApplyQuery(questions, topic, sortBy, sortOrder, limit, offset);
     }
     
     // Vue content queries
     public IEnumerable<VueLesson> VueLessons(string? topic = null, string? sortBy = null, string? sortOrder = null, int? limit = null, int? offset = null)
     {
-        // Load Vue lessons from JSON file
-        var jsonPath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Data", "vue_lessons.json");
-        if (!File.Exists(jsonPath))
+        // Use cached data from DataService instead of loading JSON file on every request
+        var lessons = _dataService.VueLessons;
+        if (AppState.IsUnlocked && (!lessons.Any() || lessons.Count() == 0))
         {
-            // Return empty collection if file not found
-            return new List<VueLesson>();
+            lessons = TestDataGenerator.GenerateTestLessons<VueLesson>("Vue");
         }
-
-        var jsonContent = File.ReadAllText(jsonPath);
-        var lessons = System.Text.Json.JsonSerializer.Deserialize<List<VueLesson>>(jsonContent, JsonSerializerOptionsConfig.Options);
-        
-        return backend.Services.DataService.ApplyQuery(lessons ?? new List<VueLesson>(), topic, sortBy, sortOrder, limit, offset);
+        return backend.Services.DataService.ApplyQuery(lessons, topic, sortBy, sortOrder, limit, offset);
     }
     
     public IEnumerable<VueInterviewQuestion> VueInterviewQuestions(string? topic = null, string? sortBy = null, string? sortOrder = null, int? limit = null, int? offset = null)
     {
-        // Load Vue interview questions from JSON file
-        var jsonPath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Data", "vue_questions.json");
-        if (!File.Exists(jsonPath))
+        // Use cached data from DataService instead of loading JSON file on every request
+        var questions = _dataService.VueInterviewQuestions;
+        if (AppState.IsUnlocked && (!questions.Any() || questions.Count() == 0))
         {
-            // Return empty collection if file not found
-            return new List<VueInterviewQuestion>();
+            questions = TestDataGenerator.GenerateTestQuestions<VueInterviewQuestion>("Vue");
         }
-
-        var jsonContent = File.ReadAllText(jsonPath);
-        var questions = System.Text.Json.JsonSerializer.Deserialize<List<VueInterviewQuestion>>(jsonContent, JsonSerializerOptionsConfig.Options);
-        
-        return backend.Services.DataService.ApplyQuery(questions ?? new List<VueInterviewQuestion>(), topic, sortBy, sortOrder, limit, offset);
+        return backend.Services.DataService.ApplyQuery(questions, topic, sortBy, sortOrder, limit, offset);
     }
     
     // TypeScript content queries
     public IEnumerable<TypescriptLesson> TypescriptLessons(string? topic = null, string? sortBy = null, string? sortOrder = null, int? limit = null, int? offset = null)
     {
-        // Load TypeScript lessons from JSON file
-        var jsonPath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Data", "typescript_lessons.json");
-        if (!File.Exists(jsonPath))
+        // Use cached data from DataService instead of loading JSON file on every request
+        var lessons = _dataService.TypescriptLessons;
+        if (AppState.IsUnlocked && (!lessons.Any() || lessons.Count() == 0))
         {
-            // Return empty collection if file not found
-            return new List<TypescriptLesson>();
+            lessons = TestDataGenerator.GenerateTestLessons<TypescriptLesson>("TypeScript");
         }
-
-        var jsonContent = File.ReadAllText(jsonPath);
-        var lessons = System.Text.Json.JsonSerializer.Deserialize<List<TypescriptLesson>>(jsonContent, JsonSerializerOptionsConfig.Options);
-        
-        return backend.Services.DataService.ApplyQuery(lessons ?? new List<TypescriptLesson>(), topic, sortBy, sortOrder, limit, offset);
+        return backend.Services.DataService.ApplyQuery(lessons, topic, sortBy, sortOrder, limit, offset);
     }
     
     public IEnumerable<TypescriptInterviewQuestion> TypescriptInterviewQuestions(string? topic = null, string? sortBy = null, string? sortOrder = null, int? limit = null, int? offset = null)
     {
-        // Load TypeScript interview questions from JSON file
-        var jsonPath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Data", "typescript_questions.json");
-        if (!File.Exists(jsonPath))
+        // Use cached data from DataService instead of loading JSON file on every request
+        var questions = _dataService.TypescriptInterviewQuestions;
+        if (AppState.IsUnlocked && (!questions.Any() || questions.Count() == 0))
         {
-            // Return empty collection if file not found
-            return new List<TypescriptInterviewQuestion>();
+            questions = TestDataGenerator.GenerateTestQuestions<TypescriptInterviewQuestion>("TypeScript");
         }
-
-        var jsonContent = File.ReadAllText(jsonPath);
-        var questions = System.Text.Json.JsonSerializer.Deserialize<List<TypescriptInterviewQuestion>>(jsonContent, JsonSerializerOptionsConfig.Options);
-        
-        return backend.Services.DataService.ApplyQuery(questions ?? new List<TypescriptInterviewQuestion>(), topic, sortBy, sortOrder, limit, offset);
+        return backend.Services.DataService.ApplyQuery(questions, topic, sortBy, sortOrder, limit, offset);
     }
     
     // Database content queries
     public IEnumerable<DatabaseLesson> DatabaseLessons(string? topic = null, string? sortBy = null, string? sortOrder = null, int? limit = null, int? offset = null)
     {
-        // Load Database lessons from JSON file
-        var jsonPath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Data", "database_lessons.json");
-        if (!File.Exists(jsonPath))
+        // Use cached data from DataService instead of loading JSON file on every request
+        var lessons = _dataService.DatabaseLessons;
+        if (AppState.IsUnlocked && (!lessons.Any() || lessons.Count() == 0))
         {
-            // Return empty collection if file not found
-            return new List<DatabaseLesson>();
+            lessons = TestDataGenerator.GenerateTestLessons<DatabaseLesson>("Database");
         }
-
-        var jsonContent = File.ReadAllText(jsonPath);
-        var lessons = System.Text.Json.JsonSerializer.Deserialize<List<DatabaseLesson>>(jsonContent, JsonSerializerOptionsConfig.Options);
-        
-        return backend.Services.DataService.ApplyQuery(lessons ?? new List<DatabaseLesson>(), topic, sortBy, sortOrder, limit, offset);
+        return backend.Services.DataService.ApplyQuery(lessons, topic, sortBy, sortOrder, limit, offset);
     }
     
     public IEnumerable<DatabaseInterviewQuestion> DatabaseInterviewQuestions(string? topic = null, string? sortBy = null, string? sortOrder = null, int? limit = null, int? offset = null)
     {
-        // Load Database interview questions from JSON file
-        var jsonPath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Data", "database_questions.json");
-        if (!File.Exists(jsonPath))
+        // Use cached data from DataService instead of loading JSON file on every request
+        var questions = _dataService.DatabaseInterviewQuestions;
+        if (AppState.IsUnlocked && (!questions.Any() || questions.Count() == 0))
         {
-            // Return empty collection if file not found
-            return new List<DatabaseInterviewQuestion>();
+            questions = TestDataGenerator.GenerateTestQuestions<DatabaseInterviewQuestion>("Database");
         }
-
-        var jsonContent = File.ReadAllText(jsonPath);
-        var questions = System.Text.Json.JsonSerializer.Deserialize<List<DatabaseInterviewQuestion>>(jsonContent, JsonSerializerOptionsConfig.Options);
-        
-        return backend.Services.DataService.ApplyQuery(questions ?? new List<DatabaseInterviewQuestion>(), topic, sortBy, sortOrder, limit, offset);
+        return backend.Services.DataService.ApplyQuery(questions, topic, sortBy, sortOrder, limit, offset);
     }
     
     // Testing content queries
     public IEnumerable<TestingLesson> TestingLessons(string? topic = null, string? sortBy = null, string? sortOrder = null, int? limit = null, int? offset = null)
     {
-        // Load Testing lessons from JSON file
-        var jsonPath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Data", "testing_lessons.json");
-        if (!File.Exists(jsonPath))
+        // Use cached data from DataService instead of loading JSON file on every request
+        var lessons = _dataService.TestingLessons;
+        if (AppState.IsUnlocked && (!lessons.Any() || lessons.Count() == 0))
         {
-            // Return empty collection if file not found
-            return new List<TestingLesson>();
+            lessons = TestDataGenerator.GenerateTestLessons<TestingLesson>("Testing");
         }
-
-        var jsonContent = File.ReadAllText(jsonPath);
-        var lessons = System.Text.Json.JsonSerializer.Deserialize<List<TestingLesson>>(jsonContent, JsonSerializerOptionsConfig.Options);
-        
-        return backend.Services.DataService.ApplyQuery(lessons ?? new List<TestingLesson>(), topic, sortBy, sortOrder, limit, offset);
+        return backend.Services.DataService.ApplyQuery(lessons, topic, sortBy, sortOrder, limit, offset);
     }
     
     public IEnumerable<TestingInterviewQuestion> TestingInterviewQuestions(string? topic = null, string? sortBy = null, string? sortOrder = null, int? limit = null, int? offset = null)
     {
-        // Load Testing interview questions from JSON file
-        var jsonPath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Data", "testing_questions.json");
-        if (!File.Exists(jsonPath))
+        // Use cached data from DataService instead of loading JSON file on every request
+        var questions = _dataService.TestingInterviewQuestions;
+        if (AppState.IsUnlocked && (!questions.Any() || questions.Count() == 0))
         {
-            // Return empty collection if file not found
-            return new List<TestingInterviewQuestion>();
+            questions = TestDataGenerator.GenerateTestQuestions<TestingInterviewQuestion>("Testing");
         }
-
-        var jsonContent = File.ReadAllText(jsonPath);
-        var questions = System.Text.Json.JsonSerializer.Deserialize<List<TestingInterviewQuestion>>(jsonContent, JsonSerializerOptionsConfig.Options);
-        
-        return backend.Services.DataService.ApplyQuery(questions ?? new List<TestingInterviewQuestion>(), topic, sortBy, sortOrder, limit, offset);
+        return backend.Services.DataService.ApplyQuery(questions, topic, sortBy, sortOrder, limit, offset);
+    }
+    
+    // Programming Fundamentals content queries
+    public IEnumerable<ProgrammingLesson> ProgrammingLessons(string? topic = null, string? sortBy = null, string? sortOrder = null, int? limit = null, int? offset = null)
+    {
+        // Use cached data from DataService instead of loading JSON file on every request
+        var lessons = _dataService.ProgrammingLessons;
+        if (AppState.IsUnlocked && (!lessons.Any() || lessons.Count() == 0))
+        {
+            lessons = TestDataGenerator.GenerateTestLessons<ProgrammingLesson>("Programming");
+        }
+        return backend.Services.DataService.ApplyQuery(lessons, topic, sortBy, sortOrder, limit, offset);
+    }
+    
+    public IEnumerable<ProgrammingInterviewQuestion> ProgrammingInterviewQuestions(string? topic = null, string? sortBy = null, string? sortOrder = null, int? limit = null, int? offset = null)
+    {
+        // Use cached data from DataService instead of loading JSON file on every request
+        var questions = _dataService.ProgrammingInterviewQuestions;
+        if (AppState.IsUnlocked && (!questions.Any() || questions.Count() == 0))
+        {
+            questions = TestDataGenerator.GenerateTestQuestions<ProgrammingInterviewQuestion>("Programming");
+        }
+        return backend.Services.DataService.ApplyQuery(questions, topic, sortBy, sortOrder, limit, offset);
+    }
+    
+    // Next.js content queries
+    public IEnumerable<NextJsLesson> NextJsLessons(string? topic = null, string? sortBy = null, string? sortOrder = null, int? limit = null, int? offset = null)
+    {
+        // Use cached data from DataService instead of loading JSON file on every request
+        var lessons = _dataService.NextJsLessons;
+        if (AppState.IsUnlocked && (!lessons.Any() || lessons.Count() == 0))
+        {
+            lessons = TestDataGenerator.GenerateTestLessons<NextJsLesson>("Next.js");
+        }
+        return backend.Services.DataService.ApplyQuery(lessons, topic, sortBy, sortOrder, limit, offset);
+    }
+    
+    public IEnumerable<NextJsInterviewQuestion> NextJsInterviewQuestions(string? topic = null, string? sortBy = null, string? sortOrder = null, int? limit = null, int? offset = null)
+    {
+        // Use cached data from DataService instead of loading JSON file on every request
+        var questions = _dataService.NextJsInterviewQuestions;
+        if (AppState.IsUnlocked && (!questions.Any() || questions.Count() == 0))
+        {
+            questions = TestDataGenerator.GenerateTestQuestions<NextJsInterviewQuestion>("Next.js");
+        }
+        return backend.Services.DataService.ApplyQuery(questions, topic, sortBy, sortOrder, limit, offset);
+    }
+    
+    // Performance Optimization content queries
+    public IEnumerable<PerformanceLesson> PerformanceLessons(string? topic = null, string? sortBy = null, string? sortOrder = null, int? limit = null, int? offset = null)
+    {
+        // Use cached data from DataService instead of loading JSON file on every request
+        var lessons = _dataService.PerformanceLessons;
+        if (AppState.IsUnlocked && (!lessons.Any() || lessons.Count() == 0))
+        {
+            lessons = TestDataGenerator.GenerateTestLessons<PerformanceLesson>("Performance");
+        }
+        return backend.Services.DataService.ApplyQuery(lessons, topic, sortBy, sortOrder, limit, offset);
+    }
+    
+    public IEnumerable<PerformanceInterviewQuestion> PerformanceInterviewQuestions(string? topic = null, string? sortBy = null, string? sortOrder = null, int? limit = null, int? offset = null)
+    {
+        // Use cached data from DataService instead of loading JSON file on every request
+        var questions = _dataService.PerformanceInterviewQuestions;
+        if (AppState.IsUnlocked && (!questions.Any() || questions.Count() == 0))
+        {
+            questions = TestDataGenerator.GenerateTestQuestions<PerformanceInterviewQuestion>("Performance");
+        }
+        return backend.Services.DataService.ApplyQuery(questions, topic, sortBy, sortOrder, limit, offset);
+    }
+    
+    // Security Fundamentals content queries
+    public IEnumerable<SecurityLesson> SecurityLessons(string? topic = null, string? sortBy = null, string? sortOrder = null, int? limit = null, int? offset = null)
+    {
+        // Use cached data from DataService instead of loading JSON file on every request
+        var lessons = _dataService.SecurityLessons;
+        if (AppState.IsUnlocked && (!lessons.Any() || lessons.Count() == 0))
+        {
+            lessons = TestDataGenerator.GenerateTestLessons<SecurityLesson>("Security");
+        }
+        return backend.Services.DataService.ApplyQuery(lessons, topic, sortBy, sortOrder, limit, offset);
+    }
+    
+    public IEnumerable<SecurityInterviewQuestion> SecurityInterviewQuestions(string? topic = null, string? sortBy = null, string? sortOrder = null, int? limit = null, int? offset = null)
+    {
+        // Use cached data from DataService instead of loading JSON file on every request
+        var questions = _dataService.SecurityInterviewQuestions;
+        if (AppState.IsUnlocked && (!questions.Any() || questions.Count() == 0))
+        {
+            questions = TestDataGenerator.GenerateTestQuestions<SecurityInterviewQuestion>("Security");
+        }
+        return backend.Services.DataService.ApplyQuery(questions, topic, sortBy, sortOrder, limit, offset);
+    }
+    
+    // Version Control content queries
+    public IEnumerable<VersionLesson> VersionLessons(string? topic = null, string? sortBy = null, string? sortOrder = null, int? limit = null, int? offset = null)
+    {
+        // Use cached data from DataService instead of loading JSON file on every request
+        var lessons = _dataService.VersionLessons;
+        if (AppState.IsUnlocked && (!lessons.Any() || lessons.Count() == 0))
+        {
+            lessons = TestDataGenerator.GenerateTestLessons<VersionLesson>("Version Control");
+        }
+        return backend.Services.DataService.ApplyQuery(lessons, topic, sortBy, sortOrder, limit, offset);
+    }
+    
+    public IEnumerable<VersionInterviewQuestion> VersionInterviewQuestions(string? topic = null, string? sortBy = null, string? sortOrder = null, int? limit = null, int? offset = null)
+    {
+        // Use cached data from DataService instead of loading JSON file on every request
+        var questions = _dataService.VersionInterviewQuestions;
+        if (AppState.IsUnlocked && (!questions.Any() || questions.Count() == 0))
+        {
+            questions = TestDataGenerator.GenerateTestQuestions<VersionInterviewQuestion>("Version Control");
+        }
+        return backend.Services.DataService.ApplyQuery(questions, topic, sortBy, sortOrder, limit, offset);
+    }
+    
+    // Web Fundamentals content queries
+    public IEnumerable<WebLesson> WebLessons(string? topic = null, string? sortBy = null, string? sortOrder = null, int? limit = null, int? offset = null)
+    {
+        // Use cached data from DataService instead of loading JSON file on every request
+        var lessons = _dataService.WebLessons;
+        if (AppState.IsUnlocked && (!lessons.Any() || lessons.Count() == 0))
+        {
+            lessons = TestDataGenerator.GenerateTestLessons<WebLesson>("Web Fundamentals");
+        }
+        return backend.Services.DataService.ApplyQuery(lessons, topic, sortBy, sortOrder, limit, offset);
+    }
+    
+    public IEnumerable<WebInterviewQuestion> WebInterviewQuestions(string? topic = null, string? sortBy = null, string? sortOrder = null, int? limit = null, int? offset = null)
+    {
+        // Use cached data from DataService instead of loading JSON file on every request
+        var questions = _dataService.WebInterviewQuestions;
+        if (AppState.IsUnlocked && (!questions.Any() || questions.Count() == 0))
+        {
+            questions = TestDataGenerator.GenerateTestQuestions<WebInterviewQuestion>("Web Fundamentals");
+        }
+        return backend.Services.DataService.ApplyQuery(questions, topic, sortBy, sortOrder, limit, offset);
     }
 }
 
@@ -428,54 +555,226 @@ public class Mutation {
     // Laravel answer submission - using DataService validation
     public AnswerResult SubmitLaravelAnswer(int questionId, int answerIndex)
     {
+        // If unlocked, accept any answer as correct for testing
+        if (AppState.IsUnlocked)
+        {
+            return new AnswerResult 
+            { 
+                IsCorrect = true, 
+                Explanation = "Test mode: All answers are correct!" 
+            };
+        }
         return _dataService.ValidateLaravelAnswer(questionId, answerIndex);
     }
     
     // React answer submission
     public AnswerResult SubmitReactAnswer(int questionId, int answerIndex)
     {
+        // If unlocked, accept any answer as correct for testing
+        if (AppState.IsUnlocked)
+        {
+            return new AnswerResult 
+            { 
+                IsCorrect = true, 
+                Explanation = "Test mode: All answers are correct!" 
+            };
+        }
         return _dataService.ValidateReactAnswer(questionId, answerIndex);
     }
     
     // Tailwind answer submission
     public AnswerResult SubmitTailwindAnswer(int questionId, int answerIndex)
     {
+        // If unlocked, accept any answer as correct for testing
+        if (AppState.IsUnlocked)
+        {
+            return new AnswerResult 
+            { 
+                IsCorrect = true, 
+                Explanation = "Test mode: All answers are correct!" 
+            };
+        }
         return _dataService.ValidateTailwindAnswer(questionId, answerIndex);
     }
     
     // Node.js answer submission
     public AnswerResult SubmitNodeAnswer(int questionId, int answerIndex)
     {
+        // If unlocked, accept any answer as correct for testing
+        if (AppState.IsUnlocked)
+        {
+            return new AnswerResult 
+            { 
+                IsCorrect = true, 
+                Explanation = "Test mode: All answers are correct!" 
+            };
+        }
         return _dataService.ValidateNodeAnswer(questionId, answerIndex);
     }
     
     // SASS answer submission
     public AnswerResult SubmitSassAnswer(int questionId, int answerIndex)
     {
+        // If unlocked, accept any answer as correct for testing
+        if (AppState.IsUnlocked)
+        {
+            return new AnswerResult 
+            { 
+                IsCorrect = true, 
+                Explanation = "Test mode: All answers are correct!" 
+            };
+        }
         return _dataService.ValidateSassAnswer(questionId, answerIndex);
     }
     
     // Vue answer submission
     public AnswerResult SubmitVueAnswer(int questionId, int answerIndex)
     {
+        // If unlocked, accept any answer as correct for testing
+        if (AppState.IsUnlocked)
+        {
+            return new AnswerResult 
+            { 
+                IsCorrect = true, 
+                Explanation = "Test mode: All answers are correct!" 
+            };
+        }
         return _dataService.ValidateVueAnswer(questionId, answerIndex);
+    }
+    
+    // Web Fundamentals answer submission
+    public AnswerResult SubmitWebAnswer(int questionId, int answerIndex)
+    {
+        // If unlocked, accept any answer as correct for testing
+        if (AppState.IsUnlocked)
+        {
+            return new AnswerResult 
+            { 
+                IsCorrect = true, 
+                Explanation = "Test mode: All answers are correct!" 
+            };
+        }
+        return _dataService.ValidateWebAnswer(questionId, answerIndex);
     }
     
     // TypeScript answer submission
     public AnswerResult SubmitTypescriptAnswer(int questionId, int answerIndex)
     {
+        // If unlocked, accept any answer as correct for testing
+        if (AppState.IsUnlocked)
+        {
+            return new AnswerResult 
+            { 
+                IsCorrect = true, 
+                Explanation = "Test mode: All answers are correct!" 
+            };
+        }
         return _dataService.ValidateTypescriptAnswer(questionId, answerIndex);
     }
     
     // Database answer submission
     public AnswerResult SubmitDatabaseAnswer(int questionId, int answerIndex)
     {
+        // If unlocked, accept any answer as correct for testing
+        if (AppState.IsUnlocked)
+        {
+            return new AnswerResult 
+            { 
+                IsCorrect = true, 
+                Explanation = "Test mode: All answers are correct!" 
+            };
+        }
         return _dataService.ValidateDatabaseAnswer(questionId, answerIndex);
     }
     
     // Testing answer submission
     public AnswerResult SubmitTestingAnswer(int questionId, int answerIndex)
     {
+        // If unlocked, accept any answer as correct for testing
+        if (AppState.IsUnlocked)
+        {
+            return new AnswerResult 
+            { 
+                IsCorrect = true, 
+                Explanation = "Test mode: All answers are correct!" 
+            };
+        }
         return _dataService.ValidateTestingAnswer(questionId, answerIndex);
+    }
+    
+    // Programming Fundamentals answer submission
+    public AnswerResult SubmitProgrammingAnswer(int questionId, int answerIndex)
+    {
+        // If unlocked, accept any answer as correct for testing
+        if (AppState.IsUnlocked)
+        {
+            return new AnswerResult 
+            { 
+                IsCorrect = true, 
+                Explanation = "Test mode: All answers are correct!" 
+            };
+        }
+        // Use the specific programming validation method
+        return _dataService.ValidateProgrammingAnswer(questionId, answerIndex);
+    }
+    
+    // Next.js answer submission
+    public AnswerResult SubmitNextJsAnswer(int questionId, int answerIndex)
+    {
+        // If unlocked, accept any answer as correct for testing
+        if (AppState.IsUnlocked)
+        {
+            return new AnswerResult 
+            { 
+                IsCorrect = true, 
+                Explanation = "Test mode: All answers are correct!" 
+            };
+        }
+        return _dataService.ValidateNextJsAnswer(questionId, answerIndex);
+    }
+    
+    // Performance Optimization answer submission
+    public AnswerResult SubmitPerformanceAnswer(int questionId, int answerIndex)
+    {
+        // If unlocked, accept any answer as correct for testing
+        if (AppState.IsUnlocked)
+        {
+            return new AnswerResult 
+            { 
+                IsCorrect = true, 
+                Explanation = "Test mode: All answers are correct!" 
+            };
+        }
+        return _dataService.ValidatePerformanceAnswer(questionId, answerIndex);
+    }
+    
+    // Security Fundamentals answer submission
+    public AnswerResult SubmitSecurityAnswer(int questionId, int answerIndex)
+    {
+        // If unlocked, accept any answer as correct for testing
+        if (AppState.IsUnlocked)
+        {
+            return new AnswerResult 
+            { 
+                IsCorrect = true, 
+                Explanation = "Test mode: All answers are correct!" 
+            };
+        }
+        return _dataService.ValidateSecurityAnswer(questionId, answerIndex);
+    }
+    
+    // Version Control answer submission
+    public AnswerResult SubmitVersionAnswer(int questionId, int answerIndex)
+    {
+        // If unlocked, accept any answer as correct for testing
+        if (AppState.IsUnlocked)
+        {
+            return new AnswerResult 
+            { 
+                IsCorrect = true, 
+                Explanation = "Test mode: All answers are correct!" 
+            };
+        }
+        return _dataService.ValidateVersionAnswer(questionId, answerIndex);
     }
 }

@@ -1,0 +1,89 @@
+{
+  "moduleSlug": "database-systems",
+  "title": "Database Systems",
+  "tier": "core",
+  "track": "Backend",
+  "timestamp": "2025-10-07T04:10:07.603Z",
+  "content": {
+    "lessons": {
+      "required": 16,
+      "actual": 16,
+      "status": "complete"
+    },
+    "quizzes": {
+      "required": 22,
+      "actual": 0,
+      "status": "unknown"
+    }
+  },
+  "validation": {
+    "issues": [
+      {
+        "severity": "medium",
+        "type": "lesson-count",
+        "message": "Module database-systems: Only 12 lessons (requires 16)",
+        "timestamp": "2025-10-01T07:38:14.934Z"
+      },
+      {
+        "severity": "medium",
+        "type": "quiz-count",
+        "message": "Module database-systems: Only 15 quiz questions (requires 22)",
+        "timestamp": "2025-10-01T07:38:14.934Z"
+      }
+    ],
+    "warnings": []
+  },
+  "accessibility": {
+    "issues": 0,
+    "severity": "compliant"
+  },
+  "quizAnalysis": {
+    "totalQuestions": 0,
+    "difficultyDistribution": {
+      "beginner": 0,
+      "intermediate": 0,
+      "advanced": 0
+    },
+    "targetDistribution": {
+      "beginner": 6,
+      "intermediate": 10,
+      "advanced": 4
+    },
+    "topicsCovered": 0,
+    "duplicationRate": 0
+  },
+  "sources": [
+    {
+      "url": "https://www.seas.upenn.edu/~zives/03s/cis550/codd.pdf"
+    },
+    {
+      "url": "https://www.db-book.com/"
+    },
+    {
+      "url": "https://www.pearson.com/us/higher-education/program/Elmasri-Fundamentals-of-Database-Systems-7th-Edition/PGM118419.html"
+    },
+    {
+      "url": "http://philip.greenspun.com/sql/constraints.html"
+    },
+    {
+      "url": "https://www.databass.dev/"
+    },
+    {
+      "url": "https://dev.mysql.com/doc/refman/8.0/en/create-table-constraints.html"
+    },
+    {
+      "url": "https://www.oreilly.com/library/view/sql-cookbook/0596009763/"
+    },
+    {
+      "url": "https://www.oreilly.com/library/view/learning-sql-2nd/9780596801835/"
+    },
+    {
+      "url": "https://www.oreilly.com/library/view/high-performance-mysql/9781492080503/"
+    }
+  ],
+  "routes": {
+    "overview": "/modules/database-systems",
+    "lessons": "/modules/database-systems/lessons",
+    "quiz": "/modules/database-systems/quiz"
+  }
+}

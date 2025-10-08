@@ -1,0 +1,132 @@
+[
+  {
+    "id": 1,
+    "question": "Which command is used to create a new Git repository in the current directory?",
+    "topic": "Version Control",
+    "choices": [
+      "git init",
+      "git create",
+      "git new",
+      "git start"
+    ],
+    "correctIndex": 0,
+    "explanation": "The 'git init' command initializes a new Git repository in the current directory, creating a .git folder that contains all the repository metadata. This is the first step in version controlling any project."
+  },
+  {
+    "id": 2,
+    "question": "What is the correct workflow to commit changes in Git?",
+    "topic": "Version Control",
+    "choices": [
+      "git add → git commit",
+      "git commit → git add",
+      "git push → git commit",
+      "git commit only (no add needed)"
+    ],
+    "correctIndex": 0,
+    "explanation": "The correct Git workflow is to first stage changes with 'git add' (adding them to the staging area), then commit them with 'git commit'. This two-step process allows you to carefully control which changes are included in each commit."
+  },
+  {
+    "id": 3,
+    "question": "Which command creates a new branch AND switches to it immediately?",
+    "topic": "Version Control",
+    "choices": [
+      "git checkout -b feature-branch",
+      "git branch feature-branch",
+      "git switch feature-branch",
+      "git create feature-branch"
+    ],
+    "correctIndex": 0,
+    "explanation": "'git checkout -b feature-branch' creates a new branch called 'feature-branch' and immediately switches to it. The newer equivalent is 'git switch -c feature-branch'. Option B only creates the branch without switching to it."
+  },
+  {
+    "id": 4,
+    "question": "What happens when you encounter a merge conflict in Git?",
+    "topic": "Version Control",
+    "choices": [
+      "Git stops the merge and requires manual resolution",
+      "Git automatically chooses the newer version",
+      "Git automatically chooses the older version",
+      "Git creates two separate files"
+    ],
+    "correctIndex": 0,
+    "explanation": "When Git encounters a merge conflict (same lines modified in different ways), it stops the merge process and marks the conflicted sections in the files. You must manually edit the files to resolve conflicts, then add and commit the resolved files."
+  },
+  {
+    "id": 5,
+    "question": "Which file is used to specify which files Git should ignore?",
+    "topic": "Version Control",
+    "choices": [
+      ".gitignore",
+      ".gitexclude",
+      "ignore.txt",
+      ".ignore"
+    ],
+    "correctIndex": 0,
+    "explanation": "The '.gitignore' file contains patterns for files and directories that Git should not track. This is essential for excluding build artifacts, dependencies, IDE files, and sensitive information from version control."
+  },
+  {
+    "id": 6,
+    "question": "How do you push a local branch to a remote repository for the first time?",
+    "topic": "Version Control",
+    "choices": [
+      "git push -u origin branch-name",
+      "git push branch-name",
+      "git push --new origin branch-name",
+      "git upload branch-name"
+    ],
+    "correctIndex": 0,
+    "explanation": "The command 'git push -u origin branch-name' pushes a local branch to the remote repository and sets up tracking. The -u flag (or --set-upstream) establishes a relationship between the local and remote branches for future pushes and pulls."
+  },
+  {
+    "id": 7,
+    "question": "What is the purpose of 'git stash'?",
+    "topic": "Version Control",
+    "choices": [
+      "Temporarily save changes without committing them",
+      "Permanently delete all changes",
+      "Create a backup of the entire repository",
+      "Synchronize with the remote repository"
+    ],
+    "correctIndex": 0,
+    "explanation": "'git stash' temporarily saves your current changes without committing them, allowing you to switch branches or pull updates without committing incomplete work. You can later restore the stashed changes with 'git stash pop' or 'git stash apply'."
+  },
+  {
+    "id": 8,
+    "question": "Which Git workflow is best for continuous deployment?",
+    "topic": "Version Control",
+    "choices": [
+      "GitHub Flow",
+      "Git Flow",
+      "Centralized Workflow",
+      "Forking Workflow"
+    ],
+    "correctIndex": 0,
+    "explanation": "GitHub Flow is a simple workflow ideal for continuous deployment. It involves creating feature branches from main, making changes, opening pull requests for review, and merging back to main for immediate deployment. Git Flow is more complex and better suited for versioned releases."
+  },
+  {
+    "id": 9,
+    "question": "What does 'git rebase' do?",
+    "topic": "Version Control",
+    "choices": [
+      "Moves or combines commits to create a linear history",
+      "Deletes commits from the repository",
+      "Creates a backup of the current branch",
+      "Synchronizes with the remote repository"
+    ],
+    "correctIndex": 0,
+    "explanation": "'git rebase' moves or combines commits to create a linear project history. It reapplies commits from the current branch on top of another base tip, resulting in a cleaner, linear history compared to merging."
+  },
+  {
+    "id": 10,
+    "question": "How do you create an annotated tag in Git?",
+    "topic": "Version Control",
+    "choices": [
+      "git tag -a v1.0.0 -m \"Release version 1.0.0\"",
+      "git tag v1.0.0",
+      "git create-tag v1.0.0",
+      "git mark v1.0.0"
+    ],
+    "correctIndex": 0,
+    "explanation": "The command 'git tag -a v1.0.0 -m \"Release version 1.0.0\"' creates an annotated tag with a message. Annotated tags store additional metadata including the tagger name, email, date, and message, making them more complete than lightweight tags created with 'git tag v1.0.0'."
+  }
+]

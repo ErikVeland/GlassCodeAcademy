@@ -204,6 +204,822 @@
       {
         "title": "Using the State Hook - React Documentation",
         "url": "https://reactjs.org/docs/hooks-state.html"
+      }
+    ],
+    "lastUpdated": "2025-10-02T10:00:00.000Z",
+    "version": "1.1.0"
+  },
+  {
+    "id": "react-fundamentals-lesson-4",
+    "moduleSlug": "react-fundamentals",
+    "title": "Advanced State Management with useReducer",
+    "order": 4,
+    "objectives": [
+      "Use the useReducer hook for complex state logic",
+      "Implement actions and reducers to manage state transitions",
+      "Understand the benefits of using useReducer over useState"
+    ],
+    "intro": "The useReducer hook is an alternative to useState for managing state in functional components, especially when you have complex state logic that involves multiple sub-values or when the next state depends on the previous one. It also makes it easier to optimize performance for components that trigger deep updates because you can pass dispatch down instead of callbacks.\n\nThis lesson will cover the useReducer hook in detail, including how to define actions and reducers, how to use the dispatch function to update state, and when to use useReducer over useState. You'll learn how to structure your state management logic to make it more predictable and maintainable.",
+    "code": {
+      "example": "import React, { useReducer } from 'react';\n\n// Initial state\nconst initialState = {\n  count: 0,\n  step: 1\n};\n\n// Reducer function\nfunction reducer(state, action) {\n  switch (action.type) {\n    case 'increment':\n      return {\n        ...state,\n        count: state.count + state.step\n      };\n    case 'decrement':\n      return {\n        ...state,\n        count: state.count - state.step\n      };\n    case 'setCount':\n      return {\n        ...state,\n        count: action.payload\n      };\n    case 'setStep':\n      return {\n        ...state,\n        step: action.payload\n      };\n    case 'reset':\n      return initialState;\n    default:\n      throw new Error();\n  }\n}\n\nfunction Counter() {\n  const [state, dispatch] = useReducer(reducer, initialState);\n  const { count, step } = state;\n\n  return (\n    <div>\n      <h1>{count}</h1>\n      <button onClick={() => dispatch({ type: 'decrement' })}>-</button>\n      <button onClick={() => dispatch({ type: 'increment' })}>+</button>\n      <input\n        type='range'\n        value={step}\n        onChange={(e) => dispatch({ type: 'setStep', payload: Number(e.target.value) })}\n      />\n      <button onClick={() => dispatch({ type: 'reset' })}>Reset</button>\n    </div>\n  );\n}\n\nexport default Counter;",
+      "explanation": "This example demonstrates the useReducer hook:\n\n1. **Initial State**: Defines the starting state\n2. **Reducer Function**: Handles state transitions based on actions\n3. **useReducer Hook**: Returns state and dispatch function\n4. **Dispatch Function**: Updates state by dispatching actions\n\nThe output shows:\n- A counter with increment and decrement buttons\n- A range input to set the step value\n- A reset button to reset the counter\n\nKey concepts illustrated:\n- State management with useReducer\n- Action and reducer definitions\n- Dispatching actions to update state\n- Resetting state to initial values\n- Using useReducer for complex state logic",
+      "language": "javascript"
+    },
+    "pitfalls": [
+      {
+        "mistake": "Not defining a default case in the reducer",
+        "solution": "Always include a default case to handle unexpected actions and prevent errors",
+        "severity": "high"
+      },
+      {
+        "mistake": "Mutating state directly in the reducer",
+        "solution": "Always return a new state object to ensure immutability",
+        "severity": "high"
+      },
+      {
+        "mistake": "Using useReducer for simple state logic",
+        "solution": "Use useState for simple state logic and reserve useReducer for complex state management",
+        "severity": "medium"
+      }
+    ],
+    "exercises": [
+      {
+        "title": "Practice: Create a Todo List",
+        "description": "Build a todo list application using useReducer",
+        "checkpoints": [
+          "Define initial state with an empty array of todos",
+          "Create actions for adding, removing, and toggling todos",
+          "Implement a reducer function to handle actions",
+          "Use useReducer to manage todo state",
+          "Add UI elements to interact with todos"
+        ]
+      }
+    ],
+    "next": [
+      "react-fundamentals-lesson-5"
+    ],
+    "estimatedMinutes": 45,
+    "difficulty": "Intermediate",
+    "tags": [
+      "Hooks",
+      "useReducer",
+      "State Management",
+      "react"
+    ],
+    "sources": [
+      {
+        "title": "Using the Reducer Hook - React Documentation",
+        "url": "https://reactjs.org/docs/hooks-reference.html#usereducer"
+      }
+    ],
+    "lastUpdated": "2025-10-02T10:00:00.000Z"
+  },
+  {
+    "id": "react-fundamentals-lesson-11",
+    "moduleSlug": "react-fundamentals",
+    "title": "Performance Optimization with React.memo and useMemo",
+    "order": 11,
+    "objectives": [
+      "Optimize React applications using memoization techniques",
+      "Implement React.memo for component rendering optimization",
+      "Use useMemo and useCallback for expensive computations"
+    ],
+    "intro": "Performance optimization is crucial for creating responsive React applications, especially as they grow in complexity and size. React provides several built-in tools to help optimize rendering performance, including React.memo, useMemo, and useCallback hooks.\n\nReact.memo is a higher-order component that prevents unnecessary re-renders of functional components by memoizing the result. useMemo and useCallback help optimize expensive calculations and function creations, respectively, by caching their results and only recomputing when dependencies change.\n\nThis lesson will explore performance optimization techniques in depth, covering when and how to use each optimization tool effectively. You'll learn to identify performance bottlenecks, implement targeted optimizations, and measure the impact of your improvements to ensure optimal user experiences.",
+    "code": {
+      "example": "import React, { useState, useMemo, useCallback, memo } from 'react';\n\n// Expensive calculation function\nconst calculateExpensiveValue = (items) => {\n  console.log('Calculating expensive value...');\n  // Simulate expensive computation\n  return items.reduce((sum, item) => {\n    // Simulate complex calculation\n    let result = 0;\n    for (let i = 0; i < 1000000; i++) {\n      result += item.value * Math.random();\n    }\n    return sum + result;\n  }, 0);\n};\n\n// Child component that should be memoized\nconst ExpensiveChildComponent = memo(({ data, onItemClick, title }) => {\n  console.log(`Rendering ${title}`);\n  \n  return (\n    <div className=\"expensive-component\">\n      <h3>{title}</h3>\n      {data.map(item => (\n        <div \n          key={item.id} \n          onClick={() => onItemClick(item)}\n          style={{\n            padding: '10px',\n            margin: '5px',\n            backgroundColor: '#f0f0f0',\n            cursor: 'pointer'\n          }}\n        >\n          {item.name} - {item.value}\n        </div>\n      ))}\n    </div>\n  );\n});\n\n// Parent component demonstrating optimization techniques\nfunction OptimizedApp() {\n  const [count, setCount] = useState(0);\n  const [items, setItems] = useState([\n    { id: 1, name: 'Item 1', value: 10 },\n    { id: 2, name: 'Item 2', value: 20 },\n    { id: 3, name: 'Item 3', value: 30 }\n  ]);\n\n  // Expensive calculation optimized with useMemo\n  const expensiveValue = useMemo(() => {\n    return calculateExpensiveValue(items);\n  }, [items]); // Only recalculate when items change\n\n  // Callback optimized with useCallback\n  const handleItemClick = useCallback((item) => {\n    console.log('Item clicked:', item);\n    // Update items with new value\n    setItems(prevItems => \n      prevItems.map(i => \n        i.id === item.id \n          ? { ...i, value: i.value + 1 } \n          : i\n      )\n    );\n  }, []); // No dependencies, so callback is stable\n\n  // Another callback that depends on count\n  const handleReset = useCallback(() => {\n    setCount(0);\n    setItems([\n      { id: 1, name: 'Item 1', value: 10 },\n      { id: 2, name: 'Item 2', value: 20 },\n      { id: 3, name: 'Item 3', value: 30 }\n    ]);\n  }, []); // Reset to initial state\n\n  return (\n    <div>\n      <h1>Performance Optimization Demo</h1>\n      <p>Count: {count}</p>\n      <button onClick={() => setCount(count + 1)}>Increment Count</button>\n      <button onClick={handleReset}>Reset</button>\n      \n      <p>Expensive Value: {Math.round(expensiveValue)}</p>\n      \n      {/* These components will only re-render when their props change */}\n      <ExpensiveChildComponent \n        data={items} \n        onItemClick={handleItemClick} \n        title=\"Items List\"\n      />\n      \n      {/* Component with inline function (will re-render unnecessarily) */}\n      <ExpensiveChildComponent \n        data={items} \n        onItemClick={(item) => console.log('Inline function:', item)} \n        title=\"Items with Inline Function (Not Optimized)\"\n      />\n    </div>\n  );\n}\n\n// Example showing custom comparison function for React.memo\nconst CustomComparisonComponent = memo(({ user, onUpdate }) => {\n  console.log('Rendering CustomComparisonComponent');\n  \n  return (\n    <div>\n      <h3>User: {user.name}</h3>\n      <p>Age: {user.age}</p>\n      <button onClick={() => onUpdate(user.id, { age: user.age + 1 })}>\n        Increment Age\n      </button>\n    </div>\n  );\n}, (prevProps, nextProps) => {\n  // Custom comparison function\n  // Only re-render if user name or age changes\n  return (\n    prevProps.user.name === nextProps.user.name &&\n    prevProps.user.age === nextProps.user.age\n  );\n});",
+      "explanation": "This example demonstrates comprehensive performance optimization techniques:\n\n1. **React.memo**: Prevents unnecessary re-renders of ExpensiveChildComponent\n2. **useMemo**: Caches expensive calculations to avoid recomputation\n3. **useCallback**: Stabilizes function references to prevent child re-renders\n4. **Custom Comparison**: Shows how to implement custom comparison logic for React.memo\n\nThe output shows:\n- Console logs indicating when components render\n- Performance improvement when using memoization\n- Difference between optimized and non-optimized components\n- Custom comparison function for fine-grained control\n\nKey concepts illustrated:\n- Component memoization with React.memo\n- Expensive computation caching with useMemo\n- Function reference stabilization with useCallback\n- Custom comparison functions for precise control\n- Performance profiling and optimization patterns\n- When and when not to apply optimizations",
+      "language": "javascript"
+    },
+    "pitfalls": [
+      {
+        "mistake": "Over-optimizing components that are not performance bottlenecks",
+        "solution": "Use React DevTools Profiler to identify actual performance issues before applying optimizations",
+        "severity": "high"
+      },
+      {
+        "mistake": "Using React.memo with components that always receive new props",
+        "solution": "React.memo is only effective when props remain the same between renders; avoid with components that receive new object/array props",
+        "severity": "high"
+      },
+      {
+        "mistake": "Creating new objects/arrays in render that break memoization",
+        "solution": "Use useMemo for object/array creation or move object literals outside render function",
+        "severity": "medium"
+      }
+    ],
+    "exercises": [
+      {
+        "title": "Practice: Optimize a Complex List Component",
+        "description": "Optimize a component that renders a large list of items with filtering and sorting",
+        "checkpoints": [
+          "Implement React.memo for list items to prevent unnecessary re-renders",
+          "Use useMemo to cache filtered and sorted data",
+          "Apply useCallback to stabilize event handlers passed to list items",
+          "Implement virtual scrolling for large datasets",
+          "Measure performance before and after optimizations",
+          "Avoid common memoization pitfalls with object props"
+        ]
+      }
+    ],
+    "next": [],
+    "estimatedMinutes": 50,
+    "difficulty": "Advanced",
+    "tags": [
+      "Performance",
+      "Optimization",
+      "React.memo",
+      "useMemo",
+      "useCallback",
+      "react"
+    ],
+    "sources": [
+      {
+        "title": "React Performance Optimization - React Documentation",
+        "url": "https://react.dev/reference/react/useMemo"
+      },
+      {
+        "title": "React.memo, useMemo, and useCallback - React Documentation",
+        "url": "https://react.dev/reference/react/useMemo"
+      }
+    ],
+    "lastUpdated": "2025-10-03T10:00:00.000Z",
+    "version": "1.1.0"
+  },
+  {
+    "id": "react-fundamentals-lesson-12",
+    "moduleSlug": "react-fundamentals",
+    "title": "Testing React Components",
+    "order": 12,
+    "objectives": [
+      "Write effective tests for React components using React Testing Library",
+      "Implement unit tests for component behavior and user interactions",
+      "Create test utilities for complex component testing scenarios"
+    ],
+    "intro": "Testing is a critical practice for ensuring the reliability and maintainability of React applications. React Testing Library provides a lightweight solution for testing React components that focuses on testing behavior from the user's perspective rather than implementation details.\n\nUnlike older testing libraries that encouraged testing implementation details, React Testing Library promotes testing components the way users interact with them - by finding elements by their text, labels, or roles, and interacting with them as a user would. This approach leads to more maintainable tests that are less likely to break when implementation details change.\n\nThis lesson will explore comprehensive testing strategies for React components, covering unit testing, integration testing, and best practices for test organization. You'll learn to write meaningful tests that provide confidence in your application's behavior while remaining resilient to refactoring.",
+    "code": {
+      "example": "import React, { useState } from 'react';\n\n// Component to test - a more complex example\nfunction TodoList() {\n  const [todos, setTodos] = useState([\n    { id: 1, text: 'Learn React', completed: true },\n    { id: 2, text: 'Build an app', completed: false }\n  ]);\n  const [newTodo, setNewTodo] = useState('');\n\n  const addTodo = () => {\n    if (newTodo.trim() !== '') {\n      setTodos([\n        ...todos,\n        { id: Date.now(), text: newTodo, completed: false }\n      ]);\n      setNewTodo('');\n    }\n  };\n\n  const toggleTodo = (id) => {\n    setTodos(todos.map(todo =>\n      todo.id === id ? { ...todo, completed: !todo.completed } : todo\n    ));\n  };\n\n  const deleteTodo = (id) => {\n    setTodos(todos.filter(todo => todo.id !== id));\n  };\n\n  const incompleteCount = todos.filter(todo => !todo.completed).length;\n\n  return (\n    <div>\n      <h1>Todo List</h1>\n      <div>\n        <input\n          value={newTodo}\n          onChange={(e) => setNewTodo(e.target.value)}\n          placeholder=\"Add a new todo\"\n        />\n        <button onClick={addTodo}>Add</button>\n      </div>\n      <div>Incomplete: {incompleteCount}</div>\n      <ul>\n        {todos.map(todo => (\n          <li key={todo.id}>\n            <input\n              type=\"checkbox\"\n              checked={todo.completed}\n              onChange={() => toggleTodo(todo.id)}\n            />\n            <span style={{ textDecoration: todo.completed ? 'line-through' : 'none' }}>\n              {todo.text}\n            </span>\n            <button onClick={() => deleteTodo(todo.id)}>Delete</button>\n          </li>\n        ))}\n      </ul>\n    </div>\n  );\n}\n\n// Test file using React Testing Library\nimport { render, screen, fireEvent, waitFor } from '@testing-library/react';\nimport { act } from 'react-dom/test-utils';\nimport '@testing-library/jest-dom';\n\n// Mock component for testing async behavior\nfunction AsyncComponent() {\n  const [data, setData] = useState(null);\n  const [loading, setLoading] = useState(false);\n\n  const fetchData = async () => {\n    setLoading(true);\n    // Simulate API call\n    await new Promise(resolve => setTimeout(resolve, 100));\n    setData('Loaded data');\n    setLoading(false);\n  };\n\n  return (\n    <div>\n      <button onClick={fetchData} disabled={loading}>\n        {loading ? 'Loading...' : 'Fetch Data'}\n      </button>\n      {data && <div data-testid=\"data-display\">{data}</div>}\n    </div>\n  );\n}\n\ndescribe('TodoList Component', () => {\n  test('renders initial todos', () => {\n    render(<TodoList />);\n    \n    // Check that initial todos are rendered\n    expect(screen.getByText('Learn React')).toBeInTheDocument();\n    expect(screen.getByText('Build an app')).toBeInTheDocument();\n    \n    // Check that one is completed (has line-through)\n    const completedTodo = screen.getByText('Learn React');\n    expect(completedTodo).toHaveStyle('text-decoration: line-through');\n    \n    // Check incomplete count\n    expect(screen.getByText('Incomplete: 1')).toBeInTheDocument();\n  });\n\n  test('adds a new todo', () => {\n    render(<TodoList />);\n    \n    // Find input and add button\n    const input = screen.getByPlaceholderText('Add a new todo');\n    const addButton = screen.getByText('Add');\n    \n    // Type in new todo\n    fireEvent.change(input, { target: { value: 'New todo item' } });\n    \n    // Click add button\n    fireEvent.click(addButton);\n    \n    // Check that new todo appears\n    expect(screen.getByText('New todo item')).toBeInTheDocument();\n    \n    // Check that incomplete count updated\n    expect(screen.getByText('Incomplete: 2')).toBeInTheDocument();\n  });\n\n  test('toggles todo completion', () => {\n    render(<TodoList />);\n    \n    // Find the unchecked todo\n    const buildAppTodo = screen.getByText('Build an app');\n    const checkbox = buildAppTodo.previousSibling; // Checkbox is previous sibling\n    \n    // Verify it's not completed initially\n    expect(buildAppTodo).not.toHaveStyle('text-decoration: line-through');\n    \n    // Click checkbox to complete it\n    fireEvent.click(checkbox);\n    \n    // Verify it's now completed\n    expect(buildAppTodo).toHaveStyle('text-decoration: line-through');\n    \n    // Check incomplete count updated\n    expect(screen.getByText('Incomplete: 0')).toBeInTheDocument();\n  });\n\n  test('deletes a todo', () => {\n    render(<TodoList />);\n    \n    // Find delete button for first todo\n    const deleteButton = screen.getByText('Learn React').nextSibling.nextSibling; // Delete button\n    \n    // Click delete button\n    fireEvent.click(deleteButton);\n    \n    // Verify todo is removed\n    expect(screen.queryByText('Learn React')).not.toBeInTheDocument();\n    \n    // Check incomplete count updated\n    expect(screen.getByText('Incomplete: 1')).toBeInTheDocument();\n  });\n});\n\ndescribe('AsyncComponent', () => {\n  test('handles async operations', async () => {\n    render(<AsyncComponent />);\n    \n    // Initially, data should not be present\n    expect(screen.queryByTestId('data-display')).not.toBeInTheDocument();\n    \n    // Click fetch button\n    const fetchButton = screen.getByText('Fetch Data');\n    fireEvent.click(fetchButton);\n    \n    // Button should be disabled and show loading text\n    expect(fetchButton).toBeDisabled();\n    expect(fetchButton).toHaveTextContent('Loading...');\n    \n    // Wait for data to load\n    await waitFor(() => {\n      expect(screen.getByTestId('data-display')).toBeInTheDocument();\n    });\n    \n    // Check data content\n    expect(screen.getByTestId('data-display')).toHaveTextContent('Loaded data');\n    \n    // Button should be enabled again\n    expect(fetchButton).not.toBeDisabled();\n    expect(fetchButton).toHaveTextContent('Fetch Data');\n  });\n});\n\n// Custom test utility for complex interactions\nexport const testUtils = {\n  addMultipleTodos: async (count) => {\n    const input = screen.getByPlaceholderText('Add a new todo');\n    const addButton = screen.getByText('Add');\n    \n    for (let i = 1; i <= count; i++) {\n      await act(async () => {\n        fireEvent.change(input, { target: { value: `Todo ${i}` } });\n        fireEvent.click(addButton);\n      });\n    }\n  },\n  \n  getAllTodoTexts: () => {\n    const todoItems = screen.getAllByRole('listitem');\n    return todoItems.map(item => {\n      const span = item.querySelector('span');\n      return span ? span.textContent : '';\n    });\n  }\n};",
+      "explanation": "This example demonstrates comprehensive testing techniques for React components:\n\n1. **Component Testing**: TodoList component with multiple interactive features\n2. **Query Methods**: Using getByText, getByPlaceholderText, queryByTestId for element selection\n3. **User Interactions**: Testing form inputs, button clicks, and checkbox toggles\n4. **State Verification**: Checking that component state updates correctly\n5. **Async Testing**: Handling asynchronous operations with waitFor\n6. **Custom Utilities**: Creating reusable test helpers for complex scenarios\n\nThe output shows:\n- Passing tests for all component functionality\n- Proper handling of user interactions\n- Correct state management verification\n- Async operation testing with loading states\n- Custom utility functions for complex test scenarios\n\nKey concepts illustrated:\n- React Testing Library querying best practices\n- User-centric testing approach\n- Async operation handling\n- Test organization with describe/test blocks\n- Custom test utility creation\n- Edge case testing (empty states, loading states)\n- Accessibility-aware querying with role-based selectors",
+      "language": "javascript"
+    },
+    "pitfalls": [
+      {
+        "mistake": "Testing implementation details instead of user behavior",
+        "solution": "Focus on testing what users see and do, not internal component implementation",
+        "severity": "high"
+      },
+      {
+        "mistake": "Not testing async operations properly",
+        "solution": "Use waitFor and proper async/await patterns for testing asynchronous behavior",
+        "severity": "high"
+      },
+      {
+        "mistake": "Writing overly specific or brittle tests",
+        "solution": "Test behavior rather than exact DOM structure; use accessible queries when possible",
+        "severity": "medium"
+      }
+    ],
+    "exercises": [
+      {
+        "title": "Practice: Test a Form Component with Validation",
+        "description": "Create comprehensive tests for a form component with validation and error handling",
+        "checkpoints": [
+          "Test initial form state and empty validation",
+          "Verify validation error messages appear for invalid inputs",
+          "Test successful form submission with valid data",
+          "Implement tests for async form submission with loading states",
+          "Create custom test utilities for form interactions",
+          "Test edge cases like network errors and validation race conditions"
+        ]
+      }
+    ],
+    "next": [],
+    "estimatedMinutes": 55,
+    "difficulty": "Advanced",
+    "tags": [
+      "Testing",
+      "React Testing Library",
+      "Unit Testing",
+      "react"
+    ],
+    "sources": [
+      {
+        "title": "React Testing Library Documentation",
+        "url": "https://testing-library.com/docs/react-testing-library/intro/"
+      },
+      {
+        "title": "Common Testing Mistakes - React Testing Library",
+        "url": "https://kentcdodds.com/blog/common-mistakes-with-react-testing-library"
+      }
+    ],
+    "lastUpdated": "2025-10-03T10:00:00.000Z",
+    "version": "1.1.0"
+  },
+  {
+    "id": "react-fundamentals-lesson-10",
+    "moduleSlug": "react-fundamentals",
+    "title": "Fetching Data with useEffect",
+    "order": 10,
+    "objectives": [
+      "Fetch data from APIs using the useEffect hook",
+      "Handle loading states and error conditions effectively",
+      "Implement proper cleanup to prevent memory leaks"
+    ],
+    "intro": "Data fetching is a fundamental aspect of modern web applications, allowing React components to retrieve and display information from external sources. The useEffect hook provides a powerful mechanism for handling side effects like data fetching, subscriptions, and manual DOM manipulations in functional components.\n\nWhen fetching data, it's crucial to manage loading states, handle errors gracefully, and implement proper cleanup to prevent memory leaks. This lesson will explore best practices for data fetching in React, including handling component unmounting, implementing retry logic, and creating reusable data fetching hooks.\n\nYou'll learn how to build robust data fetching solutions that provide excellent user experiences while maintaining application performance and reliability.",
+    "code": {
+      "example": "import React, { useState, useEffect } from 'react';\n\n// Custom hook for data fetching with advanced features\nfunction useApi(url, options = {}) {\n  const [data, setData] = useState(null);\n  const [loading, setLoading] = useState(true);\n  const [error, setError] = useState(null);\n  const [retryCount, setRetryCount] = useState(0);\n\n  useEffect(() => {\n    let isMounted = true; // Flag to prevent state updates after unmount\n    \n    const fetchData = async () => {\n      try {\n        setLoading(true);\n        setError(null);\n        \n        const response = await fetch(url, options);\n        \n        if (!response.ok) {\n          throw new Error(`HTTP error! status: ${response.status}`);\n        }\n        \n        const result = await response.json();\n        \n        // Only update state if component is still mounted\n        if (isMounted) {\n          setData(result);\n          setLoading(false);\n          setRetryCount(0);\n        }\n      } catch (err) {\n        // Only update state if component is still mounted\n        if (isMounted) {\n          setError(err);\n          setLoading(false);\n          \n          // Implement retry logic for network errors\n          if (retryCount < 3 && err.name !== 'AbortError') {\n            setTimeout(() => {\n              if (isMounted) {\n                setRetryCount(prev => prev + 1);\n              }\n            }, 1000 * Math.pow(2, retryCount)); // Exponential backoff\n          }\n        }\n      }\n    };\n\n    fetchData();\n\n    // Cleanup function to prevent memory leaks\n    return () => {\n      isMounted = false;\n    };\n  }, [url, retryCount, JSON.stringify(options)]); // Re-run when URL, retryCount, or options change\n\n  // Function to manually refetch data\n  const refetch = () => {\n    setRetryCount(0);\n  };\n\n  return { data, loading, error, refetch };\n}\n\n// Component using the custom data fetching hook\nfunction UserList() {\n  const { data: users, loading, error, refetch } = useApi('https://jsonplaceholder.typicode.com/users');\n\n  if (loading) return <div>Loading users... {loading.retryCount > 0 && `(Retry ${loading.retryCount}/3)`}</div>;\n  if (error) return <div>Error: {error.message} <button onClick={refetch}>Retry</button></div>;\n\n  return (\n    <div>\n      <h2>Users</h2>\n      <button onClick={refetch}>Refresh</button>\n      <ul>\n        {users.map(user => (\n          <li key={user.id}>\n            <h3>{user.name}</h3>\n            <p>Email: {user.email}</p>\n            <p>Phone: {user.phone}</p>\n          </li>\n        ))}\n      </ul>\n    </div>\n  );\n}",
+      "explanation": "This example demonstrates a comprehensive data fetching implementation with advanced features:\n\n1. **Custom Hook**: useApi encapsulates data fetching logic for reusability\n2. **Loading States**: Tracks loading status with retry information\n3. **Error Handling**: Catches and displays network and HTTP errors\n4. **Cleanup**: Prevents state updates after component unmounting\n5. **Retry Logic**: Implements exponential backoff for failed requests\n6. **Manual Refetching**: Provides function to manually trigger data refresh\n\nThe output shows:\n- Loading indicator with retry count during fetch operations\n- Error messages with retry button for failed requests\n- User list with names, emails, and phone numbers\n- Refresh button to manually refetch data\n\nKey concepts illustrated:\n- useEffect for data fetching side effects\n- Cleanup functions to prevent memory leaks\n- Error boundary patterns for graceful error handling\n- Retry mechanisms with exponential backoff\n- Component unmounting protection\n- Custom hook creation for reusable logic\n- Loading and error state management",
+      "language": "javascript"
+    },
+    "pitfalls": [
+      {
+        "mistake": "Not implementing cleanup functions for data fetching",
+        "solution": "Always return a cleanup function from useEffect to prevent state updates after component unmounting",
+        "severity": "high"
+      },
+      {
+        "mistake": "Creating infinite loops with useEffect dependencies",
+        "solution": "Be careful with object and array dependencies; use JSON.stringify or useMemo to stabilize references",
+        "severity": "high"
+      },
+      {
+        "mistake": "Not handling network errors gracefully",
+        "solution": "Implement comprehensive error handling with user-friendly messages and retry options",
+        "severity": "medium"
+      }
+    ],
+    "exercises": [
+      {
+        "title": "Practice: Create a Data Fetching Hook with Caching",
+        "description": "Build an enhanced data fetching hook that implements caching and request deduplication",
+        "checkpoints": [
+          "Implement in-memory caching to avoid redundant requests",
+          "Add request deduplication to prevent multiple simultaneous requests for the same URL",
+          "Create cache expiration mechanism with configurable TTL",
+          "Add support for request cancellation with AbortController",
+          "Implement pagination support for large datasets",
+          "Add TypeScript types for better developer experience"
+        ]
+      }
+    ],
+    "next": [],
+    "estimatedMinutes": 50,
+    "difficulty": "Advanced",
+    "tags": [
+      "Data Fetching",
+      "useEffect",
+      "API Integration",
+      "react"
+    ],
+    "sources": [
+      {
+        "title": "React useEffect Hook - React Documentation",
+        "url": "https://react.dev/reference/react/useEffect"
+      },
+      {
+        "title": "Data Fetching with React Hooks",
+        "url": "https://www.robinwieruch.de/react-hooks-fetch-data/"
+      }
+    ],
+    "lastUpdated": "2025-10-03T10:00:00.000Z",
+    "version": "1.1.0"
+  },
+
+    "lastUpdated": "2025-10-03T10:00:00.000Z",
+    "version": "1.1.0"
+  },
+    "version": "1.1.0"
+  },
+  {
+    "id": "react-fundamentals-lesson-5",
+    "moduleSlug": "react-fundamentals",
+    "title": "Context API for Global State",
+    "order": 5,
+    "objectives": [
+      "Create and use a React Context to share state across components",
+      "Provide and consume context values using Context.Provider and useContext hook",
+      "Understand the use cases and limitations of the Context API"
+    ],
+    "intro": "The Context API is a feature in React that allows you to share values between components without having to explicitly pass a prop through every level of the tree. This is particularly useful for global state management, such as theme settings, user authentication, or language preferences.\n\nThis lesson will cover the Context API in detail, including how to create a context, provide values to components, and consume those values using the useContext hook. You'll learn when to use the Context API and how to avoid common pitfalls.",
+    "code": {
+      "example": "import React, { createContext, useContext, useState } from 'react';\n\n// Create a Context\nconst ThemeContext = createContext();\n\n// Provider component\nfunction ThemeProvider({ children }) {\n  const [theme, setTheme] = useState('light');\n\n  const toggleTheme = () => {\n    setTheme(theme === 'light' ? 'dark' : 'light');\n  };\n\n  return (\n    <ThemeContext.Provider value={{ theme, toggleTheme }}>\n      {children}\n    </ThemeContext.Provider>\n  );\n}\n\n// Consumer component\nfunction ThemedButton() {\n  const { theme, toggleTheme } = useContext(ThemeContext);\n\n  return (\n    <button onClick={toggleTheme} style={{ background: theme === 'light' ? 'white' : 'black', color: theme === 'light' ? 'black' : 'white' }}>\n      Toggle Theme\n    </button>\n  );\n}\n\nfunction App() {\n  return (\n    <ThemeProvider>\n      <div>\n        <h1>Context API Example</h1>\n        <ThemedButton />\n      </div>\n    </ThemeProvider>\n  );\n}\n\nexport default App;",
+      "explanation": "This example demonstrates the Context API:\n\n1. **Create Context**: Defines a new context\n2. **Provider Component**: Provides context values to child components\n3. **Consumer Component**: Consumes context values using useContext hook\n4. **Toggle Theme**: Changes theme state and updates UI\n\nThe output shows:\n- A button that toggles between light and dark themes\n- Theme state shared across components without prop drilling\n\nKey concepts illustrated:\n- Creating and using contexts\n- Providing context values\n- Consuming context values with useContext\n- Use cases for the Context API\n- Avoiding prop drilling",
+      "language": "javascript"
+    },
+    "pitfalls": [
+      {
+        "mistake": "Overusing the Context API for local state",
+        "solution": "Use props or local state for local state management and reserve the Context API for global state",
+        "severity": "high"
+      },
+      {
+        "mistake": "Not using the useContext hook",
+        "solution": "Use the useContext hook to consume context values in functional components",
+        "severity": "high"
+      },
+      {
+        "mistake": "Not optimizing context updates",
+        "solution": "Use memoization techniques to prevent unnecessary re-renders when context values change",
+        "severity": "medium"
+      }
+    ],
+    "exercises": [
+      {
+        "title": "Practice: Create a Theme Switcher",
+        "description": "Build a theme switcher application using the Context API",
+        "checkpoints": [
+          "Create a context for theme settings",
+          "Provide theme values to components",
+          "Consume theme values in UI components",
+          "Implement a toggle button to switch themes"
+        ]
+      }
+    ],
+    "next": [
+      "react-fundamentals-lesson-6"
+    ],
+    "estimatedMinutes": 40,
+    "difficulty": "Intermediate",
+    "tags": [
+      "Context API",
+      "Global State",
+      "react"
+    ],
+    "sources": [
+      {
+        "title": "Context API - React Documentation",
+        "url": "https://reactjs.org/docs/context.html"
+      }
+    ],
+    "lastUpdated": "2025-10-02T10:00:00.000Z",
+    "version": "1.1.0"
+  },
+  {
+    "id": "react-fundamentals-lesson-6",
+    "moduleSlug": "react-fundamentals",
+    "title": "State Management with Context API",
+    "order": 6,
+    "objectives": [
+      "Manage global state using the Context API",
+      "Provide and consume context values in components",
+      "Optimize performance with context updates"
+    ],
+    "intro": "The Context API is a powerful feature in React for managing global state across your application. It allows you to share values between components without having to explicitly pass a prop through every level of the tree. This is particularly useful for global state management, such as theme settings, user authentication, or language preferences.\n\nThis lesson will cover the Context API in depth, including how to create a context, provide values to components, and consume those values using the useContext hook. You'll learn how to optimize performance when using the Context API and when to use it over other state management solutions.",
+    "code": {
+      "example": "import React, { createContext, useContext, useState } from 'react';\n\n// Create a Context\nconst UserContext = createContext();\n\n// Provider component\nfunction UserProvider({ children }) {\n  const [user, setUser] = useState(null);\n\n  const login = (username) => {\n    setUser(username);\n  };\n\n  const logout = () => {\n    setUser(null);\n  };\n\n  return (\n    <UserContext.Provider value={{ user, login, logout }}>\n      {children}\n    </UserContext.Provider>\n  );\n}\n\n// Consumer component\nfunction UserProfile() {\n  const { user, logout } = useContext(UserContext);\n\n  return (\n    <div>\n      {user ? (\n        <div>\n          <h2>Welcome, {user}!</h2>\n          <button onClick={logout}>Logout</button>\n        </div>\n      ) : (\n        <div>\n          <h2>Please log in</h2>\n          <button onClick={() => login('JohnDoe')}>Login as JohnDoe</button>\n        </div>\n      )}\n    </div>\n  );\n}\n\nfunction App() {\n  return (\n    <UserProvider>\n      <div>\n        <h1>User Context Example</h1>\n        <UserProfile />\n      </div>\n    </UserProvider>\n  );\n}\n\nexport default App;",
+      "explanation": "This example demonstrates the Context API:\n\n1. **Create Context**: Defines a new context\n2. **Provider Component**: Provides context values to child components\n3. **Consumer Component**: Consumes context values using useContext hook\n4. **Login/Logout**: Changes user state and updates UI\n\nThe output shows:\n- A user profile component that displays user information or login options\n- User state shared across components without prop drilling\n\nKey concepts illustrated:\n- Creating and using contexts\n- Providing context values\n- Consuming context values with useContext\n- Use cases for the Context API\n- Avoiding prop drilling",
+      "language": "javascript"
+    },
+    "pitfalls": [
+      {
+        "mistake": "Overusing the Context API for local state",
+        "solution": "Use props or local state for local state management and reserve the Context API for global state",
+        "severity": "high"
+      },
+      {
+        "mistake": "Not using the useContext hook",
+        "solution": "Use the useContext hook to consume context values in functional components",
+        "severity": "high"
+      },
+      {
+        "mistake": "Not optimizing context updates",
+        "solution": "Use memoization techniques to prevent unnecessary re-renders when context values change",
+        "severity": "medium"
+      }
+    ],
+    "exercises": [
+      {
+        "title": "Practice: Create a User Authentication System",
+        "description": "Build a user authentication system using the Context API",
+        "checkpoints": [
+          "Create a context for user authentication",
+          "Provide user authentication values to components",
+          "Consume user authentication values in UI components",
+          "Implement login and logout functionality"
+        ]
+      }
+    ],
+    "next": [
+      "react-fundamentals-lesson-7"
+    ],
+    "estimatedMinutes": 45,
+    "difficulty": "Intermediate",
+    "tags": [
+      "Context API",
+      "Global State",
+      "react"
+    ],
+    "sources": [
+      {
+        "title": "Context API - React Documentation",
+        "url": "https://reactjs.org/docs/context.html"
+      }
+    ],
+    "lastUpdated": "2025-10-02T10:00:00.000Z",
+    "version": "1.1.0"
+  },
+  {
+    "id": "react-fundamentals-lesson-7",
+    "moduleSlug": "react-fundamentals",
+    "title": "State Management with Redux",
+    "order": 7,
+    "objectives": [
+      "Understand the core concepts of Redux",
+      "Set up a Redux store and connect it to a React application",
+      "Manage state using actions and reducers"
+    ],
+    "intro": "Redux is a predictable state container for JavaScript apps. It helps you write applications that behave consistently across client, server, and native environments, and are easy to test. On top of that, it provides a great developer experience, such as live code editing combined with a time-traveling debugger.\n\nThis lesson will introduce you to Redux, including how to set up a Redux store, define actions and reducers, and connect the store to a React application. You'll learn how to manage state in a predictable and scalable way using Redux.",
+    "code": {
+      "example": "import React from 'react';\nimport { createStore } from 'redux';\nimport { Provider, useSelector, useDispatch } from 'react-redux';\n\n// Define the initial state\nconst initialState = {\n  count: 0\n};\n\n// Define the reducer function\nfunction counterReducer(state = initialState, action) {\n  switch (action.type) {\n    case 'INCREMENT':\n      return {\n        ...state,\n        count: state.count + 1\n      };\n    case 'DECREMENT':\n      return {\n        ...state,\n        count: state.count - 1\n      };\n    case 'RESET':\n      return {\n        count: 0\n      };\n    default:\n      return state;\n  }\n}\n\n// Create the Redux store\nconst store = createStore(counterReducer);\n\n// Component using Redux\nfunction Counter() {\n  const count = useSelector((state) => state.count);\n  const dispatch = useDispatch();\n\n  return (\n    <div>\n      <h1>{count}</h1>\n      <button onClick={() => dispatch({ type: 'INCREMENT' })}>+</button>\n      <button onClick={() => dispatch({ type: 'DECREMENT' })}>-</button>\n      <button onClick={() => dispatch({ type: 'RESET' })}>Reset</button>\n    </div>\n  );\n}\n\nfunction App() {\n  return (\n    <Provider store={store}>\n      <div>\n        <h1>Redux Example</h1>\n        <Counter />\n      </div>\n    </Provider>\n  );\n}\n\nexport default App;",
+      "explanation": "This example demonstrates Redux:\n\n1. **Initial State**: Defines the starting state\n2. **Reducer Function**: Handles state transitions based on actions\n3. **Create Store**: Initializes the Redux store with the reducer\n4. **Provider Component**: Connects the Redux store to the React application\n5. **Consumer Component**: Uses useSelector and useDispatch to interact with the store\n\nThe output shows:\n- A counter with increment and decrement buttons\n- A reset button to reset the counter\n\nKey concepts illustrated:\n- Setting up a Redux store\n- Defining actions and reducers\n- Connecting Redux to React\n- Using useSelector and useDispatch\n- Predictable state management with Redux",
+      "language": "javascript"
+    },
+    "pitfalls": [
+      {
+        "mistake": "Not defining a default case in the reducer",
+        "solution": "Always include a default case to handle unexpected actions and prevent errors",
+        "severity": "high"
+      },
+      {
+        "mistake": "Mutating state directly in the reducer",
+        "solution": "Always return a new state object to maintain immutability",
+        "severity": "high"
+      },
+      {
+        "mistake": "Using Redux for simple state management",
+        "solution": "Use useState or useReducer for simple state; reserve Redux for complex state management with multiple components",
+        "severity": "medium"
+      }
+    ],
+    "exercises": [
+      {
+        "title": "Practice: Create a Todo List with Redux",
+        "description": "Build a todo list application using Redux for state management",
+        "checkpoints": [
+          "Define initial state for todos with properties like id, text, and completed",
+          "Implement reducer function with actions for adding, toggling, and removing todos",
+          "Create action creators for each operation",
+          "Handle edge cases like empty todo text or duplicate IDs",
+          "Implement filtering functionality (all, active, completed)",
+          "Add undo/redo functionality for todo operations"
+        ]
+      }
+    ],
+    "next": [
+      "react-fundamentals-lesson-8"
+    ],
+    "estimatedMinutes": 45,
+    "difficulty": "Advanced",
+    "tags": [
+      "State Management",
+      "Redux",
+      "react"
+    ],
+    "sources": [
+      {
+        "title": "Redux Documentation",
+        "url": "https://redux.js.org/"
+      }
+    ],
+    "lastUpdated": "2025-10-02T10:00:00.000Z",
+    "version": "1.1.0"
+  },
+  {
+    "id": "react-fundamentals-lesson-8",
+    "moduleSlug": "react-fundamentals",
+    "title": "State Management with MobX",
+    "order": 8,
+    "objectives": [
+      "Understand the core concepts of MobX",
+      "Set up MobX and connect it to a React application",
+      "Manage state using observables and actions"
+    ],
+    "intro": "MobX is a simple, scalable state management library that makes state management simple and scalable by transparently applying functional reactive programming (TFRP). It makes it easy to manage complex state logic in a predictable and maintainable way.\n\nThis lesson will introduce you to MobX, including how to set up MobX, define observables and actions, and connect the store to a React application. You'll learn how to manage state in a predictable and scalable way using MobX.",
+    "code": {
+      "example": "import React from 'react';\nimport { makeAutoObservable } from 'mobx';\nimport { observer } from 'mobx-react-lite';\n\n// Define the store\nclass CounterStore {\n  count = 0;\n\n  constructor() {\n    makeAutoObservable(this);\n  }\n\n  increment() {\n    this.count += 1;\n  }\n\n  decrement() {\n    this.count -= 1;\n  }\n\n  reset() {\n    this.count = 0;\n  }\n}\n\nconst counterStore = new CounterStore();\n\n// Component using MobX\nconst Counter = observer(() => {\n  return (\n    <div>\n      <h1>{counterStore.count}</h1>\n      <button onClick={counterStore.increment}>+</button>\n      <button onClick={counterStore.decrement}>-</button>\n      <button onClick={counterStore.reset}>Reset</button>\n    </div>\n  );\n});\n\nfunction App() {\n  return (\n    <div>\n      <h1>MobX Example</h1>\n      <Counter />\n    </div>\n  );\n}\n\nexport default App;",
+      "explanation": "This example demonstrates MobX:\n\n1. **Store Definition**: Defines a store with observables and actions\n2. **Observer Component**: Uses observer to automatically track changes in the store\n3. **Component Interaction**: Calls actions to update the store\n\nThe output shows:\n- A counter with increment and decrement buttons\n- A reset button to reset the counter\n\nKey concepts illustrated:\n- Setting up MobX\n- Defining observables and actions\n- Connecting MobX to React\n- Using observer to track changes\n- Predictable state management with MobX",
+      "language": "javascript"
+    },
+    "pitfalls": [
+      {
+        "mistake": "Not using observer for components",
+        "solution": "Use observer to automatically track changes in the store",
+        "severity": "high"
+      },
+      {
+        "mistake": "Mutating observables directly",
+        "solution": "Always use actions to update observables",
+        "severity": "high"
+      },
+      {
+        "mistake": "Using MobX for simple state management",
+        "solution": "Use useState or useReducer for simple state; reserve MobX for complex state management with multiple components",
+        "severity": "medium"
+      }
+    ],
+    "exercises": [
+      {
+        "title": "Practice: Create a Todo List with MobX",
+        "description": "Build a todo list application using MobX for state management",
+        "checkpoints": [
+          "Define initial state for todos with properties like id, text, and completed",
+          "Implement actions for adding, toggling, and removing todos",
+          "Create action creators for each operation",
+          "Handle edge cases like empty todo text or duplicate IDs",
+          "Implement filtering functionality (all, active, completed)",
+          "Add undo/redo functionality for todo operations"
+        ]
+      }
+    ],
+    "next": [
+      "react-fundamentals-lesson-9"
+    ],
+    "estimatedMinutes": 45,
+    "difficulty": "Advanced",
+    "tags": [
+      "State Management",
+      "MobX",
+      "react"
+    ],
+    "sources": [
+      {
+        "title": "MobX Documentation",
+        "url": "https://mobx.js.org/"
+      }
+    ],
+    "lastUpdated": "2025-10-02T10:00:00.000Z",
+    "version": "1.1.0"
+  },
+  {
+    "id": "react-fundamentals-lesson-9",
+    "moduleSlug": "react-fundamentals",
+    "title": "State Management with useReducer",
+    "order": 9,
+    "objectives": [
+      "Manage complex state logic using the useReducer hook",
+      "Implement state transitions with reducer functions",
+      "Organize state management for scalable applications"
+    ],
+    "intro": "As React applications grow in complexity, managing state with useState can become challenging, especially when state transitions involve multiple sub-values or when the next state depends on the previous one. The useReducer hook provides an alternative approach to state management that is more suitable for complex state logic.\n\nuseReducer is usually preferable to useState when you have complex state logic that involves multiple sub-values or when the next state depends on the previous one. It also helps to separate the state logic from the components that use it, making components more readable and maintainable.\n\nThis lesson will explore the useReducer hook in depth, covering reducer function patterns, action types, and state immutability. You'll learn how to implement complex state management solutions that scale with your application's needs while maintaining predictable state transitions.",
+    "code": {
+      "example": "import React, { useReducer } from 'react';\n\n// Define the initial state\nconst initialState = {\n  count: 0,\n  history: [],\n  isIncrementing: false\n};\n\n// Define the reducer function\nfunction counterReducer(state, action) {\n  switch (action.type) {\n    case 'INCREMENT_START':\n      return {\n        ...state,\n        isIncrementing: true\n      };\n    case 'INCREMENT':\n      return {\n        count: state.count + 1,\n        history: [...state.history, `Incremented to ${state.count + 1}`],\n        isIncrementing: false\n      };\n    case 'DECREMENT':\n      return {\n        count: state.count - 1,\n        history: [...state.history, `Decremented to ${state.count - 1}`],\n        isIncrementing: false\n      };\n    case 'RESET':\n      return {\n        count: 0,\n        history: [...state.history, 'Reset to 0'],\n        isIncrementing: false\n      };\n    case 'UNDO':\n      // Remove last history entry\n      const newHistory = state.history.slice(0, -1);\n      const lastCount = newHistory.length > 0 \n        ? parseInt(newHistory[newHistory.length - 1].match(/\\d+$/)[0])\n        : 0;\n      return {\n        count: lastCount,\n        history: newHistory,\n        isIncrementing: false\n      };\n    default:\n      throw new Error(`Unknown action type: ${action.type}`);\n  }\n}\n\n// Component using useReducer\nfunction Counter() {\n  const [state, dispatch] = useReducer(counterReducer, initialState);\n\n  const handleIncrement = () => {\n    dispatch({ type: 'INCREMENT_START' });\n    // Simulate async operation\n    setTimeout(() => {\n      dispatch({ type: 'INCREMENT' });\n    }, 500);\n  };\n\n  return (\n    <div>\n      <h2>Counter: {state.count} {state.isIncrementing ? '(Incrementing...)' : ''}</h2>\n      <button onClick={handleIncrement} disabled={state.isIncrementing}>+</button>\n      <button onClick={() => dispatch({ type: 'DECREMENT' })}>-</button>\n      <button onClick={() => dispatch({ type: 'RESET' })}>Reset</button>\n      <button onClick={() => dispatch({ type: 'UNDO' })} disabled={state.history.length === 0}>Undo</button>\n      \n      <h3>History:</h3>\n      <ul>\n        {state.history.map((item, index) => (\n          <li key={index}>{item}</li>\n        ))}\n      </ul>\n    </div>\n  );\n}",
+      "explanation": "This example demonstrates advanced useReducer implementation with complex state management:\n\n1. **Initial State**: Defines a complex state object with multiple properties\n2. **Reducer Function**: Handles different action types with specific state transitions\n3. **Action Dispatching**: Components dispatch actions to trigger state changes\n4. **State Immutability**: Reducer returns new state objects rather than mutating existing ones\n5. **Complex Operations**: Implements undo functionality and async state transitions\n\nThe output shows:\n- Counter with increment/decrement buttons and real-time history\n- Loading state during async operations\n- Undo functionality to revert actions\n- Comprehensive history tracking\n\nKey concepts illustrated:\n- Reducer pattern for complex state management\n- Action types and payload handling\n- State immutability principles\n- Async state transitions\n- Complex state operations (undo/redo)\n- Performance optimization with state separation",
+      "language": "javascript"
+    },
+    "pitfalls": [
+      {
+        "mistake": "Mutating state directly in reducer functions",
+        "solution": "Always return new state objects to maintain immutability and predictable state transitions",
+        "severity": "high"
+      },
+      {
+        "mistake": "Using useReducer for simple state management",
+        "solution": "Use useState for simple state; reserve useReducer for complex state logic with multiple sub-values",
+        "severity": "medium"
+      },
+      {
+        "mistake": "Not handling all possible action types",
+        "solution": "Include a default case that throws an error for unknown action types to catch bugs early",
+        "severity": "medium"
+      }
+    ],
+    "exercises": [
+      {
+        "title": "Practice: Create a Todo List with useReducer",
+        "description": "Build a todo list application using useReducer for state management",
+        "checkpoints": [
+          "Define initial state for todos with properties like id, text, and completed",
+          "Implement reducer function with actions for adding, toggling, and removing todos",
+          "Create action creators for each operation",
+          "Handle edge cases like empty todo text or duplicate IDs",
+          "Implement filtering functionality (all, active, completed)",
+          "Add undo/redo functionality for todo operations"
+        ]
+      }
+    ],
+    "next": [],
+    "estimatedMinutes": 45,
+    "difficulty": "Advanced",
+    "tags": [
+      "State Management",
+      "useReducer",
+      "Reducers",
+      "react"
+    ],
+    "sources": [
+      {
+        "title": "React useReducer Hook - React Documentation",
+        "url": "https://reactjs.org/docs/hooks-reference.html#usereducer"
+      },
+      {
+        "title": "React Hooks: useState vs useReducer",
+        "url": "https://reactjs.org/docs/hooks-reference.html#hooks-and-performance"
+      }
+    ],
+    "lastUpdated": "2025-10-03T10:00:00.000Z",
+    "version": "1.1.0"
+  },
+  {
+    "id": "react-fundamentals-lesson-10",
+    "moduleSlug": "react-fundamentals",
+    "title": "Forms and Controlled Components",
+    "order": 6,
+    "objectives": [
+      "Create and manage forms using controlled components",
+      "Handle form input changes and submissions",
+      "Validate form data and provide feedback"
+    ],
+    "intro": "Forms are a common part of web applications, and React provides a way to handle form data using controlled components. Controlled components are form elements whose values are controlled by React state. This allows you to handle form data in a predictable and manageable way.\n\nThis lesson will cover how to create and manage forms in React, including handling input changes, form submissions, and form validation. You'll learn how to build forms that provide feedback to users and handle data submission effectively.",
+    "code": {
+      "example": "import React, { useState } from 'react';\n\nfunction Form() {\n  const [formData, setFormData] = useState({\n    username: '',\n    email: '',\n    password: ''\n  });\n\n  const handleChange = (e) => {\n    const { name, value } = e.target;\n    setFormData({\n      ...formData,\n      [name]: value\n    });\n  };\n\n  const handleSubmit = (e) => {\n    e.preventDefault();\n    console.log('Form submitted:', formData);\n  };\n\n  return (\n    <form onSubmit={handleSubmit}>\n      <div>\n        <label>\n          Username:\n          <input\n            type='text'\n            name='username'\n            value={formData.username}\n            onChange={handleChange}\n          />\n        </label>\n      </div>\n      <div>\n        <label>\n          Email:\n          <input\n            type='email'\n            name='email'\n            value={formData.email}\n            onChange={handleChange}\n          />\n        </label>\n      </div>\n      <div>\n        <label>\n          Password:\n          <input\n            type='password'\n            name='password'\n            value={formData.password}\n            onChange={handleChange}\n          />\n        </label>\n      </div>\n      <button type='submit'>Submit</button>\n    </form>\n  );\n}\n\nexport default Form;",
+      "explanation": "This example demonstrates form handling in React:\n\n1. **State Initialization**: Initializes form data state\n2. **Input Change Handler**: Updates state on input changes\n3. **Form Submission Handler**: Prevents default submission and logs form data\n4. **Form Elements**: Controlled inputs with value and onChange attributes\n\nThe output shows:\n- A form with username, email, and password fields\n- Form submission logs form data to console\n\nKey concepts illustrated:\n- Controlled components for form handling\n- State management for form data\n- Event handling for form submissions\n- Input validation and feedback",
+      "language": "javascript"
+    },
+    "pitfalls": [
+      {
+        "mistake": "Not using controlled components",
+        "solution": "Use controlled components to manage form data in React",
+        "severity": "high"
+      },
+      {
+        "mistake": "Not preventing default form submission",
+        "solution": "Use e.preventDefault() to prevent default form submission behavior",
+        "severity": "high"
+      },
+      {
+        "mistake": "Not handling input changes",
+        "solution": "Implement an input change handler to update form data",
+        "severity": "high"
+      }
+    ],
+    "exercises": [
+      {
+        "title": "Practice: Create a Contact Form",
+        "description": "Build a contact form with validation using controlled components",
+        "checkpoints": [
+          "Create state for form fields",
+          "Implement input change handlers",
+          "Add form validation logic",
+          "Handle form submission and display feedback"
+        ]
+      }
+    ],
+    "next": [
+      "react-fundamentals-lesson-7"
+    ],
+    "estimatedMinutes": 45,
+    "difficulty": "Intermediate",
+    "tags": [
+      "Forms",
+      "Controlled Components",
+      "react"
+    ],
+    "sources": [
+      {
+        "title": "Forms - React Documentation",
+        "url": "https://reactjs.org/docs/forms.html"
+      }
+    ],
+    "lastUpdated": "2025-10-02T10:00:00.000Z",
+    "version": "1.1.0"
+  },
+  {
+    "id": "react-fundamentals-lesson-7",
+    "moduleSlug": "react-fundamentals",
+    "title": "Styling React Components",
+    "order": 7,
+    "objectives": [
+      "Apply inline styles to React components",
+      "Use CSS classes for styling",
+      "Implement CSS-in-JS solutions like styled-components"
+    ],
+    "intro": "Styling is an essential part of building user interfaces, and React provides several ways to style components. You can use inline styles, CSS classes, or CSS-in-JS solutions like styled-components to style your components.\n\nThis lesson will cover the different styling options available in React, including inline styles, CSS classes, and CSS-in-JS solutions. You'll learn how to apply styles to components and choose the best styling approach for your project.",
+    "code": {
+      "example": "import React from 'react';\nimport './App.css';\nimport styled from 'styled-components';\n\nconst StyledButton = styled.button`\n  background-color: blue;\n  color: white;\n  padding: 10px 20px;\n  border: none;\n  border-radius: 5px;\n  cursor: pointer;\n\n  &:hover {\n    background-color: darkblue;\n  }\n`;\n\nfunction App() {\n  return (\n    <div className='app-container'>\n      <h1 className='app-title'>Styling React Components</h1>\n      <button style={{ backgroundColor: 'green', color: 'white', padding: '10px 20px', borderRadius: '5px', cursor: 'pointer' }}>\n        Inline Style Button\n      </button>\n      <StyledButton>\n        Styled Components Button\n      </StyledButton>\n    </div>\n  );\n}\n\nexport default App;",
+      "explanation": "This example demonstrates different styling options in React:\n\n1. **Inline Styles**: Applied directly to elements using the style attribute\n2. **CSS Classes**: Applied using the className attribute\n3. **Styled Components**: Defined using the styled-components library\n\nThe output shows:\n- A container with a title and three buttons\n- Buttons styled using inline styles, CSS classes, and styled-components\n\nKey concepts illustrated:\n- Inline styling in React\n- Using CSS classes for styling\n- Implementing CSS-in-JS solutions like styled-components\n- Choosing the best styling approach for your project",
+      "language": "javascript"
+    },
+    "pitfalls": [
+      {
+        "mistake": "Using inline styles for large stylesheets",
+        "solution": "Use CSS classes or CSS-in-JS solutions for large stylesheets",
+        "severity": "high"
+      },
+      {
+        "mistake": "Not using CSS-in-JS solutions for dynamic styles",
+        "solution": "Use CSS-in-JS solutions like styled-components for dynamic styles",
+        "severity": "medium"
+      },
+      {
+        "mistake": "Not using CSS classes for reusable styles",
+        "solution": "Use CSS classes to define reusable styles",
+        "severity": "medium"
+      }
+    ],
+    "exercises": [
+      {
+        "title": "Practice: Create a Styled Component",
+        "description": "Build a styled component using CSS-in-JS",
+        "checkpoints": [
+          "Install styled-components",
+          "Create a styled component",
+          "Use the styled component in your application",
+          "Add dynamic styles to the component"
+        ]
+      }
+    ],
+    "next": [
+      "react-fundamentals-lesson-8"
+    ],
+    "estimatedMinutes": 40,
+    "difficulty": "Intermediate",
+    "tags": [
+      "Styling",
+      "CSS",
+      "CSS-in-JS",
+      "react"
+    ],
+    "sources": [
+      {
+        "title": "Styling and CSS - React Documentation",
+        "url": "https://reactjs.org/docs/faq-styling.html"
+      },
+      {
+        "title": "Styled Components Documentation",
+        "url": "https://styled-components.com/"
+      }
+    ],
+    "lastUpdated": "2025-10-02T10:00:00.000Z",
+    "version": "1.1.0"
+  },
+  {
+    "id": "react-fundamentals-lesson-8",
+    "moduleSlug": "react-fundamentals",
+    "title": "React Router for Navigation",
+    "order": 8,
+    "objectives": [
+      "Implement client-side routing with React Router",
+      "Create navigation components and route hierarchies",
+      "Handle dynamic routes and route parameters effectively"
+    ],
+    "intro": "Client-side routing is essential for creating single-page applications (SPAs) that provide a seamless user experience without full page reloads. React Router is the most popular routing library for React applications, enabling developers to define routes, handle navigation, and manage browser history.\n\nThis lesson will explore the core concepts of React Router v6, including defining routes, creating navigation components, handling dynamic routes with parameters, and implementing nested routing patterns. You'll learn how to structure your application's navigation, pass data between routes, and handle route transitions effectively.\n\nBy the end of this lesson, you'll be able to implement comprehensive routing solutions that support complex application structures while maintaining clean, maintainable code organization.",
+    "code": {
+      "example": "import React from 'react';\nimport { BrowserRouter as Router, Routes, Route, Link, useParams, useNavigate } from 'react-router-dom';\n\n// Home component\nfunction Home() {\n  return (\n    <div>\n      <h1>Home Page</h1>\n      <p>Welcome to our React application!</p>\n    </div>\n  );\n}\n\n// About component\nfunction About() {\n  return (\n    <div>\n      <h1>About Us</h1>\n      <p>Learn more about our company and mission.</p>\n    </div>\n  );\n}\n\n// Dynamic route component with parameter\nfunction UserProfile() {\n  const { id } = useParams();\n  const navigate = useNavigate();\n  \n  const handleGoBack = () => {\n    navigate(-1); // Go back to previous page\n  };\n  \n  return (\n    <div>\n      <h1>User Profile</h1>\n      <p>User ID: {id}</p>\n      <button onClick={handleGoBack}>Go Back</button>\n    </div>\n  );\n}\n\n// Navigation component\nfunction Navigation() {\n  return (\n    <nav>\n      <ul>\n        <li><Link to=\"/\">Home</Link></li>\n        <li><Link to=\"/about\">About</Link></li>\n        <li><Link to=\"/user/123\">User Profile</Link></li>\n      </ul>\n    </nav>\n  );\n}\n\n// Main App component with routing\nfunction App() {\n  return (\n    <Router>\n      <div>\n        <Navigation />\n        <Routes>\n          <Route path=\"/\" element={<Home />} />\n          <Route path=\"/about\" element={<About />} />\n          <Route path=\"/user/:id\" element={<UserProfile />} />\n        </Routes>\n      </div>\n    </Router>\n  );\n}",
+      "explanation": "This example demonstrates a complete React Router implementation with multiple routes:\n\n1. **BrowserRouter**: Wraps the application to enable routing functionality\n2. **Routes and Route**: Define route mappings to components\n3. **Link**: Creates navigation links without page reloads\n4. **useParams**: Accesses dynamic route parameters\n5. **useNavigate**: Programmatically navigates between routes\n\nThe output shows:\n- Navigation menu with links to different pages\n- Route-based component rendering\n- Dynamic parameter handling in the UserProfile component\n- Programmatic navigation with the back button\n\nKey concepts illustrated:\n- Client-side routing principles\n- Route definition and matching\n- Dynamic route parameters\n- Navigation components\n- Programmatic navigation\n- Route hierarchy management",
+      "language": "javascript"
+    },
+    "pitfalls": [
+      {
+        "mistake": "Not wrapping the application with BrowserRouter",
+        "solution": "Ensure the entire application is wrapped with BrowserRouter to enable routing functionality",
+        "severity": "high"
+      },
+      {
+        "mistake": "Using outdated React Router syntax",
+        "solution": "Use React Router v6 syntax with Routes, Route, and hooks like useParams and useNavigate",
+        "severity": "high"
+      },
+      {
+        "mistake": "Not handling 404 cases for undefined routes",
+        "solution": "Implement a catch-all route to handle undefined paths gracefully",
+        "severity": "medium"
+      }
+    ],
+    "exercises": [
+      {
+        "title": "Practice: Create a Multi-Page Application",
+        "description": "Build a React application with multiple pages using React Router",
+        "checkpoints": [
+          "Implement BrowserRouter to enable routing",
+          "Create at least 3 different page components",
+          "Define routes for each page component",
+          "Add navigation links between pages",
+          "Implement a dynamic route with parameters",
+          "Add a 404 page for undefined routes"
+        ]
+      }
+    ],
+    "next": [],
+    "estimatedMinutes": 40,
+    "difficulty": "Intermediate",
+    "tags": [
+      "Routing",
+      "React Router",
+      "Navigation",
+      "react"
+    ],
+    "sources": [
+      {
+        "title": "React Router Documentation",
+        "url": "https://reactrouter.com/"
+      },
+      {
+        "title": "React Router v6 Migration Guide",
+        "url": "https://reactrouter.com/en/main/upgrading/v5"
+      }
+    ],
+    "lastUpdated": "2025-10-03T10:00:00.000Z",
+    "version": "1.1.0"
+  }
       },
       {
         "title": "Using the Effect Hook - React Documentation",
@@ -326,52 +1142,67 @@
     "title": "Forms and Controlled Components",
     "order": 7,
     "objectives": [
-      "Implement practical solutions",
-      "Build foundational understanding"
+      "Implement controlled components for form data management",
+      "Handle form validation and user input effectively",
+      "Create reusable form components with proper state management"
     ],
-    "intro": "Welcome to this comprehensive lesson on Forms.\n\nLearn how to create forms and manage form data using controlled components.\n\nThroughout this lesson, you'll gain hands-on experience with practical implementations and real-world scenarios. We'll explore both the theoretical foundations and practical applications, ensuring you can immediately apply what you learn.\n\nThis lesson is designed to build upon previous concepts while introducing new techniques that will enhance your development skills. By the end, you'll have a solid understanding of the key principles and be ready to tackle more advanced topics.\n\nThe knowledge gained here will serve as a foundation for subsequent lessons and real-world projects.",
+    "intro": "Forms are a critical part of any web application, enabling user interaction and data collection. In React, forms can be implemented using controlled components, where form data is handled by the component's state rather than the DOM. This approach provides better control over form behavior, validation, and data flow.\n\nControlled components ensure that the React state is the single source of truth for form data, making it easier to implement features like real-time validation, conditional fields, and dynamic form behavior. This lesson will explore the principles of controlled components, form validation techniques, and best practices for creating robust, user-friendly forms in React applications.\n\nYou'll learn how to handle different input types, implement validation strategies, and create reusable form components that can be used throughout your application. By the end of this lesson, you'll be able to build complex forms that provide excellent user experiences while maintaining clean, maintainable code.",
     "code": {
       "example": "import React, { useState } from 'react';\n\nfunction ContactForm() {\n  const [formData, setFormData] = useState({\n    name: '',\n    email: '',\n    message: '',\n    category: 'general'\n  });\n\n  const [errors, setErrors] = useState({});\n\n  const handleChange = (event) => {\n    const { name, value } = event.target;\n    setFormData(prev => ({\n      ...prev,\n      [name]: value\n    }));\n  };\n\n  const validateForm = () => {\n    const newErrors = {};\n    if (!formData.name.trim()) newErrors.name = 'Name is required';\n    if (!formData.email.trim()) newErrors.email = 'Email is required';\n    if (!formData.message.trim()) newErrors.message = 'Message is required';\n    return newErrors;\n  };\n\n  const handleSubmit = (event) => {\n    event.preventDefault();\n    const formErrors = validateForm();\n    if (Object.keys(formErrors).length === 0) {\n      console.log('Form submitted:', formData);\n      // Reset form\n      setFormData({ name: '', email: '', message: '', category: 'general' });\n    } else {\n      setErrors(formErrors);\n    }\n  };\n\n  return (\n    <form onSubmit={handleSubmit}>\n      <input\n        name=\"name\"\n        value={formData.name}\n        onChange={handleChange}\n        placeholder=\"Name\"\n      />\n      {errors.name && <span>{errors.name}</span>}\n      \n      <input\n        name=\"email\"\n        type=\"email\"\n        value={formData.email}\n        onChange={handleChange}\n        placeholder=\"Email\"\n      />\n      {errors.email && <span>{errors.email}</span>}\n      \n      <select name=\"category\" value={formData.category} onChange={handleChange}>\n        <option value=\"general\">General</option>\n        <option value=\"support\">Support</option>\n        <option value=\"sales\">Sales</option>\n      </select>\n      \n      <textarea\n        name=\"message\"\n        value={formData.message}\n        onChange={handleChange}\n        placeholder=\"Message\"\n      />\n      {errors.message && <span>{errors.message}</span>}\n      \n      <button type=\"submit\">Submit</button>\n    </form>\n  );\n}",
-      "explanation": "This example produces: Contact form with validation that displays errors for empty required fields\n\nThe code demonstrates practical implementation techniques and shows how the concepts work in real scenarios. Pay attention to the structure and patterns used, as these represent industry best practices.",
+      "explanation": "This example demonstrates a comprehensive form implementation with controlled components:\n\n1. **State Management**: Uses useState to manage form data and validation errors\n2. **Controlled Inputs**: Each input's value is controlled by React state\n3. **Event Handling**: handleChange function updates state when inputs change\n4. **Form Validation**: validateForm function checks for required fields\n5. **Submission Handling**: handleSubmit prevents default behavior and processes form data\n\nThe output shows a fully functional contact form with real-time validation that displays error messages for empty required fields.\n\nKey concepts illustrated:\n- Controlled component pattern\n- Form state management\n- Input validation techniques\n- Error handling and display\n- Form submission with data processing\n- Component reusability",
       "language": "javascript"
     },
     "pitfalls": [
       {
-        "mistake": "Not following best practices",
-        "solution": "Review documentation and community guidelines",
+        "mistake": "Not implementing proper form validation",
+        "solution": "Always validate user input both client-side and server-side to ensure data integrity",
+        "severity": "high"
+      },
+      {
+        "mistake": "Using uncontrolled components for complex forms",
+        "solution": "Use controlled components for forms that require validation, dynamic behavior, or complex state management",
         "severity": "medium"
       },
       {
-        "mistake": "Skipping error handling",
-        "solution": "Implement proper error boundaries and validation",
-        "severity": "low"
+        "mistake": "Not handling different input types properly",
+        "solution": "Implement specific handling for checkboxes, radio buttons, and select elements",
+        "severity": "medium"
       }
     ],
     "exercises": [
       {
-        "title": "Practice: Forms and Controlled Components",
-        "description": "Apply the concepts from this lesson on Forms",
+        "title": "Practice: Create a Registration Form",
+        "description": "Build a registration form with email, password, and confirmation fields",
         "checkpoints": [
-          "Understand the core concept",
-          "Implement the example code",
-          "Experiment with variations"
+          "Implement controlled components for all form fields",
+          "Add validation for email format and password strength",
+          "Create password confirmation matching validation",
+          "Display appropriate error messages for validation failures",
+          "Handle form submission with validated data"
         ]
       }
     ],
     "next": [],
-    "estimatedMinutes": 25,
+    "estimatedMinutes": 35,
     "difficulty": "Intermediate",
     "tags": [
       "Forms",
+      "Controlled Components",
+      "Validation",
       "react"
     ],
-    "legacy": {
-      "originalId": 7,
-      "originalTopic": "Forms",
-      "migrated": "2025-10-01T06:41:13.474Z"
-    },
-    "lastUpdated": "2025-10-01T06:41:13.474Z",
-    "version": "1.0.0"
+    "sources": [
+      {
+        "title": "Forms - React Documentation",
+        "url": "https://reactjs.org/docs/forms.html"
+      },
+      {
+        "title": "React Forms: Controlled Components",
+        "url": "https://reactjs.org/docs/forms.html#controlled-components"
+      }
+    ],
+    "lastUpdated": "2025-10-03T10:00:00.000Z",
+    "version": "1.1.0"
   },
   {
     "id": "react-fundamentals-lesson-8",
@@ -379,52 +1210,68 @@
     "title": "React Router for Navigation",
     "order": 8,
     "objectives": [
-      "Implement practical solutions",
-      "Build foundational understanding"
+      "Implement client-side routing with React Router",
+      "Create navigation components and route hierarchies",
+      "Handle dynamic routes and route parameters effectively"
     ],
-    "intro": "Welcome to this comprehensive lesson on Routing.\n\nLearn how to implement client-side routing in React applications using React Router.\n\nThroughout this lesson, you'll gain hands-on experience with practical implementations and real-world scenarios. We'll explore both the theoretical foundations and practical applications, ensuring you can immediately apply what you learn.\n\nThis lesson is designed to build upon previous concepts while introducing new techniques that will enhance your development skills. By the end, you'll have a solid understanding of the key principles and be ready to tackle more advanced topics.\n\nThe knowledge gained here will serve as a foundation for subsequent lessons and real-world projects.",
+    "intro": "Client-side routing is essential for creating single-page applications (SPAs) that provide a seamless user experience without full page reloads. React Router is the most popular routing library for React applications, enabling developers to define routes, handle navigation, and manage browser history.\n\nThis lesson will explore the core concepts of React Router v6, including defining routes, creating navigation components, handling dynamic routes with parameters, and implementing nested routing patterns. You'll learn how to structure your application's navigation, pass data between routes, and handle route transitions effectively.\n\nBy the end of this lesson, you'll be able to implement comprehensive routing solutions that support complex application structures while maintaining clean, maintainable code organization.",
     "code": {
-      "example": "import React from 'react';\nimport { BrowserRouter as Router, Route, Routes, Link, useParams } from 'react-router-dom';\n\nfunction Home() {\n  return <h2>Home Page</h2>;\n}\n\nfunction About() {\n  return <h2>About Page</h2>;\n}\n\nfunction UserProfile() {\n  const { id } = useParams();\n  return <h2>User Profile: {id}</h2>;\n}\n\nfunction Navigation() {\n  return (\n    <nav>\n      <ul>\n        <li><Link to=\"/\">Home</Link></li>\n        <li><Link to=\"/about\">About</Link></li>\n        <li><Link to=\"/user/123\">User 123</Link></li>\n      </ul>\n    </nav>\n  );\n}\n\nfunction App() {\n  return (\n    <Router>\n      <div>\n        <Navigation />\n        <Routes>\n          <Route path=\"/\" element={<Home />} />\n          <Route path=\"/about\" element={<About />} />\n          <Route path=\"/user/:id\" element={<UserProfile />} />\n        </Routes>\n      </div>\n    </Router>\n  );\n}",
-      "explanation": "This example produces: Navigation menu with routes for Home, About, and User Profile pages\n\nThe code demonstrates practical implementation techniques and shows how the concepts work in real scenarios. Pay attention to the structure and patterns used, as these represent industry best practices.",
+      "example": "import React from 'react';\nimport { BrowserRouter as Router, Routes, Route, Link, useParams, useNavigate } from 'react-router-dom';\n\n// Home component\nfunction Home() {\n  return (\n    <div>\n      <h1>Home Page</h1>\n      <p>Welcome to our React application!</p>\n    </div>\n  );\n}\n\n// About component\nfunction About() {\n  return (\n    <div>\n      <h1>About Us</h1>\n      <p>Learn more about our company and mission.</p>\n    </div>\n  );\n}\n\n// Dynamic route component with parameter\nfunction UserProfile() {\n  const { id } = useParams();\n  const navigate = useNavigate();\n  \n  const handleGoBack = () => {\n    navigate(-1); // Go back to previous page\n  };\n  \n  return (\n    <div>\n      <h1>User Profile</h1>\n      <p>User ID: {id}</p>\n      <button onClick={handleGoBack}>Go Back</button>\n    </div>\n  );\n}\n\n// Navigation component\nfunction Navigation() {\n  return (\n    <nav>\n      <ul>\n        <li><Link to=\"/\">Home</Link></li>\n        <li><Link to=\"/about\">About</Link></li>\n        <li><Link to=\"/user/123\">User Profile</Link></li>\n      </ul>\n    </nav>\n  );\n}\n\n// Main App component with routing\nfunction App() {\n  return (\n    <Router>\n      <div>\n        <Navigation />\n        <Routes>\n          <Route path=\"/\" element={<Home />} />\n          <Route path=\"/about\" element={<About />} />\n          <Route path=\"/user/:id\" element={<UserProfile />} />\n        </Routes>\n      </div>\n    </Router>\n  );\n}",
+      "explanation": "This example demonstrates a complete React Router implementation with multiple routes:\n\n1. **BrowserRouter**: Wraps the application to enable routing functionality\n2. **Routes and Route**: Define route mappings to components\n3. **Link**: Creates navigation links without page reloads\n4. **useParams**: Accesses dynamic route parameters\n5. **useNavigate**: Programmatically navigates between routes\n\nThe output shows:\n- Navigation menu with links to different pages\n- Route-based component rendering\n- Dynamic parameter handling in the UserProfile component\n- Programmatic navigation with the back button\n\nKey concepts illustrated:\n- Client-side routing principles\n- Route definition and matching\n- Dynamic route parameters\n- Navigation components\n- Programmatic navigation\n- Route hierarchy management",
       "language": "javascript"
     },
     "pitfalls": [
       {
-        "mistake": "Not following best practices",
-        "solution": "Review documentation and community guidelines",
-        "severity": "medium"
+        "mistake": "Not wrapping the application with BrowserRouter",
+        "solution": "Ensure the entire application is wrapped with BrowserRouter to enable routing functionality",
+        "severity": "high"
       },
       {
-        "mistake": "Skipping error handling",
-        "solution": "Implement proper error boundaries and validation",
-        "severity": "low"
+        "mistake": "Using outdated React Router syntax",
+        "solution": "Use React Router v6 syntax with Routes, Route, and hooks like useParams and useNavigate",
+        "severity": "high"
+      },
+      {
+        "mistake": "Not handling 404 cases for undefined routes",
+        "solution": "Implement a catch-all route to handle undefined paths gracefully",
+        "severity": "medium"
       }
     ],
     "exercises": [
       {
-        "title": "Practice: React Router for Navigation",
-        "description": "Apply the concepts from this lesson on Routing",
+        "title": "Practice: Create a Multi-Page Application",
+        "description": "Build a React application with multiple pages using React Router",
         "checkpoints": [
-          "Understand the core concept",
-          "Implement the example code",
-          "Experiment with variations"
+          "Implement BrowserRouter to enable routing",
+          "Create at least 3 different page components",
+          "Define routes for each page component",
+          "Add navigation links between pages",
+          "Implement a dynamic route with parameters",
+          "Add a 404 page for undefined routes"
         ]
       }
     ],
     "next": [],
-    "estimatedMinutes": 25,
+    "estimatedMinutes": 40,
     "difficulty": "Intermediate",
     "tags": [
       "Routing",
+      "React Router",
+      "Navigation",
       "react"
     ],
-    "legacy": {
-      "originalId": 8,
-      "originalTopic": "Routing",
-      "migrated": "2025-10-01T06:41:13.474Z"
-    },
-    "lastUpdated": "2025-10-01T06:41:13.474Z",
-    "version": "1.0.0"
+    "sources": [
+      {
+        "title": "React Router Documentation",
+        "url": "https://reactrouter.com/"
+      },
+      {
+        "title": "React Router v6 Migration Guide",
+        "url": "https://reactrouter.com/en/main/upgrading/v5"
+      }
+    ],
+    "lastUpdated": "2025-10-03T10:00:00.000Z",
+    "version": "1.1.0"
   },
   {
     "id": "react-fundamentals-lesson-9",
@@ -432,52 +1279,68 @@
     "title": "State Management with useReducer",
     "order": 9,
     "objectives": [
-      "Understand state management and lifecycle",
-      "Implement practical solutions"
+      "Manage complex state logic using the useReducer hook",
+      "Implement state transitions with reducer functions",
+      "Organize state management for scalable applications"
     ],
-    "intro": "Welcome to this comprehensive lesson on State Management.\n\nLearn how to manage complex state logic using the useReducer hook.\n\nThroughout this lesson, you'll gain hands-on experience with practical implementations and real-world scenarios. We'll explore both the theoretical foundations and practical applications, ensuring you can immediately apply what you learn.\n\nThis lesson is designed to build upon previous concepts while introducing new techniques that will enhance your development skills. By the end, you'll have a solid understanding of the key principles and be ready to tackle more advanced topics.\n\nThe knowledge gained here will serve as a foundation for subsequent lessons and real-world projects.",
+    "intro": "As React applications grow in complexity, managing state with useState can become challenging, especially when state transitions involve multiple sub-values or when the next state depends on the previous one. The useReducer hook provides an alternative approach to state management that is more suitable for complex state logic.\n\nuseReducer is usually preferable to useState when you have complex state logic that involves multiple sub-values or when the next state depends on the previous one. It also helps to separate the state logic from the components that use it, making components more readable and maintainable.\n\nThis lesson will explore the useReducer hook in depth, covering reducer function patterns, action types, and state immutability. You'll learn how to implement complex state management solutions that scale with your application's needs while maintaining predictable state transitions.",
     "code": {
-      "example": "import React, { useReducer } from 'react';\n\nconst initialState = {\n  count: 0,\n  history: []\n};\n\nfunction reducer(state, action) {\n  switch (action.type) {\n    case 'increment':\n      return {\n        count: state.count + 1,\n        history: [...state.history, `Incremented to ${state.count + 1}`]\n      };\n    case 'decrement':\n      return {\n        count: state.count - 1,\n        history: [...state.history, `Decremented to ${state.count - 1}`]\n      };\n    case 'reset':\n      return {\n        count: 0,\n        history: [...state.history, 'Reset to 0']\n      };\n    default:\n      throw new Error('Unknown action type');\n  }\n}\n\nfunction Counter() {\n  const [state, dispatch] = useReducer(reducer, initialState);\n\n  return (\n    <div>\n      <p>Count: {state.count}</p>\n      <button onClick={() => dispatch({ type: 'increment' })}>+</button>\n      <button onClick={() => dispatch({ type: 'decrement' })}>-</button>\n      <button onClick={() => dispatch({ type: 'reset' })}>Reset</button>\n      \n      <h3>History:</h3>\n      <ul>\n        {state.history.map((item, index) => (\n          <li key={index}>{item}</li>\n        ))}\n      </ul>\n    </div>\n  );\n}",
-      "explanation": "This example produces: Counter with increment/decrement buttons and action history\n\nThe code demonstrates practical implementation techniques and shows how the concepts work in real scenarios. Pay attention to the structure and patterns used, as these represent industry best practices.",
+      "example": "import React, { useReducer } from 'react';\n\n// Define the initial state\nconst initialState = {\n  count: 0,\n  history: [],\n  isIncrementing: false\n};\n\n// Define the reducer function\nfunction counterReducer(state, action) {\n  switch (action.type) {\n    case 'INCREMENT_START':\n      return {\n        ...state,\n        isIncrementing: true\n      };\n    case 'INCREMENT':\n      return {\n        count: state.count + 1,\n        history: [...state.history, `Incremented to ${state.count + 1}`],\n        isIncrementing: false\n      };\n    case 'DECREMENT':\n      return {\n        count: state.count - 1,\n        history: [...state.history, `Decremented to ${state.count - 1}`],\n        isIncrementing: false\n      };\n    case 'RESET':\n      return {\n        count: 0,\n        history: [...state.history, 'Reset to 0'],\n        isIncrementing: false\n      };\n    case 'UNDO':\n      // Remove last history entry\n      const newHistory = state.history.slice(0, -1);\n      const lastCount = newHistory.length > 0 \n        ? parseInt(newHistory[newHistory.length - 1].match(/\\d+$/)[0])\n        : 0;\n      return {\n        count: lastCount,\n        history: newHistory,\n        isIncrementing: false\n      };\n    default:\n      throw new Error(`Unknown action type: ${action.type}`);\n  }\n}\n\n// Component using useReducer\nfunction Counter() {\n  const [state, dispatch] = useReducer(counterReducer, initialState);\n\n  const handleIncrement = () => {\n    dispatch({ type: 'INCREMENT_START' });\n    // Simulate async operation\n    setTimeout(() => {\n      dispatch({ type: 'INCREMENT' });\n    }, 500);\n  };\n\n  return (\n    <div>\n      <h2>Counter: {state.count} {state.isIncrementing ? '(Incrementing...)' : ''}</h2>\n      <button onClick={handleIncrement} disabled={state.isIncrementing}>+</button>\n      <button onClick={() => dispatch({ type: 'DECREMENT' })}>-</button>\n      <button onClick={() => dispatch({ type: 'RESET' })}>Reset</button>\n      <button onClick={() => dispatch({ type: 'UNDO' })} disabled={state.history.length === 0}>Undo</button>\n      \n      <h3>History:</h3>\n      <ul>\n        {state.history.map((item, index) => (\n          <li key={index}>{item}</li>\n        ))}\n      </ul>\n    </div>\n  );\n}",
+      "explanation": "This example demonstrates advanced useReducer implementation with complex state management:\n\n1. **Initial State**: Defines a complex state object with multiple properties\n2. **Reducer Function**: Handles different action types with specific state transitions\n3. **Action Dispatching**: Components dispatch actions to trigger state changes\n4. **State Immutability**: Reducer returns new state objects rather than mutating existing ones\n5. **Complex Operations**: Implements undo functionality and async state transitions\n\nThe output shows:\n- Counter with increment/decrement buttons and real-time history\n- Loading state during async operations\n- Undo functionality to revert actions\n- Comprehensive history tracking\n\nKey concepts illustrated:\n- Reducer pattern for complex state management\n- Action types and payload handling\n- State immutability principles\n- Async state transitions\n- Complex state operations (undo/redo)\n- Performance optimization with state separation",
       "language": "javascript"
     },
     "pitfalls": [
       {
-        "mistake": "Not following best practices",
-        "solution": "Review documentation and community guidelines",
+        "mistake": "Mutating state directly in reducer functions",
+        "solution": "Always return new state objects to maintain immutability and predictable state transitions",
+        "severity": "high"
+      },
+      {
+        "mistake": "Using useReducer for simple state management",
+        "solution": "Use useState for simple state; reserve useReducer for complex state logic with multiple sub-values",
         "severity": "medium"
       },
       {
-        "mistake": "Skipping error handling",
-        "solution": "Implement proper error boundaries and validation",
-        "severity": "low"
+        "mistake": "Not handling all possible action types",
+        "solution": "Include a default case that throws an error for unknown action types to catch bugs early",
+        "severity": "medium"
       }
     ],
     "exercises": [
       {
-        "title": "Practice: State Management with useReducer",
-        "description": "Apply the concepts from this lesson on State Management",
+        "title": "Practice: Create a Todo List with useReducer",
+        "description": "Build a todo list application using useReducer for state management",
         "checkpoints": [
-          "Understand the core concept",
-          "Implement the example code",
-          "Experiment with variations"
+          "Define initial state for todos with properties like id, text, and completed",
+          "Implement reducer function with actions for adding, toggling, and removing todos",
+          "Create action creators for each operation",
+          "Handle edge cases like empty todo text or duplicate IDs",
+          "Implement filtering functionality (all, active, completed)",
+          "Add undo/redo functionality for todo operations"
         ]
       }
     ],
     "next": [],
-    "estimatedMinutes": 25,
+    "estimatedMinutes": 45,
     "difficulty": "Advanced",
     "tags": [
       "State Management",
+      "useReducer",
+      "Reducers",
       "react"
     ],
-    "legacy": {
-      "originalId": 9,
-      "originalTopic": "State Management",
-      "migrated": "2025-10-01T06:41:13.474Z"
-    },
-    "lastUpdated": "2025-10-01T06:41:13.474Z",
-    "version": "1.0.0"
+    "sources": [
+      {
+        "title": "React useReducer Hook - React Documentation",
+        "url": "https://reactjs.org/docs/hooks-reference.html#usereducer"
+      },
+      {
+        "title": "React Hooks: useState vs useReducer",
+        "url": "https://reactjs.org/docs/hooks-reference.html#hooks-and-performance"
+      }
+    ],
+    "lastUpdated": "2025-10-03T10:00:00.000Z",
+    "version": "1.1.0"
   },
   {
     "id": "react-fundamentals-lesson-10",
@@ -485,52 +1348,68 @@
     "title": "Fetching Data with useEffect",
     "order": 10,
     "objectives": [
-      "Implement practical solutions",
-      "Build foundational understanding"
+      "Fetch data from APIs using the useEffect hook",
+      "Handle loading states and error conditions effectively",
+      "Implement proper cleanup to prevent memory leaks"
     ],
-    "intro": "Welcome to this comprehensive lesson on API Integration.\n\nLearn how to fetch data from APIs and handle loading states in React.\n\nThroughout this lesson, you'll gain hands-on experience with practical implementations and real-world scenarios. We'll explore both the theoretical foundations and practical applications, ensuring you can immediately apply what you learn.\n\nThis lesson is designed to build upon previous concepts while introducing new techniques that will enhance your development skills. By the end, you'll have a solid understanding of the key principles and be ready to tackle more advanced topics.\n\nThe knowledge gained here will serve as a foundation for subsequent lessons and real-world projects.",
+    "intro": "Data fetching is a fundamental aspect of modern web applications, allowing React components to retrieve and display information from external sources. The useEffect hook provides a powerful mechanism for handling side effects like data fetching, subscriptions, and manual DOM manipulations in functional components.\n\nWhen fetching data, it's crucial to manage loading states, handle errors gracefully, and implement proper cleanup to prevent memory leaks. This lesson will explore best practices for data fetching in React, including handling component unmounting, implementing retry logic, and creating reusable data fetching hooks.\n\nYou'll learn how to build robust data fetching solutions that provide excellent user experiences while maintaining application performance and reliability.",
     "code": {
-      "example": "import React, { useState, useEffect } from 'react';\n\nfunction UserList() {\n  const [users, setUsers] = useState([]);\n  const [loading, setLoading] = useState(true);\n  const [error, setError] = useState(null);\n\n  useEffect(() => {\n    const fetchUsers = async () => {\n      try {\n        setLoading(true);\n        const response = await fetch('https://jsonplaceholder.typicode.com/users');\n        if (!response.ok) {\n          throw new Error('Failed to fetch users');\n        }\n        const userData = await response.json();\n        setUsers(userData);\n      } catch (err) {\n        setError(err.message);\n      } finally {\n        setLoading(false);\n      }\n    };\n\n    fetchUsers();\n  }, []);\n\n  if (loading) return <div>Loading users...</div>;\n  if (error) return <div>Error: {error}</div>;\n\n  return (\n    <div>\n      <h2>Users</h2>\n      <ul>\n        {users.map(user => (\n          <li key={user.id}>\n            <h3>{user.name}</h3>\n            <p>Email: {user.email}</p>\n            <p>Phone: {user.phone}</p>\n          </li>\n        ))}\n      </ul>\n    </div>\n  );\n}\n\n// Custom hook for data fetching\nfunction useApi(url) {\n  const [data, setData] = useState(null);\n  const [loading, setLoading] = useState(true);\n  const [error, setError] = useState(null);\n\n  useEffect(() => {\n    fetch(url)\n      .then(response => response.json())\n      .then(setData)\n      .catch(setError)\n      .finally(() => setLoading(false));\n  }, [url]);\n\n  return { data, loading, error };\n}",
-      "explanation": "This example produces: Loading users...\n[Then displays list of users with names, emails, and phone numbers]\n\nThe code demonstrates practical implementation techniques and shows how the concepts work in real scenarios. Pay attention to the structure and patterns used, as these represent industry best practices.",
+      "example": "import React, { useState, useEffect } from 'react';\n\n// Custom hook for data fetching with advanced features\nfunction useApi(url, options = {}) {\n  const [data, setData] = useState(null);\n  const [loading, setLoading] = useState(true);\n  const [error, setError] = useState(null);\n  const [retryCount, setRetryCount] = useState(0);\n\n  useEffect(() => {\n    let isMounted = true; // Flag to prevent state updates after unmount\n    \n    const fetchData = async () => {\n      try {\n        setLoading(true);\n        setError(null);\n        \n        const response = await fetch(url, options);\n        \n        if (!response.ok) {\n          throw new Error(`HTTP error! status: ${response.status}`);\n        }\n        \n        const result = await response.json();\n        \n        // Only update state if component is still mounted\n        if (isMounted) {\n          setData(result);\n          setLoading(false);\n          setRetryCount(0);\n        }\n      } catch (err) {\n        // Only update state if component is still mounted\n        if (isMounted) {\n          setError(err);\n          setLoading(false);\n          \n          // Implement retry logic for network errors\n          if (retryCount < 3 && err.name !== 'AbortError') {\n            setTimeout(() => {\n              if (isMounted) {\n                setRetryCount(prev => prev + 1);\n              }\n            }, 1000 * Math.pow(2, retryCount)); // Exponential backoff\n          }\n        }\n      }\n    };\n\n    fetchData();\n\n    // Cleanup function to prevent memory leaks\n    return () => {\n      isMounted = false;\n    };\n  }, [url, retryCount, JSON.stringify(options)]); // Re-run when URL, retryCount, or options change\n\n  // Function to manually refetch data\n  const refetch = () => {\n    setRetryCount(0);\n  };\n\n  return { data, loading, error, refetch };\n}\n\n// Component using the custom data fetching hook\nfunction UserList() {\n  const { data: users, loading, error, refetch } = useApi('https://jsonplaceholder.typicode.com/users');\n\n  if (loading) return <div>Loading users... {loading.retryCount > 0 && `(Retry ${loading.retryCount}/3)`}</div>;\n  if (error) return <div>Error: {error.message} <button onClick={refetch}>Retry</button></div>;\n\n  return (\n    <div>\n      <h2>Users</h2>\n      <button onClick={refetch}>Refresh</button>\n      <ul>\n        {users.map(user => (\n          <li key={user.id}>\n            <h3>{user.name}</h3>\n            <p>Email: {user.email}</p>\n            <p>Phone: {user.phone}</p>\n          </li>\n        ))}\n      </ul>\n    </div>\n  );\n}",
+      "explanation": "This example demonstrates a comprehensive data fetching implementation with advanced features:\n\n1. **Custom Hook**: useApi encapsulates data fetching logic for reusability\n2. **Loading States**: Tracks loading status with retry information\n3. **Error Handling**: Catches and displays network and HTTP errors\n4. **Cleanup**: Prevents state updates after component unmounting\n5. **Retry Logic**: Implements exponential backoff for failed requests\n6. **Manual Refetching**: Provides function to manually trigger data refresh\n\nThe output shows:\n- Loading indicator with retry count during fetch operations\n- Error messages with retry button for failed requests\n- User list with names, emails, and phone numbers\n- Refresh button to manually refetch data\n\nKey concepts illustrated:\n- useEffect for data fetching side effects\n- Cleanup functions to prevent memory leaks\n- Error boundary patterns for graceful error handling\n- Retry mechanisms with exponential backoff\n- Component unmounting protection\n- Custom hook creation for reusable logic\n- Loading and error state management",
       "language": "javascript"
     },
     "pitfalls": [
       {
-        "mistake": "Not following best practices",
-        "solution": "Review documentation and community guidelines",
-        "severity": "medium"
+        "mistake": "Not implementing cleanup functions for data fetching",
+        "solution": "Always return a cleanup function from useEffect to prevent state updates after component unmounting",
+        "severity": "high"
       },
       {
-        "mistake": "Skipping error handling",
-        "solution": "Implement proper error boundaries and validation",
-        "severity": "low"
+        "mistake": "Creating infinite loops with useEffect dependencies",
+        "solution": "Be careful with object and array dependencies; use JSON.stringify or useMemo to stabilize references",
+        "severity": "high"
+      },
+      {
+        "mistake": "Not handling network errors gracefully",
+        "solution": "Implement comprehensive error handling with user-friendly messages and retry options",
+        "severity": "medium"
       }
     ],
     "exercises": [
       {
-        "title": "Practice: Fetching Data with useEffect",
-        "description": "Apply the concepts from this lesson on API Integration",
+        "title": "Practice: Create a Data Fetching Hook with Caching",
+        "description": "Build an enhanced data fetching hook that implements caching and request deduplication",
         "checkpoints": [
-          "Understand the core concept",
-          "Implement the example code",
-          "Experiment with variations"
+          "Implement in-memory caching to avoid redundant requests",
+          "Add request deduplication to prevent multiple simultaneous requests for the same URL",
+          "Create cache expiration mechanism with configurable TTL",
+          "Add support for request cancellation with AbortController",
+          "Implement pagination support for large datasets",
+          "Add TypeScript types for better developer experience"
         ]
       }
     ],
     "next": [],
-    "estimatedMinutes": 25,
-    "difficulty": "Intermediate",
+    "estimatedMinutes": 50,
+    "difficulty": "Advanced",
     "tags": [
+      "Data Fetching",
+      "useEffect",
       "API Integration",
       "react"
     ],
-    "legacy": {
-      "originalId": 10,
-      "originalTopic": "API Integration",
-      "migrated": "2025-10-01T06:41:13.474Z"
-    },
-    "lastUpdated": "2025-10-01T06:41:13.474Z",
-    "version": "1.0.0"
+    "sources": [
+      {
+        "title": "React useEffect Hook - React Documentation",
+        "url": "https://reactjs.org/docs/hooks-effect.html"
+      },
+      {
+        "title": "Data Fetching with React Hooks",
+        "url": "https://www.robinwieruch.de/react-hooks-fetch-data/"
+      }
+    ],
+    "lastUpdated": "2025-10-03T10:00:00.000Z",
+    "version": "1.1.0"
   },
   {
     "id": "react-fundamentals-lesson-11",
@@ -538,106 +1417,272 @@
     "title": "Performance Optimization with React.memo and useMemo",
     "order": 11,
     "objectives": [
-      "Implement practical solutions",
-      "Build foundational understanding"
+      "Optimize React applications using memoization techniques",
+      "Implement React.memo for component rendering optimization",
+      "Use useMemo and useCallback for expensive computations"
     ],
-    "intro": "Welcome to this comprehensive lesson on Performance.\n\nLearn how to optimize React applications using memoization techniques.\n\nThroughout this lesson, you'll gain hands-on experience with practical implementations and real-world scenarios. We'll explore both the theoretical foundations and practical applications, ensuring you can immediately apply what you learn.\n\nThis lesson is designed to build upon previous concepts while introducing new techniques that will enhance your development skills. By the end, you'll have a solid understanding of the key principles and be ready to tackle more advanced topics.\n\nThe knowledge gained here will serve as a foundation for subsequent lessons and real-world projects.",
+    "intro": "Performance optimization is crucial for creating responsive React applications, especially as they grow in complexity and size. React provides several built-in tools to help optimize rendering performance, including React.memo, useMemo, and useCallback hooks.\n\nReact.memo is a higher-order component that prevents unnecessary re-renders of functional components by memoizing the result. useMemo and useCallback help optimize expensive calculations and function creations, respectively, by caching their results and only recomputing when dependencies change.\n\nThis lesson will explore performance optimization techniques in depth, covering when and how to use each optimization tool effectively. You'll learn to identify performance bottlenecks, implement targeted optimizations, and measure the impact of your improvements to ensure optimal user experiences.",
     "code": {
-      "example": "import React, { useState, useMemo, useCallback, memo } from 'react';\n\n// Memoized child component\nconst ExpensiveComponent = memo(({ data, onItemClick }) => {\n  console.log('ExpensiveComponent rendered');\n  \n  return (\n    <div>\n      <h3>Expensive Component</h3>\n      {data.map(item => (\n        <div key={item.id} onClick={() => onItemClick(item)}>\n          {item.name} - {item.value}\n        </div>\n      ))}\n    </div>\n  );\n});\n\nfunction App() {\n  const [count, setCount] = useState(0);\n  const [items, setItems] = useState([\n    { id: 1, name: 'Item 1', value: 10 },\n    { id: 2, name: 'Item 2', value: 20 },\n    { id: 3, name: 'Item 3', value: 30 }\n  ]);\n\n  // Expensive calculation that we want to memoize\n  const expensiveValue = useMemo(() => {\n    console.log('Calculating expensive value...');\n    return items.reduce((sum, item) => sum + item.value, 0) * 1.2;\n  }, [items]);\n\n  // Memoized callback to prevent unnecessary re-renders\n  const handleItemClick = useCallback((item) => {\n    console.log('Item clicked:', item);\n  }, []);\n\n  return (\n    <div>\n      <h1>Performance Optimization Demo</h1>\n      <p>Count: {count}</p>\n      <button onClick={() => setCount(count + 1)}>Increment Count</button>\n      \n      <p>Expensive Value: {expensiveValue}</p>\n      \n      <ExpensiveComponent \n        data={items} \n        onItemClick={handleItemClick} \n      />\n    </div>\n  );\n}",
-      "explanation": "This example produces: Performance optimized app with memoized components and calculations\n\nThe code demonstrates practical implementation techniques and shows how the concepts work in real scenarios. Pay attention to the structure and patterns used, as these represent industry best practices.",
-      "language": "javascript"
-    },
-    "pitfalls": [
-      {
-        "mistake": "Not following best practices",
-        "solution": "Review documentation and community guidelines",
-        "severity": "medium"
-      },
-      {
-        "mistake": "Skipping error handling",
-        "solution": "Implement proper error boundaries and validation",
-        "severity": "low"
-      }
-    ],
-    "exercises": [
-      {
-        "title": "Practice: Performance Optimization with React.memo and useMemo",
-        "description": "Apply the concepts from this lesson on Performance",
-        "checkpoints": [
-          "Understand the core concept",
-          "Implement the example code",
-          "Experiment with variations"
-        ]
-      }
-    ],
-    "next": [],
-    "estimatedMinutes": 25,
-    "difficulty": "Advanced",
-    "tags": [
-      "Performance",
-      "react"
-    ],
-    "legacy": {
-      "originalId": 11,
-      "originalTopic": "Performance",
-      "migrated": "2025-10-01T06:41:13.474Z"
-    },
-    "lastUpdated": "2025-10-01T06:41:13.474Z",
-    "version": "1.0.0"
-  },
+      "example": "import React, { useState, useMemo, useCallback, memo } from 'react';\n\n// Expensive calculation function\nconst calculateExpensiveValue = (items) => {\n  console.log('Calculating expensive value...');\n  // Simulate expensive computation\n  return items.reduce((sum, item) => {\n    // Simulate complex calculation\n    let result = 0;\n    for (let i = 0; i < 1000000; i++) {\n      result += item.value * Math.random();\n    }\n    return sum + result;\n  }, 0);\n};\n\n// Child component that should be memoized\nconst ExpensiveChildComponent = memo(({ data, onItemClick, title }) => {\n  console.log(`Rendering ${title}`);\n  \n  return (\n    <div className=\"expensive-component\">\n      <h3>{title}</h3>\n      {data.map(item => (\n        <div \n          key={item.id} \n          onClick={() => onItemClick(item)}\n          style={{\n            padding: '10px',\n            margin: '5px',\n            backgroundColor: '#f0f0f0',\n            cursor: 'pointer'\n          }}\n        >\n          {item.name} - {item.value}\n        </div>\n      ))}\n    </div>\n  );\n});\n\n// Parent component demonstrating optimization techniques\nfunction OptimizedApp() {\n  const [count, setCount] = useState(0);\n  const [items, setItems] = useState([\n    { id: 1, name: 'Item 1', value: 10 },\n    { id: 2, name: 'Item 2', value: 20 },\n    { id: 3, name: 'Item 3', value: 30 }\n  ]);\n\n  // Expensive calculation optimized with useMemo\n  const expensiveValue = useMemo(() => {\n    return calculateExpensiveValue(items);\n  }, [items]); // Only recalculate when items change\n\n  // Callback optimized with useCallback\n  const handleItemClick = useCallback((item) => {\n    console.log('Item clicked:', item);\n    // Update items with new value\n    setItems(prevItems => \n      prevItems.map(i => \n        i.id === item.id \n          ? { ...i, value: i.value + 1 } \n          : i\n      )\n    );\n  }, []); // No dependencies, so callback is stable\n\n  // Another callback that depends on count\n  const handleReset = useCallback(() => {\n    setCount(0);\n    setItems([\n      { id: 1, name: 'Item 1', value: 10 },\n      { id: 2, name: 'Item 2', value: 20 },\n      { id: 3, name: 'Item 3', value: 30 }\n    ]);
+  }, []); // Reset to initial state
+
+  return (
+    <div>
+      <h1>Performance Optimization Demo</h1>
+      <p>Count: {count}</p>
+      <button onClick={() => setCount(count + 1)}>Increment Count</button>
+      <button onClick={handleReset}>Reset</button>
+      
+      <p>Expensive Value: {Math.round(expensiveValue)}</p>
+      
+      {/* These components will only re-render when their props change */}
+      <ExpensiveChildComponent 
+        data={items} 
+        onItemClick={handleItemClick} 
+        title=\"Items List\"
+      />
+      
+      {/* Component with inline function (will re-render unnecessarily) */}
+      <ExpensiveChildComponent 
+        data={items} 
+        onItemClick={(item) => console.log('Inline function:', item)} 
+        title=\"Items with Inline Function (Not Optimized)\"
+      />
+    </div>
+  );
+}
+
+// Example showing custom comparison function for React.memo
+const CustomComparisonComponent = memo(({ user, onUpdate }) => {
+  console.log('Rendering CustomComparisonComponent');
+  
+  return (
+    <div>
+      <h3>User: {user.name}</h3>
+      <p>Age: {user.age}</p>
+      <button onClick={() => onUpdate(user.id, { age: user.age + 1 })}>
+        Increment Age
+      </button>
+    </div>
+  );
+}, (prevProps, nextProps) => {
+  // Custom comparison function
+  // Only re-render if user name or age changes
+  return (
+    prevProps.user.name === nextProps.user.name &&
+    prevProps.user.age === nextProps.user.age
+  );
+});,
   {
     "id": "react-fundamentals-lesson-12",
     "moduleSlug": "react-fundamentals",
     "title": "Testing React Components",
     "order": 12,
     "objectives": [
-      "Master component creation and usage",
-      "Implement practical solutions"
+      "Write effective tests for React components using React Testing Library",
+      "Implement unit tests for component behavior and user interactions",
+      "Create test utilities for complex component testing scenarios"
     ],
-    "intro": "Welcome to this comprehensive lesson on Testing.\n\nLearn how to write tests for React components using React Testing Library.\n\nThroughout this lesson, you'll gain hands-on experience with practical implementations and real-world scenarios. We'll explore both the theoretical foundations and practical applications, ensuring you can immediately apply what you learn.\n\nThis lesson is designed to build upon previous concepts while introducing new techniques that will enhance your development skills. By the end, you'll have a solid understanding of the key principles and be ready to tackle more advanced topics.\n\nThe knowledge gained here will serve as a foundation for subsequent lessons and real-world projects.",
+    "intro": "Testing is a critical practice for ensuring the reliability and maintainability of React applications. React Testing Library provides a lightweight solution for testing React components that focuses on testing behavior from the user's perspective rather than implementation details.\n\nUnlike older testing libraries that encouraged testing implementation details, React Testing Library promotes testing components the way users interact with them - by finding elements by their text, labels, or roles, and interacting with them as a user would. This approach leads to more maintainable tests that are less likely to break when implementation details change.\n\nThis lesson will explore comprehensive testing strategies for React components, covering unit testing, integration testing, and best practices for test organization. You'll learn to write meaningful tests that provide confidence in your application's behavior while remaining resilient to refactoring.",
     "code": {
-      "example": "import React from 'react';\nimport { render, screen, fireEvent, waitFor } from '@testing-library/react';\nimport '@testing-library/jest-dom';\n\n// Component to test\nfunction Counter({ initialCount = 0 }) {\n  const [count, setCount] = React.useState(initialCount);\n  \n  return (\n    <div>\n      <h1>Count: {count}</h1>\n      <button onClick={() => setCount(count + 1)}>Increment</button>\n      <button onClick={() => setCount(count - 1)}>Decrement</button>\n      <button onClick={() => setCount(0)}>Reset</button>\n    </div>\n  );\n}\n\n// Test file\ndescribe('Counter Component', () => {\n  test('renders with initial count', () => {\n    render(<Counter initialCount={5} />);\n    expect(screen.getByText('Count: 5')).toBeInTheDocument();\n  });\n\n  test('increments count when increment button is clicked', () => {\n    render(<Counter />);\n    const incrementButton = screen.getByText('Increment');\n    fireEvent.click(incrementButton);\n    expect(screen.getByText('Count: 1')).toBeInTheDocument();\n  });\n\n  test('decrements count when decrement button is clicked', () => {\n    render(<Counter initialCount={5} />);\n    const decrementButton = screen.getByText('Decrement');\n    fireEvent.click(decrementButton);\n    expect(screen.getByText('Count: 4')).toBeInTheDocument();\n  });\n\n  test('resets count when reset button is clicked', () => {\n    render(<Counter initialCount={10} />);\n    const resetButton = screen.getByText('Reset');\n    fireEvent.click(resetButton);\n    expect(screen.getByText('Count: 0')).toBeInTheDocument();\n  });\n\n  test('handles multiple interactions', async () => {\n    render(<Counter />);\n    const incrementButton = screen.getByText('Increment');\n    \n    fireEvent.click(incrementButton);\n    fireEvent.click(incrementButton);\n    \n    await waitFor(() => {\n      expect(screen.getByText('Count: 2')).toBeInTheDocument();\n    });\n  });\n});",
-      "explanation": "This example produces: ✓ renders with initial count\n✓ increments count when increment button is clicked\n✓ decrements count when decrement button is clicked\n✓ resets count when reset button is clicked\n✓ handles multiple interactions\n\nThe code demonstrates practical implementation techniques and shows how the concepts work in real scenarios. Pay attention to the structure and patterns used, as these represent industry best practices.",
-      "language": "javascript"
-    },
-    "pitfalls": [
-      {
-        "mistake": "Not following best practices",
-        "solution": "Review documentation and community guidelines",
-        "severity": "medium"
-      },
-      {
-        "mistake": "Skipping error handling",
-        "solution": "Implement proper error boundaries and validation",
-        "severity": "low"
-      }
-    ],
-    "exercises": [
-      {
-        "title": "Practice: Testing React Components",
-        "description": "Apply the concepts from this lesson on Testing",
-        "checkpoints": [
-          "Understand the core concept",
-          "Implement the example code",
-          "Experiment with variations"
-        ]
-      }
-    ],
-    "next": [],
-    "estimatedMinutes": 25,
-    "difficulty": "Intermediate",
-    "tags": [
-      "Testing",
-      "react"
-    ],
-    "legacy": {
-      "originalId": 12,
-      "originalTopic": "Testing",
-      "migrated": "2025-10-01T06:41:13.474Z"
-    },
-    "lastUpdated": "2025-10-01T06:41:13.474Z",
-    "version": "1.0.0"
+      "example": "import React, { useState } from 'react';\n\n// Component to test - a more complex example\nfunction TodoList() {\n  const [todos, setTodos] = useState([\n    { id: 1, text: 'Learn React', completed: true },\n    { id: 2, text: 'Build an app', completed: false }\n  ]);\n  const [newTodo, setNewTodo] = useState('');\n\n  const addTodo = () => {\n    if (newTodo.trim() !== '') {\n      setTodos([\n        ...todos,\n        { id: Date.now(), text: newTodo, completed: false }\n      ]);
+      setNewTodo('');
+    }
+  };
+
+  const toggleTodo = (id) => {
+    setTodos(todos.map(todo =>
+      todo.id === id ? { ...todo, completed: !todo.completed } : todo
+    ));
+  };
+
+  const deleteTodo = (id) => {
+    setTodos(todos.filter(todo => todo.id !== id));
+  };
+
+  const incompleteCount = todos.filter(todo => !todo.completed).length;
+
+  return (
+    <div>
+      <h1>Todo List</h1>
+      <div>
+        <input
+          value={newTodo}
+          onChange={(e) => setNewTodo(e.target.value)}
+          placeholder=\"Add a new todo\"
+        />
+        <button onClick={addTodo}>Add</button>
+      </div>
+      <div>Incomplete: {incompleteCount}</div>
+      <ul>
+        {todos.map(todo => (
+          <li key={todo.id}>
+            <input
+              type=\"checkbox\"
+              checked={todo.completed}
+              onChange={() => toggleTodo(todo.id)}
+            />
+            <span style={{ textDecoration: todo.completed ? 'line-through' : 'none' }}>
+              {todo.text}
+            </span>
+            <button onClick={() => deleteTodo(todo.id)}>Delete</button>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+
+// Test file using React Testing Library
+import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { act } from 'react-dom/test-utils';
+import '@testing-library/jest-dom';
+
+// Mock component for testing async behavior
+function AsyncComponent() {
+  const [data, setData] = useState(null);
+  const [loading, setLoading] = useState(false);
+
+  const fetchData = async () => {
+    setLoading(true);
+    // Simulate API call
+    await new Promise(resolve => setTimeout(resolve, 100));
+    setData('Loaded data');
+    setLoading(false);
+  };
+
+  return (
+    <div>
+      <button onClick={fetchData} disabled={loading}>
+        {loading ? 'Loading...' : 'Fetch Data'}
+      </button>
+      {data && <div data-testid=\"data-display\">{data}</div>}
+    </div>
+  );
+}
+
+describe('TodoList Component', () => {
+  test('renders initial todos', () => {
+    render(<TodoList />);
+    
+    // Check that initial todos are rendered
+    expect(screen.getByText('Learn React')).toBeInTheDocument();
+    expect(screen.getByText('Build an app')).toBeInTheDocument();
+    
+    // Check that one is completed (has line-through)
+    const completedTodo = screen.getByText('Learn React');
+    expect(completedTodo).toHaveStyle('text-decoration: line-through');
+    
+    // Check incomplete count
+    expect(screen.getByText('Incomplete: 1')).toBeInTheDocument();
+  });
+
+  test('adds a new todo', () => {
+    render(<TodoList />);
+    
+    // Find input and add button
+    const input = screen.getByPlaceholderText('Add a new todo');
+    const addButton = screen.getByText('Add');
+    
+    // Type in new todo
+    fireEvent.change(input, { target: { value: 'New todo item' } });
+    
+    // Click add button
+    fireEvent.click(addButton);
+    
+    // Check that new todo appears
+    expect(screen.getByText('New todo item')).toBeInTheDocument();
+    
+    // Check that incomplete count updated
+    expect(screen.getByText('Incomplete: 2')).toBeInTheDocument();
+  });
+
+  test('toggles todo completion', () => {
+    render(<TodoList />);
+    
+    // Find the unchecked todo
+    const buildAppTodo = screen.getByText('Build an app');
+    const checkbox = buildAppTodo.previousSibling; // Checkbox is previous sibling
+    
+    // Verify it's not completed initially
+    expect(buildAppTodo).not.toHaveStyle('text-decoration: line-through');
+    
+    // Click checkbox to complete it
+    fireEvent.click(checkbox);
+    
+    // Verify it's now completed
+    expect(buildAppTodo).toHaveStyle('text-decoration: line-through');
+    
+    // Check incomplete count updated
+    expect(screen.getByText('Incomplete: 0')).toBeInTheDocument();
+  });
+
+  test('deletes a todo', () => {
+    render(<TodoList />);
+    
+    // Find delete button for first todo
+    const deleteButton = screen.getByText('Learn React').nextSibling.nextSibling; // Delete button
+    
+    // Click delete button
+    fireEvent.click(deleteButton);
+    
+    // Verify todo is removed
+    expect(screen.queryByText('Learn React')).not.toBeInTheDocument();
+    
+    // Check incomplete count updated
+    expect(screen.getByText('Incomplete: 1')).toBeInTheDocument();
+  });
+});
+
+describe('AsyncComponent', () => {
+  test('handles async operations', async () => {
+    render(<AsyncComponent />);
+    
+    // Initially, data should not be present
+    expect(screen.queryByTestId('data-display')).not.toBeInTheDocument();
+    
+    // Click fetch button
+    const fetchButton = screen.getByText('Fetch Data');
+    fireEvent.click(fetchButton);
+    
+    // Button should be disabled and show loading text
+    expect(fetchButton).toBeDisabled();
+    expect(fetchButton).toHaveTextContent('Loading...');
+    
+    // Wait for data to load
+    await waitFor(() => {
+      expect(screen.getByTestId('data-display')).toBeInTheDocument();
+    });
+    
+    // Check data content
+    expect(screen.getByTestId('data-display')).toHaveTextContent('Loaded data');
+    
+    // Button should be enabled again
+    expect(fetchButton).not.toBeDisabled();
+    expect(fetchButton).toHaveTextContent('Fetch Data');
+  });
+});
+
+// Custom test utility for complex interactions
+export const testUtils = {
+  addMultipleTodos: async (count) => {
+    const input = screen.getByPlaceholderText('Add a new todo');
+    const addButton = screen.getByText('Add');
+    
+    for (let i = 1; i <= count; i++) {
+      await act(async () => {
+        fireEvent.change(input, { target: { value: `Todo ${i}` } });
+        fireEvent.click(addButton);
+      });
+    }
   },
+  
+  getAllTodoTexts: () => {
+    const todoItems = screen.getAllByRole('listitem');
+    return todoItems.map(item => {
+      const span = item.querySelector('span');
+      return span ? span.textContent : '';
+    });\n  }\n};,
   {
     "id": "react-fundamentals-lesson-13",
     "moduleSlug": "react-fundamentals",
@@ -648,51 +1693,65 @@
       "Implement comprehensive error handling strategies",
       "Learn error logging and user experience best practices"
     ],
-    "intro": "Welcome to this comprehensive lesson on Error Boundaries and Error Handling.\n\nLearn how to gracefully handle errors in React applications and provide robust user experiences.\n\nThroughout this lesson, you'll gain hands-on experience with practical implementations and real-world scenarios. We'll explore both the theoretical foundations and practical applications, ensuring you can immediately apply what you learn.\n\nThis lesson is designed to build upon previous concepts while introducing new techniques that will enhance your development skills. By the end, you'll have a solid understanding of the key principles and be ready to tackle more advanced topics.\n\nThe knowledge gained here will serve as a foundation for subsequent lessons and real-world projects.",
+    "intro": "Error handling is a critical aspect of building robust React applications that provide graceful degradation when things go wrong. React Error Boundaries are React components that catch JavaScript errors anywhere in their child component tree, log those errors, and display a fallback UI instead of the component tree that crashed.\n\nWhile React components naturally fail when they encounter errors, unhandled errors can lead to broken user interfaces, poor user experiences, and difficulty debugging issues in production. Error Boundaries provide a structured approach to handling errors, ensuring that users see meaningful error messages rather than blank screens or broken components.\n\nThis lesson will explore Error Boundary implementation patterns, error logging strategies, and best practices for providing excellent user experiences even when errors occur. You'll learn to build resilient applications that handle errors gracefully while providing developers with the information needed to diagnose and fix issues.",
     "code": {
-      "example": "import React from 'react';\n\n// Error Boundary Component\nclass ErrorBoundary extends React.Component {\n  constructor(props) {\n    super(props);\n    this.state = { hasError: false, error: null, errorInfo: null };\n  }\n\n  static getDerivedStateFromError(error) {\n    // Update state to trigger fallback UI\n    return { hasError: true };\n  }\n\n  componentDidCatch(error, errorInfo) {\n    // Log error details\n    console.error('Error caught by boundary:', error, errorInfo);\n    \n    // Store error details in state\n    this.setState({\n      error: error,\n      errorInfo: errorInfo\n    });\n\n    // Report to error tracking service\n    // this.logErrorToService(error, errorInfo);\n  }\n\n  render() {\n    if (this.state.hasError) {\n      // Fallback UI\n      return (\n        <div className=\"error-boundary\">\n          <h2>Something went wrong!</h2>\n          <details style={{ whiteSpace: 'pre-wrap' }}>\n            <summary>Click for error details</summary>\n            {this.state.error && this.state.error.toString()}\n            <br />\n            {this.state.errorInfo.componentStack}\n          </details>\n        </div>\n      );\n    }\n\n    return this.props.children;\n  }\n}\n\n// Component that might throw an error\nfunction ProblematicComponent({ shouldThrow }) {\n  if (shouldThrow) {\n    throw new Error('This is a deliberate error for testing!');\n  }\n  return <div>Component loaded successfully!</div>;\n}\n\n// Main App with Error Boundary\nfunction App() {\n  const [shouldThrow, setShouldThrow] = React.useState(false);\n\n  return (\n    <div>\n      <h1>Error Boundary Demo</h1>\n      <button onClick={() => setShouldThrow(!shouldThrow)}>\n        {shouldThrow ? 'Fix Component' : 'Break Component'}\n      </button>\n      \n      <ErrorBoundary>\n        <ProblematicComponent shouldThrow={shouldThrow} />\n      </ErrorBoundary>\n    </div>\n  );\n}",
-      "explanation": "This example demonstrates a complete error boundary implementation that catches errors in child components and displays a user-friendly fallback UI. Click 'Break Component' to see the error boundary in action.\n\nThe code demonstrates practical implementation techniques and shows how the concepts work in real scenarios. Pay attention to the structure and patterns used, as these represent industry best practices.",
+      "example": "import React from 'react';\n\n// Comprehensive Error Boundary Component\nclass ErrorBoundary extends React.Component {\n  constructor(props) {\n    super(props);\n    this.state = { \n      hasError: false, \n      error: null, \n      errorInfo: null,\n      eventId: null // For error tracking service\n    };\n  }\n\n  // Static method to handle errors in the component tree\n  static getDerivedStateFromError(error) {\n    // Update state to trigger fallback UI on next render\n    return { hasError: true, error };\n  }\n\n  // Method called after error is caught\n  componentDidCatch(error, errorInfo) {\n    // Log error details for debugging\n    console.error('Error caught by boundary:', error, errorInfo);\n    \n    // Store error details in state\n    this.setState({\n      error: error,\n      errorInfo: errorInfo\n    });\n\n    // Report to error tracking service (e.g., Sentry, Bugsnag)\n    if (typeof this.props.onError === 'function') {\n      const eventId = this.props.onError(error, errorInfo);\n      this.setState({ eventId });\n    }\n    \n    // Send to logging service\n    this.logErrorToService(error, errorInfo);\n  }\n\n  // Method to reset the error boundary\n  resetErrorBoundary = () => {\n    this.setState({\n      hasError: false,\n      error: null,\n      errorInfo: null,\n      eventId: null\n    });\n  };\n\n  // Log error to external service\n  logErrorToService = (error, errorInfo) => {\n    // In a real application, you would send this to an error tracking service\n    // Example using Sentry:\n    // Sentry.withScope((scope) => {\n    //   scope.setExtras(errorInfo);\n    //   const eventId = Sentry.captureException(error);\n    //   this.setState({ eventId });\n    // });\n    \n    // For demonstration, we'll just log to console\n    console.log('Logging error to service:', {\n      error: error.toString(),\n      errorInfo,\n      timestamp: new Date().toISOString(),\n      userAgent: navigator.userAgent,\n      url: window.location.href\n    });\n  };\n\n  render() {\n    if (this.state.hasError) {\n      // Fallback UI\n      return (\n        <div className=\"error-boundary\" style={{\n          padding: '20px',\n          border: '1px solid #fcc',\n          backgroundColor: '#fee',\n          borderRadius: '4px',\n          margin: '20px'\n        }}>\n          <h2>Something went wrong</h2>\n          <p>We're sorry, but something went wrong. Our team has been notified.</p>\n          \n          {this.props.showDetails && (\n            <details style={{ whiteSpace: 'pre-wrap', marginTop: '10px' }}>\n              <summary>Error details</summary>\n              <h3>{this.state.error && this.state.error.toString()}</h3>\n              <pre>{this.state.errorInfo && this.state.errorInfo.componentStack}</pre>\n            </details>\n          )}\n          \n          <div style={{ marginTop: '15px' }}>\n            <button \n              onClick={this.resetErrorBoundary}\n              style={{\n                marginRight: '10px',\n                padding: '8px 16px',\n                backgroundColor: '#007bff',\n                color: 'white',\n                border: 'none',\n                borderRadius: '4px',\n                cursor: 'pointer'\n              }}\n            >\n              Try Again\n            </button>\n            \n            {this.state.eventId && (\n              <button \n                onClick={() => {\n                  // In a real app, this would open a feedback form\n                  alert(`Reference ID: ${this.state.eventId}`);\n                }}\n                style={{\n                  padding: '8px 16px',\n                  backgroundColor: '#28a745',\n                  color: 'white',\n                  border: 'none',\n                  borderRadius: '4px',\n                  cursor: 'pointer'\n                }}\n              >\n                Report Feedback\n              </button>\n            )}\n          </div>\n        </div>\n      );\n    }\n\n    // Normal rendering when no error\n    return this.props.children;\n  }\n}\n\n// Component that might throw an error\nfunction ProblematicComponent({ shouldThrow, userId }) {\n  const [count, setCount] = React.useState(0);\n  \n  if (shouldThrow) {\n    throw new Error(`This is a deliberate error for user ${userId}!`);\n  }\n  \n  if (count > 5) {\n    throw new Error(`Count exceeded limit: ${count}`);\n  }\n  \n  return (\n    <div>\n      <h3>Problematic Component</h3>\n      <p>User ID: {userId}</p>\n      <p>Count: {count}</p>\n      <button onClick={() => setCount(count + 1)}>\n        Increment (will error at 6)\n      </button>\n    </div>\n  );\n}\n\n// Main App with Error Boundary\nfunction App() {\n  const [shouldThrow, setShouldThrow] = React.useState(false);\n  const [userId] = React.useState(Math.floor(Math.random() * 1000));\n\n  // Error handler function\n  const handleError = (error, errorInfo) => {\n    // Generate a unique event ID for tracking\n    const eventId = `error-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;\n    console.log(`Error reported with ID: ${eventId}`);\n    return eventId;\n  };\n\n  return (\n    <div style={{ padding: '20px' }}>\n      <h1>Error Boundary Demo</h1>\n      <button \n        onClick={() => setShouldThrow(!shouldThrow)}\n        style={{\n          marginBottom: '20px',\n          padding: '10px 20px',\n          backgroundColor: shouldThrow ? '#28a745' : '#dc3545',\n          color: 'white',\n          border: 'none',\n          borderRadius: '4px',\n          cursor: 'pointer'\n        }}\n      >\n        {shouldThrow ? 'Fix Component' : 'Break Component'}\n      </button>\n      \n      {/* Error Boundary wrapping the problematic component */}\n      <ErrorBoundary \n        onError={handleError}\n        showDetails={process.env.NODE_ENV === 'development'}\n      >\n        <ProblematicComponent shouldThrow={shouldThrow} userId={userId} />\n      </ErrorBoundary>\n      \n      {/* Component outside error boundary to show it doesn't affect other parts */}\n      <div style={{ marginTop: '30px', padding: '15px', backgroundColor: '#f8f9fa', borderRadius: '4px' }}>\n        <h3>Other Component</h3>\n        <p>This component is unaffected by errors in the component above.</p>\n      </div>\n    </div>\n  );\n}\n\n// Higher-order component version of Error Boundary\nfunction withErrorBoundary(WrappedComponent, errorBoundaryProps) {\n  return function ComponentWithErrorBoundary(props) {\n    return (\n      <ErrorBoundary {...errorBoundaryProps}>\n        <WrappedComponent {...props} />\n      </ErrorBoundary>\n    );\n  };\n}\n\n// Example usage of HOC\nconst SafeProblematicComponent = withErrorBoundary(ProblematicComponent, {\n  showDetails: true\n});",
+      "explanation": "This example demonstrates comprehensive error boundary implementation:\n\n1. **Error Boundary Class**: Catches errors in child component tree\n2. **State Management**: Tracks error state and details\n3. **Static Method**: getDerivedStateFromError for synchronous error handling\n4. **Lifecycle Method**: componentDidCatch for side effects after error\n5. **Fallback UI**: User-friendly error display with recovery options\n6. **Error Reporting**: Integration with error tracking services\n7. **Reset Functionality**: Ability to recover from error state\n8. **Higher-Order Component**: Reusable error boundary wrapper\n\nThe output shows:\n- Error boundary catching component errors gracefully\n- User-friendly error display with recovery options\n- Error details in development mode\n- Reference ID for error tracking\n- Isolated error handling (other components unaffected)\n\nKey concepts illustrated:\n- Error boundary lifecycle methods\n- Fallback UI design patterns\n- Error logging and reporting strategies\n- User experience considerations for errors\n- Error recovery mechanisms\n- Higher-order components for reusability\n- Environment-specific error handling\n- Component isolation principles",
       "language": "javascript"
     },
     "pitfalls": [
       {
         "mistake": "Not implementing error boundaries for async operations",
-        "solution": "Error boundaries only catch errors in render, lifecycle methods, and constructors. Use try-catch for async operations",
+        "solution": "Error boundaries only catch errors in render, lifecycle methods, and constructors. Use try-catch for async operations and event handlers",
         "severity": "high"
       },
       {
         "mistake": "Not providing meaningful error messages to users",
-        "solution": "Always show user-friendly error messages instead of technical stack traces",
+        "solution": "Always show user-friendly error messages instead of technical stack traces; provide recovery options when possible",
         "severity": "medium"
       },
       {
         "mistake": "Not logging errors for debugging",
-        "solution": "Implement proper error logging and reporting to track issues in production",
+        "solution": "Implement proper error logging and reporting to track issues in production using services like Sentry or Bugsnag",
         "severity": "medium"
       }
     ],
     "exercises": [
       {
-        "title": "Practice: Error Boundaries and Error Handling",
-        "description": "Create error boundaries for different parts of your application and implement comprehensive error handling strategies",
+        "title": "Practice: Create a Production-Ready Error Boundary",
+        "description": "Build an enhanced error boundary that integrates with an error tracking service and provides comprehensive user feedback",
         "checkpoints": [
-          "Implement an Error Boundary component",
-          "Create fallback UI for different error scenarios",
-          "Add error logging and reporting",
-          "Test error handling in development and production"
+          "Implement integration with a real error tracking service like Sentry",
+          "Add user feedback collection mechanism for error reports",
+          "Create different error boundary behaviors for development vs production",
+          "Implement automatic error reporting with context information",
+          "Add retry mechanisms for recoverable errors",
+          "Create a dashboard component to display error statistics",
+          "Implement error categorization and tagging for better tracking"
         ]
       }
     ],
     "next": [],
-    "estimatedMinutes": 35,
+    "estimatedMinutes": 50,
     "difficulty": "Advanced",
     "tags": [
       "Error Handling",
       "Error Boundaries",
+      "Reliability",
       "react"
     ],
-    "lastUpdated": "2025-10-01T06:41:13.474Z",
-    "version": "1.0.0"
+    "sources": [
+      {
+        "title": "React Error Boundaries - React Documentation",
+        "url": "https://react.dev/learn/error-boundaries"
+      },
+      {
+        "title": "Error Handling in React 16 - React Blog",
+        "url": "https://reactjs.org/blog/2017/07/26/error-handling-in-react-16.html"
+      }
+    ],
+    "lastUpdated": "2025-10-03T10:00:00.000Z",
+    "version": "1.1.0"
   },
   {
     "id": "react-fundamentals-lesson-14",
@@ -704,52 +1763,68 @@
       "Implement lazy loading with React.lazy and Suspense",
       "Optimize bundle size and loading performance"
     ],
-    "intro": "Welcome to this comprehensive lesson on Code Splitting and Lazy Loading.\n\nLearn how to optimize your React application's performance by splitting code and loading components on demand.\n\nThroughout this lesson, you'll gain hands-on experience with practical implementations and real-world scenarios. We'll explore both the theoretical foundations and practical applications, ensuring you can immediately apply what you learn.\n\nThis lesson is designed to build upon previous concepts while introducing new techniques that will enhance your development skills. By the end, you'll have a solid understanding of the key principles and be ready to tackle more advanced topics.\n\nThe knowledge gained here will serve as a foundation for subsequent lessons and real-world projects.",
+    "intro": "As web applications grow in complexity, the size of JavaScript bundles can become a significant performance bottleneck. Code splitting is a technique that breaks up large bundles into smaller chunks that can be loaded on demand, reducing the initial load time and improving the overall user experience.\n\nReact provides built-in support for code splitting through React.lazy and Suspense, allowing developers to easily implement lazy loading for components. This approach enables applications to load only the code needed for the current view, deferring the loading of other components until they are actually required.\n\nThis lesson will explore advanced code splitting strategies, including route-based splitting, component-level lazy loading, and dynamic imports. You'll learn to implement comprehensive code splitting solutions that optimize bundle sizes while maintaining application functionality and providing smooth user experiences.",
     "code": {
-      "example": "import React, { Suspense, useState } from 'react';\n\n// Lazy loaded components\nconst LazyDashboard = React.lazy(() => import('./Dashboard'));\nconst LazyProfile = React.lazy(() => import('./Profile'));\nconst LazySettings = React.lazy(() => import('./Settings'));\n\n// Loading component\nfunction LoadingSpinner() {\n  return (\n    <div className=\"loading-spinner\">\n      <div className=\"spinner\"></div>\n      <p>Loading...</p>\n    </div>\n  );\n}\n\n// Error fallback component\nfunction ErrorFallback({ error, resetError }) {\n  return (\n    <div className=\"error-fallback\">\n      <h2>Something went wrong loading this component</h2>\n      <p>{error.message}</p>\n      <button onClick={resetError}>Try again</button>\n    </div>\n  );\n}\n\n// Main App with code splitting\nfunction App() {\n  const [currentView, setCurrentView] = useState('home');\n\n  const renderCurrentView = () => {\n    switch (currentView) {\n      case 'dashboard':\n        return <LazyDashboard />;\n      case 'profile':\n        return <LazyProfile />;\n      case 'settings':\n        return <LazySettings />;\n      default:\n        return <div>Welcome to the Home Page!</div>;\n    }\n  };\n\n  return (\n    <div className=\"app\">\n      <nav>\n        <button onClick={() => setCurrentView('home')}>Home</button>\n        <button onClick={() => setCurrentView('dashboard')}>Dashboard</button>\n        <button onClick={() => setCurrentView('profile')}>Profile</button>\n        <button onClick={() => setCurrentView('settings')}>Settings</button>\n      </nav>\n\n      <main>\n        <Suspense fallback={<LoadingSpinner />}>\n          {renderCurrentView()}\n        </Suspense>\n      </main>\n    </div>\n  );\n}\n\n// Example of a lazy-loaded component with its own lazy dependencies\nfunction Dashboard() {\n  const [showChart, setShowChart] = useState(false);\n\n  // Nested lazy loading\n  const LazyChart = React.lazy(() => import('./Chart'));\n\n  return (\n    <div>\n      <h1>Dashboard</h1>\n      <button onClick={() => setShowChart(!showChart)}>\n        {showChart ? 'Hide Chart' : 'Show Chart'}\n      </button>\n      \n      {showChart && (\n        <Suspense fallback={<div>Loading chart...</div>}>\n          <LazyChart />\n        </Suspense>\n      )}\n    </div>\n  );\n}\n\n// Route-based code splitting example\nimport { Route, Routes } from 'react-router-dom';\n\nfunction AppWithRouting() {\n  return (\n    <Routes>\n      <Route path=\"/\" element={<HomePage />} />\n      <Route \n        path=\"/dashboard\" \n        element={\n          <Suspense fallback={<LoadingSpinner />}>\n            <LazyDashboard />\n          </Suspense>\n        } \n      />\n      <Route \n        path=\"/profile\" \n        element={\n          <Suspense fallback={<LoadingSpinner />}>\n            <LazyProfile />\n          </Suspense>\n        } \n      />\n    </Routes>\n  );\n}",
-      "explanation": "This example demonstrates comprehensive code splitting strategies including component-level lazy loading, route-based splitting, and nested lazy loading. Components are loaded only when needed, reducing initial bundle size.\n\nThe code demonstrates practical implementation techniques and shows how the concepts work in real scenarios. Pay attention to the structure and patterns used, as these represent industry best practices.",
+      "example": "import React, { Suspense, useState, lazy } from 'react';\n\n// Simulate large components with dynamic imports\n// In a real app, these would be separate files\nconst LazyDashboard = lazy(() => \n  new Promise(resolve => {\n    // Simulate network delay\n    setTimeout(() => {\n      resolve(import('./Dashboard'));\n    }, 1000);\n  })\n);\n\nconst LazyProfile = lazy(() => \n  new Promise(resolve => {\n    setTimeout(() => {\n      resolve(import('./Profile'));\n    }, 1500);\n  })\n);\n\nconst LazySettings = lazy(() => \n  new Promise(resolve => {\n    setTimeout(() => {\n      resolve(import('./Settings'));\n    }, 800);\n  })\n);\n\n// Loading component with different states\nfunction LoadingSpinner({ message = 'Loading...' }) {\n  return (\n    <div className=\"loading-container\" style={{\n      display: 'flex',\n      flexDirection: 'column',\n      alignItems: 'center',\n      justifyContent: 'center',\n      padding: '40px',\n      minHeight: '200px'\n    }}>\n      <div className=\"spinner\" style={{\n        width: '40px',\n        height: '40px',\n        border: '4px solid #f3f3f3',\n        borderTop: '4px solid #3498db',\n        borderRadius: '50%',\n        animation: 'spin 1s linear infinite',\n        marginBottom: '15px'\n      }}></div>\n      <p>{message}</p>\n    </div>\n  );\n}\n\n// Error fallback component\nfunction ErrorFallback({ error, resetErrorBoundary }) {\n  return (\n    <div className=\"error-fallback\" style={{\n      padding: '20px',\n      border: '1px solid #fcc',\n      backgroundColor: '#fee',\n      borderRadius: '4px',\n      textAlign: 'center'\n    }}>\n      <h2>Failed to load component</h2>\n      <p>{error?.message || 'Something went wrong while loading this component.'}</p>\n      <button \n        onClick={resetErrorBoundary}\n        style={{\n          padding: '10px 20px',\n          backgroundColor: '#007bff',\n          color: 'white',\n          border: 'none',\n          borderRadius: '4px',\n          cursor: 'pointer'\n        }}\n      >\n        Try Again\n      </button>\n    </div>\n  );\n}\n\n// Error boundary for lazy-loaded components\nclass LazyComponentErrorBoundary extends React.Component {\n  constructor(props) {\n    super(props);\n    this.state = { hasError: false, error: null };\n  }\n\n  static getDerivedStateFromError(error) {\n    return { hasError: true, error };\n  }\n\n  render() {\n    if (this.state.hasError) {\n      return <ErrorFallback \n        error={this.state.error} \n        resetErrorBoundary={() => this.setState({ hasError: false, error: null })} \n      />;\n    }\n\n    return this.props.children;\n  }\n}\n\n// Main App with code splitting\nfunction App() {\n  const [currentView, setCurrentView] = useState('home');\n  const [loadingMessage, setLoadingMessage] = useState('Loading component...');\n\n  const renderCurrentView = () => {\n    switch (currentView) {\n      case 'dashboard':\n        setLoadingMessage('Loading dashboard...');\n        return <LazyDashboard />;\n      case 'profile':\n        setLoadingMessage('Loading profile...');\n        return <LazyProfile />;\n      case 'settings':\n        setLoadingMessage('Loading settings...');\n        return <LazySettings />;\n      default:\n        return (\n          <div>\n            <h1>Welcome to the Home Page</h1>\n            <p>Select a section to navigate to:</p>\n            <ul>\n              <li>Dashboard - Performance monitoring</li>\n              <li>Profile - User account management</li>\n              <li>Settings - Application configuration</li>\n            </ul>\n          </div>\n        );\n    }\n  };\n\n  return (\n    <div className=\"app\">\n      <nav style={{\n        padding: '15px',\n        backgroundColor: '#f8f9fa',\n        borderBottom: '1px solid #dee2e6'\n      }}>\n        <button \n          onClick={() => setCurrentView('home')}\n          style={{\n            marginRight: '10px',\n            padding: '8px 16px',\n            backgroundColor: currentView === 'home' ? '#007bff' : '#e9ecef',\n            color: currentView === 'home' ? 'white' : 'black',\n            border: 'none',\n            borderRadius: '4px',\n            cursor: 'pointer'\n          }}\n        >\n          Home\n        </button>\n        <button \n          onClick={() => setCurrentView('dashboard')}\n          style={{\n            marginRight: '10px',\n            padding: '8px 16px',\n            backgroundColor: currentView === 'dashboard' ? '#007bff' : '#e9ecef',\n            color: currentView === 'dashboard' ? 'white' : 'black',\n            border: 'none',\n            borderRadius: '4px',\n            cursor: 'pointer'\n          }}\n        >\n          Dashboard\n        </button>\n        <button \n          onClick={() => setCurrentView('profile')}\n          style={{\n            marginRight: '10px',\n            padding: '8px 16px',\n            backgroundColor: currentView === 'profile' ? '#007bff' : '#e9ecef',\n            color: currentView === 'profile' ? 'white' : 'black',\n            border: 'none',\n            borderRadius: '4px',\n            cursor: 'pointer'\n          }}\n        >\n          Profile\n        </button>\n        <button \n          onClick={() => setCurrentView('settings')}\n          style={{\n            padding: '8px 16px',\n            backgroundColor: currentView === 'settings' ? '#007bff' : '#e9ecef',\n            color: currentView === 'settings' ? 'white' : 'black',\n            border: 'none',\n            borderRadius: '4px',\n            cursor: 'pointer'\n          }}\n        >\n          Settings\n        </button>\n      </nav>\n\n      <main style={{ padding: '20px' }}>\n        <LazyComponentErrorBoundary>\n          <Suspense fallback={<LoadingSpinner message={loadingMessage} />}>\n            {renderCurrentView()}\n          </Suspense>\n        </LazyComponentErrorBoundary>\n      </main>\n    </div>\n  );\n}\n\n// Example of a lazy-loaded component with its own lazy dependencies\nfunction Dashboard() {\n  const [showChart, setShowChart] = useState(false);\n  const [showReports, setShowReports] = useState(false);\n\n  // Nested lazy loading\n  const LazyChart = lazy(() => \n    new Promise(resolve => {\n      setTimeout(() => {\n        resolve(import('./Chart'));\n      }, 1200);\n    })\n  );\n\n  const LazyReports = lazy(() => \n    new Promise(resolve => {\n      setTimeout(() => {\n        resolve(import('./Reports'));\n      }, 900);\n    })\n  );\n\n  return (\n    <div>\n      <h1>Dashboard</h1>\n      <div style={{ marginBottom: '20px' }}>\n        <button \n          onClick={() => setShowChart(!showChart)}\n          style={{\n            marginRight: '10px',\n            padding: '8px 16px',\n            backgroundColor: showChart ? '#28a745' : '#007bff',\n            color: 'white',\n            border: 'none',\n            borderRadius: '4px',\n            cursor: 'pointer'\n          }}\n        >\n          {showChart ? 'Hide Chart' : 'Show Chart'}\n        </button>\n        \n        <button \n          onClick={() => setShowReports(!showReports)}\n          style={{\n            padding: '8px 16px',\n            backgroundColor: showReports ? '#28a745' : '#007bff',\n            color: 'white',\n            border: 'none',\n            borderRadius: '4px',\n            cursor: 'pointer'\n          }}\n        >\n          {showReports ? 'Hide Reports' : 'Show Reports'}\n        </button>\n      </div>\n      \n      {showChart && (\n        <div style={{ marginBottom: '20px' }}>\n          <h2>Performance Chart</h2>\n          <LazyComponentErrorBoundary>\n            <Suspense fallback={<LoadingSpinner message=\"Loading chart...\" />}>\n              <LazyChart />\n            </Suspense>\n          </LazyComponentErrorBoundary>\n        </div>\n      )}\n      \n      {showReports && (\n        <div>\n          <h2>Reports</h2>\n          <LazyComponentErrorBoundary>\n            <Suspense fallback={<LoadingSpinner message=\"Loading reports...\" />}>\n              <LazyReports />\n            </Suspense>\n          </LazyComponentErrorBoundary>\n        </div>\n      )}\n    </div>\n  );\n}\n\n// Route-based code splitting example\nimport { BrowserRouter as Router, Routes, Route } from 'react-router-dom';\n\nfunction AppWithRouting() {\n  return (\n    <Router>\n      <div>\n        <nav>\n          <Link to=\"/\">Home</Link>\n          <Link to=\"/dashboard\">Dashboard</Link>\n          <Link to=\"/profile\">Profile</Link>\n        </nav>\n        \n        <Routes>\n          <Route path=\"/\" element={<HomePage />} />\n          <Route \n            path=\"/dashboard\" \n            element={\n              <LazyComponentErrorBoundary>\n                <Suspense fallback={<LoadingSpinner message=\"Loading dashboard...\" />}>\n                  <LazyDashboard />\n                </Suspense>\n              </LazyComponentErrorBoundary>\n            } \n          />\n          <Route \n            path=\"/profile\" \n            element={\n              <LazyComponentErrorBoundary>\n                <Suspense fallback={<LoadingSpinner message=\"Loading profile...\" />}>\n                  <LazyProfile />\n                </Suspense>\n              </LazyComponentErrorBoundary>\n            } \n          />\n        </Routes>\n      </div>\n    </Router>\n  );\n}\n\n// Preload components for better user experience\nconst preloadComponent = (importFunction) => {\n  // Start loading the component without waiting for it\n  importFunction();\n  return importFunction;\n};\n\n// Preload components when user shows intent (e.g., hover)\nfunction NavigationWithPreloading() {\n  return (\n    <nav>\n      <Link \n        to=\"/dashboard\" \n        onMouseEnter={() => preloadComponent(() => import('./Dashboard'))}\n      >\n        Dashboard\n      </Link>\n      <Link \n        to=\"/profile\" \n        onMouseEnter={() => preloadComponent(() => import('./Profile'))}\n      >\n        Profile\n      </Link>\n    </nav>\n  );\n}",
+      "explanation": "This example demonstrates comprehensive code splitting and lazy loading implementation:\n\n1. **React.lazy**: Dynamically imports components only when needed\n2. **Suspense**: Provides loading fallback UI during component loading\n3. **Error Boundaries**: Handles errors in lazy-loaded components gracefully\n4. **Route-based Splitting**: Code splitting based on application routes\n5. **Nested Lazy Loading**: Lazy loading components within other lazy components\n6. **Preloading**: Proactive loading of components based on user intent\n7. **Loading States**: Customizable loading indicators with context\n\nThe output shows:\n- Component-based code splitting with loading indicators\n- Error handling for failed component loads\n- Route-based lazy loading implementation\n- Nested lazy loading for complex component hierarchies\n- Preloading strategies for improved user experience\n- Visual feedback during loading states\n\nKey concepts illustrated:\n- Dynamic import syntax and patterns\n- Suspense component for loading states\n- Error boundary integration with lazy components\n- Route-based vs component-based splitting\n- Nested and conditional lazy loading\n- Preloading strategies for performance\n- User experience considerations for loading states\n- Bundle optimization techniques",
       "language": "javascript"
     },
     "pitfalls": [
       {
         "mistake": "Over-splitting code into too many small chunks",
-        "solution": "Balance between bundle size and number of network requests. Group related functionality together",
+        "solution": "Balance between bundle size and number of network requests. Group related functionality together and use webpack bundle analyzer to identify optimal splitting points",
         "severity": "medium"
       },
       {
         "mistake": "Not handling loading states properly",
-        "solution": "Always provide meaningful loading indicators and error boundaries for lazy-loaded components",
+        "solution": "Always provide meaningful loading indicators and error boundaries for lazy-loaded components to ensure good user experience",
         "severity": "high"
       },
       {
         "mistake": "Not preloading critical resources",
-        "solution": "Use resource hints and strategic preloading for components likely to be needed soon",
+        "solution": "Use resource hints and strategic preloading for components likely to be needed soon, such as on hover or based on user behavior patterns",
         "severity": "medium"
       }
     ],
     "exercises": [
       {
-        "title": "Practice: Code Splitting and Lazy Loading",
-        "description": "Implement code splitting in a React application to optimize loading performance",
+        "title": "Practice: Implement Comprehensive Code Splitting",
+        "description": "Create a React application with advanced code splitting strategies including route-based splitting, component-level lazy loading, and preloading",
         "checkpoints": [
-          "Convert existing components to lazy-loaded components",
-          "Implement route-based code splitting",
-          "Add proper loading states and error boundaries",
-          "Measure and optimize bundle sizes"
+          "Implement route-based code splitting for different application sections",
+          "Add component-level lazy loading for heavy components",
+          "Create custom loading and error components for lazy-loaded content",
+          "Implement preloading strategies based on user interaction patterns",
+          "Add bundle analysis to identify optimal splitting points",
+          "Implement progressive loading for complex component hierarchies",
+          "Measure and optimize loading performance with performance tools"
         ]
       }
     ],
     "next": [],
-    "estimatedMinutes": 40,
+    "estimatedMinutes": 55,
     "difficulty": "Advanced",
     "tags": [
       "Performance",
       "Code Splitting",
       "Lazy Loading",
+      "Bundle Optimization",
       "react"
     ],
-    "lastUpdated": "2025-10-01T06:41:13.474Z",
-    "version": "1.0.0"
+    "sources": [
+      {
+        "title": "Code Splitting - React Documentation",
+        "url": "https://react.dev/learn/code-splitting"
+      },
+      {
+        "title": "React.lazy - React Documentation",
+        "url": "https://react.dev/reference/react/lazy"
+      }
+    ]
+      }
+    ],
+    "lastUpdated": "2025-10-03T10:00:00.000Z",
+    "version": "1.1.0"
   },
   {
     "id": "react-fundamentals-lesson-15",
@@ -761,58 +1836,73 @@
       "Learn production optimization and security best practices",
       "Implement monitoring and error tracking in production"
     ],
-    "intro": "Welcome to this comprehensive lesson on Deployment and Production Best Practices.\n\nLearn how to deploy React applications to production and implement best practices for performance, security, and monitoring.\n\nThroughout this lesson, you'll gain hands-on experience with practical implementations and real-world scenarios. We'll explore both the theoretical foundations and practical applications, ensuring you can immediately apply what you learn.\n\nThis lesson is designed to build upon previous concepts while introducing new techniques that will enhance your development skills. By the end, you'll have a solid understanding of the key principles and be ready to tackle more advanced topics.\n\nThe knowledge gained here will serve as a foundation for subsequent lessons and real-world projects.",
+    "intro": "Deploying React applications to production requires careful attention to performance optimization, security considerations, and monitoring strategies. A successful deployment ensures that applications load quickly, remain secure, and provide insights into user behavior and potential issues.\n\nProduction-ready React applications should be optimized for performance through techniques like code splitting, asset compression, and efficient caching strategies. Security measures including proper headers, content security policies, and secure configuration are essential to protect both the application and its users.\n\nThis lesson will explore comprehensive deployment strategies, covering build optimization, security hardening, performance monitoring, and error tracking. You'll learn to implement production best practices that ensure your React applications are reliable, secure, and performant in real-world environments.",
     "code": {
-      "example": "// Production build optimization\n// package.json build script\n{\n  \"scripts\": {\n    \"build\": \"react-scripts build\",\n    \"build:analyze\": \"npm run build && npx webpack-bundle-analyzer build/static/js/*.js\",\n    \"build:production\": \"NODE_ENV=production npm run build\"\n  }\n}\n\n// Environment configuration\n// .env.production\nREACT_APP_API_URL=https://api.production.com\nREACT_APP_ENVIRONMENT=production\nREACT_APP_SENTRY_DSN=your-sentry-dsn\nGENERATE_SOURCEMAP=false\n\n// Production configuration component\nimport React from 'react';\n\n// Error tracking setup\nimport * as Sentry from '@sentry/react';\n\nif (process.env.NODE_ENV === 'production') {\n  Sentry.init({\n    dsn: process.env.REACT_APP_SENTRY_DSN,\n    environment: process.env.REACT_APP_ENVIRONMENT,\n    integrations: [\n      new Sentry.BrowserTracing(),\n    ],\n    tracesSampleRate: 0.1,\n  });\n}\n\n// Service Worker registration\nif ('serviceWorker' in navigator && process.env.NODE_ENV === 'production') {\n  window.addEventListener('load', () => {\n    navigator.serviceWorker.register('/sw.js')\n      .then((registration) => {\n        console.log('SW registered: ', registration);\n      })\n      .catch((registrationError) => {\n        console.log('SW registration failed: ', registrationError);\n      });\n  });\n}\n\n// Performance monitoring\nfunction performanceMonitor() {\n  // Core Web Vitals\n  if (typeof window !== 'undefined' && 'performance' in window) {\n    // First Contentful Paint\n    new PerformanceObserver((list) => {\n      for (const entry of list.getEntries()) {\n        if (entry.name === 'first-contentful-paint') {\n          console.log('FCP:', entry.startTime);\n          // Send to analytics\n        }\n      }\n    }).observe({ entryTypes: ['paint'] });\n\n    // Largest Contentful Paint\n    new PerformanceObserver((list) => {\n      const entries = list.getEntries();\n      const lastEntry = entries[entries.length - 1];\n      console.log('LCP:', lastEntry.startTime);\n      // Send to analytics\n    }).observe({ entryTypes: ['largest-contentful-paint'] });\n  }\n}\n\n// Security headers (server configuration example)\n/*\n// nginx.conf or .htaccess\nHeader always set X-Content-Type-Options nosniff\nHeader always set X-Frame-Options DENY\nHeader always set X-XSS-Protection \"1; mode=block\"\nHeader always set Strict-Transport-Security \"max-age=63072000; includeSubDomains; preload\"\nHeader always set Content-Security-Policy \"default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'\"\n*/\n\n// Production-ready App component\nfunction App() {\n  React.useEffect(() => {\n    performanceMonitor();\n  }, []);\n\n  return (\n    <Sentry.ErrorBoundary fallback={ErrorFallback} showDialog>\n      <div className=\"app\">\n        {/* Your app content */}\n      </div>\n    </Sentry.ErrorBoundary>\n  );\n}\n\n// Docker deployment example\n/*\n# Dockerfile\nFROM node:16-alpine as build\nWORKDIR /app\nCOPY package*.json ./\nRUN npm ci --only=production\nCOPY . .\nRUN npm run build\n\nFROM nginx:alpine\nCOPY --from=build /app/build /usr/share/nginx/html\nCOPY nginx.conf /etc/nginx/nginx.conf\nEXPOSE 80\nCMD [\"nginx\", \"-g\", \"daemon off;\"]\n*/\n\n// CI/CD pipeline example (GitHub Actions)\n/*\nname: Deploy to Production\non:\n  push:\n    branches: [main]\njobs:\n  deploy:\n    runs-on: ubuntu-latest\n    steps:\n    - uses: actions/checkout@v2\n    - name: Setup Node.js\n      uses: actions/setup-node@v2\n      with:\n        node-version: '16'\n    - name: Install dependencies\n      run: npm ci\n    - name: Run tests\n      run: npm test -- --coverage --watchAll=false\n    - name: Build\n      run: npm run build\n    - name: Deploy to S3\n      run: aws s3 sync build/ s3://your-bucket --delete\n*/",
-      "explanation": "This example demonstrates a comprehensive production deployment setup including error tracking, performance monitoring, security headers, Docker containerization, and CI/CD pipeline configuration.\n\nThe code demonstrates practical implementation techniques and shows how the concepts work in real scenarios. Pay attention to the structure and patterns used, as these represent industry best practices.",
+      "example": "// Production build optimization\n// package.json build scripts\n{\n  \"scripts\": {\n    \"build\": \"react-scripts build\",\n    \"build:analyze\": \"npm run build && npx webpack-bundle-analyzer build/static/js/*.js\",\n    \"build:staging\": \"REACT_APP_ENV=staging npm run build\",\n    \"build:production\": \"REACT_APP_ENV=production GENERATE_SOURCEMAP=false npm run build\"\n  }\n}\n\n// Environment configuration\n// .env.production\nREACT_APP_API_URL=https://api.production.com\nREACT_APP_ENVIRONMENT=production\nREACT_APP_VERSION=$npm_package_version\nREACT_APP_SENTRY_DSN=your-sentry-dsn\nGENERATE_SOURCEMAP=false\n\n// Environment configuration\n// .env.staging\nREACT_APP_API_URL=https://api.staging.com\nREACT_APP_ENVIRONMENT=staging\nREACT_APP_VERSION=$npm_package_version\nREACT_APP_SENTRY_DSN=your-staging-sentry-dsn\n\n// Production configuration component\nimport React from 'react';\n\n// Error tracking setup\nimport * as Sentry from '@sentry/react';\nimport { Integrations } from '@sentry/tracing';\n\n// Initialize Sentry only in production\nif (process.env.NODE_ENV === 'production' && process.env.REACT_APP_SENTRY_DSN) {\n  Sentry.init({\n    dsn: process.env.REACT_APP_SENTRY_DSN,\n    environment: process.env.REACT_APP_ENVIRONMENT,\n    release: process.env.REACT_APP_VERSION,\n    integrations: [\n      new Integrations.BrowserTracing(),\n    ],\n    tracesSampleRate: 0.1, // Capture 10% of transactions for performance monitoring\n  });\n}\n\n// Service Worker registration for caching\nif ('serviceWorker' in navigator && process.env.NODE_ENV === 'production') {\n  window.addEventListener('load', () => {\n    navigator.serviceWorker.register('/sw.js')\n      .then((registration) => {\n        console.log('SW registered: ', registration);\n      })\n      .catch((registrationError) => {\n        console.log('SW registration failed: ', registrationError);\n      });\n  });\n}\n\n// Performance monitoring\nfunction setupPerformanceMonitoring() {\n  // Core Web Vitals monitoring\n  if (typeof window !== 'undefined' && 'performance' in window) {\n    // First Contentful Paint\n    new PerformanceObserver((list) => {\n      for (const entry of list.getEntries()) {\n        if (entry.name === 'first-contentful-paint') {\n          console.log('FCP:', entry.startTime);\n          // Send to analytics service\n          if (typeof gtag !== 'undefined') {\n            gtag('event', 'web_vital', {\n              name: 'FCP',\n              value: Math.round(entry.startTime),\n              event_category: 'Web Vitals',\n              event_label: window.location.pathname,\n              non_interaction: true,\n            });\n          }\n        }\n      }\n    }).observe({ entryTypes: ['paint'] });\n\n    // Largest Contentful Paint\n    new PerformanceObserver((list) => {\n      const entries = list.getEntries();\n      const lastEntry = entries[entries.length - 1];\n      console.log('LCP:', lastEntry.startTime);\n      // Send to analytics service\n      if (typeof gtag !== 'undefined') {\n        gtag('event', 'web_vital', {\n          name: 'LCP',\n          value: Math.round(lastEntry.startTime),\n          event_category: 'Web Vitals',\n          event_label: window.location.pathname,\n          non_interaction: true,\n        });\n      }\n    }).observe({ entryTypes: ['largest-contentful-paint'] });\n\n    // Cumulative Layout Shift\n    new PerformanceObserver((list) => {\n      let clsValue = 0;\n      for (const entry of list.getEntries()) {\n        if (!entry.hadRecentInput) {\n          clsValue += entry.value;\n        }\n      }\n      console.log('CLS:', clsValue);\n      // Send to analytics service\n      if (typeof gtag !== 'undefined') {\n        gtag('event', 'web_vital', {\n          name: 'CLS',\n          value: Math.round(clsValue * 10000) / 10000,\n          event_category: 'Web Vitals',\n          event_label: window.location.pathname,\n          non_interaction: true,\n        });\n      }\n    }).observe({ entryTypes: ['layout-shift'] });\n  }\n}\n\n// Security headers (server configuration example)\n/*\n// nginx.conf or .htaccess\nHeader always set X-Content-Type-Options nosniff\nHeader always set X-Frame-Options DENY\nHeader always set X-XSS-Protection \"1; mode=block\"\nHeader always set Strict-Transport-Security \"max-age=63072000; includeSubDomains; preload\"\nHeader always set Content-Security-Policy \"default-src 'self'; script-src 'self' 'unsafe-inline' https://www.google-analytics.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://www.google-analytics.com; connect-src 'self' https://api.production.com\"\nHeader always set Referrer-Policy \"strict-origin-when-cross-origin\"\n*/\n\n// Production-ready App component\nfunction App() {\n  React.useEffect(() => {\n    // Setup performance monitoring\n    setupPerformanceMonitoring();\n    \n    // Log application version\n    console.log(`App version: ${process.env.REACT_APP_VERSION}`);\n  }, []);\n\n  return (\n    <Sentry.ErrorBoundary fallback={({ error, componentStack, resetError }) => (\n      <div className=\"error-boundary\">\n        <h2>Something went wrong</h2>\n        <p>We're sorry, but something went wrong. Our team has been notified.</p>\n        <button onClick={resetError}>Try again</button>\n        \n        {process.env.REACT_APP_ENVIRONMENT !== 'production' && (\n          <details style={{ whiteSpace: 'pre-wrap' }}>\n            <summary>Error details</summary>\n            <p><strong>{error?.toString()}</strong></p>\n            <pre>{componentStack}</pre>\n          </details>\n        )}\n      </div>\n    )} showDialog>\n      <div className=\"app\">\n        {/* Your app content */}\n      </div>\n    </Sentry.ErrorBoundary>\n  );\n}\n\n// Docker deployment example\n/*\n# Dockerfile\nFROM node:16-alpine as build\nWORKDIR /app\nCOPY package*.json ./\nRUN npm ci --only=production\nCOPY . .\nRUN npm run build\n\nFROM nginx:alpine\nCOPY --from=build /app/build /usr/share/nginx/html\nCOPY nginx.conf /etc/nginx/nginx.conf\nEXPOSE 80\nCMD [\"nginx\", \"-g\", \"daemon off;\"]\n*/\n\n// CI/CD pipeline example (GitHub Actions)\n/*\nname: Deploy to Production\non:\n  push:\n    branches: [main]\n  pull_request:\n    branches: [main]\n\njobs:\n  test:\n    runs-on: ubuntu-latest\n    steps:\n    - uses: actions/checkout@v2\n    - name: Setup Node.js\n      uses: actions/setup-node@v2\n      with:\n        node-version: '16'\n    - name: Install dependencies\n      run: npm ci\n    - name: Run tests\n      run: npm test -- --coverage --watchAll=false\n    - name: Run linter\n      run: npm run lint\n\n  build-and-deploy:\n    needs: test\n    runs-on: ubuntu-latest\n    if: github.ref == 'refs/heads/main'\n    steps:\n    - uses: actions/checkout@v2\n    - name: Setup Node.js\n      uses: actions/setup-node@v2\n      with:\n        node-version: '16'\n    - name: Install dependencies\n      run: npm ci\n    - name: Build for production\n      run: npm run build:production\n    - name: Analyze bundle\n      run: npm run build:analyze\n    - name: Deploy to S3\n      run: |\n        aws s3 sync build/ s3://your-production-bucket --delete\n        aws cloudfront create-invalidation --distribution-id YOUR_DISTRIBUTION_ID --paths \"/*\"\n*/\n\n// Health check endpoint implementation\n// public/health.json\n{\n  \"status\": \"ok\",\n  \"timestamp\": \"2025-10-03T10:00:00.000Z\",\n  \"version\": \"1.0.0\"\n}\n\n// Monitoring and analytics setup\nfunction setupAnalytics() {\n  // Google Analytics\n  if (process.env.REACT_APP_GA_TRACKING_ID) {\n    // Load GA script\n    const script = document.createElement('script');\n    script.src = `https://www.googletagmanager.com/gtag/js?id=${process.env.REACT_APP_GA_TRACKING_ID}`;\n    script.async = true;\n    document.head.appendChild(script);\n    \n    // Initialize GA\n    window.dataLayer = window.dataLayer || [];\n    function gtag(){dataLayer.push(arguments);}\n    window.gtag = gtag;\n    gtag('js', new Date());\n    gtag('config', process.env.REACT_APP_GA_TRACKING_ID);\n  }\n}\n\n// Environment-specific configuration\nconst config = {\n  development: {\n    apiUrl: 'http://localhost:3001',\n    debug: true\n  },\n  staging: {\n    apiUrl: process.env.REACT_APP_API_URL || 'https://api.staging.com',\n    debug: true\n  },\n  production: {\n    apiUrl: process.env.REACT_APP_API_URL || 'https://api.production.com',\n    debug: false\n  }\n};\n\nconst currentConfig = config[process.env.REACT_APP_ENVIRONMENT] || config.development;\n\nexport default currentConfig;",
+      "explanation": "This example demonstrates comprehensive production deployment setup:\n\n1. **Build Optimization**: Production build scripts with source map control\n2. **Environment Configuration**: Different settings for development, staging, and production\n3. **Error Tracking**: Sentry integration for error monitoring and reporting\n4. **Performance Monitoring**: Core Web Vitals tracking with Google Analytics\n5. **Security Headers**: Server configuration for security hardening\n6. **Service Workers**: Caching strategy for offline support\n7. **Docker Deployment**: Containerization for consistent deployment\n8. **CI/CD Pipeline**: Automated testing and deployment workflow\n9. **Health Checks**: Endpoint for monitoring application status\n10. **Analytics Setup**: User behavior tracking and reporting\n11. **Environment Config**: Configuration management for different environments\n\nThe output shows:\n- Optimized production build process\n- Comprehensive error tracking and monitoring\n- Security-hardened application configuration\n- Automated deployment pipeline\n- Performance monitoring implementation\n- Environment-specific configuration management\n\nKey concepts illustrated:\n- Production build optimization techniques\n- Error tracking and monitoring strategies\n- Security best practices for web applications\n- Containerization and deployment patterns\n- CI/CD pipeline implementation\n- Performance monitoring and analytics\n- Environment configuration management\n- Health check and monitoring endpoints\n- Bundle analysis and optimization",
       "language": "javascript"
     },
     "pitfalls": [
       {
         "mistake": "Not optimizing bundle size for production",
-        "solution": "Use webpack-bundle-analyzer, tree shaking, and code splitting to minimize bundle size",
+        "solution": "Use webpack-bundle-analyzer, tree shaking, and code splitting to minimize bundle size; implement lazy loading for non-critical components",
         "severity": "high"
       },
       {
         "mistake": "Missing security headers and CSP",
-        "solution": "Implement comprehensive security headers and Content Security Policy for production",
+        "solution": "Implement comprehensive security headers and Content Security Policy for production; regularly audit security configuration",
         "severity": "high"
       },
       {
         "mistake": "Not monitoring application performance",
-        "solution": "Implement Core Web Vitals monitoring and error tracking with tools like Sentry",
+        "solution": "Implement Core Web Vitals monitoring and error tracking with tools like Sentry; set up alerts for performance degradation",
         "severity": "medium"
       },
       {
         "mistake": "Including source maps in production",
-        "solution": "Disable source maps in production or serve them separately for debugging",
+        "solution": "Disable source maps in production or serve them separately for debugging to prevent exposing source code to users",
         "severity": "medium"
       }
     ],
     "exercises": [
       {
-        "title": "Practice: Deployment and Production Best Practices",
-        "description": "Deploy a React application to production with proper optimization and monitoring",
+        "title": "Practice: Deploy a Production-Ready React Application",
+        "description": "Deploy a React application to production with proper optimization, security, and monitoring",
         "checkpoints": [
-          "Optimize build for production deployment",
-          "Implement error tracking and performance monitoring",
-          "Configure security headers and CSP",
-          "Set up CI/CD pipeline for automated deployment",
-          "Test application in production environment"
+          "Optimize build for production deployment with bundle analysis",
+          "Implement error tracking and performance monitoring with Sentry",
+          "Configure security headers and Content Security Policy",
+          "Set up CI/CD pipeline for automated testing and deployment",
+          "Implement environment-specific configuration management",
+          "Add health check endpoints for monitoring",
+          "Configure analytics for user behavior tracking",
+          "Test application in production environment with load testing"
         ]
       }
     ],
     "next": [],
-    "estimatedMinutes": 45,
+    "estimatedMinutes": 60,
     "difficulty": "Advanced",
     "tags": [
       "Deployment",
       "Production",
       "Performance",
       "Security",
+      "CI/CD",
+      "Monitoring",
       "react"
     ],
-    "lastUpdated": "2025-10-01T06:41:13.474Z",
-    "version": "1.0.0"
+    "sources": [
+      {
+        "title": "Production Deployment - React Documentation",
+        "url": "https://create-react-app.dev/docs/deployment/"
+      },
+      {
+        "title": "Web Vitals - Google Developers",
+        "url": "https://web.dev/articles/vitals"
+      }
+    ],
+    "lastUpdated": "2025-10-03T10:00:00.000Z",
+    "version": "1.1.0"
   }
 ]

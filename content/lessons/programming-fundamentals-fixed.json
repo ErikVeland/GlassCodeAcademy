@@ -1,0 +1,774 @@
+[
+  {
+    "id": "programming-fundamentals-lesson-1",
+    "moduleSlug": "programming-fundamentals",
+    "title": "Variables and Data Types",
+    "order": 1,
+    "objectives": [
+      "Understand different data types in programming (numbers, strings, booleans)",
+      "Learn how to declare and initialize variables",
+      "Master variable naming conventions and best practices"
+    ],
+    "intro": "Variables are fundamental building blocks in programming that store and manage data in your applications. Understanding data types is crucial for writing efficient and bug-free code.\n\nIn this lesson, you'll learn about primitive data types including numbers, strings, and booleans. We'll explore how different programming languages handle these types and when to use each one effectively.\n\nVariables act as containers that hold values which can change during program execution. Proper variable management is essential for memory efficiency and code readability. You'll discover naming conventions that make your code self-documenting and easier to maintain.\n\nBy the end of this lesson, you'll confidently declare variables, choose appropriate data types, and follow industry-standard naming practices. These skills form the foundation for all programming concepts you'll learn throughout your development journey.\n\nWe'll cover practical examples showing how variables store different types of information, from user input to calculation results. Understanding these fundamentals will prepare you for more complex topics like functions, arrays, and object-oriented programming.",
+    "code": {
+      "example": "// Variable declarations with different data types\n\n// Numbers (integers and floating-point)\nlet age = 25;\nlet price = 19.99;\nlet temperature = -5;\n\n// Strings (text data)\nlet firstName = \"John\";\nlet lastName = \"Doe\";\nlet message = `Hello, ${firstName} ${lastName}!`;\n\n// Booleans (true/false values)\nlet isLoggedIn = true;\nlet hasPermission = false;\nlet isValidEmail = email.includes('@');\n\n// Constants (values that don't change)\nconst PI = 3.14159;\nconst MAX_USERS = 100;\n\n// Variable naming conventions\nlet userName = \"camelCase for variables\";\nconst API_URL = \"UPPER_CASE for constants\";\nlet is_valid = false; // avoid snake_case in JavaScript\n\nconsole.log(`Age: ${age}, Price: $${price}, User: ${firstName}`);",
+      "explanation": "This example demonstrates proper variable declaration, different data types, and naming conventions. Notice how we use 'let' for variables that can change, 'const' for constants, and template literals for string interpolation.",
+      "language": "javascript"
+    },
+    "pitfalls": [
+      {
+        "mistake": "Using inconsistent variable naming conventions",
+        "solution": "Follow camelCase for variables and UPPER_CASE for constants in JavaScript",
+        "severity": "medium"
+      },
+      {
+        "mistake": "Not declaring variables with appropriate keywords (let/const)",
+        "solution": "Use 'let' for variables that change and 'const' for constants to prevent accidental reassignment",
+        "severity": "high"
+      },
+      {
+        "mistake": "Using global variables unnecessarily",
+        "solution": "Limit variable scope to where it's needed to prevent naming conflicts and memory issues",
+        "severity": "medium"
+      }
+    ],
+    "exercises": [
+      {
+        "title": "Variable Declaration Practice",
+        "description": "Create a simple program that declares variables for a user profile and displays the information.",
+        "checkpoints": [
+          "Declare variables for name, age, email, and account status",
+          "Use appropriate data types for each variable",
+          "Display the user information using template literals",
+          "Verify your variable names follow naming conventions"
+        ]
+      }
+    ],
+    "next": [],
+    "estimatedMinutes": 30,
+    "difficulty": "Beginner",
+    "tags": [
+      "Logic",
+      "Algorithms",
+      "Data Structures"
+    ],
+    "lastUpdated": "2025-10-01T06:42:16.313Z",
+    "version": "1.0.0"
+  },
+  {
+    "id": "programming-fundamentals-lesson-2",
+    "moduleSlug": "programming-fundamentals",
+    "title": "Control Structures",
+    "order": 2,
+    "objectives": [
+      "Master if statements and conditional logic",
+      "Implement loops for repetitive tasks (for, while, do-while)",
+      "Use switch statements for multiple conditions"
+    ],
+    "intro": "Control structures are the building blocks that control the flow of your program execution. They determine which code runs when, based on conditions and repetition needs.\n\nIn this lesson, you'll learn how to make decisions in your code using if statements, else clauses, and complex conditional logic. These structures allow your programs to respond dynamically to different situations and user inputs.\n\nLoops are essential for performing repetitive tasks efficiently. Instead of writing the same code multiple times, you'll use for loops, while loops, and do-while loops to iterate through data and repeat operations.\n\nSwitch statements provide a clean way to handle multiple possible values for a single variable. This is particularly useful when dealing with user choices, menu systems, or processing different types of data.\n\nBy mastering these control structures, you'll be able to create programs that make intelligent decisions and handle repetitive tasks automatically. These concepts are fundamental to all programming languages and essential for building any meaningful application.",
+    "code": {
+      "example": "// Conditional statements (if/else)\nlet age = 18;\nlet hasLicense = true;\n\nif (age >= 18 && hasLicense) {\n    console.log('Can drive legally');\n} else if (age >= 16) {\n    console.log('Can drive with supervision');\n} else {\n    console.log('Too young to drive');\n}\n\n// Switch statement for multiple conditions\nlet dayOfWeek = 'Monday';\nswitch (dayOfWeek) {\n    case 'Monday':\n    case 'Tuesday':\n    case 'Wednesday':\n    case 'Thursday':\n    case 'Friday':\n        console.log('Weekday');\n        break;\n    case 'Saturday':\n    case 'Sunday':\n        console.log('Weekend');\n        break;\n    default:\n        console.log('Invalid day');\n}\n\n// For loop for counting\nfor (let i = 1; i <= 5; i++) {\n    console.log(`Count: ${i}`);\n}\n\n// While loop for unknown iterations\nlet password = '';\nwhile (password !== 'secret') {\n    password = prompt('Enter password:');\n    if (password !== 'secret') {\n        console.log('Incorrect password, try again');\n    }\n}\n\n// Array iteration\nlet fruits = ['apple', 'banana', 'orange'];\nfor (let fruit of fruits) {\n    console.log(`I like ${fruit}`);\n}",
+      "explanation": "This example shows different control structures: if/else for decisions, switch for multiple conditions, for loops for counting, while loops for unknown iterations, and array iteration.",
+      "language": "javascript"
+    },
+    "pitfalls": [
+      {
+        "mistake": "Using assignment (=) instead of comparison (===) in conditions",
+        "solution": "Always use === for comparison and = for assignment. Use === instead of == for strict equality",
+        "severity": "high"
+      },
+      {
+        "mistake": "Forgetting break statements in switch cases",
+        "solution": "Always include break statements to prevent fall-through behavior unless intentional",
+        "severity": "medium"
+      },
+      {
+        "mistake": "Creating infinite loops by forgetting to update loop variables",
+        "solution": "Ensure loop conditions will eventually become false by updating variables inside the loop",
+        "severity": "high"
+      }
+    ],
+    "exercises": [
+      {
+        "title": "Grade Calculator",
+        "description": "Create a program that determines letter grades based on numeric scores and calculates class statistics.",
+        "checkpoints": [
+          "Use if/else statements to convert numeric grades to letters (A, B, C, D, F)",
+          "Implement a loop to process multiple student grades",
+          "Use a switch statement to count how many of each letter grade",
+          "Calculate and display the class average"
+        ]
+      }
+    ],
+    "next": [],
+    "estimatedMinutes": 30,
+    "difficulty": "Beginner",
+    "tags": [
+      "Logic",
+      "Algorithms",
+      "Data Structures"
+    ],
+    "lastUpdated": "2025-10-01T06:42:16.314Z",
+    "version": "1.0.0"
+  },
+  {
+    "id": "programming-fundamentals-lesson-3",
+    "moduleSlug": "programming-fundamentals",
+    "title": "Functions and Methods",
+    "order": 3,
+    "objectives": [
+      "Understand function syntax and parameter passing",
+      "Learn about return values and scope",
+      "Master function best practices and naming conventions"
+    ],
+    "intro": "Functions are reusable blocks of code that perform specific tasks, making your programs modular, organized, and easier to maintain. They are essential for writing clean, efficient code.\n\nIn this lesson, you'll learn how to define functions, pass data through parameters, and return results. Functions help eliminate code duplication and make your programs easier to test and debug.\n\nScope is a crucial concept that determines where variables can be accessed in your code. Understanding local and global scope prevents common bugs and helps you write more predictable functions.\n\nYou'll discover different types of functions including arrow functions, anonymous functions, and higher-order functions. These concepts prepare you for advanced programming patterns and modern development practices.\n\nBy the end of this lesson, you'll confidently create functions that solve specific problems, accept input parameters, return meaningful results, and follow industry naming conventions. Functions are the building blocks of larger applications.",
+    "code": {
+      "example": "// Basic function declaration\nfunction greetUser(name, timeOfDay) {\n    return `Good ${timeOfDay}, ${name}!`;\n}\n\n// Function expression\nconst calculateArea = function(length, width) {\n    return length * width;\n};\n\n// Arrow function (ES6+)\nconst multiply = (a, b) => a * b;\n\n// Function with default parameters\nfunction createUser(name, role = 'user', active = true) {\n    return {\n        name: name,\n        role: role,\n        active: active,\n        createdAt: new Date()\n    };\n}\n\n// Higher-order function (function that takes another function)\nfunction processNumbers(numbers, operation) {\n    return numbers.map(operation);\n}\n\n// Usage examples\nconsole.log(greetUser('Alice', 'morning'));\nconst roomArea = calculateArea(10, 12);\nconst product = multiply(5, 3);\n\nconst newUser = createUser('Bob');\nconst adminUser = createUser('Carol', 'admin');\n\nconst doubled = processNumbers([1, 2, 3, 4], x => x * 2);\nconsole.log(doubled); // [2, 4, 6, 8]\n\n// Function scope example\nlet globalVar = 'I am global';\n\nfunction demonstrateScope() {\n    let localVar = 'I am local';\n    console.log(globalVar); // Can access global\n    console.log(localVar);  // Can access local\n}\n\n// console.log(localVar); // Error: localVar is not defined",
+      "explanation": "This example demonstrates function declarations, expressions, arrow functions, parameters with defaults, return values, higher-order functions, and variable scope.",
+      "language": "javascript"
+    },
+    "pitfalls": [
+      {
+        "mistake": "Modifying global variables inside functions",
+        "solution": "Use parameters and return values instead of relying on global variables",
+        "severity": "high"
+      },
+      {
+        "mistake": "Creating functions that do too many things",
+        "solution": "Follow the single responsibility principle - each function should do one thing well",
+        "severity": "medium"
+      },
+      {
+        "mistake": "Not handling missing or invalid parameters",
+        "solution": "Validate parameters and provide default values or error handling",
+        "severity": "medium"
+      }
+    ],
+    "exercises": [
+      {
+        "title": "Calculator Functions",
+        "description": "Build a set of calculator functions that demonstrate parameter passing and return values.",
+        "checkpoints": [
+          "Create functions for basic math operations (add, subtract, multiply, divide)",
+          "Implement input validation to handle invalid numbers",
+          "Build a main function that uses all the math functions",
+          "Add error handling for division by zero"
+        ]
+      }
+    ],
+    "next": [],
+    "estimatedMinutes": 30,
+    "difficulty": "Beginner",
+    "tags": [
+      "Logic",
+      "Algorithms",
+      "Data Structures"
+    ],
+    "lastUpdated": "2025-10-01T06:42:16.314Z",
+    "version": "1.0.0"
+  },
+  {
+    "id": "programming-fundamentals-lesson-4",
+    "moduleSlug": "programming-fundamentals",
+    "title": "Arrays and Data Structures",
+    "order": 4,
+    "objectives": [
+      "Understand arrays as fundamental data structures for storing collections of data",
+      "Learn to manipulate arrays with common operations like sorting, searching, and filtering",
+      "Explore other basic data structures like lists, stacks, and queues"
+    ],
+    "intro": "Arrays and data structures are fundamental tools for organizing and managing collections of data in your programs. They provide efficient ways to store, access, and manipulate multiple values of the same type or related types.\n\nIn this lesson, you'll learn about arrays, which are ordered collections that allow you to store multiple values in a single variable. You'll discover how to access elements by index, iterate through arrays, and perform common operations like adding, removing, and modifying elements.\n\nBeyond arrays, you'll explore other essential data structures that solve specific programming problems. Stacks follow a last-in-first-out (LIFO) pattern, perfect for undo functionality and function call management. Queues use first-in-first-out (FIFO) ordering, ideal for task scheduling and breadth-first search algorithms.\n\nUnderstanding these data structures is crucial for writing efficient algorithms and solving complex programming problems. Each structure has specific strengths and use cases that make it the right choice for different scenarios.\n\nBy mastering arrays and basic data structures, you'll be able to organize data effectively, implement efficient algorithms, and solve programming challenges that involve collections of information. This knowledge forms the foundation for more advanced data structures and algorithms you'll encounter in your programming journey.",
+    "code": {
+      "example": "// Object-Oriented Programming Concepts\n\n// Basic class definition\nclass Person {\n    constructor(name, age) {\n        this.name = name;\n        this.age = age;\n    }\n    \n    greet() {\n        return `Hello, my name is ${this.name} and I'm ${this.age} years old.`;\n    }\n    \n    haveBirthday() {\n        this.age++;\n        return `Happy birthday! ${this.name} is now ${this.age} years old.`;\n    }\n}\n\n// Creating instances of a class\nlet person1 = new Person('Alice', 30);\nlet person2 = new Person('Bob', 25);\n\nconsole.log(person1.greet());\nconsole.log(person2.haveBirthday());\n\n// Encapsulation with private fields (ES2022)\nclass BankAccount {\n    #balance; // Private field\n    \n    constructor(initialBalance) {\n        this.#balance = initialBalance;\n    }\n    \n    deposit(amount) {\n        if (amount > 0) {\n            this.#balance += amount;\n            return `Deposited $${amount}. New balance: $${this.#balance}`;\n        }\n        return 'Invalid deposit amount';\n    }\n    \n    withdraw(amount) {\n        if (amount > 0 && amount <= this.#balance) {\n            this.#balance -= amount;\n            return `Withdrew $${amount}. New balance: $${this.#balance}`;\n        }\n        return 'Invalid withdrawal amount';\n    }\n    \n    getBalance() {\n        return this.#balance;\n    }\n}\n\n// Using encapsulated class\nlet account = new BankAccount(1000);\nconsole.log(account.deposit(500));\nconsole.log(account.withdraw(200));\n// console.log(account.#balance); // Error: Private field\n\n// Inheritance\nclass Employee extends Person {\n    constructor(name, age, jobTitle, salary) {\n        super(name, age); // Call parent constructor\n        this.jobTitle = jobTitle;\n        this.salary = salary;\n    }\n    \n    work() {\n        return `${this.name} is working as a ${this.jobTitle}.`;\n    }\n    \n    // Method overriding\n    greet() {\n        return `Hello, I'm ${this.name}, a ${this.jobTitle}.`;\n    }\n}\n\n// Polymorphism\nlet employee = new Employee('Charlie', 35, 'Developer', 75000);\nconsole.log(employee.greet()); // Overridden method\nconsole.log(employee.work());\nconsole.log(employee.haveBirthday()); // Inherited method\n\n// Abstract base class (simulated)\nclass Shape {\n    constructor(color) {\n        this.color = color;\n    }\n    \n    // Abstract method - should be implemented by subclasses\n    getArea() {\n        throw new Error('getArea() must be implemented by subclass');\n    }\n    \n    getDescription() {\n        return `A ${this.color} shape with area ${this.getArea()}`;\n    }\n}\n\n// Concrete implementations\nclass Rectangle extends Shape {\n    constructor(color, width, height) {\n        super(color);\n        this.width = width;\n        this.height = height;\n    }\n    \n    getArea() {\n        return this.width * this.height;\n    }\n}\n\n// Polymorphism in action\nlet shapes = [\n    new Rectangle('red', 5, 3),\n    new Rectangle('blue', 4, 6)\n];\n\nshapes.forEach(shape => {\n    console.log(shape.getDescription());\n});",
+      "explanation": "This example demonstrates core OOP concepts including:\n\n1. Class definition with constructor, properties, and methods\n2. Creating object instances with 'new' keyword\n3. Encapsulation with private fields (#) to control data access\n4. Inheritance using 'extends' keyword to create specialized classes\n5. Method overriding to customize inherited behavior\n6. Polymorphism allowing objects to take multiple forms\n7. Abstract base classes to define common interfaces\n\nThese concepts work together to create organized, reusable, and maintainable code structures.",
+      "language": "javascript"
+    },
+    "pitfalls": [
+      {
+        "mistake": "Accessing array elements with invalid indices",
+        "solution": "Always check array bounds and use methods like includes() or find() for safer element checking",
+        "severity": "high"
+      },
+      {
+        "mistake": "Modifying arrays during iteration with for loops",
+        "solution": "Use functional methods like map(), filter(), and reduce() instead of modifying arrays while iterating",
+        "severity": "medium"
+      },
+      {
+        "mistake": "Not understanding the performance implications of different array methods",
+        "solution": "Learn which methods modify the original array and which create new arrays; understand time complexity of operations",
+        "severity": "medium"
+      }
+    ],
+    "exercises": [
+      {
+        "title": "Data Structure Implementation Practice",
+        "description": "Create and manipulate arrays and implement basic stack and queue operations.",
+        "checkpoints": [
+          "Create an array of student grades and calculate statistics (average, highest, lowest)",
+          "Implement a stack-based undo functionality for a simple text editor",
+          "Create a queue-based task scheduler that processes tasks in order",
+          "Build a program that sorts and filters a list of products by different criteria"
+        ]
+      }
+    ],
+    "next": [],
+    "estimatedMinutes": 45,
+    "difficulty": "Beginner",
+    "tags": [
+      "Arrays",
+      "Data Structures",
+      "Stack",
+      "Queue"
+    ],
+    "lastUpdated": "2025-10-03T15:00:00.000Z",
+    "version": "1.0.0"
+  },
+  {
+    "id": "programming-fundamentals-lesson-5",
+    "moduleSlug": "programming-fundamentals",
+    "title": "Object-Oriented Programming Concepts",
+    "order": 5,
+    "objectives": [
+      "Understand the fundamental principles of object-oriented programming (OOP)",
+      "Learn to create classes and objects with properties and methods",
+      "Master key OOP concepts including encapsulation, inheritance, and polymorphism"
+    ],
+    "intro": "Object-Oriented Programming (OOP) is a powerful paradigm that organizes code around objects and classes, making programs more modular, reusable, and maintainable. OOP models real-world entities as objects with properties (data) and methods (behaviors), creating intuitive and logical program structures.\n\nIn this lesson, you'll learn to define classes, which serve as blueprints for creating objects. You'll discover how to create instances of classes, set and access properties, and call methods. Classes allow you to bundle data and functionality together, creating self-contained units that represent real-world concepts.\n\nYou'll master the four pillars of OOP: encapsulation (controlling access to data), inheritance (creating specialized versions of classes), polymorphism (objects taking multiple forms), and abstraction (hiding complex implementation details). These principles help you write cleaner, more organized code that's easier to understand and modify.\n\nOOP promotes code reusability through inheritance and composition, allowing you to build upon existing code rather than starting from scratch. This approach reduces duplication, minimizes errors, and speeds up development.\n\nBy understanding OOP concepts, you'll be able to design more scalable applications, collaborate effectively with other developers, and leverage the vast ecosystem of object-oriented libraries and frameworks available in most programming languages.",
+    "code": {
+      "example": "// Object-Oriented Programming Concepts\n\n// Basic class definition\nclass Person {\n    constructor(name, age) {\n        this.name = name;\n        this.age = age;\n    }\n    \n    greet() {\n        return `Hello, my name is ${this.name} and I'm ${this.age} years old.`;\n    }\n    \n    haveBirthday() {\n        this.age++;\n        return `Happy birthday! ${this.name} is now ${this.age} years old.`;\n    }\n}\n\n// Creating instances of a class\nlet person1 = new Person('Alice', 30);\nlet person2 = new Person('Bob', 25);\n\nconsole.log(person1.greet());\nconsole.log(person2.haveBirthday());\n\n// Encapsulation with private fields (ES2022)\nclass BankAccount {\n    #balance; // Private field\n    \n    constructor(initialBalance) {\n        this.#balance = initialBalance;\n    }\n    \n    deposit(amount) {\n        if (amount > 0) {\n            this.#balance += amount;\n            return `Deposited $${amount}. New balance: $${this.#balance}`;\n        }\n        return 'Invalid deposit amount';\n    }\n    \n    withdraw(amount) {\n        if (amount > 0 && amount <= this.#balance) {\n            this.#balance -= amount;\n            return `Withdrew $${amount}. New balance: $${this.#balance}`;\n        }\n        return 'Invalid withdrawal amount';\n    }\n    \n    getBalance() {\n        return this.#balance;\n    }\n}\n\n// Using encapsulated class\nlet account = new BankAccount(1000);\nconsole.log(account.deposit(500));\nconsole.log(account.withdraw(200));\n// console.log(account.#balance); // Error: Private field\n\n// Inheritance\nclass Employee extends Person {\n    constructor(name, age, jobTitle, salary) {\n        super(name, age); // Call parent constructor\n        this.jobTitle = jobTitle;\n        this.salary = salary;\n    }\n    \n    work() {\n        return `${this.name} is working as a ${this.jobTitle}.`;\n    }\n    \n    // Method overriding\n    greet() {\n        return `Hello, I'm ${this.name}, a ${this.jobTitle}.`;\n    }\n}\n\n// Polymorphism\nlet employee = new Employee('Charlie', 35, 'Developer', 75000);\nconsole.log(employee.greet()); // Overridden method\nconsole.log(employee.work());\nconsole.log(employee.haveBirthday()); // Inherited method\n\n// Abstract base class (simulated)\nclass Shape {\n    constructor(color) {\n        this.color = color;\n    }\n    \n    // Abstract method - should be implemented by subclasses\n    getArea() {\n        throw new Error('getArea() must be implemented by subclass');\n    }\n    \n    getDescription() {\n        return `A ${this.color} shape with area ${this.getArea()}`;\n    }\n}\n\n// Concrete implementations\nclass Rectangle extends Shape {\n    constructor(color, width, height) {\n        super(color);\n        this.width = width;\n        this.height = height;\n    }\n    \n    getArea() {\n        return this.width * this.height;\n    }\n}\n\n// Polymorphism in action\nlet shapes = [\n    new Rectangle('red', 5, 3),\n    new Rectangle('blue', 4, 6)\n];\n\nshapes.forEach(shape => {\n    console.log(shape.getDescription());\n});",
+      "explanation": "This example demonstrates core OOP concepts including:\n\n1. Class definition with constructor, properties, and methods\n2. Creating object instances with 'new' keyword\n3. Encapsulation with private fields (#) to control data access\n4. Inheritance using 'extends' keyword to create specialized classes\n5. Method overriding to customize inherited behavior\n6. Polymorphism allowing objects to take multiple forms\n7. Abstract base classes to define common interfaces\n\nThese concepts work together to create organized, reusable, and maintainable code structures.",
+      "language": "javascript"
+    },
+    "pitfalls": [
+      {
+        "mistake": "Creating classes that do too many unrelated things",
+        "solution": "Follow the Single Responsibility Principle - each class should have one clear purpose",
+        "severity": "high"
+      },
+      {
+        "mistake": "Overusing inheritance instead of composition",
+        "solution": "Prefer composition over inheritance when objects need to share behavior but aren't truly 'is-a' relationships",
+        "severity": "medium"
+      },
+      {
+        "mistake": "Not properly encapsulating data, exposing internal implementation",
+        "solution": "Use private fields and methods to hide implementation details and control access to internal state",
+        "severity": "medium"
+      }
+    ],
+    "exercises": [
+      {
+        "title": "OOP Design and Implementation",
+        "description": "Design and implement object-oriented solutions for real-world scenarios.",
+        "checkpoints": [
+          "Create a Vehicle class hierarchy with Car, Truck, and Motorcycle subclasses",
+          "Implement a Library system with Book, Member, and Library classes using proper encapsulation",
+          "Design a banking system with Account, SavingsAccount, and CheckingAccount classes demonstrating inheritance",
+          "Build a simple game with Character, Player, and Enemy classes showing polymorphism"
+        ]
+      }
+    ],
+    "next": [],
+    "estimatedMinutes": 60,
+    "difficulty": "Intermediate",
+    "tags": [
+      "OOP",
+      "Classes",
+      "Inheritance",
+      "Encapsulation",
+      "Polymorphism"
+    ],
+    "lastUpdated": "2025-10-03T15:00:00.000Z",
+    "version": "1.0.0"
+  },
+  {
+    "id": "programming-fundamentals-lesson-6",
+    "moduleSlug": "programming-fundamentals",
+    "title": "Error Handling and Debugging",
+    "order": 6,
+    "objectives": [
+      "Learn to identify, handle, and recover from different types of errors",
+      "Master debugging techniques and tools for troubleshooting code issues",
+      "Implement proper error logging and user feedback mechanisms"
+    ],
+    "intro": "Error handling and debugging are essential skills for every programmer. No matter how carefully you write code, errors will occur - whether from unexpected user input, network failures, or logical mistakes. Learning to handle these gracefully and debug effectively is crucial for creating robust, reliable applications.\n\nIn this lesson, you'll learn about different types of errors: syntax errors (caught during compilation), runtime errors (occur during execution), and logical errors (produce incorrect results). You'll discover how to use try-catch blocks to handle exceptions, validate input to prevent errors, and implement fallback mechanisms for graceful degradation.\n\nDebugging is the process of finding and fixing errors in your code. You'll master essential debugging techniques including using console.log() strategically, setting breakpoints, stepping through code execution, and inspecting variable values. Modern development tools provide powerful debugging capabilities that can save hours of frustration.\n\nEffective error handling involves more than just catching exceptions. You'll learn to log errors for diagnostic purposes, provide meaningful feedback to users, and implement monitoring systems that alert you to problems in production. Proper error handling improves user experience and makes your applications more maintainable.\n\nBy mastering error handling and debugging, you'll be able to create more resilient applications, troubleshoot issues quickly, and build confidence in your code's reliability. These skills are invaluable for professional software development.",
+    "code": {
+      "example": "// Error Handling and Debugging\n\n// Different types of errors\n\n// Syntax Error - caught during parsing\n// let x = ; // Uncommenting this would cause a syntax error\n\n// Runtime Error - occurs during execution\nfunction divide(a, b) {\n    if (b === 0) {\n        throw new Error('Division by zero is not allowed');\n    }\n    return a / b;\n}\n\n// Handling errors with try-catch\ntry {\n    let result = divide(10, 0);\n    console.log('Result:', result);\n} catch (error) {\n    console.error('Error occurred:', error.message);\n    // Provide fallback behavior\n    console.log('Using default value instead');\n} finally {\n    console.log('Cleanup operations');\n}\n\n// Custom error classes\nclass ValidationError extends Error {\n    constructor(message, field) {\n        super(message);\n        this.name = 'ValidationError';\n        this.field = field;\n    }\n}\n\n// Input validation with custom errors\nfunction validateUser(user) {\n    if (!user.name || user.name.length < 2) {\n        throw new ValidationError('Name must be at least 2 characters long', 'name');\n    }\n    \n    if (!user.email || !user.email.includes('@')) {\n        throw new ValidationError('Invalid email format', 'email');\n    }\n    \n    return true;\n}\n\n// Handling specific error types\ntry {\n    validateUser({ name: 'A', email: 'invalid-email' });\n} catch (error) {\n    if (error instanceof ValidationError) {\n        console.error(`Validation failed for ${error.field}: ${error.message}`);\n    } else {\n        console.error('Unexpected error:', error.message);\n    }\n}\n\n// Async error handling\nasync function fetchData(url) {\n    try {\n        let response = await fetch(url);\n        if (!response.ok) {\n            throw new Error(`HTTP error! status: ${response.status}`);\n        }\n        return await response.json();\n    } catch (error) {\n        console.error('Fetch failed:', error.message);\n        throw error; // Re-throw to let caller handle\n    }\n}\n\n// Debugging techniques\nfunction calculateTotal(items) {\n    let total = 0;\n    \n    // Debugging with console.log\n    console.log('Calculating total for items:', items);\n    \n    for (let i = 0; i < items.length; i++) {\n        // More debugging\n        console.log(`Processing item ${i}:`, items[i]);\n        \n        if (typeof items[i].price !== 'number') {\n            console.warn(`Invalid price for item ${i}:`, items[i].price);\n            continue;\n        }\n        \n        total += items[i].price;\n        console.log(`Running total: ${total}`);\n    }\n    \n    console.log('Final total:', total);\n    return total;\n}\n\n// Using the debugging function\nlet items = [\n    { name: 'Apple', price: 1.50 },\n    { name: 'Banana', price: 0.75 },\n    { name: 'Orange', price: 'invalid' } // This will trigger a warning\n];\n\ncalculateTotal(items);\n\n// Error logging and monitoring\nclass Logger {\n    static logError(error, context = {}) {\n        let errorInfo = {\n            timestamp: new Date().toISOString(),\n            message: error.message,\n            stack: error.stack,\n            context: context\n        };\n        \n        // In a real application, you might send this to a logging service\n        console.error('Application Error:', JSON.stringify(errorInfo, null, 2));\n        \n        // You could also send to an external service\n        // sendToLoggingService(errorInfo);\n    }\n    \n    static logInfo(message, data = {}) {\n        console.log('INFO:', message, data);\n    }\n}\n\n// Using the logger\ntry {\n    // Some operation that might fail\n    throw new Error('Something went wrong');\n} catch (error) {\n    Logger.logError(error, {\n        userId: 123,\n        action: 'user_registration'\n    });\n}",
+      "explanation": "This example demonstrates comprehensive error handling and debugging techniques including:\n\n1. Different types of errors and when they occur\n2. Try-catch-finally blocks for handling exceptions\n3. Custom error classes for specific error types\n4. Input validation with meaningful error messages\n5. Async error handling with promises and async/await\n6. Debugging with strategic console.log() statements\n7. Error logging with context information\n\nThese techniques help you create robust applications that handle errors gracefully and provide useful diagnostic information.",
+      "language": "javascript"
+    },
+    "pitfalls": [
+      {
+        "mistake": "Catching errors but not handling them appropriately",
+        "solution": "Always handle errors meaningfully - log them, provide user feedback, or implement fallback behavior",
+        "severity": "high"
+      },
+      {
+        "mistake": "Swallowing errors by catching them silently",
+        "solution": "Always log caught errors unless you have a specific reason not to, and consider re-throwing if the caller should handle them",
+        "severity": "high"
+      },
+      {
+        "mistake": "Not providing meaningful error messages to users",
+        "solution": "Create user-friendly error messages that help users understand what went wrong and how to fix it",
+        "severity": "medium"
+      }
+    ],
+    "exercises": [
+      {
+        "title": "Error Handling and Debugging Practice",
+        "description": "Implement comprehensive error handling and debugging strategies in a real application.",
+        "checkpoints": [
+          "Create a form validation system with custom validation errors",
+          "Implement error handling for API calls with proper user feedback",
+          "Add strategic logging to a complex function to aid debugging",
+          "Build a simple error monitoring system that tracks and reports errors"
+        ]
+      }
+    ],
+    "next": [],
+    "estimatedMinutes": 50,
+    "difficulty": "Intermediate",
+    "tags": [
+      "Error Handling",
+      "Debugging",
+      "Exceptions",
+      "Logging"
+    ],
+    "lastUpdated": "2025-10-03T15:00:00.000Z",
+    "version": "1.0.0"
+  },
+  {
+    "id": "programming-fundamentals-lesson-7",
+    "moduleSlug": "programming-fundamentals",
+    "title": "File I/O Operations",
+    "order": 7,
+    "objectives": [
+      "Learn to read from and write to files in different formats",
+      "Understand file handling best practices and error management",
+      "Master working with different file types including text, JSON, and binary data"
+    ],
+    "intro": "File Input/Output (I/O) operations are fundamental for persisting data beyond program execution and interacting with external systems. Whether you're saving user preferences, processing large datasets, or exchanging information with other applications, understanding file operations is essential for building practical applications.\n\nIn this lesson, you'll learn to read from and write to files using various methods and formats. You'll discover how to handle text files, structured data like JSON, and binary files. Proper file handling includes opening files safely, reading and writing data efficiently, and closing files to free system resources.\n\nError handling is crucial when working with files, as operations can fail due to permissions, disk space, network issues, or file corruption. You'll learn to anticipate and handle these errors gracefully, ensuring your programs can recover from file-related problems.\n\nFile operations involve important security considerations, especially when dealing with user-provided file paths or processing files from untrusted sources. You'll learn best practices for validating file paths, preventing directory traversal attacks, and handling file permissions safely.\n\nBy mastering file I/O operations, you'll be able to create applications that persist data between sessions, process external data sources, and integrate with file-based systems. This skill is essential for almost any real-world application development.",
+    "code": {
+      "example": "// File I/O Operations\n\n// Reading and writing text files (Node.js example)\nconst fs = require('fs');\nconst path = require('path');\n\n// Writing to a text file\nconst content = 'Hello, World!\nThis is a sample file.';\nfs.writeFileSync('sample.txt', content);\nconsole.log('File written successfully');\n\n// Reading from a text file synchronously\ntry {\n    const data = fs.readFileSync('sample.txt', 'utf8');\n    console.log('File contents:', data);\n} catch (error) {\n    console.error('Error reading file:', error.message);\n}\n\n// Asynchronous file operations with callbacks\nfs.writeFile('async-sample.txt', content, (err) => {\n    if (err) {\n        console.error('Error writing file:', err);\n        return;\n    }\n    console.log('Async file write completed');\n    \n    fs.readFile('async-sample.txt', 'utf8', (err, data) => {\n        if (err) {\n            console.error('Error reading file:', err);\n            return;\n        }\n        console.log('Async file read:', data);\n    });\n});\n\n// Working with JSON files\nconst userData = {\n    name: 'John Doe',\n    age: 30,\n    email: 'john@example.com',\n    preferences: {\n        theme: 'dark',\n        notifications: true\n    }\n};\n\n// Write JSON to file\nfs.writeFileSync('user.json', JSON.stringify(userData, null, 2));\n\n// Read and parse JSON\ntry {\n    const jsonString = fs.readFileSync('user.json', 'utf8');\n    const parsedData = JSON.parse(jsonString);\n    console.log('Parsed user data:', parsedData);\n} catch (error) {\n    console.error('Error processing JSON file:', error.message);\n}\n\n// Working with file paths safely\nfunction safeJoin(basePath, userPath) {\n    const resolvedPath = path.resolve(basePath);\n    const normalizedUserPath = path.normalize(userPath);\n    const fullPath = path.join(resolvedPath, normalizedUserPath);\n    \n    // Prevent directory traversal\n    if (!fullPath.startsWith(resolvedPath)) {\n        throw new Error('Path traversal attempt detected');\n    }\n    \n    return fullPath;\n}\n\n// File information and metadata\nfs.stat('sample.txt', (err, stats) => {\n    if (err) {\n        console.error('Error getting file stats:', err);\n        return;\n    }\n    \n    console.log('File stats:');\n    console.log('Size:', stats.size, 'bytes');\n    console.log('Created:', stats.birthtime);\n    console.log('Modified:', stats.mtime);\n    console.log('Is file:', stats.isFile());\n    console.log('Is directory:', stats.isDirectory());\n});\n\n// Working with directories\nconst dirPath = 'data';\n\n// Create directory if it doesn't exist\nif (!fs.existsSync(dirPath)) {\n    fs.mkdirSync(dirPath, { recursive: true });\n    console.log('Directory created:', dirPath);\n}\n\n// List directory contents\nfs.readdir(dirPath, (err, files) => {\n    if (err) {\n        console.error('Error reading directory:', err);\n        return;\n    }\n    \n    console.log('Directory contents:', files);\n});\n\n// Copy a file\nfs.copyFile('sample.txt', 'data/sample-copy.txt', (err) => {\n    if (err) {\n        console.error('Error copying file:', err);\n        return;\n    }\n    console.log('File copied successfully');\n});\n\n// Delete a file\n// fs.unlink('sample.txt', (err) => {\n//     if (err) {\n//         console.error('Error deleting file:', err);\n//         return;\n//     }\n//     console.log('File deleted successfully');\n// });",
+      "explanation": "This example demonstrates file I/O operations including:\n\n1. Writing and reading text files with synchronous and asynchronous methods\n2. Working with JSON data serialization and parsing\n3. Safe file path handling to prevent directory traversal attacks\n4. Getting file metadata and statistics\n5. Working with directories (create, list contents)\n6. File operations like copying\n7. Error handling for file operations\n\nThese operations are fundamental for persisting data and interacting with the file system.",
+      "language": "javascript"
+    },
+    "pitfalls": [
+      {
+        "mistake": "Not handling file operation errors properly",
+        "solution": "Always wrap file operations in try-catch blocks or handle callback errors to prevent application crashes",
+        "severity": "high"
+      },
+      {
+        "mistake": "Blocking the event loop with synchronous file operations",
+        "solution": "Use asynchronous file operations in server applications to maintain responsiveness",
+        "severity": "high"
+      },
+      {
+        "mistake": "Not validating file paths from user input",
+        "solution": "Always sanitize and validate file paths to prevent directory traversal and other security issues",
+        "severity": "high"
+      }
+    ],
+    "exercises": [
+      {
+        "title": "File Operations Practice",
+        "description": "Implement various file I/O operations with proper error handling and security considerations.",
+        "checkpoints": [
+          "Create a program that reads a text file, processes its contents, and writes the results to a new file",
+          "Build a configuration manager that reads settings from a JSON file and saves user preferences",
+          "Implement safe file path handling that prevents directory traversal attacks",
+          "Create a file backup utility that copies files to a backup directory with timestamps"
+        ]
+      }
+    ],
+    "next": [],
+    "estimatedMinutes": 50,
+    "difficulty": "Intermediate",
+    "tags": [
+      "File I/O",
+      "File Handling",
+      "Persistence",
+      "JSON"
+    ],
+    "lastUpdated": "2025-10-03T15:00:00.000Z",
+    "version": "1.0.0"
+  },
+  {
+    "id": "programming-fundamentals-lesson-8",
+    "moduleSlug": "programming-fundamentals",
+    "title": "Algorithmic Thinking",
+    "order": 8,
+    "objectives": [
+      "Develop systematic approaches to problem-solving using algorithms",
+      "Learn to analyze algorithm efficiency and complexity",
+      "Practice implementing common algorithms for searching and sorting"
+    ],
+    "intro": "Algorithmic thinking is the foundation of computer science and software development. It involves breaking down complex problems into smaller, manageable steps and creating systematic procedures to solve them efficiently. This skill is essential for writing optimized code and tackling challenging programming tasks.\n\nIn this lesson, you'll learn to approach problems methodically by identifying inputs, outputs, and constraints. You'll practice decomposing complex problems into simpler subproblems and designing step-by-step solutions. Algorithmic thinking emphasizes clarity, precision, and logical reasoning over specific programming syntax.\n\nYou'll explore fundamental algorithms for common tasks like searching and sorting data. Understanding these algorithms helps you choose the right approach for different scenarios and recognize when existing solutions can be applied to new problems. You'll learn to evaluate algorithm efficiency using Big O notation, which describes how execution time or space requirements grow with input size.\n\nAlgorithmic thinking develops your ability to reason about problems abstractly, making you a more effective programmer. It helps you write cleaner, more efficient code and communicate your solutions clearly to other developers. These skills are valuable for technical interviews, collaborative development, and creating high-performance applications.\n\nBy mastering algorithmic thinking, you'll be able to approach new challenges with confidence, design efficient solutions, and continue growing as a software developer. This foundation supports learning more advanced computer science concepts and tackling increasingly complex problems.",
+    "code": {
+      "example": "// Algorithmic Thinking Examples\n\n// Linear Search Algorithm\nfunction linearSearch(arr, target) {\n    for (let i = 0; i < arr.length; i++) {\n        if (arr[i] === target) {\n            return i; // Return index of found element\n        }\n    }\n    return -1; // Element not found\n}\n\n// Binary Search Algorithm (requires sorted array)\nfunction binarySearch(arr, target) {\n    let left = 0;\n    let right = arr.length - 1;\n    \n    while (left <= right) {\n        let mid = Math.floor((left + right) / 2);\n        \n        if (arr[mid] === target) {\n            return mid;\n        } else if (arr[mid] < target) {\n            left = mid + 1;\n        } else {\n            right = mid - 1;\n        }\n    }\n    \n    return -1; // Element not found\n}\n\n// Bubble Sort Algorithm\nfunction bubbleSort(arr) {\n    let n = arr.length;\n    let swapped;\n    \n    do {\n        swapped = false;\n        for (let i = 0; i < n - 1; i++) {\n            if (arr[i] > arr[i + 1]) {\n                // Swap elements\n                [arr[i], arr[i + 1]] = [arr[i + 1], arr[i]];\n                swapped = true;\n            }\n        }\n        n--; // Reduce range since largest element is now in place\n    } while (swapped);\n    \n    return arr;\n}\n\n// Selection Sort Algorithm\nfunction selectionSort(arr) {\n    for (let i = 0; i < arr.length - 1; i++) {\n        let minIndex = i;\n        \n        // Find index of minimum element\n        for (let j = i + 1; j < arr.length; j++) {\n            if (arr[j] < arr[minIndex]) {\n                minIndex = j;\n            }\n        }\n        \n        // Swap minimum element with first element\n        if (minIndex !== i) {\n            [arr[i], arr[minIndex]] = [arr[minIndex], arr[i]];\n        }\n    }\n    \n    return arr;\n}\n\n// Algorithm Complexity Analysis\n\n// Time Complexity Examples:\n// O(1) - Constant time\nfunction getFirstElement(arr) {\n    return arr[0]; // Always takes same time regardless of array size\n}\n\n// O(n) - Linear time\nfunction findMax(arr) {\n    let max = arr[0];\n    for (let i = 1; i < arr.length; i++) {\n        if (arr[i] > max) {\n            max = arr[i];\n        }\n    }\n    return max;\n}\n\n// O(n²) - Quadratic time\nfunction hasDuplicates(arr) {\n    for (let i = 0; i < arr.length; i++) {\n        for (let j = i + 1; j < arr.length; j++) {\n            if (arr[i] === arr[j]) {\n                return true;\n            }\n        }\n    }\n    return false;\n}\n\n// Space Complexity Example:\n// O(1) - Constant space\nfunction sumArray(arr) {\n    let sum = 0; // Only using one variable regardless of input size\n    for (let i = 0; i < arr.length; i++) {\n        sum += arr[i];\n    }\n    return sum;\n}\n\n// O(n) - Linear space\nfunction doubleArray(arr) {\n    let doubled = []; // Creating new array proportional to input size\n    for (let i = 0; i < arr.length; i++) {\n        doubled.push(arr[i] * 2);\n    }\n    return doubled;\n}\n\n// Using the algorithms\nlet numbers = [64, 34, 25, 12, 22, 11, 90];\nconsole.log('Original array:', numbers);\n\nconsole.log('Linear search for 25:', linearSearch(numbers, 25));\n\nlet sortedNumbers = [...numbers].sort((a, b) => a - b);\nconsole.log('Sorted array:', sortedNumbers);\nconsole.log('Binary search for 25:', binarySearch(sortedNumbers, 25));\n\nlet unsorted = [64, 34, 25, 12, 22, 11, 90];\nconsole.log('Bubble sort result:', bubbleSort([...unsorted]));\n\nconsole.log('Selection sort result:', selectionSort([...unsorted]));",
+      "explanation": "This example demonstrates fundamental algorithms and complexity analysis including:\n\n1. Linear search algorithm with O(n) time complexity\n2. Binary search algorithm with O(log n) time complexity\n3. Bubble sort algorithm with O(n²) time complexity\n4. Selection sort algorithm with O(n²) time complexity\n5. Examples of constant, linear, and quadratic time complexity\n6. Examples of constant and linear space complexity\n\nUnderstanding these concepts helps you choose appropriate algorithms and predict performance characteristics.",
+      "language": "javascript"
+    },
+    "pitfalls": [
+      {
+        "mistake": "Jumping to code without properly analyzing the problem first",
+        "solution": "Always spend time understanding the problem requirements, constraints, and edge cases before implementing",
+        "severity": "high"
+      },
+      {
+        "mistake": "Not considering algorithm efficiency for large inputs",
+        "solution": "Analyze time and space complexity, especially for operations that might scale with user data",
+        "severity": "medium"
+      },
+      {
+        "mistake": "Overcomplicating simple problems with unnecessarily complex algorithms",
+        "solution": "Start with simple, correct solutions and optimize only when necessary based on performance requirements",
+        "severity": "medium"
+      }
+    ],
+    "exercises": [
+      {
+        "title": "Algorithm Implementation Practice",
+        "description": "Implement and analyze various algorithms for common programming tasks.",
+        "checkpoints": [
+          "Implement a recursive factorial function and compare its complexity with an iterative version",
+          "Create a function to find the intersection of two arrays with different algorithmic approaches",
+          "Implement a binary search tree with insert, search, and delete operations",
+          "Analyze the time and space complexity of your implementations and identify optimization opportunities"
+        ]
+      }
+    ],
+    "next": [],
+    "estimatedMinutes": 60,
+    "difficulty": "Intermediate",
+    "tags": [
+      "Algorithms",
+      "Complexity",
+      "Searching",
+      "Sorting",
+      "Problem Solving"
+    ],
+    "lastUpdated": "2025-10-03T15:00:00.000Z",
+    "version": "1.0.0"
+  },
+  {
+    "id": "programming-fundamentals-lesson-9",
+    "moduleSlug": "programming-fundamentals",
+    "title": "Recursion",
+    "order": 9,
+    "objectives": [
+      "Understand the concept of recursion and how functions can call themselves",
+      "Learn to implement recursive solutions for problems with self-similar structure",
+      "Master techniques for debugging and optimizing recursive functions"
+    ],
+    "intro": "Recursion is a powerful programming technique where a function calls itself to solve a problem by breaking it down into smaller, similar subproblems. This approach is particularly elegant for problems that have a self-similar or fractal structure, such as tree traversals, mathematical sequences, and divide-and-conquer algorithms.\n\nIn this lesson, you'll learn to recognize problems that are naturally suited for recursive solutions. You'll understand the essential components of a recursive function: a base case that stops the recursion and a recursive case that breaks the problem into smaller pieces. Without proper base cases, recursive functions can run indefinitely, causing stack overflow errors.\n\nYou'll explore classic recursive algorithms including calculating factorials, generating Fibonacci sequences, traversing tree structures, and implementing mathematical operations like exponentiation. These examples demonstrate how recursion can lead to cleaner, more readable code for certain types of problems.\n\nRecursive thinking requires a shift in perspective from iterative problem-solving. Instead of thinking about how to solve a problem step-by-step, you consider how to solve it in terms of smaller versions of the same problem. This mindset is fundamental for advanced computer science topics like dynamic programming and graph algorithms.\n\nBy mastering recursion, you'll gain a deeper understanding of problem decomposition and be able to write more elegant solutions for complex problems. This skill is highly valued in technical interviews and is essential for advanced algorithmic thinking.",
+    "code": {
+      "example": "// Recursion Examples\n\n// Factorial using recursion\nfunction factorial(n) {\n    // Base case: factorial of 0 or 1 is 1\n    if (n <= 1) {\n        return 1;\n    }\n    \n    // Recursive case: n! = n * (n-1)!\n    return n * factorial(n - 1);\n}\n\nconsole.log('5! =', factorial(5)); // 120\n\n// Fibonacci sequence using recursion\nfunction fibonacci(n) {\n    // Base cases\n    if (n <= 0) return 0;\n    if (n === 1) return 1;\n    \n    // Recursive case: fib(n) = fib(n-1) + fib(n-2)\n    return fibonacci(n - 1) + fibonacci(n - 2);\n}\n\nconsole.log('Fibonacci sequence (first 10 numbers):');\nfor (let i = 0; i < 10; i++) {\n    console.log(`fib(${i}) = ${fibonacci(i)}`);\n}\n\n// Exponentiation using recursion\nfunction power(base, exponent) {\n    // Base cases\n    if (exponent === 0) return 1;\n    if (exponent === 1) return base;\n    \n    // Handle negative exponents\n    if (exponent < 0) {\n        return 1 / power(base, -exponent);\n    }\n    \n    // Recursive case for positive exponents\n    return base * power(base, exponent - 1);\n}\n\nconsole.log('2^10 =', power(2, 10)); // 1024\n\n// Optimized exponentiation using divide and conquer\nfunction fastPower(base, exponent) {\n    // Base cases\n    if (exponent === 0) return 1;\n    if (exponent === 1) return base;\n    \n    // Handle negative exponents\n    if (exponent < 0) {\n        return 1 / fastPower(base, -exponent);\n    }\n    \n    // If exponent is even\n    if (exponent % 2 === 0) {\n        let half = fastPower(base, exponent / 2);\n        return half * half;\n    } else {\n        // If exponent is odd\n        return base * fastPower(base, exponent - 1);\n    }\n}\n\nconsole.log('2^10 (fast) =', fastPower(2, 10)); // 1024\n\n// Tree traversal example\nclass TreeNode {\n    constructor(value) {\n        this.value = value;\n        this.left = null;\n        this.right = null;\n    }\n}\n\n// Create a simple binary tree\n//       1\n//      / \\\n//     2   3\n//    / \\\n//   4   5\n\nlet root = new TreeNode(1);\nroot.left = new TreeNode(2);\nroot.right = new TreeNode(3);\nroot.left.left = new TreeNode(4);\nroot.left.right = new TreeNode(5);\n\n// In-order traversal (Left, Root, Right)\nfunction inOrderTraversal(node) {\n    if (node === null) {\n        return;\n    }\n    \n    inOrderTraversal(node.left);   // Traverse left subtree\n    console.log(node.value);       // Visit root\n    inOrderTraversal(node.right);  // Traverse right subtree\n}\n\nconsole.log('In-order traversal:');\ninOrderTraversal(root); // Output: 4, 2, 5, 1, 3\n\n// Calculate sum of all nodes in tree\nfunction sumTree(node) {\n    if (node === null) {\n        return 0;\n    }\n    \n    return node.value + sumTree(node.left) + sumTree(node.right);\n}\n\nconsole.log('Sum of all nodes:', sumTree(root)); // 15\n\n// Count nodes in tree\nfunction countNodes(node) {\n    if (node === null) {\n        return 0;\n    }\n    \n    return 1 + countNodes(node.left) + countNodes(node.right);\n}\n\nconsole.log('Number of nodes:', countNodes(root)); // 5",
+      "explanation": "This example demonstrates various recursive techniques including:\n\n1. Basic recursion with factorial calculation\n2. Fibonacci sequence generation (demonstrates overlapping subproblems)\n3. Simple and optimized exponentiation\n4. Tree traversal using recursion\n5. Recursive functions for tree operations (sum, count)\n\nEach example shows proper base cases to prevent infinite recursion and demonstrates how complex problems can be solved by breaking them into smaller, similar subproblems.",
+      "language": "javascript"
+    },
+    "pitfalls": [
+      {
+        "mistake": "Forgetting to include base cases, leading to infinite recursion",
+        "solution": "Always define clear base cases that stop the recursion, and verify they will be reached",
+        "severity": "high"
+      },
+      {
+        "mistake": "Not considering the performance implications of naive recursive solutions",
+        "solution": "Recognize when recursion leads to redundant calculations and consider memoization or iterative approaches",
+        "severity": "medium"
+      },
+      {
+        "mistake": "Exceeding stack limits with deep recursion",
+        "solution": "Be aware of stack overflow limitations and consider iterative solutions for very deep recursive problems",
+        "severity": "medium"
+      }
+    ],
+    "exercises": [
+      {
+        "title": "Recursive Problem Solving",
+        "description": "Implement recursive solutions for various computational problems.",
+        "checkpoints": [
+          "Create a recursive function to reverse a string",
+          "Implement a recursive binary search algorithm",
+          "Build a recursive function to calculate the greatest common divisor (GCD)",
+          "Design a recursive solution for traversing and processing a file directory structure"
+        ]
+      }
+    ],
+    "next": [],
+    "estimatedMinutes": 55,
+    "difficulty": "Intermediate",
+    "tags": [
+      "Recursion",
+      "Algorithms",
+      "Tree Traversal",
+      "Mathematical Functions"
+    ],
+    "lastUpdated": "2025-10-03T15:00:00.000Z",
+    "version": "1.0.0"
+  },
+  {
+    "id": "programming-fundamentals-lesson-10",
+    "moduleSlug": "programming-fundamentals",
+    "title": "Memory Management",
+    "order": 10,
+    "objectives": [
+      "Understand how memory is allocated and managed in computer systems",
+      "Learn about different types of memory (stack vs heap) and their characteristics",
+      "Master techniques for preventing memory leaks and optimizing memory usage"
+    ],
+    "intro": "Memory management is a critical aspect of programming that affects application performance, stability, and resource utilization. Understanding how memory works helps you write more efficient programs, avoid common pitfalls like memory leaks, and optimize resource usage. Different programming languages handle memory management differently, from manual allocation in C/C++ to automatic garbage collection in JavaScript and Java.\n\nIn this lesson, you'll learn about the two main types of memory: stack memory for static allocation and heap memory for dynamic allocation. Stack memory is fast and automatically managed but limited in size, making it suitable for local variables and function calls. Heap memory is larger and more flexible but requires careful management to prevent leaks and fragmentation.\n\nYou'll explore how different programming languages handle memory management. Languages like C and C++ require manual memory management, giving developers control but also responsibility for allocating and freeing memory. Higher-level languages use garbage collection to automatically reclaim unused memory, but this can introduce performance overhead and require understanding of how the collector works.\n\nMemory leaks occur when allocated memory is not properly released, causing applications to consume increasing amounts of memory over time. You'll learn to identify common causes of memory leaks and implement strategies to prevent them. Proper memory management improves application performance, reduces resource consumption, and prevents crashes.\n\nBy understanding memory management principles, you'll write more efficient, stable applications and make informed decisions about data structures, algorithms, and programming language features. This knowledge is essential for developing high-performance applications and systems programming.",
+    "code": {
+      "example": "// Memory Management Concepts\n\n// Stack vs Heap Memory Examples\n\n// Stack memory - automatically managed, fast access\nfunction stackExample() {\n    let localVar = 'I am stored on the stack';\n    let localNumber = 42;\n    let localArray = [1, 2, 3]; // Array reference on stack, actual data may be on heap\n    \n    console.log(localVar, localNumber, localArray);\n    \n    // When function ends, all local variables are automatically cleaned up\n}\n\nstackExample();\n\n// Heap memory - manually managed in some languages, garbage collected in others\nlet globalObject = {\n    name: 'Stored in heap memory',\n    data: [1, 2, 3, 4, 5]\n};\n\n// Memory leak examples and prevention\n\n// Example of potential memory leak - event listeners not removed\nfunction createMemoryLeak() {\n    let largeData = new Array(1000000).fill('data');\n    \n    function handleClick() {\n        console.log('Button clicked', largeData.length);\n    }\n    \n    // Adding event listener without removing it can cause memory leaks\n    document.addEventListener('click', handleClick);\n    \n    // Proper cleanup\n    return function cleanup() {\n        document.removeEventListener('click', handleClick);\n        largeData = null; // Help garbage collector\n    };
+}
+
+// Memory optimization techniques// Memory optimization techniques
+
+// Object pooling - reusing objects instead of creating new ones
+class ObjectPool {
+    constructor(createFn, resetFn, initialSize = 10) {
+        this.createFn = createFn;
+        this.resetFn = resetFn;
+        this.pool = [];
+        
+        // Pre-populate pool
+        for (let i = 0; i < initialSize; i++) {
+            this.pool.push(this.createFn());
+        }
+    }
+    
+    acquire() {
+        if (this.pool.length > 0) {
+            return this.pool.pop();
+        }
+        return this.createFn();
+    }
+    
+    release(obj) {
+        this.resetFn(obj);
+        this.pool.push(obj);
+    }
+}
+
+// Example usage of object pool
+const vectorPool = new ObjectPool(
+    () => ({ x: 0, y: 0 }), // Create function
+    (vec) => { vec.x = 0; vec.y = 0; } // Reset function
+);
+
+// Use pooled objects instead of creating new ones
+let vector1 = vectorPool.acquire();
+vector1.x = 10;
+vector1.y = 20;
+
+let vector2 = vectorPool.acquire();
+vector2.x = 30;
+vector2.y = 40;
+
+// Return objects to pool when done
+vectorPool.release(vector1);
+vectorPool.release(vector2);
+
+// Weak references to prevent memory leaks
+let cache = new Map();
+let weakCache = new WeakMap();
+
+// Regular Map holds strong references - objects won't be garbage collected
+let strongRefKey = {};
+cache.set(strongRefKey, 'cached data');
+
+// WeakMap holds weak references - objects can be garbage collected
+let weakRefKey = {};
+weakCache.set(weakRefKey, 'weakly cached data');
+
+// When weakRefKey is no longer referenced elsewhere,
+// the entry will be automatically removed from weakCache
+
+// Memory profiling example
+function memoryIntensiveOperation() {
+    // Simulate memory-intensive operation
+    let data = [];
+    for (let i = 0; i < 100000; i++) {
+        data.push({
+            id: i,
+            value: Math.random(),
+            timestamp: Date.now()
+        });
+    }
+    
+    // Process data
+    let result = data.filter(item => item.value > 0.5)
+                    .map(item => item.value * 2);
+    
+    // Important: clear reference to allow garbage collection
+    data = null;
+    
+    return result.length;
+}
+
+console.log('Processed items:', memoryIntensiveOperation());
+}",
+      "explanation": "This example demonstrates key memory management concepts including:\n\n1. Stack vs heap memory allocation and characteristics\n2. Examples of potential memory leaks and how to prevent them\n3. Object pooling for memory optimization\n4. Weak references to prevent memory leaks\n5. Memory profiling techniques\n\nUnderstanding these concepts helps you write more efficient, stable applications.",
+      "language": "javascript"
+    },
+    "pitfalls": [
+      {
+        "mistake": "Not cleaning up event listeners and callbacks",
+        "solution": "Always remove event listeners and callbacks when they're no longer needed, especially in long-running applications",
+        "severity": "high"
+      },
+      {
+        "mistake": "Holding references to large objects unnecessarily",
+        "solution": "Set object references to null when they're no longer needed to help garbage collection",
+        "severity": "medium"
+      },
+      {
+        "mistake": "Creating excessive temporary objects in loops",
+        "solution": "Use object pooling or reuse existing objects when possible to reduce garbage collection pressure",
+        "severity": "medium"
+      }
+    ],
+    "exercises": [
+      {
+        "title": "Memory Management Practice",
+        "description": "Implement memory-efficient solutions and identify potential memory issues.",
+        "checkpoints": [
+          "Create a memory leak detector that monitors event listeners and object references",
+          "Implement an object pool for a particle system in a game engine",
+          "Optimize a data processing function to minimize memory allocation",
+          "Use weak references to implement a cache that doesn't prevent garbage collection"
+        ]
+      }
+    ],
+    "next": [],
+    "estimatedMinutes": 50,
+    "difficulty": "Intermediate",
+    "tags": [
+      "Memory Management",
+      "Performance",
+      "Garbage Collection",
+      "Optimization"
+    ],
+    "lastUpdated": "2025-10-03T15:00:00.000Z",
+    "version": "1.0.0"
+  },
+  {
+    "id": "programming-fundamentals-lesson-11",
+    "moduleSlug": "programming-fundamentals",
+    "title": "Best Practices and Code Quality",
+    "order": 11,
+    "objectives": [
+      "Learn coding standards and naming conventions for readable code",
+      "Master techniques for writing maintainable and scalable code",
+      "Understand code review processes and collaborative development practices"
+    ],
+    "intro": "Code quality and best practices are essential for creating software that is maintainable, readable, and reliable over time. Professional developers spend more time reading code than writing it, making readability and consistency crucial for team collaboration and long-term project success. Following established best practices helps prevent common errors, improves code maintainability, and facilitates knowledge transfer among team members.\n\nIn this lesson, you'll learn about coding standards including naming conventions, code organization, and formatting guidelines that make code easier to understand and maintain. Consistent naming of variables, functions, and classes communicates intent clearly and reduces cognitive load when reading code. You'll discover how proper code structure and modularization improve maintainability and enable easier testing and debugging.\n\nWriting maintainable code involves following principles like the Single Responsibility Principle, which states that each function or class should have one clear purpose. You'll learn about code documentation, including when and how to write effective comments, and the importance of self-documenting code that expresses intent through clear naming and structure.\n\nCode reviews are a critical part of professional software development, helping catch bugs, ensure consistency, and share knowledge among team members. You'll learn what to look for during code reviews, how to give constructive feedback, and how to incorporate feedback effectively. These practices improve code quality and help teams grow together.\n\nBy adopting best practices and focusing on code quality, you'll create software that stands the test of time, reduces maintenance costs, and provides a better experience for both users and developers who work with your code.",
+    "code": {
+      "example": "// Best Practices and Code Quality Examples\n\n// Good naming conventions\n// Bad: unclear variable names\nlet d = 25;\nlet calc = (x, y) => x * y;\n\n// Good: descriptive variable names\nlet daysInMonth = 25;\nfunction calculateArea(length, width) {\n    return length * width;\n}\n\n// Consistent formatting and indentation\n// Bad: inconsistent formatting\nfunction processData(data){\nif(data.length>0){\nfor(let i=0;i<data.length;i++){\nprocessItem(data[i]);\n}\n}\n}\n\n// Good: consistent formatting\nfunction processData(data) {\n    if (data.length > 0) {\n        for (let i = 0; i < data.length; i++) {\n            processItem(data[i]);\n        }\n    }\n}\n\n// Single Responsibility Principle\n// Bad: function doing multiple things\nfunction processUserOrder(userId, orderId) {\n    // Validate user\n    let user = getUserById(userId);\n    if (!user) throw new Error('User not found');\n    \n    // Process payment\n    let payment = processPayment(user.paymentInfo);\n    \n    // Update order status\n    updateOrderStatus(orderId, 'processed');\n    \n    // Send confirmation email\n    sendEmail(user.email, 'Order Confirmation');\n}\n\n// Good: separate functions for each responsibility\nfunction validateUser(userId) {\n    let user = getUserById(userId);\n    if (!user) throw new Error('User not found');\n    return user;\n}\n\nfunction processOrderPayment(paymentInfo) {\n    return processPayment(paymentInfo);\n}\n\nfunction updateOrderStatus(orderId, status) {\n    return updateOrderStatus(orderId, status);\n}\n\nfunction sendOrderConfirmation(email) {\n    return sendEmail(email, 'Order Confirmation');\n}\n\n// Self-documenting code\n// Bad: unclear logic with comments needed\n// Check if user can access feature\nif (u.r === 'admin' || (u.r === 'user' && u.p)) {\n    // Allow access\n}\n\n// Good: clear logic that doesn't need comments\nconst isAdmin = user.role === 'admin';\nconst isPremiumUser = user.role === 'user' && user.hasPremiumAccess;\nconst hasFeatureAccess = isAdmin || isPremiumUser;\n\nif (hasFeatureAccess) {\n    // Allow access\n}\n\n// Error handling best practices\n// Bad: generic error handling\ntry {\n    performOperation();\n} catch (error) {\n    console.log('Something went wrong');\n}\n\n// Good: specific error handling\ntry {\n    performOperation();\n} catch (error) {\n    if (error instanceof ValidationError) {\n        showUserMessage('Please check your input and try again');\n    } else if (error instanceof NetworkError) {\n        showUserMessage('Network error. Please check your connection');\n    } else {\n        logError(error);\n        showUserMessage('An unexpected error occurred. Please try again later');\n    }\n}\n\n// Code documentation examples\n\n/**\n * Calculates the factorial of a given number using recursion\n * @param {number} n - The number to calculate factorial for (must be non-negative integer)\n * @returns {number} The factorial of n\n * @throws {Error} If n is negative or not an integer\n * @example\n * // returns 120\n * factorial(5);\n * @example\n * // returns 1\n * factorial(0);\n */\nfunction factorial(n) {\n    if (n < 0 || !Number.isInteger(n)) {\n        throw new Error('Input must be a non-negative integer');\n    }\n    \n    if (n <= 1) {\n        return 1;\n    }\n    \n    return n * factorial(n - 1);\n}\n\n// Code organization with modules\n\n// user-service.js\nclass UserService {\n    constructor(database) {\n        this.database = database;\n    }\n    \n    async createUser(userData) {\n        // Implementation\n    }\n    \n    async getUserById(id) {\n        // Implementation\n    }\n    \n    async updateUser(id, updates) {\n        // Implementation\n    }\n}\n\n// order-service.js\nclass OrderService {\n    constructor(database, userService) {\n        this.database = database;\n        this.userService = userService;\n    }\n    \n    async createOrder(userId, items) {\n        // Implementation\n    }\n    \n    async getOrderById(id) {\n        // Implementation\n    }\n}\n\n// Dependency injection for better testability\nfunction createAppServices(database) {\n    const userService = new UserService(database);\n    const orderService = new OrderService(database, userService);\n    \n    return {\n        userService,\n        orderService\n    };
+}",
+      "explanation": "This example demonstrates key code quality and best practices including:\n\n1. Good naming conventions that clearly express intent\n2. Consistent code formatting and indentation\n3. Single Responsibility Principle with focused functions\n4. Self-documenting code that reduces need for comments\n5. Proper error handling with specific error types\n6. Documentation with JSDoc comments\n7. Code organization with clear module structure\n8. Dependency injection for better testability\n\nThese practices improve code readability, maintainability, and collaboration.",
+      "language": "javascript"
+    },
+    "pitfalls": [
+      {
+        "mistake": "Inconsistent naming conventions and formatting across the codebase",
+        "solution": "Adopt and enforce a consistent style guide using tools like ESLint and Prettier",
+        "severity": "medium"
+      },
+      {
+        "mistake": "Writing functions that do too many things",
+        "solution": "Follow the Single Responsibility Principle and break large functions into smaller, focused ones",
+        "severity": "high"
+      },
+      {
+        "mistake": "Not writing tests or writing poor quality tests",
+        "solution": "Write comprehensive tests including unit tests, integration tests, and edge case coverage",
+        "severity": "high"
+      }
+    ],
+    "exercises": [
+      {
+        "title": "Code Quality Improvement",
+        "description": "Refactor existing code to improve quality and apply best practices.",
+        "checkpoints": [
+          "Take a poorly written function and refactor it to follow Single Responsibility Principle",
+          "Implement consistent naming conventions and formatting across a code module",
+          "Add proper documentation and error handling to existing functions",
+          "Set up linting and formatting tools to enforce code quality standards"
+        ]
+      }
+    ],
+    "next": [],
+    "estimatedMinutes": 45,
+    "difficulty": "Intermediate",
+    "tags": [
+      "Best Practices",
+      "Code Quality",
+      "Naming Conventions",
+      "Code Review"
+    ],
+    "lastUpdated": "2025-10-03T15:00:00.000Z",
+    "version": "1.0.0"
+  },
+  {
+    "id": "programming-fundamentals-lesson-12",
+    "moduleSlug": "programming-fundamentals",
+    "title": "Project Organization",
+    "order": 12,
+    "objectives": [
+      "Learn to structure programming projects for maintainability and scalability",
+      "Understand module systems and dependency management",
+      "Master version control and collaborative development workflows"
+    ],
+    "intro": "Project organization is crucial for creating software that can grow and evolve over time while remaining maintainable and collaborative. Well-organized projects make it easier for developers to navigate code, understand system architecture, and contribute effectively. Proper organization also facilitates testing, deployment, and ongoing maintenance.\n\nIn this lesson, you'll learn about different project structure approaches and how to organize files and directories logically. You'll discover module systems that help manage code dependencies and prevent naming conflicts. Good project organization includes separating concerns like separating business logic from presentation code, organizing configuration files, and managing external dependencies effectively.\n\nDependency management is essential for modern software development, allowing you to leverage existing libraries and frameworks while maintaining control over versions and compatibility. You'll learn about package managers, semantic versioning, and how to specify and update dependencies safely. Proper dependency management reduces development time and helps ensure consistent, reliable builds.\n\nVersion control systems like Git are fundamental for collaborative development and project history tracking. You'll learn branching strategies, commit message conventions, and how to structure repositories for different types of projects. Good version control practices enable effective collaboration, safe experimentation, and reliable release management.\n\nBy mastering project organization, you'll be able to create professional-quality software that scales effectively, facilitates team collaboration, and maintains quality over time. These skills are essential for participating in real-world software development projects and building a career in technology.",
+    "code": {
+      "example": "// Project Organization Examples\n\n// Typical project structure\n/*\nmy-project/\n├── src/\n│   ├── components/\n│   ├── services/\n│   ├── utils/\n│   ├── models/\n│   └── index.js\n├── tests/\n├── docs/\n├── config/\n├── public/\n├── package.json\n├── README.md\n└── .gitignore\n*/\n\n// Module organization with ES6 modules\n\n// utils/math.js\nexport function add(a, b) {\n    return a + b;\n}\n\nexport function multiply(a, b) {\n    return a * b;\n}\n\n// Default export\nexport default function calculateTotal(items) {\n    return items.reduce((sum, item) => sum + item.price, 0);\n}\n\n// services/user-service.js\nimport { add } from '../utils/math.js';\n\nexport class UserService {\n    constructor(database) {\n        this.database = database;\n    }\n    \n    async createUser(userData) {\n        // Implementation\n        return this.database.create('users', userData);\n    }\n    \n    async getUserById(id) {\n        return this.database.findById('users', id);\n    }\n}\n\n// main.js\nimport calculateTotal, { add, multiply } from './utils/math.js';\nimport { UserService } from './services/user-service.js';\n\n// Package.json dependency management\n/*\n{\n  \"name\": \"my-project\",\n  \"version\": \"1.0.0\",\n  \"description\": \"A sample project\",\n  \"main\": \"src/index.js\",\n  \"scripts\": {\n    \"start\": \"node src/index.js\",\n    \"test\": \"jest\",\n    \"build\": \"webpack --mode production\"\n  },\n  \"dependencies\": {\n    \"express\": \"^4.18.0\",\n    \"lodash\": \"^4.17.21\"\n  },\n  \"devDependencies\": {\n    \"jest\": \"^29.0.0\",\n    \"webpack\": \"^5.75.0\"\n  }\n}\n*/\n\n// Configuration management\n\n// config/database.js\nconst config = {\n    development: {\n        host: 'localhost',\n        port: 5432,\n        database: 'myapp_dev'\n    },\n    production: {\n        host: process.env.DB_HOST,\n        port: process.env.DB_PORT,\n        database: process.env.DB_NAME\n    }\n};\n\nexport default config[process.env.NODE_ENV || 'development'];\n\n// Environment-specific configuration\n// .env\n/*\nNODE_ENV=development\nDB_HOST=localhost\nDB_PORT=5432\nAPI_KEY=your-api-key-here\n*/\n\n// Git workflow examples\n\n// Feature branch workflow\n/*\n# Create feature branch\ngit checkout -b feature/user-authentication\n\n# Make changes and commit\ngit add src/components/LoginForm.js\ngit commit -m \"Add login form component with validation\"\n\n# Push to remote\ngit push origin feature/user-authentication\n\n# Create pull request and get feedback\n\n# Merge after review\ngit checkout main\ngit merge feature/user-authentication\ngit push origin main\n\n# Clean up\ngit branch -d feature/user-authentication\n*/\n\n// Semantic versioning example\n/*\nMAJOR version when you make incompatible API changes\nMINOR version when you add functionality in a backward compatible manner\nPATCH version when you make backward compatible bug fixes\n\nExamples:\n1.0.0 -> Initial release\n1.0.1 -> Bug fix\n1.1.0 -> New feature added\n2.0.0 -> Breaking change introduced\n*/\n\n// Documentation structure\n/*\nREADME.md - Project overview and setup instructions\nCONTRIBUTING.md - Guidelines for contributors\nLICENSE - Legal terms\nCHANGELOG.md - Version history and changes\ndocs/\n  ├── api.md - API documentation\n  ├── architecture.md - System design\n  └── troubleshooting.md - Common issues and solutions\n*/",
+      "explanation": "This example demonstrates key project organization concepts including:\n\n1. Typical project directory structure for maintainability\n2. ES6 module system with named and default exports\n3. Package.json for dependency and script management\n4. Configuration management with environment-specific settings\n5. Git workflow for collaborative development\n6. Semantic versioning practices\n7. Documentation organization\n\nThese practices help create professional, maintainable software projects.",
+      "language": "javascript"
+    },
+    "pitfalls": [
+      {
+        "mistake": "Mixing different types of code in the same files or directories",
+        "solution": "Organize code by concern (components, services, utilities) and maintain consistent directory structure",
+        "severity": "medium"
+      },
+      {
+        "mistake": "Not managing dependencies properly, leading to version conflicts",
+        "solution": "Use package managers, specify version ranges appropriately, and regularly update dependencies",
+        "severity": "high"
+      },
+      {
+        "mistake": "Poor commit message practices that don't explain changes clearly",
+        "solution": "Follow conventional commit message formats and explain the 'why' behind changes, not just the 'what'",
+        "severity": "medium"
+      }
+    ],
+    "exercises": [
+      {
+        "title": "Project Structure Implementation",
+        "description": "Organize a software project following best practices for maintainability and collaboration.",
+        "checkpoints": [
+          "Create a well-structured project directory with appropriate separation of concerns",
+          "Implement a module system with proper imports and exports",
+          "Set up package.json with dependencies and scripts for common tasks",
+          "Configure version control with proper branching strategy and commit conventions"
+        ]
+      }
+    ],
+    "next": [],
+    "estimatedMinutes": 50,
+    "difficulty": "Intermediate",
+    "tags": [
+      "Project Organization",
+      "Module Systems",
+      "Dependency Management",
+      "Version Control"
+    ],
+    "lastUpdated": "2025-10-03T15:00:00.000Z",
+    "version": "1.0.0"
+  }
+]

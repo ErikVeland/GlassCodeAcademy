@@ -345,8 +345,11 @@ $glass-tier-quality: linear-gradient(135deg,
 }
 
 // Accessibility Enhancements
-.glass-morphism:focus-within,
-.glass-interactive:focus {
+// Only apply focus styles to actionable elements, not container divs
+.glass-interactive:focus,
+.glass-button:focus,
+.glass-filter-tag:focus,
+.glass-nav-item:focus {
   outline: 2px solid $color-primary;
   outline-offset: 2px;
   

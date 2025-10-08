@@ -1,0 +1,59 @@
+{
+  "id": "vue-lesson-15-composition-api-patterns",
+  "moduleSlug": "vue-advanced",
+  "title": "Advanced Composition API Patterns",
+  "order": 15,
+  "objectives": [
+    "Master advanced Composition API patterns and best practices",
+    "Implement reactive patterns with ref, reactive, and computed",
+    "Create reusable composables for complex logic",
+    "Optimize performance with proper reactivity management"
+  ],
+  "intro": "The Composition API in Vue 3 provides powerful tools for organizing and reusing component logic, but mastering its advanced patterns requires understanding the underlying reactivity system and best practices. This comprehensive lesson explores sophisticated Composition API techniques that enable developers to create highly maintainable and performant Vue applications.\n\nYou'll learn to implement complex reactive patterns using ref, reactive, and computed properties effectively, create reusable composables that encapsulate sophisticated logic, and optimize performance through proper reactivity management. We'll explore advanced patterns for handling asynchronous operations, managing complex state, and creating flexible APIs.\n\nThe lesson covers practical implementation strategies for organizing large-scale applications, managing side effects, and creating type-safe composables with TypeScript. You'll discover how to balance reusability with specificity, implement proper error handling, and optimize composables for performance.\n\nBy mastering advanced Composition API patterns, you'll be able to create Vue applications with clean, organized code that scales effectively and provides excellent developer experience.",
+  "code": {
+    "example": "// Advanced Composition API Patterns\n\n// Reusable composable for complex async operations\n// composables/useAsyncOperation.js\nimport { ref, computed, watch } from 'vue'\n\nexport function useAsyncOperation(operation, options = {}) {\n  const { \n    immediate = false, \n    resetOnExecute = true,\n    defaultData = null \n  } = options\n  \n  const data = ref(defaultData)\n  const loading = ref(false)\n  const error = ref(null)\n  const executed = ref(false)\n  \n  const isSuccess = computed(() => executed.value && !loading.value && !error.value)\n  const isError = computed(() => executed.value && !loading.value && error.value)\n  \n  let abortController = null\n  \n  const execute = async (...args) => {\n    if (loading.value && abortController) {\n      abortController.abort()\n    }\n    \n    if (resetOnExecute) {\n      data.value = defaultData\n      error.value = null\n    }\n    \n    loading.value = true\n    executed.value = true\n    abortController = new AbortController()\n    \n    try {\n      const result = await operation(...args, { signal: abortController.signal })\n      data.value = result\n      return result\n    } catch (err) {\n      if (err.name !== 'AbortError') {\n        error.value = err\n        console.error('Async operation failed:', err)\n      }\n      throw err\n    } finally {\n      loading.value = false\n      abortController = null\n    }\n  }\n  \n  const reset = () => {\n    data.value = defaultData\n    loading.value = false\n    error.value = null\n    executed.value = false\n  }\n  \n  // Execute immediately if requested\n  if (immediate) {\n    execute()\n  }\n  \n  // Cleanup on unmount\n  const cleanup = () => {\n    if (abortController) {\n      abortController.abort()\n    }\n  }\n  \n  return {\n    data: readonly(data),\n    loading: readonly(loading),\n    error: readonly(error),\n    executed: readonly(executed),\n    isSuccess: readonly(isSuccess),\n    isError: readonly(isError),\n    execute,\n    reset,\n    cleanup\n  }\n}\n\n// Composable for managing complex form state\n// composables/useForm.js\nimport { reactive, computed, watch } from 'vue'\n\nexport function useForm(initialValues = {}, validationRules = {}) {\n  const form = reactive({\n    values: { ...initialValues },\n    errors: {},\n    touched: {},\n    isSubmitting: false,\n    submitCount: 0\n  })\n  \n  const isValid = computed(() => {\n    return Object.keys(form.errors).length === 0 && \n           Object.keys(validationRules).every(field => !form.errors[field])\n  })\n  \n  const isDirty = computed(() => {\n    return Object.keys(form.values).some(key => \n      form.values[key] !== initialValues[key]\n    )\n  })\n  \n  const setFieldValue = (field, value) => {\n    form.values[field] = value\n    form.touched[field] = true\n    \n    // Validate field if rules exist\n    if (validationRules[field]) {\n      const error = validationRules[field](value, form.values)\n      if (error) {\n        form.errors[field] = error\n      } else {\n        delete form.errors[field]\n      }\n    }\n  }\n  \n  const setFieldError = (field, error) => {\n    if (error) {\n      form.errors[field] = error\n    } else {\n      delete form.errors[field]\n    }\n  }\n  \n  const validateField = (field) => {\n    if (validationRules[field]) {\n      const error = validationRules[field](form.values[field], form.values)\n      setFieldError(field, error)\n      return !error\n    }\n    return true\n  }\n  \n  const validateForm = () => {\n    let isValid = true\n    Object.keys(validationRules).forEach(field => {\n      const isFieldValid = validateField(field)\n      if (!isFieldValid) isValid = false\n    })\n    return isValid\n  }\n  \n  const handleSubmit = async (onSubmit) => {\n    form.submitCount++\n    \n    // Mark all fields as touched\n    Object.keys(form.values).forEach(field => {\n      form.touched[field] = true\n    })\n    \n    // Validate form\n    const isFormValid = validateForm()\n    if (!isFormValid) return false\n    \n    form.isSubmitting = true\n    \n    try {\n      await onSubmit(form.values)\n      return true\n    } catch (error) {\n      console.error('Form submission error:', error)\n      return false\n    } finally {\n      form.isSubmitting = false\n    }\n  }\n  \n  const resetForm = () => {\n    Object.keys(form.values).forEach(key => {\n      form.values[key] = initialValues[key]\n    })\n    form.errors = {}\n    form.touched = {}\n    form.isSubmitting = false\n    form.submitCount = 0\n  }\n  \n  return {\n    form: readonly(form),\n    isValid: readonly(isValid),\n    isDirty: readonly(isDirty),\n    setFieldValue,\n    setFieldError,\n    validateField,\n    validateForm,\n    handleSubmit,\n    resetForm\n  }\n}\n\n// Usage examples:\n// In a component\n// import { useAsyncOperation, useForm } from '@/composables'\n// \n// const { data, loading, error, execute } = useAsyncOperation(\n//   (id) => fetch(`/api/users/${id}`),\n//   { immediate: true, defaultData: {} }\n// )\n// \n// const { form, isValid, handleSubmit } = useForm(\n//   { name: '', email: '', age: '' },\n//   {\n//     name: (value) => !value ? 'Name is required' : null,\n//     email: (value) => !value ? 'Email is required' : \n//             !/^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(value) ? 'Invalid email' : null,\n//     age: (value) => value && (value < 18 || value > 120) ? 'Age must be between 18 and 120' : null\n//   }\n// )\n// \n// const onSubmit = async (values) => {\n//   const success = await handleSubmit(async (formData) => {\n//     await fetch('/api/users', {\n//       method: 'POST',\n//       headers: { 'Content-Type': 'application/json' },\n//       body: JSON.stringify(formData)\n//     })\n//   })\n//   \n//   if (success) {\n//     console.log('Form submitted successfully')\n//   }\n// }",
+    "explanation": "This example demonstrates advanced Composition API patterns including:\n\n1. A reusable composable for complex async operations with abort capability\n2. A comprehensive form management composable with validation\n3. Proper reactivity management with readonly returns\n4. Cleanup functions for proper resource management\n5. TypeScript-friendly APIs with clear return types\n\nThese patterns enable developers to create highly reusable, maintainable logic that can be shared across components while maintaining proper reactivity and performance.",
+    "language": "javascript"
+  },
+  "pitfalls": [
+    {
+      "mistake": "Creating overly generic composables that are hard to use",
+      "solution": "Balance reusability with specificity, provide clear documentation and examples",
+      "severity": "medium"
+    },
+    {
+      "mistake": "Not properly managing reactivity which leads to performance issues",
+      "solution": "Use readonly returns, avoid unnecessary reactivity, and optimize computed properties",
+      "severity": "high"
+    },
+    {
+      "mistake": "Forgetting to clean up side effects like event listeners or intervals",
+      "solution": "Implement cleanup functions and use onUnmounted lifecycle hook",
+      "severity": "medium"
+    }
+  ],
+  "exercises": [
+    {
+      "title": "Build Advanced Composables",
+      "description": "Create sophisticated composables for common patterns like pagination, search, and data synchronization",
+      "checkpoints": [
+        "Implement a pagination composable with loading states",
+        "Create a search composable with debouncing and caching",
+        "Build a data synchronization composable with offline support",
+        "Optimize composables for performance and memory usage"
+      ]
+    }
+  ],
+  "next": ["vue-lesson-16-state-management"],
+  "estimatedMinutes": 50,
+  "difficulty": "Advanced",
+  "tags": [
+    "Composition API",
+    "Composables",
+    "Reactivity",
+    "Performance",
+    "Vue 3"
+  ],
+  "lastUpdated": "2025-10-03T10:00:00Z",
+  "version": "1.0.0"
+}

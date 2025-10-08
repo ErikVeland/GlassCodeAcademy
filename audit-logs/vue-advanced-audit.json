@@ -1,0 +1,61 @@
+{
+  "moduleSlug": "vue-advanced",
+  "title": "Vue.js Framework",
+  "tier": "specialized",
+  "track": "Frontend",
+  "timestamp": "2025-10-07T04:10:07.616Z",
+  "content": {
+    "lessons": {
+      "required": 14,
+      "actual": 14,
+      "status": "complete"
+    },
+    "quizzes": {
+      "required": 18,
+      "actual": 18,
+      "status": "complete"
+    }
+  },
+  "validation": {
+    "issues": [
+      {
+        "severity": "medium",
+        "type": "lesson-count",
+        "message": "Module vue-advanced: Only 12 lessons (requires 14)",
+        "timestamp": "2025-10-01T07:38:14.938Z"
+      },
+      {
+        "severity": "medium",
+        "type": "quiz-count",
+        "message": "Module vue-advanced: Only 15 quiz questions (requires 18)",
+        "timestamp": "2025-10-01T07:38:14.938Z"
+      }
+    ],
+    "warnings": []
+  },
+  "accessibility": {
+    "issues": 0,
+    "severity": "compliant"
+  },
+  "quizAnalysis": {
+    "totalQuestions": 18,
+    "difficultyDistribution": {
+      "beginner": 9,
+      "intermediate": 8,
+      "advanced": 1
+    },
+    "targetDistribution": {
+      "beginner": 6,
+      "intermediate": 10,
+      "advanced": 4
+    },
+    "topicsCovered": 11,
+    "duplicationRate": 80
+  },
+  "sources": [],
+  "routes": {
+    "overview": "/modules/vue-advanced",
+    "lessons": "/modules/vue-advanced/lessons",
+    "quiz": "/modules/vue-advanced/quiz"
+  }
+}

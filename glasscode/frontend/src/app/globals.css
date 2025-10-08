@@ -138,10 +138,21 @@ html:not(.dark) body {
   }
 }
 
-/* Ensure focus styles work in dark mode */
-.dark :focus {
+/* Ensure focus styles work in dark mode - only for actionable elements */
+.dark a:focus,
+.dark button:focus,
+.dark input:focus,
+.dark textarea:focus,
+.dark select:focus,
+.dark [role="button"]:focus,
+.dark [tabindex]:not([tabindex="-1"]):focus {
   outline: 2px solid #818CF8; /* indigo-400 */
   outline-offset: 2px;
+}
+
+/* Remove focus-within from glass-morphism in dark mode as well */
+.dark .glass-morphism:focus-within {
+  outline: none;
 }
 
 /* Circular Chart Styles */
@@ -403,4 +414,9 @@ html:not(.dark) body {
 .next-tier-button:hover {
   background: rgba(255, 255, 255, 0.3);
   transform: translateY(-2px);
+}
+
+/* Remove the problematic focus-within rule that was applying focus to all glass containers */
+.glass-morphism:focus-within {
+  outline: none;
 }

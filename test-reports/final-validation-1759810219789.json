@@ -1,0 +1,122 @@
+{
+  "timestamp": "2025-10-07T04:10:19.758Z",
+  "totalModules": 18,
+  "validModules": 4,
+  "totalLessons": 112,
+  "validLessons": 83,
+  "totalQuizzes": 340,
+  "validQuizzes": 340,
+  "issues": [
+    {
+      "severity": "medium",
+      "type": "lesson-count",
+      "message": "Module programming-fundamentals: Only 1 lessons (requires 12)",
+      "timestamp": "2025-10-07T04:10:19.769Z"
+    },
+    {
+      "severity": "critical",
+      "type": "lessons-missing",
+      "message": "Module web-fundamentals: Lessons file not found",
+      "timestamp": "2025-10-07T04:10:19.770Z"
+    },
+    {
+      "severity": "critical",
+      "type": "lessons-missing",
+      "message": "Module version-control: Lessons file not found",
+      "timestamp": "2025-10-07T04:10:19.775Z"
+    },
+    {
+      "severity": "critical",
+      "type": "lessons-missing",
+      "message": "Module dotnet-fundamentals: Lessons file not found",
+      "timestamp": "2025-10-07T04:10:19.777Z"
+    },
+    {
+      "severity": "critical",
+      "type": "lessons-missing",
+      "message": "Module react-fundamentals: Lessons file not found",
+      "timestamp": "2025-10-07T04:10:19.779Z"
+    },
+    {
+      "severity": "critical",
+      "type": "quizzes-missing",
+      "message": "Module database-systems: Quizzes file not found",
+      "timestamp": "2025-10-07T04:10:19.780Z"
+    },
+    {
+      "severity": "critical",
+      "type": "lessons-missing",
+      "message": "Module typescript-fundamentals: Lessons file not found",
+      "timestamp": "2025-10-07T04:10:19.781Z"
+    },
+    {
+      "severity": "critical",
+      "type": "lessons-missing",
+      "message": "Module node-fundamentals: Lessons file not found",
+      "timestamp": "2025-10-07T04:10:19.781Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-count",
+      "message": "Module laravel-fundamentals: Only 16 lessons (requires 18)",
+      "timestamp": "2025-10-07T04:10:19.782Z"
+    },
+    {
+      "severity": "medium",
+      "type": "lesson-count",
+      "message": "Module sass-advanced: Only 12 lessons (requires 15)",
+      "timestamp": "2025-10-07T04:10:19.784Z"
+    },
+    {
+      "severity": "critical",
+      "type": "quizzes-missing",
+      "message": "Module tailwind-advanced: Quizzes file not found",
+      "timestamp": "2025-10-07T04:10:19.785Z"
+    },
+    {
+      "severity": "critical",
+      "type": "lessons-missing",
+      "message": "Module testing-fundamentals: Lessons file not found",
+      "timestamp": "2025-10-07T04:10:19.786Z"
+    },
+    {
+      "severity": "critical",
+      "type": "lessons-missing",
+      "message": "Module e2e-testing: Lessons file not found",
+      "timestamp": "2025-10-07T04:10:19.787Z"
+    },
+    {
+      "severity": "critical",
+      "type": "lessons-missing",
+      "message": "Module security-fundamentals: Lessons file not found",
+      "timestamp": "2025-10-07T04:10:19.788Z"
+    }
+  ],
+  "warnings": [
+    {
+      "type": "lesson-content",
+      "message": "Module nextjs-advanced, Lesson nextjs-advanced-lesson-10: Content too short (177 chars)",
+      "timestamp": "2025-10-07T04:10:19.783Z"
+    },
+    {
+      "type": "lesson-content",
+      "message": "Module nextjs-advanced, Lesson nextjs-advanced-lesson-11: Content too short (168 chars)",
+      "timestamp": "2025-10-07T04:10:19.783Z"
+    },
+    {
+      "type": "lesson-content",
+      "message": "Module nextjs-advanced, Lesson nextjs-advanced-lesson-12: Content too short (161 chars)",
+      "timestamp": "2025-10-07T04:10:19.783Z"
+    }
+  ],
+  "summary": {
+    "overallCompliance": 65,
+    "readyForProduction": false,
+    "criticalIssues": 11,
+    "recommendations": [
+      "🔴 Address all critical issues before production deployment",
+      "🟡 Improve content quality to reach 90%+ compliance",
+      "📚 Add more lessons to modules below threshold"
+    ]
+  }
+}

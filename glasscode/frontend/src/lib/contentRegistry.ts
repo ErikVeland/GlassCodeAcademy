@@ -3,6 +3,9 @@
  * Provides centralized access to content registry data for routing and navigation
  */
 
+import { getApolloClient } from '@/apolloClient';
+import { GET_PROGRAMMING_LESSONS, GET_PROGRAMMING_QUESTIONS } from '@/graphql/queries';
+
 interface Module {
   slug: string;
   title: string;
@@ -263,6 +266,20 @@ class ContentRegistryLoader {
    * Get lessons for a specific module
    */
   async getModuleLessons(moduleSlug: string): Promise<any[]> {
+    // Special handling for programming-fundamentals module to use GraphQL
+    if (moduleSlug === 'programming-fundamentals') {
+      try {
+        const client = getApolloClient();
+        const { data } = await client.query({
+          query: GET_PROGRAMMING_LESSONS
+        });
+        return data.programmingLessons || [];
+      } catch (error) {
+        console.error(`Failed to load programming lessons via GraphQL:`, error);
+        return [];
+      }
+    }
+    
     try {
       const baseUrl = process.env.NODE_ENV === 'production' 
         ? process.env.NEXT_PUBLIC_BASE_URL || 'https://your-domain.com'
@@ -282,6 +299,24 @@ class ContentRegistryLoader {
    * Get quiz for a specific module
    */
   async getModuleQuiz(moduleSlug: string): Promise<any | null> {
+    // Special handling for programming-fundamentals module to use GraphQL
+    if (moduleSlug === 'programming-fundamentals') {
+      try {
+        const client = getApolloClient();
+        const { data } = await client.query({
+          query: GET_PROGRAMMING_QUESTIONS
+        });
+        
+        // Transform the data to match the expected quiz format
+        return {
+          questions: data.programmingInterviewQuestions || []
+        };
+      } catch (error) {
+        console.error(`Failed to load programming questions via GraphQL:`, error);
+        return null;
+      }
+    }
+    
     try {
       const baseUrl = process.env.NODE_ENV === 'production' 
         ? process.env.NEXT_PUBLIC_BASE_URL || 'https://your-domain.com'
@@ -337,6 +372,88 @@ class ContentRegistryLoader {
 
 // Export singleton instance
 export const contentRegistry = ContentRegistryLoader.getInstance();
+
+// Export utility functions for lesson grouping
+export function getLessonGroups(moduleSlug: string, lessons: any[]): any[] {
+  if (moduleSlug === 'programming-fundamentals') {
+    // Group programming fundamentals lessons into logical categories
+    return [
+      {
+        id: 'basic-concepts',
+        title: 'Basic Programming Concepts',
+        description: 'Learn fundamental programming concepts including variables, control structures, and functions',
+        lessons: lessons.slice(0, 3), // Lessons 1-3
+        order: 1
+      },
+      {
+        id: 'data-structures',
+        title: 'Data Structures',
+        description: 'Explore arrays, objects, and object-oriented programming concepts',
+        lessons: lessons.slice(3, 5), // Lessons 4-5
+        order: 2
+      },
+      {
+        id: 'error-handling',
+        title: 'Error Handling & File Operations',
+        description: 'Master error handling techniques and file input/output operations',
+        lessons: lessons.slice(5, 7), // Lessons 6-7
+        order: 3
+      },
+      {
+        id: 'algorithms',
+        title: 'Algorithms & Recursion',
+        description: 'Develop algorithmic thinking and understand recursive problem solving',
+        lessons: lessons.slice(7, 9), // Lessons 8-9
+        order: 4
+      },
+      {
+        id: 'advanced-topics',
+        title: 'Advanced Topics',
+        description: 'Deep dive into memory management, best practices, and project organization',
+        lessons: lessons.slice(9, 12), // Lessons 10-12
+        order: 5
+      }
+    ];
+  }
+  
+  // For other modules, create one group per lesson
+  return lessons.map((lesson, index) => ({
+    id: `group-${index + 1}`,
+    title: lesson.title,
+    description: lesson.intro ? lesson.intro.split('\n')[0] : '',
+    lessons: [lesson],
+    order: index + 1
+  }));
+}
+
+export function getLessonGroupForLesson(moduleSlug: string, lessons: any[], lessonOrder: number): any | null {
+  const groups = getLessonGroups(moduleSlug, lessons);
+  const lessonIndex = lessonOrder - 1;
+  const lesson = lessons[lessonIndex];
+  
+  if (!lesson) return null;
+  
+  for (const group of groups) {
+    if (group.lessons.some((l: any) => l.order === lesson.order)) {
+      return {
+        group,
+        groupIndex: groups.indexOf(group)
+      };
+    }
+  }
+  
+  return null;
+}
+
+export function getNextLessonGroup(moduleSlug: string, lessons: any[], lessonOrder: number): any | null {
+  const groups = getLessonGroups(moduleSlug, lessons);
+  const currentGroupInfo = getLessonGroupForLesson(moduleSlug, lessons, lessonOrder);
+  
+  if (!currentGroupInfo) return null;
+  
+  const nextGroupIndex = currentGroupInfo.groupIndex + 1;
+  return nextGroupIndex < groups.length ? groups[nextGroupIndex] : null;
+}
 
 // Export types
 export type { Module, Tier, ContentRegistry };

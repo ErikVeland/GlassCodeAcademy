@@ -15,7 +15,7 @@
       "color": "from-blue-500 to-cyan-500",
       "learningObjectives": [
         "Master basic programming concepts",
-        "Understand web development fundamentals", 
+        "Understand web development fundamentals",
         "Learn version control workflows"
       ]
     },
@@ -33,7 +33,7 @@
     },
     "specialized": {
       "level": 3,
-      "title": "Specialized Skills", 
+      "title": "Specialized Skills",
       "description": "Develop expertise in modern development practices",
       "focusArea": "Advanced frameworks (Next.js, GraphQL, DevOps)",
       "color": "from-purple-500 to-violet-500",
@@ -68,13 +68,20 @@
       "difficulty": "Beginner",
       "estimatedHours": 40,
       "category": "programming",
-      "technologies": ["Logic", "Algorithms", "Data Structures"],
+      "technologies": [
+        "Logic",
+        "Algorithms",
+        "Data Structures"
+      ],
       "prerequisites": [],
       "thresholds": {
         "requiredLessons": 12,
         "requiredQuestions": 15
       },
-      "legacySlugs": ["programming-basics", "fundamentals"],
+      "legacySlugs": [
+        "programming-basics",
+        "fundamentals"
+      ],
       "status": "active",
       "metadata": {
         "thresholds": {
@@ -84,13 +91,13 @@
         }
       },
       "routes": {
-        "overview": "/modules/programming-fundamentals",
-        "lessons": "/modules/programming-fundamentals/lessons",
-        "quiz": "/modules/programming-fundamentals/quiz"
+        "overview": "/programming",
+        "lessons": "/programming/lessons",
+        "quiz": "/programming/interview"
       }
     },
     {
-      "slug": "web-fundamentals", 
+      "slug": "web-fundamentals",
       "title": "Web Development Basics",
       "description": "HTML5, CSS3, JavaScript fundamentals, and DOM manipulation",
       "tier": "foundational",
@@ -100,13 +107,23 @@
       "difficulty": "Beginner",
       "estimatedHours": 50,
       "category": "web",
-      "technologies": ["HTML5", "CSS3", "JavaScript", "DOM"],
-      "prerequisites": ["programming-fundamentals"],
+      "technologies": [
+        "HTML5",
+        "CSS3",
+        "JavaScript",
+        "DOM"
+      ],
+      "prerequisites": [
+        "programming-fundamentals"
+      ],
       "thresholds": {
         "requiredLessons": 15,
         "requiredQuestions": 20
       },
-      "legacySlugs": ["web-basics", "html-css-js"],
+      "legacySlugs": [
+        "web-basics",
+        "html-css-js"
+      ],
       "status": "active",
       "metadata": {
         "thresholds": {
@@ -116,9 +133,9 @@
         }
       },
       "routes": {
-        "overview": "/modules/web-fundamentals",
-        "lessons": "/modules/web-fundamentals/lessons", 
-        "quiz": "/modules/web-fundamentals/quiz"
+        "overview": "/web",
+        "lessons": "/web/lessons",
+        "quiz": "/web/interview"
       }
     },
     {
@@ -132,13 +149,20 @@
       "difficulty": "Beginner",
       "estimatedHours": 20,
       "category": "devops",
-      "technologies": ["Git", "GitHub", "Version Control"],
+      "technologies": [
+        "Git",
+        "GitHub",
+        "Version Control"
+      ],
       "prerequisites": [],
       "thresholds": {
         "requiredLessons": 10,
         "requiredQuestions": 15
       },
-      "legacySlugs": ["git", "version-control-basics"],
+      "legacySlugs": [
+        "git",
+        "version-control-basics"
+      ],
       "status": "active",
       "metadata": {
         "thresholds": {
@@ -148,14 +172,14 @@
         }
       },
       "routes": {
-        "overview": "/modules/version-control",
-        "lessons": "/modules/version-control/lessons",
-        "quiz": "/modules/version-control/quiz"
+        "overview": "/version",
+        "lessons": "/version/lessons",
+        "quiz": "/version/interview"
       }
     },
     {
       "slug": "dotnet-fundamentals",
-      "title": ".NET Core Fundamentals", 
+      "title": ".NET Core Fundamentals",
       "description": "C#, ASP.NET Core, Entity Framework, and enterprise patterns",
       "tier": "core",
       "track": "Backend",
@@ -164,13 +188,23 @@
       "difficulty": "Intermediate",
       "estimatedHours": 80,
       "category": "backend",
-      "technologies": ["C#", "ASP.NET Core", "Entity Framework"],
-      "prerequisites": ["programming-fundamentals"],
+      "technologies": [
+        "C#",
+        "ASP.NET Core",
+        "Entity Framework"
+      ],
+      "prerequisites": [
+        "programming-fundamentals"
+      ],
       "thresholds": {
         "requiredLessons": 18,
         "requiredQuestions": 25
       },
-      "legacySlugs": ["dotnet", "dot-net", "csharp"],
+      "legacySlugs": [
+        "dotnet",
+        "dot-net",
+        "csharp"
+      ],
       "status": "active",
       "metadata": {
         "thresholds": {
@@ -180,7 +214,7 @@
         }
       },
       "routes": {
-        "overview": "/modules/dotnet-fundamentals",
+        "overview": "/dotnet",
         "lessons": "/dotnet/lessons",
         "quiz": "/dotnet/interview"
       }
@@ -189,20 +223,30 @@
       "slug": "react-fundamentals",
       "title": "React Development",
       "description": "Components, hooks, state management, and modern patterns",
-      "tier": "core", 
+      "tier": "core",
       "track": "Frontend",
       "order": 2,
       "icon": "⚛️",
-      "difficulty": "Intermediate", 
+      "difficulty": "Intermediate",
       "estimatedHours": 60,
       "category": "frontend",
-      "technologies": ["React", "JSX", "Hooks", "State Management"],
-      "prerequisites": ["web-fundamentals"],
+      "technologies": [
+        "React",
+        "JSX",
+        "Hooks",
+        "State Management"
+      ],
+      "prerequisites": [
+        "web-fundamentals"
+      ],
       "thresholds": {
         "requiredLessons": 15,
         "requiredQuestions": 20
       },
-      "legacySlugs": ["react", "reactjs"],
+      "legacySlugs": [
+        "react",
+        "reactjs"
+      ],
       "status": "active",
       "metadata": {
         "thresholds": {
@@ -213,8 +257,8 @@
       },
       "routes": {
         "overview": "/modules/react-fundamentals",
-        "lessons": "/react/lessons",
-        "quiz": "/react/interview"
+        "lessons": "/modules/react-fundamentals/lessons",
+        "quiz": "/modules/react-fundamentals/quiz"
       }
     },
     {
@@ -228,13 +272,23 @@
       "difficulty": "Intermediate",
       "estimatedHours": 70,
       "category": "database",
-      "technologies": ["SQL", "NoSQL", "Database Design"],
-      "prerequisites": ["programming-fundamentals"],
+      "technologies": [
+        "SQL",
+        "NoSQL",
+        "Database Design"
+      ],
+      "prerequisites": [
+        "programming-fundamentals"
+      ],
       "thresholds": {
         "requiredLessons": 16,
         "requiredQuestions": 22
       },
-      "legacySlugs": ["database", "sql", "db"],
+      "legacySlugs": [
+        "database",
+        "sql",
+        "db"
+      ],
       "status": "active",
       "metadata": {
         "thresholds": {
@@ -245,8 +299,8 @@
       },
       "routes": {
         "overview": "/modules/database-systems",
-        "lessons": "/database/lessons",
-        "quiz": "/database/interview"
+        "lessons": "/modules/database-systems/lessons",
+        "quiz": "/modules/database-systems/quiz"
       }
     },
     {
@@ -260,13 +314,22 @@
       "difficulty": "Intermediate",
       "estimatedHours": 50,
       "category": "frontend",
-      "technologies": ["TypeScript", "JavaScript", "Static Typing"],
-      "prerequisites": ["web-fundamentals"],
+      "technologies": [
+        "TypeScript",
+        "JavaScript",
+        "Static Typing"
+      ],
+      "prerequisites": [
+        "web-fundamentals"
+      ],
       "thresholds": {
         "requiredLessons": 14,
         "requiredQuestions": 18
       },
-      "legacySlugs": ["typescript", "ts"],
+      "legacySlugs": [
+        "typescript",
+        "ts"
+      ],
       "status": "active",
       "metadata": {
         "thresholds": {
@@ -277,8 +340,8 @@
       },
       "routes": {
         "overview": "/modules/typescript-fundamentals",
-        "lessons": "/typescript/lessons",
-        "quiz": "/typescript/interview"
+        "lessons": "/modules/typescript-fundamentals/lessons",
+        "quiz": "/modules/typescript-fundamentals/quiz"
       }
     },
     {
@@ -291,26 +354,35 @@
       "icon": "💚",
       "difficulty": "Intermediate",
       "estimatedHours": 60,
-      "category": "backend", 
-      "technologies": ["Node.js", "npm", "Express"],
-      "prerequisites": ["web-fundamentals"],
+      "category": "backend",
+      "technologies": [
+        "Node.js",
+        "npm",
+        "Express"
+      ],
+      "prerequisites": [
+        "web-fundamentals"
+      ],
       "thresholds": {
-        "requiredLessons": 15,
+        "requiredLessons": 18,
         "requiredQuestions": 20
       },
-      "legacySlugs": ["node", "nodejs"],
+      "legacySlugs": [
+        "node",
+        "nodejs"
+      ],
       "status": "active",
       "metadata": {
         "thresholds": {
-          "minLessons": 15,
+          "minLessons": 18,
           "minQuizQuestions": 20,
           "passingScore": 70
         }
       },
       "routes": {
         "overview": "/modules/node-fundamentals",
-        "lessons": "/node/lessons",
-        "quiz": "/node/interview"
+        "lessons": "/modules/node-fundamentals/lessons",
+        "quiz": "/modules/node-fundamentals/quiz"
       }
     },
     {
@@ -324,25 +396,35 @@
       "difficulty": "Intermediate",
       "estimatedHours": 70,
       "category": "backend",
-      "technologies": ["PHP", "Laravel", "Eloquent ORM"],
-      "prerequisites": ["programming-fundamentals", "web-fundamentals"],
+      "technologies": [
+        "PHP",
+        "Laravel",
+        "Eloquent ORM"
+      ],
+      "prerequisites": [
+        "programming-fundamentals",
+        "web-fundamentals"
+      ],
       "thresholds": {
-        "requiredLessons": 16,
-        "requiredQuestions": 22
+        "requiredLessons": 18,
+        "requiredQuestions": 30
       },
-      "legacySlugs": ["laravel", "php"],
+      "legacySlugs": [
+        "laravel",
+        "php"
+      ],
       "status": "active",
       "metadata": {
         "thresholds": {
-          "minLessons": 16,
-          "minQuizQuestions": 22,
+          "minLessons": 18,
+          "minQuizQuestions": 30,
           "passingScore": 70
         }
       },
       "routes": {
         "overview": "/modules/laravel-fundamentals",
-        "lessons": "/laravel/lessons",
-        "quiz": "/laravel/interview"
+        "lessons": "/modules/laravel-fundamentals/lessons",
+        "quiz": "/modules/laravel-fundamentals/quiz"
       }
     },
     {
@@ -356,13 +438,22 @@
       "difficulty": "Advanced",
       "estimatedHours": 50,
       "category": "frontend",
-      "technologies": ["Next.js", "SSR", "API Routes"],
-      "prerequisites": ["react-fundamentals"],
+      "technologies": [
+        "Next.js",
+        "SSR",
+        "API Routes"
+      ],
+      "prerequisites": [
+        "react-fundamentals"
+      ],
       "thresholds": {
         "requiredLessons": 14,
         "requiredQuestions": 18
       },
-      "legacySlugs": ["nextjs", "next"],
+      "legacySlugs": [
+        "nextjs",
+        "next"
+      ],
       "status": "active",
       "metadata": {
         "thresholds": {
@@ -373,8 +464,8 @@
       },
       "routes": {
         "overview": "/modules/nextjs-advanced",
-        "lessons": "/nextjs/lessons",
-        "quiz": "/nextjs/interview"
+        "lessons": "/modules/nextjs-advanced/lessons",
+        "quiz": "/modules/nextjs-advanced/quiz"
       }
     },
     {
@@ -388,13 +479,22 @@
       "difficulty": "Advanced",
       "estimatedHours": 50,
       "category": "backend",
-      "technologies": ["GraphQL", "Schemas", "Resolvers"],
-      "prerequisites": ["dotnet-fundamentals"],
+      "technologies": [
+        "GraphQL",
+        "Schemas",
+        "Resolvers"
+      ],
+      "prerequisites": [
+        "dotnet-fundamentals"
+      ],
       "thresholds": {
         "requiredLessons": 13,
         "requiredQuestions": 17
       },
-      "legacySlugs": ["graphql", "gql"],
+      "legacySlugs": [
+        "graphql",
+        "gql"
+      ],
       "status": "active",
       "metadata": {
         "thresholds": {
@@ -405,8 +505,8 @@
       },
       "routes": {
         "overview": "/modules/graphql-advanced",
-        "lessons": "/graphql/lessons",
-        "quiz": "/graphql/interview"
+        "lessons": "/modules/graphql-advanced/lessons",
+        "quiz": "/modules/graphql-advanced/quiz"
       }
     },
     {
@@ -420,25 +520,34 @@
       "difficulty": "Advanced",
       "estimatedHours": 35,
       "category": "frontend",
-      "technologies": ["Sass", "SCSS", "CSS"],
-      "prerequisites": ["web-fundamentals"],
+      "technologies": [
+        "Sass",
+        "SCSS",
+        "CSS"
+      ],
+      "prerequisites": [
+        "web-fundamentals"
+      ],
       "thresholds": {
-        "requiredLessons": 12,
+        "requiredLessons": 15,
         "requiredQuestions": 15
       },
-      "legacySlugs": ["sass", "scss"],
+      "legacySlugs": [
+        "sass",
+        "scss"
+      ],
       "status": "active",
       "metadata": {
         "thresholds": {
-          "minLessons": 12,
+          "minLessons": 15,
           "minQuizQuestions": 15,
           "passingScore": 70
         }
       },
       "routes": {
         "overview": "/modules/sass-advanced",
-        "lessons": "/sass/lessons",
-        "quiz": "/sass/interview"
+        "lessons": "/modules/sass-advanced/lessons",
+        "quiz": "/modules/sass-advanced/quiz"
       }
     },
     {
@@ -452,13 +561,22 @@
       "difficulty": "Advanced",
       "estimatedHours": 40,
       "category": "frontend",
-      "technologies": ["Tailwind CSS", "Utility Classes", "Design Systems"],
-      "prerequisites": ["web-fundamentals"],
+      "technologies": [
+        "Tailwind CSS",
+        "Utility Classes",
+        "Design Systems"
+      ],
+      "prerequisites": [
+        "web-fundamentals"
+      ],
       "thresholds": {
         "requiredLessons": 13,
         "requiredQuestions": 16
       },
-      "legacySlugs": ["tailwind", "tailwindcss"],
+      "legacySlugs": [
+        "tailwind",
+        "tailwindcss"
+      ],
       "status": "active",
       "metadata": {
         "thresholds": {
@@ -469,8 +587,8 @@
       },
       "routes": {
         "overview": "/modules/tailwind-advanced",
-        "lessons": "/tailwind/lessons",
-        "quiz": "/tailwind/interview"
+        "lessons": "/modules/tailwind-advanced/lessons",
+        "quiz": "/modules/tailwind-advanced/quiz"
       }
     },
     {
@@ -484,13 +602,22 @@
       "difficulty": "Advanced",
       "estimatedHours": 55,
       "category": "frontend",
-      "technologies": ["Vue.js", "Vuex", "Vue Router"],
-      "prerequisites": ["web-fundamentals"],
+      "technologies": [
+        "Vue.js",
+        "Vuex",
+        "Vue Router"
+      ],
+      "prerequisites": [
+        "web-fundamentals"
+      ],
       "thresholds": {
         "requiredLessons": 14,
         "requiredQuestions": 18
       },
-      "legacySlugs": ["vue", "vuejs"],
+      "legacySlugs": [
+        "vue",
+        "vuejs"
+      ],
       "status": "active",
       "metadata": {
         "thresholds": {
@@ -501,8 +628,8 @@
       },
       "routes": {
         "overview": "/modules/vue-advanced",
-        "lessons": "/vue/lessons",
-        "quiz": "/vue/interview"
+        "lessons": "/modules/vue-advanced/lessons",
+        "quiz": "/modules/vue-advanced/quiz"
       }
     },
     {
@@ -516,13 +643,22 @@
       "difficulty": "Intermediate",
       "estimatedHours": 50,
       "category": "testing",
-      "technologies": ["Unit Testing", "TDD", "Integration Testing"],
-      "prerequisites": ["dotnet-fundamentals"],
+      "technologies": [
+        "Unit Testing",
+        "TDD",
+        "Integration Testing"
+      ],
+      "prerequisites": [
+        "dotnet-fundamentals"
+      ],
       "thresholds": {
         "requiredLessons": 14,
         "requiredQuestions": 18
       },
-      "legacySlugs": ["testing", "unit-testing"],
+      "legacySlugs": [
+        "testing",
+        "unit-testing"
+      ],
       "status": "active",
       "metadata": {
         "thresholds": {
@@ -533,8 +669,8 @@
       },
       "routes": {
         "overview": "/modules/testing-fundamentals",
-        "lessons": "/testing/lessons",
-        "quiz": "/testing/interview"
+        "lessons": "/modules/testing-fundamentals/lessons",
+        "quiz": "/modules/testing-fundamentals/quiz"
       }
     },
     {
@@ -548,13 +684,24 @@
       "difficulty": "Advanced",
       "estimatedHours": 40,
       "category": "testing",
-      "technologies": ["Cypress", "Playwright", "E2E Testing"],
-      "prerequisites": ["react-fundamentals", "testing-fundamentals"],
+      "technologies": [
+        "Cypress",
+        "Playwright",
+        "E2E Testing"
+      ],
+      "prerequisites": [
+        "react-fundamentals",
+        "testing-fundamentals"
+      ],
       "thresholds": {
         "requiredLessons": 12,
         "requiredQuestions": 15
       },
-      "legacySlugs": ["e2e", "cypress", "playwright"],
+      "legacySlugs": [
+        "e2e",
+        "cypress",
+        "playwright"
+      ],
       "status": "active",
       "metadata": {
         "thresholds": {
@@ -580,13 +727,23 @@
       "difficulty": "Advanced",
       "estimatedHours": 45,
       "category": "frontend",
-      "technologies": ["Performance", "Profiling", "Optimization"],
-      "prerequisites": ["react-fundamentals", "nextjs-advanced"],
+      "technologies": [
+        "Performance",
+        "Profiling",
+        "Optimization"
+      ],
+      "prerequisites": [
+        "react-fundamentals",
+        "nextjs-advanced"
+      ],
       "thresholds": {
         "requiredLessons": 13,
         "requiredQuestions": 16
       },
-      "legacySlugs": ["performance", "optimization"],
+      "legacySlugs": [
+        "performance",
+        "optimization"
+      ],
       "status": "active",
       "metadata": {
         "thresholds": {
@@ -612,13 +769,23 @@
       "difficulty": "Advanced",
       "estimatedHours": 60,
       "category": "backend",
-      "technologies": ["Security", "Authentication", "Authorization"],
-      "prerequisites": ["dotnet-fundamentals", "database-systems"],
+      "technologies": [
+        "Security",
+        "Authentication",
+        "Authorization"
+      ],
+      "prerequisites": [
+        "dotnet-fundamentals",
+        "database-systems"
+      ],
       "thresholds": {
         "requiredLessons": 15,
         "requiredQuestions": 20
       },
-      "legacySlugs": ["security", "auth"],
+      "legacySlugs": [
+        "security",
+        "auth"
+      ],
       "status": "active",
       "metadata": {
         "thresholds": {

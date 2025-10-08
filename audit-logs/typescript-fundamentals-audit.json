@@ -1,0 +1,48 @@
+{
+  "moduleSlug": "typescript-fundamentals",
+  "title": "TypeScript Development",
+  "tier": "core",
+  "track": "Frontend",
+  "timestamp": "2025-10-07T04:10:07.605Z",
+  "content": {
+    "lessons": {
+      "required": 14,
+      "actual": 0,
+      "status": "unknown"
+    },
+    "quizzes": {
+      "required": 18,
+      "actual": 0,
+      "status": "unknown"
+    }
+  },
+  "validation": {
+    "issues": [],
+    "warnings": []
+  },
+  "accessibility": {
+    "issues": 0,
+    "severity": "compliant"
+  },
+  "quizAnalysis": {
+    "totalQuestions": 18,
+    "difficultyDistribution": {
+      "beginner": 8,
+      "intermediate": 7,
+      "advanced": 3
+    },
+    "targetDistribution": {
+      "beginner": 6,
+      "intermediate": 10,
+      "advanced": 4
+    },
+    "topicsCovered": 13,
+    "duplicationRate": 80
+  },
+  "sources": [],
+  "routes": {
+    "overview": "/modules/typescript-fundamentals",
+    "lessons": "/modules/typescript-fundamentals/lessons",
+    "quiz": "/modules/typescript-fundamentals/quiz"
+  }
+}

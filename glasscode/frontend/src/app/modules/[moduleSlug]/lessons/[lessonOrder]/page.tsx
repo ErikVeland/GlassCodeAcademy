@@ -1,6 +1,6 @@
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
-import { contentRegistry } from '@/lib/contentRegistry';
+import { contentRegistry, getLessonGroups, getLessonGroupForLesson, getNextLessonGroup } from '@/lib/contentRegistry';
 import { Metadata } from 'next';
 
 interface LessonPageProps {
@@ -67,8 +67,14 @@ export default async function LessonPage({ params }: LessonPageProps) {
     notFound();
   }
 
-  const prevLesson = lessonIndex > 0 ? lessons[lessonIndex - 1] : null;
-  const nextLesson = lessonIndex < lessons.length - 1 ? lessons[lessonIndex + 1] : null;
+  // Get lesson groups and current group info
+  const lessonGroups = getLessonGroups(module.slug, lessons);
+  const currentGroupInfo = getLessonGroupForLesson(module.slug, lessons, lessonIndex + 1);
+  const nextGroup = getNextLessonGroup(module.slug, lessons, lessonIndex + 1);
+  
+  // Determine if this is the last lesson in its group
+  const isLastInGroup = currentGroupInfo && currentGroupInfo.group.lessons[currentGroupInfo.group.lessons.length - 1].order === lesson.order;
+  const isFirstInGroup = currentGroupInfo && currentGroupInfo.group.lessons[0].order === lesson.order;
 
   return (
     <>
@@ -95,7 +101,7 @@ export default async function LessonPage({ params }: LessonPageProps) {
             </li>
             <li className="text-gray-500">/</li>
             <li className="text-gray-900 dark:text-gray-100 font-medium">
-              Lesson {lessonOrder}
+              {currentGroupInfo?.group.title} - Lesson {lessonOrder}
             </li>
           </ol>
         </nav>
@@ -113,7 +119,7 @@ export default async function LessonPage({ params }: LessonPageProps) {
                     {lesson.title}
                   </h1>
                   <p className="text-gray-600 dark:text-gray-300">
-                    {module.title} • Lesson {lesson.order || lessonIndex + 1} of {lessons.length}
+                    {module.title} • {currentGroupInfo?.group.title} • Lesson {lesson.order || lessonIndex + 1} of {lessons.length}
                   </p>
                 </div>
               </div>
@@ -265,39 +271,49 @@ export default async function LessonPage({ params }: LessonPageProps) {
         {/* Navigation */}
         <nav className="mt-12 flex justify-between items-center">
           <div>
-            {prevLesson ? (
-              <Link
-                href={`${module.routes.lessons}/${prevLesson.order || lessonIndex}`}
-                className="inline-flex items-center px-4 py-2 text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors"
-              >
-                ← Previous: {prevLesson.title}
-              </Link>
-            ) : (
+            {isFirstInGroup ? (
               <Link
                 href={module.routes.lessons}
                 className="inline-flex items-center px-4 py-2 text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors"
               >
                 ← Back to Lessons
               </Link>
+            ) : (
+              <Link
+                href={`${module.routes.lessons}/${lessonIndex}`} // Previous lesson
+                className="inline-flex items-center px-4 py-2 text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors"
+              >
+                ← Previous Lesson
+              </Link>
             )}
           </div>
           
           <div>
-            {nextLesson ? (
-              <Link
-                href={`${module.routes.lessons}/${nextLesson.order || lessonIndex + 2}`}
-                className="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
-              >
-                Next: {nextLesson.title}
-                <span className="ml-2">→</span>
-              </Link>
+            {isLastInGroup ? (
+              nextGroup ? (
+                <Link
+                  href={`${module.routes.lessons}/${nextGroup.lessons[0].order}`}
+                  className="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                >
+                  Next Group: {nextGroup.title}
+                  <span className="ml-2">→</span>
+                </Link>
+              ) : (
+                <Link
+                  href={module.routes.quiz}
+                  className="inline-flex items-center px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
+                >
+                  Take Assessment
+                  <span className="ml-2">🎯</span>
+                </Link>
+              )
             ) : (
               <Link
-                href={module.routes.quiz}
-                className="inline-flex items-center px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
+                href={`${module.routes.lessons}/${lessonIndex + 2}`} // Next lesson
+                className="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
               >
-                Take Assessment
-                <span className="ml-2">🎯</span>
+                Next Lesson
+                <span className="ml-2">→</span>
               </Link>
             )}
           </div>

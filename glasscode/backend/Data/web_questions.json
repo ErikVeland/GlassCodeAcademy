@@ -1,0 +1,132 @@
+[
+  {
+    "id": 1,
+    "question": "Which HTML5 element should be used to wrap the main navigation links of a website?",
+    "topic": "Web Fundamentals",
+    "choices": [
+      "<nav>",
+      "<div>",
+      "<header>",
+      "<menu>"
+    ],
+    "correctIndex": 0,
+    "explanation": "The <nav> element is specifically designed for navigation links. It provides semantic meaning that helps screen readers and search engines understand the purpose of the content. Using <div> provides no semantic value, while <header> is for page headers and <menu> is for interactive commands."
+  },
+  {
+    "id": 2,
+    "question": "What is the correct CSS to center a div horizontally and vertically using Flexbox?",
+    "topic": "Web Fundamentals",
+    "choices": [
+      "display: flex; justify-content: center; align-items: center;",
+      "display: flex; align-content: center; justify-items: center;",
+      "display: block; text-align: center; vertical-align: middle;",
+      "display: grid; place-items: center;"
+    ],
+    "correctIndex": 0,
+    "explanation": "With Flexbox, 'justify-content: center' centers items horizontally (main axis) and 'align-items: center' centers them vertically (cross axis). Option D would work with CSS Grid, but the question specifically asks about Flexbox."
+  },
+  {
+    "id": 3,
+    "question": "Which JavaScript method is used to select an element by its ID?",
+    "topic": "Web Fundamentals",
+    "choices": [
+      "document.getElementById('myId')",
+      "document.querySelector('#myId')",
+      "document.getElementByClass('myId')",
+      "Both A and B are correct"
+    ],
+    "correctIndex": 3,
+    "explanation": "Both document.getElementById('myId') and document.querySelector('#myId') can select an element by ID. getElementById is the traditional method, while querySelector is more flexible and can use any CSS selector. Option C is incorrect because it should be getElementsByClassName and it's for classes, not IDs."
+  },
+  {
+    "id": 4,
+    "question": "What does this CSS media query do?\n\n@media (max-width: 768px) { /* styles */ }",
+    "topic": "Web Fundamentals",
+    "choices": [
+      "Applies styles when screen width is 768px or less",
+      "Applies styles when screen width is exactly 768px",
+      "Applies styles when screen width is more than 768px",
+      "Only applies to tablets with 768px width"
+    ],
+    "correctIndex": 0,
+    "explanation": "The 'max-width: 768px' media query applies styles when the viewport width is 768 pixels or smaller. This is commonly used for mobile-first responsive design to apply mobile styles on smaller screens."
+  },
+  {
+    "id": 5,
+    "question": "Which input type provides built-in email validation in HTML5?",
+    "topic": "Web Fundamentals",
+    "choices": [
+      "<input type=\"email\">",
+      "<input type=\"text\" pattern=\"email\">",
+      "<input type=\"validation\" format=\"email\">",
+      "<input type=\"text\" validate=\"email\">"
+    ],
+    "correctIndex": 0,
+    "explanation": "HTML5 introduced the 'email' input type which automatically validates that the entered text follows email format (contains @ symbol and valid structure). Modern browsers will show validation errors if the format is incorrect."
+  },
+  {
+    "id": 6,
+    "question": "What is the purpose of the CSS 'box-sizing: border-box' property?",
+    "topic": "Web Fundamentals",
+    "choices": [
+      "Includes padding and border in the element's total width and height",
+      "Creates a border around the element",
+      "Adds padding to the element",
+      "Changes the element's display type to a box"
+    ],
+    "correctIndex": 0,
+    "explanation": "When 'box-sizing: border-box' is applied, the element's width and height include the padding and border, making it easier to size elements. Without this property, padding and borders are added to the specified width and height, often causing layout issues."
+  },
+  {
+    "id": 7,
+    "question": "Which CSS display value removes an element from the document flow?",
+    "topic": "Web Fundamentals",
+    "choices": [
+      "display: none",
+      "display: block",
+      "display: inline",
+      "display: flex"
+    ],
+    "correctIndex": 0,
+    "explanation": "'display: none' completely removes an element from the document flow, making it invisible and not taking up any space. Other display values like 'block', 'inline', and 'flex' still participate in the document flow, just with different layout behaviors."
+  },
+  {
+    "id": 8,
+    "question": "What is the correct way to add an event listener in JavaScript?",
+    "topic": "Web Fundamentals",
+    "choices": [
+      "element.addEventListener('click', function() { })",
+      "element.onclick = function() { }",
+      "element.attachEvent('onclick', function() { })",
+      "Both A and B are correct"
+    ],
+    "correctIndex": 3,
+    "explanation": "Both addEventListener and direct event properties (like onclick) can be used to add event listeners. addEventListener is more flexible as it allows multiple listeners for the same event and provides better control. Direct event properties are simpler but limited to one listener per event type."
+  },
+  {
+    "id": 9,
+    "question": "Which CSS property is used to make a flex container's items wrap to multiple lines?",
+    "topic": "Web Fundamentals",
+    "choices": [
+      "flex-wrap: wrap",
+      "flex-direction: wrap",
+      "flex-line: wrap",
+      "wrap: flex"
+    ],
+    "correctIndex": 0,
+    "explanation": "The 'flex-wrap: wrap' property allows flex items to wrap onto multiple lines when they don't fit in a single line. The default value is 'nowrap', which keeps all items on one line even if they overflow the container."
+  },
+  {
+    "id": 10,
+    "question": "What is the purpose of the viewport meta tag in HTML?",
+    "topic": "Web Fundamentals",
+    "choices": [
+      "Controls how the page is displayed on mobile devices",
+      "Sets the background color of the page",
+      "Defines the character encoding",
+      "Specifies the page title"
+    ],
+    "correctIndex": 0,
+    "explanation": "The viewport meta tag (<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">) controls how the page is displayed on mobile devices. It ensures the page width matches the device width and sets the initial zoom level, which is essential for responsive design."
+  }
+]

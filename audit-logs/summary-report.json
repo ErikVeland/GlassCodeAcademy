@@ -1,0 +1,1338 @@
+{
+  "timestamp": "2025-10-07T04:10:07.624Z",
+  "statistics": {
+    "totalModules": 18,
+    "completeLessons": 6,
+    "completeQuizzes": 7,
+    "accessibleModules": 18
+  },
+  "modules": [
+    {
+      "moduleSlug": "programming-fundamentals",
+      "title": "Programming Fundamentals",
+      "tier": "foundational",
+      "track": "Programming",
+      "timestamp": "2025-10-07T04:10:07.593Z",
+      "content": {
+        "lessons": {
+          "required": 12,
+          "actual": 1,
+          "status": "incomplete"
+        },
+        "quizzes": {
+          "required": 15,
+          "actual": 15,
+          "status": "complete"
+        }
+      },
+      "validation": {
+        "issues": [],
+        "warnings": []
+      },
+      "accessibility": {
+        "issues": 0,
+        "severity": "compliant"
+      },
+      "quizAnalysis": {
+        "totalQuestions": 15,
+        "difficultyDistribution": {
+          "beginner": 8,
+          "intermediate": 7,
+          "advanced": 0
+        },
+        "targetDistribution": {
+          "beginner": 6,
+          "intermediate": 10,
+          "advanced": 4
+        },
+        "topicsCovered": 10,
+        "duplicationRate": 80
+      },
+      "sources": [],
+      "routes": {
+        "overview": "/modules/programming-fundamentals",
+        "lessons": "/modules/programming-fundamentals/lessons",
+        "quiz": "/modules/programming-fundamentals/quiz"
+      }
+    },
+    {
+      "moduleSlug": "web-fundamentals",
+      "title": "Web Development Basics",
+      "tier": "foundational",
+      "track": "Frontend",
+      "timestamp": "2025-10-07T04:10:07.595Z",
+      "content": {
+        "lessons": {
+          "required": 15,
+          "actual": 0,
+          "status": "unknown"
+        },
+        "quizzes": {
+          "required": 20,
+          "actual": 0,
+          "status": "unknown"
+        }
+      },
+      "validation": {
+        "issues": [],
+        "warnings": []
+      },
+      "accessibility": {
+        "issues": 0,
+        "severity": "compliant"
+      },
+      "quizAnalysis": {
+        "totalQuestions": 20,
+        "difficultyDistribution": {
+          "beginner": 9,
+          "intermediate": 9,
+          "advanced": 2
+        },
+        "targetDistribution": {
+          "beginner": 6,
+          "intermediate": 10,
+          "advanced": 4
+        },
+        "topicsCovered": 4,
+        "duplicationRate": 80
+      },
+      "sources": [],
+      "routes": {
+        "overview": "/modules/web-fundamentals",
+        "lessons": "/modules/web-fundamentals/lessons",
+        "quiz": "/modules/web-fundamentals/quiz"
+      }
+    },
+    {
+      "moduleSlug": "version-control",
+      "title": "Version Control with Git",
+      "tier": "foundational",
+      "track": "DevOps",
+      "timestamp": "2025-10-07T04:10:07.598Z",
+      "content": {
+        "lessons": {
+          "required": 10,
+          "actual": 0,
+          "status": "unknown"
+        },
+        "quizzes": {
+          "required": 15,
+          "actual": 0,
+          "status": "unknown"
+        }
+      },
+      "validation": {
+        "issues": [],
+        "warnings": []
+      },
+      "accessibility": {
+        "issues": 0,
+        "severity": "compliant"
+      },
+      "quizAnalysis": {
+        "totalQuestions": 15,
+        "difficultyDistribution": {
+          "beginner": 10,
+          "intermediate": 4,
+          "advanced": 1
+        },
+        "targetDistribution": {
+          "beginner": 6,
+          "intermediate": 10,
+          "advanced": 4
+        },
+        "topicsCovered": 3,
+        "duplicationRate": 80
+      },
+      "sources": [],
+      "routes": {
+        "overview": "/modules/version-control",
+        "lessons": "/modules/version-control/lessons",
+        "quiz": "/modules/version-control/quiz"
+      }
+    },
+    {
+      "moduleSlug": "dotnet-fundamentals",
+      "title": ".NET Core Fundamentals",
+      "tier": "core",
+      "track": "Backend",
+      "timestamp": "2025-10-07T04:10:07.599Z",
+      "content": {
+        "lessons": {
+          "required": 18,
+          "actual": 0,
+          "status": "unknown"
+        },
+        "quizzes": {
+          "required": 25,
+          "actual": 0,
+          "status": "unknown"
+        }
+      },
+      "validation": {
+        "issues": [],
+        "warnings": []
+      },
+      "accessibility": {
+        "issues": 0,
+        "severity": "compliant"
+      },
+      "quizAnalysis": {
+        "totalQuestions": 25,
+        "difficultyDistribution": {
+          "beginner": 8,
+          "intermediate": 11,
+          "advanced": 1
+        },
+        "targetDistribution": {
+          "beginner": 6,
+          "intermediate": 10,
+          "advanced": 4
+        },
+        "topicsCovered": 15,
+        "duplicationRate": 75
+      },
+      "sources": [],
+      "routes": {
+        "overview": "/modules/dotnet-fundamentals",
+        "lessons": "/modules/dotnet-fundamentals/lessons",
+        "quiz": "/modules/dotnet-fundamentals/quiz"
+      }
+    },
+    {
+      "moduleSlug": "react-fundamentals",
+      "title": "React Development",
+      "tier": "core",
+      "track": "Frontend",
+      "timestamp": "2025-10-07T04:10:07.602Z",
+      "content": {
+        "lessons": {
+          "required": 15,
+          "actual": 0,
+          "status": "unknown"
+        },
+        "quizzes": {
+          "required": 20,
+          "actual": 0,
+          "status": "unknown"
+        }
+      },
+      "validation": {
+        "issues": [],
+        "warnings": []
+      },
+      "accessibility": {
+        "issues": 0,
+        "severity": "compliant"
+      },
+      "quizAnalysis": {
+        "totalQuestions": 20,
+        "difficultyDistribution": {
+          "beginner": 9,
+          "intermediate": 10,
+          "advanced": 1
+        },
+        "targetDistribution": {
+          "beginner": 6,
+          "intermediate": 10,
+          "advanced": 4
+        },
+        "topicsCovered": 14,
+        "duplicationRate": 80
+      },
+      "sources": [],
+      "routes": {
+        "overview": "/modules/react-fundamentals",
+        "lessons": "/modules/react-fundamentals/lessons",
+        "quiz": "/modules/react-fundamentals/quiz"
+      }
+    },
+    {
+      "moduleSlug": "database-systems",
+      "title": "Database Systems",
+      "tier": "core",
+      "track": "Backend",
+      "timestamp": "2025-10-07T04:10:07.603Z",
+      "content": {
+        "lessons": {
+          "required": 16,
+          "actual": 16,
+          "status": "complete"
+        },
+        "quizzes": {
+          "required": 22,
+          "actual": 0,
+          "status": "unknown"
+        }
+      },
+      "validation": {
+        "issues": [
+          {
+            "severity": "medium",
+            "type": "lesson-count",
+            "message": "Module database-systems: Only 12 lessons (requires 16)",
+            "timestamp": "2025-10-01T07:38:14.934Z"
+          },
+          {
+            "severity": "medium",
+            "type": "quiz-count",
+            "message": "Module database-systems: Only 15 quiz questions (requires 22)",
+            "timestamp": "2025-10-01T07:38:14.934Z"
+          }
+        ],
+        "warnings": []
+      },
+      "accessibility": {
+        "issues": 0,
+        "severity": "compliant"
+      },
+      "quizAnalysis": {
+        "totalQuestions": 0,
+        "difficultyDistribution": {
+          "beginner": 0,
+          "intermediate": 0,
+          "advanced": 0
+        },
+        "targetDistribution": {
+          "beginner": 6,
+          "intermediate": 10,
+          "advanced": 4
+        },
+        "topicsCovered": 0,
+        "duplicationRate": 0
+      },
+      "sources": [
+        {
+          "url": "https://www.seas.upenn.edu/~zives/03s/cis550/codd.pdf"
+        },
+        {
+          "url": "https://www.db-book.com/"
+        },
+        {
+          "url": "https://www.pearson.com/us/higher-education/program/Elmasri-Fundamentals-of-Database-Systems-7th-Edition/PGM118419.html"
+        },
+        {
+          "url": "http://philip.greenspun.com/sql/constraints.html"
+        },
+        {
+          "url": "https://www.databass.dev/"
+        },
+        {
+          "url": "https://dev.mysql.com/doc/refman/8.0/en/create-table-constraints.html"
+        },
+        {
+          "url": "https://www.oreilly.com/library/view/sql-cookbook/0596009763/"
+        },
+        {
+          "url": "https://www.oreilly.com/library/view/learning-sql-2nd/9780596801835/"
+        },
+        {
+          "url": "https://www.oreilly.com/library/view/high-performance-mysql/9781492080503/"
+        }
+      ],
+      "routes": {
+        "overview": "/modules/database-systems",
+        "lessons": "/modules/database-systems/lessons",
+        "quiz": "/modules/database-systems/quiz"
+      }
+    },
+    {
+      "moduleSlug": "typescript-fundamentals",
+      "title": "TypeScript Development",
+      "tier": "core",
+      "track": "Frontend",
+      "timestamp": "2025-10-07T04:10:07.605Z",
+      "content": {
+        "lessons": {
+          "required": 14,
+          "actual": 0,
+          "status": "unknown"
+        },
+        "quizzes": {
+          "required": 18,
+          "actual": 0,
+          "status": "unknown"
+        }
+      },
+      "validation": {
+        "issues": [],
+        "warnings": []
+      },
+      "accessibility": {
+        "issues": 0,
+        "severity": "compliant"
+      },
+      "quizAnalysis": {
+        "totalQuestions": 18,
+        "difficultyDistribution": {
+          "beginner": 8,
+          "intermediate": 7,
+          "advanced": 3
+        },
+        "targetDistribution": {
+          "beginner": 6,
+          "intermediate": 10,
+          "advanced": 4
+        },
+        "topicsCovered": 13,
+        "duplicationRate": 80
+      },
+      "sources": [],
+      "routes": {
+        "overview": "/modules/typescript-fundamentals",
+        "lessons": "/modules/typescript-fundamentals/lessons",
+        "quiz": "/modules/typescript-fundamentals/quiz"
+      }
+    },
+    {
+      "moduleSlug": "node-fundamentals",
+      "title": "Node.js Development",
+      "tier": "core",
+      "track": "Backend",
+      "timestamp": "2025-10-07T04:10:07.606Z",
+      "content": {
+        "lessons": {
+          "required": 18,
+          "actual": 0,
+          "status": "unknown"
+        },
+        "quizzes": {
+          "required": 20,
+          "actual": 0,
+          "status": "unknown"
+        }
+      },
+      "validation": {
+        "issues": [],
+        "warnings": []
+      },
+      "accessibility": {
+        "issues": 0,
+        "severity": "compliant"
+      },
+      "quizAnalysis": {
+        "totalQuestions": 20,
+        "difficultyDistribution": {
+          "beginner": 11,
+          "intermediate": 4,
+          "advanced": 5
+        },
+        "targetDistribution": {
+          "beginner": 6,
+          "intermediate": 10,
+          "advanced": 4
+        },
+        "topicsCovered": 15,
+        "duplicationRate": 80
+      },
+      "sources": [],
+      "routes": {
+        "overview": "/modules/node-fundamentals",
+        "lessons": "/modules/node-fundamentals/lessons",
+        "quiz": "/modules/node-fundamentals/quiz"
+      }
+    },
+    {
+      "moduleSlug": "laravel-fundamentals",
+      "title": "Laravel Framework",
+      "tier": "core",
+      "track": "Backend",
+      "timestamp": "2025-10-07T04:10:07.608Z",
+      "content": {
+        "lessons": {
+          "required": 18,
+          "actual": 16,
+          "status": "incomplete"
+        },
+        "quizzes": {
+          "required": 30,
+          "actual": 35,
+          "status": "complete"
+        }
+      },
+      "validation": {
+        "issues": [
+          {
+            "severity": "medium",
+            "type": "lesson-count",
+            "message": "Module laravel-fundamentals: Only 12 lessons (requires 16)",
+            "timestamp": "2025-10-01T07:38:14.936Z"
+          }
+        ],
+        "warnings": []
+      },
+      "accessibility": {
+        "issues": 0,
+        "severity": "compliant"
+      },
+      "quizAnalysis": {
+        "totalQuestions": 35,
+        "difficultyDistribution": {
+          "beginner": 4,
+          "intermediate": 16,
+          "advanced": 0
+        },
+        "targetDistribution": {
+          "beginner": 6,
+          "intermediate": 10,
+          "advanced": 4
+        },
+        "topicsCovered": 19,
+        "duplicationRate": 65
+      },
+      "sources": [],
+      "routes": {
+        "overview": "/modules/laravel-fundamentals",
+        "lessons": "/modules/laravel-fundamentals/lessons",
+        "quiz": "/modules/laravel-fundamentals/quiz"
+      }
+    },
+    {
+      "moduleSlug": "nextjs-advanced",
+      "title": "Next.js Full-Stack Framework",
+      "tier": "specialized",
+      "track": "Frontend",
+      "timestamp": "2025-10-07T04:10:07.610Z",
+      "content": {
+        "lessons": {
+          "required": 14,
+          "actual": 14,
+          "status": "complete"
+        },
+        "quizzes": {
+          "required": 18,
+          "actual": 18,
+          "status": "complete"
+        }
+      },
+      "validation": {
+        "issues": [
+          {
+            "severity": "medium",
+            "type": "lesson-count",
+            "message": "Module nextjs-advanced: Only 12 lessons (requires 14)",
+            "timestamp": "2025-10-01T07:38:14.937Z"
+          },
+          {
+            "severity": "medium",
+            "type": "quiz-count",
+            "message": "Module nextjs-advanced: Only 5 quiz questions (requires 18)",
+            "timestamp": "2025-10-01T07:38:14.937Z"
+          }
+        ],
+        "warnings": []
+      },
+      "accessibility": {
+        "issues": 0,
+        "severity": "compliant"
+      },
+      "quizAnalysis": {
+        "totalQuestions": 18,
+        "difficultyDistribution": {
+          "beginner": 4,
+          "intermediate": 9,
+          "advanced": 5
+        },
+        "targetDistribution": {
+          "beginner": 6,
+          "intermediate": 10,
+          "advanced": 4
+        },
+        "topicsCovered": 16,
+        "duplicationRate": 80
+      },
+      "sources": [],
+      "routes": {
+        "overview": "/modules/nextjs-advanced",
+        "lessons": "/modules/nextjs-advanced/lessons",
+        "quiz": "/modules/nextjs-advanced/quiz"
+      }
+    },
+    {
+      "moduleSlug": "graphql-advanced",
+      "title": "GraphQL Development",
+      "tier": "specialized",
+      "track": "Backend",
+      "timestamp": "2025-10-07T04:10:07.612Z",
+      "content": {
+        "lessons": {
+          "required": 13,
+          "actual": 13,
+          "status": "complete"
+        },
+        "quizzes": {
+          "required": 17,
+          "actual": 20,
+          "status": "complete"
+        }
+      },
+      "validation": {
+        "issues": [],
+        "warnings": []
+      },
+      "accessibility": {
+        "issues": 0,
+        "severity": "compliant"
+      },
+      "quizAnalysis": {
+        "totalQuestions": 20,
+        "difficultyDistribution": {
+          "beginner": 7,
+          "intermediate": 10,
+          "advanced": 3
+        },
+        "targetDistribution": {
+          "beginner": 6,
+          "intermediate": 10,
+          "advanced": 4
+        },
+        "topicsCovered": 12,
+        "duplicationRate": 80
+      },
+      "sources": [],
+      "routes": {
+        "overview": "/modules/graphql-advanced",
+        "lessons": "/modules/graphql-advanced/lessons",
+        "quiz": "/modules/graphql-advanced/quiz"
+      }
+    },
+    {
+      "moduleSlug": "sass-advanced",
+      "title": "Sass/SCSS Development",
+      "tier": "specialized",
+      "track": "Frontend",
+      "timestamp": "2025-10-07T04:10:07.613Z",
+      "content": {
+        "lessons": {
+          "required": 15,
+          "actual": 12,
+          "status": "incomplete"
+        },
+        "quizzes": {
+          "required": 15,
+          "actual": 15,
+          "status": "complete"
+        }
+      },
+      "validation": {
+        "issues": [],
+        "warnings": []
+      },
+      "accessibility": {
+        "issues": 0,
+        "severity": "compliant"
+      },
+      "quizAnalysis": {
+        "totalQuestions": 15,
+        "difficultyDistribution": {
+          "beginner": 8,
+          "intermediate": 7,
+          "advanced": 0
+        },
+        "targetDistribution": {
+          "beginner": 6,
+          "intermediate": 10,
+          "advanced": 4
+        },
+        "topicsCovered": 11,
+        "duplicationRate": 80
+      },
+      "sources": [],
+      "routes": {
+        "overview": "/modules/sass-advanced",
+        "lessons": "/modules/sass-advanced/lessons",
+        "quiz": "/modules/sass-advanced/quiz"
+      }
+    },
+    {
+      "moduleSlug": "tailwind-advanced",
+      "title": "Tailwind CSS Framework",
+      "tier": "specialized",
+      "track": "Frontend",
+      "timestamp": "2025-10-07T04:10:07.614Z",
+      "content": {
+        "lessons": {
+          "required": 13,
+          "actual": 13,
+          "status": "complete"
+        },
+        "quizzes": {
+          "required": 16,
+          "actual": 0,
+          "status": "unknown"
+        }
+      },
+      "validation": {
+        "issues": [],
+        "warnings": []
+      },
+      "accessibility": {
+        "issues": 0,
+        "severity": "compliant"
+      },
+      "quizAnalysis": {
+        "totalQuestions": 0,
+        "difficultyDistribution": {
+          "beginner": 0,
+          "intermediate": 0,
+          "advanced": 0
+        },
+        "targetDistribution": {
+          "beginner": 6,
+          "intermediate": 10,
+          "advanced": 4
+        },
+        "topicsCovered": 0,
+        "duplicationRate": 0
+      },
+      "sources": [],
+      "routes": {
+        "overview": "/modules/tailwind-advanced",
+        "lessons": "/modules/tailwind-advanced/lessons",
+        "quiz": "/modules/tailwind-advanced/quiz"
+      }
+    },
+    {
+      "moduleSlug": "vue-advanced",
+      "title": "Vue.js Framework",
+      "tier": "specialized",
+      "track": "Frontend",
+      "timestamp": "2025-10-07T04:10:07.616Z",
+      "content": {
+        "lessons": {
+          "required": 14,
+          "actual": 14,
+          "status": "complete"
+        },
+        "quizzes": {
+          "required": 18,
+          "actual": 18,
+          "status": "complete"
+        }
+      },
+      "validation": {
+        "issues": [
+          {
+            "severity": "medium",
+            "type": "lesson-count",
+            "message": "Module vue-advanced: Only 12 lessons (requires 14)",
+            "timestamp": "2025-10-01T07:38:14.938Z"
+          },
+          {
+            "severity": "medium",
+            "type": "quiz-count",
+            "message": "Module vue-advanced: Only 15 quiz questions (requires 18)",
+            "timestamp": "2025-10-01T07:38:14.938Z"
+          }
+        ],
+        "warnings": []
+      },
+      "accessibility": {
+        "issues": 0,
+        "severity": "compliant"
+      },
+      "quizAnalysis": {
+        "totalQuestions": 18,
+        "difficultyDistribution": {
+          "beginner": 9,
+          "intermediate": 8,
+          "advanced": 1
+        },
+        "targetDistribution": {
+          "beginner": 6,
+          "intermediate": 10,
+          "advanced": 4
+        },
+        "topicsCovered": 11,
+        "duplicationRate": 80
+      },
+      "sources": [],
+      "routes": {
+        "overview": "/modules/vue-advanced",
+        "lessons": "/modules/vue-advanced/lessons",
+        "quiz": "/modules/vue-advanced/quiz"
+      }
+    },
+    {
+      "moduleSlug": "testing-fundamentals",
+      "title": "Software Testing Fundamentals",
+      "tier": "quality",
+      "track": "Testing",
+      "timestamp": "2025-10-07T04:10:07.618Z",
+      "content": {
+        "lessons": {
+          "required": 14,
+          "actual": 0,
+          "status": "unknown"
+        },
+        "quizzes": {
+          "required": 18,
+          "actual": 0,
+          "status": "unknown"
+        }
+      },
+      "validation": {
+        "issues": [
+          {
+            "severity": "medium",
+            "type": "lesson-count",
+            "message": "Module testing-fundamentals: Only 12 lessons (requires 14)",
+            "timestamp": "2025-10-01T07:38:14.939Z"
+          },
+          {
+            "severity": "medium",
+            "type": "quiz-count",
+            "message": "Module testing-fundamentals: Only 15 quiz questions (requires 18)",
+            "timestamp": "2025-10-01T07:38:14.939Z"
+          }
+        ],
+        "warnings": []
+      },
+      "accessibility": {
+        "issues": 0,
+        "severity": "compliant"
+      },
+      "quizAnalysis": {
+        "totalQuestions": 18,
+        "difficultyDistribution": {
+          "beginner": 11,
+          "intermediate": 6,
+          "advanced": 1
+        },
+        "targetDistribution": {
+          "beginner": 6,
+          "intermediate": 10,
+          "advanced": 4
+        },
+        "topicsCovered": 13,
+        "duplicationRate": 80
+      },
+      "sources": [],
+      "routes": {
+        "overview": "/modules/testing-fundamentals",
+        "lessons": "/modules/testing-fundamentals/lessons",
+        "quiz": "/modules/testing-fundamentals/quiz"
+      }
+    },
+    {
+      "moduleSlug": "e2e-testing",
+      "title": "End-to-End Testing",
+      "tier": "quality",
+      "track": "Testing",
+      "timestamp": "2025-10-07T04:10:07.619Z",
+      "content": {
+        "lessons": {
+          "required": 12,
+          "actual": 0,
+          "status": "unknown"
+        },
+        "quizzes": {
+          "required": 15,
+          "actual": 0,
+          "status": "unknown"
+        }
+      },
+      "validation": {
+        "issues": [],
+        "warnings": []
+      },
+      "accessibility": {
+        "issues": 0,
+        "severity": "compliant"
+      },
+      "quizAnalysis": {
+        "totalQuestions": 15,
+        "difficultyDistribution": {
+          "beginner": 7,
+          "intermediate": 7,
+          "advanced": 1
+        },
+        "targetDistribution": {
+          "beginner": 6,
+          "intermediate": 10,
+          "advanced": 4
+        },
+        "topicsCovered": 3,
+        "duplicationRate": 80
+      },
+      "sources": [],
+      "routes": {
+        "overview": "/modules/e2e-testing",
+        "lessons": "/modules/e2e-testing/lessons",
+        "quiz": "/modules/e2e-testing/quiz"
+      }
+    },
+    {
+      "moduleSlug": "performance-optimization",
+      "title": "Performance Optimization",
+      "tier": "quality",
+      "track": "Performance",
+      "timestamp": "2025-10-07T04:10:07.620Z",
+      "content": {
+        "lessons": {
+          "required": 13,
+          "actual": 13,
+          "status": "complete"
+        },
+        "quizzes": {
+          "required": 16,
+          "actual": 48,
+          "status": "complete"
+        }
+      },
+      "validation": {
+        "issues": [],
+        "warnings": []
+      },
+      "accessibility": {
+        "issues": 0,
+        "severity": "compliant"
+      },
+      "quizAnalysis": {
+        "totalQuestions": 48,
+        "difficultyDistribution": {
+          "beginner": 7,
+          "intermediate": 8,
+          "advanced": 5
+        },
+        "targetDistribution": {
+          "beginner": 6,
+          "intermediate": 10,
+          "advanced": 4
+        },
+        "topicsCovered": 14,
+        "duplicationRate": 56
+      },
+      "sources": [],
+      "routes": {
+        "overview": "/modules/performance-optimization",
+        "lessons": "/modules/performance-optimization/lessons",
+        "quiz": "/modules/performance-optimization/quiz"
+      }
+    },
+    {
+      "moduleSlug": "security-fundamentals",
+      "title": "Security Best Practices",
+      "tier": "quality",
+      "track": "Security",
+      "timestamp": "2025-10-07T04:10:07.622Z",
+      "content": {
+        "lessons": {
+          "required": 15,
+          "actual": 0,
+          "status": "unknown"
+        },
+        "quizzes": {
+          "required": 20,
+          "actual": 0,
+          "status": "unknown"
+        }
+      },
+      "validation": {
+        "issues": [],
+        "warnings": []
+      },
+      "accessibility": {
+        "issues": 0,
+        "severity": "compliant"
+      },
+      "quizAnalysis": {
+        "totalQuestions": 20,
+        "difficultyDistribution": {
+          "beginner": 9,
+          "intermediate": 4,
+          "advanced": 7
+        },
+        "targetDistribution": {
+          "beginner": 6,
+          "intermediate": 10,
+          "advanced": 4
+        },
+        "topicsCovered": 3,
+        "duplicationRate": 80
+      },
+      "sources": [],
+      "routes": {
+        "overview": "/modules/security-fundamentals",
+        "lessons": "/modules/security-fundamentals/lessons",
+        "quiz": "/modules/security-fundamentals/quiz"
+      }
+    }
+  ],
+  "reports": {
+    "validation": {
+      "timestamp": "2025-10-01T07:38:14.925Z",
+      "totalModules": 18,
+      "validModules": 13,
+      "totalLessons": 237,
+      "validLessons": 177,
+      "totalQuizzes": 320,
+      "validQuizzes": 270,
+      "issues": [
+        {
+          "severity": "medium",
+          "type": "lesson-count",
+          "message": "Module database-systems: Only 12 lessons (requires 16)",
+          "timestamp": "2025-10-01T07:38:14.934Z"
+        },
+        {
+          "severity": "medium",
+          "type": "quiz-count",
+          "message": "Module database-systems: Only 15 quiz questions (requires 22)",
+          "timestamp": "2025-10-01T07:38:14.934Z"
+        },
+        {
+          "severity": "medium",
+          "type": "lesson-count",
+          "message": "Module laravel-fundamentals: Only 12 lessons (requires 16)",
+          "timestamp": "2025-10-01T07:38:14.936Z"
+        },
+        {
+          "severity": "medium",
+          "type": "lesson-count",
+          "message": "Module nextjs-advanced: Only 12 lessons (requires 14)",
+          "timestamp": "2025-10-01T07:38:14.937Z"
+        },
+        {
+          "severity": "medium",
+          "type": "quiz-count",
+          "message": "Module nextjs-advanced: Only 5 quiz questions (requires 18)",
+          "timestamp": "2025-10-01T07:38:14.937Z"
+        },
+        {
+          "severity": "medium",
+          "type": "lesson-count",
+          "message": "Module vue-advanced: Only 12 lessons (requires 14)",
+          "timestamp": "2025-10-01T07:38:14.938Z"
+        },
+        {
+          "severity": "medium",
+          "type": "quiz-count",
+          "message": "Module vue-advanced: Only 15 quiz questions (requires 18)",
+          "timestamp": "2025-10-01T07:38:14.938Z"
+        },
+        {
+          "severity": "medium",
+          "type": "lesson-count",
+          "message": "Module testing-fundamentals: Only 12 lessons (requires 14)",
+          "timestamp": "2025-10-01T07:38:14.939Z"
+        },
+        {
+          "severity": "medium",
+          "type": "quiz-count",
+          "message": "Module testing-fundamentals: Only 15 quiz questions (requires 18)",
+          "timestamp": "2025-10-01T07:38:14.939Z"
+        }
+      ],
+      "warnings": [],
+      "summary": {
+        "overallCompliance": 77,
+        "readyForProduction": false,
+        "criticalIssues": 0,
+        "recommendations": [
+          "🟡 Improve content quality to reach 90%+ compliance",
+          "📚 Add more lessons to modules below threshold",
+          "❓ Add more quiz questions to meet minimum requirements"
+        ]
+      }
+    },
+    "accessibility": {
+      "timestamp": "2025-10-07T04:07:55.064Z",
+      "summary": {
+        "totalIssues": 0,
+        "highSeverity": 0,
+        "mediumSeverity": 0,
+        "lowSeverity": 0
+      },
+      "issues": []
+    },
+    "randomness": {
+      "timestamp": "2025-10-07T04:09:18.526Z",
+      "summary": {
+        "totalModules": 16,
+        "goodDistributionModules": 1,
+        "avgQuestions": 21,
+        "avgDistribution": {
+          "beginner": 8,
+          "intermediate": 8,
+          "advanced": 2
+        },
+        "avgDuplication": 77.25
+      },
+      "modules": [
+        {
+          "module": "dotnet-fundamentals",
+          "totalQuestions": 25,
+          "avgDistribution": {
+            "beginner": 8,
+            "intermediate": 11,
+            "advanced": 1
+          },
+          "targetDistribution": {
+            "beginner": 6,
+            "intermediate": 10,
+            "advanced": 4
+          },
+          "isDistributionGood": false,
+          "topicsCovered": 15,
+          "duplicationRate": 75
+        },
+        {
+          "module": "e2e-testing",
+          "totalQuestions": 15,
+          "avgDistribution": {
+            "beginner": 7,
+            "intermediate": 7,
+            "advanced": 1
+          },
+          "targetDistribution": {
+            "beginner": 6,
+            "intermediate": 10,
+            "advanced": 4
+          },
+          "isDistributionGood": false,
+          "topicsCovered": 3,
+          "duplicationRate": 80
+        },
+        {
+          "module": "graphql-advanced",
+          "totalQuestions": 20,
+          "avgDistribution": {
+            "beginner": 7,
+            "intermediate": 10,
+            "advanced": 3
+          },
+          "targetDistribution": {
+            "beginner": 6,
+            "intermediate": 10,
+            "advanced": 4
+          },
+          "isDistributionGood": true,
+          "topicsCovered": 12,
+          "duplicationRate": 80
+        },
+        {
+          "module": "laravel-fundamentals",
+          "totalQuestions": 35,
+          "avgDistribution": {
+            "beginner": 4,
+            "intermediate": 16,
+            "advanced": 0
+          },
+          "targetDistribution": {
+            "beginner": 6,
+            "intermediate": 10,
+            "advanced": 4
+          },
+          "isDistributionGood": false,
+          "topicsCovered": 19,
+          "duplicationRate": 65
+        },
+        {
+          "module": "nextjs-advanced",
+          "totalQuestions": 18,
+          "avgDistribution": {
+            "beginner": 4,
+            "intermediate": 9,
+            "advanced": 5
+          },
+          "targetDistribution": {
+            "beginner": 6,
+            "intermediate": 10,
+            "advanced": 4
+          },
+          "isDistributionGood": false,
+          "topicsCovered": 16,
+          "duplicationRate": 80
+        },
+        {
+          "module": "node-fundamentals",
+          "totalQuestions": 20,
+          "avgDistribution": {
+            "beginner": 11,
+            "intermediate": 4,
+            "advanced": 5
+          },
+          "targetDistribution": {
+            "beginner": 6,
+            "intermediate": 10,
+            "advanced": 4
+          },
+          "isDistributionGood": false,
+          "topicsCovered": 15,
+          "duplicationRate": 80
+        },
+        {
+          "module": "performance-optimization",
+          "totalQuestions": 48,
+          "avgDistribution": {
+            "beginner": 7,
+            "intermediate": 8,
+            "advanced": 5
+          },
+          "targetDistribution": {
+            "beginner": 6,
+            "intermediate": 10,
+            "advanced": 4
+          },
+          "isDistributionGood": false,
+          "topicsCovered": 14,
+          "duplicationRate": 56
+        },
+        {
+          "module": "programming-fundamentals",
+          "totalQuestions": 15,
+          "avgDistribution": {
+            "beginner": 8,
+            "intermediate": 7,
+            "advanced": 0
+          },
+          "targetDistribution": {
+            "beginner": 6,
+            "intermediate": 10,
+            "advanced": 4
+          },
+          "isDistributionGood": false,
+          "topicsCovered": 10,
+          "duplicationRate": 80
+        },
+        {
+          "module": "react-fundamentals",
+          "totalQuestions": 20,
+          "avgDistribution": {
+            "beginner": 9,
+            "intermediate": 10,
+            "advanced": 1
+          },
+          "targetDistribution": {
+            "beginner": 6,
+            "intermediate": 10,
+            "advanced": 4
+          },
+          "isDistributionGood": false,
+          "topicsCovered": 14,
+          "duplicationRate": 80
+        },
+        {
+          "module": "sass-advanced",
+          "totalQuestions": 15,
+          "avgDistribution": {
+            "beginner": 8,
+            "intermediate": 7,
+            "advanced": 0
+          },
+          "targetDistribution": {
+            "beginner": 6,
+            "intermediate": 10,
+            "advanced": 4
+          },
+          "isDistributionGood": false,
+          "topicsCovered": 11,
+          "duplicationRate": 80
+        },
+        {
+          "module": "security-fundamentals",
+          "totalQuestions": 20,
+          "avgDistribution": {
+            "beginner": 9,
+            "intermediate": 4,
+            "advanced": 7
+          },
+          "targetDistribution": {
+            "beginner": 6,
+            "intermediate": 10,
+            "advanced": 4
+          },
+          "isDistributionGood": false,
+          "topicsCovered": 3,
+          "duplicationRate": 80
+        },
+        {
+          "module": "testing-fundamentals",
+          "totalQuestions": 18,
+          "avgDistribution": {
+            "beginner": 11,
+            "intermediate": 6,
+            "advanced": 1
+          },
+          "targetDistribution": {
+            "beginner": 6,
+            "intermediate": 10,
+            "advanced": 4
+          },
+          "isDistributionGood": false,
+          "topicsCovered": 13,
+          "duplicationRate": 80
+        },
+        {
+          "module": "typescript-fundamentals",
+          "totalQuestions": 18,
+          "avgDistribution": {
+            "beginner": 8,
+            "intermediate": 7,
+            "advanced": 3
+          },
+          "targetDistribution": {
+            "beginner": 6,
+            "intermediate": 10,
+            "advanced": 4
+          },
+          "isDistributionGood": false,
+          "topicsCovered": 13,
+          "duplicationRate": 80
+        },
+        {
+          "module": "version-control",
+          "totalQuestions": 15,
+          "avgDistribution": {
+            "beginner": 10,
+            "intermediate": 4,
+            "advanced": 1
+          },
+          "targetDistribution": {
+            "beginner": 6,
+            "intermediate": 10,
+            "advanced": 4
+          },
+          "isDistributionGood": false,
+          "topicsCovered": 3,
+          "duplicationRate": 80
+        },
+        {
+          "module": "vue-advanced",
+          "totalQuestions": 18,
+          "avgDistribution": {
+            "beginner": 9,
+            "intermediate": 8,
+            "advanced": 1
+          },
+          "targetDistribution": {
+            "beginner": 6,
+            "intermediate": 10,
+            "advanced": 4
+          },
+          "isDistributionGood": false,
+          "topicsCovered": 11,
+          "duplicationRate": 80
+        },
+        {
+          "module": "web-fundamentals",
+          "totalQuestions": 20,
+          "avgDistribution": {
+            "beginner": 9,
+            "intermediate": 9,
+            "advanced": 2
+          },
+          "targetDistribution": {
+            "beginner": 6,
+            "intermediate": 10,
+            "advanced": 4
+          },
+          "isDistributionGood": false,
+          "topicsCovered": 4,
+          "duplicationRate": 80
+        }
+      ]
+    }
+  }
+}
