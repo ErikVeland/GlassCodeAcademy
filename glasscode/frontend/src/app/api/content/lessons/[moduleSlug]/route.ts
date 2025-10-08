@@ -60,6 +60,30 @@ async function fetchProgrammingLessons() {
   }
 }
 
+// Function to find lesson file in multiple possible locations
+function findLessonFile(moduleSlug: string): string | null {
+  // Try to find the lesson file in different possible locations
+  const possiblePaths = [
+    path.join(process.cwd(), '..', '..', 'content', 'lessons', `${moduleSlug}.json`),
+    path.join(process.cwd(), 'content', 'lessons', `${moduleSlug}.json`),
+    path.join(__dirname, '..', '..', '..', '..', 'content', 'lessons', `${moduleSlug}.json`),
+    path.join('/srv/academy', 'content', 'lessons', `${moduleSlug}.json`),
+  ];
+  
+  for (const lessonPath of possiblePaths) {
+    try {
+      if (fs.existsSync(lessonPath)) {
+        return lessonPath;
+      }
+    } catch (err) {
+      console.error(`Error checking ${lessonPath}:`, err);
+      // Continue to next path
+    }
+  }
+  
+  return null;
+}
+
 export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ moduleSlug: string }> }
@@ -81,13 +105,11 @@ export async function GET(
       });
     }
 
-    const lessonsPath = path.join(process.cwd(), '..', '..', 'content', 'lessons', `${moduleSlug}.json`);
-    console.log('Looking for lessons at:', lessonsPath);
-    console.log('Current working directory:', process.cwd());
-    console.log('File exists:', fs.existsSync(lessonsPath));
+    // Try to find the lesson file
+    const lessonsPath = findLessonFile(moduleSlug);
     
-    if (!fs.existsSync(lessonsPath)) {
-      console.log('File not found, returning empty array');
+    if (!lessonsPath) {
+      console.log(`Lesson file not found for module: ${moduleSlug}`);
       // Return empty array instead of error to prevent build failures
       return new Response(JSON.stringify([]), {
         headers: {
@@ -96,6 +118,9 @@ export async function GET(
       });
     }
 
+    console.log('Looking for lessons at:', lessonsPath);
+    console.log('File exists:', fs.existsSync(lessonsPath));
+    
     const lessonsContent = fs.readFileSync(lessonsPath, 'utf8');
     const lessons = JSON.parse(lessonsContent);
     console.log('Found', lessons.length, 'lessons');

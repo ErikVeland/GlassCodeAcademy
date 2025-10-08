@@ -54,6 +54,30 @@ async function fetchProgrammingQuestions() {
   }
 }
 
+// Function to find quiz file in multiple possible locations
+function findQuizFile(moduleSlug: string): string | null {
+  // Try to find the quiz file in different possible locations
+  const possiblePaths = [
+    path.join(process.cwd(), '..', '..', 'content', 'quizzes', `${moduleSlug}.json`),
+    path.join(process.cwd(), 'content', 'quizzes', `${moduleSlug}.json`),
+    path.join(__dirname, '..', '..', '..', '..', 'content', 'quizzes', `${moduleSlug}.json`),
+    path.join('/srv/academy', 'content', 'quizzes', `${moduleSlug}.json`),
+  ];
+  
+  for (const quizPath of possiblePaths) {
+    try {
+      if (fs.existsSync(quizPath)) {
+        return quizPath;
+      }
+    } catch (err) {
+      console.error(`Error checking ${quizPath}:`, err);
+      // Continue to next path
+    }
+  }
+  
+  return null;
+}
+
 export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ moduleSlug: string }> }
@@ -75,13 +99,11 @@ export async function GET(
       });
     }
 
-    const quizPath = path.join(process.cwd(), '..', '..', 'content', 'quizzes', `${moduleSlug}.json`);
-    console.log('Looking for quiz at:', quizPath);
-    console.log('Current working directory:', process.cwd());
-    console.log('File exists:', fs.existsSync(quizPath));
+    // Try to find the quiz file
+    const quizPath = findQuizFile(moduleSlug);
     
-    if (!fs.existsSync(quizPath)) {
-      console.log('File not found, returning empty quiz');
+    if (!quizPath) {
+      console.log(`Quiz file not found for module: ${moduleSlug}`);
       // Return empty quiz instead of error to prevent build failures
       return new Response(JSON.stringify({ questions: [] }), {
         headers: {
@@ -90,6 +112,9 @@ export async function GET(
       });
     }
 
+    console.log('Looking for quiz at:', quizPath);
+    console.log('File exists:', fs.existsSync(quizPath));
+    
     const quizContent = fs.readFileSync(quizPath, 'utf8');
     const quiz = JSON.parse(quizContent);
     console.log('Found', quiz.questions?.length || 0, 'questions');
