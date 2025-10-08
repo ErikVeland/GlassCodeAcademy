@@ -7,10 +7,10 @@ using System.Collections.Generic;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Configure Kestrel to listen on port 5023
+// Configure Kestrel to listen on port 8080 to match systemd service configuration
 builder.WebHost.UseKestrel(options =>
 {
-    options.ListenAnyIP(5023);
+    options.ListenAnyIP(8080);
 });
 
 builder.Services.AddCors(options =>

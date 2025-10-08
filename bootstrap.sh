@@ -2,7 +2,8 @@
 set -euo pipefail
 
 ### Load configuration from .env file ###
-ENV_FILE="/Users/veland/GlassCodeAcademy/.env"
+# Use relative path instead of hardcoded absolute path
+ENV_FILE="./.env"
 if [ -f "$ENV_FILE" ]; then
     source "$ENV_FILE"
     echo "Loaded configuration from $ENV_FILE"
@@ -139,19 +140,30 @@ fi
 update_global_json "$DOTNET_SDK_VERSION"
 
 ### 9. Build & Publish Backend (.NET)
-log "Building & publishing backend..."
+log "Building backend..."
 cd "$APP_DIR/glasscode/backend"
-sudo -u "$DEPLOY_USER" dotnet restore
-PUBLISH_DIR="$APP_DIR/glasscode/backend/out"
-sudo -u "$DEPLOY_USER" dotnet publish -c Release -o "$PUBLISH_DIR"
+
+# Clean + restore dependencies
+log "Restoring .NET dependencies..."
+if ! sudo -u "$DEPLOY_USER" dotnet restore; then
+    log "ERROR: Failed to restore .NET dependencies"
+    exit 1
+fi
+
+# Publish backend to /out
+log "Publishing .NET backend..."
+if ! sudo -u "$DEPLOY_USER" dotnet publish -c Release -o "$APP_DIR/glasscode/backend/out"; then
+    log "ERROR: Failed to publish .NET backend"
+    exit 1
+fi
 
 ### 10. Build Frontend (Next.js)
 log "Building frontend..."
 cd "$APP_DIR/glasscode/frontend"
 sudo -u "$DEPLOY_USER" npm ci
 cat > .env.production <<EOF
-NEXT_PUBLIC_API_BASE=https://$DOMAIN
-NEXT_PUBLIC_BASE_URL=https://$DOMAIN
+NEXT_PUBLIC_API_BASE=$NEXT_PUBLIC_API_BASE
+NEXT_PUBLIC_BASE_URL=$NEXT_PUBLIC_BASE_URL
 NODE_ENV=production
 EOF
 sudo -u "$DEPLOY_USER" npm run build
@@ -160,15 +172,15 @@ sudo -u "$DEPLOY_USER" npm run build
 log "Creating systemd services..."
 systemctl stop ${APP_NAME}-dotnet ${APP_NAME}-frontend 2>/dev/null || true
 
-# .NET backend service
+# Create .NET backend service
 cat >/etc/systemd/system/${APP_NAME}-dotnet.service <<EOF
 [Unit]
 Description=$APP_NAME .NET Backend
 After=network.target
 
 [Service]
-WorkingDirectory=$PUBLISH_DIR
-ExecStart=/usr/bin/dotnet $PUBLISH_DIR/backend.dll --urls http://0.0.0.0:8080
+WorkingDirectory=$APP_DIR/glasscode/backend/out
+ExecStart=/usr/bin/dotnet $APP_DIR/glasscode/backend/out/backend.dll --urls http://0.0.0.0:8080
 Restart=always
 RestartSec=10
 User=$DEPLOY_USER

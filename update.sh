@@ -2,7 +2,8 @@
 set -euo pipefail
 
 ### Load configuration from .env file ###
-ENV_FILE="/Users/veland/GlassCodeAcademy/.env"
+# Use relative path instead of hardcoded absolute path
+ENV_FILE="./.env"
 if [ -f "$ENV_FILE" ]; then
     source "$ENV_FILE"
     echo "Loaded configuration from $ENV_FILE"
@@ -113,19 +114,27 @@ if command -v dotnet >/dev/null; then
 fi
 
 ### 6. Build Backend
-log "Publishing .NET backend..."
+log "Updating .NET backend..."
 cd "$APP_DIR/glasscode/backend"
-PUBLISH_DIR="$APP_DIR/glasscode/backend/out"
-sudo -u "$DEPLOY_USER" dotnet restore
-sudo -u "$DEPLOY_USER" dotnet publish -c Release -o "$PUBLISH_DIR"
+
+if ! sudo -u "$DEPLOY_USER" dotnet restore; then
+    log "ERROR: Failed to restore .NET dependencies"
+    exit 1
+fi
+
+log "Publishing .NET backend..."
+if ! sudo -u "$DEPLOY_USER" dotnet publish -c Release -o "$APP_DIR/glasscode/backend/out"; then
+    log "ERROR: Failed to publish .NET backend"
+    exit 1
+fi
 
 ### 7. Build Frontend
 log "Building Next.js frontend..."
 cd "$APP_DIR/glasscode/frontend"
 sudo -u "$DEPLOY_USER" npm ci
 cat > .env.production <<EOF
-NEXT_PUBLIC_API_BASE=https://$DOMAIN
-NEXT_PUBLIC_BASE_URL=https://$DOMAIN
+NEXT_PUBLIC_API_BASE=$NEXT_PUBLIC_API_BASE
+NEXT_PUBLIC_BASE_URL=$NEXT_PUBLIC_BASE_URL
 NODE_ENV=production
 EOF
 sudo -u "$DEPLOY_USER" npm run build

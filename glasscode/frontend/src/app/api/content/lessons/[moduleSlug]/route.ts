@@ -1,15 +1,12 @@
 import { NextRequest } from 'next/server';
 import fs from 'fs';
 import path from 'path';
+import { getGraphQLEndpoint } from '@/lib/urlUtils';
 
 // For programming fundamentals, we'll use GraphQL to fetch data from the backend
 async function fetchProgrammingLessons() {
   try {
-    // Use environment variable for GraphQL endpoint with fallback to localhost for development
-    // For production, use the local backend since we're running on the same server
-    const graphqlEndpoint = process.env.NODE_ENV === 'production' 
-      ? 'http://localhost:8080/graphql'  // Local backend on same server
-      : 'http://localhost:5023/graphql'; // Development backend
+    const graphqlEndpoint = getGraphQLEndpoint();
     
     const response = await fetch(graphqlEndpoint, {
       method: 'POST',

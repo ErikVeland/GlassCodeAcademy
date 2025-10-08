@@ -32,9 +32,9 @@ const retryLink = new RetryLink({
 });
 
 export const createApolloClient = () => {
-  // Use the base URL - for production we use localhost since backend runs on same server
+  // Use the base URL from environment variables
   let baseUrl = process.env.NODE_ENV === 'production' 
-    ? 'http://localhost:8080'  // Local backend on same server
+    ? process.env.NEXT_PUBLIC_BASE_URL || 'https://glasscode.academy'  // Use domain for production
     : process.env.NEXT_PUBLIC_API_BASE || 'http://localhost:5023'; // Development fallback
   
   const graphqlUrl = `${baseUrl}/graphql`;

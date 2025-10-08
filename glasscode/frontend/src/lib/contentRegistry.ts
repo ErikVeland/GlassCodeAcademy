@@ -398,6 +398,42 @@ class ContentRegistryLoader {
   }
 
   /**
+   * Get programming fundamentals lessons via GraphQL
+   */
+  async getProgrammingLessons(): Promise<any[]> {
+    // Special handling for programming-fundamentals module to use GraphQL
+    try {
+      const client = getApolloClient();
+      const { data } = await client.query({
+        query: GET_PROGRAMMING_LESSONS
+      });
+      return data.programmingLessons || [];
+    } catch (error) {
+      console.error(`Failed to load programming lessons via GraphQL:`, error);
+      // Return empty array as fallback to prevent build failures
+      return [];
+    }
+  }
+
+  /**
+   * Get programming fundamentals questions via GraphQL
+   */
+  async getProgrammingQuestions(): Promise<any[]> {
+    // Special handling for programming-fundamentals module to use GraphQL
+    try {
+      const client = getApolloClient();
+      const { data } = await client.query({
+        query: GET_PROGRAMMING_QUESTIONS
+      });
+      return data.programmingQuestions || [];
+    } catch (error) {
+      console.error(`Failed to load programming questions via GraphQL:`, error);
+      // Return empty array as fallback to prevent build failures
+      return [];
+    }
+  }
+
+  /**
    * Check if module content meets minimum thresholds
    */
   async checkModuleThresholds(moduleSlug: string): Promise<{

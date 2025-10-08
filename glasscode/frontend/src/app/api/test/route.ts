@@ -1,5 +1,5 @@
 export async function GET() {
-  const apiUrl = process.env.NEXT_PUBLIC_API_BASE || 'http://localhost:5022';
+  const apiUrl = process.env.NEXT_PUBLIC_API_BASE || 'http://localhost:5023';
   
   try {
     const response = await fetch(`${apiUrl}/api/health`);
@@ -12,7 +12,7 @@ export async function GET() {
     }), {
       headers: {
         'Content-Type': 'application/json'
-      }
+        }
     });
   } catch (error: any) {
     return new Response(JSON.stringify({
