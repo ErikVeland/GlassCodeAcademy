@@ -175,8 +175,18 @@ a {
 
 // Glass Button Variants
 .glass-button {
-  @extend .glass-morphism;
-  @extend .glass-interactive;
+  /* Replacing @extend .glass-morphism; */
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: $border-radius-xl;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  position: relative;
+  overflow: hidden;
+  /* Replacing @extend .glass-interactive; */
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  cursor: pointer;
   padding: $spacing-2 $spacing-4;
   border-radius: $border-radius-md;
   font-weight: $font-weight-medium;
@@ -186,10 +196,12 @@ a {
   background: rgba(59, 130, 246, 0.2);
   border-color: rgba(59, 130, 246, 0.4);
   border: none;
-  cursor: pointer;
 }
 
 .glass-button:hover {
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.15);
+  border-color: rgba(255, 255, 255, 0.4);
   background: rgba(59, 130, 246, 0.3);
   transform: translateY(-1px);
 }
@@ -214,7 +226,15 @@ a {
 
 // Glass Card Components
 .glass-card {
-  @extend .glass-morphism;
+  /* Replacing @extend .glass-morphism; */
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: $border-radius-xl;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  position: relative;
+  overflow: hidden;
   padding: $spacing-6;
   margin-bottom: $spacing-4;
 }
@@ -237,8 +257,18 @@ a {
 
 // Glass Module Cards
 .glass-module-card {
-  @extend .glass-morphism;
-  @extend .glass-interactive;
+  /* Replacing @extend .glass-morphism; */
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: $border-radius-xl;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  position: relative;
+  overflow: hidden;
+  /* Replacing @extend .glass-interactive; */
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  cursor: pointer;
   padding: $spacing-6;
   height: 100%;
   display: flex;
@@ -246,6 +276,16 @@ a {
   position: relative;
   color: white;
   text-decoration: none;
+}
+
+.glass-module-card:hover {
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.15);
+  border-color: rgba(255, 255, 255, 0.4);
+}
+
+.glass-module-card:active {
+  transform: translateY(0) scale(1);
 }
 
 .glass-module-card::after {

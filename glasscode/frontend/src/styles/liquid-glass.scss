@@ -159,7 +159,17 @@
 
 /* Glass Button Variants */
 .glass-button {
-  @apply glass-morphism glass-interactive;
+  /* Replacing @apply glass-morphism glass-interactive; */
+  background: var(--glass-bg);
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  border: 1px solid var(--glass-border);
+  border-radius: var(--border-radius-card);
+  box-shadow: var(--glass-shadow);
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  cursor: pointer;
   padding: 0.75rem 1.5rem;
   border-radius: var(--border-radius-panel);
   font-weight: 500;
@@ -171,6 +181,9 @@
 }
 
 .glass-button:hover {
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.15);
+  border-color: rgba(255, 255, 255, 0.4);
   background: rgba(59, 130, 246, 0.3);
   transform: translateY(-1px);
 }
@@ -195,7 +208,15 @@
 
 /* Glass Card Components */
 .glass-card {
-  @apply glass-morphism;
+  /* Replacing @apply glass-morphism; */
+  background: var(--glass-bg);
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  border: 1px solid var(--glass-border);
+  border-radius: var(--border-radius-card);
+  box-shadow: var(--glass-shadow);
+  position: relative;
+  overflow: hidden;
   padding: 1.5rem;
   margin-bottom: 1rem;
   border-radius: var(--border-radius-card);
@@ -281,7 +302,15 @@
 
 /* Progress Indicators with Glass Effect */
 .glass-progress-container {
-  @apply glass-morphism;
+  /* Replacing @apply glass-morphism; */
+  background: var(--glass-bg);
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  border: 1px solid var(--glass-border);
+  border-radius: var(--border-radius-card);
+  box-shadow: var(--glass-shadow);
+  position: relative;
+  overflow: hidden;
   padding: 0.5rem;
   height: 1rem;
   border-radius: 9999px; /* Full border radius for progress bars */
@@ -299,13 +328,33 @@
 
 /* Module Card Enhancements */
 .glass-module-card {
-  @apply glass-morphism glass-interactive;
+  /* Replacing @apply glass-morphism glass-interactive; */
+  background: var(--glass-bg);
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  border: 1px solid var(--glass-border);
+  border-radius: var(--border-radius-card);
+  box-shadow: var(--glass-shadow);
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  cursor: pointer;
   padding: 1.5rem;
   height: 100%;
   display: flex;
   flex-direction: column;
   position: relative;
   border-radius: var(--border-radius-card);
+}
+
+.glass-module-card:hover {
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.15);
+  border-color: rgba(255, 255, 255, 0.4);
+}
+
+.glass-module-card:active {
+  transform: translateY(0) scale(1);
 }
 
 .glass-module-card::after {
@@ -333,7 +382,15 @@
 
 /* Search and Filter Glass Styling */
 .glass-search-container {
-  @apply glass-morphism;
+  /* Replacing @apply glass-morphism; */
+  background: var(--glass-bg);
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  border: 1px solid var(--glass-border);
+  border-radius: var(--border-radius-card);
+  box-shadow: var(--glass-shadow);
+  position: relative;
+  overflow: hidden;
   padding: 1rem;
   margin-bottom: 2rem;
   border-radius: var(--border-radius-panel);
@@ -361,7 +418,17 @@
 
 /* Filter Tags with Glass Effect */
 .glass-filter-tag {
-  @apply glass-morphism glass-interactive;
+  /* Replacing @apply glass-morphism glass-interactive; */
+  background: var(--glass-bg);
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  border: 1px solid var(--glass-border);
+  border-radius: var(--border-radius-card);
+  box-shadow: var(--glass-shadow);
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  cursor: pointer;
   padding: 0.5rem 1rem;
   border-radius: 2rem;
   font-size: 0.875rem;
@@ -370,6 +437,16 @@
   align-items: center;
   gap: 0.5rem;
   margin: 0.25rem;
+}
+
+.glass-filter-tag:hover {
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.15);
+  border-color: rgba(255, 255, 255, 0.4);
+}
+
+.glass-filter-tag:active {
+  transform: translateY(0) scale(1);
 }
 
 .glass-filter-tag.active {
@@ -446,13 +523,37 @@
 
 /* Glass Loading States */
 .glass-loading {
-  @apply glass-morphism glass-shimmer;
+  /* Replacing @apply glass-morphism glass-shimmer; */
+  background: var(--glass-bg);
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  border: 1px solid var(--glass-border);
+  border-radius: var(--border-radius-card);
+  box-shadow: var(--glass-shadow);
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.2),
+    transparent
+  );
+  background-size: 200% 100%;
+  animation: glassShimmer 2s infinite;
   height: 100px;
   border-radius: 0.75rem;
 }
 
 .glass-skeleton {
-  @apply glass-morphism;
+  /* Replacing @apply glass-morphism; */
+  background: var(--glass-bg);
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  border: 1px solid var(--glass-border);
+  border-radius: var(--border-radius-card);
+  box-shadow: var(--glass-shadow);
+  position: relative;
+  overflow: hidden;
   height: 1rem;
   border-radius: 0.25rem;
   margin: 0.5rem 0;
@@ -511,13 +612,23 @@
 
 /* Glass Navigation Components */
 .glass-nav-container {
-  @apply glass-morphism;
+  /* Replacing @apply glass-morphism; */
+  background: var(--glass-bg);
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  border: 1px solid var(--glass-border);
+  border-radius: var(--border-radius-card);
+  box-shadow: var(--glass-shadow);
+  position: relative;
+  overflow: hidden;
   padding: 1rem;
   margin-bottom: 1.5rem;
 }
 
 .glass-nav-item {
-  @extend .glass-interactive;
+  /* Replacing @extend .glass-interactive; */
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  cursor: pointer;
   padding: 0.75rem 1rem;
   border-radius: 0.75rem;
   margin-bottom: 0.5rem;
@@ -526,22 +637,36 @@
   display: flex;
   align-items: center;
   gap: 0.75rem;
-  
-  @media (prefers-color-scheme: dark) {
+}
+
+.glass-nav-item:hover {
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.15);
+  border-color: rgba(255, 255, 255, 0.4);
+}
+
+.glass-nav-item:active {
+  transform: translateY(0) scale(1);
+}
+
+@media (prefers-color-scheme: dark) {
+  .glass-nav-item {
     color: #f3f4f6;
   }
-  
-  &.active {
-    background: rgba(59, 130, 246, 0.2);
-    border-color: rgba(59, 130, 246, 0.4);
-  }
-  
-  &:hover:not(.active) {
-    background: rgba(255, 255, 255, 0.1);
-    
-    @media (prefers-color-scheme: dark) {
-      background: rgba(255, 255, 255, 0.05);
-    }
+}
+
+.glass-nav-item.active {
+  background: rgba(59, 130, 246, 0.2);
+  border-color: rgba(59, 130, 246, 0.4);
+}
+
+.glass-nav-item:hover:not(.active) {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+@media (prefers-color-scheme: dark) {
+  .glass-nav-item:hover:not(.active) {
+    background: rgba(255, 255, 255, 0.05);
   }
 }
 
@@ -553,8 +678,13 @@
 .glass-nav-item:focus {
   outline: 2px solid var(--focus-ring);
   outline-offset: 2px;
-  
-  @media (prefers-contrast: high) {
+}
+
+@media (prefers-contrast: high) {
+  .glass-interactive:focus,
+  .glass-button:focus,
+  .glass-filter-tag:focus,
+  .glass-nav-item:focus {
     outline: 2px solid #000000;
     outline-offset: 2px;
   }
