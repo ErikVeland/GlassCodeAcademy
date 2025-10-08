@@ -18,7 +18,9 @@ async function fetchProgrammingLessons() {
           query GetProgrammingLessons {
             programmingLessons {
               id
+              topic
               title
+              description
             }
           }
         `,
@@ -35,6 +37,25 @@ async function fetchProgrammingLessons() {
     return result.data?.programmingLessons || [];
   } catch (error) {
     console.error('Failed to fetch programming lessons via GraphQL:', error);
+    // During build time, the backend might not be available
+    // Return a minimal set of lessons to allow build to complete
+    if (process.env.NEXT_PHASE === 'phase-production-build') {
+      console.log('Build phase detected, returning minimal lesson data');
+      return [
+        { id: 1, title: 'Variables and Data Types', topic: 'basics', description: 'Learn about variables and data types' },
+        { id: 2, title: 'Control Structures', topic: 'basics', description: 'Learn about control structures' },
+        { id: 3, title: 'Functions', topic: 'basics', description: 'Learn about functions' },
+        { id: 4, title: 'Arrays and Objects', topic: 'data-structures', description: 'Learn about arrays and objects' },
+        { id: 5, title: 'Object-Oriented Programming', topic: 'data-structures', description: 'Learn about OOP' },
+        { id: 6, title: 'Error Handling', topic: 'error-handling', description: 'Learn about error handling' },
+        { id: 7, title: 'File Operations', topic: 'error-handling', description: 'Learn about file operations' },
+        { id: 8, title: 'Recursion', topic: 'algorithms', description: 'Learn about recursion' },
+        { id: 9, title: 'Sorting Algorithms', topic: 'algorithms', description: 'Learn about sorting algorithms' },
+        { id: 10, title: 'Memory Management', topic: 'advanced', description: 'Learn about memory management' },
+        { id: 11, title: 'Best Practices', topic: 'advanced', description: 'Learn about best practices' },
+        { id: 12, title: 'Project Organization', topic: 'advanced', description: 'Learn about project organization' }
+      ];
+    }
     return [];
   }
 }

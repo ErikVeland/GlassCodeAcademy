@@ -8,8 +8,6 @@ export const GET_PROGRAMMING_LESSONS = gql`
       topic
       title
       description
-      codeExample
-      output
     }
   }
 `;
@@ -32,13 +30,11 @@ export const GET_PROGRAMMING_QUESTIONS = gql`
 // Query for a specific programming lesson by ID
 export const GET_PROGRAMMING_LESSON = gql`
   query GetProgrammingLesson($id: Int!) {
-    programmingLessons(id: $id) {
+    programmingLesson(id: $id) {
       id
       topic
       title
       description
-      codeExample
-      output
     }
   }
 `;

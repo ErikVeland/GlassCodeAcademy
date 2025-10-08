@@ -36,31 +36,31 @@ The application follows a full-stack architecture with a Next.js frontend and AS
 
 > **Architectural Note**: We've also implemented a completely separate module-based architecture where each technology is implemented using its own stack. This is purely for educational purposes - a real application would use a more sensible unified approach!
 
-```
+```mermaid
 graph TB
     subgraph "Frontend Layer"
         A[Next.js 15] --> B[React 19]
         B --> C[Tailwind CSS]
         C --> D[TypeScript]
         A --> E[Apollo Client]
-        E --> F[GraphQL API]
     end
 
     subgraph "API Layer"
-        F[GraphQL API] --> G[Hot Chocolate Server]
+        E --> F[GraphQL API]
+        F --> G[Hot Chocolate Server]
         G --> H[GraphQL Schema]
     end
 
     subgraph "Backend Layer"
-        H[GraphQL Schema] --> I[ASP.NET Core 9]
+        H --> I[ASP.NET Core 9]
         I --> J[.NET Controllers]
         I --> K[Laravel Integration]
         I --> L[Data Services]
-        L --> M[In-Memory Data]
     end
 
     subgraph "Data Layer"
-        M[In-Memory Data] --> N[Lesson Data]
+        L --> M[In-Memory Data]
+        M --> N[Lesson Data]
         M --> O[Question Data]
         M --> P[User Progress Data]
     end
@@ -85,7 +85,8 @@ graph TB
     V --> W
     Q --> A
     R --> I
-    S --> Q & R
+    S --> Q
+    S --> R
 ```
 
 ## Directory Structure
@@ -187,33 +188,59 @@ All data is accessed through GraphQL queries and mutations:
 - `submitSassAnswer` (SASS-specific)
 - `trackProgress`
 
-## Setup Instructions
+## Development Setup
 
 ### Prerequisites
-- .NET 9 SDK
-- Node.js 18+
+- .NET 8.0 SDK or later
+- Node.js 18+ and npm
+- Git
 
-### Backend Setup
+### Quick Start (Development)
+
+To start both frontend and backend services in development mode:
+
 ```bash
-cd glasscode/backend
-dotnet restore
-dotnet run
+# Make the script executable
+chmod +x start-dev.sh
+
+# Run the development script
+./start-dev.sh
 ```
 
-The backend will start on `http://localhost:8080`
+This will start:
+- Backend on `http://localhost:8080`
+- Frontend on `http://localhost:3000`
 
-### Frontend Setup
+### Manual Start (Development)
+
+#### Backend Setup
+```bash
+cd glasscode/backend
+
+# Make the script executable
+chmod +x start-dev.sh
+
+# Run the backend development script
+./start-dev.sh
+```
+
+The backend will start on `http://localhost:8080` with:
+- GraphQL API: `http://localhost:8080/graphql`
+- GraphQL UI: `http://localhost:8080/graphql-ui`
+- Health check: `http://localhost:8080/api/health`
+
+#### Frontend Setup
 ```bash
 cd glasscode/frontend
-npm install
-npm run dev
+
+# Make the script executable
+chmod +x start-dev.sh
+
+# Run the frontend development script
+./start-dev.sh
 ```
 
 The frontend will start on `http://localhost:3000`
-
-## Content Management
-
-All lesson content is organized in the [content/lessons/](file:///Users/veland/GlassCodeAcademy/content/lessons) directory with each module having its own JSON file containing all lessons for that technology.
 
 ## Production Deployment
 
@@ -300,7 +327,7 @@ If you prefer to set up the server manually, follow these steps:
    curl -sSL https://packages.microsoft.com/config/ubuntu/24.04/packages-microsoft-prod.deb -o packages-microsoft-prod.deb
    sudo dpkg -i packages-microsoft-prod.deb
    sudo apt-get update
-   sudo apt-get install -y dotnet-sdk-9.0 aspnetcore-runtime-9.0
+   sudo apt-get install -y dotnet-sdk-8.0 aspnetcore-runtime-8.0
    ```
 
 3. **Clone repository**

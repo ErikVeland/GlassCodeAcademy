@@ -6,9 +6,9 @@ set -euo pipefail
 ENV_FILE="./.env"
 if [ -f "$ENV_FILE" ]; then
     source "$ENV_FILE"
-    echo "Loaded configuration from $ENV_FILE"
+    echo "✅ Loaded configuration from $ENV_FILE"
 else
-    echo "WARNING: Configuration file $ENV_FILE not found, using defaults"
+    echo "⚠️  WARNING: Configuration file $ENV_FILE not found, using defaults"
     
     # Default configuration
     APP_NAME="glasscode"
@@ -19,7 +19,7 @@ else
     EMAIL="erik@veland.au"
 fi
 
-echo "=== Bootstrap Script for $APP_NAME ==="
+echo "🚀 Bootstrap Script for $APP_NAME"
 
 log() {
     echo "[$(date +'%Y-%m-%d %H:%M:%S')] $1"
@@ -38,17 +38,17 @@ wait_for_service() {
     local max_attempts=30
     local attempt=1
     
-    log "Waiting for $service_name to start..."
+    log "⏳ Waiting for $service_name to start..."
     while [ $attempt -le $max_attempts ]; do
         if is_service_running "$service_name"; then
-            log "$service_name is running"
+            log "✅ $service_name is running"
             return 0
         fi
-        log "Attempt $attempt/$max_attempts: $service_name not ready yet, waiting 5 seconds..."
+        log "⏰ Attempt $attempt/$max_attempts: $service_name not ready yet, waiting 5 seconds..."
         sleep 5
         attempt=$((attempt + 1))
     done
-    log "ERROR: $service_name failed to start within timeout"
+    log "❌ ERROR: $service_name failed to start within timeout"
     return 1
 }
 
@@ -56,7 +56,7 @@ update_global_json() {
     local dotnet_version=$1
     local global_json_path="$APP_DIR/global.json"
     
-    log "Updating global.json with .NET SDK version: $dotnet_version"
+    log "📝 Updating global.json with .NET SDK version: $dotnet_version"
     cat > "$global_json_path" <<EOF
 {
   "sdk": {
@@ -65,43 +65,45 @@ update_global_json() {
   }
 }
 EOF
-    log "global.json updated successfully"
+    log "✅ global.json updated successfully"
 }
 
 ### 1. Validate prerequisites
-log "Validating prerequisites..."
+log "🔍 Validating prerequisites..."
 if ! command_exists apt-get; then
-    log "ERROR: This script requires a Debian/Ubuntu-based system with apt-get"
+    log "❌ ERROR: This script requires a Debian/Ubuntu-based system with apt-get"
     exit 1
 fi
 
 ### 2. Create deploy user if not exists
-log "Setting up deploy user..."
+log "👤 Setting up deploy user..."
 if ! id "$DEPLOY_USER" &>/dev/null; then
-    log "Creating deploy user..."
+    log "🔧 Creating deploy user..."
     adduser --disabled-password --gecos "" "$DEPLOY_USER"
     usermod -aG sudo "$DEPLOY_USER"
+    log "✅ Deploy user created"
 else
-    log "Deploy user already exists"
+    log "✅ Deploy user already exists"
 fi
 
 ### 3. Install base packages
-log "Installing base packages..."
+log "📦 Installing base packages..."
 apt-get update
 apt-get install -y \
     curl gnupg2 ca-certificates lsb-release apt-transport-https \
     build-essential pkg-config unzip zip jq git \
     nginx certbot python3-certbot-nginx ufw fail2ban
+log "✅ Base packages installed"
 
 ### 4. Install Node.js (20 LTS)
-log "Installing Node.js..."
+log "🟢 Installing Node.js..."
 curl -fsSL https://deb.nodesource.com/setup_20.x | bash -
 apt-get install -y nodejs
-log "Node.js version: $(node --version)"
-log "npm version: $(npm --version)"
+log "✅ Node.js version: $(node --version)"
+log "✅ npm version: $(npm --version)"
 
 ### 5. Install .NET SDK (try 9, fallback to 8)
-log "Installing .NET..."
+log "🔷 Installing .NET..."
 curl -sSL https://packages.microsoft.com/config/ubuntu/24.04/packages-microsoft-prod.deb -o packages-microsoft-prod.deb
 dpkg -i packages-microsoft-prod.deb
 rm -f packages-microsoft-prod.deb
@@ -110,55 +112,62 @@ apt-get update
 DOTNET_VERSION=""
 if apt-get install -y dotnet-sdk-9.0 aspnetcore-runtime-9.0; then
     DOTNET_VERSION="9.0"
+    log "✅ .NET 9.0 installed"
 elif apt-get install -y dotnet-sdk-8.0 aspnetcore-runtime-8.0; then
     DOTNET_VERSION="8.0"
+    log "✅ .NET 8.0 installed"
 else
-    log "ERROR: Failed to install .NET SDK"
+    log "❌ ERROR: Failed to install .NET SDK"
     exit 1
 fi
 
 DOTNET_SDK_VERSION=$(dotnet --list-sdks | head -1 | cut -d ' ' -f 1)
-log ".NET SDK version: $DOTNET_SDK_VERSION"
-log ".NET runtime version: $(dotnet --version)"
+log "✅ .NET SDK version: $DOTNET_SDK_VERSION"
+log "✅ .NET runtime version: $(dotnet --version)"
 
 ### 6. Setup directories
-log "Setting up directories..."
+log "📂 Setting up directories..."
 mkdir -p "$APP_DIR"
 chown -R "$DEPLOY_USER":"$DEPLOY_USER" "$APP_DIR"
+log "✅ Directories set up"
 
 ### 7. Clone or update repo
-log "Fetching repository..."
+log "📥 Fetching repository..."
 if [ ! -d "$APP_DIR/.git" ]; then
     sudo -u "$DEPLOY_USER" git clone "$REPO" "$APP_DIR"
+    log "✅ Repository cloned"
 else
     cd "$APP_DIR"
     sudo -u "$DEPLOY_USER" git reset --hard
     sudo -u "$DEPLOY_USER" git pull
+    log "✅ Repository updated"
 fi
 
 ### 8. Update global.json
 update_global_json "$DOTNET_SDK_VERSION"
 
 ### 9. Build & Publish Backend (.NET)
-log "Building backend..."
+log "🏗️  Building backend..."
 cd "$APP_DIR/glasscode/backend"
 
 # Clean + restore dependencies
-log "Restoring .NET dependencies..."
+log "🔧 Restoring .NET dependencies..."
 if ! sudo -u "$DEPLOY_USER" dotnet restore; then
-    log "ERROR: Failed to restore .NET dependencies"
+    log "❌ ERROR: Failed to restore .NET dependencies"
     exit 1
 fi
+log "✅ .NET dependencies restored"
 
 # Publish backend to /out
-log "Publishing .NET backend..."
+log "📦 Publishing .NET backend..."
 if ! sudo -u "$DEPLOY_USER" dotnet publish -c Release -o "$APP_DIR/glasscode/backend/out"; then
-    log "ERROR: Failed to publish .NET backend"
+    log "❌ ERROR: Failed to publish .NET backend"
     exit 1
 fi
+log "✅ .NET backend published"
 
 ### 10. Build Frontend (Next.js)
-log "Building frontend..."
+log "🎨 Building frontend..."
 cd "$APP_DIR/glasscode/frontend"
 sudo -u "$DEPLOY_USER" npm ci
 cat > .env.production <<EOF
@@ -167,9 +176,10 @@ NEXT_PUBLIC_BASE_URL=$NEXT_PUBLIC_BASE_URL
 NODE_ENV=production
 EOF
 sudo -u "$DEPLOY_USER" npm run build
+log "✅ Frontend built"
 
 ### 11. Create systemd services
-log "Creating systemd services..."
+log "⚙️  Creating systemd services..."
 systemctl stop ${APP_NAME}-dotnet ${APP_NAME}-frontend 2>/dev/null || true
 
 # Create .NET backend service
@@ -218,7 +228,7 @@ systemctl restart ${APP_NAME}-frontend
 wait_for_service "${APP_NAME}-frontend"
 
 ### 12. Configure Nginx
-log "Configuring Nginx..."
+log "🌐 Configuring Nginx..."
 cat >/etc/nginx/sites-available/$APP_NAME <<EOF
 server {
     listen 80;
@@ -261,36 +271,39 @@ EOF
 
 ln -sf /etc/nginx/sites-available/$APP_NAME /etc/nginx/sites-enabled/
 nginx -t && systemctl reload nginx
+log "✅ Nginx configured"
 
 ### 13. TLS
-log "Setting up TLS..."
+log "🔒 Setting up TLS..."
 certbot --nginx -d $DOMAIN -d www.$DOMAIN --non-interactive --agree-tos -m $EMAIL || true
+log "✅ TLS setup complete"
 
 ### 14. Firewall
-log "Configuring UFW..."
+log "🛡️  Configuring UFW..."
 ufw allow OpenSSH
 ufw allow 80
 ufw allow 443
 ufw --force enable
+log "✅ UFW configured"
 
 ### 15. Health check
-log "Performing health checks..."
+log "🩺 Performing health checks..."
 sleep 10
 if curl -s -X POST http://localhost:8080/graphql \
   -H "Content-Type: application/json" \
   -d '{"query":"{ __typename }"}' | grep -q '__typename'; then
-    log "Backend health check: PASSED"
+    log "✅ Backend health check: PASSED"
 else
-    log "WARNING: Backend health check failed"
+    log "⚠️  WARNING: Backend health check failed"
 fi
 
 if curl -f http://localhost:3000 >/dev/null 2>&1; then
-    log "Frontend health check: PASSED"
+    log "✅ Frontend health check: PASSED"
 else
-    log "WARNING: Frontend health check failed"
+    log "⚠️  WARNING: Frontend health check failed"
 fi
 
-log "=== Deployment Complete! ==="
-log "Visit https://$DOMAIN"
-log "Backend: $(systemctl is-active ${APP_NAME}-dotnet)"
-log "Frontend: $(systemctl is-active ${APP_NAME}-frontend)"
+log "🎉 Deployment Complete!"
+log "🔗 Visit https://$DOMAIN"
+log "🔧 Backend: $(systemctl is-active ${APP_NAME}-dotnet)"
+log "🔧 Frontend: $(systemctl is-active ${APP_NAME}-frontend)"
