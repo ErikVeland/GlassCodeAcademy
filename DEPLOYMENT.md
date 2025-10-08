@@ -2,60 +2,9 @@
 
 This guide provides detailed instructions for deploying the GlassCode Academy application to various platforms.
 
-## Docker Deployment (Recommended)
-
-This application is designed for Docker deployment using either docker-compose or individual container deployment.
-
-### Using Docker Compose (Local Development)
-```bash
-docker-compose up --build
-```
-
-This will start both the frontend (on port 3000) and backend (on port 8080) services.
-
-### Individual Container Deployment
-Build and run each service separately:
-
-**Backend:**
-```bash
-cd glasscode/backend
-docker build -t fullstack-backend .
-docker run -p 8080:8080 fullstack-backend
-```
-
-**Frontend:**
-```bash
-cd glasscode/frontend
-docker build -t fullstack-frontend .
-docker run -p 3000:3000 fullstack-frontend
-```
-
 ## Content Management
 
-### Loose Lesson Files
-
-Some lesson files may appear in the root directory of the repository. These are additional lessons that extend existing modules and need to be integrated into the main content structure.
-
-To integrate these loose lesson files:
-
-```bash
-# Run the integration script
-./scripts/integrate-lessons.sh
-```
-
-This script will:
-1. Backup existing lesson files
-2. Integrate loose lesson files into their respective module files
-3. Remove the loose files after successful integration
-
-The integration script requires `jq` to be installed:
-```bash
-# Ubuntu/Debian
-sudo apt-get install jq
-
-# macOS
-brew install jq
-```
+All lesson content is organized in the [content/lessons/](file:///Users/veland/GlassCodeAcademy/content/lessons) directory with each module having its own JSON file containing all lessons for that technology.
 
 ## Standalone Server Deployment (Recommended)
 

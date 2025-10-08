@@ -4,7 +4,7 @@
 
 GlassCode Academy is a full-stack educational platform designed to help developers learn and prepare for interviews in modern web technologies. The application provides structured learning resources and realistic interview practice with instant feedback.
 
-> **Note**: This is purely a learning and coding challenge! No real application would (or should) be architected this way. In the real world, you wouldn't run 5+ separate technology stacks just to teach about them. But for the sake of learning and demonstrating proficiency in each technology, we've gone a bit overboard with the architecture. Think of it as an educational extreme sport!
+> **Note**: This is purely a learning and coding challenge! No real application would (or should) be architored this way. In the real world, you wouldn't run 5+ separate technology stacks just to teach about them. But for the sake of learning and demonstrating proficiency in each technology, we've gone a bit overboard with the architecture. Think of it as an educational extreme sport!
 
 ## Features
 
@@ -36,7 +36,7 @@ The application follows a full-stack architecture with a Next.js frontend and AS
 
 > **Architectural Note**: We've also implemented a completely separate module-based architecture where each technology is implemented using its own stack. This is purely for educational purposes - a real application would use a more sensible unified approach!
 
-```mermaid
+```
 graph TB
     subgraph "Frontend Layer"
         A[Next.js 15] --> B[React 19]
@@ -72,12 +72,17 @@ graph TB
     end
 
     subgraph "Deployment"
-        T[Docker - Frontend]
-        U[Docker - Backend]
+        T[Systemd Service - Frontend]
+        U[Systemd Service - Backend]
+        V[NGINX Reverse Proxy]
+        W[SSL/TLS Certificates]
     end
 
     A --> T
     I --> U
+    T --> V
+    U --> V
+    V --> W
     Q --> A
     R --> I
     S --> Q & R
@@ -195,7 +200,7 @@ dotnet restore
 dotnet run
 ```
 
-The backend will start on `http://localhost:5022`
+The backend will start on `http://localhost:8080`
 
 ### Frontend Setup
 ```bash
@@ -208,23 +213,9 @@ The frontend will start on `http://localhost:3000`
 
 ## Content Management
 
-### Loose Lesson Files
+All lesson content is organized in the [content/lessons/](file:///Users/veland/GlassCodeAcademy/content/lessons) directory with each module having its own JSON file containing all lessons for that technology.
 
-Some lesson files may appear in the root directory of the repository. These are additional lessons that extend existing modules and need to be integrated into the main content structure.
-
-To integrate these loose lesson files:
-
-```bash
-# Run the integration script
-./scripts/integrate-lessons.sh
-```
-
-This script will:
-1. Backup existing lesson files
-2. Integrate loose lesson files into their respective module files
-3. Remove the loose files after successful integration
-
-### Production Deployment
+## Production Deployment
 
 For production deployments, we provide a turn-key bootstrap script that automates the entire setup process:
 

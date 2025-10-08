@@ -10,7 +10,6 @@ export const GET_PROGRAMMING_LESSONS = gql`
       description
       codeExample
       output
-      order
     }
   }
 `;
@@ -40,7 +39,6 @@ export const GET_PROGRAMMING_LESSON = gql`
       description
       codeExample
       output
-      order
     }
   }
 `;

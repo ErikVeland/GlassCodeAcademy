@@ -2,26 +2,18 @@
 
 This is the frontend application for the GlassCode Academy project, built with Next.js 15, React 19, and TypeScript.
 
-## Docker Deployment (Recommended)
+## Standalone Server Deployment (Recommended)
 
-This application is designed for Docker deployment using either docker-compose or individual container deployment.
+For production deployments, we recommend using our standalone server setup which runs both the frontend and backend on the same server.
 
-### Using Docker Compose (Local Development)
-```bash
-docker-compose up --build
-```
+### Prerequisites
+- Ubuntu 24.04 LTS server
+- Domain name pointing to your server (glasscode.academy)
+- SSH access to the server
 
-This will start both the frontend (on port 3000) and backend (on port 8080) services.
+### Automated Deployment Script
 
-### Individual Container Deployment
-Build and run each service separately:
-
-**Frontend:**
-```bash
-cd glasscode/frontend
-docker build -t fullstack-frontend .
-docker run -p 3000:3000 fullstack-frontend
-```
+Use the provided bootstrap script to automatically set up your GlassCode Academy server. See the main DEPLOYMENT.md file for details.
 
 ## Cloud Deployment Options
 
@@ -29,7 +21,7 @@ docker run -p 3000:3000 fullstack-frontend
 
 1. Fork this repository to your GitHub account
 2. Create a new Web Service on Render for the frontend component:
-   - Use the Docker runtime
+   - Use the Node.js runtime
    - Set the root directory to `glasscode/frontend`
    - Configure environment variables as needed
 
@@ -37,7 +29,7 @@ docker run -p 3000:3000 fullstack-frontend
 
 1. Create a `.env.local` file with:
    ```
-   NEXT_PUBLIC_API_BASE=http://localhost:5022
+   NEXT_PUBLIC_API_BASE=http://localhost:8080
    ```
 
 2. Run the development server:

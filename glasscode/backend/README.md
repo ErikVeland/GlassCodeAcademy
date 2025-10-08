@@ -6,27 +6,6 @@ This is the backend application for the GlassCode Academy project, built with .N
 
 Since the frontend is deployed separately, you'll need to deploy the .NET backend separately. Here are several options:
 
-### Docker Deployment (Recommended)
-
-This application is designed for Docker deployment using either docker-compose or individual container deployment.
-
-#### Using Docker Compose (Local Development)
-```bash
-docker-compose up --build
-```
-
-This will start both the frontend (on port 3000) and backend (on port 8080) services.
-
-#### Individual Container Deployment
-Build and run each service separately:
-
-**Backend:**
-```bash
-cd glasscode/backend
-docker build -t fullstack-backend .
-docker run -p 8080:8080 fullstack-backend
-```
-
 ### Standalone Server Deployment (Recommended)
 
 For production deployments, we recommend using our standalone server setup which runs both the frontend and backend on the same server.
@@ -138,8 +117,8 @@ Before testing the frontend integration, verify the backend is working:
    dotnet run
    ```
 
-The backend will be available at http://localhost:5022.
+The backend will be available at http://localhost:8080.
 
 2. Test GraphQL endpoints:
-   - GraphQL API: http://localhost:5022/graphql
-   - GraphQL UI: http://localhost:5022/graphql-ui
+   - GraphQL API: http://localhost:8080/graphql
+   - GraphQL UI: http://localhost:8080/graphql-ui
