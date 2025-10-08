@@ -259,30 +259,29 @@ export default function QuizResultsPage({ params }: QuizResultsPageProps) {
                   🔄 Retake Quiz
                 </h3>
                 <p className="text-gray-600 dark:text-gray-300 mb-4">
-                Review the material and try the quiz again to demonstrate your knowledge.
-              </p>
-              <button
-                onClick={handleRetakeQuiz}
-                className="w-full px-4 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700 transition-colors"
-              >
-                Retake Quiz
-              </button>
-            </div>
-          )}
+                  Review the material and try the quiz again to demonstrate your knowledge.
+                </p>
+                <button
+                  onClick={handleRetakeQuiz}
+                  className="w-full px-4 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700 transition-colors"
+                >
+                  Retake Quiz
+                </button>
+              </div>
+            )}
+          </div>
         </div>
-      </div>
-    </section>
+      </section>
 
-    {/* Navigation Footer */}
-    <footer className="flex justify-center">
-      <Link
-        href={`/modules/${moduleSlug}`}
-        className="inline-flex items-center px-4 py-2 text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors"
-      >
-        ← Back to Module Overview
-      </Link>
-    </footer>
-  </div>
-</div>
+      {/* Navigation Footer */}
+      <footer className="flex justify-center">
+        <Link
+          href={`/modules/${moduleSlug}`}
+          className="inline-flex items-center px-4 py-2 text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors"
+        >
+          ← Back to Module Overview
+        </Link>
+      </footer>
+    </div>
   );
 }
