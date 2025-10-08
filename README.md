@@ -111,6 +111,13 @@ GlassCodeAcademy/
 │       │   ├── components/
 │       │   └── apolloClient.ts
 │       └── package.json
+├── content/
+│   ├── lessons/
+│   │   ├── laravel-fundamentals.json
+│   │   ├── node-fundamentals.json
+│   │   └── ... (other module lessons)
+│   ├── quizzes/
+│   └── registry.json
 ├── laravel-backend/ (complete Laravel application structure)
 └── README.md
 ```
@@ -199,7 +206,25 @@ npm run dev
 
 The frontend will start on `http://localhost:3000`
 
-## Production Deployment
+## Content Management
+
+### Loose Lesson Files
+
+Some lesson files may appear in the root directory of the repository. These are additional lessons that extend existing modules and need to be integrated into the main content structure.
+
+To integrate these loose lesson files:
+
+```bash
+# Run the integration script
+./scripts/integrate-lessons.sh
+```
+
+This script will:
+1. Backup existing lesson files
+2. Integrate loose lesson files into their respective module files
+3. Remove the loose files after successful integration
+
+### Production Deployment
 
 For production deployments, we provide a turn-key bootstrap script that automates the entire setup process:
 

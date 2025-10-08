@@ -30,6 +30,33 @@ docker build -t fullstack-frontend .
 docker run -p 3000:3000 fullstack-frontend
 ```
 
+## Content Management
+
+### Loose Lesson Files
+
+Some lesson files may appear in the root directory of the repository. These are additional lessons that extend existing modules and need to be integrated into the main content structure.
+
+To integrate these loose lesson files:
+
+```bash
+# Run the integration script
+./scripts/integrate-lessons.sh
+```
+
+This script will:
+1. Backup existing lesson files
+2. Integrate loose lesson files into their respective module files
+3. Remove the loose files after successful integration
+
+The integration script requires `jq` to be installed:
+```bash
+# Ubuntu/Debian
+sudo apt-get install jq
+
+# macOS
+brew install jq
+```
+
 ## Standalone Server Deployment (Recommended)
 
 For production deployments, we recommend using our standalone server setup which runs both the frontend and backend on the same server.
