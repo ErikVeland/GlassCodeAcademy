@@ -113,213 +113,233 @@
     },
     {
       "id": "version-control-q6",
-      "question": "How do you implement Git in a production environment?",
+      "question": "What is the primary purpose of version control systems in software development?",
       "topic": "Git",
-      "difficulty": "Intermediate",
+      "difficulty": "Beginner",
       "choices": [
-        "Option A - Placeholder answer",
-        "Option B - Placeholder answer",
-        "Option C - Placeholder answer",
-        "Option D - Placeholder answer"
+        "Track changes to code over time, enable collaboration, and maintain project history",
+        "Delete code to free up disk space",
+        "Prevent developers from making any changes",
+        "Slow down development processes intentionally"
       ],
       "correctIndex": 0,
-      "explanation": "This question tests understanding of Git concepts. The correct answer demonstrates proper implementation of Version Control with Git principles. Review the lesson materials for detailed explanations of these concepts.",
-      "industryContext": "In professional development, understanding Git is crucial for building scalable and maintainable applications.",
+      "explanation": "The primary purpose of version control systems is to track changes to code over time, enabling multiple developers to collaborate effectively while maintaining a complete history of the project. Version control provides the foundation for modern software development workflows by allowing teams to work simultaneously on the same codebase without conflicts.",
+      "industryContext": "Version control systems have become essential infrastructure for software development, with Git being used by over 90% of professional developers. Companies like Microsoft, Google, and Facebook rely on sophisticated version control workflows to manage massive codebases with thousands of contributors. The shift from centralized systems like SVN to distributed systems like Git has revolutionized collaborative development.",
       "tags": [
-        "foundational",
-        "intermediate"
+        "version-control",
+        "git",
+        "collaboration",
+        "beginner"
       ],
-      "estimatedTime": 90,
-      "questionType": "multiple-choice"
+      "questionType": "multiple-choice",
+      "estimatedTime": 90
     },
     {
       "id": "version-control-q7",
-      "question": "Which of the following is a key feature of Version Control with Git?",
+      "question": "What are the performance considerations when using Git for large repositories?",
       "topic": "GitHub",
-      "difficulty": "Beginner",
+      "difficulty": "Intermediate",
       "choices": [
-        "Option A - Placeholder answer",
-        "Option B - Placeholder answer",
-        "Option C - Placeholder answer",
-        "Option D - Placeholder answer"
+        "Use shallow clones, sparse checkouts, and Git LFS for large files to improve performance",
+        "Clone the entire repository history regardless of size",
+        "Avoid all version control for large projects",
+        "Use only the oldest Git features for better compatibility"
       ],
       "correctIndex": 0,
-      "explanation": "This question tests understanding of Git concepts. The correct answer demonstrates proper implementation of Version Control with Git principles. Review the lesson materials for detailed explanations of these concepts.",
-      "industryContext": "In professional development, understanding Git is crucial for building scalable and maintainable applications.",
+      "explanation": "Performance considerations for large Git repositories include using shallow clones to reduce download time, sparse checkouts to work with only specific directories, and Git LFS (Large File Storage) to handle large binary files efficiently. These techniques help maintain reasonable performance even with massive repositories containing years of history.",
+      "industryContext": "Large repositories present significant performance challenges that require specialized techniques. Companies like Microsoft and Google have developed sophisticated approaches to handling massive repositories, with Microsoft's Windows codebase being one of the largest Git repositories in the world. Git LFS was specifically created to address performance issues with large binary files.",
       "tags": [
-        "foundational",
-        "beginner"
+        "git",
+        "performance",
+        "large-repositories",
+        "intermediate"
       ],
-      "estimatedTime": 90,
-      "questionType": "multiple-choice"
+      "questionType": "multiple-choice",
+      "estimatedTime": 90
     },
     {
       "id": "version-control-q8",
-      "question": "Which pattern is most effective for Git architecture?",
+      "question": "When should you use different branching strategies in version control?",
       "topic": "Version Control",
-      "difficulty": "Intermediate",
+      "difficulty": "Beginner",
       "choices": [
-        "Option A - Placeholder answer",
-        "Option B - Placeholder answer",
-        "Option C - Placeholder answer",
-        "Option D - Placeholder answer"
+        "Choose strategies based on team size, release frequency, and project complexity requirements",
+        "Always use the most complex branching strategy regardless of project needs",
+        "Never use branching and keep all changes in the main branch",
+        "Use random branching patterns without any strategic consideration"
       ],
       "correctIndex": 0,
-      "explanation": "This question tests understanding of Git concepts. The correct answer demonstrates proper implementation of Version Control with Git principles. Review the lesson materials for detailed explanations of these concepts.",
-      "industryContext": "In professional development, understanding Git is crucial for building scalable and maintainable applications.",
+      "explanation": "Branching strategy selection should be based on team size (larger teams need more structured approaches), release frequency (frequent releases benefit from continuous integration), and project complexity (complex projects may need feature isolation). Common strategies include Git Flow for structured releases, GitHub Flow for continuous deployment, and trunk-based development for rapid iteration.",
+      "industryContext": "Different organizations adopt branching strategies that match their development workflows and business requirements. Companies like Facebook use trunk-based development for rapid iteration, while enterprises with formal release cycles often use Git Flow. GitHub popularized the simpler GitHub Flow approach for continuous deployment scenarios.",
       "tags": [
-        "foundational",
-        "intermediate"
+        "version-control",
+        "branching-strategies",
+        "workflow",
+        "beginner"
       ],
-      "estimatedTime": 90,
-      "questionType": "multiple-choice"
+      "questionType": "multiple-choice",
+      "estimatedTime": 90
     },
     {
       "id": "version-control-q9",
-      "question": "What is the primary purpose of Git?",
+      "question": "How do you implement version control in a production environment with multiple teams?",
       "topic": "Git",
-      "difficulty": "Beginner",
+      "difficulty": "Intermediate",
       "choices": [
-        "Option A - Placeholder answer",
-        "Option B - Placeholder answer",
-        "Option C - Placeholder answer",
-        "Option D - Placeholder answer"
+        "Use protected branches, code review workflows, automated testing, and access controls",
+        "Allow all developers to push directly to production branches",
+        "Disable version control entirely for production environments",
+        "Use only manual processes without any automation"
       ],
       "correctIndex": 0,
-      "explanation": "This question tests understanding of Git concepts. The correct answer demonstrates proper implementation of Version Control with Git principles. Review the lesson materials for detailed explanations of these concepts.",
-      "industryContext": "In professional development, understanding Git is crucial for building scalable and maintainable applications.",
+      "explanation": "Production version control implementation requires protected branches to prevent direct pushes to critical branches, code review workflows to ensure quality, automated testing to catch issues early, and access controls to limit who can make changes. These practices ensure that only thoroughly reviewed and tested code reaches production environments.",
+      "industryContext": "Enterprise version control requires sophisticated access controls and workflow enforcement. Companies like Amazon and Netflix have implemented complex permission systems and automated gates that prevent unapproved changes from reaching production. GitHub's protected branches feature and pull request reviews have become industry standards for production workflows.",
       "tags": [
-        "foundational",
-        "beginner"
+        "version-control",
+        "production",
+        "workflow",
+        "intermediate"
       ],
-      "estimatedTime": 90,
-      "questionType": "multiple-choice"
+      "questionType": "multiple-choice",
+      "estimatedTime": 90
     },
     {
       "id": "version-control-q10",
-      "question": "What are the trade-offs between different Git approaches?",
+      "question": "Which of the following is a key feature of modern version control systems?",
       "topic": "GitHub",
-      "difficulty": "Advanced",
+      "difficulty": "Beginner",
       "choices": [
-        "Option A - Placeholder answer",
-        "Option B - Placeholder answer",
-        "Option C - Placeholder answer",
-        "Option D - Placeholder answer"
+        "Distributed architecture, branching and merging, and collaboration tools",
+        "Centralized control with limited collaboration features",
+        "No support for multiple developers working simultaneously",
+        "Manual conflict resolution without any automation"
       ],
       "correctIndex": 0,
-      "explanation": "This question tests understanding of Git concepts. The correct answer demonstrates proper implementation of Version Control with Git principles. Review the lesson materials for detailed explanations of these concepts.",
-      "industryContext": "In professional development, understanding Git is crucial for building scalable and maintainable applications.",
+      "explanation": "Key features of modern version control systems include distributed architecture that allows each developer to have a complete repository copy, sophisticated branching and merging capabilities for parallel development, and integrated collaboration tools like pull requests and code review features. These features enable efficient collaborative development at scale.",
+      "industryContext": "The evolution from centralized version control systems like SVN to distributed systems like Git has transformed software development practices. Modern platforms like GitHub and GitLab have extended Git with powerful collaboration features. The distributed nature of Git provides resilience and flexibility that centralized systems cannot match.",
       "tags": [
-        "foundational",
-        "advanced"
+        "version-control",
+        "git",
+        "distributed-systems",
+        "beginner"
       ],
-      "estimatedTime": 90,
-      "questionType": "multiple-choice"
+      "questionType": "multiple-choice",
+      "estimatedTime": 90
     },
     {
       "id": "version-control-q11",
-      "question": "When should you use Git in development?",
+      "question": "What are the trade-offs between different version control workflows?",
       "topic": "Version Control",
-      "difficulty": "Beginner",
+      "difficulty": "Advanced",
       "choices": [
-        "Option A - Placeholder answer",
-        "Option B - Placeholder answer",
-        "Option C - Placeholder answer",
-        "Option D - Placeholder answer"
+        "Git Flow provides structured releases but more complexity; GitHub Flow is simpler but requires continuous deployment discipline",
+        "All version control workflows are identical with no meaningful differences",
+        "Complex workflows are always superior to simple approaches",
+        "Simple workflows work for all project types without any limitations"
       ],
       "correctIndex": 0,
-      "explanation": "This question tests understanding of Git concepts. The correct answer demonstrates proper implementation of Version Control with Git principles. Review the lesson materials for detailed explanations of these concepts.",
-      "industryContext": "In professional development, understanding Git is crucial for building scalable and maintainable applications.",
+      "explanation": "Version control workflow trade-offs include Git Flow which provides structured release management and support for multiple release versions but introduces complexity through multiple long-lived branches, versus GitHub Flow which is simpler and supports rapid iteration but requires discipline around continuous deployment and feature flagging. The choice depends on organizational release processes and team maturity.",
+      "industryContext": "Workflow selection significantly impacts development velocity and release management. Large enterprises with formal release cycles often choose Git Flow or similar structured approaches, while startups and web-focused companies typically prefer simpler workflows like GitHub Flow. Companies like Etsy have published detailed case studies comparing different workflow approaches.",
       "tags": [
-        "foundational",
-        "beginner"
+        "version-control",
+        "workflows",
+        "trade-offs",
+        "advanced"
       ],
-      "estimatedTime": 90,
-      "questionType": "multiple-choice"
+      "questionType": "multiple-choice",
+      "estimatedTime": 120
     },
     {
       "id": "version-control-q12",
-      "question": "What is the primary purpose of Git?",
+      "question": "How do you implement version control in a production environment with regulatory compliance requirements?",
       "topic": "Git",
-      "difficulty": "Beginner",
+      "difficulty": "Intermediate",
       "choices": [
-        "Option A - Placeholder answer",
-        "Option B - Placeholder answer",
-        "Option C - Placeholder answer",
-        "Option D - Placeholder answer"
+        "Use signed commits, audit trails, branch protection, and compliance-focused workflows",
+        "Ignore all compliance requirements for faster development",
+        "Disable version control entirely to avoid compliance issues",
+        "Use only basic Git features without any security enhancements"
       ],
       "correctIndex": 0,
-      "explanation": "This question tests understanding of Git concepts. The correct answer demonstrates proper implementation of Version Control with Git principles. Review the lesson materials for detailed explanations of these concepts.",
-      "industryContext": "In professional development, understanding Git is crucial for building scalable and maintainable applications.",
+      "explanation": "Production version control implementation with regulatory compliance requires signed commits to verify authorship, comprehensive audit trails for change tracking, branch protection to enforce review processes, and compliance-focused workflows that meet regulatory requirements. These measures ensure that version control practices support rather than hinder compliance efforts.",
+      "industryContext": "Regulatory compliance significantly impacts version control implementation in industries like finance and healthcare. Companies subject to SOX, HIPAA, or other regulations must implement version control practices that support audit requirements. Financial institutions like JPMorgan Chase have developed sophisticated compliance-focused Git workflows.",
       "tags": [
-        "foundational",
-        "beginner"
+        "version-control",
+        "compliance",
+        "security",
+        "intermediate"
       ],
-      "estimatedTime": 90,
-      "questionType": "multiple-choice"
+      "questionType": "multiple-choice",
+      "estimatedTime": 90
     },
     {
       "id": "version-control-q13",
-      "question": "Which of the following is a key feature of Version Control with Git?",
+      "question": "What are the security considerations when using version control systems?",
       "topic": "GitHub",
-      "difficulty": "Beginner",
+      "difficulty": "Intermediate",
       "choices": [
-        "Option A - Placeholder answer",
-        "Option B - Placeholder answer",
-        "Option C - Placeholder answer",
-        "Option D - Placeholder answer"
+        "Protect sensitive data, implement access controls, use signed commits, and scan for secrets",
+        "Store all credentials in version control for easy access",
+        "Disable all security measures to improve developer convenience",
+        "Ignore security concerns and focus only on feature development"
       ],
       "correctIndex": 0,
-      "explanation": "This question tests understanding of Git concepts. The correct answer demonstrates proper implementation of Version Control with Git principles. Review the lesson materials for detailed explanations of these concepts.",
-      "industryContext": "In professional development, understanding Git is crucial for building scalable and maintainable applications.",
+      "explanation": "Version control security considerations include protecting sensitive data through proper .gitignore configuration and secret scanning, implementing access controls to limit repository access, using signed commits to verify authorship, and scanning for accidentally committed secrets. These practices prevent security incidents caused by version control misconfigurations.",
+      "industryContext": "Version control security has become a critical concern as high-profile incidents have shown the risks of committing sensitive data. Companies like GitHub and GitLab have implemented sophisticated secret scanning and security alerting features. The average cost of a data breach involving version control misconfigurations can exceed $4 million.",
       "tags": [
-        "foundational",
-        "beginner"
+        "version-control",
+        "security",
+        "secrets-management",
+        "intermediate"
       ],
-      "estimatedTime": 90,
-      "questionType": "multiple-choice"
+      "questionType": "multiple-choice",
+      "estimatedTime": 90
     },
     {
       "id": "version-control-q14",
-      "question": "When should you use Git in development?",
+      "question": "Which pattern is most effective for implementing scalable version control practices?",
       "topic": "Version Control",
-      "difficulty": "Beginner",
+      "difficulty": "Intermediate",
       "choices": [
-        "Option A - Placeholder answer",
-        "Option B - Placeholder answer",
-        "Option C - Placeholder answer",
-        "Option D - Placeholder answer"
+        "Modular repository structure, automated workflows, clear branching strategies, and comprehensive documentation",
+        "Monolithic repositories with no organizational structure",
+        "Random commit patterns without any conventions",
+        "No documentation or standard practices"
       ],
       "correctIndex": 0,
-      "explanation": "This question tests understanding of Git concepts. The correct answer demonstrates proper implementation of Version Control with Git principles. Review the lesson materials for detailed explanations of these concepts.",
-      "industryContext": "In professional development, understanding Git is crucial for building scalable and maintainable applications.",
+      "explanation": "Scalable version control practices require modular repository structure for maintainability, automated workflows to reduce manual errors, clear branching strategies for team coordination, and comprehensive documentation to ensure consistency. These patterns enable version control systems to scale effectively with growing teams and codebases.",
+      "industryContext": "Scaling version control practices is critical for growing organizations. Companies like Microsoft and Google have developed sophisticated approaches to managing massive codebases with thousands of contributors. The monorepo vs. multi-repo debate reflects different approaches to scaling version control, with successful companies using both patterns effectively.",
       "tags": [
-        "foundational",
-        "beginner"
+        "version-control",
+        "scalability",
+        "best-practices",
+        "intermediate"
       ],
-      "estimatedTime": 90,
-      "questionType": "multiple-choice"
+      "questionType": "multiple-choice",
+      "estimatedTime": 90
     },
     {
       "id": "version-control-q15",
-      "question": "What is the primary purpose of Git?",
+      "question": "How do you implement version control in a production environment with enterprise governance requirements?",
       "topic": "Git",
-      "difficulty": "Beginner",
+      "difficulty": "Intermediate",
       "choices": [
-        "Option A - Placeholder answer",
-        "Option B - Placeholder answer",
-        "Option C - Placeholder answer",
-        "Option D - Placeholder answer"
+        "Use enterprise Git platforms, implement governance policies, enforce compliance controls, and maintain audit trails",
+        "Ignore all governance requirements for faster development velocity",
+        "Use only basic Git features without any enterprise capabilities",
+        "Disable version control entirely to avoid governance complexity"
       ],
       "correctIndex": 0,
-      "explanation": "This question tests understanding of Git concepts. The correct answer demonstrates proper implementation of Version Control with Git principles. Review the lesson materials for detailed explanations of these concepts.",
-      "industryContext": "In professional development, understanding Git is crucial for building scalable and maintainable applications.",
+      "explanation": "Enterprise version control implementation requires enterprise Git platforms with advanced security and governance features, governance policies that align with organizational standards, compliance controls that meet regulatory requirements, and comprehensive audit trails for tracking all changes. These measures ensure that version control supports rather than hinders enterprise objectives.",
+      "industryContext": "Enterprise governance significantly impacts version control implementation in large organizations. Companies like IBM and Oracle use enterprise Git platforms like GitHub Enterprise and GitLab Ultimate to implement sophisticated governance controls. Governance requirements often drive the selection of version control platforms and workflows.",
       "tags": [
-        "foundational",
-        "beginner"
+        "version-control",
+        "enterprise",
+        "governance",
+        "intermediate"
       ],
-      "estimatedTime": 90,
-      "questionType": "multiple-choice"
+      "questionType": "multiple-choice",
+      "estimatedTime": 90
     }
   ],
   "metadata": {

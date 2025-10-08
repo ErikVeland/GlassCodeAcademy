@@ -113,20 +113,22 @@
     },
     {
       "id": "e2e-testing-q6",
-      "question": "What is the primary purpose of Cypress?",
-      "topic": "Cypress",
+      "question": "What is the primary purpose of end-to-end testing in modern web development?",
+      "topic": "E2E Testing",
       "difficulty": "Beginner",
       "choices": [
-        "Option A - Placeholder answer",
-        "Option B - Placeholder answer",
-        "Option C - Placeholder answer",
-        "Option D - Placeholder answer"
+        "Validate complete user workflows from UI to backend systems to ensure integrated functionality",
+        "Test individual functions in isolation for unit testing",
+        "Verify code syntax and formatting standards",
+        "Measure application performance under load"
       ],
       "correctIndex": 0,
-      "explanation": "This question tests understanding of Cypress concepts. The correct answer demonstrates proper implementation of End-to-End Testing principles. Review the lesson materials for detailed explanations of these concepts.",
-      "industryContext": "In professional development, understanding Cypress is crucial for building scalable and maintainable applications.",
+      "explanation": "The primary purpose of end-to-end testing is to validate complete user workflows from the user interface through all layers of the application to the backend systems. This ensures that integrated functionality works correctly and that different components work together as expected. E2E tests provide confidence that real user scenarios function properly.",
+      "industryContext": "E2E testing is critical for continuous deployment pipelines where automated tests must validate that new changes don't break existing functionality. Major companies like Google and Microsoft rely heavily on E2E tests to ensure quality in their web applications. The shift-left testing movement has made E2E testing more important in development workflows.",
       "tags": [
-        "quality",
+        "e2e-testing",
+        "testing-strategy",
+        "integration-testing",
         "beginner"
       ],
       "questionType": "multiple-choice",
@@ -134,20 +136,22 @@
     },
     {
       "id": "e2e-testing-q7",
-      "question": "What are the performance considerations when using Cypress?",
-      "topic": "Playwright",
+      "question": "What are the performance considerations when implementing Cypress for testing?",
+      "topic": "Cypress",
       "difficulty": "Intermediate",
       "choices": [
-        "Option A - Placeholder answer",
-        "Option B - Placeholder answer",
-        "Option C - Placeholder answer",
-        "Option D - Placeholder answer"
+        "Use selective testing, parallel execution, and optimize test data setup to reduce execution time",
+        "Run all tests sequentially regardless of execution time",
+        "Disable all waiting mechanisms to speed up tests",
+        "Use synchronous execution for all test scenarios"
       ],
       "correctIndex": 0,
-      "explanation": "This question tests understanding of Cypress concepts. The correct answer demonstrates proper implementation of End-to-End Testing principles. Review the lesson materials for detailed explanations of these concepts.",
-      "industryContext": "In professional development, understanding Cypress is crucial for building scalable and maintainable applications.",
+      "explanation": "Performance considerations for Cypress implementation include selective testing to run only relevant tests, parallel execution to distribute workload across multiple machines, and optimized test data setup to minimize preparation time. Cypress's automatic waiting and retry mechanisms should be leveraged rather than disabled, as they provide reliability benefits that outweigh minor performance costs.",
+      "industryContext": "Test execution time is critical for CI/CD pipelines where fast feedback is essential. Companies like GitHub and Shopify have implemented sophisticated Cypress optimization strategies including parallelization across multiple containers and selective test execution based on code changes. Cypress Dashboard provides insights into test performance optimization.",
       "tags": [
-        "quality",
+        "cypress",
+        "performance",
+        "test-optimization",
         "intermediate"
       ],
       "questionType": "multiple-choice",
@@ -155,20 +159,22 @@
     },
     {
       "id": "e2e-testing-q8",
-      "question": "When should you use Cypress in development?",
-      "topic": "E2E Testing",
+      "question": "When should you use Playwright instead of other end-to-end testing frameworks?",
+      "topic": "Playwright",
       "difficulty": "Beginner",
       "choices": [
-        "Option A - Placeholder answer",
-        "Option B - Placeholder answer",
-        "Option C - Placeholder answer",
-        "Option D - Placeholder answer"
+        "When you need cross-browser testing with a single API, faster execution, and modern web features support",
+        "When you want to limit testing to a single browser",
+        "When you prefer older testing approaches",
+        "When you don't care about test reliability"
       ],
       "correctIndex": 0,
-      "explanation": "This question tests understanding of Cypress concepts. The correct answer demonstrates proper implementation of End-to-End Testing principles. Review the lesson materials for detailed explanations of these concepts.",
-      "industryContext": "In professional development, understanding Cypress is crucial for building scalable and maintainable applications.",
+      "explanation": "Playwright is particularly beneficial when you need cross-browser testing with a unified API that works across Chromium, Firefox, and WebKit, faster execution through its architecture that runs tests in separate processes, and comprehensive support for modern web features including Shadow DOM, iframes, and web components. Its auto-waiting and retry mechanisms also improve test reliability.",
+      "industryContext": "Playwright has gained significant adoption since its release, with companies like Microsoft and Adobe migrating from other frameworks. Its multi-browser support with a single API addresses a major pain point in E2E testing. The framework's performance advantages make it attractive for large test suites where execution time is critical.",
       "tags": [
-        "quality",
+        "playwright",
+        "cross-browser",
+        "framework-comparison",
         "beginner"
       ],
       "questionType": "multiple-choice",
@@ -176,20 +182,22 @@
     },
     {
       "id": "e2e-testing-q9",
-      "question": "What is the primary purpose of Cypress?",
+      "question": "What is the primary purpose of using Cypress for end-to-end testing?",
       "topic": "Cypress",
       "difficulty": "Beginner",
       "choices": [
-        "Option A - Placeholder answer",
-        "Option B - Placeholder answer",
-        "Option C - Placeholder answer",
-        "Option D - Placeholder answer"
+        "To test complete user journeys with automatic waiting, real-time debugging, and direct DOM access",
+        "To replace unit testing entirely",
+        "To slow down development processes",
+        "To avoid writing any test code"
       ],
       "correctIndex": 0,
-      "explanation": "This question tests understanding of Cypress concepts. The correct answer demonstrates proper implementation of End-to-End Testing principles. Review the lesson materials for detailed explanations of these concepts.",
-      "industryContext": "In professional development, understanding Cypress is crucial for building scalable and maintainable applications.",
+      "explanation": "Cypress's primary purpose is to enable comprehensive end-to-end testing of user journeys with features like automatic waiting that eliminates flaky tests, real-time debugging capabilities that speed up test development, and direct DOM access that simplifies test authoring. These features make E2E testing more reliable and developer-friendly compared to older frameworks.",
+      "industryContext": "Cypress has revolutionized E2E testing by addressing common pain points like flaky tests and difficult debugging. Companies like Venmo and Robinhood have adopted Cypress for its developer experience improvements. The framework's time-travel debugging and automatic waiting have become industry standards for modern E2E testing.",
       "tags": [
-        "quality",
+        "cypress",
+        "e2e-testing",
+        "developer-experience",
         "beginner"
       ],
       "questionType": "multiple-choice",
@@ -197,20 +205,22 @@
     },
     {
       "id": "e2e-testing-q10",
-      "question": "Which of the following is a key feature of End-to-End Testing?",
+      "question": "Which of the following is a key feature of modern end-to-end testing frameworks?",
       "topic": "Playwright",
       "difficulty": "Beginner",
       "choices": [
-        "Option A - Placeholder answer",
-        "Option B - Placeholder answer",
-        "Option C - Placeholder answer",
-        "Option D - Placeholder answer"
+        "Automatic waiting, cross-browser support, and real-time debugging capabilities",
+        "Manual waiting for all operations",
+        "Support for only one browser",
+        "No debugging capabilities"
       ],
       "correctIndex": 0,
-      "explanation": "This question tests understanding of Cypress concepts. The correct answer demonstrates proper implementation of End-to-End Testing principles. Review the lesson materials for detailed explanations of these concepts.",
-      "industryContext": "In professional development, understanding Cypress is crucial for building scalable and maintainable applications.",
+      "explanation": "Key features of modern E2E testing frameworks include automatic waiting that handles asynchronous operations without explicit timeouts, cross-browser support that enables testing across multiple browsers with a single codebase, and real-time debugging capabilities that help developers quickly identify and fix test issues. These features significantly improve test reliability and developer productivity.",
+      "industryContext": "Modern E2E frameworks have evolved to address the reliability and usability issues of earlier tools. The shift from Selenium-based frameworks to modern alternatives like Cypress and Playwright reflects industry demand for more reliable and developer-friendly testing solutions. Cross-browser testing has become essential as users access applications from diverse browser environments.",
       "tags": [
-        "quality",
+        "e2e-testing",
+        "framework-features",
+        "reliability",
         "beginner"
       ],
       "questionType": "multiple-choice",
@@ -218,20 +228,22 @@
     },
     {
       "id": "e2e-testing-q11",
-      "question": "Which pattern is most effective for Cypress architecture?",
+      "question": "Which pattern is most effective for organizing end-to-end test suites?",
       "topic": "E2E Testing",
       "difficulty": "Intermediate",
       "choices": [
-        "Option A - Placeholder answer",
-        "Option B - Placeholder answer",
-        "Option C - Placeholder answer",
-        "Option D - Placeholder answer"
+        "Page Object Model with test data separation, reusable utilities, and clear test structure",
+        "All tests in a single file without organization",
+        "Random test organization with no clear patterns",
+        "Mixing test logic with application code"
       ],
       "correctIndex": 0,
-      "explanation": "This question tests understanding of Cypress concepts. The correct answer demonstrates proper implementation of End-to-End Testing principles. Review the lesson materials for detailed explanations of these concepts.",
-      "industryContext": "In professional development, understanding Cypress is crucial for building scalable and maintainable applications.",
+      "explanation": "The most effective pattern for organizing E2E test suites is the Page Object Model combined with test data separation, reusable utilities, and clear test structure. Page Object Model encapsulates page interactions, test data separation keeps tests maintainable, reusable utilities reduce duplication, and clear structure makes tests easy to understand and maintain.",
+      "industryContext": "Test organization patterns have evolved to handle the complexity of large-scale E2E test suites. Companies like Netflix and Airbnb have developed sophisticated test architectures that scale to thousands of tests. The Page Object Model pattern, originally from Selenium, remains the gold standard for E2E test organization.",
       "tags": [
-        "quality",
+        "e2e-testing",
+        "test-organization",
+        "page-object-model",
         "intermediate"
       ],
       "questionType": "multiple-choice",
@@ -239,20 +251,22 @@
     },
     {
       "id": "e2e-testing-q12",
-      "question": "How do you implement Cypress in a production environment?",
+      "question": "How do you implement Cypress in a production environment with complex workflows?",
       "topic": "Cypress",
       "difficulty": "Intermediate",
       "choices": [
-        "Option A - Placeholder answer",
-        "Option B - Placeholder answer",
-        "Option C - Placeholder answer",
-        "Option D - Placeholder answer"
+        "Use custom commands for reusable workflows, implement proper test data management, and configure CI/CD integration",
+        "Write all tests without any reusable components",
+        "Ignore CI/CD integration for testing",
+        "Use hardcoded test data for all scenarios"
       ],
       "correctIndex": 0,
-      "explanation": "This question tests understanding of Cypress concepts. The correct answer demonstrates proper implementation of End-to-End Testing principles. Review the lesson materials for detailed explanations of these concepts.",
-      "industryContext": "In professional development, understanding Cypress is crucial for building scalable and maintainable applications.",
+      "explanation": "Implementing Cypress in production environments with complex workflows requires custom commands for reusable test workflows that reduce duplication, proper test data management that ensures consistency and isolation, and CI/CD integration that enables automated testing in deployment pipelines. These practices ensure tests are maintainable, reliable, and provide fast feedback.",
+      "industryContext": "Production E2E testing requires sophisticated approaches to handle complex application workflows. Companies like Salesforce and Adobe have implemented enterprise-scale Cypress deployments with custom command libraries and sophisticated test data management. CI/CD integration is essential for modern DevOps practices.",
       "tags": [
-        "quality",
+        "cypress",
+        "production-testing",
+        "custom-commands",
         "intermediate"
       ],
       "questionType": "multiple-choice",
@@ -260,41 +274,45 @@
     },
     {
       "id": "e2e-testing-q13",
-      "question": "What are the trade-offs between different Cypress approaches?",
+      "question": "What are the trade-offs between different end-to-end testing approaches?",
       "topic": "Playwright",
       "difficulty": "Advanced",
       "choices": [
-        "Option A - Placeholder answer",
-        "Option B - Placeholder answer",
-        "Option C - Placeholder answer",
-        "Option D - Placeholder answer"
+        "Cypress offers better debugging but limited browser support; Playwright provides cross-browser testing but steeper learning curve",
+        "All approaches are identical with no trade-offs",
+        "Older frameworks are always better than modern ones",
+        "Testing approaches don't impact development velocity"
       ],
       "correctIndex": 0,
-      "explanation": "This question tests understanding of Cypress concepts. The correct answer demonstrates proper implementation of End-to-End Testing principles. Review the lesson materials for detailed explanations of these concepts.",
-      "industryContext": "In professional development, understanding Cypress is crucial for building scalable and maintainable applications.",
+      "explanation": "Trade-offs between E2E testing approaches include Cypress's superior debugging experience and automatic waiting mechanisms versus its initial limitation to Chromium-based browsers (now expanded), while Playwright offers comprehensive cross-browser support and faster execution but may have a steeper learning curve. The choice depends on specific project requirements like browser support needs and team expertise.",
+      "industryContext": "Framework selection decisions require careful consideration of project-specific requirements. Large enterprises often use multiple frameworks to address different testing needs. The evolution from Selenium to modern frameworks like Cypress and Playwright reflects ongoing improvements in E2E testing capabilities and developer experience.",
       "tags": [
-        "quality",
+        "e2e-testing",
+        "framework-comparison",
+        "trade-offs",
         "advanced"
       ],
       "questionType": "multiple-choice",
-      "estimatedTime": 90
+      "estimatedTime": 120
     },
     {
       "id": "e2e-testing-q14",
-      "question": "Which pattern is most effective for Cypress architecture?",
+      "question": "Which pattern is most effective for implementing robust end-to-end testing architecture?",
       "topic": "E2E Testing",
       "difficulty": "Intermediate",
       "choices": [
-        "Option A - Placeholder answer",
-        "Option B - Placeholder answer",
-        "Option C - Placeholder answer",
-        "Option D - Placeholder answer"
+        "Layered architecture with page objects, test data factories, utility libraries, and configuration management",
+        "Monolithic test files with all logic mixed together",
+        "No architectural patterns at all",
+        "Random organization without any structure"
       ],
       "correctIndex": 0,
-      "explanation": "This question tests understanding of Cypress concepts. The correct answer demonstrates proper implementation of End-to-End Testing principles. Review the lesson materials for detailed explanations of these concepts.",
-      "industryContext": "In professional development, understanding Cypress is crucial for building scalable and maintainable applications.",
+      "explanation": "Robust E2E testing architecture uses a layered approach with page objects for UI abstraction, test data factories for consistent data generation, utility libraries for common functions, and configuration management for environment-specific settings. This architecture promotes maintainability, reusability, and scalability of test suites.",
+      "industryContext": "Enterprise-scale testing requires sophisticated architectures to manage complexity. Companies like Microsoft and Google have developed testing frameworks with layered architectures that scale to thousands of tests. The principles of software architecture apply equally to test code, emphasizing separation of concerns and modularity.",
       "tags": [
-        "quality",
+        "e2e-testing",
+        "test-architecture",
+        "scalability",
         "intermediate"
       ],
       "questionType": "multiple-choice",
@@ -302,20 +320,22 @@
     },
     {
       "id": "e2e-testing-q15",
-      "question": "How do you implement Cypress in a production environment?",
+      "question": "How do you implement Cypress in a production environment with enterprise security requirements?",
       "topic": "Cypress",
       "difficulty": "Intermediate",
       "choices": [
-        "Option A - Placeholder answer",
-        "Option B - Placeholder answer",
-        "Option C - Placeholder answer",
-        "Option D - Placeholder answer"
+        "Use secure test data management, implement proper authentication strategies, and configure network security policies",
+        "Ignore security requirements for faster test development",
+        "Store sensitive credentials in plain text files",
+        "Disable all security measures during testing"
       ],
       "correctIndex": 0,
-      "explanation": "This question tests understanding of Cypress concepts. The correct answer demonstrates proper implementation of End-to-End Testing principles. Review the lesson materials for detailed explanations of these concepts.",
-      "industryContext": "In professional development, understanding Cypress is crucial for building scalable and maintainable applications.",
+      "explanation": "Implementing Cypress in production environments with enterprise security requirements involves secure test data management that protects sensitive information, proper authentication strategies that don't compromise security, and network security policies that align with organizational standards. These measures ensure tests can run in secure environments without exposing vulnerabilities.",
+      "industryContext": "Enterprise security requirements significantly impact E2E testing implementation. Financial institutions and government agencies have strict security protocols that testing frameworks must accommodate. Companies like JPMorgan Chase and Bank of America have developed secure E2E testing practices that meet regulatory requirements.",
       "tags": [
-        "quality",
+        "cypress",
+        "enterprise-security",
+        "test-data-management",
         "intermediate"
       ],
       "questionType": "multiple-choice",

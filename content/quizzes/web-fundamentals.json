@@ -113,41 +113,45 @@
     },
     {
       "id": "web-fundamentals-q6",
-      "question": "How do you implement HTML5 in a production environment?",
-      "topic": "JavaScript",
-      "difficulty": "Intermediate",
+      "question": "How do you implement HTML5 semantic elements for better accessibility and SEO?",
+      "topic": "HTML5",
+      "difficulty": "Beginner",
       "choices": [
-        "Option A - Placeholder answer",
-        "Option B - Placeholder answer",
-        "Option C - Placeholder answer",
-        "Option D - Placeholder answer"
+        "Use header, nav, main, article, section, aside, and footer elements appropriately for content structure",
+        "Use only div elements with class attributes for all content",
+        "Use table elements for page layout",
+        "Use deprecated elements like font and center for styling"
       ],
       "correctIndex": 0,
-      "explanation": "This question tests understanding of HTML5 concepts. The correct answer demonstrates proper implementation of Web Development Basics principles. Review the lesson materials for detailed explanations of these concepts.",
-      "industryContext": "In professional development, understanding HTML5 is crucial for building scalable and maintainable applications.",
+      "explanation": "HTML5 semantic elements like header, nav, main, article, section, aside, and footer provide meaningful structure that improves accessibility for screen readers and SEO for search engines. These elements convey the purpose of content sections, making web pages more understandable to both users and machines.",
+      "industryContext": "Major search engines like Google prioritize semantic HTML in their ranking algorithms. Accessibility tools like screen readers rely heavily on semantic elements to navigate content effectively. Companies like Microsoft and IBM have made web accessibility a core requirement for their digital products.",
       "tags": [
-        "foundational",
-        "intermediate"
+        "html5",
+        "semantics",
+        "accessibility",
+        "beginner"
       ],
       "estimatedTime": 90,
       "questionType": "multiple-choice"
     },
     {
       "id": "web-fundamentals-q7",
-      "question": "What are the performance considerations when using HTML5?",
-      "topic": "DOM",
+      "question": "What are the performance considerations when using CSS3 layout techniques?",
+      "topic": "CSS3",
       "difficulty": "Intermediate",
       "choices": [
-        "Option A - Placeholder answer",
-        "Option B - Placeholder answer",
-        "Option C - Placeholder answer",
-        "Option D - Placeholder answer"
+        "Use Flexbox for one-dimensional layouts and Grid for two-dimensional layouts to optimize rendering performance",
+        "Use floats for all modern layouts regardless of complexity",
+        "Apply complex animations to every element for visual appeal",
+        "Use absolute positioning for all elements to avoid layout calculations"
       ],
       "correctIndex": 0,
-      "explanation": "This question tests understanding of HTML5 concepts. The correct answer demonstrates proper implementation of Web Development Basics principles. Review the lesson materials for detailed explanations of these concepts.",
-      "industryContext": "In professional development, understanding HTML5 is crucial for building scalable and maintainable applications.",
+      "explanation": "CSS3 layout performance considerations include using Flexbox for one-dimensional layouts (rows or columns) and Grid for two-dimensional layouts (rows and columns together). These modern layout systems are optimized by browsers and provide better performance than older techniques like floats. Choosing the right layout method reduces browser reflow and repaint operations.",
+      "industryContext": "Browser vendors have heavily optimized Flexbox and Grid implementations. Websites like GitHub and Twitter have seen significant performance improvements by migrating from float-based to modern layout systems. CSS containment properties have been introduced to further optimize layout performance.",
       "tags": [
-        "foundational",
+        "css3",
+        "performance",
+        "layout",
         "intermediate"
       ],
       "estimatedTime": 90,
@@ -155,20 +159,22 @@
     },
     {
       "id": "web-fundamentals-q8",
-      "question": "Which pattern is most effective for HTML5 architecture?",
-      "topic": "HTML5",
+      "question": "How do you implement responsive design patterns for cross-device compatibility?",
+      "topic": "CSS3",
       "difficulty": "Intermediate",
       "choices": [
-        "Option A - Placeholder answer",
-        "Option B - Placeholder answer",
-        "Option C - Placeholder answer",
-        "Option D - Placeholder answer"
+        "Use mobile-first approach with media queries, flexible units, and touch-friendly navigation",
+        "Create separate fixed-width designs for each device type",
+        "Use the same desktop layout on all devices without modifications",
+        "Ignore mobile devices and focus only on desktop browsers"
       ],
       "correctIndex": 0,
-      "explanation": "This question tests understanding of HTML5 concepts. The correct answer demonstrates proper implementation of Web Development Basics principles. Review the lesson materials for detailed explanations of these concepts.",
-      "industryContext": "In professional development, understanding HTML5 is crucial for building scalable and maintainable applications.",
+      "explanation": "Responsive design patterns include a mobile-first approach that starts with small screens and scales up, media queries to adapt layouts for different screen sizes, flexible units (rem, em, %) instead of fixed pixels, and touch-friendly navigation elements. This approach ensures optimal user experience across all devices while maintaining a single codebase.",
+      "industryContext": "Mobile web traffic now exceeds desktop traffic globally. Companies like Airbnb and BBC have invested heavily in responsive design, seeing significant improvements in user engagement and conversion rates. Google's mobile-first indexing makes responsive design essential for SEO.",
       "tags": [
-        "foundational",
+        "responsive-design",
+        "mobile-first",
+        "media-queries",
         "intermediate"
       ],
       "estimatedTime": 90,
@@ -176,41 +182,45 @@
     },
     {
       "id": "web-fundamentals-q9",
-      "question": "How do you implement HTML5 in a production environment?",
-      "topic": "CSS3",
-      "difficulty": "Intermediate",
+      "question": "Which approach is most effective for HTML5 form validation and user experience?",
+      "topic": "HTML5",
+      "difficulty": "Beginner",
       "choices": [
-        "Option A - Placeholder answer",
-        "Option B - Placeholder answer",
-        "Option C - Placeholder answer",
-        "Option D - Placeholder answer"
+        "Combine HTML5 validation attributes with JavaScript enhancement and clear error messaging",
+        "Rely solely on server-side validation without client feedback",
+        "Use only JavaScript validation and ignore HTML5 attributes",
+        "Disable all form validation to simplify the user experience"
       ],
       "correctIndex": 0,
-      "explanation": "This question tests understanding of HTML5 concepts. The correct answer demonstrates proper implementation of Web Development Basics principles. Review the lesson materials for detailed explanations of these concepts.",
-      "industryContext": "In professional development, understanding HTML5 is crucial for building scalable and maintainable applications.",
+      "explanation": "Effective HTML5 form validation combines native HTML5 validation attributes (required, pattern, min/max) for immediate feedback, JavaScript enhancement for custom validation logic and improved user experience, and clear, accessible error messaging. This layered approach provides instant feedback while ensuring security through server-side validation.",
+      "industryContext": "Form conversion rates can improve by 20-40% with proper validation and user feedback. Companies like Google and Apple have established best practices for form design and validation. The Constraint Validation API provides programmatic access to HTML5 validation features.",
       "tags": [
-        "foundational",
-        "intermediate"
+        "html5",
+        "form-validation",
+        "user-experience",
+        "beginner"
       ],
       "estimatedTime": 90,
       "questionType": "multiple-choice"
     },
     {
       "id": "web-fundamentals-q10",
-      "question": "Which of the following is a key feature of Web Development Basics?",
+      "question": "What are the key features of modern JavaScript that improve web development?",
       "topic": "JavaScript",
       "difficulty": "Beginner",
       "choices": [
-        "Option A - Placeholder answer",
-        "Option B - Placeholder answer",
-        "Option C - Placeholder answer",
-        "Option D - Placeholder answer"
+        "ES6+ features like const/let, arrow functions, modules, and promises for better code organization",
+        "Only use var declarations and global variables for simplicity",
+        "Avoid all modern JavaScript features to maintain compatibility",
+        "Use document.write for all DOM manipulation"
       ],
       "correctIndex": 0,
-      "explanation": "This question tests understanding of HTML5 concepts. The correct answer demonstrates proper implementation of Web Development Basics principles. Review the lesson materials for detailed explanations of these concepts.",
-      "industryContext": "In professional development, understanding HTML5 is crucial for building scalable and maintainable applications.",
+      "explanation": "Modern JavaScript features that improve development include const/let for better variable scoping, arrow functions for concise syntax and lexical this binding, modules for code organization and dependency management, and promises/async-await for better asynchronous programming. These features lead to more maintainable and reliable code.",
+      "industryContext": "Modern JavaScript adoption has accelerated rapidly, with over 95% of websites using ES6+ features. Frameworks like React and Vue extensively use modern JavaScript features. Browser support for ES6+ is nearly universal, making these features safe to use in production.",
       "tags": [
-        "foundational",
+        "javascript",
+        "es6",
+        "best-practices",
         "beginner"
       ],
       "estimatedTime": 90,
@@ -218,20 +228,22 @@
     },
     {
       "id": "web-fundamentals-q11",
-      "question": "Which pattern is most effective for HTML5 architecture?",
+      "question": "How do you optimize DOM manipulation for better web application performance?",
       "topic": "DOM",
       "difficulty": "Intermediate",
       "choices": [
-        "Option A - Placeholder answer",
-        "Option B - Placeholder answer",
-        "Option C - Placeholder answer",
-        "Option D - Placeholder answer"
+        "Batch DOM updates, use document fragments, cache DOM references, and minimize reflows",
+        "Query the DOM repeatedly within loops for fresh data",
+        "Manipulate individual elements one by one for precision",
+        "Use innerHTML for all dynamic content regardless of security implications"
       ],
       "correctIndex": 0,
-      "explanation": "This question tests understanding of HTML5 concepts. The correct answer demonstrates proper implementation of Web Development Basics principles. Review the lesson materials for detailed explanations of these concepts.",
-      "industryContext": "In professional development, understanding HTML5 is crucial for building scalable and maintainable applications.",
+      "explanation": "DOM manipulation optimization techniques include batching updates to reduce reflows, using document fragments to build complex DOM structures off-DOM, caching DOM references to avoid repeated queries, and minimizing reflows and repaints through strategic update timing. These practices significantly improve application responsiveness.",
+      "industryContext": "DOM manipulation is often the performance bottleneck in web applications. Frameworks like React and Vue implement virtual DOM to optimize updates. Websites like Facebook and Twitter handle thousands of DOM updates per second through careful optimization.",
       "tags": [
-        "foundational",
+        "dom",
+        "performance",
+        "optimization",
         "intermediate"
       ],
       "estimatedTime": 90,
@@ -239,41 +251,45 @@
     },
     {
       "id": "web-fundamentals-q12",
-      "question": "How would you optimize HTML5 for large-scale applications?",
-      "topic": "HTML5",
-      "difficulty": "Advanced",
+      "question": "Which CSS3 techniques are most effective for creating engaging user interfaces?",
+      "topic": "CSS3",
+      "difficulty": "Beginner",
       "choices": [
-        "Option A - Placeholder answer",
-        "Option B - Placeholder answer",
-        "Option C - Placeholder answer",
-        "Option D - Placeholder answer"
+        "Use transitions for smooth state changes, transforms for element manipulation, and flexbox/grid for layouts",
+        "Apply complex animations to every element for maximum visual impact",
+        "Use only basic CSS properties to ensure compatibility",
+        "Avoid all CSS3 features due to browser support concerns"
       ],
       "correctIndex": 0,
-      "explanation": "This question tests understanding of HTML5 concepts. The correct answer demonstrates proper implementation of Web Development Basics principles. Review the lesson materials for detailed explanations of these concepts.",
-      "industryContext": "In professional development, understanding HTML5 is crucial for building scalable and maintainable applications.",
+      "explanation": "Effective CSS3 techniques for engaging interfaces include transitions for smooth state changes that improve user experience, transforms for efficient element manipulation without triggering layout recalculations, and modern layout systems like flexbox and grid for responsive, maintainable designs. These features enhance usability without sacrificing performance.",
+      "industryContext": "Motion design principles have become essential for modern web experiences. Companies like Google (Material Design) and Apple (Human Interface Guidelines) provide comprehensive guidance on using CSS3 features effectively. CSS3 performance is optimized in all modern browsers.",
       "tags": [
-        "foundational",
-        "advanced"
+        "css3",
+        "transitions",
+        "transforms",
+        "beginner"
       ],
       "estimatedTime": 90,
       "questionType": "multiple-choice"
     },
     {
       "id": "web-fundamentals-q13",
-      "question": "What are the performance considerations when using HTML5?",
-      "topic": "CSS3",
+      "question": "What are the best practices for HTML5 accessibility implementation?",
+      "topic": "HTML5",
       "difficulty": "Intermediate",
       "choices": [
-        "Option A - Placeholder answer",
-        "Option B - Placeholder answer",
-        "Option C - Placeholder answer",
-        "Option D - Placeholder answer"
+        "Use semantic elements, ARIA attributes when needed, proper heading hierarchy, and keyboard navigation support",
+        "Ignore accessibility concerns to focus on visual design",
+        "Use only images to convey important information",
+        "Rely solely on screen reader detection scripts"
       ],
       "correctIndex": 0,
-      "explanation": "This question tests understanding of HTML5 concepts. The correct answer demonstrates proper implementation of Web Development Basics principles. Review the lesson materials for detailed explanations of these concepts.",
-      "industryContext": "In professional development, understanding HTML5 is crucial for building scalable and maintainable applications.",
+      "explanation": "HTML5 accessibility best practices include using semantic elements for built-in accessibility, ARIA attributes to enhance accessibility when semantic elements aren't sufficient, proper heading hierarchy (h1-h6) for content structure, and ensuring full keyboard navigation support. These practices make web content usable by people with disabilities.",
+      "industryContext": "Accessibility compliance is legally required in many jurisdictions (ADA, EU Web Accessibility Directive). Companies like Microsoft and IBM have made accessibility a core part of their development processes. Automated accessibility testing tools like axe and Lighthouse help identify issues.",
       "tags": [
-        "foundational",
+        "html5",
+        "accessibility",
+        "aria",
         "intermediate"
       ],
       "estimatedTime": 90,
@@ -281,41 +297,45 @@
     },
     {
       "id": "web-fundamentals-q14",
-      "question": "When should you use HTML5 in development?",
+      "question": "How do you implement effective JavaScript event handling patterns?",
       "topic": "JavaScript",
-      "difficulty": "Beginner",
+      "difficulty": "Intermediate",
       "choices": [
-        "Option A - Placeholder answer",
-        "Option B - Placeholder answer",
-        "Option C - Placeholder answer",
-        "Option D - Placeholder answer"
+        "Use event delegation for dynamic content, remove event listeners to prevent memory leaks, and handle events at the appropriate level",
+        "Attach individual event listeners to every element regardless of performance",
+        "Use inline event handlers for simplicity",
+        "Ignore event handling and rely on page reloads for all interactions"
       ],
       "correctIndex": 0,
-      "explanation": "This question tests understanding of HTML5 concepts. The correct answer demonstrates proper implementation of Web Development Basics principles. Review the lesson materials for detailed explanations of these concepts.",
-      "industryContext": "In professional development, understanding HTML5 is crucial for building scalable and maintainable applications.",
+      "explanation": "Effective JavaScript event handling includes event delegation for efficient handling of dynamic content, proper removal of event listeners to prevent memory leaks, and attaching handlers at the appropriate level in the DOM hierarchy. These patterns improve performance and maintainability while reducing memory consumption.",
+      "industryContext": "Event handling patterns are fundamental to modern web applications. Frameworks like React implement synthetic event systems for cross-browser consistency. Event delegation is particularly important for applications with large amounts of dynamic content like social media feeds.",
       "tags": [
-        "foundational",
-        "beginner"
+        "javascript",
+        "event-handling",
+        "event-delegation",
+        "intermediate"
       ],
       "estimatedTime": 90,
       "questionType": "multiple-choice"
     },
     {
       "id": "web-fundamentals-q15",
-      "question": "How do you implement HTML5 in a production environment?",
-      "topic": "DOM",
+      "question": "How do you implement HTML5 in a production environment with legacy browser support?",
+      "topic": "HTML5",
       "difficulty": "Intermediate",
       "choices": [
-        "Option A - Placeholder answer",
-        "Option B - Placeholder answer",
-        "Option C - Placeholder answer",
-        "Option D - Placeholder answer"
+        "Use feature detection, polyfills for missing features, and progressive enhancement for graceful degradation",
+        "Require the latest browsers and block older ones",
+        "Avoid all HTML5 features to maintain compatibility",
+        "Use only the newest HTML5 features regardless of browser support"
       ],
       "correctIndex": 0,
-      "explanation": "This question tests understanding of HTML5 concepts. The correct answer demonstrates proper implementation of Web Development Basics principles. Review the lesson materials for detailed explanations of these concepts.",
-      "industryContext": "In professional development, understanding HTML5 is crucial for building scalable and maintainable applications.",
+      "explanation": "Production HTML5 implementation with legacy support involves feature detection to check browser capabilities, polyfills to provide missing functionality in older browsers, and progressive enhancement to ensure core functionality works everywhere while enhancing capable browsers. This approach maximizes reach while providing modern experiences.",
+      "industryContext": "Browser support varies significantly across user bases, especially in enterprise environments. Companies like GitHub and Airbnb use progressive enhancement to support diverse browser requirements. Feature detection libraries like Modernizr help implement graceful degradation strategies.",
       "tags": [
-        "foundational",
+        "html5",
+        "browser-support",
+        "polyfills",
         "intermediate"
       ],
       "estimatedTime": 90,
@@ -323,20 +343,23 @@
     },
     {
       "id": "web-fundamentals-q16",
-      "question": "Which of the following is a key feature of Web Development Basics?",
-      "topic": "HTML5",
+      "question": "Which CSS3 layout approach is most effective for responsive web design?",
+      "topic": "CSS3",
       "difficulty": "Beginner",
       "choices": [
-        "Option A - Placeholder answer",
-        "Option B - Placeholder answer",
-        "Option C - Placeholder answer",
-        "Option D - Placeholder answer"
+        "Use CSS Grid for complex layouts and Flexbox for simpler one-dimensional arrangements",
+        "Use floats for all modern layouts",
+        "Use absolute positioning for all elements",
+        "Use tables for page layout"
       ],
       "correctIndex": 0,
-      "explanation": "This question tests understanding of HTML5 concepts. The correct answer demonstrates proper implementation of Web Development Basics principles. Review the lesson materials for detailed explanations of these concepts.",
-      "industryContext": "In professional development, understanding HTML5 is crucial for building scalable and maintainable applications.",
+      "explanation": "Effective CSS3 layout for responsive design uses CSS Grid for complex two-dimensional layouts (rows and columns together) and Flexbox for simpler one-dimensional arrangements (rows or columns). This combination provides the flexibility needed for responsive designs while maintaining clean, maintainable code.",
+      "industryContext": "CSS Grid and Flexbox have become the standard layout systems, replacing older techniques like floats and positioning. Major websites like GitHub and Twitter have migrated to these modern layout systems. Browser support is nearly universal for both technologies.",
       "tags": [
-        "foundational",
+        "css3",
+        "grid",
+        "flexbox",
+        "responsive-design",
         "beginner"
       ],
       "estimatedTime": 90,
@@ -344,41 +367,46 @@
     },
     {
       "id": "web-fundamentals-q17",
-      "question": "How do you troubleshoot complex HTML5 issues?",
+      "question": "How do you troubleshoot complex HTML5 issues in cross-browser environments?",
       "topic": "CSS3",
       "difficulty": "Advanced",
       "choices": [
-        "Option A - Placeholder answer",
-        "Option B - Placeholder answer",
-        "Option C - Placeholder answer",
-        "Option D - Placeholder answer"
+        "Use browser developer tools, feature detection libraries, and systematic testing across target browsers",
+        "Test only in the most popular browser",
+        "Ignore browser differences and hope for the best",
+        "Use browser-specific CSS hacks for all styling"
       ],
       "correctIndex": 0,
-      "explanation": "This question tests understanding of HTML5 concepts. The correct answer demonstrates proper implementation of Web Development Basics principles. Review the lesson materials for detailed explanations of these concepts.",
-      "industryContext": "In professional development, understanding HTML5 is crucial for building scalable and maintainable applications.",
+      "explanation": "Cross-browser HTML5 troubleshooting requires using browser developer tools for debugging, feature detection libraries like Modernizr to identify capability gaps, and systematic testing across all target browsers and versions. This approach helps identify and resolve compatibility issues before they affect users.",
+      "industryContext": "Cross-browser compatibility remains challenging despite improved standards compliance. Tools like BrowserStack and Sauce Labs provide cloud-based testing environments. Companies with global reach like Facebook and Google maintain extensive browser compatibility testing infrastructures.",
       "tags": [
-        "foundational",
+        "html5",
+        "cross-browser",
+        "troubleshooting",
         "advanced"
       ],
-      "estimatedTime": 90,
+      "estimatedTime": 120,
       "questionType": "multiple-choice"
     },
     {
       "id": "web-fundamentals-q18",
-      "question": "How do you implement HTML5 in a production environment?",
+      "question": "What JavaScript patterns are most effective for DOM manipulation and event handling?",
       "topic": "JavaScript",
       "difficulty": "Intermediate",
       "choices": [
-        "Option A - Placeholder answer",
-        "Option B - Placeholder answer",
-        "Option C - Placeholder answer",
-        "Option D - Placeholder answer"
+        "Use modular patterns with event delegation, DOM caching, and proper event listener management",
+        "Attach individual event listeners to every DOM element",
+        "Use global variables for all state management",
+        "Manipulate the DOM directly without any organizational patterns"
       ],
       "correctIndex": 0,
-      "explanation": "This question tests understanding of HTML5 concepts. The correct answer demonstrates proper implementation of Web Development Basics principles. Review the lesson materials for detailed explanations of these concepts.",
-      "industryContext": "In professional development, understanding HTML5 is crucial for building scalable and maintainable applications.",
+      "explanation": "Effective JavaScript patterns for DOM manipulation include modular organization to encapsulate functionality, event delegation to efficiently handle events on dynamic content, DOM caching to avoid repeated queries, and proper event listener management to prevent memory leaks. These patterns create maintainable and performant code.",
+      "industryContext": "Modern JavaScript frameworks implement these patterns at scale. Libraries like jQuery popularized many of these best practices. Performance-critical applications like Google Maps and Facebook implement sophisticated DOM management strategies.",
       "tags": [
-        "foundational",
+        "javascript",
+        "dom-manipulation",
+        "event-handling",
+        "patterns",
         "intermediate"
       ],
       "estimatedTime": 90,
@@ -386,20 +414,23 @@
     },
     {
       "id": "web-fundamentals-q19",
-      "question": "Which of the following is a key feature of Web Development Basics?",
+      "question": "Which HTML5 features are essential for creating accessible web applications?",
       "topic": "DOM",
       "difficulty": "Beginner",
       "choices": [
-        "Option A - Placeholder answer",
-        "Option B - Placeholder answer",
-        "Option C - Placeholder answer",
-        "Option D - Placeholder answer"
+        "Semantic elements, form labels, ARIA attributes, and keyboard navigation support",
+        "Complex visual effects and animations",
+        "Custom fonts and advanced CSS styling",
+        "Multimedia elements without captions"
       ],
       "correctIndex": 0,
-      "explanation": "This question tests understanding of HTML5 concepts. The correct answer demonstrates proper implementation of Web Development Basics principles. Review the lesson materials for detailed explanations of these concepts.",
-      "industryContext": "In professional development, understanding HTML5 is crucial for building scalable and maintainable applications.",
+      "explanation": "Essential HTML5 features for accessibility include semantic elements that provide built-in meaning, proper form labels that connect inputs with their descriptions, ARIA attributes to enhance accessibility where needed, and keyboard navigation support for users who cannot use a mouse. These features ensure content is usable by people with disabilities.",
+      "industryContext": "Web Content Accessibility Guidelines (WCAG) 2.1 provide the standard for web accessibility. Companies face legal requirements for accessibility in many jurisdictions. Tools like screen readers depend heavily on proper HTML5 semantic structure and ARIA attributes.",
       "tags": [
-        "foundational",
+        "html5",
+        "accessibility",
+        "semantics",
+        "aria",
         "beginner"
       ],
       "estimatedTime": 90,
@@ -407,20 +438,23 @@
     },
     {
       "id": "web-fundamentals-q20",
-      "question": "When should you use HTML5 in development?",
+      "question": "When should you use HTML5 features in web development projects?",
       "topic": "HTML5",
       "difficulty": "Beginner",
       "choices": [
-        "Option A - Placeholder answer",
-        "Option B - Placeholder answer",
-        "Option C - Placeholder answer",
-        "Option D - Placeholder answer"
+        "When they solve specific problems and improve user experience, with graceful degradation for unsupported browsers",
+        "Always use the latest features regardless of browser support",
+        "Never use HTML5 features to maintain maximum compatibility",
+        "Only use features that work in Internet Explorer 6"
       ],
       "correctIndex": 0,
-      "explanation": "This question tests understanding of HTML5 concepts. The correct answer demonstrates proper implementation of Web Development Basics principles. Review the lesson materials for detailed explanations of these concepts.",
-      "industryContext": "In professional development, understanding HTML5 is crucial for building scalable and maintainable applications.",
+      "explanation": "HTML5 features should be used when they solve specific problems and improve user experience, with graceful degradation strategies for browsers that don't support them. This approach leverages modern capabilities while maintaining broad compatibility. Feature detection helps determine when to apply enhancements.",
+      "industryContext": "Progressive enhancement has become the standard approach for using modern web features. Companies balance innovation with compatibility based on their user base analytics. Feature detection libraries like Modernizr help implement this strategy effectively.",
       "tags": [
-        "foundational",
+        "html5",
+        "progressive-enhancement",
+        "feature-detection",
+        "best-practices",
         "beginner"
       ],
       "estimatedTime": 90,

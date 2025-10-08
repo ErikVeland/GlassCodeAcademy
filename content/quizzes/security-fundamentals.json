@@ -8,20 +8,21 @@
   "questions": [
     {
       "id": "security-fundamentals-q1",
-      "question": "What are the performance considerations when using Security?",
+      "question": "What are the performance considerations when implementing authentication systems?",
       "topic": "Authentication",
       "difficulty": "Intermediate",
       "choices": [
-        "Option A - Placeholder answer",
-        "Option B - Placeholder answer",
-        "Option C - Placeholder answer",
-        "Option D - Placeholder answer"
+        "Use efficient hashing algorithms like bcrypt with appropriate cost factors and implement session caching",
+        "Always use the highest security settings regardless of performance impact",
+        "Avoid authentication altogether to improve performance",
+        "Use simple hashing algorithms like MD5 for faster processing"
       ],
       "correctIndex": 0,
-      "explanation": "This question tests understanding of Security concepts. The correct answer demonstrates proper implementation of Security Best Practices principles. Review the lesson materials for detailed explanations of these concepts.",
-      "industryContext": "In professional development, understanding Security is crucial for building scalable and maintainable applications.",
+      "explanation": "Balancing security and performance in authentication systems requires using efficient but secure hashing algorithms like bcrypt with appropriate cost factors. Session caching can significantly improve performance by reducing database lookups. The key is finding the right balance between security and user experience.",
+      "industryContext": "Major tech companies like Google and Facebook invest heavily in optimizing their authentication systems to handle billions of requests while maintaining security. Properly configured bcrypt with session caching can handle thousands of authentication requests per second.",
       "tags": [
-        "quality",
+        "authentication",
+        "performance",
         "intermediate"
       ],
       "estimatedTime": 90,
@@ -29,44 +30,48 @@
     },
     {
       "id": "security-fundamentals-q2",
-      "question": "How do you troubleshoot complex Security issues?",
+      "question": "How do you troubleshoot complex authorization issues in a microservices architecture?",
       "topic": "Authorization",
       "difficulty": "Advanced",
       "choices": [
-        "Option A - Placeholder answer",
-        "Option B - Placeholder answer",
-        "Option C - Placeholder answer",
-        "Option D - Placeholder answer"
+        "Implement distributed tracing, centralized logging, and use consistent authorization policies across services",
+        "Debug each service independently without considering interactions",
+        "Remove authorization checks temporarily to isolate the issue",
+        "Use a monolithic approach instead of microservices"
       ],
       "correctIndex": 0,
-      "explanation": "This question tests understanding of Security concepts. The correct answer demonstrates proper implementation of Security Best Practices principles. Review the lesson materials for detailed explanations of these concepts.",
-      "industryContext": "In professional development, understanding Security is crucial for building scalable and maintainable applications.",
+      "explanation": "Troubleshooting authorization in microservices requires a systematic approach with distributed tracing to follow requests across services, centralized logging for correlation, and consistent authorization policies. Tools like Jaeger or Zipkin can help trace requests, while centralized logging solutions like ELK stack help correlate events.",
+      "industryContext": "Companies like Netflix and Uber have developed sophisticated approaches to debugging authorization issues in their microservices architectures. Distributed tracing has become essential for understanding complex service interactions.",
       "tags": [
-        "quality",
+        "authorization",
+        "microservices",
+        "troubleshooting",
         "advanced"
       ],
-      "estimatedTime": 90,
+      "estimatedTime": 120,
       "questionType": "multiple-choice"
     },
     {
       "id": "security-fundamentals-q3",
-      "question": "How would you optimize Security for large-scale applications?",
+      "question": "How would you optimize security implementations for large-scale applications with millions of users?",
       "topic": "Security",
       "difficulty": "Advanced",
       "choices": [
-        "Option A - Placeholder answer",
-        "Option B - Placeholder answer",
-        "Option C - Placeholder answer",
-        "Option D - Placeholder answer"
+        "Implement layered security with CDN protection, rate limiting, caching security decisions, and horizontal scaling",
+        "Use a single security approach for all parts of the application",
+        "Focus only on perimeter security and ignore internal threats",
+        "Remove security measures to improve performance"
       ],
       "correctIndex": 0,
-      "explanation": "This question tests understanding of Security concepts. The correct answer demonstrates proper implementation of Security Best Practices principles. Review the lesson materials for detailed explanations of these concepts.",
-      "industryContext": "In professional development, understanding Security is crucial for building scalable and maintainable applications.",
+      "explanation": "Large-scale security optimization requires a layered approach including CDN protection for DDoS mitigation, rate limiting to prevent abuse, caching security decisions to reduce latency, and horizontal scaling to handle load. Each layer addresses different types of threats while maintaining performance.",
+      "industryContext": "Major platforms like Twitter and Instagram handle security for hundreds of millions of users by implementing multi-layered security architectures. They use techniques like edge security, distributed rate limiting, and intelligent caching to maintain both security and performance.",
       "tags": [
-        "quality",
+        "scalability",
+        "security-architecture",
+        "optimization",
         "advanced"
       ],
-      "estimatedTime": 90,
+      "estimatedTime": 120,
       "questionType": "multiple-choice"
     },
     {
@@ -137,20 +142,22 @@
     },
     {
       "id": "security-fundamentals-q7",
-      "question": "Which of the following is a key feature of Security Best Practices?",
+      "question": "Which security practices are essential for protecting user data in modern web applications?",
       "topic": "Authentication",
       "difficulty": "Beginner",
       "choices": [
-        "Option A - Placeholder answer",
-        "Option B - Placeholder answer",
-        "Option C - Placeholder answer",
-        "Option D - Placeholder answer"
+        "Implement multi-factor authentication, use secure password hashing, and enforce strong password policies",
+        "Store passwords in plain text for easier recovery",
+        "Use the same password for all user accounts",
+        "Disable password complexity requirements for user convenience"
       ],
       "correctIndex": 0,
-      "explanation": "This question tests understanding of Security concepts. The correct answer demonstrates proper implementation of Security Best Practices principles. Review the lesson materials for detailed explanations of these concepts.",
-      "industryContext": "In professional development, understanding Security is crucial for building scalable and maintainable applications.",
+      "explanation": "Essential security practices for user data protection include multi-factor authentication for additional security layers, secure password hashing using algorithms like bcrypt or Argon2, and strong password policies that enforce complexity and regular updates. These practices work together to create robust protection.",
+      "industryContext": "Regulatory requirements like GDPR and CCPA mandate strong data protection practices. Companies that fail to implement proper security measures face significant fines and reputation damage. Multi-factor authentication has become a standard requirement for most online services.",
       "tags": [
-        "quality",
+        "data-protection",
+        "authentication",
+        "best-practices",
         "beginner"
       ],
       "estimatedTime": 90,
@@ -158,275 +165,301 @@
     },
     {
       "id": "security-fundamentals-q8",
-      "question": "How do you troubleshoot complex Security issues?",
+      "question": "What strategies are effective for troubleshooting complex security vulnerabilities?",
       "topic": "Authorization",
       "difficulty": "Advanced",
       "choices": [
-        "Option A - Placeholder answer",
-        "Option B - Placeholder answer",
-        "Option C - Placeholder answer",
-        "Option D - Placeholder answer"
+        "Use systematic penetration testing, code review, threat modeling, and security monitoring tools",
+        "Ignore the vulnerability if it doesn't cause immediate issues",
+        "Apply quick fixes without understanding the root cause",
+        "Blame third-party libraries for all security issues"
       ],
       "correctIndex": 0,
-      "explanation": "This question tests understanding of Security concepts. The correct answer demonstrates proper implementation of Security Best Practices principles. Review the lesson materials for detailed explanations of these concepts.",
-      "industryContext": "In professional development, understanding Security is crucial for building scalable and maintainable applications.",
+      "explanation": "Effective security troubleshooting requires a systematic approach including penetration testing to identify vulnerabilities, code review to find implementation flaws, threat modeling to understand potential attack vectors, and security monitoring tools to detect ongoing threats. This comprehensive approach ensures thorough vulnerability identification and remediation.",
+      "industryContext": "Professional security teams use structured approaches like the NIST Cybersecurity Framework and OWASP Testing Guide. Bug bounty programs have become popular for crowdsourcing vulnerability discovery, with companies like Google and Facebook paying millions in rewards.",
       "tags": [
-        "quality",
+        "vulnerability-assessment",
+        "troubleshooting",
+        "penetration-testing",
         "advanced"
       ],
-      "estimatedTime": 90,
+      "estimatedTime": 120,
       "questionType": "multiple-choice"
     },
     {
       "id": "security-fundamentals-q9",
-      "question": "How do you implement Security in a production environment?",
+      "question": "How do you implement comprehensive security measures in a production environment?",
       "topic": "Security",
       "difficulty": "Intermediate",
       "choices": [
-        "Option A - Placeholder answer",
-        "Option B - Placeholder answer",
-        "Option C - Placeholder answer",
-        "Option D - Placeholder answer"
+        "Deploy web application firewalls, implement security headers, use secure deployment pipelines, and continuous monitoring",
+        "Focus only on perimeter security and ignore internal application security",
+        "Disable security measures during deployment for convenience",
+        "Use default configurations for all security tools"
       ],
       "correctIndex": 0,
-      "explanation": "This question tests understanding of Security concepts. The correct answer demonstrates proper implementation of Security Best Practices principles. Review the lesson materials for detailed explanations of these concepts.",
-      "industryContext": "In professional development, understanding Security is crucial for building scalable and maintainable applications.",
+      "explanation": "Comprehensive production security implementation includes web application firewalls for filtering malicious traffic, security headers to prevent common attacks, secure deployment pipelines with automated security checks, and continuous monitoring for threat detection. Each component addresses different aspects of the security landscape.",
+      "industryContext": "DevSecOps practices have emerged to integrate security into the entire development lifecycle. Companies like Microsoft and Amazon have embedded security checks throughout their deployment pipelines, reducing vulnerabilities by over 70%.",
       "tags": [
-        "quality",
+        "production-security",
+        "devsecops",
+        "implementation",
         "intermediate"
       ],
-      "estimatedTime": 90,
+      "estimatedTime": 120,
       "questionType": "multiple-choice"
     },
     {
       "id": "security-fundamentals-q10",
-      "question": "What are the trade-offs between different Security approaches?",
-      "topic": "Authentication",
-      "difficulty": "Advanced",
+      "question": "What are the key principles of secure coding practices?",
+      "topic": "Security",
+      "difficulty": "Beginner",
       "choices": [
-        "Option A - Placeholder answer",
-        "Option B - Placeholder answer",
-        "Option C - Placeholder answer",
-        "Option D - Placeholder answer"
+        "Validate all inputs, sanitize outputs, implement proper error handling, and follow security best practices",
+        "Trust all user inputs since they come from your application",
+        "Ignore security warnings from static analysis tools",
+        "Use complex code to make it harder for attackers to understand"
       ],
       "correctIndex": 0,
-      "explanation": "This question tests understanding of Security concepts. The correct answer demonstrates proper implementation of Security Best Practices principles. Review the lesson materials for detailed explanations of these concepts.",
-      "industryContext": "In professional development, understanding Security is crucial for building scalable and maintainable applications.",
+      "explanation": "Secure coding principles include input validation to prevent injection attacks, output sanitization to prevent XSS, proper error handling to avoid information disclosure, and following established security best practices. These principles form the foundation of defensive programming.",
+      "industryContext": "The OWASP Secure Coding Practices guide is widely adopted across the industry. Companies that implement secure coding practices see 60-80% fewer security vulnerabilities in their applications compared to those that don't.",
       "tags": [
-        "quality",
-        "advanced"
+        "secure-coding",
+        "best-practices",
+        "input-validation",
+        "beginner"
       ],
       "estimatedTime": 90,
       "questionType": "multiple-choice"
     },
     {
       "id": "security-fundamentals-q11",
-      "question": "Which pattern is most effective for Security architecture?",
-      "topic": "Authorization",
+      "question": "Which pattern is most effective for implementing secure authentication architecture?",
+      "topic": "Authentication",
       "difficulty": "Intermediate",
       "choices": [
-        "Option A - Placeholder answer",
-        "Option B - Placeholder answer",
-        "Option C - Placeholder answer",
-        "Option D - Placeholder answer"
+        "OAuth 2.0 with JWT tokens, secure session management, and multi-factor authentication",
+        "Storing passwords in plain text with basic HTTP authentication",
+        "Using the same session token for all users",
+        "Disabling authentication for internal APIs"
       ],
       "correctIndex": 0,
-      "explanation": "This question tests understanding of Security concepts. The correct answer demonstrates proper implementation of Security Best Practices principles. Review the lesson materials for detailed explanations of these concepts.",
-      "industryContext": "In professional development, understanding Security is crucial for building scalable and maintainable applications.",
+      "explanation": "Effective authentication architecture uses OAuth 2.0 for standardized authorization flows, JWT tokens for stateless authentication, secure session management with proper timeouts and rotation, and multi-factor authentication for additional security. This pattern provides both security and scalability.",
+      "industryContext": "Major identity providers like Auth0, Okta, and Google Identity Platform use OAuth 2.0 and JWT as industry standards. The shift toward zero-trust security models has made robust authentication architecture even more critical.",
       "tags": [
-        "quality",
+        "authentication",
+        "oauth",
+        "jwt",
         "intermediate"
       ],
-      "estimatedTime": 90,
+      "estimatedTime": 120,
       "questionType": "multiple-choice"
     },
     {
       "id": "security-fundamentals-q12",
-      "question": "How would you optimize Security for large-scale applications?",
+      "question": "How would you optimize security controls for high-performance applications?",
       "topic": "Security",
       "difficulty": "Advanced",
       "choices": [
-        "Option A - Placeholder answer",
-        "Option B - Placeholder answer",
-        "Option C - Placeholder answer",
-        "Option D - Placeholder answer"
+        "Use hardware security modules, implement caching for authorization decisions, and optimize cryptographic operations",
+        "Remove all security controls to maximize performance",
+        "Use the slowest but most secure algorithms for all operations",
+        "Apply security controls only to visible application features"
       ],
       "correctIndex": 0,
-      "explanation": "This question tests understanding of Security concepts. The correct answer demonstrates proper implementation of Security Best Practices principles. Review the lesson materials for detailed explanations of these concepts.",
-      "industryContext": "In professional development, understanding Security is crucial for building scalable and maintainable applications.",
+      "explanation": "High-performance security optimization involves hardware security modules for accelerated cryptographic operations, caching authorization decisions to reduce latency, and optimizing cryptographic operations through algorithm selection and implementation tuning. The goal is maintaining security without sacrificing performance.",
+      "industryContext": "Financial institutions like banks and payment processors handle millions of transactions per second while maintaining strict security requirements. They use specialized hardware and sophisticated caching strategies to achieve both performance and security.",
       "tags": [
-        "quality",
+        "performance",
+        "optimization",
+        "cryptography",
         "advanced"
       ],
-      "estimatedTime": 90,
+      "estimatedTime": 120,
       "questionType": "multiple-choice"
     },
     {
       "id": "security-fundamentals-q13",
-      "question": "What are the trade-offs between different Security approaches?",
+      "question": "What are the security considerations when using modern authentication protocols?",
       "topic": "Authentication",
-      "difficulty": "Advanced",
+      "difficulty": "Intermediate",
       "choices": [
-        "Option A - Placeholder answer",
-        "Option B - Placeholder answer",
-        "Option C - Placeholder answer",
-        "Option D - Placeholder answer"
+        "Implement proper token validation, use secure storage, enforce token expiration, and protect against replay attacks",
+        "Store tokens in plain text local storage indefinitely",
+        "Use the same token for all authentication contexts",
+        "Disable token validation to improve application speed"
       ],
       "correctIndex": 0,
-      "explanation": "This question tests understanding of Security concepts. The correct answer demonstrates proper implementation of Security Best Practices principles. Review the lesson materials for detailed explanations of these concepts.",
-      "industryContext": "In professional development, understanding Security is crucial for building scalable and maintainable applications.",
+      "explanation": "Modern authentication protocols require proper token validation to ensure authenticity, secure storage to prevent theft, token expiration to limit exposure windows, and protection against replay attacks through mechanisms like nonces or timestamps. These measures work together to create robust authentication security.",
+      "industryContext": "The shift from session-based to token-based authentication has created new security challenges. Companies like GitHub and Slack have implemented sophisticated token management systems to handle these considerations at scale.",
       "tags": [
-        "quality",
-        "advanced"
+        "authentication",
+        "tokens",
+        "protocols",
+        "intermediate"
       ],
-      "estimatedTime": 90,
+      "estimatedTime": 120,
       "questionType": "multiple-choice"
     },
     {
       "id": "security-fundamentals-q14",
-      "question": "When should you use Security in development?",
-      "topic": "Authorization",
-      "difficulty": "Beginner",
+      "question": "How do you implement effective input validation to prevent injection attacks?",
+      "topic": "Security",
+      "difficulty": "Intermediate",
       "choices": [
-        "Option A - Placeholder answer",
-        "Option B - Placeholder answer",
-        "Option C - Placeholder answer",
-        "Option D - Placeholder answer"
+        "Use whitelist validation, parameterized queries, output encoding, and comprehensive validation libraries",
+        "Trust all user input since it comes from your own application",
+        "Use blacklist validation to block known malicious patterns",
+        "Apply validation only to visible form fields"
       ],
       "correctIndex": 0,
-      "explanation": "This question tests understanding of Security concepts. The correct answer demonstrates proper implementation of Security Best Practices principles. Review the lesson materials for detailed explanations of these concepts.",
-      "industryContext": "In professional development, understanding Security is crucial for building scalable and maintainable applications.",
+      "explanation": "Effective input validation uses whitelist validation to allow only known good values, parameterized queries to prevent SQL injection, output encoding to prevent XSS, and comprehensive validation libraries to handle various data types. This multi-layered approach provides robust protection against injection attacks.",
+      "industryContext": "Injection attacks consistently rank in the OWASP Top 10 security risks. Companies that implement comprehensive input validation see dramatic reductions in security incidents. The use of validation libraries like OWASP ESAPI has become standard practice.",
       "tags": [
-        "quality",
-        "beginner"
+        "input-validation",
+        "injection-prevention",
+        "security-controls",
+        "intermediate"
       ],
-      "estimatedTime": 90,
+      "estimatedTime": 120,
       "questionType": "multiple-choice"
     },
     {
       "id": "security-fundamentals-q15",
-      "question": "What is the primary purpose of Security?",
+      "question": "Which security implementation provides the best protection for sensitive data at rest?",
       "topic": "Security",
-      "difficulty": "Beginner",
+      "difficulty": "Advanced",
       "choices": [
-        "Option A - Placeholder answer",
-        "Option B - Placeholder answer",
-        "Option C - Placeholder answer",
-        "Option D - Placeholder answer"
+        "AES-256 encryption with proper key management, secure key storage, and field-level encryption for highly sensitive data",
+        "Base64 encoding to obscure data from casual observers",
+        "Storing all data in plain text for easier debugging",
+        "Using the same encryption key for all data"
       ],
       "correctIndex": 0,
-      "explanation": "This question tests understanding of Security concepts. The correct answer demonstrates proper implementation of Security Best Practices principles. Review the lesson materials for detailed explanations of these concepts.",
-      "industryContext": "In professional development, understanding Security is crucial for building scalable and maintainable applications.",
+      "explanation": "Best practices for data at rest protection include AES-256 encryption as the industry standard, proper key management with rotation and secure storage, and field-level encryption for highly sensitive data like passwords and personal information. This approach provides strong protection while maintaining performance.",
+      "industryContext": "Data breach regulations like GDPR and CCPA require strong data protection measures. Companies that implement proper encryption see significantly reduced impact from data breaches, with some avoiding notification requirements entirely due to encryption.",
       "tags": [
-        "quality",
-        "beginner"
+        "data-encryption",
+        "key-management",
+        "data-protection",
+        "advanced"
       ],
-      "estimatedTime": 90,
+      "estimatedTime": 120,
       "questionType": "multiple-choice"
     },
     {
       "id": "security-fundamentals-q16",
-      "question": "Which of the following is a key feature of Security Best Practices?",
-      "topic": "Authentication",
-      "difficulty": "Beginner",
+      "question": "What are the trade-offs between different security monitoring approaches?",
+      "topic": "Security",
+      "difficulty": "Advanced",
       "choices": [
-        "Option A - Placeholder answer",
-        "Option B - Placeholder answer",
-        "Option C - Placeholder answer",
-        "Option D - Placeholder answer"
+        "Real-time monitoring provides immediate threat detection but requires more resources; batch processing is resource-efficient but has detection delays",
+        "More monitoring is always better regardless of resource costs",
+        "Security monitoring is unnecessary for well-designed applications",
+        "Simple log files are sufficient for all security monitoring needs"
       ],
       "correctIndex": 0,
-      "explanation": "This question tests understanding of Security concepts. The correct answer demonstrates proper implementation of Security Best Practices principles. Review the lesson materials for detailed explanations of these concepts.",
-      "industryContext": "In professional development, understanding Security is crucial for building scalable and maintainable applications.",
+      "explanation": "Security monitoring trade-offs include real-time monitoring for immediate threat detection but higher resource consumption, versus batch processing for resource efficiency but delayed detection. The optimal approach balances detection speed with resource constraints based on threat models and compliance requirements.",
+      "industryContext": "Security Information and Event Management (SIEM) systems have evolved to handle these trade-offs. Companies like Splunk and IBM QRadar provide sophisticated monitoring solutions that balance real-time detection with resource efficiency.",
       "tags": [
-        "quality",
-        "beginner"
+        "security-monitoring",
+        "trade-offs",
+        "siem",
+        "advanced"
       ],
-      "estimatedTime": 90,
+      "estimatedTime": 120,
       "questionType": "multiple-choice"
     },
     {
       "id": "security-fundamentals-q17",
-      "question": "When should you use Security in development?",
-      "topic": "Authorization",
-      "difficulty": "Beginner",
+      "question": "How do you implement secure session management in distributed applications?",
+      "topic": "Authentication",
+      "difficulty": "Intermediate",
       "choices": [
-        "Option A - Placeholder answer",
-        "Option B - Placeholder answer",
-        "Option C - Placeholder answer",
-        "Option D - Placeholder answer"
+        "Use centralized session stores, implement proper session invalidation, set secure cookie attributes, and use short session timeouts",
+        "Store session data in client-side cookies without encryption",
+        "Use the same session ID across all user sessions",
+        "Never expire sessions to improve user experience"
       ],
       "correctIndex": 0,
-      "explanation": "This question tests understanding of Security concepts. The correct answer demonstrates proper implementation of Security Best Practices principles. Review the lesson materials for detailed explanations of these concepts.",
-      "industryContext": "In professional development, understanding Security is crucial for building scalable and maintainable applications.",
+      "explanation": "Secure distributed session management requires centralized session stores for consistency, proper session invalidation on logout and timeout, secure cookie attributes (HttpOnly, Secure, SameSite), and appropriately short session timeouts to limit exposure windows. These measures work together to protect session security.",
+      "industryContext": "The shift to microservices and cloud-native architectures has made distributed session management more complex. Companies like Netflix and Airbnb have developed sophisticated session management systems to handle these challenges at scale.",
       "tags": [
-        "quality",
-        "beginner"
+        "session-management",
+        "distributed-systems",
+        "authentication",
+        "intermediate"
       ],
-      "estimatedTime": 90,
+      "estimatedTime": 120,
       "questionType": "multiple-choice"
     },
     {
       "id": "security-fundamentals-q18",
-      "question": "What is the primary purpose of Security?",
+      "question": "What security measures are essential for protecting APIs from common attacks?",
       "topic": "Security",
-      "difficulty": "Beginner",
+      "difficulty": "Intermediate",
       "choices": [
-        "Option A - Placeholder answer",
-        "Option B - Placeholder answer",
-        "Option C - Placeholder answer",
-        "Option D - Placeholder answer"
+        "Implement rate limiting, input validation, authentication, authorization, and API gateway security controls",
+        "Make all APIs publicly accessible without any protection",
+        "Use the same API key for all clients",
+        "Disable logging to prevent attackers from seeing API usage patterns"
       ],
       "correctIndex": 0,
-      "explanation": "This question tests understanding of Security concepts. The correct answer demonstrates proper implementation of Security Best Practices principles. Review the lesson materials for detailed explanations of these concepts.",
-      "industryContext": "In professional development, understanding Security is crucial for building scalable and maintainable applications.",
+      "explanation": "Essential API security measures include rate limiting to prevent abuse, input validation to prevent injection attacks, strong authentication and authorization to control access, and API gateway security controls for centralized protection. These layers work together to create robust API security.",
+      "industryContext": "API security has become critical as more applications expose functionality through APIs. The OWASP API Security Top 10 provides guidance on protecting APIs from common threats. Major API platforms like Stripe and Twilio implement comprehensive security measures.",
       "tags": [
-        "quality",
-        "beginner"
+        "api-security",
+        "rate-limiting",
+        "authentication",
+        "intermediate"
       ],
-      "estimatedTime": 90,
+      "estimatedTime": 120,
       "questionType": "multiple-choice"
     },
     {
       "id": "security-fundamentals-q19",
-      "question": "Which of the following is a key feature of Security Best Practices?",
-      "topic": "Authentication",
-      "difficulty": "Beginner",
+      "question": "How do you implement effective security logging and monitoring?",
+      "topic": "Security",
+      "difficulty": "Advanced",
       "choices": [
-        "Option A - Placeholder answer",
-        "Option B - Placeholder answer",
-        "Option C - Placeholder answer",
-        "Option D - Placeholder answer"
+        "Log security events with sufficient context, implement real-time alerting, use centralized log management, and maintain audit trails",
+        "Log everything to text files and never review the logs",
+        "Avoid logging security events to prevent information disclosure",
+        "Log only successful operations and ignore failed attempts"
       ],
       "correctIndex": 0,
-      "explanation": "This question tests understanding of Security concepts. The correct answer demonstrates proper implementation of Security Best Practices principles. Review the lesson materials for detailed explanations of these concepts.",
-      "industryContext": "In professional development, understanding Security is crucial for building scalable and maintainable applications.",
+      "explanation": "Effective security logging requires logging events with sufficient context for investigation, implementing real-time alerting for critical events, using centralized log management for correlation and analysis, and maintaining comprehensive audit trails for compliance. The key is balancing information value with performance and storage considerations.",
+      "industryContext": "Compliance frameworks like SOC 2 and ISO 27001 require comprehensive security logging. Companies use Security Information and Event Management (SIEM) systems like Splunk and ELK stack to implement effective logging and monitoring at scale.",
       "tags": [
-        "quality",
-        "beginner"
+        "logging",
+        "monitoring",
+        "siem",
+        "advanced"
       ],
-      "estimatedTime": 90,
+      "estimatedTime": 120,
       "questionType": "multiple-choice"
     },
     {
       "id": "security-fundamentals-q20",
-      "question": "When should you use Security in development?",
-      "topic": "Authorization",
-      "difficulty": "Beginner",
+      "question": "What are the key considerations for implementing secure communication protocols?",
+      "topic": "Security",
+      "difficulty": "Intermediate",
       "choices": [
-        "Option A - Placeholder answer",
-        "Option B - Placeholder answer",
-        "Option C - Placeholder answer",
-        "Option D - Placeholder answer"
+        "Use TLS 1.3 with strong cipher suites, implement certificate pinning, validate certificates properly, and enforce HTTPS everywhere",
+        "Use self-signed certificates for all internal communications",
+        "Disable certificate validation to avoid connection errors",
+        "Use outdated SSL protocols for backward compatibility"
       ],
       "correctIndex": 0,
-      "explanation": "This question tests understanding of Security concepts. The correct answer demonstrates proper implementation of Security Best Practices principles. Review the lesson materials for detailed explanations of these concepts.",
-      "industryContext": "In professional development, understanding Security is crucial for building scalable and maintainable applications.",
+      "explanation": "Secure communication requires TLS 1.3 for the latest security features, strong cipher suites to prevent cryptographic attacks, certificate pinning to prevent man-in-the-middle attacks, proper certificate validation to ensure authenticity, and HTTPS enforcement to protect all communications. These measures work together to create secure communication channels.",
+      "industryContext": "The push for HTTPS everywhere has been led by browser vendors and web standards organizations. Companies like Cloudflare and Let's Encrypt have made secure communication more accessible through free SSL certificates and automated management tools.",
       "tags": [
-        "quality",
-        "beginner"
+        "tls",
+        "https",
+        "certificates",
+        "intermediate"
       ],
-      "estimatedTime": 90,
+      "estimatedTime": 120,
       "questionType": "multiple-choice"
     }
   ],
