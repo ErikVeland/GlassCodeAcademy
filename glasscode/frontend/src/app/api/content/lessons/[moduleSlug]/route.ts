@@ -70,9 +70,14 @@ function findLessonFile(moduleSlug: string): string | null {
     path.join('/srv/academy', 'content', 'lessons', `${moduleSlug}.json`),
   ];
   
+  console.log('Searching for lesson file:', moduleSlug);
+  console.log('Current working directory:', process.cwd());
+  
   for (const lessonPath of possiblePaths) {
     try {
-      if (fs.existsSync(lessonPath)) {
+      const exists = fs.existsSync(lessonPath);
+      console.log(`Checking path: ${lessonPath} - ${exists ? 'FOUND' : 'NOT FOUND'}`);
+      if (exists) {
         return lessonPath;
       }
     } catch (err) {
@@ -90,6 +95,7 @@ export async function GET(
 ) {
   try {
     const { moduleSlug } = await params;
+    console.log('=== Lesson API Route ===');
     console.log('Received request for module:', moduleSlug);
     
     // Special handling for programming-fundamentals module
@@ -98,6 +104,7 @@ export async function GET(
       const lessons = await fetchProgrammingLessons();
       console.log('GraphQL returned', lessons.length, 'lessons');
       return new Response(JSON.stringify(lessons), {
+        status: 200,
         headers: {
           'Content-Type': 'application/json',
           'Cache-Control': 'public, max-age=600, stale-while-revalidate=86400',
@@ -110,8 +117,9 @@ export async function GET(
     
     if (!lessonsPath) {
       console.log(`Lesson file not found for module: ${moduleSlug}`);
-      // Return empty array instead of error to prevent build failures
+      // Return empty array with proper JSON content type
       return new Response(JSON.stringify([]), {
+        status: 200,
         headers: {
           'Content-Type': 'application/json',
         },
@@ -126,6 +134,7 @@ export async function GET(
     console.log('Found', lessons.length, 'lessons');
 
     return new Response(JSON.stringify(lessons), {
+      status: 200,
       headers: {
         'Content-Type': 'application/json',
         'Cache-Control': 'public, max-age=600, stale-while-revalidate=86400',
@@ -133,11 +142,16 @@ export async function GET(
     });
   } catch (error) {
     console.error('Failed to load lessons:', error);
-    // Return empty array instead of error to prevent build failures
+    // Return empty array with proper JSON content type and 200 status
     return new Response(JSON.stringify([]), {
+      status: 200,
       headers: {
         'Content-Type': 'application/json',
       },
     });
   }
 }
+
+// Add explicit export to ensure route is handled
+export const runtime = 'nodejs';
+export const dynamic = 'force-dynamic';

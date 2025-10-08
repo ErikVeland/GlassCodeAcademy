@@ -314,6 +314,48 @@ class ContentRegistryLoader {
       }
     }
     
+    // For server-side operations, read files directly instead of making HTTP requests
+    if (typeof window === 'undefined') {
+      try {
+        // Dynamically import fs and path only when needed on server-side
+        const fs = require('fs');
+        const path = require('path');
+        
+        // Try to find the lesson file in different possible locations
+        const possiblePaths = [
+          path.join(process.cwd(), '..', '..', 'content', 'lessons', `${moduleSlug}.json`),
+          path.join(process.cwd(), 'content', 'lessons', `${moduleSlug}.json`),
+          path.join(__dirname, '..', '..', '..', '..', 'content', 'lessons', `${moduleSlug}.json`),
+          path.join('/srv/academy', 'content', 'lessons', `${moduleSlug}.json`),
+        ];
+        
+        let lessonsPath = '';
+        for (const possiblePath of possiblePaths) {
+          try {
+            if (fs.existsSync(possiblePath)) {
+              lessonsPath = possiblePath;
+              break;
+            }
+          } catch (err) {
+            // Continue to next path
+          }
+        }
+        
+        if (!lessonsPath) {
+          console.error(`Lesson file not found for module: ${moduleSlug}`);
+          return [];
+        }
+        
+        const lessonsContent = fs.readFileSync(lessonsPath, 'utf8');
+        const lessons = JSON.parse(lessonsContent);
+        return Array.isArray(lessons) ? lessons : [];
+      } catch (error) {
+        console.error(`Failed to load lessons for ${moduleSlug} (server-side):`, error);
+        return [];
+      }
+    }
+    
+    // For client-side, use HTTP requests
     try {
       const baseUrl = process.env.NODE_ENV === 'production' 
         ? process.env.NEXT_PUBLIC_BASE_URL || 'https://glasscode.academy'
@@ -392,6 +434,48 @@ class ContentRegistryLoader {
       }
     }
     
+    // For server-side operations, read files directly instead of making HTTP requests
+    if (typeof window === 'undefined') {
+      try {
+        // Dynamically import fs and path only when needed on server-side
+        const fs = require('fs');
+        const path = require('path');
+        
+        // Try to find the quiz file in different possible locations
+        const possiblePaths = [
+          path.join(process.cwd(), '..', '..', 'content', 'quizzes', `${moduleSlug}.json`),
+          path.join(process.cwd(), 'content', 'quizzes', `${moduleSlug}.json`),
+          path.join(__dirname, '..', '..', '..', '..', 'content', 'quizzes', `${moduleSlug}.json`),
+          path.join('/srv/academy', 'content', 'quizzes', `${moduleSlug}.json`),
+        ];
+        
+        let quizPath = '';
+        for (const possiblePath of possiblePaths) {
+          try {
+            if (fs.existsSync(possiblePath)) {
+              quizPath = possiblePath;
+              break;
+            }
+          } catch (err) {
+            // Continue to next path
+          }
+        }
+        
+        if (!quizPath) {
+          console.error(`Quiz file not found for module: ${moduleSlug}`);
+          return null;
+        }
+        
+        const quizContent = fs.readFileSync(quizPath, 'utf8');
+        const quiz = JSON.parse(quizContent);
+        return quiz && typeof quiz === 'object' ? quiz : null;
+      } catch (error) {
+        console.error(`Failed to load quiz for ${moduleSlug} (server-side):`, error);
+        return null;
+      }
+    }
+    
+    // For client-side, use HTTP requests
     try {
       const baseUrl = process.env.NODE_ENV === 'production' 
         ? process.env.NEXT_PUBLIC_BASE_URL || 'https://glasscode.academy'

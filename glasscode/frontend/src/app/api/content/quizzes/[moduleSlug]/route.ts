@@ -64,9 +64,14 @@ function findQuizFile(moduleSlug: string): string | null {
     path.join('/srv/academy', 'content', 'quizzes', `${moduleSlug}.json`),
   ];
   
+  console.log('Searching for quiz file:', moduleSlug);
+  console.log('Current working directory:', process.cwd());
+  
   for (const quizPath of possiblePaths) {
     try {
-      if (fs.existsSync(quizPath)) {
+      const exists = fs.existsSync(quizPath);
+      console.log(`Checking path: ${quizPath} - ${exists ? 'FOUND' : 'NOT FOUND'}`);
+      if (exists) {
         return quizPath;
       }
     } catch (err) {
@@ -84,6 +89,7 @@ export async function GET(
 ) {
   try {
     const { moduleSlug } = await params;
+    console.log('=== Quiz API Route ===');
     console.log('Received request for quiz module:', moduleSlug);
     
     // Special handling for programming-fundamentals module
@@ -92,6 +98,7 @@ export async function GET(
       const questions = await fetchProgrammingQuestions();
       console.log('GraphQL returned', questions.length, 'questions');
       return new Response(JSON.stringify({ questions }), {
+        status: 200,
         headers: {
           'Content-Type': 'application/json',
           'Cache-Control': 'public, max-age=600, stale-while-revalidate=86400',
@@ -104,8 +111,9 @@ export async function GET(
     
     if (!quizPath) {
       console.log(`Quiz file not found for module: ${moduleSlug}`);
-      // Return empty quiz instead of error to prevent build failures
+      // Return empty quiz with proper JSON content type
       return new Response(JSON.stringify({ questions: [] }), {
+        status: 200,
         headers: {
           'Content-Type': 'application/json',
         },
@@ -120,6 +128,7 @@ export async function GET(
     console.log('Found', quiz.questions?.length || 0, 'questions');
 
     return new Response(JSON.stringify(quiz), {
+      status: 200,
       headers: {
         'Content-Type': 'application/json',
         'Cache-Control': 'public, max-age=600, stale-while-revalidate=86400',
@@ -127,11 +136,16 @@ export async function GET(
     });
   } catch (error) {
     console.error('Failed to load quiz:', error);
-    // Return empty quiz instead of error to prevent build failures
+    // Return empty quiz with proper JSON content type and 200 status
     return new Response(JSON.stringify({ questions: [] }), {
+      status: 200,
       headers: {
         'Content-Type': 'application/json',
       },
     });
   }
 }
+
+// Add explicit export to ensure route is handled
+export const runtime = 'nodejs';
+export const dynamic = 'force-dynamic';
