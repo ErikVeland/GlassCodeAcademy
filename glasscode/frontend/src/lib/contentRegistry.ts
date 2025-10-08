@@ -137,7 +137,12 @@ class ContentRegistryLoader {
         if (!registryData) {
           // Fallback to fetch even in server-side context
           console.log('Falling back to fetch for registry');
-          const response = await fetch('http://localhost:3009/registry.json');
+          const baseUrl = process.env.NODE_ENV === 'production' 
+            ? process.env.NEXT_PUBLIC_BASE_URL || 'https://glasscode.academy'
+            : 'http://localhost:3000';
+          const response = await fetch(`${baseUrl}/api/content/registry`, {
+            signal: AbortSignal.timeout(10000) // 10 second timeout
+          });
           if (!response.ok) {
             throw new Error(`Failed to fetch registry.json: ${response.status} ${response.statusText}`);
           }
@@ -151,7 +156,9 @@ class ContentRegistryLoader {
         return this.registry;
       } else {
         // Client-side: fetch from public directory
-        const response = await fetch('/registry.json');
+        const response = await fetch('/registry.json', {
+          signal: AbortSignal.timeout(10000) // 10 second timeout
+        });
         if (!response.ok) {
           throw new Error(`Failed to fetch registry.json: ${response.status} ${response.statusText}`);
         }
@@ -283,21 +290,43 @@ class ContentRegistryLoader {
         return data.programmingLessons || [];
       } catch (error) {
         console.error(`Failed to load programming lessons via GraphQL:`, error);
+        // Return empty array as fallback to prevent build failures
         return [];
       }
     }
     
     try {
       const baseUrl = process.env.NODE_ENV === 'production' 
-        ? process.env.NEXT_PUBLIC_BASE_URL || 'https://your-domain.com'
+        ? process.env.NEXT_PUBLIC_BASE_URL || 'https://glasscode.academy'
         : 'http://localhost:3000';
-      const response = await fetch(`${baseUrl}/api/content/lessons/${moduleSlug}`);
-      if (!response.ok) {
+      
+      // Use AbortController for timeout
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 15000); // 15 second timeout
+      
+      const response = await fetch(`${baseUrl}/api/content/lessons/${moduleSlug}`, {
+        signal: controller.signal
+      }).finally(() => {
+        clearTimeout(timeoutId);
+      });
+      
+      // Check if response is HTML (error page) instead of JSON
+      const contentType = response.headers.get('content-type');
+      if (contentType && contentType.includes('text/html')) {
+        console.error(`Received HTML instead of JSON for lessons/${moduleSlug}`);
         return [];
       }
-      return await response.json();
+      
+      if (!response.ok) {
+        console.error(`HTTP error ${response.status} for lessons/${moduleSlug}`);
+        return [];
+      }
+      
+      const data = await response.json();
+      return Array.isArray(data) ? data : [];
     } catch (error) {
       console.error(`Failed to load lessons for ${moduleSlug}:`, error);
+      // Return empty array as fallback to prevent build failures
       return [];
     }
   }
@@ -318,23 +347,52 @@ class ContentRegistryLoader {
         return {
           questions: data.programmingInterviewQuestions || []
         };
-      } catch (error) {
+      } catch (error: any) {
         console.error(`Failed to load programming questions via GraphQL:`, error);
+        // Check if it's a GraphQL error with specific details
+        if (error.graphQLErrors && error.graphQLErrors.length > 0) {
+          console.error('GraphQL errors:', error.graphQLErrors);
+        }
+        if (error.networkError) {
+          console.error('Network error:', error.networkError);
+        }
+        // Return null as fallback to prevent build failures
         return null;
       }
     }
     
     try {
       const baseUrl = process.env.NODE_ENV === 'production' 
-        ? process.env.NEXT_PUBLIC_BASE_URL || 'https://your-domain.com'
+        ? process.env.NEXT_PUBLIC_BASE_URL || 'https://glasscode.academy'
         : 'http://localhost:3000';
-      const response = await fetch(`${baseUrl}/api/content/quizzes/${moduleSlug}`);
-      if (!response.ok) {
+      
+      // Use AbortController for timeout
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 15000); // 15 second timeout
+      
+      const response = await fetch(`${baseUrl}/api/content/quizzes/${moduleSlug}`, {
+        signal: controller.signal
+      }).finally(() => {
+        clearTimeout(timeoutId);
+      });
+      
+      // Check if response is HTML (error page) instead of JSON
+      const contentType = response.headers.get('content-type');
+      if (contentType && contentType.includes('text/html')) {
+        console.error(`Received HTML instead of JSON for quizzes/${moduleSlug}`);
         return null;
       }
-      return await response.json();
+      
+      if (!response.ok) {
+        console.error(`HTTP error ${response.status} for quizzes/${moduleSlug}`);
+        return null;
+      }
+      
+      const data = await response.json();
+      return data && typeof data === 'object' ? data : null;
     } catch (error) {
       console.error(`Failed to load quiz for ${moduleSlug}:`, error);
+      // Return null as fallback to prevent build failures
       return null;
     }
   }
@@ -372,6 +430,7 @@ class ContentRegistryLoader {
       };
     } catch (error) {
       console.error(`Failed to check thresholds for ${moduleSlug}:`, error);
+      // Return safe defaults to prevent build failures
       return { lessons: false, lessonsValid: false, quiz: false, quizValid: false, overall: false };
     }
   }

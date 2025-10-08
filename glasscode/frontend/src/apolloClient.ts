@@ -9,7 +9,7 @@ const shouldRetry = (error: any) => {
     error.message?.includes('NetworkError') ||
     error.message?.includes('ECONNREFUSED') ||
     error.message?.includes('timeout') ||
-    error.message?.includes('502') ||  // Bad gateway (Render specific)
+    error.message?.includes('502') ||  // Bad gateway
     error.message?.includes('503') ||  // Service unavailable
     error.message?.includes('504') ||  // Gateway timeout
     error.statusCode === 408 ||  // Request timeout
@@ -26,21 +26,16 @@ const retryLink = new RetryLink({
     jitter: true,  // Add randomness to prevent thundering herd
   },
   attempts: {
-    max: 5,       // Reduced from 15 to 5 retry attempts
+    max: 3,       // Reduced from 15 to 3 retry attempts
     retryIf: (error, _operation) => shouldRetry(error),
   },
 });
 
 export const createApolloClient = () => {
-  // Use the base URL from environment or fallback to localhost for development
-  let baseUrl = process.env.NEXT_PUBLIC_API_BASE || 'https://fullstack-academy-backend.onrender.com';
-  
-  // For local development, use the backend service name from docker-compose
-  if (typeof window !== 'undefined' && window.location.hostname === 'localhost') {
-    // When running in Docker, the backend is accessible via the service name 'backend'
-    // When running locally without Docker, it's on localhost:5023
-    baseUrl = window.location.port === '3000' ? 'http://localhost:5023' : 'http://backend:8080';
-  }
+  // Use the base URL - for production we use localhost since backend runs on same server
+  let baseUrl = process.env.NODE_ENV === 'production' 
+    ? 'http://localhost:8080'  // Local backend on same server
+    : process.env.NEXT_PUBLIC_API_BASE || 'http://localhost:5023'; // Development fallback
   
   const graphqlUrl = `${baseUrl}/graphql`;
   
@@ -50,7 +45,7 @@ export const createApolloClient = () => {
       // Add timeout for faster failure detection
       fetch: (uri, options) => {
         const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 5000); // 5 second timeout
+        const timeoutId = setTimeout(() => controller.abort(), 15000); // 15 second timeout
         return fetch(uri, {
           ...options,
           signal: controller.signal
@@ -58,6 +53,16 @@ export const createApolloClient = () => {
       }
     })),
     cache: new InMemoryCache(),
+    defaultOptions: {
+      watchQuery: {
+        errorPolicy: 'ignore',
+        fetchPolicy: 'cache-first',
+      },
+      query: {
+        errorPolicy: 'all', // Changed from 'ignore' to 'all' to handle errors properly
+        fetchPolicy: 'cache-first',
+      },
+    },
   });
 };
 

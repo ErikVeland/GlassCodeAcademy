@@ -27,13 +27,18 @@ docker build -t fullstack-backend .
 docker run -p 8080:8080 fullstack-backend
 ```
 
-### Render.com (Recommended for Cloud Deployment)
+### Standalone Server Deployment (Recommended)
 
-1. Fork this repository to your GitHub account
-2. Create a new Web Service on Render for the backend component:
-   - Use the Docker runtime
-   - Set the root directory to `glasscode/backend`
-   - Configure environment variables as needed
+For production deployments, we recommend using our standalone server setup which runs both the frontend and backend on the same server.
+
+#### Prerequisites
+- Ubuntu 24.04 LTS server
+- Domain name pointing to your server (glasscode.academy)
+- SSH access to the server
+
+#### Automated Deployment Script
+
+Use the provided bootstrap script to automatically set up your GlassCode Academy server. See the main DEPLOYMENT.md file for details.
 
 ### Azure App Service
 
@@ -60,7 +65,7 @@ docker run -p 8080:8080 fullstack-backend
        options.AddPolicy("AllowFrontend",
            policy => policy.WithOrigins(
                "http://localhost:3000", 
-               "https://your-render-domain.onrender.com",
+               "https://glasscode.academy",
                "https://your-custom-domain.com")
                            .AllowAnyHeader()
                            .AllowAnyMethod());
@@ -109,21 +114,21 @@ Before testing the frontend integration, verify the backend is working:
    ```bash
    curl -X POST -H "Content-Type: application/json" \
    -d '{"query":"{ laravelLessons { id title topic } }"}' \
-   http://your-backend-url/graphql
+   https://glasscode.academy/graphql
    ```
    
 2. Test React lessons query
    ```bash
    curl -X POST -H "Content-Type: application/json" \
    -d '{"query":"{ reactLessons { id title topic } }"}' \
-   http://your-backend-url/graphql
+   https://glasscode.academy/graphql
    ```
 
 3. Test GraphQL mutations
    ```bash
    curl -X POST -H "Content-Type: application/json" \
    -d '{"query":"mutation { submitLaravelAnswer(questionId: 1, answerIndex: 0) { isCorrect explanation } }"}' \
-   http://your-backend-url/graphql
+   https://glasscode.academy/graphql
    ```
 
 ## Local Development

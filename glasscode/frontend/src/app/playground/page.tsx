@@ -5,7 +5,7 @@ import Link from 'next/link';
 import EnhancedLoadingComponent from '../../components/EnhancedLoadingComponent';
 
 export default function GraphQLPlayground() {
-  const [query, setQuery] = useState(`# Welcome to the dotNetQuiz GraphQL Playground
+  const [query, setQuery] = useState(`# Welcome to the GlassCode GraphQL Playground
 # Try running some queries!
 
 query {
@@ -25,8 +25,8 @@ query {
     setLoading(true);
     setError('');
     try {
-      // Use the environment variable or default to the hosted backend
-      const baseUrl = process.env.NEXT_PUBLIC_API_BASE || 'https://fullstack-academy-backend.onrender.com';
+      // Use the environment variable or default to the new domain
+      const baseUrl = process.env.NEXT_PUBLIC_API_BASE || 'https://glasscode.academy';
       const graphqlUrl = `${baseUrl}/graphql`;
       
       const res = await fetch(graphqlUrl, {
@@ -58,8 +58,8 @@ query {
     // Reset the fetch process
     const fetchGraphQL = async () => {
       try {
-        // Use the environment variable or default to the hosted backend
-        const baseUrl = process.env.NEXT_PUBLIC_API_BASE || 'https://fullstack-academy-backend.onrender.com';
+        // Use the environment variable or default to the new domain
+        const baseUrl = process.env.NEXT_PUBLIC_API_BASE || 'https://glasscode.academy';
         const graphqlUrl = `${baseUrl}/graphql`;
         
         const res = await fetch(graphqlUrl, {
@@ -68,7 +68,7 @@ query {
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({
-            query: `# Welcome to the dotNetQuiz GraphQL Playground
+            query: `# Welcome to the GlassCode GraphQL Playground
 # Try running some queries!
 
 query {

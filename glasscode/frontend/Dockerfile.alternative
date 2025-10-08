@@ -16,7 +16,8 @@ RUN npm run build
 # Set environment variables
 ENV NODE_ENV=production
 ENV HOSTNAME=0.0.0.0
-ENV NEXT_PUBLIC_API_BASE=https://fullstack-academy-backend.onrender.com
+ENV NEXT_PUBLIC_API_BASE=https://glasscode.academy
+ENV NEXT_PUBLIC_BASE_URL=https://glasscode.academy
 ENV PORT=3000
 
 # Expose port
