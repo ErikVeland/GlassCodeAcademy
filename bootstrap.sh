@@ -205,8 +205,6 @@ Restart=always
 RestartSec=10
 User=$DEPLOY_USER
 Environment=NODE_ENV=production
-Environment=NEXT_PUBLIC_API_BASE=https://$DOMAIN
-Environment=NEXT_PUBLIC_BASE_URL=https://$DOMAIN
 
 [Install]
 WantedBy=multi-user.target

@@ -1,5 +1,6 @@
 import { ApolloClient, InMemoryCache, HttpLink } from '@apollo/client';
 import { RetryLink } from '@apollo/client/link/retry';
+import { getGraphQLEndpoint } from '@/lib/urlUtils';
 
 // Custom function to determine if we should retry based on error
 const shouldRetry = (error: any) => {
@@ -32,12 +33,8 @@ const retryLink = new RetryLink({
 });
 
 export const createApolloClient = () => {
-  // Use the base URL from environment variables
-  let baseUrl = process.env.NODE_ENV === 'production' 
-    ? process.env.NEXT_PUBLIC_BASE_URL || 'https://glasscode.academy'  // Use domain for production
-    : process.env.NEXT_PUBLIC_API_BASE || 'http://localhost:5023'; // Development fallback
-  
-  const graphqlUrl = `${baseUrl}/graphql`;
+  // Use the GraphQL endpoint utility function to get the correct URL
+  const graphqlUrl = getGraphQLEndpoint();
   
   return new ApolloClient({
     link: retryLink.concat(new HttpLink({ 
