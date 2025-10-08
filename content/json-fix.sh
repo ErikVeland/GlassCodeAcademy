@@ -4,27 +4,35 @@
 # Requires: python3
 # Optional: jq (for pretty output)
 #
+# New features:
+#   --log <path>           Log unrecoverable files with error snippets to this file.
+#   --label-index N        On macOS, set Finder "label index" (1..7) on unrecoverable files (0 = none).
+#                          Tip: Try 2 for Red on recent macOS. Indices can vary by theme/macOS version.
+#
 # Usage:
-#   json-fix.sh [--check] [--in-place] [--backup] [--format] [--ext .json,.jsonc] [--python /path/to/python3] PATH...
+#   json-fix.sh [--check] [--in-place] [--backup] [--format] [--ext .json,.jsonc] [--python /path/to/python3] [--log file] [--label-index N] PATH...
 #
 # Examples:
 #   json-fix.sh --check file.json
 #   json-fix.sh --in-place --backup ./lessons
 #   json-fix.sh --format --ext .json,.jsonc ./configs
 #   json-fix.sh --python /opt/homebrew/bin/python3 lessons/
+#   json-fix.sh --in-place --backup --log ./json-fix.unrecoverable.log --label-index 2 lessons/
 
 set -euo pipefail
 
 print_usage() {
-    echo "Usage: $(basename "$0") [--check] [--in-place] [--backup] [--format] [--ext .json,.jsonc] [--python /path/python3] PATH..."
+    echo "Usage: $(basename "$0") [--check] [--in-place] [--backup] [--format] [--ext .json,.jsonc] [--python /path/python3] [--log file] [--label-index N] PATH..."
     echo
     echo "  PATH may be a file or a directory (directories are processed recursively)."
-    echo "  --check       Validate only; exit nonzero if any file is invalid."
-    echo "  --in-place    Write fixed/pretty output back to the original files."
-    echo "  --backup      With --in-place, also write a .bak copy first."
-    echo "  --format      Pretty-print valid JSON (still attempts repair if invalid)."
-    echo "  --ext         Comma-separated list of extensions to include (default: .json)."
-    echo "  --python      Explicit path to python3 interpreter."
+    echo "  --check         Validate only; exit nonzero if any file is invalid."
+    echo "  --in-place      Write fixed/pretty output back to the original files."
+    echo "  --backup        With --in-place, also write a .bak copy first."
+    echo "  --format        Pretty-print valid JSON (still attempts repair if invalid)."
+    echo "  --ext           Comma-separated list of extensions to include (default: .json)."
+    echo "  --python        Explicit path to python3 interpreter."
+    echo "  --log           Path to append UNRECOVERABLE file entries (with error snippet)."
+    echo "  --label-index   On macOS, set Finder label index (1..7) on UNRECOVERABLE files (0 disables)."
 }
 
 DO_CHECK=false
@@ -33,6 +41,8 @@ DO_BACKUP=false
 DO_FORMAT=false
 EXT_LIST=".json"
 PY_PATH=""
+LOG_PATH=""
+LABEL_INDEX=0        # 0 = do not set label
 PATHS=()
 
 # Parse arguments
@@ -44,6 +54,8 @@ while [[ $# -gt 0 ]]; do
         --format) DO_FORMAT=true; shift ;;
         --ext) EXT_LIST="$2"; shift 2 ;;
         --python) PY_PATH="$2"; shift 2 ;;
+        --log) LOG_PATH="$2"; shift 2 ;;
+        --label-index) LABEL_INDEX="$2"; shift 2 ;;
         --help|-h) print_usage; exit 0 ;;
         --*) echo "Unknown option: $1" >&2; print_usage; exit 2 ;;
         *) PATHS+=("$1"); shift ;;
@@ -85,6 +97,8 @@ if command -v jq >/dev/null 2>&1; then
     JQ_BIN="$(command -v jq)"
 fi
 
+OS_NAME="$(uname -s || true)"
+
 # Lowercase helper (portable to old bash)
 to_lower() { tr '[:upper:]' '[:lower:]'; }
 
@@ -110,6 +124,40 @@ has_included_ext() {
         fi
     done
     return 1
+}
+
+# macOS Finder label via AppleScript (label index 1..7; 0 clears)
+apply_finder_label() {
+    local file_path="$1"
+    local idx="$2"
+    [[ "$OS_NAME" == "Darwin" ]] || return 0
+    [[ "$idx" =~ ^[0-7]$ ]] || return 0
+    /usr/bin/osascript >/dev/null 2>&1 <<OSA
+try
+    tell application "Finder"
+        set theItem to POSIX file "$file_path" as alias
+        set label index of theItem to $idx
+    end tell
+end try
+OSA
+    return 0
+}
+
+# Log unrecoverable file with timestamp and first lines of error
+log_unrecoverable() {
+    local file_path="$1"
+    local err_path="$2"
+    [[ -n "$LOG_PATH" ]] || return 0
+    {
+        echo "----- $(date '+%Y-%m-%d %H:%M:%S %z') -----"
+        echo "UNRECOVERABLE: $file_path"
+        if [[ -s "$err_path" ]]; then
+            echo "--- error (head) ---"
+            head -n 20 "$err_path"
+            echo "--------------------"
+        fi
+        echo
+    } >> "$LOG_PATH"
 }
 
 # Python program that validates/repairs JSON. Invoked via heredoc.
@@ -407,7 +455,12 @@ PYCODE
             :
         else
             echo "[FAILED] $path" >&2
-            if [[ -s "${tmp_out}.err" ]]; then head -n 5 "${tmp_out}.err" >&2; fi
+            if [[ -s "${tmp_out}.err" ]]; then head -n 20 "${tmp_out}.err" >&2; fi
+            # Log + label for UNRECOVERABLE
+            log_unrecoverable "$path" "${tmp_out}.err"
+            if [[ "$LABEL_INDEX" -gt 0 ]]; then
+                apply_finder_label "$path" "$LABEL_INDEX" || true
+            fi
             rm -f "$tmp_out" "${tmp_out}.err"
             return 1
         fi
@@ -443,7 +496,6 @@ process_dir() {
         fi
     done
     find_args+=(")")
-    # Use -print0 for safety with spaces
     find "$dir" "${find_args[@]}" -print0 | while IFS= read -r -d '' f; do
         if ! process_file "$f"; then
             overall=1

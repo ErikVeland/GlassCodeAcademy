@@ -20,7 +20,12 @@
       "correctIndex": 3,
       "explanation": "All statements are correct. SSR renders pages on each request using getServerSideProps, while SSG pre-renders pages at build time using getStaticProps. The choice depends on how dynamic your content needs to be.",
       "industryContext": "Next.js is widely adopted in enterprise applications for its flexibility in choosing the right rendering strategy based on content requirements.",
-      "tags": ["SSR", "SSG", "Rendering", "Performance"],
+      "tags": [
+        "SSR",
+        "SSG",
+        "Rendering",
+        "Performance"
+      ],
       "questionType": "multiple-choice",
       "estimatedTime": 120
     },
@@ -38,7 +43,11 @@
       "correctIndex": 1,
       "explanation": "Incremental Static Regeneration (ISR) allows you to update static content after deployment by setting a revalidate value in getStaticProps. This combines the benefits of static generation with the ability to update content.",
       "industryContext": "ISR is crucial for e-commerce and content sites that need fast loading times but occasionally updated content.",
-      "tags": ["ISR", "Static Generation", "Performance"],
+      "tags": [
+        "ISR",
+        "Static Generation",
+        "Performance"
+      ],
       "questionType": "multiple-choice",
       "estimatedTime": 90
     },
@@ -56,7 +65,11 @@
       "correctIndex": 0,
       "explanation": "Dynamic API routes in Next.js use square brackets in the filename, such as [id].js or [slug].js. The parameter name becomes available in req.query.",
       "industryContext": "Dynamic API routes are essential for RESTful APIs and CRUD operations in full-stack applications.",
-      "tags": ["API Routes", "Dynamic Routing", "Backend"],
+      "tags": [
+        "API Routes",
+        "Dynamic Routing",
+        "Backend"
+      ],
       "questionType": "multiple-choice",
       "estimatedTime": 90
     },
@@ -74,7 +87,12 @@
       "correctIndex": 1,
       "explanation": "The Next.js Image component provides automatic optimization including lazy loading, responsive images, modern format serving (WebP, AVIF), and size optimization based on device.",
       "industryContext": "Image optimization is critical for Core Web Vitals and user experience, especially on mobile devices and slow connections.",
-      "tags": ["Images", "Performance", "Optimization", "Core Web Vitals"],
+      "tags": [
+        "Images",
+        "Performance",
+        "Optimization",
+        "Core Web Vitals"
+      ],
       "questionType": "multiple-choice",
       "estimatedTime": 90
     },
@@ -92,7 +110,12 @@
       "correctIndex": 3,
       "explanation": "Both getServerSideProps (for SSR) and getStaticProps (for SSG) can fetch data on the server before rendering. The choice depends on whether you need data at request time or build time.",
       "industryContext": "Server-side data fetching is essential for SEO and initial page load performance in production applications.",
-      "tags": ["Data Fetching", "SSR", "SSG", "Performance"],
+      "tags": [
+        "Data Fetching",
+        "SSR",
+        "SSG",
+        "Performance"
+      ],
       "questionType": "multiple-choice",
       "estimatedTime": 90
     },
@@ -110,7 +133,11 @@
       "correctIndex": 0,
       "explanation": "Next.js middleware runs at the Edge Runtime and should be defined in a middleware.ts file in the root directory. It executes before requests are completed and can modify responses.",
       "industryContext": "Edge middleware is crucial for authentication, redirects, and performance optimization in modern web applications.",
-      "tags": ["Middleware", "Edge Runtime", "Performance"],
+      "tags": [
+        "Middleware",
+        "Edge Runtime",
+        "Performance"
+      ],
       "questionType": "multiple-choice",
       "estimatedTime": 90
     },
@@ -128,7 +155,11 @@
       "correctIndex": 0,
       "explanation": "The revalidate property in getStaticProps enables Incremental Static Regeneration (ISR), allowing static pages to be updated in the background after the specified number of seconds.",
       "industryContext": "ISR is essential for sites that need static performance with fresh content, like news sites and e-commerce platforms.",
-      "tags": ["ISR", "Static Generation", "Performance"],
+      "tags": [
+        "ISR",
+        "Static Generation",
+        "Performance"
+      ],
       "questionType": "multiple-choice",
       "estimatedTime": 90
     },
@@ -146,7 +177,11 @@
       "correctIndex": 0,
       "explanation": "Catch-all routes in Next.js use the [...slug].js syntax with three dots before the parameter name. This captures multiple path segments as an array.",
       "industryContext": "Catch-all routes are useful for CMSs, documentation sites, and flexible routing structures.",
-      "tags": ["Routing", "Dynamic Routes", "File System"],
+      "tags": [
+        "Routing",
+        "Dynamic Routes",
+        "File System"
+      ],
       "questionType": "multiple-choice",
       "estimatedTime": 90
     },
@@ -164,7 +199,11 @@
       "correctIndex": 0,
       "explanation": "Next.js Image optimization is enabled by default when using the next/image component. No additional configuration is required for basic optimization.",
       "industryContext": "Automatic image optimization significantly improves Core Web Vitals and user experience across devices.",
-      "tags": ["Images", "Performance", "Optimization"],
+      "tags": [
+        "Images",
+        "Performance",
+        "Optimization"
+      ],
       "questionType": "multiple-choice",
       "estimatedTime": 90
     },
@@ -182,7 +221,11 @@
       "correctIndex": 3,
       "explanation": "All approaches are valid for API authentication in Next.js. You can check auth in individual handlers, use middleware for route protection, or create reusable HOFs for authentication logic.",
       "industryContext": "Proper API authentication is critical for security in production applications handling sensitive data.",
-      "tags": ["Authentication", "Security", "API Routes"],
+      "tags": [
+        "Authentication",
+        "Security",
+        "API Routes"
+      ],
       "questionType": "multiple-choice",
       "estimatedTime": 120
     },
@@ -200,7 +243,11 @@
       "correctIndex": 0,
       "explanation": "Vercel is the platform created by the Next.js team and is specifically optimized for Next.js applications, offering zero-config deployments and automatic optimizations.",
       "industryContext": "While Next.js can deploy anywhere, Vercel provides the best developer experience and performance optimizations.",
-      "tags": ["Deployment", "Vercel", "Performance"],
+      "tags": [
+        "Deployment",
+        "Vercel",
+        "Performance"
+      ],
       "questionType": "multiple-choice",
       "estimatedTime": 60
     },
@@ -218,7 +265,11 @@
       "correctIndex": 0,
       "explanation": "Next.js i18n is enabled by configuring the i18n object in next.config.js with locales and defaultLocale. This enables automatic locale detection and routing.",
       "industryContext": "Built-in i18n support is essential for applications targeting global markets and multilingual audiences.",
-      "tags": ["i18n", "Internationalization", "Configuration"],
+      "tags": [
+        "i18n",
+        "Internationalization",
+        "Configuration"
+      ],
       "questionType": "multiple-choice",
       "estimatedTime": 90
     },
@@ -236,7 +287,11 @@
       "correctIndex": 0,
       "explanation": "fallback: false returns 404 for paths not returned by getStaticPaths, while fallback: 'blocking' renders new paths on-demand server-side and caches them for future requests.",
       "industryContext": "Understanding fallback behavior is crucial for balancing build times with content availability in large-scale applications.",
-      "tags": ["Static Generation", "getStaticPaths", "Performance"],
+      "tags": [
+        "Static Generation",
+        "getStaticPaths",
+        "Performance"
+      ],
       "questionType": "multiple-choice",
       "estimatedTime": 120
     },
@@ -254,7 +309,11 @@
       "correctIndex": 1,
       "explanation": "Link prefetching automatically prefetches pages in the viewport, loading them before navigation to prevent layout shifts and improve perceived performance.",
       "industryContext": "Link prefetching is a key optimization for improving Core Web Vitals and user experience in single-page applications.",
-      "tags": ["Performance", "Navigation", "Core Web Vitals"],
+      "tags": [
+        "Performance",
+        "Navigation",
+        "Core Web Vitals"
+      ],
       "questionType": "multiple-choice",
       "estimatedTime": 90
     },
@@ -272,7 +331,11 @@
       "correctIndex": 3,
       "explanation": "Next.js supports custom error pages through _error.js for general errors, specific files like 404.js and 500.js for HTTP errors, and React error boundaries for component-level errors.",
       "industryContext": "Proper error handling improves user experience and helps with debugging in production applications.",
-      "tags": ["Error Handling", "User Experience", "Pages"],
+      "tags": [
+        "Error Handling",
+        "User Experience",
+        "Pages"
+      ],
       "questionType": "multiple-choice",
       "estimatedTime": 90
     },
@@ -290,7 +353,11 @@
       "correctIndex": 0,
       "explanation": "next.config.js is the configuration file for Next.js that allows you to customize build behavior, webpack configuration, redirects, headers, and other framework settings.",
       "industryContext": "Proper configuration is essential for optimizing performance, security, and deployment settings in production applications.",
-      "tags": ["Configuration", "Build", "Optimization"],
+      "tags": [
+        "Configuration",
+        "Build",
+        "Optimization"
+      ],
       "questionType": "multiple-choice",
       "estimatedTime": 60
     },
@@ -308,7 +375,11 @@
       "correctIndex": 3,
       "explanation": "Next.js supports multiple styling approaches including CSS Modules, styled-components, Tailwind CSS, and regular CSS. The choice depends on project requirements and team preferences.",
       "industryContext": "Flexible styling options allow teams to choose the approach that best fits their workflow and design system requirements.",
-      "tags": ["Styling", "CSS", "Design Systems"],
+      "tags": [
+        "Styling",
+        "CSS",
+        "Design Systems"
+      ],
       "questionType": "multiple-choice",
       "estimatedTime": 90
     },
@@ -326,7 +397,12 @@
       "correctIndex": 3,
       "explanation": "Next.js supports multiple approaches for real-time features: WebSockets with custom servers, Socket.io integration, Server-Sent Events, and third-party services like Pusher or Ably.",
       "industryContext": "Real-time features are essential for modern applications like chat systems, live updates, collaborative tools, and real-time dashboards.",
-      "tags": ["Real-time", "WebSockets", "Socket.io", "SSE"],
+      "tags": [
+        "Real-time",
+        "WebSockets",
+        "Socket.io",
+        "SSE"
+      ],
       "questionType": "multiple-choice",
       "estimatedTime": 120
     }

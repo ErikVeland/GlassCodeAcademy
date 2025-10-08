@@ -425,7 +425,11 @@
       "correctIndex": 0,
       "explanation": "The Composition API provides better logic reuse through composables, improved TypeScript support with better type inference, and allows for more flexible code organization compared to the Options API.",
       "industryContext": "The Composition API is particularly valuable in large-scale applications where code reuse and maintainability are critical.",
-      "tags": ["Composition API", "Architecture", "TypeScript"],
+      "tags": [
+        "Composition API",
+        "Architecture",
+        "TypeScript"
+      ],
       "questionType": "multiple-choice",
       "estimatedTime": 90
     },
@@ -443,7 +447,11 @@
       "correctIndex": 0,
       "explanation": "Lazy loading in Vue can be implemented using defineAsyncComponent() for individual components or dynamic imports (() => import('./Component.vue')) in Vue Router for route-level code splitting.",
       "industryContext": "Lazy loading is essential for improving initial page load times and optimizing the user experience in large applications.",
-      "tags": ["Performance", "Code Splitting", "Optimization"],
+      "tags": [
+        "Performance",
+        "Code Splitting",
+        "Optimization"
+      ],
       "questionType": "multiple-choice",
       "estimatedTime": 90
     },
@@ -461,7 +469,11 @@
       "correctIndex": 0,
       "explanation": "The key attribute helps Vue's virtual DOM algorithm track individual list items when the list changes, enabling efficient updates and preventing rendering issues. Without proper keys, Vue might reuse elements incorrectly leading to state bugs.",
       "industryContext": "Proper key usage is crucial for maintaining component state and avoiding subtle bugs in dynamic lists, especially important in data-driven applications.",
-      "tags": ["Rendering", "Virtual DOM", "Performance"],
+      "tags": [
+        "Rendering",
+        "Virtual DOM",
+        "Performance"
+      ],
       "questionType": "multiple-choice",
       "estimatedTime": 90
     }

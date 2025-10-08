@@ -425,7 +425,11 @@
       "correctIndex": 0,
       "explanation": "TDD follows the red-green-refactor cycle: First write a failing test (red), then write the minimal code needed to make it pass (green), finally refactor the code to improve quality while keeping all tests passing. This cycle ensures you always have tests driving your design.",
       "industryContext": "TDD is widely used in agile development environments and helps ensure high test coverage while driving better design decisions.",
-      "tags": ["TDD", "Testing Strategy", "beginner"],
+      "tags": [
+        "TDD",
+        "Testing Strategy",
+        "beginner"
+      ],
       "questionType": "multiple-choice",
       "estimatedTime": 90
     },
@@ -443,7 +447,11 @@
       "correctIndex": 0,
       "explanation": "100% code coverage only means every line has been executed during testing, not that the code is correct or bug-free. It doesn't guarantee that all edge cases are handled, that assertions are meaningful, or that the code behaves correctly in all scenarios. Coverage is a useful metric but should be combined with other quality measures.",
       "industryContext": "Understanding the limitations of code coverage helps teams focus on writing meaningful tests rather than just achieving high coverage numbers.",
-      "tags": ["Code Coverage", "Testing Quality", "intermediate"],
+      "tags": [
+        "Code Coverage",
+        "Testing Quality",
+        "intermediate"
+      ],
       "questionType": "multiple-choice",
       "estimatedTime": 120
     },
@@ -461,7 +469,11 @@
       "correctIndex": 0,
       "explanation": "Contract testing ensures that services can communicate correctly by testing the contracts (APIs) between them. Tools like Pact allow consumer services to define expectations for provider services, catching integration issues early without requiring complex test environments. This is more effective than unit tests (which test in isolation) or manual testing (which is slow and error-prone).",
       "industryContext": "Contract testing is essential in microservices architectures where services are developed by different teams and deployed independently.",
-      "tags": ["Integration Testing", "Microservices", "advanced"],
+      "tags": [
+        "Integration Testing",
+        "Microservices",
+        "advanced"
+      ],
       "questionType": "multiple-choice",
       "estimatedTime": 120
     }

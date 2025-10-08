@@ -459,9 +459,9 @@
       "question": "What is the value of 'this' in an arrow function?",
       "choices": [
         "The global object",
-      "The object that called the function",
-      "The enclosing scope's 'this' value",
-      "undefined"
+        "The object that called the function",
+        "The enclosing scope's 'this' value",
+        "undefined"
       ],
       "correctIndex": 2,
       "explanation": "Arrow functions do not have their own 'this'. They inherit 'this' from the enclosing scope, which makes them useful for callbacks but unsuitable for methods.",
