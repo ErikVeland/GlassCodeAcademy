@@ -22,6 +22,19 @@ log() {
     echo "[$(date +'%Y-%m-%d %H:%M:%S')] $1"
 }
 
+draw_progress() {
+    # Usage: draw_progress current total [prefix]
+    local current=$1
+    local total=$2
+    local prefix=${3:-""}
+    local width=30
+    local percent=$(( current * 100 / total ))
+    local filled=$(( percent * width / 100 ))
+    local bar_filled=$(printf '%*s' "$filled" | tr ' ' '#')
+    local bar_empty=$(printf '%*s' $(( width - filled )) | tr ' ' '-')
+    printf "\r%s[%s%s] %3d%% (attempt %d/%d)" "$prefix" "$bar_filled" "$bar_empty" "$percent" "$current" "$total"
+}
+
 is_service_running() {
     systemctl is-active --quiet "$1"
 }
@@ -174,7 +187,54 @@ if ! sudo -u "$DEPLOY_USER" dotnet publish -c Release -o "$APP_DIR/glasscode/bac
 fi
 log "✅ .NET backend published"
 
-### 8. Build Frontend
+### 8. Start Backend BEFORE Frontend Build
+log "🚀 Starting backend service (pre-build)..."
+systemctl restart ${APP_NAME}-dotnet
+if ! wait_for_service "${APP_NAME}-dotnet"; then
+    log "❌ Backend failed to start before frontend build"
+    rollback
+fi
+
+log "⏳ Verifying backend health before frontend build..."
+MAX_ATTEMPTS=30
+ATTEMPT=1
+SLEEP_INTERVAL=5
+while [[ $ATTEMPT -le $MAX_ATTEMPTS ]]; do
+    if curl -s -f http://localhost:8080/api/health >/dev/null 2>&1; then
+        HEALTH_RESPONSE=$(curl -s http://localhost:8080/api/health)
+        BACKEND_STATUS=$(echo "$HEALTH_RESPONSE" | grep -o '"status":"[^"]*"' | cut -d'"' -f4)
+        if [[ "$BACKEND_STATUS" == "healthy" ]]; then
+            draw_progress "$ATTEMPT" "$MAX_ATTEMPTS" "  "
+            printf "\n"
+            log "✅ Backend healthy. Proceeding to build frontend."
+            break
+        else
+            draw_progress "$ATTEMPT" "$MAX_ATTEMPTS" "  "
+            printf "\n"
+            log "⚠️  Backend responding but status is $BACKEND_STATUS"
+            break
+        fi
+    fi
+    draw_progress "$ATTEMPT" "$MAX_ATTEMPTS" "  ⏳ Backend health: "
+    ATTEMPT=$((ATTEMPT + 1))
+    sleep $SLEEP_INTERVAL
+done
+printf "\n" 2>/dev/null || true
+
+if [[ $ATTEMPT -gt $MAX_ATTEMPTS ]]; then
+    log "❌ Backend failed to become healthy before frontend build."
+    log "🧪 Diagnostic: systemd status"
+    systemctl status ${APP_NAME}-dotnet --no-pager || true
+    log "🧪 Diagnostic: recent logs"
+    journalctl -u ${APP_NAME}-dotnet -n 100 --no-pager || true
+    log "🧪 Diagnostic: port check"
+    ss -tulpn | grep :8080 || true
+    log "🧪 Diagnostic: health curl"
+    curl -v http://localhost:8080/api/health || true
+    rollback
+fi
+
+### 9. Build Frontend
 log "🎨 Building Next.js frontend..."
 cd "$APP_DIR/glasscode/frontend"
 
@@ -195,7 +255,7 @@ EOF
 sudo -u "$DEPLOY_USER" npm run build
 log "✅ Frontend built"
 
-### 9. Restart services in proper order
+### 10. Restart services in proper order
 log "🔄 Restarting services..."
 systemctl daemon-reload
 
@@ -217,20 +277,42 @@ while [[ $ATTEMPT -le $MAX_ATTEMPTS ]]; do
         HEALTH_RESPONSE=$(curl -s http://localhost:8080/api/health)
         BACKEND_STATUS=$(echo "$HEALTH_RESPONSE" | grep -o '"status":"[^"]*"' | cut -d'"' -f4)
         if [[ "$BACKEND_STATUS" == "healthy" ]]; then
+            # Finish progress bar line
+            draw_progress "$ATTEMPT" "$MAX_ATTEMPTS" "  "
+            printf "\n"
             log "✅ Backend is fully loaded and healthy!"
             break
         else
+            draw_progress "$ATTEMPT" "$MAX_ATTEMPTS" "  "
+            printf "\n"
             log "⚠️  Backend is responding but status is $BACKEND_STATUS"
             break
         fi
     fi
-    log "⏰ Attempt $ATTEMPT/$MAX_ATTEMPTS: Backend not ready yet, waiting $SLEEP_INTERVAL seconds..."
+    draw_progress "$ATTEMPT" "$MAX_ATTEMPTS" "  ⏳ Backend health: "
     ATTEMPT=$((ATTEMPT + 1))
     sleep $SLEEP_INTERVAL
 done
 
+# Ensure the progress line is terminated
+printf "\n" 2>/dev/null || true
+
 if [[ $ATTEMPT -gt $MAX_ATTEMPTS ]]; then
     log "❌ Backend failed to become healthy within the expected time."
+
+    # Verbose diagnostics before rollback
+    log "🧪 Diagnostic: Checking backend service status"
+    systemctl status ${APP_NAME}-dotnet --no-pager || true
+
+    log "🧪 Diagnostic: Recent backend logs"
+    journalctl -u ${APP_NAME}-dotnet -n 100 --no-pager || true
+
+    log "🧪 Diagnostic: Listening ports (expect 0.0.0.0:8080)"
+    ss -tulpn | grep :8080 || true
+
+    log "🧪 Diagnostic: Health endpoint verbose curl"
+    curl -v http://localhost:8080/api/health || true
+
     log "❌ Rolling back due to backend health check failure..."
     rollback
 fi

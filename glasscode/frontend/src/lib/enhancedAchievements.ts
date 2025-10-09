@@ -336,11 +336,58 @@ export const RARITY_STYLES = {
 };
 
 // Achievement progress calculation utility
+export interface UserProgressSummary {
+  completedModules?: number;
+  completedLessons?: number;
+  averageQuizScore?: number;
+  currentStreak?: number;
+  totalStudyTime?: number; // in minutes
+  tierProgress?: Partial<Record<'foundational' | 'core' | 'specialized' | 'quality', number>>;
+}
+
 export const calculateAchievementProgress = (
   achievement: ExtendedAchievement,
-  userProgress: any
+  userProgress: UserProgressSummary
 ): number => {
-  // This would calculate actual progress based on user data
-  // Implementation would depend on the specific requirement type
-  return 0; // Placeholder
+  const total = achievement.requirements.length;
+  if (total === 0) return 0;
+
+  let met = 0;
+  for (const req of achievement.requirements) {
+    let current = 0;
+    switch (req.type) {
+      case 'module_completion':
+        current = userProgress.completedModules || 0;
+        break;
+      case 'lesson_count':
+        current = userProgress.completedLessons || 0;
+        break;
+      case 'quiz_score':
+        current = userProgress.averageQuizScore || 0;
+        break;
+      case 'streak_days':
+        current = userProgress.currentStreak || 0;
+        break;
+      case 'time_spent':
+        current = userProgress.totalStudyTime || 0;
+        break;
+      case 'tier_completion':
+        if (achievement.tier && userProgress.tierProgress) {
+          current = userProgress.tierProgress[achievement.tier] || 0;
+        }
+        break;
+      default:
+        current = 0;
+    }
+
+    const meetsMinimum = req.condition !== 'maximum' && current >= req.target;
+    const meetsExact = req.condition === 'exact' && current === req.target;
+    const meetsMaximum = req.condition === 'maximum' && current <= req.target;
+
+    if (meetsExact || meetsMinimum || meetsMaximum) {
+      met += 1;
+    }
+  }
+
+  return Math.round((met / total) * 100);
 };

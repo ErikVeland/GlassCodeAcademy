@@ -1,4 +1,5 @@
 import { onCLS, onINP, onFCP, onLCP, onTTFB } from 'web-vitals';
+import type { Metric } from 'web-vitals';
 import React from 'react';
 
 interface WebVitalsMetric {
@@ -6,7 +7,7 @@ interface WebVitalsMetric {
   value: number;
   rating: 'good' | 'needs-improvement' | 'poor';
   delta: number;
-  entries: any[];
+  entries: PerformanceEntry[];
   id: string;
   navigationType: string;
 }
@@ -64,13 +65,13 @@ class PerformanceMonitor {
     this.observeFirstInput();
   }
 
-  private handleMetric(metricName: string, metric: any) {
+  private handleMetric(metricName: string, metric: Metric) {
     const webVitalsMetric: WebVitalsMetric = {
       name: metricName,
       value: metric.value,
       rating: metric.rating,
       delta: metric.delta,
-      entries: metric.entries,
+      entries: metric.entries ?? [],
       id: metric.id,
       navigationType: metric.navigationType || 'navigate'
     };
@@ -95,7 +96,7 @@ class PerformanceMonitor {
     console.log(`Rating: ${metric.rating}`);
     console.log(`Delta: ${metric.delta}`);
     console.log(`Navigation Type: ${metric.navigationType}`);
-    if (metric.entries?.length > 0) {
+    if (metric.entries.length > 0) {
       console.log('Entries:', metric.entries);
     }
     console.groupEnd();
@@ -171,7 +172,7 @@ class PerformanceMonitor {
     try {
       observer.observe({ entryTypes: ['longtask'] });
       this.observers.set('longtask', observer);
-    } catch (e) {
+    } catch {
       // Long tasks not supported in this browser
     }
   }
@@ -179,9 +180,9 @@ class PerformanceMonitor {
   private observeLayoutShifts() {
     if (!('PerformanceObserver' in window)) return;
 
-    const observer = new PerformanceObserver((list) => {
+    const observer = new PerformanceObserver((list: PerformanceObserverEntryList) => {
       for (const entry of list.getEntries()) {
-        if (entry.entryType === 'layout-shift' && !(entry as any).hadRecentInput) {
+        if (entry.entryType === 'layout-shift' && !(entry as LayoutShift).hadRecentInput) {
           this.handleLayoutShift(entry);
         }
       }
@@ -190,7 +191,7 @@ class PerformanceMonitor {
     try {
       observer.observe({ entryTypes: ['layout-shift'] });
       this.observers.set('layout-shift', observer);
-    } catch (e) {
+    } catch {
       // Layout shift not supported
     }
   }
@@ -209,7 +210,7 @@ class PerformanceMonitor {
     try {
       observer.observe({ entryTypes: ['first-input'] });
       this.observers.set('first-input', observer);
-    } catch (e) {
+    } catch {
       // First input not supported
     }
   }
@@ -248,7 +249,7 @@ class PerformanceMonitor {
   }
 
   private handleLayoutShift(entry: PerformanceEntry) {
-    const value = (entry as any).value;
+    const value = (entry as LayoutShift).value;
     if (value > 0.1) { // Significant layout shift
       if (this.config.enableConsoleLogging) {
         console.warn(`Significant layout shift: ${value.toFixed(4)}`);
@@ -257,7 +258,7 @@ class PerformanceMonitor {
   }
 
   private handleFirstInput(entry: PerformanceEntry) {
-    const delay = (entry as any).processingStart - entry.startTime;
+    const delay = (entry as PerformanceEventTiming).processingStart - entry.startTime;
     if (this.config.enableConsoleLogging) {
       console.log(`First Input Delay: ${delay.toFixed(2)}ms`);
     }
@@ -336,7 +337,7 @@ export function usePerformanceMetrics() {
   const [metrics, setMetrics] = React.useState<Map<string, WebVitalsMetric>>(new Map());
 
   React.useEffect(() => {
-    const handleMetricUpdate = (event: CustomEvent) => {
+    const handleMetricUpdate = () => {
       setMetrics(new Map(performanceMonitor.getMetrics()));
     };
 

@@ -34,6 +34,20 @@ cleanup() {
 # Set up cleanup function to run on script exit
 trap cleanup EXIT INT TERM
 
+# Progress bar helper
+draw_progress() {
+    local current=$1
+    local max=$2
+    local label="$3"
+    local width=30
+    local filled=$(( current * width / max ))
+    local empty=$(( width - filled ))
+    printf "\r["
+    for ((i=0; i<filled; i++)); do printf "#"; done
+    for ((i=0; i<empty; i++)); do printf "-"; done
+    printf "] %s (%d/%d)" "$label" "$current" "$max"
+}
+
 # Function to stop any existing processes on specific ports
 stop_existing_services() {
     echo "🔄 Stopping any existing services on ports 8080 and 3000..."
@@ -85,30 +99,36 @@ BACKEND_PID=$!
 cd ../..
 
 # Wait for backend to be fully ready by polling the health check endpoint
-echo "⏳ Waiting for backend to be fully loaded..."
+echo "⏳ Waiting for backend to be fully loaded and healthy..."
 MAX_ATTEMPTS=30
 ATTEMPT=1
 SLEEP_INTERVAL=2
 while [[ $ATTEMPT -le $MAX_ATTEMPTS ]]; do
     if curl -s -f http://localhost:8080/api/health >/dev/null 2>&1; then
-        echo "✅ Backend is fully loaded and ready!"
-        # Get backend health details
         HEALTH_RESPONSE=$(curl -s http://localhost:8080/api/health)
         BACKEND_STATUS=$(echo "$HEALTH_RESPONSE" | grep -o '"status":"[^"]*"' | cut -d'"' -f4)
         if [[ "$BACKEND_STATUS" == "healthy" ]]; then
+            draw_progress "$ATTEMPT" "$MAX_ATTEMPTS" "Backend healthy"; printf "\n"
             echo "✅ Backend health check passed: System is healthy"
         else
-            echo "⚠️  Backend health check shows degraded status, but service is responding"
+            draw_progress "$ATTEMPT" "$MAX_ATTEMPTS" "Backend degraded: $BACKEND_STATUS"; printf "\n"
+            echo "⚠️  Backend responding but status is $BACKEND_STATUS"
         fi
         break
     fi
-    echo "⏳ Waiting for backend... (attempt $ATTEMPT/$MAX_ATTEMPTS)"
+    draw_progress "$ATTEMPT" "$MAX_ATTEMPTS" "Checking backend health"; printf "\n"
     ATTEMPT=$((ATTEMPT + 1))
     sleep $SLEEP_INTERVAL
 done
 
 if [[ $ATTEMPT -gt $MAX_ATTEMPTS ]]; then
     echo "❌ Backend failed to start properly within the expected time."
+    echo "🧪 Diagnostic: backend service status"
+    ps -ef | grep -E "dotnet.*backend" | grep -v grep || true
+    echo "🧪 Diagnostic: listening ports (expect :8080)"
+    ss -tulpn | grep :8080 || true
+    echo "🧪 Diagnostic: health endpoint verbose output"
+    curl -v http://localhost:8080/api/health || true
     echo "🛑 Stopping services..."
     kill $BACKEND_PID 2>/dev/null
     exit 1
@@ -130,16 +150,21 @@ MAX_FE_ATTEMPTS=30
 FE_ATTEMPT=1
 while [[ $FE_ATTEMPT -le $MAX_FE_ATTEMPTS ]]; do
     if curl -s -f http://localhost:3000 >/dev/null 2>&1; then
+        draw_progress "$FE_ATTEMPT" "$MAX_FE_ATTEMPTS" "Frontend ready"; printf "\n"
         echo "✅ Frontend is fully loaded and ready!"
         break
     fi
-    echo "⏳ Waiting for frontend... (attempt $FE_ATTEMPT/$MAX_FE_ATTEMPTS)"
+    draw_progress "$FE_ATTEMPT" "$MAX_FE_ATTEMPTS" "Checking frontend"; printf "\n"
     FE_ATTEMPT=$((FE_ATTEMPT + 1))
     sleep $SLEEP_INTERVAL
 done
 
 if [[ $FE_ATTEMPT -gt $MAX_FE_ATTEMPTS ]]; then
     echo "❌ Frontend failed to start properly within the expected time."
+    echo "🧪 Diagnostic: frontend dev server status"
+    ps -ef | grep -E "node.*next" | grep -v grep || true
+    echo "🧪 Diagnostic: listening ports (expect :3000)"
+    ss -tulpn | grep :3000 || true
     echo "🛑 Stopping services..."
     kill $BACKEND_PID 2>/dev/null
     kill $FRONTEND_PID 2>/dev/null

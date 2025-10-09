@@ -1,7 +1,10 @@
 'use client'
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useProgressTrackingComplete } from '../hooks/useProgressTrackingComplete';
+import type { ProgressData, AchievementData } from '../hooks/useProgressTrackingComplete';
+
+type AchievementDefinition = Omit<AchievementData, 'earnedDate' | 'moduleId'>;
 
 // Tier colors matching design system
 const getTierColor = (tier?: string) => {
@@ -74,10 +77,19 @@ const ProgressRing: React.FC<{
           className="transition-all duration-500 ease-out"
         />
         <defs>
-          <linearGradient id={`progressGradient-${gradient.replace(/\s+/g, '-')}`} x1="0%" y1="0%" x2="100%" y2="0%">
-            <stop offset="0%" stopColor={gradient.split(' ')[0].replace('from-', '')} />
-            <stop offset="100%" stopColor={gradient.split(' ')[2].replace('to-', '')} />
-          </linearGradient>
+          {(() => {
+            const parts = (gradient || '').trim().split(/\s+/);
+            const fromPart = parts.find(p => p.startsWith('from-')) || parts[0] || 'from-blue-500';
+            const toPart = parts.find(p => p.startsWith('to-')) || parts[1] || 'to-cyan-500';
+            const fromColor = fromPart.replace('from-', '');
+            const toColor = toPart.replace('to-', '');
+            return (
+              <linearGradient id={`progressGradient-${gradient.replace(/\s+/g, '-')}`} x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%" stopColor={fromColor} />
+                <stop offset="100%" stopColor={toColor} />
+              </linearGradient>
+            );
+          })()}
         </defs>
       </svg>
       {showLabel && (
@@ -97,7 +109,7 @@ const ProgressRing: React.FC<{
 };
 
 const AchievementCard: React.FC<{ 
-  achievement: any; 
+  achievement: AchievementDefinition; 
   earned: boolean; 
   earnedDate?: string;
   showUnlockCondition?: boolean; 
@@ -251,14 +263,11 @@ export const CompleteProgressTracker: React.FC = () => {
     progress,
     streak,
     achievements,
-    userStats,
     calculateOverallProgress,
     getTierProgress,
     getCompletedModulesCount,
     getTotalTimeSpent,
     getAverageQuizScore,
-    getRecentAchievements,
-    getStreakStatus,
     getStreakMotivation,
     exportProgressData,
     importProgressData
@@ -267,7 +276,6 @@ export const CompleteProgressTracker: React.FC = () => {
   const [showAllAchievements, setShowAllAchievements] = useState(false);
   const [filterCategory, setFilterCategory] = useState<string>('all');
   const [filterTier, setFilterTier] = useState<string>('all');
-  const [recentAchievement, setRecentAchievement] = useState<string | null>(null);
   const [importData, setImportData] = useState<string>('');
   const [importResult, setImportResult] = useState<{ success: boolean; message: string } | null>(null);
 
@@ -275,7 +283,6 @@ export const CompleteProgressTracker: React.FC = () => {
   const completedCount = getCompletedModulesCount();
   const totalTime = getTotalTimeSpent();
   const avgScore = getAverageQuizScore();
-  const recentAchievements = getRecentAchievements();
 
   const earnedAchievementIds = achievements.map(a => a.id);
   const earnedCount = earnedAchievementIds.length;
@@ -312,8 +319,8 @@ export const CompleteProgressTracker: React.FC = () => {
 
   // Update tier module counts based on actual progress
   Object.entries(tierModuleCounts).forEach(([tier, counts]) => {
-    const tierModules = (Object as any).values(progress).filter((p: any) => p.tier === tier);
-    counts.completed = tierModules.filter((p: any) => p.completionStatus === 'completed').length;
+    const tierModules = Object.values(progress as Record<string, ProgressData>).filter((p) => p.tier === tier);
+    counts.completed = tierModules.filter((p) => p.completionStatus === 'completed').length;
   });
 
   // Format time for display
@@ -324,8 +331,8 @@ export const CompleteProgressTracker: React.FC = () => {
     return `${hours}h ${remainingMinutes}m`;
   };
 
-  // Filter achievements
-  const filteredAchievements = Object.values({
+  // Achievement catalog and filtered list
+  const ACHIEVEMENT_CATALOG: Record<string, AchievementDefinition> = {
     'first-lesson': {
       id: 'first-lesson',
       title: 'First Steps',
@@ -462,7 +469,8 @@ export const CompleteProgressTracker: React.FC = () => {
       points: 300,
       unlockCondition: '30 consecutive days of learning'
     }
-  }).filter((achievement: any) => {
+  };
+  const filteredAchievements = Object.values(ACHIEVEMENT_CATALOG).filter((achievement) => {
     if (!showAllAchievements && !earnedAchievementIds.includes(achievement.id)) {
       return false;
     }
@@ -490,20 +498,6 @@ export const CompleteProgressTracker: React.FC = () => {
 
   return (
     <div className="w-full max-w-7xl mx-auto mb-12 p-4">
-      {/* Recent Achievement Notification */}
-      {recentAchievement && (
-        <div className="fixed top-4 right-4 z-50 animate-bounce">
-          <div className="bg-gradient-to-br from-yellow-400 to-orange-500 text-white p-4 rounded-xl shadow-2xl border border-white/20">
-            <div className="flex items-center gap-3">
-              <span className="text-2xl">🏆</span>
-              <div>
-                <p className="font-bold text-sm">Achievement Unlocked!</p>
-                <p className="text-xs opacity-90">First Steps</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
       
       <div className="text-center mb-8">
         <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
@@ -603,7 +597,7 @@ export const CompleteProgressTracker: React.FC = () => {
               </div>
             </div>
             <p className="text-white/80 italic">
-              "{getStreakMotivation()}"
+              {getStreakMotivation()}
             </p>
           </div>
           <div className="flex flex-col gap-2">
@@ -618,11 +612,11 @@ export const CompleteProgressTracker: React.FC = () => {
                 const fileInput = document.createElement('input');
                 fileInput.type = 'file';
                 fileInput.accept = '.json';
-                fileInput.onchange = (e) => {
+                fileInput.onchange = (e: Event) => {
                   const file = (e.target as HTMLInputElement).files?.[0];
                   if (file) {
                     const reader = new FileReader();
-                    reader.onload = (event) => {
+                    reader.onload = (event: ProgressEvent<FileReader>) => {
                       if (event.target?.result) {
                         setImportData(event.target.result as string);
                         handleImport();
@@ -637,6 +631,11 @@ export const CompleteProgressTracker: React.FC = () => {
             >
               📤 Import Progress
             </button>
+            {importResult && (
+              <div role="status" className={`mt-2 text-sm ${importResult.success ? 'text-green-300' : 'text-red-300'}`}>
+                {importResult.message}
+              </div>
+            )}
           </div>
         </div>
       </div>
@@ -672,7 +671,7 @@ export const CompleteProgressTracker: React.FC = () => {
               <label className="text-white/80 text-sm font-medium">Category:</label>
               <select 
                 value={filterCategory} 
-                onChange={(e) => setFilterCategory(e.target.value)}
+                onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setFilterCategory(e.target.value)}
                 className="bg-white/10 text-white border border-white/20 rounded-lg px-3 py-1 text-sm"
               >
                 <option value="all">All</option>
@@ -686,7 +685,7 @@ export const CompleteProgressTracker: React.FC = () => {
               <label className="text-white/80 text-sm font-medium">Tier:</label>
               <select 
                 value={filterTier} 
-                onChange={(e) => setFilterTier(e.target.value)}
+                onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setFilterTier(e.target.value)}
                 className="bg-white/10 text-white border border-white/20 rounded-lg px-3 py-1 text-sm"
               >
                 <option value="all">All</option>
@@ -700,9 +699,9 @@ export const CompleteProgressTracker: React.FC = () => {
         )}
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {filteredAchievements.map((achievement: any) => {
+          {filteredAchievements.map((achievement: AchievementDefinition) => {
               const earned = earnedAchievementIds.includes(achievement.id);
-              const earnedData = achievements.find(a => a.id === achievement.id);
+              const earnedData = achievements.find((a: AchievementData) => a.id === achievement.id);
               
               return (
                 <AchievementCard

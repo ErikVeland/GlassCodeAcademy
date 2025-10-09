@@ -25,6 +25,20 @@ log() {
     echo "[$(date +'%Y-%m-%d %H:%M:%S')] $1"
 }
 
+# Draw progress bar for waits
+draw_progress() {
+    local current=$1
+    local max=$2
+    local label="$3"
+    local width=30
+    local filled=$(( current * width / max ))
+    local empty=$(( width - filled ))
+    printf "\r["
+    for ((i=0; i<filled; i++)); do printf "#"; done
+    for ((i=0; i<empty; i++)); do printf "-"; done
+    printf "] %s (%d/%d)" "$label" "$current" "$max"
+}
+
 command_exists() {
     command -v "$1" >/dev/null 2>&1
 }
@@ -219,11 +233,24 @@ After=network.target ${APP_NAME}-dotnet.service
 
 [Service]
 WorkingDirectory=$APP_DIR/glasscode/frontend
+ExecStartPre=/usr/bin/bash -lc '
+  MAX=30; COUNT=1;
+  while [ $COUNT -le $MAX ]; do
+    RESP=$(curl -s http://127.0.0.1:8080/api/health || true);
+    STATUS=$(echo "$RESP" | grep -o '"status":"[^\"]*"' | cut -d'"' -f4);
+    if [ "$STATUS" = "healthy" ]; then
+      exit 0;
+    fi;
+    sleep 5; COUNT=$((COUNT+1));
+  done;
+  echo "Backend health check gating failed: status='$STATUS' resp='$RESP'"; exit 1;
+'
 ExecStart=/usr/bin/npx next start -p 3000
 Restart=always
 RestartSec=10
 User=$DEPLOY_USER
 Environment=NODE_ENV=production
+TimeoutStartSec=300
 
 [Install]
 WantedBy=multi-user.target
@@ -257,13 +284,21 @@ while [[ $ATTEMPT -le $MAX_ATTEMPTS ]]; do
             break
         fi
     fi
-    log "⏰ Attempt $ATTEMPT/$MAX_ATTEMPTS: Backend not ready yet, waiting $SLEEP_INTERVAL seconds..."
+    draw_progress "$ATTEMPT" "$MAX_ATTEMPTS" "Waiting for backend health"; printf "\n"
     ATTEMPT=$((ATTEMPT + 1))
     sleep $SLEEP_INTERVAL
 done
 
 if [[ $ATTEMPT -gt $MAX_ATTEMPTS ]]; then
     log "❌ Backend failed to become healthy within the expected time."
+    log "🔎 Diagnostics: systemd status for backend"
+    systemctl status ${APP_NAME}-dotnet --no-pager || true
+    log "🪵 Recent backend logs (journalctl)"
+    journalctl -u ${APP_NAME}-dotnet -n 200 --no-pager || true
+    log "🔌 Listening ports snapshot"
+    ss -tulpen | grep -E ':(8080|3000)' || true
+    log "🌐 Health endpoint verbose output"
+    curl -v http://localhost:8080/api/health || true
     systemctl stop ${APP_NAME}-dotnet 2>/dev/null || true
     exit 1
 fi

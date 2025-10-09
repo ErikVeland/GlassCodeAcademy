@@ -2,7 +2,8 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   eslint: {
-    ignoreDuringBuilds: true,
+    // Enforce ESLint during production builds
+    ignoreDuringBuilds: false,
   },
   output: 'standalone',
   // Performance optimizations

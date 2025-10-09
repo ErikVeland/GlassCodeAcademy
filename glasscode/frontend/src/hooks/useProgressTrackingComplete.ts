@@ -753,7 +753,10 @@ export const useProgressTrackingComplete = () => {
       "You're developing skills that will last a lifetime!",
       "Every expert was once a beginner who kept going!"
     ];
-    return messages[Math.floor(Math.random() * messages.length)];
+    // Deterministic selection based on streak state to avoid SSR/client mismatch
+    const seed = (streak.currentStreak || 0) + (streak.longestStreak || 0);
+    const index = Math.abs(seed) % messages.length;
+    return messages[index];
   };
 
   const exportProgressData = () => {

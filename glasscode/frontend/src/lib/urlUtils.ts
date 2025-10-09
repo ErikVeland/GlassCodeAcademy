@@ -3,33 +3,30 @@
  */
 
 /**
- * Convert HTTPS domain URL to HTTP localhost URL for backend calls
- * This is used in production where the frontend and backend run on the same server
- */
-export function getLocalBackendUrl(baseUrl: string | undefined): string {
-  if (!baseUrl) return 'http://localhost:8080/graphql';
-  
-  // For production, convert HTTPS domain to HTTP localhost
-  if (baseUrl.startsWith('https://')) {
-    return 'http://localhost:8080/graphql';
-  }
-  
-  // For development, use the provided base URL
-  if (baseUrl.startsWith('http://')) {
-    return `${baseUrl}/graphql`;
-  }
-  
-  return 'http://localhost:8080/graphql';
-}
-
-/**
- * Get the GraphQL endpoint URL based on environment
+ * Get the GraphQL endpoint URL based on environment.
+ *
+ * Production: Prefer absolute public origin from NEXT_PUBLIC_BASE_URL, fallback to
+ * relative `/graphql` which is expected to be proxied by Nginx.
+ *
+ * Development: Use NEXT_PUBLIC_API_BASE if provided, otherwise use localhost fallback.
  */
 export function getGraphQLEndpoint(): string {
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL?.replace(/\/+$/, '');
+  const apiBase = process.env.NEXT_PUBLIC_API_BASE?.replace(/\/+$/, '');
+
   if (process.env.NODE_ENV === 'production') {
-    return getLocalBackendUrl(process.env.NEXT_PUBLIC_API_BASE);
+    if (baseUrl && (baseUrl.startsWith('https://') || baseUrl.startsWith('http://'))) {
+      return `${baseUrl}/graphql`;
+    }
+    // Fallback: relative path for browser (proxied by Nginx). Note SSR may require absolute.
+    return '/graphql';
   }
-  
-  // Development fallback
+
+  // Development environment: respect configured API base if available
+  if (apiBase && (apiBase.startsWith('http://') || apiBase.startsWith('https://'))) {
+    return `${apiBase}/graphql`;
+  }
+
+  // Default dev fallback
   return 'http://localhost:5023/graphql';
 }
