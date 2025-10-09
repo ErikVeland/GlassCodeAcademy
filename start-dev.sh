@@ -34,9 +34,44 @@ cleanup() {
 # Set up cleanup function to run on script exit
 trap cleanup EXIT INT TERM
 
-# Kill any existing processes on the ports we'll use
-lsof -i :8080 | grep LISTEN | awk '{print $2}' | xargs kill -9 2>/dev/null || true
-lsof -i :3000 | grep LISTEN | awk '{print $2}' | xargs kill -9 2>/dev/null || true
+# Function to stop any existing processes on specific ports
+stop_existing_services() {
+    echo "🔄 Stopping any existing services on ports 8080 and 3000..."
+    
+    # Kill processes using port 8080 (backend)
+    PORT_8080_PIDS=$(lsof -ti:8080 2>/dev/null)
+    if [[ -n "$PORT_8080_PIDS" ]]; then
+        echo "🛑 Stopping processes on port 8080 (PIDs: $PORT_8080_PIDS)"
+        kill -9 $PORT_8080_PIDS 2>/dev/null || true
+        sleep 2
+    fi
+    
+    # Kill processes using port 3000 (frontend)
+    PORT_3000_PIDS=$(lsof -ti:3000 2>/dev/null)
+    if [[ -n "$PORT_3000_PIDS" ]]; then
+        echo "🛑 Stopping processes on port 3000 (PIDs: $PORT_3000_PIDS)"
+        kill -9 $PORT_3000_PIDS 2>/dev/null || true
+        sleep 2
+    fi
+    
+    # Additional cleanup for any remaining dotnet or node processes
+    DOTNET_PIDS=$(pgrep -f "dotnet.*backend" 2>/dev/null)
+    if [[ -n "$DOTNET_PIDS" ]]; then
+        echo "🛑 Stopping dotnet backend processes (PIDs: $DOTNET_PIDS)"
+        kill -9 $DOTNET_PIDS 2>/dev/null || true
+    fi
+    
+    NODE_PIDS=$(pgrep -f "node.*next" 2>/dev/null)
+    if [[ -n "$NODE_PIDS" ]]; then
+        echo "🛑 Stopping node frontend processes (PIDs: $NODE_PIDS)"
+        kill -9 $NODE_PIDS 2>/dev/null || true
+    fi
+    
+    echo "✅ Existing services stopped"
+}
+
+# Stop any existing services before starting new ones
+stop_existing_services
 
 # Copy latest registry.json to frontend public directory
 echo "🔄 Syncing frontend configuration..."

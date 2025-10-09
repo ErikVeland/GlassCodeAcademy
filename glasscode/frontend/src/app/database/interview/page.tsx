@@ -67,7 +67,7 @@ function DatabaseInterviewRegular() {
   const [selected, setSelected] = useState<number | null>(null);
   const [feedback, setFeedback] = useState<AnswerResult | null>(null);
   const [loading, setLoading] = useState(true);
-  // const [score, setScore] = useState(0);
+  const [score, setScore] = useState(0);
   const [shuffled, setShuffled] = useState(false);
   const router = useRouter();
   const retryCountRef = useRef(0);
@@ -174,7 +174,6 @@ function DatabaseInterviewRegular() {
     setScore(0);
     setShuffled(false);
     retryCountRef.current = 0;
-    setError(null);
     setLoading(true);
     // setShouldRetry(true);
     refetch();
