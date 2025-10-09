@@ -1,7 +1,8 @@
 #!/usr/bin/env node
 
+// Simple JSON validation script
 const fs = require('fs');
-const path = require('path');
+const pathModule = require('path');
 
 // List of expected JSON files
 const expectedFiles = [
@@ -43,13 +44,13 @@ const expectedFiles = [
 
 // Validate JSON files
 function validateJsonFiles() {
-  const dataDir = path.join(__dirname, '..', 'glasscode', 'backend', 'Data');
+  const dataDir = pathModule.join(__dirname, '..', 'glasscode', 'backend', 'Data');
   let hasErrors = false;
   
   console.log('🔍 Validating JSON files...');
   
   for (const file of expectedFiles) {
-    const filePath = path.join(dataDir, file);
+    const filePath = pathModule.join(dataDir, file);
     
     if (!fs.existsSync(filePath)) {
       console.error(`❌ Missing file: ${file}`);
@@ -83,7 +84,6 @@ validateJsonFiles();
  * Validates content registry, lessons, and quizzes against schema and thresholds
  */
 
-const fs = require('fs');
 const path = require('path');
 
 // Validation modes

@@ -8,16 +8,32 @@
 const fs = require('fs');
 const path = require('path');
 
-// Get all lesson files
+// Get all lesson files from content/lessons directory
 const lessonsDir = path.join(__dirname, '..', 'content', 'lessons');
-const lessonFiles = fs.readdirSync(lessonsDir).filter(file => file.endsWith('.json'));
+let lessonFiles = [];
+if (fs.existsSync(lessonsDir)) {
+  lessonFiles = fs.readdirSync(lessonsDir).filter(file => file.endsWith('.json'));
+}
 
-console.log('Found ' + lessonFiles.length + ' lesson files to process...');
+// Get all JSON files from backend Data directory
+const dataDir = path.join(__dirname, '..', 'glasscode', 'backend', 'Data');
+let dataFiles = [];
+if (fs.existsSync(dataDir)) {
+  dataFiles = fs.readdirSync(dataDir).filter(file => file.endsWith('.json'));
+}
 
-// Process each lesson file
-lessonFiles.forEach(file => {
-  const filePath = path.join(lessonsDir, file);
-  console.log('Processing ' + file + '...');
+const allFiles = [
+  ...lessonFiles.map(file => ({ path: path.join(lessonsDir, file), name: file })),
+  ...dataFiles.map(file => ({ path: path.join(dataDir, file), name: file }))
+];
+
+console.log('Found ' + allFiles.length + ' JSON files to process...');
+
+// Process each file
+allFiles.forEach(fileInfo => {
+  const filePath = fileInfo.path;
+  const fileName = fileInfo.name;
+  console.log('Processing ' + fileName + '...');
   
   try {
     const fileContent = fs.readFileSync(filePath, 'utf8');
@@ -34,33 +50,41 @@ lessonFiles.forEach(file => {
     // Fix common JSON issues
     let fixedContent = fileContent;
     
-    // Fix unescaped backslashes in code examples
-    // This is a bit tricky because we need to be careful not to over-escape
-    // We'll look for patterns that commonly cause issues
+    // Fix the specific issue we found with backslashes in code examples
+    // We need to be very careful here to not over-escape
     
-    // Fix the specific issue we found with backslashes in HTML
-    fixedContent = fixedContent.replace(/\\n/g, '\\\\n');
-    fixedContent = fixedContent.replace(/\\t/g, '\\\\t');
-    fixedContent = fixedContent.replace(/\\r/g, '\\\\r');
-    fixedContent = fixedContent.replace(/\\'/g, "\\'");
-    fixedContent = fixedContent.replace(/\\"/g, '\\"');
+    // First, let's handle the specific case where we have unescaped quotes in code examples
+    // This is a common issue with JavaScript code in JSON strings
     
-    // More careful approach - fix unescaped backslashes that are not part of escape sequences
+    // Temporarily replace escaped quotes to avoid confusion
+    fixedContent = fixedContent.replace(/\\"/g, '__TEMP_ESCAPED_QUOTE__');
+    
+    // Fix unescaped backslashes that are not part of valid escape sequences
     // This regex looks for backslashes that are not followed by valid escape characters
     fixedContent = fixedContent.replace(/\\(?![nrtbfv\\"'\\/])/g, '\\\\');
+    
+    // Restore the escaped quotes
+    fixedContent = fixedContent.replace(/__TEMP_ESCAPED_QUOTE__/g, '\\"');
     
     // Try to parse the fixed content
     try {
       JSON.parse(fixedContent);
       // If successful, write the fixed content back to file
       fs.writeFileSync(filePath, fixedContent);
-      console.log('  ✓ Successfully fixed and updated ' + file);
+      console.log('  ✓ Successfully fixed and updated ' + fileName);
     } catch (fixError) {
-      console.error('  ❌ Failed to fix ' + file + ': ' + fixError.message);
-      console.error('  Original error was: ' + parseError.message);
+      console.error('  ❌ Failed to fix ' + fileName + ': ' + fixError.message);
+      // Show a snippet of the problematic area
+      const errorMatch = fixError.message.match(/position (\d+)/);
+      if (errorMatch) {
+        const pos = parseInt(errorMatch[1]);
+        const start = Math.max(0, pos - 50);
+        const end = Math.min(fixedContent.length, pos + 50);
+        console.error('  Context: ...' + fixedContent.substring(start, end) + '...');
+      }
     }
   } catch (error) {
-    console.error('  ❌ Error processing ' + file + ': ' + error.message);
+    console.error('  ❌ Error processing ' + fileName + ': ' + error.message);
   }
 });
 

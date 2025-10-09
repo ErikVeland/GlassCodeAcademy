@@ -600,7 +600,7 @@ body {
         
         .objective-item {
           display: flex;
-          align-items: flex-start;
+          align-items: baseline; // Align to baseline for better text alignment
           gap: $spacing-sm;
           font-size: 0.9375rem;
           line-height: 1.4;
@@ -608,8 +608,15 @@ body {
           .objective-icon {
             color: rgba(255, 255, 255, 0.8);
             font-size: 0.875rem;
-            margin-top: 2px;
             flex-shrink: 0;
+            // Align icon with text baseline
+            align-self: baseline;
+            margin-top: 0.125rem; // Fine-tune vertical alignment
+          }
+          
+          // Responsive adjustments
+          @include breakpoint('tablet') {
+            gap: $spacing-md; // Increase gap on tablet
           }
         }
       }
