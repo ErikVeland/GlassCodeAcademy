@@ -105,7 +105,31 @@ app.MapGraphQL("/graphql"); // Keep original GraphQL endpoint
 app.MapBananaCakePop("/graphql-ui");
 
 // Health check endpoint
-app.MapGet("/api/health", () => Results.Ok(new { status = "healthy", timestamp = DateTime.UtcNow, unlocked = AppState.IsUnlocked }));
+app.MapGet("/api/health", () => {
+    var dataService = backend.Services.DataService.Instance;
+    var dataStats = new Dictionary<string, int>
+    {
+        { "LaravelLessons", dataService.LaravelLessons.Count() },
+        { "LaravelQuestions", dataService.LaravelInterviewQuestions.Count() },
+        { "ReactLessons", dataService.ReactLessons.Count() },
+        { "ReactQuestions", dataService.ReactInterviewQuestions.Count() },
+        { "NextJsLessons", dataService.NextJsLessons.Count() },
+        { "NextJsQuestions", dataService.NextJsInterviewQuestions.Count() },
+        { "PerformanceLessons", dataService.PerformanceLessons.Count() },
+        { "PerformanceQuestions", dataService.PerformanceInterviewQuestions.Count() },
+        { "SecurityLessons", dataService.SecurityLessons.Count() },
+        { "SecurityQuestions", dataService.SecurityInterviewQuestions.Count() }
+    };
+
+    var isHealthy = dataStats.All(stat => stat.Value > 0);
+    
+    return Results.Ok(new { 
+        status = isHealthy ? "healthy" : "degraded", 
+        timestamp = DateTime.UtcNow, 
+        unlocked = AppState.IsUnlocked,
+        dataStats = dataStats
+    });
+});
 
 app.Run();
 
@@ -749,7 +773,7 @@ public class Mutation {
     }
     
     // Security Fundamentals answer submission
-    public AnswerResult SubmitSecurityAnswer(int questionId, int answerIndex)
+    public AnswerResult SubmitSecurityAnswer(string questionId, int answerIndex)
     {
         // If unlocked, accept any answer as correct for testing
         if (AppState.IsUnlocked)

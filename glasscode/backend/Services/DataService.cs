@@ -30,6 +30,67 @@ namespace backend.Services
             LoadSecurityData();
             LoadVersionData();
             LoadLaravelData();
+            
+            // Verify data integrity after loading
+            VerifyDataIntegrity();
+        }
+
+        // Verify that all data was loaded correctly
+        private void VerifyDataIntegrity()
+        {
+            Console.WriteLine("🔍 Verifying data integrity...");
+            
+            var dataStats = new Dictionary<string, int>
+            {
+                { "DotNet Lessons", DotNetLessons.Count() },
+                { "GraphQL Lessons", GraphQLLessons.Count() },
+                { "DotNet Questions", DotNetInterviewQuestions.Count() },
+                { "GraphQL Questions", GraphQLInterviewQuestions.Count() },
+                { "Laravel Lessons", LaravelLessons.Count() },
+                { "Laravel Questions", LaravelInterviewQuestions.Count() },
+                { "React Lessons", ReactLessons.Count() },
+                { "React Questions", ReactInterviewQuestions.Count() },
+                { "Tailwind Lessons", TailwindLessons.Count() },
+                { "Tailwind Questions", TailwindInterviewQuestions.Count() },
+                { "Node Lessons", NodeLessons.Count() },
+                { "Node Questions", NodeInterviewQuestions.Count() },
+                { "Sass Lessons", SassLessons.Count() },
+                { "Sass Questions", SassInterviewQuestions.Count() },
+                { "Vue Lessons", VueLessons.Count() },
+                { "Vue Questions", VueInterviewQuestions.Count() },
+                { "TypeScript Lessons", TypescriptLessons.Count() },
+                { "TypeScript Questions", TypescriptInterviewQuestions.Count() },
+                { "Database Lessons", DatabaseLessons.Count() },
+                { "Database Questions", DatabaseInterviewQuestions.Count() },
+                { "Testing Lessons", TestingLessons.Count() },
+                { "Testing Questions", TestingInterviewQuestions.Count() },
+                { "Programming Lessons", ProgrammingLessons.Count() },
+                { "Programming Questions", ProgrammingInterviewQuestions.Count() },
+                { "Web Lessons", WebLessons.Count() },
+                { "Web Questions", WebInterviewQuestions.Count() },
+                { "Next.js Lessons", NextJsLessons.Count() },
+                { "Next.js Questions", NextJsInterviewQuestions.Count() },
+                { "Performance Lessons", PerformanceLessons.Count() },
+                { "Performance Questions", PerformanceInterviewQuestions.Count() },
+                { "Security Lessons", SecurityLessons.Count() },
+                { "Security Questions", SecurityInterviewQuestions.Count() },
+                { "Version Lessons", VersionLessons.Count() },
+                { "Version Questions", VersionInterviewQuestions.Count() }
+            };
+
+            foreach (var stat in dataStats)
+            {
+                if (stat.Value == 0)
+                {
+                    Console.WriteLine($"⚠️  WARNING: {stat.Key} has 0 items loaded");
+                }
+                else
+                {
+                    Console.WriteLine($"✅ {stat.Key}: {stat.Value} items");
+                }
+            }
+
+            Console.WriteLine("✅ Data integrity verification completed");
         }
 
         // Data collections
@@ -114,6 +175,23 @@ namespace backend.Services
         // Version Control data collections
         public IEnumerable<VersionLesson> VersionLessons { get; private set; } = new List<VersionLesson>();
         public IEnumerable<VersionInterviewQuestion> VersionInterviewQuestions { get; private set; } = new List<VersionInterviewQuestion>();
+
+        // Helper method to validate JSON format
+        private void ValidateJsonFormat(string json, string dataType)
+        {
+            try
+            {
+                // Try to parse the JSON to validate its format
+                using var document = System.Text.Json.JsonDocument.Parse(json);
+                Console.WriteLine($"✅ {dataType} JSON format validated successfully");
+            }
+            catch (System.Text.Json.JsonException ex)
+            {
+                Console.WriteLine($"❌ Invalid JSON format in {dataType}: {ex.Message}");
+                Console.WriteLine($"JSON snippet: {json.Substring(0, Math.Min(100, json.Length))}...");
+                throw; // Re-throw to handle in the calling method
+            }
+        }
 
         // Helper methods
         public static IEnumerable<T> ApplyQuery<T>(IEnumerable<T> items, string? topic, string? sortBy, string? sortOrder, int? limit, int? offset)
@@ -236,6 +314,8 @@ namespace backend.Services
                 if (System.IO.File.Exists(lessonsPath))
                 {
                     var lessonsJson = System.IO.File.ReadAllText(lessonsPath);
+                    // Validate JSON before deserialization
+                    ValidateJsonFormat(lessonsJson, "React Lessons");
                     ReactLessons = System.Text.Json.JsonSerializer.Deserialize<List<ReactLesson>>(lessonsJson, new JsonSerializerOptions
                     {
                         PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
@@ -252,6 +332,8 @@ namespace backend.Services
                 if (System.IO.File.Exists(questionsPath))
                 {
                     var questionsJson = System.IO.File.ReadAllText(questionsPath);
+                    // Validate JSON before deserialization
+                    ValidateJsonFormat(questionsJson, "React Questions");
                     ReactInterviewQuestions = System.Text.Json.JsonSerializer.Deserialize<List<ReactInterviewQuestion>>(questionsJson, new JsonSerializerOptions
                     {
                         PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
@@ -746,15 +828,17 @@ namespace backend.Services
                 if (System.IO.File.Exists(lessonsPath))
                 {
                     var lessonsJson = System.IO.File.ReadAllText(lessonsPath);
+                    ValidateJsonFormat(lessonsJson, "Next.js Lessons");
                     NextJsLessons = System.Text.Json.JsonSerializer.Deserialize<List<NextJsLesson>>(lessonsJson, new JsonSerializerOptions
                     {
                         PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
                         PropertyNameCaseInsensitive = true
                     }) ?? new List<NextJsLesson>();
+                    Console.WriteLine($"✅ Loaded {NextJsLessons.Count()} Next.js lessons");
                 }
                 else
                 {
-                    Console.WriteLine($"Next.js lessons file not found at {lessonsPath}");
+                    Console.WriteLine($"❌ Next.js lessons file not found at {lessonsPath}");
                     NextJsLessons = new List<NextJsLesson>();
                 }
 
@@ -762,29 +846,31 @@ namespace backend.Services
                 if (System.IO.File.Exists(questionsPath))
                 {
                     var questionsJson = System.IO.File.ReadAllText(questionsPath);
+                    ValidateJsonFormat(questionsJson, "Next.js Questions");
                     NextJsInterviewQuestions = System.Text.Json.JsonSerializer.Deserialize<List<NextJsInterviewQuestion>>(questionsJson, new JsonSerializerOptions
                     {
                         PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
                         PropertyNameCaseInsensitive = true
                     }) ?? new List<NextJsInterviewQuestion>();
+                    Console.WriteLine($"✅ Loaded {NextJsInterviewQuestions.Count()} Next.js questions");
                 }
                 else
                 {
-                    Console.WriteLine($"Next.js questions file not found at {questionsPath}");
+                    Console.WriteLine($"❌ Next.js questions file not found at {questionsPath}");
                     NextJsInterviewQuestions = new List<NextJsInterviewQuestion>();
                 }
             }
             catch (System.Text.Json.JsonException jsonEx)
             {
-                Console.WriteLine($"Error deserializing Next.js data: {jsonEx.Message}");
-                NextJsLessons = new List<NextJsLesson>();
-                NextJsInterviewQuestions = new List<NextJsInterviewQuestion>();
+                Console.WriteLine($"❌ Error deserializing Next.js data: {jsonEx.Message}");
+                Console.WriteLine($"Line: {jsonEx.LineNumber}, Position: {jsonEx.BytePositionInLine}");
+                // Don't silently fail - rethrow to make the issue visible
+                throw new InvalidOperationException("Failed to load Next.js data due to JSON format error", jsonEx);
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error loading Next.js data: {ex.Message}");
-                NextJsLessons = new List<NextJsLesson>();
-                NextJsInterviewQuestions = new List<NextJsInterviewQuestion>();
+                Console.WriteLine($"❌ Error loading Next.js data: {ex.Message}");
+                throw new InvalidOperationException("Failed to load Next.js data", ex);
             }
         }
 
@@ -1269,7 +1355,7 @@ namespace backend.Services
         }
 
         // Security Fundamentals answer validation
-        public AnswerResult ValidateSecurityAnswer(int questionId, int answerIndex)
+        public AnswerResult ValidateSecurityAnswer(string questionId, int answerIndex)
         {
             var question = SecurityInterviewQuestions.FirstOrDefault(q => q.Id == questionId);
             if (question == null)

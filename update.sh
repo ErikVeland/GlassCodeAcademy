@@ -143,7 +143,21 @@ if command -v dotnet >/dev/null; then
     log "✅ .NET SDK version synced"
 fi
 
-### 6. Build Backend
+### 6. Validate Content
+log "🔍 Validating content..."
+cd "$APP_DIR"
+if [ -f "scripts/validate-content.js" ]; then
+    if node scripts/validate-content.js; then
+        log "✅ Content validation passed"
+    else
+        log "❌ ERROR: Content validation failed"
+        rollback
+    fi
+else
+    log "⚠️  Validation script not found, skipping content validation"
+fi
+
+### 7. Build Backend
 log "🏗️  Updating .NET backend..."
 cd "$APP_DIR/glasscode/backend"
 
@@ -160,7 +174,7 @@ if ! sudo -u "$DEPLOY_USER" dotnet publish -c Release -o "$APP_DIR/glasscode/bac
 fi
 log "✅ .NET backend published"
 
-### 7. Build Frontend
+### 8. Build Frontend
 log "🎨 Building Next.js frontend..."
 cd "$APP_DIR/glasscode/frontend"
 
@@ -181,7 +195,7 @@ EOF
 sudo -u "$DEPLOY_USER" npm run build
 log "✅ Frontend built"
 
-### 8. Restart services in proper order
+### 9. Restart services in proper order
 log "🔄 Restarting services..."
 systemctl daemon-reload
 
@@ -207,7 +221,7 @@ fi
 
 log "✅ Services restarted"
 
-### 9. Health checks
+### 10. Health checks
 log "🩺 Checking backend..."
 if curl -s -X POST http://localhost:8080/graphql \
   -H "Content-Type: application/json" \
