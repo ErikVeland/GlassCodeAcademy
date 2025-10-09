@@ -847,11 +847,24 @@ namespace backend.Services
                 {
                     var questionsJson = System.IO.File.ReadAllText(questionsPath);
                     ValidateJsonFormat(questionsJson, "Next.js Questions");
-                    NextJsInterviewQuestions = System.Text.Json.JsonSerializer.Deserialize<List<NextJsInterviewQuestion>>(questionsJson, new JsonSerializerOptions
+                    var options = new JsonSerializerOptions
                     {
                         PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
                         PropertyNameCaseInsensitive = true
-                    }) ?? new List<NextJsInterviewQuestion>();
+                    };
+
+                    using var document = System.Text.Json.JsonDocument.Parse(questionsJson);
+                    if (document.RootElement.ValueKind == JsonValueKind.Object &&
+                        document.RootElement.TryGetProperty("questions", out var questionsElement) &&
+                        questionsElement.ValueKind == JsonValueKind.Array)
+                    {
+                        var questionsArrayJson = questionsElement.GetRawText();
+                        NextJsInterviewQuestions = System.Text.Json.JsonSerializer.Deserialize<List<NextJsInterviewQuestion>>(questionsArrayJson, options) ?? new List<NextJsInterviewQuestion>();
+                    }
+                    else
+                    {
+                        NextJsInterviewQuestions = System.Text.Json.JsonSerializer.Deserialize<List<NextJsInterviewQuestion>>(questionsJson, options) ?? new List<NextJsInterviewQuestion>();
+                    }
                     Console.WriteLine($"✅ Loaded {NextJsInterviewQuestions.Count()} Next.js questions");
                 }
                 else
