@@ -133,14 +133,14 @@ export default function WebInterviewPage() {
   const retryCountRef = useRef(0);
   const [shouldRetry, setShouldRetry] = useState(true);
 
-  const { data, loading: gqlLoading, error: gqlError, refetch } = useQuery(WEB_INTERVIEW_QUESTIONS_QUERY, {
-    onError: (error) => {
-      // Increment retry counter for network errors
-      if (isNetworkError(error)) {
-        retryCountRef.current += 1;
-      }
+  const { data, loading: gqlLoading, error: gqlError, refetch } = useQuery(WEB_INTERVIEW_QUESTIONS_QUERY);
+
+  // Increment retry counter for network errors
+  useEffect(() => {
+    if (gqlError && isNetworkError(gqlError)) {
+      retryCountRef.current += 1;
     }
-  });
+  }, [gqlError]);
   
   // Reset retry count on successful load
   useEffect(() => {

@@ -90,14 +90,14 @@ export default function SassInterviewPage() {
   const retryCountRef = useRef(0);
   const [shouldRetry, setShouldRetry] = useState(true); // Add this state
   
-  const { loading, error, data, refetch } = useQuery(GET_SASS_QUESTIONS, {
-    onError: (error) => {
-      // Increment retry counter for network errors
-      if (isNetworkError(error) && shouldRetry) {
-        retryCountRef.current += 1;
-      }
+  const { loading, error, data, refetch } = useQuery(GET_SASS_QUESTIONS);
+
+  // Increment retry counter for network errors
+  useEffect(() => {
+    if (error && isNetworkError(error) && shouldRetry) {
+      retryCountRef.current += 1;
     }
-  });
+  }, [error, shouldRetry]);
   
   // Reset retry count on successful load
   useEffect(() => {

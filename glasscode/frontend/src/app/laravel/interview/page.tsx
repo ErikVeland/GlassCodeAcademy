@@ -133,14 +133,7 @@ export default function LaravelInterviewPage() {
   const retryCountRef = useRef(0);
   const [shouldRetry, setShouldRetry] = useState(true); // Add this state
 
-  const { data, loading: gqlLoading, error: gqlError, refetch } = useQuery(LARAVEL_INTERVIEW_QUESTIONS_QUERY, {
-    onError: (error) => {
-      // Increment retry counter for network errors
-      if (isNetworkError(error) && shouldRetry) {
-        retryCountRef.current += 1;
-      }
-    }
-  });
+  const { data, loading: gqlLoading, error: gqlError, refetch } = useQuery(LARAVEL_INTERVIEW_QUESTIONS_QUERY);
   
   // Reset retry count on successful load
   useEffect(() => {
@@ -148,6 +141,14 @@ export default function LaravelInterviewPage() {
       retryCountRef.current = 0;
     }
   }, [data, gqlLoading]);
+
+  // Increment retry counter for network errors
+  useEffect(() => {
+    if (gqlError && isNetworkError(gqlError) && shouldRetry) {
+      retryCountRef.current += 1;
+    }
+  }, [gqlError, shouldRetry]);
+
 
   const gqlQuestions: LaravelInterviewQuestion[] = data?.laravelInterviewQuestions ?? [];
 

@@ -226,14 +226,16 @@ export default function ProgrammingLessonsPage() {
         );
     }
 
-    const { data, loading, error, refetch } = useQuery(PROGRAMMING_LESSONS_QUERY, {
-        onError: (error) => {
-            // Increment retry counter for network errors
+    const { data, loading, error, refetch } = useQuery(PROGRAMMING_LESSONS_QUERY);
+
+    // Increment retry counter for network errors when an error occurs
+    useEffect(() => {
+        if (error) {
             if (isNetworkError(error)) {
                 retryCountRef.current += 1;
             }
         }
-    });
+    }, [error]);
     
     // Reset retry count on successful load
     useEffect(() => {

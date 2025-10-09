@@ -173,14 +173,16 @@ export default function VueInterviewPage() {
   const retryCountRef = useRef(0);
   const [shouldRetry, setShouldRetry] = useState(true);
 
-  const { data, loading: gqlLoading, error: gqlError, refetch } = useQuery(VUE_INTERVIEW_QUESTIONS_QUERY, {
-    onError: (error) => {
-      // Increment retry counter for network errors
-      if (isNetworkError(error)) {
+  const { data, loading: gqlLoading, error: gqlError, refetch } = useQuery(VUE_INTERVIEW_QUESTIONS_QUERY);
+
+  // Increment retry counter for network errors when an error occurs
+  useEffect(() => {
+    if (gqlError && shouldRetry) {
+      if (isNetworkError(gqlError)) {
         retryCountRef.current += 1;
       }
     }
-  });
+  }, [gqlError, shouldRetry]);
   
   // Reset retry count on successful load
   useEffect(() => {

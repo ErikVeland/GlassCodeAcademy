@@ -87,14 +87,7 @@ function DatabaseLessonsRegular() {
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
   const retryCountRef = useRef(0);
 
-  const { data, loading, error, refetch } = useQuery(DATABASE_LESSONS_QUERY, {
-    onError: (error) => {
-      // Increment retry counter for network errors
-      if (isNetworkError(error)) {
-        retryCountRef.current += 1;
-      }
-    }
-  });
+  const { data, loading, error, refetch } = useQuery(DATABASE_LESSONS_QUERY);
   
   // Reset retry count on successful load
   useEffect(() => {
@@ -102,6 +95,14 @@ function DatabaseLessonsRegular() {
       retryCountRef.current = 0;
     }
   }, [data, loading]);
+
+  // Increment retry counter for network errors
+  useEffect(() => {
+    if (error && isNetworkError(error)) {
+      retryCountRef.current += 1;
+    }
+  }, [error]);
+
 
   const lessons: DatabaseLesson[] = data?.databaseLessons ?? [];
 

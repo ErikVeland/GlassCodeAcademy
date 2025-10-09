@@ -43,6 +43,96 @@ command_exists() {
     command -v "$1" >/dev/null 2>&1
 }
 
+# Perform environment preflight checks and install missing base tools
+preflight_checks() {
+    log "🔍 Running environment preflight checks..."
+
+    # Require root privileges
+    if [ "${EUID:-$(id -u)}" -ne 0 ]; then
+        log "❌ ERROR: This script must be run as root (use sudo)"
+        exit 1
+    fi
+
+    # Detect OS
+    if [ -f /etc/os-release ]; then
+        . /etc/os-release
+        OS_ID="$ID"
+        OS_VER="$VERSION_ID"
+        PRETTY_OS="$PRETTY_NAME"
+        log "🖥️  Detected OS: $PRETTY_OS"
+        if [ "$OS_ID" != "ubuntu" ] && [ "$OS_ID" != "debian" ]; then
+            log "❌ ERROR: Only Debian/Ubuntu systems are supported"
+            exit 1
+        fi
+    else
+        log "❌ ERROR: Cannot detect OS (missing /etc/os-release)"
+        exit 1
+    fi
+
+    # Ensure systemd is available
+    if ! command_exists systemctl; then
+        log "❌ ERROR: systemd is required on the server"
+        exit 1
+    fi
+
+    # Ensure apt-get exists
+    if ! command_exists apt-get; then
+        log "❌ ERROR: This script requires a Debian/Ubuntu-based system with apt-get"
+        exit 1
+    fi
+
+    # Network reachability (non-fatal warnings)
+    if ! curl -fsSL https://deb.nodesource.com/setup_20.x >/dev/null 2>&1; then
+        log "⚠️  WARNING: nodesource.com not reachable right now; will retry during installation"
+    fi
+    if ! curl -fsSL https://packages.microsoft.com >/dev/null 2>&1; then
+        log "⚠️  WARNING: packages.microsoft.com not reachable right now; will retry during installation"
+    fi
+
+    # Ensure base tools
+    REQUIRED_CMDS=(curl git jq unzip zip ss)
+    MISSING_PKGS=()
+    for cmd in "${REQUIRED_CMDS[@]}"; do
+        if ! command_exists "$cmd"; then
+            MISSING_PKGS+=("$cmd")
+        fi
+    done
+    if [ "${#MISSING_PKGS[@]}" -gt 0 ]; then
+        log "📦 Installing missing base packages: ${MISSING_PKGS[*]}"
+        apt-get update
+        # Map command names to packages where needed
+        apt-get install -y curl git jq unzip zip iproute2 || true
+    else
+        log "✅ Base packages already present"
+    fi
+
+    # Ports check (non-fatal warnings)
+    for port in 8080 3000; do
+        if ss -tulpn 2>/dev/null | grep -q ":$port"; then
+            log "⚠️  WARNING: Port $port appears to be in use; services may fail to bind"
+        fi
+    done
+
+    # Env variables presence (non-fatal warnings)
+    REQUIRED_ENV=(APP_NAME DEPLOY_USER APP_DIR DOMAIN EMAIL)
+    for var in "${REQUIRED_ENV[@]}"; do
+        if [ -z "${!var:-}" ]; then
+            log "⚠️  WARNING: Environment variable $var not set; using defaults where applicable"
+        fi
+    done
+
+    # Flags to control conditional installations
+    NEED_NODE=0
+    NEED_DOTNET=0
+    NODE_VER=$(node --version 2>/dev/null || echo "")
+    if [ -z "$NODE_VER" ] || ! echo "$NODE_VER" | grep -qE '^v(20|21)\.'; then
+        NEED_NODE=1
+    fi
+    if ! command_exists dotnet; then
+        NEED_DOTNET=1
+    fi
+}
+
 is_service_running() {
     systemctl is-active --quiet "$1"
 }
@@ -82,12 +172,10 @@ EOF
     log "✅ global.json updated successfully"
 }
 
-### 1. Validate prerequisites
+### 1. Preflight and prerequisites
+preflight_checks
+
 log "🔍 Validating prerequisites..."
-if ! command_exists apt-get; then
-    log "❌ ERROR: This script requires a Debian/Ubuntu-based system with apt-get"
-    exit 1
-fi
 
 ### 2. Create deploy user if not exists
 log "👤 Setting up deploy user..."
@@ -109,30 +197,47 @@ apt-get install -y \
     nginx certbot python3-certbot-nginx ufw fail2ban
 log "✅ Base packages installed"
 
-### 4. Install Node.js (20 LTS)
-log "🟢 Installing Node.js..."
-curl -fsSL https://deb.nodesource.com/setup_20.x | bash -
-apt-get install -y nodejs
-log "✅ Node.js version: $(node --version)"
+### 4. Install Node.js (20 LTS) if needed
+if [ "${NEED_NODE:-0}" -eq 1 ]; then
+    log "🟢 Installing Node.js 20 LTS..."
+    curl -fsSL https://deb.nodesource.com/setup_20.x | bash -
+    apt-get install -y nodejs
+else
+    log "✅ Node.js already present: $(node --version)"
+fi
 log "✅ npm version: $(npm --version)"
 
-### 5. Install .NET SDK (try 9, fallback to 8)
-log "🔷 Installing .NET..."
-curl -sSL https://packages.microsoft.com/config/ubuntu/24.04/packages-microsoft-prod.deb -o packages-microsoft-prod.deb
-dpkg -i packages-microsoft-prod.deb
-rm -f packages-microsoft-prod.deb
-apt-get update
+### 5. Install .NET SDK (try 9, fallback to 8) if needed
+DOTNET_SDK_VERSION=""
+if [ "${NEED_DOTNET:-0}" -eq 1 ]; then
+    log "🔷 Installing .NET..."
+    # Choose Microsoft packages config based on OS
+    MS_URL=""
+    if [ "${OS_ID}" = "ubuntu" ]; then
+        MS_URL="https://packages.microsoft.com/config/ubuntu/${OS_VER}/packages-microsoft-prod.deb"
+    elif [ "${OS_ID}" = "debian" ]; then
+        MS_URL="https://packages.microsoft.com/config/debian/${OS_VER}/packages-microsoft-prod.deb"
+    fi
+    curl -sSL "$MS_URL" -o packages-microsoft-prod.deb || true
+    if [ -f packages-microsoft-prod.deb ]; then
+        dpkg -i packages-microsoft-prod.deb || true
+        rm -f packages-microsoft-prod.deb
+        apt-get update || true
+    fi
 
-DOTNET_VERSION=""
-if apt-get install -y dotnet-sdk-9.0 aspnetcore-runtime-9.0; then
-    DOTNET_VERSION="9.0"
-    log "✅ .NET 9.0 installed"
-elif apt-get install -y dotnet-sdk-8.0 aspnetcore-runtime-8.0; then
-    DOTNET_VERSION="8.0"
-    log "✅ .NET 8.0 installed"
+    DOTNET_VERSION=""
+    if apt-get install -y dotnet-sdk-9.0 aspnetcore-runtime-9.0; then
+        DOTNET_VERSION="9.0"
+        log "✅ .NET 9.0 installed"
+    elif apt-get install -y dotnet-sdk-8.0 aspnetcore-runtime-8.0; then
+        DOTNET_VERSION="8.0"
+        log "✅ .NET 8.0 installed"
+    else
+        log "❌ ERROR: Failed to install .NET SDK"
+        exit 1
+    fi
 else
-    log "❌ ERROR: Failed to install .NET SDK"
-    exit 1
+    log "✅ .NET already present: $(dotnet --version)"
 fi
 
 DOTNET_SDK_VERSION=$(dotnet --list-sdks | head -1 | cut -d ' ' -f 1)
@@ -180,6 +285,45 @@ if ! sudo -u "$DEPLOY_USER" dotnet publish -c Release -o "$APP_DIR/glasscode/bac
 fi
 log "✅ .NET backend published"
 
+# Start backend temporarily BEFORE frontend build so Next.js can fetch data
+log "🚀 Starting temporary backend for frontend build data collection..."
+sudo -u "$DEPLOY_USER" /usr/bin/dotnet "$APP_DIR/glasscode/backend/out/backend.dll" --urls http://127.0.0.1:8080 \
+  >/tmp/${APP_NAME}-bootstrap-temp-backend.log 2>&1 &
+TEMP_BACKEND_PID=$!
+
+log "⏳ Verifying temporary backend health before frontend build..."
+MAX_ATTEMPTS=30
+ATTEMPT=1
+SLEEP_INTERVAL=5
+while [[ $ATTEMPT -le $MAX_ATTEMPTS ]]; do
+    if curl -s -f http://localhost:8080/api/health >/dev/null 2>&1; then
+        HEALTH_RESPONSE=$(curl -s http://localhost:8080/api/health)
+        BACKEND_STATUS=$(echo "$HEALTH_RESPONSE" | grep -o '"status":"[^"]*"' | cut -d '"' -f4)
+        if [[ "$BACKEND_STATUS" == "healthy" ]]; then
+            log "✅ Temporary backend healthy. Proceeding to build frontend."
+            break
+        else
+            log "⚠️  Temporary backend responding but status is $BACKEND_STATUS"
+            break
+        fi
+    fi
+    draw_progress "$ATTEMPT" "$MAX_ATTEMPTS" "  ⏳ Backend health: "
+    ATTEMPT=$((ATTEMPT + 1))
+    sleep $SLEEP_INTERVAL
+done
+
+if [[ $ATTEMPT -gt $MAX_ATTEMPTS ]]; then
+    log "❌ Temporary backend failed to become healthy before frontend build."
+    log "🧪 Diagnostic: port check"
+    ss -tulpn | grep :8080 || true
+    log "🧪 Diagnostic: health curl"
+    curl -v http://localhost:8080/api/health || true
+    # Stop temp backend if started
+    kill $TEMP_BACKEND_PID 2>/dev/null || true
+    wait $TEMP_BACKEND_PID 2>/dev/null || true
+    exit 1
+fi
+
 ### 10. Build Frontend (Next.js)
 log "🎨 Building frontend..."
 cd "$APP_DIR/glasscode/frontend"
@@ -200,6 +344,12 @@ NODE_ENV=production
 EOF
 sudo -u "$DEPLOY_USER" npm run build
 log "✅ Frontend built"
+
+# Stop temporary backend after build
+if kill $TEMP_BACKEND_PID 2>/dev/null; then
+  wait $TEMP_BACKEND_PID 2>/dev/null || true
+  log "⏹️  Temporary backend stopped after frontend build"
+fi
 
 ### 11. Create systemd services
 log "⚙️  Creating systemd services..."
@@ -235,15 +385,15 @@ After=network.target ${APP_NAME}-dotnet.service
 WorkingDirectory=$APP_DIR/glasscode/frontend
 ExecStartPre=/usr/bin/bash -lc '
   MAX=30; COUNT=1;
-  while [ $COUNT -le $MAX ]; do
-    RESP=$(curl -s http://127.0.0.1:8080/api/health || true);
-    STATUS=$(echo "$RESP" | grep -o '"status":"[^\"]*"' | cut -d'"' -f4);
-    if [ "$STATUS" = "healthy" ]; then
+  while [ \$COUNT -le \$MAX ]; do
+    RESP=\$(curl -s http://127.0.0.1:8080/api/health || true);
+    STATUS=\$(echo "\$RESP" | grep -o \"status\":\"[^\"]*\" | cut -d\" -f4);
+    if [ "\$STATUS" = "healthy" ]; then
       exit 0;
     fi;
-    sleep 5; COUNT=$((COUNT+1));
+    sleep 5; COUNT=\$((COUNT+1));
   done;
-  echo "Backend health check gating failed: status='$STATUS' resp='$RESP'"; exit 1;
+  echo "Backend health check gating failed: status='\$STATUS' resp='\$RESP'"; exit 1;
 '
 ExecStart=/usr/bin/npx next start -p 3000
 Restart=always

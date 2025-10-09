@@ -28,11 +28,14 @@ const PROGRAMMING_OVERVIEW_QUERY = gql`
 
 export default function ProgrammingOverviewPage() {
     const [retryCount, setRetryCount] = useState(0);
-    const { data, loading, error, refetch } = useQuery(PROGRAMMING_OVERVIEW_QUERY, {
-        onError: () => {
+    const { data, loading, error, refetch } = useQuery(PROGRAMMING_OVERVIEW_QUERY);
+
+    // Increment retry count when any error occurs (matching previous behavior)
+    useEffect(() => {
+        if (error) {
             setRetryCount(prev => prev + 1);
         }
-    });
+    }, [error]);
 
     // Reset retry count on successful load
     useEffect(() => {

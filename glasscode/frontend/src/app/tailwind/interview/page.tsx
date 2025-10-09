@@ -133,14 +133,14 @@ export default function TailwindInterviewPage() {
   const retryCountRef = useRef(0);
   const [shouldRetry, setShouldRetry] = useState(true);
 
-  const { data, loading: gqlLoading, error: gqlError, refetch } = useQuery(TAILWIND_INTERVIEW_QUESTIONS_QUERY, {
-    onError: (error) => {
-      // Increment retry counter for network errors
-      if (shouldRetryBackendError(error)) {
-        retryCountRef.current += 1;
-      }
+  const { data, loading: gqlLoading, error: gqlError, refetch } = useQuery(TAILWIND_INTERVIEW_QUESTIONS_QUERY);
+
+  // Increment retry counter for network errors
+  useEffect(() => {
+    if (gqlError && shouldRetryBackendError(gqlError)) {
+      retryCountRef.current += 1;
     }
-  });
+  }, [gqlError]);
   
   // Reset retry count on successful load
   useEffect(() => {
