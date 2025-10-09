@@ -14,8 +14,16 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="Data/**/*.json" CopyToOutputDirectory="PreserveNewest" />
-    <Content Include="Data/**/*.json" CopyToPublishDirectory="Always" />
+    <Content Update="Data/**/*.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToPublishDirectory>Always</CopyToPublishDirectory>
+    </Content>
+  </ItemGroup>
+
+  <!-- Exclude publish output folder from implicit content items -->
+  <ItemGroup>
+    <None Remove="out/**" />
+    <Content Remove="out/**" />
   </ItemGroup>
 
 </Project>
