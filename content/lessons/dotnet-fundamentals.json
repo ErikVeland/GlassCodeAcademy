@@ -1,1 +1,619 @@
-[]
+[
+  {
+    "id": "dotnet-fundamentals-lesson-1",
+    "moduleSlug": "dotnet-fundamentals",
+    "title": "Introduction to .NET and C#",
+    "order": 1,
+    "objectives": [
+      "Understand the .NET ecosystem and its cross-platform capabilities",
+      "Learn the fundamentals of C# syntax and structure",
+      "Create your first .NET application using the command line",
+      "Understand the relationship between .NET, C#, and the Common Language Runtime (CLR)"
+    ],
+    "intro": "The .NET platform has evolved significantly since its initial release in 2002, transforming from a Windows-only framework to a modern, open-source, cross-platform development ecosystem. Today's .NET (formerly .NET Core) supports development on Windows, macOS, and Linux, making it a truly universal platform for building applications.\n\n.NET is more than just a runtime; it's a comprehensive development platform that includes a runtime environment, a rich class library, and multiple programming languages. C# is the primary language for .NET development, offering modern features like type inference, pattern matching, and asynchronous programming.\n\nIn this lesson, you'll learn about the architecture of .NET applications, including the Common Language Runtime (CLR) that manages code execution, and the Base Class Library (BCL) that provides common functionality. You'll understand how .NET compiles code into an intermediate language and then to native machine code at runtime.\n\nYou'll also explore the different types of applications you can build with .NET, from web APIs and web applications to desktop applications and mobile apps. By the end of this lesson, you'll have created your first .NET application and understood the fundamental concepts that make .NET a powerful platform for modern software development.",
+    "code": {
+      "example": "using System;\n\nnamespace HelloWorld\n{\n    class Program\n    {\n        static void Main(string[] args)\n        {\n            // Basic console output\n            Console.WriteLine(\"Hello, .NET World!\");\n            \n            // Variables and data types\n            string name = \"Developer\";\n            int age = 25;\n            bool isLearning = true;\n            double experience = 2.5;\n            \n            // String interpolation\n            Console.WriteLine($\"Welcome {name}, you are {age} years old.\");\n            \n            // Conditional logic\n            if (isLearning)\n            {\n                Console.WriteLine($\"You have {experience} years of experience.\");\n            }\n            \n            // Looping\n            for (int i = 1; i <= 3; i++)\n            {\n                Console.WriteLine($\"Learning day {i}\");\n            }\n            \n            // Method call\n            DisplayMessage(\"Thank you for learning .NET!\");\n            \n            // Keep console open\n            Console.WriteLine(\"Press any key to exit...\");\n            Console.ReadKey();\n        }\n        \n        // Method definition\n        static void DisplayMessage(string message)\n        {\n            Console.WriteLine($\"Message: {message}\");\n        }\n    }\n}",
+      "explanation": "This example demonstrates the basic structure of a C# program. The 'using' statement imports namespaces, the namespace organizes code, and the Main method is the entry point of the application. The code shows basic C# syntax including variable declarations with type inference, string interpolation, conditional statements, loops, and method definitions. The Console class is part of the System namespace and provides methods for input and output operations.",
+      "language": "csharp"
+    },
+    "pitfalls": [
+      {
+        "mistake": "Confusing .NET Framework with modern .NET",
+        "solution": "Remember that modern .NET (versions 5.0 and later) is cross-platform and open-source, while .NET Framework is Windows-only and in maintenance mode",
+        "severity": "high"
+      },
+      {
+        "mistake": "Not using the 'using' statement for namespaces",
+        "solution": "Always include necessary 'using' statements at the top of your files to avoid fully qualified type names",
+        "severity": "medium"
+      },
+      {
+        "mistake": "Forgetting to call Console.ReadKey() in console applications",
+        "solution": "Add Console.ReadKey() at the end of console applications to prevent the window from closing immediately",
+        "severity": "low"
+      }
+    ],
+    "exercises": [
+      {
+        "title": "Create a Personal Information Application",
+        "description": "Build a console application that collects and displays personal information using C# fundamentals.",
+        "checkpoints": [
+          "Create a new .NET console application using the CLI",
+          "Define variables for name, age, and favorite programming language",
+          "Use string interpolation to display a personalized message",
+          "Implement a method that takes parameters and returns a formatted string",
+          "Add proper user input handling with Console.ReadLine()"
+        ]
+      }
+    ],
+    "next": [
+      "dotnet-fundamentals-lesson-2"
+    ],
+    "estimatedMinutes": 45,
+    "difficulty": "Beginner",
+    "tags": [
+      ".NET",
+      "C#",
+      "CLI",
+      "Fundamentals"
+    ],
+    "lastUpdated": "2025-10-09T10:00:00.000Z",
+    "version": "1.0.0"
+  },
+  {
+    "id": "dotnet-fundamentals-lesson-2",
+    "moduleSlug": "dotnet-fundamentals",
+    "title": "Object-Oriented Programming in C#",
+    "order": 2,
+    "objectives": [
+      "Master the four pillars of object-oriented programming: encapsulation, abstraction, inheritance, and polymorphism",
+      "Create classes and objects with proper access modifiers",
+      "Implement inheritance hierarchies and method overriding",
+      "Use interfaces to define contracts for classes"
+    ],
+    "intro": "Object-oriented programming (OOP) is a fundamental paradigm in C# and .NET development that organizes code around objects and classes. Understanding OOP principles is crucial for building maintainable, scalable, and reusable applications.\n\nEncapsulation is the practice of hiding internal implementation details while exposing only necessary functionality through well-defined interfaces. In C#, this is achieved through access modifiers like private, protected, internal, and public, which control the visibility of class members.\n\nAbstraction allows you to focus on what an object does rather than how it does it. Abstract classes and interfaces in C# provide mechanisms to define contracts and common behavior without specifying implementation details.\n\nInheritance enables you to create new classes based on existing ones, inheriting their properties and methods. This promotes code reuse and establishes hierarchical relationships between classes. C# supports single inheritance for classes but multiple inheritance for interfaces.\n\nPolymorphism allows objects of different types to be treated as instances of the same type through a common interface. This includes method overriding, where derived classes provide specific implementations of base class methods, and method overloading, where multiple methods with the same name but different parameters exist.\n\nBy mastering these OOP concepts, you'll be able to design robust and flexible applications that follow industry best practices and are easier to maintain and extend.",
+    "code": {
+      "example": "using System;\nusing System.Collections.Generic;\n\n// Abstract base class\npublic abstract class Animal\n{\n    // Properties with encapsulation\n    public string Name { get; set; }\n    protected int Age { get; set; }\n    \n    // Constructor\n    public Animal(string name, int age)\n    {\n        Name = name;\n        Age = age;\n    }\n    \n    // Abstract method (must be implemented by derived classes)\n    public abstract void MakeSound();\n    \n    // Virtual method (can be overridden)\n    public virtual void Move()\n    {\n        Console.WriteLine($\"{Name} is moving.\");\n    }\n    \n    // Concrete method\n    public void DisplayInfo()\n    {\n        Console.WriteLine($\"Name: {Name}, Age: {Age}\");\n    }\n}\n\n// Interface\npublic interface IFlyable\n{\n    void Fly();\n}\n\n// Derived class with inheritance\npublic class Dog : Animal\n{\n    public string Breed { get; set; }\n    \n    public Dog(string name, int age, string breed) : base(name, age)\n    {\n        Breed = breed;\n    }\n    \n    // Override abstract method\n    public override void MakeSound()\n    {\n        Console.WriteLine($\"{Name} says Woof!\");\n    }\n    \n    // Override virtual method\n    public override void Move()\n    {\n        Console.WriteLine($\"{Name} runs on four legs.\");\n    }\n    \n    // Method specific to Dog\n    public void Fetch()\n    {\n        Console.WriteLine($\"{Name} fetches the ball.\");\n    }\n}\n\n// Another derived class implementing an interface\npublic class Bird : Animal, IFlyable\n{\n    public double Wingspan { get; set; }\n    \n    public Bird(string name, int age, double wingspan) : base(name, age)\n    {\n        Wingspan = wingspan;\n    }\n    \n    public override void MakeSound()\n    {\n        Console.WriteLine($\"{Name} chirps.\");\n    }\n    \n    public override void Move()\n    {\n        Console.WriteLine($\"{Name} walks or flies.\");\n    }\n    \n    // Interface implementation\n    public void Fly()\n    {\n        Console.WriteLine($\"{Name} flies with a wingspan of {Wingspan} meters.\");\n    }\n}\n\n// Example usage\npublic class Program\n{\n    public static void Main()\n    {\n        // Polymorphism - different objects, same interface\n        List<Animal> animals = new List<Animal>\n        {\n            new Dog(\"Buddy\", 3, \"Golden Retriever\"),\n            new Bird(\"Tweety\", 1, 0.3)\n        };\n        \n        foreach (Animal animal in animals)\n        {\n            animal.DisplayInfo();\n            animal.MakeSound();\n            animal.Move();\n            \n            // Safe casting to check interface implementation\n            if (animal is IFlyable flyable)\n            {\n                flyable.Fly();\n            }\n            \n            Console.WriteLine();\n        }\n    }\n}",
+      "explanation": "This example demonstrates all four pillars of OOP in C#. Encapsulation is shown through properties with different access modifiers (public, protected). Abstraction is demonstrated with the abstract Animal class and the IFlyable interface. Inheritance is shown with Dog and Bird classes inheriting from Animal. Polymorphism is illustrated by treating different animal objects through the common Animal interface and using the 'is' operator to safely cast to interfaces.",
+      "language": "csharp"
+    },
+    "pitfalls": [
+      {
+        "mistake": "Creating classes with too many responsibilities",
+        "solution": "Follow the Single Responsibility Principle - each class should have only one reason to change",
+        "severity": "high"
+      },
+      {
+        "mistake": "Making everything public instead of using proper encapsulation",
+        "solution": "Use appropriate access modifiers (private, protected, internal) to hide implementation details",
+        "severity": "medium"
+      },
+      {
+        "mistake": "Deep inheritance hierarchies that are hard to maintain",
+        "solution": "Prefer composition over inheritance and keep inheritance hierarchies shallow",
+        "severity": "medium"
+      }
+    ],
+    "exercises": [
+      {
+        "title": "Design a Vehicle Management System",
+        "description": "Create a class hierarchy for different types of vehicles using OOP principles.",
+        "checkpoints": [
+          "Create an abstract Vehicle base class with common properties and methods",
+          "Implement at least three derived classes (Car, Motorcycle, Truck) with specific behaviors",
+          "Define interfaces for special capabilities like IFuelable or IElectric",
+          "Use polymorphism to manage a collection of different vehicle types",
+          "Demonstrate method overriding and interface implementation"
+        ]
+      }
+    ],
+    "next": [
+      "dotnet-fundamentals-lesson-3"
+    ],
+    "estimatedMinutes": 60,
+    "difficulty": "Intermediate",
+    "tags": [
+      "OOP",
+      "C#",
+      "Inheritance",
+      "Polymorphism",
+      "Interfaces"
+    ],
+    "lastUpdated": "2025-10-09T10:00:00.000Z",
+    "version": "1.0.0"
+  },
+  {
+    "id": "dotnet-fundamentals-lesson-3",
+    "moduleSlug": "dotnet-fundamentals",
+    "title": "ASP.NET Core Web Applications",
+    "order": 3,
+    "objectives": [
+      "Understand the structure and components of ASP.NET Core applications",
+      "Create web APIs and MVC applications using ASP.NET Core",
+      "Implement routing, controllers, and middleware",
+      "Configure services and dependency injection in the application startup"
+    ],
+    "intro": "ASP.NET Core is a cross-platform, high-performance framework for building modern web applications and services. It's a redesign of the original ASP.NET framework with a focus on modularity, performance, and cloud readiness.\n\nAt the heart of ASP.NET Core is the middleware pipeline, which processes HTTP requests and responses. Middleware components are arranged in a pipeline where each component can handle the request, modify it, or pass it to the next component. This modular approach allows you to compose applications with only the features you need.\n\nASP.NET Core supports multiple application models, including Web APIs for building RESTful services, MVC for traditional web applications with server-rendered views, and minimal APIs for lightweight API development. Each model provides different levels of abstraction and control.\n\nRouting is a key feature that maps incoming URLs to specific actions in your application. ASP.NET Core provides both conventional routing (based on route templates) and attribute routing (defined directly on controllers and actions), giving you flexibility in how you structure your URLs.\n\nThe framework also includes built-in support for dependency injection, configuration management, logging, and security. These features are configured during application startup in the Program.cs file, which is the entry point for ASP.NET Core applications.\n\nBy mastering ASP.NET Core fundamentals, you'll be able to build scalable, maintainable web applications that can run on any platform and integrate with modern development practices like containerization and cloud deployment.",
+    "code": {
+      "example": "// Program.cs - Entry point for ASP.NET Core application\nusing Microsoft.AspNetCore.Builder;\nusing Microsoft.Extensions.DependencyInjection;\nusing Microsoft.Extensions.Hosting;\n\nvar builder = WebApplication.CreateBuilder(args);\n\n// Add services to the container\nbuilder.Services.AddControllers();\nbuilder.Services.AddEndpointsApiExplorer();\nbuilder.Services.AddSwaggerGen();\n\nvar app = builder.Build();\n\n// Configure the HTTP request pipeline\nif (app.Environment.IsDevelopment())\n{\n    app.UseSwagger();\n    app.UseSwaggerUI();\n}\n\napp.UseHttpsRedirection();\napp.UseAuthorization();\napp.MapControllers();\n\napp.Run();\n\n// Controllers/ProductsController.cs\nusing Microsoft.AspNetCore.Mvc;\n\nnamespace MyWebApp.Controllers\n{\n    [ApiController]\n    [Route(\"[controller]\")]\n    public class ProductsController : ControllerBase\n    {\n        private static readonly List<Product> Products = new()\n        {\n            new Product { Id = 1, Name = \"Laptop\", Price = 999.99m },\n            new Product { Id = 2, Name = \"Mouse\", Price = 29.99m },\n            new Product { Id = 3, Name = \"Keyboard\", Price = 79.99m }\n        };\n        \n        // GET: /products\n        [HttpGet]\n        public ActionResult<IEnumerable<Product>> Get()\n        {\n            return Ok(Products);\n        }\n        \n        // GET: /products/5\n        [HttpGet(\"{id}\")]\n        public ActionResult<Product> Get(int id)\n        {\n            var product = Products.FirstOrDefault(p => p.Id == id);\n            if (product == null)\n            {\n                return NotFound();\n            }\n            return Ok(product);\n        }\n        \n        // POST: /products\n        [HttpPost]\n        public ActionResult<Product> Post(Product product)\n        {\n            product.Id = Products.Max(p => p.Id) + 1;\n            Products.Add(product);\n            return CreatedAtAction(nameof(Get), new { id = product.Id }, product);\n        }\n        \n        // PUT: /products/5\n        [HttpPut(\"{id}\")]\n        public IActionResult Put(int id, Product product)\n        {\n            var existingProduct = Products.FirstOrDefault(p => p.Id == id);\n            if (existingProduct == null)\n            {\n                return NotFound();\n            }\n            \n            existingProduct.Name = product.Name;\n            existingProduct.Price = product.Price;\n            \n            return NoContent();\n        }\n        \n        // DELETE: /products/5\n        [HttpDelete(\"{id}\")]\n        public IActionResult Delete(int id)\n        {\n            var product = Products.FirstOrDefault(p => p.Id == id);\n            if (product == null)\n            {\n                return NotFound();\n            }\n            \n            Products.Remove(product);\n            return NoContent();\n        }\n    }\n    \n    // Models/Product.cs\n    public class Product\n    {\n        public int Id { get; set; }\n        public string Name { get; set; } = string.Empty;\n        public decimal Price { get; set; }\n    }\n}",
+      "explanation": "This example shows a complete ASP.NET Core Web API application. The Program.cs file configures services and the middleware pipeline. The ProductsController demonstrates the standard CRUD operations with HTTP verbs (GET, POST, PUT, DELETE). The Product model represents the data structure. The controller uses attribute routing with [ApiController] and [Route] attributes, and returns appropriate HTTP status codes using ActionResult types.",
+      "language": "csharp"
+    },
+    "pitfalls": [
+      {
+        "mistake": "Not following REST conventions for API design",
+        "solution": "Use standard HTTP verbs (GET, POST, PUT, DELETE) and proper status codes (200, 201, 404, etc.)",
+        "severity": "high"
+      },
+      {
+        "mistake": "Putting too much logic directly in controllers",
+        "solution": "Use services to encapsulate business logic and keep controllers thin",
+        "severity": "medium"
+      },
+      {
+        "mistake": "Ignoring asynchronous programming in web applications",
+        "solution": "Use async/await for I/O operations to improve scalability",
+        "severity": "medium"
+      }
+    ],
+    "exercises": [
+      {
+        "title": "Build a Task Management API",
+        "description": "Create a RESTful API for managing tasks with full CRUD operations.",
+        "checkpoints": [
+          "Set up an ASP.NET Core Web API project with proper middleware configuration",
+          "Create a Task model with properties like Id, Title, Description, DueDate, and IsCompleted",
+          "Implement a TasksController with endpoints for all CRUD operations",
+          "Use proper HTTP status codes and response types",
+          "Test your API using Swagger or a tool like Postman"
+        ]
+      }
+    ],
+    "next": [
+      "dotnet-fundamentals-lesson-4"
+    ],
+    "estimatedMinutes": 75,
+    "difficulty": "Intermediate",
+    "tags": [
+      "ASP.NET Core",
+      "Web API",
+      "Middleware",
+      "Controllers",
+      "Routing"
+    ],
+    "lastUpdated": "2025-10-09T10:00:00.000Z",
+    "version": "1.0.0"
+  },
+  {
+    "id": "dotnet-fundamentals-lesson-4",
+    "moduleSlug": "dotnet-fundamentals",
+    "title": "Entity Framework Core for Data Access",
+    "order": 4,
+    "objectives": [
+      "Understand Object-Relational Mapping (ORM) and Entity Framework Core",
+      "Create data models and configure database contexts",
+      "Perform CRUD operations using EF Core",
+      "Implement relationships between entities and query related data"
+    ],
+    "intro": "Entity Framework Core (EF Core) is a modern, lightweight, and extensible Object-Relational Mapper (ORM) for .NET. It enables developers to work with databases using .NET objects, eliminating the need for most data-access code that traditionally needs to be written.\n\nEF Core supports multiple database providers including SQL Server, PostgreSQL, MySQL, SQLite, and many others. This flexibility allows you to choose the database that best fits your application requirements while using the same programming model.\n\nAt the core of EF Core are DbContext and entity classes. The DbContext represents a session with the database and is used to query and save instances of entities. Entity classes represent the data models in your application and are mapped to database tables.\n\nEF Core provides several ways to configure the mapping between entities and database tables, including data annotations, the Fluent API, and conventions. These configuration options give you fine-grained control over how your objects are persisted.\n\nQuerying data with EF Core is intuitive thanks to Language Integrated Query (LINQ), which allows you to write database queries using C# syntax. EF Core translates these LINQ queries into efficient SQL that is executed against the database.\n\nChange tracking is another important feature of EF Core that automatically detects changes made to entities and persists those changes to the database when SaveChanges is called. This reduces the amount of code you need to write for data operations.\n\nBy mastering Entity Framework Core, you'll be able to build data-driven applications more efficiently while maintaining good performance and following best practices for data access.",
+    "code": {
+      "example": "// Models/Blog.cs\nusing System.ComponentModel.DataAnnotations;\n\nclass Blog\n{\n    public int BlogId { get; set; }\n    \n    [Required]\n    [MaxLength(100)]\n    public string Url { get; set; } = string.Empty;\n    \n    [MaxLength(500)]\n    public string Title { get; set; } = string.Empty;\n    \n    // Navigation property\n    public List<Post> Posts { get; } = new();\n}\n\n// Models/Post.cs\nclass Post\n{\n    public int PostId { get; set; }\n    \n    [Required]\n    [MaxLength(200)]\n    public string Title { get; set; } = string.Empty;\n    \n    public string Content { get; set; } = string.Empty;\n    \n    public DateTime PublishedDate { get; set; } = DateTime.UtcNow;\n    \n    // Foreign key\n    public int BlogId { get; set; }\n    \n    // Navigation properties\n    public Blog Blog { get; set; } = null!;\n}\n\n// Data/BlogContext.cs\nusing Microsoft.EntityFrameworkCore;\n\nclass BlogContext : DbContext\n{\n    public DbSet<Blog> Blogs => Set<Blog>();\n    public DbSet<Post> Posts => Set<Post>();\n    \n    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)\n    {\n        optionsBuilder.UseSqlServer(\n            \"Server=(localdb)\\\\mssqllocaldb;Database=Blogging;Trusted_Connection=true\");\n    }\n    \n    protected override void OnModelCreating(ModelBuilder modelBuilder)\n    {\n        modelBuilder.Entity<Blog>()\n            .HasIndex(b => b.Url)\n            .IsUnique();\n            \n        modelBuilder.Entity<Post>()\n            .HasIndex(p => p.PublishedDate);\n            \n        // Configure the relationship\n        modelBuilder.Entity<Post>()\n            .HasOne(p => p.Blog)\n            .WithMany(b => b.Posts)\n            .HasForeignKey(p => p.BlogId);\n    }\n}\n\n// Program.cs example usage\nusing var context = new BlogContext();\n\n// Ensure database is created\ncontext.Database.EnsureCreated();\n\n// Create\nvar blog = new Blog { Url = \"http://example.com\", Title = \"My Blog\" };\ncontext.Blogs.Add(blog);\ncontext.SaveChanges();\n\n// Read\nvar blogs = context.Blogs\n    .Where(b => b.Url.Contains(\"example\"))\n    .ToList();\n    \nvar blogWithPosts = context.Blogs\n    .Include(b => b.Posts)\n    .FirstOrDefault(b => b.BlogId == blog.BlogId);\n    \n// Update\nif (blogWithPosts != null)\n{\n    blogWithPosts.Title = \"Updated Blog Title\";\n    context.SaveChanges();\n}\n\n// Delete\nvar postToDelete = context.Posts.FirstOrDefault();\nif (postToDelete != null)\n{\n    context.Posts.Remove(postToDelete);\n    context.SaveChanges();\n}",
+      "explanation": "This example demonstrates EF Core fundamentals including entity classes with data annotations for validation, a DbContext for database operations, and common CRUD operations. The Blog and Post entities have a one-to-many relationship. The example shows configuration using both data annotations and the Fluent API in OnModelCreating. LINQ queries are used for reading data, and Include is used to eagerly load related data.",
+      "language": "csharp"
+    },
+    "pitfalls": [
+      {
+        "mistake": "Not using asynchronous methods for database operations",
+        "solution": "Use async methods like ToListAsync, SaveChangesAsync for better scalability",
+        "severity": "high"
+      },
+      {
+        "mistake": "N+1 query problem with lazy loading",
+        "solution": "Use Include or projection queries to load related data efficiently",
+        "severity": "high"
+      },
+      {
+        "mistake": "Not configuring relationships properly",
+        "solution": "Explicitly configure relationships using Fluent API or data annotations",
+        "severity": "medium"
+      }
+    ],
+    "exercises": [
+      {
+        "title": "Build a Library Management System with EF Core",
+        "description": "Create a data model for a library system and implement data access using Entity Framework Core.",
+        "checkpoints": [
+          "Design entity classes for Books, Authors, and Genres with proper relationships",
+          "Create a DbContext and configure relationships using Fluent API",
+          "Implement CRUD operations for all entities",
+          "Use LINQ queries to retrieve related data efficiently",
+          "Handle database migrations using the CLI"
+        ]
+      }
+    ],
+    "next": [
+      "dotnet-fundamentals-lesson-5"
+    ],
+    "estimatedMinutes": 90,
+    "difficulty": "Intermediate",
+    "tags": [
+      "Entity Framework Core",
+      "ORM",
+      "Database",
+      "LINQ",
+      "Data Access"
+    ],
+    "lastUpdated": "2025-10-09T10:00:00.000Z",
+    "version": "1.0.0"
+  },
+  {
+    "id": "dotnet-fundamentals-lesson-5",
+    "moduleSlug": "dotnet-fundamentals",
+    "title": "Dependency Injection and Services",
+    "order": 5,
+    "objectives": [
+      "Understand the dependency injection pattern and Inversion of Control",
+      "Configure services with different lifetimes in ASP.NET Core",
+      "Create and consume custom services",
+      "Use built-in services and third-party dependency injection containers"
+    ],
+    "intro": "Dependency Injection (DI) is a design pattern that implements Inversion of Control (IoC) by transferring the responsibility of creating and managing object dependencies to a container. ASP.NET Core has built-in support for dependency injection, making it easy to create loosely coupled, testable, and maintainable applications.\n\nThe DI container in ASP.NET Core manages the lifetime of services and automatically provides dependencies to classes that request them through constructors, properties, or methods. This eliminates the need for hard-coded dependencies and makes code more modular and flexible.\n\nThere are three service lifetimes in ASP.NET Core:\n1. Transient: Created each time they're requested\n2. Scoped: Created once per request\n3. Singleton: Created once for the application lifetime\n\nChoosing the correct lifetime is crucial for application performance and correctness. Transient services are ideal for lightweight, stateless services. Scoped services are perfect for services that should maintain state within a request but not across requests. Singleton services should be used for expensive-to-create or stateless services that are thread-safe.\n\nService registration happens in the Program.cs file using the IServiceCollection. You can register services with interfaces for better abstraction or directly with concrete types. The built-in container supports constructor injection, which is the recommended approach.\n\nASP.NET Core provides many built-in services like ILogger, IConfiguration, and IHttpContextAccessor that you can inject into your classes. You can also create your own services and register them with the DI container.\n\nBy mastering dependency injection, you'll write more testable code, reduce coupling between components, and make your applications more maintainable and scalable.",
+    "code": {
+      "example": "// Services/IEmailService.cs\npublic interface IEmailService\n{\n    Task<bool> SendEmailAsync(string to, string subject, string body);\n}\n\n// Services/EmailService.cs\npublic class EmailService : IEmailService\n{\n    private readonly ILogger<EmailService> _logger;\n    private readonly IConfiguration _configuration;\n    \n    public EmailService(ILogger<EmailService> logger, IConfiguration configuration)\n    {\n        _logger = logger;\n        _configuration = configuration;\n    }\n    \n    public async Task<bool> SendEmailAsync(string to, string subject, string body)\n    {\n        try\n        {\n            // Get configuration values\n            var smtpServer = _configuration[\"Email:SmtpServer\"];\n            var apiKey = _configuration[\"Email:ApiKey\"];\n            \n            _logger.LogInformation(\"Sending email to {Email}\", to);\n            \n            // Simulate email sending\n            await Task.Delay(1000);\n            \n            _logger.LogInformation(\"Email sent successfully to {Email}\", to);\n            return true;\n        }\n        catch (Exception ex)\n        {\n            _logger.LogError(ex, \"Failed to send email to {Email}\", to);\n            return false;\n        }\n    }\n}\n\n// Services/IProductService.cs\npublic interface IProductService\n{\n    Task<IEnumerable<Product>> GetAllProductsAsync();\n    Task<Product?> GetProductByIdAsync(int id);\n    Task<Product> CreateProductAsync(Product product);\n}\n\n// Services/ProductService.cs\npublic class ProductService : IProductService\n{\n    private readonly IEmailService _emailService;\n    private readonly ILogger<ProductService> _logger;\n    private readonly List<Product> _products;\n    \n    public ProductService(IEmailService emailService, ILogger<ProductService> logger)\n    {\n        _emailService = emailService;\n        _logger = logger;\n        _products = new List<Product>\n        {\n            new Product { Id = 1, Name = \"Laptop\", Price = 999.99m },\n            new Product { Id = 2, Name = \"Mouse\", Price = 29.99m }\n        };\n    }\n    \n    public async Task<IEnumerable<Product>> GetAllProductsAsync()\n    {\n        _logger.LogInformation(\"Retrieving all products\");\n        return await Task.FromResult(_products);\n    }\n    \n    public async Task<Product?> GetProductByIdAsync(int id)\n    {\n        _logger.LogInformation(\"Retrieving product with ID {ProductId}\", id);\n        return await Task.FromResult(_products.FirstOrDefault(p => p.Id == id));\n    }\n    \n    public async Task<Product> CreateProductAsync(Product product)\n    {\n        product.Id = _products.Max(p => p.Id) + 1;\n        _products.Add(product);\n        \n        _logger.LogInformation(\"Product created with ID {ProductId}\", product.Id);\n        \n        // Notify admin about new product\n        await _emailService.SendEmailAsync(\n            \"admin@example.com\", \n            \"New Product Added\", \n            $\"A new product '{product.Name}' has been added.\");\n            \n        return product;\n    }\n}\n\n// Program.cs - Service Registration\nusing Microsoft.AspNetCore.Builder;\nusing Microsoft.Extensions.DependencyInjection;\nusing Microsoft.Extensions.Hosting;\n\nvar builder = WebApplication.CreateBuilder(args);\n\n// Register services\nbuilder.Services.AddTransient<IEmailService, EmailService>();\nbuilder.Services.AddScoped<IProductService, ProductService>();\n\nbuilder.Services.AddControllers();\nvar app = builder.Build();\n\napp.MapControllers();\napp.Run();\n\n// Controllers/ProductsController.cs\n[ApiController]\n[Route(\"[controller]\")]\npublic class ProductsController : ControllerBase\n{\n    private readonly IProductService _productService;\n    \n    public ProductsController(IProductService productService)\n    {\n        _productService = productService;\n    }\n    \n    [HttpGet]\n    public async Task<ActionResult<IEnumerable<Product>>> Get()\n    {\n        var products = await _productService.GetAllProductsAsync();\n        return Ok(products);\n    }\n    \n    [HttpPost]\n    public async Task<ActionResult<Product>> Post(Product product)\n    {\n        var createdProduct = await _productService.CreateProductAsync(product);\n        return CreatedAtAction(nameof(Get), new { id = createdProduct.Id }, createdProduct);\n    }\n}",
+      "explanation": "This example demonstrates dependency injection in ASP.NET Core. The EmailService and ProductService are registered with different lifetimes (transient and scoped). The ProductService depends on the IEmailService, showing how services can depend on other services. Constructor injection is used throughout, which is the recommended approach. The controller depends on the IProductService, demonstrating how DI works at all levels of the application.",
+      "language": "csharp"
+    },
+    "pitfalls": [
+      {
+        "mistake": "Choosing incorrect service lifetimes",
+        "solution": "Use transient for lightweight stateless services, scoped for per-request services, and singleton for expensive or stateless services",
+        "severity": "high"
+      },
+      {
+        "mistake": "Creating circular dependencies between services",
+        "solution": "Restructure dependencies or use property injection for circular references when necessary",
+        "severity": "high"
+      },
+      {
+        "mistake": "Resolving services manually instead of using constructor injection",
+        "solution": "Use constructor injection and let the DI container manage service resolution",
+        "severity": "medium"
+      }
+    ],
+    "exercises": [
+      {
+        "title": "Implement a Notification System with Dependency Injection",
+        "description": "Create services for different notification types and use DI to manage them.",
+        "checkpoints": [
+          "Create interfaces for notification services (IEmailService, ISMSService, IPushNotificationService)",
+          "Implement concrete classes for each notification type",
+          "Create a NotificationManager service that uses all notification services",
+          "Register services with appropriate lifetimes in Program.cs",
+          "Inject services into a controller and use them to send notifications"
+        ]
+      }
+    ],
+    "next": [
+      "dotnet-fundamentals-lesson-6"
+    ],
+    "estimatedMinutes": 75,
+    "difficulty": "Intermediate",
+    "tags": [
+      "Dependency Injection",
+      "Services",
+      "IoC",
+      "Lifetime Management",
+      "ASP.NET Core"
+    ],
+    "lastUpdated": "2025-10-09T10:00:00.000Z",
+    "version": "1.0.0"
+  },
+  {
+    "id": "dotnet-fundamentals-lesson-6",
+    "moduleSlug": "dotnet-fundamentals",
+    "title": "Middleware and Request Pipeline",
+    "order": 6,
+    "objectives": [
+      "Understand the HTTP request pipeline and middleware components",
+      "Create custom middleware for cross-cutting concerns",
+      "Configure middleware in the correct order",
+      "Use built-in middleware for common functionality"
+    ],
+    "intro": "Middleware components are software that form a pipeline through which HTTP requests and responses flow in ASP.NET Core applications. Each middleware component can examine, modify, or short-circuit the request before passing it to the next component in the pipeline.\n\nThe request pipeline is configured in the Program.cs file using the IApplicationBuilder. Middleware components are added in the order they should execute, with each component having the opportunity to act on the request before and after the next component processes it. This creates a powerful mechanism for implementing cross-cutting concerns like logging, authentication, and error handling.\n\nBuilt-in middleware components provide common functionality such as serving static files, routing, authentication, and error handling. You can also create custom middleware to implement application-specific logic or cross-cutting concerns that don't have built-in solutions.\n\nCustom middleware can be implemented as classes with a specific pattern or as inline middleware using lambda expressions. Class-based middleware provides more flexibility and reusability, while inline middleware is suitable for simple scenarios.\n\nThe order of middleware registration is crucial because it determines the order of execution. For example, error handling middleware should be registered early to catch exceptions from downstream middleware, while authentication middleware should come before authorization middleware.\n\nMiddleware components can be conditionally applied based on request characteristics or environment settings. This allows you to have different behavior in development versus production environments.\n\nBy mastering middleware, you'll be able to create flexible, maintainable applications with clean separation of concerns and efficient request processing.",
+    "code": {
+      "example": "// Middleware/RequestLoggingMiddleware.cs\nusing Microsoft.AspNetCore.Http;\nusing System.Diagnostics;\nusing System.Threading.Tasks;\n\npublic class RequestLoggingMiddleware\n{\n    private readonly RequestDelegate _next;\n    private readonly ILogger<RequestLoggingMiddleware> _logger;\n    \n    public RequestLoggingMiddleware(RequestDelegate next, ILogger<RequestLoggingMiddleware> logger)\n    {\n        _next = next;\n        _logger = logger;\n    }\n    \n    public async Task InvokeAsync(HttpContext context)\n    {\n        var stopwatch = Stopwatch.StartNew();\n        \n        try\n        {\n            _logger.LogInformation(\n                \"Request {Method} {Url} started at {Time}\", \n                context.Request.Method, \n                context.Request.Path, \n                DateTime.UtcNow);\n            \n            await _next(context);\n            \n            stopwatch.Stop();\n            _logger.LogInformation(\n                \"Request {Method} {Url} completed with status {StatusCode} in {Elapsed}ms\", \n                context.Request.Method, \n                context.Request.Path, \n                context.Response.StatusCode, \n                stopwatch.ElapsedMilliseconds);\n        }\n        catch (Exception ex)\n        {\n            stopwatch.Stop();\n            _logger.LogError(\n                ex, \n                \"Request {Method} {Url} failed after {Elapsed}ms\", \n                context.Request.Method, \n                context.Request.Path, \n                stopwatch.ElapsedMilliseconds);\n            \n            // Re-throw to let the exception middleware handle it\n            throw;\n        }\n    }\n}\n\n// Middleware/ApiKeyMiddleware.cs\npublic class ApiKeyMiddleware\n{\n    private readonly RequestDelegate _next;\n    private const string API_KEY_HEADER = \"X-API-Key\";\n    \n    public ApiKeyMiddleware(RequestDelegate next)\n    {\n        _next = next;\n    }\n    \n    public async Task InvokeAsync(HttpContext context, IConfiguration configuration)\n    {\n        // Skip API key check for development environment\n        if (context.Request.HttpContext.RequestServices\n            .GetRequiredService<IWebHostEnvironment>().IsDevelopment())\n        {\n            await _next(context);\n            return;\n        }\n        \n        // Check for API key in header\n        if (!context.Request.Headers.TryGetValue(API_KEY_HEADER, out var apiKey))\n        {\n            context.Response.StatusCode = 401;\n            await context.Response.WriteAsync(\"API Key is missing\");\n            return;\n        }\n        \n        // Validate API key\n        var expectedApiKey = configuration[\"ApiKey\"];\n        if (string.IsNullOrEmpty(expectedApiKey) || !apiKey.Equals(expectedApiKey))\n        {\n            context.Response.StatusCode = 401;\n            await context.Response.WriteAsync(\"Invalid API Key\");\n            return;\n        }\n        \n        // API key is valid, continue processing\n        await _next(context);\n    }\n}\n\n// Extension method to make middleware easier to use\npublic static class MiddlewareExtensions\n{\n    public static IApplicationBuilder UseRequestLogging(\n        this IApplicationBuilder builder)\n    {\n        return builder.UseMiddleware<RequestLoggingMiddleware>();\n    }\n    \n    public static IApplicationBuilder UseApiKeyAuthentication(\n        this IApplicationBuilder builder)\n    {\n        return builder.UseMiddleware<ApiKeyMiddleware>();\n    }\n}\n\n// Program.cs - Middleware Configuration\nusing Microsoft.AspNetCore.Builder;\nusing Microsoft.Extensions.DependencyInjection;\n\nvar builder = WebApplication.CreateBuilder(args);\n\nbuilder.Services.AddControllers();\n\nvar app = builder.Build();\n\n// Middleware order is important!\nif (app.Environment.IsDevelopment())\n{\n    app.UseDeveloperExceptionPage();\n}\n\napp.UseRequestLogging();  // Custom logging middleware\napp.UseHttpsRedirection();\napp.UseRouting();\napp.UseApiKeyAuthentication();  // Custom authentication middleware\napp.UseAuthorization();\napp.MapControllers();\n\napp.Run();",
+      "explanation": "This example shows how to create custom middleware components in ASP.NET Core. The RequestLoggingMiddleware logs information about requests and their processing time. The ApiKeyMiddleware implements a simple API key authentication mechanism. Both examples show the standard middleware pattern with a constructor that takes RequestDelegate and an InvokeAsync method. Extension methods are provided to make the middleware easier to use in the pipeline configuration.",
+      "language": "csharp"
+    },
+    "pitfalls": [
+      {
+        "mistake": "Adding middleware in incorrect order",
+        "solution": "Place error handling middleware first, authentication before authorization, and static files early in the pipeline",
+        "severity": "high"
+      },
+      {
+        "mistake": "Not calling _next() in middleware, causing the pipeline to stop",
+        "solution": "Always call await _next(context) unless you intend to short-circuit the pipeline",
+        "severity": "high"
+      },
+      {
+        "mistake": "Performing expensive operations without considering performance impact",
+        "solution": "Optimize middleware for performance and consider async operations for I/O-bound tasks",
+        "severity": "medium"
+      }
+    ],
+    "exercises": [
+      {
+        "title": "Create a Rate Limiting Middleware",
+        "description": "Implement middleware that limits the number of requests from a client within a time window.",
+        "checkpoints": [
+          "Create a custom middleware class that tracks request counts per IP address",
+          "Implement a sliding window algorithm for rate limiting",
+          "Return appropriate HTTP status codes (429) when limits are exceeded",
+          "Add configuration options for requests per time window",
+          "Create extension methods for easy registration"
+        ]
+      }
+    ],
+    "next": [
+      "dotnet-fundamentals-lesson-7"
+    ],
+    "estimatedMinutes": 75,
+    "difficulty": "Intermediate",
+    "tags": [
+      "Middleware",
+      "Request Pipeline",
+      "HTTP",
+      "Cross-cutting Concerns",
+      "ASP.NET Core"
+    ],
+    "lastUpdated": "2025-10-09T10:00:00.000Z",
+    "version": "1.0.0"
+  },
+  {
+    "id": "dotnet-fundamentals-lesson-7",
+    "moduleSlug": "dotnet-fundamentals",
+    "title": "Authentication and Authorization",
+    "order": 7,
+    "objectives": [
+      "Implement JWT-based authentication in ASP.NET Core",
+      "Configure role-based and claims-based authorization",
+      "Secure API endpoints with authentication requirements",
+      "Handle authentication and authorization errors properly"
+    ],
+    "intro": "Authentication and authorization are critical aspects of modern web applications that ensure only legitimate users can access resources and that they can only access what they're permitted to. ASP.NET Core provides a comprehensive security framework that makes implementing these features straightforward.\n\nAuthentication is the process of verifying who a user is, typically through credentials like usernames and passwords, or through external providers like Google, Facebook, or Azure AD. ASP.NET Core Identity is a membership system that includes login functionality, user management, and password hashing.\n\nAuthorization determines what an authenticated user is allowed to do. ASP.NET Core supports several authorization approaches, including role-based authorization, claims-based authorization, and policy-based authorization. Role-based authorization checks if a user belongs to a specific role, while claims-based authorization examines the claims in a user's identity.\n\nJSON Web Tokens (JWT) have become the standard for securing APIs in modern applications. JWTs are compact, URL-safe tokens that contain claims about a user and can be verified and trusted because they're digitally signed. ASP.NET Core makes it easy to implement JWT authentication and use the claims for authorization decisions.\n\nPolicy-based authorization provides the most flexibility by allowing you to define authorization requirements as policies that can combine multiple requirements. This approach enables complex authorization scenarios while keeping the code clean and maintainable.\n\nSecurity headers, HTTPS enforcement, and proper error handling are also important considerations for application security. ASP.NET Core provides built-in middleware for many security features, but it's important to understand how to configure them properly.\n\nBy mastering authentication and authorization, you'll be able to build secure applications that protect user data and prevent unauthorized access to sensitive resources.",
+    "code": {
+      "example": "// Program.cs - JWT Authentication Configuration\nusing Microsoft.AspNetCore.Authentication.JwtBearer;\nusing Microsoft.IdentityModel.Tokens;\nusing System.Text;\n\nvar builder = WebApplication.CreateBuilder(args);\n\n// Add JWT authentication\nbuilder.Services.AddAuthentication(options =>\n{\n    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;\n    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;\n})\n.AddJwtBearer(options =>\n{\n    options.TokenValidationParameters = new TokenValidationParameters\n    {\n        ValidateIssuer = true,\n        ValidateAudience = true,\n        ValidateLifetime = true,\n        ValidateIssuerSigningKey = true,\n        ValidIssuer = builder.Configuration[\"Jwt:Issuer\"],\n        ValidAudience = builder.Configuration[\"Jwt:Audience\"],\n        IssuerSigningKey = new SymmetricSecurityKey(\n            Encoding.UTF8.GetBytes(builder.Configuration[\"Jwt:Key\"]))\n    };\n});\n\n// Add authorization with policies\nbuilder.Services.AddAuthorization(options =>\n{\n    options.AddPolicy(\"AdminOnly\", policy => policy.RequireRole(\"Admin\"));\n    options.AddPolicy(\"PremiumUser\", policy => policy.RequireClaim(\"Subscription\", \"Premium\"));\n    options.AddPolicy(\"AtLeast18\", policy => policy.Requirements.Add(new MinimumAgeRequirement(18)));\n});\n\nbuilder.Services.AddControllers();\n\nvar app = builder.Build();\n\napp.UseAuthentication();  // Must come before UseAuthorization\napp.UseAuthorization();\napp.MapControllers();\n\napp.Run();\n\n// Controllers/AccountController.cs\nusing Microsoft.AspNetCore.Mvc;\nusing Microsoft.IdentityModel.Tokens;\nusing System.IdentityModel.Tokens.Jwt;\nusing System.Security.Claims;\nusing System.Text;\n\n[ApiController]\n[Route(\"[controller]\")]\npublic class AccountController : ControllerBase\n{\n    private readonly IConfiguration _configuration;\n    \n    public AccountController(IConfiguration configuration)\n    {\n        _configuration = configuration;\n    }\n    \n    [HttpPost(\"login\")]\n    public IActionResult Login([FromBody] LoginModel model)\n    {\n        // Validate credentials (simplified for example)\n        if (model.Username != \"admin\" || model.Password != \"password\")\n        {\n            return Unauthorized();\n        }\n        \n        // Create claims\n        var claims = new[]\n        {\n            new Claim(ClaimTypes.Name, model.Username),\n            new Claim(ClaimTypes.Role, \"Admin\"),\n            new Claim(\"Subscription\", \"Premium\"),\n            new Claim(ClaimTypes.DateOfBirth, \"1990-01-01\")\n        };\n        \n        // Generate JWT token\n        var key = new SymmetricSecurityKey(\n            Encoding.UTF8.GetBytes(_configuration[\"Jwt:Key\"]));\n        var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);\n        \n        var token = new JwtSecurityToken(\n            issuer: _configuration[\"Jwt:Issuer\"],\n            audience: _configuration[\"Jwt:Audience\"],\n            claims: claims,\n            expires: DateTime.Now.AddMinutes(30),\n            signingCredentials: creds);\n        \n        return Ok(new\n        {\n            token = new JwtSecurityTokenHandler().WriteToken(token)\n        });\n    }\n}\n\n// Controllers/ProductsController.cs\n[ApiController]\n[Route(\"[controller]\")]\npublic class ProductsController : ControllerBase\n{\n    // Available to all authenticated users\n    [HttpGet]\n    [Authorize]\n    public IActionResult GetAll()\n    {\n        return Ok(new[] { \"Product1\", \"Product2\" });\n    }\n    \n    // Only admins can access\n    [HttpPost]\n    [Authorize(Policy = \"AdminOnly\")]\n    public IActionResult Create([FromBody] object product)\n    {\n        return Ok(\"Product created\");\n    }\n    \n    // Only premium users can access\n    [HttpGet(\"premium\")]\n    [Authorize(Policy = \"PremiumUser\")]\n    public IActionResult GetPremiumContent()\n    {\n        return Ok(\"Premium content\");\n    }\n}\n\n// Models/LoginModel.cs\npublic class LoginModel\n{\n    public string Username { get; set; } = string.Empty;\n    public string Password { get; set; } = string.Empty;\n}",
+      "explanation": "This example demonstrates JWT authentication and authorization in ASP.NET Core. The Program.cs file configures JWT authentication with validation parameters and defines authorization policies. The AccountController shows how to generate JWT tokens after validating user credentials. The ProductsController demonstrates different authorization approaches using the Authorize attribute with roles and policies.",
+      "language": "csharp"
+    },
+    "pitfalls": [
+      {
+        "mistake": "Not validating JWT tokens properly",
+        "solution": "Always validate issuer, audience, lifetime, and signature of JWT tokens",
+        "severity": "high"
+      },
+      {
+        "mistake": "Placing UseAuthentication() after UseAuthorization()",
+        "solution": "UseAuthentication() must come before UseAuthorization() in the middleware pipeline",
+        "severity": "high"
+      },
+      {
+        "mistake": "Storing secrets in code or configuration files",
+        "solution": "Use secure secret management like Azure Key Vault or environment variables",
+        "severity": "high"
+      }
+    ],
+    "exercises": [
+      {
+        "title": "Implement a Complete Authentication System",
+        "description": "Create a full authentication and authorization system with user registration, login, and protected resources.",
+        "checkpoints": [
+          "Implement user registration with password hashing using ASP.NET Core Identity",
+          "Create JWT token generation and validation",
+          "Define authorization policies for different user types",
+          "Protect API endpoints with appropriate authorization attributes",
+          "Handle authentication and authorization errors gracefully"
+        ]
+      }
+    ],
+    "next": [
+      "dotnet-fundamentals-lesson-8"
+    ],
+    "estimatedMinutes": 90,
+    "difficulty": "Advanced",
+    "tags": [
+      "Authentication",
+      "Authorization",
+      "JWT",
+      "Security",
+      "Claims"
+    ],
+    "lastUpdated": "2025-10-09T10:00:00.000Z",
+    "version": "1.0.0"
+  },
+  {
+    "id": "dotnet-fundamentals-lesson-8",
+    "moduleSlug": "dotnet-fundamentals",
+    "title": "API Development with Controllers",
+    "order": 8,
+    "objectives": [
+      "Create RESTful APIs using ASP.NET Core controllers",
+      "Implement proper HTTP status codes and response types",
+      "Handle validation and error scenarios",
+      "Use action filters and model binding effectively"
+    ],
+    "intro": "API development is a core skill for modern .NET developers, as web APIs form the backbone of most applications today. ASP.NET Core provides powerful features for building RESTful APIs that are performant, maintainable, and follow industry best practices.\n\nControllers in ASP.NET Core are classes that handle HTTP requests and return HTTP responses. They use attributes to define routing, HTTP verbs, and other behaviors. The ControllerBase base class provides helper methods for creating common HTTP responses like Ok(), NotFound(), and BadRequest().\n\nREST conventions are important for creating predictable and intuitive APIs. This includes using appropriate HTTP verbs (GET for retrieval, POST for creation, PUT for updates, DELETE for deletion), proper status codes (200 for success, 201 for created, 404 for not found, etc.), and consistent resource naming.\n\nModel binding automatically converts HTTP request data into action method parameters. This includes binding from the request body (for POST/PUT), route parameters, query strings, and form data. Understanding model binding is crucial for creating flexible APIs that can handle different types of input.\n\nValidation is essential for ensuring data integrity and providing good user experience. ASP.NET Core supports both data annotations for simple validation and FluentValidation for complex scenarios. Validation results are automatically available in the ModelState, which can be checked in controller actions.\n\nAction filters provide a way to run code before or after action execution. Built-in filters handle common concerns like authorization, caching, and exception handling. Custom filters can be created for application-specific cross-cutting concerns.\n\nAPI documentation is important for both internal and external consumers. ASP.NET Core integrates well with Swagger/OpenAPI tools to automatically generate interactive documentation for APIs.\n\nBy mastering API development with controllers, you'll be able to create robust, well-documented APIs that follow REST conventions and provide excellent developer experience.",
+    "code": {
+      "example": "// Models/Product.cs\nusing System.ComponentModel.DataAnnotations;\n\nclass Product\n{\n    public int Id { get; set; }\n    \n    [Required(ErrorMessage = \"Name is required\")]\n    [StringLength(100, ErrorMessage = \"Name cannot exceed 100 characters\")]\n    public string Name { get; set; } = string.Empty;\n    \n    [Required(ErrorMessage = \"Price is required\")]\n    [Range(0.01, 10000, ErrorMessage = \"Price must be between $0.01 and $10,000\")]\n    public decimal Price { get; set; }\n    \n    [StringLength(500, ErrorMessage = \"Description cannot exceed 500 characters\")]\n    public string Description { get; set; } = string.Empty;\n    \n    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;\n    public bool IsAvailable { get; set; } = true;\n}\n\n// Controllers/ProductsController.cs\nusing Microsoft.AspNetCore.Mvc;\nusing System.ComponentModel.DataAnnotations;\n\n[ApiController]\n[Route(\"api/[controller]\")]\npublic class ProductsController : ControllerBase\n{\n    private static readonly List<Product> _products = new()\n    {\n        new Product { Id = 1, Name = \"Laptop\", Price = 999.99m, Description = \"High-performance laptop\" },\n        new Product { Id = 2, Name = \"Mouse\", Price = 29.99m, Description = \"Wireless mouse\" }\n    };\n    \n    // GET: api/products\n    [HttpGet]\n    [ProducesResponseType(StatusCodes.Status200OK)]\n    [ProducesResponseType(StatusCodes.Status400BadRequest)]\n    public ActionResult<IEnumerable<Product>> GetProducts(\n        [FromQuery] string? search = null,\n        [FromQuery] bool? availableOnly = null,\n        [FromQuery] int page = 1,\n        [FromQuery] int pageSize = 10)\n    {\n        var query = _products.AsQueryable();\n        \n        // Apply filters\n        if (!string.IsNullOrEmpty(search))\n        {\n            query = query.Where(p => p.Name.Contains(search, StringComparison.OrdinalIgnoreCase));\n        }\n        \n        if (availableOnly == true)\n        {\n            query = query.Where(p => p.IsAvailable);\n        }\n        \n        // Apply pagination\n        var totalCount = query.Count();\n        var products = query.Skip((page - 1) * pageSize).Take(pageSize).ToList();\n        \n        // Add pagination headers\n        Response.Headers.Add(\"X-Total-Count\", totalCount.ToString());\n        Response.Headers.Add(\"X-Page\", page.ToString());\n        Response.Headers.Add(\"X-Page-Size\", pageSize.ToString());\n        \n        return Ok(products);\n    }\n    \n    // GET: api/products/5\n    [HttpGet(\"{id}\")]\n    [ProducesResponseType(StatusCodes.Status200OK)]\n    [ProducesResponseType(StatusCodes.Status404NotFound)]\n    public ActionResult<Product> GetProduct(int id)\n    {\n        var product = _products.FirstOrDefault(p => p.Id == id);\n        \n        if (product == null)\n        {\n            return NotFound(new { message = $\"Product with ID {id} not found\" });\n        }\n        \n        return Ok(product);\n    }\n    \n    // POST: api/products\n    [HttpPost]\n    [ProducesResponseType(StatusCodes.Status201Created)]\n    [ProducesResponseType(StatusCodes.Status400BadRequest)]\n    public ActionResult<Product> CreateProduct(Product product)\n    {\n        // Validate model\n        if (!ModelState.IsValid)\n        {\n            return BadRequest(ModelState);\n        }\n        \n        // Set ID and add to collection\n        product.Id = _products.Max(p => p.Id) + 1;\n        _products.Add(product);\n        \n        return CreatedAtAction(nameof(GetProduct), new { id = product.Id }, product);\n    }\n    \n    // PUT: api/products/5\n    [HttpPut(\"{id}\")]\n    [ProducesResponseType(StatusCodes.Status204NoContent)]\n    [ProducesResponseType(StatusCodes.Status400BadRequest)]\n    [ProducesResponseType(StatusCodes.Status404NotFound)]\n    public IActionResult UpdateProduct(int id, Product product)\n    {\n        // Validate model\n        if (!ModelState.IsValid)\n        {\n            return BadRequest(ModelState);\n        }\n        \n        if (id != product.Id)\n        {\n            return BadRequest(new { message = \"ID mismatch\" });\n        }\n        \n        var existingProduct = _products.FirstOrDefault(p => p.Id == id);\n        if (existingProduct == null)\n        {\n            return NotFound(new { message = $\"Product with ID {id} not found\" });\n        }\n        \n        // Update properties\n        existingProduct.Name = product.Name;\n        existingProduct.Price = product.Price;\n        existingProduct.Description = product.Description;\n        existingProduct.IsAvailable = product.IsAvailable;\n        \n        return NoContent();\n    }\n    \n    // DELETE: api/products/5\n    [HttpDelete(\"{id}\")]\n    [ProducesResponseType(StatusCodes.Status204NoContent)]\n    [ProducesResponseType(StatusCodes.Status404NotFound)]\n    public IActionResult DeleteProduct(int id)\n    {\n        var product = _products.FirstOrDefault(p => p.Id == id);\n        if (product == null)\n        {\n            return NotFound(new { message = $\"Product with ID {id} not found\" });\n        }\n        \n        _products.Remove(product);\n        return NoContent();\n    }\n}",
+      "explanation": "This example demonstrates a complete RESTful API controller for managing products. It shows proper use of HTTP verbs, status codes, and response types. The controller includes query parameters for filtering and pagination, model validation with data annotations, and proper error handling with descriptive messages. Action results are used appropriately for different scenarios (Ok, CreatedAtAction, NoContent, BadRequest, NotFound).",
+      "language": "csharp"
+    },
+    "pitfalls": [
+      {
+        "mistake": "Not using proper HTTP status codes",
+        "solution": "Use standard HTTP status codes (200, 201, 204, 400, 404, etc.) consistently",
+        "severity": "high"
+      },
+      {
+        "mistake": "Ignoring model validation",
+        "solution": "Always validate input data and return appropriate error responses",
+        "severity": "high"
+      },
+      {
+        "mistake": "Putting too much business logic in controllers",
+        "solution": "Move business logic to services and keep controllers thin",
+        "severity": "medium"
+      }
+    ],
+    "exercises": [
+      {
+        "title": "Build a Complete E-commerce API",
+        "description": "Create a full-featured API for an e-commerce system with products, categories, and orders.",
+        "checkpoints": [
+          "Design RESTful endpoints for products, categories, and orders with proper HTTP verbs",
+          "Implement comprehensive validation for all input data",
+          "Add filtering, sorting, and pagination capabilities",
+          "Use proper HTTP status codes and response formats",
+          "Handle error scenarios gracefully with meaningful error messages"
+        ]
+      }
+    ],
+    "next": [
+      "dotnet-fundamentals-lesson-9"
+    ],
+    "estimatedMinutes": 90,
+    "difficulty": "Intermediate",
+    "tags": [
+      "API",
+      "Controllers",
+      "REST",
+      "Validation",
+      "HTTP"
+    ],
+    "lastUpdated": "2025-10-09T10:00:00.000Z",
+    "version": "1.0.0"
+  },
+  {
+    "id": "dotnet-fundamentals-lesson-9",
+    "moduleSlug": "dotnet-fundamentals",
+    "title": "Testing .NET Applications",
+    "order": 9,
+    "objectives": [
+      "Write unit tests for .NET applications using xUnit",
+      "Create integration tests for ASP.NET Core APIs",
+      "Use mocking frameworks to isolate dependencies",
+      "Implement test-driven development practices"
+    ],
+    "intro": "Testing is a critical practice for ensuring the quality, reliability, and maintainability of .NET applications. A comprehensive testing strategy includes different types of tests that serve specific purposes and provide confidence at different levels of the application.\n\nUnit tests are the foundation of any testing strategy. They test individual units of code (typically methods or classes) in isolation from their dependencies. xUnit is the most popular testing framework for .NET, offering features like parameterized tests, test fixtures, and extensibility. Unit tests should be fast, reliable, and focused on a single behavior.\n\nIntegration tests verify that different parts of an application work together correctly. For ASP.NET Core applications, this often means testing the full HTTP request pipeline, including middleware, controllers, and services. Integration tests are more complex and slower than unit tests but provide higher confidence that the application works as expected.\n\nMocking frameworks like Moq allow you to create fake implementations of dependencies for unit testing. This enables you to test code in isolation and control the behavior of dependencies to test different scenarios. Proper use of mocking leads to more maintainable and focused tests.\n\nTest-driven development (TDD) is a practice where tests are written before the implementation code. This approach encourages better design, clearer requirements, and more testable code. The TDD cycle involves writing a failing test, implementing the minimum code to make it pass, and then refactoring while keeping tests green.\n\nThe Arrange-Act-Assert pattern provides a clear structure for organizing tests. Arrange sets up the test conditions and inputs, Act executes the code under test, and Assert verifies the expected outcomes. This pattern makes tests easier to read and maintain.\n\nCode coverage tools help identify untested code paths, but high coverage doesn't guarantee good tests. Focus on testing behaviors and edge cases rather than just achieving coverage metrics. Quality of tests is more important than quantity.\n\nBy mastering testing practices, you'll create more reliable applications, catch bugs early, and make refactoring safer and more confident.",
+    "code": {
+      "example": "// Calculator.cs - Code to be tested\npublic class Calculator\n{\n    public int Add(int a, int b)\n    {\n        return a + b;\n    }\n    \n    public decimal Divide(decimal dividend, decimal divisor)\n    {\n        if (divisor == 0)\n        {\n            throw new DivideByZeroException(\"Cannot divide by zero\");\n        }\n        return dividend / divisor;\n    }\n    \n    public bool IsPrime(int number)\n    {\n        if (number < 2) return false;\n        if (number == 2) return true;\n        if (number % 2 == 0) return false;\n        \n        for (int i = 3; i * i <= number; i += 2)\n        {\n            if (number % i == 0) return false;\n        }\n        return true;\n    }\n}\n\n// Services/IEmailService.cs\npublic interface IEmailService\n{\n    Task<bool> SendEmailAsync(string to, string subject, string body);\n}\n\n// Services/NotificationService.cs\npublic class NotificationService\n{\n    private readonly IEmailService _emailService;\n    \n    public NotificationService(IEmailService emailService)\n    {\n        _emailService = emailService;\n    }\n    \n    public async Task<bool> SendWelcomeEmailAsync(string userEmail)\n    {\n        var subject = \"Welcome to our service!\";\n        var body = $\"Hello {userEmail}, welcome to our amazing service!\";\n        \n        return await _emailService.SendEmailAsync(userEmail, subject, body);\n    }\n}\n\n// UnitTests/CalculatorTests.cs\nusing Xunit;\nusing System;\n\npublic class CalculatorTests\n{\n    private readonly Calculator _calculator;\n    \n    public CalculatorTests()\n    {\n        _calculator = new Calculator();\n    }\n    \n    [Theory]\n    [InlineData(2, 3, 5)]\n    [InlineData(-1, 1, 0)]\n    [InlineData(0, 0, 0)]\n    [InlineData(-5, -3, -8)]\n    public void Add_ReturnsCorrectResult(int a, int b, int expected)\n    {\n        // Arrange\n        // (already arranged in constructor)\n        \n        // Act\n        var result = _calculator.Add(a, b);\n        \n        // Assert\n        Assert.Equal(expected, result);\n    }\n    \n    [Fact]\n    public void Divide_ByZero_ThrowsException()\n    {\n        // Arrange\n        const decimal dividend = 10;\n        const decimal divisor = 0;\n        \n        // Act & Assert\n        Assert.Throws<DivideByZeroException>(() => \n            _calculator.Divide(dividend, divisor));\n    }\n    \n    [Theory]\n    [InlineData(2, true)]\n    [InlineData(3, true)]\n    [InlineData(4, false)]\n    [InlineData(17, true)]\n    [InlineData(25, false)]\n    public void IsPrime_ReturnsExpectedResult(int number, bool expected)\n    {\n        // Arrange\n        // (already arranged)\n        \n        // Act\n        var result = _calculator.IsPrime(number);\n        \n        // Assert\n        Assert.Equal(expected, result);\n    }\n}\n\n// UnitTests/NotificationServiceTests.cs\nusing Moq;\nusing Xunit;\nusing System.Threading.Tasks;\n\npublic class NotificationServiceTests\n{\n    [Fact]\n    public async Task SendWelcomeEmailAsync_ReturnsTrue_WhenEmailServiceSucceeds()\n    {\n        // Arrange\n        var mockEmailService = new Mock<IEmailService>();\n        mockEmailService\n            .Setup(x => x.SendEmailAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()))\n            .ReturnsAsync(true);\n            \n        var notificationService = new NotificationService(mockEmailService.Object);\n        const string userEmail = \"test@example.com\";\n        \n        // Act\n        var result = await notificationService.SendWelcomeEmailAsync(userEmail);\n        \n        // Assert\n        Assert.True(result);\n        mockEmailService.Verify(\n            x => x.SendEmailAsync(\n                userEmail, \n                \"Welcome to our service!\", \n                It.IsAny<string>()), \n            Times.Once);\n    }\n}",
+      "explanation": "This example demonstrates unit testing with xUnit and Moq. The CalculatorTests show parameterized tests with Theory and InlineData attributes, testing exception scenarios, and verifying different input combinations. The NotificationServiceTests demonstrate mocking with Moq to isolate the service under test from its dependencies. The tests follow the Arrange-Act-Assert pattern and use verification to ensure the email service is called with expected parameters.",
+      "language": "csharp"
+    },
+    "pitfalls": [
+      {
+        "mistake": "Testing implementation details instead of behavior",
+        "solution": "Focus on testing what the code does rather than how it does it",
+        "severity": "high"
+      },
+      {
+        "mistake": "Creating tests that are too slow or flaky",
+        "solution": "Keep unit tests fast and isolated, use mocks to avoid external dependencies",
+        "severity": "high"
+      },
+      {
+        "mistake": "Not testing edge cases and error conditions",
+        "solution": "Test boundary conditions, invalid inputs, and exception scenarios",
+        "severity": "medium"
+      }
+    ],
+    "exercises": [
+      {
+        "title": "Create a Comprehensive Test Suite",
+        "description": "Write unit and integration tests for a shopping cart service.",
+        "checkpoints": [
+          "Create unit tests for business logic with various input scenarios",
+          "Use mocking to isolate the service under test from database dependencies",
+          "Implement integration tests that test the full API endpoints",
+          "Test error conditions and edge cases thoroughly",
+          "Use test fixtures to set up common test data"
+        ]
+      }
+    ],
+    "next": [
+      "dotnet-fundamentals-lesson-10"
+    ],
+    "estimatedMinutes": 90,
+    "difficulty": "Intermediate",
+    "tags": [
+      "Testing",
+      "xUnit",
+      "Moq",
+      "TDD",
+      "Unit Tests"
+    ],
+    "lastUpdated": "2025-10-09T10:00:00.000Z",
+    "version": "1.0.0"
+  },
+  {
+    "id": "dotnet-fundamentals-lesson-10",
+    "moduleSlug": "dotnet-fundamentals",
+    "title": "Deployment and Configuration",
+    "order": 10,
+    "objectives": [
+      "Package and deploy .NET applications to different environments",
+      "Configure applications for different environments using configuration providers",
+      "Implement logging and monitoring in .NET applications",
+      "Use environment variables and secrets management"
+    ],
+    "intro": "Deployment and configuration management are essential skills for delivering .NET applications to production environments. Modern .NET applications need to run reliably across different environments with appropriate settings and security measures.\n\n.NET applications can be deployed in several ways, including self-contained deployments that include the runtime, framework-dependent deployments that rely on a shared runtime, and single-file deployments for simplified distribution. Containerization with Docker has become a popular approach for consistent deployment across environments.\n\nConfiguration in .NET Core is handled through a provider-based system that can read settings from multiple sources including JSON files, environment variables, command-line arguments, and Azure Key Vault. The configuration system supports hierarchical settings and can be strongly-typed using the Options pattern.\n\nEnvironment-specific configuration allows you to have different settings for development, staging, and production environments. ASP.NET Core automatically loads environment-specific configuration files and provides the IWebHostEnvironment service to check the current environment.\n\nLogging is crucial for monitoring application health and diagnosing issues. .NET provides a built-in logging framework that supports multiple providers including console, file, and third-party services like Application Insights. Structured logging with log levels and categories helps you filter and analyze log data effectively.\n\nSecrets management is important for protecting sensitive information like connection strings and API keys. For development, the Secret Manager tool keeps secrets outside of source control. For production, Azure Key Vault, AWS Secrets Manager, or similar services provide secure storage and access.\n\nHealth checks provide endpoints that monitoring systems can use to verify that your application is running correctly. ASP.NET Core includes built-in health check functionality that can verify database connectivity, external service availability, and custom conditions.\n\nPerformance monitoring and profiling tools help you identify bottlenecks and optimize your applications. Understanding how to collect and analyze performance data is crucial for maintaining responsive applications under load.\n\nBy mastering deployment and configuration, you'll be able to deliver robust, secure applications that can be easily managed and monitored in production environments.",
+    "code": {
+      "example": "// appsettings.json\n{\n  \"Logging\": {\n    \"LogLevel\": {\n      \"Default\": \"Information\",\n      \"Microsoft.AspNetCore\": \"Warning\"\n    }\n  },\n  \"ConnectionStrings\": {\n    \"DefaultConnection\": \"Server=(localdb)\\\\mssqllocaldb;Database=MyApp;Trusted_Connection=true;\"\n  },\n  \"Jwt\": {\n    \"Key\": \"YOUR_SECRET_KEY_HERE\",\n    \"Issuer\": \"MyApp\",\n    \"Audience\": \"MyAppUsers\"\n  },\n  \"Email\": {\n    \"SmtpServer\": \"smtp.example.com\",\n    \"Port\": 587,\n    \"UseSsl\": true\n  }\n}\n\n// appsettings.Development.json\n{\n  \"Logging\": {\n    \"LogLevel\": {\n      \"Default\": \"Debug\",\n      \"System\": \"Information\",\n      \"Microsoft\": \"Information\"\n    }\n  },\n  \"ConnectionStrings\": {\n    \"DefaultConnection\": \"Server=(localdb)\\\\mssqllocaldb;Database=MyAppDev;Trusted_Connection=true;\"\n  }\n}\n\n// Program.cs - Configuration and Logging\nusing Microsoft.AspNetCore.Builder;\nusing Microsoft.Extensions.DependencyInjection;\nusing Microsoft.Extensions.Hosting;\nusing Microsoft.Extensions.Configuration;\nusing Microsoft.Extensions.Logging;\n\nvar builder = WebApplication.CreateBuilder(args);\n\n// Configure services with configuration\nbuilder.Services.AddControllers();\n\n// Add configuration options\nbuilder.Services.Configure<EmailSettings>(\n    builder.Configuration.GetSection(\"Email\"));\n    \n// Add logging\nbuilder.Logging.ClearProviders();\nbuilder.Logging.AddConsole();\nbuilder.Logging.AddDebug();\n\n// Add health checks\nbuilder.Services.AddHealthChecks()\n    .AddSqlServer(builder.Configuration.GetConnectionString(\"DefaultConnection\"))\n    .AddUrlGroup(new Uri(\"https://api.github.com\"), \"GitHub API\");\n\nvar app = builder.Build();\n\n// Configure pipeline\nif (app.Environment.IsDevelopment())\n{\n    app.UseDeveloperExceptionPage();\n}\nelse\n{\n    app.UseExceptionHandler(\"/Error\");\n    app.UseHsts();\n}\n\napp.UseRouting();\napp.MapControllers();\n\n// Map health checks endpoint\napp.MapHealthChecks(\"/health\");\n\napp.Run();\n\n// Models/EmailSettings.cs\npublic class EmailSettings\n{\n    public string SmtpServer { get; set; } = string.Empty;\n    public int Port { get; set; } = 587;\n    public bool UseSsl { get; set; } = true;\n    public string Username { get; set; } = string.Empty;\n    public string Password { get; set; } = string.Empty;\n}\n\n// Controllers/ConfigController.cs\n[ApiController]\n[Route(\"[controller]\")]\npublic class ConfigController : ControllerBase\n{\n    private readonly ILogger<ConfigController> _logger;\n    private readonly IConfiguration _configuration;\n    private readonly EmailSettings _emailSettings;\n    \n    public ConfigController(\n        ILogger<ConfigController> logger, \n        IConfiguration configuration,\n        IOptions<EmailSettings> emailSettings)\n    {\n        _logger = logger;\n        _configuration = configuration;\n        _emailSettings = emailSettings.Value;\n    }\n    \n    [HttpGet(\"connection-string\")]\n    public ActionResult<string> GetConnectionString()\n    {\n        _logger.LogInformation(\"Retrieving connection string\");\n        \n        // Never expose actual connection strings in real applications!\n        var connectionString = _configuration.GetConnectionString(\"DefaultConnection\");\n        return Ok(new { HasConnectionString = !string.IsNullOrEmpty(connectionString) });\n    }\n    \n    [HttpGet(\"email-settings\")]\n    public ActionResult<EmailSettings> GetEmailSettings()\n    {\n        _logger.LogDebug(\"Retrieving email settings\");\n        return Ok(_emailSettings);\n    }\n}",
+      "explanation": "This example demonstrates configuration management in .NET with environment-specific settings files, the Options pattern for strongly-typed configuration, and logging configuration. The Program.cs file shows how to configure services, logging, and health checks. The controller demonstrates how to inject configuration and options into services. Environment-specific configuration files allow different settings per environment while maintaining common configuration in the base file.",
+      "language": "csharp"
+    },
+    "pitfalls": [
+      {
+        "mistake": "Storing secrets in configuration files that are committed to source control",
+        "solution": "Use Secret Manager for development and Azure Key Vault or similar services for production",
+        "severity": "high"
+      },
+      {
+        "mistake": "Not configuring different log levels for different environments",
+        "solution": "Use Debug level for development and Information/Warn for production to control log volume",
+        "severity": "medium"
+      },
+      {
+        "mistake": "Hard-coding environment-specific values instead of using configuration",
+        "solution": "Use configuration providers to manage environment-specific settings",
+        "severity": "medium"
+      }
+    ],
+    "exercises": [
+      {
+        "title": "Configure a Production-Ready Application",
+        "description": "Set up configuration, logging, and deployment for a .NET application.",
+        "checkpoints": [
+          "Create environment-specific configuration files for development, staging, and production",
+          "Implement the Options pattern for strongly-typed configuration",
+          "Set up structured logging with appropriate log levels per environment",
+          "Configure health checks for critical application dependencies",
+          "Prepare deployment scripts for containerized deployment"
+        ]
+      }
+    ],
+    "next": [],
+    "estimatedMinutes": 75,
+    "difficulty": "Intermediate",
+    "tags": [
+      "Deployment",
+      "Configuration",
+      "Logging",
+      "Environment",
+      "Health Checks"
+    ],
+    "lastUpdated": "2025-10-09T10:00:00.000Z",
+    "version": "1.0.0"
+  }
+]

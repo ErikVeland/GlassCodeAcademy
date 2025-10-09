@@ -542,7 +542,7 @@ public class Query {
 public class Mutation {
     private readonly backend.Services.DataService _dataService = backend.Services.DataService.Instance;
 
-    public AnswerResult SubmitAnswer(int questionId, int answerIndex)
+    public AnswerResult SubmitAnswer(string questionId, int answerIndex)
     {
         return _dataService.ValidateAnswer(questionId, answerIndex);
     }
@@ -719,7 +719,7 @@ public class Mutation {
     }
     
     // Next.js answer submission
-    public AnswerResult SubmitNextJsAnswer(int questionId, int answerIndex)
+    public AnswerResult SubmitNextJsAnswer(string questionId, int answerIndex)
     {
         // If unlocked, accept any answer as correct for testing
         if (AppState.IsUnlocked)
@@ -734,7 +734,7 @@ public class Mutation {
     }
     
     // Performance Optimization answer submission
-    public AnswerResult SubmitPerformanceAnswer(int questionId, int answerIndex)
+    public AnswerResult SubmitPerformanceAnswer(string questionId, int answerIndex)
     {
         // If unlocked, accept any answer as correct for testing
         if (AppState.IsUnlocked)

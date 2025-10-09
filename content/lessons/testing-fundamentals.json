@@ -1,1 +1,493 @@
-[]
+[
+  {
+    "id": "testing-fundamentals-lesson-1",
+    "moduleSlug": "testing-fundamentals",
+    "title": "Introduction to Software Testing",
+    "order": 1,
+    "objectives": [
+      "Understand the fundamental principles and importance of software testing",
+      "Learn different types of software testing and when to apply them",
+      "Identify the role of testing in the software development lifecycle",
+      "Recognize common testing terminology and concepts"
+    ],
+    "intro": "Software testing is a critical practice in modern software development that ensures applications meet quality standards, function as expected, and provide value to users. Testing is not just about finding bugs; it's about building confidence in the software, reducing risks, and ensuring that applications behave correctly under various conditions.\n\nIn this lesson, you'll learn about the fundamental principles of software testing, including the testing pyramid which guides the distribution of different test types in a project. You'll understand why testing is essential for delivering reliable software and how it fits into different development methodologies like Agile and DevOps.\n\nYou'll explore the different levels of testing, from unit testing individual functions to integration testing component interactions, and system testing complete workflows. Each level serves a specific purpose and provides different types of feedback about the software's quality.\n\nThe lesson will also cover the psychology of testing, including the difference between developer and tester mindsets, and why independent testing is valuable. You'll learn about the principles of good testing, such as exhaustive testing being impossible, early testing being more effective, and defect clustering.\n\nBy mastering these fundamentals, you'll understand why testing is not a phase that happens at the end of development, but an ongoing activity that should be integrated throughout the entire development process.",
+    "code": {
+      "example": "// Example of a simple function that needs testing\npublic class Calculator\n{\n    public int Add(int a, int b)\n    {\n        return a + b;\n    }\n    \n    public double Divide(double dividend, double divisor)\n    {\n        if (divisor == 0)\n        {\n            throw new DivideByZeroException(\"Cannot divide by zero\");\n        }\n        return dividend / divisor;\n    }\n    \n    public bool IsEven(int number)\n    {\n        return number % 2 == 0;\n    }\n}\n\n// Without testing, how do we know this code works correctly?\n// What happens with negative numbers?\n// What about edge cases like int.MaxValue?\n\n// Example test scenarios that should be considered:\n// 1. Normal cases: Add(2, 3) should return 5\n// 2. Edge cases: Add(0, 0) should return 0\n// 3. Negative numbers: Add(-1, 1) should return 0\n// 4. Boundary values: Add(int.MaxValue, 0) should return int.MaxValue\n// 5. Error conditions: Divide(10, 0) should throw DivideByZeroException\n\n// Testing helps us verify all these scenarios work as expected\n// and gives us confidence when making changes to the code.",
+      "explanation": "This example shows a simple Calculator class with basic mathematical operations. Without testing, we can't be certain the code works correctly in all scenarios. The comments illustrate various test cases that should be considered, including normal cases, edge cases, and error conditions. Testing provides confidence that our code behaves correctly and helps prevent regressions when changes are made.",
+      "language": "csharp"
+    },
+    "pitfalls": [
+      {
+        "mistake": "Treating testing as a phase that happens only at the end of development",
+        "solution": "Integrate testing throughout the development process with practices like Test-Driven Development (TDD)",
+        "severity": "high"
+      },
+      {
+        "mistake": "Writing tests that are too broad or too narrow in scope",
+        "solution": "Follow the testing pyramid - many unit tests, fewer integration tests, and fewer end-to-end tests",
+        "severity": "medium"
+      },
+      {
+        "mistake": "Not considering edge cases and error conditions in tests",
+        "solution": "Think about boundary values, null inputs, and unexpected user behavior when writing tests",
+        "severity": "medium"
+      }
+    ],
+    "exercises": [
+      {
+        "title": "Identify Test Scenarios for a User Registration Function",
+        "description": "Analyze a user registration function and identify comprehensive test scenarios.",
+        "checkpoints": [
+          "List normal test cases for valid user input",
+          "Identify edge cases such as boundary values for input fields",
+          "Consider error conditions like duplicate usernames or invalid email formats",
+          "Think about security-related test scenarios",
+          "Prioritize test cases based on risk and likelihood"
+        ]
+      }
+    ],
+    "next": [
+      "testing-fundamentals-lesson-2"
+    ],
+    "estimatedMinutes": 45,
+    "difficulty": "Beginner",
+    "tags": [
+      "testing",
+      "fundamentals",
+      "principles",
+      "SDLC"
+    ],
+    "lastUpdated": "2025-10-09T10:00:00.000Z",
+    "version": "1.0.0"
+  },
+  {
+    "id": "testing-fundamentals-lesson-2",
+    "moduleSlug": "testing-fundamentals",
+    "title": "Unit Testing Principles",
+    "order": 2,
+    "objectives": [
+      "Master the fundamentals of unit testing and its benefits",
+      "Learn the FIRST principles for writing effective unit tests",
+      "Understand how to structure unit tests using the Arrange-Act-Assert pattern",
+      "Implement unit tests for isolated units of code"
+    ],
+    "intro": "Unit testing is the foundation of any comprehensive testing strategy. It involves testing individual units or components of software in isolation to ensure they function correctly. A unit is typically the smallest testable part of an application, such as a function, method, or class.\n\nEffective unit tests follow the FIRST principles: they should be Fast (run quickly), Independent (not depend on other tests), Repeatable (produce the same results), Self-validating (automatically determine pass/fail), and Thorough (cover important scenarios). These principles ensure that unit tests provide maximum value with minimal maintenance overhead.\n\nThe Arrange-Act-Assert (AAA) pattern provides a clear structure for organizing unit tests. In the Arrange phase, you set up the test conditions and inputs. In the Act phase, you execute the code under test. In the Assert phase, you verify the expected outcomes. This pattern makes tests easier to read, understand, and maintain.\n\nGood unit tests are isolated from external dependencies like databases, file systems, and network services. This isolation is achieved through techniques like dependency injection and the use of test doubles (mocks, stubs, fakes). Isolation ensures tests are fast, reliable, and focused on testing the specific unit of code.\n\nUnit testing provides several benefits including improved code quality, faster debugging, safer refactoring, and living documentation. Well-written unit tests serve as executable specifications that describe how code should behave, making it easier for new developers to understand the system.\n\nBy mastering unit testing principles, you'll be able to write tests that provide confidence in your code, catch bugs early, and make your software more maintainable.",
+    "code": {
+      "example": "// Service to be tested\npublic interface IEmailService\n{\n    bool SendEmail(string to, string subject, string body);\n}\n\npublic class UserService\n{\n    private readonly IEmailService _emailService;\n    \n    public UserService(IEmailService emailService)\n    {\n        _emailService = emailService;\n    }\n    \n    public bool RegisterUser(string email, string name)\n    {\n        // Validate inputs\n        if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(name))\n        {\n            return false;\n        }\n        \n        // Simulate user creation logic\n        var userCreated = CreateUserInDatabase(email, name);\n        \n        if (userCreated)\n        {\n            // Send welcome email\n            _emailService.SendEmail(email, \"Welcome!\", $\"Hello {name}, welcome to our service!\");\n        }\n        \n        return userCreated;\n    }\n    \n    private bool CreateUserInDatabase(string email, string name)\n    {\n        // Simulate database operation\n        return true; // Assume success for this example\n    }\n}\n\n// Unit test following FIRST principles and AAA pattern\nusing Xunit;\nusing Moq;\n\npublic class UserServiceTests\n{\n    [Fact]\n    public void RegisterUser_WithValidInputs_ReturnsTrue()\n    {\n        // Arrange\n        var mockEmailService = new Mock<IEmailService>();\n        mockEmailService.Setup(x => x.SendEmail(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()))\n                       .Returns(true);\n        \n        var userService = new UserService(mockEmailService.Object);\n        \n        // Act\n        var result = userService.RegisterUser(\"test@example.com\", \"John Doe\");\n        \n        // Assert\n        Assert.True(result);\n        mockEmailService.Verify(x => x.SendEmail(\"test@example.com\", \"Welcome!\", \"Hello John Doe, welcome to our service!\"), Times.Once);\n    }\n    \n    [Fact]\n    public void RegisterUser_WithNullEmail_ReturnsFalse()\n    {\n        // Arrange\n        var mockEmailService = new Mock<IEmailService>();\n        var userService = new UserService(mockEmailService.Object);\n        \n        // Act\n        var result = userService.RegisterUser(null, \"John Doe\");\n        \n        // Assert\n        Assert.False(result);\n        mockEmailService.Verify(x => x.SendEmail(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()), Times.Never);\n    }\n    \n    [Fact]\n    public void RegisterUser_WithEmptyName_ReturnsFalse()\n    {\n        // Arrange\n        var mockEmailService = new Mock<IEmailService>();\n        var userService = new UserService(mockEmailService.Object);\n        \n        // Act\n        var result = userService.RegisterUser(\"test@example.com\", \"\");\n        \n        // Assert\n        Assert.False(result);\n        mockEmailService.Verify(x => x.SendEmail(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()), Times.Never);\n    }\n}",
+      "explanation": "This example demonstrates unit testing principles with a UserService class that depends on an IEmailService. The tests follow the FIRST principles: they're Fast (complete quickly), Independent (can run in any order), Repeatable (same results each time), Self-validating (automatically check results), and Thorough (cover multiple scenarios). Each test follows the Arrange-Act-Assert pattern and uses Moq to create a mock email service, isolating the unit under test from external dependencies.",
+      "language": "csharp"
+    },
+    "pitfalls": [
+      {
+        "mistake": "Testing implementation details instead of behavior",
+        "solution": "Focus on testing what the code does rather than how it does it, testing public interfaces rather than private methods",
+        "severity": "high"
+      },
+      {
+        "mistake": "Creating tests that are slow or unreliable",
+        "solution": "Isolate tests from external dependencies, keep tests focused, and avoid unnecessary setup",
+        "severity": "high"
+      },
+      {
+        "mistake": "Not testing edge cases and error conditions",
+        "solution": "Test boundary values, null inputs, and failure scenarios in addition to happy path cases",
+        "severity": "medium"
+      }
+    ],
+    "exercises": [
+      {
+        "title": "Write Unit Tests for a Shopping Cart Service",
+        "description": "Create comprehensive unit tests for a shopping cart service following best practices.",
+        "checkpoints": [
+          "Implement tests for adding items to the cart",
+          "Test removing items from the cart",
+          "Verify cart total calculation with multiple items",
+          "Test edge cases like adding duplicate items",
+          "Handle error conditions such as removing non-existent items"
+        ]
+      }
+    ],
+    "next": [
+      "testing-fundamentals-lesson-3"
+    ],
+    "estimatedMinutes": 60,
+    "difficulty": "Intermediate",
+    "tags": [
+      "unit-testing",
+      "first-principles",
+      "aaa-pattern",
+      "isolation"
+    ],
+    "lastUpdated": "2025-10-09T10:00:00.000Z",
+    "version": "1.0.0"
+  },
+  {
+    "id": "testing-fundamentals-lesson-3",
+    "moduleSlug": "testing-fundamentals",
+    "title": "Test-Driven Development (TDD)",
+    "order": 3,
+    "objectives": [
+      "Understand the Test-Driven Development (TDD) methodology",
+      "Implement the Red-Green-Refactor cycle in practice",
+      "Write tests before implementation code",
+      "Refactor code confidently with comprehensive test coverage"
+    ],
+    "intro": "Test-Driven Development (TDD) is a software development approach where tests are written before the actual implementation code. This approach follows the Red-Green-Refactor cycle: first write a failing test (Red), then write the minimum code to make it pass (Green), and finally refactor the code while keeping all tests passing (Refactor).\n\nTDD provides several benefits including improved code design, better test coverage, reduced debugging time, and increased confidence when making changes. By writing tests first, developers are forced to think about the design and interface of their code before implementation, often leading to more modular and testable designs.\n\nThe Red-Green-Refactor cycle is the core of TDD practice. In the Red phase, you write a test that fails because the functionality doesn't exist yet. This ensures the test is actually testing something. In the Green phase, you write the minimum code necessary to make the test pass, focusing on functionality rather than perfection. In the Refactor phase, you improve the code's structure, performance, or readability while ensuring all tests continue to pass.\n\nTDD encourages developers to think in small increments, implementing functionality piece by piece rather than trying to build everything at once. This incremental approach leads to better design decisions and makes it easier to identify and fix problems early in the development process.\n\nCommon challenges with TDD include the initial learning curve, the discipline required to stick to the process, and knowing what to test. However, with practice, TDD becomes a natural part of the development workflow and leads to higher quality, more maintainable code.\n\nBy mastering TDD, you'll develop a more disciplined approach to software development, write better-designed code, and have greater confidence in the correctness of your implementations.",
+    "code": {
+      "example": "// Let's implement a StringCalculator class using TDD\n\n// Step 1: Write a failing test (Red)\n/*\npublic class StringCalculatorTests\n{\n    [Fact]\n    public void Add_EmptyString_ReturnsZero()\n    {\n        // Arrange\n        var calculator = new StringCalculator();\n        \n        // Act\n        var result = calculator.Add(\"\");\n        \n        // Assert\n        Assert.Equal(0, result);\n    }\n}\n*/\n\n// Step 2: Write minimum code to make test pass (Green)\n/*\npublic class StringCalculator\n{\n    public int Add(string numbers)\n    {\n        return 0; // Minimum implementation to pass the test\n    }\n}\n*/\n\n// Step 3: Add another test for a simple case\n/*\n[Fact]\npublic void Add_SingleNumber_ReturnsNumber()\n{\n    // Arrange\n    var calculator = new StringCalculator();\n    \n    // Act\n    var result = calculator.Add(\"1\");\n    \n    // Assert\n    Assert.Equal(1, result);\n}\n*/\n\n// Step 4: Update implementation to handle both cases\n/*\npublic class StringCalculator\n{\n    public int Add(string numbers)\n    {\n        if (string.IsNullOrEmpty(numbers))\n            return 0;\n            \n        return int.Parse(numbers);\n    }\n}\n*/\n\n// Step 5: Add test for two numbers\n/*\n[Fact]\npublic void Add_TwoNumbers_ReturnsSum()\n{\n    // Arrange\n    var calculator = new StringCalculator();\n    \n    // Act\n    var result = calculator.Add(\"1,2\");\n    \n    // Assert\n    Assert.Equal(3, result);\n}\n*/\n\n// Step 6: Update implementation\npublic class StringCalculator\n{\n    public int Add(string numbers)\n    {\n        if (string.IsNullOrEmpty(numbers))\n            return 0;\n            \n        var numberArray = numbers.Split(',');\n        var sum = 0;\n        \n        foreach (var number in numberArray)\n        {\n            sum += int.Parse(number);\n        }\n        \n        return sum;\n    }\n}\n\n// Continue this cycle for more complex requirements like handling newlines,\n// custom delimiters, negative numbers, etc.",
+      "explanation": "This example demonstrates the TDD process by implementing a StringCalculator class. We start with the simplest test case (empty string returns zero), write minimal code to pass it, then add more complex test cases one by one. Each new test forces us to improve the implementation. This incremental approach ensures we only implement what's needed and leads to well-tested, well-designed code.",
+      "language": "csharp"
+    },
+    "pitfalls": [
+      {
+        "mistake": "Writing tests that are too complex or try to test too much at once",
+        "solution": "Start with simple test cases and gradually increase complexity, following the 'simplest thing that could possibly work' principle",
+        "severity": "high"
+      },
+      {
+        "mistake": "Skipping the refactoring step or refactoring without tests",
+        "solution": "Always refactor with confidence by keeping all tests passing, and never refactor without comprehensive test coverage",
+        "severity": "high"
+      },
+      {
+        "mistake": "Writing implementation code before tests",
+        "solution": "Stick to the discipline of writing tests first, even when it feels slower initially",
+        "severity": "medium"
+      }
+    ],
+    "exercises": [
+      {
+        "title": "Implement a Password Validator Using TDD",
+        "description": "Create a password validation service using strict TDD methodology.",
+        "checkpoints": [
+          "Start with the simplest test case (empty password) and make it pass",
+          "Gradually add more complex requirements one by one",
+          "Follow the Red-Green-Refactor cycle for each new requirement",
+          "Refactor the implementation as needed while keeping all tests green",
+          "Handle edge cases like null inputs and very long passwords"
+        ]
+      }
+    ],
+    "next": [
+      "testing-fundamentals-lesson-4"
+    ],
+    "estimatedMinutes": 75,
+    "difficulty": "Intermediate",
+    "tags": [
+      "tdd",
+      "red-green-refactor",
+      "test-first",
+      "design"
+    ],
+    "lastUpdated": "2025-10-09T10:00:00.000Z",
+    "version": "1.0.0"
+  },
+  {
+    "id": "testing-fundamentals-lesson-4",
+    "moduleSlug": "testing-fundamentals",
+    "title": "Mocking and Test Doubles",
+    "order": 4,
+    "objectives": [
+      "Understand different types of test doubles: mocks, stubs, fakes, and spies",
+      "Implement mocking frameworks to isolate units of code",
+      "Create effective test doubles that accurately simulate dependencies",
+      "Verify interactions between objects using mocks"
+    ],
+    "intro": "Mocking is a technique used in unit testing to isolate the unit of code under test from its dependencies. Test doubles are objects that replace real dependencies in tests, allowing you to control their behavior and verify interactions. Understanding the different types of test doubles and when to use each is crucial for effective unit testing.\n\nThere are several types of test doubles: Stubs provide canned answers to calls made during the test, usually not responding at all to anything outside what's programmed for the test. Mocks are stubs with added behavior verification - they know what methods should be called and with what arguments, and can verify this during the test. Fakes are working implementations of dependencies that aren't suitable for production (like an in-memory database). Spies record information about method calls for later verification.\n\nMocking frameworks like Moq, NSubstitute, and FakeItEasy provide powerful features for creating test doubles with minimal code. These frameworks allow you to set up return values, throw exceptions, verify method calls, and configure complex behavior scenarios. They also provide clear error messages when tests fail, making debugging easier.\n\nEffective mocking requires understanding what to mock and what not to mock. Generally, you should mock external dependencies like databases, web services, and file systems, but not simple data structures or utility classes. It's also important to avoid over-mocking, which can lead to brittle tests that are tightly coupled to implementation details.\n\nBest practices for mocking include mocking only what you own (preferably), keeping mocks simple, verifying behavior rather than implementation, and isolating tests to ensure they're independent and repeatable. Good mocks make tests faster, more reliable, and easier to maintain.\n\nBy mastering mocking techniques, you'll be able to write unit tests that are fast, reliable, and focused on testing the specific behavior of your code rather than its dependencies.",
+    "code": {
+      "example": "// Different types of test doubles example\n\n// Interface for real dependency\npublic interface IUserRepository\n{\n    User GetUserById(int id);\n    void SaveUser(User user);\n    List<User> GetAllUsers();\n}\n\n// Real implementation (what we'd use in production)\npublic class DatabaseUserRepository : IUserRepository\n{\n    public User GetUserById(int id)\n    {\n        // Connect to database and retrieve user\n        // This is slow and requires a database connection\n        throw new NotImplementedException();\n    }\n    \n    public void SaveUser(User user)\n    {\n        // Save user to database\n        throw new NotImplementedException();\n    }\n    \n    public List<User> GetAllUsers()\n    {\n        // Retrieve all users from database\n        throw new NotImplementedException();\n    }\n}\n\n// Fake implementation (test double)\npublic class InMemoryUserRepository : IUserRepository\n{\n    private readonly Dictionary<int, User> _users = new Dictionary<int, User>();\n    \n    public User GetUserById(int id)\n    {\n        return _users.ContainsKey(id) ? _users[id] : null;\n    }\n    \n    public void SaveUser(User user)\n    {\n        _users[user.Id] = user;\n    }\n    \n    public List<User> GetAllUsers()\n    {\n        return _users.Values.ToList();\n    }\n}\n\n// Service under test\npublic class UserService\n{\n    private readonly IUserRepository _userRepository;\n    \n    public UserService(IUserRepository userRepository)\n    {\n        _userRepository = userRepository;\n    }\n    \n    public User GetUserProfile(int userId)\n    {\n        var user = _userRepository.GetUserById(userId);\n        if (user == null)\n        {\n            throw new UserNotFoundException($\"User with ID {userId} not found\");\n        }\n        return user;\n    }\n    \n    public void RegisterUser(User user)\n    {\n        // Check if user already exists\n        var existingUser = _userRepository.GetUserById(user.Id);\n        if (existingUser != null)\n        {\n            throw new DuplicateUserException($\"User with ID {user.Id} already exists\");\n        }\n        \n        _userRepository.SaveUser(user);\n    }\n}\n\n// Unit tests using different test doubles\nusing Xunit;\nusing Moq;\n\npublic class UserServiceTests\n{\n    [Fact]\n    public void GetUserProfile_ExistingUser_ReturnsUser()\n    {\n        // Using a mock (test double)\n        var mockRepository = new Mock<IUserRepository>();\n        var expectedUser = new User { Id = 1, Name = \"John Doe\" };\n        mockRepository.Setup(x => x.GetUserById(1)).Returns(expectedUser);\n        \n        var userService = new UserService(mockRepository.Object);\n        \n        var result = userService.GetUserProfile(1);\n        \n        Assert.Equal(expectedUser, result);\n        mockRepository.Verify(x => x.GetUserById(1), Times.Once);\n    }\n    \n    [Fact]\n    public void GetUserProfile_NonExistingUser_ThrowsException()\n    {\n        // Using a stub (test double)\n        var mockRepository = new Mock<IUserRepository>();\n        mockRepository.Setup(x => x.GetUserById(It.IsAny<int>())).Returns((User)null);\n        \n        var userService = new UserService(mockRepository.Object);\n        \n        Assert.Throws<UserNotFoundException>(() => userService.GetUserProfile(999));\n    }\n    \n    [Fact]\n    public void RegisterUser_NewUser_SavesUser()\n    {\n        // Using a fake (test double)\n        var fakeRepository = new InMemoryUserRepository();\n        var userService = new UserService(fakeRepository);\n        var newUser = new User { Id = 1, Name = \"John Doe\" };\n        \n        userService.RegisterUser(newUser);\n        \n        var savedUser = fakeRepository.GetUserById(1);\n        Assert.NotNull(savedUser);\n        Assert.Equal(\"John Doe\", savedUser.Name);\n    }\n}",
+      "explanation": "This example demonstrates different types of test doubles. The DatabaseUserRepository is a real implementation that would connect to a database. The InMemoryUserRepository is a fake - a working implementation suitable for testing. The tests show how to use mocks (with Moq) for verification and stubs for providing canned responses. Each type of test double serves a different purpose and is appropriate for different testing scenarios.",
+      "language": "csharp"
+    },
+    "pitfalls": [
+      {
+        "mistake": "Over-mocking and testing implementation details",
+        "solution": "Mock only external dependencies and focus on testing behavior rather than implementation details",
+        "severity": "high"
+      },
+      {
+        "mistake": "Creating complex mocks that are hard to maintain",
+        "solution": "Keep mocks simple and focused, and prefer fakes for complex scenarios",
+        "severity": "medium"
+      },
+      {
+        "mistake": "Not verifying mock expectations",
+        "solution": "Always verify that expected method calls were made when using mocks for behavior verification",
+        "severity": "medium"
+      }
+    ],
+    "exercises": [
+      {
+        "title": "Create Test Doubles for an Email Notification Service",
+        "description": "Implement different types of test doubles for an email service dependency.",
+        "checkpoints": [
+          "Create a stub that returns predefined responses for email sending",
+          "Implement a mock that verifies email sending interactions",
+          "Build a fake email service that stores sent emails in memory",
+          "Write tests using each type of test double",
+          "Compare the advantages and disadvantages of each approach"
+        ]
+      }
+    ],
+    "next": [
+      "testing-fundamentals-lesson-5"
+    ],
+    "estimatedMinutes": 90,
+    "difficulty": "Intermediate",
+    "tags": [
+      "mocking",
+      "test-doubles",
+      "stubs",
+      "mocks",
+      "fakes"
+    ],
+    "lastUpdated": "2025-10-09T10:00:00.000Z",
+    "version": "1.0.0"
+  },
+  {
+    "id": "testing-fundamentals-lesson-5",
+    "moduleSlug": "testing-fundamentals",
+    "title": "Integration Testing",
+    "order": 5,
+    "objectives": [
+      "Understand the purpose and scope of integration testing",
+      "Implement integration tests that verify component interactions",
+      "Configure test environments for integration testing",
+      "Handle test data and external dependencies in integration tests"
+    ],
+    "intro": "Integration testing verifies that different modules or services used by your application work well together. Unlike unit tests that isolate individual components, integration tests check the interfaces between components and the interactions with external systems like databases, web services, and file systems.\n\nIntegration tests occupy a middle ground in the testing pyramid between fast, isolated unit tests and slow, broad end-to-end tests. They're more comprehensive than unit tests but faster and more focused than end-to-end tests. Integration tests are particularly valuable for catching issues that unit tests might miss, such as incorrect database queries, misconfigured services, or broken API contracts.\n\nEffective integration testing requires careful test environment setup. This often involves using test databases, mock services, or containerized environments that closely resemble production. Test data management is crucial - you need consistent, repeatable data sets that allow tests to run reliably without interfering with each other.\n\nConfiguration management is another important aspect of integration testing. Tests should be able to run in different environments (development, CI, staging) without requiring manual configuration changes. This is typically achieved through environment variables, configuration files, or dependency injection.\n\nBest practices for integration testing include keeping tests focused on specific integration points, using appropriate test data that covers edge cases, cleaning up test data after tests run, and running integration tests in a consistent environment. It's also important to strike the right balance between test coverage and test execution time.\n\nCommon challenges in integration testing include test flakiness due to external dependencies, slow test execution, and difficulty in setting up and maintaining test environments. These challenges can be addressed through proper test design, infrastructure as code, and continuous integration practices.\n\nBy mastering integration testing, you'll be able to catch integration issues early, verify that your application works correctly with external systems, and build confidence in your application's overall functionality.",
+    "code": {
+      "example": "// Example of integration testing with a database\n\n// Entity class\npublic class Product\n{\n    public int Id { get; set; }\n    public string Name { get; set; }\n    public decimal Price { get; set; }\n    public DateTime CreatedAt { get; set; }\n}\n\n// Repository interface\npublic interface IProductRepository\n{\n    Task<Product> GetProductByIdAsync(int id);\n    Task<List<Product>> GetAllProductsAsync();\n    Task<Product> CreateProductAsync(Product product);\n    Task<bool> UpdateProductAsync(Product product);\n    Task<bool> DeleteProductAsync(int id);\n}\n\n// Implementation using Entity Framework\npublic class ProductRepository : IProductRepository\n{\n    private readonly ProductContext _context;\n    \n    public ProductRepository(ProductContext context)\n    {\n        _context = context;\n    }\n    \n    public async Task<Product> GetProductByIdAsync(int id)\n    {\n        return await _context.Products.FindAsync(id);\n    }\n    \n    public async Task<List<Product>> GetAllProductsAsync()\n    {\n        return await _context.Products.ToListAsync();\n    }\n    \n    public async Task<Product> CreateProductAsync(Product product)\n    {\n        _context.Products.Add(product);\n        await _context.SaveChangesAsync();\n        return product;\n    }\n    \n    public async Task<bool> UpdateProductAsync(Product product)\n    {\n        _context.Products.Update(product);\n        var result = await _context.SaveChangesAsync();\n        return result > 0;\n    }\n    \n    public async Task<bool> DeleteProductAsync(int id)\n    {\n        var product = await _context.Products.FindAsync(id);\n        if (product == null) return false;\n        \n        _context.Products.Remove(product);\n        var result = await _context.SaveChangesAsync();\n        return result > 0;\n    }\n}\n\n// Integration test using xUnit and in-memory database\nusing Xunit;\nusing Microsoft.EntityFrameworkCore;\nusing System.Threading.Tasks;\n\npublic class ProductRepositoryTests : IDisposable\n{\n    private readonly ProductContext _context;\n    private readonly ProductRepository _repository;\n    \n    public ProductRepositoryTests()\n    {\n        // Set up in-memory database for testing\n        var options = new DbContextOptionsBuilder<ProductContext>()\n            .UseInMemoryDatabase(databaseName: Guid.NewGuid().ToString())\n            .Options;\n            \n        _context = new ProductContext(options);\n        _repository = new ProductRepository(_context);\n        \n        // Seed test data\n        _context.Products.AddRange(\n            new Product { Id = 1, Name = \"Laptop\", Price = 999.99m, CreatedAt = DateTime.UtcNow },\n            new Product { Id = 2, Name = \"Mouse\", Price = 29.99m, CreatedAt = DateTime.UtcNow }\n        );\n        _context.SaveChanges();\n    }\n    \n    [Fact]\n    public async Task GetProductByIdAsync_ExistingProduct_ReturnsProduct()\n    {\n        // Act\n        var result = await _repository.GetProductByIdAsync(1);\n        \n        // Assert\n        Assert.NotNull(result);\n        Assert.Equal(\"Laptop\", result.Name);\n        Assert.Equal(999.99m, result.Price);\n    }\n    \n    [Fact]\n    public async Task CreateProductAsync_ValidProduct_AddsToDatabase()\n    {\n        // Arrange\n        var newProduct = new Product \n        { \n            Name = \"Keyboard\", \n            Price = 79.99m, \n            CreatedAt = DateTime.UtcNow \n        };\n        \n        // Act\n        var result = await _repository.CreateProductAsync(newProduct);\n        \n        // Assert\n        Assert.NotNull(result);\n        Assert.True(result.Id > 0);\n        \n        // Verify it was actually saved\n        var savedProduct = await _context.Products.FindAsync(result.Id);\n        Assert.NotNull(savedProduct);\n        Assert.Equal(\"Keyboard\", savedProduct.Name);\n    }\n    \n    [Fact]\n    public async Task UpdateProductAsync_ExistingProduct_UpdatesDatabase()\n    {\n        // Arrange\n        var product = await _context.Products.FindAsync(1);\n        product.Price = 899.99m;\n        \n        // Act\n        var result = await _repository.UpdateProductAsync(product);\n        \n        // Assert\n        Assert.True(result);\n        \n        // Verify the update was persisted\n        var updatedProduct = await _context.Products.FindAsync(1);\n        Assert.Equal(899.99m, updatedProduct.Price);\n    }\n    \n    public void Dispose()\n    {\n        _context?.Dispose();\n    }\n}",
+      "explanation": "This example demonstrates integration testing with a database using Entity Framework. The test uses an in-memory database to avoid requiring a real database connection while still testing the actual EF integration. The test class implements IDisposable to clean up resources after tests run. Each test verifies that the repository methods work correctly with the database, covering CRUD operations. This approach provides confidence that the data access layer works correctly without the complexity of managing a separate test database.",
+      "language": "csharp"
+    },
+    "pitfalls": [
+      {
+        "mistake": "Making integration tests too slow or unreliable",
+        "solution": "Use in-memory databases or mock services where appropriate, and ensure tests are independent and repeatable",
+        "severity": "high"
+      },
+      {
+        "mistake": "Not managing test data properly",
+        "solution": "Use transactions that can be rolled back, or clean up test data after each test to ensure tests don't interfere with each other",
+        "severity": "high"
+      },
+      {
+        "mistake": "Testing too much in a single integration test",
+        "solution": "Keep integration tests focused on specific integration points rather than trying to test entire workflows",
+        "severity": "medium"
+      }
+    ],
+    "exercises": [
+      {
+        "title": "Create Integration Tests for a REST API Client",
+        "description": "Implement integration tests for a service that consumes a REST API.",
+        "checkpoints": [
+          "Set up a test environment with a mock HTTP server",
+          "Test successful API calls and response handling",
+          "Verify error handling for different HTTP status codes",
+          "Test timeout and network failure scenarios",
+          "Ensure tests are isolated and don't depend on external services"
+        ]
+      }
+    ],
+    "next": [
+      "testing-fundamentals-lesson-6"
+    ],
+    "estimatedMinutes": 90,
+    "difficulty": "Intermediate",
+    "tags": [
+      "integration-testing",
+      "databases",
+      "external-dependencies",
+      "test-environments"
+    ],
+    "lastUpdated": "2025-10-09T10:00:00.000Z",
+    "version": "1.0.0"
+  },
+  {
+    "id": "testing-fundamentals-lesson-6",
+    "moduleSlug": "testing-fundamentals",
+    "title": "Testing Frameworks and Tools",
+    "order": 6,
+    "objectives": [
+      "Compare popular testing frameworks for different programming languages",
+      "Configure and use xUnit, NUnit, and MSTest for .NET testing",
+      "Implement test runners and continuous integration with testing",
+      "Utilize advanced testing features like parameterized tests and fixtures"
+    ],
+    "intro": "Testing frameworks provide the foundation for writing and executing tests in modern software development. Different frameworks offer various features, syntax styles, and extensibility options that can significantly impact your testing experience and productivity.\n\nIn the .NET ecosystem, xUnit, NUnit, and MSTest are the three primary testing frameworks. xUnit is the most modern and is designed specifically for .NET, offering features like parameterized tests, test fixtures, and extensibility. NUnit is a mature framework with a rich feature set and extensive documentation. MSTest is Microsoft's official testing framework, well-integrated with Visual Studio and Azure DevOps.\n\nEach framework has its strengths: xUnit emphasizes test isolation and provides clean, modern syntax; NUnit offers extensive assertion capabilities and flexible test organization; MSTest provides excellent IDE integration and is well-suited for enterprise environments. Choosing the right framework depends on your team's preferences, project requirements, and existing tooling.\n\nModern testing frameworks provide advanced features that make testing more efficient and expressive. Parameterized tests allow you to run the same test logic with different input data, reducing code duplication. Test fixtures enable setup and teardown logic that runs before and after tests. Assertion libraries provide fluent APIs for expressing test expectations clearly.\n\nTest runners are tools that discover, execute, and report on tests. They can run tests in parallel, provide detailed reporting, and integrate with continuous integration systems. Popular test runners include the built-in runners for each framework, ReSharper, and command-line tools like dotnet test.\n\nContinuous integration (CI) systems play a crucial role in automated testing. They automatically run tests when code changes are committed, providing rapid feedback to developers. Configuring CI to run tests effectively requires understanding how to set up test environments, manage test data, and interpret test results.\n\nBy mastering testing frameworks and tools, you'll be able to write more effective tests, automate your testing process, and integrate testing seamlessly into your development workflow.",
+    "code": {
+      "example": "// Example showing different .NET testing frameworks\n\n// xUnit example\nusing Xunit;\nusing System.Collections.Generic;\n\npublic class CalculatorTests\n{\n    private readonly Calculator _calculator;\n    \n    public CalculatorTests()\n    {\n        _calculator = new Calculator();\n    }\n    \n    // Simple test\n    [Fact]\n    public void Add_WhenGivenTwoNumbers_ReturnsTheirSum()\n    {\n        var result = _calculator.Add(2, 3);\n        Assert.Equal(5, result);\n    }\n    \n    // Parameterized test\n    [Theory]\n    [InlineData(1, 2, 3)]\n    [InlineData(-1, 1, 0)]\n    [InlineData(0, 0, 0)]\n    public void Add_WithVariousInputs_ReturnsCorrectResult(int a, int b, int expected)\n    {\n        var result = _calculator.Add(a, b);\n        Assert.Equal(expected, result);\n    }\n    \n    // Async test\n    [Fact]\n    public async Task DivideAsync_WhenDivisorIsZero_ThrowsException()\n    {\n        await Assert.ThrowsAsync<DivideByZeroException>(() => \n            _calculator.DivideAsync(10, 0));\n    }\n}\n\n// NUnit example\nusing NUnit.Framework;\nusing System.Collections.Generic;\n\n[TestFixture]\npublic class CalculatorNUnitTests\n{\n    private Calculator _calculator;\n    \n    [SetUp]\n    public void Setup()\n    {\n        _calculator = new Calculator();\n    }\n    \n    [Test]\n    public void Add_WhenGivenTwoNumbers_ReturnsTheirSum()\n    {\n        var result = _calculator.Add(2, 3);\n        Assert.That(result, Is.EqualTo(5));\n    }\n    \n    [TestCase(1, 2, 3)]\n    [TestCase(-1, 1, 0)]\n    [TestCase(0, 0, 0)]\n    public void Add_WithVariousInputs_ReturnsCorrectResult(int a, int b, int expected)\n    {\n        var result = _calculator.Add(a, b);\n        Assert.That(result, Is.EqualTo(expected));\n    }\n    \n    [Test]\n    public void Divide_WhenDivisorIsZero_ThrowsException()\n    {\n        var ex = Assert.Throws<DivideByZeroException>(() => \n            _calculator.Divide(10, 0));\n        Assert.That(ex.Message, Does.Contain(\"Cannot divide by zero\"));\n    }\n}\n\n// MSTest example\nusing Microsoft.VisualStudio.TestTools.UnitTesting;\nusing System.Collections.Generic;\n\n[TestClass]\npublic class CalculatorMSTestTests\n{\n    private Calculator _calculator;\n    \n    [TestInitialize]\n    public void Setup()\n    {\n        _calculator = new Calculator();\n    }\n    \n    [TestMethod]\n    public void Add_WhenGivenTwoNumbers_ReturnsTheirSum()\n    {\n        var result = _calculator.Add(2, 3);\n        Assert.AreEqual(5, result);\n    }\n    \n    [DataTestMethod]\n    [DataRow(1, 2, 3)]\n    [DataRow(-1, 1, 0)]\n    [DataRow(0, 0, 0)]\n    public void Add_WithVariousInputs_ReturnsCorrectResult(int a, int b, int expected)\n    {\n        var result = _calculator.Add(a, b);\n        Assert.AreEqual(expected, result);\n    }\n    \n    [TestMethod]\n    [ExpectedException(typeof(DivideByZeroException))]\n    public void Divide_WhenDivisorIsZero_ThrowsException()\n    {\n        _calculator.Divide(10, 0);\n    }\n}",
+      "explanation": "This example demonstrates the syntax differences between the three major .NET testing frameworks. xUnit uses [Fact] and [Theory] attributes with Assert methods. NUnit uses [TestFixture], [Test], and [TestCase] with a fluent assertion syntax. MSTest uses [TestClass], [TestMethod], and [DataTestMethod] with Assert methods. Each framework has its own approach to test organization, parameterized tests, and assertion syntax, but they all serve the same fundamental purpose of enabling automated testing.",
+      "language": "csharp"
+    },
+    "pitfalls": [
+      {
+        "mistake": "Choosing a framework based only on popularity rather than suitability for your project",
+        "solution": "Evaluate frameworks based on your team's needs, project requirements, and existing tooling rather than just popularity",
+        "severity": "medium"
+      },
+      {
+        "mistake": "Not leveraging advanced framework features like parameterized tests",
+        "solution": "Use parameterized tests, test fixtures, and other advanced features to reduce code duplication and improve test coverage",
+        "severity": "medium"
+      },
+      {
+        "mistake": "Ignoring test runner configuration and performance",
+        "solution": "Configure test runners for parallel execution and proper reporting, and monitor test execution performance",
+        "severity": "medium"
+      }
+    ],
+    "exercises": [
+      {
+        "title": "Compare Testing Frameworks for a New Project",
+        "description": "Evaluate different testing frameworks and set up a testing environment.",
+        "checkpoints": [
+          "Create simple tests using xUnit, NUnit, and MSTest",
+          "Compare syntax, features, and ease of use",
+          "Configure test runners and CI integration",
+          "Implement parameterized tests and test fixtures",
+          "Document recommendations for framework selection"
+        ]
+      }
+    ],
+    "next": [
+      "testing-fundamentals-lesson-7"
+    ],
+    "estimatedMinutes": 75,
+    "difficulty": "Intermediate",
+    "tags": [
+      "testing-frameworks",
+      "xunit",
+      "nunit",
+      "mstest",
+      "test-runners"
+    ],
+    "lastUpdated": "2025-10-09T10:00:00.000Z",
+    "version": "1.0.0"
+  },
+  {
+    "id": "testing-fundamentals-lesson-7",
+    "moduleSlug": "testing-fundamentals",
+    "title": "Code Coverage and Quality Metrics",
+    "order": 7,
+    "objectives": [
+      "Understand code coverage metrics and their significance",
+      "Measure and analyze code coverage in .NET applications",
+      "Interpret coverage reports to identify untested code",
+      "Establish quality gates based on coverage metrics"
+    ],
+    "intro": "Code coverage is a metric that measures the degree to which the source code of a program is executed when a test suite runs. It's expressed as a percentage and indicates how much of your code is being tested. While high coverage doesn't guarantee good tests, low coverage is often a red flag indicating insufficient testing.\n\nThere are several types of code coverage metrics, each measuring different aspects of code execution. Statement coverage measures the percentage of executable statements that have been executed. Branch coverage measures the percentage of decision points (if statements, loops) that have been taken. Function coverage measures the percentage of functions that have been called. Line coverage is similar to statement coverage but measures lines of code.\n\nIn .NET, tools like Coverlet, Visual Studio Code Coverage, and AltCover can measure code coverage during test execution. These tools instrument the code to track which parts are executed by tests, then generate detailed reports showing coverage statistics and highlighting uncovered code.\n\nInterpreting coverage reports requires understanding that 100% coverage doesn't mean bug-free code. Tests might execute all code paths but still have incorrect assertions or miss important edge cases. Conversely, lower coverage might be acceptable for certain types of code like simple data transfer objects or auto-generated code.\n\nEffective use of code coverage involves setting appropriate targets based on project requirements and risk tolerance. Many teams aim for 80% coverage as a reasonable balance between thorough testing and practicality. Critical business logic might require higher coverage, while utility code might have lower requirements.\n\nQuality gates can be established in continuous integration pipelines to enforce coverage requirements. If coverage drops below a threshold, the build can fail, preventing poorly tested code from being merged. However, it's important to use coverage as a guide rather than a strict gate to avoid gaming the metric.\n\nBy mastering code coverage and quality metrics, you'll be able to measure the effectiveness of your test suite, identify areas that need more testing, and make data-driven decisions about code quality.",
+    "code": {
+      "example": "// Example code to measure coverage\n\npublic class BankAccount\n{\n    public decimal Balance { get; private set; }\n    public string AccountNumber { get; }\n    \n    public BankAccount(string accountNumber, decimal initialBalance = 0)\n    {\n        AccountNumber = accountNumber;\n        Balance = initialBalance;\n    }\n    \n    public void Deposit(decimal amount)\n    {\n        if (amount <= 0)\n        {\n            throw new ArgumentException(\"Deposit amount must be positive\");\n        }\n        \n        Balance += amount;\n    }\n    \n    public void Withdraw(decimal amount)\n    {\n        if (amount <= 0)\n        {\n            throw new ArgumentException(\"Withdrawal amount must be positive\");\n        }\n        \n        if (amount > Balance)\n        {\n            throw new InvalidOperationException(\"Insufficient funds\");\n        }\n        \n        Balance -= amount;\n    }\n    \n    public bool TransferTo(BankAccount targetAccount, decimal amount)\n    {\n        if (targetAccount == null)\n        {\n            throw new ArgumentNullException(nameof(targetAccount));\n        }\n        \n        // This is a business rule - can't transfer to same account\n        if (targetAccount.AccountNumber == AccountNumber)\n        {\n            return false;\n        }\n        \n        Withdraw(amount);\n        targetAccount.Deposit(amount);\n        return true;\n    }\n}\n\n// Tests that provide good coverage\nusing Xunit;\n\npublic class BankAccountTests\n{\n    [Fact]\n    public void Deposit_WithPositiveAmount_IncreasesBalance()\n    {\n        var account = new BankAccount(\"12345\", 100);\n        \n        account.Deposit(50);\n        \n        Assert.Equal(150, account.Balance);\n    }\n    \n    [Fact]\n    public void Deposit_WithZeroAmount_ThrowsException()\n    {\n        var account = new BankAccount(\"12345\");\n        \n        Assert.Throws<ArgumentException>(() => account.Deposit(0));\n    }\n    \n    [Fact]\n    public void Deposit_WithNegativeAmount_ThrowsException()\n    {\n        var account = new BankAccount(\"12345\");\n        \n        Assert.Throws<ArgumentException>(() => account.Deposit(-10));\n    }\n    \n    [Fact]\n    public void Withdraw_WithSufficientFunds_DecreasesBalance()\n    {\n        var account = new BankAccount(\"12345\", 100);\n        \n        account.Withdraw(30);\n        \n        Assert.Equal(70, account.Balance);\n    }\n    \n    [Fact]\n    public void Withdraw_WithInsufficientFunds_ThrowsException()\n    {\n        var account = new BankAccount(\"12345\", 50);\n        \n        Assert.Throws<InvalidOperationException>(() => account.Withdraw(100));\n    }\n    \n    [Fact]\n    public void TransferTo_ValidAccount_TransfersFunds()\n    {\n        var sourceAccount = new BankAccount(\"12345\", 100);\n        var targetAccount = new BankAccount(\"67890\", 50);\n        \n        var result = sourceAccount.TransferTo(targetAccount, 30);\n        \n        Assert.True(result);\n        Assert.Equal(70, sourceAccount.Balance);\n        Assert.Equal(80, targetAccount.Balance);\n    }\n    \n    [Fact]\n    public void TransferTo_SameAccount_ReturnsFalse()\n    {\n        var account = new BankAccount(\"12345\", 100);\n        \n        var result = account.TransferTo(account, 30);\n        \n        Assert.False(result);\n        Assert.Equal(100, account.Balance); // Balance should be unchanged\n    }\n    \n    [Fact]\n    public void TransferTo_NullAccount_ThrowsException()\n    {\n        var account = new BankAccount(\"12345\", 100);\n        \n        Assert.Throws<ArgumentNullException>(() => account.TransferTo(null, 30));\n    }\n}",
+      "explanation": "This example shows a BankAccount class with several methods that have different code paths. The tests provide comprehensive coverage by testing normal cases, edge cases, and error conditions. Each method has tests for its main functionality as well as tests for its validation logic. This approach ensures that all branches of the code are executed during testing, leading to high code coverage. Tools like Coverlet can measure the actual coverage percentage and highlight any lines that aren't executed by tests.",
+      "language": "csharp"
+    },
+    "pitfalls": [
+      {
+        "mistake": "Focusing only on coverage percentage rather than test quality",
+        "solution": "Use coverage as a guide to identify untested code, but prioritize writing meaningful tests over achieving arbitrary coverage targets",
+        "severity": "high"
+      },
+      {
+        "mistake": "Not considering the context when setting coverage targets",
+        "solution": "Set different coverage requirements for different parts of the codebase based on risk and complexity",
+        "severity": "medium"
+      },
+      {
+        "mistake": "Ignoring uncovered code that should be tested",
+        "solution": "Regularly review coverage reports to identify and address gaps in test coverage",
+        "severity": "medium"
+      }
+    ],
+    "exercises": [
+      {
+        "title": "Measure and Improve Code Coverage for a Service Class",
+        "description": "Analyze code coverage for an existing service and improve test coverage.",
+        "checkpoints": [
+          "Run code coverage analysis on an existing service class",
+          "Identify uncovered code paths and edge cases",
+          "Write additional tests to improve coverage",
+          "Set up coverage reporting in a CI pipeline",
+          "Document coverage requirements for different types of code"
+        ]
+      }
+    ],
+    "next": [
+      "testing-fundamentals-lesson-8"
+    ],
+    "estimatedMinutes": 75,
+    "difficulty": "Intermediate",
+    "tags": [
+      "code-coverage",
+      "metrics",
+      "coverlet",
+      "quality-gates",
+      "analysis"
+    ],
+    "lastUpdated": "2025-10-09T10:00:00.000Z",
+    "version": "1.0.0"
+  },
+  {
+    "id": "testing-fundamentals-lesson-8",
+    "moduleSlug": "testing-fundamentals",
+    "title": "Behavior-Driven Development (BDD)",
+    "order": 8,
+    "objectives": [
+      "Understand the principles and benefits of Behavior-Driven Development",
+      "Write executable specifications using Gherkin syntax",
+      "Implement BDD frameworks like SpecFlow or BDDfy",
+      "Collaborate effectively with stakeholders using BDD practices"
+    ],
+    "intro": "Behavior-Driven Development (BDD) is an agile software development methodology that encourages collaboration between developers, QA, and non-technical stakeholders in a software project. BDD extends Test-Driven Development by writing tests in a natural language that non-programmers can read and understand.\n\nThe core principle of BDD is to focus on the behavior of the system from the user's perspective rather than implementation details. This approach helps ensure that everyone involved in the project has a shared understanding of what the software should do. BDD bridges the communication gap between technical and non-technical team members.\n\nGherkin is the language used to write BDD specifications. It uses a structured format with keywords like Feature, Scenario, Given, When, and Then to describe system behavior in a readable way. Feature files contain high-level descriptions of system capabilities, while scenarios describe specific examples of how the system should behave.\n\nBDD frameworks like SpecFlow (for .NET), Cucumber (for Java/Ruby), and Behave (for Python) allow these natural language specifications to be executed as automated tests. These frameworks parse Gherkin feature files and map the steps to implementation code, creating executable specifications that serve as both documentation and tests.\n\nThe BDD process typically involves three stages: Discovery, where stakeholders collaborate to define system behavior; Formulation, where scenarios are written in Gherkin; and Automation, where step definitions are implemented to execute the scenarios. This process ensures that development is driven by business requirements rather than technical implementation details.\n\nEffective BDD requires a cultural shift toward collaboration and shared understanding. It works best when business stakeholders, developers, and testers work together throughout the development process. The living documentation created through BDD becomes a valuable asset that evolves with the system.\n\nBy mastering BDD, you'll improve communication within your team, create executable specifications that serve as documentation, and ensure that development focuses on delivering business value.",
+    "code": {
+      "example": "# Feature file (Calculator.feature)\nFeature: Calculator\n  In order to perform basic arithmetic operations\n  As a user\n  I want to use a calculator to add and subtract numbers\n\n  Scenario: Add two positive numbers\n    Given I have a calculator\n    And I have entered 50 into the calculator\n    And I have entered 70 into the calculator\n    When I press add\n    Then the result should be 120 on the screen\n\n  Scenario: Subtract two numbers\n    Given I have a calculator\n    And I have entered 100 into the calculator\n    And I have entered 30 into the calculator\n    When I press subtract\n    Then the result should be 70 on the screen\n\n  Scenario Outline: Add numbers from examples\n    Given I have a calculator\n    And I have entered <first> into the calculator\n    And I have entered <second> into the calculator\n    When I press add\n    Then the result should be <result> on the screen\n\n    Examples:\n      | first | second | result |\n      | 20    | 30     | 50     |\n      | 2     | 5      | 7      |\n      | 0     | 40     | 40     |\n\n// Step definition file (CalculatorSteps.cs)\nusing TechTalk.SpecFlow;\nusing Xunit;\n\n[Binding]\npublic class CalculatorSteps\n{\n    private Calculator _calculator;\n    private int _result;\n    \n    [Given(\"I have a calculator\")]\n    public void GivenIHaveACalculator()\n    {\n        _calculator = new Calculator();\n    }\n    \n    [Given(\"I have entered (.*) into the calculator\")]\n    public void GivenIHaveEnteredIntoTheCalculator(int number)\n    {\n        _calculator.EnterNumber(number);\n    }\n    \n    [When(\"I press add\")]\n    public void WhenIPressAdd()\n    {\n        _result = _calculator.Add();\n    }\n    \n    [When(\"I press subtract\")]\n    public void WhenIPressSubtract()\n    {\n        _result = _calculator.Subtract();\n    }\n    \n    [Then(\"the result should be (.*) on the screen\")]\n    public void ThenTheResultShouldBeOnTheScreen(int expectedResult)\n    {\n        Assert.Equal(expectedResult, _result);\n    }\n}\n\n// Implementation class (Calculator.cs)\npublic class Calculator\n{\n    private readonly List<int> _numbers = new List<int>();\n    \n    public void EnterNumber(int number)\n    {\n        _numbers.Add(number);\n    }\n    \n    public int Add()\n    {\n        return _numbers.Sum();\n    }\n    \n    public int Subtract()\n    {\n        if (_numbers.Count < 2) return 0;\n        return _numbers[0] - _numbers[1];\n    }\n}\n\n      \"explanation\": \"This example shows a BDD implementation using SpecFlow. The feature file describes the calculator functionality in natural language that business stakeholders can understand. The step definitions map each Gherkin step to actual code implementation. The calculator class provides the actual functionality. This approach creates living documentation that serves as both requirements and automated tests.\",\n      \"language\": \"csharp\"\n    },\n    \"pitfalls\": [\n      {\n        \"mistake\": \"Writing scenarios that are too technical or too vague\",\n        \"solution\": \"Work with business stakeholders to write scenarios in clear, business-focused language using concrete examples\",\n        \"severity\": \"high\"\n      },\n      {\n        \"mistake\": \"Creating too many scenario outlines with excessive examples\",\n        \"solution\": \"Focus on the most important examples that illustrate different behaviors and edge cases\",\n        \"severity\": \"medium\"\n      },\n      {\n        \"mistake\": \"Not maintaining scenarios as the system evolves\",\n        \"solution\": \"Regularly review and update scenarios to ensure they reflect current system behavior\",\n        \"severity\": \"medium\"\n      }\n    ],\n    \"exercises\": [\n      {\n        \"title\": \"Implement a Shopping Cart Feature with BDD\",\n        \"description\": \"Create BDD specifications and implementation for a shopping cart feature.\",\n        \"checkpoints\": [\n          \"Write feature files describing shopping cart functionality in business language\",\n          \"Create scenarios for adding, removing, and updating items\",\n          \"Implement step definitions that map to actual code\",\n          \"Handle edge cases like out-of-stock items or quantity limits\",\n          \"Run scenarios as automated tests to validate implementation\"\n        ]\n      }\n    ],\n    \"next\": [\n      \"testing-fundamentals-lesson-9\"\n    ],\n    \"estimatedMinutes\": 90,\n    \"difficulty\": \"Intermediate\",\n    \"tags\": [\n      \"bdd\",\n      \"specflow\",\n      \"gherkin\",\n      \"collaboration\",\n      \"specifications\"\n    ],\n    \"lastUpdated\": \"2025-10-09T10:00:00.000Z\",\n    \"version\": \"1.0.0\"\n  },\n  {\n    \"id\": \"testing-fundamentals-lesson-9\",\n    \"moduleSlug\": \"testing-fundamentals\",\n    \"title\": \"Testing Best Practices\",\n    \"order\": 9,\n    \"objectives\": [\n      \"Apply industry-standard testing best practices\",\n      \"Organize and structure test code for maintainability\",\n      \"Implement effective test data management strategies\",\n      \"Follow naming conventions and coding standards for tests\"\n    ],\n    \"intro\": \"Testing best practices are guidelines and principles that help teams write effective, maintainable, and reliable tests. These practices have been developed through years of experience in the software industry and represent proven approaches to testing.\n\nOne of the most important best practices is the use of the AAA (Arrange-Act-Assert) pattern for structuring tests. This pattern makes tests easier to read and understand by clearly separating the setup, execution, and verification phases. Consistent structure across tests makes it easier for team members to work with the test suite.\n\nEffective test naming is crucial for maintainability. Test names should clearly describe what is being tested, the scenario, and the expected outcome. Good naming makes it easier to understand test failures and serves as documentation for the code's behavior.\n\nTest data management is another critical area. Tests should use consistent, reliable test data that covers various scenarios including edge cases. Data should be isolated between tests to prevent interference, and cleanup mechanisms should ensure tests don't leave residual data.\n\nMaintainability practices include keeping tests DRY (Don't Repeat Yourself) through helper methods and base classes, avoiding test interdependencies, and organizing tests logically. Well-organized tests are easier to maintain and extend over time.\n\nPerformance considerations include running tests in parallel when possible, minimizing expensive setup operations, and focusing on what's important to test rather than achieving 100% coverage at the expense of test quality.\n\nBy following testing best practices, you'll create test suites that are reliable, maintainable, and provide value to your development process.\",\n    \"code\": {\n      \"example\": \"// Example of well-structured test following best practices\nusing Xunit;\n\npublic class UserServiceTests\n{\n    // Use descriptive class names that match the system under test\n    \n    [Fact]\n    public void RegisterUser_WithValidCredentials_CreatesUserAndSendsWelcomeEmail()\n    {\n        // ARRANGE - Clear separation of setup phase\n        var emailServiceMock = new Mock<IEmailService>();\n        var userRepositoryMock = new Mock<IUserRepository>();\n        var userService = new UserService(userRepositoryMock.Object, emailServiceMock.Object);\n        \n        var userDto = new UserRegistrationDto\n        {\n            Email = \\\"test@example.com\\\",\n            Password = \\\"SecurePassword123!\\\",\n            FirstName = \\\"John\\\",\n            LastName = \\\"Doe\\\"\n        };\n        \n        userRepositoryMock.Setup(x => x.GetUserByEmail(userDto.Email))\n                         .Returns((User)null); // User doesn't exist\n        \n        User savedUser = null;\n        userRepositoryMock.Setup(x => x.SaveUser(It.IsAny<User>()))\n                         .Callback<User>(u => savedUser = u)\n                         .Returns(true);\n        \n        // ACT - Clear separation of execution phase\n        var result = userService.RegisterUser(userDto);\n        \n        // ASSERT - Clear separation of verification phase\n        Assert.True(result.Success);\n        Assert.NotNull(savedUser);\n        Assert.Equal(userDto.Email, savedUser.Email);\n        Assert.Equal(userDto.FirstName, savedUser.FirstName);\n        Assert.Equal(userDto.LastName, savedUser.LastName);\n        \n        // Verify interactions with dependencies\n        userRepositoryMock.Verify(x => x.GetUserByEmail(userDto.Email), Times.Once);\n        userRepositoryMock.Verify(x => x.SaveUser(It.IsAny<User>()), Times.Once);\n        emailServiceMock.Verify(x => x.SendWelcomeEmail(userDto.Email), Times.Once);\n    }\n    \n    [Fact]\n    public void RegisterUser_WithExistingEmail_ReturnsFailureResult()\n    {\n        // ARRANGE\n        var emailServiceMock = new Mock<IEmailService>();\n        var userRepositoryMock = new Mock<IUserRepository>();\n        var userService = new UserService(userRepositoryMock.Object, emailServiceMock.Object);\n        \n        var userDto = new UserRegistrationDto\n        {\n            Email = \\\"existing@example.com\\\",\n            Password = \\\"SecurePassword123!\\\",\n            FirstName = \\\"John\\\",\n            LastName = \\\"Doe\\\"\n        };\n        \n        var existingUser = new User { Email = userDto.Email };\n        userRepositoryMock.Setup(x => x.GetUserByEmail(userDto.Email))\n                         .Returns(existingUser); // User already exists\n        \n        // ACT\n        var result = userService.RegisterUser(userDto);\n        \n        // ASSERT\n        Assert.False(result.Success);\n        Assert.Equal(\\\"User already exists\\\", result.ErrorMessage);\n        \n        // Verify no user was saved and no email was sent\n        userRepositoryMock.Verify(x => x.SaveUser(It.IsAny<User>()), Times.Never);\n        emailServiceMock.Verify(x => x.SendWelcomeEmail(It.IsAny<string>()), Times.Never);\n    }\n    \n    [Theory]\n    [InlineData(\\\"\\\")]\n    [InlineData(null)]\n    [InlineData(\\\"invalid-email\\\")]\n    public void RegisterUser_WithInvalidEmail_ReturnsFailureResult(string invalidEmail)\n    {\n        // ARRANGE\n        var emailServiceMock = new Mock<IEmailService>();\n        var userRepositoryMock = new Mock<IUserRepository>();\n        var userService = new UserService(userRepositoryMock.Object, emailServiceMock.Object);\n        \n        var userDto = new UserRegistrationDto\n        {\n            Email = invalidEmail,\n            Password = \\\"SecurePassword123!\\\",\n            FirstName = \\\"John\\\",\n            LastName = \\\"Doe\\\"\n        };\n        \n        // ACT\n        var result = userService.RegisterUser(userDto);\n        \n        // ASSERT\n        Assert.False(result.Success);\n        Assert.Contains(\\\"Invalid email\\\", result.ErrorMessage);\n    }\n}\",\n      \"explanation\": \"This example demonstrates several testing best practices. Test class names clearly indicate what is being tested. Test method names follow the pattern 'MethodName_StateUnderTest_ExpectedBehavior'. The AAA pattern is clearly visible with comments separating each phase. The tests use descriptive variable names and cover both happy path and error scenarios. Mock setups are clear and verification ensures the right interactions occurred. Parameterized tests efficiently cover multiple invalid email cases.\",\n      \"language\": \"csharp\"\n    },\n    \"pitfalls\": [\n      {\n        \"mistake\": \"Using unclear or generic test method names\",\n        \"solution\": \"Use descriptive names that indicate what is being tested, under what conditions, and what is expected\",\n        \"severity\": \"high\"\n      },\n      {\n        \"mistake\": \"Creating tests that are hard to read due to poor structure\",\n        \"solution\": \"Follow the AAA pattern and use clear separation between arrange, act, and assert phases\",\n        \"severity\": \"high\"\n      },\n      {\n        \"mistake\": \"Not cleaning up test data or resources\",\n        \"solution\": \"Use setup and teardown methods or disposables to ensure tests don't leave residual data\",\n        \"severity\": \"medium\"\n      }\n    ],\n    \"exercises\": [\n      {\n        \"title\": \"Refactor Tests to Follow Best Practices\",\n        \"description\": \"Improve existing tests to follow industry best practices for structure and naming.\",\n        \"checkpoints\": [\n          \"Review existing test names and rename them to be more descriptive\",\n          \"Reorganize tests to clearly follow the AAA pattern\",\n          \"Extract common setup code into appropriate locations\",\n          \"Add missing assertions to verify all expected outcomes\",\n          \"Ensure tests are isolated and don't depend on each other\"\n        ]\n      }\n    ],\n    \"next\": [\n      \"testing-fundamentals-lesson-10\"\n    ],\n    \"estimatedMinutes\": 75,\n    \"difficulty\": \"Intermediate\",\n    \"tags\": [\n      \"best-practices\",\n      \"naming\",\n      \"structure\",\n      \"maintainability\",\n      \"aaa-pattern\"\n    ],\n    \"lastUpdated\": \"2025-10-09T10:00:00.000Z\",\n    \"version\": \"1.0.0\"\n  },\n  {\n    \"id\": \"testing-fundamentals-lesson-10\",\n    \"moduleSlug\": \"testing-fundamentals\",\n    \"title\": \"Continuous Integration and Testing\",\n    \"order\": 10,\n    \"objectives\": [\n      \"Integrate automated testing into continuous integration pipelines\",\n      \"Configure test execution in CI environments\",\n      \"Implement quality gates based on test results\",\n      \"Monitor and analyze test results in CI systems\"\n    ],\n    \"intro\": \"Continuous Integration (CI) is a development practice where developers integrate code into a shared repository frequently, typically several times a day. Each integration is verified by an automated build and automated tests to detect integration errors as quickly as possible.\n\nIn a CI environment, automated tests play a crucial role in ensuring code quality and preventing defects from reaching production. Tests are executed automatically whenever code is committed to the repository, providing rapid feedback to developers about the impact of their changes.\n\nEffective CI testing requires careful configuration of test execution environments. Tests should run in consistent, isolated environments that closely match production. This often involves using containers, virtual machines, or cloud-based testing environments to ensure reproducibility.\n\nQuality gates are automated checks that must pass before code can be merged or deployed. These can include minimum test coverage thresholds, successful test execution, code quality metrics, and security scans. Quality gates help maintain code quality standards and prevent problematic code from progressing through the delivery pipeline.\n\nMonitoring and analyzing test results in CI systems is essential for maintaining a healthy test suite. Teams should track test execution times, failure rates, and coverage metrics to identify issues early. Flaky tests (tests that fail intermittently) should be identified and fixed to maintain confidence in the test suite.\n\nCI systems like GitHub Actions, Azure DevOps, Jenkins, and GitLab CI provide features for configuring automated test execution, parallel test running, and detailed reporting. These systems can be configured to run different types of tests at different stages of the pipeline, optimizing feedback time while maintaining thorough testing.\n\nBy integrating testing into CI pipelines, teams can catch defects early, reduce integration issues, and deliver higher quality software more reliably.\",\n    \"code\": {\n      \"example\": \"# GitHub Actions workflow for .NET testing\nname: CI\n\non:\n  push:\n    branches: [ main ]\n  pull_request:\n    branches: [ main ]\n\njobs:\n  build-and-test:\n    runs-on: ubuntu-latest\n    \n    steps:\n    - uses: actions/checkout@v3\n    \n    - name: Setup .NET\n      uses: actions/setup-dotnet@v3\n      with:\n        dotnet-version: 8.0.x\n    \n    - name: Restore dependencies\n      run: dotnet restore\n    \n    - name: Build\n      run: dotnet build --no-restore\n    \n    - name: Run unit tests\n      run: dotnet test --no-build --verbosity normal\n    \n    - name: Run integration tests\n      run: dotnet test tests/IntegrationTests --no-build --verbosity normal\n    \n    - name: Collect code coverage\n      run: dotnet test /p:CollectCoverage=true /p:CoverletOutputFormat=opencover\n    \n    - name: Upload coverage to Codecov\n      uses: codecov/codecov-action@v3\n      with:\n        file: ./coverage.opencover.xml\n    \n    - name: Check coverage threshold\n      run: |\n        COVERAGE=$(grep -oP 'line-rate=\\\"\\\\K[0-9.]+' ./coverage.opencover.xml)\n        if (( $(echo \\\"$COVERAGE < 0.8\\\" | bc -l) )); then\n          echo \\\"Code coverage is below 80%: $COVERAGE\\\"\n          exit 1\n        fi\n    \n    - name: Run security scans\n      run: dotnet tool run security-scan\n    \n    - name: Generate test reports\n      run: |\n        dotnet test --logger \\\"trx;LogFileName=test-results.trx\\\"\n        dotnet tool run trx2html test-results.trx\n    \n    - name: Archive test results\n      uses: actions/upload-artifact@v3\n      if: always()\n      with:\n        name: test-results\n        path: |\n          **/TestResults/**\n          **/*.trx\n          coverage.opencover.xml\",\n      \"explanation\": \"This GitHub Actions workflow demonstrates CI testing best practices. It runs on both push to main branch and pull requests. The workflow includes steps for restoring dependencies, building the application, running unit and integration tests separately, collecting code coverage, uploading coverage reports, checking coverage thresholds, running security scans, and archiving test results. Quality gates are implemented through coverage thresholds and test execution requirements. The workflow uses appropriate runners and includes error handling with the 'if: always()' condition for artifact upload.\",\n      \"language\": \"yaml\"\n    },\n    \"pitfalls\": [\n      {\n        \"mistake\": \"Allowing failing tests in CI pipelines\",\n        \"solution\": \"Make CI builds fail when tests fail to maintain quality standards and prevent broken code from progressing\",\n        \"severity\": \"high\"\n      },\n      {\n        \"mistake\": \"Not running tests in isolated environments\",\n        \"solution\": \"Use containers or clean environments for each CI run to ensure consistent, reproducible test results\",\n        \"severity\": \"high\"\n      },\n      {\n        \"mistake\": \"Ignoring slow test execution in CI\",\n        \"solution\": \"Optimize test execution time through parallelization, selective testing, and performance improvements\",\n        \"severity\": \"medium\"\n      }\n    ],\n    \"exercises\": [\n      {\n        \"title\": \"Configure a CI Pipeline with Automated Testing\",\n        \"description\": \"Set up a continuous integration pipeline that automatically runs tests and enforces quality gates.\",\n        \"checkpoints\": [\n          \"Configure automated test execution on code commits\",\n          \"Implement separate jobs for unit and integration tests\",\n          \"Set up code coverage collection and reporting\",\n          \"Configure quality gates based on test results and coverage\",\n          \"Implement notifications for test failures and quality gate violations\"\n        ]\n      }\n    ],\n    \"next\": [],\n    \"estimatedMinutes\": 90,\n    \"difficulty\": \"Intermediate\",\n    \"tags\": [\n      \"ci\",\n      \"continuous-integration\",\n      \"github-actions\",\n      \"quality-gates\",\n      \"automation\"\n    ],\n    \"lastUpdated\": \"2025-10-09T10:00:00.000Z\",\n    \"version\": \"1.0.0\"\n  }\n]",
+      "language": "csharp"
+    },
+    "pitfalls": [
+      {
+        "mistake": "Writing scenarios that are too technical or too vague",
+        "solution": "Work with business stakeholders to write scenarios in clear, business-focused language using concrete examples",
+        "severity": "high"
+      },
+      {
+        "mistake": "Creating too many scenario outlines with excessive examples",
+        "solution": "Focus on the most important examples that illustrate different behaviors and edge cases",
+        "severity": "medium"
+      },
+      {
+        "mistake": "Not maintaining scenarios as the system evolves",
+        "solution": "Regularly review and update scenarios to ensure they reflect current system behavior",
+        "severity": "medium"
+      }
+    ],
+    "exercises": [
+      {
+        "title": "Implement a Shopping Cart Feature with BDD",
+        "description": "Create BDD specifications and implementation for a shopping cart feature.",
+        "checkpoints": [
+          "Write feature files describing shopping cart functionality in business language",
+          "Create scenarios for adding, removing, and updating items",
+          "Implement step definitions that map to actual code",
+          "Handle edge cases like out-of-stock items or quantity limits",
+          "Run scenarios as automated tests to validate implementation"
+        ]
+      }
+    ],
+    "next": [
+      "testing-fundamentals-lesson-9"
+    ],
+    "estimatedMinutes": 90,
+    "difficulty": "Intermediate",
+    "tags": [
+      "bdd",
+      "specflow",
+      "gherkin",
+      "collaboration",
+      "specifications"
+    ],
+    "lastUpdated": "2025-10-09T10:00:00.000Z",
+    "version": "1.0.0"
+  }
+]

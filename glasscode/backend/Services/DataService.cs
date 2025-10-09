@@ -141,23 +141,26 @@ namespace backend.Services
         }
 
         // Answer validation
-        public AnswerResult ValidateAnswer(int questionId, int answerIndex)
+        public AnswerResult ValidateAnswer(string questionId, int answerIndex)
         {
             // Try to find the question in any collection
             InterviewQuestion? question = null;
             
             // Check DotNet questions first
-            question = DotNetInterviewQuestions.FirstOrDefault(q => q.Id == questionId);
-            if (question != null)
+            if (int.TryParse(questionId, out int dotNetQuestionId))
             {
-                bool isCorrect = question.Type == "open-ended" || 
-                                (question.CorrectAnswer.HasValue && answerIndex == question.CorrectAnswer.Value);
-
-                return new AnswerResult
+                question = DotNetInterviewQuestions.FirstOrDefault(q => q.Id == dotNetQuestionId);
+                if (question != null)
                 {
-                    IsCorrect = isCorrect,
-                    Explanation = question.Explanation
-                };
+                    bool isCorrect = question.Type == "open-ended" || 
+                                    (question.CorrectAnswer.HasValue && answerIndex == question.CorrectAnswer.Value);
+
+                    return new AnswerResult
+                    {
+                        IsCorrect = isCorrect,
+                        Explanation = question.Explanation
+                    };
+                }
             }
             
             // Check NextJs questions
@@ -175,17 +178,20 @@ namespace backend.Services
             }
             
             // Check GraphQL questions
-            var graphqlQuestion = GraphQLInterviewQuestions.FirstOrDefault(q => q.Id == questionId);
-            if (graphqlQuestion != null)
+            if (int.TryParse(questionId, out int graphqlQuestionId))
             {
-                bool isCorrect = graphqlQuestion.Type == "open-ended" || 
-                                (graphqlQuestion.CorrectAnswer.HasValue && answerIndex == graphqlQuestion.CorrectAnswer.Value);
-
-                return new AnswerResult
+                var graphqlQuestion = GraphQLInterviewQuestions.FirstOrDefault(q => q.Id == graphqlQuestionId);
+                if (graphqlQuestion != null)
                 {
-                    IsCorrect = isCorrect,
-                    Explanation = graphqlQuestion.Explanation
-                };
+                    bool isCorrect = graphqlQuestion.Type == "open-ended" || 
+                                    (graphqlQuestion.CorrectAnswer.HasValue && answerIndex == graphqlQuestion.CorrectAnswer.Value);
+
+                    return new AnswerResult
+                    {
+                        IsCorrect = isCorrect,
+                        Explanation = graphqlQuestion.Explanation
+                    };
+                }
             }
 
             return new AnswerResult { IsCorrect = false, Explanation = "Question not found." };
@@ -1217,7 +1223,7 @@ namespace backend.Services
         }
 
         // Next.js answer validation
-        public AnswerResult ValidateNextJsAnswer(int questionId, int answerIndex)
+        public AnswerResult ValidateNextJsAnswer(string questionId, int answerIndex)
         {
             var question = NextJsInterviewQuestions.FirstOrDefault(q => q.Id == questionId);
             if (question == null)
@@ -1240,7 +1246,7 @@ namespace backend.Services
         }
 
         // Performance Optimization answer validation
-        public AnswerResult ValidatePerformanceAnswer(int questionId, int answerIndex)
+        public AnswerResult ValidatePerformanceAnswer(string questionId, int answerIndex)
         {
             var question = PerformanceInterviewQuestions.FirstOrDefault(q => q.Id == questionId);
             if (question == null)
