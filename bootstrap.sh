@@ -285,25 +285,47 @@ if ! sudo -u "$DEPLOY_USER" dotnet publish -c Release -o "$APP_DIR/glasscode/bac
 fi
 log "✅ .NET backend published"
 
-# Start backend temporarily BEFORE frontend build so Next.js can fetch data
-log "🚀 Starting temporary backend for frontend build data collection..."
-sudo -u "$DEPLOY_USER" /usr/bin/dotnet "$APP_DIR/glasscode/backend/out/backend.dll" --urls http://127.0.0.1:8080 \
-  >/tmp/${APP_NAME}-bootstrap-temp-backend.log 2>&1 &
-TEMP_BACKEND_PID=$!
+# Create and start REAL backend service before frontend build
+log "⚙️  Creating backend systemd service (real backend)..."
+systemctl stop ${APP_NAME}-dotnet 2>/dev/null || true
+cat >/etc/systemd/system/${APP_NAME}-dotnet.service <<EOF
+[Unit]
+Description=$APP_NAME .NET Backend
+After=network.target
 
-log "⏳ Verifying temporary backend health before frontend build..."
+[Service]
+WorkingDirectory=$APP_DIR/glasscode/backend/out
+ExecStart=/usr/bin/dotnet $APP_DIR/glasscode/backend/out/backend.dll --urls http://0.0.0.0:8080
+Restart=always
+RestartSec=10
+User=$DEPLOY_USER
+Environment=DOTNET_ROOT=/usr/share/dotnet
+Environment=ASPNETCORE_URLS=http://0.0.0.0:8080
+Environment=ASPNETCORE_ENVIRONMENT=Production
+
+[Install]
+WantedBy=multi-user.target
+EOF
+
+systemctl daemon-reload
+systemctl enable ${APP_NAME}-dotnet
+
+log "🚀 Starting real backend service..."
+systemctl start ${APP_NAME}-dotnet
+
+log "⏳ Waiting for real backend health before frontend build..."
 MAX_ATTEMPTS=30
 ATTEMPT=1
 SLEEP_INTERVAL=5
 while [[ $ATTEMPT -le $MAX_ATTEMPTS ]]; do
     if curl -s -f http://localhost:8080/api/health >/dev/null 2>&1; then
         HEALTH_RESPONSE=$(curl -s http://localhost:8080/api/health)
-        BACKEND_STATUS=$(echo "$HEALTH_RESPONSE" | grep -o '"status":"[^"]*"' | cut -d '"' -f4)
+        BACKEND_STATUS=$(echo "$HEALTH_RESPONSE" | grep -o '"status":"[^"]*"' | cut -d'"' -f4)
         if [[ "$BACKEND_STATUS" == "healthy" ]]; then
-            log "✅ Temporary backend healthy. Proceeding to build frontend."
+            log "✅ Real backend healthy. Proceeding to build frontend."
             break
         else
-            log "⚠️  Temporary backend responding but status is $BACKEND_STATUS"
+            log "⚠️  Real backend responding but status is $BACKEND_STATUS"
             break
         fi
     fi
@@ -313,14 +335,15 @@ while [[ $ATTEMPT -le $MAX_ATTEMPTS ]]; do
 done
 
 if [[ $ATTEMPT -gt $MAX_ATTEMPTS ]]; then
-    log "❌ Temporary backend failed to become healthy before frontend build."
-    log "🧪 Diagnostic: port check"
+    log "❌ Real backend failed to become healthy before frontend build."
+    log "🧪 Diagnostic: systemd status"
+    systemctl status ${APP_NAME}-dotnet --no-pager || true
+    log "🪵 Recent backend logs (journalctl)"
+    journalctl -u ${APP_NAME}-dotnet -n 200 --no-pager || true
+    log "🔌 Listening ports snapshot"
     ss -tulpn | grep :8080 || true
-    log "🧪 Diagnostic: health curl"
+    log "🌐 Health endpoint verbose output"
     curl -v http://localhost:8080/api/health || true
-    # Stop temp backend if started
-    kill $TEMP_BACKEND_PID 2>/dev/null || true
-    wait $TEMP_BACKEND_PID 2>/dev/null || true
     exit 1
 fi
 
@@ -344,12 +367,6 @@ NODE_ENV=production
 EOF
 sudo -u "$DEPLOY_USER" npm run build
 log "✅ Frontend built"
-
-# Stop temporary backend after build
-if kill $TEMP_BACKEND_PID 2>/dev/null; then
-  wait $TEMP_BACKEND_PID 2>/dev/null || true
-  log "⏹️  Temporary backend stopped after frontend build"
-fi
 
 ### 11. Create systemd services
 log "⚙️  Creating systemd services..."
@@ -408,63 +425,6 @@ EOF
 
 systemctl daemon-reload
 systemctl enable ${APP_NAME}-dotnet ${APP_NAME}-frontend
-
-# Start backend first and wait for it to be ready
-log "🚀 Starting backend service..."
-systemctl restart ${APP_NAME}-dotnet
-if ! wait_for_service "${APP_NAME}-dotnet"; then
-    log "❌ Backend failed to start"
-    exit 1
-fi
-
-# Wait for backend to be fully ready by polling the health check endpoint
-log "⏳ Waiting for backend to be fully loaded and healthy..."
-MAX_ATTEMPTS=30
-ATTEMPT=1
-SLEEP_INTERVAL=5
-while [[ $ATTEMPT -le $MAX_ATTEMPTS ]]; do
-    if curl -s -f http://localhost:8080/api/health >/dev/null 2>&1; then
-        HEALTH_RESPONSE=$(curl -s http://localhost:8080/api/health)
-        BACKEND_STATUS=$(echo "$HEALTH_RESPONSE" | grep -o '"status":"[^"]*"' | cut -d'"' -f4)
-        if [[ "$BACKEND_STATUS" == "healthy" ]]; then
-            log "✅ Backend is fully loaded and healthy!"
-            break
-        else
-            log "⚠️  Backend is responding but status is $BACKEND_STATUS"
-            break
-        fi
-    fi
-    draw_progress "$ATTEMPT" "$MAX_ATTEMPTS" "Waiting for backend health"; printf "\n"
-    ATTEMPT=$((ATTEMPT + 1))
-    sleep $SLEEP_INTERVAL
-done
-
-if [[ $ATTEMPT -gt $MAX_ATTEMPTS ]]; then
-    log "❌ Backend failed to become healthy within the expected time."
-    log "🔎 Diagnostics: systemd status for backend"
-    systemctl status ${APP_NAME}-dotnet --no-pager || true
-    log "🪵 Recent backend logs (journalctl)"
-    journalctl -u ${APP_NAME}-dotnet -n 200 --no-pager || true
-    log "🔌 Listening ports snapshot"
-    ss -tulpen | grep -E ':(8080|3000)' || true
-    log "🌐 Health endpoint verbose output"
-    curl -v http://localhost:8080/api/health || true
-    systemctl stop ${APP_NAME}-dotnet 2>/dev/null || true
-    exit 1
-fi
-
-# Small additional delay to ensure backend is completely ready
-log "⏰ Waiting for backend to fully initialize..."
-sleep 10
-
-# Now start frontend
-log "🚀 Starting frontend service..."
-systemctl restart ${APP_NAME}-frontend
-if ! wait_for_service "${APP_NAME}-frontend"; then
-    log "❌ Frontend failed to start"
-    systemctl stop ${APP_NAME}-dotnet 2>/dev/null || true
-    exit 1
-fi
 
 ### 12. Configure Nginx
 log "🌐 Configuring Nginx..."
