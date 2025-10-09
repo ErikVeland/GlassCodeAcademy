@@ -288,6 +288,14 @@ log "✅ .NET backend published"
 # Create and start REAL backend service before frontend build
 log "⚙️  Creating backend systemd service (real backend)..."
 systemctl stop ${APP_NAME}-dotnet 2>/dev/null || true
+log "🔌 Port 8080 preflight: checking for conflicts..."
+CONFLICT_PIDS=$(ss -tulpn 2>/dev/null | grep ':8080' | sed -n 's/.*pid=\([0-9]\+\).*/\1/p' | sort -u)
+if [ -n "$CONFLICT_PIDS" ]; then
+    log "🛑 Killing processes using port 8080 (PIDs: $CONFLICT_PIDS)"
+    kill -9 $CONFLICT_PIDS 2>/dev/null || true
+    sleep 2
+fi
+ss -tulpn 2>/dev/null | grep ':8080' || true
 cat >/etc/systemd/system/${APP_NAME}-dotnet.service <<EOF
 [Unit]
 Description=$APP_NAME .NET Backend
@@ -295,7 +303,7 @@ After=network.target
 
 [Service]
 WorkingDirectory=$APP_DIR/glasscode/backend/out
-ExecStart=/usr/bin/dotnet $APP_DIR/glasscode/backend/out/backend.dll --urls http://0.0.0.0:8080
+ExecStart=/usr/bin/dotnet $APP_DIR/glasscode/backend/out/backend.dll
 Restart=always
 RestartSec=10
 User=$DEPLOY_USER
@@ -370,27 +378,7 @@ log "✅ Frontend built"
 
 ### 11. Create systemd services
 log "⚙️  Creating systemd services..."
-systemctl stop ${APP_NAME}-dotnet ${APP_NAME}-frontend 2>/dev/null || true
-
-# Create .NET backend service
-cat >/etc/systemd/system/${APP_NAME}-dotnet.service <<EOF
-[Unit]
-Description=$APP_NAME .NET Backend
-After=network.target
-
-[Service]
-WorkingDirectory=$APP_DIR/glasscode/backend/out
-ExecStart=/usr/bin/dotnet $APP_DIR/glasscode/backend/out/backend.dll --urls http://0.0.0.0:8080
-Restart=always
-RestartSec=10
-User=$DEPLOY_USER
-Environment=DOTNET_ROOT=/usr/share/dotnet
-Environment=ASPNETCORE_URLS=http://0.0.0.0:8080
-Environment=ASPNETCORE_ENVIRONMENT=Production
-
-[Install]
-WantedBy=multi-user.target
-EOF
+systemctl stop ${APP_NAME}-frontend 2>/dev/null || true
 
 # Frontend service (production mode)
 cat >/etc/systemd/system/${APP_NAME}-frontend.service <<EOF
