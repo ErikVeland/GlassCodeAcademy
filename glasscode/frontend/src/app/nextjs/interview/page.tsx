@@ -504,7 +504,7 @@ export default function InterviewQuiz() {
                 ) : (
                   <button
                     onClick={async () => {
-                      const baseUrl = process.env.NEXT_PUBLIC_API_BASE || 'http://localhost:5022';
+                      const baseUrl = process.env.NEXT_PUBLIC_API_BASE || 'http://localhost:8080';
                       const res = await fetch(`${baseUrl}/api/nextjs/interviewquestions/submit`, {
                         method: "POST",
                         headers: { "Content-Type": "application/json" },

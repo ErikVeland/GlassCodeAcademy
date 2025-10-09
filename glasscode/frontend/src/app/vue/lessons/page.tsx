@@ -7,8 +7,9 @@ import { useQuery, gql } from '@apollo/client';
 import TechnologyUtilizationBox from '../../../components/TechnologyUtilizationBox';
 import EnhancedLoadingComponent from '../../../components/EnhancedLoadingComponent';
 
+// Minimal data for build phase
 type VueLesson = {
-    id: number;
+    id: string;
     topic: string;
     title: string;
     description: string;
@@ -20,6 +21,22 @@ type TopicGroup = {
     topic: string;
     lessons: VueLesson[];
 };
+
+const minimalData: TopicGroup[] = [
+  {
+    topic: "Vue.js Fundamentals",
+    lessons: [
+      {
+        id: "vue-fundamentals-1",
+        topic: "Vue.js Fundamentals",
+        title: "Introduction to Vue.js",
+        description: "Learn the basics of Vue.js framework.",
+        codeExample: "// Minimal example\nconst app = Vue.createApp({\n  data() {\n    return {\n      message: 'Hello Vue!'\n    }\n  }\n})",
+        output: "Hello Vue!"
+      }
+    ]
+  }
+];
 
 const VUE_LESSONS_QUERY = gql`
   query VueLessons {
@@ -35,6 +52,50 @@ const VUE_LESSONS_QUERY = gql`
 `;
 
 export default function VueLessonsPage() {
+    // Check if we're in build phase
+    if (process.env.NEXT_PHASE === 'phase-production-build') {
+        // Return minimal data during build
+        return (
+            <div className="w-full p-6">
+                <div className="max-w-4xl mx-auto bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-xl shadow-lg p-6 border border-gray-200 dark:border-gray-700">
+                    <Link 
+                      href="/" 
+                      className="inline-block mb-4 bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200 font-semibold py-1 px-3 rounded shadow hover:bg-green-200 dark:hover:bg-green-800 transition-colors duration-150 flex items-center gap-1 text-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
+                      aria-label="Back to home"
+                    >
+                        <span className="text-base">←</span> Back to Home
+                    </Link>
+                    <h1 className="text-3xl font-bold mb-6 mt-2 text-green-700 dark:text-green-300">Learn Vue.js Step by Step</h1>
+                    <div>
+                        {minimalData.map(group => (
+                            <div key={group.topic} className="mb-10">
+                                <h2 className="text-2xl font-extrabold mb-4 flex items-center gap-2 text-green-700 dark:text-green-300">
+                                    <span className="inline-block h-8 w-2 rounded bg-green-500 dark:bg-green-400 mr-3"></span>
+                                    <span className="bg-green-50 dark:bg-green-900 px-4 py-2 rounded-lg text-green-800 dark:text-green-200 shadow-sm">{group.topic}</span>
+                                </h2>
+                                <ul className="space-y-3">
+                                    {group.lessons.map((lesson, idx) => (
+                                        <li
+                                            key={lesson.id}
+                                            className="bg-gray-100/50 dark:bg-gray-700/50 backdrop-blur-sm p-4 rounded shadow hover:bg-green-50 dark:hover:bg-green-900 cursor-pointer transition-colors duration-150 border border-gray-200 dark:border-gray-600 focus-within:ring-2 focus-within:ring-green-500 focus-within:ring-offset-2"
+                                        >
+                                            <div className="font-semibold text-green-700 dark:text-green-300">{lesson.title}</div>
+                                            <p className="text-gray-600 dark:text-gray-300 mt-1 text-sm">{lesson.description}</p>
+                                        </li>
+                                    ))}
+                                </ul>
+                            </div>
+                        ))}
+                        <TechnologyUtilizationBox 
+                            technology="Vue.js" 
+                            explanation="In this Vue.js module, Vue is being used as the core frontend framework to build the entire user interface. Vue components manage the state and rendering of the lesson content and quiz questions." 
+                        />
+                    </div>
+                </div>
+            </div>
+        );
+    }
+    
     const [selectedTopic, setSelectedTopic] = useState<string | null>(null);
     const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
     const retryCountRef = useRef(0);

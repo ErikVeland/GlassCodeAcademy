@@ -711,12 +711,4 @@ const HomePage: React.FC = () => {
   );
 };
 
-const HomePageWithProviders: React.FC = () => {
-  return (
-    <AccessibilityProvider>
-      <HomePage />
-    </AccessibilityProvider>
-  );
-};
-
-export default HomePageWithProviders;
+export default HomePage;

@@ -231,10 +231,55 @@ EOF
 
 systemctl daemon-reload
 systemctl enable ${APP_NAME}-dotnet ${APP_NAME}-frontend
+
+# Start backend first and wait for it to be ready
+log "🚀 Starting backend service..."
 systemctl restart ${APP_NAME}-dotnet
-wait_for_service "${APP_NAME}-dotnet"
+if ! wait_for_service "${APP_NAME}-dotnet"; then
+    log "❌ Backend failed to start"
+    exit 1
+fi
+
+# Wait for backend to be fully ready by polling the health check endpoint
+log "⏳ Waiting for backend to be fully loaded and healthy..."
+MAX_ATTEMPTS=30
+ATTEMPT=1
+SLEEP_INTERVAL=5
+while [[ $ATTEMPT -le $MAX_ATTEMPTS ]]; do
+    if curl -s -f http://localhost:8080/api/health >/dev/null 2>&1; then
+        HEALTH_RESPONSE=$(curl -s http://localhost:8080/api/health)
+        BACKEND_STATUS=$(echo "$HEALTH_RESPONSE" | grep -o '"status":"[^"]*"' | cut -d'"' -f4)
+        if [[ "$BACKEND_STATUS" == "healthy" ]]; then
+            log "✅ Backend is fully loaded and healthy!"
+            break
+        else
+            log "⚠️  Backend is responding but status is $BACKEND_STATUS"
+            break
+        fi
+    fi
+    log "⏰ Attempt $ATTEMPT/$MAX_ATTEMPTS: Backend not ready yet, waiting $SLEEP_INTERVAL seconds..."
+    ATTEMPT=$((ATTEMPT + 1))
+    sleep $SLEEP_INTERVAL
+done
+
+if [[ $ATTEMPT -gt $MAX_ATTEMPTS ]]; then
+    log "❌ Backend failed to become healthy within the expected time."
+    systemctl stop ${APP_NAME}-dotnet 2>/dev/null || true
+    exit 1
+fi
+
+# Small additional delay to ensure backend is completely ready
+log "⏰ Waiting for backend to fully initialize..."
+sleep 10
+
+# Now start frontend
+log "🚀 Starting frontend service..."
 systemctl restart ${APP_NAME}-frontend
-wait_for_service "${APP_NAME}-frontend"
+if ! wait_for_service "${APP_NAME}-frontend"; then
+    log "❌ Frontend failed to start"
+    systemctl stop ${APP_NAME}-dotnet 2>/dev/null || true
+    exit 1
+fi
 
 ### 12. Configure Nginx
 log "🌐 Configuring Nginx..."

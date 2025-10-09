@@ -207,7 +207,35 @@ if ! wait_for_service "${APP_NAME}-dotnet"; then
     rollback
 fi
 
-# Small delay to ensure backend is fully ready to accept connections
+# Wait for backend to be fully ready by polling the health check endpoint
+log "⏳ Waiting for backend to be fully loaded and healthy..."
+MAX_ATTEMPTS=30
+ATTEMPT=1
+SLEEP_INTERVAL=5
+while [[ $ATTEMPT -le $MAX_ATTEMPTS ]]; do
+    if curl -s -f http://localhost:8080/api/health >/dev/null 2>&1; then
+        HEALTH_RESPONSE=$(curl -s http://localhost:8080/api/health)
+        BACKEND_STATUS=$(echo "$HEALTH_RESPONSE" | grep -o '"status":"[^"]*"' | cut -d'"' -f4)
+        if [[ "$BACKEND_STATUS" == "healthy" ]]; then
+            log "✅ Backend is fully loaded and healthy!"
+            break
+        else
+            log "⚠️  Backend is responding but status is $BACKEND_STATUS"
+            break
+        fi
+    fi
+    log "⏰ Attempt $ATTEMPT/$MAX_ATTEMPTS: Backend not ready yet, waiting $SLEEP_INTERVAL seconds..."
+    ATTEMPT=$((ATTEMPT + 1))
+    sleep $SLEEP_INTERVAL
+done
+
+if [[ $ATTEMPT -gt $MAX_ATTEMPTS ]]; then
+    log "❌ Backend failed to become healthy within the expected time."
+    log "❌ Rolling back due to backend health check failure..."
+    rollback
+fi
+
+# Small additional delay to ensure backend is completely ready
 log "⏰ Waiting for backend to fully initialize..."
 sleep 10
 
@@ -222,21 +250,49 @@ fi
 log "✅ Services restarted"
 
 ### 10. Health checks
-log "🩺 Checking backend..."
+log "🩺 Performing comprehensive health checks..."
+
+# Check backend GraphQL endpoint
+log "🔍 Checking backend GraphQL endpoint..."
 if curl -s -X POST http://localhost:8080/graphql \
   -H "Content-Type: application/json" \
   -d '{"query":"{ __typename }"}' | grep -q '__typename'; then
-    log "✅ Backend health check: PASSED"
+    log "✅ Backend GraphQL endpoint: PASSED"
 else
-    log "⚠️  WARNING: Backend health check failed"
+    log "❌ Backend GraphQL endpoint: FAILED"
     rollback
 fi
 
-log "🩺 Checking frontend..."
-if curl -f http://localhost:3000 >/dev/null 2>&1; then
-    log "✅ Frontend health check: PASSED"
+# Check backend health endpoint details
+log "🔍 Checking backend health details..."
+BACKEND_HEALTH_CHECK=$(curl -s http://localhost:8080/api/health)
+BACKEND_STATUS=$(echo "$BACKEND_HEALTH_CHECK" | grep -o '"status":"[^"]*"' | cut -d'"' -f4)
+if [[ "$BACKEND_STATUS" == "healthy" ]]; then
+    log "✅ Backend health status: HEALTHY"
 else
-    log "⚠️  WARNING: Frontend health check failed"
+    log "⚠️  Backend health status: $BACKEND_STATUS"
+    # Only rollback if status is not healthy
+    if [[ "$BACKEND_STATUS" != "healthy" ]]; then
+        log "❌ Rolling back due to backend health status..."
+        rollback
+    fi
+fi
+
+# Check frontend availability
+log "🔍 Checking frontend availability..."
+if curl -f http://localhost:3000 >/dev/null 2>&1; then
+    log "✅ Frontend availability: PASSED"
+else
+    log "❌ Frontend availability: FAILED"
+    rollback
+fi
+
+# Check frontend content (registry.json)
+log "🔍 Checking frontend content..."
+if curl -s http://localhost:3000/registry.json | grep -q 'modules'; then
+    log "✅ Frontend content availability: PASSED"
+else
+    log "❌ Frontend content availability: FAILED"
     rollback
 fi
 
