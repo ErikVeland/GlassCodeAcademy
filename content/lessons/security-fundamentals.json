@@ -1,4 +1,5 @@
-[{
+[
+  {
     "id": "security-fundamentals-lesson-1",
     "moduleSlug": "security-fundamentals",
     "title": "Web Security Fundamentals",
@@ -14,7 +15,8 @@
       "explanation": "This comprehensive example demonstrates essential web security practices including input validation, secure authentication with bcrypt and JWT, authorization middleware, SQL injection prevention, and security headers implementation.",
       "language": "javascript"
     },
-    "pitfalls": [{
+    "pitfalls": [
+      {
         "mistake": "Not following Security best practices",
         "solution": "Review official documentation and established patterns for Security",
         "severity": "medium"
@@ -30,15 +32,17 @@
         "severity": "low"
       }
     ],
-    "exercises": [{
-      "title": "Practice Testing Fundamentals",
-      "description": "Apply the concepts learned in this lesson through hands-on practice.",
-      "checkpoints": [
-        "Complete the basic implementation",
-        "Test your solution",
-        "Identify areas for improvement"
-      ]
-    }],
+    "exercises": [
+      {
+        "title": "Practice Testing Fundamentals",
+        "description": "Apply the concepts learned in this lesson through hands-on practice.",
+        "checkpoints": [
+          "Complete the basic implementation",
+          "Test your solution",
+          "Identify areas for improvement"
+        ]
+      }
+    ],
     "next": [],
     "estimatedMinutes": 30,
     "difficulty": "Advanced",
@@ -66,7 +70,8 @@
       "explanation": "This example demonstrates prevention techniques for the OWASP Top 10 security risks including injection prevention with parameterized queries, secure authentication with account lockout mechanisms, data encryption for sensitive information, XXE prevention in XML processing, access control implementation, and security misconfiguration handling.",
       "language": "javascript"
     },
-    "pitfalls": [{
+    "pitfalls": [
+      {
         "mistake": "Relying on client-side validation alone for security",
         "solution": "Always implement server-side validation and never trust client-side input",
         "severity": "high"
@@ -82,17 +87,19 @@
         "severity": "medium"
       }
     ],
-    "exercises": [{
-      "title": "OWASP Top 10 Vulnerability Assessment",
-      "description": "Conduct a security review of a sample application to identify OWASP Top 10 vulnerabilities and implement fixes.",
-      "checkpoints": [
-        "Analyze sample code for injection vulnerabilities and implement parameterized queries",
-        "Review authentication mechanisms and add account lockout functionality",
-        "Identify sensitive data exposure and implement proper encryption",
-        "Check access controls and implement role-based permissions",
-        "Review security configurations and apply appropriate headers"
-      ]
-    }],
+    "exercises": [
+      {
+        "title": "OWASP Top 10 Vulnerability Assessment",
+        "description": "Conduct a security review of a sample application to identify OWASP Top 10 vulnerabilities and implement fixes.",
+        "checkpoints": [
+          "Analyze sample code for injection vulnerabilities and implement parameterized queries",
+          "Review authentication mechanisms and add account lockout functionality",
+          "Identify sensitive data exposure and implement proper encryption",
+          "Check access controls and implement role-based permissions",
+          "Review security configurations and apply appropriate headers"
+        ]
+      }
+    ],
     "next": [],
     "estimatedMinutes": 45,
     "difficulty": "Advanced",
@@ -122,7 +129,8 @@
       "explanation": "This comprehensive example demonstrates input validation and data sanitization techniques including email, username, and password validation; HTML, JavaScript, and CSS sanitization; secure file upload handling with validation and malware scanning; and reusable validation middleware for Express applications.",
       "language": "javascript"
     },
-    "pitfalls": [{
+    "pitfalls": [
+      {
         "mistake": "Relying only on client-side validation",
         "solution": "Always implement server-side validation as client-side validation can be bypassed",
         "severity": "high"
@@ -138,17 +146,19 @@
         "severity": "high"
       }
     ],
-    "exercises": [{
-      "title": "Implement Secure Input Validation",
-      "description": "Create a comprehensive input validation system for a user registration form with email, username, password, and profile fields.",
-      "checkpoints": [
-        "Implement validation for all form fields with appropriate constraints",
-        "Add sanitization for user-provided content to prevent XSS",
-        "Create secure file upload handling for profile pictures",
-        "Implement validation middleware for Express routes",
-        "Test validation with both valid and invalid inputs"
-      ]
-    }],
+    "exercises": [
+      {
+        "title": "Implement Secure Input Validation",
+        "description": "Create a comprehensive input validation system for a user registration form with email, username, password, and profile fields.",
+        "checkpoints": [
+          "Implement validation for all form fields with appropriate constraints",
+          "Add sanitization for user-provided content to prevent XSS",
+          "Create secure file upload handling for profile pictures",
+          "Implement validation middleware for Express routes",
+          "Test validation with both valid and invalid inputs"
+        ]
+      }
+    ],
     "next": [],
     "estimatedMinutes": 60,
     "difficulty": "Advanced",
@@ -178,7 +188,8 @@
       "explanation": "This example demonstrates security performance optimization techniques including bcrypt cost factor benchmarking, optimized session management with Redis caching, performance-optimized rate limiting using Redis pipelines, cached access control to reduce database queries, streaming encryption for large files, batch processing for cryptographic operations, and security-focused performance testing utilities.",
       "language": "javascript"
     },
-    "pitfalls": [{
+    "pitfalls": [
+      {
         "mistake": "Using overly expensive cryptographic operations in request path",
         "solution": "Benchmark different security parameter levels and choose appropriate trade-offs between security and performance",
         "severity": "high"
@@ -194,17 +205,19 @@
         "severity": "high"
       }
     ],
-    "exercises": [{
-      "title": "Security Performance Optimization Implementation",
-      "description": "Implement performance optimizations for a security system including benchmarking cryptographic operations, implementing cached access control, and optimizing session management.",
-      "checkpoints": [
-        "Benchmark different bcrypt cost factors and document performance impact",
-        "Implement cached access control with proper invalidation",
-        "Optimize session management with Redis caching",
-        "Create batch processing for multiple password hashing operations",
-        "Measure performance improvements before and after optimizations"
-      ]
-    }],
+    "exercises": [
+      {
+        "title": "Security Performance Optimization Implementation",
+        "description": "Implement performance optimizations for a security system including benchmarking cryptographic operations, implementing cached access control, and optimizing session management.",
+        "checkpoints": [
+          "Benchmark different bcrypt cost factors and document performance impact",
+          "Implement cached access control with proper invalidation",
+          "Optimize session management with Redis caching",
+          "Create batch processing for multiple password hashing operations",
+          "Measure performance improvements before and after optimizations"
+        ]
+      }
+    ],
     "next": [],
     "estimatedMinutes": 60,
     "difficulty": "Advanced",
@@ -234,7 +247,8 @@
       "explanation": "This example demonstrates automated security testing implementation including dependency vulnerability scanning with npm audit, static application security testing (SAST) with ESLint, CI/CD pipeline integration with configurable failure thresholds, container image scanning, and security configuration checking utilities.",
       "language": "javascript"
     },
-    "pitfalls": [{
+    "pitfalls": [
+      {
         "mistake": "Failing to configure security tools properly leading to excessive false positives",
         "solution": "Spend time configuring security tools for your specific technology stack and establish baseline configurations that minimize noise while catching real issues",
         "severity": "medium"
@@ -250,17 +264,19 @@
         "severity": "high"
       }
     ],
-    "exercises": [{
-      "title": "Automated Security Testing Implementation",
-      "description": "Implement a comprehensive automated security testing pipeline including dependency scanning, SAST integration, and CI/CD pipeline configuration.",
-      "checkpoints": [
-        "Implement dependency vulnerability scanning with npm audit",
-        "Integrate ESLint with security plugins for SAST",
-        "Create a CI/CD pipeline configuration that runs security checks",
-        "Implement risk-based vulnerability prioritization",
-        "Generate and analyze security reports from pipeline runs"
-      ]
-    }],
+    "exercises": [
+      {
+        "title": "Automated Security Testing Implementation",
+        "description": "Implement a comprehensive automated security testing pipeline including dependency scanning, SAST integration, and CI/CD pipeline configuration.",
+        "checkpoints": [
+          "Implement dependency vulnerability scanning with npm audit",
+          "Integrate ESLint with security plugins for SAST",
+          "Create a CI/CD pipeline configuration that runs security checks",
+          "Implement risk-based vulnerability prioritization",
+          "Generate and analyze security reports from pipeline runs"
+        ]
+      }
+    ],
     "next": [],
     "estimatedMinutes": 75,
     "difficulty": "Advanced",
@@ -290,7 +306,8 @@
       "explanation": "This example demonstrates secure code quality practices including security-focused ESLint configuration with security plugins, a comprehensive security code review checklist utility, automated security quality gates with configurable thresholds, security code quality metrics calculation, and automated security review tools that detect common vulnerabilities and anti-patterns.",
       "language": "javascript"
     },
-    "pitfalls": [{
+    "pitfalls": [
+      {
         "mistake": "Treating security code reviews as separate from regular code reviews",
         "solution": "Integrate security considerations into all code reviews and train all developers to recognize security-relevant changes",
         "severity": "high"
@@ -306,17 +323,19 @@
         "severity": "medium"
       }
     ],
-    "exercises": [{
-      "title": "Secure Code Quality Implementation",
-      "description": "Implement a comprehensive secure code quality system including ESLint security configuration, automated quality gates, and security metrics tracking.",
-      "checkpoints": [
-        "Configure ESLint with security plugins and rules",
-        "Implement automated security quality gates with configurable thresholds",
-        "Create security code quality metrics dashboard",
-        "Set up automated security review tools for common vulnerabilities",
-        "Integrate security checks into development workflow"
-      ]
-    }],
+    "exercises": [
+      {
+        "title": "Secure Code Quality Implementation",
+        "description": "Implement a comprehensive secure code quality system including ESLint security configuration, automated quality gates, and security metrics tracking.",
+        "checkpoints": [
+          "Configure ESLint with security plugins and rules",
+          "Implement automated security quality gates with configurable thresholds",
+          "Create security code quality metrics dashboard",
+          "Set up automated security review tools for common vulnerabilities",
+          "Integrate security checks into development workflow"
+        ]
+      }
+    ],
     "next": [],
     "estimatedMinutes": 90,
     "difficulty": "Advanced",
@@ -346,7 +365,8 @@
       "explanation": "This example demonstrates security review processes and collaboration including a structured security review framework with different review types and checklists, a security collaboration platform for issue tracking and team communication, automated security review integration with pull requests, and security review metrics and analytics for measuring effectiveness.",
       "language": "javascript"
     },
-    "pitfalls": [{
+    "pitfalls": [
+      {
         "mistake": "Creating security review processes that are too slow or bureaucratic",
         "solution": "Design streamlined review processes with clear criteria and integrate automated checks to handle routine issues, reserving human review for complex security decisions",
         "severity": "high"
@@ -362,17 +382,19 @@
         "severity": "medium"
       }
     ],
-    "exercises": [{
-      "title": "Security Review Process Implementation",
-      "description": "Implement a comprehensive security review process including structured review frameworks, collaboration tools, and metrics tracking.",
-      "checkpoints": [
-        "Create security review templates for different review types",
-        "Implement a security collaboration platform for issue tracking",
-        "Set up automated security review integration with pull requests",
-        "Establish security review metrics and reporting",
-        "Test the end-to-end review process with sample code changes"
-      ]
-    }],
+    "exercises": [
+      {
+        "title": "Security Review Process Implementation",
+        "description": "Implement a comprehensive security review process including structured review frameworks, collaboration tools, and metrics tracking.",
+        "checkpoints": [
+          "Create security review templates for different review types",
+          "Implement a security collaboration platform for issue tracking",
+          "Set up automated security review integration with pull requests",
+          "Establish security review metrics and reporting",
+          "Test the end-to-end review process with sample code changes"
+        ]
+      }
+    ],
     "next": [],
     "estimatedMinutes": 90,
     "difficulty": "Advanced",
@@ -402,7 +424,8 @@
       "explanation": "This example demonstrates security in CI/CD including CI/CD pipeline configuration with security checks, security quality gate implementation with configurable thresholds, automated security validation for deployments, security monitoring and alerting systems, and CI/CD security metrics and reporting.",
       "language": "javascript"
     },
-    "pitfalls": [{
+    "pitfalls": [
+      {
         "mistake": "Adding too many security checks which slow down the pipeline",
         "solution": "Prioritize security checks based on risk and implement them at appropriate stages in the pipeline, using fast feedback loops for critical issues and more thorough analysis for less critical ones",
         "severity": "high"
@@ -418,17 +441,19 @@
         "severity": "high"
       }
     ],
-    "exercises": [{
-      "title": "CI/CD Security Implementation",
-      "description": "Implement a comprehensive CI/CD security pipeline including security gates, deployment validation, and monitoring.",
-      "checkpoints": [
-        "Configure security checks in a CI/CD pipeline",
-        "Implement security quality gates with configurable thresholds",
-        "Set up automated deployment security validation",
-        "Create security monitoring and alerting for production",
-        "Establish CI/CD security metrics and reporting"
-      ]
-    }],
+    "exercises": [
+      {
+        "title": "CI/CD Security Implementation",
+        "description": "Implement a comprehensive CI/CD security pipeline including security gates, deployment validation, and monitoring.",
+        "checkpoints": [
+          "Configure security checks in a CI/CD pipeline",
+          "Implement security quality gates with configurable thresholds",
+          "Set up automated deployment security validation",
+          "Create security monitoring and alerting for production",
+          "Establish CI/CD security metrics and reporting"
+        ]
+      }
+    ],
     "next": [],
     "estimatedMinutes": 120,
     "difficulty": "Expert",
@@ -458,7 +483,8 @@
       "explanation": "This example demonstrates security monitoring and incident response including a security monitoring framework with pluggable monitors, specific security monitors for authentication and file integrity, an incident response system with playbooks, a notification system for alerts and incidents, and security monitoring playbooks for common incident types.",
       "language": "javascript"
     },
-    "pitfalls": [{
+    "pitfalls": [
+      {
         "mistake": "Creating too many alerts which lead to alert fatigue",
         "solution": "Implement alert correlation and prioritization to reduce noise and ensure that critical alerts are not lost in a sea of low-priority notifications",
         "severity": "high"
@@ -474,17 +500,19 @@
         "severity": "high"
       }
     ],
-    "exercises": [{
-      "title": "Security Monitoring Implementation",
-      "description": "Implement a comprehensive security monitoring and incident response system including monitoring framework, alerting, and incident response playbooks.",
-      "checkpoints": [
-        "Create a security monitoring framework with pluggable monitors",
-        "Implement specific security monitors for common threats",
-        "Set up alerting and notification systems",
-        "Develop incident response playbooks for different threat types",
-        "Test the end-to-end monitoring and response workflow"
-      ]
-    }],
+    "exercises": [
+      {
+        "title": "Security Monitoring Implementation",
+        "description": "Implement a comprehensive security monitoring and incident response system including monitoring framework, alerting, and incident response playbooks.",
+        "checkpoints": [
+          "Create a security monitoring framework with pluggable monitors",
+          "Implement specific security monitors for common threats",
+          "Set up alerting and notification systems",
+          "Develop incident response playbooks for different threat types",
+          "Test the end-to-end monitoring and response workflow"
+        ]
+      }
+    ],
     "next": [],
     "estimatedMinutes": 120,
     "difficulty": "Expert",
@@ -514,7 +542,8 @@
       "explanation": "This example demonstrates security debugging and forensic analysis including a security debugging framework for evidence collection, log analysis tools for detecting security events, memory analysis tools for finding suspicious content, network traffic analysis for identifying malicious activity, and file system analysis for detecting suspicious files.",
       "language": "javascript"
     },
-    "pitfalls": [{
+    "pitfalls": [
+      {
         "mistake": "Creating too many alerts which lead to alert fatigue",
         "solution": "Implement alert correlation and prioritization to reduce noise and ensure that critical alerts are not lost in a sea of low-priority notifications",
         "severity": "high"
@@ -530,17 +559,19 @@
         "severity": "high"
       }
     ],
-    "exercises": [{
-      "title": "Security Monitoring Implementation",
-      "description": "Implement a comprehensive security monitoring and incident response system including monitoring framework, alerting, and incident response playbooks.",
-      "checkpoints": [
-        "Create a security monitoring framework with pluggable monitors",
-        "Implement specific security monitors for common threats",
-        "Set up alerting and notification systems",
-        "Develop incident response playbooks for different threat types",
-        "Test the end-to-end monitoring and response workflow"
-      ]
-    }],
+    "exercises": [
+      {
+        "title": "Security Monitoring Implementation",
+        "description": "Implement a comprehensive security monitoring and incident response system including monitoring framework, alerting, and incident response playbooks.",
+        "checkpoints": [
+          "Create a security monitoring framework with pluggable monitors",
+          "Implement specific security monitors for common threats",
+          "Set up alerting and notification systems",
+          "Develop incident response playbooks for different threat types",
+          "Test the end-to-end monitoring and response workflow"
+        ]
+      }
+    ],
     "next": [],
     "estimatedMinutes": 120,
     "difficulty": "Expert",
@@ -552,5 +583,320 @@
     ],
     "lastUpdated": "2025-10-03T15:30:00.000Z",
     "version": "1.1.0"
+  },
+  {
+    "id": "security-fundamentals-lesson-11",
+    "moduleSlug": "security-fundamentals",
+    "title": "OAuth2 and OpenID Connect",
+    "order": 11,
+    "objectives": [
+      "Implement OAuth2 authorization flows for secure API access",
+      "Use OpenID Connect for user authentication and identity management",
+      "Configure JWT tokens with proper signing and validation",
+      "Apply security best practices for OAuth2 and OIDC implementations"
+    ],
+    "intro": "OAuth2 and OpenID Connect (OIDC) are industry-standard protocols for authorization and authentication that enable secure access to resources and user identity management. OAuth2 provides a framework for delegated authorization, allowing users to grant third-party applications access to their resources without sharing credentials. OpenID Connect builds on OAuth2 to provide authentication capabilities, making it possible to verify user identity while leveraging OAuth2's authorization framework.\n\nOAuth2 defines several authorization flows, each suited for different types of applications and security requirements. The Authorization Code flow is recommended for server-side web applications, providing robust security through temporary authorization codes and backend token exchange. The Implicit flow was designed for browser-based applications but has been largely superseded by the Authorization Code flow with PKCE. The Client Credentials flow is used for machine-to-machine communication where user context isn't needed.\n\nOpenID Connect extends OAuth2 by adding an ID token to the authorization response, providing information about the authenticated user. This ID token is a JWT that contains claims about the user's identity, enabling applications to authenticate users while still using OAuth2 for authorization. OIDC also defines standard scopes like 'openid', 'profile', and 'email' that applications can request to obtain user information.\n\nProper implementation of OAuth2 and OIDC requires careful attention to security considerations including secure token storage, appropriate token lifetimes, and protection against common attacks like CSRF and token replay. Applications must validate tokens properly, use secure communication channels, and implement proper error handling to prevent security vulnerabilities.\n\nIn this lesson, you'll learn to implement OAuth2 authorization flows, use OpenID Connect for authentication, configure JWT tokens with proper security measures, and apply best practices for secure OAuth2 and OIDC implementations.",
+    "code": {
+      "example": "// oauth2-client.js - OAuth2 client implementation\nconst crypto = require('crypto');\nconst querystring = require('querystring');\n\n// OAuth2 client configuration\nclass OAuth2Client {\n  constructor(config) {\n    this.clientId = config.clientId;\n    this.clientSecret = config.clientSecret;\n    this.redirectUri = config.redirectUri;\n    this.authorizationEndpoint = config.authorizationEndpoint;\n    this.tokenEndpoint = config.tokenEndpoint;\n    this.userInfoEndpoint = config.userInfoEndpoint;\n  }\n  \n  // Generate PKCE code verifier and challenge\n  generatePKCE() {\n    const codeVerifier = crypto.randomBytes(32).toString('base64url');\n    const codeChallenge = crypto.createHash('sha256')\n      .update(codeVerifier)\n      .digest('base64url');\n    \n    return { codeVerifier, codeChallenge };\n  }\n  \n  // Generate authorization URL\n  getAuthorizationUrl(scopes = ['openid', 'profile', 'email'], state = null) {\n    const { codeChallenge } = this.generatePKCE();\n    \n    const params = {\n      response_type: 'code',\n      client_id: this.clientId,\n      redirect_uri: this.redirectUri,\n      scope: scopes.join(' '),\n      state: state || crypto.randomBytes(16).toString('hex'),\n      code_challenge: codeChallenge,\n      code_challenge_method: 'S256'\n    };\n    \n    return `${this.authorizationEndpoint}?${querystring.stringify(params)}`;\n  }\n  \n  // Exchange authorization code for tokens\n  async exchangeCodeForTokens(authorizationCode, codeVerifier) {\n    const tokenRequest = {\n      grant_type: 'authorization_code',\n      code: authorizationCode,\n      redirect_uri: this.redirectUri,\n      client_id: this.clientId,\n      client_secret: this.clientSecret,\n      code_verifier: codeVerifier\n    };\n    \n    const response = await fetch(this.tokenEndpoint, {\n      method: 'POST',\n      headers: {\n        'Content-Type': 'application/x-www-form-urlencoded'\n      },\n      body: querystring.stringify(tokenRequest)\n    });\n    \n    if (!response.ok) {\n      throw new Error(`Token exchange failed: ${response.status} ${response.statusText}`);\n    }\n    \n    return await response.json();\n  }\n  \n  // Refresh access token\n  async refreshAccessToken(refreshToken) {\n    const refreshRequest = {\n      grant_type: 'refresh_token',\n      refresh_token: refreshToken,\n      client_id: this.clientId,\n      client_secret: this.clientSecret\n    };\n    \n    const response = await fetch(this.tokenEndpoint, {\n      method: 'POST',\n      headers: {\n        'Content-Type': 'application/x-www-form-urlencoded'\n      },\n      body: querystring.stringify(refreshRequest)\n    });\n    \n    if (!response.ok) {\n      throw new Error(`Token refresh failed: ${response.status} ${response.statusText}`);\n    }\n    \n    return await response.json();\n  }\n  \n  // Get user info\n  async getUserInfo(accessToken) {\n    const response = await fetch(this.userInfoEndpoint, {\n      headers: {\n        'Authorization': `Bearer ${accessToken}`\n      }\n    });\n    \n    if (!response.ok) {\n      throw new Error(`User info request failed: ${response.status} ${response.statusText}`);\n    }\n    \n    return await response.json();\n  }\n}\n\n// jwt-validator.js - JWT token validation\nconst jwt = require('jsonwebtoken');\nconst jwksClient = require('jwks-rsa');\n\n// JWT validation utility\nclass JWTValidator {\n  constructor(issuer, audience, jwksUri) {\n    this.issuer = issuer;\n    this.audience = audience;\n    this.jwksClient = jwksClient({\n      jwksUri: jwksUri,\n      cache: true,\n      cacheMaxAge: 3600000 // 1 hour\n    });\n  }\n  \n  // Get signing key from JWKS\n  async getSigningKey(kid) {\n    return new Promise((resolve, reject) => {\n      this.jwksClient.getSigningKey(kid, (err, key) => {\n        if (err) {\n          reject(err);\n        } else {\n          resolve(key.getPublicKey());\n        }\n      });\n    });\n  }\n  \n  // Validate JWT token\n  async validateToken(token) {\n    // Decode token to get header\n    const decoded = jwt.decode(token, { complete: true });\n    if (!decoded) {\n      throw new Error('Invalid token format');\n    }\n    \n    // Get signing key\n    const signingKey = await this.getSigningKey(decoded.header.kid);\n    \n    // Verify token\n    const verified = jwt.verify(token, signingKey, {\n      issuer: this.issuer,\n      audience: this.audience,\n      algorithms: ['RS256']\n    });\n    \n    // Additional validation\n    const now = Math.floor(Date.now() / 1000);\n    if (verified.exp < now) {\n      throw new Error('Token has expired');\n    }\n    \n    if (verified.nbf && verified.nbf > now) {\n      throw new Error('Token not yet valid');\n    }\n    \n    return verified;\n  }\n}\n\n// oidc-middleware.js - OIDC middleware for Express\nconst express = require('express');\n\n// OIDC middleware\nclass OIDCMiddleware {\n  constructor(oauth2Client, jwtValidator) {\n    this.oauth2Client = oauth2Client;\n    this.jwtValidator = jwtValidator;\n  }\n  \n  // Authentication middleware\n  authenticate() {\n    return async (req, res, next) => {\n      const authHeader = req.headers.authorization;\n      \n      if (!authHeader || !authHeader.startsWith('Bearer ')) {\n        return res.status(401).json({\n          error: 'Unauthorized',\n          message: 'Missing or invalid authorization header'\n        });\n      }\n      \n      const token = authHeader.substring(7); // Remove 'Bearer '\n      \n      try {\n        // Validate JWT token\n        const decoded = await this.jwtValidator.validateToken(token);\n        \n        // Attach user info to request\n        req.user = {\n          id: decoded.sub,\n          email: decoded.email,\n          name: decoded.name,\n          scopes: decoded.scope ? decoded.scope.split(' ') : []\n        };\n        \n        next();\n      } catch (error) {\n        console.error('Token validation error:', error);\n        return res.status(401).json({\n          error: 'Unauthorized',\n          message: 'Invalid or expired token'\n        });\n      }\n    };\n  }\n  \n  // Authorization middleware\n  authorize(requiredScopes = []) {\n    return (req, res, next) => {\n      if (!req.user) {\n        return res.status(401).json({\n          error: 'Unauthorized',\n          message: 'Authentication required'\n        });\n      }\n      \n      // Check if user has required scopes\n      const userScopes = req.user.scopes || [];\n      const hasRequiredScopes = requiredScopes.every(scope => \n        userScopes.includes(scope)\n      );\n      \n      if (!hasRequiredScopes) {\n        return res.status(403).json({\n          error: 'Forbidden',\n          message: 'Insufficient permissions',\n          requiredScopes\n        });\n      }\n      \n      next();\n    };\n  }\n}\n\n// app.js - Express app with OIDC integration\nconst app = express();\n\n// Initialize OAuth2 client\nconst oauth2Client = new OAuth2Client({\n  clientId: process.env.OAUTH2_CLIENT_ID,\n  clientSecret: process.env.OAUTH2_CLIENT_SECRET,\n  redirectUri: 'http://localhost:3000/callback',\n  authorizationEndpoint: 'https://auth.example.com/oauth2/authorize',\n  tokenEndpoint: 'https://auth.example.com/oauth2/token',\n  userInfoEndpoint: 'https://auth.example.com/oauth2/userinfo'\n});\n\n// Initialize JWT validator\nconst jwtValidator = new JWTValidator(\n  'https://auth.example.com',\n  process.env.OAUTH2_CLIENT_ID,\n  'https://auth.example.com/oauth2/jwks'\n);\n\n// Initialize OIDC middleware\nconst oidcMiddleware = new OIDCMiddleware(oauth2Client, jwtValidator);\n\n// Routes\napp.get('/auth/login', (req, res) => {\n  const authUrl = oauth2Client.getAuthorizationUrl();\n  res.redirect(authUrl);\n});\n\napp.get('/callback', async (req, res) => {\n  try {\n    const { code, state } = req.query;\n    \n    // In a real implementation, verify state parameter\n    \n    // Exchange code for tokens\n    const tokens = await oauth2Client.exchangeCodeForTokens(code, 'verifier');\n    \n    // Store tokens securely (in real app, use secure HTTP-only cookies)\n    res.json({\n      message: 'Authentication successful',\n      accessToken: tokens.access_token,\n      refreshToken: tokens.refresh_token,\n      idToken: tokens.id_token\n    });\n  } catch (error) {\n    console.error('Authentication error:', error);\n    res.status(500).json({\n      error: 'Authentication failed',\n      message: error.message\n    });\n  }\n});\n\n// Protected routes\napp.get('/api/profile', \n  oidcMiddleware.authenticate(),\n  oidcMiddleware.authorize(['profile']),\n  async (req, res) => {\n    try {\n      const userInfo = await oauth2Client.getUserInfo(req.headers.authorization.substring(7));\n      res.json({\n        user: userInfo\n      });\n    } catch (error) {\n      console.error('User info error:', error);\n      res.status(500).json({\n        error: 'Failed to retrieve user info',\n        message: error.message\n      });\n    }\n  }\n);\n\napp.get('/api/admin',\n  oidcMiddleware.authenticate(),\n  oidcMiddleware.authorize(['admin']),\n  (req, res) => {\n    res.json({\n      message: 'Admin access granted',\n      user: req.user\n    });\n  }\n);\n\nconst PORT = process.env.PORT || 3000;\napp.listen(PORT, () => {\n  console.log(`OAuth2/OIDC server running on port ${PORT}`);\n});\n\n// security-best-practices.js - Security considerations\n\n// 1. Secure token storage\nconst secureTokenStorage = {\n  // For web applications, store tokens in secure HTTP-only cookies\n  storeInCookie: (res, token, name) => {\n    res.cookie(name, token, {\n      httpOnly: true,      // Prevent XSS\n      secure: true,        // HTTPS only\n      sameSite: 'strict',  // CSRF protection\n      maxAge: 3600000      // 1 hour\n    });\n  },\n  \n  // For mobile/native apps, use secure storage mechanisms\n  storeInSecureStorage: (token, name) => {\n    // Implementation depends on platform\n    // iOS: Keychain, Android: Keystore\n    console.log(`Storing ${name} in secure storage`);\n  }\n};\n\n// 2. Token refresh handling\nconst tokenRefreshHandler = {\n  // Automatic token refresh\n  autoRefresh: async (refreshToken, oauth2Client) => {\n    try {\n      const newTokens = await oauth2Client.refreshAccessToken(refreshToken);\n      return newTokens;\n    } catch (error) {\n      // Handle refresh failure (e.g., refresh token expired)\n      console.error('Token refresh failed:', error);\n      throw new Error('Session expired, please log in again');\n    }\n  },\n  \n  // Token expiration handling\n  handleTokenExpiration: (error) => {\n    if (error.message.includes('expired') || error.message.includes('invalid')) {\n      // Redirect to login or trigger refresh\n      return { requiresLogin: true };\n    }\n    return { requiresLogin: false };\n  }\n};\n\n// 3. PKCE implementation (already shown in OAuth2Client)\n\n// 4. State parameter for CSRF protection\nconst stateProtection = {\n  generateState: () => {\n    return crypto.randomBytes(32).toString('hex');\n  },\n  \n  verifyState: (receivedState, expectedState) => {\n    // Use constant-time comparison to prevent timing attacks\n    return crypto.timingSafeEqual(\n      Buffer.from(receivedState),\n      Buffer.from(expectedState)\n    );\n  }\n};",
+      "explanation": "This example demonstrates OAuth2 and OpenID Connect implementation including:\n\n1. **OAuth2 Client Implementation**: Authorization Code flow with PKCE\n2. **JWT Token Validation**: Secure token verification with JWKS\n3. **OpenID Connect Middleware**: Authentication and authorization middleware\n4. **Security Best Practices**: Secure token storage and handling\n5. **PKCE Implementation**: Proof Key for Code Exchange for public clients\n\nKey concepts illustrated:\n- OAuth2 authorization flows\n- OpenID Connect authentication\n- JWT token validation\n- PKCE for public clients\n- Secure token storage\n- Authorization middleware\n- Error handling\n\nThe examples show:\n- Authorization URL generation\n- Token exchange with PKCE\n- JWT validation with JWKS\n- User info retrieval\n- Protected route implementation\n- Security best practices",
+      "language": "javascript"
+    },
+    "pitfalls": [
+      {
+        "mistake": "Not using PKCE for public clients leading to authorization code interception attacks",
+        "solution": "Always implement PKCE for public clients and mobile applications to prevent authorization code interception",
+        "severity": "high"
+      },
+      {
+        "mistake": "Storing tokens insecurely in local storage or cookies without proper security flags",
+        "solution": "Use secure HTTP-only cookies with SameSite flags or platform-specific secure storage for tokens",
+        "severity": "high"
+      },
+      {
+        "mistake": "Not validating JWT tokens properly including signature, issuer, and audience",
+        "solution": "Implement comprehensive JWT validation including signature verification, issuer and audience checks, and expiration validation",
+        "severity": "high"
+      }
+    ],
+    "exercises": [
+      {
+        "title": "Implement Secure OAuth2 and OIDC Integration",
+        "description": "Create a complete OAuth2 and OpenID Connect implementation with proper security measures.",
+        "checkpoints": [
+          "Implement OAuth2 Authorization Code flow with PKCE for a web application",
+          "Configure JWT token validation with proper signature verification",
+          "Create authentication and authorization middleware for protected routes",
+          "Implement secure token storage using HTTP-only cookies or platform-specific secure storage",
+          "Apply security best practices including state parameter validation and token refresh handling"
+        ]
+      }
+    ],
+    "next": [
+      "security-fundamentals-lesson-12"
+    ],
+    "estimatedMinutes": 90,
+    "difficulty": "Advanced",
+    "tags": [
+      "OAuth2",
+      "OpenID Connect",
+      "JWT",
+      "Authentication",
+      "Authorization"
+    ],
+    "lastUpdated": "2025-10-09T10:00:00.000Z",
+    "version": "1.0.0"
+  },
+  {
+    "id": "security-fundamentals-lesson-12",
+    "moduleSlug": "security-fundamentals",
+    "title": "API Security Best Practices",
+    "order": 12,
+    "objectives": [
+      "Implement rate limiting and throttling to prevent abuse",
+      "Apply proper authentication and authorization for API endpoints",
+      "Use API gateways and reverse proxies for security enforcement",
+      "Implement secure API documentation and versioning strategies"
+    ],
+    "intro": "API security is a critical concern in modern application development as APIs serve as the primary interface between different systems and expose sensitive business functionality. Proper API security requires a multi-layered approach that includes authentication, authorization, input validation, rate limiting, and monitoring to protect against various attack vectors.\n\nAuthentication and authorization are fundamental to API security, ensuring that only legitimate clients can access APIs and that they can only perform actions they're authorized to perform. This includes implementing strong authentication mechanisms like API keys, OAuth2 tokens, and JWT, along with proper authorization checks at the endpoint level. API security also requires careful consideration of token management, including proper storage, rotation, and revocation.\n\nRate limiting and throttling protect APIs from abuse and denial-of-service attacks by limiting the number of requests a client can make within a specific time period. Effective rate limiting strategies include different limits for different types of requests, IP-based limiting, and user-based limiting. Throttling can be implemented at various levels including application-level, infrastructure-level, and through API gateways.\n\nAPI gateways and reverse proxies provide centralized security enforcement points that can handle cross-cutting concerns like SSL termination, authentication, rate limiting, and logging. These components can also provide additional security features like request/response transformation, IP filtering, and payload inspection. Proper configuration of API gateways is essential for maintaining security without impacting performance.\n\nSecure API design includes implementing proper input validation, using HTTPS exclusively, sanitizing output to prevent injection attacks, and following security best practices for API documentation and versioning. API documentation should provide enough information for legitimate users while avoiding exposing implementation details that could aid attackers.\n\nIn this lesson, you'll learn to implement rate limiting and throttling, apply proper authentication and authorization, use API gateways for security enforcement, and implement secure API design practices.",
+    "code": {
+      "example": "// rate-limiter.js - Rate limiting implementation\nconst redis = require('redis');\n\nclass RateLimiter {\n  constructor(redisClient, options = {}) {\n    this.redis = redisClient;\n    this.windowMs = options.windowMs || 60000; // 1 minute\n    this.maxRequests = options.maxRequests || 100;\n    this.prefix = options.prefix || 'rate_limit';\n  }\n  \n  // Check if request is allowed\n  async isAllowed(identifier, maxRequests = this.maxRequests) {\n    const key = `${this.prefix}:${identifier}`;\n    const windowSeconds = Math.floor(this.windowMs / 1000);\n    \n    // Use Redis atomic operations for thread safety\n    const [current, _] = await Promise.all([\n      this.redis.incr(key),\n      this.redis.expire(key, windowSeconds)\n    ]);\n    \n    return current <= maxRequests;\n  }\n  \n  // Get current usage\n  async getUsage(identifier) {\n    const key = `${this.prefix}:${identifier}`;\n    const current = await this.redis.get(key);\n    return {\n      current: parseInt(current) || 0,\n      limit: this.maxRequests,\n      windowMs: this.windowMs\n    };\n  }\n  \n  // Sliding window rate limiter\n  async slidingWindow(identifier, maxRequests = this.maxRequests) {\n    const key = `${this.prefix}:sliding:${identifier}`;\n    const now = Date.now();\n    const windowStart = now - this.windowMs;\n    \n    // Remove old entries and add new one\n    const multi = this.redis.multi();\n    multi.zremrangebyscore(key, 0, windowStart);\n    multi.zadd(key, now, now.toString());\n    multi.zcard(key);\n    multi.expire(key, Math.floor(this.windowMs / 1000));\n    \n    const results = await multi.exec();\n    const count = results[2][1]; // zcard result\n    \n    return count <= maxRequests;\n  }\n}\n\n// api-security-middleware.js - API security middleware\nconst rateLimiter = new RateLimiter(redis.createClient());\n\n// Rate limiting middleware\nconst rateLimitMiddleware = (maxRequests = 100) => {\n  return async (req, res, next) => {\n    const identifier = req.ip || req.headers['x-forwarded-for'] || 'unknown';\n    \n    try {\n      const isAllowed = await rateLimiter.slidingWindow(identifier, maxRequests);\n      \n      if (!isAllowed) {\n        return res.status(429).json({\n          error: 'Too Many Requests',\n          message: 'Rate limit exceeded',\n          retryAfter: rateLimiter.windowMs\n        });\n      }\n      \n      // Add rate limit headers\n      const usage = await rateLimiter.getUsage(identifier);\n      res.set({\n        'X-RateLimit-Limit': usage.limit,\n        'X-RateLimit-Remaining': Math.max(0, usage.limit - usage.current),\n        'X-RateLimit-Reset': new Date(Date.now() + usage.windowMs).toISOString()\n      });\n      \n      next();\n    } catch (error) {\n      console.error('Rate limiting error:', error);\n      // Fail open to avoid blocking legitimate requests\n      next();\n    }\n  };\n};\n\n// Authentication middleware\nconst authenticateAPI = async (req, res, next) => {\n  const authHeader = req.headers.authorization;\n  \n  if (!authHeader || !authHeader.startsWith('Bearer ')) {\n    return res.status(401).json({\n      error: 'Unauthorized',\n      message: 'Missing or invalid authorization header'\n    });\n  }\n  \n  const token = authHeader.substring(7);\n  \n  try {\n    // Validate JWT token (implementation from previous lesson)\n    const decoded = await jwtValidator.validateToken(token);\n    \n    // Attach user info\n    req.user = {\n      id: decoded.sub,\n      scopes: decoded.scope ? decoded.scope.split(' ') : []\n    };\n    \n    next();\n  } catch (error) {\n    return res.status(401).json({\n      error: 'Unauthorized',\n      message: 'Invalid or expired token'\n    });\n  }\n};\n\n// Authorization middleware\nconst authorizeAPI = (requiredScopes = []) => {\n  return (req, res, next) => {\n    if (!req.user) {\n      return res.status(401).json({\n        error: 'Unauthorized',\n        message: 'Authentication required'\n      });\n    }\n    \n    const userScopes = req.user.scopes || [];\n    const hasRequiredScopes = requiredScopes.every(scope => \n      userScopes.includes(scope)\n    );\n    \n    if (!hasRequiredScopes) {\n      return res.status(403).json({\n        error: 'Forbidden',\n        message: 'Insufficient permissions',\n        requiredScopes\n      });\n    }\n    \n    next();\n  };\n};\n\n// Input validation middleware\nconst validateInput = (schema) => {\n  return (req, res, next) => {\n    try {\n      // Validate request body\n      if (req.body) {\n        const { error, value } = schema.validate(req.body, {\n          abortEarly: false,\n          stripUnknown: true\n        });\n        \n        if (error) {\n          return res.status(400).json({\n            error: 'Bad Request',\n            message: 'Invalid input data',\n            details: error.details.map(detail => ({\n              field: detail.path.join('.'),\n              message: detail.message\n            }))\n          });\n        }\n        \n        // Replace body with validated data\n        req.body = value;\n      }\n      \n      next();\n    } catch (error) {\n      return res.status(500).json({\n        error: 'Internal Server Error',\n        message: 'Input validation failed'\n      });\n    }\n  };\n};\n\n// Security headers middleware\nconst securityHeaders = (req, res, next) => {\n  res.set({\n    'X-Content-Type-Options': 'nosniff',\n    'X-Frame-Options': 'DENY',\n    'X-XSS-Protection': '1; mode=block',\n    'Strict-Transport-Security': 'max-age=31536000; includeSubDomains',\n    'Content-Security-Policy': \"default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'\",\n    'Referrer-Policy': 'no-referrer',\n    'Permissions-Policy': 'geolocation=(), microphone=(), camera=()'\n  });\n  \n  next();\n};\n\n// app.js - Express app with security middleware\nconst express = require('express');\nconst Joi = require('joi');\nconst app = express();\n\n// Middleware\napp.use(express.json());\napp.use(securityHeaders);\n\n// User schema for validation\nconst userSchema = Joi.object({\n  name: Joi.string().min(1).max(100).required(),\n  email: Joi.string().email().required(),\n  age: Joi.number().integer().min(0).max(150).required()\n});\n\n// Routes with security\napp.post('/api/users',\n  rateLimitMiddleware(50), // Stricter rate limit for user creation\n  authenticateAPI,\n  authorizeAPI(['users:create']),\n  validateInput(userSchema),\n  (req, res) => {\n    // Create user logic\n    res.status(201).json({\n      message: 'User created successfully',\n      user: req.body\n    });\n  }\n);\n\napp.get('/api/users/:id',\n  rateLimitMiddleware(), // Default rate limit\n  authenticateAPI,\n  authorizeAPI(['users:read']),\n  (req, res) => {\n    // Get user logic\n    res.json({\n      id: req.params.id,\n      name: 'John Doe',\n      email: 'john@example.com'\n    });\n  }\n);\n\napp.put('/api/users/:id',\n  rateLimitMiddleware(30), // Moderate rate limit for updates\n  authenticateAPI,\n  authorizeAPI(['users:update']),\n  validateInput(userSchema),\n  (req, res) => {\n    // Update user logic\n    res.json({\n      message: 'User updated successfully',\n      user: { id: req.params.id, ...req.body }\n    });\n  }\n);\n\napp.delete('/api/users/:id',\n  rateLimitMiddleware(10), // Strict rate limit for deletions\n  authenticateAPI,\n  authorizeAPI(['users:delete']),\n  (req, res) => {\n    // Delete user logic\n    res.json({\n      message: 'User deleted successfully'\n    });\n  }\n);\n\n// Health check endpoint (no authentication needed)\napp.get('/health', rateLimitMiddleware(1000), (req, res) => {\n  res.json({\n    status: 'healthy',\n    timestamp: new Date().toISOString()\n  });\n});\n\n// Error handling middleware\napp.use((error, req, res, next) => {\n  console.error('API Error:', error);\n  \n  // Don't leak internal error details\n  const statusCode = error.statusCode || 500;\n  const message = statusCode === 500 ? 'Internal Server Error' : error.message;\n  \n  res.status(statusCode).json({\n    error: message\n  });\n});\n\nconst PORT = process.env.PORT || 3000;\napp.listen(PORT, () => {\n  console.log(`Secure API server running on port ${PORT}`);\n});\n\n// api-gateway.js - API gateway configuration example\n/*\n// nginx.conf example\nserver {\n  listen 443 ssl;\n  server_name api.example.com;\n  \n  ssl_certificate /path/to/certificate.crt;\n  ssl_certificate_key /path/to/private.key;\n  \n  # Rate limiting\n  limit_req_zone $binary_remote_addr zone=api:10m rate=10r/s;\n  \n  location /api/ {\n    limit_req zone=api burst=20 nodelay;\n    \n    # Proxy to backend\n    proxy_pass http://backend_servers;\n    proxy_set_header Host $host;\n    proxy_set_header X-Real-IP $remote_addr;\n    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;\n    proxy_set_header X-Forwarded-Proto $scheme;\n    \n    # Security headers\n    add_header X-Content-Type-Options nosniff;\n    add_header X-Frame-Options DENY;\n    add_header X-XSS-Protection \"1; mode=block\";\n    add_header Strict-Transport-Security \"max-age=31536000; includeSubDomains\" always;\n    \n    # CORS\n    add_header Access-Control-Allow-Origin \"https://app.example.com\";\n    add_header Access-Control-Allow-Methods \"GET, POST, PUT, DELETE, OPTIONS\";\n    add_header Access-Control-Allow-Headers \"Authorization, Content-Type\";\n  }\n  \n  # API documentation\n  location /docs/ {\n    # Restrict access to documentation\n    allow 192.168.0.0/24;\n    deny all;\n    \n    root /var/www/docs;\n    index index.html;\n  }\n}\n*/\n\n// kong-api-gateway.js - Kong API gateway configuration\n/*\n// Rate limiting plugin configuration\n{\n  \"name\": \"rate-limiting\",\n  \"config\": {\n    \"minute\": 100,\n    \"hour\": 5000,\n    \"policy\": \"redis\",\n    \"redis_host\": \"localhost\",\n    \"redis_port\": 6379,\n    \"redis_database\": 1\n  }\n}\n\n// Key authentication plugin\n{\n  \"name\": \"key-auth\",\n  \"config\": {\n    \"key_names\": [\"apikey\"],\n    \"hide_credentials\": true\n  }\n}\n\n// ACL plugin for authorization\n{\n  \"name\": \"acl\",\n  \"config\": {\n    \"whitelist\": [\"admin\", \"user\"]\n  }\n}\n*/\n\n// security-monitoring.js - Security monitoring\n\n// Log security events\nconst securityLogger = {\n  logEvent: (eventType, details) => {\n    const logEntry = {\n      timestamp: new Date().toISOString(),\n      eventType,\n      ...details,\n      severity: getSeverity(eventType)\n    };\n    \n    console.log(`SECURITY: ${JSON.stringify(logEntry)}`);\n    \n    // In production, send to SIEM or security monitoring system\n    // sendToSIEM(logEntry);\n  }\n};\n\nconst getSeverity = (eventType) => {\n  const severityMap = {\n    'unauthorized_access': 'high',\n    'rate_limit_exceeded': 'medium',\n    'invalid_input': 'low',\n    'authentication_failure': 'high',\n    'authorization_failure': 'high'\n  };\n  \n  return severityMap[eventType] || 'low';\n};\n\n// Monitor for suspicious patterns\nconst securityMonitor = {\n  checkForSuspiciousActivity: (req) => {\n    // Check for common attack patterns\n    const suspiciousPatterns = [\n      /<script/i,           // XSS attempts\n      /\\b(union|select|insert|delete|drop)\\b/i, // SQL injection\n      /\\.\\./,               // Path traversal\n      /\\b(admin|root)\\b/i   // Privilege escalation attempts\n    ];\n    \n    const requestData = JSON.stringify({\n      url: req.url,\n      headers: req.headers,\n      body: req.body,\n      query: req.query\n    });\n    \n    for (const pattern of suspiciousPatterns) {\n      if (pattern.test(requestData)) {\n        securityLogger.logEvent('suspicious_activity', {\n          pattern: pattern.toString(),\n          ip: req.ip,\n          userAgent: req.headers['user-agent']\n        });\n        return true;\n      }\n    }\n    \n    return false;\n  }\n};",
+      "explanation": "This example demonstrates API security best practices including:\n\n1. **Rate Limiting**: Sliding window rate limiter with Redis backend\n2. **Authentication**: JWT token validation middleware\n3. **Authorization**: Scope-based access control\n4. **Input Validation**: Schema validation with Joi\n5. **Security Headers**: HTTP security headers middleware\n6. **API Gateway Configuration**: Nginx and Kong examples\n7. **Security Monitoring**: Logging and suspicious activity detection\n\nKey concepts illustrated:\n- Rate limiting algorithms\n- Authentication middleware\n- Authorization scopes\n- Input validation\n- Security headers\n- API gateway configuration\n- Security monitoring\n\nThe examples show:\n- Express middleware implementation\n- Redis-based rate limiting\n- JWT validation\n- Schema validation\n- Security headers\n- API gateway configuration\n- Security logging",
+      "language": "javascript"
+    },
+    "pitfalls": [
+      {
+        "mistake": "Not implementing rate limiting leading to denial-of-service vulnerabilities",
+        "solution": "Implement comprehensive rate limiting at both application and infrastructure levels with appropriate thresholds",
+        "severity": "high"
+      },
+      {
+        "mistake": "Failing to validate and sanitize API inputs leading to injection attacks",
+        "solution": "Implement strict input validation and sanitization for all API inputs using schema validation libraries",
+        "severity": "high"
+      },
+      {
+        "mistake": "Exposing sensitive information in API responses and error messages",
+        "solution": "Sanitize error responses and avoid exposing implementation details or sensitive data in API responses",
+        "severity": "medium"
+      }
+    ],
+    "exercises": [
+      {
+        "title": "Implement Comprehensive API Security",
+        "description": "Create a secure API with rate limiting, authentication, authorization, and input validation.",
+        "checkpoints": [
+          "Implement rate limiting with sliding window algorithm using Redis",
+          "Create authentication middleware with JWT token validation",
+          "Implement scope-based authorization for different API endpoints",
+          "Add input validation using schema validation libraries",
+          "Configure security headers and CORS policies",
+          "Set up API gateway with rate limiting and authentication plugins"
+        ]
+      }
+    ],
+    "next": [
+      "security-fundamentals-lesson-13"
+    ],
+    "estimatedMinutes": 90,
+    "difficulty": "Advanced",
+    "tags": [
+      "API Security",
+      "Rate Limiting",
+      "Authentication",
+      "Authorization",
+      "API Gateway"
+    ],
+    "lastUpdated": "2025-10-09T10:00:00.000Z",
+    "version": "1.0.0"
+  },
+  {
+    "id": "security-fundamentals-lesson-13",
+    "moduleSlug": "security-fundamentals",
+    "title": "Data Protection and Encryption",
+    "order": 13,
+    "objectives": [
+      "Implement data encryption for sensitive information at rest and in transit",
+      "Apply proper key management practices for cryptographic systems",
+      "Use hashing and salting techniques for password storage",
+      "Implement field-level encryption for database security"
+    ],
+    "intro": "Data protection and encryption are fundamental security measures that safeguard sensitive information from unauthorized access and disclosure. In today's digital landscape, organizations handle vast amounts of personal, financial, and confidential data that must be protected both by law and ethical responsibility. Effective data protection requires a comprehensive approach that includes encryption, proper key management, secure data handling practices, and compliance with relevant regulations.\n\nIn this lesson, you'll learn how to implement robust data encryption for information at rest and in transit. You'll understand the differences between symmetric and asymmetric encryption, when to use each approach, and how to properly implement cryptographic algorithms without introducing vulnerabilities. You'll also explore transport layer security (TLS) for protecting data in transit and learn about certificate management for secure communications.\n\nKey management is a critical aspect of cryptographic systems that often determines the overall security effectiveness. You'll learn about key generation, storage, rotation, and revocation practices. You'll understand the importance of using hardware security modules (HSMs) or cloud key management services for protecting cryptographic keys, and explore techniques for key derivation and distribution.\n\nPassword storage security is a specialized area that requires specific techniques to protect user credentials. You'll learn about proper hashing algorithms, salting techniques, and key stretching methods that make password cracking computationally expensive. You'll also explore modern approaches like bcrypt, scrypt, and Argon2, and understand how to implement secure password reset mechanisms.\n\nBy mastering data protection and encryption, you'll be able to implement comprehensive data security measures that protect sensitive information throughout its lifecycle while meeting compliance requirements and industry best practices.",
+    "code": {
+      "example": "// Data Protection and Encryption Implementation\n\n// 1. Symmetric Encryption Service\nconst crypto = require('crypto');\n\n// AES-256-GCM encryption service\nclass SymmetricEncryptionService {\n  // Generate a random encryption key\n  static generateKey() {\n    return crypto.randomBytes(32); // 256 bits\n  }\n  \n  // Encrypt data with AES-256-GCM\n  static encrypt(plaintext, key) {\n    // Generate a random initialization vector\n    const iv = crypto.randomBytes(16);\n    \n    // Create cipher\n    const cipher = crypto.createCipherGCM('aes-256-gcm', key, iv);\n    \n    // Encrypt the data\n    let encrypted = cipher.update(plaintext, 'utf8', 'hex');\n    encrypted += cipher.final('hex');\n    \n    // Get the authentication tag\n    const authTag = cipher.getAuthTag();\n    \n    // Return encrypted data with IV and auth tag\n    return {\n      data: encrypted,\n      iv: iv.toString('hex'),\n      authTag: authTag.toString('hex')\n    };\n  }\n  \n  // Decrypt data with AES-256-GCM\n  static decrypt(encryptedData, key) {\n    // Parse the encrypted data\n    const { data, iv, authTag } = encryptedData;\n    \n    // Create decipher\n    const decipher = crypto.createDecipherGCM('aes-256-gcm', key, Buffer.from(iv, 'hex'));\n    decipher.setAuthTag(Buffer.from(authTag, 'hex'));\n    \n    // Decrypt the data\n    let decrypted = decipher.update(data, 'hex', 'utf8');\n    decrypted += decipher.final('utf8');\n    \n    return decrypted;\n  }\n}\n\n// 2. Asymmetric Encryption Service\nconst NodeRSA = require('node-rsa');\n\nclass AsymmetricEncryptionService {\n  // Generate RSA key pair\n  static generateKeyPair() {\n    const key = new NodeRSA({ b: 2048 });\n    return {\n      publicKey: key.exportKey('public'),\n      privateKey: key.exportKey('private')\n    };\n  }\n  \n  // Encrypt with public key\n  static encrypt(plaintext, publicKey) {\n    const key = new NodeRSA(publicKey);\n    return key.encrypt(plaintext, 'base64');\n  }\n  \n  // Decrypt with private key\n  static decrypt(ciphertext, privateKey) {\n    const key = new NodeRSA(privateKey);\n    return key.decrypt(ciphertext, 'utf8');\n  }\n  \n  // Sign data with private key\n  static sign(data, privateKey) {\n    const key = new NodeRSA(privateKey);\n    return key.sign(data, 'base64');\n  }\n  \n  // Verify signature with public key\n  static verify(data, signature, publicKey) {\n    const key = new NodeRSA(publicKey);\n    return key.verify(data, signature, 'utf8', 'base64');\n  }\n}\n\n// 3. Secure Password Hashing\nconst bcrypt = require('bcrypt');\n\n// Password hashing service\nclass PasswordHashingService {\n  // Hash a password with bcrypt\n  static async hashPassword(password, saltRounds = 12) {\n    return await bcrypt.hash(password, saltRounds);\n  }\n  \n  // Verify a password against its hash\n  static async verifyPassword(password, hash) {\n    return await bcrypt.compare(password, hash);\n  }\n  \n  // Check if a password needs rehashing\n  static needsRehash(hash, currentRounds = 12) {\n    const rounds = bcrypt.getRounds(hash);\n    return rounds < currentRounds;\n  }\n}\n\n// 4. Key Management Service\nclass KeyManagementService {\n  constructor() {\n    // In production, use a secure key management system like AWS KMS or HashiCorp Vault\n    this.keys = new Map();\n  }\n  \n  // Generate and store a key\n  async generateKey(keyId, purpose) {\n    const key = crypto.randomBytes(32);\n    this.keys.set(keyId, {\n      key,\n      purpose,\n      createdAt: new Date(),\n      rotationDate: new Date(Date.now() + 90 * 24 * 60 * 60 * 1000) // 90 days\n    });\n    \n    // In production, store securely in a KMS\n    return key;\n  }\n  \n  // Retrieve a key\n  async getKey(keyId) {\n    const keyEntry = this.keys.get(keyId);\n    if (!keyEntry) {\n      throw new Error(`Key not found: ${keyId}`);\n    }\n    \n    // Check if key needs rotation\n    if (new Date() > keyEntry.rotationDate) {\n      console.warn(`Key ${keyId} should be rotated`);\n    }\n    \n    return keyEntry.key;\n  }\n  \n  // Rotate a key\n  async rotateKey(keyId) {\n    const oldKeyEntry = this.keys.get(keyId);\n    if (!oldKeyEntry) {\n      throw new Error(`Key not found: ${keyId}`);\n    }\n    \n    const newKey = crypto.randomBytes(32);\n    this.keys.set(keyId, {\n      key: newKey,\n      purpose: oldKeyEntry.purpose,\n      createdAt: new Date(),\n      rotationDate: new Date(Date.now() + 90 * 24 * 60 * 60 * 1000) // 90 days\n    });\n    \n    return newKey;\n  }\n}\n\n// 5. Field-Level Database Encryption\nconst keyManagementService = new KeyManagementService();\n\n// Encrypted field service\nclass EncryptedFieldService {\n  // Encrypt a field\n  static async encryptField(plaintext, keyId) {\n    const key = await keyManagementService.getKey(keyId);\n    return SymmetricEncryptionService.encrypt(plaintext, key);\n  }\n  \n  // Decrypt a field\n  static async decryptField(encryptedData, keyId) {\n    const key = await keyManagementService.getKey(keyId);\n    return SymmetricEncryptionService.decrypt(encryptedData, key);\n  }\n  \n  // Encrypt user data for storage\n  static async encryptUserData(userData) {\n    const ssnKey = await keyManagementService.getKey('ssn-key');\n    const emailKey = await keyManagementService.getKey('email-key');\n    \n    return {\n      ...userData,\n      ssn: SymmetricEncryptionService.encrypt(userData.ssn, ssnKey),\n      email: SymmetricEncryptionService.encrypt(userData.email, emailKey)\n    };\n  }\n  \n  // Decrypt user data for use\n  static async decryptUserData(encryptedUserData) {\n    const ssnKey = await keyManagementService.getKey('ssn-key');\n    const emailKey = await keyManagementService.getKey('email-key');\n    \n    return {\n      ...encryptedUserData,\n      ssn: SymmetricEncryptionService.decrypt(encryptedUserData.ssn, ssnKey),\n      email: SymmetricEncryptionService.decrypt(encryptedUserData.email, emailKey)\n    };\n  }\n}\n\n// 6. Transport Layer Security (TLS) Configuration\n\n// HTTPS server with proper TLS configuration\nconst https = require('https');\nconst fs = require('fs');\n\n// TLS configuration options\nconst tlsOptions = {\n  key: fs.readFileSync('path/to/private-key.pem'),\n  cert: fs.readFileSync('path/to/certificate.pem'),\n  ca: fs.readFileSync('path/to/ca-certificate.pem'),\n  \n  // Security options\n  minVersion: 'TLSv1.2',\n  maxVersion: 'TLSv1.3',\n  ciphers: [\n    'ECDHE-RSA-AES256-GCM-SHA384',\n    'ECDHE-RSA-AES128-GCM-SHA256',\n    'DHE-RSA-AES256-GCM-SHA384',\n    'DHE-RSA-AES128-GCM-SHA256'\n  ].join(':'),\n  \n  // Prevent insecure renegotiation\n  secureOptions: crypto.constants.SSL_OP_NO_SSLv2 | \n                 crypto.constants.SSL_OP_NO_SSLv3 | \n                 crypto.constants.SSL_OP_NO_TLSv1 | \n                 crypto.constants.SSL_OP_NO_TLSv1_1,\n  \n  // OCSP stapling\n  requestOCSP: true\n};\n\n// Create HTTPS server\nconst server = https.createServer(tlsOptions, (req, res) => {\n  res.writeHead(200);\n  res.end('Secure connection!');\n});\n\nserver.listen(443, () => {\n  console.log('HTTPS server running with secure TLS configuration');\n});\n\n// 7. Data Protection Utilities\n\nclass DataProtectionUtils {\n  // Mask sensitive data for logging\n  static maskSensitiveData(data, maskChar = '*') {\n    if (typeof data !== 'string') return data;\n    \n    // Mask credit card numbers\n    data = data.replace(/\\b(?:\\d{4}[ -]?){3}\\d{4}\\b/g, (match) => {\n      return match.slice(0, -4).replace(/\\d/g, maskChar) + match.slice(-4);\n    });\n    \n    // Mask SSN\n    data = data.replace(/\\b\\d{3}-\\d{2}-\\d{4}\\b/g, (match) => {\n      return match.slice(0, -4).replace(/\\d/g, maskChar) + match.slice(-4);\n    });\n    \n    // Mask email addresses\n    data = data.replace(/\\b[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}\\b/g, (match) => {\n      const [local, domain] = match.split('@');\n      const maskedLocal = local.slice(0, 1) + maskChar.repeat(Math.max(0, local.length - 2)) + local.slice(-1);\n      return `${maskedLocal}@${domain}`;\n    });\n    \n    return data;\n  }\n  \n  // Securely delete files\n  static async secureDelete(filePath, passes = 3) {\n    const fsPromises = require('fs').promises;\n    \n    try {\n      // Get file size\n      const stats = await fsPromises.stat(filePath);\n      const fileSize = stats.size;\n      \n      // Overwrite file multiple times with random data\n      for (let i = 0; i < passes; i++) {\n        const randomData = crypto.randomBytes(fileSize);\n        await fsPromises.writeFile(filePath, randomData);\n      }\n      \n      // Delete the file\n      await fsPromises.unlink(filePath);\n      \n      console.log(`File ${filePath} securely deleted`);\n    } catch (error) {\n      console.error(`Failed to securely delete file ${filePath}:`, error);\n      throw error;\n    }\n  }\n}\n\n// Example usage\n\n// Encrypt and decrypt data\nasync function demonstrateEncryption() {\n  // Symmetric encryption\n  const key = SymmetricEncryptionService.generateKey();\n  const plaintext = 'This is sensitive data';\n  \n  const encrypted = SymmetricEncryptionService.encrypt(plaintext, key);\n  const decrypted = SymmetricEncryptionService.decrypt(encrypted, key);\n  \n  console.log('Symmetric encryption:');\n  console.log('Original:', plaintext);\n  console.log('Encrypted:', encrypted);\n  console.log('Decrypted:', decrypted);\n  \n  // Asymmetric encryption\n  const keyPair = AsymmetricEncryptionService.generateKeyPair();\n  const message = 'This is a secret message';\n  \n  const encryptedMessage = AsymmetricEncryptionService.encrypt(message, keyPair.publicKey);\n  const decryptedMessage = AsymmetricEncryptionService.decrypt(encryptedMessage, keyPair.privateKey);\n  \n  console.log('\\nAsymmetric encryption:');\n  console.log('Original:', message);\n  console.log('Encrypted:', encryptedMessage);\n  console.log('Decrypted:', decryptedMessage);\n  \n  // Password hashing\n  const password = 'MySecurePassword123!';\n  const hashedPassword = await PasswordHashingService.hashPassword(password);\n  const isValid = await PasswordHashingService.verifyPassword(password, hashedPassword);\n  \n  console.log('\\nPassword hashing:');\n  console.log('Password:', password);\n  console.log('Hashed:', hashedPassword);\n  console.log('Valid:', isValid);\n}\n\ndemonstrateEncryption().catch(console.error);\n\n// Key management\nasync function demonstrateKeyManagement() {\n  await keyManagementService.generateKey('ssn-key', 'social-security-numbers');\n  await keyManagementService.generateKey('email-key', 'email-addresses');\n  \n  const ssnKey = await keyManagementService.getKey('ssn-key');\n  console.log('SSN key retrieved successfully');\n  \n  // Rotate key\n  await keyManagementService.rotateKey('ssn-key');\n  console.log('SSN key rotated successfully');\n}\n\ndemonstrateKeyManagement().catch(console.error);\n\n// Field-level encryption\nasync function demonstrateFieldEncryption() {\n  const userData = {\n    id: 1,\n    name: 'John Doe',\n    ssn: '123-45-6789',\n    email: 'john.doe@example.com'\n  };\n  \n  // Encrypt user data\n  const encryptedUserData = await EncryptedFieldService.encryptUserData(userData);\n  console.log('Encrypted user data:', encryptedUserData);\n  \n  // Decrypt user data\n  const decryptedUserData = await EncryptedFieldService.decryptUserData(encryptedUserData);\n  console.log('Decrypted user data:', decryptedUserData);\n}\n\ndemonstrateFieldEncryption().catch(console.error);",
+      "explanation": "This example demonstrates comprehensive data protection and encryption techniques including:\\n\\n1. **Symmetric Encryption**: AES-256-GCM implementation for data at rest\\n2. **Asymmetric Encryption**: RSA encryption for secure key exchange and digital signatures\\n3. **Password Hashing**: bcrypt implementation for secure password storage\\n4. **Key Management**: Key generation, storage, and rotation practices\\n5. **Field-Level Encryption**: Database field encryption for sensitive data\\n6. **TLS Configuration**: Secure HTTPS server configuration\\n7. **Data Protection Utilities**: Sensitive data masking and secure file deletion\\n\\nKey concepts illustrated:\\n- Authenticated encryption with AES-GCM\\n- Public key cryptography with RSA\\n- Password hashing with bcrypt\\n- Key rotation and management\\n- Field-level database encryption\\n- TLS security configuration\\n- Data masking for logging\\n\\nThe examples show:\\n- Symmetric and asymmetric encryption usage\\n- Secure password handling\\n- Key management practices\\n- Field-level database encryption\\n- TLS server configuration\\n- Sensitive data protection utilities",
+      "language": "javascript"
+    },
+    "pitfalls": [
+      {
+        "mistake": "Using weak encryption algorithms or improper key sizes",
+        "solution": "Use industry-standard algorithms like AES-256 with proper key sizes and follow cryptographic best practices",
+        "severity": "high"
+      },
+      {
+        "mistake": "Hardcoding encryption keys in source code or configuration files",
+        "solution": "Use secure key management systems like AWS KMS, Azure Key Vault, or HashiCorp Vault for key storage",
+        "severity": "high"
+      },
+      {
+        "mistake": "Not properly implementing cryptographic algorithms leading to vulnerabilities",
+        "solution": "Use well-tested cryptographic libraries and follow established implementation patterns rather than implementing crypto from scratch",
+        "severity": "high"
+      }
+    ],
+    "exercises": [
+      {
+        "title": "Implement Comprehensive Data Protection",
+        "description": "Create a complete data protection system with encryption, key management, and secure data handling.",
+        "checkpoints": [
+          "Implement symmetric encryption for sensitive data at rest",
+          "Create asymmetric encryption for secure key exchange",
+          "Set up secure password hashing with bcrypt",
+          "Implement key management with rotation policies",
+          "Add field-level encryption for database fields",
+          "Configure TLS for secure data in transit",
+          "Create utilities for data masking and secure deletion"
+        ]
+      }
+    ],
+    "next": [
+      "security-fundamentals-lesson-14"
+    ],
+    "estimatedMinutes": 90,
+    "difficulty": "Advanced",
+    "tags": [
+      "Encryption",
+      "Data Protection",
+      "Key Management",
+      "Password Security",
+      "TLS"
+    ],
+    "lastUpdated": "2025-10-09T10:00:00.000Z",
+    "version": "1.0.0"
+  },
+  {
+    "id": "security-fundamentals-lesson-14",
+    "moduleSlug": "security-fundamentals",
+    "title": "Security Headers and Content Security Policy",
+    "order": 14,
+    "objectives": [
+      "Implement essential security headers to protect against common web vulnerabilities",
+      "Configure Content Security Policy (CSP) to prevent cross-site scripting attacks",
+      "Apply HTTP security headers for defense in depth protection",
+      "Monitor and refine security header configurations for optimal protection"
+    ],
+    "intro": "Security headers and Content Security Policy (CSP) are critical defense mechanisms that provide an additional layer of protection for web applications. These HTTP headers instruct browsers on how to handle content and can prevent or mitigate various types of attacks including cross-site scripting (XSS), clickjacking, MIME type sniffing, and protocol downgrade attacks. Properly configured security headers form an essential part of a defense-in-depth security strategy.\n\nIn this lesson, you'll learn about essential security headers that every web application should implement. You'll understand the purpose and configuration of headers like Strict-Transport-Security (HSTS), X-Content-Type-Options, X-Frame-Options, and X-XSS-Protection. You'll explore how these headers work together to create a comprehensive security posture and learn about browser support for different headers.\n\nContent Security Policy (CSP) is one of the most powerful security headers for preventing XSS attacks and other code injection vulnerabilities. You'll learn how to create effective CSP policies that balance security with functionality, understand the different directives available, and implement reporting mechanisms to monitor policy violations. You'll also explore advanced CSP features like nonce-based policies and strict-dynamic directives.\n\nImplementing security headers effectively requires careful consideration of your application's specific needs and potential compatibility issues. You'll learn how to test and refine security header configurations, implement gradual rollout strategies, and monitor for policy violations. You'll also understand how to handle legacy browsers and applications that may not be compatible with strict security headers.\n\nBy mastering security headers and Content Security Policy, you'll be able to significantly reduce your application's attack surface and protect users from a wide range of client-side vulnerabilities while maintaining a good user experience.",
+    "code": {
+      "example": "// Security Headers and Content Security Policy Implementation\n\n// 1. Essential Security Headers Middleware\nfunction securityHeadersMiddleware(req, res, next) {\n  // Strict-Transport-Security (HSTS)\n  // Enforces HTTPS and prevents protocol downgrade attacks\n  res.setHeader('Strict-Transport-Security', \n    'max-age=31536000; includeSubDomains; preload'); // 1 year\n  \n  // X-Content-Type-Options\n  // Prevents MIME type sniffing\n  res.setHeader('X-Content-Type-Options', 'nosniff');\n  \n  // X-Frame-Options\n  // Prevents clickjacking attacks\n  res.setHeader('X-Frame-Options', 'DENY');\n  \n  // X-XSS-Protection\n  // Enables XSS filtering (deprecated in modern browsers but still useful)\n  res.setHeader('X-XSS-Protection', '1; mode=block');\n  \n  // Referrer-Policy\n  // Controls how much referrer information is sent\n  res.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');\n  \n  // Permissions-Policy\n  // Controls which features and APIs can be used\n  res.setHeader('Permissions-Policy', \n    'geolocation=(), microphone=(), camera=(), fullscreen=(self)');\n  \n  next();\n}\n\n// 2. Content Security Policy (CSP) Implementation\n\nclass ContentSecurityPolicy {\n  // Basic CSP configuration\n  static basicCSP() {\n    return {\n      'Content-Security-Policy': \"\n        default-src 'self';\n        script-src 'self';\n        style-src 'self' 'unsafe-inline';\n        img-src 'self' data: https:;\n        font-src 'self' https: data:;\n        connect-src 'self';\n        media-src 'self';\n        object-src 'none';\n        child-src 'self';\n        frame-ancestors 'none';\n        base-uri 'self';\n        form-action 'self';\n        block-all-mixed-content;\n        upgrade-insecure-requests;\"\n    };\n  }\n  \n  // Strict CSP with nonce for inline scripts\n  static strictCSP(nonce) {\n    return {\n      'Content-Security-Policy': `\n        default-src 'self';\n        script-src 'self' 'nonce-${nonce}' 'strict-dynamic';\n        style-src 'self' 'unsafe-inline';\n        img-src 'self' data: https:;\n        font-src 'self' https: data:;\n        connect-src 'self';\n        media-src 'self';\n        object-src 'none';\n        child-src 'self';\n        frame-ancestors 'none';\n        base-uri 'self';\n        form-action 'self';\n        block-all-mixed-content;\n        upgrade-insecure-requests;`\n    };\n  }\n  \n  // Report-only CSP for monitoring\n  static reportOnlyCSP(reportUri) {\n    return {\n      'Content-Security-Policy-Report-Only': `\n        default-src 'self';\n        script-src 'self';\n        style-src 'self' 'unsafe-inline';\n        img-src 'self' data: https:;\n        font-src 'self' https: data:;\n        connect-src 'self';\n        media-src 'self';\n        object-src 'none';\n        child-src 'self';\n        frame-ancestors 'none';\n        base-uri 'self';\n        form-action 'self';\n        block-all-mixed-content;\n        upgrade-insecure-requests;\n        report-uri ${reportUri};\n        report-to csp-reporting;`\n    };\n  }\n}\n\n// 3. Express.js Implementation with CSP\nconst crypto = require('crypto');\nconst express = require('express');\nconst app = express();\n\n// Generate nonce for CSP\nfunction generateNonce() {\n  return crypto.randomBytes(16).toString('base64');\n}\n\n// CSP middleware\nfunction cspMiddleware(req, res, next) {\n  const nonce = generateNonce();\n  \n  // Attach nonce to response locals for use in templates\n  res.locals.nonce = nonce;\n  \n  // Set CSP header\n  const cspHeaders = ContentSecurityPolicy.strictCSP(nonce);\n  Object.entries(cspHeaders).forEach(([header, value]) => {\n    res.setHeader(header, value.replace(/\\s+/g, ' ').trim());\n  });\n  \n  next();\n}\n\n// Report endpoint for CSP violations\napp.post('/csp-report', express.json({ type: 'application/csp-report' }), (req, res) => {\n  const violation = req.body['csp-report'];\n  \n  // Log the violation (in production, send to security monitoring system)\n  console.warn('CSP Violation:', {\n    documentUri: violation['document-uri'],\n    violatedDirective: violation['violated-directive'],\n    blockedUri: violation['blocked-uri'],\n    originalPolicy: violation['original-policy']\n  });\n  \n  // In production, you might want to store violations in a database\n  // for analysis and monitoring\n  \n  res.status(204).end();\n});\n\n// Apply security headers middleware\napp.use(securityHeadersMiddleware);\n\n// Apply CSP middleware\napp.use(cspMiddleware);\n\n// Example route with inline script using nonce\napp.get('/', (req, res) => {\n  const nonce = res.locals.nonce;\n  \n  res.send(`\n    <!DOCTYPE html>\n    <html>\n    <head>\n      <title>Secure Page</title>\n      <style>\n        body { font-family: Arial, sans-serif; }\n        .highlight { background-color: yellow; }\n      </style>\n    </head>\n    <body>\n      <h1>Secure Page with CSP</h1>\n      <p>This page implements Content Security Policy with nonce for inline scripts.</p>\n      \n      <script nonce=\"${nonce}\">\n        // This inline script is allowed because it has the correct nonce\n        console.log('Inline script executed with nonce');\n        document.getElementById('dynamic-content').textContent = 'Dynamic content loaded';\n      </script>\n      \n      <div id=\"dynamic-content\"></div>\n    </body>\n    </html>\n  `);\n});\n\n// 4. Advanced Security Headers\n\nclass AdvancedSecurityHeaders {\n  // Feature Policy (now Permissions Policy)\n  static permissionsPolicy() {\n    return {\n      'Permissions-Policy': `\n        geolocation=(),\n        midi=(),\n        notifications=(),\n        push=(),\n        sync-xhr=(),\n        microphone=(),\n        camera=(),\n        magnetometer=(),\n        gyroscope=(),\n        speaker=(),\n        vibrate=(),\n        fullscreen=(self),\n        payment=(),\n        usb=(),\n        xr-spatial-tracking=()`\n    };\n  }\n  \n  // Reporting API configuration\n  static reportingEndpoints() {\n    return {\n      'Reporting-Endpoints': `\n        default=\"https://reports.example.com/default\",\n        csp-reporting=\"https://reports.example.com/csp\",\n        network-errors=\"https://reports.example.com/network\"`\n    };\n  }\n  \n  // Cross-Origin Resource Policy\n  static crossOriginResourcePolicy() {\n    return {\n      'Cross-Origin-Resource-Policy': 'same-site'\n    };\n  }\n  \n  // Cross-Origin Embedder Policy\n  static crossOriginEmbedderPolicy() {\n    return {\n      'Cross-Origin-Embedder-Policy': 'require-corp'\n    };\n  }\n  \n  // Cross-Origin Opener Policy\n  static crossOriginOpenerPolicy() {\n    return {\n      'Cross-Origin-Opener-Policy': 'same-origin'\n    };\n  }\n}\n\n// 5. Security Headers for Different Environments\n\nclass EnvironmentSecurityHeaders {\n  // Development environment headers (more permissive)\n  static development() {\n    return {\n      'X-Content-Type-Options': 'nosniff',\n      'X-Frame-Options': 'SAMEORIGIN', // More permissive for development\n      'X-XSS-Protection': '1; mode=block',\n      'Referrer-Policy': 'strict-origin-when-cross-origin'\n    };\n  }\n  \n  // Production environment headers (strict)\n  static production() {\n    return {\n      'Strict-Transport-Security': 'max-age=31536000; includeSubDomains; preload',\n      'X-Content-Type-Options': 'nosniff',\n      'X-Frame-Options': 'DENY',\n      'X-XSS-Protection': '1; mode=block',\n      'Referrer-Policy': 'strict-origin-when-cross-origin',\n      'Permissions-Policy': 'geolocation=(), microphone=(), camera=()'\n    };\n  }\n  \n  // Staging environment headers (balanced)\n  static staging() {\n    return {\n      'Strict-Transport-Security': 'max-age=86400', // 1 day for testing\n      'X-Content-Type-Options': 'nosniff',\n      'X-Frame-Options': 'SAMEORIGIN',\n      'X-XSS-Protection': '1; mode=block',\n      'Referrer-Policy': 'strict-origin-when-cross-origin'\n    };\n  }\n}\n\n// 6. Security Header Validation and Monitoring\n\nclass SecurityHeaderValidator {\n  // Validate security headers on response\n  static validateHeaders(headers) {\n    const requiredHeaders = [\n      'strict-transport-security',\n      'x-content-type-options',\n      'x-frame-options',\n      'content-security-policy'\n    ];\n    \n    const missingHeaders = [];\n    \n    for (const header of requiredHeaders) {\n      if (!headers[header]) {\n        missingHeaders.push(header);\n      }\n    }\n    \n    return {\n      isValid: missingHeaders.length === 0,\n      missingHeaders,\n      message: missingHeaders.length === 0 \n        ? 'All required security headers present' \n        : `Missing security headers: ${missingHeaders.join(', ')}`\n    };\n  }\n  \n  // Monitor CSP violations\n  static monitorCSPViolations(violation) {\n    // In production, send to logging/monitoring system\n    console.warn('CSP Violation Detected:', violation);\n    \n    // Example: Send to external monitoring service\n    // sendToMonitoringService('csp-violation', violation);\n    \n    // Example: Alert security team for high-risk violations\n    if (violation['blocked-uri'] && violation['blocked-uri'].includes('evil.com')) {\n      console.error('High-risk CSP violation detected!');\n      // sendAlertToSecurityTeam(violation);\n    }\n  }\n}\n\n// 7. Helmet.js Integration (Popular security middleware)\n\n// const helmet = require('helmet');\n\n// Custom helmet configuration\nfunction customHelmet() {\n  return (req, res, next) => {\n    // Apply basic helmet security\n    // app.use(helmet());\n    \n    // Override or extend specific headers\n    res.setHeader('X-Frame-Options', 'DENY');\n    \n    // Add custom CSP\n    const nonce = generateNonce();\n    res.locals.nonce = nonce;\n    \n    const cspHeaders = ContentSecurityPolicy.strictCSP(nonce);\n    Object.entries(cspHeaders).forEach(([header, value]) => {\n      res.setHeader(header, value.replace(/\\s+/g, ' ').trim());\n    });\n    \n    next();\n  };\n}\n\n// 8. Security Header Testing Utilities\n\nclass SecurityHeaderTester {\n  // Test security headers for a URL\n  static async testHeaders(url) {\n    try {\n      const response = await fetch(url);\n      const headers = {};\n      \n      // Convert headers to lowercase for consistent checking\n      for (const [key, value] of response.headers.entries()) {\n        headers[key.toLowerCase()] = value;\n      }\n      \n      // Check for essential security headers\n      const results = {\n        url,\n        timestamp: new Date().toISOString(),\n        headers: {\n          'Strict-Transport-Security': headers['strict-transport-security'] || 'MISSING',\n          'X-Content-Type-Options': headers['x-content-type-options'] || 'MISSING',\n          'X-Frame-Options': headers['x-frame-options'] || 'MISSING',\n          'X-XSS-Protection': headers['x-xss-protection'] || 'MISSING',\n          'Content-Security-Policy': headers['content-security-policy'] || 'MISSING',\n          'Referrer-Policy': headers['referrer-policy'] || 'MISSING'\n        }\n      };\n      \n      return results;\n    } catch (error) {\n      return {\n        url,\n        error: error.message,\n        timestamp: new Date().toISOString()\n      };\n    }\n  }\n  \n  // Generate security header report\n  static generateReport(testResults) {\n    const report = {\n      summary: {\n        totalHeaders: 0,\n        presentHeaders: 0,\n        missingHeaders: 0\n      },\n      details: []\n    };\n    \n    if (testResults.headers) {\n      report.summary.totalHeaders = Object.keys(testResults.headers).length;\n      \n      Object.entries(testResults.headers).forEach(([header, value]) => {\n        const isPresent = value !== 'MISSING';\n        \n        if (isPresent) {\n          report.summary.presentHeaders++;\n        } else {\n          report.summary.missingHeaders++;\n        }\n        \n        report.details.push({\n          header,\n          value,\n          status: isPresent ? 'PRESENT' : 'MISSING'\n        });\n      });\n    }\n    \n    return report;\n  }\n}\n\n// Example usage\n\n// Test security headers\nasync function testSecurityHeaders() {\n  // In a real application, you would test your actual URLs\n  const testUrl = 'https://example.com';\n  \n  // const results = await SecurityHeaderTester.testHeaders(testUrl);\n  // const report = SecurityHeaderTester.generateReport(results);\n  \n  // console.log('Security Header Test Results:', JSON.stringify(report, null, 2));\n  \n  console.log('Security headers would be tested in a real environment');\n}\n\ntestSecurityHeaders().catch(console.error);\n\n// Start server (commented out for example)\n// const PORT = process.env.PORT || 3000;\n// app.listen(PORT, () => {\n//   console.log(`Server running with security headers on port ${PORT}`);\n// });",
+      "explanation": "This example demonstrates comprehensive security headers and Content Security Policy implementation including:\\n\\n1. **Essential Security Headers**: Implementation of critical HTTP security headers\\n2. **Content Security Policy**: Basic, strict, and report-only CSP configurations\\n3. **Express.js Integration**: Middleware for applying security headers and CSP\\n4. **Advanced Security Headers**: Permissions Policy, Reporting API, and CORP headers\\n5. **Environment-Specific Headers**: Different configurations for dev, staging, and production\\n6. **Validation and Monitoring**: Tools for validating headers and monitoring violations\\n7. **Helmet.js Integration**: Custom configuration for popular security middleware\\n8. **Testing Utilities**: Tools for testing and reporting on security headers\\n\\nKey concepts illustrated:\\n- HTTP security headers and their purposes\\n- Content Security Policy directives and configurations\\n- Nonce-based CSP for inline scripts\\n- Environment-specific security configurations\\n- CSP violation reporting and monitoring\\n- Security header validation and testing\\n\\nThe examples show:\\n- Middleware implementation for security headers\\n- CSP configuration with nonce support\\n- Environment-specific header configurations\\n- CSP violation monitoring\\n- Security header testing utilities",
+      "language": "javascript"
+    },
+    "pitfalls": [
+      {
+        "mistake": "Implementing overly restrictive CSP policies that break application functionality",
+        "solution": "Start with report-only mode to monitor violations before enforcing policies, and gradually tighten restrictions while testing functionality",
+        "severity": "high"
+      },
+      {
+        "mistake": "Not implementing security headers consistently across all application routes",
+        "solution": "Use application-level middleware to ensure all responses include appropriate security headers",
+        "severity": "medium"
+      },
+      {
+        "mistake": "Failing to monitor CSP violations which can indicate attempted attacks or broken functionality",
+        "solution": "Implement CSP violation reporting endpoints and monitor reports to identify issues and potential attacks",
+        "severity": "medium"
+      }
+    ],
+    "exercises": [
+      {
+        "title": "Implement Comprehensive Security Headers",
+        "description": "Create a complete security header implementation with CSP, environment-specific configurations, and monitoring.",
+        "checkpoints": [
+          "Implement essential security headers middleware for an Express.js application",
+          "Create Content Security Policy with nonce support for inline scripts",
+          "Set up CSP violation reporting endpoint",
+          "Configure environment-specific security headers",
+          "Implement security header validation and monitoring",
+          "Create testing utilities for security headers",
+          "Add advanced security headers like Permissions Policy and CORP"
+        ]
+      }
+    ],
+    "next": [
+      "security-fundamentals-lesson-15"
+    ],
+    "estimatedMinutes": 90,
+    "difficulty": "Advanced",
+    "tags": [
+      "Security Headers",
+      "Content Security Policy",
+      "CSP",
+      "HTTP Security",
+      "XSS Prevention"
+    ],
+    "lastUpdated": "2025-10-09T10:00:00.000Z",
+    "version": "1.0.0"
+  },
+  {
+    "id": "security-fundamentals-lesson-15",
+    "moduleSlug": "security-fundamentals",
+    "title": "Vulnerability Assessment and Security Testing",
+    "order": 15,
+    "objectives": [
+      "Conduct systematic vulnerability assessments to identify security weaknesses",
+      "Implement automated security testing in development workflows",
+      "Perform penetration testing to evaluate real-world attack scenarios",
+      "Analyze and remediate security vulnerabilities effectively"
+    ],
+    "intro": "Vulnerability assessment and security testing are essential practices for identifying, evaluating, and addressing security weaknesses in applications and systems before they can be exploited by attackers. These processes provide organizations with visibility into their security posture and enable proactive risk management rather than reactive incident response. Effective vulnerability assessment requires a combination of automated tools, manual testing techniques, and systematic methodologies.\n\nIn this lesson, you'll learn how to conduct systematic vulnerability assessments using both automated tools and manual techniques. You'll understand different types of vulnerability assessments including network scanning, application testing, and configuration reviews. You'll explore industry-standard frameworks and methodologies for organizing assessment activities and ensuring comprehensive coverage of potential security issues.\n\nAutomated security testing integration into development workflows enables teams to identify vulnerabilities early in the software development lifecycle when they are less expensive to fix. You'll learn how to implement static application security testing (SAST), dynamic application security testing (DAST), and software composition analysis (SCA) in continuous integration pipelines. You'll also explore infrastructure as code (IaC) scanning and container image security testing.\n\nPenetration testing provides valuable insights into how real attackers might exploit vulnerabilities in your systems. You'll learn about different types of penetration testing including black box, white box, and gray box approaches. You'll understand how to scope penetration testing engagements, interpret results, and work effectively with penetration testing teams to address identified issues.\n\nBy mastering vulnerability assessment and security testing, you'll be able to systematically identify and remediate security vulnerabilities, integrate security testing into development workflows, and maintain a proactive security posture that adapts to evolving threats.",
+    "code": {
+      "example": "// Vulnerability Assessment and Security Testing Implementation\n\n// 1. Vulnerability Scanning Framework\nconst { exec } = require('child_process');\nconst util = require('util');\nconst fs = require('fs').promises;\n\nconst execPromise = util.promisify(exec);\n\nclass VulnerabilityScanner {\n  // Scan for dependency vulnerabilities using npm audit\n  static async scanDependencies() {\n    try {\n      const { stdout, stderr } = await execPromise('npm audit --json');\n      \n      if (stderr) {\n        console.warn('npm audit warnings:', stderr);\n      }\n      \n      const auditReport = JSON.parse(stdout);\n      \n      return {\n        total: auditReport.metadata.vulnerabilities.total,\n        critical: auditReport.metadata.vulnerabilities.critical,\n        high: auditReport.metadata.vulnerabilities.high,\n        moderate: auditReport.metadata.vulnerabilities.moderate,\n        low: auditReport.metadata.vulnerabilities.low,\n        advisories: Object.values(auditReport.advisories || {})\n      };\n    } catch (error) {\n      // npm audit exits with code 1 when vulnerabilities found\n      if (error.stdout) {\n        try {\n          const auditReport = JSON.parse(error.stdout);\n          return {\n            total: auditReport.metadata.vulnerabilities.total,\n            critical: auditReport.metadata.vulnerabilities.critical,\n            high: auditReport.metadata.vulnerabilities.high,\n            moderate: auditReport.metadata.vulnerabilities.moderate,\n            low: auditReport.metadata.vulnerabilities.low,\n            advisories: Object.values(auditReport.advisories || {})\n          };\n        } catch (parseError) {\n          throw new Error(`Failed to parse npm audit output: ${parseError.message}`);\n        }\n      }\n      throw error;\n    }\n  }\n  \n  // Scan container images for vulnerabilities\n  static async scanContainerImage(imageName) {\n    try {\n      const { stdout } = await execPromise(`trivy image --format json --quiet ${imageName}`);\n      const report = JSON.parse(stdout);\n      \n      const vulnerabilities = {\n        critical: 0,\n        high: 0,\n        medium: 0,\n        low: 0\n      };\n      \n      report.Results.forEach(result => {\n        if (result.Vulnerabilities) {\n          result.Vulnerabilities.forEach(vuln => {\n            switch (vuln.Severity.toLowerCase()) {\n              case 'critical':\n                vulnerabilities.critical++;\n                break;\n              case 'high':\n                vulnerabilities.high++;\n                break;\n              case 'medium':\n                vulnerabilities.medium++;\n                break;\n              case 'low':\n                vulnerabilities.low++;\n                break;\n            }\n          });\n        }\n      });\n      \n      return {\n        total: Object.values(vulnerabilities).reduce((sum, count) => sum + count, 0),\n        ...vulnerabilities,\n        results: report.Results\n      };\n    } catch (error) {\n      throw new Error(`Container scan failed: ${error.message}`);\n    }\n  }\n  \n  // Scan infrastructure as code (IaC) for misconfigurations\n  static async scanIaC(filePath) {\n    try {\n      const { stdout } = await execPromise(`checkov --file ${filePath} --output json`);\n      const report = JSON.parse(stdout);\n      \n      return {\n        passed: report.summary.passed,\n        failed: report.summary.failed,\n        skipped: report.summary.skipped,\n        parseErrors: report.summary.parse_errors,\n        checkovVersion: report.summary.checkov_version,\n        results: report.results\n      };\n    } catch (error) {\n      throw new Error(`IaC scan failed: ${error.message}`);\n    }\n  }\n}\n\n// 2. Automated Security Testing Pipeline\n\nclass SecurityTestingPipeline {\n  constructor() {\n    this.thresholds = {\n      critical: 0,\n      high: 5,\n      moderate: 20\n    };\n  }\n  \n  // Run comprehensive security tests\n  async runSecurityTests() {\n    console.log('Running security tests...');\n    \n    const results = {\n      timestamp: new Date().toISOString(),\n      tests: {}\n    };\n    \n    try {\n      // Dependency scanning\n      results.tests.dependencies = await VulnerabilityScanner.scanDependencies();\n      console.log(`Dependency scan found ${results.tests.dependencies.total} vulnerabilities`);\n      \n      // Static analysis (example with ESLint)\n      results.tests.staticAnalysis = await this.runStaticAnalysis();\n      console.log(`Static analysis found ${results.tests.staticAnalysis.issues.length} issues`);\n      \n      // Configuration checks\n      results.tests.configChecks = await this.runConfigChecks();\n      console.log(`Configuration checks completed`);\n      \n      // Determine if pipeline should fail\n      const shouldFail = this.shouldFailPipeline(results);\n      results.shouldFail = shouldFail;\n      \n      if (shouldFail) {\n        console.error('Security thresholds exceeded, pipeline will fail');\n      }\n      \n      // Save report\n      await fs.writeFile('security-report.json', JSON.stringify(results, null, 2));\n      \n      return results;\n    } catch (error) {\n      console.error('Security testing pipeline failed:', error);\n      throw error;\n    }\n  }\n  \n  // Run static analysis\n  async runStaticAnalysis() {\n    try {\n      const { stdout } = await execPromise('npx eslint . --ext .js,.ts --format json');\n      const results = JSON.parse(stdout);\n      \n      // Filter for security-related issues\n      const securityIssues = results.flatMap(file =>\n        file.messages.filter(message =>\n          message.ruleId && (\n            message.ruleId.includes('security') ||\n            message.ruleId.includes('no-eval') ||\n            message.ruleId.includes('no-new-func') ||\n            message.ruleId.includes('xss')\n          )\n        ).map(issue => ({\n          filePath: file.filePath,\n          line: issue.line,\n          column: issue.column,\n          message: issue.message,\n          ruleId: issue.ruleId,\n          severity: issue.severity\n        }))\n      );\n      \n      return {\n        totalIssues: securityIssues.length,\n        criticalIssues: securityIssues.filter(i => i.severity === 2),\n        issues: securityIssues\n      };\n    } catch (error) {\n      // ESLint exits with code 1 when issues found\n      if (error.stdout) {\n        try {\n          const results = JSON.parse(error.stdout);\n          const securityIssues = results.flatMap(file =>\n            file.messages.filter(message =>\n              message.ruleId && (\n                message.ruleId.includes('security') ||\n                message.ruleId.includes('no-eval') ||\n                message.ruleId.includes('no-new-func') ||\n                message.ruleId.includes('xss')\n              )\n            ).map(issue => ({\n              filePath: file.filePath,\n              line: issue.line,\n              column: issue.column,\n              message: issue.message,\n              ruleId: issue.ruleId,\n              severity: issue.severity\n            }))\n          );\n          \n          return {\n            totalIssues: securityIssues.length,\n            criticalIssues: securityIssues.filter(i => i.severity === 2),\n            issues: securityIssues\n          };\n        } catch (parseError) {\n          throw new Error(`Failed to parse ESLint output: ${parseError.message}`);\n        }\n      }\n      throw error;\n    }\n  }\n  \n  // Run configuration checks\n  async runConfigChecks() {\n    // Check for exposed secrets in config files\n    const issues = [];\n    \n    try {\n      // This is a simplified example - in practice, you'd scan actual config files\n      const configFiles = ['config.json', '.env', 'package.json'];\n      \n      for (const configFile of configFiles) {\n        try {\n          const content = await fs.readFile(configFile, 'utf8');\n          \n          // Look for common patterns of exposed secrets\n          if (content.includes('API_KEY=') && !content.includes('API_KEY=\"\"')) {\n            issues.push({\n              file: configFile,\n              issue: 'Potential API key exposure',\n              severity: 'high'\n            });\n          }\n          \n          if (content.includes('PASSWORD=') && !content.includes('PASSWORD=\"\"')) {\n            issues.push({\n              file: configFile,\n              issue: 'Potential password exposure',\n              severity: 'critical'\n            });\n          }\n        } catch (error) {\n          // File might not exist, which is fine\n        }\n      }\n    } catch (error) {\n      console.warn('Configuration checks encountered an error:', error);\n    }\n    \n    return {\n      issuesFound: issues.length,\n      issues\n    };\n  }\n  \n  // Determine if pipeline should fail based on thresholds\n  shouldFailPipeline(results) {\n    if (results.tests.dependencies) {\n      if (results.tests.dependencies.critical > this.thresholds.critical) {\n        return true;\n      }\n      if (results.tests.dependencies.high > this.thresholds.high) {\n        return true;\n      }\n      if (results.tests.dependencies.moderate > this.thresholds.moderate) {\n        return true;\n      }\n    }\n    \n    if (results.tests.staticAnalysis) {\n      if (results.tests.staticAnalysis.criticalIssues.length > 0) {\n        return true;\n      }\n    }\n    \n    return false;\n  }\n}\n\n// 3. Penetration Testing Framework\n\nclass PenetrationTestingFramework {\n  // Simulate a penetration test report\n  static generatePenTestReport(target) {\n    return {\n      target,\n      timestamp: new Date().toISOString(),\n      executiveSummary: {\n        overallRisk: 'Medium',\n        criticalFindings: 2,\n        highFindings: 5,\n        mediumFindings: 12,\n        lowFindings: 8\n      },\n      findings: [\n        {\n          id: 'PT-001',\n          title: 'SQL Injection Vulnerability',\n          severity: 'High',\n          cvssScore: 8.1,\n          description: 'User input in login form is not properly sanitized, allowing SQL injection attacks',\n          affectedComponents: ['/api/login'],\n          proofOfConcept: 'POST /api/login with payload: username=admin\\'--&password=anything',\n          remediation: 'Implement parameterized queries and input validation',\n          references: ['https://owasp.org/www-community/attacks/SQL_Injection']\n        },\n        {\n          id: 'PT-002',\n          title: 'Cross-Site Scripting (XSS)',\n          severity: 'High',\n          cvssScore: 7.2,\n          description: 'User input in search field is reflected without proper encoding',\n          affectedComponents: ['/search'],\n          proofOfConcept: 'Search for: <script>alert(\\'XSS\\')</script>',\n          remediation: 'Implement proper output encoding and Content Security Policy',\n          references: ['https://owasp.org/www-community/attacks/xss/']\n        },\n        {\n          id: 'PT-003',\n          title: 'Weak Password Policy',\n          severity: 'Medium',\n          cvssScore: 5.0,\n          description: 'Password policy allows weak passwords with minimal complexity requirements',\n          affectedComponents: ['/api/register', '/api/change-password'],\n          proofOfConcept: 'Successfully registered account with password \"123456\"',\n          remediation: 'Implement strong password policy with complexity requirements',\n          references: ['https://pages.nist.gov/800-63-3/sp800-63b.html']\n        }\n      ],\n      recommendations: [\n        'Implement comprehensive input validation',\n        'Add rate limiting to authentication endpoints',\n        'Enhance logging and monitoring for security events',\n        'Conduct regular security training for development team'\n      ]\n    };\n  }\n  \n  // Simulate vulnerability scanning\n  static async scanForVulnerabilities(target) {\n    // This would integrate with actual vulnerability scanning tools\n    // For demo, we'll simulate results\n    \n    return {\n      target,\n      timestamp: new Date().toISOString(),\n      vulnerabilities: [\n        {\n          name: 'Outdated Dependency',\n          severity: 'High',\n          description: 'Express.js version 4.16.0 has known vulnerabilities',\n          recommendation: 'Upgrade to latest version'\n        },\n        {\n          name: 'Missing Security Headers',\n          severity: 'Medium',\n          description: 'Strict-Transport-Security header is missing',\n          recommendation: 'Add HSTS header'\n        },\n        {\n          name: 'Exposed Debug Information',\n          severity: 'Medium',\n          description: 'Debug information exposed in error responses',\n          recommendation: 'Disable debug mode in production'\n        }\n      ]\n    };\n  }\n}\n\n// 4. Vulnerability Management System\n\nclass VulnerabilityManagement {\n  constructor() {\n    this.vulnerabilities = [];\n  }\n  \n  // Add a vulnerability to tracking system\n  addVulnerability(vuln) {\n    const vulnerability = {\n      id: `VULN-${Date.now()}-${Math.floor(Math.random() * 1000)}`,\n      ...vuln,\n      status: 'open',\n      createdAt: new Date().toISOString(),\n      updatedAt: new Date().toISOString()\n    };\n    \n    this.vulnerabilities.push(vulnerability);\n    return vulnerability.id;\n  }\n  \n  // Update vulnerability status\n  updateVulnerability(id, updates) {\n    const vuln = this.vulnerabilities.find(v => v.id === id);\n    if (!vuln) {\n      throw new Error(`Vulnerability not found: ${id}`);\n    }\n    \n    Object.assign(vuln, updates, { updatedAt: new Date().toISOString() });\n    return vuln;\n  }\n  \n  // Get vulnerabilities by severity\n  getVulnerabilitiesBySeverity(severity) {\n    return this.vulnerabilities.filter(v => v.severity === severity);\n  }\n  \n  // Get open vulnerabilities\n  getOpenVulnerabilities() {\n    return this.vulnerabilities.filter(v => v.status === 'open');\n  }\n  \n  // Generate vulnerability report\n  generateReport() {\n    const report = {\n      summary: {\n        total: this.vulnerabilities.length,\n        open: this.vulnerabilities.filter(v => v.status === 'open').length,\n        resolved: this.vulnerabilities.filter(v => v.status === 'resolved').length,\n        critical: this.vulnerabilities.filter(v => v.severity === 'critical').length,\n        high: this.vulnerabilities.filter(v => v.severity === 'high').length,\n        medium: this.vulnerabilities.filter(v => v.severity === 'medium').length,\n        low: this.vulnerabilities.filter(v => v.severity === 'low').length\n      },\n      vulnerabilities: this.vulnerabilities\n    };\n    \n    return report;\n  }\n}\n\n// 5. Security Testing Utilities\n\nclass SecurityTestUtils {\n  // Generate a test security report\n  static generateTestReport() {\n    const pipeline = new SecurityTestingPipeline();\n    \n    return {\n      timestamp: new Date().toISOString(),\n      summary: {\n        totalTests: 4,\n        passed: 3,\n        failed: 1\n      },\n      details: [\n        {\n          test: 'Dependency Scan',\n          status: 'passed',\n          vulnerabilities: {\n            critical: 0,\n            high: 2,\n            moderate: 5,\n            low: 12\n          }\n        },\n        {\n          test: 'Static Analysis',\n          status: 'passed',\n          issues: {\n            critical: 0,\n            high: 3,\n            moderate: 8,\n            low: 15\n          }\n        },\n        {\n          test: 'Container Scan',\n          status: 'failed',\n          vulnerabilities: {\n            critical: 1,\n            high: 4,\n            moderate: 12,\n            low: 8\n          }\n        },\n        {\n          test: 'Configuration Check',\n          status: 'passed',\n          issues: {\n            critical: 0,\n            high: 0,\n            moderate: 1,\n            low: 3\n          }\n        }\n      ]\n    };\n  }\n  \n  // Simulate security test execution\n  static async runSecurityTests() {\n    console.log('Running automated security tests...');\n    \n    // Simulate test execution time\n    await new Promise(resolve => setTimeout(resolve, 2000));\n    \n    const report = this.generateTestReport();\n    \n    console.log('Security tests completed');\n    console.log(`Found ${report.details.reduce((sum, test) => \n      sum + Object.values(test.vulnerabilities || test.issues || {}).reduce((s, v) => s + v, 0), 0)} issues`);\n    \n    return report;\n  }\n}\n\n// Example usage\n\n// Run security testing pipeline\nasync function runSecurityPipeline() {\n  const pipeline = new SecurityTestingPipeline();\n  \n  try {\n    const results = await pipeline.runSecurityTests();\n    console.log('Security testing pipeline completed successfully');\n    \n    // Check if pipeline should fail\n    if (results.shouldFail) {\n      console.error('Security thresholds exceeded!');\n      process.exit(1);\n    }\n    \n    return results;\n  } catch (error) {\n    console.error('Security pipeline failed:', error);\n    process.exit(1);\n  }\n}\n\n// Generate penetration test report\nfunction generatePenTestReport() {\n  const report = PenetrationTestingFramework.generatePenTestReport('https://example.com');\n  console.log('Penetration test report generated:', JSON.stringify(report, null, 2));\n  return report;\n}\n\n// Manage vulnerabilities\nfunction manageVulnerabilities() {\n  const vulnManager = new VulnerabilityManagement();\n  \n  // Add some sample vulnerabilities\n  vulnManager.addVulnerability({\n    title: 'SQL Injection Vulnerability',\n    severity: 'high',\n    description: 'User input not properly sanitized in login form',\n    affectedComponents: ['/api/login']\n  });\n  \n  vulnManager.addVulnerability({\n    title: 'Outdated Dependency',\n    severity: 'medium',\n    description: 'Express.js version has known vulnerabilities',\n    affectedComponents: ['package.json']\n  });\n  \n  // Generate report\n  const report = vulnManager.generateReport();\n  console.log('Vulnerability report:', JSON.stringify(report, null, 2));\n  \n  return report;\n}\n\n// Run all examples\nasync function runAllExamples() {\n  console.log('=== Vulnerability Assessment and Security Testing Examples ===\\n');\n  \n  // Run security tests\n  console.log('1. Running security tests...');\n  await SecurityTestUtils.runSecurityTests();\n  \n  console.log('\\n2. Generating penetration test report...');\n  generatePenTestReport();\n  \n  console.log('\\n3. Managing vulnerabilities...');\n  manageVulnerabilities();\n  \n  console.log('\\nAll examples completed successfully!');\n}\n\n// Uncomment to run examples\n// runAllExamples().catch(console.error);\n\n// Example CI/CD pipeline integration\n/*\n// .github/workflows/security.yml\nname: Security Testing\n\non: [push, pull_request]\n\njobs:\n  security-tests:\n    runs-on: ubuntu-latest\n    \n    steps:\n    - uses: actions/checkout@v2\n    \n    - name: Setup Node.js\n      uses: actions/setup-node@v2\n      with:\n        node-version: '16'\n    \n    - name: Install dependencies\n      run: npm ci\n    \n    - name: Run security tests\n      run: node security-pipeline.js\n    \n    - name: Upload security report\n      uses: actions/upload-artifact@v2\n      with:\n        name: security-report\n        path: security-report.json\n*/",
+      "explanation": "This example demonstrates comprehensive vulnerability assessment and security testing implementation including:\\n\\n1. **Vulnerability Scanning Framework**: Dependency scanning, container image scanning, and IaC scanning\\n2. **Automated Security Testing Pipeline**: Integrated security testing with thresholds and reporting\\n3. **Penetration Testing Framework**: Penetration test report generation and vulnerability simulation\\n4. **Vulnerability Management System**: Tracking and managing security vulnerabilities\\n5. **Security Testing Utilities**: Tools for running and reporting on security tests\\n\\nKey concepts illustrated:\\n- Automated vulnerability scanning with npm audit and Trivy\\n- Security testing pipeline integration\\n- Penetration test report generation\\n- Vulnerability tracking and management\\n- Security testing utilities and reporting\\n\\nThe examples show:\\n- Dependency vulnerability scanning\\n- Container image security scanning\\n- Static analysis integration\\n- Vulnerability management system\\n- Security testing pipeline implementation\\n- Penetration test report generation",
+      "language": "javascript"
+    },
+    "pitfalls": [
+      {
+        "mistake": "Running vulnerability scans only in production environments or infrequently",
+        "solution": "Integrate vulnerability scanning into development workflows and CI/CD pipelines to catch issues early and scan regularly",
+        "severity": "high"
+      },
+      {
+        "mistake": "Not properly prioritizing vulnerabilities based on risk and exploitability",
+        "solution": "Implement risk-based vulnerability prioritization using CVSS scores and business impact assessments",
+        "severity": "medium"
+      },
+      {
+        "mistake": "Failing to track and remediate vulnerabilities systematically",
+        "solution": "Implement a vulnerability management process with tracking, assignment, and verification of remediation",
+        "severity": "high"
+      }
+    ],
+    "exercises": [
+      {
+        "title": "Implement Comprehensive Vulnerability Assessment",
+        "description": "Create a complete vulnerability assessment system with scanning, testing, and management capabilities.",
+        "checkpoints": [
+          "Implement dependency vulnerability scanning with npm audit",
+          "Add container image scanning with Trivy or similar tool",
+          "Create static analysis integration with ESLint security plugins",
+          "Implement infrastructure as code scanning",
+          "Build vulnerability management system with tracking and reporting",
+          "Set up automated security testing pipeline",
+          "Generate comprehensive security reports"
+        ]
+      }
+    ],
+    "next": [],
+    "estimatedMinutes": 90,
+    "difficulty": "Advanced",
+    "tags": [
+      "Vulnerability Assessment",
+      "Security Testing",
+      "Penetration Testing",
+      "Vulnerability Management",
+      "CI/CD Security"
+    ],
+    "lastUpdated": "2025-10-09T10:00:00.000Z",
+    "version": "1.0.0"
   }
 ]
