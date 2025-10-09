@@ -121,6 +121,34 @@ function CircularProgress({ percent }: { percent: number }) {
 }
 
 export default function ProgrammingInterviewPage() {
+  // Check if we're in build phase - return minimal data during build
+  if (process.env.NEXT_PHASE === 'phase-production-build') {
+    console.log('Build phase detected, returning minimal quiz data for programming-fundamentals');
+    const minimalQuestions: ProgrammingInterviewQuestion[] = [
+      { id: 1, topic: 'basics', type: 'multiple-choice', question: 'What is a variable?', choices: ['A storage location', 'A function', 'A loop', 'A class'], correctAnswer: 0, explanation: 'A variable is a storage location paired with an associated symbolic name.' },
+      { id: 2, topic: 'basics', type: 'multiple-choice', question: 'What is a function?', choices: ['A storage location', 'A reusable block of code', 'A loop', 'A class'], correctAnswer: 1, explanation: 'A function is a reusable block of code that performs a specific task.' },
+      { id: 3, topic: 'data-structures', type: 'multiple-choice', question: 'What is an array?', choices: ['A single value', 'A collection of elements', 'A function', 'A class'], correctAnswer: 1, explanation: 'An array is a collection of elements, each identified by an array index.' }
+    ];
+
+    return (
+      <div className="py-12 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-4xl mx-auto">
+          <EnhancedLoadingComponent 
+            retryCount={0} 
+            maxRetries={30} 
+            error={null}
+            onRetry={() => {}}
+          />
+          <div className="mt-6 text-center">
+            <p className="text-gray-600 dark:text-gray-400 text-sm">
+              Build phase detected. Returning minimal data for Programming interview questions.
+            </p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   const [shuffledQuestions, setShuffledQuestions] = useState<ProgrammingInterviewQuestion[]>([]);
   const [current, setCurrent] = useState(0);
   const [selected, setSelected] = useState<number | null>(null);

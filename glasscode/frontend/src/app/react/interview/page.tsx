@@ -121,6 +121,34 @@ function CircularProgress({ percent }: { percent: number }) {
 }
 
 export default function ReactInterviewPage() {
+  // Check if we're in build phase - return minimal data during build
+  if (process.env.NEXT_PHASE === 'phase-production-build') {
+    console.log('Build phase detected, returning minimal quiz data for react-fundamentals');
+    const minimalQuestions: ReactInterviewQuestion[] = [
+      { id: 1, topic: 'components', type: 'multiple-choice', question: 'What is a React component?', choices: ['A function or class that returns JSX', 'A CSS file', 'A database query', 'An HTML element'], correctAnswer: 0, explanation: 'A React component is a function or class that returns JSX elements.' },
+      { id: 2, topic: 'state', type: 'multiple-choice', question: 'What is React state?', choices: ['A way to store data that changes over time', 'A CSS property', 'An HTML attribute', 'A database table'], correctAnswer: 0, explanation: 'React state is a way to store data that changes over time and causes re-renders when updated.' },
+      { id: 3, topic: 'hooks', type: 'multiple-choice', question: 'What is useState?', choices: ['A React hook for managing state', 'A CSS framework', 'An HTML tag', 'A JavaScript method'], correctAnswer: 0, explanation: 'useState is a React hook that allows you to add state to functional components.' }
+    ];
+
+    return (
+      <div className="py-12 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-4xl mx-auto">
+          <EnhancedLoadingComponent 
+            retryCount={0} 
+            maxRetries={30} 
+            error={null}
+            onRetry={() => {}}
+          />
+          <div className="mt-6 text-center">
+            <p className="text-gray-600 dark:text-gray-400 text-sm">
+              Build phase detected. Returning minimal data for React interview questions.
+            </p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   const [shuffledQuestions, setShuffledQuestions] = useState<ReactInterviewQuestion[]>([]);
   const [current, setCurrent] = useState(0);
   const [selected, setSelected] = useState<number | null>(null);

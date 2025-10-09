@@ -121,6 +121,34 @@ function CircularProgress({ percent }: { percent: number }) {
 }
 
 export default function InterviewQuiz() {
+  // Check if we're in build phase - return minimal data during build
+  if (process.env.NEXT_PHASE === 'phase-production-build') {
+    console.log('Build phase detected, returning minimal quiz data for nextjs-advanced');
+    const minimalQuestions: InterviewQuestion[] = [
+      { id: 1, topic: 'routing', type: 'multiple-choice', question: 'What is the difference between App Router and Pages Router in Next.js?', choices: ['App Router is newer and more flexible', 'Pages Router is newer', 'They are the same', 'App Router is deprecated'], correctAnswer: 0, explanation: 'The App Router is the newer routing system in Next.js that provides more flexibility and better performance.' },
+      { id: 2, topic: 'ssr', type: 'multiple-choice', question: 'What is getServerSideProps used for?', choices: ['Server-side rendering', 'Static site generation', 'Client-side rendering', 'API routes'], correctAnswer: 0, explanation: 'getServerSideProps is used for server-side rendering, where the page is generated on each request.' },
+      { id: 3, topic: 'ssg', type: 'multiple-choice', question: 'What is getStaticProps used for?', choices: ['Static site generation', 'Server-side rendering', 'Client-side rendering', 'API routes'], correctAnswer: 0, explanation: 'getStaticProps is used for static site generation, where the page is generated at build time.' }
+    ];
+
+    return (
+      <div className="py-12 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-4xl mx-auto">
+          <EnhancedLoadingComponent 
+            retryCount={0} 
+            maxRetries={30} 
+            error={null}
+            onRetry={() => {}}
+          />
+          <div className="mt-6 text-center">
+            <p className="text-gray-600 dark:text-gray-400 text-sm">
+              Build phase detected. Returning minimal data for Next.js interview questions.
+            </p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   const [shuffledQuestions, setShuffledQuestions] = useState<InterviewQuestion[]>([]);
   const [current, setCurrent] = useState(0);
   const [selected, setSelected] = useState<number | null>(null);

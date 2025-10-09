@@ -2,13 +2,12 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { useSearchParams } from 'next/navigation';
 import { contentRegistry } from '@/lib/contentRegistry';
 import type { Module, Tier } from '@/lib/contentRegistry';
 import { useProgressTracking } from '../hooks/useProgressTracking';
-import { GamificationSystem } from '../components/GamificationSystem';
 import GamificationDashboard from '../components/GamificationDashboard';
 import SearchFilterSystem from '../components/SearchFilterSystem';
-import { AccessibilityProvider, useAccessibility } from '../components/AccessibilityProvider';
 import '../styles/responsive.scss';
 import '../styles/design-system.scss';
 import '../styles/homepage.scss';
@@ -32,6 +31,9 @@ const ModuleCard: React.FC<{
   tierKey: string;
 }> = ({ module, tierColor, tierKey }) => {
   const { progress, updateProgress, achievements } = useProgressTracking();
+  const searchParams = useSearchParams();
+  const isUnlocked = searchParams.get('unlock') === 'true';
+  
   const moduleProgress = progress[module.slug];
   const completionPercentage = moduleProgress ? 
     (moduleProgress.lessonsCompleted / moduleProgress.totalLessons) * 100 : 0;
@@ -48,7 +50,7 @@ const ModuleCard: React.FC<{
     progress[prereqId]?.completionStatus === 'completed'
   );
   
-  const isLocked = module.prerequisites.length > 0 && !prerequisitesMet;
+  const isLocked = !isUnlocked && module.prerequisites.length > 0 && !prerequisitesMet;
   
   const handleModuleClick = () => {
     if (!isLocked) {

@@ -615,5 +615,499 @@
     ],
     "lastUpdated": "2025-10-09T10:00:00.000Z",
     "version": "1.0.0"
+  },
+  {
+    "id": "dotnet-fundamentals-lesson-11",
+    "moduleSlug": "dotnet-fundamentals",
+    "title": "Advanced LINQ and Data Processing",
+    "order": 11,
+    "objectives": [
+      "Master advanced LINQ operators for complex data transformations",
+      "Implement efficient data processing patterns with LINQ",
+      "Use deferred execution and eager execution appropriately",
+      "Optimize LINQ queries for performance with large datasets"
+    ],
+    "intro": "Language Integrated Query (LINQ) is one of the most powerful features of C# that provides a consistent querying syntax for working with different data sources. While basic LINQ operations are essential, mastering advanced LINQ techniques enables developers to write more efficient, readable, and maintainable code for complex data processing scenarios.\n\nAdvanced LINQ operators like GroupBy, Join, GroupJoin, and SelectMany allow for sophisticated data transformations that would be cumbersome to implement with traditional loops and conditionals. These operators enable developers to express complex relationships and transformations in a declarative manner.\n\nUnderstanding execution modes is crucial for performance optimization. Deferred execution means that query expressions are not evaluated until they're enumerated, which can lead to performance issues if not managed correctly. Eager execution, achieved through operators like ToList() or ToArray(), evaluates queries immediately and can prevent repeated execution.\n\nPerformance considerations become critical when working with large datasets. Techniques like using indexed versions of operators, minimizing iterations, and choosing appropriate data structures can significantly impact application performance. Profiling tools can help identify bottlenecks in LINQ queries.\n\nIn this lesson, you'll explore advanced grouping and aggregation techniques, implement complex joins between data sources, and learn how to optimize LINQ queries for different scenarios. You'll also understand when to use deferred versus eager execution and how to avoid common performance pitfalls.",
+    "code": {
+      "example": "// Advanced Grouping and Aggregation\nusing System;\nusing System.Collections.Generic;\nusing System.Linq;\n\nclass Order\n{\n    public int Id { get; set; }\n    public string Customer { get; set; }\n    public decimal Amount { get; set; }\n    public DateTime OrderDate { get; set; }\n    public string Category { get; set; }\n}\n\n// Sample data\nvar orders = new List<Order>\n{\n    new Order { Id = 1, Customer = \"Alice\", Amount = 150.00m, OrderDate = new DateTime(2023, 1, 15), Category = \"Electronics\" },\n    new Order { Id = 2, Customer = \"Bob\", Amount = 75.50m, OrderDate = new DateTime(2023, 1, 20), Category = \"Books\" },\n    new Order { Id = 3, Customer = \"Alice\", Amount = 200.00m, OrderDate = new DateTime(2023, 2, 5), Category = \"Electronics\" },\n    new Order { Id = 4, Customer = \"Charlie\", Amount = 50.00m, OrderDate = new DateTime(2023, 2, 10), Category = \"Books\" },\n    new Order { Id = 5, Customer = \"Bob\", Amount = 300.00m, OrderDate = new DateTime(2023, 2, 15), Category = \"Electronics\" }\n};\n\n// Advanced grouping with multiple keys and custom result\nvar customerCategorySummary = orders\n    .GroupBy(o => new { o.Customer, o.Category })\n    .Select(g => new {\n        Customer = g.Key.Customer,\n        Category = g.Key.Category,\n        TotalAmount = g.Sum(o => o.Amount),\n        OrderCount = g.Count(),\n        AverageOrder = g.Average(o => o.Amount),\n        LargestOrder = g.Max(o => o.Amount)\n    })\n    .OrderByDescending(x => x.TotalAmount)\n    .ToList();\n\nforeach (var item in customerCategorySummary)\n{\n    Console.WriteLine($\"{item.Customer} - {item.Category}: {item.OrderCount} orders, Total: ${item.TotalAmount}, Avg: ${item.AverageOrder:F2}\");\n}\n\n// Complex joins - GroupJoin for master-detail relationships\nvar customers = new List<string> { \"Alice\", \"Bob\", \"Charlie\", \"David\" };\n\nvar customerOrderSummary = customers\n    .GroupJoin(orders,\n        customer => customer,\n        order => order.Customer,\n        (customer, customerOrders) => new {\n            Customer = customer,\n            TotalOrders = customerOrders.Count(),\n            TotalAmount = customerOrders.Sum(o => o.Amount),\n            Orders = customerOrders.ToList()\n        })\n    .Where(c => c.TotalOrders > 0)\n    .OrderByDescending(c => c.TotalAmount)\n    .ToList();\n\n// Deferred vs Eager Execution example\nConsole.WriteLine(\"\\nDemonstrating deferred execution:\");\nvar query = orders.Where(o => o.Amount > 100);\n\n// At this point, no filtering has occurred yet\norders.Add(new Order { Id = 6, Customer = \"Eve\", Amount = 120.00m, OrderDate = new DateTime(2023, 3, 1), Category = \"Clothing\" });\n\n// Now the filtering happens, including the newly added order\nforeach (var order in query)\n{\n    Console.WriteLine($\"Order {order.Id}: ${order.Amount} from {order.Customer}\");\n}\n\n// For consistent results with changing data, use eager execution\nConsole.WriteLine(\"\\nUsing eager execution:\");\nvar eagerQuery = orders.Where(o => o.Amount > 100).ToList(); // Results are materialized immediately\n\norders.Add(new Order { Id = 7, Customer = \"Frank\", Amount = 130.00m, OrderDate = new DateTime(2023, 3, 5), Category = \"Electronics\" });\n\n// The newly added order won't appear because the query was already executed\nforeach (var order in eagerQuery)\n{\n    Console.WriteLine($\"Order {order.Id}: ${order.Amount} from {order.Customer}\");\n}",
+      "explanation": "This example demonstrates several advanced LINQ concepts. The first section shows complex grouping with multiple keys and multiple aggregation operations in a single query. The GroupJoin operation creates master-detail relationships, which is useful for hierarchical data. The deferred vs eager execution example illustrates how LINQ queries are not executed until enumerated, and how ToList() forces immediate execution. These patterns are essential for processing complex business data efficiently.",
+      "language": "csharp"
+    },
+    "pitfalls": [
+      {
+        "mistake": "Not understanding deferred execution leading to unexpected results",
+        "solution": "Use ToList(), ToArray(), or other materialization methods when you need to ensure query execution at a specific point",
+        "severity": "high"
+      },
+      {
+        "mistake": "Using inefficient LINQ queries with large datasets",
+        "solution": "Profile queries, consider database-level operations for large datasets, and use appropriate indexing",
+        "severity": "high"
+      },
+      {
+        "mistake": "Overusing complex LINQ expressions that hurt readability",
+        "solution": "Break complex queries into smaller, well-named steps and consider using method syntax for complex operations",
+        "severity": "medium"
+      }
+    ],
+    "exercises": [
+      {
+        "title": "Implement Advanced Data Analysis with LINQ",
+        "description": "Create a comprehensive data analysis application using advanced LINQ operations.",
+        "checkpoints": [
+          "Create a data model representing sales transactions with properties like date, product, customer, and amount",
+          "Implement complex grouping operations to analyze sales by multiple dimensions",
+          "Use GroupJoin to create hierarchical reports showing customers and their orders",
+          "Demonstrate the difference between deferred and eager execution with a practical example",
+          "Optimize a LINQ query for performance with a large dataset (10,000+ records)"
+        ]
+      }
+    ],
+    "next": [
+      "dotnet-fundamentals-lesson-12"
+    ],
+    "estimatedMinutes": 90,
+    "difficulty": "Advanced",
+    "tags": [
+      "LINQ",
+      "Data Processing",
+      "Performance",
+      "Deferred Execution",
+      "Aggregation"
+    ],
+    "lastUpdated": "2025-10-09T10:00:00.000Z",
+    "version": "1.0.0"
+  },
+  {
+    "id": "dotnet-fundamentals-lesson-12",
+    "moduleSlug": "dotnet-fundamentals",
+    "title": "Advanced Configuration Management",
+    "order": 12,
+    "objectives": [
+      "Implement complex configuration scenarios with multiple providers",
+      "Manage environment-specific configurations effectively",
+      "Use configuration validation and strongly-typed options",
+      "Implement configuration reloading and monitoring"
+    ],
+    "intro": "Configuration management is a critical aspect of modern application development that enables applications to adapt to different environments without code changes. While basic configuration with appsettings.json files is straightforward, advanced scenarios require understanding multiple configuration providers, environment-specific settings, and dynamic configuration updates.\n\n.NET's configuration system is built on a provider-based architecture that can read settings from various sources including JSON files, XML files, environment variables, command-line arguments, Azure Key Vault, and custom sources. This flexibility allows applications to have different configurations in development, staging, and production environments while maintaining consistency in how configuration values are accessed.\n\nEnvironment-specific configuration is essential for managing different settings across deployment environments. ASP.NET Core automatically loads environment-specific configuration files and provides mechanisms to override settings based on the current environment. This approach enables secure management of secrets in production while maintaining developer-friendly settings in development.\n\nStrongly-typed configuration with the Options pattern provides compile-time safety and better IntelliSense support compared to accessing configuration values by string keys. Configuration validation ensures that required settings are present and have valid values before the application starts, preventing runtime errors due to misconfiguration.\n\nIn this lesson, you'll learn to implement advanced configuration scenarios including multiple configuration providers with proper precedence, environment-specific settings management, strongly-typed options with validation, and configuration reloading for dynamic updates. You'll also understand how to securely manage secrets and implement custom configuration providers for specialized scenarios.",
+    "code": {
+      "example": "// Program.cs - Multiple Configuration Providers\nusing Microsoft.AspNetCore.Builder;\nusing Microsoft.Extensions.Configuration;\nusing Microsoft.Extensions.DependencyInjection;\nusing Microsoft.Extensions.Hosting;\n\nclass Program\n{\n    static void Main(string[] args)\n    {\n        var builder = WebApplication.CreateBuilder(args);\n        \n        // Clear default configuration sources to demonstrate manual setup\n        builder.Configuration.Sources.Clear();\n        \n        // Add configuration providers in order of precedence (last added has highest priority)\n        builder.Configuration\n            .AddJsonFile(\"appsettings.json\", optional: false, reloadOnChange: true)\n            .AddJsonFile($\"appsettings.{builder.Environment.EnvironmentName}.json\", optional: true, reloadOnChange: true)\n            .AddEnvironmentVariables(prefix: \"MYAPP_\")\n            .AddCommandLine(args);\n            \n        // For development, also add user secrets\n        if (builder.Environment.IsDevelopment())\n        {\n            builder.Configuration.AddUserSecrets<Program>();\n        }\n        \n        builder.Services.AddControllers();\n        \n        // Register strongly-typed options\n        builder.Services.Configure<DatabaseOptions>(\n            builder.Configuration.GetSection(\"Database\"));\n        builder.Services.Configure<CacheOptions>(\n            builder.Configuration.GetSection(\"Cache\"));\n        \n        // Register configuration validator\n        builder.Services.PostConfigure<DatabaseOptions>(options =>\n        {\n            if (string.IsNullOrEmpty(options.ConnectionString))\n                throw new InvalidOperationException(\"Database connection string is required\");\n                \n            if (options.CommandTimeout <= 0)\n                throw new InvalidOperationException(\"Database command timeout must be positive\");\n        });\n        \n        var app = builder.Build();\n        \n        // Demonstrate configuration change monitoring\n        var config = app.Services.GetRequiredService<IConfiguration>();\n        var changeToken = config.GetReloadToken();\n        changeToken.RegisterChangeCallback(_ =>\n        {\n            Console.WriteLine(\"Configuration changed at: \" + DateTime.Now);\n            // Handle configuration changes\n        }, null);\n        \n        app.MapControllers();\n        app.Run();\n    }\n}\n\n// Models/DatabaseOptions.cs\npublic class DatabaseOptions\n{\n    public const string SectionName = \"Database\";\n    \n    public string ConnectionString { get; set; } = string.Empty;\n    public int CommandTimeout { get; set; } = 30;\n    public int MaxPoolSize { get; set; } = 100;\n    public bool EnableRetryOnFailure { get; set; } = true;\n}\n\n// Models/CacheOptions.cs\npublic class CacheOptions\n{\n    public const string SectionName = \"Cache\";\n    \n    public string Provider { get; set; } = \"Memory\";\n    public int DefaultExpirationMinutes { get; set; } = 60;\n    public string RedisConnectionString { get; set; } = string.Empty;\n    public bool EnableCompression { get; set; } = false;\n}\n\n// Controllers/ConfigController.cs\nusing Microsoft.AspNetCore.Mvc;\nusing Microsoft.Extensions.Options;\n\n[ApiController]\n[Route(\"[controller]\")]\npublic class ConfigController : ControllerBase\n{\n    private readonly DatabaseOptions _databaseOptions;\n    private readonly CacheOptions _cacheOptions;\n    private readonly IConfiguration _configuration;\n    \n    public ConfigController(\n        IOptions<DatabaseOptions> databaseOptions,\n        IOptions<CacheOptions> cacheOptions,\n        IConfiguration configuration)\n    {\n        _databaseOptions = databaseOptions.Value;\n        _cacheOptions = cacheOptions.Value;\n        _configuration = configuration;\n    }\n    \n    [HttpGet(\"database\")]\n    public ActionResult<DatabaseOptions> GetDatabaseConfig()\n    {\n        return Ok(_databaseOptions);\n    }\n    \n    [HttpGet(\"cache\")]\n    public ActionResult<CacheOptions> GetCacheConfig()\n    {\n        return Ok(_cacheOptions);\n    }\n    \n    [HttpGet(\"raw\")]\n    public ActionResult<string> GetRawConfig([FromQuery] string key)\n    {\n        var value = _configuration[key];\n        return string.IsNullOrEmpty(value) ? NotFound() : Ok(value);\n    }\n}",
+      "explanation": "This example demonstrates advanced configuration management techniques in .NET. The Program.cs file shows how to manually configure multiple providers with proper precedence, including JSON files, environment variables, and command-line arguments. The strongly-typed options classes (DatabaseOptions and CacheOptions) provide compile-time safety and IntelliSense support. Configuration validation is implemented using PostConfigure to ensure required settings are present. The controller demonstrates how to inject both strongly-typed options and raw IConfiguration for flexible access to configuration values.",
+      "language": "csharp"
+    },
+    "pitfalls": [
+      {
+        "mistake": "Not understanding configuration provider precedence leading to unexpected values",
+        "solution": "Remember that providers added last have the highest precedence, and environment variables typically override file-based configuration",
+        "severity": "high"
+      },
+      {
+        "mistake": "Storing secrets in configuration files that are committed to source control",
+        "solution": "Use User Secrets for development and secure vault services like Azure Key Vault for production",
+        "severity": "high"
+      },
+      {
+        "mistake": "Not validating configuration at startup leading to runtime errors",
+        "solution": "Implement configuration validation using IValidateOptions or PostConfigure to catch misconfigurations early",
+        "severity": "medium"
+      }
+    ],
+    "exercises": [
+      {
+        "title": "Implement a Comprehensive Configuration System",
+        "description": "Create an application with advanced configuration management including multiple providers and validation.",
+        "checkpoints": [
+          "Set up multiple configuration providers with proper precedence (JSON files, environment variables, command-line)",
+          "Implement environment-specific configuration files for development, staging, and production",
+          "Create strongly-typed options classes with validation for different configuration sections",
+          "Implement configuration change monitoring to respond to runtime updates",
+          "Securely manage secrets using appropriate providers for each environment"
+        ]
+      }
+    ],
+    "next": [
+      "dotnet-fundamentals-lesson-13"
+    ],
+    "estimatedMinutes": 90,
+    "difficulty": "Advanced",
+    "tags": [
+      "Configuration",
+      "Environment",
+      "Options Pattern",
+      "Validation",
+      "Providers"
+    ],
+    "lastUpdated": "2025-10-09T10:00:00.000Z",
+    "version": "1.0.0"
+  },
+  {
+    "id": "dotnet-fundamentals-lesson-13",
+    "moduleSlug": "dotnet-fundamentals",
+    "title": "Performance Monitoring and Profiling",
+    "order": 13,
+    "objectives": [
+      "Implement application performance monitoring with built-in and third-party tools",
+      "Use profiling tools to identify performance bottlenecks",
+      "Monitor application metrics and create custom performance counters",
+      "Implement distributed tracing for microservices architectures"
+    ],
+    "intro": "Performance monitoring and profiling are essential practices for building high-quality, responsive applications that provide excellent user experiences. While functional correctness is important, performance characteristics often determine user satisfaction and business success. Understanding how to measure, monitor, and optimize application performance is a critical skill for professional developers.\n\n.NET provides several built-in performance monitoring capabilities including EventCounters, Activity tracing, and integration with system monitoring tools. These features enable developers to collect detailed performance metrics without significantly impacting application performance. Third-party Application Performance Monitoring (APM) solutions like Application Insights, New Relic, and Datadog provide comprehensive monitoring with advanced features like distributed tracing and alerting.\n\nProfiling tools help identify specific performance bottlenecks in applications by analyzing CPU usage, memory allocation, and I/O patterns. Tools like dotTrace, dotMemory, and PerfView provide detailed insights into application behavior and help developers optimize critical code paths. Understanding when and how to use these tools effectively can significantly improve application performance.\n\nDistributed tracing is becoming increasingly important as applications evolve toward microservices architectures. Tracing requests as they flow through multiple services helps identify performance issues and understand system behavior. OpenTelemetry has emerged as the standard for implementing distributed tracing and metrics collection across different platforms and languages.\n\nIn this lesson, you'll learn to implement comprehensive performance monitoring using both built-in .NET features and third-party tools. You'll understand how to profile applications to identify bottlenecks, monitor key performance metrics, and implement distributed tracing for complex architectures. You'll also explore performance optimization techniques and best practices for maintaining high-performance applications in production.",
+    "code": {
+      "example": "// Program.cs - Performance Monitoring Setup\nusing Microsoft.AspNetCore.Builder;\nusing Microsoft.Extensions.DependencyInjection;\nusing Microsoft.Extensions.Hosting;\nusing System.Diagnostics;\nusing System.Diagnostics.Metrics;\n\nvar builder = WebApplication.CreateBuilder(args);\n\n// Add Application Insights telemetry (requires Microsoft.ApplicationInsights.AspNetCore package)\nbuilder.Services.AddApplicationInsightsTelemetry();\n\n// Add custom metrics\nbuilder.Services.AddSingleton<PerformanceMetrics>();\n\nbuilder.Services.AddControllers();\nvar app = builder.Build();\n\napp.UseRouting();\napp.MapControllers();\n\n// Custom performance metrics example\napp.MapGet(\"/api/work\", async (PerformanceMetrics metrics) =>\n{\n    var stopwatch = Stopwatch.StartNew();\n    \n    try\n    {\n        // Simulate some work\n        await Task.Delay(Random.Shared.Next(100, 500));\n        \n        // Record successful operation\n        metrics.RecordSuccessfulOperation(stopwatch.ElapsedMilliseconds);\n        return Results.Ok(new { message = \"Work completed successfully\" });\n    }\n    catch (Exception ex)\n    {\n        // Record failed operation\n        metrics.RecordFailedOperation(stopwatch.ElapsedMilliseconds, ex.GetType().Name);\n        return Results.Problem(\"An error occurred while processing the request\");\n    }\n});\n\napp.Run();\n\n// Services/PerformanceMetrics.cs\nusing System.Diagnostics.Metrics;\n\npublic class PerformanceMetrics\n{\n    private readonly Meter _meter;\n    private readonly Counter<long> _requestCounter;\n    private readonly Histogram<double> _responseTimeHistogram;\n    private readonly Counter<long> _errorCounter;\n    \n    public PerformanceMetrics()\n    {\n        _meter = new Meter(\"MyApplication.Metrics\", \"1.0.0\");\n        \n        // Counter for total requests\n        _requestCounter = _meter.CreateCounter<long>(\n            \"app.requests.total\", \n            description: \"Total number of requests\");\n            \n        // Histogram for response times\n        _responseTimeHistogram = _meter.CreateHistogram<double>(\n            \"app.response.time\", \n            unit: \"milliseconds\", \n            description: \"Response time distribution\");\n            \n        // Counter for errors by type\n        _errorCounter = _meter.CreateCounter<long>(\n            \"app.errors.total\", \n            description: \"Total number of errors by type\");\n    }\n    \n    public void RecordSuccessfulOperation(double responseTimeMs)\n    {\n        _requestCounter.Add(1, new KeyValuePair<string, object?>(\"status\", \"success\"));\n        _responseTimeHistogram.Record(responseTimeMs);\n    }\n    \n    public void RecordFailedOperation(double responseTimeMs, string errorType)\n    {\n        _requestCounter.Add(1, new KeyValuePair<string, object?>(\"status\", \"error\"));\n        _responseTimeHistogram.Record(responseTimeMs);\n        _errorCounter.Add(1, new KeyValuePair<string, object?>(\"type\", errorType));\n    }\n}\n\n// Controllers/MetricsController.cs\nusing Microsoft.AspNetCore.Mvc;\n\n[ApiController]\n[Route(\"[controller]\")]\npublic class MetricsController : ControllerBase\n{\n    private readonly PerformanceMetrics _metrics;\n    \n    public MetricsController(PerformanceMetrics metrics)\n    {\n        _metrics = metrics;\n    }\n    \n    [HttpPost(\"simulate-work\")]\n    public async Task<ActionResult> SimulateWork()\n    {\n        var random = Random.Shared.NextDouble();\n        \n        // Simulate different scenarios\n        if (random < 0.7) // 70% success\n        {\n            await Task.Delay(Random.Shared.Next(50, 200));\n            _metrics.RecordSuccessfulOperation(Random.Shared.Next(50, 200));\n            return Ok(new { status = \"success\" });\n        }\n        else if (random < 0.9) // 20% slow response\n        {\n            await Task.Delay(Random.Shared.Next(500, 1000));\n            _metrics.RecordSuccessfulOperation(Random.Shared.Next(500, 1000));\n            return Ok(new { status = \"slow\" });\n        }\n        else // 10% error\n        {\n            _metrics.RecordFailedOperation(Random.Shared.Next(10, 50), \"TimeoutException\");\n            return StatusCode(500, new { status = \"error\" });\n        }\n    }\n}",
+      "explanation": "This example demonstrates performance monitoring and metrics collection in .NET applications. The Program.cs file shows how to set up Application Insights telemetry and register custom performance metrics services. The PerformanceMetrics class uses the System.Diagnostics.Metrics namespace to create custom counters and histograms for tracking requests, response times, and errors. The controller demonstrates how to record metrics for different operation outcomes. This approach provides structured telemetry that can be collected by monitoring systems and used for alerting and performance analysis.",
+      "language": "csharp"
+    },
+    "pitfalls": [
+      {
+        "mistake": "Adding too much instrumentation which impacts application performance",
+        "solution": "Use sampling, adaptive sampling, or conditional logging to minimize performance impact while maintaining observability",
+        "severity": "high"
+      },
+      {
+        "mistake": "Not monitoring the right metrics leading to missed performance issues",
+        "solution": "Focus on business-critical metrics like response times, error rates, and throughput rather than just technical metrics",
+        "severity": "high"
+      },
+      {
+        "mistake": "Ignoring performance testing in development environments",
+        "solution": "Implement performance testing as part of CI/CD pipelines and use staging environments that mirror production",
+        "severity": "medium"
+      }
+    ],
+    "exercises": [
+      {
+        "title": "Implement Comprehensive Performance Monitoring",
+        "description": "Create an application with custom performance metrics and integrate with monitoring tools.",
+        "checkpoints": [
+          "Set up Application Insights or another APM tool for basic telemetry collection",
+          "Implement custom metrics using System.Diagnostics.Metrics for business-critical operations",
+          "Create dashboards to visualize key performance indicators like response times and error rates",
+          "Implement distributed tracing for API calls and database operations",
+          "Set up alerts for performance degradation and error spikes"
+        ]
+      }
+    ],
+    "next": [
+      "dotnet-fundamentals-lesson-14"
+    ],
+    "estimatedMinutes": 90,
+    "difficulty": "Advanced",
+    "tags": [
+      "Performance",
+      "Monitoring",
+      "Profiling",
+      "Metrics",
+      "APM"
+    ],
+    "lastUpdated": "2025-10-09T10:00:00.000Z",
+    "version": "1.0.0"
+  },
+  {
+    "id": "dotnet-fundamentals-lesson-14",
+    "moduleSlug": "dotnet-fundamentals",
+    "title": "Advanced Middleware Patterns",
+    "order": 14,
+    "objectives": [
+      "Implement advanced middleware patterns for cross-cutting concerns",
+      "Create reusable middleware components with proper lifecycle management",
+      "Use middleware for request/response transformation and validation",
+      "Implement conditional and branching middleware pipelines"
+    ],
+    "intro": "Middleware is a powerful pattern in ASP.NET Core that allows developers to intercept and process HTTP requests and responses as they flow through the application pipeline. While basic middleware implementation is straightforward, advanced patterns enable sophisticated cross-cutting concerns like request logging, authentication, rate limiting, and response transformation.\n\nAdvanced middleware patterns go beyond simple request processing to include complex scenarios like conditional middleware execution, branching pipelines, and middleware that can short-circuit the pipeline based on specific conditions. These patterns enable developers to create highly modular and reusable components that can be easily composed to build complex application behaviors.\n\nReusable middleware components require careful consideration of lifecycle management, dependency injection, and proper error handling. Well-designed middleware should be configurable, testable, and follow established patterns for integration with the ASP.NET Core pipeline. Understanding how to properly manage resources and handle exceptions in middleware is crucial for building robust applications.\n\nRequest and response transformation middleware can modify incoming requests or outgoing responses to implement features like content negotiation, compression, or custom headers. Validation middleware can ensure that requests meet specific criteria before they reach controllers, providing early feedback to clients and reducing load on application logic.\n\nIn this lesson, you'll learn to implement advanced middleware patterns including conditional execution, branching pipelines, and transformation middleware. You'll understand how to create reusable, configurable middleware components and integrate them properly into the ASP.NET Core pipeline. You'll also explore best practices for error handling, resource management, and testing middleware components.",
+    "code": {
+      "example": "// Middleware/ConditionalMiddleware.cs\nusing Microsoft.AspNetCore.Http;\nusing System.Threading.Tasks;\n\npublic class ConditionalMiddleware\n{\n    private readonly RequestDelegate _next;\n    private readonly string _requiredHeader;\n    \n    public ConditionalMiddleware(RequestDelegate next, string requiredHeader)\n    {\n        _next = next;\n        _requiredHeader = requiredHeader;\n    }\n    \n    public async Task InvokeAsync(HttpContext context)\n    {\n        // Check if this middleware should run based on conditions\n        if (ShouldExecuteMiddleware(context))\n        {\n            // Pre-processing logic\n            await PreProcessAsync(context);\n            \n            // Continue pipeline\n            await _next(context);\n            \n            // Post-processing logic\n            await PostProcessAsync(context);\n        }\n        else\n        {\n            // Skip this middleware and continue pipeline\n            await _next(context);\n        }\n    }\n    \n    private bool ShouldExecuteMiddleware(HttpContext context)\n    {\n        // Execute middleware only for API endpoints\n        return context.Request.Path.StartsWithSegments(\"/api\");\n    }\n    \n    private async Task PreProcessAsync(HttpContext context)\n    {\n        // Log request start\n        var logger = context.RequestServices.GetService<ILogger<ConditionalMiddleware>>();\n        logger?.LogInformation(\"API request started: {Method} {Path}\", \n            context.Request.Method, context.Request.Path);\n            \n        // Add custom header\n        context.Request.Headers[\"X-Processing-Start\"] = DateTime.UtcNow.ToString(\"o\");\n    }\n    \n    private async Task PostProcessAsync(HttpContext context)\n    {\n        // Add timing header\n        if (context.Request.Headers.TryGetValue(\"X-Processing-Start\", out var startTimeStr) &&\n            DateTime.TryParse(startTimeStr, out var startTime))\n        {\n            var duration = DateTime.UtcNow - startTime;\n            context.Response.Headers[\"X-Processing-Time\"] = duration.TotalMilliseconds.ToString(\"F2\");\n        }\n    }\n}\n\n// Middleware/BranchingMiddleware.cs\nusing Microsoft.AspNetCore.Http;\nusing Microsoft.AspNetCore.Builder;\nusing System.Threading.Tasks;\n\npublic class BranchingMiddleware\n{\n    private readonly RequestDelegate _next;\n    private readonly RequestDelegate _apiPipeline;\n    private readonly RequestDelegate _webPipeline;\n    \n    public BranchingMiddleware(RequestDelegate next, IApplicationBuilder apiBuilder, IApplicationBuilder webBuilder)\n    {\n        _next = next;\n        _apiPipeline = apiBuilder.Build();\n        _webPipeline = webBuilder.Build();\n    }\n    \n    public async Task InvokeAsync(HttpContext context)\n    {\n        if (context.Request.Path.StartsWithSegments(\"/api\"))\n        {\n            // Use API-specific pipeline\n            await _apiPipeline(context);\n        }\n        else if (context.Request.Path.StartsWithSegments(\"/web\"))\n        {\n            // Use web-specific pipeline\n            await _webPipeline(context);\n        }\n        else\n        {\n            // Use default pipeline\n            await _next(context);\n        }\n    }\n}\n\n// Program.cs - Middleware Configuration\nusing Microsoft.AspNetCore.Builder;\nusing Microsoft.Extensions.DependencyInjection;\nusing Microsoft.Extensions.Hosting;\n\nvar builder = WebApplication.CreateBuilder(args);\nbuilder.Services.AddControllers();\nvar app = builder.Build();\n\n// Configure conditional middleware\napp.UseMiddleware<ConditionalMiddleware>(\"X-API-Key\");\n\n// Configure branching middleware\nvar apiBuilder = app.New();\napiBuilder.UseMiddleware<ApiSpecificMiddleware>();\napiBuilder.UseRouting();\napiBuilder.UseEndpoints(endpoints =>\n{\n    endpoints.MapControllers();\n});\n\nvar webBuilder = app.New();\nwebBuilder.UseMiddleware<WebSpecificMiddleware>();\nwebBuilder.UseRouting();\nwebBuilder.UseEndpoints(endpoints =>\n{\n    endpoints.MapRazorPages();\n});\n\napp.UseMiddleware<BranchingMiddleware>(apiBuilder, webBuilder);\n\napp.Run();\n\n// Extension methods for easier middleware registration\npublic static class MiddlewareExtensions\n{\n    public static IApplicationBuilder UseConditionalProcessing(\n        this IApplicationBuilder builder, \n        string requiredHeader)\n    {\n        return builder.UseMiddleware<ConditionalMiddleware>(requiredHeader);\n    }\n    \n    public static IApplicationBuilder UseApiBranch(\n        this IApplicationBuilder builder, \n        Action<IApplicationBuilder> configureApi)\n    {\n        var apiBuilder = builder.New();\n        configureApi(apiBuilder);\n        return builder.UseMiddleware<BranchingMiddleware>(apiBuilder, builder);\n    }\n}",
+      "explanation": "This example demonstrates advanced middleware patterns in ASP.NET Core. The ConditionalMiddleware shows how to implement middleware that only executes under certain conditions, with pre-processing and post-processing logic. The BranchingMiddleware demonstrates how to create different processing pipelines for different types of requests. The Program.cs file shows how to configure these middleware components in the application pipeline. Extension methods are provided to make middleware registration more intuitive and configurable.",
+      "language": "csharp"
+    },
+    "pitfalls": [
+      {
+        "mistake": "Not calling _next() in middleware causing the pipeline to stop",
+        "solution": "Always call await _next(context) unless you explicitly intend to short-circuit the pipeline",
+        "severity": "high"
+      },
+      {
+        "mistake": "Creating middleware that is too tightly coupled to specific application logic",
+        "solution": "Design middleware to be generic and configurable, following the single responsibility principle",
+        "severity": "high"
+      },
+      {
+        "mistake": "Improperly managing resources in middleware leading to memory leaks",
+        "solution": "Implement IDisposable for middleware that manages resources and ensure proper cleanup",
+        "severity": "medium"
+      }
+    ],
+    "exercises": [
+      {
+        "title": "Implement Advanced Middleware Solutions",
+        "description": "Create reusable middleware components that implement advanced patterns for request processing.",
+        "checkpoints": [
+          "Implement conditional middleware that only executes for specific routes or request conditions",
+          "Create branching middleware that routes requests to different processing pipelines",
+          "Develop transformation middleware that modifies requests or responses",
+          "Implement rate limiting middleware with configurable limits per client",
+          "Create testable middleware with proper dependency injection and error handling"
+        ]
+      }
+    ],
+    "next": [
+      "dotnet-fundamentals-lesson-15"
+    ],
+    "estimatedMinutes": 90,
+    "difficulty": "Advanced",
+    "tags": [
+      "Middleware",
+      "Pipeline",
+      "Patterns",
+      "Conditional",
+      "Branching"
+    ],
+    "lastUpdated": "2025-10-09T10:00:00.000Z",
+    "version": "1.0.0"
+  },
+  {
+    "id": "dotnet-fundamentals-lesson-15",
+    "moduleSlug": "dotnet-fundamentals",
+    "title": "API Versioning Strategies",
+    "order": 15,
+    "objectives": [
+      "Implement different API versioning strategies (URI, header, query parameter, media type)",
+      "Use the Microsoft.AspNetCore.Mvc.Versioning package for API versioning",
+      "Handle API version deprecation and sunset policies",
+      "Create comprehensive API documentation for versioned endpoints"
+    ],
+    "intro": "API versioning is a critical aspect of building and maintaining production APIs that evolve over time. As APIs grow and change, it's essential to provide a stable experience for existing clients while introducing new features and improvements for new clients. Proper versioning strategies enable teams to innovate without breaking existing integrations.\n\nThere are several common approaches to API versioning, each with its own advantages and trade-offs. URI versioning (e.g., /api/v1/users) is explicit and easy to understand but can lead to URL proliferation. Header-based versioning (e.g., Accept: application/vnd.myapi.v1+json) keeps URLs clean but may be less visible to API consumers. Query parameter versioning (e.g., /api/users?api-version=1.0) is simple but can complicate caching. Media type versioning leverages HTTP content negotiation but requires more sophisticated client implementations.\n\nThe ASP.NET Core ecosystem provides excellent support for API versioning through the Microsoft.AspNetCore.Mvc.Versioning package, which simplifies implementing various versioning strategies. This package provides attributes for versioning controllers and actions, automatic version selection, and built-in support for deprecation notices and sunset policies.\n\nAPI deprecation and sunset policies are essential for communicating changes to API consumers and managing the transition to newer versions. Proper documentation and clear communication about version lifecycles help clients plan migrations and reduce the impact of version changes. Sunset headers and deprecation warnings can be used to notify clients about upcoming changes.\n\nIn this lesson, you'll learn to implement various API versioning strategies using ASP.NET Core and the versioning package. You'll understand how to configure versioning for controllers and actions, handle version deprecation, and create comprehensive documentation for versioned APIs. You'll also explore best practices for versioning strategy selection and migration planning.",
+    "code": {
+      "example": "// Program.cs - API Versioning Setup\nusing Microsoft.AspNetCore.Builder;\nusing Microsoft.Extensions.DependencyInjection;\nusing Microsoft.Extensions.Hosting;\nusing Microsoft.AspNetCore.Mvc.Versioning;\nusing Microsoft.AspNetCore.Mvc.ApiExplorer;\n\nvar builder = WebApplication.CreateBuilder(args);\n\n// Add API versioning\nbuilder.Services.AddApiVersioning(options =>\n{\n    // Report API versions in response headers\n    options.ReportApiVersions = true;\n    \n    // Default API version\n    options.DefaultApiVersion = new Microsoft.AspNetCore.Mvc.ApiVersion(1, 0);\n    \n    // Assume default version when not specified\n    options.AssumeDefaultVersionWhenUnspecified = true;\n    \n    // Versioning strategy - can be QueryString, Header, MediaType, or Url\n    options.ApiVersionReader = ApiVersionReader.Combine(\n        new QueryStringApiVersionReader(\"api-version\"),\n        new HeaderApiVersionReader(\"api-version\"),\n        new MediaTypeApiVersionReader(\"api-version\"));\n});\n\n// Add versioned API explorer for documentation\nbuilder.Services.AddVersionedApiExplorer(options =>\n{\n    options.GroupNameFormat = \"'v'VVV\";\n    options.SubstituteApiVersionInUrl = true;\n});\n\nbuilder.Services.AddControllers();\nvar app = builder.Build();\n\napp.UseRouting();\napp.MapControllers();\napp.Run();\n\n// Controllers/UsersControllerV1.cs\nusing Microsoft.AspNetCore.Mvc;\n\n[ApiVersion(\"1.0\")]\n[Route(\"api/v{version:apiVersion}/[controller]\")]\n[ApiController]\npublic class UsersController : ControllerBase\n{\n    [HttpGet]\n    public IActionResult Get()\n    {\n        return Ok(new[] { \"User1 (v1)\", \"User2 (v1)\" });\n    }\n    \n    [HttpGet(\"{id}\")]\n    public IActionResult Get(int id)\n    {\n        return Ok($\"User {id} (v1)\");\n    }\n}\n\n// Controllers/UsersControllerV2.cs\nusing Microsoft.AspNetCore.Mvc;\n\n[ApiVersion(\"2.0\")]\n[Route(\"api/v{version:apiVersion}/[controller]\")]\n[ApiController]\npublic class UsersControllerV2 : ControllerBase\n{\n    [HttpGet]\n    public IActionResult Get()\n    {\n        return Ok(new[] { \n            new { Id = 1, Name = \"User1\", Email = \"user1@example.com\" },\n            new { Id = 2, Name = \"User2\", Email = \"user2@example.com\" }\n        });\n    }\n    \n    [HttpGet(\"{id}\")]\n    public IActionResult Get(int id)\n    {\n        return Ok(new { Id = id, Name = $\"User{id}\", Email = $\"user{id}@example.com\" });\n    }\n    \n    [HttpPost]\n    public IActionResult Post([FromBody] CreateUserRequest request)\n    {\n        // New functionality in v2\n        return Ok(new { Id = 999, Name = request.Name, Email = request.Email });\n    }\n}\n\n// Controllers/UsersControllerDeprecated.cs\nusing Microsoft.AspNetCore.Mvc;\n\n[ApiVersion(\"1.0\", Deprecated = true)]\n[ApiVersion(\"3.0\")]\n[Route(\"api/v{version:apiVersion}/[controller]\")]\n[ApiController]\npublic class UsersControllerDeprecated : ControllerBase\n{\n    [HttpGet]\n    public IActionResult GetV1()\n    {\n        // This endpoint is deprecated\n        HttpContext.Response.Headers.Add(\"Warning\", \n            \"299 - \\\"API version 1.0 is deprecated, migrate to version 3.0\\\"\");\n        return Ok(new[] { \"User1 (deprecated)\", \"User2 (deprecated)\" });\n    }\n    \n    [MapToApiVersion(\"3.0\")]\n    [HttpGet]\n    public IActionResult GetV3()\n    {\n        // This is the new version\n        return Ok(new[] { \n            new { Id = 1, Name = \"User1\", Email = \"user1@example.com\", Created = DateTime.UtcNow },\n            new { Id = 2, Name = \"User2\", Email = \"user2@example.com\", Created = DateTime.UtcNow }\n        });\n    }\n}\n\n// Models/CreateUserRequest.cs\npublic class CreateUserRequest\n{\n    public string Name { get; set; } = string.Empty;\n    public string Email { get; set; } = string.Empty;\n}",
+      "explanation": "This example demonstrates API versioning in ASP.NET Core using the Microsoft.AspNetCore.Mvc.Versioning package. The Program.cs file shows how to configure API versioning with multiple version readers (query string, header, media type). Three controller examples show different versioning approaches: a v1 controller with basic functionality, a v2 controller with enhanced functionality, and a controller that demonstrates deprecation of v1 with a new v3 version. The deprecated controller includes a warning header to notify clients about the deprecation.",
+      "language": "csharp"
+    },
+    "pitfalls": [
+      {
+        "mistake": "Releasing APIs without a versioning strategy making future changes breaking",
+        "solution": "Implement versioning from the beginning, even for v1 APIs, to enable smooth evolution",
+        "severity": "high"
+      },
+      {
+        "mistake": "Making breaking changes within the same API version",
+        "solution": "Use semantic versioning principles and introduce breaking changes only in major version increments",
+        "severity": "high"
+      },
+      {
+        "mistake": "Not properly communicating version deprecations to API consumers",
+        "solution": "Implement deprecation headers, sunset headers, and clear documentation about version lifecycles",
+        "severity": "medium"
+      }
+    ],
+    "exercises": [
+      {
+        "title": "Implement Comprehensive API Versioning",
+        "description": "Create a versioned API with multiple versions and proper deprecation handling.",
+        "checkpoints": [
+          "Implement URI-based versioning for API endpoints with clear version paths",
+          "Configure multiple version reading strategies (header, query parameter, media type)",
+          "Create controllers for different API versions with appropriate functionality differences",
+          "Implement deprecation warnings and sunset policies for older API versions",
+          "Generate comprehensive documentation for all API versions using Swagger/OpenAPI"
+        ]
+      }
+    ],
+    "next": [
+      "dotnet-fundamentals-lesson-16"
+    ],
+    "estimatedMinutes": 90,
+    "difficulty": "Advanced",
+    "tags": [
+      "API",
+      "Versioning",
+      "REST",
+      "Deprecation",
+      "Documentation"
+    ],
+    "lastUpdated": "2025-10-09T10:00:00.000Z",
+    "version": "1.0.0"
+  },
+  {
+    "id": "dotnet-fundamentals-lesson-16",
+    "moduleSlug": "dotnet-fundamentals",
+    "title": "Caching Strategies",
+    "order": 16,
+    "objectives": [
+      "Implement in-memory caching with IMemoryCache",
+      "Use distributed caching with Redis and other providers",
+      "Apply caching patterns like cache-aside, write-through, and read-through",
+      "Implement cache invalidation and expiration strategies"
+    ],
+    "intro": "Caching is a fundamental technique for improving application performance and scalability by storing frequently accessed data in faster storage mediums. Effective caching strategies can dramatically reduce response times, decrease database load, and improve overall user experience. However, caching also introduces complexity around data consistency, cache invalidation, and memory management.\n\n.NET provides several caching options, from simple in-memory caching with IMemoryCache to distributed caching solutions like Redis. In-memory caching is ideal for single-instance applications and provides the fastest access times, while distributed caching is essential for scaled-out applications that need to share cached data across multiple instances.\n\nDifferent caching patterns address specific scenarios and requirements. The cache-aside pattern loads data on demand and is the most common approach. Write-through and read-through patterns provide more automatic cache management but require more complex implementation. Understanding when to use each pattern is crucial for effective caching implementation.\n\nCache invalidation is one of the most challenging aspects of caching, famously described as one of the two hard problems in computer science. Strategies include time-based expiration, event-based invalidation, and hybrid approaches. Proper cache key design and cache warming techniques can also improve cache effectiveness.\n\nIn this lesson, you'll learn to implement various caching strategies using .NET's built-in caching features and external providers. You'll understand different caching patterns and when to apply them, implement cache invalidation strategies, and optimize cache performance. You'll also explore distributed caching scenarios and best practices for cache management in production environments.",
+    "code": {
+      "example": "// Services/ProductServiceWithCaching.cs\nusing Microsoft.Extensions.Caching.Memory;\nusing Microsoft.Extensions.Caching.Distributed;\nusing System.Text.Json;\n\npublic class ProductServiceWithCaching\n{\n    private readonly IMemoryCache _memoryCache;\n    private readonly IDistributedCache _distributedCache;\n    private readonly ILogger<ProductServiceWithCaching> _logger;\n    \n    public ProductServiceWithCaching(\n        IMemoryCache memoryCache, \n        IDistributedCache distributedCache,\n        ILogger<ProductServiceWithCaching> logger)\n    {\n        _memoryCache = memoryCache;\n        _distributedCache = distributedCache;\n        _logger = logger;\n    }\n    \n    // Cache-aside pattern with in-memory cache\n    public async Task<Product?> GetProductAsync(int productId)\n    {\n        var cacheKey = $\"product_{productId}\";\n        \n        // Try to get from cache first\n        if (_memoryCache.TryGetValue(cacheKey, out Product? cachedProduct))\n        {\n            _logger.LogInformation(\"Product {ProductId} retrieved from cache\", productId);\n            return cachedProduct;\n        }\n        \n        // If not in cache, get from data source\n        var product = await GetProductFromDatabaseAsync(productId);\n        \n        if (product != null)\n        {\n            // Store in cache with expiration\n            var cacheEntryOptions = new MemoryCacheEntryOptions()\n                .SetSlidingExpiration(TimeSpan.FromMinutes(10))\n                .SetAbsoluteExpiration(TimeSpan.FromHours(1))\n                .RegisterPostEvictionCallback((key, value, reason, state) =>\n                {\n                    _logger.LogInformation(\"Cache entry {Key} evicted due to {Reason}\", key, reason);\n                });\n                \n            _memoryCache.Set(cacheKey, product, cacheEntryOptions);\n            _logger.LogInformation(\"Product {ProductId} added to cache\", productId);\n        }\n        \n        return product;\n    }\n    \n    // Distributed cache with Redis\n    public async Task<IEnumerable<Product>> GetPopularProductsAsync()\n    {\n        var cacheKey = \"popular_products\";\n        \n        // Try to get from distributed cache\n        var cachedData = await _distributedCache.GetStringAsync(cacheKey);\n        if (!string.IsNullOrEmpty(cachedData))\n        {\n            _logger.LogInformation(\"Popular products retrieved from distributed cache\");\n            return JsonSerializer.Deserialize<IEnumerable<Product>>(cachedData)!;\n        }\n        \n        // If not in cache, get from data source\n        var products = await GetPopularProductsFromDatabaseAsync();\n        \n        // Store in distributed cache\n        var cacheOptions = new DistributedCacheEntryOptions()\n            .SetSlidingExpiration(TimeSpan.FromMinutes(5));\n            \n        var jsonData = JsonSerializer.Serialize(products);\n        await _distributedCache.SetStringAsync(cacheKey, jsonData, cacheOptions);\n        _logger.LogInformation(\"Popular products added to distributed cache\");\n        \n        return products;\n    }\n    \n    // Cache invalidation\n    public async Task<Product> CreateProductAsync(Product product)\n    {\n        // Create product in database\n        var createdProduct = await CreateProductInDatabaseAsync(product);\n        \n        // Invalidate related caches\n        var productCacheKey = $\"product_{createdProduct.Id}\";\n        _memoryCache.Remove(productCacheKey);\n        \n        // Invalidate popular products cache\n        await _distributedCache.RemoveAsync(\"popular_products\");\n        \n        _logger.LogInformation(\"Cache invalidated for product {ProductId} and popular products\", createdProduct.Id);\n        \n        return createdProduct;\n    }\n    \n    // Simulated database operations\n    private async Task<Product?> GetProductFromDatabaseAsync(int productId)\n    {\n        await Task.Delay(100); // Simulate database call\n        return new Product { Id = productId, Name = $\"Product {productId}\", Price = productId * 10.0m };\n    }\n    \n    private async Task<IEnumerable<Product>> GetPopularProductsFromDatabaseAsync()\n    {\n        await Task.Delay(200); // Simulate database call\n        return new[]\n        {\n            new Product { Id = 1, Name = \"Popular Product 1\", Price = 29.99m },\n            new Product { Id = 2, Name = \"Popular Product 2\", Price = 39.99m },\n            new Product { Id = 3, Name = \"Popular Product 3\", Price = 49.99m }\n        };\n    }\n    \n    private async Task<Product> CreateProductInDatabaseAsync(Product product)\n    {\n        await Task.Delay(50); // Simulate database call\n        product.Id = new Random().Next(1000, 9999);\n        return product;\n    }\n}\n\n// Program.cs - Caching Configuration\nusing Microsoft.AspNetCore.Builder;\nusing Microsoft.Extensions.DependencyInjection;\nusing Microsoft.Extensions.Hosting;\n\nvar builder = WebApplication.CreateBuilder(args);\n\n// Add in-memory caching\nbuilder.Services.AddMemoryCache(options =>\n{\n    options.SizeLimit = 1024; // Maximum cache size\n});\n\n// Add distributed caching with Redis (requires StackExchange.Redis package)\nbuilder.Services.AddStackExchangeRedisCache(options =>\n{\n    options.Configuration = builder.Configuration.GetConnectionString(\"Redis\");\n    options.InstanceName = \"MyApp_\";\n});\n\n// Register services\nbuilder.Services.AddScoped<ProductServiceWithCaching>();\nbuilder.Services.AddControllers();\n\nvar app = builder.Build();\n\napp.UseRouting();\napp.MapControllers();\napp.Run();\n\n// Controllers/ProductsController.cs\nusing Microsoft.AspNetCore.Mvc;\n\n[ApiController]\n[Route(\"api/[controller]\")]\npublic class ProductsController : ControllerBase\n{\n    private readonly ProductServiceWithCaching _productService;\n    \n    public ProductsController(ProductServiceWithCaching productService)\n    {\n        _productService = productService;\n    }\n    \n    [HttpGet(\"{id}\")]\n    public async Task<ActionResult<Product>> Get(int id)\n    {\n        var product = await _productService.GetProductAsync(id);\n        return product == null ? NotFound() : Ok(product);\n    }\n    \n    [HttpGet(\"popular\")]\n    public async Task<ActionResult<IEnumerable<Product>>> GetPopular()\n    {\n        var products = await _productService.GetPopularProductsAsync();\n        return Ok(products);\n    }\n    \n    [HttpPost]\n    public async Task<ActionResult<Product>> Post(Product product)\n    {\n        var createdProduct = await _productService.CreateProductAsync(product);\n        return CreatedAtAction(nameof(Get), new { id = createdProduct.Id }, createdProduct);\n    }\n}\n\n// Models/Product.cs\npublic class Product\n{\n    public int Id { get; set; }\n    public string Name { get; set; } = string.Empty;\n    public decimal Price { get; set; }\n}",
+      "explanation": "This example demonstrates various caching strategies in .NET applications. The ProductServiceWithCaching class shows implementation of the cache-aside pattern with both in-memory caching using IMemoryCache and distributed caching using Redis. The service includes cache expiration strategies with both sliding and absolute expiration, cache invalidation when data changes, and proper logging. The Program.cs file shows how to configure both in-memory and distributed caching services. The controller demonstrates how to use the caching service in API endpoints.",
+      "language": "csharp"
+    },
+    "pitfalls": [
+      {
+        "mistake": "Caching data that changes frequently leading to stale data issues",
+        "solution": "Use appropriate expiration policies and implement cache invalidation for frequently changing data",
+        "severity": "high"
+      },
+      {
+        "mistake": "Not considering memory pressure and cache size limits",
+        "solution": "Configure cache size limits and use cache priorities to ensure important data is retained",
+        "severity": "high"
+      },
+      {
+        "mistake": "Inconsistent caching strategies across different parts of the application",
+        "solution": "Establish caching patterns and guidelines, and use centralized caching services",
+        "severity": "medium"
+      }
+    ],
+    "exercises": [
+      {
+        "title": "Implement Comprehensive Caching Solutions",
+        "description": "Create an application with multiple caching strategies and proper invalidation mechanisms.",
+        "checkpoints": [
+          "Implement in-memory caching for frequently accessed but infrequently changing data",
+          "Set up distributed caching with Redis for shared cache scenarios",
+          "Apply different caching patterns (cache-aside, read-through) based on data access patterns",
+          "Implement cache expiration and invalidation strategies appropriate for different data types",
+          "Monitor cache performance and hit ratios to optimize caching effectiveness"
+        ]
+      }
+    ],
+    "next": [
+      "dotnet-fundamentals-lesson-17"
+    ],
+    "estimatedMinutes": 90,
+    "difficulty": "Advanced",
+    "tags": [
+      "Caching",
+      "MemoryCache",
+      "Redis",
+      "Performance",
+      "Distributed"
+    ],
+    "lastUpdated": "2025-10-09T10:00:00.000Z",
+    "version": "1.0.0"
+  },
+  {
+    "id": "dotnet-fundamentals-lesson-17",
+    "moduleSlug": "dotnet-fundamentals",
+    "title": "Advanced Entity Framework Patterns",
+    "order": 17,
+    "objectives": [
+      "Implement advanced querying patterns with EF Core",
+      "Use database transactions and handle concurrency conflicts",
+      "Optimize EF Core performance with compiled queries and batching",
+      "Implement repository and unit of work patterns with EF Core"
+    ],
+    "intro": "Entity Framework Core is a powerful Object-Relational Mapper (ORM) that simplifies data access in .NET applications. While basic EF Core usage covers many scenarios, advanced patterns and techniques are essential for building high-performance, maintainable data access layers in complex applications.\n\nAdvanced querying patterns in EF Core include techniques like compiled queries for improved performance, raw SQL queries for complex scenarios, and efficient loading strategies for related data. Understanding when to use eager loading, explicit loading, or lazy loading is crucial for optimizing data access performance and avoiding common pitfalls like the N+1 query problem.\n\nDatabase transactions ensure data consistency and integrity when performing multiple related operations. EF Core provides both automatic and manual transaction management, along with optimistic and pessimistic concurrency control mechanisms. Understanding how to handle concurrency conflicts gracefully is important for applications with multiple concurrent users.\n\nPerformance optimization in EF Core involves techniques like compiled queries for frequently executed queries, batching multiple operations to reduce database round trips, and proper indexing strategies. Monitoring query execution plans and using tools like SQL Profiler can help identify performance bottlenecks in data access code.\n\nDesign patterns like Repository and Unit of Work provide abstraction layers that make data access code more testable and maintainable. While EF Core's DbContext already implements Unit of Work and Repository patterns to some degree, custom implementations can provide additional benefits for complex applications.\n\nIn this lesson, you'll learn to implement advanced Entity Framework Core patterns including sophisticated querying techniques, transaction management, and performance optimization strategies. You'll understand how to handle concurrency conflicts, implement design patterns for better code organization, and optimize EF Core usage for high-performance applications.",
+    "code": {
+      "example": "// Data/Models/Order.cs\nusing System.ComponentModel.DataAnnotations;\n\nclass Order\n{\n    public int Id { get; set; }\n    \n    [Required]\n    public string CustomerName { get; set; } = string.Empty;\n    \n    public DateTime OrderDate { get; set; } = DateTime.UtcNow;\n    \n    [Required]\n    [Range(0.01, double.MaxValue)]\n    public decimal TotalAmount { get; set; }\n    \n    public OrderStatus Status { get; set; } = OrderStatus.Pending;\n    \n    // Navigation properties\n    public List<OrderItem> Items { get; } = new();\n}\n\n// Data/Models/OrderItem.cs\nclass OrderItem\n{\n    public int Id { get; set; }\n    public int OrderId { get; set; }\n    public int ProductId { get; set; }\n    public int Quantity { get; set; }\n    public decimal UnitPrice { get; set; }\n    \n    // Navigation properties\n    public Order Order { get; set; } = null!;\n    public Product Product { get; set; } = null!;\n}\n\n// Data/Models/Product.cs\nclass Product\n{\n    public int Id { get; set; }\n    public string Name { get; set; } = string.Empty;\n    public decimal Price { get; set; }\n    public int StockQuantity { get; set; }\n    \n    // Navigation properties\n    public List<OrderItem> OrderItems { get; } = new();\n}\n\n// Data/Models/OrderStatus.cs\nenum OrderStatus\n{\n    Pending,\n    Processing,\n    Shipped,\n    Delivered,\n    Cancelled\n}\n\n// Data/ApplicationDbContext.cs\nusing Microsoft.EntityFrameworkCore;\n\npublic class ApplicationDbContext : DbContext\n{\n    public DbSet<Order> Orders => Set<Order>();\n    public DbSet<OrderItem> OrderItems => Set<OrderItem>();\n    public DbSet<Product> Products => Set<Product>();\n    \n    public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options) { }\n    \n    protected override void OnModelCreating(ModelBuilder modelBuilder)\n    {\n        modelBuilder.Entity<Order>(entity =>\n        {\n            entity.HasIndex(e => e.CustomerName);\n            entity.HasIndex(e => e.OrderDate);\n            entity.Property(e => e.TotalAmount).HasPrecision(18, 2);\n        });\n        \n        modelBuilder.Entity<OrderItem>(entity =>\n        {\n            entity.HasIndex(e => e.OrderId);\n            entity.HasIndex(e => e.ProductId);\n            entity.Property(e => e.UnitPrice).HasPrecision(18, 2);\n        });\n        \n        modelBuilder.Entity<Product>(entity =>\n        {\n            entity.HasIndex(e => e.Name);\n            entity.Property(e => e.Price).HasPrecision(18, 2);\n        });\n        \n        // Seed data\n        modelBuilder.Entity<Product>().HasData(\n            new Product { Id = 1, Name = \"Laptop\", Price = 999.99m, StockQuantity = 50 },\n            new Product { Id = 2, Name = \"Mouse\", Price = 29.99m, StockQuantity = 200 },\n            new Product { Id = 3, Name = \"Keyboard\", Price = 79.99m, StockQuantity = 150 }\n        );\n    }\n}\n\n// Services/OrderService.cs\nusing Microsoft.EntityFrameworkCore;\n\npublic class OrderService\n{\n    private readonly ApplicationDbContext _context;\n    private readonly ILogger<OrderService> _logger;\n    \n    // Compiled query for better performance\n    private static readonly Func<ApplicationDbContext, int, Task<Order?>> s_compiledGetOrderQuery =\n        EF.CompileAsyncQuery((ApplicationDbContext context, int orderId) =>\n            context.Orders\n                .Include(o => o.Items)\n                .ThenInclude(oi => oi.Product)\n                .FirstOrDefault(o => o.Id == orderId));\n    \n    public OrderService(ApplicationDbContext context, ILogger<OrderService> logger)\n    {\n        _context = context;\n        _logger = logger;\n    }\n    \n    // Advanced querying with compiled query\n    public async Task<Order?> GetOrderWithDetailsAsync(int orderId)\n    {\n        return await s_compiledGetOrderQuery(_context, orderId);\n    }\n    \n    // Transaction with concurrency handling\n    public async Task<bool> UpdateOrderStatusAsync(int orderId, OrderStatus newStatus)\n    {\n        using var transaction = await _context.Database.BeginTransactionAsync();\n        \n        try\n        {\n            // Use optimistic concurrency with retry logic\n            var retryCount = 0;\n            const int maxRetries = 3;\n            \n            while (retryCount < maxRetries)\n            {\n                try\n                {\n                    var order = await _context.Orders\n                        .FirstOrDefaultAsync(o => o.Id == orderId);\n                        \n                    if (order == null)\n                        return false;\n                        \n                    order.Status = newStatus;\n                    order.OrderDate = DateTime.UtcNow; // Update timestamp\n                    \n                    await _context.SaveChangesAsync();\n                    await transaction.CommitAsync();\n                    \n                    _logger.LogInformation(\"Order {OrderId} status updated to {Status}\", orderId, newStatus);\n                    return true;\n                }\n                catch (DbUpdateConcurrencyException ex)\n                {\n                    retryCount++;\n                    if (retryCount >= maxRetries)\n                        throw;\n                        \n                    _logger.LogWarning(\"Concurrency conflict on order {OrderId}, retry {RetryCount}/{MaxRetries}\", \n                        orderId, retryCount, maxRetries);\n                    \n                    // Refresh entities from database\n                    foreach (var entry in ex.Entries)\n                    {\n                        await entry.ReloadAsync();\n                    }\n                    \n                    // Wait before retry\n                    await Task.Delay(TimeSpan.FromMilliseconds(100 * retryCount));\n                }\n            }\n            \n            return false;\n        }\n        catch (Exception ex)\n        {\n            await transaction.RollbackAsync();\n            _logger.LogError(ex, \"Error updating order {OrderId} status\", orderId);\n            throw;\n        }\n    }\n    \n    // Batch operations for performance\n    public async Task<int> ProcessPendingOrdersAsync()\n    {\n        // Batch update using raw SQL for performance\n        var processedCount = await _context.Database.ExecuteSqlRawAsync(\n            \"UPDATE Orders SET Status = {0}, OrderDate = {1} WHERE Status = {2}\",\n            OrderStatus.Processing, DateTime.UtcNow, OrderStatus.Pending);\n            \n        _logger.LogInformation(\"Processed {Count} pending orders\", processedCount);\n        return processedCount;\n    }\n}\n\n// Program.cs - Service Registration\nusing Microsoft.AspNetCore.Builder;\nusing Microsoft.EntityFrameworkCore;\nusing Microsoft.Extensions.DependencyInjection;\nusing Microsoft.Extensions.Hosting;\n\nvar builder = WebApplication.CreateBuilder(args);\n\n// Add Entity Framework\nbuilder.Services.AddDbContext<ApplicationDbContext>(options =>\n    options.UseSqlServer(builder.Configuration.GetConnectionString(\"DefaultConnection\")));\n    \n// Register services\nbuilder.Services.AddScoped<OrderService>();\nbuilder.Services.AddControllers();\n\nvar app = builder.Build();\n\napp.UseRouting();\napp.MapControllers();\napp.Run();",
+      "explanation": "This example demonstrates advanced Entity Framework Core patterns including compiled queries for performance optimization, transaction management with concurrency handling, and batch operations using raw SQL. The OrderService shows how to implement these patterns in a real-world scenario. The compiled query improves performance for frequently executed queries by pre-compiling the query expression. Transaction management with retry logic handles concurrency conflicts gracefully. Batch operations using raw SQL provide efficient ways to update multiple records at once.",
+      "language": "csharp"
+    },
+    "pitfalls": [
+      {
+        "mistake": "Not using compiled queries for frequently executed queries leading to performance issues",
+        "solution": "Use EF.CompileQuery or EF.CompileAsyncQuery for queries that are executed frequently with the same structure",
+        "severity": "high"
+      },
+      {
+        "mistake": "Ignoring concurrency conflicts in multi-user applications",
+        "solution": "Implement optimistic or pessimistic concurrency control and handle DbUpdateConcurrencyException appropriately",
+        "severity": "high"
+      },
+      {
+        "mistake": "Loading too much data with eager loading causing performance problems",
+        "solution": "Use Select projections to load only needed data, or use explicit loading for complex scenarios",
+        "severity": "medium"
+      }
+    ],
+    "exercises": [
+      {
+        "title": "Implement Advanced Entity Framework Patterns",
+        "description": "Create a data access layer with advanced EF Core patterns for performance and concurrency.",
+        "checkpoints": [
+          "Implement compiled queries for frequently executed data access operations",
+          "Add transaction management with proper concurrency conflict handling",
+          "Use batch operations for bulk data modifications to improve performance",
+          "Implement repository and unit of work patterns for better code organization",
+          "Optimize query performance with proper indexing and loading strategies"
+        ]
+      }
+    ],
+    "next": [
+      "dotnet-fundamentals-lesson-18"
+    ],
+    "estimatedMinutes": 90,
+    "difficulty": "Advanced",
+    "tags": [
+      "Entity Framework Core",
+      "ORM",
+      "Transactions",
+      "Performance",
+      "Concurrency"
+    ],
+    "lastUpdated": "2025-10-09T10:00:00.000Z",
+    "version": "1.0.0"
+  },
+  {
+    "id": "dotnet-fundamentals-lesson-18",
+    "moduleSlug": "dotnet-fundamentals",
+    "title": "Microservices Communication",
+    "order": 18,
+    "objectives": [
+      "Implement synchronous communication between microservices using HTTP clients",
+      "Use message queues and event-driven architectures for asynchronous communication",
+      "Apply circuit breaker and retry patterns for resilient service communication",
+      "Implement service discovery and load balancing for microservices"
+    ],
+    "intro": "Microservices architecture has become a popular approach for building scalable, maintainable applications by decomposing monolithic systems into smaller, independently deployable services. However, this architectural style introduces new challenges around service communication, data consistency, and system resilience that must be carefully addressed.\n\nCommunication between microservices can be synchronous or asynchronous, each with its own trade-offs. Synchronous communication using HTTP/REST APIs provides immediate feedback but can lead to tight coupling and cascade failures. Asynchronous communication using message queues and event-driven architectures provides better decoupling and resilience but introduces complexity around eventual consistency and message ordering.\n\nResilient communication patterns are essential for maintaining system stability in distributed environments. The circuit breaker pattern prevents cascade failures by temporarily stopping requests to failing services. Retry patterns with exponential backoff help handle transient failures. Timeout mechanisms prevent requests from hanging indefinitely. These patterns work together to create robust, fault-tolerant systems.\n\nService discovery and load balancing are critical infrastructure components in microservices architectures. Service discovery enables services to find and communicate with each other dynamically, while load balancing distributes requests across multiple service instances for better performance and availability. These capabilities are often provided by container orchestration platforms like Kubernetes or service meshes like Istio.\n\nIn this lesson, you'll learn to implement various microservices communication patterns using .NET technologies. You'll understand how to build resilient synchronous and asynchronous communication mechanisms, apply circuit breaker and retry patterns, and implement service discovery and load balancing. You'll also explore best practices for designing effective microservices communication strategies.",
+    "code": {
+      "example": "// Services/OrderServiceClient.cs\nusing System.Net.Http.Json;\nusing Polly;\nusing Polly.CircuitBreaker;\nusing Polly.Extensions.Http;\n\npublic class OrderServiceClient\n{\n    private readonly HttpClient _httpClient;\n    private readonly ILogger<OrderServiceClient> _logger;\n    private readonly CircuitBreakerPolicy _circuitBreaker;\n    \n    public OrderServiceClient(HttpClient httpClient, ILogger<OrderServiceClient> logger)\n    {\n        _httpClient = httpClient;\n        _logger = logger;\n        \n        // Configure circuit breaker policy\n        _circuitBreaker = Policy\n            .Handle<HttpRequestException>()\n            .CircuitBreaker(\n                exceptionsAllowedBeforeBreaking: 3,\n                durationOfBreak: TimeSpan.FromMinutes(1));\n    }\n    \n    // Resilient synchronous communication with retry and circuit breaker\n    public async Task<OrderDetails?> GetOrderDetailsAsync(int orderId)\n    {\n        // Define retry policy\n        var retryPolicy = Policy\n            .Handle<HttpRequestException>()\n            .Or<BrokenCircuitException>()\n            .WaitAndRetryAsync(\n                retryCount: 3,\n                sleepDurationProvider: retryAttempt => TimeSpan.FromSeconds(Math.Pow(2, retryAttempt)),\n                onRetry: (outcome, timespan, retryCount, context) =>\n                {\n                    _logger.LogWarning(\"Retry {RetryCount} for order {OrderId} in {Delay}ms\", \n                        retryCount, orderId, timespan.TotalMilliseconds);\n                });\n        \n        // Combine policies\n        var policy = Policy.WrapAsync(_circuitBreaker, retryPolicy);\n        \n        try\n        {\n            return await policy.ExecuteAsync(async () =>\n            {\n                var response = await _httpClient.GetAsync($\"/api/orders/{orderId}\");\n                response.EnsureSuccessStatusCode();\n                \n                return await response.Content.ReadFromJsonAsync<OrderDetails>();\n            });\n        }\n        catch (BrokenCircuitException)\n        {\n            _logger.LogError(\"Circuit breaker is open for order service\");\n            throw new ServiceUnavailableException(\"Order service is temporarily unavailable\");\n        }\n    }\n}\n\n// Services/EventPublisher.cs\nusing System.Text.Json;\nusing System.Text;\nusing RabbitMQ.Client;\n\npublic class EventPublisher : IDisposable\n{\n    private readonly IConnection _connection;\n    private readonly IModel _channel;\n    \n    public EventPublisher(string rabbitMqConnectionString)\n    {\n        var factory = new ConnectionFactory() { Uri = new Uri(rabbitMqConnectionString) };\n        _connection = factory.CreateConnection();\n        _channel = _connection.CreateModel();\n        \n        // Declare exchange\n        _channel.ExchangeDeclare(exchange: \"order_events\", type: ExchangeType.Topic);\n    }\n    \n    // Asynchronous communication using message queue\n    public async Task PublishOrderCreatedEventAsync(OrderCreatedEvent orderEvent)\n    {\n        var message = JsonSerializer.Serialize(orderEvent);\n        var body = Encoding.UTF8.GetBytes(message);\n        \n        var properties = _channel.CreateBasicProperties();\n        properties.Persistent = true;\n        \n        _channel.BasicPublish(\n            exchange: \"order_events\",\n            routingKey: \"order.created\",\n            basicProperties: properties,\n            body: body);\n            \n        await Task.CompletedTask; // In real implementation, this might be fire-and-forget\n    }\n    \n    public void Dispose()\n    {\n        _channel?.Close();\n        _connection?.Close();\n    }\n}\n\n// Services/EventSubscriber.cs\nusing RabbitMQ.Client;\nusing RabbitMQ.Client.Events;\n\npublic class EventSubscriber : IDisposable\n{\n    private readonly IConnection _connection;\n    private readonly IModel _channel;\n    private readonly ILogger<EventSubscriber> _logger;\n    \n    public EventSubscriber(string rabbitMqConnectionString, ILogger<EventSubscriber> logger)\n    {\n        _logger = logger;\n        var factory = new ConnectionFactory() { Uri = new Uri(rabbitMqConnectionString) };\n        _connection = factory.CreateConnection();\n        _channel = _connection.CreateModel();\n        \n        _channel.ExchangeDeclare(exchange: \"order_events\", type: ExchangeType.Topic);\n        _channel.QueueDeclare(queue: \"inventory_queue\", durable: true, exclusive: false, autoDelete: false, arguments: null);\n        _channel.QueueBind(queue: \"inventory_queue\", exchange: \"order_events\", routingKey: \"order.created\");\n    }\n    \n    public void StartListening(Func<OrderCreatedEvent, Task> handler)\n    {\n        var consumer = new EventingBasicConsumer(_channel);\n        consumer.Received += async (model, ea) =>\n        {\n            try\n            {\n                var body = ea.Body.ToArray();\n                var message = Encoding.UTF8.GetString(body);\n                var orderEvent = JsonSerializer.Deserialize<OrderCreatedEvent>(message);\n                \n                if (orderEvent != null)\n                {\n                    await handler(orderEvent);\n                    \n                    // Acknowledge message processing\n                    _channel.BasicAck(deliveryTag: ea.DeliveryTag, multiple: false);\n                }\n            }\n            catch (Exception ex)\n            {\n                _logger.LogError(ex, \"Error processing order event\");\n                // Reject message and requeue for retry\n                _channel.BasicNack(deliveryTag: ea.DeliveryTag, multiple: false, requeue: true);\n            }\n        };\n        \n        _channel.BasicConsume(queue: \"inventory_queue\", autoAck: false, consumer: consumer);\n    }\n    \n    public void Dispose()\n    {\n        _channel?.Close();\n        _connection?.Close();\n    }\n}\n\n// Program.cs - Service Registration\nusing Microsoft.AspNetCore.Builder;\nusing Microsoft.Extensions.DependencyInjection;\nusing Microsoft.Extensions.Hosting;\n\nvar builder = WebApplication.CreateBuilder(args);\n\n// Configure HTTP client with base URL\nbuilder.Services.AddHttpClient<OrderServiceClient>(client =>\n{\n    client.BaseAddress = new Uri(builder.Configuration[\"OrderService:BaseUrl\"] ?? \"http://localhost:5001\");\n    client.Timeout = TimeSpan.FromSeconds(30);\n});\n\n// Register services\nbuilder.Services.AddSingleton<EventPublisher>(sp =>\n    new EventPublisher(builder.Configuration.GetConnectionString(\"RabbitMQ\")!));\nbuilder.Services.AddSingleton<EventSubscriber>(sp =>\n    new EventSubscriber(builder.Configuration.GetConnectionString(\"RabbitMQ\")!,\n        sp.GetRequiredService<ILogger<EventSubscriber>>()));\n        \nbuilder.Services.AddControllers();\nvar app = builder.Build();\n\napp.UseRouting();\napp.MapControllers();\napp.Run();\n\n// Models/OrderDetails.cs\npublic class OrderDetails\n{\n    public int Id { get; set; }\n    public string CustomerName { get; set; } = string.Empty;\n    public DateTime OrderDate { get; set; }\n    public decimal TotalAmount { get; set; }\n    public List<OrderItem> Items { get; set; } = new();\n}\n\n// Models/OrderItem.cs\npublic class OrderItem\n{\n    public int ProductId { get; set; }\n    public string ProductName { get; set; } = string.Empty;\n    public int Quantity { get; set; }\n    public decimal UnitPrice { get; set; }\n}\n\n// Models/OrderCreatedEvent.cs\npublic class OrderCreatedEvent\n{\n    public int OrderId { get; set; }\n    public string CustomerName { get; set; } = string.Empty;\n    public DateTime OrderDate { get; set; }\n    public decimal TotalAmount { get; set; }\n    public List<OrderItemEvent> Items { get; set; } = new();\n}\n\n// Models/OrderItemEvent.cs\npublic class OrderItemEvent\n{\n    public int ProductId { get; set; }\n    public string ProductName { get; set; } = string.Empty;\n    public int Quantity { get; set; }\n    public decimal UnitPrice { get; set; }\n}\n\n// Custom exception\npublic class ServiceUnavailableException : Exception\n{\n    public ServiceUnavailableException(string message) : base(message) { }\n}",
+      "explanation": "This example demonstrates microservices communication patterns in .NET applications. The OrderServiceClient shows resilient synchronous communication using HttpClient with Polly for circuit breaker and retry policies. The EventPublisher and EventSubscriber demonstrate asynchronous communication using RabbitMQ message queues. The Program.cs file shows how to configure and register these services. The models represent the data structures used for communication between services.",
+      "language": "csharp"
+    },
+    "pitfalls": [
+      {
+        "mistake": "Not implementing resilience patterns leading to cascade failures",
+        "solution": "Use circuit breakers, retries with exponential backoff, and proper timeout configurations",
+        "severity": "high"
+      },
+      {
+        "mistake": "Ignoring distributed transaction challenges in microservices",
+        "solution": "Use eventual consistency patterns, saga patterns, or event-driven architectures instead of distributed transactions",
+        "severity": "high"
+      },
+      {
+        "mistake": "Creating too many direct service-to-service dependencies",
+        "solution": "Use message queues for loose coupling and implement proper service contracts",
+        "severity": "medium"
+      }
+    ],
+    "exercises": [
+      {
+        "title": "Implement Microservices Communication Patterns",
+        "description": "Create services that communicate using both synchronous and asynchronous patterns with proper resilience.",
+        "checkpoints": [
+          "Implement HTTP client communication with circuit breaker and retry patterns",
+          "Set up message queue communication for event-driven interactions",
+          "Create service contracts and data models for inter-service communication",
+          "Implement proper error handling and logging for service communication",
+          "Configure service discovery and load balancing for multiple service instances"
+        ]
+      }
+    ],
+    "next": [],
+    "estimatedMinutes": 90,
+    "difficulty": "Advanced",
+    "tags": [
+      "Microservices",
+      "Communication",
+      "Resilience",
+      "Messaging",
+      "HTTP"
+    ],
+    "lastUpdated": "2025-10-09T10:00:00.000Z",
+    "version": "1.0.0"
   }
 ]

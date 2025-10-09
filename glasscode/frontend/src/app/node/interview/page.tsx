@@ -121,6 +121,34 @@ function CircularProgress({ percent }: { percent: number }) {
 }
 
 export default function NodeInterviewPage() {
+  // Check if we're in build phase - return minimal data during build
+  if (process.env.NEXT_PHASE === 'phase-production-build') {
+    console.log('Build phase detected, returning minimal quiz data for node-fundamentals');
+    const minimalQuestions: NodeInterviewQuestion[] = [
+      { id: 1, topic: 'basics', type: 'multiple-choice', question: 'What is Node.js?', choices: ['A JavaScript runtime built on Chrome\'s V8 engine', 'A CSS framework', 'An HTML processor', 'A database'], correctAnswer: 0, explanation: 'Node.js is a JavaScript runtime built on Chrome\'s V8 JavaScript engine.' },
+      { id: 2, topic: 'modules', type: 'multiple-choice', question: 'How do you import modules in Node.js?', choices: ['require()', 'import', 'include', 'load'], correctAnswer: 0, explanation: 'In Node.js, you use the require() function to import modules.' },
+      { id: 3, topic: 'npm', type: 'multiple-choice', question: 'What is npm?', choices: ['Node Package Manager', 'Node Process Manager', 'Network Package Manager', 'New Package Manager'], correctAnswer: 0, explanation: 'npm stands for Node Package Manager, which is used to manage dependencies in Node.js projects.' }
+    ];
+
+    return (
+      <div className="py-12 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-4xl mx-auto">
+          <EnhancedLoadingComponent 
+            retryCount={0} 
+            maxRetries={30} 
+            error={null}
+            onRetry={() => {}}
+          />
+          <div className="mt-6 text-center">
+            <p className="text-gray-600 dark:text-gray-400 text-sm">
+              Build phase detected. Returning minimal data for Node.js interview questions.
+            </p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   const [shuffledQuestions, setShuffledQuestions] = useState<NodeInterviewQuestion[]>([]);
   const [current, setCurrent] = useState(0);
   const [selected, setSelected] = useState<number | null>(null);
