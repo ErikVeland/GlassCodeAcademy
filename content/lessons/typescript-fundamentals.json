@@ -1,5 +1,4 @@
-[
-  {
+[{
     "id": "typescript-fundamentals-lesson-1",
     "moduleSlug": "typescript-fundamentals",
     "title": "Primitive Types and Type Annotations",
@@ -15,8 +14,7 @@
       "explanation": "This example demonstrates comprehensive usage of TypeScript's primitive types:\n\n1. **Boolean Types**: Explicit boolean declarations with logical operations\n2. **Number Types**: Various number formats including integers, floats, scientific notation, and BigInt\n3. **String Types**: Template literals with interpolation and multiline strings\n4. **Any Type**: Flexible but unsafe typing (use sparingly)\n5. **Unknown Type**: Type-safe alternative to any requiring type checking\n6. **Never Type**: For functions that never return or exhaustive type checking\n7. **Type Inference**: Automatic type detection with option for explicit annotations\n8. **Function Types**: Typed parameters and return values\n9. **Array Types**: Two syntax approaches for typed arrays\n\nThe output shows how TypeScript provides compile-time type checking while maintaining JavaScript's flexibility. The unknown type prevents unsafe operations until type checking is performed, and the never type helps with exhaustive checks in conditional logic.",
       "language": "typescript"
     },
-    "pitfalls": [
-      {
+    "pitfalls": [{
         "mistake": "Overusing the any type which bypasses type checking",
         "solution": "Use unknown instead of any when the type is unknown, and provide explicit type annotations whenever possible to maintain type safety",
         "severity": "high"
@@ -32,19 +30,17 @@
         "severity": "medium"
       }
     ],
-    "exercises": [
-      {
-        "title": "Type Safety Practice with Primitive Types",
-        "description": "Create a type-safe user profile system using primitive types and explicit annotations",
-        "checkpoints": [
-          "Declare variables for user profile data (name, age, email, isActive) with appropriate primitive types",
-          "Create a function that validates user data with typed parameters and return values",
-          "Implement a safe data processing function using unknown type for external input",
-          "Use template literals to generate formatted user information strings",
-          "Demonstrate the difference between any and unknown with practical examples"
-        ]
-      }
-    ],
+    "exercises": [{
+      "title": "Type Safety Practice with Primitive Types",
+      "description": "Create a type-safe user profile system using primitive types and explicit annotations",
+      "checkpoints": [
+        "Declare variables for user profile data (name, age, email, isActive) with appropriate primitive types",
+        "Create a function that validates user data with typed parameters and return values",
+        "Implement a safe data processing function using unknown type for external input",
+        "Use template literals to generate formatted user information strings",
+        "Demonstrate the difference between any and unknown with practical examples"
+      ]
+    }],
     "next": [],
     "estimatedMinutes": 30,
     "difficulty": "Beginner",
@@ -78,8 +74,7 @@
       "explanation": "This example demonstrates comprehensive usage of TypeScript's collection types:\n\n1. **Arrays**: Multiple declaration syntaxes with type-safe operations\n2. **Array Methods**: Map, filter, and reduce with preserved type information\n3. **Multi-dimensional Arrays**: Nested arrays with proper typing\n4. **Tuples**: Fixed-length collections with specific element types\n5. **Tuple Destructuring**: Extracting values with type preservation\n6. **Numeric Enums**: Explicit and auto-incrementing values with reverse mapping\n7. **String Enums**: More common pattern with explicit string values\n8. **Union Types with Enums**: Restricting allowed enum values\n9. **Const Enums**: Performance optimization for constant values\n\nThe output shows how TypeScript provides compile-time safety while maintaining JavaScript's flexibility. Tuples prevent accessing invalid indices, and enums provide runtime values while maintaining compile-time type checking.",
       "language": "typescript"
     },
-    "pitfalls": [
-      {
+    "pitfalls": [{
         "mistake": "Not understanding tuple behavior with additional elements",
         "solution": "Remember that tuples allow additional elements of union types after defined positions, which can lead to unexpected behavior. Use readonly tuples or explicit length checking when precise element counts are required.",
         "severity": "medium"
@@ -95,19 +90,17 @@
         "severity": "medium"
       }
     ],
-    "exercises": [
-      {
-        "title": "Collection Processing Pipeline",
-        "description": "Build a type-safe data processing pipeline using arrays, tuples, and enums",
-        "checkpoints": [
-          "Create a data processing function that takes an array of user data and returns processed results with type safety",
-          "Implement a coordinate system using tuples for position tracking",
-          "Design an API response handler using enums for status codes",
-          "Build a configuration system using string enums for environment settings",
-          "Create a data transformation pipeline that preserves types through map and filter operations"
-        ]
-      }
-    ],
+    "exercises": [{
+      "title": "Collection Processing Pipeline",
+      "description": "Build a type-safe data processing pipeline using arrays, tuples, and enums",
+      "checkpoints": [
+        "Create a data processing function that takes an array of user data and returns processed results with type safety",
+        "Implement a coordinate system using tuples for position tracking",
+        "Design an API response handler using enums for status codes",
+        "Build a configuration system using string enums for environment settings",
+        "Create a data transformation pipeline that preserves types through map and filter operations"
+      ]
+    }],
     "next": [],
     "estimatedMinutes": 35,
     "difficulty": "Beginner",
@@ -142,8 +135,7 @@
       "explanation": "This example demonstrates comprehensive interface usage in TypeScript:\n\n1. **Basic Interfaces**: Required, optional, and readonly properties\n2. **Interface Functions**: Using interfaces with functions and parameters\n3. **Interface Extension**: Single and multiple inheritance\n4. **Index Signatures**: Dynamic property access\n5. **Function Interfaces**: Typing function signatures\n6. **Method Signatures**: Interfaces with methods\n7. **Interface Merging**: Multiple declarations with same name\n8. **Array-like Interfaces**: Typing objects that behave like arrays\n9. **Hybrid Types**: Objects that act as both functions and objects\n\nThe output shows how interfaces provide compile-time type checking while maintaining JavaScript's flexibility. Readonly properties prevent accidental mutations, optional properties allow for flexible object structures, and interface extension enables code reuse.",
       "language": "typescript"
     },
-    "pitfalls": [
-      {
+    "pitfalls": [{
         "mistake": "Using classes instead of interfaces when only type checking is needed",
         "solution": "Use interfaces for pure type checking and contracts. Use classes when you need implementation details, constructors, or runtime behavior.",
         "severity": "medium"
@@ -159,19 +151,17 @@
         "severity": "low"
       }
     ],
-    "exercises": [
-      {
-        "title": "API Contract Design with Interfaces",
-        "description": "Design type-safe API contracts using interfaces for request/response objects",
-        "checkpoints": [
-          "Create interfaces for a user management API with request and response objects",
-          "Implement interface inheritance for base entities and specific resource types",
-          "Design flexible configuration interfaces with optional properties and index signatures",
-          "Build function interfaces for API service methods with proper error handling",
-          "Use interface merging to extend global browser objects with custom properties"
-        ]
-      }
-    ],
+    "exercises": [{
+      "title": "API Contract Design with Interfaces",
+      "description": "Design type-safe API contracts using interfaces for request/response objects",
+      "checkpoints": [
+        "Create interfaces for a user management API with request and response objects",
+        "Implement interface inheritance for base entities and specific resource types",
+        "Design flexible configuration interfaces with optional properties and index signatures",
+        "Build function interfaces for API service methods with proper error handling",
+        "Use interface merging to extend global browser objects with custom properties"
+      ]
+    }],
     "next": [],
     "estimatedMinutes": 40,
     "difficulty": "Intermediate",
@@ -205,8 +195,7 @@
       "explanation": "This example demonstrates comprehensive class usage in TypeScript:\n\n1. **Access Modifiers**: Public, private, and protected with parameter properties\n2. **Abstract Classes**: Base class with abstract and concrete methods\n3. **Inheritance**: Extending base classes with super() calls\n4. **Method Overriding**: Custom implementations in subclasses\n5. **Getters and Setters**: Property access control\n6. **Static Members**: Class-level methods and properties\n7. **Polymorphism**: Treating different objects through common interface\n8. **Encapsulation**: Information hiding with private members\n\nThe output shows how TypeScript provides compile-time access control while maintaining JavaScript's flexibility. Private properties prevent external access, protected properties allow subclass access, and polymorphism enables treating different objects uniformly.",
       "language": "typescript"
     },
-    "pitfalls": [
-      {
+    "pitfalls": [{
         "mistake": "Overusing inheritance instead of composition for code reuse",
         "solution": "Favor composition over inheritance when possible. Use inheritance for 'is-a' relationships and composition for 'has-a' relationships.",
         "severity": "medium"
@@ -222,19 +211,17 @@
         "severity": "medium"
       }
     ],
-    "exercises": [
-      {
-        "title": "Domain Modeling with TypeScript Classes",
-        "description": "Create a type-safe domain model using classes, inheritance, and abstract base classes",
-        "checkpoints": [
-          "Design an abstract base class for domain entities with common properties and methods",
-          "Implement concrete classes for different entity types with proper encapsulation",
-          "Create a polymorphic service that can operate on different entity types",
-          "Implement validation logic using method overriding in subclasses",
-          "Use parameter properties and accessors to reduce boilerplate code"
-        ]
-      }
-    ],
+    "exercises": [{
+      "title": "Domain Modeling with TypeScript Classes",
+      "description": "Create a type-safe domain model using classes, inheritance, and abstract base classes",
+      "checkpoints": [
+        "Design an abstract base class for domain entities with common properties and methods",
+        "Implement concrete classes for different entity types with proper encapsulation",
+        "Create a polymorphic service that can operate on different entity types",
+        "Implement validation logic using method overriding in subclasses",
+        "Use parameter properties and accessors to reduce boilerplate code"
+      ]
+    }],
     "next": [],
     "estimatedMinutes": 45,
     "difficulty": "Intermediate",
@@ -269,8 +256,7 @@
       "explanation": "This example demonstrates comprehensive generic usage in TypeScript:\n\n1. **Generic Functions**: Type-safe functions that work with any type\n2. **Generic Interfaces**: Interfaces that can be parameterized with types\n3. **Generic Classes**: Classes with type parameters for flexible instantiation\n4. **Generic Constraints**: Limiting acceptable types with extends\n5. **Keyof Constraints**: Using keyof operator for type-safe property access\n6. **Multiple Type Parameters**: Generic components with multiple type variables\n7. **Default Generic Types**: Providing default types for generic parameters\n8. **Generic Type Aliases**: Type aliases with generic parameters\n\nThe output shows how generics provide type safety while maintaining flexibility. Type inference reduces boilerplate, constraints ensure compatibility, and multiple type parameters enable complex generic components.",
       "language": "typescript"
     },
-    "pitfalls": [
-      {
+    "pitfalls": [{
         "mistake": "Over-constraining generics, making them less reusable",
         "solution": "Use the minimal constraints necessary for your generic components to work. Add constraints only when you need to access specific properties or methods.",
         "severity": "medium"
@@ -286,19 +272,17 @@
         "severity": "high"
       }
     ],
-    "exercises": [
-      {
-        "title": "Generic Data Processing Pipeline",
-        "description": "Create a type-safe data processing pipeline using generics and generic constraints",
-        "checkpoints": [
-          "Implement a generic map function that maintains type information through transformations",
-          "Create a generic filter function with constraints for type-safe filtering",
-          "Design a generic repository interface with CRUD operations",
-          "Build a generic validation system using constraints to access required properties",
-          "Implement a generic caching mechanism with type-safe key-value storage"
-        ]
-      }
-    ],
+    "exercises": [{
+      "title": "Generic Data Processing Pipeline",
+      "description": "Create a type-safe data processing pipeline using generics and generic constraints",
+      "checkpoints": [
+        "Implement a generic map function that maintains type information through transformations",
+        "Create a generic filter function with constraints for type-safe filtering",
+        "Design a generic repository interface with CRUD operations",
+        "Build a generic validation system using constraints to access required properties",
+        "Implement a generic caching mechanism with type-safe key-value storage"
+      ]
+    }],
     "next": [],
     "estimatedMinutes": 40,
     "difficulty": "Intermediate",
@@ -332,8 +316,7 @@
       "explanation": "This example demonstrates advanced type composition in TypeScript:\n\n1. **Union Types**: Combining types with | operator and type narrowing\n2. **Literal Types**: Finite sets of allowed values\n3. **Intersection Types**: Merging multiple type definitions\n4. **Discriminated Unions**: Type-safe handling of variant data structures\n5. **Conditional Types**: Transforming types based on type relationships\n6. **Distributive Types**: Conditional types that distribute over union types\n7. **Infer Keyword**: Extracting type information within conditional types\n8. **Exhaustive Checks**: Ensuring all union cases are handled\n\nThe output shows how these advanced types provide compile-time safety while maintaining JavaScript's flexibility. Discriminated unions enable type-safe state handling, and conditional types allow for sophisticated type transformations.",
       "language": "typescript"
     },
-    "pitfalls": [
-      {
+    "pitfalls": [{
         "mistake": "Overcomplicating type definitions with unnecessary union or intersection types",
         "solution": "Use union types when a value can legitimately be multiple types, and intersection types when you need to combine multiple contracts. Avoid creating complex type compositions that hurt readability.",
         "severity": "medium"
@@ -349,19 +332,17 @@
         "severity": "medium"
       }
     ],
-    "exercises": [
-      {
-        "title": "Advanced Type Composition Patterns",
-        "description": "Create sophisticated type definitions using union, intersection, and conditional types",
-        "checkpoints": [
-          "Implement a type-safe state management system using discriminated unions",
-          "Create utility types for common type transformations using conditional types",
-          "Design flexible API response types that handle multiple response formats",
-          "Build a configuration system with type-safe option combinations using intersection types",
-          "Implement exhaustive type checking for complex union types"
-        ]
-      }
-    ],
+    "exercises": [{
+      "title": "Advanced Type Composition Patterns",
+      "description": "Create sophisticated type definitions using union, intersection, and conditional types",
+      "checkpoints": [
+        "Implement a type-safe state management system using discriminated unions",
+        "Create utility types for common type transformations using conditional types",
+        "Design flexible API response types that handle multiple response formats",
+        "Build a configuration system with type-safe option combinations using intersection types",
+        "Implement exhaustive type checking for complex union types"
+      ]
+    }],
     "next": [],
     "estimatedMinutes": 45,
     "difficulty": "Advanced",
@@ -396,8 +377,7 @@
       "explanation": "This example demonstrates comprehensive type guard and assertion usage in TypeScript:\n\n1. **typeof Guards**: Checking primitive types at runtime\n2. **instanceof Guards**: Checking class instance types\n3. **in Operator Guards**: Checking for object properties\n4. **Custom Type Guards**: User-defined functions with type predicates\n5. **Type Assertions**: Telling TypeScript about types it can't infer\n6. **Non-null Assertions**: Asserting values are not null or undefined\n7. **Definite Assignment**: Telling TypeScript variables will be assigned later\n\nThe output shows how type guards enable safe access to type-specific properties and methods. Type assertions bypass type checking but should be used carefully to avoid runtime errors.",
       "language": "typescript"
     },
-    "pitfalls": [
-      {
+    "pitfalls": [{
         "mistake": "Overusing type assertions which bypass type safety",
         "solution": "Use type guards instead of assertions when possible to maintain type safety. Only use assertions when you're absolutely certain about the type and TypeScript can't infer it.",
         "severity": "high"
@@ -413,19 +393,17 @@
         "severity": "medium"
       }
     ],
-    "exercises": [
-      {
-        "title": "Safe API Response Handling with Type Guards",
-        "description": "Implement robust API response handling using type guards and safe assertions",
-        "checkpoints": [
-          "Create custom type guards for different API response types",
-          "Implement a type-safe API client that narrows response types using guards",
-          "Design error handling that distinguishes between network errors and invalid responses",
-          "Build a form validation system using type guards for input validation",
-          "Create utility functions for safe property access using the in operator"
-        ]
-      }
-    ],
+    "exercises": [{
+      "title": "Safe API Response Handling with Type Guards",
+      "description": "Implement robust API response handling using type guards and safe assertions",
+      "checkpoints": [
+        "Create custom type guards for different API response types",
+        "Implement a type-safe API client that narrows response types using guards",
+        "Design error handling that distinguishes between network errors and invalid responses",
+        "Build a form validation system using type guards for input validation",
+        "Create utility functions for safe property access using the in operator"
+      ]
+    }],
     "next": [],
     "estimatedMinutes": 40,
     "difficulty": "Intermediate",
@@ -459,8 +437,7 @@
       "explanation": "This example demonstrates comprehensive usage of TypeScript's built-in utility types:\n\n1. **Partial**: Making all properties optional for flexible updates\n2. **Required**: Making all properties required\n3. **Pick**: Selecting specific properties for focused types\n4. **Omit**: Excluding specific properties for data privacy\n5. **Record**: Creating dictionary-like object types\n6. **Exclude/Extract**: Working with union types\n7. **Readonly**: Making properties immutable\n8. **ReturnType**: Extracting function return types\n9. **Parameters**: Extracting function parameter types\n10. **Combining Utilities**: Using multiple utility types together\n\nThe output shows how utility types reduce boilerplate code while maintaining type safety. Partial is perfect for update operations, Pick and Omit create precise type shapes, and Record simplifies dictionary creation.",
       "language": "typescript"
     },
-    "pitfalls": [
-      {
+    "pitfalls": [{
         "mistake": "Manually recreating type definitions instead of using utility types",
         "solution": "Use built-in utility types like Partial, Pick, and Omit to transform existing types rather than creating new interfaces from scratch.",
         "severity": "medium"
@@ -476,19 +453,17 @@
         "severity": "low"
       }
     ],
-    "exercises": [
-      {
-        "title": "Utility Types for API Client Development",
-        "description": "Create a type-safe API client using TypeScript's built-in utility types",
-        "checkpoints": [
-          "Design request and response types using utility types for flexibility",
-          "Implement partial update functionality using the Partial utility type",
-          "Create public and private data representations using Pick and Omit",
-          "Build configuration objects using Record utility type",
-          "Extract function types for consistent API client interfaces"
-        ]
-      }
-    ],
+    "exercises": [{
+      "title": "Utility Types for API Client Development",
+      "description": "Create a type-safe API client using TypeScript's built-in utility types",
+      "checkpoints": [
+        "Design request and response types using utility types for flexibility",
+        "Implement partial update functionality using the Partial utility type",
+        "Create public and private data representations using Pick and Omit",
+        "Build configuration objects using Record utility type",
+        "Extract function types for consistent API client interfaces"
+      ]
+    }],
     "next": [],
     "estimatedMinutes": 40,
     "difficulty": "Intermediate",
@@ -522,8 +497,7 @@
       "explanation": "This example demonstrates comprehensive decorator usage in TypeScript:\n\n1. **Class Decorators**: Modifying or replacing class definitions\n2. **Method Decorators**: Observing or modifying method definitions\n3. **Property Decorators**: Observing or modifying property access\n4. **Parameter Decorators**: Gathering information about parameters\n5. **Decorator Factories**: Creating configurable decorators\n6. **Metadata APIs**: Using reflection for runtime type information\n7. **Decorator Composition**: Applying multiple decorators to the same element\n8. **Error Handling**: Implementing robust decorator logic\n\nThe output shows how decorators enable meta-programming while maintaining type safety. Class decorators can modify class behavior, method decorators can add cross-cutting concerns, and parameter decorators can enable validation.",
       "language": "typescript"
     },
-    "pitfalls": [
-      {
+    "pitfalls": [{
         "mistake": "Not enabling experimentalDecorators and emitDecoratorMetadata in tsconfig.json",
         "solution": "Ensure both compiler options are set to true in your TypeScript configuration to use decorators and metadata APIs.",
         "severity": "high"
@@ -539,19 +513,17 @@
         "severity": "medium"
       }
     ],
-    "exercises": [
-      {
-        "title": "Framework-like Decorators for API Development",
-        "description": "Create a set of decorators for building a REST API framework with validation, logging, and routing",
-        "checkpoints": [
-          "Implement route decorators for HTTP methods (GET, POST, PUT, DELETE)",
-          "Create validation decorators for request parameters and body data",
-          "Build logging decorators that capture request/response information",
-          "Design dependency injection decorators for service classes",
-          "Implement error handling decorators that transform exceptions to HTTP responses"
-        ]
-      }
-    ],
+    "exercises": [{
+      "title": "Framework-like Decorators for API Development",
+      "description": "Create a set of decorators for building a REST API framework with validation, logging, and routing",
+      "checkpoints": [
+        "Implement route decorators for HTTP methods (GET, POST, PUT, DELETE)",
+        "Create validation decorators for request parameters and body data",
+        "Build logging decorators that capture request/response information",
+        "Design dependency injection decorators for service classes",
+        "Implement error handling decorators that transform exceptions to HTTP responses"
+      ]
+    }],
     "next": [],
     "estimatedMinutes": 45,
     "difficulty": "Advanced",
@@ -585,8 +557,7 @@
       "explanation": "This example demonstrates comprehensive module system usage in TypeScript:\n\n1. **Named Exports**: Exporting multiple functions and constants from a module\n2. **Default Exports**: Primary export of a module (often a class)\n3. **Named Imports**: Importing specific exports with optional aliasing\n4. **Namespace Imports**: Importing all exports into a namespace object\n5. **Re-exports**: Aggregating and re-exporting from other modules\n6. **Dynamic Imports**: Asynchronously loading modules for code splitting\n7. **Type-only Imports**: Importing only type information (no runtime code)\n8. **Module Augmentation**: Extending existing modules with new capabilities\n9. **Barrel Exports**: Index files that aggregate multiple module exports\n\nThe output shows how the module system provides flexible code organization while maintaining type safety. Dynamic imports enable lazy loading, and re-exports allow for convenient module aggregations.",
       "language": "typescript"
     },
-    "pitfalls": [
-      {
+    "pitfalls": [{
         "mistake": "Mixing default and named imports incorrectly",
         "solution": "Remember that default imports don't use curly braces, while named imports do. You can combine both in a single import statement, but the default import must come first.",
         "severity": "medium"
@@ -602,19 +573,17 @@
         "severity": "medium"
       }
     ],
-    "exercises": [
-      {
-        "title": "Modular Application Architecture",
-        "description": "Design a modular TypeScript application using ES modules with proper code organization",
-        "checkpoints": [
-          "Create a core module with shared utilities and types",
-          "Implement feature modules with specific responsibilities using named and default exports",
-          "Design an index module that provides a clean public API through re-exports",
-          "Implement lazy loading for optional features using dynamic imports",
-          "Create type-only imports for dependency injection interfaces"
-        ]
-      }
-    ],
+    "exercises": [{
+      "title": "Modular Application Architecture",
+      "description": "Design a modular TypeScript application using ES modules with proper code organization",
+      "checkpoints": [
+        "Create a core module with shared utilities and types",
+        "Implement feature modules with specific responsibilities using named and default exports",
+        "Design an index module that provides a clean public API through re-exports",
+        "Implement lazy loading for optional features using dynamic imports",
+        "Create type-only imports for dependency injection interfaces"
+      ]
+    }],
     "next": [],
     "estimatedMinutes": 40,
     "difficulty": "Intermediate",
@@ -644,169 +613,11 @@
     ],
     "intro": "Asynchronous programming is fundamental to modern web development, and TypeScript provides powerful tools for working with asynchronous operations while maintaining type safety. Promises represent the eventual completion or failure of asynchronous operations, and when combined with TypeScript's type system, they enable you to catch potential errors at compile time rather than runtime. The async/await syntax builds on Promises to provide a more readable and maintainable approach to asynchronous programming.\n\nTyped Promises allow you to specify the expected return types of asynchronous operations, making your code more predictable and enabling better IDE support with autocomplete and error detection. Error handling with Promises and async/await requires careful consideration to ensure that errors are properly caught and handled, preventing unhandled promise rejections that can crash your application.\n\nAsync/await patterns enable you to write asynchronous code that looks and behaves more like synchronous code, making it easier to understand and maintain. You can combine sequential and parallel execution patterns to optimize performance while maintaining readability. Advanced Promise combinators like Promise.all, Promise.race, and Promise.allSettled provide powerful tools for managing multiple asynchronous operations.\n\nThis lesson will explore practical applications of asynchronous programming in real-world scenarios, including API client development, data fetching, and complex workflow management. You'll learn advanced patterns such as async middleware, cancellation tokens, and how to create type-safe asynchronous utilities.\n\nBy mastering Promises and async/await with TypeScript, you'll be able to create robust and maintainable asynchronous applications that handle errors gracefully while providing excellent development experience through type safety.",
     "code": {
-      "example": "// Typed Promise functions with proper error handling\ninterface User {\n  id: number\n  name: string\n  email: string\n  createdAt: Date\n}\n\nfunction fetchUser(id: number): Promise<User> {\n  return new Promise((resolve, reject) => {\n    // Simulate API call\n    setTimeout(() => {\n      if (id > 0) {\n        resolve({\n          id,\n          name: `User ${id}`,
-          email: `user${id}@example.com`,
-          createdAt: new Date()
-        })
-      } else {
-        reject(new Error(`Invalid user ID: ${id}`))
-      }
-    }, 1000)
-  })
-}
-
-// Generic Promise wrapper with type safety
-function delay<T>(ms: number, value: T): Promise<T> {
-  return new Promise(resolve => {
-    setTimeout(() => resolve(value), ms)
-  })
-}
-
-// Async/await with sequential execution
-async function getUserProfile(userId: number): Promise<User> {
-  try {
-    // Sequential operations - each waits for the previous one
-    const user = await fetchUser(userId)
-    await delay(500, null)  // Simulate additional processing
-    return user
-  } catch (error) {
-    // Proper error handling with type safety
-    if (error instanceof Error) {
-      throw new Error(`Failed to get user profile: ${error.message}`)
-    }
-    throw new Error('Unknown error occurred while fetching user profile')
-  }
-}
-
-// Parallel execution with Promise.all
-async function fetchMultipleUsers(userIds: number[]): Promise<User[]> {
-  try {
-    // All requests happen in parallel
-    const users = await Promise.all(userIds.map(id => fetchUser(id)))
-    return users
-  } catch (error) {
-    throw new Error(`Failed to fetch users: ${error instanceof Error ? error.message : 'Unknown error'}`)
-  }
-}
-
-// Error handling with Promise.allSettled
-async function fetchUsersWithErrorHandling(userIds: number[]): Promise<{
-  successful: User[]
-  failed: { id: number; error: string }[]
-}> {
-  // Promise.allSettled never rejects, it returns results for all promises
-  const results = await Promise.allSettled(userIds.map(id => fetchUser(id)))
-  
-  const successful: User[] = []
-  const failed: { id: number; error: string }[] = []
-  
-  results.forEach((result, index) => {
-    if (result.status === 'fulfilled') {
-      successful.push(result.value)
-    } else {
-      failed.push({
-        id: userIds[index],
-        error: result.reason instanceof Error ? result.reason.message : 'Unknown error'
-      })
-    }
-  })
-  
-  return { successful, failed }
-}
-
-// Promise combinators with proper typing
-interface ApiResponse<T> {
-  data: T
-  status: number
-  message: string
-  timestamp: Date
-}
-
-async function fetchWithTimeout<T>(
-  promise: Promise<T>, 
-  timeoutMs: number
-): Promise<T> {
-  const timeoutPromise = new Promise<never>((_, reject) => {
-    setTimeout(() => reject(new Error('Request timeout')), timeoutMs)
-  })
-  
-  // Race between the actual promise and timeout
-  return Promise.race([promise, timeoutPromise])
-}
-
-// Async iterators for streaming data
-async function* fetchUsersStream(userIds: number[]): AsyncIterableIterator<User> {
-  for (const id of userIds) {
-    try {
-      const user = await fetchUser(id)
-      yield user
-    } catch (error) {
-      // Log error but continue with next user
-      console.error(`Failed to fetch user ${id}:`, error instanceof Error ? error.message : 'Unknown error')
-    }
-  }
-}
-
-// Advanced pattern: Async middleware
-interface AsyncMiddleware<T> {
-  (input: T): Promise<T>
-}
-
-async function applyMiddleware<T>(
-  input: T,
-  middlewares: AsyncMiddleware<T>[]
-): Promise<T> {
-  let result = input
-  for (const middleware of middlewares) {
-    result = await middleware(result)
-  }
-  return result
-}
-
-// Usage examples
-async function main() {
-  try {
-    // Sequential execution
-    console.log('Fetching user profile...')
-    const userProfile = await getUserProfile(1)
-    console.log('User profile:', userProfile.name)
-    
-    // Parallel execution
-    console.log('Fetching multiple users...')
-    const multipleUsers = await fetchMultipleUsers([1, 2, 3])
-    console.log(`Fetched ${multipleUsers.length} users`)
-    
-    // Error handling with allSettled
-    console.log('Fetching users with error handling...')
-    const { successful, failed } = await fetchUsersWithErrorHandling([1, -1, 3])
-    console.log(`Successful: ${successful.length}, Failed: ${failed.length}`)
-    
-    // Async iteration
-    console.log('Streaming users...')
-    for await (const user of fetchUsersStream([1, 2, 3])) {
-      console.log(`Streamed user: ${user.name}`)
-    }
-    
-    // Timeout handling
-    console.log('Fetching with timeout...')
-    try {
-      const userWithTimeout = await fetchWithTimeout(fetchUser(1), 2000)
-      console.log('Fetched with timeout:', userWithTimeout.name)
-    } catch (error) {
-      console.log('Timeout error:', error instanceof Error ? error.message : 'Unknown error')
-    }
-    
-  } catch (error) {
-    console.error('Main error:', error instanceof Error ? error.message : 'Unknown error')
-  }
-}
-
-main()",
+      "example": "// Typed Promise functions with proper error handling\ninterface User {\n  id: number\n  name: string\n  email: string\n  createdAt: Date\n}\n\nfunction fetchUser(id: number): Promise<User> {\n  return new Promise((resolve, reject) => {\n    // Simulate API call\n    setTimeout(() => {\n      if (id > 0) {\n        resolve({\n          id,\n          name: `User ${id}`,\n          email: `user${id}@example.com`,\n          createdAt: new Date()\n        })\n      } else {\n        reject(new Error(`Invalid user ID: ${id}`))\n      }\n    }, 1000)\n  })\n}\n\n// Generic Promise wrapper with type safety\nfunction delay<T>(ms: number, value: T): Promise<T> {\n  return new Promise(resolve => {\n    setTimeout(() => resolve(value), ms)\n  })\n}\n\n// Async/await with sequential execution\nasync function getUserProfile(userId: number): Promise<User> {\n  try {\n    // Sequential operations - each waits for the previous one\n    const user = await fetchUser(userId)\n    await delay(500, null)\n    return user\n  } catch (error) {\n    if (error instanceof Error) {\n      throw new Error(`Failed to get user profile: ${error.message}`)\n    }\n    throw new Error('Unknown error occurred while fetching user profile')\n  }\n}\n\n// Parallel execution with Promise.all\nasync function fetchMultipleUsers(userIds: number[]): Promise<User[]> {\n  try {\n    const users = await Promise.all(userIds.map(id => fetchUser(id)))\n    return users\n  } catch (error) {\n    throw new Error(`Failed to fetch users: ${error instanceof Error ? error.message : 'Unknown error'}`)\n  }\n}\n\n// Error handling with Promise.allSettled\nasync function fetchUsersWithErrorHandling(userIds: number[]): Promise<{\n  successful: User[]\n  failed: { id: number; error: string }[]\n}> {\n  const results = await Promise.allSettled(userIds.map(id => fetchUser(id)))\n  \n  const successful: User[] = []\n  const failed: { id: number; error: string }[] = []\n  \n  results.forEach((result, index) => {\n    if (result.status === 'fulfilled') {\n      successful.push(result.value)\n    } else {\n      failed.push({\n        id: userIds[index],\n        error: result.reason instanceof Error ? result.reason.message : 'Unknown error'\n      })\n    }\n  })\n  \n  return { successful, failed }\n}\n\n// Promise combinators with proper typing\ninterface ApiResponse<T> {\n  data: T\n  status: number\n  message: string\n  timestamp: Date\n}\n\nasync function fetchWithTimeout<T>(\n  promise: Promise<T>, \n  timeoutMs: number\n): Promise<T> {\n  const timeoutPromise = new Promise<never>((_, reject) => {\n    setTimeout(() => reject(new Error('Request timeout')), timeoutMs)\n  })\n  \n  return Promise.race([promise, timeoutPromise])\n}\n\n// Async iterators for streaming data\nasync function* fetchUsersStream(userIds: number[]): AsyncIterableIterator<User> {\n  for (const id of userIds) {\n    try {\n      const user = await fetchUser(id)\n      yield user\n    } catch (error) {\n      console.error(`Failed to fetch user ${id}:`, error instanceof Error ? error.message : 'Unknown error')\n    }\n  }\n}\n\n// Advanced pattern: Async middleware\ninterface AsyncMiddleware<T> {\n  (input: T): Promise<T>\n}\n\nasync function applyMiddleware<T>(\n  input: T,\n  middlewares: AsyncMiddleware<T>[]\n): Promise<T> {\n  let result = input\n  for (const middleware of middlewares) {\n    result = await middleware(result)\n  }\n  return result\n}\n\n// Usage examples\nasync function main() {\n  try {\n    console.log('Fetching user profile...')\n    const userProfile = await getUserProfile(1)\n    console.log('User profile:', userProfile.name)\n    \n    console.log('Fetching multiple users...')\n    const multipleUsers = await fetchMultipleUsers([1, 2, 3])\n    console.log(`Fetched ${multipleUsers.length} users`)\n    \n    console.log('Fetching users with error handling...')\n    const { successful, failed } = await fetchUsersWithErrorHandling([1, -1, 3])\n    console.log(`Successful: ${successful.length}, Failed: ${failed.length}`)\n    \n    console.log('Streaming users...')\n    for await (const user of fetchUsersStream([1, 2, 3])) {\n      console.log(`Streamed user: ${user.name}`)\n    }\n    \n    console.log('Fetching with timeout...')\n    try {\n      const userWithTimeout = await fetchWithTimeout(fetchUser(1), 2000)\n      console.log('Fetched with timeout:', userWithTimeout.name)\n    } catch (error) {\n      console.log('Timeout error:', error instanceof Error ? error.message : 'Unknown error')\n    }\n    \n  } catch (error) {\n    console.error('Main error:', error instanceof Error ? error.message : 'Unknown error')\n  }\n}\n\nmain()",
       "explanation": "This example demonstrates comprehensive async/await and Promise usage in TypeScript:\n\n1. **Typed Promises**: Functions that return typed Promise objects\n2. **Sequential Execution**: Async/await for operations that must happen in order\n3. **Parallel Execution**: Promise.all for concurrent operations\n4. **Error Handling**: Proper try/catch with type-safe error handling\n5. **Promise Combinators**: allSettled for partial failure handling, race for timeouts\n6. **Async Iterators**: for await syntax for streaming data\n7. **Generic Utilities**: Reusable async functions with type parameters\n8. **Advanced Patterns**: Middleware composition with async functions\n\nThe output shows how TypeScript provides compile-time safety for asynchronous operations. Type checking prevents incorrect usage of Promise results, and proper error handling ensures robust applications.",
       "language": "typescript"
     },
-    "pitfalls": [
-      {
+    "pitfalls": [{
         "mistake": "Forgetting to handle Promise rejections which can cause unhandled promise rejection warnings",
         "solution": "Always use try/catch with async/await or .catch() with Promises, and consider using Promise.allSettled when you need to handle partial failures.",
         "severity": "high"
@@ -822,19 +633,17 @@ main()",
         "severity": "medium"
       }
     ],
-    "exercises": [
-      {
-        "title": "Robust API Client with Async Patterns",
-        "description": "Create a type-safe API client using advanced async/await patterns and Promise combinators",
-        "checkpoints": [
-          "Implement sequential and parallel data fetching with proper error handling",
-          "Create timeout and retry mechanisms for unreliable network requests",
-          "Design a streaming data processor using async iterators",
-          "Build a request queue that manages concurrent operations with limits",
-          "Implement cancellation support for long-running operations"
-        ]
-      }
-    ],
+    "exercises": [{
+      "title": "Robust API Client with Async Patterns",
+      "description": "Create a type-safe API client using advanced async/await patterns and Promise combinators",
+      "checkpoints": [
+        "Implement sequential and parallel data fetching with proper error handling",
+        "Create timeout and retry mechanisms for unreliable network requests",
+        "Design a streaming data processor using async iterators",
+        "Build a request queue that manages concurrent operations with limits",
+        "Implement cancellation support for long-running operations"
+      ]
+    }],
     "next": [],
     "estimatedMinutes": 45,
     "difficulty": "Intermediate",
@@ -864,43 +673,11 @@ main()",
     ],
     "intro": "Testing is a critical practice for ensuring code quality, preventing regressions, and enabling confident refactoring in TypeScript applications. TypeScript's type system provides additional safety for tests by catching type-related errors at compile time, but effective testing requires understanding how to leverage both TypeScript's type system and testing frameworks like Jest. Well-written tests serve as documentation for your code and provide a safety net for future changes.\n\nType-safe testing involves writing tests that benefit from TypeScript's type checking while maintaining the flexibility to test edge cases and error conditions. This includes using proper type annotations for test data, leveraging TypeScript's type inference for cleaner test code, and using type guards when testing functions with union types. Mocking and spying techniques should maintain type safety while allowing you to isolate units of code for testing.\n\nComprehensive test coverage includes testing not just the happy path but also edge cases, error conditions, and asynchronous operations. This means testing boundary conditions, invalid inputs, and error handling to ensure your code behaves correctly under all circumstances. Asynchronous testing requires special attention to ensure promises are properly awaited and errors are correctly caught and asserted.\n\nThis lesson will explore practical testing patterns in real-world scenarios, including API client testing, service layer testing, and integration testing. You'll learn advanced patterns such as custom matchers, test utilities, and how to structure test suites for maintainability.\n\nBy mastering testing with TypeScript, you'll be able to create more reliable applications with confidence that changes won't introduce regressions while maintaining excellent development experience through type safety.",
     "code": {
-      "example": "// user-service.ts - Code to test with proper typing\nexport interface User {\n  id: number\n  name: string\n  email: string\n  age: number\n  createdAt: Date\n  updatedAt: Date\n}\n\nexport interface UserCreationData {\n  name: string\n  email: string\n  age: number\n}\n\nexport interface UserRepository {\n  findById(id: number): Promise<User | null>\n  findAll(): Promise<User[]>\n  create(userData: UserCreationData): Promise<User>\n  update(id: number, updates: Partial<User>): Promise<User | null>\n  delete(id: number): Promise<boolean>\n}\n\nexport class UserService {\n  constructor(private repository: UserRepository) {}\n  \n  async createUser(userData: UserCreationData): Promise<User> {\n    // Validate input\n    if (!userData.name?.trim()) {\n      throw new Error('Name is required')\n    }\n    \n    if (!userData.email?.includes('@')) {\n      throw new Error('Valid email is required')\n    }\n    \n    if (userData.age < 0 || userData.age > 150) {\n      throw new Error('Age must be between 0 and 150')\n    }\n    \n    const user: User = {\n      ...userData,\n      id: 0, // Will be set by repository\n      createdAt: new Date(),\n      updatedAt: new Date()\n    }\n    \n    return this.repository.create(userData)\n  }\n  \n  async getUser(id: number): Promise<User> {\n    if (id <= 0) {\n      throw new Error('Invalid user ID')\n    }\n    \n    const user = await this.repository.findById(id)\n    if (!user) {\n      throw new Error(`User with ID ${id} not found`)\n    }\n    \n    return user\n  }\n  \n  async updateUser(id: number, updates: Partial<User>): Promise<User> {\n    const user = await this.getUser(id)\n    \n    // Validate updates\n    if (updates.age !== undefined && (updates.age < 0 || updates.age > 150)) {\n      throw new Error('Age must be between 0 and 150')\n    }\n    \n    const updatedUser = {\n      ...user,\n      ...updates,\n      updatedAt: new Date()\n    }\n    \n    const result = await this.repository.update(id, updatedUser)\n    if (!result) {\n      throw new Error(`Failed to update user with ID ${id}`)\n    }\n    \n    return result\n  }\n  \n  async deleteUser(id: number): Promise<boolean> {\n    if (id <= 0) {\n      throw new Error('Invalid user ID')\n    }\n    \n    return this.repository.delete(id)\n  }\n}\n\n// user-service.test.ts - Comprehensive tests with type safety\nimport { UserService, User, UserCreationData, UserRepository } from './user-service'\n\n// Mock repository implementation\nclass MockUserRepository implements UserRepository {\n  private users: User[] = []\n  private nextId = 1\n  \n  async findById(id: number): Promise<User | null> {\n    return this.users.find(user => user.id === id) || null\n  }\n  \n  async findAll(): Promise<User[]> {\n    return [...this.users]\n  }\n  \n  async create(userData: UserCreationData): Promise<User> {\n    const user: User = {\n      ...userData,\n      id: this.nextId++,\n      createdAt: new Date(),\n      updatedAt: new Date()\n    }\n    this.users.push(user)\n    return user\n  }\n  \n  async update(id: number, updates: Partial<User>): Promise<User | null> {\n    const index = this.users.findIndex(user => user.id === id)\n    if (index === -1) return null\n    \n    this.users[index] = { ...this.users[index], ...updates }\n    return this.users[index]\n  }\n  \n  async delete(id: number): Promise<boolean> {\n    const initialLength = this.users.length\n    this.users = this.users.filter(user => user.id !== id)\n    return this.users.length < initialLength\n  }\n}\n\n// Test utilities\nconst createTestUser = (overrides: Partial<UserCreationData> = {}): UserCreationData => ({\n  name: 'Test User',\n  email: 'test@example.com',\n  age: 25,\n  ...overrides\n})\n\ndescribe('UserService', () => {\n  let userService: UserService\n  let mockRepository: jest.Mocked<UserRepository>\n  \n  beforeEach(() => {\n    mockRepository = new MockUserRepository() as jest.Mocked<UserRepository>\n    userService = new UserService(mockRepository)\n  })\n  \n  describe('createUser', () => {\n    it('should create a user with valid data', async () => {\n      const userData = createTestUser({ name: 'John Doe', email: 'john@example.com' })\n      \n      const user = await userService.createUser(userData)\n      \n      expect(user.name).toBe('John Doe')\n      expect(user.email).toBe('john@example.com')\n      expect(user.age).toBe(25)\n      expect(user.id).toBeGreaterThan(0)\n      expect(user.createdAt).toBeInstanceOf(Date)\n      expect(user.updatedAt).toBeInstanceOf(Date)\n    })\n    \n    it('should throw error for invalid email', async () => {\n      const userData = createTestUser({ email: 'invalid-email' })\n      \n      await expect(userService.createUser(userData))\n        .rejects\n        .toThrow('Valid email is required')\n    })\n    \n    it('should throw error for missing name', async () => {\n      const userData = createTestUser({ name: '' })\n      \n      await expect(userService.createUser(userData))\n        .rejects\n        .toThrow('Name is required')\n    })\n    \n    it('should throw error for invalid age', async () => {\n      const userData = createTestUser({ age: -5 })\n      \n      await expect(userService.createUser(userData))\n        .rejects\n        .toThrow('Age must be between 0 and 150')\n    })\n  })\n  \n  describe('getUser', () => {\n    it('should return user by id', async () => {\n      // Setup\n      const userData = createTestUser()\n      const createdUser = await userService.createUser(userData)\n      \n      // Test\n      const user = await userService.getUser(createdUser.id)\n      \n      expect(user).toEqual(createdUser)\n    })\n    \n    it('should throw error for non-existent user', async () => {\n      await expect(userService.getUser(999))\n        .rejects\n        .toThrow('User with ID 999 not found')\n    })\n    \n    it('should throw error for invalid user ID', async () => {\n      await expect(userService.getUser(-1))\n        .rejects\n        .toThrow('Invalid user ID')\n    })\n  })\n  \n  describe('updateUser', () => {\n    it('should update existing user partially', async () => {\n      // Setup\n      const userData = createTestUser({ name: 'Original Name', email: 'original@test.com', age: 25 })\n      const createdUser = await userService.createUser(userData)\n      \n      // Test\n      const updates = { name: 'Updated Name', age: 26 }\n      const updatedUser = await userService.updateUser(createdUser.id, updates)\n      \n      expect(updatedUser.name).toBe('Updated Name')\n      expect(updatedUser.email).toBe('original@test.com')  // Unchanged\n      expect(updatedUser.age).toBe(26)\n      expect(updatedUser.updatedAt.getTime()).toBeGreaterThan(createdUser.updatedAt.getTime())\n    })\n    \n    it('should throw error for invalid age update', async () => {\n      // Setup\n      const userData = createTestUser()\n      const createdUser = await userService.createUser(userData)\n      \n      // Test\n      const invalidUpdates = { age: 200 }\n      await expect(userService.updateUser(createdUser.id, invalidUpdates))\n        .rejects\n        .toThrow('Age must be between 0 and 150')\n    })\n  })\n  \n  describe('deleteUser', () => {\n    it('should delete existing user', async () => {\n      // Setup\n      const userData = createTestUser()\n      const createdUser = await userService.createUser(userData)\n      \n      // Test\n      const result = await userService.deleteUser(createdUser.id)\n      \n      expect(result).toBe(true)\n      await expect(userService.getUser(createdUser.id))\n        .rejects\n        .toThrow(/not found/)
-    })
-    
-    it('should return false for non-existent user', async () => {
-      const result = await userService.deleteUser(999)
-      expect(result).toBe(false)
-    })
-  })
-  
-  // Async testing examples
-  describe('Async operations', () => {
-    it('handles async operations with resolves', async () => {
-      const userData = createTestUser()
-      await expect(userService.createUser(userData)).resolves.toHaveProperty('name', 'Test User')
-    })
-    
-    it('tests async error with rejects', async () => {
-      await expect(userService.getUser(-1)).rejects.toThrow('Invalid user ID')
-    })
-    
-    it('tests with done callback for callback-based async code', (done) => {
-      setTimeout(() => {
-        try {
-          expect(1 + 1).toBe(2)
-          done()
-        } catch (error) {
-          done(error)
-        }
-      }, 10)
-    })
-  })
-})",
+      "example": "// user-service.ts - Code to test with proper typing\nexport interface User {\n  id: number\n  name: string\n  email: string\n  age: number\n  createdAt: Date\n  updatedAt: Date\n}\n\nexport interface UserCreationData {\n  name: string\n  email: string\n  age: number\n}\n\nexport interface UserRepository {\n  findById(id: number): Promise<User | null>\n  findAll(): Promise<User[]>\n  create(userData: UserCreationData): Promise<User>\n  update(id: number, updates: Partial<User>): Promise<User | null>\n  delete(id: number): Promise<boolean>\n}\n\nexport class UserService {\n  constructor(private repository: UserRepository) {}\n  \n  async createUser(userData: UserCreationData): Promise<User> {\n    if (!userData.name?.trim()) {\n      throw new Error('Name is required')\n    }\n    \n    if (!userData.email?.includes('@')) {\n      throw new Error('Valid email is required')\n    }\n    \n    if (userData.age < 0 || userData.age > 150) {\n      throw new Error('Age must be between 0 and 150')\n    }\n    \n    const user: User = {\n      ...userData,\n      id: 0,\n      createdAt: new Date(),\n      updatedAt: new Date()\n    }\n    \n    return this.repository.create(userData)\n  }\n  \n  async getUser(id: number): Promise<User> {\n    if (id <= 0) {\n      throw new Error('Invalid user ID')\n    }\n    \n    const user = await this.repository.findById(id)\n    if (!user) {\n      throw new Error(`User with ID ${id} not found`)\n    }\n    \n    return user\n  }\n  \n  async updateUser(id: number, updates: Partial<User>): Promise<User> {\n    const user = await this.getUser(id)\n    \n    if (updates.age !== undefined && (updates.age < 0 || updates.age > 150)) {\n      throw new Error('Age must be between 0 and 150')\n    }\n    \n    const updatedUser = {\n      ...user,\n      ...updates,\n      updatedAt: new Date()\n    }\n    \n    const result = await this.repository.update(id, updatedUser)\n    if (!result) {\n      throw new Error(`Failed to update user with ID ${id}`)\n    }\n    \n    return result\n  }\n  \n  async deleteUser(id: number): Promise<boolean> {\n    if (id <= 0) {\n      throw new Error('Invalid user ID')\n    }\n    \n    return this.repository.delete(id)\n  }\n}\n\n// user-service.test.ts - Comprehensive tests with type safety\nimport { UserService, User, UserCreationData, UserRepository } from './user-service'\n\nclass MockUserRepository implements UserRepository {\n  private users: User[] = []\n  private nextId = 1\n  \n  async findById(id: number): Promise<User | null> {\n    return this.users.find(user => user.id === id) || null\n  }\n  \n  async findAll(): Promise<User[]> {\n    return [...this.users]\n  }\n  \n  async create(userData: UserCreationData): Promise<User> {\n    const user: User = {\n      ...userData,\n      id: this.nextId++,\n      createdAt: new Date(),\n      updatedAt: new Date()\n    }\n    this.users.push(user)\n    return user\n  }\n  \n  async update(id: number, updates: Partial<User>): Promise<User | null> {\n    const index = this.users.findIndex(user => user.id === id)\n    if (index === -1) return null\n    \n    this.users[index] = { ...this.users[index], ...updates }\n    return this.users[index]\n  }\n  \n  async delete(id: number): Promise<boolean> {\n    const initialLength = this.users.length\n    this.users = this.users.filter(user => user.id !== id)\n    return this.users.length < initialLength\n  }\n}\n\nconst createTestUser = (overrides: Partial<UserCreationData> = {}): UserCreationData => ({\n  name: 'Test User',\n  email: 'test@example.com',\n  age: 25,\n  ...overrides\n})\n\ndescribe('UserService', () => {\n  let userService: UserService\n  let mockRepository: jest.Mocked<UserRepository>\n  \n  beforeEach(() => {\n    mockRepository = new MockUserRepository() as jest.Mocked<UserRepository>\n    userService = new UserService(mockRepository)\n  })\n  \n  describe('createUser', () => {\n    it('should create a user with valid data', async () => {\n      const userData = createTestUser({ name: 'John Doe', email: 'john@example.com' })\n      \n      const user = await userService.createUser(userData)\n      \n      expect(user.name).toBe('John Doe')\n      expect(user.email).toBe('john@example.com')\n      expect(user.age).toBe(25)\n      expect(user.id).toBeGreaterThan(0)\n      expect(user.createdAt).toBeInstanceOf(Date)\n      expect(user.updatedAt).toBeInstanceOf(Date)\n    })\n    \n    it('should throw error for invalid email', async () => {\n      const userData = createTestUser({ email: 'invalid-email' })\n      \n      await expect(userService.createUser(userData))\n        .rejects\n        .toThrow('Valid email is required')\n    })\n    \n    it('should throw error for missing name', async () => {\n      const userData = createTestUser({ name: '' })\n      \n      await expect(userService.createUser(userData))\n        .rejects\n        .toThrow('Name is required')\n    })\n    \n    it('should throw error for invalid age', async () => {\n      const userData = createTestUser({ age: -5 })\n      \n      await expect(userService.createUser(userData))\n        .rejects\n        .toThrow('Age must be between 0 and 150')\n    })\n  })\n  \n  describe('getUser', () => {\n    it('should return user by id', async () => {\n      const userData = createTestUser()\n      const createdUser = await userService.createUser(userData)\n      \n      const user = await userService.getUser(createdUser.id)\n      \n      expect(user).toEqual(createdUser)\n    })\n    \n    it('should throw error for non-existent user', async () => {\n      await expect(userService.getUser(999))\n        .rejects\n        .toThrow('User with ID 999 not found')\n    })\n    \n    it('should throw error for invalid user ID', async () => {\n      await expect(userService.getUser(-1))\n        .rejects\n        .toThrow('Invalid user ID')\n    })\n  })\n  \n  describe('updateUser', () => {\n    it('should update existing user partially', async () => {\n      const userData = createTestUser({ name: 'Original Name', email: 'original@test.com', age: 25 })\n      const createdUser = await userService.createUser(userData)\n      \n      const updates = { name: 'Updated Name', age: 26 }\n      const updatedUser = await userService.updateUser(createdUser.id, updates)\n      \n      expect(updatedUser.name).toBe('Updated Name')\n      expect(updatedUser.email).toBe('original@test.com')\n      expect(updatedUser.age).toBe(26)\n      expect(updatedUser.updatedAt.getTime()).toBeGreaterThan(createdUser.updatedAt.getTime())\n    })\n    \n    it('should throw error for invalid age update', async () => {\n      const userData = createTestUser()\n      const createdUser = await userService.createUser(userData)\n      \n      const invalidUpdates = { age: 200 }\n      await expect(userService.updateUser(createdUser.id, invalidUpdates))\n        .rejects\n        .toThrow('Age must be between 0 and 150')\n    })\n  })\n  \n  describe('deleteUser', () => {\n    it('should delete existing user', async () => {\n      const userData = createTestUser()\n      const createdUser = await userService.createUser(userData)\n      \n      const result = await userService.deleteUser(createdUser.id)\n      \n      expect(result).toBe(true)\n      await expect(userService.getUser(createdUser.id))\n        .rejects\n        .toThrow(/not found/)\n    })\n    \n    it('should return false for non-existent user', async () => {\n      const result = await userService.deleteUser(999)\n      expect(result).toBe(false)\n    })\n  })\n  \n  describe('Async operations', () => {\n    it('handles async operations with resolves', async () => {\n      const userData = createTestUser()\n      await expect(userService.createUser(userData)).resolves.toHaveProperty('name', 'Test User')\n    })\n    \n    it('tests async error with rejects', async () => {\n      await expect(userService.getUser(-1)).rejects.toThrow('Invalid user ID')\n    })\n    \n    it('tests with done callback for callback-based async code', (done) => {\n      setTimeout(() => {\n        try {\n          expect(1 + 1).toBe(2)\n          done()\n        } catch (error) {\n          done(error)\n        }\n      }, 10)\n    })\n  })\n})",
       "explanation": "This example demonstrates comprehensive testing patterns with TypeScript:\n\n1. **Type-Safe Tests**: Using TypeScript types for test data and assertions\n2. **Input Validation Testing**: Testing both valid and invalid inputs\n3. **Error Condition Testing**: Verifying proper error messages and handling\n4. **Mock Implementation**: Creating type-safe mock objects for dependencies\n5. **Test Utilities**: Helper functions for creating test data\n6. **Async Testing**: Multiple approaches for testing asynchronous code\n7. **Edge Case Testing**: Boundary conditions and error scenarios\n8. **Test Organization**: Structured test suites with descriptive names\n\nThe output shows Jest's test runner output with passing tests and proper error assertions. Type safety helps catch issues at compile time while comprehensive test coverage ensures runtime correctness.",
       "language": "typescript"
     },
-    "pitfalls": [
-      {
+    "pitfalls": [{
         "mistake": "Testing implementation details instead of behavior",
         "solution": "Focus on testing what a function does rather than how it does it, making tests more resilient to refactoring while still maintaining type safety.",
         "severity": "high"
@@ -916,19 +693,17 @@ main()",
         "severity": "medium"
       }
     ],
-    "exercises": [
-      {
-        "title": "Comprehensive API Service Testing",
-        "description": "Create a complete test suite for an API service including unit, integration, and contract tests",
-        "checkpoints": [
-          "Write unit tests for service layer functions with comprehensive mocking",
-          "Implement integration tests for API endpoints with a test database",
-          "Create contract tests that verify API responses match expected schemas",
-          "Add performance tests for critical endpoints",
-          "Configure test coverage reporting and set minimum coverage thresholds"
-        ]
-      }
-    ],
+    "exercises": [{
+      "title": "Comprehensive API Service Testing",
+      "description": "Create a complete test suite for an API service including unit, integration, and contract tests",
+      "checkpoints": [
+        "Write unit tests for service layer functions with comprehensive mocking",
+        "Implement integration tests for API endpoints with a test database",
+        "Create contract tests that verify API responses match expected schemas",
+        "Add performance tests for critical endpoints",
+        "Configure test coverage reporting and set minimum coverage thresholds"
+      ]
+    }],
     "next": [],
     "estimatedMinutes": 45,
     "difficulty": "Intermediate",
@@ -958,12 +733,11 @@ main()",
     ],
     "intro": "Welcome to this comprehensive lesson on Advanced TypeScript Patterns and Utility Types.\n\nLearn how to leverage TypeScript's advanced type system features to create more robust and maintainable code.\n\nThroughout this lesson, you'll gain hands-on experience with practical implementations and real-world scenarios. We'll explore both the theoretical foundations and practical applications, ensuring you can immediately apply what you learn.\n\nThis lesson is designed to build upon previous concepts while introducing new techniques that will enhance your development skills. By the end, you'll have a solid understanding of the key principles and be ready to tackle more advanced topics.\n\nThe knowledge gained here will serve as a foundation for subsequent lessons and real-world projects.",
     "code": {
-      "example": "// Utility Types\ninterface User {\n  id: number;\n  name: string;\n  email: string;\n  age: number;\n  isActive: boolean;\n}\n\n// Partial - makes all properties optional\ntype UserUpdate = Partial<User>;\nconst updateUser = (id: number, updates: UserUpdate) => {\n  // Only update the provided fields\n};\n\n// Pick - select specific properties\ntype UserSummary = Pick<User, 'id' | 'name' | 'email'>;\n\n// Omit - exclude specific properties\ntype CreateUser = Omit<User, 'id'>;\n\n// Record - create object type with specific keys and values\ntype UserRoles = Record<'admin' | 'user' | 'guest', string[]>;\nconst permissions: UserRoles = {\n  admin: ['read', 'write', 'delete'],\n  user: ['read', 'write'],\n  guest: ['read']\n};\n\n// Conditional Types\ntype ApiResponse<T> = T extends string ? string : T extends number ? number : never;\n\n// Mapped Types\ntype Optional<T> = {\n  [K in keyof T]?: T[K];\n};\n\ntype Readonly<T> = {\n  readonly [K in keyof T]: T[K];\n};\n\n// Template Literal Types\ntype Color = 'red' | 'green' | 'blue';\ntype Size = 'small' | 'medium' | 'large';\ntype ThemeClass = `${Color}-${Size}`;\n// Results in: 'red-small' | 'red-medium' | 'red-large' | 'green-small' | etc.\n\n// Advanced Pattern: Discriminated Unions\ninterface LoadingState {\n  status: 'loading';\n}\n\ninterface SuccessState {\n  status: 'success';\n  data: any;\n}\n\ninterface ErrorState {\n  status: 'error';\n  error: string;\n}\n\ntype AsyncState = LoadingState | SuccessState | ErrorState;\n\nfunction handleState(state: AsyncState) {\n  switch (state.status) {\n    case 'loading':\n      console.log('Loading...');\n      break;\n    case 'success':\n      console.log('Data:', state.data); // TypeScript knows data exists\n      break;\n    case 'error':\n      console.log('Error:', state.error); // TypeScript knows error exists\n      break;\n  }\n}\n\n// Advanced Pattern: Builder Pattern with TypeScript\nclass QueryBuilder<T> {\n  private conditions: string[] = [];\n  private orderBy: string = '';\n  private limitCount: number = 0;\n\n  where(condition: keyof T, operator: string, value: any): this {\n    this.conditions.push(`${String(condition)} ${operator} '${value}'`);\n    return this;\n  }\n\n  order(field: keyof T, direction: 'ASC' | 'DESC' = 'ASC'): this {\n    this.orderBy = `ORDER BY ${String(field)} ${direction}`;\n    return this;\n  }\n\n  limit(count: number): this {\n    this.limitCount = count;\n    return this;\n  }\n\n  build(): string {\n    let query = 'SELECT * FROM table';\n    if (this.conditions.length > 0) {\n      query += ` WHERE ${this.conditions.join(' AND ')}`;\n    }\n    if (this.orderBy) {\n      query += ` ${this.orderBy}`;\n    }\n    if (this.limitCount > 0) {\n      query += ` LIMIT ${this.limitCount}`;\n    }\n    return query;\n  }\n}\n\n// Usage\nconst query = new QueryBuilder<User>()\n  .where('age', '>', 18)\n  .where('isActive', '=', true)\n  .order('name', 'ASC')\n  .limit(10)\n  .build();",
+      "example": "// Utility Types\ninterface User {\n  id: number;\n  name: string;\n  email: string;\n  age: number;\n  isActive: boolean;\n}\n\n// Partial - makes all properties optional\ntype UserUpdate = Partial<User>;\nconst updateUser = (id: number, updates: UserUpdate) => {\n  // Only update the provided fields\n};\n\n// Pick - select specific properties\ntype UserSummary = Pick<User, 'id' | 'name' | 'email'>;\n\n// Omit - exclude specific properties\ntype CreateUser = Omit<User, 'id'>;\n\n// Record - create object type with specific keys and values\ntype UserRoles = Record<'admin' | 'user' | 'guest', string[]>;\nconst permissions: UserRoles = {\n  admin: ['read', 'write', 'delete'],\n  user: ['read', 'write'],\n  guest: ['read']\n};\n\n// Conditional Types\ntype ApiResponse<T> = T extends string ? string : T extends number ? number : never;\n\n// Mapped Types\ntype Optional<T> = {\n  [K in keyof T]?: T[K];\n};\n\ntype Readonly<T> = {\n  readonly [K in keyof T]: T[K];\n};\n\n// Template Literal Types\ntype Color = 'red' | 'green' | 'blue';\ntype Size = 'small' | 'medium' | 'large';\ntype ThemeClass = `${Color}-${Size}`;\n\n// Advanced Pattern: Discriminated Unions\ninterface LoadingState {\n  status: 'loading';\n}\n\ninterface SuccessState {\n  status: 'success';\n  data: any;\n}\n\ninterface ErrorState {\n  status: 'error';\n  error: string;\n}\n\ntype AsyncState = LoadingState | SuccessState | ErrorState;\n\nfunction handleState(state: AsyncState) {\n  switch (state.status) {\n    case 'loading':\n      console.log('Loading...');\n      break;\n    case 'success':\n      console.log('Data:', state.data);\n      break;\n    case 'error':\n      console.log('Error:', state.error);\n      break;\n  }\n}\n\n// Advanced Pattern: Builder Pattern with TypeScript\nclass QueryBuilder<T> {\n  private conditions: string[] = [];\n  private orderBy: string = '';\n  private limitCount: number = 0;\n\n  where(condition: keyof T, operator: string, value: any): this {\n    this.conditions.push(`${String(condition)} ${operator} '${value}'`);\n    return this;\n  }\n\n  order(field: keyof T, direction: 'ASC' | 'DESC' = 'ASC'): this {\n    this.orderBy = `ORDER BY ${String(field)} ${direction}`;\n    return this;\n  }\n\n  limit(count: number): this {\n    this.limitCount = count;\n    return this;\n  }\n\n  build(): string {\n    let query = 'SELECT * FROM table';\n    if (this.conditions.length > 0) {\n      query += ` WHERE ${this.conditions.join(' AND ')}`;\n    }\n    if (this.orderBy) {\n      query += ` ${this.orderBy}`;\n    }\n    if (this.limitCount > 0) {\n      query += ` LIMIT ${this.limitCount}`;\n    }\n    return query;\n  }\n}\n\n// Usage\nconst query = new QueryBuilder<User>()\n  .where('age', '>', 18)\n  .where('isActive', '=', true)\n  .order('name', 'ASC')\n  .limit(10)\n  .build();",
       "explanation": "This example demonstrates advanced TypeScript patterns including utility types (Partial, Pick, Omit, Record), conditional types, mapped types, template literal types, discriminated unions, and the builder pattern with proper type safety.\n\nThe code demonstrates practical implementation techniques and shows how the concepts work in real scenarios. Pay attention to the structure and patterns used, as these represent industry best practices.",
       "language": "typescript"
     },
-    "pitfalls": [
-      {
+    "pitfalls": [{
         "mistake": "Overusing complex types that hurt readability",
         "solution": "Balance type safety with code readability. Use meaningful names and document complex types",
         "severity": "medium"
@@ -979,18 +753,16 @@ main()",
         "severity": "low"
       }
     ],
-    "exercises": [
-      {
-        "title": "Practice: Advanced TypeScript Patterns and Utility Types",
-        "description": "Implement advanced TypeScript patterns to create type-safe and maintainable code",
-        "checkpoints": [
-          "Create utility types for common data transformations",
-          "Implement discriminated unions for state management",
-          "Build type-safe APIs using template literal types",
-          "Create reusable patterns with conditional and mapped types"
-        ]
-      }
-    ],
+    "exercises": [{
+      "title": "Practice: Advanced TypeScript Patterns and Utility Types",
+      "description": "Implement advanced TypeScript patterns to create type-safe and maintainable code",
+      "checkpoints": [
+        "Create utility types for common data transformations",
+        "Implement discriminated unions for state management",
+        "Build type-safe APIs using template literal types",
+        "Create reusable patterns with conditional and mapped types"
+      ]
+    }],
     "next": [],
     "estimatedMinutes": 40,
     "difficulty": "Advanced",
@@ -1014,12 +786,11 @@ main()",
     ],
     "intro": "Welcome to this comprehensive lesson on TypeScript in Production and Migration Strategies.\n\nLearn how to successfully deploy TypeScript applications to production and migrate existing JavaScript codebases.\n\nThroughout this lesson, you'll gain hands-on experience with practical implementations and real-world scenarios. We'll explore both the theoretical foundations and practical applications, ensuring you can immediately apply what you learn.\n\nThis lesson is designed to build upon previous concepts while introducing new techniques that will enhance your development skills. By the end, you'll have a solid understanding of the key principles and be ready to tackle more advanced topics.\n\nThe knowledge gained here will serve as a foundation for subsequent lessons and real-world projects.",
     "code": {
-      "example": "// Production tsconfig.json\n{\n  \"compilerOptions\": {\n    \"target\": \"ES2020\",\n    \"module\": \"ESNext\",\n    \"moduleResolution\": \"node\",\n    \"lib\": [\"ES2020\", \"DOM\"],\n    \"outDir\": \"./dist\",\n    \"rootDir\": \"./src\",\n    \"strict\": true,\n    \"noImplicitAny\": true,\n    \"strictNullChecks\": true,\n    \"strictFunctionTypes\": true,\n    \"noImplicitReturns\": true,\n    \"noFallthroughCasesInSwitch\": true,\n    \"noUncheckedIndexedAccess\": true,\n    \"exactOptionalPropertyTypes\": true,\n    \"allowSyntheticDefaultImports\": true,\n    \"esModuleInterop\": true,\n    \"forceConsistentCasingInFileNames\": true,\n    \"skipLibCheck\": true,\n    \"declaration\": true,\n    \"declarationMap\": true,\n    \"sourceMap\": false,\n    \"removeComments\": true,\n    \"importHelpers\": true,\n    \"downlevelIteration\": true\n  },\n  \"include\": [\"src/**/*\"],\n  \"exclude\": [\"node_modules\", \"dist\", \"**/*.test.ts\"]\n}\n\n// Migration Strategy: Gradual adoption\n// 1. Start with JavaScript files and .d.ts declarations\n// types/legacy.d.ts\ndeclare module 'legacy-library' {\n  export function legacyFunction(param: any): any;\n  export const LEGACY_CONSTANT: string;\n}\n\n// 2. Add TypeScript gradually, file by file\n// utils/validation.ts (new TypeScript file)\nexport interface ValidationRule {\n  field: string;\n  required?: boolean;\n  minLength?: number;\n  maxLength?: number;\n  pattern?: RegExp;\n}\n\nexport interface ValidationResult {\n  isValid: boolean;\n  errors: string[];\n}\n\nexport class Validator {\n  private rules: ValidationRule[] = [];\n\n  addRule(rule: ValidationRule): this {\n    this.rules.push(rule);\n    return this;\n  }\n\n  validate(data: Record<string, any>): ValidationResult {\n    const errors: string[] = [];\n\n    for (const rule of this.rules) {\n      const value = data[rule.field];\n\n      if (rule.required && (value === undefined || value === null || value === '')) {\n        errors.push(`${rule.field} is required`);\n        continue;\n      }\n\n      if (typeof value === 'string') {\n        if (rule.minLength && value.length < rule.minLength) {\n          errors.push(`${rule.field} must be at least ${rule.minLength} characters`);\n        }\n        if (rule.maxLength && value.length > rule.maxLength) {\n          errors.push(`${rule.field} must be no more than ${rule.maxLength} characters`);\n        }\n        if (rule.pattern && !rule.pattern.test(value)) {\n          errors.push(`${rule.field} format is invalid`);\n        }\n      }\n    }\n\n    return {\n      isValid: errors.length === 0,\n      errors\n    };\n  }\n}\n\n// 3. Build configuration for production\n// webpack.config.js\nconst path = require('path');\n\nmodule.exports = {\n  entry: './src/index.ts',\n  module: {\n    rules: [\n      {\n        test: /\\.ts$/,\n        use: 'ts-loader',\n        exclude: /node_modules/,\n      },\n    ],\n  },\n  resolve: {\n    extensions: ['.ts', '.js'],\n  },\n  output: {\n    filename: 'bundle.js',\n    path: path.resolve(__dirname, 'dist'),\n  },\n  optimization: {\n    usedExports: true,\n    sideEffects: false,\n  },\n};\n\n// CI/CD Integration\n// .github/workflows/typescript.yml\n/*\nname: TypeScript CI\non: [push, pull_request]\njobs:\n  build:\n    runs-on: ubuntu-latest\n    steps:\n    - uses: actions/checkout@v2\n    - name: Setup Node.js\n      uses: actions/setup-node@v2\n      with:\n        node-version: '16'\n    - name: Install dependencies\n      run: npm ci\n    - name: TypeScript type check\n      run: npx tsc --noEmit\n    - name: Lint\n      run: npm run lint\n    - name: Test\n      run: npm test\n    - name: Build\n      run: npm run build\n*/\n\n// Performance monitoring in production\ninterface PerformanceMetrics {\n  buildTime: number;\n  bundleSize: number;\n  typeCheckTime: number;\n}\n\nclass TypeScriptMetrics {\n  static measureBuildPerformance(): PerformanceMetrics {\n    const start = Date.now();\n    // Build process timing logic\n    const buildTime = Date.now() - start;\n    \n    return {\n      buildTime,\n      bundleSize: this.getBundleSize(),\n      typeCheckTime: this.getTypeCheckTime()\n    };\n  }\n\n  private static getBundleSize(): number {\n    // Logic to measure bundle size\n    return 0;\n  }\n\n  private static getTypeCheckTime(): number {\n    // Logic to measure type checking time\n    return 0;\n  }\n}",
+      "example": "// Production tsconfig.json\n{\n  \"compilerOptions\": {\n    \"target\": \"ES2020\",\n    \"module\": \"ESNext\",\n    \"moduleResolution\": \"node\",\n    \"lib\": [\"ES2020\", \"DOM\"],\n    \"outDir\": \"./dist\",\n    \"rootDir\": \"./src\",\n    \"strict\": true,\n    \"noImplicitAny\": true,\n    \"strictNullChecks\": true,\n    \"strictFunctionTypes\": true,\n    \"noImplicitReturns\": true,\n    \"noFallthroughCasesInSwitch\": true,\n    \"noUncheckedIndexedAccess\": true,\n    \"exactOptionalPropertyTypes\": true,\n    \"allowSyntheticDefaultImports\": true,\n    \"esModuleInterop\": true,\n    \"forceConsistentCasingInFileNames\": true,\n    \"skipLibCheck\": true,\n    \"declaration\": true,\n    \"declarationMap\": true,\n    \"sourceMap\": false,\n    \"removeComments\": true,\n    \"importHelpers\": true,\n    \"downlevelIteration\": true\n  },\n  \"include\": [\"src/**/*\"],\n  \"exclude\": [\"node_modules\", \"dist\", \"**/*.test.ts\"]\n}\n\n// Migration Strategy: Gradual adoption\n// 1. Start with JavaScript files and .d.ts declarations\n// types/legacy.d.ts\ndeclare module 'legacy-library' {\n  export function legacyFunction(param: any): any;\n  export const LEGACY_CONSTANT: string;\n}\n\n// 2. Add TypeScript gradually, file by file\n// utils/validation.ts (new TypeScript file)\nexport interface ValidationRule {\n  field: string;\n  required?: boolean;\n  minLength?: number;\n  maxLength?: number;\n  pattern?: RegExp;\n}\n\nexport interface ValidationResult {\n  isValid: boolean;\n  errors: string[];\n}\n\nexport class Validator {\n  private rules: ValidationRule[] = [];\n\n  addRule(rule: ValidationRule): this {\n    this.rules.push(rule);\n    return this;\n  }\n\n  validate(data: Record<string, any>): ValidationResult {\n    const errors: string[] = [];\n\n    for (const rule of this.rules) {\n      const value = data[rule.field];\n\n      if (rule.required && (value === undefined || value === null || value === '')) {\n        errors.push(`${rule.field} is required`);\n        continue;\n      }\n\n      if (typeof value === 'string') {\n        if (rule.minLength && value.length < rule.minLength) {\n          errors.push(`${rule.field} must be at least ${rule.minLength} characters`);\n        }\n        if (rule.maxLength && value.length > rule.maxLength) {\n          errors.push(`${rule.field} must be no more than ${rule.maxLength} characters`);\n        }\n        if (rule.pattern && !rule.pattern.test(value)) {\n          errors.push(`${rule.field} format is invalid`);\n        }\n      }\n    }\n\n    return {\n      isValid: errors.length === 0,\n      errors\n    };\n  }\n}\n\n// 3. Build configuration for production\n// webpack.config.js\nconst path = require('path');\n\nmodule.exports = {\n  entry: './src/index.ts',\n  module: {\n    rules: [\n      {\n        test: /\\.ts$/,\n        use: 'ts-loader',\n        exclude: /node_modules/,\n      },\n    ],\n  },\n  resolve: {\n    extensions: ['.ts', '.js'],\n  },\n  output: {\n    filename: 'bundle.js',\n    path: path.resolve(__dirname, 'dist'),\n  },\n  optimization: {\n    usedExports: true,\n    sideEffects: false,\n  },\n};\n\n// CI/CD Integration\n// .github/workflows/typescript.yml\n/*\nname: TypeScript CI\non: [push, pull_request]\njobs:\n  build:\n    runs-on: ubuntu-latest\n    steps:\n    - uses: actions/checkout@v2\n    - name: Setup Node.js\n      uses: actions/setup-node@v2\n      with:\n        node-version: '16'\n    - name: Install dependencies\n      run: npm ci\n    - name: TypeScript type check\n      run: npx tsc --noEmit\n    - name: Lint\n      run: npm run lint\n    - name: Test\n      run: npm test\n    - name: Build\n      run: npm run build\n*/\n\n// Performance monitoring in production\ninterface PerformanceMetrics {\n  buildTime: number;\n  bundleSize: number;\n  typeCheckTime: number;\n}\n\nclass TypeScriptMetrics {\n  static measureBuildPerformance(): PerformanceMetrics {\n    const start = Date.now();\n    const buildTime = Date.now() - start;\n    \n    return {\n      buildTime,\n      bundleSize: this.getBundleSize(),\n      typeCheckTime: this.getTypeCheckTime()\n    };\n  }\n\n  private static getBundleSize(): number {\n    return 0;\n  }\n\n  private static getTypeCheckTime(): number {\n    return 0;\n  }\n}",
       "explanation": "This example demonstrates production-ready TypeScript configuration, migration strategies for converting JavaScript projects, build optimization, and deployment practices including CI/CD integration.\n\nThe code demonstrates practical implementation techniques and shows how the concepts work in real scenarios. Pay attention to the structure and patterns used, as these represent industry best practices.",
       "language": "typescript"
     },
-    "pitfalls": [
-      {
+    "pitfalls": [{
         "mistake": "Enabling strict mode too early in migration",
         "solution": "Gradually enable strict TypeScript options during migration to avoid overwhelming the team",
         "severity": "medium"
@@ -1035,19 +806,17 @@ main()",
         "severity": "high"
       }
     ],
-    "exercises": [
-      {
-        "title": "Practice: TypeScript in Production and Migration Strategies",
-        "description": "Set up a production-ready TypeScript project and implement migration strategies",
-        "checkpoints": [
-          "Configure production TypeScript settings",
-          "Set up build optimization and bundling",
-          "Implement gradual migration strategy",
-          "Configure CI/CD pipeline with type checking",
-          "Monitor and optimize build performance"
-        ]
-      }
-    ],
+    "exercises": [{
+      "title": "Practice: TypeScript in Production and Migration Strategies",
+      "description": "Set up a production-ready TypeScript project and implement migration strategies",
+      "checkpoints": [
+        "Configure production TypeScript settings",
+        "Set up build optimization and bundling",
+        "Implement gradual migration strategy",
+        "Configure CI/CD pipeline with type checking",
+        "Monitor and optimize build performance"
+      ]
+    }],
     "next": [],
     "estimatedMinutes": 45,
     "difficulty": "Advanced",
