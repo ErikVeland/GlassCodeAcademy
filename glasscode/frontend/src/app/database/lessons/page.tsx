@@ -6,6 +6,7 @@ import { useQuery, gql } from '@apollo/client';
 import TechnologyUtilizationBox from '../../../components/TechnologyUtilizationBox';
 import EnhancedLoadingComponent from '../../../components/EnhancedLoadingComponent';
 import BreadcrumbNavigation from '../../../components/BreadcrumbNavigation';
+import { isNetworkError } from '@/lib/isNetworkError';
 
 // Minimal data for build phase
 type DatabaseLesson = {
@@ -131,26 +132,7 @@ function DatabaseLessonsRegular() {
     nextCategoryTopic = topicGroups[(currentTopicIdx + 1) % topicGroups.length]?.topic ?? null;
   }
 
-  // Helper function to determine if an error is a network error
-  const isNetworkError = (error: unknown): boolean => {
-    if (!error) return false;
-    
-    // Type guard for ApolloError
-    if (typeof error === 'object' && error !== null) {
-      const apolloError = error as { message?: string; networkError?: unknown };
-      if (apolloError.message) {
-        return (
-          apolloError.message.includes('Failed to fetch') ||
-          apolloError.message.includes('NetworkError') ||
-          apolloError.message.includes('ECONNREFUSED') ||
-          apolloError.message.includes('timeout')
-        );
-      }
-      return !!apolloError.networkError;
-    }
-    
-    return false;
-  };
+  
 
   // If we're loading or have retry attempts, show the enhanced loading component
   if (loading || retryCountRef.current > 0) {

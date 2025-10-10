@@ -39,14 +39,7 @@ export default function TestingLessonsPage() {
     const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
     const retryCountRef = useRef(0);
 
-    const { data, loading, error, refetch } = useQuery(TESTING_LESSONS_QUERY, {
-        onError: (error) => {
-            // Increment retry counter for network errors
-            if (isNetworkError(error)) {
-                retryCountRef.current += 1;
-            }
-        }
-    });
+    const { data, loading, error, refetch } = useQuery(TESTING_LESSONS_QUERY);
     
     // Reset retry count on successful load
     useEffect(() => {
@@ -92,6 +85,13 @@ export default function TestingLessonsPage() {
             error.networkError
         );
     };
+
+    // Handle network errors with derived state from the hook
+    useEffect(() => {
+        if (error && isNetworkError(error)) {
+            retryCountRef.current += 1;
+        }
+    }, [error]);
 
     // If we're loading or have retry attempts, show the enhanced loading component
     if (loading || retryCountRef.current > 0) {

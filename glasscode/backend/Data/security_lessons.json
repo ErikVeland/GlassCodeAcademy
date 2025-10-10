@@ -30,5 +30,77 @@
     "description": "Learn how to conduct performance testing specifically for security features, including authentication systems, encryption processes, access controls, and logging mechanisms.",
     "codeExample": "// Security Performance Testing and Optimization Implementation\\n\\n// 1. Secure Authentication Performance Testing\\nconst bcrypt = require('bcrypt');\\nconst crypto = require('crypto');\\n\\n// Benchmark different bcrypt cost factors\\nasync function benchmarkBcryptCost(password, minCost = 10, maxCost = 14) {\\n  const results = [];\\n  \\n  for (let cost = minCost; cost <= maxCost; cost++) {\\n    const startTime = process.hrtime.bigint();\\n    await bcrypt.hash(password, cost);\\n    const endTime = process.hrtime.bigint();\\n    \\n    const durationMs = Number(endTime - startTime) / 1000000;\\n    results.push({\\n      cost,\\n      durationMs,\\n      recommendation: durationMs < 100 ? 'Acceptable' : \\n                     durationMs < 250 ? 'Consider optimization' : 'Too slow for interactive use'\\n    });\\n  }\\n  \\n  return results;\\n}\\n\\n// Optimized session management with caching\\nclass OptimizedSessionManager {\\n  constructor(redisClient, cacheTtl = 3600) {\\n    this.redis = redisClient;\\n    this.cacheTtl = cacheTtl;\\n  }\\n  \\n  async createSession(userId, permissions) {\\n    const sessionId = crypto.randomBytes(32).toString('hex');\\n    const sessionData = {\\n      userId,\\n      permissions,\\n      createdAt: Date.now(),\\n      lastAccessed: Date.now()\\n    };\\n    \\n    // Store in Redis with expiration\\n    await this.redis.setex(\\`session:${sessionId}\\`, \\n      this.cacheTtl, \\n      JSON.stringify(sessionData)\\n    );\\n    \\n    return sessionId;\\n  }\\n  \\n  async validateSession(sessionId) {\\n    // First check if session exists\\n    const sessionStr = await this.redis.get(\\`session:${sessionId}\\`);\\n    if (!sessionStr) return null;\\n    \\n    const session = JSON.parse(sessionStr);\\n    \\n    // Update last accessed time\\n    session.lastAccessed = Date.now();\\n    await this.redis.setex(\\`session:${sessionId}\\`, \\n      this.cacheTtl, \\n      JSON.stringify(session)\\n    );\\n    \\n    return session;\\n  }\\n  \\n  async destroySession(sessionId) {\\n    await this.redis.del(\\`session:${sessionId}\\`);\\n  }\\n}\\n\\n// 2. Rate Limiting with Performance Considerations\\nclass PerformanceOptimizedRateLimiter {\\n  constructor(redisClient) {\\n    this.redis = redisClient;\\n  }\\n  \\n  async isAllowed(identifier, maxRequests = 100, windowSeconds = 60) {\\n    const key = \\`rate_limit:${identifier}\\`;\\n    const now = Math.floor(Date.now() / 1000);\\n    const windowStart = now - windowSeconds;\\n    \\n    // Use Redis pipeline for atomic operations\\n    const pipeline = this.redis.multi();\\n    \\n    // Remove expired entries\\n    pipeline.zremrangebyscore(key, 0, windowStart);\\n    \\n    // Add current request\\n    pipeline.zadd(key, now, \\`\\${now}-\\${Math.random()}\\`);\\n    \\n    // Set expiration\\n    pipeline.expire(key, windowSeconds);\\n    \\n    // Get count\\n    pipeline.zcard(key);\\n    \\n    const results = await pipeline.exec();\\n    const requestCount = results[3][1]; // Result of zcard\\n    \\n    return {\\n      allowed: requestCount <= maxRequests,\\n      count: requestCount,\\n      remaining: Math.max(0, maxRequests - requestCount)\\n    };\\n  }\\n}\\n\\n// 3. Efficient Access Control with Caching\\nclass CachedAccessControl {\\n  constructor(redisClient, db) {\\n    this.redis = redisClient;\\n    this.db = db;\\n    this.cacheTtl = 300; // 5 minutes\\n  }\\n  \\n  async hasPermission(userId, resource, action) {\\n    const cacheKey = \\`permission:${userId}:${resource}:${action}\\`;\\n    \\n    // Try cache first\\n    const cachedResult = await this.redis.get(cacheKey);\\n    if (cachedResult !== null) {\\n      return cachedResult === 'true';\\n    }\\n    \\n    // Check database if not in cache\\n    const hasPermission = await this.db.checkPermission(userId, resource, action);\\n    \\n    // Cache result\\n    await this.redis.setex(\\n      cacheKey, \\n      this.cacheTtl, \\n      hasPermission ? 'true' : 'false'\\n    );\\n    \\n    return hasPermission;\\n  }\\n  \\n  // Invalidate cache when permissions change\\n  async invalidateUserPermissions(userId) {\\n    const pattern = \\`permission:${userId}:*\\`;\\n    const keys = await this.redis.keys(pattern);\\n    if (keys.length > 0) {\\n      await this.redis.del(...keys);\\n    }\\n  }\\n}\\n\\n// 4. Cryptographic Operation Optimization\\nconst crypto = require('crypto');\\n\\n// Use streaming for large data encryption\\nfunction encryptLargeFile(inputStream, outputStream, key) {\\n  const algorithm = 'aes-256-gcm';\\n  const iv = crypto.randomBytes(16);\\n  \\n  const cipher = crypto.createCipher(algorithm, key);\\n  \\n  // Write IV to output stream\\n  outputStream.write(iv);\\n  \\n  // Stream encryption\\n  inputStream.pipe(cipher).pipe(outputStream);\\n  \\n  return new Promise((resolve, reject) => {\\n    cipher.on('end', resolve);\\n    cipher.on('error', reject);\\n  });\\n}\\n\\n// Batch processing for multiple small operations\\nasync function batchHashPasswords(passwords, saltRounds = 12) {\\n  const results = [];\\n  \\n  // Process in smaller batches to avoid blocking the event loop\\n  const batchSize = 10;\\n  \\n  for (let i = 0; i < passwords.length; i += batchSize) {\\n    const batch = passwords.slice(i, i + batchSize);\\n    const batchResults = await Promise.all(\\n      batch.map(password => bcrypt.hash(password, saltRounds))\\n    );\\n    results.push(...batchResults);\\n    \\n    // Allow event loop to process other tasks\\n    await new Promise(resolve => setImmediate(resolve));\\n  }\\n  \\n  return results;\\n}\\n\\n// 5. Security Performance Testing Utilities\\nconst autocannon = require('autocannon');\\n\\nasync function securityPerformanceTest(url, requests, connections) {\\n  const result = await autocannon({\\n    url,\\n    requests,\\n    connections,\\n    duration: 30, // 30 seconds\\n    pipelining: 1,\\n    setupClient: (client) => {\\n      // Add authentication token for security testing\\n      client.on('headers', {\\n        authorization: 'Bearer test-token'\\n      });\\n    }\\n  });\\n  \\n  return {\\n    requestsPerSecond: result.requests.average,\\n    latency: result.latency.average,\\n    throughput: result.throughput.average,\\n    errors: result.errors,\\n    timeouts: result.timeouts\\n  };\\n}\\n\\n// Example usage\\napp.post('/api/login', async (req, res) => {\\n  try {\\n    const { email, password } = req.body;\\n    \\n    // Simulate optimized authentication\\n    const user = await UserRepository.findByEmail(email);\\n    if (!user) {\\n      return res.status(401).json({ error: 'Invalid credentials' });\\n    }\\n    \\n    const isValid = await bcrypt.compare(password, user.password_hash);\\n    if (!isValid) {\\n      return res.status(401).json({ error: 'Invalid credentials' });\\n    }\\n    \\n    // Create optimized session\\n    const sessionId = await sessionManager.createSession(user.id, user.permissions);\\n    \\n    res.json({ \\n      token: sessionId,\\n      user: { id: user.id, email: user.email }\\n    });\\n  } catch (error) {\\n    res.status(500).json({ error: 'Authentication failed' });\\n  }\\n});",
     "output": "Security performance optimization implementation including bcrypt cost factor benchmarking, optimized session management with Redis caching, performance-optimized rate limiting using Redis pipelines, cached access control to reduce database queries, streaming encryption for large files, batch processing for cryptographic operations, and security-focused performance testing utilities."
+  },
+  {
+    "id": 5,
+    "topic": "Buffer Overflow",
+    "title": "Memory Safety and Buffer Overflow Prevention",
+    "description": "Understand classic buffer overflows and modern mitigations: bounds checking, safer libraries, stack canaries, ASLR, and DEP.",
+    "codeExample": "#include <stdio.h>\n#include <string.h>\n\nvoid unsafe_copy(char *dest, const char *src) {\n  strcpy(dest, src);\n}\n\nvoid safe_copy(char *dest, size_t dest_size, const char *src) {\n  strncpy(dest, src, dest_size - 1);\n  dest[dest_size - 1] = '\\0';\n}\n\nint main() {\n  char dest[16];\n  const char *input = \"AAAAAAAAAAAAAAAAAAAAAAAAAAAA\";\n  safe_copy(dest, sizeof(dest), input);\n  printf(\"%s\", dest);\n  return 0;\n}",
+    "output": "Demonstrates safe bounded copy to prevent stack-based buffer overflow."
+  },
+  {
+    "id": 6,
+    "topic": "Account Lockout",
+    "title": "Brute-force Mitigation with Account Lockout",
+    "description": "Implement rate limiting and lockout thresholds to counter credential stuffing and brute-force attacks.",
+    "codeExample": "class AuthThrottle {\n  constructor(store, maxAttempts = 5, lockoutMs = 900000) {\n    this.store = store;\n    this.maxAttempts = maxAttempts;\n    this.lockoutMs = lockoutMs;\n  }\n  async recordAttempt(userId, success) {\n    const key = 'auth:' + userId;\n    const rec = (await this.store.get(key)) || { attempts: 0, lockedUntil: 0 };\n    const now = Date.now();\n    if (rec.lockedUntil && rec.lockedUntil > now) {\n      return { locked: true, until: rec.lockedUntil };\n    }\n    if (success) {\n      await this.store.set(key, { attempts: 0, lockedUntil: 0 });\n      return { locked: false };\n    }\n    rec.attempts += 1;\n    if (rec.attempts >= this.maxAttempts) {\n      rec.lockedUntil = now + this.lockoutMs;\n    }\n    await this.store.set(key, rec);\n    return { locked: !!rec.lockedUntil, until: rec.lockedUntil };\n  }\n}",
+    "output": "Shows time-bound account lockout after repeated failed authentication attempts."
+  },
+  {
+    "id": 7,
+    "topic": "CSP",
+    "title": "Content Security Policy for XSS Mitigation",
+    "description": "Author effective CSPs: directives for script-src, style-src, frame-ancestors, object-src, and reporting; use nonce/hash policies.",
+    "codeExample": "// Express middleware setting CSP\napp.use((req, res, next) => {\n  const csp = \"default-src 'self'; script-src 'self' 'nonce-abc123'; style-src 'self' 'nonce-abc123'; img-src 'self' data:; frame-ancestors 'none'; object-src 'none'; base-uri 'self';\";\n  res.setHeader('Content-Security-Policy', csp);\n  next();\n});",
+    "output": "Applies strict CSP with nonces to reduce script injection risk and clickjacking."
+  },
+  {
+    "id": 8,
+    "topic": "Social Engineering",
+    "title": "Defenses Against Social Engineering",
+    "description": "Phishing, pretexting, baiting, tailgating; layered defenses: MFA, training, just-in-time warnings, anomalous behavior detection.",
+    "codeExample": "function detectPhishing(email) {\n  const suspiciousDomains = [/\\\.ru$/, /\\\.cn$/];\n  const indicators = [/urgent/i, /verify your account/i, /password expires/i];\n  const domainMatch = suspiciousDomains.some(rx => rx.test(email.from));\n  const contentMatch = indicators.some(rx => rx.test(email.body));\n  return domainMatch || contentMatch;\n}",
+    "output": "Simple heuristic detection of potentially malicious messages to complement training and controls."
+  },
+  {
+    "id": 9,
+    "topic": "Security Audit",
+    "title": "Planning and Executing Security Audits",
+    "description": "Risk-based scoping, control testing, evidence collection, reporting, and remediation tracking aligned with ISO/IEC 27001.",
+    "codeExample": "class AuditPlan {\n  constructor(scope, controls) {\n    this.scope = scope;\n    this.controls = controls;\n    this.evidence = [];\n  }\n  addEvidence(controlId, artifact) {\n    this.evidence.push({ controlId: controlId, artifact: artifact, timestamp: new Date().toISOString() });\n  }\n  summarize() {\n    const tested = new Set(this.evidence.map(e => e.controlId));\n    const remaining = this.controls.filter(c => !tested.has(c.id));\n    return { tested: tested.size, remaining: remaining.length };\n  }\n}",
+    "output": "Provides an audit planning scaffold linking controls to evidence for defensible reporting."
+  },
+  {
+    "id": 10,
+    "topic": "Zero-day",
+    "title": "Zero-day Vulnerabilities and Coordinated Disclosure",
+    "description": "Discovery paths, exploit economics, and coordinated vulnerability disclosure (CVD): timelines, CVE assignment, patching, and communication.",
+    "codeExample": "class DisclosureWorkflow {\n  constructor() {\n    this.state = 'identified';\n    this.timeline = [];\n  }\n  advance(step, note) {\n    this.timeline.push({ step: step, note: note, at: new Date().toISOString() });\n    this.state = step;\n  }\n}",
+    "output": "Outlines CVD lifecycle tracking states and artifacts, grounding responsible disclosure practice."
+  },
+  {
+    "id": 11,
+    "topic": "Password Policy",
+    "title": "Modern Password Policies and MFA Integration",
+    "description": "Align with NIST SP 800-63B: prohibit common passwords, allow long passphrases, throttle guesses, pair with phishing-resistant MFA.",
+    "codeExample": "async function validatePassword(pw, breachedSet) {\n  if (pw.length < 12) return false;\n  if (/\\s/.test(pw)) return false;\n  if (breachedSet.has(pw.toLowerCase())) return false;\n  return true;\n}",
+    "output": "Checks include breached-password screening; complements MFA for strong assurance."
+  },
+  {
+    "id": 12,
+    "topic": "Secure Headers",
+    "title": "HTTP Security Headers in Practice",
+    "description": "Apply HSTS, X-Content-Type-Options, X-Frame-Options, Referrer-Policy, and robust CSP; discuss preload lists and subdomain coverage.",
+    "codeExample": "app.use((req, res, next) => {\n  res.setHeader('Strict-Transport-Security', 'max-age=31536000; includeSubDomains; preload');\n  res.setHeader('X-Content-Type-Options', 'nosniff');\n  res.setHeader('X-Frame-Options', 'DENY');\n  res.setHeader('Referrer-Policy', 'no-referrer');\n  res.setHeader('Content-Security-Policy', \"default-src 'self'\");\n  next();\n});",
+    "output": "Configures core headers to reduce common web attack surfaces and enforce HTTPS."
+  },
+  {
+    "id": 13,
+    "topic": "Secure SDLC",
+    "title": "Integrating Security into the SDLC",
+    "description": "Embed threat modeling, secure code review, dependency scanning, SAST/DAST, and continuous security testing into agile workflows.",
+    "codeExample": "const pipeline = {\n  stages: ['lint', 'test', 'sast', 'build', 'dast'],\n  gates: {\n    sast: { failOn: ['critical', 'high'] },\n    dast: { failOn: ['critical'] }\n  }\n};",
+    "output": "Shows a simplified pipeline with security gates to prevent risky deployments."
   }
 ]

@@ -133,14 +133,7 @@ export default function E2eInterviewPage() {
   const retryCountRef = useRef(0);
   const [shouldRetry, setShouldRetry] = useState(true);
 
-  const { data, loading: gqlLoading, error: gqlError, refetch } = useQuery(E2E_INTERVIEW_QUESTIONS_QUERY, {
-    onError: (error) => {
-      // Increment retry counter for network errors
-      if (isNetworkError(error)) {
-        retryCountRef.current += 1;
-      }
-    }
-  });
+  const { data, loading: gqlLoading, error: gqlError, refetch } = useQuery(E2E_INTERVIEW_QUESTIONS_QUERY);
   
   // Reset retry count on successful load
   useEffect(() => {
@@ -148,6 +141,13 @@ export default function E2eInterviewPage() {
       retryCountRef.current = 0;
     }
   }, [data, gqlLoading]);
+
+  // Handle network errors with derived state from the hook
+  useEffect(() => {
+    if (gqlError && isNetworkError(gqlError)) {
+      retryCountRef.current += 1;
+    }
+  }, [gqlError]);
 
   const gqlQuestions: E2eInterviewQuestion[] = data?.e2eInterviewQuestions ?? [];
 

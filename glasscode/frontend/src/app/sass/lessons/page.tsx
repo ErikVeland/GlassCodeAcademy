@@ -38,14 +38,14 @@ export default function SassLessonsPage() {
     const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
     const retryCountRef = useRef(0);
 
-    const { data, loading, error, refetch } = useQuery(SASS_LESSONS_QUERY, {
-        onError: (error) => {
-            // Increment retry counter for network errors
-            if (isNetworkError(error)) {
-                retryCountRef.current += 1;
-            }
+    const { data, loading, error, refetch } = useQuery(SASS_LESSONS_QUERY);
+    
+    // Increment retry counter for network errors using derived state
+    useEffect(() => {
+        if (error && isNetworkError(error)) {
+            retryCountRef.current += 1;
         }
-    });
+    }, [error]);
     
     // Reset retry count on successful load
     useEffect(() => {

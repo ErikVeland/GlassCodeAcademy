@@ -2,10 +2,10 @@
 
 import { useEffect, useState, useRef } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { useQuery, gql } from '@apollo/client';
 import TechnologyUtilizationBox from '../../../components/TechnologyUtilizationBox';
 import EnhancedLoadingComponent from '../../../components/EnhancedLoadingComponent';
+import { isNetworkError } from '@/lib/isNetworkError';
 
 type ReactLesson = {
     id: number;
@@ -39,6 +39,23 @@ export default function ReactLessonsPage() {
     const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
     const retryCountRef = useRef(0);
 
+    // Always call hooks unconditionally at the top of the component
+    const { data, loading, error, refetch } = useQuery(REACT_LESSONS_QUERY);
+
+    // Increment retry counter when a network error occurs
+    useEffect(() => {
+        if (error && isNetworkError(error)) {
+            retryCountRef.current += 1;
+        }
+    }, [error]);
+    
+    // Reset retry count on successful load
+    useEffect(() => {
+        if (data && !loading) {
+            retryCountRef.current = 0;
+        }
+    }, [data, loading]);
+
     // Check if we're in build phase - return minimal data during build
     if (process.env.NEXT_PHASE === 'phase-production-build') {
         console.log('Build phase detected, returning minimal lesson data for react-fundamentals');
@@ -61,7 +78,6 @@ export default function ReactLessonsPage() {
         let currentLesson: ReactLesson | null = null;
         let currentTopicLessons: ReactLesson[] = [];
         let currentLessonIndex: number | null = null;
-        let isLastCategory = false;
         let nextCategoryTopic: string | null = null;
         if (selectedTopic !== null && selectedIndex !== null) {
             currentTopicLessons = topicGroups.find(tg => tg.topic === selectedTopic)?.lessons ?? [];
@@ -69,20 +85,10 @@ export default function ReactLessonsPage() {
             currentLessonIndex = selectedIndex;
             // Find the next topic (cycle to first if at end)
             const currentTopicIdx = topicGroups.findIndex(tg => tg.topic === selectedTopic);
-            isLastCategory = currentTopicIdx === topicGroups.length - 1;
             nextCategoryTopic = topicGroups[(currentTopicIdx + 1) % topicGroups.length]?.topic ?? null;
         }
 
-        // Helper function to determine if an error is a network error
-        const isNetworkError = (error: any): boolean => {
-            return !!error && (
-                error.message?.includes('Failed to fetch') ||
-                error.message?.includes('NetworkError') ||
-                error.message?.includes('ECONNREFUSED') ||
-                error.message?.includes('timeout') ||
-                error.networkError
-            );
-        };
+        
 
         return (
             // Updated container with glass morphism effect
@@ -226,21 +232,7 @@ export default function ReactLessonsPage() {
         );
     }
 
-    const { data, loading, error, refetch } = useQuery(REACT_LESSONS_QUERY);
-
-    // Increment retry counter when a network error occurs
-    useEffect(() => {
-        if (error && isNetworkError(error)) {
-            retryCountRef.current += 1;
-        }
-    }, [error]);
     
-    // Reset retry count on successful load
-    useEffect(() => {
-        if (data && !loading) {
-            retryCountRef.current = 0;
-        }
-    }, [data, loading]);
 
     const lessons: ReactLesson[] = data?.reactLessons ?? [];
 
@@ -269,16 +261,7 @@ export default function ReactLessonsPage() {
         nextCategoryTopic = topicGroups[(currentTopicIdx + 1) % topicGroups.length]?.topic ?? null;
     }
 
-    // Helper function to determine if an error is a network error
-    const isNetworkError = (error: any): boolean => {
-        return !!error && (
-            error.message?.includes('Failed to fetch') ||
-            error.message?.includes('NetworkError') ||
-            error.message?.includes('ECONNREFUSED') ||
-            error.message?.includes('timeout') ||
-            error.networkError
-        );
-    };
+    
 
     // If we're loading or have retry attempts, show the enhanced loading component
     if (loading || retryCountRef.current > 0) {

@@ -2,10 +2,10 @@
 
 import { useEffect, useState, useRef } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { useQuery, gql } from '@apollo/client';
 import TechnologyUtilizationBox from '../../../components/TechnologyUtilizationBox';
 import EnhancedLoadingComponent from '../../../components/EnhancedLoadingComponent';
+import { isNetworkError } from '@/lib/isNetworkError';
 
 type ProgrammingLesson = {
     id: number;
@@ -38,9 +38,28 @@ export default function ProgrammingLessonsPage() {
     const [selectedTopic, setSelectedTopic] = useState<string | null>(null);
     const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
     const retryCountRef = useRef(0);
+    const isBuildPhase = process.env.NEXT_PHASE === 'phase-production-build';
 
-    // Check if we're in build phase - return minimal data during build
-    if (process.env.NEXT_PHASE === 'phase-production-build') {
+    const { data, loading, error, refetch } = useQuery(PROGRAMMING_LESSONS_QUERY);
+
+    // Increment retry counter for network errors when an error occurs
+    useEffect(() => {
+        if (error) {
+            if (isNetworkError(error)) {
+                retryCountRef.current += 1;
+            }
+        }
+    }, [error]);
+    
+    // Reset retry count on successful load
+    useEffect(() => {
+        if (data && !loading) {
+            retryCountRef.current = 0;
+        }
+    }, [data, loading]);
+
+    // Render minimal content during build phase but keep hooks unconditional
+    if (isBuildPhase) {
         console.log('Build phase detected, returning minimal lesson data for programming-fundamentals');
         const minimalLessons: ProgrammingLesson[] = [
             { id: 1, topic: 'basics', title: 'Variables and Data Types', description: 'Learn about variables and data types', codeExample: 'let x = 5;\nlet name = "John";\nlet isActive = true;', output: 'Variables declared with different data types' },
@@ -48,7 +67,6 @@ export default function ProgrammingLessonsPage() {
             { id: 3, topic: 'functions', title: 'Functions', description: 'Learn about functions', codeExample: 'function add(a, b) {\n  return a + b;\n}\nconsole.log(add(2, 3));', output: '5' }
         ];
 
-        // Group lessons by topic
         const topicGroups: TopicGroup[] = Object.values(
             minimalLessons.reduce((acc, lesson) => {
                 if (!acc[lesson.topic]) acc[lesson.topic] = { topic: lesson.topic, lessons: [] };
@@ -57,44 +75,26 @@ export default function ProgrammingLessonsPage() {
             }, {} as Record<string, TopicGroup>)
         );
 
-        // If a lesson is selected, find its topic and index
         let currentLesson: ProgrammingLesson | null = null;
         let currentTopicLessons: ProgrammingLesson[] = [];
         let currentLessonIndex: number | null = null;
-        let isLastCategory = false;
         let nextCategoryTopic: string | null = null;
         if (selectedTopic !== null && selectedIndex !== null) {
             currentTopicLessons = topicGroups.find(tg => tg.topic === selectedTopic)?.lessons ?? [];
             currentLesson = currentTopicLessons[selectedIndex] ?? null;
             currentLessonIndex = selectedIndex;
-            // Find the next topic (cycle to first if at end)
             const currentTopicIdx = topicGroups.findIndex(tg => tg.topic === selectedTopic);
-            isLastCategory = currentTopicIdx === topicGroups.length - 1;
             nextCategoryTopic = topicGroups[(currentTopicIdx + 1) % topicGroups.length]?.topic ?? null;
         }
 
-        // Helper function to determine if an error is a network error
-        const isNetworkError = (error: any): boolean => {
-            return !!error && (
-                error.message?.includes('Failed to fetch') ||
-                error.message?.includes('NetworkError') ||
-                error.message?.includes('ECONNREFUSED') ||
-                error.message?.includes('timeout') ||
-                error.networkError
-            );
-        };
-
         return (
-            // Updated container with glass morphism effect
             <div className="w-full p-6">
-                {/* Updated container with glass morphism effect */}
                 <div className="max-w-4xl mx-auto bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm rounded-xl shadow-lg p-6 border border-gray-200 dark:border-gray-700">
                     <Link href="/" className="inline-block mb-4 bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 font-semibold py-1 px-2 rounded shadow hover:bg-blue-200 dark:hover:bg-blue-800 transition-colors duration-150 flex items-center gap-1 text-xs">
                         <span className="text-base">←</span> Back to Home
                     </Link>
                     <h1 className="text-3xl font-bold mb-6 mt-2 text-blue-700 dark:text-blue-300">Learn Programming Fundamentals Step by Step</h1>
 
-                    {/* Topic Overview */}
                     {selectedTopic === null && (
                         <div>
                             {topicGroups.map(group => (
@@ -127,9 +127,7 @@ export default function ProgrammingLessonsPage() {
                         </div>
                     )}
 
-                    {/* Lesson Detail View */}
                     {selectedTopic !== null && currentLesson && (
-                        // Updated container with glass morphism effect
                         <div className="bg-gray-100/80 dark:bg-gray-700/80 backdrop-blur-sm p-6 rounded-xl shadow-lg space-y-4 mt-4 border border-gray-200 dark:border-gray-600">
                             <button
                                 className="w-full mb-4 bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 font-semibold py-1 rounded shadow hover:bg-blue-200 dark:hover:bg-blue-800 transition-colors duration-150 flex items-center justify-center gap-1 text-xs"
@@ -168,7 +166,6 @@ export default function ProgrammingLessonsPage() {
                             />
 
                             <div className="flex justify-between mt-6 gap-4">
-                                {/* Previous button (always left) */}
                                 {currentLessonIndex! > 0 ? (
                                     <button
                                         className="w-1/2 bg-blue-600 dark:bg-blue-700 text-white px-4 py-2 rounded shadow hover:bg-blue-700 dark:hover:bg-blue-600 transition-colors duration-150 flex items-center"
@@ -184,7 +181,6 @@ export default function ProgrammingLessonsPage() {
                                         &nbsp;
                                     </button>
                                 )}
-                                {/* Next button (always right) */}
                                 {currentLessonIndex! < currentTopicLessons.length - 1 ? (
                                     <button
                                         className="w-1/2 bg-blue-600 dark:bg-blue-700 text-white px-4 py-2 rounded shadow hover:bg-blue-700 dark:hover:bg-blue-600 transition-colors duration-150 flex items-center justify-end"
@@ -201,8 +197,7 @@ export default function ProgrammingLessonsPage() {
                                     </button>
                                 )}
                             </div>
-                            
-                            {/* Navigation to next category button */}
+
                             {currentLessonIndex === currentTopicLessons.length - 1 && nextCategoryTopic && (
                                 <div className="mt-4 text-center">
                                     <button
@@ -226,24 +221,6 @@ export default function ProgrammingLessonsPage() {
         );
     }
 
-    const { data, loading, error, refetch } = useQuery(PROGRAMMING_LESSONS_QUERY);
-
-    // Increment retry counter for network errors when an error occurs
-    useEffect(() => {
-        if (error) {
-            if (isNetworkError(error)) {
-                retryCountRef.current += 1;
-            }
-        }
-    }, [error]);
-    
-    // Reset retry count on successful load
-    useEffect(() => {
-        if (data && !loading) {
-            retryCountRef.current = 0;
-        }
-    }, [data, loading]);
-
     const lessons: ProgrammingLesson[] = data?.programmingLessons ?? [];
 
     // Group lessons by topic
@@ -259,7 +236,6 @@ export default function ProgrammingLessonsPage() {
     let currentLesson: ProgrammingLesson | null = null;
     let currentTopicLessons: ProgrammingLesson[] = [];
     let currentLessonIndex: number | null = null;
-    let isLastCategory = false;
     let nextCategoryTopic: string | null = null;
     if (selectedTopic !== null && selectedIndex !== null) {
         currentTopicLessons = topicGroups.find(tg => tg.topic === selectedTopic)?.lessons ?? [];
@@ -267,20 +243,10 @@ export default function ProgrammingLessonsPage() {
         currentLessonIndex = selectedIndex;
         // Find the next topic (cycle to first if at end)
         const currentTopicIdx = topicGroups.findIndex(tg => tg.topic === selectedTopic);
-        isLastCategory = currentTopicIdx === topicGroups.length - 1;
         nextCategoryTopic = topicGroups[(currentTopicIdx + 1) % topicGroups.length]?.topic ?? null;
     }
 
-    // Helper function to determine if an error is a network error
-    const isNetworkError = (error: any): boolean => {
-        return !!error && (
-            error.message?.includes('Failed to fetch') ||
-            error.message?.includes('NetworkError') ||
-            error.message?.includes('ECONNREFUSED') ||
-            error.message?.includes('timeout') ||
-            error.networkError
-        );
-    };
+    
 
     // If we're loading or have retry attempts, show the enhanced loading component
     if (loading || retryCountRef.current > 0) {
