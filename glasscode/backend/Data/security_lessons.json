@@ -60,7 +60,7 @@
     "topic": "Social Engineering",
     "title": "Defenses Against Social Engineering",
     "description": "Phishing, pretexting, baiting, tailgating; layered defenses: MFA, training, just-in-time warnings, anomalous behavior detection.",
-    "codeExample": "function detectPhishing(email) {\n  const suspiciousDomains = [/\\\.ru$/, /\\\.cn$/];\n  const indicators = [/urgent/i, /verify your account/i, /password expires/i];\n  const domainMatch = suspiciousDomains.some(rx => rx.test(email.from));\n  const contentMatch = indicators.some(rx => rx.test(email.body));\n  return domainMatch || contentMatch;\n}",
+    "codeExample": "function detectPhishing(email) {\n  const suspiciousDomains = [/\\\\.ru$/, /\\\\.cn$/];\n  const indicators = [/urgent/i, /verify your account/i, /password expires/i];\n  const domainMatch = suspiciousDomains.some(rx => rx.test(email.from));\n  const contentMatch = indicators.some(rx => rx.test(email.body));\n  return domainMatch || contentMatch;\n}",
     "output": "Simple heuristic detection of potentially malicious messages to complement training and controls."
   },
   {
