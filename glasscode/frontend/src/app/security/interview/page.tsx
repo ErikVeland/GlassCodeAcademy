@@ -133,14 +133,7 @@ export default function SecurityInterviewPage() {
   const retryCountRef = useRef(0);
   const [shouldRetry, setShouldRetry] = useState(true);
 
-  const { data, loading: gqlLoading, error: gqlError, refetch } = useQuery(SECURITY_INTERVIEW_QUESTIONS_QUERY, {
-    onError: (error) => {
-      // Increment retry counter for network errors
-      if (isNetworkError(error)) {
-        retryCountRef.current += 1;
-      }
-    }
-  });
+  const { data, loading: gqlLoading, error: gqlError, refetch } = useQuery(SECURITY_INTERVIEW_QUESTIONS_QUERY);
   
   // Reset retry count on successful load
   useEffect(() => {
@@ -148,6 +141,13 @@ export default function SecurityInterviewPage() {
       retryCountRef.current = 0;
     }
   }, [data, gqlLoading]);
+
+  // Increment retry counter for network errors via derived state
+  useEffect(() => {
+    if (gqlError && isNetworkError(gqlError)) {
+      retryCountRef.current += 1;
+    }
+  }, [gqlError]);
 
   const gqlQuestions: SecurityInterviewQuestion[] = data?.securityInterviewQuestions ?? [];
 

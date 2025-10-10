@@ -896,11 +896,62 @@ namespace backend.Services
                 if (System.IO.File.Exists(lessonsPath))
                 {
                     var lessonsJson = System.IO.File.ReadAllText(lessonsPath);
-                    PerformanceLessons = System.Text.Json.JsonSerializer.Deserialize<List<PerformanceLesson>>(lessonsJson, new JsonSerializerOptions
+                    // Map content-style JSON to PerformanceLesson model shape
+                    var mappedLessons = new List<PerformanceLesson>();
+                    try
                     {
-                        PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
-                        PropertyNameCaseInsensitive = true
-                    }) ?? new List<PerformanceLesson>();
+                        using var doc = JsonDocument.Parse(lessonsJson);
+                        JsonElement root = doc.RootElement;
+                        JsonElement lessonsArray = root;
+                        if (root.ValueKind == JsonValueKind.Object)
+                        {
+                            // Support { "lessons": [...] } format if present
+                            if (root.TryGetProperty("lessons", out var larr) && larr.ValueKind == JsonValueKind.Array)
+                            {
+                                lessonsArray = larr;
+                            }
+                            else
+                            {
+                                lessonsArray = default;
+                            }
+                        }
+
+                        if (lessonsArray.ValueKind == JsonValueKind.Array)
+                        {
+                            foreach (var el in lessonsArray.EnumerateArray())
+                            {
+                                var lesson = new PerformanceLesson
+                                {
+                                    Id = GetStringFlexible(el, "id") ?? string.Empty,
+                                    Topic = GetString(el, "moduleSlug") ?? GetString(el, "topic"),
+                                    Title = GetString(el, "title") ?? string.Empty,
+                                    Description = GetString(el, "intro") ?? GetString(el, "description") ?? string.Empty,
+                                    CodeExample = GetNestedString(el, "code", "example") ?? GetString(el, "codeExample") ?? string.Empty,
+                                    Output = GetNestedString(el, "code", "explanation") ?? GetString(el, "output") ?? string.Empty
+                                };
+                                mappedLessons.Add(lesson);
+                            }
+                        }
+                        else
+                        {
+                            // Fallback to direct deserialization if not an array
+                            mappedLessons = System.Text.Json.JsonSerializer.Deserialize<List<PerformanceLesson>>(lessonsJson, new JsonSerializerOptions
+                            {
+                                PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+                                PropertyNameCaseInsensitive = true
+                            }) ?? new List<PerformanceLesson>();
+                        }
+                    }
+                    catch (Exception)
+                    {
+                        // Fallback to direct deserialization on any mapping/parsing error
+                        mappedLessons = System.Text.Json.JsonSerializer.Deserialize<List<PerformanceLesson>>(lessonsJson, new JsonSerializerOptions
+                        {
+                            PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+                            PropertyNameCaseInsensitive = true
+                        }) ?? new List<PerformanceLesson>();
+                    }
+                    PerformanceLessons = mappedLessons;
                 }
                 else
                 {
@@ -912,11 +963,59 @@ namespace backend.Services
                 if (System.IO.File.Exists(questionsPath))
                 {
                     var questionsJson = System.IO.File.ReadAllText(questionsPath);
-                    PerformanceInterviewQuestions = System.Text.Json.JsonSerializer.Deserialize<List<PerformanceInterviewQuestion>>(questionsJson, new JsonSerializerOptions
+                    var mappedQuestions = new List<PerformanceInterviewQuestion>();
+                    try
                     {
-                        PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
-                        PropertyNameCaseInsensitive = true
-                    }) ?? new List<PerformanceInterviewQuestion>();
+                        using var qdoc = JsonDocument.Parse(questionsJson);
+                        JsonElement qroot = qdoc.RootElement;
+                        JsonElement qarray = qroot;
+                        if (qroot.ValueKind == JsonValueKind.Object)
+                        {
+                            // Handle { "questions": [...] }
+                            if (qroot.TryGetProperty("questions", out var qarr) && qarr.ValueKind == JsonValueKind.Array)
+                            {
+                                qarray = qarr;
+                            }
+                            else
+                            {
+                                qarray = default;
+                            }
+                        }
+                        if (qarray.ValueKind == JsonValueKind.Array)
+                        {
+                            foreach (var q in qarray.EnumerateArray())
+                            {
+                                var item = new PerformanceInterviewQuestion
+                                {
+                                    Id = GetStringFlexible(q, "id") ?? string.Empty,
+                                    Topic = GetString(q, "topic"),
+                                    Type = GetString(q, "type") ?? GetString(q, "questionType") ?? string.Empty,
+                                    Question = GetString(q, "question") ?? string.Empty,
+                                    Choices = GetStringArray(q, "choices").ToArray(),
+                                    CorrectAnswer = GetIntFlexible(q, "correctAnswer") ?? GetIntFlexible(q, "correctIndex"),
+                                    Explanation = GetString(q, "explanation")
+                                };
+                                mappedQuestions.Add(item);
+                            }
+                        }
+                        else
+                        {
+                            mappedQuestions = System.Text.Json.JsonSerializer.Deserialize<List<PerformanceInterviewQuestion>>(questionsJson, new JsonSerializerOptions
+                            {
+                                PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+                                PropertyNameCaseInsensitive = true
+                            }) ?? new List<PerformanceInterviewQuestion>();
+                        }
+                    }
+                    catch (Exception)
+                    {
+                        mappedQuestions = System.Text.Json.JsonSerializer.Deserialize<List<PerformanceInterviewQuestion>>(questionsJson, new JsonSerializerOptions
+                        {
+                            PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+                            PropertyNameCaseInsensitive = true
+                        }) ?? new List<PerformanceInterviewQuestion>();
+                    }
+                    PerformanceInterviewQuestions = mappedQuestions;
                 }
                 else
                 {
@@ -947,11 +1046,57 @@ namespace backend.Services
                 if (System.IO.File.Exists(lessonsPath))
                 {
                     var lessonsJson = System.IO.File.ReadAllText(lessonsPath);
-                    SecurityLessons = System.Text.Json.JsonSerializer.Deserialize<List<SecurityLesson>>(lessonsJson, new JsonSerializerOptions
+                    var mappedLessons = new List<SecurityLesson>();
+                    try
                     {
-                        PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
-                        PropertyNameCaseInsensitive = true
-                    }) ?? new List<SecurityLesson>();
+                        using var doc = JsonDocument.Parse(lessonsJson);
+                        JsonElement root = doc.RootElement;
+                        JsonElement lessonsArray = root;
+                        if (root.ValueKind == JsonValueKind.Object)
+                        {
+                            if (root.TryGetProperty("lessons", out var larr) && larr.ValueKind == JsonValueKind.Array)
+                            {
+                                lessonsArray = larr;
+                            }
+                            else
+                            {
+                                lessonsArray = default;
+                            }
+                        }
+                        if (lessonsArray.ValueKind == JsonValueKind.Array)
+                        {
+                            foreach (var el in lessonsArray.EnumerateArray())
+                            {
+                                var lesson = new SecurityLesson
+                                {
+                                    Id = GetStringFlexible(el, "id") ?? string.Empty,
+                                    Topic = GetString(el, "topic"),
+                                    Title = GetString(el, "title") ?? string.Empty,
+                                    Description = GetString(el, "intro") ?? GetString(el, "description") ?? string.Empty,
+                                    CodeExample = GetNestedString(el, "code", "example") ?? GetString(el, "codeExample") ?? string.Empty,
+                                    Output = GetNestedString(el, "code", "explanation") ?? GetString(el, "output") ?? string.Empty
+                                };
+                                mappedLessons.Add(lesson);
+                            }
+                        }
+                        else
+                        {
+                            mappedLessons = System.Text.Json.JsonSerializer.Deserialize<List<SecurityLesson>>(lessonsJson, new JsonSerializerOptions
+                            {
+                                PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+                                PropertyNameCaseInsensitive = true
+                            }) ?? new List<SecurityLesson>();
+                        }
+                    }
+                    catch (Exception)
+                    {
+                        mappedLessons = System.Text.Json.JsonSerializer.Deserialize<List<SecurityLesson>>(lessonsJson, new JsonSerializerOptions
+                        {
+                            PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+                            PropertyNameCaseInsensitive = true
+                        }) ?? new List<SecurityLesson>();
+                    }
+                    SecurityLessons = mappedLessons;
                 }
                 else
                 {
@@ -963,11 +1108,58 @@ namespace backend.Services
                 if (System.IO.File.Exists(questionsPath))
                 {
                     var questionsJson = System.IO.File.ReadAllText(questionsPath);
-                    SecurityInterviewQuestions = System.Text.Json.JsonSerializer.Deserialize<List<SecurityInterviewQuestion>>(questionsJson, new JsonSerializerOptions
+                    var mappedQuestions = new List<SecurityInterviewQuestion>();
+                    try
                     {
-                        PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
-                        PropertyNameCaseInsensitive = true
-                    }) ?? new List<SecurityInterviewQuestion>();
+                        using var qdoc = JsonDocument.Parse(questionsJson);
+                        JsonElement qroot = qdoc.RootElement;
+                        JsonElement qarray = qroot;
+                        if (qroot.ValueKind == JsonValueKind.Object)
+                        {
+                            if (qroot.TryGetProperty("questions", out var qarr) && qarr.ValueKind == JsonValueKind.Array)
+                            {
+                                qarray = qarr;
+                            }
+                            else
+                            {
+                                qarray = default;
+                            }
+                        }
+                        if (qarray.ValueKind == JsonValueKind.Array)
+                        {
+                            foreach (var q in qarray.EnumerateArray())
+                            {
+                                var item = new SecurityInterviewQuestion
+                                {
+                                    Id = GetStringFlexible(q, "id") ?? string.Empty,
+                                    Topic = GetString(q, "topic"),
+                                    Type = GetString(q, "type") ?? GetString(q, "questionType") ?? string.Empty,
+                                    Question = GetString(q, "question") ?? string.Empty,
+                                    Choices = GetStringArray(q, "choices").ToArray(),
+                                    CorrectAnswer = GetIntFlexible(q, "correctAnswer") ?? GetIntFlexible(q, "correctIndex"),
+                                    Explanation = GetString(q, "explanation")
+                                };
+                                mappedQuestions.Add(item);
+                            }
+                        }
+                        else
+                        {
+                            mappedQuestions = System.Text.Json.JsonSerializer.Deserialize<List<SecurityInterviewQuestion>>(questionsJson, new JsonSerializerOptions
+                            {
+                                PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+                                PropertyNameCaseInsensitive = true
+                            }) ?? new List<SecurityInterviewQuestion>();
+                        }
+                    }
+                    catch (Exception)
+                    {
+                        mappedQuestions = System.Text.Json.JsonSerializer.Deserialize<List<SecurityInterviewQuestion>>(questionsJson, new JsonSerializerOptions
+                        {
+                            PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+                            PropertyNameCaseInsensitive = true
+                        }) ?? new List<SecurityInterviewQuestion>();
+                    }
+                    SecurityInterviewQuestions = mappedQuestions;
                 }
                 else
                 {
@@ -987,6 +1179,82 @@ namespace backend.Services
                 SecurityLessons = new List<SecurityLesson>();
                 SecurityInterviewQuestions = new List<SecurityInterviewQuestion>();
             }
+        }
+
+        private static string? GetString(JsonElement el, string prop)
+        {
+            if (el.TryGetProperty(prop, out var v))
+            {
+                if (v.ValueKind == JsonValueKind.String) return v.GetString();
+                return v.ToString();
+            }
+            return null;
+        }
+
+        private static string? GetStringFlexible(JsonElement el, string prop)
+        {
+            if (!el.TryGetProperty(prop, out var v)) return null;
+            try
+            {
+                if (v.ValueKind == JsonValueKind.String) return v.GetString();
+                if (v.ValueKind == JsonValueKind.Number)
+                {
+                    if (v.TryGetInt32(out var i)) return i.ToString();
+                    if (v.TryGetInt64(out var l)) return l.ToString();
+                    return v.ToString();
+                }
+                return v.ToString();
+            }
+            catch
+            {
+                return v.ToString();
+            }
+        }
+
+        private static int? GetIntFlexible(JsonElement el, string prop)
+        {
+            if (!el.TryGetProperty(prop, out var v)) return null;
+            try
+            {
+                if (v.ValueKind == JsonValueKind.Number)
+                {
+                    if (v.TryGetInt32(out var i)) return i;
+                    if (v.TryGetInt64(out var l)) return (int)l;
+                }
+                else if (v.ValueKind == JsonValueKind.String)
+                {
+                    if (int.TryParse(v.GetString(), out var i)) return i;
+                }
+                return null;
+            }
+            catch { return null; }
+        }
+
+        private static string? GetNestedString(JsonElement el, string parent, string child)
+        {
+            if (el.TryGetProperty(parent, out var p) && p.ValueKind == JsonValueKind.Object)
+            {
+                if (p.TryGetProperty(child, out var c))
+                {
+                    if (c.ValueKind == JsonValueKind.String) return c.GetString();
+                    return c.ToString();
+                }
+            }
+            return null;
+        }
+
+        private static List<string> GetStringArray(JsonElement el, string prop)
+        {
+            var result = new List<string>();
+            if (el.TryGetProperty(prop, out var arr) && arr.ValueKind == JsonValueKind.Array)
+            {
+                foreach (var item in arr.EnumerateArray())
+                {
+                    if (item.ValueKind == JsonValueKind.String) result.Add(item.GetString()!);
+                    else result.Add(item.ToString());
+                }
+            }
+            return result;
         }
 
         // Load Version Control data from JSON files

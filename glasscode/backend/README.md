@@ -83,6 +83,27 @@ Use the provided bootstrap script to automatically set up your GlassCode Academy
   },
   "AllowedHosts": "*"
 }
+
+## Ports & URLs
+
+- Default port: `8080` configured via `appsettings.json` (`Kestrel.Endpoints.Http.Url: http://*:8080`).
+- Health check: `http://localhost:8080/api/health`.
+- GraphQL endpoint: `http://localhost:8080/graphql`.
+- Back-compat GraphQL mapping: `http://localhost:8080/api`.
+- Override port using environment variable:
+  - Run directly: `ASPNETCORE_URLS=http://localhost:5022 dotnet run`.
+  - Run published DLL: `ASPNETCORE_URLS=http://localhost:5022 dotnet ./publish/backend.dll`.
+- If you see connection failures on `5022`, ensure the backend is bound to `8080` (default) or set `ASPNETCORE_URLS` to the desired port.
+
+## Local Development
+
+- Start with default config (8080):
+  - `dotnet run`
+  - or publish and run: `dotnet publish -c Debug -o publish && ASPNETCORE_URLS=http://localhost:8080 dotnet ./publish/backend.dll`
+- Quick endpoints to verify:
+  - Health: `curl -sS http://localhost:8080/api/health`
+  - GraphQL (HTTP): `curl -sS -X POST http://localhost:8080/graphql -H 'Content-Type: application/json' -d '{"query":"{ __schema { queryType { name } } }"}'`
+  - GraphQL UI: open `http://localhost:8080/graphql-ui`
 ```
 
 ## Testing the Backend
