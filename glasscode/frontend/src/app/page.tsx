@@ -25,33 +25,33 @@ interface RegistryData {
 }
 
 // Enhanced ModuleCard component with accessibility, progress tracking, and achievement indicators
-const ModuleCard: React.FC<{ 
-  module: Module; 
+const ModuleCard: React.FC<{
+  module: Module;
   tierColor: string;
   tierKey: string;
 }> = ({ module, tierColor, tierKey }) => {
   const { progress, updateProgress, achievements } = useProgressTracking();
   const searchParams = useSearchParams();
   const isUnlocked = searchParams.get('unlock') === 'true';
-  
+
   const moduleProgress = progress[module.slug];
-  const completionPercentage = moduleProgress ? 
+  const completionPercentage = moduleProgress ?
     (moduleProgress.lessonsCompleted / moduleProgress.totalLessons) * 100 : 0;
-  
+
   // Check for achievements related to this module
   const moduleAchievements = achievements.filter(a => a.moduleId === module.slug || a.tier === tierKey);
   const hasAchievements = moduleAchievements.length > 0;
-  
+
   // Determine module status
   const moduleStatus = moduleProgress?.completionStatus || 'not-started';
-  
+
   // Check prerequisites
-  const prerequisitesMet = module.prerequisites.every(prereqId => 
+  const prerequisitesMet = module.prerequisites.every(prereqId =>
     progress[prereqId]?.completionStatus === 'completed'
   );
-  
+
   const isLocked = !isUnlocked && module.prerequisites.length > 0 && !prerequisitesMet;
-  
+
   const handleModuleClick = () => {
     if (!isLocked) {
       updateProgress(module.slug, {
@@ -60,7 +60,7 @@ const ModuleCard: React.FC<{
       });
     }
   };
-  
+
   // Define tier-specific gradient classes
   const tierGradientClass = {
     foundational: 'from-blue-500 to-cyan-500',
@@ -68,11 +68,11 @@ const ModuleCard: React.FC<{
     specialized: 'from-purple-500 to-violet-500',
     quality: 'from-orange-500 to-red-500'
   }[tierKey] || 'from-blue-500 to-cyan-500';
-  
+
   return (
     <div className={`module-card-container ${isLocked ? 'locked' : ''}`}>
-      <Link 
-        href={isLocked ? '#' : module.routes.overview} 
+      <Link
+        href={isLocked ? '#' : module.routes.overview}
         className={`block bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 p-5 hover:shadow-xl transition-all duration-300 ${
           isLocked ? 'opacity-60' : 'hover:-translate-y-1'
         }`}
@@ -86,7 +86,7 @@ const ModuleCard: React.FC<{
           <div className="absolute -top-2 -right-2 z-10">
             <div className="flex flex-wrap gap-1">
               {moduleAchievements.slice(0, 3).map((achievement, index) => (
-                <div 
+                <div
                   key={achievement.id}
                   className="w-6 h-6 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-full flex items-center justify-center border-2 border-white shadow-lg"
                   title={achievement.description}
@@ -104,7 +104,7 @@ const ModuleCard: React.FC<{
             </div>
           </div>
         )}
-        
+
         {/* Lock overlay for prerequisites */}
         {isLocked && (
           <div className="absolute inset-0 bg-gray-900/50 backdrop-blur-sm rounded-xl flex items-center justify-center z-5">
@@ -117,7 +117,7 @@ const ModuleCard: React.FC<{
             </div>
           </div>
         )}
-        
+
         <div className="module-header flex items-start gap-4 mb-4">
           <div className={`w-10 h-10 rounded-lg bg-gradient-to-br ${tierGradientClass} flex items-center justify-center text-white font-bold text-lg`}>
             {module.icon}
@@ -146,11 +146,11 @@ const ModuleCard: React.FC<{
             </div>
           </div>
         </div>
-        
+
         <p className="text-gray-700 dark:text-gray-300 mb-4 text-left text-sm" id={`module-${module.slug}-description`}>
           {module.description}
         </p>
-        
+
         {/* Technologies used - Pill-shaped tags */}
         <div className="flex flex-wrap gap-1 mb-4">
           {module.technologies.slice(0, 3).map(tech => (
@@ -162,16 +162,16 @@ const ModuleCard: React.FC<{
             <span className="px-2 py-1 bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200 rounded-full text-xs">+{module.technologies.length - 3} more</span>
           )}
         </div>
-        
+
         <div className="module-meta mt-auto">
           <div className="flex items-center justify-between text-sm text-gray-600 dark:text-gray-400 mb-3">
             <span>📅 {module.estimatedHours}h</span>
             <span>{module.track}</span>
           </div>
-          
+
           {moduleProgress && (
             <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
-              <div 
+              <div
                 className={`h-2 rounded-full bg-gradient-to-r ${tierGradientClass}`}
                 style={{ width: `${completionPercentage}%` }}
                 role="progressbar"
@@ -183,7 +183,7 @@ const ModuleCard: React.FC<{
             </div>
           )}
         </div>
-        
+
         {/* Prerequisites indicator */}
         {module.prerequisites.length > 0 && (
           <div className="mt-3 text-xs text-gray-500 dark:text-gray-500 text-left">
@@ -196,7 +196,7 @@ const ModuleCard: React.FC<{
 };
 
 // Enhanced TierSection component with better accessibility and visual hierarchy
-const TierSection: React.FC<{ 
+const TierSection: React.FC<{
   tierKey: string;
   tier: Tier;
   modules: Module[];
@@ -208,9 +208,9 @@ const TierSection: React.FC<{
     const moduleProgress = progress[module.slug];
     return moduleProgress?.completionStatus === 'completed';
   }).length;
-  
+
   if (!isVisible) return null;
-  
+
   // Define tier-specific gradient classes
   const tierGradientClass = {
     foundational: 'from-blue-500 to-cyan-500',
@@ -218,9 +218,9 @@ const TierSection: React.FC<{
     specialized: 'from-purple-500 to-violet-500',
     quality: 'from-orange-500 to-red-500'
   }[tierKey] || 'from-blue-500 to-cyan-500';
-  
+
   return (
-    <section 
+    <section
       className="w-full mb-8" // Consistent styling with other sections
       data-tier={tierKey}
       aria-labelledby={`tier-${tierKey}-heading`}
@@ -242,14 +242,14 @@ const TierSection: React.FC<{
                   <p className="text-white/90 mt-1 text-left text-sm">{tier.description}</p>
                 </div>
               </div>
-              
+
               <div className="bg-white/10 rounded-lg p-4 border border-white/20 backdrop-blur-sm">
                 <p className="font-medium text-white text-left text-sm">
                   <strong>Focus Area:</strong> {tier.focusArea}
                 </p>
               </div>
             </div>
-            
+
             {/* Unified progress widget like dashboard */}
             <div className="bg-white/20 text-white p-4 rounded-lg min-w-[140px] text-center backdrop-blur-sm">
               <div className="text-2xl font-bold">{tierProgress}%</div>
@@ -259,7 +259,7 @@ const TierSection: React.FC<{
               </div>
             </div>
           </div>
-          
+
           {/* Learning objectives */}
           <div className="bg-white/10 rounded-xl p-5 border border-white/20 mt-4 backdrop-blur-sm">
             <h3 className="text-lg font-semibold text-white mb-3 text-left">Learning Objectives</h3>
@@ -273,7 +273,7 @@ const TierSection: React.FC<{
             </ul>
           </div>
         </div>
-        
+
         {/* Modules grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-6" role="list" aria-label={`${tier.title} modules`}>
           {modules.map((module: Module) => (
@@ -286,7 +286,7 @@ const TierSection: React.FC<{
             </div>
           ))}
         </div>
-        
+
         {/* Tier completion indicator */}
         {tierProgress === 100 && (
           <div className="mt-8 text-center bg-white/10 p-6 rounded-xl border border-white/20 backdrop-blur-sm">
@@ -324,10 +324,10 @@ const HomePage: React.FC = () => {
   const [selectedDifficulty, setSelectedDifficulty] = useState<string | null>(null);
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [selectedStatus, setSelectedStatus] = useState<string | null>(null);
-  
-  const { 
+
+  const {
     progress,
-    calculateOverallProgress, 
+    calculateOverallProgress,
     getCompletedModulesCount,
     getTierProgress,
     achievements,
@@ -343,10 +343,10 @@ const HomePage: React.FC = () => {
           contentRegistry.getTiers(),
           contentRegistry.getModules()
         ]);
-        
+
         // Organize modules by tier
         const tierData: Record<string, TierData> = {};
-        
+
         Object.entries(tiers).forEach(([tierKey, tier]) => {
           const tierModules = modules.filter(module => module.tier === tierKey)
                                    .sort((a, b) => a.order - b.order);
@@ -355,7 +355,7 @@ const HomePage: React.FC = () => {
             modules: tierModules
           };
         });
-        
+
         setRegistryData({
           tiers: tierData,
           allModules: modules
@@ -367,7 +367,7 @@ const HomePage: React.FC = () => {
         setLoading(false);
       }
     }
-    
+
     loadRegistryData();
   }, []);
 
@@ -398,7 +398,7 @@ const HomePage: React.FC = () => {
             <p className="text-gray-600 dark:text-gray-300 mb-6">
               {error || 'Unable to load learning modules'}
             </p>
-            <button 
+            <button
               onClick={() => window.location.reload()}
               className="glass-button"
             >
@@ -510,10 +510,10 @@ const HomePage: React.FC = () => {
                     Master Modern Web Development
                   </h1>
                   <p className="text-lg md:text-xl text-gray-600 dark:text-gray-300 mb-6 text-left">
-                    Comprehensive learning paths across 18 technology modules with interactive lessons, 
+                    Comprehensive learning paths across 18 technology modules with interactive lessons,
                     real-world projects, and interview preparation.
                   </p>
-                  
+
                   <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
                     <div className="bg-gradient-to-r from-blue-500 to-cyan-500 text-white p-4 rounded-lg text-center">
                       <div className="text-sm opacity-90">Total Modules</div>
@@ -532,7 +532,7 @@ const HomePage: React.FC = () => {
                       <div className="text-2xl font-bold">{streak.currentStreak} days</div>
                     </div>
                   </div>
-                  
+
                   {/* Recent achievements showcase */}
                   {recentAchievements.length > 0 && (
                     <div className="mt-6">
@@ -553,7 +553,7 @@ const HomePage: React.FC = () => {
                     </div>
                   )}
                 </div>
-                
+
                 <div className="hero-visual flex justify-center">
                   <div className="learning-path-visualization w-full max-w-md">
                     <svg viewBox="0 0 400 300" className="path-svg w-full h-auto" role="img" aria-label="Learning path visualization">
@@ -573,12 +573,12 @@ const HomePage: React.FC = () => {
                         className="learning-path"
                       />
                       <circle cx="50" cy="250" r="12" fill="#3B82F6" className="tier-node" aria-label="Foundational tier" />
-                      <circle cx="150" cy="175" r="12" fill="#10B981" className="tier-node" aria-label="Core technologies tier" />
-                      <circle cx="250" cy="125" r="12" fill="#8B5CF6" className="tier-node" aria-label="Specialized skills tier" />
+                      <circle cx="150" cy="190" r="12" fill="#10B981" className="tier-node" aria-label="Core technologies tier" />
+                      <circle cx="250" cy="110" r="12" fill="#8B5CF6" className="tier-node" aria-label="Specialized skills tier" />
                       <circle cx="350" cy="50" r="12" fill="#F59E0B" className="tier-node" aria-label="Quality and testing tier" />
                       <text x="50" y="275" textAnchor="middle" fill="white" fontSize="12">Foundational</text>
-                      <text x="150" y="200" textAnchor="middle" fill="white" fontSize="12">Core</text>
-                      <text x="250" y="150" textAnchor="middle" fill="white" fontSize="12">Specialized</text>
+                      <text x="150" y="215" textAnchor="middle" fill="white" fontSize="12">Core</text>
+                      <text x="250" y="135" textAnchor="middle" fill="white" fontSize="12">Specialized</text>
                       <text x="350" y="75" textAnchor="middle" fill="white" fontSize="12">Quality</text>
                     </svg>
                   </div>
@@ -595,7 +595,7 @@ const HomePage: React.FC = () => {
         <section className="w-full mb-8">
           <div className="bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm rounded-xl shadow-lg border border-gray-200 dark:border-gray-700">
             <div className="p-6">
-              <SearchFilterSystem 
+              <SearchFilterSystem
                 searchQuery={searchQuery}
                 onSearchChange={setSearchQuery}
                 selectedTier={selectedTier}
@@ -615,11 +615,11 @@ const HomePage: React.FC = () => {
         </section>
 
         {/* Learning Tiers - Proper 4-tier layout with consistent styling */}
-        <div 
-          id="learning-tiers" 
-          className="w-full" 
+        <div
+          id="learning-tiers"
+          className="w-full"
           tabIndex={-1}
-          role="region" 
+          role="region"
           aria-label="Learning modules organized by tier"
         >
           {hasActiveFilters && Object.keys(filteredTiers).length === 0 && (
@@ -630,7 +630,7 @@ const HomePage: React.FC = () => {
                 <p className="text-gray-600 dark:text-gray-300 mb-6">
                   Try adjusting your search terms or filters to find what you're looking for.
                 </p>
-                <button 
+                <button
                   onClick={clearFilters}
                   className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
                 >
@@ -639,16 +639,16 @@ const HomePage: React.FC = () => {
               </div>
             </div>
           )}
-          
+
           {/* Render tiers in the correct order */}
           {tierOrder.map(tierKey => {
             const tierData = filteredTiers[tierKey];
             if (!tierData) return null;
-            
+
             return (
-              <TierSection 
-                key={tierKey} 
-                tier={tierData.tier} 
+              <TierSection
+                key={tierKey}
+                tier={tierData.tier}
                 modules={tierData.modules}
                 tierKey={tierKey}
                 isVisible={!hasActiveFilters || tierData.modules.length > 0}
@@ -668,20 +668,20 @@ const HomePage: React.FC = () => {
                   <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-1">GraphQL Playground</h3>
                   <p className="text-sm text-gray-600 dark:text-gray-400">Experiment with queries</p>
                 </Link>
-                
+
                 <Link href="/animated-background-demo" className="bg-gray-50 dark:bg-gray-700 p-6 rounded-lg border border-gray-200 dark:border-gray-600 text-center hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors" role="listitem">
                   <span className="text-4xl block mb-2" role="img" aria-label="Design icon">🎨</span>
                   <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-1">Design Showcase</h3>
                   <p className="text-sm text-gray-600 dark:text-gray-400">UI components</p>
                 </Link>
-                
+
                 <Link href="/interview-prep" className="bg-gray-50 dark:bg-gray-700 p-6 rounded-lg border border-gray-200 dark:border-gray-600 text-center hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors" role="listitem">
                   <span className="text-4xl block mb-2" role="img" aria-label="Interview icon">💼</span>
                   <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-1">Interview Prep</h3>
                   <p className="text-sm text-gray-600 dark:text-gray-400">Practice questions</p>
                 </Link>
-                
-                <button 
+
+                <button
                   onClick={() => {
                     const progressData = { progress, achievements, streak };
                     const dataStr = JSON.stringify(progressData, null, 2);

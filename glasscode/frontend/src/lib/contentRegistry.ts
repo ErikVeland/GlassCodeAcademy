@@ -754,4 +754,4 @@ export function getNextLessonGroup(moduleSlug: string, lessons: Lesson[], lesson
 }
 
 // Export types
-export type { Module, Tier, ContentRegistry, Lesson, Quiz };
+export type { Module, Tier, ContentRegistry, Lesson, ProgrammingQuestion, Quiz };

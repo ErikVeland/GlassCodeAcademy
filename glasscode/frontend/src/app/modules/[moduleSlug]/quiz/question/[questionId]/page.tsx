@@ -207,7 +207,7 @@ export default function QuizQuestionPage({ params }: { params: Promise<{ moduleS
 
         {/* Answer Choices */}
         <div className="space-y-3 mb-8">
-          {questionData.choices.map((choice: string, index: number) => {
+          {(questionData.choices ?? []).map((choice: string, index: number) => {
             const isSelected = selectedAnswer === index;
             const isCorrectAnswer = index === questionData.correctAnswer;
             

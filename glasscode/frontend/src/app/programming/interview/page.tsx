@@ -2,6 +2,7 @@
 
 import { useEffect, useState, useRef } from "react";
 import Link from "next/link";
+import { useNextUnlockedLesson } from "@/hooks/useNextUnlockedLesson";
 import { useRouter } from "next/navigation";
 import { useQuery, gql, useMutation } from '@apollo/client';
 import TechnologyUtilizationBox from '../../../components/TechnologyUtilizationBox';
@@ -163,6 +164,7 @@ function CircularProgress({ percent }: { percent: number }) {
 export default function ProgrammingInterviewPage() {
   // Compute build phase flag without affecting hook execution order
   const isBuildPhase = typeof process !== 'undefined' && process.env.NEXT_PHASE === 'phase-production-build';
+  const { nextLessonHref } = useNextUnlockedLesson();
 
   const [shuffledQuestions, setShuffledQuestions] = useState<ProgrammingInterviewQuestion[]>([]);
   const [current, setCurrent] = useState(0);
@@ -405,7 +407,7 @@ export default function ProgrammingInterviewPage() {
               )}
               {passed && (
                 <Link
-                  href="/modules/programming-fundamentals/lessons/1"
+                  href={nextLessonHref || "/modules/programming-fundamentals/lessons/1"}
                   className="btn btn-success font-semibold"
                   aria-label="Start Next Lesson"
                 >

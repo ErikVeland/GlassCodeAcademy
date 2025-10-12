@@ -168,14 +168,14 @@ const interviewTiers: Record<string, InterviewTier> = {
 };
 
 // Updated Interview Module Card Component with homepage styling
-const InterviewModuleCard: React.FC<{ 
-  module: InterviewModule; 
+const InterviewModuleCard: React.FC<{
+  module: InterviewModule;
   tierColor: string;
   tierKey: string;
 }> = ({ module, tierColor, tierKey }) => {
   const prerequisitesMet = module.prerequisites.length === 0;
   const isLocked = module.prerequisites.length > 0 && !prerequisitesMet;
-  
+
   // Define tier-specific gradient classes to match homepage
   const tierGradientClass = {
     foundational: 'from-blue-500 to-cyan-500',
@@ -183,11 +183,11 @@ const InterviewModuleCard: React.FC<{
     specialized: 'from-purple-500 to-violet-500',
     expert: 'from-orange-500 to-red-500'
   }[tierKey] || 'from-blue-500 to-cyan-500';
-  
+
   return (
     <div className={`module-card-container ${isLocked ? 'locked' : ''}`}>
-      <Link 
-        href={isLocked ? '#' : module.href} 
+      <Link
+        href={isLocked ? '#' : module.href}
         className={`block bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 p-5 hover:shadow-xl transition-all duration-300 ${
           isLocked ? 'opacity-60' : 'hover:-translate-y-1'
         }`}
@@ -202,7 +202,7 @@ const InterviewModuleCard: React.FC<{
             </div>
           </div>
         )}
-        
+
         <div className="module-header flex items-start gap-4 mb-4">
           <div className={`w-10 h-10 rounded-lg bg-gradient-to-br ${tierGradientClass} flex items-center justify-center text-white font-bold text-lg`}>
             {module.icon}
@@ -225,11 +225,11 @@ const InterviewModuleCard: React.FC<{
             </div>
           </div>
         </div>
-        
+
         <p className="text-gray-700 dark:text-gray-300 mb-4 text-left text-sm">
           {module.description}
         </p>
-        
+
         {/* Technologies used - Pill-shaped tags */}
         <div className="flex flex-wrap gap-1 mb-4">
           {module.technologies.slice(0, 3).map(tech => (
@@ -241,7 +241,7 @@ const InterviewModuleCard: React.FC<{
             <span className="px-2 py-1 bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200 rounded-full text-xs">+{module.technologies.length - 3} more</span>
           )}
         </div>
-        
+
         <div className="module-meta mt-auto">
           <div className="flex items-center justify-between text-sm text-gray-600 dark:text-gray-400">
             <span>⏱️ {module.estimatedTime}</span>
@@ -254,15 +254,15 @@ const InterviewModuleCard: React.FC<{
 };
 
 // Updated Tier Section Component with homepage styling
-const InterviewTierSection: React.FC<{ 
-  tier: InterviewTier; 
+const InterviewTierSection: React.FC<{
+  tier: InterviewTier;
   tierKey: string;
   isVisible: boolean;
 }> = ({ tier, tierKey, isVisible }) => {
   if (!isVisible) return null;
-  
+
   const totalQuestions = tier.modules.reduce((sum, module) => sum + module.questionCount, 0);
-  
+
   // Define tier-specific gradient classes to match homepage
   const tierGradientClass = {
     foundational: 'from-blue-500 to-cyan-500',
@@ -270,7 +270,7 @@ const InterviewTierSection: React.FC<{
     specialized: 'from-purple-500 to-violet-500',
     expert: 'from-orange-500 to-red-500'
   }[tierKey] || 'from-blue-500 to-cyan-500';
-  
+
   return (
     <section className="w-full mb-8" data-tier={tierKey}>
       <div className={`rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 bg-gradient-to-br ${tierGradientClass} p-6`}>
@@ -288,14 +288,14 @@ const InterviewTierSection: React.FC<{
                   <p className="text-white/90 mt-1 text-left text-sm">{tier.description}</p>
                 </div>
               </div>
-              
+
               <div className="bg-white/10 rounded-lg p-4 border border-white/20 backdrop-blur-sm">
                 <p className="font-medium text-white text-left text-sm">
                   <strong>Focus Area:</strong> {tier.focusArea}
                 </p>
               </div>
             </div>
-            
+
             {/* Unified progress widget like dashboard */}
             <div className="bg-white/20 text-white p-4 rounded-lg min-w-[140px] text-center backdrop-blur-sm">
               <div className="text-2xl font-bold">{tier.modules.length}</div>
@@ -305,7 +305,7 @@ const InterviewTierSection: React.FC<{
               </div>
             </div>
           </div>
-          
+
           {/* Learning objectives */}
           <div className="bg-white/10 rounded-xl p-5 border border-white/20 mt-4 backdrop-blur-sm">
             <h3 className="text-lg font-semibold text-white mb-3 text-left">Learning Objectives</h3>
@@ -319,7 +319,7 @@ const InterviewTierSection: React.FC<{
             </ul>
           </div>
         </div>
-        
+
         {/* Modules grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-6" role="list">
           {tier.modules.map((module: InterviewModule) => (
@@ -379,7 +379,7 @@ const InterviewPrepPage: React.FC = () => {
   }, {} as Record<string, InterviewTier>);
 
   const totalModules = Object.values(interviewTiers).reduce((sum, tier) => sum + tier.modules.length, 0);
-  const totalQuestions = Object.values(interviewTiers).reduce((sum, tier) => 
+  const totalQuestions = Object.values(interviewTiers).reduce((sum, tier) =>
     sum + tier.modules.reduce((tierSum, module) => tierSum + module.questionCount, 0), 0
   );
 
@@ -408,11 +408,11 @@ const InterviewPrepPage: React.FC = () => {
                     Master Technical Interviews with Structured Learning
                   </p>
                   <p className="text-gray-600 dark:text-gray-300 mb-6 text-left">
-                    Prepare systematically for technical interviews through our tier-based approach. 
-                    From foundational concepts to expert-level system design, build confidence with 
+                    Prepare systematically for technical interviews through our tier-based approach.
+                    From foundational concepts to expert-level system design, build confidence with
                     comprehensive question banks and detailed explanations.
                   </p>
-                  
+
                   <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
                     <div className="bg-gradient-to-r from-blue-500 to-cyan-500 text-white p-4 rounded-lg text-center">
                       <div className="text-sm opacity-90">Modules</div>
@@ -432,7 +432,7 @@ const InterviewPrepPage: React.FC = () => {
                     </div>
                   </div>
                 </div>
-                
+
                 <div className="hero-visual flex justify-center">
                   <div className="interview-path-visualization w-full max-w-md">
                     <svg viewBox="0 0 400 300" className="path-svg w-full h-auto">
@@ -452,12 +452,12 @@ const InterviewPrepPage: React.FC = () => {
                         className="learning-path"
                       />
                       <circle cx="50" cy="250" r="12" fill="#3B82F6" className="tier-node" />
-                      <circle cx="150" cy="175" r="12" fill="#10B981" className="tier-node" />
-                      <circle cx="250" cy="125" r="12" fill="#8B5CF6" className="tier-node" />
+                      <circle cx="150" cy="190" r="12" fill="#10B981" className="tier-node" />
+                      <circle cx="250" cy="110" r="12" fill="#8B5CF6" className="tier-node" />
                       <circle cx="350" cy="50" r="12" fill="#F59E0B" className="tier-node" />
                       <text x="50" y="275" textAnchor="middle" fill="white" fontSize="12">Foundational</text>
-                      <text x="150" y="200" textAnchor="middle" fill="white" fontSize="12">Core</text>
-                      <text x="250" y="150" textAnchor="middle" fill="white" fontSize="12">Specialized</text>
+                      <text x="150" y="215" textAnchor="middle" fill="white" fontSize="12">Core</text>
+                      <text x="250" y="135" textAnchor="middle" fill="white" fontSize="12">Specialized</text>
                       <text x="350" y="75" textAnchor="middle" fill="white" fontSize="12">Expert</text>
                     </svg>
                   </div>
@@ -483,12 +483,12 @@ const InterviewPrepPage: React.FC = () => {
                   <span className="absolute right-3 top-3 text-gray-400">🔍</span>
                 </div>
               </div>
-              
+
               <div className="filters-container grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div className="filter-group">
                   <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Tier Level</label>
-                  <select 
-                    value={selectedTier || 'all'} 
+                  <select
+                    value={selectedTier || 'all'}
                     onChange={(e) => setSelectedTier(e.target.value === 'all' ? null : e.target.value)}
                     className="w-full px-3 py-2 bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:focus:ring-blue-500 dark:focus:border-blue-500 text-gray-900 dark:text-white"
                   >
@@ -502,8 +502,8 @@ const InterviewPrepPage: React.FC = () => {
 
                 <div className="filter-group">
                   <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Difficulty</label>
-                  <select 
-                    value={selectedDifficulty || 'all'} 
+                  <select
+                    value={selectedDifficulty || 'all'}
                     onChange={(e) => setSelectedDifficulty(e.target.value === 'all' ? null : e.target.value)}
                     className="w-full px-3 py-2 bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:focus:ring-blue-500 dark:focus:border-blue-500 text-gray-900 dark:text-white"
                   >
@@ -516,8 +516,8 @@ const InterviewPrepPage: React.FC = () => {
 
                 <div className="filter-group">
                   <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Category</label>
-                  <select 
-                    value={selectedCategory || 'all'} 
+                  <select
+                    value={selectedCategory || 'all'}
                     onChange={(e) => setSelectedCategory(e.target.value === 'all' ? null : e.target.value)}
                     className="w-full px-3 py-2 bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:focus:ring-blue-500 dark:focus:border-blue-500 text-gray-900 dark:text-white"
                   >
@@ -530,13 +530,13 @@ const InterviewPrepPage: React.FC = () => {
                   </select>
                 </div>
               </div>
-              
+
               {hasActiveFilters && (
                 <div className="filter-results mt-4 flex items-center justify-between">
                   <span className="text-sm text-gray-600 dark:text-gray-400">
                     Showing {Object.values(filteredTiers).reduce((sum, tier) => sum + tier.modules.length, 0)} of {totalModules} modules
                   </span>
-                  <button 
+                  <button
                     onClick={clearFilters}
                     className="px-3 py-1 text-sm bg-gray-200 dark:bg-gray-600 text-gray-800 dark:text-gray-200 rounded-lg hover:bg-gray-300 dark:hover:bg-gray-500 transition-colors"
                   >
@@ -558,7 +558,7 @@ const InterviewPrepPage: React.FC = () => {
                 <p className="text-gray-600 dark:text-gray-300 mb-6">
                   Try adjusting your search terms or filters to find what you're looking for.
                 </p>
-                <button 
+                <button
                   onClick={clearFilters}
                   className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
                 >
@@ -567,11 +567,11 @@ const InterviewPrepPage: React.FC = () => {
               </div>
             </div>
           )}
-          
+
           {Object.entries(filteredTiers).map(([tierKey, tier]) => (
-            <InterviewTierSection 
-              key={tierKey} 
-              tier={tier} 
+            <InterviewTierSection
+              key={tierKey}
+              tier={tier}
               tierKey={tierKey}
               isVisible={!hasActiveFilters || tier.modules.length > 0}
             />
@@ -589,13 +589,13 @@ const InterviewPrepPage: React.FC = () => {
                   <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-1">Learning Modules</h3>
                   <p className="text-sm text-gray-600 dark:text-gray-400">Return to main learning curriculum and lessons</p>
                 </Link>
-                
+
                 <Link href="/playground" className="bg-gray-50 dark:bg-gray-700 p-6 rounded-lg border border-gray-200 dark:border-gray-600 text-center hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors">
                   <span className="text-4xl block mb-2">🔬</span>
                   <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-1">GraphQL Playground</h3>
                   <p className="text-sm text-gray-600 dark:text-gray-400">Practice with interactive GraphQL queries</p>
                 </Link>
-                
+
                 <Link href="/animated-background-demo" className="bg-gray-50 dark:bg-gray-700 p-6 rounded-lg border border-gray-200 dark:border-gray-600 text-center hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors">
                   <span className="text-4xl block mb-2">🎨</span>
                   <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-1">Design Showcase</h3>
