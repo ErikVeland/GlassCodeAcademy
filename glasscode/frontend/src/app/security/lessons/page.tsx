@@ -69,10 +69,12 @@ export default function SecurityLessonsPage() {
         currentTopicLessons = topicGroups.find(tg => tg.topic === selectedTopic)?.lessons ?? [];
         currentLesson = currentTopicLessons[selectedIndex] ?? null;
         currentLessonIndex = selectedIndex;
-        // Find the next topic (cycle to first if at end)
+        // Compute navigation metadata safely within selected state
         const currentTopicIdx = topicGroups.findIndex(tg => tg.topic === selectedTopic);
-        isLastCategory = currentTopicIdx === topicGroups.length - 1;
-        nextCategoryTopic = topicGroups[(currentTopicIdx + 1) % topicGroups.length]?.topic ?? null;
+        if (currentTopicIdx >= 0 && topicGroups.length > 0) {
+            isLastCategory = currentTopicIdx === topicGroups.length - 1;
+            nextCategoryTopic = topicGroups[(currentTopicIdx + 1) % topicGroups.length]?.topic ?? null;
+        }
     }
 
     
@@ -134,7 +136,13 @@ export default function SecurityLessonsPage() {
                     <div>
                         {topicGroups.map(group => (
                             <div key={group.topic} className="mb-10">
-                                <h2 className="text-2xl font-extrabold mb-4 flex items-center gap-2 text-blue-700 dark:text-blue-300">
+                                <h2 
+                                    className="text-2xl font-extrabold mb-4 flex items-center gap-2 text-blue-700 dark:text-blue-300 cursor-pointer"
+                                    onClick={() => {
+                                        setSelectedTopic(group.topic);
+                                        setSelectedIndex(0);
+                                    }}
+                                >
                                     <span className="inline-block h-8 w-2 rounded bg-blue-500 dark:bg-blue-400 mr-3"></span>
                                     <span className="bg-blue-50 dark:bg-blue-900 px-4 py-2 rounded-lg text-blue-800 dark:text-blue-200 shadow-sm">{group.topic}</span>
                                 </h2>
@@ -181,7 +189,13 @@ export default function SecurityLessonsPage() {
                             <span className="text-sm text-gray-600 dark:text-gray-400">Lesson {currentLessonIndex! + 1} of {currentTopicLessons.length}</span>
                         </div>
                         <h2 className="text-2xl font-bold">{currentLesson.title}</h2>
-                        <p className="text-gray-700 dark:text-gray-300">{currentLesson.description}</p>
+                        <div className="space-y-3 text-gray-700 dark:text-gray-300">
+                            {currentLesson.description
+                                .split('\n\n')
+                                .map((paragraph, idx) => (
+                                    <p key={idx}>{paragraph}</p>
+                                ))}
+                        </div>
 
                         <div>
                             <h3 className="font-semibold mt-4 text-blue-700 dark:text-blue-300">Code Example:</h3>

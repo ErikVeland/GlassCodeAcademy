@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState, useRef } from "react";
+import { useSearchParams } from 'next/navigation';
 import Link from "next/link";
 import { useQuery, gql } from '@apollo/client';
 import TechnologyUtilizationBox from '../../../components/TechnologyUtilizationBox';
@@ -39,6 +40,7 @@ export default function ProgrammingLessonsPage() {
     const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
     const retryCountRef = useRef(0);
     const isBuildPhase = process.env.NEXT_PHASE === 'phase-production-build';
+    const searchParams = useSearchParams();
 
     const { data, loading, error, refetch } = useQuery(PROGRAMMING_LESSONS_QUERY);
 
@@ -57,6 +59,25 @@ export default function ProgrammingLessonsPage() {
             retryCountRef.current = 0;
         }
     }, [data, loading]);
+
+    // Initialize selection from URL params: ?topic=...&index=...
+    useEffect(() => {
+        const topicParam = searchParams.get('topic');
+        const indexParam = searchParams.get('index');
+        // Only set initial selection if none is chosen yet
+        if (selectedTopic === null && topicParam) {
+            setSelectedTopic(topicParam);
+        }
+        if (selectedIndex === null) {
+            if (indexParam !== null) {
+                const idx = parseInt(indexParam, 10);
+                setSelectedIndex(Number.isNaN(idx) ? 0 : Math.max(0, idx));
+            } else if (topicParam) {
+                // default to first lesson when topic is provided
+                setSelectedIndex(0);
+            }
+        }
+    }, [searchParams, selectedTopic, selectedIndex]);
 
     // Render minimal content during build phase but keep hooks unconditional
     if (isBuildPhase) {
@@ -144,7 +165,14 @@ export default function ProgrammingLessonsPage() {
                                 <span className="text-sm text-gray-600 dark:text-gray-400">Lesson {currentLessonIndex! + 1} of {currentTopicLessons.length}</span>
                             </div>
                             <h2 className="text-2xl font-bold">{currentLesson.title}</h2>
-                            <p className="text-gray-700 dark:text-gray-300">{currentLesson.description}</p>
+                            {currentLesson.description && (
+                                (currentLesson.description.includes('\n\n')
+                                    ? currentLesson.description.split('\n\n')
+                                    : currentLesson.description.split('\n')
+                                ).filter(para => para.trim() !== '').map((para, i) => (
+                                    <p key={i} className="text-gray-700 dark:text-gray-300">{para}</p>
+                                ))
+                            )}
 
                             <div>
                                 <h3 className="font-semibold mt-4 text-blue-700 dark:text-blue-300">Code Example:</h3>
@@ -237,6 +265,7 @@ export default function ProgrammingLessonsPage() {
     let currentTopicLessons: ProgrammingLesson[] = [];
     let currentLessonIndex: number | null = null;
     let nextCategoryTopic: string | null = null;
+    let isLastCategory: boolean = false;
     if (selectedTopic !== null && selectedIndex !== null) {
         currentTopicLessons = topicGroups.find(tg => tg.topic === selectedTopic)?.lessons ?? [];
         currentLesson = currentTopicLessons[selectedIndex] ?? null;
@@ -244,6 +273,7 @@ export default function ProgrammingLessonsPage() {
         // Find the next topic (cycle to first if at end)
         const currentTopicIdx = topicGroups.findIndex(tg => tg.topic === selectedTopic);
         nextCategoryTopic = topicGroups[(currentTopicIdx + 1) % topicGroups.length]?.topic ?? null;
+        isLastCategory = currentTopicIdx === topicGroups.length - 1;
     }
 
     
@@ -298,7 +328,13 @@ export default function ProgrammingLessonsPage() {
                     <div>
                         {topicGroups.map(group => (
                             <div key={group.topic} className="mb-10">
-                                <h2 className="text-2xl font-extrabold mb-4 flex items-center gap-2 text-blue-700 dark:text-blue-300">
+                                <h2
+                                    className="text-2xl font-extrabold mb-4 flex items-center gap-2 text-blue-700 dark:text-blue-300 cursor-pointer select-none"
+                                    onClick={() => {
+                                        setSelectedTopic(group.topic);
+                                        setSelectedIndex(0);
+                                    }}
+                                >
                                     <span className="inline-block h-8 w-2 rounded bg-blue-500 dark:bg-blue-400 mr-3"></span>
                                     <span className="bg-blue-50 dark:bg-blue-900 px-4 py-2 rounded-lg text-blue-800 dark:text-blue-200 shadow-sm">{group.topic}</span>
                                 </h2>
@@ -345,7 +381,14 @@ export default function ProgrammingLessonsPage() {
                             <span className="text-sm text-gray-600 dark:text-gray-400">Lesson {currentLessonIndex! + 1} of {currentTopicLessons.length}</span>
                         </div>
                         <h2 className="text-2xl font-bold">{currentLesson.title}</h2>
-                        <p className="text-gray-700 dark:text-gray-300">{currentLesson.description}</p>
+                        {currentLesson.description && (
+                            (currentLesson.description.includes('\n\n')
+                                ? currentLesson.description.split('\n\n')
+                                : currentLesson.description.split('\n')
+                            ).filter(para => para.trim() !== '').map((para, i) => (
+                                <p key={i} className="text-gray-700 dark:text-gray-300">{para}</p>
+                            ))
+                        )}
 
                         <div>
                             <h3 className="font-semibold mt-4 text-blue-700 dark:text-blue-300">Code Example:</h3>

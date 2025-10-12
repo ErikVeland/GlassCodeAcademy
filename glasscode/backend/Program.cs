@@ -8,6 +8,8 @@ using System.Collections.Generic;
 var builder = WebApplication.CreateBuilder(args);
 
 // Use default Kestrel configuration; ports are controlled via ASPNETCORE_URLS or appsettings.json
+// Force binding to localhost to avoid macOS wildcard binding aborts
+builder.WebHost.UseUrls(Environment.GetEnvironmentVariable("ASPNETCORE_URLS") ?? "http://127.0.0.1:5024");
 
 builder.Services.AddCors(options =>
 {

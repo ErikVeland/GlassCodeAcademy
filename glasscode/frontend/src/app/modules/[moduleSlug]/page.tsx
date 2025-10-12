@@ -2,7 +2,7 @@ import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import { contentRegistry } from '@/lib/contentRegistry';
-import type { Module } from '@/lib/contentRegistry';
+import type { Module, Lesson, Quiz } from '@/lib/contentRegistry';
 
 interface ModulePageProps {
   params: Promise<{ moduleSlug: string }>;
@@ -10,25 +10,25 @@ interface ModulePageProps {
 
 export async function generateStaticParams() {
   const modules = await contentRegistry.getModules();
-  return modules.map((module) => ({
-    moduleSlug: module.slug,
+  return modules.map((m) => ({
+    moduleSlug: m.slug,
   }));
 }
 
 export async function generateMetadata({ params }: ModulePageProps): Promise<Metadata> {
   const { moduleSlug } = await params;
-  const module = await contentRegistry.getModule(moduleSlug);
+  const currentModule = await contentRegistry.getModule(moduleSlug);
   
-  if (!module) {
+  if (!currentModule) {
     return {
       title: 'Module Not Found',
     };
   }
 
   return {
-    title: `${module.title} - Fullstack Learning Platform`,
-    description: module.description,
-    keywords: module.technologies.join(', '),
+    title: `${currentModule.title} - Fullstack Learning Platform`,
+    description: currentModule.description,
+    keywords: currentModule.technologies.join(', '),
   };
 }
 
@@ -36,23 +36,23 @@ export default async function ModulePage({ params }: ModulePageProps) {
   const { moduleSlug } = await params;
   
   // Add error handling for content registry
-  let module: Module | null = null;
+  let currentModule: Module | null = null;
   let tier = null;
   let thresholds = { lessons: false, lessonsValid: false, quiz: false, quizValid: false, overall: false };
-  let lessons: any[] = [];
-  let quiz: any | null = null;
+  let lessons: Lesson[] = [];
+  let quiz: Quiz | null = null;
   
   try {
-    module = await contentRegistry.getModule(moduleSlug);
+    currentModule = await contentRegistry.getModule(moduleSlug);
     
-    if (!module) {
+    if (!currentModule) {
       notFound();
     }
 
-    tier = await contentRegistry.getTier(module.tier);
-    thresholds = await contentRegistry.checkModuleThresholds(module.slug);
-    lessons = await contentRegistry.getModuleLessons(module.slug);
-    quiz = await contentRegistry.getModuleQuiz(module.slug);
+    tier = await contentRegistry.getTier(currentModule.tier);
+    thresholds = await contentRegistry.checkModuleThresholds(currentModule.slug);
+    lessons = await contentRegistry.getModuleLessons(currentModule.slug);
+    quiz = await contentRegistry.getModuleQuiz(currentModule.slug);
   } catch (error) {
     console.error('Error loading module data:', error);
     // Return a more graceful error page
@@ -61,7 +61,7 @@ export default async function ModulePage({ params }: ModulePageProps) {
         <div className="glass-morphism p-8 rounded-xl text-center">
           <h1 className="text-2xl font-bold text-red-600 dark:text-red-400 mb-4">Content Unavailable</h1>
           <p className="text-gray-600 dark:text-gray-300 mb-6">
-            We're having trouble loading the content for this module. This might be due to a temporary issue with our content registry.
+            We&apos;re having trouble loading the content for this module. This might be due to a temporary issue with our content registry.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <button
@@ -101,7 +101,7 @@ export default async function ModulePage({ params }: ModulePageProps) {
             </li>
             <li className="text-gray-500">/</li>
             <li className="text-gray-900 dark:text-gray-100 font-medium">
-              {module.title}
+              {currentModule.title}
             </li>
           </ol>
         </nav>
@@ -110,32 +110,32 @@ export default async function ModulePage({ params }: ModulePageProps) {
         <header className="mb-12">
           <div className="glass-morphism p-8 rounded-xl">
             <div className="flex items-start gap-6">
-              <div className="text-6xl" role="img" aria-label={`${module.title} icon`}>
-                {module.icon}
+              <div className="text-6xl" role="img" aria-label={`${currentModule.title} icon`}>
+                {currentModule.icon}
               </div>
               
               <div className="flex-1">
                 <div className="flex items-center gap-4 mb-4">
                   <h1 className="text-4xl font-bold text-gray-900 dark:text-white">
-                    {module.title}
+                    {currentModule.title}
                   </h1>
                   
                   <span className={`
                     px-3 py-1 rounded-full text-sm font-medium
-                    ${module.difficulty === 'Beginner' ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200' :
-                      module.difficulty === 'Intermediate' ? 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200' :
+                    ${currentModule.difficulty === 'Beginner' ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200' :
+                      currentModule.difficulty === 'Intermediate' ? 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200' :
                       'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200'}
                   `}>
-                    {module.difficulty}
+                    {currentModule.difficulty}
                   </span>
                 </div>
                 
                 <p className="text-xl text-gray-600 dark:text-gray-300 mb-6">
-                  {module.description}
+                  {currentModule.description}
                 </p>
                 
                 <div className="flex flex-wrap gap-2 mb-6">
-                  {module.technologies.map((tech) => (
+                  {currentModule.technologies.map((tech) => (
                     <span
                       key={tech}
                       className="px-3 py-1 bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200 rounded-full text-sm"
@@ -147,13 +147,13 @@ export default async function ModulePage({ params }: ModulePageProps) {
                 
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm text-gray-600 dark:text-gray-400">
                   <div>
-                    <span className="font-medium">Track:</span> {module.track}
+                    <span className="font-medium">Track:</span> {currentModule.track}
                   </div>
                   <div>
                     <span className="font-medium">Tier:</span> {tier?.title}
                   </div>
                   <div>
-                    <span className="font-medium">Duration:</span> {module.estimatedHours}h
+                    <span className="font-medium">Duration:</span> {currentModule.estimatedHours}h
                   </div>
                   <div>
                     <span className="font-medium">Lessons:</span> {lessons?.length || 0}
@@ -165,7 +165,7 @@ export default async function ModulePage({ params }: ModulePageProps) {
         </header>
 
         {/* Content Status Alert */}
-        {module.status === 'content-pending' && (
+        {currentModule.status === 'content-pending' && (
           <div className="mb-8 p-4 bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg">
             <div className="flex">
               <div className="flex-shrink-0">
@@ -184,17 +184,17 @@ export default async function ModulePage({ params }: ModulePageProps) {
         )}
 
         {/* Prerequisites */}
-        {module.prerequisites.length > 0 && (
+        {currentModule.prerequisites.length > 0 && (
           <section className="mb-8">
             <div className="glass-morphism p-6 rounded-xl">
               <h2 className="text-xl font-semibold mb-4 text-gray-900 dark:text-white">
                 Prerequisites
               </h2>
               <p className="text-gray-600 dark:text-gray-300 mb-4">
-                Before starting this module, make sure you've completed:
+                Before starting this module, make sure you&apos;ve completed:
               </p>
               <ul className="space-y-2">
-                {module.prerequisites.map((prereqSlug) => (
+                {currentModule.prerequisites.map((prereqSlug) => (
                   <li key={prereqSlug}>
                     <PrerequisiteLink slug={prereqSlug} />
                   </li>
@@ -226,12 +226,32 @@ export default async function ModulePage({ params }: ModulePageProps) {
                     Learn the core concepts through structured lessons and practical examples.
                   </p>
                   <Link
-                    href={module.routes.lessons}
+                    href={currentModule.routes.lessons}
                     className="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
                   >
                     Start Learning
                     <span className="ml-2">→</span>
                   </Link>
+                  {/* Example topic shortcuts if module has common topics */}
+                  <div className="mt-4 flex flex-wrap gap-2">
+                    {Array.from(
+                      new Set(
+                        (lessons || [])
+                          .map((l: Lesson) => l.topic)
+                          .filter((t): t is string => typeof t === 'string' && t.length > 0)
+                      )
+                    )
+                      .slice(0, 6)
+                      .map((topic: string) => (
+                        <Link
+                          key={topic}
+                          href={`${currentModule.routes.lessons}?topic=${encodeURIComponent(topic)}`}
+                          className="px-2 py-1 bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 rounded text-xs hover:bg-blue-100 dark:hover:bg-blue-900/50"
+                        >
+                          {topic}
+                        </Link>
+                      ))}
+                  </div>
                 </div>
               ) : (
                 <div>
@@ -267,7 +287,7 @@ export default async function ModulePage({ params }: ModulePageProps) {
                     Test your knowledge with comprehensive questions and scenarios.
                   </p>
                   <Link
-                    href={module.routes.quiz}
+                    href={currentModule.routes.quiz}
                     className="inline-flex items-center px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
                   >
                     Take Quiz
@@ -316,9 +336,9 @@ export default async function ModulePage({ params }: ModulePageProps) {
 
 async function PrerequisiteLink({ slug }: { slug: string }) {
   try {
-    const module = await contentRegistry.getModule(slug);
+    const prereqModule = await contentRegistry.getModule(slug);
     
-    if (!module) {
+    if (!prereqModule) {
       return (
         <span className="text-gray-500 dark:text-gray-400">
           {slug} (module not found)
@@ -328,11 +348,11 @@ async function PrerequisiteLink({ slug }: { slug: string }) {
 
     return (
       <Link
-        href={module.routes.overview}
+        href={prereqModule.routes.overview}
         className="flex items-center gap-2 text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300"
       >
-        <span>{module.icon}</span>
-        <span>{module.title}</span>
+        <span>{prereqModule.icon}</span>
+        <span>{prereqModule.title}</span>
       </Link>
     );
   } catch (error) {
