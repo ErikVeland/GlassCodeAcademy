@@ -323,9 +323,36 @@ sleep 10
 
 # Now start frontend
 log "🚀 Starting frontend service..."
+if systemctl is-enabled ${APP_NAME}-frontend 2>/dev/null | grep -q masked; then
+    log "⚠️  Frontend service is masked. Unmasking..."
+    systemctl unmask ${APP_NAME}-frontend || true
+fi
+
+# If the unit file is missing or masked, surface diagnostics before attempting restart
+if systemctl list-unit-files | grep -q "^${APP_NAME}-frontend\.service"; then
+    :
+else
+    log "❌ Frontend unit file not found. Expected /etc/systemd/system/${APP_NAME}-frontend.service"
+    systemctl status ${APP_NAME}-frontend --no-pager || true
+    journalctl -u ${APP_NAME}-frontend -n 100 --no-pager || true
+    rollback
+fi
+
 systemctl restart ${APP_NAME}-frontend
 if ! wait_for_service "${APP_NAME}-frontend"; then
     log "❌ Frontend failed to start, rolling back..."
+    log "🧪 Diagnostic: systemd status for frontend"
+    systemctl status ${APP_NAME}-frontend --no-pager || true
+    log "🧪 Diagnostic: recent frontend logs"
+    journalctl -u ${APP_NAME}-frontend -n 100 --no-pager || true
+    log "🧪 Diagnostic: unit file permissions"
+    UNIT_FILE_PATH="/etc/systemd/system/${APP_NAME}-frontend.service"
+    if [ -f "$UNIT_FILE_PATH" ]; then
+        ls -l "$UNIT_FILE_PATH" || true
+        sed -n '1,120p' "$UNIT_FILE_PATH" || true
+    else
+        log "❌ Unit file missing at $UNIT_FILE_PATH"
+    fi
     rollback
 fi
 

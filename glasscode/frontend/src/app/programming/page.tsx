@@ -187,7 +187,7 @@ export default function ProgrammingOverviewPage() {
                 
                 <div className="flex flex-col sm:flex-row gap-4">
                     <Link 
-                        href="/programming/lessons" 
+                        href="/modules/programming-fundamentals/lessons" 
                         className="flex-1 bg-gradient-to-r from-blue-500 to-indigo-600 text-white px-6 py-3 rounded-lg shadow hover:from-blue-600 hover:to-indigo-700 transition-all duration-150 font-semibold text-center"
                     >
                         Start Learning

@@ -277,7 +277,6 @@ export default function ProgrammingInterviewPage() {
     setScore(0);
     setShuffled(false);
     retryCountRef.current = 0;
-    setLoading(true);
     refetch();
   };
 
@@ -401,7 +400,7 @@ export default function ProgrammingInterviewPage() {
                 Return Home
               </Link>
               {score < Math.ceil(shuffledQuestions.length * 0.7) && (
-                <Link href="/programming/lessons" className="px-4 py-2 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 text-white rounded-lg hover:from-indigo-600 hover:via-purple-600 hover:to-pink-600 transition-all duration-150 font-semibold">
+                <Link href="/modules/programming-fundamentals/lessons" className="px-4 py-2 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 text-white rounded-lg hover:from-indigo-600 hover:via-purple-600 hover:to-pink-600 transition-all duration-150 font-semibold">
                   Review Lessons
                 </Link>
               )}
@@ -477,15 +476,6 @@ export default function ProgrammingInterviewPage() {
     // Return choices in the shuffled order
     return q.choiceOrder.map(index => q.choices![index]);
   };
-  
-  // Get the correct answer index in the display order
-  const getDisplayCorrectAnswerIndex = () => {
-    if (q.correctAnswer === undefined) return -1;
-    if (!q.choiceOrder) return q.correctAnswer;
-    
-    // Find where the original correct answer is in the shuffled order
-    return q.choiceOrder.indexOf(q.correctAnswer);
-  };
 
   return (
     // Updated container with glass morphism effect
@@ -520,26 +510,14 @@ export default function ProgrammingInterviewPage() {
             
             {/* Multiple choice */}
             {q.type === 'multiple-choice' && q.choices && (
-        <fieldset role="radiogroup" aria-label="Answer choices" className="space-y-3">
+              <fieldset role="radiogroup" aria-label="Answer choices" className="space-y-2">
                 <legend className="sr-only">Choose an answer</legend>
                 {getDisplayChoices().map((choice, displayIndex) => {
                   const isSelected = selected === displayIndex;
-                  const isCorrect = !!feedback && displayIndex === getDisplayCorrectAnswerIndex();
-                  const isIncorrectSelected = !!feedback && isSelected && !isCorrect;
                   return (
                     <label
                       key={displayIndex}
-                      className={`group relative p-4 border rounded-lg cursor-pointer transition-colors duration-150 focus-within:ring-2 focus-within:ring-blue-500 ${
-                        feedback
-                          ? isCorrect
-                            ? "bg-green-50 dark:bg-green-900/30 border-green-400 dark:border-green-600"
-                            : isIncorrectSelected
-                              ? "bg-red-50 dark:bg-red-900/30 border-red-400 dark:border-red-600"
-                              : "border-gray-300 dark:border-gray-600"
-                          : isSelected
-                            ? "bg-white dark:bg-gray-800 border-blue-500 ring-1 ring-blue-400"
-                            : "border-gray-300 hover:border-blue-400 dark:border-gray-600 dark:hover:border-blue-500"
-                      }`}
+                      className="flex items-start gap-3 p-3 rounded cursor-pointer"
                     >
                       <input
                         type="radio"
@@ -548,33 +526,12 @@ export default function ProgrammingInterviewPage() {
                         checked={isSelected}
                         onChange={() => !feedback && setSelected(displayIndex)}
                         disabled={!!feedback}
-                        className="sr-only"
+                        className="mt-1"
                       />
-                      <div className="flex items-start">
-                        <div className={`flex-shrink-0 h-5 w-5 border rounded-full mt-0.5 mr-3 flex items-center justify-center transition-colors duration-150 ${
-                          feedback
-                            ? isCorrect
-                              ? "bg-green-500 border-green-500 text-white"
-                              : isIncorrectSelected
-                                ? "bg-red-500 border-red-500 text-white"
-                                : "border-gray-300 dark:border-gray-500"
-                          : isSelected
-                            ? "bg-blue-500 border-blue-500"
-                            : "border-gray-300 dark:border-gray-500"
-                        }`}>
-                          {(feedback && isCorrect) && (
-                            <svg className="h-5 w-5 text-white" fill="currentColor" viewBox="0 0 20 20">
-                              <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                            </svg>
-                          )}
-                          {(feedback && isIncorrectSelected) && (
-                            <svg className="h-5 w-5 text-white" fill="currentColor" viewBox="0 0 20 20">
-                              <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
-                            </svg>
-                          )}
-                        </div>
-                        <span className="text-gray-800 dark:text-gray-200" dangerouslySetInnerHTML={{ __html: formatQuestionText(choice) }}></span>
-                      </div>
+                      <span
+                        className="text-gray-800 dark:text-gray-200 leading-tight"
+                        dangerouslySetInnerHTML={{ __html: formatQuestionText(choice) }}
+                      ></span>
                     </label>
                   );
                 })}

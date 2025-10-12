@@ -412,6 +412,16 @@ WantedBy=multi-user.target
 EOF
 
 systemctl daemon-reload
+# Unmask services if previously masked
+if systemctl is-enabled ${APP_NAME}-frontend 2>/dev/null | grep -q masked; then
+    log "⚠️  Frontend service is masked. Unmasking..."
+    systemctl unmask ${APP_NAME}-frontend || true
+fi
+if systemctl is-enabled ${APP_NAME}-dotnet 2>/dev/null | grep -q masked; then
+    log "⚠️  Backend service is masked. Unmasking..."
+    systemctl unmask ${APP_NAME}-dotnet || true
+fi
+
 systemctl enable ${APP_NAME}-dotnet ${APP_NAME}-frontend
 
 ### 12. Configure Nginx

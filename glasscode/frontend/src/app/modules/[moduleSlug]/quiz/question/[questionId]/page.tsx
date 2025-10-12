@@ -230,26 +230,26 @@ export default function QuizQuestionPage({ params }: { params: Promise<{ moduleS
             return (
               <div
                 key={index}
-                className={choiceStyle}
+                className={choiceStyle.replace(/\bborder-[^\s]+\b/g, '').replace(/\bborder\b/g, '').replace(/\bring-[^\s]+\b/g, '') + ' focus:outline-none focus-visible:outline-none'}
                 onClick={() => !showExplanation && handleAnswerSelect(index)}
               >
                 <div className="flex items-center">
-                  <div className={`flex-shrink-0 w-6 h-6 rounded-full border flex items-center justify-center mr-4 ${
+                  <div className={`flex-shrink-0 w-6 h-6 rounded-full flex items-center justify-center mr-4 ${
                     showExplanation
                       ? isCorrectAnswer
-                        ? "border-green-500 bg-green-500 text-white"
+                        ? "bg-green-500 text-white"
                         : isSelected && !isCorrectAnswer
-                          ? "border-red-500 bg-red-500 text-white"
-                          : "border-gray-300 dark:border-gray-600"
+                          ? "bg-red-500 text-white"
+                          : "bg-transparent"
                       : isSelected
-                        ? "border-blue-500 bg-blue-500 text-white"
-                        : "border-gray-300 dark:border-gray-600"
+                        ? "bg-blue-500 text-white"
+                        : "bg-transparent"
                   }`}>
                     {showExplanation && isCorrectAnswer && "✓"}
                     {showExplanation && isSelected && !isCorrectAnswer && "✗"}
                     {!showExplanation && isSelected && "✓"}
                   </div>
-                  <span className="text-gray-800 dark:text-gray-200">{choice}</span>
+                  <span className="text-gray-800 dark:text-gray-200 leading-tight">{choice}</span>
                 </div>
               </div>
             );

@@ -92,7 +92,7 @@
       },
       "routes": {
         "overview": "/programming",
-        "lessons": "/programming/lessons",
+        "lessons": "/modules/programming-fundamentals/lessons",
         "quiz": "/programming/interview"
       }
     },

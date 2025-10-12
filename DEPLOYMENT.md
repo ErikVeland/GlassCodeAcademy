@@ -208,6 +208,26 @@ If you prefer to set up the server manually, follow these steps:
    - Use a more unique web app name
    - Ensure all resource names follow Azure naming conventions
 
+4. **Frontend systemd service is masked (fails to start)**
+   - Symptom:
+     ```
+     Failed to restart glasscode-frontend.service: Unit glasscode-frontend.service is masked.
+     ```
+   - Cause: The unit is masked (e.g., via `systemctl mask`) and cannot be started or restarted.
+   - Fix:
+     ```bash
+     sudo systemctl unmask glasscode-frontend
+     sudo systemctl daemon-reload
+     sudo systemctl restart glasscode-frontend
+     ```
+   - Diagnostics:
+     ```bash
+     sudo systemctl status glasscode-frontend --no-pager
+     journalctl -u glasscode-frontend -n 100 --no-pager
+     ls -l /etc/systemd/system/glasscode-frontend.service
+     ```
+   - Note: Our deployment scripts automatically unmask `${APP_NAME}-frontend` and `${APP_NAME}-dotnet` before enabling/restarting.
+
 ### Testing Your Deployment
 
 After deployment, test your backend API:
