@@ -327,7 +327,6 @@ const StatsCard: React.FC<{
 
 export const GamificationDashboard: React.FC = () => {
   const { 
-    progress, 
     streak, 
     achievements: earnedAchievements, 
     calculateOverallProgress,

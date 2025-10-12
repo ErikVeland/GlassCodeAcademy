@@ -2,7 +2,6 @@
 
 import { useEffect, useState, useRef } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { useQuery, gql } from '@apollo/client';
 import TechnologyUtilizationBox from '../../../components/TechnologyUtilizationBox';
 import EnhancedLoadingComponent from '../../../components/EnhancedLoadingComponent';
@@ -76,13 +75,14 @@ export default function TypescriptLessonsPage() {
     }
 
     // Helper function to determine if an error is a network error
-    const isNetworkError = (error: any): boolean => {
-        return !!error && (
-            error.message?.includes('Failed to fetch') ||
-            error.message?.includes('NetworkError') ||
-            error.message?.includes('ECONNREFUSED') ||
-            error.message?.includes('timeout') ||
-            error.networkError
+    const isNetworkError = (error: unknown): boolean => {
+        const e = error as { message?: string; networkError?: unknown };
+        return !!e && (
+            e.message?.includes('Failed to fetch') ||
+            e.message?.includes('NetworkError') ||
+            e.message?.includes('ECONNREFUSED') ||
+            e.message?.includes('timeout') ||
+            e.networkError !== undefined
         );
     };
 

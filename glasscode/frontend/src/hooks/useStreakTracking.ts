@@ -97,13 +97,13 @@ export const useStreakTracking = () => {
     const stored = localStorage.getItem(STORAGE_KEY);
     if (stored) {
       try {
-        const parsed = JSON.parse(stored);
+        const parsed = JSON.parse(stored) as Partial<StreakData>;
         return {
           ...parsed,
           milestones: STREAK_MILESTONES.map(milestone => ({
             ...milestone,
-            achieved: parsed.milestones?.find((m: any) => m.id === milestone.id)?.achieved || false,
-            achievedDate: parsed.milestones?.find((m: any) => m.id === milestone.id)?.achievedDate
+            achieved: parsed.milestones?.find((m: StreakMilestone) => m.id === milestone.id)?.achieved || false,
+            achievedDate: parsed.milestones?.find((m: StreakMilestone) => m.id === milestone.id)?.achievedDate
           }))
         };
       } catch (error) {
@@ -128,9 +128,25 @@ export const useStreakTracking = () => {
   }, [streakData]);
 
   // Check if streak should be broken on component mount
+  const checkStreakStatus = useCallback(() => {
+    const today = new Date().toISOString().split('T')[0];
+    const { lastActivityDate } = streakData;
+    
+    if (!lastActivityDate) return;
+    
+    // If it's been more than a day since last activity, break the streak
+    if (!isConsecutiveDay(lastActivityDate, today) && !isSameDay(lastActivityDate, today)) {
+      setStreakData(prev => ({
+        ...prev,
+        currentStreak: 0,
+        isActive: false
+      }));
+    }
+  }, [streakData]);
+
   useEffect(() => {
     checkStreakStatus();
-  }, []);
+  }, [checkStreakStatus]);
 
   const isConsecutiveDay = (lastDate: string, currentDate: string): boolean => {
     if (!lastDate) return true;
@@ -147,21 +163,7 @@ export const useStreakTracking = () => {
     return new Date(date1).toDateString() === new Date(date2).toDateString();
   };
 
-  const checkStreakStatus = () => {
-    const today = new Date().toISOString().split('T')[0];
-    const { lastActivityDate, currentStreak } = streakData;
-    
-    if (!lastActivityDate) return;
-    
-    // If it's been more than a day since last activity, break the streak
-    if (!isConsecutiveDay(lastActivityDate, today) && !isSameDay(lastActivityDate, today)) {
-      setStreakData(prev => ({
-        ...prev,
-        currentStreak: 0,
-        isActive: false
-      }));
-    }
-  };
+  // checkStreakStatus moved above and memoized with useCallback
 
   const recordActivity = useCallback((activityType: 'lesson' | 'quiz' | 'module_completion' | 'badge_earned', details: string, points: number = 10) => {
     const today = new Date().toISOString().split('T')[0];

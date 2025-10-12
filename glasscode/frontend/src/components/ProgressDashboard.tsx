@@ -156,7 +156,12 @@ const VisualProgress: React.FC<VisualProgressProps> = ({
   );
 };
 
-const TierProgressCard: React.FC<{ tierName: string; modules: any[]; }> = ({ tierName, modules }) => {
+interface ModuleSummary {
+  completionStatus: 'completed' | 'in_progress' | 'pending';
+  title: string;
+}
+
+const TierProgressCard: React.FC<{ tierName: string; modules: ModuleSummary[] }> = ({ tierName, modules }) => {
   const completedModules = modules.filter(m => m.completionStatus === 'completed').length;
   const percentage = modules.length > 0 ? (completedModules / modules.length) * 100 : 0;
 
@@ -186,7 +191,14 @@ const TierProgressCard: React.FC<{ tierName: string; modules: any[]; }> = ({ tie
   );
 };
 
-const AchievementBadge: React.FC<{ achievement: any; size?: 'small' | 'medium' | 'large' }> = ({ 
+interface Achievement {
+  title: string;
+  description: string;
+  earned: boolean;
+  earnedDate?: string | number | Date;
+}
+
+const AchievementBadge: React.FC<{ achievement: Achievement; size?: 'small' | 'medium' | 'large' }> = ({ 
   achievement, 
   size = 'medium' 
 }) => {
@@ -207,7 +219,7 @@ const AchievementBadge: React.FC<{ achievement: any; size?: 'small' | 'medium' |
 };
 
 export const ProgressDashboard: React.FC = () => {
-  const { progress, calculateOverallProgress, getTierProgress, getCompletedModulesCount, getTotalTimeSpent, getAverageQuizScore } = useProgressTracking();
+  const { progress, getTotalTimeSpent } = useProgressTracking();
   const { streakData, getStreakStatus, getStreakMotivation } = useStreakTracking();
   const { achievements, getRecentAchievements } = useAchievements();
   

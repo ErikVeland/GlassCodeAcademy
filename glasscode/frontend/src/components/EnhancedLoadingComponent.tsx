@@ -5,7 +5,7 @@ import React, { useState, useEffect } from 'react';
 interface EnhancedLoadingComponentProps {
   retryCount: number;
   maxRetries: number;
-  error?: any;
+  error?: unknown;
   onRetry?: () => void;
 }
 
@@ -31,6 +31,18 @@ const EnhancedLoadingComponent: React.FC<EnhancedLoadingComponentProps> = ({
   useEffect(() => {
     setShowRetry(false);
   }, [retryCount]);
+
+  // Safely derive a displayable error message from various error shapes
+  const errorMessage: string | null = (() => {
+    if (error == null) return null;
+    if (error instanceof Error) return error.message;
+    if (typeof error === 'string') return error;
+    if (typeof error === 'object' && 'message' in (error as Record<string, unknown>)) {
+      const m = (error as { message?: unknown }).message;
+      return typeof m === 'string' ? m : null;
+    }
+    return null;
+  })();
 
   if (retryCount === 0) {
     return (
@@ -107,15 +119,20 @@ const EnhancedLoadingComponent: React.FC<EnhancedLoadingComponentProps> = ({
         The backend took too long to start. Please try again.
       </div>
       <div className="text-gray-600 dark:text-gray-400 text-center mb-4">
-        <p>Sorry, we couldn't connect to the server. This might be due to:</p>
+        <p>Sorry, we couldn&apos;t connect to the server. This might be due to:</p>
         <ul className="list-disc list-inside mt-2 text-left">
           <li>Server is still initializing</li>
           <li>Network connectivity issues</li>
           <li>Server resource limitations</li>
         </ul>
         <p className="mt-3 text-sm">
-          Don't worry! This is normal for free tier deployments. The server will be ready soon.
+          Don&apos;t worry! This is normal for free tier deployments. The server will be ready soon.
         </p>
+        {errorMessage && (
+          <div className="mt-2 text-xs text-red-600 dark:text-red-400 break-words">
+            Error: {errorMessage}
+          </div>
+        )}
       </div>
       <button 
         className="bg-purple-600 text-white px-4 py-2 rounded hover:bg-purple-700 transition-colors duration-200"

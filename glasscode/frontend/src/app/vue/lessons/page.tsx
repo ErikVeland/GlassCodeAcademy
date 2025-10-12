@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useRef } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { isNetworkError } from "@/lib/isNetworkError";
 import { useQuery, gql } from '@apollo/client';
 import TechnologyUtilizationBox from '../../../components/TechnologyUtilizationBox';
 import EnhancedLoadingComponent from '../../../components/EnhancedLoadingComponent';
@@ -51,51 +51,51 @@ const VUE_LESSONS_QUERY = gql`
   }
 `;
 
-export default function VueLessonsPage() {
-    // Check if we're in build phase
-    if (process.env.NEXT_PHASE === 'phase-production-build') {
-        // Return minimal data during build
-        return (
-            <div className="w-full p-6">
-                <div className="max-w-4xl mx-auto bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-xl shadow-lg p-6 border border-gray-200 dark:border-gray-700">
-                    <Link 
-                      href="/" 
-                      className="inline-block mb-4 bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200 font-semibold py-1 px-3 rounded shadow hover:bg-green-200 dark:hover:bg-green-800 transition-colors duration-150 flex items-center gap-1 text-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
-                      aria-label="Back to home"
-                    >
-                        <span className="text-base">←</span> Back to Home
-                    </Link>
-                    <h1 className="text-3xl font-bold mb-6 mt-2 text-green-700 dark:text-green-300">Learn Vue.js Step by Step</h1>
-                    <div>
-                        {minimalData.map(group => (
-                            <div key={group.topic} className="mb-10">
-                                <h2 className="text-2xl font-extrabold mb-4 flex items-center gap-2 text-green-700 dark:text-green-300">
-                                    <span className="inline-block h-8 w-2 rounded bg-green-500 dark:bg-green-400 mr-3"></span>
-                                    <span className="bg-green-50 dark:bg-green-900 px-4 py-2 rounded-lg text-green-800 dark:text-green-200 shadow-sm">{group.topic}</span>
-                                </h2>
-                                <ul className="space-y-3">
-                                    {group.lessons.map((lesson, idx) => (
-                                        <li
-                                            key={lesson.id}
-                                            className="bg-gray-100/50 dark:bg-gray-700/50 backdrop-blur-sm p-4 rounded shadow hover:bg-green-50 dark:hover:bg-green-900 cursor-pointer transition-colors duration-150 border border-gray-200 dark:border-gray-600 focus-within:ring-2 focus-within:ring-green-500 focus-within:ring-offset-2"
-                                        >
-                                            <div className="font-semibold text-green-700 dark:text-green-300">{lesson.title}</div>
-                                            <p className="text-gray-600 dark:text-gray-300 mt-1 text-sm">{lesson.description}</p>
-                                        </li>
-                                    ))}
-                                </ul>
-                            </div>
-                        ))}
-                        <TechnologyUtilizationBox 
-                            technology="Vue.js" 
-                            explanation="In this Vue.js module, Vue is being used as the core frontend framework to build the entire user interface. Vue components manage the state and rendering of the lesson content and quiz questions." 
-                        />
-                    </div>
+// Build-phase minimal component (no hooks)
+function VueLessonsBuild() {
+    return (
+        <div className="w-full p-6">
+            <div className="max-w-4xl mx-auto bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-xl shadow-lg p-6 border border-gray-200 dark:border-gray-700">
+                <Link 
+                  href="/" 
+                  className="inline-block mb-4 bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200 font-semibold py-1 px-3 rounded shadow hover:bg-green-200 dark:hover:bg-green-800 transition-colors duration-150 flex items-center gap-1 text-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
+                  aria-label="Back to home"
+                >
+                    <span className="text-base">←</span> Back to Home
+                </Link>
+                <h1 className="text-3xl font-bold mb-6 mt-2 text-green-700 dark:text-green-300">Learn Vue.js Step by Step</h1>
+                <div>
+                    {minimalData.map(group => (
+                        <div key={group.topic} className="mb-10">
+                            <h2 className="text-2xl font-extrabold mb-4 flex items-center gap-2 text-green-700 dark:text-green-300">
+                                <span className="inline-block h-8 w-2 rounded bg-green-500 dark:bg-green-400 mr-3"></span>
+                                <span className="bg-green-50 dark:bg-green-900 px-4 py-2 rounded-lg text-green-800 dark:text-green-200 shadow-sm">{group.topic}</span>
+                            </h2>
+                            <ul className="space-y-3">
+                                {group.lessons.map((lesson) => (
+                                    <li
+                                        key={lesson.id}
+                                        className="bg-gray-100/50 dark:bg-gray-700/50 backdrop-blur-sm p-4 rounded shadow hover:bg-green-50 dark:hover:bg-green-900 cursor-pointer transition-colors duration-150 border border-gray-200 dark:border-gray-600 focus-within:ring-2 focus-within:ring-green-500 focus-within:ring-offset-2"
+                                    >
+                                        <div className="font-semibold text-green-700 dark:text-green-300">{lesson.title}</div>
+                                        <p className="text-gray-600 dark:text-gray-300 mt-1 text-sm">{lesson.description}</p>
+                                    </li>
+                                ))}
+                            </ul>
+                        </div>
+                    ))}
+                    <TechnologyUtilizationBox 
+                        technology="Vue.js" 
+                        explanation="In this Vue.js module, Vue is being used as the core frontend framework to build the entire user interface. Vue components manage the state and rendering of the lesson content and quiz questions." 
+                    />
                 </div>
             </div>
-        );
-    }
-    
+        </div>
+    );
+}
+
+// Runtime component with hooks
+function VueLessonsRuntime() {
     const [selectedTopic, setSelectedTopic] = useState<string | null>(null);
     const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
     const retryCountRef = useRef(0);
@@ -143,16 +143,7 @@ export default function VueLessonsPage() {
         nextCategoryTopic = topicGroups[(currentTopicIdx + 1) % topicGroups.length]?.topic ?? null;
     }
 
-    // Helper function to determine if an error is a network error
-    const isNetworkError = (error: any): boolean => {
-        return !!error && (
-            error.message?.includes('Failed to fetch') ||
-            error.message?.includes('NetworkError') ||
-            error.message?.includes('ECONNREFUSED') ||
-            error.message?.includes('timeout') ||
-            error.networkError
-        );
-    };
+    
 
     // If we're loading or have retry attempts, show the enhanced loading component
     if (loading || retryCountRef.current > 0) {
@@ -305,8 +296,8 @@ export default function VueLessonsPage() {
                                     &nbsp;
                                 </button>
                             )}
-                            {/* Next button */}
-                            {currentLessonIndex! < currentTopicLessons.length - 1 ? (
+                        {/* Next button */}
+                        {currentLessonIndex! < currentTopicLessons.length - 1 ? (
                                 <button
                                     className="flex-1 bg-green-600 dark:bg-green-700 text-white px-4 py-2 rounded shadow hover:bg-green-700 dark:hover:bg-green-600 transition-colors duration-150 flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
                                     onClick={() => setSelectedIndex(currentLessonIndex! + 1)}
@@ -362,4 +353,11 @@ export default function VueLessonsPage() {
             </div>
         </div>
     );
+}
+
+export default function VueLessonsPage() {
+    if (process.env.NEXT_PHASE === 'phase-production-build') {
+        return <VueLessonsBuild />;
+    }
+    return <VueLessonsRuntime />;
 }

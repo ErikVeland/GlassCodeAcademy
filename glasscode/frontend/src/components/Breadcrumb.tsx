@@ -31,7 +31,7 @@ export function Breadcrumb({ items, className = '' }: BreadcrumbProps) {
     >
       <ol className="flex items-center space-x-2 text-sm">
         {breadcrumbItems.map((item, index) => (
-          <li key={index} className="flex items-center">
+          <li key={`${item.label}-${item.href ?? index}`} className="flex items-center">
             {index > 0 && (
               <ChevronRightIcon 
                 className="flex-shrink-0 h-4 w-4 text-gray-400 mx-2" 
@@ -220,7 +220,7 @@ export function LessonBreadcrumb({
       href: `/modules/${moduleSlug}/lessons`
     },
     {
-      label: `Lesson ${lessonNumber}`,
+      label: lessonTitle ? `Lesson ${lessonNumber}: ${lessonTitle}` : `Lesson ${lessonNumber}`,
       isCurrentPage: true
     }
   ];

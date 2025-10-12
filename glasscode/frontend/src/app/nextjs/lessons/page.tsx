@@ -2,7 +2,6 @@
 
 import { useEffect, useState, useRef } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { useQuery, gql } from '@apollo/client';
 import EnhancedLoadingComponent from '../../../components/EnhancedLoadingComponent';
 
@@ -71,17 +70,6 @@ export default function NextJsLessonsPage() {
             isLastCategory = currentTopicIdx === topicGroups.length - 1;
             nextCategoryTopic = topicGroups[(currentTopicIdx + 1) % topicGroups.length]?.topic ?? null;
         }
-
-        // Helper function to determine if an error is a network error
-        const isNetworkError = (error: any): boolean => {
-            return !!error && (
-                error.message?.includes('Failed to fetch') ||
-                error.message?.includes('NetworkError') ||
-                error.message?.includes('ECONNREFUSED') ||
-                error.message?.includes('timeout') ||
-                error.networkError
-            );
-        };
 
         return (
             // Updated container with glass morphism effect

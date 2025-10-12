@@ -14,7 +14,7 @@ interface AccessibilitySettings {
 
 interface AccessibilityContextType {
   settings: AccessibilitySettings;
-  updateSetting: (key: keyof AccessibilitySettings, value: any) => void;
+  updateSetting: <K extends keyof AccessibilitySettings>(key: K, value: AccessibilitySettings[K]) => void;
   resetSettings: () => void;
   announceToScreenReader: (message: string) => void;
   trapFocus: (container: HTMLElement) => () => void;
@@ -116,7 +116,7 @@ export const AccessibilityProvider: React.FC<AccessibilityProviderProps> = ({ ch
     }
   }, [settings]);
 
-  const updateSetting = useCallback((key: keyof AccessibilitySettings, value: any) => {
+  const updateSetting = useCallback(<K extends keyof AccessibilitySettings>(key: K, value: AccessibilitySettings[K]) => {
     setSettings(prev => ({ ...prev, [key]: value }));
   }, []);
 
@@ -313,7 +313,7 @@ export const AccessibilityPanel: React.FC<{ isOpen: boolean; onClose: () => void
 
   if (!isOpen) return null;
 
-  const handleSettingChange = (key: keyof AccessibilitySettings, value: any) => {
+  const handleSettingChange = <K extends keyof AccessibilitySettings>(key: K, value: AccessibilitySettings[K]) => {
     updateSetting(key, value);
     announceToScreenReader(`${key} setting updated`);
   };

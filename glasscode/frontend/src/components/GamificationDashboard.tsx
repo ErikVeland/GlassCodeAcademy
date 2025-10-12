@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useState, useEffect } from 'react';
-import { useProgressTracking, AchievementData } from '../hooks/useProgressTracking';
+import { useProgressTracking } from '../hooks/useProgressTracking';
 
 interface StreakData {
   current: number;
@@ -32,36 +32,7 @@ const GamificationDashboard: React.FC = () => {
     initializeGamification();
   }, [progress]);
 
-  const updateStreak = () => {
-    const today = new Date();
-    const lastActivity = streakData.lastActivity;
-    
-    if (!lastActivity) {
-      // First activity
-      const newStreak = { current: 1, longest: 1, lastActivity: today };
-      setStreakData(newStreak);
-      localStorage.setItem('learning_streak', JSON.stringify(newStreak));
-    } else {
-      const daysDiff = Math.floor((today.getTime() - lastActivity.getTime()) / (1000 * 60 * 60 * 24));
-      
-      if (daysDiff === 1) {
-        // Consecutive day
-        const current = streakData.current + 1;
-        const newStreak = {
-          current,
-          longest: Math.max(current, streakData.longest),
-          lastActivity: today
-        };
-        setStreakData(newStreak);
-        localStorage.setItem('learning_streak', JSON.stringify(newStreak));
-      } else if (daysDiff > 1) {
-        // Streak broken
-        const newStreak = { current: 1, longest: streakData.longest, lastActivity: today };
-        setStreakData(newStreak);
-        localStorage.setItem('learning_streak', JSON.stringify(newStreak));
-      }
-    }
-  };
+  // Streak updates are managed by `initializeGamification`; additional helpers can be added when needed.
 
   const filteredAchievements = achievements.filter(achievement => 
     selectedRarity === 'all' || achievement.type === selectedRarity

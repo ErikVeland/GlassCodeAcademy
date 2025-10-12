@@ -13,7 +13,7 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowFrontend",
         policy => policy
-            .WithOrigins("http://localhost:3000", "http://localhost:3001", "http://192.168.6.238:3000", "http://192.168.6.238:3001", "https://glasscode.academy")
+            .WithOrigins("http://localhost:3000", "http://localhost:3001", "http://localhost:3002", "http://localhost:3003", "http://192.168.6.238:3000", "http://192.168.6.238:3001", "https://glasscode.academy")
             .AllowAnyHeader()
             .AllowAnyMethod()
             .AllowCredentials());
@@ -90,7 +90,14 @@ app.Use(async (context, next) =>
     await next();
 });
 
-app.UseHttpsRedirection();
+// Enable HTTPS redirection only outside development to avoid local fetch failures
+if (!app.Environment.IsDevelopment())
+{
+    app.UseHttpsRedirection();
+}
+
+// Ensure endpoint routing is set up before applying CORS
+app.UseRouting();
 app.UseCors("AllowFrontend");
 app.UseAuthorization();
 // Removed REST controller mapping

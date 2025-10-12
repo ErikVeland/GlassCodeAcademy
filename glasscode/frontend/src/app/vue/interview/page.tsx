@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { useQuery, gql, useMutation } from '@apollo/client';
 import TechnologyUtilizationBox from '../../../components/TechnologyUtilizationBox';
 import EnhancedLoadingComponent from '../../../components/EnhancedLoadingComponent';
+import { isNetworkError } from '@/lib/isNetworkError';
 
 interface VueInterviewQuestion {
   id: string;
@@ -166,7 +167,6 @@ export default function VueInterviewPage() {
   const [selected, setSelected] = useState<number | null>(null);
   const [feedback, setFeedback] = useState<AnswerResult | null>(null);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
   const [score, setScore] = useState(0);
   const [shuffled, setShuffled] = useState(false);
   const router = useRouter();
@@ -276,25 +276,12 @@ export default function VueInterviewPage() {
     setScore(0);
     setShuffled(false);
     retryCountRef.current = 0;
-    setError(null);
     setLoading(true);
     setShouldRetry(true);
     refetch();
   };
 
-  // Helper function to determine if an error is a network error
-  const isNetworkError = (error: any): boolean => {
-    return !!error && (
-      error.message?.includes('Failed to fetch') ||
-      error.message?.includes('NetworkError') ||
-      error.message?.includes('ECONNREFUSED') ||
-      error.message?.includes('timeout') ||
-      error.message?.includes('502') || // Bad Gateway
-      error.message?.includes('503') || // Service Unavailable
-      error.message?.includes('504') || // Gateway Timeout
-      error.networkError
-    );
-  };
+  // Using shared network error utility
 
   // If we're loading or have retry attempts, show the enhanced loading component
   if (gqlLoading || loading || retryCountRef.current > 0) {

@@ -26,6 +26,17 @@ const nextConfig: NextConfig = {
   compress: true,
   // Enable React Server Components
   reactStrictMode: true,
+  // Dev proxy: forward frontend `/graphql` to backend GraphQL API
+  async rewrites() {
+    // Prefer configured API base if provided; otherwise default to local backend
+    const base = process.env.NEXT_PUBLIC_API_BASE?.replace(/\/+$/, '') || 'http://localhost:8080';
+    return [
+      {
+        source: '/graphql',
+        destination: `${base}/graphql`,
+      },
+    ];
+  },
 };
 
 export default nextConfig;

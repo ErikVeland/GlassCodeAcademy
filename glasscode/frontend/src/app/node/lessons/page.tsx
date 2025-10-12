@@ -2,7 +2,6 @@
 
 import { useEffect, useState, useRef } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { useQuery, gql } from '@apollo/client';
 import TechnologyUtilizationBox from '../../../components/TechnologyUtilizationBox';
 import EnhancedLoadingComponent from '../../../components/EnhancedLoadingComponent';
@@ -72,20 +71,6 @@ export default function NodeLessonsPage() {
             isLastCategory = currentTopicIdx === topicGroups.length - 1;
             nextCategoryTopic = topicGroups[(currentTopicIdx + 1) % topicGroups.length]?.topic ?? null;
         }
-
-        // Helper function to determine if an error is a network error
-        const isNetworkError = (error: any): boolean => {
-            return !!error && (
-                error.message?.includes('Failed to fetch') ||
-                error.message?.includes('NetworkError') ||
-                error.message?.includes('ECONNREFUSED') ||
-                error.message?.includes('timeout') ||
-                error.message?.includes('502') || // Bad Gateway
-                error.message?.includes('503') || // Service Unavailable
-                error.message?.includes('504') || // Gateway Timeout
-                error.networkError
-            );
-        };
 
         return (
             // Updated container with glass morphism effect

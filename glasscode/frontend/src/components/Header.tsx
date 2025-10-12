@@ -41,13 +41,13 @@ export default function Header() {
   const specializedRef = useRef<HTMLDivElement>(null);
   const qualityRef = useRef<HTMLDivElement>(null);
   const pathname = usePathname();
-  const { progress, calculateOverallProgress, getCompletedModulesCount, getTierProgress } = useProgressTracking();
+  const { getTierProgress } = useProgressTracking();
 
   // Load registry data on component mount
   useEffect(() => {
     const loadRegistryData = async () => {
       try {
-        const registry = await contentRegistry.loadRegistry();
+        await contentRegistry.loadRegistry();
         const modules = await contentRegistry.getModules();
         
         // Create tier groups with actual module data from registry

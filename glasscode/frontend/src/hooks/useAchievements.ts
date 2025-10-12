@@ -15,6 +15,21 @@ interface AchievementProgress {
   };
 }
 
+interface ProgressSnapshot {
+  completedModules?: number;
+  completedLessons?: number;
+  averageQuizScore?: number;
+  currentStreak?: number;
+  totalStudyTime?: number;
+  tierProgress?: Record<string, number>;
+}
+
+type AchievementStorage = Record<string, {
+  earned: boolean;
+  earnedDate?: string;
+  progress: number;
+}>;
+
 const STORAGE_KEY = 'fullstack-academy-achievements';
 
 export const useAchievements = () => {
@@ -43,25 +58,25 @@ export const useAchievements = () => {
 
   // Save to localStorage whenever achievements change
   useEffect(() => {
-    const achievementData = achievements.reduce((acc, achievement) => {
+    const achievementData = achievements.reduce<AchievementStorage>((acc, achievement) => {
       acc[achievement.id] = {
         earned: achievement.earned,
         earnedDate: achievement.earnedDate,
         progress: achievement.progress
       };
       return acc;
-    }, {} as any);
+    }, {} as AchievementStorage);
     
     localStorage.setItem(STORAGE_KEY, JSON.stringify(achievementData));
   }, [achievements]);
 
-  const checkAchievement = useCallback((achievementId: string, progressData: any) => {
+  const checkAchievement = useCallback((achievementId: string, progressData: ProgressSnapshot) => {
     const achievement = ENHANCED_ACHIEVEMENTS[achievementId];
     if (!achievement) return false;
 
     let isEarned = true;
     let progress = 0;
-    let totalRequirements = achievement.requirements.length;
+    const totalRequirements = achievement.requirements.length;
 
     for (const requirement of achievement.requirements) {
       let requirementMet = false;
@@ -85,8 +100,10 @@ export const useAchievements = () => {
           break;
         case 'tier_completion':
           // Check if specific tier is completed based on the achievement's tier
-          const tierProgress = achievement.tier ? progressData.tierProgress?.[achievement.tier] || 0 : 0;
-          currentValue = tierProgress;
+          {
+            const tierProgressValue = achievement.tier ? progressData.tierProgress?.[achievement.tier] || 0 : 0;
+            currentValue = tierProgressValue;
+          }
           break;
         default:
           currentValue = 0;
@@ -127,15 +144,17 @@ export const useAchievements = () => {
           case 'streak_days': return progressData.currentStreak || 0;
           case 'time_spent': return progressData.totalStudyTime || 0;
           case 'tier_completion': 
-            const tierProgress = achievement.tier ? progressData.tierProgress?.[achievement.tier] || 0 : 0;
-            return tierProgress;
+            {
+              const tierProgressValue = achievement.tier ? progressData.tierProgress?.[achievement.tier] || 0 : 0;
+              return tierProgressValue;
+            }
           default: return 0;
         }
       })
     };
   }, []);
 
-  const updateAchievements = useCallback((progressData: any) => {
+  const updateAchievements = useCallback((progressData: ProgressSnapshot) => {
     const currentDate = new Date().toISOString();
     let newAchievements = false;
 

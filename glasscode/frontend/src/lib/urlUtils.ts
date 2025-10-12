@@ -11,22 +11,37 @@
  * Development: Use NEXT_PUBLIC_API_BASE if provided, otherwise use localhost fallback.
  */
 export function getGraphQLEndpoint(): string {
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL?.replace(/\/+$/, '');
-  const apiBase = process.env.NEXT_PUBLIC_API_BASE?.replace(/\/+$/, '');
+  // Prefer explicit GraphQL endpoint when provided. Works in SSR and browser.
+  const explicitEndpoint = process.env.GRAPHQL_ENDPOINT?.trim();
+  if (explicitEndpoint) {
+    return explicitEndpoint;
+  }
+
+  const rawBaseUrl = process.env.NEXT_PUBLIC_BASE_URL?.trim();
+  const rawApiBase = process.env.NEXT_PUBLIC_API_BASE?.trim();
+
+  const baseUrl = rawBaseUrl ? rawBaseUrl.replace(/\/+$/, '') : undefined;
+  const apiBase = rawApiBase ? rawApiBase.replace(/\/+$/, '') : undefined;
 
   if (process.env.NODE_ENV === 'production') {
     if (baseUrl && (baseUrl.startsWith('https://') || baseUrl.startsWith('http://'))) {
-      return `${baseUrl}/graphql`;
+      // Enforce HTTPS scheme in production if http is provided
+      const httpsBase = baseUrl.startsWith('http://')
+        ? `https://${baseUrl.slice('http://'.length)}`
+        : baseUrl;
+      return `${httpsBase}/graphql`;
     }
-    // Fallback: relative path for browser (proxied by Nginx). Note SSR may require absolute.
+    // Fallback: relative path for browser (proxied by Nginx)
     return '/graphql';
   }
 
-  // Development environment: respect configured API base if available
-  if (apiBase && (apiBase.startsWith('http://') || apiBase.startsWith('https://'))) {
-    return `${apiBase}/graphql`;
+  // Development environment: if NEXT_PUBLIC_API_BASE is set, proxy via relative path
+  // This allows Next.js rewrites to avoid CORS issues in dev
+  if (process.env.NODE_ENV !== 'production' && apiBase) {
+    return '/graphql';
   }
 
   // Default dev fallback
-  return 'http://localhost:5023/graphql';
+  // Backend default port is 8080 per backend README/start-dev.sh
+  return 'http://localhost:8080/graphql';
 }

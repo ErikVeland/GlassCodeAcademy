@@ -6,9 +6,10 @@ import { useRouter } from "next/navigation";
 import { useQuery, gql, useMutation } from '@apollo/client';
 import TechnologyUtilizationBox from '../../../components/TechnologyUtilizationBox';
 import EnhancedLoadingComponent from '../../../components/EnhancedLoadingComponent';
+import { getGraphQLEndpoint } from '@/lib/urlUtils';
 
 interface InterviewQuestion {
-  id: number;
+  id: string;
   topic: string;
   type: string;
   question: string;
@@ -40,8 +41,8 @@ const QUESTIONS_QUERY = gql`
 `;
 
 const SUBMIT_ANSWER_MUTATION = gql`
-  mutation SubmitAnswer($questionId: Int!, $answerIndex: Int!) {
-    submitAnswer(questionId: $questionId, answerIndex: $answerIndex) {
+  mutation SubmitNextJsAnswer($questionId: String!, $answerIndex: Int!) {
+    submitNextJsAnswer(questionId: $questionId, answerIndex: $answerIndex) {
       isCorrect
       explanation
     }
@@ -121,47 +122,21 @@ function CircularProgress({ percent }: { percent: number }) {
 }
 
 export default function InterviewQuiz() {
-  // Check if we're in build phase - return minimal data during build
-  if (process.env.NEXT_PHASE === 'phase-production-build') {
-    console.log('Build phase detected, returning minimal quiz data for nextjs-advanced');
-    const minimalQuestions: InterviewQuestion[] = [
-      { id: 1, topic: 'routing', type: 'multiple-choice', question: 'What is the difference between App Router and Pages Router in Next.js?', choices: ['App Router is newer and more flexible', 'Pages Router is newer', 'They are the same', 'App Router is deprecated'], correctAnswer: 0, explanation: 'The App Router is the newer routing system in Next.js that provides more flexibility and better performance.' },
-      { id: 2, topic: 'ssr', type: 'multiple-choice', question: 'What is getServerSideProps used for?', choices: ['Server-side rendering', 'Static site generation', 'Client-side rendering', 'API routes'], correctAnswer: 0, explanation: 'getServerSideProps is used for server-side rendering, where the page is generated on each request.' },
-      { id: 3, topic: 'ssg', type: 'multiple-choice', question: 'What is getStaticProps used for?', choices: ['Static site generation', 'Server-side rendering', 'Client-side rendering', 'API routes'], correctAnswer: 0, explanation: 'getStaticProps is used for static site generation, where the page is generated at build time.' }
-    ];
-
-    return (
-      <div className="py-12 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-4xl mx-auto">
-          <EnhancedLoadingComponent 
-            retryCount={0} 
-            maxRetries={30} 
-            error={null}
-            onRetry={() => {}}
-          />
-          <div className="mt-6 text-center">
-            <p className="text-gray-600 dark:text-gray-400 text-sm">
-              Build phase detected. Returning minimal data for Next.js interview questions.
-            </p>
-          </div>
-        </div>
-      </div>
-    );
-  }
+  // Detect build phase to adjust behavior without violating hooks rules
+  const isBuildPhase = process.env.NEXT_PHASE === 'phase-production-build';
 
   const [shuffledQuestions, setShuffledQuestions] = useState<InterviewQuestion[]>([]);
   const [current, setCurrent] = useState(0);
   const [selected, setSelected] = useState<number | null>(null);
   const [feedback, setFeedback] = useState<AnswerResult | null>(null);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
   const [score, setScore] = useState(0);
   const [shuffled, setShuffled] = useState(false);
   const router = useRouter();
   const retryCountRef = useRef(0);
   const [shouldRetry, setShouldRetry] = useState(true); // Add this state
 
-  const { data, loading: gqlLoading, error: gqlError, refetch } = useQuery(QUESTIONS_QUERY);
+  const { data, loading: gqlLoading, error: gqlError, refetch } = useQuery(QUESTIONS_QUERY, { skip: isBuildPhase });
 
   // Increment retry counter for network errors
   useEffect(() => {
@@ -186,14 +161,26 @@ export default function InterviewQuiz() {
     if (saved) {
       try {
         const parsed = JSON.parse(saved);
-        setShuffledQuestions(parsed.questions || []);
-        setCurrent(parsed.current || 0);
-        setSelected(parsed.selected ?? null);
-        setScore(parsed.score || 0);
-        setShuffled(true);
+        const hasValidQuestions = Array.isArray(parsed.questions) && parsed.questions.length > 0;
+
+        if (hasValidQuestions) {
+          setShuffledQuestions(parsed.questions);
+          // Ensure current index is within bounds of restored questions
+          const safeCurrent = Math.min(parsed.current || 0, parsed.questions.length - 1);
+          setCurrent(safeCurrent);
+          setSelected(parsed.selected ?? null);
+          setScore(parsed.score || 0);
+          setShuffled(true);
+        } else {
+          // Ignore and clear empty saved state to allow GraphQL initialization
+          localStorage.removeItem(QUIZ_STORAGE_KEY);
+        }
         setLoading(false);
         return;
-      } catch {}
+      } catch {
+        // If parsing fails, continue without using saved state
+        setLoading(false);
+      }
     }
     setLoading(false);
   }, []);
@@ -204,6 +191,11 @@ export default function InterviewQuiz() {
       const shuffledQs = shuffle(gqlQuestions).map(q => shuffleQuestionChoices(q));
       setShuffledQuestions(shuffledQs.slice(0, 10));
       setShuffled(true);
+      // Persist initial state immediately to avoid empty state on reload
+      localStorage.setItem(
+        QUIZ_STORAGE_KEY,
+        JSON.stringify({ questions: shuffledQs.slice(0, 10), current: 0, selected: null, score })
+      );
     }
   }, [gqlQuestions, shuffled]);
 
@@ -219,26 +211,29 @@ export default function InterviewQuiz() {
     if (selected === null) return;
     setFeedback(null);
     
+    // Determine the current question locally to avoid pre-declaration references
+    const question = shuffledQuestions[current];
+    
     // Map the selected display index back to the original index
     let originalSelectedIndex = selected;
-    if (q.choiceOrder && q.correctAnswer !== undefined) {
-      // The selected index is the display index, we need the original index
-      originalSelectedIndex = q.choiceOrder[selected];
+    if (question.choiceOrder && question.correctAnswer !== undefined) {
+      // The selected index is the display index, map to original index
+      originalSelectedIndex = question.choiceOrder[selected];
     }
     
     // Use Apollo mutation instead of REST
     const { data } = await submitAnswer({
-      variables: { questionId: shuffledQuestions[current].id, answerIndex: originalSelectedIndex },
+      variables: { questionId: question.id, answerIndex: originalSelectedIndex },
       optimisticResponse: {
-        submitAnswer: {
+        submitNextJsAnswer: {
           isCorrect: false, // Optimistic default
           explanation: 'Checking...',
           __typename: 'AnswerResult',
         },
       },
     });
-    setFeedback(data.submitAnswer);
-    if (data.submitAnswer.isCorrect) setScore((s) => s + 1);
+    setFeedback(data.submitNextJsAnswer);
+    if (data.submitNextJsAnswer.isCorrect) setScore((s) => s + 1);
   };
 
   const nextQuestion = () => {
@@ -264,18 +259,42 @@ export default function InterviewQuiz() {
   };
 
   // Helper function to determine if an error is a network error
-  const isNetworkError = (error: any): boolean => {
-    return !!error && (
-      error.message?.includes('Failed to fetch') ||
-      error.message?.includes('NetworkError') ||
-      error.message?.includes('ECONNREFUSED') ||
-      error.message?.includes('timeout') ||
-      error.message?.includes('502') || // Bad Gateway
-      error.message?.includes('503') || // Service Unavailable
-      error.message?.includes('504') || // Gateway Timeout
-      error.networkError
+  const isNetworkError = (err: unknown): boolean => {
+    const e = err as { message?: string; networkError?: unknown } | null | undefined;
+    const msg = typeof e?.message === 'string' ? e!.message : '';
+    return !!(
+      (msg && (
+        msg.includes('Failed to fetch') ||
+        msg.includes('NetworkError') ||
+        msg.includes('ECONNREFUSED') ||
+        msg.includes('timeout') ||
+        msg.includes('502') || // Bad Gateway
+        msg.includes('503') || // Service Unavailable
+        msg.includes('504') // Gateway Timeout
+      )) || e?.networkError
     );
   };
+
+  // During build phase, render minimal UI after hooks are initialized
+  if (isBuildPhase) {
+    return (
+      <div className="py-12 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-4xl mx-auto">
+          <EnhancedLoadingComponent 
+            retryCount={0} 
+            maxRetries={30} 
+            error={null}
+            onRetry={() => {}}
+          />
+          <div className="mt-6 text-center">
+            <p className="text-gray-600 dark:text-gray-400 text-sm">
+              Build phase detected. Showing minimal UI for Next.js interview questions.
+            </p>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   // Handle manual retry
   const handleManualRetry = () => {
@@ -504,8 +523,9 @@ export default function InterviewQuiz() {
                 ) : (
                   <button
                     onClick={async () => {
-                      const baseUrl = process.env.NEXT_PUBLIC_API_BASE || 'http://localhost:8080';
-                      const res = await fetch(`${baseUrl}/api/nextjs/interviewquestions/submit`, {
+                      const graphqlEndpoint = getGraphQLEndpoint();
+                      const apiBase = graphqlEndpoint.replace(/\/graphql$/, '');
+                      const res = await fetch(`${apiBase}/api/nextjs/interviewquestions/submit`, {
                         method: "POST",
                         headers: { "Content-Type": "application/json" },
                         body: JSON.stringify({

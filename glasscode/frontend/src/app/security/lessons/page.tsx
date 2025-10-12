@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useRef } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { isNetworkError } from "@/lib/isNetworkError";
 import { useQuery, gql } from '@apollo/client';
 import TechnologyUtilizationBox from '../../../components/TechnologyUtilizationBox';
 import EnhancedLoadingComponent from '../../../components/EnhancedLoadingComponent';
@@ -75,16 +75,7 @@ export default function SecurityLessonsPage() {
         nextCategoryTopic = topicGroups[(currentTopicIdx + 1) % topicGroups.length]?.topic ?? null;
     }
 
-    // Helper function to determine if an error is a network error
-    const isNetworkError = (error: any): boolean => {
-        return !!error && (
-            error.message?.includes('Failed to fetch') ||
-            error.message?.includes('NetworkError') ||
-            error.message?.includes('ECONNREFUSED') ||
-            error.message?.includes('timeout') ||
-            error.networkError
-        );
-    };
+    
 
     // Increment retry counter via derived state when a network error occurs
     useEffect(() => {

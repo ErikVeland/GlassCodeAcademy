@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import EnhancedLoadingComponent from '../../components/EnhancedLoadingComponent';
+import { getGraphQLEndpoint } from '@/lib/urlUtils';
 
 export default function GraphQLPlayground() {
   const [query, setQuery] = useState(`# Welcome to the GlassCode GraphQL Playground
@@ -25,9 +26,8 @@ query {
     setLoading(true);
     setError('');
     try {
-      // Use the environment variable or default to the new domain
-      const baseUrl = process.env.NEXT_PUBLIC_API_BASE || 'https://glasscode.academy';
-      const graphqlUrl = `${baseUrl}/graphql`;
+      // Resolve GraphQL endpoint via shared utility
+      const graphqlUrl = getGraphQLEndpoint();
       
       const res = await fetch(graphqlUrl, {
         method: 'POST',
@@ -58,9 +58,8 @@ query {
     // Reset the fetch process
     const fetchGraphQL = async () => {
       try {
-        // Use the environment variable or default to the new domain
-        const baseUrl = process.env.NEXT_PUBLIC_API_BASE || 'https://glasscode.academy';
-        const graphqlUrl = `${baseUrl}/graphql`;
+        // Resolve GraphQL endpoint via shared utility
+        const graphqlUrl = getGraphQLEndpoint();
         
         const res = await fetch(graphqlUrl, {
           method: 'POST',

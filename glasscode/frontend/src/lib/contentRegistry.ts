@@ -74,6 +74,37 @@ interface ContentRegistry {
   };
 }
 
+// Specific types for lessons and quizzes to avoid `any`
+interface Lesson {
+  id?: number;
+  order?: number;
+  title: string;
+  intro?: string;
+  topic?: string;
+}
+
+interface ProgrammingQuestion {
+  id?: number;
+  topic?: string;
+  type?: string;
+  question: string;
+  choices?: string[];
+  correctAnswer?: number;
+  explanation?: string;
+}
+
+interface Quiz {
+  questions: ProgrammingQuestion[];
+}
+
+interface LessonGroup {
+  id: string;
+  title: string;
+  description: string;
+  lessons: Lesson[];
+  order: number;
+}
+
 class ContentRegistryLoader {
   private static instance: ContentRegistryLoader;
   private registry: ContentRegistry | null = null;
@@ -105,8 +136,8 @@ class ContentRegistryLoader {
         console.log('Server-side registry loading, cwd:', process.cwd());
         
         // Dynamically import fs and path only when needed on server-side
-        const fs = require('fs');
-        const path = require('path');
+        const fs = await import('fs');
+        const path = await import('path');
         
         // Try to find the registry.json file in different possible locations
         const possiblePaths = [
@@ -115,7 +146,7 @@ class ContentRegistryLoader {
           path.join(__dirname, '..', 'public', 'registry.json'),
         ];
         
-        let registryData: any = null;
+        let registryData: unknown = null;
         let foundPath = '';
         
         for (const registryPath of possiblePaths) {
@@ -128,8 +159,8 @@ class ContentRegistryLoader {
               foundPath = registryPath;
               break;
             }
-          } catch (err) {
-            console.error(`Error reading ${registryPath}:`, err);
+          } catch (_err) {
+            console.error(`Error reading ${registryPath}:`, _err);
             // Continue to next path
           }
         }
@@ -146,7 +177,7 @@ class ContentRegistryLoader {
           if (!response.ok) {
             throw new Error(`Failed to fetch registry.json: ${response.status} ${response.statusText}`);
           }
-          const registryDataFetch = await response.json();
+          const registryDataFetch: unknown = await response.json();
           this.registry = registryDataFetch as ContentRegistry;
           return this.registry;
         }
@@ -162,11 +193,11 @@ class ContentRegistryLoader {
         if (!response.ok) {
           throw new Error(`Failed to fetch registry.json: ${response.status} ${response.statusText}`);
         }
-        const registryData = await response.json();
+        const registryData: unknown = await response.json();
         this.registry = registryData as ContentRegistry;
         return this.registry;
       }
-    } catch (error) {
+    } catch (error: unknown) {
       console.error('Failed to load content registry:', error);
       throw new Error('Content registry unavailable');
     }
@@ -238,8 +269,8 @@ class ContentRegistryLoader {
    */
   async findModuleByLegacySlug(legacySlug: string): Promise<Module | null> {
     const modules = await this.getModules();
-    return modules.find(module => 
-      module.legacySlugs.includes(legacySlug)
+    return modules.find(mod => 
+      mod.legacySlugs.includes(legacySlug)
     ) || null;
   }
 
@@ -250,14 +281,14 @@ class ContentRegistryLoader {
     const modules = await this.getModules();
     const routes: string[] = [];
 
-    for (const module of modules) {
+    for (const mod of modules) {
       // Add module overview route
-      routes.push(module.routes.overview);
+      routes.push(mod.routes.overview);
       
       // Add lesson routes (if content exists)
-      if (module.status === 'active') {
-        routes.push(module.routes.lessons);
-        routes.push(module.routes.quiz);
+      if (mod.status === 'active') {
+        routes.push(mod.routes.lessons);
+        routes.push(mod.routes.quiz);
       }
     }
 
@@ -279,7 +310,7 @@ class ContentRegistryLoader {
   /**
    * Get lessons for a specific module
    */
-  async getModuleLessons(moduleSlug: string): Promise<any[]> {
+  async getModuleLessons(moduleSlug: string): Promise<Lesson[]> {
     // Special handling for programming-fundamentals module to use GraphQL
     if (moduleSlug === 'programming-fundamentals') {
       try {
@@ -287,14 +318,14 @@ class ContentRegistryLoader {
         const { data } = await client.query({
           query: GET_PROGRAMMING_LESSONS
         });
-        return data.programmingLessons || [];
-      } catch (error) {
+        return (data.programmingLessons || []) as Lesson[];
+      } catch (error: unknown) {
         console.error(`Failed to load programming lessons via GraphQL:`, error);
         // During build time, the backend might not be available
         // Return a minimal set of lessons to allow build to complete
         if (process.env.NEXT_PHASE === 'phase-production-build') {
           console.log('Build phase detected, returning minimal lesson data for programming-fundamentals');
-          return [
+          const minimalLessons: Lesson[] = [
             { id: 1, title: 'Variables and Data Types', topic: 'basics' },
             { id: 2, title: 'Control Structures', topic: 'basics' },
             { id: 3, title: 'Functions', topic: 'basics' },
@@ -308,6 +339,7 @@ class ContentRegistryLoader {
             { id: 11, title: 'Best Practices', topic: 'advanced' },
             { id: 12, title: 'Project Organization', topic: 'advanced' }
           ];
+          return minimalLessons;
         }
         // Return empty array as fallback to prevent build failures
         return [];
@@ -318,8 +350,8 @@ class ContentRegistryLoader {
     if (typeof window === 'undefined') {
       try {
         // Dynamically import fs and path only when needed on server-side
-        const fs = require('fs');
-        const path = require('path');
+        const fs = await import('fs');
+        const path = await import('path');
         
         // Try to find the lesson file in different possible locations
         const possiblePaths = [
@@ -336,7 +368,7 @@ class ContentRegistryLoader {
               lessonsPath = possiblePath;
               break;
             }
-          } catch (err) {
+          } catch {
             // Continue to next path
           }
         }
@@ -347,9 +379,10 @@ class ContentRegistryLoader {
         }
         
         const lessonsContent = fs.readFileSync(lessonsPath, 'utf8');
-        const lessons = JSON.parse(lessonsContent);
-        return Array.isArray(lessons) ? lessons : [];
-      } catch (error) {
+        const lessonsData: unknown = JSON.parse(lessonsContent);
+        const lessons = Array.isArray(lessonsData) ? (lessonsData as Lesson[]) : [];
+        return lessons;
+      } catch (error: unknown) {
         console.error(`Failed to load lessons for ${moduleSlug} (server-side):`, error);
         return [];
       }
@@ -383,9 +416,9 @@ class ContentRegistryLoader {
         return [];
       }
       
-      const data = await response.json();
-      return Array.isArray(data) ? data : [];
-    } catch (error) {
+      const data: unknown = await response.json();
+      return Array.isArray(data) ? (data as Lesson[]) : [];
+    } catch (error: unknown) {
       console.error(`Failed to load lessons for ${moduleSlug}:`, error);
       // Return empty array as fallback to prevent build failures
       return [];
@@ -395,7 +428,7 @@ class ContentRegistryLoader {
   /**
    * Get quiz for a specific module
    */
-  async getModuleQuiz(moduleSlug: string): Promise<any | null> {
+  async getModuleQuiz(moduleSlug: string): Promise<Quiz | null> {
     // Special handling for programming-fundamentals module to use GraphQL
     if (moduleSlug === 'programming-fundamentals') {
       try {
@@ -405,29 +438,28 @@ class ContentRegistryLoader {
         });
         
         // Transform the data to match the expected quiz format
-        return {
-          questions: data.programmingInterviewQuestions || []
-        };
-      } catch (error: any) {
+        const questions = (data.programmingInterviewQuestions || []) as ProgrammingQuestion[];
+        return { questions } as Quiz;
+      } catch (error: unknown) {
         console.error(`Failed to load programming questions via GraphQL:`, error);
-        // Check if it's a GraphQL error with specific details
-        if (error.graphQLErrors && error.graphQLErrors.length > 0) {
-          console.error('GraphQL errors:', error.graphQLErrors);
+        // Optionally log GraphQL-specific details if present
+        const maybeGraphQLError = error as { graphQLErrors?: unknown[]; networkError?: unknown } | null;
+        if (maybeGraphQLError?.graphQLErrors && Array.isArray(maybeGraphQLError.graphQLErrors) && maybeGraphQLError.graphQLErrors.length > 0) {
+          console.error('GraphQL errors:', maybeGraphQLError.graphQLErrors);
         }
-        if (error.networkError) {
-          console.error('Network error:', error.networkError);
+        if (maybeGraphQLError?.networkError) {
+          console.error('Network error:', maybeGraphQLError.networkError);
         }
         // During build time, the backend might not be available
         // Return a minimal set of questions to allow build to complete
         if (process.env.NEXT_PHASE === 'phase-production-build') {
           console.log('Build phase detected, returning minimal quiz data for programming-fundamentals');
-          return {
-            questions: [
-              { id: 1, topic: 'basics', type: 'multiple-choice', question: 'What is a variable?', choices: ['A storage location', 'A function', 'A loop', 'A class'], correctAnswer: 0, explanation: 'A variable is a storage location paired with an associated symbolic name.' },
-              { id: 2, topic: 'basics', type: 'multiple-choice', question: 'What is a function?', choices: ['A storage location', 'A reusable block of code', 'A loop', 'A class'], correctAnswer: 1, explanation: 'A function is a reusable block of code that performs a specific task.' },
-              { id: 3, topic: 'data-structures', type: 'multiple-choice', question: 'What is an array?', choices: ['A single value', 'A collection of elements', 'A function', 'A class'], correctAnswer: 1, explanation: 'An array is a collection of elements, each identified by an array index.' }
-            ]
-          };
+          const questions: ProgrammingQuestion[] = [
+            { id: 1, topic: 'basics', type: 'multiple-choice', question: 'What is a variable?', choices: ['A storage location', 'A function', 'A loop', 'A class'], correctAnswer: 0, explanation: 'A variable is a storage location paired with an associated symbolic name.' },
+            { id: 2, topic: 'basics', type: 'multiple-choice', question: 'What is a function?', choices: ['A storage location', 'A reusable block of code', 'A loop', 'A class'], correctAnswer: 1, explanation: 'A function is a reusable block of code that performs a specific task.' },
+            { id: 3, topic: 'data-structures', type: 'multiple-choice', question: 'What is an array?', choices: ['A single value', 'A collection of elements', 'A function', 'A class'], correctAnswer: 1, explanation: 'An array is a collection of elements, each identified by an array index.' }
+          ];
+          return { questions } as Quiz;
         }
         // Return null as fallback to prevent build failures
         return null;
@@ -438,8 +470,8 @@ class ContentRegistryLoader {
     if (typeof window === 'undefined') {
       try {
         // Dynamically import fs and path only when needed on server-side
-        const fs = require('fs');
-        const path = require('path');
+        const fs = await import('fs');
+        const path = await import('path');
         
         // Try to find the quiz file in different possible locations
         const possiblePaths = [
@@ -456,7 +488,7 @@ class ContentRegistryLoader {
               quizPath = possiblePath;
               break;
             }
-          } catch (err) {
+          } catch {
             // Continue to next path
           }
         }
@@ -467,9 +499,10 @@ class ContentRegistryLoader {
         }
         
         const quizContent = fs.readFileSync(quizPath, 'utf8');
-        const quiz = JSON.parse(quizContent);
-        return quiz && typeof quiz === 'object' ? quiz : null;
-      } catch (error) {
+        const quizData: unknown = JSON.parse(quizContent);
+        const quiz = quizData && typeof quizData === 'object' ? (quizData as Quiz) : null;
+        return quiz;
+      } catch (error: unknown) {
         console.error(`Failed to load quiz for ${moduleSlug} (server-side):`, error);
         return null;
       }
@@ -503,9 +536,9 @@ class ContentRegistryLoader {
         return null;
       }
       
-      const data = await response.json();
-      return data && typeof data === 'object' ? data : null;
-    } catch (error) {
+      const data: unknown = await response.json();
+      return data && typeof data === 'object' ? (data as Quiz) : null;
+    } catch (error: unknown) {
       console.error(`Failed to load quiz for ${moduleSlug}:`, error);
       // Return null as fallback to prevent build failures
       return null;
@@ -515,21 +548,21 @@ class ContentRegistryLoader {
   /**
    * Get programming fundamentals lessons via GraphQL
    */
-  async getProgrammingLessons(): Promise<any[]> {
+  async getProgrammingLessons(): Promise<Lesson[]> {
     // Special handling for programming-fundamentals module to use GraphQL
     try {
       const client = getApolloClient();
       const { data } = await client.query({
         query: GET_PROGRAMMING_LESSONS
       });
-      return data.programmingLessons || [];
-    } catch (error) {
+      return (data.programmingLessons || []) as Lesson[];
+    } catch (error: unknown) {
       console.error(`Failed to load programming lessons via GraphQL:`, error);
       // During build time, the backend might not be available
       // Return a minimal set of lessons to allow build to complete
       if (process.env.NEXT_PHASE === 'phase-production-build') {
         console.log('Build phase detected, returning minimal lesson data');
-        return [
+        const minimalLessons: Lesson[] = [
           { id: 1, title: 'Variables and Data Types', topic: 'basics' },
           { id: 2, title: 'Control Structures', topic: 'basics' },
           { id: 3, title: 'Functions', topic: 'basics' },
@@ -543,6 +576,7 @@ class ContentRegistryLoader {
           { id: 11, title: 'Best Practices', topic: 'advanced' },
           { id: 12, title: 'Project Organization', topic: 'advanced' }
         ];
+        return minimalLessons;
       }
       // Return empty array as fallback to prevent build failures
       return [];
@@ -552,25 +586,26 @@ class ContentRegistryLoader {
   /**
    * Get programming fundamentals questions via GraphQL
    */
-  async getProgrammingQuestions(): Promise<any[]> {
+  async getProgrammingQuestions(): Promise<ProgrammingQuestion[]> {
     // Special handling for programming-fundamentals module to use GraphQL
     try {
       const client = getApolloClient();
       const { data } = await client.query({
         query: GET_PROGRAMMING_QUESTIONS
       });
-      return data.programmingQuestions || [];
-    } catch (error) {
+      return (data.programmingQuestions || []) as ProgrammingQuestion[];
+    } catch (error: unknown) {
       console.error(`Failed to load programming questions via GraphQL:`, error);
       // During build time, the backend might not be available
       // Return a minimal set of questions to allow build to complete
       if (process.env.NEXT_PHASE === 'phase-production-build') {
         console.log('Build phase detected, returning minimal question data');
-        return [
+        const minimalQuestions: ProgrammingQuestion[] = [
           { id: 1, topic: 'basics', type: 'multiple-choice', question: 'What is a variable?', choices: ['A storage location', 'A function', 'A loop', 'A class'], correctAnswer: 0, explanation: 'A variable is a storage location paired with an associated symbolic name.' },
           { id: 2, topic: 'basics', type: 'multiple-choice', question: 'What is a function?', choices: ['A storage location', 'A reusable block of code', 'A loop', 'A class'], correctAnswer: 1, explanation: 'A function is a reusable block of code that performs a specific task.' },
           { id: 3, topic: 'data-structures', type: 'multiple-choice', question: 'What is an array?', choices: ['A single value', 'A collection of elements', 'A function', 'A class'], correctAnswer: 1, explanation: 'An array is a collection of elements, each identified by an array index.' }
         ];
+        return minimalQuestions;
       }
       // Return empty array as fallback to prevent build failures
       return [];
@@ -588,18 +623,18 @@ class ContentRegistryLoader {
     overall: boolean;
   }> {
     try {
-      const [lessons, quiz, module] = await Promise.all([
+      const [lessons, quiz, mod] = await Promise.all([
         this.getModuleLessons(moduleSlug),
         this.getModuleQuiz(moduleSlug),
         this.getModule(moduleSlug)
       ]);
       
-      if (!module) {
+      if (!mod) {
         return { lessons: false, lessonsValid: false, quiz: false, quizValid: false, overall: false };
       }
       
-      const lessonsMeetThreshold = lessons.length >= (module.thresholds?.requiredLessons || 0);
-      const quizMeetsThreshold = quiz && quiz.questions?.length >= (module.thresholds?.requiredQuestions || 0);
+      const lessonsMeetThreshold = lessons.length >= (mod.thresholds?.requiredLessons || 0);
+      const quizMeetsThreshold = quiz && quiz.questions?.length >= (mod.thresholds?.requiredQuestions || 0);
       
       return {
         lessons: lessonsMeetThreshold,
@@ -620,7 +655,7 @@ class ContentRegistryLoader {
 export const contentRegistry = ContentRegistryLoader.getInstance();
 
 // Export utility functions for lesson grouping
-export function getLessonGroups(moduleSlug: string, lessons: any[]): any[] {
+export function getLessonGroups(moduleSlug: string, lessons: Lesson[]): LessonGroup[] {
   if (moduleSlug === 'programming-fundamentals') {
     // Group programming fundamentals lessons into logical categories
     return [
@@ -672,7 +707,7 @@ export function getLessonGroups(moduleSlug: string, lessons: any[]): any[] {
   }));
 }
 
-export function getLessonGroupForLesson(moduleSlug: string, lessons: any[], lessonOrder: number): any | null {
+export function getLessonGroupForLesson(moduleSlug: string, lessons: Lesson[], lessonOrder: number): { group: LessonGroup; groupIndex: number } | null {
   const groups = getLessonGroups(moduleSlug, lessons);
   const lessonIndex = lessonOrder - 1;
   const lesson = lessons[lessonIndex];
@@ -680,7 +715,7 @@ export function getLessonGroupForLesson(moduleSlug: string, lessons: any[], less
   if (!lesson) return null;
   
   for (const group of groups) {
-    if (group.lessons.some((l: any) => l.order === lesson.order)) {
+    if (group.lessons.some((l) => l.order === lesson.order)) {
       return {
         group,
         groupIndex: groups.indexOf(group)
@@ -691,7 +726,7 @@ export function getLessonGroupForLesson(moduleSlug: string, lessons: any[], less
   return null;
 }
 
-export function getNextLessonGroup(moduleSlug: string, lessons: any[], lessonOrder: number): any | null {
+export function getNextLessonGroup(moduleSlug: string, lessons: Lesson[], lessonOrder: number): LessonGroup | null {
   const groups = getLessonGroups(moduleSlug, lessons);
   const currentGroupInfo = getLessonGroupForLesson(moduleSlug, lessons, lessonOrder);
   
