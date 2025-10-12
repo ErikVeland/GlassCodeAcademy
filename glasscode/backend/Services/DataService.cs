@@ -182,7 +182,7 @@ namespace backend.Services
             try
             {
                 // Try to parse the JSON to validate its format
-                using var document = System.Text.Json.JsonDocument.Parse(json);
+                using var document = System.Text.Json.JsonDocument.Parse(json, new JsonDocumentOptions { AllowTrailingCommas = true, CommentHandling = JsonCommentHandling.Skip });
                 Console.WriteLine($"✅ {dataType} JSON format validated successfully");
             }
             catch (System.Text.Json.JsonException ex)
@@ -853,7 +853,7 @@ namespace backend.Services
                         PropertyNameCaseInsensitive = true
                     };
 
-                    using var document = System.Text.Json.JsonDocument.Parse(questionsJson);
+                    using var document = System.Text.Json.JsonDocument.Parse(questionsJson, new JsonDocumentOptions { AllowTrailingCommas = true, CommentHandling = JsonCommentHandling.Skip });
                     if (document.RootElement.ValueKind == JsonValueKind.Object &&
                         document.RootElement.TryGetProperty("questions", out var questionsElement) &&
                         questionsElement.ValueKind == JsonValueKind.Array)
@@ -900,7 +900,7 @@ namespace backend.Services
                     var mappedLessons = new List<PerformanceLesson>();
                     try
                     {
-                        using var doc = JsonDocument.Parse(lessonsJson);
+                        using var doc = JsonDocument.Parse(lessonsJson, new JsonDocumentOptions { AllowTrailingCommas = true, CommentHandling = JsonCommentHandling.Skip });
                         JsonElement root = doc.RootElement;
                         JsonElement lessonsArray = root;
                         if (root.ValueKind == JsonValueKind.Object)
@@ -966,7 +966,7 @@ namespace backend.Services
                     var mappedQuestions = new List<PerformanceInterviewQuestion>();
                     try
                     {
-                        using var qdoc = JsonDocument.Parse(questionsJson);
+                        using var qdoc = JsonDocument.Parse(questionsJson, new JsonDocumentOptions { AllowTrailingCommas = true, CommentHandling = JsonCommentHandling.Skip });
                         JsonElement qroot = qdoc.RootElement;
                         JsonElement qarray = qroot;
                         if (qroot.ValueKind == JsonValueKind.Object)
@@ -1049,7 +1049,7 @@ namespace backend.Services
                     var mappedLessons = new List<SecurityLesson>();
                     try
                     {
-                        using var doc = JsonDocument.Parse(lessonsJson);
+                        using var doc = JsonDocument.Parse(lessonsJson, new JsonDocumentOptions { AllowTrailingCommas = true, CommentHandling = JsonCommentHandling.Skip });
                         JsonElement root = doc.RootElement;
                         JsonElement lessonsArray = root;
                         if (root.ValueKind == JsonValueKind.Object)
@@ -1069,7 +1069,23 @@ namespace backend.Services
                             {
                                 var lesson = new SecurityLesson
                                 {
-                                    Id = GetStringFlexible(el, "id") ?? string.Empty,
+                                    Id = GetIntFlexible(el, "id") ?? 0,
+                                    Topic = GetString(el, "topic"),
+                                    Title = GetString(el, "title") ?? string.Empty,
+                                    Description = GetString(el, "intro") ?? GetString(el, "description") ?? string.Empty,
+                                    CodeExample = GetNestedString(el, "code", "example") ?? GetString(el, "codeExample") ?? string.Empty,
+                                    Output = GetNestedString(el, "code", "explanation") ?? GetString(el, "output") ?? string.Empty
+                                };
+                                mappedLessons.Add(lesson);
+                            }
+                        }
+                        else if (root.ValueKind == JsonValueKind.Array)
+                        {
+                            foreach (var el in root.EnumerateArray())
+                            {
+                                var lesson = new SecurityLesson
+                                {
+                                    Id = GetIntFlexible(el, "id") ?? 0,
                                     Topic = GetString(el, "topic"),
                                     Title = GetString(el, "title") ?? string.Empty,
                                     Description = GetString(el, "intro") ?? GetString(el, "description") ?? string.Empty,
@@ -1081,20 +1097,40 @@ namespace backend.Services
                         }
                         else
                         {
-                            mappedLessons = System.Text.Json.JsonSerializer.Deserialize<List<SecurityLesson>>(lessonsJson, new JsonSerializerOptions
-                            {
-                                PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
-                                PropertyNameCaseInsensitive = true
-                            }) ?? new List<SecurityLesson>();
+                            mappedLessons = new List<SecurityLesson>();
                         }
                     }
                     catch (Exception)
                     {
-                        mappedLessons = System.Text.Json.JsonSerializer.Deserialize<List<SecurityLesson>>(lessonsJson, new JsonSerializerOptions
+                        try
                         {
-                            PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
-                            PropertyNameCaseInsensitive = true
-                        }) ?? new List<SecurityLesson>();
+                            using var doc2 = JsonDocument.Parse(lessonsJson, new JsonDocumentOptions { AllowTrailingCommas = true, CommentHandling = JsonCommentHandling.Skip });
+                            var root2 = doc2.RootElement;
+                            if (root2.ValueKind == JsonValueKind.Array)
+                            {
+                                foreach (var el in root2.EnumerateArray())
+                                {
+                                    var lesson = new SecurityLesson
+                                    {
+                                        Id = GetIntFlexible(el, "id") ?? 0,
+                                        Topic = GetString(el, "topic"),
+                                        Title = GetString(el, "title") ?? string.Empty,
+                                        Description = GetString(el, "intro") ?? GetString(el, "description") ?? string.Empty,
+                                        CodeExample = GetNestedString(el, "code", "example") ?? GetString(el, "codeExample") ?? string.Empty,
+                                        Output = GetNestedString(el, "code", "explanation") ?? GetString(el, "output") ?? string.Empty
+                                    };
+                                    mappedLessons.Add(lesson);
+                                }
+                            }
+                            else
+                            {
+                                mappedLessons = new List<SecurityLesson>();
+                            }
+                        }
+                        catch
+                        {
+                            mappedLessons = new List<SecurityLesson>();
+                        }
                     }
                     SecurityLessons = mappedLessons;
                 }
@@ -1111,7 +1147,7 @@ namespace backend.Services
                     var mappedQuestions = new List<SecurityInterviewQuestion>();
                     try
                     {
-                        using var qdoc = JsonDocument.Parse(questionsJson);
+                        using var qdoc = JsonDocument.Parse(questionsJson, new JsonDocumentOptions { AllowTrailingCommas = true, CommentHandling = JsonCommentHandling.Skip });
                         JsonElement qroot = qdoc.RootElement;
                         JsonElement qarray = qroot;
                         if (qroot.ValueKind == JsonValueKind.Object)
@@ -1131,7 +1167,24 @@ namespace backend.Services
                             {
                                 var item = new SecurityInterviewQuestion
                                 {
-                                    Id = GetStringFlexible(q, "id") ?? string.Empty,
+                                    Id = GetIntFlexible(q, "id") ?? 0,
+                                    Topic = GetString(q, "topic"),
+                                    Type = GetString(q, "type") ?? GetString(q, "questionType") ?? string.Empty,
+                                    Question = GetString(q, "question") ?? string.Empty,
+                                    Choices = GetStringArray(q, "choices").ToArray(),
+                                    CorrectAnswer = GetIntFlexible(q, "correctAnswer") ?? GetIntFlexible(q, "correctIndex"),
+                                    Explanation = GetString(q, "explanation")
+                                };
+                                mappedQuestions.Add(item);
+                            }
+                        }
+                        else if (qroot.ValueKind == JsonValueKind.Array)
+                        {
+                            foreach (var q in qroot.EnumerateArray())
+                            {
+                                var item = new SecurityInterviewQuestion
+                                {
+                                    Id = GetIntFlexible(q, "id") ?? 0,
                                     Topic = GetString(q, "topic"),
                                     Type = GetString(q, "type") ?? GetString(q, "questionType") ?? string.Empty,
                                     Question = GetString(q, "question") ?? string.Empty,
@@ -1144,20 +1197,41 @@ namespace backend.Services
                         }
                         else
                         {
-                            mappedQuestions = System.Text.Json.JsonSerializer.Deserialize<List<SecurityInterviewQuestion>>(questionsJson, new JsonSerializerOptions
-                            {
-                                PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
-                                PropertyNameCaseInsensitive = true
-                            }) ?? new List<SecurityInterviewQuestion>();
+                            mappedQuestions = new List<SecurityInterviewQuestion>();
                         }
                     }
                     catch (Exception)
                     {
-                        mappedQuestions = System.Text.Json.JsonSerializer.Deserialize<List<SecurityInterviewQuestion>>(questionsJson, new JsonSerializerOptions
+                        try
                         {
-                            PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
-                            PropertyNameCaseInsensitive = true
-                        }) ?? new List<SecurityInterviewQuestion>();
+                            using var qdoc2 = JsonDocument.Parse(questionsJson, new JsonDocumentOptions { AllowTrailingCommas = true, CommentHandling = JsonCommentHandling.Skip });
+                            var root2 = qdoc2.RootElement;
+                            if (root2.ValueKind == JsonValueKind.Array)
+                            {
+                                foreach (var q in root2.EnumerateArray())
+                                {
+                                    var item = new SecurityInterviewQuestion
+                                    {
+                                        Id = GetIntFlexible(q, "id") ?? 0,
+                                        Topic = GetString(q, "topic"),
+                                        Type = GetString(q, "type") ?? GetString(q, "questionType") ?? string.Empty,
+                                        Question = GetString(q, "question") ?? string.Empty,
+                                        Choices = GetStringArray(q, "choices").ToArray(),
+                                        CorrectAnswer = GetIntFlexible(q, "correctAnswer") ?? GetIntFlexible(q, "correctIndex"),
+                                        Explanation = GetString(q, "explanation")
+                                    };
+                                    mappedQuestions.Add(item);
+                                }
+                            }
+                            else
+                            {
+                                mappedQuestions = new List<SecurityInterviewQuestion>();
+                            }
+                        }
+                        catch
+                        {
+                            mappedQuestions = new List<SecurityInterviewQuestion>();
+                        }
                     }
                     SecurityInterviewQuestions = mappedQuestions;
                 }
@@ -1636,7 +1710,7 @@ namespace backend.Services
         }
 
         // Security Fundamentals answer validation
-        public AnswerResult ValidateSecurityAnswer(string questionId, int answerIndex)
+        public AnswerResult ValidateSecurityAnswer(int questionId, int answerIndex)
         {
             var question = SecurityInterviewQuestions.FirstOrDefault(q => q.Id == questionId);
             if (question == null)

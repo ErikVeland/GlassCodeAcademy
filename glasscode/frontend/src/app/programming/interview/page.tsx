@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { useQuery, gql, useMutation } from '@apollo/client';
 import TechnologyUtilizationBox from '../../../components/TechnologyUtilizationBox';
 import EnhancedLoadingComponent from '../../../components/EnhancedLoadingComponent';
+import ConfettiBurst from '../../../components/ConfettiBurst';
 
 interface ProgrammingInterviewQuestion {
   id: number;
@@ -45,11 +46,50 @@ const SUBMIT_PROGRAMMING_ANSWER_MUTATION = gql`
       isCorrect
       explanation
     }
-  }
+}
 `;
 
+function escapeHtml(str: string) {
+  return str
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;');
+}
+
 function formatQuestionText(text: string) {
-  return text.replace(/\b(Variables|Data Types|Control Structures|Functions|Arrays|Objects|Loops|Conditionals|Scope|Recursion|Algorithms|Data Structures|Big O|Time Complexity|Space Complexity)\b/g, '<code class="bg-gray-100 dark:bg-gray-700 px-1 py-0.5 rounded text-sm font-mono">$1</code>');
+  // Escape HTML first to prevent injection
+  let escaped = escapeHtml(text);
+
+  // Store code segment placeholders to avoid interfering with keyword highlighting
+  const placeholders: Record<string, string> = {};
+  let counter = 0;
+
+  // Handle fenced code blocks: ```lang\n...```
+  escaped = escaped.replace(/```(\w+)?\n([\s\S]*?)```/g, (_match, lang, code) => {
+    const id = `__CODEBLOCK_${counter++}__`;
+    const languageClass = lang ? `language-${lang}` : '';
+    const html = `<pre class="bg-gray-900 text-gray-100 dark:bg-gray-900 rounded-md p-3 overflow-x-auto text-sm"><code class="font-mono ${languageClass}">${code}</code></pre>`;
+    placeholders[id] = html;
+    return id;
+  });
+
+  // Handle inline code: `code`
+  escaped = escaped.replace(/`([^`]+)`/g, (_match, code) => {
+    const id = `__INLINECODE_${counter++}__`;
+    const html = `<code class="bg-gray-100 dark:bg-gray-700 px-1 py-0.5 rounded text-sm font-mono">${code}</code>`;
+    placeholders[id] = html;
+    return id;
+  });
+
+  // Optional: highlight common CS terms outside of code segments
+  escaped = escaped.replace(/\b(Variables|Data Types|Control Structures|Functions|Arrays|Objects|Loops|Conditionals|Scope|Recursion|Algorithms|Data Structures|Big O|Time Complexity|Space Complexity)\b/g, '<code class="bg-gray-100 dark:bg-gray-700 px-1 py-0.5 rounded text-sm font-mono">$1</code>');
+
+  // Restore placeholders
+  Object.keys(placeholders).forEach((id) => {
+    escaped = escaped.replace(id, placeholders[id]);
+  });
+
+  return escaped;
 }
 
 function shuffle<T>(array: T[]): T[] {
@@ -121,45 +161,18 @@ function CircularProgress({ percent }: { percent: number }) {
 }
 
 export default function ProgrammingInterviewPage() {
-  // Check if we're in build phase - return minimal data during build
-  if (process.env.NEXT_PHASE === 'phase-production-build') {
-    console.log('Build phase detected, returning minimal quiz data for programming-fundamentals');
-    const minimalQuestions: ProgrammingInterviewQuestion[] = [
-      { id: 1, topic: 'basics', type: 'multiple-choice', question: 'What is a variable?', choices: ['A storage location', 'A function', 'A loop', 'A class'], correctAnswer: 0, explanation: 'A variable is a storage location paired with an associated symbolic name.' },
-      { id: 2, topic: 'basics', type: 'multiple-choice', question: 'What is a function?', choices: ['A storage location', 'A reusable block of code', 'A loop', 'A class'], correctAnswer: 1, explanation: 'A function is a reusable block of code that performs a specific task.' },
-      { id: 3, topic: 'data-structures', type: 'multiple-choice', question: 'What is an array?', choices: ['A single value', 'A collection of elements', 'A function', 'A class'], correctAnswer: 1, explanation: 'An array is a collection of elements, each identified by an array index.' }
-    ];
-
-    return (
-      <div className="py-12 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-4xl mx-auto">
-          <EnhancedLoadingComponent 
-            retryCount={0} 
-            maxRetries={30} 
-            error={null}
-            onRetry={() => {}}
-          />
-          <div className="mt-6 text-center">
-            <p className="text-gray-600 dark:text-gray-400 text-sm">
-              Build phase detected. Returning minimal data for Programming interview questions.
-            </p>
-          </div>
-        </div>
-      </div>
-    );
-  }
+  // Compute build phase flag without affecting hook execution order
+  const isBuildPhase = typeof process !== 'undefined' && process.env.NEXT_PHASE === 'phase-production-build';
 
   const [shuffledQuestions, setShuffledQuestions] = useState<ProgrammingInterviewQuestion[]>([]);
   const [current, setCurrent] = useState(0);
   const [selected, setSelected] = useState<number | null>(null);
   const [feedback, setFeedback] = useState<AnswerResult | null>(null);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
   const [score, setScore] = useState(0);
   const [shuffled, setShuffled] = useState(false);
   const router = useRouter();
   const retryCountRef = useRef(0);
-  const [shouldRetry, setShouldRetry] = useState(true);
 
   const { data, loading: gqlLoading, error: gqlError, refetch } = useQuery(PROGRAMMING_INTERVIEW_QUESTIONS_QUERY);
   
@@ -262,28 +275,36 @@ export default function ProgrammingInterviewPage() {
     setScore(0);
     setShuffled(false);
     retryCountRef.current = 0;
-    setError(null);
     setLoading(true);
-    setShouldRetry(true);
     refetch();
   };
 
   // Helper function to determine if an error is a network error
-  const isNetworkError = (error: any): boolean => {
-    return !!error && (
-      error.message?.includes('Failed to fetch') ||
-      error.message?.includes('NetworkError') ||
-      error.message?.includes('ECONNREFUSED') ||
-      error.message?.includes('timeout') ||
-      error.message?.includes('502') || // Bad Gateway
-      error.message?.includes('503') || // Service Unavailable
-      error.message?.includes('504') || // Gateway Timeout
-      error.networkError
+  // Type-safe helpers to avoid using `any` and handle diverse error shapes
+  const hasMessage = (e: unknown): e is { message: string } => {
+    return typeof e === 'object' && e !== null && typeof (e as Record<string, unknown>).message === 'string';
+  };
+  const hasNetworkError = (e: unknown): e is { networkError: unknown } => {
+    return typeof e === 'object' && e !== null && (e as Record<string, unknown>).networkError !== undefined;
+  };
+  const isNetworkError = (error: unknown): boolean => {
+    if (!error) return false;
+    const message = hasMessage(error) ? error.message : '';
+    const networkError = hasNetworkError(error) ? (error as Record<string, unknown>).networkError : undefined;
+    return !!(
+      message?.includes('Failed to fetch') ||
+      message?.includes('NetworkError') ||
+      message?.includes('ECONNREFUSED') ||
+      message?.includes('timeout') ||
+      message?.includes('502') || // Bad Gateway
+      message?.includes('503') || // Service Unavailable
+      message?.includes('504') || // Gateway Timeout
+      networkError
     );
   };
 
-  // If we're loading or have retry attempts, show the enhanced loading component
-  if (gqlLoading || loading || retryCountRef.current > 0) {
+  // Show enhanced loading during initial load, retries, or build phase
+  if (gqlLoading || loading || retryCountRef.current > 0 || isBuildPhase) {
     return (
       <div className="py-12 px-4 sm:px-6 lg:px-8">
         <div className="max-w-4xl mx-auto">
@@ -293,13 +314,12 @@ export default function ProgrammingInterviewPage() {
             error={gqlError}
             onRetry={() => {
               retryCountRef.current = 0;
-              setShouldRetry(true);
               refetch();
             }}
           />
           <div className="mt-6 text-center">
             <p className="text-gray-600 dark:text-gray-400 text-sm">
-              We're automatically retrying while the backend starts up.
+              We&apos;re automatically retrying while the backend starts up.
               If this takes too long, you can manually retry using the button above.
             </p>
           </div>
@@ -319,7 +339,6 @@ export default function ProgrammingInterviewPage() {
             <button
               onClick={() => {
                 retryCountRef.current = 0;
-                setShouldRetry(true);
                 refetch();
               }}
               className="px-4 py-2 bg-red-600 dark:bg-red-700 text-white rounded-lg hover:bg-red-700 dark:hover:bg-red-600 transition-colors duration-200"
@@ -349,10 +368,14 @@ export default function ProgrammingInterviewPage() {
     );
   }
   
+  const passed = score >= Math.ceil(shuffledQuestions.length * 0.7);
+
   if (current >= shuffledQuestions.length)
     return (
       // Updated container with glass morphism effect
       <div className="py-12 px-4 sm:px-6 lg:px-8">
+        {/* Confetti celebration when passed */}
+        <ConfettiBurst active={passed} durationMs={5000} />
         <div className="bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm rounded-xl shadow-lg p-6 border border-gray-200 dark:border-gray-700">
           <div className="text-center">
             <h2 className="text-3xl font-bold text-blue-600 dark:text-blue-400 mb-4">
@@ -388,10 +411,43 @@ export default function ProgrammingInterviewPage() {
               </button>
             </div>
 
-            {score >= Math.ceil(shuffledQuestions.length * 0.7) && (
-              <div className="mt-8 p-6 border-2 border-blue-200 dark:border-blue-700 rounded-xl bg-blue-50/80 dark:bg-blue-900/30 backdrop-blur-sm">
-                <h3 className="text-xl font-bold text-blue-800 dark:text-blue-200 mb-2">Certificate of Completion</h3>
-                <p className="text-blue-700 dark:text-blue-300">This certifies that you have successfully completed the Programming interview preparation quiz.</p>
+            {passed && (
+              <div className="mt-10 relative mx-auto max-w-2xl">
+                <div className="relative rounded-2xl p-8 bg-gradient-to-br from-blue-50 via-white to-indigo-50 dark:from-blue-950/40 dark:via-gray-900 dark:to-indigo-900/40 border-4 border-blue-200 dark:border-blue-700 shadow-xl">
+                  {/* Decorative corner flourishes */}
+                  <div className="absolute -top-3 -left-3 h-12 w-12 rounded-full border-4 border-blue-200 dark:border-blue-700 bg-white dark:bg-gray-900" />
+                  <div className="absolute -top-3 -right-3 h-12 w-12 rounded-full border-4 border-blue-200 dark:border-blue-700 bg-white dark:bg-gray-900" />
+                  <div className="absolute -bottom-3 -left-3 h-12 w-12 rounded-full border-4 border-blue-200 dark:border-blue-700 bg-white dark:bg-gray-900" />
+                  <div className="absolute -bottom-3 -right-3 h-12 w-12 rounded-full border-4 border-blue-200 dark:border-blue-700 bg-white dark:bg-gray-900" />
+
+                  {/* Title */}
+                  <h3 className="text-2xl font-extrabold tracking-wide text-blue-800 dark:text-blue-200 mb-3">Certificate of Achievement</h3>
+                  <p className="text-sm uppercase tracking-[0.2em] text-gray-500 dark:text-gray-400 mb-6">Presented by GlassCode Academy</p>
+
+                  {/* Recipient and details */}
+                  <div className="space-y-2">
+                    <p className="text-gray-800 dark:text-gray-200 text-lg">This certifies that</p>
+                    <p className="text-2xl font-semibold text-blue-700 dark:text-blue-300">You</p>
+                    <p className="text-gray-700 dark:text-gray-300">successfully completed the Programming Interview Preparation Quiz</p>
+                    <p className="text-gray-700 dark:text-gray-300">with a score of <span className="font-semibold">{score}/{shuffledQuestions.length}</span> ({Math.round((score / shuffledQuestions.length) * 100)}%).</p>
+                  </div>
+
+                  {/* Seal */}
+                  <div className="mt-8 flex items-center justify-center gap-6">
+                    <div className="h-20 w-20 rounded-full bg-gradient-to-br from-yellow-400 to-amber-500 dark:from-yellow-500 dark:to-amber-600 shadow-lg border-4 border-yellow-200 dark:border-amber-700 flex items-center justify-center">
+                      <span className="text-white font-bold">PASS</span>
+                    </div>
+                    <div className="text-left">
+                      <p className="text-sm text-gray-600 dark:text-gray-400">Issued on {new Date().toLocaleDateString()}</p>
+                      <p className="text-sm text-gray-600 dark:text-gray-400">Certificate ID: {Math.floor(Math.random() * 1_000_000)}</p>
+                    </div>
+                  </div>
+
+                  {/* Signature line */}
+                  <div className="mt-8 border-t border-dashed border-gray-300 dark:border-gray-700 pt-4">
+                    <p className="text-sm text-gray-600 dark:text-gray-400">Authorized by GlassCode Academy</p>
+                  </div>
+                </div>
               </div>
             )}
           </div>

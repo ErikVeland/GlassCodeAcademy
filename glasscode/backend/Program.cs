@@ -7,9 +7,9 @@ using System.Collections.Generic;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Use default Kestrel configuration; ports are controlled via ASPNETCORE_URLS or appsettings.json
+// Use default Kestrel configuration; prefer 8080 unless overridden by ASPNETCORE_URLS
 // Force binding to localhost to avoid macOS wildcard binding aborts
-builder.WebHost.UseUrls(Environment.GetEnvironmentVariable("ASPNETCORE_URLS") ?? "http://127.0.0.1:5024");
+builder.WebHost.UseUrls(Environment.GetEnvironmentVariable("ASPNETCORE_URLS") ?? "http://127.0.0.1:8080");
 
 builder.Services.AddCors(options =>
 {
@@ -778,7 +778,7 @@ public class Mutation {
     }
     
     // Security Fundamentals answer submission
-    public AnswerResult SubmitSecurityAnswer(string questionId, int answerIndex)
+    public AnswerResult SubmitSecurityAnswer(int questionId, int answerIndex)
     {
         // If unlocked, accept any answer as correct for testing
         if (AppState.IsUnlocked)
