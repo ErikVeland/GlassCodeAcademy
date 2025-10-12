@@ -35,20 +35,21 @@ export default function ConfettiBurst({ active, durationMs = 4000 }: ConfettiBur
       "#fb7185", // rose-400
     ];
 
+    // Emit confetti from the bottom upward
     const pieces = Array.from({ length: 160 }).map(() => ({
       x: Math.random() * canvas.width,
-      y: -20 - Math.random() * 100,
+      y: canvas.height + 20 + Math.random() * 80,
       w: 6 + Math.random() * 6,
       h: 10 + Math.random() * 10,
       vx: -2 + Math.random() * 4,
-      vy: 2 + Math.random() * 2,
+      vy: -3 - Math.random() * 2, // initial upward velocity
       rot: Math.random() * Math.PI,
       vrot: (-0.1 + Math.random() * 0.2),
       color: colors[Math.floor(Math.random() * colors.length)],
       opacity: 0.9,
     }));
 
-    const gravity = 0.08;
+    const gravity = -0.06; // upward bias
     const drag = 0.997;
     const start = performance.now();
 
@@ -70,10 +71,11 @@ export default function ConfettiBurst({ active, durationMs = 4000 }: ConfettiBur
         p.x += p.vx;
         p.y += p.vy;
         p.rot += p.vrot;
-        if (p.y > canvas.height + 20) {
-          p.y = -20 - Math.random() * 100;
+        // recycle pieces after exiting top of screen
+        if (p.y < -20) {
+          p.y = canvas.height + 20 + Math.random() * 80;
           p.x = Math.random() * canvas.width;
-          p.vy = 2 + Math.random() * 2;
+          p.vy = -3 - Math.random() * 2;
           p.vx = -2 + Math.random() * 4;
         }
         ctx.save();

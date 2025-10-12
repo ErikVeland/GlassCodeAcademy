@@ -341,7 +341,7 @@ export default function ProgrammingInterviewPage() {
                 retryCountRef.current = 0;
                 refetch();
               }}
-              className="px-4 py-2 bg-red-600 dark:bg-red-700 text-white rounded-lg hover:bg-red-700 dark:hover:bg-red-600 transition-colors duration-200"
+              className="btn btn-danger"
             >
               Try Again
             </button>
@@ -359,7 +359,7 @@ export default function ProgrammingInterviewPage() {
           <div className="text-center">
             <h2 className="text-2xl font-bold text-gray-800 dark:text-gray-200 mb-4">No Questions Available</h2>
             <p className="mb-4 text-gray-600 dark:text-gray-300">There are no Programming interview questions available at this time.</p>
-            <Link href="/" className="px-4 py-2 bg-red-600 dark:bg-red-700 text-white rounded-lg hover:bg-red-700 dark:hover:bg-red-600 transition-colors duration-200">
+            <Link href="/" className="btn btn-danger">
               Return Home
             </Link>
           </div>
@@ -395,7 +395,7 @@ export default function ProgrammingInterviewPage() {
             </div>
 
             <div className="flex flex-wrap justify-center gap-4 mt-8">
-              <Link href="/" className="px-4 py-2 bg-gray-600 dark:bg-gray-700 text-white rounded-lg hover:bg-gray-700 dark:hover:bg-gray-600 transition-colors duration-200">
+              <Link href="/" className="btn btn-secondary">
                 Return Home
               </Link>
               {score < Math.ceil(shuffledQuestions.length * 0.7) && (
@@ -403,9 +403,18 @@ export default function ProgrammingInterviewPage() {
                   Review Lessons
                 </Link>
               )}
+              {passed && (
+                <Link
+                  href="/modules/programming-fundamentals/lessons/1"
+                  className="btn btn-success font-semibold"
+                  aria-label="Start Next Lesson"
+                >
+                  Start Next Lesson
+                </Link>
+              )}
               <button
                 onClick={restartQuiz}
-                className="px-4 py-2 bg-blue-600 dark:bg-blue-700 text-white rounded-lg hover:bg-blue-700 dark:hover:bg-blue-600 transition-colors duration-200"
+                className="btn btn-primary"
               >
                 Try Again
               </button>
@@ -509,51 +518,65 @@ export default function ProgrammingInterviewPage() {
             
             {/* Multiple choice */}
             {q.type === 'multiple-choice' && q.choices && (
-              <div className="space-y-3">
-                {getDisplayChoices().map((choice, displayIndex) => (
-                  <div 
-                    key={displayIndex}
-                    onClick={() => !feedback && setSelected(displayIndex)}
-                    className={`p-4 border rounded-lg cursor-pointer transition-all duration-200 backdrop-blur-sm ${
-                      feedback 
-                        ? displayIndex === getDisplayCorrectAnswerIndex() 
-                          ? "bg-green-50/80 dark:bg-green-900/40 border-green-300 dark:border-green-600" 
-                          : displayIndex === selected 
-                            ? "bg-red-50/80 dark:bg-red-900/40 border-red-300 dark:border-red-600" 
-                            : "border-gray-200 dark:border-gray-600" 
-                        : displayIndex === selected 
-                          ? "bg-blue-50/80 dark:bg-blue-900/40 border-blue-300 dark:border-blue-600 shadow-sm" 
-                          : "border-gray-200 dark:border-gray-600 hover:border-blue-200 dark:hover:border-blue-500 hover:bg-blue-50/80 dark:hover:bg-blue-900/30"
-                    }`}
-                  >
-                    <div className="flex items-start">
-                      <div className={`flex-shrink-0 h-5 w-5 border rounded-full mt-0.5 mr-3 flex items-center justify-center transition-colors duration-200 ${
-                        feedback 
-                          ? displayIndex === getDisplayCorrectAnswerIndex() 
-                            ? "bg-green-500 border-green-500" 
-                            : displayIndex === selected 
-                              ? "bg-red-500 border-red-500" 
-                              : "border-gray-300 dark:border-gray-500" 
-                          : displayIndex === selected 
-                            ? "bg-blue-500 border-blue-500" 
-                            : "border-gray-300 dark:border-gray-500"
-                      }`}>
-                        {(feedback && displayIndex === getDisplayCorrectAnswerIndex()) && (
-                          <svg className="h-5 w-5 text-white" fill="currentColor" viewBox="0 0 20 20">
-                            <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                          </svg>
-                        )}
-                        {(feedback && displayIndex === selected && displayIndex !== getDisplayCorrectAnswerIndex()) && (
-                          <svg className="h-5 w-5 text-white" fill="currentColor" viewBox="0 0 20 20">
-                            <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
-                          </svg>
-                        )}
+              <fieldset role="radiogroup" aria-label="Answer choices" className="space-y-3">
+                <legend className="sr-only">Choose an answer</legend>
+                {getDisplayChoices().map((choice, displayIndex) => {
+                  const isSelected = selected === displayIndex;
+                  const isCorrect = !!feedback && displayIndex === getDisplayCorrectAnswerIndex();
+                  const isIncorrectSelected = !!feedback && isSelected && !isCorrect;
+                  return (
+                    <label
+                      key={displayIndex}
+                      className={`p-4 border rounded-lg cursor-pointer transition-all duration-200 backdrop-blur-sm ${
+                        feedback
+                          ? isCorrect
+                            ? "bg-green-50/80 dark:bg-green-900/40 border-green-300 dark:border-green-600"
+                            : isIncorrectSelected
+                              ? "bg-red-50/80 dark:bg-red-900/40 border-red-300 dark:border-red-600"
+                              : "border-gray-200 dark:border-gray-600"
+                          : isSelected
+                            ? "bg-blue-50/80 dark:bg-blue-900/40 border-blue-300 dark:border-blue-600 shadow-sm"
+                            : "border-gray-200 dark:border-gray-600 hover:border-blue-200 dark:hover:border-blue-500 hover:bg-blue-50/80 dark:hover:bg-blue-900/30"
+                      }`}
+                    >
+                      <input
+                        type="radio"
+                        name={`question-${q.id}`}
+                        value={displayIndex}
+                        checked={isSelected}
+                        onChange={() => !feedback && setSelected(displayIndex)}
+                        disabled={!!feedback}
+                        className="sr-only"
+                      />
+                      <div className="flex items-start">
+                        <div className={`flex-shrink-0 h-5 w-5 border rounded-full mt-0.5 mr-3 flex items-center justify-center transition-colors duration-200 ${
+                          feedback
+                            ? isCorrect
+                              ? "bg-green-500 border-green-500"
+                              : isIncorrectSelected
+                                ? "bg-red-500 border-red-500"
+                                : "border-gray-300 dark:border-gray-500"
+                            : isSelected
+                              ? "bg-blue-500 border-blue-500"
+                              : "border-gray-300 dark:border-gray-500"
+                        }`}>
+                          {(feedback && isCorrect) && (
+                            <svg className="h-5 w-5 text-white" fill="currentColor" viewBox="0 0 20 20">
+                              <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                            </svg>
+                          )}
+                          {(feedback && isIncorrectSelected) && (
+                            <svg className="h-5 w-5 text-white" fill="currentColor" viewBox="0 0 20 20">
+                              <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
+                            </svg>
+                          )}
+                        </div>
+                        <span className="text-gray-800 dark:text-gray-200" dangerouslySetInnerHTML={{ __html: formatQuestionText(choice) }}></span>
                       </div>
-                      <span className="text-gray-800 dark:text-gray-200" dangerouslySetInnerHTML={{ __html: formatQuestionText(choice) }}></span>
-                    </div>
-                  </div>
-                ))}
-              </div>
+                    </label>
+                  );
+                })}
+              </fieldset>
             )}
             
             {/* Open-ended */}
@@ -570,13 +593,17 @@ export default function ProgrammingInterviewPage() {
                     onClick={async () => {
                       setFeedback({ isCorrect: true, explanation: q.explanation });
                     }}
-                    className="mt-2 px-4 py-2 bg-blue-600 dark:bg-blue-700 text-white rounded-lg hover:bg-blue-700 dark:hover:bg-blue-600 transition-colors duration-200"
+                    className="btn btn-primary mt-2"
                   >
                     Show Answer
                   </button>
                 )}
               </div>
             )}
+          </div>
+          {/* Live region for feedback announcements */}
+          <div aria-live="polite" className="sr-only">
+            {feedback ? `${feedback.isCorrect ? 'Correct' : 'Incorrect'}. ${feedback.explanation ?? ''}` : ''}
           </div>
           
           {/* Feedback */}
@@ -610,7 +637,7 @@ export default function ProgrammingInterviewPage() {
           <div className="flex justify-between">
             <button
               onClick={() => { clearQuizState(); router.push('/'); }}
-              className="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-50/80 dark:hover:bg-gray-700/80 backdrop-blur-sm transition-colors duration-200"
+              className="btn btn-secondary"
             >
               Exit Quiz
             </button>
@@ -620,11 +647,7 @@ export default function ProgrammingInterviewPage() {
                 <button
                   onClick={handleSubmit}
                   disabled={selected === null}
-                  className={`px-4 py-2 rounded-lg transition-colors duration-200 ${
-                    selected === null 
-                      ? 'bg-gray-300 dark:bg-gray-600 text-gray-500 dark:text-gray-400 cursor-not-allowed' 
-                      : 'bg-blue-600 dark:bg-blue-700 text-white hover:bg-blue-700 dark:hover:bg-blue-600'
-                  }`}
+                  className="btn btn-primary"
                 >
                   Submit
                 </button>
@@ -633,11 +656,7 @@ export default function ProgrammingInterviewPage() {
               {feedback && (
                 <button
                   onClick={nextQuestion}
-                  className={`px-4 py-2 rounded-lg text-white transition-colors duration-200 ${
-                    current === shuffledQuestions.length - 1 
-                      ? 'bg-green-600 dark:bg-green-700 hover:bg-green-700 dark:hover:bg-green-600' 
-                      : 'bg-blue-600 dark:bg-blue-700 hover:bg-blue-700 dark:hover:bg-blue-600'
-                  }`}
+                  className={current === shuffledQuestions.length - 1 ? 'btn btn-success' : 'btn btn-primary'}
                 >
                   {current === shuffledQuestions.length - 1 ? 'Finish Quiz 🎉' : 'Next Question'}
                 </button>
