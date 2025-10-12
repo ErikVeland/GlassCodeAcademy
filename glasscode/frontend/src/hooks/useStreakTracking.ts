@@ -99,12 +99,18 @@ export const useStreakTracking = () => {
       try {
         const parsed = JSON.parse(stored) as Partial<StreakData>;
         return {
-          ...parsed,
+          currentStreak: parsed.currentStreak ?? 0,
+          longestStreak: parsed.longestStreak ?? 0,
+          lastActivityDate: parsed.lastActivityDate ?? '',
+          streakType: parsed.streakType ?? 'daily',
           milestones: STREAK_MILESTONES.map(milestone => ({
             ...milestone,
             achieved: parsed.milestones?.find((m: StreakMilestone) => m.id === milestone.id)?.achieved || false,
             achievedDate: parsed.milestones?.find((m: StreakMilestone) => m.id === milestone.id)?.achievedDate
-          }))
+          })),
+          streakHistory: parsed.streakHistory ?? [],
+          isActive: parsed.isActive ?? false,
+          nextMilestone: parsed.nextMilestone
         };
       } catch (error) {
         console.error('Failed to parse streak data from localStorage:', error);

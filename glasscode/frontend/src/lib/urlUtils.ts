@@ -37,11 +37,11 @@ export function getGraphQLEndpoint(): string {
 
   // Development environment: if NEXT_PUBLIC_API_BASE is set, proxy via relative path
   // This allows Next.js rewrites to avoid CORS issues in dev
-  if (process.env.NODE_ENV !== 'production' && apiBase) {
+  if (apiBase) {
     return '/graphql';
   }
 
   // Default dev fallback
   // Backend default port is 8080 per backend README/start-dev.sh
-  return 'http://localhost:8080/graphql';
+  return 'http://127.0.0.1:8080/graphql';
 }

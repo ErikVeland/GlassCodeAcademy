@@ -1,14 +1,28 @@
 "use client";
 
 import { useState, useEffect } from 'react';
-import { notFound, useRouter } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import { contentRegistry } from '@/lib/contentRegistry';
+import type { ProgrammingQuestion } from '@/lib/contentRegistry';
 
 // For client components in Next.js 15, params are still Promises that need to be awaited
 export default function QuizStartPage({ params }: { params: Promise<{ moduleSlug: string }> }) {
   const router = useRouter();
   const [resolvedParams, setResolvedParams] = useState<{ moduleSlug: string } | null>(null);
-  const [quizData, setQuizData] = useState<any>(null);
+  interface QuizOverview {
+    title: string;
+    totalQuestions: number;
+    timeLimit: number;
+    passingScore: number;
+    instructions: string[];
+    _sessionSeed: {
+      selectedQuestions: ProgrammingQuestion[];
+      passingScore: number;
+      timeLimit: number;
+    };
+  }
+  const [quizData, setQuizData] = useState<QuizOverview | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -18,26 +32,65 @@ export default function QuizStartPage({ params }: { params: Promise<{ moduleSlug
       try {
         const { moduleSlug } = await params;
         setResolvedParams({ moduleSlug });
-        
-        // In a real implementation, this would fetch quiz data
-        // For now, we'll simulate with mock data
-        const mockQuiz = {
-          title: "Programming Fundamentals Quiz",
-          totalQuestions: 15,
-          timeLimit: 30, // minutes
-          passingScore: 70,
+        // Load module and quiz from content registry
+        const [mod, quiz] = await Promise.all([
+          contentRegistry.getModule(moduleSlug),
+          contentRegistry.getModuleQuiz(moduleSlug)
+        ]);
+
+        if (!mod || !quiz || !quiz.questions || quiz.questions.length === 0) {
+          setError("Quiz data not available for this module");
+          setLoading(false);
+          return;
+        }
+
+        // Determine target number of questions and pool size (2x)
+        const availableQuestions = quiz.questions.length;
+        const targetQuestions = Math.min(
+          mod.metadata?.thresholds?.minQuizQuestions ?? mod.thresholds?.requiredQuestions ?? 10,
+          availableQuestions
+        );
+        const poolSize = Math.min(targetQuestions * 2, availableQuestions);
+
+        // Create a shuffled selection pool
+        const shuffle = <T,>(arr: T[]): T[] => {
+          const a = [...arr];
+          for (let i = a.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [a[i], a[j]] = [a[j], a[i]];
+          }
+          return a;
+        };
+
+        const pool = shuffle(quiz.questions).slice(0, poolSize);
+        const selectedQuestions = shuffle(pool).slice(0, targetQuestions);
+
+        const timeLimit = mod.metadata?.thresholds?.minQuizQuestions ? 30 : 30; // default 30 minutes
+        const passingScore = mod.metadata?.thresholds?.passingScore ?? 70;
+
+        const quizOverview = {
+          title: `${mod.title} Quiz`,
+          totalQuestions: selectedQuestions.length,
+          timeLimit,
+          passingScore,
           instructions: [
-            "You have 30 minutes to complete this quiz",
+            `You have ${timeLimit} minutes to complete this quiz`,
             "Each question has only one correct answer",
             "You can navigate between questions using the navigation buttons",
             "Your progress will be saved automatically",
             "Good luck!"
-          ]
+          ],
+          _sessionSeed: {
+            selectedQuestions,
+            passingScore,
+            timeLimit
+          }
         };
-        
-        setQuizData(mockQuiz);
+
+        setQuizData(quizOverview);
         setLoading(false);
       } catch (err) {
+        console.error('Failed to load quiz data', err);
         setError("Failed to load quiz data");
         setLoading(false);
       }
@@ -48,9 +101,28 @@ export default function QuizStartPage({ params }: { params: Promise<{ moduleSlug
 
   const handleStartQuiz = () => {
     if (!resolvedParams) return;
-    // In a real implementation, this would start the actual quiz
-    // For now, we'll redirect to a placeholder
-    router.push(`/modules/${resolvedParams.moduleSlug}/quiz/question/1`);
+    // Create quiz session in sessionStorage and start quiz
+    try {
+      const sessionKey = `quizSession:${resolvedParams.moduleSlug}`;
+      const seed = quizData?._sessionSeed;
+      if (!seed) {
+        setError('Quiz session setup failed');
+        return;
+      }
+      const sessionPayload = {
+        questions: seed.selectedQuestions,
+        totalQuestions: seed.selectedQuestions.length,
+        passingScore: seed.passingScore,
+        timeLimit: seed.timeLimit,
+        startedAt: Date.now(),
+        answers: Array(seed.selectedQuestions.length).fill(null) as Array<{ selectedIndex: number; correct: boolean } | null>
+      };
+      sessionStorage.setItem(sessionKey, JSON.stringify(sessionPayload));
+      router.push(`/modules/${resolvedParams.moduleSlug}/quiz/question/1`);
+    } catch (e) {
+      console.error('Failed to initialize quiz session', e);
+      setError('Failed to initialize quiz session');
+    }
   };
 
   if (loading) {
@@ -187,7 +259,7 @@ export default function QuizStartPage({ params }: { params: Promise<{ moduleSlug
                 </h3>
                 <p className="mt-1 text-sm text-yellow-700 dark:text-yellow-300">
                   Once you start the quiz, the timer will begin and cannot be paused. 
-                  Make sure you're ready before clicking Start Quiz.
+                  Make sure you&apos;re ready before clicking Start Quiz.
                 </p>
               </div>
             </div>

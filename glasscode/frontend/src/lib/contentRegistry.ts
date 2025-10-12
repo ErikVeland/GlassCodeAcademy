@@ -81,6 +81,23 @@ interface Lesson {
   title: string;
   intro?: string;
   topic?: string;
+  tags?: string[];
+  estimatedMinutes?: number;
+  objectives?: string[];
+  code?: {
+    example?: string;
+    explanation?: string;
+  };
+  pitfalls?: Array<{
+    mistake?: string;
+    solution?: string;
+    severity?: string;
+  }>;
+  exercises?: Array<{
+    title?: string;
+    description?: string;
+    checkpoints?: string[];
+  }>;
 }
 
 interface ProgrammingQuestion {
@@ -634,7 +651,7 @@ class ContentRegistryLoader {
       }
       
       const lessonsMeetThreshold = lessons.length >= (mod.thresholds?.requiredLessons || 0);
-      const quizMeetsThreshold = quiz && quiz.questions?.length >= (mod.thresholds?.requiredQuestions || 0);
+      const quizMeetsThreshold = !!quiz && ((quiz?.questions?.length ?? 0) >= (mod.thresholds?.requiredQuestions || 0));
       
       return {
         lessons: lessonsMeetThreshold,
@@ -737,4 +754,4 @@ export function getNextLessonGroup(moduleSlug: string, lessons: Lesson[], lesson
 }
 
 // Export types
-export type { Module, Tier, ContentRegistry };
+export type { Module, Tier, ContentRegistry, Lesson, Quiz };

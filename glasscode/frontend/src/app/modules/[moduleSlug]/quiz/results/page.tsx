@@ -3,13 +3,33 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import ConfettiBurst from '@/components/ConfettiBurst';
+import { useProgressTrackingComplete } from '@/hooks/useProgressTrackingComplete';
+import { contentRegistry } from '@/lib/contentRegistry';
+import type { ProgrammingQuestion } from '@/lib/contentRegistry';
+
+type CategoryScore = { category: string; correct: number; total: number };
+
+type ResultsData = {
+  totalQuestions: number;
+  correctAnswers: number;
+  score: number;
+  passingScore: number;
+  timeTaken: string;
+  timeLimit: string;
+  passed: boolean;
+  categoryScores: CategoryScore[];
+};
 
 // For client components in Next.js 15, params are still Promises that need to be awaited
 export default function QuizResultsPage({ params }: { params: Promise<{ moduleSlug: string }> }) {
   const router = useRouter();
   const [resolvedParams, setResolvedParams] = useState<{ moduleSlug: string } | null>(null);
-  const [results, setResults] = useState<any>(null);
+  const [results, setResults] = useState<ResultsData | null>(null);
   const [loading, setLoading] = useState(true);
+  const [showConfetti, setShowConfetti] = useState(false);
+  const { updateProgress } = useProgressTrackingComplete();
+  const [nextModuleHref, setNextModuleHref] = useState<string | null>(null);
 
   // Resolve the params promise
   useEffect(() => {
@@ -17,31 +37,71 @@ export default function QuizResultsPage({ params }: { params: Promise<{ moduleSl
       try {
         const { moduleSlug } = await params;
         setResolvedParams({ moduleSlug });
-        
-        // Mock results data - in a real implementation, this would come from the quiz session
-        const mockResults = {
-          totalQuestions: 15,
-          correctAnswers: 12,
-          score: 80,
-          passingScore: 70,
-          timeTaken: "22:30",
-          timeLimit: "30:00",
-          passed: true,
-          categoryScores: [
-            { category: "Variables & Data Types", correct: 3, total: 3 },
-            { category: "Control Structures", correct: 2, total: 3 },
-            { category: "Functions & Scope", correct: 2, total: 2 },
-            { category: "Data Structures", correct: 2, total: 2 },
-            { category: "Error Handling", correct: 1, total: 2 },
-            { category: "Algorithms", correct: 2, total: 3 }
-          ]
+        // Load quiz session from sessionStorage
+        const sessionKey = `quizSession:${moduleSlug}`;
+        const raw = typeof window !== 'undefined' ? sessionStorage.getItem(sessionKey) : null;
+        if (!raw) {
+          setLoading(false);
+          return;
+        }
+        const session = JSON.parse(raw);
+        const totalQuestions: number = session?.questions?.length ?? 0;
+        const answers: Array<{ selectedIndex: number; correct: boolean } | null> = session?.answers ?? [];
+        const correctAnswers = answers.reduce((acc, a) => acc + (a?.correct ? 1 : 0), 0);
+        const score = totalQuestions > 0 ? Math.round((correctAnswers / totalQuestions) * 100) : 0;
+        const passingScore: number = session?.passingScore ?? 70;
+        const passed = score >= passingScore;
+        const startedAt: number = session?.startedAt ?? Date.now();
+        const timeLimitMin: number = session?.timeLimit ?? 30;
+        const formatMinSec = (ms: number) => {
+          const totalSec = Math.max(0, Math.floor(ms / 1000));
+          const m = Math.floor(totalSec / 60);
+          const s = totalSec % 60;
+          return `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+        };
+        const timeTaken = formatMinSec(Date.now() - startedAt);
+        const timeLimit = `${String(timeLimitMin).padStart(2, '0')}:00`;
+
+        // Category breakdown by question topic
+        const categories: Record<string, { correct: number; total: number }> = {};
+        (session?.questions ?? []).forEach((q: ProgrammingQuestion, idx: number) => {
+          const cat = q?.topic || 'General';
+          if (!categories[cat]) categories[cat] = { correct: 0, total: 0 };
+          categories[cat].total += 1;
+          const a = answers[idx];
+          if (a?.correct) categories[cat].correct += 1;
+        });
+        const categoryScores: CategoryScore[] = Object.entries(categories).map(([category, stats]) => ({
+          category,
+          correct: stats.correct,
+          total: stats.total
+        }));
+
+        const computedResults = {
+          totalQuestions,
+          correctAnswers,
+          score,
+          passingScore,
+          timeTaken,
+          timeLimit,
+          passed,
+          categoryScores
         };
 
-        // Simulate loading
-        setTimeout(() => {
-          setResults(mockResults);
-          setLoading(false);
-        }, 1000);
+        setResults(computedResults);
+        setLoading(false);
+        if (passed) {
+          try {
+            const mod = await contentRegistry.getModule(moduleSlug);
+            const moduleName = mod?.title ?? moduleSlug.replace(/-/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
+            updateProgress(moduleSlug, moduleName, {
+              quizScore: score,
+            });
+            setShowConfetti(true);
+          } catch (e) {
+            console.error('Failed to update progress', e);
+          }
+        }
       } catch (error) {
         console.error('Error resolving params:', error);
       }
@@ -49,6 +109,42 @@ export default function QuizResultsPage({ params }: { params: Promise<{ moduleSl
 
     resolveParams();
   }, [params]);
+
+  // Compute next module route once params are resolved
+  useEffect(() => {
+    const computeNext = async () => {
+      if (!resolvedParams) return;
+      try {
+        const current = await contentRegistry.getModule(resolvedParams.moduleSlug);
+        if (!current) return;
+        // Next module within same tier by order; if none, next tier's first
+        const tierModules = await contentRegistry.getModulesByTier(current.tier);
+        const idx = tierModules.findIndex(m => m.slug === current.slug);
+        let next: typeof tierModules[number] | null = null;
+        if (idx >= 0 && idx < tierModules.length - 1) {
+          next = tierModules[idx + 1];
+        } else {
+          // move to next tier level
+          const tiers = await contentRegistry.getTiers();
+          const tierLevels = Object.keys(tiers).sort((a, b) =>
+            (tiers[a].level ?? 0) - (tiers[b].level ?? 0)
+          );
+          const currentIdx = tierLevels.findIndex(t => t === current.tier);
+          if (currentIdx >= 0 && currentIdx < tierLevels.length - 1) {
+            const nextTierKey = tierLevels[currentIdx + 1];
+            const nextTierModules = await contentRegistry.getModulesByTier(nextTierKey);
+            if (nextTierModules.length > 0) next = nextTierModules[0];
+          }
+        }
+        if (next) {
+          setNextModuleHref(`/modules/${next.slug}`);
+        }
+      } catch (e) {
+        console.error('Error computing next module:', e);
+      }
+    };
+    computeNext();
+  }, [resolvedParams]);
 
   const handleRetakeQuiz = () => {
     if (!resolvedParams) return;
@@ -97,6 +193,7 @@ export default function QuizResultsPage({ params }: { params: Promise<{ moduleSl
 
   return (
     <div className="max-w-4xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
+      <ConfettiBurst active={showConfetti} durationMs={4500} />
       {/* Breadcrumb Navigation */}
       <nav className="mb-8" aria-label="Breadcrumb">
         <ol className="flex items-center space-x-2 text-sm">
@@ -188,7 +285,7 @@ export default function QuizResultsPage({ params }: { params: Promise<{ moduleSl
           </h2>
           
           <div className="space-y-4">
-            {results.categoryScores.map((category: any, index: number) => {
+            {results.categoryScores.map((category: CategoryScore, index: number) => {
               const percentage = Math.round((category.correct / category.total) * 100);
               const isPerfect = category.correct === category.total;
               const isGood = percentage >= 70;
@@ -259,12 +356,21 @@ export default function QuizResultsPage({ params }: { params: Promise<{ moduleSl
                 <p className="text-gray-600 dark:text-gray-300 mb-4">
                   Move on to the next module to continue your learning journey.
                 </p>
-                <Link
-                  href="/"
-                  className="inline-block w-full px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors text-center"
-                >
-                  View Next Module
-                </Link>
+                {nextModuleHref ? (
+                  <Link
+                    href={nextModuleHref}
+                    className="inline-block w-full px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors text-center"
+                  >
+                    View Next Module
+                  </Link>
+                ) : (
+                  <Link
+                    href={`/modules/${moduleSlug}`}
+                    className="inline-block w-full px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors text-center"
+                  >
+                    Back to Module Overview
+                  </Link>
+                )}
               </div>
             ) : (
               <div className="border border-gray-200 dark:border-gray-700 rounded-lg p-6">

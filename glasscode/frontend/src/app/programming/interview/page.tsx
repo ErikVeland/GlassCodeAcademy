@@ -518,7 +518,7 @@ export default function ProgrammingInterviewPage() {
             
             {/* Multiple choice */}
             {q.type === 'multiple-choice' && q.choices && (
-              <fieldset role="radiogroup" aria-label="Answer choices" className="space-y-3">
+        <fieldset role="radiogroup" aria-label="Answer choices" className="space-y-3">
                 <legend className="sr-only">Choose an answer</legend>
                 {getDisplayChoices().map((choice, displayIndex) => {
                   const isSelected = selected === displayIndex;
@@ -527,16 +527,16 @@ export default function ProgrammingInterviewPage() {
                   return (
                     <label
                       key={displayIndex}
-                      className={`p-4 border rounded-lg cursor-pointer transition-all duration-200 backdrop-blur-sm ${
+                      className={`group relative p-4 border rounded-lg cursor-pointer transition-colors duration-150 focus-within:ring-2 focus-within:ring-blue-500 ${
                         feedback
                           ? isCorrect
-                            ? "bg-green-50/80 dark:bg-green-900/40 border-green-300 dark:border-green-600"
+                            ? "bg-green-50 dark:bg-green-900/30 border-green-400 dark:border-green-600"
                             : isIncorrectSelected
-                              ? "bg-red-50/80 dark:bg-red-900/40 border-red-300 dark:border-red-600"
-                              : "border-gray-200 dark:border-gray-600"
+                              ? "bg-red-50 dark:bg-red-900/30 border-red-400 dark:border-red-600"
+                              : "border-gray-300 dark:border-gray-600"
                           : isSelected
-                            ? "bg-blue-50/80 dark:bg-blue-900/40 border-blue-300 dark:border-blue-600 shadow-sm"
-                            : "border-gray-200 dark:border-gray-600 hover:border-blue-200 dark:hover:border-blue-500 hover:bg-blue-50/80 dark:hover:bg-blue-900/30"
+                            ? "bg-white dark:bg-gray-800 border-blue-500 ring-1 ring-blue-400"
+                            : "border-gray-300 hover:border-blue-400 dark:border-gray-600 dark:hover:border-blue-500"
                       }`}
                     >
                       <input
@@ -549,16 +549,16 @@ export default function ProgrammingInterviewPage() {
                         className="sr-only"
                       />
                       <div className="flex items-start">
-                        <div className={`flex-shrink-0 h-5 w-5 border rounded-full mt-0.5 mr-3 flex items-center justify-center transition-colors duration-200 ${
+                        <div className={`flex-shrink-0 h-5 w-5 border rounded-full mt-0.5 mr-3 flex items-center justify-center transition-colors duration-150 ${
                           feedback
                             ? isCorrect
-                              ? "bg-green-500 border-green-500"
+                              ? "bg-green-500 border-green-500 text-white"
                               : isIncorrectSelected
-                                ? "bg-red-500 border-red-500"
+                                ? "bg-red-500 border-red-500 text-white"
                                 : "border-gray-300 dark:border-gray-500"
-                            : isSelected
-                              ? "bg-blue-500 border-blue-500"
-                              : "border-gray-300 dark:border-gray-500"
+                          : isSelected
+                            ? "bg-blue-500 border-blue-500"
+                            : "border-gray-300 dark:border-gray-500"
                         }`}>
                           {(feedback && isCorrect) && (
                             <svg className="h-5 w-5 text-white" fill="currentColor" viewBox="0 0 20 20">

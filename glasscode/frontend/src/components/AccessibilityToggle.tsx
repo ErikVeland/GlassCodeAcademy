@@ -93,7 +93,12 @@ const AccessibilityToggle: React.FC = () => {
                 <select
                   id="text-size-select"
                   value={settings.textSize}
-                  onChange={(e) => updateSetting('textSize', e.target.value)}
+                  onChange={(e) =>
+                    updateSetting(
+                      'textSize',
+                      e.target.value as typeof settings.textSize
+                    )
+                  }
                   aria-describedby="text-size-help"
                 >
                   <option value="small">Small</option>

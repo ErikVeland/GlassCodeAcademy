@@ -365,7 +365,12 @@ export const AccessibilityPanel: React.FC<{ isOpen: boolean; onClose: () => void
             <select
               id="text-size-select"
               value={settings.textSize}
-              onChange={(e) => handleSettingChange('textSize', e.target.value)}
+              onChange={(e) =>
+                handleSettingChange(
+                  'textSize',
+                  e.target.value as AccessibilitySettings['textSize']
+                )
+              }
             >
               <option value="small">Small</option>
               <option value="medium">Medium</option>

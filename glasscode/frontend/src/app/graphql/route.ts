@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 
 // Proxy /graphql to backend GraphQL endpoint for dev reliability
 const getBackendGraphQLEndpoint = () => {
-  const base = process.env.NEXT_PUBLIC_API_BASE?.replace(/\/+$/, '') || 'http://localhost:8080';
+  const base = process.env.NEXT_PUBLIC_API_BASE?.replace(/\/+$/, '') || 'http://127.0.0.1:8080';
   return `${base}/graphql`;
 };
 

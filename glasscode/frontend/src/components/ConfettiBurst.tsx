@@ -11,6 +11,7 @@ interface ConfettiBurstProps {
 export default function ConfettiBurst({ active, durationMs = 4000 }: ConfettiBurstProps) {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const rafRef = useRef<number | null>(null);
+  const startRef = useRef<number | null>(null);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -19,9 +20,12 @@ export default function ConfettiBurst({ active, durationMs = 4000 }: ConfettiBur
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
+    const origin = { x: 0, y: 0 };
     const resize = () => {
       canvas.width = window.innerWidth;
       canvas.height = window.innerHeight;
+      origin.x = canvas.width / 2;
+      origin.y = canvas.height + 36; // just below bottom edge
     };
     resize();
     window.addEventListener("resize", resize);
@@ -35,23 +39,35 @@ export default function ConfettiBurst({ active, durationMs = 4000 }: ConfettiBur
       "#fb7185", // rose-400
     ];
 
-    // Emit confetti from the bottom upward
-    const pieces = Array.from({ length: 160 }).map(() => ({
-      x: Math.random() * canvas.width,
-      y: canvas.height + 20 + Math.random() * 80,
-      w: 6 + Math.random() * 6,
-      h: 10 + Math.random() * 10,
-      vx: -2 + Math.random() * 4,
-      vy: -3 - Math.random() * 2, // initial upward velocity
-      rot: Math.random() * Math.PI,
-      vrot: (-0.1 + Math.random() * 0.2),
-      color: colors[Math.floor(Math.random() * colors.length)],
-      opacity: 0.9,
-    }));
+    // Single-point fountain emitter: bottom-center, spreading upward with gravity
+    const spread = 0.85; // radians around straight-up
+    const minSpeed = 7.25;
+    const maxSpeed = 12.0;
 
-    const gravity = -0.06; // upward bias
-    const drag = 0.997;
+    const makePiece = () => {
+      const theta = -Math.PI / 2 + (Math.random() - 0.5) * spread;
+      const speed = minSpeed + Math.random() * (maxSpeed - minSpeed);
+      return {
+        x: origin.x,
+        y: origin.y,
+        w: 6 + Math.random() * 6,
+        h: 10 + Math.random() * 10,
+        vx: Math.cos(theta) * speed,
+        vy: Math.sin(theta) * speed,
+        rot: Math.random() * Math.PI,
+        vrot: -0.15 + Math.random() * 0.3,
+        color: colors[Math.floor(Math.random() * colors.length)],
+        opacity: 0.95,
+      };
+    };
+
+    const pieces = Array.from({ length: 220 }).map(() => makePiece());
+
+    const gravity = 0.13; // pull downward
+    const drag = 0.989; // slight air resistance
+    const emissionEndMs = durationMs * 0.65; // stop recycling after this
     const start = performance.now();
+    startRef.current = start;
 
     const draw = () => {
       const now = performance.now();
@@ -64,25 +80,45 @@ export default function ConfettiBurst({ active, durationMs = 4000 }: ConfettiBur
       }
 
       ctx.clearRect(0, 0, canvas.width, canvas.height);
+      const wind = Math.sin(elapsed * 0.002) * 0.08;
+      const fadeFactor = elapsed > emissionEndMs
+        ? Math.max(0, (durationMs - elapsed) / (durationMs - emissionEndMs))
+        : 1;
       for (const p of pieces) {
+        // physics integration
         p.vy += gravity;
+        p.vx += wind;
         p.vx *= drag;
         p.vy *= drag;
         p.x += p.vx;
         p.y += p.vy;
         p.rot += p.vrot;
-        // recycle pieces after exiting top of screen
-        if (p.y < -20) {
-          p.y = canvas.height + 20 + Math.random() * 80;
-          p.x = Math.random() * canvas.width;
-          p.vy = -3 - Math.random() * 2;
-          p.vx = -2 + Math.random() * 4;
+
+        // recycle when out of bounds (below screen or far off sides)
+        const outOfBounds = p.y > canvas.height + 80 || p.x < -80 || p.x > canvas.width + 80;
+        if (outOfBounds) {
+          if (elapsed <= emissionEndMs) {
+            const theta = -Math.PI / 2 + (Math.random() - 0.5) * spread;
+            const speed = minSpeed + Math.random() * (maxSpeed - minSpeed);
+            p.x = origin.x;
+            p.y = origin.y;
+            p.vx = Math.cos(theta) * speed;
+            p.vy = Math.sin(theta) * speed;
+            p.rot = Math.random() * Math.PI;
+            p.vrot = -0.15 + Math.random() * 0.3;
+            p.opacity = 0.95;
+          } else {
+            p.opacity = 0;
+            continue;
+          }
         }
+
+        // draw
         ctx.save();
         ctx.translate(p.x, p.y);
         ctx.rotate(p.rot);
         ctx.fillStyle = p.color;
-        ctx.globalAlpha = p.opacity;
+        ctx.globalAlpha = p.opacity * fadeFactor;
         ctx.fillRect(-p.w / 2, -p.h / 2, p.w, p.h);
         ctx.restore();
       }

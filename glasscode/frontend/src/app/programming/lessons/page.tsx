@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, Suspense } from "react";
 import { useSearchParams } from 'next/navigation';
 import Link from "next/link";
 import { useQuery, gql } from '@apollo/client';
@@ -35,7 +35,7 @@ const PROGRAMMING_LESSONS_QUERY = gql`
   }
 `;
 
-export default function ProgrammingLessonsPage() {
+function ProgrammingLessonsInner() {
     const [selectedTopic, setSelectedTopic] = useState<string | null>(null);
     const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
     const retryCountRef = useRef(0);
@@ -479,5 +479,13 @@ export default function ProgrammingLessonsPage() {
                 )}
             </div>
         </div>
+    );
+}
+
+export default function ProgrammingLessonsPage() {
+    return (
+        <Suspense fallback={<EnhancedLoadingComponent retryCount={0} maxRetries={1} />}> 
+            <ProgrammingLessonsInner />
+        </Suspense>
     );
 }

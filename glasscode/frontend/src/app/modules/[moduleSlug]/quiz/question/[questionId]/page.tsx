@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from 'react';
+import type { ProgrammingQuestion } from '@/lib/contentRegistry';
 import { notFound, useRouter } from 'next/navigation';
 import Link from 'next/link';
 
@@ -8,11 +9,21 @@ import Link from 'next/link';
 export default function QuizQuestionPage({ params }: { params: Promise<{ moduleSlug: string; questionId: string }> }) {
   const router = useRouter();
   const [resolvedParams, setResolvedParams] = useState<{ moduleSlug: string; questionId: string } | null>(null);
-  const [questionData, setQuestionData] = useState<any>(null);
-  const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null);
+  const [questionData, setQuestionData] = useState<ProgrammingQuestion | null>(null);
+  const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
   const [showExplanation, setShowExplanation] = useState(false);
   const [isCorrect, setIsCorrect] = useState<boolean | null>(null);
   const [loading, setLoading] = useState(true);
+  const [totalQuestions, setTotalQuestions] = useState<number>(0);
+
+  interface QuizSession {
+    questions: ProgrammingQuestion[];
+    totalQuestions: number;
+    passingScore: number;
+    timeLimit: number;
+    startedAt: number;
+    answers: ({ selectedIndex: number; correct: boolean } | null)[];
+  }
 
   // Resolve the params promise
   useEffect(() => {
@@ -20,36 +31,34 @@ export default function QuizQuestionPage({ params }: { params: Promise<{ moduleS
       try {
         const { moduleSlug, questionId } = await params;
         setResolvedParams({ moduleSlug, questionId });
-        
         // Parse question ID
         const questionIndex = parseInt(questionId) - 1;
-        
-        // Mock quiz data - in a real implementation, this would come from an API
-        const mockQuizData = {
-          totalQuestions: 15,
-          questions: Array.from({ length: 15 }, (_, i) => ({
-            id: i + 1,
-            type: i % 3 === 0 ? 'multiple-choice' : i % 3 === 1 ? 'true-false' : 'scenario',
-            question: `This is a sample question ${i + 1} about programming concepts. What is the correct answer to this important concept?`,
-            choices: [
-              `Option A for question ${i + 1}`,
-              `Option B for question ${i + 1}`,
-              `Option C for question ${i + 1}`,
-              `Option D for question ${i + 1}`
-            ],
-            correctAnswer: `Option ${String.fromCharCode(65 + (i % 4))} for question ${i + 1}`,
-            explanation: `This explanation describes why the correct answer is what it is for question ${i + 1}. Understanding this concept is crucial for mastering the material.`
-          }))
-        };
 
-        // Validate question ID
-        if (isNaN(questionIndex) || questionIndex < 0 || questionIndex >= mockQuizData.totalQuestions) {
+        // Load quiz session
+        const sessionKey = `quizSession:${moduleSlug}`;
+        const raw = typeof window !== 'undefined' ? sessionStorage.getItem(sessionKey) : null;
+        if (!raw) {
+          setLoading(false);
           notFound();
           return;
         }
-
-        // Set current question data
-        setQuestionData(mockQuizData.questions[questionIndex]);
+        const session = JSON.parse(raw) as QuizSession;
+        const total = session?.questions?.length ?? 0;
+        setTotalQuestions(total);
+        if (isNaN(questionIndex) || questionIndex < 0 || questionIndex >= total) {
+          // End of quiz or invalid index
+          router.push(`/modules/${moduleSlug}/quiz/results`);
+          return;
+        }
+        const q = session.questions[questionIndex];
+        setQuestionData(q);
+        // Restore previous selection if exists
+        const prev = session.answers?.[questionIndex] ?? null;
+        if (prev) {
+          setSelectedAnswer(prev.selectedIndex);
+          setIsCorrect(prev.correct);
+          setShowExplanation(true);
+        }
         setLoading(false);
       } catch (error) {
         console.error('Error resolving params:', error);
@@ -60,29 +69,41 @@ export default function QuizQuestionPage({ params }: { params: Promise<{ moduleS
     resolveParams();
   }, [params]);
 
-  const handleAnswerSelect = (answer: string) => {
-    setSelectedAnswer(answer);
+  const handleAnswerSelect = (index: number) => {
+    setSelectedAnswer(index);
   };
 
   const handleSubmit = () => {
-    if (!selectedAnswer || !questionData) return;
-    
+    if (selectedAnswer === null || !questionData || !resolvedParams) return;
     const correct = selectedAnswer === questionData.correctAnswer;
     setIsCorrect(correct);
     setShowExplanation(true);
+    // Persist answer to session
+    try {
+      const { moduleSlug, questionId } = resolvedParams;
+      const sessionKey = `quizSession:${moduleSlug}`;
+      const raw = sessionStorage.getItem(sessionKey);
+      if (!raw) return;
+      const session = JSON.parse(raw);
+      const qIndex = parseInt(questionId) - 1;
+      session.answers[qIndex] = { selectedIndex: selectedAnswer, correct };
+      sessionStorage.setItem(sessionKey, JSON.stringify(session));
+    } catch (e) {
+      console.error('Failed to save answer', e);
+    }
   };
 
   const handleNextQuestion = () => {
     if (!resolvedParams) return;
-    
     const { moduleSlug, questionId } = resolvedParams;
-    const questionIndex = parseInt(questionId) - 1;
-    
-    if (questionIndex < 14) { // 15 questions total (0-14)
-      router.push(`/modules/${moduleSlug}/quiz/question/${questionIndex + 2}`);
-    } else {
-      // Quiz completed - redirect to results
+    const nextIndex = parseInt(questionId);
+    const sessionKey = `quizSession:${moduleSlug}`;
+    const raw = sessionStorage.getItem(sessionKey);
+    const total = raw ? (JSON.parse(raw)?.questions?.length ?? 0) : 0;
+    if (nextIndex >= total) {
       router.push(`/modules/${moduleSlug}/quiz/results`);
+    } else {
+      router.push(`/modules/${moduleSlug}/quiz/question/${nextIndex + 1}`);
     }
   };
 
@@ -115,11 +136,6 @@ export default function QuizQuestionPage({ params }: { params: Promise<{ moduleS
 
   const { moduleSlug, questionId } = resolvedParams;
   const questionIndex = parseInt(questionId) - 1;
-  
-  // Mock quiz data for navigation buttons
-  const mockQuizData = {
-    totalQuestions: 15
-  };
 
   return (
     <div className="max-w-4xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
@@ -155,16 +171,16 @@ export default function QuizQuestionPage({ params }: { params: Promise<{ moduleS
         <div className="glass-morphism p-4 rounded-xl">
           <div className="flex justify-between items-center mb-2">
             <span className="text-sm text-gray-600 dark:text-gray-300">
-              Question {questionId} of {mockQuizData.totalQuestions}
+              Question {questionId} of {totalQuestions}
             </span>
             <span className="text-sm text-gray-600 dark:text-gray-300">
-              {Math.round((questionIndex / mockQuizData.totalQuestions) * 100)}% Complete
+              {Math.round((questionIndex / (totalQuestions || 1)) * 100)}% Complete
             </span>
           </div>
           <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
             <div 
               className="bg-blue-600 h-2 rounded-full" 
-              style={{ width: `${((questionIndex + 1) / mockQuizData.totalQuestions) * 100}%` }}
+              style={{ width: `${((questionIndex + 1) / (totalQuestions || 1)) * 100}%` }}
             ></div>
           </div>
         </div>
@@ -192,8 +208,8 @@ export default function QuizQuestionPage({ params }: { params: Promise<{ moduleS
         {/* Answer Choices */}
         <div className="space-y-3 mb-8">
           {questionData.choices.map((choice: string, index: number) => {
-            const isSelected = selectedAnswer === choice;
-            const isCorrectAnswer = choice === questionData.correctAnswer;
+            const isSelected = selectedAnswer === index;
+            const isCorrectAnswer = index === questionData.correctAnswer;
             
             let choiceStyle = "flex items-center p-4 rounded-lg border cursor-pointer transition-colors ";
             
@@ -215,7 +231,7 @@ export default function QuizQuestionPage({ params }: { params: Promise<{ moduleS
               <div
                 key={index}
                 className={choiceStyle}
-                onClick={() => !showExplanation && handleAnswerSelect(choice)}
+                onClick={() => !showExplanation && handleAnswerSelect(index)}
               >
                 <div className="flex items-center">
                   <div className={`flex-shrink-0 w-6 h-6 rounded-full border flex items-center justify-center mr-4 ${
@@ -298,7 +314,7 @@ export default function QuizQuestionPage({ params }: { params: Promise<{ moduleS
                 onClick={handleNextQuestion}
                 className="px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors flex items-center"
               >
-                {questionIndex < mockQuizData.totalQuestions - 1 ? "Next Question" : "View Results"}
+                {questionIndex < totalQuestions - 1 ? "Next Question" : "View Results"}
                 <span className="ml-2">→</span>
               </button>
             )}
