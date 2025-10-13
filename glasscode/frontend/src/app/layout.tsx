@@ -6,6 +6,7 @@ import AnimatedBackground from '../components/AnimatedBackground';
 import { AccessibilityProvider } from '../components/AccessibilityProvider';
 import ApolloWrapper from '../components/ApolloWrapper';
 import AdminQueryHandler from '../components/AdminQueryHandler';
+import { Suspense } from 'react';
 
 // Apollo error/dev messages for development
 if (typeof window !== 'undefined' && process.env.NODE_ENV !== 'production') {
@@ -43,7 +44,9 @@ export default function RootLayout({
           <AccessibilityProvider>
             <DarkModeProvider>
               <div className="flex flex-col min-h-screen">
-                <AdminQueryHandler />
+                <Suspense fallback={null}>
+                  <AdminQueryHandler />
+                </Suspense>
                 {/* Skip to main content link for accessibility */}
                 <a 
                   href="#main-content" 

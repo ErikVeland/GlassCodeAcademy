@@ -81,6 +81,18 @@ Examples:
 
 # Full-stack deployment with custom frontend port
 ./bootstrap.sh --port 8080
+
+Notes and troubleshooting:
+
+- Ensure the frontend systemd unit binds to the configured port. The script generates `ExecStart=/usr/bin/node server.js -p <PORT>` inside `/etc/systemd/system/<APP_NAME>-frontend.service`.
+- If you hit `502 Bad Gateway`, check:
+  - `systemctl status glasscode-frontend` and `journalctl -u glasscode-frontend -n 200`
+  - `systemctl status glasscode-dotnet` and `journalctl -u glasscode-dotnet -n 200`
+  - Confirm ports are listening: `ss -tulpn | grep -E ':8080|:3000|:<PORT>'`
+  - Verify backend health: `curl -s http://127.0.0.1:8080/api/health`
+  - Verify frontend: `curl -s http://127.0.0.1:<PORT>/`
+- NGINX is configured to proxy to `127.0.0.1:<PORT>` for the frontend and `127.0.0.1:8080` for `/api` and `/graphql`. Timeouts are set to 60s to reduce transient 502s.
+- The script preflights ports and kills conflicting processes on `8080` and the frontend port before starting services.
 ```
 
 The script will stage `.next/standalone`, `.next/static`, and `public` under the frontend working directory used by the service, ensure the systemd unit uses `ExecStart=/usr/bin/node .next/standalone/server.js -p <PORT>`, and configure NGINX accordingly.

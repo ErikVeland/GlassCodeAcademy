@@ -437,6 +437,14 @@ log "✅ Standalone assets staged"
 ### 11. Create systemd services
 log "⚙️  Creating systemd services..."
 systemctl stop ${APP_NAME}-frontend 2>/dev/null || true
+log "🔌 Frontend port $FRONTEND_PORT preflight: checking for conflicts..."
+FRONTEND_CONFLICT_PIDS=$(ss -tulpn 2>/dev/null | grep ":$FRONTEND_PORT" | sed -n 's/.*pid=\([0-9]\+\).*/\1/p' | sort -u)
+if [ -n "$FRONTEND_CONFLICT_PIDS" ]; then
+    log "🛑 Killing processes using port $FRONTEND_PORT (PIDs: $FRONTEND_CONFLICT_PIDS)"
+    kill -9 $FRONTEND_CONFLICT_PIDS 2>/dev/null || true
+    sleep 2
+fi
+ss -tulpn 2>/dev/null | grep ":$FRONTEND_PORT" || true
 
 ### Frontend service (production mode)
 # Generate unit with conditional backend gating and standalone working directory
@@ -457,16 +465,18 @@ TimeoutStartSec=300
 ExecStartPre=/usr/bin/bash -lc '
   MAX=30; COUNT=1;
   while [ \$COUNT -le \$MAX ]; do
+    HTTP=\$(curl -s -o /dev/null -w "%{http_code}" http://127.0.0.1:8080/api/health || true);
     RESP=\$(curl -s http://127.0.0.1:8080/api/health || true);
-    STATUS=\$(echo "\$RESP" | grep -o \"status\":\"[^\"]*\" | cut -d\" -f4);
-    if [ "\$STATUS" = "healthy" ]; then
+    STATUS=\$(echo "\$RESP" | jq -r .status 2>/dev/null || echo "");
+    if [ "\$HTTP" = "200" ] && [ "\$STATUS" = "healthy" ]; then
       exit 0;
     fi;
     sleep 5; COUNT=\$((COUNT+1));
   done;
-  echo "Backend health check gating failed: status='\$STATUS' resp='\$RESP'"; exit 1;
+  echo "Backend health check gating failed: http='\$HTTP' status='\$STATUS' resp='\$RESP'"; exit 1;
 '
-ExecStart=/usr/bin/node server.js
+ExecStart=/usr/bin/node server.js -p $FRONTEND_PORT
+ 
 
 [Install]
 WantedBy=multi-user.target
@@ -485,7 +495,7 @@ User=$DEPLOY_USER
 Environment=NODE_ENV=production
 Environment=PORT=$FRONTEND_PORT
 TimeoutStartSec=300
-ExecStart=/usr/bin/node server.js
+ExecStart=/usr/bin/node server.js -p $FRONTEND_PORT
 
 [Install]
 WantedBy=multi-user.target
@@ -558,6 +568,9 @@ server {
         proxy_set_header X-Real-IP \$remote_addr;
         proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;
         proxy_set_header X-Forwarded-Proto \$scheme;
+        proxy_connect_timeout 60s;
+        proxy_send_timeout 60s;
+        proxy_read_timeout 60s;
     }
 }
 EOF
@@ -580,6 +593,9 @@ server {
         proxy_set_header X-Real-IP \$remote_addr;
         proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;
         proxy_set_header X-Forwarded-Proto \$scheme;
+        proxy_connect_timeout 60s;
+        proxy_send_timeout 60s;
+        proxy_read_timeout 60s;
     }
 
     location /graphql {
@@ -589,6 +605,9 @@ server {
         proxy_set_header X-Real-IP \$remote_addr;
         proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;
         proxy_set_header X-Forwarded-Proto \$scheme;
+        proxy_connect_timeout 60s;
+        proxy_send_timeout 60s;
+        proxy_read_timeout 60s;
     }
 
     location / {
@@ -598,6 +617,9 @@ server {
         proxy_set_header X-Real-IP \$remote_addr;
         proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;
         proxy_set_header X-Forwarded-Proto \$scheme;
+        proxy_connect_timeout 60s;
+        proxy_send_timeout 60s;
+        proxy_read_timeout 60s;
     }
 }
 EOF
