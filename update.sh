@@ -462,6 +462,30 @@ else
         log "🔧 Adding ExecStartPre to use health-check script"
         sed -i "/^\[Service\]/a ExecStartPre=$APP_DIR/glasscode/frontend/check_backend_health.sh" "$UNIT_FILE_PATH"
     fi
+    # Clean up any accidental inline script content in the unit file
+    # Some previous versions embedded the health-check script inline, producing invalid keys like MAX, HTTP, RESP
+    if grep -Eq '^(MAX=|HTTP=|RESP=|STATUS=|sleep 5;|echo "Backend health check gating failed)' "$UNIT_FILE_PATH"; then
+        log "🔧 Detected inline script contamination in unit file; rewriting clean template"
+        cat > "$UNIT_FILE_PATH" <<EOF
+[Unit]
+Description=${APP_NAME} Next.js Frontend
+After=network.target ${APP_NAME}-dotnet.service
+
+[Service]
+WorkingDirectory=$APP_DIR/glasscode/frontend
+EnvironmentFile=$APP_DIR/glasscode/frontend/.env.production
+ExecStartPre=$APP_DIR/glasscode/frontend/check_backend_health.sh
+ExecStart=/usr/bin/node .next/standalone/server.js -p 3000
+Restart=always
+RestartSec=10
+User=$DEPLOY_USER
+Environment=NODE_ENV=production
+TimeoutStartSec=300
+
+[Install]
+WantedBy=multi-user.target
+EOF
+    fi
     systemctl daemon-reload
     if command -v systemd-analyze >/dev/null 2>&1; then
         log "🧪 Verifying unit file with systemd-analyze"
