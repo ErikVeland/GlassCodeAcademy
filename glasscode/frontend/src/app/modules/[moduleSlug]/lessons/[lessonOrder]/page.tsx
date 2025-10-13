@@ -86,8 +86,8 @@ export default async function LessonPage({ params }: LessonPageProps) {
   const nextGroup = getNextLessonGroup(currentModule.slug, lessons, lessonIndex + 1);
   
   // Determine if this is the last lesson in its group
-  const isLastInGroup = currentGroupInfo && currentGroupInfo.group.lessons[currentGroupInfo.group.lessons.length - 1].order === lesson.order;
-  const isFirstInGroup = currentGroupInfo && currentGroupInfo.group.lessons[0].order === lesson.order;
+  const isLastInGroup = currentGroupInfo && currentGroupInfo.group.lessons[currentGroupInfo.group.lessons.length - 1] === lesson;
+  const isFirstInGroup = currentGroupInfo && currentGroupInfo.group.lessons[0] === lesson;
 
   return (
     <>
@@ -306,7 +306,7 @@ export default async function LessonPage({ params }: LessonPageProps) {
             {isLastInGroup ? (
               nextGroup ? (
                 <Link
-                  href={`${currentModule.routes.lessons}/${nextGroup.lessons[0].order}`}
+                  href={`${currentModule.routes.lessons}/${lessons.indexOf(nextGroup.lessons[0]) + 1}`}
                   className="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
                 >
                   Next Group: {nextGroup.title}

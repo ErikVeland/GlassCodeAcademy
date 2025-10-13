@@ -506,7 +506,7 @@ function ProgrammingInterviewContent() {
                   {/* Recipient and details */}
                   <div className="space-y-2">
                     <p className="text-gray-800 dark:text-gray-200 text-lg">This certifies that</p>
-                    <p className="text-2xl font-semibold text-blue-700 dark:text-blue-300">You</p>
+                    <p className="text-2xl font-semibold text-blue-700 dark:text-blue-300 certificate-name">You</p>
                     <p className="text-gray-700 dark:text-gray-300">successfully completed the Programming Interview Preparation Quiz</p>
                     <p className="text-gray-700 dark:text-gray-300">with a score of <span className="font-semibold">{score}/{shuffledQuestions.length}</span> ({Math.round((score / shuffledQuestions.length) * 100)}%).</p>
                   </div>

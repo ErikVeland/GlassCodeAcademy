@@ -1,25 +1,11 @@
 "use client";
 
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { useQuery, gql } from '@apollo/client';
 import TechnologyUtilizationBox from '../../components/TechnologyUtilizationBox';
 import EnhancedLoadingComponent from '../../components/EnhancedLoadingComponent';
 
-type ProgrammingLesson = {
-    id: number;
-    topic: string;
-    title: string;
-    description: string;
-    codeExample: string;
-    output: string;
-};
-
-type TopicGroup = {
-    topic: string;
-    lessons: ProgrammingLesson[];
-};
 
 const PROGRAMMING_OVERVIEW_QUERY = gql`
   query ProgrammingOverview {
@@ -33,7 +19,6 @@ const PROGRAMMING_OVERVIEW_QUERY = gql`
 `;
 
 export default function ProgrammingOverviewPage() {
-    const router = useRouter();
     const [retryCount, setRetryCount] = useState(0);
     const { data, loading, error, refetch } = useQuery(PROGRAMMING_OVERVIEW_QUERY);
 
@@ -51,16 +36,6 @@ export default function ProgrammingOverviewPage() {
         }
     }, [data, loading]);
 
-    const lessons: ProgrammingLesson[] = data?.programmingLessons ?? [];
-
-    // Group lessons by topic
-    const topicGroups: TopicGroup[] = Object.values(
-        lessons.reduce((acc, lesson) => {
-            if (!acc[lesson.topic]) acc[lesson.topic] = { topic: lesson.topic, lessons: [] };
-            acc[lesson.topic].lessons.push(lesson);
-            return acc;
-        }, {} as Record<string, TopicGroup>)
-    );
 
     // If we're loading or have retry attempts, show the enhanced loading component
     if (loading || retryCount > 0) {
@@ -133,57 +108,7 @@ export default function ProgrammingOverviewPage() {
                     </div>
                 </div>
                 
-                <div className="mb-8">
-                    <h2 className="text-2xl font-bold mb-4 text-blue-700 dark:text-blue-300">Topics Covered</h2>
-                    <div className="grid grid-cols-1 gap-4">
-                        {topicGroups.map((group: TopicGroup) => (
-                            <div
-                                key={group.topic}
-                                role="link"
-                                tabIndex={0}
-                                onClick={() => router.push(`/programming/lessons?topic=${encodeURIComponent(group.topic)}&index=0`)}
-                                onKeyDown={(e) => {
-                                    if (e.key === 'Enter' || e.key === ' ') {
-                                        e.preventDefault();
-                                        router.push(`/programming/lessons?topic=${encodeURIComponent(group.topic)}&index=0`);
-                                    }
-                                }}
-                                className="bg-gray-100/80 dark:bg-gray-700/80 backdrop-blur-sm p-4 rounded-lg shadow border border-gray-200 dark:border-gray-600 cursor-pointer hover:ring-2 hover:ring-blue-400/50"
-                                aria-label={`Go to ${group.topic} lessons`}
-                            >
-                                <Link
-                                    href={`/programming/lessons?topic=${encodeURIComponent(group.topic)}&index=0`}
-                                    onClick={(e) => e.stopPropagation()}
-                                    className="font-bold text-lg text-blue-700 dark:text-blue-300 mb-2 hover:underline"
-                                    aria-label={`Go to ${group.topic} lessons`}
-                                >
-                                    {group.topic}
-                                </Link>
-                                <p className="text-gray-600 dark:text-gray-300 mb-3">
-                                    {group.lessons.length} lessons covering essential concepts
-                                </p>
-                                <div className="flex flex-wrap gap-2 mb-3">
-                                    {group.lessons.slice(0, 3).map((lesson: ProgrammingLesson, i: number) => (
-                                        <Link
-                                            key={lesson.id}
-                                            href={`/programming/lessons?topic=${encodeURIComponent(group.topic)}&index=${i}`}
-                                            onClick={(e) => e.stopPropagation()}
-                                            className="bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 text-xs px-2 py-1 rounded hover:bg-blue-200 dark:hover:bg-blue-800"
-                                            aria-label={`Open ${group.topic} lesson ${i + 1}: ${lesson.title}`}
-                                        >
-                                            {lesson.title}
-                                        </Link>
-                                    ))}
-                                    {group.lessons.length > 3 && (
-                                        <span className="bg-gray-200 dark:bg-gray-600 text-gray-700 dark:text-gray-300 text-xs px-2 py-1 rounded">
-                                            +{group.lessons.length - 3} more
-                                        </span>
-                                    )}
-                                </div>
-                            </div>
-                        ))}
-                    </div>
-                </div>
+                {/* Topics section removed per request to simplify module homepage */}
                 
                 <div className="flex flex-col sm:flex-row gap-4">
                     <Link 

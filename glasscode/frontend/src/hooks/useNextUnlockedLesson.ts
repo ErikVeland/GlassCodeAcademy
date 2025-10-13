@@ -25,18 +25,19 @@ export const useNextUnlockedLesson = () => {
             );
             const status = progress[mod.slug]?.completionStatus || 'not-started';
             if (prereqsMet && status !== 'completed') {
-              // Determine first lesson order from lesson groups
+              // Determine first lesson index from lesson groups for robust routing
               const lessons = await contentRegistry.getModuleLessons(mod.slug);
               const groups = getLessonGroups(mod.slug, lessons);
-              let firstLessonOrder = 1;
+              let firstLessonIndex = 0;
               if (groups && groups.length > 0 && groups[0].lessons && groups[0].lessons.length > 0) {
                 const first = groups[0].lessons[0];
-                firstLessonOrder = (first.order ?? first.id ?? 1) as number;
+                const idx = lessons.indexOf(first);
+                firstLessonIndex = idx >= 0 ? idx : 0;
               }
               {
                 const lessonsPath = mod.routes.lessons;
                 const shouldAppendOrder = lessonsPath.startsWith('/modules/');
-                const href = shouldAppendOrder ? `${lessonsPath}/${firstLessonOrder}` : lessonsPath;
+                const href = shouldAppendOrder ? `${lessonsPath}/${firstLessonIndex + 1}` : lessonsPath;
                 setNextLessonHref(href);
               }
               return;
@@ -52,15 +53,16 @@ export const useNextUnlockedLesson = () => {
             if (status !== 'completed') {
               const lessons = await contentRegistry.getModuleLessons(mod.slug);
               const groups = getLessonGroups(mod.slug, lessons);
-              let firstLessonOrder = 1;
+              let firstLessonIndex = 0;
               if (groups && groups.length > 0 && groups[0].lessons && groups[0].lessons.length > 0) {
                 const first = groups[0].lessons[0];
-                firstLessonOrder = (first.order ?? first.id ?? 1) as number;
+                const idx = lessons.indexOf(first);
+                firstLessonIndex = idx >= 0 ? idx : 0;
               }
               {
                 const lessonsPath = mod.routes.lessons;
                 const shouldAppendOrder = lessonsPath.startsWith('/modules/');
-                const href = shouldAppendOrder ? `${lessonsPath}/${firstLessonOrder}` : lessonsPath;
+                const href = shouldAppendOrder ? `${lessonsPath}/${firstLessonIndex + 1}` : lessonsPath;
                 setNextLessonHref(href);
               }
               return;

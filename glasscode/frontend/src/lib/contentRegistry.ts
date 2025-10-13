@@ -91,7 +91,7 @@ interface Lesson {
   pitfalls?: Array<{
     mistake?: string;
     solution?: string;
-    severity?: string;
+    severity?: 'high' | 'medium' | 'low';
   }>;
   exercises?: Array<{
     title?: string;
@@ -185,10 +185,7 @@ class ContentRegistryLoader {
         if (!registryData) {
           // Fallback to fetch even in server-side context
           console.log('Falling back to fetch for registry');
-          const baseUrl = process.env.NODE_ENV === 'production' 
-            ? process.env.NEXT_PUBLIC_BASE_URL || 'https://glasscode.academy'
-            : 'http://localhost:3000';
-          const response = await fetch(`${baseUrl}/api/content/registry`, {
+          const response = await fetch(`/api/content/registry`, {
             signal: AbortSignal.timeout(10000) // 10 second timeout
           });
           if (!response.ok) {
@@ -371,31 +368,83 @@ class ContentRegistryLoader {
         const { data } = await client.query({
           query: GET_PROGRAMMING_LESSONS
         });
-        return (data.programmingLessons || []) as Lesson[];
+        const lessons = (data.programmingLessons || []) as Lesson[];
+        return lessons.map((l, i) => ({ ...l, order: i + 1 }));
       } catch (error: unknown) {
         console.error(`Failed to load programming lessons via GraphQL:`, error);
-        // During build time, the backend might not be available
-        // Return a minimal set of lessons to allow build to complete
-        if (process.env.NEXT_PHASE === 'phase-production-build') {
-          console.log('Build phase detected, returning minimal lesson data for programming-fundamentals');
-          const minimalLessons: Lesson[] = [
-            { id: 1, title: 'Variables and Data Types', topic: 'basics' },
-            { id: 2, title: 'Control Structures', topic: 'basics' },
-            { id: 3, title: 'Functions', topic: 'basics' },
-            { id: 4, title: 'Arrays and Objects', topic: 'data-structures' },
-            { id: 5, title: 'Object-Oriented Programming', topic: 'data-structures' },
-            { id: 6, title: 'Error Handling', topic: 'error-handling' },
-            { id: 7, title: 'File Operations', topic: 'error-handling' },
-            { id: 8, title: 'Recursion', topic: 'algorithms' },
-            { id: 9, title: 'Sorting Algorithms', topic: 'algorithms' },
-            { id: 10, title: 'Memory Management', topic: 'advanced' },
-            { id: 11, title: 'Best Practices', topic: 'advanced' },
-            { id: 12, title: 'Project Organization', topic: 'advanced' }
-          ];
-          return minimalLessons;
+        // Attempt a server-side file fallback first
+        if (typeof window === 'undefined') {
+          try {
+            const fs = await import('fs');
+            const path = await import('path');
+            const possiblePaths = [
+              path.join(process.cwd(), '..', '..', 'content', 'lessons', `programming-fundamentals.json`),
+              path.join(process.cwd(), 'content', 'lessons', `programming-fundamentals.json`),
+              path.join(__dirname, '..', '..', '..', '..', 'content', 'lessons', `programming-fundamentals.json`),
+              path.join('/srv/academy', 'content', 'lessons', `programming-fundamentals.json`),
+            ];
+            let lessonsPath = '';
+            for (const possiblePath of possiblePaths) {
+              try {
+                if (fs.existsSync(possiblePath)) {
+                  lessonsPath = possiblePath;
+                  break;
+                }
+              } catch {
+                // Continue to next path
+              }
+            }
+            if (lessonsPath) {
+              const lessonsContent = fs.readFileSync(lessonsPath, 'utf8');
+              const lessonsData: unknown = JSON.parse(lessonsContent);
+              const lessons = Array.isArray(lessonsData) ? (lessonsData as Lesson[]) : [];
+              if (lessons.length > 0) {
+                return lessons.map((l, i) => ({ ...l, order: i + 1 }));
+              }
+            }
+          } catch (fsError) {
+            console.error('PF server-side file fallback failed:', fsError);
+          }
+        } else {
+          // Client-side fallback: try hitting the API route
+          try {
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), 15000);
+            const response = await fetch(`/api/content/lessons/programming-fundamentals`, {
+              signal: controller.signal,
+            }).finally(() => clearTimeout(timeoutId));
+            const contentType = response.headers.get('content-type');
+            if (contentType && contentType.includes('text/html')) {
+              console.error('Received HTML instead of JSON for programming-fundamentals lessons');
+            } else if (response.ok) {
+              const data: unknown = await response.json();
+              const lessons = Array.isArray(data) ? (data as Lesson[]) : [];
+              if (lessons.length > 0) {
+                return lessons.map((l, i) => ({ ...l, order: i + 1 }));
+              }
+            } else {
+              console.error(`HTTP error ${response.status} for programming-fundamentals lessons`);
+            }
+          } catch (httpError) {
+            console.error('PF client-side API fallback failed:', httpError);
+          }
         }
-        // Return empty array as fallback to prevent build failures
-        return [];
+        // Final fallback: return minimal PF lessons to prevent empty content
+        const minimalLessons: Lesson[] = [
+          { id: 1, title: 'Variables and Data Types', topic: 'basics' },
+          { id: 2, title: 'Control Structures', topic: 'basics' },
+          { id: 3, title: 'Functions', topic: 'basics' },
+          { id: 4, title: 'Arrays and Objects', topic: 'data-structures' },
+          { id: 5, title: 'Object-Oriented Programming', topic: 'data-structures' },
+          { id: 6, title: 'Error Handling', topic: 'error-handling' },
+          { id: 7, title: 'File Operations', topic: 'error-handling' },
+          { id: 8, title: 'Recursion', topic: 'algorithms' },
+          { id: 9, title: 'Sorting Algorithms', topic: 'algorithms' },
+          { id: 10, title: 'Memory Management', topic: 'advanced' },
+          { id: 11, title: 'Best Practices', topic: 'advanced' },
+          { id: 12, title: 'Project Organization', topic: 'advanced' }
+        ];
+        return minimalLessons.map((l, i) => ({ ...l, order: i + 1 }));
       }
     }
     
@@ -434,7 +483,7 @@ class ContentRegistryLoader {
         const lessonsContent = fs.readFileSync(lessonsPath, 'utf8');
         const lessonsData: unknown = JSON.parse(lessonsContent);
         const lessons = Array.isArray(lessonsData) ? (lessonsData as Lesson[]) : [];
-        return lessons;
+        return lessons.map((l, i) => ({ ...l, order: i + 1 }));
       } catch (error: unknown) {
         console.error(`Failed to load lessons for ${moduleSlug} (server-side):`, error);
         return [];
@@ -443,15 +492,12 @@ class ContentRegistryLoader {
     
     // For client-side, use HTTP requests
     try {
-      const baseUrl = process.env.NODE_ENV === 'production' 
-        ? process.env.NEXT_PUBLIC_BASE_URL || 'https://glasscode.academy'
-        : 'http://localhost:3000';
       
       // Use AbortController for timeout
       const controller = new AbortController();
       const timeoutId = setTimeout(() => controller.abort(), 15000); // 15 second timeout
       
-      const response = await fetch(`${baseUrl}/api/content/lessons/${moduleSlug}`, {
+      const response = await fetch(`/api/content/lessons/${moduleSlug}`, {
         signal: controller.signal
       }).finally(() => {
         clearTimeout(timeoutId);
@@ -470,7 +516,7 @@ class ContentRegistryLoader {
       }
       
       const data: unknown = await response.json();
-      return Array.isArray(data) ? (data as Lesson[]) : [];
+      return Array.isArray(data) ? (data as Lesson[]).map((l, i) => ({ ...l, order: i + 1 })) : [];
     } catch (error: unknown) {
       console.error(`Failed to load lessons for ${moduleSlug}:`, error);
       // Return empty array as fallback to prevent build failures
@@ -563,15 +609,12 @@ class ContentRegistryLoader {
     
     // For client-side, use HTTP requests
     try {
-      const baseUrl = process.env.NODE_ENV === 'production' 
-        ? process.env.NEXT_PUBLIC_BASE_URL || 'https://glasscode.academy'
-        : 'http://localhost:3000';
       
       // Use AbortController for timeout
       const controller = new AbortController();
       const timeoutId = setTimeout(() => controller.abort(), 15000); // 15 second timeout
       
-      const response = await fetch(`${baseUrl}/api/content/quizzes/${moduleSlug}`, {
+      const response = await fetch(`/api/content/quizzes/${moduleSlug}`, {
         signal: controller.signal
       }).finally(() => {
         clearTimeout(timeoutId);
@@ -768,7 +811,8 @@ export function getLessonGroupForLesson(moduleSlug: string, lessons: Lesson[], l
   if (!lesson) return null;
   
   for (const group of groups) {
-    if (group.lessons.some((l) => l.order === lesson.order)) {
+    // Match by identity to avoid relying on potentially missing/unsynchronized order values
+    if (group.lessons.some((l) => l === lesson)) {
       return {
         group,
         groupIndex: groups.indexOf(group)

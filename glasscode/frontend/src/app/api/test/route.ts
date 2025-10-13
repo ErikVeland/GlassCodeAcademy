@@ -1,5 +1,7 @@
+import { getApiBaseStrict } from '@/lib/urlUtils';
+
 export async function GET(): Promise<Response> {
-  const apiUrl = process.env.NEXT_PUBLIC_API_BASE || 'http://localhost:8080';
+  const apiUrl = getApiBaseStrict();
   
   try {
     const response = await fetch(`${apiUrl}/api/health`);
@@ -19,7 +21,8 @@ export async function GET(): Promise<Response> {
     return new Response(JSON.stringify({
       success: false,
       apiUrl,
-      error: message
+      error: message,
+      hint: 'Set NEXT_PUBLIC_API_BASE to your backend origin.'
     }), {
       headers: {
         'Content-Type': 'application/json'

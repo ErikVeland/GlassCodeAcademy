@@ -1,8 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { getApiBaseStrict } from '@/lib/urlUtils';
 
-// Proxy /graphql to backend GraphQL endpoint for dev reliability
+// Proxy /graphql to backend GraphQL endpoint without hardcoded host
 const getBackendGraphQLEndpoint = () => {
-  const base = process.env.NEXT_PUBLIC_API_BASE?.replace(/\/+$/, '') || 'http://127.0.0.1:8080';
+  const base = getApiBaseStrict();
   return `${base}/graphql`;
 };
 
@@ -47,7 +48,7 @@ export async function POST(req: NextRequest) {
     });
   } catch (error) {
     console.error('GraphQL proxy error:', error);
-    return NextResponse.json({ error: 'GraphQL proxy failed' }, { status: 502 });
+    return NextResponse.json({ error: 'GraphQL proxy failed. Ensure NEXT_PUBLIC_API_BASE is set.' }, { status: 502 });
   }
 }
 

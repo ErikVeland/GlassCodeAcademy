@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
+import { ROUTES } from '@/lib/routes';
 import AnimatedBackground from '../../components/AnimatedBackground';
 import EnhancedLoadingComponent from '../../components/EnhancedLoadingComponent';
 
@@ -18,7 +19,7 @@ export default function AnimatedBackgroundDemo() {
   const [speed, setSpeed] = useState(25);
   const [blur, setBlur] = useState(55);
   const [opacity, setOpacity] = useState(0.77);
-  const [respectReducedMotion, setRespectReducedMotion] = useState(true);
+  const [respectReducedMotion, setRespectReducedMotion] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [retryCount, setRetryCount] = useState(0);
@@ -197,12 +198,20 @@ export default function AnimatedBackgroundDemo() {
               <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">
                 Animated Background Demo
               </h1>
-              <Link 
-                href="/" 
-                className="inline-block mb-4 bg-pink-100 dark:bg-pink-900 text-pink-800 dark:text-pink-200 font-semibold py-1 px-2 rounded shadow hover:bg-pink-200 dark:hover:bg-pink-800 transition-colors duration-150 flex items-center gap-1 text-xs"
-              >
-                <span className="text-base">←</span> Back to Home
-              </Link>
+              <div className="flex items-center gap-2">
+                <Link 
+                  href="/" 
+                  className="inline-block mb-4 bg-pink-100 dark:bg-pink-900 text-pink-800 dark:text-pink-200 font-semibold py-1 px-2 rounded shadow hover:bg-pink-200 dark:hover:bg-pink-800 transition-colors duration-150 flex items-center gap-1 text-xs"
+                >
+                  <span className="text-base">←</span> Back to Home
+                </Link>
+                <a
+                  href={ROUTES.api.download.animatedBackground}
+                  className="inline-block mb-4 bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200 font-semibold py-1 px-2 rounded shadow hover:bg-green-200 dark:hover:bg-green-800 transition-colors duration-150 flex items-center gap-1 text-xs"
+                >
+                  <span className="text-base">⬇</span> Download Component
+                </a>
+              </div>
             </div>
           </div>
         </header>
@@ -242,7 +251,7 @@ export default function AnimatedBackgroundDemo() {
                             className="h-4 w-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500"
                           />
                           <span className="text-sm text-gray-700 dark:text-gray-300">
-                            {respectReducedMotion ? 'Enabled' : 'Disabled (force animation)'}
+                            {respectReducedMotion ? 'Enabled' : 'Disabled (animation forced for demo)'}
                           </span>
                         </div>
                       </div>

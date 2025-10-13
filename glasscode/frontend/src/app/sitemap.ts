@@ -1,12 +1,9 @@
 import { MetadataRoute } from 'next';
 import { contentRegistry } from '@/lib/contentRegistry';
+import { getPublicOriginStrict } from '@/lib/urlUtils';
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const baseUrl = process.env.VERCEL_URL 
-    ? `https://${process.env.VERCEL_URL}`
-    : process.env.NODE_ENV === 'production'
-    ? 'https://fullstack-academy.com' // Replace with actual domain
-    : 'http://localhost:3000';
+  const baseUrl = getPublicOriginStrict();
 
   try {
     // Generate sitemap data directly from content registry

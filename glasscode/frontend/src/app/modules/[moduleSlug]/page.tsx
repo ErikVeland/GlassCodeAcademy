@@ -232,26 +232,7 @@ export default async function ModulePage({ params }: ModulePageProps) {
                     Start Learning
                     <span className="ml-2">→</span>
                   </Link>
-                  {/* Example topic shortcuts if module has common topics */}
-                  <div className="mt-4 flex flex-wrap gap-2">
-                    {Array.from(
-                      new Set(
-                        (lessons || [])
-                          .map((l: Lesson) => l.topic)
-                          .filter((t): t is string => typeof t === 'string' && t.length > 0)
-                      )
-                    )
-                      .slice(0, 6)
-                      .map((topic: string) => (
-                        <Link
-                          key={topic}
-                          href={`${currentModule.routes.lessons}?topic=${encodeURIComponent(topic)}`}
-                          className="px-2 py-1 bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 rounded text-xs hover:bg-blue-100 dark:hover:bg-blue-900/50"
-                        >
-                          {topic}
-                        </Link>
-                      ))}
-                  </div>
+                  {/* Topic shortcut chips removed per request to simplify module homepage */}
                 </div>
               ) : (
                 <div>

@@ -173,7 +173,7 @@ export default async function LessonsPage({ params, searchParams }: LessonsPageP
                   <div className="ml-6">
                     {group.lessons[0] && (
                       <Link
-                        href={`${currentModule.routes.lessons}/${group.lessons[0].order}`}
+                        href={`${currentModule.routes.lessons}/${lessons.indexOf(group.lessons[0]) + 1}`}
                         className="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
                       >
                         Start Group
