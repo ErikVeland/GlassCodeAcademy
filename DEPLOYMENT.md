@@ -234,7 +234,7 @@ If you prefer to set up the server manually, follow these steps:
      journalctl -u glasscode-frontend -n 100 --no-pager
      ls -l /etc/systemd/system/glasscode-frontend.service
      ```
-   - Note: Our deployment scripts automatically unmask `${APP_NAME}-frontend` and `${APP_NAME}-dotnet` before enabling/restarting, and create/update the frontend unit to use the Next standalone server when needed.
+   - Note: Our deployment scripts now proactively unmask `${APP_NAME}-frontend` and `${APP_NAME}-dotnet` before enabling or restarting, and enforce the frontend unit's `ExecStart` to use the Next standalone server. If you still encounter masking issues (e.g., after manual changes), run the repair commands above, then re-run `bootstrap.sh` or `update.sh`.
 
 ### Testing Your Deployment
 

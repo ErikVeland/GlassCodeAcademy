@@ -192,7 +192,25 @@ class ContentRegistryLoader {
             signal: AbortSignal.timeout(10000) // 10 second timeout
           });
           if (!response.ok) {
-            throw new Error(`Failed to fetch registry.json: ${response.status} ${response.statusText}`);
+            console.warn(`Registry fetch failed ${response.status} ${response.statusText}, using minimal fallback`);
+            const minimal: ContentRegistry = {
+              version: '0.0.0',
+              lastUpdated: new Date().toISOString(),
+              tiers: {
+                foundational: { level: 1, title: 'Foundational', description: '', focusArea: 'Core', color: '#4B5563', learningObjectives: [] },
+                core: { level: 2, title: 'Core', description: '', focusArea: 'Core', color: '#2563EB', learningObjectives: [] },
+                specialized: { level: 3, title: 'Specialized', description: '', focusArea: 'Advanced', color: '#10B981', learningObjectives: [] },
+                quality: { level: 4, title: 'Quality', description: '', focusArea: 'Quality', color: '#F59E0B', learningObjectives: [] },
+              },
+              modules: [],
+              globalSettings: {
+                contentThresholds: { strictMode: false, developmentMode: true, minimumLessonsPerModule: 0, minimumQuestionsPerModule: 0, requiredSchemaCompliance: 0 },
+                routingRules: { enableLegacyRedirects: true, generate404Fallbacks: true, requireContentThresholds: false },
+                seoSettings: { generateSitemap: true, includeLastModified: false, excludeContentPending: false },
+              },
+            };
+            this.registry = minimal;
+            return this.registry;
           }
           const registryDataFetch: unknown = await response.json();
           this.registry = registryDataFetch as ContentRegistry;
@@ -216,7 +234,25 @@ class ContentRegistryLoader {
       }
     } catch (error: unknown) {
       console.error('Failed to load content registry:', error);
-      throw new Error('Content registry unavailable');
+      // Safe minimal fallback to avoid breaking pages
+      const minimal: ContentRegistry = {
+        version: '0.0.0',
+        lastUpdated: new Date().toISOString(),
+        tiers: {
+          foundational: { level: 1, title: 'Foundational', description: '', focusArea: 'Core', color: '#4B5563', learningObjectives: [] },
+          core: { level: 2, title: 'Core', description: '', focusArea: 'Core', color: '#2563EB', learningObjectives: [] },
+          specialized: { level: 3, title: 'Specialized', description: '', focusArea: 'Advanced', color: '#10B981', learningObjectives: [] },
+          quality: { level: 4, title: 'Quality', description: '', focusArea: 'Quality', color: '#F59E0B', learningObjectives: [] },
+        },
+        modules: [],
+        globalSettings: {
+          contentThresholds: { strictMode: false, developmentMode: true, minimumLessonsPerModule: 0, minimumQuestionsPerModule: 0, requiredSchemaCompliance: 0 },
+          routingRules: { enableLegacyRedirects: true, generate404Fallbacks: true, requireContentThresholds: false },
+          seoSettings: { generateSitemap: true, includeLastModified: false, excludeContentPending: false },
+        },
+      };
+      this.registry = minimal;
+      return this.registry;
     }
   }
 

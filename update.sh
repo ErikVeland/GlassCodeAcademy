@@ -258,6 +258,9 @@ log "✅ Frontend built"
 ### 10. Restart services in proper order
 log "🔄 Restarting services..."
 systemctl daemon-reload
+# Proactively unmask services to avoid masked-unit failures
+systemctl unmask ${APP_NAME}-frontend || true
+systemctl unmask ${APP_NAME}-dotnet || true
 
 # Start backend first and wait for it to be ready
 log "🚀 Starting backend service..."
@@ -363,12 +366,10 @@ WantedBy=multi-user.target
 EOF
     systemctl daemon-reload
 else
-    # If the unit exists, ensure it uses the standalone ExecStart
-    if grep -q "ExecStart=/usr/bin/npx next start" "$UNIT_FILE_PATH"; then
-        log "🔧 Updating ExecStart to use Next standalone server"
-        sed -i 's|ExecStart=/usr/bin/npx next start -p 3000|ExecStart=/usr/bin/node .next/standalone/server.js -p 3000|' "$UNIT_FILE_PATH"
-        systemctl daemon-reload
-    fi
+    # If the unit exists, ensure it uses the standalone ExecStart regardless of current value
+    log "🔧 Enforcing ExecStart to use Next standalone server"
+    sed -i 's|^ExecStart=.*|ExecStart=/usr/bin/node .next/standalone/server.js -p 3000|' "$UNIT_FILE_PATH"
+    systemctl daemon-reload
 fi
 
 systemctl restart ${APP_NAME}-frontend

@@ -33,7 +33,7 @@ const ModuleCard: React.FC<{
   const searchParams = useSearchParams();
   const isUnlocked = searchParams.get('unlock') === 'true';
 
-  const moduleProgress = progress[module.slug];
+  const moduleProgress = progress[module.slug] || null;
   const completionPercentage = moduleProgress ?
     (moduleProgress.lessonsCompleted / moduleProgress.totalLessons) * 100 : 0;
 
@@ -45,7 +45,7 @@ const ModuleCard: React.FC<{
   const moduleStatus = moduleProgress?.completionStatus || 'not-started';
 
   // Check prerequisites
-  const prerequisitesMet = module.prerequisites.every(prereqId =>
+  const prerequisitesMet = (module.prerequisites || []).every(prereqId =>
     progress[prereqId]?.completionStatus === 'completed'
   );
 
@@ -71,7 +71,7 @@ const ModuleCard: React.FC<{
   return (
     <div className={`module-card-container ${isLocked ? 'locked' : ''} h-full`}>
       <Link
-        href={isLocked ? '#' : module.routes.overview}
+        href={isLocked ? '#' : (module.routes?.overview || '#')}
         className={`relative flex flex-col h-full bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 p-5 hover:shadow-xl transition-all duration-300 ${
           isLocked ? 'opacity-60' : 'hover:-translate-y-1'
         }`}
@@ -119,19 +119,19 @@ const ModuleCard: React.FC<{
 
         <div className="module-header flex items-start gap-4 mb-4">
           <div className={`w-10 h-10 rounded-lg bg-gradient-to-br ${tierGradientClass} flex items-center justify-center text-white font-bold text-lg`}>
-            {module.icon}
+            {module.icon || '📚'}
           </div>
           <div className="flex-1">
             <h4 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-2 text-left" id={`module-${module.slug}-title`}>
-              {module.title}
+              {module.title || 'Untitled Module'}
             </h4>
             <div className="flex items-center gap-2 mb-2">
               <span className={`px-2 py-1 rounded-full text-xs font-medium ${
-                module.difficulty === 'Beginner' ? 'bg-green-500/20 text-green-700 dark:text-green-300' :
-                module.difficulty === 'Intermediate' ? 'bg-yellow-500/20 text-yellow-700 dark:text-yellow-300' :
+                (module.difficulty || 'Beginner') === 'Beginner' ? 'bg-green-500/20 text-green-700 dark:text-green-300' :
+                (module.difficulty || 'Beginner') === 'Intermediate' ? 'bg-yellow-500/20 text-yellow-700 dark:text-yellow-300' :
                 'bg-red-500/20 text-red-700 dark:text-red-300'
               }`}>
-                {module.difficulty}
+                {module.difficulty || 'Beginner'}
               </span>
               <span className={`px-2 py-1 rounded-full text-xs font-medium ${
                 moduleStatus === 'not-started' ? 'bg-gray-500/20 text-gray-700 dark:text-gray-300' :
@@ -147,25 +147,25 @@ const ModuleCard: React.FC<{
         </div>
 
         <p className="text-gray-700 dark:text-gray-300 mb-4 text-left text-sm" id={`module-${module.slug}-description`}>
-          {module.description}
+          {module.description || 'No description available.'}
         </p>
 
         {/* Technologies used - Pill-shaped tags */}
         <div className="flex flex-wrap gap-1 mb-4">
-          {module.technologies.slice(0, 3).map(tech => (
+          {(module.technologies || []).slice(0, 3).map(tech => (
             <span key={tech} className="px-2 py-1 bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200 rounded-full text-xs">
               {tech}
             </span>
           ))}
-          {module.technologies.length > 3 && (
+          {(module.technologies || []).length > 3 && (
             <span className="px-2 py-1 bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200 rounded-full text-xs">+{module.technologies.length - 3} more</span>
           )}
         </div>
 
         <div className="module-meta mt-auto">
           <div className="flex items-center justify-between text-sm text-gray-600 dark:text-gray-400 mb-3">
-            <span>📅 {module.estimatedHours}h</span>
-            <span>{module.track}</span>
+            <span>📅 {module.estimatedHours ?? 0}h</span>
+            <span>{module.track || ''}</span>
           </div>
 
           {moduleProgress && (
@@ -184,9 +184,9 @@ const ModuleCard: React.FC<{
         </div>
 
         {/* Prerequisites indicator */}
-        {module.prerequisites.length > 0 && (
+        {(module.prerequisites || []).length > 0 && (
           <div className="mt-3 text-xs text-gray-500 dark:text-gray-500 text-left">
-            🔗 Requires: {module.prerequisites.length} prerequisite{module.prerequisites.length > 1 ? 's' : ''}
+            🔗 Requires: {module.prerequisites!.length} prerequisite{module.prerequisites!.length > 1 ? 's' : ''}
           </div>
         )}
       </Link>
@@ -264,7 +264,7 @@ const TierSection: React.FC<{
           <div className="bg-white/10 rounded-xl p-5 border border-white/20 mt-4 backdrop-blur-sm">
             <h3 className="text-lg font-semibold text-white mb-3 text-left">Learning Objectives</h3>
             <ul className="grid grid-cols-1 md:grid-cols-3 gap-3">
-              {tier.learningObjectives.map((objective, index) => (
+              {(tier.learningObjectives || []).map((objective, index) => (
                 <li key={index} className="flex items-start gap-2">
                   <span className="text-white mt-1 flex-shrink-0 text-sm">✓</span>
                   <span className="text-white/90 text-left text-sm">{objective}</span>
@@ -345,9 +345,10 @@ const HomePage: React.FC = () => {
         // Organize modules by tier
         const tierData: Record<string, TierData> = {};
 
-        Object.entries(tiers).forEach(([tierKey, tier]) => {
-          const tierModules = modules.filter(module => module.tier === tierKey)
-                                   .sort((a, b) => a.order - b.order);
+        Object.entries(tiers || {}).forEach(([tierKey, tier]) => {
+          const tierModules = modules
+            .filter(module => module.tier === tierKey)
+            .sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
           tierData[tierKey] = {
             tier,
             modules: tierModules
@@ -356,7 +357,7 @@ const HomePage: React.FC = () => {
 
         setRegistryData({
           tiers: tierData,
-          allModules: modules
+          allModules: modules || []
         });
       } catch (err) {
         console.error('Failed to load registry data:', err);

@@ -316,6 +316,8 @@ WantedBy=multi-user.target
 EOF
 
 systemctl daemon-reload
+# Always attempt to unmask backend service before enabling/starting
+systemctl unmask ${APP_NAME}-dotnet || true
 systemctl enable ${APP_NAME}-dotnet
 
 log "🚀 Starting real backend service..."
@@ -412,6 +414,9 @@ WantedBy=multi-user.target
 EOF
 
 systemctl daemon-reload
+# Always attempt to unmask services to avoid masked-unit failures
+systemctl unmask ${APP_NAME}-frontend || true
+systemctl unmask ${APP_NAME}-dotnet || true
 # Unmask services if previously masked
 if systemctl is-enabled ${APP_NAME}-frontend 2>/dev/null | grep -q masked; then
     log "⚠️  Frontend service is masked. Unmasking..."
