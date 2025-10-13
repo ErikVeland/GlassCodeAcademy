@@ -247,6 +247,12 @@ else
     sudo -u "$DEPLOY_USER" npm install
 fi
 
+# Pre-checks: Ensure critical credentials are present for production
+if [ -z "${NEXTAUTH_SECRET:-}" ]; then
+    log "❌ NEXTAUTH_SECRET is not set in $ENV_FILE. Please set a strong secret for production (e.g., 32+ chars)."
+    rollback
+fi
+
 cat > .env.production <<EOF
 NEXT_PUBLIC_API_BASE=$NEXT_PUBLIC_API_BASE
 NEXT_PUBLIC_BASE_URL=$NEXT_PUBLIC_BASE_URL
@@ -367,14 +373,15 @@ EnvironmentFile=$APP_DIR/glasscode/frontend/.env.production
 ExecStartPre=/usr/bin/bash -lc '
   MAX=30; COUNT=1;
   while [ \$COUNT -le \$MAX ]; do
-    RESP=$(curl -s http://127.0.0.1:8080/api/health || true);
-    STATUS=$(echo "\$RESP" | grep -o '"status":"[^"]*"' | cut -d'"' -f4);
-    if [ "\$STATUS" = "healthy" ]; then
+    HTTP=\$(curl -s -o /dev/null -w "%{http_code}" http://127.0.0.1:8080/api/health || true);
+    RESP=\$(curl -s http://127.0.0.1:8080/api/health || true);
+    STATUS=\$(echo "\$RESP" | grep -o '"status":"[^"]*"' | cut -d'"' -f4);
+    if [ "\$HTTP" = "200" ] && [ "\$STATUS" = "healthy" ]; then
       exit 0;
     fi;
-    sleep 5; COUNT=$((\$COUNT+1));
+    sleep 5; COUNT=\$((COUNT+1));
   done;
-  echo "Backend health check gating failed: status='\$STATUS' resp='\$RESP'"; exit 1;
+  echo "Backend health check gating failed: http='\$HTTP' status='\$STATUS' resp='\$RESP'"; exit 1;
 '
 ExecStart=/usr/bin/node .next/standalone/server.js -p 3000
 Restart=always

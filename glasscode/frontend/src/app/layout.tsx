@@ -59,13 +59,38 @@ export default function RootLayout({
                 
                 {/* Animated Background Component */}
                 <AnimatedBackground />
-                <Header />
+                <Suspense fallback={
+                  <div className="py-4 px-4 sm:px-6 lg:px-8">
+                    <div className="max-w-7xl mx-auto">
+                      <div className="bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm rounded-xl shadow p-4 border border-gray-200 dark:border-gray-700">
+                        <div className="text-center">
+                          <p className="text-gray-600 dark:text-gray-300">Loading header...</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                }>
+                  <Header />
+                </Suspense>
                 <main 
                   id="main-content" 
                   className="flex-grow w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 relative"
                   tabIndex={-1}
                 >
-                  {children}
+                  <Suspense fallback={
+                    <div className="py-12 px-4 sm:px-6 lg:px-8">
+                      <div className="max-w-4xl mx-auto">
+                        <div className="bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm rounded-xl shadow-lg p-6 border border-gray-200 dark:border-gray-700">
+                          <div className="text-center">
+                            <h2 className="text-2xl font-bold text-gray-800 dark:text-gray-200 mb-2">Loading</h2>
+                            <p className="text-gray-600 dark:text-gray-300">Preparing content...</p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  }>
+                    {children}
+                  </Suspense>
                 </main>
                 <footer className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm border-t border-gray-200 dark:border-gray-700 w-full max-w-7xl mx-auto mt-auto relative">
                   <div className="py-6 px-4 sm:px-6 lg:px-8">
