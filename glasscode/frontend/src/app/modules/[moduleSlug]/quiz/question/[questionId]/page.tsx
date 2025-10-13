@@ -15,6 +15,8 @@ export default function QuizQuestionPage({ params }: { params: Promise<{ moduleS
   const [isCorrect, setIsCorrect] = useState<boolean | null>(null);
   const [loading, setLoading] = useState(true);
   const [totalQuestions, setTotalQuestions] = useState<number>(0);
+  const [quizEndAt, setQuizEndAt] = useState<number | null>(null);
+  const [remainingMs, setRemainingMs] = useState<number>(0);
 
   interface QuizSession {
     questions: ProgrammingQuestion[];
@@ -52,6 +54,10 @@ export default function QuizQuestionPage({ params }: { params: Promise<{ moduleS
         }
         const q = session.questions[questionIndex];
         setQuestionData(q);
+        // Setup countdown timer
+        const endAt = (session.startedAt || Date.now()) + (session.timeLimit || 0) * 60 * 1000;
+        setQuizEndAt(endAt);
+        setRemainingMs(Math.max(0, endAt - Date.now()));
         // Restore previous selection if exists
         const prev = session.answers?.[questionIndex] ?? null;
         if (prev) {
@@ -68,6 +74,23 @@ export default function QuizQuestionPage({ params }: { params: Promise<{ moduleS
 
     resolveParams();
   }, [params]);
+
+  // Countdown effect
+  useEffect(() => {
+    if (!quizEndAt || !resolvedParams) return;
+    const { moduleSlug } = resolvedParams;
+    const interval = setInterval(() => {
+      const ms = quizEndAt - Date.now();
+      if (ms <= 0) {
+        clearInterval(interval);
+        setRemainingMs(0);
+        router.push(`/modules/${moduleSlug}/quiz/results`);
+      } else {
+        setRemainingMs(ms);
+      }
+    }, 1000);
+    return () => clearInterval(interval);
+  }, [quizEndAt, resolvedParams]);
 
   const handleAnswerSelect = (index: number) => {
     setSelectedAnswer(index);
@@ -175,6 +198,9 @@ export default function QuizQuestionPage({ params }: { params: Promise<{ moduleS
             </span>
             <span className="text-sm text-gray-600 dark:text-gray-300">
               {Math.round((questionIndex / (totalQuestions || 1)) * 100)}% Complete
+            </span>
+            <span className="text-sm font-medium text-gray-900 dark:text-gray-100">
+              Time Left: {new Date(remainingMs).toISOString().substring(14,19)}
             </span>
           </div>
           <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
@@ -299,9 +325,9 @@ export default function QuizQuestionPage({ params }: { params: Promise<{ moduleS
             {!showExplanation ? (
               <button
                 onClick={handleSubmit}
-                disabled={!selectedAnswer}
+                disabled={selectedAnswer === null}
                 className={`px-6 py-2 rounded-lg transition-colors flex items-center ${
-                  selectedAnswer
+                  selectedAnswer !== null
                     ? "bg-blue-600 text-white hover:bg-blue-700"
                     : "bg-gray-300 text-gray-500 cursor-not-allowed"
                 }`}

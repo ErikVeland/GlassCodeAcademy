@@ -44,8 +44,21 @@ export default function QuizStartPage({ params }: { params: Promise<{ moduleSlug
           return;
         }
 
+        // Normalize questions: trim text, ensure valid choices and correctAnswer index
+        const sanitizedQuestions = (quiz.questions || []).filter((q) => {
+          const choices = q.choices ?? [];
+          const hasChoices = Array.isArray(choices) && choices.length > 0;
+          const hasValidIndex = typeof q.correctAnswer === 'number' && q.correctAnswer >= 0 && q.correctAnswer < choices.length;
+          const hasQuestionText = typeof q.question === 'string' && q.question.trim().length > 0;
+          return hasChoices && hasValidIndex && hasQuestionText;
+        }).map((q) => ({
+          ...q,
+          question: (q.question || '').trim(),
+          choices: (q.choices || []).map((c) => (typeof c === 'string' ? c.trim() : String(c))),
+        }));
+
         // Determine target number of questions and pool size (2x)
-        const availableQuestions = quiz.questions.length;
+        const availableQuestions = sanitizedQuestions.length;
         const targetQuestions = Math.min(
           mod.metadata?.thresholds?.minQuizQuestions ?? mod.thresholds?.requiredQuestions ?? 10,
           availableQuestions
@@ -62,10 +75,14 @@ export default function QuizStartPage({ params }: { params: Promise<{ moduleSlug
           return a;
         };
 
-        const pool = shuffle(quiz.questions).slice(0, poolSize);
+        const pool = shuffle(sanitizedQuestions).slice(0, poolSize);
         const selectedQuestions = shuffle(pool).slice(0, targetQuestions);
 
-        const timeLimit = mod.metadata?.thresholds?.minQuizQuestions ? 30 : 30; // default 30 minutes
+        // Compute time limit: use metadata passingScore/time or fallback by question count
+        // Base: 1.5 minutes per question, min 10, max 45
+        const defaultPerQuestion = 1.5; // minutes
+        const computedByCount = Math.round(Math.min(45, Math.max(10, selectedQuestions.length * defaultPerQuestion)));
+        const timeLimit = computedByCount;
         const passingScore = mod.metadata?.thresholds?.passingScore ?? 70;
 
         const quizOverview = {

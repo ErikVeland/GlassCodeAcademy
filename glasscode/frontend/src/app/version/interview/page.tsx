@@ -61,6 +61,32 @@ function shuffle<T>(array: T[]): T[] {
   return arr;
 }
 
+// Normalize question type to expected values
+function normalizeType(type?: string): 'multiple-choice' | 'open-ended' {
+  const t = (type || '').toLowerCase().trim().replace(/[_\s]+/g, '-');
+  return t === 'multiple-choice' ? 'multiple-choice' : 'open-ended';
+}
+
+// Sanitize a question: trim text, validate choices/correctAnswer, normalize type
+function sanitizeQuestion(q: VersionInterviewQuestion): VersionInterviewQuestion | null {
+  const trimmedQuestion = (q.question || '').trim();
+  if (!trimmedQuestion) return null;
+  const type = normalizeType(q.type);
+  if (type === 'multiple-choice') {
+    const choices = Array.isArray(q.choices)
+      ? q.choices.map(c => (c || '').trim()).filter(c => c.length > 0)
+      : [];
+    const correct = typeof q.correctAnswer === 'number' ? q.correctAnswer : -1;
+    if (choices.length < 2) return null;
+    if (correct < 0 || correct >= choices.length) return null;
+    const base: VersionInterviewQuestion = { ...q, type, question: trimmedQuestion, choices, correctAnswer: correct };
+    // Ensure we have a shuffled display order for choices
+    return shuffleQuestionChoices(base);
+  }
+  // open-ended
+  return { ...q, type, question: trimmedQuestion };
+}
+
 // Update the shuffle function to track choice order
 function shuffleQuestionChoices(question: VersionInterviewQuestion): VersionInterviewQuestion {
   // If no choices or only one choice, return as is
@@ -126,12 +152,10 @@ export default function VersionInterviewPage() {
   const [selected, setSelected] = useState<number | null>(null);
   const [feedback, setFeedback] = useState<AnswerResult | null>(null);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
   const [score, setScore] = useState(0);
   const [shuffled, setShuffled] = useState(false);
   const router = useRouter();
   const retryCountRef = useRef(0);
-  const [shouldRetry, setShouldRetry] = useState(true);
 
   const { data, loading: gqlLoading, error: gqlError, refetch } = useQuery(VERSION_INTERVIEW_QUESTIONS_QUERY);
   
@@ -158,9 +182,14 @@ export default function VersionInterviewPage() {
     if (saved) {
       try {
         const parsed = JSON.parse(saved);
-        setShuffledQuestions(parsed.questions || []);
+        const savedQuestions = Array.isArray(parsed.questions) ? parsed.questions : [];
+        const sanitizedSaved = savedQuestions
+          .map(q => sanitizeQuestion(q))
+          .filter((x): x is VersionInterviewQuestion => x !== null);
+        setShuffledQuestions(sanitizedSaved);
         setCurrent(parsed.current || 0);
-        setSelected(parsed.selected ?? null);
+        // Selected may not align with reshuffled choices; reset for safety
+        setSelected(null);
         setScore(parsed.score || 0);
         setShuffled(true);
         setLoading(false);
@@ -172,11 +201,11 @@ export default function VersionInterviewPage() {
 
   useEffect(() => {
     if (gqlQuestions.length > 0 && !shuffled) {
-      // Select 20 random questions from the pool
-      const selectedQuestions = shuffle(gqlQuestions).slice(0, 20);
-      // Shuffle both questions and choices within each question
-      const shuffledQs = selectedQuestions.map(q => shuffleQuestionChoices(q));
-      setShuffledQuestions(shuffledQs);
+      const sanitizedPool = gqlQuestions
+        .map(q => sanitizeQuestion(q))
+        .filter((x): x is VersionInterviewQuestion => x !== null);
+      const selectedQuestions = shuffle(sanitizedPool).slice(0, 20);
+      setShuffledQuestions(selectedQuestions);
       setShuffled(true);
     }
   }, [gqlQuestions, shuffled]);
@@ -234,23 +263,24 @@ export default function VersionInterviewPage() {
     setScore(0);
     setShuffled(false);
     retryCountRef.current = 0;
-    setError(null);
     setLoading(true);
-    setShouldRetry(true);
     refetch();
   };
 
   // Helper function to determine if an error is a network error
-  const isNetworkError = (error: any): boolean => {
-    return !!error && (
-      error.message?.includes('Failed to fetch') ||
-      error.message?.includes('NetworkError') ||
-      error.message?.includes('ECONNREFUSED') ||
-      error.message?.includes('timeout') ||
-      error.message?.includes('502') || // Bad Gateway
-      error.message?.includes('503') || // Service Unavailable
-      error.message?.includes('504') || // Gateway Timeout
-      error.networkError
+  const isNetworkError = (error: unknown): boolean => {
+    if (!error) return false;
+    const e = error as { message?: string; networkError?: unknown };
+    const msg = e.message ?? '';
+    return (
+      msg.includes('Failed to fetch') ||
+      msg.includes('NetworkError') ||
+      msg.includes('ECONNREFUSED') ||
+      msg.includes('timeout') ||
+      msg.includes('502') || // Bad Gateway
+      msg.includes('503') || // Service Unavailable
+      msg.includes('504') || // Gateway Timeout
+      !!e.networkError
     );
   };
 
@@ -265,13 +295,12 @@ export default function VersionInterviewPage() {
             error={gqlError}
             onRetry={() => {
               retryCountRef.current = 0;
-              setShouldRetry(true);
               refetch();
             }}
           />
           <div className="mt-6 text-center">
             <p className="text-gray-600 dark:text-gray-400 text-sm">
-              We're automatically retrying while the backend starts up.
+              We&#39;re automatically retrying while the backend starts up.
               If this takes too long, you can manually retry using the button above.
             </p>
           </div>
