@@ -77,13 +77,10 @@ fi
 # Provider IDs/secrets warnings (non-fatal)
 [ -z "${GOOGLE_CLIENT_ID:-}" ] && log "⚠️  WARNING: GOOGLE_CLIENT_ID missing; Google login disabled."
 [ -z "${GOOGLE_CLIENT_SECRET:-}" ] && log "⚠️  WARNING: GOOGLE_CLIENT_SECRET missing; Google login disabled."
-[ -z "${GITHUB_CLIENT_ID:-}" ] && log "⚠️  WARNING: GITHUB_CLIENT_ID missing; GitHub login disabled."
-[ -z "${GITHUB_CLIENT_SECRET:-}" ] && log "⚠️  WARNING: GITHUB_CLIENT_SECRET missing; GitHub login disabled."
+[ -z "${GITHUB_ID:-}" ] && log "⚠️  WARNING: GITHUB_ID missing; GitHub login disabled."
+[ -z "${GITHUB_SECRET:-}" ] && log "⚠️  WARNING: GITHUB_SECRET missing; GitHub login disabled."
 [ -z "${APPLE_CLIENT_ID:-}" ] && log "⚠️  WARNING: APPLE_CLIENT_ID missing; Apple login disabled."
 [ -z "${APPLE_CLIENT_SECRET:-}" ] && log "⚠️  WARNING: APPLE_CLIENT_SECRET missing; Apple login disabled."
-[ -z "${APPLE_TEAM_ID:-}" ] && log "⚠️  WARNING: APPLE_TEAM_ID missing; Apple login disabled."
-[ -z "${APPLE_KEY_ID:-}" ] && log "⚠️  WARNING: APPLE_KEY_ID missing; Apple login disabled."
-[ -z "${APPLE_PRIVATE_KEY:-}" ] && log "⚠️  WARNING: APPLE_PRIVATE_KEY missing; Apple login disabled."
 
 FRONTEND_ONLY=0
 FRONTEND_PORT="${PORT:-3000}"
@@ -471,11 +468,18 @@ log "📦 Installing frontend dependencies with npm ci (fresh lockfile)"
 sudo -u "$DEPLOY_USER" npm ci || sudo -u "$DEPLOY_USER" npm install
 
 cat > .env.production <<EOF
-NEXT_PUBLIC_API_BASE=$NEXT_PUBLIC_API_BASE
-NEXT_PUBLIC_BASE_URL=$NEXT_PUBLIC_BASE_URL
+NEXT_PUBLIC_API_BASE=${NEXT_PUBLIC_API_BASE}
+NEXT_PUBLIC_BASE_URL=${NEXT_PUBLIC_BASE_URL}
 NODE_ENV=production
-NEXTAUTH_URL=$NEXTAUTH_URL
-NEXTAUTH_SECRET=$NEXTAUTH_SECRET
+NEXTAUTH_URL=${NEXTAUTH_URL}
+NEXTAUTH_SECRET=${NEXTAUTH_SECRET}
+GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID:-}
+GOOGLE_CLIENT_SECRET=${GOOGLE_CLIENT_SECRET:-}
+GITHUB_ID=${GITHUB_ID:-}
+GITHUB_SECRET=${GITHUB_SECRET:-}
+APPLE_CLIENT_ID=${APPLE_CLIENT_ID:-}
+APPLE_CLIENT_SECRET=${APPLE_CLIENT_SECRET:-}
+DEMO_USERS_JSON=${DEMO_USERS_JSON:-}
 EOF
 sudo -u "$DEPLOY_USER" npm run build
 log "✅ Frontend built"
@@ -535,13 +539,12 @@ After=network.target ${APP_NAME}-dotnet.service
 
 [Service]
 WorkingDirectory=$APP_DIR/glasscode/frontend/.next/standalone
+EnvironmentFile=$APP_DIR/glasscode/frontend/.env.production
 Restart=always
 RestartSec=10
 User=$DEPLOY_USER
 Environment=NODE_ENV=production
 Environment=PORT=$FRONTEND_PORT
-Environment=NEXTAUTH_SECRET=$NEXTAUTH_SECRET
-Environment=NEXTAUTH_URL=$NEXTAUTH_URL
 TimeoutStartSec=300
 ExecStartPre=$APP_DIR/glasscode/frontend/check_backend_health.sh
 ExecStart=/usr/bin/node server.js -p $FRONTEND_PORT

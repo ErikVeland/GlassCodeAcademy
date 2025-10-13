@@ -275,13 +275,11 @@ fi
 # Warn if provider IDs are missing (non-fatal)
 [ -z "${GOOGLE_CLIENT_ID:-}" ] && log "⚠️  WARNING: GOOGLE_CLIENT_ID missing; Google login will be disabled."
 [ -z "${GOOGLE_CLIENT_SECRET:-}" ] && log "⚠️  WARNING: GOOGLE_CLIENT_SECRET missing; Google login will be disabled."
-[ -z "${GITHUB_CLIENT_ID:-}" ] && log "⚠️  WARNING: GITHUB_CLIENT_ID missing; GitHub login will be disabled."
-[ -z "${GITHUB_CLIENT_SECRET:-}" ] && log "⚠️  WARNING: GITHUB_CLIENT_SECRET missing; GitHub login will be disabled."
+[ -z "${GITHUB_ID:-}" ] && log "⚠️  WARNING: GITHUB_ID missing; GitHub login will be disabled."
+[ -z "${GITHUB_SECRET:-}" ] && log "⚠️  WARNING: GITHUB_SECRET missing; GitHub login will be disabled."
 [ -z "${APPLE_CLIENT_ID:-}" ] && log "⚠️  WARNING: APPLE_CLIENT_ID missing; Apple login will be disabled."
 [ -z "${APPLE_CLIENT_SECRET:-}" ] && log "⚠️  WARNING: APPLE_CLIENT_SECRET missing; Apple login will be disabled."
-[ -z "${APPLE_TEAM_ID:-}" ] && log "⚠️  WARNING: APPLE_TEAM_ID missing; Apple login will be disabled."
-[ -z "${APPLE_KEY_ID:-}" ] && log "⚠️  WARNING: APPLE_KEY_ID missing; Apple login will be disabled."
-[ -z "${APPLE_PRIVATE_KEY:-}" ] && log "⚠️  WARNING: APPLE_PRIVATE_KEY missing; Apple login will be disabled."
+## Apple provider in NextAuth uses APPLE_CLIENT_ID and APPLE_CLIENT_SECRET in our setup
 
 cat > .env.production <<EOF
 NEXT_PUBLIC_API_BASE=$NEXT_PUBLIC_API_BASE
@@ -291,13 +289,10 @@ NEXTAUTH_URL=${NEXTAUTH_URL:-https://$DOMAIN}
 NEXTAUTH_SECRET=${NEXTAUTH_SECRET:-}
 GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID:-}
 GOOGLE_CLIENT_SECRET=${GOOGLE_CLIENT_SECRET:-}
-GITHUB_CLIENT_ID=${GITHUB_CLIENT_ID:-}
-GITHUB_CLIENT_SECRET=${GITHUB_CLIENT_SECRET:-}
+GITHUB_ID=${GITHUB_ID:-}
+GITHUB_SECRET=${GITHUB_SECRET:-}
 APPLE_CLIENT_ID=${APPLE_CLIENT_ID:-}
 APPLE_CLIENT_SECRET=${APPLE_CLIENT_SECRET:-}
-APPLE_TEAM_ID=${APPLE_TEAM_ID:-}
-APPLE_KEY_ID=${APPLE_KEY_ID:-}
-APPLE_PRIVATE_KEY=${APPLE_PRIVATE_KEY:-}
 DEMO_USERS_JSON=${DEMO_USERS_JSON:-}
 EOF
 sudo -u "$DEPLOY_USER" npm run build
