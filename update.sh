@@ -461,8 +461,10 @@ else
     sed -i 's|^ExecStart=.*|ExecStart=/usr/bin/node .next/standalone/server.js -p 3000|' "$UNIT_FILE_PATH"
     # Also enforce ExecStartPre to use the health-check script to avoid quoting issues
     if grep -q '^ExecStartPre=' "$UNIT_FILE_PATH"; then
+        log "🔧 Rewriting ExecStartPre to use health-check script"
         sed -i "s|^ExecStartPre=.*|ExecStartPre=$APP_DIR/glasscode/frontend/check_backend_health.sh|" "$UNIT_FILE_PATH"
     else
+        log "🔧 Adding ExecStartPre to use health-check script"
         sed -i "/^\[Service\]/a ExecStartPre=$APP_DIR/glasscode/frontend/check_backend_health.sh" "$UNIT_FILE_PATH"
     fi
     systemctl daemon-reload
