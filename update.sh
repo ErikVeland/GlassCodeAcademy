@@ -251,9 +251,30 @@ cat > .env.production <<EOF
 NEXT_PUBLIC_API_BASE=$NEXT_PUBLIC_API_BASE
 NEXT_PUBLIC_BASE_URL=$NEXT_PUBLIC_BASE_URL
 NODE_ENV=production
+NEXTAUTH_URL=${NEXTAUTH_URL:-https://$DOMAIN}
+NEXTAUTH_SECRET=${NEXTAUTH_SECRET:-}
+GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID:-}
+GOOGLE_CLIENT_SECRET=${GOOGLE_CLIENT_SECRET:-}
+GITHUB_CLIENT_ID=${GITHUB_CLIENT_ID:-}
+GITHUB_CLIENT_SECRET=${GITHUB_CLIENT_SECRET:-}
+APPLE_CLIENT_ID=${APPLE_CLIENT_ID:-}
+APPLE_CLIENT_SECRET=${APPLE_CLIENT_SECRET:-}
+APPLE_TEAM_ID=${APPLE_TEAM_ID:-}
+APPLE_KEY_ID=${APPLE_KEY_ID:-}
+APPLE_PRIVATE_KEY=${APPLE_PRIVATE_KEY:-}
+DEMO_USERS_JSON=${DEMO_USERS_JSON:-}
 EOF
 sudo -u "$DEPLOY_USER" npm run build
 log "✅ Frontend built"
+
+# Verify Next.js standalone server exists
+if [ ! -f ".next/standalone/server.js" ]; then
+    log "❌ Next standalone server missing at .next/standalone/server.js"
+    log "🧪 Diagnostic: list .next and standalone contents"
+    ls -al .next || true
+    ls -al .next/standalone || true
+    rollback
+fi
 
 ### 10. Restart services in proper order
 log "🔄 Restarting services..."
@@ -342,17 +363,18 @@ After=network.target ${APP_NAME}-dotnet.service
 
 [Service]
 WorkingDirectory=$APP_DIR/glasscode/frontend
+EnvironmentFile=$APP_DIR/glasscode/frontend/.env.production
 ExecStartPre=/usr/bin/bash -lc '
   MAX=30; COUNT=1;
-  while [ $COUNT -le $MAX ]; do
+  while [ \$COUNT -le \$MAX ]; do
     RESP=$(curl -s http://127.0.0.1:8080/api/health || true);
-    STATUS=$(echo "$RESP" | grep -o "status":"[^\"]*" | cut -d" -f4);
-    if [ "$STATUS" = "healthy" ]; then
+    STATUS=$(echo "\$RESP" | grep -o '"status":"[^"]*"' | cut -d'"' -f4);
+    if [ "\$STATUS" = "healthy" ]; then
       exit 0;
     fi;
-    sleep 5; COUNT=$((COUNT+1));
+    sleep 5; COUNT=$((\$COUNT+1));
   done;
-  echo "Backend health check gating failed: status='$STATUS' resp='$RESP'"; exit 1;
+  echo "Backend health check gating failed: status='\$STATUS' resp='\$RESP'"; exit 1;
 '
 ExecStart=/usr/bin/node .next/standalone/server.js -p 3000
 Restart=always
@@ -365,11 +387,25 @@ TimeoutStartSec=300
 WantedBy=multi-user.target
 EOF
     systemctl daemon-reload
+    if command -v systemd-analyze >/dev/null 2>&1; then
+        log "🧪 Verifying unit file with systemd-analyze"
+        if ! systemd-analyze verify "$UNIT_FILE_PATH"; then
+            log "❌ Unit file verification failed"
+            rollback
+        fi
+    fi
 else
     # If the unit exists, ensure it uses the standalone ExecStart regardless of current value
     log "🔧 Enforcing ExecStart to use Next standalone server"
     sed -i 's|^ExecStart=.*|ExecStart=/usr/bin/node .next/standalone/server.js -p 3000|' "$UNIT_FILE_PATH"
     systemctl daemon-reload
+    if command -v systemd-analyze >/dev/null 2>&1; then
+        log "🧪 Verifying unit file with systemd-analyze"
+        if ! systemd-analyze verify "$UNIT_FILE_PATH"; then
+            log "❌ Unit file verification failed"
+            rollback
+        fi
+    fi
 fi
 
 systemctl restart ${APP_NAME}-frontend

@@ -5,6 +5,7 @@ import { DarkModeProvider } from '../components/DarkModeContext';
 import AnimatedBackground from '../components/AnimatedBackground';
 import { AccessibilityProvider } from '../components/AccessibilityProvider';
 import ApolloWrapper from '../components/ApolloWrapper';
+import AuthProvider from '../components/AuthProvider';
 import AdminQueryHandler from '../components/AdminQueryHandler';
 import { Suspense } from 'react';
 
@@ -41,6 +42,7 @@ export default function RootLayout({
       </head>
       <body className={`antialiased min-h-screen bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100 relative`}>
         <ApolloWrapper>
+          <AuthProvider>
           <AccessibilityProvider>
             <DarkModeProvider>
               <div className="flex flex-col min-h-screen">
@@ -75,6 +77,7 @@ export default function RootLayout({
               </div>
             </DarkModeProvider>
           </AccessibilityProvider>
+          </AuthProvider>
         </ApolloWrapper>
       </body>
     </html>
