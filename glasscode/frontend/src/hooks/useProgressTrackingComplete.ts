@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { contentRegistry } from '@/lib/contentRegistry';
 
 // Enhanced interfaces matching design documentation
 export interface ProgressData {
@@ -80,7 +81,7 @@ const STORAGE_KEYS = {
 };
 
 // Tier-based module mapping according to design documentation
-const TIER_MODULES = {
+const TIER_MODULES: Record<'foundational' | 'core' | 'specialized' | 'quality', string[]> = {
   foundational: [
     'programming-fundamentals', 
     'web-fundamentals', 
@@ -260,6 +261,8 @@ const STREAK_MILESTONES = [
 
 export const useProgressTrackingComplete = () => {
   const [progress, setProgress] = useState<Record<string, ProgressData>>({});
+  const [tierModuleCache, setTierModuleCache] = useState<Record<string, string[]>>({});
+  const [lessonCountCache, setLessonCountCache] = useState<Record<string, number>>({});
   const [streak, setStreak] = useState<StreakData>({
     currentStreak: 0,
     longestStreak: 0,
@@ -308,6 +311,96 @@ export const useProgressTrackingComplete = () => {
     }
   }, []);
 
+  // Normalize module items into slug list
+  const normalizeModuleSlugs = (items: unknown[]): string[] => {
+    return items
+      .map((item) => {
+        if (typeof item === 'string') return item;
+        if (item && typeof item === 'object') {
+          const obj = item as { slug?: string; id?: string };
+          return obj.slug ?? obj.id ?? '';
+        }
+        return '';
+      })
+      .filter((s): s is string => Boolean(s));
+  };
+
+  // Load content registry and build caches (tier modules and lesson counts)
+  useEffect(() => {
+    let mounted = true;
+    (async () => {
+      try {
+        await contentRegistry.loadRegistry();
+
+        const tierMap: Record<string, string[]> = {};
+        const lessonCounts: Record<string, number> = {};
+
+        // Default slugs; attempt to read from registry if available
+        let tierSlugs: Array<'foundational' | 'core' | 'specialized' | 'quality'> = [
+          'foundational',
+          'core',
+          'specialized',
+          'quality'
+        ];
+
+        try {
+          const tiersRecord = await contentRegistry.getTiers();
+          const candidateSlugs = Object.keys(tiersRecord);
+          const validSlugs = candidateSlugs.filter((s) =>
+            s === 'foundational' || s === 'core' || s === 'specialized' || s === 'quality'
+          ) as Array<'foundational' | 'core' | 'specialized' | 'quality'>;
+          if (validSlugs.length) tierSlugs = validSlugs;
+        } catch {
+          // Keep defaults on failure
+        }
+
+        for (const tierSlug of tierSlugs) {
+          let mods: unknown[] = [];
+          try {
+            mods = await contentRegistry.getModulesByTier(tierSlug);
+          } catch {
+            mods = (TIER_MODULES[tierSlug] || []) as unknown[];
+          }
+          const moduleSlugs = normalizeModuleSlugs(mods);
+          tierMap[tierSlug] = moduleSlugs;
+
+          // Populate lesson counts per module
+          for (const modSlug of moduleSlugs) {
+            try {
+              const lessons = await contentRegistry.getModuleLessons(modSlug);
+              lessonCounts[modSlug] = Array.isArray(lessons) ? lessons.length : (lessonCounts[modSlug] || 0);
+            } catch {
+              // Leave default if registry fails
+              lessonCounts[modSlug] = lessonCounts[modSlug] ?? 0;
+            }
+          }
+        }
+
+        if (!mounted) return;
+        setTierModuleCache(tierMap);
+        setLessonCountCache(lessonCounts);
+      } catch (err) {
+        console.warn('Content registry not available, using fallback TIER_MODULES:', err);
+        if (!mounted) return;
+        // Fallback to static mapping
+        setTierModuleCache(TIER_MODULES as Record<string, string[]>);
+      }
+    })();
+    return () => {
+      mounted = false;
+    };
+  }, []);
+
+  // Helper: determine tier for a module via registry-backed cache with fallback
+  const resolveTierForModule = (
+    moduleId: string
+  ): 'foundational' | 'core' | 'specialized' | 'quality' => {
+    const source = Object.keys(tierModuleCache).length ? tierModuleCache : (TIER_MODULES as Record<string, string[]>);
+    const found = (Object.entries(source).find(([, mods]) => mods.includes(moduleId))?.[0] || 'foundational') as
+      'foundational' | 'core' | 'specialized' | 'quality';
+    return found;
+  };
+
   // Save data to localStorage whenever it changes
   useEffect(() => {
     try {
@@ -341,20 +434,26 @@ export const useProgressTrackingComplete = () => {
     }
   }, [userStats]);
 
-  const updateProgress = (moduleId: string, moduleName: string, data: Partial<ProgressData>) => {
+  const updateProgress = (
+    moduleId: string,
+    dataOrName: string | Partial<ProgressData>,
+    maybeData?: Partial<ProgressData>
+  ) => {
     const currentTime = new Date().toISOString();
+    const data: Partial<ProgressData> = typeof dataOrName === 'string' ? (maybeData ?? {}) : (dataOrName as Partial<ProgressData>);
+    const resolvedModuleName = typeof dataOrName === 'string'
+      ? dataOrName
+      : (progress[moduleId]?.moduleName ?? moduleId);
     
-    // Determine tier for module
-    const tier = Object.entries(TIER_MODULES).find(([, modules]) => 
-      modules.includes(moduleId)
-    )?.[0] as 'foundational' | 'core' | 'specialized' | 'quality' || 'foundational';
+    // Determine tier for module using registry-backed cache
+    const tier = resolveTierForModule(moduleId);
     
     // Get actual lesson count from content files
     const actualLessonCount = getActualLessonCount(moduleId);
     
     const defaultProgressData: ProgressData = {
       moduleId,
-      moduleName,
+      moduleName: resolvedModuleName,
       lessonsCompleted: 0,
       totalLessons: actualLessonCount,
       quizScore: 0,
@@ -410,28 +509,24 @@ export const useProgressTrackingComplete = () => {
     updateStreak(moduleId, data.lessonsCompleted || 0);
     
     // Check for new achievements
-    checkAchievements(updated, moduleId);
+    void checkAchievements(updated, moduleId);
     
     // Update user stats
     updateUserStats(updated);
   };
 
-  // Helper function to get actual lesson count from content files
+  // Helper function to get actual lesson count from content files (registry-backed with fallback)
   const getActualLessonCount = (moduleSlug: string): number => {
-    // In a real implementation, this would fetch from the actual content files
-    // For now, return default counts based on tier
-    const tier = Object.entries(TIER_MODULES).find(([, modules]) => 
-      modules.includes(moduleSlug)
-    )?.[0];
-    
-    const defaultCounts: Record<string, number> = {
+    const fromCache = lessonCountCache[moduleSlug];
+    if (typeof fromCache === 'number' && fromCache > 0) return fromCache;
+    const tier = resolveTierForModule(moduleSlug);
+    const defaultCounts: Record<'foundational' | 'core' | 'specialized' | 'quality', number> = {
       foundational: 12,
       core: 15,
       specialized: 14,
       quality: 12
     };
-    
-    return defaultCounts[tier || 'foundational'] || 12;
+    return defaultCounts[tier] || 12;
   };
 
   const updateStreak = (moduleId: string, lessonsCompleted: number) => {
@@ -480,7 +575,7 @@ export const useProgressTrackingComplete = () => {
     }
   };
 
-  const checkAchievements = (progressData: Record<string, ProgressData>, moduleId: string) => {
+  const checkAchievements = async (progressData: Record<string, ProgressData>, moduleId: string) => {
     const newAchievements: AchievementData[] = [];
     const currentTime = new Date().toISOString();
     
@@ -511,7 +606,7 @@ export const useProgressTrackingComplete = () => {
     // Tier completion achievements
     const foundationMasterAchievement = createAchievement('foundation-master', moduleId);
     if (foundationMasterAchievement) {
-      const foundationalModules = TIER_MODULES.foundational;
+      const foundationalModules = (tierModuleCache.foundational || TIER_MODULES.foundational);
       const foundationCompleted = foundationalModules.every(mod => 
         progressData[mod]?.completionStatus === 'completed'
       );
@@ -522,7 +617,7 @@ export const useProgressTrackingComplete = () => {
     
     const coreDeveloperAchievement = createAchievement('core-developer', moduleId);
     if (coreDeveloperAchievement) {
-      const coreModules = TIER_MODULES.core;
+      const coreModules = (tierModuleCache.core || TIER_MODULES.core);
       const coreCompleted = coreModules.every(mod => 
         progressData[mod]?.completionStatus === 'completed'
       );
@@ -533,7 +628,7 @@ export const useProgressTrackingComplete = () => {
     
     const specialistAchievement = createAchievement('specialist', moduleId);
     if (specialistAchievement) {
-      const specializedModules = TIER_MODULES.specialized;
+      const specializedModules = (tierModuleCache.specialized || TIER_MODULES.specialized);
       const specializedCompleted = specializedModules.every(mod => 
         progressData[mod]?.completionStatus === 'completed'
       );
@@ -544,7 +639,7 @@ export const useProgressTrackingComplete = () => {
     
     const qualityGuardianAchievement = createAchievement('quality-guardian', moduleId);
     if (qualityGuardianAchievement) {
-      const qualityModules = TIER_MODULES.quality;
+      const qualityModules = (tierModuleCache.quality || TIER_MODULES.quality);
       const qualityCompleted = qualityModules.every(mod => 
         progressData[mod]?.completionStatus === 'completed'
       );
@@ -604,16 +699,30 @@ export const useProgressTrackingComplete = () => {
     // Full stack achievement
     const fullStackAchievement = createAchievement('full-stack', moduleId);
     if (fullStackAchievement) {
-      const backendModules = ['dotnet', 'laravel', 'database-systems'];
-      const frontendModules = ['react', 'nextjs', 'vue'];
-      
-      const backendCompleted = backendModules.some(mod => 
+      // Try registry tracks first, fallback to static lists
+      let backendTrackItems: unknown[] = [];
+      let frontendTrackItems: unknown[] = [];
+      try {
+        backendTrackItems = await contentRegistry.getModulesByTrack('backend');
+      } catch {
+        backendTrackItems = ['dotnet', 'laravel', 'database-systems'];
+      }
+      try {
+        frontendTrackItems = await contentRegistry.getModulesByTrack('frontend');
+      } catch {
+        frontendTrackItems = ['react', 'nextjs', 'vue'];
+      }
+
+      const backendModules = normalizeModuleSlugs(backendTrackItems);
+      const frontendModules = normalizeModuleSlugs(frontendTrackItems);
+
+      const backendCompleted = backendModules.some((mod) =>
         progressData[mod]?.completionStatus === 'completed'
       );
-      const frontendCompleted = frontendModules.some(mod => 
+      const frontendCompleted = frontendModules.some((mod) =>
         progressData[mod]?.completionStatus === 'completed'
       );
-      
+
       if (backendCompleted && frontendCompleted) {
         newAchievements.push(fullStackAchievement);
       }
@@ -647,15 +756,12 @@ export const useProgressTrackingComplete = () => {
     }
     
     // Determine current tier based on completion
-    let currentTier = 'foundational';
+    let currentTier: 'foundational' | 'core' | 'specialized' | 'quality' = 'foundational';
     if (modulesCompleted > 0) {
-      const foundationalComplete = TIER_MODULES.foundational.every(mod => 
-        progressData[mod]?.completionStatus === 'completed');
-      const coreComplete = TIER_MODULES.core.every(mod => 
-        progressData[mod]?.completionStatus === 'completed');
-      const specializedComplete = TIER_MODULES.specialized.every(mod => 
-        progressData[mod]?.completionStatus === 'completed');
-      
+      const source = Object.keys(tierModuleCache).length ? tierModuleCache : (TIER_MODULES as Record<string, string[]>);
+      const foundationalComplete = (source.foundational || []).every(mod => progressData[mod]?.completionStatus === 'completed');
+      const coreComplete = (source.core || []).every(mod => progressData[mod]?.completionStatus === 'completed');
+      const specializedComplete = (source.specialized || []).every(mod => progressData[mod]?.completionStatus === 'completed');
       if (specializedComplete) {
         currentTier = 'quality';
       } else if (coreComplete) {
@@ -681,7 +787,8 @@ export const useProgressTrackingComplete = () => {
   };
 
   const calculateOverallProgress = () => {
-    const allModules = Object.values(TIER_MODULES).flat();
+    const source = Object.keys(tierModuleCache).length ? tierModuleCache : (TIER_MODULES as Record<string, string[]>);
+    const allModules = Object.values(source).flat();
     const totalModules = allModules.length;
     const completedModules = allModules.filter(moduleId => 
       progress[moduleId]?.completionStatus === 'completed'
@@ -691,7 +798,8 @@ export const useProgressTrackingComplete = () => {
   };
   
   const getTierProgress = (tier: 'foundational' | 'core' | 'specialized' | 'quality') => {
-    const tierModules = TIER_MODULES[tier];
+    const source = Object.keys(tierModuleCache).length ? tierModuleCache : (TIER_MODULES as Record<string, string[]>);
+    const tierModules = source[tier] || [];
     const completedInTier = tierModules.filter(moduleId => 
       progress[moduleId]?.completionStatus === 'completed'
     ).length;

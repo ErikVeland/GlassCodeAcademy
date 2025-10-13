@@ -27,9 +27,8 @@ interface RegistryData {
 // Enhanced ModuleCard component with accessibility, progress tracking, and achievement indicators
 const ModuleCard: React.FC<{
   module: Module;
-  tierColor: string;
   tierKey: string;
-}> = ({ module, tierColor, tierKey }) => {
+}> = ({ module, tierKey }) => {
   const { progress, updateProgress, achievements } = useProgressTracking();
   const searchParams = useSearchParams();
   const isUnlocked = searchParams.get('unlock') === 'true';
@@ -70,10 +69,10 @@ const ModuleCard: React.FC<{
   }[tierKey] || 'from-blue-500 to-cyan-500';
 
   return (
-    <div className={`module-card-container ${isLocked ? 'locked' : ''}`}>
+    <div className={`module-card-container ${isLocked ? 'locked' : ''} h-full`}>
       <Link
         href={isLocked ? '#' : module.routes.overview}
-        className={`block bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 p-5 hover:shadow-xl transition-all duration-300 ${
+        className={`relative flex flex-col h-full bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 p-5 hover:shadow-xl transition-all duration-300 ${
           isLocked ? 'opacity-60' : 'hover:-translate-y-1'
         }`}
         onClick={handleModuleClick}
@@ -243,11 +242,12 @@ const TierSection: React.FC<{
                 </div>
               </div>
 
-              <div className="bg-white/10 rounded-lg p-4 border border-white/20 backdrop-blur-sm">
-                <p className="font-medium text-white text-left text-sm">
-                  <strong>Focus Area:</strong> {tier.focusArea}
-                </p>
-              </div>
+            </div>
+
+            <div className="bg-white/10 rounded-lg p-4 border border-white/20 backdrop-blur-sm">
+              <p className="font-medium text-white text-left text-sm">
+                <strong>Focus Area:</strong> {tier.focusArea}
+              </p>
             </div>
 
             {/* Unified progress widget like dashboard */}
@@ -275,12 +275,11 @@ const TierSection: React.FC<{
         </div>
 
         {/* Modules grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-6" role="list" aria-label={`${tier.title} modules`}>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-6 auto-rows-fr" role="list" aria-label={`${tier.title} modules`}>
           {modules.map((module: Module) => (
-            <div key={module.slug} role="listitem">
+            <div key={module.slug} role="listitem" className="h-full">
               <ModuleCard
                 module={module}
-                tierColor={tier.color}
                 tierKey={tierKey}
               />
             </div>
@@ -293,7 +292,7 @@ const TierSection: React.FC<{
             <div className="text-4xl mb-2">🎉</div>
             <h3 className="text-xl font-bold text-white mb-2">Tier Complete!</h3>
             <p className="text-white/90 mb-4">
-              Congratulations! You've mastered the {tier.title} tier.
+              Congratulations! You&apos;ve mastered the {tier.title} tier.
             </p>
             {tierKey !== 'quality' && (
               <button className="px-6 py-2 bg-white/20 text-white rounded-lg hover:bg-white/30 transition-colors backdrop-blur-sm">
@@ -304,7 +303,7 @@ const TierSection: React.FC<{
               <div className="mt-4">
                 <span className="text-3xl block">🏆</span>
                 <h4 className="text-lg font-bold text-white mt-1">Full Stack Developer Achieved!</h4>
-                <p className="text-white/90 mt-1">You've completed all tiers and mastered full stack development!</p>
+                <p className="text-white/90 mt-1">You&apos;ve completed all tiers and mastered full stack development!</p>
               </div>
             )}
           </div>
@@ -329,7 +328,6 @@ const HomePage: React.FC = () => {
     progress,
     calculateOverallProgress,
     getCompletedModulesCount,
-    getTierProgress,
     achievements,
     streak
   } = useProgressTracking();
@@ -482,13 +480,7 @@ const HomePage: React.FC = () => {
     setSelectedStatus(null);
   };
 
-  const skipToMainContent = () => {
-    const mainContent = document.getElementById('learning-tiers');
-    if (mainContent) {
-      mainContent.focus();
-      mainContent.scrollIntoView({ behavior: 'smooth' });
-    }
-  };
+  
 
   // Define the correct tier order for display
   const tierOrder = ['foundational', 'core', 'specialized', 'quality'];
@@ -628,7 +620,7 @@ const HomePage: React.FC = () => {
                 <div className="text-6xl mb-4">🔍</div>
                 <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">No modules found</h3>
                 <p className="text-gray-600 dark:text-gray-300 mb-6">
-                  Try adjusting your search terms or filters to find what you're looking for.
+                  Try adjusting your search terms or filters to find what you&apos;re looking for.
                 </p>
                 <button
                   onClick={clearFilters}

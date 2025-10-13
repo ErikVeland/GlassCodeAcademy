@@ -400,7 +400,7 @@ ExecStartPre=/usr/bin/bash -lc '
   done;
   echo "Backend health check gating failed: status='\$STATUS' resp='\$RESP'"; exit 1;
 '
-ExecStart=/usr/bin/npx next start -p 3000
+ExecStart=/usr/bin/node .next/standalone/server.js -p 3000
 Restart=always
 RestartSec=10
 User=$DEPLOY_USER
@@ -423,6 +423,24 @@ if systemctl is-enabled ${APP_NAME}-dotnet 2>/dev/null | grep -q masked; then
 fi
 
 systemctl enable ${APP_NAME}-dotnet ${APP_NAME}-frontend
+
+### 11.1 Start or restart services
+log "🚀 Starting services..."
+for svc in ${APP_NAME}-dotnet ${APP_NAME}-frontend; do
+    if systemctl is-active --quiet "$svc"; then
+        log "🔄 $svc already running, restarting..."
+        systemctl restart "$svc" || true
+    else
+        log "▶️  Starting $svc..."
+        systemctl start "$svc" || true
+    fi
+    # Wait for service to become active (best-effort)
+    if ! wait_for_service "$svc"; then
+        log "⚠️  WARNING: $svc did not become active within timeout"
+        systemctl status "$svc" --no-pager || true
+        journalctl -u "$svc" -n 100 --no-pager || true
+    fi
+done
 
 ### 12. Configure Nginx
 log "🌐 Configuring Nginx..."

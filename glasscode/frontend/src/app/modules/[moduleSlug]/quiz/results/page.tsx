@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import ConfettiBurst from '@/components/ConfettiBurst';
 import { useProgressTrackingComplete } from '@/hooks/useProgressTrackingComplete';
+import { useProgressTracking } from '@/hooks/useProgressTracking';
 import { contentRegistry } from '@/lib/contentRegistry';
 import type { ProgrammingQuestion } from '@/lib/contentRegistry';
 
@@ -28,7 +29,8 @@ export default function QuizResultsPage({ params }: { params: Promise<{ moduleSl
   const [results, setResults] = useState<ResultsData | null>(null);
   const [loading, setLoading] = useState(true);
   const [showConfetti, setShowConfetti] = useState(false);
-  const { updateProgress } = useProgressTrackingComplete();
+  const { updateProgress: updateProgressComplete } = useProgressTrackingComplete();
+  const { updateProgress: updateProgressBasic } = useProgressTracking();
   const [nextModuleHref, setNextModuleHref] = useState<string | null>(null);
 
   // Resolve the params promise
@@ -94,9 +96,27 @@ export default function QuizResultsPage({ params }: { params: Promise<{ moduleSl
           try {
             const mod = await contentRegistry.getModule(moduleSlug);
             const moduleName = mod?.title ?? moduleSlug.replace(/-/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
-            updateProgress(moduleSlug, moduleName, {
+            // Try to compute accurate lessons count from registry
+            let lessonsCount = 0;
+            try {
+              const lessons = await contentRegistry.getModuleLessons(moduleSlug);
+              lessonsCount = Array.isArray(lessons) ? lessons.length : 0;
+            } catch (err) {
+              console.warn('Unable to load lessons for completion update:', err);
+            }
+
+            // Update enhanced tracker (includes moduleName and richer stats)
+            updateProgressComplete(moduleSlug, moduleName, {
               quizScore: score,
+              ...(lessonsCount > 0 ? { totalLessons: lessonsCount, lessonsCompleted: lessonsCount } : {})
             });
+
+            // Update basic tracker to keep fullstack progress in sync
+            updateProgressBasic(moduleSlug, {
+              quizScore: score,
+              ...(lessonsCount > 0 ? { totalLessons: lessonsCount, lessonsCompleted: lessonsCount } : {})
+            });
+
             setShowConfetti(true);
           } catch (e) {
             console.error('Failed to update progress', e);

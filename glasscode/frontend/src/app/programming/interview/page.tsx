@@ -1,13 +1,15 @@
 "use client";
 
-import { useEffect, useState, useRef } from "react";
+ import { useEffect, useState, useRef, Suspense } from "react";
 import Link from "next/link";
 import { useNextUnlockedLesson } from "@/hooks/useNextUnlockedLesson";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useQuery, gql, useMutation } from '@apollo/client';
 import TechnologyUtilizationBox from '../../../components/TechnologyUtilizationBox';
 import EnhancedLoadingComponent from '../../../components/EnhancedLoadingComponent';
 import ConfettiBurst from '../../../components/ConfettiBurst';
+import { useProgressTracking } from "@/hooks/useProgressTracking";
+import { useProgressTrackingComplete } from "@/hooks/useProgressTrackingComplete";
 
 interface ProgrammingInterviewQuestion {
   id: number;
@@ -161,10 +163,16 @@ function CircularProgress({ percent }: { percent: number }) {
   );
 }
 
-export default function ProgrammingInterviewPage() {
+function ProgrammingInterviewContent() {
   // Compute build phase flag without affecting hook execution order
   const isBuildPhase = typeof process !== 'undefined' && process.env.NEXT_PHASE === 'phase-production-build';
+  const searchParams = useSearchParams();
+  const isDev = typeof process !== 'undefined' && process.env.NODE_ENV === 'development';
+  const autopass = isDev && searchParams?.get('autopass') === '1';
+  const debugMode = isDev && searchParams?.get('debug') === '1';
   const { nextLessonHref } = useNextUnlockedLesson();
+  const { updateProgress: updateDefaultProgress } = useProgressTracking();
+  const { updateProgress: updateCompleteProgress } = useProgressTrackingComplete();
 
   const [shuffledQuestions, setShuffledQuestions] = useState<ProgrammingInterviewQuestion[]>([]);
   const [current, setCurrent] = useState(0);
@@ -173,8 +181,10 @@ export default function ProgrammingInterviewPage() {
   const [loading, setLoading] = useState(true);
   const [score, setScore] = useState(0);
   const [shuffled, setShuffled] = useState(false);
+  const [debugInfo, setDebugInfo] = useState<{ defaultProgress?: unknown; completeProgress?: unknown; achievements?: unknown; streak?: unknown } | null>(null);
   const router = useRouter();
   const retryCountRef = useRef(0);
+  const hasUpdatedProgressRef = useRef(false);
 
   const { data, loading: gqlLoading, error: gqlError, refetch } = useQuery(PROGRAMMING_INTERVIEW_QUESTIONS_QUERY);
   
@@ -231,6 +241,65 @@ export default function ProgrammingInterviewPage() {
       JSON.stringify({ questions: shuffledQuestions, current, selected, score })
     );
   }, [shuffledQuestions, current, selected, score]);
+
+  // Dev-only: Autopass support via query flag to speed up verification
+  useEffect(() => {
+    if (!autopass) return;
+    if (shuffledQuestions.length > 0 && current < shuffledQuestions.length) {
+      const total = shuffledQuestions.length;
+      setSelected(null);
+      setFeedback({ isCorrect: true, explanation: 'Auto-pass mode' });
+      setScore(total);
+      setCurrent(total);
+    }
+  }, [autopass, shuffledQuestions.length, current]);
+
+  // Optional debug panel: expose localStorage progress values for quick validation
+  useEffect(() => {
+    if (!debugMode) return;
+    try {
+      const defaultProgressRaw = localStorage.getItem('fullstack_progress_veland');
+      const completeProgressRaw = localStorage.getItem('dotnetquiz_progress_complete');
+      const achievementsRaw = localStorage.getItem('dotnetquiz_achievements_complete');
+      const streakRaw = localStorage.getItem('dotnetquiz_streak_complete');
+      setDebugInfo({
+        defaultProgress: defaultProgressRaw ? JSON.parse(defaultProgressRaw) : null,
+        completeProgress: completeProgressRaw ? JSON.parse(completeProgressRaw) : null,
+        achievements: achievementsRaw ? JSON.parse(achievementsRaw) : null,
+        streak: streakRaw ? JSON.parse(streakRaw) : null,
+      });
+    } catch {
+      // ignore JSON parse errors in debug mode
+    }
+  }, [debugMode, current]);
+
+  // Derived pass flag based on current score and total questions
+  const passed = score >= Math.ceil(shuffledQuestions.length * 0.7);
+
+  // Update progress when quiz is completed and passed; ensure stable hook order
+  // and guard against zero-question edge cases.
+  useEffect(() => {
+    if (shuffledQuestions.length === 0) return;
+    const quizFinished = current >= shuffledQuestions.length;
+    if (quizFinished && passed && !hasUpdatedProgressRef.current) {
+      const percentScore = Math.round((score / shuffledQuestions.length) * 100);
+      try {
+        // Update default progress store used by navigation/locks
+        updateDefaultProgress('programming-fundamentals', { quizScore: percentScore });
+        // Update complete progress store with certificate metadata
+        updateCompleteProgress('programming-fundamentals', {
+          quizScore: percentScore,
+          certificate: {
+            earned: true,
+            earnedDate: new Date().toISOString(),
+            shareUrl: ''
+          }
+        });
+      } finally {
+        hasUpdatedProgressRef.current = true;
+      }
+    }
+  }, [current, shuffledQuestions.length, passed, score, updateDefaultProgress, updateCompleteProgress]);
 
   const handleSubmit = async () => {
     if (selected === null) return;
@@ -369,7 +438,7 @@ export default function ProgrammingInterviewPage() {
     );
   }
   
-  const passed = score >= Math.ceil(shuffledQuestions.length * 0.7);
+  
 
   if (current >= shuffledQuestions.length)
     return (
@@ -629,6 +698,35 @@ export default function ProgrammingInterviewPage() {
         technology="Programming Fundamentals" 
         explanation="In this Programming Fundamentals module, core programming concepts are taught using fundamental programming constructs and logic." 
       />
+
+      {debugMode && (
+        <div className="mt-6 p-4 rounded-lg border border-gray-300 dark:border-gray-700 bg-white/80 dark:bg-gray-800/80">
+          <h4 className="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-2">Debug Panel</h4>
+          <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">LocalStorage progress snapshots:</p>
+          <pre className="text-xs overflow-auto max-h-64 bg-gray-50 dark:bg-gray-900/50 p-3 rounded">
+{JSON.stringify(debugInfo, null, 2)}
+          </pre>
+        </div>
+      )}
     </div>
+  );
+}
+
+export default function ProgrammingInterviewPage() {
+  return (
+    <Suspense fallback={
+      <div className="py-12 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-4xl mx-auto">
+          <div className="bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm rounded-xl shadow-lg p-6 border border-gray-200 dark:border-gray-700">
+            <div className="text-center">
+              <h2 className="text-2xl font-bold text-gray-800 dark:text-gray-200 mb-4">Loading Interview</h2>
+              <p className="mb-4 text-gray-600 dark:text-gray-300">Preparing questions and settings...</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    }>
+      <ProgrammingInterviewContent />
+    </Suspense>
   );
 }

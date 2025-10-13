@@ -328,14 +328,47 @@ if systemctl is-enabled ${APP_NAME}-frontend 2>/dev/null | grep -q masked; then
     systemctl unmask ${APP_NAME}-frontend || true
 fi
 
-# If the unit file is missing or masked, surface diagnostics before attempting restart
-if systemctl list-unit-files | grep -q "^${APP_NAME}-frontend\.service"; then
-    :
+UNIT_FILE_PATH="/etc/systemd/system/${APP_NAME}-frontend.service"
+# Ensure unit file exists and uses Next standalone ExecStart
+if [ ! -f "$UNIT_FILE_PATH" ]; then
+    log "🔧 Creating frontend unit file at $UNIT_FILE_PATH"
+    cat > "$UNIT_FILE_PATH" <<EOF
+[Unit]
+Description=${APP_NAME} Next.js Frontend
+After=network.target ${APP_NAME}-dotnet.service
+
+[Service]
+WorkingDirectory=$APP_DIR/glasscode/frontend
+ExecStartPre=/usr/bin/bash -lc '
+  MAX=30; COUNT=1;
+  while [ $COUNT -le $MAX ]; do
+    RESP=$(curl -s http://127.0.0.1:8080/api/health || true);
+    STATUS=$(echo "$RESP" | grep -o "status":"[^\"]*" | cut -d" -f4);
+    if [ "$STATUS" = "healthy" ]; then
+      exit 0;
+    fi;
+    sleep 5; COUNT=$((COUNT+1));
+  done;
+  echo "Backend health check gating failed: status='$STATUS' resp='$RESP'"; exit 1;
+'
+ExecStart=/usr/bin/node .next/standalone/server.js -p 3000
+Restart=always
+RestartSec=10
+User=$DEPLOY_USER
+Environment=NODE_ENV=production
+TimeoutStartSec=300
+
+[Install]
+WantedBy=multi-user.target
+EOF
+    systemctl daemon-reload
 else
-    log "❌ Frontend unit file not found. Expected /etc/systemd/system/${APP_NAME}-frontend.service"
-    systemctl status ${APP_NAME}-frontend --no-pager || true
-    journalctl -u ${APP_NAME}-frontend -n 100 --no-pager || true
-    rollback
+    # If the unit exists, ensure it uses the standalone ExecStart
+    if grep -q "ExecStart=/usr/bin/npx next start" "$UNIT_FILE_PATH"; then
+        log "🔧 Updating ExecStart to use Next standalone server"
+        sed -i 's|ExecStart=/usr/bin/npx next start -p 3000|ExecStart=/usr/bin/node .next/standalone/server.js -p 3000|' "$UNIT_FILE_PATH"
+        systemctl daemon-reload
+    fi
 fi
 
 systemctl restart ${APP_NAME}-frontend

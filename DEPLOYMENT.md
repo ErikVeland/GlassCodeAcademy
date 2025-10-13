@@ -216,8 +216,16 @@ If you prefer to set up the server manually, follow these steps:
    - Cause: The unit is masked (e.g., via `systemctl mask`) and cannot be started or restarted.
    - Fix:
      ```bash
+     # Unmask and reload
      sudo systemctl unmask glasscode-frontend
      sudo systemctl daemon-reload
+     
+     # Ensure unit uses Next standalone server
+     # ExecStart=/usr/bin/node .next/standalone/server.js -p 3000
+     sudo sed -i 's|ExecStart=.\+|ExecStart=/usr/bin/node .next/standalone/server.js -p 3000|' /etc/systemd/system/glasscode-frontend.service
+     sudo systemctl daemon-reload
+     
+     # Restart service
      sudo systemctl restart glasscode-frontend
      ```
    - Diagnostics:
@@ -226,7 +234,7 @@ If you prefer to set up the server manually, follow these steps:
      journalctl -u glasscode-frontend -n 100 --no-pager
      ls -l /etc/systemd/system/glasscode-frontend.service
      ```
-   - Note: Our deployment scripts automatically unmask `${APP_NAME}-frontend` and `${APP_NAME}-dotnet` before enabling/restarting.
+   - Note: Our deployment scripts automatically unmask `${APP_NAME}-frontend` and `${APP_NAME}-dotnet` before enabling/restarting, and create/update the frontend unit to use the Next standalone server when needed.
 
 ### Testing Your Deployment
 
