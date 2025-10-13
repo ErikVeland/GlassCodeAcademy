@@ -1,12 +1,14 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import Header from '../components/Header';
+import FloatingDarkModeToggle from '../components/FloatingDarkModeToggle';
 import { DarkModeProvider } from '../components/DarkModeContext';
 import AnimatedBackground from '../components/AnimatedBackground';
 import ScrollToTopOnRouteChange from '../components/ScrollToTopOnRouteChange';
 import { AccessibilityProvider } from '../components/AccessibilityProvider';
 import ApolloWrapper from '../components/ApolloWrapper';
 import AuthProvider from '../components/AuthProvider';
+import ProfileProvider from '../components/ProfileProvider';
 import AdminQueryHandler from '../components/AdminQueryHandler';
 import { Suspense } from 'react';
 import { EXTERNAL_LINKS } from '@/lib/appConfig';
@@ -39,8 +41,9 @@ export default function RootLayout({
       <body className={"antialiased min-h-screen bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100 relative"}>
         <ApolloWrapper>
           <AuthProvider>
-          <AccessibilityProvider>
-            <DarkModeProvider>
+          <ProfileProvider>
+            <AccessibilityProvider>
+              <DarkModeProvider>
               <div className="flex flex-col min-h-screen">
                 {/* Smooth scroll to top on route changes */}
                 <ScrollToTopOnRouteChange />
@@ -70,6 +73,8 @@ export default function RootLayout({
                 }>
                   <Header />
                 </Suspense>
+                {/* Floating dark mode toggle in bottom-right */}
+                <FloatingDarkModeToggle />
                 <main 
                   id="main-content" 
                   className="flex-grow w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 relative"
@@ -106,8 +111,9 @@ export default function RootLayout({
                   </div>
                 </footer>
               </div>
-            </DarkModeProvider>
-          </AccessibilityProvider>
+              </DarkModeProvider>
+            </AccessibilityProvider>
+          </ProfileProvider>
           </AuthProvider>
         </ApolloWrapper>
       </body>

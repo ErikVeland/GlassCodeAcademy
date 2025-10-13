@@ -5,6 +5,7 @@ import { useState, useRef, useEffect } from "react";
 import { usePathname } from "next/navigation";
 import MobileMenu from './MobileMenu';
 import DarkModeToggle from './DarkModeToggle';
+import ProfileMenu from './ProfileMenu';
 import { useProgressTracking } from '../hooks/useProgressTracking';
 import { contentRegistry } from '@/lib/contentRegistry';
 
@@ -675,7 +676,10 @@ export default function Header() {
           </div>
           
           <div className="flex items-center">
-            <DarkModeToggle />
+            {/* DarkModeToggle moved to floating bottom-right. Space reserved for upcoming Profile menu. */}
+            <div className="hidden md:block mr-2">
+              <ProfileMenu />
+            </div>
             <div className="md:hidden ml-2">
               <MobileMenu />
             </div>

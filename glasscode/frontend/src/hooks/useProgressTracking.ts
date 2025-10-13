@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useSession } from 'next-auth/react';
 
 export interface ProgressData {
   moduleId: string;
@@ -108,6 +109,7 @@ const ACHIEVEMENT_DEFINITIONS = {
 };
 
 export const useProgressTracking = () => {
+  const { data: session } = useSession();
   const [progress, setProgress] = useState<Record<string, ProgressData>>({});
   const [streak, setStreak] = useState<StreakData>({
     currentStreak: 0,
@@ -117,27 +119,53 @@ export const useProgressTracking = () => {
   });
   const [achievements, setAchievements] = useState<AchievementData[]>([]);
 
+  // Compute per-user/guest storage keys for namespacing
+  const getStorageKeys = () => {
+    const getGuestName = () => {
+      try {
+        const raw = localStorage.getItem('guestUser');
+        if (raw) {
+          const parsed = JSON.parse(raw);
+          if (parsed?.name) return String(parsed.name);
+        }
+      } catch {}
+      return null;
+    };
+    const identifier = (session?.user?.email || session?.user?.name || getGuestName() || 'anonymous')
+      .toString()
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, '-')
+      .replace(/^-+|-+$/g, '');
+    const prefix = 'fullstack';
+    return {
+      PROGRESS: `${prefix}_progress_${identifier}`,
+      STREAK: `${prefix}_streak_${identifier}`,
+      ACHIEVEMENTS: `${prefix}_achievements_${identifier}`,
+    };
+  };
+
   // Load data from localStorage on mount
   useEffect(() => {
     try {
-      const savedProgress = localStorage.getItem(STORAGE_KEYS.PROGRESS);
+      const keys = getStorageKeys();
+      const savedProgress = localStorage.getItem(keys.PROGRESS) || localStorage.getItem(STORAGE_KEYS.PROGRESS);
       if (savedProgress) {
         setProgress(JSON.parse(savedProgress));
       }
 
-      const savedStreak = localStorage.getItem(STORAGE_KEYS.STREAK);
+      const savedStreak = localStorage.getItem(keys.STREAK) || localStorage.getItem(STORAGE_KEYS.STREAK);
       if (savedStreak) {
         setStreak(JSON.parse(savedStreak));
       }
 
-      const savedAchievements = localStorage.getItem(STORAGE_KEYS.ACHIEVEMENTS);
+      const savedAchievements = localStorage.getItem(keys.ACHIEVEMENTS) || localStorage.getItem(STORAGE_KEYS.ACHIEVEMENTS);
       if (savedAchievements) {
         setAchievements(JSON.parse(savedAchievements));
       }
     } catch (error) {
       console.error('Error loading progress data:', error);
     }
-  }, []);
+  }, [session?.user?.email, session?.user?.name]);
 
   const updateProgress = (moduleId: string, data: Partial<ProgressData>) => {
     const currentTime = new Date().toISOString();
@@ -182,7 +210,7 @@ export const useProgressTracking = () => {
     };
     
     setProgress(updated);
-    localStorage.setItem(STORAGE_KEYS.PROGRESS, JSON.stringify(updated));
+    localStorage.setItem(getStorageKeys().PROGRESS, JSON.stringify(updated));
     
     // Update streak
     updateStreak();
@@ -241,7 +269,7 @@ export const useProgressTracking = () => {
       updatedStreak.activityDates = newActivityDates.slice(-365); // Keep last year of data
       
       setStreak(updatedStreak);
-      localStorage.setItem(STORAGE_KEYS.STREAK, JSON.stringify(updatedStreak));
+      localStorage.setItem(getStorageKeys().STREAK, JSON.stringify(updatedStreak));
     }
   };
 
@@ -364,7 +392,7 @@ export const useProgressTracking = () => {
     if (newAchievements.length > 0) {
       const updatedAchievements = [...achievements, ...newAchievements];
       setAchievements(updatedAchievements);
-      localStorage.setItem(STORAGE_KEYS.ACHIEVEMENTS, JSON.stringify(updatedAchievements));
+      localStorage.setItem(getStorageKeys().ACHIEVEMENTS, JSON.stringify(updatedAchievements));
     }
   };
 
