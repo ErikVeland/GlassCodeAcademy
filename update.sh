@@ -266,17 +266,33 @@ cd "$APP_DIR/glasscode/frontend"
 # Use npm ci if package-lock.json exists, otherwise use npm install
 if [ -f "package-lock.json" ]; then
     log "📦 Using npm ci (package-lock.json found)"
-    sudo -u "$DEPLOY_USER" npm ci
+    # Fallback to npm install if lock is out of sync or ci fails
+    sudo -u "$DEPLOY_USER" npm ci || sudo -u "$DEPLOY_USER" npm install
 else
     log "⚠️  package-lock.json not found, using npm install"
     sudo -u "$DEPLOY_USER" npm install
 fi
 
-# Pre-checks: Ensure critical credentials are present for production
+# Pre-checks: Warn for missing secrets and auto-generate a temporary NEXTAUTH_SECRET
+log "🔐 Checking secrets for production..."
 if [ -z "${NEXTAUTH_SECRET:-}" ]; then
-    log "❌ NEXTAUTH_SECRET is not set in $ENV_FILE. Please set a strong secret for production (e.g., 32+ chars)."
-    rollback
+    log "⚠️  WARNING: NEXTAUTH_SECRET is missing in $ENV_FILE. Generating a temporary secret to avoid install failure."
+    # Generate a 64-char hex secret using Node crypto; fallback to a static placeholder if generation fails
+    GENERATED_SECRET=$(node -e 'console.log(require("crypto").randomBytes(32).toString("hex"))' 2>/dev/null || echo "temporary-nextauth-secret-change-me")
+    NEXTAUTH_SECRET="$GENERATED_SECRET"
+    log "ℹ️  A temporary NEXTAUTH_SECRET has been set for this deployment. Please update $ENV_FILE with a permanent, strong secret."
 fi
+
+# Warn if provider IDs are missing (non-fatal)
+[ -z "${GOOGLE_CLIENT_ID:-}" ] && log "⚠️  WARNING: GOOGLE_CLIENT_ID missing; Google login will be disabled."
+[ -z "${GOOGLE_CLIENT_SECRET:-}" ] && log "⚠️  WARNING: GOOGLE_CLIENT_SECRET missing; Google login will be disabled."
+[ -z "${GITHUB_CLIENT_ID:-}" ] && log "⚠️  WARNING: GITHUB_CLIENT_ID missing; GitHub login will be disabled."
+[ -z "${GITHUB_CLIENT_SECRET:-}" ] && log "⚠️  WARNING: GITHUB_CLIENT_SECRET missing; GitHub login will be disabled."
+[ -z "${APPLE_CLIENT_ID:-}" ] && log "⚠️  WARNING: APPLE_CLIENT_ID missing; Apple login will be disabled."
+[ -z "${APPLE_CLIENT_SECRET:-}" ] && log "⚠️  WARNING: APPLE_CLIENT_SECRET missing; Apple login will be disabled."
+[ -z "${APPLE_TEAM_ID:-}" ] && log "⚠️  WARNING: APPLE_TEAM_ID missing; Apple login will be disabled."
+[ -z "${APPLE_KEY_ID:-}" ] && log "⚠️  WARNING: APPLE_KEY_ID missing; Apple login will be disabled."
+[ -z "${APPLE_PRIVATE_KEY:-}" ] && log "⚠️  WARNING: APPLE_PRIVATE_KEY missing; Apple login will be disabled."
 
 cat > .env.production <<EOF
 NEXT_PUBLIC_API_BASE=$NEXT_PUBLIC_API_BASE

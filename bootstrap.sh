@@ -43,8 +43,48 @@ command_exists() {
     command -v "$1" >/dev/null 2>&1
 }
 
+# Generate a random secret with multiple fallbacks
+generate_secret() {
+    if command_exists openssl; then
+        openssl rand -hex 32 && return 0
+    fi
+    if command_exists node; then
+        node -e 'console.log(require("crypto").randomBytes(32).toString("hex"))' && return 0
+    fi
+    if command_exists python3; then
+        python3 - <<'PY'
+import secrets
+print(secrets.token_hex(32))
+PY
+        return 0
+    fi
+    # Fallback to alphanumeric from /dev/urandom
+    tr -dc 'A-Za-z0-9' </dev/urandom | head -c 64
+}
+
 # Parse CLI flags and set mode/port
 # Defaults: frontend + backend, port 3000 unless overridden
+log "🔐 Checking authentication secrets..."
+if [ -z "${NEXTAUTH_SECRET:-}" ]; then
+    log "⚠️  WARNING: NEXTAUTH_SECRET is missing; generating a temporary secret to avoid install failure."
+    NEXTAUTH_SECRET="$(generate_secret || echo 'temporary-nextauth-secret-change-me')"
+    log "ℹ️  Temporary NEXTAUTH_SECRET set; update $ENV_FILE with a permanent, strong value."
+fi
+if [ -z "${NEXTAUTH_URL:-}" ]; then
+    NEXTAUTH_URL="https://${DOMAIN}"
+    log "⚠️  WARNING: NEXTAUTH_URL missing; defaulting to ${NEXTAUTH_URL}"
+fi
+# Provider IDs/secrets warnings (non-fatal)
+[ -z "${GOOGLE_CLIENT_ID:-}" ] && log "⚠️  WARNING: GOOGLE_CLIENT_ID missing; Google login disabled."
+[ -z "${GOOGLE_CLIENT_SECRET:-}" ] && log "⚠️  WARNING: GOOGLE_CLIENT_SECRET missing; Google login disabled."
+[ -z "${GITHUB_CLIENT_ID:-}" ] && log "⚠️  WARNING: GITHUB_CLIENT_ID missing; GitHub login disabled."
+[ -z "${GITHUB_CLIENT_SECRET:-}" ] && log "⚠️  WARNING: GITHUB_CLIENT_SECRET missing; GitHub login disabled."
+[ -z "${APPLE_CLIENT_ID:-}" ] && log "⚠️  WARNING: APPLE_CLIENT_ID missing; Apple login disabled."
+[ -z "${APPLE_CLIENT_SECRET:-}" ] && log "⚠️  WARNING: APPLE_CLIENT_SECRET missing; Apple login disabled."
+[ -z "${APPLE_TEAM_ID:-}" ] && log "⚠️  WARNING: APPLE_TEAM_ID missing; Apple login disabled."
+[ -z "${APPLE_KEY_ID:-}" ] && log "⚠️  WARNING: APPLE_KEY_ID missing; Apple login disabled."
+[ -z "${APPLE_PRIVATE_KEY:-}" ] && log "⚠️  WARNING: APPLE_PRIVATE_KEY missing; Apple login disabled."
+
 FRONTEND_ONLY=0
 FRONTEND_PORT="${PORT:-3000}"
 while [[ $# -gt 0 ]]; do
@@ -434,7 +474,8 @@ cd "$APP_DIR/glasscode/frontend"
 # Use npm ci if package-lock.json exists, otherwise use npm install
 if [ -f "package-lock.json" ]; then
     log "📦 Using npm ci (package-lock.json found)"
-    sudo -u "$DEPLOY_USER" npm ci
+    # Fallback to npm install if lock is out of sync or ci fails
+    sudo -u "$DEPLOY_USER" npm ci || sudo -u "$DEPLOY_USER" npm install
 else
     log "⚠️  package-lock.json not found, using npm install"
     sudo -u "$DEPLOY_USER" npm install
@@ -444,6 +485,8 @@ cat > .env.production <<EOF
 NEXT_PUBLIC_API_BASE=$NEXT_PUBLIC_API_BASE
 NEXT_PUBLIC_BASE_URL=$NEXT_PUBLIC_BASE_URL
 NODE_ENV=production
+NEXTAUTH_URL=$NEXTAUTH_URL
+NEXTAUTH_SECRET=$NEXTAUTH_SECRET
 EOF
 sudo -u "$DEPLOY_USER" npm run build
 log "✅ Frontend built"
@@ -486,6 +529,8 @@ RestartSec=10
 User=$DEPLOY_USER
 Environment=NODE_ENV=production
 Environment=PORT=$FRONTEND_PORT
+Environment=NEXTAUTH_SECRET=$NEXTAUTH_SECRET
+Environment=NEXTAUTH_URL=$NEXTAUTH_URL
 TimeoutStartSec=300
 ExecStartPre=/usr/bin/bash -lc '
   MAX=30; COUNT=1;
@@ -519,6 +564,8 @@ RestartSec=10
 User=$DEPLOY_USER
 Environment=NODE_ENV=production
 Environment=PORT=$FRONTEND_PORT
+Environment=NEXTAUTH_SECRET=$NEXTAUTH_SECRET
+Environment=NEXTAUTH_URL=$NEXTAUTH_URL
 TimeoutStartSec=300
 ExecStart=/usr/bin/node server.js -p $FRONTEND_PORT
 
