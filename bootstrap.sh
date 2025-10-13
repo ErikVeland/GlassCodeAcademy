@@ -406,6 +406,31 @@ fi
 log "🎨 Building frontend..."
 cd "$APP_DIR/glasscode/frontend"
 
+# Ensure Node dependencies are installed for root workspace and scripts before frontend build
+log "📦 Ensuring root Node dependencies installed..."
+cd "$APP_DIR"
+if [ -f "package-lock.json" ]; then
+    log "📦 Using npm ci in root (package-lock.json found)"
+    sudo -u "$DEPLOY_USER" npm ci || sudo -u "$DEPLOY_USER" npm install
+else
+    log "⚠️  package-lock.json not found in root, using npm install"
+    sudo -u "$DEPLOY_USER" npm install
+fi
+
+if [ -d "$APP_DIR/scripts" ] && [ -f "$APP_DIR/scripts/package.json" ]; then
+    log "📦 Ensuring scripts Node dependencies installed..."
+    cd "$APP_DIR/scripts"
+    if [ -f "package-lock.json" ]; then
+        log "📦 Using npm ci in scripts (package-lock.json found)"
+        sudo -u "$DEPLOY_USER" npm ci || sudo -u "$DEPLOY_USER" npm install
+    else
+        log "⚠️  package-lock.json not found in scripts, using npm install"
+        sudo -u "$DEPLOY_USER" npm install
+    fi
+fi
+
+cd "$APP_DIR/glasscode/frontend"
+
 # Use npm ci if package-lock.json exists, otherwise use npm install
 if [ -f "package-lock.json" ]; then
     log "📦 Using npm ci (package-lock.json found)"
