@@ -275,7 +275,7 @@ const TierSection: React.FC<{
             <ul className="grid grid-cols-1 md:grid-cols-3 gap-3">
               {(tier.learningObjectives || []).map((objective, index) => (
                 <li key={index} className="flex items-start gap-2">
-                  <span className="text-white mt-1 flex-shrink-0 text-sm">✓</span>
+                  <span className="text-green-500 mt-0.5 flex-shrink-0 text-sm">✓</span>
                   <span className="text-white/90 text-left text-sm">{objective}</span>
                 </li>
               ))}

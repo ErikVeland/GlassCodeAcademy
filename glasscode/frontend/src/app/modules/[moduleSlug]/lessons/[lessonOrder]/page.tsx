@@ -2,7 +2,6 @@ import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import { contentRegistry, getLessonGroupForLesson, getNextLessonGroup } from '@/lib/contentRegistry';
 import { Metadata } from 'next';
-import ScrollToTopOnRouteChange from '@/components/ScrollToTopOnRouteChange';
 
 interface LessonPageProps {
   params: Promise<{ 
@@ -91,7 +90,6 @@ export default async function LessonPage({ params }: LessonPageProps) {
 
   return (
     <>
-      <ScrollToTopOnRouteChange />
       <div className="max-w-4xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
         {/* Breadcrumb Navigation */}
         <nav className="mb-8" aria-label="Breadcrumb">
@@ -154,7 +152,7 @@ export default async function LessonPage({ params }: LessonPageProps) {
                 <ul className="space-y-2">
                   {lesson.objectives.map((objective: string, index: number) => (
                     <li key={index} className="flex items-center gap-3">
-                      <span className="text-green-500">✓</span>
+                      <span className="text-green-500 mt-0.5">✓</span>
                       <span className="text-gray-700 dark:text-gray-300">{objective}</span>
                     </li>
                   ))}

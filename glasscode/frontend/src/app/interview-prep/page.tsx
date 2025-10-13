@@ -170,9 +170,8 @@ const interviewTiers: Record<string, InterviewTier> = {
 // Updated Interview Module Card Component with homepage styling
 const InterviewModuleCard: React.FC<{
   module: InterviewModule;
-  tierColor: string;
   tierKey: string;
-}> = ({ module, tierColor, tierKey }) => {
+}> = ({ module, tierKey }) => {
   const prerequisitesMet = module.prerequisites.length === 0;
   const isLocked = module.prerequisites.length > 0 && !prerequisitesMet;
 
@@ -312,7 +311,7 @@ const InterviewTierSection: React.FC<{
             <ul className="grid grid-cols-1 md:grid-cols-3 gap-3">
               {tier.learningObjectives.map((objective, index) => (
                 <li key={index} className="flex items-start gap-2">
-                  <span className="text-white mt-1 flex-shrink-0 text-sm">✓</span>
+                  <span className="text-green-500 mt-0.5 flex-shrink-0 text-sm">✓</span>
                   <span className="text-white/90 text-left text-sm">{objective}</span>
                 </li>
               ))}
@@ -326,7 +325,6 @@ const InterviewTierSection: React.FC<{
             <div key={module.id} role="listitem">
               <InterviewModuleCard
                 module={module}
-                tierColor={tier.color}
                 tierKey={tierKey}
               />
             </div>
@@ -556,7 +554,7 @@ const InterviewPrepPage: React.FC = () => {
                 <div className="text-6xl mb-4">🔍</div>
                 <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">No modules found</h3>
                 <p className="text-gray-600 dark:text-gray-300 mb-6">
-                  Try adjusting your search terms or filters to find what you're looking for.
+                  Try adjusting your search terms or filters to find what you&#39;re looking for.
                 </p>
                 <button
                   onClick={clearFilters}
