@@ -370,7 +370,8 @@ if [ "$FRONTEND_ONLY" -eq 0 ]; then
     log "⚙️  Creating backend systemd service (real backend)..."
     systemctl stop ${APP_NAME}-dotnet 2>/dev/null || true
     log "🔌 Port 8080 preflight: checking for conflicts..."
-    CONFLICT_PIDS=$(ss -tulpn 2>/dev/null | grep ':8080' | sed -n 's/.*pid=\([0-9]\+\).*/\1/p' | sort -u)
+    # Avoid grep in pipeline under pipefail; parse PIDs with sed directly
+    CONFLICT_PIDS=$(ss -tulpn 2>/dev/null | sed -n 's/.*:8080.*pid=\([0-9]\+\).*/\1/p' | sort -u)
     if [ -n "$CONFLICT_PIDS" ]; then
         log "🛑 Killing processes using port 8080 (PIDs: $CONFLICT_PIDS)"
         kill -9 $CONFLICT_PIDS 2>/dev/null || true
@@ -499,7 +500,8 @@ log "✅ Standalone assets staged"
 log "⚙️  Creating systemd services..."
 systemctl stop ${APP_NAME}-frontend 2>/dev/null || true
 log "🔌 Frontend port $FRONTEND_PORT preflight: checking for conflicts..."
-FRONTEND_CONFLICT_PIDS=$(ss -tulpn 2>/dev/null | grep ":$FRONTEND_PORT" | sed -n 's/.*pid=\([0-9]\+\).*/\1/p' | sort -u)
+# Avoid grep in pipeline under pipefail; parse PIDs with sed directly
+FRONTEND_CONFLICT_PIDS=$(ss -tulpn 2>/dev/null | sed -n "s/.*:$FRONTEND_PORT.*pid=\([0-9]\+\).*/\1/p" | sort -u)
 if [ -n "$FRONTEND_CONFLICT_PIDS" ]; then
     log "🛑 Killing processes using port $FRONTEND_PORT (PIDs: $FRONTEND_CONFLICT_PIDS)"
     kill -9 $FRONTEND_CONFLICT_PIDS 2>/dev/null || true
