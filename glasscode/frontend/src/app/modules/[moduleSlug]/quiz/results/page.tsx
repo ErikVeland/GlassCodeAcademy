@@ -6,8 +6,9 @@ import { useRouter } from 'next/navigation';
 import ConfettiBurst from '@/components/ConfettiBurst';
 import { useProgressTrackingComplete } from '@/hooks/useProgressTrackingComplete';
 import { useProgressTracking } from '@/hooks/useProgressTracking';
+import { useNextUnlockedLesson } from '@/hooks/useNextUnlockedLesson';
 import { contentRegistry } from '@/lib/contentRegistry';
-import type { ProgrammingQuestion } from '@/lib/contentRegistry';
+import type { ProgrammingQuestion, Module } from '@/lib/contentRegistry';
 
 type CategoryScore = { category: string; correct: number; total: number };
 
@@ -32,6 +33,9 @@ export default function QuizResultsPage({ params }: { params: Promise<{ moduleSl
   const { updateProgress: updateProgressComplete } = useProgressTrackingComplete();
   const { updateProgress: updateProgressBasic } = useProgressTracking();
   const [nextModuleHref, setNextModuleHref] = useState<string | null>(null);
+  const [nextModuleTitle, setNextModuleTitle] = useState<string | null>(null);
+  const [nextLessonTitle, setNextLessonTitle] = useState<string | null>(null);
+  const { nextLessonHref } = useNextUnlockedLesson();
 
   // Resolve the params promise
   useEffect(() => {
@@ -158,6 +162,7 @@ export default function QuizResultsPage({ params }: { params: Promise<{ moduleSl
         }
         if (next) {
           setNextModuleHref(`/modules/${next.slug}`);
+          setNextModuleTitle(next.title ?? null);
         }
       } catch (e) {
         console.error('Error computing next module:', e);
@@ -166,14 +171,47 @@ export default function QuizResultsPage({ params }: { params: Promise<{ moduleSl
     computeNext();
   }, [resolvedParams]);
 
+  // Resolve the title for the next lesson link (module title behind lessons path)
+  useEffect(() => {
+    const resolveNextLessonTitle = async () => {
+      try {
+        if (!nextLessonHref) {
+          setNextLessonTitle(null);
+          return;
+        }
+        const modules = await contentRegistry.getModules();
+        let candidatePath = nextLessonHref;
+        if (candidatePath.startsWith('/modules/') && candidatePath.includes('/lessons/')) {
+          candidatePath = candidatePath.replace(/\/lessons\/.*$/, '/lessons');
+        }
+        const target = modules.find((m: Module) => m?.routes?.lessons === candidatePath);
+        setNextLessonTitle(target ? target.title : null);
+      } catch {
+        setNextLessonTitle(null);
+      }
+    };
+    resolveNextLessonTitle();
+  }, [nextLessonHref]);
+
   const handleRetakeQuiz = () => {
     if (!resolvedParams) return;
     router.push(`/modules/${resolvedParams.moduleSlug}/quiz/start`);
   };
 
-  const handleReviewLessons = () => {
+  const handleReviewLessons = async () => {
     if (!resolvedParams) return;
-    router.push(`/modules/${resolvedParams.moduleSlug}/lessons`);
+    try {
+      const mod = await contentRegistry.getModule(resolvedParams.moduleSlug);
+      if (mod) {
+        const lessonsPath = mod.routes.lessons;
+        const href = lessonsPath.startsWith('/modules/') ? `${lessonsPath}/1` : lessonsPath;
+        router.push(href);
+        return;
+      }
+    } catch (e) {
+      console.error('Failed to resolve module lessons route', e);
+    }
+    router.push(`/modules/${resolvedParams.moduleSlug}`);
   };
 
   if (loading) {
@@ -376,16 +414,23 @@ export default function QuizResultsPage({ params }: { params: Promise<{ moduleSl
                 <p className="text-gray-600 dark:text-gray-300 mb-4">
                   Move on to the next module to continue your learning journey.
                 </p>
-                {nextModuleHref ? (
+                {nextLessonHref ? (
+                  <Link
+                    href={nextLessonHref}
+                    className="inline-block w-full px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors text-center"
+                  >
+                    {nextLessonTitle ? `Start ${nextLessonTitle}` : 'Start Next Lesson'}
+                  </Link>
+                ) : nextModuleHref ? (
                   <Link
                     href={nextModuleHref}
                     className="inline-block w-full px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors text-center"
                   >
-                    View Next Module
+                    {nextModuleTitle ? `View ${nextModuleTitle}` : 'View Next Module'}
                   </Link>
                 ) : (
                   <Link
-                    href={`/modules/${moduleSlug}`}
+                    href={`/modules/${resolvedParams?.moduleSlug ?? ''}`}
                     className="inline-block w-full px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors text-center"
                   >
                     Back to Module Overview
@@ -415,7 +460,7 @@ export default function QuizResultsPage({ params }: { params: Promise<{ moduleSl
       {/* Navigation Footer */}
       <footer className="flex justify-center">
         <Link
-          href={`/modules/${moduleSlug}`}
+          href={`/modules/${resolvedParams?.moduleSlug ?? ''}`}
           className="inline-flex items-center px-4 py-2 text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors"
         >
           ← Back to Module Overview

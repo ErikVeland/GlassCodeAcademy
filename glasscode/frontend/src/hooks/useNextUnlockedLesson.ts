@@ -33,7 +33,12 @@ export const useNextUnlockedLesson = () => {
                 const first = groups[0].lessons[0];
                 firstLessonOrder = (first.order ?? first.id ?? 1) as number;
               }
-              setNextLessonHref(`${mod.routes.lessons}/${firstLessonOrder}`);
+              {
+                const lessonsPath = mod.routes.lessons;
+                const shouldAppendOrder = lessonsPath.startsWith('/modules/');
+                const href = shouldAppendOrder ? `${lessonsPath}/${firstLessonOrder}` : lessonsPath;
+                setNextLessonHref(href);
+              }
               return;
             }
           }
@@ -52,7 +57,12 @@ export const useNextUnlockedLesson = () => {
                 const first = groups[0].lessons[0];
                 firstLessonOrder = (first.order ?? first.id ?? 1) as number;
               }
-              setNextLessonHref(`${mod.routes.lessons}/${firstLessonOrder}`);
+              {
+                const lessonsPath = mod.routes.lessons;
+                const shouldAppendOrder = lessonsPath.startsWith('/modules/');
+                const href = shouldAppendOrder ? `${lessonsPath}/${firstLessonOrder}` : lessonsPath;
+                setNextLessonHref(href);
+              }
               return;
             }
           }
