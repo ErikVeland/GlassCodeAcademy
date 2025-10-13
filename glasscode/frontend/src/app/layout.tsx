@@ -1,11 +1,11 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import Header from '../components/Header';
 import { DarkModeProvider } from '../components/DarkModeContext';
 import AnimatedBackground from '../components/AnimatedBackground';
 import { AccessibilityProvider } from '../components/AccessibilityProvider';
 import ApolloWrapper from '../components/ApolloWrapper';
+import AdminQueryHandler from '../components/AdminQueryHandler';
 
 // Apollo error/dev messages for development
 if (typeof window !== 'undefined' && process.env.NODE_ENV !== 'production') {
@@ -16,15 +16,7 @@ if (typeof window !== 'undefined' && process.env.NODE_ENV !== 'production') {
   });
 }
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
+// Fonts are loaded from Google Fonts CDN via <link> tags in <head>.
 
 export const metadata: Metadata = {
   title: "GlassCode Academy - Learn .NET, Next.js, GraphQL, and Laravel",
@@ -38,13 +30,20 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-screen bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100 relative`}
-      >
+      <head>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link
+          href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&family=JetBrains+Mono:wght@100..800&display=swap"
+          rel="stylesheet"
+        />
+      </head>
+      <body className={`antialiased min-h-screen bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100 relative`}>
         <ApolloWrapper>
           <AccessibilityProvider>
             <DarkModeProvider>
               <div className="flex flex-col min-h-screen">
+                <AdminQueryHandler />
                 {/* Skip to main content link for accessibility */}
                 <a 
                   href="#main-content" 

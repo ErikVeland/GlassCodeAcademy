@@ -31,7 +31,8 @@ const ModuleCard: React.FC<{
 }> = ({ module, tierKey }) => {
   const { progress, updateProgress, achievements } = useProgressTracking();
   const searchParams = useSearchParams();
-  const isUnlocked = searchParams.get('unlock') === 'true';
+  const isUnlockMode = searchParams.has('unlock');
+  const isLockMode = searchParams.has('lock');
 
   const moduleProgress = progress[module.slug] || null;
   const completionPercentage = moduleProgress ?
@@ -49,7 +50,15 @@ const ModuleCard: React.FC<{
     progress[prereqId]?.completionStatus === 'completed'
   );
 
-  const isLocked = !isUnlocked && module.prerequisites.length > 0 && !prerequisitesMet;
+  const isStartModule = (module.prerequisites || []).length === 0;
+  const isLocked = (
+    // Admin unlock mode: nothing is locked
+    (isUnlockMode ? false :
+    // Admin lock mode: lock all except modules that can be started (no prerequisites)
+    (isLockMode ? !isStartModule :
+    // Default behavior: respect prerequisites
+    (module.prerequisites.length > 0 && !prerequisitesMet)))
+  );
 
   const handleModuleClick = () => {
     if (!isLocked) {

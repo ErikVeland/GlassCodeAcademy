@@ -43,6 +43,34 @@ command_exists() {
     command -v "$1" >/dev/null 2>&1
 }
 
+# Parse CLI flags and set mode/port
+# Defaults: frontend + backend, port 3000 unless overridden
+FRONTEND_ONLY=0
+FRONTEND_PORT="${PORT:-3000}"
+while [[ $# -gt 0 ]]; do
+    case "$1" in
+        --frontend-only)
+            FRONTEND_ONLY=1
+            shift
+            ;;
+        --port)
+            if [[ -n "${2:-}" ]]; then
+                FRONTEND_PORT="$2"
+                shift 2
+            else
+                log "⚠️  WARNING: --port flag provided without a value; using default $FRONTEND_PORT"
+                shift
+            fi
+            ;;
+        *)
+            log "⚠️  WARNING: Unknown argument: $1"
+            shift
+            ;;
+    esac
+done
+export FRONTEND_ONLY FRONTEND_PORT
+log "⚙️  Mode: FRONTEND_ONLY=$FRONTEND_ONLY, FRONTEND_PORT=$FRONTEND_PORT"
+
 # Perform environment preflight checks and install missing base tools
 preflight_checks() {
     log "🔍 Running environment preflight checks..."
@@ -107,7 +135,7 @@ preflight_checks() {
     fi
 
     # Ports check (non-fatal warnings)
-    for port in 8080 3000; do
+    for port in 8080 "$FRONTEND_PORT"; do
         if ss -tulpn 2>/dev/null | grep -q ":$port"; then
             log "⚠️  WARNING: Port $port appears to be in use; services may fail to bind"
         fi
@@ -209,6 +237,10 @@ log "✅ npm version: $(npm --version)"
 
 ### 5. Install .NET SDK (try 9, fallback to 8) if needed
 DOTNET_SDK_VERSION=""
+# Skip .NET installation entirely in frontend-only mode
+if [ "$FRONTEND_ONLY" -eq 1 ]; then
+    NEED_DOTNET=0
+fi
 if [ "${NEED_DOTNET:-0}" -eq 1 ]; then
     log "🔷 Installing .NET..."
     # Choose Microsoft packages config based on OS
@@ -237,12 +269,21 @@ if [ "${NEED_DOTNET:-0}" -eq 1 ]; then
         exit 1
     fi
 else
-    log "✅ .NET already present: $(dotnet --version)"
+    if command_exists dotnet; then
+        log "✅ .NET already present: $(dotnet --version)"
+    else
+        log "ℹ️  Skipping .NET installation (frontend-only mode)"
+    fi
 fi
 
-DOTNET_SDK_VERSION=$(dotnet --list-sdks | head -1 | cut -d ' ' -f 1)
-log "✅ .NET SDK version: $DOTNET_SDK_VERSION"
-log "✅ .NET runtime version: $(dotnet --version)"
+if command_exists dotnet; then
+    DOTNET_SDK_VERSION=$(dotnet --list-sdks | head -1 | cut -d ' ' -f 1)
+    log "✅ .NET SDK version: $DOTNET_SDK_VERSION"
+    log "✅ .NET runtime version: $(dotnet --version)"
+else
+    DOTNET_SDK_VERSION=""
+    log "ℹ️  .NET SDK not present"
+fi
 
 ### 6. Setup directories
 log "📂 Setting up directories..."
@@ -262,41 +303,44 @@ else
     log "✅ Repository updated"
 fi
 
-### 8. Update global.json
-update_global_json "$DOTNET_SDK_VERSION"
-
-### 9. Build & Publish Backend (.NET)
-log "🏗️  Building backend..."
-cd "$APP_DIR/glasscode/backend"
-
-# Clean + restore dependencies
-log "🔧 Restoring .NET dependencies..."
-if ! sudo -u "$DEPLOY_USER" dotnet restore; then
-    log "❌ ERROR: Failed to restore .NET dependencies"
-    exit 1
+### 8. Update global.json (only if .NET SDK detected)
+if [ -n "$DOTNET_SDK_VERSION" ]; then
+    update_global_json "$DOTNET_SDK_VERSION"
 fi
-log "✅ .NET dependencies restored"
 
-# Publish backend to /out
-log "📦 Publishing .NET backend..."
-if ! sudo -u "$DEPLOY_USER" dotnet publish -c Release -o "$APP_DIR/glasscode/backend/out"; then
-    log "❌ ERROR: Failed to publish .NET backend"
-    exit 1
-fi
-log "✅ .NET backend published"
+### 9. Build & Publish Backend (.NET) (skipped in frontend-only mode)
+if [ "$FRONTEND_ONLY" -eq 0 ]; then
+    log "🏗️  Building backend..."
+    cd "$APP_DIR/glasscode/backend"
 
-# Create and start REAL backend service before frontend build
-log "⚙️  Creating backend systemd service (real backend)..."
-systemctl stop ${APP_NAME}-dotnet 2>/dev/null || true
-log "🔌 Port 8080 preflight: checking for conflicts..."
-CONFLICT_PIDS=$(ss -tulpn 2>/dev/null | grep ':8080' | sed -n 's/.*pid=\([0-9]\+\).*/\1/p' | sort -u)
-if [ -n "$CONFLICT_PIDS" ]; then
-    log "🛑 Killing processes using port 8080 (PIDs: $CONFLICT_PIDS)"
-    kill -9 $CONFLICT_PIDS 2>/dev/null || true
-    sleep 2
-fi
-ss -tulpn 2>/dev/null | grep ':8080' || true
-cat >/etc/systemd/system/${APP_NAME}-dotnet.service <<EOF
+    # Clean + restore dependencies
+    log "🔧 Restoring .NET dependencies..."
+    if ! sudo -u "$DEPLOY_USER" dotnet restore; then
+        log "❌ ERROR: Failed to restore .NET dependencies"
+        exit 1
+    fi
+    log "✅ .NET dependencies restored"
+
+    # Publish backend to /out
+    log "📦 Publishing .NET backend..."
+    if ! sudo -u "$DEPLOY_USER" dotnet publish -c Release -o "$APP_DIR/glasscode/backend/out"; then
+        log "❌ ERROR: Failed to publish .NET backend"
+        exit 1
+    fi
+    log "✅ .NET backend published"
+
+    # Create and start REAL backend service before frontend build
+    log "⚙️  Creating backend systemd service (real backend)..."
+    systemctl stop ${APP_NAME}-dotnet 2>/dev/null || true
+    log "🔌 Port 8080 preflight: checking for conflicts..."
+    CONFLICT_PIDS=$(ss -tulpn 2>/dev/null | grep ':8080' | sed -n 's/.*pid=\([0-9]\+\).*/\1/p' | sort -u)
+    if [ -n "$CONFLICT_PIDS" ]; then
+        log "🛑 Killing processes using port 8080 (PIDs: $CONFLICT_PIDS)"
+        kill -9 $CONFLICT_PIDS 2>/dev/null || true
+        sleep 2
+    fi
+    ss -tulpn 2>/dev/null | grep ':8080' || true
+    cat >/etc/systemd/system/${APP_NAME}-dotnet.service <<EOF
 [Unit]
 Description=$APP_NAME .NET Backend
 After=network.target
@@ -315,46 +359,47 @@ Environment=ASPNETCORE_ENVIRONMENT=Production
 WantedBy=multi-user.target
 EOF
 
-systemctl daemon-reload
-# Always attempt to unmask backend service before enabling/starting
-systemctl unmask ${APP_NAME}-dotnet || true
-systemctl enable ${APP_NAME}-dotnet
+    systemctl daemon-reload
+    # Always attempt to unmask backend service before enabling/starting
+    systemctl unmask ${APP_NAME}-dotnet || true
+    systemctl enable ${APP_NAME}-dotnet
 
-log "🚀 Starting real backend service..."
-systemctl start ${APP_NAME}-dotnet
+    log "🚀 Starting real backend service..."
+    systemctl start ${APP_NAME}-dotnet
 
-log "⏳ Waiting for real backend health before frontend build..."
-MAX_ATTEMPTS=30
-ATTEMPT=1
-SLEEP_INTERVAL=5
-while [[ $ATTEMPT -le $MAX_ATTEMPTS ]]; do
-    if curl -s -f http://localhost:8080/api/health >/dev/null 2>&1; then
-        HEALTH_RESPONSE=$(curl -s http://localhost:8080/api/health)
-        BACKEND_STATUS=$(echo "$HEALTH_RESPONSE" | grep -o '"status":"[^"]*"' | cut -d'"' -f4)
-        if [[ "$BACKEND_STATUS" == "healthy" ]]; then
-            log "✅ Real backend healthy. Proceeding to build frontend."
-            break
-        else
-            log "⚠️  Real backend responding but status is $BACKEND_STATUS"
-            break
+    log "⏳ Waiting for real backend health before frontend build..."
+    MAX_ATTEMPTS=30
+    ATTEMPT=1
+    SLEEP_INTERVAL=5
+    while [[ $ATTEMPT -le $MAX_ATTEMPTS ]]; do
+        if curl -s -f http://localhost:8080/api/health >/dev/null 2>&1; then
+            HEALTH_RESPONSE=$(curl -s http://localhost:8080/api/health)
+            BACKEND_STATUS=$(echo "$HEALTH_RESPONSE" | grep -o '"status":"[^"]*"' | cut -d'"' -f4)
+            if [[ "$BACKEND_STATUS" == "healthy" ]]; then
+                log "✅ Real backend healthy. Proceeding to build frontend."
+                break
+            else
+                log "⚠️  Real backend responding but status is $BACKEND_STATUS"
+                break
+            fi
         fi
-    fi
-    draw_progress "$ATTEMPT" "$MAX_ATTEMPTS" "  ⏳ Backend health: "
-    ATTEMPT=$((ATTEMPT + 1))
-    sleep $SLEEP_INTERVAL
-done
+        draw_progress "$ATTEMPT" "$MAX_ATTEMPTS" "  ⏳ Backend health: "
+        ATTEMPT=$((ATTEMPT + 1))
+        sleep $SLEEP_INTERVAL
+    done
 
-if [[ $ATTEMPT -gt $MAX_ATTEMPTS ]]; then
-    log "❌ Real backend failed to become healthy before frontend build."
-    log "🧪 Diagnostic: systemd status"
-    systemctl status ${APP_NAME}-dotnet --no-pager || true
-    log "🪵 Recent backend logs (journalctl)"
-    journalctl -u ${APP_NAME}-dotnet -n 200 --no-pager || true
-    log "🔌 Listening ports snapshot"
-    ss -tulpn | grep :8080 || true
-    log "🌐 Health endpoint verbose output"
-    curl -v http://localhost:8080/api/health || true
-    exit 1
+    if [[ $ATTEMPT -gt $MAX_ATTEMPTS ]]; then
+        log "❌ Real backend failed to become healthy before frontend build."
+        log "🧪 Diagnostic: systemd status"
+        systemctl status ${APP_NAME}-dotnet --no-pager || true
+        log "🪵 Recent backend logs (journalctl)"
+        journalctl -u ${APP_NAME}-dotnet -n 200 --no-pager || true
+        log "🔌 Listening ports snapshot"
+        ss -tulpn | grep :8080 || true
+        log "🌐 Health endpoint verbose output"
+        curl -v http://localhost:8080/api/health || true
+        exit 1
+    fi
 fi
 
 ### 10. Build Frontend (Next.js)
@@ -378,18 +423,37 @@ EOF
 sudo -u "$DEPLOY_USER" npm run build
 log "✅ Frontend built"
 
+# Stage Next.js standalone assets for reliable serving
+log "📦 Staging Next.js standalone assets..."
+cd "$APP_DIR/glasscode/frontend"
+mkdir -p .next/standalone/.next
+rm -rf .next/standalone/.next/static
+cp -r .next/static .next/standalone/.next/static
+rm -rf .next/standalone/public
+cp -r public .next/standalone/public 2>/dev/null || true
+chown -R "$DEPLOY_USER":"$DEPLOY_USER" .next/standalone || true
+log "✅ Standalone assets staged"
+
 ### 11. Create systemd services
 log "⚙️  Creating systemd services..."
 systemctl stop ${APP_NAME}-frontend 2>/dev/null || true
 
-# Frontend service (production mode)
+### Frontend service (production mode)
+# Generate unit with conditional backend gating and standalone working directory
+if [ "$FRONTEND_ONLY" -eq 0 ]; then
 cat >/etc/systemd/system/${APP_NAME}-frontend.service <<EOF
 [Unit]
 Description=$APP_NAME Next.js Frontend
 After=network.target ${APP_NAME}-dotnet.service
 
 [Service]
-WorkingDirectory=$APP_DIR/glasscode/frontend
+WorkingDirectory=$APP_DIR/glasscode/frontend/.next/standalone
+Restart=always
+RestartSec=10
+User=$DEPLOY_USER
+Environment=NODE_ENV=production
+Environment=PORT=$FRONTEND_PORT
+TimeoutStartSec=300
 ExecStartPre=/usr/bin/bash -lc '
   MAX=30; COUNT=1;
   while [ \$COUNT -le \$MAX ]; do
@@ -402,36 +466,62 @@ ExecStartPre=/usr/bin/bash -lc '
   done;
   echo "Backend health check gating failed: status='\$STATUS' resp='\$RESP'"; exit 1;
 '
-ExecStart=/usr/bin/node .next/standalone/server.js -p 3000
-Restart=always
-RestartSec=10
-User=$DEPLOY_USER
-Environment=NODE_ENV=production
-TimeoutStartSec=300
+ExecStart=/usr/bin/node server.js
 
 [Install]
 WantedBy=multi-user.target
 EOF
+else
+cat >/etc/systemd/system/${APP_NAME}-frontend.service <<EOF
+[Unit]
+Description=$APP_NAME Next.js Frontend
+After=network.target
+
+[Service]
+WorkingDirectory=$APP_DIR/glasscode/frontend/.next/standalone
+Restart=always
+RestartSec=10
+User=$DEPLOY_USER
+Environment=NODE_ENV=production
+Environment=PORT=$FRONTEND_PORT
+TimeoutStartSec=300
+ExecStart=/usr/bin/node server.js
+
+[Install]
+WantedBy=multi-user.target
+EOF
+fi
 
 systemctl daemon-reload
 # Always attempt to unmask services to avoid masked-unit failures
 systemctl unmask ${APP_NAME}-frontend || true
-systemctl unmask ${APP_NAME}-dotnet || true
+if [ "$FRONTEND_ONLY" -eq 0 ]; then
+    systemctl unmask ${APP_NAME}-dotnet || true
+fi
 # Unmask services if previously masked
 if systemctl is-enabled ${APP_NAME}-frontend 2>/dev/null | grep -q masked; then
     log "⚠️  Frontend service is masked. Unmasking..."
     systemctl unmask ${APP_NAME}-frontend || true
 fi
-if systemctl is-enabled ${APP_NAME}-dotnet 2>/dev/null | grep -q masked; then
+if [ "$FRONTEND_ONLY" -eq 0 ] && systemctl is-enabled ${APP_NAME}-dotnet 2>/dev/null | grep -q masked; then
     log "⚠️  Backend service is masked. Unmasking..."
     systemctl unmask ${APP_NAME}-dotnet || true
 fi
 
-systemctl enable ${APP_NAME}-dotnet ${APP_NAME}-frontend
+if [ "$FRONTEND_ONLY" -eq 0 ]; then
+    systemctl enable ${APP_NAME}-dotnet ${APP_NAME}-frontend
+else
+    systemctl enable ${APP_NAME}-frontend
+fi
 
 ### 11.1 Start or restart services
 log "🚀 Starting services..."
-for svc in ${APP_NAME}-dotnet ${APP_NAME}-frontend; do
+SERVICES_TO_START=()
+if [ "$FRONTEND_ONLY" -eq 0 ]; then
+    SERVICES_TO_START+=("${APP_NAME}-dotnet")
+fi
+SERVICES_TO_START+=("${APP_NAME}-frontend")
+for svc in "${SERVICES_TO_START[@]}"; do
     if systemctl is-active --quiet "$svc"; then
         log "🔄 $svc already running, restarting..."
         systemctl restart "$svc" || true
@@ -449,6 +539,29 @@ done
 
 ### 12. Configure Nginx
 log "🌐 Configuring Nginx..."
+if [ "$FRONTEND_ONLY" -eq 1 ]; then
+cat >/etc/nginx/sites-available/$APP_NAME <<EOF
+server {
+    listen 80;
+    server_name www.$DOMAIN;
+    return 301 https://$DOMAIN\$request_uri;
+}
+
+server {
+    listen 80;
+    server_name $DOMAIN;
+
+    location / {
+        proxy_pass http://127.0.0.1:$FRONTEND_PORT;
+        proxy_http_version 1.1;
+        proxy_set_header Host \$host;
+        proxy_set_header X-Real-IP \$remote_addr;
+        proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto \$scheme;
+    }
+}
+EOF
+else
 cat >/etc/nginx/sites-available/$APP_NAME <<EOF
 server {
     listen 80;
@@ -479,7 +592,7 @@ server {
     }
 
     location / {
-        proxy_pass http://127.0.0.1:3000;
+        proxy_pass http://127.0.0.1:$FRONTEND_PORT;
         proxy_http_version 1.1;
         proxy_set_header Host \$host;
         proxy_set_header X-Real-IP \$remote_addr;
@@ -488,6 +601,7 @@ server {
     }
 }
 EOF
+fi
 
 ln -sf /etc/nginx/sites-available/$APP_NAME /etc/nginx/sites-enabled/
 nginx -t && systemctl reload nginx
@@ -509,15 +623,19 @@ log "✅ UFW configured"
 ### 15. Health check
 log "🩺 Performing health checks..."
 sleep 10
-if curl -s -X POST http://localhost:8080/graphql \
-  -H "Content-Type: application/json" \
-  -d '{"query":"{ __typename }"}' | grep -q '__typename'; then
-    log "✅ Backend health check: PASSED"
+if [ "$FRONTEND_ONLY" -eq 0 ]; then
+  if curl -s -X POST http://localhost:8080/graphql \
+    -H "Content-Type: application/json" \
+    -d '{"query":"{ __typename }"}' | grep -q '__typename'; then
+      log "✅ Backend health check: PASSED"
+  else
+      log "⚠️  WARNING: Backend health check failed"
+  fi
 else
-    log "⚠️  WARNING: Backend health check failed"
+  log "ℹ️  Skipping backend health check (frontend-only mode)"
 fi
 
-if curl -f http://localhost:3000 >/dev/null 2>&1; then
+if curl -f http://localhost:$FRONTEND_PORT >/dev/null 2>&1; then
     log "✅ Frontend health check: PASSED"
 else
     log "⚠️  WARNING: Frontend health check failed"

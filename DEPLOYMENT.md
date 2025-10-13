@@ -66,6 +66,46 @@ The bootstrap script will:
 8. Configure firewall rules
 9. Perform health checks
 
+### Bootstrap Script Flags
+
+The bootstrap script supports additional flags for flexible deployment:
+
+- `--frontend-only`: Skips backend (.NET) setup and only builds and runs the Next.js frontend using the standalone server.
+- `--port <PORT>`: Specifies the port for the frontend standalone server (default: `3000`).
+
+Examples:
+
+```bash
+# Frontend-only deployment on port 3006
+./bootstrap.sh --frontend-only --port 3006
+
+# Full-stack deployment with custom frontend port
+./bootstrap.sh --port 8080
+```
+
+The script will stage `.next/standalone`, `.next/static`, and `public` under the frontend working directory used by the service, ensure the systemd unit uses `ExecStart=/usr/bin/node .next/standalone/server.js -p <PORT>`, and configure NGINX accordingly.
+
+### Admin URL Query Parameters
+
+For admin and testing purposes, the frontend recognizes these URL query parameters on the homepage and across the app:
+
+- `?unlock`: Temporarily unlocks all modules regardless of prerequisites while the param is present.
+- `?lock`: Temporarily locks all modules except start modules (modules with no prerequisites).
+- `?reset` (alias: `?rest`): Resets the app to a virgin state. Clears `localStorage`, `sessionStorage`, and browser caches, then removes admin params and reloads the page.
+
+Usage examples:
+
+```text
+https://glasscode.academy/?unlock
+https://glasscode.academy/?lock
+https://glasscode.academy/?reset
+```
+
+Notes:
+- `?unlock` and `?lock` are transient and only apply while present in the URL.
+- `?reset` will clear all client-side storage keys including quiz progress, achievements, streaks, and preferences, and attempt to clear Service Worker caches where supported.
+- After a reset, the URL query parameters are removed automatically to prevent repeated resets on refresh.
+
 ### Updating the Application
 
 To update the application to the latest version, use the update script:
