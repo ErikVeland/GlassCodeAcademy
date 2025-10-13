@@ -447,39 +447,28 @@ log "🎨 Building frontend..."
 cd "$APP_DIR/glasscode/frontend"
 
 # Ensure Node dependencies are installed for root workspace and scripts before frontend build
-log "📦 Ensuring root Node dependencies installed..."
+log "📦 Regenerating root lockfile from package.json..."
 cd "$APP_DIR"
-if [ -f "package-lock.json" ]; then
-    log "📦 Using npm ci in root (package-lock.json found)"
-    sudo -u "$DEPLOY_USER" npm ci || sudo -u "$DEPLOY_USER" npm install
-else
-    log "⚠️  package-lock.json not found in root, using npm install"
-    sudo -u "$DEPLOY_USER" npm install
-fi
+sudo -u "$DEPLOY_USER" rm -f package-lock.json || true
+sudo -u "$DEPLOY_USER" npm install --package-lock-only
+log "📦 Installing root dependencies with npm ci (fresh lockfile)"
+sudo -u "$DEPLOY_USER" npm ci || sudo -u "$DEPLOY_USER" npm install
 
 if [ -d "$APP_DIR/scripts" ] && [ -f "$APP_DIR/scripts/package.json" ]; then
-    log "📦 Ensuring scripts Node dependencies installed..."
+    log "📦 Regenerating scripts lockfile from package.json..."
     cd "$APP_DIR/scripts"
-    if [ -f "package-lock.json" ]; then
-        log "📦 Using npm ci in scripts (package-lock.json found)"
-        sudo -u "$DEPLOY_USER" npm ci || sudo -u "$DEPLOY_USER" npm install
-    else
-        log "⚠️  package-lock.json not found in scripts, using npm install"
-        sudo -u "$DEPLOY_USER" npm install
-    fi
+    sudo -u "$DEPLOY_USER" rm -f package-lock.json || true
+    sudo -u "$DEPLOY_USER" npm install --package-lock-only
+    log "📦 Installing scripts dependencies with npm ci (fresh lockfile)"
+    sudo -u "$DEPLOY_USER" npm ci || sudo -u "$DEPLOY_USER" npm install
 fi
 
 cd "$APP_DIR/glasscode/frontend"
-
-# Use npm ci if package-lock.json exists, otherwise use npm install
-if [ -f "package-lock.json" ]; then
-    log "📦 Using npm ci (package-lock.json found)"
-    # Fallback to npm install if lock is out of sync or ci fails
-    sudo -u "$DEPLOY_USER" npm ci || sudo -u "$DEPLOY_USER" npm install
-else
-    log "⚠️  package-lock.json not found, using npm install"
-    sudo -u "$DEPLOY_USER" npm install
-fi
+log "📦 Regenerating frontend lockfile from package.json..."
+sudo -u "$DEPLOY_USER" rm -f package-lock.json || true
+sudo -u "$DEPLOY_USER" npm install --package-lock-only
+log "📦 Installing frontend dependencies with npm ci (fresh lockfile)"
+sudo -u "$DEPLOY_USER" npm ci || sudo -u "$DEPLOY_USER" npm install
 
 cat > .env.production <<EOF
 NEXT_PUBLIC_API_BASE=$NEXT_PUBLIC_API_BASE
@@ -517,7 +506,25 @@ ss -tulpn 2>/dev/null | grep ":$FRONTEND_PORT" || true
 ### Frontend service (production mode)
 # Generate unit with conditional backend gating and standalone working directory
 if [ "$FRONTEND_ONLY" -eq 0 ]; then
-cat >/etc/systemd/system/${APP_NAME}-frontend.service <<EOF
+    # Create backend health check gating script to avoid multiline quoting in unit
+    cat >"$APP_DIR/glasscode/frontend/check_backend_health.sh" <<'EOS'
+#!/usr/bin/env bash
+MAX=30
+COUNT=1
+while [ $COUNT -le $MAX ]; do
+  HTTP=$(curl -s -o /dev/null -w "%{http_code}" http://127.0.0.1:8080/api/health || true)
+  RESP=$(curl -s http://127.0.0.1:8080/api/health || true)
+  STATUS=$(echo "$RESP" | jq -r .status 2>/dev/null || echo "$RESP" | grep -o '"status":"[^"]*"' | cut -d '"' -f4)
+  if [ "$HTTP" = "200" ] && [ "$STATUS" = "healthy" ]; then
+    exit 0
+  fi
+  sleep 5; COUNT=$((COUNT+1))
+done
+echo "Backend health check gating failed: http='$HTTP' status='$STATUS' resp='$RESP'"
+exit 1
+EOS
+    chmod +x "$APP_DIR/glasscode/frontend/check_backend_health.sh"
+    cat >/etc/systemd/system/${APP_NAME}-frontend.service <<EOF
 [Unit]
 Description=$APP_NAME Next.js Frontend
 After=network.target ${APP_NAME}-dotnet.service
@@ -532,19 +539,7 @@ Environment=PORT=$FRONTEND_PORT
 Environment=NEXTAUTH_SECRET=$NEXTAUTH_SECRET
 Environment=NEXTAUTH_URL=$NEXTAUTH_URL
 TimeoutStartSec=300
-ExecStartPre=/usr/bin/bash -lc '
-  MAX=30; COUNT=1;
-  while [ \$COUNT -le \$MAX ]; do
-    HTTP=\$(curl -s -o /dev/null -w "%{http_code}" http://127.0.0.1:8080/api/health || true);
-    RESP=\$(curl -s http://127.0.0.1:8080/api/health || true);
-    STATUS=\$(echo "\$RESP" | jq -r .status 2>/dev/null || echo "");
-    if [ "\$HTTP" = "200" ] && [ "\$STATUS" = "healthy" ]; then
-      exit 0;
-    fi;
-    sleep 5; COUNT=\$((COUNT+1));
-  done;
-  echo "Backend health check gating failed: http='\$HTTP' status='\$STATUS' resp='\$RESP'"; exit 1;
-'
+ExecStartPre=$APP_DIR/glasscode/frontend/check_backend_health.sh
 ExecStart=/usr/bin/node server.js -p $FRONTEND_PORT
  
 
