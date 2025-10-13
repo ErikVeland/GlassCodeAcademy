@@ -18,6 +18,7 @@ export default function AnimatedBackgroundDemo() {
   const [speed, setSpeed] = useState(25);
   const [blur, setBlur] = useState(55);
   const [opacity, setOpacity] = useState(0.77);
+  const [respectReducedMotion, setRespectReducedMotion] = useState(true);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [retryCount, setRetryCount] = useState(0);
@@ -184,6 +185,7 @@ export default function AnimatedBackgroundDemo() {
         speed={speed}
         blur={blur}
         opacity={opacity}
+        respectReducedMotion={respectReducedMotion}
       />
       
       {/* Content */}
@@ -227,6 +229,23 @@ export default function AnimatedBackgroundDemo() {
                     </h3>
                     
                     <div className="space-y-6">
+                      <div>
+                        <label htmlFor="reduced-motion-toggle" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                          Respect Reduced Motion
+                        </label>
+                        <div className="flex items-center gap-3">
+                          <input
+                            id="reduced-motion-toggle"
+                            type="checkbox"
+                            checked={respectReducedMotion}
+                            onChange={(e) => setRespectReducedMotion(e.target.checked)}
+                            className="h-4 w-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500"
+                          />
+                          <span className="text-sm text-gray-700 dark:text-gray-300">
+                            {respectReducedMotion ? 'Enabled' : 'Disabled (force animation)'}
+                          </span>
+                        </div>
+                      </div>
                       <div>
                         <label htmlFor="speed-control" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                           Animation Speed: {speed}s

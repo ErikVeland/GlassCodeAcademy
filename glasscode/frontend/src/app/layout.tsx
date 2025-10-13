@@ -3,6 +3,7 @@ import "./globals.css";
 import Header from '../components/Header';
 import { DarkModeProvider } from '../components/DarkModeContext';
 import AnimatedBackground from '../components/AnimatedBackground';
+import ScrollToTopOnRouteChange from '../components/ScrollToTopOnRouteChange';
 import { AccessibilityProvider } from '../components/AccessibilityProvider';
 import ApolloWrapper from '../components/ApolloWrapper';
 import AuthProvider from '../components/AuthProvider';
@@ -46,6 +47,8 @@ export default function RootLayout({
           <AccessibilityProvider>
             <DarkModeProvider>
               <div className="flex flex-col min-h-screen">
+                {/* Smooth scroll to top on route changes */}
+                <ScrollToTopOnRouteChange />
                 <Suspense fallback={null}>
                   <AdminQueryHandler />
                 </Suspense>

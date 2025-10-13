@@ -57,6 +57,7 @@ body {
   padding: 0;
   position: relative;
   min-height: 100vh;
+  scroll-behavior: smooth;
 }
 
 /* Custom styles for wider layout */

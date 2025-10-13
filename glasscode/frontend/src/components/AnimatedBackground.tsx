@@ -8,6 +8,7 @@ interface AnimatedBackgroundProps {
   blur?: number;
   opacity?: number;
   className?: string;
+  respectReducedMotion?: boolean;
 }
 
 const AnimatedBackground: React.FC<AnimatedBackgroundProps> = ({
@@ -28,7 +29,8 @@ const AnimatedBackground: React.FC<AnimatedBackgroundProps> = ({
   speed = 45, // Increased from 25 to 45 seconds to fit all colors
   blur = 55,
   opacity = 0.77,
-  className = ''
+  className = '',
+  respectReducedMotion = true
 }) => {
   const backgroundRef = useRef<HTMLDivElement>(null);
 
@@ -44,10 +46,13 @@ const AnimatedBackground: React.FC<AnimatedBackgroundProps> = ({
           
           // Check if user prefers reduced motion
           const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-          
-          // Only animate if user doesn't prefer reduced motion
-          if (!prefersReducedMotion) {
-            backgroundRef.current.style.animation = `gradientFlow ${speed}s ease infinite`;
+
+          // Respect reduced motion by default; allow explicit override for demo purposes
+          if (!prefersReducedMotion || !respectReducedMotion) {
+            // Use inline !important to ensure animation works even under global reduced-motion CSS
+            backgroundRef.current.style.setProperty('animation', `gradientFlow ${speed}s ease infinite`, !respectReducedMotion ? 'important' : '');
+            backgroundRef.current.style.setProperty('animation-duration', `${speed}s`, !respectReducedMotion ? 'important' : '');
+            backgroundRef.current.style.setProperty('animation-iteration-count', 'infinite', !respectReducedMotion ? 'important' : '');
           } else {
             // Apply a static gradient when reduced motion is preferred
             backgroundRef.current.style.animation = 'none';
@@ -60,7 +65,7 @@ const AnimatedBackground: React.FC<AnimatedBackgroundProps> = ({
 
       updateGradient();
     }
-  }, [colors, speed, blur, opacity]);
+  }, [colors, speed, blur, opacity, respectReducedMotion]);
 
   // Check if user prefers reduced motion
   const prefersReducedMotion = typeof window !== 'undefined' 
@@ -72,8 +77,8 @@ const AnimatedBackground: React.FC<AnimatedBackgroundProps> = ({
       ref={backgroundRef}
       className={`fixed top-0 left-0 w-full h-full -z-10 ${className}`}
       style={{
-        animation: prefersReducedMotion 
-          ? 'none' 
+        animation: prefersReducedMotion && respectReducedMotion
+          ? 'none'
           : `gradientFlow ${speed}s ease infinite`,
       }}
       aria-hidden="true"

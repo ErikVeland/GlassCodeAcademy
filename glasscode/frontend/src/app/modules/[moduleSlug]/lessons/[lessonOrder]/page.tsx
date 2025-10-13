@@ -1,7 +1,8 @@
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
-import { contentRegistry, getLessonGroups, getLessonGroupForLesson, getNextLessonGroup } from '@/lib/contentRegistry';
+import { contentRegistry, getLessonGroupForLesson, getNextLessonGroup } from '@/lib/contentRegistry';
 import { Metadata } from 'next';
+import ScrollToTopOnRouteChange from '@/components/ScrollToTopOnRouteChange';
 
 interface LessonPageProps {
   params: Promise<{ 
@@ -10,17 +11,30 @@ interface LessonPageProps {
   }>;
 }
 
+// Explicit interfaces to avoid 'any' types in maps
+interface Pitfall {
+  mistake?: string;
+  solution?: string;
+  severity?: 'high' | 'medium' | 'low';
+}
+
+interface Exercise {
+  title?: string;
+  description?: string;
+  checkpoints?: string[];
+}
+
 export async function generateStaticParams() {
   const modules = await contentRegistry.getModules();
   const params: Array<{ moduleSlug: string; lessonOrder: string }> = [];
   
-  for (const module of modules) {
-    if (module.status === 'active') {
-      const lessons = await contentRegistry.getModuleLessons(module.slug);
+  for (const mod of modules) {
+    if (mod.status === 'active') {
+      const lessons = await contentRegistry.getModuleLessons(mod.slug);
       if (lessons) {
         lessons.forEach((_, index) => {
           params.push({
-            moduleSlug: module.slug,
+            moduleSlug: mod.slug,
             lessonOrder: (index + 1).toString(),
           });
         });
@@ -33,33 +47,33 @@ export async function generateStaticParams() {
 
 export async function generateMetadata({ params }: LessonPageProps): Promise<Metadata> {
   const { moduleSlug, lessonOrder } = await params;
-  const module = await contentRegistry.getModule(moduleSlug);
+  const currentModule = await contentRegistry.getModule(moduleSlug);
   const lessons = await contentRegistry.getModuleLessons(moduleSlug);
   const lessonIndex = parseInt(lessonOrder) - 1;
   const lesson = lessons?.[lessonIndex];
   
-  if (!module || !lesson) {
+  if (!currentModule || !lesson) {
     return {
       title: 'Lesson Not Found',
     };
   }
 
   return {
-    title: `${lesson.title} - ${module.title} Lessons`,
-    description: lesson.intro?.substring(0, 160) || `Learn ${lesson.title} in the ${module.title} module.`,
-    keywords: lesson.tags?.join(', ') || module.technologies.join(', '),
+    title: `${lesson.title} - ${currentModule.title} Lessons`,
+    description: lesson.intro?.substring(0, 160) || `Learn ${lesson.title} in the ${currentModule.title} module.`,
+    keywords: lesson.tags?.join(', ') || currentModule.technologies.join(', '),
   };
 }
 
 export default async function LessonPage({ params }: LessonPageProps) {
   const { moduleSlug, lessonOrder } = await params;
-  const module = await contentRegistry.getModule(moduleSlug);
+  const currentModule = await contentRegistry.getModule(moduleSlug);
   
-  if (!module) {
+  if (!currentModule) {
     notFound();
   }
 
-  const lessons = await contentRegistry.getModuleLessons(module.slug);
+  const lessons = await contentRegistry.getModuleLessons(currentModule.slug);
   const lessonIndex = parseInt(lessonOrder) - 1;
   const lesson = lessons?.[lessonIndex];
 
@@ -68,9 +82,8 @@ export default async function LessonPage({ params }: LessonPageProps) {
   }
 
   // Get lesson groups and current group info
-  const lessonGroups = getLessonGroups(module.slug, lessons);
-  const currentGroupInfo = getLessonGroupForLesson(module.slug, lessons, lessonIndex + 1);
-  const nextGroup = getNextLessonGroup(module.slug, lessons, lessonIndex + 1);
+  const currentGroupInfo = getLessonGroupForLesson(currentModule.slug, lessons, lessonIndex + 1);
+  const nextGroup = getNextLessonGroup(currentModule.slug, lessons, lessonIndex + 1);
   
   // Determine if this is the last lesson in its group
   const isLastInGroup = currentGroupInfo && currentGroupInfo.group.lessons[currentGroupInfo.group.lessons.length - 1].order === lesson.order;
@@ -78,6 +91,7 @@ export default async function LessonPage({ params }: LessonPageProps) {
 
   return (
     <>
+      <ScrollToTopOnRouteChange />
       <div className="max-w-4xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
         {/* Breadcrumb Navigation */}
         <nav className="mb-8" aria-label="Breadcrumb">
@@ -89,13 +103,13 @@ export default async function LessonPage({ params }: LessonPageProps) {
             </li>
             <li className="text-gray-500">/</li>
             <li>
-              <Link href={module.routes.overview} className="text-blue-600 hover:text-blue-800">
-                {module.title}
+              <Link href={currentModule.routes.overview} className="text-blue-600 hover:text-blue-800">
+                {currentModule.title}
               </Link>
             </li>
             <li className="text-gray-500">/</li>
             <li>
-              <Link href={module.routes.lessons} className="text-blue-600 hover:text-blue-800">
+              <Link href={currentModule.routes.lessons} className="text-blue-600 hover:text-blue-800">
                 Lessons
               </Link>
             </li>
@@ -119,7 +133,7 @@ export default async function LessonPage({ params }: LessonPageProps) {
                     {lesson.title}
                   </h1>
                   <p className="text-gray-600 dark:text-gray-300">
-                    {module.title} • {currentGroupInfo?.group.title} • Lesson {lesson.order || lessonIndex + 1} of {lessons.length}
+                    {currentModule.title} • {currentGroupInfo?.group.title} • Lesson {lesson.order || lessonIndex + 1} of {lessons.length}
                   </p>
                 </div>
               </div>
@@ -198,7 +212,7 @@ export default async function LessonPage({ params }: LessonPageProps) {
               </h2>
               
               <div className="space-y-4">
-                {lesson.pitfalls.map((pitfall: any, index: number) => (
+                {lesson.pitfalls.map((pitfall: Pitfall, index: number) => (
                   <div key={index} className="border border-yellow-200 dark:border-yellow-800 bg-yellow-50 dark:bg-yellow-900/20 rounded-lg p-4">
                     <div className="flex items-start gap-3">
                       <span className="text-yellow-500 text-xl mt-1">⚠️</span>
@@ -234,7 +248,7 @@ export default async function LessonPage({ params }: LessonPageProps) {
               </h2>
               
               <div className="space-y-6">
-                {lesson.exercises.map((exercise: any, index: number) => (
+                {lesson.exercises.map((exercise: Exercise, index: number) => (
                   <div key={index} className="border border-blue-200 dark:border-blue-800 bg-blue-50 dark:bg-blue-900/20 rounded-lg p-6">
                     <h3 className="text-lg font-semibold text-blue-900 dark:text-blue-100 mb-3">
                       {exercise.title || `Exercise ${index + 1}`}
@@ -273,14 +287,14 @@ export default async function LessonPage({ params }: LessonPageProps) {
           <div>
             {isFirstInGroup ? (
               <Link
-                href={module.routes.lessons}
+                href={currentModule.routes.lessons}
                 className="inline-flex items-center px-4 py-2 text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors"
               >
                 ← Back to Lessons
               </Link>
             ) : (
               <Link
-                href={`${module.routes.lessons}/${lessonIndex}`} // Previous lesson
+                href={`${currentModule.routes.lessons}/${lessonIndex}`} // Previous lesson
                 className="inline-flex items-center px-4 py-2 text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors"
               >
                 ← Previous Lesson
@@ -292,7 +306,7 @@ export default async function LessonPage({ params }: LessonPageProps) {
             {isLastInGroup ? (
               nextGroup ? (
                 <Link
-                  href={`${module.routes.lessons}/${nextGroup.lessons[0].order}`}
+                  href={`${currentModule.routes.lessons}/${nextGroup.lessons[0].order}`}
                   className="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
                 >
                   Next Group: {nextGroup.title}
@@ -300,7 +314,7 @@ export default async function LessonPage({ params }: LessonPageProps) {
                 </Link>
               ) : (
                 <Link
-                  href={module.routes.quiz}
+                  href={currentModule.routes.quiz}
                   className="inline-flex items-center px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
                 >
                   Take Assessment
@@ -309,7 +323,7 @@ export default async function LessonPage({ params }: LessonPageProps) {
               )
             ) : (
               <Link
-                href={`${module.routes.lessons}/${lessonIndex + 2}`} // Next lesson
+                href={`${currentModule.routes.lessons}/${lessonIndex + 2}`} // Next lesson
                 className="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
               >
                 Next Lesson
