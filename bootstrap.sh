@@ -505,8 +505,10 @@ ss -tulpn 2>/dev/null | grep ":$FRONTEND_PORT" || true
 
 ### Frontend service (production mode)
 # Generate unit with conditional backend gating and standalone working directory
+UNIT_FILE_PATH="/etc/systemd/system/${APP_NAME}-frontend.service"
 if [ "$FRONTEND_ONLY" -eq 0 ]; then
     # Create backend health check gating script to avoid multiline quoting in unit
+    log "🔧 Creating backend health-check script to avoid unit quoting"
     cat >"$APP_DIR/glasscode/frontend/check_backend_health.sh" <<'EOS'
 #!/usr/bin/env bash
 MAX=30
@@ -524,6 +526,8 @@ echo "Backend health check gating failed: http='$HTTP' status='$STATUS' resp='$R
 exit 1
 EOS
     chmod +x "$APP_DIR/glasscode/frontend/check_backend_health.sh"
+    log "✅ Health-check script ready at $APP_DIR/glasscode/frontend/check_backend_health.sh"
+    log "⚙️  Writing frontend unit with health-check ExecStartPre at $UNIT_FILE_PATH"
     cat >/etc/systemd/system/${APP_NAME}-frontend.service <<EOF
 [Unit]
 Description=$APP_NAME Next.js Frontend
@@ -547,6 +551,7 @@ ExecStart=/usr/bin/node server.js -p $FRONTEND_PORT
 WantedBy=multi-user.target
 EOF
 else
+log "⚙️  Writing frontend unit (frontend-only mode) at $UNIT_FILE_PATH"
 cat >/etc/systemd/system/${APP_NAME}-frontend.service <<EOF
 [Unit]
 Description=$APP_NAME Next.js Frontend
@@ -567,6 +572,15 @@ ExecStart=/usr/bin/node server.js -p $FRONTEND_PORT
 [Install]
 WantedBy=multi-user.target
 EOF
+fi
+
+# Verify the generated unit file when systemd-analyze is available
+if command -v systemd-analyze >/dev/null 2>&1; then
+    log "🧪 Verifying frontend unit file with systemd-analyze"
+    if ! systemd-analyze verify "$UNIT_FILE_PATH"; then
+        log "❌ Frontend unit file verification failed"
+        exit 1
+    fi
 fi
 
 systemctl daemon-reload
