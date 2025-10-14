@@ -73,6 +73,26 @@ echo "Running: npm run typecheck"
 npm run typecheck || fail "Typecheck failed"
 ok "Typecheck passed"
 
+# Attempt to source environment files if required vars are missing
+load_env_if_missing() {
+  if [ -z "${GRAPHQL_ENDPOINT:-}" ] && [ -z "${NEXT_PUBLIC_BASE_URL:-}" ] && [ -z "${NEXT_PUBLIC_API_BASE:-}" ]; then
+    for f in glasscode/frontend/.env.local glasscode/frontend/.env.production glasscode/frontend/.env.hosted; do
+      if [ -f "$f" ]; then
+        echo "Sourcing env from $f"
+        set -a; . "$f"; set +a
+        # Normalize trailing slashes
+        NEXT_PUBLIC_BASE_URL="${NEXT_PUBLIC_BASE_URL%%/}"
+        NEXT_PUBLIC_API_BASE="${NEXT_PUBLIC_API_BASE%%/}"
+        if [ -n "${GRAPHQL_ENDPOINT:-}" ] || [ -n "${NEXT_PUBLIC_BASE_URL:-}" ] || [ -n "${NEXT_PUBLIC_API_BASE:-}" ]; then
+          break
+        fi
+      fi
+    done
+  fi
+}
+
+load_env_if_missing
+
 section "GraphQL endpoint validation"
 # Validate that server-side GraphQL endpoint will be absolute to avoid ERR_INVALID_URL
 GRAPHQL_ENDPOINT="${GRAPHQL_ENDPOINT:-}"
