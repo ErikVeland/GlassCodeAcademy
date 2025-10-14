@@ -500,7 +500,8 @@
       ],
       "correctAnswer": 0,
       "explanation": "`v-if` conditionally renders elements by actually adding or removing them from the DOM based on the condition. `v-show` simply toggles the CSS display property to show or hide elements. `v-if` has higher toggle costs but `v-show` has higher initial render costs. Use `v-if` for rarely changed conditions and `v-show` for frequently toggled elements.",
-      "correctIndex": 0
+      "correctIndex": 0,
+      "difficulty": "Beginner"
     }
   ],
   "metadata": {

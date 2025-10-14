@@ -1056,7 +1056,8 @@
       ],
       "correctAnswer": 0,
       "explanation": "The testing pyramid is a conceptual model that guides teams on how to distribute different types of tests. It suggests having many unit tests (fast and cheap), fewer integration tests, and even fewer end-to-end tests (slow and expensive). This distribution optimizes for fast feedback and cost-effectiveness.",
-      "correctIndex": 0
+      "correctIndex": 0,
+      "difficulty": "Beginner"
     },
     {
       "id": 2,
@@ -1071,7 +1072,8 @@
       ],
       "correctAnswer": 0,
       "explanation": "Unit tests typically run the fastest because they test small units of code in isolation without external dependencies like databases or network calls. They're executed in memory and can run in milliseconds, making them ideal for continuous integration pipelines.",
-      "correctIndex": 0
+      "correctIndex": 0,
+      "difficulty": "Beginner"
     },
     {
       "id": 3,
@@ -1079,7 +1081,8 @@
       "type": "open-ended",
       "question": "What is the difference between a mock and a stub in testing? When would you use each?",
       "choices": null,
-      "explanation": "A stub provides canned answers to calls made during the test, usually not responding at all to anything outside what's programmed in for the test. A mock is a stub with added behavior verification - it knows what methods should be called and with what arguments, and can verify this during the test. Use stubs when you need to control indirect inputs, and mocks when you need to verify interactions between objects."
+      "explanation": "A stub provides canned answers to calls made during the test, usually not responding at all to anything outside what's programmed in for the test. A mock is a stub with added behavior verification - it knows what methods should be called and with what arguments, and can verify this during the test. Use stubs when you need to control indirect inputs, and mocks when you need to verify interactions between objects.",
+      "difficulty": "Beginner"
     },
     {
       "id": 6,
@@ -1094,7 +1097,8 @@
       ],
       "correctAnswer": 0,
       "explanation": "The Arrange-Act-Assert (AAA) pattern structures tests into three clear sections: Arrange (set up preconditions and inputs), Act (execute the code under test), and Assert (verify the outcomes). This pattern makes tests more readable, maintainable, and easier to debug.",
-      "correctIndex": 0
+      "correctIndex": 0,
+      "difficulty": "Beginner"
     },
     {
       "id": 7,
@@ -1102,7 +1106,8 @@
       "type": "open-ended",
       "question": "What is test isolation and why is it important? How do you achieve it?",
       "choices": null,
-      "explanation": "Test isolation means each test can run independently without being affected by other tests. It's important because it ensures tests are reliable, repeatable, and can be run in any order. You achieve it by using fresh test data for each test, mocking external dependencies, avoiding shared state between tests, and using setup/teardown methods to prepare and clean up the test environment."
+      "explanation": "Test isolation means each test can run independently without being affected by other tests. It's important because it ensures tests are reliable, repeatable, and can be run in any order. You achieve it by using fresh test data for each test, mocking external dependencies, avoiding shared state between tests, and using setup/teardown methods to prepare and clean up the test environment.",
+      "difficulty": "Beginner"
     },
     {
       "id": 8,
@@ -1117,7 +1122,8 @@
       ],
       "correctAnswer": 0,
       "explanation": "Code coverage measures the percentage of code executed by tests, including lines, branches, and functions. However, it doesn't measure test quality or correctness - 100% coverage doesn't guarantee bug-free code. Tests could execute all code paths but still have incorrect assertions. It's a useful metric for identifying untested code but shouldn't be the sole measure of test effectiveness.",
-      "correctIndex": 0
+      "correctIndex": 0,
+      "difficulty": "Beginner"
     },
     {
       "id": 9,
@@ -1132,7 +1138,8 @@
       ],
       "correctAnswer": 0,
       "explanation": "The testing pyramid suggests having many fast, cheap unit tests at the base, fewer integration tests in the middle, and fewest expensive E2E tests at the top.",
-      "correctIndex": 0
+      "correctIndex": 0,
+      "difficulty": "Beginner"
     },
     {
       "id": 10,
@@ -1147,7 +1154,8 @@
       ],
       "correctAnswer": 0,
       "explanation": "Mocks verify that specific methods were called with expected parameters. Stubs provide predetermined responses. Spies record information about function calls for later verification.",
-      "correctIndex": 0
+      "correctIndex": 0,
+      "difficulty": "Beginner"
     },
     {
       "id": 11,
@@ -1155,7 +1163,8 @@
       "type": "open-ended",
       "question": "What are the different types of code coverage and what do they measure?",
       "choices": null,
-      "explanation": "Line coverage: percentage of code lines executed. Branch coverage: percentage of code branches taken. Function coverage: percentage of functions called. Statement coverage: percentage of statements executed. Condition coverage: percentage of boolean conditions evaluated to both true and false."
+      "explanation": "Line coverage: percentage of code lines executed. Branch coverage: percentage of code branches taken. Function coverage: percentage of functions called. Statement coverage: percentage of statements executed. Condition coverage: percentage of boolean conditions evaluated to both true and false.",
+      "difficulty": "Beginner"
     },
     {
       "id": 12,
@@ -1170,7 +1179,8 @@
       ],
       "correctAnswer": 0,
       "explanation": "Load testing evaluates system performance under expected user load to identify bottlenecks and ensure the application can handle normal traffic volumes.",
-      "correctIndex": 0
+      "correctIndex": 0,
+      "difficulty": "Beginner"
     },
     {
       "id": 13,
@@ -1185,7 +1195,8 @@
       ],
       "correctAnswer": 0,
       "explanation": "TDD follows Red (write failing test), Green (make test pass with minimal code), Refactor (improve code while keeping tests passing) cycle.",
-      "correctIndex": 0
+      "correctIndex": 0,
+      "difficulty": "Beginner"
     },
     {
       "id": 14,
@@ -1193,7 +1204,8 @@
       "type": "open-ended",
       "question": "What should you test when testing REST APIs?",
       "choices": null,
-      "explanation": "Test: HTTP status codes, response data structure and content, request/response headers, authentication/authorization, input validation, error handling, performance under load, and edge cases like invalid data or missing parameters."
+      "explanation": "Test: HTTP status codes, response data structure and content, request/response headers, authentication/authorization, input validation, error handling, performance under load, and edge cases like invalid data or missing parameters.",
+      "difficulty": "Beginner"
     },
     {
       "id": 15,
@@ -1208,7 +1220,8 @@
       ],
       "correctAnswer": 0,
       "explanation": "Good unit tests are FIRST: Fast, Independent/Isolated, Repeatable, Self-validating, and Timely. They should test one specific behavior and be easy to understand and maintain.",
-      "correctIndex": 0
+      "correctIndex": 0,
+      "difficulty": "Beginner"
     }
   ],
   "metadata": {

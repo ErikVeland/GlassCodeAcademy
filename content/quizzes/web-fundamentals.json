@@ -240,7 +240,7 @@
       "id": 46,
       "question": "How do you optimize DOM manipulation for better web application performance?",
       "topic": "DOM",
-      "difficulty": "Intermediate",
+      "difficulty": "Advanced",
       "choices": [
         "Batch DOM updates, use document fragments, cache DOM references, and minimize reflows",
         "Query the DOM repeatedly within loops for fresh data",
@@ -288,7 +288,7 @@
       "id": 48,
       "question": "What are the best practices for HTML5 accessibility implementation?",
       "topic": "HTML5",
-      "difficulty": "Intermediate",
+      "difficulty": "Advanced",
       "choices": [
         "Use semantic elements, ARIA attributes when needed, proper heading hierarchy, and keyboard navigation support",
         "Ignore accessibility concerns to focus on visual design",
@@ -312,7 +312,7 @@
       "id": 49,
       "question": "How do you implement effective JavaScript event handling patterns?",
       "topic": "JavaScript",
-      "difficulty": "Intermediate",
+      "difficulty": "Advanced",
       "choices": [
         "Use event delegation for dynamic content, remove event listeners to prevent memory leaks, and handle events at the appropriate level",
         "Attach individual event listeners to every element regardless of performance",
@@ -336,7 +336,7 @@
       "id": 50,
       "question": "How do you implement HTML5 in a production environment with legacy browser support?",
       "topic": "HTML5",
-      "difficulty": "Intermediate",
+      "difficulty": "Advanced",
       "choices": [
         "Use feature detection, polyfills for missing features, and progressive enhancement for graceful degradation",
         "Require the latest browsers and block older ones",
@@ -409,7 +409,7 @@
       "id": 53,
       "question": "What JavaScript patterns are most effective for DOM manipulation and event handling?",
       "topic": "JavaScript",
-      "difficulty": "Intermediate",
+      "difficulty": "Advanced",
       "choices": [
         "Use modular patterns with event delegation, DOM caching, and proper event listener management",
         "Attach individual event listeners to every DOM element",
@@ -492,7 +492,8 @@
       ],
       "correctIndex": 0,
       "explanation": "When 'box-sizing: border-box' is applied, the element's width and height include the padding and border, making it easier to size elements. Without this property, padding and borders are added to the specified width and height, often causing layout issues.",
-      "correctAnswer": 0
+      "correctAnswer": 0,
+      "difficulty": "Beginner"
     },
     {
       "id": 7,
@@ -506,7 +507,8 @@
       ],
       "correctIndex": 0,
       "explanation": "'display: none' completely removes an element from the document flow, making it invisible and not taking up any space. Other display values like 'block', 'inline', and 'flex' still participate in the document flow, just with different layout behaviors.",
-      "correctAnswer": 0
+      "correctAnswer": 0,
+      "difficulty": "Beginner"
     },
     {
       "id": 8,
@@ -520,7 +522,8 @@
       ],
       "correctIndex": 3,
       "explanation": "Both addEventListener and direct event properties (like onclick) can be used to add event listeners. addEventListener is more flexible as it allows multiple listeners for the same event and provides better control. Direct event properties are simpler but limited to one listener per event type.",
-      "correctAnswer": 3
+      "correctAnswer": 3,
+      "difficulty": "Beginner"
     },
     {
       "id": 9,
@@ -534,7 +537,8 @@
       ],
       "correctIndex": 0,
       "explanation": "The 'flex-wrap: wrap' property allows flex items to wrap onto multiple lines when they don't fit in a single line. The default value is 'nowrap', which keeps all items on one line even if they overflow the container.",
-      "correctAnswer": 0
+      "correctAnswer": 0,
+      "difficulty": "Beginner"
     },
     {
       "id": 10,
@@ -548,7 +552,8 @@
       ],
       "correctIndex": 0,
       "explanation": "The viewport meta tag (<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">) controls how the page is displayed on mobile devices. It ensures the page width matches the device width and sets the initial zoom level, which is essential for responsive design.",
-      "correctAnswer": 0
+      "correctAnswer": 0,
+      "difficulty": "Beginner"
     },
     {
       "id": 11,
@@ -562,7 +567,8 @@
       ],
       "correctIndex": 0,
       "explanation": "The 'font-size' property is used to change the font size of an element. It can be specified in various units such as pixels (px), ems (em), rems (rem), percentages (%), or keywords like small, medium, large.",
-      "correctAnswer": 0
+      "correctAnswer": 0,
+      "difficulty": "Beginner"
     },
     {
       "id": 12,
@@ -576,7 +582,8 @@
       ],
       "correctIndex": 0,
       "explanation": "In modern JavaScript, variables are declared using 'let' for block-scoped variables or 'const' for constants. 'var' is the older way of declaring variables with function scope. The syntax 'let myVariable = 'value';' is the correct modern approach.",
-      "correctAnswer": 0
+      "correctAnswer": 0,
+      "difficulty": "Beginner"
     },
     {
       "id": 13,
@@ -590,7 +597,8 @@
       ],
       "correctIndex": 0,
       "explanation": "The <article> element is used to define independent, self-contained content that could stand alone, such as a blog post, news article, or forum post. <section> groups related content, <div> is a generic container, and <span> is an inline container.",
-      "correctAnswer": 0
+      "correctAnswer": 0,
+      "difficulty": "Beginner"
     },
     {
       "id": 14,
@@ -604,7 +612,8 @@
       ],
       "correctIndex": 0,
       "explanation": "The 'z-index' property controls the stack order of positioned elements (those with position other than static). Elements with a higher z-index value will appear in front of elements with a lower z-index value.",
-      "correctAnswer": 0
+      "correctAnswer": 0,
+      "difficulty": "Beginner"
     },
     {
       "id": 15,
@@ -618,7 +627,8 @@
       ],
       "correctIndex": 0,
       "explanation": "The 'push()' method adds one or more elements to the end of an array and returns the new length of the array. 'append()' is used for DOM manipulation, while 'add()' and 'insert()' are not standard array methods.",
-      "correctAnswer": 0
+      "correctAnswer": 0,
+      "difficulty": "Beginner"
     },
     {
       "id": 16,
@@ -632,7 +642,8 @@
       ],
       "correctIndex": 0,
       "explanation": "'position: absolute;' removes the element from the normal document flow and positions it relative to its nearest positioned ancestor (an element with position other than static). If no positioned ancestor exists, it positions relative to the initial containing block (usually the viewport).",
-      "correctAnswer": 0
+      "correctAnswer": 0,
+      "difficulty": "Beginner"
     },
     {
       "id": 17,
@@ -646,7 +657,8 @@
       ],
       "correctIndex": 0,
       "explanation": "The 'alt' attribute specifies alternative text for an image, which is displayed if the image cannot be loaded and is also used by screen readers for accessibility. The 'title' attribute provides tooltip text, while 'description' and 'caption' are not valid image attributes.",
-      "correctAnswer": 0
+      "correctAnswer": 0,
+      "difficulty": "Beginner"
     },
     {
       "id": 18,
@@ -660,7 +672,8 @@
       ],
       "correctIndex": 0,
       "explanation": "In CSS, class selectors are prefixed with a period (.), so '.className' is the correct syntax. ID selectors use the hash symbol (#), while * and $ are not used for class selection.",
-      "correctAnswer": 0
+      "correctAnswer": 0,
+      "difficulty": "Beginner"
     },
     {
       "id": 19,
@@ -674,7 +687,8 @@
       ],
       "correctIndex": 0,
       "explanation": "The strict equality operator '===' checks both value and type equality without performing type coercion. The loose equality operator '==' performs type coercion before comparison. The single '=' is for assignment, and '!== ' checks for strict inequality.",
-      "correctAnswer": 0
+      "correctAnswer": 0,
+      "difficulty": "Beginner"
     },
     {
       "id": 20,
@@ -688,7 +702,8 @@
       ],
       "correctIndex": 0,
       "explanation": "The <main> element represents the dominant content of the body of a document or application. It should contain the primary content that is unique to that page and directly related to the document's central topic.",
-      "correctAnswer": 0
+      "correctAnswer": 0,
+      "difficulty": "Beginner"
     },
     {
       "id": 21,
@@ -702,7 +717,8 @@
       ],
       "correctIndex": 0,
       "explanation": "The 'line-height' property sets the space between lines of text. 'letter-spacing' controls the space between characters, 'word-spacing' controls the space between words, and 'text-spacing' is not a standard CSS property.",
-      "correctAnswer": 0
+      "correctAnswer": 0,
+      "difficulty": "Beginner"
     },
     {
       "id": 22,
@@ -716,7 +732,8 @@
       ],
       "correctIndex": 3,
       "explanation": "JavaScript supports both single-line comments using '//' and multi-line comments using '/* */'. HTML comments use <!-- -->, which is not valid JavaScript syntax.",
-      "correctAnswer": 3
+      "correctAnswer": 3,
+      "difficulty": "Beginner"
     },
     {
       "id": 23,
@@ -730,7 +747,8 @@
       ],
       "correctIndex": 0,
       "explanation": "The 'font-weight' property is used to make text bold. It accepts values like 'bold', 'bolder', 'lighter', or numeric values from 100 to 900. 'font-style' is used for italic text, and 'text-weight' and 'bold' are not valid CSS properties.",
-      "correctAnswer": 0
+      "correctAnswer": 0,
+      "difficulty": "Beginner"
     },
     {
       "id": 24,
@@ -744,7 +762,8 @@
       ],
       "correctIndex": 0,
       "explanation": "The <aside> element represents content that is tangentially related to the content around it, such as sidebars, pull quotes, or advertisements. It should contain content that is related to the surrounding content but not essential to the main flow.",
-      "correctAnswer": 0
+      "correctAnswer": 0,
+      "difficulty": "Beginner"
     },
     {
       "id": 25,
@@ -758,7 +777,8 @@
       ],
       "correctIndex": 0,
       "explanation": "The 'pop()' method removes the last element from an array and returns that element. 'shift()' removes the first element, 'remove()' is not a standard array method, and 'delete' is an operator that removes object properties.",
-      "correctAnswer": 0
+      "correctAnswer": 0,
+      "difficulty": "Beginner"
     },
     {
       "id": 26,
@@ -772,7 +792,8 @@
       ],
       "correctIndex": 0,
       "explanation": "The 'float' property positions an element to the left or right side of its container, allowing other content (like text) to wrap around it. It's commonly used for creating layouts with text wrapping around images.",
-      "correctAnswer": 0
+      "correctAnswer": 0,
+      "difficulty": "Beginner"
     },
     {
       "id": 27,
@@ -786,7 +807,8 @@
       ],
       "correctIndex": 0,
       "explanation": "The <footer> element is used to define a footer for a document or section. It typically contains information about the author, copyright data, or links to related documents. <bottom>, <foot>, and <end> are not valid HTML elements.",
-      "correctAnswer": 0
+      "correctAnswer": 0,
+      "difficulty": "Beginner"
     },
     {
       "id": 28,
@@ -800,7 +822,8 @@
       ],
       "correctIndex": 0,
       "explanation": "In CSS, ID selectors are prefixed with a hash symbol (#), so '#idName' is the correct syntax. Class selectors use the period (.), while * and @ are not used for ID selection.",
-      "correctAnswer": 0
+      "correctAnswer": 0,
+      "difficulty": "Beginner"
     },
     {
       "id": 29,
@@ -814,7 +837,8 @@
       ],
       "correctIndex": 0,
       "explanation": "The 'parseInt()' function is used to convert a string to an integer. It parses the string and returns an integer or NaN if the string cannot be converted. 'toInt()' and the other options are not standard JavaScript methods.",
-      "correctAnswer": 0
+      "correctAnswer": 0,
+      "difficulty": "Beginner"
     },
     {
       "id": 30,
@@ -828,7 +852,8 @@
       ],
       "correctIndex": 0,
       "explanation": "The 'transition' property is used to animate changes between CSS property values when they change, such as on hover or focus. It creates smooth animations for property changes like color, size, or position.",
-      "correctAnswer": 0
+      "correctAnswer": 0,
+      "difficulty": "Beginner"
     },
     {
       "id": 31,
@@ -842,7 +867,8 @@
       ],
       "correctIndex": 0,
       "explanation": "The <strong> element is used to define important text with strong importance, seriousness, or urgency. It is semantic and indicates that the content is important. <b> makes text bold but has no semantic meaning, <important> is not a valid HTML element, and <em> is for emphasized text.",
-      "correctAnswer": 0
+      "correctAnswer": 0,
+      "difficulty": "Beginner"
     },
     {
       "id": 32,
@@ -856,7 +882,8 @@
       ],
       "correctIndex": 0,
       "explanation": "To target all <h1> elements in CSS, you use the element selector without any prefix: 'h1 { color: red; }'. '.h1' targets elements with class='h1', '#h1' targets an element with id='h1', and '*h1' is not valid CSS syntax.",
-      "correctAnswer": 0
+      "correctAnswer": 0,
+      "difficulty": "Beginner"
     },
     {
       "id": 33,
@@ -870,7 +897,8 @@
       ],
       "correctIndex": 0,
       "explanation": "The 'unshift()' method adds one or more elements to the beginning of an array and returns the new length of the array. 'shift()' removes the first element, 'prepend()' is a DOM method, and 'insertAtStart()' is not a standard array method.",
-      "correctAnswer": 0
+      "correctAnswer": 0,
+      "difficulty": "Intermediate"
     },
     {
       "id": 34,
@@ -884,7 +912,8 @@
       ],
       "correctIndex": 0,
       "explanation": "'display: inline-block;' makes an element flow like inline elements (it doesn't break to a new line) but allows setting width and height properties, which regular inline elements don't allow. It combines properties of both inline and block-level elements.",
-      "correctAnswer": 0
+      "correctAnswer": 0,
+      "difficulty": "Intermediate"
     },
     {
       "id": 35,
@@ -898,7 +927,8 @@
       ],
       "correctIndex": 0,
       "explanation": "The 'required' attribute is used to specify that an input field must be filled out before submitting the form. It's a boolean attribute that provides built-in HTML5 form validation. The other options are not valid HTML attributes for this purpose.",
-      "correctAnswer": 0
+      "correctAnswer": 0,
+      "difficulty": "Intermediate"
     },
     {
       "id": 36,
@@ -912,7 +942,8 @@
       ],
       "correctIndex": 0,
       "explanation": "The 'typeof' operator returns a string indicating the data type of the operand. It's useful for checking the type of a variable or value, such as 'number', 'string', 'boolean', 'object', 'function', etc.",
-      "correctAnswer": 0
+      "correctAnswer": 0,
+      "difficulty": "Intermediate"
     },
     {
       "id": 37,
@@ -926,7 +957,8 @@
       ],
       "correctIndex": 0,
       "explanation": "The 'background-color' property is used to set the background color of an element. 'color' sets the text color, 'background' is a shorthand property that can set multiple background properties, and 'bgcolor' is an HTML attribute, not a CSS property.",
-      "correctAnswer": 0
+      "correctAnswer": 0,
+      "difficulty": "Intermediate"
     },
     {
       "id": 38,
@@ -940,7 +972,8 @@
       ],
       "correctIndex": 0,
       "explanation": "The <video> element is used to embed video content in HTML documents. It supports various video formats and provides built-in controls. <movie>, <media>, and <play> are not valid HTML elements for video content.",
-      "correctAnswer": 0
+      "correctAnswer": 0,
+      "difficulty": "Intermediate"
     },
     {
       "id": 39,
@@ -954,7 +987,8 @@
       ],
       "correctIndex": 0,
       "explanation": "The 'Math.round()' method rounds a number to the nearest integer. 'Math.floor()' rounds down to the nearest integer, 'Math.ceil()' rounds up to the nearest integer, and 'Math.integer()' is not a valid method.",
-      "correctAnswer": 0
+      "correctAnswer": 0,
+      "difficulty": "Intermediate"
     },
     {
       "id": 40,
@@ -968,7 +1002,8 @@
       ],
       "correctIndex": 0,
       "explanation": "The '@media' rule is used to apply different styles for different media types or device characteristics, such as screen size, resolution, or orientation. It's the foundation of responsive web design, allowing different styles for mobile, tablet, and desktop views.",
-      "correctAnswer": 0
+      "correctAnswer": 0,
+      "difficulty": "Intermediate"
     }
   ],
   "metadata": {
