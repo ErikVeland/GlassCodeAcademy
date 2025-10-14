@@ -96,13 +96,13 @@
       "topic": "Components",
       "difficulty": "Beginner",
       "choices": [
-        "app.component('my-component', MyComponent)",
-        "Vue.component('my-component', MyComponent)",
-        "MyComponent.component('my-component')",
-        "component('my-component', MyComponent)"
+        "`app.component('my-component', MyComponent)`",
+        "`Vue.component('my-component', MyComponent)`",
+        "`MyComponent.component('my-component')`",
+        "`component('my-component', MyComponent)`"
       ],
       "correctIndex": 0,
-      "explanation": "In Vue 3, global components are registered using app.component() where app is the application instance returned by Vue.createApp(). This is different from Vue 2 where Vue.component() was used. The new approach provides better encapsulation.",
+      "explanation": "In Vue 3, global components are registered using `app.component()` where `app` is the application instance returned by `Vue.createApp()`. This is different from Vue 2 where `Vue.component()` was used. The new approach provides better encapsulation.",
       "industryContext": "These skills are valuable in professional development environments.",
       "tags": [
         "Components",
@@ -130,7 +130,7 @@
         "It's deprecated in Vue 3"
       ],
       "correctIndex": 0,
-      "explanation": "The setup() function is the entry point for Composition API logic. It's executed before the component is created, once the props are resolved. It's where you define reactive state, computed properties, watchers, and lifecycle hooks when using the Composition API.",
+      "explanation": "The `setup()` function is the entry point for Composition API logic. It's executed before the component is created, once the props are resolved. It's where you define reactive state, computed properties, watchers, and lifecycle hooks when using the Composition API.",
       "industryContext": "These skills are valuable in professional development environments.",
       "tags": [
         "Composition API",
@@ -260,17 +260,17 @@
     },
     {
       "id": 11,
-      "question": "What is the difference between ref() and reactive() in Vue 3?",
+      "question": "What is the difference between `ref()` and `reactive()` in Vue 3?",
       "topic": "Reactivity",
       "difficulty": "Beginner",
       "choices": [
-        "ref() for primitives, reactive() for objects",
-        "ref() is faster than reactive()",
-        "reactive() is deprecated",
+        "`ref()` for primitives, `reactive()` for objects",
+        "`ref()` is faster than `reactive()`",
+        "`reactive()` is deprecated",
         "No functional difference"
       ],
       "correctIndex": 0,
-      "explanation": "ref() is used for primitive values and returns a reactive reference, while reactive() is used for objects and makes them deeply reactive.",
+      "explanation": "`ref()` is used for primitive values and returns a reactive reference, while `reactive()` is used for objects and makes them deeply reactive.",
       "industryContext": "These skills are valuable in professional development environments.",
       "tags": [
         "Reactivity",

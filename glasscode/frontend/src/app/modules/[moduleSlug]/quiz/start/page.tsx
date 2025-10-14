@@ -216,6 +216,7 @@ export default function QuizStartPage({ params }: { params: Promise<{ moduleSlug
           timeLimit,
           passingScore,
           instructions: [
+            `You will answer ${randomizedSelectedQuestions.length} randomly selected questions from a larger pool`,
             `You have ${timeLimit} minutes to complete this quiz`,
             "Each question has only one correct answer",
             "You can navigate between questions using the navigation buttons",
@@ -381,7 +382,7 @@ export default function QuizStartPage({ params }: { params: Promise<{ moduleSlug
                   {quizData?.totalQuestions}
                 </div>
                 <div className="text-sm text-gray-600 dark:text-gray-300">
-                  Questions
+                  Quiz Length
                 </div>
               </div>
               <div className="bg-green-50 dark:bg-green-900/30 p-4 rounded-lg">

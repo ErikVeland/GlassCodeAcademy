@@ -56,13 +56,13 @@
       "topic": "Git",
       "difficulty": "Intermediate",
       "choices": [
-        "git checkout -b feature-branch",
-        "git branch feature-branch",
-        "git switch feature-branch",
-        "git create feature-branch"
+        "`git checkout -b feature-branch`",
+        "`git branch feature-branch`",
+        "`git switch feature-branch`",
+        "`git create feature-branch`"
       ],
       "correctIndex": 0,
-      "explanation": "'git checkout -b feature-branch' creates a new branch called 'feature-branch' and immediately switches to it. The newer equivalent is 'git switch -c feature-branch'. Option B only creates the branch without switching to it.",
+      "explanation": "`git checkout -b feature-branch` creates a new branch called `feature-branch` and immediately switches to it. The newer equivalent is `git switch -c feature-branch`. The `git branch feature-branch` option only creates the branch without switching to it.",
       "industryContext": "Feature branches are essential for team development, allowing developers to work on different features simultaneously without interfering with each other's code.",
       "tags": [
         "foundational",

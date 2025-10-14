@@ -123,7 +123,7 @@ export default async function LessonsPage({ params, searchParams }: LessonsPageP
           <div className="space-y-6">
             {lessonGroups.map((group) => (
               <div key={group.id} className="glass-morphism p-6 rounded-xl">
-                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between">
+                <div className="flex flex-col sm:flex-row items-start justify-between">
                   <div className="flex-1">
                     <div className="flex items-center gap-3 mb-3">
                       <span className="flex items-center justify-center w-8 h-8 bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 rounded-full text-sm font-bold">
@@ -141,18 +141,31 @@ export default async function LessonsPage({ params, searchParams }: LessonsPageP
                       {group.description}
                     </p>
 
-                    <div className="mb-4">
-                      <h3 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                        Lessons in this group:
-                      </h3>
-                      <ul className="text-sm text-gray-600 dark:text-gray-400 space-y-1">
-                        {group.lessons.map((lesson) => (
-                          <li key={lesson.id} className="flex items-center gap-2">
-                            <span className="text-blue-500">•</span>
-                            {lesson.title}
-                          </li>
-                        ))}
-                      </ul>
+                    <div className="md:flex md:items-end md:justify-between">
+                      <div className="md:flex-1 md:pr-6 mb-4 md:mb-0">
+                        <h3 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                          Lessons in this group:
+                        </h3>
+                        <ul className="text-sm text-gray-600 dark:text-gray-400 space-y-1">
+                          {group.lessons.map((lesson) => (
+                            <li key={lesson.id} className="flex items-center gap-2">
+                              <span className="text-blue-500">•</span>
+                              {lesson.title}
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                      {group.lessons[0] && (
+                        <div className="mt-4 md:mt-0 md:ml-6 w-full sm:w-auto">
+                          <Link
+                            href={`${currentModule.routes.lessons}/${lessons.indexOf(group.lessons[0]) + 1}`}
+                            className="inline-flex items-center justify-center w-full sm:w-auto px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                          >
+                            Start Group
+                            <span className="ml-2">→</span>
+                          </Link>
+                        </div>
+                      )}
                     </div>
 
                     {group.lessons[0] && (
@@ -167,18 +180,6 @@ export default async function LessonsPage({ params, searchParams }: LessonsPageP
                           </Link>
                         )}
                       </div>
-                    )}
-                  </div>
-                  
-                  <div className="mt-4 sm:mt-0 sm:ml-6 w-full sm:w-auto">
-                    {group.lessons[0] && (
-                      <Link
-                        href={`${currentModule.routes.lessons}/${lessons.indexOf(group.lessons[0]) + 1}`}
-                        className="inline-flex items-center justify-center w-full sm:w-auto px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
-                      >
-                        Start Group
-                        <span className="ml-2">→</span>
-                      </Link>
                     )}
                   </div>
                 </div>

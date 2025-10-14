@@ -34,13 +34,13 @@
       "topic": "CSS3",
       "difficulty": "Intermediate",
       "choices": [
-        "display: flex; justify-content: center; align-items: center;",
-        "display: flex; align-content: center; justify-items: center;",
-        "display: block; text-align: center; vertical-align: middle;",
-        "display: grid; place-items: center;"
+        "`display: flex; justify-content: center; align-items: center;`",
+        "`display: flex; align-content: center; justify-items: center;`",
+        "`display: block; text-align: center; vertical-align: middle;`",
+        "`display: grid; place-items: center;`"
       ],
       "correctIndex": 0,
-      "explanation": "With Flexbox, 'justify-content: center' centers items horizontally (main axis) and 'align-items: center' centers them vertically (cross axis). Option D would work with CSS Grid, but the question specifically asks about Flexbox.",
+      "explanation": "With Flexbox, `justify-content: center` centers items horizontally (main axis) and `align-items: center` centers them vertically (cross axis). The `display: grid; place-items: center;` solution works with CSS Grid, but the question specifically asks about Flexbox.",
       "industryContext": "Flexbox is the most common method for centering content in modern web development, replacing older techniques like floats and positioning.",
       "tags": [
         "foundational",
@@ -56,13 +56,13 @@
       "topic": "JavaScript",
       "difficulty": "Beginner",
       "choices": [
-        "document.getElementById('myId')",
-        "document.querySelector('#myId')",
-        "document.getElementByClass('myId')",
-        "Both A and B are correct"
+        "`document.getElementById('myId')`",
+        "`document.querySelector('#myId')`",
+        "`document.getElementByClass('myId')`",
+        "Both `document.getElementById('myId')` and `document.querySelector('#myId')` are correct"
       ],
       "correctIndex": 3,
-      "explanation": "Both document.getElementById('myId') and document.querySelector('#myId') can select an element by ID. getElementById is the traditional method, while querySelector is more flexible and can use any CSS selector. Option C is incorrect because it should be getElementsByClassName and it's for classes, not IDs.",
+      "explanation": "Both `document.getElementById('myId')` and `document.querySelector('#myId')` can select an element by ID. `getElementById` is the traditional method, while `querySelector` is more flexible and can use any CSS selector. The string `document.getElementByClass('myId')` is incorrect—it should be `getElementsByClassName`, and it targets classes, not IDs.",
       "industryContext": "DOM manipulation is fundamental to interactive web development. Understanding different selection methods helps you choose the most efficient approach for your needs.",
       "tags": [
         "foundational",

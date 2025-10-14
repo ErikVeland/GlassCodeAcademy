@@ -57,8 +57,7 @@ export function wrapInlineCode(text: string): string {
 
 export function normalizeQuestion(question: { question?: string; choices?: string[]; explanation?: string }) {
   const q = { ...question };
-  if (q.question) q.question = wrapInlineCode(q.question);
-  if (Array.isArray(q.choices)) q.choices = q.choices.map(c => wrapInlineCode(c));
-  if (q.explanation) q.explanation = wrapInlineCode(q.explanation);
+  // Disable automatic inline-code wrapping. Content authors should add backticks manually
+  // in the JSON for any segments that should be rendered as inline code.
   return q;
 }

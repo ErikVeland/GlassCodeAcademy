@@ -12,7 +12,6 @@ interface QuizLayoutProps {
 }
 
 export default function QuizLayout({ module, quiz, thresholds, unlockingModules, children }: QuizLayoutProps) {
-  const questionCount = quiz?.questions?.length ?? 0;
   const passingScore = thresholds?.passingScore ?? 70;
 
   return (
@@ -33,13 +32,13 @@ export default function QuizLayout({ module, quiz, thresholds, unlockingModules,
       </nav>
 
       {/* Header */}
-      <header className="mb-8">
-        <div className="glass-morphism p-8 rounded-xl">
+      <header className="mb-4">
+        <div className="glass-morphism px-0 py-8 rounded-xl">
           <div className="mb-4">
             <h1 className="text-3xl font-bold text-gray-900 dark:text-white">{module.title} Quiz</h1>
             <p className="mt-1 text-sm text-gray-600 dark:text-gray-300">Requires at least {passingScore}% to pass</p>
           </div>
-          <p className="text-gray-700 dark:text-gray-300">{questionCount} question{questionCount !== 1 ? 's' : ''}</p>
+          {/* Removed redundant quiz length display to avoid confusion */}
         </div>
       </header>
 

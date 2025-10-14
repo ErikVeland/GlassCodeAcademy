@@ -78,13 +78,13 @@
       "topic": "Test Reliability",
       "difficulty": "Beginner",
       "choices": [
-        "Use data-testid attributes specifically for testing",
+        "Use `data-testid` attributes specifically for testing",
         "Use CSS class names from styling",
         "Use text content that might change",
         "Use complex CSS selectors with multiple levels"
       ],
       "correctIndex": 0,
-      "explanation": "data-testid attributes are the most reliable selectors because they're specifically designed for testing and won't change when styling or content updates. This makes tests more stable and maintainable over time.",
+      "explanation": "`data-testid` attributes are the most reliable selectors because they're specifically designed for testing and won't change when styling or content updates. This makes tests more stable and maintainable over time.",
       "industryContext": "Stable selectors are crucial for reducing test maintenance overhead in fast-moving development environments where UI changes frequently. Using dedicated test attributes is considered a best practice in the industry.",
       "tags": [
         "selectors",

@@ -34,7 +34,39 @@ async function fetchProgrammingLessons() {
     }
 
     const result = await response.json();
-    return result.data?.programmingLessons || [];
+    const lessons = result.data?.programmingLessons || [];
+    // If GraphQL succeeded but returned empty, attempt file/minimal fallbacks
+    if (!Array.isArray(lessons) || lessons.length === 0) {
+      try {
+        const lessonsPath = findLessonFile('programming-fundamentals');
+        if (lessonsPath) {
+          console.log('Using local file fallback for programming-fundamentals at', lessonsPath);
+          const lessonsContent = fs.readFileSync(lessonsPath, 'utf8');
+          const parsed = JSON.parse(lessonsContent);
+          if (Array.isArray(parsed) && parsed.length > 0) {
+            return parsed;
+          }
+        }
+      } catch (fsErr) {
+        console.error('PF local file fallback (success branch) failed:', fsErr);
+      }
+      // Final minimal fallback to avoid empty content
+      return [
+        { id: 1, title: 'Variables and Data Types', topic: 'basics', description: 'Learn about variables and data types' },
+        { id: 2, title: 'Control Structures', topic: 'basics', description: 'Learn about control structures' },
+        { id: 3, title: 'Functions', topic: 'basics', description: 'Learn about functions' },
+        { id: 4, title: 'Arrays and Objects', topic: 'data-structures', description: 'Learn about arrays and objects' },
+        { id: 5, title: 'Object-Oriented Programming', topic: 'data-structures', description: 'Learn about OOP' },
+        { id: 6, title: 'Error Handling', topic: 'error-handling', description: 'Learn about error handling' },
+        { id: 7, title: 'File Operations', topic: 'error-handling', description: 'Learn about file operations' },
+        { id: 8, title: 'Recursion', topic: 'algorithms', description: 'Learn about recursion' },
+        { id: 9, title: 'Sorting Algorithms', topic: 'algorithms', description: 'Learn about sorting algorithms' },
+        { id: 10, title: 'Memory Management', topic: 'advanced', description: 'Learn about memory management' },
+        { id: 11, title: 'Best Practices', topic: 'advanced', description: 'Learn about best practices' },
+        { id: 12, title: 'Project Organization', topic: 'advanced', description: 'Learn about project organization' }
+      ];
+    }
+    return lessons;
   } catch (error) {
     console.error('Failed to fetch programming lessons via GraphQL:', error);
     // Try local file fallback for programming-fundamentals
