@@ -12,13 +12,13 @@
       "topic": "Core Concepts",
       "difficulty": "Beginner",
       "choices": [
-        "Vue.createApp({})",
-        "new Vue({})",
-        "Vue.app({})",
-        "Vue.init({})"
+        "`Vue.createApp({})`",
+        "`new Vue({})`",
+        "`Vue.app({})`",
+        "`Vue.init({})`"
       ],
       "correctIndex": 0,
-      "explanation": "In Vue 3, applications are created using Vue.createApp({}). This is different from Vue 2 where new Vue({}) was used. The new API provides better modularity and allows creating multiple Vue applications on the same page.",
+      "explanation": "In Vue 3, applications are created using `Vue.createApp({})`. This is different from Vue 2 where `new Vue({})` was used. The new API provides better modularity and allows creating multiple Vue applications on the same page.",
       "industryContext": "These skills are valuable in professional development environments.",
       "tags": [
         "Core Concepts",
@@ -39,13 +39,13 @@
       "topic": "Core Concepts",
       "difficulty": "Intermediate",
       "choices": [
-        "v-model",
-        "v-bind",
-        "v-on",
-        "v-show"
+        "`v-model`",
+        "`v-bind`",
+        "`v-on`",
+        "`v-show`"
       ],
       "correctIndex": 0,
-      "explanation": "The v-model directive is used for two-way data binding between form inputs and application state. It automatically picks the correct way to update the element based on the input type.",
+      "explanation": "The `v-model` directive is used for two-way data binding between form inputs and application state. It automatically picks the correct way to update the element based on the input type.",
       "industryContext": "These skills are valuable in professional development environments.",
       "tags": [
         "Core Concepts",
@@ -197,17 +197,17 @@
     },
     {
       "id": "vue-advanced-q8",
-      "question": "What is the difference between v-if and v-show?",
+      "question": "What is the difference between `v-if` and `v-show`?",
       "topic": "Directives",
       "difficulty": "Beginner",
       "choices": [
-        "v-if conditionally renders elements, v-show toggles CSS display property",
-        "v-if is for lists, v-show is for single elements",
-        "v-if is faster than v-show",
+        "`v-if` conditionally renders elements, `v-show` toggles CSS display property",
+        "`v-if` is for lists, `v-show` is for single elements",
+        "`v-if` is faster than `v-show`",
         "There is no difference"
       ],
       "correctIndex": 0,
-      "explanation": "v-if conditionally renders elements by actually adding or removing them from the DOM based on the condition. v-show simply toggles the CSS display property to show or hide elements. v-if has higher toggle costs but v-show has higher initial render costs. Use v-if for rarely changed conditions and v-show for frequently toggled elements.",
+      "explanation": "`v-if` conditionally renders elements by actually adding or removing them from the DOM based on the condition. `v-show` simply toggles the CSS display property to show or hide elements. `v-if` has higher toggle costs but `v-show` has higher initial render costs. Use `v-if` for rarely changed conditions and `v-show` for frequently toggled elements.",
       "industryContext": "These skills are valuable in professional development environments.",
       "tags": [
         "Directives",
@@ -282,13 +282,13 @@
       "topic": "Performance",
       "difficulty": "Advanced",
       "choices": [
-        "Lazy loading, v-show vs v-if, virtual scrolling, computed optimization, keep-alive caching",
+        "Lazy loading, `v-show` vs `v-if`, virtual scrolling, computed optimization, `keep-alive` caching",
         "Using only functional components and avoiding state management",
         "Increasing bundle size with more dependencies for better features",
         "Disabling reactivity for all components to reduce overhead"
       ],
       "correctIndex": 0,
-      "explanation": "Optimize Vue apps through: lazy loading components to reduce initial bundle size, using v-show vs v-if appropriately based on toggle frequency, implementing virtual scrolling for large lists, optimizing computed properties to avoid unnecessary recalculations, using keep-alive for cached components to prevent re-rendering, and minimizing reactivity overhead by using shallowRef or markRaw for non-reactive data. These techniques help improve load times, reduce memory usage, and enhance user experience.",
+      "explanation": "Optimize Vue apps through: lazy loading components to reduce initial bundle size, using `v-show` vs `v-if` appropriately based on toggle frequency, implementing virtual scrolling for large lists, optimizing computed properties to avoid unnecessary recalculations, using `keep-alive` for cached components to prevent re-rendering, and minimizing reactivity overhead by using `shallowRef` or `markRaw` for non-reactive data. These techniques help improve load times, reduce memory usage, and enhance user experience.",
       "industryContext": "Performance optimization is critical for professional Vue.js applications, especially in enterprise environments where user experience and SEO are important. Professional developers use these techniques to build fast, responsive applications that scale well with complex data and user interactions.",
       "tags": [
         "Performance",
@@ -369,7 +369,7 @@
         "Move components between different Vue applications"
       ],
       "correctIndex": 0,
-      "explanation": "Teleports allow rendering component templates in different parts of the DOM tree, outside the component hierarchy. Use for modals, tooltips, or notifications that need to escape parent containers. The Teleport component takes a 'to' prop that specifies the target DOM element where the content should be rendered. This is particularly useful for CSS positioning issues and z-index conflicts that arise when components are nested deeply in the DOM.",
+      "explanation": "Teleports allow rendering component templates in different parts of the DOM tree, outside the component hierarchy. Use for modals, tooltips, or notifications that need to escape parent containers. The Teleport component takes a `'to'` prop that specifies the target DOM element where the content should be rendered. This is particularly useful for CSS positioning issues and z-index conflicts that arise when components are nested deeply in the DOM.",
       "industryContext": "Teleports are an important Vue 3 feature for building professional UI components that need to break out of their container constraints. Professional Vue developers use Teleports for creating overlay components like modals, dropdowns, and tooltips that require proper positioning and z-index management.",
       "tags": [
         "Advanced",
@@ -439,13 +439,13 @@
       "topic": "Performance",
       "difficulty": "Intermediate",
       "choices": [
-        "Using defineAsyncComponent() or dynamic imports in router",
+        "Using `defineAsyncComponent()` or dynamic imports in router",
         "Using v-lazy directive",
         "Using Vue.lazy() method",
         "Using the async attribute in component tags"
       ],
       "correctIndex": 0,
-      "explanation": "Lazy loading in Vue can be implemented using defineAsyncComponent() for individual components or dynamic imports (() => import('./Component.vue')) in Vue Router for route-level code splitting.",
+      "explanation": "Lazy loading in Vue can be implemented using `defineAsyncComponent()` for individual components or dynamic imports (() => import('./Component.vue')) in Vue Router for route-level code splitting.",
       "industryContext": "Lazy loading is essential for improving initial page load times and optimizing the user experience in large applications.",
       "tags": [
         "Performance",
@@ -462,7 +462,7 @@
       "difficulty": "Intermediate",
       "choices": [
         "It helps Vue track changes and optimize re-rendering",
-        "It's required for v-for syntax to work",
+        "It's required for `v-for` syntax to work",
         "It prevents memory leaks",
         "It enables two-way data binding"
       ],

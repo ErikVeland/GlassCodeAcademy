@@ -12,7 +12,7 @@ const presetAvatars: { id: string; emoji: string }[] = [
 ];
 
 export default function EditProfilePage() {
-  const { profile, updateDisplayName, updateAvatarUrl, setAvatarPreset } = useProfile();
+  const { profile, setDisplayName, setAvatarImage, setPresetAvatar } = useProfile();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const sizePx = 96;
 
@@ -22,7 +22,7 @@ export default function EditProfilePage() {
     const reader = new FileReader();
     reader.onload = () => {
       const dataUrl = reader.result as string;
-      updateAvatarUrl(dataUrl);
+      setAvatarImage(dataUrl);
     };
     reader.readAsDataURL(file);
   };
@@ -44,7 +44,7 @@ export default function EditProfilePage() {
             <input
               type="text"
               defaultValue={profile.displayName || ''}
-              onBlur={(e) => updateDisplayName(e.target.value)}
+              onBlur={(e) => setDisplayName(e.target.value)}
               className="w-full px-3 py-2 rounded-md border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900"
               placeholder="Enter display name"
             />
@@ -64,7 +64,7 @@ export default function EditProfilePage() {
               <button
                 key={a.id}
                 className={`w-12 h-12 rounded-full flex items-center justify-center text-2xl border ${profile.avatarPresetId === a.id ? 'border-blue-600' : 'border-gray-300 dark:border-gray-700'} bg-gray-100 dark:bg-gray-700`}
-                onClick={() => setAvatarPreset(a.id)}
+                onClick={() => setPresetAvatar(a.id)}
                 aria-label={`Select avatar ${a.emoji}`}
               >
                 {a.emoji}

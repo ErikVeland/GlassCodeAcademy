@@ -246,7 +246,7 @@ export default function LaravelLessonsPage() {
                                             Exit Lessons
                                         </Link>
                                         <Link 
-                                            href="/laravel/interview" 
+ href="/modules/laravel-fundamentals/quiz"
                                             className="flex-1 bg-gradient-to-r from-red-500 via-orange-500 to-amber-500 text-white px-4 py-2 rounded shadow hover:from-red-600 hover:via-orange-600 hover:to-amber-600 transition-all duration-150 font-semibold text-center"
                                         >
                                             Start Laravel Quiz

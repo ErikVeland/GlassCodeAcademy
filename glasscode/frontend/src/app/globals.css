@@ -35,6 +35,111 @@
   .btn-success {
     @apply bg-green-600 text-white hover:bg-green-500 focus:ring-green-400 dark:bg-green-500 dark:hover:bg-green-400;
   }
+
+  /* Celebratory 100% badge styles */
+  .badge-perfect {
+    @apply bg-green-600 text-white rounded-lg shadow-lg;
+    background-image: radial-gradient(circle at 30% 30%, rgba(34,197,94,0.35), transparent 50%),
+      radial-gradient(circle at 70% 70%, rgba(34,197,94,0.25), transparent 50%),
+      linear-gradient(180deg, rgba(34,197,94,0.95), rgba(22,163,74,0.95));
+    box-shadow: 0 6px 18px rgba(34, 197, 94, 0.35), inset 0 0 12px rgba(255,255,255,0.15);
+    animation: badgePulse 1.2s ease-in-out infinite;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .badge-perfect::after {
+    content: '';
+    position: absolute;
+    top: -40%;
+    left: -40%;
+    width: 180%;
+    height: 180%;
+    background: radial-gradient(closest-side, rgba(255,255,255,0.16), rgba(255,255,255,0) 70%);
+    transform: rotate(25deg);
+    animation: glossSweep 2.4s ease-in-out infinite;
+    pointer-events: none;
+  }
+
+  /* Lightning variant for certificate badge */
+  .badge-lightning {
+    @apply text-white rounded-lg shadow-2xl;
+    background: radial-gradient(circle at 30% 30%, rgba(147, 197, 253, 0.35), transparent 50%),
+      radial-gradient(circle at 70% 70%, rgba(147, 197, 253, 0.25), transparent 50%),
+      linear-gradient(180deg, rgba(59,130,246,0.95), rgba(29,78,216,0.95));
+    box-shadow: 0 10px 28px rgba(29, 78, 216, 0.45), inset 0 0 18px rgba(255,255,255,0.20), 0 0 24px rgba(59,130,246,0.55);
+    position: relative;
+    overflow: hidden;
+    animation: pulseGlow 1.25s ease-in-out infinite;
+  }
+
+  .badge-lightning::before {
+    content: '';
+    position: absolute;
+    inset: -2px;
+    border-radius: inherit;
+    padding: 2px; /* border thickness */
+    background: conic-gradient(from 180deg, rgba(255,255,255,0.0), rgba(255,255,255,0.8), rgba(255,255,255,0.0));
+    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+            mask-composite: exclude;
+    animation: sparkTravel 2.2s linear infinite;
+    pointer-events: none;
+  }
+
+  .badge-lightning::after {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -40%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(closest-side, rgba(255,255,255,0.22), rgba(255,255,255,0) 70%);
+    transform: rotate(20deg);
+    animation: glossSweep 2.6s ease-in-out infinite;
+    mix-blend-mode: screen;
+    pointer-events: none;
+  }
+
+  /* Green awarding animation for 100% HD seal */
+  .badge-hd-award {
+    @apply text-white rounded-lg shadow-2xl;
+    background: radial-gradient(circle at 30% 30%, rgba(16, 185, 129, 0.35), transparent 50%),
+      radial-gradient(circle at 70% 70%, rgba(16, 185, 129, 0.25), transparent 50%),
+      linear-gradient(180deg, rgba(5, 150, 105, 0.95), rgba(4, 120, 87, 0.95));
+    box-shadow: 0 10px 28px rgba(4, 120, 87, 0.45), inset 0 0 18px rgba(255,255,255,0.20), 0 0 24px rgba(16,185,129,0.55);
+    position: relative;
+    overflow: hidden;
+    animation: hdPulseGlow 1.25s ease-in-out infinite;
+  }
+
+  .badge-hd-award::before {
+    content: '';
+    position: absolute;
+    inset: -2px;
+    border-radius: inherit;
+    padding: 2px; /* border thickness */
+    background: conic-gradient(from 180deg, rgba(255,255,255,0.0), rgba(255,255,255,0.8), rgba(255,255,255,0.0));
+    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+            mask-composite: exclude;
+    animation: sparkTravel 2.2s linear infinite;
+    pointer-events: none;
+  }
+
+  .badge-hd-award::after {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -40%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(closest-side, rgba(255,255,255,0.22), rgba(255,255,255,0) 70%);
+    transform: rotate(20deg);
+    animation: glossSweep 2.6s ease-in-out infinite;
+    mix-blend-mode: screen;
+    pointer-events: none;
+  }
 }
 
 /* Classy multi-point gradient animation */
@@ -48,6 +153,46 @@
   100% {
     background-position: 0% 50%;
   }
+}
+
+/* Energetic pulse for perfect badge */
+@keyframes badgePulse {
+  0% { transform: scale(1); box-shadow: 0 6px 18px rgba(34, 197, 94, 0.35), inset 0 0 12px rgba(255,255,255,0.15); }
+  50% { transform: scale(1.04); box-shadow: 0 10px 28px rgba(34, 197, 94, 0.55), inset 0 0 18px rgba(255,255,255,0.22); }
+  100% { transform: scale(1); box-shadow: 0 6px 18px rgba(34, 197, 94, 0.35), inset 0 0 12px rgba(255,255,255,0.15); }
+}
+
+@keyframes glossSweep {
+  0% { transform: translateX(-10%) rotate(25deg); opacity: 0.6; }
+  50% { transform: translateX(10%) rotate(25deg); opacity: 0.25; }
+  100% { transform: translateX(-10%) rotate(25deg); opacity: 0.6; }
+}
+
+/* Pulsing electric glow for lightning badge */
+@keyframes pulseGlow {
+  0% { transform: scale(1); box-shadow: 0 10px 28px rgba(29,78,216,0.45), 0 0 0 rgba(59,130,246,0); }
+  50% { transform: scale(1.035); box-shadow: 0 14px 36px rgba(29,78,216,0.65), 0 0 24px rgba(59,130,246,0.55); }
+  100% { transform: scale(1); box-shadow: 0 10px 28px rgba(29,78,216,0.45), 0 0 0 rgba(59,130,246,0); }
+}
+
+/* Pulsing emerald glow for HD award badge */
+@keyframes hdPulseGlow {
+  0% { transform: scale(1); box-shadow: 0 10px 28px rgba(4,120,87,0.45), 0 0 0 rgba(16,185,129,0); }
+  50% { transform: scale(1.035); box-shadow: 0 14px 36px rgba(4,120,87,0.65), 0 0 24px rgba(16,185,129,0.55); }
+  100% { transform: scale(1); box-shadow: 0 10px 28px rgba(4,120,87,0.45), 0 0 0 rgba(16,185,129,0); }
+}
+
+/* Lightning crackle strokes moving around the border */
+@keyframes lightningCrackle {
+  0% { filter: drop-shadow(0 0 6px rgba(255,255,255,0.9)) hue-rotate(0deg); opacity: 0.85; }
+  50% { filter: drop-shadow(0 0 14px rgba(255,255,255,1)) hue-rotate(25deg); opacity: 1; }
+  100% { filter: drop-shadow(0 0 6px rgba(255,255,255,0.9)) hue-rotate(0deg); opacity: 0.85; }
+}
+
+/* Spark traveling around the edge */
+@keyframes sparkTravel {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 }
 
 body {
@@ -249,6 +394,122 @@ html:not(.dark) body {
     text-align: left;
   }
 }
+
+/* Unlock chip styles */
+.unlock-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 10px;
+  border-radius: 9999px;
+  border: 1px solid rgba(99, 102, 241, 0.4);
+  background: rgba(99, 102, 241, 0.08);
+  color: #1f2937;
+  text-decoration: none;
+  font-size: 12px;
+  transition: transform 0.2s ease, background-color 0.2s ease, box-shadow 0.2s ease;
+}
+.dark .unlock-chip {
+  color: #e5e7eb;
+  border-color: rgba(99, 102, 241, 0.5);
+  background: rgba(99, 102, 241, 0.15);
+}
+.unlock-chip:hover {
+  transform: translateY(-1px);
+  background: rgba(99, 102, 241, 0.15);
+  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.25);
+}
+
+/* Sweet animated radio buttons */
+.radio-option {
+  display: flex;
+  align-items: center;
+  padding: 14px 16px;
+  border-radius: 10px;
+  border: 1px solid var(--radio-border, #e5e7eb);
+  background: var(--radio-bg, #ffffff);
+  cursor: pointer;
+  transition: border-color 0.2s ease, background-color 0.2s ease, box-shadow 0.2s ease;
+}
+.dark .radio-option {
+  --radio-bg: rgba(31, 41, 55, 0.6);
+  --radio-border: #374151;
+}
+.radio-option:hover {
+  border-color: #93c5fd;
+}
+.radio-option.is-selected {
+  --radio-border: #3b82f6;
+  --radio-bg: #eff6ff;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+}
+.dark .radio-option.is-selected {
+  --radio-bg: rgba(30, 64, 175, 0.25);
+}
+.radio-option.is-correct {
+  --radio-border: #10b981;
+  --radio-bg: #ecfdf5;
+  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.15);
+}
+.dark .radio-option.is-correct {
+  --radio-bg: rgba(6, 95, 70, 0.35);
+}
+.radio-option.is-incorrect {
+  --radio-border: #ef4444;
+  --radio-bg: #fef2f2;
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.15);
+}
+.dark .radio-option.is-incorrect {
+  --radio-bg: rgba(127, 29, 29, 0.35);
+}
+
+.sweet-radio-input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+.sweet-radio-visual {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  border: 2px solid var(--radio-circle-border, #9ca3af);
+  margin-right: 12px;
+  position: relative;
+  flex-shrink: 0;
+  transition: border-color 0.2s ease;
+}
+.radio-option:hover .sweet-radio-visual {
+  --radio-circle-border: #60a5fa;
+}
+.sweet-radio-input:checked + .sweet-radio-visual {
+  --radio-circle-border: #3b82f6;
+}
+.sweet-radio-visual::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: radial-gradient(ellipse at center, #3b82f6 0%, #60a5fa 100%);
+  transform: translate(-50%, -50%) scale(0);
+  opacity: 0;
+}
+.sweet-radio-input:checked + .sweet-radio-visual::after {
+  animation: radioFill 240ms ease-out forwards;
+}
+
+@keyframes radioFill {
+  0% { transform: translate(-50%, -50%) scale(0.4); opacity: 0; }
+  50% { transform: translate(-50%, -50%) scale(1.2); opacity: 0.9; }
+  100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+}
+
+.radio-text {
+  color: #1f2937;
+}
+.dark .radio-text { color: #e5e7eb; }
 
 .tier-main-info {
   flex: 1;

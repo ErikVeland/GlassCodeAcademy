@@ -793,11 +793,123 @@ namespace backend.Services
                 if (System.IO.File.Exists(questionsPath))
                 {
                     var questionsJson = System.IO.File.ReadAllText(questionsPath);
-                    WebInterviewQuestions = System.Text.Json.JsonSerializer.Deserialize<List<WebInterviewQuestion>>(questionsJson, new JsonSerializerOptions
+                    // Robust parsing similar to Version: support object root with `questions` array or plain array.
+                    var mappedQuestions = new List<WebInterviewQuestion>();
+                    try
                     {
-                        PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
-                        PropertyNameCaseInsensitive = true
-                    }) ?? new List<WebInterviewQuestion>();
+                        using var qdoc = JsonDocument.Parse(questionsJson, new JsonDocumentOptions { AllowTrailingCommas = true, CommentHandling = JsonCommentHandling.Skip });
+                        JsonElement qroot = qdoc.RootElement;
+                        JsonElement qarray = qroot;
+                        if (qroot.ValueKind == JsonValueKind.Object)
+                        {
+                            if (qroot.TryGetProperty("questions", out var qarr) && qarr.ValueKind == JsonValueKind.Array)
+                            {
+                                qarray = qarr;
+                            }
+                            else
+                            {
+                                qarray = default;
+                            }
+                        }
+                        if (qarray.ValueKind == JsonValueKind.Array)
+                        {
+                            foreach (var q in qarray.EnumerateArray())
+                            {
+                                var item = new WebInterviewQuestion
+                                {
+                                    Id = GetIntFlexible(q, "id") ?? 0,
+                                    Topic = GetString(q, "topic"),
+                                    Type = GetString(q, "type") ?? GetString(q, "questionType") ?? string.Empty,
+                                    Question = GetString(q, "question") ?? string.Empty,
+                                    Choices = GetStringArray(q, "choices").ToArray(),
+                                    CorrectAnswer = GetIntFlexible(q, "correctAnswer") ?? GetIntFlexible(q, "correctIndex"),
+                                    Explanation = GetString(q, "explanation")
+                                };
+                                // Auto-classify multiple-choice when choices and correct answer are present
+                                if (item.Choices != null && item.Choices.Length > 0 && item.CorrectAnswer.HasValue)
+                                {
+                                    item.Type = "multiple-choice";
+                                }
+                                else if (string.IsNullOrWhiteSpace(item.Type))
+                                {
+                                    item.Type = "open-ended";
+                                }
+                                mappedQuestions.Add(item);
+                            }
+                        }
+                        else if (qroot.ValueKind == JsonValueKind.Array)
+                        {
+                            foreach (var q in qroot.EnumerateArray())
+                            {
+                                var item = new WebInterviewQuestion
+                                {
+                                    Id = GetIntFlexible(q, "id") ?? 0,
+                                    Topic = GetString(q, "topic"),
+                                    Type = GetString(q, "type") ?? GetString(q, "questionType") ?? string.Empty,
+                                    Question = GetString(q, "question") ?? string.Empty,
+                                    Choices = GetStringArray(q, "choices").ToArray(),
+                                    CorrectAnswer = GetIntFlexible(q, "correctAnswer") ?? GetIntFlexible(q, "correctIndex"),
+                                    Explanation = GetString(q, "explanation")
+                                };
+                                if (item.Choices != null && item.Choices.Length > 0 && item.CorrectAnswer.HasValue)
+                                {
+                                    item.Type = "multiple-choice";
+                                }
+                                else if (string.IsNullOrWhiteSpace(item.Type))
+                                {
+                                    item.Type = "open-ended";
+                                }
+                                mappedQuestions.Add(item);
+                            }
+                        }
+                        else
+                        {
+                            mappedQuestions = new List<WebInterviewQuestion>();
+                        }
+                    }
+                    catch (Exception)
+                    {
+                        // Fallback: try parsing as a plain array
+                        try
+                        {
+                            using var qdoc2 = JsonDocument.Parse(questionsJson, new JsonDocumentOptions { AllowTrailingCommas = true, CommentHandling = JsonCommentHandling.Skip });
+                            var root2 = qdoc2.RootElement;
+                            if (root2.ValueKind == JsonValueKind.Array)
+                            {
+                                foreach (var q in root2.EnumerateArray())
+                                {
+                                    var item = new WebInterviewQuestion
+                                    {
+                                        Id = GetIntFlexible(q, "id") ?? 0,
+                                        Topic = GetString(q, "topic"),
+                                        Type = GetString(q, "type") ?? GetString(q, "questionType") ?? string.Empty,
+                                        Question = GetString(q, "question") ?? string.Empty,
+                                        Choices = GetStringArray(q, "choices").ToArray(),
+                                        CorrectAnswer = GetIntFlexible(q, "correctAnswer") ?? GetIntFlexible(q, "correctIndex"),
+                                        Explanation = GetString(q, "explanation")
+                                    };
+                                    if (item.Choices != null && item.Choices.Length > 0 && item.CorrectAnswer.HasValue)
+                                    {
+                                        item.Type = "multiple-choice";
+                                    }
+                                    else if (string.IsNullOrWhiteSpace(item.Type))
+                                    {
+                                        item.Type = "open-ended";
+                                    }
+                                    mappedQuestions.Add(item);
+                                }
+                            }
+                            else
+                            {
+                                mappedQuestions = new List<WebInterviewQuestion>();
+                            }
+                        }
+                        catch
+                        {
+                            mappedQuestions = new List<WebInterviewQuestion>();
+                        }
+                    }
+                    WebInterviewQuestions = mappedQuestions;
                 }
                 else
                 {

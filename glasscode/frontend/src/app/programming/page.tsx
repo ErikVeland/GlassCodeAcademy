@@ -118,7 +118,7 @@ export default function ProgrammingOverviewPage() {
                         Start Learning
                     </Link>
                     <Link 
-                        href="/programming/interview" 
+ href="/modules/programming-fundamentals/quiz"
                         className="flex-1 bg-gradient-to-r from-green-500 to-teal-600 text-white px-6 py-3 rounded-lg shadow hover:from-green-600 hover:to-teal-700 transition-all duration-150 font-semibold text-center"
                     >
                         Take Quiz

@@ -9,6 +9,7 @@ import { useProgressTracking } from '@/hooks/useProgressTracking';
 import { useNextUnlockedLesson } from '@/hooks/useNextUnlockedLesson';
 import { contentRegistry } from '@/lib/contentRegistry';
 import type { ProgrammingQuestion, Module } from '@/lib/contentRegistry';
+import QuizResult from '@/components/QuizResult';
 
 type CategoryScore = { category: string; correct: number; total: number };
 
@@ -36,6 +37,7 @@ export default function QuizResultsPage({ params }: { params: Promise<{ moduleSl
   const [nextModuleTitle, setNextModuleTitle] = useState<string | null>(null);
   const [nextLessonTitle, setNextLessonTitle] = useState<string | null>(null);
   const { nextLessonHref } = useNextUnlockedLesson();
+  const [moduleTitle, setModuleTitle] = useState<string | null>(null);
 
   // Resolve the params promise
   useEffect(() => {
@@ -141,6 +143,7 @@ export default function QuizResultsPage({ params }: { params: Promise<{ moduleSl
       try {
         const current = await contentRegistry.getModule(resolvedParams.moduleSlug);
         if (!current) return;
+        setModuleTitle(current.title ?? null);
         // Next module within same tier by order; if none, next tier's first
         const tierModules = await contentRegistry.getModulesByTier(current.tier);
         const idx = tierModules.findIndex(m => m.slug === current.slug);
@@ -279,58 +282,20 @@ export default function QuizResultsPage({ params }: { params: Promise<{ moduleSl
         </ol>
       </nav>
 
-      {/* Results Header */}
+      {/* Results Header using shared component */}
       <header className="mb-12">
-        <div className="glass-morphism p-8 rounded-xl text-center">
-          <div className="mb-6">
-            <div className={`inline-flex items-center justify-center w-24 h-24 rounded-full ${
-              results.passed ? "bg-green-100 dark:bg-green-900/30" : "bg-red-100 dark:bg-red-900/30"
-            }`}>
-              <span className={`text-5xl ${results.passed ? "text-green-600 dark:text-green-400" : "text-red-600 dark:text-red-400"}`}>
-                {results.passed ? "🎉" : "😔"}
-              </span>
-            </div>
-          </div>
-          
-          <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">
-            {results.passed ? "Congratulations! You Passed!" : "Quiz Complete"}
-          </h1>
-          
-          <div className="max-w-2xl mx-auto">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
-              <div className="bg-blue-50 dark:bg-blue-900/30 p-4 rounded-lg">
-                <div className="text-3xl font-bold text-blue-600 dark:text-blue-300">
-                  {results.score}%
-                </div>
-                <div className="text-sm text-gray-600 dark:text-gray-300">
-                  Your Score
-                </div>
-              </div>
-              <div className="bg-green-50 dark:bg-green-900/30 p-4 rounded-lg">
-                <div className="text-3xl font-bold text-green-600 dark:text-green-300">
-                  {results.correctAnswers}/{results.totalQuestions}
-                </div>
-                <div className="text-sm text-gray-600 dark:text-gray-300">
-                  Correct Answers
-                </div>
-              </div>
-              <div className="bg-purple-50 dark:bg-purple-900/30 p-4 rounded-lg">
-                <div className="text-3xl font-bold text-purple-600 dark:text-purple-300">
-                  {results.timeTaken}
-                </div>
-                <div className="text-sm text-gray-600 dark:text-gray-300">
-                  Time Taken
-                </div>
-              </div>
-            </div>
-            
-            <div className={`inline-block px-6 py-3 rounded-full text-lg font-semibold ${
-              results.passed 
-                ? "bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-200" 
-                : "bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-200"
-            }`}>
-              {results.passed ? "Passed" : "Not Passed"} • {results.passingScore}% required
-            </div>
+        <div className="glass-morphism p-8 rounded-xl">
+          <QuizResult
+            moduleName={moduleTitle ?? moduleSlug}
+            score={results.correctAnswers}
+            total={results.totalQuestions}
+            onRetry={handleRetakeQuiz}
+            nextLessonHref={results.passed && nextLessonHref ? nextLessonHref : undefined}
+            nextModuleHref={results.passed && !nextLessonHref && nextModuleHref ? nextModuleHref : undefined}
+            passThresholdPercent={results.passingScore}
+          />
+          <div className="mt-6 text-center text-sm text-gray-600 dark:text-gray-300">
+            Time Taken: <span className="font-semibold">{results.timeTaken}</span> • Time Limit: <span className="font-semibold">{results.timeLimit}</span>
           </div>
         </div>
       </header>
@@ -406,7 +371,7 @@ export default function QuizResultsPage({ params }: { params: Promise<{ moduleSl
               </button>
             </div>
             
-            {results.passed ? (
+            {results.passed && (
               <div className="border border-gray-200 dark:border-gray-700 rounded-lg p-6">
                 <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-3">
                   🚀 Continue Learning
@@ -436,21 +401,6 @@ export default function QuizResultsPage({ params }: { params: Promise<{ moduleSl
                     Back to Module Overview
                   </Link>
                 )}
-              </div>
-            ) : (
-              <div className="border border-gray-200 dark:border-gray-700 rounded-lg p-6">
-                <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-3">
-                  🔄 Retake Quiz
-                </h3>
-                <p className="text-gray-600 dark:text-gray-300 mb-4">
-                  Review the material and try the quiz again to demonstrate your knowledge.
-                </p>
-                <button
-                  onClick={handleRetakeQuiz}
-                  className="w-full px-4 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700 transition-colors"
-                >
-                  Retake Quiz
-                </button>
               </div>
             )}
           </div>

@@ -10,6 +10,8 @@ import type { ProgrammingQuestion } from '@/lib/contentRegistry';
 export default function QuizStartPage({ params }: { params: Promise<{ moduleSlug: string }> }) {
   const router = useRouter();
   const [resolvedParams, setResolvedParams] = useState<{ moduleSlug: string } | null>(null);
+  const [poolCount, setPoolCount] = useState<number>(0);
+  const [debugEnabled, setDebugEnabled] = useState<boolean>(false);
   interface QuizOverview {
     title: string;
     totalQuestions: number;
@@ -32,6 +34,13 @@ export default function QuizStartPage({ params }: { params: Promise<{ moduleSlug
       try {
         const { moduleSlug } = await params;
         setResolvedParams({ moduleSlug });
+        // Enable debug view if query param is present
+        if (typeof window !== 'undefined') {
+          try {
+            const qp = new URLSearchParams(window.location.search);
+            setDebugEnabled(qp.get('debug') === '1');
+          } catch {}
+        }
         // Load module and quiz from content registry
         const [mod, quiz] = await Promise.all([
           contentRegistry.getModule(moduleSlug),
@@ -44,26 +53,50 @@ export default function QuizStartPage({ params }: { params: Promise<{ moduleSlug
           return;
         }
 
-        // Normalize questions: trim text, ensure valid choices and correctAnswer index
-        const sanitizedQuestions = (quiz.questions || []).filter((q) => {
-          const choices = q.choices ?? [];
-          const hasChoices = Array.isArray(choices) && choices.length > 0;
-          const hasValidIndex = typeof q.correctAnswer === 'number' && q.correctAnswer >= 0 && q.correctAnswer < choices.length;
-          const hasQuestionText = typeof q.question === 'string' && q.question.trim().length > 0;
-          return hasChoices && hasValidIndex && hasQuestionText;
-        }).map((q) => ({
-          ...q,
-          question: (q.question || '').trim(),
-          choices: (q.choices || []).map((c) => (typeof c === 'string' ? c.trim() : String(c))),
-        }));
+        // Normalize questions: trim text, ensure valid choices and correct answer index
+        // Support local JSON that uses `correctIndex` by mapping it to `correctAnswer`
+        const sanitizedQuestions = (quiz.questions || [])
+          .map((q) => {
+            const choices = q.choices ?? [];
+            const normalizedChoices = Array.isArray(choices)
+              ? choices.map((c) => (typeof c === 'string' ? c.trim() : String(c)))
+              : [];
+            const effectiveCorrect =
+              typeof q.correctAnswer === 'number'
+                ? q.correctAnswer
+                : typeof (q as unknown as { correctIndex?: number }).correctIndex === 'number'
+                ? (q as unknown as { correctIndex: number }).correctIndex
+                : undefined;
+            return {
+              ...q,
+              question: (q.question || '').trim(),
+              choices: normalizedChoices,
+              // Ensure `correctAnswer` is set for downstream logic
+              correctAnswer: effectiveCorrect,
+            } as ProgrammingQuestion;
+          })
+          .filter((q) => {
+            const choices = q.choices ?? [];
+            const hasChoices = Array.isArray(choices) && choices.length > 0;
+            const hasValidIndex =
+              typeof q.correctAnswer === 'number' && q.correctAnswer >= 0 && q.correctAnswer < choices.length;
+            const hasQuestionText = typeof q.question === 'string' && q.question.trim().length > 0;
+            return hasChoices && hasValidIndex && hasQuestionText;
+          });
 
         // Determine target number of questions and pool size (2x)
         const availableQuestions = sanitizedQuestions.length;
-        const targetQuestions = Math.min(
-          mod.metadata?.thresholds?.minQuizQuestions ?? mod.thresholds?.requiredQuestions ?? 10,
-          availableQuestions
-        );
-        const poolSize = Math.min(targetQuestions * 2, availableQuestions);
+        setPoolCount(availableQuestions);
+        // Select target number of questions
+        // For programming-fundamentals, sample 14 from the full available pool
+        const targetQuestions = (moduleSlug === 'programming-fundamentals')
+          ? Math.min(14, availableQuestions)
+          : Math.min(
+              mod.metadata?.thresholds?.minQuizQuestions ?? mod.thresholds?.requiredQuestions ?? 10,
+              availableQuestions
+            );
+        // Sample from the full available pool to maximize variety across attempts
+        const poolSize = availableQuestions;
 
         // Create a shuffled selection pool
         const shuffle = <T,>(arr: T[]): T[] => {
@@ -78,6 +111,23 @@ export default function QuizStartPage({ params }: { params: Promise<{ moduleSlug
         const pool = shuffle(sanitizedQuestions).slice(0, poolSize);
         const selectedQuestions = shuffle(pool).slice(0, targetQuestions);
 
+        // Randomize choice order for each selected question and update correct answer index
+        const randomizedSelectedQuestions = selectedQuestions.map((q) => {
+          const hasChoices = Array.isArray(q.choices) && q.choices.length > 1;
+          const hasCorrectIndex = typeof q.correctAnswer === 'number' && q.correctAnswer >= 0;
+          if (!hasChoices || !hasCorrectIndex) return q;
+
+          const indices = q.choices!.map((_, i) => i);
+          const shuffledIndices = shuffle(indices);
+          const newChoices = shuffledIndices.map((i) => q.choices![i]);
+          const newCorrectIndex = shuffledIndices.indexOf(q.correctAnswer!);
+          return {
+            ...q,
+            choices: newChoices,
+            correctAnswer: newCorrectIndex,
+          } as ProgrammingQuestion;
+        });
+
         // Compute time limit: use metadata passingScore/time or fallback by question count
         // Base: 1.5 minutes per question, min 10, max 45
         const defaultPerQuestion = 1.5; // minutes
@@ -87,7 +137,7 @@ export default function QuizStartPage({ params }: { params: Promise<{ moduleSlug
 
         const quizOverview = {
           title: `${mod.title} Quiz`,
-          totalQuestions: selectedQuestions.length,
+          totalQuestions: randomizedSelectedQuestions.length,
           timeLimit,
           passingScore,
           instructions: [
@@ -98,7 +148,7 @@ export default function QuizStartPage({ params }: { params: Promise<{ moduleSlug
             "Good luck!"
           ],
           _sessionSeed: {
-            selectedQuestions,
+            selectedQuestions: randomizedSelectedQuestions,
             passingScore,
             timeLimit
           }
@@ -250,6 +300,13 @@ export default function QuizStartPage({ params }: { params: Promise<{ moduleSlug
       {/* Quiz Instructions */}
       <section className="mb-12">
         <div className="glass-morphism p-8 rounded-xl">
+          {debugEnabled && quizData?._sessionSeed?.selectedQuestions && (
+            <div className="mb-6 border border-dashed border-gray-300 dark:border-gray-700 rounded-lg p-4">
+              <div className="text-sm text-gray-600 dark:text-gray-300 mb-2">Debug</div>
+              <div className="text-xs text-gray-700 dark:text-gray-200">Pool size: {poolCount}</div>
+              <div className="text-xs text-gray-700 dark:text-gray-200">Selected IDs: {quizData._sessionSeed.selectedQuestions.map(q => q.id).join(', ')}</div>
+            </div>
+          )}
           <h2 className="text-2xl font-semibold text-gray-900 dark:text-white mb-6">
             📋 Quiz Instructions
           </h2>
@@ -282,15 +339,7 @@ export default function QuizStartPage({ params }: { params: Promise<{ moduleSlug
             </div>
           </div>
 
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <button
-              onClick={handleStartQuiz}
-              className="px-8 py-4 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors text-lg font-medium flex items-center justify-center"
-            >
-              Start Quiz
-              <span className="ml-2">🎯</span>
-            </button>
-            
+          <div className="flex items-center justify-between gap-4">
             <Link
               href={`/modules/${moduleSlug}/quiz`}
               className="px-8 py-4 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300 transition-colors text-lg font-medium flex items-center justify-center"
@@ -298,6 +347,14 @@ export default function QuizStartPage({ params }: { params: Promise<{ moduleSlug
               Cancel
               <span className="ml-2">←</span>
             </Link>
+
+            <button
+              onClick={handleStartQuiz}
+              className="px-8 py-4 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors text-lg font-medium flex items-center justify-center"
+            >
+              Start Quiz
+              <span className="ml-2">🎯</span>
+            </button>
           </div>
         </div>
       </section>

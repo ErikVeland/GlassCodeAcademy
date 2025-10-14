@@ -216,13 +216,13 @@
       "topic": "Playwright",
       "difficulty": "Intermediate",
       "choices": [
-        "page.route()",
-        "page.mock()",
-        "page.intercept()",
-        "page.fulfill()"
+        "`page.route()`",
+        "`page.mock()`",
+        "`page.intercept()`",
+        "`page.fulfill()`"
       ],
       "correctIndex": 0,
-      "explanation": "In Playwright, page.route() is used to intercept network requests and mock responses, allowing you to test various scenarios including error conditions, slow responses, and edge cases without modifying your application code.",
+      "explanation": "In Playwright, `page.route()` is used to intercept network requests and mock responses, allowing you to test various scenarios including error conditions, slow responses, and edge cases without modifying your application code.",
       "industryContext": "Network interception and API mocking are powerful features that make Playwright particularly suitable for comprehensive E2E testing. These capabilities enable teams to create reliable tests that aren't affected by backend issues or network latency.",
       "tags": [
         "playwright",

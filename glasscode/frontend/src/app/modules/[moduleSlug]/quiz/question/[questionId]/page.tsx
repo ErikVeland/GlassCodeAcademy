@@ -7,6 +7,13 @@ import Link from 'next/link';
 
 // For client components in Next.js 15, params are still Promises that need to be awaited
 export default function QuizQuestionPage({ params }: { params: Promise<{ moduleSlug: string; questionId: string }> }) {
+  const renderInlineCode = (text: string) => {
+    const parts = String(text).split(/(`[^`]+`)/g);
+    return parts.map((part, i) => {
+      const match = part.match(/^`([^`]+)`$/);
+      return match ? <code key={i}>{match[1]}</code> : <span key={i}>{part}</span>;
+    });
+  };
   const router = useRouter();
   const [resolvedParams, setResolvedParams] = useState<{ moduleSlug: string; questionId: string } | null>(null);
   const [questionData, setQuestionData] = useState<ProgrammingQuestion | null>(null);
@@ -227,57 +234,32 @@ export default function QuizQuestionPage({ params }: { params: Promise<{ moduleS
 
         <div className="prose prose-lg dark:prose-invert max-w-none mb-8">
           <p className="text-gray-800 dark:text-gray-200 text-lg">
-            {questionData.question}
+            {renderInlineCode(questionData.question)}
           </p>
         </div>
 
-        {/* Answer Choices */}
+        {/* Answer Choices with animated radios */}
         <div className="space-y-3 mb-8">
           {(questionData.choices ?? []).map((choice: string, index: number) => {
             const isSelected = selectedAnswer === index;
             const isCorrectAnswer = index === questionData.correctAnswer;
-            
-            let choiceStyle = "flex items-center p-4 rounded-lg border cursor-pointer transition-colors ";
-            
-            if (showExplanation) {
-              if (isCorrectAnswer) {
-                choiceStyle += "border-green-500 bg-green-50 dark:bg-green-900/30";
-              } else if (isSelected && !isCorrectAnswer) {
-                choiceStyle += "border-red-500 bg-red-50 dark:bg-red-900/30";
-              } else {
-                choiceStyle += "border-gray-200 dark:border-gray-700";
-              }
-            } else {
-              choiceStyle += isSelected 
-                ? "border-blue-500 bg-blue-50 dark:bg-blue-900/30" 
-                : "border-gray-200 dark:border-gray-700 hover:border-blue-300 dark:hover:border-blue-700";
-            }
-
+            const baseClasses = 'radio-option';
+            const stateClass = showExplanation
+              ? (isCorrectAnswer ? ' is-correct' : (isSelected && !isCorrectAnswer ? ' is-incorrect' : ''))
+              : (isSelected ? ' is-selected' : '');
             return (
-              <div
-                key={index}
-                className={choiceStyle.replace(/\bborder-[^\s]+\b/g, '').replace(/\bborder\b/g, '').replace(/\bring-[^\s]+\b/g, '') + ' focus:outline-none focus-visible:outline-none'}
-                onClick={() => !showExplanation && handleAnswerSelect(index)}
-              >
-                <div className="flex items-center">
-                  <div className={`flex-shrink-0 w-6 h-6 rounded-full flex items-center justify-center mr-4 ${
-                    showExplanation
-                      ? isCorrectAnswer
-                        ? "bg-green-500 text-white"
-                        : isSelected && !isCorrectAnswer
-                          ? "bg-red-500 text-white"
-                          : "bg-transparent"
-                      : isSelected
-                        ? "bg-blue-500 text-white"
-                        : "bg-transparent"
-                  }`}>
-                    {showExplanation && isCorrectAnswer && "✓"}
-                    {showExplanation && isSelected && !isCorrectAnswer && "✗"}
-                    {!showExplanation && isSelected && "✓"}
-                  </div>
-                  <span className="text-gray-800 dark:text-gray-200 leading-tight">{choice}</span>
-                </div>
-              </div>
+              <label key={index} className={baseClasses + stateClass}>
+                <input
+                  type="radio"
+                  name="answer"
+                  className="sweet-radio-input"
+                  checked={selectedAnswer === index}
+                  onChange={() => !showExplanation && handleAnswerSelect(index)}
+                  aria-checked={selectedAnswer === index}
+                />
+                <span className="sweet-radio-visual" aria-hidden="true" />
+                <span className="radio-text">{renderInlineCode(choice)}</span>
+              </label>
             );
           })}
         </div>
@@ -300,7 +282,7 @@ export default function QuizQuestionPage({ params }: { params: Promise<{ moduleS
                   {isCorrect ? "Correct!" : "Incorrect"}
                 </h3>
                 <p className="text-gray-700 dark:text-gray-300 mt-2">
-                  {questionData.explanation}
+                  {renderInlineCode(questionData.explanation || '')}
                 </p>
               </div>
             </div>

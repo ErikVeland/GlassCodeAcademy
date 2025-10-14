@@ -256,7 +256,7 @@ export default function TailwindLessonsPage() {
                                             Exit Lessons
                                         </Link>
                                         <Link 
-                                            href="/tailwind/interview" 
+ href="/modules/tailwind-advanced/quiz"
                                             className="flex-1 bg-gradient-to-r from-teal-500 via-cyan-500 to-blue-500 text-white px-4 py-2 rounded shadow hover:from-teal-600 hover:via-cyan-600 hover:to-blue-600 transition-all duration-150 font-semibold text-center"
                                         >
                                             Start Tailwind Quiz

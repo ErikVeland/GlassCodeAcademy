@@ -438,7 +438,7 @@ export default function NodeLessonsPage() {
                                             Exit Lessons
                                         </Link>
                                         <Link 
-                                            href="/node/interview" 
+ href="/modules/node-fundamentals/quiz"
                                             className="flex-1 bg-gradient-to-r from-green-500 via-emerald-500 to-teal-500 text-white px-4 py-2 rounded shadow hover:from-green-600 hover:via-emerald-600 hover:to-teal-600 transition-all duration-150 font-semibold text-center"
                                         >
                                             Start Node.js Quiz

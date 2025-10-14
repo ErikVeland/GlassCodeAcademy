@@ -300,7 +300,7 @@ function DatabaseLessonsRegular() {
                         Exit Lessons
                       </Link>
                       <Link 
-                        href="/database/interview" 
+ href="/modules/database-systems/quiz"
                         className="flex-1 bg-orange-600/20 text-white px-3 py-1 rounded-lg hover:bg-orange-600/30 transition-colors text-center"
                       >
                         Start Database Quiz

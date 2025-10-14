@@ -2,8 +2,7 @@
 
 import { useEffect, useState, useRef } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { useQuery, gql } from '@apollo/client';
+import { useQuery, gql, ApolloError } from '@apollo/client';
 import TechnologyUtilizationBox from '../../../components/TechnologyUtilizationBox';
 import EnhancedLoadingComponent from '../../../components/EnhancedLoadingComponent';
 
@@ -83,13 +82,13 @@ export default function DotNetLessonsPage() {
     }
 
     // Helper function to determine if an error is a network error
-    const isNetworkError = (error: any): boolean => {
-        return !!error && (
-            error.message?.includes('Failed to fetch') ||
-            error.message?.includes('NetworkError') ||
-            error.message?.includes('ECONNREFUSED') ||
-            error.message?.includes('timeout') ||
-            error.networkError
+    const isNetworkError = (err: ApolloError | undefined): boolean => {
+        return !!err && (
+            err.message?.includes('Failed to fetch') ||
+            err.message?.includes('NetworkError') ||
+            err.message?.includes('ECONNREFUSED') ||
+            err.message?.includes('timeout') ||
+            !!err.networkError
         );
     };
 
@@ -256,7 +255,7 @@ export default function DotNetLessonsPage() {
                                             Exit Lessons
                                         </Link>
                                         <Link 
-                                            href="/dotnet/interview" 
+ href="/modules/dotnet-fundamentals/quiz"
                                             className="flex-1 bg-gradient-to-r from-blue-500 via-indigo-500 to-purple-500 text-white px-4 py-2 rounded shadow hover:from-blue-600 hover:via-indigo-600 hover:to-purple-600 transition-all duration-150 font-semibold text-center"
                                         >
                                             Start .NET Quiz

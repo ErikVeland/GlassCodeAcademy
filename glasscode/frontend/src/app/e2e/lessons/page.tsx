@@ -2,8 +2,7 @@
 
 import { useEffect, useState, useRef } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { useQuery, gql } from '@apollo/client';
+import { useQuery, gql, ApolloError } from '@apollo/client';
 import TechnologyUtilizationBox from '../../../components/TechnologyUtilizationBox';
 import EnhancedLoadingComponent from '../../../components/EnhancedLoadingComponent';
 
@@ -57,14 +56,13 @@ export default function E2eLessonsPage() {
 
     const lessons: E2eLesson[] = data?.e2eLessons ?? [];
 
-    // Group lessons by topic
-    const topicGroups: TopicGroup[] = Object.values(
-        lessons.reduce((acc, lesson) => {
-            if (!acc[lesson.topic]) acc[lesson.topic] = { topic: lesson.topic, lessons: [] };
-            acc[lesson.topic].lessons.push(lesson);
-            return acc;
-        }, {} as Record<string, TopicGroup>)
-    );
+    // Group lessons by topic with explicit accumulator typing
+    const topicGroupsMap: Record<string, TopicGroup> = lessons.reduce((acc, lesson) => {
+        if (!acc[lesson.topic]) acc[lesson.topic] = { topic: lesson.topic, lessons: [] };
+        acc[lesson.topic].lessons.push(lesson);
+        return acc;
+    }, {} as Record<string, TopicGroup>);
+    const topicGroups: TopicGroup[] = Object.values(topicGroupsMap);
 
     // If a lesson is selected, find its topic and index
     let currentLesson: E2eLesson | null = null;
@@ -83,13 +81,13 @@ export default function E2eLessonsPage() {
     }
 
     // Helper function to determine if an error is a network error
-    const isNetworkError = (error: any): boolean => {
-        return !!error && (
-            error.message?.includes('Failed to fetch') ||
-            error.message?.includes('NetworkError') ||
-            error.message?.includes('ECONNREFUSED') ||
-            error.message?.includes('timeout') ||
-            error.networkError
+    const isNetworkError = (err: ApolloError | undefined): boolean => {
+        return !!err && (
+            err.message?.includes('Failed to fetch') ||
+            err.message?.includes('NetworkError') ||
+            err.message?.includes('ECONNREFUSED') ||
+            err.message?.includes('timeout') ||
+            !!err.networkError
         );
     };
 
@@ -256,7 +254,7 @@ export default function E2eLessonsPage() {
                                             Exit Lessons
                                         </Link>
                                         <Link 
-                                            href="/e2e/interview" 
+ href="/modules/e2e-testing/quiz"
                                             className="flex-1 bg-gradient-to-r from-blue-500 via-indigo-500 to-purple-500 text-white px-4 py-2 rounded shadow hover:from-blue-600 hover:via-indigo-600 hover:to-purple-600 transition-all duration-150 font-semibold text-center"
                                         >
                                             Start E2E Testing Quiz

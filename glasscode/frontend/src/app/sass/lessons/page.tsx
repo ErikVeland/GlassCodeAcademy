@@ -243,7 +243,7 @@ export default function SassLessonsPage() {
                                             Exit Lessons
                                         </Link>
                                         <Link 
-                                            href="/sass/interview" 
+ href="/modules/sass-advanced/quiz"
                                             className="flex-1 bg-gradient-to-r from-pink-500 via-rose-500 to-red-500 text-white px-4 py-2 rounded shadow hover:from-pink-600 hover:via-rose-600 hover:to-red-600 transition-all duration-150 font-semibold text-center"
                                         >
                                             Start SASS Quiz

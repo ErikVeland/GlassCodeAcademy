@@ -256,7 +256,7 @@ export default function VersionLessonsPage() {
                                             Exit Lessons
                                         </Link>
                                         <Link 
-                                            href="/version/interview" 
+ href="/modules/version-control/quiz"
                                             className="flex-1 bg-gradient-to-r from-blue-500 via-indigo-500 to-purple-500 text-white px-4 py-2 rounded shadow hover:from-blue-600 hover:via-indigo-600 hover:to-purple-600 transition-all duration-150 font-semibold text-center"
                                         >
                                             Start Version Control Quiz

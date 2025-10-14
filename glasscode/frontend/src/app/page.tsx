@@ -77,6 +77,22 @@ const ModuleCard: React.FC<{
     quality: 'from-orange-500 to-red-500'
   }[tierKey] || 'from-blue-500 to-cyan-500';
 
+  const [unlockingModules, setUnlockingModules] = useState<Array<{ slug: string; title: string; routes: { overview: string } }>>([]);
+  useEffect(() => {
+    let isMounted = true;
+    const loadUnlocks = async () => {
+      try {
+        const mods = await contentRegistry.getModules();
+        const unlocked = mods.filter(m => (m.prerequisites || []).includes(module.slug)).map(m => ({ slug: m.slug, title: m.title, routes: { overview: m.routes.overview } }));
+        if (isMounted) setUnlockingModules(unlocked);
+      } catch (e) {
+        console.error('Failed to load unlocking modules', e);
+      }
+    };
+    loadUnlocks();
+    return () => { isMounted = false; };
+  }, [module.slug]);
+
   return (
     <div className={`module-card-container ${isLocked ? 'locked' : ''} h-full`}>
       <Link
@@ -196,6 +212,21 @@ const ModuleCard: React.FC<{
         {(module.prerequisites || []).length > 0 && (
           <div className="mt-3 text-xs text-gray-500 dark:text-gray-500 text-left">
             🔗 Requires: {module.prerequisites!.length} prerequisite{module.prerequisites!.length > 1 ? 's' : ''}
+          </div>
+        )}
+
+        {/* Unlock chips shown when module is completed */}
+        {moduleStatus === 'completed' && unlockingModules.length > 0 && (
+          <div className="mt-4 text-left">
+            <div className="text-xs text-gray-600 dark:text-gray-400 mb-2">Unlocks:</div>
+            <div className="flex flex-wrap gap-2">
+              {unlockingModules.map((m) => (
+                <Link key={m.slug} href={m.routes.overview} className="unlock-chip">
+                  <span className="mr-1">🔓</span>
+                  {m.title}
+                </Link>
+              ))}
+            </div>
           </div>
         )}
       </Link>

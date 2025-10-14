@@ -256,7 +256,7 @@ export default function TestingLessonsPage() {
                                             Exit Lessons
                                         </Link>
                                         <Link 
-                                            href="/testing/interview" 
+ href="/modules/testing-fundamentals/quiz"
                                             className="flex-1 bg-gradient-to-r from-orange-500 via-red-500 to-pink-500 text-white px-4 py-2 rounded shadow hover:from-orange-600 hover:via-red-600 hover:to-pink-600 transition-all duration-150 font-semibold text-center"
                                         >
                                             Start Testing Quiz

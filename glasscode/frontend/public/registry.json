@@ -93,7 +93,7 @@
       "routes": {
         "overview": "/programming",
         "lessons": "/modules/programming-fundamentals/lessons",
-        "quiz": "/programming/interview"
+        "quiz": "/modules/programming-fundamentals/quiz"
       }
     },
     {
@@ -135,7 +135,7 @@
       "routes": {
         "overview": "/web",
         "lessons": "/web/lessons",
-        "quiz": "/web/interview"
+        "quiz": "/modules/web-fundamentals/quiz"
       }
     },
     {
@@ -174,7 +174,7 @@
       "routes": {
         "overview": "/version",
         "lessons": "/version/lessons",
-        "quiz": "/version/interview"
+        "quiz": "/modules/version-control/quiz"
       }
     },
     {
@@ -216,7 +216,7 @@
       "routes": {
         "overview": "/dotnet",
         "lessons": "/dotnet/lessons",
-        "quiz": "/dotnet/interview"
+        "quiz": "/modules/dotnet-fundamentals/quiz"
       }
     },
     {

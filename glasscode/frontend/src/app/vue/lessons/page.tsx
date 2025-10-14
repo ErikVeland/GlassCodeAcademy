@@ -327,7 +327,7 @@ function VueLessonsRuntime() {
                                             Exit Lessons
                                         </Link>
                                         <Link 
-                                            href="/vue/interview" 
+ href="/modules/vue-advanced/quiz"
                                             className="flex-1 bg-gradient-to-r from-green-500 via-emerald-500 to-teal-500 text-white px-4 py-2 rounded shadow hover:from-green-600 hover:via-emerald-600 hover:to-teal-600 transition-all duration-150 font-semibold text-center focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
                                             aria-label="Start Vue.js quiz"
                                         >
