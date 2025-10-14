@@ -53,13 +53,16 @@ export default function QuizStartPage({ params }: { params: Promise<{ moduleSlug
           return;
         }
 
-        // Normalize questions: trim text, ensure valid choices and correct answer index
+        // Normalize questions: trim text, ensure valid fields for multiple-choice OR open-ended
         // Support local JSON that uses `correctIndex` by mapping it to `correctAnswer`
         const sanitizedQuestions = (quiz.questions || [])
           .map((q) => {
-            const choices = q.choices ?? [];
-            const normalizedChoices = Array.isArray(choices)
-              ? choices.map((c) => (typeof c === 'string' ? c.trim() : String(c)))
+            const rawChoices = q.choices ?? [];
+            const normalizedChoices = Array.isArray(rawChoices)
+              ? rawChoices.map((c) => (typeof c === 'string' ? c.trim() : String(c)))
+              : [];
+            const normalizedAccepted = Array.isArray(q.acceptedAnswers)
+              ? q.acceptedAnswers.map((a) => (typeof a === 'string' ? a.trim() : String(a))).filter(Boolean)
               : [];
             const effectiveCorrect =
               typeof q.correctAnswer === 'number'
@@ -67,34 +70,45 @@ export default function QuizStartPage({ params }: { params: Promise<{ moduleSlug
                 : typeof (q as unknown as { correctIndex?: number }).correctIndex === 'number'
                 ? (q as unknown as { correctIndex: number }).correctIndex
                 : undefined;
+
+            // Determine question type
+            const inferredType = normalizedAccepted.length > 0 ? 'open-ended' : 'multiple-choice';
+
             return {
               ...q,
               question: (q.question || '').trim(),
               choices: normalizedChoices,
-              // Ensure `correctAnswer` is set for downstream logic
+              acceptedAnswers: normalizedAccepted.length > 0 ? normalizedAccepted : q.acceptedAnswers,
+              // Ensure `correctAnswer` is set for downstream logic when applicable
               correctAnswer: effectiveCorrect,
+              type: q.type || inferredType,
             } as ProgrammingQuestion;
           })
           .filter((q) => {
+            const hasQuestionText = typeof q.question === 'string' && q.question.trim().length > 0;
+            const isOpenEnded = (q.type === 'open-ended') || ((q.acceptedAnswers ?? []).length > 0);
+            if (isOpenEnded) {
+              const hasAccepted = Array.isArray(q.acceptedAnswers) && q.acceptedAnswers.length > 0;
+              return hasQuestionText && hasAccepted;
+            }
+            // multiple-choice validation
             const choices = q.choices ?? [];
             const hasChoices = Array.isArray(choices) && choices.length > 0;
             const hasValidIndex =
               typeof q.correctAnswer === 'number' && q.correctAnswer >= 0 && q.correctAnswer < choices.length;
-            const hasQuestionText = typeof q.question === 'string' && q.question.trim().length > 0;
-            return hasChoices && hasValidIndex && hasQuestionText;
+            return hasQuestionText && hasChoices && hasValidIndex;
           });
 
-        // Determine target number of questions and pool size (2x)
+        // Determine target number of questions and pool size
         const availableQuestions = sanitizedQuestions.length;
         setPoolCount(availableQuestions);
-        // Select target number of questions
-        // For programming-fundamentals, sample 14 from the full available pool
-        const targetQuestions = (moduleSlug === 'programming-fundamentals')
-          ? Math.min(14, availableQuestions)
-          : Math.min(
-              mod.metadata?.thresholds?.minQuizQuestions ?? mod.thresholds?.requiredQuestions ?? 10,
-              availableQuestions
-            );
+        // Select target number of questions using per-module config; default to 14
+        const desiredCount = (
+          mod.metadata?.thresholds?.minQuizQuestions ??
+          mod.thresholds?.requiredQuestions ??
+          14
+        );
+        const targetQuestions = Math.min(desiredCount, availableQuestions);
         // Sample from the full available pool to maximize variety across attempts
         const poolSize = availableQuestions;
 
@@ -113,6 +127,9 @@ export default function QuizStartPage({ params }: { params: Promise<{ moduleSlug
 
         // Randomize choice order for each selected question and update correct answer index
         const randomizedSelectedQuestions = selectedQuestions.map((q) => {
+          const isOpenEnded = (q.type === 'open-ended') || ((q.acceptedAnswers ?? []).length > 0);
+          if (isOpenEnded) return q; // no choice shuffling for open-ended
+
           const hasChoices = Array.isArray(q.choices) && q.choices.length > 1;
           const hasCorrectIndex = typeof q.correctAnswer === 'number' && q.correctAnswer >= 0;
           if (!hasChoices || !hasCorrectIndex) return q;
@@ -125,6 +142,7 @@ export default function QuizStartPage({ params }: { params: Promise<{ moduleSlug
             ...q,
             choices: newChoices,
             correctAnswer: newCorrectIndex,
+            type: 'multiple-choice',
           } as ProgrammingQuestion;
         });
 
@@ -182,7 +200,11 @@ export default function QuizStartPage({ params }: { params: Promise<{ moduleSlug
         passingScore: seed.passingScore,
         timeLimit: seed.timeLimit,
         startedAt: Date.now(),
-        answers: Array(seed.selectedQuestions.length).fill(null) as Array<{ selectedIndex: number; correct: boolean } | null>
+        answers: Array(seed.selectedQuestions.length).fill(null) as Array<{
+          selectedIndex?: number;
+          enteredText?: string;
+          correct: boolean;
+        } | null>
       };
       sessionStorage.setItem(sessionKey, JSON.stringify(sessionPayload));
       router.push(`/modules/${resolvedParams.moduleSlug}/quiz/question/1`);
@@ -340,21 +362,24 @@ export default function QuizStartPage({ params }: { params: Promise<{ moduleSlug
           </div>
 
           <div className="flex items-center justify-between gap-4">
-            <Link
-              href={`/modules/${moduleSlug}/quiz`}
-              className="px-8 py-4 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300 transition-colors text-lg font-medium flex items-center justify-center"
-            >
-              Cancel
-              <span className="ml-2">←</span>
-            </Link>
+            <div className="flex justify-start">
+              <Link
+                href={`/modules/${moduleSlug}/quiz`}
+                className="inline-flex items-center px-8 py-4 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300 transition-colors text-lg font-medium"
+              >
+                ← Cancel
+              </Link>
+            </div>
 
-            <button
-              onClick={handleStartQuiz}
-              className="px-8 py-4 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors text-lg font-medium flex items-center justify-center"
-            >
-              Start Quiz
-              <span className="ml-2">🎯</span>
-            </button>
+            <div className="flex justify-end">
+              <button
+                onClick={handleStartQuiz}
+                className="inline-flex items-center px-8 py-4 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors text-lg font-medium"
+              >
+                Start Quiz
+                <span className="ml-2">🎯</span>
+              </button>
+            </div>
           </div>
         </div>
       </section>

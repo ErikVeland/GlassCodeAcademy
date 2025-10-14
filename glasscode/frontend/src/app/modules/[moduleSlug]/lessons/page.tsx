@@ -123,7 +123,7 @@ export default async function LessonsPage({ params, searchParams }: LessonsPageP
           <div className="space-y-6">
             {lessonGroups.map((group) => (
               <div key={group.id} className="glass-morphism p-6 rounded-xl">
-                <div className="flex items-start justify-between">
+                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between">
                   <div className="flex-1">
                     <div className="flex items-center gap-3 mb-3">
                       <span className="flex items-center justify-center w-8 h-8 bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 rounded-full text-sm font-bold">
@@ -170,11 +170,11 @@ export default async function LessonsPage({ params, searchParams }: LessonsPageP
                     )}
                   </div>
                   
-                  <div className="ml-6">
+                  <div className="mt-4 sm:mt-0 sm:ml-6 w-full sm:w-auto">
                     {group.lessons[0] && (
                       <Link
                         href={`${currentModule.routes.lessons}/${lessons.indexOf(group.lessons[0]) + 1}`}
-                        className="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                        className="inline-flex items-center justify-center w-full sm:w-auto px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
                       >
                         Start Group
                         <span className="ml-2">→</span>

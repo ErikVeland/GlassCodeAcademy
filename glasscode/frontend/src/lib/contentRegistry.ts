@@ -107,6 +107,9 @@ interface ProgrammingQuestion {
   question: string;
   choices?: string[];
   correctAnswer?: number;
+  // For open-ended questions, provide a list of accepted answers
+  // Answers are matched in a case-insensitive, trimmed manner
+  acceptedAnswers?: string[];
   explanation?: string;
 }
 

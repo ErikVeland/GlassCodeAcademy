@@ -18,6 +18,7 @@ export default function QuizQuestionPage({ params }: { params: Promise<{ moduleS
   const [resolvedParams, setResolvedParams] = useState<{ moduleSlug: string; questionId: string } | null>(null);
   const [questionData, setQuestionData] = useState<ProgrammingQuestion | null>(null);
   const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
+  const [enteredText, setEnteredText] = useState<string>('');
   const [showExplanation, setShowExplanation] = useState(false);
   const [isCorrect, setIsCorrect] = useState<boolean | null>(null);
   const [loading, setLoading] = useState(true);
@@ -31,7 +32,7 @@ export default function QuizQuestionPage({ params }: { params: Promise<{ moduleS
     passingScore: number;
     timeLimit: number;
     startedAt: number;
-    answers: ({ selectedIndex: number; correct: boolean } | null)[];
+    answers: ({ selectedIndex?: number; enteredText?: string; correct: boolean } | null)[];
   }
 
   // Resolve the params promise
@@ -68,7 +69,12 @@ export default function QuizQuestionPage({ params }: { params: Promise<{ moduleS
         // Restore previous selection if exists
         const prev = session.answers?.[questionIndex] ?? null;
         if (prev) {
-          setSelectedAnswer(prev.selectedIndex);
+          if (typeof prev.selectedIndex === 'number') {
+            setSelectedAnswer(prev.selectedIndex);
+          }
+          if (typeof prev.enteredText === 'string') {
+            setEnteredText(prev.enteredText);
+          }
           setIsCorrect(prev.correct);
           setShowExplanation(true);
         }
@@ -104,8 +110,19 @@ export default function QuizQuestionPage({ params }: { params: Promise<{ moduleS
   };
 
   const handleSubmit = () => {
-    if (selectedAnswer === null || !questionData || !resolvedParams) return;
-    const correct = selectedAnswer === questionData.correctAnswer;
+    if (!questionData || !resolvedParams) return;
+    let correct = false;
+
+    const isOpenEnded = (questionData.type === 'open-ended') || ((questionData.acceptedAnswers ?? []).length > 0);
+    if (isOpenEnded) {
+      const accepted = (questionData.acceptedAnswers ?? []).map(a => String(a).trim().toLowerCase());
+      const candidate = String(enteredText || '').trim().toLowerCase();
+      correct = candidate.length > 0 && accepted.includes(candidate);
+    } else {
+      if (selectedAnswer === null) return; // must select
+      correct = selectedAnswer === questionData.correctAnswer;
+    }
+
     setIsCorrect(correct);
     setShowExplanation(true);
     // Persist answer to session
@@ -116,7 +133,10 @@ export default function QuizQuestionPage({ params }: { params: Promise<{ moduleS
       if (!raw) return;
       const session = JSON.parse(raw);
       const qIndex = parseInt(questionId) - 1;
-      session.answers[qIndex] = { selectedIndex: selectedAnswer, correct };
+      const payload = isOpenEnded
+        ? { enteredText, correct }
+        : { selectedIndex: selectedAnswer, correct };
+      session.answers[qIndex] = payload;
       sessionStorage.setItem(sessionKey, JSON.stringify(session));
     } catch (e) {
       console.error('Failed to save answer', e);
@@ -238,31 +258,46 @@ export default function QuizQuestionPage({ params }: { params: Promise<{ moduleS
           </p>
         </div>
 
-        {/* Answer Choices with animated radios */}
-        <div className="space-y-3 mb-8">
-          {(questionData.choices ?? []).map((choice: string, index: number) => {
-            const isSelected = selectedAnswer === index;
-            const isCorrectAnswer = index === questionData.correctAnswer;
-            const baseClasses = 'radio-option';
-            const stateClass = showExplanation
-              ? (isCorrectAnswer ? ' is-correct' : (isSelected && !isCorrectAnswer ? ' is-incorrect' : ''))
-              : (isSelected ? ' is-selected' : '');
-            return (
-              <label key={index} className={baseClasses + stateClass}>
-                <input
-                  type="radio"
-                  name="answer"
-                  className="sweet-radio-input"
-                  checked={selectedAnswer === index}
-                  onChange={() => !showExplanation && handleAnswerSelect(index)}
-                  aria-checked={selectedAnswer === index}
-                />
-                <span className="sweet-radio-visual" aria-hidden="true" />
-                <span className="radio-text">{renderInlineCode(choice)}</span>
-              </label>
-            );
-          })}
-        </div>
+        {/* Answer Input */}
+        {((questionData.type === 'open-ended') || ((questionData.acceptedAnswers ?? []).length > 0)) ? (
+          <div className="mb-8">
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              Your Answer
+            </label>
+            <input
+              type="text"
+              value={enteredText}
+              onChange={(e) => !showExplanation && setEnteredText(e.target.value)}
+              className="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100"
+              placeholder="Type your answer"
+            />
+          </div>
+        ) : (
+          <div className="space-y-3 mb-8">
+            {(questionData.choices ?? []).map((choice: string, index: number) => {
+              const isSelected = selectedAnswer === index;
+              const isCorrectAnswer = index === questionData.correctAnswer;
+              const baseClasses = 'radio-option';
+              const stateClass = showExplanation
+                ? (isCorrectAnswer ? ' is-correct' : (isSelected && !isCorrectAnswer ? ' is-incorrect' : ''))
+                : (isSelected ? ' is-selected' : '');
+              return (
+                <label key={index} className={baseClasses + stateClass}>
+                  <input
+                    type="radio"
+                    name="answer"
+                    className="sweet-radio-input"
+                    checked={selectedAnswer === index}
+                    onChange={() => !showExplanation && handleAnswerSelect(index)}
+                    aria-checked={selectedAnswer === index}
+                  />
+                  <span className="sweet-radio-visual" aria-hidden="true" />
+                  <span className="radio-text">{renderInlineCode(choice)}</span>
+                </label>
+              );
+            })}
+          </div>
+        )}
 
         {/* Explanation */}
         {showExplanation && (

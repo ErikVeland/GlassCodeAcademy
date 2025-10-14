@@ -54,7 +54,7 @@ export default function QuizResultsPage({ params }: { params: Promise<{ moduleSl
         }
         const session = JSON.parse(raw);
         const totalQuestions: number = session?.questions?.length ?? 0;
-        const answers: Array<{ selectedIndex: number; correct: boolean } | null> = session?.answers ?? [];
+        const answers: Array<{ selectedIndex?: number; enteredText?: string; correct: boolean } | null> = session?.answers ?? [];
         const correctAnswers = answers.reduce((acc, a) => acc + (a?.correct ? 1 : 0), 0);
         const score = totalQuestions > 0 ? Math.round((correctAnswers / totalQuestions) * 100) : 0;
         const passingScore: number = session?.passingScore ?? 70;
@@ -164,7 +164,20 @@ export default function QuizResultsPage({ params }: { params: Promise<{ moduleSl
           }
         }
         if (next) {
-          setNextModuleHref(`/modules/${next.slug}`);
+          try {
+            const lessons = await contentRegistry.getModuleLessons(next.slug);
+            // Compute first lesson index similar to hook
+            let firstLessonIndex = 0;
+            if (Array.isArray(lessons) && lessons.length > 0) {
+              firstLessonIndex = 0;
+            }
+            const lessonsPath = next.routes.lessons;
+            const shouldAppendOrder = lessonsPath.startsWith('/modules/');
+            const href = shouldAppendOrder ? `${lessonsPath}/${firstLessonIndex + 1}` : lessonsPath;
+            setNextModuleHref(href);
+          } catch {
+            setNextModuleHref(`/modules/${next.slug}`);
+          }
           setNextModuleTitle(next.title ?? null);
         }
       } catch (e) {
@@ -239,12 +252,14 @@ export default function QuizResultsPage({ params }: { params: Promise<{ moduleSl
           <p className="text-gray-600 dark:text-gray-300 mb-6">
             Unable to load quiz results. Please try again.
           </p>
-          <Link
-            href={`/modules/${resolvedParams?.moduleSlug || ''}/quiz`}
-            className="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
-          >
-            ← Back to Quiz
-          </Link>
+          <div className="flex justify-start">
+            <Link
+              href={`/modules/${resolvedParams?.moduleSlug || ''}/quiz`}
+              className="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+            >
+              ← Back to Quiz
+            </Link>
+          </div>
         </div>
       </div>
     );
@@ -292,6 +307,8 @@ export default function QuizResultsPage({ params }: { params: Promise<{ moduleSl
             onRetry={handleRetakeQuiz}
             nextLessonHref={results.passed && nextLessonHref ? nextLessonHref : undefined}
             nextModuleHref={results.passed && !nextLessonHref && nextModuleHref ? nextModuleHref : undefined}
+            nextLessonTitle={results.passed ? nextLessonTitle ?? undefined : undefined}
+            nextModuleTitle={results.passed ? nextModuleTitle ?? undefined : undefined}
             passThresholdPercent={results.passingScore}
           />
           <div className="mt-6 text-center text-sm text-gray-600 dark:text-gray-300">
@@ -380,26 +397,32 @@ export default function QuizResultsPage({ params }: { params: Promise<{ moduleSl
                   Move on to the next module to continue your learning journey.
                 </p>
                 {nextLessonHref ? (
-                  <Link
-                    href={nextLessonHref}
-                    className="inline-block w-full px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors text-center"
-                  >
-                    {nextLessonTitle ? `Start ${nextLessonTitle}` : 'Start Next Lesson'}
-                  </Link>
+                  <div className="flex justify-end">
+                    <Link
+                      href={nextLessonHref}
+                      className="inline-flex items-center px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
+                    >
+                      {nextLessonTitle ? `Start ${nextLessonTitle}` : 'Start Next Lesson'}
+                    </Link>
+                  </div>
                 ) : nextModuleHref ? (
-                  <Link
-                    href={nextModuleHref}
-                    className="inline-block w-full px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors text-center"
-                  >
-                    {nextModuleTitle ? `View ${nextModuleTitle}` : 'View Next Module'}
-                  </Link>
+                  <div className="flex justify-end">
+                    <Link
+                      href={nextModuleHref}
+                      className="inline-flex items-center px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
+                    >
+                      {nextModuleTitle ? `Start ${nextModuleTitle}` : 'Start Next Module'}
+                    </Link>
+                  </div>
                 ) : (
-                  <Link
-                    href={`/modules/${resolvedParams?.moduleSlug ?? ''}`}
-                    className="inline-block w-full px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors text-center"
-                  >
-                    Back to Module Overview
-                  </Link>
+                  <div className="flex justify-start">
+                    <Link
+                      href={`/modules/${resolvedParams?.moduleSlug ?? ''}`}
+                      className="inline-flex items-center px-4 py-2 text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors"
+                    >
+                      ← Back to Module Overview
+                    </Link>
+                  </div>
                 )}
               </div>
             )}
@@ -408,7 +431,7 @@ export default function QuizResultsPage({ params }: { params: Promise<{ moduleSl
       </section>
 
       {/* Navigation Footer */}
-      <footer className="flex justify-center">
+      <footer className="flex justify-start">
         <Link
           href={`/modules/${resolvedParams?.moduleSlug ?? ''}`}
           className="inline-flex items-center px-4 py-2 text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors"
