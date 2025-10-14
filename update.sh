@@ -407,7 +407,7 @@ if [[ $ATTEMPT -gt $MAX_ATTEMPTS ]]; then
 fi
 
 # Small additional delay to ensure backend is completely ready
-log "⏰ Waiting for backend to fully initialize..."
+log "⏳ Extra grace period: waiting 10s after backend healthy..."
 sleep 10
 
 # Now start frontend

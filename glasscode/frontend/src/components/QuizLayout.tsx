@@ -1,6 +1,6 @@
 'use client';
 
-import Link from 'next/link';
+import BreadcrumbNavigation from './BreadcrumbNavigation';
 import type { Module, Quiz } from '@/lib/contentRegistry';
 
 interface QuizLayoutProps {
@@ -17,19 +17,7 @@ export default function QuizLayout({ module, thresholds, children }: QuizLayoutP
   return (
     <div className="max-w-4xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
       {/* Breadcrumb */}
-      <nav className="mb-8" aria-label="Breadcrumb">
-        <ol className="flex items-center space-x-2 text-sm">
-          <li>
-            <Link href="/" className="text-blue-600 hover:text-blue-800">Home</Link>
-          </li>
-          <li className="text-gray-500">/</li>
-          <li>
-            <Link href={module.routes.overview} className="text-blue-600 hover:text-blue-800">{module.title}</Link>
-          </li>
-          <li className="text-gray-500">/</li>
-          <li className="text-gray-900 dark:text-gray-100 font-medium">Quiz</li>
-        </ol>
-      </nav>
+      <BreadcrumbNavigation />
 
       {/* Header */}
       <header className="mb-4">

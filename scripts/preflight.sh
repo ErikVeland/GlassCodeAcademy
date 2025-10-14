@@ -73,6 +73,25 @@ echo "Running: npm run typecheck"
 npm run typecheck || fail "Typecheck failed"
 ok "Typecheck passed"
 
+section "GraphQL endpoint validation"
+# Validate that server-side GraphQL endpoint will be absolute to avoid ERR_INVALID_URL
+GRAPHQL_ENDPOINT="${GRAPHQL_ENDPOINT:-}"
+NEXT_PUBLIC_BASE_URL_TRIMMED="${NEXT_PUBLIC_BASE_URL:-}"
+NEXT_PUBLIC_API_BASE_TRIMMED="${NEXT_PUBLIC_API_BASE:-}"
+if [ -n "$GRAPHQL_ENDPOINT" ]; then
+  echo "GRAPHQL_ENDPOINT explicitly set: $GRAPHQL_ENDPOINT"
+  if ! node -e "new URL(process.env.GRAPHQL_ENDPOINT)" >/dev/null 2>&1; then
+    fail "GRAPHQL_ENDPOINT is not a valid absolute URL"
+  fi
+  ok "GraphQL endpoint is valid"
+else
+  if [ -z "$NEXT_PUBLIC_BASE_URL_TRIMMED" ] && [ -z "$NEXT_PUBLIC_API_BASE_TRIMMED" ]; then
+    fail "GraphQL endpoint would resolve to '/graphql' on server and fail. Set NEXT_PUBLIC_BASE_URL or NEXT_PUBLIC_API_BASE (or GRAPHQL_ENDPOINT)."
+  fi
+  echo "Derived endpoint will use NEXT_PUBLIC_BASE_URL or NEXT_PUBLIC_API_BASE"
+  ok "GraphQL endpoint derivation is configured"
+fi
+
 section "Summary"
 ok "All pre-flight checks passed"
 exit 0

@@ -1,4 +1,4 @@
-import Link from 'next/link';
+import BreadcrumbNavigation from './BreadcrumbNavigation';
 import type { Module, Lesson } from '@/lib/contentRegistry';
 
 interface LessonLayoutProps {
@@ -15,31 +15,7 @@ export default function LessonLayout({ module, lesson, lessons, lessonIndex, gro
   return (
     <div className="max-w-4xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
       {/* Breadcrumb Navigation */}
-      <nav className="mb-8" aria-label="Breadcrumb">
-        <ol className="flex items-center space-x-2 text-sm">
-          <li>
-            <Link href="/" className="text-blue-600 hover:text-blue-800">
-              Home
-            </Link>
-          </li>
-          <li className="text-gray-500">/</li>
-          <li>
-            <Link href={module.routes.overview} className="text-blue-600 hover:text-blue-800">
-              {module.title}
-            </Link>
-          </li>
-          <li className="text-gray-500">/</li>
-          <li>
-            <Link href={module.routes.lessons} className="text-blue-600 hover:text-blue-800">
-              Lessons
-            </Link>
-          </li>
-          <li className="text-gray-500">/</li>
-          <li className="text-gray-900 dark:text-gray-100 font-medium">
-            {groupTitle} - Lesson {lessonIndex + 1}
-          </li>
-        </ol>
-      </nav>
+      <BreadcrumbNavigation />
 
       {/* Lesson Header */}
       <header className="mb-8">
