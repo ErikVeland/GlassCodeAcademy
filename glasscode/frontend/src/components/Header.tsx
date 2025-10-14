@@ -279,7 +279,7 @@ export default function Header() {
     return (
       <header className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm shadow dark:shadow-gray-700 w-full border-b border-gray-200 dark:border-gray-700 relative z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between h-16 items-center">
+          <div className="flex justify-between items-center py-4">
             <div className="flex-shrink-0 flex items-center">
               <Link 
                 href="/" 
@@ -314,7 +314,7 @@ export default function Header() {
   return (
     <header className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm shadow dark:shadow-gray-700 w-full border-b border-gray-200 dark:border-gray-700 relative z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between h-16 items-center">
+        <div className="flex justify-between items-center py-4">
           <div className="flex-shrink-0 flex items-center">
             <Link 
               href="/" 

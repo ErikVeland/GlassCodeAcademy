@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import "../styles/design-system.scss";
+import "../styles/liquid-glass.scss";
 import Header from '../components/Header';
 import FloatingDarkModeToggle from '../components/FloatingDarkModeToggle';
 import { DarkModeProvider } from '../components/DarkModeContext';

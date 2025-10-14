@@ -67,7 +67,7 @@ export default async function QuizPage({ params }: QuizPageProps) {
       {/* Quiz Content */}
       {quiz && quiz.questions && quiz.questions.length > 0 ? (
         <div className="space-y-4">
-          <div className="glass-morphism px-0 py-8 rounded-xl">
+          <div className="glass-morphism px-8 py-8 rounded-xl">
             <h2 className="text-2xl font-semibold text-gray-900 dark:text-white mb-4">
               🎯 Assessment Overview
             </h2>
@@ -77,22 +77,25 @@ export default async function QuizPage({ params }: QuizPageProps) {
             </p>
             
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+              {/* Quiz Length combined with pool size (smaller font) */}
               <div className="bg-blue-50 dark:bg-blue-900/30 p-4 rounded-lg">
                 <div className="text-2xl font-bold text-blue-600 dark:text-blue-300">
-                  {quizLength}
+                  {quizLength} <span className="text-sm font-medium text-blue-700 dark:text-blue-200">questions</span>
                 </div>
-                <div className="text-sm text-gray-600 dark:text-gray-300">
-                  Quiz Length
-                </div>
-              </div>
-              <div className="bg-gray-50 dark:bg-gray-900/30 p-4 rounded-lg">
-                <div className="text-2xl font-bold text-gray-800 dark:text-gray-200">
-                  {quiz.questions.length}
-                </div>
-                <div className="text-sm text-gray-600 dark:text-gray-300">
-                  Question Pool
+                <div className="text-xs text-gray-600 dark:text-gray-300 mt-1">
+                  Pool: {quiz.questions.length}
                 </div>
               </div>
+              {/* Requirement Met chip */}
+              <div className="bg-green-50 dark:bg-green-900/30 p-4 rounded-lg">
+                <div className="text-2xl font-bold text-green-600 dark:text-green-300">
+                  {((thresholds.lessons ? 50 : 0) + (thresholds.quiz ? 50 : 0))}%
+                </div>
+                <div className="text-sm text-gray-600 dark:text-gray-300">
+                  Requirement Met
+                </div>
+              </div>
+              {/* Passing Score */}
               <div className="bg-purple-50 dark:bg-purple-900/30 p-4 rounded-lg">
                 <div className="text-2xl font-bold text-purple-600 dark:text-purple-300">
                   {passingScore}%

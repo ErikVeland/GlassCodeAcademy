@@ -21,6 +21,13 @@ const CertificateAward: React.FC<CertificateAwardProps> = ({
   const isHighDistinction = percent === 100;
   const [showLightning, setShowLightning] = useState(false);
   const [isReducedMotion, setIsReducedMotion] = useState(false);
+  // Stable certificate ID for the lifetime of this component mount
+  const [certificateId] = useState<string>(() => {
+    const randomSix = Math.floor(Math.random() * 1_000_000)
+      .toString()
+      .padStart(6, "0");
+    return `GC-${randomSix}`;
+  });
 
   // Trigger lightning on first mount for High Distinction
   useEffect(() => {
@@ -104,7 +111,7 @@ const CertificateAward: React.FC<CertificateAwardProps> = ({
           </div>
           <div className="text-left">
             <p className="text-sm text-gray-600 dark:text-gray-400">Issued on {new Date().toLocaleDateString()}</p>
-            <p className="text-sm text-gray-600 dark:text-gray-400">Certificate ID: {Math.floor(Math.random() * 1_000_000)}</p>
+            <p className="text-sm text-gray-600 dark:text-gray-400">Certificate ID: {certificateId}</p>
           </div>
         </div>
 

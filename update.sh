@@ -22,6 +22,18 @@ log() {
     echo "[$(date +'%Y-%m-%d %H:%M:%S')] $1"
 }
 
+# Determine frontend port from env, unit file, or default
+# Prefer PORT from .env; otherwise extract from existing unit; fallback to 3000
+UNIT_FILE_PATH="/etc/systemd/system/${APP_NAME}-frontend.service"
+FRONTEND_PORT="${PORT:-}"
+if [ -z "$FRONTEND_PORT" ] && [ -f "$UNIT_FILE_PATH" ]; then
+    FRONTEND_PORT=$(sed -n 's/^ExecStart=.*-p \([0-9]\+\).*/\1/p' "$UNIT_FILE_PATH" | head -n1 || true)
+fi
+if [ -z "$FRONTEND_PORT" ]; then
+    FRONTEND_PORT=3000
+fi
+log "🌐 Frontend port: $FRONTEND_PORT"
+
 draw_progress() {
     # Usage: draw_progress current total [prefix]
     local current=$1
@@ -454,7 +466,7 @@ After=network.target ${APP_NAME}-dotnet.service
 WorkingDirectory=$APP_DIR/glasscode/frontend
 EnvironmentFile=$APP_DIR/glasscode/frontend/.env.production
 ExecStartPre=$APP_DIR/glasscode/frontend/check_backend_health.sh
-ExecStart=/usr/bin/node .next/standalone/server.js -p 3000
+ExecStart=/usr/bin/node .next/standalone/server.js -p $FRONTEND_PORT
 Restart=always
 RestartSec=10
 User=$DEPLOY_USER
@@ -475,7 +487,7 @@ EOF
 else
     # If the unit exists, ensure it uses the standalone ExecStart regardless of current value
     log "🔧 Enforcing ExecStart to use Next standalone server"
-    sed -i 's|^ExecStart=.*|ExecStart=/usr/bin/node .next/standalone/server.js -p 3000|' "$UNIT_FILE_PATH"
+    sed -i "s|^ExecStart=.*|ExecStart=/usr/bin/node .next/standalone/server.js -p $FRONTEND_PORT|" "$UNIT_FILE_PATH"
     # Also enforce ExecStartPre to use the health-check script to avoid quoting issues
     if grep -q '^ExecStartPre=' "$UNIT_FILE_PATH"; then
         log "🔧 Rewriting ExecStartPre to use health-check script"
@@ -497,7 +509,7 @@ After=network.target ${APP_NAME}-dotnet.service
 WorkingDirectory=$APP_DIR/glasscode/frontend
 EnvironmentFile=$APP_DIR/glasscode/frontend/.env.production
 ExecStartPre=$APP_DIR/glasscode/frontend/check_backend_health.sh
-ExecStart=/usr/bin/node .next/standalone/server.js -p 3000
+ExecStart=/usr/bin/node .next/standalone/server.js -p $FRONTEND_PORT
 Restart=always
 RestartSec=10
 User=$DEPLOY_USER
@@ -526,7 +538,7 @@ if ! wait_for_service "${APP_NAME}-frontend"; then
     log "🧪 Diagnostic: recent frontend logs"
     journalctl -u ${APP_NAME}-frontend -n 100 --no-pager || true
     log "🧪 Diagnostic: unit file permissions"
-    UNIT_FILE_PATH="/etc/systemd/system/${APP_NAME}-frontend.service"
+    # UNIT_FILE_PATH already defined at top for consistency
     if [ -f "$UNIT_FILE_PATH" ]; then
         ls -l "$UNIT_FILE_PATH" || true
         sed -n '1,120p' "$UNIT_FILE_PATH" || true
@@ -569,7 +581,7 @@ fi
 
 # Check frontend availability
 log "🔍 Checking frontend availability..."
-if curl -f http://localhost:3000 >/dev/null 2>&1; then
+if curl -f http://localhost:$FRONTEND_PORT >/dev/null 2>&1; then
     log "✅ Frontend availability: PASSED"
 else
     log "❌ Frontend availability: FAILED"
@@ -578,7 +590,7 @@ fi
 
 # Check frontend content (registry.json)
 log "🔍 Checking frontend content..."
-if curl -s http://localhost:3000/registry.json | grep -q 'modules'; then
+if curl -s http://localhost:$FRONTEND_PORT/registry.json | grep -q 'modules'; then
     log "✅ Frontend content availability: PASSED"
 else
     log "❌ Frontend content availability: FAILED"

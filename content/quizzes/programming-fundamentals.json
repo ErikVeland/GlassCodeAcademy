@@ -21,7 +21,7 @@
       "id": 2,
       "topic": "Control Structures",
       "type": "multiple-choice",
-      "question": "What will this code output?`\n\nlet x = 5;\nif (x > 3) {\n    console.log(`A`);\n} else if (x > 7) {\n    console.log(`B`);\n} else {\n    console.log(`C`);\n}`",
+      "question": "What will this code output?\n\n`let x = 5;\nif (x > 3) {\n    console.log(`A`);\n} else if (x > 7) {\n    console.log(`B`);\n} else {\n    console.log(`C`);\n}`",
       "choices": [
         "`A`",
         "`B`",

@@ -12,6 +12,7 @@ export default function QuizStartPage({ params }: { params: Promise<{ moduleSlug
   const [resolvedParams, setResolvedParams] = useState<{ moduleSlug: string } | null>(null);
   const [poolCount, setPoolCount] = useState<number>(0);
   const [debugEnabled, setDebugEnabled] = useState<boolean>(false);
+  const [reqPercent, setReqPercent] = useState<number>(0);
   // Metadata stored in the session seed for debugging visualization
   interface SeedDebug {
     moduleSlug: string;
@@ -56,9 +57,10 @@ export default function QuizStartPage({ params }: { params: Promise<{ moduleSlug
           } catch {}
         }
         // Load module and quiz from content registry
-        const [mod, quiz] = await Promise.all([
+        const [mod, quiz, thresholds] = await Promise.all([
           contentRegistry.getModule(moduleSlug),
-          contentRegistry.getModuleQuiz(moduleSlug)
+          contentRegistry.getModuleQuiz(moduleSlug),
+          contentRegistry.checkModuleThresholds(moduleSlug)
         ]);
 
         if (!mod || !quiz || !quiz.questions || quiz.questions.length === 0) {
@@ -244,6 +246,9 @@ export default function QuizStartPage({ params }: { params: Promise<{ moduleSlug
         };
 
         setQuizData(quizOverview);
+        // Compute requirement met percentage based on thresholds available in this effect
+        const percent = ((thresholds.lessons ? 50 : 0) + (thresholds.quiz ? 50 : 0));
+        setReqPercent(percent);
         // Persist seed for debug page before starting quiz
         try {
           const seedKey = `quizSeed:${moduleSlug}`;
@@ -376,13 +381,23 @@ export default function QuizStartPage({ params }: { params: Promise<{ moduleSlug
               {quizData?.title}
             </p>
             
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
+              {/* Quiz Length combined with pool size (smaller font) */}
               <div className="bg-blue-50 dark:bg-blue-900/30 p-4 rounded-lg">
                 <div className="text-2xl font-bold text-blue-600 dark:text-blue-300">
-                  {quizData?.totalQuestions}
+                  {quizData?.totalQuestions} <span className="text-sm font-medium text-blue-700 dark:text-blue-200">questions</span>
+                </div>
+                <div className="text-xs text-gray-600 dark:text-gray-300 mt-1">
+                  Pool: {poolCount}
+                </div>
+              </div>
+              {/* Requirement Met chip */}
+              <div className="bg-green-50 dark:bg-green-900/30 p-4 rounded-lg">
+                <div className="text-2xl font-bold text-green-600 dark:text-green-300">
+                  {reqPercent}%
                 </div>
                 <div className="text-sm text-gray-600 dark:text-gray-300">
-                  Quiz Length
+                  Requirement Met
                 </div>
               </div>
               <div className="bg-green-50 dark:bg-green-900/30 p-4 rounded-lg">
