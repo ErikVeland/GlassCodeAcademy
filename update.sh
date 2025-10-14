@@ -439,24 +439,6 @@ EOS
 chmod +x "$APP_DIR/glasscode/frontend/check_backend_health.sh"
 if [ ! -f "$UNIT_FILE_PATH" ]; then
     log "🔧 Creating frontend unit file at $UNIT_FILE_PATH"
-    # Create backend health check gating script to avoid multiline quoting in unit
-    cat >"$APP_DIR/glasscode/frontend/check_backend_health.sh" <<'EOS'
-#!/usr/bin/env bash
-MAX=30
-COUNT=1
-while [ $COUNT -le $MAX ]; do
-  HTTP=$(curl -s -o /dev/null -w "%{http_code}" http://127.0.0.1:8080/api/health || true)
-  RESP=$(curl -s http://127.0.0.1:8080/api/health || true)
-  STATUS=$(echo "$RESP" | jq -r .status 2>/dev/null || echo "$RESP" | grep -o '"status":"[^"]*"' | cut -d '"' -f4)
-  if [ "$HTTP" = "200" ] && [ "$STATUS" = "healthy" ]; then
-    exit 0
-  fi
-  sleep 5; COUNT=$((COUNT+1))
-done
-echo "Backend health check gating failed: http='$HTTP' status='$STATUS' resp='$RESP'"
-exit 1
-EOS
-    chmod +x "$APP_DIR/glasscode/frontend/check_backend_health.sh"
     cat > "$UNIT_FILE_PATH" <<EOF
 [Unit]
 Description=${APP_NAME} Next.js Frontend
@@ -579,21 +561,58 @@ else
     fi
 fi
 
-# Check frontend availability
+# Check frontend availability with retries (allow warm-up)
 log "🔍 Checking frontend availability..."
-if curl -f http://localhost:$FRONTEND_PORT >/dev/null 2>&1; then
-    log "✅ Frontend availability: PASSED"
-else
+MAX_ATTEMPTS=30
+ATTEMPT=1
+SLEEP_INTERVAL=5
+FRONTEND_OK=false
+while [[ $ATTEMPT -le $MAX_ATTEMPTS ]]; do
+    if curl -s -f http://localhost:$FRONTEND_PORT >/dev/null 2>&1; then
+        draw_progress "$ATTEMPT" "$MAX_ATTEMPTS" "  "
+        printf "\n"
+        log "✅ Frontend availability: PASSED"
+        FRONTEND_OK=true
+        break
+    fi
+    draw_progress "$ATTEMPT" "$MAX_ATTEMPTS" "  ⏳ Frontend availability: "
+    ATTEMPT=$((ATTEMPT + 1))
+    sleep $SLEEP_INTERVAL
+done
+printf "\n" 2>/dev/null || true
+if [[ "$FRONTEND_OK" != true ]]; then
     log "❌ Frontend availability: FAILED"
+    log "🧪 Diagnostic: frontend service status"
+    systemctl status ${APP_NAME}-frontend --no-pager || true
+    log "🧪 Diagnostic: recent frontend logs"
+    journalctl -u ${APP_NAME}-frontend -n 100 --no-pager || true
+    log "🧪 Diagnostic: listening ports (expect $FRONTEND_PORT)"
+    ss -tulpn | grep :$FRONTEND_PORT || true
     rollback
 fi
 
-# Check frontend content (registry.json)
+# Check frontend content (registry.json) with retries
 log "🔍 Checking frontend content..."
-if curl -s http://localhost:$FRONTEND_PORT/registry.json | grep -q 'modules'; then
-    log "✅ Frontend content availability: PASSED"
-else
+ATTEMPT=1
+CONTENT_OK=false
+while [[ $ATTEMPT -le $MAX_ATTEMPTS ]]; do
+    RESP=$(curl -s http://localhost:$FRONTEND_PORT/registry.json || true)
+    if echo "$RESP" | grep -q 'modules'; then
+        draw_progress "$ATTEMPT" "$MAX_ATTEMPTS" "  "
+        printf "\n"
+        log "✅ Frontend content availability: PASSED"
+        CONTENT_OK=true
+        break
+    fi
+    draw_progress "$ATTEMPT" "$MAX_ATTEMPTS" "  ⏳ Frontend content: "
+    ATTEMPT=$((ATTEMPT + 1))
+    sleep $SLEEP_INTERVAL
+done
+printf "\n" 2>/dev/null || true
+if [[ "$CONTENT_OK" != true ]]; then
     log "❌ Frontend content availability: FAILED"
+    log "🧪 Diagnostic: registry.json response"
+    echo "$RESP" | head -n 100 || true
     rollback
 fi
 
