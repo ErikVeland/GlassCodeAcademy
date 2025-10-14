@@ -144,6 +144,41 @@ node scripts/quiz-difficulty-report.js
 This prints pool sizes and predicted beginner/intermediate/advanced counts per module using tier weights and quiz length.
 ```
 
+## Question Schema & Authoring
+
+We’ve standardized the question schema and added fields to better control multiple-choice presentation and open-ended validation:
+
+- Multiple-choice
+  - `fixedChoiceOrder` (boolean): prevents shuffling when order matters
+  - `choiceLabels` (string): set to `letters` to render choices as `A. / B. / C. / D.`
+- Open-ended
+  - `acceptedAnswers` (array of strings): alternative correct phrasings (case-insensitive match)
+
+Authoring guidelines and the full schema live in:
+- `docs/QUESTION_TEMPLATE.md`
+- `CONTRIBUTING.md`
+
+## Automatic Migration: Letter-Labeled Fixed Order
+
+A migration script updates existing quiz content that references lettered options or includes "All of the above" / "None of the above" to use fixed order with letter labels.
+
+- Dry run (shows what would change):
+  ```bash
+  node scripts/migrate-lettered-questions.js --dry
+  ```
+- Apply changes:
+  ```bash
+  node scripts/migrate-lettered-questions.js
+  ```
+
+What it does:
+- Scans `content/quizzes/*.json`
+- For questions that reference letters in the prompt or choices, or include "All of the above"/"None of the above":
+  - Sets `fixedChoiceOrder: true`
+  - Sets `choiceLabels: "letters"`
+
+After running, start the app and visit module quiz pages to confirm A/B/C/D prefixes and that affected questions no longer shuffle.
+
 ## Technology Modules Implementation
 
 ### Backend Technologies

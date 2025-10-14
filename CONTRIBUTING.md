@@ -13,6 +13,9 @@ All interview questions use a standardized JSON structure (see `docs/QUESTION_TE
 - `question` (string): Clear prompt text.
 - `choices` (string[4]): Exactly 4 choices for multiple-choice only.
 - `correctAnswer` (number): Index `0–3` for multiple-choice only.
+- `acceptedAnswers` (string[]): Optional list of alternative correct free-text answers for `open-ended` questions.
+- `fixedChoiceOrder` (boolean): For `multiple-choice` questions only. When `true`, choices render in author-provided order (no shuffling).
+- `choiceLabels` ("letters" | "none"): Presentation style for `multiple-choice`. Use `"letters"` to show `A./B./C./D.` labels (requires `fixedChoiceOrder: true`).
 - `explanation` (string): Why the correct answer is correct; teaching-oriented.
 - `industryContext` (string): Real-world relevance and context.
 
@@ -20,6 +23,12 @@ Key rules
 - Multiple-choice: include exactly 4 `choices` and a `correctAnswer` index.
 - Open-ended: omit `choices` and `correctAnswer`.
 - Coding-challenge: specify input/output and constraints; keep scope realistic.
+
+Multiple-choice authoring rules
+- If the question references lettered options (e.g., "Choose A and C"), set `fixedChoiceOrder: true` and `choiceLabels: "letters"`.
+- If a choice is "All of the above" or "None of the above", keep it in its intended position and set `fixedChoiceOrder: true`.
+- Avoid ambiguous options like "Both" unless the referenced options are clear with letter labels.
+- Do not use `acceptedAnswers` for `multiple-choice` questions.
 
 Authoring guidance: See the “Question Type Do’s/Don’ts” section in `docs/QUESTION_TEMPLATE.md`.
 

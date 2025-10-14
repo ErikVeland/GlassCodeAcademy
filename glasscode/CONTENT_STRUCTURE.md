@@ -215,10 +215,13 @@ All content follows these standards:
 ### Interview Question Structure
 1. **Question**: Clear, specific question
 2. **Type**: Multiple-choice or open-ended
-3. **Choices**: For multiple-choice questions
-4. **Correct Answer**: Index of correct choice (multiple-choice)
-5. **Explanation**: Detailed reasoning for the answer
-6. **Topic**: Categorization for organization
+3. **Choices**: Exactly 4 choices for multiple-choice questions
+4. **Correct Answer**: Index of correct choice (0–3) for multiple-choice
+5. **Accepted Answers**: Optional list of valid free-text answers for open-ended
+6. **Fixed Choice Order**: Prevent shuffling when authorial order matters
+7. **Choice Labels**: Use `letters` to render `A./B./C./D.` (with fixed order)
+8. **Explanation**: Detailed reasoning for the answer
+9. **Topic**: Categorization for organization
 
 ### Code Examples Standards
 1. **Syntax Accuracy**: Valid code that runs correctly

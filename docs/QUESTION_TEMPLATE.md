@@ -2,7 +2,7 @@
 
 ## Overview
 
-This template defines the standardized structure for all interview questions and assessments across the DotNetQuiz Academy platform, ensuring consistent evaluation, proper difficulty distribution, and comprehensive learning assessment.
+This template defines the standardized structure for all interview questions and assessments across the GlassCode Academy platform, ensuring consistent evaluation, proper difficulty distribution, and comprehensive learning assessment.
 
 ## JSON Schema Structure
 
@@ -56,6 +56,26 @@ This template defines the standardized structure for all interview questions and
     "minimum": 0,
     "maximum": 3,
     "note": "Required for multiple-choice, null for open-ended"
+  },
+  "acceptedAnswers": {
+    "type": "array",
+    "items": { "type": "string" },
+    "description": "Optional alternative correct free-text answers for open-ended questions",
+    "required": false,
+    "note": "Only applicable to open-ended questions"
+  },
+  "fixedChoiceOrder": {
+    "type": "boolean",
+    "description": "Prevent shuffling; render choices in author-provided order (multiple-choice)",
+    "required": false,
+    "default": false
+  },
+  "choiceLabels": {
+    "type": "string",
+    "enum": ["letters", "none"],
+    "description": "Presentation style for choices; use 'letters' to render A./B./C./D.",
+    "required": false,
+    "note": "Use with fixedChoiceOrder when letter references or above/none patterns are present"
   },
   "explanation": {
     "type": "string",
@@ -396,6 +416,8 @@ Notes:
     "DOM.render()"
   ],
   "correctAnswer": 0,
+  "fixedChoiceOrder": true,
+  "choiceLabels": "letters",
   "explanation": "ReactDOM.render() is the method used to render React components to the DOM. This method is part of the react-dom package and takes a React element and a DOM container as arguments.",
   "industryContext": "ReactDOM.render() is essential for any React application and is typically called once at the application's entry point to mount the root component.",
   "relatedConcepts": ["React components", "Virtual DOM", "React application structure"],
