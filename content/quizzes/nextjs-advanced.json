@@ -28,7 +28,9 @@
       ],
       "questionType": "multiple-choice",
       "estimatedTime": 120,
-      "correctAnswer": 3
+      "correctAnswer": 3,
+      "fixedChoiceOrder": true,
+      "choiceLabels": "letters"
     },
     {
       "id": 2,
@@ -122,7 +124,9 @@
       ],
       "questionType": "multiple-choice",
       "estimatedTime": 90,
-      "correctAnswer": 3
+      "correctAnswer": 3,
+      "fixedChoiceOrder": true,
+      "choiceLabels": "letters"
     },
     {
       "id": 6,
@@ -237,7 +241,9 @@
       ],
       "questionType": "multiple-choice",
       "estimatedTime": 120,
-      "correctAnswer": 3
+      "correctAnswer": 3,
+      "fixedChoiceOrder": true,
+      "choiceLabels": "letters"
     },
     {
       "id": 11,
@@ -352,7 +358,9 @@
       ],
       "questionType": "multiple-choice",
       "estimatedTime": 90,
-      "correctAnswer": 3
+      "correctAnswer": 3,
+      "fixedChoiceOrder": true,
+      "choiceLabels": "letters"
     },
     {
       "id": 16,
@@ -422,7 +430,9 @@
       ],
       "questionType": "multiple-choice",
       "estimatedTime": 120,
-      "correctAnswer": 3
+      "correctAnswer": 3,
+      "fixedChoiceOrder": true,
+      "choiceLabels": "letters"
     }
   ]
 }

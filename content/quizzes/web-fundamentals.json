@@ -523,7 +523,9 @@
       "correctIndex": 3,
       "explanation": "Both addEventListener and direct event properties (like onclick) can be used to add event listeners. addEventListener is more flexible as it allows multiple listeners for the same event and provides better control. Direct event properties are simpler but limited to one listener per event type.",
       "correctAnswer": 3,
-      "difficulty": "Beginner"
+      "difficulty": "Beginner",
+      "fixedChoiceOrder": true,
+      "choiceLabels": "letters"
     },
     {
       "id": 9,
@@ -733,7 +735,9 @@
       "correctIndex": 3,
       "explanation": "JavaScript supports both single-line comments using '//' and multi-line comments using '/* */'. HTML comments use <!-- -->, which is not valid JavaScript syntax.",
       "correctAnswer": 3,
-      "difficulty": "Beginner"
+      "difficulty": "Beginner",
+      "fixedChoiceOrder": true,
+      "choiceLabels": "letters"
     },
     {
       "id": 23,

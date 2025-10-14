@@ -64,6 +64,8 @@ interface ProgrammingQuestion {
   correctAnswer?: number;
   acceptedAnswers?: string[];
   explanation?: string;
+  fixedChoiceOrder?: boolean;
+  choiceLabels?: 'letters' | 'none';
 }
 
 export function normalizeQuestion(input: unknown): ProgrammingQuestion {
@@ -101,5 +103,14 @@ export function normalizeQuestion(input: unknown): ProgrammingQuestion {
     correctAnswer,
     acceptedAnswers,
     type: typeof raw.type === 'string' ? (raw.type as string) : undefined,
+    // Normalize optional flags when present
+    fixedChoiceOrder:
+      typeof (raw as { fixedChoiceOrder?: unknown }).fixedChoiceOrder === 'boolean'
+        ? (raw as { fixedChoiceOrder: boolean }).fixedChoiceOrder
+        : undefined,
+    choiceLabels:
+      typeof (raw as { choiceLabels?: unknown }).choiceLabels === 'string'
+        ? ((raw as { choiceLabels: string }).choiceLabels === 'letters' ? 'letters' : 'none')
+        : undefined,
   };
 }

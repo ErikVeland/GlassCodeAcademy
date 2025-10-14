@@ -112,6 +112,10 @@ interface ProgrammingQuestion {
   // Answers are matched in a case-insensitive, trimmed manner
   acceptedAnswers?: string[];
   explanation?: string;
+  // If true, keep choices in fixed order and do not shuffle
+  fixedChoiceOrder?: boolean;
+  // Optional choice label style; when 'letters', render A/B/C/D prefixes
+  choiceLabels?: 'letters' | 'none';
 }
 
 interface Quiz {

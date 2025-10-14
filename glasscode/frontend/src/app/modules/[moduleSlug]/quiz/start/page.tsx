@@ -192,6 +192,13 @@ export default function QuizStartPage({ params }: { params: Promise<{ moduleSlug
           const hasChoices = Array.isArray(q.choices) && q.choices.length > 1;
           const hasCorrectIndex = typeof q.correctAnswer === 'number' && q.correctAnswer >= 0;
           if (!hasChoices || !hasCorrectIndex) return q;
+          // Honor fixed-order questions: do not shuffle choices
+          if ((q as { fixedChoiceOrder?: boolean }).fixedChoiceOrder) {
+            return {
+              ...q,
+              type: 'multiple-choice',
+            } as ProgrammingQuestion;
+          }
 
           const indices = q.choices!.map((_, i) => i);
           const shuffledIndices = shuffle(indices);

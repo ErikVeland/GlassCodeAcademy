@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { useSearchParams } from 'next/navigation';
+import { useSearchParams, useRouter } from 'next/navigation';
 import { contentRegistry } from '@/lib/contentRegistry';
 import type { Module, Tier } from '@/lib/contentRegistry';
 import { useProgressTracking } from '../hooks/useProgressTracking';
@@ -29,6 +29,7 @@ const ModuleCard: React.FC<{
   module: Module;
   tierKey: string;
 }> = ({ module, tierKey }) => {
+  const router = useRouter();
   const { progress, updateProgress, achievements } = useProgressTracking();
   const searchParams = useSearchParams();
   const isUnlockMode = searchParams.has('unlock');
@@ -220,10 +221,19 @@ const ModuleCard: React.FC<{
             <div className="text-xs text-gray-600 dark:text-gray-400 mb-2">Unlocks:</div>
             <div className="flex flex-wrap gap-2">
               {unlockingModules.map((m) => (
-                <Link key={m.slug} href={m.routes.overview} className="unlock-chip">
+                <button
+                  type="button"
+                  key={m.slug}
+                  className="unlock-chip"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    router.push(m.routes.overview);
+                  }}
+                >
                   <span className="mr-1">🔓</span>
                   {m.title}
-                </Link>
+                </button>
               ))}
             </div>
           </div>

@@ -60,7 +60,9 @@
         "originalType": "multiple-choice",
         "migrated": "2025-10-01T06:41:13.483Z"
       },
-      "correctAnswer": 2
+      "correctAnswer": 2,
+      "fixedChoiceOrder": true,
+      "choiceLabels": "letters"
     },
     {
       "id": 3,

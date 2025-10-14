@@ -304,7 +304,9 @@
       "correctIndex": 2,
       "explanation": "The `return` statement both stops the function execution and sends a value back to the caller. If no value is specified, it returns `undefined`.",
       "industryContext": "Return statements are fundamental for creating functions that produce output and enable modular, reusable code in all programming applications.",
-      "correctAnswer": 2
+      "correctAnswer": 2,
+      "fixedChoiceOrder": true,
+      "choiceLabels": "letters"
     },
     {
       "id": 20,
@@ -336,7 +338,9 @@
       "correctIndex": 3,
       "explanation": "Both dot notation (user.name) and bracket notation (user[`name`]) can be used to access object properties in JavaScript. Dot notation is more common for known property names.",
       "industryContext": "Object property access is fundamental for working with structured data in JavaScript applications, APIs, and JSON processing.",
-      "correctAnswer": 3
+      "correctAnswer": 3,
+      "fixedChoiceOrder": true,
+      "choiceLabels": "letters"
     },
     {
       "id": 22,
@@ -624,7 +628,9 @@
       "correctIndex": 2,
       "explanation": "Both methods can be used, but `hasOwnProperty()` is more reliable as it checks for the property directly on the object, not in its prototype chain.",
       "industryContext": "Property checking is essential for safely accessing object properties and preventing runtime errors in JavaScript applications that process dynamic data.",
-      "correctAnswer": 2
+      "correctAnswer": 2,
+      "fixedChoiceOrder": true,
+      "choiceLabels": "letters"
     },
     {
       "id": 40,

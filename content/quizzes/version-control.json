@@ -699,7 +699,9 @@
       "correctIndex": 3,
       "explanation": "Both 'git diff --cached' and 'git diff --staged' show the changes that are staged for the next commit. '--cached' and '--staged' are synonyms. These commands show what will be included in the next commit.",
       "correctAnswer": 3,
-      "difficulty": "Intermediate"
+      "difficulty": "Intermediate",
+      "fixedChoiceOrder": true,
+      "choiceLabels": "letters"
     },
     {
       "id": 29,

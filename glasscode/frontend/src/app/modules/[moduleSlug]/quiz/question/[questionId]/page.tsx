@@ -295,6 +295,8 @@ export default function QuizQuestionPage({ params }: { params: Promise<{ moduleS
               const stateClass = showExplanation
                 ? (isCorrectAnswer ? ' is-correct' : (isSelected && !isCorrectAnswer ? ' is-incorrect' : ''))
                 : (isSelected ? ' is-selected' : '');
+              const showLetters = (questionData as { choiceLabels?: 'letters' | 'none' }).choiceLabels === 'letters';
+              const letter = String.fromCharCode(65 + index);
               return (
                 <label key={index} className={baseClasses + stateClass}>
                   <input
@@ -306,7 +308,14 @@ export default function QuizQuestionPage({ params }: { params: Promise<{ moduleS
                     aria-checked={selectedAnswer === index}
                   />
                   <span className="sweet-radio-visual" aria-hidden="true" />
-                  <span className="radio-text">{renderInlineCode(choice)}</span>
+                  <span className="radio-text">
+                    {showLetters && (
+                      <span className="mr-2 inline-block font-semibold text-gray-700 dark:text-gray-300" aria-hidden="true">
+                        {letter}.
+                      </span>
+                    )}
+                    {renderInlineCode(choice)}
+                  </span>
                 </label>
               );
             })}

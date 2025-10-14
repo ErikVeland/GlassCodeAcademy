@@ -11,6 +11,7 @@ GlassCode Academy is a full-stack educational platform designed to help develope
 - **Learning Tracks**: Comprehensive lessons for .NET, Next.js, GraphQL, Laravel, React, Tailwind CSS, Node.js, and SASS
 - **Step-by-Step Lessons**: Code examples with expected outputs
 - **Interview Quizzes**: Multiple-choice and open-ended questions
+  - Tier-weighted difficulty reporting and selection (see docs)
 - **Progress Tracking**: Local storage-based progress tracking
 - **Gamification**: Certificate rewards for completed modules
 - **Modern UI**: Built with Next.js, React, and Tailwind CSS
@@ -126,6 +127,21 @@ GlassCodeAcademy/
 │   └── registry.json
 ├── laravel-backend/ (complete Laravel application structure)
 └── README.md
+
+## Quiz Difficulty & Reporting
+
+We use tier-weighted difficulty targets to keep quizzes aligned with module tiers (e.g., foundational favors beginner content). A reporting script summarizes predicted per-attempt difficulty based on current pools:
+
+- Script: `scripts/quiz-difficulty-report.js`
+- Docs: `docs/QUIZ_DIFFICULTY.md`
+
+Run:
+
+```bash
+node scripts/quiz-difficulty-report.js
+```
+
+This prints pool sizes and predicted beginner/intermediate/advanced counts per module using tier weights and quiz length.
 ```
 
 ## Technology Modules Implementation
