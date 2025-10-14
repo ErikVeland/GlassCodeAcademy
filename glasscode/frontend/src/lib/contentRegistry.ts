@@ -333,6 +333,18 @@ class ContentRegistryLoader {
   }
 
   /**
+   * Find module by a route path (overview/lessons/quiz)
+   */
+  async findModuleByRoutePath(routePath: string): Promise<Module | null> {
+    const modules = await this.getModules();
+    return modules.find(mod => (
+      mod.routes?.overview === routePath ||
+      mod.routes?.lessons === routePath ||
+      mod.routes?.quiz === routePath
+    )) || null;
+  }
+
+  /**
    * Get all valid routes for static generation
    */
   async getAllRoutes(): Promise<string[]> {
@@ -887,8 +899,41 @@ export function getLessonGroups(moduleSlug: string, lessons: Lesson[]): LessonGr
       }
     ];
   }
-  
-  // For other modules, create one group per lesson
+
+  // Attempt to group by 'topic' or legacy originalTopic if available
+  const topics = new Map<string, Lesson[]>();
+  for (const lesson of lessons) {
+    const legacyTopic = (lesson as unknown as { legacy?: { originalTopic?: string } }).legacy?.originalTopic;
+    const topic = (lesson.topic || legacyTopic) as string | undefined;
+    if (topic && topic.trim().length > 0) {
+      const list = topics.get(topic) || [];
+      list.push(lesson);
+      topics.set(topic, list);
+    }
+  }
+
+  if (topics.size > 0) {
+    const groups: LessonGroup[] = Array.from(topics.entries()).map(([title, groupLessons], idx) => ({
+      id: `group-${idx + 1}`,
+      title,
+      description: '',
+      lessons: groupLessons,
+      order: idx + 1
+    }));
+
+    // Sort groups by the smallest lesson order within each group when available
+    groups.sort((a, b) => {
+      const aOrder = Math.min(...a.lessons.map((l) => (l.order ?? Number.MAX_SAFE_INTEGER)));
+      const bOrder = Math.min(...b.lessons.map((l) => (l.order ?? Number.MAX_SAFE_INTEGER)));
+      return aOrder - bOrder;
+    });
+
+    // Reassign sequential order values post-sort
+    groups.forEach((g, i) => { g.order = i + 1; });
+    return groups;
+  }
+
+  // Fallback: one group per lesson
   return lessons.map((lesson, index) => ({
     id: `group-${index + 1}`,
     title: lesson.title,
