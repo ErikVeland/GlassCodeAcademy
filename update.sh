@@ -591,17 +591,28 @@ if [[ "$FRONTEND_OK" != true ]]; then
     rollback
 fi
 
-# Check frontend content (registry.json) with retries
+# Check frontend content via API route with retries (more reliable than static /registry.json)
 log "🔍 Checking frontend content..."
 ATTEMPT=1
 CONTENT_OK=false
+RESP=""
 while [[ $ATTEMPT -le $MAX_ATTEMPTS ]]; do
-    RESP=$(curl -s http://localhost:$FRONTEND_PORT/registry.json || true)
-    if echo "$RESP" | grep -q 'modules'; then
+    RESP=$(curl -s http://localhost:$FRONTEND_PORT/api/content/registry || true)
+    if echo "$RESP" | grep -q '"modules"'; then
         draw_progress "$ATTEMPT" "$MAX_ATTEMPTS" "  "
         printf "\n"
-        log "✅ Frontend content availability: PASSED"
+        log "✅ Frontend content availability: PASSED (api/content/registry)"
         CONTENT_OK=true
+        break
+    fi
+    # Fallback: try legacy static file if API route not ready
+    STATIC_RESP=$(curl -s http://localhost:$FRONTEND_PORT/registry.json || true)
+    if echo "$STATIC_RESP" | grep -q '"modules"'; then
+        draw_progress "$ATTEMPT" "$MAX_ATTEMPTS" "  "
+        printf "\n"
+        log "✅ Frontend content availability: PASSED (registry.json)"
+        CONTENT_OK=true
+        RESP="$STATIC_RESP"
         break
     fi
     draw_progress "$ATTEMPT" "$MAX_ATTEMPTS" "  ⏳ Frontend content: "
@@ -611,7 +622,7 @@ done
 printf "\n" 2>/dev/null || true
 if [[ "$CONTENT_OK" != true ]]; then
     log "❌ Frontend content availability: FAILED"
-    log "🧪 Diagnostic: registry.json response"
+    log "🧪 Diagnostic: API /api/content/registry response"
     echo "$RESP" | head -n 100 || true
     rollback
 fi
