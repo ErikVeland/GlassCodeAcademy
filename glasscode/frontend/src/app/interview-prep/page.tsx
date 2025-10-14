@@ -191,7 +191,6 @@ const InterviewModuleCard: React.FC<{
           isLocked ? 'opacity-60' : 'hover:-translate-y-1'
         }`}
         aria-disabled={isLocked}
-        role="article"
       >
         {isLocked && (
           <div className="absolute inset-0 bg-gray-900/50 backdrop-blur-sm rounded-xl flex items-center justify-center z-5">

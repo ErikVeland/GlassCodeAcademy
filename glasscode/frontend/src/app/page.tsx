@@ -103,8 +103,7 @@ const ModuleCard: React.FC<{
         onClick={handleModuleClick}
         aria-disabled={isLocked}
         aria-describedby={`module-${module.slug}-description`}
-        role="article"
-      >
+        >
         {/* Achievement badges overlay */}
         {hasAchievements && !isLocked && (
           <div className="absolute -top-2 -right-2 z-10">

@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useRef, useEffect } from 'react';
+import Image from 'next/image';
 import Link from 'next/link';
 import { useProfile } from './ProfileProvider';
 import { usePathname } from 'next/navigation';
@@ -56,7 +57,16 @@ export default function ProfileMenu() {
 
   const renderAvatar = () => {
     if (profile.avatarUrl) {
-      return <img src={profile.avatarUrl} alt="Profile" className="rounded-full object-cover" style={{ width: sizePx, height: sizePx }} />;
+      return (
+        <Image
+          src={profile.avatarUrl}
+          alt="Profile"
+          className="rounded-full object-cover"
+          width={sizePx}
+          height={sizePx}
+          unoptimized
+        />
+      );
     }
     if (profile.avatarPresetId && presetAvatars[profile.avatarPresetId]) {
       return (

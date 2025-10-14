@@ -4,7 +4,6 @@ import Link from "next/link";
 import { useState, useRef, useEffect } from "react";
 import { usePathname } from "next/navigation";
 import MobileMenu from './MobileMenu';
-import DarkModeToggle from './DarkModeToggle';
 import ProfileMenu from './ProfileMenu';
 import { useProgressTracking } from '../hooks/useProgressTracking';
 import { contentRegistry } from '@/lib/contentRegistry';

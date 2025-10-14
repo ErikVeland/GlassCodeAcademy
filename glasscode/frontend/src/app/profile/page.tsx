@@ -2,6 +2,7 @@
 
 import React from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { useProfile } from '../../components/ProfileProvider';
 import { useProgressTracking } from '../../hooks/useProgressTracking';
 
@@ -31,7 +32,7 @@ export default function ProfileOverviewPage() {
         <h1 className="text-2xl font-bold mb-4">Your Profile</h1>
         <div className="flex items-center space-x-4 mb-6">
           {profile.avatarUrl ? (
-            <img src={profile.avatarUrl} alt="Profile" className="rounded-full object-cover" style={{ width: sizePx, height: sizePx }} />
+            <Image src={profile.avatarUrl} alt="Profile" className="rounded-full object-cover" width={sizePx} height={sizePx} />
           ) : (
             <div className="rounded-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center text-4xl" style={{ width: sizePx, height: sizePx }}>
               <span>👤</span>
@@ -106,8 +107,7 @@ export default function ProfileOverviewPage() {
               <li key={ach.id} className="flex items-center justify-between p-3 rounded-lg border border-gray-200 dark:border-gray-700">
                 <div className="flex items-center space-x-3">
                   {ach.badgeUrl ? (
-                    // eslint-disable-next-line @next/next/no-img-element
-                    <img src={ach.badgeUrl} alt={ach.description} className="w-8 h-8" />
+                    <Image src={ach.badgeUrl} alt={ach.description} width={32} height={32} className="w-8 h-8" />
                   ) : (
                     <span className="text-xl">🏆</span>
                   )}

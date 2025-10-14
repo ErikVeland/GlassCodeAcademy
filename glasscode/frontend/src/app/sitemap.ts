@@ -19,9 +19,9 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     ];
     
     // Add module pages
-    for (const module of modules) {
+    for (const mod of modules) {
       sitemapEntries.push({
-        url: `${baseUrl}${module.routes.overview}`,
+        url: `${baseUrl}${mod.routes.overview}`,
         lastModified: new Date(),
         changeFrequency: 'weekly',
         priority: 0.8,
@@ -29,7 +29,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       
       // Add lessons page
       sitemapEntries.push({
-        url: `${baseUrl}${module.routes.lessons}`,
+        url: `${baseUrl}${mod.routes.lessons}`,
         lastModified: new Date(),
         changeFrequency: 'weekly',
         priority: 0.7,
@@ -37,7 +37,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       
       // Add quiz page
       sitemapEntries.push({
-        url: `${baseUrl}${module.routes.quiz}`,
+        url: `${baseUrl}${mod.routes.quiz}`,
         lastModified: new Date(),
         changeFrequency: 'weekly',
         priority: 0.7,

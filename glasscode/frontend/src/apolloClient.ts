@@ -1,22 +1,23 @@
-import { ApolloClient, InMemoryCache, HttpLink } from '@apollo/client';
+import { ApolloClient, InMemoryCache, HttpLink, NormalizedCacheObject } from '@apollo/client';
 import { RetryLink } from '@apollo/client/link/retry';
 import { getGraphQLEndpoint } from '@/lib/urlUtils';
 
 // Custom function to determine if we should retry based on error
-const shouldRetry = (error: any) => {
+const shouldRetry = (error: unknown) => {
+  // Narrow the error shape
+  const err = (error && typeof error === 'object') ? (error as { message?: string; statusCode?: number }) : undefined;
+  const msg = err?.message ?? '';
+  const code = err?.statusCode;
   // Retry on network errors or server errors that might be due to cold start
-  return !!error && (
-    error.message?.includes('Failed to fetch') ||
-    error.message?.includes('NetworkError') ||
-    error.message?.includes('ECONNREFUSED') ||
-    error.message?.includes('timeout') ||
-    error.message?.includes('502') ||  // Bad gateway
-    error.message?.includes('503') ||  // Service unavailable
-    error.message?.includes('504') ||  // Gateway timeout
-    error.statusCode === 408 ||  // Request timeout
-    error.statusCode === 502 ||  // Bad gateway
-    error.statusCode === 503 ||  // Service unavailable
-    error.statusCode === 504     // Gateway timeout
+  return (
+    msg.includes('Failed to fetch') ||
+    msg.includes('NetworkError') ||
+    msg.includes('ECONNREFUSED') ||
+    msg.includes('timeout') ||
+    msg.includes('502') ||  // Bad gateway
+    msg.includes('503') ||  // Service unavailable
+    msg.includes('504') ||  // Gateway timeout
+    [408, 502, 503, 504].includes(code ?? -1)
   );
 };
 
@@ -28,7 +29,7 @@ const retryLink = new RetryLink({
   },
   attempts: {
     max: 3,       // Reduced from 15 to 3 retry attempts
-    retryIf: (error, _operation) => shouldRetry(error),
+    retryIf: (error) => shouldRetry(error),
   },
 });
 
@@ -64,7 +65,7 @@ export const createApolloClient = () => {
 };
 
 // For client components that need a singleton instance
-let clientSingleton: ApolloClient<any> | null = null;
+let clientSingleton: ApolloClient<NormalizedCacheObject> | null = null;
 
 export function getApolloClient() {
   if (typeof window === 'undefined') {

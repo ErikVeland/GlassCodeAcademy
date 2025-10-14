@@ -100,7 +100,7 @@ export default function QuizQuestionPage({ params }: { params: Promise<{ moduleS
     };
 
     resolveParams();
-  }, [params]);
+  }, [params, router]);
 
   // Countdown effect
   useEffect(() => {
@@ -117,7 +117,7 @@ export default function QuizQuestionPage({ params }: { params: Promise<{ moduleS
       }
     }, 1000);
     return () => clearInterval(interval);
-  }, [quizEndAt, resolvedParams]);
+  }, [quizEndAt, resolvedParams, router]);
 
   const handleAnswerSelect = (index: number) => {
     setSelectedAnswer(index);

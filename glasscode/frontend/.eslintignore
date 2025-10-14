@@ -1,0 +1,8 @@
+# Ignore legacy backup files and WIP snapshots
+**/*.bak.ts
+**/*.bak.tsx
+**/*.bak.js
+**/*.bak.jsx
+
+# Disabled middleware file
+src/middleware.ts.disabled

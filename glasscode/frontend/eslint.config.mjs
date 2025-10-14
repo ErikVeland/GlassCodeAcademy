@@ -10,6 +10,16 @@ const compat = new FlatCompat({
 });
 
 const eslintConfig = [
+  // Ignore backup and disabled files to reduce lint noise
+  {
+    ignores: [
+      "**/*.bak.ts",
+      "**/*.bak.tsx",
+      "**/*.bak.js",
+      "**/*.bak.jsx",
+      "src/middleware.ts.disabled",
+    ],
+  },
   ...compat.extends("next/core-web-vitals", "next/typescript"),
 ];
 

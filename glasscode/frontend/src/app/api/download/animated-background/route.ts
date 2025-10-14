@@ -22,7 +22,8 @@ export async function GET() {
         'Cache-Control': 'no-store',
       },
     });
-  } catch (error) {
+  } catch (error: unknown) {
+    console.error('Failed to read AnimatedBackground component file:', error);
     return NextResponse.json({ error: 'Failed to read component file.' }, { status: 500 });
   }
 }

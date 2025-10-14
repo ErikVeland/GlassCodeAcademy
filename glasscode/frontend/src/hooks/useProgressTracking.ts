@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useSession } from 'next-auth/react';
 
 export interface ProgressData {
@@ -120,7 +120,7 @@ export const useProgressTracking = () => {
   const [achievements, setAchievements] = useState<AchievementData[]>([]);
 
   // Compute per-user/guest storage keys for namespacing
-  const getStorageKeys = () => {
+  const getStorageKeys = useCallback(() => {
     const getGuestName = () => {
       try {
         const raw = localStorage.getItem('guestUser');
@@ -142,7 +142,7 @@ export const useProgressTracking = () => {
       STREAK: `${prefix}_streak_${identifier}`,
       ACHIEVEMENTS: `${prefix}_achievements_${identifier}`,
     };
-  };
+  }, [session?.user?.email, session?.user?.name]);
 
   // Load data from localStorage on mount
   useEffect(() => {
@@ -165,7 +165,7 @@ export const useProgressTracking = () => {
     } catch (error) {
       console.error('Error loading progress data:', error);
     }
-  }, [session?.user?.email, session?.user?.name]);
+  }, [getStorageKeys]);
 
   const updateProgress = (moduleId: string, data: Partial<ProgressData>) => {
     const currentTime = new Date().toISOString();

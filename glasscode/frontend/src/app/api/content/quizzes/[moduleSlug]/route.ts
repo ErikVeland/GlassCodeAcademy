@@ -63,7 +63,9 @@ export async function GET(request: Request, context: { params: Promise<{ moduleS
     const quiz = JSON.parse(quizContent);
     console.log('Found', quiz.questions?.length || 0, 'questions');
 
-    const normalizedQuestions = Array.isArray(quiz.questions) ? quiz.questions.map((q: any) => normalizeQuestion(q)) : [];
+    const normalizedQuestions = Array.isArray(quiz.questions)
+      ? (quiz.questions as unknown[]).map((q) => normalizeQuestion(q))
+      : [];
     const normalizedQuiz = { ...quiz, questions: normalizedQuestions };
 
     return new Response(JSON.stringify(normalizedQuiz), {

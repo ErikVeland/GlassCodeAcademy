@@ -2,7 +2,6 @@
 
 import { useEffect, useState, useRef } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { useQuery, gql } from '@apollo/client';
 import EnhancedLoadingComponent from '../../../components/EnhancedLoadingComponent';
 
@@ -82,13 +81,16 @@ export default function LaravelLessonsPage() {
     }
 
     // Helper function to determine if an error is a network error
-    const isNetworkError = (error: any): boolean => {
-        return !!error && (
-            error.message?.includes('Failed to fetch') ||
-            error.message?.includes('NetworkError') ||
-            error.message?.includes('ECONNREFUSED') ||
-            error.message?.includes('timeout') ||
-            error.networkError
+    const isNetworkError = (error: unknown): boolean => {
+        if (!error) return false;
+        const e = error as { message?: string; networkError?: unknown };
+        const msg = e.message ?? '';
+        return (
+            msg.includes('Failed to fetch') ||
+            msg.includes('NetworkError') ||
+            msg.includes('ECONNREFUSED') ||
+            msg.includes('timeout') ||
+            !!e.networkError
         );
     };
 

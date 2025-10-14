@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useRef } from 'react';
+import Image from 'next/image';
 import { useProfile } from '../../../components/ProfileProvider';
 
 const presetAvatars: { id: string; emoji: string }[] = [
@@ -33,7 +34,7 @@ export default function EditProfilePage() {
         <h1 className="text-2xl font-bold mb-4">Edit Profile</h1>
         <div className="flex items-center space-x-4 mb-6">
           {profile.avatarUrl ? (
-            <img src={profile.avatarUrl} alt="Profile" className="rounded-full object-cover" style={{ width: sizePx, height: sizePx }} />
+            <Image src={profile.avatarUrl} alt="Profile" className="rounded-full object-cover" width={sizePx} height={sizePx} />
           ) : (
             <div className="rounded-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center text-4xl" style={{ width: sizePx, height: sizePx }}>
               <span>{profile.avatarPresetId ? presetAvatars.find(a => a.id === profile.avatarPresetId)?.emoji : '👤'}</span>

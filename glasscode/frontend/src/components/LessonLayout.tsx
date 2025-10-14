@@ -1,10 +1,10 @@
 import Link from 'next/link';
-import type { Module } from '@/lib/contentRegistry';
+import type { Module, Lesson } from '@/lib/contentRegistry';
 
 interface LessonLayoutProps {
   module: Module;
-  lesson: any;
-  lessons: any[];
+  lesson: Lesson;
+  lessons: Lesson[];
   lessonIndex: number;
   groupTitle?: string;
   isFirstInGroup?: boolean;
@@ -114,7 +114,7 @@ export default function LessonLayout({ module, lesson, lessons, lessonIndex, gro
           <section className="glass-morphism p-8 rounded-xl">
             <h2 className="text-2xl font-semibold text-gray-900 dark:text-white mb-4">⚠️ Common Pitfalls</h2>
             <div className="space-y-4">
-              {lesson.pitfalls.map((pitfall: any, index: number) => (
+                {lesson.pitfalls.map((pitfall, index) => (
                 <div key={index} className="border border-yellow-200 dark:border-yellow-800 bg-yellow-50 dark:bg-yellow-900/20 rounded-lg p-4">
                   <div className="flex items-start gap-3">
                     <span className="text-yellow-500 text-xl mt-1">⚠️</span>
@@ -144,7 +144,7 @@ export default function LessonLayout({ module, lesson, lessons, lessonIndex, gro
           <section className="glass-morphism p-8 rounded-xl">
             <h2 className="text-2xl font-semibold text-gray-900 dark:text-white mb-4">📝 Practice Exercises</h2>
             <div className="space-y-6">
-              {lesson.exercises.map((exercise: any, index: number) => (
+              {lesson.exercises.map((exercise, index) => (
                 <div key={index} className="border border-blue-200 dark:border-blue-800 bg-blue-50 dark:bg-blue-900/20 rounded-lg p-6">
                   <h3 className="font-semibold text-blue-800 dark:text-blue-200 mb-2">{exercise.title || `Exercise ${index + 1}`}</h3>
                   <p className="text-gray-700 dark:text-gray-300 mb-4">{exercise.description || 'Practice the concepts learned above.'}</p>

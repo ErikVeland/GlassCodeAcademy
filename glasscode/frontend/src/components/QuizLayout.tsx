@@ -11,7 +11,7 @@ interface QuizLayoutProps {
   children?: React.ReactNode;
 }
 
-export default function QuizLayout({ module, quiz, thresholds, unlockingModules, children }: QuizLayoutProps) {
+export default function QuizLayout({ module, thresholds, children }: QuizLayoutProps) {
   const passingScore = thresholds?.passingScore ?? 70;
 
   return (
