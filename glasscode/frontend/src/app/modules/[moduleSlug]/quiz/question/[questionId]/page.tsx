@@ -8,11 +8,25 @@ import Link from 'next/link';
 // For client components in Next.js 15, params are still Promises that need to be awaited
 export default function QuizQuestionPage({ params }: { params: Promise<{ moduleSlug: string; questionId: string }> }) {
   const renderInlineCode = (text: string) => {
-    const parts = String(text).split(/(`[^`]+`)/g);
-    return parts.map((part, i) => {
-      const match = part.match(/^`([^`]+)`$/);
-      return match ? <code key={i}>{match[1]}</code> : <span key={i}>{part}</span>;
-    });
+    // Split by backticked segments while preserving them
+    const parts = String(text).split(/(`[^`]+`)/g).filter(p => p.length > 0);
+    // Merge adjacent code parts into a single code element for readability
+    const merged: Array<{ type: 'code' | 'text'; value: string }> = [];
+    for (const part of parts) {
+      const codeMatch = part.match(/^`([^`]+)`$/);
+      if (codeMatch) {
+        const val = codeMatch[1];
+        const last = merged[merged.length - 1];
+        if (last && last.type === 'code') {
+          last.value += ` ${val}`;
+        } else {
+          merged.push({ type: 'code', value: val });
+        }
+      } else {
+        merged.push({ type: 'text', value: part });
+      }
+    }
+    return merged.map((seg, i) => (seg.type === 'code' ? <code key={i}>{seg.value}</code> : <span key={i}>{seg.value}</span>));
   };
   const router = useRouter();
   const [resolvedParams, setResolvedParams] = useState<{ moduleSlug: string; questionId: string } | null>(null);

@@ -20,22 +20,37 @@ const CertificateAward: React.FC<CertificateAwardProps> = ({
 }) => {
   const isHighDistinction = percent === 100;
   const [showLightning, setShowLightning] = useState(false);
+  const [isReducedMotion, setIsReducedMotion] = useState(false);
 
   // Trigger lightning on first mount for High Distinction
   useEffect(() => {
     if (isHighDistinction) {
       // Start lightning effect on appearance
-      setShowLightning(true);
-      // Optionally fade the intense crackle after a short burst
-      const t = setTimeout(() => setShowLightning(false), 3500);
-      return () => clearTimeout(t);
+      if (!isReducedMotion) {
+        setShowLightning(true);
+        // Optionally fade the intense crackle after a short burst
+        const t = setTimeout(() => setShowLightning(false), 3500);
+        return () => clearTimeout(t);
+      } else {
+        setShowLightning(false);
+      }
     }
-  }, [isHighDistinction]);
+  }, [isHighDistinction, isReducedMotion]);
+
+  // Respect system reduced motion preference
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const mq = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const updatePref = () => setIsReducedMotion(mq.matches);
+    updatePref();
+    mq.addEventListener?.('change', updatePref);
+    return () => mq.removeEventListener?.('change', updatePref);
+  }, []);
 
   return (
     <div className={`relative mx-auto max-w-2xl ${className}`}>
-      {/* Only celebrate with confetti for High Distinction */}
-      <ConfettiBurst active={isHighDistinction} durationMs={6000} />
+      {/* Only celebrate with confetti for High Distinction (disabled if reduced motion) */}
+      <ConfettiBurst active={isHighDistinction && !isReducedMotion} durationMs={6000} />
 
       <div className={`relative rounded-2xl p-8 bg-gradient-to-br from-blue-50 via-white to-indigo-50 dark:from-blue-950/40 dark:via-gray-900 dark:to-indigo-900/40 border-4 border-blue-200 dark:border-blue-700 shadow-xl ${isHighDistinction && showLightning ? 'badge-hd-award' : ''}`}>
         {/* Decorative corner seals */}
@@ -45,7 +60,7 @@ const CertificateAward: React.FC<CertificateAwardProps> = ({
         <div className="absolute -bottom-3 -right-3 h-12 w-12 rounded-full border-4 border-blue-200 dark:border-blue-700 bg-white dark:bg-gray-900" />
 
         {/* Animated sheen for High Distinction */}
-        {isHighDistinction && (
+        {isHighDistinction && !isReducedMotion && (
           <div className="pointer-events-none absolute inset-0 overflow-hidden rounded-2xl">
             <div className="absolute -top-1/2 -left-1/2 h-[200%] w-[200%] bg-gradient-to-r from-transparent via-white/20 to-transparent animate-[shimmer_2.5s_infinite]" />
           </div>

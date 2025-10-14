@@ -279,7 +279,7 @@ export default function QuizStartPage({ params }: { params: Promise<{ moduleSlug
       </nav>
 
       {/* Quiz Start Header */}
-      <header className="mb-12">
+      <header className="mb-6">
         <div className="glass-morphism p-8 rounded-xl">
           <div className="text-center">
             <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">
@@ -289,7 +289,7 @@ export default function QuizStartPage({ params }: { params: Promise<{ moduleSlug
               {quizData?.title}
             </p>
             
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
               <div className="bg-blue-50 dark:bg-blue-900/30 p-4 rounded-lg">
                 <div className="text-2xl font-bold text-blue-600 dark:text-blue-300">
                   {quizData?.totalQuestions}

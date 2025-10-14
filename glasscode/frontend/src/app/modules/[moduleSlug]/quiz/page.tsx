@@ -120,13 +120,15 @@ export default async function QuizPage({ params }: QuizPageProps) {
               </span>
             </div>
 
-            <Link
-              href={`${currentModule.routes.quiz}/start`}
-              className="inline-flex items-center px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors text-lg font-medium"
-            >
-              Start Quiz
-              <span className="ml-2">🎯</span>
-            </Link>
+            <div className="flex justify-end">
+              <Link
+                href={`${currentModule.routes.quiz}/start`}
+                className="inline-flex items-center px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors text-lg font-medium"
+              >
+                Start Quiz
+                <span className="ml-2">🎯</span>
+              </Link>
+            </div>
 
             {unlockingModules && unlockingModules.length > 0 && (
               <div className="mt-8 border-t border-gray-200 dark:border-gray-700 pt-6">

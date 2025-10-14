@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 
 interface ConfettiBurstProps {
   active: boolean;
@@ -12,10 +12,21 @@ export default function ConfettiBurst({ active, durationMs = 4000 }: ConfettiBur
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const rafRef = useRef<number | null>(null);
   const startRef = useRef<number | null>(null);
+  const [isReducedMotion, setIsReducedMotion] = useState(false);
+
+  // Respect system reduced motion preference
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const mq = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const updatePref = () => setIsReducedMotion(mq.matches);
+    updatePref();
+    mq.addEventListener?.('change', updatePref);
+    return () => mq.removeEventListener?.('change', updatePref);
+  }, []);
 
   useEffect(() => {
     const canvas = canvasRef.current;
-    if (!canvas || !active) return;
+    if (!canvas || !active || isReducedMotion) return;
 
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
@@ -132,8 +143,10 @@ export default function ConfettiBurst({ active, durationMs = 4000 }: ConfettiBur
       if (rafRef.current) cancelAnimationFrame(rafRef.current);
       window.removeEventListener("resize", resize);
     };
-  }, [active, durationMs]);
+  }, [active, durationMs, isReducedMotion]);
 
+  // Do not render canvas when reduced motion is requested
+  if (isReducedMotion) return null;
   return (
     <div className={`pointer-events-none fixed inset-0 z-40 ${active ? '' : 'hidden'}`}>
       <canvas ref={canvasRef} className="w-full h-full" />

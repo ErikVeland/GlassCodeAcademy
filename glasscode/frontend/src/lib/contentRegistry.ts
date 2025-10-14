@@ -5,6 +5,7 @@
 
 import { getApolloClient } from '@/apolloClient';
 import { GET_PROGRAMMING_LESSONS, GET_PROGRAMMING_QUESTIONS } from '@/graphql/queries';
+import { normalizeQuestion } from './textNormalization';
 
 interface Module {
   slug: string;
@@ -541,7 +542,8 @@ class ContentRegistryLoader {
         
         // Transform the data to match the expected quiz format
         const questions = (data.programmingInterviewQuestions || []) as ProgrammingQuestion[];
-        return { questions } as Quiz;
+        const normalized = questions.map(q => normalizeQuestion(q));
+        return { questions: normalized } as Quiz;
       } catch (error: unknown) {
         console.error(`Failed to load programming questions via GraphQL:`, error);
         // Optionally log GraphQL-specific details if present
@@ -570,7 +572,8 @@ class ContentRegistryLoader {
                   const fileContent = fs.readFileSync(quizPath, 'utf8');
                   const quizData: unknown = JSON.parse(fileContent);
                   if (quizData && typeof quizData === 'object' && (quizData as Quiz).questions) {
-                    return quizData as Quiz;
+                    const q = (quizData as Quiz).questions.map(q => normalizeQuestion(q));
+                    return { ...(quizData as Quiz), questions: q } as Quiz;
                   }
                 }
               } catch {
@@ -583,7 +586,8 @@ class ContentRegistryLoader {
             if (response.ok) {
               const data: unknown = await response.json();
               if (data && typeof data === 'object' && (data as Quiz).questions) {
-                return data as Quiz;
+                const q = (data as Quiz).questions.map(q => normalizeQuestion(q));
+                return { ...(data as Quiz), questions: q } as Quiz;
               }
             }
           }
@@ -596,7 +600,7 @@ class ContentRegistryLoader {
           { id: 2, topic: 'basics', type: 'multiple-choice', question: 'What is a function?', choices: ['A storage location', 'A reusable block of code', 'A loop', 'A class'], correctAnswer: 1, explanation: 'A function is a reusable block of code that performs a specific task.' },
           { id: 3, topic: 'data-structures', type: 'multiple-choice', question: 'What is an array?', choices: ['A single value', 'A collection of elements', 'A function', 'A class'], correctAnswer: 1, explanation: 'An array is a collection of elements, each identified by an array index.' }
         ];
-        return { questions } as Quiz;
+        return { questions: questions.map(q => normalizeQuestion(q)) } as Quiz;
       }
     }
     
@@ -635,7 +639,9 @@ class ContentRegistryLoader {
         const quizContent = fs.readFileSync(quizPath, 'utf8');
         const quizData: unknown = JSON.parse(quizContent);
         const quiz = quizData && typeof quizData === 'object' ? (quizData as Quiz) : null;
-        return quiz;
+        if (!quiz) return null;
+        const normalizedQuestions = Array.isArray(quiz.questions) ? quiz.questions.map(q => normalizeQuestion(q)) : [];
+        return { ...quiz, questions: normalizedQuestions };
       } catch (error: unknown) {
         console.error(`Failed to load quiz for ${moduleSlug} (server-side):`, error);
         return null;
@@ -668,7 +674,10 @@ class ContentRegistryLoader {
       }
       
       const data: unknown = await response.json();
-      return data && typeof data === 'object' ? (data as Quiz) : null;
+      if (!(data && typeof data === 'object')) return null;
+      const quiz = data as Quiz;
+      const normalizedQuestions = Array.isArray(quiz.questions) ? quiz.questions.map(q => normalizeQuestion(q)) : [];
+      return { ...quiz, questions: normalizedQuestions };
     } catch (error: unknown) {
       console.error(`Failed to load quiz for ${moduleSlug}:`, error);
       // Return null as fallback to prevent build failures
@@ -724,7 +733,8 @@ class ContentRegistryLoader {
       const { data } = await client.query({
         query: GET_PROGRAMMING_QUESTIONS
       });
-      return (data.programmingQuestions || []) as ProgrammingQuestion[];
+      const questions = (data.programmingQuestions || []) as ProgrammingQuestion[];
+      return questions.map(q => normalizeQuestion(q));
     } catch (error: unknown) {
       console.error(`Failed to load programming questions via GraphQL:`, error);
       // During build time, the backend might not be available
@@ -736,7 +746,7 @@ class ContentRegistryLoader {
           { id: 2, topic: 'basics', type: 'multiple-choice', question: 'What is a function?', choices: ['A storage location', 'A reusable block of code', 'A loop', 'A class'], correctAnswer: 1, explanation: 'A function is a reusable block of code that performs a specific task.' },
           { id: 3, topic: 'data-structures', type: 'multiple-choice', question: 'What is an array?', choices: ['A single value', 'A collection of elements', 'A function', 'A class'], correctAnswer: 1, explanation: 'An array is a collection of elements, each identified by an array index.' }
         ];
-        return minimalQuestions;
+        return minimalQuestions.map(q => normalizeQuestion(q));
       }
       // Return empty array as fallback to prevent build failures
       return [];

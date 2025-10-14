@@ -2,6 +2,7 @@ import { NextRequest } from 'next/server';
 import fs from 'fs';
 import path from 'path';
 import { getGraphQLEndpoint } from '@/lib/urlUtils';
+import { normalizeQuestion } from '@/lib/textNormalization';
 
 // For programming fundamentals, we'll use GraphQL to fetch data from the backend
 async function fetchProgrammingQuestions() {
@@ -37,18 +38,29 @@ async function fetchProgrammingQuestions() {
     }
 
     const result = await response.json();
-    return result.data?.programmingInterviewQuestions || [];
+    const raw = result.data?.programmingInterviewQuestions || [];
+    // Deduplicate by `id` to avoid duplicates across data sources
+    const byId = new Map<number | string, any>();
+    for (const q of raw) {
+      const key = (q && (q.id ?? q.question)) as number | string;
+      if (!byId.has(key)) {
+        byId.set(key, q);
+      }
+    }
+    const deduped = Array.from(byId.values());
+    return deduped.map((q: any) => normalizeQuestion(q));
   } catch (error) {
     console.error('Failed to fetch programming questions via GraphQL:', error);
     // During build time, the backend might not be available
     // Return a minimal set of questions to allow build to complete
     if (process.env.NEXT_PHASE === 'phase-production-build') {
       console.log('Build phase detected, returning minimal question data');
-      return [
+      const minimal = [
         { id: 1, topic: 'basics', type: 'multiple-choice', question: 'What is a variable?', choices: ['A storage location', 'A function', 'A loop', 'A class'], correctAnswer: 0, explanation: 'A variable is a storage location paired with an associated symbolic name.' },
         { id: 2, topic: 'basics', type: 'multiple-choice', question: 'What is a function?', choices: ['A storage location', 'A reusable block of code', 'A loop', 'A class'], correctAnswer: 1, explanation: 'A function is a reusable block of code that performs a specific task.' },
         { id: 3, topic: 'data-structures', type: 'multiple-choice', question: 'What is an array?', choices: ['A single value', 'A collection of elements', 'A function', 'A class'], correctAnswer: 1, explanation: 'An array is a collection of elements, each identified by an array index.' }
       ];
+      return minimal.map(q => normalizeQuestion(q));
     }
     return [];
   }
@@ -107,13 +119,12 @@ export async function GET(
         });
       } catch (err) {
         console.error('GraphQL failed, serving minimal stub for programming-fundamentals:', err);
-        const stub = {
-          questions: [
-            { id: 1, topic: 'basics', type: 'multiple-choice', question: 'What is a variable?', choices: ['A storage location', 'A function', 'A loop', 'A class'], correctAnswer: 0, explanation: 'A variable is a storage location paired with an associated symbolic name.' },
-            { id: 2, topic: 'basics', type: 'multiple-choice', question: 'What is a function?', choices: ['A storage location', 'A reusable block of code', 'A loop', 'A class'], correctAnswer: 1, explanation: 'A function is a reusable block of code that performs a specific task.' },
-            { id: 3, topic: 'data-structures', type: 'multiple-choice', question: 'What is an array?', choices: ['A single value', 'A collection of elements', 'A function', 'A class'], correctAnswer: 1, explanation: 'An array is a collection of elements, each identified by an array index.' }
-          ]
-        };
+        const stubQuestions = [
+          { id: 1, topic: 'basics', type: 'multiple-choice', question: 'What is a variable?', choices: ['A storage location', 'A function', 'A loop', 'A class'], correctAnswer: 0, explanation: 'A variable is a storage location paired with an associated symbolic name.' },
+          { id: 2, topic: 'basics', type: 'multiple-choice', question: 'What is a function?', choices: ['A storage location', 'A reusable block of code', 'A loop', 'A class'], correctAnswer: 1, explanation: 'A function is a reusable block of code that performs a specific task.' },
+          { id: 3, topic: 'data-structures', type: 'multiple-choice', question: 'What is an array?', choices: ['A single value', 'A collection of elements', 'A function', 'A class'], correctAnswer: 1, explanation: 'An array is a collection of elements, each identified by an array index.' }
+        ].map(q => normalizeQuestion(q));
+        const stub = { questions: stubQuestions };
         return new Response(JSON.stringify(stub), {
           status: 200,
           headers: {
@@ -144,7 +155,10 @@ export async function GET(
     const quiz = JSON.parse(quizContent);
     console.log('Found', quiz.questions?.length || 0, 'questions');
 
-    return new Response(JSON.stringify(quiz), {
+    const normalizedQuestions = Array.isArray(quiz.questions) ? quiz.questions.map((q: any) => normalizeQuestion(q)) : [];
+    const normalizedQuiz = { ...quiz, questions: normalizedQuestions };
+
+    return new Response(JSON.stringify(normalizedQuiz), {
       status: 200,
       headers: {
         'Content-Type': 'application/json',
