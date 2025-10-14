@@ -325,31 +325,42 @@ class ContentValidator {
   }
 
   validateQuestionStructure(question, moduleSlug, index) {
-    const requiredFields = ['question', 'choices', 'explanation'];
     const context = { moduleSlug, questionIndex: index };
 
-    for (const field of requiredFields) {
+    // Required for all question types
+    const baseRequired = ['question', 'explanation'];
+    for (const field of baseRequired) {
       if (!question[field]) {
         this.addError(`Question missing required field: ${field}`, context);
       }
     }
 
-    // Check for correctIndex field (allow both correctIndex and correctAnswer for legacy compatibility)
-    if (question.correctIndex === undefined && question.correctAnswer === undefined) {
-      this.addError('Question missing correctIndex or correctAnswer field', context);
-    }
+    // Determine question type (support legacy "type" and new "questionType")
+    const qType = (question.questionType || question.type || 'multiple-choice').toLowerCase();
 
-    // Validate choices array
-    if (question.choices && Array.isArray(question.choices)) {
-      if (question.choices.length !== 4) {
+    if (qType === 'multiple-choice') {
+      // Choices required and must have exactly 4 entries
+      if (!question.choices || !Array.isArray(question.choices)) {
+        this.addError('Question missing required field: choices', context);
+      } else if (question.choices.length !== 4) {
         this.addError('Question must have exactly 4 choices', context);
       }
-    }
 
-    // Validate correctIndex
-    if (typeof question.correctIndex === 'number') {
-      if (question.correctIndex < 0 || question.correctIndex >= (question.choices?.length || 4)) {
-        this.addError('Question correctIndex out of range', context);
+      // Must have correctIndex or correctAnswer
+      if (question.correctIndex === undefined && question.correctAnswer === undefined) {
+        this.addError('Question missing correctIndex or correctAnswer field', context);
+      }
+
+      // Validate correctIndex range when present
+      if (typeof question.correctIndex === 'number' && Array.isArray(question.choices)) {
+        if (question.correctIndex < 0 || question.correctIndex >= question.choices.length) {
+          this.addError('Question correctIndex out of range', context);
+        }
+      }
+    } else {
+      // Open-ended or coding-challenge: choices should be null or omitted, and no correctIndex required
+      if (question.choices && Array.isArray(question.choices)) {
+        this.addWarning('Open-ended/coding question has choices array; expected null or omitted', context);
       }
     }
   }

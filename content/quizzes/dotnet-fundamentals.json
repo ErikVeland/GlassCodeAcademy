@@ -60,7 +60,7 @@
       "choices": [
         "int?",
         "int!",
-        "nullable<int>",
+        "`nullable<int>`",
         "int*"
       ],
       "correctIndex": 0,
@@ -311,10 +311,10 @@
       "topic": "Collections",
       "difficulty": "Advanced",
       "choices": [
-        "LinkedList<T>",
-        "List<T>",
+        "`LinkedList<T>`",
+        "`List<T>`",
         "Array",
-        "Dictionary<TKey, TValue>"
+        "`Dictionary<TKey, TValue>`"
       ],
       "correctIndex": 0,
       "explanation": "LinkedList<T> provides O(1) insertion and deletion at arbitrary positions when you have a reference to the node, unlike List<T> which requires O(n) for insertions/deletions in the middle due to element shifting.",
@@ -929,7 +929,7 @@
     {
       "id": 1,
       "question": "What is the difference between .NET Framework and .NET Core?",
-      "options": [
+      "choices": [
         ".NET Core is a subset of .NET Framework",
         ".NET Framework is cross-platform while .NET Core is Windows-only",
         ".NET Core is cross-platform and open-source while .NET Framework is Windows-only",
@@ -938,12 +938,14 @@
       "correctAnswer": 2,
       "difficulty": "Basic",
       "explanation": ".NET Core is a cross-platform, open-source framework that can run on Windows, macOS, and Linux, while .NET Framework is Windows-only and proprietary.",
-      "correctIndex": 2
+      "correctIndex": 2,
+      "questionType": "multiple-choice",
+      "estimatedTime": 45
     },
     {
       "id": 2,
       "question": "Which keyword is used to declare a constant in C#?",
-      "options": [
+      "choices": [
         "final",
         "const",
         "readonly",
@@ -952,12 +954,14 @@
       "correctAnswer": 1,
       "difficulty": "Basic",
       "explanation": "The 'const' keyword is used to declare compile-time constants in C#. The value must be assigned at declaration and cannot be changed.",
-      "correctIndex": 1
+      "correctIndex": 1,
+      "questionType": "multiple-choice",
+      "estimatedTime": 45
     },
     {
       "id": 6,
       "question": "Which LINQ method would you use to filter a collection?",
-      "options": [
+      "choices": [
         "Select",
         "Where",
         "OrderBy",
@@ -966,12 +970,14 @@
       "correctAnswer": 1,
       "difficulty": "Intermediate",
       "explanation": "The 'Where' method is used to filter collections based on a specified condition, returning only elements that match the criteria.",
-      "correctIndex": 1
+      "correctIndex": 1,
+      "questionType": "multiple-choice",
+      "estimatedTime": 60
     },
     {
       "id": 7,
       "question": "What is the purpose of the 'using' statement in C#?",
-      "options": [
+      "choices": [
         "To import namespaces only",
         "To ensure proper disposal of resources",
         "To declare variables",
@@ -980,12 +986,14 @@
       "correctAnswer": 1,
       "difficulty": "Intermediate",
       "explanation": "The 'using' statement ensures that IDisposable objects are properly disposed of when they go out of scope, even if an exception occurs.",
-      "correctIndex": 1
+      "correctIndex": 1,
+      "questionType": "multiple-choice",
+      "estimatedTime": 60
     },
     {
       "id": 12,
       "question": "Which design pattern is commonly used for dependency injection in .NET?",
-      "options": [
+      "choices": [
         "Singleton Pattern",
         "Factory Pattern",
         "Inversion of Control (IoC) Container",
@@ -994,7 +1002,9 @@
       "correctAnswer": 2,
       "difficulty": "Advanced",
       "explanation": "IoC containers implement the Inversion of Control principle for dependency injection, managing object creation and dependency resolution automatically.",
-      "correctIndex": 2
+      "correctIndex": 2,
+      "questionType": "multiple-choice",
+      "estimatedTime": 75
     }
   ],
   "metadata": {

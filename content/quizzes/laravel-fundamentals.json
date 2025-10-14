@@ -155,7 +155,7 @@
         "/user/{id}",
         "/user/:id",
         "/user/[id]",
-        "/user/<id>"
+        "`/user/<id>`"
       ],
       "correctIndex": 0,
       "explanation": "In Laravel, curly braces {} are used to define route parameters.",

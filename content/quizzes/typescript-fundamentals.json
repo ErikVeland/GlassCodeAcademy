@@ -14,7 +14,7 @@
       "choices": [
         "let myVar: string = \"hello\"",
         "let myVar string = \"hello\"",
-        "let myVar = string \"hello\"",
+        "`let myVar = string \"hello\"`",
         "let myVar := string = \"hello\""
       ],
       "correctIndex": 0,
@@ -41,7 +41,7 @@
       "difficulty": "Intermediate",
       "choices": [
         "let arr: string[] = ['a', 'b', 'c']",
-        "let arr: Array<string> = ['a', 'b', 'c']",
+        "`let arr: Array<string> = ['a', 'b', 'c']`",
         "Both A and B",
         "let arr: [string] = ['a', 'b', 'c']"
       ],
@@ -67,13 +67,7 @@
       "question": "What is the difference between an interface and a type alias in TypeScript? When would you use each?",
       "topic": "Interfaces",
       "difficulty": "Beginner",
-      "choices": [
-        "Open-ended question - no multiple choice",
-        "This is a conceptual question",
-        "Answer requires explanation",
-        "Multiple approaches possible"
-      ],
-      "correctIndex": 0,
+      
       "explanation": "Interfaces create a new name that can be used everywhere and can be extended and implemented. Type aliases don't create a new name and cannot be extended or implemented. Use interfaces for defining object shapes and type aliases for complex types like union types. Interfaces are preferred for object shapes because they support declaration merging.",
       "industryContext": "TypeScript is increasingly adopted in large codebases for better maintainability.",
       "tags": [
@@ -432,10 +426,10 @@
       "topic": "Advanced Types",
       "difficulty": "Advanced",
       "choices": [
-        "Omit<T, U>",
-        "Exclude<T, U>",
-        "Extract<T, U>",
-        "Pick<T, U>"
+        "`Omit<T, U>`",
+        "`Exclude<T, U>`",
+        "`Extract<T, U>`",
+        "`Pick<T, U>`"
       ],
       "correctIndex": 1,
       "explanation": "Exclude<T, U> constructs a type by excluding from T all union members that are assignable to U. Omit works on object properties, while Exclude works on union types.",

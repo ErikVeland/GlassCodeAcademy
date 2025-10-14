@@ -12,10 +12,10 @@
       "topic": "Components",
       "difficulty": "Beginner",
       "choices": [
-        "function MyComponent() { return <div>Hello</div>; }",
-        "class MyComponent { render() { return <div>Hello</div>; } }",
-        "MyComponent() => { return <div>Hello</div>; }",
-        "const MyComponent = { <div>Hello</div> }"
+        "`function MyComponent() { return <div>Hello</div>; }`",
+        "`class MyComponent { render() { return <div>Hello</div>; } }`",
+        "`MyComponent() => { return <div>Hello</div>; }`",
+        "`const MyComponent = { <div>Hello</div> }`"
       ],
       "correctIndex": 0,
       "explanation": "In modern React, functional components are the preferred way to create components. They are simpler and can use hooks for state and side effects.",

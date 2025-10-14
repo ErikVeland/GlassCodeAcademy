@@ -12,10 +12,10 @@
       "topic": "HTML5",
       "difficulty": "Beginner",
       "choices": [
-        "<nav>",
-        "<div>",
-        "<header>",
-        "<menu>"
+        "`<nav>`",
+        "`<div>`",
+        "`<header>`",
+        "`<menu>`"
       ],
       "correctIndex": 0,
       "explanation": "The <nav> element is specifically designed for navigation links. It provides semantic meaning that helps screen readers and search engines understand the purpose of the content. Using <div> provides no semantic value, while <header> is for page headers and <menu> is for interactive commands.",
@@ -34,13 +34,13 @@
       "topic": "CSS3",
       "difficulty": "Intermediate",
       "choices": [
-        "`display: flex; justify-content: center; align-items: center;`",
+        "`display: flex; `justify-content: center`; `align-items: center`;`",
         "`display: flex; align-content: center; justify-items: center;`",
         "`display: block; text-align: center; vertical-align: middle;`",
-        "`display: grid; place-items: center;`"
+        "`display: grid; `place-items: center`;`"
       ],
       "correctIndex": 0,
-      "explanation": "With Flexbox, `justify-content: center` centers items horizontally (main axis) and `align-items: center` centers them vertically (cross axis). The `display: grid; place-items: center;` solution works with CSS Grid, but the question specifically asks about Flexbox.",
+      "explanation": "With Flexbox, `justify-content: center` centers items horizontally (main axis) and `align-items: center` centers them vertically (cross axis). The `display: grid; `place-items: center`;` solution works with CSS Grid, but the question specifically asks about Flexbox.",
       "industryContext": "Flexbox is the most common method for centering content in modern web development, replacing older techniques like floats and positioning.",
       "tags": [
         "foundational",
@@ -59,7 +59,7 @@
         "`document.getElementById('myId')`",
         "`document.querySelector('#myId')`",
         "`document.getElementByClass('myId')`",
-        "Both `document.getElementById('myId')` and `document.querySelector('#myId')` are correct"
+        "`Both `document.getElementById('myId')` and `document.querySelector('#myId')` are correct`"
       ],
       "correctIndex": 3,
       "explanation": "Both `document.getElementById('myId')` and `document.querySelector('#myId')` can select an element by ID. `getElementById` is the traditional method, while `querySelector` is more flexible and can use any CSS selector. The string `document.getElementByClass('myId')` is incorrect—it should be `getElementsByClassName`, and it targets classes, not IDs.",
@@ -100,10 +100,10 @@
       "topic": "HTML5",
       "difficulty": "Beginner",
       "choices": [
-        "<input type=\"email\">",
-        "<input type=\"text\" pattern=\"email\">",
-        "<input type=\"validation\" format=\"email\">",
-        "<input type=\"text\" validate=\"email\">"
+        "`<input type=\"email\">`",
+        "`<input type=\"text\" pattern=\"email\">`",
+        "`<input type=\"validation\" format=\"email\">`",
+        "`<input type=\"text\" validate=\"email\">`"
       ],
       "correctIndex": 0,
       "explanation": "HTML5 introduced the 'email' input type which automatically validates that the entered text follows email format (contains @ symbol and valid structure). Modern browsers will show validation errors if the format is incorrect.",
@@ -499,10 +499,10 @@
       "question": "Which CSS display value removes an element from the document flow?",
       "topic": "Web Fundamentals",
       "choices": [
-        "display: none",
-        "display: block",
-        "display: inline",
-        "display: flex"
+        "`display: none`",
+        "`display: block`",
+        "`display: inline`",
+        "`display: flex`"
       ],
       "correctIndex": 0,
       "explanation": "'display: none' completely removes an element from the document flow, making it invisible and not taking up any space. Other display values like 'block', 'inline', and 'flex' still participate in the document flow, just with different layout behaviors.",
@@ -569,7 +569,7 @@
       "question": "What is the correct way to declare a JavaScript variable?",
       "topic": "Web Fundamentals",
       "choices": [
-        "let myVariable = 'value';",
+        "`let myVariable = 'value';`",
         "variable myVariable = 'value';",
         "declare myVariable = 'value';",
         "var myVariable: 'value';"
@@ -583,10 +583,10 @@
       "question": "Which HTML element is used to define an independent, self-contained content section?",
       "topic": "Web Fundamentals",
       "choices": [
-        "<article>",
-        "<section>",
-        "<div>",
-        "<span>"
+        "`<article>`",
+        "`<section>`",
+        "`<div>`",
+        "`<span>`"
       ],
       "correctIndex": 0,
       "explanation": "The <article> element is used to define independent, self-contained content that could stand alone, such as a blog post, news article, or forum post. <section> groups related content, <div> is a generic container, and <span> is an inline container.",
@@ -779,10 +779,10 @@
       "question": "Which HTML element is used to define a footer for a document or section?",
       "topic": "Web Fundamentals",
       "choices": [
-        "<footer>",
-        "<bottom>",
-        "<foot>",
-        "<end>"
+        "`<footer>`",
+        "`<bottom>`",
+        "`<foot>`",
+        "`<end>`"
       ],
       "correctIndex": 0,
       "explanation": "The <footer> element is used to define a footer for a document or section. It typically contains information about the author, copyright data, or links to related documents. <bottom>, <foot>, and <end> are not valid HTML elements.",
@@ -835,10 +835,10 @@
       "question": "Which HTML element is used to define important text?",
       "topic": "Web Fundamentals",
       "choices": [
-        "<strong>",
-        "<b>",
-        "<important>",
-        "<em>"
+        "`<strong>`",
+        "`<b>`",
+        "`<important>`",
+        "`<em>`"
       ],
       "correctIndex": 0,
       "explanation": "The <strong> element is used to define important text with strong importance, seriousness, or urgency. It is semantic and indicates that the content is important. <b> makes text bold but has no semantic meaning, <important> is not a valid HTML element, and <em> is for emphasized text.",
@@ -933,10 +933,10 @@
       "question": "What is the correct HTML element for playing video files?",
       "topic": "Web Fundamentals",
       "choices": [
-        "<video>",
-        "<movie>",
-        "<media>",
-        "<play>"
+        "`<video>`",
+        "`<movie>`",
+        "`<media>`",
+        "`<play>`"
       ],
       "correctIndex": 0,
       "explanation": "The <video> element is used to embed video content in HTML documents. It supports various video formats and provides built-in controls. <movie>, <media>, and <play> are not valid HTML elements for video content.",

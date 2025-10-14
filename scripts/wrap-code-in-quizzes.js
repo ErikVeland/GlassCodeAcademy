@@ -29,6 +29,22 @@ function wrapTokens(text) {
     { regex: /(?<!`)page\.(route|mock|intercept|fulfill)\(\)(?!`)/g },
     // Teleport 'to' prop
     { regex: /(?<!`)'to'(?!`)/g },
+    // DOM selection methods with arguments
+    { regex: /(?<!`)document\.getElementById\([^)]*\)(?!`)/g },
+    { regex: /(?<!`)document\.querySelector\([^)]*\)(?!`)/g },
+    { regex: /(?<!`)getElementsByClassName\b(?!`)/g },
+    // Common JS function and variable patterns
+    { regex: /(?<!`)(const|let|var)\s+[a-zA-Z_$][a-zA-Z0-9_$]*\s*=\s*(?:\([^)]*\)\s*=>|function\b)(?!`)/g },
+    { regex: /(?<!`)function\s+[a-zA-Z_$][a-zA-Z0-9_$]*\([^)]*\)\s*\{[^}]*\}(?!`)/g },
+    // Git commands (specific common forms)
+    { regex: /(?<!`)git\s+checkout\s+-b\s+[a-zA-Z0-9._/-]+(?!`)/g },
+    { regex: /(?<!`)git\s+switch\s+-c\s+[a-zA-Z0-9._/-]+(?!`)/g },
+    { regex: /(?<!`)git\s+branch\s+[a-zA-Z0-9._/-]+(?!`)/g },
+    // CSS properties commonly referenced inline
+    { regex: /(?<!`)justify-content:\s*center(?!`)/g },
+    { regex: /(?<!`)align-items:\s*center(?!`)/g },
+    { regex: /(?<!`)place-items:\s*center(?!`)/g },
+    { regex: /(?<!`)display:\s*(flex|grid|block)(?!`)/g }
   ];
 
   let result = text;
@@ -36,6 +52,23 @@ function wrapTokens(text) {
     result = result.replace(regex, (m) => `\`${m}\``);
   }
   return result;
+}
+
+// Heuristic: wrap entire choice if it looks like code, while preserving apostrophes as-is
+function shouldWrapChoice(choice) {
+  if (typeof choice !== 'string') return false;
+  const alreadyWrapped = choice.startsWith('`') && choice.endsWith('`');
+  if (alreadyWrapped) return false;
+  const codeyPatterns = [
+    /\bfunction\s+[a-zA-Z_$][a-zA-Z0-9_$]*\(/,
+    /\b(const|let|var)\s+[a-zA-Z_$][a-zA-Z0-9_$]*\s*=\s*/,
+    /=>/,
+    /document\.[a-zA-Z]+\(/,
+    /\bgit\s+[a-z-]+\b/,
+    /<\s*[a-zA-Z][^>]*>/,
+    /\b(display|justify-content|align-items|place-items):\s*/,
+  ];
+  return codeyPatterns.some((re) => re.test(choice));
 }
 
 function processFile(filePath) {
@@ -58,9 +91,14 @@ function processFile(filePath) {
         updated.explanation = wrapTokens(updated.explanation);
       }
       if (Array.isArray(updated.choices)) {
-        updated.choices = updated.choices.map((choice) =>
-          typeof choice === 'string' ? wrapTokens(choice) : choice
-        );
+        updated.choices = updated.choices.map((choice) => {
+          if (typeof choice !== 'string') return choice;
+          let c = wrapTokens(choice);
+          if (shouldWrapChoice(c)) {
+            c = `\`${c}\``;
+          }
+          return c;
+        });
       }
       return updated;
     });

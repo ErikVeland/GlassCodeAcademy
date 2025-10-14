@@ -12,10 +12,10 @@
       "topic": "Git",
       "difficulty": "Beginner",
       "choices": [
-        "git init",
-        "git create",
-        "git new",
-        "git start"
+        "`git init`",
+        "`git create`",
+        "`git new`",
+        "`git start`"
       ],
       "correctIndex": 0,
       "explanation": "The 'git init' command initializes a new Git repository in the current directory, creating a .git folder that contains all the repository metadata. This is the first step in version controlling any project.",
@@ -34,10 +34,10 @@
       "topic": "Git",
       "difficulty": "Beginner",
       "choices": [
-        "git add → git commit",
-        "git commit → git add",
-        "git push → git commit",
-        "git commit only (no add needed)"
+        "`git add → git commit`",
+        "`git commit → git add`",
+        "`git push → git commit`",
+        "`git commit only (no add needed)`"
       ],
       "correctIndex": 0,
       "explanation": "The correct Git workflow is to first stage changes with 'git add' (adding them to the staging area), then commit them with 'git commit'. This two-step process allows you to carefully control which changes are included in each commit.",
@@ -361,10 +361,10 @@
       "question": "How do you push a local branch to a remote repository for the first time?",
       "topic": "Version Control",
       "choices": [
-        "git push -u origin branch-name",
-        "git push branch-name",
-        "git push --new origin branch-name",
-        "git upload branch-name"
+        "`git push -u origin branch-name`",
+        "`git push branch-name`",
+        "`git push --new origin branch-name`",
+        "`git upload branch-name`"
       ],
       "correctIndex": 0,
       "explanation": "The command 'git push -u origin branch-name' pushes a local branch to the remote repository and sets up tracking. The -u flag (or --set-upstream) establishes a relationship between the local and remote branches for future pushes and pulls.",
@@ -417,10 +417,10 @@
       "question": "How do you create an annotated tag in Git?",
       "topic": "Version Control",
       "choices": [
-        "git tag -a v1.0.0 -m \"Release version 1.0.0\"",
-        "git tag v1.0.0",
-        "git create-tag v1.0.0",
-        "git mark v1.0.0"
+        "`git tag -a v1.0.0 -m \"Release version 1.0.0\"`",
+        "`git tag v1.0.0`",
+        "`git create-tag v1.0.0`",
+        "`git mark v1.0.0`"
       ],
       "correctIndex": 0,
       "explanation": "The command 'git tag -a v1.0.0 -m \"Release version 1.0.0\"' creates an annotated tag with a message. Annotated tags store additional metadata including the tagger name, email, date, and message, making them more complete than lightweight tags created with 'git tag v1.0.0'.",
@@ -445,10 +445,10 @@
       "question": "Which command shows the commit history in a compact format?",
       "topic": "Version Control",
       "choices": [
-        "git log --oneline",
-        "git history --short",
-        "git commits --brief",
-        "git show --compact"
+        "`git log --oneline`",
+        "`git history --short`",
+        "`git commits --brief`",
+        "`git show --compact`"
       ],
       "correctIndex": 0,
       "explanation": "'git log --oneline' displays the commit history in a compact format, showing each commit on a single line with its abbreviated commit hash and commit message. This is useful for quickly reviewing the commit history.",
@@ -473,10 +473,10 @@
       "question": "Which Git command is used to compare changes between commits?",
       "topic": "Version Control",
       "choices": [
-        "git diff",
-        "git compare",
-        "git changes",
-        "git show"
+        "`git diff`",
+        "`git compare`",
+        "`git changes`",
+        "`git show`"
       ],
       "correctIndex": 0,
       "explanation": "'git diff' is used to compare changes between commits, between the working directory and the index, or between branches. It shows the differences in a format similar to the Unix diff command.",
@@ -501,10 +501,10 @@
       "question": "Which command is used to undo the last commit but keep the changes in the working directory?",
       "topic": "Version Control",
       "choices": [
-        "git reset --soft HEAD~1",
-        "git revert HEAD",
-        "git undo last-commit",
-        "git commit --undo"
+        "`git reset --soft HEAD~1`",
+        "`git revert HEAD`",
+        "`git undo last-commit`",
+        "`git commit --undo`"
       ],
       "correctIndex": 0,
       "explanation": "'git reset --soft HEAD~1' undoes the last commit but keeps the changes staged in the index. This allows you to modify the commit before committing again. The changes remain in your working directory and index.",
@@ -529,10 +529,10 @@
       "question": "Which command is used to fetch changes from a remote repository without merging them?",
       "topic": "Version Control",
       "choices": [
-        "git fetch",
-        "git pull",
-        "git update",
-        "git sync"
+        "`git fetch`",
+        "`git pull`",
+        "`git update`",
+        "`git sync`"
       ],
       "correctIndex": 0,
       "explanation": "'git fetch' downloads changes from a remote repository but does not merge them into your current branch. This allows you to review the changes before deciding whether to merge them with 'git merge' or 'git pull'.",
@@ -557,10 +557,10 @@
       "question": "Which command is used to combine multiple commits into a single commit?",
       "topic": "Version Control",
       "choices": [
-        "git rebase -i",
-        "git squash",
-        "git combine",
-        "git merge --flatten"
+        "`git rebase -i`",
+        "`git squash`",
+        "`git combine`",
+        "`git merge --flatten`"
       ],
       "correctIndex": 0,
       "explanation": "'git rebase -i' (interactive rebase) is used to combine multiple commits into a single commit. During the interactive rebase, you can choose to 'squash' or 'fixup' commits to combine them with previous commits.",
@@ -585,10 +585,10 @@
       "question": "Which Git command is used to create a bare repository?",
       "topic": "Version Control",
       "choices": [
-        "git init --bare",
-        "git create --empty",
-        "git init --empty",
-        "git bare init"
+        "`git init --bare`",
+        "`git create --empty`",
+        "`git init --empty`",
+        "`git bare init`"
       ],
       "correctIndex": 0,
       "explanation": "'git init --bare' creates a bare repository, which is a repository that doesn't have a working directory. Bare repositories are typically used as central repositories that developers push to and pull from.",
@@ -613,13 +613,13 @@
       "question": "Which command is used to list all branches in a repository?",
       "topic": "Version Control",
       "choices": [
-        "git branch -a",
-        "git branches",
-        "git list-branches",
-        "git show-branches"
+        "`git branch -a`",
+        "`git branches`",
+        "`git list-branches`",
+        "`git show-branches`"
       ],
       "correctIndex": 0,
-      "explanation": "'git branch -a' lists all branches in a repository, including both local and remote-tracking branches. The '-a' flag stands for 'all'. Without this flag, 'git branch' only shows local branches.",
+      "explanation": "'`git branch -a`' lists all branches in a repository, including both local and remote-tracking branches. The '-a' flag stands for 'all'. Without this flag, 'git branch' only shows local branches.",
       "correctAnswer": 0
     },
     {
@@ -641,10 +641,10 @@
       "question": "Which command is used to configure Git user information?",
       "topic": "Version Control",
       "choices": [
-        "git config --global user.name \"Your Name\"",
-        "git user set \"Your Name\"",
-        "git setup user \"Your Name\"",
-        "git profile \"Your Name\""
+        "`git config --global user.name \"Your Name\"`",
+        "`git user set \"Your Name\"`",
+        "`git setup user \"Your Name\"`",
+        "`git profile \"Your Name\"`"
       ],
       "correctIndex": 0,
       "explanation": "'git config --global user.name \"Your Name\"' is used to configure Git user information. The '--global' flag sets the configuration for all repositories on the system. You also need to set the email with 'git config --global user.email \"your.email@example.com\"'.",
@@ -669,9 +669,9 @@
       "question": "Which command is used to show the changes staged for the next commit?",
       "topic": "Version Control",
       "choices": [
-        "git diff --cached",
-        "git diff --staged",
-        "git status --changes",
+        "`git diff --cached`",
+        "`git diff --staged`",
+        "`git status --changes`",
         "Both A and B are correct"
       ],
       "correctIndex": 3,
@@ -697,10 +697,10 @@
       "question": "Which command is used to temporarily store uncommitted changes?",
       "topic": "Version Control",
       "choices": [
-        "git stash",
-        "git store",
-        "git save",
-        "git hold"
+        "`git stash`",
+        "`git store`",
+        "`git save`",
+        "`git hold`"
       ],
       "correctIndex": 0,
       "explanation": "'git stash' is used to temporarily store uncommitted changes. It saves your local modifications away and reverts the working directory to match the HEAD commit, allowing you to work on something else and come back to your changes later.",
