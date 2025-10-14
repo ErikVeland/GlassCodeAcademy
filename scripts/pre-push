@@ -1,0 +1,24 @@
+#!/usr/bin/env bash
+
+echo "🔍 Running pre-push preflight..."
+
+# Ensure we run from the repo root
+REPO_ROOT="$(git rev-parse --show-toplevel 2>/dev/null || pwd)"
+cd "$REPO_ROOT" || {
+  echo "❌ Failed to locate repository root"
+  exit 1
+}
+
+# Prefer full preflight if available
+if [ -f "scripts/preflight.sh" ]; then
+  bash scripts/preflight.sh || exit 1
+else
+  echo "ℹ️ scripts/preflight.sh not found; falling back to typecheck"
+  if ! npm run typecheck; then
+    echo "❌ Typecheck failed. Push blocked."
+    exit 1
+  fi
+fi
+
+echo "✅ Pre-push checks passed"
+exit 0

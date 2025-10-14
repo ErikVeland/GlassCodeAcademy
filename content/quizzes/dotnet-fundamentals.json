@@ -675,7 +675,7 @@
     },
     {
       "id": 35,
-      "question": "Which method in Entity Framework Core executes a query and returns results?",
+      "question": "Which method in Entity Framework Core executes a `query` and returns results?",
       "topic": "Entity Framework",
       "difficulty": "Beginner",
       "choices": [
@@ -685,7 +685,7 @@
         "OrderBy()"
       ],
       "correctIndex": 0,
-      "explanation": "ToList() executes the query and returns the results as a List<T>. Methods like Where(), Select(), and OrderBy() are deferred execution methods that build up the query expression but don't execute it until a method like ToList() is called.",
+      "explanation": "ToList() executes the `query` and returns the results as a List<T>. Methods like Where(), Select(), and OrderBy() are deferred execution methods that build up the `query` expression but don't execute it until a method like ToList() is called.",
       "industryContext": "Understanding deferred execution in Entity Framework is crucial for performance optimization. Calling ToList() or similar methods triggers query execution and should be done thoughtfully to avoid retrieving unnecessary data.",
       "tags": [
         "beginner",
@@ -940,7 +940,8 @@
       "explanation": ".NET Core is a cross-platform, open-source framework that can run on Windows, macOS, and Linux, while .NET Framework is Windows-only and proprietary.",
       "correctIndex": 2,
       "questionType": "multiple-choice",
-      "estimatedTime": 45
+      "estimatedTime": 45,
+      "topic": ".NET"
     },
     {
       "id": 2,
@@ -956,7 +957,8 @@
       "explanation": "The 'const' keyword is used to declare compile-time constants in C#. The value must be assigned at declaration and cannot be changed.",
       "correctIndex": 1,
       "questionType": "multiple-choice",
-      "estimatedTime": 45
+      "estimatedTime": 45,
+      "topic": ".NET"
     },
     {
       "id": 6,
@@ -972,7 +974,8 @@
       "explanation": "The 'Where' method is used to filter collections based on a specified condition, returning only elements that match the criteria.",
       "correctIndex": 1,
       "questionType": "multiple-choice",
-      "estimatedTime": 60
+      "estimatedTime": 60,
+      "topic": ".NET"
     },
     {
       "id": 7,
@@ -988,7 +991,8 @@
       "explanation": "The 'using' statement ensures that IDisposable objects are properly disposed of when they go out of scope, even if an exception occurs.",
       "correctIndex": 1,
       "questionType": "multiple-choice",
-      "estimatedTime": 60
+      "estimatedTime": 60,
+      "topic": ".NET"
     },
     {
       "id": 12,
@@ -1004,7 +1008,8 @@
       "explanation": "IoC containers implement the Inversion of Control principle for dependency injection, managing object creation and dependency resolution automatically.",
       "correctIndex": 2,
       "questionType": "multiple-choice",
-      "estimatedTime": 75
+      "estimatedTime": 75,
+      "topic": ".NET"
     }
   ],
   "metadata": {

@@ -724,7 +724,7 @@
       },
       {
         "mistake": "Ignoring user privacy and permissions for sensitive APIs",
-        "solution": "Always request user permission for sensitive APIs like geolocation and notifications, explain why you need the data, and handle permission denials gracefully",
+        "solution": "Always request user permission for sensitive APIs like geolocation and notifications, `explain` why you need the data, and handle permission denials gracefully",
         "severity": "high"
       },
       {

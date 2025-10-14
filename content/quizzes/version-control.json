@@ -40,7 +40,7 @@
         "`git commit only (no add needed)`"
       ],
       "correctIndex": 0,
-      "explanation": "The correct Git workflow is to first stage changes with 'git add' (adding them to the staging area), then commit them with 'git commit'. This two-step process allows you to carefully control which changes are included in each commit.",
+      "explanation": "The correct Git workflow is to first stage changes with 'git add' (adding them to the staging area), then commit them with '`git commit`'. This two-step process allows you to carefully control which changes are included in each commit.",
       "industryContext": "The staging area is a key feature that sets Git apart from other version control systems, allowing developers to craft precise, logical commits.",
       "tags": [
         "foundational",
@@ -367,7 +367,7 @@
         "`git upload branch-name`"
       ],
       "correctIndex": 0,
-      "explanation": "The command 'git push -u origin branch-name' pushes a local branch to the remote repository and sets up tracking. The -u flag (or --set-upstream) establishes a relationship between the local and remote branches for future pushes and pulls.",
+      "explanation": "The command '`git push` -u origin branch-name' pushes a local branch to the remote repository and sets up tracking. The -u flag (or --set-upstream) establishes a relationship between the local and remote branches for future pushes and pulls.",
       "correctAnswer": 0
     },
     {
@@ -400,7 +400,7 @@
     },
     {
       "id": 9,
-      "question": "What does 'git rebase' do?",
+      "question": "What does '`git rebase`' do?",
       "topic": "Version Control",
       "choices": [
         "Moves or combines commits to create a linear history",
@@ -409,7 +409,7 @@
         "Synchronizes with the remote repository"
       ],
       "correctIndex": 0,
-      "explanation": "'git rebase' moves or combines commits to create a linear project history. It reapplies commits from the current branch on top of another base tip, resulting in a cleaner, linear history compared to merging.",
+      "explanation": "'`git rebase`' moves or combines commits to create a linear project history. It reapplies commits from the current branch on top of another base tip, resulting in a cleaner, linear history compared to merging.",
       "correctAnswer": 0
     },
     {
@@ -535,7 +535,7 @@
         "`git sync`"
       ],
       "correctIndex": 0,
-      "explanation": "'git fetch' downloads changes from a remote repository but does not merge them into your current branch. This allows you to review the changes before deciding whether to merge them with 'git merge' or 'git pull'.",
+      "explanation": "'git fetch' downloads changes from a remote repository but does not merge them into your current branch. This allows you to review the changes before deciding whether to merge them with '`git merge`' or '`git pull`'.",
       "correctAnswer": 0
     },
     {
@@ -563,7 +563,7 @@
         "`git merge --flatten`"
       ],
       "correctIndex": 0,
-      "explanation": "'git rebase -i' (interactive rebase) is used to combine multiple commits into a single commit. During the interactive rebase, you can choose to 'squash' or 'fixup' commits to combine them with previous commits.",
+      "explanation": "'`git rebase` -i' (interactive rebase) is used to combine multiple commits into a single commit. During the interactive rebase, you can choose to 'squash' or 'fixup' commits to combine them with previous commits.",
       "correctAnswer": 0
     },
     {

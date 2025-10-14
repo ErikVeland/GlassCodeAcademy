@@ -726,7 +726,7 @@
       },
       {
         "mistake": "Incorrectly naming foreign keys",
-        "solution": "Follow Laravel conventions or explicitly specify foreign key names",
+        "solution": "Follow Laravel conventions or explicitly specify `foreign key` names",
         "severity": "medium"
       }
     ],

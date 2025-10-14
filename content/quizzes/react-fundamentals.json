@@ -74,7 +74,7 @@
         "A debugging tool for tracking component re-renders"
       ],
       "correctIndex": 0,
-      "explanation": "React Hooks are functions that let you 'hook into' React state and lifecycle features from function components. They were introduced to allow using state and other React features without writing a class, making components simpler and easier to reuse. Hooks like useState, useEffect, and useContext provide a more direct API to React concepts.",
+      "explanation": "React Hooks are functions that let you 'hook into' React state and lifecycle features from function components. They were introduced to allow using state and other React features without writing a class, making components simpler and easier to reuse. Hooks like `useState`, `useEffect`, and useContext provide a more direct API to React concepts.",
       "industryContext": "React Hooks have become the standard way to write React components since their introduction in 2019. Understanding hooks is essential for modern React development and is widely used in enterprise applications for building scalable user interfaces.",
       "tags": [
         "Hooks",
@@ -91,13 +91,13 @@
       "topic": "Hooks",
       "difficulty": "Intermediate",
       "choices": [
-        "useState",
-        "useEffect",
+        "`useState`",
+        "`useEffect`",
         "useContext",
         "useReducer"
       ],
       "correctIndex": 0,
-      "explanation": "The useState hook is used to add state to functional components in React.",
+      "explanation": "The `useState` hook is used to add state to functional components in React.",
       "industryContext": "The useState hook is the most commonly used React Hook in modern applications, enabling developers to manage component state without class components. This pattern is essential for building interactive UIs in production applications.",
       "tags": [
         "Hooks",
@@ -198,13 +198,13 @@
       "topic": "State",
       "difficulty": "Beginner",
       "choices": [
-        "Using the setter function returned by useState",
+        "Using the setter function returned by `useState`",
         "Directly modifying the state variable",
         "Using this.setState",
         "Using forceUpdate"
       ],
       "correctIndex": 0,
-      "explanation": "When using useState, you get a state variable and a setter function. You must use the setter function to update state.",
+      "explanation": "When using `useState`, you get a state variable and a setter function. You must use the setter function to update state.",
       "industryContext": "Proper state management using useState setter functions is critical for predictable React applications. This pattern prevents common bugs related to direct state mutations and ensures components re-render correctly when state changes.",
       "tags": [
         "State",
@@ -273,7 +273,7 @@
     },
     {
       "id": 11,
-      "question": "When should you use useReducer instead of useState?",
+      "question": "When should you use useReducer instead of `useState`?",
       "topic": "State Management",
       "difficulty": "Intermediate",
       "choices": [
@@ -283,7 +283,7 @@
         "When working with form input values and validation"
       ],
       "correctIndex": 0,
-      "explanation": "useReducer is preferred over useState when you have complex state logic that involves multiple sub-values or when the next state depends on the previous one. It's also useful when you want to separate the state logic from the component and make it more predictable and testable.",
+      "explanation": "useReducer is preferred over `useState` when you have complex state logic that involves multiple sub-values or when the next state depends on the previous one. It's also useful when you want to separate the state logic from the component and make it more predictable and testable.",
       "industryContext": "Complex state management is a common challenge in enterprise React applications. Understanding when to use useReducer versus useState is crucial for building maintainable and scalable applications that can handle complex user interactions and data flows.",
       "tags": [
         "State Management",

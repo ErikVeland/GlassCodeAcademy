@@ -1,4 +1,4 @@
-import { NextRequest } from 'next/server';
+// Use the Web Request type to satisfy Next.js route handler typing
 import fs from 'fs';
 import path from 'path';
 import { normalizeQuestion } from '@/lib/textNormalization';
@@ -34,12 +34,9 @@ function findQuizFile(moduleSlug: string): string | null {
   return null;
 }
 
-export async function GET(
-  request: NextRequest,
-  { params }: { params: { moduleSlug: string } }
-) {
+export async function GET(request: Request, context: { params: Promise<{ moduleSlug: string }> }) {
   try {
-    const { moduleSlug } = params;
+    const { moduleSlug } = await context.params;
     console.log('=== Quiz API Route ===');
     console.log('Received request for quiz module:', moduleSlug);
     

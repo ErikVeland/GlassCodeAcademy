@@ -237,7 +237,7 @@
       "difficulty": "Beginner",
       "choices": [
         "A filter for HTTP requests that can examine and modify requests entering your application",
-        "A database optimization tool for improving query performance",
+        "A database optimization tool for improving `query` performance",
         "A template engine for rendering views in Laravel applications",
         "A caching mechanism for storing frequently accessed data"
       ],
@@ -326,7 +326,7 @@
         "A way to bind multiple routes to the same controller method"
       ],
       "correctIndex": 0,
-      "explanation": "Route model binding provides a convenient way to inject model instances into your routes. Laravel will automatically resolve Eloquent models defined in routes or controller methods whose type-hinted variable names match a route segment name. This eliminates the need to manually query the database for a model within your route or controller, making your code cleaner and more expressive.",
+      "explanation": "Route model binding provides a convenient way to inject model instances into your routes. Laravel will automatically resolve Eloquent models defined in routes or controller methods whose type-hinted variable names match a route segment name. This eliminates the need to manually `query` the database for a model within your route or controller, making your code cleaner and more expressive.",
       "industryContext": "Route model binding is a powerful Laravel feature that simplifies working with Eloquent models in routes and controllers. It's a key feature for building RESTful APIs and CRUD applications where you frequently need to retrieve models based on route parameters.",
       "tags": [
         "Routing",
@@ -432,13 +432,13 @@
       "topic": "Database",
       "difficulty": "Intermediate",
       "choices": [
-        "Version control for your database schema that allows team collaboration on database changes",
+        "Version control for your database `schema` that allows team collaboration on database changes",
         "A backup system for automatically saving database snapshots",
         "A performance optimization tool for indexing database tables",
         "A security feature for encrypting sensitive database columns"
       ],
       "correctIndex": 0,
-      "explanation": "Migrations are like version control for your database, allowing your team to define and share the application's database schema definition. They are typically paired with Laravel's schema builder to build your application's database schema. Migrations enable you to modify your database schema over time in a structured and organized way, making it easy to collaborate with team members and deploy database changes across different environments.",
+      "explanation": "Migrations are like version control for your database, allowing your team to define and share the application's database `schema` definition. They are typically paired with Laravel's `schema` builder to build your application's database `schema`. Migrations enable you to modify your database `schema` over time in a structured and organized way, making it easy to collaborate with team members and deploy database changes across different environments.",
       "industryContext": "Database migrations are essential for modern web development, enabling teams to collaborate on database schema changes and deploy updates consistently across development, staging, and production environments. This is a critical feature for maintaining database integrity in team-based development workflows.",
       "tags": [
         "Database",
@@ -792,7 +792,7 @@
     },
     {
       "id": 29,
-      "question": "How do you eager load relationships to avoid the N+1 query problem?",
+      "question": "How do you eager load relationships to avoid the N+1 `query` problem?",
       "topic": "Eloquent ORM",
       "difficulty": "Beginner",
       "choices": [
@@ -802,7 +802,7 @@
         "attach()"
       ],
       "correctIndex": 0,
-      "explanation": "The with() method is used to eager load relationships when querying models to avoid the N+1 query problem. Example: User::with('posts')->get();",
+      "explanation": "The with() method is used to eager load relationships when querying models to avoid the N+1 `query` problem. Example: User::with('posts')->get();",
       "industryContext": "These skills are valuable in professional development environments.",
       "tags": [
         "Eloquent ORM",

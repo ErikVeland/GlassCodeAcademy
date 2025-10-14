@@ -67,7 +67,6 @@
       "question": "What are props in Vue and how are they used? How do they differ from the data property?",
       "topic": "Components",
       "difficulty": "Intermediate",
-      
       "explanation": "Props are custom attributes you can register on a component to pass data from parent components to child components. They are used to pass data down the component tree. Props are read-only in the child component, while data properties are mutable within the component. Props are defined in the parent component's template, while data properties are defined within the component itself.",
       "industryContext": "These skills are valuable in professional development environments.",
       "tags": [
@@ -81,8 +80,7 @@
         "originalId": 3,
         "originalType": "open-ended",
         "migrated": "2025-10-01T06:41:13.489Z"
-      },
-      "correctAnswer": 0
+      }
     },
     {
       "id": 4,

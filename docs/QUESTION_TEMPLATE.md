@@ -98,6 +98,82 @@ This template defines the standardized structure for all interview questions and
 }
 ```
 
+## Minimal JSON Examples
+
+These examples show the minimal valid shape for each question type using the standardized fields and naming conventions.
+
+### Multiple-Choice (Minimal Valid)
+```json
+{
+  "id": 42,
+  "topic": "React Basics",
+  "type": "multiple-choice",
+  "difficulty": "Beginner",
+  "question": "Which React hook is used to manage component state?",
+  "choices": [
+    "useState",
+    "useEffect",
+    "useContext",
+    "useCallback"
+  ],
+  "correctAnswer": 0,
+  "explanation": "useState is specifically designed for managing component state. useEffect handles side effects, useContext accesses context values, and useCallback memoizes functions.",
+  "industryContext": "Managing component state is foundational in professional React development across all application sizes."
+}
+```
+
+### Open-Ended (Minimal Valid)
+```json
+{
+  "id": 43,
+  "topic": "React Architecture",
+  "type": "open-ended",
+  "difficulty": "Intermediate",
+  "question": "Explain the concept of props drilling and two strategies to avoid it.",
+  "explanation": "Props drilling occurs when props are passed through multiple component layers to reach deeply nested components. Common strategies to avoid it include using the Context API to share data without explicit props and adopting a state management library like Redux to centralize state.",
+  "industryContext": "Avoiding props drilling improves maintainability in production applications with deep component trees."
+}
+```
+
+Notes:
+- For open-ended questions, do not include `choices` and `correctAnswer` fields.
+- Use `correctAnswer` (index 0–3) for multiple-choice questions only.
+
+## Question Type Do’s/Don’ts
+
+### Multiple-Choice — Do’s
+- Include exactly 4 `choices` with similar length and specificity
+- Set `correctAnswer` to the correct choice index (0–3)
+- Write an educational `explanation` covering why correct is correct and others aren’t
+- Keep distractors plausible but clearly incorrect; avoid vague or absolute statements
+
+### Multiple-Choice — Don’ts
+- Don’t use “All of the above” or “None of the above”
+- Don’t include ambiguous, compound, or trick questions
+- Don’t mix formats (e.g., add open-ended fields to MC questions)
+
+### Open-Ended — Do’s
+- Omit `choices` and `correctAnswer`
+- Make the prompt specific with a clear scope and expected depth
+- Provide an `explanation` outlining key points, alternatives, and context
+
+### Open-Ended — Don’ts
+- Don’t ask overly broad or ambiguous questions
+- Don’t span multiple unrelated topics in one prompt
+
+### Coding-Challenge — Do’s
+- Specify clear input/output, constraints, and evaluation criteria
+- Focus on realistic tasks aligned with lesson topics and industry practice
+- Keep the scope achievable without external boilerplate
+
+### Coding-Challenge — Don’ts
+- Don’t require long environment setup or external services
+- Don’t depend on framework-specific scaffolding unless explicitly stated
+
+### General
+- Always include `topic` aligned to lesson categories
+- Keep `difficulty` as one of: `Beginner`, `Intermediate`, `Advanced`
+
 ## Difficulty Classification Framework
 
 ### Distribution Target (Per Module)

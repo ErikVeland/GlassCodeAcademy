@@ -26,7 +26,8 @@
         "beginner"
       ],
       "questionType": "multiple-choice",
-      "estimatedTime": 60
+      "estimatedTime": 60,
+      "correctAnswer": 0
     },
     {
       "id": "e2e-testing-q2",
@@ -48,7 +49,8 @@
         "beginner"
       ],
       "questionType": "multiple-choice",
-      "estimatedTime": 45
+      "estimatedTime": 45,
+      "correctAnswer": 0
     },
     {
       "id": "e2e-testing-q3",
@@ -70,7 +72,8 @@
         "beginner"
       ],
       "questionType": "multiple-choice",
-      "estimatedTime": 45
+      "estimatedTime": 45,
+      "correctAnswer": 0
     },
     {
       "id": "e2e-testing-q4",
@@ -93,7 +96,8 @@
         "beginner"
       ],
       "questionType": "multiple-choice",
-      "estimatedTime": 60
+      "estimatedTime": 60,
+      "correctAnswer": 0
     },
     {
       "id": "e2e-testing-q5",
@@ -116,7 +120,8 @@
         "beginner"
       ],
       "questionType": "multiple-choice",
-      "estimatedTime": 60
+      "estimatedTime": 60,
+      "correctAnswer": 0
     },
     {
       "id": "e2e-testing-q6",
@@ -139,7 +144,8 @@
         "beginner"
       ],
       "questionType": "multiple-choice",
-      "estimatedTime": 60
+      "estimatedTime": 60,
+      "correctAnswer": 0
     },
     {
       "id": "e2e-testing-q7",
@@ -162,7 +168,8 @@
         "intermediate"
       ],
       "questionType": "multiple-choice",
-      "estimatedTime": 75
+      "estimatedTime": 75,
+      "correctAnswer": 0
     },
     {
       "id": "e2e-testing-q8",
@@ -185,7 +192,8 @@
         "intermediate"
       ],
       "questionType": "multiple-choice",
-      "estimatedTime": 75
+      "estimatedTime": 75,
+      "correctAnswer": 0
     },
     {
       "id": "e2e-testing-q9",
@@ -208,7 +216,8 @@
         "intermediate"
       ],
       "questionType": "multiple-choice",
-      "estimatedTime": 75
+      "estimatedTime": 75,
+      "correctAnswer": 0
     },
     {
       "id": "e2e-testing-q10",
@@ -231,7 +240,8 @@
         "intermediate"
       ],
       "questionType": "multiple-choice",
-      "estimatedTime": 75
+      "estimatedTime": 75,
+      "correctAnswer": 0
     },
     {
       "id": "e2e-testing-q11",
@@ -254,7 +264,8 @@
         "intermediate"
       ],
       "questionType": "multiple-choice",
-      "estimatedTime": 75
+      "estimatedTime": 75,
+      "correctAnswer": 0
     },
     {
       "id": "e2e-testing-q12",
@@ -277,7 +288,8 @@
         "intermediate"
       ],
       "questionType": "multiple-choice",
-      "estimatedTime": 75
+      "estimatedTime": 75,
+      "correctAnswer": 0
     },
     {
       "id": "e2e-testing-q13",
@@ -300,7 +312,8 @@
         "intermediate"
       ],
       "questionType": "multiple-choice",
-      "estimatedTime": 75
+      "estimatedTime": 75,
+      "correctAnswer": 0
     },
     {
       "id": "e2e-testing-q14",
@@ -323,7 +336,8 @@
         "intermediate"
       ],
       "questionType": "multiple-choice",
-      "estimatedTime": 75
+      "estimatedTime": 75,
+      "correctAnswer": 0
     },
     {
       "id": "e2e-testing-q15",
@@ -346,7 +360,8 @@
         "intermediate"
       ],
       "questionType": "multiple-choice",
-      "estimatedTime": 75
+      "estimatedTime": 75,
+      "correctAnswer": 0
     },
     {
       "id": "e2e-testing-q16",
@@ -370,7 +385,8 @@
         "intermediate"
       ],
       "questionType": "multiple-choice",
-      "estimatedTime": 75
+      "estimatedTime": 75,
+      "correctAnswer": 0
     },
     {
       "id": "e2e-testing-q17",
@@ -393,7 +409,8 @@
         "intermediate"
       ],
       "questionType": "multiple-choice",
-      "estimatedTime": 75
+      "estimatedTime": 75,
+      "correctAnswer": 0
     },
     {
       "id": "e2e-testing-q18",
@@ -416,7 +433,8 @@
         "intermediate"
       ],
       "questionType": "multiple-choice",
-      "estimatedTime": 75
+      "estimatedTime": 75,
+      "correctAnswer": 0
     },
     {
       "id": "e2e-testing-q19",
@@ -439,7 +457,8 @@
         "intermediate"
       ],
       "questionType": "multiple-choice",
-      "estimatedTime": 75
+      "estimatedTime": 75,
+      "correctAnswer": 0
     },
     {
       "id": "e2e-testing-q20",
@@ -462,7 +481,8 @@
         "intermediate"
       ],
       "questionType": "multiple-choice",
-      "estimatedTime": 75
+      "estimatedTime": 75,
+      "correctAnswer": 0
     },
     {
       "id": "e2e-testing-q21",
@@ -485,7 +505,8 @@
         "advanced"
       ],
       "questionType": "multiple-choice",
-      "estimatedTime": 90
+      "estimatedTime": 90,
+      "correctAnswer": 0
     },
     {
       "id": "e2e-testing-q22",
@@ -508,7 +529,8 @@
         "advanced"
       ],
       "questionType": "multiple-choice",
-      "estimatedTime": 90
+      "estimatedTime": 90,
+      "correctAnswer": 0
     },
     {
       "id": "e2e-testing-q23",
@@ -531,7 +553,8 @@
         "advanced"
       ],
       "questionType": "multiple-choice",
-      "estimatedTime": 90
+      "estimatedTime": 90,
+      "correctAnswer": 0
     },
     {
       "id": "e2e-testing-q24",
@@ -554,7 +577,8 @@
         "advanced"
       ],
       "questionType": "multiple-choice",
-      "estimatedTime": 90
+      "estimatedTime": 90,
+      "correctAnswer": 0
     },
     {
       "id": "e2e-testing-q25",
@@ -577,7 +601,8 @@
         "advanced"
       ],
       "questionType": "multiple-choice",
-      "estimatedTime": 90
+      "estimatedTime": 90,
+      "correctAnswer": 0
     },
     {
       "id": "e2e-testing-q26",
@@ -600,7 +625,8 @@
         "advanced"
       ],
       "questionType": "multiple-choice",
-      "estimatedTime": 90
+      "estimatedTime": 90,
+      "correctAnswer": 0
     },
     {
       "id": "e2e-testing-q27",
@@ -623,7 +649,8 @@
         "advanced"
       ],
       "questionType": "multiple-choice",
-      "estimatedTime": 90
+      "estimatedTime": 90,
+      "correctAnswer": 0
     },
     {
       "id": "e2e-testing-q28",
@@ -646,7 +673,8 @@
         "advanced"
       ],
       "questionType": "multiple-choice",
-      "estimatedTime": 90
+      "estimatedTime": 90,
+      "correctAnswer": 0
     },
     {
       "id": "e2e-testing-q29",
@@ -669,7 +697,8 @@
         "advanced"
       ],
       "questionType": "multiple-choice",
-      "estimatedTime": 90
+      "estimatedTime": 90,
+      "correctAnswer": 0
     },
     {
       "id": "e2e-testing-q30",
@@ -692,7 +721,8 @@
         "advanced"
       ],
       "questionType": "multiple-choice",
-      "estimatedTime": 90
+      "estimatedTime": 90,
+      "correctAnswer": 0
     },
     {
       "id": "e2e-testing-q31",
@@ -715,7 +745,8 @@
         "advanced"
       ],
       "questionType": "multiple-choice",
-      "estimatedTime": 90
+      "estimatedTime": 90,
+      "correctAnswer": 0
     },
     {
       "id": "e2e-testing-q32",
@@ -738,7 +769,8 @@
         "advanced"
       ],
       "questionType": "multiple-choice",
-      "estimatedTime": 90
+      "estimatedTime": 90,
+      "correctAnswer": 0
     }
   ],
   "metadata": {

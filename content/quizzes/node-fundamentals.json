@@ -210,7 +210,7 @@
       "choices": [
         "A mechanism that handles asynchronous operations",
         "A loop that executes synchronous code",
-        "A database query optimizer",
+        "A database `query` optimizer",
         "A memory management system"
       ],
       "correctIndex": 0,

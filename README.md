@@ -211,6 +211,10 @@ This will start:
 - Backend on `http://localhost:8080`
 - Frontend on `http://localhost:3000`
 
+### Contributing
+
+Please read `CONTRIBUTING.md` for the content schema, validation workflow, auto-fix tools, and authoring guidelines.
+
 ### Manual Start (Development)
 
 #### Backend Setup

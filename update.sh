@@ -134,6 +134,21 @@ mkdir -p "$(dirname "$BACKUP_DIR")"
 cp -r "$APP_DIR" "$BACKUP_DIR"
 log "💾 Backup created at $BACKUP_DIR"
 
+# Prune older backups and keep only the most recent one to avoid clutter
+if ls -d /srv/academy-backup-* >/dev/null 2>&1; then
+    RECENT_AND_OLD=$(ls -dt /srv/academy-backup-* 2>/dev/null || true)
+    # Convert to array; first entry is the most recent
+    IFS=$'\n' read -r -d '' -a BACKUPS < <(printf '%s\0' "$RECENT_AND_OLD") || true
+    if [ ${#BACKUPS[@]} -gt 1 ]; then
+        for OLD in "${BACKUPS[@]:1}"; do
+            if [ -d "$OLD" ]; then
+                rm -rf "$OLD"
+                log "🧹 Removed old backup: $OLD"
+            fi
+        done
+    fi
+fi
+
 ### 4. Update repo
 cd "$APP_DIR"
 CURRENT_BRANCH=$(git rev-parse --abbrev-ref HEAD)
@@ -295,6 +310,13 @@ APPLE_CLIENT_ID=${APPLE_CLIENT_ID:-}
 APPLE_CLIENT_SECRET=${APPLE_CLIENT_SECRET:-}
 DEMO_USERS_JSON=${DEMO_USERS_JSON:-}
 EOF
+ 
+# Enforce lint and typecheck before production build
+log "🔎 Running ESLint checks (frontend)"
+sudo -u "$DEPLOY_USER" npm run lint
+log "🔎 Running TypeScript typecheck (frontend)"
+sudo -u "$DEPLOY_USER" npm run typecheck
+
 sudo -u "$DEPLOY_USER" npm run build
 log "✅ Frontend built"
 

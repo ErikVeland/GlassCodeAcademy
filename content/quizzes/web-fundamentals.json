@@ -74,7 +74,7 @@
     },
     {
       "id": 4,
-      "question": "What does this CSS media query do?\n\n@media (max-width: 768px) { /* styles */ }",
+      "question": "What does this CSS media `query` do?\n\n@media (max-width: 768px) { /* styles */ }",
       "topic": "CSS3",
       "difficulty": "Beginner",
       "choices": [
@@ -84,7 +84,7 @@
         "Only applies to tablets with 768px width"
       ],
       "correctIndex": 0,
-      "explanation": "The 'max-width: 768px' media query applies styles when the viewport width is 768 pixels or smaller. This is commonly used for mobile-first responsive design to apply mobile styles on smaller screens.",
+      "explanation": "The 'max-width: 768px' media `query` applies styles when the viewport width is 768 pixels or smaller. This is commonly used for mobile-first responsive design to apply mobile styles on smaller screens.",
       "industryContext": "Media queries are essential for responsive web design, ensuring websites work well on mobile devices, tablets, and desktops. 768px is a common breakpoint for tablet/mobile design.",
       "tags": [
         "foundational",

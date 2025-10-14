@@ -930,7 +930,7 @@
     },
     {
       "id": 54,
-      "question": "What is the primary benefit of using mutation testing to evaluate test suite quality?",
+      "question": "What is the primary benefit of using `mutation` testing to evaluate test suite quality?",
       "topic": "Advanced Testing Techniques",
       "difficulty": "Advanced",
       "choices": [
@@ -1079,7 +1079,6 @@
       "type": "open-ended",
       "question": "What is the difference between a mock and a stub in testing? When would you use each?",
       "choices": null,
-      "correctAnswer": null,
       "explanation": "A stub provides canned answers to calls made during the test, usually not responding at all to anything outside what's programmed in for the test. A mock is a stub with added behavior verification - it knows what methods should be called and with what arguments, and can verify this during the test. Use stubs when you need to control indirect inputs, and mocks when you need to verify interactions between objects."
     },
     {
@@ -1103,7 +1102,6 @@
       "type": "open-ended",
       "question": "What is test isolation and why is it important? How do you achieve it?",
       "choices": null,
-      "correctAnswer": null,
       "explanation": "Test isolation means each test can run independently without being affected by other tests. It's important because it ensures tests are reliable, repeatable, and can be run in any order. You achieve it by using fresh test data for each test, mocking external dependencies, avoiding shared state between tests, and using setup/teardown methods to prepare and clean up the test environment."
     },
     {
@@ -1157,7 +1155,6 @@
       "type": "open-ended",
       "question": "What are the different types of code coverage and what do they measure?",
       "choices": null,
-      "correctAnswer": null,
       "explanation": "Line coverage: percentage of code lines executed. Branch coverage: percentage of code branches taken. Function coverage: percentage of functions called. Statement coverage: percentage of statements executed. Condition coverage: percentage of boolean conditions evaluated to both true and false."
     },
     {
@@ -1196,7 +1193,6 @@
       "type": "open-ended",
       "question": "What should you test when testing REST APIs?",
       "choices": null,
-      "correctAnswer": null,
       "explanation": "Test: HTTP status codes, response data structure and content, request/response headers, authentication/authorization, input validation, error handling, performance under load, and edge cases like invalid data or missing parameters."
     },
     {

@@ -335,6 +335,17 @@ class ContentValidator {
       }
     }
 
+    // Soft-check topic presence
+    if (!question.topic) {
+      this.addWarning('Question missing field: topic', context);
+    }
+
+    // Validate difficulty value when present
+    const validDifficulties = ['Beginner', 'Intermediate', 'Advanced', 'Basic'];
+    if (question.difficulty && !validDifficulties.includes(question.difficulty)) {
+      this.addError(`Invalid question difficulty: ${question.difficulty}`, context);
+    }
+
     // Determine question type (support legacy "type" and new "questionType")
     const qType = (question.questionType || question.type || 'multiple-choice').toLowerCase();
 
@@ -358,9 +369,14 @@ class ContentValidator {
         }
       }
     } else {
-      // Open-ended or coding-challenge: choices should be null or omitted, and no correctIndex required
-      if (question.choices && Array.isArray(question.choices)) {
-        this.addWarning('Open-ended/coding question has choices array; expected null or omitted', context);
+      // Open-ended or coding-challenge: choices/correctIndex/correctAnswer should be omitted
+      const hasChoices = question.choices && Array.isArray(question.choices);
+      const hasCorrectIndex = question.correctIndex !== undefined;
+      const hasCorrectAnswer = question.correctAnswer !== undefined;
+
+      if (hasChoices || hasCorrectIndex || hasCorrectAnswer) {
+        const msg = 'Open-ended/coding question should not include choices, correctIndex, or correctAnswer';
+        this.addWarning(msg, context);
       }
     }
   }

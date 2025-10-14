@@ -124,13 +124,13 @@
       "topic": "Customization",
       "difficulty": "Intermediate",
       "choices": [
-        "tailwind.config.js",
-        "package.json",
+        "`tailwind.config.js`",
+        "`package.json`",
         "postcss.config.js",
         "styles.css"
       ],
       "correctIndex": 0,
-      "explanation": "Tailwind's configuration file (tailwind.config.js) is where you customize the default theme, add plugins, and configure other options.",
+      "explanation": "Tailwind's configuration file (`tailwind.config.js`) is where you customize the default theme, add plugins, and configure other options.",
       "industryContext": "These skills are valuable in professional development environments.",
       "tags": [
         "Customization",
@@ -186,7 +186,7 @@
         "small: 600px, medium: 900px, large: 1200px"
       ],
       "correctIndex": 0,
-      "explanation": "Tailwind's default breakpoints are: sm (640px), md (768px), lg (1024px), xl (1280px), and 2xl (1536px). These follow a mobile-first approach and can be customized in the tailwind.config.js file to match your specific design requirements. Each breakpoint represents a minimum screen width at which the responsive styles will be applied.",
+      "explanation": "Tailwind's default breakpoints are: sm (640px), md (768px), lg (1024px), xl (1280px), and 2xl (1536px). These follow a mobile-first approach and can be customized in the `tailwind.config.js` file to match your specific design requirements. Each breakpoint represents a minimum screen width at which the responsive styles will be applied.",
       "industryContext": "Understanding Tailwind's responsive breakpoints is essential for building mobile-first, responsive web applications. Professional frontend developers need to know these default values to effectively use Tailwind's responsive utility classes and customize them when needed for specific project requirements.",
       "tags": [
         "Responsive",
@@ -236,13 +236,13 @@
       "topic": "Customization",
       "difficulty": "Beginner",
       "choices": [
-        "Extend the theme in tailwind.config.js",
+        "Extend the theme in `tailwind.config.js`",
         "Create new CSS classes",
         "Use inline styles",
         "Modify the core framework"
       ],
       "correctIndex": 0,
-      "explanation": "Custom colors are added by extending the theme configuration in tailwind.config.js, which generates utility classes for your custom color palette.",
+      "explanation": "Custom colors are added by extending the theme configuration in `tailwind.config.js`, which generates utility classes for your custom color palette.",
       "industryContext": "These skills are valuable in professional development environments.",
       "tags": [
         "Customization",
@@ -298,7 +298,7 @@
         "Dark mode is automatically enabled in Tailwind v3+"
       ],
       "correctIndex": 0,
-      "explanation": "To implement dark mode in Tailwind CSS, first enable it by setting darkMode: 'class' in your tailwind.config.js file. Then use the dark: prefix on utility classes to apply styles only in dark mode, such as 'bg-white dark:bg-gray-800'. Toggle dark mode by adding or removing the 'dark' class on the document element or a parent container. This approach provides explicit control over when dark mode is active.",
+      "explanation": "To implement dark mode in Tailwind CSS, first enable it by setting darkMode: 'class' in your `tailwind.config.js` file. Then use the dark: prefix on utility classes to apply styles only in dark mode, such as 'bg-white dark:bg-gray-800'. Toggle dark mode by adding or removing the 'dark' class on the document element or a parent container. This approach provides explicit control over when dark mode is active.",
       "industryContext": "Dark mode implementation is increasingly important for modern web applications as users expect customizable viewing experiences. Professional frontend developers need to understand how to implement dark mode properly to meet accessibility standards and user preferences.",
       "tags": [
         "Dark Mode",
@@ -351,7 +351,7 @@
         "Mobile-first breakpoint prefixes (sm:, md:, lg:, xl:)",
         "Desktop-first approach",
         "Automatic responsive scaling",
-        "Media query mixins"
+        "Media `query` mixins"
       ],
       "correctIndex": 0,
       "explanation": "Tailwind uses mobile-first responsive design with breakpoint prefixes that apply styles at specific screen sizes and larger.",
@@ -382,7 +382,7 @@
         "Built-in features that require no configuration"
       ],
       "correctIndex": 0,
-      "explanation": "Tailwind plugins extend the framework by adding new utilities, components, or base styles. Official plugins include @tailwindcss/forms for better form styling, @tailwindcss/typography for styling prose content, and @tailwindcss/aspect-ratio for maintaining aspect ratios. Custom plugins can add project-specific utilities, components, or modify the theme. Plugins are installed via npm and added to the plugins array in tailwind.config.js.",
+      "explanation": "Tailwind plugins extend the framework by adding new utilities, components, or base styles. Official plugins include @tailwindcss/forms for better form styling, @tailwindcss/typography for styling prose content, and @tailwindcss/aspect-ratio for maintaining aspect ratios. Custom plugins can add project-specific utilities, components, or modify the theme. Plugins are installed via npm and added to the plugins array in `tailwind.config.js`.",
       "industryContext": "Tailwind plugins are essential for extending the framework's capabilities to meet specific project requirements. Professional developers use plugins to add functionality like form styling, typography enhancements, and custom components while maintaining consistency with the utility-first approach.",
       "tags": [
         "Plugins",

@@ -14,11 +14,11 @@
       "choices": [
         "SSR renders pages at request time, SSG renders pages at build time",
         "SSR is for dynamic content, SSG is for static content only",
-        "SSR uses getServerSideProps, SSG uses getStaticProps",
+        "SSR uses `getServerSideProps`, SSG uses `getStaticProps`",
         "All of the above"
       ],
       "correctIndex": 3,
-      "explanation": "All statements are correct. SSR renders pages on each request using getServerSideProps, while SSG pre-renders pages at build time using getStaticProps. The choice depends on how dynamic your content needs to be.",
+      "explanation": "All statements are correct. SSR renders pages on each request using `getServerSideProps`, while SSG pre-renders pages at build time using `getStaticProps`. The choice depends on how dynamic your content needs to be.",
       "industryContext": "Next.js is widely adopted in enterprise applications for its flexibility in choosing the right rendering strategy based on content requirements.",
       "tags": [
         "SSR",
@@ -42,7 +42,7 @@
         "Dynamic Imports"
       ],
       "correctIndex": 1,
-      "explanation": "Incremental Static Regeneration (ISR) allows you to update static content after deployment by setting a revalidate value in getStaticProps. This combines the benefits of static generation with the ability to update content.",
+      "explanation": "Incremental Static Regeneration (ISR) allows you to update static content after deployment by setting a revalidate value in `getStaticProps`. This combines the benefits of static generation with the ability to update content.",
       "industryContext": "ISR is crucial for e-commerce and content sites that need fast loading times but occasionally updated content.",
       "tags": [
         "ISR",
@@ -62,10 +62,10 @@
         "Create a file named [param].js in the pages/api directory",
         "Use the useRouter hook in an API file",
         "Add dynamic: true to the API function",
-        "Use getServerSideProps in the API route"
+        "Use `getServerSideProps` in the API route"
       ],
       "correctIndex": 0,
-      "explanation": "Dynamic API routes in Next.js use square brackets in the filename, such as [id].js or [slug].js. The parameter name becomes available in req.query.",
+      "explanation": "Dynamic API routes in Next.js use square brackets in the filename, such as [id].js or [slug].js. The parameter name becomes available in req.`query`.",
       "industryContext": "Dynamic API routes are essential for RESTful APIs and CRUD operations in full-stack applications.",
       "tags": [
         "API Routes",
@@ -106,13 +106,13 @@
       "topic": "Data Fetching",
       "difficulty": "Beginner",
       "choices": [
-        "getServerSideProps",
-        "getStaticProps",
-        "useEffect",
+        "`getServerSideProps`",
+        "`getStaticProps`",
+        "`useEffect`",
         "Both A and B"
       ],
       "correctIndex": 3,
-      "explanation": "Both getServerSideProps (for SSR) and getStaticProps (for SSG) can fetch data on the server before rendering. The choice depends on whether you need data at request time or build time.",
+      "explanation": "Both `getServerSideProps` (for SSR) and `getStaticProps` (for SSG) can fetch data on the server before rendering. The choice depends on whether you need data at request time or build time.",
       "industryContext": "Server-side data fetching is essential for SEO and initial page load performance in production applications.",
       "tags": [
         "Data Fetching",
@@ -149,7 +149,7 @@
     },
     {
       "id": 7,
-      "question": "What is the purpose of the revalidate property in getStaticProps?",
+      "question": "What is the purpose of the revalidate property in `getStaticProps`?",
       "topic": "ISR",
       "difficulty": "Intermediate",
       "choices": [
@@ -159,7 +159,7 @@
         "To check user authentication"
       ],
       "correctIndex": 0,
-      "explanation": "The revalidate property in getStaticProps enables Incremental Static Regeneration (ISR), allowing static pages to be updated in the background after the specified number of seconds.",
+      "explanation": "The revalidate property in `getStaticProps` enables Incremental Static Regeneration (ISR), allowing static pages to be updated in the background after the specified number of seconds.",
       "industryContext": "ISR is essential for sites that need static performance with fresh content, like news sites and e-commerce platforms.",
       "tags": [
         "ISR",
@@ -268,13 +268,13 @@
       "topic": "Internationalization",
       "difficulty": "Intermediate",
       "choices": [
-        "Configure i18n in next.config.js",
+        "Configure i18n in `next.config.js`",
         "Install react-intl package",
         "Use the useTranslation hook",
         "Add locale files to public directory"
       ],
       "correctIndex": 0,
-      "explanation": "Next.js i18n is enabled by configuring the i18n object in next.config.js with locales and defaultLocale. This enables automatic locale detection and routing.",
+      "explanation": "Next.js i18n is enabled by configuring the i18n object in `next.config.js` with locales and defaultLocale. This enables automatic locale detection and routing.",
       "industryContext": "Built-in i18n support is essential for applications targeting global markets and multilingual audiences.",
       "tags": [
         "i18n",
@@ -356,7 +356,7 @@
     },
     {
       "id": 16,
-      "question": "What is the purpose of the next.config.js file?",
+      "question": "What is the purpose of the `next.config.js` file?",
       "topic": "Configuration",
       "difficulty": "Beginner",
       "choices": [
@@ -366,7 +366,7 @@
         "To configure database connections"
       ],
       "correctIndex": 0,
-      "explanation": "next.config.js is the configuration file for Next.js that allows you to customize build behavior, webpack configuration, redirects, headers, and other framework settings.",
+      "explanation": "`next.config.js` is the configuration file for Next.js that allows you to customize build behavior, webpack configuration, redirects, headers, and other framework settings.",
       "industryContext": "Proper configuration is essential for optimizing performance, security, and deployment settings in production applications.",
       "tags": [
         "Configuration",

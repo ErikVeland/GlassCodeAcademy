@@ -42,6 +42,74 @@ function wrapTokens(text) {
     { regex: /(?<!`)display:\s*(flex|grid|block)(?!`)/g },
     // Teleport 'to' prop and quoted tokens
     { regex: /(?<!`)'to'(?!`)/g },
+
+    // Framework lifecycle and hooks
+    { regex: /(?<!`)\bngOnInit\b(?!`)/g },
+    { regex: /(?<!`)\bOnInit\b(?!`)/g },
+    { regex: /(?<!`)\buseEffect\b(?!`)/g },
+    { regex: /(?<!`)\buseState\b(?!`)/g },
+    { regex: /(?<!`)\bcreateSlice\b(?!`)/g },
+    { regex: /(?<!`)\bconfigureStore\b(?!`)/g },
+
+    // GraphQL/Backend identifiers
+    { regex: /(?<!`)\bGraphQLSchema\b(?!`)/g },
+    { regex: /(?<!`)\bGraphQLObjectType\b(?!`)/g },
+    { regex: /(?<!`)\bApolloServer\b(?!`)/g },
+    { regex: /(?<!`)\bPrismaClient\b(?!`)/g },
+    { regex: /(?<!`)\bDbContext\b(?!`)/g },
+
+    // Prototype method references e.g. Array.prototype.map
+    { regex: /(?<!`)\b(Array|String|Object|Number|Promise|Map|Set)\.prototype\.[a-zA-Z]+\b(?!`)/g },
+
+    // Common file names and config files
+    { regex: /(?<!`)\b(tsconfig\.json|package\.json|next\.config\.js|webpack\.config\.js)\b(?!`)/g },
+
+    // CLI commands
+    { regex: /(?<!`)\bnpm\s+run\s+[a-zA-Z:_-]+\b(?!`)/g },
+    { regex: /(?<!`)\bnpx\s+[a-zA-Z0-9@\/_-]+\b(?!`)/g },
+    { regex: /(?<!`)\bdotnet\s+(build|test|run)\b(?!`)/g },
+
+    // Source paths
+    { regex: /(?<!`)\bsrc\/[A-Za-z0-9._\/-]+\b(?!`)/g },
+
+    // Additional Angular identifiers and templates
+    { regex: /(?<!`)@Component\b(?!`)/g },
+    { regex: /(?<!`)@Injectable\b(?!`)/g },
+    { regex: /(?<!`)@NgModule\b(?!`)/g },
+    { regex: /(?<!`)\*ngFor\b(?!`)/g },
+    { regex: /(?<!`)\*ngIf\b(?!`)/g },
+    { regex: /(?<!`)app\.module\.ts\b(?!`)/g },
+    { regex: /(?<!`)app\.component\.ts\b(?!`)/g },
+
+    // React/Next extra hooks and files
+    { regex: /(?<!`)\buseMemo\b(?!`)/g },
+    { regex: /(?<!`)\buseCallback\b(?!`)/g },
+    { regex: /(?<!`)\bgetStaticProps\b(?!`)/g },
+    { regex: /(?<!`)\bgetServerSideProps\b(?!`)/g },
+    { regex: /(?<!`)next\.config\.(js|ts)\b(?!`)/g },
+
+    // Svelte basics
+    { regex: /(?<!`)\bonMount\b(?!`)/g },
+    { regex: /(?<!`)\+page\.svelte\b(?!`)/g },
+
+    // Additional config filenames
+    { regex: /(?<!`)vite\.config\.(js|ts)\b(?!`)/g },
+    { regex: /(?<!`)webpack\.config\.(js|ts)\b(?!`)/g },
+
+    // More CLI commands
+    { regex: /(?<!`)\byarn\s+(add|install|build|dev)\b(?!`)/g },
+    { regex: /(?<!`)\bpnpm\s+(add|install|build|dev)\b(?!`)/g },
+    { regex: /(?<!`)\bpip\s+install\s+[A-Za-z0-9._-]+\b(?!`)/g },
+    { regex: /(?<!`)\bcomposer\s+install\b(?!`)/g },
+
+    // Database keywords (case-insensitive common terms)
+    { regex: /\bPRIMARY KEY\b/gi },
+    { regex: /\bFOREIGN KEY\b/gi },
+    { regex: /\bINDEX\b/gi },
+    { regex: /\bJOIN\b/gi },
+    { regex: /\bLEFT JOIN\b/gi },
+    { regex: /\bRIGHT JOIN\b/gi },
+    { regex: /\bEXPLAIN\b/gi }
   ];
 
   let result = text;
@@ -58,11 +126,33 @@ function processLesson(lesson) {
   if (typeof updated.title === 'string') updated.title = wrapTokens(updated.title);
   if (typeof updated.intro === 'string') updated.intro = wrapTokens(updated.intro);
   if (typeof updated.description === 'string') updated.description = wrapTokens(updated.description);
+  if (typeof updated.instructions === 'string') updated.instructions = wrapTokens(updated.instructions);
+  if (typeof updated.summary === 'string') updated.summary = wrapTokens(updated.summary);
+  if (typeof updated.realWorldApplication === 'string') updated.realWorldApplication = wrapTokens(updated.realWorldApplication);
 
   // Objectives array
   if (Array.isArray(updated.objectives)) {
     updated.objectives = updated.objectives.map((obj) =>
       typeof obj === 'string' ? wrapTokens(obj) : obj
+    );
+  }
+
+  // Tips array of strings
+  if (Array.isArray(updated.tips)) {
+    updated.tips = updated.tips.map((tip) =>
+      typeof tip === 'string' ? wrapTokens(tip) : tip
+    );
+  }
+
+  // Prerequisites and next steps arrays of strings
+  if (Array.isArray(updated.prerequisites)) {
+    updated.prerequisites = updated.prerequisites.map((item) =>
+      typeof item === 'string' ? wrapTokens(item) : item
+    );
+  }
+  if (Array.isArray(updated.nextSteps)) {
+    updated.nextSteps = updated.nextSteps.map((item) =>
+      typeof item === 'string' ? wrapTokens(item) : item
     );
   }
 
@@ -91,6 +181,16 @@ function processLesson(lesson) {
       const ne = { ...ex };
       if (typeof ne.prompt === 'string') ne.prompt = wrapTokens(ne.prompt);
       return ne;
+    });
+  }
+
+  // Sections: wrap title/content if present
+  if (Array.isArray(updated.sections)) {
+    updated.sections = updated.sections.map((sec) => {
+      const ns = { ...sec };
+      if (typeof ns.title === 'string') ns.title = wrapTokens(ns.title);
+      if (typeof ns.content === 'string') ns.content = wrapTokens(ns.content);
+      return ns;
     });
   }
 

@@ -67,7 +67,6 @@
       "question": "What is the difference between an interface and a type alias in TypeScript? When would you use each?",
       "topic": "Interfaces",
       "difficulty": "Beginner",
-      
       "explanation": "Interfaces create a new name that can be used everywhere and can be extended and implemented. Type aliases don't create a new name and cannot be extended or implemented. Use interfaces for defining object shapes and type aliases for complex types like union types. Interfaces are preferred for object shapes because they support declaration merging.",
       "industryContext": "TypeScript is increasingly adopted in large codebases for better maintainability.",
       "tags": [
@@ -81,8 +80,7 @@
         "originalId": 3,
         "originalType": "open-ended",
         "migrated": "2025-10-01T06:41:13.483Z"
-      },
-      "correctAnswer": 0
+      }
     },
     {
       "id": 4,
@@ -455,7 +453,7 @@
         "Removing all existing JavaScript libraries"
       ],
       "correctIndex": 0,
-      "explanation": "Key considerations when migrating a JavaScript project to TypeScript include: gradual adoption by renaming .js to .ts files incrementally to minimize disruption, configuring tsconfig.json with appropriate strictness levels that balance type safety with migration effort, adding type definitions (@types packages) for third-party libraries, creating .d.ts files for legacy JavaScript code, setting up proper build tools (webpack, rollup) to handle TypeScript compilation, establishing team conventions for type usage and naming, and implementing type checking in CI/CD pipelines to prevent type errors from reaching production.",
+      "explanation": "Key considerations when migrating a JavaScript project to TypeScript include: gradual adoption by renaming .js to .ts files incrementally to minimize disruption, configuring `tsconfig.json` with appropriate strictness levels that balance type safety with migration effort, adding type definitions (@types packages) for third-party libraries, creating .d.ts files for legacy JavaScript code, setting up proper build tools (webpack, rollup) to handle TypeScript compilation, establishing team conventions for type usage and naming, and implementing type checking in CI/CD pipelines to prevent type errors from reaching production.",
       "industryContext": "Many companies migrate existing JavaScript codebases to TypeScript to improve maintainability and developer experience. Professional TypeScript migration requires careful planning and execution to minimize disruption while maximizing the benefits of type safety.",
       "tags": [
         "Migration",

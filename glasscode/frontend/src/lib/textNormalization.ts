@@ -55,9 +55,51 @@ export function wrapInlineCode(text: string): string {
   return processed;
 }
 
-export function normalizeQuestion(question: { question?: string; choices?: string[]; explanation?: string }) {
-  const q = { ...question };
-  // Disable automatic inline-code wrapping. Content authors should add backticks manually
-  // in the JSON for any segments that should be rendered as inline code.
-  return q;
+interface ProgrammingQuestion {
+  id?: number;
+  topic?: string;
+  type?: string;
+  question: string;
+  choices?: string[];
+  correctAnswer?: number;
+  acceptedAnswers?: string[];
+  explanation?: string;
+}
+
+export function normalizeQuestion(input: unknown): ProgrammingQuestion {
+  const raw = (input ?? {}) as Record<string, unknown>;
+  const questionText =
+    typeof raw.question === 'string' ? raw.question.trim() : '';
+  const question =
+    questionText.length > 0 ? questionText : 'Untitled question';
+
+  const choices =
+    Array.isArray(raw.choices)
+      ? (raw.choices as unknown[])
+          .map((c) => (typeof c === 'string' ? c.trim() : String(c)))
+          .filter((c) => (c ?? '').length > 0)
+      : undefined;
+
+  const correctAnswer =
+    typeof (raw as { correctAnswer?: number }).correctAnswer === 'number'
+      ? (raw as { correctAnswer: number }).correctAnswer
+      : typeof (raw as { correctIndex?: number }).correctIndex === 'number'
+      ? (raw as { correctIndex: number }).correctIndex
+      : undefined;
+
+  const acceptedAnswers =
+    Array.isArray((raw as { acceptedAnswers?: unknown[] }).acceptedAnswers)
+      ? ((raw as { acceptedAnswers: unknown[] }).acceptedAnswers || [])
+          .map((a) => (typeof a === 'string' ? a.trim() : String(a)))
+          .filter((a) => (a ?? '').length > 0)
+      : undefined;
+
+  return {
+    ...(raw as object),
+    question,
+    choices,
+    correctAnswer,
+    acceptedAnswers,
+    type: typeof raw.type === 'string' ? (raw.type as string) : undefined,
+  };
 }

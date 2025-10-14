@@ -2,9 +2,12 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   eslint: {
-    // Skip ESLint during production builds to prevent build failures
-    // Linting remains enabled in development via IDE/editor and npm scripts
-    ignoreDuringBuilds: true,
+    // Enforce ESLint during production builds so invalid code fails early
+    ignoreDuringBuilds: false,
+  },
+  typescript: {
+    // Explicitly fail the build on TypeScript errors
+    ignoreBuildErrors: false,
   },
   output: 'standalone',
   // Performance optimizations

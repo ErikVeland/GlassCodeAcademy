@@ -64,17 +64,17 @@
     },
     {
       "id": 3,
-      "question": "What is the difference between INNER JOIN and LEFT JOIN? When would you use each?",
+      "question": "What is the difference between INNER `JOIN` and LEFT `JOIN`? When would you use each?",
       "topic": "SQL",
       "difficulty": "Beginner",
       "choices": [
-        "INNER JOIN returns only matching rows from both tables, while LEFT JOIN returns all rows from the left table and matching rows from the right table",
-        "INNER JOIN is faster than LEFT JOIN for all query scenarios",
-        "LEFT JOIN can only be used with three or more tables",
-        "INNER JOIN and LEFT JOIN produce identical results in all cases"
+        "INNER `JOIN` returns only matching rows from both tables, while LEFT `JOIN` returns all rows from the left table and matching rows from the right table",
+        "INNER `JOIN` is faster than LEFT `JOIN` for all `query` scenarios",
+        "LEFT `JOIN` can only be used with three or more tables",
+        "INNER `JOIN` and LEFT `JOIN` produce identical results in all cases"
       ],
       "correctIndex": 0,
-      "explanation": "INNER JOIN returns only rows that have matching values in both tables. LEFT JOIN returns all rows from the left table and matching rows from the right table. If there's no match, NULL values are returned for columns from the right table. Use INNER JOIN when you only want records that exist in both tables, and LEFT JOIN when you want all records from the first table regardless of whether they have matches in the second table.",
+      "explanation": "INNER `JOIN` returns only rows that have matching values in both tables. LEFT `JOIN` returns all rows from the left table and matching rows from the right table. If there's no match, NULL values are returned for columns from the right table. Use INNER `JOIN` when you only want records that exist in both tables, and LEFT `JOIN` when you want all records from the first table regardless of whether they have matches in the second table.",
       "industryContext": "Understanding SQL JOIN operations is crucial for backend developers working with relational databases. Proper use of JOINs can significantly impact application performance and data integrity in enterprise applications. LEFT JOIN is commonly used in reporting scenarios where you want to include all primary records even if related data is missing.",
       "tags": [
         "SQL",
@@ -143,17 +143,17 @@
     },
     {
       "id": 6,
-      "question": "What is the N+1 query problem and how can it be avoided?",
+      "question": "What is the N+1 `query` problem and how can it be avoided?",
       "topic": "Performance",
       "difficulty": "Beginner",
       "choices": [
-        "Executing one query to get parent records and N queries to get related data for each parent; use eager loading",
+        "Executing one `query` to get parent records and N queries to get related data for each parent; use eager loading",
         "A syntax error in SQL queries",
         "A problem with database indexing",
         "A network connectivity issue"
       ],
       "correctIndex": 0,
-      "explanation": "The N+1 query problem occurs when you execute one query to get a set of parent records and then N additional queries to get related data for each parent record. This can be avoided by using eager loading (JOINs) to fetch all needed data in a single query, or by using techniques like batch loading.",
+      "explanation": "The N+1 `query` problem occurs when you execute one `query` to get a set of parent records and then N additional queries to get related data for each parent record. This can be avoided by using eager loading (JOINs) to fetch all needed data in a single `query`, or by using techniques like batch loading.",
       "industryContext": "The N+1 query problem is a common performance issue in web applications that can severely impact response times and scalability. It's particularly prevalent in ORM-based applications and understanding how to avoid it is crucial for backend developers working on high-traffic applications like e-commerce platforms and social media services.",
       "tags": [
         "Performance",
@@ -198,13 +198,13 @@
       "topic": "Indexing",
       "difficulty": "Intermediate",
       "choices": [
-        "When the column is frequently used in WHERE clauses, JOINs, or ORDER BY clauses",
+        "When the column is frequently used in WHERE clauses, JOINs, or `ORDER BY` clauses",
         "When the column contains large text data",
         "When the table has fewer than 100 rows",
         "When the column is updated frequently"
       ],
       "correctIndex": 0,
-      "explanation": "Indexes should be added to columns that are frequently used in WHERE clauses, JOIN conditions, or ORDER BY clauses as they significantly improve query performance. However, indexes come with overhead for INSERT, UPDATE, and DELETE operations, so they should be used judiciously.",
+      "explanation": "Indexes should be added to columns that are frequently used in WHERE clauses, `JOIN` conditions, or `ORDER BY` clauses as they significantly improve `query` performance. However, indexes come with overhead for INSERT, `UPDATE`, and DELETE operations, so they should be used judiciously.",
       "industryContext": "Database indexing is a critical performance optimization technique used in production systems to ensure fast query execution. Proper indexing strategies are essential for applications handling large datasets, such as analytics platforms, content management systems, and real-time data processing applications.",
       "tags": [
         "Indexing",
@@ -232,7 +232,7 @@
         "Better support for complex transactions"
       ],
       "correctIndex": 0,
-      "explanation": "Document databases like MongoDB offer schema flexibility, allowing you to store varied document structures without predefined schemas. They excel at storing nested, hierarchical data and can evolve the data model without complex migrations, making them suitable for agile development and varied data structures.",
+      "explanation": "Document databases like MongoDB offer `schema` flexibility, allowing you to store varied document structures without predefined schemas. They excel at storing nested, hierarchical data and can evolve the data model without complex migrations, making them suitable for agile development and varied data structures.",
       "industryContext": "Document databases like MongoDB are widely used in modern web applications where schema flexibility and rapid iteration are important. They're particularly popular in content management systems, real-time analytics, and applications with varying data structures, such as IoT platforms and social media applications.",
       "tags": [
         "NoSQL",
@@ -363,7 +363,7 @@
       "choices": [
         "Rules that limit the values that can be placed in a column, such as ensuring an age column only accepts positive values",
         "Security measures that prevent unauthorized access to database tables",
-        "Performance optimizations that speed up query execution",
+        "Performance optimizations that speed up `query` execution",
         "Indexing strategies that improve data retrieval speed"
       ],
       "correctIndex": 0,
@@ -412,10 +412,10 @@
       "topic": "Security",
       "difficulty": "Intermediate",
       "choices": [
-        "SELECT * FROM users WHERE email = ?",
-        "SELECT * FROM users WHERE email = '' + email + ''",
-        "SELECT * FROM users WHERE email = $email",
-        "SELECT * FROM users WHERE email = email"
+        "`SELECT` * FROM users WHERE email = ?",
+        "`SELECT` * FROM users WHERE email = '' + email + ''",
+        "`SELECT` * FROM users WHERE email = $email",
+        "`SELECT` * FROM users WHERE email = email"
       ],
       "correctIndex": 0,
       "explanation": "Using parameterized queries with placeholders (?) is the correct approach to prevent SQL injection. This separates the SQL code from the data, ensuring user input is treated as data rather than executable code. The other options are vulnerable to SQL injection attacks.",
@@ -533,7 +533,7 @@
         "The process of encrypting sensitive database information"
       ],
       "correctIndex": 0,
-      "explanation": "Denormalization involves adding redundant data to a database schema to improve read performance by reducing the number of joins needed. It's commonly used in data warehouses, reporting databases, and read-heavy applications where query performance is more important than storage efficiency.",
+      "explanation": "Denormalization involves adding redundant data to a database `schema` to improve read performance by reducing the number of joins needed. It's commonly used in data warehouses, reporting databases, and read-heavy applications where `query` performance is more important than storage efficiency.",
       "industryContext": "Database denormalization is a strategic technique used in data warehousing, business intelligence, and analytics applications where read performance is prioritized over storage efficiency. It's essential for building high-performance reporting systems and dashboards that need to process large volumes of data quickly.",
       "tags": [
         "Database Design",
@@ -550,13 +550,13 @@
       "topic": "Database Objects",
       "difficulty": "Beginner",
       "choices": [
-        "To provide a virtual table based on the result of a query, simplifying complex queries and controlling data access",
-        "To store temporary data during query execution",
+        "To provide a virtual table based on the result of a `query`, simplifying complex queries and controlling data access",
+        "To store temporary data during `query` execution",
         "To backup database automatically",
         "To encrypt sensitive database columns"
       ],
       "correctIndex": 0,
-      "explanation": "Database views are virtual tables based on the result of a SQL query. They simplify complex queries, provide an additional layer of security by controlling data access, and can present data in a more user-friendly format. Views don't store data themselves but display data from one or more underlying tables.",
+      "explanation": "Database views are virtual tables based on the result of a SQL `query`. They simplify complex queries, provide an additional layer of security by controlling data access, and can present data in a more user-friendly format. Views don't store data themselves but display data from one or more underlying tables.",
       "industryContext": "Database views are widely used in enterprise applications to simplify complex queries, implement security policies, and provide consistent interfaces to data. They're particularly valuable in applications with complex data models where different user roles need access to different subsets of data, such as in customer relationship management (CRM) and enterprise resource planning (ERP) systems.",
       "tags": [
         "Database Objects",

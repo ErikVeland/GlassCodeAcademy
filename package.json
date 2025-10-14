@@ -2,7 +2,11 @@
   "scripts": {
     "start": "bash start.sh",
     "start:dev": "bash start-dev.sh",
-    "start:both": "bash start-dev.sh"
+    "start:both": "bash start-dev.sh",
+    "ci:validate": "CI=1 node scripts/validate-content.js",
+    "typecheck": "npm --prefix glasscode/frontend run typecheck",
+    "lint": "npm --prefix glasscode/frontend run lint",
+    "ci:build": "npm --prefix glasscode/frontend ci && npm --prefix glasscode/frontend run lint && npm --prefix glasscode/frontend run typecheck && npm --prefix glasscode/frontend run build"
   },
   "dependencies": {
     "ajv": "^8.17.1",
