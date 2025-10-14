@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev --turbopack",
-    "build": "next build",
+    "build": "node scripts/copy-content.js && next build",
     "start": "node .next/standalone/server.js -p 3000",
     "start:next": "next start",
     "lint": "next lint",

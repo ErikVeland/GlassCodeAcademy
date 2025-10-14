@@ -597,6 +597,18 @@ class ContentRegistryLoader {
       
       if (!response.ok) {
         console.error(`HTTP error ${response.status} for lessons/${moduleSlug}`);
+        // Client-side static fallback: try public content
+        try {
+          const staticRes = await fetch(`/content/lessons/${moduleSlug}.json`, {
+            signal: controller.signal,
+          });
+          if (staticRes.ok) {
+            const staticData: unknown = await staticRes.json();
+            return Array.isArray(staticData) ? (staticData as Lesson[]).map((l, i) => ({ ...l, order: i + 1 })) : [];
+          }
+        } catch (staticErr) {
+          console.error(`Static lessons fallback failed for ${moduleSlug}:`, staticErr);
+        }
         return [];
       }
       
@@ -681,6 +693,22 @@ class ContentRegistryLoader {
       
       if (!response.ok) {
         console.error(`HTTP error ${response.status} for quizzes/${moduleSlug}`);
+        // Client-side static fallback: try public content
+        try {
+          const staticRes = await fetch(`/content/quizzes/${moduleSlug}.json`, {
+            signal: controller.signal,
+          });
+          if (staticRes.ok) {
+            const staticData: unknown = await staticRes.json();
+            if (staticData && typeof staticData === 'object') {
+              const quiz = staticData as Quiz;
+              const normalizedQuestions = Array.isArray(quiz.questions) ? quiz.questions.map(q => normalizeQuestion(q)) : [];
+              return { ...quiz, questions: normalizedQuestions };
+            }
+          }
+        } catch (staticErr) {
+          console.error(`Static quiz fallback failed for ${moduleSlug}:`, staticErr);
+        }
         return null;
       }
       
