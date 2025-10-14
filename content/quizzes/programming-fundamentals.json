@@ -3,7 +3,7 @@
   "title": "Programming Fundamentals Quiz",
   "questions": [
     {
-      "id": "prog-fund-q1",
+      "id": 15,
       "topic": "Variables",
       "difficulty": "Beginner",
       "question": "Which keyword is used to declare a variable that can be reassigned in JavaScript?",
@@ -15,10 +15,11 @@
       ],
       "correctIndex": 2,
       "explanation": "In JavaScript, 'let' is used to declare variables that can be reassigned. 'const' is used for constants that cannot be reassigned, while 'final' and 'static' are keywords from other programming languages.",
-      "industryContext": "Understanding variable declaration keywords is fundamental for writing maintainable JavaScript code and avoiding common bugs related to variable scope and reassignment."
+      "industryContext": "Understanding variable declaration keywords is fundamental for writing maintainable JavaScript code and avoiding common bugs related to variable scope and reassignment.",
+      "correctAnswer": 2
     },
     {
-      "id": "prog-fund-q2",
+      "id": 16,
       "topic": "Data Types",
       "difficulty": "Beginner",
       "question": "Which of the following is NOT a primitive data type in JavaScript?",
@@ -30,10 +31,11 @@
       ],
       "correctIndex": 3,
       "explanation": "In JavaScript, Object is not a primitive data type. The primitive data types are Number, Boolean, String, Undefined, Null, Symbol, and BigInt. Objects are reference types.",
-      "industryContext": "Distinguishing between primitive and reference types is crucial for understanding memory allocation and variable assignment behavior in JavaScript applications."
+      "industryContext": "Distinguishing between primitive and reference types is crucial for understanding memory allocation and variable assignment behavior in JavaScript applications.",
+      "correctAnswer": 3
     },
     {
-      "id": "prog-fund-q3",
+      "id": 17,
       "topic": "Conditionals",
       "difficulty": "Beginner",
       "question": "What is the correct way to write an if statement in JavaScript?",
@@ -45,10 +47,11 @@
       ],
       "correctIndex": 1,
       "explanation": "In JavaScript, if statements require parentheses around the condition. The correct syntax is 'if (condition) {}'. Other options either use incorrect syntax or assignment instead of comparison.",
-      "industryContext": "Proper conditional syntax prevents logical errors and is essential for implementing decision-making logic in all JavaScript applications."
+      "industryContext": "Proper conditional syntax prevents logical errors and is essential for implementing decision-making logic in all JavaScript applications.",
+      "correctAnswer": 1
     },
     {
-      "id": "prog-fund-q4",
+      "id": 18,
       "topic": "Loops",
       "difficulty": "Beginner",
       "question": "Which loop is guaranteed to execute at least once?",
@@ -60,10 +63,11 @@
       ],
       "correctIndex": 2,
       "explanation": "A do-while loop is guaranteed to execute at least once because the condition is checked after the loop body runs. In contrast, for and while loops check the condition before executing.",
-      "industryContext": "Understanding loop behavior is important for implementing algorithms that require at least one execution, such as user input validation or menu systems."
+      "industryContext": "Understanding loop behavior is important for implementing algorithms that require at least one execution, such as user input validation or menu systems.",
+      "correctAnswer": 2
     },
     {
-      "id": "prog-fund-q5",
+      "id": 19,
       "topic": "Functions",
       "difficulty": "Beginner",
       "question": "What does the 'return' statement do in a function?",
@@ -75,10 +79,11 @@
       ],
       "correctIndex": 2,
       "explanation": "The 'return' statement both stops the function execution and sends a value back to the caller. If no value is specified, it returns 'undefined'.",
-      "industryContext": "Return statements are fundamental for creating functions that produce output and enable modular, reusable code in all programming applications."
+      "industryContext": "Return statements are fundamental for creating functions that produce output and enable modular, reusable code in all programming applications.",
+      "correctAnswer": 2
     },
     {
-      "id": "prog-fund-q6",
+      "id": 20,
       "topic": "Arrays",
       "difficulty": "Beginner",
       "question": "What is the index of the first element in a JavaScript array?",
@@ -90,10 +95,11 @@
       ],
       "correctIndex": 0,
       "explanation": "JavaScript arrays are zero-indexed, meaning the first element is at index 0, the second at index 1, and so on.",
-      "industryContext": "Zero-based indexing is standard in most programming languages and understanding it correctly prevents off-by-one errors in array operations."
+      "industryContext": "Zero-based indexing is standard in most programming languages and understanding it correctly prevents off-by-one errors in array operations.",
+      "correctAnswer": 0
     },
     {
-      "id": "prog-fund-q7",
+      "id": 21,
       "topic": "Objects",
       "difficulty": "Beginner",
       "question": "How do you access the property 'name' of an object called 'user'?",
@@ -105,10 +111,11 @@
       ],
       "correctIndex": 3,
       "explanation": "Both dot notation (user.name) and bracket notation (user['name']) can be used to access object properties in JavaScript. Dot notation is more common for known property names.",
-      "industryContext": "Object property access is fundamental for working with structured data in JavaScript applications, APIs, and JSON processing."
+      "industryContext": "Object property access is fundamental for working with structured data in JavaScript applications, APIs, and JSON processing.",
+      "correctAnswer": 3
     },
     {
-      "id": "prog-fund-q8",
+      "id": 22,
       "topic": "Strings",
       "difficulty": "Beginner",
       "question": "Which method removes whitespace from both ends of a string?",
@@ -120,10 +127,11 @@
       ],
       "correctIndex": 0,
       "explanation": "The trim() method removes whitespace from both ends of a string. This is useful for cleaning up user input.",
-      "industryContext": "String trimming is essential for data validation and cleaning user input to prevent issues with authentication, search, and data processing."
+      "industryContext": "String trimming is essential for data validation and cleaning user input to prevent issues with authentication, search, and data processing.",
+      "correctAnswer": 0
     },
     {
-      "id": "prog-fund-q9",
+      "id": 23,
       "topic": "Numbers",
       "difficulty": "Beginner",
       "question": "What is the result of 0.1 + 0.2 in JavaScript?",
@@ -135,10 +143,11 @@
       ],
       "correctIndex": 1,
       "explanation": "Due to floating-point precision issues, 0.1 + 0.2 equals 0.30000000000000004 in JavaScript. This is a common gotcha in many programming languages.",
-      "industryContext": "Understanding floating-point precision is crucial for financial calculations and scientific applications where accuracy is paramount."
+      "industryContext": "Understanding floating-point precision is crucial for financial calculations and scientific applications where accuracy is paramount.",
+      "correctAnswer": 1
     },
     {
-      "id": "prog-fund-q10",
+      "id": 24,
       "topic": "Variables",
       "difficulty": "Beginner",
       "question": "Which naming convention is recommended for JavaScript variables?",
@@ -150,10 +159,11 @@
       ],
       "correctIndex": 2,
       "explanation": "camelCase is the recommended naming convention for JavaScript variables. It starts with a lowercase letter and capitalizes subsequent words without spaces or underscores.",
-      "industryContext": "Following consistent naming conventions improves code readability and maintainability in team environments and aligns with JavaScript community standards."
+      "industryContext": "Following consistent naming conventions improves code readability and maintainability in team environments and aligns with JavaScript community standards.",
+      "correctAnswer": 2
     },
     {
-      "id": "prog-fund-q11",
+      "id": 25,
       "topic": "Functions",
       "difficulty": "Beginner",
       "question": "What is a parameter in a function?",
@@ -165,10 +175,11 @@
       ],
       "correctIndex": 0,
       "explanation": "Parameters are variables listed in the function definition that receive values when the function is called. The values passed are called arguments.",
-      "industryContext": "Understanding parameters and arguments is essential for creating flexible, reusable functions that can operate on different data inputs."
+      "industryContext": "Understanding parameters and arguments is essential for creating flexible, reusable functions that can operate on different data inputs.",
+      "correctAnswer": 0
     },
     {
-      "id": "prog-fund-q12",
+      "id": 26,
       "topic": "Arrays",
       "difficulty": "Beginner",
       "question": "Which method adds an element to the end of an array?",
@@ -180,10 +191,11 @@
       ],
       "correctIndex": 1,
       "explanation": "The push() method adds one or more elements to the end of an array and returns the new length of the array.",
-      "industryContext": "Array manipulation methods like push() are fundamental for managing dynamic collections of data in web applications and data processing tasks."
+      "industryContext": "Array manipulation methods like push() are fundamental for managing dynamic collections of data in web applications and data processing tasks.",
+      "correctAnswer": 1
     },
     {
-      "id": "prog-fund-q13",
+      "id": 27,
       "topic": "Conditionals",
       "difficulty": "Intermediate",
       "question": "What is the result of the expression: (5 > 3) && (2 < 1) || true?",
@@ -195,10 +207,11 @@
       ],
       "correctIndex": 0,
       "explanation": "Following operator precedence, this evaluates as ((5 > 3) && (2 < 1)) || true. (5 > 3) is true, (2 < 1) is false, so (true && false) is false. Then false || true equals true.",
-      "industryContext": "Understanding logical operator precedence is crucial for writing complex conditional logic that behaves as expected in enterprise applications."
+      "industryContext": "Understanding logical operator precedence is crucial for writing complex conditional logic that behaves as expected in enterprise applications.",
+      "correctAnswer": 0
     },
     {
-      "id": "prog-fund-q14",
+      "id": 28,
       "topic": "Loops",
       "difficulty": "Intermediate",
       "question": "What will be the output of this code: for(let i=0; i<5; i++) { if(i===3) continue; console.log(i); }",
@@ -210,10 +223,11 @@
       ],
       "correctIndex": 1,
       "explanation": "The continue statement skips the current iteration when i equals 3, so 3 is not printed. The loop outputs 0, 1, 2, and 4.",
-      "industryContext": "Loop control statements like continue are essential for implementing efficient algorithms that need to skip certain iterations based on conditions."
+      "industryContext": "Loop control statements like continue are essential for implementing efficient algorithms that need to skip certain iterations based on conditions.",
+      "correctAnswer": 1
     },
     {
-      "id": "prog-fund-q15",
+      "id": 29,
       "topic": "Functions",
       "difficulty": "Intermediate",
       "question": "What is a closure in JavaScript?",
@@ -225,10 +239,11 @@
       ],
       "correctIndex": 1,
       "explanation": "A closure is a function that has access to variables from its outer (enclosing) scope even after the outer function has finished executing. This is a powerful feature in JavaScript.",
-      "industryContext": "Closures are fundamental to many JavaScript patterns including module patterns, callbacks, and maintaining private state in applications."
+      "industryContext": "Closures are fundamental to many JavaScript patterns including module patterns, callbacks, and maintaining private state in applications.",
+      "correctAnswer": 1
     },
     {
-      "id": "prog-fund-q16",
+      "id": 30,
       "topic": "Arrays",
       "difficulty": "Intermediate",
       "question": "Which method creates a new array with the results of calling a function for every array element?",
@@ -240,10 +255,11 @@
       ],
       "correctIndex": 2,
       "explanation": "The map() method creates a new array populated with the results of calling a provided function on every element in the calling array. It does not modify the original array.",
-      "industryContext": "The map() method is essential for functional programming approaches and transforming data in modern JavaScript frameworks and data processing pipelines."
+      "industryContext": "The map() method is essential for functional programming approaches and transforming data in modern JavaScript frameworks and data processing pipelines.",
+      "correctAnswer": 2
     },
     {
-      "id": "prog-fund-q17",
+      "id": 31,
       "topic": "Objects",
       "difficulty": "Intermediate",
       "question": "What is the value of 'this' inside a method of an object?",
@@ -255,10 +271,11 @@
       ],
       "correctIndex": 1,
       "explanation": "Inside a method, 'this' refers to the object that the method belongs to. This allows methods to access and modify the object's properties.",
-      "industryContext": "Understanding 'this' binding is crucial for object-oriented JavaScript programming and avoiding common pitfalls in event handlers and callback functions."
+      "industryContext": "Understanding 'this' binding is crucial for object-oriented JavaScript programming and avoiding common pitfalls in event handlers and callback functions.",
+      "correctAnswer": 1
     },
     {
-      "id": "prog-fund-q18",
+      "id": 32,
       "topic": "Strings",
       "difficulty": "Intermediate",
       "question": "Which regular expression pattern matches a string that starts with 'Hello'?",
@@ -270,10 +287,11 @@
       ],
       "correctIndex": 1,
       "explanation": "The ^ symbol in a regular expression matches the beginning of a string. So /^Hello/ matches strings that start with 'Hello'.",
-      "industryContext": "Regular expressions are essential for input validation, data extraction, and text processing in web applications and backend services."
+      "industryContext": "Regular expressions are essential for input validation, data extraction, and text processing in web applications and backend services.",
+      "correctAnswer": 1
     },
     {
-      "id": "prog-fund-q19",
+      "id": 33,
       "topic": "Numbers",
       "difficulty": "Intermediate",
       "question": "What is the result of parseInt('10.5')?",
@@ -285,10 +303,11 @@
       ],
       "correctIndex": 1,
       "explanation": "parseInt() parses a string and returns an integer. It stops parsing at the first non-numeric character, so '10.5' becomes 10.",
-      "industryContext": "Type conversion functions like parseInt() are crucial for processing user input and API data in web applications where type safety is important."
+      "industryContext": "Type conversion functions like parseInt() are crucial for processing user input and API data in web applications where type safety is important.",
+      "correctAnswer": 1
     },
     {
-      "id": "prog-fund-q20",
+      "id": 34,
       "topic": "Variables",
       "difficulty": "Intermediate",
       "question": "What is the scope of a variable declared with 'let' inside a block {}?",
@@ -300,10 +319,11 @@
       ],
       "correctIndex": 2,
       "explanation": "Variables declared with 'let' have block scope, meaning they are only accessible within the block {} where they are defined, unlike 'var' which has function scope.",
-      "industryContext": "Understanding block scope is essential for writing modern JavaScript code that avoids variable hoisting issues and maintains clean, predictable variable lifecycles."
+      "industryContext": "Understanding block scope is essential for writing modern JavaScript code that avoids variable hoisting issues and maintains clean, predictable variable lifecycles.",
+      "correctAnswer": 2
     },
     {
-      "id": "prog-fund-q21",
+      "id": 35,
       "topic": "Conditionals",
       "difficulty": "Intermediate",
       "question": "Which operator is used for strict equality comparison in JavaScript?",
@@ -315,10 +335,11 @@
       ],
       "correctIndex": 1,
       "explanation": "The === operator checks for both value and type equality without type coercion. This is different from == which performs type coercion before comparison.",
-      "industryContext": "Using strict equality (===) is a best practice that prevents bugs related to type coercion and makes code behavior more predictable in enterprise applications."
+      "industryContext": "Using strict equality (===) is a best practice that prevents bugs related to type coercion and makes code behavior more predictable in enterprise applications.",
+      "correctAnswer": 1
     },
     {
-      "id": "prog-fund-q22",
+      "id": 36,
       "topic": "Loops",
       "difficulty": "Intermediate",
       "question": "What is the primary difference between for...in and for...of loops?",
@@ -330,10 +351,11 @@
       ],
       "correctIndex": 0,
       "explanation": "for...in iterates over the enumerable property names (keys) of an object, while for...of iterates over the values of iterable objects like arrays, strings, etc.",
-      "industryContext": "Choosing the right iteration method is important for performance and correctly processing different data structures in modern JavaScript applications."
+      "industryContext": "Choosing the right iteration method is important for performance and correctly processing different data structures in modern JavaScript applications.",
+      "correctAnswer": 0
     },
     {
-      "id": "prog-fund-q23",
+      "id": 37,
       "topic": "Functions",
       "difficulty": "Intermediate",
       "question": "What is the result of: (function() { return typeof arguments; })();",
@@ -345,10 +367,11 @@
       ],
       "correctIndex": 0,
       "explanation": "The 'arguments' object inside functions is array-like but is actually of type 'object'. It's not a true array, despite having a length property and indexed elements.",
-      "industryContext": "Understanding the arguments object is important for creating flexible functions that can accept variable numbers of parameters, though modern JavaScript prefers rest parameters."
+      "industryContext": "Understanding the arguments object is important for creating flexible functions that can accept variable numbers of parameters, though modern JavaScript prefers rest parameters.",
+      "correctAnswer": 0
     },
     {
-      "id": "prog-fund-q24",
+      "id": 38,
       "topic": "Arrays",
       "difficulty": "Intermediate",
       "question": "Which method can be used to remove the last element from an array?",
@@ -360,10 +383,11 @@
       ],
       "correctIndex": 0,
       "explanation": "The pop() method removes the last element from an array and returns that element. It modifies the original array.",
-      "industryContext": "Array manipulation methods like pop() are fundamental for implementing data structures like stacks and managing dynamic collections in web applications."
+      "industryContext": "Array manipulation methods like pop() are fundamental for implementing data structures like stacks and managing dynamic collections in web applications.",
+      "correctAnswer": 0
     },
     {
-      "id": "prog-fund-q25",
+      "id": 39,
       "topic": "Objects",
       "difficulty": "Intermediate",
       "question": "How do you check if an object has a specific property?",
@@ -375,10 +399,11 @@
       ],
       "correctIndex": 2,
       "explanation": "Both methods can be used, but hasOwnProperty() is more reliable as it checks for the property directly on the object, not in its prototype chain.",
-      "industryContext": "Property checking is essential for safely accessing object properties and preventing runtime errors in JavaScript applications that process dynamic data."
+      "industryContext": "Property checking is essential for safely accessing object properties and preventing runtime errors in JavaScript applications that process dynamic data.",
+      "correctAnswer": 2
     },
     {
-      "id": "prog-fund-q26",
+      "id": 40,
       "topic": "Strings",
       "difficulty": "Intermediate",
       "question": "What does the match() method return when no matches are found?",
@@ -390,10 +415,11 @@
       ],
       "correctIndex": 1,
       "explanation": "The match() method returns null when no matches are found. It returns an array of matches when successful.",
-      "industryContext": "Understanding return values of string methods is important for proper error handling and flow control in text processing applications."
+      "industryContext": "Understanding return values of string methods is important for proper error handling and flow control in text processing applications.",
+      "correctAnswer": 1
     },
     {
-      "id": "prog-fund-q27",
+      "id": 41,
       "topic": "Numbers",
       "difficulty": "Intermediate",
       "question": "What is the value of Number('') (empty string)?",
@@ -405,10 +431,11 @@
       ],
       "correctIndex": 1,
       "explanation": "Number('') converts an empty string to 0. This is part of JavaScript's type coercion rules, which can sometimes be surprising.",
-      "industryContext": "Understanding type coercion is crucial for handling user input and API data correctly, especially in financial applications where precision is important."
+      "industryContext": "Understanding type coercion is crucial for handling user input and API data correctly, especially in financial applications where precision is important.",
+      "correctAnswer": 1
     },
     {
-      "id": "prog-fund-q28",
+      "id": 42,
       "topic": "Variables",
       "difficulty": "Intermediate",
       "question": "What happens when you redeclare a variable with 'let' in the same scope?",
@@ -420,10 +447,11 @@
       ],
       "correctIndex": 2,
       "explanation": "Redeclaring a variable with 'let' in the same scope throws a SyntaxError. This helps catch programming errors early.",
-      "industryContext": "Understanding variable redeclaration rules helps prevent bugs and makes code more predictable, which is especially important in large codebases."
+      "industryContext": "Understanding variable redeclaration rules helps prevent bugs and makes code more predictable, which is especially important in large codebases.",
+      "correctAnswer": 2
     },
     {
-      "id": "prog-fund-q29",
+      "id": 43,
       "topic": "Conditionals",
       "difficulty": "Intermediate",
       "question": "What is the result of: Boolean('false')?",
@@ -435,10 +463,11 @@
       ],
       "correctIndex": 0,
       "explanation": "Boolean('false') returns true because any non-empty string is truthy in JavaScript. Only empty strings are falsy.",
-      "industryContext": "Understanding truthy and falsy values is essential for writing concise conditional logic and avoiding bugs in JavaScript applications."
+      "industryContext": "Understanding truthy and falsy values is essential for writing concise conditional logic and avoiding bugs in JavaScript applications.",
+      "correctAnswer": 0
     },
     {
-      "id": "prog-fund-q30",
+      "id": 44,
       "topic": "Loops",
       "difficulty": "Intermediate",
       "question": "What will be logged to the console: let i = 0; while(i < 3) { console.log(i); i++; }",
@@ -450,10 +479,11 @@
       ],
       "correctIndex": 0,
       "explanation": "The while loop starts with i=0. It logs 0, increments to 1, logs 1, increments to 2, logs 2, increments to 3, then stops because 3 is not less than 3.",
-      "industryContext": "Understanding loop execution flow is fundamental for implementing algorithms correctly and avoiding off-by-one errors in production code."
+      "industryContext": "Understanding loop execution flow is fundamental for implementing algorithms correctly and avoiding off-by-one errors in production code.",
+      "correctAnswer": 0
     },
     {
-      "id": "prog-fund-q31",
+      "id": 45,
       "topic": "Functions",
       "difficulty": "Intermediate",
       "question": "What is the value of 'this' in an arrow function?",
@@ -465,10 +495,11 @@
       ],
       "correctIndex": 2,
       "explanation": "Arrow functions do not have their own 'this'. They inherit 'this' from the enclosing scope, which makes them useful for callbacks but unsuitable for methods.",
-      "industryContext": "Understanding arrow function 'this' binding is crucial for correctly using modern JavaScript features and avoiding common pitfalls in event handling and callback patterns."
+      "industryContext": "Understanding arrow function 'this' binding is crucial for correctly using modern JavaScript features and avoiding common pitfalls in event handling and callback patterns.",
+      "correctAnswer": 2
     },
     {
-      "id": "prog-fund-q32",
+      "id": 46,
       "topic": "Arrays",
       "difficulty": "Intermediate",
       "question": "Which method creates a shallow copy of an array?",
@@ -480,10 +511,11 @@
       ],
       "correctIndex": 0,
       "explanation": "The slice() method creates a shallow copy of an array. It does not modify the original array. slice() without arguments copies the entire array.",
-      "industryContext": "Creating array copies is important for implementing immutable data patterns and avoiding unintended mutations in modern JavaScript frameworks."
+      "industryContext": "Creating array copies is important for implementing immutable data patterns and avoiding unintended mutations in modern JavaScript frameworks.",
+      "correctAnswer": 0
     },
     {
-      "id": "prog-fund-q33",
+      "id": 47,
       "topic": "Algorithms",
       "difficulty": "Advanced",
       "question": "What is the time complexity of binary search in a sorted array?",
@@ -495,10 +527,11 @@
       ],
       "correctIndex": 1,
       "explanation": "Binary search has O(log n) time complexity because it eliminates half of the remaining elements with each comparison, making it very efficient for large datasets.",
-      "industryContext": "Understanding algorithmic complexity is essential for optimizing performance in applications that process large amounts of data or require real-time responses."
+      "industryContext": "Understanding algorithmic complexity is essential for optimizing performance in applications that process large amounts of data or require real-time responses.",
+      "correctAnswer": 1
     },
     {
-      "id": "prog-fund-q34",
+      "id": 48,
       "topic": "Data Structures",
       "difficulty": "Advanced",
       "question": "What is the primary advantage of using a Map over a plain object in JavaScript?",
@@ -510,10 +543,11 @@
       ],
       "correctIndex": 1,
       "explanation": "Maps preserve the insertion order of elements and can use any value (including objects and functions) as keys, unlike objects which convert keys to strings.",
-      "industryContext": "Choosing the right data structure is critical for performance optimization and maintaining code clarity in complex applications with large datasets."
+      "industryContext": "Choosing the right data structure is critical for performance optimization and maintaining code clarity in complex applications with large datasets.",
+      "correctAnswer": 1
     },
     {
-      "id": "prog-fund-q35",
+      "id": 49,
       "topic": "Memory Management",
       "difficulty": "Advanced",
       "question": "What is a memory leak in JavaScript?",
@@ -525,10 +559,11 @@
       ],
       "correctIndex": 0,
       "explanation": "A memory leak occurs when memory that is no longer needed is not released, causing the application to consume more and more memory over time.",
-      "industryContext": "Understanding memory management is crucial for building performant, scalable applications that can run for extended periods without degrading performance."
+      "industryContext": "Understanding memory management is crucial for building performant, scalable applications that can run for extended periods without degrading performance.",
+      "correctAnswer": 0
     },
     {
-      "id": "prog-fund-q36",
+      "id": 50,
       "topic": "Asynchronous Programming",
       "difficulty": "Advanced",
       "question": "What is the event loop in JavaScript?",
@@ -540,10 +575,11 @@
       ],
       "correctIndex": 1,
       "explanation": "The event loop is JavaScript's mechanism for handling asynchronous operations in a single-threaded environment by continuously checking the call stack and callback queue.",
-      "industryContext": "Understanding the event loop is fundamental for writing efficient asynchronous JavaScript code and avoiding blocking operations in web applications."
+      "industryContext": "Understanding the event loop is fundamental for writing efficient asynchronous JavaScript code and avoiding blocking operations in web applications.",
+      "correctAnswer": 1
     },
     {
-      "id": "prog-fund-q37",
+      "id": 51,
       "topic": "Scope and Closures",
       "difficulty": "Advanced",
       "question": "What is the module pattern in JavaScript?",
@@ -555,10 +591,11 @@
       ],
       "correctIndex": 1,
       "explanation": "The module pattern uses closures to create private variables and methods, providing encapsulation in JavaScript before ES6 modules were available.",
-      "industryContext": "Understanding design patterns like the module pattern is important for creating maintainable, encapsulated code in large JavaScript applications."
+      "industryContext": "Understanding design patterns like the module pattern is important for creating maintainable, encapsulated code in large JavaScript applications.",
+      "correctAnswer": 1
     },
     {
-      "id": "prog-fund-q38",
+      "id": 52,
       "topic": "Functional Programming",
       "difficulty": "Advanced",
       "question": "What does it mean for a function to be 'pure'?",
@@ -570,10 +607,11 @@
       ],
       "correctIndex": 1,
       "explanation": "A pure function has no side effects (doesn't modify external state) and always returns the same output for the same input, making it predictable and easy to test.",
-      "industryContext": "Pure functions are fundamental to functional programming paradigms and contribute to code that is more testable, maintainable, and less prone to bugs."
+      "industryContext": "Pure functions are fundamental to functional programming paradigms and contribute to code that is more testable, maintainable, and less prone to bugs.",
+      "correctAnswer": 1
     },
     {
-      "id": "prog-fund-q39",
+      "id": 53,
       "topic": "Performance Optimization",
       "difficulty": "Advanced",
       "question": "What is memoization?",
@@ -585,10 +623,11 @@
       ],
       "correctIndex": 0,
       "explanation": "Memoization is an optimization technique that caches the results of expensive function calls and returns the cached result when the same inputs occur again.",
-      "industryContext": "Memoization is a key technique for optimizing performance in applications with expensive computations or repeated function calls, especially in recursive algorithms."
+      "industryContext": "Memoization is a key technique for optimizing performance in applications with expensive computations or repeated function calls, especially in recursive algorithms.",
+      "correctAnswer": 0
     },
     {
-      "id": "prog-fund-q40",
+      "id": 54,
       "topic": "Error Handling",
       "difficulty": "Advanced",
       "question": "What is the difference between throw and return in JavaScript?",
@@ -600,7 +639,219 @@
       ],
       "correctIndex": 0,
       "explanation": "throw is used to raise exceptions (errors) that can be caught with try/catch, while return is used to send normal values back from functions.",
-      "industryContext": "Proper error handling with throw/catch is essential for creating robust applications that gracefully handle unexpected conditions and provide meaningful feedback to users."
+      "industryContext": "Proper error handling with throw/catch is essential for creating robust applications that gracefully handle unexpected conditions and provide meaningful feedback to users.",
+      "correctAnswer": 0
+    },
+    {
+      "id": 1,
+      "topic": "Variables",
+      "type": "multiple-choice",
+      "question": "Which variable declaration is most appropriate for storing a user's age that might change over time?",
+      "choices": [
+        "let age = 25;",
+        "const age = 25;",
+        "var age = 25;",
+        "age = 25;"
+      ],
+      "correctAnswer": 0,
+      "explanation": "'let' is the correct choice because the user's age might change (when they have a birthday), so we need a variable that can be reassigned. 'const' is for constants that never change, 'var' has scope issues and should be avoided in modern JavaScript, and declaring without a keyword creates a global variable which is dangerous.",
+      "correctIndex": 0
+    },
+    {
+      "id": 2,
+      "topic": "Control Structures",
+      "type": "multiple-choice",
+      "question": "What will this code output?\n\nlet x = 5;\nif (x > 3) {\n    console.log('A');\n} else if (x > 7) {\n    console.log('B');\n} else {\n    console.log('C');\n}",
+      "choices": [
+        "A",
+        "B",
+        "C",
+        "Nothing (no output)"
+      ],
+      "correctAnswer": 0,
+      "explanation": "The code will output 'A'. Since x = 5 and 5 > 3 is true, the first condition is met and 'A' is logged. The else if condition (x > 7) is never checked because the first condition was already true. In if-else chains, only the first true condition executes.",
+      "correctIndex": 0
+    },
+    {
+      "id": 3,
+      "topic": "Functions",
+      "type": "multiple-choice",
+      "question": "Which function definition follows best practices for a function that calculates the total price including tax?",
+      "choices": [
+        "function calculateTotalPrice(price, taxRate) { return price + (price * taxRate); }",
+        "function calc(p, t) { return p + p * t; }",
+        "function calculatePrice() { return price + tax; }",
+        "const calculate = () => { console.log(price * 1.08); }"
+      ],
+      "correctAnswer": 0,
+      "explanation": "Option A follows best practices with a descriptive function name, clear parameter names, and returns a value instead of just logging. Option B uses unclear abbreviations, Option C relies on global variables which is bad practice, and Option D doesn't return a value and hardcodes the tax rate.",
+      "correctIndex": 0
+    },
+    {
+      "id": 4,
+      "topic": "Control Structures",
+      "type": "multiple-choice",
+      "question": "What is wrong with this loop and how would you fix it?\n\nlet i = 0;\nwhile (i < 10) {\n    console.log(i);\n    // Missing something here\n}",
+      "choices": [
+        "Missing i++ or i = i + 1 to increment the counter",
+        "Should use for loop instead of while loop",
+        "The condition should be i <= 10",
+        "Need to declare i inside the loop"
+      ],
+      "correctAnswer": 0,
+      "explanation": "The loop is missing the increment statement (i++ or i = i + 1). Without incrementing i, the condition i < 10 will always be true, creating an infinite loop that will crash the program. The counter variable must be updated inside the loop body.",
+      "correctIndex": 0
+    },
+    {
+      "id": 5,
+      "topic": "Data Types",
+      "type": "multiple-choice",
+      "question": "Which data type should you use to store whether a user is currently logged in?",
+      "choices": [
+        "boolean",
+        "string",
+        "number",
+        "array"
+      ],
+      "correctAnswer": 0,
+      "explanation": "Boolean is the correct data type for true/false values like login status. A boolean can only be true or false, making it perfect for yes/no, on/off, or logged-in/logged-out states. Strings and numbers could work but waste memory and allow invalid values.",
+      "correctIndex": 0
+    },
+    {
+      "id": 6,
+      "topic": "Functions",
+      "type": "multiple-choice",
+      "question": "What will happen when this function is called with calculateDiscount(100)?\n\nfunction calculateDiscount(price, discountRate = 0.1) {\n    return price * discountRate;\n}",
+      "choices": [
+        "Returns 10 (using default discount rate of 0.1)",
+        "Returns an error because discountRate is missing",
+        "Returns 0 because discountRate is undefined",
+        "Returns 100 because no discount is applied"
+      ],
+      "correctAnswer": 0,
+      "explanation": "The function will return 10. When discountRate is not provided, it uses the default value of 0.1. So 100 * 0.1 = 10. Default parameters allow functions to work even when some arguments are omitted, making them more flexible and user-friendly.",
+      "correctIndex": 0
+    },
+    {
+      "id": 7,
+      "topic": "Best Practices",
+      "type": "multiple-choice",
+      "question": "What are the key principles of writing clean, maintainable code?",
+      "choices": [
+        "Use meaningful variable names, keep functions small and focused, and add comments where necessary",
+        "Write code as quickly as possible to meet deadlines",
+        "Use single-letter variable names to keep code concise",
+        "Put all code in one large function to reduce file count"
+      ],
+      "correctAnswer": 0,
+      "explanation": "Clean code principles include using descriptive variable and function names that clearly express intent, keeping functions small and focused on a single responsibility, and adding comments to explain complex logic or business rules. These practices make code easier to read, understand, and maintain by other developers.",
+      "correctIndex": 0
+    },
+    {
+      "id": 8,
+      "topic": "Data Structures",
+      "type": "multiple-choice",
+      "question": "Which data structure is most appropriate for implementing a function call stack?",
+      "choices": [
+        "Stack (LIFO - Last In, First Out)",
+        "Queue (FIFO - First In, First Out)",
+        "Array with random access",
+        "Linked List"
+      ],
+      "correctAnswer": 0,
+      "explanation": "A stack data structure is perfect for implementing a function call stack because of its LIFO (Last In, First Out) behavior. When functions are called, they are pushed onto the stack, and when they return, they are popped off the stack. This ensures that the most recently called function is the first to return, which is exactly how function calls work.",
+      "correctIndex": 0
+    },
+    {
+      "id": 9,
+      "topic": "Functions",
+      "type": "multiple-choice",
+      "question": "What is the primary benefit of using functions in programming?",
+      "choices": [
+        "Code reusability and modularity",
+        "Making code run faster",
+        "Reducing the need for variables",
+        "Eliminating the need for comments"
+      ],
+      "correctAnswer": 0,
+      "explanation": "The primary benefits of functions are code reusability and modularity. Functions allow you to write code once and use it multiple times, reducing duplication. They also break complex problems into smaller, manageable pieces, making code easier to understand, test, and maintain.",
+      "correctIndex": 0
+    },
+    {
+      "id": 10,
+      "topic": "Algorithms",
+      "type": "multiple-choice",
+      "question": "What is the time complexity of accessing an element in an array by index?",
+      "choices": [
+        "O(1) - Constant time",
+        "O(n) - Linear time",
+        "O(log n) - Logarithmic time",
+        "O(n²) - Quadratic time"
+      ],
+      "correctAnswer": 0,
+      "explanation": "Accessing an element in an array by index is O(1) or constant time complexity. This is because arrays store elements in contiguous memory locations, so the memory address of any element can be calculated directly using the base address + (index * element_size) without needing to traverse through other elements.",
+      "correctIndex": 0
+    },
+    {
+      "id": 11,
+      "topic": "Variables",
+      "type": "multiple-choice",
+      "question": "Which of the following is NOT a valid way to declare a variable in modern JavaScript?",
+      "choices": [
+        "var variableName = value;",
+        "let variableName = value;",
+        "const variableName = value;",
+        "variableName = value;"
+      ],
+      "correctAnswer": 3,
+      "explanation": "Declaring a variable without var, let, or const (like 'variableName = value;') creates a global variable, which is generally considered bad practice. Modern JavaScript should use 'let' for variables that can change and 'const' for constants. The 'var' keyword is older and has scope issues, but it's still valid.",
+      "correctIndex": 3
+    },
+    {
+      "id": 12,
+      "topic": "Control Structures",
+      "type": "multiple-choice",
+      "question": "What is the output of this code snippet?\n\nlet result = 0;\nfor (let i = 1; i <= 5; i++) {\n  result += i;\n}\nconsole.log(result);",
+      "choices": [
+        "15",
+        "10",
+        "5",
+        "0"
+      ],
+      "correctAnswer": 0,
+      "explanation": "The loop iterates from 1 to 5, adding each value to result: 0 + 1 + 2 + 3 + 4 + 5 = 15. This is a common pattern for calculating the sum of a series of numbers.",
+      "correctIndex": 0
+    },
+    {
+      "id": 13,
+      "topic": "OOP",
+      "type": "multiple-choice",
+      "question": "What is the main advantage of using object-oriented programming (OOP)?",
+      "choices": [
+        "Encapsulation, inheritance, and polymorphism for better code organization",
+        "Making code run faster",
+        "Reducing the total number of lines of code",
+        "Eliminating the need for functions"
+      ],
+      "correctAnswer": 0,
+      "explanation": "OOP's main advantages are its core principles: encapsulation (bundling data and methods together while controlling access), inheritance (creating specialized versions of classes), and polymorphism (objects taking multiple forms). These principles help organize code, promote reusability, and make complex systems more manageable.",
+      "correctIndex": 0
+    },
+    {
+      "id": 14,
+      "topic": "Error Handling",
+      "type": "multiple-choice",
+      "question": "Which error handling approach is most appropriate for handling unexpected runtime errors?",
+      "choices": [
+        "try-catch blocks with specific error types",
+        "Ignoring errors and hoping they don't occur",
+        "Using console.log() to print error messages",
+        "Wrapping entire programs in a single try-catch block"
+      ],
+      "correctAnswer": 0,
+      "explanation": "try-catch blocks with specific error types provide structured error handling that allows programs to gracefully handle unexpected situations. By catching specific error types, you can implement appropriate recovery strategies for different error conditions, making applications more robust and user-friendly.",
+      "correctIndex": 0
     }
-  ]
+  ],
+  "totalQuestions": 54
 }

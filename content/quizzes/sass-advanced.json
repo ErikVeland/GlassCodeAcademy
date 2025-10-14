@@ -7,7 +7,7 @@
   "timeLimit": 23,
   "questions": [
     {
-      "id": "sass-advanced-q1",
+      "id": 1,
       "question": "What is SASS?",
       "topic": "Basics",
       "difficulty": "Beginner",
@@ -31,10 +31,11 @@
         "originalId": 1,
         "originalType": "multiple-choice",
         "migrated": "2025-10-01T06:41:13.487Z"
-      }
+      },
+      "correctAnswer": 0
     },
     {
-      "id": "sass-advanced-q2",
+      "id": 2,
       "question": "What symbol is used to define a variable in SASS?",
       "topic": "Basics",
       "difficulty": "Intermediate",
@@ -58,10 +59,11 @@
         "originalId": 2,
         "originalType": "multiple-choice",
         "migrated": "2025-10-01T06:41:13.487Z"
-      }
+      },
+      "correctAnswer": 0
     },
     {
-      "id": "sass-advanced-q3",
+      "id": 3,
       "question": "How does nesting work in SASS and what are its benefits?",
       "topic": "Nesting",
       "difficulty": "Intermediate",
@@ -85,10 +87,11 @@
         "originalId": 3,
         "originalType": "open-ended",
         "migrated": "2025-10-01T06:41:13.487Z"
-      }
+      },
+      "correctAnswer": 0
     },
     {
-      "id": "sass-advanced-q4",
+      "id": 4,
       "question": "How do you reference the parent selector in a nested rule in SASS?",
       "topic": "Nesting",
       "difficulty": "Beginner",
@@ -112,10 +115,11 @@
         "originalId": 4,
         "originalType": "multiple-choice",
         "migrated": "2025-10-01T06:41:13.487Z"
-      }
+      },
+      "correctAnswer": 0
     },
     {
-      "id": "sass-advanced-q5",
+      "id": 5,
       "question": "What is a mixin in SASS?",
       "topic": "Mixins",
       "difficulty": "Beginner",
@@ -139,10 +143,11 @@
         "originalId": 5,
         "originalType": "multiple-choice",
         "migrated": "2025-10-01T06:41:13.487Z"
-      }
+      },
+      "correctAnswer": 0
     },
     {
-      "id": "sass-advanced-q6",
+      "id": 6,
       "question": "Which function is used to make a color lighter in SASS?",
       "topic": "Functions",
       "difficulty": "Intermediate",
@@ -166,10 +171,11 @@
         "originalId": 6,
         "originalType": "multiple-choice",
         "migrated": "2025-10-01T06:41:13.487Z"
-      }
+      },
+      "correctAnswer": 0
     },
     {
-      "id": "sass-advanced-q7",
+      "id": 7,
       "question": "What is the difference between .scss and .sass syntax?",
       "topic": "Compilation",
       "difficulty": "Beginner",
@@ -193,10 +199,11 @@
         "originalId": 7,
         "originalType": "open-ended",
         "migrated": "2025-10-01T06:41:13.487Z"
-      }
+      },
+      "correctAnswer": 0
     },
     {
-      "id": "sass-advanced-q8",
+      "id": 8,
       "question": "What is the purpose of @extend in SASS?",
       "topic": "Extend",
       "difficulty": "Beginner",
@@ -220,10 +227,11 @@
         "originalId": 8,
         "originalType": "multiple-choice",
         "migrated": "2025-10-01T06:41:13.487Z"
-      }
+      },
+      "correctAnswer": 0
     },
     {
-      "id": "sass-advanced-q9",
+      "id": 9,
       "question": "What is the 7-1 SASS architecture pattern?",
       "topic": "Architecture",
       "difficulty": "Beginner",
@@ -247,10 +255,11 @@
         "originalId": 9,
         "originalType": "multiple-choice",
         "migrated": "2025-10-01T06:41:13.487Z"
-      }
+      },
+      "correctAnswer": 0
     },
     {
-      "id": "sass-advanced-q10",
+      "id": 10,
       "question": "What is the best practice for organizing SASS imports?",
       "topic": "Performance",
       "difficulty": "Beginner",
@@ -274,10 +283,11 @@
         "originalId": 10,
         "originalType": "multiple-choice",
         "migrated": "2025-10-01T06:41:13.487Z"
-      }
+      },
+      "correctAnswer": 0
     },
     {
-      "id": "sass-advanced-q11",
+      "id": 11,
       "question": "When should you use @extend vs mixins in SASS?",
       "topic": "Advanced Features",
       "difficulty": "Intermediate",
@@ -301,10 +311,11 @@
         "originalId": 11,
         "originalType": "open-ended",
         "migrated": "2025-10-01T06:41:13.487Z"
-      }
+      },
+      "correctAnswer": 0
     },
     {
-      "id": "sass-advanced-q12",
+      "id": 12,
       "question": "Which SASS data type is best for storing multiple related values?",
       "topic": "Data Types",
       "difficulty": "Intermediate",
@@ -328,10 +339,11 @@
         "originalId": 12,
         "originalType": "multiple-choice",
         "migrated": "2025-10-01T06:41:13.487Z"
-      }
+      },
+      "correctAnswer": 0
     },
     {
-      "id": "sass-advanced-q13",
+      "id": 13,
       "question": "What does the @return directive do in SASS functions?",
       "topic": "Functions",
       "difficulty": "Intermediate",
@@ -355,10 +367,11 @@
         "originalId": 13,
         "originalType": "multiple-choice",
         "migrated": "2025-10-01T06:41:13.487Z"
-      }
+      },
+      "correctAnswer": 0
     },
     {
-      "id": "sass-advanced-q14",
+      "id": 14,
       "question": "What are the main control directives in SASS and when would you use them?",
       "topic": "Control Directives",
       "difficulty": "Intermediate",
@@ -382,10 +395,11 @@
         "originalId": 14,
         "originalType": "open-ended",
         "migrated": "2025-10-01T06:41:13.487Z"
-      }
+      },
+      "correctAnswer": 0
     },
     {
-      "id": "sass-advanced-q15",
+      "id": 15,
       "question": "What is the difference between SASS and SCSS syntax?",
       "topic": "Compilation",
       "difficulty": "Beginner",
@@ -409,7 +423,8 @@
         "originalId": 15,
         "originalType": "multiple-choice",
         "migrated": "2025-10-01T06:41:13.487Z"
-      }
+      },
+      "correctAnswer": 0
     }
   ],
   "metadata": {

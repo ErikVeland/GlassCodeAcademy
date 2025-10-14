@@ -12,6 +12,19 @@ export default function QuizStartPage({ params }: { params: Promise<{ moduleSlug
   const [resolvedParams, setResolvedParams] = useState<{ moduleSlug: string } | null>(null);
   const [poolCount, setPoolCount] = useState<number>(0);
   const [debugEnabled, setDebugEnabled] = useState<boolean>(false);
+  // Metadata stored in the session seed for debugging visualization
+  interface SeedDebug {
+    moduleSlug: string;
+    desiredCount: number;
+    poolSize: number;
+    availableBeforeDedup: number;
+    availableAfterDedup: number;
+    excludedByHistory: string[];
+    rawQuestions: ProgrammingQuestion[];
+    sanitizedPool: ProgrammingQuestion[];
+    selectedIds: string[];
+    timestamp: number;
+  }
   interface QuizOverview {
     title: string;
     totalQuestions: number;
@@ -22,6 +35,7 @@ export default function QuizStartPage({ params }: { params: Promise<{ moduleSlug
       selectedQuestions: ProgrammingQuestion[];
       passingScore: number;
       timeLimit: number;
+      debug?: SeedDebug;
     };
   }
   const [quizData, setQuizData] = useState<QuizOverview | null>(null);
@@ -52,6 +66,9 @@ export default function QuizStartPage({ params }: { params: Promise<{ moduleSlug
           setLoading(false);
           return;
         }
+
+        // Capture raw questions before any sanitization for debug view
+        const rawQuestions = (quiz.questions || []).map((q) => ({ ...q })) as ProgrammingQuestion[];
 
         // Normalize questions: trim text, ensure valid fields for multiple-choice OR open-ended
         // Support local JSON that uses `correctIndex` by mapping it to `correctAnswer`
@@ -99,8 +116,36 @@ export default function QuizStartPage({ params }: { params: Promise<{ moduleSlug
             return hasQuestionText && hasChoices && hasValidIndex;
           });
 
+        // Deduplicate by id first, then by normalized question text
+        const normalizeTextForKey = (text: string) =>
+          (text || '')
+            .toLowerCase()
+            .replace(/[`*_~]/g, '')
+            .replace(/\s+/g, ' ')
+            .trim();
+        const byId: Record<string, ProgrammingQuestion> = {};
+        const byTextKey: Record<string, ProgrammingQuestion> = {};
+        for (const q of sanitizedQuestions) {
+          const id = String(q.id ?? '');
+          const textKey = normalizeTextForKey(q.question || '');
+          if (id && !byId[id]) {
+            byId[id] = q;
+          }
+          if (textKey && !byTextKey[textKey]) {
+            byTextKey[textKey] = q;
+          }
+        }
+        const dedupedQuestions: ProgrammingQuestion[] = Object.values(byId);
+        // Add unique-by-text that don't share an id
+        for (const q of Object.values(byTextKey)) {
+          const id = String(q.id ?? '');
+          if (!id || !byId[id]) {
+            dedupedQuestions.push(q);
+          }
+        }
+
         // Determine target number of questions and pool size
-        const availableQuestions = sanitizedQuestions.length;
+        const availableQuestions = dedupedQuestions.length;
         setPoolCount(availableQuestions);
         // Select target number of questions using per-module config; default to 14
         const desiredCount = (
@@ -122,7 +167,19 @@ export default function QuizStartPage({ params }: { params: Promise<{ moduleSlug
           return a;
         };
 
-        const pool = shuffle(sanitizedQuestions).slice(0, poolSize);
+        // History-based exclusion: avoid recently used questions when possible
+        let historyIds: string[] = [];
+        try {
+          const hk = `quizHistory:${moduleSlug}`;
+          const histRaw = typeof window !== 'undefined' ? window.localStorage.getItem(hk) : null;
+          historyIds = histRaw ? JSON.parse(histRaw) : [];
+          if (!Array.isArray(historyIds)) historyIds = [];
+        } catch {}
+        const historySet = new Set(historyIds.map(String));
+        const excludedByHistory = dedupedQuestions.filter((q) => historySet.has(String(q.id))).map((q) => String(q.id));
+        const historyFiltered = dedupedQuestions.filter((q) => !historySet.has(String(q.id)));
+        const basePool = historyFiltered.length >= targetQuestions ? historyFiltered : dedupedQuestions;
+        const pool = shuffle(basePool).slice(0, poolSize);
         const selectedQuestions = shuffle(pool).slice(0, targetQuestions);
 
         // Randomize choice order for each selected question and update correct answer index
@@ -168,11 +225,29 @@ export default function QuizStartPage({ params }: { params: Promise<{ moduleSlug
           _sessionSeed: {
             selectedQuestions: randomizedSelectedQuestions,
             passingScore,
-            timeLimit
+            timeLimit,
+            // Debug metadata for visualization
+            debug: {
+              moduleSlug,
+              desiredCount: targetQuestions,
+              poolSize,
+              availableBeforeDedup: sanitizedQuestions.length,
+              availableAfterDedup: dedupedQuestions.length,
+              excludedByHistory,
+              rawQuestions,
+              sanitizedPool: dedupedQuestions,
+              selectedIds: randomizedSelectedQuestions.map((q) => String(q.id)),
+              timestamp: Date.now(),
+            }
           }
         };
 
         setQuizData(quizOverview);
+        // Persist seed for debug page before starting quiz
+        try {
+          const seedKey = `quizSeed:${moduleSlug}`;
+          sessionStorage.setItem(seedKey, JSON.stringify(quizOverview._sessionSeed));
+        } catch {}
         setLoading(false);
       } catch (err) {
         console.error('Failed to load quiz data', err);
@@ -207,6 +282,17 @@ export default function QuizStartPage({ params }: { params: Promise<{ moduleSlug
         } | null>
       };
       sessionStorage.setItem(sessionKey, JSON.stringify(sessionPayload));
+      // Update history with selected IDs to diversify future attempts
+      try {
+        const hk = `quizHistory:${resolvedParams.moduleSlug}`;
+        const histRaw = window.localStorage.getItem(hk);
+        const historyIds: string[] = histRaw ? JSON.parse(histRaw) : [];
+        const selectedIds = seed.debug?.selectedIds ?? seed.selectedQuestions.map((q) => String(q.id));
+        const merged = Array.from(new Set([...historyIds, ...selectedIds]));
+        // limit history size to avoid unbounded growth
+        const limited = merged.slice(-200);
+        window.localStorage.setItem(hk, JSON.stringify(limited));
+      } catch {}
       router.push(`/modules/${resolvedParams.moduleSlug}/quiz/question/1`);
     } catch (e) {
       console.error('Failed to initialize quiz session', e);

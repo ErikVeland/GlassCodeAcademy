@@ -7,7 +7,7 @@
   "timeLimit": 23,
   "questions": [
     {
-      "id": "tailwind-advanced-q1",
+      "id": 1,
       "question": "What is Tailwind CSS?",
       "topic": "Basics",
       "difficulty": "Beginner",
@@ -31,10 +31,11 @@
         "originalId": 1,
         "originalType": "multiple-choice",
         "migrated": "2025-10-01T06:41:13.488Z"
-      }
+      },
+      "correctAnswer": 0
     },
     {
-      "id": "tailwind-advanced-q2",
+      "id": 2,
       "question": "How do you add padding to an element in Tailwind CSS?",
       "topic": "Basics",
       "difficulty": "Beginner",
@@ -58,10 +59,11 @@
         "originalId": 2,
         "originalType": "multiple-choice",
         "migrated": "2025-10-01T06:41:13.488Z"
-      }
+      },
+      "correctAnswer": 0
     },
     {
-      "id": "tailwind-advanced-q3",
+      "id": 3,
       "question": "How does Tailwind's mobile-first responsive design approach work?",
       "topic": "Layout",
       "difficulty": "Intermediate",
@@ -85,10 +87,11 @@
         "originalId": 3,
         "originalType": "open-ended",
         "migrated": "2025-10-01T06:41:13.488Z"
-      }
+      },
+      "correctAnswer": 0
     },
     {
-      "id": "tailwind-advanced-q4",
+      "id": 4,
       "question": "Which class is used to create a flex container in Tailwind?",
       "topic": "Layout",
       "difficulty": "Intermediate",
@@ -112,10 +115,11 @@
         "originalId": 4,
         "originalType": "multiple-choice",
         "migrated": "2025-10-01T06:41:13.488Z"
-      }
+      },
+      "correctAnswer": 0
     },
     {
-      "id": "tailwind-advanced-q5",
+      "id": 5,
       "question": "Where do you customize Tailwind's default theme?",
       "topic": "Customization",
       "difficulty": "Intermediate",
@@ -139,10 +143,11 @@
         "originalId": 5,
         "originalType": "multiple-choice",
         "migrated": "2025-10-01T06:41:13.488Z"
-      }
+      },
+      "correctAnswer": 0
     },
     {
-      "id": "tailwind-advanced-q6",
+      "id": 6,
       "question": "How do you make text bold in Tailwind CSS?",
       "topic": "Utilities",
       "difficulty": "Beginner",
@@ -166,10 +171,11 @@
         "originalId": 6,
         "originalType": "multiple-choice",
         "migrated": "2025-10-01T06:41:13.488Z"
-      }
+      },
+      "correctAnswer": 0
     },
     {
-      "id": "tailwind-advanced-q7",
+      "id": 7,
       "question": "What are the default breakpoints in Tailwind CSS?",
       "topic": "Responsive",
       "difficulty": "Intermediate",
@@ -193,10 +199,11 @@
         "originalId": 7,
         "originalType": "open-ended",
         "migrated": "2025-10-01T06:41:13.488Z"
-      }
+      },
+      "correctAnswer": 0
     },
     {
-      "id": "tailwind-advanced-q8",
+      "id": 8,
       "question": "How do you set a background color to blue-500 in Tailwind?",
       "topic": "Colors",
       "difficulty": "Beginner",
@@ -220,10 +227,11 @@
         "originalId": 8,
         "originalType": "multiple-choice",
         "migrated": "2025-10-01T06:41:13.488Z"
-      }
+      },
+      "correctAnswer": 0
     },
     {
-      "id": "tailwind-advanced-q9",
+      "id": 9,
       "question": "How do you add custom colors to Tailwind CSS?",
       "topic": "Customization",
       "difficulty": "Beginner",
@@ -247,10 +255,11 @@
         "originalId": 9,
         "originalType": "multiple-choice",
         "migrated": "2025-10-01T06:41:13.488Z"
-      }
+      },
+      "correctAnswer": 0
     },
     {
-      "id": "tailwind-advanced-q10",
+      "id": 10,
       "question": "What is PurgeCSS and why is it important for Tailwind?",
       "topic": "Performance",
       "difficulty": "Beginner",
@@ -274,10 +283,11 @@
         "originalId": 10,
         "originalType": "multiple-choice",
         "migrated": "2025-10-01T06:41:13.488Z"
-      }
+      },
+      "correctAnswer": 0
     },
     {
-      "id": "tailwind-advanced-q11",
+      "id": 11,
       "question": "How do you implement dark mode in Tailwind CSS?",
       "topic": "Dark Mode",
       "difficulty": "Beginner",
@@ -301,10 +311,11 @@
         "originalId": 11,
         "originalType": "open-ended",
         "migrated": "2025-10-01T06:41:13.488Z"
-      }
+      },
+      "correctAnswer": 0
     },
     {
-      "id": "tailwind-advanced-q12",
+      "id": 12,
       "question": "What is the @apply directive used for in Tailwind?",
       "topic": "Components",
       "difficulty": "Beginner",
@@ -328,10 +339,11 @@
         "originalId": 12,
         "originalType": "multiple-choice",
         "migrated": "2025-10-01T06:41:13.488Z"
-      }
+      },
+      "correctAnswer": 0
     },
     {
-      "id": "tailwind-advanced-q13",
+      "id": 13,
       "question": "How does Tailwind handle responsive design?",
       "topic": "Responsive Design",
       "difficulty": "Intermediate",
@@ -355,10 +367,11 @@
         "originalId": 13,
         "originalType": "multiple-choice",
         "migrated": "2025-10-01T06:41:13.488Z"
-      }
+      },
+      "correctAnswer": 0
     },
     {
-      "id": "tailwind-advanced-q14",
+      "id": 14,
       "question": "What are Tailwind plugins and how do they extend functionality?",
       "topic": "Plugins",
       "difficulty": "Intermediate",
@@ -382,10 +395,11 @@
         "originalId": 14,
         "originalType": "open-ended",
         "migrated": "2025-10-01T06:41:13.488Z"
-      }
+      },
+      "correctAnswer": 0
     },
     {
-      "id": "tailwind-advanced-q15",
+      "id": 15,
       "question": "What is a recommended approach for managing long utility class lists?",
       "topic": "Best Practices",
       "difficulty": "Beginner",
@@ -409,10 +423,11 @@
         "originalId": 15,
         "originalType": "multiple-choice",
         "migrated": "2025-10-01T06:41:13.488Z"
-      }
+      },
+      "correctAnswer": 0
     },
     {
-      "id": "tailwind-advanced-q16",
+      "id": 16,
       "question": "What are the advanced techniques for building scalable design systems with Tailwind CSS?",
       "topic": "Advanced Patterns",
       "difficulty": "Advanced",
@@ -431,7 +446,8 @@
         "tailwind"
       ],
       "questionType": "multiple-choice",
-      "estimatedTime": 90
+      "estimatedTime": 90,
+      "correctAnswer": 0
     }
   ],
   "metadata": {

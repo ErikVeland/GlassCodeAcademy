@@ -7,7 +7,7 @@
   "timeLimit": 23,
   "questions": [
     {
-      "id": "database-systems-q1",
+      "id": 1,
       "question": "What is a primary key in a relational database?",
       "topic": "Database Fundamentals",
       "difficulty": "Beginner",
@@ -31,10 +31,11 @@
         "originalId": 1,
         "originalType": "multiple-choice",
         "migrated": "2025-10-01T06:41:13.482Z"
-      }
+      },
+      "correctAnswer": 0
     },
     {
-      "id": "database-systems-q2",
+      "id": 2,
       "question": "Which normal form eliminates transitive dependencies?",
       "topic": "Database Fundamentals",
       "difficulty": "Intermediate",
@@ -58,10 +59,11 @@
         "originalId": 2,
         "originalType": "multiple-choice",
         "migrated": "2025-10-01T06:41:13.482Z"
-      }
+      },
+      "correctAnswer": 0
     },
     {
-      "id": "database-systems-q3",
+      "id": 3,
       "question": "What is the difference between INNER JOIN and LEFT JOIN? When would you use each?",
       "topic": "SQL",
       "difficulty": "Beginner",
@@ -80,10 +82,11 @@
         "database"
       ],
       "questionType": "multiple-choice",
-      "estimatedTime": 90
+      "estimatedTime": 90,
+      "correctAnswer": 0
     },
     {
-      "id": "database-systems-q4",
+      "id": 4,
       "question": "What does an ER diagram represent?",
       "topic": "Data Modeling",
       "difficulty": "Intermediate",
@@ -107,10 +110,11 @@
         "originalId": 4,
         "originalType": "multiple-choice",
         "migrated": "2025-10-01T06:41:13.482Z"
-      }
+      },
+      "correctAnswer": 0
     },
     {
-      "id": "database-systems-q5",
+      "id": 5,
       "question": "What is the purpose of a DbContext in Entity Framework Core?",
       "topic": "ORM Integration",
       "difficulty": "Beginner",
@@ -134,10 +138,11 @@
         "originalId": 5,
         "originalType": "multiple-choice",
         "migrated": "2025-10-01T06:41:13.482Z"
-      }
+      },
+      "correctAnswer": 0
     },
     {
-      "id": "database-systems-q6",
+      "id": 6,
       "question": "What is the N+1 query problem and how can it be avoided?",
       "topic": "Performance",
       "difficulty": "Beginner",
@@ -161,10 +166,11 @@
         "originalId": 6,
         "originalType": "multiple-choice",
         "migrated": "2025-10-01T06:41:13.482Z"
-      }
+      },
+      "correctAnswer": 0
     },
     {
-      "id": "database-systems-q7",
+      "id": 7,
       "question": "Explain ACID properties in database transactions.",
       "topic": "Transactions",
       "difficulty": "Intermediate",
@@ -183,10 +189,11 @@
         "database"
       ],
       "questionType": "multiple-choice",
-      "estimatedTime": 90
+      "estimatedTime": 90,
+      "correctAnswer": 0
     },
     {
-      "id": "database-systems-q8",
+      "id": 8,
       "question": "When should you consider adding an index to a database column?",
       "topic": "Indexing",
       "difficulty": "Intermediate",
@@ -210,10 +217,11 @@
         "originalId": 8,
         "originalType": "multiple-choice",
         "migrated": "2025-10-01T06:41:13.482Z"
-      }
+      },
+      "correctAnswer": 0
     },
     {
-      "id": "database-systems-q9",
+      "id": 9,
       "question": "What is the main advantage of document databases like MongoDB over relational databases?",
       "topic": "NoSQL",
       "difficulty": "Beginner",
@@ -237,10 +245,11 @@
         "originalId": 9,
         "originalType": "multiple-choice",
         "migrated": "2025-10-01T06:41:13.482Z"
-      }
+      },
+      "correctAnswer": 0
     },
     {
-      "id": "database-systems-q10",
+      "id": 10,
       "question": "Which technique is most effective for preventing SQL injection attacks?",
       "topic": "Security",
       "difficulty": "Intermediate",
@@ -264,10 +273,11 @@
         "originalId": 10,
         "originalType": "multiple-choice",
         "migrated": "2025-10-01T06:41:13.482Z"
-      }
+      },
+      "correctAnswer": 0
     },
     {
-      "id": "database-systems-q11",
+      "id": 11,
       "question": "What is the difference between full, incremental, and differential backups? When would you use each?",
       "topic": "Backup and Recovery",
       "difficulty": "Beginner",
@@ -286,10 +296,11 @@
         "database"
       ],
       "questionType": "multiple-choice",
-      "estimatedTime": 90
+      "estimatedTime": 90,
+      "correctAnswer": 0
     },
     {
-      "id": "database-systems-q12",
+      "id": 12,
       "question": "What is database sharding?",
       "topic": "Performance",
       "difficulty": "Beginner",
@@ -313,10 +324,11 @@
         "originalId": 12,
         "originalType": "multiple-choice",
         "migrated": "2025-10-01T06:41:13.482Z"
-      }
+      },
+      "correctAnswer": 0
     },
     {
-      "id": "database-systems-q13",
+      "id": 13,
       "question": "In master-slave database replication, what is the primary purpose of read replicas?",
       "topic": "Replication",
       "difficulty": "Beginner",
@@ -340,10 +352,11 @@
         "originalId": 13,
         "originalType": "multiple-choice",
         "migrated": "2025-10-01T06:41:13.482Z"
-      }
+      },
+      "correctAnswer": 0
     },
     {
-      "id": "database-systems-q14",
+      "id": 14,
       "question": "What are CHECK constraints and provide an example of when you would use them?",
       "topic": "Constraints",
       "difficulty": "Intermediate",
@@ -362,10 +375,11 @@
         "database"
       ],
       "questionType": "multiple-choice",
-      "estimatedTime": 90
+      "estimatedTime": 90,
+      "correctAnswer": 0
     },
     {
-      "id": "database-systems-q15",
+      "id": 15,
       "question": "What is the CAP theorem in distributed databases?",
       "topic": "Advanced Topics",
       "difficulty": "Beginner",
@@ -389,10 +403,11 @@
         "originalId": 15,
         "originalType": "multiple-choice",
         "migrated": "2025-10-01T06:41:13.482Z"
-      }
+      },
+      "correctAnswer": 0
     },
     {
-      "id": "database-systems-q16",
+      "id": 16,
       "question": "Which SQL statement would prevent SQL injection in this scenario: user input for email search?",
       "topic": "Security",
       "difficulty": "Intermediate",
@@ -411,10 +426,11 @@
         "database"
       ],
       "questionType": "multiple-choice",
-      "estimatedTime": 90
+      "estimatedTime": 90,
+      "correctAnswer": 0
     },
     {
-      "id": "database-systems-q17",
+      "id": 17,
       "question": "What is the purpose of database connection pooling?",
       "topic": "Performance",
       "difficulty": "Beginner",
@@ -433,10 +449,11 @@
         "database"
       ],
       "questionType": "multiple-choice",
-      "estimatedTime": 90
+      "estimatedTime": 90,
+      "correctAnswer": 0
     },
     {
-      "id": "database-systems-q18",
+      "id": 18,
       "question": "What is a deadlock in database transactions?",
       "topic": "Transactions",
       "difficulty": "Intermediate",
@@ -455,10 +472,11 @@
         "database"
       ],
       "questionType": "multiple-choice",
-      "estimatedTime": 90
+      "estimatedTime": 90,
+      "correctAnswer": 0
     },
     {
-      "id": "database-systems-q19",
+      "id": 19,
       "question": "What is the difference between clustered and non-clustered indexes?",
       "topic": "Indexing",
       "difficulty": "Intermediate",
@@ -477,10 +495,11 @@
         "database"
       ],
       "questionType": "multiple-choice",
-      "estimatedTime": 90
+      "estimatedTime": 90,
+      "correctAnswer": 0
     },
     {
-      "id": "database-systems-q20",
+      "id": 20,
       "question": "What is the purpose of database transactions?",
       "topic": "Transactions",
       "difficulty": "Beginner",
@@ -499,10 +518,11 @@
         "database"
       ],
       "questionType": "multiple-choice",
-      "estimatedTime": 90
+      "estimatedTime": 90,
+      "correctAnswer": 0
     },
     {
-      "id": "database-systems-q21",
+      "id": 21,
       "question": "What is database denormalization and when would you use it?",
       "topic": "Database Design",
       "difficulty": "Intermediate",
@@ -521,10 +541,11 @@
         "database"
       ],
       "questionType": "multiple-choice",
-      "estimatedTime": 90
+      "estimatedTime": 90,
+      "correctAnswer": 0
     },
     {
-      "id": "database-systems-q22",
+      "id": 22,
       "question": "What is the purpose of database views?",
       "topic": "Database Objects",
       "difficulty": "Beginner",
@@ -543,7 +564,8 @@
         "database"
       ],
       "questionType": "multiple-choice",
-      "estimatedTime": 90
+      "estimatedTime": 90,
+      "correctAnswer": 0
     }
   ],
   "metadata": {

@@ -7,7 +7,7 @@
   "timeLimit": 23,
   "questions": [
     {
-      "id": "node-fundamentals-q1",
+      "id": 1,
       "question": "What is Node.js?",
       "topic": "Basics",
       "difficulty": "Beginner",
@@ -31,10 +31,11 @@
         "originalId": 1,
         "originalType": "multiple-choice",
         "migrated": "2025-10-01T06:41:13.484Z"
-      }
+      },
+      "correctAnswer": 0
     },
     {
-      "id": "node-fundamentals-q2",
+      "id": 2,
       "question": "How do you import a module in Node.js?",
       "topic": "Basics",
       "difficulty": "Beginner",
@@ -58,10 +59,11 @@
         "originalId": 2,
         "originalType": "multiple-choice",
         "migrated": "2025-10-01T06:41:13.484Z"
-      }
+      },
+      "correctAnswer": 0
     },
     {
-      "id": "node-fundamentals-q3",
+      "id": 3,
       "question": "What is Express.js and why is it used?",
       "topic": "Express",
       "difficulty": "Beginner",
@@ -85,10 +87,11 @@
         "originalId": 3,
         "originalType": "open-ended",
         "migrated": "2025-10-01T06:41:13.484Z"
-      }
+      },
+      "correctAnswer": 0
     },
     {
-      "id": "node-fundamentals-q4",
+      "id": 4,
       "question": "Which method is used to handle GET requests in Express?",
       "topic": "Express",
       "difficulty": "Intermediate",
@@ -112,10 +115,11 @@
         "originalId": 4,
         "originalType": "multiple-choice",
         "migrated": "2025-10-01T06:41:13.484Z"
-      }
+      },
+      "correctAnswer": 0
     },
     {
-      "id": "node-fundamentals-q5",
+      "id": 5,
       "question": "What is middleware in Express.js?",
       "topic": "Middleware",
       "difficulty": "Beginner",
@@ -139,10 +143,11 @@
         "originalId": 5,
         "originalType": "multiple-choice",
         "migrated": "2025-10-01T06:41:13.484Z"
-      }
+      },
+      "correctAnswer": 0
     },
     {
-      "id": "node-fundamentals-q6",
+      "id": 6,
       "question": "How do you handle asynchronous operations in Node.js?",
       "topic": "Async",
       "difficulty": "Beginner",
@@ -166,10 +171,11 @@
         "originalId": 6,
         "originalType": "multiple-choice",
         "migrated": "2025-10-01T06:41:13.484Z"
-      }
+      },
+      "correctAnswer": 0
     },
     {
-      "id": "node-fundamentals-q7",
+      "id": 7,
       "question": "What is NPM and what is it used for?",
       "topic": "NPM",
       "difficulty": "Beginner",
@@ -193,10 +199,11 @@
         "originalId": 7,
         "originalType": "open-ended",
         "migrated": "2025-10-01T06:41:13.484Z"
-      }
+      },
+      "correctAnswer": 0
     },
     {
-      "id": "node-fundamentals-q8",
+      "id": 8,
       "question": "What is the event loop in Node.js?",
       "topic": "Event Loop",
       "difficulty": "Beginner",
@@ -220,10 +227,11 @@
         "originalId": 8,
         "originalType": "multiple-choice",
         "migrated": "2025-10-01T06:41:13.484Z"
-      }
+      },
+      "correctAnswer": 0
     },
     {
-      "id": "node-fundamentals-q9",
+      "id": 9,
       "question": "What is the main advantage of using async/await over Promises in Node.js?",
       "topic": "Async Programming",
       "difficulty": "Beginner",
@@ -247,10 +255,11 @@
         "originalId": 9,
         "originalType": "multiple-choice",
         "migrated": "2025-10-01T06:41:13.484Z"
-      }
+      },
+      "correctAnswer": 0
     },
     {
-      "id": "node-fundamentals-q10",
+      "id": 10,
       "question": "What is clustering in Node.js and why is it useful?",
       "topic": "Performance",
       "difficulty": "Beginner",
@@ -274,10 +283,11 @@
         "originalId": 10,
         "originalType": "multiple-choice",
         "migrated": "2025-10-01T06:41:13.484Z"
-      }
+      },
+      "correctAnswer": 0
     },
     {
-      "id": "node-fundamentals-q11",
+      "id": 11,
       "question": "What are some essential security practices for Node.js applications?",
       "topic": "Security",
       "difficulty": "Intermediate",
@@ -301,10 +311,11 @@
         "originalId": 11,
         "originalType": "open-ended",
         "migrated": "2025-10-01T06:41:13.484Z"
-      }
+      },
+      "correctAnswer": 0
     },
     {
-      "id": "node-fundamentals-q12",
+      "id": 12,
       "question": "Which testing framework is most commonly used for Node.js applications?",
       "topic": "Testing",
       "difficulty": "Intermediate",
@@ -328,10 +339,11 @@
         "originalId": 12,
         "originalType": "multiple-choice",
         "migrated": "2025-10-01T06:41:13.484Z"
-      }
+      },
+      "correctAnswer": 0
     },
     {
-      "id": "node-fundamentals-q13",
+      "id": 13,
       "question": "What is the difference between fs.readFile() and fs.readFileSync() in Node.js?",
       "topic": "File System",
       "difficulty": "Beginner",
@@ -355,10 +367,11 @@
         "originalId": 13,
         "originalType": "multiple-choice",
         "migrated": "2025-10-01T06:41:13.484Z"
-      }
+      },
+      "correctAnswer": 0
     },
     {
-      "id": "node-fundamentals-q14",
+      "id": 14,
       "question": "How should you handle uncaught exceptions in Node.js applications?",
       "topic": "Error Handling",
       "difficulty": "Intermediate",
@@ -382,10 +395,11 @@
         "originalId": 14,
         "originalType": "open-ended",
         "migrated": "2025-10-01T06:41:13.484Z"
-      }
+      },
+      "correctAnswer": 0
     },
     {
-      "id": "node-fundamentals-q15",
+      "id": 15,
       "question": "What is the main advantage of using streams for processing large files in Node.js?",
       "topic": "Streams",
       "difficulty": "Beginner",
@@ -409,10 +423,11 @@
         "originalId": 15,
         "originalType": "multiple-choice",
         "migrated": "2025-10-01T06:41:13.484Z"
-      }
+      },
+      "correctAnswer": 0
     },
     {
-      "id": "node-fundamentals-q16",
+      "id": 16,
       "question": "What are the key security considerations when developing Node.js applications?",
       "topic": "Security",
       "difficulty": "Advanced",
@@ -431,10 +446,11 @@
         "node"
       ],
       "questionType": "multiple-choice",
-      "estimatedTime": 90
+      "estimatedTime": 90,
+      "correctAnswer": 0
     },
     {
-      "id": "node-fundamentals-q17",
+      "id": 17,
       "question": "What is the difference between process.nextTick() and setImmediate() in Node.js?",
       "topic": "Event Loop",
       "difficulty": "Advanced",
@@ -453,10 +469,11 @@
         "node"
       ],
       "questionType": "multiple-choice",
-      "estimatedTime": 120
+      "estimatedTime": 120,
+      "correctAnswer": 0
     },
     {
-      "id": "node-fundamentals-q18",
+      "id": 18,
       "question": "How do you implement clustering in Node.js and why is it important?",
       "topic": "Performance",
       "difficulty": "Advanced",
@@ -475,10 +492,11 @@
         "node"
       ],
       "questionType": "multiple-choice",
-      "estimatedTime": 120
+      "estimatedTime": 120,
+      "correctAnswer": 0
     },
     {
-      "id": "node-fundamentals-q19",
+      "id": 19,
       "question": "What are the benefits and challenges of microservices architecture with Node.js?",
       "topic": "Architecture",
       "difficulty": "Advanced",
@@ -497,10 +515,11 @@
         "node"
       ],
       "questionType": "multiple-choice",
-      "estimatedTime": 90
+      "estimatedTime": 90,
+      "correctAnswer": 0
     },
     {
-      "id": "node-fundamentals-q20",
+      "id": 20,
       "question": "What tools and practices are essential for production deployment of Node.js applications?",
       "topic": "DevOps",
       "difficulty": "Advanced",
@@ -519,7 +538,8 @@
         "node"
       ],
       "questionType": "multiple-choice",
-      "estimatedTime": 120
+      "estimatedTime": 120,
+      "correctAnswer": 0
     }
   ],
   "metadata": {

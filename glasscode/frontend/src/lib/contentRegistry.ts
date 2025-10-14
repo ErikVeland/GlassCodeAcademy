@@ -4,7 +4,7 @@
  */
 
 import { getApolloClient } from '@/apolloClient';
-import { GET_PROGRAMMING_LESSONS, GET_PROGRAMMING_QUESTIONS } from '@/graphql/queries';
+import { GET_PROGRAMMING_LESSONS } from '@/graphql/queries';
 import { normalizeQuestion } from './textNormalization';
 
 interface Module {
@@ -532,77 +532,7 @@ class ContentRegistryLoader {
    * Get quiz for a specific module
    */
   async getModuleQuiz(moduleSlug: string): Promise<Quiz | null> {
-    // Special handling for programming-fundamentals module to use GraphQL
-    if (moduleSlug === 'programming-fundamentals') {
-      try {
-        const client = getApolloClient();
-        const { data } = await client.query({
-          query: GET_PROGRAMMING_QUESTIONS
-        });
-        
-        // Transform the data to match the expected quiz format
-        const questions = (data.programmingInterviewQuestions || []) as ProgrammingQuestion[];
-        const normalized = questions.map(q => normalizeQuestion(q));
-        return { questions: normalized } as Quiz;
-      } catch (error: unknown) {
-        console.error(`Failed to load programming questions via GraphQL:`, error);
-        // Optionally log GraphQL-specific details if present
-        const maybeGraphQLError = error as { graphQLErrors?: unknown[]; networkError?: unknown } | null;
-        if (maybeGraphQLError?.graphQLErrors && Array.isArray(maybeGraphQLError.graphQLErrors) && maybeGraphQLError.graphQLErrors.length > 0) {
-          console.error('GraphQL errors:', maybeGraphQLError.graphQLErrors);
-        }
-        if (maybeGraphQLError?.networkError) {
-          console.error('Network error:', maybeGraphQLError.networkError);
-        }
-        // Fallback strategy: try local file, otherwise return minimal stub
-        try {
-          if (typeof window === 'undefined') {
-            // Server-side: attempt to load local quiz file
-            const fs = await import('fs');
-            const path = await import('path');
-            const possiblePaths = [
-              path.join(process.cwd(), '..', '..', 'content', 'quizzes', `${moduleSlug}.json`),
-              path.join(process.cwd(), 'content', 'quizzes', `${moduleSlug}.json`),
-              path.join(__dirname, '..', '..', '..', '..', 'content', 'quizzes', `${moduleSlug}.json`),
-              path.join('/srv/academy', 'content', 'quizzes', `${moduleSlug}.json`),
-            ];
-            for (const quizPath of possiblePaths) {
-              try {
-                if (fs.existsSync(quizPath)) {
-                  const fileContent = fs.readFileSync(quizPath, 'utf8');
-                  const quizData: unknown = JSON.parse(fileContent);
-                  if (quizData && typeof quizData === 'object' && (quizData as Quiz).questions) {
-                    const q = (quizData as Quiz).questions.map(q => normalizeQuestion(q));
-                    return { ...(quizData as Quiz), questions: q } as Quiz;
-                  }
-                }
-              } catch {
-                // Continue to next path
-              }
-            }
-          } else {
-            // Client-side: attempt to fetch from API route
-            const response = await fetch(`/api/content/quizzes/${moduleSlug}`);
-            if (response.ok) {
-              const data: unknown = await response.json();
-              if (data && typeof data === 'object' && (data as Quiz).questions) {
-                const q = (data as Quiz).questions.map(q => normalizeQuestion(q));
-                return { ...(data as Quiz), questions: q } as Quiz;
-              }
-            }
-          }
-        } catch (fallbackError) {
-          console.error('Additional error during quiz fallback resolution:', fallbackError);
-        }
-        // Final minimal stub to ensure page availability
-        const questions: ProgrammingQuestion[] = [
-          { id: 1, topic: 'basics', type: 'multiple-choice', question: 'What is a variable?', choices: ['A storage location', 'A function', 'A loop', 'A class'], correctAnswer: 0, explanation: 'A variable is a storage location paired with an associated symbolic name.' },
-          { id: 2, topic: 'basics', type: 'multiple-choice', question: 'What is a function?', choices: ['A storage location', 'A reusable block of code', 'A loop', 'A class'], correctAnswer: 1, explanation: 'A function is a reusable block of code that performs a specific task.' },
-          { id: 3, topic: 'data-structures', type: 'multiple-choice', question: 'What is an array?', choices: ['A single value', 'A collection of elements', 'A function', 'A class'], correctAnswer: 1, explanation: 'An array is a collection of elements, each identified by an array index.' }
-        ];
-        return { questions: questions.map(q => normalizeQuestion(q)) } as Quiz;
-      }
-    }
+    // Load all module quizzes from local content only
     
     // For server-side operations, read files directly instead of making HTTP requests
     if (typeof window === 'undefined') {
@@ -727,28 +657,39 @@ class ContentRegistryLoader {
    * Get programming fundamentals questions via GraphQL
    */
   async getProgrammingQuestions(): Promise<ProgrammingQuestion[]> {
-    // Special handling for programming-fundamentals module to use GraphQL
+    // Load programming fundamentals questions from local quiz content
     try {
-      const client = getApolloClient();
-      const { data } = await client.query({
-        query: GET_PROGRAMMING_QUESTIONS
-      });
-      const questions = (data.programmingQuestions || []) as ProgrammingQuestion[];
-      return questions.map(q => normalizeQuestion(q));
-    } catch (error: unknown) {
-      console.error(`Failed to load programming questions via GraphQL:`, error);
-      // During build time, the backend might not be available
-      // Return a minimal set of questions to allow build to complete
-      if (process.env.NEXT_PHASE === 'phase-production-build') {
-        console.log('Build phase detected, returning minimal question data');
-        const minimalQuestions: ProgrammingQuestion[] = [
-          { id: 1, topic: 'basics', type: 'multiple-choice', question: 'What is a variable?', choices: ['A storage location', 'A function', 'A loop', 'A class'], correctAnswer: 0, explanation: 'A variable is a storage location paired with an associated symbolic name.' },
-          { id: 2, topic: 'basics', type: 'multiple-choice', question: 'What is a function?', choices: ['A storage location', 'A reusable block of code', 'A loop', 'A class'], correctAnswer: 1, explanation: 'A function is a reusable block of code that performs a specific task.' },
-          { id: 3, topic: 'data-structures', type: 'multiple-choice', question: 'What is an array?', choices: ['A single value', 'A collection of elements', 'A function', 'A class'], correctAnswer: 1, explanation: 'An array is a collection of elements, each identified by an array index.' }
+      if (typeof window === 'undefined') {
+        const fs = await import('fs');
+        const path = await import('path');
+        const possiblePaths = [
+          path.join(process.cwd(), '..', '..', 'content', 'quizzes', `programming-fundamentals.json`),
+          path.join(process.cwd(), 'content', 'quizzes', `programming-fundamentals.json`),
+          path.join(__dirname, '..', '..', '..', '..', 'content', 'quizzes', `programming-fundamentals.json`),
+          path.join('/srv/academy', 'content', 'quizzes', `programming-fundamentals.json`),
         ];
-        return minimalQuestions.map(q => normalizeQuestion(q));
+        for (const quizPath of possiblePaths) {
+          try {
+            if (fs.existsSync(quizPath)) {
+              const fileContent = fs.readFileSync(quizPath, 'utf8');
+              const quizData: unknown = JSON.parse(fileContent);
+              const questions = (quizData && typeof quizData === 'object' && (quizData as Quiz).questions) ? (quizData as Quiz).questions : [];
+              return questions.map(q => normalizeQuestion(q));
+            }
+          } catch {
+            // Continue to next path
+          }
+        }
+        return [];
+      } else {
+        const response = await fetch(`/api/content/quizzes/programming-fundamentals`);
+        if (!response.ok) return [];
+        const data: unknown = await response.json();
+        const questions = (data && typeof data === 'object' && (data as Quiz).questions) ? (data as Quiz).questions : [];
+        return questions.map(q => normalizeQuestion(q));
       }
-      // Return empty array as fallback to prevent build failures
+    } catch (error: unknown) {
+      console.error('Failed to load programming fundamentals questions from local content:', error);
       return [];
     }
   }

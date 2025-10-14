@@ -7,7 +7,7 @@
   "timeLimit": 30,
   "questions": [
     {
-      "id": "nextjs-advanced-q1",
+      "id": 1,
       "question": "What is the main difference between SSR and SSG in Next.js?",
       "topic": "Rendering Methods",
       "difficulty": "Intermediate",
@@ -27,10 +27,11 @@
         "Performance"
       ],
       "questionType": "multiple-choice",
-      "estimatedTime": 120
+      "estimatedTime": 120,
+      "correctAnswer": 3
     },
     {
-      "id": "nextjs-advanced-q2",
+      "id": 2,
       "question": "Which Next.js feature allows you to update statically generated pages after deployment?",
       "topic": "Static Generation",
       "difficulty": "Advanced",
@@ -49,10 +50,11 @@
         "Performance"
       ],
       "questionType": "multiple-choice",
-      "estimatedTime": 90
+      "estimatedTime": 90,
+      "correctAnswer": 1
     },
     {
-      "id": "nextjs-advanced-q3",
+      "id": 3,
       "question": "How do you create a dynamic API route in Next.js?",
       "topic": "API Routes",
       "difficulty": "Intermediate",
@@ -71,10 +73,11 @@
         "Backend"
       ],
       "questionType": "multiple-choice",
-      "estimatedTime": 90
+      "estimatedTime": 90,
+      "correctAnswer": 0
     },
     {
-      "id": "nextjs-advanced-q4",
+      "id": 4,
       "question": "What is the correct way to optimize images in Next.js?",
       "topic": "Image Optimization",
       "difficulty": "Intermediate",
@@ -94,10 +97,11 @@
         "Core Web Vitals"
       ],
       "questionType": "multiple-choice",
-      "estimatedTime": 90
+      "estimatedTime": 90,
+      "correctAnswer": 1
     },
     {
-      "id": "nextjs-advanced-q5",
+      "id": 5,
       "question": "Which function should you use to fetch data on the server before rendering a page?",
       "topic": "Data Fetching",
       "difficulty": "Beginner",
@@ -117,10 +121,11 @@
         "Performance"
       ],
       "questionType": "multiple-choice",
-      "estimatedTime": 90
+      "estimatedTime": 90,
+      "correctAnswer": 3
     },
     {
-      "id": "nextjs-advanced-q6",
+      "id": 6,
       "question": "Which Next.js middleware function runs at the Edge Runtime?",
       "topic": "Middleware",
       "difficulty": "Advanced",
@@ -139,10 +144,11 @@
         "Performance"
       ],
       "questionType": "multiple-choice",
-      "estimatedTime": 90
+      "estimatedTime": 90,
+      "correctAnswer": 0
     },
     {
-      "id": "nextjs-advanced-q7",
+      "id": 7,
       "question": "What is the purpose of the revalidate property in getStaticProps?",
       "topic": "ISR",
       "difficulty": "Intermediate",
@@ -161,10 +167,11 @@
         "Performance"
       ],
       "questionType": "multiple-choice",
-      "estimatedTime": 90
+      "estimatedTime": 90,
+      "correctAnswer": 0
     },
     {
-      "id": "nextjs-advanced-q8",
+      "id": 8,
       "question": "How do you create a catch-all dynamic route in Next.js?",
       "topic": "Routing",
       "difficulty": "Intermediate",
@@ -183,10 +190,11 @@
         "File System"
       ],
       "questionType": "multiple-choice",
-      "estimatedTime": 90
+      "estimatedTime": 90,
+      "correctAnswer": 0
     },
     {
-      "id": "nextjs-advanced-q9",
+      "id": 9,
       "question": "Which Next.js configuration enables automatic image optimization?",
       "topic": "Image Optimization",
       "difficulty": "Beginner",
@@ -205,10 +213,11 @@
         "Optimization"
       ],
       "questionType": "multiple-choice",
-      "estimatedTime": 90
+      "estimatedTime": 90,
+      "correctAnswer": 0
     },
     {
-      "id": "nextjs-advanced-q10",
+      "id": 10,
       "question": "What is the correct way to implement API authentication in Next.js?",
       "topic": "API Security",
       "difficulty": "Advanced",
@@ -227,10 +236,11 @@
         "API Routes"
       ],
       "questionType": "multiple-choice",
-      "estimatedTime": 120
+      "estimatedTime": 120,
+      "correctAnswer": 3
     },
     {
-      "id": "nextjs-advanced-q11",
+      "id": 11,
       "question": "Which deployment platform is specifically optimized for Next.js?",
       "topic": "Deployment",
       "difficulty": "Beginner",
@@ -249,10 +259,11 @@
         "Performance"
       ],
       "questionType": "multiple-choice",
-      "estimatedTime": 60
+      "estimatedTime": 60,
+      "correctAnswer": 0
     },
     {
-      "id": "nextjs-advanced-q12",
+      "id": 12,
       "question": "How do you enable internationalization (i18n) in Next.js?",
       "topic": "Internationalization",
       "difficulty": "Intermediate",
@@ -271,10 +282,11 @@
         "Configuration"
       ],
       "questionType": "multiple-choice",
-      "estimatedTime": 90
+      "estimatedTime": 90,
+      "correctAnswer": 0
     },
     {
-      "id": "nextjs-advanced-q13",
+      "id": 13,
       "question": "What is the difference between fallback: false and fallback: 'blocking' in getStaticPaths?",
       "topic": "Static Generation",
       "difficulty": "Advanced",
@@ -293,10 +305,11 @@
         "Performance"
       ],
       "questionType": "multiple-choice",
-      "estimatedTime": 120
+      "estimatedTime": 120,
+      "correctAnswer": 0
     },
     {
-      "id": "nextjs-advanced-q14",
+      "id": 14,
       "question": "Which Next.js feature helps prevent layout shift during navigation?",
       "topic": "Performance",
       "difficulty": "Intermediate",
@@ -315,10 +328,11 @@
         "Core Web Vitals"
       ],
       "questionType": "multiple-choice",
-      "estimatedTime": 90
+      "estimatedTime": 90,
+      "correctAnswer": 1
     },
     {
-      "id": "nextjs-advanced-q15",
+      "id": 15,
       "question": "How do you implement custom error pages in Next.js?",
       "topic": "Error Handling",
       "difficulty": "Intermediate",
@@ -337,10 +351,11 @@
         "Pages"
       ],
       "questionType": "multiple-choice",
-      "estimatedTime": 90
+      "estimatedTime": 90,
+      "correctAnswer": 3
     },
     {
-      "id": "nextjs-advanced-q16",
+      "id": 16,
       "question": "What is the purpose of the next.config.js file?",
       "topic": "Configuration",
       "difficulty": "Beginner",
@@ -359,10 +374,11 @@
         "Optimization"
       ],
       "questionType": "multiple-choice",
-      "estimatedTime": 60
+      "estimatedTime": 60,
+      "correctAnswer": 0
     },
     {
-      "id": "nextjs-advanced-q17",
+      "id": 17,
       "question": "Which approach is recommended for styling in Next.js applications?",
       "topic": "Styling",
       "difficulty": "Intermediate",
@@ -381,10 +397,11 @@
         "Design Systems"
       ],
       "questionType": "multiple-choice",
-      "estimatedTime": 90
+      "estimatedTime": 90,
+      "correctAnswer": 3
     },
     {
-      "id": "nextjs-advanced-q18",
+      "id": 18,
       "question": "How do you implement real-time features in Next.js applications?",
       "topic": "Real-time Features",
       "difficulty": "Advanced",
@@ -404,7 +421,8 @@
         "SSE"
       ],
       "questionType": "multiple-choice",
-      "estimatedTime": 120
+      "estimatedTime": 120,
+      "correctAnswer": 3
     }
   ]
 }

@@ -4,80 +4,10 @@
 const fs = require('fs');
 const pathModule = require('path');
 
-// List of expected JSON files
-const expectedFiles = [
-  'database_lessons.json',
-  'database_questions.json',
-  'dotnet_lessons.json',
-  'dotnet_questions.json',
-  'graphql_lessons.json',
-  'graphql_questions.json',
-  'laravel_lessons.json',
-  'laravel_questions.json',
-  'nextjs_lessons.json',
-  'nextjs_questions.json',
-  'node_lessons.json',
-  'node_questions.json',
-  'performance_lessons.json',
-  'performance_questions.json',
-  'programming_lessons.json',
-  'programming_questions.json',
-  'react_lessons.json',
-  'react_questions.json',
-  'sass_lessons.json',
-  'sass_questions.json',
-  'security_lessons.json',
-  'security_questions.json',
-  'tailwind_lessons.json',
-  'tailwind_questions.json',
-  'testing_lessons.json',
-  'testing_questions.json',
-  'typescript_lessons.json',
-  'typescript_questions.json',
-  'version_lessons.json',
-  'version_questions.json',
-  'vue_lessons.json',
-  'vue_questions.json',
-  'web_lessons.json',
-  'web_questions.json'
-];
-
-// Validate JSON files
-function validateJsonFiles() {
-  const dataDir = pathModule.join(__dirname, '..', 'glasscode', 'backend', 'Data');
-  let hasErrors = false;
-  
-  console.log('🔍 Validating JSON files...');
-  
-  for (const file of expectedFiles) {
-    const filePath = pathModule.join(dataDir, file);
-    
-    if (!fs.existsSync(filePath)) {
-      console.error(`❌ Missing file: ${file}`);
-      hasErrors = true;
-      continue;
-    }
-    
-    try {
-      const content = fs.readFileSync(filePath, 'utf8');
-      JSON.parse(content);
-      console.log(`✅ ${file}`);
-    } catch (error) {
-      console.error(`❌ Invalid JSON in ${file}: ${error.message}`);
-      hasErrors = true;
-    }
-  }
-  
-  if (hasErrors) {
-    console.error('\n❌ Validation failed. Please fix the issues above.');
-    process.exit(1);
-  } else {
-    console.log('\n✅ All JSON files are valid!');
-  }
-}
-
-// Run validation
-validateJsonFiles();
+// Deprecated: backend Data directory validation
+// Previously validated JSON files under glasscode/backend/Data. This project now
+// sources lessons and quizzes exclusively from content/lessons and content/quizzes.
+// The old validation has been removed to avoid coupling to backend/Data.
 
 /**
  * Content Validation Framework

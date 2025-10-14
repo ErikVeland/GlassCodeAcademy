@@ -7,7 +7,7 @@
   "timeLimit": 23,
   "questions": [
     {
-      "id": "typescript-fundamentals-q1",
+      "id": 1,
       "question": "How do you define a variable with an explicit type annotation in TypeScript?",
       "topic": "Basic Types",
       "difficulty": "Beginner",
@@ -31,10 +31,11 @@
         "originalId": 1,
         "originalType": "multiple-choice",
         "migrated": "2025-10-01T06:41:13.483Z"
-      }
+      },
+      "correctAnswer": 0
     },
     {
-      "id": "typescript-fundamentals-q2",
+      "id": 2,
       "question": "Which of the following is the correct way to define an array of strings?",
       "topic": "Basic Types",
       "difficulty": "Intermediate",
@@ -58,10 +59,11 @@
         "originalId": 2,
         "originalType": "multiple-choice",
         "migrated": "2025-10-01T06:41:13.483Z"
-      }
+      },
+      "correctAnswer": 2
     },
     {
-      "id": "typescript-fundamentals-q3",
+      "id": 3,
       "question": "What is the difference between an interface and a type alias in TypeScript? When would you use each?",
       "topic": "Interfaces",
       "difficulty": "Beginner",
@@ -85,10 +87,11 @@
         "originalId": 3,
         "originalType": "open-ended",
         "migrated": "2025-10-01T06:41:13.483Z"
-      }
+      },
+      "correctAnswer": 0
     },
     {
-      "id": "typescript-fundamentals-q4",
+      "id": 4,
       "question": "Which access modifier makes a property or method accessible only within the same class?",
       "topic": "Classes",
       "difficulty": "Intermediate",
@@ -112,10 +115,11 @@
         "originalId": 4,
         "originalType": "multiple-choice",
         "migrated": "2025-10-01T06:41:13.483Z"
-      }
+      },
+      "correctAnswer": 0
     },
     {
-      "id": "typescript-fundamentals-q5",
+      "id": 5,
       "question": "What is the purpose of generics in TypeScript?",
       "topic": "Generics",
       "difficulty": "Beginner",
@@ -139,10 +143,11 @@
         "originalId": 5,
         "originalType": "multiple-choice",
         "migrated": "2025-10-01T06:41:13.483Z"
-      }
+      },
+      "correctAnswer": 0
     },
     {
-      "id": "typescript-fundamentals-q6",
+      "id": 6,
       "question": "What is the difference between 'any' and 'unknown' types in TypeScript?",
       "topic": "Type System",
       "difficulty": "Beginner",
@@ -166,10 +171,11 @@
         "originalId": 6,
         "originalType": "multiple-choice",
         "migrated": "2025-10-01T06:41:13.483Z"
-      }
+      },
+      "correctAnswer": 0
     },
     {
-      "id": "typescript-fundamentals-q7",
+      "id": 7,
       "question": "Explain the concept of 'declaration merging' in TypeScript and when it's useful.",
       "topic": "Interfaces",
       "difficulty": "Intermediate",
@@ -193,10 +199,11 @@
         "originalId": 7,
         "originalType": "open-ended",
         "migrated": "2025-10-01T06:41:13.483Z"
-      }
+      },
+      "correctAnswer": 0
     },
     {
-      "id": "typescript-fundamentals-q8",
+      "id": 8,
       "question": "What is a discriminated union in TypeScript?",
       "topic": "Advanced Types",
       "difficulty": "Beginner",
@@ -220,10 +227,11 @@
         "originalId": 8,
         "originalType": "multiple-choice",
         "migrated": "2025-10-01T06:41:13.483Z"
-      }
+      },
+      "correctAnswer": 0
     },
     {
-      "id": "typescript-fundamentals-q9",
+      "id": 9,
       "question": "What is a mapped type in TypeScript?",
       "topic": "Advanced Types",
       "difficulty": "Beginner",
@@ -247,10 +255,11 @@
         "originalId": 9,
         "originalType": "multiple-choice",
         "migrated": "2025-10-01T06:41:13.483Z"
-      }
+      },
+      "correctAnswer": 0
     },
     {
-      "id": "typescript-fundamentals-q10",
+      "id": 10,
       "question": "What does the Pick<T, K> utility type do?",
       "topic": "Utility Types",
       "difficulty": "Intermediate",
@@ -274,10 +283,11 @@
         "originalId": 10,
         "originalType": "multiple-choice",
         "migrated": "2025-10-01T06:41:13.483Z"
-      }
+      },
+      "correctAnswer": 0
     },
     {
-      "id": "typescript-fundamentals-q11",
+      "id": 11,
       "question": "What are type predicates and how do they work?",
       "topic": "Type Guards",
       "difficulty": "Intermediate",
@@ -301,10 +311,11 @@
         "originalId": 11,
         "originalType": "open-ended",
         "migrated": "2025-10-01T06:41:13.483Z"
-      }
+      },
+      "correctAnswer": 0
     },
     {
-      "id": "typescript-fundamentals-q12",
+      "id": 12,
       "question": "What is the difference between 'import * as' and 'import {}'?",
       "topic": "Modules",
       "difficulty": "Beginner",
@@ -328,10 +339,11 @@
         "originalId": 12,
         "originalType": "multiple-choice",
         "migrated": "2025-10-01T06:41:13.483Z"
-      }
+      },
+      "correctAnswer": 0
     },
     {
-      "id": "typescript-fundamentals-q13",
+      "id": 13,
       "question": "What are decorators in TypeScript?",
       "topic": "Decorators",
       "difficulty": "Intermediate",
@@ -355,10 +367,11 @@
         "originalId": 13,
         "originalType": "multiple-choice",
         "migrated": "2025-10-01T06:41:13.483Z"
-      }
+      },
+      "correctAnswer": 0
     },
     {
-      "id": "typescript-fundamentals-q14",
+      "id": 14,
       "question": "How do conditional types work in TypeScript?",
       "topic": "Conditional Types",
       "difficulty": "Intermediate",
@@ -382,10 +395,11 @@
         "originalId": 14,
         "originalType": "open-ended",
         "migrated": "2025-10-01T06:41:13.483Z"
-      }
+      },
+      "correctAnswer": 0
     },
     {
-      "id": "typescript-fundamentals-q15",
+      "id": 15,
       "question": "What is tree shaking in TypeScript projects?",
       "topic": "Performance",
       "difficulty": "Beginner",
@@ -409,10 +423,11 @@
         "originalId": 15,
         "originalType": "multiple-choice",
         "migrated": "2025-10-01T06:41:13.483Z"
-      }
+      },
+      "correctAnswer": 0
     },
     {
-      "id": "typescript-fundamentals-q16",
+      "id": 16,
       "question": "Which utility type removes all properties from a type T that are assignable to type U?",
       "topic": "Advanced Types",
       "difficulty": "Advanced",
@@ -431,10 +446,11 @@
         "typescript"
       ],
       "questionType": "multiple-choice",
-      "estimatedTime": 120
+      "estimatedTime": 120,
+      "correctAnswer": 1
     },
     {
-      "id": "typescript-fundamentals-q17",
+      "id": 17,
       "question": "What are the key considerations when migrating a JavaScript project to TypeScript?",
       "topic": "Migration",
       "difficulty": "Advanced",
@@ -453,10 +469,11 @@
         "typescript"
       ],
       "questionType": "multiple-choice",
-      "estimatedTime": 90
+      "estimatedTime": 90,
+      "correctAnswer": 0
     },
     {
-      "id": "typescript-fundamentals-q18",
+      "id": 18,
       "question": "What is the purpose of the 'satisfies' operator introduced in TypeScript 4.9?",
       "topic": "Advanced Types",
       "difficulty": "Advanced",
@@ -475,7 +492,8 @@
         "typescript"
       ],
       "questionType": "multiple-choice",
-      "estimatedTime": 120
+      "estimatedTime": 120,
+      "correctAnswer": 0
     }
   ],
   "metadata": {

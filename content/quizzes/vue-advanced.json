@@ -2,12 +2,12 @@
   "moduleSlug": "vue-advanced",
   "title": "Vue Advanced Assessment",
   "description": "Comprehensive assessment covering key concepts from the vue-advanced module",
-  "totalQuestions": 18,
+  "totalQuestions": 19,
   "passingScore": 70,
   "timeLimit": 23,
   "questions": [
     {
-      "id": "vue-advanced-q1",
+      "id": 1,
       "question": "What is the correct way to create a Vue application in Vue 3?",
       "topic": "Core Concepts",
       "difficulty": "Beginner",
@@ -31,10 +31,11 @@
         "originalId": 1,
         "originalType": "multiple-choice",
         "migrated": "2025-10-01T06:41:13.489Z"
-      }
+      },
+      "correctAnswer": 0
     },
     {
-      "id": "vue-advanced-q2",
+      "id": 2,
       "question": "Which directive is used for two-way data binding in Vue?",
       "topic": "Core Concepts",
       "difficulty": "Intermediate",
@@ -58,10 +59,11 @@
         "originalId": 2,
         "originalType": "multiple-choice",
         "migrated": "2025-10-01T06:41:13.489Z"
-      }
+      },
+      "correctAnswer": 0
     },
     {
-      "id": "vue-advanced-q3",
+      "id": 3,
       "question": "What are props in Vue and how are they used? How do they differ from the data property?",
       "topic": "Components",
       "difficulty": "Intermediate",
@@ -85,10 +87,11 @@
         "originalId": 3,
         "originalType": "open-ended",
         "migrated": "2025-10-01T06:41:13.489Z"
-      }
+      },
+      "correctAnswer": 0
     },
     {
-      "id": "vue-advanced-q4",
+      "id": 4,
       "question": "How do you define a global component in Vue 3?",
       "topic": "Components",
       "difficulty": "Beginner",
@@ -112,10 +115,11 @@
         "originalId": 4,
         "originalType": "multiple-choice",
         "migrated": "2025-10-01T06:41:13.489Z"
-      }
+      },
+      "correctAnswer": 0
     },
     {
-      "id": "vue-advanced-q5",
+      "id": 5,
       "question": "What is the purpose of the setup() function in the Composition API?",
       "topic": "Composition API",
       "difficulty": "Beginner",
@@ -139,10 +143,11 @@
         "originalId": 5,
         "originalType": "multiple-choice",
         "migrated": "2025-10-01T06:41:13.489Z"
-      }
+      },
+      "correctAnswer": 0
     },
     {
-      "id": "vue-advanced-q6",
+      "id": 6,
       "question": "What is the difference between ref and reactive in Vue 3?",
       "topic": "Reactivity",
       "difficulty": "Beginner",
@@ -166,10 +171,11 @@
         "originalId": 6,
         "originalType": "multiple-choice",
         "migrated": "2025-10-01T06:41:13.489Z"
-      }
+      },
+      "correctAnswer": 0
     },
     {
-      "id": "vue-advanced-q7",
+      "id": 7,
       "question": "Explain the Vue component lifecycle hooks and when you would use each one.",
       "topic": "Lifecycle",
       "difficulty": "Intermediate",
@@ -193,10 +199,11 @@
         "originalId": 7,
         "originalType": "open-ended",
         "migrated": "2025-10-01T06:41:13.489Z"
-      }
+      },
+      "correctAnswer": 0
     },
     {
-      "id": "vue-advanced-q8",
+      "id": 9,
       "question": "What is the difference between `v-if` and `v-show`?",
       "topic": "Directives",
       "difficulty": "Beginner",
@@ -220,10 +227,11 @@
         "originalId": 8,
         "originalType": "multiple-choice",
         "migrated": "2025-10-01T06:41:13.489Z"
-      }
+      },
+      "correctAnswer": 0
     },
     {
-      "id": "vue-advanced-q9",
+      "id": 10,
       "question": "What is the main advantage of Vue 3's Composition API?",
       "topic": "Composition API",
       "difficulty": "Beginner",
@@ -247,10 +255,11 @@
         "originalId": 9,
         "originalType": "multiple-choice",
         "migrated": "2025-10-01T06:41:13.489Z"
-      }
+      },
+      "correctAnswer": 0
     },
     {
-      "id": "vue-advanced-q10",
+      "id": 11,
       "question": "What is the difference between ref() and reactive() in Vue 3?",
       "topic": "Reactivity",
       "difficulty": "Beginner",
@@ -274,10 +283,11 @@
         "originalId": 10,
         "originalType": "multiple-choice",
         "migrated": "2025-10-01T06:41:13.489Z"
-      }
+      },
+      "correctAnswer": 0
     },
     {
-      "id": "vue-advanced-q11",
+      "id": 12,
       "question": "How can you optimize Vue application performance?",
       "topic": "Performance",
       "difficulty": "Advanced",
@@ -301,10 +311,11 @@
         "originalId": 11,
         "originalType": "open-ended",
         "migrated": "2025-10-01T06:41:13.489Z"
-      }
+      },
+      "correctAnswer": 0
     },
     {
-      "id": "vue-advanced-q12",
+      "id": 13,
       "question": "What is Pinia and how does it relate to Vuex?",
       "topic": "State Management",
       "difficulty": "Beginner",
@@ -328,10 +339,11 @@
         "originalId": 12,
         "originalType": "multiple-choice",
         "migrated": "2025-10-01T06:41:13.489Z"
-      }
+      },
+      "correctAnswer": 0
     },
     {
-      "id": "vue-advanced-q13",
+      "id": 14,
       "question": "Which tool is recommended for testing Vue components?",
       "topic": "Testing",
       "difficulty": "Intermediate",
@@ -355,10 +367,11 @@
         "originalId": 13,
         "originalType": "multiple-choice",
         "migrated": "2025-10-01T06:41:13.489Z"
-      }
+      },
+      "correctAnswer": 0
     },
     {
-      "id": "vue-advanced-q14",
+      "id": 15,
       "question": "What are Teleports in Vue 3 and when would you use them?",
       "topic": "Advanced",
       "difficulty": "Intermediate",
@@ -382,10 +395,11 @@
         "originalId": 14,
         "originalType": "open-ended",
         "migrated": "2025-10-01T06:41:13.489Z"
-      }
+      },
+      "correctAnswer": 0
     },
     {
-      "id": "vue-advanced-q15",
+      "id": 16,
       "question": "How do you create a custom directive in Vue 3?",
       "topic": "Directives",
       "difficulty": "Beginner",
@@ -409,10 +423,11 @@
         "originalId": 15,
         "originalType": "multiple-choice",
         "migrated": "2025-10-01T06:41:13.489Z"
-      }
+      },
+      "correctAnswer": 0
     },
     {
-      "id": "vue-advanced-q16",
+      "id": 17,
       "question": "What is the main benefit of using the Composition API over the Options API?",
       "topic": "Composition API",
       "difficulty": "Intermediate",
@@ -431,10 +446,11 @@
         "TypeScript"
       ],
       "questionType": "multiple-choice",
-      "estimatedTime": 90
+      "estimatedTime": 90,
+      "correctAnswer": 0
     },
     {
-      "id": "vue-advanced-q17",
+      "id": 18,
       "question": "How do you implement lazy loading for Vue components?",
       "topic": "Performance",
       "difficulty": "Intermediate",
@@ -453,10 +469,11 @@
         "Optimization"
       ],
       "questionType": "multiple-choice",
-      "estimatedTime": 90
+      "estimatedTime": 90,
+      "correctAnswer": 0
     },
     {
-      "id": "vue-advanced-q18",
+      "id": 19,
       "question": "What is the purpose of the key attribute in Vue lists and why is it important?",
       "topic": "Rendering",
       "difficulty": "Intermediate",
@@ -475,7 +492,23 @@
         "Performance"
       ],
       "questionType": "multiple-choice",
-      "estimatedTime": 90
+      "estimatedTime": 90,
+      "correctAnswer": 0
+    },
+    {
+      "id": 8,
+      "topic": "Directives",
+      "type": "multiple-choice",
+      "question": "What is the difference between v-if and v-show?",
+      "choices": [
+        "v-if conditionally renders elements, v-show toggles CSS display property",
+        "v-if is for lists, v-show is for single elements",
+        "v-if is faster than v-show",
+        "There is no difference"
+      ],
+      "correctAnswer": 0,
+      "explanation": "v-if conditionally renders elements by actually adding or removing them from the DOM based on the condition. v-show simply toggles the CSS display property to show or hide elements. v-if has higher toggle costs but v-show has higher initial render costs. Use v-if for rarely changed conditions and v-show for frequently toggled elements.",
+      "correctIndex": 0
     }
   ],
   "metadata": {

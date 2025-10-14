@@ -7,7 +7,7 @@
   "timeLimit": 30,
   "questions": [
     {
-      "id": "performance-optimization-q1",
+      "id": 1,
       "question": "What are the trade-offs between different performance optimization approaches?",
       "topic": "Profiling",
       "difficulty": "Advanced",
@@ -27,10 +27,11 @@
         "advanced"
       ],
       "questionType": "multiple-choice",
-      "estimatedTime": 90
+      "estimatedTime": 90,
+      "correctAnswer": 0
     },
     {
-      "id": "performance-optimization-q2",
+      "id": 2,
       "question": "When should you use performance optimization techniques in web development?",
       "topic": "Optimization",
       "difficulty": "Beginner",
@@ -50,10 +51,11 @@
         "beginner"
       ],
       "questionType": "multiple-choice",
-      "estimatedTime": 90
+      "estimatedTime": 90,
+      "correctAnswer": 0
     },
     {
-      "id": "performance-optimization-q3",
+      "id": 3,
       "question": "How do you implement performance optimization in a production environment?",
       "topic": "Performance",
       "difficulty": "Intermediate",
@@ -73,10 +75,11 @@
         "intermediate"
       ],
       "questionType": "multiple-choice",
-      "estimatedTime": 90
+      "estimatedTime": 90,
+      "correctAnswer": 0
     },
     {
-      "id": "performance-optimization-q4",
+      "id": 4,
       "question": "What are the trade-offs between different performance optimization approaches?",
       "topic": "Profiling",
       "difficulty": "Advanced",
@@ -96,10 +99,11 @@
         "advanced"
       ],
       "questionType": "multiple-choice",
-      "estimatedTime": 120
+      "estimatedTime": 120,
+      "correctAnswer": 0
     },
     {
-      "id": "performance-optimization-q5",
+      "id": 5,
       "question": "Which pattern is most effective for performance optimization architecture?",
       "topic": "Optimization",
       "difficulty": "Intermediate",
@@ -119,10 +123,11 @@
         "intermediate"
       ],
       "questionType": "multiple-choice",
-      "estimatedTime": 90
+      "estimatedTime": 90,
+      "correctAnswer": 0
     },
     {
-      "id": "performance-optimization-q6",
+      "id": 6,
       "question": "What is the primary purpose of performance optimization in web development?",
       "topic": "Performance",
       "difficulty": "Beginner",
@@ -142,10 +147,11 @@
         "beginner"
       ],
       "questionType": "multiple-choice",
-      "estimatedTime": 90
+      "estimatedTime": 90,
+      "correctAnswer": 0
     },
     {
-      "id": "performance-optimization-q7",
+      "id": 7,
       "question": "What are the performance considerations when using optimization techniques?",
       "topic": "Profiling",
       "difficulty": "Intermediate",
@@ -165,10 +171,11 @@
         "intermediate"
       ],
       "questionType": "multiple-choice",
-      "estimatedTime": 90
+      "estimatedTime": 90,
+      "correctAnswer": 0
     },
     {
-      "id": "performance-optimization-q8",
+      "id": 8,
       "question": "When should you use performance optimization in development workflows?",
       "topic": "Optimization",
       "difficulty": "Beginner",
@@ -188,10 +195,11 @@
         "beginner"
       ],
       "questionType": "multiple-choice",
-      "estimatedTime": 90
+      "estimatedTime": 90,
+      "correctAnswer": 0
     },
     {
-      "id": "performance-optimization-q9",
+      "id": 9,
       "question": "What is the primary purpose of implementing performance optimization strategies?",
       "topic": "Performance",
       "difficulty": "Beginner",
@@ -211,10 +219,11 @@
         "beginner"
       ],
       "questionType": "multiple-choice",
-      "estimatedTime": 90
+      "estimatedTime": 90,
+      "correctAnswer": 0
     },
     {
-      "id": "performance-optimization-q10",
+      "id": 10,
       "question": "What are the performance considerations when using optimization techniques?",
       "topic": "Profiling",
       "difficulty": "Intermediate",
@@ -234,10 +243,11 @@
         "intermediate"
       ],
       "questionType": "multiple-choice",
-      "estimatedTime": 90
+      "estimatedTime": 90,
+      "correctAnswer": 0
     },
     {
-      "id": "performance-optimization-q11",
+      "id": 11,
       "question": "When should you use performance optimization techniques in application development?",
       "topic": "Optimization",
       "difficulty": "Beginner",
@@ -257,10 +267,11 @@
         "beginner"
       ],
       "questionType": "multiple-choice",
-      "estimatedTime": 90
+      "estimatedTime": 90,
+      "correctAnswer": 0
     },
     {
-      "id": "performance-optimization-q12",
+      "id": 12,
       "question": "What is the primary purpose of performance optimization in modern web applications?",
       "topic": "Performance",
       "difficulty": "Beginner",
@@ -280,10 +291,11 @@
         "beginner"
       ],
       "questionType": "multiple-choice",
-      "estimatedTime": 90
+      "estimatedTime": 90,
+      "correctAnswer": 0
     },
     {
-      "id": "performance-optimization-q13",
+      "id": 13,
       "question": "What are the performance considerations when using optimization approaches?",
       "topic": "Profiling",
       "difficulty": "Intermediate",
@@ -303,10 +315,11 @@
         "intermediate"
       ],
       "questionType": "multiple-choice",
-      "estimatedTime": 90
+      "estimatedTime": 90,
+      "correctAnswer": 0
     },
     {
-      "id": "performance-optimization-q14",
+      "id": 14,
       "question": "How do you troubleshoot complex performance optimization issues?",
       "topic": "Optimization",
       "difficulty": "Advanced",
@@ -326,10 +339,11 @@
         "advanced"
       ],
       "questionType": "multiple-choice",
-      "estimatedTime": 120
+      "estimatedTime": 120,
+      "correctAnswer": 0
     },
     {
-      "id": "performance-optimization-q15",
+      "id": 15,
       "question": "What is the primary purpose of performance optimization techniques?",
       "topic": "Performance",
       "difficulty": "Beginner",
@@ -349,10 +363,11 @@
         "beginner"
       ],
       "questionType": "multiple-choice",
-      "estimatedTime": 90
+      "estimatedTime": 90,
+      "correctAnswer": 0
     },
     {
-      "id": "performance-optimization-q16",
+      "id": 16,
       "question": "What are the performance considerations when using optimization strategies?",
       "topic": "Profiling",
       "difficulty": "Intermediate",
@@ -372,10 +387,11 @@
         "intermediate"
       ],
       "questionType": "multiple-choice",
-      "estimatedTime": 90
+      "estimatedTime": 90,
+      "correctAnswer": 0
     },
     {
-      "id": "performance-optimization-q17",
+      "id": 17,
       "question": "What is First Contentful Paint (FCP) and why is it important?",
       "topic": "Core Web Vitals",
       "difficulty": "Beginner",
@@ -394,10 +410,11 @@
         "performance"
       ],
       "questionType": "multiple-choice",
-      "estimatedTime": 45
+      "estimatedTime": 45,
+      "correctAnswer": 0
     },
     {
-      "id": "performance-optimization-q18",
+      "id": 18,
       "question": "Which HTTP header helps browsers prioritize resource loading?",
       "topic": "Resource Loading",
       "difficulty": "Beginner",
@@ -416,10 +433,11 @@
         "performance"
       ],
       "questionType": "multiple-choice",
-      "estimatedTime": 45
+      "estimatedTime": 45,
+      "correctAnswer": 0
     },
     {
-      "id": "performance-optimization-q19",
+      "id": 19,
       "question": "What is the primary benefit of code splitting in web applications?",
       "topic": "Code Splitting",
       "difficulty": "Beginner",
@@ -438,10 +456,11 @@
         "performance"
       ],
       "questionType": "multiple-choice",
-      "estimatedTime": 45
+      "estimatedTime": 45,
+      "correctAnswer": 0
     },
     {
-      "id": "performance-optimization-q20",
+      "id": 20,
       "question": "What does the 'defer' attribute do on a script tag?",
       "topic": "Script Loading",
       "difficulty": "Beginner",
@@ -460,10 +479,11 @@
         "performance"
       ],
       "questionType": "multiple-choice",
-      "estimatedTime": 45
+      "estimatedTime": 45,
+      "correctAnswer": 0
     },
     {
-      "id": "performance-optimization-q21",
+      "id": 21,
       "question": "What is the purpose of image compression in web performance?",
       "topic": "Image Optimization",
       "difficulty": "Beginner",
@@ -482,10 +502,11 @@
         "performance"
       ],
       "questionType": "multiple-choice",
-      "estimatedTime": 45
+      "estimatedTime": 45,
+      "correctAnswer": 0
     },
     {
-      "id": "performance-optimization-q22",
+      "id": 22,
       "question": "What is lazy loading and when should it be used?",
       "topic": "Resource Loading",
       "difficulty": "Beginner",
@@ -504,10 +525,11 @@
         "performance"
       ],
       "questionType": "multiple-choice",
-      "estimatedTime": 45
+      "estimatedTime": 45,
+      "correctAnswer": 0
     },
     {
-      "id": "performance-optimization-q23",
+      "id": 23,
       "question": "What is browser caching and how does it improve performance?",
       "topic": "Caching",
       "difficulty": "Beginner",
@@ -526,10 +548,11 @@
         "performance"
       ],
       "questionType": "multiple-choice",
-      "estimatedTime": 45
+      "estimatedTime": 45,
+      "correctAnswer": 0
     },
     {
-      "id": "performance-optimization-q24",
+      "id": 24,
       "question": "What is the benefit of using a Content Delivery Network (CDN)?",
       "topic": "Infrastructure",
       "difficulty": "Beginner",
@@ -548,10 +571,11 @@
         "performance"
       ],
       "questionType": "multiple-choice",
-      "estimatedTime": 45
+      "estimatedTime": 45,
+      "correctAnswer": 0
     },
     {
-      "id": "performance-optimization-q25",
+      "id": 25,
       "question": "What does the 'async' attribute do on a script tag?",
       "topic": "Script Loading",
       "difficulty": "Beginner",
@@ -570,10 +594,11 @@
         "performance"
       ],
       "questionType": "multiple-choice",
-      "estimatedTime": 45
+      "estimatedTime": 45,
+      "correctAnswer": 0
     },
     {
-      "id": "performance-optimization-q26",
+      "id": 26,
       "question": "What is the purpose of minification in web development?",
       "topic": "Build Optimization",
       "difficulty": "Beginner",
@@ -592,10 +617,11 @@
         "performance"
       ],
       "questionType": "multiple-choice",
-      "estimatedTime": 45
+      "estimatedTime": 45,
+      "correctAnswer": 0
     },
     {
-      "id": "performance-optimization-q27",
+      "id": 27,
       "question": "What is Largest Contentful Paint (LCP) and why does it matter?",
       "topic": "Core Web Vitals",
       "difficulty": "Beginner",
@@ -614,10 +640,11 @@
         "performance"
       ],
       "questionType": "multiple-choice",
-      "estimatedTime": 45
+      "estimatedTime": 45,
+      "correctAnswer": 0
     },
     {
-      "id": "performance-optimization-q28",
+      "id": 28,
       "question": "What is Cumulative Layout Shift (CLS) and how can it be minimized?",
       "topic": "Core Web Vitals",
       "difficulty": "Beginner",
@@ -636,10 +663,11 @@
         "performance"
       ],
       "questionType": "multiple-choice",
-      "estimatedTime": 45
+      "estimatedTime": 45,
+      "correctAnswer": 0
     },
     {
-      "id": "performance-optimization-q29",
+      "id": 29,
       "question": "What is the difference between service workers and HTTP caching?",
       "topic": "Caching",
       "difficulty": "Intermediate",
@@ -658,10 +686,11 @@
         "performance"
       ],
       "questionType": "multiple-choice",
-      "estimatedTime": 60
+      "estimatedTime": 60,
+      "correctAnswer": 0
     },
     {
-      "id": "performance-optimization-q30",
+      "id": 30,
       "question": "What is tree shaking and how does it improve bundle size?",
       "topic": "Build Optimization",
       "difficulty": "Intermediate",
@@ -680,10 +709,11 @@
         "performance"
       ],
       "questionType": "multiple-choice",
-      "estimatedTime": 60
+      "estimatedTime": 60,
+      "correctAnswer": 0
     },
     {
-      "id": "performance-optimization-q31",
+      "id": 31,
       "question": "What is the purpose of requestIdleCallback in performance optimization?",
       "topic": "Runtime Optimization",
       "difficulty": "Intermediate",
@@ -702,10 +732,11 @@
         "performance"
       ],
       "questionType": "multiple-choice",
-      "estimatedTime": 60
+      "estimatedTime": 60,
+      "correctAnswer": 0
     },
     {
-      "id": "performance-optimization-q32",
+      "id": 32,
       "question": "How does virtual scrolling improve performance for large lists?",
       "topic": "Runtime Optimization",
       "difficulty": "Intermediate",
@@ -724,10 +755,11 @@
         "performance"
       ],
       "questionType": "multiple-choice",
-      "estimatedTime": 60
+      "estimatedTime": 60,
+      "correctAnswer": 0
     },
     {
-      "id": "performance-optimization-q33",
+      "id": 33,
       "question": "What is the critical rendering path and why is it important?",
       "topic": "Rendering",
       "difficulty": "Intermediate",
@@ -746,10 +778,11 @@
         "performance"
       ],
       "questionType": "multiple-choice",
-      "estimatedTime": 60
+      "estimatedTime": 60,
+      "correctAnswer": 0
     },
     {
-      "id": "performance-optimization-q34",
+      "id": 34,
       "question": "What is the benefit of using CSS containment properties?",
       "topic": "Rendering",
       "difficulty": "Intermediate",
@@ -768,10 +801,11 @@
         "performance"
       ],
       "questionType": "multiple-choice",
-      "estimatedTime": 60
+      "estimatedTime": 60,
+      "correctAnswer": 0
     },
     {
-      "id": "performance-optimization-q35",
+      "id": 35,
       "question": "What is the purpose of the Performance API in web development?",
       "topic": "Profiling",
       "difficulty": "Intermediate",
@@ -790,10 +824,11 @@
         "performance"
       ],
       "questionType": "multiple-choice",
-      "estimatedTime": 60
+      "estimatedTime": 60,
+      "correctAnswer": 0
     },
     {
-      "id": "performance-optimization-q36",
+      "id": 36,
       "question": "How does HTTP/2 improve web performance compared to HTTP/1.1?",
       "topic": "Networking",
       "difficulty": "Intermediate",
@@ -812,10 +847,11 @@
         "performance"
       ],
       "questionType": "multiple-choice",
-      "estimatedTime": 60
+      "estimatedTime": 60,
+      "correctAnswer": 0
     },
     {
-      "id": "performance-optimization-q37",
+      "id": 37,
       "question": "What is the benefit of using resource hints like preconnect and prefetch?",
       "topic": "Resource Loading",
       "difficulty": "Intermediate",
@@ -834,10 +870,11 @@
         "performance"
       ],
       "questionType": "multiple-choice",
-      "estimatedTime": 60
+      "estimatedTime": 60,
+      "correctAnswer": 0
     },
     {
-      "id": "performance-optimization-q38",
+      "id": 38,
       "question": "What is the purpose of the Intersection Observer API?",
       "topic": "Runtime Optimization",
       "difficulty": "Intermediate",
@@ -856,10 +893,11 @@
         "performance"
       ],
       "questionType": "multiple-choice",
-      "estimatedTime": 60
+      "estimatedTime": 60,
+      "correctAnswer": 0
     },
     {
-      "id": "performance-optimization-q39",
+      "id": 39,
       "question": "How does Web Workers improve performance in JavaScript applications?",
       "topic": "Runtime Optimization",
       "difficulty": "Intermediate",
@@ -878,10 +916,11 @@
         "performance"
       ],
       "questionType": "multiple-choice",
-      "estimatedTime": 60
+      "estimatedTime": 60,
+      "correctAnswer": 0
     },
     {
-      "id": "performance-optimization-q40",
+      "id": 40,
       "question": "What is the benefit of using CSS Grid and Flexbox over traditional layout methods?",
       "topic": "Rendering",
       "difficulty": "Intermediate",
@@ -900,10 +939,11 @@
         "performance"
       ],
       "questionType": "multiple-choice",
-      "estimatedTime": 60
+      "estimatedTime": 60,
+      "correctAnswer": 0
     },
     {
-      "id": "performance-optimization-q41",
+      "id": 41,
       "question": "What is the purpose of the Paint Timing API and how is it used?",
       "topic": "Profiling",
       "difficulty": "Advanced",
@@ -922,10 +962,11 @@
         "performance"
       ],
       "questionType": "multiple-choice",
-      "estimatedTime": 90
+      "estimatedTime": 90,
+      "correctAnswer": 0
     },
     {
-      "id": "performance-optimization-q42",
+      "id": 42,
       "question": "What are the performance implications of using CSS custom properties (variables)?",
       "topic": "Rendering",
       "difficulty": "Advanced",
@@ -944,10 +985,11 @@
         "performance"
       ],
       "questionType": "multiple-choice",
-      "estimatedTime": 90
+      "estimatedTime": 90,
+      "correctAnswer": 0
     },
     {
-      "id": "performance-optimization-q43",
+      "id": 43,
       "question": "How does the Event Loop impact JavaScript performance and what are optimization strategies?",
       "topic": "Runtime Optimization",
       "difficulty": "Advanced",
@@ -966,10 +1008,11 @@
         "performance"
       ],
       "questionType": "multiple-choice",
-      "estimatedTime": 90
+      "estimatedTime": 90,
+      "correctAnswer": 0
     },
     {
-      "id": "performance-optimization-q44",
+      "id": 44,
       "question": "What is the purpose of the Largest Contentful Paint (LCP) element and how do you optimize it?",
       "topic": "Core Web Vitals",
       "difficulty": "Advanced",
@@ -988,10 +1031,11 @@
         "performance"
       ],
       "questionType": "multiple-choice",
-      "estimatedTime": 90
+      "estimatedTime": 90,
+      "correctAnswer": 0
     },
     {
-      "id": "performance-optimization-q45",
+      "id": 45,
       "question": "What are the performance trade-offs of using CSS-in-JS libraries?",
       "topic": "Rendering",
       "difficulty": "Advanced",
@@ -1010,10 +1054,11 @@
         "performance"
       ],
       "questionType": "multiple-choice",
-      "estimatedTime": 90
+      "estimatedTime": 90,
+      "correctAnswer": 0
     },
     {
-      "id": "performance-optimization-q46",
+      "id": 46,
       "question": "How does browser speculative parsing affect performance and what are best practices?",
       "topic": "Resource Loading",
       "difficulty": "Advanced",
@@ -1032,10 +1077,11 @@
         "performance"
       ],
       "questionType": "multiple-choice",
-      "estimatedTime": 90
+      "estimatedTime": 90,
+      "correctAnswer": 0
     },
     {
-      "id": "performance-optimization-q47",
+      "id": 47,
       "question": "What is the impact of JavaScript bundle composition on parsing and execution time?",
       "topic": "Runtime Optimization",
       "difficulty": "Advanced",
@@ -1054,10 +1100,11 @@
         "performance"
       ],
       "questionType": "multiple-choice",
-      "estimatedTime": 90
+      "estimatedTime": 90,
+      "correctAnswer": 0
     },
     {
-      "id": "performance-optimization-q48",
+      "id": 48,
       "question": "What are the performance considerations for implementing a Progressive Web App (PWA)?",
       "topic": "Infrastructure",
       "difficulty": "Advanced",
@@ -1076,7 +1123,8 @@
         "performance"
       ],
       "questionType": "multiple-choice",
-      "estimatedTime": 90
+      "estimatedTime": 90,
+      "correctAnswer": 0
     }
   ],
   "metadata": {

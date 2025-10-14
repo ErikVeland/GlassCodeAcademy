@@ -1,0 +1,90 @@
+{
+  "timestamp": "2025-10-14T02:50:07.959Z",
+  "report": [
+    {
+      "source": "database_questions.json",
+      "target": "database-systems.json",
+      "mergedCount": 22
+    },
+    {
+      "source": "dotnet_questions.json",
+      "target": "dotnet-fundamentals.json",
+      "mergedCount": 45
+    },
+    {
+      "source": "graphql_questions.json",
+      "target": "graphql-advanced.json",
+      "mergedCount": 33
+    },
+    {
+      "source": "laravel_questions.json",
+      "target": "laravel-fundamentals.json",
+      "mergedCount": 35
+    },
+    {
+      "source": "nextjs_questions.json",
+      "target": "nextjs-advanced.json",
+      "mergedCount": 18
+    },
+    {
+      "source": "node_questions.json",
+      "target": "node-fundamentals.json",
+      "mergedCount": 20
+    },
+    {
+      "source": "performance_questions.json",
+      "target": "performance-optimization.json",
+      "mergedCount": 48
+    },
+    {
+      "source": "programming_questions.json",
+      "target": "programming-fundamentals.json",
+      "mergedCount": 54
+    },
+    {
+      "source": "react_questions.json",
+      "target": "react-fundamentals.json",
+      "mergedCount": 20
+    },
+    {
+      "source": "sass_questions.json",
+      "target": "sass-advanced.json",
+      "mergedCount": 15
+    },
+    {
+      "source": "security_questions.json",
+      "target": "security-fundamentals.json",
+      "mergedCount": 60
+    },
+    {
+      "source": "tailwind_questions.json",
+      "target": "tailwind-advanced.json",
+      "mergedCount": 16
+    },
+    {
+      "source": "testing_questions.json",
+      "target": "testing-fundamentals.json",
+      "mergedCount": 58
+    },
+    {
+      "source": "typescript_questions.json",
+      "target": "typescript-fundamentals.json",
+      "mergedCount": 18
+    },
+    {
+      "source": "version_questions.json",
+      "target": "version-control.json",
+      "mergedCount": 40
+    },
+    {
+      "source": "vue_questions.json",
+      "target": "vue-advanced.json",
+      "mergedCount": 19
+    },
+    {
+      "source": "web_questions.json",
+      "target": "web-fundamentals.json",
+      "mergedCount": 55
+    }
+  ]
+}
