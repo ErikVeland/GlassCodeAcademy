@@ -1,8 +1,10 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import '../../styles/design-system.scss';
+import { getInterviewPrepSources, formatSourcesForDisplay, LessonSource } from '../../lib/sourcesUtils';
+import Sources from '../../components/Sources';
 
 // Interview Preparation Hub - Non-Gamified Educational Structure
 interface InterviewModule {
@@ -167,13 +169,30 @@ const interviewTiers: Record<string, InterviewTier> = {
   }
 };
 
-// Updated Interview Module Card Component with homepage styling
+// Updated Interview Module Card Component with homepage styling and sources integration
 const InterviewModuleCard: React.FC<{
   module: InterviewModule;
   tierKey: string;
 }> = ({ module, tierKey }) => {
   const prerequisitesMet = module.prerequisites.length === 0;
   const isLocked = module.prerequisites.length > 0 && !prerequisitesMet;
+  const [sources, setSources] = useState<LessonSource[]>([]);
+  const [showSources, setShowSources] = useState(false);
+
+  useEffect(() => {
+    const fetchSources = async () => {
+      try {
+        const sourcesData = await getInterviewPrepSources(module.id);
+        if (sourcesData) {
+          setSources(formatSourcesForDisplay(sourcesData));
+        }
+      } catch (error) {
+        console.error(`Error fetching sources for ${module.id}:`, error);
+      }
+    };
+
+    fetchSources();
+  }, [module.id]);
 
   // Define tier-specific gradient classes to match homepage
   const tierGradientClass = {
@@ -247,6 +266,34 @@ const InterviewModuleCard: React.FC<{
           </div>
         </div>
       </Link>
+
+      {/* Sources Section */}
+      {sources.length > 0 && (
+        <div className="mt-4">
+          <button
+            onClick={(e) => {
+              e.preventDefault();
+              setShowSources(!showSources);
+            }}
+            className="w-full px-3 py-2 text-sm bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-300 rounded-lg hover:bg-blue-100 dark:hover:bg-blue-900/30 transition-colors flex items-center justify-center gap-2"
+          >
+            <span>📚</span>
+            <span>{showSources ? 'Hide' : 'Show'} Related Resources ({sources.length})</span>
+            <span className={`transform transition-transform ${showSources ? 'rotate-180' : ''}`}>▼</span>
+          </button>
+          
+          {showSources && (
+            <div className="mt-3">
+              <Sources 
+                sources={sources} 
+                title="Related Learning Resources"
+                variant="compact"
+                className="text-left"
+              />
+            </div>
+          )}
+        </div>
+      )}
     </div>
   );
 };
