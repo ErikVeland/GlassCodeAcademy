@@ -652,7 +652,7 @@
       "id": 41,
       "topic": "Numbers",
       "difficulty": "Beginner",
-      "question": "What is the value of `Number('') (empty string)`?",
+      "question": "What is the value of `Number('')` (empty string)?",
       "choices": [
         "`NaN`",
         "`0`",
