@@ -9,10 +9,16 @@ interface ModulePageProps {
 }
 
 export async function generateStaticParams() {
-  const modules = await contentRegistry.getModules();
-  return modules.map((m) => ({
-    moduleSlug: m.slug,
-  }));
+  try {
+    const modules = await contentRegistry.getModules();
+    return modules.map((m) => ({
+      moduleSlug: m.slug,
+    }));
+  } catch (error) {
+    console.warn('Failed to load modules for static generation:', error);
+    // Return empty array to prevent build failures
+    return [];
+  }
 }
 
 export async function generateMetadata({ params }: ModulePageProps): Promise<Metadata> {

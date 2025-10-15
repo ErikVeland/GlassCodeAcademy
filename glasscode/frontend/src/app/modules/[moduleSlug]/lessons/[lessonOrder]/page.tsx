@@ -24,24 +24,34 @@ interface Exercise {
 }
 
 export async function generateStaticParams() {
-  const modules = await contentRegistry.getModules();
-  const params: Array<{ moduleSlug: string; lessonOrder: string }> = [];
-  
-  for (const mod of modules) {
-    if (mod.status === 'active') {
-      const lessons = await contentRegistry.getModuleLessons(mod.slug);
-      if (lessons) {
-        lessons.forEach((_, index) => {
-          params.push({
-            moduleSlug: mod.slug,
-            lessonOrder: (index + 1).toString(),
-          });
-        });
+  try {
+    const modules = await contentRegistry.getModules();
+    const params: Array<{ moduleSlug: string; lessonOrder: string }> = [];
+    
+    for (const mod of modules) {
+      if (mod.status === 'active') {
+        try {
+          const lessons = await contentRegistry.getModuleLessons(mod.slug);
+          if (lessons) {
+            lessons.forEach((_, index) => {
+              params.push({
+                moduleSlug: mod.slug,
+                lessonOrder: (index + 1).toString(),
+              });
+            });
+          }
+        } catch (lessonError) {
+          console.warn(`Failed to load lessons for module ${mod.slug}:`, lessonError);
+        }
       }
     }
+    
+    return params;
+  } catch (error) {
+    console.warn('Failed to load modules for lesson static generation:', error);
+    // Return empty array to prevent build failures
+    return [];
   }
-  
-  return params;
 }
 
 export async function generateMetadata({ params }: LessonPageProps): Promise<Metadata> {
