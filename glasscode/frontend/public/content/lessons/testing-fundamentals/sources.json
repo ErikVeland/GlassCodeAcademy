@@ -1,0 +1,29 @@
+{
+  "module": "testing-fundamentals",
+  "sources": [
+    {
+      "title": "Testing Library Documentation",
+      "url": "https://testing-library.com/docs/"
+    },
+    {
+      "title": "Jest Testing Framework",
+      "url": "https://jestjs.io/docs/getting-started"
+    },
+    {
+      "title": "Test-Driven Development: By Example",
+      "url": "https://www.amazon.com/Test-Driven-Development-Kent-Beck/dp/0321146530"
+    },
+    {
+      "title": "The Art of Unit Testing",
+      "url": "https://www.manning.com/books/the-art-of-unit-testing-second-edition"
+    },
+    {
+      "title": "Clean Code: A Handbook of Agile Software Craftsmanship",
+      "url": "https://www.amazon.com/Clean-Code-Handbook-Software-Craftsmanship/dp/0132350882"
+    },
+    {
+      "title": "xUnit Test Patterns",
+      "url": "https://www.amazon.com/xUnit-Test-Patterns-Refactoring-Code/dp/0131495054"
+    }
+  ]
+}
