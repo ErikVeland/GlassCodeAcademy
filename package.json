@@ -7,15 +7,5 @@
     "typecheck": "npm --prefix glasscode/frontend run typecheck",
     "lint": "npm --prefix glasscode/frontend run lint",
     "ci:build": "npm --prefix glasscode/frontend ci && npm --prefix glasscode/frontend run lint && npm --prefix glasscode/frontend run typecheck && npm --prefix glasscode/frontend run build"
-  },
-  "dependencies": {
-    "ajv": "^8.17.1",
-    "ajv-formats": "^3.0.1",
-    "js-yaml": "^4.1.0"
-  },
-  "devDependencies": {
-    "chrome-launcher": "^1.2.1",
-    "lighthouse": "^12.8.2",
-    "puppeteer": "^24.23.0"
   }
 }
