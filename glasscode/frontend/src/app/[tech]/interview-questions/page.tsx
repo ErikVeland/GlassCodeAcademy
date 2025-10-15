@@ -7,6 +7,8 @@ import { getGraphQLEndpoint } from '@/lib/urlUtils';
 import { getInterviewMapping, getSubmitMutationName } from '@/lib/interviewMapping';
 import type { BaseInterviewQuestion } from '@/lib/interviewUtils';
 import { formatQuestionText } from '@/lib/interviewUtils';
+import { getTechInterviewSources, formatSourcesForDisplay, type LessonSource } from '@/lib/sourcesUtils';
+import Sources from '@/components/Sources';
 
 interface AnswerResult {
   isCorrect: boolean;
@@ -23,6 +25,8 @@ export default function InterviewQuestionsPage() {
   const [questions, setQuestions] = useState<BaseInterviewQuestion[]>([]);
   const [selectedChoices, setSelectedChoices] = useState<Record<string, number>>({});
   const [results, setResults] = useState<Record<string, AnswerResult>>({});
+  const [sources, setSources] = useState<LessonSource[]>([]);
+  const [showSources, setShowSources] = useState(false);
 
   useEffect(() => {
     let isMounted = true;
@@ -59,11 +63,24 @@ export default function InterviewQuestionsPage() {
         if (isMounted) setLoading(false);
       }
     }
+
+    async function loadSources() {
+      try {
+        const sourcesData = await getTechInterviewSources(tech);
+        if (sourcesData && isMounted) {
+          setSources(formatSourcesForDisplay(sourcesData));
+        }
+      } catch (error) {
+        console.error(`Error fetching sources for ${tech}:`, error);
+      }
+    }
+
     loadQuestions();
+    loadSources();
     return () => {
       isMounted = false;
     };
-  }, [mapping]);
+  }, [mapping, tech]);
 
   const handleChoiceSelect = (qid: string, index: number) => {
     setSelectedChoices((prev) => ({ ...prev, [qid]: index }));
@@ -211,6 +228,33 @@ export default function InterviewQuestionsPage() {
                 )}
               </div>
             ))}
+          </div>
+        )}
+
+        {/* Related Learning Resources Section */}
+        {sources.length > 0 && (
+          <div className="mt-8 border-t border-gray-200 dark:border-gray-700 pt-8">
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
+                📚 Related Learning Resources
+              </h2>
+              <button
+                onClick={() => setShowSources(!showSources)}
+                className="px-4 py-2 text-sm bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-300 rounded-lg hover:bg-blue-100 dark:hover:bg-blue-900/30 transition-colors flex items-center gap-2"
+              >
+                <span>{showSources ? 'Hide' : 'Show'} Resources ({sources.length})</span>
+                <span className={`transform transition-transform ${showSources ? 'rotate-180' : ''}`}>▼</span>
+              </button>
+            </div>
+            
+            {showSources && (
+              <Sources 
+                sources={sources} 
+                title=""
+                variant="card"
+                className="grid grid-cols-1 md:grid-cols-2 gap-4"
+              />
+            )}
           </div>
         )}
       </div>

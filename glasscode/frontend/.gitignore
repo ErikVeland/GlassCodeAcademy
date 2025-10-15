@@ -20,6 +20,9 @@
 # production
 /build
 
+# Generated content (copied from ../../content during build)
+/public/content/
+
 # misc
 .DS_Store
 *.pem
