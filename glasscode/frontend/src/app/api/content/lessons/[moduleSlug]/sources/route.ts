@@ -4,10 +4,10 @@ import path from 'path';
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { moduleSlug: string } }
+  { params }: { params: Promise<{ moduleSlug: string }> }
 ) {
   try {
-    const { moduleSlug } = params;
+    const { moduleSlug } = await params;
     
     // Try to read from the public/content directory first (build artifacts)
     const publicSourcesPath = path.join(process.cwd(), 'public', 'content', 'lessons', moduleSlug, 'sources.json');
