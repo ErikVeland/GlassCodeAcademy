@@ -1,0 +1,29 @@
+{
+  "module": "performance-optimization",
+  "sources": [
+    {
+      "title": "Web.dev Performance Documentation",
+      "url": "https://web.dev/fast/"
+    },
+    {
+      "title": "Google PageSpeed Insights",
+      "url": "https://developers.google.com/speed/docs/insights/rules"
+    },
+    {
+      "title": "High Performance Browser Networking",
+      "url": "https://hpbn.co/"
+    },
+    {
+      "title": "Web Performance Optimization Best Practices",
+      "url": "https://developers.google.com/web/fundamentals/performance/get-started"
+    },
+    {
+      "title": "Lighthouse Documentation",
+      "url": "https://developers.google.com/web/tools/lighthouse"
+    },
+    {
+      "title": "Performance API Documentation",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/Performance_API"
+    }
+  ]
+}

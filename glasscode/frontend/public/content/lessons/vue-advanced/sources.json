@@ -1,0 +1,29 @@
+{
+  "module": "vue-advanced",
+  "sources": [
+    {
+      "title": "Vue.js Official Documentation",
+      "url": "https://vuejs.org/guide/introduction.html"
+    },
+    {
+      "title": "Vue.js API Reference",
+      "url": "https://vuejs.org/api/"
+    },
+    {
+      "title": "Vue.js GitHub Repository",
+      "url": "https://github.com/vuejs/vue"
+    },
+    {
+      "title": "Vue.js Style Guide",
+      "url": "https://vuejs.org/style-guide/"
+    },
+    {
+      "title": "Vue Router Documentation",
+      "url": "https://router.vuejs.org/"
+    },
+    {
+      "title": "Vuex State Management",
+      "url": "https://vuex.vuejs.org/"
+    }
+  ]
+}

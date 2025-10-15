@@ -1,0 +1,29 @@
+{
+  "module": "version-control",
+  "sources": [
+    {
+      "title": "Git Documentation",
+      "url": "https://git-scm.com/doc"
+    },
+    {
+      "title": "Pro Git Book",
+      "url": "https://git-scm.com/book/en/v2"
+    },
+    {
+      "title": "GitHub Guides",
+      "url": "https://guides.github.com/"
+    },
+    {
+      "title": "Git Branching Model",
+      "url": "https://nvie.com/posts/a-successful-git-branching-model/"
+    },
+    {
+      "title": "Git Best Practices",
+      "url": "https://sethrobertson.github.io/GitBestPractices/"
+    },
+    {
+      "title": "Git Cheat Sheet",
+      "url": "https://education.github.com/git-cheat-sheet-education.pdf"
+    }
+  ]
+}

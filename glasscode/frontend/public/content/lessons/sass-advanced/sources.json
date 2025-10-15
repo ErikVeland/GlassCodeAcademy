@@ -1,0 +1,29 @@
+{
+  "module": "sass-advanced",
+  "sources": [
+    {
+      "title": "Sass Official Documentation",
+      "url": "https://sass-lang.com/documentation"
+    },
+    {
+      "title": "Sass Guidelines",
+      "url": "https://sass-guidelin.es/"
+    },
+    {
+      "title": "Sass GitHub Repository",
+      "url": "https://github.com/sass/sass"
+    },
+    {
+      "title": "Sass Best Practices",
+      "url": "https://sass-lang.com/documentation/style-rules"
+    },
+    {
+      "title": "7-1 Pattern for Sass Architecture",
+      "url": "https://sass-guidelin.es/#architecture"
+    },
+    {
+      "title": "Sass Functions and Mixins",
+      "url": "https://sass-lang.com/documentation/modules"
+    }
+  ]
+}

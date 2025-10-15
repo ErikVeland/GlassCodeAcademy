@@ -1,0 +1,1086 @@
+[
+  {
+    "id": "react-fundamentals-lesson-1",
+    "moduleSlug": "react-fundamentals",
+    "title": "React Components Basics",
+    "order": 1,
+    "objectives": [
+      "Create functional and class components in React",
+      "Understand the component lifecycle and props",
+      "Implement component composition for reusable UI elements"
+    ],
+    "intro": "React components are the fundamental building blocks of React applications. They are reusable, encapsulated pieces of code that return React elements describing what should appear on the screen. Components let you split the UI into independent, reusable pieces, and think about each piece in isolation.\n\nThere are two types of components in React: functional components and class components. Functional components are simpler and are defined as JavaScript functions that accept props and return React elements. Class components are ES6 classes that extend React.Component and must implement a render method.\n\nThis lesson will explore component creation, props handling, component composition, and the fundamental principles that make React components powerful for building user interfaces. You'll learn how to create reusable components that can be composed together to build complex applications.",
+    "code": {
+      "example": "import React from 'react';\n\n// Functional component with props\nfunction Welcome(props) {\n  return <h1>Hello, {props.name}!</h1>;\n}\n\n// Functional component using destructuring\nfunction WelcomeDestructured({ name, title }) {\n  return (\n    <div>\n      <h1>Hello, {name}!</h1>\n      <p>{title}</p>\n    </div>\n  );\n}\n\n// Class component\nclass WelcomeClass extends React.Component {\n  render() {\n    return <h1>Hello, {this.props.name}!</h1>;\n  }\n}\n\n// Component composition example\nfunction App() {\n  return (\n    <div>\n      <Welcome name=\"Alice\" />\n      <WelcomeDestructured name=\"Bob\" title=\"Software Engineer\" />\n      <WelcomeClass name=\"Charlie\" />\n    </div>\n  );\n}\n\nexport default App;",
+      "explanation": "This example demonstrates different ways to create React components:\n\n1. **Functional Component**: The simplest way to define a component using a function that accepts props\n2. **Destructured Props**: Using ES6 destructuring to extract specific props\n3. **Class Component**: Traditional class-based approach extending React.Component\n4. **Component Composition**: Combining multiple components in a parent component\n\nThe output shows:\nHello, Alice!\nHello, Bob!\nSoftware Engineer\nHello, Charlie!\n\nKey concepts illustrated:\n- Component definition syntax\n- Props passing and usage\n- Component composition patterns\n- Modern vs. traditional component approaches",
+      "language": "javascript"
+    },
+    "pitfalls": [
+      {
+        "mistake": "Forgetting to return JSX from functional components",
+        "solution": "Always ensure functional components return valid JSX or null",
+        "severity": "high"
+      },
+      {
+        "mistake": "Mutating props directly within components",
+        "solution": "Props are read-only; create new objects or use state for mutable data",
+        "severity": "high"
+      },
+      {
+        "mistake": "Not using keys when rendering lists of components",
+        "solution": "Always provide unique keys for list items to help React identify changes",
+        "severity": "medium"
+      }
+    ],
+    "exercises": [
+      {
+        "title": "Practice: Create a User Profile Component",
+        "description": "Build a reusable user profile component that displays user information",
+        "checkpoints": [
+          "Create a functional component that accepts user data as props",
+          "Display user name, email, and role",
+          "Add default props for optional fields",
+          "Compose multiple user profile components in a parent component"
+        ]
+      }
+    ],
+    "next": [
+      "react-fundamentals-lesson-2"
+    ],
+    "estimatedMinutes": 30,
+    "difficulty": "Beginner",
+    "tags": [
+      "Components",
+      "Functional Components",
+      "Class Components",
+      "Props",
+      "react"
+    ],
+    "sources": [
+      {
+        "title": "React Components and Props - React Documentation",
+        "url": "https://reactjs.org/docs/components-and-props.html"
+      },
+      {
+        "title": "React.Component - React Documentation",
+        "url": "https://reactjs.org/docs/react-component.html"
+      }
+    ],
+    "lastUpdated": "2025-10-02T10:00:00.000Z",
+    "version": "1.1.0"
+  },
+  {
+    "id": "react-fundamentals-lesson-2",
+    "moduleSlug": "react-fundamentals",
+    "title": "Component State and Lifecycle",
+    "order": 2,
+    "objectives": [
+      "Manage component state using setState in class components",
+      "Understand the React component lifecycle methods",
+      "Implement side effects and cleanup in lifecycle methods"
+    ],
+    "intro": "State is a built-in React object that is used to contain data or information about the component. A component's state can change over time; whenever it changes, the component re-renders. State is what allows React components to be dynamic and interactive.\n\nIn class components, state is managed using this.state and this.setState(). The setState() method is the primary way to update the UI in response to event handlers and server responses. React may batch multiple setState() calls into a single update for performance.\n\nReact class components have several lifecycle methods that allow you to run code at particular times in the component's lifecycle. These include mounting (when a component is being created and inserted into the DOM), updating (when a component is being re-rendered), and unmounting (when a component is being removed from the DOM).\n\nThis lesson will cover state management in class components, lifecycle methods, and how to properly handle side effects and cleanup to prevent memory leaks.",
+    "code": {
+      "example": "import React, { Component } from 'react';\n\nclass Clock extends Component {\n  constructor(props) {\n    super(props);\n    // Initialize state in constructor\n    this.state = { \n      date: new Date(),\n      timezone: 'UTC'\n    };\n  }\n\n  // Lifecycle method: runs after component is mounted to the DOM\n  componentDidMount() {\n    // Set up a timer that updates the clock every second\n    this.timerID = setInterval(\n      () => this.tick(),\n      1000\n    );\n    console.log('Clock component mounted');\n  }\n\n  // Lifecycle method: runs before component is removed from the DOM\n  componentWillUnmount() {\n    // Clean up the timer to prevent memory leaks\n    clearInterval(this.timerID);\n    console.log('Clock component will unmount');\n  }\n\n  // Custom method to update state\n  tick() {\n    this.setState({\n      date: new Date()\n    });\n  }\n\n  // Method to change timezone\n  changeTimezone = (newTimezone) => {\n    this.setState({\n      timezone: newTimezone\n    });\n  }\n\n  // Lifecycle method: runs when component updates\n  componentDidUpdate(prevProps, prevState) {\n    // Only log if date actually changed\n    if (prevState.date !== this.state.date) {\n      console.log('Clock updated:', this.state.date.toLocaleTimeString());\n    }\n  }\n\n  render() {\n    return (\n      <div>\n        <h2>Current time: {this.state.date.toLocaleTimeString()}</h2>\n        <p>Timezone: {this.state.timezone}</p>\n        <button onClick={() => this.changeTimezone('PST')}>\n          Change to PST\n        </button>\n      </div>\n    );\n  }\n}\n\nexport default Clock;",
+      "explanation": "This example demonstrates state management and lifecycle methods in a React class component:\n\n1. **Constructor**: Initializes state and binds methods\n2. **componentDidMount**: Runs after component is added to DOM, sets up timer\n3. **componentWillUnmount**: Runs before component is removed, cleans up timer\n4. **componentDidUpdate**: Runs after component updates, logs changes\n5. **setState**: Updates component state and triggers re-render\n\nThe output shows a live clock that updates every second with a button to change timezones.\n\nKey concepts illustrated:\n- State initialization and updates\n- Lifecycle method usage\n- Side effect management\n- Proper cleanup to prevent memory leaks\n- Event handling with state updates",
+      "language": "javascript"
+    },
+    "pitfalls": [
+      {
+        "mistake": "Not cleaning up side effects in componentWillUnmount",
+        "solution": "Always clean up subscriptions, timers, and event listeners to prevent memory leaks",
+        "severity": "high"
+      },
+      {
+        "mistake": "Calling setState in componentWillUnmount",
+        "solution": "Avoid setState calls in componentWillUnmount as component is being unmounted",
+        "severity": "high"
+      },
+      {
+        "mistake": "Modifying state directly instead of using setState",
+        "solution": "Always use setState() to update state to ensure proper re-rendering",
+        "severity": "high"
+      }
+    ],
+    "exercises": [
+      {
+        "title": "Practice: Create a Timer Component",
+        "description": "Build a timer component that can start, pause, and reset",
+        "checkpoints": [
+          "Initialize state for time, isRunning, and interval ID",
+          "Implement start, pause, and reset methods",
+          "Use componentDidMount and componentWillUnmount for timer management",
+          "Add componentDidUpdate to log timer state changes"
+        ]
+      }
+    ],
+    "next": [
+      "react-fundamentals-lesson-3"
+    ],
+    "estimatedMinutes": 45,
+    "difficulty": "Intermediate",
+    "tags": [
+      "State",
+      "Lifecycle",
+      "Class Components",
+      "Side Effects",
+      "react"
+    ],
+    "sources": [
+      {
+        "title": "React State and Lifecycle - React Documentation",
+        "url": "https://reactjs.org/docs/state-and-lifecycle.html"
+      },
+      {
+        "title": "React Component Lifecycle - React Documentation",
+        "url": "https://reactjs.org/docs/react-component.html#the-component-lifecycle"
+      }
+    ],
+    "lastUpdated": "2025-10-02T10:00:00.000Z",
+    "version": "1.1.0"
+  },
+  {
+    "id": "react-fundamentals-lesson-3",
+    "moduleSlug": "react-fundamentals",
+    "title": "Introduction to React Hooks",
+    "order": 3,
+    "objectives": [
+      "Use `useState` hook to manage state in functional components",
+      "Implement `useEffect` hook for side effects and lifecycle events",
+      "Understand the rules of hooks and best practices"
+    ],
+    "intro": "Hooks are a new addition in React 16.8 that let you use state and other React features without writing a class. They allow you to reuse stateful logic without changing your component hierarchy, and they make it easier to split one component into smaller functions based on related pieces of state.\n\nThe `useState` hook is the most common hook and allows you to add React state to functional components. The `useEffect` hook serves the same purpose as componentDidMount, componentDidUpdate, and componentWillUnmount in React classes, but unified into a single API.\n\nThis lesson will explore the `useState` and `useEffect` hooks in detail, covering how to manage state in functional components, handle side effects, and follow the rules of hooks to ensure your components work correctly.",
+    "code": {
+      "example": "import React, { useState, useEffect } from 'react';\n\nfunction Counter() {\n  // useState returns an array with the current state value and a function to update it\n  const [count, setCount] = useState(0);\n  const [name, setName] = useState('');\n\n  // useEffect replaces componentDidMount, componentDidUpdate, and componentWillUnmount\n  useEffect(() => {\n    // This runs after every render\n    document.title = `Count: ${count}`;\n    \n    // Cleanup function (optional) - runs before next effect or unmount\n    return () => {\n      console.log('Cleaning up effect for count:', count);\n    };\n  }, [count]); // Dependency array - effect runs when count changes\n\n  // Effect that runs only once (like componentDidMount)\n  useEffect(() => {\n    console.log('Component mounted');\n    \n    // Cleanup for mount effect\n    return () => {\n      console.log('Component will unmount');\n    };\n  }, []); // Empty dependency array means run only once\n\n  return (\n    <div>\n      <p>You clicked {count} times</p>\n      <button onClick={() => setCount(count + 1)}>\n        Click me\n      </button>\n      <button onClick={() => setCount(0)}>\n        Reset\n      </button>\n      <div>\n        <label>\n          Name:\n          <input \n            value={name}\n            onChange={(e) => setName(e.target.value)}\n          />\n        </label>\n        <p>Hello, {name}!</p>\n      </div>\n    </div>\n  );\n}\n\nexport default Counter;",
+      "explanation": "This example demonstrates the `useState` and `useEffect` hooks:\n\n1. **`useState`**: Manages state in functional components\n   - Returns [currentValue, setterFunction]\n   - Can be called multiple times for different state variables\n2. **`useEffect`**: Handles side effects\n   - Replaces lifecycle methods\n   - Can return cleanup function\n   - Dependency array controls when effect runs\n\nThe output shows:\n- A counter that updates document title\n- A name input that updates a greeting\n- Console logs for mount, update, and unmount\n\nKey concepts illustrated:\n- State management with `useState`\n- Side effects with `useEffect`\n- Dependency arrays for performance\n- Cleanup functions for resource management\n- Combining multiple hooks in one component",
+      "language": "javascript"
+    },
+    "pitfalls": [
+      {
+        "mistake": "Calling hooks conditionally or in loops",
+        "solution": "Always call hooks at the top level of your React function",
+        "severity": "high"
+      },
+      {
+        "mistake": "Forgetting dependency arrays in `useEffect`",
+        "solution": "Always specify dependencies to prevent infinite loops or stale values",
+        "severity": "high"
+      },
+      {
+        "mistake": "Updating state based on previous state incorrectly",
+        "solution": "Use functional updates: setCount(prevCount => prevCount + 1)",
+        "severity": "medium"
+      }
+    ],
+    "exercises": [
+      {
+        "title": "Practice: Create a Data Fetching Component",
+        "description": "Build a component that fetches and displays user data using hooks",
+        "checkpoints": [
+          "Use useState to manage loading, data, and error states",
+          "Use useEffect to fetch data when component mounts",
+          "Implement cleanup to cancel requests if component unmounts",
+          "Add error handling for failed requests"
+        ]
+      }
+    ],
+    "next": [
+      "react-fundamentals-lesson-4"
+    ],
+    "estimatedMinutes": 40,
+    "difficulty": "Intermediate",
+    "tags": [
+      "Hooks",
+      "useState",
+      "useEffect",
+      "Functional Components",
+      "react"
+    ],
+    "sources": [
+      {
+        "title": "React Hooks - React Documentation",
+        "url": "https://reactjs.org/docs/hooks-intro.html"
+      },
+      {
+        "title": "Using the State Hook - React Documentation",
+        "url": "https://reactjs.org/docs/hooks-state.html"
+      }
+    ],
+    "lastUpdated": "2025-10-02T10:00:00.000Z",
+    "version": "1.1.0"
+  },
+  {
+    "id": "react-fundamentals-lesson-4",
+    "moduleSlug": "react-fundamentals",
+    "title": "Advanced State Management with useReducer",
+    "order": 4,
+    "objectives": [
+      "Use the useReducer hook for complex state logic",
+      "Implement actions and reducers to manage state transitions",
+      "Understand the benefits of using useReducer over `useState`"
+    ],
+    "intro": "The useReducer hook is an alternative to `useState` for managing state in functional components, especially when you have complex state logic that involves multiple sub-values or when the next state depends on the previous one. It also makes it easier to optimize performance for components that trigger deep updates because you can pass dispatch down instead of callbacks.\n\nThis lesson will cover the useReducer hook in detail, including how to define actions and reducers, how to use the dispatch function to update state, and when to use useReducer over `useState`. You'll learn how to structure your state management logic to make it more predictable and maintainable.",
+    "code": {
+      "example": "import React, { useReducer } from 'react';\n\n// Initial state\nconst initialState = {\n  count: 0,\n  step: 1\n};\n\n// Reducer function\nfunction reducer(state, action) {\n  switch (action.type) {\n    case 'increment':\n      return {\n        ...state,\n        count: state.count + state.step\n      };\n    case 'decrement':\n      return {\n        ...state,\n        count: state.count - state.step\n      };\n    case 'setCount':\n      return {\n        ...state,\n        count: action.payload\n      };\n    case 'setStep':\n      return {\n        ...state,\n        step: action.payload\n      };\n    case 'reset':\n      return initialState;\n    default:\n      throw new Error();\n  }\n}\n\nfunction Counter() {\n  const [state, dispatch] = useReducer(reducer, initialState);\n  const { count, step } = state;\n\n  return (\n    <div>\n      <h1>{count}</h1>\n      <button onClick={() => dispatch({ type: 'decrement' })}>-</button>\n      <button onClick={() => dispatch({ type: 'increment' })}>+</button>\n      <input\n        type='range'\n        value={step}\n        onChange={(e) => dispatch({ type: 'setStep', payload: Number(e.target.value) })}\n      />\n      <button onClick={() => dispatch({ type: 'reset' })}>Reset</button>\n    </div>\n  );\n}\n\nexport default Counter;",
+      "explanation": "This example demonstrates the useReducer hook:\n\n1. **Initial State**: Defines the starting state\n2. **Reducer Function**: Handles state transitions based on actions\n3. **useReducer Hook**: Returns state and dispatch function\n4. **Dispatch Function**: Updates state by dispatching actions\n\nThe output shows:\n- A counter with increment and decrement buttons\n- A range input to set the step value\n- A reset button to reset the counter\n\nKey concepts illustrated:\n- State management with useReducer\n- Action and reducer definitions\n- Dispatching actions to update state\n- Resetting state to initial values\n- Using useReducer for complex state logic",
+      "language": "javascript"
+    },
+    "pitfalls": [
+      {
+        "mistake": "Not defining a default case in the reducer",
+        "solution": "Always include a default case to handle unexpected actions and prevent errors",
+        "severity": "high"
+      },
+      {
+        "mistake": "Mutating state directly in the reducer",
+        "solution": "Always return a new state object to ensure immutability",
+        "severity": "high"
+      },
+      {
+        "mistake": "Using useReducer for simple state logic",
+        "solution": "Use `useState` for simple state logic and reserve useReducer for complex state management",
+        "severity": "medium"
+      }
+    ],
+    "exercises": [
+      {
+        "title": "Practice: Create a Todo List",
+        "description": "Build a todo list application using useReducer",
+        "checkpoints": [
+          "Define initial state with an empty array of todos",
+          "Create actions for adding, removing, and toggling todos",
+          "Implement a reducer function to handle actions",
+          "Use useReducer to manage todo state",
+          "Add UI elements to interact with todos"
+        ]
+      }
+    ],
+    "next": [
+      "react-fundamentals-lesson-5"
+    ],
+    "estimatedMinutes": 45,
+    "difficulty": "Intermediate",
+    "tags": [
+      "Hooks",
+      "useReducer",
+      "State Management",
+      "react"
+    ],
+    "sources": [
+      {
+        "title": "Using the Reducer Hook - React Documentation",
+        "url": "https://reactjs.org/docs/hooks-reference.html#usereducer"
+      }
+    ],
+    "lastUpdated": "2025-10-02T10:00:00.000Z"
+  },
+  {
+    "id": "react-fundamentals-lesson-11",
+    "moduleSlug": "react-fundamentals",
+    "title": "Performance Optimization with React.memo and `useMemo`",
+    "order": 11,
+    "objectives": [
+      "Optimize React applications using memoization techniques",
+      "Implement React.memo for component rendering optimization",
+      "Use `useMemo` and `useCallback` for expensive computations"
+    ],
+    "intro": "Performance optimization is crucial for creating responsive React applications, especially as they grow in complexity and size. React provides several built-in tools to help optimize rendering performance, including React.memo, `useMemo`, and `useCallback` hooks.\n\nReact.memo is a higher-order component that prevents unnecessary re-renders of functional components by memoizing the result. `useMemo` and `useCallback` help optimize expensive calculations and function creations, respectively, by caching their results and only recomputing when dependencies change.\n\nThis lesson will explore performance optimization techniques in depth, covering when and how to use each optimization tool effectively. You'll learn to identify performance bottlenecks, implement targeted optimizations, and measure the impact of your improvements to ensure optimal user experiences.",
+    "code": {
+      "example": "import React, { useState, useMemo, useCallback, memo } from 'react';\n\n// Expensive calculation function\nconst calculateExpensiveValue = (items) => {\n  console.log('Calculating expensive value...');\n  // Simulate expensive computation\n  return items.reduce((sum, item) => {\n    // Simulate complex calculation\n    let result = 0;\n    for (let i = 0; i < 1000000; i++) {\n      result += item.value * Math.random();\n    }\n    return sum + result;\n  }, 0);\n};\n\n// Child component that should be memoized\nconst ExpensiveChildComponent = memo(({ data, onItemClick, title }) => {\n  console.log(`Rendering ${title}`);\n  \n  return (\n    <div className=\"expensive-component\">\n      <h3>{title}</h3>\n      {data.map(item => (\n        <div \n          key={item.id} \n          onClick={() => onItemClick(item)}\n          style={{\n            padding: '10px',\n            margin: '5px',\n            backgroundColor: '#f0f0f0',\n            cursor: 'pointer'\n          }}\n        >\n          {item.name} - {item.value}\n        </div>\n      ))}\n    </div>\n  );\n});\n\n// Parent component demonstrating optimization techniques\nfunction OptimizedApp() {\n  const [count, setCount] = useState(0);\n  const [items, setItems] = useState([\n    { id: 1, name: 'Item 1', value: 10 },\n    { id: 2, name: 'Item 2', value: 20 },\n    { id: 3, name: 'Item 3', value: 30 }\n  ]);\n\n  // Expensive calculation optimized with useMemo\n  const expensiveValue = useMemo(() => {\n    return calculateExpensiveValue(items);\n  }, [items]); // Only recalculate when items change\n\n  // Callback optimized with useCallback\n  const handleItemClick = useCallback((item) => {\n    console.log('Item clicked:', item);\n    // Update items with new value\n    setItems(prevItems => \n      prevItems.map(i => \n        i.id === item.id \n          ? { ...i, value: i.value + 1 } \n          : i\n      )\n    );\n  }, []); // No dependencies, so callback is stable\n\n  // Another callback that depends on count\n  const handleReset = useCallback(() => {\n    setCount(0);\n    setItems([\n      { id: 1, name: 'Item 1', value: 10 },\n      { id: 2, name: 'Item 2', value: 20 },\n      { id: 3, name: 'Item 3', value: 30 }\n    ]);\n  }, []); // Reset to initial state\n\n  return (\n    <div>\n      <h1>Performance Optimization Demo</h1>\n      <p>Count: {count}</p>\n      <button onClick={() => setCount(count + 1)}>Increment Count</button>\n      <button onClick={handleReset}>Reset</button>\n      \n      <p>Expensive Value: {Math.round(expensiveValue)}</p>\n      \n      {/* These components will only re-render when their props change */}\n      <ExpensiveChildComponent \n        data={items} \n        onItemClick={handleItemClick} \n        title=\"Items List\"\n      />\n      \n      {/* Component with inline function (will re-render unnecessarily) */}\n      <ExpensiveChildComponent \n        data={items} \n        onItemClick={(item) => console.log('Inline function:', item)} \n        title=\"Items with Inline Function (Not Optimized)\"\n      />\n    </div>\n  );\n}\n\n// Example showing custom comparison function for React.memo\nconst CustomComparisonComponent = memo(({ user, onUpdate }) => {\n  console.log('Rendering CustomComparisonComponent');\n  \n  return (\n    <div>\n      <h3>User: {user.name}</h3>\n      <p>Age: {user.age}</p>\n      <button onClick={() => onUpdate(user.id, { age: user.age + 1 })}>\n        Increment Age\n      </button>\n    </div>\n  );\n}, (prevProps, nextProps) => {\n  // Custom comparison function\n  // Only re-render if user name or age changes\n  return (\n    prevProps.user.name === nextProps.user.name &&\n    prevProps.user.age === nextProps.user.age\n  );\n});",
+      "explanation": "This example demonstrates comprehensive performance optimization techniques:\n\n1. **React.memo**: Prevents unnecessary re-renders of ExpensiveChildComponent\n2. **`useMemo`**: Caches expensive calculations to avoid recomputation\n3. **`useCallback`**: Stabilizes function references to prevent child re-renders\n4. **Custom Comparison**: Shows how to implement custom comparison logic for React.memo\n\nThe output shows:\n- Console logs indicating when components render\n- Performance improvement when using memoization\n- Difference between optimized and non-optimized components\n- Custom comparison function for fine-grained control\n\nKey concepts illustrated:\n- Component memoization with React.memo\n- Expensive computation caching with `useMemo`\n- Function reference stabilization with `useCallback`\n- Custom comparison functions for precise control\n- Performance profiling and optimization patterns\n- When and when not to apply optimizations",
+      "language": "javascript"
+    },
+    "pitfalls": [
+      {
+        "mistake": "Over-optimizing components that are not performance bottlenecks",
+        "solution": "Use React DevTools Profiler to identify actual performance issues before applying optimizations",
+        "severity": "high"
+      },
+      {
+        "mistake": "Using React.memo with components that always receive new props",
+        "solution": "React.memo is only effective when props remain the same between renders; avoid with components that receive new object/array props",
+        "severity": "high"
+      },
+      {
+        "mistake": "Creating new objects/arrays in render that break memoization",
+        "solution": "Use `useMemo` for object/array creation or move object literals outside render function",
+        "severity": "medium"
+      }
+    ],
+    "exercises": [
+      {
+        "title": "Practice: Optimize a Complex List Component",
+        "description": "Optimize a component that renders a large list of items with filtering and sorting",
+        "checkpoints": [
+          "Implement React.memo for list items to prevent unnecessary re-renders",
+          "Use useMemo to cache filtered and sorted data",
+          "Apply useCallback to stabilize event handlers passed to list items",
+          "Implement virtual scrolling for large datasets",
+          "Measure performance before and after optimizations",
+          "Avoid common memoization pitfalls with object props"
+        ]
+      }
+    ],
+    "next": [],
+    "estimatedMinutes": 50,
+    "difficulty": "Advanced",
+    "tags": [
+      "Performance",
+      "Optimization",
+      "React.memo",
+      "useMemo",
+      "useCallback",
+      "react"
+    ],
+    "sources": [
+      {
+        "title": "React Performance Optimization - React Documentation",
+        "url": "https://react.dev/reference/react/useMemo"
+      },
+      {
+        "title": "React.memo, useMemo, and useCallback - React Documentation",
+        "url": "https://react.dev/reference/react/useMemo"
+      }
+    ],
+    "lastUpdated": "2025-10-03T10:00:00.000Z",
+    "version": "1.1.0"
+  },
+  {
+    "id": "react-fundamentals-lesson-12",
+    "moduleSlug": "react-fundamentals",
+    "title": "Testing React Components",
+    "order": 12,
+    "objectives": [
+      "Write effective tests for React components using React Testing Library",
+      "Implement unit tests for component behavior and user interactions",
+      "Create test utilities for complex component testing scenarios"
+    ],
+    "intro": "Testing is a critical practice for ensuring the reliability and maintainability of React applications. React Testing Library provides a lightweight solution for testing React components that focuses on testing behavior from the user's perspective rather than implementation details.\n\nUnlike older testing libraries that encouraged testing implementation details, React Testing Library promotes testing components the way users interact with them - by finding elements by their text, labels, or roles, and interacting with them as a user would. This approach leads to more maintainable tests that are less likely to break when implementation details change.\n\nThis lesson will explore comprehensive testing strategies for React components, covering unit testing, integration testing, and best practices for test organization. You'll learn to write meaningful tests that provide confidence in your application's behavior while remaining resilient to refactoring.",
+    "code": {
+      "example": "import React, { useState } from 'react';\n\n// Component to test - a more complex example\nfunction TodoList() {\n  const [todos, setTodos] = useState([\n    { id: 1, text: 'Learn React', completed: true },\n    { id: 2, text: 'Build an app', completed: false }\n  ]);\n  const [newTodo, setNewTodo] = useState('');\n\n  const addTodo = () => {\n    if (newTodo.trim() !== '') {\n      setTodos([\n        ...todos,\n        { id: Date.now(), text: newTodo, completed: false }\n      ]);\n      setNewTodo('');\n    }\n  };\n\n  const toggleTodo = (id) => {\n    setTodos(todos.map(todo =>\n      todo.id === id ? { ...todo, completed: !todo.completed } : todo\n    ));\n  };\n\n  const deleteTodo = (id) => {\n    setTodos(todos.filter(todo => todo.id !== id));\n  };\n\n  const incompleteCount = todos.filter(todo => !todo.completed).length;\n\n  return (\n    <div>\n      <h1>Todo List</h1>\n      <div>\n        <input\n          value={newTodo}\n          onChange={(e) => setNewTodo(e.target.value)}\n          placeholder=\"Add a new todo\"\n        />\n        <button onClick={addTodo}>Add</button>\n      </div>\n      <div>Incomplete: {incompleteCount}</div>\n      <ul>\n        {todos.map(todo => (\n          <li key={todo.id}>\n            <input\n              type=\"checkbox\"\n              checked={todo.completed}\n              onChange={() => toggleTodo(todo.id)}\n            />\n            <span style={{ textDecoration: todo.completed ? 'line-through' : 'none' }}>\n              {todo.text}\n            </span>\n            <button onClick={() => deleteTodo(todo.id)}>Delete</button>\n          </li>\n        ))}\n      </ul>\n    </div>\n  );\n}\n\n// Test file using React Testing Library\nimport { render, screen, fireEvent, waitFor } from '@testing-library/react';\nimport { act } from 'react-dom/test-utils';\nimport '@testing-library/jest-dom';\n\n// Mock component for testing async behavior\nfunction AsyncComponent() {\n  const [data, setData] = useState(null);\n  const [loading, setLoading] = useState(false);\n\n  const fetchData = async () => {\n    setLoading(true);\n    // Simulate API call\n    await new Promise(resolve => setTimeout(resolve, 100));\n    setData('Loaded data');\n    setLoading(false);\n  };\n\n  return (\n    <div>\n      <button onClick={fetchData} disabled={loading}>\n        {loading ? 'Loading...' : 'Fetch Data'}\n      </button>\n      {data && <div data-testid=\"data-display\">{data}</div>}\n    </div>\n  );\n}\n\ndescribe('TodoList Component', () => {\n  test('renders initial todos', () => {\n    render(<TodoList />);\n    \n    // Check that initial todos are rendered\n    expect(screen.getByText('Learn React')).toBeInTheDocument();\n    expect(screen.getByText('Build an app')).toBeInTheDocument();\n    \n    // Check that one is completed (has line-through)\n    const completedTodo = screen.getByText('Learn React');\n    expect(completedTodo).toHaveStyle('text-decoration: line-through');\n    \n    // Check incomplete count\n    expect(screen.getByText('Incomplete: 1')).toBeInTheDocument();\n  });\n\n  test('adds a new todo', () => {\n    render(<TodoList />);\n    \n    // Find input and add button\n    const input = screen.getByPlaceholderText('Add a new todo');\n    const addButton = screen.getByText('Add');\n    \n    // Type in new todo\n    fireEvent.change(input, { target: { value: 'New todo item' } });\n    \n    // Click add button\n    fireEvent.click(addButton);\n    \n    // Check that new todo appears\n    expect(screen.getByText('New todo item')).toBeInTheDocument();\n    \n    // Check that incomplete count updated\n    expect(screen.getByText('Incomplete: 2')).toBeInTheDocument();\n  });\n\n  test('toggles todo completion', () => {\n    render(<TodoList />);\n    \n    // Find the unchecked todo\n    const buildAppTodo = screen.getByText('Build an app');\n    const checkbox = buildAppTodo.previousSibling; // Checkbox is previous sibling\n    \n    // Verify it's not completed initially\n    expect(buildAppTodo).not.toHaveStyle('text-decoration: line-through');\n    \n    // Click checkbox to complete it\n    fireEvent.click(checkbox);\n    \n    // Verify it's now completed\n    expect(buildAppTodo).toHaveStyle('text-decoration: line-through');\n    \n    // Check incomplete count updated\n    expect(screen.getByText('Incomplete: 0')).toBeInTheDocument();\n  });\n\n  test('deletes a todo', () => {\n    render(<TodoList />);\n    \n    // Find delete button for first todo\n    const deleteButton = screen.getByText('Learn React').nextSibling.nextSibling; // Delete button\n    \n    // Click delete button\n    fireEvent.click(deleteButton);\n    \n    // Verify todo is removed\n    expect(screen.queryByText('Learn React')).not.toBeInTheDocument();\n    \n    // Check incomplete count updated\n    expect(screen.getByText('Incomplete: 1')).toBeInTheDocument();\n  });\n});\n\ndescribe('AsyncComponent', () => {\n  test('handles async operations', async () => {\n    render(<AsyncComponent />);\n    \n    // Initially, data should not be present\n    expect(screen.queryByTestId('data-display')).not.toBeInTheDocument();\n    \n    // Click fetch button\n    const fetchButton = screen.getByText('Fetch Data');\n    fireEvent.click(fetchButton);\n    \n    // Button should be disabled and show loading text\n    expect(fetchButton).toBeDisabled();\n    expect(fetchButton).toHaveTextContent('Loading...');\n    \n    // Wait for data to load\n    await waitFor(() => {\n      expect(screen.getByTestId('data-display')).toBeInTheDocument();\n    });\n    \n    // Check data content\n    expect(screen.getByTestId('data-display')).toHaveTextContent('Loaded data');\n    \n    // Button should be enabled again\n    expect(fetchButton).not.toBeDisabled();\n    expect(fetchButton).toHaveTextContent('Fetch Data');\n  });\n});\n\n// Custom test utility for complex interactions\nexport const testUtils = {\n  addMultipleTodos: async (count) => {\n    const input = screen.getByPlaceholderText('Add a new todo');\n    const addButton = screen.getByText('Add');\n    \n    for (let i = 1; i <= count; i++) {\n      await act(async () => {\n        fireEvent.change(input, { target: { value: `Todo ${i}` } });\n        fireEvent.click(addButton);\n      });\n    }\n  },\n  \n  getAllTodoTexts: () => {\n    const todoItems = screen.getAllByRole('listitem');\n    return todoItems.map(item => {\n      const span = item.querySelector('span');\n      return span ? span.textContent : '';\n    });\n  }\n};",
+      "explanation": "This example demonstrates comprehensive testing techniques for React components:\n\n1. **Component Testing**: TodoList component with multiple interactive features\n2. **Query Methods**: Using getByText, getByPlaceholderText, queryByTestId for element selection\n3. **User Interactions**: Testing form inputs, button clicks, and checkbox toggles\n4. **State Verification**: Checking that component state updates correctly\n5. **Async Testing**: Handling asynchronous operations with waitFor\n6. **Custom Utilities**: Creating reusable test helpers for complex scenarios\n\nThe output shows:\n- Passing tests for all component functionality\n- Proper handling of user interactions\n- Correct state management verification\n- Async operation testing with loading states\n- Custom utility functions for complex test scenarios\n\nKey concepts illustrated:\n- React Testing Library querying best practices\n- User-centric testing approach\n- Async operation handling\n- Test organization with describe/test blocks\n- Custom test utility creation\n- Edge case testing (empty states, loading states)\n- Accessibility-aware querying with role-based selectors",
+      "language": "javascript"
+    },
+    "pitfalls": [
+      {
+        "mistake": "Testing implementation details instead of user behavior",
+        "solution": "Focus on testing what users see and do, not internal component implementation",
+        "severity": "high"
+      },
+      {
+        "mistake": "Not testing async operations properly",
+        "solution": "Use waitFor and proper async/await patterns for testing asynchronous behavior",
+        "severity": "high"
+      },
+      {
+        "mistake": "Writing overly specific or brittle tests",
+        "solution": "Test behavior rather than exact DOM structure; use accessible queries when possible",
+        "severity": "medium"
+      }
+    ],
+    "exercises": [
+      {
+        "title": "Practice: Test a Form Component with Validation",
+        "description": "Create comprehensive tests for a form component with validation and error handling",
+        "checkpoints": [
+          "Test initial form state and empty validation",
+          "Verify validation error messages appear for invalid inputs",
+          "Test successful form submission with valid data",
+          "Implement tests for async form submission with loading states",
+          "Create custom test utilities for form interactions",
+          "Test edge cases like network errors and validation race conditions"
+        ]
+      }
+    ],
+    "next": [],
+    "estimatedMinutes": 55,
+    "difficulty": "Advanced",
+    "tags": [
+      "Testing",
+      "React Testing Library",
+      "Unit Testing",
+      "react"
+    ],
+    "sources": [
+      {
+        "title": "React Testing Library Documentation",
+        "url": "https://testing-library.com/docs/react-testing-library/intro/"
+      },
+      {
+        "title": "Common Testing Mistakes - React Testing Library",
+        "url": "https://kentcdodds.com/blog/common-mistakes-with-react-testing-library"
+      }
+    ],
+    "lastUpdated": "2025-10-03T10:00:00.000Z",
+    "version": "1.1.0"
+  },
+  {
+    "id": "react-fundamentals-lesson-10",
+    "moduleSlug": "react-fundamentals",
+    "title": "Fetching Data with `useEffect`",
+    "order": 10,
+    "objectives": [
+      "Fetch data from APIs using the `useEffect` hook",
+      "Handle loading states and error conditions effectively",
+      "Implement proper cleanup to prevent memory leaks"
+    ],
+    "intro": "Data fetching is a fundamental aspect of modern web applications, allowing React components to retrieve and display information from external sources. The `useEffect` hook provides a powerful mechanism for handling side effects like data fetching, subscriptions, and manual DOM manipulations in functional components.\n\nWhen fetching data, it's crucial to manage loading states, handle errors gracefully, and implement proper cleanup to prevent memory leaks. This lesson will explore best practices for data fetching in React, including handling component unmounting, implementing retry logic, and creating reusable data fetching hooks.\n\nYou'll learn how to build robust data fetching solutions that provide excellent user experiences while maintaining application performance and reliability.",
+    "code": {
+      "example": "import React, { useState, useEffect } from 'react';\n\n// Custom hook for data fetching with advanced features\nfunction useApi(url, options = {}) {\n  const [data, setData] = useState(null);\n  const [loading, setLoading] = useState(true);\n  const [error, setError] = useState(null);\n  const [retryCount, setRetryCount] = useState(0);\n\n  useEffect(() => {\n    let isMounted = true; // Flag to prevent state updates after unmount\n    \n    const fetchData = async () => {\n      try {\n        setLoading(true);\n        setError(null);\n        \n        const response = await fetch(url, options);\n        \n        if (!response.ok) {\n          throw new Error(`HTTP error! status: ${response.status}`);\n        }\n        \n        const result = await response.json();\n        \n        // Only update state if component is still mounted\n        if (isMounted) {\n          setData(result);\n          setLoading(false);\n          setRetryCount(0);\n        }\n      } catch (err) {\n        // Only update state if component is still mounted\n        if (isMounted) {\n          setError(err);\n          setLoading(false);\n          \n          // Implement retry logic for network errors\n          if (retryCount < 3 && err.name !== 'AbortError') {\n            setTimeout(() => {\n              if (isMounted) {\n                setRetryCount(prev => prev + 1);\n              }\n            }, 1000 * Math.pow(2, retryCount)); // Exponential backoff\n          }\n        }\n      }\n    };\n\n    fetchData();\n\n    // Cleanup function to prevent memory leaks\n    return () => {\n      isMounted = false;\n    };\n  }, [url, retryCount, JSON.stringify(options)]); // Re-run when URL, retryCount, or options change\n\n  // Function to manually refetch data\n  const refetch = () => {\n    setRetryCount(0);\n  };\n\n  return { data, loading, error, refetch };\n}\n\n// Component using the custom data fetching hook\nfunction UserList() {\n  const { data: users, loading, error, refetch } = useApi('https://jsonplaceholder.typicode.com/users');\n\n  if (loading) return <div>Loading users... {loading.retryCount > 0 && `(Retry ${loading.retryCount}/3)`}</div>;\n  if (error) return <div>Error: {error.message} <button onClick={refetch}>Retry</button></div>;\n\n  return (\n    <div>\n      <h2>Users</h2>\n      <button onClick={refetch}>Refresh</button>\n      <ul>\n        {users.map(user => (\n          <li key={user.id}>\n            <h3>{user.name}</h3>\n            <p>Email: {user.email}</p>\n            <p>Phone: {user.phone}</p>\n          </li>\n        ))}\n      </ul>\n    </div>\n  );\n}",
+      "explanation": "This example demonstrates a comprehensive data fetching implementation with advanced features:\n\n1. **Custom Hook**: useApi encapsulates data fetching logic for reusability\n2. **Loading States**: Tracks loading status with retry information\n3. **Error Handling**: Catches and displays network and HTTP errors\n4. **Cleanup**: Prevents state updates after component unmounting\n5. **Retry Logic**: Implements exponential backoff for failed requests\n6. **Manual Refetching**: Provides function to manually trigger data refresh\n\nThe output shows:\n- Loading indicator with retry count during fetch operations\n- Error messages with retry button for failed requests\n- User list with names, emails, and phone numbers\n- Refresh button to manually refetch data\n\nKey concepts illustrated:\n- `useEffect` for data fetching side effects\n- Cleanup functions to prevent memory leaks\n- Error boundary patterns for graceful error handling\n- Retry mechanisms with exponential backoff\n- Component unmounting protection\n- Custom hook creation for reusable logic\n- Loading and error state management",
+      "language": "javascript"
+    },
+    "pitfalls": [
+      {
+        "mistake": "Not implementing cleanup functions for data fetching",
+        "solution": "Always return a cleanup function from `useEffect` to prevent state updates after component unmounting",
+        "severity": "high"
+      },
+      {
+        "mistake": "Creating infinite loops with `useEffect` dependencies",
+        "solution": "Be careful with object and array dependencies; use JSON.stringify or `useMemo` to stabilize references",
+        "severity": "high"
+      },
+      {
+        "mistake": "Not handling network errors gracefully",
+        "solution": "Implement comprehensive error handling with user-friendly messages and retry options",
+        "severity": "medium"
+      }
+    ],
+    "exercises": [
+      {
+        "title": "Practice: Create a Data Fetching Hook with Caching",
+        "description": "Build an enhanced data fetching hook that implements caching and request deduplication",
+        "checkpoints": [
+          "Implement in-memory caching to avoid redundant requests",
+          "Add request deduplication to prevent multiple simultaneous requests for the same URL",
+          "Create cache expiration mechanism with configurable TTL",
+          "Add support for request cancellation with AbortController",
+          "Implement pagination support for large datasets",
+          "Add TypeScript types for better developer experience"
+        ]
+      }
+    ],
+    "next": [],
+    "estimatedMinutes": 50,
+    "difficulty": "Advanced",
+    "tags": [
+      "Data Fetching",
+      "useEffect",
+      "API Integration",
+      "react"
+    ],
+    "sources": [
+      {
+        "title": "React useEffect Hook - React Documentation",
+        "url": "https://react.dev/reference/react/useEffect"
+      },
+      {
+        "title": "Data Fetching with React Hooks",
+        "url": "https://www.robinwieruch.de/react-hooks-fetch-data/"
+      }
+    ],
+    "lastUpdated": "2025-10-03T10:00:00.000Z",
+    "version": "1.1.0"
+  },
+  {
+    "id": "react-fundamentals-lesson-5",
+    "moduleSlug": "react-fundamentals",
+    "title": "Context API for Global State",
+    "order": 5,
+    "objectives": [
+      "Create and use a React Context to share state across components",
+      "Provide and consume context values using Context.Provider and useContext hook",
+      "Understand the use cases and limitations of the Context API"
+    ],
+    "intro": "The Context API is a feature in React that allows you to share values between components without having to explicitly pass a prop through every level of the tree. This is particularly useful for global state management, such as theme settings, user authentication, or language preferences.\n\nThis lesson will cover the Context API in detail, including how to create a context, provide values to components, and consume those values using the useContext hook. You'll learn when to use the Context API and how to avoid common pitfalls.",
+    "code": {
+      "example": "import React, { createContext, useContext, useState } from 'react';\n\n// Create a Context\nconst ThemeContext = createContext();\n\n// Provider component\nfunction ThemeProvider({ children }) {\n  const [theme, setTheme] = useState('light');\n\n  const toggleTheme = () => {\n    setTheme(theme === 'light' ? 'dark' : 'light');\n  };\n\n  return (\n    <ThemeContext.Provider value={{ theme, toggleTheme }}>\n      {children}\n    </ThemeContext.Provider>\n  );\n}\n\n// Consumer component\nfunction ThemedButton() {\n  const { theme, toggleTheme } = useContext(ThemeContext);\n\n  return (\n    <button onClick={toggleTheme} style={{ background: theme === 'light' ? 'white' : 'black', color: theme === 'light' ? 'black' : 'white' }}>\n      Toggle Theme\n    </button>\n  );\n}\n\nfunction App() {\n  return (\n    <ThemeProvider>\n      <div>\n        <h1>Context API Example</h1>\n        <ThemedButton />\n      </div>\n    </ThemeProvider>\n  );\n}\n\nexport default App;",
+      "explanation": "This example demonstrates the Context API:\n\n1. **Create Context**: Defines a new context\n2. **Provider Component**: Provides context values to child components\n3. **Consumer Component**: Consumes context values using useContext hook\n4. **Toggle Theme**: Changes theme state and updates UI\n\nThe output shows:\n- A button that toggles between light and dark themes\n- Theme state shared across components without prop drilling\n\nKey concepts illustrated:\n- Creating and using contexts\n- Providing context values\n- Consuming context values with useContext\n- Use cases for the Context API\n- Avoiding prop drilling",
+      "language": "javascript"
+    },
+    "pitfalls": [
+      {
+        "mistake": "Overusing the Context API for local state",
+        "solution": "Use props or local state for local state management and reserve the Context API for global state",
+        "severity": "high"
+      },
+      {
+        "mistake": "Not using the useContext hook",
+        "solution": "Use the useContext hook to consume context values in functional components",
+        "severity": "high"
+      },
+      {
+        "mistake": "Not optimizing context updates",
+        "solution": "Use memoization techniques to prevent unnecessary re-renders when context values change",
+        "severity": "medium"
+      }
+    ],
+    "exercises": [
+      {
+        "title": "Practice: Create a Theme Switcher",
+        "description": "Build a theme switcher application using the Context API",
+        "checkpoints": [
+          "Create a context for theme settings",
+          "Provide theme values to components",
+          "Consume theme values in UI components",
+          "Implement a toggle button to switch themes"
+        ]
+      }
+    ],
+    "next": [
+      "react-fundamentals-lesson-6"
+    ],
+    "estimatedMinutes": 40,
+    "difficulty": "Intermediate",
+    "tags": [
+      "Context API",
+      "Global State",
+      "react"
+    ],
+    "sources": [
+      {
+        "title": "Context API - React Documentation",
+        "url": "https://reactjs.org/docs/context.html"
+      }
+    ],
+    "lastUpdated": "2025-10-02T10:00:00.000Z",
+    "version": "1.1.0"
+  },
+  {
+    "id": "react-fundamentals-lesson-6",
+    "moduleSlug": "react-fundamentals",
+    "title": "State Management with Context API",
+    "order": 6,
+    "objectives": [
+      "Manage global state using the Context API",
+      "Provide and consume context values in components",
+      "Optimize performance with context updates"
+    ],
+    "intro": "The Context API is a powerful feature in React for managing global state across your application. It allows you to share values between components without having to explicitly pass a prop through every level of the tree. This is particularly useful for global state management, such as theme settings, user authentication, or language preferences.\n\nThis lesson will cover the Context API in depth, including how to create a context, provide values to components, and consume those values using the useContext hook. You'll learn how to optimize performance when using the Context API and when to use it over other state management solutions.",
+    "code": {
+      "example": "import React, { createContext, useContext, useState } from 'react';\n\n// Create a Context\nconst UserContext = createContext();\n\n// Provider component\nfunction UserProvider({ children }) {\n  const [user, setUser] = useState(null);\n\n  const login = (username) => {\n    setUser(username);\n  };\n\n  const logout = () => {\n    setUser(null);\n  };\n\n  return (\n    <UserContext.Provider value={{ user, login, logout }}>\n      {children}\n    </UserContext.Provider>\n  );\n}\n\n// Consumer component\nfunction UserProfile() {\n  const { user, logout } = useContext(UserContext);\n\n  return (\n    <div>\n      {user ? (\n        <div>\n          <h2>Welcome, {user}!</h2>\n          <button onClick={logout}>Logout</button>\n        </div>\n      ) : (\n        <div>\n          <h2>Please log in</h2>\n          <button onClick={() => login('JohnDoe')}>Login as JohnDoe</button>\n        </div>\n      )}\n    </div>\n  );\n}\n\nfunction App() {\n  return (\n    <UserProvider>\n      <div>\n        <h1>User Context Example</h1>\n        <UserProfile />\n      </div>\n    </UserProvider>\n  );\n}\n\nexport default App;",
+      "explanation": "This example demonstrates the Context API:\n\n1. **Create Context**: Defines a new context\n2. **Provider Component**: Provides context values to child components\n3. **Consumer Component**: Consumes context values using useContext hook\n4. **Login/Logout**: Changes user state and updates UI\n\nThe output shows:\n- A user profile component that displays user information or login options\n- User state shared across components without prop drilling\n\nKey concepts illustrated:\n- Creating and using contexts\n- Providing context values\n- Consuming context values with useContext\n- Use cases for the Context API\n- Avoiding prop drilling",
+      "language": "javascript"
+    },
+    "pitfalls": [
+      {
+        "mistake": "Overusing the Context API for local state",
+        "solution": "Use props or local state for local state management and reserve the Context API for global state",
+        "severity": "high"
+      },
+      {
+        "mistake": "Not using the useContext hook",
+        "solution": "Use the useContext hook to consume context values in functional components",
+        "severity": "high"
+      },
+      {
+        "mistake": "Not optimizing context updates",
+        "solution": "Use memoization techniques to prevent unnecessary re-renders when context values change",
+        "severity": "medium"
+      }
+    ],
+    "exercises": [
+      {
+        "title": "Practice: Create a User Authentication System",
+        "description": "Build a user authentication system using the Context API",
+        "checkpoints": [
+          "Create a context for user authentication",
+          "Provide user authentication values to components",
+          "Consume user authentication values in UI components",
+          "Implement login and logout functionality"
+        ]
+      }
+    ],
+    "next": [
+      "react-fundamentals-lesson-7"
+    ],
+    "estimatedMinutes": 45,
+    "difficulty": "Intermediate",
+    "tags": [
+      "Context API",
+      "Global State",
+      "react"
+    ],
+    "sources": [
+      {
+        "title": "Context API - React Documentation",
+        "url": "https://reactjs.org/docs/context.html"
+      }
+    ],
+    "lastUpdated": "2025-10-02T10:00:00.000Z",
+    "version": "1.1.0"
+  },
+  {
+    "id": "react-fundamentals-lesson-7",
+    "moduleSlug": "react-fundamentals",
+    "title": "State Management with Redux",
+    "order": 7,
+    "objectives": [
+      "Understand the core concepts of Redux",
+      "Set up a Redux store and connect it to a React application",
+      "Manage state using actions and reducers"
+    ],
+    "intro": "Redux is a predictable state container for JavaScript apps. It helps you write applications that behave consistently across client, server, and native environments, and are easy to test. On top of that, it provides a great developer experience, such as live code editing combined with a time-traveling debugger.\n\nThis lesson will introduce you to Redux, including how to set up a Redux store, define actions and reducers, and connect the store to a React application. You'll learn how to manage state in a predictable and scalable way using Redux.",
+    "code": {
+      "example": "import React from 'react';\nimport { createStore } from 'redux';\nimport { Provider, useSelector, useDispatch } from 'react-redux';\n\n// Define the initial state\nconst initialState = {\n  count: 0\n};\n\n// Define the reducer function\nfunction counterReducer(state = initialState, action) {\n  switch (action.type) {\n    case 'INCREMENT':\n      return {\n        ...state,\n        count: state.count + 1\n      };\n    case 'DECREMENT':\n      return {\n        ...state,\n        count: state.count - 1\n      };\n    case 'RESET':\n      return {\n        count: 0\n      };\n    default:\n      return state;\n  }\n}\n\n// Create the Redux store\nconst store = createStore(counterReducer);\n\n// Component using Redux\nfunction Counter() {\n  const count = useSelector((state) => state.count);\n  const dispatch = useDispatch();\n\n  return (\n    <div>\n      <h1>{count}</h1>\n      <button onClick={() => dispatch({ type: 'INCREMENT' })}>+</button>\n      <button onClick={() => dispatch({ type: 'DECREMENT' })}>-</button>\n      <button onClick={() => dispatch({ type: 'RESET' })}>Reset</button>\n    </div>\n  );\n}\n\nfunction App() {\n  return (\n    <Provider store={store}>\n      <div>\n        <h1>Redux Example</h1>\n        <Counter />\n      </div>\n    </Provider>\n  );\n}\n\nexport default App;",
+      "explanation": "This example demonstrates Redux:\n\n1. **Initial State**: Defines the starting state\n2. **Reducer Function**: Handles state transitions based on actions\n3. **Create Store**: Initializes the Redux store with the reducer\n4. **Provider Component**: Connects the Redux store to the React application\n5. **Consumer Component**: Uses useSelector and useDispatch to interact with the store\n\nThe output shows:\n- A counter with increment and decrement buttons\n- A reset button to reset the counter\n\nKey concepts illustrated:\n- Setting up a Redux store\n- Defining actions and reducers\n- Connecting Redux to React\n- Using useSelector and useDispatch\n- Predictable state management with Redux",
+      "language": "javascript"
+    },
+    "pitfalls": [
+      {
+        "mistake": "Not defining a default case in the reducer",
+        "solution": "Always include a default case to handle unexpected actions and prevent errors",
+        "severity": "high"
+      },
+      {
+        "mistake": "Mutating state directly in the reducer",
+        "solution": "Always return a new state object to maintain immutability",
+        "severity": "high"
+      },
+      {
+        "mistake": "Using Redux for simple state management",
+        "solution": "Use `useState` or useReducer for simple state; reserve Redux for complex state management with multiple components",
+        "severity": "medium"
+      }
+    ],
+    "exercises": [
+      {
+        "title": "Practice: Create a Todo List with Redux",
+        "description": "Build a todo list application using Redux for state management",
+        "checkpoints": [
+          "Define initial state for todos with properties like id, text, and completed",
+          "Implement reducer function with actions for adding, toggling, and removing todos",
+          "Create action creators for each operation",
+          "Handle edge cases like empty todo text or duplicate IDs",
+          "Implement filtering functionality (all, active, completed)",
+          "Add undo/redo functionality for todo operations"
+        ]
+      }
+    ],
+    "next": [
+      "react-fundamentals-lesson-8"
+    ],
+    "estimatedMinutes": 45,
+    "difficulty": "Advanced",
+    "tags": [
+      "State Management",
+      "Redux",
+      "react"
+    ],
+    "sources": [
+      {
+        "title": "Redux Documentation",
+        "url": "https://redux.js.org/"
+      }
+    ],
+    "lastUpdated": "2025-10-02T10:00:00.000Z",
+    "version": "1.1.0"
+  },
+  {
+    "id": "react-fundamentals-lesson-8",
+    "moduleSlug": "react-fundamentals",
+    "title": "State Management with MobX",
+    "order": 8,
+    "objectives": [
+      "Understand the core concepts of MobX",
+      "Set up MobX and connect it to a React application",
+      "Manage state using observables and actions"
+    ],
+    "intro": "MobX is a simple, scalable state management library that makes state management simple and scalable by transparently applying functional reactive programming (TFRP). It makes it easy to manage complex state logic in a predictable and maintainable way.\n\nThis lesson will introduce you to MobX, including how to set up MobX, define observables and actions, and connect the store to a React application. You'll learn how to manage state in a predictable and scalable way using MobX.",
+    "code": {
+      "example": "import React from 'react';\nimport { makeAutoObservable } from 'mobx';\nimport { observer } from 'mobx-react-lite';\n\n// Define the store\nclass CounterStore {\n  count = 0;\n\n  constructor() {\n    makeAutoObservable(this);\n  }\n\n  increment() {\n    this.count += 1;\n  }\n\n  decrement() {\n    this.count -= 1;\n  }\n\n  reset() {\n    this.count = 0;\n  }\n}\n\nconst counterStore = new CounterStore();\n\n// Component using MobX\nconst Counter = observer(() => {\n  return (\n    <div>\n      <h1>{counterStore.count}</h1>\n      <button onClick={counterStore.increment}>+</button>\n      <button onClick={counterStore.decrement}>-</button>\n      <button onClick={counterStore.reset}>Reset</button>\n    </div>\n  );\n});\n\nfunction App() {\n  return (\n    <div>\n      <h1>MobX Example</h1>\n      <Counter />\n    </div>\n  );\n}\n\nexport default App;",
+      "explanation": "This example demonstrates MobX:\n\n1. **Store Definition**: Defines a store with observables and actions\n2. **Observer Component**: Uses observer to automatically track changes in the store\n3. **Component Interaction**: Calls actions to update the store\n\nThe output shows:\n- A counter with increment and decrement buttons\n- A reset button to reset the counter\n\nKey concepts illustrated:\n- Setting up MobX\n- Defining observables and actions\n- Connecting MobX to React\n- Using observer to track changes\n- Predictable state management with MobX",
+      "language": "javascript"
+    },
+    "pitfalls": [
+      {
+        "mistake": "Not using observer for components",
+        "solution": "Use observer to automatically track changes in the store",
+        "severity": "high"
+      },
+      {
+        "mistake": "Mutating observables directly",
+        "solution": "Always use actions to update observables",
+        "severity": "high"
+      },
+      {
+        "mistake": "Using MobX for simple state management",
+        "solution": "Use `useState` or useReducer for simple state; reserve MobX for complex state management with multiple components",
+        "severity": "medium"
+      }
+    ],
+    "exercises": [
+      {
+        "title": "Practice: Create a Todo List with MobX",
+        "description": "Build a todo list application using MobX for state management",
+        "checkpoints": [
+          "Define initial state for todos with properties like id, text, and completed",
+          "Implement actions for adding, toggling, and removing todos",
+          "Create action creators for each operation",
+          "Handle edge cases like empty todo text or duplicate IDs",
+          "Implement filtering functionality (all, active, completed)",
+          "Add undo/redo functionality for todo operations"
+        ]
+      }
+    ],
+    "next": [
+      "react-fundamentals-lesson-9"
+    ],
+    "estimatedMinutes": 45,
+    "difficulty": "Advanced",
+    "tags": [
+      "State Management",
+      "MobX",
+      "react"
+    ],
+    "sources": [
+      {
+        "title": "MobX Documentation",
+        "url": "https://mobx.js.org/"
+      }
+    ],
+    "lastUpdated": "2025-10-02T10:00:00.000Z",
+    "version": "1.1.0"
+  },
+  {
+    "id": "react-fundamentals-lesson-9",
+    "moduleSlug": "react-fundamentals",
+    "title": "State Management with useReducer",
+    "order": 9,
+    "objectives": [
+      "Manage complex state logic using the useReducer hook",
+      "Implement state transitions with reducer functions",
+      "Organize state management for scalable applications"
+    ],
+    "intro": "As React applications grow in complexity, managing state with `useState` can become challenging, especially when state transitions involve multiple sub-values or when the next state depends on the previous one. The useReducer hook provides an alternative approach to state management that is more suitable for complex state logic.\n\nuseReducer is usually preferable to `useState` when you have complex state logic that involves multiple sub-values or when the next state depends on the previous one. It also helps to separate the state logic from the components that use it, making components more readable and maintainable.\n\nThis lesson will explore the useReducer hook in depth, covering reducer function patterns, action types, and state immutability. You'll learn how to implement complex state management solutions that scale with your application's needs while maintaining predictable state transitions.",
+    "code": {
+      "example": "import React, { useReducer } from 'react';\n\n// Define the initial state\nconst initialState = {\n  count: 0,\n  history: [],\n  isIncrementing: false\n};\n\n// Define the reducer function\nfunction counterReducer(state, action) {\n  switch (action.type) {\n    case 'INCREMENT_START':\n      return {\n        ...state,\n        isIncrementing: true\n      };\n    case 'INCREMENT':\n      return {\n        count: state.count + 1,\n        history: [...state.history, `Incremented to ${state.count + 1}`],\n        isIncrementing: false\n      };\n    case 'DECREMENT':\n      return {\n        count: state.count - 1,\n        history: [...state.history, `Decremented to ${state.count - 1}`],\n        isIncrementing: false\n      };\n    case 'RESET':\n      return {\n        count: 0,\n        history: [...state.history, 'Reset to 0'],\n        isIncrementing: false\n      };\n    case 'UNDO':\n      // Remove last history entry\n      const newHistory = state.history.slice(0, -1);\n      const lastCount = newHistory.length > 0 \n        ? parseInt(newHistory[newHistory.length - 1].match(/\\d+$/)[0])\n        : 0;\n      return {\n        count: lastCount,\n        history: newHistory,\n        isIncrementing: false\n      };\n    default:\n      throw new Error(`Unknown action type: ${action.type}`);\n  }\n}\n\n// Component using useReducer\nfunction Counter() {\n  const [state, dispatch] = useReducer(counterReducer, initialState);\n\n  const handleIncrement = () => {\n    dispatch({ type: 'INCREMENT_START' });\n    // Simulate async operation\n    setTimeout(() => {\n      dispatch({ type: 'INCREMENT' });\n    }, 500);\n  };\n\n  return (\n    <div>\n      <h2>Counter: {state.count} {state.isIncrementing ? '(Incrementing...)' : ''}</h2>\n      <button onClick={handleIncrement} disabled={state.isIncrementing}>+</button>\n      <button onClick={() => dispatch({ type: 'DECREMENT' })}>-</button>\n      <button onClick={() => dispatch({ type: 'RESET' })}>Reset</button>\n      <button onClick={() => dispatch({ type: 'UNDO' })} disabled={state.history.length === 0}>Undo</button>\n      \n      <h3>History:</h3>\n      <ul>\n        {state.history.map((item, index) => (\n          <li key={index}>{item}</li>\n        ))}\n      </ul>\n    </div>\n  );\n}",
+      "explanation": "This example demonstrates advanced useReducer implementation with complex state management:\n\n1. **Initial State**: Defines a complex state object with multiple properties\n2. **Reducer Function**: Handles different action types with specific state transitions\n3. **Action Dispatching**: Components dispatch actions to trigger state changes\n4. **State Immutability**: Reducer returns new state objects rather than mutating existing ones\n5. **Complex Operations**: Implements undo functionality and async state transitions\n\nThe output shows:\n- Counter with increment/decrement buttons and real-time history\n- Loading state during async operations\n- Undo functionality to revert actions\n- Comprehensive history tracking\n\nKey concepts illustrated:\n- Reducer pattern for complex state management\n- Action types and payload handling\n- State immutability principles\n- Async state transitions\n- Complex state operations (undo/redo)\n- Performance optimization with state separation",
+      "language": "javascript"
+    },
+    "pitfalls": [
+      {
+        "mistake": "Mutating state directly in reducer functions",
+        "solution": "Always return new state objects to maintain immutability and predictable state transitions",
+        "severity": "high"
+      },
+      {
+        "mistake": "Using useReducer for simple state management",
+        "solution": "Use `useState` for simple state; reserve useReducer for complex state logic with multiple sub-values",
+        "severity": "medium"
+      },
+      {
+        "mistake": "Not handling all possible action types",
+        "solution": "Include a default case that throws an error for unknown action types to catch bugs early",
+        "severity": "medium"
+      }
+    ],
+    "exercises": [
+      {
+        "title": "Practice: Create a Todo List with useReducer",
+        "description": "Build a todo list application using useReducer for state management",
+        "checkpoints": [
+          "Define initial state for todos with properties like id, text, and completed",
+          "Implement reducer function with actions for adding, toggling, and removing todos",
+          "Create action creators for each operation",
+          "Handle edge cases like empty todo text or duplicate IDs",
+          "Implement filtering functionality (all, active, completed)",
+          "Add undo/redo functionality for todo operations"
+        ]
+      }
+    ],
+    "next": [],
+    "estimatedMinutes": 45,
+    "difficulty": "Advanced",
+    "tags": [
+      "State Management",
+      "useReducer",
+      "Reducers",
+      "react"
+    ],
+    "sources": [
+      {
+        "title": "React useReducer Hook - React Documentation",
+        "url": "https://reactjs.org/docs/hooks-reference.html#usereducer"
+      },
+      {
+        "title": "React Hooks: useState vs useReducer",
+        "url": "https://reactjs.org/docs/hooks-reference.html#hooks-and-performance"
+      }
+    ],
+    "lastUpdated": "2025-10-03T10:00:00.000Z",
+    "version": "1.1.0"
+  },
+  {
+    "id": "react-fundamentals-lesson-10",
+    "moduleSlug": "react-fundamentals",
+    "title": "Forms and Controlled Components",
+    "order": 6,
+    "objectives": [
+      "Create and manage forms using controlled components",
+      "Handle form input changes and submissions",
+      "Validate form data and provide feedback"
+    ],
+    "intro": "Forms are a common part of web applications, and React provides a way to handle form data using controlled components. Controlled components are form elements whose values are controlled by React state. This allows you to handle form data in a predictable and manageable way.\n\nThis lesson will cover how to create and manage forms in React, including handling input changes, form submissions, and form validation. You'll learn how to build forms that provide feedback to users and handle data submission effectively.",
+    "code": {
+      "example": "import React, { useState } from 'react';\n\nfunction Form() {\n  const [formData, setFormData] = useState({\n    username: '',\n    email: '',\n    password: ''\n  });\n\n  const handleChange = (e) => {\n    const { name, value } = e.target;\n    setFormData({\n      ...formData,\n      [name]: value\n    });\n  };\n\n  const handleSubmit = (e) => {\n    e.preventDefault();\n    console.log('Form submitted:', formData);\n  };\n\n  return (\n    <form onSubmit={handleSubmit}>\n      <div>\n        <label>\n          Username:\n          <input\n            type='text'\n            name='username'\n            value={formData.username}\n            onChange={handleChange}\n          />\n        </label>\n      </div>\n      <div>\n        <label>\n          Email:\n          <input\n            type='email'\n            name='email'\n            value={formData.email}\n            onChange={handleChange}\n          />\n        </label>\n      </div>\n      <div>\n        <label>\n          Password:\n          <input\n            type='password'\n            name='password'\n            value={formData.password}\n            onChange={handleChange}\n          />\n        </label>\n      </div>\n      <button type='submit'>Submit</button>\n    </form>\n  );\n}\n\nexport default Form;",
+      "explanation": "This example demonstrates form handling in React:\n\n1. **State Initialization**: Initializes form data state\n2. **Input Change Handler**: Updates state on input changes\n3. **Form Submission Handler**: Prevents default submission and logs form data\n4. **Form Elements**: Controlled inputs with value and onChange attributes\n\nThe output shows:\n- A form with username, email, and password fields\n- Form submission logs form data to console\n\nKey concepts illustrated:\n- Controlled components for form handling\n- State management for form data\n- Event handling for form submissions\n- Input validation and feedback",
+      "language": "javascript"
+    },
+    "pitfalls": [
+      {
+        "mistake": "Not using controlled components",
+        "solution": "Use controlled components to manage form data in React",
+        "severity": "high"
+      },
+      {
+        "mistake": "Not preventing default form submission",
+        "solution": "Use e.preventDefault() to prevent default form submission behavior",
+        "severity": "high"
+      },
+      {
+        "mistake": "Not handling input changes",
+        "solution": "Implement an input change handler to update form data",
+        "severity": "high"
+      }
+    ],
+    "exercises": [
+      {
+        "title": "Practice: Create a Contact Form",
+        "description": "Build a contact form with validation using controlled components",
+        "checkpoints": [
+          "Create state for form fields",
+          "Implement input change handlers",
+          "Add form validation logic",
+          "Handle form submission and display feedback"
+        ]
+      }
+    ],
+    "next": [
+      "react-fundamentals-lesson-7"
+    ],
+    "estimatedMinutes": 45,
+    "difficulty": "Intermediate",
+    "tags": [
+      "Forms",
+      "Controlled Components",
+      "react"
+    ],
+    "sources": [
+      {
+        "title": "Forms - React Documentation",
+        "url": "https://reactjs.org/docs/forms.html"
+      }
+    ],
+    "lastUpdated": "2025-10-02T10:00:00.000Z",
+    "version": "1.1.0"
+  },
+  {
+    "id": "react-fundamentals-lesson-7",
+    "moduleSlug": "react-fundamentals",
+    "title": "Styling React Components",
+    "order": 7,
+    "objectives": [
+      "Apply inline styles to React components",
+      "Use CSS classes for styling",
+      "Implement CSS-in-JS solutions like styled-components"
+    ],
+    "intro": "Styling is an essential part of building user interfaces, and React provides several ways to style components. You can use inline styles, CSS classes, or CSS-in-JS solutions like styled-components to style your components.\n\nThis lesson will cover the different styling options available in React, including inline styles, CSS classes, and CSS-in-JS solutions. You'll learn how to apply styles to components and choose the best styling approach for your project.",
+    "code": {
+      "example": "import React from 'react';\nimport './App.css';\nimport styled from 'styled-components';\n\nconst StyledButton = styled.button`\n  background-color: blue;\n  color: white;\n  padding: 10px 20px;\n  border: none;\n  border-radius: 5px;\n  cursor: pointer;\n\n  &:hover {\n    background-color: darkblue;\n  }\n`;\n\nfunction App() {\n  return (\n    <div className='app-container'>\n      <h1 className='app-title'>Styling React Components</h1>\n      <button style={{ backgroundColor: 'green', color: 'white', padding: '10px 20px', borderRadius: '5px', cursor: 'pointer' }}>\n        Inline Style Button\n      </button>\n      <StyledButton>\n        Styled Components Button\n      </StyledButton>\n    </div>\n  );\n}\n\nexport default App;",
+      "explanation": "This example demonstrates different styling options in React:\n\n1. **Inline Styles**: Applied directly to elements using the style attribute\n2. **CSS Classes**: Applied using the className attribute\n3. **Styled Components**: Defined using the styled-components library\n\nThe output shows:\n- A container with a title and three buttons\n- Buttons styled using inline styles, CSS classes, and styled-components\n\nKey concepts illustrated:\n- Inline styling in React\n- Using CSS classes for styling\n- Implementing CSS-in-JS solutions like styled-components\n- Choosing the best styling approach for your project",
+      "language": "javascript"
+    },
+    "pitfalls": [
+      {
+        "mistake": "Using inline styles for large stylesheets",
+        "solution": "Use CSS classes or CSS-in-JS solutions for large stylesheets",
+        "severity": "high"
+      },
+      {
+        "mistake": "Not using CSS-in-JS solutions for dynamic styles",
+        "solution": "Use CSS-in-JS solutions like styled-components for dynamic styles",
+        "severity": "medium"
+      },
+      {
+        "mistake": "Not using CSS classes for reusable styles",
+        "solution": "Use CSS classes to define reusable styles",
+        "severity": "medium"
+      }
+    ],
+    "exercises": [
+      {
+        "title": "Practice: Create a Styled Component",
+        "description": "Build a styled component using CSS-in-JS",
+        "checkpoints": [
+          "Install styled-components",
+          "Create a styled component",
+          "Use the styled component in your application",
+          "Add dynamic styles to the component"
+        ]
+      }
+    ],
+    "next": [
+      "react-fundamentals-lesson-8"
+    ],
+    "estimatedMinutes": 40,
+    "difficulty": "Intermediate",
+    "tags": [
+      "Styling",
+      "CSS",
+      "CSS-in-JS",
+      "react"
+    ],
+    "sources": [
+      {
+        "title": "Styling and CSS - React Documentation",
+        "url": "https://reactjs.org/docs/faq-styling.html"
+      },
+      {
+        "title": "Styled Components Documentation",
+        "url": "https://styled-components.com/"
+      }
+    ],
+    "lastUpdated": "2025-10-02T10:00:00.000Z",
+    "version": "1.1.0"
+  },
+  {
+    "id": "react-fundamentals-lesson-8",
+    "moduleSlug": "react-fundamentals",
+    "title": "React Router for Navigation",
+    "order": 8,
+    "objectives": [
+      "Implement client-side routing with React Router",
+      "Create navigation components and route hierarchies",
+      "Handle dynamic routes and route parameters effectively"
+    ],
+    "intro": "Client-side routing is essential for creating single-page applications (SPAs) that provide a seamless user experience without full page reloads. React Router is the most popular routing library for React applications, enabling developers to define routes, handle navigation, and manage browser history.\n\nThis lesson will explore the core concepts of React Router v6, including defining routes, creating navigation components, handling dynamic routes with parameters, and implementing nested routing patterns. You'll learn how to structure your application's navigation, pass data between routes, and handle route transitions effectively.\n\nBy the end of this lesson, you'll be able to implement comprehensive routing solutions that support complex application structures while maintaining clean, maintainable code organization.",
+    "code": {
+      "example": "import React from 'react';\nimport { BrowserRouter as Router, Routes, Route, Link, useParams, useNavigate } from 'react-router-dom';\n\n// Home component\nfunction Home() {\n  return (\n    <div>\n      <h1>Home Page</h1>\n      <p>Welcome to our React application!</p>\n    </div>\n  );\n}\n\n// About component\nfunction About() {\n  return (\n    <div>\n      <h1>About Us</h1>\n      <p>Learn more about our company and mission.</p>\n    </div>\n  );\n}\n\n// Dynamic route component with parameter\nfunction UserProfile() {\n  const { id } = useParams();\n  const navigate = useNavigate();\n  \n  const handleGoBack = () => {\n    navigate(-1); // Go back to previous page\n  };\n  \n  return (\n    <div>\n      <h1>User Profile</h1>\n      <p>User ID: {id}</p>\n      <button onClick={handleGoBack}>Go Back</button>\n    </div>\n  );\n}\n\n// Navigation component\nfunction Navigation() {\n  return (\n    <nav>\n      <ul>\n        <li><Link to=\"/\">Home</Link></li>\n        <li><Link to=\"/about\">About</Link></li>\n        <li><Link to=\"/user/123\">User Profile</Link></li>\n      </ul>\n    </nav>\n  );\n}\n\n// Main App component with routing\nfunction App() {\n  return (\n    <Router>\n      <div>\n        <Navigation />\n        <Routes>\n          <Route path=\"/\" element={<Home />} />\n          <Route path=\"/about\" element={<About />} />\n          <Route path=\"/user/:id\" element={<UserProfile />} />\n        </Routes>\n      </div>\n    </Router>\n  );\n}",
+      "explanation": "This example demonstrates a complete React Router implementation with multiple routes:\n\n1. **BrowserRouter**: Wraps the application to enable routing functionality\n2. **Routes and Route**: Define route mappings to components\n3. **Link**: Creates navigation links without page reloads\n4. **useParams**: Accesses dynamic route parameters\n5. **useNavigate**: Programmatically navigates between routes\n\nThe output shows:\n- Navigation menu with links to different pages\n- Route-based component rendering\n- Dynamic parameter handling in the UserProfile component\n- Programmatic navigation with the back button\n\nKey concepts illustrated:\n- Client-side routing principles\n- Route definition and matching\n- Dynamic route parameters\n- Navigation components\n- Programmatic navigation\n- Route hierarchy management",
+      "language": "javascript"
+    },
+    "pitfalls": [
+      {
+        "mistake": "Not wrapping the application with BrowserRouter",
+        "solution": "Ensure the entire application is wrapped with BrowserRouter to enable routing functionality",
+        "severity": "high"
+      },
+      {
+        "mistake": "Using outdated React Router syntax",
+        "solution": "Use React Router v6 syntax with Routes, Route, and hooks like useParams and useNavigate",
+        "severity": "high"
+      },
+      {
+        "mistake": "Not handling 404 cases for undefined routes",
+        "solution": "Implement a catch-all route to handle undefined paths gracefully",
+        "severity": "medium"
+      }
+    ],
+    "exercises": [
+      {
+        "title": "Practice: Create a Multi-Page Application",
+        "description": "Build a React application with multiple pages using React Router",
+        "checkpoints": [
+          "Implement BrowserRouter to enable routing",
+          "Create at least 3 different page components",
+          "Define routes for each page component",
+          "Add navigation links between pages",
+          "Implement a dynamic route with parameters",
+          "Add a 404 page for undefined routes"
+        ]
+      }
+    ],
+    "next": [],
+    "estimatedMinutes": 40,
+    "difficulty": "Intermediate",
+    "tags": [
+      "Routing",
+      "React Router",
+      "Navigation",
+      "react"
+    ],
+    "sources": [
+      {
+        "title": "React Router Documentation",
+        "url": "https://reactrouter.com/"
+      },
+      {
+        "title": "React Router v6 Migration Guide",
+        "url": "https://reactrouter.com/en/main/upgrading/v5"
+      }
+    ],
+    "lastUpdated": "2025-10-03T10:00:00.000Z",
+    "version": "1.1.0"
+  },
+  {
+    "id": "react-fundamentals-lesson-4",
+    "moduleSlug": "react-fundamentals",
+    "title": "Custom Hooks",
+    "order": 4,
+    "objectives": [
+      "Create reusable custom hooks to share stateful logic",
+      "Extract and encapsulate component logic into custom hooks",
+      "Follow naming conventions and best practices for custom hooks"
+    ],
+    "intro": "Custom Hooks are a mechanism to reuse stateful logic (such as setting up a subscription and remembering the current value), but every time you use a custom Hook, all state and effects inside of it are fully isolated. They allow you to extract component logic into reusable functions.\n\nA custom Hook is a JavaScript function whose name starts with 'use' and that may call other Hooks. Unlike a React component, a custom Hook doesn't need to have a specific signature. We can decide what it takes as arguments, and what, if anything, it should return.\n\nThis lesson will explore how to create custom hooks to extract and share common logic between components, making your code more modular, testable, and maintainable.",
+    "code": {
+      "example": "import { useState, useEffect } from 'react';\n\n// Custom hook for managing form state\nfunction useForm(initialValues) {\n  const [values, setValues] = useState(initialValues);\n\n  const handleChange = (e) => {\n    setValues({\n      ...values,\n      [e.target.name]: e.target.value\n    });\n  };\n\n  const reset = () => {\n    setValues(initialValues);\n  };\n\n  return [values, handleChange, reset];\n}\n\n// Custom hook for browser window size\nfunction useWindowSize() {\n  const [windowSize, setWindowSize] = useState({\n    width: window.innerWidth,\n    height: window.innerHeight,\n  });\n\n  useEffect(() => {\n    const handleResize = () => {\n      setWindowSize({\n        width: window.innerWidth,\n        height: window.innerHeight,\n      });\n    };\n\n    window.addEventListener('resize', handleResize);\n\n    // Cleanup\n    return () => window.removeEventListener('resize', handleResize);\n  }, []);\n\n  return windowSize;\n}\n\n// Component using custom hooks\nfunction MyComponent() {\n  const [formValues, handleFormChange, resetForm] = useForm({\n    name: '',\n    email: ''\n  });\n\n  const windowSize = useWindowSize();\n\n  return (\n    <div>\n      <h2>Window Size: {windowSize.width} x {windowSize.height}</h2>\n      <form>\n        <input\n          name=\"name\"\n          value={formValues.name}\n          onChange={handleFormChange}\n          placeholder=\"Name\"\n        />\n        <input\n          name=\"email\"\n          value={formValues.email}\n          onChange={handleFormChange}\n          placeholder=\"Email\"\n        />\n        <button type=\"button\" onClick={resetForm}>Reset</button>\n      </form>\n      <p>Name: {formValues.name}</p>\n      <p>Email: {formValues.email}</p>\n    </div>\n  );\n}\n\nexport default MyComponent;",
+      "explanation": "This example demonstrates two custom hooks and their usage:\n\n1. **useForm**: Manages form state and input handling\n   - Encapsulates form logic for reuse\n   - Returns state and handler functions\n2. **useWindowSize**: Tracks browser window dimensions\n   - Handles browser event listeners\n   - Includes proper cleanup\n\nThe output shows:\n- Real-time window dimensions that update on resize\n- Form inputs with synchronized state\n- Reset button that clears form\n\nKey concepts illustrated:\n- Custom hook creation and naming conventions\n- Logic extraction and encapsulation\n- State and effect management in custom hooks\n- Hook composition in components\n- Proper cleanup in effect hooks\n- Reusable logic across components",
+      "language": "javascript"
+    },
+    "pitfalls": [
+      {
+        "mistake": "Not following the 'use' naming convention for custom hooks",
+        "solution": "Custom hooks must start with 'use' to be properly detected by React's linting rules",
+        "severity": "high"
+      },
+      {
+        "mistake": "Mixing unrelated logic in a single custom hook",
+        "solution": "Keep custom hooks focused on a single responsibility or related functionality",
+        "severity": "medium"
+      },
+      {
+        "mistake": "Forgetting to return cleanup functions from effects in custom hooks",
+        "solution": "Always implement cleanup for subscriptions, timers, and event listeners",
+        "severity": "high"
+      }
+    ],
+    "exercises": [
+      {
+        "title": "Practice: Create a Custom Hook for Dark Mode",
+        "description": "Build a custom hook that manages dark mode state and persists it",
+        "checkpoints": [
+          "Use useState to manage dark mode state",
+          "Use useEffect to persist state to localStorage",
+          "Add logic to detect system preference",
+          "Return state and toggle function for use in components"
+        ]
+      }
+    ],
+    "next": [
+      "react-fundamentals-lesson-5"
+    ],
+    "estimatedMinutes": 45,
+    "difficulty": "Advanced",
+    "tags": [
+      "Custom Hooks",
+      "Logic Reuse",
+      "State Management",
+      "react"
+    ],
+    "sources": [
+      {
+        "title": "Building Your Own Hooks - React Documentation",
+        "url": "https://reactjs.org/docs/hooks-custom.html"
+      },
+      {
+        "title": "React Hooks FAQ - React Documentation",
+        "url": "https://reactjs.org/docs/hooks-faq.html"
+      }
+    ],
+    "lastUpdated": "2025-10-02T10:00:00.000Z",
+    "version": "1.1.0"
+  }
+]

@@ -1,0 +1,732 @@
+[
+  {
+    "id": "e2e-testing-lesson-1",
+    "moduleSlug": "e2e-testing",
+    "title": "Introduction to End-to-End Testing",
+    "order": 1,
+    "objectives": [
+      "Understand the fundamental concepts and importance of end-to-end testing",
+      "Learn the differences between unit, integration, and end-to-end testing",
+      "Identify when to use end-to-end testing in the testing pyramid",
+      "Recognize common E2E testing frameworks and tools"
+    ],
+    "intro": "End-to-end (E2E) testing is a software testing methodology that validates entire workflows of an application from start to finish, simulating real user scenarios. Unlike unit tests that focus on individual functions or integration tests that verify interactions between specific components, E2E tests ensure that all integrated parts of an application work together as expected.\n\nIn this lesson, you'll learn about the role of E2E testing within the broader testing strategy and how it fits into the testing pyramid. You'll understand why E2E tests are crucial for validating user journeys and business workflows, even though they're typically slower and more complex than other test types.\n\nYou'll explore the key characteristics that make E2E tests both valuable and challenging, including their ability to catch integration issues that other test types might miss, and their tendency to be more brittle due to their broad scope.\n\nThe lesson will also cover the evolution of E2E testing frameworks, from early tools like Selenium to modern solutions like Cypress and Playwright, and how these tools have addressed many of the traditional challenges with E2E testing.\n\nBy mastering these fundamentals, you'll understand when and how to effectively incorporate E2E testing into your overall testing strategy to maximize confidence in your application's functionality.",
+    "code": {
+      "example": "// Example of a simple user registration workflow that would be tested with E2E testing\n\n// User visits the registration page\n// User fills in registration form with valid data\n// User submits the form\n// Application validates the data\n// Application creates a new user account\n// Application sends a confirmation email\n// User receives confirmation message\n// User can log in with new credentials\n\n// In an E2E test using a framework like Playwright:\nconst { test, expect } = require('@playwright/test');\n\ntest('user can register for an account', async ({ page }) => {\n  // Navigate to registration page\n  await page.goto('/register');\n  \n  // Fill in registration form\n  await page.fill('#email', 'test@example.com');\n  await page.fill('#password', 'securePassword123');\n  await page.fill('#confirmPassword', 'securePassword123');\n  \n  // Submit form\n  await page.click('#register-button');\n  \n  // Verify success message\n  await expect(page.locator('.success-message')).toContainText('Account created successfully');\n  \n  // Verify user is redirected to dashboard\n  await expect(page).toHaveURL('/dashboard');\n});\n\n// This test validates the entire workflow from UI interaction through backend processing\n// to user feedback, which is the essence of end-to-end testing.",
+      "explanation": "This example demonstrates a typical E2E test scenario for user registration. The test simulates a real user's journey through the application, interacting with the UI, submitting data, and verifying the results. Unlike unit tests that would test individual functions in isolation, this E2E test validates the complete workflow, ensuring all components work together correctly. The test uses Playwright syntax but illustrates concepts that apply to all E2E testing frameworks.",
+      "language": "javascript"
+    },
+    "pitfalls": [
+      {
+        "mistake": "Writing too many E2E tests, leading to slow test suites and maintenance overhead",
+        "solution": "Follow the testing pyramid - focus E2E tests on critical user journeys and supplement with more unit and integration tests",
+        "severity": "high"
+      },
+      {
+        "mistake": "Testing implementation details instead of user workflows",
+        "solution": "Focus on user-facing behaviors and business workflows rather than specific UI elements or implementation details",
+        "severity": "high"
+      },
+      {
+        "mistake": "Creating overly complex E2E tests that are hard to maintain",
+        "solution": "Keep E2E tests focused on specific user journeys and break complex workflows into multiple tests",
+        "severity": "medium"
+      }
+    ],
+    "exercises": [
+      {
+        "title": "Identify Critical User Journeys for E2E Testing",
+        "description": "Analyze an e-commerce application and identify the most critical user journeys that should be covered by E2E tests.",
+        "checkpoints": [
+          "List the core business workflows (e.g., product search, add to cart, checkout)",
+          "Identify authentication flows (login, registration, password reset)",
+          "Consider edge cases in critical workflows",
+          "Prioritize workflows based on business impact and user frequency",
+          "Map out the steps in each identified journey"
+        ]
+      }
+    ],
+    "next": [
+      "e2e-testing-lesson-2"
+    ],
+    "estimatedMinutes": 45,
+    "difficulty": "Beginner",
+    "tags": [
+      "e2e-testing",
+      "testing-pyramid",
+      "fundamentals",
+      "workflows"
+    ],
+    "lastUpdated": "2025-10-09T10:00:00.000Z",
+    "version": "1.0.0"
+  },
+  {
+    "id": "e2e-testing-lesson-2",
+    "moduleSlug": "e2e-testing",
+    "title": "Cypress Fundamentals",
+    "order": 2,
+    "objectives": [
+      "Master the core concepts and architecture of Cypress testing framework",
+      "Learn to write, run, and debug Cypress tests",
+      "Understand Cypress's automatic waiting and retry mechanisms",
+      "Implement best practices for reliable Cypress tests"
+    ],
+    "intro": "Cypress is a next-generation front-end testing tool built for the modern web. Unlike traditional testing frameworks that run tests outside the browser, Cypress runs in the same run loop as your application, providing real-time feedback and eliminating many of the common issues with flaky tests.\n\nIn this lesson, you'll learn about Cypress's unique architecture and how it differs from other E2E testing frameworks. You'll understand the benefits of Cypress's automatic waiting mechanisms, which eliminate the need for arbitrary timeouts and make tests more reliable.\n\nYou'll explore Cypress's powerful debugging capabilities, including time-travel debugging that allows you to see the state of your application at each step of a test. This feature dramatically reduces the time needed to identify and fix test issues.\n\nThe lesson will cover core Cypress commands for interacting with web elements, asserting conditions, and navigating between pages. You'll learn about Cypress's selector strategies and best practices for creating stable, maintainable tests.\n\nYou'll also understand how to structure Cypress tests using patterns like Page Objects and how to handle common testing scenarios like authentication, file uploads, and network requests.\n\nBy mastering Cypress fundamentals, you'll be able to create fast, reliable E2E tests that provide confidence in your application's functionality.",
+    "code": {
+      "example": "// Basic Cypress test structure\n\ndescribe('Login Feature', () => {\n  beforeEach(() => {\n    // Visit the login page before each test\n    cy.visit('/login');\n  });\n\n  it('successfully logs in with valid credentials', () => {\n    // Arrange - Fill in login form\n    cy.get('[data-cy=\"email\"]').type('user@example.com');\n    cy.get('[data-cy=\"password\"]').type('password123');\n    \n    // Act - Submit the form\n    cy.get('[data-cy=\"login-button\"]').click();\n    \n    // Assert - Verify successful login\n    cy.url().should('include', '/dashboard');\n    cy.get('[data-cy=\"welcome-message\"]').should('contain', 'Welcome');\n    cy.get('[data-cy=\"user-menu\"]').should('be.visible');\n  });\n\n  it('shows error message with invalid credentials', () => {\n    // Arrange - Fill in login form with invalid data\n    cy.get('[data-cy=\"email\"]').type('invalid@example.com');\n    cy.get('[data-cy=\"password\"]').type('wrongpassword');\n    \n    // Act - Submit the form\n    cy.get('[data-cy=\"login-button\"]').click();\n    \n    // Assert - Verify error message\n    cy.get('[data-cy=\"error-message\"]').should('be.visible')\n      .and('contain', 'Invalid credentials');\n    cy.url().should('include', '/login'); // Should stay on login page\n  });\n\n  it('requires email and password fields to be filled', () => {\n    // Act - Try to submit empty form\n    cy.get('[data-cy=\"login-button\"]').click();\n    \n    // Assert - Verify validation messages\n    cy.get('[data-cy=\"email-error\"]').should('be.visible');\n    cy.get('[data-cy=\"password-error\"]').should('be.visible');\n  });\n});\n\n// Key Cypress features demonstrated:\n// 1. Automatic waiting - No need for explicit waits\n// 2. Retry-ability - Commands retry until they pass or timeout\n// 3. Time-travel debugging - Click commands in test runner to see app state\n// 4. Data attributes for stable selectors",
+      "explanation": "This example demonstrates core Cypress testing patterns including test structure with describe/it blocks, beforeEach hooks for setup, and the Arrange-Act-Assert pattern. The test uses Cypress's automatic waiting mechanisms - when you use cy.get(), Cypress automatically waits for the element to appear and be interactable. The data-cy attributes provide stable selectors that won't break when CSS classes change. Each assertion demonstrates different aspects of Cypress's capabilities, from URL verification to content checking.",
+      "language": "javascript"
+    },
+    "pitfalls": [
+      {
+        "mistake": "Using cy.wait() with static timeouts instead of automatic waiting",
+        "solution": "Rely on Cypress's automatic waiting and retry mechanisms, only using cy.wait() for specific network timing scenarios",
+        "severity": "high"
+      },
+      {
+        "mistake": "Using unreliable selectors like CSS classes that may change",
+        "solution": "Use data attributes specifically for testing (data-cy) or other stable selectors",
+        "severity": "high"
+      },
+      {
+        "mistake": "Writing tests that depend on previous tests (not isolated)",
+        "solution": "Ensure each test can run independently by using beforeEach to set up required state",
+        "severity": "medium"
+      }
+    ],
+    "exercises": [
+      {
+        "title": "Create Cypress Tests for a Shopping Cart Feature",
+        "description": "Write comprehensive Cypress tests for adding items to a shopping cart and proceeding to checkout.",
+        "checkpoints": [
+          "Create tests for adding single and multiple items to cart",
+          "Test updating item quantities in the cart",
+          "Verify cart total calculations are correct",
+          "Test removing items from the cart",
+          "Implement checkout flow validation"
+        ]
+      }
+    ],
+    "next": [
+      "e2e-testing-lesson-3"
+    ],
+    "estimatedMinutes": 75,
+    "difficulty": "Intermediate",
+    "tags": [
+      "cypress",
+      "frameworks",
+      "automatic-waiting",
+      "debugging"
+    ],
+    "lastUpdated": "2025-10-09T10:00:00.000Z",
+    "version": "1.0.0"
+  },
+  {
+    "id": "e2e-testing-lesson-3",
+    "moduleSlug": "e2e-testing",
+    "title": "Playwright Essentials",
+    "order": 3,
+    "objectives": [
+      "Understand the core features and architecture of Playwright",
+      "Learn to write tests for multiple browsers with a single API",
+      "Master Playwright's auto-waiting and retry mechanisms",
+      "Implement advanced testing scenarios with Playwright"
+    ],
+    "intro": "Playwright is a modern end-to-end testing framework that enables reliable testing across all modern browsers with a single API. Developed by Microsoft, Playwright addresses many limitations of earlier testing frameworks and provides powerful features for testing modern web applications.\n\nIn this lesson, you'll learn about Playwright's architecture and how it differs from other E2E testing frameworks. You'll understand the benefits of Playwright's multi-browser support, which allows you to test your application on Chromium, Firefox, and WebKit (Safari) using the same test code.\n\nYou'll explore Playwright's powerful auto-waiting mechanisms that automatically wait for elements to be ready before interacting with them. This eliminates flaky tests caused by timing issues and makes tests more reliable.\n\nThe lesson will cover advanced Playwright features like network interception, which allows you to mock API responses and test different scenarios without modifying your application code. You'll also learn about Playwright's powerful locator strategies and how to create robust selectors.\n\nYou'll understand how to handle complex testing scenarios like file uploads, drag and drop interactions, and testing applications with complex UI components like calendars and rich text editors.\n\nBy mastering Playwright essentials, you'll be able to create fast, reliable tests that work across all major browsers and handle complex testing scenarios.",
+    "code": {
+      "example": "// Playwright test with multiple browser support\nconst { test, expect } = require('@playwright/test');\n\n// This test will run on Chromium, Firefox, and WebKit\ntest('user can search for products', async ({ page }) => {\n  // Navigate to the homepage\n  await page.goto('/');\n  \n  // Search for a product\n  await page.fill('[data-testid=\"search-input\"]', 'laptop');\n  await page.click('[data-testid=\"search-button\"]');\n  \n  // Wait for search results and verify\n  await expect(page.locator('[data-testid=\"search-results\"]'))\n    .toBeVisible();\n  \n  // Verify at least one result is shown\n  const resultsCount = await page\n    .locator('[data-testid=\"product-card\"]')\n    .count();\n  expect(resultsCount).toBeGreaterThan(0);\n  \n  // Verify first product has expected elements\n  const firstProduct = page.locator('[data-testid=\"product-card\"]').first();\n  await expect(firstProduct.locator('[data-testid=\"product-title\"]'))\n    .toBeVisible();\n  await expect(firstProduct.locator('[data-testid=\"product-price\"]'))\n    .toBeVisible();\n});\n\n// Advanced Playwright features\n\ntest('handle API mocking for error scenarios', async ({ page }) => {\n  // Mock API response to simulate error\n  await page.route('**/api/products/**', route => {\n    route.fulfill({\n      status: 500,\n      contentType: 'application/json',\n      body: JSON.stringify({ error: 'Server error' })\n    });\n  });\n  \n  // Navigate to products page\n  await page.goto('/products');\n  \n  // Verify error message is displayed\n  await expect(page.locator('[data-testid=\"error-message\"]'))\n    .toBeVisible()\n    .and\n    .toContainText('Server error');\n  \n  // Verify retry button is available\n  await expect(page.locator('[data-testid=\"retry-button\"]'))\n    .toBeVisible();\n});\n\n// Key Playwright features demonstrated:\n// 1. Cross-browser testing with single API\n// 2. Auto-waiting for elements\n// 3. Network interception and mocking\n// 4. Chained locators for complex element selection",
+      "explanation": "This example demonstrates key Playwright features including cross-browser testing capabilities and API mocking. The first test shows how Playwright's auto-waiting works - when you use await expect().toBeVisible(), Playwright automatically waits for the element to appear. The second test demonstrates network interception, where we mock an API response to test error handling scenarios without needing to modify the actual application. Playwright's locator chaining allows for precise element selection even in complex UIs.",
+      "language": "javascript"
+    },
+    "pitfalls": [
+      {
+        "mistake": "Not leveraging Playwright's network interception capabilities",
+        "solution": "Use page.route() to mock API responses and test various scenarios including error conditions",
+        "severity": "high"
+      },
+      {
+        "mistake": "Using brittle selectors that break with UI changes",
+        "solution": "Use data-testid attributes or other stable selectors, and leverage Playwright's robust locator strategies",
+        "severity": "high"
+      },
+      {
+        "mistake": "Writing tests that don't take advantage of cross-browser testing",
+        "solution": "Configure tests to run on multiple browsers to catch browser-specific issues early",
+        "severity": "medium"
+      }
+    ],
+    "exercises": [
+      {
+        "title": "Implement Playwright Tests for a File Upload Feature",
+        "description": "Create comprehensive Playwright tests for a file upload feature with validation and error handling.",
+        "checkpoints": [
+          "Test uploading valid file types and sizes",
+          "Verify upload progress indicators work correctly",
+          "Test error handling for invalid file types",
+          "Implement tests for large file upload scenarios",
+          "Verify uploaded files are properly processed and displayed"
+        ]
+      }
+    ],
+    "next": [
+      "e2e-testing-lesson-4"
+    ],
+    "estimatedMinutes": 75,
+    "difficulty": "Intermediate",
+    "tags": [
+      "playwright",
+      "cross-browser",
+      "network-interception",
+      "locators"
+    ],
+    "lastUpdated": "2025-10-09T10:00:00.000Z",
+    "version": "1.0.0"
+  },
+  {
+    "id": "e2e-testing-lesson-4",
+    "moduleSlug": "e2e-testing",
+    "title": "Test Organization and Page Objects",
+    "order": 4,
+    "objectives": [
+      "Learn to organize E2E tests using the Page Object Model pattern",
+      "Implement reusable components and utilities for test code",
+      "Structure test suites for maintainability and scalability",
+      "Apply best practices for test data management"
+    ],
+    "intro": "As your E2E test suite grows, proper organization becomes crucial for maintainability and scalability. The Page Object Model (POM) is a design pattern that creates an object repository for web UI elements, reducing code duplication and making tests more readable and maintainable.\n\nIn this lesson, you'll learn how to implement the Page Object Model pattern with modern E2E testing frameworks. You'll understand how to structure your test code to maximize reusability and minimize maintenance overhead.\n\nYou'll explore strategies for managing test data effectively, including using factories for generating consistent test data and implementing cleanup mechanisms to ensure test isolation.\n\nThe lesson will cover advanced organizational patterns like component objects for reusable UI components and service objects for encapsulating business logic. You'll learn how to structure your test directories and files for optimal navigation and maintenance.\n\nYou'll also understand how to implement configuration management for different environments (development, staging, production) and how to handle secrets and sensitive data in test environments.\n\nBy mastering test organization, you'll create E2E test suites that scale effectively with your application and remain maintainable over time.",
+    "code": {
+      "example": "// Page Object Model implementation for a login page\n\n// LoginPage.js\nexport class LoginPage {\n  constructor(page) {\n    this.page = page;\n    this.emailInput = page.locator('[data-testid=\"email-input\"]');\n    this.passwordInput = page.locator('[data-testid=\"password-input\"]');\n    this.loginButton = page.locator('[data-testid=\"login-button\"]');\n    this.errorMessage = page.locator('[data-testid=\"error-message\"]');\n  }\n\n  async navigate() {\n    await this.page.goto('/login');\n  }\n\n  async login(email, password) {\n    await this.emailInput.fill(email);\n    await this.passwordInput.fill(password);\n    await this.loginButton.click();\n  }\n\n  async loginWithRedirect(email, password) {\n    await this.login(email, password);\n    // Wait for redirect to complete\n    await this.page.waitForURL('**/dashboard');\n    // Return new page object for the next page\n    return new DashboardPage(this.page);\n  }\n}\n\n// DashboardPage.js\nexport class DashboardPage {\n  constructor(page) {\n    this.page = page;\n    this.welcomeMessage = page.locator('[data-testid=\"welcome-message\"]');\n    this.userMenu = page.locator('[data-testid=\"user-menu\"]');\n  }\n\n  async getWelcomeText() {\n    return await this.welcomeMessage.textContent();\n  }\n\n  async isUserMenuVisible() {\n    return await this.userMenu.isVisible();\n  }\n}\n\n// login.test.js\nimport { test, expect } from '@playwright/test';\nimport { LoginPage } from '../pages/LoginPage';\nimport { DashboardPage } from '../pages/DashboardPage';\n\ntest('successful login redirects to dashboard', async ({ page }) => {\n  const loginPage = new LoginPage(page);\n  await loginPage.navigate();\n  \n  // Using page object methods\n  const dashboardPage = await loginPage.loginWithRedirect(\n    'user@example.com', \n    'password123'\n  );\n  \n  // Assertions using page object\n  expect(await dashboardPage.getWelcomeText()).toContain('Welcome');\n  expect(await dashboardPage.isUserMenuVisible()).toBe(true);\n});\n\n// Key benefits of Page Object Model:\n// 1. Centralized element locators - change in one place\n// 2. Reusable methods - loginWithRedirect can be used in multiple tests\n// 3. Improved readability - test logic is clear and focused\n// 4. Easier maintenance - UI changes only require page object updates",
+      "explanation": "This example demonstrates the Page Object Model pattern with Playwright. The LoginPage and DashboardPage classes encapsulate the UI elements and interactions for each page, making the test code more readable and maintainable. When UI elements change, you only need to update the page objects rather than every test that uses those elements. The loginWithRedirect method shows how page objects can return other page objects, creating a fluent API for navigating through the application.",
+      "language": "javascript"
+    },
+    "pitfalls": [
+      {
+        "mistake": "Creating page objects that are too large or try to do too much",
+        "solution": "Keep page objects focused on specific pages or components, and break complex pages into multiple objects",
+        "severity": "high"
+      },
+      {
+        "mistake": "Hard-coding test data in page objects",
+        "solution": "Use parameters for test data and implement data factories for generating consistent test data",
+        "severity": "high"
+      },
+      {
+        "mistake": "Not organizing test files logically",
+        "solution": "Use a clear directory structure (pages, tests, utils, data) and consistent naming conventions",
+        "severity": "medium"
+      }
+    ],
+    "exercises": [
+      {
+        "title": "Implement Page Objects for an E-commerce Application",
+        "description": "Create page objects for a complete e-commerce flow including product browsing, cart management, and checkout.",
+        "checkpoints": [
+          "Create page objects for homepage, product listing, product detail, cart, and checkout pages",
+          "Implement reusable methods for common actions like adding to cart",
+          "Design component objects for shared UI elements like headers and footers",
+          "Structure the page object files in a logical directory hierarchy",
+          "Write tests that use the page objects to verify the complete purchase flow"
+        ]
+      }
+    ],
+    "next": [
+      "e2e-testing-lesson-5"
+    ],
+    "estimatedMinutes": 90,
+    "difficulty": "Intermediate",
+    "tags": [
+      "page-object-model",
+      "test-organization",
+      "reusability",
+      "maintainability"
+    ],
+    "lastUpdated": "2025-10-09T10:00:00.000Z",
+    "version": "1.0.0"
+  },
+  {
+    "id": "e2e-testing-lesson-5",
+    "moduleSlug": "e2e-testing",
+    "title": "Handling Authentication and Sessions",
+    "order": 5,
+    "objectives": [
+      "Learn strategies for handling authentication in E2E tests",
+      "Implement session management to avoid repeated logins",
+      "Master token-based authentication testing",
+      "Handle complex authentication flows like OAuth and SSO"
+    ],
+    "intro": "Authentication is a critical aspect of most web applications, and properly testing authentication flows is essential for ensuring application security and user experience. However, authentication can significantly slow down E2E tests if not handled correctly.\n\nIn this lesson, you'll learn various strategies for handling authentication in E2E tests, from simple username/password flows to complex OAuth and SSO implementations. You'll understand how to balance test realism with execution speed.\n\nYou'll explore session management techniques that allow tests to reuse authenticated sessions, dramatically reducing test execution time while maintaining test isolation. You'll learn about browser storage mechanisms and how to properly manage authentication tokens.\n\nThe lesson will cover advanced authentication scenarios including multi-factor authentication, social login integrations, and token refresh mechanisms. You'll understand how to test error conditions and edge cases in authentication flows.\n\nYou'll also learn about security considerations in E2E testing, including how to handle sensitive credentials and how to test authentication without exposing real user accounts or production systems.\n\nBy mastering authentication handling, you'll create efficient, secure E2E tests that properly validate your application's authentication mechanisms.",
+    "code": {
+      "example": "// Authentication strategies in Playwright\n\nimport { test, expect } from '@playwright/test';\n\n// Strategy 1: Direct login for each test (slower but more realistic)\ntest('user can access protected page after login', async ({ page }) => {\n  // Navigate to login page\n  await page.goto('/login');\n  \n  // Perform login\n  await page.fill('[data-testid=\"email\"]', 'user@example.com');\n  await page.fill('[data-testid=\"password\"]', 'password123');\n  await page.click('[data-testid=\"login-button\"]');\n  \n  // Verify successful login\n  await expect(page).toHaveURL('/dashboard');\n  \n  // Perform actions that require authentication\n  await page.click('[data-testid=\"profile-link\"]');\n  await expect(page.locator('[data-testid=\"profile-page\"]')).toBeVisible();\n});\n\n// Strategy 2: Session storage reuse (faster)\nconst authFile = 'auth.json';\n\ntest('setup authenticated session', async ({ page }) => {\n  // Perform login\n  await page.goto('/login');\n  await page.fill('[data-testid=\"email\"]', 'user@example.com');\n  await page.fill('[data-testid=\"password\"]', 'password123');\n  await page.click('[data-testid=\"login-button\"]');\n  \n  // Wait for login to complete\n  await page.waitForURL('/dashboard');\n  \n  // Save storage state\n  await page.context().storageState({ path: authFile });\n});\n\n// Reuse authenticated state in other tests\ntest.use({ storageState: authFile });\n\ntest('access profile page with saved session', async ({ page }) => {\n  // Start already authenticated\n  await page.goto('/profile');\n  \n  // Perform actions that require authentication\n  await expect(page.locator('[data-testid=\"profile-page\"]')).toBeVisible();\n});\n\n// Strategy 3: API-based authentication (fastest for token-based auth)\ntest('API-based login for token authentication', async ({ request }) => {\n  // Get authentication token via API\n  const loginResponse = await request.post('/api/login', {\n    data: {\n      email: 'user@example.com',\n      password: 'password123'\n    }\n  });\n  \n  expect(loginResponse.ok()).toBeTruthy();\n  \n  const { token } = await loginResponse.json();\n  \n  // Use token in subsequent API requests\n  const profileResponse = await request.get('/api/profile', {\n    headers: {\n      'Authorization': `Bearer ${token}`\n    }\n  });\n  \n  expect(profileResponse.ok()).toBeTruthy();\n});\n\n// Key authentication strategies:\n// 1. Full UI login - Most realistic but slowest\n// 2. Session reuse - Good balance of speed and realism\n// 3. API authentication - Fastest for token-based systems",
+      "explanation": "This example demonstrates three different authentication strategies with increasing levels of efficiency. The first approach performs a full UI login for each test, which is the most realistic but slowest. The second approach logs in once and saves the session state, then reuses it in subsequent tests - a good balance of speed and realism. The third approach bypasses the UI entirely and authenticates via API, which is fastest for token-based authentication but doesn't test the login UI itself. Each strategy has its place depending on what you're trying to test.",
+      "language": "javascript"
+    },
+    "pitfalls": [
+      {
+        "mistake": "Performing full login for every test, causing unnecessarily slow test execution",
+        "solution": "Use session reuse or API-based authentication for tests that don't specifically need to test the login flow",
+        "severity": "high"
+      },
+      {
+        "mistake": "Hard-coding credentials in test code",
+        "solution": "Use environment variables or secure credential management systems for authentication data",
+        "severity": "high"
+      },
+      {
+        "mistake": "Not properly cleaning up authentication state between tests",
+        "solution": "Implement proper test isolation with beforeEach/afterEach hooks to ensure tests don't interfere with each other",
+        "severity": "medium"
+      }
+    ],
+    "exercises": [
+      {
+        "title": "Implement Authentication Strategies for a Social Media App",
+        "description": "Create E2E tests for an application with email/password login, Google OAuth, and session management.",
+        "checkpoints": [
+          "Implement UI-based login tests for the main login flow",
+          "Create session reuse setup for faster authenticated tests",
+          "Test OAuth integration with Google login",
+          "Implement tests for session timeout and token refresh",
+          "Verify proper logout functionality and session cleanup"
+        ]
+      }
+    ],
+    "next": [
+      "e2e-testing-lesson-6"
+    ],
+    "estimatedMinutes": 90,
+    "difficulty": "Intermediate",
+    "tags": [
+      "authentication",
+      "session-management",
+      "oauth",
+      "security"
+    ],
+    "lastUpdated": "2025-10-09T10:00:00.000Z",
+    "version": "1.0.0"
+  },
+  {
+    "id": "e2e-testing-lesson-6",
+    "moduleSlug": "e2e-testing",
+    "title": "Network Interception and API Mocking",
+    "order": 6,
+    "objectives": [
+      "Master network interception techniques for E2E testing",
+      "Learn to mock API responses for reliable testing",
+      "Implement stubbing for external services and dependencies",
+      "Handle complex network scenarios and error conditions"
+    ],
+    "intro": "Modern web applications heavily rely on APIs and external services, making network interception and API mocking essential skills for effective E2E testing. These techniques allow you to test various scenarios without depending on actual backend services or external systems.\n\nIn this lesson, you'll learn how to intercept network requests and mock responses using modern E2E testing frameworks. You'll understand how to create reliable tests that aren't affected by backend issues or network latency.\n\nYou'll explore advanced mocking scenarios including simulating different API response times, error conditions, and edge cases that are difficult to reproduce in real environments. You'll learn how to mock external services like payment gateways, social media APIs, and third-party integrations.\n\nThe lesson will cover strategies for handling authentication tokens in mocked requests and how to maintain consistency between mocked data and UI expectations. You'll understand how to create realistic mock data that matches your application's actual API contracts.\n\nYou'll also learn about the limitations of API mocking and when it's better to test against real services. You'll understand how to balance test reliability with test realism.\n\nBy mastering network interception and API mocking, you'll create faster, more reliable E2E tests that can validate complex application behavior under various conditions.",
+    "code": {
+      "example": "// Network interception and API mocking in Playwright\n\nimport { test, expect } from '@playwright/test';\n\n// Mock successful API response\ntest('display user profile with mocked API data', async ({ page }) => {\n  // Intercept API request and mock response\n  await page.route('**/api/user/profile', route => {\n    route.fulfill({\n      status: 200,\n      contentType: 'application/json',\n      body: JSON.stringify({\n        id: 123,\n        name: 'John Doe',\n        email: 'john@example.com',\n        avatar: '/images/avatar.jpg',\n        membershipLevel: 'premium'\n      })\n    });\n  });\n  \n  // Navigate to profile page\n  await page.goto('/profile');\n  \n  // Verify UI displays mocked data\n  await expect(page.locator('[data-testid=\"user-name\"]'))\n    .toHaveText('John Doe');\n  await expect(page.locator('[data-testid=\"user-email\"]'))\n    .toHaveText('john@example.com');\n  await expect(page.locator('[data-testid=\"membership-badge\"]'))\n    .toHaveText('premium');\n});\n\n// Mock API error response\ntest('handle API error gracefully', async ({ page }) => {\n  // Mock 500 error response\n  await page.route('**/api/user/profile', route => {\n    route.fulfill({\n      status: 500,\n      contentType: 'application/json',\n      body: JSON.stringify({\n        error: 'Internal server error'\n      })\n    });\n  });\n  \n  // Navigate to profile page\n  await page.goto('/profile');\n  \n  // Verify error handling\n  await expect(page.locator('[data-testid=\"error-message\"]'))\n    .toBeVisible()\n    .and\n    .toContainText('Unable to load profile');\n  await expect(page.locator('[data-testid=\"retry-button\"]'))\n    .toBeVisible();\n});\n\n// Mock slow API response\ntest('handle loading states properly', async ({ page }) => {\n  // Mock slow API response (3 seconds)\n  await page.route('**/api/user/profile', async route => {\n    await page.waitForTimeout(3000);\n    route.fulfill({\n      status: 200,\n      contentType: 'application/json',\n      body: JSON.stringify({\n        name: 'John Doe',\n        email: 'john@example.com'\n      })\n    });\n  });\n  \n  // Navigate to profile page\n  await page.goto('/profile');\n  \n  // Verify loading state is displayed\n  await expect(page.locator('[data-testid=\"loading-spinner\"]'))\n    .toBeVisible();\n  \n  // Verify content appears after loading\n  await expect(page.locator('[data-testid=\"user-name\"]'))\n    .toBeVisible();\n});\n\n// Inspect and modify real requests\ntest('add authentication header to API requests', async ({ page }) => {\n  // Intercept and modify requests\n  await page.route('**/api/**', route => {\n    const headers = {\n      ...route.request().headers(),\n      'Authorization': 'Bearer mock-token-123'\n    };\n    route.continue({ headers });\n  });\n  \n  // Perform actions that trigger API calls\n  await page.goto('/dashboard');\n  // API calls will now include the mock authorization header\n});",
+      "explanation": "This example demonstrates various network interception and mocking techniques. The first test shows how to mock a successful API response with specific data, allowing you to test the UI without depending on a real backend. The second test demonstrates error handling by mocking a 500 server error response. The third test shows how to simulate slow network conditions to verify loading states. The fourth example demonstrates how to intercept and modify real requests, such as adding authentication headers. These techniques make tests more reliable and allow you to test scenarios that would be difficult to reproduce in a real environment.",
+      "language": "javascript"
+    },
+    "pitfalls": [
+      {
+        "mistake": "Mocking API responses that don't match real API contracts",
+        "solution": "Ensure mocked responses match the actual API structure and data types to avoid false positives",
+        "severity": "high"
+      },
+      {
+        "mistake": "Over-mocking and not testing against real services when appropriate",
+        "solution": "Use mocking for specific scenarios but also have tests that run against real services for integration validation",
+        "severity": "high"
+      },
+      {
+        "mistake": "Not handling all possible API response scenarios",
+        "solution": "Mock success, error, timeout, and edge case scenarios to ensure comprehensive test coverage",
+        "severity": "medium"
+      }
+    ],
+    "exercises": [
+      {
+        "title": "Implement API Mocking for a Weather Application",
+        "description": "Create E2E tests for a weather app that displays current conditions and forecasts using API mocking.",
+        "checkpoints": [
+          "Mock successful weather API responses with realistic data",
+          "Test error handling for API failures and network issues",
+          "Implement mocking for different weather conditions (sunny, rainy, stormy)",
+          "Test loading states and UI transitions",
+          "Verify proper display of temperature units and formatting"
+        ]
+      }
+    ],
+    "next": [
+      "e2e-testing-lesson-7"
+    ],
+    "estimatedMinutes": 90,
+    "difficulty": "Intermediate",
+    "tags": [
+      "network-interception",
+      "api-mocking",
+      "error-handling",
+      "performance"
+    ],
+    "lastUpdated": "2025-10-09T10:00:00.000Z",
+    "version": "1.0.0"
+  },
+  {
+    "id": "e2e-testing-lesson-7",
+    "moduleSlug": "e2e-testing",
+    "title": "Cross-Browser and Visual Testing",
+    "order": 7,
+    "objectives": [
+      "Learn cross-browser testing strategies and implementation",
+      "Master visual regression testing techniques",
+      "Implement responsive design testing across devices",
+      "Handle browser-specific issues and compatibility"
+    ],
+    "intro": "Modern web applications must work consistently across different browsers, devices, and screen sizes. Cross-browser testing and visual regression testing are essential for ensuring a consistent user experience regardless of how users access your application.\n\nIn this lesson, you'll learn how to implement effective cross-browser testing strategies using modern E2E testing frameworks. You'll understand the differences between various browsers and how to handle browser-specific quirks and compatibility issues.\n\nYou'll explore visual regression testing techniques that automatically detect unintended visual changes in your application. You'll learn how to set up visual testing workflows and handle false positives that can occur with visual comparisons.\n\nThe lesson will cover responsive design testing across different screen sizes and devices. You'll understand how to simulate various viewport sizes and device characteristics to ensure your application works well on mobile, tablet, and desktop.\n\nYou'll also learn about performance considerations in cross-browser testing and how to optimize test execution across multiple browser environments. You'll understand when to test on real browsers versus when emulators are sufficient.\n\nBy mastering cross-browser and visual testing, you'll ensure your application provides a consistent, high-quality experience for all users regardless of their browser or device preferences.",
+    "code": {
+      "example": "// Cross-browser testing with Playwright\n\nimport { test, expect } from '@playwright/test';\n\n// This test will automatically run on Chromium, Firefox, and WebKit\ntest('navigation works correctly across browsers', async ({ page }) => {\n  await page.goto('/');\n  \n  // Click navigation link\n  await page.click('[data-testid=\"products-link\"]');\n  \n  // Verify navigation worked\n  await expect(page).toHaveURL('/products');\n  await expect(page.locator('[data-testid=\"products-page\"]')).toBeVisible();\n});\n\n// Test specific browser\ntest('check browser-specific feature support', async ({ page, browserName }) => {\n  await page.goto('/');\n  \n  // Different behavior based on browser\n  if (browserName === 'chromium') {\n    // Chromium-specific test\n    await expect(page.locator('[data-testid=\"web-share-button\"]')).toBeVisible();\n  } else {\n    // Other browsers might not support this feature\n    await expect(page.locator('[data-testid=\"web-share-button\"]')).toBeHidden();\n  }\n});\n\n// Visual regression testing\nimport { test, expect } from '@playwright/test';\n\ntest('homepage visual regression', async ({ page }) => {\n  await page.goto('/');\n  \n  // Take screenshot and compare with baseline\n  await expect(page).toHaveScreenshot('homepage.png', {\n    maxDiffPixelRatio: 0.01\n  });\n});\n\n// Responsive design testing\ntest('mobile navigation works correctly', async ({ page }) => {\n  // Set viewport to mobile size\n  await page.setViewportSize({ width: 375, height: 667 });\n  \n  await page.goto('/');\n  \n  // Mobile-specific elements should be visible\n  await expect(page.locator('[data-testid=\"mobile-menu-button\"]')).toBeVisible();\n  \n  // Desktop elements should be hidden\n  await expect(page.locator('[data-testid=\"desktop-nav\"]')).toBeHidden();\n  \n  // Test mobile menu interaction\n  await page.click('[data-testid=\"mobile-menu-button\"]');\n  await expect(page.locator('[data-testid=\"mobile-menu\"]')).toBeVisible();\n});\n\n// Test across multiple viewports\ntest('hero section responsive behavior', async ({ page }) => {\n  const viewports = [\n    { name: 'mobile', width: 375, height: 667 },\n    { name: 'tablet', width: 768, height: 1024 },\n    { name: 'desktop', width: 1280, height: 800 }\n  ];\n  \n  for (const viewport of viewports) {\n    await page.setViewportSize({ \n      width: viewport.width, \n      height: viewport.height \n    });\n    \n    await page.goto('/');\n    \n    // Take viewport-specific screenshot\n    await expect(page).toHaveScreenshot(`hero-${viewport.name}.png`, {\n      maxDiffPixelRatio: 0.01\n    });\n  }\n});",
+      "explanation": "This example demonstrates cross-browser and visual testing techniques. The first test will automatically run on all supported browsers (Chromium, Firefox, WebKit) ensuring consistent behavior. The second test shows how to write browser-specific tests when needed. The third test demonstrates visual regression testing by comparing screenshots with baselines. The fourth test shows responsive design testing by setting different viewport sizes. The final test demonstrates testing across multiple viewports in a single test, which is useful for ensuring responsive behavior across different device sizes.",
+      "language": "javascript"
+    },
+    "pitfalls": [
+      {
+        "mistake": "Testing on too many browser combinations, causing slow test execution",
+        "solution": "Focus on browsers that represent your user base and use risk-based testing to prioritize combinations",
+        "severity": "high"
+      },
+      {
+        "mistake": "Ignoring visual regression testing false positives",
+        "solution": "Configure appropriate thresholds and review visual diffs carefully to distinguish real issues from acceptable changes",
+        "severity": "high"
+      },
+      {
+        "mistake": "Not testing on actual mobile devices when targeting mobile users",
+        "solution": "Use device emulators for development but test on real devices for critical user flows",
+        "severity": "medium"
+      }
+    ],
+    "exercises": [
+      {
+        "title": "Implement Cross-Browser Testing for a Dashboard Application",
+        "description": "Create comprehensive cross-browser and visual tests for a data dashboard with charts and graphs.",
+        "checkpoints": [
+          "Test dashboard functionality across Chromium, Firefox, and WebKit",
+          "Implement visual regression tests for chart rendering",
+          "Test responsive behavior on mobile, tablet, and desktop viewports",
+          "Verify data visualization consistency across browsers",
+          "Handle browser-specific issues in chart libraries"
+        ]
+      }
+    ],
+    "next": [
+      "e2e-testing-lesson-8"
+    ],
+    "estimatedMinutes": 90,
+    "difficulty": "Intermediate",
+    "tags": [
+      "cross-browser",
+      "visual-testing",
+      "responsive-design",
+      "compatibility"
+    ],
+    "lastUpdated": "2025-10-09T10:00:00.000Z",
+    "version": "1.0.0"
+  },
+  {
+    "id": "e2e-testing-lesson-8",
+    "moduleSlug": "e2e-testing",
+    "title": "Performance and Reliability Optimization",
+    "order": 8,
+    "objectives": [
+      "Learn techniques for optimizing E2E test performance",
+      "Master strategies for creating reliable, non-flaky tests",
+      "Implement parallel test execution and resource management",
+      "Handle test data and environment setup efficiently"
+    ],
+    "intro": "As E2E test suites grow, performance and reliability become critical concerns. Slow tests can bottleneck development workflows, while flaky tests can erode confidence in the entire testing process. Optimizing both performance and reliability is essential for maintaining effective E2E testing practices.\n\nIn this lesson, you'll learn techniques for identifying and addressing performance bottlenecks in your E2E tests. You'll understand how to profile test execution and optimize resource usage to reduce test run times.\n\nYou'll explore strategies for creating reliable tests that consistently pass or fail based on actual application behavior rather than timing issues or environmental factors. You'll learn about common causes of test flakiness and how to address them.\n\nThe lesson will cover parallel test execution strategies that maximize resource utilization while maintaining test isolation. You'll understand how to configure test runners for optimal parallelization and how to handle resource contention.\n\nYou'll also learn about advanced reliability techniques including automatic retries, test quarantine patterns, and monitoring for flaky tests. You'll understand how to balance test speed with test reliability.\n\nBy mastering performance and reliability optimization, you'll create E2E test suites that provide fast feedback while maintaining the confidence needed for continuous deployment.",
+    "code": {
+      "example": "// Performance and reliability optimization techniques\n\nimport { test, expect } from '@playwright/test';\n\n// Reliable element interaction with proper waits\ntest('reliable form submission', async ({ page }) => {\n  await page.goto('/contact');\n  \n  // Instead of arbitrary waits, use auto-waiting\n  await page.fill('[data-testid=\"name\"]', 'John Doe');\n  await page.fill('[data-testid=\"email\"]', 'john@example.com');\n  await page.fill('[data-testid=\"message\"]', 'Test message');\n  \n  // Wait for button to be enabled before clicking\n  const submitButton = page.locator('[data-testid=\"submit-button\"]');\n  await expect(submitButton).toBeEnabled();\n  await submitButton.click();\n  \n  // Wait for success message\n  await expect(page.locator('[data-testid=\"success-message\"]'))\n    .toBeVisible({ timeout: 10000 }); // Extended timeout for network operations\n});\n\n// Test data management with factories\nclass UserFactory {\n  static create(userData = {}) {\n    return {\n      id: Date.now(), // Unique ID\n      name: userData.name || `User ${Date.now()}`,\n      email: userData.email || `user${Date.now()}@example.com`,\n      ...userData\n    };\n  }\n}\n\ntest('create user with factory data', async ({ page }) => {\n  const testUser = UserFactory.create({\n    name: 'Test User',\n    email: 'test@example.com'\n  });\n  \n  // Use factory data in test\n  await page.goto('/register');\n  await page.fill('[data-testid=\"name\"]', testUser.name);\n  await page.fill('[data-testid=\"email\"]', testUser.email);\n  // ... rest of test\n});\n\n// Parallel execution configuration (playwright.config.js)\n/*\nconst config = {\n  // Run tests in parallel\n  workers: process.env.CI ? 2 : undefined, // Fewer workers in CI\n  \n  // Use sharding for large test suites\n  shard: process.env.SHARD ? {\n    total: parseInt(process.env.SHARD_TOTAL || '1'),\n    current: parseInt(process.env.SHARD_INDEX || '1')\n  } : undefined,\n  \n  // Retry failed tests\n  retries: process.env.CI ? 2 : 0,\n  \n  // Timeout configuration\n  timeout: 30000, // 30 seconds per test\n  expect: {\n    timeout: 10000 // 10 seconds for assertions\n  },\n  \n  use: {\n    // Headless in CI, headed locally for debugging\n    headless: !!process.env.CI,\n    \n    // Screenshot on failure\n    screenshot: 'only-on-failure',\n    \n    // Video recording\n    video: 'retain-on-failure'\n  }\n};\n\nexport default config;\n*/\n\n// Test isolation with beforeEach\ntest.beforeEach(async ({ page }) => {\n  // Clear browser storage\n  await page.context().clearCookies();\n  await page.evaluate(() => localStorage.clear());\n  \n  // Reset database or use test-specific data\n  // This ensures tests don't interfere with each other\n});\n\n// Handling flaky tests with proper waits\ntest('handle dynamic content loading', async ({ page }) => {\n  await page.goto('/dashboard');\n  \n  // Wait for specific content to load rather than arbitrary timeouts\n  await page.waitForSelector('[data-testid=\"dashboard-content\"]', {\n    state: 'visible'\n  });\n  \n  // Or use expect with timeout\n  await expect(page.locator('[data-testid=\"welcome-message\"]'))\n    .toBeVisible({ timeout: 15000 });\n});",
+      "explanation": "This example demonstrates several performance and reliability optimization techniques. The first test shows how to use Playwright's auto-waiting features instead of arbitrary timeouts. The UserFactory class demonstrates proper test data management. The configuration example shows how to optimize parallel execution and handle retries. The beforeEach hook shows how to ensure test isolation. The final test demonstrates proper waiting strategies for dynamic content. These techniques help create fast, reliable tests that provide consistent results.",
+      "language": "javascript"
+    },
+    "pitfalls": [
+      {
+        "mistake": "Using arbitrary timeouts (cy.wait(1000)) instead of smart waiting",
+        "solution": "Use framework auto-waiting and explicit waits for specific conditions",
+        "severity": "high"
+      },
+      {
+        "mistake": "Not properly isolating tests, causing interference between test runs",
+        "solution": "Implement proper beforeEach/afterEach hooks to reset state between tests",
+        "severity": "high"
+      },
+      {
+        "mistake": "Running too many tests in parallel without considering resource constraints",
+        "solution": "Configure appropriate worker counts based on system resources and test characteristics",
+        "severity": "medium"
+      }
+    ],
+    "exercises": [
+      {
+        "title": "Optimize a Slow E2E Test Suite",
+        "description": "Identify and fix performance and reliability issues in an existing E2E test suite.",
+        "checkpoints": [
+          "Profile test execution to identify bottlenecks",
+          "Replace arbitrary waits with smart waiting strategies",
+          "Implement proper test data management with factories",
+          "Configure parallel execution for optimal resource usage",
+          "Fix flaky tests by improving reliability techniques"
+        ]
+      }
+    ],
+    "next": [
+      "e2e-testing-lesson-9"
+    ],
+    "estimatedMinutes": 90,
+    "difficulty": "Intermediate",
+    "tags": [
+      "performance",
+      "reliability",
+      "parallel-execution",
+      "test-optimization"
+    ],
+    "lastUpdated": "2025-10-09T10:00:00.000Z",
+    "version": "1.0.0"
+  },
+  {
+    "id": "e2e-testing-lesson-9",
+    "moduleSlug": "e2e-testing",
+    "title": "CI/CD Integration and Reporting",
+    "order": 9,
+    "objectives": [
+      "Learn to integrate E2E tests into CI/CD pipelines",
+      "Master test reporting and result analysis techniques",
+      "Implement quality gates and deployment controls",
+      "Handle test failures and debugging in CI environments"
+    ],
+    "intro": "Integrating E2E tests into continuous integration and continuous deployment (CI/CD) pipelines is crucial for maintaining software quality while enabling rapid delivery. Proper CI/CD integration ensures that tests provide fast feedback and that failures are properly identified and addressed.\n\nIn this lesson, you'll learn how to configure E2E tests to run effectively in CI/CD environments. You'll understand the differences between running tests locally versus in CI and how to optimize for each environment.\n\nYou'll explore various reporting mechanisms that provide actionable insights into test results and application quality. You'll learn how to configure detailed reporting that helps teams quickly identify and resolve issues.\n\nThe lesson will cover quality gate implementation that prevents problematic code from reaching production. You'll understand how to set appropriate thresholds for test pass rates, performance metrics, and other quality indicators.\n\nYou'll also learn about debugging strategies for CI environments where direct access to test execution is limited. You'll understand how to capture relevant information for troubleshooting test failures.\n\nBy mastering CI/CD integration and reporting, you'll ensure that your E2E tests provide maximum value in automated deployment workflows while maintaining high software quality standards.",
+    "code": {
+      "example": "// CI/CD integration and reporting examples\n\n// GitHub Actions workflow for E2E testing\n/*\nname: E2E Tests\n\non:\n  push:\n    branches: [ main ]\n  pull_request:\n    branches: [ main ]\n\njobs:\n  e2e-tests:\n    runs-on: ubuntu-latest\n    \n    # Services needed for testing\n    services:\n      postgres:\n        image: postgres:13\n        env:\n          POSTGRES_PASSWORD: postgres\n        options: >-\n          --health-cmd pg_isready\n          --health-interval 10s\n          --health-timeout 5s\n          --health-retries 5\n    \n    steps:\n    - uses: actions/checkout@v3\n    \n    - name: Setup Node.js\n      uses: actions/setup-node@v3\n      with:\n        node-version: '18'\n        cache: 'npm'\n    \n    - name: Install dependencies\n      run: npm ci\n    \n    - name: Install Playwright browsers\n      run: npx playwright install --with-deps\n    \n    - name: Start application\n      run: npm run start:test &\n      env:\n        DATABASE_URL: postgresql://postgres:postgres@localhost:5432/test\n    \n    - name: Wait for application\n      run: npx wait-on http://localhost:3000\n    \n    - name: Run E2E tests\n      run: npm run test:e2e\n      env:\n        CI: true\n    \n    - name: Upload test results\n      uses: actions/upload-artifact@v3\n      if: always()\n      with:\n        name: test-results\n        path: |\n          test-results/\n          screenshots/\n          videos/\n    \n    - name: Report test coverage\n      if: github.ref == 'refs/heads/main'\n      run: npm run report-coverage\n*/\n\n// Playwright configuration for CI/CD\n/*\n// playwright.config.js\nimport { defineConfig } from '@playwright/test';\n\nexport default defineConfig({\n  // CI-specific settings\n  workers: process.env.CI ? 2 : undefined,\n  retries: process.env.CI ? 2 : 0,\n  \n  // Reporting\n  reporter: [\n    ['list'], // Simple output for CI logs\n    ['html', { open: 'never' }], // HTML report for detailed analysis\n    ['json', { outputFile: 'test-results/results.json' }], // JSON for CI integration\n    ['junit', { outputFile: 'test-results/results.xml' }] // JUnit for CI systems\n  ],\n  \n  use: {\n    // Headless in CI\n    headless: !!process.env.CI,\n    \n    // Capture artifacts on failure\n    screenshot: 'only-on-failure',\n    video: 'retain-on-failure',\n    trace: 'retain-on-failure',\n    \n    // Base URL for tests\n    baseURL: process.env.BASE_URL || 'http://localhost:3000',\n    \n    // Timeout settings\n    actionTimeout: 10000,\n    navigationTimeout: 15000\n  },\n  \n  // Projects for different browsers\n  projects: [\n    {\n      name: 'chromium',\n      use: { browserName: 'chromium' }\n    },\n    {\n      name: 'firefox',\n      use: { browserName: 'firefox' }\n    },\n    {\n      name: 'webkit',\n      use: { browserName: 'webkit' }\n    }\n  ]\n});\n*/\n\n// Quality gate implementation\n/*\n// Script to check test results before deployment\nconst fs = require('fs');\n\nfunction checkTestResults() {\n  const results = JSON.parse(fs.readFileSync('test-results/results.json', 'utf8'));\n  \n  const totalTests = results.suites.reduce((total, suite) => \n    total + suite.specs.length, 0);\n  \n  const failedTests = results.suites.reduce((failed, suite) => \n    failed + suite.specs.filter(spec => spec.ok === false).length, 0);\n  \n  const passRate = ((totalTests - failedTests) / totalTests) * 100;\n  \n  console.log(`Test Results: ${totalTests} total, ${failedTests} failed, ${passRate.toFixed(2)}% pass rate`);\n  \n  // Quality gate - fail if pass rate is below threshold\n  if (passRate < 95) {\n    console.error('Quality gate failed: Test pass rate below 95%');\n    process.exit(1);\n  }\n  \n  console.log('Quality gate passed');\n}\n\ncheckTestResults();\n*/",
+      "explanation": "This example demonstrates CI/CD integration for E2E testing. The GitHub Actions workflow shows how to set up a complete testing environment with necessary services, install dependencies, start the application, and run tests. The Playwright configuration shows CI-specific settings like reduced workers, retries, and artifact capture. The quality gate script demonstrates how to programmatically check test results and prevent deployment if quality thresholds aren't met. These configurations ensure that E2E tests provide reliable feedback in automated workflows.",
+      "language": "yaml"
+    },
+    "pitfalls": [
+      {
+        "mistake": "Not capturing enough debugging information in CI environments",
+        "solution": "Configure screenshots, videos, and traces to be captured on test failures for troubleshooting",
+        "severity": "high"
+      },
+      {
+        "mistake": "Setting unrealistic quality gates that block all deployments",
+        "solution": "Set appropriate thresholds based on historical data and allow for temporary overrides when needed",
+        "severity": "high"
+      },
+      {
+        "mistake": "Running E2E tests on every commit without considering resource costs",
+        "solution": "Use selective test execution and run full suites on specific triggers like pull requests to main branch",
+        "severity": "medium"
+      }
+    ],
+    "exercises": [
+      {
+        "title": "Implement CI/CD Pipeline for E2E Testing",
+        "description": "Create a complete CI/CD pipeline that runs E2E tests and implements quality gates for deployment.",
+        "checkpoints": [
+          "Configure GitHub Actions or GitLab CI workflow for E2E testing",
+          "Set up proper reporting with multiple output formats",
+          "Implement quality gates based on test results",
+          "Configure artifact capture for debugging failed tests",
+          "Optimize pipeline for fast feedback and resource usage"
+        ]
+      }
+    ],
+    "next": [
+      "e2e-testing-lesson-10"
+    ],
+    "estimatedMinutes": 90,
+    "difficulty": "Intermediate",
+    "tags": [
+      "ci-cd",
+      "reporting",
+      "quality-gates",
+      "pipeline-integration"
+    ],
+    "lastUpdated": "2025-10-09T10:00:00.000Z",
+    "version": "1.0.0"
+  },
+  {
+    "id": "e2e-testing-lesson-10",
+    "moduleSlug": "e2e-testing",
+    "title": "Advanced Testing Patterns and Best Practices",
+    "order": 10,
+    "objectives": [
+      "Master advanced E2E testing patterns and techniques",
+      "Learn industry best practices for scalable test suites",
+      "Implement testing strategies for complex applications",
+      "Understand when and how to evolve testing approaches"
+    ],
+    "intro": "As you gain experience with E2E testing, advanced patterns and best practices become essential for maintaining effective, scalable test suites. These techniques help you handle complex testing scenarios while keeping your tests maintainable and reliable.\n\nIn this lesson, you'll learn advanced testing patterns like the Screenplay Pattern, which provides a more maintainable alternative to traditional Page Objects for complex applications. You'll understand how to structure tests for maximum reusability and minimal maintenance overhead.\n\nYou'll explore best practices for testing complex application features like real-time updates, file handling, and third-party integrations. You'll learn how to create robust tests for challenging scenarios while maintaining test performance.\n\nThe lesson will cover strategies for evolving your testing approach as your application grows and changes. You'll understand how to refactor test suites, update testing strategies, and adapt to new requirements without starting from scratch.\n\nYou'll also learn about emerging trends in E2E testing including AI-assisted testing, self-healing tests, and component-based testing approaches. You'll understand how to evaluate and adopt new techniques that provide genuine value.\n\nBy mastering advanced testing patterns and best practices, you'll create E2E test suites that scale with your application and continue to provide value as your software evolves.",
+    "code": {
+      "example": "// Advanced testing patterns and best practices\n\nimport { test, expect } from '@playwright/test';\n\n// Screenplay Pattern implementation\n// Instead of Page Objects, use Tasks and Questions\n\nclass LoginTask {\n  constructor(email, password) {\n    this.email = email;\n    this.password = password;\n  }\n  \n  async performAs(actor) {\n    await actor.page.goto('/login');\n    await actor.page.fill('[data-testid=\"email\"]', this.email);\n    await actor.page.fill('[data-testid=\"password\"]', this.password);\n    await actor.page.click('[data-testid=\"login-button\"]');\n    await actor.page.waitForURL('**/dashboard');\n  }\n}\n\nclass CurrentUserQuestion {\n  static async answeredBy(actor) {\n    return await actor.page.locator('[data-testid=\"user-menu\"]').textContent();\n  }\n}\n\nclass Actor {\n  constructor(page) {\n    this.page = page;\n  }\n  \n  async attemptsTo(task) {\n    await task.performAs(this);\n  }\n  \n  async asks(question) {\n    return await question.answeredBy(this);\n  }\n}\n\n// Using the Screenplay Pattern\ntest('user can login using Screenplay Pattern', async ({ page }) => {\n  const actor = new Actor(page);\n  \n  await actor.attemptsTo(new LoginTask('user@example.com', 'password123'));\n  \n  const userName = await actor.asks(CurrentUserQuestion);\n  expect(userName).toContain('User Name');\n});\n\n// Component-based testing for reusable UI components\ntest('date picker component works correctly', async ({ page }) => {\n  // Test the date picker component in isolation\n  await page.goto('/components/date-picker');\n  \n  // Select a date\n  await page.click('[data-testid=\"date-input\"]');\n  await page.click('[data-testid=\"calendar-day-15\"]');\n  \n  // Verify date is selected\n  const selectedDate = await page.inputValue('[data-testid=\"date-input\"]');\n  expect(selectedDate).toMatch(/\\d{4}-\\d{2}-15/);\n  \n  // Verify calendar closes\n  await expect(page.locator('[data-testid=\"calendar\"]')).toBeHidden();\n});\n\n// Testing real-time updates\n// playwright.config.js configuration for real-time testing\n/*\n{\n  use: {\n    // Increase timeout for real-time operations\n    actionTimeout: 30000,\n    navigationTimeout: 45000,\n    \n    // Use fewer workers for real-time tests to reduce server load\n    launchOptions: {\n      slowMo: process.env.CI ? 50 : 0 // Slow down in CI for stability\n    }\n  }\n}\n*/\n\ntest('real-time chat updates correctly', async ({ page }) => {\n  // Join chat room\n  await page.goto('/chat/room1');\n  \n  // Send a message\n  await page.fill('[data-testid=\"message-input\"]', 'Hello, world!');\n  await page.click('[data-testid=\"send-button\"]');\n  \n  // Wait for message to appear (real-time)\n  await expect(page.locator('[data-testid=\"message\"]'))\n    .toContainText('Hello, world!', { timeout: 10000 });\n  \n  // Verify message timestamp is recent\n  const timestamp = await page.locator('[data-testid=\"message-timestamp\"]').textContent();\n  const messageTime = new Date(timestamp);\n  const now = new Date();\n  const timeDiff = Math.abs(now - messageTime);\n  expect(timeDiff).toBeLessThan(60000); // Within last minute\n});\n\n// Best practice: Test data cleanup\ntest.afterEach(async ({ page }) => {\n  // Clean up test data\n  await page.evaluate(() => {\n    // Clear any test-specific data from localStorage\n    Object.keys(localStorage).forEach(key => {\n      if (key.startsWith('test-')) {\n        localStorage.removeItem(key);\n      }\n    });\n  });\n  \n  // Clear cookies\n  await page.context().clearCookies();\n});",
+      "explanation": "This example demonstrates advanced testing patterns and best practices. The Screenplay Pattern implementation shows an alternative to traditional Page Objects that can be more maintainable for complex applications. The component-based testing example shows how to test reusable UI components in isolation. The real-time chat test demonstrates handling of real-time updates with appropriate timeouts. The afterEach hook shows proper test data cleanup to ensure test isolation. These patterns help create more maintainable and reliable test suites for complex applications.",
+      "language": "javascript"
+    },
+    "pitfalls": [
+      {
+        "mistake": "Over-engineering test solutions with complex patterns that aren't needed",
+        "solution": "Start with simple approaches and only add complexity when it provides clear benefits for maintainability",
+        "severity": "high"
+      },
+      {
+        "mistake": "Not regularly refactoring and updating test suites as applications evolve",
+        "solution": "Treat test code with the same care as production code, regularly reviewing and improving test architecture",
+        "severity": "high"
+      },
+      {
+        "mistake": "Ignoring emerging testing trends and techniques that could improve efficiency",
+        "solution": "Stay informed about new testing approaches and evaluate them for applicability to your specific context",
+        "severity": "medium"
+      }
+    ],
+    "exercises": [
+      {
+        "title": "Refactor an Existing E2E Test Suite Using Advanced Patterns",
+        "description": "Take an existing E2E test suite and refactor it using advanced patterns and best practices.",
+        "checkpoints": [
+          "Identify areas of the existing test suite that could benefit from refactoring",
+          "Implement the Screenplay Pattern or other advanced patterns where appropriate",
+          "Improve test data management and cleanup strategies",
+          "Optimize test structure for better maintainability",
+          "Document the improvements and their benefits"
+        ]
+      }
+    ],
+    "next": [],
+    "estimatedMinutes": 90,
+    "difficulty": "Advanced",
+    "tags": [
+      "advanced-patterns",
+      "best-practices",
+      "screenplay-pattern",
+      "maintainability"
+    ],
+    "lastUpdated": "2025-10-09T10:00:00.000Z",
+    "version": "1.0.0"
+  },
+  {
+    "id": "e2e-testing-lesson-11",
+    "moduleSlug": "e2e-testing",
+    "title": "Mobile and Device Testing",
+    "order": 11,
+    "objectives": [
+      "Implement responsive design testing across different device sizes and orientations",
+      "Use device emulation and real device testing for mobile applications",
+      "Test touch interactions and mobile-specific gestures",
+      "Optimize test performance for mobile and device testing scenarios"
+    ],
+    "intro": "Mobile and device testing is a critical aspect of end-to-end testing that ensures applications work correctly across various devices, screen sizes, and input methods. With the increasing diversity of devices and the growing number of mobile users, testing applications on different devices has become essential for delivering a consistent user experience.\n\nResponsive design testing involves verifying that applications adapt properly to different screen sizes, resolutions, and orientations. This includes testing layouts on mobile phones, tablets, desktops, and other devices to ensure content is readable, navigation is intuitive, and functionality works correctly regardless of the viewing context. Modern testing frameworks provide device emulation capabilities that simulate different devices without requiring physical hardware.\n\nMobile-specific testing goes beyond responsive design to include touch interactions, gestures, and mobile platform features. Testing touch interactions involves verifying that tap, swipe, pinch, and other gestures work correctly. Mobile applications also need to handle device-specific features like orientation changes, keyboard interactions, and mobile browser behaviors that differ from desktop experiences.\n\nDevice testing can be performed using emulators, simulators, and real devices. Emulators and simulators provide cost-effective ways to test on multiple device configurations, while real device testing ensures compatibility with actual hardware and operating system variations. Cloud-based device testing platforms offer access to extensive device farms without the need for physical device maintenance.\n\nPerformance considerations are particularly important for mobile testing, as mobile devices typically have different performance characteristics than desktop systems. Network conditions, battery usage, and processing power all affect application performance on mobile devices. Optimizing tests for mobile scenarios helps ensure reliable test execution and accurate performance measurements.\n\nIn this lesson, you'll learn to implement responsive design testing, use device emulation for mobile testing, test touch interactions and gestures, and optimize test performance for mobile scenarios.",
+    "code": {
+      "example": "// mobile-testing.cy.js - Cypress mobile testing\n\ndescribe('Mobile Testing', () => {\n  // Test on different device sizes\n  const devices = [\n    { name: 'iPhone 12', width: 390, height: 844 },\n    { name: 'iPad Air', width: 820, height: 1180 },\n    { name: 'Desktop', width: 1920, height: 1080 }\n  ];\n  \n  devices.forEach(device => {\n    context(`Testing on ${device.name}`, () => {\n      beforeEach(() => {\n        // Set viewport size\n        cy.viewport(device.width, device.height);\n        cy.visit('/');\n      });\n      \n      it('should display responsive navigation correctly', () => {\n        // Check if mobile menu appears on small screens\n        if (device.width < 768) {\n          cy.get('[data-cy=mobile-menu-button]').should('be.visible');\n          cy.get('[data-cy=desktop-nav]').should('not.be.visible');\n          \n          // Test mobile menu interaction\n          cy.get('[data-cy=mobile-menu-button]').click();\n          cy.get('[data-cy=mobile-menu]').should('be.visible');\n        } else {\n          cy.get('[data-cy=desktop-nav]').should('be.visible');\n          cy.get('[data-cy=mobile-menu-button]').should('not.be.visible');\n        }\n      });\n      \n      it('should adapt layout for screen size', () => {\n        // Check responsive grid layout\n        cy.get('[data-cy=product-grid]').should('be.visible');\n        \n        // Different column counts based on screen size\n        if (device.width >= 1200) {\n          cy.get('[data-cy=product-grid] .product-card').should('have.length.gte', 4);\n        } else if (device.width >= 768) {\n          cy.get('[data-cy=product-grid] .product-card').should('have.length.gte', 2);\n        } else {\n          cy.get('[data-cy=product-grid] .product-card').should('have.length.gte', 1);\n        }\n      });\n      \n      it('should handle orientation changes', () => {\n        // Only test orientation on mobile devices\n        if (device.width < device.height) { // Portrait mode\n          // Test portrait orientation\n          cy.get('[data-cy=hero-section]').should('have.css', 'flex-direction', 'column');\n          \n          // Change to landscape\n          cy.viewport(device.height, device.width);\n          cy.get('[data-cy=hero-section]').should('have.css', 'flex-direction', 'row');\n        }\n      });\n    });\n  });\n  \n  // Touch interaction testing\n  context('Touch Interactions', () => {\n    beforeEach(() => {\n      cy.viewport('iphone-12');\n      cy.visit('/');\n    });\n    \n    it('should handle swipe gestures', () => {\n      // Test carousel swipe functionality\n      cy.get('[data-cy=carousel]').should('be.visible');\n      \n      // Get initial slide\n      cy.get('[data-cy=carousel-slide]').eq(0).invoke('text').then(initialText => {\n        // Swipe left\n        cy.get('[data-cy=carousel]')\n          .trigger('touchstart', { touches: [{ clientX: 100, clientY: 50 }] })\n          .trigger('touchend', { touches: [{ clientX: 50, clientY: 50 }] });\n        \n        // Verify slide changed\n        cy.get('[data-cy=carousel-slide]').eq(0).should('not.have.text', initialText);\n      });\n    });\n    \n    it('should handle tap and hold gestures', () => {\n      cy.get('[data-cy=long-press-button]').should('be.visible');\n      \n      // Simulate long press\n      cy.get('[data-cy=long-press-button]')\n        .trigger('touchstart')\n        .wait(1000) // Hold for 1 second\n        .trigger('touchend');\n      \n      // Verify long press action\n      cy.get('[data-cy=long-press-menu]').should('be.visible');\n    });\n    \n    it('should handle pinch gestures', () => {\n      cy.get('[data-cy=zoomable-image]').should('be.visible');\n      \n      // Simulate pinch zoom\n      cy.get('[data-cy=zoomable-image]')\n        .trigger('touchstart', { touches: [{ clientX: 100, clientY: 100 }, { clientX: 200, clientY: 200 }] })\n        .trigger('touchmove', { touches: [{ clientX: 80, clientY: 80 }, { clientX: 220, clientY: 220 }] })\n        .trigger('touchend');\n      \n      // Verify zoom effect\n      cy.get('[data-cy=zoomable-image]').should('have.css', 'transform').and('include', 'scale');\n    });\n  });\n  \n  // Real device testing configuration\n  context('Real Device Testing', () => {\n    it('should connect to real mobile device', () => {\n      // This would typically be configured in cypress.config.js\n      // Example configuration for real device testing\n      /*\n      {\n        browsers: [\n          {\n            name: 'chrome',\n            family: 'chrome',\n            channel: 'stable',\n            displayName: 'Chrome',\n            version: '108.0.5359.71',\n            path: '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',\n            majorVersion: 108,\n            isHeadless: false,\n            isMobile: true // Enable mobile testing\n          }\n        ]\n      }\n      */\n      \n      // In a real implementation, you would use a service like BrowserStack or Sauce Labs\n      cy.log('Real device testing would connect to cloud device farm');\n      expect(true).to.be.true;\n    });\n  });\n});\n\n// mobile-testing.playwright.js - Playwright mobile testing\nconst { test, expect } = require('@playwright/test');\n\n// Device descriptors for common devices\nconst devices = [\n  { name: 'iPhone 12', descriptor: 'iPhone 12' },\n  { name: 'Pixel 5', descriptor: 'Pixel 5' },\n  { name: 'iPad Mini', descriptor: 'iPad Mini' }\n];\n\n// Test on multiple devices\nfor (const device of devices) {\n  test.describe(`Mobile Testing on ${device.name}`, () => {\n    test.use({\n      ...devices[device.descriptor] || { viewport: { width: 390, height: 844 } }\n    });\n    \n    test('should display mobile navigation correctly', async ({ page }) => {\n      await page.goto('/');\n      \n      // Check mobile-specific elements\n      const isMobile = await page.viewportSize().width < 768;\n      \n      if (isMobile) {\n        await expect(page.locator('[data-cy=mobile-menu-button]')).toBeVisible();\n        await expect(page.locator('[data-cy=desktop-nav]')).not.toBeVisible();\n        \n        // Test mobile menu\n        await page.click('[data-cy=mobile-menu-button]');\n        await expect(page.locator('[data-cy=mobile-menu]')).toBeVisible();\n      } else {\n        await expect(page.locator('[data-cy=desktop-nav]')).toBeVisible();\n        await expect(page.locator('[data-cy=mobile-menu-button]')).not.toBeVisible();\n      }\n    });\n    \n    test('should handle touch interactions', async ({ page }) {\n      await page.goto('/');\n      \n      // Test swipe gesture\n      const carousel = page.locator('[data-cy=carousel]');\n      await expect(carousel).toBeVisible();\n      \n      // Get initial slide content\n      const initialSlide = await page.locator('[data-cy=carousel-slide]').first().textContent();\n      \n      // Perform swipe\n      await carousel.tap({ position: { x: 300, y: 100 } });\n      await page.touchscreen.swipe(300, 100, 100, 100);\n      \n      // Verify slide changed\n      const newSlide = await page.locator('[data-cy=carousel-slide]').first().textContent();\n      expect(newSlide).not.toEqual(initialSlide);\n    });\n    \n    test('should adapt to orientation changes', async ({ page }) {\n      await page.goto('/');\n      \n      const viewport = await page.viewportSize();\n      \n      // Test orientation change\n      if (viewport.width < viewport.height) { // Portrait\n        await page.setViewportSize({ width: viewport.height, height: viewport.width }); // Landscape\n        \n        // Verify layout adaptation\n        const heroSection = page.locator('[data-cy=hero-section]');\n        await expect(heroSection).toHaveCSS('flex-direction', 'row');\n      }\n    });\n  });\n}\n\n// performance-testing.js - Mobile performance testing\nconst { test, expect } = require('@playwright/test');\n\ntest.describe('Mobile Performance Testing', () => {\n  test.use({\n    ...devices['iPhone 12'],\n    // Simulate slower network conditions\n    launchOptions: {\n      slowMo: 50 // Slow down operations by 50ms\n    }\n  });\n  \n  test('should load within performance budget', async ({ page }) {\n    // Measure load time\n    const startTime = Date.now();\n    await page.goto('/');\n    const loadTime = Date.now() - startTime;\n    \n    // Assert performance budget (3 seconds for mobile)\n    expect(loadTime).toBeLessThan(3000);\n    \n    console.log(`Page loaded in ${loadTime}ms`);\n  });\n  \n  test('should maintain responsive interactions', async ({ page }) => {\n    await page.goto('/');\n    \n    // Measure interaction response time\n    const startTime = Date.now();\n    await page.click('[data-cy=button]');\n    const responseTime = Date.now() - startTime;\n    \n    // Assert interaction performance (100ms for mobile)\n    expect(responseTime).toBeLessThan(100);\n    \n    console.log(`Interaction responded in ${responseTime}ms`);\n  });\n  \n  test('should handle memory constraints', async ({ page }) {\n    await page.goto('/');\n    \n    // Test memory usage by navigating between pages\n    for (let i = 0; i < 10; i++) {\n      await page.click('[data-cy=nav-link]');\n      await page.waitForLoadState('networkidle');\n      await page.goBack();\n      await page.waitForLoadState('networkidle');\n    }\n    \n    // In a real implementation, you would check memory usage\n    // This is a placeholder for actual memory testing\n    expect(true).toBe(true);\n  });\n});",
+      "explanation": "This example demonstrates mobile and device testing including:\n\n1. **Responsive Design Testing**: Testing across different device sizes and viewports\n2. **Touch Interaction Testing**: Simulating tap, swipe, and pinch gestures\n3. **Orientation Testing**: Verifying layout changes when device orientation changes\n4. **Device Emulation**: Using framework capabilities to simulate different devices\n5. **Real Device Testing**: Configuration for cloud-based device testing\n6. **Performance Testing**: Measuring load times and interaction responsiveness\n\nKey concepts illustrated:\n- Viewport configuration for different devices\n- Touch event simulation\n- Responsive layout verification\n- Device-specific element testing\n- Performance budget enforcement\n- Memory constraint testing\n\nThe examples show:\n- Cross-device test implementation\n- Touch gesture testing\n- Orientation change handling\n- Performance measurement\n- Mobile-specific interaction testing",
+      "language": "javascript"
+    },
+    "pitfalls": [
+      {
+        "mistake": "Only testing on desktop browsers and ignoring mobile devices",
+        "solution": "Include mobile devices in test coverage using emulators, simulators, or real device testing services",
+        "severity": "high"
+      },
+      {
+        "mistake": "Not accounting for mobile-specific interactions like touch gestures",
+        "solution": "Test touch interactions, gestures, and mobile-specific behaviors that differ from desktop experiences",
+        "severity": "high"
+      },
+      {
+        "mistake": "Ignoring performance differences between desktop and mobile devices",
+        "solution": "Implement performance testing specifically for mobile devices with appropriate performance budgets",
+        "severity": "medium"
+      }
+    ],
+    "exercises": [
+      {
+        "title": "Implement Comprehensive Mobile Testing Suite",
+        "description": "Create end-to-end tests for mobile devices including responsive design, touch interactions, and performance testing.",
+        "checkpoints": [
+          "Implement responsive design testing across different device sizes and orientations",
+          "Test touch interactions including tap, swipe, and pinch gestures",
+          "Configure device emulation for common mobile devices",
+          "Implement performance testing with mobile-specific performance budgets",
+          "Set up real device testing using cloud device farms"
+        ]
+      }
+    ],
+    "next": [
+      "e2e-testing-lesson-12"
+    ],
+    "estimatedMinutes": 90,
+    "difficulty": "Advanced",
+    "tags": [
+      "Mobile Testing",
+      "Responsive Design",
+      "Touch Interactions",
+      "Device Testing",
+      "Performance"
+    ],
+    "lastUpdated": "2025-10-09T10:00:00.000Z",
+    "version": "1.0.0"
+  },
+  {
+    "id": "e2e-testing-lesson-12",
+    "moduleSlug": "e2e-testing",
+    "title": "Accessibility and Compliance Testing",
+    "order": 12,
+    "objectives": [
+      "Implement automated accessibility testing using tools like axe-core and pa11y",
+      "Test keyboard navigation and screen reader compatibility",
+      "Verify WCAG compliance for web applications",
+      "Integrate accessibility testing into CI/CD pipelines"
+    ],
+    "intro": "Accessibility and compliance testing ensures that applications are usable by people with disabilities and meet legal and regulatory requirements. With increasing awareness of digital accessibility and legal requirements like the Americans with Disabilities Act (ADA) and EuropeanAccessibility Act, testing for accessibility has become a critical part of the development process.\n\nAutomated accessibility testing tools like axe-core, pa11y, and Lighthouse can identify many common accessibility issues during development and testing. These tools check for issues like missing alt text, insufficient color contrast, improper heading structure, and missing form labels. While automated tools can catch 30-50% of accessibility issues, manual testing is still required for comprehensive coverage.\n\nKeyboard navigation testing ensures that all functionality is accessible without a mouse. This includes verifying that focus indicators are visible, tab order is logical, and all interactive elements can be reached and activated using keyboard controls. Screen reader compatibility testing involves using tools like NVDA, JAWS, or VoiceOver to verify that content is properly announced and navigation is intuitive.\n\nWeb Content Accessibility Guidelines (WCAG) provide the international standard for web accessibility, with three levels of conformance: A (minimum level), AA (standard level), and AAA (enhanced level). Most organizations target AA compliance, which covers issues like color contrast ratios, text alternatives for non-text content, and keyboard accessibility. Understanding these guidelines helps teams prioritize accessibility efforts.\n\nIntegrating accessibility testing into continuous integration and deployment pipelines ensures that accessibility issues are caught early and don't make it to production. This includes running automated accessibility scans, generating accessibility reports, and potentially blocking deployments that fail accessibility criteria. Regular accessibility audits and user testing with people with disabilities provide additional validation.\n\nIn this lesson, you'll learn to implement automated accessibility testing, test keyboard navigation and screen reader compatibility, verify WCAG compliance, and integrate accessibility testing into CI/CD pipelines.",
+    "code": {
+      "example": "// accessibility-testing.cy.js - Cypress accessibility testing\n\n// Import axe-core for accessibility testing\nconst axe = require('axe-core');\n\n// Custom command to run axe accessibility checks\ncy.Commands.add('checkAccessibility', (context = null, options = {}) => {\n  cy.injectAxe(); // Inject axe-core into the page\n  \n  const defaultOptions = {\n    runOnly: {\n      type: 'tag',\n      values: ['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa']\n    },\n    ...options\n  };\n  \n  cy.checkA11y(context, defaultOptions);\n});\n\n// Custom command to inject axe\nCypress.Commands.add('injectAxe', () => {\n  cy.window({ log: false }).then(window => {\n    const axeCDN = 'https://cdnjs.cloudflare.com/ajax/libs/axe-core/4.8.2/axe.min.js';\n    const script = window.document.createElement('script');\n    script.src = axeCDN;\n    script.onload = () => {\n      window.axe = window.axe || axe;\n    };\n    window.document.head.appendChild(script);\n  });\n});\n\ndescribe('Accessibility Testing', () => {\n  beforeEach(() => {\n    cy.visit('/');\n  });\n  \n  it('should pass basic accessibility checks', () => {\n    // Run accessibility check on entire page\n    cy.checkAccessibility();\n  });\n  \n  it('should pass accessibility checks for specific components', () => {\n    // Test specific components\n    cy.checkAccessibility('[data-cy=header]', {\n      runOnly: {\n        type: 'tag',\n        values: ['wcag2a', 'wcag2aa']\n      }\n    });\n    \n    cy.checkAccessibility('[data-cy=main-content]', {\n      runOnly: {\n        type: 'tag',\n        values: ['wcag2a', 'wcag2aa']\n      }\n    });\n  });\n  \n  it('should have proper heading structure', () => {\n    // Verify heading hierarchy\n    cy.get('h1').should('have.length', 1);\n    cy.get('h1').first().should('be.visible');\n    \n    // Check that headings follow proper order\n    cy.get('h2').each(($h2, index) => {\n      cy.wrap($h2).should('be.visible');\n      // Additional checks for heading content and structure\n    });\n  });\n  \n  it('should have sufficient color contrast', () => {\n    // Check text color contrast\n    cy.get('[data-cy=text-content]').each($el => {\n      const color = Cypress.$($el).css('color');\n      const backgroundColor = Cypress.$($el).css('background-color');\n      \n      // In a real implementation, you would use a color contrast checking library\n      // This is a simplified example\n      cy.log(`Checking contrast for element with text color ${color} and background ${backgroundColor}`);\n    });\n  });\n  \n  it('should have alt text for images', () => {\n    // Check that images have alt attributes\n    cy.get('img').each($img => {\n      const altText = $img.attr('alt');\n      expect(altText).to.not.be.undefined;\n      expect(altText).to.not.be.empty;\n    });\n  });\n});\n\n// keyboard-navigation.cy.js - Keyboard navigation testing\ndescribe('Keyboard Navigation', () => {\n  beforeEach(() => {\n    cy.visit('/');\n  });\n  \n  it('should have logical tab order', () => {\n    // Start from beginning\n    cy.get('body').focus();\n    \n    // Tab through main navigation elements\n    cy.get('[data-cy=nav-link]').each(($link, index) => {\n      cy.tab(); // Custom command for tab key\n      cy.focused().should('have.attr', 'data-cy', $link.attr('data-cy'));\n      \n      // Check that focus indicator is visible\n      cy.focused().should('have.css', 'outline-width').and('not.eq', '0px');\n    });\n  });\n  \n  it('should allow keyboard activation of interactive elements', () => {\n    // Navigate to a button\n    cy.get('[data-cy=submit-button]').focus();\n    cy.focused().should('have.attr', 'data-cy', 'submit-button');\n    \n    // Activate with Enter key\n    cy.focused().type('{enter}');\n    \n    // Verify action occurred\n    cy.get('[data-cy=success-message]').should('be.visible');\n  });\n  \n  it('should handle skip links correctly', () => {\n    // Check that skip link exists\n    cy.get('[data-cy=skip-link]').should('be.visible');\n    \n    // Activate skip link\n    cy.get('[data-cy=skip-link]').focus().type('{enter}');\n    \n    // Verify focus moved to main content\n    cy.focused().should('have.attr', 'data-cy', 'main-content');\n  });\n  \n  it('should handle form navigation with keyboard', () => {\n    // Navigate to form\n    cy.get('[data-cy=form]').focus();\n    \n    // Tab through form fields\n    cy.get('[data-cy=form] input, [data-cy=form] select, [data-cy=form] button').each($el => {\n      cy.tab();\n      cy.focused().should('have.attr', 'data-cy', $el.attr('data-cy'));\n    });\n  });\n});\n\n// accessibility-testing.playwright.js - Playwright accessibility testing\nconst { test, expect } = require('@playwright/test');\nconst AxeBuilder = require('@axe-core/playwright').default;\n\n// Custom fixture for accessibility testing\nconst testWithAxe = test.extend({\n  makeAxeBuilder: async ({ page }, use) => {\n    const makeAxeBuilder = () => new AxeBuilder({ page })\n      .withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa'])\n      .disableRules([\n        'color-contrast', // Handled separately\n        'region' // May not be relevant for all pages\n      ]);\n    \n    await use(makeAxeBuilder);\n  },\n});\n\ntestWithAxe('should pass accessibility checks', async ({ page, makeAxeBuilder }) => {\n  await page.goto('/');\n  \n  // Run accessibility scan\n  const accessibilityScanResults = await makeAxeBuilder()\n    .analyze();\n  \n  // Assert no violations\n  expect(accessibilityScanResults.violations).toEqual([]);\n  \n  // Log results for debugging\n  console.log('Accessibility violations:', accessibilityScanResults.violations);\n});\n\ntest('should have proper focus management', async ({ page }) => {\n  await page.goto('/');\n  \n  // Test focus behavior\n  await page.keyboard.press('Tab');\n  await expect(page.locator(':focus')).toHaveAttribute('data-cy', 'nav-link-1');\n  \n  await page.keyboard.press('Tab');\n  await expect(page.locator(':focus')).toHaveAttribute('data-cy', 'nav-link-2');\n  \n  // Test that focus indicator is visible\n  const focusOutline = await page.locator(':focus').evaluate(el => \n    window.getComputedStyle(el).outlineWidth\n  );\n  expect(focusOutline).not.toEqual('0px');\n});\n\ntest('should have proper ARIA attributes', async ({ page }) => {\n  await page.goto('/');\n  \n  // Check ARIA labels\n  await expect(page.locator('[data-cy=search-input]')).toHaveAttribute('aria-label', 'Search');\n  \n  // Check ARIA roles\n  await expect(page.locator('[data-cy=alert]')).toHaveAttribute('role', 'alert');\n  \n  // Check ARIA hidden\n  await expect(page.locator('[data-cy=decorative-image]')).toHaveAttribute('aria-hidden', 'true');\n});\n\n// wcag-compliance.js - WCAG compliance checking\nconst { test, expect } = require('@playwright/test');\n\n// WCAG 2.1 AA compliance checks\ntest.describe('WCAG 2.1 AA Compliance', () => {\n  test.beforeEach(async ({ page }) => {\n    await page.goto('/');\n  });\n  \n  // Color contrast check (WCAG 1.4.3)\n  test('should meet minimum color contrast ratios', async ({ page }) => {\n    // Check text elements for sufficient contrast\n    const textElements = await page.locator('p, h1, h2, h3, h4, h5, h6, span, div').all();\n    \n    for (const element of textElements) {\n      const isVisible = await element.isVisible();\n      if (!isVisible) continue;\n      \n      const contrastRatio = await element.evaluate(el => {\n        const style = window.getComputedStyle(el);\n        const color = style.color;\n        const backgroundColor = style.backgroundColor;\n        // In a real implementation, calculate actual contrast ratio\n        return 4.5; // Mock value\n      });\n      \n      // WCAG AA requires 4.5:1 for normal text, 3:1 for large text\n      expect(contrastRatio).toBeGreaterThanOrEqual(3);\n    }\n  });\n  \n  // Text alternatives (WCAG 1.1.1)\n  test('should provide text alternatives for non-text content', async ({ page }) => {\n    // Check images have alt text\n    const images = await page.locator('img').all();\n    for (const img of images) {\n      const altText = await img.getAttribute('alt');\n      expect(altText).not.toBeNull();\n      \n      // Decorative images should have empty alt text\n      const isDecorative = await img.getAttribute('data-decorative');\n      if (isDecorative) {\n        expect(altText).toBe('');\n      } else {\n        expect(altText).not.toBe('');\n      }\n    }\n  });\n  \n  // Keyboard accessibility (WCAG 2.1.1)\n  test('should be keyboard accessible', async ({ page }) => {\n    // Test that all interactive elements can be reached via keyboard\n    const interactiveElements = await page.locator(\n      'button, a, input, select, textarea, [tabindex]:not([tabindex=\"-1\"])'\n    ).all();\n    \n    for (const element of interactiveElements) {\n      const tabIndex = await element.getAttribute('tabindex');\n      // Elements should have appropriate tab indices\n      expect(tabIndex).not.toBe('-1');\n    }\n  });\n  \n  // Focus order (WCAG 2.4.3)\n  test('should have meaningful focus order', async ({ page }) => {\n    // Test logical focus order by tabbing through elements\n    await page.keyboard.press('Tab');\n    const firstElement = await page.locator(':focus');\n    \n    await page.keyboard.press('Tab');\n    const secondElement = await page.locator(':focus');\n    \n    // Verify logical order (this would be more complex in a real implementation)\n    expect(firstElement).not.toBeNull();\n    expect(secondElement).not.toBeNull();\n  });\n});\n\n// ci-cd-integration.js - CI/CD integration example\n/*\n// cypress.config.js\nconst { defineConfig } = require('cypress');\n\nmodule.exports = defineConfig({\n  e2e: {\n    setupNodeEvents(on, config) {\n      // Accessibility testing plugin\n      on('task', {\n        log(message) {\n          console.log(message);\n          return null;\n        },\n        table(message) {\n          console.table(message);\n          return null;\n        }\n      });\n      \n      // Accessibility reporting\n      on('after:run', (results) => {\n        // Generate accessibility report\n        const fs = require('fs');\n        const path = require('path');\n        \n        // Save accessibility violations to file\n        const violations = results.violations || [];\n        fs.writeFileSync(\n          path.join(__dirname, 'reports', 'accessibility-violations.json'),\n          JSON.stringify(violations, null, 2)\n        );\n        \n        // Fail build if critical violations found\n        const criticalViolations = violations.filter(v => \n          v.impact === 'critical' || v.impact === 'serious'\n        );\n        \n        if (criticalViolations.length > 0) {\n          console.error(`Found ${criticalViolations.length} critical accessibility violations`);\n          process.exit(1); // Fail the build\n        }\n      });\n    },\n    baseUrl: 'http://localhost:3000',\n  },\n  // Accessibility testing configuration\n  env: {\n    accessibility: {\n      enabled: true,\n      failOnViolation: true,\n      thresholds: {\n        critical: 0,\n        serious: 0,\n        moderate: 5,\n        minor: 10\n      }\n    }\n  }\n});\n*/\n\n// GitHub Actions workflow example\n/*\nname: Accessibility Testing\n\non: [push, pull_request]\n\njobs:\n  accessibility:\n    runs-on: ubuntu-latest\n    \n    steps:\n    - uses: actions/checkout@v3\n    \n    - name: Setup Node.js\n      uses: actions/setup-node@v3\n      with:\n        node-version: '18'\n        \n    - name: Install dependencies\n      run: npm ci\n      \n    - name: Start development server\n      run: npm start &\n      \n    - name: Wait for server to start\n      run: sleep 10\n      \n    - name: Run accessibility tests\n      run: npx cypress run --spec \"**/accessibility-testing.cy.js\"\n      \n    - name: Check accessibility report\n      run: |\n        if [ -f \"reports/accessibility-violations.json\" ]; then\n          echo \"Accessibility violations found:\"\n          cat reports/accessibility-violations.json\n          exit 1\n        else\n          echo \"No accessibility violations found\"\n        fi\n      \n    - name: Upload accessibility report\n      uses: actions/upload-artifact@v3\n      if: failure()\n      with:\n        name: accessibility-report\n        path: reports/accessibility-violations.json\n*/",
+      "explanation": "This example demonstrates accessibility and compliance testing including:\n\n1. **Automated Accessibility Testing**: Using axe-core and pa11y for automated checks\n2. **Keyboard Navigation Testing**: Verifying tab order and keyboard interactions\n3. **WCAG Compliance Checking**: Testing for specific WCAG guidelines\n4. **Screen Reader Compatibility**: ARIA attribute validation\n5. **CI/CD Integration**: Automated accessibility testing in pipelines\n\nKey concepts illustrated:\n- Accessibility testing frameworks\n- Keyboard navigation verification\n- Color contrast checking\n- ARIA attribute validation\n- WCAG compliance testing\n- Automated reporting\n\nThe examples show:\n- Cypress accessibility testing implementation\n- Playwright accessibility testing\n- WCAG compliance verification\n- CI/CD integration examples\n- Focus management testing",
+      "language": "javascript"
+    },
+    "pitfalls": [
+      {
+        "mistake": "Relying solely on automated accessibility testing tools",
+        "solution": "Combine automated testing with manual testing and user testing with people with disabilities for comprehensive coverage",
+        "severity": "high"
+      },
+      {
+        "mistake": "Not integrating accessibility testing into the development workflow",
+        "solution": "Integrate accessibility testing into CI/CD pipelines and make it part of the standard testing process",
+        "severity": "high"
+      },
+      {
+        "mistake": "Ignoring keyboard navigation and screen reader compatibility",
+        "solution": "Test all functionality with keyboard-only navigation and verify screen reader compatibility",
+        "severity": "medium"
+      }
+    ],
+    "exercises": [
+      {
+        "title": "Implement Comprehensive Accessibility Testing",
+        "description": "Create accessibility tests for a web application including automated checks, keyboard navigation, and WCAG compliance.",
+        "checkpoints": [
+          "Implement automated accessibility testing using axe-core or similar tools",
+          "Test keyboard navigation including tab order and focus management",
+          "Verify WCAG 2.1 AA compliance for key accessibility criteria",
+          "Test screen reader compatibility with ARIA attributes",
+          "Integrate accessibility testing into CI/CD pipeline with appropriate thresholds"
+        ]
+      }
+    ],
+    "next": [],
+    "estimatedMinutes": 90,
+    "difficulty": "Advanced",
+    "tags": [
+      "Accessibility",
+      "WCAG",
+      "axe-core",
+      "Keyboard Navigation",
+      "Compliance"
+    ],
+    "lastUpdated": "2025-10-09T10:00:00.000Z",
+    "version": "1.0.0"
+  }
+]

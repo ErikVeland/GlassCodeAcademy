@@ -1,0 +1,29 @@
+{
+  "module": "e2e-testing",
+  "sources": [
+    {
+      "title": "Cypress Documentation",
+      "url": "https://docs.cypress.io/guides/overview/why-cypress"
+    },
+    {
+      "title": "Playwright Documentation",
+      "url": "https://playwright.dev/docs/intro"
+    },
+    {
+      "title": "Selenium Documentation",
+      "url": "https://www.selenium.dev/documentation/"
+    },
+    {
+      "title": "End-to-End Testing Best Practices",
+      "url": "https://martinfowler.com/articles/practical-test-pyramid.html#End-to-endTests"
+    },
+    {
+      "title": "Test Automation University",
+      "url": "https://testautomationu.applitools.com/"
+    },
+    {
+      "title": "UI Testing Best Practices",
+      "url": "https://applitools.com/blog/ui-testing-best-practices/"
+    }
+  ]
+}
