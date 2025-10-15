@@ -211,6 +211,21 @@ export default function QuizResultsPage({ params }: { params: Promise<{ moduleSl
 
   const handleRetakeQuiz = () => {
     if (!resolvedParams) return;
+    
+    // Clear existing quiz session data to ensure a fresh start
+    try {
+      const sessionKey = `quizSession:${resolvedParams.moduleSlug}`;
+      const seedKey = `quizSeed:${resolvedParams.moduleSlug}`;
+      
+      // Remove quiz session and seed data for a fresh start
+      sessionStorage.removeItem(sessionKey);
+      sessionStorage.removeItem(seedKey);
+      // Note: We keep the quiz history to maintain question diversity across attempts
+    } catch (error) {
+      console.warn('Failed to clear session storage:', error);
+    }
+    
+    // Navigate to quiz start page for a fresh quiz
     router.push(`/modules/${resolvedParams.moduleSlug}/quiz/start`);
   };
 
