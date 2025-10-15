@@ -8,23 +8,22 @@ const path = require('path');
 
 // Define the expected structures
 const lessonStructure = {
-  id: 'number',
-  topic: 'string',
+  id: 'string', // Lessons use descriptive string IDs like "database-systems-lesson-1"
+  moduleSlug: 'string',
   title: 'string',
-  description: 'string',
-  content: 'string',
-  codeExample: 'string',
-  output: 'string',
-  difficulty: 'string' // Should be Beginner, Intermediate, or Advanced
+  order: 'number',
+  objectives: 'array',
+  intro: 'string'
+  // Note: lessons have more complex nested structures that we'll validate separately
 };
 
 const questionStructure = {
   id: 'number',
   topic: 'string',
-  type: 'string', // Should be multiple-choice, true-false, coding, etc.
+  questionType: 'string', // Should be multiple-choice, true-false, coding, open-ended
   question: 'string',
-  choices: 'array',
-  correctAnswer: 'number', // Index of correct choice for multiple-choice
+  choices: 'array', // Optional for open-ended questions
+  correctIndex: 'number', // Index of correct choice for multiple-choice, optional for open-ended
   explanation: 'string'
 };
 
@@ -32,14 +31,19 @@ const questionStructure = {
 const validDifficulties = ['Beginner', 'Intermediate', 'Advanced'];
 
 // Valid question types
-const validQuestionTypes = ['multiple-choice', 'true-false', 'coding'];
+const validQuestionTypes = ['multiple-choice', 'true-false', 'coding', 'open-ended'];
 
 // Function to validate a single item against a structure
 function validateItem(item, structure, fileName) {
   const errors = [];
   
-  // Check all required fields exist
+  // Check all required fields exist (except optional ones for open-ended questions)
   for (const [field, type] of Object.entries(structure)) {
+    // Skip optional fields for open-ended questions
+    if (item.questionType === 'open-ended' && (field === 'choices' || field === 'correctIndex')) {
+      continue;
+    }
+    
     if (item[field] === undefined) {
       errors.push(`Missing field: ${field}`);
       continue;
@@ -66,13 +70,13 @@ function validateItem(item, structure, fileName) {
     errors.push(`Invalid difficulty: ${item.difficulty}. Should be one of: ${validDifficulties.join(', ')}`);
   }
   
-  if (item.type && !validQuestionTypes.includes(item.type)) {
-    errors.push(`Invalid question type: ${item.type}. Should be one of: ${validQuestionTypes.join(', ')}`);
+  if (item.questionType && !validQuestionTypes.includes(item.questionType)) {
+    errors.push(`Invalid question type: ${item.questionType}. Should be one of: ${validQuestionTypes.join(', ')}`);
   }
   
-  if (item.choices && item.correctAnswer !== undefined) {
-    if (item.correctAnswer < 0 || item.correctAnswer >= item.choices.length) {
-      errors.push(`Invalid correctAnswer index: ${item.correctAnswer}. Should be between 0 and ${item.choices.length - 1}`);
+  if (item.choices && item.correctIndex !== undefined) {
+    if (item.correctIndex < 0 || item.correctIndex >= item.choices.length) {
+      errors.push(`Invalid correctIndex: ${item.correctIndex}. Should be between 0 and ${item.choices.length - 1}`);
     }
   }
   
@@ -85,12 +89,26 @@ function validateJsonFile(filePath, structure) {
     const data = JSON.parse(fs.readFileSync(filePath, 'utf8'));
     const errors = [];
     
-    if (!Array.isArray(data)) {
-      errors.push('File should contain an array of items');
-      return errors;
+    let itemsToValidate;
+    
+    // Handle different file structures
+    if (filePath.includes('/quizzes/')) {
+      // Quiz files have a wrapper object with a questions array
+      if (typeof data !== 'object' || !data.questions || !Array.isArray(data.questions)) {
+        errors.push('Quiz file should contain an object with a questions array');
+        return errors;
+      }
+      itemsToValidate = data.questions;
+    } else {
+      // Lesson files are direct arrays
+      if (!Array.isArray(data)) {
+        errors.push('Lesson file should contain an array of items');
+        return errors;
+      }
+      itemsToValidate = data;
     }
     
-    data.forEach((item, index) => {
+    itemsToValidate.forEach((item, index) => {
       const itemErrors = validateItem(item, structure, filePath);
       if (itemErrors.length > 0) {
         errors.push(`Item ${index + 1}: ${itemErrors.join(', ')}`);
@@ -103,47 +121,39 @@ function validateJsonFile(filePath, structure) {
   }
 }
 
-// Find all data files in modules
+// Find all data files in content directory
 function findAllDataFiles() {
-  const modulesDir = path.join(__dirname, '..', 'modules');
+  const contentDir = path.join(__dirname, '..', 'content');
   const dataFiles = [];
   
-  const modules = fs.readdirSync(modulesDir);
-  
-  for (const module of modules) {
-    const modulePath = path.join(modulesDir, module);
-    if (!fs.statSync(modulePath).isDirectory()) continue;
-    
-    // Look for data directories in backend folders
-    const backendPath = path.join(modulePath, 'backend');
-    if (fs.existsSync(backendPath) && fs.statSync(backendPath).isDirectory()) {
-      const dataPath = path.join(backendPath, 'data');
-      if (fs.existsSync(dataPath) && fs.statSync(dataPath).isDirectory()) {
-        const files = fs.readdirSync(dataPath);
-        for (const file of files) {
-          if (file.endsWith('.json')) {
-            dataFiles.push({
-              module,
-              file,
-              path: path.join(dataPath, file)
-            });
-          }
-        }
+  // Check lessons directory
+  const lessonsDir = path.join(contentDir, 'lessons');
+  if (fs.existsSync(lessonsDir)) {
+    const files = fs.readdirSync(lessonsDir);
+    for (const file of files) {
+      if (file.endsWith('.json')) {
+        dataFiles.push({
+          module: file.replace('.json', ''),
+          file,
+          path: path.join(lessonsDir, file),
+          type: 'lessons'
+        });
       }
     }
-    
-    // Also check for data directories directly in module root (for simpler modules)
-    const dataPath = path.join(modulePath, 'data');
-    if (fs.existsSync(dataPath) && fs.statSync(dataPath).isDirectory()) {
-      const files = fs.readdirSync(dataPath);
-      for (const file of files) {
-        if (file.endsWith('.json')) {
-          dataFiles.push({
-            module,
-            file,
-            path: path.join(dataPath, file)
-          });
-        }
+  }
+  
+  // Check quizzes directory
+  const quizzesDir = path.join(contentDir, 'quizzes');
+  if (fs.existsSync(quizzesDir)) {
+    const files = fs.readdirSync(quizzesDir);
+    for (const file of files) {
+      if (file.endsWith('.json')) {
+        dataFiles.push({
+          module: file.replace('.json', ''),
+          file,
+          path: path.join(quizzesDir, file),
+          type: 'quizzes'
+        });
       }
     }
   }
@@ -153,18 +163,18 @@ function findAllDataFiles() {
 
 // Main validation function
 function validateAllData() {
-  console.log('Validating data structures across all modules...\n');
+  console.log('Validating data structures across all content files...\n');
   
   const dataFiles = findAllDataFiles();
   let totalErrors = 0;
   
   for (const dataFile of dataFiles) {
-    console.log(`Validating ${dataFile.module}/${dataFile.file}...`);
+    console.log(`Validating ${dataFile.type}/${dataFile.file}...`);
     
     let structure;
-    if (dataFile.file.includes('lesson')) {
+    if (dataFile.type === 'lessons') {
       structure = lessonStructure;
-    } else if (dataFile.file.includes('question')) {
+    } else if (dataFile.type === 'quizzes') {
       structure = questionStructure;
     } else {
       console.log('  Unknown file type, skipping...\n');
@@ -184,7 +194,7 @@ function validateAllData() {
   }
   
   if (totalErrors === 0) {
-    console.log('All data files passed validation! 🎉');
+    console.log('All content files passed validation! 🎉');
     return true;
   } else {
     console.log(`Validation failed with ${totalErrors} errors.`);

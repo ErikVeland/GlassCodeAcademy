@@ -7,7 +7,7 @@
   "timeLimit": 45,
   "questions": [
     {
-      "id": "e2e-testing-q1",
+      "id": "1",
       "question": "What is the primary purpose of end-to-end testing in the testing pyramid?",
       "topic": "E2E Testing Fundamentals",
       "difficulty": "Beginner",
@@ -30,7 +30,7 @@
       "correctAnswer": 0
     },
     {
-      "id": "e2e-testing-q2",
+      "id": "2",
       "question": "Which E2E testing framework runs tests in the same run loop as your application?",
       "topic": "Cypress",
       "difficulty": "Beginner",
@@ -53,7 +53,7 @@
       "correctAnswer": 0
     },
     {
-      "id": "e2e-testing-q3",
+      "id": "3",
       "question": "Which browsers does Playwright support out of the box with a single API?",
       "topic": "Playwright",
       "difficulty": "Beginner",
@@ -76,7 +76,7 @@
       "correctAnswer": 0
     },
     {
-      "id": "e2e-testing-q4",
+      "id": "4",
       "question": "What is the recommended selector strategy for reliable E2E tests?",
       "topic": "Test Reliability",
       "difficulty": "Beginner",
@@ -100,7 +100,7 @@
       "correctAnswer": 0
     },
     {
-      "id": "e2e-testing-q5",
+      "id": "5",
       "question": "What does the Page Object Model pattern help achieve in E2E testing?",
       "topic": "Test Organization",
       "difficulty": "Beginner",
@@ -124,7 +124,7 @@
       "correctAnswer": 0
     },
     {
-      "id": "e2e-testing-q6",
+      "id": "6",
       "question": "What is the primary benefit of using network interception in E2E testing?",
       "topic": "API Mocking",
       "difficulty": "Beginner",
@@ -148,7 +148,7 @@
       "correctAnswer": 0
     },
     {
-      "id": "e2e-testing-q7",
+      "id": "7",
       "question": "What is the main advantage of Cypress's automatic waiting mechanism?",
       "topic": "Cypress",
       "difficulty": "Intermediate",
@@ -172,7 +172,7 @@
       "correctAnswer": 0
     },
     {
-      "id": "e2e-testing-q8",
+      "id": "8",
       "question": "When should you use session storage reuse instead of full UI login in E2E tests?",
       "topic": "Authentication",
       "difficulty": "Intermediate",
@@ -196,7 +196,7 @@
       "correctAnswer": 0
     },
     {
-      "id": "e2e-testing-q9",
+      "id": "9",
       "question": "What is the primary purpose of visual regression testing?",
       "topic": "Visual Testing",
       "difficulty": "Intermediate",
@@ -220,7 +220,7 @@
       "correctAnswer": 0
     },
     {
-      "id": "e2e-testing-q10",
+      "id": "10",
       "question": "Which Playwright feature allows you to mock API responses for testing?",
       "topic": "Playwright",
       "difficulty": "Intermediate",
@@ -244,7 +244,7 @@
       "correctAnswer": 0
     },
     {
-      "id": "e2e-testing-q11",
+      "id": "11",
       "question": "What is the recommended approach for handling test data in E2E tests?",
       "topic": "Test Data Management",
       "difficulty": "Intermediate",
@@ -268,7 +268,7 @@
       "correctAnswer": 0
     },
     {
-      "id": "e2e-testing-q12",
+      "id": "12",
       "question": "What is the primary benefit of using the Screenplay Pattern in E2E testing?",
       "topic": "Advanced Testing Patterns",
       "difficulty": "Intermediate",
@@ -292,7 +292,7 @@
       "correctAnswer": 0
     },
     {
-      "id": "e2e-testing-q13",
+      "id": "13",
       "question": "What is the main purpose of implementing quality gates in CI/CD pipelines for E2E testing?",
       "topic": "CI/CD Integration",
       "difficulty": "Intermediate",
@@ -316,7 +316,7 @@
       "correctAnswer": 0
     },
     {
-      "id": "e2e-testing-q14",
+      "id": "14",
       "question": "What is the recommended approach for handling flaky tests in E2E test suites?",
       "topic": "Test Reliability",
       "difficulty": "Intermediate",
@@ -340,7 +340,7 @@
       "correctAnswer": 0
     },
     {
-      "id": "e2e-testing-q15",
+      "id": "15",
       "question": "What is the primary advantage of using component-based testing for UI components?",
       "topic": "Component Testing",
       "difficulty": "Intermediate",
@@ -364,7 +364,7 @@
       "correctAnswer": 0
     },
     {
-      "id": "e2e-testing-q16",
+      "id": "16",
       "question": "What is the recommended strategy for optimizing E2E test performance in CI/CD environments?",
       "topic": "Performance Optimization",
       "difficulty": "Intermediate",
@@ -389,7 +389,7 @@
       "correctAnswer": 0
     },
     {
-      "id": "e2e-testing-q17",
+      "id": "17",
       "question": "What is the primary benefit of using parallel execution in E2E testing?",
       "topic": "Performance Optimization",
       "difficulty": "Intermediate",
@@ -413,7 +413,7 @@
       "correctAnswer": 0
     },
     {
-      "id": "e2e-testing-q18",
+      "id": "18",
       "question": "What is the main purpose of using test fixtures in E2E testing frameworks?",
       "topic": "Test Organization",
       "difficulty": "Intermediate",
@@ -437,7 +437,7 @@
       "correctAnswer": 0
     },
     {
-      "id": "e2e-testing-q19",
+      "id": "19",
       "question": "What is the recommended approach for handling browser-specific issues in cross-browser testing?",
       "topic": "Cross-Browser Testing",
       "difficulty": "Intermediate",
@@ -461,7 +461,7 @@
       "correctAnswer": 0
     },
     {
-      "id": "e2e-testing-q20",
+      "id": "20",
       "question": "What is the primary advantage of using headless browser mode in E2E testing?",
       "topic": "Test Execution",
       "difficulty": "Intermediate",
@@ -485,7 +485,7 @@
       "correctAnswer": 0
     },
     {
-      "id": "e2e-testing-q21",
+      "id": "21",
       "question": "What is the main benefit of implementing retry mechanisms for failed E2E tests?",
       "topic": "Test Reliability",
       "difficulty": "Advanced",
@@ -509,7 +509,7 @@
       "correctAnswer": 0
     },
     {
-      "id": "e2e-testing-q22",
+      "id": "22",
       "question": "When should you use Playwright over Cypress for E2E testing?",
       "topic": "Framework Selection",
       "difficulty": "Advanced",
@@ -533,7 +533,7 @@
       "correctAnswer": 0
     },
     {
-      "id": "e2e-testing-q23",
+      "id": "23",
       "question": "What is the primary challenge when implementing the Screenplay Pattern for E2E testing?",
       "topic": "Advanced Testing Patterns",
       "difficulty": "Advanced",
@@ -557,7 +557,7 @@
       "correctAnswer": 0
     },
     {
-      "id": "e2e-testing-q24",
+      "id": "24",
       "question": "What is the main benefit of using sharding in large E2E test suites?",
       "topic": "Test Distribution",
       "difficulty": "Advanced",
@@ -581,7 +581,7 @@
       "correctAnswer": 0
     },
     {
-      "id": "e2e-testing-q25",
+      "id": "25",
       "question": "What is the primary consideration when testing real-time applications with E2E tests?",
       "topic": "Real-time Testing",
       "difficulty": "Advanced",
@@ -605,7 +605,7 @@
       "correctAnswer": 0
     },
     {
-      "id": "e2e-testing-q26",
+      "id": "26",
       "question": "What is the main advantage of using AI-assisted testing tools in E2E testing?",
       "topic": "Emerging Technologies",
       "difficulty": "Advanced",
@@ -629,7 +629,7 @@
       "correctAnswer": 0
     },
     {
-      "id": "e2e-testing-q27",
+      "id": "27",
       "question": "What is the primary challenge when implementing visual regression testing at scale?",
       "topic": "Visual Testing",
       "difficulty": "Advanced",
@@ -653,7 +653,7 @@
       "correctAnswer": 0
     },
     {
-      "id": "e2e-testing-q28",
+      "id": "28",
       "question": "What is the recommended approach for testing complex authentication flows like OAuth and SSO?",
       "topic": "Authentication",
       "difficulty": "Advanced",
@@ -677,7 +677,7 @@
       "correctAnswer": 0
     },
     {
-      "id": "e2e-testing-q29",
+      "id": "29",
       "question": "What is the primary benefit of implementing self-healing tests in E2E testing?",
       "topic": "Advanced Testing Techniques",
       "difficulty": "Advanced",
@@ -701,7 +701,7 @@
       "correctAnswer": 0
     },
     {
-      "id": "e2e-testing-q30",
+      "id": "30",
       "question": "What is the main consideration when testing applications with complex UI components like calendars and rich text editors?",
       "topic": "Complex UI Testing",
       "difficulty": "Advanced",
@@ -725,7 +725,7 @@
       "correctAnswer": 0
     },
     {
-      "id": "e2e-testing-q31",
+      "id": "31",
       "question": "What is the primary advantage of using contract testing in conjunction with E2E testing?",
       "topic": "Integration Testing",
       "difficulty": "Advanced",
@@ -749,7 +749,7 @@
       "correctAnswer": 0
     },
     {
-      "id": "e2e-testing-q32",
+      "id": "32",
       "question": "What is the recommended strategy for handling test data cleanup in E2E tests?",
       "topic": "Test Data Management",
       "difficulty": "Advanced",

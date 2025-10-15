@@ -7,7 +7,7 @@
   "timeLimit": 30,
   "questions": [
     {
-      "id": 1,
+      "id": "1",
       "question": "What are the trade-offs between different performance optimization approaches?",
       "topic": "Profiling",
       "difficulty": "Advanced",
@@ -31,7 +31,7 @@
       "correctAnswer": 0
     },
     {
-      "id": 2,
+      "id": "2",
       "question": "When should you use performance optimization techniques in web development?",
       "topic": "Optimization",
       "difficulty": "Beginner",
@@ -55,7 +55,7 @@
       "correctAnswer": 0
     },
     {
-      "id": 3,
+      "id": "3",
       "question": "How do you implement performance optimization in a production environment?",
       "topic": "Performance",
       "difficulty": "Intermediate",
@@ -79,7 +79,7 @@
       "correctAnswer": 0
     },
     {
-      "id": 4,
+      "id": "4",
       "question": "What are the trade-offs between different performance optimization approaches?",
       "topic": "Profiling",
       "difficulty": "Advanced",
@@ -103,7 +103,7 @@
       "correctAnswer": 0
     },
     {
-      "id": 5,
+      "id": "5",
       "question": "Which pattern is most effective for performance optimization architecture?",
       "topic": "Optimization",
       "difficulty": "Intermediate",
@@ -127,7 +127,7 @@
       "correctAnswer": 0
     },
     {
-      "id": 6,
+      "id": "6",
       "question": "What is the primary purpose of performance optimization in web development?",
       "topic": "Performance",
       "difficulty": "Beginner",
@@ -151,7 +151,7 @@
       "correctAnswer": 0
     },
     {
-      "id": 7,
+      "id": "7",
       "question": "What are the performance considerations when using optimization techniques?",
       "topic": "Profiling",
       "difficulty": "Intermediate",
@@ -175,7 +175,7 @@
       "correctAnswer": 0
     },
     {
-      "id": 8,
+      "id": "8",
       "question": "When should you use performance optimization in development workflows?",
       "topic": "Optimization",
       "difficulty": "Beginner",
@@ -199,7 +199,7 @@
       "correctAnswer": 0
     },
     {
-      "id": 9,
+      "id": "9",
       "question": "What is the primary purpose of implementing performance optimization strategies?",
       "topic": "Performance",
       "difficulty": "Beginner",
@@ -223,7 +223,7 @@
       "correctAnswer": 0
     },
     {
-      "id": 10,
+      "id": "10",
       "question": "What are the performance considerations when using optimization techniques?",
       "topic": "Profiling",
       "difficulty": "Intermediate",
@@ -247,7 +247,7 @@
       "correctAnswer": 0
     },
     {
-      "id": 11,
+      "id": "11",
       "question": "When should you use performance optimization techniques in application development?",
       "topic": "Optimization",
       "difficulty": "Beginner",
@@ -271,7 +271,7 @@
       "correctAnswer": 0
     },
     {
-      "id": 12,
+      "id": "12",
       "question": "What is the primary purpose of performance optimization in modern web applications?",
       "topic": "Performance",
       "difficulty": "Beginner",
@@ -295,7 +295,7 @@
       "correctAnswer": 0
     },
     {
-      "id": 13,
+      "id": "13",
       "question": "What are the performance considerations when using optimization approaches?",
       "topic": "Profiling",
       "difficulty": "Intermediate",
@@ -319,7 +319,7 @@
       "correctAnswer": 0
     },
     {
-      "id": 14,
+      "id": "14",
       "question": "How do you troubleshoot complex performance optimization issues?",
       "topic": "Optimization",
       "difficulty": "Advanced",
@@ -343,7 +343,7 @@
       "correctAnswer": 0
     },
     {
-      "id": 15,
+      "id": "15",
       "question": "What is the primary purpose of performance optimization techniques?",
       "topic": "Performance",
       "difficulty": "Beginner",
@@ -367,7 +367,7 @@
       "correctAnswer": 0
     },
     {
-      "id": 16,
+      "id": "16",
       "question": "What are the performance considerations when using optimization strategies?",
       "topic": "Profiling",
       "difficulty": "Intermediate",
@@ -391,7 +391,7 @@
       "correctAnswer": 0
     },
     {
-      "id": 17,
+      "id": "17",
       "question": "What is First Contentful Paint (FCP) and why is it important?",
       "topic": "Core Web Vitals",
       "difficulty": "Beginner",
@@ -414,7 +414,7 @@
       "correctAnswer": 0
     },
     {
-      "id": 18,
+      "id": "18",
       "question": "Which HTTP header helps browsers prioritize resource loading?",
       "topic": "Resource Loading",
       "difficulty": "Beginner",
@@ -437,7 +437,7 @@
       "correctAnswer": 0
     },
     {
-      "id": 19,
+      "id": "19",
       "question": "What is the primary benefit of code splitting in web applications?",
       "topic": "Code Splitting",
       "difficulty": "Beginner",
@@ -460,7 +460,7 @@
       "correctAnswer": 0
     },
     {
-      "id": 20,
+      "id": "20",
       "question": "What does the 'defer' attribute do on a script tag?",
       "topic": "Script Loading",
       "difficulty": "Beginner",
@@ -483,7 +483,7 @@
       "correctAnswer": 0
     },
     {
-      "id": 21,
+      "id": "21",
       "question": "What is the purpose of image compression in web performance?",
       "topic": "Image Optimization",
       "difficulty": "Beginner",
@@ -506,7 +506,7 @@
       "correctAnswer": 0
     },
     {
-      "id": 22,
+      "id": "22",
       "question": "What is lazy loading and when should it be used?",
       "topic": "Resource Loading",
       "difficulty": "Beginner",
@@ -529,7 +529,7 @@
       "correctAnswer": 0
     },
     {
-      "id": 23,
+      "id": "23",
       "question": "What is browser caching and how does it improve performance?",
       "topic": "Caching",
       "difficulty": "Beginner",
@@ -552,7 +552,7 @@
       "correctAnswer": 0
     },
     {
-      "id": 24,
+      "id": "24",
       "question": "What is the benefit of using a Content Delivery Network (CDN)?",
       "topic": "Infrastructure",
       "difficulty": "Beginner",
@@ -575,7 +575,7 @@
       "correctAnswer": 0
     },
     {
-      "id": 25,
+      "id": "25",
       "question": "What does the 'async' attribute do on a script tag?",
       "topic": "Script Loading",
       "difficulty": "Beginner",
@@ -598,7 +598,7 @@
       "correctAnswer": 0
     },
     {
-      "id": 26,
+      "id": "26",
       "question": "What is the purpose of minification in web development?",
       "topic": "Build Optimization",
       "difficulty": "Beginner",
@@ -621,7 +621,7 @@
       "correctAnswer": 0
     },
     {
-      "id": 27,
+      "id": "27",
       "question": "What is Largest Contentful Paint (LCP) and why does it matter?",
       "topic": "Core Web Vitals",
       "difficulty": "Beginner",
@@ -644,7 +644,7 @@
       "correctAnswer": 0
     },
     {
-      "id": 28,
+      "id": "28",
       "question": "What is Cumulative Layout Shift (CLS) and how can it be minimized?",
       "topic": "Core Web Vitals",
       "difficulty": "Beginner",
@@ -667,7 +667,7 @@
       "correctAnswer": 0
     },
     {
-      "id": 29,
+      "id": "29",
       "question": "What is the difference between service workers and HTTP caching?",
       "topic": "Caching",
       "difficulty": "Intermediate",
@@ -690,7 +690,7 @@
       "correctAnswer": 0
     },
     {
-      "id": 30,
+      "id": "30",
       "question": "What is tree shaking and how does it improve bundle size?",
       "topic": "Build Optimization",
       "difficulty": "Intermediate",
@@ -713,7 +713,7 @@
       "correctAnswer": 0
     },
     {
-      "id": 31,
+      "id": "31",
       "question": "What is the purpose of requestIdleCallback in performance optimization?",
       "topic": "Runtime Optimization",
       "difficulty": "Intermediate",
@@ -736,7 +736,7 @@
       "correctAnswer": 0
     },
     {
-      "id": 32,
+      "id": "32",
       "question": "How does virtual scrolling improve performance for large lists?",
       "topic": "Runtime Optimization",
       "difficulty": "Intermediate",
@@ -759,7 +759,7 @@
       "correctAnswer": 0
     },
     {
-      "id": 33,
+      "id": "33",
       "question": "What is the critical rendering path and why is it important?",
       "topic": "Rendering",
       "difficulty": "Intermediate",
@@ -782,7 +782,7 @@
       "correctAnswer": 0
     },
     {
-      "id": 34,
+      "id": "34",
       "question": "What is the benefit of using CSS containment properties?",
       "topic": "Rendering",
       "difficulty": "Intermediate",
@@ -805,7 +805,7 @@
       "correctAnswer": 0
     },
     {
-      "id": 35,
+      "id": "35",
       "question": "What is the purpose of the Performance API in web development?",
       "topic": "Profiling",
       "difficulty": "Intermediate",
@@ -828,7 +828,7 @@
       "correctAnswer": 0
     },
     {
-      "id": 36,
+      "id": "36",
       "question": "How does HTTP/2 improve web performance compared to HTTP/1.1?",
       "topic": "Networking",
       "difficulty": "Intermediate",
@@ -851,7 +851,7 @@
       "correctAnswer": 0
     },
     {
-      "id": 37,
+      "id": "37",
       "question": "What is the benefit of using resource hints like preconnect and prefetch?",
       "topic": "Resource Loading",
       "difficulty": "Intermediate",
@@ -874,7 +874,7 @@
       "correctAnswer": 0
     },
     {
-      "id": 38,
+      "id": "38",
       "question": "What is the purpose of the Intersection Observer API?",
       "topic": "Runtime Optimization",
       "difficulty": "Intermediate",
@@ -897,7 +897,7 @@
       "correctAnswer": 0
     },
     {
-      "id": 39,
+      "id": "39",
       "question": "How does Web Workers improve performance in JavaScript applications?",
       "topic": "Runtime Optimization",
       "difficulty": "Intermediate",
@@ -920,7 +920,7 @@
       "correctAnswer": 0
     },
     {
-      "id": 40,
+      "id": "40",
       "question": "What is the benefit of using CSS Grid and Flexbox over traditional layout methods?",
       "topic": "Rendering",
       "difficulty": "Intermediate",
@@ -943,7 +943,7 @@
       "correctAnswer": 0
     },
     {
-      "id": 41,
+      "id": "41",
       "question": "What is the purpose of the Paint Timing API and how is it used?",
       "topic": "Profiling",
       "difficulty": "Advanced",
@@ -966,7 +966,7 @@
       "correctAnswer": 0
     },
     {
-      "id": 42,
+      "id": "42",
       "question": "What are the performance implications of using CSS custom properties (variables)?",
       "topic": "Rendering",
       "difficulty": "Advanced",
@@ -989,7 +989,7 @@
       "correctAnswer": 0
     },
     {
-      "id": 43,
+      "id": "43",
       "question": "How does the Event Loop impact JavaScript performance and what are optimization strategies?",
       "topic": "Runtime Optimization",
       "difficulty": "Advanced",
@@ -1012,7 +1012,7 @@
       "correctAnswer": 0
     },
     {
-      "id": 44,
+      "id": "44",
       "question": "What is the purpose of the Largest Contentful Paint (LCP) element and how do you optimize it?",
       "topic": "Core Web Vitals",
       "difficulty": "Advanced",
@@ -1035,7 +1035,7 @@
       "correctAnswer": 0
     },
     {
-      "id": 45,
+      "id": "45",
       "question": "What are the performance trade-offs of using CSS-in-JS libraries?",
       "topic": "Rendering",
       "difficulty": "Advanced",
@@ -1058,7 +1058,7 @@
       "correctAnswer": 0
     },
     {
-      "id": 46,
+      "id": "46",
       "question": "How does browser speculative parsing affect performance and what are best practices?",
       "topic": "Resource Loading",
       "difficulty": "Advanced",
@@ -1081,7 +1081,7 @@
       "correctAnswer": 0
     },
     {
-      "id": 47,
+      "id": "47",
       "question": "What is the impact of JavaScript bundle composition on parsing and execution time?",
       "topic": "Runtime Optimization",
       "difficulty": "Advanced",
@@ -1104,7 +1104,7 @@
       "correctAnswer": 0
     },
     {
-      "id": 48,
+      "id": "48",
       "question": "What are the performance considerations for implementing a Progressive Web App (PWA)?",
       "topic": "Infrastructure",
       "difficulty": "Advanced",

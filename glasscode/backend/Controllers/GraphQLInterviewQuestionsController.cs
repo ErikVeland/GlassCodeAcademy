@@ -56,21 +56,16 @@ public class GraphQLInterviewQuestionsController : ControllerBase
                     foreach (var q in questionsProp.EnumerateArray())
                     {
                         idx++;
-                        int id = idx;
+                        string id = idx.ToString();
                         if (q.TryGetProperty("id", out var idProp))
                         {
                             if (idProp.ValueKind == JsonValueKind.Number)
                             {
-                                id = idProp.GetInt32();
+                                id = idProp.GetInt32().ToString();
                             }
                             else if (idProp.ValueKind == JsonValueKind.String)
                             {
-                                var idStr = idProp.GetString() ?? string.Empty;
-                                var digits = new string(idStr.Reverse().TakeWhile(char.IsDigit).Reverse().ToArray());
-                                if (!string.IsNullOrEmpty(digits) && int.TryParse(digits, out var parsed))
-                                {
-                                    id = parsed;
-                                }
+                                id = idProp.GetString() ?? idx.ToString();
                             }
                         }
 
@@ -160,7 +155,7 @@ public class GraphQLInterviewQuestionsController : ControllerBase
     [HttpGet("{id}")]
     public ActionResult<GraphQLInterviewQuestion> Get(string id)
     {
-        var question = Questions.FirstOrDefault(q => q.Id.ToString() == id);
+        var question = Questions.FirstOrDefault(q => q.Id == id);
         return question == null ? NotFound() : Ok(question);
     }
 

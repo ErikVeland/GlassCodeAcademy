@@ -406,26 +406,21 @@ namespace backend.Services
             InterviewQuestion? question = null;
             
             // Check DotNet questions first
-            if (int.TryParse(questionId, out int dotNetQuestionId))
+            question = DotNetInterviewQuestions.FirstOrDefault(q => q.Id == questionId);
+            if (question != null)
             {
-                question = DotNetInterviewQuestions.FirstOrDefault(q => q.Id == dotNetQuestionId);
-                if (question != null)
-                {
-                    bool isCorrect = question.Type == "open-ended" || 
-                                    (question.CorrectAnswer.HasValue && answerIndex == question.CorrectAnswer.Value);
+                bool isCorrect = question.Type == "open-ended" || 
+                                (question.CorrectAnswer.HasValue && answerIndex == question.CorrectAnswer.Value);
 
-                    return new AnswerResult
-                    {
-                        IsCorrect = isCorrect,
-                        Explanation = question.Explanation
-                    };
-                }
+                return new AnswerResult
+                {
+                    IsCorrect = isCorrect,
+                    Explanation = question.Explanation
+                };
             }
             
             // Check NextJs questions
-            if (int.TryParse(questionId, out int nextJsQuestionId))
-            {
-                var nextJsQuestion = NextJsInterviewQuestions.FirstOrDefault(q => q.Id == nextJsQuestionId);
+            var nextJsQuestion = NextJsInterviewQuestions.FirstOrDefault(q => q.Id == questionId);
             if (nextJsQuestion != null)
             {
                 bool isCorrect = nextJsQuestion.Type == "open-ended" || 
@@ -437,30 +432,26 @@ namespace backend.Services
                     Explanation = nextJsQuestion.Explanation
                 };
             }
-            }
             
             // Check GraphQL questions
-            if (int.TryParse(questionId, out int graphqlQuestionId))
+            var graphqlQuestion = GraphQLInterviewQuestions.FirstOrDefault(q => q.Id == questionId);
+            if (graphqlQuestion != null)
             {
-                var graphqlQuestion = GraphQLInterviewQuestions.FirstOrDefault(q => q.Id == graphqlQuestionId);
-                if (graphqlQuestion != null)
-                {
-                    bool isCorrect = graphqlQuestion.Type == "open-ended" || 
-                                    (graphqlQuestion.CorrectAnswer.HasValue && answerIndex == graphqlQuestion.CorrectAnswer.Value);
+                bool isCorrect = graphqlQuestion.Type == "open-ended" || 
+                                (graphqlQuestion.CorrectAnswer.HasValue && answerIndex == graphqlQuestion.CorrectAnswer.Value);
 
-                    return new AnswerResult
-                    {
-                        IsCorrect = isCorrect,
-                        Explanation = graphqlQuestion.Explanation
-                    };
-                }
+                return new AnswerResult
+                {
+                    IsCorrect = isCorrect,
+                    Explanation = graphqlQuestion.Explanation
+                };
             }
 
             return new AnswerResult { IsCorrect = false, Explanation = "Question not found." };
         }
 
         // Laravel answer validation
-        public AnswerResult ValidateLaravelAnswer(int questionId, int answerIndex)
+        public AnswerResult ValidateLaravelAnswer(string questionId, int answerIndex)
         {
             var question = LaravelInterviewQuestions.FirstOrDefault(q => q.Id == questionId);
             if (question == null)
@@ -1416,7 +1407,7 @@ namespace backend.Services
                             {
                                 var item = new VersionInterviewQuestion
                                 {
-                                    Id = GetIntFlexible(q, "id") ?? 0,
+                                    Id = GetString(q, "id") ?? "0",
                                     Topic = GetString(q, "topic"),
                                     Type = GetString(q, "type") ?? GetString(q, "questionType") ?? string.Empty,
                                     Question = GetString(q, "question") ?? string.Empty,
@@ -1442,7 +1433,7 @@ namespace backend.Services
                             {
                                 var item = new VersionInterviewQuestion
                                 {
-                                    Id = GetIntFlexible(q, "id") ?? 0,
+                                    Id = GetString(q, "id") ?? "0",
                                     Topic = GetString(q, "topic"),
                                     Type = GetString(q, "type") ?? GetString(q, "questionType") ?? string.Empty,
                                     Question = GetString(q, "question") ?? string.Empty,
@@ -1479,7 +1470,7 @@ namespace backend.Services
                                 {
                                     var item = new VersionInterviewQuestion
                                     {
-                                        Id = GetIntFlexible(q, "id") ?? 0,
+                                        Id = GetString(q, "id") ?? "0",
                                         Topic = GetString(q, "topic"),
                                         Type = GetString(q, "type") ?? GetString(q, "questionType") ?? string.Empty,
                                         Question = GetString(q, "question") ?? string.Empty,
@@ -1531,7 +1522,7 @@ namespace backend.Services
         }
 
         // React answer validation
-        public AnswerResult ValidateReactAnswer(int questionId, int answerIndex)
+        public AnswerResult ValidateReactAnswer(string questionId, int answerIndex)
         {
             var question = ReactInterviewQuestions.FirstOrDefault(q => q.Id == questionId);
             if (question == null)
@@ -1554,7 +1545,7 @@ namespace backend.Services
         }
 
         // Tailwind answer validation
-        public AnswerResult ValidateTailwindAnswer(int questionId, int answerIndex)
+        public AnswerResult ValidateTailwindAnswer(string questionId, int answerIndex)
         {
             var question = TailwindInterviewQuestions.FirstOrDefault(q => q.Id == questionId);
             if (question == null)
@@ -1577,7 +1568,7 @@ namespace backend.Services
         }
 
         // Node.js answer validation
-        public AnswerResult ValidateNodeAnswer(int questionId, int answerIndex)
+        public AnswerResult ValidateNodeAnswer(string questionId, int answerIndex)
         {
             var question = NodeInterviewQuestions.FirstOrDefault(q => q.Id == questionId);
             if (question == null)
@@ -1600,7 +1591,7 @@ namespace backend.Services
         }
 
         // SASS answer validation
-        public AnswerResult ValidateSassAnswer(int questionId, int answerIndex)
+        public AnswerResult ValidateSassAnswer(string questionId, int answerIndex)
         {
             var question = SassInterviewQuestions.FirstOrDefault(q => q.Id == questionId);
             if (question == null)
@@ -1623,7 +1614,7 @@ namespace backend.Services
         }
 
         // Vue answer validation
-        public AnswerResult ValidateVueAnswer(int questionId, int answerIndex)
+        public AnswerResult ValidateVueAnswer(string questionId, int answerIndex)
         {
             var question = VueInterviewQuestions.FirstOrDefault(q => q.Id == questionId);
             if (question == null)
@@ -1646,7 +1637,7 @@ namespace backend.Services
         }
 
         // TypeScript answer validation
-        public AnswerResult ValidateTypescriptAnswer(int questionId, int answerIndex)
+        public AnswerResult ValidateTypescriptAnswer(string questionId, int answerIndex)
         {
             var question = TypescriptInterviewQuestions.FirstOrDefault(q => q.Id == questionId);
             if (question == null)
@@ -1669,7 +1660,7 @@ namespace backend.Services
         }
 
         // Database answer validation
-        public AnswerResult ValidateDatabaseAnswer(int questionId, int answerIndex)
+        public AnswerResult ValidateDatabaseAnswer(string questionId, int answerIndex)
         {
             var question = DatabaseInterviewQuestions.FirstOrDefault(q => q.Id == questionId);
             if (question == null)
@@ -1692,7 +1683,7 @@ namespace backend.Services
         }
 
         // Testing answer validation
-        public AnswerResult ValidateTestingAnswer(int questionId, int answerIndex)
+        public AnswerResult ValidateTestingAnswer(string questionId, int answerIndex)
         {
             var question = TestingInterviewQuestions.FirstOrDefault(q => q.Id == questionId);
             if (question == null)
@@ -1715,7 +1706,7 @@ namespace backend.Services
         }
 
         // Programming answer validation
-        public AnswerResult ValidateProgrammingAnswer(int questionId, int answerIndex)
+        public AnswerResult ValidateProgrammingAnswer(string questionId, int answerIndex)
         {
             var question = ProgrammingInterviewQuestions.FirstOrDefault(q => q.Id == questionId);
             if (question == null)
@@ -1738,7 +1729,7 @@ namespace backend.Services
         }
 
         // Web Fundamentals answer validation
-        public AnswerResult ValidateWebAnswer(int questionId, int answerIndex)
+        public AnswerResult ValidateWebAnswer(string questionId, int answerIndex)
         {
             var question = WebInterviewQuestions.FirstOrDefault(q => q.Id == questionId);
             if (question == null)
@@ -1833,16 +1824,7 @@ namespace backend.Services
         // Next.js answer validation
         public AnswerResult ValidateNextJsAnswer(string questionId, int answerIndex)
         {
-            if (!int.TryParse(questionId, out int id))
-            {
-                return new AnswerResult 
-                { 
-                    IsCorrect = false, 
-                    Explanation = "Invalid question ID." 
-                };
-            }
-            
-            var question = NextJsInterviewQuestions.FirstOrDefault(q => q.Id == id);
+            var question = NextJsInterviewQuestions.FirstOrDefault(q => q.Id == questionId);
             if (question == null)
             {
                 return new AnswerResult 
@@ -1886,7 +1868,7 @@ namespace backend.Services
         }
 
         // Security Fundamentals answer validation
-        public AnswerResult ValidateSecurityAnswer(int questionId, int answerIndex)
+        public AnswerResult ValidateSecurityAnswer(string questionId, int answerIndex)
         {
             var question = SecurityInterviewQuestions.FirstOrDefault(q => q.Id == questionId);
             if (question == null)
@@ -1909,7 +1891,7 @@ namespace backend.Services
         }
 
         // Version Control answer validation
-        public AnswerResult ValidateVersionAnswer(int questionId, int answerIndex)
+        public AnswerResult ValidateVersionAnswer(string questionId, int answerIndex)
         {
             var question = VersionInterviewQuestions.FirstOrDefault(q => q.Id == questionId);
             if (question == null)

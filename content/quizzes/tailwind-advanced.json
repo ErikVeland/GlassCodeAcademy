@@ -7,7 +7,7 @@
   "timeLimit": 23,
   "questions": [
     {
-      "id": 1,
+      "id": "1",
       "question": "What is Tailwind CSS?",
       "topic": "Basics",
       "difficulty": "Beginner",
@@ -35,7 +35,7 @@
       "correctAnswer": 0
     },
     {
-      "id": 2,
+      "id": "2",
       "question": "How do you add padding to an element in Tailwind CSS?",
       "topic": "Basics",
       "difficulty": "Beginner",
@@ -63,7 +63,7 @@
       "correctAnswer": 0
     },
     {
-      "id": 3,
+      "id": "3",
       "question": "How does Tailwind's mobile-first responsive design approach work?",
       "topic": "Layout",
       "difficulty": "Intermediate",
@@ -91,7 +91,7 @@
       "correctAnswer": 0
     },
     {
-      "id": 4,
+      "id": "4",
       "question": "Which class is used to create a flex container in Tailwind?",
       "topic": "Layout",
       "difficulty": "Intermediate",
@@ -119,7 +119,7 @@
       "correctAnswer": 0
     },
     {
-      "id": 5,
+      "id": "5",
       "question": "Where do you customize Tailwind's default theme?",
       "topic": "Customization",
       "difficulty": "Intermediate",
@@ -147,7 +147,7 @@
       "correctAnswer": 0
     },
     {
-      "id": 6,
+      "id": "6",
       "question": "How do you make text bold in Tailwind CSS?",
       "topic": "Utilities",
       "difficulty": "Beginner",
@@ -175,7 +175,7 @@
       "correctAnswer": 0
     },
     {
-      "id": 7,
+      "id": "7",
       "question": "What are the default breakpoints in Tailwind CSS?",
       "topic": "Responsive",
       "difficulty": "Intermediate",
@@ -203,7 +203,7 @@
       "correctAnswer": 0
     },
     {
-      "id": 8,
+      "id": "8",
       "question": "How do you set a background color to blue-500 in Tailwind?",
       "topic": "Colors",
       "difficulty": "Beginner",
@@ -231,7 +231,7 @@
       "correctAnswer": 0
     },
     {
-      "id": 9,
+      "id": "9",
       "question": "How do you add custom colors to Tailwind CSS?",
       "topic": "Customization",
       "difficulty": "Beginner",
@@ -259,7 +259,7 @@
       "correctAnswer": 0
     },
     {
-      "id": 10,
+      "id": "10",
       "question": "What is PurgeCSS and why is it important for Tailwind?",
       "topic": "Performance",
       "difficulty": "Beginner",
@@ -287,7 +287,7 @@
       "correctAnswer": 0
     },
     {
-      "id": 11,
+      "id": "11",
       "question": "How do you implement dark mode in Tailwind CSS?",
       "topic": "Dark Mode",
       "difficulty": "Beginner",
@@ -315,7 +315,7 @@
       "correctAnswer": 0
     },
     {
-      "id": 12,
+      "id": "12",
       "question": "What is the @apply directive used for in Tailwind?",
       "topic": "Components",
       "difficulty": "Beginner",
@@ -343,7 +343,7 @@
       "correctAnswer": 0
     },
     {
-      "id": 13,
+      "id": "13",
       "question": "How does Tailwind handle responsive design?",
       "topic": "Responsive Design",
       "difficulty": "Intermediate",
@@ -371,7 +371,7 @@
       "correctAnswer": 0
     },
     {
-      "id": 14,
+      "id": "14",
       "question": "What are Tailwind plugins and how do they extend functionality?",
       "topic": "Plugins",
       "difficulty": "Intermediate",
@@ -399,7 +399,7 @@
       "correctAnswer": 0
     },
     {
-      "id": 15,
+      "id": "15",
       "question": "What is a recommended approach for managing long utility class lists?",
       "topic": "Best Practices",
       "difficulty": "Beginner",
@@ -427,7 +427,7 @@
       "correctAnswer": 0
     },
     {
-      "id": 16,
+      "id": "16",
       "question": "What are the advanced techniques for building scalable design systems with Tailwind CSS?",
       "topic": "Advanced Patterns",
       "difficulty": "Advanced",

@@ -7,7 +7,7 @@
   "timeLimit": 30,
   "questions": [
     {
-      "id": 3,
+      "id": "3",
       "question": "What is the primary difference between .NET Framework and modern .NET (Core)?",
       "topic": ".NET Platform",
       "difficulty": "Beginner",
@@ -30,7 +30,7 @@
       "correctAnswer": 0
     },
     {
-      "id": 4,
+      "id": "4",
       "question": "Which keyword is used to declare an immutable variable in C#?",
       "topic": "C# Fundamentals",
       "difficulty": "Beginner",
@@ -53,7 +53,7 @@
       "correctAnswer": 0
     },
     {
-      "id": 5,
+      "id": "5",
       "question": "What is the correct way to declare a nullable integer in C#?",
       "topic": "Data Types",
       "difficulty": "Beginner",
@@ -76,7 +76,7 @@
       "correctAnswer": 0
     },
     {
-      "id": 8,
+      "id": "8",
       "question": "Which access modifier makes a member accessible only within the same class?",
       "topic": "Object-Oriented Programming",
       "difficulty": "Beginner",
@@ -99,7 +99,7 @@
       "correctAnswer": 0
     },
     {
-      "id": 9,
+      "id": "9",
       "question": "What does the 'virtual' keyword indicate in C#?",
       "topic": "Object-Oriented Programming",
       "difficulty": "Intermediate",
@@ -122,7 +122,7 @@
       "correctAnswer": 0
     },
     {
-      "id": 10,
+      "id": "10",
       "question": "Which LINQ method would you use to filter a collection based on a condition?",
       "topic": "LINQ",
       "difficulty": "Intermediate",
@@ -145,7 +145,7 @@
       "correctAnswer": 0
     },
     {
-      "id": 11,
+      "id": "11",
       "question": "What is the primary purpose of the 'using' statement in C#?",
       "topic": "Resource Management",
       "difficulty": "Beginner",
@@ -168,7 +168,7 @@
       "correctAnswer": 0
     },
     {
-      "id": 13,
+      "id": "13",
       "question": "Which keyword is used to prevent inheritance of a class in C#?",
       "topic": "Object-Oriented Programming",
       "difficulty": "Beginner",
@@ -191,7 +191,7 @@
       "correctAnswer": 0
     },
     {
-      "id": 14,
+      "id": "14",
       "question": "What is the difference between IEnumerable and IQueryable?",
       "topic": "LINQ",
       "difficulty": "Intermediate",
@@ -214,7 +214,7 @@
       "correctAnswer": 0
     },
     {
-      "id": 15,
+      "id": "15",
       "question": "In async programming, what does 'await' do?",
       "topic": "Asynchronous Programming",
       "difficulty": "Intermediate",
@@ -237,7 +237,7 @@
       "correctAnswer": 0
     },
     {
-      "id": 16,
+      "id": "16",
       "question": "What is the purpose of the 'yield' keyword in C#?",
       "topic": "Collections",
       "difficulty": "Intermediate",
@@ -260,7 +260,7 @@
       "correctAnswer": 0
     },
     {
-      "id": 17,
+      "id": "17",
       "question": "Which design pattern is commonly implemented by dependency injection containers?",
       "topic": "Design Patterns",
       "difficulty": "Intermediate",
@@ -283,7 +283,7 @@
       "correctAnswer": 0
     },
     {
-      "id": 18,
+      "id": "18",
       "question": "What is the difference between 'ref' and 'out' parameters?",
       "topic": "Methods",
       "difficulty": "Intermediate",
@@ -306,7 +306,7 @@
       "correctAnswer": 0
     },
     {
-      "id": 19,
+      "id": "19",
       "question": "Which collection type provides the best performance for frequent insertions and deletions at arbitrary positions?",
       "topic": "Collections",
       "difficulty": "Advanced",
@@ -329,7 +329,7 @@
       "correctAnswer": 0
     },
     {
-      "id": 20,
+      "id": "20",
       "question": "What is the purpose of the 'ConfigureAwait(false)' method?",
       "topic": "Asynchronous Programming",
       "difficulty": "Intermediate",
@@ -352,7 +352,7 @@
       "correctAnswer": 0
     },
     {
-      "id": 21,
+      "id": "21",
       "question": "Which attribute is used to specify that a property should be serialized with a different name in JSON?",
       "topic": "Serialization",
       "difficulty": "Intermediate",
@@ -375,7 +375,7 @@
       "correctAnswer": 0
     },
     {
-      "id": 22,
+      "id": "22",
       "question": "What is the difference between 'var' and 'dynamic' in C#?",
       "topic": "Variables",
       "difficulty": "Intermediate",
@@ -398,7 +398,7 @@
       "correctAnswer": 0
     },
     {
-      "id": 23,
+      "id": "23",
       "question": "Which method is called when an object is about to be garbage collected?",
       "topic": "Memory Management",
       "difficulty": "Intermediate",
@@ -421,7 +421,7 @@
       "correctAnswer": 0
     },
     {
-      "id": 24,
+      "id": "24",
       "question": "What is the purpose of the 'lock' statement in C#?",
       "topic": "Threading",
       "difficulty": "Intermediate",
@@ -444,7 +444,7 @@
       "correctAnswer": 0
     },
     {
-      "id": 25,
+      "id": "25",
       "question": "Which interface should a class implement to support the 'foreach' loop?",
       "topic": "Collections",
       "difficulty": "Beginner",
@@ -467,7 +467,7 @@
       "correctAnswer": 0
     },
     {
-      "id": 26,
+      "id": "26",
       "question": "What is the primary benefit of using Entity Framework in .NET applications?",
       "topic": "Entity Framework",
       "difficulty": "Beginner",
@@ -490,7 +490,7 @@
       "correctAnswer": 0
     },
     {
-      "id": 27,
+      "id": "27",
       "question": "Which C# feature allows you to define a method that can be called with a variable number of arguments?",
       "topic": "Methods",
       "difficulty": "Intermediate",
@@ -513,7 +513,7 @@
       "correctAnswer": 0
     },
     {
-      "id": 28,
+      "id": "28",
       "question": "What is the purpose of the 'async' keyword in C# method declarations?",
       "topic": "Asynchronous Programming",
       "difficulty": "Beginner",
@@ -536,7 +536,7 @@
       "correctAnswer": 0
     },
     {
-      "id": 29,
+      "id": "29",
       "question": "Which statement about value types and reference types is correct?",
       "topic": "Data Types",
       "difficulty": "Intermediate",
@@ -559,7 +559,7 @@
       "correctAnswer": 0
     },
     {
-      "id": 30,
+      "id": "30",
       "question": "What is the primary purpose of the 'using' directive in C#?",
       "topic": "Namespaces",
       "difficulty": "Beginner",
@@ -582,7 +582,7 @@
       "correctAnswer": 0
     },
     {
-      "id": 31,
+      "id": "31",
       "question": "Which HTTP verb should be used for updating a resource in a RESTful API?",
       "topic": "Web APIs",
       "difficulty": "Beginner",
@@ -605,7 +605,7 @@
       "correctAnswer": 0
     },
     {
-      "id": 32,
+      "id": "32",
       "question": "What is the purpose of middleware in ASP.NET Core?",
       "topic": "ASP.NET Core",
       "difficulty": "Intermediate",
@@ -628,7 +628,7 @@
       "correctAnswer": 0
     },
     {
-      "id": 33,
+      "id": "33",
       "question": "Which service lifetime should you use for a service that should be created once per HTTP request?",
       "topic": "Dependency Injection",
       "difficulty": "Intermediate",
@@ -651,7 +651,7 @@
       "correctAnswer": 0
     },
     {
-      "id": 34,
+      "id": "34",
       "question": "What does the [ApiController] attribute provide in ASP.NET Core?",
       "topic": "Web APIs",
       "difficulty": "Intermediate",
@@ -674,7 +674,7 @@
       "correctAnswer": 0
     },
     {
-      "id": 35,
+      "id": "35",
       "question": "Which method in Entity Framework Core executes a `query` and returns results?",
       "topic": "Entity Framework",
       "difficulty": "Beginner",
@@ -697,7 +697,7 @@
       "correctAnswer": 0
     },
     {
-      "id": 36,
+      "id": "36",
       "question": "What is the purpose of the 'ConfigureServices' method in ASP.NET Core?",
       "topic": "ASP.NET Core",
       "difficulty": "Intermediate",
@@ -720,7 +720,7 @@
       "correctAnswer": 0
     },
     {
-      "id": 37,
+      "id": "37",
       "question": "Which testing framework is most commonly used for .NET unit testing?",
       "topic": "Testing",
       "difficulty": "Beginner",
@@ -743,7 +743,7 @@
       "correctAnswer": 0
     },
     {
-      "id": 38,
+      "id": "38",
       "question": "What is the primary purpose of JWT (JSON Web Tokens) in authentication?",
       "topic": "Security",
       "difficulty": "Intermediate",
@@ -766,7 +766,7 @@
       "correctAnswer": 0
     },
     {
-      "id": 39,
+      "id": "39",
       "question": "Which interface should you implement to make a class disposable in C#?",
       "topic": "Resource Management",
       "difficulty": "Beginner",
@@ -789,7 +789,7 @@
       "correctAnswer": 0
     },
     {
-      "id": 40,
+      "id": "40",
       "question": "What is the difference between AddScoped and AddTransient in ASP.NET Core DI?",
       "topic": "Dependency Injection",
       "difficulty": "Intermediate",
@@ -812,7 +812,7 @@
       "correctAnswer": 0
     },
     {
-      "id": 41,
+      "id": "41",
       "question": "Which attribute is used to specify that a property is required in Entity Framework Core?",
       "topic": "Entity Framework",
       "difficulty": "Beginner",
@@ -835,7 +835,7 @@
       "correctAnswer": 0
     },
     {
-      "id": 42,
+      "id": "42",
       "question": "What is the purpose of the 'await using' statement in C#?",
       "topic": "Asynchronous Programming",
       "difficulty": "Advanced",
@@ -858,7 +858,7 @@
       "correctAnswer": 0
     },
     {
-      "id": 43,
+      "id": "43",
       "question": "Which pattern is commonly used to implement configuration in ASP.NET Core?",
       "topic": "Configuration",
       "difficulty": "Intermediate",
@@ -881,7 +881,7 @@
       "correctAnswer": 0
     },
     {
-      "id": 44,
+      "id": "44",
       "question": "What is the primary benefit of using records in C# 9.0+?",
       "topic": "C# Language Features",
       "difficulty": "Intermediate",
@@ -904,7 +904,7 @@
       "correctAnswer": 0
     },
     {
-      "id": 45,
+      "id": "45",
       "question": "Which HTTP status code should be returned when a resource is successfully created in a REST API?",
       "topic": "Web APIs",
       "difficulty": "Beginner",
@@ -927,7 +927,7 @@
       "correctAnswer": 0
     },
     {
-      "id": 1,
+      "id": "1",
       "question": "What is the difference between .NET Framework and .NET Core?",
       "choices": [
         ".NET Core is a subset of .NET Framework",
@@ -936,7 +936,7 @@
         "There is no difference between them"
       ],
       "correctAnswer": 2,
-      "difficulty": "Basic",
+      "difficulty": "Beginner",
       "explanation": ".NET Core is a cross-platform, open-source framework that can run on Windows, macOS, and Linux, while .NET Framework is Windows-only and proprietary.",
       "correctIndex": 2,
       "questionType": "multiple-choice",
@@ -944,7 +944,7 @@
       "topic": ".NET"
     },
     {
-      "id": 2,
+      "id": "2",
       "question": "Which keyword is used to declare a constant in C#?",
       "choices": [
         "final",
@@ -953,7 +953,7 @@
         "static"
       ],
       "correctAnswer": 1,
-      "difficulty": "Basic",
+      "difficulty": "Beginner",
       "explanation": "The 'const' keyword is used to declare compile-time constants in C#. The value must be assigned at declaration and cannot be changed.",
       "correctIndex": 1,
       "questionType": "multiple-choice",
@@ -961,7 +961,7 @@
       "topic": ".NET"
     },
     {
-      "id": 6,
+      "id": "6",
       "question": "Which LINQ method would you use to filter a collection?",
       "choices": [
         "Select",
@@ -978,7 +978,7 @@
       "topic": ".NET"
     },
     {
-      "id": 7,
+      "id": "7",
       "question": "What is the purpose of the 'using' statement in C#?",
       "choices": [
         "To import namespaces only",
@@ -995,7 +995,7 @@
       "topic": ".NET"
     },
     {
-      "id": 12,
+      "id": "12",
       "question": "Which design pattern is commonly used for dependency injection in .NET?",
       "choices": [
         "Singleton Pattern",

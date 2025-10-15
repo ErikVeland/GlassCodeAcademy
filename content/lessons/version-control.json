@@ -1,6 +1,6 @@
 [
   {
-    "id": "version-control-lesson-1",
+    "id": "1",
     "moduleSlug": "version-control",
     "title": "Git Fundamentals and Setup",
     "order": 1,
@@ -56,7 +56,7 @@
     "version": "1.0.0"
   },
   {
-    "id": "version-control-lesson-2",
+    "id": "2",
     "moduleSlug": "version-control",
     "title": "Branching and Merging",
     "order": 2,
@@ -112,7 +112,7 @@
     "version": "1.0.0"
   },
   {
-    "id": "version-control-lesson-3",
+    "id": "3",
     "moduleSlug": "version-control",
     "title": "Remote Repositories and Collaboration",
     "order": 3,
@@ -169,7 +169,7 @@
     "version": "1.0.0"
   },
   {
-    "id": "version-control-lesson-4",
+    "id": "4",
     "moduleSlug": "version-control",
     "title": "Git Workflows and Best Practices",
     "order": 4,
@@ -227,7 +227,7 @@
     "version": "1.0.0"
   },
   {
-    "id": "version-control-lesson-5",
+    "id": "5",
     "moduleSlug": "version-control",
     "title": "Advanced Git Commands and Techniques",
     "order": 5,
@@ -285,7 +285,7 @@
     "version": "1.0.0"
   },
   {
-    "id": "version-control-lesson-6",
+    "id": "6",
     "moduleSlug": "version-control",
     "title": "Git Troubleshooting and Recovery",
     "order": 6,
@@ -344,7 +344,7 @@
     "version": "1.0.0"
   },
   {
-    "id": "version-control-lesson-7",
+    "id": "7",
     "moduleSlug": "version-control",
     "title": "Git Hooks and Automation",
     "order": 7,
@@ -403,7 +403,7 @@
     "version": "1.0.0"
   },
   {
-    "id": "version-control-lesson-8",
+    "id": "8",
     "moduleSlug": "version-control",
     "title": "Git Internals and Performance Optimization",
     "order": 8,
@@ -450,7 +450,7 @@
     ],
     "next": [],
     "estimatedMinutes": 75,
-    "difficulty": "Expert",
+    "difficulty": "Advanced",
     "tags": [
       "Git",
       "GitHub",
@@ -462,7 +462,7 @@
     "version": "1.0.0"
   },
   {
-    "id": "version-control-lesson-9",
+    "id": "9",
     "moduleSlug": "version-control",
     "title": "Team Collaboration and Code Review Processes",
     "order": 9,
@@ -521,7 +521,7 @@
     "version": "1.0.0"
   },
   {
-    "id": "version-control-lesson-10",
+    "id": "10",
     "moduleSlug": "version-control",
     "title": "Git Best Practices and Advanced Techniques",
     "order": 10,
@@ -532,8 +532,8 @@
     ],
     "intro": "Git's power lies not just in its basic commands, but in the sophisticated workflows and optimization techniques that professional development teams use to maintain code quality and collaboration efficiency. Understanding advanced Git concepts is essential for becoming a proficient developer who can contribute effectively to complex projects.\n\nIn this lesson, you'll learn how to customize Git to match your workflow preferences, configure advanced settings for optimal performance, and implement professional practices that large development teams rely on. You'll discover how to create custom aliases, configure merge strategies, and set up hooks that automate quality checks.\n\nRepository maintenance is crucial for long-term project health. You'll explore techniques for cleaning up commit history, managing large files with Git LFS, and optimizing repository performance through proper configuration and periodic maintenance.\n\nBy mastering these advanced Git techniques, you'll be able to work more efficiently in team environments, maintain cleaner project histories, and contribute to open-source projects with confidence. These skills distinguish professional developers from beginners and are highly valued in the industry.\n\nWe'll cover practical examples including custom Git configurations for different environments, advanced merge strategies for complex feature integration, and maintenance scripts that keep repositories healthy and performant.",
     "code": {
-     "example": "# Git Best Practices and Advanced Techniques\n\n# Advanced Git Configuration\n\n# Create environment-specific configurations\n# ~/.gitconfig.local (personal settings)\n[user]\n  name = Your Name\n  email = your.personal.email@example.com\n\n[core]\n  editor = code --wait\n  autocrlf = input  # For macOS/Linux\n\n# Project-specific configuration (.git/config)\n[remote \"origin\"]\n  url = https://github.com/your-username/project.git\n\n[branch \"main\"]\n  remote = origin\n  merge = refs/heads/main\n\n# Advanced merge strategies\n\n# Use merge strategy options\ngit merge -X theirs feature-branch  # Prefer their changes in conflicts\ngit merge -X ours feature-branch    # Prefer our changes in conflicts\n\n# Squash merge for clean history\ngit merge --squash feature-branch\ngit commit -m \"feat: implement user authentication\"\n\n# No fast-forward merge to preserve branch structure\ngit merge --no-ff feature-branch\n\n# Custom Git Aliases for Productivity\n\n# Add to ~/.gitconfig\n[alias]\n  # Status and log shortcuts\n  st = status\n  ci = commit\n  co = checkout\n  br = branch\n  \n  # Advanced log formatting\n  lg = log --oneline --graph --all\n  ll = log --pretty=format:\"%C(yellow)%h%C(reset) - %C(green)(%cr)%C(reset) %C(bold blue)<%an>%C(reset) %s\"\n  \n  # Diff and patch commands\n  dc = diff --cached\n  dt = difftool\n  \n  # Reset shortcuts\n  unstage = reset HEAD --\n  undo = reset --soft HEAD~1\n  \n  # Workflow aliases\n  ready = \"!git add . && git status\"\n  publish = \"!git push -u origin $(git rev-parse --abbrev-ref HEAD)\"\n\n# Git Hooks for Automation\n\n# Pre-commit hook example (.git/hooks/pre-commit)\n#!/bin/sh\n\n# Prevent committing to main branch\ngit rev-parse --abbrev-ref HEAD | grep '^main$' > /dev/null\nif [ $? -eq 0 ]; then\n  echo \"Direct commits to main branch are not allowed.\"\n  exit 1\nfi\n\n# Run linter on staged files\nFILES=$(git diff --cached --name-only --diff-filter=ACMR | grep '\\.js$')\nif [ -n \"$FILES\" ]; then\n  echo \"Running linter on staged JavaScript files...\"\n  ./node_modules/.bin/eslint $FILES\n  if [ $? -ne 0 ]; then\n    echo \"ESLint failed. Please fix errors before committing.\"\n    exit 1\n  fi\nfi\n\n# Repository Maintenance and Optimization\n\n# Configure for large repositories\ngit config --global gc.auto 2500\ngit config --global pack.threads 1\ngit config --global core.preloadindex true\ngit config --global core.untrackedcache true\n\n# Optimize for Windows file systems\ngit config --global core.fscache true\n\n# Performance benchmarking\ngit config --global advice.statTimes true\n\n# Repository health checks\n\n# Verify repository integrity\ngit fsck --full\n\n# Check for corrupt objects\ngit fsck --strict\n\n# Analyze repository size\ngit count-objects -vH\n\n# Find large objects in history\ngit rev-list --objects --all | \\\n  git cat-file --batch-check='%(objecttype) %(objectname) %(objectsize) %(rest)' | \\\n  awk '/^blob/ {print substr($0, index($0, $4))}' | \\\n  sort --numeric-sort --key=2 | \\\n  tail -n 20\n\n# Clean up unreachable objects\ngit gc --aggressive\ngit prune\n\n# Optimize pack files\ngit repack -ad\n\n# Clean up merged branches\ngit branch --merged | grep -v main | xargs git branch -d\n\n# Prune remote-tracking branches\ngit remote prune origin\n\n# Advanced Performance Techniques\n\n# Use shallow clones for faster cloning\ngit clone --depth 1 https://github.com/user/repo.git\n\n# Shallow fetch\ngit fetch --depth 5\n\n# Use sparse-checkout for partial repository\ngit sparse-checkout init --cone\ngit sparse-checkout set path/to/directory\n\n# Optimize for large files with Git LFS\ngit lfs install\ngit lfs track \"*.psd\"\ngit add .gitattributes\n\n# Use partial clone for enormous repositories\ngit clone --filter=blob:none https://github.com/user/large-repo.git\n\n# Configure network performance\ngit config --global http.lowSpeedLimit 0\ngit config --global http.lowSpeedTime 999999\n\n# Enable multi-threaded index preloading\ngit config --global core.preloadindex true" ,
-     "explanation": "This example demonstrates advanced Git techniques including:\n\n1. **Custom Configuration**: Environment-specific settings and project-level configurations\n2. **Advanced Merging**: Different merge strategies for various scenarios\n3. **Productivity Aliases**: Custom commands that speed up common workflows\n4. **Automation Hooks**: Pre-commit hooks that enforce quality standards\n5. **Performance Optimization**: Settings that improve Git operations in large repositories\n6. **Repository Maintenance**: Commands that keep repositories healthy and efficient\n7. **Large File Handling**: Git LFS configuration for managing binary assets\n8. **Network Optimization**: Settings that improve performance over slow connections\n\nThese techniques help professional developers work more efficiently while maintaining code quality and repository health.",
+      "example": "# Git Best Practices and Advanced Techniques\n\n# Advanced Git Configuration\n\n# Create environment-specific configurations\n# ~/.gitconfig.local (personal settings)\n[user]\n  name = Your Name\n  email = your.personal.email@example.com\n\n[core]\n  editor = code --wait\n  autocrlf = input  # For macOS/Linux\n\n# Project-specific configuration (.git/config)\n[remote \"origin\"]\n  url = https://github.com/your-username/project.git\n\n[branch \"main\"]\n  remote = origin\n  merge = refs/heads/main\n\n# Advanced merge strategies\n\n# Use merge strategy options\ngit merge -X theirs feature-branch  # Prefer their changes in conflicts\ngit merge -X ours feature-branch    # Prefer our changes in conflicts\n\n# Squash merge for clean history\ngit merge --squash feature-branch\ngit commit -m \"feat: implement user authentication\"\n\n# No fast-forward merge to preserve branch structure\ngit merge --no-ff feature-branch\n\n# Custom Git Aliases for Productivity\n\n# Add to ~/.gitconfig\n[alias]\n  # Status and log shortcuts\n  st = status\n  ci = commit\n  co = checkout\n  br = branch\n  \n  # Advanced log formatting\n  lg = log --oneline --graph --all\n  ll = log --pretty=format:\"%C(yellow)%h%C(reset) - %C(green)(%cr)%C(reset) %C(bold blue)<%an>%C(reset) %s\"\n  \n  # Diff and patch commands\n  dc = diff --cached\n  dt = difftool\n  \n  # Reset shortcuts\n  unstage = reset HEAD --\n  undo = reset --soft HEAD~1\n  \n  # Workflow aliases\n  ready = \"!git add . && git status\"\n  publish = \"!git push -u origin $(git rev-parse --abbrev-ref HEAD)\"\n\n# Git Hooks for Automation\n\n# Pre-commit hook example (.git/hooks/pre-commit)\n#!/bin/sh\n\n# Prevent committing to main branch\ngit rev-parse --abbrev-ref HEAD | grep '^main$' > /dev/null\nif [ $? -eq 0 ]; then\n  echo \"Direct commits to main branch are not allowed.\"\n  exit 1\nfi\n\n# Run linter on staged files\nFILES=$(git diff --cached --name-only --diff-filter=ACMR | grep '\\.js$')\nif [ -n \"$FILES\" ]; then\n  echo \"Running linter on staged JavaScript files...\"\n  ./node_modules/.bin/eslint $FILES\n  if [ $? -ne 0 ]; then\n    echo \"ESLint failed. Please fix errors before committing.\"\n    exit 1\n  fi\nfi\n\n# Repository Maintenance and Optimization\n\n# Configure for large repositories\ngit config --global gc.auto 2500\ngit config --global pack.threads 1\ngit config --global core.preloadindex true\ngit config --global core.untrackedcache true\n\n# Optimize for Windows file systems\ngit config --global core.fscache true\n\n# Performance benchmarking\ngit config --global advice.statTimes true\n\n# Repository health checks\n\n# Verify repository integrity\ngit fsck --full\n\n# Check for corrupt objects\ngit fsck --strict\n\n# Analyze repository size\ngit count-objects -vH\n\n# Find large objects in history\ngit rev-list --objects --all | \\\n  git cat-file --batch-check='%(objecttype) %(objectname) %(objectsize) %(rest)' | \\\n  awk '/^blob/ {print substr($0, index($0, $4))}' | \\\n  sort --numeric-sort --key=2 | \\\n  tail -n 20\n\n# Clean up unreachable objects\ngit gc --aggressive\ngit prune\n\n# Optimize pack files\ngit repack -ad\n\n# Clean up merged branches\ngit branch --merged | grep -v main | xargs git branch -d\n\n# Prune remote-tracking branches\ngit remote prune origin\n\n# Advanced Performance Techniques\n\n# Use shallow clones for faster cloning\ngit clone --depth 1 https://github.com/user/repo.git\n\n# Shallow fetch\ngit fetch --depth 5\n\n# Use sparse-checkout for partial repository\ngit sparse-checkout init --cone\ngit sparse-checkout set path/to/directory\n\n# Optimize for large files with Git LFS\ngit lfs install\ngit lfs track \"*.psd\"\ngit add .gitattributes\n\n# Use partial clone for enormous repositories\ngit clone --filter=blob:none https://github.com/user/large-repo.git\n\n# Configure network performance\ngit config --global http.lowSpeedLimit 0\ngit config --global http.lowSpeedTime 999999\n\n# Enable multi-threaded index preloading\ngit config --global core.preloadindex true",
+      "explanation": "This example demonstrates advanced Git techniques including:\n\n1. **Custom Configuration**: Environment-specific settings and project-level configurations\n2. **Advanced Merging**: Different merge strategies for various scenarios\n3. **Productivity Aliases**: Custom commands that speed up common workflows\n4. **Automation Hooks**: Pre-commit hooks that enforce quality standards\n5. **Performance Optimization**: Settings that improve Git operations in large repositories\n6. **Repository Maintenance**: Commands that keep repositories healthy and efficient\n7. **Large File Handling**: Git LFS configuration for managing binary assets\n8. **Network Optimization**: Settings that improve performance over slow connections\n\nThese techniques help professional developers work more efficiently while maintaining code quality and repository health.",
       "language": "bash"
     },
     "pitfalls": [

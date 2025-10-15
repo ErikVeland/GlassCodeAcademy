@@ -1,6 +1,6 @@
 [
   {
-    "id": "sass-advanced-lesson-1",
+    "id": "1",
     "moduleSlug": "sass-advanced",
     "title": "Introduction to SASS",
     "order": 1,
@@ -53,7 +53,7 @@
     "version": "1.0.0"
   },
   {
-    "id": "sass-advanced-lesson-2",
+    "id": "2",
     "moduleSlug": "sass-advanced",
     "title": "Variables in SASS",
     "order": 2,
@@ -106,7 +106,7 @@
     "version": "1.0.0"
   },
   {
-    "id": "sass-advanced-lesson-3",
+    "id": "3",
     "moduleSlug": "sass-advanced",
     "title": "Nesting in SASS",
     "order": 3,
@@ -159,7 +159,7 @@
     "version": "1.0.0"
   },
   {
-    "id": "sass-advanced-lesson-4",
+    "id": "4",
     "moduleSlug": "sass-advanced",
     "title": "Creating and Using Mixins",
     "order": 4,
@@ -212,7 +212,7 @@
     "version": "1.0.0"
   },
   {
-    "id": "sass-advanced-lesson-5",
+    "id": "5",
     "moduleSlug": "sass-advanced",
     "title": "SASS Functions and Operations",
     "order": 5,
@@ -265,7 +265,7 @@
     "version": "1.0.0"
   },
   {
-    "id": "sass-advanced-lesson-6",
+    "id": "6",
     "moduleSlug": "sass-advanced",
     "title": "Control Directives and Loops",
     "order": 6,
@@ -318,7 +318,7 @@
     "version": "1.0.0"
   },
   {
-    "id": "sass-advanced-lesson-7",
+    "id": "7",
     "moduleSlug": "sass-advanced",
     "title": "Inheritance with @extend",
     "order": 7,
@@ -371,7 +371,7 @@
     "version": "1.0.0"
   },
   {
-    "id": "sass-advanced-lesson-8",
+    "id": "8",
     "moduleSlug": "sass-advanced",
     "title": "Organizing Code with Partials and @import",
     "order": 8,
@@ -424,7 +424,7 @@
     "version": "1.0.0"
   },
   {
-    "id": "sass-advanced-lesson-9",
+    "id": "9",
     "moduleSlug": "sass-advanced",
     "title": "Working with Maps and Lists",
     "order": 9,
@@ -477,7 +477,7 @@
     "version": "1.0.0"
   },
   {
-    "id": "sass-advanced-lesson-10",
+    "id": "10",
     "moduleSlug": "sass-advanced",
     "title": "SASS Architecture and BEM Methodology",
     "order": 10,
@@ -530,7 +530,7 @@
     "version": "1.0.0"
   },
   {
-    "id": "sass-advanced-lesson-11",
+    "id": "11",
     "moduleSlug": "sass-advanced",
     "title": "SASS Performance and Optimization",
     "order": 11,
@@ -583,7 +583,7 @@
     "version": "1.0.0"
   },
   {
-    "id": "sass-advanced-lesson-12",
+    "id": "12",
     "moduleSlug": "sass-advanced",
     "title": "Modern SASS Features and CSS Grid Integration",
     "order": 12,
@@ -636,7 +636,7 @@
     "version": "1.0.0"
   },
   {
-    "id": "sass-advanced-lesson-13",
+    "id": "13",
     "moduleSlug": "sass-advanced",
     "title": "Advanced Architecture Patterns and the 7-1 Pattern",
     "order": 13,
@@ -696,7 +696,7 @@
     "version": "1.0.0"
   },
   {
-    "id": "sass-advanced-lesson-14",
+    "id": "14",
     "moduleSlug": "sass-advanced",
     "title": "Design System Implementation with Sass",
     "order": 14,
@@ -756,7 +756,7 @@
     "version": "1.0.0"
   },
   {
-    "id": "sass-advanced-lesson-15",
+    "id": "15",
     "moduleSlug": "sass-advanced",
     "title": "Advanced Responsive Design Techniques with Sass",
     "order": 15,
@@ -818,7 +818,7 @@
     "version": "1.0.0"
   },
   {
-    "id": "sass-lesson-16-theming-customization",
+    "id": "16",
     "moduleSlug": "sass-advanced",
     "title": "Theming and Customization Strategies",
     "order": 16,

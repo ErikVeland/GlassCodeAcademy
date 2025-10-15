@@ -1,6 +1,6 @@
 [
   {
-    "id": "typescript-fundamentals-lesson-1",
+    "id": "1",
     "moduleSlug": "typescript-fundamentals",
     "title": "Primitive Types and Type Annotations",
     "order": 1,
@@ -63,7 +63,7 @@
     "version": "1.1.0"
   },
   {
-    "id": "typescript-fundamentals-lesson-2",
+    "id": "2",
     "moduleSlug": "typescript-fundamentals",
     "title": "Arrays, Tuples, and Enums",
     "order": 2,
@@ -127,7 +127,7 @@
     "version": "1.1.0"
   },
   {
-    "id": "typescript-fundamentals-lesson-3",
+    "id": "3",
     "moduleSlug": "typescript-fundamentals",
     "title": "Interface Declaration and Extension",
     "order": 3,
@@ -190,7 +190,7 @@
     "version": "1.1.0"
   },
   {
-    "id": "typescript-fundamentals-lesson-4",
+    "id": "4",
     "moduleSlug": "typescript-fundamentals",
     "title": "Class Implementation with Access Modifiers and Abstract Classes",
     "order": 4,
@@ -254,7 +254,7 @@
     "version": "1.1.0"
   },
   {
-    "id": "typescript-fundamentals-lesson-5",
+    "id": "5",
     "moduleSlug": "typescript-fundamentals",
     "title": "Generic Types and Constraints",
     "order": 5,
@@ -317,7 +317,7 @@
     "version": "1.1.0"
   },
   {
-    "id": "typescript-fundamentals-lesson-6",
+    "id": "6",
     "moduleSlug": "typescript-fundamentals",
     "title": "Union, Intersection, and Conditional Types",
     "order": 6,
@@ -381,7 +381,7 @@
     "version": "1.1.0"
   },
   {
-    "id": "typescript-fundamentals-lesson-7",
+    "id": "7",
     "moduleSlug": "typescript-fundamentals",
     "title": "Type Guards and Type Assertions",
     "order": 7,
@@ -444,7 +444,7 @@
     "version": "1.1.0"
   },
   {
-    "id": "typescript-fundamentals-lesson-8",
+    "id": "8",
     "moduleSlug": "typescript-fundamentals",
     "title": "Built-in Utility Types",
     "order": 8,
@@ -507,7 +507,7 @@
     "version": "1.1.0"
   },
   {
-    "id": "typescript-fundamentals-lesson-9",
+    "id": "9",
     "moduleSlug": "typescript-fundamentals",
     "title": "Decorators and Metadata",
     "order": 9,
@@ -570,7 +570,7 @@
     "version": "1.1.0"
   },
   {
-    "id": "typescript-fundamentals-lesson-10",
+    "id": "10",
     "moduleSlug": "typescript-fundamentals",
     "title": "Module System and Namespaces",
     "order": 10,
@@ -633,7 +633,7 @@
     "version": "1.1.0"
   },
   {
-    "id": "typescript-fundamentals-lesson-11",
+    "id": "11",
     "moduleSlug": "typescript-fundamentals",
     "title": "Promises, Async/Await with TypeScript",
     "order": 11,
@@ -696,7 +696,7 @@
     "version": "1.1.0"
   },
   {
-    "id": "typescript-fundamentals-lesson-12",
+    "id": "12",
     "moduleSlug": "typescript-fundamentals",
     "title": "Testing TypeScript Code",
     "order": 12,
@@ -759,7 +759,7 @@
     "version": "1.1.0"
   },
   {
-    "id": "typescript-fundamentals-lesson-13",
+    "id": "13",
     "moduleSlug": "typescript-fundamentals",
     "title": "Advanced TypeScript Patterns and Utility Types",
     "order": 13,
@@ -815,7 +815,7 @@
     "version": "1.0.0"
   },
   {
-    "id": "typescript-fundamentals-lesson-14",
+    "id": "14",
     "moduleSlug": "typescript-fundamentals",
     "title": "TypeScript in Production and Migration Strategies",
     "order": 14,

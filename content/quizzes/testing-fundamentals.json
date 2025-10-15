@@ -7,7 +7,7 @@
   "timeLimit": 45,
   "questions": [
     {
-      "id": 4,
+      "id": "4",
       "question": "What is the primary purpose of the testing pyramid in software development?",
       "topic": "Testing Fundamentals",
       "difficulty": "Beginner",
@@ -30,7 +30,7 @@
       "correctAnswer": 0
     },
     {
-      "id": 5,
+      "id": "5",
       "question": "Which testing principle states that exhaustive testing is impossible?",
       "topic": "Testing Fundamentals",
       "difficulty": "Beginner",
@@ -53,7 +53,7 @@
       "correctAnswer": 0
     },
     {
-      "id": 16,
+      "id": "16",
       "question": "What does the 'A' in the AAA testing pattern stand for?",
       "topic": "Unit Testing",
       "difficulty": "Beginner",
@@ -76,7 +76,7 @@
       "correctAnswer": 0
     },
     {
-      "id": 17,
+      "id": "17",
       "question": "What is the main focus of integration testing?",
       "topic": "Integration Testing",
       "difficulty": "Beginner",
@@ -99,7 +99,7 @@
       "correctAnswer": 0
     },
     {
-      "id": 18,
+      "id": "18",
       "question": "What is a key advantage of end-to-end testing?",
       "topic": "End-to-End Testing",
       "difficulty": "Beginner",
@@ -122,7 +122,7 @@
       "correctAnswer": 0
     },
     {
-      "id": 19,
+      "id": "19",
       "question": "In the FIRST principles of unit testing, what does the 'I' stand for?",
       "topic": "Unit Testing",
       "difficulty": "Beginner",
@@ -145,7 +145,7 @@
       "correctAnswer": 0
     },
     {
-      "id": 20,
+      "id": "20",
       "question": "What is the first step in the Red-Green-Refactor cycle of Test-Driven Development?",
       "topic": "TDD",
       "difficulty": "Beginner",
@@ -168,7 +168,7 @@
       "correctAnswer": 0
     },
     {
-      "id": 21,
+      "id": "21",
       "question": "Which Gherkin keyword is used to describe the preconditions for a scenario?",
       "topic": "BDD",
       "difficulty": "Beginner",
@@ -191,7 +191,7 @@
       "correctAnswer": 0
     },
     {
-      "id": 22,
+      "id": "22",
       "question": "What is the primary purpose of code coverage metrics?",
       "topic": "Code Coverage",
       "difficulty": "Beginner",
@@ -214,7 +214,7 @@
       "correctAnswer": 0
     },
     {
-      "id": 23,
+      "id": "23",
       "question": "What is test isolation and why is it important?",
       "topic": "Testing Best Practices",
       "difficulty": "Beginner",
@@ -237,7 +237,7 @@
       "correctAnswer": 0
     },
     {
-      "id": 24,
+      "id": "24",
       "question": "Which type of test double provides canned answers to calls but doesn't verify behavior?",
       "topic": "Mocking",
       "difficulty": "Beginner",
@@ -260,7 +260,7 @@
       "correctAnswer": 0
     },
     {
-      "id": 25,
+      "id": "25",
       "question": "What is the main benefit of using parameterized tests?",
       "topic": "Testing Frameworks",
       "difficulty": "Beginner",
@@ -283,7 +283,7 @@
       "correctAnswer": 0
     },
     {
-      "id": 26,
+      "id": "26",
       "question": "What is the primary difference between unit tests and integration tests?",
       "topic": "Testing Types",
       "difficulty": "Intermediate",
@@ -307,7 +307,7 @@
       "correctAnswer": 0
     },
     {
-      "id": 27,
+      "id": "27",
       "question": "Which testing framework is most commonly used for .NET unit testing in modern applications?",
       "topic": "Testing Frameworks",
       "difficulty": "Intermediate",
@@ -330,7 +330,7 @@
       "correctAnswer": 0
     },
     {
-      "id": 28,
+      "id": "28",
       "question": "What is the main purpose of using mocks in unit testing?",
       "topic": "Mocking",
       "difficulty": "Intermediate",
@@ -353,7 +353,7 @@
       "correctAnswer": 0
     },
     {
-      "id": 29,
+      "id": "29",
       "question": "What does the 'I' in the FIRST principles of unit testing stand for?",
       "topic": "Unit Testing",
       "difficulty": "Intermediate",
@@ -376,7 +376,7 @@
       "correctAnswer": 0
     },
     {
-      "id": 30,
+      "id": "30",
       "question": "Which code coverage metric measures the percentage of decision points that have been taken?",
       "topic": "Code Coverage",
       "difficulty": "Intermediate",
@@ -399,7 +399,7 @@
       "correctAnswer": 0
     },
     {
-      "id": 31,
+      "id": "31",
       "question": "What is the main advantage of using in-memory databases for integration testing?",
       "topic": "Integration Testing",
       "difficulty": "Intermediate",
@@ -422,7 +422,7 @@
       "correctAnswer": 0
     },
     {
-      "id": 32,
+      "id": "32",
       "question": "In BDD, what is the purpose of scenario outlines?",
       "topic": "BDD",
       "difficulty": "Intermediate",
@@ -445,7 +445,7 @@
       "correctAnswer": 0
     },
     {
-      "id": 33,
+      "id": "33",
       "question": "What is the primary benefit of using dependency injection for testability?",
       "topic": "Testing Best Practices",
       "difficulty": "Intermediate",
@@ -468,7 +468,7 @@
       "correctAnswer": 0
     },
     {
-      "id": 34,
+      "id": "34",
       "question": "Which TDD principle helps prevent over-engineering during implementation?",
       "topic": "TDD",
       "difficulty": "Intermediate",
@@ -491,7 +491,7 @@
       "correctAnswer": 0
     },
     {
-      "id": 35,
+      "id": "35",
       "question": "What is the main purpose of test fixtures in testing frameworks?",
       "topic": "Testing Frameworks",
       "difficulty": "Intermediate",
@@ -514,7 +514,7 @@
       "correctAnswer": 0
     },
     {
-      "id": 36,
+      "id": "36",
       "question": "What is the primary difference between stubs and mocks in testing?",
       "topic": "Mocking",
       "difficulty": "Intermediate",
@@ -538,7 +538,7 @@
       "correctAnswer": 0
     },
     {
-      "id": 37,
+      "id": "37",
       "question": "What is the main benefit of using the Arrange-Act-Assert pattern in testing?",
       "topic": "Unit Testing",
       "difficulty": "Intermediate",
@@ -561,7 +561,7 @@
       "correctAnswer": 0
     },
     {
-      "id": 38,
+      "id": "38",
       "question": "Which testing approach is most effective for catching integration issues between microservices?",
       "topic": "Integration Testing",
       "difficulty": "Intermediate",
@@ -584,7 +584,7 @@
       "correctAnswer": 0
     },
     {
-      "id": 39,
+      "id": "39",
       "question": "What is the primary limitation of code coverage metrics?",
       "topic": "Code Coverage",
       "difficulty": "Intermediate",
@@ -607,7 +607,7 @@
       "correctAnswer": 0
     },
     {
-      "id": 40,
+      "id": "40",
       "question": "What is the main purpose of using fakes in testing?",
       "topic": "Mocking",
       "difficulty": "Intermediate",
@@ -630,7 +630,7 @@
       "correctAnswer": 0
     },
     {
-      "id": 41,
+      "id": "41",
       "question": "Which testing principle suggests that testing should start as early as possible in the software development lifecycle?",
       "topic": "Testing Fundamentals",
       "difficulty": "Intermediate",
@@ -653,7 +653,7 @@
       "correctAnswer": 0
     },
     {
-      "id": 42,
+      "id": "42",
       "question": "What is the main benefit of using behavior verification with mocks?",
       "topic": "Mocking",
       "difficulty": "Intermediate",
@@ -676,7 +676,7 @@
       "correctAnswer": 0
     },
     {
-      "id": 43,
+      "id": "43",
       "question": "What is the primary purpose of continuous integration in relation to testing?",
       "topic": "CI/CD",
       "difficulty": "Intermediate",
@@ -699,7 +699,7 @@
       "correctAnswer": 0
     },
     {
-      "id": 44,
+      "id": "44",
       "question": "What does 100% code coverage guarantee about your software?",
       "topic": "Code Coverage",
       "difficulty": "Advanced",
@@ -722,7 +722,7 @@
       "correctAnswer": 0
     },
     {
-      "id": 45,
+      "id": "45",
       "question": "Which testing approach is most effective for testing complex business logic with many conditional branches?",
       "topic": "Testing Strategies",
       "difficulty": "Advanced",
@@ -745,7 +745,7 @@
       "correctAnswer": 0
     },
     {
-      "id": 46,
+      "id": "46",
       "question": "What is the primary challenge when implementing contract testing in a microservices architecture?",
       "topic": "Integration Testing",
       "difficulty": "Advanced",
@@ -768,7 +768,7 @@
       "correctAnswer": 0
     },
     {
-      "id": 47,
+      "id": "47",
       "question": "Which advanced mocking technique allows you to verify the order of method calls?",
       "topic": "Mocking",
       "difficulty": "Advanced",
@@ -791,7 +791,7 @@
       "correctAnswer": 0
     },
     {
-      "id": 48,
+      "id": "48",
       "question": "What is the primary benefit of using property-based testing over example-based testing?",
       "topic": "Advanced Testing Techniques",
       "difficulty": "Advanced",
@@ -814,7 +814,7 @@
       "correctAnswer": 0
     },
     {
-      "id": 49,
+      "id": "49",
       "question": "Which testing anti-pattern involves creating tests that are overly dependent on implementation details?",
       "topic": "Testing Best Practices",
       "difficulty": "Advanced",
@@ -837,7 +837,7 @@
       "correctAnswer": 0
     },
     {
-      "id": 50,
+      "id": "50",
       "question": "What is the primary advantage of using testcontainers for integration testing?",
       "topic": "Integration Testing",
       "difficulty": "Advanced",
@@ -860,7 +860,7 @@
       "correctAnswer": 0
     },
     {
-      "id": 51,
+      "id": "51",
       "question": "Which advanced CI/CD practice involves running a subset of tests based on code changes?",
       "topic": "CI/CD",
       "difficulty": "Advanced",
@@ -883,7 +883,7 @@
       "correctAnswer": 0
     },
     {
-      "id": 52,
+      "id": "52",
       "question": "What is the primary challenge when implementing test-driven development in legacy codebases?",
       "topic": "TDD",
       "difficulty": "Advanced",
@@ -906,7 +906,7 @@
       "correctAnswer": 0
     },
     {
-      "id": 53,
+      "id": "53",
       "question": "Which advanced BDD technique involves creating domain-specific languages for test scenarios?",
       "topic": "BDD",
       "difficulty": "Advanced",
@@ -929,7 +929,7 @@
       "correctAnswer": 0
     },
     {
-      "id": 54,
+      "id": "54",
       "question": "What is the primary benefit of using `mutation` testing to evaluate test suite quality?",
       "topic": "Advanced Testing Techniques",
       "difficulty": "Advanced",
@@ -952,7 +952,7 @@
       "correctAnswer": 0
     },
     {
-      "id": 55,
+      "id": "55",
       "question": "Which advanced testing pattern involves creating tests that can adapt to different environments or configurations?",
       "topic": "Testing Best Practices",
       "difficulty": "Advanced",
@@ -975,7 +975,7 @@
       "correctAnswer": 0
     },
     {
-      "id": 56,
+      "id": "56",
       "question": "What is the primary challenge when implementing observability-driven development?",
       "topic": "Advanced Testing Techniques",
       "difficulty": "Advanced",
@@ -998,7 +998,7 @@
       "correctAnswer": 0
     },
     {
-      "id": 57,
+      "id": "57",
       "question": "Which advanced testing technique involves running tests with different system configurations to identify configuration-related issues?",
       "topic": "Advanced Testing Techniques",
       "difficulty": "Advanced",
@@ -1021,7 +1021,7 @@
       "correctAnswer": 0
     },
     {
-      "id": 58,
+      "id": "58",
       "question": "What is the primary benefit of implementing chaos engineering practices in testing?",
       "topic": "Advanced Testing Techniques",
       "difficulty": "Advanced",
@@ -1044,7 +1044,7 @@
       "correctAnswer": 0
     },
     {
-      "id": 1,
+      "id": "1",
       "topic": "Testing Fundamentals",
       "type": "multiple-choice",
       "question": "What is the purpose of the testing pyramid?",
@@ -1057,10 +1057,11 @@
       "correctAnswer": 0,
       "explanation": "The testing pyramid is a conceptual model that guides teams on how to distribute different types of tests. It suggests having many unit tests (fast and cheap), fewer integration tests, and even fewer end-to-end tests (slow and expensive). This distribution optimizes for fast feedback and cost-effectiveness.",
       "correctIndex": 0,
-      "difficulty": "Beginner"
+      "difficulty": "Beginner",
+      "questionType": "multiple-choice"
     },
     {
-      "id": 2,
+      "id": "2",
       "topic": "Testing Fundamentals",
       "type": "multiple-choice",
       "question": "Which type of test typically runs the fastest?",
@@ -1073,19 +1074,21 @@
       "correctAnswer": 0,
       "explanation": "Unit tests typically run the fastest because they test small units of code in isolation without external dependencies like databases or network calls. They're executed in memory and can run in milliseconds, making them ideal for continuous integration pipelines.",
       "correctIndex": 0,
-      "difficulty": "Beginner"
+      "difficulty": "Beginner",
+      "questionType": "multiple-choice"
     },
     {
-      "id": 3,
+      "id": "3",
       "topic": "Unit Testing",
       "type": "open-ended",
       "question": "What is the difference between a mock and a stub in testing? When would you use each?",
       "choices": null,
       "explanation": "A stub provides canned answers to calls made during the test, usually not responding at all to anything outside what's programmed in for the test. A mock is a stub with added behavior verification - it knows what methods should be called and with what arguments, and can verify this during the test. Use stubs when you need to control indirect inputs, and mocks when you need to verify interactions between objects.",
-      "difficulty": "Beginner"
+      "difficulty": "Beginner",
+      "questionType": "open-ended"
     },
     {
-      "id": 6,
+      "id": "6",
       "topic": "Test Patterns",
       "type": "multiple-choice",
       "question": "What is the purpose of the Arrange-Act-Assert pattern in testing?",
@@ -1098,19 +1101,21 @@
       "correctAnswer": 0,
       "explanation": "The Arrange-Act-Assert (AAA) pattern structures tests into three clear sections: Arrange (set up preconditions and inputs), Act (execute the code under test), and Assert (verify the outcomes). This pattern makes tests more readable, maintainable, and easier to debug.",
       "correctIndex": 0,
-      "difficulty": "Beginner"
+      "difficulty": "Beginner",
+      "questionType": "multiple-choice"
     },
     {
-      "id": 7,
+      "id": "7",
       "topic": "Mocking",
       "type": "open-ended",
       "question": "What is test isolation and why is it important? How do you achieve it?",
       "choices": null,
       "explanation": "Test isolation means each test can run independently without being affected by other tests. It's important because it ensures tests are reliable, repeatable, and can be run in any order. You achieve it by using fresh test data for each test, mocking external dependencies, avoiding shared state between tests, and using setup/teardown methods to prepare and clean up the test environment.",
-      "difficulty": "Beginner"
+      "difficulty": "Beginner",
+      "questionType": "open-ended"
     },
     {
-      "id": 8,
+      "id": "8",
       "topic": "Code Coverage",
       "type": "multiple-choice",
       "question": "What does code coverage measure and what are its limitations?",
@@ -1123,10 +1128,11 @@
       "correctAnswer": 0,
       "explanation": "Code coverage measures the percentage of code executed by tests, including lines, branches, and functions. However, it doesn't measure test quality or correctness - 100% coverage doesn't guarantee bug-free code. Tests could execute all code paths but still have incorrect assertions. It's a useful metric for identifying untested code but shouldn't be the sole measure of test effectiveness.",
       "correctIndex": 0,
-      "difficulty": "Beginner"
+      "difficulty": "Beginner",
+      "questionType": "multiple-choice"
     },
     {
-      "id": 9,
+      "id": "9",
       "topic": "Test Types",
       "type": "multiple-choice",
       "question": "What is the testing pyramid?",
@@ -1139,10 +1145,11 @@
       "correctAnswer": 0,
       "explanation": "The testing pyramid suggests having many fast, cheap unit tests at the base, fewer integration tests in the middle, and fewest expensive E2E tests at the top.",
       "correctIndex": 0,
-      "difficulty": "Beginner"
+      "difficulty": "Beginner",
+      "questionType": "multiple-choice"
     },
     {
-      "id": 10,
+      "id": "10",
       "topic": "Mocking",
       "type": "multiple-choice",
       "question": "What is the difference between mocks, stubs, and spies?",
@@ -1155,19 +1162,21 @@
       "correctAnswer": 0,
       "explanation": "Mocks verify that specific methods were called with expected parameters. Stubs provide predetermined responses. Spies record information about function calls for later verification.",
       "correctIndex": 0,
-      "difficulty": "Beginner"
+      "difficulty": "Beginner",
+      "questionType": "multiple-choice"
     },
     {
-      "id": 11,
+      "id": "11",
       "topic": "Coverage",
       "type": "open-ended",
       "question": "What are the different types of code coverage and what do they measure?",
       "choices": null,
       "explanation": "Line coverage: percentage of code lines executed. Branch coverage: percentage of code branches taken. Function coverage: percentage of functions called. Statement coverage: percentage of statements executed. Condition coverage: percentage of boolean conditions evaluated to both true and false.",
-      "difficulty": "Beginner"
+      "difficulty": "Beginner",
+      "questionType": "open-ended"
     },
     {
-      "id": 12,
+      "id": "12",
       "topic": "Performance Testing",
       "type": "multiple-choice",
       "question": "What is load testing?",
@@ -1180,10 +1189,11 @@
       "correctAnswer": 0,
       "explanation": "Load testing evaluates system performance under expected user load to identify bottlenecks and ensure the application can handle normal traffic volumes.",
       "correctIndex": 0,
-      "difficulty": "Beginner"
+      "difficulty": "Beginner",
+      "questionType": "multiple-choice"
     },
     {
-      "id": 13,
+      "id": "13",
       "topic": "TDD",
       "type": "multiple-choice",
       "question": "What is the TDD cycle?",
@@ -1196,19 +1206,21 @@
       "correctAnswer": 0,
       "explanation": "TDD follows Red (write failing test), Green (make test pass with minimal code), Refactor (improve code while keeping tests passing) cycle.",
       "correctIndex": 0,
-      "difficulty": "Beginner"
+      "difficulty": "Beginner",
+      "questionType": "multiple-choice"
     },
     {
-      "id": 14,
+      "id": "14",
       "topic": "API Testing",
       "type": "open-ended",
       "question": "What should you test when testing REST APIs?",
       "choices": null,
       "explanation": "Test: HTTP status codes, response data structure and content, request/response headers, authentication/authorization, input validation, error handling, performance under load, and edge cases like invalid data or missing parameters.",
-      "difficulty": "Beginner"
+      "difficulty": "Beginner",
+      "questionType": "open-ended"
     },
     {
-      "id": 15,
+      "id": "15",
       "topic": "Best Practices",
       "type": "multiple-choice",
       "question": "What makes a good unit test?",
@@ -1221,7 +1233,8 @@
       "correctAnswer": 0,
       "explanation": "Good unit tests are FIRST: Fast, Independent/Isolated, Repeatable, Self-validating, and Timely. They should test one specific behavior and be easy to understand and maintain.",
       "correctIndex": 0,
-      "difficulty": "Beginner"
+      "difficulty": "Beginner",
+      "questionType": "multiple-choice"
     }
   ],
   "metadata": {

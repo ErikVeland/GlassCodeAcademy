@@ -586,7 +586,7 @@ public class Mutation {
     }
     
     // Laravel answer submission - using DataService validation
-    public AnswerResult SubmitLaravelAnswer(int questionId, int answerIndex)
+    public AnswerResult SubmitLaravelAnswer(string questionId, int answerIndex)
     {
         // If unlocked, accept any answer as correct for testing
         if (AppState.IsUnlocked)
@@ -601,7 +601,7 @@ public class Mutation {
     }
     
     // React answer submission
-    public AnswerResult SubmitReactAnswer(int questionId, int answerIndex)
+    public AnswerResult SubmitReactAnswer(string questionId, int answerIndex)
     {
         // If unlocked, accept any answer as correct for testing
         if (AppState.IsUnlocked)
@@ -616,7 +616,7 @@ public class Mutation {
     }
     
     // Tailwind answer submission
-    public AnswerResult SubmitTailwindAnswer(int questionId, int answerIndex)
+    public AnswerResult SubmitTailwindAnswer(string questionId, int answerIndex)
     {
         // If unlocked, accept any answer as correct for testing
         if (AppState.IsUnlocked)
@@ -631,7 +631,7 @@ public class Mutation {
     }
     
     // Node.js answer submission
-    public AnswerResult SubmitNodeAnswer(int questionId, int answerIndex)
+    public AnswerResult SubmitNodeAnswer(string questionId, int answerIndex)
     {
         // If unlocked, accept any answer as correct for testing
         if (AppState.IsUnlocked)
@@ -645,8 +645,8 @@ public class Mutation {
         return _dataService.ValidateNodeAnswer(questionId, answerIndex);
     }
     
-    // SASS answer submission
-    public AnswerResult SubmitSassAnswer(int questionId, int answerIndex)
+    // Sass answer submission
+    public AnswerResult SubmitSassAnswer(string questionId, int answerIndex)
     {
         // If unlocked, accept any answer as correct for testing
         if (AppState.IsUnlocked)
@@ -661,7 +661,7 @@ public class Mutation {
     }
     
     // Vue answer submission
-    public AnswerResult SubmitVueAnswer(int questionId, int answerIndex)
+    public AnswerResult SubmitVueAnswer(string questionId, int answerIndex)
     {
         // If unlocked, accept any answer as correct for testing
         if (AppState.IsUnlocked)
@@ -676,7 +676,7 @@ public class Mutation {
     }
     
     // Web Fundamentals answer submission
-    public AnswerResult SubmitWebAnswer(int questionId, int answerIndex)
+    public AnswerResult SubmitWebAnswer(string questionId, int answerIndex)
     {
         // If unlocked, accept any answer as correct for testing
         if (AppState.IsUnlocked)
@@ -691,7 +691,7 @@ public class Mutation {
     }
     
     // TypeScript answer submission
-    public AnswerResult SubmitTypescriptAnswer(int questionId, int answerIndex)
+    public AnswerResult SubmitTypescriptAnswer(string questionId, int answerIndex)
     {
         // If unlocked, accept any answer as correct for testing
         if (AppState.IsUnlocked)
@@ -706,7 +706,7 @@ public class Mutation {
     }
     
     // Database answer submission
-    public AnswerResult SubmitDatabaseAnswer(int questionId, int answerIndex)
+    public AnswerResult SubmitDatabaseAnswer(string questionId, int answerIndex)
     {
         // If unlocked, accept any answer as correct for testing
         if (AppState.IsUnlocked)
@@ -721,7 +721,7 @@ public class Mutation {
     }
     
     // Testing answer submission
-    public AnswerResult SubmitTestingAnswer(int questionId, int answerIndex)
+    public AnswerResult SubmitTestingAnswer(string questionId, int answerIndex)
     {
         // If unlocked, accept any answer as correct for testing
         if (AppState.IsUnlocked)
@@ -735,8 +735,8 @@ public class Mutation {
         return _dataService.ValidateTestingAnswer(questionId, answerIndex);
     }
     
-    // Programming Fundamentals answer submission
-    public AnswerResult SubmitProgrammingAnswer(int questionId, int answerIndex)
+    // Programming answer submission
+    public AnswerResult SubmitProgrammingAnswer(string questionId, int answerIndex)
     {
         // If unlocked, accept any answer as correct for testing
         if (AppState.IsUnlocked)
@@ -782,7 +782,7 @@ public class Mutation {
     }
     
     // Security Fundamentals answer submission
-    public AnswerResult SubmitSecurityAnswer(int questionId, int answerIndex)
+    public AnswerResult SubmitSecurityAnswer(string questionId, int answerIndex)
     {
         // If unlocked, accept any answer as correct for testing
         if (AppState.IsUnlocked)
@@ -797,7 +797,7 @@ public class Mutation {
     }
     
     // Version Control answer submission
-    public AnswerResult SubmitVersionAnswer(int questionId, int answerIndex)
+    public AnswerResult SubmitVersionAnswer(string questionId, int answerIndex)
     {
         // If unlocked, accept any answer as correct for testing
         if (AppState.IsUnlocked)
@@ -811,3 +811,6 @@ public class Mutation {
         return _dataService.ValidateVersionAnswer(questionId, answerIndex);
     }
 }
+
+// Make Program class accessible for testing
+public partial class Program { }

@@ -7,7 +7,7 @@
   "timeLimit": 23,
   "questions": [
     {
-      "id": 1,
+      "id": "1",
       "question": "What is the correct way to create a React component?",
       "topic": "Components",
       "difficulty": "Beginner",
@@ -35,7 +35,7 @@
       "correctAnswer": 0
     },
     {
-      "id": 2,
+      "id": "2",
       "question": "How do you pass data to a React component?",
       "topic": "Components",
       "difficulty": "Beginner",
@@ -63,7 +63,7 @@
       "correctAnswer": 0
     },
     {
-      "id": 3,
+      "id": "3",
       "question": "What are React Hooks and why were they introduced?",
       "topic": "Hooks",
       "difficulty": "Intermediate",
@@ -86,7 +86,7 @@
       "correctAnswer": 0
     },
     {
-      "id": 4,
+      "id": "4",
       "question": "Which hook is used to manage state in a functional component?",
       "topic": "Hooks",
       "difficulty": "Intermediate",
@@ -114,7 +114,7 @@
       "correctAnswer": 0
     },
     {
-      "id": 5,
+      "id": "5",
       "question": "What is the purpose of React Context?",
       "topic": "Context",
       "difficulty": "Beginner",
@@ -142,7 +142,7 @@
       "correctAnswer": 0
     },
     {
-      "id": 6,
+      "id": "6",
       "question": "Which method is called after a component is rendered for the first time?",
       "topic": "Lifecycle",
       "difficulty": "Intermediate",
@@ -170,7 +170,7 @@
       "correctAnswer": 0
     },
     {
-      "id": 7,
+      "id": "7",
       "question": "What is the virtual DOM and how does it improve React performance?",
       "topic": "Rendering",
       "difficulty": "Beginner",
@@ -193,7 +193,7 @@
       "correctAnswer": 0
     },
     {
-      "id": 8,
+      "id": "8",
       "question": "How do you update state in a functional component?",
       "topic": "State",
       "difficulty": "Beginner",
@@ -216,7 +216,7 @@
       "correctAnswer": 0
     },
     {
-      "id": 9,
+      "id": "9",
       "question": "What is the purpose of useCallback hook?",
       "topic": "Hooks",
       "difficulty": "Beginner",
@@ -244,7 +244,7 @@
       "correctAnswer": 0
     },
     {
-      "id": 10,
+      "id": "10",
       "question": "What does React.memo() do?",
       "topic": "Performance",
       "difficulty": "Intermediate",
@@ -272,7 +272,7 @@
       "correctAnswer": 0
     },
     {
-      "id": 11,
+      "id": "11",
       "question": "When should you use useReducer instead of `useState`?",
       "topic": "State Management",
       "difficulty": "Intermediate",
@@ -295,7 +295,7 @@
       "correctAnswer": 0
     },
     {
-      "id": 12,
+      "id": "12",
       "question": "Which library is commonly used for testing React components?",
       "topic": "Testing",
       "difficulty": "Intermediate",
@@ -323,7 +323,7 @@
       "correctAnswer": 0
     },
     {
-      "id": 13,
+      "id": "13",
       "question": "What is an Error Boundary in React?",
       "topic": "Error Handling",
       "difficulty": "Beginner",
@@ -351,7 +351,7 @@
       "correctAnswer": 0
     },
     {
-      "id": 14,
+      "id": "14",
       "question": "What are React Portals and when would you use them?",
       "topic": "Advanced",
       "difficulty": "Intermediate",
@@ -374,7 +374,7 @@
       "correctAnswer": 0
     },
     {
-      "id": 15,
+      "id": "15",
       "question": "What is React Suspense used for?",
       "topic": "Concurrency",
       "difficulty": "Beginner",
@@ -402,7 +402,7 @@
       "correctAnswer": 0
     },
     {
-      "id": 16,
+      "id": "16",
       "question": "What is the difference between React.lazy() and dynamic imports in React?",
       "topic": "Code Splitting",
       "difficulty": "Advanced",
@@ -425,7 +425,7 @@
       "correctAnswer": 0
     },
     {
-      "id": 17,
+      "id": "17",
       "question": "What is the purpose of the useRef hook?",
       "topic": "Hooks",
       "difficulty": "Intermediate",
@@ -448,7 +448,7 @@
       "correctAnswer": 0
     },
     {
-      "id": 18,
+      "id": "18",
       "question": "How does React handle keys in lists?",
       "topic": "Rendering",
       "difficulty": "Beginner",
@@ -471,7 +471,7 @@
       "correctAnswer": 0
     },
     {
-      "id": 19,
+      "id": "19",
       "question": "What is the Context API used for?",
       "topic": "State Management",
       "difficulty": "Intermediate",
@@ -494,7 +494,7 @@
       "correctAnswer": 0
     },
     {
-      "id": 20,
+      "id": "20",
       "question": "What is the difference between controlled and uncontrolled components?",
       "topic": "Forms",
       "difficulty": "Intermediate",

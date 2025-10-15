@@ -7,7 +7,7 @@
   "timeLimit": 30,
   "questions": [
     {
-      "id": 1,
+      "id": "1",
       "question": "Which command is used to create a new Git repository in the current directory?",
       "topic": "Git",
       "difficulty": "Beginner",
@@ -29,7 +29,7 @@
       "correctAnswer": 0
     },
     {
-      "id": 2,
+      "id": "2",
       "question": "What is the correct workflow to commit changes in Git?",
       "topic": "Git",
       "difficulty": "Beginner",
@@ -51,7 +51,7 @@
       "correctAnswer": 0
     },
     {
-      "id": 3,
+      "id": "3",
       "question": "Which command creates a new branch AND switches to it immediately?",
       "topic": "Git",
       "difficulty": "Intermediate",
@@ -73,7 +73,7 @@
       "correctAnswer": 0
     },
     {
-      "id": 4,
+      "id": "4",
       "question": "What happens when you encounter a merge conflict in Git?",
       "topic": "Git",
       "difficulty": "Intermediate",
@@ -95,7 +95,7 @@
       "correctAnswer": 0
     },
     {
-      "id": 5,
+      "id": "5",
       "question": "Which file is used to specify which files Git should ignore?",
       "topic": "Git",
       "difficulty": "Beginner",
@@ -117,7 +117,7 @@
       "correctAnswer": 0
     },
     {
-      "id": 31,
+      "id": "31",
       "question": "What is the primary purpose of version control systems in software development?",
       "topic": "Git",
       "difficulty": "Beginner",
@@ -141,7 +141,7 @@
       "correctAnswer": 0
     },
     {
-      "id": 32,
+      "id": "32",
       "question": "What are the performance considerations when using Git for large repositories?",
       "topic": "GitHub",
       "difficulty": "Intermediate",
@@ -165,7 +165,7 @@
       "correctAnswer": 0
     },
     {
-      "id": 33,
+      "id": "33",
       "question": "When should you use different branching strategies in version control?",
       "topic": "Version Control",
       "difficulty": "Beginner",
@@ -189,7 +189,7 @@
       "correctAnswer": 0
     },
     {
-      "id": 34,
+      "id": "34",
       "question": "How do you implement version control in a production environment with multiple teams?",
       "topic": "Git",
       "difficulty": "Intermediate",
@@ -213,7 +213,7 @@
       "correctAnswer": 0
     },
     {
-      "id": 35,
+      "id": "35",
       "question": "Which of the following is a key feature of modern version control systems?",
       "topic": "GitHub",
       "difficulty": "Beginner",
@@ -237,7 +237,7 @@
       "correctAnswer": 0
     },
     {
-      "id": 36,
+      "id": "36",
       "question": "What are the trade-offs between different version control workflows?",
       "topic": "Version Control",
       "difficulty": "Advanced",
@@ -261,7 +261,7 @@
       "correctAnswer": 0
     },
     {
-      "id": 37,
+      "id": "37",
       "question": "How do you implement version control in a production environment with regulatory compliance requirements?",
       "topic": "Git",
       "difficulty": "Intermediate",
@@ -285,7 +285,7 @@
       "correctAnswer": 0
     },
     {
-      "id": 38,
+      "id": "38",
       "question": "What are the security considerations when using version control systems?",
       "topic": "GitHub",
       "difficulty": "Advanced",
@@ -309,7 +309,7 @@
       "correctAnswer": 0
     },
     {
-      "id": 39,
+      "id": "39",
       "question": "Which pattern is most effective for implementing scalable version control practices?",
       "topic": "Version Control",
       "difficulty": "Advanced",
@@ -333,7 +333,7 @@
       "correctAnswer": 0
     },
     {
-      "id": 40,
+      "id": "40",
       "question": "How do you implement version control in a production environment with enterprise governance requirements?",
       "topic": "Git",
       "difficulty": "Advanced",
@@ -357,7 +357,7 @@
       "correctAnswer": 0
     },
     {
-      "id": 6,
+      "id": "6",
       "question": "How do you push a local branch to a remote repository for the first time?",
       "topic": "Version Control",
       "choices": [
@@ -369,10 +369,11 @@
       "correctIndex": 0,
       "explanation": "The command '`git push` -u origin branch-name' pushes a local branch to the remote repository and sets up tracking. The -u flag (or --set-upstream) establishes a relationship between the local and remote branches for future pushes and pulls.",
       "correctAnswer": 0,
-      "difficulty": "Beginner"
+      "difficulty": "Beginner",
+      "questionType": "multiple-choice"
     },
     {
-      "id": 7,
+      "id": "7",
       "question": "What is the purpose of 'git stash'?",
       "topic": "Version Control",
       "choices": [
@@ -384,10 +385,11 @@
       "correctIndex": 0,
       "explanation": "'git stash' temporarily saves your current changes without committing them, allowing you to switch branches or pull updates without committing incomplete work. You can later restore the stashed changes with 'git stash pop' or 'git stash apply'.",
       "correctAnswer": 0,
-      "difficulty": "Beginner"
+      "difficulty": "Beginner",
+      "questionType": "multiple-choice"
     },
     {
-      "id": 8,
+      "id": "8",
       "question": "Which Git workflow is best for continuous deployment?",
       "topic": "Version Control",
       "choices": [
@@ -399,10 +401,11 @@
       "correctIndex": 0,
       "explanation": "GitHub Flow is a simple workflow ideal for continuous deployment. It involves creating feature branches from main, making changes, opening pull requests for review, and merging back to main for immediate deployment. Git Flow is more complex and better suited for versioned releases.",
       "correctAnswer": 0,
-      "difficulty": "Beginner"
+      "difficulty": "Beginner",
+      "questionType": "multiple-choice"
     },
     {
-      "id": 9,
+      "id": "9",
       "question": "What does '`git rebase`' do?",
       "topic": "Version Control",
       "choices": [
@@ -414,10 +417,11 @@
       "correctIndex": 0,
       "explanation": "'`git rebase`' moves or combines commits to create a linear project history. It reapplies commits from the current branch on top of another base tip, resulting in a cleaner, linear history compared to merging.",
       "correctAnswer": 0,
-      "difficulty": "Beginner"
+      "difficulty": "Beginner",
+      "questionType": "multiple-choice"
     },
     {
-      "id": 10,
+      "id": "10",
       "question": "How do you create an annotated tag in Git?",
       "topic": "Version Control",
       "choices": [
@@ -429,10 +433,11 @@
       "correctIndex": 0,
       "explanation": "The command 'git tag -a v1.0.0 -m \"Release version 1.0.0\"' creates an annotated tag with a message. Annotated tags store additional metadata including the tagger name, email, date, and message, making them more complete than lightweight tags created with 'git tag v1.0.0'.",
       "correctAnswer": 0,
-      "difficulty": "Beginner"
+      "difficulty": "Beginner",
+      "questionType": "multiple-choice"
     },
     {
-      "id": 11,
+      "id": "11",
       "question": "What is the purpose of 'git cherry-pick'?",
       "topic": "Version Control",
       "choices": [
@@ -444,10 +449,11 @@
       "correctIndex": 0,
       "explanation": "'git cherry-pick' applies the changes introduced by some existing commits to the current branch. It's useful for applying specific commits from one branch to another without merging the entire branch.",
       "correctAnswer": 0,
-      "difficulty": "Beginner"
+      "difficulty": "Beginner",
+      "questionType": "multiple-choice"
     },
     {
-      "id": 12,
+      "id": "12",
       "question": "Which command shows the commit history in a compact format?",
       "topic": "Version Control",
       "choices": [
@@ -459,10 +465,11 @@
       "correctIndex": 0,
       "explanation": "'git log --oneline' displays the commit history in a compact format, showing each commit on a single line with its abbreviated commit hash and commit message. This is useful for quickly reviewing the commit history.",
       "correctAnswer": 0,
-      "difficulty": "Beginner"
+      "difficulty": "Beginner",
+      "questionType": "multiple-choice"
     },
     {
-      "id": 13,
+      "id": "13",
       "question": "What does 'git reset --hard' do?",
       "topic": "Version Control",
       "choices": [
@@ -474,10 +481,11 @@
       "correctIndex": 0,
       "explanation": "'git reset --hard' resets both the working directory and the index to match a specific commit, discarding all changes in both. This is a destructive operation that permanently deletes uncommitted changes, so it should be used with caution.",
       "correctAnswer": 0,
-      "difficulty": "Beginner"
+      "difficulty": "Beginner",
+      "questionType": "multiple-choice"
     },
     {
-      "id": 14,
+      "id": "14",
       "question": "Which Git command is used to compare changes between commits?",
       "topic": "Version Control",
       "choices": [
@@ -489,10 +497,11 @@
       "correctIndex": 0,
       "explanation": "'git diff' is used to compare changes between commits, between the working directory and the index, or between branches. It shows the differences in a format similar to the Unix diff command.",
       "correctAnswer": 0,
-      "difficulty": "Beginner"
+      "difficulty": "Beginner",
+      "questionType": "multiple-choice"
     },
     {
-      "id": 15,
+      "id": "15",
       "question": "What is the purpose of a Git hook?",
       "topic": "Version Control",
       "choices": [
@@ -504,10 +513,11 @@
       "correctIndex": 0,
       "explanation": "Git hooks are scripts that Git executes before or after events such as commit, push, or merge. They allow you to customize Git's behavior and automate tasks in your development workflow.",
       "correctAnswer": 0,
-      "difficulty": "Beginner"
+      "difficulty": "Beginner",
+      "questionType": "multiple-choice"
     },
     {
-      "id": 16,
+      "id": "16",
       "question": "Which command is used to undo the last commit but keep the changes in the working directory?",
       "topic": "Version Control",
       "choices": [
@@ -519,10 +529,11 @@
       "correctIndex": 0,
       "explanation": "'git reset --soft HEAD~1' undoes the last commit but keeps the changes staged in the index. This allows you to modify the commit before committing again. The changes remain in your working directory and index.",
       "correctAnswer": 0,
-      "difficulty": "Beginner"
+      "difficulty": "Beginner",
+      "questionType": "multiple-choice"
     },
     {
-      "id": 17,
+      "id": "17",
       "question": "What does 'git bisect' do?",
       "topic": "Version Control",
       "choices": [
@@ -534,10 +545,11 @@
       "correctIndex": 0,
       "explanation": "'git bisect' uses a binary search algorithm to help you find the commit that introduced a bug. You mark a known good commit and a known bad commit, and Git checks out commits in between for you to test until you find the problematic commit.",
       "correctAnswer": 0,
-      "difficulty": "Beginner"
+      "difficulty": "Beginner",
+      "questionType": "multiple-choice"
     },
     {
-      "id": 18,
+      "id": "18",
       "question": "Which command is used to fetch changes from a remote repository without merging them?",
       "topic": "Version Control",
       "choices": [
@@ -549,10 +561,11 @@
       "correctIndex": 0,
       "explanation": "'git fetch' downloads changes from a remote repository but does not merge them into your current branch. This allows you to review the changes before deciding whether to merge them with '`git merge`' or '`git pull`'.",
       "correctAnswer": 0,
-      "difficulty": "Beginner"
+      "difficulty": "Beginner",
+      "questionType": "multiple-choice"
     },
     {
-      "id": 19,
+      "id": "19",
       "question": "What is the purpose of 'git reflog'?",
       "topic": "Version Control",
       "choices": [
@@ -564,10 +577,11 @@
       "correctIndex": 0,
       "explanation": "'git reflog' shows a log of when the tips of branches and other references were updated. It's particularly useful for recovering from mistakes, as it shows commits that might otherwise be lost, including commits that were reset or rebased.",
       "correctAnswer": 0,
-      "difficulty": "Beginner"
+      "difficulty": "Beginner",
+      "questionType": "multiple-choice"
     },
     {
-      "id": 20,
+      "id": "20",
       "question": "Which command is used to combine multiple commits into a single commit?",
       "topic": "Version Control",
       "choices": [
@@ -579,10 +593,11 @@
       "correctIndex": 0,
       "explanation": "'`git rebase` -i' (interactive rebase) is used to combine multiple commits into a single commit. During the interactive rebase, you can choose to 'squash' or 'fixup' commits to combine them with previous commits.",
       "correctAnswer": 0,
-      "difficulty": "Beginner"
+      "difficulty": "Beginner",
+      "questionType": "multiple-choice"
     },
     {
-      "id": 21,
+      "id": "21",
       "question": "What does 'git blame' do?",
       "topic": "Version Control",
       "choices": [
@@ -594,10 +609,11 @@
       "correctIndex": 0,
       "explanation": "'git blame' shows what revision and author last modified each line of a file. It's useful for understanding when and why specific lines of code were changed, and who made those changes.",
       "correctAnswer": 0,
-      "difficulty": "Beginner"
+      "difficulty": "Beginner",
+      "questionType": "multiple-choice"
     },
     {
-      "id": 22,
+      "id": "22",
       "question": "Which Git command is used to create a bare repository?",
       "topic": "Version Control",
       "choices": [
@@ -609,10 +625,11 @@
       "correctIndex": 0,
       "explanation": "'git init --bare' creates a bare repository, which is a repository that doesn't have a working directory. Bare repositories are typically used as central repositories that developers push to and pull from.",
       "correctAnswer": 0,
-      "difficulty": "Beginner"
+      "difficulty": "Beginner",
+      "questionType": "multiple-choice"
     },
     {
-      "id": 23,
+      "id": "23",
       "question": "What is the purpose of 'git clean'?",
       "topic": "Version Control",
       "choices": [
@@ -624,10 +641,11 @@
       "correctIndex": 0,
       "explanation": "'git clean' removes untracked files from the working directory. Untracked files are files that are not being tracked by Git. This command is useful for cleaning up build artifacts or other generated files.",
       "correctAnswer": 0,
-      "difficulty": "Beginner"
+      "difficulty": "Beginner",
+      "questionType": "multiple-choice"
     },
     {
-      "id": 24,
+      "id": "24",
       "question": "Which command is used to list all branches in a repository?",
       "topic": "Version Control",
       "choices": [
@@ -639,10 +657,11 @@
       "correctIndex": 0,
       "explanation": "'`git branch -a`' lists all branches in a repository, including both local and remote-tracking branches. The '-a' flag stands for 'all'. Without this flag, 'git branch' only shows local branches.",
       "correctAnswer": 0,
-      "difficulty": "Beginner"
+      "difficulty": "Beginner",
+      "questionType": "multiple-choice"
     },
     {
-      "id": 25,
+      "id": "25",
       "question": "What does 'git fsck' do?",
       "topic": "Version Control",
       "choices": [
@@ -654,10 +673,11 @@
       "correctIndex": 0,
       "explanation": "'git fsck' (file system check) verifies the connectivity and validity of objects in the Git database. It checks for corrupt objects, dangling commits, and other integrity issues in the repository.",
       "correctAnswer": 0,
-      "difficulty": "Beginner"
+      "difficulty": "Beginner",
+      "questionType": "multiple-choice"
     },
     {
-      "id": 26,
+      "id": "26",
       "question": "Which command is used to configure Git user information?",
       "topic": "Version Control",
       "choices": [
@@ -669,10 +689,11 @@
       "correctIndex": 0,
       "explanation": "'git config --global user.name \"Your Name\"' is used to configure Git user information. The '--global' flag sets the configuration for all repositories on the system. You also need to set the email with 'git config --global user.email \"your.email@example.com\"'.",
       "correctAnswer": 0,
-      "difficulty": "Beginner"
+      "difficulty": "Beginner",
+      "questionType": "multiple-choice"
     },
     {
-      "id": 27,
+      "id": "27",
       "question": "What is the purpose of 'git archive'?",
       "topic": "Version Control",
       "choices": [
@@ -684,10 +705,11 @@
       "correctIndex": 0,
       "explanation": "'git archive' creates an archive of files from a named tree, such as a specific commit or branch. It's useful for creating distribution packages or snapshots of the code at a specific point in time.",
       "correctAnswer": 0,
-      "difficulty": "Beginner"
+      "difficulty": "Beginner",
+      "questionType": "multiple-choice"
     },
     {
-      "id": 28,
+      "id": "28",
       "question": "Which command is used to show the changes staged for the next commit?",
       "topic": "Version Control",
       "choices": [
@@ -701,10 +723,11 @@
       "correctAnswer": 3,
       "difficulty": "Intermediate",
       "fixedChoiceOrder": true,
-      "choiceLabels": "letters"
+      "choiceLabels": "letters",
+      "questionType": "multiple-choice"
     },
     {
-      "id": 29,
+      "id": "29",
       "question": "What does 'git submodule' do?",
       "topic": "Version Control",
       "choices": [
@@ -716,10 +739,11 @@
       "correctIndex": 0,
       "explanation": "'git submodule' allows you to keep a Git repository as a subdirectory of another Git repository. This lets you clone another repository into your project and keep your commits separate.",
       "correctAnswer": 0,
-      "difficulty": "Intermediate"
+      "difficulty": "Intermediate",
+      "questionType": "multiple-choice"
     },
     {
-      "id": 30,
+      "id": "30",
       "question": "Which command is used to temporarily store uncommitted changes?",
       "topic": "Version Control",
       "choices": [
@@ -731,7 +755,8 @@
       "correctIndex": 0,
       "explanation": "'git stash' is used to temporarily store uncommitted changes. It saves your local modifications away and reverts the working directory to match the HEAD commit, allowing you to work on something else and come back to your changes later.",
       "correctAnswer": 0,
-      "difficulty": "Intermediate"
+      "difficulty": "Intermediate",
+      "questionType": "multiple-choice"
     }
   ],
   "metadata": {

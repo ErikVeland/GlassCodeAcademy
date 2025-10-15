@@ -1,6 +1,6 @@
 [
   {
-    "id": "security-fundamentals-lesson-1",
+    "id": "1",
     "moduleSlug": "security-fundamentals",
     "title": "Web Security Fundamentals",
     "order": 1,
@@ -55,7 +55,7 @@
     "version": "1.0.0"
   },
   {
-    "id": "security-fundamentals-lesson-2",
+    "id": "2",
     "moduleSlug": "security-fundamentals",
     "title": "OWASP Top 10 Security Risks",
     "order": 2,
@@ -113,7 +113,7 @@
     "version": "1.1.0"
   },
   {
-    "id": "security-fundamentals-lesson-3",
+    "id": "3",
     "moduleSlug": "security-fundamentals",
     "title": "Input Validation and Data Sanitization",
     "order": 3,
@@ -172,7 +172,7 @@
     "version": "1.1.0"
   },
   {
-    "id": "security-fundamentals-lesson-4",
+    "id": "4",
     "moduleSlug": "security-fundamentals",
     "title": "Security Performance Testing and Optimization",
     "order": 4,
@@ -231,7 +231,7 @@
     "version": "1.1.0"
   },
   {
-    "id": "security-fundamentals-lesson-5",
+    "id": "5",
     "moduleSlug": "security-fundamentals",
     "title": "Automated Security Testing and Vulnerability Scanning",
     "order": 5,
@@ -290,7 +290,7 @@
     "version": "1.1.0"
   },
   {
-    "id": "security-fundamentals-lesson-6",
+    "id": "6",
     "moduleSlug": "security-fundamentals",
     "title": "Secure Code Quality and Review Practices",
     "order": 6,
@@ -349,7 +349,7 @@
     "version": "1.1.0"
   },
   {
-    "id": "security-fundamentals-lesson-7",
+    "id": "7",
     "moduleSlug": "security-fundamentals",
     "title": "Security Review Processes and Collaboration",
     "order": 7,
@@ -408,7 +408,7 @@
     "version": "1.1.0"
   },
   {
-    "id": "security-fundamentals-lesson-8",
+    "id": "8",
     "moduleSlug": "security-fundamentals",
     "title": "Security in Continuous Integration and Deployment",
     "order": 8,
@@ -456,7 +456,7 @@
     ],
     "next": [],
     "estimatedMinutes": 120,
-    "difficulty": "Expert",
+    "difficulty": "Advanced",
     "tags": [
       "CI/CD",
       "DevSecOps",
@@ -467,7 +467,7 @@
     "version": "1.1.0"
   },
   {
-    "id": "security-fundamentals-lesson-9",
+    "id": "9",
     "moduleSlug": "security-fundamentals",
     "title": "Security Monitoring and Incident Response",
     "order": 9,
@@ -515,7 +515,7 @@
     ],
     "next": [],
     "estimatedMinutes": 120,
-    "difficulty": "Expert",
+    "difficulty": "Advanced",
     "tags": [
       "Security Monitoring",
       "Incident Response",
@@ -526,7 +526,7 @@
     "version": "1.1.0"
   },
   {
-    "id": "security-fundamentals-lesson-10",
+    "id": "10",
     "moduleSlug": "security-fundamentals",
     "title": "Security Debugging and Forensic Analysis",
     "order": 10,
@@ -574,7 +574,7 @@
     ],
     "next": [],
     "estimatedMinutes": 120,
-    "difficulty": "Expert",
+    "difficulty": "Advanced",
     "tags": [
       "Security Monitoring",
       "Incident Response",
@@ -585,7 +585,7 @@
     "version": "1.1.0"
   },
   {
-    "id": "security-fundamentals-lesson-11",
+    "id": "11",
     "moduleSlug": "security-fundamentals",
     "title": "OAuth2 and OpenID Connect",
     "order": 11,
@@ -647,7 +647,7 @@
     "version": "1.0.0"
   },
   {
-    "id": "security-fundamentals-lesson-12",
+    "id": "12",
     "moduleSlug": "security-fundamentals",
     "title": "API Security Best Practices",
     "order": 12,
@@ -710,7 +710,7 @@
     "version": "1.0.0"
   },
   {
-    "id": "security-fundamentals-lesson-13",
+    "id": "13",
     "moduleSlug": "security-fundamentals",
     "title": "Data Protection and Encryption",
     "order": 13,
@@ -774,7 +774,7 @@
     "version": "1.0.0"
   },
   {
-    "id": "security-fundamentals-lesson-14",
+    "id": "14",
     "moduleSlug": "security-fundamentals",
     "title": "Security Headers and Content Security Policy",
     "order": 14,
@@ -838,7 +838,7 @@
     "version": "1.0.0"
   },
   {
-    "id": "security-fundamentals-lesson-15",
+    "id": "15",
     "moduleSlug": "security-fundamentals",
     "title": "Vulnerability Assessment and Security Testing",
     "order": 15,

@@ -1,6 +1,6 @@
 [
   {
-    "id": "testing-fundamentals-lesson-1",
+    "id": "1",
     "moduleSlug": "testing-fundamentals",
     "title": "Introduction to Software Testing",
     "order": 1,
@@ -61,7 +61,7 @@
     "version": "1.0.0"
   },
   {
-    "id": "testing-fundamentals-lesson-2",
+    "id": "2",
     "moduleSlug": "testing-fundamentals",
     "title": "Unit Testing Principles",
     "order": 2,
@@ -122,7 +122,7 @@
     "version": "1.0.0"
   },
   {
-    "id": "testing-fundamentals-lesson-3",
+    "id": "3",
     "moduleSlug": "testing-fundamentals",
     "title": "Test-Driven Development (TDD)",
     "order": 3,
@@ -183,7 +183,7 @@
     "version": "1.0.0"
   },
   {
-    "id": "testing-fundamentals-lesson-4",
+    "id": "4",
     "moduleSlug": "testing-fundamentals",
     "title": "Mocking and Test Doubles",
     "order": 4,
@@ -245,7 +245,7 @@
     "version": "1.0.0"
   },
   {
-    "id": "testing-fundamentals-lesson-5",
+    "id": "5",
     "moduleSlug": "testing-fundamentals",
     "title": "Integration Testing",
     "order": 5,
@@ -306,7 +306,7 @@
     "version": "1.0.0"
   },
   {
-    "id": "testing-fundamentals-lesson-6",
+    "id": "6",
     "moduleSlug": "testing-fundamentals",
     "title": "Testing Frameworks and Tools",
     "order": 6,
@@ -368,7 +368,7 @@
     "version": "1.0.0"
   },
   {
-    "id": "testing-fundamentals-lesson-7",
+    "id": "7",
     "moduleSlug": "testing-fundamentals",
     "title": "Code Coverage and Quality Metrics",
     "order": 7,
@@ -430,7 +430,7 @@
     "version": "1.0.0"
   },
   {
-    "id": "testing-fundamentals-lesson-8",
+    "id": "8",
     "moduleSlug": "testing-fundamentals",
     "title": "Behavior-Driven Development (BDD)",
     "order": 8,
@@ -491,7 +491,7 @@
     "version": "1.0.0"
   },
   {
-    "id": "testing-fundamentals-lesson-9",
+    "id": "9",
     "moduleSlug": "testing-fundamentals",
     "title": "Integration Testing Patterns",
     "order": 9,
@@ -553,7 +553,7 @@
     "version": "1.0.0"
   },
   {
-    "id": "testing-fundamentals-lesson-10",
+    "id": "10",
     "moduleSlug": "testing-fundamentals",
     "title": "Mocking Best Practices",
     "order": 10,
@@ -615,7 +615,7 @@
     "version": "1.0.0"
   },
   {
-    "id": "testing-fundamentals-lesson-11",
+    "id": "11",
     "moduleSlug": "testing-fundamentals",
     "title": "Test Data Management",
     "order": 11,
@@ -677,7 +677,7 @@
     "version": "1.0.0"
   },
   {
-    "id": "testing-fundamentals-lesson-12",
+    "id": "12",
     "moduleSlug": "testing-fundamentals",
     "title": "Behavior-Driven Development",
     "order": 12,
@@ -739,7 +739,7 @@
     "version": "1.0.0"
   },
   {
-    "id": "testing-fundamentals-lesson-13",
+    "id": "13",
     "moduleSlug": "testing-fundamentals",
     "title": "Performance Testing Fundamentals",
     "order": 13,
@@ -801,7 +801,7 @@
     "version": "1.0.0"
   },
   {
-    "id": "testing-fundamentals-lesson-14",
+    "id": "14",
     "moduleSlug": "testing-fundamentals",
     "title": "Test Coverage Analysis",
     "order": 14,

@@ -7,7 +7,7 @@
   "timeLimit": 53,
   "questions": [
     {
-      "id": 1,
+      "id": "1",
       "question": "Which method is used to define a GET route in Laravel?",
       "topic": "Routing",
       "difficulty": "Intermediate",
@@ -35,7 +35,7 @@
       "correctAnswer": 0
     },
     {
-      "id": 2,
+      "id": "2",
       "question": "Which method is used to retrieve all records from a model?",
       "topic": "Eloquent ORM",
       "difficulty": "Intermediate",
@@ -63,7 +63,7 @@
       "correctAnswer": 0
     },
     {
-      "id": 3,
+      "id": "3",
       "question": "Which directive is used to extend a Blade layout?",
       "topic": "Blade Templates",
       "difficulty": "Intermediate",
@@ -91,7 +91,7 @@
       "correctAnswer": 0
     },
     {
-      "id": 4,
+      "id": "4",
       "question": "Which artisan command is used to create a new migration?",
       "topic": "Database",
       "difficulty": "Intermediate",
@@ -119,7 +119,7 @@
       "correctAnswer": 0
     },
     {
-      "id": 5,
+      "id": "5",
       "question": "Which middleware is used to authenticate users in Laravel?",
       "topic": "Authentication",
       "difficulty": "Intermediate",
@@ -147,7 +147,7 @@
       "correctAnswer": 0
     },
     {
-      "id": 6,
+      "id": "6",
       "question": "How do you define a route parameter in Laravel?",
       "topic": "Routing",
       "difficulty": "Beginner",
@@ -175,7 +175,7 @@
       "correctAnswer": 0
     },
     {
-      "id": 7,
+      "id": "7",
       "question": "What is Eloquent ORM in Laravel?",
       "topic": "Eloquent ORM",
       "difficulty": "Beginner",
@@ -203,7 +203,7 @@
       "correctAnswer": 0
     },
     {
-      "id": 8,
+      "id": "8",
       "question": "Which Blade directive is used to display data that might be null?",
       "topic": "Blade Templates",
       "difficulty": "Intermediate",
@@ -231,7 +231,7 @@
       "correctAnswer": 0
     },
     {
-      "id": 9,
+      "id": "9",
       "question": "What is middleware in Laravel?",
       "topic": "Middleware",
       "difficulty": "Beginner",
@@ -259,7 +259,7 @@
       "correctAnswer": 0
     },
     {
-      "id": 10,
+      "id": "10",
       "question": "Which method is used to run database migrations?",
       "topic": "Database",
       "difficulty": "Intermediate",
@@ -287,7 +287,7 @@
       "correctAnswer": 0
     },
     {
-      "id": 11,
+      "id": "11",
       "question": "Which Laravel package provides a simple way to add authentication to your application?",
       "topic": "Authentication",
       "difficulty": "Beginner",
@@ -315,7 +315,7 @@
       "correctAnswer": 0
     },
     {
-      "id": 12,
+      "id": "12",
       "question": "What is route model binding in Laravel?",
       "topic": "Routing",
       "difficulty": "Beginner",
@@ -343,7 +343,7 @@
       "correctAnswer": 0
     },
     {
-      "id": 13,
+      "id": "13",
       "question": "Which method is used to create a new record in the database using Eloquent?",
       "topic": "Eloquent ORM",
       "difficulty": "Intermediate",
@@ -371,7 +371,7 @@
       "correctAnswer": 0
     },
     {
-      "id": 14,
+      "id": "14",
       "question": "Which Blade directive is used to include a view?",
       "topic": "Blade Templates",
       "difficulty": "Intermediate",
@@ -399,7 +399,7 @@
       "correctAnswer": 0
     },
     {
-      "id": 15,
+      "id": "15",
       "question": "Where are route middleware registered in Laravel?",
       "topic": "Middleware",
       "difficulty": "Intermediate",
@@ -427,7 +427,7 @@
       "correctAnswer": 0
     },
     {
-      "id": 16,
+      "id": "16",
       "question": "What are Laravel migrations?",
       "topic": "Database",
       "difficulty": "Intermediate",
@@ -455,7 +455,7 @@
       "correctAnswer": 0
     },
     {
-      "id": 17,
+      "id": "17",
       "question": "Which Laravel feature provides API token authentication?",
       "topic": "Authentication",
       "difficulty": "Intermediate",
@@ -483,7 +483,7 @@
       "correctAnswer": 0
     },
     {
-      "id": 18,
+      "id": "18",
       "question": "Which method is used to define a POST route in Laravel?",
       "topic": "Routing",
       "difficulty": "Intermediate",
@@ -511,7 +511,7 @@
       "correctAnswer": 0
     },
     {
-      "id": 19,
+      "id": "19",
       "question": "How do you define a relationship between two models in Eloquent?",
       "topic": "Eloquent ORM",
       "difficulty": "Beginner",
@@ -539,7 +539,7 @@
       "correctAnswer": 0
     },
     {
-      "id": 20,
+      "id": "20",
       "question": "Which Blade directive is used to define a section?",
       "topic": "Blade Templates",
       "difficulty": "Intermediate",
@@ -567,7 +567,7 @@
       "correctAnswer": 0
     },
     {
-      "id": 21,
+      "id": "21",
       "question": "Which method is used to validate request data in Laravel controllers?",
       "topic": "Validation",
       "difficulty": "Intermediate",
@@ -597,7 +597,7 @@
       "choiceLabels": "letters"
     },
     {
-      "id": 22,
+      "id": "22",
       "question": "Which artisan command generates a new event and listener?",
       "topic": "Events",
       "difficulty": "Intermediate",
@@ -627,7 +627,7 @@
       "choiceLabels": "letters"
     },
     {
-      "id": 23,
+      "id": "23",
       "question": "Which method is used to dispatch a job to the queue?",
       "topic": "Queues",
       "difficulty": "Intermediate",
@@ -655,7 +655,7 @@
       "correctAnswer": 0
     },
     {
-      "id": 24,
+      "id": "24",
       "question": "Which facade is used to interact with the cache in Laravel?",
       "topic": "Caching",
       "difficulty": "Intermediate",
@@ -683,7 +683,7 @@
       "correctAnswer": 0
     },
     {
-      "id": 25,
+      "id": "25",
       "question": "Which base class should feature tests extend in Laravel?",
       "topic": "Testing",
       "difficulty": "Intermediate",
@@ -711,7 +711,7 @@
       "correctAnswer": 0
     },
     {
-      "id": 26,
+      "id": "26",
       "question": "Which method is used to transform each item in a collection?",
       "topic": "Collections",
       "difficulty": "Intermediate",
@@ -739,7 +739,7 @@
       "correctAnswer": 0
     },
     {
-      "id": 27,
+      "id": "27",
       "question": "How do you list all available Artisan commands?",
       "topic": "Artisan",
       "difficulty": "Beginner",
@@ -767,7 +767,7 @@
       "correctAnswer": 0
     },
     {
-      "id": 28,
+      "id": "28",
       "question": "Which method is used to define a foreign key constraint in Laravel migrations?",
       "topic": "Database",
       "difficulty": "Intermediate",
@@ -797,7 +797,7 @@
       "choiceLabels": "letters"
     },
     {
-      "id": 29,
+      "id": "29",
       "question": "How do you eager load relationships to avoid the N+1 `query` problem?",
       "topic": "Eloquent ORM",
       "difficulty": "Beginner",
@@ -825,7 +825,7 @@
       "correctAnswer": 0
     },
     {
-      "id": 30,
+      "id": "30",
       "question": "Which middleware is used to prevent CSRF attacks in Laravel?",
       "topic": "Security",
       "difficulty": "Intermediate",
@@ -853,7 +853,7 @@
       "correctAnswer": 0
     },
     {
-      "id": 31,
+      "id": "31",
       "question": "Which method is used to store uploaded files in Laravel?",
       "topic": "File Storage",
       "difficulty": "Intermediate",
@@ -881,7 +881,7 @@
       "correctAnswer": 0
     },
     {
-      "id": 32,
+      "id": "32",
       "question": "Which method is used to send a notification immediately?",
       "topic": "Notifications",
       "difficulty": "Intermediate",
@@ -909,7 +909,7 @@
       "correctAnswer": 0
     },
     {
-      "id": 33,
+      "id": "33",
       "question": "Which artisan command generates a new API resource class?",
       "topic": "API Resources",
       "difficulty": "Intermediate",
@@ -937,7 +937,7 @@
       "correctAnswer": 0
     },
     {
-      "id": 34,
+      "id": "34",
       "question": "Which method is used to bind a class to the service container?",
       "topic": "Service Container",
       "difficulty": "Intermediate",
@@ -965,7 +965,7 @@
       "correctAnswer": 0
     },
     {
-      "id": 35,
+      "id": "35",
       "question": "Where are scheduled tasks defined in Laravel?",
       "topic": "Task Scheduling",
       "difficulty": "Intermediate",

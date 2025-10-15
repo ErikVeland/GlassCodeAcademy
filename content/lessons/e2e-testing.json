@@ -1,6 +1,6 @@
 [
   {
-    "id": "e2e-testing-lesson-1",
+    "id": "1",
     "moduleSlug": "e2e-testing",
     "title": "Introduction to End-to-End Testing",
     "order": 1,
@@ -61,7 +61,7 @@
     "version": "1.0.0"
   },
   {
-    "id": "e2e-testing-lesson-2",
+    "id": "2",
     "moduleSlug": "e2e-testing",
     "title": "Cypress Fundamentals",
     "order": 2,
@@ -122,7 +122,7 @@
     "version": "1.0.0"
   },
   {
-    "id": "e2e-testing-lesson-3",
+    "id": "3",
     "moduleSlug": "e2e-testing",
     "title": "Playwright Essentials",
     "order": 3,
@@ -183,7 +183,7 @@
     "version": "1.0.0"
   },
   {
-    "id": "e2e-testing-lesson-4",
+    "id": "4",
     "moduleSlug": "e2e-testing",
     "title": "Test Organization and Page Objects",
     "order": 4,
@@ -244,7 +244,7 @@
     "version": "1.0.0"
   },
   {
-    "id": "e2e-testing-lesson-5",
+    "id": "5",
     "moduleSlug": "e2e-testing",
     "title": "Handling Authentication and Sessions",
     "order": 5,
@@ -305,7 +305,7 @@
     "version": "1.0.0"
   },
   {
-    "id": "e2e-testing-lesson-6",
+    "id": "6",
     "moduleSlug": "e2e-testing",
     "title": "Network Interception and API Mocking",
     "order": 6,
@@ -366,7 +366,7 @@
     "version": "1.0.0"
   },
   {
-    "id": "e2e-testing-lesson-7",
+    "id": "7",
     "moduleSlug": "e2e-testing",
     "title": "Cross-Browser and Visual Testing",
     "order": 7,
@@ -427,7 +427,7 @@
     "version": "1.0.0"
   },
   {
-    "id": "e2e-testing-lesson-8",
+    "id": "8",
     "moduleSlug": "e2e-testing",
     "title": "Performance and Reliability Optimization",
     "order": 8,
@@ -488,7 +488,7 @@
     "version": "1.0.0"
   },
   {
-    "id": "e2e-testing-lesson-9",
+    "id": "9",
     "moduleSlug": "e2e-testing",
     "title": "CI/CD Integration and Reporting",
     "order": 9,
@@ -549,7 +549,7 @@
     "version": "1.0.0"
   },
   {
-    "id": "e2e-testing-lesson-10",
+    "id": "10",
     "moduleSlug": "e2e-testing",
     "title": "Advanced Testing Patterns and Best Practices",
     "order": 10,
@@ -608,7 +608,7 @@
     "version": "1.0.0"
   },
   {
-    "id": "e2e-testing-lesson-11",
+    "id": "11",
     "moduleSlug": "e2e-testing",
     "title": "Mobile and Device Testing",
     "order": 11,
@@ -670,7 +670,7 @@
     "version": "1.0.0"
   },
   {
-    "id": "e2e-testing-lesson-12",
+    "id": "12",
     "moduleSlug": "e2e-testing",
     "title": "Accessibility and Compliance Testing",
     "order": 12,

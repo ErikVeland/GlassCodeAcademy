@@ -1,6 +1,6 @@
 [
   {
-    "id": "react-fundamentals-lesson-1",
+    "id": "1",
     "moduleSlug": "react-fundamentals",
     "title": "React Components Basics",
     "order": 1,
@@ -70,7 +70,7 @@
     "version": "1.1.0"
   },
   {
-    "id": "react-fundamentals-lesson-2",
+    "id": "2",
     "moduleSlug": "react-fundamentals",
     "title": "Component State and Lifecycle",
     "order": 2,
@@ -140,7 +140,7 @@
     "version": "1.1.0"
   },
   {
-    "id": "react-fundamentals-lesson-3",
+    "id": "3",
     "moduleSlug": "react-fundamentals",
     "title": "Introduction to React Hooks",
     "order": 3,
@@ -210,7 +210,7 @@
     "version": "1.1.0"
   },
   {
-    "id": "react-fundamentals-lesson-4",
+    "id": "4",
     "moduleSlug": "react-fundamentals",
     "title": "Advanced State Management with useReducer",
     "order": 4,
@@ -275,7 +275,7 @@
     "lastUpdated": "2025-10-02T10:00:00.000Z"
   },
   {
-    "id": "react-fundamentals-lesson-11",
+    "id": "11",
     "moduleSlug": "react-fundamentals",
     "title": "Performance Optimization with React.memo and `useMemo`",
     "order": 11,
@@ -346,7 +346,7 @@
     "version": "1.1.0"
   },
   {
-    "id": "react-fundamentals-lesson-12",
+    "id": "12",
     "moduleSlug": "react-fundamentals",
     "title": "Testing React Components",
     "order": 12,
@@ -415,7 +415,7 @@
     "version": "1.1.0"
   },
   {
-    "id": "react-fundamentals-lesson-10",
+    "id": "10",
     "moduleSlug": "react-fundamentals",
     "title": "Fetching Data with `useEffect`",
     "order": 10,
@@ -484,7 +484,7 @@
     "version": "1.1.0"
   },
   {
-    "id": "react-fundamentals-lesson-5",
+    "id": "5",
     "moduleSlug": "react-fundamentals",
     "title": "Context API for Global State",
     "order": 5,
@@ -548,7 +548,7 @@
     "version": "1.1.0"
   },
   {
-    "id": "react-fundamentals-lesson-6",
+    "id": "6",
     "moduleSlug": "react-fundamentals",
     "title": "State Management with Context API",
     "order": 6,
@@ -612,7 +612,7 @@
     "version": "1.1.0"
   },
   {
-    "id": "react-fundamentals-lesson-7",
+    "id": "7",
     "moduleSlug": "react-fundamentals",
     "title": "State Management with Redux",
     "order": 7,
@@ -678,7 +678,7 @@
     "version": "1.1.0"
   },
   {
-    "id": "react-fundamentals-lesson-8",
+    "id": "8",
     "moduleSlug": "react-fundamentals",
     "title": "State Management with MobX",
     "order": 8,
@@ -744,7 +744,7 @@
     "version": "1.1.0"
   },
   {
-    "id": "react-fundamentals-lesson-9",
+    "id": "9",
     "moduleSlug": "react-fundamentals",
     "title": "State Management with useReducer",
     "order": 9,
@@ -813,7 +813,7 @@
     "version": "1.1.0"
   },
   {
-    "id": "react-fundamentals-lesson-10",
+    "id": "10",
     "moduleSlug": "react-fundamentals",
     "title": "Forms and Controlled Components",
     "order": 6,
@@ -877,7 +877,7 @@
     "version": "1.1.0"
   },
   {
-    "id": "react-fundamentals-lesson-7",
+    "id": "7",
     "moduleSlug": "react-fundamentals",
     "title": "Styling React Components",
     "order": 7,
@@ -946,7 +946,7 @@
     "version": "1.1.0"
   },
   {
-    "id": "react-fundamentals-lesson-8",
+    "id": "8",
     "moduleSlug": "react-fundamentals",
     "title": "React Router for Navigation",
     "order": 8,
@@ -1015,7 +1015,7 @@
     "version": "1.1.0"
   },
   {
-    "id": "react-fundamentals-lesson-4",
+    "id": "4",
     "moduleSlug": "react-fundamentals",
     "title": "Custom Hooks",
     "order": 4,

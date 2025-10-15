@@ -1,6 +1,6 @@
 [
   {
-    "id": "vue-advanced-lesson-1",
+    "id": "1",
     "moduleSlug": "vue-advanced",
     "title": "Vue Instance and Lifecycle",
     "order": 1,
@@ -54,7 +54,7 @@
     "version": "1.0.0"
   },
   {
-    "id": "vue-advanced-lesson-2",
+    "id": "2",
     "moduleSlug": "vue-advanced",
     "title": "Template Syntax and Directives",
     "order": 2,
@@ -107,7 +107,7 @@
     "version": "1.0.0"
   },
   {
-    "id": "vue-advanced-lesson-3",
+    "id": "3",
     "moduleSlug": "vue-advanced",
     "title": "Component Basics and Communication",
     "order": 3,
@@ -160,7 +160,7 @@
     "version": "1.0.0"
   },
   {
-    "id": "vue-advanced-lesson-4",
+    "id": "4",
     "moduleSlug": "vue-advanced",
     "title": "Slots and Dynamic Components",
     "order": 4,
@@ -213,7 +213,7 @@
     "version": "1.0.0"
   },
   {
-    "id": "vue-advanced-lesson-5",
+    "id": "5",
     "moduleSlug": "vue-advanced",
     "title": "Reactive References and Composables",
     "order": 5,
@@ -266,7 +266,7 @@
     "version": "1.0.0"
   },
   {
-    "id": "vue-advanced-lesson-6",
+    "id": "6",
     "moduleSlug": "vue-advanced",
     "title": "Pinia State Management",
     "order": 6,
@@ -319,7 +319,7 @@
     "version": "1.0.0"
   },
   {
-    "id": "vue-advanced-lesson-7",
+    "id": "7",
     "moduleSlug": "vue-advanced",
     "title": "Vue Router Navigation",
     "order": 7,
@@ -372,7 +372,7 @@
     "version": "1.0.0"
   },
   {
-    "id": "vue-advanced-lesson-8",
+    "id": "8",
     "moduleSlug": "vue-advanced",
     "title": "Form Handling and Validation",
     "order": 8,
@@ -425,7 +425,7 @@
     "version": "1.0.0"
   },
   {
-    "id": "vue-advanced-lesson-9",
+    "id": "9",
     "moduleSlug": "vue-advanced",
     "title": "Performance Optimization",
     "order": 9,
@@ -478,7 +478,7 @@
     "version": "1.0.0"
   },
   {
-    "id": "vue-advanced-lesson-10",
+    "id": "10",
     "moduleSlug": "vue-advanced",
     "title": "Component Testing",
     "order": 10,
@@ -531,7 +531,7 @@
     "version": "1.0.0"
   },
   {
-    "id": "vue-advanced-lesson-11",
+    "id": "11",
     "moduleSlug": "vue-advanced",
     "title": "Teleport and Portal Patterns",
     "order": 11,
@@ -584,7 +584,7 @@
     "version": "1.0.0"
   },
   {
-    "id": "vue-advanced-lesson-12",
+    "id": "12",
     "moduleSlug": "vue-advanced",
     "title": "Custom Directives and Plugins",
     "order": 12,
@@ -637,7 +637,7 @@
     "version": "1.0.0"
   },
   {
-    "id": "vue-advanced-lesson-13",
+    "id": "13",
     "moduleSlug": "vue-advanced",
     "title": "Advanced Component Patterns",
     "order": 13,
@@ -697,7 +697,7 @@
     "version": "1.0.0"
   },
   {
-    "id": "vue-advanced-lesson-14",
+    "id": "14",
     "moduleSlug": "vue-advanced",
     "title": "Vue 3 Ecosystem and Production Deployment",
     "order": 14,
@@ -757,7 +757,7 @@
     "version": "1.0.0"
   },
   {
-    "id": "vue-lesson-15-composition-api-patterns",
+    "id": "15",
     "moduleSlug": "vue-advanced",
     "title": "Advanced Composition API Patterns",
     "order": 15,
@@ -818,7 +818,7 @@
     "version": "1.0.0"
   },
   {
-    "id": "vue-lesson-16-state-management",
+    "id": "16",
     "moduleSlug": "vue-advanced",
     "title": "Advanced State Management with Pinia",
     "order": 16,
@@ -880,7 +880,7 @@
     "version": "1.0.0"
   },
   {
-    "id": "vue-lesson-17-routing-navigation",
+    "id": "17",
     "moduleSlug": "vue-advanced",
     "title": "Advanced Routing and Navigation Patterns",
     "order": 17,
@@ -943,7 +943,7 @@
     "version": "1.0.0"
   },
   {
-    "id": "vue-lesson-18-testing-strategies",
+    "id": "18",
     "moduleSlug": "vue-advanced",
     "title": "Advanced Testing Strategies",
     "order": 18,

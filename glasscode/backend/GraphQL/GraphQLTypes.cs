@@ -17,7 +17,7 @@ public class GraphQLLessonType
 
 public class GraphQLInterviewQuestionType
 {
-    public int Id { get; set; }
+    public string Id { get; set; } = string.Empty;
     public string? Topic { get; set; }
     public string? Type { get; set; }
     public string? Question { get; set; }
@@ -71,12 +71,12 @@ public class GraphQLQuery
 
     public static GraphQLInterviewQuestionType? GetGraphQLQuestion(string id)
     {
-        var question = GraphQLInterviewQuestionsController.Questions.FirstOrDefault(q => q.Id.ToString() == id);
+        var question = GraphQLInterviewQuestionsController.Questions.FirstOrDefault(q => q.Id == id);
         return question == null ? null : new GraphQLInterviewQuestionType
         {
             Id = question.Id,
             Topic = question.Topic,
-            Type = question.Type.ToString(),
+            Type = question.Type,
             Question = question.Question,
             Choices = question.Choices,
             CorrectAnswer = question.CorrectAnswer,
@@ -135,10 +135,10 @@ public class GraphQLQuery
         return questions?.Select(q => new GraphQLInterviewQuestionType
         {
             Id = q.Id,
-            Topic = null, // DotNet questions don't have topic field
-            Type = q.Difficulty,
+            Topic = q.Topic,
+            Type = q.Type,
             Question = q.Question,
-            Choices = q.Options.ToArray(),
+            Choices = q.Choices,
             CorrectAnswer = q.CorrectAnswer,
             Explanation = q.Explanation
         }) ?? new List<GraphQLInterviewQuestionType>();
@@ -147,7 +147,7 @@ public class GraphQLQuery
     public static GraphQLInterviewQuestionType? GetDotNetQuestion(string id)
     {
         var questions = GetDotNetQuestions();
-        return questions.FirstOrDefault(q => q.Id.ToString() == id);
+        return questions.FirstOrDefault(q => q.Id == id);
     }
 
     // Programming Lessons
@@ -214,6 +214,6 @@ public class GraphQLQuery
     public static GraphQLInterviewQuestionType? GetProgrammingQuestion(string id)
     {
         var questions = GetProgrammingQuestions();
-        return questions.FirstOrDefault(q => q.Id.ToString() == id);
+        return questions.FirstOrDefault(q => q.Id == id);
     }
 }

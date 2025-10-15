@@ -1,6 +1,6 @@
 [
   {
-    "id": "laravel-fundamentals-lesson-1",
+    "id": "1",
     "moduleSlug": "laravel-fundamentals",
     "title": "Basic Routing in Laravel",
     "order": 1,
@@ -53,7 +53,7 @@
     "version": "1.0.0"
   },
   {
-    "id": "laravel-fundamentals-lesson-2",
+    "id": "2",
     "moduleSlug": "laravel-fundamentals",
     "title": "Route Parameters",
     "order": 2,
@@ -106,7 +106,7 @@
     "version": "1.0.0"
   },
   {
-    "id": "laravel-fundamentals-lesson-3",
+    "id": "3",
     "moduleSlug": "laravel-fundamentals",
     "title": "Introduction to Eloquent",
     "order": 3,
@@ -159,7 +159,7 @@
     "version": "1.0.0"
   },
   {
-    "id": "laravel-fundamentals-lesson-4",
+    "id": "4",
     "moduleSlug": "laravel-fundamentals",
     "title": "Querying Models",
     "order": 4,
@@ -212,7 +212,7 @@
     "version": "1.0.0"
   },
   {
-    "id": "laravel-fundamentals-lesson-5",
+    "id": "5",
     "moduleSlug": "laravel-fundamentals",
     "title": "Blade Basics",
     "order": 5,
@@ -265,7 +265,7 @@
     "version": "1.0.0"
   },
   {
-    "id": "laravel-fundamentals-lesson-6",
+    "id": "6",
     "moduleSlug": "laravel-fundamentals",
     "title": "Blade Control Structures",
     "order": 6,
@@ -318,7 +318,7 @@
     "version": "1.0.0"
   },
   {
-    "id": "laravel-fundamentals-lesson-7",
+    "id": "7",
     "moduleSlug": "laravel-fundamentals",
     "title": "Creating Middleware",
     "order": 7,
@@ -371,7 +371,7 @@
     "version": "1.0.0"
   },
   {
-    "id": "laravel-fundamentals-lesson-8",
+    "id": "8",
     "moduleSlug": "laravel-fundamentals",
     "title": "Registering Middleware",
     "order": 8,
@@ -424,7 +424,7 @@
     "version": "1.0.0"
   },
   {
-    "id": "laravel-fundamentals-lesson-9",
+    "id": "9",
     "moduleSlug": "laravel-fundamentals",
     "title": "Migrations",
     "order": 9,
@@ -477,7 +477,7 @@
     "version": "1.0.0"
   },
   {
-    "id": "laravel-fundamentals-lesson-10",
+    "id": "10",
     "moduleSlug": "laravel-fundamentals",
     "title": "Seeding Data",
     "order": 10,
@@ -530,7 +530,7 @@
     "version": "1.0.0"
   },
   {
-    "id": "laravel-fundamentals-lesson-11",
+    "id": "11",
     "moduleSlug": "laravel-fundamentals",
     "title": "Laravel Breeze",
     "order": 11,
@@ -583,7 +583,7 @@
     "version": "1.0.0"
   },
   {
-    "id": "laravel-fundamentals-lesson-12",
+    "id": "12",
     "moduleSlug": "laravel-fundamentals",
     "title": "API Authentication",
     "order": 12,
@@ -636,7 +636,7 @@
     "version": "1.0.0"
   },
   {
-    "id": "laravel-fundamentals-lesson-13",
+    "id": "13",
     "moduleSlug": "laravel-fundamentals",
     "title": "Form Validation",
     "order": 13,
@@ -698,7 +698,7 @@
     "version": "1.0.0"
   },
   {
-    "id": "laravel-fundamentals-lesson-14",
+    "id": "14",
     "moduleSlug": "laravel-fundamentals",
     "title": "Eloquent Relationships",
     "order": 14,
@@ -761,7 +761,7 @@
     "version": "1.0.0"
   },
   {
-    "id": "laravel-fundamentals-lesson-15",
+    "id": "15",
     "moduleSlug": "laravel-fundamentals",
     "title": "File Storage and Uploads",
     "order": 15,
@@ -824,7 +824,7 @@
     "version": "1.0.0"
   },
   {
-    "id": "laravel-fundamentals-lesson-16",
+    "id": "16",
     "moduleSlug": "laravel-fundamentals",
     "title": "Laravel Artisan Commands",
     "order": 16,
@@ -887,7 +887,7 @@
     "version": "1.0.0"
   },
   {
-    "id": "laravel-fundamentals-lesson-17",
+    "id": "17",
     "moduleSlug": "laravel-fundamentals",
     "title": "Advanced Eloquent Relationships",
     "order": 17,
@@ -947,7 +947,7 @@
     "version": "1.0.0"
   },
   {
-    "id": "laravel-fundamentals-lesson-18",
+    "id": "18",
     "moduleSlug": "laravel-fundamentals",
     "title": "API Development with Sanctum and Passport",
     "order": 18,
@@ -1008,7 +1008,7 @@
     "version": "1.0.0"
   },
   {
-    "id": "laravel-lesson-19-testing-strategies",
+    "id": "19",
     "moduleSlug": "laravel-fundamentals",
     "title": "Advanced Testing Strategies with Pest and PHPUnit",
     "order": 19,
@@ -1071,7 +1071,7 @@
     "version": "1.0.0"
   },
   {
-    "id": "laravel-lesson-20-queue-workers",
+    "id": "20",
     "moduleSlug": "laravel-fundamentals",
     "title": "Queue Workers and Job Processing",
     "order": 20,
@@ -1133,7 +1133,7 @@
     "version": "1.0.0"
   },
   {
-    "id": "laravel-lesson-21-event-broadcasting",
+    "id": "21",
     "moduleSlug": "laravel-fundamentals",
     "title": "Event Broadcasting and Real-Time Features",
     "order": 21,
@@ -1196,7 +1196,7 @@
     "version": "1.0.0"
   },
   {
-    "id": "laravel-lesson-22-caching-strategies",
+    "id": "22",
     "moduleSlug": "laravel-fundamentals",
     "title": "Caching Strategies and Optimization",
     "order": 22,
@@ -1258,7 +1258,7 @@
     "version": "1.0.0"
   },
   {
-    "id": "laravel-lesson-23-deployment-practices",
+    "id": "23",
     "moduleSlug": "laravel-fundamentals",
     "title": "Deployment and DevOps Practices",
     "order": 23,

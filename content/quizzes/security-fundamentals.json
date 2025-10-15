@@ -7,7 +7,7 @@
   "timeLimit": 30,
   "questions": [
     {
-      "id": 41,
+      "id": "41",
       "question": "What are the performance considerations when implementing authentication systems?",
       "topic": "Authentication",
       "difficulty": "Intermediate",
@@ -30,7 +30,7 @@
       "correctAnswer": 0
     },
     {
-      "id": 42,
+      "id": "42",
       "question": "How do you troubleshoot complex authorization issues in a microservices architecture?",
       "topic": "Authorization",
       "difficulty": "Advanced",
@@ -54,7 +54,7 @@
       "correctAnswer": 0
     },
     {
-      "id": 43,
+      "id": "43",
       "question": "How would you optimize security implementations for large-scale applications with millions of users?",
       "topic": "Security",
       "difficulty": "Advanced",
@@ -78,7 +78,7 @@
       "correctAnswer": 0
     },
     {
-      "id": 44,
+      "id": "44",
       "question": "Your web application stores user passwords. Which approach provides the BEST security?",
       "topic": "Authentication",
       "difficulty": "Beginner",
@@ -101,7 +101,7 @@
       "correctAnswer": 0
     },
     {
-      "id": 45,
+      "id": "45",
       "question": "A security audit reveals that your API is vulnerable to SQL injection attacks. You need to fix this immediately. What's the MOST effective solution?",
       "topic": "Authorization",
       "difficulty": "Advanced",
@@ -124,7 +124,7 @@
       "correctAnswer": 0
     },
     {
-      "id": 46,
+      "id": "46",
       "question": "Your e-commerce application handles credit card payments. Which security implementation approach is MOST critical for PCI DSS compliance?",
       "topic": "Security",
       "difficulty": "Intermediate",
@@ -147,7 +147,7 @@
       "correctAnswer": 0
     },
     {
-      "id": 47,
+      "id": "47",
       "question": "Which security practices are essential for protecting user data in modern web applications?",
       "topic": "Authentication",
       "difficulty": "Beginner",
@@ -171,7 +171,7 @@
       "correctAnswer": 0
     },
     {
-      "id": 48,
+      "id": "48",
       "question": "What strategies are effective for troubleshooting complex security vulnerabilities?",
       "topic": "Authorization",
       "difficulty": "Advanced",
@@ -195,7 +195,7 @@
       "correctAnswer": 0
     },
     {
-      "id": 49,
+      "id": "49",
       "question": "How do you implement comprehensive security measures in a production environment?",
       "topic": "Security",
       "difficulty": "Intermediate",
@@ -219,7 +219,7 @@
       "correctAnswer": 0
     },
     {
-      "id": 50,
+      "id": "50",
       "question": "What are the key principles of secure coding practices?",
       "topic": "Security",
       "difficulty": "Beginner",
@@ -243,7 +243,7 @@
       "correctAnswer": 0
     },
     {
-      "id": 51,
+      "id": "51",
       "question": "Which pattern is most effective for implementing secure authentication architecture?",
       "topic": "Authentication",
       "difficulty": "Intermediate",
@@ -267,7 +267,7 @@
       "correctAnswer": 0
     },
     {
-      "id": 52,
+      "id": "52",
       "question": "How would you optimize security controls for high-performance applications?",
       "topic": "Security",
       "difficulty": "Advanced",
@@ -291,7 +291,7 @@
       "correctAnswer": 0
     },
     {
-      "id": 53,
+      "id": "53",
       "question": "What are the security considerations when using modern authentication protocols?",
       "topic": "Authentication",
       "difficulty": "Intermediate",
@@ -315,7 +315,7 @@
       "correctAnswer": 0
     },
     {
-      "id": 54,
+      "id": "54",
       "question": "How do you implement effective input validation to prevent injection attacks?",
       "topic": "Security",
       "difficulty": "Intermediate",
@@ -339,7 +339,7 @@
       "correctAnswer": 0
     },
     {
-      "id": 55,
+      "id": "55",
       "question": "Which security implementation provides the best protection for sensitive data at rest?",
       "topic": "Security",
       "difficulty": "Advanced",
@@ -363,7 +363,7 @@
       "correctAnswer": 0
     },
     {
-      "id": 56,
+      "id": "56",
       "question": "What are the trade-offs between different security monitoring approaches?",
       "topic": "Security",
       "difficulty": "Advanced",
@@ -387,7 +387,7 @@
       "correctAnswer": 0
     },
     {
-      "id": 57,
+      "id": "57",
       "question": "How do you implement secure session management in distributed applications?",
       "topic": "Authentication",
       "difficulty": "Intermediate",
@@ -411,7 +411,7 @@
       "correctAnswer": 0
     },
     {
-      "id": 58,
+      "id": "58",
       "question": "What security measures are essential for protecting APIs from common attacks?",
       "topic": "Security",
       "difficulty": "Intermediate",
@@ -435,7 +435,7 @@
       "correctAnswer": 0
     },
     {
-      "id": 59,
+      "id": "59",
       "question": "How do you implement effective security logging and monitoring?",
       "topic": "Security",
       "difficulty": "Advanced",
@@ -459,7 +459,7 @@
       "correctAnswer": 0
     },
     {
-      "id": 60,
+      "id": "60",
       "question": "What are the key considerations for implementing secure communication protocols?",
       "topic": "Security",
       "difficulty": "Intermediate",
@@ -483,7 +483,7 @@
       "correctAnswer": 0
     },
     {
-      "id": 1,
+      "id": "1",
       "question": "Which of the following is the most effective method to prevent SQL injection attacks?",
       "topic": "Security",
       "choices": [
@@ -495,10 +495,11 @@
       "correctIndex": 0,
       "explanation": "Parameterized queries or prepared statements are the most effective method to prevent SQL injection because they separate the SQL code from the data, ensuring that user input is treated as data rather than executable code. While escaping quotes and input validation help, they can be bypassed by sophisticated attacks.",
       "correctAnswer": 0,
-      "difficulty": "Beginner"
+      "difficulty": "Beginner",
+      "questionType": "multiple-choice"
     },
     {
-      "id": 2,
+      "id": "2",
       "question": "What is the primary purpose of salting passwords before hashing?",
       "topic": "Security",
       "choices": [
@@ -510,10 +511,11 @@
       "correctIndex": 0,
       "explanation": "Salting passwords adds a unique random value to each password before hashing, which prevents rainbow table attacks. Rainbow tables are precomputed tables of hash values for common passwords, but when a unique salt is added to each password, the resulting hash is unique even for identical passwords.",
       "correctAnswer": 0,
-      "difficulty": "Beginner"
+      "difficulty": "Beginner",
+      "questionType": "multiple-choice"
     },
     {
-      "id": 3,
+      "id": "3",
       "question": "Which HTTP security header prevents clickjacking attacks?",
       "topic": "Security",
       "choices": [
@@ -525,10 +527,11 @@
       "correctIndex": 0,
       "explanation": "X-Frame-Options header prevents clickjacking by controlling whether a page can be displayed in a frame, iframe, or object. Setting it to 'DENY' or 'SAMEORIGIN' prevents other sites from embedding your page in a frame, which is how clickjacking attacks typically work.",
       "correctAnswer": 0,
-      "difficulty": "Beginner"
+      "difficulty": "Beginner",
+      "questionType": "multiple-choice"
     },
     {
-      "id": 4,
+      "id": "4",
       "question": "What is the main difference between authentication and authorization?",
       "topic": "Security",
       "choices": [
@@ -540,10 +543,11 @@
       "correctIndex": 0,
       "explanation": "Authentication is the process of verifying who a user is (typically through credentials like username/password), while authorization is the process of determining what resources or actions an authenticated user is permitted to access or perform.",
       "correctAnswer": 0,
-      "difficulty": "Beginner"
+      "difficulty": "Beginner",
+      "questionType": "multiple-choice"
     },
     {
-      "id": 5,
+      "id": "5",
       "question": "Which of the following is NOT one of the OWASP Top 10 security risks?",
       "topic": "Security",
       "choices": [
@@ -555,10 +559,11 @@
       "correctIndex": 2,
       "explanation": "Buffer Overflow is a low-level programming vulnerability that is more common in languages like C/C++, but it's not typically listed in the OWASP Top 10, which focuses on web application security risks. Cross-Site Scripting, SQL Injection, and Broken Access Control are all part of the OWASP Top 10.",
       "correctAnswer": 2,
-      "difficulty": "Beginner"
+      "difficulty": "Beginner",
+      "questionType": "multiple-choice"
     },
     {
-      "id": 6,
+      "id": "6",
       "question": "What is the recommended approach for handling failed login attempts?",
       "topic": "Security",
       "choices": [
@@ -570,10 +575,11 @@
       "correctIndex": 0,
       "explanation": "Implementing account lockout with exponential backoff (increasing delays between attempts) is the recommended approach. It prevents brute force attacks while avoiding denial of service through permanent lockouts. Detailed error messages should be avoided as they can help attackers.",
       "correctAnswer": 0,
-      "difficulty": "Beginner"
+      "difficulty": "Beginner",
+      "questionType": "multiple-choice"
     },
     {
-      "id": 7,
+      "id": "7",
       "question": "Which Content Security Policy (CSP) directive controls which scripts can be executed?",
       "topic": "Security",
       "choices": [
@@ -585,10 +591,11 @@
       "correctIndex": 0,
       "explanation": "The script-src directive in Content Security Policy specifically controls which sources are allowed to execute JavaScript. This helps prevent XSS attacks by restricting where scripts can be loaded from and what types of scripts can be executed.",
       "correctAnswer": 0,
-      "difficulty": "Beginner"
+      "difficulty": "Beginner",
+      "questionType": "multiple-choice"
     },
     {
-      "id": 8,
+      "id": "8",
       "question": "What is the primary purpose of using HTTPS instead of HTTP?",
       "topic": "Security",
       "choices": [
@@ -600,10 +607,11 @@
       "correctIndex": 0,
       "explanation": "HTTPS (HTTP Secure) encrypts data in transit between the client and server using TLS/SSL encryption. This prevents eavesdropping, tampering, and man-in-the-middle attacks. While HTTPS can have SEO benefits, its primary purpose is security.",
       "correctAnswer": 0,
-      "difficulty": "Beginner"
+      "difficulty": "Beginner",
+      "questionType": "multiple-choice"
     },
     {
-      "id": 9,
+      "id": "9",
       "question": "Which type of attack is prevented by validating file uploads for both extension and content?",
       "topic": "Security",
       "choices": [
@@ -615,10 +623,11 @@
       "correctIndex": 0,
       "explanation": "Validating both file extensions and content prevents malicious file upload attacks where attackers try to upload executable files (like PHP scripts) disguised with innocent extensions (.jpg) or upload files that contain malicious code that could be executed by the server.",
       "correctAnswer": 0,
-      "difficulty": "Beginner"
+      "difficulty": "Beginner",
+      "questionType": "multiple-choice"
     },
     {
-      "id": 10,
+      "id": "10",
       "question": "What is the purpose of the 'Secure' flag on cookies?",
       "topic": "Security",
       "choices": [
@@ -630,10 +639,11 @@
       "correctIndex": 0,
       "explanation": "The 'Secure' flag on cookies ensures they are only transmitted over HTTPS connections, preventing them from being sent over unencrypted HTTP connections where they could be intercepted. This is crucial for protecting sensitive session tokens and other authentication data.",
       "correctAnswer": 0,
-      "difficulty": "Beginner"
+      "difficulty": "Beginner",
+      "questionType": "multiple-choice"
     },
     {
-      "id": 11,
+      "id": "11",
       "question": "Which of the following is the most secure method for storing session data?",
       "topic": "Security",
       "choices": [
@@ -645,10 +655,11 @@
       "correctIndex": 0,
       "explanation": "Server-side storage with session IDs in cookies is the most secure method. It keeps sensitive session data on the server where it can't be tampered with, while only sending a session identifier to the client. Client-side storage exposes data to the user, and URL parameters can be logged or shared.",
       "correctAnswer": 0,
-      "difficulty": "Beginner"
+      "difficulty": "Beginner",
+      "questionType": "multiple-choice"
     },
     {
-      "id": 12,
+      "id": "12",
       "question": "What does the principle of least privilege entail?",
       "topic": "Security",
       "choices": [
@@ -660,10 +671,11 @@
       "correctIndex": 0,
       "explanation": "The principle of least privilege states that users, processes, and systems should only have the minimum permissions necessary to perform their required functions. This minimizes the potential damage from security breaches or accidental actions.",
       "correctAnswer": 0,
-      "difficulty": "Beginner"
+      "difficulty": "Beginner",
+      "questionType": "multiple-choice"
     },
     {
-      "id": 13,
+      "id": "13",
       "question": "Which method is most effective for preventing Cross-Site Request Forgery (CSRF) attacks?",
       "topic": "Security",
       "choices": [
@@ -675,10 +687,11 @@
       "correctIndex": 0,
       "explanation": "Anti-CSRF tokens are the most effective method for preventing CSRF attacks. They are unique, unpredictable values generated by the server and sent to the client, then required with each state-changing request. Header validation can be bypassed, and HTTPS doesn't prevent CSRF.",
       "correctAnswer": 0,
-      "difficulty": "Beginner"
+      "difficulty": "Beginner",
+      "questionType": "multiple-choice"
     },
     {
-      "id": 14,
+      "id": "14",
       "question": "What is the primary benefit of using bcrypt over MD5 for password hashing?",
       "topic": "Security",
       "choices": [
@@ -690,10 +703,11 @@
       "correctIndex": 0,
       "explanation": "bcrypt is intentionally designed to be slow and computationally expensive, making brute force attacks much more difficult. It also automatically handles salting. MD5 is fast but cryptographically broken, making it unsuitable for password hashing.",
       "correctAnswer": 0,
-      "difficulty": "Beginner"
+      "difficulty": "Beginner",
+      "questionType": "multiple-choice"
     },
     {
-      "id": 15,
+      "id": "15",
       "question": "Which security measure helps prevent directory traversal attacks?",
       "topic": "Security",
       "choices": [
@@ -705,10 +719,11 @@
       "correctIndex": 0,
       "explanation": "Validating and sanitizing file paths prevents directory traversal attacks (like ../../etc/passwd) by ensuring that file access is restricted to intended directories. This involves checking for dangerous path sequences and resolving paths to ensure they're within allowed boundaries.",
       "correctAnswer": 0,
-      "difficulty": "Beginner"
+      "difficulty": "Beginner",
+      "questionType": "multiple-choice"
     },
     {
-      "id": 16,
+      "id": "16",
       "question": "What is the purpose of input validation in security?",
       "topic": "Security",
       "choices": [
@@ -720,10 +735,11 @@
       "correctIndex": 0,
       "explanation": "Input validation is a fundamental security practice that prevents injection attacks (SQL, XSS, command injection) by ensuring that user-supplied data conforms to expected formats and types. It also helps maintain data integrity in the application.",
       "correctAnswer": 0,
-      "difficulty": "Beginner"
+      "difficulty": "Beginner",
+      "questionType": "multiple-choice"
     },
     {
-      "id": 17,
+      "id": "17",
       "question": "Which security header prevents MIME type sniffing?",
       "topic": "Security",
       "choices": [
@@ -735,10 +751,11 @@
       "correctIndex": 0,
       "explanation": "X-Content-Type-Options: nosniff prevents browsers from MIME-sniffing a response away from the declared content type. This helps prevent certain types of attacks where a file with one extension is interpreted as a different content type by the browser.",
       "correctAnswer": 0,
-      "difficulty": "Beginner"
+      "difficulty": "Beginner",
+      "questionType": "multiple-choice"
     },
     {
-      "id": 18,
+      "id": "18",
       "question": "What is the recommended approach for handling sensitive data in logs?",
       "topic": "Security",
       "choices": [
@@ -750,10 +767,11 @@
       "correctIndex": 0,
       "explanation": "Sensitive data should never be logged, regardless of encryption or storage location. This includes passwords, credit card numbers, social security numbers, and other personally identifiable information. Even encrypted logs can be compromised, and logging sensitive data creates unnecessary risk.",
       "correctAnswer": 0,
-      "difficulty": "Beginner"
+      "difficulty": "Beginner",
+      "questionType": "multiple-choice"
     },
     {
-      "id": 19,
+      "id": "19",
       "question": "Which of the following is a characteristic of a secure JWT (JSON Web Token)?",
       "topic": "Security",
       "choices": [
@@ -765,10 +783,11 @@
       "correctIndex": 0,
       "explanation": "Secure JWTs should be signed with a strong secret (or use asymmetric cryptography) and have short expiration times to limit the window of opportunity for attackers. They should never contain passwords, should expire reasonably quickly, and should be stored securely (HttpOnly, Secure cookies are preferred over localStorage).",
       "correctAnswer": 0,
-      "difficulty": "Beginner"
+      "difficulty": "Beginner",
+      "questionType": "multiple-choice"
     },
     {
-      "id": 20,
+      "id": "20",
       "question": "What is the primary defense against Cross-Site Scripting (XSS) attacks?",
       "topic": "Security",
       "choices": [
@@ -780,10 +799,11 @@
       "correctIndex": 0,
       "explanation": "The primary defense against XSS attacks is proper output encoding (escaping) combined with input validation. This ensures that user-supplied data is treated as data rather than executable code when rendered in web pages. While HTTPS and CSRF tokens are important for other security aspects, they don't prevent XSS.",
       "correctAnswer": 0,
-      "difficulty": "Beginner"
+      "difficulty": "Beginner",
+      "questionType": "multiple-choice"
     },
     {
-      "id": 21,
+      "id": "21",
       "question": "Which of the following is NOT a recommended practice for API security?",
       "topic": "Security",
       "choices": [
@@ -795,10 +815,11 @@
       "correctIndex": 0,
       "explanation": "Using the same authentication method for all endpoints is not recommended because different endpoints may require different levels of security. For example, a public endpoint might use API keys while an administrative endpoint might require OAuth 2.0. Rate limiting, HTTPS, and input validation are all recommended API security practices.",
       "correctAnswer": 0,
-      "difficulty": "Beginner"
+      "difficulty": "Beginner",
+      "questionType": "multiple-choice"
     },
     {
-      "id": 22,
+      "id": "22",
       "question": "What is the purpose of a Security Token Service (STS)?",
       "topic": "Security",
       "choices": [
@@ -810,10 +831,11 @@
       "correctIndex": 0,
       "explanation": "A Security Token Service (STS) is responsible for issuing, validating, and revoking security tokens such as SAML tokens, JWTs, and OAuth tokens. It acts as a trusted authority that can authenticate users and provide tokens that other services can trust.",
       "correctAnswer": 0,
-      "difficulty": "Beginner"
+      "difficulty": "Beginner",
+      "questionType": "multiple-choice"
     },
     {
-      "id": 23,
+      "id": "23",
       "question": "Which encryption method should be used for encrypting data at rest?",
       "topic": "Security",
       "choices": [
@@ -825,10 +847,11 @@
       "correctIndex": 0,
       "explanation": "AES-256 is a strong symmetric encryption algorithm suitable for encrypting data at rest. Base64 is encoding, not encryption. MD5 and SHA-256 are hashing algorithms, not encryption algorithms. AES-256 provides strong security for data storage when properly implemented.",
       "correctAnswer": 0,
-      "difficulty": "Beginner"
+      "difficulty": "Beginner",
+      "questionType": "multiple-choice"
     },
     {
-      "id": 24,
+      "id": "24",
       "question": "What is the main purpose of a Web Application Firewall (WAF)?",
       "topic": "Security",
       "choices": [
@@ -840,10 +863,11 @@
       "correctIndex": 0,
       "explanation": "A Web Application Firewall (WAF) filters and monitors HTTP traffic between a web application and the Internet. It helps protect web applications by inspecting incoming traffic for common web exploits like SQL injection, XSS, and other OWASP Top 10 vulnerabilities.",
       "correctAnswer": 0,
-      "difficulty": "Beginner"
+      "difficulty": "Beginner",
+      "questionType": "multiple-choice"
     },
     {
-      "id": 25,
+      "id": "25",
       "question": "Which of the following is a characteristic of OAuth 2.0?",
       "topic": "Security",
       "choices": [
@@ -855,10 +879,11 @@
       "correctIndex": 0,
       "explanation": "OAuth 2.0 is an authorization framework that allows third-party applications to obtain limited access to an HTTP service on behalf of a resource owner. It is not an authentication protocol, though it is often used in conjunction with authentication systems like OpenID Connect.",
       "correctAnswer": 0,
-      "difficulty": "Beginner"
+      "difficulty": "Beginner",
+      "questionType": "multiple-choice"
     },
     {
-      "id": 26,
+      "id": "26",
       "question": "What is the primary benefit of using multi-factor authentication (MFA)?",
       "topic": "Security",
       "choices": [
@@ -870,10 +895,11 @@
       "correctIndex": 0,
       "explanation": "Multi-factor authentication (MFA) adds additional layers of security beyond just passwords by requiring users to provide two or more different types of authentication factors (something you know, something you have, something you are). This significantly reduces the risk of unauthorized access even if one factor is compromised.",
       "correctAnswer": 0,
-      "difficulty": "Beginner"
+      "difficulty": "Beginner",
+      "questionType": "multiple-choice"
     },
     {
-      "id": 27,
+      "id": "27",
       "question": "Which security principle is violated when a system continues to operate in an insecure state?",
       "topic": "Security",
       "choices": [
@@ -885,10 +911,11 @@
       "correctIndex": 0,
       "explanation": "The 'fail securely' principle states that systems should default to a secure state when they encounter an error or failure. When a system continues to operate in an insecure state after a failure, it violates this principle and can expose vulnerabilities that attackers can exploit.",
       "correctAnswer": 0,
-      "difficulty": "Beginner"
+      "difficulty": "Beginner",
+      "questionType": "multiple-choice"
     },
     {
-      "id": 28,
+      "id": "28",
       "question": "What is the main purpose of a Security Information and Event Management (SIEM) system?",
       "topic": "Security",
       "choices": [
@@ -900,10 +927,11 @@
       "correctIndex": 0,
       "explanation": "A Security Information and Event Management (SIEM) system collects, analyzes, and correlates security events from multiple sources such as network devices, servers, and applications. It helps security teams detect and respond to security threats by providing real-time analysis of security alerts.",
       "correctAnswer": 0,
-      "difficulty": "Beginner"
+      "difficulty": "Beginner",
+      "questionType": "multiple-choice"
     },
     {
-      "id": 29,
+      "id": "29",
       "question": "Which of the following is the most effective way to protect against man-in-the-middle (MITM) attacks?",
       "topic": "Security",
       "choices": [
@@ -915,10 +943,11 @@
       "correctIndex": 0,
       "explanation": "Using HTTPS with valid certificates is the most effective way to protect against man-in-the-middle (MITM) attacks. HTTPS encrypts the communication between the client and server, making it extremely difficult for attackers to intercept and modify the data in transit. Certificate validation ensures the client is communicating with the legitimate server.",
       "correctAnswer": 0,
-      "difficulty": "Beginner"
+      "difficulty": "Beginner",
+      "questionType": "multiple-choice"
     },
     {
-      "id": 30,
+      "id": "30",
       "question": "What is the purpose of a honeypot in cybersecurity?",
       "topic": "Security",
       "choices": [
@@ -930,10 +959,11 @@
       "correctIndex": 0,
       "explanation": "A honeypot is a security mechanism designed to detect and study attempts to compromise systems. It appears to be a legitimate part of the network but is actually isolated and monitored. When attackers interact with a honeypot, security teams can study their techniques and gather intelligence about potential threats.",
       "correctAnswer": 0,
-      "difficulty": "Beginner"
+      "difficulty": "Beginner",
+      "questionType": "multiple-choice"
     },
     {
-      "id": 31,
+      "id": "31",
       "question": "Which type of attack involves sending unsolicited messages to a large number of users?",
       "topic": "Security",
       "choices": [
@@ -945,10 +975,11 @@
       "correctIndex": 0,
       "explanation": "Spam refers to unsolicited messages, typically sent in bulk to a large number of recipients. While phishing, spear phishing, and whaling are all forms of social engineering attacks that attempt to trick users into revealing sensitive information, spam is the broader category of unwanted bulk messaging.",
       "correctAnswer": 0,
-      "difficulty": "Beginner"
+      "difficulty": "Beginner",
+      "questionType": "multiple-choice"
     },
     {
-      "id": 32,
+      "id": "32",
       "question": "What is the main difference between symmetric and asymmetric encryption?",
       "topic": "Security",
       "choices": [
@@ -960,10 +991,11 @@
       "correctIndex": 0,
       "explanation": "The main difference between symmetric and asymmetric encryption is in key usage. Symmetric encryption uses the same key for both encryption and decryption, while asymmetric encryption uses a pair of keys - a public key for encryption and a private key for decryption. Symmetric encryption is generally faster but requires secure key distribution.",
       "correctAnswer": 0,
-      "difficulty": "Beginner"
+      "difficulty": "Beginner",
+      "questionType": "multiple-choice"
     },
     {
-      "id": 33,
+      "id": "33",
       "question": "Which security control is most effective against social engineering attacks?",
       "topic": "Security",
       "choices": [
@@ -975,10 +1007,11 @@
       "correctIndex": 0,
       "explanation": "User awareness training is the most effective security control against social engineering attacks. Since social engineering targets human psychology rather than technical vulnerabilities, educating users about common tactics like phishing, pretexting, and baiting is the primary defense. Technical controls can help but are secondary to user education.",
       "correctAnswer": 0,
-      "difficulty": "Beginner"
+      "difficulty": "Beginner",
+      "questionType": "multiple-choice"
     },
     {
-      "id": 34,
+      "id": "34",
       "question": "What is the purpose of a security audit?",
       "topic": "Security",
       "choices": [
@@ -990,10 +1023,11 @@
       "correctIndex": 0,
       "explanation": "A security audit is a systematic evaluation of an organization's security posture, including policies, procedures, technical controls, and compliance with regulations. It helps identify vulnerabilities, assess the effectiveness of existing security measures, and provide recommendations for improvement.",
       "correctAnswer": 0,
-      "difficulty": "Beginner"
+      "difficulty": "Beginner",
+      "questionType": "multiple-choice"
     },
     {
-      "id": 35,
+      "id": "35",
       "question": "Which of the following is a characteristic of a zero-day vulnerability?",
       "topic": "Security",
       "choices": [
@@ -1005,10 +1039,11 @@
       "correctIndex": 0,
       "explanation": "A zero-day vulnerability is a security flaw that is unknown to the software vendor at the time of exploitation. The term 'zero-day' refers to the fact that the vendor has had zero days to prepare a fix or patch. These vulnerabilities are particularly dangerous because there are no existing defenses against them until a patch is developed.",
       "correctAnswer": 0,
-      "difficulty": "Beginner"
+      "difficulty": "Beginner",
+      "questionType": "multiple-choice"
     },
     {
-      "id": 36,
+      "id": "36",
       "question": "What is the primary purpose of penetration testing?",
       "topic": "Security",
       "choices": [
@@ -1020,10 +1055,11 @@
       "correctIndex": 0,
       "explanation": "Penetration testing (or pen testing) simulates real-world attacks to identify vulnerabilities in systems, networks, or applications. It is a proactive security measure that helps organizations understand their security weaknesses before malicious attackers can exploit them.",
       "correctAnswer": 0,
-      "difficulty": "Beginner"
+      "difficulty": "Beginner",
+      "questionType": "multiple-choice"
     },
     {
-      "id": 37,
+      "id": "37",
       "question": "Which security principle is applied when implementing multiple layers of defense?",
       "topic": "Security",
       "choices": [
@@ -1035,10 +1071,11 @@
       "correctIndex": 0,
       "explanation": "Defense in depth is the security principle of implementing multiple layers of defense to protect systems and data. Rather than relying on a single security control, this approach uses multiple complementary controls (network firewalls, host firewalls, antivirus, IDS/IPS, etc.) to provide redundancy and reduce the likelihood of a successful attack.",
       "correctAnswer": 0,
-      "difficulty": "Beginner"
+      "difficulty": "Beginner",
+      "questionType": "multiple-choice"
     },
     {
-      "id": 38,
+      "id": "38",
       "question": "What is the main purpose of a Digital Certificate?",
       "topic": "Security",
       "choices": [
@@ -1050,10 +1087,11 @@
       "correctIndex": 0,
       "explanation": "A Digital Certificate is an electronic document that verifies the identity of a person, organization, or device. It contains the entity's public key and is signed by a trusted Certificate Authority (CA). Digital certificates are used in HTTPS, email encryption, code signing, and other security applications.",
       "correctAnswer": 0,
-      "difficulty": "Beginner"
+      "difficulty": "Beginner",
+      "questionType": "multiple-choice"
     },
     {
-      "id": 39,
+      "id": "39",
       "question": "Which of the following is the most effective way to prevent privilege escalation attacks?",
       "topic": "Security",
       "choices": [
@@ -1065,10 +1103,11 @@
       "correctIndex": 0,
       "explanation": "Implementing the principle of least privilege is the most effective way to prevent privilege escalation attacks. By ensuring that users and processes have only the minimum permissions necessary to perform their functions, the potential damage from a compromised account or process is significantly reduced.",
       "correctAnswer": 0,
-      "difficulty": "Beginner"
+      "difficulty": "Beginner",
+      "questionType": "multiple-choice"
     },
     {
-      "id": 40,
+      "id": "40",
       "question": "What is the primary purpose of a Security Operations Center (SOC)?",
       "topic": "Security",
       "choices": [
@@ -1080,7 +1119,8 @@
       "correctIndex": 0,
       "explanation": "A Security Operations Center (SOC) is a centralized unit that monitors, detects, and responds to security incidents 24/7. It uses various security tools and technologies to analyze security events, investigate potential threats, and coordinate incident response activities to protect an organization's digital assets.",
       "correctAnswer": 0,
-      "difficulty": "Beginner"
+      "difficulty": "Beginner",
+      "questionType": "multiple-choice"
     }
   ],
   "metadata": {

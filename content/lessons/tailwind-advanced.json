@@ -1,6 +1,6 @@
 [
   {
-    "id": "tailwind-advanced-lesson-1",
+    "id": "1",
     "moduleSlug": "tailwind-advanced",
     "title": "Introduction to Tailwind CSS",
     "order": 1,
@@ -53,7 +53,7 @@
     "version": "1.0.0"
   },
   {
-    "id": "tailwind-advanced-lesson-2",
+    "id": "2",
     "moduleSlug": "tailwind-advanced",
     "title": "Utility-First Fundamentals",
     "order": 2,
@@ -106,7 +106,7 @@
     "version": "1.0.0"
   },
   {
-    "id": "tailwind-advanced-lesson-3",
+    "id": "3",
     "moduleSlug": "tailwind-advanced",
     "title": "Flexbox and Grid",
     "order": 3,
@@ -159,7 +159,7 @@
     "version": "1.0.0"
   },
   {
-    "id": "tailwind-advanced-lesson-4",
+    "id": "4",
     "moduleSlug": "tailwind-advanced",
     "title": "Responsive Design",
     "order": 4,
@@ -212,7 +212,7 @@
     "version": "1.0.0"
   },
   {
-    "id": "tailwind-advanced-lesson-5",
+    "id": "5",
     "moduleSlug": "tailwind-advanced",
     "title": "Customizing Tailwind",
     "order": 5,
@@ -265,7 +265,7 @@
     "version": "1.0.0"
   },
   {
-    "id": "tailwind-advanced-lesson-6",
+    "id": "6",
     "moduleSlug": "tailwind-advanced",
     "title": "Building Reusable Components",
     "order": 6,
@@ -318,7 +318,7 @@
     "version": "1.0.0"
   },
   {
-    "id": "tailwind-advanced-lesson-7",
+    "id": "7",
     "moduleSlug": "tailwind-advanced",
     "title": "Styling Forms",
     "order": 7,
@@ -371,7 +371,7 @@
     "version": "1.0.0"
   },
   {
-    "id": "tailwind-advanced-lesson-8",
+    "id": "8",
     "moduleSlug": "tailwind-advanced",
     "title": "Animations and Transitions",
     "order": 8,
@@ -424,7 +424,7 @@
     "version": "1.0.0"
   },
   {
-    "id": "tailwind-advanced-lesson-9",
+    "id": "9",
     "moduleSlug": "tailwind-advanced",
     "title": "Dark Mode Implementation",
     "order": 9,
@@ -477,7 +477,7 @@
     "version": "1.0.0"
   },
   {
-    "id": "tailwind-advanced-lesson-10",
+    "id": "10",
     "moduleSlug": "tailwind-advanced",
     "title": "Performance Optimization",
     "order": 10,
@@ -530,7 +530,7 @@
     "version": "1.0.0"
   },
   {
-    "id": "tailwind-advanced-lesson-11",
+    "id": "11",
     "moduleSlug": "tailwind-advanced",
     "title": "Using Tailwind Plugins",
     "order": 11,
@@ -583,7 +583,7 @@
     "version": "1.0.0"
   },
   {
-    "id": "tailwind-advanced-lesson-12",
+    "id": "12",
     "moduleSlug": "tailwind-advanced",
     "title": "Framework Integration",
     "order": 12,
@@ -636,7 +636,7 @@
     "version": "1.0.0"
   },
   {
-    "id": "tailwind-advanced-lesson-13",
+    "id": "13",
     "moduleSlug": "tailwind-advanced",
     "title": "Advanced Tailwind CSS Patterns and Best Practices",
     "order": 13,
@@ -694,7 +694,7 @@
     "version": "1.0.0"
   },
   {
-    "id": "tailwind-lesson-14-advanced-customization",
+    "id": "14",
     "moduleSlug": "tailwind-advanced",
     "title": "Advanced Customization Techniques",
     "order": 14,
@@ -756,7 +756,7 @@
     "version": "1.0.0"
   },
   {
-    "id": "tailwind-lesson-15-design-systems",
+    "id": "15",
     "moduleSlug": "tailwind-advanced",
     "title": "Design System Implementation",
     "order": 15,
@@ -816,7 +816,7 @@
     "version": "1.0.0"
   },
   {
-    "id": "tailwind-lesson-16-component-library",
+    "id": "16",
     "moduleSlug": "tailwind-advanced",
     "title": "Component Library Development",
     "order": 16,
@@ -878,7 +878,7 @@
     "version": "1.0.0"
   },
   {
-    "id": "tailwind-lesson-17-theming-dark-mode",
+    "id": "17",
     "moduleSlug": "tailwind-advanced",
     "title": "Theming and Dark Mode Strategies",
     "order": 17,

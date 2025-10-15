@@ -1,6 +1,6 @@
 [
   {
-    "id": "graphql-advanced-lesson-1",
+    "id": "1",
     "moduleSlug": "graphql-advanced",
     "title": "Introduction to GraphQL and Query Language Basics",
     "order": 1,
@@ -53,7 +53,7 @@
     "version": "1.0.0"
   },
   {
-    "id": "graphql-advanced-lesson-2",
+    "id": "2",
     "moduleSlug": "graphql-advanced",
     "title": "Schema Definition Language and Type System",
     "order": 2,
@@ -106,7 +106,7 @@
     "version": "1.0.0"
   },
   {
-    "id": "graphql-advanced-lesson-3",
+    "id": "3",
     "moduleSlug": "graphql-advanced",
     "title": "Queries and Field Selection",
     "order": 3,
@@ -159,7 +159,7 @@
     "version": "1.0.0"
   },
   {
-    "id": "graphql-advanced-lesson-4",
+    "id": "4",
     "moduleSlug": "graphql-advanced",
     "title": "Mutations and Data Modification",
     "order": 4,
@@ -212,7 +212,7 @@
     "version": "1.0.0"
   },
   {
-    "id": "graphql-advanced-lesson-5",
+    "id": "5",
     "moduleSlug": "graphql-advanced",
     "title": "Subscriptions and Real-time Data",
     "order": 5,
@@ -265,7 +265,7 @@
     "version": "1.0.0"
   },
   {
-    "id": "graphql-advanced-lesson-6",
+    "id": "6",
     "moduleSlug": "graphql-advanced",
     "title": "Resolvers and Data Fetching",
     "order": 6,
@@ -318,7 +318,7 @@
     "version": "1.0.0"
   },
   {
-    "id": "graphql-advanced-lesson-7",
+    "id": "7",
     "moduleSlug": "graphql-advanced",
     "title": "Advanced Schema Patterns",
     "order": 7,
@@ -371,7 +371,7 @@
     "version": "1.0.0"
   },
   {
-    "id": "graphql-advanced-lesson-8",
+    "id": "8",
     "moduleSlug": "graphql-advanced",
     "title": "DataLoader and N+1 Query Problem",
     "order": 8,
@@ -424,7 +424,7 @@
     "version": "1.0.0"
   },
   {
-    "id": "graphql-advanced-lesson-9",
+    "id": "9",
     "moduleSlug": "graphql-advanced",
     "title": "Query Complexity Analysis and Rate Limiting",
     "order": 9,
@@ -477,7 +477,7 @@
     "version": "1.0.0"
   },
   {
-    "id": "graphql-advanced-lesson-10",
+    "id": "10",
     "moduleSlug": "graphql-advanced",
     "title": "GraphQL Testing Strategies",
     "order": 10,
@@ -530,7 +530,7 @@
     "version": "1.0.0"
   },
   {
-    "id": "graphql-advanced-lesson-11",
+    "id": "11",
     "moduleSlug": "graphql-advanced",
     "title": "GraphQL Development Tools and Debugging",
     "order": 11,
@@ -583,7 +583,7 @@
     "version": "1.0.0"
   },
   {
-    "id": "graphql-advanced-lesson-12",
+    "id": "12",
     "moduleSlug": "graphql-advanced",
     "title": "GraphQL Security and Production Best Practices",
     "order": 12,
@@ -636,7 +636,7 @@
     "version": "1.0.0"
   },
   {
-    "id": "graphql-advanced-lesson-13",
+    "id": "13",
     "moduleSlug": "graphql-advanced",
     "title": "GraphQL Federation and Microservices Architecture",
     "order": 13,
