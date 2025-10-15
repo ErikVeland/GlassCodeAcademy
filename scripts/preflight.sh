@@ -69,9 +69,53 @@ npm run lint || fail "ESLint checks failed"
 ok "Lint passed"
 
 section "TypeScript typecheck"
-echo "Running: npm run typecheck"
-npm run typecheck || fail "Typecheck failed"
-ok "Typecheck passed"
+# Check if we're in the frontend directory, if not, navigate to it
+if [ -d "glasscode/frontend" ]; then
+  echo "Running TypeScript checks in glasscode/frontend..."
+  cd glasscode/frontend || fail "Failed to navigate to frontend directory"
+  
+  # Run TypeScript compiler check
+  echo "Running: npx tsc --noEmit"
+  npx tsc --noEmit || fail "TypeScript compilation failed"
+  
+  # Run the npm typecheck script as well
+  echo "Running: npm run typecheck"
+  npm run typecheck || fail "npm typecheck failed"
+  
+  # Navigate back to repo root
+  cd "$REPO_ROOT" || fail "Failed to return to repository root"
+  ok "TypeScript checks passed"
+else
+  echo "Frontend directory not found, running typecheck from current location"
+  npm run typecheck || fail "Typecheck failed"
+  ok "Typecheck passed"
+fi
+
+section "Next.js build validation"
+# Validate that the Next.js application can build successfully
+if [ -d "glasscode/frontend" ]; then
+  echo "Running Next.js build validation in glasscode/frontend..."
+  cd glasscode/frontend || fail "Failed to navigate to frontend directory"
+  
+  # Run a build to catch any build-time errors
+  echo "Running: npm run build"
+  npm run build || fail "Next.js build failed - this would fail in production"
+  
+  # Navigate back to repo root
+  cd "$REPO_ROOT" || fail "Failed to return to repository root"
+  ok "Next.js build validation passed"
+else
+  echo "Frontend directory not found, skipping Next.js build validation"
+fi
+
+section "API route validation"
+if [ -f "scripts/validate-api-routes.js" ]; then
+  echo "Running: node scripts/validate-api-routes.js"
+  node scripts/validate-api-routes.js || fail "API route validation failed"
+  ok "API routes valid"
+else
+  echo "No scripts/validate-api-routes.js; skipping API route validation"
+fi
 
 # Attempt to source environment files if required vars are missing
 load_env_if_missing() {
