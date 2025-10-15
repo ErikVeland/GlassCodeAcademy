@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import ConfettiBurst from "./ConfettiBurst";
+import { useProfile } from "./ProfileProvider";
 
 type CertificateAwardProps = {
   moduleName: string;
@@ -18,6 +19,7 @@ const CertificateAward: React.FC<CertificateAwardProps> = ({
   percent,
   className = "",
 }) => {
+  const { profile } = useProfile();
   const isHighDistinction = percent === 100;
   const [showLightning, setShowLightning] = useState(false);
   const [isReducedMotion, setIsReducedMotion] = useState(false);
@@ -84,7 +86,9 @@ const CertificateAward: React.FC<CertificateAwardProps> = ({
         {/* Recipient and details */}
         <div className="space-y-2 text-center">
           <p className="text-gray-800 dark:text-gray-200 text-lg">This certifies that</p>
-          <p className="text-2xl font-semibold text-blue-700 dark:text-blue-300 certificate-name">You</p>
+          <p className="text-2xl font-semibold text-blue-700 dark:text-blue-300 certificate-name">
+            {profile.displayName || "You"}
+          </p>
           <p className="text-gray-700 dark:text-gray-300">
             successfully completed the {moduleName} Interview Preparation Quiz
           </p>
