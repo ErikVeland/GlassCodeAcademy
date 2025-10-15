@@ -14,7 +14,7 @@ namespace backend.Controllers
         [HttpGet]
         public IEnumerable<VueInterviewQuestion> Get()
         {
-            var jsonPath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Data", "vue_questions.json");
+            var jsonPath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..", "..", "..", "content", "quizzes", "vue-advanced.json");
             if (!System.IO.File.Exists(jsonPath))
             {
                 return new List<VueInterviewQuestion>();

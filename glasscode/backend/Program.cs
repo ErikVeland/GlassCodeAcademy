@@ -24,6 +24,10 @@ builder.Services.AddCors(options =>
 // Add authorization services
 builder.Services.AddAuthorization();
 
+// Register GraphQL Query and Mutation services
+builder.Services.AddScoped<Query>();
+builder.Services.AddScoped<Mutation>();
+
 // Removed REST controllers and Swagger in favor of GraphQL
 
 // Enhanced GraphQL server configuration

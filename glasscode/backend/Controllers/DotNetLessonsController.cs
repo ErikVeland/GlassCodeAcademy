@@ -14,7 +14,7 @@ namespace backend.Controllers
         [HttpGet]
         public IEnumerable<DotNetLesson> Get()
         {
-            var jsonPath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Data", "dotnet_lessons.json");
+            var jsonPath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..", "..", "..", "content", "lessons", "dotnet-fundamentals.json");
             if (!System.IO.File.Exists(jsonPath))
             {
                 return new List<DotNetLesson>();

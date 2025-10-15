@@ -12,11 +12,18 @@ namespace backend.GraphQL
             descriptor.Description("Represents a Laravel learning lesson with code examples");
 
             descriptor.Field(l => l.Id).Description("The unique identifier of the lesson");
-            descriptor.Field(l => l.Topic).Description("The topic category of the lesson");
+            descriptor.Field(l => l.ModuleSlug).Description("The module slug of the lesson");
             descriptor.Field(l => l.Title).Description("The title of the lesson");
-            descriptor.Field(l => l.Description).Description("A detailed description of the lesson");
-            descriptor.Field(l => l.CodeExample).Description("Code example demonstrating the lesson concept");
-            descriptor.Field(l => l.Output).Description("Expected output of the code example");
+            descriptor.Field(l => l.Order).Description("The order of the lesson in the module");
+            descriptor.Field(l => l.Objectives).Description("Learning objectives for the lesson");
+            descriptor.Field(l => l.Intro).Description("Introduction to the lesson");
+            descriptor.Field(l => l.Code).Description("Code example demonstrating the lesson concept");
+            descriptor.Field(l => l.Pitfalls).Description("Common pitfalls and how to avoid them");
+            descriptor.Field(l => l.Exercises).Description("Practice exercises for the lesson");
+            descriptor.Field(l => l.Next).Description("Next lesson reference");
+            descriptor.Field(l => l.EstimatedMinutes).Description("Estimated time to complete the lesson");
+            descriptor.Field(l => l.Difficulty).Description("Difficulty level of the lesson");
+            descriptor.Field(l => l.Tags).Description("Tags associated with the lesson");
         }
     }
 

@@ -14,7 +14,7 @@ namespace backend.Controllers
         [HttpGet]
         public IEnumerable<TailwindInterviewQuestion> Get()
         {
-            var jsonPath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Data", "tailwind_questions.json");
+            var jsonPath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..", "..", "..", "content", "quizzes", "tailwind-advanced.json");
             if (!System.IO.File.Exists(jsonPath))
             {
                 return new List<TailwindInterviewQuestion>();

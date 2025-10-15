@@ -14,7 +14,7 @@ namespace backend.Controllers
         [HttpGet]
         public IEnumerable<NodeInterviewQuestion> Get()
         {
-            var jsonPath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Data", "node_questions.json");
+            var jsonPath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..", "..", "..", "content", "quizzes", "node-fundamentals.json");
             if (!System.IO.File.Exists(jsonPath))
             {
                 return new List<NodeInterviewQuestion>();

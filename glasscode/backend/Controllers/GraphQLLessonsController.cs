@@ -31,9 +31,9 @@ public class GraphQLLessonsController : ControllerBase
             {
                 System.IO.Path.Combine(Directory.GetCurrentDirectory(), "..", "..", "content", "lessons", "graphql-advanced.json"),
                 System.IO.Path.Combine(Directory.GetCurrentDirectory(), "..", "content", "lessons", "graphql-advanced.json"),
+                System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..", "..", "..", "content", "lessons", "graphql-advanced.json"),
                 System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..", "..", "..", "..", "content", "lessons", "graphql-advanced.json"),
-                System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..", "..", "content", "lessons", "graphql-advanced.json"),
-                "/Users/veland/GlassCodeAcademy/content/lessons/graphql-advanced.json"
+                System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..", "..", "..", "content", "lessons", "graphql-advanced.json")
             };
 
             var jsonPath = candidatePaths.FirstOrDefault(System.IO.File.Exists);
@@ -54,20 +54,15 @@ public class GraphQLLessonsController : ControllerBase
                 {
                     foreach (var el in doc.RootElement.EnumerateArray())
                     {
-                        int id = 0;
-                        if (el.TryGetProperty("order", out var orderProp) && orderProp.ValueKind == JsonValueKind.Number)
+                        string id = string.Empty;
+                        if (el.TryGetProperty("id", out var idProp) && idProp.ValueKind == JsonValueKind.String)
                         {
-                            id = orderProp.GetInt32();
+                            id = idProp.GetString() ?? string.Empty;
                         }
-                        else if (el.TryGetProperty("id", out var idProp) && idProp.ValueKind == JsonValueKind.String)
+                        else if (el.TryGetProperty("order", out var orderProp) && orderProp.ValueKind == JsonValueKind.Number)
                         {
-                            // Fallback: extract trailing digits from string id
-                            var idStr = idProp.GetString() ?? string.Empty;
-                            var digits = new string(idStr.Reverse().TakeWhile(char.IsDigit).Reverse().ToArray());
-                            if (!string.IsNullOrEmpty(digits) && int.TryParse(digits, out var parsed))
-                            {
-                                id = parsed;
-                            }
+                            // Fallback: use order as string id
+                            id = orderProp.GetInt32().ToString();
                         }
 
                         string? topic = null;
@@ -148,7 +143,7 @@ public class GraphQLLessonsController : ControllerBase
     }
 
     [HttpGet("{id}")]
-    public ActionResult<GraphQLLesson> Get(int id)
+    public ActionResult<GraphQLLesson> Get(string id)
     {
         var lesson = Lessons.FirstOrDefault(l => l.Id == id);
         return lesson == null ? NotFound() : Ok(lesson);

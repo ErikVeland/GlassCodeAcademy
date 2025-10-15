@@ -1,12 +1,6 @@
 namespace backend.Models;
 
-public class GraphQLInterviewQuestion
+public class GraphQLInterviewQuestion : BaseInterviewQuestion
 {
-    public int Id { get; set; }
-    public string? Topic { get; set; }
-    public string? Type { get; set; }
-    public string? Question { get; set; }
-    public string[]? Choices { get; set; }
-    public int? CorrectAnswer { get; set; }
-    public string? Explanation { get; set; }
+    // Inherits all properties from BaseInterviewQuestion
 }

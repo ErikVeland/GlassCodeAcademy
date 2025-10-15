@@ -7,7 +7,7 @@ namespace backend.GraphQL;
 
 public class GraphQLLessonType
 {
-    public int Id { get; set; }
+    public string Id { get; set; } = string.Empty;
     public string? Topic { get; set; }
     public string Title { get; set; } = string.Empty;
     public string Description { get; set; } = string.Empty;
@@ -41,7 +41,7 @@ public class GraphQLQuery
         });
     }
 
-    public static GraphQLLessonType? GetGraphQLLesson(int id)
+    public static GraphQLLessonType? GetGraphQLLesson(string id)
     {
         var lesson = GraphQLLessonsController.Lessons.FirstOrDefault(l => l.Id == id);
         return lesson == null ? null : new GraphQLLessonType
@@ -69,14 +69,14 @@ public class GraphQLQuery
         });
     }
 
-    public static GraphQLInterviewQuestionType? GetGraphQLQuestion(int id)
+    public static GraphQLInterviewQuestionType? GetGraphQLQuestion(string id)
     {
-        var question = GraphQLInterviewQuestionsController.Questions.FirstOrDefault(q => q.Id == id);
+        var question = GraphQLInterviewQuestionsController.Questions.FirstOrDefault(q => q.Id.ToString() == id);
         return question == null ? null : new GraphQLInterviewQuestionType
         {
             Id = question.Id,
             Topic = question.Topic,
-            Type = question.Type,
+            Type = question.Type.ToString(),
             Question = question.Question,
             Choices = question.Choices,
             CorrectAnswer = question.CorrectAnswer,
@@ -87,7 +87,7 @@ public class GraphQLQuery
     // DotNet Lessons
     public static IEnumerable<GraphQLLessonType> GetDotNetLessons()
     {
-        var jsonPath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Data", "dotnet_lessons.json");
+        var jsonPath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..", "..", "..", "content", "lessons", "dotnet_lessons.json");
         if (!System.IO.File.Exists(jsonPath))
         {
             return new List<GraphQLLessonType>();
@@ -111,7 +111,7 @@ public class GraphQLQuery
         }) ?? new List<GraphQLLessonType>();
     }
 
-    public static GraphQLLessonType? GetDotNetLesson(int id)
+    public static GraphQLLessonType? GetDotNetLesson(string id)
     {
         var lessons = GetDotNetLessons();
         return lessons.FirstOrDefault(l => l.Id == id);
@@ -119,7 +119,7 @@ public class GraphQLQuery
 
     public static IEnumerable<GraphQLInterviewQuestionType> GetDotNetQuestions()
     {
-        var jsonPath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Data", "dotnet_questions.json");
+        var jsonPath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..", "..", "..", "content", "quizzes", "dotnet_questions.json");
         if (!System.IO.File.Exists(jsonPath))
         {
             return new List<GraphQLInterviewQuestionType>();
@@ -144,16 +144,16 @@ public class GraphQLQuery
         }) ?? new List<GraphQLInterviewQuestionType>();
     }
 
-    public static GraphQLInterviewQuestionType? GetDotNetQuestion(int id)
+    public static GraphQLInterviewQuestionType? GetDotNetQuestion(string id)
     {
         var questions = GetDotNetQuestions();
-        return questions.FirstOrDefault(q => q.Id == id);
+        return questions.FirstOrDefault(q => q.Id.ToString() == id);
     }
 
     // Programming Lessons
     public static IEnumerable<GraphQLLessonType> GetProgrammingLessons()
     {
-        var jsonPath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Data", "programming_lessons.json");
+        var jsonPath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..", "..", "..", "content", "lessons", "programming-fundamentals.json");
         if (!System.IO.File.Exists(jsonPath))
         {
             return new List<GraphQLLessonType>();
@@ -177,7 +177,7 @@ public class GraphQLQuery
         }) ?? new List<GraphQLLessonType>();
     }
 
-    public static GraphQLLessonType? GetProgrammingLesson(int id)
+    public static GraphQLLessonType? GetProgrammingLesson(string id)
     {
         var lessons = GetProgrammingLessons();
         return lessons.FirstOrDefault(l => l.Id == id);
@@ -186,7 +186,7 @@ public class GraphQLQuery
     // Programming Questions
     public static IEnumerable<GraphQLInterviewQuestionType> GetProgrammingQuestions()
     {
-        var jsonPath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Data", "programming_questions.json");
+        var jsonPath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..", "..", "..", "content", "quizzes", "programming-fundamentals.json");
         if (!System.IO.File.Exists(jsonPath))
         {
             return new List<GraphQLInterviewQuestionType>();
@@ -211,9 +211,9 @@ public class GraphQLQuery
         }) ?? new List<GraphQLInterviewQuestionType>();
     }
 
-    public static GraphQLInterviewQuestionType? GetProgrammingQuestion(int id)
+    public static GraphQLInterviewQuestionType? GetProgrammingQuestion(string id)
     {
         var questions = GetProgrammingQuestions();
-        return questions.FirstOrDefault(q => q.Id == id);
+        return questions.FirstOrDefault(q => q.Id.ToString() == id);
     }
 }

@@ -31,9 +31,9 @@ public class GraphQLInterviewQuestionsController : ControllerBase
             {
                 System.IO.Path.Combine(Directory.GetCurrentDirectory(), "..", "..", "content", "quizzes", "graphql-advanced.json"),
                 System.IO.Path.Combine(Directory.GetCurrentDirectory(), "..", "content", "quizzes", "graphql-advanced.json"),
+                System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..", "..", "..", "content", "quizzes", "graphql-advanced.json"),
                 System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..", "..", "..", "..", "content", "quizzes", "graphql-advanced.json"),
-                System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..", "..", "content", "quizzes", "graphql-advanced.json"),
-                "/Users/veland/GlassCodeAcademy/content/quizzes/graphql-advanced.json"
+                System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..", "..", "..", "content", "quizzes", "graphql-advanced.json")
             };
 
             var jsonPath = candidatePaths.FirstOrDefault(System.IO.File.Exists);
@@ -158,9 +158,9 @@ public class GraphQLInterviewQuestionsController : ControllerBase
     }
 
     [HttpGet("{id}")]
-    public ActionResult<GraphQLInterviewQuestion> Get(int id)
+    public ActionResult<GraphQLInterviewQuestion> Get(string id)
     {
-        var question = Questions.FirstOrDefault(q => q.Id == id);
+        var question = Questions.FirstOrDefault(q => q.Id.ToString() == id);
         return question == null ? NotFound() : Ok(question);
     }
 
