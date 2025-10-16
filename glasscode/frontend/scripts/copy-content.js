@@ -40,6 +40,17 @@ async function main() {
     copyDir(fs, path, srcLessons, destLessons);
     console.log('[copy-content] Copying quizzes...');
     copyDir(fs, path, srcQuizzes, destQuizzes);
+    
+    // Copy registry.json file
+    const srcRegistry = path.join(repoRoot, 'content', 'registry.json');
+    const destRegistry = path.join(projectRoot, 'public', 'registry.json');
+    if (fs.existsSync(srcRegistry)) {
+      console.log('[copy-content] Copying registry.json...');
+      fs.copyFileSync(srcRegistry, destRegistry);
+    } else {
+      console.warn('[copy-content] Registry file not found at:', srcRegistry);
+    }
+    
     console.log('[copy-content] Done.');
   } catch (err) {
     console.error('[copy-content] Error while copying content:', err);
