@@ -126,7 +126,7 @@ export default async function LessonPage({ params }: LessonPageProps) {
             </li>
             <li className="text-gray-500">/</li>
             <li>
-              <Link href={currentModule.routes.lessons} className="text-blue-600 hover:text-blue-800">
+              <Link href={currentModule.slug === 'programming-fundamentals' ? '/programming/lessons' : currentModule.routes.lessons} className="text-blue-600 hover:text-blue-800">
                 Lessons
               </Link>
             </li>
@@ -304,14 +304,14 @@ export default async function LessonPage({ params }: LessonPageProps) {
           <div>
             {isFirstInGroup ? (
               <Link
-                href={currentModule.routes.lessons}
+                href={currentModule.slug === 'programming-fundamentals' ? '/programming/lessons' : currentModule.routes.lessons}
                 className="inline-flex items-center px-4 py-2 text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors"
               >
                 ← Back to Lessons
               </Link>
             ) : (
               <Link
-                href={`${currentModule.routes.lessons}/${lessonIndex}`} // Previous lesson
+                href={currentModule.slug === 'programming-fundamentals' ? `/programming/lessons/${lessonIndex}` : `${currentModule.routes.lessons}/${lessonIndex}`} // Previous lesson
                 className="inline-flex items-center px-4 py-2 text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors"
               >
                 ← Previous Lesson
@@ -323,7 +323,7 @@ export default async function LessonPage({ params }: LessonPageProps) {
             {isLastInGroup ? (
               nextGroup ? (
                 <Link
-                  href={`${currentModule.routes.lessons}/${lessons.indexOf(nextGroup.lessons[0]) + 1}`}
+                  href={currentModule.slug === 'programming-fundamentals' ? `/programming/lessons/${lessons.indexOf(nextGroup.lessons[0]) + 1}` : `${currentModule.routes.lessons}/${lessons.indexOf(nextGroup.lessons[0]) + 1}`}
                   className="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
                 >
                   Next Group: {nextGroup.title}
@@ -331,7 +331,7 @@ export default async function LessonPage({ params }: LessonPageProps) {
                 </Link>
               ) : (
                 <Link
-                  href={currentModule.routes.quiz}
+                  href={currentModule.slug === 'programming-fundamentals' ? '/programming/quiz' : currentModule.routes.quiz}
                   className="inline-flex items-center px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
                 >
                   Take Assessment
@@ -340,7 +340,7 @@ export default async function LessonPage({ params }: LessonPageProps) {
               )
             ) : (
               <Link
-                href={`${currentModule.routes.lessons}/${lessonIndex + 2}`} // Next lesson
+                href={currentModule.slug === 'programming-fundamentals' ? `/programming/lessons/${lessonIndex + 2}` : `${currentModule.routes.lessons}/${lessonIndex + 2}`} // Next lesson
                 className="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
               >
                 Next Lesson

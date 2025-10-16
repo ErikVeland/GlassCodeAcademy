@@ -268,7 +268,7 @@ public class GraphQLIntegrationTests : IClassFixture<WebApplicationFactory<Progr
             trackProgress(userId: $userId, lessonId: $lessonId, module: $module) {
                 userId
                 lessonId
-                module
+                moduleSlug
                 status
             }
         }";

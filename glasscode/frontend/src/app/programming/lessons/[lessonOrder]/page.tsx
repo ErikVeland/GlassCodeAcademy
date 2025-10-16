@@ -50,7 +50,7 @@ export async function generateStaticParams() {
 
 export async function generateMetadata({ params }: LessonPageProps): Promise<Metadata> {
   const { lessonOrder } = await params;
-  const mod = await contentRegistry.findModuleByRoutePath('/programming/lessons');
+  const mod = await contentRegistry.getModule('programming-fundamentals');
   
   if (!mod) {
     return { title: 'Lesson Not Found' };
@@ -73,8 +73,8 @@ export default async function LessonPage({ params }: LessonPageProps) {
   const { lessonOrder } = await params;
   const lessonOrderNum = parseInt(lessonOrder);
   
-  // Find the programming-fundamentals module
-  const currentModule = await contentRegistry.findModuleByRoutePath('/programming/lessons');
+  // Get the programming-fundamentals module directly
+  const currentModule = await contentRegistry.getModule('programming-fundamentals');
   
   if (!currentModule) {
     notFound();

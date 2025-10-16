@@ -15,7 +15,7 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowFrontend",
         policy => policy
-            .WithOrigins("http://localhost:3000", "http://localhost:3001", "http://localhost:3002", "http://localhost:3003", "http://192.168.6.238:3000", "http://192.168.6.238:3001", "https://glasscode.academy")
+            .WithOrigins("http://localhost:3000", "http://localhost:3001", "http://localhost:3002", "http://localhost:3003", "http://localhost:3004", "http://localhost:3005", "http://localhost:5022", "http://192.168.6.238:3000", "http://192.168.6.238:3001", "https://glasscode.academy")
             .AllowAnyHeader()
             .AllowAnyMethod()
             .AllowCredentials());

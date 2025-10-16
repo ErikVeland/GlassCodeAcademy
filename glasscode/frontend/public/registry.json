@@ -92,8 +92,8 @@
       },
       "routes": {
         "overview": "/programming",
-        "lessons": "/modules/programming-fundamentals/lessons",
-        "quiz": "/modules/programming-fundamentals/quiz"
+        "lessons": "/programming/lessons",
+        "quiz": "/programming/quiz"
       }
     },
     {

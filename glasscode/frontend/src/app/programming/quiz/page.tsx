@@ -1,47 +1,6 @@
-import { notFound, redirect } from 'next/navigation';
-import { contentRegistry } from '@/lib/contentRegistry';
-import { Metadata } from 'next';
+import { redirect } from 'next/navigation';
 
-export async function generateMetadata(): Promise<Metadata> {
-  const currentModule = await contentRegistry.findModuleByRoutePath('/programming/lessons');
-  
-  if (!currentModule) {
-    return { title: 'Quiz Not Found' };
-  }
-
-  return {
-    title: `${currentModule.title} Quiz - Test Your Knowledge`,
-    description: `Test your understanding of ${currentModule.title} concepts with our comprehensive quiz.`,
-    keywords: currentModule.technologies.join(', '),
-  };
-}
-
-export const revalidate = 3600; // Revalidate every hour
-
-export default async function ProgrammingQuizPage() {
-  // Find the programming-fundamentals module
-  const currentModule = await contentRegistry.findModuleByRoutePath('/programming/lessons');
-  
-  if (!currentModule) {
-    notFound();
-  }
-
-  const quiz = await contentRegistry.getModuleQuiz(currentModule.slug);
-  
-  if (!quiz || !quiz.questions || quiz.questions.length === 0) {
-    notFound();
-  }
-
-  // Check if module meets threshold requirements for quiz access
-  const lessons = await contentRegistry.getModuleLessons(currentModule.slug);
-  const hasMinimumLessons = lessons && lessons.length >= (currentModule.thresholds?.requiredLessons || 1);
-  const hasMinimumQuestions = quiz.questions.length >= (currentModule.thresholds?.requiredQuestions || 1);
-  
-  if (!hasMinimumLessons || !hasMinimumQuestions) {
-    // Redirect to module overview if thresholds not met
-    redirect(`/programming`);
-  }
-
-  // Redirect to the quiz start page
-  redirect(`/programming/quiz/start`);
+export default function ProgrammingQuizPage() {
+  // Redirect to canonical module quiz route
+  redirect('/modules/programming-fundamentals/quiz');
 }

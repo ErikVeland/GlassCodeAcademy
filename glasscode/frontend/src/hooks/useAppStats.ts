@@ -32,7 +32,7 @@ export interface AppStats {
   error: string | null;
 }
 
-const GRAPHQL_ENDPOINT = process.env.NEXT_PUBLIC_GRAPHQL_URL || 'http://localhost:5022/api';
+const GRAPHQL_ENDPOINT = process.env.NEXT_PUBLIC_GRAPHQL_URL || `${process.env.NEXT_PUBLIC_API_BASE || 'http://localhost:8080'}/api`;
 
 export function useAppStats(): AppStats {
   const [stats, setStats] = useState<AppStats>({

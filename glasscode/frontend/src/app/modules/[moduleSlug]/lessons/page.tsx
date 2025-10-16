@@ -158,7 +158,7 @@ export default async function LessonsPage({ params, searchParams }: LessonsPageP
                       {group.lessons[0] && (
                         <div className="mt-4 md:mt-0 md:ml-6 w-full sm:w-auto">
                           <Link
-                            href={`${currentModule.routes.lessons}/${lessons.indexOf(group.lessons[0]) + 1}`}
+                            href={currentModule.slug === 'programming-fundamentals' ? `/programming/lessons/${lessons.indexOf(group.lessons[0]) + 1}` : `${currentModule.routes.lessons}/${lessons.indexOf(group.lessons[0]) + 1}`}
                             className="inline-flex items-center justify-center w-full sm:w-auto px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
                           >
                             Start Group
