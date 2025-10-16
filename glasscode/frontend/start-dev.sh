@@ -20,6 +20,16 @@ if [ ! -d "node_modules" ]; then
     fi
 fi
 
+# Check if .next directory exists, if not build the project
+if [ ! -d ".next" ]; then
+    echo "⚠️  .next directory not found. Building project..."
+    if ! npm run build; then
+        echo "❌ ERROR: Failed to build the project."
+        exit 1
+    fi
+    echo "✅ Build completed successfully."
+fi
+
 echo "🔧 Starting frontend on port 3000..."
 echo "🔗 Frontend: http://localhost:3000"
 echo ""
