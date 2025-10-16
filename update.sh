@@ -225,7 +225,7 @@ fi
 log "⏳ Verifying backend health before frontend build..."
 MAX_ATTEMPTS=30
 ATTEMPT=1
-SLEEP_INTERVAL=5
+SLEEP_INTERVAL=3
 while [[ $ATTEMPT -le $MAX_ATTEMPTS ]]; do
     if curl -s -f http://localhost:8080/api/health >/dev/null 2>&1; then
         HEALTH_RESPONSE=$(curl -s http://localhost:8080/api/health)
@@ -360,7 +360,7 @@ fi
 log "⏳ Waiting for backend to be fully loaded and healthy..."
 MAX_ATTEMPTS=30
 ATTEMPT=1
-SLEEP_INTERVAL=5
+SLEEP_INTERVAL=3
 while [[ $ATTEMPT -le $MAX_ATTEMPTS ]]; do
     if curl -s -f http://localhost:8080/api/health >/dev/null 2>&1; then
         HEALTH_RESPONSE=$(curl -s http://localhost:8080/api/health)
@@ -407,8 +407,8 @@ if [[ $ATTEMPT -gt $MAX_ATTEMPTS ]]; then
 fi
 
 # Small additional delay to ensure backend is completely ready
-log "⏳ Extra grace period: waiting 10s after backend healthy..."
-sleep 10
+log "⏳ Extra grace period: waiting 5s after backend healthy..."
+sleep 5
 
 # Now start frontend
 log "🚀 Starting frontend service..."
@@ -453,7 +453,7 @@ Restart=always
 RestartSec=10
 User=$DEPLOY_USER
 Environment=NODE_ENV=production
-TimeoutStartSec=300
+TimeoutStartSec=60
 
 [Install]
 WantedBy=multi-user.target
@@ -565,7 +565,7 @@ fi
 log "🔍 Checking frontend availability..."
 MAX_ATTEMPTS=30
 ATTEMPT=1
-SLEEP_INTERVAL=5
+SLEEP_INTERVAL=3
 FRONTEND_OK=false
 while [[ $ATTEMPT -le $MAX_ATTEMPTS ]]; do
     if curl -s -f http://localhost:$FRONTEND_PORT >/dev/null 2>&1; then

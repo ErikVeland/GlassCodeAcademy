@@ -408,7 +408,7 @@ EOF
     log "⏳ Waiting for real backend health before frontend build..."
     MAX_ATTEMPTS=30
     ATTEMPT=1
-    SLEEP_INTERVAL=5
+    SLEEP_INTERVAL=3
     while [[ $ATTEMPT -le $MAX_ATTEMPTS ]]; do
         if curl -s -f http://localhost:8080/api/health >/dev/null 2>&1; then
             HEALTH_RESPONSE=$(curl -s http://localhost:8080/api/health)
@@ -547,7 +547,7 @@ RestartSec=10
 User=$DEPLOY_USER
 Environment=NODE_ENV=production
 Environment=PORT=$FRONTEND_PORT
-TimeoutStartSec=300
+TimeoutStartSec=60
 ExecStartPre=$APP_DIR/glasscode/frontend/check_backend_health.sh
 ExecStart=/usr/bin/node server.js -p $FRONTEND_PORT
  
@@ -571,7 +571,7 @@ Environment=NODE_ENV=production
 Environment=PORT=$FRONTEND_PORT
 Environment=NEXTAUTH_SECRET=$NEXTAUTH_SECRET
 Environment=NEXTAUTH_URL=$NEXTAUTH_URL
-TimeoutStartSec=300
+TimeoutStartSec=60
 ExecStart=/usr/bin/node server.js -p $FRONTEND_PORT
 
 [Install]
@@ -730,7 +730,7 @@ log "✅ UFW configured"
 
 ### 15. Health check
 log "🩺 Performing health checks..."
-sleep 10
+sleep 5
 if [ "$FRONTEND_ONLY" -eq 0 ]; then
   if curl -s -X POST http://localhost:8080/graphql \
     -H "Content-Type: application/json" \
