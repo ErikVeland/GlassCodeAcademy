@@ -88,10 +88,11 @@ export default function StatCard({
 
     let sizedIcon: ReactNode = icon;
     if (isValidElement(icon)) {
-        const existingClassName = (icon.props as any)?.className ?? '';
+        const iconProps = icon.props as Record<string, unknown>;
+        const existingClassName = (iconProps?.className as string) ?? '';
         const mergedClassName = `${existingClassName} w-12 h-12`.trim();
         const extraProps: Record<string, unknown> = { className: mergedClassName };
-        if ('size' in (icon.props as any)) {
+        if ('size' in iconProps) {
             extraProps.size = 48;
         }
         sizedIcon = cloneElement(icon as React.ReactElement, extraProps);
