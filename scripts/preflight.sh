@@ -97,7 +97,7 @@ if [ -d "glasscode/frontend" ]; then
   echo "Clearing Next.js build cache in glasscode/frontend..."
   cd glasscode/frontend || fail "Failed to navigate to frontend directory"
   
-  # Remove .next directory to clear build cache
+  # Remove .next directory to clear build cache and prevent prerender errors
   if [ -d ".next" ]; then
     echo "Removing .next directory to clear build cache..."
     rm -rf .next || fail "Failed to clear Next.js build cache"
