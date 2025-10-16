@@ -204,20 +204,24 @@ is_service_running() {
 
 wait_for_service() {
     local service_name=$1
-    local max_attempts=30
+    local max_attempts=60  # Increased attempts but shorter intervals
     local attempt=1
+    local sleep_time=2     # Reduced from 5 to 2 seconds for faster detection
     
     log "⏳ Waiting for $service_name to start..."
     while [ $attempt -le $max_attempts ]; do
         if is_service_running "$service_name"; then
-            log "✅ $service_name is running"
+            log "✅ $service_name is running (detected in $((attempt * sleep_time)) seconds)"
             return 0
         fi
-        log "⏰ Attempt $attempt/$max_attempts: $service_name not ready yet, waiting 5 seconds..."
-        sleep 5
+        # Only log every 5th attempt to reduce noise
+        if [ $((attempt % 5)) -eq 0 ] || [ $attempt -eq 1 ]; then
+            log "⏰ Attempt $attempt/$max_attempts: $service_name not ready yet, waiting ${sleep_time}s..."
+        fi
+        sleep $sleep_time
         attempt=$((attempt + 1))
     done
-    log "❌ ERROR: $service_name failed to start within timeout"
+    log "❌ ERROR: $service_name failed to start within timeout ($((max_attempts * sleep_time)) seconds)"
     return 1
 }
 
@@ -483,31 +487,48 @@ log "🧹 Clearing npm cache..."
 sudo -u "$DEPLOY_USER" npm cache clean --force || true
 log "✅ npm cache cleared"
 
-# Ensure Node dependencies are installed for root workspace and scripts before frontend build
-log "📦 Regenerating root lockfile from package.json..."
-cd "$APP_DIR"
-sudo -u "$DEPLOY_USER" rm -f package-lock.json || true
-sudo -u "$DEPLOY_USER" npm install --package-lock-only
-log "📦 Installing root dependencies with npm ci (fresh lockfile)"
-sudo -u "$DEPLOY_USER" npm ci || sudo -u "$DEPLOY_USER" npm install
+# Function to install npm dependencies efficiently
+install_npm_deps() {
+    local dir="$1"
+    local name="$2"
+    
+    if [ ! -f "$dir/package.json" ]; then
+        log "⚠️  No package.json found in $dir, skipping..."
+        return 0
+    fi
+    
+    log "📦 Installing $name dependencies..."
+    cd "$dir"
+    
+    # Check if lockfile exists and is newer than package.json
+    if [ -f "package-lock.json" ] && [ "package-lock.json" -nt "package.json" ]; then
+        log "📋 Using existing lockfile for $name (up to date)"
+        sudo -u "$DEPLOY_USER" npm ci || sudo -u "$DEPLOY_USER" npm install
+    else
+        log "📋 Regenerating lockfile for $name..."
+        sudo -u "$DEPLOY_USER" rm -f package-lock.json || true
+        sudo -u "$DEPLOY_USER" npm install --package-lock-only
+        sudo -u "$DEPLOY_USER" npm ci || sudo -u "$DEPLOY_USER" npm install
+    fi
+    
+    log "✅ $name dependencies installed"
+}
 
-if [ -d "$APP_DIR/scripts" ] && [ -f "$APP_DIR/scripts/package.json" ]; then
-    log "📦 Regenerating scripts lockfile from package.json..."
-    cd "$APP_DIR/scripts"
-    sudo -u "$DEPLOY_USER" rm -f package-lock.json || true
-    sudo -u "$DEPLOY_USER" npm install --package-lock-only
-    log "📦 Installing scripts dependencies with npm ci (fresh lockfile)"
-    sudo -u "$DEPLOY_USER" npm ci || sudo -u "$DEPLOY_USER" npm install
+# Install dependencies for all workspaces
+install_npm_deps "$APP_DIR" "root"
+
+if [ -d "$APP_DIR/scripts" ]; then
+    install_npm_deps "$APP_DIR/scripts" "scripts"
 fi
 
-cd "$APP_DIR/glasscode/frontend"
-log "📦 Regenerating frontend lockfile from package.json..."
-sudo -u "$DEPLOY_USER" rm -f package-lock.json || true
-sudo -u "$DEPLOY_USER" npm install --package-lock-only
-log "📦 Installing frontend dependencies with npm ci (fresh lockfile)"
-sudo -u "$DEPLOY_USER" npm ci || sudo -u "$DEPLOY_USER" npm install
+install_npm_deps "$APP_DIR/glasscode/frontend" "frontend"
 
-cat > .env.production <<EOF
+# Check if .env.production exists and has required variables
+if [ -f ".env.production" ] && grep -q "NEXTAUTH_SECRET" .env.production && grep -q "NEXT_PUBLIC_API_BASE" .env.production; then
+    log "📋 Using existing .env.production file (contains required variables)"
+else
+    log "📋 Creating .env.production file..."
+    cat > .env.production <<EOF
 NEXT_PUBLIC_API_BASE=${NEXT_PUBLIC_API_BASE}
 NEXT_PUBLIC_BASE_URL=${NEXT_PUBLIC_BASE_URL}
 NODE_ENV=production
@@ -521,7 +542,19 @@ APPLE_CLIENT_ID=${APPLE_CLIENT_ID:-}
 APPLE_CLIENT_SECRET=${APPLE_CLIENT_SECRET:-}
 DEMO_USERS_JSON=${DEMO_USERS_JSON:-}
 EOF
-sudo -u "$DEPLOY_USER" npm run build
+fi
+# Build frontend with timeout and retry mechanism
+log "🔨 Starting frontend build with timeout protection..."
+if ! timeout 600 sudo -u "$DEPLOY_USER" npm run build; then
+    log "⚠️  Frontend build timed out or failed, attempting recovery..."
+    # Clear node_modules and try again
+    sudo -u "$DEPLOY_USER" rm -rf node_modules
+    sudo -u "$DEPLOY_USER" npm install
+    if ! timeout 600 sudo -u "$DEPLOY_USER" npm run build; then
+        log "❌ Frontend build failed after retry"
+        exit 1
+    fi
+fi
 log "✅ Frontend built"
 
 # Validate build artifacts
@@ -568,27 +601,7 @@ ss -tulpn 2>/dev/null | grep ":$FRONTEND_PORT" || true
 # Generate unit with conditional backend gating and standalone working directory
 UNIT_FILE_PATH="/etc/systemd/system/${APP_NAME}-frontend.service"
 if [ "$FRONTEND_ONLY" -eq 0 ]; then
-    # Create backend health check gating script to avoid multiline quoting in unit
-    log "🔧 Creating backend health-check script to avoid unit quoting"
-    cat >"$APP_DIR/glasscode/frontend/check_backend_health.sh" <<'EOS'
-#!/usr/bin/env bash
-MAX=30
-COUNT=1
-while [ $COUNT -le $MAX ]; do
-  HTTP=$(curl -s -o /dev/null -w "%{http_code}" http://127.0.0.1:8080/api/health || true)
-  RESP=$(curl -s http://127.0.0.1:8080/api/health || true)
-  STATUS=$(echo "$RESP" | jq -r .status 2>/dev/null || echo "$RESP" | grep -o '"status":"[^"]*"' | cut -d '"' -f4)
-  if [ "$HTTP" = "200" ] && [ "$STATUS" = "healthy" ]; then
-    exit 0
-  fi
-  sleep 5; COUNT=$((COUNT+1))
-done
-echo "Backend health check gating failed: http='$HTTP' status='$STATUS' resp='$RESP'"
-exit 1
-EOS
-    chmod +x "$APP_DIR/glasscode/frontend/check_backend_health.sh"
-    log "✅ Health-check script ready at $APP_DIR/glasscode/frontend/check_backend_health.sh"
-    log "⚙️  Writing frontend unit with health-check ExecStartPre at $UNIT_FILE_PATH"
+    log "⚙️  Writing frontend unit with backend dependency at $UNIT_FILE_PATH"
     cat >/etc/systemd/system/${APP_NAME}-frontend.service <<EOF
 [Unit]
 Description=$APP_NAME Next.js Frontend
@@ -602,17 +615,15 @@ RestartSec=10
 User=$DEPLOY_USER
 Environment=NODE_ENV=production
 Environment=PORT=$FRONTEND_PORT
-TimeoutStartSec=60
-ExecStartPre=$APP_DIR/glasscode/frontend/check_backend_health.sh
-ExecStart=/usr/bin/node server.js -p $FRONTEND_PORT
- 
+TimeoutStartSec=30
+ExecStart=/usr/bin/node server.js
 
 [Install]
 WantedBy=multi-user.target
 EOF
 else
-log "⚙️  Writing frontend unit (frontend-only mode) at $UNIT_FILE_PATH"
-cat >/etc/systemd/system/${APP_NAME}-frontend.service <<EOF
+    log "⚙️  Writing frontend unit (frontend-only mode) at $UNIT_FILE_PATH"
+    cat >/etc/systemd/system/${APP_NAME}-frontend.service <<EOF
 [Unit]
 Description=$APP_NAME Next.js Frontend
 After=network.target
@@ -622,12 +633,11 @@ WorkingDirectory=$APP_DIR/glasscode/frontend/.next/standalone
 Restart=always
 RestartSec=10
 User=$DEPLOY_USER
+EnvironmentFile=$APP_DIR/glasscode/frontend/.env.production
 Environment=NODE_ENV=production
 Environment=PORT=$FRONTEND_PORT
-Environment=NEXTAUTH_SECRET=$NEXTAUTH_SECRET
-Environment=NEXTAUTH_URL=$NEXTAUTH_URL
-TimeoutStartSec=60
-ExecStart=/usr/bin/node server.js -p $FRONTEND_PORT
+TimeoutStartSec=30
+ExecStart=/usr/bin/node server.js
 
 [Install]
 WantedBy=multi-user.target
@@ -667,26 +677,72 @@ fi
 
 ### 11.1 Start or restart services
 log "🚀 Starting services..."
-SERVICES_TO_START=()
+
+# Stop services in reverse order if they're running
 if [ "$FRONTEND_ONLY" -eq 0 ]; then
-    SERVICES_TO_START+=("${APP_NAME}-dotnet")
+    if systemctl is-active --quiet "${APP_NAME}-frontend"; then
+        log "🛑 Stopping frontend service..."
+        systemctl stop "${APP_NAME}-frontend" || true
+    fi
+    if systemctl is-active --quiet "${APP_NAME}-dotnet"; then
+        log "🛑 Stopping backend service..."
+        systemctl stop "${APP_NAME}-dotnet" || true
+    fi
+else
+    if systemctl is-active --quiet "${APP_NAME}-frontend"; then
+        log "🛑 Stopping frontend service..."
+        systemctl stop "${APP_NAME}-frontend" || true
+    fi
 fi
-SERVICES_TO_START+=("${APP_NAME}-frontend")
-for svc in "${SERVICES_TO_START[@]}"; do
-    if systemctl is-active --quiet "$svc"; then
-        log "🔄 $svc already running, restarting..."
-        systemctl restart "$svc" || true
+
+# Start services with enhanced error handling and parallel startup
+if [ "$FRONTEND_ONLY" -eq 0 ]; then
+    log "▶️  Starting ${APP_NAME}-dotnet..."
+    if ! systemctl start "${APP_NAME}-dotnet"; then
+        log "❌ Failed to start ${APP_NAME}-dotnet service"
+        systemctl status "${APP_NAME}-dotnet" --no-pager || true
+        journalctl -u "${APP_NAME}-dotnet" -n 100 --no-pager || true
+        exit 1
+    fi
+    
+    # Start backend health check in background
+    (
+        if wait_for_service "${APP_NAME}-dotnet"; then
+            log "✅ ${APP_NAME}-dotnet service is healthy"
+        else
+            log "⚠️  WARNING: ${APP_NAME}-dotnet did not become active within timeout"
+            systemctl status "${APP_NAME}-dotnet" --no-pager || true
+            journalctl -u "${APP_NAME}-dotnet" -n 50 --no-pager || true
+        fi
+    ) &
+    BACKEND_HEALTH_PID=$!
+fi
+
+log "▶️  Starting ${APP_NAME}-frontend..."
+if ! systemctl start "${APP_NAME}-frontend"; then
+    log "❌ Failed to start ${APP_NAME}-frontend service"
+    systemctl status "${APP_NAME}-frontend" --no-pager || true
+    journalctl -u "${APP_NAME}-frontend" -n 100 --no-pager || true
+    exit 1
+fi
+
+# Start frontend health check in background
+(
+    if wait_for_service "${APP_NAME}-frontend"; then
+        log "✅ ${APP_NAME}-frontend service is healthy"
     else
-        log "▶️  Starting $svc..."
-        systemctl start "$svc" || true
+        log "⚠️  WARNING: ${APP_NAME}-frontend did not become active within timeout"
+        systemctl status "${APP_NAME}-frontend" --no-pager || true
+        journalctl -u "${APP_NAME}-frontend" -n 50 --no-pager || true
     fi
-    # Wait for service to become active (best-effort)
-    if ! wait_for_service "$svc"; then
-        log "⚠️  WARNING: $svc did not become active within timeout"
-        systemctl status "$svc" --no-pager || true
-        journalctl -u "$svc" -n 100 --no-pager || true
-    fi
-done
+) &
+FRONTEND_HEALTH_PID=$!
+
+# Wait for health checks to complete
+if [ "$FRONTEND_ONLY" -eq 0 ]; then
+    wait $BACKEND_HEALTH_PID
+fi
+wait $FRONTEND_HEALTH_PID
 
 ### 12. Configure Nginx
 log "🌐 Configuring Nginx..."

@@ -53,21 +53,76 @@ is_service_running() {
 
 wait_for_service() {
     local service_name=$1
-    local max_attempts=30  # Increased from 15 to 30 for more patience
+    local max_attempts=60  # Increased attempts but shorter intervals
     local attempt=1
+    local sleep_time=2     # Reduced from 5 to 2 seconds for faster detection
     
     log "⏳ Waiting for $service_name to start..."
     while [ $attempt -le $max_attempts ]; do
         if is_service_running "$service_name"; then
-            log "✅ $service_name is running"
+            log "✅ $service_name is running (detected in $((attempt * sleep_time)) seconds)"
             return 0
         fi
-        log "⏰ Attempt $attempt/$max_attempts: $service_name not ready yet, waiting 5 seconds..."
-        sleep 5
+        # Only log every 5th attempt to reduce noise
+        if [ $((attempt % 5)) -eq 0 ] || [ $attempt -eq 1 ]; then
+            log "⏰ Attempt $attempt/$max_attempts: $service_name not ready yet, waiting ${sleep_time}s..."
+        fi
+        sleep $sleep_time
         attempt=$((attempt + 1))
     done
-    log "❌ ERROR: $service_name failed to start within timeout"
+    log "❌ ERROR: $service_name failed to start within timeout ($((max_attempts * sleep_time)) seconds)"
     return 1
+}
+
+install_npm_deps() {
+    log "📦 Installing Node.js dependencies for all workspaces..."
+    
+    # Root workspace
+    cd "$APP_DIR"
+    if [ -f "package.json" ]; then
+        log "📦 Processing root workspace dependencies..."
+        if [ ! -f "package-lock.json" ] || [ "package.json" -nt "package-lock.json" ]; then
+            log "📦 Regenerating root lockfile (package.json is newer)..."
+            sudo -u "$DEPLOY_USER" rm -f package-lock.json || true
+            sudo -u "$DEPLOY_USER" npm install --package-lock-only
+        else
+            log "📦 Using existing root lockfile (up to date)"
+        fi
+        log "📦 Installing root dependencies..."
+        sudo -u "$DEPLOY_USER" npm ci || sudo -u "$DEPLOY_USER" npm install
+    fi
+    
+    # Scripts workspace
+    if [ -d "$APP_DIR/scripts" ] && [ -f "$APP_DIR/scripts/package.json" ]; then
+        log "📦 Processing scripts workspace dependencies..."
+        cd "$APP_DIR/scripts"
+        if [ ! -f "package-lock.json" ] || [ "package.json" -nt "package-lock.json" ]; then
+            log "📦 Regenerating scripts lockfile (package.json is newer)..."
+            sudo -u "$DEPLOY_USER" rm -f package-lock.json || true
+            sudo -u "$DEPLOY_USER" npm install --package-lock-only
+        else
+            log "📦 Using existing scripts lockfile (up to date)"
+        fi
+        log "📦 Installing scripts dependencies..."
+        sudo -u "$DEPLOY_USER" npm ci || sudo -u "$DEPLOY_USER" npm install
+    fi
+    
+    # Frontend workspace
+    cd "$APP_DIR/glasscode/frontend"
+    if [ -f "package.json" ]; then
+        log "📦 Processing frontend workspace dependencies..."
+        if [ ! -f "package-lock.json" ] || [ "package.json" -nt "package-lock.json" ]; then
+            log "📦 Regenerating frontend lockfile (package.json is newer)..."
+            sudo -u "$DEPLOY_USER" rm -f package-lock.json || true
+            sudo -u "$DEPLOY_USER" npm install --package-lock-only
+        else
+            log "📦 Using existing frontend lockfile (up to date)"
+        fi
+        log "📦 Installing frontend dependencies..."
+        sudo -u "$DEPLOY_USER" npm ci || sudo -u "$DEPLOY_USER" npm install
+    fi
+    
+    log "✅ All Node.js dependencies installed"
 }
 
 update_global_json() {
@@ -265,29 +320,8 @@ fi
 log "🎨 Building Next.js frontend..."
 cd "$APP_DIR/glasscode/frontend"
 
-# Ensure Node dependencies are installed for root workspace and scripts before frontend build
-log "📦 Regenerating root lockfile from package.json..."
-cd "$APP_DIR"
-sudo -u "$DEPLOY_USER" rm -f package-lock.json || true
-sudo -u "$DEPLOY_USER" npm install --package-lock-only
-log "📦 Installing root dependencies with npm ci (fresh lockfile)"
-sudo -u "$DEPLOY_USER" npm ci || sudo -u "$DEPLOY_USER" npm install
-
-if [ -d "$APP_DIR/scripts" ] && [ -f "$APP_DIR/scripts/package.json" ]; then
-    log "📦 Regenerating scripts lockfile from package.json..."
-    cd "$APP_DIR/scripts"
-    sudo -u "$DEPLOY_USER" rm -f package-lock.json || true
-    sudo -u "$DEPLOY_USER" npm install --package-lock-only
-    log "📦 Installing scripts dependencies with npm ci (fresh lockfile)"
-    sudo -u "$DEPLOY_USER" npm ci || sudo -u "$DEPLOY_USER" npm install
-fi
-
-cd "$APP_DIR/glasscode/frontend"
-log "📦 Regenerating frontend lockfile from package.json..."
-sudo -u "$DEPLOY_USER" rm -f package-lock.json || true
-sudo -u "$DEPLOY_USER" npm install --package-lock-only
-log "📦 Installing frontend dependencies with npm ci (fresh lockfile)"
-sudo -u "$DEPLOY_USER" npm ci || sudo -u "$DEPLOY_USER" npm install
+# Install Node dependencies for all workspaces
+install_npm_deps
 
 # Pre-checks: Warn for missing secrets and auto-generate a temporary NEXTAUTH_SECRET
 log "🔐 Checking secrets for production..."
@@ -329,7 +363,18 @@ sudo -u "$DEPLOY_USER" npm run lint
 log "🔎 Running TypeScript typecheck (frontend)"
 sudo -u "$DEPLOY_USER" npm run typecheck
 
-sudo -u "$DEPLOY_USER" npm run build
+# Build frontend with timeout and retry mechanism
+log "🔨 Starting frontend build with timeout protection..."
+if ! timeout 600 sudo -u "$DEPLOY_USER" npm run build; then
+    log "⚠️  Frontend build timed out or failed, attempting recovery..."
+    # Clear node_modules and try again
+    sudo -u "$DEPLOY_USER" rm -rf node_modules
+    sudo -u "$DEPLOY_USER" npm install
+    if ! timeout 600 sudo -u "$DEPLOY_USER" npm run build; then
+        log "❌ Frontend build failed after retry"
+        rollback
+    fi
+fi
 log "✅ Frontend built"
 
 # Verify Next.js standalone server exists
@@ -410,11 +455,14 @@ fi
 log "⏳ Extra grace period: waiting 5s after backend healthy..."
 sleep 5
 
-# Now start frontend
+# Now start frontend with enhanced error handling
 log "🚀 Starting frontend service..."
 if systemctl is-enabled ${APP_NAME}-frontend 2>/dev/null | grep -q masked; then
     log "⚠️  Frontend service is masked. Unmasking..."
-    systemctl unmask ${APP_NAME}-frontend || true
+    if ! systemctl unmask ${APP_NAME}-frontend; then
+        log "❌ Failed to unmask frontend service"
+        rollback
+    fi
 fi
 
 UNIT_FILE_PATH="/etc/systemd/system/${APP_NAME}-frontend.service"
