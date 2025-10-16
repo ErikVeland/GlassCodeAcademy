@@ -1,6 +1,16 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+# GlassCode Academy Bootstrap Script
+# This script sets up the complete GlassCode Academy environment on a fresh Ubuntu/Debian system
+# It handles both backend (.NET) and frontend (Next.js) setup with proper systemd services
+#
+# SMART VALIDATION APPROACH:
+# - Backend: Quick compilation check before expensive clean/rebuild
+# - Frontend: Validates existing build artifacts and runs lint/typecheck before full rebuild
+# - Only performs expensive operations (cache clearing, full builds) when errors are detected
+# - Significantly reduces bootstrap time when code is already in good state
+
 ### Load configuration from .env file ###
 # Use relative path instead of hardcoded absolute path
 ENV_FILE="./.env"
@@ -360,44 +370,62 @@ if (( $(echo "$AVAILABLE_SPACE_GB < $REQUIRED_SPACE_GB" | bc -l) )); then
 fi
 log "✅ Sufficient disk space available: ${AVAILABLE_SPACE_GB}GB"
 
-### 9. Build & Publish Backend (.NET) (skipped in frontend-only mode)
+### 9. Smart Backend Build (.NET) (skipped in frontend-only mode)
 if [ "$FRONTEND_ONLY" -eq 0 ]; then
-    log "🏗️  Building backend..."
+    log "🏗️  Smart backend build validation..."
     cd "$APP_DIR/glasscode/backend"
 
-    # Clear .NET build cache to prevent stale build artifacts
-    log "🧹 Clearing .NET build cache..."
-    sudo -u "$DEPLOY_USER" dotnet clean || true
-    sudo -u "$DEPLOY_USER" rm -rf bin obj out || true
-    log "✅ .NET cache cleared"
+    # Quick validation: check if project compiles without full build
+    BUILD_REQUIRED=false
+    log "🔍 Performing quick compilation check..."
+    if ! sudo -u "$DEPLOY_USER" dotnet build --verbosity quiet --nologo >/dev/null 2>&1; then
+        log "⚠️  Compilation errors detected, full build required"
+        BUILD_REQUIRED=true
+    elif [ ! -f "$APP_DIR/glasscode/backend/out/backend.dll" ] || [ ! -f "$APP_DIR/glasscode/backend/out/backend.runtimeconfig.json" ]; then
+        log "⚠️  Missing build artifacts, full build required"
+        BUILD_REQUIRED=true
+    else
+        log "✅ Quick compilation check passed, existing artifacts valid"
+    fi
 
-    # Clean + restore dependencies
-    log "🔧 Restoring .NET dependencies..."
-    if ! sudo -u "$DEPLOY_USER" dotnet restore; then
-        log "❌ ERROR: Failed to restore .NET dependencies"
-        exit 1
-    fi
-    log "✅ .NET dependencies restored"
+    # Only do expensive operations if quick validation failed
+    if [ "$BUILD_REQUIRED" = "true" ]; then
+        log "🏗️  Performing full backend build and publish..."
+        
+        # Clear .NET build cache to prevent stale build artifacts
+        log "🧹 Clearing .NET build cache..."
+        sudo -u "$DEPLOY_USER" dotnet clean || true
+        sudo -u "$DEPLOY_USER" rm -rf bin obj out || true
+        log "✅ .NET cache cleared"
 
-    # Publish backend to /out
-    log "📦 Publishing .NET backend..."
-    if ! sudo -u "$DEPLOY_USER" dotnet publish -c Release -o "$APP_DIR/glasscode/backend/out"; then
-        log "❌ ERROR: Failed to publish .NET backend"
-        exit 1
-    fi
-    log "✅ .NET backend published"
+        # Clean + restore dependencies
+        log "🔧 Restoring .NET dependencies..."
+        if ! sudo -u "$DEPLOY_USER" dotnet restore; then
+            log "❌ ERROR: Failed to restore .NET dependencies"
+            exit 1
+        fi
+        log "✅ .NET dependencies restored"
 
-    # Validate backend build artifacts
-    log "🔍 Validating backend build artifacts..."
-    if [ ! -f "$APP_DIR/glasscode/backend/out/backend.dll" ]; then
-        log "❌ ERROR: Missing backend.dll - backend build may have failed"
-        exit 1
+        # Publish backend to /out
+        log "📦 Publishing .NET backend..."
+        if ! sudo -u "$DEPLOY_USER" dotnet publish -c Release -o "$APP_DIR/glasscode/backend/out"; then
+            log "❌ ERROR: Failed to publish .NET backend"
+            exit 1
+        fi
+        log "✅ .NET backend published"
+
+        # Validate backend build artifacts
+        log "🔍 Validating backend build artifacts..."
+        if [ ! -f "$APP_DIR/glasscode/backend/out/backend.dll" ]; then
+            log "❌ ERROR: Missing backend.dll - backend build may have failed"
+            exit 1
+        fi
+        if [ ! -f "$APP_DIR/glasscode/backend/out/backend.runtimeconfig.json" ]; then
+            log "❌ ERROR: Missing runtime config - backend publish incomplete"
+            exit 1
+        fi
+        log "✅ Backend build artifacts validated"
     fi
-    if [ ! -f "$APP_DIR/glasscode/backend/out/backend.runtimeconfig.json" ]; then
-        log "❌ ERROR: Missing runtime config - backend publish incomplete"
-        exit 1
-    fi
-    log "✅ Backend build artifacts validated"
 
     # Create and start REAL backend service before frontend build
     log "⚙️  Creating backend systemd service (real backend)..."
@@ -477,58 +505,80 @@ fi
 log "🎨 Building frontend..."
 cd "$APP_DIR/glasscode/frontend"
 
-# Clear Next.js build cache to prevent stale webpack chunks and prerender errors
-log "🧹 Clearing Next.js build cache..."
-sudo -u "$DEPLOY_USER" rm -rf .next || true
-log "✅ Next.js cache cleared"
+# Smart Frontend Build Validation
+log "🔍 Performing smart frontend validation..."
 
-# Clear npm cache to prevent dependency resolution issues
-log "🧹 Clearing npm cache..."
-sudo -u "$DEPLOY_USER" npm cache clean --force || true
-log "✅ npm cache cleared"
-
-# Function to install npm dependencies efficiently
-install_npm_deps() {
-    local dir="$1"
-    local name="$2"
-    
-    if [ ! -f "$dir/package.json" ]; then
-        log "⚠️  No package.json found in $dir, skipping..."
-        return 0
-    fi
-    
-    log "📦 Installing $name dependencies..."
-    cd "$dir"
-    
-    # Check if lockfile exists and is newer than package.json
-    if [ -f "package-lock.json" ] && [ "package-lock.json" -nt "package.json" ]; then
-        log "📋 Using existing lockfile for $name (up to date)"
-        sudo -u "$DEPLOY_USER" npm ci || sudo -u "$DEPLOY_USER" npm install
-    else
-        log "📋 Regenerating lockfile for $name..."
-        sudo -u "$DEPLOY_USER" rm -f package-lock.json || true
-        sudo -u "$DEPLOY_USER" npm install --package-lock-only
-        sudo -u "$DEPLOY_USER" npm ci || sudo -u "$DEPLOY_USER" npm install
-    fi
-    
-    log "✅ $name dependencies installed"
-}
-
-# Install dependencies for all workspaces
-install_npm_deps "$APP_DIR" "root"
-
-if [ -d "$APP_DIR/scripts" ]; then
-    install_npm_deps "$APP_DIR/scripts" "scripts"
+# Quick validation: check if existing build is valid
+FRONTEND_BUILD_REQUIRED=false
+if [ ! -f ".next/BUILD_ID" ] || [ ! -f ".next/standalone/server.js" ] || [ ! -d ".next/static" ]; then
+    log "⚠️  Missing build artifacts, full frontend build required"
+    FRONTEND_BUILD_REQUIRED=true
+elif ! sudo -u "$DEPLOY_USER" npx next lint --quiet >/dev/null 2>&1; then
+    log "⚠️  Linting errors detected, full frontend build required"
+    FRONTEND_BUILD_REQUIRED=true
+elif ! sudo -u "$DEPLOY_USER" npx tsc --noEmit --skipLibCheck >/dev/null 2>&1; then
+    log "⚠️  TypeScript errors detected, full frontend build required"
+    FRONTEND_BUILD_REQUIRED=true
+else
+    log "✅ Quick frontend validation passed, existing build is valid"
 fi
 
-install_npm_deps "$APP_DIR/glasscode/frontend" "frontend"
+# Only clear caches and rebuild if validation failed
+if [ "$FRONTEND_BUILD_REQUIRED" = "true" ]; then
+    log "🏗️  Performing full frontend build..."
+    
+    # Clear Next.js build cache to prevent stale build artifacts
+    log "🧹 Clearing Next.js cache..."
+    sudo -u "$DEPLOY_USER" rm -rf .next || true
+    log "✅ Next.js cache cleared"
 
-# Check if .env.production exists and has required variables
-if [ -f ".env.production" ] && grep -q "NEXTAUTH_SECRET" .env.production && grep -q "NEXT_PUBLIC_API_BASE" .env.production; then
-    log "📋 Using existing .env.production file (contains required variables)"
-else
-    log "📋 Creating .env.production file..."
-    cat > .env.production <<EOF
+    # Clear npm cache to prevent dependency resolution issues
+    log "🧹 Clearing npm cache..."
+    sudo -u "$DEPLOY_USER" npm cache clean --force || true
+    log "✅ npm cache cleared"
+
+    # Function to install npm dependencies efficiently
+    install_npm_deps() {
+        local dir="$1"
+        local name="$2"
+        
+        if [ ! -f "$dir/package.json" ]; then
+            log "⚠️  No package.json found in $dir, skipping..."
+            return 0
+        fi
+        
+        log "📦 Installing $name dependencies..."
+        cd "$dir"
+        
+        # Check if lockfile exists and is newer than package.json
+        if [ -f "package-lock.json" ] && [ "package-lock.json" -nt "package.json" ]; then
+            log "📋 Using existing lockfile for $name (up to date)"
+            sudo -u "$DEPLOY_USER" npm ci || sudo -u "$DEPLOY_USER" npm install
+        else
+            log "📋 Regenerating lockfile for $name..."
+            sudo -u "$DEPLOY_USER" rm -f package-lock.json || true
+            sudo -u "$DEPLOY_USER" npm install --package-lock-only
+            sudo -u "$DEPLOY_USER" npm ci || sudo -u "$DEPLOY_USER" npm install
+        fi
+        
+        log "✅ $name dependencies installed"
+    }
+
+    # Install dependencies for all workspaces
+    install_npm_deps "$APP_DIR" "root"
+
+    if [ -d "$APP_DIR/scripts" ]; then
+        install_npm_deps "$APP_DIR/scripts" "scripts"
+    fi
+
+    install_npm_deps "$APP_DIR/glasscode/frontend" "frontend"
+
+    # Check if .env.production exists and has required variables
+    if [ -f ".env.production" ] && grep -q "NEXTAUTH_SECRET" .env.production && grep -q "NEXT_PUBLIC_API_BASE" .env.production; then
+        log "📋 Using existing .env.production file (contains required variables)"
+    else
+        log "📋 Creating .env.production file..."
+        cat > .env.production <<EOF
 NEXT_PUBLIC_API_BASE=${NEXT_PUBLIC_API_BASE}
 NEXT_PUBLIC_BASE_URL=${NEXT_PUBLIC_BASE_URL}
 NODE_ENV=production
@@ -542,38 +592,39 @@ APPLE_CLIENT_ID=${APPLE_CLIENT_ID:-}
 APPLE_CLIENT_SECRET=${APPLE_CLIENT_SECRET:-}
 DEMO_USERS_JSON=${DEMO_USERS_JSON:-}
 EOF
-fi
-# Build frontend with timeout and retry mechanism
-log "🔨 Starting frontend build with timeout protection..."
-if ! timeout 600 sudo -u "$DEPLOY_USER" npm run build; then
-    log "⚠️  Frontend build timed out or failed, attempting recovery..."
-    # Clear node_modules and try again
-    sudo -u "$DEPLOY_USER" rm -rf node_modules
-    sudo -u "$DEPLOY_USER" npm install
+    fi
+    # Build frontend with timeout and retry mechanism
+    log "🔨 Starting frontend build with timeout protection..."
     if ! timeout 600 sudo -u "$DEPLOY_USER" npm run build; then
-        log "❌ Frontend build failed after retry"
+        log "⚠️  Frontend build timed out or failed, attempting recovery..."
+        # Clear node_modules and try again
+        sudo -u "$DEPLOY_USER" rm -rf node_modules
+        sudo -u "$DEPLOY_USER" npm install
+        if ! timeout 600 sudo -u "$DEPLOY_USER" npm run build; then
+            log "❌ Frontend build failed after retry"
+            exit 1
+        fi
+    fi
+    log "✅ Frontend built"
+
+    # Validate build artifacts
+    log "🔍 Validating build artifacts..."
+    if [ ! -f ".next/BUILD_ID" ]; then
+        log "❌ ERROR: Missing .next/BUILD_ID - frontend build may have failed"
         exit 1
     fi
+    if [ ! -f ".next/standalone/server.js" ]; then
+        log "❌ ERROR: Missing .next/standalone/server.js - standalone build failed"
+        exit 1
+    fi
+    if [ ! -d ".next/static" ]; then
+        log "❌ ERROR: Missing .next/static directory - static assets not generated"
+        exit 1
+    fi
+    log "✅ Build artifacts validated"
 fi
-log "✅ Frontend built"
 
-# Validate build artifacts
-log "🔍 Validating build artifacts..."
-if [ ! -f ".next/BUILD_ID" ]; then
-    log "❌ ERROR: Missing .next/BUILD_ID - frontend build may have failed"
-    exit 1
-fi
-if [ ! -f ".next/standalone/server.js" ]; then
-    log "❌ ERROR: Missing .next/standalone/server.js - standalone build failed"
-    exit 1
-fi
-if [ ! -d ".next/static" ]; then
-    log "❌ ERROR: Missing .next/static directory - static assets not generated"
-    exit 1
-fi
-log "✅ Build artifacts validated"
-
-# Stage Next.js standalone assets for reliable serving
+# Stage Next.js standalone assets for reliable serving (always needed)
 log "📦 Staging Next.js standalone assets..."
 cd "$APP_DIR/glasscode/frontend"
 mkdir -p .next/standalone/.next

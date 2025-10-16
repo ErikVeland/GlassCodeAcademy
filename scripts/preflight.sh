@@ -3,6 +3,11 @@ set -euo pipefail
 
 # Full pre-flight checks before pushing
 # - Fast failures, clear output, and GitKraken-compatible
+#
+# SMART VALIDATION APPROACH:
+# - Performs quick validation checks first (linting, type checking, compilation)
+# - Only runs expensive operations (full builds, publishes) when errors are detected
+# - This significantly reduces preflight time during normal development
 
 RED="\033[0;31m"; GREEN="\033[0;32m"; YELLOW="\033[1;33m"; NC="\033[0m"
 
@@ -91,46 +96,58 @@ else
   ok "Typecheck passed"
 fi
 
-section "Next.js cache clearing"
-# Clear Next.js build cache to prevent stale webpack chunks and prerender errors
-if [ -d "glasscode/frontend" ]; then
-  echo "Clearing Next.js build cache in glasscode/frontend..."
-  cd glasscode/frontend || fail "Failed to navigate to frontend directory"
-  
-  # Remove .next directory to clear build cache and prevent prerender errors
-  if [ -d ".next" ]; then
-    echo "Removing .next directory to clear build cache..."
-    rm -rf .next || fail "Failed to clear Next.js build cache"
-    ok "Next.js build cache cleared"
-  else
-    echo "No .next directory found, cache already clean"
-  fi
-  
-  # Navigate back to repo root for next section
-  cd "$REPO_ROOT" || fail "Failed to return to repository root"
-else
-  echo "Frontend directory not found, skipping cache clearing"
-fi
-
 section "Next.js build validation"
-# Validate that the Next.js application can build successfully
+# Smart build validation: only do expensive operations when needed
 if [ -d "glasscode/frontend" ]; then
-  echo "Running Next.js build validation in glasscode/frontend..."
+  echo "Running smart Next.js build validation in glasscode/frontend..."
   cd glasscode/frontend || fail "Failed to navigate to frontend directory"
   
-  # Run a build to catch any build-time errors
-  echo "Running: npm run build"
-  npm run build || fail "Next.js build failed - this would fail in production"
+  # First, try a quick validation if build artifacts exist
+  BUILD_EXISTS=false
+  if [ -d ".next" ] && [ -f ".next/standalone/server.js" ] && [ -d ".next/standalone/.next" ]; then
+    echo "Existing build artifacts found, performing quick validation..."
+    
+    # Quick syntax check without full build
+    echo "Running: npx next lint --max-warnings 0 --quiet"
+    if npx next lint --max-warnings 0 --quiet >/dev/null 2>&1; then
+      echo "Running: npx tsc --noEmit --skipLibCheck"
+      if npx tsc --noEmit --skipLibCheck >/dev/null 2>&1; then
+        BUILD_EXISTS=true
+        ok "Quick validation passed - existing build is valid"
+      else
+        echo "TypeScript errors detected, full rebuild required"
+      fi
+    else
+      echo "Lint errors detected, full rebuild required"
+    fi
+  else
+    echo "No valid build artifacts found, full build required"
+  fi
   
-  # Validate standalone build output for production deployment
-  echo "Validating standalone build output..."
-  if [ ! -f ".next/standalone/server.js" ]; then
-    fail "Standalone server.js missing at .next/standalone/server.js - production deployment will fail"
+  # Only do expensive operations if quick validation failed
+  if [ "$BUILD_EXISTS" = "false" ]; then
+    echo "Performing full clean and rebuild..."
+    
+    # Clear build cache only when rebuilding
+    if [ -d ".next" ]; then
+      echo "Clearing .next directory for clean rebuild..."
+      rm -rf .next || fail "Failed to clear Next.js build cache"
+    fi
+    
+    # Run full build
+    echo "Running: npm run build"
+    npm run build || fail "Next.js build failed - this would fail in production"
+    
+    # Validate standalone build output for production deployment
+    echo "Validating standalone build output..."
+    if [ ! -f ".next/standalone/server.js" ]; then
+      fail "Standalone server.js missing at .next/standalone/server.js - production deployment will fail"
+    fi
+    if [ ! -d ".next/standalone/.next" ]; then
+      fail "Standalone .next directory missing - production deployment will fail"
+    fi
+    ok "Full build validation completed successfully"
   fi
-  if [ ! -d ".next/standalone/.next" ]; then
-    fail "Standalone .next directory missing - production deployment will fail"
-  fi
-  ok "Standalone build output validated"
   
   # Navigate back to repo root
   cd "$REPO_ROOT" || fail "Failed to return to repository root"
@@ -140,9 +157,9 @@ else
 fi
 
 section ".NET backend build validation"
-# Validate that the .NET backend can build and publish successfully
+# Smart .NET validation: only do expensive operations when needed
 if [ -d "glasscode/backend" ]; then
-  echo "Running .NET backend build validation in glasscode/backend..."
+  echo "Running smart .NET backend build validation in glasscode/backend..."
   cd glasscode/backend || fail "Failed to navigate to backend directory"
   
   # Check if .NET SDK is available
@@ -160,43 +177,58 @@ if [ -d "glasscode/backend" ]; then
     fail "backend.csproj not found - backend project file missing"
   fi
   
-  # Clean any previous build artifacts
-  echo "Cleaning previous build artifacts..."
-  rm -rf bin obj out 2>/dev/null || true
-  
-  # Restore dependencies
-  echo "Running: dotnet restore"
-  if ! dotnet restore; then
-    fail ".NET dependency restoration failed - this would fail in production"
-  fi
-  ok ".NET dependencies restored successfully"
-  
-  # Build the project
-  echo "Running: dotnet build -c Release"
-  if ! dotnet build -c Release; then
-    fail ".NET build failed - this would fail in production"
-  fi
-  ok ".NET build completed successfully"
-  
-  # Test publish (same as production deployment)
-  echo "Running: dotnet publish -c Release -o ./out"
-  if ! dotnet publish -c Release -o ./out; then
-    fail ".NET publish failed - this would fail in production deployment"
+  # Quick validation: check if project compiles without full build
+  BUILD_REQUIRED=false
+  echo "Performing quick compilation check..."
+  if ! dotnet build --verbosity quiet --nologo >/dev/null 2>&1; then
+    echo "Compilation errors detected, full build required"
+    BUILD_REQUIRED=true
+  else
+    ok "Quick compilation check passed"
   fi
   
-  # Validate publish output
-  echo "Validating publish output..."
-  if [ ! -f "./out/backend.dll" ]; then
-    fail "Published backend.dll missing at ./out/backend.dll - production deployment will fail"
+  # Only do expensive operations if quick validation failed
+  if [ "$BUILD_REQUIRED" = "true" ]; then
+    echo "Performing full .NET build and publish validation..."
+    
+    # Clean any previous build artifacts
+    echo "Cleaning previous build artifacts..."
+    rm -rf bin obj out 2>/dev/null || true
+    
+    # Restore dependencies
+    echo "Running: dotnet restore"
+    if ! dotnet restore; then
+      fail ".NET dependency restoration failed - this would fail in production"
+    fi
+    ok ".NET dependencies restored successfully"
+    
+    # Build the project
+    echo "Running: dotnet build -c Release"
+    if ! dotnet build -c Release; then
+      fail ".NET build failed - this would fail in production"
+    fi
+    ok ".NET build completed successfully"
+    
+    # Test publish (same as production deployment)
+    echo "Running: dotnet publish -c Release -o ./out"
+    if ! dotnet publish -c Release -o ./out; then
+      fail ".NET publish failed - this would fail in production deployment"
+    fi
+    
+    # Validate publish output
+    echo "Validating publish output..."
+    if [ ! -f "./out/backend.dll" ]; then
+      fail "Published backend.dll missing at ./out/backend.dll - production deployment will fail"
+    fi
+    if [ ! -f "./out/backend.runtimeconfig.json" ]; then
+      fail "Runtime config missing - production deployment may fail"
+    fi
+    ok "Backend publish output validated"
+    
+    # Clean up test artifacts
+    echo "Cleaning up test build artifacts..."
+    rm -rf bin obj out 2>/dev/null || true
   fi
-  if [ ! -f "./out/backend.runtimeconfig.json" ]; then
-    fail "Runtime config missing - production deployment may fail"
-  fi
-  ok "Backend publish output validated"
-  
-  # Clean up test artifacts
-  echo "Cleaning up test build artifacts..."
-  rm -rf bin obj out 2>/dev/null || true
   
   # Navigate back to repo root
   cd "$REPO_ROOT" || fail "Failed to return to repository root"

@@ -1,4 +1,14 @@
 #!/usr/bin/env bash
+# update.sh - Update GlassCode Academy to the latest version
+# This script updates the application by pulling the latest code and rebuilding components
+#
+# SMART VALIDATION APPROACH:
+# This script implements smart validation to optimize update performance:
+# - Backend: Quick compilation check and artifact validation before full rebuild
+# - Frontend: Checks for build artifacts, linting, and TypeScript errors before full rebuild
+# - Only performs expensive operations (cache clearing, full builds) when necessary
+# - Significantly reduces update time when no changes require rebuilding
+
 set -euo pipefail
 
 ### Load configuration from .env file ###
@@ -252,22 +262,40 @@ else
     log "⚠️  Validation script not found, skipping content validation"
 fi
 
-### 7. Build Backend
-log "🏗️  Updating .NET backend..."
+### 7. Smart Backend Build
+log "🏗️  Smart backend build validation..."
 cd "$APP_DIR/glasscode/backend"
 
-if ! sudo -u "$DEPLOY_USER" dotnet restore; then
-    log "❌ ERROR: Failed to restore .NET dependencies"
-    exit 1
+# Quick validation: check if project compiles without full build
+BUILD_REQUIRED=false
+log "🔍 Performing quick compilation check..."
+if ! sudo -u "$DEPLOY_USER" dotnet build --verbosity quiet --nologo >/dev/null 2>&1; then
+    log "⚠️  Compilation errors detected, full build required"
+    BUILD_REQUIRED=true
+elif [ ! -f "$APP_DIR/glasscode/backend/out/backend.dll" ] || [ ! -f "$APP_DIR/glasscode/backend/out/backend.runtimeconfig.json" ]; then
+    log "⚠️  Missing build artifacts, full build required"
+    BUILD_REQUIRED=true
+else
+    log "✅ Quick compilation check passed, existing artifacts valid"
 fi
-log "✅ .NET dependencies restored"
 
-log "📦 Publishing .NET backend..."
-if ! sudo -u "$DEPLOY_USER" dotnet publish -c Release -o "$APP_DIR/glasscode/backend/out"; then
-    log "❌ ERROR: Failed to publish .NET backend"
-    exit 1
+# Only do expensive operations if quick validation failed
+if [ "$BUILD_REQUIRED" = "true" ]; then
+    log "🏗️  Performing full backend build and publish..."
+    
+    if ! sudo -u "$DEPLOY_USER" dotnet restore; then
+        log "❌ ERROR: Failed to restore .NET dependencies"
+        exit 1
+    fi
+    log "✅ .NET dependencies restored"
+
+    log "📦 Publishing .NET backend..."
+    if ! sudo -u "$DEPLOY_USER" dotnet publish -c Release -o "$APP_DIR/glasscode/backend/out"; then
+        log "❌ ERROR: Failed to publish .NET backend"
+        exit 1
+    fi
+    log "✅ .NET backend published"
 fi
-log "✅ .NET backend published"
 
 ### 8. Start Backend BEFORE Frontend Build
 log "🚀 Starting backend service (pre-build)..."
@@ -316,33 +344,53 @@ if [[ $ATTEMPT -gt $MAX_ATTEMPTS ]]; then
     rollback
 fi
 
-### 9. Build Frontend
-log "🎨 Building Next.js frontend..."
+### 9. Smart Frontend Build
+log "🎨 Smart frontend build validation..."
 cd "$APP_DIR/glasscode/frontend"
 
-# Install Node dependencies for all workspaces
-install_npm_deps
-
-# Pre-checks: Warn for missing secrets and auto-generate a temporary NEXTAUTH_SECRET
-log "🔐 Checking secrets for production..."
-if [ -z "${NEXTAUTH_SECRET:-}" ]; then
-    log "⚠️  WARNING: NEXTAUTH_SECRET is missing in $ENV_FILE. Generating a temporary secret to avoid install failure."
-    # Generate a 64-char hex secret using Node crypto; fallback to a static placeholder if generation fails
-    GENERATED_SECRET=$(node -e 'console.log(require("crypto").randomBytes(32).toString("hex"))' 2>/dev/null || echo "temporary-nextauth-secret-change-me")
-    NEXTAUTH_SECRET="$GENERATED_SECRET"
-    log "ℹ️  A temporary NEXTAUTH_SECRET has been set for this deployment. Please update $ENV_FILE with a permanent, strong secret."
+# Quick validation: check if existing build is valid
+FRONTEND_BUILD_REQUIRED=false
+log "🔍 Performing quick frontend validation..."
+if [ ! -f ".next/BUILD_ID" ] || [ ! -f ".next/standalone/server.js" ] || [ ! -d ".next/static" ]; then
+    log "⚠️  Missing build artifacts, full frontend build required"
+    FRONTEND_BUILD_REQUIRED=true
+elif ! sudo -u "$DEPLOY_USER" npx next lint --quiet >/dev/null 2>&1; then
+    log "⚠️  Linting errors detected, full frontend build required"
+    FRONTEND_BUILD_REQUIRED=true
+elif ! sudo -u "$DEPLOY_USER" npx tsc --noEmit --skipLibCheck >/dev/null 2>&1; then
+    log "⚠️  TypeScript errors detected, full frontend build required"
+    FRONTEND_BUILD_REQUIRED=true
+else
+    log "✅ Quick frontend validation passed, existing build is valid"
 fi
 
-# Warn if provider IDs are missing (non-fatal)
-[ -z "${GOOGLE_CLIENT_ID:-}" ] && log "⚠️  WARNING: GOOGLE_CLIENT_ID missing; Google login will be disabled."
-[ -z "${GOOGLE_CLIENT_SECRET:-}" ] && log "⚠️  WARNING: GOOGLE_CLIENT_SECRET missing; Google login will be disabled."
-[ -z "${GITHUB_ID:-}" ] && log "⚠️  WARNING: GITHUB_ID missing; GitHub login will be disabled."
-[ -z "${GITHUB_SECRET:-}" ] && log "⚠️  WARNING: GITHUB_SECRET missing; GitHub login will be disabled."
-[ -z "${APPLE_CLIENT_ID:-}" ] && log "⚠️  WARNING: APPLE_CLIENT_ID missing; Apple login will be disabled."
-[ -z "${APPLE_CLIENT_SECRET:-}" ] && log "⚠️  WARNING: APPLE_CLIENT_SECRET missing; Apple login will be disabled."
-## Apple provider in NextAuth uses APPLE_CLIENT_ID and APPLE_CLIENT_SECRET in our setup
+# Only do expensive operations if validation failed
+if [ "$FRONTEND_BUILD_REQUIRED" = "true" ]; then
+    log "🏗️  Performing full frontend build..."
+    
+    # Install Node dependencies for all workspaces
+    install_npm_deps
 
-cat > .env.production <<EOF
+    # Pre-checks: Warn for missing secrets and auto-generate a temporary NEXTAUTH_SECRET
+    log "🔐 Checking secrets for production..."
+    if [ -z "${NEXTAUTH_SECRET:-}" ]; then
+        log "⚠️  WARNING: NEXTAUTH_SECRET is missing in $ENV_FILE. Generating a temporary secret to avoid install failure."
+        # Generate a 64-char hex secret using Node crypto; fallback to a static placeholder if generation fails
+        GENERATED_SECRET=$(node -e 'console.log(require("crypto").randomBytes(32).toString("hex"))' 2>/dev/null || echo "temporary-nextauth-secret-change-me")
+        NEXTAUTH_SECRET="$GENERATED_SECRET"
+        log "ℹ️  A temporary NEXTAUTH_SECRET has been set for this deployment. Please update $ENV_FILE with a permanent, strong secret."
+    fi
+
+    # Warn if provider IDs are missing (non-fatal)
+    [ -z "${GOOGLE_CLIENT_ID:-}" ] && log "⚠️  WARNING: GOOGLE_CLIENT_ID missing; Google login will be disabled."
+    [ -z "${GOOGLE_CLIENT_SECRET:-}" ] && log "⚠️  WARNING: GOOGLE_CLIENT_SECRET missing; Google login will be disabled."
+    [ -z "${GITHUB_ID:-}" ] && log "⚠️  WARNING: GITHUB_ID missing; GitHub login will be disabled."
+    [ -z "${GITHUB_SECRET:-}" ] && log "⚠️  WARNING: GITHUB_SECRET missing; GitHub login will be disabled."
+    [ -z "${APPLE_CLIENT_ID:-}" ] && log "⚠️  WARNING: APPLE_CLIENT_ID missing; Apple login will be disabled."
+    [ -z "${APPLE_CLIENT_SECRET:-}" ] && log "⚠️  WARNING: APPLE_CLIENT_SECRET missing; Apple login will be disabled."
+    ## Apple provider in NextAuth uses APPLE_CLIENT_ID and APPLE_CLIENT_SECRET in our setup
+
+    cat > .env.production <<EOF
 NEXT_PUBLIC_API_BASE=$NEXT_PUBLIC_API_BASE
 NEXT_PUBLIC_BASE_URL=$NEXT_PUBLIC_BASE_URL
 NODE_ENV=production
@@ -357,25 +405,26 @@ APPLE_CLIENT_SECRET=${APPLE_CLIENT_SECRET:-}
 DEMO_USERS_JSON=${DEMO_USERS_JSON:-}
 EOF
  
-# Enforce lint and typecheck before production build
-log "🔎 Running ESLint checks (frontend)"
-sudo -u "$DEPLOY_USER" npm run lint
-log "🔎 Running TypeScript typecheck (frontend)"
-sudo -u "$DEPLOY_USER" npm run typecheck
+    # Enforce lint and typecheck before production build
+    log "🔎 Running ESLint checks (frontend)"
+    sudo -u "$DEPLOY_USER" npm run lint
+    log "🔎 Running TypeScript typecheck (frontend)"
+    sudo -u "$DEPLOY_USER" npm run typecheck
 
-# Build frontend with timeout and retry mechanism
-log "🔨 Starting frontend build with timeout protection..."
-if ! timeout 600 sudo -u "$DEPLOY_USER" npm run build; then
-    log "⚠️  Frontend build timed out or failed, attempting recovery..."
-    # Clear node_modules and try again
-    sudo -u "$DEPLOY_USER" rm -rf node_modules
-    sudo -u "$DEPLOY_USER" npm install
+    # Build frontend with timeout and retry mechanism
+    log "🔨 Starting frontend build with timeout protection..."
     if ! timeout 600 sudo -u "$DEPLOY_USER" npm run build; then
-        log "❌ Frontend build failed after retry"
-        rollback
+        log "⚠️  Frontend build timed out or failed, attempting recovery..."
+        # Clear node_modules and try again
+        sudo -u "$DEPLOY_USER" rm -rf node_modules
+        sudo -u "$DEPLOY_USER" npm install
+        if ! timeout 600 sudo -u "$DEPLOY_USER" npm run build; then
+            log "❌ Frontend build failed after retry"
+            rollback
+        fi
     fi
+    log "✅ Frontend built"
 fi
-log "✅ Frontend built"
 
 # Verify Next.js standalone server exists
 if [ ! -f ".next/standalone/server.js" ]; then

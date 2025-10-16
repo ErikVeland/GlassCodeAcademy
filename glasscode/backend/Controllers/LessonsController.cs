@@ -44,6 +44,11 @@ public class LessonsController : ControllerBase
             "sass" => _dataService.SassLessons,
             "tailwind" => _dataService.TailwindLessons,
             "nextjs" => _dataService.NextJsLessons,
+            "programming-fundamentals" => _dataService.ProgrammingLessons,
+            "web" => _dataService.WebLessons,
+            "performance" => _dataService.PerformanceLessons,
+            "security" => _dataService.SecurityLessons,
+            "version" => _dataService.VersionLessons,
             _ => _dataService.DotNetLessons
         };
     }
