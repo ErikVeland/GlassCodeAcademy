@@ -91,6 +91,27 @@ else
   ok "Typecheck passed"
 fi
 
+section "Next.js cache clearing"
+# Clear Next.js build cache to prevent stale webpack chunks and prerender errors
+if [ -d "glasscode/frontend" ]; then
+  echo "Clearing Next.js build cache in glasscode/frontend..."
+  cd glasscode/frontend || fail "Failed to navigate to frontend directory"
+  
+  # Remove .next directory to clear build cache
+  if [ -d ".next" ]; then
+    echo "Removing .next directory to clear build cache..."
+    rm -rf .next || fail "Failed to clear Next.js build cache"
+    ok "Next.js build cache cleared"
+  else
+    echo "No .next directory found, cache already clean"
+  fi
+  
+  # Navigate back to repo root for next section
+  cd "$REPO_ROOT" || fail "Failed to return to repository root"
+else
+  echo "Frontend directory not found, skipping cache clearing"
+fi
+
 section "Next.js build validation"
 # Validate that the Next.js application can build successfully
 if [ -d "glasscode/frontend" ]; then
