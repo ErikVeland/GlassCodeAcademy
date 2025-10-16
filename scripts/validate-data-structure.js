@@ -6,74 +6,207 @@
 const fs = require('fs');
 const path = require('path');
 
-// Define the expected structures
+// Define the expected structures based on C# BaseLesson and BaseInterviewQuestion models
 const lessonStructure = {
-  id: 'number',
-  topic: 'string',
+  id: 'number', // Changed to match C# BaseLesson.Id (int?)
+  moduleSlug: 'string',
   title: 'string',
-  description: 'string',
-  content: 'string',
-  codeExample: 'string',
-  output: 'string',
-  difficulty: 'string' // Should be Beginner, Intermediate, or Advanced
+  order: 'number',
+  objectives: 'array',
+  intro: 'string',
+  code: 'object', // CodeExample object
+  pitfalls: 'array', // Array of Pitfall objects
+  exercises: 'array', // Array of Exercise objects
+  next: 'array', // Array of strings
+  estimatedMinutes: 'number',
+  difficulty: 'string',
+  tags: 'array',
+  lastUpdated: 'string', // Optional
+  version: 'string', // Optional
+  sources: 'array', // Optional array of Source objects
+  topic: 'string', // Optional
+  description: 'string', // Optional
+  codeExample: 'string', // Optional
+  output: 'string' // Optional
 };
 
 const questionStructure = {
-  id: 'number',
+  id: 'number', // Changed to match C# BaseInterviewQuestion.Id (int?)
   topic: 'string',
-  type: 'string', // Should be multiple-choice, true-false, coding, etc.
+  type: 'string', // Matches C# Type property
   question: 'string',
-  choices: 'array',
-  correctAnswer: 'number', // Index of correct choice for multiple-choice
-  explanation: 'string'
+  choices: 'array', // Array of strings (matches C# string[])
+  correctAnswer: 'number', // Changed from correctIndex to match C# CorrectAnswer (int?)
+  explanation: 'string',
+  difficulty: 'string',
+  industryContext: 'string',
+  tags: 'array', // Array of strings (matches C# string[])
+  questionType: 'string',
+  estimatedTime: 'number',
+  sources: 'array' // Array of Source objects
 };
 
 // Valid difficulty levels
 const validDifficulties = ['Beginner', 'Intermediate', 'Advanced'];
 
 // Valid question types
-const validQuestionTypes = ['multiple-choice', 'true-false', 'coding'];
+const validQuestionTypes = ['multiple-choice', 'true-false', 'coding', 'open-ended'];
+
+// Define required vs optional fields based on C# models
+const requiredLessonFields = ['id', 'moduleSlug', 'title', 'order', 'objectives', 'intro', 'code', 'pitfalls', 'exercises', 'next', 'estimatedMinutes', 'difficulty', 'tags'];
+const optionalLessonFields = ['lastUpdated', 'version', 'sources', 'topic', 'description', 'codeExample', 'output'];
+
+// Define required and optional fields based on C# BaseInterviewQuestion
+// Note: In C# all fields are nullable, but we'll require core fields for data integrity
+const requiredQuestionFields = ['id', 'question'];
+const optionalQuestionFields = ['topic', 'type', 'explanation', 'difficulty', 'industryContext', 'tags', 'questionType', 'estimatedTime', 'sources', 'choices', 'correctAnswer'];
+
+// Function to validate nested objects
+function validateNestedObject(obj, expectedFields, objectName) {
+  const errors = [];
+  for (const field of expectedFields) {
+    if (obj[field] === undefined) {
+      errors.push(`${objectName} missing field: ${field}`);
+    }
+  }
+  return errors;
+}
 
 // Function to validate a single item against a structure
 function validateItem(item, structure, fileName) {
   const errors = [];
+  const isLesson = structure === lessonStructure;
+  const requiredFields = isLesson ? requiredLessonFields : requiredQuestionFields;
+  const optionalFields = isLesson ? optionalLessonFields : optionalQuestionFields;
   
-  // Check all required fields exist
-  for (const [field, type] of Object.entries(structure)) {
-    if (item[field] === undefined) {
-      errors.push(`Missing field: ${field}`);
+  // Check required fields exist
+  for (const field of requiredFields) {
+    if (item[field] === undefined || item[field] === null) {
+      errors.push(`Missing required field: ${field}`);
       continue;
     }
     
     // Check field type
-    if (type === 'array') {
+    const expectedType = structure[field];
+    if (expectedType === 'array') {
       if (!Array.isArray(item[field])) {
         errors.push(`Field ${field} should be an array, got ${typeof item[field]}`);
       }
-    } else if (type === 'number') {
+    } else if (expectedType === 'number') {
       if (typeof item[field] !== 'number') {
         errors.push(`Field ${field} should be a number, got ${typeof item[field]}`);
       }
-    } else if (type === 'string') {
+    } else if (expectedType === 'string') {
       if (typeof item[field] !== 'string') {
         errors.push(`Field ${field} should be a string, got ${typeof item[field]}`);
+      }
+    } else if (expectedType === 'object') {
+      if (typeof item[field] !== 'object' || Array.isArray(item[field])) {
+        errors.push(`Field ${field} should be an object, got ${typeof item[field]}`);
       }
     }
   }
   
-  // Special validations
+  // Validate optional fields if present
+  for (const field of optionalFields) {
+    if (item[field] !== undefined && item[field] !== null) {
+      const expectedType = structure[field];
+      if (expectedType === 'array') {
+        if (!Array.isArray(item[field])) {
+          errors.push(`Optional field ${field} should be an array, got ${typeof item[field]}`);
+        }
+      } else if (expectedType === 'number') {
+        if (typeof item[field] !== 'number') {
+          errors.push(`Optional field ${field} should be a number, got ${typeof item[field]}`);
+        }
+      } else if (expectedType === 'string') {
+        if (typeof item[field] !== 'string') {
+          errors.push(`Optional field ${field} should be a string, got ${typeof item[field]}`);
+        }
+      }
+    }
+  }
+  
+  // Special validations for lessons
+  if (isLesson) {
+    // Validate code object structure
+    if (item.code && typeof item.code === 'object') {
+      const codeErrors = validateNestedObject(item.code, ['example', 'explanation', 'language'], 'Code object');
+      errors.push(...codeErrors);
+    }
+    
+    // Validate pitfalls array
+    if (item.pitfalls && Array.isArray(item.pitfalls)) {
+      item.pitfalls.forEach((pitfall, i) => {
+        if (typeof pitfall === 'object') {
+          const pitfallErrors = validateNestedObject(pitfall, ['mistake', 'solution', 'severity'], `Pitfall ${i}`);
+          errors.push(...pitfallErrors);
+        }
+      });
+    }
+    
+    // Validate exercises array
+    if (item.exercises && Array.isArray(item.exercises)) {
+      item.exercises.forEach((exercise, i) => {
+        if (typeof exercise === 'object') {
+          const exerciseErrors = validateNestedObject(exercise, ['title', 'description', 'checkpoints'], `Exercise ${i}`);
+          errors.push(...exerciseErrors);
+        }
+      });
+    }
+    
+    // Validate sources array if present
+    if (item.sources && Array.isArray(item.sources)) {
+      item.sources.forEach((source, i) => {
+        if (typeof source === 'object') {
+          const sourceErrors = validateNestedObject(source, ['title', 'url'], `Source ${i}`);
+          errors.push(...sourceErrors);
+        }
+      });
+    }
+  }
+  
+  // Special validations for questions
+  if (!isLesson) {
+    // Validate sources array
+    if (item.sources && Array.isArray(item.sources)) {
+      item.sources.forEach((source, i) => {
+        if (typeof source === 'object') {
+          const sourceErrors = validateNestedObject(source, ['title', 'url'], `Source ${i}`);
+          errors.push(...sourceErrors);
+        }
+      });
+    }
+    
+    // Check question type specific requirements
+    const questionType = item.questionType || item.type;
+    if (questionType === 'multiple-choice') {
+      // Multiple choice questions need choices and correctAnswer
+      if (!item.choices) {
+        errors.push('Multiple choice questions require choices field');
+      } else if (!Array.isArray(item.choices)) {
+        errors.push('Field choices should be an array');
+      } else if (item.choices.length !== 4) {
+        errors.push(`Multiple choice questions should have exactly 4 choices, got ${item.choices.length}`);
+      }
+
+      if (item.correctAnswer === undefined || item.correctAnswer === null) {
+        errors.push('Multiple choice questions require correctAnswer field');
+      } else if (typeof item.correctAnswer !== 'number') {
+        errors.push('Field correctAnswer should be a number');
+      } else if (item.choices && (item.correctAnswer < 0 || item.correctAnswer >= item.choices.length)) {
+        errors.push(`correctAnswer ${item.correctAnswer} is out of range`);
+      }
+    }
+  }
+  
+  // Common validations
   if (item.difficulty && !validDifficulties.includes(item.difficulty)) {
     errors.push(`Invalid difficulty: ${item.difficulty}. Should be one of: ${validDifficulties.join(', ')}`);
   }
   
-  if (item.type && !validQuestionTypes.includes(item.type)) {
-    errors.push(`Invalid question type: ${item.type}. Should be one of: ${validQuestionTypes.join(', ')}`);
-  }
-  
-  if (item.choices && item.correctAnswer !== undefined) {
-    if (item.correctAnswer < 0 || item.correctAnswer >= item.choices.length) {
-      errors.push(`Invalid correctAnswer index: ${item.correctAnswer}. Should be between 0 and ${item.choices.length - 1}`);
-    }
+  if (item.questionType && !validQuestionTypes.includes(item.questionType)) {
+    errors.push(`Invalid question type: ${item.questionType}. Should be one of: ${validQuestionTypes.join(', ')}`);
   }
   
   return errors;
@@ -85,12 +218,37 @@ function validateJsonFile(filePath, structure) {
     const data = JSON.parse(fs.readFileSync(filePath, 'utf8'));
     const errors = [];
     
-    if (!Array.isArray(data)) {
-      errors.push('File should contain an array of items');
-      return errors;
+    let itemsToValidate;
+    
+    // Handle different file structures
+    if (filePath.includes('/quizzes/')) {
+      // Handle both formats: array of questions or quiz object with questions array
+      if (Array.isArray(data)) {
+        // Direct array of questions format
+        itemsToValidate = data;
+      } else if (data && typeof data === 'object' && data.questions && Array.isArray(data.questions)) {
+        // Quiz object format with questions array
+        itemsToValidate = data.questions;
+        
+        // Validate totalQuestions if present
+        if (data.totalQuestions !== undefined && data.totalQuestions !== data.questions.length) {
+          errors.push(`Question count mismatch: expected ${data.totalQuestions}, got ${data.questions.length}`);
+          return errors;
+        }
+      } else {
+        errors.push('Quiz file should contain either an array of questions or an object with a questions array');
+        return errors;
+      }
+    } else {
+      // Lesson files are direct arrays
+      if (!Array.isArray(data)) {
+        errors.push('Lesson file should contain an array of items');
+        return errors;
+      }
+      itemsToValidate = data;
     }
     
-    data.forEach((item, index) => {
+    itemsToValidate.forEach((item, index) => {
       const itemErrors = validateItem(item, structure, filePath);
       if (itemErrors.length > 0) {
         errors.push(`Item ${index + 1}: ${itemErrors.join(', ')}`);
@@ -103,47 +261,39 @@ function validateJsonFile(filePath, structure) {
   }
 }
 
-// Find all data files in modules
+// Find all data files in content directory
 function findAllDataFiles() {
-  const modulesDir = path.join(__dirname, '..', 'modules');
+  const contentDir = path.join(__dirname, '..', 'content');
   const dataFiles = [];
   
-  const modules = fs.readdirSync(modulesDir);
-  
-  for (const module of modules) {
-    const modulePath = path.join(modulesDir, module);
-    if (!fs.statSync(modulePath).isDirectory()) continue;
-    
-    // Look for data directories in backend folders
-    const backendPath = path.join(modulePath, 'backend');
-    if (fs.existsSync(backendPath) && fs.statSync(backendPath).isDirectory()) {
-      const dataPath = path.join(backendPath, 'data');
-      if (fs.existsSync(dataPath) && fs.statSync(dataPath).isDirectory()) {
-        const files = fs.readdirSync(dataPath);
-        for (const file of files) {
-          if (file.endsWith('.json')) {
-            dataFiles.push({
-              module,
-              file,
-              path: path.join(dataPath, file)
-            });
-          }
-        }
+  // Check lessons directory
+  const lessonsDir = path.join(contentDir, 'lessons');
+  if (fs.existsSync(lessonsDir)) {
+    const files = fs.readdirSync(lessonsDir);
+    for (const file of files) {
+      if (file.endsWith('.json')) {
+        dataFiles.push({
+          module: file.replace('.json', ''),
+          file,
+          path: path.join(lessonsDir, file),
+          type: 'lessons'
+        });
       }
     }
-    
-    // Also check for data directories directly in module root (for simpler modules)
-    const dataPath = path.join(modulePath, 'data');
-    if (fs.existsSync(dataPath) && fs.statSync(dataPath).isDirectory()) {
-      const files = fs.readdirSync(dataPath);
-      for (const file of files) {
-        if (file.endsWith('.json')) {
-          dataFiles.push({
-            module,
-            file,
-            path: path.join(dataPath, file)
-          });
-        }
+  }
+  
+  // Check quizzes directory
+  const quizzesDir = path.join(contentDir, 'quizzes');
+  if (fs.existsSync(quizzesDir)) {
+    const files = fs.readdirSync(quizzesDir);
+    for (const file of files) {
+      if (file.endsWith('.json')) {
+        dataFiles.push({
+          module: file.replace('.json', ''),
+          file,
+          path: path.join(quizzesDir, file),
+          type: 'quizzes'
+        });
       }
     }
   }
@@ -153,18 +303,18 @@ function findAllDataFiles() {
 
 // Main validation function
 function validateAllData() {
-  console.log('Validating data structures across all modules...\n');
+  console.log('Validating data structures across all content files...\n');
   
   const dataFiles = findAllDataFiles();
   let totalErrors = 0;
   
   for (const dataFile of dataFiles) {
-    console.log(`Validating ${dataFile.module}/${dataFile.file}...`);
+    console.log(`Validating ${dataFile.type}/${dataFile.file}...`);
     
     let structure;
-    if (dataFile.file.includes('lesson')) {
+    if (dataFile.type === 'lessons') {
       structure = lessonStructure;
-    } else if (dataFile.file.includes('question')) {
+    } else if (dataFile.type === 'quizzes') {
       structure = questionStructure;
     } else {
       console.log('  Unknown file type, skipping...\n');
@@ -184,7 +334,7 @@ function validateAllData() {
   }
   
   if (totalErrors === 0) {
-    console.log('All data files passed validation! 🎉');
+    console.log('All content files passed validation! 🎉');
     return true;
   } else {
     console.log(`Validation failed with ${totalErrors} errors.`);

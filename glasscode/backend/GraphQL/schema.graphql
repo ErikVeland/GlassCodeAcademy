@@ -328,52 +328,52 @@ type Query {
 
 type Mutation {
   # Submit an answer to an interview question
-  submitAnswer(questionId: Int!, answerIndex: Int!): AnswerResult!
+  submitAnswer(questionId: String!, answerIndex: Int!): AnswerResult!
 
   # Submit an answer to a Laravel interview question
-  submitLaravelAnswer(questionId: Int!, answerIndex: Int!): AnswerResult!
+  submitLaravelAnswer(questionId: String!, answerIndex: Int!): AnswerResult!
 
   # Submit an answer to a React interview question
-  submitReactAnswer(questionId: Int!, answerIndex: Int!): AnswerResult!
+  submitReactAnswer(questionId: String!, answerIndex: Int!): AnswerResult!
 
   # Submit an answer to a Tailwind interview question
-  submitTailwindAnswer(questionId: Int!, answerIndex: Int!): AnswerResult!
+  submitTailwindAnswer(questionId: String!, answerIndex: Int!): AnswerResult!
 
   # Submit an answer to a Node.js interview question
-  submitNodeAnswer(questionId: Int!, answerIndex: Int!): AnswerResult!
+  submitNodeAnswer(questionId: String!, answerIndex: Int!): AnswerResult!
 
   # Submit an answer to a SASS interview question
-  submitSassAnswer(questionId: Int!, answerIndex: Int!): AnswerResult!
+  submitSassAnswer(questionId: String!, answerIndex: Int!): AnswerResult!
 
   # Submit an answer to a Programming Fundamentals interview question
-  submitProgrammingAnswer(questionId: Int!, answerIndex: Int!): AnswerResult!
+  submitProgrammingAnswer(questionId: String!, answerIndex: Int!): AnswerResult!
 
   # Submit an answer to a Next.js interview question
-  submitNextJsAnswer(questionId: Int!, answerIndex: Int!): AnswerResult!
+  submitNextJsAnswer(questionId: String!, answerIndex: Int!): AnswerResult!
 
   # Submit an answer to a Performance Optimization interview question
-  submitPerformanceAnswer(questionId: Int!, answerIndex: Int!): AnswerResult!
+  submitPerformanceAnswer(questionId: String!, answerIndex: Int!): AnswerResult!
 
   # Submit an answer to a Security Fundamentals interview question
-  submitSecurityAnswer(questionId: Int!, answerIndex: Int!): AnswerResult!
+  submitSecurityAnswer(questionId: String!, answerIndex: Int!): AnswerResult!
 
   # Submit an answer to a Version Control interview question
-  submitVersionAnswer(questionId: Int!, answerIndex: Int!): AnswerResult!
+  submitVersionAnswer(questionId: String!, answerIndex: Int!): AnswerResult!
 
   # Submit an answer to a Database Systems interview question
-  submitDatabaseAnswer(questionId: Int!, answerIndex: Int!): AnswerResult!
+  submitDatabaseAnswer(questionId: String!, answerIndex: Int!): AnswerResult!
 
   # Submit an answer to a Testing Fundamentals interview question
-  submitTestingAnswer(questionId: Int!, answerIndex: Int!): AnswerResult!
+  submitTestingAnswer(questionId: String!, answerIndex: Int!): AnswerResult!
 
   # Submit an answer to a TypeScript Fundamentals interview question
-  submitTypescriptAnswer(questionId: Int!, answerIndex: Int!): AnswerResult!
+  submitTypescriptAnswer(questionId: String!, answerIndex: Int!): AnswerResult!
 
   # Submit an answer to a Vue Advanced interview question
-  submitVueAnswer(questionId: Int!, answerIndex: Int!): AnswerResult!
+  submitVueAnswer(questionId: String!, answerIndex: Int!): AnswerResult!
 
   # Submit an answer to a Web Fundamentals interview question
-  submitWebAnswer(questionId: Int!, answerIndex: Int!): AnswerResult!
+  submitWebAnswer(questionId: String!, answerIndex: Int!): AnswerResult!
 
   # Track progress for a lesson
   trackProgress(userId: Int!, lessonId: Int!, module: String!): ProgressResult!

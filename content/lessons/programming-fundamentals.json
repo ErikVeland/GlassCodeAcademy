@@ -1,6 +1,6 @@
 [
   {
-    "id": "programming-fundamentals-lesson-1",
+    "id": 1,
     "moduleSlug": "programming-fundamentals",
     "title": "Variables and Data Types",
     "order": 1,
@@ -53,10 +53,11 @@
       "Data Structures"
     ],
     "lastUpdated": "2025-10-01T06:42:16.313Z",
-    "version": "1.0.0"
+    "version": "1.0.0",
+    "sources": []
   },
   {
-    "id": "programming-fundamentals-lesson-2",
+    "id": 2,
     "moduleSlug": "programming-fundamentals",
     "title": "Control Structures: Conditionals",
     "order": 2,
@@ -109,10 +110,11 @@
       "Control Flow"
     ],
     "lastUpdated": "2025-10-01T06:42:16.313Z",
-    "version": "1.0.0"
+    "version": "1.0.0",
+    "sources": []
   },
   {
-    "id": "programming-fundamentals-lesson-3",
+    "id": 3,
     "moduleSlug": "programming-fundamentals",
     "title": "Control Structures: Loops",
     "order": 3,
@@ -165,10 +167,11 @@
       "Control Flow"
     ],
     "lastUpdated": "2025-10-01T06:42:16.313Z",
-    "version": "1.0.0"
+    "version": "1.0.0",
+    "sources": []
   },
   {
-    "id": "programming-fundamentals-lesson-4",
+    "id": 4,
     "moduleSlug": "programming-fundamentals",
     "title": "Functions and Scope",
     "order": 4,
@@ -221,10 +224,11 @@
       "Modularity"
     ],
     "lastUpdated": "2025-10-01T06:42:16.313Z",
-    "version": "1.0.0"
+    "version": "1.0.0",
+    "sources": []
   },
   {
-    "id": "programming-fundamentals-lesson-5",
+    "id": 5,
     "moduleSlug": "programming-fundamentals",
     "title": "Arrays and Array Methods",
     "order": 5,
@@ -277,10 +281,11 @@
       "Collections"
     ],
     "lastUpdated": "2025-10-01T06:42:16.313Z",
-    "version": "1.0.0"
+    "version": "1.0.0",
+    "sources": []
   },
   {
-    "id": "programming-fundamentals-lesson-6",
+    "id": 6,
     "moduleSlug": "programming-fundamentals",
     "title": "Objects and Object Methods",
     "order": 6,
@@ -333,10 +338,11 @@
       "Data Modeling"
     ],
     "lastUpdated": "2025-10-01T06:42:16.313Z",
-    "version": "1.0.0"
+    "version": "1.0.0",
+    "sources": []
   },
   {
-    "id": "programming-fundamentals-lesson-7",
+    "id": 7,
     "moduleSlug": "programming-fundamentals",
     "title": "Error Handling and Debugging",
     "order": 7,
@@ -389,10 +395,11 @@
       "Exceptions"
     ],
     "lastUpdated": "2025-10-01T06:42:16.313Z",
-    "version": "1.0.0"
+    "version": "1.0.0",
+    "sources": []
   },
   {
-    "id": "programming-fundamentals-lesson-8",
+    "id": 8,
     "moduleSlug": "programming-fundamentals",
     "title": "Basic Algorithms and Problem Solving",
     "order": 8,
@@ -445,10 +452,11 @@
       "Complexity"
     ],
     "lastUpdated": "2025-10-01T06:42:16.313Z",
-    "version": "1.0.0"
+    "version": "1.0.0",
+    "sources": []
   },
   {
-    "id": "programming-fundamentals-lesson-9",
+    "id": 9,
     "moduleSlug": "programming-fundamentals",
     "title": "Strings and String Manipulation",
     "order": 9,
@@ -501,10 +509,11 @@
       "Text Processing"
     ],
     "lastUpdated": "2025-10-01T06:42:16.313Z",
-    "version": "1.0.0"
+    "version": "1.0.0",
+    "sources": []
   },
   {
-    "id": "programming-fundamentals-lesson-10",
+    "id": 10,
     "moduleSlug": "programming-fundamentals",
     "title": "Numbers and Mathematical Operations",
     "order": 10,
@@ -557,10 +566,11 @@
       "Precision"
     ],
     "lastUpdated": "2025-10-01T06:42:16.313Z",
-    "version": "1.0.0"
+    "version": "1.0.0",
+    "sources": []
   },
   {
-    "id": "programming-fundamentals-lesson-11",
+    "id": 11,
     "moduleSlug": "programming-fundamentals",
     "title": "Dates and Time Handling",
     "order": 11,
@@ -613,10 +623,11 @@
       "Internationalization"
     ],
     "lastUpdated": "2025-10-01T06:42:16.313Z",
-    "version": "1.0.0"
+    "version": "1.0.0",
+    "sources": []
   },
   {
-    "id": "programming-fundamentals-lesson-12",
+    "id": 12,
     "moduleSlug": "programming-fundamentals",
     "title": "File I/O and Data Persistence",
     "order": 12,
@@ -669,6 +680,7 @@
       "Persistence"
     ],
     "lastUpdated": "2025-10-01T06:42:16.313Z",
-    "version": "1.0.0"
+    "version": "1.0.0",
+    "sources": []
   }
 ]

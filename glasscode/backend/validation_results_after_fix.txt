@@ -1,0 +1,65 @@
+=== GlassCode Academy Schema Validation ===
+
+Validating lesson files...
+OK: dotnet-fundamentals.json
+OK: vue-advanced.json
+OK: node-fundamentals.json
+OK: nextjs-advanced.json
+OK: e2e-testing.json
+OK: tailwind-advanced.json
+OK: programming-fundamentals.json
+OK: testing-fundamentals.json
+OK: version-control.json
+OK: typescript-fundamentals.json
+OK: graphql-advanced.json
+OK: sass-advanced.json
+OK: react-fundamentals.json
+OK: web-fundamentals.json
+OK: laravel-fundamentals.json
+OK: security-fundamentals.json
+OK: database-systems.json
+OK: performance-optimization.json
+
+Validating quiz files...
+ERRORS in dotnet-fundamentals.json: 1 errors
+  - File should contain a quiz object
+ERRORS in vue-advanced.json: 1 errors
+  - File should contain a quiz object
+ERRORS in node-fundamentals.json: 1 errors
+  - File should contain a quiz object
+ERRORS in nextjs-advanced.json: 1 errors
+  - File should contain a quiz object
+ERRORS in e2e-testing.json: 1 errors
+  - File should contain a quiz object
+ERRORS in tailwind-advanced.json: 1 errors
+  - File should contain a quiz object
+ERRORS in programming-fundamentals.json: 1 errors
+  - File should contain a quiz object
+ERRORS in testing-fundamentals.json: 1 errors
+  - File should contain a quiz object
+ERRORS in version-control.json: 1 errors
+  - File should contain a quiz object
+ERRORS in typescript-fundamentals.json: 1 errors
+  - File should contain a quiz object
+ERRORS in graphql-advanced.json: 1 errors
+  - File should contain a quiz object
+ERRORS in sass-advanced.json: 1 errors
+  - File should contain a quiz object
+ERRORS in react-fundamentals.json: 1 errors
+  - File should contain a quiz object
+ERRORS in web-fundamentals.json: 1 errors
+  - File should contain a quiz object
+ERRORS in laravel-fundamentals.json: 1 errors
+  - File should contain a quiz object
+ERRORS in security-fundamentals.json: 1 errors
+  - File should contain a quiz object
+ERRORS in database-systems.json: 1 errors
+  - File should contain a quiz object
+ERRORS in performance-optimization.json: 1 errors
+  - File should contain a quiz object
+
+=== Validation Summary ===
+Total files checked: 36
+Files with errors: 18
+Total errors found: 18
+Schema validation completed with errors.

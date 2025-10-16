@@ -1,6 +1,6 @@
 [
   {
-    "id": "testing-fundamentals-lesson-1",
+    "id": 1,
     "moduleSlug": "testing-fundamentals",
     "title": "Introduction to Software Testing",
     "order": 1,
@@ -58,10 +58,11 @@
       "SDLC"
     ],
     "lastUpdated": "2025-10-09T10:00:00.000Z",
-    "version": "1.0.0"
+    "version": "1.0.0",
+    "sources": []
   },
   {
-    "id": "testing-fundamentals-lesson-2",
+    "id": 2,
     "moduleSlug": "testing-fundamentals",
     "title": "Unit Testing Principles",
     "order": 2,
@@ -119,10 +120,11 @@
       "isolation"
     ],
     "lastUpdated": "2025-10-09T10:00:00.000Z",
-    "version": "1.0.0"
+    "version": "1.0.0",
+    "sources": []
   },
   {
-    "id": "testing-fundamentals-lesson-3",
+    "id": 3,
     "moduleSlug": "testing-fundamentals",
     "title": "Test-Driven Development (TDD)",
     "order": 3,
@@ -180,10 +182,11 @@
       "design"
     ],
     "lastUpdated": "2025-10-09T10:00:00.000Z",
-    "version": "1.0.0"
+    "version": "1.0.0",
+    "sources": []
   },
   {
-    "id": "testing-fundamentals-lesson-4",
+    "id": 4,
     "moduleSlug": "testing-fundamentals",
     "title": "Mocking and Test Doubles",
     "order": 4,
@@ -242,10 +245,11 @@
       "fakes"
     ],
     "lastUpdated": "2025-10-09T10:00:00.000Z",
-    "version": "1.0.0"
+    "version": "1.0.0",
+    "sources": []
   },
   {
-    "id": "testing-fundamentals-lesson-5",
+    "id": 5,
     "moduleSlug": "testing-fundamentals",
     "title": "Integration Testing",
     "order": 5,
@@ -303,10 +307,11 @@
       "test-environments"
     ],
     "lastUpdated": "2025-10-09T10:00:00.000Z",
-    "version": "1.0.0"
+    "version": "1.0.0",
+    "sources": []
   },
   {
-    "id": "testing-fundamentals-lesson-6",
+    "id": 6,
     "moduleSlug": "testing-fundamentals",
     "title": "Testing Frameworks and Tools",
     "order": 6,
@@ -365,10 +370,11 @@
       "test-runners"
     ],
     "lastUpdated": "2025-10-09T10:00:00.000Z",
-    "version": "1.0.0"
+    "version": "1.0.0",
+    "sources": []
   },
   {
-    "id": "testing-fundamentals-lesson-7",
+    "id": 7,
     "moduleSlug": "testing-fundamentals",
     "title": "Code Coverage and Quality Metrics",
     "order": 7,
@@ -427,10 +433,11 @@
       "analysis"
     ],
     "lastUpdated": "2025-10-09T10:00:00.000Z",
-    "version": "1.0.0"
+    "version": "1.0.0",
+    "sources": []
   },
   {
-    "id": "testing-fundamentals-lesson-8",
+    "id": 8,
     "moduleSlug": "testing-fundamentals",
     "title": "Behavior-Driven Development (BDD)",
     "order": 8,
@@ -443,6 +450,7 @@
     "intro": "Behavior-Driven Development (BDD) is an agile software development methodology that encourages collaboration between developers, QA, and non-technical stakeholders in a software project. BDD extends Test-Driven Development by writing tests in a natural language that non-programmers can read and understand.\n\nThe core principle of BDD is to focus on the behavior of the system from the user's perspective rather than implementation details. This approach helps ensure that everyone involved in the project has a shared understanding of what the software should do. BDD bridges the communication gap between technical and non-technical team members.\n\nGherkin is the language used to write BDD specifications. It uses a structured format with keywords like Feature, Scenario, Given, When, and Then to describe system behavior in a readable way. Feature files contain high-level descriptions of system capabilities, while scenarios describe specific examples of how the system should behave.\n\nBDD frameworks like SpecFlow (for .NET), Cucumber (for Java/Ruby), and Behave (for Python) allow these natural language specifications to be executed as automated tests. These frameworks parse Gherkin feature files and map the steps to implementation code, creating executable specifications that serve as both documentation and tests.\n\nThe BDD process typically involves three stages: Discovery, where stakeholders collaborate to define system behavior; Formulation, where scenarios are written in Gherkin; and Automation, where step definitions are implemented to execute the scenarios. This process ensures that development is driven by business requirements rather than technical implementation details.\n\nEffective BDD requires a cultural shift toward collaboration and shared understanding. It works best when business stakeholders, developers, and testers work together throughout the development process. The living documentation created through BDD becomes a valuable asset that evolves with the system.\n\nBy mastering BDD, you'll improve communication within your team, create executable specifications that serve as documentation, and ensure that development focuses on delivering business value.",
     "code": {
       "example": "# Feature file (Calculator.feature)\nFeature: Calculator\n  In order to perform basic arithmetic operations\n  As a user\n  I want to use a calculator to add and subtract numbers\n\n  Scenario: Add two positive numbers\n    Given I have a calculator\n    And I have entered 50 into the calculator\n    And I have entered 70 into the calculator\n    When I press add\n    Then the result should be 120 on the screen\n\n  Scenario: Subtract two numbers\n    Given I have a calculator\n    And I have entered 100 into the calculator\n    And I have entered 30 into the calculator\n    When I press subtract\n    Then the result should be 70 on the screen\n\n  Scenario Outline: Add numbers from examples\n    Given I have a calculator\n    And I have entered <first> into the calculator\n    And I have entered <second> into the calculator\n    When I press add\n    Then the result should be <result> on the screen\n\n    Examples:\n      | first | second | result |\n      | 20    | 30     | 50     |\n      | 2     | 5      | 7      |\n      | 0     | 40     | 40     |\n\n// Step definition file (CalculatorSteps.cs)\nusing TechTalk.SpecFlow;\nusing Xunit;\n\n[Binding]\npublic class CalculatorSteps\n{\n    private Calculator _calculator;\n    private int _result;\n    \n    [Given(\"I have a calculator\")]\n    public void GivenIHaveACalculator()\n    {\n        _calculator = new Calculator();\n    }\n    \n    [Given(\"I have entered (.*) into the calculator\")]\n    public void GivenIHaveEnteredIntoTheCalculator(int number)\n    {\n        _calculator.EnterNumber(number);\n    }\n    \n    [When(\"I press add\")]\n    public void WhenIPressAdd()\n    {\n        _result = _calculator.Add();\n    }\n    \n    [When(\"I press subtract\")]\n    public void WhenIPressSubtract()\n    {\n        _result = _calculator.Subtract();\n    }\n    \n    [Then(\"the result should be (.*) on the screen\")]\n    public void ThenTheResultShouldBeOnTheScreen(int expectedResult)\n    {\n        Assert.Equal(expectedResult, _result);\n    }\n}\n\n// Implementation class (Calculator.cs)\npublic class Calculator\n{\n    private readonly List<int> _numbers = new List<int>();\n    \n    public void EnterNumber(int number)\n    {\n        _numbers.Add(number);\n    }\n    \n    public int Add()\n    {\n        return _numbers.Sum();\n    }\n    \n    public int Subtract()\n    {\n        if (_numbers.Count < 2) return 0;\n        return _numbers[0] - _numbers[1];\n    }\n}\n\n      \"explanation\": \"This example shows a BDD implementation using SpecFlow. The feature file describes the calculator functionality in natural language that business stakeholders can understand. The step definitions map each Gherkin step to actual code implementation. The calculator class provides the actual functionality. This approach creates living documentation that serves as both requirements and automated tests.\",\n      \"language\": \"csharp\"\n    },\n    \"pitfalls\": [\n      {\n        \"mistake\": \"Writing scenarios that are too technical or too vague\",\n        \"solution\": \"Work with business stakeholders to write scenarios in clear, business-focused language using concrete examples\",\n        \"severity\": \"high\"\n      },\n      {\n        \"mistake\": \"Creating too many scenario outlines with excessive examples\",\n        \"solution\": \"Focus on the most important examples that illustrate different behaviors and edge cases\",\n        \"severity\": \"medium\"\n      },\n      {\n        \"mistake\": \"Not maintaining scenarios as the system evolves\",\n        \"solution\": \"Regularly review and update scenarios to ensure they reflect current system behavior\",\n        \"severity\": \"medium\"\n      }\n    ],\n    \"exercises\": [\n      {\n        \"title\": \"Implement a Shopping Cart Feature with BDD\",\n        \"description\": \"Create BDD specifications and implementation for a shopping cart feature.\",\n        \"checkpoints\": [\n          \"Write feature files describing shopping cart functionality in business language\",\n          \"Create scenarios for adding, removing, and updating items\",\n          \"Implement step definitions that map to actual code\",\n          \"Handle edge cases like out-of-stock items or quantity limits\",\n          \"Run scenarios as automated tests to validate implementation\"\n        ]\n      }\n    ],\n    \"next\": [\n      \"testing-fundamentals-lesson-9\"\n    ],\n    \"estimatedMinutes\": 90,\n    \"difficulty\": \"Intermediate\",\n    \"tags\": [\n      \"bdd\",\n      \"specflow\",\n      \"gherkin\",\n      \"collaboration\",\n      \"specifications\"\n    ],\n    \"lastUpdated\": \"2025-10-09T10:00:00.000Z\",\n    \"version\": \"1.0.0\"\n  },\n  {\n    \"id\": \"testing-fundamentals-lesson-9\",\n    \"moduleSlug\": \"testing-fundamentals\",\n    \"title\": \"Testing Best Practices\",\n    \"order\": 9,\n    \"objectives\": [\n      \"Apply industry-standard testing best practices\",\n      \"Organize and structure test code for maintainability\",\n      \"Implement effective test data management strategies\",\n      \"Follow naming conventions and coding standards for tests\"\n    ],\n    \"intro\": \"Testing best practices are guidelines and principles that help teams write effective, maintainable, and reliable tests. These practices have been developed through years of experience in the software industry and represent proven approaches to testing.\n\nOne of the most important best practices is the use of the AAA (Arrange-Act-Assert) pattern for structuring tests. This pattern makes tests easier to read and understand by clearly separating the setup, execution, and verification phases. Consistent structure across tests makes it easier for team members to work with the test suite.\n\nEffective test naming is crucial for maintainability. Test names should clearly describe what is being tested, the scenario, and the expected outcome. Good naming makes it easier to understand test failures and serves as documentation for the code's behavior.\n\nTest data management is another critical area. Tests should use consistent, reliable test data that covers various scenarios including edge cases. Data should be isolated between tests to prevent interference, and cleanup mechanisms should ensure tests don't leave residual data.\n\nMaintainability practices include keeping tests DRY (Don't Repeat Yourself) through helper methods and base classes, avoiding test interdependencies, and organizing tests logically. Well-organized tests are easier to maintain and extend over time.\n\nPerformance considerations include running tests in parallel when possible, minimizing expensive setup operations, and focusing on what's important to test rather than achieving 100% coverage at the expense of test quality.\n\nBy following testing best practices, you'll create test suites that are reliable, maintainable, and provide value to your development process.\",\n    \"code\": {\n      \"example\": \"// Example of well-structured test following best practices\nusing Xunit;\n\npublic class UserServiceTests\n{\n    // Use descriptive class names that match the system under test\n    \n    [Fact]\n    public void RegisterUser_WithValidCredentials_CreatesUserAndSendsWelcomeEmail()\n    {\n        // ARRANGE - Clear separation of setup phase\n        var emailServiceMock = new Mock<IEmailService>();\n        var userRepositoryMock = new Mock<IUserRepository>();\n        var userService = new UserService(userRepositoryMock.Object, emailServiceMock.Object);\n        \n        var userDto = new UserRegistrationDto\n        {\n            Email = \\\"test@example.com\\\",\n            Password = \\\"SecurePassword123!\\\",\n            FirstName = \\\"John\\\",\n            LastName = \\\"Doe\\\"\n        };\n        \n        userRepositoryMock.Setup(x => x.GetUserByEmail(userDto.Email))\n                         .Returns((User)null); // User doesn't exist\n        \n        User savedUser = null;\n        userRepositoryMock.Setup(x => x.SaveUser(It.IsAny<User>()))\n                         .Callback<User>(u => savedUser = u)\n                         .Returns(true);\n        \n        // ACT - Clear separation of execution phase\n        var result = userService.RegisterUser(userDto);\n        \n        // ASSERT - Clear separation of verification phase\n        Assert.True(result.Success);\n        Assert.NotNull(savedUser);\n        Assert.Equal(userDto.Email, savedUser.Email);\n        Assert.Equal(userDto.FirstName, savedUser.FirstName);\n        Assert.Equal(userDto.LastName, savedUser.LastName);\n        \n        // Verify interactions with dependencies\n        userRepositoryMock.Verify(x => x.GetUserByEmail(userDto.Email), Times.Once);\n        userRepositoryMock.Verify(x => x.SaveUser(It.IsAny<User>()), Times.Once);\n        emailServiceMock.Verify(x => x.SendWelcomeEmail(userDto.Email), Times.Once);\n    }\n    \n    [Fact]\n    public void RegisterUser_WithExistingEmail_ReturnsFailureResult()\n    {\n        // ARRANGE\n        var emailServiceMock = new Mock<IEmailService>();\n        var userRepositoryMock = new Mock<IUserRepository>();\n        var userService = new UserService(userRepositoryMock.Object, emailServiceMock.Object);\n        \n        var userDto = new UserRegistrationDto\n        {\n            Email = \\\"existing@example.com\\\",\n            Password = \\\"SecurePassword123!\\\",\n            FirstName = \\\"John\\\",\n            LastName = \\\"Doe\\\"\n        };\n        \n        var existingUser = new User { Email = userDto.Email };\n        userRepositoryMock.Setup(x => x.GetUserByEmail(userDto.Email))\n                         .Returns(existingUser); // User already exists\n        \n        // ACT\n        var result = userService.RegisterUser(userDto);\n        \n        // ASSERT\n        Assert.False(result.Success);\n        Assert.Equal(\\\"User already exists\\\", result.ErrorMessage);\n        \n        // Verify no user was saved and no email was sent\n        userRepositoryMock.Verify(x => x.SaveUser(It.IsAny<User>()), Times.Never);\n        emailServiceMock.Verify(x => x.SendWelcomeEmail(It.IsAny<string>()), Times.Never);\n    }\n    \n    [Theory]\n    [InlineData(\\\"\\\")]\n    [InlineData(null)]\n    [InlineData(\\\"invalid-email\\\")]\n    public void RegisterUser_WithInvalidEmail_ReturnsFailureResult(string invalidEmail)\n    {\n        // ARRANGE\n        var emailServiceMock = new Mock<IEmailService>();\n        var userRepositoryMock = new Mock<IUserRepository>();\n        var userService = new UserService(userRepositoryMock.Object, emailServiceMock.Object);\n        \n        var userDto = new UserRegistrationDto\n        {\n            Email = invalidEmail,\n            Password = \\\"SecurePassword123!\\\",\n            FirstName = \\\"John\\\",\n            LastName = \\\"Doe\\\"\n        };\n        \n        // ACT\n        var result = userService.RegisterUser(userDto);\n        \n        // ASSERT\n        Assert.False(result.Success);\n        Assert.Contains(\\\"Invalid email\\\", result.ErrorMessage);\n    }\n}\",\n      \"explanation\": \"This example demonstrates several testing best practices. Test class names clearly indicate what is being tested. Test method names follow the pattern 'MethodName_StateUnderTest_ExpectedBehavior'. The AAA pattern is clearly visible with comments separating each phase. The tests use descriptive variable names and cover both happy path and error scenarios. Mock setups are clear and verification ensures the right interactions occurred. Parameterized tests efficiently cover multiple invalid email cases.\",\n      \"language\": \"csharp\"\n    },\n    \"pitfalls\": [\n      {\n        \"mistake\": \"Using unclear or generic test method names\",\n        \"solution\": \"Use descriptive names that indicate what is being tested, under what conditions, and what is expected\",\n        \"severity\": \"high\"\n      },\n      {\n        \"mistake\": \"Creating tests that are hard to read due to poor structure\",\n        \"solution\": \"Follow the AAA pattern and use clear separation between arrange, act, and assert phases\",\n        \"severity\": \"high\"\n      },\n      {\n        \"mistake\": \"Not cleaning up test data or resources\",\n        \"solution\": \"Use setup and teardown methods or disposables to ensure tests don't leave residual data\",\n        \"severity\": \"medium\"\n      }\n    ],\n    \"exercises\": [\n      {\n        \"title\": \"Refactor Tests to Follow Best Practices\",\n        \"description\": \"Improve existing tests to follow industry best practices for structure and naming.\",\n        \"checkpoints\": [\n          \"Review existing test names and rename them to be more descriptive\",\n          \"Reorganize tests to clearly follow the AAA pattern\",\n          \"Extract common setup code into appropriate locations\",\n          \"Add missing assertions to verify all expected outcomes\",\n          \"Ensure tests are isolated and don't depend on each other\"\n        ]\n      }\n    ],\n    \"next\": [\n      \"testing-fundamentals-lesson-10\"\n    ],\n    \"estimatedMinutes\": 75,\n    \"difficulty\": \"Intermediate\",\n    \"tags\": [\n      \"best-practices\",\n      \"naming\",\n      \"structure\",\n      \"maintainability\",\n      \"aaa-pattern\"\n    ],\n    \"lastUpdated\": \"2025-10-09T10:00:00.000Z\",\n    \"version\": \"1.0.0\"\n  },\n  {\n    \"id\": \"testing-fundamentals-lesson-10\",\n    \"moduleSlug\": \"testing-fundamentals\",\n    \"title\": \"Continuous Integration and Testing\",\n    \"order\": 10,\n    \"objectives\": [\n      \"Integrate automated testing into continuous integration pipelines\",\n      \"Configure test execution in CI environments\",\n      \"Implement quality gates based on test results\",\n      \"Monitor and analyze test results in CI systems\"\n    ],\n    \"intro\": \"Continuous Integration (CI) is a development practice where developers integrate code into a shared repository frequently, typically several times a day. Each integration is verified by an automated build and automated tests to detect integration errors as quickly as possible.\n\nIn a CI environment, automated tests play a crucial role in ensuring code quality and preventing defects from reaching production. Tests are executed automatically whenever code is committed to the repository, providing rapid feedback to developers about the impact of their changes.\n\nEffective CI testing requires careful configuration of test execution environments. Tests should run in consistent, isolated environments that closely match production. This often involves using containers, virtual machines, or cloud-based testing environments to ensure reproducibility.\n\nQuality gates are automated checks that must pass before code can be merged or deployed. These can include minimum test coverage thresholds, successful test execution, code quality metrics, and security scans. Quality gates help maintain code quality standards and prevent problematic code from progressing through the delivery pipeline.\n\nMonitoring and analyzing test results in CI systems is essential for maintaining a healthy test suite. Teams should track test execution times, failure rates, and coverage metrics to identify issues early. Flaky tests (tests that fail intermittently) should be identified and fixed to maintain confidence in the test suite.\n\nCI systems like GitHub Actions, Azure DevOps, Jenkins, and GitLab CI provide features for configuring automated test execution, parallel test running, and detailed reporting. These systems can be configured to run different types of tests at different stages of the pipeline, optimizing feedback time while maintaining thorough testing.\n\nBy integrating testing into CI pipelines, teams can catch defects early, reduce integration issues, and deliver higher quality software more reliably.\",\n    \"code\": {\n      \"example\": \"# GitHub Actions workflow for .NET testing\nname: CI\n\non:\n  push:\n    branches: [ main ]\n  pull_request:\n    branches: [ main ]\n\njobs:\n  build-and-test:\n    runs-on: ubuntu-latest\n    \n    steps:\n    - uses: actions/checkout@v3\n    \n    - name: Setup .NET\n      uses: actions/setup-dotnet@v3\n      with:\n        dotnet-version: 8.0.x\n    \n    - name: Restore dependencies\n      run: dotnet restore\n    \n    - name: Build\n      run: dotnet build --no-restore\n    \n    - name: Run unit tests\n      run: dotnet test --no-build --verbosity normal\n    \n    - name: Run integration tests\n      run: dotnet test tests/IntegrationTests --no-build --verbosity normal\n    \n    - name: Collect code coverage\n      run: dotnet test /p:CollectCoverage=true /p:CoverletOutputFormat=opencover\n    \n    - name: Upload coverage to Codecov\n      uses: codecov/codecov-action@v3\n      with:\n        file: ./coverage.opencover.xml\n    \n    - name: Check coverage threshold\n      run: |\n        COVERAGE=$(grep -oP 'line-rate=\\\"\\\\K[0-9.]+' ./coverage.opencover.xml)\n        if (( $(echo \\\"$COVERAGE < 0.8\\\" | bc -l) )); then\n          echo \\\"Code coverage is below 80%: $COVERAGE\\\"\n          exit 1\n        fi\n    \n    - name: Run security scans\n      run: dotnet tool run security-scan\n    \n    - name: Generate test reports\n      run: |\n        dotnet test --logger \\\"trx;LogFileName=test-results.trx\\\"\n        dotnet tool run trx2html test-results.trx\n    \n    - name: Archive test results\n      uses: actions/upload-artifact@v3\n      if: always()\n      with:\n        name: test-results\n        path: |\n          **/TestResults/**\n          **/*.trx\n          coverage.opencover.xml\",\n      \"explanation\": \"This GitHub Actions workflow demonstrates CI testing best practices. It runs on both push to main branch and pull requests. The workflow includes steps for restoring dependencies, building the application, running unit and integration tests separately, collecting code coverage, uploading coverage reports, checking coverage thresholds, running security scans, and archiving test results. Quality gates are implemented through coverage thresholds and test execution requirements. The workflow uses appropriate runners and includes error handling with the 'if: always()' condition for artifact upload.\",\n      \"language\": \"yaml\"\n    },\n    \"pitfalls\": [\n      {\n        \"mistake\": \"Allowing failing tests in CI pipelines\",\n        \"solution\": \"Make CI builds fail when tests fail to maintain quality standards and prevent broken code from progressing\",\n        \"severity\": \"high\"\n      },\n      {\n        \"mistake\": \"Not running tests in isolated environments\",\n        \"solution\": \"Use containers or clean environments for each CI run to ensure consistent, reproducible test results\",\n        \"severity\": \"high\"\n      },\n      {\n        \"mistake\": \"Ignoring slow test execution in CI\",\n        \"solution\": \"Optimize test execution time through parallelization, selective testing, and performance improvements\",\n        \"severity\": \"medium\"\n      }\n    ],\n    \"exercises\": [\n      {\n        \"title\": \"Configure a CI Pipeline with Automated Testing\",\n        \"description\": \"Set up a continuous integration pipeline that automatically runs tests and enforces quality gates.\",\n        \"checkpoints\": [\n          \"Configure automated test execution on code commits\",\n          \"Implement separate jobs for unit and integration tests\",\n          \"Set up code coverage collection and reporting\",\n          \"Configure quality gates based on test results and coverage\",\n          \"Implement notifications for test failures and quality gate violations\"\n        ]\n      }\n    ],\n    \"next\": [],\n    \"estimatedMinutes\": 90,\n    \"difficulty\": \"Intermediate\",\n    \"tags\": [\n      \"ci\",\n      \"continuous-integration\",\n      \"github-actions\",\n      \"quality-gates\",\n      \"automation\"\n    ],\n    \"lastUpdated\": \"2025-10-09T10:00:00.000Z\",\n    \"version\": \"1.0.0\"\n  }\n]",
+      "explanation": "This example shows a BDD implementation using SpecFlow for a simple Calculator domain. The Gherkin feature file expresses behaviour in business-readable language (Given/When/Then), including a Scenario Outline with tabular Examples. The step definitions bind each step to executable code and delegate work to the Calculator class. The Calculator stores the entered numbers and implements Add (sum of all entered values) and Subtract (first minus second) to satisfy the scenarios. Running these with SpecFlow+xUnit turns the feature into living documentation and automated tests that verify the behaviour end-to-end.",
       "language": "csharp"
     },
     "pitfalls": [
@@ -488,10 +496,11 @@
       "specifications"
     ],
     "lastUpdated": "2025-10-09T10:00:00.000Z",
-    "version": "1.0.0"
+    "version": "1.0.0",
+    "sources": []
   },
   {
-    "id": "testing-fundamentals-lesson-9",
+    "id": 9,
     "moduleSlug": "testing-fundamentals",
     "title": "Integration Testing Patterns",
     "order": 9,
@@ -550,10 +559,11 @@
       "Contract Testing"
     ],
     "lastUpdated": "2025-10-09T10:00:00.000Z",
-    "version": "1.0.0"
+    "version": "1.0.0",
+    "sources": []
   },
   {
-    "id": "testing-fundamentals-lesson-10",
+    "id": 10,
     "moduleSlug": "testing-fundamentals",
     "title": "Mocking Best Practices",
     "order": 10,
@@ -612,10 +622,11 @@
       "Sinon"
     ],
     "lastUpdated": "2025-10-09T10:00:00.000Z",
-    "version": "1.0.0"
+    "version": "1.0.0",
+    "sources": []
   },
   {
-    "id": "testing-fundamentals-lesson-11",
+    "id": 11,
     "moduleSlug": "testing-fundamentals",
     "title": "Test Data Management",
     "order": 11,
@@ -674,10 +685,11 @@
       "Synthetic Data"
     ],
     "lastUpdated": "2025-10-09T10:00:00.000Z",
-    "version": "1.0.0"
+    "version": "1.0.0",
+    "sources": []
   },
   {
-    "id": "testing-fundamentals-lesson-12",
+    "id": 12,
     "moduleSlug": "testing-fundamentals",
     "title": "Behavior-Driven Development",
     "order": 12,
@@ -736,10 +748,11 @@
       "Scenarios"
     ],
     "lastUpdated": "2025-10-09T10:00:00.000Z",
-    "version": "1.0.0"
+    "version": "1.0.0",
+    "sources": []
   },
   {
-    "id": "testing-fundamentals-lesson-13",
+    "id": 13,
     "moduleSlug": "testing-fundamentals",
     "title": "Performance Testing Fundamentals",
     "order": 13,
@@ -798,10 +811,11 @@
       "Metrics"
     ],
     "lastUpdated": "2025-10-09T10:00:00.000Z",
-    "version": "1.0.0"
+    "version": "1.0.0",
+    "sources": []
   },
   {
-    "id": "testing-fundamentals-lesson-14",
+    "id": 14,
     "moduleSlug": "testing-fundamentals",
     "title": "Test Coverage Analysis",
     "order": 14,
@@ -858,6 +872,7 @@
       "Analysis"
     ],
     "lastUpdated": "2025-10-09T10:00:00.000Z",
-    "version": "1.0.0"
+    "version": "1.0.0",
+    "sources": []
   }
 ]

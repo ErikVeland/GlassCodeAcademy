@@ -1,5 +1,5 @@
 {
-  "module": "node-fundamentals",
+  "moduleSlug": "node-fundamentals",
   "sources": [
     {
       "title": "Node.js Official Documentation",

@@ -3,9 +3,9 @@ using backend.Models;
 
 namespace backend.GraphQL
 {
-    public class TestingLessonType : ObjectType<TestingLesson>
+    public class TestingLessonType : ObjectType<BaseLesson>
     {
-        protected override void Configure(IObjectTypeDescriptor<TestingLesson> descriptor)
+        protected override void Configure(IObjectTypeDescriptor<BaseLesson> descriptor)
         {
             descriptor.Name("TestingLesson");
             descriptor.Description("Represents a Testing learning lesson with code examples");
@@ -19,9 +19,9 @@ namespace backend.GraphQL
         }
     }
 
-    public class TestingInterviewQuestionType : ObjectType<TestingInterviewQuestion>
+    public class TestingInterviewQuestionType : ObjectType<BaseInterviewQuestion>
     {
-        protected override void Configure(IObjectTypeDescriptor<TestingInterviewQuestion> descriptor)
+        protected override void Configure(IObjectTypeDescriptor<BaseInterviewQuestion> descriptor)
         {
             descriptor.Name("TestingInterviewQuestion");
             descriptor.Description("Represents a Testing interview question with multiple choice or open-ended format");

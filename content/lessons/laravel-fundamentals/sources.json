@@ -1,5 +1,5 @@
 {
-  "module": "laravel-fundamentals",
+  "moduleSlug": "laravel-fundamentals",
   "sources": [
     {
       "title": "Laravel Official Documentation",

@@ -403,8 +403,6 @@ class ContentRegistryLoader {
                 path.join(process.cwd(), '..', '..', '..', 'content', 'lessons', `programming-fundamentals.json`),
                 // Try direct path from current working directory
                 path.join(process.cwd(), 'content', 'lessons', `programming-fundamentals.json`),
-                // Try absolute path based on the known structure
-                path.join('/Users/veland/GlassCodeAcademy/content/lessons', `programming-fundamentals.json`),
                 // Legacy paths for compatibility
                 path.join(__dirname, '..', '..', '..', '..', 'content', 'lessons', `programming-fundamentals.json`),
                 path.join('/srv/academy', 'content', 'lessons', `programming-fundamentals.json`),
@@ -567,8 +565,6 @@ class ContentRegistryLoader {
           path.join(process.cwd(), '..', '..', '..', 'content', 'lessons', `${moduleSlug}.json`),
           // Try direct path from current working directory
           path.join(process.cwd(), 'content', 'lessons', `${moduleSlug}.json`),
-          // Try absolute path based on the known structure
-          path.join('/Users/veland/GlassCodeAcademy/content/lessons', `${moduleSlug}.json`),
           // Legacy paths for compatibility
           path.join(__dirname, '..', '..', '..', '..', 'content', 'lessons', `${moduleSlug}.json`),
           path.join('/srv/academy', 'content', 'lessons', `${moduleSlug}.json`),

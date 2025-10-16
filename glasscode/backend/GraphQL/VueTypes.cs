@@ -3,11 +3,11 @@ using backend.Models;
 
 namespace backend.GraphQL
 {
-    public class VueLessonType : ObjectType<VueLesson>
+    public class VueLessonType : ObjectType<BaseLesson>
+{
+    protected override void Configure(IObjectTypeDescriptor<BaseLesson> descriptor)
     {
-        protected override void Configure(IObjectTypeDescriptor<VueLesson> descriptor)
-        {
-            descriptor.Name("VueLesson");
+        descriptor.Name("VueLesson");
             descriptor.Description("Represents a Vue.js learning lesson with code examples");
 
             descriptor.Field(l => l.Id).Description("The unique identifier of the lesson");
@@ -19,9 +19,9 @@ namespace backend.GraphQL
         }
     }
 
-    public class VueInterviewQuestionType : ObjectType<VueInterviewQuestion>
+    public class VueInterviewQuestionType : ObjectType<BaseInterviewQuestion>
     {
-        protected override void Configure(IObjectTypeDescriptor<VueInterviewQuestion> descriptor)
+        protected override void Configure(IObjectTypeDescriptor<BaseInterviewQuestion> descriptor)
         {
             descriptor.Name("VueInterviewQuestion");
             descriptor.Description("Represents a Vue.js interview question with multiple choice or open-ended format");

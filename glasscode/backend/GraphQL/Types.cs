@@ -4,9 +4,9 @@ using HotChocolate.Types;
 namespace backend.GraphQL
 {
     // Lesson type definition for GraphQL
-    public class LessonType : ObjectType<Lesson>
+    public class LessonType : ObjectType<BaseLesson>
     {
-        protected override void Configure(IObjectTypeDescriptor<Lesson> descriptor)
+        protected override void Configure(IObjectTypeDescriptor<BaseLesson> descriptor)
         {
             descriptor.Description("Represents a learning lesson with code examples");
 
@@ -20,9 +20,9 @@ namespace backend.GraphQL
     }
 
     // InterviewQuestion type definition for GraphQL
-    public class InterviewQuestionType : ObjectType<InterviewQuestion>
+    public class InterviewQuestionType : ObjectType<BaseInterviewQuestion>
     {
-        protected override void Configure(IObjectTypeDescriptor<InterviewQuestion> descriptor)
+        protected override void Configure(IObjectTypeDescriptor<BaseInterviewQuestion> descriptor)
         {
             descriptor.Description("Represents an interview question with multiple choice or open-ended format");
 
@@ -57,7 +57,7 @@ namespace backend.GraphQL
 
             descriptor.Field(p => p.UserId).Description("The user's identifier");
             descriptor.Field(p => p.LessonId).Description("The lesson's identifier");
-            descriptor.Field(p => p.Module).Description("The module name");
+            descriptor.Field(p => p.ModuleSlug).Description("The module slug");
             descriptor.Field(p => p.Status).Description("The status of the lesson (e.g., completed)");
         }
     }

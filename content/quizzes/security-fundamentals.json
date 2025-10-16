@@ -1,1097 +1,1178 @@
-{
-  "moduleSlug": "security-fundamentals",
-  "title": "Security Best Practices Assessment",
-  "description": "Comprehensive quiz covering key concepts from the Security Best Practices module",
-  "totalQuestions": 60,
-  "passingScore": 70,
-  "timeLimit": 30,
-  "questions": [
-    {
-      "id": 41,
-      "question": "What are the performance considerations when implementing authentication systems?",
-      "topic": "Authentication",
-      "difficulty": "Intermediate",
-      "choices": [
-        "Use efficient hashing algorithms like bcrypt with appropriate cost factors and implement session caching",
-        "Always use the highest security settings regardless of performance impact",
-        "Avoid authentication altogether to improve performance",
-        "Use simple hashing algorithms like MD5 for faster processing"
-      ],
-      "correctIndex": 0,
-      "explanation": "Balancing security and performance in authentication systems requires using efficient but secure hashing algorithms like bcrypt with appropriate cost factors. Session caching can significantly improve performance by reducing database lookups. The key is finding the right balance between security and user experience.",
-      "industryContext": "Major tech companies like Google and Facebook invest heavily in optimizing their authentication systems to handle billions of requests while maintaining security. Properly configured bcrypt with session caching can handle thousands of authentication requests per second.",
-      "tags": [
-        "authentication",
-        "performance",
-        "intermediate"
-      ],
-      "estimatedTime": 90,
-      "questionType": "multiple-choice",
-      "correctAnswer": 0
-    },
-    {
-      "id": 42,
-      "question": "How do you troubleshoot complex authorization issues in a microservices architecture?",
-      "topic": "Authorization",
-      "difficulty": "Advanced",
-      "choices": [
-        "Implement distributed tracing, centralized logging, and use consistent authorization policies across services",
-        "Debug each service independently without considering interactions",
-        "Remove authorization checks temporarily to isolate the issue",
-        "Use a monolithic approach instead of microservices"
-      ],
-      "correctIndex": 0,
-      "explanation": "Troubleshooting authorization in microservices requires a systematic approach with distributed tracing to follow requests across services, centralized logging for correlation, and consistent authorization policies. Tools like Jaeger or Zipkin can help trace requests, while centralized logging solutions like ELK stack help correlate events.",
-      "industryContext": "Companies like Netflix and Uber have developed sophisticated approaches to debugging authorization issues in their microservices architectures. Distributed tracing has become essential for understanding complex service interactions.",
-      "tags": [
-        "authorization",
-        "microservices",
-        "troubleshooting",
-        "advanced"
-      ],
-      "estimatedTime": 120,
-      "questionType": "multiple-choice",
-      "correctAnswer": 0
-    },
-    {
-      "id": 43,
-      "question": "How would you optimize security implementations for large-scale applications with millions of users?",
-      "topic": "Security",
-      "difficulty": "Advanced",
-      "choices": [
-        "Implement layered security with CDN protection, rate limiting, caching security decisions, and horizontal scaling",
-        "Use a single security approach for all parts of the application",
-        "Focus only on perimeter security and ignore internal threats",
-        "Remove security measures to improve performance"
-      ],
-      "correctIndex": 0,
-      "explanation": "Large-scale security optimization requires a layered approach including CDN protection for DDoS mitigation, rate limiting to prevent abuse, caching security decisions to reduce latency, and horizontal scaling to handle load. Each layer addresses different types of threats while maintaining performance.",
-      "industryContext": "Major platforms like Twitter and Instagram handle security for hundreds of millions of users by implementing multi-layered security architectures. They use techniques like edge security, distributed rate limiting, and intelligent caching to maintain both security and performance.",
-      "tags": [
-        "scalability",
-        "security-architecture",
-        "optimization",
-        "advanced"
-      ],
-      "estimatedTime": 120,
-      "questionType": "multiple-choice",
-      "correctAnswer": 0
-    },
-    {
-      "id": 44,
-      "question": "Your web application stores user passwords. Which approach provides the BEST security?",
-      "topic": "Authentication",
-      "difficulty": "Beginner",
-      "choices": [
-        "Hash passwords using bcrypt with a salt and appropriate work factor",
-        "Encrypt passwords using AES-256 with a secret key",
-        "Store passwords in plain text but use HTTPS for transmission",
-        "Use MD5 hashing for fast password verification"
-      ],
-      "correctIndex": 0,
-      "explanation": "bcrypt with salt and appropriate work factor (cost parameter) is the gold standard for password storage. It's designed to be slow and resistant to rainbow table attacks. AES encryption is reversible (not suitable for passwords), plain text is never acceptable, and MD5 is cryptographically broken and too fast for password hashing.",
-      "industryContext": "Password security breaches are among the most common and damaging security incidents. Proper password hashing is a fundamental requirement for any application handling user credentials.",
-      "tags": [
-        "authentication",
-        "password-security",
-        "beginner"
-      ],
-      "estimatedTime": 90,
-      "questionType": "multiple-choice",
-      "correctAnswer": 0
-    },
-    {
-      "id": 45,
-      "question": "A security audit reveals that your API is vulnerable to SQL injection attacks. You need to fix this immediately. What's the MOST effective solution?",
-      "topic": "Authorization",
-      "difficulty": "Advanced",
-      "choices": [
-        "Replace all SQL queries with parameterized queries/prepared statements",
-        "Add input validation to reject special characters like quotes",
-        "Implement rate limiting to slow down potential attacks",
-        "Use stored procedures exclusively for all database operations"
-      ],
-      "correctIndex": 0,
-      "explanation": "Parameterized queries (prepared statements) completely separate SQL code from user data, making SQL injection impossible regardless of input content. Input validation can be bypassed, rate limiting doesn't prevent the vulnerability, and while stored procedures can help, they don't automatically prevent SQL injection if used incorrectly.",
-      "industryContext": "SQL injection consistently ranks as one of the top web application security risks (OWASP Top 10). A single SQL injection vulnerability can lead to complete database compromise, making this knowledge critical for any developer working with databases.",
-      "tags": [
-        "sql-injection",
-        "database-security",
-        "advanced"
-      ],
-      "estimatedTime": 120,
-      "questionType": "multiple-choice",
-      "correctAnswer": 0
-    },
-    {
-      "id": 46,
-      "question": "Your e-commerce application handles credit card payments. Which security implementation approach is MOST critical for PCI DSS compliance?",
-      "topic": "Security",
-      "difficulty": "Intermediate",
-      "choices": [
-        "Use a certified payment processor (like Stripe/PayPal) and never store card data",
-        "Encrypt all card data with AES-256 and store it securely",
-        "Hash credit card numbers using bcrypt before storing",
-        "Store card data in a separate database with limited access"
-      ],
-      "correctIndex": 0,
-      "explanation": "The safest and most compliant approach is to never store sensitive card data yourself. Use certified payment processors that handle PCI DSS compliance. This reduces your compliance scope from Level 1 (most stringent) to Level 4 (least stringent) and eliminates the risk of card data breaches from your systems.",
-      "industryContext": "PCI DSS compliance is legally required for businesses processing credit cards. Non-compliance can result in fines up to $500,000 per incident, plus liability for fraud losses. Using certified processors is the industry standard approach.",
-      "tags": [
-        "pci-dss",
-        "payment-security",
-        "intermediate"
-      ],
-      "estimatedTime": 120,
-      "questionType": "multiple-choice",
-      "correctAnswer": 0
-    },
-    {
-      "id": 47,
-      "question": "Which security practices are essential for protecting user data in modern web applications?",
-      "topic": "Authentication",
-      "difficulty": "Beginner",
-      "choices": [
-        "Implement multi-factor authentication, use secure password hashing, and enforce strong password policies",
-        "Store passwords in plain text for easier recovery",
-        "Use the same password for all user accounts",
-        "Disable password complexity requirements for user convenience"
-      ],
-      "correctIndex": 0,
-      "explanation": "Essential security practices for user data protection include multi-factor authentication for additional security layers, secure password hashing using algorithms like bcrypt or Argon2, and strong password policies that enforce complexity and regular updates. These practices work together to create robust protection.",
-      "industryContext": "Regulatory requirements like GDPR and CCPA mandate strong data protection practices. Companies that fail to implement proper security measures face significant fines and reputation damage. Multi-factor authentication has become a standard requirement for most online services.",
-      "tags": [
-        "data-protection",
-        "authentication",
-        "best-practices",
-        "beginner"
-      ],
-      "estimatedTime": 90,
-      "questionType": "multiple-choice",
-      "correctAnswer": 0
-    },
-    {
-      "id": 48,
-      "question": "What strategies are effective for troubleshooting complex security vulnerabilities?",
-      "topic": "Authorization",
-      "difficulty": "Advanced",
-      "choices": [
-        "Use systematic penetration testing, code review, threat modeling, and security monitoring tools",
-        "Ignore the vulnerability if it doesn't cause immediate issues",
-        "Apply quick fixes without understanding the root cause",
-        "Blame third-party libraries for all security issues"
-      ],
-      "correctIndex": 0,
-      "explanation": "Effective security troubleshooting requires a systematic approach including penetration testing to identify vulnerabilities, code review to find implementation flaws, threat modeling to understand potential attack vectors, and security monitoring tools to detect ongoing threats. This comprehensive approach ensures thorough vulnerability identification and remediation.",
-      "industryContext": "Professional security teams use structured approaches like the NIST Cybersecurity Framework and OWASP Testing Guide. Bug bounty programs have become popular for crowdsourcing vulnerability discovery, with companies like Google and Facebook paying millions in rewards.",
-      "tags": [
-        "vulnerability-assessment",
-        "troubleshooting",
-        "penetration-testing",
-        "advanced"
-      ],
-      "estimatedTime": 120,
-      "questionType": "multiple-choice",
-      "correctAnswer": 0
-    },
-    {
-      "id": 49,
-      "question": "How do you implement comprehensive security measures in a production environment?",
-      "topic": "Security",
-      "difficulty": "Intermediate",
-      "choices": [
-        "Deploy web application firewalls, implement security headers, use secure deployment pipelines, and continuous monitoring",
-        "Focus only on perimeter security and ignore internal application security",
-        "Disable security measures during deployment for convenience",
-        "Use default configurations for all security tools"
-      ],
-      "correctIndex": 0,
-      "explanation": "Comprehensive production security implementation includes web application firewalls for filtering malicious traffic, security headers to prevent common attacks, secure deployment pipelines with automated security checks, and continuous monitoring for threat detection. Each component addresses different aspects of the security landscape.",
-      "industryContext": "DevSecOps practices have emerged to integrate security into the entire development lifecycle. Companies like Microsoft and Amazon have embedded security checks throughout their deployment pipelines, reducing vulnerabilities by over 70%.",
-      "tags": [
-        "production-security",
-        "devsecops",
-        "implementation",
-        "intermediate"
-      ],
-      "estimatedTime": 120,
-      "questionType": "multiple-choice",
-      "correctAnswer": 0
-    },
-    {
-      "id": 50,
-      "question": "What are the key principles of secure coding practices?",
-      "topic": "Security",
-      "difficulty": "Beginner",
-      "choices": [
-        "Validate all inputs, sanitize outputs, implement proper error handling, and follow security best practices",
-        "Trust all user inputs since they come from your application",
-        "Ignore security warnings from static analysis tools",
-        "Use complex code to make it harder for attackers to understand"
-      ],
-      "correctIndex": 0,
-      "explanation": "Secure coding principles include input validation to prevent injection attacks, output sanitization to prevent XSS, proper error handling to avoid information disclosure, and following established security best practices. These principles form the foundation of defensive programming.",
-      "industryContext": "The OWASP Secure Coding Practices guide is widely adopted across the industry. Companies that implement secure coding practices see 60-80% fewer security vulnerabilities in their applications compared to those that don't.",
-      "tags": [
-        "secure-coding",
-        "best-practices",
-        "input-validation",
-        "beginner"
-      ],
-      "estimatedTime": 90,
-      "questionType": "multiple-choice",
-      "correctAnswer": 0
-    },
-    {
-      "id": 51,
-      "question": "Which pattern is most effective for implementing secure authentication architecture?",
-      "topic": "Authentication",
-      "difficulty": "Intermediate",
-      "choices": [
-        "OAuth 2.0 with JWT tokens, secure session management, and multi-factor authentication",
-        "Storing passwords in plain text with basic HTTP authentication",
-        "Using the same session token for all users",
-        "Disabling authentication for internal APIs"
-      ],
-      "correctIndex": 0,
-      "explanation": "Effective authentication architecture uses OAuth 2.0 for standardized authorization flows, JWT tokens for stateless authentication, secure session management with proper timeouts and rotation, and multi-factor authentication for additional security. This pattern provides both security and scalability.",
-      "industryContext": "Major identity providers like Auth0, Okta, and Google Identity Platform use OAuth 2.0 and JWT as industry standards. The shift toward zero-trust security models has made robust authentication architecture even more critical.",
-      "tags": [
-        "authentication",
-        "oauth",
-        "jwt",
-        "intermediate"
-      ],
-      "estimatedTime": 120,
-      "questionType": "multiple-choice",
-      "correctAnswer": 0
-    },
-    {
-      "id": 52,
-      "question": "How would you optimize security controls for high-performance applications?",
-      "topic": "Security",
-      "difficulty": "Advanced",
-      "choices": [
-        "Use hardware security modules, implement caching for authorization decisions, and optimize cryptographic operations",
-        "Remove all security controls to maximize performance",
-        "Use the slowest but most secure algorithms for all operations",
-        "Apply security controls only to visible application features"
-      ],
-      "correctIndex": 0,
-      "explanation": "High-performance security optimization involves hardware security modules for accelerated cryptographic operations, caching authorization decisions to reduce latency, and optimizing cryptographic operations through algorithm selection and implementation tuning. The goal is maintaining security without sacrificing performance.",
-      "industryContext": "Financial institutions like banks and payment processors handle millions of transactions per second while maintaining strict security requirements. They use specialized hardware and sophisticated caching strategies to achieve both performance and security.",
-      "tags": [
-        "performance",
-        "optimization",
-        "cryptography",
-        "advanced"
-      ],
-      "estimatedTime": 120,
-      "questionType": "multiple-choice",
-      "correctAnswer": 0
-    },
-    {
-      "id": 53,
-      "question": "What are the security considerations when using modern authentication protocols?",
-      "topic": "Authentication",
-      "difficulty": "Intermediate",
-      "choices": [
-        "Implement proper token validation, use secure storage, enforce token expiration, and protect against replay attacks",
-        "Store tokens in plain text local storage indefinitely",
-        "Use the same token for all authentication contexts",
-        "Disable token validation to improve application speed"
-      ],
-      "correctIndex": 0,
-      "explanation": "Modern authentication protocols require proper token validation to ensure authenticity, secure storage to prevent theft, token expiration to limit exposure windows, and protection against replay attacks through mechanisms like nonces or timestamps. These measures work together to create robust authentication security.",
-      "industryContext": "The shift from session-based to token-based authentication has created new security challenges. Companies like GitHub and Slack have implemented sophisticated token management systems to handle these considerations at scale.",
-      "tags": [
-        "authentication",
-        "tokens",
-        "protocols",
-        "intermediate"
-      ],
-      "estimatedTime": 120,
-      "questionType": "multiple-choice",
-      "correctAnswer": 0
-    },
-    {
-      "id": 54,
-      "question": "How do you implement effective input validation to prevent injection attacks?",
-      "topic": "Security",
-      "difficulty": "Intermediate",
-      "choices": [
-        "Use whitelist validation, parameterized queries, output encoding, and comprehensive validation libraries",
-        "Trust all user input since it comes from your own application",
-        "Use blacklist validation to block known malicious patterns",
-        "Apply validation only to visible form fields"
-      ],
-      "correctIndex": 0,
-      "explanation": "Effective input validation uses whitelist validation to allow only known good values, parameterized queries to prevent SQL injection, output encoding to prevent XSS, and comprehensive validation libraries to handle various data types. This multi-layered approach provides robust protection against injection attacks.",
-      "industryContext": "Injection attacks consistently rank in the OWASP Top 10 security risks. Companies that implement comprehensive input validation see dramatic reductions in security incidents. The use of validation libraries like OWASP ESAPI has become standard practice.",
-      "tags": [
-        "input-validation",
-        "injection-prevention",
-        "security-controls",
-        "intermediate"
-      ],
-      "estimatedTime": 120,
-      "questionType": "multiple-choice",
-      "correctAnswer": 0
-    },
-    {
-      "id": 55,
-      "question": "Which security implementation provides the best protection for sensitive data at rest?",
-      "topic": "Security",
-      "difficulty": "Advanced",
-      "choices": [
-        "AES-256 encryption with proper key management, secure key storage, and field-level encryption for highly sensitive data",
-        "Base64 encoding to obscure data from casual observers",
-        "Storing all data in plain text for easier debugging",
-        "Using the same encryption key for all data"
-      ],
-      "correctIndex": 0,
-      "explanation": "Best practices for data at rest protection include AES-256 encryption as the industry standard, proper key management with rotation and secure storage, and field-level encryption for highly sensitive data like passwords and personal information. This approach provides strong protection while maintaining performance.",
-      "industryContext": "Data breach regulations like GDPR and CCPA require strong data protection measures. Companies that implement proper encryption see significantly reduced impact from data breaches, with some avoiding notification requirements entirely due to encryption.",
-      "tags": [
-        "data-encryption",
-        "key-management",
-        "data-protection",
-        "advanced"
-      ],
-      "estimatedTime": 120,
-      "questionType": "multiple-choice",
-      "correctAnswer": 0
-    },
-    {
-      "id": 56,
-      "question": "What are the trade-offs between different security monitoring approaches?",
-      "topic": "Security",
-      "difficulty": "Advanced",
-      "choices": [
-        "Real-time monitoring provides immediate threat detection but requires more resources; batch processing is resource-efficient but has detection delays",
-        "More monitoring is always better regardless of resource costs",
-        "Security monitoring is unnecessary for well-designed applications",
-        "Simple log files are sufficient for all security monitoring needs"
-      ],
-      "correctIndex": 0,
-      "explanation": "Security monitoring trade-offs include real-time monitoring for immediate threat detection but higher resource consumption, versus batch processing for resource efficiency but delayed detection. The optimal approach balances detection speed with resource constraints based on threat models and compliance requirements.",
-      "industryContext": "Security Information and Event Management (SIEM) systems have evolved to handle these trade-offs. Companies like Splunk and IBM QRadar provide sophisticated monitoring solutions that balance real-time detection with resource efficiency.",
-      "tags": [
-        "security-monitoring",
-        "trade-offs",
-        "siem",
-        "advanced"
-      ],
-      "estimatedTime": 120,
-      "questionType": "multiple-choice",
-      "correctAnswer": 0
-    },
-    {
-      "id": 57,
-      "question": "How do you implement secure session management in distributed applications?",
-      "topic": "Authentication",
-      "difficulty": "Intermediate",
-      "choices": [
-        "Use centralized session stores, implement proper session invalidation, set secure cookie attributes, and use short session timeouts",
-        "Store session data in client-side cookies without encryption",
-        "Use the same session ID across all user sessions",
-        "Never expire sessions to improve user experience"
-      ],
-      "correctIndex": 0,
-      "explanation": "Secure distributed session management requires centralized session stores for consistency, proper session invalidation on logout and timeout, secure cookie attributes (HttpOnly, Secure, SameSite), and appropriately short session timeouts to limit exposure windows. These measures work together to protect session security.",
-      "industryContext": "The shift to microservices and cloud-native architectures has made distributed session management more complex. Companies like Netflix and Airbnb have developed sophisticated session management systems to handle these challenges at scale.",
-      "tags": [
-        "session-management",
-        "distributed-systems",
-        "authentication",
-        "intermediate"
-      ],
-      "estimatedTime": 120,
-      "questionType": "multiple-choice",
-      "correctAnswer": 0
-    },
-    {
-      "id": 58,
-      "question": "What security measures are essential for protecting APIs from common attacks?",
-      "topic": "Security",
-      "difficulty": "Intermediate",
-      "choices": [
-        "Implement rate limiting, input validation, authentication, authorization, and API gateway security controls",
-        "Make all APIs publicly accessible without any protection",
-        "Use the same API key for all clients",
-        "Disable logging to prevent attackers from seeing API usage patterns"
-      ],
-      "correctIndex": 0,
-      "explanation": "Essential API security measures include rate limiting to prevent abuse, input validation to prevent injection attacks, strong authentication and authorization to control access, and API gateway security controls for centralized protection. These layers work together to create robust API security.",
-      "industryContext": "API security has become critical as more applications expose functionality through APIs. The OWASP API Security Top 10 provides guidance on protecting APIs from common threats. Major API platforms like Stripe and Twilio implement comprehensive security measures.",
-      "tags": [
-        "api-security",
-        "rate-limiting",
-        "authentication",
-        "intermediate"
-      ],
-      "estimatedTime": 120,
-      "questionType": "multiple-choice",
-      "correctAnswer": 0
-    },
-    {
-      "id": 59,
-      "question": "How do you implement effective security logging and monitoring?",
-      "topic": "Security",
-      "difficulty": "Advanced",
-      "choices": [
-        "Log security events with sufficient context, implement real-time alerting, use centralized log management, and maintain audit trails",
-        "Log everything to text files and never review the logs",
-        "Avoid logging security events to prevent information disclosure",
-        "Log only successful operations and ignore failed attempts"
-      ],
-      "correctIndex": 0,
-      "explanation": "Effective security logging requires logging events with sufficient context for investigation, implementing real-time alerting for critical events, using centralized log management for correlation and analysis, and maintaining comprehensive audit trails for compliance. The key is balancing information value with performance and storage considerations.",
-      "industryContext": "Compliance frameworks like SOC 2 and ISO 27001 require comprehensive security logging. Companies use Security Information and Event Management (SIEM) systems like Splunk and ELK stack to implement effective logging and monitoring at scale.",
-      "tags": [
-        "logging",
-        "monitoring",
-        "siem",
-        "advanced"
-      ],
-      "estimatedTime": 120,
-      "questionType": "multiple-choice",
-      "correctAnswer": 0
-    },
-    {
-      "id": 60,
-      "question": "What are the key considerations for implementing secure communication protocols?",
-      "topic": "Security",
-      "difficulty": "Intermediate",
-      "choices": [
-        "Use TLS 1.3 with strong cipher suites, implement certificate pinning, validate certificates properly, and enforce HTTPS everywhere",
-        "Use self-signed certificates for all internal communications",
-        "Disable certificate validation to avoid connection errors",
-        "Use outdated SSL protocols for backward compatibility"
-      ],
-      "correctIndex": 0,
-      "explanation": "Secure communication requires TLS 1.3 for the latest security features, strong cipher suites to prevent cryptographic attacks, certificate pinning to prevent man-in-the-middle attacks, proper certificate validation to ensure authenticity, and HTTPS enforcement to protect all communications. These measures work together to create secure communication channels.",
-      "industryContext": "The push for HTTPS everywhere has been led by browser vendors and web standards organizations. Companies like Cloudflare and Let's Encrypt have made secure communication more accessible through free SSL certificates and automated management tools.",
-      "tags": [
-        "tls",
-        "https",
-        "certificates",
-        "intermediate"
-      ],
-      "estimatedTime": 120,
-      "questionType": "multiple-choice",
-      "correctAnswer": 0
-    },
-    {
-      "id": 1,
-      "question": "Which of the following is the most effective method to prevent SQL injection attacks?",
-      "topic": "Security",
-      "choices": [
-        "Using parameterized queries or prepared statements",
-        "Escaping single quotes in user input",
-        "Validating input length",
-        "Using stored procedures"
-      ],
-      "correctIndex": 0,
-      "explanation": "Parameterized queries or prepared statements are the most effective method to prevent SQL injection because they separate the SQL code from the data, ensuring that user input is treated as data rather than executable code. While escaping quotes and input validation help, they can be bypassed by sophisticated attacks.",
-      "correctAnswer": 0,
-      "difficulty": "Beginner"
-    },
-    {
-      "id": 2,
-      "question": "What is the primary purpose of salting passwords before hashing?",
-      "topic": "Security",
-      "choices": [
-        "To prevent rainbow table attacks",
-        "To make passwords longer",
-        "To encrypt the password",
-        "To compress the password"
-      ],
-      "correctIndex": 0,
-      "explanation": "Salting passwords adds a unique random value to each password before hashing, which prevents rainbow table attacks. Rainbow tables are precomputed tables of hash values for common passwords, but when a unique salt is added to each password, the resulting hash is unique even for identical passwords.",
-      "correctAnswer": 0,
-      "difficulty": "Beginner"
-    },
-    {
-      "id": 3,
-      "question": "Which HTTP security header prevents clickjacking attacks?",
-      "topic": "Security",
-      "choices": [
-        "X-Frame-Options",
-        "X-XSS-Protection",
-        "X-Content-Type-Options",
-        "Strict-Transport-Security"
-      ],
-      "correctIndex": 0,
-      "explanation": "X-Frame-Options header prevents clickjacking by controlling whether a page can be displayed in a frame, iframe, or object. Setting it to 'DENY' or 'SAMEORIGIN' prevents other sites from embedding your page in a frame, which is how clickjacking attacks typically work.",
-      "correctAnswer": 0,
-      "difficulty": "Beginner"
-    },
-    {
-      "id": 4,
-      "question": "What is the main difference between authentication and authorization?",
-      "topic": "Security",
-      "choices": [
-        "Authentication verifies identity, authorization determines permissions",
-        "Authentication is for users, authorization is for admins",
-        "Authentication uses passwords, authorization uses tokens",
-        "Authentication is client-side, authorization is server-side"
-      ],
-      "correctIndex": 0,
-      "explanation": "Authentication is the process of verifying who a user is (typically through credentials like username/password), while authorization is the process of determining what resources or actions an authenticated user is permitted to access or perform.",
-      "correctAnswer": 0,
-      "difficulty": "Beginner"
-    },
-    {
-      "id": 5,
-      "question": "Which of the following is NOT one of the OWASP Top 10 security risks?",
-      "topic": "Security",
-      "choices": [
-        "Cross-Site Scripting (XSS)",
-        "SQL Injection",
-        "Buffer Overflow",
-        "Broken Access Control"
-      ],
-      "correctIndex": 2,
-      "explanation": "Buffer Overflow is a low-level programming vulnerability that is more common in languages like C/C++, but it's not typically listed in the OWASP Top 10, which focuses on web application security risks. Cross-Site Scripting, SQL Injection, and Broken Access Control are all part of the OWASP Top 10.",
-      "correctAnswer": 2,
-      "difficulty": "Beginner"
-    },
-    {
-      "id": 6,
-      "question": "What is the recommended approach for handling failed login attempts?",
-      "topic": "Security",
-      "choices": [
-        "Implement account lockout with exponential backoff",
-        "Immediately lock the account permanently",
-        "Allow unlimited attempts without restrictions",
-        "Show detailed error messages about why login failed"
-      ],
-      "correctIndex": 0,
-      "explanation": "Implementing account lockout with exponential backoff (increasing delays between attempts) is the recommended approach. It prevents brute force attacks while avoiding denial of service through permanent lockouts. Detailed error messages should be avoided as they can help attackers.",
-      "correctAnswer": 0,
-      "difficulty": "Beginner"
-    },
-    {
-      "id": 7,
-      "question": "Which Content Security Policy (CSP) directive controls which scripts can be executed?",
-      "topic": "Security",
-      "choices": [
-        "script-src",
-        "default-src",
-        "object-src",
-        "frame-src"
-      ],
-      "correctIndex": 0,
-      "explanation": "The script-src directive in Content Security Policy specifically controls which sources are allowed to execute JavaScript. This helps prevent XSS attacks by restricting where scripts can be loaded from and what types of scripts can be executed.",
-      "correctAnswer": 0,
-      "difficulty": "Beginner"
-    },
-    {
-      "id": 8,
-      "question": "What is the primary purpose of using HTTPS instead of HTTP?",
-      "topic": "Security",
-      "choices": [
-        "To encrypt data in transit between client and server",
-        "To make websites load faster",
-        "To improve search engine rankings",
-        "To reduce server load"
-      ],
-      "correctIndex": 0,
-      "explanation": "HTTPS (HTTP Secure) encrypts data in transit between the client and server using TLS/SSL encryption. This prevents eavesdropping, tampering, and man-in-the-middle attacks. While HTTPS can have SEO benefits, its primary purpose is security.",
-      "correctAnswer": 0,
-      "difficulty": "Beginner"
-    },
-    {
-      "id": 9,
-      "question": "Which type of attack is prevented by validating file uploads for both extension and content?",
-      "topic": "Security",
-      "choices": [
-        "Malicious file upload attacks",
-        "SQL injection",
-        "Cross-site scripting",
-        "Session fixation"
-      ],
-      "correctIndex": 0,
-      "explanation": "Validating both file extensions and content prevents malicious file upload attacks where attackers try to upload executable files (like PHP scripts) disguised with innocent extensions (.jpg) or upload files that contain malicious code that could be executed by the server.",
-      "correctAnswer": 0,
-      "difficulty": "Beginner"
-    },
-    {
-      "id": 10,
-      "question": "What is the purpose of the 'Secure' flag on cookies?",
-      "topic": "Security",
-      "choices": [
-        "Ensures cookies are only sent over HTTPS connections",
-        "Encrypts the cookie content",
-        "Prevents JavaScript access to cookies",
-        "Makes cookies expire faster"
-      ],
-      "correctIndex": 0,
-      "explanation": "The 'Secure' flag on cookies ensures they are only transmitted over HTTPS connections, preventing them from being sent over unencrypted HTTP connections where they could be intercepted. This is crucial for protecting sensitive session tokens and other authentication data.",
-      "correctAnswer": 0,
-      "difficulty": "Beginner"
-    },
-    {
-      "id": 11,
-      "question": "Which of the following is the most secure method for storing session data?",
-      "topic": "Security",
-      "choices": [
-        "Server-side storage with session IDs in cookies",
-        "Storing all session data in client-side cookies",
-        "URL parameters",
-        "Hidden form fields"
-      ],
-      "correctIndex": 0,
-      "explanation": "Server-side storage with session IDs in cookies is the most secure method. It keeps sensitive session data on the server where it can't be tampered with, while only sending a session identifier to the client. Client-side storage exposes data to the user, and URL parameters can be logged or shared.",
-      "correctAnswer": 0,
-      "difficulty": "Beginner"
-    },
-    {
-      "id": 12,
-      "question": "What does the principle of least privilege entail?",
-      "topic": "Security",
-      "choices": [
-        "Users and processes should have only the minimum permissions necessary",
-        "Users should have access to all system resources",
-        "Administrators should have limited access",
-        "Permissions should be granted based on seniority"
-      ],
-      "correctIndex": 0,
-      "explanation": "The principle of least privilege states that users, processes, and systems should only have the minimum permissions necessary to perform their required functions. This minimizes the potential damage from security breaches or accidental actions.",
-      "correctAnswer": 0,
-      "difficulty": "Beginner"
-    },
-    {
-      "id": 13,
-      "question": "Which method is most effective for preventing Cross-Site Request Forgery (CSRF) attacks?",
-      "topic": "Security",
-      "choices": [
-        "Using anti-CSRF tokens",
-        "Validating the Referer header",
-        "Checking the User-Agent header",
-        "Requiring HTTPS"
-      ],
-      "correctIndex": 0,
-      "explanation": "Anti-CSRF tokens are the most effective method for preventing CSRF attacks. They are unique, unpredictable values generated by the server and sent to the client, then required with each state-changing request. Header validation can be bypassed, and HTTPS doesn't prevent CSRF.",
-      "correctAnswer": 0,
-      "difficulty": "Beginner"
-    },
-    {
-      "id": 14,
-      "question": "What is the primary benefit of using bcrypt over MD5 for password hashing?",
-      "topic": "Security",
-      "choices": [
-        "bcrypt is intentionally slow and resistant to brute force attacks",
-        "bcrypt produces shorter hash values",
-        "bcrypt is faster to compute",
-        "bcrypt doesn't require a salt"
-      ],
-      "correctIndex": 0,
-      "explanation": "bcrypt is intentionally designed to be slow and computationally expensive, making brute force attacks much more difficult. It also automatically handles salting. MD5 is fast but cryptographically broken, making it unsuitable for password hashing.",
-      "correctAnswer": 0,
-      "difficulty": "Beginner"
-    },
-    {
-      "id": 15,
-      "question": "Which security measure helps prevent directory traversal attacks?",
-      "topic": "Security",
-      "choices": [
-        "Validating and sanitizing file paths",
-        "Using HTTPS",
-        "Implementing CSRF tokens",
-        "Setting cookie expiration dates"
-      ],
-      "correctIndex": 0,
-      "explanation": "Validating and sanitizing file paths prevents directory traversal attacks (like ../../etc/passwd) by ensuring that file access is restricted to intended directories. This involves checking for dangerous path sequences and resolving paths to ensure they're within allowed boundaries.",
-      "correctAnswer": 0,
-      "difficulty": "Beginner"
-    },
-    {
-      "id": 16,
-      "question": "What is the purpose of input validation in security?",
-      "topic": "Security",
-      "choices": [
-        "To prevent injection attacks and ensure data integrity",
-        "To improve user interface design",
-        "To increase database performance",
-        "To reduce network bandwidth usage"
-      ],
-      "correctIndex": 0,
-      "explanation": "Input validation is a fundamental security practice that prevents injection attacks (SQL, XSS, command injection) by ensuring that user-supplied data conforms to expected formats and types. It also helps maintain data integrity in the application.",
-      "correctAnswer": 0,
-      "difficulty": "Beginner"
-    },
-    {
-      "id": 17,
-      "question": "Which security header prevents MIME type sniffing?",
-      "topic": "Security",
-      "choices": [
-        "X-Content-Type-Options: nosniff",
-        "X-Frame-Options: DENY",
-        "X-XSS-Protection: 1",
-        "Strict-Transport-Security"
-      ],
-      "correctIndex": 0,
-      "explanation": "X-Content-Type-Options: nosniff prevents browsers from MIME-sniffing a response away from the declared content type. This helps prevent certain types of attacks where a file with one extension is interpreted as a different content type by the browser.",
-      "correctAnswer": 0,
-      "difficulty": "Beginner"
-    },
-    {
-      "id": 18,
-      "question": "What is the recommended approach for handling sensitive data in logs?",
-      "topic": "Security",
-      "choices": [
-        "Never log sensitive data like passwords or credit card numbers",
-        "Encrypt all log files",
-        "Log everything for debugging purposes",
-        "Store logs in a public location"
-      ],
-      "correctIndex": 0,
-      "explanation": "Sensitive data should never be logged, regardless of encryption or storage location. This includes passwords, credit card numbers, social security numbers, and other personally identifiable information. Even encrypted logs can be compromised, and logging sensitive data creates unnecessary risk.",
-      "correctAnswer": 0,
-      "difficulty": "Beginner"
-    },
-    {
-      "id": 19,
-      "question": "Which of the following is a characteristic of a secure JWT (JSON Web Token)?",
-      "topic": "Security",
-      "choices": [
-        "Signed with a strong secret and has a short expiration time",
-        "Contains the user's password for verification",
-        "Never expires for user convenience",
-        "Stored in localStorage without additional security measures"
-      ],
-      "correctIndex": 0,
-      "explanation": "Secure JWTs should be signed with a strong secret (or use asymmetric cryptography) and have short expiration times to limit the window of opportunity for attackers. They should never contain passwords, should expire reasonably quickly, and should be stored securely (HttpOnly, Secure cookies are preferred over localStorage).",
-      "correctAnswer": 0,
-      "difficulty": "Beginner"
-    },
-    {
-      "id": 20,
-      "question": "What is the primary defense against Cross-Site Scripting (XSS) attacks?",
-      "topic": "Security",
-      "choices": [
-        "Output encoding and input validation",
-        "Using HTTPS",
-        "Implementing CSRF tokens",
-        "Setting cookie expiration dates"
-      ],
-      "correctIndex": 0,
-      "explanation": "The primary defense against XSS attacks is proper output encoding (escaping) combined with input validation. This ensures that user-supplied data is treated as data rather than executable code when rendered in web pages. While HTTPS and CSRF tokens are important for other security aspects, they don't prevent XSS.",
-      "correctAnswer": 0,
-      "difficulty": "Beginner"
-    },
-    {
-      "id": 21,
-      "question": "Which of the following is NOT a recommended practice for API security?",
-      "topic": "Security",
-      "choices": [
-        "Using the same authentication method for all endpoints",
-        "Implementing rate limiting",
-        "Using HTTPS for all API communications",
-        "Validating and sanitizing all input"
-      ],
-      "correctIndex": 0,
-      "explanation": "Using the same authentication method for all endpoints is not recommended because different endpoints may require different levels of security. For example, a public endpoint might use API keys while an administrative endpoint might require OAuth 2.0. Rate limiting, HTTPS, and input validation are all recommended API security practices.",
-      "correctAnswer": 0,
-      "difficulty": "Beginner"
-    },
-    {
-      "id": 22,
-      "question": "What is the purpose of a Security Token Service (STS)?",
-      "topic": "Security",
-      "choices": [
-        "To issue, validate, and revoke security tokens",
-        "To store user passwords securely",
-        "To encrypt database connections",
-        "To monitor network traffic for attacks"
-      ],
-      "correctIndex": 0,
-      "explanation": "A Security Token Service (STS) is responsible for issuing, validating, and revoking security tokens such as SAML tokens, JWTs, and OAuth tokens. It acts as a trusted authority that can authenticate users and provide tokens that other services can trust.",
-      "correctAnswer": 0,
-      "difficulty": "Beginner"
-    },
-    {
-      "id": 23,
-      "question": "Which encryption method should be used for encrypting data at rest?",
-      "topic": "Security",
-      "choices": [
-        "AES-256",
-        "Base64",
-        "MD5",
-        "SHA-256"
-      ],
-      "correctIndex": 0,
-      "explanation": "AES-256 is a strong symmetric encryption algorithm suitable for encrypting data at rest. Base64 is encoding, not encryption. MD5 and SHA-256 are hashing algorithms, not encryption algorithms. AES-256 provides strong security for data storage when properly implemented.",
-      "correctAnswer": 0,
-      "difficulty": "Beginner"
-    },
-    {
-      "id": 24,
-      "question": "What is the main purpose of a Web Application Firewall (WAF)?",
-      "topic": "Security",
-      "choices": [
-        "To filter and monitor HTTP traffic between a web application and the Internet",
-        "To encrypt data transmission",
-        "To authenticate users",
-        "To manage database connections"
-      ],
-      "correctIndex": 0,
-      "explanation": "A Web Application Firewall (WAF) filters and monitors HTTP traffic between a web application and the Internet. It helps protect web applications by inspecting incoming traffic for common web exploits like SQL injection, XSS, and other OWASP Top 10 vulnerabilities.",
-      "correctAnswer": 0,
-      "difficulty": "Beginner"
-    },
-    {
-      "id": 25,
-      "question": "Which of the following is a characteristic of OAuth 2.0?",
-      "topic": "Security",
-      "choices": [
-        "It is an authorization framework",
-        "It handles user authentication",
-        "It encrypts data transmission",
-        "It manages session storage"
-      ],
-      "correctIndex": 0,
-      "explanation": "OAuth 2.0 is an authorization framework that allows third-party applications to obtain limited access to an HTTP service on behalf of a resource owner. It is not an authentication protocol, though it is often used in conjunction with authentication systems like OpenID Connect.",
-      "correctAnswer": 0,
-      "difficulty": "Beginner"
-    },
-    {
-      "id": 26,
-      "question": "What is the primary benefit of using multi-factor authentication (MFA)?",
-      "topic": "Security",
-      "choices": [
-        "It adds additional layers of security beyond just passwords",
-        "It makes passwords longer",
-        "It encrypts user data",
-        "It speeds up the login process"
-      ],
-      "correctIndex": 0,
-      "explanation": "Multi-factor authentication (MFA) adds additional layers of security beyond just passwords by requiring users to provide two or more different types of authentication factors (something you know, something you have, something you are). This significantly reduces the risk of unauthorized access even if one factor is compromised.",
-      "correctAnswer": 0,
-      "difficulty": "Beginner"
-    },
-    {
-      "id": 27,
-      "question": "Which security principle is violated when a system continues to operate in an insecure state?",
-      "topic": "Security",
-      "choices": [
-        "Fail securely",
-        "Principle of least privilege",
-        "Defense in depth",
-        "Separation of duties"
-      ],
-      "correctIndex": 0,
-      "explanation": "The 'fail securely' principle states that systems should default to a secure state when they encounter an error or failure. When a system continues to operate in an insecure state after a failure, it violates this principle and can expose vulnerabilities that attackers can exploit.",
-      "correctAnswer": 0,
-      "difficulty": "Beginner"
-    },
-    {
-      "id": 28,
-      "question": "What is the main purpose of a Security Information and Event Management (SIEM) system?",
-      "topic": "Security",
-      "choices": [
-        "To collect, analyze, and correlate security events from multiple sources",
-        "To encrypt network traffic",
-        "To authenticate users",
-        "To manage firewall rules"
-      ],
-      "correctIndex": 0,
-      "explanation": "A Security Information and Event Management (SIEM) system collects, analyzes, and correlates security events from multiple sources such as network devices, servers, and applications. It helps security teams detect and respond to security threats by providing real-time analysis of security alerts.",
-      "correctAnswer": 0,
-      "difficulty": "Beginner"
-    },
-    {
-      "id": 29,
-      "question": "Which of the following is the most effective way to protect against man-in-the-middle (MITM) attacks?",
-      "topic": "Security",
-      "choices": [
-        "Using HTTPS with valid certificates",
-        "Changing passwords frequently",
-        "Using longer passwords",
-        "Disabling JavaScript"
-      ],
-      "correctIndex": 0,
-      "explanation": "Using HTTPS with valid certificates is the most effective way to protect against man-in-the-middle (MITM) attacks. HTTPS encrypts the communication between the client and server, making it extremely difficult for attackers to intercept and modify the data in transit. Certificate validation ensures the client is communicating with the legitimate server.",
-      "correctAnswer": 0,
-      "difficulty": "Beginner"
-    },
-    {
-      "id": 30,
-      "question": "What is the purpose of a honeypot in cybersecurity?",
-      "topic": "Security",
-      "choices": [
-        "To detect and study attempts to compromise systems",
-        "To encrypt sensitive data",
-        "To authenticate users",
-        "To speed up network performance"
-      ],
-      "correctIndex": 0,
-      "explanation": "A honeypot is a security mechanism designed to detect and study attempts to compromise systems. It appears to be a legitimate part of the network but is actually isolated and monitored. When attackers interact with a honeypot, security teams can study their techniques and gather intelligence about potential threats.",
-      "correctAnswer": 0,
-      "difficulty": "Beginner"
-    },
-    {
-      "id": 31,
-      "question": "Which type of attack involves sending unsolicited messages to a large number of users?",
-      "topic": "Security",
-      "choices": [
-        "Spam",
-        "Phishing",
-        "Spear phishing",
-        "Whaling"
-      ],
-      "correctIndex": 0,
-      "explanation": "Spam refers to unsolicited messages, typically sent in bulk to a large number of recipients. While phishing, spear phishing, and whaling are all forms of social engineering attacks that attempt to trick users into revealing sensitive information, spam is the broader category of unwanted bulk messaging.",
-      "correctAnswer": 0,
-      "difficulty": "Beginner"
-    },
-    {
-      "id": 32,
-      "question": "What is the main difference between symmetric and asymmetric encryption?",
-      "topic": "Security",
-      "choices": [
-        "Symmetric uses the same key for encryption and decryption, while asymmetric uses a pair of keys",
-        "Symmetric is faster than asymmetric",
-        "Asymmetric is more secure than symmetric",
-        "Symmetric requires a certificate authority"
-      ],
-      "correctIndex": 0,
-      "explanation": "The main difference between symmetric and asymmetric encryption is in key usage. Symmetric encryption uses the same key for both encryption and decryption, while asymmetric encryption uses a pair of keys - a public key for encryption and a private key for decryption. Symmetric encryption is generally faster but requires secure key distribution.",
-      "correctAnswer": 0,
-      "difficulty": "Beginner"
-    },
-    {
-      "id": 33,
-      "question": "Which security control is most effective against social engineering attacks?",
-      "topic": "Security",
-      "choices": [
-        "User awareness training",
-        "Firewalls",
-        "Antivirus software",
-        "Intrusion detection systems"
-      ],
-      "correctIndex": 0,
-      "explanation": "User awareness training is the most effective security control against social engineering attacks. Since social engineering targets human psychology rather than technical vulnerabilities, educating users about common tactics like phishing, pretexting, and baiting is the primary defense. Technical controls can help but are secondary to user education.",
-      "correctAnswer": 0,
-      "difficulty": "Beginner"
-    },
-    {
-      "id": 34,
-      "question": "What is the purpose of a security audit?",
-      "topic": "Security",
-      "choices": [
-        "To systematically evaluate an organization's security posture",
-        "To encrypt sensitive data",
-        "To authenticate users",
-        "To monitor network traffic"
-      ],
-      "correctIndex": 0,
-      "explanation": "A security audit is a systematic evaluation of an organization's security posture, including policies, procedures, technical controls, and compliance with regulations. It helps identify vulnerabilities, assess the effectiveness of existing security measures, and provide recommendations for improvement.",
-      "correctAnswer": 0,
-      "difficulty": "Beginner"
-    },
-    {
-      "id": 35,
-      "question": "Which of the following is a characteristic of a zero-day vulnerability?",
-      "topic": "Security",
-      "choices": [
-        "It is unknown to the software vendor at the time of exploitation",
-        "It affects only web applications",
-        "It can be easily patched",
-        "It requires physical access to exploit"
-      ],
-      "correctIndex": 0,
-      "explanation": "A zero-day vulnerability is a security flaw that is unknown to the software vendor at the time of exploitation. The term 'zero-day' refers to the fact that the vendor has had zero days to prepare a fix or patch. These vulnerabilities are particularly dangerous because there are no existing defenses against them until a patch is developed.",
-      "correctAnswer": 0,
-      "difficulty": "Beginner"
-    },
-    {
-      "id": 36,
-      "question": "What is the primary purpose of penetration testing?",
-      "topic": "Security",
-      "choices": [
-        "To simulate real-world attacks to identify vulnerabilities",
-        "To encrypt data at rest",
-        "To authenticate users",
-        "To monitor network performance"
-      ],
-      "correctIndex": 0,
-      "explanation": "Penetration testing (or pen testing) simulates real-world attacks to identify vulnerabilities in systems, networks, or applications. It is a proactive security measure that helps organizations understand their security weaknesses before malicious attackers can exploit them.",
-      "correctAnswer": 0,
-      "difficulty": "Beginner"
-    },
-    {
-      "id": 37,
-      "question": "Which security principle is applied when implementing multiple layers of defense?",
-      "topic": "Security",
-      "choices": [
-        "Defense in depth",
-        "Principle of least privilege",
-        "Fail securely",
-        "Separation of duties"
-      ],
-      "correctIndex": 0,
-      "explanation": "Defense in depth is the security principle of implementing multiple layers of defense to protect systems and data. Rather than relying on a single security control, this approach uses multiple complementary controls (network firewalls, host firewalls, antivirus, IDS/IPS, etc.) to provide redundancy and reduce the likelihood of a successful attack.",
-      "correctAnswer": 0,
-      "difficulty": "Beginner"
-    },
-    {
-      "id": 38,
-      "question": "What is the main purpose of a Digital Certificate?",
-      "topic": "Security",
-      "choices": [
-        "To verify the identity of a person, organization, or device",
-        "To encrypt user passwords",
-        "To authenticate database connections",
-        "To compress data for transmission"
-      ],
-      "correctIndex": 0,
-      "explanation": "A Digital Certificate is an electronic document that verifies the identity of a person, organization, or device. It contains the entity's public key and is signed by a trusted Certificate Authority (CA). Digital certificates are used in HTTPS, email encryption, code signing, and other security applications.",
-      "correctAnswer": 0,
-      "difficulty": "Beginner"
-    },
-    {
-      "id": 39,
-      "question": "Which of the following is the most effective way to prevent privilege escalation attacks?",
-      "topic": "Security",
-      "choices": [
-        "Implementing the principle of least privilege",
-        "Using longer passwords",
-        "Installing antivirus software",
-        "Enabling automatic updates"
-      ],
-      "correctIndex": 0,
-      "explanation": "Implementing the principle of least privilege is the most effective way to prevent privilege escalation attacks. By ensuring that users and processes have only the minimum permissions necessary to perform their functions, the potential damage from a compromised account or process is significantly reduced.",
-      "correctAnswer": 0,
-      "difficulty": "Beginner"
-    },
-    {
-      "id": 40,
-      "question": "What is the primary purpose of a Security Operations Center (SOC)?",
-      "topic": "Security",
-      "choices": [
-        "To monitor, detect, and respond to security incidents 24/7",
-        "To develop software applications",
-        "To manage database backups",
-        "To optimize network performance"
-      ],
-      "correctIndex": 0,
-      "explanation": "A Security Operations Center (SOC) is a centralized unit that monitors, detects, and responds to security incidents 24/7. It uses various security tools and technologies to analyze security events, investigate potential threats, and coordinate incident response activities to protect an organization's digital assets.",
-      "correctAnswer": 0,
-      "difficulty": "Beginner"
-    }
-  ],
-  "metadata": {
-    "difficulty": "Advanced",
-    "estimatedTime": "30 minutes",
-    "topics": [
-      "Security",
-      "Authentication",
-      "Authorization"
+[
+  {
+    "id": 1,
+    "question": "What are the performance considerations when implementing authentication systems?",
+    "topic": "Authentication",
+    "difficulty": "Intermediate",
+    "choices": [
+      "Use efficient hashing algorithms like bcrypt with appropriate cost factors and implement session caching",
+      "Always use the highest security settings regardless of performance impact",
+      "Avoid authentication altogether to improve performance",
+      "Use simple hashing algorithms like MD5 for faster processing"
     ],
-    "lastUpdated": "2025-10-01T06:42:16.318Z",
-    "version": "1.0.0"
+    "explanation": "Balancing security and performance in authentication systems requires using efficient but secure hashing algorithms like bcrypt with appropriate cost factors. Session caching can significantly improve performance by reducing database lookups. The key is finding the right balance between security and user experience.",
+    "industryContext": "Major tech companies like Google and Facebook invest heavily in optimizing their authentication systems to handle billions of requests while maintaining security. Properly configured bcrypt with session caching can handle thousands of authentication requests per second.",
+    "tags": [
+      "authentication",
+      "performance",
+      "intermediate"
+    ],
+    "estimatedTime": 90,
+    "questionType": "multiple-choice",
+    "correctAnswer": 0,
+    "type": "multiple-choice",
+    "sources": []
+  },
+  {
+    "id": 2,
+    "question": "How do you troubleshoot complex authorization issues in a microservices architecture?",
+    "topic": "Authorization",
+    "difficulty": "Advanced",
+    "choices": [
+      "Implement distributed tracing, centralized logging, and use consistent authorization policies across services",
+      "Debug each service independently without considering interactions",
+      "Remove authorization checks temporarily to isolate the issue",
+      "Use a monolithic approach instead of microservices"
+    ],
+    "explanation": "Troubleshooting authorization in microservices requires a systematic approach with distributed tracing to follow requests across services, centralized logging for correlation, and consistent authorization policies. Tools like Jaeger or Zipkin can help trace requests, while centralized logging solutions like ELK stack help correlate events.",
+    "industryContext": "Companies like Netflix and Uber have developed sophisticated approaches to debugging authorization issues in their microservices architectures. Distributed tracing has become essential for understanding complex service interactions.",
+    "tags": [
+      "authorization",
+      "microservices",
+      "troubleshooting",
+      "advanced"
+    ],
+    "estimatedTime": 120,
+    "questionType": "multiple-choice",
+    "correctAnswer": 0,
+    "type": "multiple-choice",
+    "sources": []
+  },
+  {
+    "id": 3,
+    "question": "How would you optimize security implementations for large-scale applications with millions of users?",
+    "topic": "Security",
+    "difficulty": "Advanced",
+    "choices": [
+      "Implement layered security with CDN protection, rate limiting, caching security decisions, and horizontal scaling",
+      "Use a single security approach for all parts of the application",
+      "Focus only on perimeter security and ignore internal threats",
+      "Remove security measures to improve performance"
+    ],
+    "explanation": "Large-scale security optimization requires a layered approach including CDN protection for DDoS mitigation, rate limiting to prevent abuse, caching security decisions to reduce latency, and horizontal scaling to handle load. Each layer addresses different types of threats while maintaining performance.",
+    "industryContext": "Major platforms like Twitter and Instagram handle security for hundreds of millions of users by implementing multi-layered security architectures. They use techniques like edge security, distributed rate limiting, and intelligent caching to maintain both security and performance.",
+    "tags": [
+      "scalability",
+      "security-architecture",
+      "optimization",
+      "advanced"
+    ],
+    "estimatedTime": 120,
+    "questionType": "multiple-choice",
+    "correctAnswer": 0,
+    "type": "multiple-choice",
+    "sources": []
+  },
+  {
+    "id": 4,
+    "question": "Your web application stores user passwords. Which approach provides the BEST security?",
+    "topic": "Authentication",
+    "difficulty": "Beginner",
+    "choices": [
+      "Hash passwords using bcrypt with a salt and appropriate work factor",
+      "Encrypt passwords using AES-256 with a secret key",
+      "Store passwords in plain text but use HTTPS for transmission",
+      "Use MD5 hashing for fast password verification"
+    ],
+    "explanation": "bcrypt with salt and appropriate work factor (cost parameter) is the gold standard for password storage. It's designed to be slow and resistant to rainbow table attacks. AES encryption is reversible (not suitable for passwords), plain text is never acceptable, and MD5 is cryptographically broken and too fast for password hashing.",
+    "industryContext": "Password security breaches are among the most common and damaging security incidents. Proper password hashing is a fundamental requirement for any application handling user credentials.",
+    "tags": [
+      "authentication",
+      "password-security",
+      "beginner"
+    ],
+    "estimatedTime": 90,
+    "questionType": "multiple-choice",
+    "correctAnswer": 0,
+    "type": "multiple-choice",
+    "sources": []
+  },
+  {
+    "id": 5,
+    "question": "A security audit reveals that your API is vulnerable to SQL injection attacks. You need to fix this immediately. What's the MOST effective solution?",
+    "topic": "Authorization",
+    "difficulty": "Advanced",
+    "choices": [
+      "Replace all SQL queries with parameterized queries/prepared statements",
+      "Add input validation to reject special characters like quotes",
+      "Implement rate limiting to slow down potential attacks",
+      "Use stored procedures exclusively for all database operations"
+    ],
+    "explanation": "Parameterized queries (prepared statements) completely separate SQL code from user data, making SQL injection impossible regardless of input content. Input validation can be bypassed, rate limiting doesn't prevent the vulnerability, and while stored procedures can help, they don't automatically prevent SQL injection if used incorrectly.",
+    "industryContext": "SQL injection consistently ranks as one of the top web application security risks (OWASP Top 10). A single SQL injection vulnerability can lead to complete database compromise, making this knowledge critical for any developer working with databases.",
+    "tags": [
+      "sql-injection",
+      "database-security",
+      "advanced"
+    ],
+    "estimatedTime": 120,
+    "questionType": "multiple-choice",
+    "correctAnswer": 0,
+    "type": "multiple-choice",
+    "sources": []
+  },
+  {
+    "id": 6,
+    "question": "Your e-commerce application handles credit card payments. Which security implementation approach is MOST critical for PCI DSS compliance?",
+    "topic": "Security",
+    "difficulty": "Intermediate",
+    "choices": [
+      "Use a certified payment processor (like Stripe/PayPal) and never store card data",
+      "Encrypt all card data with AES-256 and store it securely",
+      "Hash credit card numbers using bcrypt before storing",
+      "Store card data in a separate database with limited access"
+    ],
+    "explanation": "The safest and most compliant approach is to never store sensitive card data yourself. Use certified payment processors that handle PCI DSS compliance. This reduces your compliance scope from Level 1 (most stringent) to Level 4 (least stringent) and eliminates the risk of card data breaches from your systems.",
+    "industryContext": "PCI DSS compliance is legally required for businesses processing credit cards. Non-compliance can result in fines up to $500,000 per incident, plus liability for fraud losses. Using certified processors is the industry standard approach.",
+    "tags": [
+      "pci-dss",
+      "payment-security",
+      "intermediate"
+    ],
+    "estimatedTime": 120,
+    "questionType": "multiple-choice",
+    "correctAnswer": 0,
+    "type": "multiple-choice",
+    "sources": []
+  },
+  {
+    "id": 7,
+    "question": "Which security practices are essential for protecting user data in modern web applications?",
+    "topic": "Authentication",
+    "difficulty": "Beginner",
+    "choices": [
+      "Implement multi-factor authentication, use secure password hashing, and enforce strong password policies",
+      "Store passwords in plain text for easier recovery",
+      "Use the same password for all user accounts",
+      "Disable password complexity requirements for user convenience"
+    ],
+    "explanation": "Essential security practices for user data protection include multi-factor authentication for additional security layers, secure password hashing using algorithms like bcrypt or Argon2, and strong password policies that enforce complexity and regular updates. These practices work together to create robust protection.",
+    "industryContext": "Regulatory requirements like GDPR and CCPA mandate strong data protection practices. Companies that fail to implement proper security measures face significant fines and reputation damage. Multi-factor authentication has become a standard requirement for most online services.",
+    "tags": [
+      "data-protection",
+      "authentication",
+      "best-practices",
+      "beginner"
+    ],
+    "estimatedTime": 90,
+    "questionType": "multiple-choice",
+    "correctAnswer": 0,
+    "type": "multiple-choice",
+    "sources": []
+  },
+  {
+    "id": 8,
+    "question": "What strategies are effective for troubleshooting complex security vulnerabilities?",
+    "topic": "Authorization",
+    "difficulty": "Advanced",
+    "choices": [
+      "Use systematic penetration testing, code review, threat modeling, and security monitoring tools",
+      "Ignore the vulnerability if it doesn't cause immediate issues",
+      "Apply quick fixes without understanding the root cause",
+      "Blame third-party libraries for all security issues"
+    ],
+    "explanation": "Effective security troubleshooting requires a systematic approach including penetration testing to identify vulnerabilities, code review to find implementation flaws, threat modeling to understand potential attack vectors, and security monitoring tools to detect ongoing threats. This comprehensive approach ensures thorough vulnerability identification and remediation.",
+    "industryContext": "Professional security teams use structured approaches like the NIST Cybersecurity Framework and OWASP Testing Guide. Bug bounty programs have become popular for crowdsourcing vulnerability discovery, with companies like Google and Facebook paying millions in rewards.",
+    "tags": [
+      "vulnerability-assessment",
+      "troubleshooting",
+      "penetration-testing",
+      "advanced"
+    ],
+    "estimatedTime": 120,
+    "questionType": "multiple-choice",
+    "correctAnswer": 0,
+    "type": "multiple-choice",
+    "sources": []
+  },
+  {
+    "id": 9,
+    "question": "How do you implement comprehensive security measures in a production environment?",
+    "topic": "Security",
+    "difficulty": "Intermediate",
+    "choices": [
+      "Deploy web application firewalls, implement security headers, use secure deployment pipelines, and continuous monitoring",
+      "Focus only on perimeter security and ignore internal application security",
+      "Disable security measures during deployment for convenience",
+      "Use default configurations for all security tools"
+    ],
+    "explanation": "Comprehensive production security implementation includes web application firewalls for filtering malicious traffic, security headers to prevent common attacks, secure deployment pipelines with automated security checks, and continuous monitoring for threat detection. Each component addresses different aspects of the security landscape.",
+    "industryContext": "DevSecOps practices have emerged to integrate security into the entire development lifecycle. Companies like Microsoft and Amazon have embedded security checks throughout their deployment pipelines, reducing vulnerabilities by over 70%.",
+    "tags": [
+      "production-security",
+      "devsecops",
+      "implementation",
+      "intermediate"
+    ],
+    "estimatedTime": 120,
+    "questionType": "multiple-choice",
+    "correctAnswer": 0,
+    "type": "multiple-choice",
+    "sources": []
+  },
+  {
+    "id": 10,
+    "question": "What are the key principles of secure coding practices?",
+    "topic": "Security",
+    "difficulty": "Beginner",
+    "choices": [
+      "Validate all inputs, sanitize outputs, implement proper error handling, and follow security best practices",
+      "Trust all user inputs since they come from your application",
+      "Ignore security warnings from static analysis tools",
+      "Use complex code to make it harder for attackers to understand"
+    ],
+    "explanation": "Secure coding principles include input validation to prevent injection attacks, output sanitization to prevent XSS, proper error handling to avoid information disclosure, and following established security best practices. These principles form the foundation of defensive programming.",
+    "industryContext": "The OWASP Secure Coding Practices guide is widely adopted across the industry. Companies that implement secure coding practices see 60-80% fewer security vulnerabilities in their applications compared to those that don't.",
+    "tags": [
+      "secure-coding",
+      "best-practices",
+      "input-validation",
+      "beginner"
+    ],
+    "estimatedTime": 90,
+    "questionType": "multiple-choice",
+    "correctAnswer": 0,
+    "type": "multiple-choice",
+    "sources": []
+  },
+  {
+    "id": 11,
+    "question": "Which pattern is most effective for implementing secure authentication architecture?",
+    "topic": "Authentication",
+    "difficulty": "Intermediate",
+    "choices": [
+      "OAuth 2.0 with JWT tokens, secure session management, and multi-factor authentication",
+      "Storing passwords in plain text with basic HTTP authentication",
+      "Using the same session token for all users",
+      "Disabling authentication for internal APIs"
+    ],
+    "explanation": "Effective authentication architecture uses OAuth 2.0 for standardized authorization flows, JWT tokens for stateless authentication, secure session management with proper timeouts and rotation, and multi-factor authentication for additional security. This pattern provides both security and scalability.",
+    "industryContext": "Major identity providers like Auth0, Okta, and Google Identity Platform use OAuth 2.0 and JWT as industry standards. The shift toward zero-trust security models has made robust authentication architecture even more critical.",
+    "tags": [
+      "authentication",
+      "oauth",
+      "jwt",
+      "intermediate"
+    ],
+    "estimatedTime": 120,
+    "questionType": "multiple-choice",
+    "correctAnswer": 0,
+    "type": "multiple-choice",
+    "sources": []
+  },
+  {
+    "id": 12,
+    "question": "How would you optimize security controls for high-performance applications?",
+    "topic": "Security",
+    "difficulty": "Advanced",
+    "choices": [
+      "Use hardware security modules, implement caching for authorization decisions, and optimize cryptographic operations",
+      "Remove all security controls to maximize performance",
+      "Use the slowest but most secure algorithms for all operations",
+      "Apply security controls only to visible application features"
+    ],
+    "explanation": "High-performance security optimization involves hardware security modules for accelerated cryptographic operations, caching authorization decisions to reduce latency, and optimizing cryptographic operations through algorithm selection and implementation tuning. The goal is maintaining security without sacrificing performance.",
+    "industryContext": "Financial institutions like banks and payment processors handle millions of transactions per second while maintaining strict security requirements. They use specialized hardware and sophisticated caching strategies to achieve both performance and security.",
+    "tags": [
+      "performance",
+      "optimization",
+      "cryptography",
+      "advanced"
+    ],
+    "estimatedTime": 120,
+    "questionType": "multiple-choice",
+    "correctAnswer": 0,
+    "type": "multiple-choice",
+    "sources": []
+  },
+  {
+    "id": 13,
+    "question": "What are the security considerations when using modern authentication protocols?",
+    "topic": "Authentication",
+    "difficulty": "Intermediate",
+    "choices": [
+      "Implement proper token validation, use secure storage, enforce token expiration, and protect against replay attacks",
+      "Store tokens in plain text local storage indefinitely",
+      "Use the same token for all authentication contexts",
+      "Disable token validation to improve application speed"
+    ],
+    "explanation": "Modern authentication protocols require proper token validation to ensure authenticity, secure storage to prevent theft, token expiration to limit exposure windows, and protection against replay attacks through mechanisms like nonces or timestamps. These measures work together to create robust authentication security.",
+    "industryContext": "The shift from session-based to token-based authentication has created new security challenges. Companies like GitHub and Slack have implemented sophisticated token management systems to handle these considerations at scale.",
+    "tags": [
+      "authentication",
+      "tokens",
+      "protocols",
+      "intermediate"
+    ],
+    "estimatedTime": 120,
+    "questionType": "multiple-choice",
+    "correctAnswer": 0,
+    "type": "multiple-choice",
+    "sources": []
+  },
+  {
+    "id": 14,
+    "question": "How do you implement effective input validation to prevent injection attacks?",
+    "topic": "Security",
+    "difficulty": "Intermediate",
+    "choices": [
+      "Use whitelist validation, parameterized queries, output encoding, and comprehensive validation libraries",
+      "Trust all user input since it comes from your own application",
+      "Use blacklist validation to block known malicious patterns",
+      "Apply validation only to visible form fields"
+    ],
+    "explanation": "Effective input validation uses whitelist validation to allow only known good values, parameterized queries to prevent SQL injection, output encoding to prevent XSS, and comprehensive validation libraries to handle various data types. This multi-layered approach provides robust protection against injection attacks.",
+    "industryContext": "Injection attacks consistently rank in the OWASP Top 10 security risks. Companies that implement comprehensive input validation see dramatic reductions in security incidents. The use of validation libraries like OWASP ESAPI has become standard practice.",
+    "tags": [
+      "input-validation",
+      "injection-prevention",
+      "security-controls",
+      "intermediate"
+    ],
+    "estimatedTime": 120,
+    "questionType": "multiple-choice",
+    "correctAnswer": 0,
+    "type": "multiple-choice",
+    "sources": []
+  },
+  {
+    "id": 15,
+    "question": "Which security implementation provides the best protection for sensitive data at rest?",
+    "topic": "Security",
+    "difficulty": "Advanced",
+    "choices": [
+      "AES-256 encryption with proper key management, secure key storage, and field-level encryption for highly sensitive data",
+      "Base64 encoding to obscure data from casual observers",
+      "Storing all data in plain text for easier debugging",
+      "Using the same encryption key for all data"
+    ],
+    "explanation": "Best practices for data at rest protection include AES-256 encryption as the industry standard, proper key management with rotation and secure storage, and field-level encryption for highly sensitive data like passwords and personal information. This approach provides strong protection while maintaining performance.",
+    "industryContext": "Data breach regulations like GDPR and CCPA require strong data protection measures. Companies that implement proper encryption see significantly reduced impact from data breaches, with some avoiding notification requirements entirely due to encryption.",
+    "tags": [
+      "data-encryption",
+      "key-management",
+      "data-protection",
+      "advanced"
+    ],
+    "estimatedTime": 120,
+    "questionType": "multiple-choice",
+    "correctAnswer": 0,
+    "type": "multiple-choice",
+    "sources": []
+  },
+  {
+    "id": 16,
+    "question": "What are the trade-offs between different security monitoring approaches?",
+    "topic": "Security",
+    "difficulty": "Advanced",
+    "choices": [
+      "Real-time monitoring provides immediate threat detection but requires more resources; batch processing is resource-efficient but has detection delays",
+      "More monitoring is always better regardless of resource costs",
+      "Security monitoring is unnecessary for well-designed applications",
+      "Simple log files are sufficient for all security monitoring needs"
+    ],
+    "explanation": "Security monitoring trade-offs include real-time monitoring for immediate threat detection but higher resource consumption, versus batch processing for resource efficiency but delayed detection. The optimal approach balances detection speed with resource constraints based on threat models and compliance requirements.",
+    "industryContext": "Security Information and Event Management (SIEM) systems have evolved to handle these trade-offs. Companies like Splunk and IBM QRadar provide sophisticated monitoring solutions that balance real-time detection with resource efficiency.",
+    "tags": [
+      "security-monitoring",
+      "trade-offs",
+      "siem",
+      "advanced"
+    ],
+    "estimatedTime": 120,
+    "questionType": "multiple-choice",
+    "correctAnswer": 0,
+    "type": "multiple-choice",
+    "sources": []
+  },
+  {
+    "id": 17,
+    "question": "How do you implement secure session management in distributed applications?",
+    "topic": "Authentication",
+    "difficulty": "Intermediate",
+    "choices": [
+      "Use centralized session stores, implement proper session invalidation, set secure cookie attributes, and use short session timeouts",
+      "Store session data in client-side cookies without encryption",
+      "Use the same session ID across all user sessions",
+      "Never expire sessions to improve user experience"
+    ],
+    "explanation": "Secure distributed session management requires centralized session stores for consistency, proper session invalidation on logout and timeout, secure cookie attributes (HttpOnly, Secure, SameSite), and appropriately short session timeouts to limit exposure windows. These measures work together to protect session security.",
+    "industryContext": "The shift to microservices and cloud-native architectures has made distributed session management more complex. Companies like Netflix and Airbnb have developed sophisticated session management systems to handle these challenges at scale.",
+    "tags": [
+      "session-management",
+      "distributed-systems",
+      "authentication",
+      "intermediate"
+    ],
+    "estimatedTime": 120,
+    "questionType": "multiple-choice",
+    "correctAnswer": 0,
+    "type": "multiple-choice",
+    "sources": []
+  },
+  {
+    "id": 18,
+    "question": "What security measures are essential for protecting APIs from common attacks?",
+    "topic": "Security",
+    "difficulty": "Intermediate",
+    "choices": [
+      "Implement rate limiting, input validation, authentication, authorization, and API gateway security controls",
+      "Make all APIs publicly accessible without any protection",
+      "Use the same API key for all clients",
+      "Disable logging to prevent attackers from seeing API usage patterns"
+    ],
+    "explanation": "Essential API security measures include rate limiting to prevent abuse, input validation to prevent injection attacks, strong authentication and authorization to control access, and API gateway security controls for centralized protection. These layers work together to create robust API security.",
+    "industryContext": "API security has become critical as more applications expose functionality through APIs. The OWASP API Security Top 10 provides guidance on protecting APIs from common threats. Major API platforms like Stripe and Twilio implement comprehensive security measures.",
+    "tags": [
+      "api-security",
+      "rate-limiting",
+      "authentication",
+      "intermediate"
+    ],
+    "estimatedTime": 120,
+    "questionType": "multiple-choice",
+    "correctAnswer": 0,
+    "type": "multiple-choice",
+    "sources": []
+  },
+  {
+    "id": 19,
+    "question": "How do you implement effective security logging and monitoring?",
+    "topic": "Security",
+    "difficulty": "Advanced",
+    "choices": [
+      "Log security events with sufficient context, implement real-time alerting, use centralized log management, and maintain audit trails",
+      "Log everything to text files and never review the logs",
+      "Avoid logging security events to prevent information disclosure",
+      "Log only successful operations and ignore failed attempts"
+    ],
+    "explanation": "Effective security logging requires logging events with sufficient context for investigation, implementing real-time alerting for critical events, using centralized log management for correlation and analysis, and maintaining comprehensive audit trails for compliance. The key is balancing information value with performance and storage considerations.",
+    "industryContext": "Compliance frameworks like SOC 2 and ISO 27001 require comprehensive security logging. Companies use Security Information and Event Management (SIEM) systems like Splunk and ELK stack to implement effective logging and monitoring at scale.",
+    "tags": [
+      "logging",
+      "monitoring",
+      "siem",
+      "advanced"
+    ],
+    "estimatedTime": 120,
+    "questionType": "multiple-choice",
+    "correctAnswer": 0,
+    "type": "multiple-choice",
+    "sources": []
+  },
+  {
+    "id": 20,
+    "question": "What are the key considerations for implementing secure communication protocols?",
+    "topic": "Security",
+    "difficulty": "Intermediate",
+    "choices": [
+      "Use TLS 1.3 with strong cipher suites, implement certificate pinning, validate certificates properly, and enforce HTTPS everywhere",
+      "Use self-signed certificates for all internal communications",
+      "Disable certificate validation to avoid connection errors",
+      "Use outdated SSL protocols for backward compatibility"
+    ],
+    "explanation": "Secure communication requires TLS 1.3 for the latest security features, strong cipher suites to prevent cryptographic attacks, certificate pinning to prevent man-in-the-middle attacks, proper certificate validation to ensure authenticity, and HTTPS enforcement to protect all communications. These measures work together to create secure communication channels.",
+    "industryContext": "The push for HTTPS everywhere has been led by browser vendors and web standards organizations. Companies like Cloudflare and Let's Encrypt have made secure communication more accessible through free SSL certificates and automated management tools.",
+    "tags": [
+      "tls",
+      "https",
+      "certificates",
+      "intermediate"
+    ],
+    "estimatedTime": 120,
+    "questionType": "multiple-choice",
+    "correctAnswer": 0,
+    "type": "multiple-choice",
+    "sources": []
+  },
+  {
+    "id": 21,
+    "question": "Which of the following is the most effective method to prevent SQL injection attacks?",
+    "topic": "Security",
+    "choices": [
+      "Using parameterized queries or prepared statements",
+      "Escaping single quotes in user input",
+      "Validating input length",
+      "Using stored procedures"
+    ],
+    "explanation": "Parameterized queries or prepared statements are the most effective method to prevent SQL injection because they separate the SQL code from the data, ensuring that user input is treated as data rather than executable code. While escaping quotes and input validation help, they can be bypassed by sophisticated attacks.",
+    "correctAnswer": 0,
+    "difficulty": "Beginner",
+    "questionType": "multiple-choice",
+    "type": "multiple-choice",
+    "sources": []
+  },
+  {
+    "id": 22,
+    "question": "What is the primary purpose of salting passwords before hashing?",
+    "topic": "Security",
+    "choices": [
+      "To prevent rainbow table attacks",
+      "To make passwords longer",
+      "To encrypt the password",
+      "To compress the password"
+    ],
+    "explanation": "Salting passwords adds a unique random value to each password before hashing, which prevents rainbow table attacks. Rainbow tables are precomputed tables of hash values for common passwords, but when a unique salt is added to each password, the resulting hash is unique even for identical passwords.",
+    "correctAnswer": 0,
+    "difficulty": "Beginner",
+    "questionType": "multiple-choice",
+    "type": "multiple-choice",
+    "sources": []
+  },
+  {
+    "id": 23,
+    "question": "Which HTTP security header prevents clickjacking attacks?",
+    "topic": "Security",
+    "choices": [
+      "X-Frame-Options",
+      "X-XSS-Protection",
+      "X-Content-Type-Options",
+      "Strict-Transport-Security"
+    ],
+    "explanation": "X-Frame-Options header prevents clickjacking by controlling whether a page can be displayed in a frame, iframe, or object. Setting it to 'DENY' or 'SAMEORIGIN' prevents other sites from embedding your page in a frame, which is how clickjacking attacks typically work.",
+    "correctAnswer": 0,
+    "difficulty": "Beginner",
+    "questionType": "multiple-choice",
+    "type": "multiple-choice",
+    "sources": []
+  },
+  {
+    "id": 24,
+    "question": "What is the main difference between authentication and authorization?",
+    "topic": "Security",
+    "choices": [
+      "Authentication verifies identity, authorization determines permissions",
+      "Authentication is for users, authorization is for admins",
+      "Authentication uses passwords, authorization uses tokens",
+      "Authentication is client-side, authorization is server-side"
+    ],
+    "explanation": "Authentication is the process of verifying who a user is (typically through credentials like username/password), while authorization is the process of determining what resources or actions an authenticated user is permitted to access or perform.",
+    "correctAnswer": 0,
+    "difficulty": "Beginner",
+    "questionType": "multiple-choice",
+    "type": "multiple-choice",
+    "sources": []
+  },
+  {
+    "id": 25,
+    "question": "Which of the following is NOT one of the OWASP Top 10 security risks?",
+    "topic": "Security",
+    "choices": [
+      "Cross-Site Scripting (XSS)",
+      "SQL Injection",
+      "Buffer Overflow",
+      "Broken Access Control"
+    ],
+    "explanation": "Buffer Overflow is a low-level programming vulnerability that is more common in languages like C/C++, but it's not typically listed in the OWASP Top 10, which focuses on web application security risks. Cross-Site Scripting, SQL Injection, and Broken Access Control are all part of the OWASP Top 10.",
+    "correctAnswer": 2,
+    "difficulty": "Beginner",
+    "questionType": "multiple-choice",
+    "type": "multiple-choice",
+    "sources": []
+  },
+  {
+    "id": 26,
+    "question": "What is the recommended approach for handling failed login attempts?",
+    "topic": "Security",
+    "choices": [
+      "Implement account lockout with exponential backoff",
+      "Immediately lock the account permanently",
+      "Allow unlimited attempts without restrictions",
+      "Show detailed error messages about why login failed"
+    ],
+    "explanation": "Implementing account lockout with exponential backoff (increasing delays between attempts) is the recommended approach. It prevents brute force attacks while avoiding denial of service through permanent lockouts. Detailed error messages should be avoided as they can help attackers.",
+    "correctAnswer": 0,
+    "difficulty": "Beginner",
+    "questionType": "multiple-choice",
+    "type": "multiple-choice",
+    "sources": []
+  },
+  {
+    "id": 27,
+    "question": "Which Content Security Policy (CSP) directive controls which scripts can be executed?",
+    "topic": "Security",
+    "choices": [
+      "script-src",
+      "default-src",
+      "object-src",
+      "frame-src"
+    ],
+    "explanation": "The script-src directive in Content Security Policy specifically controls which sources are allowed to execute JavaScript. This helps prevent XSS attacks by restricting where scripts can be loaded from and what types of scripts can be executed.",
+    "correctAnswer": 0,
+    "difficulty": "Beginner",
+    "questionType": "multiple-choice",
+    "type": "multiple-choice",
+    "sources": []
+  },
+  {
+    "id": 28,
+    "question": "What is the primary purpose of using HTTPS instead of HTTP?",
+    "topic": "Security",
+    "choices": [
+      "To encrypt data in transit between client and server",
+      "To make websites load faster",
+      "To improve search engine rankings",
+      "To reduce server load"
+    ],
+    "explanation": "HTTPS (HTTP Secure) encrypts data in transit between the client and server using TLS/SSL encryption. This prevents eavesdropping, tampering, and man-in-the-middle attacks. While HTTPS can have SEO benefits, its primary purpose is security.",
+    "correctAnswer": 0,
+    "difficulty": "Beginner",
+    "questionType": "multiple-choice",
+    "type": "multiple-choice",
+    "sources": []
+  },
+  {
+    "id": 29,
+    "question": "Which type of attack is prevented by validating file uploads for both extension and content?",
+    "topic": "Security",
+    "choices": [
+      "Malicious file upload attacks",
+      "SQL injection",
+      "Cross-site scripting",
+      "Session fixation"
+    ],
+    "explanation": "Validating both file extensions and content prevents malicious file upload attacks where attackers try to upload executable files (like PHP scripts) disguised with innocent extensions (.jpg) or upload files that contain malicious code that could be executed by the server.",
+    "correctAnswer": 0,
+    "difficulty": "Beginner",
+    "questionType": "multiple-choice",
+    "type": "multiple-choice",
+    "sources": []
+  },
+  {
+    "id": 30,
+    "question": "What is the purpose of the 'Secure' flag on cookies?",
+    "topic": "Security",
+    "choices": [
+      "Ensures cookies are only sent over HTTPS connections",
+      "Encrypts the cookie content",
+      "Prevents JavaScript access to cookies",
+      "Makes cookies expire faster"
+    ],
+    "explanation": "The 'Secure' flag on cookies ensures they are only transmitted over HTTPS connections, preventing them from being sent over unencrypted HTTP connections where they could be intercepted. This is crucial for protecting sensitive session tokens and other authentication data.",
+    "correctAnswer": 0,
+    "difficulty": "Beginner",
+    "questionType": "multiple-choice",
+    "type": "multiple-choice",
+    "sources": []
+  },
+  {
+    "id": 31,
+    "question": "Which of the following is the most secure method for storing session data?",
+    "topic": "Security",
+    "choices": [
+      "Server-side storage with session IDs in cookies",
+      "Storing all session data in client-side cookies",
+      "URL parameters",
+      "Hidden form fields"
+    ],
+    "explanation": "Server-side storage with session IDs in cookies is the most secure method. It keeps sensitive session data on the server where it can't be tampered with, while only sending a session identifier to the client. Client-side storage exposes data to the user, and URL parameters can be logged or shared.",
+    "correctAnswer": 0,
+    "difficulty": "Beginner",
+    "questionType": "multiple-choice",
+    "type": "multiple-choice",
+    "sources": []
+  },
+  {
+    "id": 32,
+    "question": "What does the principle of least privilege entail?",
+    "topic": "Security",
+    "choices": [
+      "Users and processes should have only the minimum permissions necessary",
+      "Users should have access to all system resources",
+      "Administrators should have limited access",
+      "Permissions should be granted based on seniority"
+    ],
+    "explanation": "The principle of least privilege states that users, processes, and systems should only have the minimum permissions necessary to perform their required functions. This minimizes the potential damage from security breaches or accidental actions.",
+    "correctAnswer": 0,
+    "difficulty": "Beginner",
+    "questionType": "multiple-choice",
+    "type": "multiple-choice",
+    "sources": []
+  },
+  {
+    "id": 33,
+    "question": "Which method is most effective for preventing Cross-Site Request Forgery (CSRF) attacks?",
+    "topic": "Security",
+    "choices": [
+      "Using anti-CSRF tokens",
+      "Validating the Referer header",
+      "Checking the User-Agent header",
+      "Requiring HTTPS"
+    ],
+    "explanation": "Anti-CSRF tokens are the most effective method for preventing CSRF attacks. They are unique, unpredictable values generated by the server and sent to the client, then required with each state-changing request. Header validation can be bypassed, and HTTPS doesn't prevent CSRF.",
+    "correctAnswer": 0,
+    "difficulty": "Beginner",
+    "questionType": "multiple-choice",
+    "type": "multiple-choice",
+    "sources": []
+  },
+  {
+    "id": 34,
+    "question": "What is the primary benefit of using bcrypt over MD5 for password hashing?",
+    "topic": "Security",
+    "choices": [
+      "bcrypt is intentionally slow and resistant to brute force attacks",
+      "bcrypt produces shorter hash values",
+      "bcrypt is faster to compute",
+      "bcrypt doesn't require a salt"
+    ],
+    "explanation": "bcrypt is intentionally designed to be slow and computationally expensive, making brute force attacks much more difficult. It also automatically handles salting. MD5 is fast but cryptographically broken, making it unsuitable for password hashing.",
+    "correctAnswer": 0,
+    "difficulty": "Beginner",
+    "questionType": "multiple-choice",
+    "type": "multiple-choice",
+    "sources": []
+  },
+  {
+    "id": 35,
+    "question": "Which security measure helps prevent directory traversal attacks?",
+    "topic": "Security",
+    "choices": [
+      "Validating and sanitizing file paths",
+      "Using HTTPS",
+      "Implementing CSRF tokens",
+      "Setting cookie expiration dates"
+    ],
+    "explanation": "Validating and sanitizing file paths prevents directory traversal attacks (like ../../etc/passwd) by ensuring that file access is restricted to intended directories. This involves checking for dangerous path sequences and resolving paths to ensure they're within allowed boundaries.",
+    "correctAnswer": 0,
+    "difficulty": "Beginner",
+    "questionType": "multiple-choice",
+    "type": "multiple-choice",
+    "sources": []
+  },
+  {
+    "id": 36,
+    "question": "What is the purpose of input validation in security?",
+    "topic": "Security",
+    "choices": [
+      "To prevent injection attacks and ensure data integrity",
+      "To improve user interface design",
+      "To increase database performance",
+      "To reduce network bandwidth usage"
+    ],
+    "explanation": "Input validation is a fundamental security practice that prevents injection attacks (SQL, XSS, command injection) by ensuring that user-supplied data conforms to expected formats and types. It also helps maintain data integrity in the application.",
+    "correctAnswer": 0,
+    "difficulty": "Beginner",
+    "questionType": "multiple-choice",
+    "type": "multiple-choice",
+    "sources": []
+  },
+  {
+    "id": 37,
+    "question": "Which security header prevents MIME type sniffing?",
+    "topic": "Security",
+    "choices": [
+      "X-Content-Type-Options: nosniff",
+      "X-Frame-Options: DENY",
+      "X-XSS-Protection: 1",
+      "Strict-Transport-Security"
+    ],
+    "explanation": "X-Content-Type-Options: nosniff prevents browsers from MIME-sniffing a response away from the declared content type. This helps prevent certain types of attacks where a file with one extension is interpreted as a different content type by the browser.",
+    "correctAnswer": 0,
+    "difficulty": "Beginner",
+    "questionType": "multiple-choice",
+    "type": "multiple-choice",
+    "sources": []
+  },
+  {
+    "id": 38,
+    "question": "What is the recommended approach for handling sensitive data in logs?",
+    "topic": "Security",
+    "choices": [
+      "Never log sensitive data like passwords or credit card numbers",
+      "Encrypt all log files",
+      "Log everything for debugging purposes",
+      "Store logs in a public location"
+    ],
+    "explanation": "Sensitive data should never be logged, regardless of encryption or storage location. This includes passwords, credit card numbers, social security numbers, and other personally identifiable information. Even encrypted logs can be compromised, and logging sensitive data creates unnecessary risk.",
+    "correctAnswer": 0,
+    "difficulty": "Beginner",
+    "questionType": "multiple-choice",
+    "type": "multiple-choice",
+    "sources": []
+  },
+  {
+    "id": 39,
+    "question": "Which of the following is a characteristic of a secure JWT (JSON Web Token)?",
+    "topic": "Security",
+    "choices": [
+      "Signed with a strong secret and has a short expiration time",
+      "Contains the user's password for verification",
+      "Never expires for user convenience",
+      "Stored in localStorage without additional security measures"
+    ],
+    "explanation": "Secure JWTs should be signed with a strong secret (or use asymmetric cryptography) and have short expiration times to limit the window of opportunity for attackers. They should never contain passwords, should expire reasonably quickly, and should be stored securely (HttpOnly, Secure cookies are preferred over localStorage).",
+    "correctAnswer": 0,
+    "difficulty": "Beginner",
+    "questionType": "multiple-choice",
+    "type": "multiple-choice",
+    "sources": []
+  },
+  {
+    "id": 40,
+    "question": "What is the primary defense against Cross-Site Scripting (XSS) attacks?",
+    "topic": "Security",
+    "choices": [
+      "Output encoding and input validation",
+      "Using HTTPS",
+      "Implementing CSRF tokens",
+      "Setting cookie expiration dates"
+    ],
+    "explanation": "The primary defense against XSS attacks is proper output encoding (escaping) combined with input validation. This ensures that user-supplied data is treated as data rather than executable code when rendered in web pages. While HTTPS and CSRF tokens are important for other security aspects, they don't prevent XSS.",
+    "correctAnswer": 0,
+    "difficulty": "Beginner",
+    "questionType": "multiple-choice",
+    "type": "multiple-choice",
+    "sources": []
+  },
+  {
+    "id": 41,
+    "question": "Which of the following is NOT a recommended practice for API security?",
+    "topic": "Security",
+    "choices": [
+      "Using the same authentication method for all endpoints",
+      "Implementing rate limiting",
+      "Using HTTPS for all API communications",
+      "Validating and sanitizing all input"
+    ],
+    "explanation": "Using the same authentication method for all endpoints is not recommended because different endpoints may require different levels of security. For example, a public endpoint might use API keys while an administrative endpoint might require OAuth 2.0. Rate limiting, HTTPS, and input validation are all recommended API security practices.",
+    "correctAnswer": 0,
+    "difficulty": "Beginner",
+    "questionType": "multiple-choice",
+    "type": "multiple-choice",
+    "sources": []
+  },
+  {
+    "id": 42,
+    "question": "What is the purpose of a Security Token Service (STS)?",
+    "topic": "Security",
+    "choices": [
+      "To issue, validate, and revoke security tokens",
+      "To store user passwords securely",
+      "To encrypt database connections",
+      "To monitor network traffic for attacks"
+    ],
+    "explanation": "A Security Token Service (STS) is responsible for issuing, validating, and revoking security tokens such as SAML tokens, JWTs, and OAuth tokens. It acts as a trusted authority that can authenticate users and provide tokens that other services can trust.",
+    "correctAnswer": 0,
+    "difficulty": "Beginner",
+    "questionType": "multiple-choice",
+    "type": "multiple-choice",
+    "sources": []
+  },
+  {
+    "id": 43,
+    "question": "Which encryption method should be used for encrypting data at rest?",
+    "topic": "Security",
+    "choices": [
+      "AES-256",
+      "Base64",
+      "MD5",
+      "SHA-256"
+    ],
+    "explanation": "AES-256 is a strong symmetric encryption algorithm suitable for encrypting data at rest. Base64 is encoding, not encryption. MD5 and SHA-256 are hashing algorithms, not encryption algorithms. AES-256 provides strong security for data storage when properly implemented.",
+    "correctAnswer": 0,
+    "difficulty": "Beginner",
+    "questionType": "multiple-choice",
+    "type": "multiple-choice",
+    "sources": []
+  },
+  {
+    "id": 44,
+    "question": "What is the main purpose of a Web Application Firewall (WAF)?",
+    "topic": "Security",
+    "choices": [
+      "To filter and monitor HTTP traffic between a web application and the Internet",
+      "To encrypt data transmission",
+      "To authenticate users",
+      "To manage database connections"
+    ],
+    "explanation": "A Web Application Firewall (WAF) filters and monitors HTTP traffic between a web application and the Internet. It helps protect web applications by inspecting incoming traffic for common web exploits like SQL injection, XSS, and other OWASP Top 10 vulnerabilities.",
+    "correctAnswer": 0,
+    "difficulty": "Beginner",
+    "questionType": "multiple-choice",
+    "type": "multiple-choice",
+    "sources": []
+  },
+  {
+    "id": 45,
+    "question": "Which of the following is a characteristic of OAuth 2.0?",
+    "topic": "Security",
+    "choices": [
+      "It is an authorization framework",
+      "It handles user authentication",
+      "It encrypts data transmission",
+      "It manages session storage"
+    ],
+    "explanation": "OAuth 2.0 is an authorization framework that allows third-party applications to obtain limited access to an HTTP service on behalf of a resource owner. It is not an authentication protocol, though it is often used in conjunction with authentication systems like OpenID Connect.",
+    "correctAnswer": 0,
+    "difficulty": "Beginner",
+    "questionType": "multiple-choice",
+    "type": "multiple-choice",
+    "sources": []
+  },
+  {
+    "id": 46,
+    "question": "What is the primary benefit of using multi-factor authentication (MFA)?",
+    "topic": "Security",
+    "choices": [
+      "It adds additional layers of security beyond just passwords",
+      "It makes passwords longer",
+      "It encrypts user data",
+      "It speeds up the login process"
+    ],
+    "explanation": "Multi-factor authentication (MFA) adds additional layers of security beyond just passwords by requiring users to provide two or more different types of authentication factors (something you know, something you have, something you are). This significantly reduces the risk of unauthorized access even if one factor is compromised.",
+    "correctAnswer": 0,
+    "difficulty": "Beginner",
+    "questionType": "multiple-choice",
+    "type": "multiple-choice",
+    "sources": []
+  },
+  {
+    "id": 47,
+    "question": "Which security principle is violated when a system continues to operate in an insecure state?",
+    "topic": "Security",
+    "choices": [
+      "Fail securely",
+      "Principle of least privilege",
+      "Defense in depth",
+      "Separation of duties"
+    ],
+    "explanation": "The 'fail securely' principle states that systems should default to a secure state when they encounter an error or failure. When a system continues to operate in an insecure state after a failure, it violates this principle and can expose vulnerabilities that attackers can exploit.",
+    "correctAnswer": 0,
+    "difficulty": "Beginner",
+    "questionType": "multiple-choice",
+    "type": "multiple-choice",
+    "sources": []
+  },
+  {
+    "id": 48,
+    "question": "What is the main purpose of a Security Information and Event Management (SIEM) system?",
+    "topic": "Security",
+    "choices": [
+      "To collect, analyze, and correlate security events from multiple sources",
+      "To encrypt network traffic",
+      "To authenticate users",
+      "To manage firewall rules"
+    ],
+    "explanation": "A Security Information and Event Management (SIEM) system collects, analyzes, and correlates security events from multiple sources such as network devices, servers, and applications. It helps security teams detect and respond to security threats by providing real-time analysis of security alerts.",
+    "correctAnswer": 0,
+    "difficulty": "Beginner",
+    "questionType": "multiple-choice",
+    "type": "multiple-choice",
+    "sources": []
+  },
+  {
+    "id": 49,
+    "question": "Which of the following is the most effective way to protect against man-in-the-middle (MITM) attacks?",
+    "topic": "Security",
+    "choices": [
+      "Using HTTPS with valid certificates",
+      "Changing passwords frequently",
+      "Using longer passwords",
+      "Disabling JavaScript"
+    ],
+    "explanation": "Using HTTPS with valid certificates is the most effective way to protect against man-in-the-middle (MITM) attacks. HTTPS encrypts the communication between the client and server, making it extremely difficult for attackers to intercept and modify the data in transit. Certificate validation ensures the client is communicating with the legitimate server.",
+    "correctAnswer": 0,
+    "difficulty": "Beginner",
+    "questionType": "multiple-choice",
+    "type": "multiple-choice",
+    "sources": []
+  },
+  {
+    "id": 50,
+    "question": "What is the purpose of a honeypot in cybersecurity?",
+    "topic": "Security",
+    "choices": [
+      "To detect and study attempts to compromise systems",
+      "To encrypt sensitive data",
+      "To authenticate users",
+      "To speed up network performance"
+    ],
+    "explanation": "A honeypot is a security mechanism designed to detect and study attempts to compromise systems. It appears to be a legitimate part of the network but is actually isolated and monitored. When attackers interact with a honeypot, security teams can study their techniques and gather intelligence about potential threats.",
+    "correctAnswer": 0,
+    "difficulty": "Beginner",
+    "questionType": "multiple-choice",
+    "type": "multiple-choice",
+    "sources": []
+  },
+  {
+    "id": 51,
+    "question": "Which type of attack involves sending unsolicited messages to a large number of users?",
+    "topic": "Security",
+    "choices": [
+      "Spam",
+      "Phishing",
+      "Spear phishing",
+      "Whaling"
+    ],
+    "explanation": "Spam refers to unsolicited messages, typically sent in bulk to a large number of recipients. While phishing, spear phishing, and whaling are all forms of social engineering attacks that attempt to trick users into revealing sensitive information, spam is the broader category of unwanted bulk messaging.",
+    "correctAnswer": 0,
+    "difficulty": "Beginner",
+    "questionType": "multiple-choice",
+    "type": "multiple-choice",
+    "sources": []
+  },
+  {
+    "id": 52,
+    "question": "What is the main difference between symmetric and asymmetric encryption?",
+    "topic": "Security",
+    "choices": [
+      "Symmetric uses the same key for encryption and decryption, while asymmetric uses a pair of keys",
+      "Symmetric is faster than asymmetric",
+      "Asymmetric is more secure than symmetric",
+      "Symmetric requires a certificate authority"
+    ],
+    "explanation": "The main difference between symmetric and asymmetric encryption is in key usage. Symmetric encryption uses the same key for both encryption and decryption, while asymmetric encryption uses a pair of keys - a public key for encryption and a private key for decryption. Symmetric encryption is generally faster but requires secure key distribution.",
+    "correctAnswer": 0,
+    "difficulty": "Beginner",
+    "questionType": "multiple-choice",
+    "type": "multiple-choice",
+    "sources": []
+  },
+  {
+    "id": 53,
+    "question": "Which security control is most effective against social engineering attacks?",
+    "topic": "Security",
+    "choices": [
+      "User awareness training",
+      "Firewalls",
+      "Antivirus software",
+      "Intrusion detection systems"
+    ],
+    "explanation": "User awareness training is the most effective security control against social engineering attacks. Since social engineering targets human psychology rather than technical vulnerabilities, educating users about common tactics like phishing, pretexting, and baiting is the primary defense. Technical controls can help but are secondary to user education.",
+    "correctAnswer": 0,
+    "difficulty": "Beginner",
+    "questionType": "multiple-choice",
+    "type": "multiple-choice",
+    "sources": []
+  },
+  {
+    "id": 54,
+    "question": "What is the purpose of a security audit?",
+    "topic": "Security",
+    "choices": [
+      "To systematically evaluate an organization's security posture",
+      "To encrypt sensitive data",
+      "To authenticate users",
+      "To monitor network traffic"
+    ],
+    "explanation": "A security audit is a systematic evaluation of an organization's security posture, including policies, procedures, technical controls, and compliance with regulations. It helps identify vulnerabilities, assess the effectiveness of existing security measures, and provide recommendations for improvement.",
+    "correctAnswer": 0,
+    "difficulty": "Beginner",
+    "questionType": "multiple-choice",
+    "type": "multiple-choice",
+    "sources": []
+  },
+  {
+    "id": 55,
+    "question": "Which of the following is a characteristic of a zero-day vulnerability?",
+    "topic": "Security",
+    "choices": [
+      "It is unknown to the software vendor at the time of exploitation",
+      "It affects only web applications",
+      "It can be easily patched",
+      "It requires physical access to exploit"
+    ],
+    "explanation": "A zero-day vulnerability is a security flaw that is unknown to the software vendor at the time of exploitation. The term 'zero-day' refers to the fact that the vendor has had zero days to prepare a fix or patch. These vulnerabilities are particularly dangerous because there are no existing defenses against them until a patch is developed.",
+    "correctAnswer": 0,
+    "difficulty": "Beginner",
+    "questionType": "multiple-choice",
+    "type": "multiple-choice",
+    "sources": []
+  },
+  {
+    "id": 56,
+    "question": "What is the primary purpose of penetration testing?",
+    "topic": "Security",
+    "choices": [
+      "To simulate real-world attacks to identify vulnerabilities",
+      "To encrypt data at rest",
+      "To authenticate users",
+      "To monitor network performance"
+    ],
+    "explanation": "Penetration testing (or pen testing) simulates real-world attacks to identify vulnerabilities in systems, networks, or applications. It is a proactive security measure that helps organizations understand their security weaknesses before malicious attackers can exploit them.",
+    "correctAnswer": 0,
+    "difficulty": "Beginner",
+    "questionType": "multiple-choice",
+    "type": "multiple-choice",
+    "sources": []
+  },
+  {
+    "id": 57,
+    "question": "Which security principle is applied when implementing multiple layers of defense?",
+    "topic": "Security",
+    "choices": [
+      "Defense in depth",
+      "Principle of least privilege",
+      "Fail securely",
+      "Separation of duties"
+    ],
+    "explanation": "Defense in depth is the security principle of implementing multiple layers of defense to protect systems and data. Rather than relying on a single security control, this approach uses multiple complementary controls (network firewalls, host firewalls, antivirus, IDS/IPS, etc.) to provide redundancy and reduce the likelihood of a successful attack.",
+    "correctAnswer": 0,
+    "difficulty": "Beginner",
+    "questionType": "multiple-choice",
+    "type": "multiple-choice",
+    "sources": []
+  },
+  {
+    "id": 58,
+    "question": "What is the main purpose of a Digital Certificate?",
+    "topic": "Security",
+    "choices": [
+      "To verify the identity of a person, organization, or device",
+      "To encrypt user passwords",
+      "To authenticate database connections",
+      "To compress data for transmission"
+    ],
+    "explanation": "A Digital Certificate is an electronic document that verifies the identity of a person, organization, or device. It contains the entity's public key and is signed by a trusted Certificate Authority (CA). Digital certificates are used in HTTPS, email encryption, code signing, and other security applications.",
+    "correctAnswer": 0,
+    "difficulty": "Beginner",
+    "questionType": "multiple-choice",
+    "type": "multiple-choice",
+    "sources": []
+  },
+  {
+    "id": 59,
+    "question": "Which of the following is the most effective way to prevent privilege escalation attacks?",
+    "topic": "Security",
+    "choices": [
+      "Implementing the principle of least privilege",
+      "Using longer passwords",
+      "Installing antivirus software",
+      "Enabling automatic updates"
+    ],
+    "explanation": "Implementing the principle of least privilege is the most effective way to prevent privilege escalation attacks. By ensuring that users and processes have only the minimum permissions necessary to perform their functions, the potential damage from a compromised account or process is significantly reduced.",
+    "correctAnswer": 0,
+    "difficulty": "Beginner",
+    "questionType": "multiple-choice",
+    "type": "multiple-choice",
+    "sources": []
+  },
+  {
+    "id": 60,
+    "question": "What is the primary purpose of a Security Operations Center (SOC)?",
+    "topic": "Security",
+    "choices": [
+      "To monitor, detect, and respond to security incidents 24/7",
+      "To develop software applications",
+      "To manage database backups",
+      "To optimize network performance"
+    ],
+    "explanation": "A Security Operations Center (SOC) is a centralized unit that monitors, detects, and responds to security incidents 24/7. It uses various security tools and technologies to analyze security events, investigate potential threats, and coordinate incident response activities to protect an organization's digital assets.",
+    "correctAnswer": 0,
+    "difficulty": "Beginner",
+    "questionType": "multiple-choice",
+    "type": "multiple-choice",
+    "sources": []
   }
-}
+]

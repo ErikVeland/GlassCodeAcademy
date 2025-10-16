@@ -1,5 +1,5 @@
 {
-  "module": "database-systems",
+  "moduleSlug": "database-systems",
   "sources": [
     {
       "title": "Microsoft SQL Server Documentation",

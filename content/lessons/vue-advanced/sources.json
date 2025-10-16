@@ -1,5 +1,5 @@
 {
-  "module": "vue-advanced",
+  "moduleSlug": "vue-advanced",
   "sources": [
     {
       "title": "Vue.js Official Documentation",

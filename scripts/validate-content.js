@@ -296,14 +296,22 @@ class ContentValidator {
       const quizContent = fs.readFileSync(quizPath, 'utf8');
       const quiz = JSON.parse(quizContent);
 
-      if (!quiz.questions || !Array.isArray(quiz.questions)) {
-        this.addError(`Quiz must have questions array: ${module.slug}`, context);
+      // Handle both formats: direct array of questions or object with questions property
+      let questions = [];
+      if (Array.isArray(quiz)) {
+        // Direct array format (current structure)
+        questions = quiz;
+      } else if (quiz.questions && Array.isArray(quiz.questions)) {
+        // Object with questions property format
+        questions = quiz.questions;
+      } else {
+        this.addError(`Quiz must be an array of questions or have a questions array: ${module.slug}`, context);
         return false;
       }
 
       const requiredQuestions = module.thresholds?.requiredQuestions || 15;
-      if (quiz.questions.length < requiredQuestions) {
-        const message = `Module ${module.slug} has ${quiz.questions.length} questions, requires ${requiredQuestions}`;
+      if (questions.length < requiredQuestions) {
+        const message = `Module ${module.slug} has ${questions.length} questions, requires ${requiredQuestions}`;
         if (isStrictMode) {
           this.addError(message, context);
           return false;
@@ -313,7 +321,7 @@ class ContentValidator {
       }
 
       // Validate question structure
-      quiz.questions.forEach((question, index) => {
+      questions.forEach((question, index) => {
         this.validateQuestionStructure(question, module.slug, index);
       });
 

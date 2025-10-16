@@ -1,5 +1,5 @@
 {
-  "module": "tailwind-advanced",
+  "moduleSlug": "tailwind-advanced",
   "sources": [
     {
       "title": "Tailwind CSS Official Documentation",

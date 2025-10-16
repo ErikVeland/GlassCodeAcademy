@@ -4,7 +4,7 @@ namespace backend.GraphQL;
 
 public class DotNetLessonType
 {
-    public int Id { get; set; }
+    public string Id { get; set; } = string.Empty;
     public string? Topic { get; set; }
     public string Title { get; set; } = string.Empty;
     public string Description { get; set; } = string.Empty;
@@ -14,7 +14,7 @@ public class DotNetLessonType
 
 public class DotNetInterviewQuestionType
 {
-    public int Id { get; set; }
+    public string Id { get; set; } = string.Empty;
     public string Question { get; set; } = string.Empty;
     public List<string> Options { get; set; } = new List<string>();
     public int CorrectAnswer { get; set; }

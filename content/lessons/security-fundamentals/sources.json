@@ -1,5 +1,5 @@
 {
-  "module": "security-fundamentals",
+  "moduleSlug": "security-fundamentals",
   "sources": [
     {
       "title": "OWASP Top Ten",

@@ -1,5 +1,5 @@
 {
-  "module": "testing-fundamentals",
+  "moduleSlug": "testing-fundamentals",
   "sources": [
     {
       "title": "Testing Library Documentation",

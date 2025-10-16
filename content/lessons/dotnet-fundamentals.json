@@ -1,6 +1,6 @@
 [
   {
-    "id": "dotnet-fundamentals-lesson-1",
+    "id": 1,
     "moduleSlug": "dotnet-fundamentals",
     "title": "Introduction to .NET and C#",
     "order": 1,
@@ -58,10 +58,11 @@
       "Fundamentals"
     ],
     "lastUpdated": "2025-10-09T10:00:00.000Z",
-    "version": "1.0.0"
+    "version": "1.0.0",
+    "sources": []
   },
   {
-    "id": "dotnet-fundamentals-lesson-2",
+    "id": 2,
     "moduleSlug": "dotnet-fundamentals",
     "title": "Object-Oriented Programming in C#",
     "order": 2,
@@ -120,10 +121,11 @@
       "Interfaces"
     ],
     "lastUpdated": "2025-10-09T10:00:00.000Z",
-    "version": "1.0.0"
+    "version": "1.0.0",
+    "sources": []
   },
   {
-    "id": "dotnet-fundamentals-lesson-3",
+    "id": 3,
     "moduleSlug": "dotnet-fundamentals",
     "title": "ASP.NET Core Web Applications",
     "order": 3,
@@ -182,10 +184,11 @@
       "Routing"
     ],
     "lastUpdated": "2025-10-09T10:00:00.000Z",
-    "version": "1.0.0"
+    "version": "1.0.0",
+    "sources": []
   },
   {
-    "id": "dotnet-fundamentals-lesson-4",
+    "id": 4,
     "moduleSlug": "dotnet-fundamentals",
     "title": "Entity Framework Core for Data Access",
     "order": 4,
@@ -244,10 +247,11 @@
       "Data Access"
     ],
     "lastUpdated": "2025-10-09T10:00:00.000Z",
-    "version": "1.0.0"
+    "version": "1.0.0",
+    "sources": []
   },
   {
-    "id": "dotnet-fundamentals-lesson-5",
+    "id": 5,
     "moduleSlug": "dotnet-fundamentals",
     "title": "Dependency Injection and Services",
     "order": 5,
@@ -306,10 +310,11 @@
       "ASP.NET Core"
     ],
     "lastUpdated": "2025-10-09T10:00:00.000Z",
-    "version": "1.0.0"
+    "version": "1.0.0",
+    "sources": []
   },
   {
-    "id": "dotnet-fundamentals-lesson-6",
+    "id": 6,
     "moduleSlug": "dotnet-fundamentals",
     "title": "Middleware and Request Pipeline",
     "order": 6,
@@ -368,10 +373,11 @@
       "ASP.NET Core"
     ],
     "lastUpdated": "2025-10-09T10:00:00.000Z",
-    "version": "1.0.0"
+    "version": "1.0.0",
+    "sources": []
   },
   {
-    "id": "dotnet-fundamentals-lesson-7",
+    "id": 7,
     "moduleSlug": "dotnet-fundamentals",
     "title": "Authentication and Authorization",
     "order": 7,
@@ -430,10 +436,11 @@
       "Claims"
     ],
     "lastUpdated": "2025-10-09T10:00:00.000Z",
-    "version": "1.0.0"
+    "version": "1.0.0",
+    "sources": []
   },
   {
-    "id": "dotnet-fundamentals-lesson-8",
+    "id": 8,
     "moduleSlug": "dotnet-fundamentals",
     "title": "API Development with Controllers",
     "order": 8,
@@ -492,10 +499,11 @@
       "HTTP"
     ],
     "lastUpdated": "2025-10-09T10:00:00.000Z",
-    "version": "1.0.0"
+    "version": "1.0.0",
+    "sources": []
   },
   {
-    "id": "dotnet-fundamentals-lesson-9",
+    "id": 9,
     "moduleSlug": "dotnet-fundamentals",
     "title": "Testing .NET Applications",
     "order": 9,
@@ -554,10 +562,11 @@
       "Unit Tests"
     ],
     "lastUpdated": "2025-10-09T10:00:00.000Z",
-    "version": "1.0.0"
+    "version": "1.0.0",
+    "sources": []
   },
   {
-    "id": "dotnet-fundamentals-lesson-10",
+    "id": 10,
     "moduleSlug": "dotnet-fundamentals",
     "title": "Deployment and Configuration",
     "order": 10,
@@ -614,10 +623,11 @@
       "Health Checks"
     ],
     "lastUpdated": "2025-10-09T10:00:00.000Z",
-    "version": "1.0.0"
+    "version": "1.0.0",
+    "sources": []
   },
   {
-    "id": "dotnet-fundamentals-lesson-11",
+    "id": 11,
     "moduleSlug": "dotnet-fundamentals",
     "title": "Advanced LINQ and Data Processing",
     "order": 11,
@@ -676,10 +686,11 @@
       "Aggregation"
     ],
     "lastUpdated": "2025-10-09T10:00:00.000Z",
-    "version": "1.0.0"
+    "version": "1.0.0",
+    "sources": []
   },
   {
-    "id": "dotnet-fundamentals-lesson-12",
+    "id": 12,
     "moduleSlug": "dotnet-fundamentals",
     "title": "Advanced Configuration Management",
     "order": 12,
@@ -738,10 +749,11 @@
       "Providers"
     ],
     "lastUpdated": "2025-10-09T10:00:00.000Z",
-    "version": "1.0.0"
+    "version": "1.0.0",
+    "sources": []
   },
   {
-    "id": "dotnet-fundamentals-lesson-13",
+    "id": 13,
     "moduleSlug": "dotnet-fundamentals",
     "title": "Performance Monitoring and Profiling",
     "order": 13,
@@ -800,10 +812,11 @@
       "APM"
     ],
     "lastUpdated": "2025-10-09T10:00:00.000Z",
-    "version": "1.0.0"
+    "version": "1.0.0",
+    "sources": []
   },
   {
-    "id": "dotnet-fundamentals-lesson-14",
+    "id": 14,
     "moduleSlug": "dotnet-fundamentals",
     "title": "Advanced Middleware Patterns",
     "order": 14,
@@ -862,10 +875,11 @@
       "Branching"
     ],
     "lastUpdated": "2025-10-09T10:00:00.000Z",
-    "version": "1.0.0"
+    "version": "1.0.0",
+    "sources": []
   },
   {
-    "id": "dotnet-fundamentals-lesson-15",
+    "id": 15,
     "moduleSlug": "dotnet-fundamentals",
     "title": "API Versioning Strategies",
     "order": 15,
@@ -924,10 +938,11 @@
       "Documentation"
     ],
     "lastUpdated": "2025-10-09T10:00:00.000Z",
-    "version": "1.0.0"
+    "version": "1.0.0",
+    "sources": []
   },
   {
-    "id": "dotnet-fundamentals-lesson-16",
+    "id": 16,
     "moduleSlug": "dotnet-fundamentals",
     "title": "Caching Strategies",
     "order": 16,
@@ -986,10 +1001,11 @@
       "Distributed"
     ],
     "lastUpdated": "2025-10-09T10:00:00.000Z",
-    "version": "1.0.0"
+    "version": "1.0.0",
+    "sources": []
   },
   {
-    "id": "dotnet-fundamentals-lesson-17",
+    "id": 17,
     "moduleSlug": "dotnet-fundamentals",
     "title": "Advanced Entity Framework Patterns",
     "order": 17,
@@ -1048,10 +1064,11 @@
       "Concurrency"
     ],
     "lastUpdated": "2025-10-09T10:00:00.000Z",
-    "version": "1.0.0"
+    "version": "1.0.0",
+    "sources": []
   },
   {
-    "id": "dotnet-fundamentals-lesson-18",
+    "id": 18,
     "moduleSlug": "dotnet-fundamentals",
     "title": "Microservices Communication",
     "order": 18,
@@ -1108,6 +1125,7 @@
       "HTTP"
     ],
     "lastUpdated": "2025-10-09T10:00:00.000Z",
-    "version": "1.0.0"
+    "version": "1.0.0",
+    "sources": []
   }
 ]

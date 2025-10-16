@@ -1,5 +1,5 @@
 {
-  "module": "graphql-advanced",
+  "moduleSlug": "graphql-advanced",
   "sources": [
     {
       "title": "GraphQL Official Documentation",

@@ -3,9 +3,9 @@ using backend.Models;
 
 namespace backend.GraphQL
 {
-    public class WebLessonType : ObjectType<WebLesson>
+    public class WebLessonType : ObjectType<BaseLesson>
     {
-        protected override void Configure(IObjectTypeDescriptor<WebLesson> descriptor)
+        protected override void Configure(IObjectTypeDescriptor<BaseLesson> descriptor)
         {
             descriptor.Name("WebLesson");
             descriptor.Description("Represents a Web Fundamentals learning lesson with code examples");
@@ -19,9 +19,9 @@ namespace backend.GraphQL
         }
     }
 
-    public class WebInterviewQuestionType : ObjectType<WebInterviewQuestion>
+    public class WebInterviewQuestionType : ObjectType<BaseInterviewQuestion>
     {
-        protected override void Configure(IObjectTypeDescriptor<WebInterviewQuestion> descriptor)
+        protected override void Configure(IObjectTypeDescriptor<BaseInterviewQuestion> descriptor)
         {
             descriptor.Name("WebInterviewQuestion");
             descriptor.Description("Represents a Web Fundamentals interview question with multiple choice or open-ended format");
