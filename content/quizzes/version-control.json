@@ -1,794 +1,796 @@
-[
-  {
-    "id": 1,
-    "question": "Which command is used to create a new Git repository in the current directory?",
-    "topic": "Git",
-    "difficulty": "Beginner",
-    "choices": [
-      "`git init`",
-      "`git create`",
-      "`git new`",
-      "`git start`"
-    ],
-    "explanation": "The 'git init' command initializes a new Git repository in the current directory, creating a .git folder that contains all the repository metadata. This is the first step in version controlling any project.",
-    "industryContext": "Every software project should be version controlled from the start. 'git init' is often the first command developers run when starting a new project.",
-    "tags": [
-      "foundational",
-      "beginner"
-    ],
-    "estimatedTime": 90,
-    "questionType": "multiple-choice",
-    "correctAnswer": 0,
-    "type": "multiple-choice",
-    "sources": []
-  },
-  {
-    "id": 2,
-    "question": "What is the correct workflow to commit changes in Git?",
-    "topic": "Git",
-    "difficulty": "Beginner",
-    "choices": [
-      "`git add → git commit`",
-      "`git commit → git add`",
-      "`git push → git commit`",
-      "`git commit only (no add needed)`"
-    ],
-    "explanation": "The correct Git workflow is to first stage changes with 'git add' (adding them to the staging area), then commit them with '`git commit`'. This two-step process allows you to carefully control which changes are included in each commit.",
-    "industryContext": "The staging area is a key feature that sets Git apart from other version control systems, allowing developers to craft precise, logical commits.",
-    "tags": [
-      "foundational",
-      "beginner"
-    ],
-    "estimatedTime": 90,
-    "questionType": "multiple-choice",
-    "correctAnswer": 0,
-    "type": "multiple-choice",
-    "sources": []
-  },
-  {
-    "id": 3,
-    "question": "Which command creates a new branch AND switches to it immediately?",
-    "topic": "Git",
-    "difficulty": "Intermediate",
-    "choices": [
-      "`git checkout -b feature-branch`",
-      "`git branch feature-branch`",
-      "`git switch feature-branch`",
-      "`git create feature-branch`"
-    ],
-    "explanation": "`git checkout -b feature-branch` creates a new branch called `feature-branch` and immediately switches to it. The newer equivalent is `git switch -c feature-branch`. The `git branch feature-branch` option only creates the branch without switching to it.",
-    "industryContext": "Feature branches are essential for team development, allowing developers to work on different features simultaneously without interfering with each other's code.",
-    "tags": [
-      "foundational",
-      "intermediate"
-    ],
-    "estimatedTime": 90,
-    "questionType": "multiple-choice",
-    "correctAnswer": 0,
-    "type": "multiple-choice",
-    "sources": []
-  },
-  {
-    "id": 4,
-    "question": "What happens when you encounter a merge conflict in Git?",
-    "topic": "Git",
-    "difficulty": "Intermediate",
-    "choices": [
-      "Git stops the merge and requires manual resolution",
-      "Git automatically chooses the newer version",
-      "Git automatically chooses the older version",
-      "Git creates two separate files"
-    ],
-    "explanation": "When Git encounters a merge conflict (same lines modified in different ways), it stops the merge process and marks the conflicted sections in the files. You must manually edit the files to resolve conflicts, then add and commit the resolved files.",
-    "industryContext": "Merge conflicts are common in team development. Learning to resolve them efficiently is a crucial skill for collaborative software development.",
-    "tags": [
-      "foundational",
-      "intermediate"
-    ],
-    "estimatedTime": 90,
-    "questionType": "multiple-choice",
-    "correctAnswer": 0,
-    "type": "multiple-choice",
-    "sources": []
-  },
-  {
-    "id": 5,
-    "question": "Which file is used to specify which files Git should ignore?",
-    "topic": "Git",
-    "difficulty": "Beginner",
-    "choices": [
-      ".gitignore",
-      ".gitexclude",
-      "ignore.txt",
-      ".ignore"
-    ],
-    "explanation": "The '.gitignore' file contains patterns for files and directories that Git should not track. This is essential for excluding build artifacts, dependencies, IDE files, and sensitive information from version control.",
-    "industryContext": "Every project should have a .gitignore file to prevent accidentally committing temporary files, build outputs, or sensitive information like API keys.",
-    "tags": [
-      "foundational",
-      "beginner"
-    ],
-    "estimatedTime": 90,
-    "questionType": "multiple-choice",
-    "correctAnswer": 0,
-    "type": "multiple-choice",
-    "sources": []
-  },
-  {
-    "id": 6,
-    "question": "What is the primary purpose of version control systems in software development?",
-    "topic": "Git",
-    "difficulty": "Beginner",
-    "choices": [
-      "Track changes to code over time, enable collaboration, and maintain project history",
-      "Delete code to free up disk space",
-      "Prevent developers from making any changes",
-      "Slow down development processes intentionally"
-    ],
-    "explanation": "The primary purpose of version control systems is to track changes to code over time, enabling multiple developers to collaborate effectively while maintaining a complete history of the project. Version control provides the foundation for modern software development workflows by allowing teams to work simultaneously on the same codebase without conflicts.",
-    "industryContext": "Version control systems have become essential infrastructure for software development, with Git being used by over 90% of professional developers. Companies like Microsoft, Google, and Facebook rely on sophisticated version control workflows to manage massive codebases with thousands of contributors. The shift from centralized systems like SVN to distributed systems like Git has revolutionized collaborative development.",
-    "tags": [
-      "version-control",
-      "git",
-      "collaboration",
-      "beginner"
-    ],
-    "questionType": "multiple-choice",
-    "estimatedTime": 90,
-    "correctAnswer": 0,
-    "type": "multiple-choice",
-    "sources": []
-  },
-  {
-    "id": 7,
-    "question": "What are the performance considerations when using Git for large repositories?",
-    "topic": "GitHub",
-    "difficulty": "Intermediate",
-    "choices": [
-      "Use shallow clones, sparse checkouts, and Git LFS for large files to improve performance",
-      "Clone the entire repository history regardless of size",
-      "Avoid all version control for large projects",
-      "Use only the oldest Git features for better compatibility"
-    ],
-    "explanation": "Performance considerations for large Git repositories include using shallow clones to reduce download time, sparse checkouts to work with only specific directories, and Git LFS (Large File Storage) to handle large binary files efficiently. These techniques help maintain reasonable performance even with massive repositories containing years of history.",
-    "industryContext": "Large repositories present significant performance challenges that require specialized techniques. Companies like Microsoft and Google have developed sophisticated approaches to handling massive repositories, with Microsoft's Windows codebase being one of the largest Git repositories in the world. Git LFS was specifically created to address performance issues with large binary files.",
-    "tags": [
-      "git",
-      "performance",
-      "large-repositories",
-      "intermediate"
-    ],
-    "questionType": "multiple-choice",
-    "estimatedTime": 90,
-    "correctAnswer": 0,
-    "type": "multiple-choice",
-    "sources": []
-  },
-  {
-    "id": 8,
-    "question": "When should you use different branching strategies in version control?",
-    "topic": "Version Control",
-    "difficulty": "Beginner",
-    "choices": [
-      "Choose strategies based on team size, release frequency, and project complexity requirements",
-      "Always use the most complex branching strategy regardless of project needs",
-      "Never use branching and keep all changes in the main branch",
-      "Use random branching patterns without any strategic consideration"
-    ],
-    "explanation": "Branching strategy selection should be based on team size (larger teams need more structured approaches), release frequency (frequent releases benefit from continuous integration), and project complexity (complex projects may need feature isolation). Common strategies include Git Flow for structured releases, GitHub Flow for continuous deployment, and trunk-based development for rapid iteration.",
-    "industryContext": "Different organizations adopt branching strategies that match their development workflows and business requirements. Companies like Facebook use trunk-based development for rapid iteration, while enterprises with formal release cycles often use Git Flow. GitHub popularized the simpler GitHub Flow approach for continuous deployment scenarios.",
-    "tags": [
-      "version-control",
-      "branching-strategies",
-      "workflow",
-      "beginner"
-    ],
-    "questionType": "multiple-choice",
-    "estimatedTime": 90,
-    "correctAnswer": 0,
-    "type": "multiple-choice",
-    "sources": []
-  },
-  {
-    "id": 9,
-    "question": "How do you implement version control in a production environment with multiple teams?",
-    "topic": "Git",
-    "difficulty": "Intermediate",
-    "choices": [
-      "Use protected branches, code review workflows, automated testing, and access controls",
-      "Allow all developers to push directly to production branches",
-      "Disable version control entirely for production environments",
-      "Use only manual processes without any automation"
-    ],
-    "explanation": "Production version control implementation requires protected branches to prevent direct pushes to critical branches, code review workflows to ensure quality, automated testing to catch issues early, and access controls to limit who can make changes. These practices ensure that only thoroughly reviewed and tested code reaches production environments.",
-    "industryContext": "Enterprise version control requires sophisticated access controls and workflow enforcement. Companies like Amazon and Netflix have implemented complex permission systems and automated gates that prevent unapproved changes from reaching production. GitHub's protected branches feature and pull request reviews have become industry standards for production workflows.",
-    "tags": [
-      "version-control",
-      "production",
-      "workflow",
-      "intermediate"
-    ],
-    "questionType": "multiple-choice",
-    "estimatedTime": 90,
-    "correctAnswer": 0,
-    "type": "multiple-choice",
-    "sources": []
-  },
-  {
-    "id": 10,
-    "question": "Which of the following is a key feature of modern version control systems?",
-    "topic": "GitHub",
-    "difficulty": "Beginner",
-    "choices": [
-      "Distributed architecture, branching and merging, and collaboration tools",
-      "Centralized control with limited collaboration features",
-      "No support for multiple developers working simultaneously",
-      "Manual conflict resolution without any automation"
-    ],
-    "explanation": "Key features of modern version control systems include distributed architecture that allows each developer to have a complete repository copy, sophisticated branching and merging capabilities for parallel development, and integrated collaboration tools like pull requests and code review features. These features enable efficient collaborative development at scale.",
-    "industryContext": "The evolution from centralized version control systems like SVN to distributed systems like Git has transformed software development practices. Modern platforms like GitHub and GitLab have extended Git with powerful collaboration features. The distributed nature of Git provides resilience and flexibility that centralized systems cannot match.",
-    "tags": [
-      "version-control",
-      "git",
-      "distributed-systems",
-      "beginner"
-    ],
-    "questionType": "multiple-choice",
-    "estimatedTime": 90,
-    "correctAnswer": 0,
-    "type": "multiple-choice",
-    "sources": []
-  },
-  {
-    "id": 11,
-    "question": "What are the trade-offs between different version control workflows?",
-    "topic": "Version Control",
-    "difficulty": "Advanced",
-    "choices": [
-      "Git Flow provides structured releases but more complexity; GitHub Flow is simpler but requires continuous deployment discipline",
-      "All version control workflows are identical with no meaningful differences",
-      "Complex workflows are always superior to simple approaches",
-      "Simple workflows work for all project types without any limitations"
-    ],
-    "explanation": "Version control workflow trade-offs include Git Flow which provides structured release management and support for multiple release versions but introduces complexity through multiple long-lived branches, versus GitHub Flow which is simpler and supports rapid iteration but requires discipline around continuous deployment and feature flagging. The choice depends on organizational release processes and team maturity.",
-    "industryContext": "Workflow selection significantly impacts development velocity and release management. Large enterprises with formal release cycles often choose Git Flow or similar structured approaches, while startups and web-focused companies typically prefer simpler workflows like GitHub Flow. Companies like Etsy have published detailed case studies comparing different workflow approaches.",
-    "tags": [
-      "version-control",
-      "workflows",
-      "trade-offs",
-      "advanced"
-    ],
-    "questionType": "multiple-choice",
-    "estimatedTime": 120,
-    "correctAnswer": 0,
-    "type": "multiple-choice",
-    "sources": []
-  },
-  {
-    "id": 12,
-    "question": "How do you implement version control in a production environment with regulatory compliance requirements?",
-    "topic": "Git",
-    "difficulty": "Intermediate",
-    "choices": [
-      "Use signed commits, audit trails, branch protection, and compliance-focused workflows",
-      "Ignore all compliance requirements for faster development",
-      "Disable version control entirely to avoid compliance issues",
-      "Use only basic Git features without any security enhancements"
-    ],
-    "explanation": "Production version control implementation with regulatory compliance requires signed commits to verify authorship, comprehensive audit trails for change tracking, branch protection to enforce review processes, and compliance-focused workflows that meet regulatory requirements. These measures ensure that version control practices support rather than hinder compliance efforts.",
-    "industryContext": "Regulatory compliance significantly impacts version control implementation in industries like finance and healthcare. Companies subject to SOX, HIPAA, or other regulations must implement version control practices that support audit requirements. Financial institutions like JPMorgan Chase have developed sophisticated compliance-focused Git workflows.",
-    "tags": [
-      "version-control",
-      "compliance",
-      "security",
-      "intermediate"
-    ],
-    "questionType": "multiple-choice",
-    "estimatedTime": 90,
-    "correctAnswer": 0,
-    "type": "multiple-choice",
-    "sources": []
-  },
-  {
-    "id": 13,
-    "question": "What are the security considerations when using version control systems?",
-    "topic": "GitHub",
-    "difficulty": "Advanced",
-    "choices": [
-      "Protect sensitive data, implement access controls, use signed commits, and scan for secrets",
-      "Store all credentials in version control for easy access",
-      "Disable all security measures to improve developer convenience",
-      "Ignore security concerns and focus only on feature development"
-    ],
-    "explanation": "Version control security considerations include protecting sensitive data through proper .gitignore configuration and secret scanning, implementing access controls to limit repository access, using signed commits to verify authorship, and scanning for accidentally committed secrets. These practices prevent security incidents caused by version control misconfigurations.",
-    "industryContext": "Version control security has become a critical concern as high-profile incidents have shown the risks of committing sensitive data. Companies like GitHub and GitLab have implemented sophisticated secret scanning and security alerting features. The average cost of a data breach involving version control misconfigurations can exceed $4 million.",
-    "tags": [
-      "version-control",
-      "security",
-      "secrets-management",
-      "intermediate"
-    ],
-    "questionType": "multiple-choice",
-    "estimatedTime": 90,
-    "correctAnswer": 0,
-    "type": "multiple-choice",
-    "sources": []
-  },
-  {
-    "id": 14,
-    "question": "Which pattern is most effective for implementing scalable version control practices?",
-    "topic": "Version Control",
-    "difficulty": "Advanced",
-    "choices": [
-      "Modular repository structure, automated workflows, clear branching strategies, and comprehensive documentation",
-      "Monolithic repositories with no organizational structure",
-      "Random commit patterns without any conventions",
-      "No documentation or standard practices"
-    ],
-    "explanation": "Scalable version control practices require modular repository structure for maintainability, automated workflows to reduce manual errors, clear branching strategies for team coordination, and comprehensive documentation to ensure consistency. These patterns enable version control systems to scale effectively with growing teams and codebases.",
-    "industryContext": "Scaling version control practices is critical for growing organizations. Companies like Microsoft and Google have developed sophisticated approaches to managing massive codebases with thousands of contributors. The monorepo vs. multi-repo debate reflects different approaches to scaling version control, with successful companies using both patterns effectively.",
-    "tags": [
-      "version-control",
-      "scalability",
-      "best-practices",
-      "intermediate"
-    ],
-    "questionType": "multiple-choice",
-    "estimatedTime": 90,
-    "correctAnswer": 0,
-    "type": "multiple-choice",
-    "sources": []
-  },
-  {
-    "id": 15,
-    "question": "How do you implement version control in a production environment with enterprise governance requirements?",
-    "topic": "Git",
-    "difficulty": "Advanced",
-    "choices": [
-      "Use enterprise Git platforms, implement governance policies, enforce compliance controls, and maintain audit trails",
-      "Ignore all governance requirements for faster development velocity",
-      "Use only basic Git features without any enterprise capabilities",
-      "Disable version control entirely to avoid governance complexity"
-    ],
-    "explanation": "Enterprise version control implementation requires enterprise Git platforms with advanced security and governance features, governance policies that align with organizational standards, compliance controls that meet regulatory requirements, and comprehensive audit trails for tracking all changes. These measures ensure that version control supports rather than hinders enterprise objectives.",
-    "industryContext": "Enterprise governance significantly impacts version control implementation in large organizations. Companies like IBM and Oracle use enterprise Git platforms like GitHub Enterprise and GitLab Ultimate to implement sophisticated governance controls. Governance requirements often drive the selection of version control platforms and workflows.",
-    "tags": [
-      "version-control",
-      "enterprise",
-      "governance",
-      "intermediate"
-    ],
-    "questionType": "multiple-choice",
-    "estimatedTime": 90,
-    "correctAnswer": 0,
-    "type": "multiple-choice",
-    "sources": []
-  },
-  {
-    "id": 16,
-    "question": "How do you push a local branch to a remote repository for the first time?",
-    "topic": "Version Control",
-    "choices": [
-      "`git push -u origin branch-name`",
-      "`git push branch-name`",
-      "`git push --new origin branch-name`",
-      "`git upload branch-name`"
-    ],
-    "explanation": "The command '`git push` -u origin branch-name' pushes a local branch to the remote repository and sets up tracking. The -u flag (or --set-upstream) establishes a relationship between the local and remote branches for future pushes and pulls.",
-    "correctAnswer": 0,
-    "difficulty": "Beginner",
-    "questionType": "multiple-choice",
-    "type": "multiple-choice",
-    "sources": []
-  },
-  {
-    "id": 17,
-    "question": "What is the purpose of 'git stash'?",
-    "topic": "Version Control",
-    "choices": [
-      "Temporarily save changes without committing them",
-      "Permanently delete all changes",
-      "Create a backup of the entire repository",
-      "Synchronize with the remote repository"
-    ],
-    "explanation": "'git stash' temporarily saves your current changes without committing them, allowing you to switch branches or pull updates without committing incomplete work. You can later restore the stashed changes with 'git stash pop' or 'git stash apply'.",
-    "correctAnswer": 0,
-    "difficulty": "Beginner",
-    "questionType": "multiple-choice",
-    "type": "multiple-choice",
-    "sources": []
-  },
-  {
-    "id": 18,
-    "question": "Which Git workflow is best for continuous deployment?",
-    "topic": "Version Control",
-    "choices": [
-      "GitHub Flow",
-      "Git Flow",
-      "Centralized Workflow",
-      "Forking Workflow"
-    ],
-    "explanation": "GitHub Flow is a simple workflow ideal for continuous deployment. It involves creating feature branches from main, making changes, opening pull requests for review, and merging back to main for immediate deployment. Git Flow is more complex and better suited for versioned releases.",
-    "correctAnswer": 0,
-    "difficulty": "Beginner",
-    "questionType": "multiple-choice",
-    "type": "multiple-choice",
-    "sources": []
-  },
-  {
-    "id": 19,
-    "question": "What does '`git rebase`' do?",
-    "topic": "Version Control",
-    "choices": [
-      "Moves or combines commits to create a linear history",
-      "Deletes commits from the repository",
-      "Creates a backup of the current branch",
-      "Synchronizes with the remote repository"
-    ],
-    "explanation": "'`git rebase`' moves or combines commits to create a linear project history. It reapplies commits from the current branch on top of another base tip, resulting in a cleaner, linear history compared to merging.",
-    "correctAnswer": 0,
-    "difficulty": "Beginner",
-    "questionType": "multiple-choice",
-    "type": "multiple-choice",
-    "sources": []
-  },
-  {
-    "id": 20,
-    "question": "How do you create an annotated tag in Git?",
-    "topic": "Version Control",
-    "choices": [
-      "`git tag -a v1.0.0 -m \"Release version 1.0.0\"`",
-      "`git tag v1.0.0`",
-      "`git create-tag v1.0.0`",
-      "`git mark v1.0.0`"
-    ],
-    "explanation": "The command 'git tag -a v1.0.0 -m \"Release version 1.0.0\"' creates an annotated tag with a message. Annotated tags store additional metadata including the tagger name, email, date, and message, making them more complete than lightweight tags created with 'git tag v1.0.0'.",
-    "correctAnswer": 0,
-    "difficulty": "Beginner",
-    "questionType": "multiple-choice",
-    "type": "multiple-choice",
-    "sources": []
-  },
-  {
-    "id": 21,
-    "question": "What is the purpose of 'git cherry-pick'?",
-    "topic": "Version Control",
-    "choices": [
-      "To apply the changes introduced by some existing commits",
-      "To delete a specific commit",
-      "To create a new branch from a commit",
-      "To merge two branches together"
-    ],
-    "explanation": "'git cherry-pick' applies the changes introduced by some existing commits to the current branch. It's useful for applying specific commits from one branch to another without merging the entire branch.",
-    "correctAnswer": 0,
-    "difficulty": "Beginner",
-    "questionType": "multiple-choice",
-    "type": "multiple-choice",
-    "sources": []
-  },
-  {
-    "id": 22,
-    "question": "Which command shows the commit history in a compact format?",
-    "topic": "Version Control",
-    "choices": [
-      "`git log --oneline`",
-      "`git history --short`",
-      "`git commits --brief`",
-      "`git show --compact`"
-    ],
-    "explanation": "'git log --oneline' displays the commit history in a compact format, showing each commit on a single line with its abbreviated commit hash and commit message. This is useful for quickly reviewing the commit history.",
-    "correctAnswer": 0,
-    "difficulty": "Beginner",
-    "questionType": "multiple-choice",
-    "type": "multiple-choice",
-    "sources": []
-  },
-  {
-    "id": 23,
-    "question": "What does 'git reset --hard' do?",
-    "topic": "Version Control",
-    "choices": [
-      "Resets the working directory and index to match a specific commit, discarding all changes",
-      "Resets only the index to match a specific commit",
-      "Resets only the working directory to match a specific commit",
-      "Creates a backup of the current state before resetting"
-    ],
-    "explanation": "'git reset --hard' resets both the working directory and the index to match a specific commit, discarding all changes in both. This is a destructive operation that permanently deletes uncommitted changes, so it should be used with caution.",
-    "correctAnswer": 0,
-    "difficulty": "Beginner",
-    "questionType": "multiple-choice",
-    "type": "multiple-choice",
-    "sources": []
-  },
-  {
-    "id": 24,
-    "question": "Which Git command is used to compare changes between commits?",
-    "topic": "Version Control",
-    "choices": [
-      "`git diff`",
-      "`git compare`",
-      "`git changes`",
-      "`git show`"
-    ],
-    "explanation": "'git diff' is used to compare changes between commits, between the working directory and the index, or between branches. It shows the differences in a format similar to the Unix diff command.",
-    "correctAnswer": 0,
-    "difficulty": "Beginner",
-    "questionType": "multiple-choice",
-    "type": "multiple-choice",
-    "sources": []
-  },
-  {
-    "id": 25,
-    "question": "What is the purpose of a Git hook?",
-    "topic": "Version Control",
-    "choices": [
-      "To trigger custom scripts at certain points in the Git workflow",
-      "To connect to a remote repository",
-      "To merge branches automatically",
-      "To compress the repository size"
-    ],
-    "explanation": "Git hooks are scripts that Git executes before or after events such as commit, push, or merge. They allow you to customize Git's behavior and automate tasks in your development workflow.",
-    "correctAnswer": 0,
-    "difficulty": "Beginner",
-    "questionType": "multiple-choice",
-    "type": "multiple-choice",
-    "sources": []
-  },
-  {
-    "id": 26,
-    "question": "Which command is used to undo the last commit but keep the changes in the working directory?",
-    "topic": "Version Control",
-    "choices": [
-      "`git reset --soft HEAD~1`",
-      "`git revert HEAD`",
-      "`git undo last-commit`",
-      "`git commit --undo`"
-    ],
-    "explanation": "'git reset --soft HEAD~1' undoes the last commit but keeps the changes staged in the index. This allows you to modify the commit before committing again. The changes remain in your working directory and index.",
-    "correctAnswer": 0,
-    "difficulty": "Beginner",
-    "questionType": "multiple-choice",
-    "type": "multiple-choice",
-    "sources": []
-  },
-  {
-    "id": 27,
-    "question": "What does 'git bisect' do?",
-    "topic": "Version Control",
-    "choices": [
-      "Helps find the commit that introduced a bug using binary search",
-      "Splits a repository into two parts",
-      "Compares two branches side by side",
-      "Merges multiple commits into one"
-    ],
-    "explanation": "'git bisect' uses a binary search algorithm to help you find the commit that introduced a bug. You mark a known good commit and a known bad commit, and Git checks out commits in between for you to test until you find the problematic commit.",
-    "correctAnswer": 0,
-    "difficulty": "Beginner",
-    "questionType": "multiple-choice",
-    "type": "multiple-choice",
-    "sources": []
-  },
-  {
-    "id": 28,
-    "question": "Which command is used to fetch changes from a remote repository without merging them?",
-    "topic": "Version Control",
-    "choices": [
-      "`git fetch`",
-      "`git pull`",
-      "`git update`",
-      "`git sync`"
-    ],
-    "explanation": "'git fetch' downloads changes from a remote repository but does not merge them into your current branch. This allows you to review the changes before deciding whether to merge them with '`git merge`' or '`git pull`'.",
-    "correctAnswer": 0,
-    "difficulty": "Beginner",
-    "questionType": "multiple-choice",
-    "type": "multiple-choice",
-    "sources": []
-  },
-  {
-    "id": 29,
-    "question": "What is the purpose of 'git reflog'?",
-    "topic": "Version Control",
-    "choices": [
-      "Shows a log of when the tips of branches and other references were updated",
-      "Displays the reference manual for Git commands",
-      "Lists all remote repository references",
-      "Shows the log of file references in the repository"
-    ],
-    "explanation": "'git reflog' shows a log of when the tips of branches and other references were updated. It's particularly useful for recovering from mistakes, as it shows commits that might otherwise be lost, including commits that were reset or rebased.",
-    "correctAnswer": 0,
-    "difficulty": "Beginner",
-    "questionType": "multiple-choice",
-    "type": "multiple-choice",
-    "sources": []
-  },
-  {
-    "id": 30,
-    "question": "Which command is used to combine multiple commits into a single commit?",
-    "topic": "Version Control",
-    "choices": [
-      "`git rebase -i`",
-      "`git squash`",
-      "`git combine`",
-      "`git merge --flatten`"
-    ],
-    "explanation": "'`git rebase` -i' (interactive rebase) is used to combine multiple commits into a single commit. During the interactive rebase, you can choose to 'squash' or 'fixup' commits to combine them with previous commits.",
-    "correctAnswer": 0,
-    "difficulty": "Beginner",
-    "questionType": "multiple-choice",
-    "type": "multiple-choice",
-    "sources": []
-  },
-  {
-    "id": 31,
-    "question": "What does 'git blame' do?",
-    "topic": "Version Control",
-    "choices": [
-      "Shows what revision and author last modified each line of a file",
-      "Assigns responsibility for bugs to specific developers",
-      "Highlights lines of code that have been changed recently",
-      "Displays a list of files that have been modified"
-    ],
-    "explanation": "'git blame' shows what revision and author last modified each line of a file. It's useful for understanding when and why specific lines of code were changed, and who made those changes.",
-    "correctAnswer": 0,
-    "difficulty": "Beginner",
-    "questionType": "multiple-choice",
-    "type": "multiple-choice",
-    "sources": []
-  },
-  {
-    "id": 32,
-    "question": "Which Git command is used to create a bare repository?",
-    "topic": "Version Control",
-    "choices": [
-      "`git init --bare`",
-      "`git create --empty`",
-      "`git init --empty`",
-      "`git bare init`"
-    ],
-    "explanation": "'git init --bare' creates a bare repository, which is a repository that doesn't have a working directory. Bare repositories are typically used as central repositories that developers push to and pull from.",
-    "correctAnswer": 0,
-    "difficulty": "Beginner",
-    "questionType": "multiple-choice",
-    "type": "multiple-choice",
-    "sources": []
-  },
-  {
-    "id": 33,
-    "question": "What is the purpose of 'git clean'?",
-    "topic": "Version Control",
-    "choices": [
-      "Removes untracked files from the working directory",
-      "Deletes the entire repository",
-      "Clears the Git cache",
-      "Resets all changes in the repository"
-    ],
-    "explanation": "'git clean' removes untracked files from the working directory. Untracked files are files that are not being tracked by Git. This command is useful for cleaning up build artifacts or other generated files.",
-    "correctAnswer": 0,
-    "difficulty": "Beginner",
-    "questionType": "multiple-choice",
-    "type": "multiple-choice",
-    "sources": []
-  },
-  {
-    "id": 34,
-    "question": "Which command is used to list all branches in a repository?",
-    "topic": "Version Control",
-    "choices": [
-      "`git branch -a`",
-      "`git branches`",
-      "`git list-branches`",
-      "`git show-branches`"
-    ],
-    "explanation": "'`git branch -a`' lists all branches in a repository, including both local and remote-tracking branches. The '-a' flag stands for 'all'. Without this flag, 'git branch' only shows local branches.",
-    "correctAnswer": 0,
-    "difficulty": "Beginner",
-    "questionType": "multiple-choice",
-    "type": "multiple-choice",
-    "sources": []
-  },
-  {
-    "id": 35,
-    "question": "What does 'git fsck' do?",
-    "topic": "Version Control",
-    "choices": [
-      "Verifies the connectivity and validity of objects in the database",
-      "Checks the file system for errors",
-      "Fixes corrupted Git repositories",
-      "Synchronizes with the file system"
-    ],
-    "explanation": "'git fsck' (file system check) verifies the connectivity and validity of objects in the Git database. It checks for corrupt objects, dangling commits, and other integrity issues in the repository.",
-    "correctAnswer": 0,
-    "difficulty": "Beginner",
-    "questionType": "multiple-choice",
-    "type": "multiple-choice",
-    "sources": []
-  },
-  {
-    "id": 36,
-    "question": "Which command is used to configure Git user information?",
-    "topic": "Version Control",
-    "choices": [
-      "`git config --global user.name \"Your Name\"`",
-      "`git user set \"Your Name\"`",
-      "`git setup user \"Your Name\"`",
-      "`git profile \"Your Name\"`"
-    ],
-    "explanation": "'git config --global user.name \"Your Name\"' is used to configure Git user information. The '--global' flag sets the configuration for all repositories on the system. You also need to set the email with 'git config --global user.email \"your.email@example.com\"'.",
-    "correctAnswer": 0,
-    "difficulty": "Beginner",
-    "questionType": "multiple-choice",
-    "type": "multiple-choice",
-    "sources": []
-  },
-  {
-    "id": 37,
-    "question": "What is the purpose of 'git archive'?",
-    "topic": "Version Control",
-    "choices": [
-      "Creates an archive of files from a named tree",
-      "Compresses the entire repository",
-      "Backs up the repository to a remote location",
-      "Archives old commits to save space"
-    ],
-    "explanation": "'git archive' creates an archive of files from a named tree, such as a specific commit or branch. It's useful for creating distribution packages or snapshots of the code at a specific point in time.",
-    "correctAnswer": 0,
-    "difficulty": "Beginner",
-    "questionType": "multiple-choice",
-    "type": "multiple-choice",
-    "sources": []
-  },
-  {
-    "id": 38,
-    "question": "Which command is used to show the changes staged for the next commit?",
-    "topic": "Version Control",
-    "choices": [
-      "`git diff --cached`",
-      "`git diff --staged`",
-      "`git status --changes`",
-      "Both A and B are correct"
-    ],
-    "explanation": "Both 'git diff --cached' and 'git diff --staged' show the changes that are staged for the next commit. '--cached' and '--staged' are synonyms. These commands show what will be included in the next commit.",
-    "correctAnswer": 3,
-    "difficulty": "Intermediate",
-    "fixedChoiceOrder": true,
-    "choiceLabels": "letters",
-    "questionType": "multiple-choice",
-    "type": "multiple-choice",
-    "sources": []
-  },
-  {
-    "id": 39,
-    "question": "What does 'git submodule' do?",
-    "topic": "Version Control",
-    "choices": [
-      "Manages external repositories as subdirectories of the main repository",
-      "Creates subdirectories within the repository",
-      "Splits the repository into smaller modules",
-      "Manages different versions of the same file"
-    ],
-    "explanation": "'git submodule' allows you to keep a Git repository as a subdirectory of another Git repository. This lets you clone another repository into your project and keep your commits separate.",
-    "correctAnswer": 0,
-    "difficulty": "Intermediate",
-    "questionType": "multiple-choice",
-    "type": "multiple-choice",
-    "sources": []
-  },
-  {
-    "id": 40,
-    "question": "Which command is used to temporarily store uncommitted changes?",
-    "topic": "Version Control",
-    "choices": [
-      "`git stash`",
-      "`git store`",
-      "`git save`",
-      "`git hold`"
-    ],
-    "explanation": "'git stash' is used to temporarily store uncommitted changes. It saves your local modifications away and reverts the working directory to match the HEAD commit, allowing you to work on something else and come back to your changes later.",
-    "correctAnswer": 0,
-    "difficulty": "Intermediate",
-    "questionType": "multiple-choice",
-    "type": "multiple-choice",
-    "sources": []
-  }
-]
+{
+  "questions": [
+    {
+      "id": 1,
+      "question": "Which command is used to create a new Git repository in the current directory?",
+      "topic": "Git",
+      "difficulty": "Beginner",
+      "choices": [
+        "`git init`",
+        "`git create`",
+        "`git new`",
+        "`git start`"
+      ],
+      "explanation": "The 'git init' command initializes a new Git repository in the current directory, creating a .git folder that contains all the repository metadata. This is the first step in version controlling any project.",
+      "industryContext": "Every software project should be version controlled from the start. 'git init' is often the first command developers run when starting a new project.",
+      "tags": [
+        "foundational",
+        "beginner"
+      ],
+      "estimatedTime": 90,
+      "questionType": "multiple-choice",
+      "correctAnswer": 0,
+      "type": "multiple-choice",
+      "sources": []
+    },
+    {
+      "id": 2,
+      "question": "What is the correct workflow to commit changes in Git?",
+      "topic": "Git",
+      "difficulty": "Beginner",
+      "choices": [
+        "`git add → git commit`",
+        "`git commit → git add`",
+        "`git push → git commit`",
+        "`git commit only (no add needed)`"
+      ],
+      "explanation": "The correct Git workflow is to first stage changes with 'git add' (adding them to the staging area), then commit them with '`git commit`'. This two-step process allows you to carefully control which changes are included in each commit.",
+      "industryContext": "The staging area is a key feature that sets Git apart from other version control systems, allowing developers to craft precise, logical commits.",
+      "tags": [
+        "foundational",
+        "beginner"
+      ],
+      "estimatedTime": 90,
+      "questionType": "multiple-choice",
+      "correctAnswer": 0,
+      "type": "multiple-choice",
+      "sources": []
+    },
+    {
+      "id": 3,
+      "question": "Which command creates a new branch AND switches to it immediately?",
+      "topic": "Git",
+      "difficulty": "Intermediate",
+      "choices": [
+        "`git checkout -b feature-branch`",
+        "`git branch feature-branch`",
+        "`git switch feature-branch`",
+        "`git create feature-branch`"
+      ],
+      "explanation": "`git checkout -b feature-branch` creates a new branch called `feature-branch` and immediately switches to it. The newer equivalent is `git switch -c feature-branch`. The `git branch feature-branch` option only creates the branch without switching to it.",
+      "industryContext": "Feature branches are essential for team development, allowing developers to work on different features simultaneously without interfering with each other's code.",
+      "tags": [
+        "foundational",
+        "intermediate"
+      ],
+      "estimatedTime": 90,
+      "questionType": "multiple-choice",
+      "correctAnswer": 0,
+      "type": "multiple-choice",
+      "sources": []
+    },
+    {
+      "id": 4,
+      "question": "What happens when you encounter a merge conflict in Git?",
+      "topic": "Git",
+      "difficulty": "Intermediate",
+      "choices": [
+        "Git stops the merge and requires manual resolution",
+        "Git automatically chooses the newer version",
+        "Git automatically chooses the older version",
+        "Git creates two separate files"
+      ],
+      "explanation": "When Git encounters a merge conflict (same lines modified in different ways), it stops the merge process and marks the conflicted sections in the files. You must manually edit the files to resolve conflicts, then add and commit the resolved files.",
+      "industryContext": "Merge conflicts are common in team development. Learning to resolve them efficiently is a crucial skill for collaborative software development.",
+      "tags": [
+        "foundational",
+        "intermediate"
+      ],
+      "estimatedTime": 90,
+      "questionType": "multiple-choice",
+      "correctAnswer": 0,
+      "type": "multiple-choice",
+      "sources": []
+    },
+    {
+      "id": 5,
+      "question": "Which file is used to specify which files Git should ignore?",
+      "topic": "Git",
+      "difficulty": "Beginner",
+      "choices": [
+        ".gitignore",
+        ".gitexclude",
+        "ignore.txt",
+        ".ignore"
+      ],
+      "explanation": "The '.gitignore' file contains patterns for files and directories that Git should not track. This is essential for excluding build artifacts, dependencies, IDE files, and sensitive information from version control.",
+      "industryContext": "Every project should have a .gitignore file to prevent accidentally committing temporary files, build outputs, or sensitive information like API keys.",
+      "tags": [
+        "foundational",
+        "beginner"
+      ],
+      "estimatedTime": 90,
+      "questionType": "multiple-choice",
+      "correctAnswer": 0,
+      "type": "multiple-choice",
+      "sources": []
+    },
+    {
+      "id": 6,
+      "question": "What is the primary purpose of version control systems in software development?",
+      "topic": "Git",
+      "difficulty": "Beginner",
+      "choices": [
+        "Track changes to code over time, enable collaboration, and maintain project history",
+        "Delete code to free up disk space",
+        "Prevent developers from making any changes",
+        "Slow down development processes intentionally"
+      ],
+      "explanation": "The primary purpose of version control systems is to track changes to code over time, enabling multiple developers to collaborate effectively while maintaining a complete history of the project. Version control provides the foundation for modern software development workflows by allowing teams to work simultaneously on the same codebase without conflicts.",
+      "industryContext": "Version control systems have become essential infrastructure for software development, with Git being used by over 90% of professional developers. Companies like Microsoft, Google, and Facebook rely on sophisticated version control workflows to manage massive codebases with thousands of contributors. The shift from centralized systems like SVN to distributed systems like Git has revolutionized collaborative development.",
+      "tags": [
+        "version-control",
+        "git",
+        "collaboration",
+        "beginner"
+      ],
+      "questionType": "multiple-choice",
+      "estimatedTime": 90,
+      "correctAnswer": 0,
+      "type": "multiple-choice",
+      "sources": []
+    },
+    {
+      "id": 7,
+      "question": "What are the performance considerations when using Git for large repositories?",
+      "topic": "GitHub",
+      "difficulty": "Intermediate",
+      "choices": [
+        "Use shallow clones, sparse checkouts, and Git LFS for large files to improve performance",
+        "Clone the entire repository history regardless of size",
+        "Avoid all version control for large projects",
+        "Use only the oldest Git features for better compatibility"
+      ],
+      "explanation": "Performance considerations for large Git repositories include using shallow clones to reduce download time, sparse checkouts to work with only specific directories, and Git LFS (Large File Storage) to handle large binary files efficiently. These techniques help maintain reasonable performance even with massive repositories containing years of history.",
+      "industryContext": "Large repositories present significant performance challenges that require specialized techniques. Companies like Microsoft and Google have developed sophisticated approaches to handling massive repositories, with Microsoft's Windows codebase being one of the largest Git repositories in the world. Git LFS was specifically created to address performance issues with large binary files.",
+      "tags": [
+        "git",
+        "performance",
+        "large-repositories",
+        "intermediate"
+      ],
+      "questionType": "multiple-choice",
+      "estimatedTime": 90,
+      "correctAnswer": 0,
+      "type": "multiple-choice",
+      "sources": []
+    },
+    {
+      "id": 8,
+      "question": "When should you use different branching strategies in version control?",
+      "topic": "Version Control",
+      "difficulty": "Beginner",
+      "choices": [
+        "Choose strategies based on team size, release frequency, and project complexity requirements",
+        "Always use the most complex branching strategy regardless of project needs",
+        "Never use branching and keep all changes in the main branch",
+        "Use random branching patterns without any strategic consideration"
+      ],
+      "explanation": "Branching strategy selection should be based on team size (larger teams need more structured approaches), release frequency (frequent releases benefit from continuous integration), and project complexity (complex projects may need feature isolation). Common strategies include Git Flow for structured releases, GitHub Flow for continuous deployment, and trunk-based development for rapid iteration.",
+      "industryContext": "Different organizations adopt branching strategies that match their development workflows and business requirements. Companies like Facebook use trunk-based development for rapid iteration, while enterprises with formal release cycles often use Git Flow. GitHub popularized the simpler GitHub Flow approach for continuous deployment scenarios.",
+      "tags": [
+        "version-control",
+        "branching-strategies",
+        "workflow",
+        "beginner"
+      ],
+      "questionType": "multiple-choice",
+      "estimatedTime": 90,
+      "correctAnswer": 0,
+      "type": "multiple-choice",
+      "sources": []
+    },
+    {
+      "id": 9,
+      "question": "How do you implement version control in a production environment with multiple teams?",
+      "topic": "Git",
+      "difficulty": "Intermediate",
+      "choices": [
+        "Use protected branches, code review workflows, automated testing, and access controls",
+        "Allow all developers to push directly to production branches",
+        "Disable version control entirely for production environments",
+        "Use only manual processes without any automation"
+      ],
+      "explanation": "Production version control implementation requires protected branches to prevent direct pushes to critical branches, code review workflows to ensure quality, automated testing to catch issues early, and access controls to limit who can make changes. These practices ensure that only thoroughly reviewed and tested code reaches production environments.",
+      "industryContext": "Enterprise version control requires sophisticated access controls and workflow enforcement. Companies like Amazon and Netflix have implemented complex permission systems and automated gates that prevent unapproved changes from reaching production. GitHub's protected branches feature and pull request reviews have become industry standards for production workflows.",
+      "tags": [
+        "version-control",
+        "production",
+        "workflow",
+        "intermediate"
+      ],
+      "questionType": "multiple-choice",
+      "estimatedTime": 90,
+      "correctAnswer": 0,
+      "type": "multiple-choice",
+      "sources": []
+    },
+    {
+      "id": 10,
+      "question": "Which of the following is a key feature of modern version control systems?",
+      "topic": "GitHub",
+      "difficulty": "Beginner",
+      "choices": [
+        "Distributed architecture, branching and merging, and collaboration tools",
+        "Centralized control with limited collaboration features",
+        "No support for multiple developers working simultaneously",
+        "Manual conflict resolution without any automation"
+      ],
+      "explanation": "Key features of modern version control systems include distributed architecture that allows each developer to have a complete repository copy, sophisticated branching and merging capabilities for parallel development, and integrated collaboration tools like pull requests and code review features. These features enable efficient collaborative development at scale.",
+      "industryContext": "The evolution from centralized version control systems like SVN to distributed systems like Git has transformed software development practices. Modern platforms like GitHub and GitLab have extended Git with powerful collaboration features. The distributed nature of Git provides resilience and flexibility that centralized systems cannot match.",
+      "tags": [
+        "version-control",
+        "git",
+        "distributed-systems",
+        "beginner"
+      ],
+      "questionType": "multiple-choice",
+      "estimatedTime": 90,
+      "correctAnswer": 0,
+      "type": "multiple-choice",
+      "sources": []
+    },
+    {
+      "id": 11,
+      "question": "What are the trade-offs between different version control workflows?",
+      "topic": "Version Control",
+      "difficulty": "Advanced",
+      "choices": [
+        "Git Flow provides structured releases but more complexity; GitHub Flow is simpler but requires continuous deployment discipline",
+        "All version control workflows are identical with no meaningful differences",
+        "Complex workflows are always superior to simple approaches",
+        "Simple workflows work for all project types without any limitations"
+      ],
+      "explanation": "Version control workflow trade-offs include Git Flow which provides structured release management and support for multiple release versions but introduces complexity through multiple long-lived branches, versus GitHub Flow which is simpler and supports rapid iteration but requires discipline around continuous deployment and feature flagging. The choice depends on organizational release processes and team maturity.",
+      "industryContext": "Workflow selection significantly impacts development velocity and release management. Large enterprises with formal release cycles often choose Git Flow or similar structured approaches, while startups and web-focused companies typically prefer simpler workflows like GitHub Flow. Companies like Etsy have published detailed case studies comparing different workflow approaches.",
+      "tags": [
+        "version-control",
+        "workflows",
+        "trade-offs",
+        "advanced"
+      ],
+      "questionType": "multiple-choice",
+      "estimatedTime": 120,
+      "correctAnswer": 0,
+      "type": "multiple-choice",
+      "sources": []
+    },
+    {
+      "id": 12,
+      "question": "How do you implement version control in a production environment with regulatory compliance requirements?",
+      "topic": "Git",
+      "difficulty": "Intermediate",
+      "choices": [
+        "Use signed commits, audit trails, branch protection, and compliance-focused workflows",
+        "Ignore all compliance requirements for faster development",
+        "Disable version control entirely to avoid compliance issues",
+        "Use only basic Git features without any security enhancements"
+      ],
+      "explanation": "Production version control implementation with regulatory compliance requires signed commits to verify authorship, comprehensive audit trails for change tracking, branch protection to enforce review processes, and compliance-focused workflows that meet regulatory requirements. These measures ensure that version control practices support rather than hinder compliance efforts.",
+      "industryContext": "Regulatory compliance significantly impacts version control implementation in industries like finance and healthcare. Companies subject to SOX, HIPAA, or other regulations must implement version control practices that support audit requirements. Financial institutions like JPMorgan Chase have developed sophisticated compliance-focused Git workflows.",
+      "tags": [
+        "version-control",
+        "compliance",
+        "security",
+        "intermediate"
+      ],
+      "questionType": "multiple-choice",
+      "estimatedTime": 90,
+      "correctAnswer": 0,
+      "type": "multiple-choice",
+      "sources": []
+    },
+    {
+      "id": 13,
+      "question": "What are the security considerations when using version control systems?",
+      "topic": "GitHub",
+      "difficulty": "Advanced",
+      "choices": [
+        "Protect sensitive data, implement access controls, use signed commits, and scan for secrets",
+        "Store all credentials in version control for easy access",
+        "Disable all security measures to improve developer convenience",
+        "Ignore security concerns and focus only on feature development"
+      ],
+      "explanation": "Version control security considerations include protecting sensitive data through proper .gitignore configuration and secret scanning, implementing access controls to limit repository access, using signed commits to verify authorship, and scanning for accidentally committed secrets. These practices prevent security incidents caused by version control misconfigurations.",
+      "industryContext": "Version control security has become a critical concern as high-profile incidents have shown the risks of committing sensitive data. Companies like GitHub and GitLab have implemented sophisticated secret scanning and security alerting features. The average cost of a data breach involving version control misconfigurations can exceed $4 million.",
+      "tags": [
+        "version-control",
+        "security",
+        "secrets-management",
+        "intermediate"
+      ],
+      "questionType": "multiple-choice",
+      "estimatedTime": 90,
+      "correctAnswer": 0,
+      "type": "multiple-choice",
+      "sources": []
+    },
+    {
+      "id": 14,
+      "question": "Which pattern is most effective for implementing scalable version control practices?",
+      "topic": "Version Control",
+      "difficulty": "Advanced",
+      "choices": [
+        "Modular repository structure, automated workflows, clear branching strategies, and comprehensive documentation",
+        "Monolithic repositories with no organizational structure",
+        "Random commit patterns without any conventions",
+        "No documentation or standard practices"
+      ],
+      "explanation": "Scalable version control practices require modular repository structure for maintainability, automated workflows to reduce manual errors, clear branching strategies for team coordination, and comprehensive documentation to ensure consistency. These patterns enable version control systems to scale effectively with growing teams and codebases.",
+      "industryContext": "Scaling version control practices is critical for growing organizations. Companies like Microsoft and Google have developed sophisticated approaches to managing massive codebases with thousands of contributors. The monorepo vs. multi-repo debate reflects different approaches to scaling version control, with successful companies using both patterns effectively.",
+      "tags": [
+        "version-control",
+        "scalability",
+        "best-practices",
+        "intermediate"
+      ],
+      "questionType": "multiple-choice",
+      "estimatedTime": 90,
+      "correctAnswer": 0,
+      "type": "multiple-choice",
+      "sources": []
+    },
+    {
+      "id": 15,
+      "question": "How do you implement version control in a production environment with enterprise governance requirements?",
+      "topic": "Git",
+      "difficulty": "Advanced",
+      "choices": [
+        "Use enterprise Git platforms, implement governance policies, enforce compliance controls, and maintain audit trails",
+        "Ignore all governance requirements for faster development velocity",
+        "Use only basic Git features without any enterprise capabilities",
+        "Disable version control entirely to avoid governance complexity"
+      ],
+      "explanation": "Enterprise version control implementation requires enterprise Git platforms with advanced security and governance features, governance policies that align with organizational standards, compliance controls that meet regulatory requirements, and comprehensive audit trails for tracking all changes. These measures ensure that version control supports rather than hinders enterprise objectives.",
+      "industryContext": "Enterprise governance significantly impacts version control implementation in large organizations. Companies like IBM and Oracle use enterprise Git platforms like GitHub Enterprise and GitLab Ultimate to implement sophisticated governance controls. Governance requirements often drive the selection of version control platforms and workflows.",
+      "tags": [
+        "version-control",
+        "enterprise",
+        "governance",
+        "intermediate"
+      ],
+      "questionType": "multiple-choice",
+      "estimatedTime": 90,
+      "correctAnswer": 0,
+      "type": "multiple-choice",
+      "sources": []
+    },
+    {
+      "id": 16,
+      "question": "How do you push a local branch to a remote repository for the first time?",
+      "topic": "Version Control",
+      "choices": [
+        "`git push -u origin branch-name`",
+        "`git push branch-name`",
+        "`git push --new origin branch-name`",
+        "`git upload branch-name`"
+      ],
+      "explanation": "The command '`git push` -u origin branch-name' pushes a local branch to the remote repository and sets up tracking. The -u flag (or --set-upstream) establishes a relationship between the local and remote branches for future pushes and pulls.",
+      "correctAnswer": 0,
+      "difficulty": "Beginner",
+      "questionType": "multiple-choice",
+      "type": "multiple-choice",
+      "sources": []
+    },
+    {
+      "id": 17,
+      "question": "What is the purpose of 'git stash'?",
+      "topic": "Version Control",
+      "choices": [
+        "Temporarily save changes without committing them",
+        "Permanently delete all changes",
+        "Create a backup of the entire repository",
+        "Synchronize with the remote repository"
+      ],
+      "explanation": "'git stash' temporarily saves your current changes without committing them, allowing you to switch branches or pull updates without committing incomplete work. You can later restore the stashed changes with 'git stash pop' or 'git stash apply'.",
+      "correctAnswer": 0,
+      "difficulty": "Beginner",
+      "questionType": "multiple-choice",
+      "type": "multiple-choice",
+      "sources": []
+    },
+    {
+      "id": 18,
+      "question": "Which Git workflow is best for continuous deployment?",
+      "topic": "Version Control",
+      "choices": [
+        "GitHub Flow",
+        "Git Flow",
+        "Centralized Workflow",
+        "Forking Workflow"
+      ],
+      "explanation": "GitHub Flow is a simple workflow ideal for continuous deployment. It involves creating feature branches from main, making changes, opening pull requests for review, and merging back to main for immediate deployment. Git Flow is more complex and better suited for versioned releases.",
+      "correctAnswer": 0,
+      "difficulty": "Beginner",
+      "questionType": "multiple-choice",
+      "type": "multiple-choice",
+      "sources": []
+    },
+    {
+      "id": 19,
+      "question": "What does '`git rebase`' do?",
+      "topic": "Version Control",
+      "choices": [
+        "Moves or combines commits to create a linear history",
+        "Deletes commits from the repository",
+        "Creates a backup of the current branch",
+        "Synchronizes with the remote repository"
+      ],
+      "explanation": "'`git rebase`' moves or combines commits to create a linear project history. It reapplies commits from the current branch on top of another base tip, resulting in a cleaner, linear history compared to merging.",
+      "correctAnswer": 0,
+      "difficulty": "Beginner",
+      "questionType": "multiple-choice",
+      "type": "multiple-choice",
+      "sources": []
+    },
+    {
+      "id": 20,
+      "question": "How do you create an annotated tag in Git?",
+      "topic": "Version Control",
+      "choices": [
+        "`git tag -a v1.0.0 -m \"Release version 1.0.0\"`",
+        "`git tag v1.0.0`",
+        "`git create-tag v1.0.0`",
+        "`git mark v1.0.0`"
+      ],
+      "explanation": "The command 'git tag -a v1.0.0 -m \"Release version 1.0.0\"' creates an annotated tag with a message. Annotated tags store additional metadata including the tagger name, email, date, and message, making them more complete than lightweight tags created with 'git tag v1.0.0'.",
+      "correctAnswer": 0,
+      "difficulty": "Beginner",
+      "questionType": "multiple-choice",
+      "type": "multiple-choice",
+      "sources": []
+    },
+    {
+      "id": 21,
+      "question": "What is the purpose of 'git cherry-pick'?",
+      "topic": "Version Control",
+      "choices": [
+        "To apply the changes introduced by some existing commits",
+        "To delete a specific commit",
+        "To create a new branch from a commit",
+        "To merge two branches together"
+      ],
+      "explanation": "'git cherry-pick' applies the changes introduced by some existing commits to the current branch. It's useful for applying specific commits from one branch to another without merging the entire branch.",
+      "correctAnswer": 0,
+      "difficulty": "Beginner",
+      "questionType": "multiple-choice",
+      "type": "multiple-choice",
+      "sources": []
+    },
+    {
+      "id": 22,
+      "question": "Which command shows the commit history in a compact format?",
+      "topic": "Version Control",
+      "choices": [
+        "`git log --oneline`",
+        "`git history --short`",
+        "`git commits --brief`",
+        "`git show --compact`"
+      ],
+      "explanation": "'git log --oneline' displays the commit history in a compact format, showing each commit on a single line with its abbreviated commit hash and commit message. This is useful for quickly reviewing the commit history.",
+      "correctAnswer": 0,
+      "difficulty": "Beginner",
+      "questionType": "multiple-choice",
+      "type": "multiple-choice",
+      "sources": []
+    },
+    {
+      "id": 23,
+      "question": "What does 'git reset --hard' do?",
+      "topic": "Version Control",
+      "choices": [
+        "Resets the working directory and index to match a specific commit, discarding all changes",
+        "Resets only the index to match a specific commit",
+        "Resets only the working directory to match a specific commit",
+        "Creates a backup of the current state before resetting"
+      ],
+      "explanation": "'git reset --hard' resets both the working directory and the index to match a specific commit, discarding all changes in both. This is a destructive operation that permanently deletes uncommitted changes, so it should be used with caution.",
+      "correctAnswer": 0,
+      "difficulty": "Beginner",
+      "questionType": "multiple-choice",
+      "type": "multiple-choice",
+      "sources": []
+    },
+    {
+      "id": 24,
+      "question": "Which Git command is used to compare changes between commits?",
+      "topic": "Version Control",
+      "choices": [
+        "`git diff`",
+        "`git compare`",
+        "`git changes`",
+        "`git show`"
+      ],
+      "explanation": "'git diff' is used to compare changes between commits, between the working directory and the index, or between branches. It shows the differences in a format similar to the Unix diff command.",
+      "correctAnswer": 0,
+      "difficulty": "Beginner",
+      "questionType": "multiple-choice",
+      "type": "multiple-choice",
+      "sources": []
+    },
+    {
+      "id": 25,
+      "question": "What is the purpose of a Git hook?",
+      "topic": "Version Control",
+      "choices": [
+        "To trigger custom scripts at certain points in the Git workflow",
+        "To connect to a remote repository",
+        "To merge branches automatically",
+        "To compress the repository size"
+      ],
+      "explanation": "Git hooks are scripts that Git executes before or after events such as commit, push, or merge. They allow you to customize Git's behavior and automate tasks in your development workflow.",
+      "correctAnswer": 0,
+      "difficulty": "Beginner",
+      "questionType": "multiple-choice",
+      "type": "multiple-choice",
+      "sources": []
+    },
+    {
+      "id": 26,
+      "question": "Which command is used to undo the last commit but keep the changes in the working directory?",
+      "topic": "Version Control",
+      "choices": [
+        "`git reset --soft HEAD~1`",
+        "`git revert HEAD`",
+        "`git undo last-commit`",
+        "`git commit --undo`"
+      ],
+      "explanation": "'git reset --soft HEAD~1' undoes the last commit but keeps the changes staged in the index. This allows you to modify the commit before committing again. The changes remain in your working directory and index.",
+      "correctAnswer": 0,
+      "difficulty": "Beginner",
+      "questionType": "multiple-choice",
+      "type": "multiple-choice",
+      "sources": []
+    },
+    {
+      "id": 27,
+      "question": "What does 'git bisect' do?",
+      "topic": "Version Control",
+      "choices": [
+        "Helps find the commit that introduced a bug using binary search",
+        "Splits a repository into two parts",
+        "Compares two branches side by side",
+        "Merges multiple commits into one"
+      ],
+      "explanation": "'git bisect' uses a binary search algorithm to help you find the commit that introduced a bug. You mark a known good commit and a known bad commit, and Git checks out commits in between for you to test until you find the problematic commit.",
+      "correctAnswer": 0,
+      "difficulty": "Beginner",
+      "questionType": "multiple-choice",
+      "type": "multiple-choice",
+      "sources": []
+    },
+    {
+      "id": 28,
+      "question": "Which command is used to fetch changes from a remote repository without merging them?",
+      "topic": "Version Control",
+      "choices": [
+        "`git fetch`",
+        "`git pull`",
+        "`git update`",
+        "`git sync`"
+      ],
+      "explanation": "'git fetch' downloads changes from a remote repository but does not merge them into your current branch. This allows you to review the changes before deciding whether to merge them with '`git merge`' or '`git pull`'.",
+      "correctAnswer": 0,
+      "difficulty": "Beginner",
+      "questionType": "multiple-choice",
+      "type": "multiple-choice",
+      "sources": []
+    },
+    {
+      "id": 29,
+      "question": "What is the purpose of 'git reflog'?",
+      "topic": "Version Control",
+      "choices": [
+        "Shows a log of when the tips of branches and other references were updated",
+        "Displays the reference manual for Git commands",
+        "Lists all remote repository references",
+        "Shows the log of file references in the repository"
+      ],
+      "explanation": "'git reflog' shows a log of when the tips of branches and other references were updated. It's particularly useful for recovering from mistakes, as it shows commits that might otherwise be lost, including commits that were reset or rebased.",
+      "correctAnswer": 0,
+      "difficulty": "Beginner",
+      "questionType": "multiple-choice",
+      "type": "multiple-choice",
+      "sources": []
+    },
+    {
+      "id": 30,
+      "question": "Which command is used to combine multiple commits into a single commit?",
+      "topic": "Version Control",
+      "choices": [
+        "`git rebase -i`",
+        "`git squash`",
+        "`git combine`",
+        "`git merge --flatten`"
+      ],
+      "explanation": "'`git rebase` -i' (interactive rebase) is used to combine multiple commits into a single commit. During the interactive rebase, you can choose to 'squash' or 'fixup' commits to combine them with previous commits.",
+      "correctAnswer": 0,
+      "difficulty": "Beginner",
+      "questionType": "multiple-choice",
+      "type": "multiple-choice",
+      "sources": []
+    },
+    {
+      "id": 31,
+      "question": "What does 'git blame' do?",
+      "topic": "Version Control",
+      "choices": [
+        "Shows what revision and author last modified each line of a file",
+        "Assigns responsibility for bugs to specific developers",
+        "Highlights lines of code that have been changed recently",
+        "Displays a list of files that have been modified"
+      ],
+      "explanation": "'git blame' shows what revision and author last modified each line of a file. It's useful for understanding when and why specific lines of code were changed, and who made those changes.",
+      "correctAnswer": 0,
+      "difficulty": "Beginner",
+      "questionType": "multiple-choice",
+      "type": "multiple-choice",
+      "sources": []
+    },
+    {
+      "id": 32,
+      "question": "Which Git command is used to create a bare repository?",
+      "topic": "Version Control",
+      "choices": [
+        "`git init --bare`",
+        "`git create --empty`",
+        "`git init --empty`",
+        "`git bare init`"
+      ],
+      "explanation": "'git init --bare' creates a bare repository, which is a repository that doesn't have a working directory. Bare repositories are typically used as central repositories that developers push to and pull from.",
+      "correctAnswer": 0,
+      "difficulty": "Beginner",
+      "questionType": "multiple-choice",
+      "type": "multiple-choice",
+      "sources": []
+    },
+    {
+      "id": 33,
+      "question": "What is the purpose of 'git clean'?",
+      "topic": "Version Control",
+      "choices": [
+        "Removes untracked files from the working directory",
+        "Deletes the entire repository",
+        "Clears the Git cache",
+        "Resets all changes in the repository"
+      ],
+      "explanation": "'git clean' removes untracked files from the working directory. Untracked files are files that are not being tracked by Git. This command is useful for cleaning up build artifacts or other generated files.",
+      "correctAnswer": 0,
+      "difficulty": "Beginner",
+      "questionType": "multiple-choice",
+      "type": "multiple-choice",
+      "sources": []
+    },
+    {
+      "id": 34,
+      "question": "Which command is used to list all branches in a repository?",
+      "topic": "Version Control",
+      "choices": [
+        "`git branch -a`",
+        "`git branches`",
+        "`git list-branches`",
+        "`git show-branches`"
+      ],
+      "explanation": "'`git branch -a`' lists all branches in a repository, including both local and remote-tracking branches. The '-a' flag stands for 'all'. Without this flag, 'git branch' only shows local branches.",
+      "correctAnswer": 0,
+      "difficulty": "Beginner",
+      "questionType": "multiple-choice",
+      "type": "multiple-choice",
+      "sources": []
+    },
+    {
+      "id": 35,
+      "question": "What does 'git fsck' do?",
+      "topic": "Version Control",
+      "choices": [
+        "Verifies the connectivity and validity of objects in the database",
+        "Checks the file system for errors",
+        "Fixes corrupted Git repositories",
+        "Synchronizes with the file system"
+      ],
+      "explanation": "'git fsck' (file system check) verifies the connectivity and validity of objects in the Git database. It checks for corrupt objects, dangling commits, and other integrity issues in the repository.",
+      "correctAnswer": 0,
+      "difficulty": "Beginner",
+      "questionType": "multiple-choice",
+      "type": "multiple-choice",
+      "sources": []
+    },
+    {
+      "id": 36,
+      "question": "Which command is used to configure Git user information?",
+      "topic": "Version Control",
+      "choices": [
+        "`git config --global user.name \"Your Name\"`",
+        "`git user set \"Your Name\"`",
+        "`git setup user \"Your Name\"`",
+        "`git profile \"Your Name\"`"
+      ],
+      "explanation": "'git config --global user.name \"Your Name\"' is used to configure Git user information. The '--global' flag sets the configuration for all repositories on the system. You also need to set the email with 'git config --global user.email \"your.email@example.com\"'.",
+      "correctAnswer": 0,
+      "difficulty": "Beginner",
+      "questionType": "multiple-choice",
+      "type": "multiple-choice",
+      "sources": []
+    },
+    {
+      "id": 37,
+      "question": "What is the purpose of 'git archive'?",
+      "topic": "Version Control",
+      "choices": [
+        "Creates an archive of files from a named tree",
+        "Compresses the entire repository",
+        "Backs up the repository to a remote location",
+        "Archives old commits to save space"
+      ],
+      "explanation": "'git archive' creates an archive of files from a named tree, such as a specific commit or branch. It's useful for creating distribution packages or snapshots of the code at a specific point in time.",
+      "correctAnswer": 0,
+      "difficulty": "Beginner",
+      "questionType": "multiple-choice",
+      "type": "multiple-choice",
+      "sources": []
+    },
+    {
+      "id": 38,
+      "question": "Which command is used to show the changes staged for the next commit?",
+      "topic": "Version Control",
+      "choices": [
+        "`git diff --cached`",
+        "`git diff --staged`",
+        "`git status --changes`",
+        "Both A and B are correct"
+      ],
+      "explanation": "Both 'git diff --cached' and 'git diff --staged' show the changes that are staged for the next commit. '--cached' and '--staged' are synonyms. These commands show what will be included in the next commit.",
+      "correctAnswer": 3,
+      "difficulty": "Intermediate",
+      "fixedChoiceOrder": true,
+      "choiceLabels": "letters",
+      "questionType": "multiple-choice",
+      "type": "multiple-choice",
+      "sources": []
+    },
+    {
+      "id": 39,
+      "question": "What does 'git submodule' do?",
+      "topic": "Version Control",
+      "choices": [
+        "Manages external repositories as subdirectories of the main repository",
+        "Creates subdirectories within the repository",
+        "Splits the repository into smaller modules",
+        "Manages different versions of the same file"
+      ],
+      "explanation": "'git submodule' allows you to keep a Git repository as a subdirectory of another Git repository. This lets you clone another repository into your project and keep your commits separate.",
+      "correctAnswer": 0,
+      "difficulty": "Intermediate",
+      "questionType": "multiple-choice",
+      "type": "multiple-choice",
+      "sources": []
+    },
+    {
+      "id": 40,
+      "question": "Which command is used to temporarily store uncommitted changes?",
+      "topic": "Version Control",
+      "choices": [
+        "`git stash`",
+        "`git store`",
+        "`git save`",
+        "`git hold`"
+      ],
+      "explanation": "'git stash' is used to temporarily store uncommitted changes. It saves your local modifications away and reverts the working directory to match the HEAD commit, allowing you to work on something else and come back to your changes later.",
+      "correctAnswer": 0,
+      "difficulty": "Intermediate",
+      "questionType": "multiple-choice",
+      "type": "multiple-choice",
+      "sources": []
+    }
+  ]
+}

@@ -1,482 +1,484 @@
-[
-  {
-    "id": 1,
-    "question": "What is Node.js?",
-    "topic": "Basics",
-    "difficulty": "Beginner",
-    "choices": [
-      "A JavaScript runtime built on Chrome's V8 JavaScript engine",
-      "A CSS framework",
-      "A database management system",
-      "A front-end framework"
-    ],
-    "explanation": "Node.js is a JavaScript runtime that allows you to run JavaScript on the server-side, built on Chrome's V8 JavaScript engine.",
-    "industryContext": "Node.js is essential for modern backend development and tooling.",
-    "tags": [
-      "Basics",
-      "beginner",
-      "node"
-    ],
-    "questionType": "multiple-choice",
-    "estimatedTime": 90,
-    "correctAnswer": 0,
-    "type": "multiple-choice",
-    "sources": []
-  },
-  {
-    "id": 2,
-    "question": "How do you import a module in Node.js?",
-    "topic": "Basics",
-    "difficulty": "Beginner",
-    "choices": [
-      "require()",
-      "import",
-      "include",
-      "load"
-    ],
-    "explanation": "In Node.js, modules are imported using the require() function. The import statement is used in ES6 modules.",
-    "industryContext": "Node.js is essential for modern backend development and tooling.",
-    "tags": [
-      "Basics",
-      "beginner",
-      "node"
-    ],
-    "questionType": "multiple-choice",
-    "estimatedTime": 90,
-    "correctAnswer": 0,
-    "type": "multiple-choice",
-    "sources": []
-  },
-  {
-    "id": 3,
-    "question": "What is Express.js and why is it used?",
-    "topic": "Express",
-    "difficulty": "Beginner",
-    "choices": [
-      "A minimal Node.js web framework that simplifies building web servers and APIs",
-      "A database management system for Node.js applications",
-      "A testing framework for Node.js unit tests",
-      "A code editor specifically designed for Node.js development"
-    ],
-    "explanation": "Express.js is a minimal and flexible Node.js web application framework that provides a robust set of features for web and mobile applications. It simplifies the process of building web servers and APIs by providing helpful utilities and middleware. Express is built on top of Node.js and provides a thin layer of fundamental web application features, without obscuring Node.js features that you know and love. It's the most popular web framework for Node.js and is used by many major companies.",
-    "industryContext": "Express.js is the most widely used web framework for Node.js, serving as the foundation for countless web applications and APIs. Understanding Express is essential for any Node.js backend developer, as it provides the building blocks for creating robust, scalable web services.",
-    "tags": [
-      "Express",
-      "beginner",
-      "node"
-    ],
-    "questionType": "multiple-choice",
-    "estimatedTime": 90,
-    "correctAnswer": 0,
-    "type": "multiple-choice",
-    "sources": []
-  },
-  {
-    "id": 4,
-    "question": "Which method is used to handle GET requests in Express?",
-    "topic": "Express",
-    "difficulty": "Intermediate",
-    "choices": [
-      "app.get()",
-      "app.post()",
-      "app.put()",
-      "app.delete()"
-    ],
-    "explanation": "In Express.js, app.get() is used to define a route handler for GET requests.",
-    "industryContext": "Node.js is essential for modern backend development and tooling.",
-    "tags": [
-      "Express",
-      "intermediate",
-      "node"
-    ],
-    "questionType": "multiple-choice",
-    "estimatedTime": 90,
-    "correctAnswer": 0,
-    "type": "multiple-choice",
-    "sources": []
-  },
-  {
-    "id": 5,
-    "question": "What is middleware in Express.js?",
-    "topic": "Middleware",
-    "difficulty": "Beginner",
-    "choices": [
-      "Functions that have access to the request and response objects",
-      "Database connection utilities",
-      "Template engines",
-      "Routing functions"
-    ],
-    "explanation": "Middleware functions in Express.js are functions that have access to the request object, the response object, and the next middleware function in the application's request-response cycle.",
-    "industryContext": "Node.js is essential for modern backend development and tooling.",
-    "tags": [
-      "Middleware",
-      "beginner",
-      "node"
-    ],
-    "questionType": "multiple-choice",
-    "estimatedTime": 90,
-    "correctAnswer": 0,
-    "type": "multiple-choice",
-    "sources": []
-  },
-  {
-    "id": 6,
-    "question": "How do you handle asynchronous operations in Node.js?",
-    "topic": "Async",
-    "difficulty": "Beginner",
-    "choices": [
-      "Using callbacks, promises, or async/await",
-      "Using synchronous functions only",
-      "Using threads",
-      "Using global variables"
-    ],
-    "explanation": "Node.js handles asynchronous operations using callbacks, promises, or the more modern async/await syntax.",
-    "industryContext": "Node.js is essential for modern backend development and tooling.",
-    "tags": [
-      "Async",
-      "beginner",
-      "node"
-    ],
-    "questionType": "multiple-choice",
-    "estimatedTime": 90,
-    "correctAnswer": 0,
-    "type": "multiple-choice",
-    "sources": []
-  },
-  {
-    "id": 7,
-    "question": "What is NPM and what is it used for?",
-    "topic": "NPM",
-    "difficulty": "Beginner",
-    "choices": [
-      "The default package manager for Node.js used to install, share, and manage packages",
-      "A database management system for Node.js applications",
-      "A testing framework for Node.js unit tests",
-      "A code editor specifically designed for Node.js development"
-    ],
-    "explanation": "NPM (Node Package Manager) is the default package manager for Node.js. It is used to install, share, and manage packages (libraries and tools) in Node.js projects. It also helps with dependency management and script execution. NPM hosts the world's largest registry of open-source packages and is essential for modern JavaScript development, allowing developers to easily share and reuse code.",
-    "industryContext": "NPM is fundamental to Node.js development, serving as the primary package manager for installing dependencies, managing project versions, and running scripts. Understanding NPM is essential for any Node.js developer working on real-world applications.",
-    "tags": [
-      "NPM",
-      "beginner",
-      "node"
-    ],
-    "questionType": "multiple-choice",
-    "estimatedTime": 90,
-    "correctAnswer": 0,
-    "type": "multiple-choice",
-    "sources": []
-  },
-  {
-    "id": 8,
-    "question": "What is the event loop in Node.js?",
-    "topic": "Event Loop",
-    "difficulty": "Beginner",
-    "choices": [
-      "A mechanism that handles asynchronous operations",
-      "A loop that executes synchronous code",
-      "A database `query` optimizer",
-      "A memory management system"
-    ],
-    "explanation": "The event loop in Node.js is a mechanism that handles asynchronous operations by continuously checking the call stack and callback queue to execute callbacks when the call stack is empty.",
-    "industryContext": "Node.js is essential for modern backend development and tooling.",
-    "tags": [
-      "Event Loop",
-      "beginner",
-      "node"
-    ],
-    "questionType": "multiple-choice",
-    "estimatedTime": 90,
-    "correctAnswer": 0,
-    "type": "multiple-choice",
-    "sources": []
-  },
-  {
-    "id": 9,
-    "question": "What is the main advantage of using async/await over Promises in Node.js?",
-    "topic": "Async Programming",
-    "difficulty": "Beginner",
-    "choices": [
-      "More readable and easier to debug synchronous-looking code",
-      "Better performance than Promises",
-      "Automatic error handling without try-catch",
-      "Faster execution than callback functions"
-    ],
-    "explanation": "Async/await provides more readable, synchronous-looking code that's easier to debug and maintain. While it doesn't improve performance over Promises (it's syntactic sugar over them), it makes error handling with try-catch more natural and reduces callback hell and Promise chaining complexity.",
-    "industryContext": "Node.js is essential for modern backend development and tooling.",
-    "tags": [
-      "Async Programming",
-      "beginner",
-      "node"
-    ],
-    "questionType": "multiple-choice",
-    "estimatedTime": 90,
-    "correctAnswer": 0,
-    "type": "multiple-choice",
-    "sources": []
-  },
-  {
-    "id": 10,
-    "question": "What is clustering in Node.js and why is it useful?",
-    "topic": "Performance",
-    "difficulty": "Beginner",
-    "choices": [
-      "Running multiple Node.js processes to utilize all CPU cores",
-      "Grouping related modules together",
-      "Connecting multiple databases",
-      "Organizing code into clusters of functions"
-    ],
-    "explanation": "Clustering in Node.js allows you to create multiple worker processes that share the same server port, enabling utilization of all CPU cores. Since Node.js is single-threaded, clustering helps improve performance for CPU-intensive applications by distributing the workload across multiple processes.",
-    "industryContext": "Node.js is essential for modern backend development and tooling.",
-    "tags": [
-      "Performance",
-      "beginner",
-      "node"
-    ],
-    "questionType": "multiple-choice",
-    "estimatedTime": 90,
-    "correctAnswer": 0,
-    "type": "multiple-choice",
-    "sources": []
-  },
-  {
-    "id": 11,
-    "question": "What are some essential security practices for Node.js applications?",
-    "topic": "Security",
-    "difficulty": "Intermediate",
-    "choices": [
-      "Input validation, HTTPS everywhere, helmet.js for security headers, and dependency updates",
-      "Using only synchronous code to prevent race conditions",
-      "Storing all configuration in public repositories for transparency",
-      "Disabling all logging to prevent information disclosure"
-    ],
-    "explanation": "Essential security practices for Node.js applications include: using HTTPS everywhere to encrypt data in transit, validating and sanitizing all input to prevent injection attacks, implementing proper authentication and authorization mechanisms, using helmet.js for security headers to protect against common web vulnerabilities, rate limiting to prevent abuse, keeping dependencies updated to patch known vulnerabilities, using environment variables for secrets instead of hardcoding them, implementing CSRF protection, using secure session management, and regular security audits with tools like npm audit.",
-    "industryContext": "Security is critical for production Node.js applications, especially those handling sensitive user data or financial transactions. Following security best practices is essential for protecting applications from common vulnerabilities like injection attacks, cross-site scripting, and data breaches.",
-    "tags": [
-      "Security",
-      "intermediate",
-      "node"
-    ],
-    "questionType": "multiple-choice",
-    "estimatedTime": 90,
-    "correctAnswer": 0,
-    "type": "multiple-choice",
-    "sources": []
-  },
-  {
-    "id": 12,
-    "question": "Which testing framework is most commonly used for Node.js applications?",
-    "topic": "Testing",
-    "difficulty": "Intermediate",
-    "choices": [
-      "Jest",
-      "JUnit",
-      "PHPUnit",
-      "NUnit"
-    ],
-    "explanation": "Jest is the most popular testing framework for Node.js applications. It provides a comprehensive testing solution with built-in test runner, assertion library, mocking capabilities, and code coverage reporting. Other popular options include Mocha and Chai, but Jest has gained widespread adoption due to its simplicity and feature completeness.",
-    "industryContext": "Node.js is essential for modern backend development and tooling.",
-    "tags": [
-      "Testing",
-      "intermediate",
-      "node"
-    ],
-    "questionType": "multiple-choice",
-    "estimatedTime": 90,
-    "correctAnswer": 0,
-    "type": "multiple-choice",
-    "sources": []
-  },
-  {
-    "id": 13,
-    "question": "What is the difference between fs.readFile() and fs.readFileSync() in Node.js?",
-    "topic": "File System",
-    "difficulty": "Beginner",
-    "choices": [
-      "readFile() is asynchronous and non-blocking, readFileSync() is synchronous and blocking",
-      "readFile() is faster than readFileSync()",
-      "readFileSync() supports more file formats",
-      "readFile() requires more memory than readFileSync()"
-    ],
-    "explanation": "fs.readFile() is asynchronous and non-blocking, allowing other operations to continue while the file is being read. fs.readFileSync() is synchronous and blocks the event loop until the file reading is complete. The async version is preferred in production applications to maintain performance and responsiveness.",
-    "industryContext": "Node.js is essential for modern backend development and tooling.",
-    "tags": [
-      "File System",
-      "beginner",
-      "node"
-    ],
-    "questionType": "multiple-choice",
-    "estimatedTime": 90,
-    "correctAnswer": 0,
-    "type": "multiple-choice",
-    "sources": []
-  },
-  {
-    "id": 14,
-    "question": "How should you handle uncaught exceptions in Node.js applications?",
-    "topic": "Error Handling",
-    "difficulty": "Intermediate",
-    "choices": [
-      "Use process.on('uncaughtException') to log errors and gracefully shut down, plus process managers for restarts",
-      "Ignore them as Node.js handles them automatically",
-      "Restart the server manually every time an exception occurs",
-      "Wrap all code in a single global try-catch block"
-    ],
-    "explanation": "Handle uncaught exceptions by: 1) Using process.on('uncaughtException') to log errors and gracefully shut down, 2) Using process.on('unhandledRejection') for unhandled Promise rejections, 3) Implementing proper error handling in all async operations, 4) Using try-catch blocks around critical code, 5) Using process managers like PM2 for automatic restarts, 6) Logging all errors for debugging. Never ignore uncaught exceptions as they can lead to memory leaks and unstable applications. The recommended approach is to log the error, perform cleanup operations, and then exit the process, allowing a process manager to restart it.",
-    "industryContext": "Proper error handling is crucial for building reliable Node.js applications that can gracefully recover from unexpected issues. Unhandled exceptions can cause application crashes and downtime, making robust error handling essential for production systems.",
-    "tags": [
-      "Error Handling",
-      "intermediate",
-      "node"
-    ],
-    "questionType": "multiple-choice",
-    "estimatedTime": 90,
-    "correctAnswer": 0,
-    "type": "multiple-choice",
-    "sources": []
-  },
-  {
-    "id": 15,
-    "question": "What is the main advantage of using streams for processing large files in Node.js?",
-    "topic": "Streams",
-    "difficulty": "Beginner",
-    "choices": [
-      "Memory efficient processing of data in chunks",
-      "Faster file compression",
-      "Better error handling",
-      "Automatic file backup"
-    ],
-    "explanation": "Streams allow memory-efficient processing of large files by reading and processing data in small chunks rather than loading the entire file into memory. This prevents memory overflow issues and enables processing of files larger than available RAM, making applications more scalable and efficient.",
-    "industryContext": "Node.js is essential for modern backend development and tooling.",
-    "tags": [
-      "Streams",
-      "beginner",
-      "node"
-    ],
-    "questionType": "multiple-choice",
-    "estimatedTime": 90,
-    "correctAnswer": 0,
-    "type": "multiple-choice",
-    "sources": []
-  },
-  {
-    "id": 16,
-    "question": "What are the key security considerations when developing Node.js applications?",
-    "topic": "Security",
-    "difficulty": "Advanced",
-    "choices": [
-      "Input validation, secure password hashing, authentication/authorization, and dependency updates",
-      "Using only built-in Node.js modules to avoid security vulnerabilities",
-      "Disabling all logging to prevent information disclosure",
-      "Running the application as root user for maximum privileges"
-    ],
-    "explanation": "Key security considerations when developing Node.js applications include: input validation and sanitization to prevent XSS and injection attacks (SQL injection, command injection), secure password hashing with bcrypt or similar strong hashing algorithms, proper authentication and authorization mechanisms with secure session management, rate limiting to prevent DoS attacks, using HTTPS and security headers (helmet.js) to protect against common web vulnerabilities, keeping dependencies updated to patch known vulnerabilities, implementing proper error handling without exposing sensitive information that could aid attackers, and using environment variables for secrets like API keys and database credentials rather than hardcoding them.",
-    "industryContext": "Security is critical for production Node.js applications, especially in enterprise environments handling sensitive data. Following security best practices helps protect against common vulnerabilities like injection attacks, cross-site scripting, broken authentication, and insecure dependencies that could lead to data breaches or system compromise.",
-    "tags": [
-      "Security",
-      "advanced",
-      "node"
-    ],
-    "questionType": "multiple-choice",
-    "estimatedTime": 90,
-    "correctAnswer": 0,
-    "type": "multiple-choice",
-    "sources": []
-  },
-  {
-    "id": 17,
-    "question": "What is the difference between process.nextTick() and setImmediate() in Node.js?",
-    "topic": "Event Loop",
-    "difficulty": "Advanced",
-    "choices": [
-      "process.nextTick() executes before I/O events, setImmediate() executes after",
-      "setImmediate() executes before I/O events, process.nextTick() executes after",
-      "Both execute at the same time",
-      "They are identical functions"
-    ],
-    "explanation": "process.nextTick() has higher priority and executes callbacks before I/O events in the same phase, while setImmediate() executes callbacks after I/O events. process.nextTick() can potentially starve I/O if overused.",
-    "industryContext": "Understanding event loop mechanics is crucial for writing performant Node.js applications.",
-    "tags": [
-      "Event Loop",
-      "advanced",
-      "node"
-    ],
-    "questionType": "multiple-choice",
-    "estimatedTime": 120,
-    "correctAnswer": 0,
-    "type": "multiple-choice",
-    "sources": []
-  },
-  {
-    "id": 18,
-    "question": "How do you implement clustering in Node.js and why is it important?",
-    "topic": "Performance",
-    "difficulty": "Advanced",
-    "choices": [
-      "Using the cluster module to fork worker processes",
-      "Using threads with the worker_threads module",
-      "Using external load balancers only",
-      "Node.js automatically handles clustering"
-    ],
-    "explanation": "Clustering in Node.js is implemented using the cluster module, which allows you to fork multiple worker processes that share the same server port. This is important because Node.js is single-threaded by default, so clustering allows utilization of multiple CPU cores for better performance.",
-    "industryContext": "Clustering is essential for production Node.js applications to maximize server resource utilization.",
-    "tags": [
-      "Performance",
-      "advanced",
-      "node"
-    ],
-    "questionType": "multiple-choice",
-    "estimatedTime": 120,
-    "correctAnswer": 0,
-    "type": "multiple-choice",
-    "sources": []
-  },
-  {
-    "id": 19,
-    "question": "What are the benefits and challenges of microservices architecture with Node.js?",
-    "topic": "Architecture",
-    "difficulty": "Advanced",
-    "choices": [
-      "Benefits: independent deployment, technology diversity; Challenges: service communication complexity, distributed system issues",
-      "Benefits: simpler monolithic structure; Challenges: harder to scale individual components",
-      "Benefits: reduced network latency; Challenges: increased memory usage",
-      "Benefits: single technology stack; Challenges: team coordination difficulties"
-    ],
-    "explanation": "Benefits of microservices architecture with Node.js include: independent deployment and scaling of services allowing teams to work autonomously, technology diversity enabling different services to use the most appropriate technologies, fault isolation so that failures in one service don't bring down the entire system, and team autonomy with different teams able to own different services. Challenges include: increased complexity in service communication requiring robust APIs and messaging systems, distributed system challenges such as maintaining consistency and monitoring across services, network latency between service calls, data consistency across services requiring distributed transactions or eventual consistency patterns, and operational overhead of managing multiple services. Node.js is well-suited for microservices due to its lightweight nature, excellent I/O handling, and rich ecosystem of packages.",
-    "industryContext": "Microservices architecture is widely adopted in enterprise environments for scalable, maintainable applications. Node.js's non-blocking I/O model and lightweight runtime make it an excellent choice for building microservices that need to handle high concurrency and respond quickly to requests.",
-    "tags": [
-      "Architecture",
-      "advanced",
-      "node"
-    ],
-    "questionType": "multiple-choice",
-    "estimatedTime": 90,
-    "correctAnswer": 0,
-    "type": "multiple-choice",
-    "sources": []
-  },
-  {
-    "id": 20,
-    "question": "What tools and practices are essential for production deployment of Node.js applications?",
-    "topic": "DevOps",
-    "difficulty": "Advanced",
-    "choices": [
-      "Process managers, monitoring, logging, and containerization",
-      "Only Docker containers",
-      "Just environment variables",
-      "Basic server setup is sufficient"
-    ],
-    "explanation": "Essential tools and practices include: process managers (PM2, cluster), comprehensive monitoring (Prometheus, New Relic), structured logging (Winston), containerization (Docker), CI/CD pipelines, health checks, graceful shutdowns, security headers, and load balancing. These ensure reliability, scalability, and maintainability in production.",
-    "industryContext": "Production deployment requires robust DevOps practices to ensure application reliability and performance.",
-    "tags": [
-      "DevOps",
-      "advanced",
-      "node"
-    ],
-    "questionType": "multiple-choice",
-    "estimatedTime": 120,
-    "correctAnswer": 0,
-    "type": "multiple-choice",
-    "sources": []
-  }
-]
+{
+  "questions": [
+    {
+      "id": 1,
+      "question": "What is Node.js?",
+      "topic": "Basics",
+      "difficulty": "Beginner",
+      "choices": [
+        "A JavaScript runtime built on Chrome's V8 JavaScript engine",
+        "A CSS framework",
+        "A database management system",
+        "A front-end framework"
+      ],
+      "explanation": "Node.js is a JavaScript runtime that allows you to run JavaScript on the server-side, built on Chrome's V8 JavaScript engine.",
+      "industryContext": "Node.js is essential for modern backend development and tooling.",
+      "tags": [
+        "Basics",
+        "beginner",
+        "node"
+      ],
+      "questionType": "multiple-choice",
+      "estimatedTime": 90,
+      "correctAnswer": 0,
+      "type": "multiple-choice",
+      "sources": []
+    },
+    {
+      "id": 2,
+      "question": "How do you import a module in Node.js?",
+      "topic": "Basics",
+      "difficulty": "Beginner",
+      "choices": [
+        "require()",
+        "import",
+        "include",
+        "load"
+      ],
+      "explanation": "In Node.js, modules are imported using the require() function. The import statement is used in ES6 modules.",
+      "industryContext": "Node.js is essential for modern backend development and tooling.",
+      "tags": [
+        "Basics",
+        "beginner",
+        "node"
+      ],
+      "questionType": "multiple-choice",
+      "estimatedTime": 90,
+      "correctAnswer": 0,
+      "type": "multiple-choice",
+      "sources": []
+    },
+    {
+      "id": 3,
+      "question": "What is Express.js and why is it used?",
+      "topic": "Express",
+      "difficulty": "Beginner",
+      "choices": [
+        "A minimal Node.js web framework that simplifies building web servers and APIs",
+        "A database management system for Node.js applications",
+        "A testing framework for Node.js unit tests",
+        "A code editor specifically designed for Node.js development"
+      ],
+      "explanation": "Express.js is a minimal and flexible Node.js web application framework that provides a robust set of features for web and mobile applications. It simplifies the process of building web servers and APIs by providing helpful utilities and middleware. Express is built on top of Node.js and provides a thin layer of fundamental web application features, without obscuring Node.js features that you know and love. It's the most popular web framework for Node.js and is used by many major companies.",
+      "industryContext": "Express.js is the most widely used web framework for Node.js, serving as the foundation for countless web applications and APIs. Understanding Express is essential for any Node.js backend developer, as it provides the building blocks for creating robust, scalable web services.",
+      "tags": [
+        "Express",
+        "beginner",
+        "node"
+      ],
+      "questionType": "multiple-choice",
+      "estimatedTime": 90,
+      "correctAnswer": 0,
+      "type": "multiple-choice",
+      "sources": []
+    },
+    {
+      "id": 4,
+      "question": "Which method is used to handle GET requests in Express?",
+      "topic": "Express",
+      "difficulty": "Intermediate",
+      "choices": [
+        "app.get()",
+        "app.post()",
+        "app.put()",
+        "app.delete()"
+      ],
+      "explanation": "In Express.js, app.get() is used to define a route handler for GET requests.",
+      "industryContext": "Node.js is essential for modern backend development and tooling.",
+      "tags": [
+        "Express",
+        "intermediate",
+        "node"
+      ],
+      "questionType": "multiple-choice",
+      "estimatedTime": 90,
+      "correctAnswer": 0,
+      "type": "multiple-choice",
+      "sources": []
+    },
+    {
+      "id": 5,
+      "question": "What is middleware in Express.js?",
+      "topic": "Middleware",
+      "difficulty": "Beginner",
+      "choices": [
+        "Functions that have access to the request and response objects",
+        "Database connection utilities",
+        "Template engines",
+        "Routing functions"
+      ],
+      "explanation": "Middleware functions in Express.js are functions that have access to the request object, the response object, and the next middleware function in the application's request-response cycle.",
+      "industryContext": "Node.js is essential for modern backend development and tooling.",
+      "tags": [
+        "Middleware",
+        "beginner",
+        "node"
+      ],
+      "questionType": "multiple-choice",
+      "estimatedTime": 90,
+      "correctAnswer": 0,
+      "type": "multiple-choice",
+      "sources": []
+    },
+    {
+      "id": 6,
+      "question": "How do you handle asynchronous operations in Node.js?",
+      "topic": "Async",
+      "difficulty": "Beginner",
+      "choices": [
+        "Using callbacks, promises, or async/await",
+        "Using synchronous functions only",
+        "Using threads",
+        "Using global variables"
+      ],
+      "explanation": "Node.js handles asynchronous operations using callbacks, promises, or the more modern async/await syntax.",
+      "industryContext": "Node.js is essential for modern backend development and tooling.",
+      "tags": [
+        "Async",
+        "beginner",
+        "node"
+      ],
+      "questionType": "multiple-choice",
+      "estimatedTime": 90,
+      "correctAnswer": 0,
+      "type": "multiple-choice",
+      "sources": []
+    },
+    {
+      "id": 7,
+      "question": "What is NPM and what is it used for?",
+      "topic": "NPM",
+      "difficulty": "Beginner",
+      "choices": [
+        "The default package manager for Node.js used to install, share, and manage packages",
+        "A database management system for Node.js applications",
+        "A testing framework for Node.js unit tests",
+        "A code editor specifically designed for Node.js development"
+      ],
+      "explanation": "NPM (Node Package Manager) is the default package manager for Node.js. It is used to install, share, and manage packages (libraries and tools) in Node.js projects. It also helps with dependency management and script execution. NPM hosts the world's largest registry of open-source packages and is essential for modern JavaScript development, allowing developers to easily share and reuse code.",
+      "industryContext": "NPM is fundamental to Node.js development, serving as the primary package manager for installing dependencies, managing project versions, and running scripts. Understanding NPM is essential for any Node.js developer working on real-world applications.",
+      "tags": [
+        "NPM",
+        "beginner",
+        "node"
+      ],
+      "questionType": "multiple-choice",
+      "estimatedTime": 90,
+      "correctAnswer": 0,
+      "type": "multiple-choice",
+      "sources": []
+    },
+    {
+      "id": 8,
+      "question": "What is the event loop in Node.js?",
+      "topic": "Event Loop",
+      "difficulty": "Beginner",
+      "choices": [
+        "A mechanism that handles asynchronous operations",
+        "A loop that executes synchronous code",
+        "A database `query` optimizer",
+        "A memory management system"
+      ],
+      "explanation": "The event loop in Node.js is a mechanism that handles asynchronous operations by continuously checking the call stack and callback queue to execute callbacks when the call stack is empty.",
+      "industryContext": "Node.js is essential for modern backend development and tooling.",
+      "tags": [
+        "Event Loop",
+        "beginner",
+        "node"
+      ],
+      "questionType": "multiple-choice",
+      "estimatedTime": 90,
+      "correctAnswer": 0,
+      "type": "multiple-choice",
+      "sources": []
+    },
+    {
+      "id": 9,
+      "question": "What is the main advantage of using async/await over Promises in Node.js?",
+      "topic": "Async Programming",
+      "difficulty": "Beginner",
+      "choices": [
+        "More readable and easier to debug synchronous-looking code",
+        "Better performance than Promises",
+        "Automatic error handling without try-catch",
+        "Faster execution than callback functions"
+      ],
+      "explanation": "Async/await provides more readable, synchronous-looking code that's easier to debug and maintain. While it doesn't improve performance over Promises (it's syntactic sugar over them), it makes error handling with try-catch more natural and reduces callback hell and Promise chaining complexity.",
+      "industryContext": "Node.js is essential for modern backend development and tooling.",
+      "tags": [
+        "Async Programming",
+        "beginner",
+        "node"
+      ],
+      "questionType": "multiple-choice",
+      "estimatedTime": 90,
+      "correctAnswer": 0,
+      "type": "multiple-choice",
+      "sources": []
+    },
+    {
+      "id": 10,
+      "question": "What is clustering in Node.js and why is it useful?",
+      "topic": "Performance",
+      "difficulty": "Beginner",
+      "choices": [
+        "Running multiple Node.js processes to utilize all CPU cores",
+        "Grouping related modules together",
+        "Connecting multiple databases",
+        "Organizing code into clusters of functions"
+      ],
+      "explanation": "Clustering in Node.js allows you to create multiple worker processes that share the same server port, enabling utilization of all CPU cores. Since Node.js is single-threaded, clustering helps improve performance for CPU-intensive applications by distributing the workload across multiple processes.",
+      "industryContext": "Node.js is essential for modern backend development and tooling.",
+      "tags": [
+        "Performance",
+        "beginner",
+        "node"
+      ],
+      "questionType": "multiple-choice",
+      "estimatedTime": 90,
+      "correctAnswer": 0,
+      "type": "multiple-choice",
+      "sources": []
+    },
+    {
+      "id": 11,
+      "question": "What are some essential security practices for Node.js applications?",
+      "topic": "Security",
+      "difficulty": "Intermediate",
+      "choices": [
+        "Input validation, HTTPS everywhere, helmet.js for security headers, and dependency updates",
+        "Using only synchronous code to prevent race conditions",
+        "Storing all configuration in public repositories for transparency",
+        "Disabling all logging to prevent information disclosure"
+      ],
+      "explanation": "Essential security practices for Node.js applications include: using HTTPS everywhere to encrypt data in transit, validating and sanitizing all input to prevent injection attacks, implementing proper authentication and authorization mechanisms, using helmet.js for security headers to protect against common web vulnerabilities, rate limiting to prevent abuse, keeping dependencies updated to patch known vulnerabilities, using environment variables for secrets instead of hardcoding them, implementing CSRF protection, using secure session management, and regular security audits with tools like npm audit.",
+      "industryContext": "Security is critical for production Node.js applications, especially those handling sensitive user data or financial transactions. Following security best practices is essential for protecting applications from common vulnerabilities like injection attacks, cross-site scripting, and data breaches.",
+      "tags": [
+        "Security",
+        "intermediate",
+        "node"
+      ],
+      "questionType": "multiple-choice",
+      "estimatedTime": 90,
+      "correctAnswer": 0,
+      "type": "multiple-choice",
+      "sources": []
+    },
+    {
+      "id": 12,
+      "question": "Which testing framework is most commonly used for Node.js applications?",
+      "topic": "Testing",
+      "difficulty": "Intermediate",
+      "choices": [
+        "Jest",
+        "JUnit",
+        "PHPUnit",
+        "NUnit"
+      ],
+      "explanation": "Jest is the most popular testing framework for Node.js applications. It provides a comprehensive testing solution with built-in test runner, assertion library, mocking capabilities, and code coverage reporting. Other popular options include Mocha and Chai, but Jest has gained widespread adoption due to its simplicity and feature completeness.",
+      "industryContext": "Node.js is essential for modern backend development and tooling.",
+      "tags": [
+        "Testing",
+        "intermediate",
+        "node"
+      ],
+      "questionType": "multiple-choice",
+      "estimatedTime": 90,
+      "correctAnswer": 0,
+      "type": "multiple-choice",
+      "sources": []
+    },
+    {
+      "id": 13,
+      "question": "What is the difference between fs.readFile() and fs.readFileSync() in Node.js?",
+      "topic": "File System",
+      "difficulty": "Beginner",
+      "choices": [
+        "readFile() is asynchronous and non-blocking, readFileSync() is synchronous and blocking",
+        "readFile() is faster than readFileSync()",
+        "readFileSync() supports more file formats",
+        "readFile() requires more memory than readFileSync()"
+      ],
+      "explanation": "fs.readFile() is asynchronous and non-blocking, allowing other operations to continue while the file is being read. fs.readFileSync() is synchronous and blocks the event loop until the file reading is complete. The async version is preferred in production applications to maintain performance and responsiveness.",
+      "industryContext": "Node.js is essential for modern backend development and tooling.",
+      "tags": [
+        "File System",
+        "beginner",
+        "node"
+      ],
+      "questionType": "multiple-choice",
+      "estimatedTime": 90,
+      "correctAnswer": 0,
+      "type": "multiple-choice",
+      "sources": []
+    },
+    {
+      "id": 14,
+      "question": "How should you handle uncaught exceptions in Node.js applications?",
+      "topic": "Error Handling",
+      "difficulty": "Intermediate",
+      "choices": [
+        "Use process.on('uncaughtException') to log errors and gracefully shut down, plus process managers for restarts",
+        "Ignore them as Node.js handles them automatically",
+        "Restart the server manually every time an exception occurs",
+        "Wrap all code in a single global try-catch block"
+      ],
+      "explanation": "Handle uncaught exceptions by: 1) Using process.on('uncaughtException') to log errors and gracefully shut down, 2) Using process.on('unhandledRejection') for unhandled Promise rejections, 3) Implementing proper error handling in all async operations, 4) Using try-catch blocks around critical code, 5) Using process managers like PM2 for automatic restarts, 6) Logging all errors for debugging. Never ignore uncaught exceptions as they can lead to memory leaks and unstable applications. The recommended approach is to log the error, perform cleanup operations, and then exit the process, allowing a process manager to restart it.",
+      "industryContext": "Proper error handling is crucial for building reliable Node.js applications that can gracefully recover from unexpected issues. Unhandled exceptions can cause application crashes and downtime, making robust error handling essential for production systems.",
+      "tags": [
+        "Error Handling",
+        "intermediate",
+        "node"
+      ],
+      "questionType": "multiple-choice",
+      "estimatedTime": 90,
+      "correctAnswer": 0,
+      "type": "multiple-choice",
+      "sources": []
+    },
+    {
+      "id": 15,
+      "question": "What is the main advantage of using streams for processing large files in Node.js?",
+      "topic": "Streams",
+      "difficulty": "Beginner",
+      "choices": [
+        "Memory efficient processing of data in chunks",
+        "Faster file compression",
+        "Better error handling",
+        "Automatic file backup"
+      ],
+      "explanation": "Streams allow memory-efficient processing of large files by reading and processing data in small chunks rather than loading the entire file into memory. This prevents memory overflow issues and enables processing of files larger than available RAM, making applications more scalable and efficient.",
+      "industryContext": "Node.js is essential for modern backend development and tooling.",
+      "tags": [
+        "Streams",
+        "beginner",
+        "node"
+      ],
+      "questionType": "multiple-choice",
+      "estimatedTime": 90,
+      "correctAnswer": 0,
+      "type": "multiple-choice",
+      "sources": []
+    },
+    {
+      "id": 16,
+      "question": "What are the key security considerations when developing Node.js applications?",
+      "topic": "Security",
+      "difficulty": "Advanced",
+      "choices": [
+        "Input validation, secure password hashing, authentication/authorization, and dependency updates",
+        "Using only built-in Node.js modules to avoid security vulnerabilities",
+        "Disabling all logging to prevent information disclosure",
+        "Running the application as root user for maximum privileges"
+      ],
+      "explanation": "Key security considerations when developing Node.js applications include: input validation and sanitization to prevent XSS and injection attacks (SQL injection, command injection), secure password hashing with bcrypt or similar strong hashing algorithms, proper authentication and authorization mechanisms with secure session management, rate limiting to prevent DoS attacks, using HTTPS and security headers (helmet.js) to protect against common web vulnerabilities, keeping dependencies updated to patch known vulnerabilities, implementing proper error handling without exposing sensitive information that could aid attackers, and using environment variables for secrets like API keys and database credentials rather than hardcoding them.",
+      "industryContext": "Security is critical for production Node.js applications, especially in enterprise environments handling sensitive data. Following security best practices helps protect against common vulnerabilities like injection attacks, cross-site scripting, broken authentication, and insecure dependencies that could lead to data breaches or system compromise.",
+      "tags": [
+        "Security",
+        "advanced",
+        "node"
+      ],
+      "questionType": "multiple-choice",
+      "estimatedTime": 90,
+      "correctAnswer": 0,
+      "type": "multiple-choice",
+      "sources": []
+    },
+    {
+      "id": 17,
+      "question": "What is the difference between process.nextTick() and setImmediate() in Node.js?",
+      "topic": "Event Loop",
+      "difficulty": "Advanced",
+      "choices": [
+        "process.nextTick() executes before I/O events, setImmediate() executes after",
+        "setImmediate() executes before I/O events, process.nextTick() executes after",
+        "Both execute at the same time",
+        "They are identical functions"
+      ],
+      "explanation": "process.nextTick() has higher priority and executes callbacks before I/O events in the same phase, while setImmediate() executes callbacks after I/O events. process.nextTick() can potentially starve I/O if overused.",
+      "industryContext": "Understanding event loop mechanics is crucial for writing performant Node.js applications.",
+      "tags": [
+        "Event Loop",
+        "advanced",
+        "node"
+      ],
+      "questionType": "multiple-choice",
+      "estimatedTime": 120,
+      "correctAnswer": 0,
+      "type": "multiple-choice",
+      "sources": []
+    },
+    {
+      "id": 18,
+      "question": "How do you implement clustering in Node.js and why is it important?",
+      "topic": "Performance",
+      "difficulty": "Advanced",
+      "choices": [
+        "Using the cluster module to fork worker processes",
+        "Using threads with the worker_threads module",
+        "Using external load balancers only",
+        "Node.js automatically handles clustering"
+      ],
+      "explanation": "Clustering in Node.js is implemented using the cluster module, which allows you to fork multiple worker processes that share the same server port. This is important because Node.js is single-threaded by default, so clustering allows utilization of multiple CPU cores for better performance.",
+      "industryContext": "Clustering is essential for production Node.js applications to maximize server resource utilization.",
+      "tags": [
+        "Performance",
+        "advanced",
+        "node"
+      ],
+      "questionType": "multiple-choice",
+      "estimatedTime": 120,
+      "correctAnswer": 0,
+      "type": "multiple-choice",
+      "sources": []
+    },
+    {
+      "id": 19,
+      "question": "What are the benefits and challenges of microservices architecture with Node.js?",
+      "topic": "Architecture",
+      "difficulty": "Advanced",
+      "choices": [
+        "Benefits: independent deployment, technology diversity; Challenges: service communication complexity, distributed system issues",
+        "Benefits: simpler monolithic structure; Challenges: harder to scale individual components",
+        "Benefits: reduced network latency; Challenges: increased memory usage",
+        "Benefits: single technology stack; Challenges: team coordination difficulties"
+      ],
+      "explanation": "Benefits of microservices architecture with Node.js include: independent deployment and scaling of services allowing teams to work autonomously, technology diversity enabling different services to use the most appropriate technologies, fault isolation so that failures in one service don't bring down the entire system, and team autonomy with different teams able to own different services. Challenges include: increased complexity in service communication requiring robust APIs and messaging systems, distributed system challenges such as maintaining consistency and monitoring across services, network latency between service calls, data consistency across services requiring distributed transactions or eventual consistency patterns, and operational overhead of managing multiple services. Node.js is well-suited for microservices due to its lightweight nature, excellent I/O handling, and rich ecosystem of packages.",
+      "industryContext": "Microservices architecture is widely adopted in enterprise environments for scalable, maintainable applications. Node.js's non-blocking I/O model and lightweight runtime make it an excellent choice for building microservices that need to handle high concurrency and respond quickly to requests.",
+      "tags": [
+        "Architecture",
+        "advanced",
+        "node"
+      ],
+      "questionType": "multiple-choice",
+      "estimatedTime": 90,
+      "correctAnswer": 0,
+      "type": "multiple-choice",
+      "sources": []
+    },
+    {
+      "id": 20,
+      "question": "What tools and practices are essential for production deployment of Node.js applications?",
+      "topic": "DevOps",
+      "difficulty": "Advanced",
+      "choices": [
+        "Process managers, monitoring, logging, and containerization",
+        "Only Docker containers",
+        "Just environment variables",
+        "Basic server setup is sufficient"
+      ],
+      "explanation": "Essential tools and practices include: process managers (PM2, cluster), comprehensive monitoring (Prometheus, New Relic), structured logging (Winston), containerization (Docker), CI/CD pipelines, health checks, graceful shutdowns, security headers, and load balancing. These ensure reliability, scalability, and maintainability in production.",
+      "industryContext": "Production deployment requires robust DevOps practices to ensure application reliability and performance.",
+      "tags": [
+        "DevOps",
+        "advanced",
+        "node"
+      ],
+      "questionType": "multiple-choice",
+      "estimatedTime": 120,
+      "correctAnswer": 0,
+      "type": "multiple-choice",
+      "sources": []
+    }
+  ]
+}

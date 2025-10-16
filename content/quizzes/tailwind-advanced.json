@@ -1,386 +1,388 @@
-[
-  {
-    "id": 1,
-    "question": "What is Tailwind CSS?",
-    "topic": "Basics",
-    "difficulty": "Beginner",
-    "choices": [
-      "A utility-first CSS framework",
-      "A component-based CSS framework",
-      "A CSS preprocessor",
-      "A JavaScript framework"
-    ],
-    "explanation": "Tailwind CSS is a utility-first CSS framework that provides low-level utility classes to build designs without writing custom CSS.",
-    "industryContext": "These skills are valuable in professional development environments.",
-    "tags": [
-      "Basics",
-      "beginner",
-      "tailwind"
-    ],
-    "questionType": "multiple-choice",
-    "estimatedTime": 90,
-    "correctAnswer": 0,
-    "type": "multiple-choice",
-    "sources": []
-  },
-  {
-    "id": 2,
-    "question": "How do you add padding to an element in Tailwind CSS?",
-    "topic": "Basics",
-    "difficulty": "Beginner",
-    "choices": [
-      "p-4",
-      "m-4",
-      "w-4",
-      "h-4"
-    ],
-    "explanation": "In Tailwind, p-* classes are used for padding. The number represents the spacing scale where p-4 equals 1rem (16px).",
-    "industryContext": "These skills are valuable in professional development environments.",
-    "tags": [
-      "Basics",
-      "beginner",
-      "tailwind"
-    ],
-    "questionType": "multiple-choice",
-    "estimatedTime": 90,
-    "correctAnswer": 0,
-    "type": "multiple-choice",
-    "sources": []
-  },
-  {
-    "id": 3,
-    "question": "How does Tailwind's mobile-first responsive design approach work?",
-    "topic": "Layout",
-    "difficulty": "Intermediate",
-    "choices": [
-      "Unprefixed classes apply to all screens, responsive prefixes apply to breakpoints and larger",
-      "Desktop-first approach with max-width media queries",
-      "Only applies styles to mobile devices with special mobile classes",
-      "Requires separate CSS files for each screen size"
-    ],
-    "explanation": "Tailwind uses a mobile-first approach where unprefixed classes apply to all screen sizes, and responsive prefixes (sm:, md:, lg:, xl:) apply to specific breakpoints and larger screens. This means styles stack as the screen size increases. For example, <div class=\"text-sm md:text-base lg:text-lg\"> will be text-sm on mobile, text-base on medium screens and larger, and text-lg on large screens and larger. This approach reduces CSS bloat and makes responsive design more intuitive.",
-    "industryContext": "Understanding Tailwind's mobile-first responsive approach is crucial for professional frontend developers building modern, responsive web applications. This methodology aligns with current web development best practices and helps create consistent, maintainable responsive designs.",
-    "tags": [
-      "Layout",
-      "intermediate",
-      "tailwind"
-    ],
-    "questionType": "multiple-choice",
-    "estimatedTime": 90,
-    "correctAnswer": 0,
-    "type": "multiple-choice",
-    "sources": []
-  },
-  {
-    "id": 4,
-    "question": "Which class is used to create a flex container in Tailwind?",
-    "topic": "Layout",
-    "difficulty": "Intermediate",
-    "choices": [
-      "flex",
-      "grid",
-      "block",
-      "inline"
-    ],
-    "explanation": "The flex class creates a flex container in Tailwind CSS, enabling flexbox layout for its children.",
-    "industryContext": "These skills are valuable in professional development environments.",
-    "tags": [
-      "Layout",
-      "intermediate",
-      "tailwind"
-    ],
-    "questionType": "multiple-choice",
-    "estimatedTime": 90,
-    "correctAnswer": 0,
-    "type": "multiple-choice",
-    "sources": []
-  },
-  {
-    "id": 5,
-    "question": "Where do you customize Tailwind's default theme?",
-    "topic": "Customization",
-    "difficulty": "Intermediate",
-    "choices": [
-      "`tailwind.config.js`",
-      "`package.json`",
-      "postcss.config.js",
-      "styles.css"
-    ],
-    "explanation": "Tailwind's configuration file (`tailwind.config.js`) is where you customize the default theme, add plugins, and configure other options.",
-    "industryContext": "These skills are valuable in professional development environments.",
-    "tags": [
-      "Customization",
-      "intermediate",
-      "tailwind"
-    ],
-    "questionType": "multiple-choice",
-    "estimatedTime": 90,
-    "correctAnswer": 0,
-    "type": "multiple-choice",
-    "sources": []
-  },
-  {
-    "id": 6,
-    "question": "How do you make text bold in Tailwind CSS?",
-    "topic": "Utilities",
-    "difficulty": "Beginner",
-    "choices": [
-      "font-bold",
-      "text-bold",
-      "bold",
-      "font-weight-bold"
-    ],
-    "explanation": "The font-bold class makes text bold in Tailwind CSS. Tailwind uses the font-* naming convention for font weight utilities.",
-    "industryContext": "These skills are valuable in professional development environments.",
-    "tags": [
-      "Utilities",
-      "beginner",
-      "tailwind"
-    ],
-    "questionType": "multiple-choice",
-    "estimatedTime": 90,
-    "correctAnswer": 0,
-    "type": "multiple-choice",
-    "sources": []
-  },
-  {
-    "id": 7,
-    "question": "What are the default breakpoints in Tailwind CSS?",
-    "topic": "Responsive",
-    "difficulty": "Intermediate",
-    "choices": [
-      "sm: 640px, md: 768px, lg: 1024px, xl: 1280px, 2xl: 1536px",
-      "sm: 576px, md: 768px, lg: 992px, xl: 1200px",
-      "mobile: 480px, tablet: 768px, desktop: 1024px",
-      "small: 600px, medium: 900px, large: 1200px"
-    ],
-    "explanation": "Tailwind's default breakpoints are: sm (640px), md (768px), lg (1024px), xl (1280px), and 2xl (1536px). These follow a mobile-first approach and can be customized in the `tailwind.config.js` file to match your specific design requirements. Each breakpoint represents a minimum screen width at which the responsive styles will be applied.",
-    "industryContext": "Understanding Tailwind's responsive breakpoints is essential for building mobile-first, responsive web applications. Professional frontend developers need to know these default values to effectively use Tailwind's responsive utility classes and customize them when needed for specific project requirements.",
-    "tags": [
-      "Responsive",
-      "intermediate",
-      "tailwind"
-    ],
-    "questionType": "multiple-choice",
-    "estimatedTime": 90,
-    "correctAnswer": 0,
-    "type": "multiple-choice",
-    "sources": []
-  },
-  {
-    "id": 8,
-    "question": "How do you set a background color to blue-500 in Tailwind?",
-    "topic": "Colors",
-    "difficulty": "Beginner",
-    "choices": [
-      "bg-blue-500",
-      "background-blue-500",
-      "color-blue-500",
-      "blue-500-bg"
-    ],
-    "explanation": "In Tailwind, background colors are set using the bg-* naming convention, so bg-blue-500 sets the background color to the 500 shade of blue.",
-    "industryContext": "These skills are valuable in professional development environments.",
-    "tags": [
-      "Colors",
-      "beginner",
-      "tailwind"
-    ],
-    "questionType": "multiple-choice",
-    "estimatedTime": 90,
-    "correctAnswer": 0,
-    "type": "multiple-choice",
-    "sources": []
-  },
-  {
-    "id": 9,
-    "question": "How do you add custom colors to Tailwind CSS?",
-    "topic": "Customization",
-    "difficulty": "Beginner",
-    "choices": [
-      "Extend the theme in `tailwind.config.js`",
-      "Create new CSS classes",
-      "Use inline styles",
-      "Modify the core framework"
-    ],
-    "explanation": "Custom colors are added by extending the theme configuration in `tailwind.config.js`, which generates utility classes for your custom color palette.",
-    "industryContext": "These skills are valuable in professional development environments.",
-    "tags": [
-      "Customization",
-      "beginner",
-      "tailwind"
-    ],
-    "questionType": "multiple-choice",
-    "estimatedTime": 90,
-    "correctAnswer": 0,
-    "type": "multiple-choice",
-    "sources": []
-  },
-  {
-    "id": 10,
-    "question": "What is PurgeCSS and why is it important for Tailwind?",
-    "topic": "Performance",
-    "difficulty": "Beginner",
-    "choices": [
-      "Removes unused CSS classes to reduce bundle size",
-      "Validates CSS syntax",
-      "Compresses images",
-      "Optimizes JavaScript"
-    ],
-    "explanation": "PurgeCSS (now built into Tailwind) removes unused utility classes from the final CSS bundle, dramatically reducing file size from hundreds of KB to just a few KB.",
-    "industryContext": "These skills are valuable in professional development environments.",
-    "tags": [
-      "Performance",
-      "beginner",
-      "tailwind"
-    ],
-    "questionType": "multiple-choice",
-    "estimatedTime": 90,
-    "correctAnswer": 0,
-    "type": "multiple-choice",
-    "sources": []
-  },
-  {
-    "id": 11,
-    "question": "How do you implement dark mode in Tailwind CSS?",
-    "topic": "Dark Mode",
-    "difficulty": "Beginner",
-    "choices": [
-      "Set darkMode: 'class' in config and use dark: prefix utilities like 'dark:bg-gray-800'",
-      "Use a separate dark.css file for all dark mode styles",
-      "Add !important to all dark mode CSS rules",
-      "Dark mode is automatically enabled in Tailwind v3+"
-    ],
-    "explanation": "To implement dark mode in Tailwind CSS, first enable it by setting darkMode: 'class' in your `tailwind.config.js` file. Then use the dark: prefix on utility classes to apply styles only in dark mode, such as 'bg-white dark:bg-gray-800'. Toggle dark mode by adding or removing the 'dark' class on the document element or a parent container. This approach provides explicit control over when dark mode is active.",
-    "industryContext": "Dark mode implementation is increasingly important for modern web applications as users expect customizable viewing experiences. Professional frontend developers need to understand how to implement dark mode properly to meet accessibility standards and user preferences.",
-    "tags": [
-      "Dark Mode",
-      "beginner",
-      "tailwind"
-    ],
-    "questionType": "multiple-choice",
-    "estimatedTime": 90,
-    "correctAnswer": 0,
-    "type": "multiple-choice",
-    "sources": []
-  },
-  {
-    "id": 12,
-    "question": "What is the @apply directive used for in Tailwind?",
-    "topic": "Components",
-    "difficulty": "Beginner",
-    "choices": [
-      "Applying utility classes in custom CSS",
-      "Creating animations",
-      "Importing external CSS",
-      "Optimizing performance"
-    ],
-    "explanation": "@apply allows you to use Tailwind utilities within custom CSS classes, useful for creating component classes while maintaining utility-first approach.",
-    "industryContext": "These skills are valuable in professional development environments.",
-    "tags": [
-      "Components",
-      "beginner",
-      "tailwind"
-    ],
-    "questionType": "multiple-choice",
-    "estimatedTime": 90,
-    "correctAnswer": 0,
-    "type": "multiple-choice",
-    "sources": []
-  },
-  {
-    "id": 13,
-    "question": "How does Tailwind handle responsive design?",
-    "topic": "Responsive Design",
-    "difficulty": "Intermediate",
-    "choices": [
-      "Mobile-first breakpoint prefixes (sm:, md:, lg:, xl:)",
-      "Desktop-first approach",
-      "Automatic responsive scaling",
-      "Media `query` mixins"
-    ],
-    "explanation": "Tailwind uses mobile-first responsive design with breakpoint prefixes that apply styles at specific screen sizes and larger.",
-    "industryContext": "These skills are valuable in professional development environments.",
-    "tags": [
-      "Responsive Design",
-      "intermediate",
-      "tailwind"
-    ],
-    "questionType": "multiple-choice",
-    "estimatedTime": 90,
-    "correctAnswer": 0,
-    "type": "multiple-choice",
-    "sources": []
-  },
-  {
-    "id": 14,
-    "question": "What are Tailwind plugins and how do they extend functionality?",
-    "topic": "Plugins",
-    "difficulty": "Intermediate",
-    "choices": [
-      "Extensions that add new utilities, components, or base styles to Tailwind CSS",
-      "Third-party CSS frameworks that replace Tailwind",
-      "JavaScript libraries that must be installed separately",
-      "Built-in features that require no configuration"
-    ],
-    "explanation": "Tailwind plugins extend the framework by adding new utilities, components, or base styles. Official plugins include @tailwindcss/forms for better form styling, @tailwindcss/typography for styling prose content, and @tailwindcss/aspect-ratio for maintaining aspect ratios. Custom plugins can add project-specific utilities, components, or modify the theme. Plugins are installed via npm and added to the plugins array in `tailwind.config.js`.",
-    "industryContext": "Tailwind plugins are essential for extending the framework's capabilities to meet specific project requirements. Professional developers use plugins to add functionality like form styling, typography enhancements, and custom components while maintaining consistency with the utility-first approach.",
-    "tags": [
-      "Plugins",
-      "intermediate",
-      "tailwind"
-    ],
-    "questionType": "multiple-choice",
-    "estimatedTime": 90,
-    "correctAnswer": 0,
-    "type": "multiple-choice",
-    "sources": []
-  },
-  {
-    "id": 15,
-    "question": "What is a recommended approach for managing long utility class lists?",
-    "topic": "Best Practices",
-    "difficulty": "Beginner",
-    "choices": [
-      "Extract to component classes or use @apply",
-      "Use inline comments",
-      "Group by functionality",
-      "Use shorter class names"
-    ],
-    "explanation": "For maintainability, extract frequently used utility combinations into component classes using @apply, or create framework-specific components that encapsulate the styling.",
-    "industryContext": "These skills are valuable in professional development environments.",
-    "tags": [
-      "Best Practices",
-      "beginner",
-      "tailwind"
-    ],
-    "questionType": "multiple-choice",
-    "estimatedTime": 90,
-    "correctAnswer": 0,
-    "type": "multiple-choice",
-    "sources": []
-  },
-  {
-    "id": 16,
-    "question": "What are the advanced techniques for building scalable design systems with Tailwind CSS?",
-    "topic": "Advanced Patterns",
-    "difficulty": "Advanced",
-    "choices": [
-      "Customizing design tokens, creating component variants, and optimizing bundle size with PurgeCSS",
-      "Using only default Tailwind classes without customization",
-      "Writing all custom CSS instead of using utility classes",
-      "Avoiding responsive design to simplify implementation"
-    ],
-    "explanation": "Advanced techniques for building scalable design systems with Tailwind CSS include: customizing design tokens through the theme configuration to match your brand guidelines, creating configurable component variants using utility combinations and the @apply directive, implementing consistent spacing and typography scales, leveraging CSS custom properties for dynamic values, optimizing bundle size with PurgeCSS to remove unused classes, and building reusable component libraries with well-defined APIs. These techniques help maintain consistency across large applications while keeping the codebase maintainable.",
-    "industryContext": "Advanced Tailwind patterns are essential for large-scale applications and design system implementation in enterprise environments. Professional frontend architects use these techniques to create maintainable, consistent design systems that can scale across multiple products and teams while maintaining performance and developer experience.",
-    "tags": [
-      "Advanced Patterns",
-      "advanced",
-      "tailwind"
-    ],
-    "questionType": "multiple-choice",
-    "estimatedTime": 90,
-    "correctAnswer": 0,
-    "type": "multiple-choice",
-    "sources": []
-  }
-]
+{
+  "questions": [
+    {
+      "id": 1,
+      "question": "What is Tailwind CSS?",
+      "topic": "Basics",
+      "difficulty": "Beginner",
+      "choices": [
+        "A utility-first CSS framework",
+        "A component-based CSS framework",
+        "A CSS preprocessor",
+        "A JavaScript framework"
+      ],
+      "explanation": "Tailwind CSS is a utility-first CSS framework that provides low-level utility classes to build designs without writing custom CSS.",
+      "industryContext": "These skills are valuable in professional development environments.",
+      "tags": [
+        "Basics",
+        "beginner",
+        "tailwind"
+      ],
+      "questionType": "multiple-choice",
+      "estimatedTime": 90,
+      "correctAnswer": 0,
+      "type": "multiple-choice",
+      "sources": []
+    },
+    {
+      "id": 2,
+      "question": "How do you add padding to an element in Tailwind CSS?",
+      "topic": "Basics",
+      "difficulty": "Beginner",
+      "choices": [
+        "p-4",
+        "m-4",
+        "w-4",
+        "h-4"
+      ],
+      "explanation": "In Tailwind, p-* classes are used for padding. The number represents the spacing scale where p-4 equals 1rem (16px).",
+      "industryContext": "These skills are valuable in professional development environments.",
+      "tags": [
+        "Basics",
+        "beginner",
+        "tailwind"
+      ],
+      "questionType": "multiple-choice",
+      "estimatedTime": 90,
+      "correctAnswer": 0,
+      "type": "multiple-choice",
+      "sources": []
+    },
+    {
+      "id": 3,
+      "question": "How does Tailwind's mobile-first responsive design approach work?",
+      "topic": "Layout",
+      "difficulty": "Intermediate",
+      "choices": [
+        "Unprefixed classes apply to all screens, responsive prefixes apply to breakpoints and larger",
+        "Desktop-first approach with max-width media queries",
+        "Only applies styles to mobile devices with special mobile classes",
+        "Requires separate CSS files for each screen size"
+      ],
+      "explanation": "Tailwind uses a mobile-first approach where unprefixed classes apply to all screen sizes, and responsive prefixes (sm:, md:, lg:, xl:) apply to specific breakpoints and larger screens. This means styles stack as the screen size increases. For example, <div class=\"text-sm md:text-base lg:text-lg\"> will be text-sm on mobile, text-base on medium screens and larger, and text-lg on large screens and larger. This approach reduces CSS bloat and makes responsive design more intuitive.",
+      "industryContext": "Understanding Tailwind's mobile-first responsive approach is crucial for professional frontend developers building modern, responsive web applications. This methodology aligns with current web development best practices and helps create consistent, maintainable responsive designs.",
+      "tags": [
+        "Layout",
+        "intermediate",
+        "tailwind"
+      ],
+      "questionType": "multiple-choice",
+      "estimatedTime": 90,
+      "correctAnswer": 0,
+      "type": "multiple-choice",
+      "sources": []
+    },
+    {
+      "id": 4,
+      "question": "Which class is used to create a flex container in Tailwind?",
+      "topic": "Layout",
+      "difficulty": "Intermediate",
+      "choices": [
+        "flex",
+        "grid",
+        "block",
+        "inline"
+      ],
+      "explanation": "The flex class creates a flex container in Tailwind CSS, enabling flexbox layout for its children.",
+      "industryContext": "These skills are valuable in professional development environments.",
+      "tags": [
+        "Layout",
+        "intermediate",
+        "tailwind"
+      ],
+      "questionType": "multiple-choice",
+      "estimatedTime": 90,
+      "correctAnswer": 0,
+      "type": "multiple-choice",
+      "sources": []
+    },
+    {
+      "id": 5,
+      "question": "Where do you customize Tailwind's default theme?",
+      "topic": "Customization",
+      "difficulty": "Intermediate",
+      "choices": [
+        "`tailwind.config.js`",
+        "`package.json`",
+        "postcss.config.js",
+        "styles.css"
+      ],
+      "explanation": "Tailwind's configuration file (`tailwind.config.js`) is where you customize the default theme, add plugins, and configure other options.",
+      "industryContext": "These skills are valuable in professional development environments.",
+      "tags": [
+        "Customization",
+        "intermediate",
+        "tailwind"
+      ],
+      "questionType": "multiple-choice",
+      "estimatedTime": 90,
+      "correctAnswer": 0,
+      "type": "multiple-choice",
+      "sources": []
+    },
+    {
+      "id": 6,
+      "question": "How do you make text bold in Tailwind CSS?",
+      "topic": "Utilities",
+      "difficulty": "Beginner",
+      "choices": [
+        "font-bold",
+        "text-bold",
+        "bold",
+        "font-weight-bold"
+      ],
+      "explanation": "The font-bold class makes text bold in Tailwind CSS. Tailwind uses the font-* naming convention for font weight utilities.",
+      "industryContext": "These skills are valuable in professional development environments.",
+      "tags": [
+        "Utilities",
+        "beginner",
+        "tailwind"
+      ],
+      "questionType": "multiple-choice",
+      "estimatedTime": 90,
+      "correctAnswer": 0,
+      "type": "multiple-choice",
+      "sources": []
+    },
+    {
+      "id": 7,
+      "question": "What are the default breakpoints in Tailwind CSS?",
+      "topic": "Responsive",
+      "difficulty": "Intermediate",
+      "choices": [
+        "sm: 640px, md: 768px, lg: 1024px, xl: 1280px, 2xl: 1536px",
+        "sm: 576px, md: 768px, lg: 992px, xl: 1200px",
+        "mobile: 480px, tablet: 768px, desktop: 1024px",
+        "small: 600px, medium: 900px, large: 1200px"
+      ],
+      "explanation": "Tailwind's default breakpoints are: sm (640px), md (768px), lg (1024px), xl (1280px), and 2xl (1536px). These follow a mobile-first approach and can be customized in the `tailwind.config.js` file to match your specific design requirements. Each breakpoint represents a minimum screen width at which the responsive styles will be applied.",
+      "industryContext": "Understanding Tailwind's responsive breakpoints is essential for building mobile-first, responsive web applications. Professional frontend developers need to know these default values to effectively use Tailwind's responsive utility classes and customize them when needed for specific project requirements.",
+      "tags": [
+        "Responsive",
+        "intermediate",
+        "tailwind"
+      ],
+      "questionType": "multiple-choice",
+      "estimatedTime": 90,
+      "correctAnswer": 0,
+      "type": "multiple-choice",
+      "sources": []
+    },
+    {
+      "id": 8,
+      "question": "How do you set a background color to blue-500 in Tailwind?",
+      "topic": "Colors",
+      "difficulty": "Beginner",
+      "choices": [
+        "bg-blue-500",
+        "background-blue-500",
+        "color-blue-500",
+        "blue-500-bg"
+      ],
+      "explanation": "In Tailwind, background colors are set using the bg-* naming convention, so bg-blue-500 sets the background color to the 500 shade of blue.",
+      "industryContext": "These skills are valuable in professional development environments.",
+      "tags": [
+        "Colors",
+        "beginner",
+        "tailwind"
+      ],
+      "questionType": "multiple-choice",
+      "estimatedTime": 90,
+      "correctAnswer": 0,
+      "type": "multiple-choice",
+      "sources": []
+    },
+    {
+      "id": 9,
+      "question": "How do you add custom colors to Tailwind CSS?",
+      "topic": "Customization",
+      "difficulty": "Beginner",
+      "choices": [
+        "Extend the theme in `tailwind.config.js`",
+        "Create new CSS classes",
+        "Use inline styles",
+        "Modify the core framework"
+      ],
+      "explanation": "Custom colors are added by extending the theme configuration in `tailwind.config.js`, which generates utility classes for your custom color palette.",
+      "industryContext": "These skills are valuable in professional development environments.",
+      "tags": [
+        "Customization",
+        "beginner",
+        "tailwind"
+      ],
+      "questionType": "multiple-choice",
+      "estimatedTime": 90,
+      "correctAnswer": 0,
+      "type": "multiple-choice",
+      "sources": []
+    },
+    {
+      "id": 10,
+      "question": "What is PurgeCSS and why is it important for Tailwind?",
+      "topic": "Performance",
+      "difficulty": "Beginner",
+      "choices": [
+        "Removes unused CSS classes to reduce bundle size",
+        "Validates CSS syntax",
+        "Compresses images",
+        "Optimizes JavaScript"
+      ],
+      "explanation": "PurgeCSS (now built into Tailwind) removes unused utility classes from the final CSS bundle, dramatically reducing file size from hundreds of KB to just a few KB.",
+      "industryContext": "These skills are valuable in professional development environments.",
+      "tags": [
+        "Performance",
+        "beginner",
+        "tailwind"
+      ],
+      "questionType": "multiple-choice",
+      "estimatedTime": 90,
+      "correctAnswer": 0,
+      "type": "multiple-choice",
+      "sources": []
+    },
+    {
+      "id": 11,
+      "question": "How do you implement dark mode in Tailwind CSS?",
+      "topic": "Dark Mode",
+      "difficulty": "Beginner",
+      "choices": [
+        "Set darkMode: 'class' in config and use dark: prefix utilities like 'dark:bg-gray-800'",
+        "Use a separate dark.css file for all dark mode styles",
+        "Add !important to all dark mode CSS rules",
+        "Dark mode is automatically enabled in Tailwind v3+"
+      ],
+      "explanation": "To implement dark mode in Tailwind CSS, first enable it by setting darkMode: 'class' in your `tailwind.config.js` file. Then use the dark: prefix on utility classes to apply styles only in dark mode, such as 'bg-white dark:bg-gray-800'. Toggle dark mode by adding or removing the 'dark' class on the document element or a parent container. This approach provides explicit control over when dark mode is active.",
+      "industryContext": "Dark mode implementation is increasingly important for modern web applications as users expect customizable viewing experiences. Professional frontend developers need to understand how to implement dark mode properly to meet accessibility standards and user preferences.",
+      "tags": [
+        "Dark Mode",
+        "beginner",
+        "tailwind"
+      ],
+      "questionType": "multiple-choice",
+      "estimatedTime": 90,
+      "correctAnswer": 0,
+      "type": "multiple-choice",
+      "sources": []
+    },
+    {
+      "id": 12,
+      "question": "What is the @apply directive used for in Tailwind?",
+      "topic": "Components",
+      "difficulty": "Beginner",
+      "choices": [
+        "Applying utility classes in custom CSS",
+        "Creating animations",
+        "Importing external CSS",
+        "Optimizing performance"
+      ],
+      "explanation": "@apply allows you to use Tailwind utilities within custom CSS classes, useful for creating component classes while maintaining utility-first approach.",
+      "industryContext": "These skills are valuable in professional development environments.",
+      "tags": [
+        "Components",
+        "beginner",
+        "tailwind"
+      ],
+      "questionType": "multiple-choice",
+      "estimatedTime": 90,
+      "correctAnswer": 0,
+      "type": "multiple-choice",
+      "sources": []
+    },
+    {
+      "id": 13,
+      "question": "How does Tailwind handle responsive design?",
+      "topic": "Responsive Design",
+      "difficulty": "Intermediate",
+      "choices": [
+        "Mobile-first breakpoint prefixes (sm:, md:, lg:, xl:)",
+        "Desktop-first approach",
+        "Automatic responsive scaling",
+        "Media `query` mixins"
+      ],
+      "explanation": "Tailwind uses mobile-first responsive design with breakpoint prefixes that apply styles at specific screen sizes and larger.",
+      "industryContext": "These skills are valuable in professional development environments.",
+      "tags": [
+        "Responsive Design",
+        "intermediate",
+        "tailwind"
+      ],
+      "questionType": "multiple-choice",
+      "estimatedTime": 90,
+      "correctAnswer": 0,
+      "type": "multiple-choice",
+      "sources": []
+    },
+    {
+      "id": 14,
+      "question": "What are Tailwind plugins and how do they extend functionality?",
+      "topic": "Plugins",
+      "difficulty": "Intermediate",
+      "choices": [
+        "Extensions that add new utilities, components, or base styles to Tailwind CSS",
+        "Third-party CSS frameworks that replace Tailwind",
+        "JavaScript libraries that must be installed separately",
+        "Built-in features that require no configuration"
+      ],
+      "explanation": "Tailwind plugins extend the framework by adding new utilities, components, or base styles. Official plugins include @tailwindcss/forms for better form styling, @tailwindcss/typography for styling prose content, and @tailwindcss/aspect-ratio for maintaining aspect ratios. Custom plugins can add project-specific utilities, components, or modify the theme. Plugins are installed via npm and added to the plugins array in `tailwind.config.js`.",
+      "industryContext": "Tailwind plugins are essential for extending the framework's capabilities to meet specific project requirements. Professional developers use plugins to add functionality like form styling, typography enhancements, and custom components while maintaining consistency with the utility-first approach.",
+      "tags": [
+        "Plugins",
+        "intermediate",
+        "tailwind"
+      ],
+      "questionType": "multiple-choice",
+      "estimatedTime": 90,
+      "correctAnswer": 0,
+      "type": "multiple-choice",
+      "sources": []
+    },
+    {
+      "id": 15,
+      "question": "What is a recommended approach for managing long utility class lists?",
+      "topic": "Best Practices",
+      "difficulty": "Beginner",
+      "choices": [
+        "Extract to component classes or use @apply",
+        "Use inline comments",
+        "Group by functionality",
+        "Use shorter class names"
+      ],
+      "explanation": "For maintainability, extract frequently used utility combinations into component classes using @apply, or create framework-specific components that encapsulate the styling.",
+      "industryContext": "These skills are valuable in professional development environments.",
+      "tags": [
+        "Best Practices",
+        "beginner",
+        "tailwind"
+      ],
+      "questionType": "multiple-choice",
+      "estimatedTime": 90,
+      "correctAnswer": 0,
+      "type": "multiple-choice",
+      "sources": []
+    },
+    {
+      "id": 16,
+      "question": "What are the advanced techniques for building scalable design systems with Tailwind CSS?",
+      "topic": "Advanced Patterns",
+      "difficulty": "Advanced",
+      "choices": [
+        "Customizing design tokens, creating component variants, and optimizing bundle size with PurgeCSS",
+        "Using only default Tailwind classes without customization",
+        "Writing all custom CSS instead of using utility classes",
+        "Avoiding responsive design to simplify implementation"
+      ],
+      "explanation": "Advanced techniques for building scalable design systems with Tailwind CSS include: customizing design tokens through the theme configuration to match your brand guidelines, creating configurable component variants using utility combinations and the @apply directive, implementing consistent spacing and typography scales, leveraging CSS custom properties for dynamic values, optimizing bundle size with PurgeCSS to remove unused classes, and building reusable component libraries with well-defined APIs. These techniques help maintain consistency across large applications while keeping the codebase maintainable.",
+      "industryContext": "Advanced Tailwind patterns are essential for large-scale applications and design system implementation in enterprise environments. Professional frontend architects use these techniques to create maintainable, consistent design systems that can scale across multiple products and teams while maintaining performance and developer experience.",
+      "tags": [
+        "Advanced Patterns",
+        "advanced",
+        "tailwind"
+      ],
+      "questionType": "multiple-choice",
+      "estimatedTime": 90,
+      "correctAnswer": 0,
+      "type": "multiple-choice",
+      "sources": []
+    }
+  ]
+}

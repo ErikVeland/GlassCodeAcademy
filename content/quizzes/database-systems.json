@@ -1,5 +1,6 @@
-[
-  {
+{
+  "questions": [
+    {
     "id": 1,
     "question": "What is a primary key in a relational database?",
     "topic": "Database Fundamentals",
@@ -527,4 +528,5 @@
     "type": "multiple-choice",
     "sources": []
   }
-]
+  ]
+}

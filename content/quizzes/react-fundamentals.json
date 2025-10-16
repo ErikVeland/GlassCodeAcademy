@@ -1,482 +1,484 @@
-[
-  {
-    "id": 1,
-    "question": "What is the correct way to create a React component?",
-    "topic": "Components",
-    "difficulty": "Beginner",
-    "choices": [
-      "`function MyComponent() { return <div>Hello</div>; }`",
-      "`class MyComponent { render() { return <div>Hello</div>; } }`",
-      "`MyComponent() => { return <div>Hello</div>; }`",
-      "`const MyComponent = { <div>Hello</div> }`"
-    ],
-    "explanation": "In modern React, functional components are the preferred way to create components. They are simpler and can use hooks for state and side effects.",
-    "industryContext": "Functional components with hooks have become the standard approach in modern React development, adopted by leading tech companies like Meta, Airbnb, and Netflix for building scalable user interfaces.",
-    "tags": [
-      "Components",
-      "beginner",
-      "react"
-    ],
-    "questionType": "multiple-choice",
-    "estimatedTime": 90,
-    "correctAnswer": 0,
-    "type": "multiple-choice",
-    "sources": []
-  },
-  {
-    "id": 2,
-    "question": "How do you pass data to a React component?",
-    "topic": "Components",
-    "difficulty": "Beginner",
-    "choices": [
-      "Using props",
-      "Using state",
-      "Using context",
-      "Using refs"
-    ],
-    "explanation": "Props are used to pass data from a parent component to a child component in React.",
-    "industryContext": "Component composition with props is a fundamental pattern in React that enables developers to build reusable UI components, a practice widely adopted in enterprise applications at companies like Microsoft, Amazon, and Uber.",
-    "tags": [
-      "Components",
-      "beginner",
-      "react"
-    ],
-    "questionType": "multiple-choice",
-    "estimatedTime": 90,
-    "correctAnswer": 0,
-    "type": "multiple-choice",
-    "sources": []
-  },
-  {
-    "id": 3,
-    "question": "What are React Hooks and why were they introduced?",
-    "topic": "Hooks",
-    "difficulty": "Intermediate",
-    "choices": [
-      "Functions that let you use state and other React features in functional components, introduced to simplify component logic",
-      "A new way to create class components with better performance",
-      "Special lifecycle methods that replace componentDidMount and componentDidUpdate",
-      "A debugging tool for tracking component re-renders"
-    ],
-    "explanation": "React Hooks are functions that let you 'hook into' React state and lifecycle features from function components. They were introduced to allow using state and other React features without writing a class, making components simpler and easier to reuse. Hooks like `useState`, `useEffect`, and useContext provide a more direct API to React concepts.",
-    "industryContext": "React Hooks have become the standard way to write React components since their introduction in 2019. Understanding hooks is essential for modern React development and is widely used in enterprise applications for building scalable user interfaces.",
-    "tags": [
-      "Hooks",
-      "intermediate",
-      "react"
-    ],
-    "questionType": "multiple-choice",
-    "estimatedTime": 90,
-    "correctAnswer": 0,
-    "type": "multiple-choice",
-    "sources": []
-  },
-  {
-    "id": 4,
-    "question": "Which hook is used to manage state in a functional component?",
-    "topic": "Hooks",
-    "difficulty": "Intermediate",
-    "choices": [
-      "`useState`",
-      "`useEffect`",
-      "useContext",
-      "useReducer"
-    ],
-    "explanation": "The `useState` hook is used to add state to functional components in React.",
-    "industryContext": "The useState hook is the most commonly used React Hook in modern applications, enabling developers to manage component state without class components. This pattern is essential for building interactive UIs in production applications.",
-    "tags": [
-      "Hooks",
-      "intermediate",
-      "react"
-    ],
-    "questionType": "multiple-choice",
-    "estimatedTime": 90,
-    "correctAnswer": 0,
-    "type": "multiple-choice",
-    "sources": []
-  },
-  {
-    "id": 5,
-    "question": "What is the purpose of React Context?",
-    "topic": "Context",
-    "difficulty": "Beginner",
-    "choices": [
-      "To share data between components without prop drilling",
-      "To manage component state",
-      "To handle side effects",
-      "To optimize component performance"
-    ],
-    "explanation": "React Context provides a way to pass data through the component tree without having to pass props down manually at every level.",
-    "industryContext": "React Context is widely used in enterprise applications to manage global state such as user authentication, theme settings, and localization data, eliminating the need for complex prop drilling patterns.",
-    "tags": [
-      "Context",
-      "beginner",
-      "react"
-    ],
-    "questionType": "multiple-choice",
-    "estimatedTime": 90,
-    "correctAnswer": 0,
-    "type": "multiple-choice",
-    "sources": []
-  },
-  {
-    "id": 6,
-    "question": "Which method is called after a component is rendered for the first time?",
-    "topic": "Lifecycle",
-    "difficulty": "Intermediate",
-    "choices": [
-      "componentDidMount",
-      "componentDidUpdate",
-      "componentWillUnmount",
-      "render"
-    ],
-    "explanation": "componentDidMount is called immediately after a component is mounted (inserted into the tree).",
-    "industryContext": "In class components, componentDidMount is commonly used for data fetching, subscriptions, and DOM manipulation. While hooks like useEffect are preferred in modern React, understanding lifecycle methods is still important for maintaining legacy codebases.",
-    "tags": [
-      "Lifecycle",
-      "intermediate",
-      "react"
-    ],
-    "questionType": "multiple-choice",
-    "estimatedTime": 90,
-    "correctAnswer": 0,
-    "type": "multiple-choice",
-    "sources": []
-  },
-  {
-    "id": 7,
-    "question": "What is the virtual DOM and how does it improve React performance?",
-    "topic": "Rendering",
-    "difficulty": "Beginner",
-    "choices": [
-      "A lightweight JavaScript representation of the actual DOM that optimizes updates by comparing changes and updating only what's necessary",
-      "A separate DOM implementation that runs in a web worker for better performance",
-      "A caching mechanism that stores rendered components in memory",
-      "A server-side rendering technique that pre-renders components"
-    ],
-    "explanation": "The virtual DOM is a lightweight JavaScript representation of the actual DOM. React uses it to optimize updates by comparing the virtual DOM with the real DOM and only updating the parts that have changed, reducing expensive DOM operations. This diffing algorithm makes React applications more performant by minimizing direct DOM manipulations.",
-    "industryContext": "Understanding the virtual DOM is fundamental to React development and helps developers write more efficient applications. This concept is crucial for optimizing performance in large-scale React applications used in enterprise environments.",
-    "tags": [
-      "Rendering",
-      "beginner",
-      "react"
-    ],
-    "questionType": "multiple-choice",
-    "estimatedTime": 90,
-    "correctAnswer": 0,
-    "type": "multiple-choice",
-    "sources": []
-  },
-  {
-    "id": 8,
-    "question": "How do you update state in a functional component?",
-    "topic": "State",
-    "difficulty": "Beginner",
-    "choices": [
-      "Using the setter function returned by `useState`",
-      "Directly modifying the state variable",
-      "Using this.setState",
-      "Using forceUpdate"
-    ],
-    "explanation": "When using `useState`, you get a state variable and a setter function. You must use the setter function to update state.",
-    "industryContext": "Proper state management using useState setter functions is critical for predictable React applications. This pattern prevents common bugs related to direct state mutations and ensures components re-render correctly when state changes.",
-    "tags": [
-      "State",
-      "beginner",
-      "react"
-    ],
-    "questionType": "multiple-choice",
-    "estimatedTime": 90,
-    "correctAnswer": 0,
-    "type": "multiple-choice",
-    "sources": []
-  },
-  {
-    "id": 9,
-    "question": "What is the purpose of useCallback hook?",
-    "topic": "Hooks",
-    "difficulty": "Beginner",
-    "choices": [
-      "Memoize functions to prevent unnecessary re-renders",
-      "Cache API responses",
-      "Handle user callbacks",
-      "Create callback refs"
-    ],
-    "explanation": "useCallback memoizes functions to prevent unnecessary re-renders of child components when the parent re-renders, optimizing performance by maintaining referential equality.",
-    "industryContext": "The useCallback hook is essential for performance optimization in React applications with complex component hierarchies. It's particularly important in applications with frequent re-renders, such as data visualization dashboards or real-time collaboration tools.",
-    "tags": [
-      "Hooks",
-      "beginner",
-      "react"
-    ],
-    "questionType": "multiple-choice",
-    "estimatedTime": 90,
-    "correctAnswer": 0,
-    "type": "multiple-choice",
-    "sources": []
-  },
-  {
-    "id": 10,
-    "question": "What does React.memo() do?",
-    "topic": "Performance",
-    "difficulty": "Intermediate",
-    "choices": [
-      "Prevents re-renders if props haven't changed",
-      "Memoizes state values",
-      "Caches API calls",
-      "Optimizes memory usage"
-    ],
-    "explanation": "React.memo() is a higher-order component that memoizes the component and only re-renders if its props have changed, improving performance.",
-    "industryContext": "React.memo() is a key performance optimization technique used in production applications to prevent unnecessary re-renders of components with expensive render operations, such as lists with many items or complex data visualizations.",
-    "tags": [
-      "Performance",
-      "intermediate",
-      "react"
-    ],
-    "questionType": "multiple-choice",
-    "estimatedTime": 90,
-    "correctAnswer": 0,
-    "type": "multiple-choice",
-    "sources": []
-  },
-  {
-    "id": 11,
-    "question": "When should you use useReducer instead of `useState`?",
-    "topic": "State Management",
-    "difficulty": "Intermediate",
-    "choices": [
-      "When managing complex state logic that involves multiple sub-values or when the next state depends on the previous one",
-      "When you need to store simple primitive values like strings or numbers",
-      "When you want to optimize component performance by reducing re-renders",
-      "When working with form input values and validation"
-    ],
-    "explanation": "useReducer is preferred over `useState` when you have complex state logic that involves multiple sub-values or when the next state depends on the previous one. It's also useful when you want to separate the state logic from the component and make it more predictable and testable.",
-    "industryContext": "Complex state management is a common challenge in enterprise React applications. Understanding when to use useReducer versus useState is crucial for building maintainable and scalable applications that can handle complex user interactions and data flows.",
-    "tags": [
-      "State Management",
-      "intermediate",
-      "react"
-    ],
-    "questionType": "multiple-choice",
-    "estimatedTime": 90,
-    "correctAnswer": 0,
-    "type": "multiple-choice",
-    "sources": []
-  },
-  {
-    "id": 12,
-    "question": "Which library is commonly used for testing React components?",
-    "topic": "Testing",
-    "difficulty": "Intermediate",
-    "choices": [
-      "React Testing Library",
-      "Selenium",
-      "JUnit",
-      "PHPUnit"
-    ],
-    "explanation": "React Testing Library is the most popular choice for testing React components, focusing on testing behavior rather than implementation details.",
-    "industryContext": "React Testing Library has become the industry standard for testing React components, adopted by major tech companies for its focus on testing user behavior rather than implementation details, leading to more maintainable test suites.",
-    "tags": [
-      "Testing",
-      "intermediate",
-      "react"
-    ],
-    "questionType": "multiple-choice",
-    "estimatedTime": 90,
-    "correctAnswer": 0,
-    "type": "multiple-choice",
-    "sources": []
-  },
-  {
-    "id": 13,
-    "question": "What is an Error Boundary in React?",
-    "topic": "Error Handling",
-    "difficulty": "Beginner",
-    "choices": [
-      "A component that catches JavaScript errors in child components",
-      "A validation method for props",
-      "A routing mechanism",
-      "A state management tool"
-    ],
-    "explanation": "Error Boundaries are React components that catch JavaScript errors anywhere in their child component tree, log those errors, and display a fallback UI.",
-    "industryContext": "Error Boundaries are essential for building resilient React applications that gracefully handle unexpected errors without crashing the entire UI. They're particularly important in production applications where unhandled errors could lead to poor user experiences.",
-    "tags": [
-      "Error Handling",
-      "beginner",
-      "react"
-    ],
-    "questionType": "multiple-choice",
-    "estimatedTime": 90,
-    "correctAnswer": 0,
-    "type": "multiple-choice",
-    "sources": []
-  },
-  {
-    "id": 14,
-    "question": "What are React Portals and when would you use them?",
-    "topic": "Advanced",
-    "difficulty": "Intermediate",
-    "choices": [
-      "A way to render children into a DOM node that exists outside the DOM hierarchy of the parent component, useful for modals and tooltips",
-      "A performance optimization technique that lazy loads components",
-      "A routing mechanism for creating nested navigation structures",
-      "A state management pattern for sharing data between distant components"
-    ],
-    "explanation": "React Portals provide a way to render children into a DOM node that exists outside the DOM hierarchy of the parent component. They're commonly used for modals, tooltips, and dropdowns that need to break out of their container's overflow or z-index context.",
-    "industryContext": "Portals are an advanced React feature that's essential for building professional UI components like modals, tooltips, and dropdown menus. Understanding portals is important for developers working on complex user interfaces in enterprise applications.",
-    "tags": [
-      "Advanced",
-      "intermediate",
-      "react"
-    ],
-    "questionType": "multiple-choice",
-    "estimatedTime": 90,
-    "correctAnswer": 0,
-    "type": "multiple-choice",
-    "sources": []
-  },
-  {
-    "id": 15,
-    "question": "What is React Suspense used for?",
-    "topic": "Concurrency",
-    "difficulty": "Beginner",
-    "choices": [
-      "Handling loading states for async operations",
-      "Suspending component updates",
-      "Pausing animations",
-      "Managing timeouts"
-    ],
-    "explanation": "React Suspense lets components 'wait' for something before rendering, typically used with lazy loading and data fetching to handle loading states declaratively.",
-    "industryContext": "React Suspense is a key feature for building responsive user interfaces that handle asynchronous operations gracefully. It's particularly valuable in applications that load data from APIs or lazy-load components to improve initial load performance.",
-    "tags": [
-      "Concurrency",
-      "beginner",
-      "react"
-    ],
-    "questionType": "multiple-choice",
-    "estimatedTime": 90,
-    "correctAnswer": 0,
-    "type": "multiple-choice",
-    "sources": []
-  },
-  {
-    "id": 16,
-    "question": "What is the difference between React.lazy() and dynamic imports in React?",
-    "topic": "Code Splitting",
-    "difficulty": "Advanced",
-    "choices": [
-      "React.lazy() is specifically for React components, dynamic imports are for any module",
-      "React.lazy() is synchronous, dynamic imports are asynchronous",
-      "React.lazy() works only with default exports, dynamic imports work with named exports",
-      "There is no difference, they are interchangeable"
-    ],
-    "explanation": "React.lazy() is a React-specific function that enables code splitting for components, while dynamic imports (import()) are a JavaScript feature that can be used for any module. React.lazy() works with dynamic imports under the hood but provides React-specific integration with Suspense for loading states.",
-    "industryContext": "Code splitting with React.lazy() and Suspense is a critical optimization technique for large React applications, enabling faster initial loads by deferring non-critical components until they're needed. This approach is widely used in enterprise applications to improve performance metrics.",
-    "tags": [
-      "Code Splitting",
-      "advanced",
-      "react"
-    ],
-    "questionType": "multiple-choice",
-    "estimatedTime": 90,
-    "correctAnswer": 0,
-    "type": "multiple-choice",
-    "sources": []
-  },
-  {
-    "id": 17,
-    "question": "What is the purpose of the useRef hook?",
-    "topic": "Hooks",
-    "difficulty": "Intermediate",
-    "choices": [
-      "To create mutable references that persist across renders without causing re-renders",
-      "To manage component state",
-      "To handle side effects",
-      "To optimize component performance"
-    ],
-    "explanation": "useRef returns a mutable ref object whose .current property is initialized to the passed argument. The returned object will persist for the full lifetime of the component and updating ref.current does not cause a re-render.",
-    "industryContext": "The useRef hook is commonly used for accessing DOM elements directly, storing mutable values that don't trigger re-renders, and maintaining references to values between renders. It's essential for implementing features like focus management and integrating with third-party libraries.",
-    "tags": [
-      "Hooks",
-      "intermediate",
-      "react"
-    ],
-    "questionType": "multiple-choice",
-    "estimatedTime": 90,
-    "correctAnswer": 0,
-    "type": "multiple-choice",
-    "sources": []
-  },
-  {
-    "id": 18,
-    "question": "How does React handle keys in lists?",
-    "topic": "Rendering",
-    "difficulty": "Beginner",
-    "choices": [
-      "Keys help React identify which items have changed, are added, or are removed",
-      "Keys are used for styling list items",
-      "Keys are required for all components to render properly",
-      "Keys are automatically generated by React"
-    ],
-    "explanation": "Keys help React identify which items have changed, are added, or are removed. Keys should be given to the elements inside the array to give the elements a stable identity, which allows React to efficiently update the DOM.",
-    "industryContext": "Proper use of keys in React lists is fundamental for performance and correctness. Incorrect key usage can lead to bugs with state management in list items and inefficient re-renders, which can significantly impact user experience in data-heavy applications.",
-    "tags": [
-      "Rendering",
-      "beginner",
-      "react"
-    ],
-    "questionType": "multiple-choice",
-    "estimatedTime": 90,
-    "correctAnswer": 0,
-    "type": "multiple-choice",
-    "sources": []
-  },
-  {
-    "id": 19,
-    "question": "What is the Context API used for?",
-    "topic": "State Management",
-    "difficulty": "Intermediate",
-    "choices": [
-      "Sharing data between components without passing props through every level",
-      "Managing global CSS variables",
-      "Handling HTTP requests",
-      "Optimizing component rendering"
-    ],
-    "explanation": "The Context API provides a way to pass data through the component tree without having to pass props down manually at every level. It's designed to share data that can be considered 'global' for a tree of React components.",
-    "industryContext": "The Context API is widely used in enterprise React applications for managing global state such as user authentication, theme settings, and application configuration. It eliminates the need for complex prop drilling patterns and provides a clean way to share data across component hierarchies.",
-    "tags": [
-      "State Management",
-      "intermediate",
-      "react"
-    ],
-    "questionType": "multiple-choice",
-    "estimatedTime": 90,
-    "correctAnswer": 0,
-    "type": "multiple-choice",
-    "sources": []
-  },
-  {
-    "id": 20,
-    "question": "What is the difference between controlled and uncontrolled components?",
-    "topic": "Forms",
-    "difficulty": "Intermediate",
-    "choices": [
-      "Controlled components have their state managed by React, uncontrolled components manage their own state",
-      "Controlled components are faster, uncontrolled components are slower",
-      "Controlled components use hooks, uncontrolled components use classes",
-      "There is no difference, they are the same"
-    ],
-    "explanation": "In controlled components, form data is handled by a React component's state. In uncontrolled components, form data is handled by the DOM itself. Controlled components are generally preferred as they provide more control and are easier to test.",
-    "industryContext": "Understanding controlled vs uncontrolled components is crucial for building robust form handling in React applications. Controlled components are the recommended approach in enterprise applications as they provide better validation, error handling, and integration with state management solutions.",
-    "tags": [
-      "Forms",
-      "intermediate",
-      "react"
-    ],
-    "questionType": "multiple-choice",
-    "estimatedTime": 90,
-    "correctAnswer": 0,
-    "type": "multiple-choice",
-    "sources": []
-  }
-]
+{
+  "questions": [
+    {
+      "id": 1,
+      "question": "What is the correct way to create a React component?",
+      "topic": "Components",
+      "difficulty": "Beginner",
+      "choices": [
+        "`function MyComponent() { return <div>Hello</div>; }`",
+        "`class MyComponent { render() { return <div>Hello</div>; } }`",
+        "`MyComponent() => { return <div>Hello</div>; }`",
+        "`const MyComponent = { <div>Hello</div> }`"
+      ],
+      "explanation": "In modern React, functional components are the preferred way to create components. They are simpler and can use hooks for state and side effects.",
+      "industryContext": "Functional components with hooks have become the standard approach in modern React development, adopted by leading tech companies like Meta, Airbnb, and Netflix for building scalable user interfaces.",
+      "tags": [
+        "Components",
+        "beginner",
+        "react"
+      ],
+      "questionType": "multiple-choice",
+      "estimatedTime": 90,
+      "correctAnswer": 0,
+      "type": "multiple-choice",
+      "sources": []
+    },
+    {
+      "id": 2,
+      "question": "How do you pass data to a React component?",
+      "topic": "Components",
+      "difficulty": "Beginner",
+      "choices": [
+        "Using props",
+        "Using state",
+        "Using context",
+        "Using refs"
+      ],
+      "explanation": "Props are used to pass data from a parent component to a child component in React.",
+      "industryContext": "Component composition with props is a fundamental pattern in React that enables developers to build reusable UI components, a practice widely adopted in enterprise applications at companies like Microsoft, Amazon, and Uber.",
+      "tags": [
+        "Components",
+        "beginner",
+        "react"
+      ],
+      "questionType": "multiple-choice",
+      "estimatedTime": 90,
+      "correctAnswer": 0,
+      "type": "multiple-choice",
+      "sources": []
+    },
+    {
+      "id": 3,
+      "question": "What are React Hooks and why were they introduced?",
+      "topic": "Hooks",
+      "difficulty": "Intermediate",
+      "choices": [
+        "Functions that let you use state and other React features in functional components, introduced to simplify component logic",
+        "A new way to create class components with better performance",
+        "Special lifecycle methods that replace componentDidMount and componentDidUpdate",
+        "A debugging tool for tracking component re-renders"
+      ],
+      "explanation": "React Hooks are functions that let you 'hook into' React state and lifecycle features from function components. They were introduced to allow using state and other React features without writing a class, making components simpler and easier to reuse. Hooks like `useState`, `useEffect`, and useContext provide a more direct API to React concepts.",
+      "industryContext": "React Hooks have become the standard way to write React components since their introduction in 2019. Understanding hooks is essential for modern React development and is widely used in enterprise applications for building scalable user interfaces.",
+      "tags": [
+        "Hooks",
+        "intermediate",
+        "react"
+      ],
+      "questionType": "multiple-choice",
+      "estimatedTime": 90,
+      "correctAnswer": 0,
+      "type": "multiple-choice",
+      "sources": []
+    },
+    {
+      "id": 4,
+      "question": "Which hook is used to manage state in a functional component?",
+      "topic": "Hooks",
+      "difficulty": "Intermediate",
+      "choices": [
+        "`useState`",
+        "`useEffect`",
+        "useContext",
+        "useReducer"
+      ],
+      "explanation": "The `useState` hook is used to add state to functional components in React.",
+      "industryContext": "The useState hook is the most commonly used React Hook in modern applications, enabling developers to manage component state without class components. This pattern is essential for building interactive UIs in production applications.",
+      "tags": [
+        "Hooks",
+        "intermediate",
+        "react"
+      ],
+      "questionType": "multiple-choice",
+      "estimatedTime": 90,
+      "correctAnswer": 0,
+      "type": "multiple-choice",
+      "sources": []
+    },
+    {
+      "id": 5,
+      "question": "What is the purpose of React Context?",
+      "topic": "Context",
+      "difficulty": "Beginner",
+      "choices": [
+        "To share data between components without prop drilling",
+        "To manage component state",
+        "To handle side effects",
+        "To optimize component performance"
+      ],
+      "explanation": "React Context provides a way to pass data through the component tree without having to pass props down manually at every level.",
+      "industryContext": "React Context is widely used in enterprise applications to manage global state such as user authentication, theme settings, and localization data, eliminating the need for complex prop drilling patterns.",
+      "tags": [
+        "Context",
+        "beginner",
+        "react"
+      ],
+      "questionType": "multiple-choice",
+      "estimatedTime": 90,
+      "correctAnswer": 0,
+      "type": "multiple-choice",
+      "sources": []
+    },
+    {
+      "id": 6,
+      "question": "Which method is called after a component is rendered for the first time?",
+      "topic": "Lifecycle",
+      "difficulty": "Intermediate",
+      "choices": [
+        "componentDidMount",
+        "componentDidUpdate",
+        "componentWillUnmount",
+        "render"
+      ],
+      "explanation": "componentDidMount is called immediately after a component is mounted (inserted into the tree).",
+      "industryContext": "In class components, componentDidMount is commonly used for data fetching, subscriptions, and DOM manipulation. While hooks like useEffect are preferred in modern React, understanding lifecycle methods is still important for maintaining legacy codebases.",
+      "tags": [
+        "Lifecycle",
+        "intermediate",
+        "react"
+      ],
+      "questionType": "multiple-choice",
+      "estimatedTime": 90,
+      "correctAnswer": 0,
+      "type": "multiple-choice",
+      "sources": []
+    },
+    {
+      "id": 7,
+      "question": "What is the virtual DOM and how does it improve React performance?",
+      "topic": "Rendering",
+      "difficulty": "Beginner",
+      "choices": [
+        "A lightweight JavaScript representation of the actual DOM that optimizes updates by comparing changes and updating only what's necessary",
+        "A separate DOM implementation that runs in a web worker for better performance",
+        "A caching mechanism that stores rendered components in memory",
+        "A server-side rendering technique that pre-renders components"
+      ],
+      "explanation": "The virtual DOM is a lightweight JavaScript representation of the actual DOM. React uses it to optimize updates by comparing the virtual DOM with the real DOM and only updating the parts that have changed, reducing expensive DOM operations. This diffing algorithm makes React applications more performant by minimizing direct DOM manipulations.",
+      "industryContext": "Understanding the virtual DOM is fundamental to React development and helps developers write more efficient applications. This concept is crucial for optimizing performance in large-scale React applications used in enterprise environments.",
+      "tags": [
+        "Rendering",
+        "beginner",
+        "react"
+      ],
+      "questionType": "multiple-choice",
+      "estimatedTime": 90,
+      "correctAnswer": 0,
+      "type": "multiple-choice",
+      "sources": []
+    },
+    {
+      "id": 8,
+      "question": "How do you update state in a functional component?",
+      "topic": "State",
+      "difficulty": "Beginner",
+      "choices": [
+        "Using the setter function returned by `useState`",
+        "Directly modifying the state variable",
+        "Using this.setState",
+        "Using forceUpdate"
+      ],
+      "explanation": "When using `useState`, you get a state variable and a setter function. You must use the setter function to update state.",
+      "industryContext": "Proper state management using useState setter functions is critical for predictable React applications. This pattern prevents common bugs related to direct state mutations and ensures components re-render correctly when state changes.",
+      "tags": [
+        "State",
+        "beginner",
+        "react"
+      ],
+      "questionType": "multiple-choice",
+      "estimatedTime": 90,
+      "correctAnswer": 0,
+      "type": "multiple-choice",
+      "sources": []
+    },
+    {
+      "id": 9,
+      "question": "What is the purpose of useCallback hook?",
+      "topic": "Hooks",
+      "difficulty": "Beginner",
+      "choices": [
+        "Memoize functions to prevent unnecessary re-renders",
+        "Cache API responses",
+        "Handle user callbacks",
+        "Create callback refs"
+      ],
+      "explanation": "useCallback memoizes functions to prevent unnecessary re-renders of child components when the parent re-renders, optimizing performance by maintaining referential equality.",
+      "industryContext": "The useCallback hook is essential for performance optimization in React applications with complex component hierarchies. It's particularly important in applications with frequent re-renders, such as data visualization dashboards or real-time collaboration tools.",
+      "tags": [
+        "Hooks",
+        "beginner",
+        "react"
+      ],
+      "questionType": "multiple-choice",
+      "estimatedTime": 90,
+      "correctAnswer": 0,
+      "type": "multiple-choice",
+      "sources": []
+    },
+    {
+      "id": 10,
+      "question": "What does React.memo() do?",
+      "topic": "Performance",
+      "difficulty": "Intermediate",
+      "choices": [
+        "Prevents re-renders if props haven't changed",
+        "Memoizes state values",
+        "Caches API calls",
+        "Optimizes memory usage"
+      ],
+      "explanation": "React.memo() is a higher-order component that memoizes the component and only re-renders if its props have changed, improving performance.",
+      "industryContext": "React.memo() is a key performance optimization technique used in production applications to prevent unnecessary re-renders of components with expensive render operations, such as lists with many items or complex data visualizations.",
+      "tags": [
+        "Performance",
+        "intermediate",
+        "react"
+      ],
+      "questionType": "multiple-choice",
+      "estimatedTime": 90,
+      "correctAnswer": 0,
+      "type": "multiple-choice",
+      "sources": []
+    },
+    {
+      "id": 11,
+      "question": "When should you use useReducer instead of `useState`?",
+      "topic": "State Management",
+      "difficulty": "Intermediate",
+      "choices": [
+        "When managing complex state logic that involves multiple sub-values or when the next state depends on the previous one",
+        "When you need to store simple primitive values like strings or numbers",
+        "When you want to optimize component performance by reducing re-renders",
+        "When working with form input values and validation"
+      ],
+      "explanation": "useReducer is preferred over `useState` when you have complex state logic that involves multiple sub-values or when the next state depends on the previous one. It's also useful when you want to separate the state logic from the component and make it more predictable and testable.",
+      "industryContext": "Complex state management is a common challenge in enterprise React applications. Understanding when to use useReducer versus useState is crucial for building maintainable and scalable applications that can handle complex user interactions and data flows.",
+      "tags": [
+        "State Management",
+        "intermediate",
+        "react"
+      ],
+      "questionType": "multiple-choice",
+      "estimatedTime": 90,
+      "correctAnswer": 0,
+      "type": "multiple-choice",
+      "sources": []
+    },
+    {
+      "id": 12,
+      "question": "Which library is commonly used for testing React components?",
+      "topic": "Testing",
+      "difficulty": "Intermediate",
+      "choices": [
+        "React Testing Library",
+        "Selenium",
+        "JUnit",
+        "PHPUnit"
+      ],
+      "explanation": "React Testing Library is the most popular choice for testing React components, focusing on testing behavior rather than implementation details.",
+      "industryContext": "React Testing Library has become the industry standard for testing React components, adopted by major tech companies for its focus on testing user behavior rather than implementation details, leading to more maintainable test suites.",
+      "tags": [
+        "Testing",
+        "intermediate",
+        "react"
+      ],
+      "questionType": "multiple-choice",
+      "estimatedTime": 90,
+      "correctAnswer": 0,
+      "type": "multiple-choice",
+      "sources": []
+    },
+    {
+      "id": 13,
+      "question": "What is an Error Boundary in React?",
+      "topic": "Error Handling",
+      "difficulty": "Beginner",
+      "choices": [
+        "A component that catches JavaScript errors in child components",
+        "A validation method for props",
+        "A routing mechanism",
+        "A state management tool"
+      ],
+      "explanation": "Error Boundaries are React components that catch JavaScript errors anywhere in their child component tree, log those errors, and display a fallback UI.",
+      "industryContext": "Error Boundaries are essential for building resilient React applications that gracefully handle unexpected errors without crashing the entire UI. They're particularly important in production applications where unhandled errors could lead to poor user experiences.",
+      "tags": [
+        "Error Handling",
+        "beginner",
+        "react"
+      ],
+      "questionType": "multiple-choice",
+      "estimatedTime": 90,
+      "correctAnswer": 0,
+      "type": "multiple-choice",
+      "sources": []
+    },
+    {
+      "id": 14,
+      "question": "What are React Portals and when would you use them?",
+      "topic": "Advanced",
+      "difficulty": "Intermediate",
+      "choices": [
+        "A way to render children into a DOM node that exists outside the DOM hierarchy of the parent component, useful for modals and tooltips",
+        "A performance optimization technique that lazy loads components",
+        "A routing mechanism for creating nested navigation structures",
+        "A state management pattern for sharing data between distant components"
+      ],
+      "explanation": "React Portals provide a way to render children into a DOM node that exists outside the DOM hierarchy of the parent component. They're commonly used for modals, tooltips, and dropdowns that need to break out of their container's overflow or z-index context.",
+      "industryContext": "Portals are an advanced React feature that's essential for building professional UI components like modals, tooltips, and dropdown menus. Understanding portals is important for developers working on complex user interfaces in enterprise applications.",
+      "tags": [
+        "Advanced",
+        "intermediate",
+        "react"
+      ],
+      "questionType": "multiple-choice",
+      "estimatedTime": 90,
+      "correctAnswer": 0,
+      "type": "multiple-choice",
+      "sources": []
+    },
+    {
+      "id": 15,
+      "question": "What is React Suspense used for?",
+      "topic": "Concurrency",
+      "difficulty": "Beginner",
+      "choices": [
+        "Handling loading states for async operations",
+        "Suspending component updates",
+        "Pausing animations",
+        "Managing timeouts"
+      ],
+      "explanation": "React Suspense lets components 'wait' for something before rendering, typically used with lazy loading and data fetching to handle loading states declaratively.",
+      "industryContext": "React Suspense is a key feature for building responsive user interfaces that handle asynchronous operations gracefully. It's particularly valuable in applications that load data from APIs or lazy-load components to improve initial load performance.",
+      "tags": [
+        "Concurrency",
+        "beginner",
+        "react"
+      ],
+      "questionType": "multiple-choice",
+      "estimatedTime": 90,
+      "correctAnswer": 0,
+      "type": "multiple-choice",
+      "sources": []
+    },
+    {
+      "id": 16,
+      "question": "What is the difference between React.lazy() and dynamic imports in React?",
+      "topic": "Code Splitting",
+      "difficulty": "Advanced",
+      "choices": [
+        "React.lazy() is specifically for React components, dynamic imports are for any module",
+        "React.lazy() is synchronous, dynamic imports are asynchronous",
+        "React.lazy() works only with default exports, dynamic imports work with named exports",
+        "There is no difference, they are interchangeable"
+      ],
+      "explanation": "React.lazy() is a React-specific function that enables code splitting for components, while dynamic imports (import()) are a JavaScript feature that can be used for any module. React.lazy() works with dynamic imports under the hood but provides React-specific integration with Suspense for loading states.",
+      "industryContext": "Code splitting with React.lazy() and Suspense is a critical optimization technique for large React applications, enabling faster initial loads by deferring non-critical components until they're needed. This approach is widely used in enterprise applications to improve performance metrics.",
+      "tags": [
+        "Code Splitting",
+        "advanced",
+        "react"
+      ],
+      "questionType": "multiple-choice",
+      "estimatedTime": 90,
+      "correctAnswer": 0,
+      "type": "multiple-choice",
+      "sources": []
+    },
+    {
+      "id": 17,
+      "question": "What is the purpose of the useRef hook?",
+      "topic": "Hooks",
+      "difficulty": "Intermediate",
+      "choices": [
+        "To create mutable references that persist across renders without causing re-renders",
+        "To manage component state",
+        "To handle side effects",
+        "To optimize component performance"
+      ],
+      "explanation": "useRef returns a mutable ref object whose .current property is initialized to the passed argument. The returned object will persist for the full lifetime of the component and updating ref.current does not cause a re-render.",
+      "industryContext": "The useRef hook is commonly used for accessing DOM elements directly, storing mutable values that don't trigger re-renders, and maintaining references to values between renders. It's essential for implementing features like focus management and integrating with third-party libraries.",
+      "tags": [
+        "Hooks",
+        "intermediate",
+        "react"
+      ],
+      "questionType": "multiple-choice",
+      "estimatedTime": 90,
+      "correctAnswer": 0,
+      "type": "multiple-choice",
+      "sources": []
+    },
+    {
+      "id": 18,
+      "question": "How does React handle keys in lists?",
+      "topic": "Rendering",
+      "difficulty": "Beginner",
+      "choices": [
+        "Keys help React identify which items have changed, are added, or are removed",
+        "Keys are used for styling list items",
+        "Keys are required for all components to render properly",
+        "Keys are automatically generated by React"
+      ],
+      "explanation": "Keys help React identify which items have changed, are added, or are removed. Keys should be given to the elements inside the array to give the elements a stable identity, which allows React to efficiently update the DOM.",
+      "industryContext": "Proper use of keys in React lists is fundamental for performance and correctness. Incorrect key usage can lead to bugs with state management in list items and inefficient re-renders, which can significantly impact user experience in data-heavy applications.",
+      "tags": [
+        "Rendering",
+        "beginner",
+        "react"
+      ],
+      "questionType": "multiple-choice",
+      "estimatedTime": 90,
+      "correctAnswer": 0,
+      "type": "multiple-choice",
+      "sources": []
+    },
+    {
+      "id": 19,
+      "question": "What is the Context API used for?",
+      "topic": "State Management",
+      "difficulty": "Intermediate",
+      "choices": [
+        "Sharing data between components without passing props through every level",
+        "Managing global CSS variables",
+        "Handling HTTP requests",
+        "Optimizing component rendering"
+      ],
+      "explanation": "The Context API provides a way to pass data through the component tree without having to pass props down manually at every level. It's designed to share data that can be considered 'global' for a tree of React components.",
+      "industryContext": "The Context API is widely used in enterprise React applications for managing global state such as user authentication, theme settings, and application configuration. It eliminates the need for complex prop drilling patterns and provides a clean way to share data across component hierarchies.",
+      "tags": [
+        "State Management",
+        "intermediate",
+        "react"
+      ],
+      "questionType": "multiple-choice",
+      "estimatedTime": 90,
+      "correctAnswer": 0,
+      "type": "multiple-choice",
+      "sources": []
+    },
+    {
+      "id": 20,
+      "question": "What is the difference between controlled and uncontrolled components?",
+      "topic": "Forms",
+      "difficulty": "Intermediate",
+      "choices": [
+        "Controlled components have their state managed by React, uncontrolled components manage their own state",
+        "Controlled components are faster, uncontrolled components are slower",
+        "Controlled components use hooks, uncontrolled components use classes",
+        "There is no difference, they are the same"
+      ],
+      "explanation": "In controlled components, form data is handled by a React component's state. In uncontrolled components, form data is handled by the DOM itself. Controlled components are generally preferred as they provide more control and are easier to test.",
+      "industryContext": "Understanding controlled vs uncontrolled components is crucial for building robust form handling in React applications. Controlled components are the recommended approach in enterprise applications as they provide better validation, error handling, and integration with state management solutions.",
+      "tags": [
+        "Forms",
+        "intermediate",
+        "react"
+      ],
+      "questionType": "multiple-choice",
+      "estimatedTime": 90,
+      "correctAnswer": 0,
+      "type": "multiple-choice",
+      "sources": []
+    }
+  ]
+}
