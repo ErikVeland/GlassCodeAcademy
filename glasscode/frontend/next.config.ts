@@ -9,7 +9,8 @@ const nextConfig: NextConfig = {
     // Explicitly fail the build on TypeScript errors
     ignoreBuildErrors: false,
   },
-  // Removed standalone output to prevent prerender issues with dynamic routes
+  // Enable standalone output for production deployment
+  output: 'standalone',
   // Performance optimizations
   experimental: {
     optimizeCss: true,

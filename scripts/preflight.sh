@@ -101,11 +101,87 @@ if [ -d "glasscode/frontend" ]; then
   echo "Running: npm run build"
   npm run build || fail "Next.js build failed - this would fail in production"
   
+  # Validate standalone build output for production deployment
+  echo "Validating standalone build output..."
+  if [ ! -f ".next/standalone/server.js" ]; then
+    fail "Standalone server.js missing at .next/standalone/server.js - production deployment will fail"
+  fi
+  if [ ! -d ".next/standalone/.next" ]; then
+    fail "Standalone .next directory missing - production deployment will fail"
+  fi
+  ok "Standalone build output validated"
+  
   # Navigate back to repo root
   cd "$REPO_ROOT" || fail "Failed to return to repository root"
   ok "Next.js build validation passed"
 else
   echo "Frontend directory not found, skipping Next.js build validation"
+fi
+
+section ".NET backend build validation"
+# Validate that the .NET backend can build and publish successfully
+if [ -d "glasscode/backend" ]; then
+  echo "Running .NET backend build validation in glasscode/backend..."
+  cd glasscode/backend || fail "Failed to navigate to backend directory"
+  
+  # Check if .NET SDK is available
+  if ! command -v dotnet >/dev/null 2>&1; then
+    fail ".NET SDK not found - required for backend build. Install .NET 8.0 SDK"
+  fi
+  
+  # Check .NET version compatibility
+  echo "Checking .NET SDK version..."
+  DOTNET_VERSION=$(dotnet --version 2>/dev/null | head -n1)
+  echo "Found .NET SDK version: $DOTNET_VERSION"
+  
+  # Validate project file exists
+  if [ ! -f "backend.csproj" ]; then
+    fail "backend.csproj not found - backend project file missing"
+  fi
+  
+  # Clean any previous build artifacts
+  echo "Cleaning previous build artifacts..."
+  rm -rf bin obj out 2>/dev/null || true
+  
+  # Restore dependencies
+  echo "Running: dotnet restore"
+  if ! dotnet restore; then
+    fail ".NET dependency restoration failed - this would fail in production"
+  fi
+  ok ".NET dependencies restored successfully"
+  
+  # Build the project
+  echo "Running: dotnet build -c Release"
+  if ! dotnet build -c Release; then
+    fail ".NET build failed - this would fail in production"
+  fi
+  ok ".NET build completed successfully"
+  
+  # Test publish (same as production deployment)
+  echo "Running: dotnet publish -c Release -o ./out"
+  if ! dotnet publish -c Release -o ./out; then
+    fail ".NET publish failed - this would fail in production deployment"
+  fi
+  
+  # Validate publish output
+  echo "Validating publish output..."
+  if [ ! -f "./out/backend.dll" ]; then
+    fail "Published backend.dll missing at ./out/backend.dll - production deployment will fail"
+  fi
+  if [ ! -f "./out/backend.runtimeconfig.json" ]; then
+    fail "Runtime config missing - production deployment may fail"
+  fi
+  ok "Backend publish output validated"
+  
+  # Clean up test artifacts
+  echo "Cleaning up test build artifacts..."
+  rm -rf bin obj out 2>/dev/null || true
+  
+  # Navigate back to repo root
+  cd "$REPO_ROOT" || fail "Failed to return to repository root"
+  ok ".NET backend build validation passed"
+else
+  echo "Backend directory not found, skipping .NET backend build validation"
 fi
 
 section "API route validation"
