@@ -155,7 +155,7 @@ preflight_checks() {
     fi
 
     # Ensure base tools
-    REQUIRED_CMDS=(curl git jq unzip zip ss)
+    REQUIRED_CMDS=(curl git jq unzip zip ss bc)
     MISSING_PKGS=()
     for cmd in "${REQUIRED_CMDS[@]}"; do
         if ! command_exists "$cmd"; then
@@ -166,7 +166,7 @@ preflight_checks() {
         log "📦 Installing missing base packages: ${MISSING_PKGS[*]}"
         apt-get update
         # Map command names to packages where needed
-        apt-get install -y curl git jq unzip zip iproute2 || true
+        apt-get install -y curl git jq unzip zip iproute2 bc || true
     else
         log "✅ Base packages already present"
     fi
@@ -345,10 +345,27 @@ if [ -n "$DOTNET_SDK_VERSION" ]; then
     update_global_json "$DOTNET_SDK_VERSION"
 fi
 
+### 8.1. Check disk space before builds
+log "💾 Checking available disk space..."
+AVAILABLE_SPACE_GB=$(df "$APP_DIR" | awk 'NR==2 {printf "%.1f", $4/1024/1024}')
+REQUIRED_SPACE_GB=5.0
+if (( $(echo "$AVAILABLE_SPACE_GB < $REQUIRED_SPACE_GB" | bc -l) )); then
+    log "❌ ERROR: Insufficient disk space. Available: ${AVAILABLE_SPACE_GB}GB, Required: ${REQUIRED_SPACE_GB}GB"
+    log "💡 Consider cleaning up old builds or expanding disk space"
+    exit 1
+fi
+log "✅ Sufficient disk space available: ${AVAILABLE_SPACE_GB}GB"
+
 ### 9. Build & Publish Backend (.NET) (skipped in frontend-only mode)
 if [ "$FRONTEND_ONLY" -eq 0 ]; then
     log "🏗️  Building backend..."
     cd "$APP_DIR/glasscode/backend"
+
+    # Clear .NET build cache to prevent stale build artifacts
+    log "🧹 Clearing .NET build cache..."
+    sudo -u "$DEPLOY_USER" dotnet clean || true
+    sudo -u "$DEPLOY_USER" rm -rf bin obj out || true
+    log "✅ .NET cache cleared"
 
     # Clean + restore dependencies
     log "🔧 Restoring .NET dependencies..."
@@ -365,6 +382,18 @@ if [ "$FRONTEND_ONLY" -eq 0 ]; then
         exit 1
     fi
     log "✅ .NET backend published"
+
+    # Validate backend build artifacts
+    log "🔍 Validating backend build artifacts..."
+    if [ ! -f "$APP_DIR/glasscode/backend/out/backend.dll" ]; then
+        log "❌ ERROR: Missing backend.dll - backend build may have failed"
+        exit 1
+    fi
+    if [ ! -f "$APP_DIR/glasscode/backend/out/backend.runtimeconfig.json" ]; then
+        log "❌ ERROR: Missing runtime config - backend publish incomplete"
+        exit 1
+    fi
+    log "✅ Backend build artifacts validated"
 
     # Create and start REAL backend service before frontend build
     log "⚙️  Creating backend systemd service (real backend)..."
@@ -444,6 +473,16 @@ fi
 log "🎨 Building frontend..."
 cd "$APP_DIR/glasscode/frontend"
 
+# Clear Next.js build cache to prevent stale webpack chunks and prerender errors
+log "🧹 Clearing Next.js build cache..."
+sudo -u "$DEPLOY_USER" rm -rf .next || true
+log "✅ Next.js cache cleared"
+
+# Clear npm cache to prevent dependency resolution issues
+log "🧹 Clearing npm cache..."
+sudo -u "$DEPLOY_USER" npm cache clean --force || true
+log "✅ npm cache cleared"
+
 # Ensure Node dependencies are installed for root workspace and scripts before frontend build
 log "📦 Regenerating root lockfile from package.json..."
 cd "$APP_DIR"
@@ -484,6 +523,22 @@ DEMO_USERS_JSON=${DEMO_USERS_JSON:-}
 EOF
 sudo -u "$DEPLOY_USER" npm run build
 log "✅ Frontend built"
+
+# Validate build artifacts
+log "🔍 Validating build artifacts..."
+if [ ! -f ".next/BUILD_ID" ]; then
+    log "❌ ERROR: Missing .next/BUILD_ID - frontend build may have failed"
+    exit 1
+fi
+if [ ! -f ".next/standalone/server.js" ]; then
+    log "❌ ERROR: Missing .next/standalone/server.js - standalone build failed"
+    exit 1
+fi
+if [ ! -d ".next/static" ]; then
+    log "❌ ERROR: Missing .next/static directory - static assets not generated"
+    exit 1
+fi
+log "✅ Build artifacts validated"
 
 # Stage Next.js standalone assets for reliable serving
 log "📦 Staging Next.js standalone assets..."
