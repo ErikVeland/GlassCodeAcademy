@@ -94,19 +94,23 @@ export default function RootLayout({
                     {children}
                   </Suspense>
                 </main>
-                <footer className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm border-t border-gray-200 dark:border-gray-700 w-full max-w-7xl mx-auto mt-auto relative">
-                  <div className="py-6 px-4 sm:px-6 lg:px-8">
-                    <p className="text-center text-sm text-gray-500 dark:text-gray-400">
-                      {new Date().getFullYear()} {EXTERNAL_LINKS.AUTHOR_URL ? (
-                        <a href={EXTERNAL_LINKS.AUTHOR_URL}>Erik Veland</a>
-                      ) : (
-                        <span>Erik Veland</span>
-                      )}. No rights reserved. Go ahead, {EXTERNAL_LINKS.REPO_URL ? (
-                        <a href={EXTERNAL_LINKS.REPO_URL} target="_blank" rel="noopener noreferrer">fork and learn</a>
-                      ) : (
-                        <span>fork and learn</span>
-                      )}!
-                    </p>
+                <footer className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm border-t border-gray-200 dark:border-gray-700 w-full mt-auto relative">
+                  <div className="py-12 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+                    <div className="flex flex-col sm:flex-row justify-between items-center space-y-4 sm:space-y-0">
+                      <div className="flex space-x-6 text-sm">
+                        <a href="/stats" className="text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors">
+                          📊 App Stats
+                        </a>
+                        {EXTERNAL_LINKS.REPO_URL && (
+                          <a href={EXTERNAL_LINKS.REPO_URL} target="_blank" rel="noopener noreferrer" className="text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors">
+                            🔗 Source Code
+                          </a>
+                        )}
+                      </div>
+                      <p className="text-center text-sm text-gray-500 dark:text-gray-400">
+                        © {new Date().getFullYear()} Glass Academy. All rights reserved.
+                      </p>
+                    </div>
                   </div>
                 </footer>
               </div>

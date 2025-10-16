@@ -189,6 +189,10 @@ next-env.d.ts
 *.sqlite
 *.sqlite3
 
+# Business sensitive files
+BUSINESS_PLAN.md
+**/BUSINESS_PLAN.md
+
 # Miscellaneous
 *.bak
 *.backup
@@ -200,3 +204,5 @@ next-env.d.ts
 .Trashes
 ehthumbs.db
 Thumbs.db
+node_modules
+node_modules
