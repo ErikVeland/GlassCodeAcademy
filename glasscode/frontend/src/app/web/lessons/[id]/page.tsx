@@ -1,22 +1,45 @@
-import { redirect } from 'next/navigation';
+import { notFound, redirect } from 'next/navigation';
 import { contentRegistry } from '@/lib/contentRegistry';
+import { Metadata } from 'next';
 
-interface LegacyWebLessonPageProps {
+interface WebLessonPageProps {
   params: Promise<{ id: string }>;
 }
 
-export default async function LegacyWebLessonRedirect({ params }: LegacyWebLessonPageProps) {
+export async function generateMetadata({ params }: WebLessonPageProps): Promise<Metadata> {
   const resolvedParams = await params;
-  const lessonId = resolvedParams.id;
+  const lessonOrderNum = parseInt(resolvedParams.id, 10);
   
-  // Find the module that handles /web/lessons
-  const mod = await contentRegistry.findModuleByRoutePath('/web/lessons');
+  const currentModule = await contentRegistry.findModuleByRoutePath('/web/lessons');
   
-  if (mod) {
-    // Redirect to the new module-based URL structure
-    redirect(`/modules/${mod.slug}/lessons/${lessonId}`);
-  } else {
-    // Fallback: redirect to home if no module found
-    redirect('/');
+  if (!currentModule) {
+    return { title: 'Lesson Not Found' };
   }
+
+  const lessons = await contentRegistry.getModuleLessons(currentModule.slug);
+  const lesson = lessons?.find(l => l.order === lessonOrderNum);
+
+  if (!lesson) {
+    return { title: 'Lesson Not Found' };
+  }
+
+  return {
+    title: `${lesson.title} - ${currentModule.title}`,
+    description: lesson.intro?.substring(0, 160) || `Learn ${lesson.title} in ${currentModule.title}`,
+    keywords: currentModule.technologies.join(', '),
+  };
+}
+
+export default async function WebLessonPage({ params }: WebLessonPageProps) {
+  const resolvedParams = await params;
+  
+  // Find the web-fundamentals module
+  const currentModule = await contentRegistry.findModuleByRoutePath('/web/lessons');
+  
+  if (!currentModule) {
+    notFound();
+  }
+
+  // Redirect to the module-based lesson page for now
+  redirect(`/modules/${currentModule.slug}/lessons/${resolvedParams.id}`);
 }

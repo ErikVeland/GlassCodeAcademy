@@ -1,6 +1,6 @@
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
-import { contentRegistry, getLessonGroupForLesson, getNextLessonGroup } from '@/lib/contentRegistry';
+import { contentRegistry } from '@/lib/contentRegistry';
 import { Metadata } from 'next';
 
 interface LessonPageProps {
@@ -118,17 +118,17 @@ export default async function LessonPage({ params }: LessonPageProps) {
                   <span className="text-3xl">{currentModule.icon}</span>
                   <div>
                     <h1 className="text-3xl font-bold text-gray-900">{lesson.title}</h1>
-                    <p className="text-gray-600 mt-2">{lesson.description}</p>
+                    <p className="text-gray-600 mt-2">{lesson.intro}</p>
                   </div>
                 </div>
                 
-                {lesson.estimatedTime && (
+                {lesson.estimatedMinutes && (
                   <div className="flex items-center gap-4 text-sm text-gray-600">
                     <span className="flex items-center gap-1">
                       <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                       </svg>
-                      {lesson.estimatedTime} min
+                      {lesson.estimatedMinutes} min
                     </span>
                     <span className="flex items-center gap-1">
                       <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -142,36 +142,40 @@ export default async function LessonPage({ params }: LessonPageProps) {
 
               {/* Lesson Content */}
               <div className="prose prose-lg max-w-none">
-                <div dangerouslySetInnerHTML={{ __html: lesson.content }} />
+                {lesson.intro && <p className="text-lg text-gray-700 mb-6">{lesson.intro}</p>}
+                {lesson.objectives && lesson.objectives.length > 0 && (
+                  <div className="mb-6">
+                    <h3 className="text-lg font-semibold mb-3">Learning Objectives</h3>
+                    <ul className="list-disc list-inside space-y-1">
+                      {lesson.objectives.map((objective, index) => (
+                        <li key={index} className="text-gray-700">{objective}</li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
               </div>
 
               {/* Code Examples */}
-              {lesson.codeExamples && lesson.codeExamples.length > 0 && (
+              {lesson.code && (
                 <div className="mt-8">
-                  <h3 className="text-xl font-semibold mb-4">Code Examples</h3>
-                  <div className="space-y-4">
-                    {lesson.codeExamples.map((example, index) => (
-                      <div key={index} className="bg-gray-50 rounded-lg p-4">
-                        {example.title && <h4 className="font-medium mb-2">{example.title}</h4>}
-                        {example.description && <p className="text-gray-600 mb-3">{example.description}</p>}
-                        <pre className="bg-gray-900 text-gray-100 p-4 rounded-lg overflow-x-auto">
-                          <code>{example.code}</code>
-                        </pre>
-                        {example.explanation && (
-                          <p className="text-gray-600 mt-2 text-sm">{example.explanation}</p>
-                        )}
-                      </div>
-                    ))}
+                  <h3 className="text-xl font-semibold mb-4">Code Example</h3>
+                  <div className="bg-gray-50 rounded-lg p-4">
+                    <pre className="bg-gray-900 text-gray-100 p-4 rounded-lg overflow-x-auto">
+                      <code>{lesson.code.example}</code>
+                    </pre>
+                    {lesson.code.explanation && (
+                      <p className="text-gray-600 mt-3">{lesson.code.explanation}</p>
+                    )}
                   </div>
                 </div>
               )}
 
               {/* Common Pitfalls */}
-              {lesson.commonPitfalls && lesson.commonPitfalls.length > 0 && (
+              {lesson.pitfalls && lesson.pitfalls.length > 0 && (
                 <div className="mt-8">
                   <h3 className="text-xl font-semibold mb-4">Common Pitfalls</h3>
                   <div className="space-y-4">
-                    {lesson.commonPitfalls.map((pitfall: Pitfall, index: number) => (
+                    {lesson.pitfalls.map((pitfall: Pitfall, index: number) => (
                       <div key={index} className="bg-red-50 border border-red-200 rounded-lg p-4">
                         <div className="flex items-start gap-3">
                           <svg className="w-5 h-5 text-red-500 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -265,7 +269,7 @@ export default async function LessonPage({ params }: LessonPageProps) {
               
               {lessons && (
                 <div className="space-y-2">
-                  {lessons.map((l, index) => (
+                  {lessons.map((l) => (
                     <Link
                       key={l.order}
                       href={`/programming/lessons/${l.order}`}

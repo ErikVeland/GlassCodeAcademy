@@ -143,7 +143,7 @@ export default async function DotnetModulePage() {
               {thresholds.lessonsValid ? (
                 <div>
                   <p className="text-gray-600 dark:text-gray-300 mb-4">Learn the core concepts through structured lessons and practical examples.</p>
-                  <Link href={currentModule.routes.lessons} className="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
+                  <Link href="/dotnet/lessons" className="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
                     Start Learning<span className="ml-2">→</span>
                   </Link>
                 </div>
@@ -163,7 +163,7 @@ export default async function DotnetModulePage() {
               {thresholds.quizValid ? (
                 <div>
                   <p className="text-gray-600 dark:text-gray-300 mb-4">Test your knowledge with comprehensive questions and scenarios.</p>
-                  <Link href={currentModule.routes.quiz} className="inline-flex items-center px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors">
+                  <Link href="/dotnet/quiz" className="inline-flex items-center px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors">
                     Take Quiz<span className="ml-2">🎯</span>
                   </Link>
                 </div>

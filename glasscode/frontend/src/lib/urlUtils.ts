@@ -6,13 +6,13 @@
  * Get the GraphQL endpoint URL with no hardcoded host.
  *
  * - If `GRAPHQL_ENDPOINT` is set, use it verbatim.
- * - Otherwise, always use the relative `/graphql` route, which the app proxies.
+ * - Otherwise, always use the relative `/api/graphql` route, which the app proxies.
  */
 export function getGraphQLEndpoint(): string {
   const explicitEndpoint = process.env.GRAPHQL_ENDPOINT?.trim();
   if (explicitEndpoint) return explicitEndpoint;
-  const path = '/graphql';
-  // On the server, a relative URL like '/graphql' will throw ERR_INVALID_URL.
+  const path = '/api/graphql';
+  // On the server, a relative URL like '/api/graphql' will throw ERR_INVALID_URL.
   // Derive an absolute URL using public origin or API base.
   if (typeof window === 'undefined') {
     try {
@@ -28,7 +28,7 @@ export function getGraphQLEndpoint(): string {
       }
     }
   }
-  // In the browser a relative URL is fine and proxied by /app/graphql route.
+  // In the browser a relative URL is fine and proxied by /app/api/graphql route.
   return path;
 }
 

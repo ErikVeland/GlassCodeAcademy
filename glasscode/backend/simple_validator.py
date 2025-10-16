@@ -13,7 +13,7 @@ def validate_lesson_file(file_path):
     errors = []
     
     try:
-        with open(file_path, 'r', encoding='utf-8') as f:
+        with open(file_path, 'r') as f:
             data = json.load(f)
         
         # Check if it's a list of lessons
@@ -38,7 +38,7 @@ def validate_lesson_file(file_path):
                 elif field in ['moduleSlug', 'title'] and not isinstance(lesson[field], str):
                     errors.append("Lesson {} field '{}' should be string, got {}".format(i, field, type(lesson[field]).__name__))
     
-    except json.JSONDecodeError as e:
+    except ValueError as e:
         errors.append("JSON parsing error: {}".format(str(e)))
     except Exception as e:
         errors.append("Error reading file: {}".format(str(e)))
@@ -50,7 +50,7 @@ def validate_quiz_file(file_path):
     errors = []
     
     try:
-        with open(file_path, 'r', encoding='utf-8') as f:
+        with open(file_path, 'r') as f:
             data = json.load(f)
         
         # Check if it has required top-level fields
@@ -99,7 +99,7 @@ def validate_quiz_file(file_path):
                 if len(question['choices']) != 4:
                     errors.append("Question {} should have exactly 4 choices, got {}".format(i, len(question['choices'])))
     
-    except json.JSONDecodeError as e:
+    except ValueError as e:
         errors.append("JSON parsing error: {}".format(str(e)))
     except Exception as e:
         errors.append("Error reading file: {}".format(str(e)))
