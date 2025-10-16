@@ -1,5 +1,5 @@
 {
-  "module": "programming-fundamentals",
+  "moduleSlug": "programming-fundamentals",
   "sources": [
     {
       "title": "MDN Web Docs - JavaScript Guide",

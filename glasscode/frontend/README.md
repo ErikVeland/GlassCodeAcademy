@@ -29,7 +29,7 @@ Use the provided bootstrap script to automatically set up your GlassCode Academy
 
 1. Create a `.env.local` file with:
    ```
-   NEXT_PUBLIC_API_BASE=http://localhost:8080
+   NEXT_PUBLIC_API_BASE=http://localhost:5022
    ```
 
 2. Run the development server:

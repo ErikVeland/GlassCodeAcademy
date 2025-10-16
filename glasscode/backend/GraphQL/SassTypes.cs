@@ -3,9 +3,9 @@ using backend.Models;
 
 namespace backend.GraphQL
 {
-    public class SassLessonType : ObjectType<SassLesson>
+    public class SassLessonType : ObjectType<BaseLesson>
     {
-        protected override void Configure(IObjectTypeDescriptor<SassLesson> descriptor)
+        protected override void Configure(IObjectTypeDescriptor<BaseLesson> descriptor)
         {
             descriptor.Name("SassLesson");
             descriptor.Description("Represents a SASS learning lesson with code examples");
@@ -19,9 +19,9 @@ namespace backend.GraphQL
         }
     }
 
-    public class SassInterviewQuestionType : ObjectType<SassInterviewQuestion>
+    public class SassInterviewQuestionType : ObjectType<BaseInterviewQuestion>
     {
-        protected override void Configure(IObjectTypeDescriptor<SassInterviewQuestion> descriptor)
+        protected override void Configure(IObjectTypeDescriptor<BaseInterviewQuestion> descriptor)
         {
             descriptor.Name("SassInterviewQuestion");
             descriptor.Description("Represents a SASS interview question with multiple choice or open-ended format");

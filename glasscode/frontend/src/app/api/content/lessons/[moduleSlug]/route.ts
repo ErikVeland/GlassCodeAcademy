@@ -1,12 +1,94 @@
-import { NextRequest } from 'next/server';
-import fs from 'fs';
-import path from 'path';
+import { NextRequest, NextResponse } from 'next/server';
 import { getGraphQLEndpoint } from '@/lib/urlUtils';
 
-// For programming fundamentals, we'll use GraphQL to fetch data from the backend
-async function fetchProgrammingLessons() {
+// Mapping of module slugs to their corresponding GraphQL query names and field structures
+const MODULE_TO_GRAPHQL_QUERY: Record<string, { queryName: string; fields: string }> = {
+  'programming-fundamentals': { 
+    queryName: 'programmingLessons', 
+    fields: 'id topic title description codeExample output' 
+  },
+  'dotnet-fundamentals': { 
+    queryName: 'dotNetLessons', 
+    fields: 'id topic title description codeExample output' 
+  },
+  'web-fundamentals': { 
+    queryName: 'webLessons', 
+    fields: 'id topic title description codeExample output' 
+  },
+  'react-fundamentals': { 
+    queryName: 'reactLessons', 
+    fields: 'id topic title description codeExample output' 
+  },
+  'database-systems': { 
+    queryName: 'databaseLessons', 
+    fields: 'id topic title description codeExample output' 
+  },
+  'typescript-fundamentals': { 
+    queryName: 'typescriptLessons', 
+    fields: 'id topic title description codeExample output' 
+  },
+  'node-fundamentals': { 
+    queryName: 'nodeLessons', 
+    fields: 'id topic title description codeExample output' 
+  },
+  'laravel-fundamentals': { 
+    queryName: 'laravelLessons', 
+    fields: 'id topic title description codeExample output' 
+  },
+  'nextjs-advanced': { 
+    queryName: 'nextJsLessons', 
+    fields: 'id topic title description codeExample output' 
+  },
+  'graphql-advanced': { 
+    queryName: 'graphQLLessons', 
+    fields: 'id topic title description codeExample output' 
+  },
+  'sass-advanced': { 
+    queryName: 'sassLessons', 
+    fields: 'id topic title description codeExample output' 
+  },
+  'tailwind-advanced': { 
+    queryName: 'tailwindLessons', 
+    fields: 'id topic title description codeExample output' 
+  },
+  'vue-advanced': { 
+    queryName: 'vueLessons', 
+    fields: 'id topic title description codeExample output' 
+  },
+  'testing-fundamentals': { 
+    queryName: 'testingLessons', 
+    fields: 'id topic title description codeExample output' 
+  },
+  'performance-optimization': { 
+    queryName: 'performanceLessons', 
+    fields: 'id topic title description codeExample output' 
+  },
+  'security-fundamentals': { 
+    queryName: 'securityLessons', 
+    fields: 'id topic title description codeExample output' 
+  },
+  'version-control': { 
+    queryName: 'versionLessons', 
+    fields: 'id topic title description codeExample output' 
+  }
+};
+
+// Unified GraphQL query function that works for all lesson types
+async function fetchLessonsFromGraphQL(moduleSlug: string) {
+  const queryConfig = MODULE_TO_GRAPHQL_QUERY[moduleSlug];
+  
+  if (!queryConfig) {
+    console.log(`No GraphQL query mapping found for module: ${moduleSlug}`);
+    return [];
+  }
+
+  const { queryName, fields } = queryConfig;
+  const query = `query { ${queryName} { ${fields} } }`;
+
   try {
+    console.log(`Fetching ${queryName} from GraphQL...`);
     const graphqlEndpoint = getGraphQLEndpoint();
+    console.log(`Fetching ${moduleSlug} lessons from GraphQL:`, graphqlEndpoint);
     
     const response = await fetch(graphqlEndpoint, {
       method: 'POST',
@@ -14,128 +96,33 @@ async function fetchProgrammingLessons() {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        query: `
-          query GetProgrammingLessons {
-            programmingLessons {
-              id
-              topic
-              title
-              description
-            }
-          }
-        `,
+        query: query
       }),
-      // Add timeout to prevent hanging requests
-      signal: AbortSignal.timeout(10000) // 10 second timeout
     });
 
     if (!response.ok) {
-      throw new Error(`GraphQL request failed with status ${response.status}`);
+      console.error('GraphQL request failed:', response.status, response.statusText);
+      throw new Error(`GraphQL request failed: ${response.status}`);
     }
 
     const result = await response.json();
-    const lessons = result.data?.programmingLessons || [];
-    // If GraphQL succeeded but returned empty, attempt file/minimal fallbacks
-    if (!Array.isArray(lessons) || lessons.length === 0) {
-      try {
-        const lessonsPath = findLessonFile('programming-fundamentals');
-        if (lessonsPath) {
-          console.log('Using local file fallback for programming-fundamentals at', lessonsPath);
-          const lessonsContent = fs.readFileSync(lessonsPath, 'utf8');
-          const parsed = JSON.parse(lessonsContent);
-          if (Array.isArray(parsed) && parsed.length > 0) {
-            return parsed;
-          }
-        }
-      } catch (fsErr) {
-        console.error('PF local file fallback (success branch) failed:', fsErr);
-      }
-      // Final minimal fallback to avoid empty content
-      return [
-        { id: 1, title: 'Variables and Data Types', topic: 'basics', description: 'Learn about variables and data types' },
-        { id: 2, title: 'Control Structures', topic: 'basics', description: 'Learn about control structures' },
-        { id: 3, title: 'Functions', topic: 'basics', description: 'Learn about functions' },
-        { id: 4, title: 'Arrays and Objects', topic: 'data-structures', description: 'Learn about arrays and objects' },
-        { id: 5, title: 'Object-Oriented Programming', topic: 'data-structures', description: 'Learn about OOP' },
-        { id: 6, title: 'Error Handling', topic: 'error-handling', description: 'Learn about error handling' },
-        { id: 7, title: 'File Operations', topic: 'error-handling', description: 'Learn about file operations' },
-        { id: 8, title: 'Recursion', topic: 'algorithms', description: 'Learn about recursion' },
-        { id: 9, title: 'Sorting Algorithms', topic: 'algorithms', description: 'Learn about sorting algorithms' },
-        { id: 10, title: 'Memory Management', topic: 'advanced', description: 'Learn about memory management' },
-        { id: 11, title: 'Best Practices', topic: 'advanced', description: 'Learn about best practices' },
-        { id: 12, title: 'Project Organization', topic: 'advanced', description: 'Learn about project organization' }
-      ];
+    
+    if (result.errors) {
+      console.error('GraphQL errors:', result.errors);
+      throw new Error('GraphQL query returned errors');
     }
+
+    const lessons = result.data?.[queryName] || [];
+    console.log(`Successfully fetched ${lessons.length} lessons for ${moduleSlug} from GraphQL`);
+    
     return lessons;
   } catch (error) {
-    console.error('Failed to fetch programming lessons via GraphQL:', error);
-    // Try local file fallback for programming-fundamentals
-    try {
-      const lessonsPath = findLessonFile('programming-fundamentals');
-      if (lessonsPath) {
-        console.log('Using local file fallback for programming-fundamentals at', lessonsPath);
-        const lessonsContent = fs.readFileSync(lessonsPath, 'utf8');
-        const lessons = JSON.parse(lessonsContent);
-        if (Array.isArray(lessons) && lessons.length > 0) {
-          return lessons;
-        }
-      }
-    } catch (fsErr) {
-      console.error('PF local file fallback failed:', fsErr);
-    }
-    // Final fallback: minimal PF lessons regardless of build phase
-    return [
-      { id: 1, title: 'Variables and Data Types', topic: 'basics', description: 'Learn about variables and data types' },
-      { id: 2, title: 'Control Structures', topic: 'basics', description: 'Learn about control structures' },
-      { id: 3, title: 'Functions', topic: 'basics', description: 'Learn about functions' },
-      { id: 4, title: 'Arrays and Objects', topic: 'data-structures', description: 'Learn about arrays and objects' },
-      { id: 5, title: 'Object-Oriented Programming', topic: 'data-structures', description: 'Learn about OOP' },
-      { id: 6, title: 'Error Handling', topic: 'error-handling', description: 'Learn about error handling' },
-      { id: 7, title: 'File Operations', topic: 'error-handling', description: 'Learn about file operations' },
-      { id: 8, title: 'Recursion', topic: 'algorithms', description: 'Learn about recursion' },
-      { id: 9, title: 'Sorting Algorithms', topic: 'algorithms', description: 'Learn about sorting algorithms' },
-      { id: 10, title: 'Memory Management', topic: 'advanced', description: 'Learn about memory management' },
-      { id: 11, title: 'Best Practices', topic: 'advanced', description: 'Learn about best practices' },
-      { id: 12, title: 'Project Organization', topic: 'advanced', description: 'Learn about project organization' }
-    ];
+    console.error(`Error fetching ${moduleSlug} lessons from GraphQL:`, error);
+    return [];
   }
 }
 
-// Function to find lesson file in multiple possible locations
-function findLessonFile(moduleSlug: string): string | null {
-  // Try to find the lesson file in different possible locations
-  const possiblePaths = [
-    // First try the correct path relative to the project root
-    path.join(process.cwd(), '..', '..', 'content', 'lessons', `${moduleSlug}.json`),
-    // Try from the glasscode/frontend directory going up to project root
-    path.join(process.cwd(), '..', '..', '..', 'content', 'lessons', `${moduleSlug}.json`),
-    // Try direct path from current working directory
-    path.join(process.cwd(), 'content', 'lessons', `${moduleSlug}.json`),
-    // Try absolute path based on the known structure
-    path.join('/Users/veland/GlassCodeAcademy/content/lessons', `${moduleSlug}.json`),
-    // Legacy paths for compatibility
-    path.join(__dirname, '..', '..', '..', '..', 'content', 'lessons', `${moduleSlug}.json`),
-    path.join('/srv/academy', 'content', 'lessons', `${moduleSlug}.json`),
-  ];
-  
-  console.log('Searching for lesson file:', moduleSlug);
-  console.log('Current working directory:', process.cwd());
-  
-  for (const lessonPath of possiblePaths) {
-    try {
-      const exists = fs.existsSync(lessonPath);
-      console.log(`Checking path: ${lessonPath} - ${exists ? 'FOUND' : 'NOT FOUND'}`);
-      if (exists) {
-        return lessonPath;
-      }
-    } catch (err) {
-      console.error(`Error checking ${lessonPath}:`, err);
-      // Continue to next path
-    }
-  }
-  
-  return null;
-}
+
 
 export async function GET(
   request: NextRequest,
@@ -143,60 +130,18 @@ export async function GET(
 ) {
   try {
     const { moduleSlug } = await params;
-    console.log('=== Lesson API Route ===');
-    console.log('Received request for module:', moduleSlug);
-    
-    // Special handling for programming-fundamentals module
-    if (moduleSlug === 'programming-fundamentals') {
-      console.log('Fetching programming lessons via GraphQL');
-      const lessons = await fetchProgrammingLessons();
-      console.log('GraphQL returned', lessons.length, 'lessons');
-      return new Response(JSON.stringify(lessons), {
-        status: 200,
-        headers: {
-          'Content-Type': 'application/json',
-          'Cache-Control': 'public, max-age=600, stale-while-revalidate=86400',
-        },
-      });
-    }
+    console.log(`Fetching lessons for module: ${moduleSlug}`);
 
-    // Try to find the lesson file
-    const lessonsPath = findLessonFile(moduleSlug);
-    
-    if (!lessonsPath) {
-      console.log(`Lesson file not found for module: ${moduleSlug}`);
-      // Return empty array with proper JSON content type
-      return new Response(JSON.stringify([]), {
-        status: 200,
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
-    }
+    // Use unified GraphQL approach for all modules
+    const lessons = await fetchLessonsFromGraphQL(moduleSlug);
 
-    console.log('Looking for lessons at:', lessonsPath);
-    console.log('File exists:', fs.existsSync(lessonsPath));
-    
-    const lessonsContent = fs.readFileSync(lessonsPath, 'utf8');
-    const lessons = JSON.parse(lessonsContent);
-    console.log('Found', lessons.length, 'lessons');
-
-    return new Response(JSON.stringify(lessons), {
-      status: 200,
-      headers: {
-        'Content-Type': 'application/json',
-        'Cache-Control': 'public, max-age=600, stale-while-revalidate=86400',
-      },
-    });
+    return NextResponse.json(lessons);
   } catch (error) {
-    console.error('Failed to load lessons:', error);
-    // Return empty array with proper JSON content type and 200 status
-    return new Response(JSON.stringify([]), {
-      status: 200,
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    });
+    console.error('Error in lessons API:', error);
+    return NextResponse.json(
+      { error: 'Failed to fetch lessons' },
+      { status: 500 }
+    );
   }
 }
 

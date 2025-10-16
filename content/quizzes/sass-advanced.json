@@ -1,437 +1,362 @@
-{
-  "moduleSlug": "sass-advanced",
-  "title": "Sass Advanced Assessment",
-  "description": "Comprehensive assessment covering key concepts from the sass-advanced module",
-  "totalQuestions": 15,
-  "passingScore": 70,
-  "timeLimit": 23,
-  "questions": [
-    {
-      "id": "1",
-      "question": "What is SASS?",
-      "topic": "Basics",
-      "difficulty": "Beginner",
-      "choices": [
-        "A CSS preprocessor that extends CSS with programming features",
-        "A JavaScript framework",
-        "A CSS framework like Bootstrap",
-        "A build tool for web applications"
-      ],
-      "correctIndex": 0,
-      "explanation": "SASS (Syntactically Awesome Style Sheets) is a CSS preprocessor that adds features like variables, nesting, and mixins to CSS, which are then compiled into regular CSS.",
-      "industryContext": "These skills are valuable in professional development environments.",
-      "tags": [
-        "Basics",
-        "beginner",
-        "sass"
-      ],
-      "questionType": "multiple-choice",
-      "estimatedTime": 90,
-      "legacy": {
-        "originalId": 1,
-        "originalType": "multiple-choice",
-        "migrated": "2025-10-01T06:41:13.487Z"
-      },
-      "correctAnswer": 0
-    },
-    {
-      "id": "2",
-      "question": "What symbol is used to define a variable in SASS?",
-      "topic": "Basics",
-      "difficulty": "Intermediate",
-      "choices": [
-        "$",
-        "@",
-        "%",
-        "#"
-      ],
-      "correctIndex": 0,
-      "explanation": "In SASS, variables are defined using the $ symbol followed by the variable name.",
-      "industryContext": "These skills are valuable in professional development environments.",
-      "tags": [
-        "Basics",
-        "intermediate",
-        "sass"
-      ],
-      "questionType": "multiple-choice",
-      "estimatedTime": 90,
-      "legacy": {
-        "originalId": 2,
-        "originalType": "multiple-choice",
-        "migrated": "2025-10-01T06:41:13.487Z"
-      },
-      "correctAnswer": 0
-    },
-    {
-      "id": "3",
-      "question": "How does nesting work in SASS and what are its benefits?",
-      "topic": "Nesting",
-      "difficulty": "Intermediate",
-      "choices": [
-        "Selectors inside other selectors that mirror HTML structure, making stylesheets more organized",
-        "Grouping all CSS rules in a single file for better performance",
-        "Using only global selectors to avoid specificity issues",
-        "Creating separate files for each HTML element to improve maintainability"
-      ],
-      "correctIndex": 0,
-      "explanation": "Nesting in SASS allows you to write selectors inside other selectors, creating a visual hierarchy that mirrors the HTML structure. This makes stylesheets more organized and easier to read, and reduces repetition in selector names. For example, instead of writing .navbar { ... } and .navbar .nav-item { ... } separately, you can nest .nav-item inside .navbar. This improves code organization and maintainability, especially for complex component styles.",
-      "industryContext": "Nesting is a fundamental SASS feature that professional frontend developers use to create well-organized, maintainable stylesheets. Understanding proper nesting techniques helps developers write cleaner CSS that's easier to understand and modify, which is essential for large-scale web applications.",
-      "tags": [
-        "Nesting",
-        "intermediate",
-        "sass"
-      ],
-      "questionType": "multiple-choice",
-      "estimatedTime": 90,
-      "legacy": {
-        "originalId": 3,
-        "originalType": "open-ended",
-        "migrated": "2025-10-01T06:41:13.487Z"
-      },
-      "correctAnswer": 0
-    },
-    {
-      "id": "4",
-      "question": "How do you reference the parent selector in a nested rule in SASS?",
-      "topic": "Nesting",
-      "difficulty": "Beginner",
-      "choices": [
-        "&",
-        "$parent",
-        ":parent",
-        "::parent"
-      ],
-      "correctIndex": 0,
-      "explanation": "The & symbol is used to reference the parent selector in nested SASS rules, commonly used for pseudo-classes and modifiers.",
-      "industryContext": "These skills are valuable in professional development environments.",
-      "tags": [
-        "Nesting",
-        "beginner",
-        "sass"
-      ],
-      "questionType": "multiple-choice",
-      "estimatedTime": 90,
-      "legacy": {
-        "originalId": 4,
-        "originalType": "multiple-choice",
-        "migrated": "2025-10-01T06:41:13.487Z"
-      },
-      "correctAnswer": 0
-    },
-    {
-      "id": "5",
-      "question": "What is a mixin in SASS?",
-      "topic": "Mixins",
-      "difficulty": "Beginner",
-      "choices": [
-        "A reusable block of CSS declarations",
-        "A function that returns a value",
-        "A variable that stores CSS properties",
-        "A selector that combines multiple classes"
-      ],
-      "correctIndex": 0,
-      "explanation": "A mixin in SASS is a reusable block of CSS declarations that can be included in other stylesheets. Mixins can also take arguments to make them more flexible.",
-      "industryContext": "These skills are valuable in professional development environments.",
-      "tags": [
-        "Mixins",
-        "beginner",
-        "sass"
-      ],
-      "questionType": "multiple-choice",
-      "estimatedTime": 90,
-      "legacy": {
-        "originalId": 5,
-        "originalType": "multiple-choice",
-        "migrated": "2025-10-01T06:41:13.487Z"
-      },
-      "correctAnswer": 0
-    },
-    {
-      "id": "6",
-      "question": "Which function is used to make a color lighter in SASS?",
-      "topic": "Functions",
-      "difficulty": "Intermediate",
-      "choices": [
-        "lighten()",
-        "brighten()",
-        "fade-in()",
-        "adjust-color()"
-      ],
-      "correctIndex": 0,
-      "explanation": "The lighten() function in SASS is used to make a color lighter by increasing its lightness value.",
-      "industryContext": "These skills are valuable in professional development environments.",
-      "tags": [
-        "Functions",
-        "intermediate",
-        "sass"
-      ],
-      "questionType": "multiple-choice",
-      "estimatedTime": 90,
-      "legacy": {
-        "originalId": 6,
-        "originalType": "multiple-choice",
-        "migrated": "2025-10-01T06:41:13.487Z"
-      },
-      "correctAnswer": 0
-    },
-    {
-      "id": "7",
-      "question": "What is the difference between .scss and .sass syntax?",
-      "topic": "Compilation",
-      "difficulty": "Beginner",
-      "choices": [
-        ".scss uses braces and semicolons like CSS, while .sass uses indentation and line breaks",
-        ".scss is newer than .sass and has more features",
-        ".sass compiles faster than .scss",
-        "There is no difference, they are identical"
-      ],
-      "correctIndex": 0,
-      "explanation": "SASS offers two syntaxes: .scss (Sassy CSS) which is CSS-compatible and uses braces and semicolons like standard CSS, making it easier for developers familiar with CSS to adopt. The .sass syntax (indented syntax) uses indentation instead of braces and line breaks instead of semicolons, similar to Python's syntax. Both syntaxes compile to the same CSS output, so the choice is largely a matter of personal or team preference.",
-      "industryContext": "Understanding both SASS syntaxes is valuable for professional frontend development, as different teams and projects may have preferences for one syntax over the other. The .scss syntax is more commonly used because it's CSS-compatible, making the transition from CSS to SASS easier for development teams.",
-      "tags": [
-        "Compilation",
-        "beginner",
-        "sass"
-      ],
-      "questionType": "multiple-choice",
-      "estimatedTime": 90,
-      "legacy": {
-        "originalId": 7,
-        "originalType": "open-ended",
-        "migrated": "2025-10-01T06:41:13.487Z"
-      },
-      "correctAnswer": 0
-    },
-    {
-      "id": "8",
-      "question": "What is the purpose of @extend in SASS?",
-      "topic": "Extend",
-      "difficulty": "Beginner",
-      "choices": [
-        "To share CSS properties between selectors",
-        "To import external stylesheets",
-        "To create reusable functions",
-        "To define variables"
-      ],
-      "correctIndex": 0,
-      "explanation": "The @extend directive in SASS allows one selector to inherit the styles of another selector, reducing code duplication by sharing CSS properties.",
-      "industryContext": "These skills are valuable in professional development environments.",
-      "tags": [
-        "Extend",
-        "beginner",
-        "sass"
-      ],
-      "questionType": "multiple-choice",
-      "estimatedTime": 90,
-      "legacy": {
-        "originalId": 8,
-        "originalType": "multiple-choice",
-        "migrated": "2025-10-01T06:41:13.487Z"
-      },
-      "correctAnswer": 0
-    },
-    {
-      "id": "9",
-      "question": "What is the 7-1 SASS architecture pattern?",
-      "topic": "Architecture",
-      "difficulty": "Beginner",
-      "choices": [
-        "7 folders, 1 main file structure",
-        "7 variables, 1 mixin pattern",
-        "7 components, 1 layout system",
-        "7 breakpoints, 1 grid system"
-      ],
-      "correctIndex": 0,
-      "explanation": "The 7-1 pattern organizes SASS files into 7 folders (base, components, layout, pages, themes, abstracts, vendors) and 1 main file that imports all partials.",
-      "industryContext": "These skills are valuable in professional development environments.",
-      "tags": [
-        "Architecture",
-        "beginner",
-        "sass"
-      ],
-      "questionType": "multiple-choice",
-      "estimatedTime": 90,
-      "legacy": {
-        "originalId": 9,
-        "originalType": "multiple-choice",
-        "migrated": "2025-10-01T06:41:13.487Z"
-      },
-      "correctAnswer": 0
-    },
-    {
-      "id": "10",
-      "question": "What is the best practice for organizing SASS imports?",
-      "topic": "Performance",
-      "difficulty": "Beginner",
-      "choices": [
-        "Import abstracts first, then base, components, and pages",
-        "Import in alphabetical order",
-        "Import largest files first",
-        "Import randomly"
-      ],
-      "correctIndex": 0,
-      "explanation": "Best practice is to import in dependency order: abstracts (variables, functions, mixins), base styles, layout, components, pages, themes, and vendors.",
-      "industryContext": "These skills are valuable in professional development environments.",
-      "tags": [
-        "Performance",
-        "beginner",
-        "sass"
-      ],
-      "questionType": "multiple-choice",
-      "estimatedTime": 90,
-      "legacy": {
-        "originalId": 10,
-        "originalType": "multiple-choice",
-        "migrated": "2025-10-01T06:41:13.487Z"
-      },
-      "correctAnswer": 0
-    },
-    {
-      "id": "11",
-      "question": "When should you use @extend vs mixins in SASS?",
-      "topic": "Advanced Features",
-      "difficulty": "Intermediate",
-      "choices": [
-        "Use @extend for shared styles without parameters, mixins for reusable patterns with parameters",
-        "Use @extend for all situations as it's more efficient",
-        "Use mixins for all situations as they're more readable",
-        "@extend and mixins are identical and interchangeable"
-      ],
-      "correctIndex": 0,
-      "explanation": "Use @extend for shared base styles that don't need parameters, as it creates grouped selectors in the compiled CSS, reducing code duplication. Use mixins for reusable patterns with parameters or complex logic, as they provide more flexibility but may duplicate code in the compiled CSS. @extend can cause bloated CSS if overused with complex selector chains, while mixins provide more flexibility but may result in larger CSS files due to code duplication.",
-      "industryContext": "Choosing between @extend and mixins is an important architectural decision in SASS development that affects both code maintainability and CSS output size. Professional frontend developers need to understand these trade-offs to write efficient and maintainable stylesheets.",
-      "tags": [
-        "Advanced Features",
-        "intermediate",
-        "sass"
-      ],
-      "questionType": "multiple-choice",
-      "estimatedTime": 90,
-      "legacy": {
-        "originalId": 11,
-        "originalType": "open-ended",
-        "migrated": "2025-10-01T06:41:13.487Z"
-      },
-      "correctAnswer": 0
-    },
-    {
-      "id": "12",
-      "question": "Which SASS data type is best for storing multiple related values?",
-      "topic": "Data Types",
-      "difficulty": "Intermediate",
-      "choices": [
-        "Maps",
-        "Lists",
-        "Strings",
-        "Numbers"
-      ],
-      "correctIndex": 0,
-      "explanation": "Maps are ideal for storing key-value pairs of related data, like color themes or breakpoint definitions, providing better organization than lists.",
-      "industryContext": "These skills are valuable in professional development environments.",
-      "tags": [
-        "Data Types",
-        "intermediate",
-        "sass"
-      ],
-      "questionType": "multiple-choice",
-      "estimatedTime": 90,
-      "legacy": {
-        "originalId": 12,
-        "originalType": "multiple-choice",
-        "migrated": "2025-10-01T06:41:13.487Z"
-      },
-      "correctAnswer": 0
-    },
-    {
-      "id": "13",
-      "question": "What does the @return directive do in SASS functions?",
-      "topic": "Functions",
-      "difficulty": "Intermediate",
-      "choices": [
-        "Returns a value from a function",
-        "Returns to previous file",
-        "Reverses a calculation",
-        "Returns an error"
-      ],
-      "correctIndex": 0,
-      "explanation": "@return specifies the value that a SASS function should return when called, similar to return statements in programming languages.",
-      "industryContext": "These skills are valuable in professional development environments.",
-      "tags": [
-        "Functions",
-        "intermediate",
-        "sass"
-      ],
-      "questionType": "multiple-choice",
-      "estimatedTime": 90,
-      "legacy": {
-        "originalId": 13,
-        "originalType": "multiple-choice",
-        "migrated": "2025-10-01T06:41:13.487Z"
-      },
-      "correctAnswer": 0
-    },
-    {
-      "id": "14",
-      "question": "What are the main control directives in SASS and when would you use them?",
-      "topic": "Control Directives",
-      "difficulty": "Intermediate",
-      "choices": [
-        "@if/@else for conditionals, @for/@each/@while for loops - used for generating repetitive CSS patterns",
-        "@import for importing files, @media for responsive design",
-        "@extend for inheritance, @mixin for reusable code blocks",
-        "@keyframes for animations, @font-face for custom fonts"
-      ],
-      "correctIndex": 0,
-      "explanation": "Main control directives: @if/@else for conditional logic allowing different styles based on conditions, @for for counted loops to generate repetitive styles with numeric variations, @each for iterating over lists and maps to create styles for multiple items, and @while for conditional loops that continue until a condition is met. These are used to generate utility classes, responsive breakpoints, color variations, grid systems, and other repetitive CSS patterns programmatically.",
-      "industryContext": "Control directives are powerful features that enable developers to write more dynamic and maintainable stylesheets. They're essential for creating design systems, utility classes, and responsive frameworks in professional frontend development.",
-      "tags": [
-        "Control Directives",
-        "intermediate",
-        "sass"
-      ],
-      "questionType": "multiple-choice",
-      "estimatedTime": 90,
-      "legacy": {
-        "originalId": 14,
-        "originalType": "open-ended",
-        "migrated": "2025-10-01T06:41:13.487Z"
-      },
-      "correctAnswer": 0
-    },
-    {
-      "id": "15",
-      "question": "What is the difference between SASS and SCSS syntax?",
-      "topic": "Compilation",
-      "difficulty": "Beginner",
-      "choices": [
-        "SASS uses indentation, SCSS uses brackets and semicolons",
-        "SASS is newer than SCSS",
-        "SCSS is faster than SASS",
-        "No functional difference"
-      ],
-      "correctIndex": 0,
-      "explanation": "SASS (indented syntax) uses indentation and newlines like Python, while SCSS (Sassy CSS) uses brackets and semicolons like CSS. Both compile to the same CSS output.",
-      "industryContext": "These skills are valuable in professional development environments.",
-      "tags": [
-        "Compilation",
-        "beginner",
-        "sass"
-      ],
-      "questionType": "multiple-choice",
-      "estimatedTime": 90,
-      "legacy": {
-        "originalId": 15,
-        "originalType": "multiple-choice",
-        "migrated": "2025-10-01T06:41:13.487Z"
-      },
-      "correctAnswer": 0
-    }
-  ],
-  "metadata": {
-    "migrated": true,
-    "originalQuestionCount": 15,
-    "migrationDate": "2025-10-01T06:41:13.487Z",
-    "lastUpdated": "2025-10-01T06:41:13.487Z",
-    "version": "1.0.0"
+[
+  {
+    "id": 1,
+    "question": "What is SASS?",
+    "topic": "Basics",
+    "difficulty": "Beginner",
+    "choices": [
+      "A CSS preprocessor that extends CSS with programming features",
+      "A JavaScript framework",
+      "A CSS framework like Bootstrap",
+      "A build tool for web applications"
+    ],
+    "explanation": "SASS (Syntactically Awesome Style Sheets) is a CSS preprocessor that adds features like variables, nesting, and mixins to CSS, which are then compiled into regular CSS.",
+    "industryContext": "These skills are valuable in professional development environments.",
+    "tags": [
+      "Basics",
+      "beginner",
+      "sass"
+    ],
+    "questionType": "multiple-choice",
+    "estimatedTime": 90,
+    "correctAnswer": 0,
+    "type": "multiple-choice",
+    "sources": []
+  },
+  {
+    "id": 2,
+    "question": "What symbol is used to define a variable in SASS?",
+    "topic": "Basics",
+    "difficulty": "Intermediate",
+    "choices": [
+      "$",
+      "@",
+      "%",
+      "#"
+    ],
+    "explanation": "In SASS, variables are defined using the $ symbol followed by the variable name.",
+    "industryContext": "These skills are valuable in professional development environments.",
+    "tags": [
+      "Basics",
+      "intermediate",
+      "sass"
+    ],
+    "questionType": "multiple-choice",
+    "estimatedTime": 90,
+    "correctAnswer": 0,
+    "type": "multiple-choice",
+    "sources": []
+  },
+  {
+    "id": 3,
+    "question": "How does nesting work in SASS and what are its benefits?",
+    "topic": "Nesting",
+    "difficulty": "Intermediate",
+    "choices": [
+      "Selectors inside other selectors that mirror HTML structure, making stylesheets more organized",
+      "Grouping all CSS rules in a single file for better performance",
+      "Using only global selectors to avoid specificity issues",
+      "Creating separate files for each HTML element to improve maintainability"
+    ],
+    "explanation": "Nesting in SASS allows you to write selectors inside other selectors, creating a visual hierarchy that mirrors the HTML structure. This makes stylesheets more organized and easier to read, and reduces repetition in selector names. For example, instead of writing .navbar { ... } and .navbar .nav-item { ... } separately, you can nest .nav-item inside .navbar. This improves code organization and maintainability, especially for complex component styles.",
+    "industryContext": "Nesting is a fundamental SASS feature that professional frontend developers use to create well-organized, maintainable stylesheets. Understanding proper nesting techniques helps developers write cleaner CSS that's easier to understand and modify, which is essential for large-scale web applications.",
+    "tags": [
+      "Nesting",
+      "intermediate",
+      "sass"
+    ],
+    "questionType": "multiple-choice",
+    "estimatedTime": 90,
+    "correctAnswer": 0,
+    "type": "multiple-choice",
+    "sources": []
+  },
+  {
+    "id": 4,
+    "question": "How do you reference the parent selector in a nested rule in SASS?",
+    "topic": "Nesting",
+    "difficulty": "Beginner",
+    "choices": [
+      "&",
+      "$parent",
+      ":parent",
+      "::parent"
+    ],
+    "explanation": "The & symbol is used to reference the parent selector in nested SASS rules, commonly used for pseudo-classes and modifiers.",
+    "industryContext": "These skills are valuable in professional development environments.",
+    "tags": [
+      "Nesting",
+      "beginner",
+      "sass"
+    ],
+    "questionType": "multiple-choice",
+    "estimatedTime": 90,
+    "correctAnswer": 0,
+    "type": "multiple-choice",
+    "sources": []
+  },
+  {
+    "id": 5,
+    "question": "What is a mixin in SASS?",
+    "topic": "Mixins",
+    "difficulty": "Beginner",
+    "choices": [
+      "A reusable block of CSS declarations",
+      "A function that returns a value",
+      "A variable that stores CSS properties",
+      "A selector that combines multiple classes"
+    ],
+    "explanation": "A mixin in SASS is a reusable block of CSS declarations that can be included in other stylesheets. Mixins can also take arguments to make them more flexible.",
+    "industryContext": "These skills are valuable in professional development environments.",
+    "tags": [
+      "Mixins",
+      "beginner",
+      "sass"
+    ],
+    "questionType": "multiple-choice",
+    "estimatedTime": 90,
+    "correctAnswer": 0,
+    "type": "multiple-choice",
+    "sources": []
+  },
+  {
+    "id": 6,
+    "question": "Which function is used to make a color lighter in SASS?",
+    "topic": "Functions",
+    "difficulty": "Intermediate",
+    "choices": [
+      "lighten()",
+      "brighten()",
+      "fade-in()",
+      "adjust-color()"
+    ],
+    "explanation": "The lighten() function in SASS is used to make a color lighter by increasing its lightness value.",
+    "industryContext": "These skills are valuable in professional development environments.",
+    "tags": [
+      "Functions",
+      "intermediate",
+      "sass"
+    ],
+    "questionType": "multiple-choice",
+    "estimatedTime": 90,
+    "correctAnswer": 0,
+    "type": "multiple-choice",
+    "sources": []
+  },
+  {
+    "id": 7,
+    "question": "What is the difference between .scss and .sass syntax?",
+    "topic": "Compilation",
+    "difficulty": "Beginner",
+    "choices": [
+      ".scss uses braces and semicolons like CSS, while .sass uses indentation and line breaks",
+      ".scss is newer than .sass and has more features",
+      ".sass compiles faster than .scss",
+      "There is no difference, they are identical"
+    ],
+    "explanation": "SASS offers two syntaxes: .scss (Sassy CSS) which is CSS-compatible and uses braces and semicolons like standard CSS, making it easier for developers familiar with CSS to adopt. The .sass syntax (indented syntax) uses indentation instead of braces and line breaks instead of semicolons, similar to Python's syntax. Both syntaxes compile to the same CSS output, so the choice is largely a matter of personal or team preference.",
+    "industryContext": "Understanding both SASS syntaxes is valuable for professional frontend development, as different teams and projects may have preferences for one syntax over the other. The .scss syntax is more commonly used because it's CSS-compatible, making the transition from CSS to SASS easier for development teams.",
+    "tags": [
+      "Compilation",
+      "beginner",
+      "sass"
+    ],
+    "questionType": "multiple-choice",
+    "estimatedTime": 90,
+    "correctAnswer": 0,
+    "type": "multiple-choice",
+    "sources": []
+  },
+  {
+    "id": 8,
+    "question": "What is the purpose of @extend in SASS?",
+    "topic": "Extend",
+    "difficulty": "Beginner",
+    "choices": [
+      "To share CSS properties between selectors",
+      "To import external stylesheets",
+      "To create reusable functions",
+      "To define variables"
+    ],
+    "explanation": "The @extend directive in SASS allows one selector to inherit the styles of another selector, reducing code duplication by sharing CSS properties.",
+    "industryContext": "These skills are valuable in professional development environments.",
+    "tags": [
+      "Extend",
+      "beginner",
+      "sass"
+    ],
+    "questionType": "multiple-choice",
+    "estimatedTime": 90,
+    "correctAnswer": 0,
+    "type": "multiple-choice",
+    "sources": []
+  },
+  {
+    "id": 9,
+    "question": "What is the 7-1 SASS architecture pattern?",
+    "topic": "Architecture",
+    "difficulty": "Beginner",
+    "choices": [
+      "7 folders, 1 main file structure",
+      "7 variables, 1 mixin pattern",
+      "7 components, 1 layout system",
+      "7 breakpoints, 1 grid system"
+    ],
+    "explanation": "The 7-1 pattern organizes SASS files into 7 folders (base, components, layout, pages, themes, abstracts, vendors) and 1 main file that imports all partials.",
+    "industryContext": "These skills are valuable in professional development environments.",
+    "tags": [
+      "Architecture",
+      "beginner",
+      "sass"
+    ],
+    "questionType": "multiple-choice",
+    "estimatedTime": 90,
+    "correctAnswer": 0,
+    "type": "multiple-choice",
+    "sources": []
+  },
+  {
+    "id": 10,
+    "question": "What is the best practice for organizing SASS imports?",
+    "topic": "Performance",
+    "difficulty": "Beginner",
+    "choices": [
+      "Import abstracts first, then base, components, and pages",
+      "Import in alphabetical order",
+      "Import largest files first",
+      "Import randomly"
+    ],
+    "explanation": "Best practice is to import in dependency order: abstracts (variables, functions, mixins), base styles, layout, components, pages, themes, and vendors.",
+    "industryContext": "These skills are valuable in professional development environments.",
+    "tags": [
+      "Performance",
+      "beginner",
+      "sass"
+    ],
+    "questionType": "multiple-choice",
+    "estimatedTime": 90,
+    "correctAnswer": 0,
+    "type": "multiple-choice",
+    "sources": []
+  },
+  {
+    "id": 11,
+    "question": "When should you use @extend vs mixins in SASS?",
+    "topic": "Advanced Features",
+    "difficulty": "Intermediate",
+    "choices": [
+      "Use @extend for shared styles without parameters, mixins for reusable patterns with parameters",
+      "Use @extend for all situations as it's more efficient",
+      "Use mixins for all situations as they're more readable",
+      "@extend and mixins are identical and interchangeable"
+    ],
+    "explanation": "Use @extend for shared base styles that don't need parameters, as it creates grouped selectors in the compiled CSS, reducing code duplication. Use mixins for reusable patterns with parameters or complex logic, as they provide more flexibility but may duplicate code in the compiled CSS. @extend can cause bloated CSS if overused with complex selector chains, while mixins provide more flexibility but may result in larger CSS files due to code duplication.",
+    "industryContext": "Choosing between @extend and mixins is an important architectural decision in SASS development that affects both code maintainability and CSS output size. Professional frontend developers need to understand these trade-offs to write efficient and maintainable stylesheets.",
+    "tags": [
+      "Advanced Features",
+      "intermediate",
+      "sass"
+    ],
+    "questionType": "multiple-choice",
+    "estimatedTime": 90,
+    "correctAnswer": 0,
+    "type": "multiple-choice",
+    "sources": []
+  },
+  {
+    "id": 12,
+    "question": "Which SASS data type is best for storing multiple related values?",
+    "topic": "Data Types",
+    "difficulty": "Intermediate",
+    "choices": [
+      "Maps",
+      "Lists",
+      "Strings",
+      "Numbers"
+    ],
+    "explanation": "Maps are ideal for storing key-value pairs of related data, like color themes or breakpoint definitions, providing better organization than lists.",
+    "industryContext": "These skills are valuable in professional development environments.",
+    "tags": [
+      "Data Types",
+      "intermediate",
+      "sass"
+    ],
+    "questionType": "multiple-choice",
+    "estimatedTime": 90,
+    "correctAnswer": 0,
+    "type": "multiple-choice",
+    "sources": []
+  },
+  {
+    "id": 13,
+    "question": "What does the @return directive do in SASS functions?",
+    "topic": "Functions",
+    "difficulty": "Intermediate",
+    "choices": [
+      "Returns a value from a function",
+      "Returns to previous file",
+      "Reverses a calculation",
+      "Returns an error"
+    ],
+    "explanation": "@return specifies the value that a SASS function should return when called, similar to return statements in programming languages.",
+    "industryContext": "These skills are valuable in professional development environments.",
+    "tags": [
+      "Functions",
+      "intermediate",
+      "sass"
+    ],
+    "questionType": "multiple-choice",
+    "estimatedTime": 90,
+    "correctAnswer": 0,
+    "type": "multiple-choice",
+    "sources": []
+  },
+  {
+    "id": 14,
+    "question": "What are the main control directives in SASS and when would you use them?",
+    "topic": "Control Directives",
+    "difficulty": "Intermediate",
+    "choices": [
+      "@if/@else for conditionals, @for/@each/@while for loops - used for generating repetitive CSS patterns",
+      "@import for importing files, @media for responsive design",
+      "@extend for inheritance, @mixin for reusable code blocks",
+      "@keyframes for animations, @font-face for custom fonts"
+    ],
+    "explanation": "Main control directives: @if/@else for conditional logic allowing different styles based on conditions, @for for counted loops to generate repetitive styles with numeric variations, @each for iterating over lists and maps to create styles for multiple items, and @while for conditional loops that continue until a condition is met. These are used to generate utility classes, responsive breakpoints, color variations, grid systems, and other repetitive CSS patterns programmatically.",
+    "industryContext": "Control directives are powerful features that enable developers to write more dynamic and maintainable stylesheets. They're essential for creating design systems, utility classes, and responsive frameworks in professional frontend development.",
+    "tags": [
+      "Control Directives",
+      "intermediate",
+      "sass"
+    ],
+    "questionType": "multiple-choice",
+    "estimatedTime": 90,
+    "correctAnswer": 0,
+    "type": "multiple-choice",
+    "sources": []
+  },
+  {
+    "id": 15,
+    "question": "What is the difference between SASS and SCSS syntax?",
+    "topic": "Compilation",
+    "difficulty": "Beginner",
+    "choices": [
+      "SASS uses indentation, SCSS uses brackets and semicolons",
+      "SASS is newer than SCSS",
+      "SCSS is faster than SASS",
+      "No functional difference"
+    ],
+    "explanation": "SASS (indented syntax) uses indentation and newlines like Python, while SCSS (Sassy CSS) uses brackets and semicolons like CSS. Both compile to the same CSS output.",
+    "industryContext": "These skills are valuable in professional development environments.",
+    "tags": [
+      "Compilation",
+      "beginner",
+      "sass"
+    ],
+    "questionType": "multiple-choice",
+    "estimatedTime": 90,
+    "correctAnswer": 0,
+    "type": "multiple-choice",
+    "sources": []
   }
-}
+]

@@ -3,9 +3,9 @@ using backend.Models;
 
 namespace backend.GraphQL
 {
-    public class NextJsLessonType : ObjectType<NextJsLesson>
+    public class NextJsLessonType : ObjectType<BaseLesson>
     {
-        protected override void Configure(IObjectTypeDescriptor<NextJsLesson> descriptor)
+        protected override void Configure(IObjectTypeDescriptor<BaseLesson> descriptor)
         {
             descriptor.Name("NextJsLesson");
             descriptor.Description("Represents a Next.js learning lesson with code examples");
@@ -26,9 +26,9 @@ namespace backend.GraphQL
         }
     }
 
-    public class NextJsInterviewQuestionType : ObjectType<NextJsInterviewQuestion>
+    public class NextJsInterviewQuestionType : ObjectType<BaseInterviewQuestion>
     {
-        protected override void Configure(IObjectTypeDescriptor<NextJsInterviewQuestion> descriptor)
+        protected override void Configure(IObjectTypeDescriptor<BaseInterviewQuestion> descriptor)
         {
             descriptor.Name("NextJsInterviewQuestion");
             descriptor.Description("Represents a Next.js interview question with multiple choice or open-ended format");

@@ -1,6 +1,6 @@
 [
   {
-    "id": "1",
+    "id": 1,
     "moduleSlug": "graphql-advanced",
     "title": "Introduction to GraphQL and Query Language Basics",
     "order": 1,
@@ -44,16 +44,12 @@
       "GraphQL Fundamentals",
       "graphql"
     ],
-    "legacy": {
-      "originalId": 1,
-      "originalTopic": "GraphQL Fundamentals",
-      "migrated": "2025-10-01T06:41:13.485Z"
-    },
     "lastUpdated": "2025-10-01T06:41:13.485Z",
-    "version": "1.0.0"
+    "version": "1.0.0",
+    "sources": []
   },
   {
-    "id": "2",
+    "id": 2,
     "moduleSlug": "graphql-advanced",
     "title": "Schema Definition Language and Type System",
     "order": 2,
@@ -97,16 +93,12 @@
       "GraphQL Fundamentals",
       "graphql"
     ],
-    "legacy": {
-      "originalId": 2,
-      "originalTopic": "GraphQL Fundamentals",
-      "migrated": "2025-10-01T06:41:13.485Z"
-    },
     "lastUpdated": "2025-10-01T06:41:13.485Z",
-    "version": "1.0.0"
+    "version": "1.0.0",
+    "sources": []
   },
   {
-    "id": "3",
+    "id": 3,
     "moduleSlug": "graphql-advanced",
     "title": "Queries and Field Selection",
     "order": 3,
@@ -150,16 +142,12 @@
       "GraphQL Operations",
       "graphql"
     ],
-    "legacy": {
-      "originalId": 3,
-      "originalTopic": "GraphQL Operations",
-      "migrated": "2025-10-01T06:41:13.485Z"
-    },
     "lastUpdated": "2025-10-01T06:41:13.485Z",
-    "version": "1.0.0"
+    "version": "1.0.0",
+    "sources": []
   },
   {
-    "id": "4",
+    "id": 4,
     "moduleSlug": "graphql-advanced",
     "title": "Mutations and Data Modification",
     "order": 4,
@@ -203,16 +191,12 @@
       "GraphQL Operations",
       "graphql"
     ],
-    "legacy": {
-      "originalId": 4,
-      "originalTopic": "GraphQL Operations",
-      "migrated": "2025-10-01T06:41:13.485Z"
-    },
     "lastUpdated": "2025-10-01T06:41:13.485Z",
-    "version": "1.0.0"
+    "version": "1.0.0",
+    "sources": []
   },
   {
-    "id": "5",
+    "id": 5,
     "moduleSlug": "graphql-advanced",
     "title": "Subscriptions and Real-time Data",
     "order": 5,
@@ -256,16 +240,12 @@
       "GraphQL Operations",
       "graphql"
     ],
-    "legacy": {
-      "originalId": 5,
-      "originalTopic": "GraphQL Operations",
-      "migrated": "2025-10-01T06:41:13.485Z"
-    },
     "lastUpdated": "2025-10-01T06:41:13.485Z",
-    "version": "1.0.0"
+    "version": "1.0.0",
+    "sources": []
   },
   {
-    "id": "6",
+    "id": 6,
     "moduleSlug": "graphql-advanced",
     "title": "Resolvers and Data Fetching",
     "order": 6,
@@ -309,16 +289,12 @@
       "Schema Design",
       "graphql"
     ],
-    "legacy": {
-      "originalId": 6,
-      "originalTopic": "Schema Design",
-      "migrated": "2025-10-01T06:41:13.485Z"
-    },
     "lastUpdated": "2025-10-01T06:41:13.485Z",
-    "version": "1.0.0"
+    "version": "1.0.0",
+    "sources": []
   },
   {
-    "id": "7",
+    "id": 7,
     "moduleSlug": "graphql-advanced",
     "title": "Advanced Schema Patterns",
     "order": 7,
@@ -362,16 +338,12 @@
       "Schema Design",
       "graphql"
     ],
-    "legacy": {
-      "originalId": 7,
-      "originalTopic": "Schema Design",
-      "migrated": "2025-10-01T06:41:13.485Z"
-    },
     "lastUpdated": "2025-10-01T06:41:13.485Z",
-    "version": "1.0.0"
+    "version": "1.0.0",
+    "sources": []
   },
   {
-    "id": "8",
+    "id": 8,
     "moduleSlug": "graphql-advanced",
     "title": "DataLoader and N+1 Query Problem",
     "order": 8,
@@ -415,16 +387,12 @@
       "Performance Optimization",
       "graphql"
     ],
-    "legacy": {
-      "originalId": 8,
-      "originalTopic": "Performance Optimization",
-      "migrated": "2025-10-01T06:41:13.485Z"
-    },
     "lastUpdated": "2025-10-01T06:41:13.485Z",
-    "version": "1.0.0"
+    "version": "1.0.0",
+    "sources": []
   },
   {
-    "id": "9",
+    "id": 9,
     "moduleSlug": "graphql-advanced",
     "title": "Query Complexity Analysis and Rate Limiting",
     "order": 9,
@@ -468,16 +436,12 @@
       "Performance Optimization",
       "graphql"
     ],
-    "legacy": {
-      "originalId": 9,
-      "originalTopic": "Performance Optimization",
-      "migrated": "2025-10-01T06:41:13.485Z"
-    },
     "lastUpdated": "2025-10-01T06:41:13.485Z",
-    "version": "1.0.0"
+    "version": "1.0.0",
+    "sources": []
   },
   {
-    "id": "10",
+    "id": 10,
     "moduleSlug": "graphql-advanced",
     "title": "GraphQL Testing Strategies",
     "order": 10,
@@ -521,16 +485,12 @@
       "Testing and Tools",
       "graphql"
     ],
-    "legacy": {
-      "originalId": 10,
-      "originalTopic": "Testing and Tools",
-      "migrated": "2025-10-01T06:41:13.485Z"
-    },
     "lastUpdated": "2025-10-01T06:41:13.485Z",
-    "version": "1.0.0"
+    "version": "1.0.0",
+    "sources": []
   },
   {
-    "id": "11",
+    "id": 11,
     "moduleSlug": "graphql-advanced",
     "title": "GraphQL Development Tools and Debugging",
     "order": 11,
@@ -574,16 +534,12 @@
       "Testing and Tools",
       "graphql"
     ],
-    "legacy": {
-      "originalId": 11,
-      "originalTopic": "Testing and Tools",
-      "migrated": "2025-10-01T06:41:13.485Z"
-    },
     "lastUpdated": "2025-10-01T06:41:13.485Z",
-    "version": "1.0.0"
+    "version": "1.0.0",
+    "sources": []
   },
   {
-    "id": "12",
+    "id": 12,
     "moduleSlug": "graphql-advanced",
     "title": "GraphQL Security and Production Best Practices",
     "order": 12,
@@ -627,16 +583,12 @@
       "Production Deployment",
       "graphql"
     ],
-    "legacy": {
-      "originalId": 12,
-      "originalTopic": "Production Deployment",
-      "migrated": "2025-10-01T06:41:13.485Z"
-    },
     "lastUpdated": "2025-10-01T06:41:13.485Z",
-    "version": "1.0.0"
+    "version": "1.0.0",
+    "sources": []
   },
   {
-    "id": "13",
+    "id": 13,
     "moduleSlug": "graphql-advanced",
     "title": "GraphQL Federation and Microservices Architecture",
     "order": 13,
@@ -691,6 +643,7 @@
       "graphql"
     ],
     "lastUpdated": "2025-10-01T06:41:13.485Z",
-    "version": "1.0.0"
+    "version": "1.0.0",
+    "sources": []
   }
 ]

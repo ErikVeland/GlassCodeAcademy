@@ -3,11 +3,11 @@ using backend.Models;
 
 namespace backend.GraphQL
 {
-    public class ReactLessonType : ObjectType<ReactLesson>
+    public class ReactLessonType : ObjectType<BaseLesson>
+{
+    protected override void Configure(IObjectTypeDescriptor<BaseLesson> descriptor)
     {
-        protected override void Configure(IObjectTypeDescriptor<ReactLesson> descriptor)
-        {
-            descriptor.Name("ReactLesson");
+        descriptor.Name("ReactLesson");
             descriptor.Description("Represents a React learning lesson with code examples");
 
             descriptor.Field(l => l.Id).Description("The unique identifier of the lesson");
@@ -26,9 +26,9 @@ namespace backend.GraphQL
         }
     }
 
-    public class ReactInterviewQuestionType : ObjectType<ReactInterviewQuestion>
+    public class ReactInterviewQuestionType : ObjectType<BaseInterviewQuestion>
     {
-        protected override void Configure(IObjectTypeDescriptor<ReactInterviewQuestion> descriptor)
+        protected override void Configure(IObjectTypeDescriptor<BaseInterviewQuestion> descriptor)
         {
             descriptor.Name("ReactInterviewQuestion");
             descriptor.Description("Represents a React interview question with multiple choice or open-ended format");

@@ -1,6 +1,6 @@
 [
   {
-    "id": "1",
+    "id": 1,
     "moduleSlug": "nextjs-advanced",
     "title": "Next.js Fundamentals and Setup",
     "order": 1,
@@ -50,10 +50,11 @@
       "SSR"
     ],
     "lastUpdated": "2025-10-01T12:00:00.000Z",
-    "version": "1.0.0"
+    "version": "1.0.0",
+    "sources": []
   },
   {
-    "id": "2",
+    "id": 2,
     "moduleSlug": "nextjs-advanced",
     "title": "File-based Routing System",
     "order": 2,
@@ -102,10 +103,11 @@
       "Navigation"
     ],
     "lastUpdated": "2025-10-01T12:00:00.000Z",
-    "version": "1.0.0"
+    "version": "1.0.0",
+    "sources": []
   },
   {
-    "id": "3",
+    "id": 3,
     "moduleSlug": "nextjs-advanced",
     "title": "Server-Side Rendering (SSR)",
     "order": 3,
@@ -154,10 +156,11 @@
       "Performance"
     ],
     "lastUpdated": "2025-10-01T12:00:00.000Z",
-    "version": "1.0.0"
+    "version": "1.0.0",
+    "sources": []
   },
   {
-    "id": "4",
+    "id": 4,
     "moduleSlug": "nextjs-advanced",
     "title": "Static Site Generation (SSG)",
     "order": 4,
@@ -207,10 +210,11 @@
       "getStaticProps"
     ],
     "lastUpdated": "2025-10-01T12:00:00.000Z",
-    "version": "1.0.0"
+    "version": "1.0.0",
+    "sources": []
   },
   {
-    "id": "5",
+    "id": 5,
     "moduleSlug": "nextjs-advanced",
     "title": "API Routes and Backend Integration",
     "order": 5,
@@ -260,10 +264,11 @@
       "Database"
     ],
     "lastUpdated": "2025-10-01T12:00:00.000Z",
-    "version": "1.0.0"
+    "version": "1.0.0",
+    "sources": []
   },
   {
-    "id": "6",
+    "id": 6,
     "moduleSlug": "nextjs-advanced",
     "title": "Image Optimization and Performance",
     "order": 6,
@@ -313,10 +318,11 @@
       "Core Web Vitals"
     ],
     "lastUpdated": "2025-10-01T12:00:00.000Z",
-    "version": "1.0.0"
+    "version": "1.0.0",
+    "sources": []
   },
   {
-    "id": "7",
+    "id": 7,
     "moduleSlug": "nextjs-advanced",
     "title": "Middleware and Edge Functions",
     "order": 7,
@@ -366,10 +372,11 @@
       "Performance"
     ],
     "lastUpdated": "2025-10-01T12:00:00.000Z",
-    "version": "1.0.0"
+    "version": "1.0.0",
+    "sources": []
   },
   {
-    "id": "8",
+    "id": 8,
     "moduleSlug": "nextjs-advanced",
     "title": "Advanced Data Fetching Patterns",
     "order": 8,
@@ -419,10 +426,11 @@
       "Data Fetching"
     ],
     "lastUpdated": "2025-10-01T12:00:00.000Z",
-    "version": "1.0.0"
+    "version": "1.0.0",
+    "sources": []
   },
   {
-    "id": "9",
+    "id": 9,
     "moduleSlug": "nextjs-advanced",
     "title": "Authentication and Security",
     "order": 9,
@@ -472,10 +480,11 @@
       "JWT"
     ],
     "lastUpdated": "2025-10-01T12:00:00.000Z",
-    "version": "1.0.0"
+    "version": "1.0.0",
+    "sources": []
   },
   {
-    "id": "10",
+    "id": 10,
     "moduleSlug": "nextjs-advanced",
     "title": "Deployment and Production Optimization",
     "order": 10,
@@ -525,10 +534,11 @@
       "Security"
     ],
     "lastUpdated": "2025-10-01T12:00:00.000Z",
-    "version": "1.0.0"
+    "version": "1.0.0",
+    "sources": []
   },
   {
-    "id": "11",
+    "id": 11,
     "moduleSlug": "nextjs-advanced",
     "title": "Testing Next.js Applications",
     "order": 11,
@@ -578,10 +588,11 @@
       "E2E"
     ],
     "lastUpdated": "2025-10-01T12:00:00.000Z",
-    "version": "1.0.0"
+    "version": "1.0.0",
+    "sources": []
   },
   {
-    "id": "12",
+    "id": 12,
     "moduleSlug": "nextjs-advanced",
     "title": "Advanced Next.js Patterns and Best Practices",
     "order": 12,
@@ -629,10 +640,11 @@
       "Enterprise"
     ],
     "lastUpdated": "2025-10-01T12:00:00.000Z",
-    "version": "1.0.0"
+    "version": "1.0.0",
+    "sources": []
   },
   {
-    "id": "13",
+    "id": 13,
     "moduleSlug": "nextjs-advanced",
     "title": "Real-time Features with WebSockets",
     "order": 13,
@@ -683,10 +695,11 @@
       "Chat"
     ],
     "lastUpdated": "2025-01-27T10:15:00.000Z",
-    "version": "1.0.0"
+    "version": "1.0.0",
+    "sources": []
   },
   {
-    "id": "14",
+    "id": 14,
     "moduleSlug": "nextjs-advanced",
     "title": "Internationalization (i18n) and Localization",
     "order": 14,
@@ -735,6 +748,7 @@
       "SEO"
     ],
     "lastUpdated": "2025-01-27T10:15:00.000Z",
-    "version": "1.0.0"
+    "version": "1.0.0",
+    "sources": []
   }
 ]

@@ -1,6 +1,6 @@
 [
   {
-    "id": "1",
+    "id": 1,
     "moduleSlug": "laravel-fundamentals",
     "title": "Basic Routing in Laravel",
     "order": 1,
@@ -44,16 +44,12 @@
       "Routing",
       "laravel"
     ],
-    "legacy": {
-      "originalId": 1,
-      "originalTopic": "Routing",
-      "migrated": "2025-10-01T06:41:13.484Z"
-    },
     "lastUpdated": "2025-10-01T06:41:13.484Z",
-    "version": "1.0.0"
+    "version": "1.0.0",
+    "sources": []
   },
   {
-    "id": "2",
+    "id": 2,
     "moduleSlug": "laravel-fundamentals",
     "title": "Route Parameters",
     "order": 2,
@@ -97,16 +93,12 @@
       "Routing",
       "laravel"
     ],
-    "legacy": {
-      "originalId": 2,
-      "originalTopic": "Routing",
-      "migrated": "2025-10-01T06:41:13.484Z"
-    },
     "lastUpdated": "2025-10-01T06:41:13.484Z",
-    "version": "1.0.0"
+    "version": "1.0.0",
+    "sources": []
   },
   {
-    "id": "3",
+    "id": 3,
     "moduleSlug": "laravel-fundamentals",
     "title": "Introduction to Eloquent",
     "order": 3,
@@ -150,16 +142,12 @@
       "Eloquent ORM",
       "laravel"
     ],
-    "legacy": {
-      "originalId": 3,
-      "originalTopic": "Eloquent ORM",
-      "migrated": "2025-10-01T06:41:13.484Z"
-    },
     "lastUpdated": "2025-10-01T06:41:13.484Z",
-    "version": "1.0.0"
+    "version": "1.0.0",
+    "sources": []
   },
   {
-    "id": "4",
+    "id": 4,
     "moduleSlug": "laravel-fundamentals",
     "title": "Querying Models",
     "order": 4,
@@ -203,16 +191,12 @@
       "Eloquent ORM",
       "laravel"
     ],
-    "legacy": {
-      "originalId": 4,
-      "originalTopic": "Eloquent ORM",
-      "migrated": "2025-10-01T06:41:13.484Z"
-    },
     "lastUpdated": "2025-10-01T06:41:13.484Z",
-    "version": "1.0.0"
+    "version": "1.0.0",
+    "sources": []
   },
   {
-    "id": "5",
+    "id": 5,
     "moduleSlug": "laravel-fundamentals",
     "title": "Blade Basics",
     "order": 5,
@@ -256,16 +240,12 @@
       "Blade Templates",
       "laravel"
     ],
-    "legacy": {
-      "originalId": 5,
-      "originalTopic": "Blade Templates",
-      "migrated": "2025-10-01T06:41:13.484Z"
-    },
     "lastUpdated": "2025-10-01T06:41:13.484Z",
-    "version": "1.0.0"
+    "version": "1.0.0",
+    "sources": []
   },
   {
-    "id": "6",
+    "id": 6,
     "moduleSlug": "laravel-fundamentals",
     "title": "Blade Control Structures",
     "order": 6,
@@ -309,16 +289,12 @@
       "Blade Templates",
       "laravel"
     ],
-    "legacy": {
-      "originalId": 6,
-      "originalTopic": "Blade Templates",
-      "migrated": "2025-10-01T06:41:13.484Z"
-    },
     "lastUpdated": "2025-10-01T06:41:13.484Z",
-    "version": "1.0.0"
+    "version": "1.0.0",
+    "sources": []
   },
   {
-    "id": "7",
+    "id": 7,
     "moduleSlug": "laravel-fundamentals",
     "title": "Creating Middleware",
     "order": 7,
@@ -362,16 +338,12 @@
       "Middleware",
       "laravel"
     ],
-    "legacy": {
-      "originalId": 7,
-      "originalTopic": "Middleware",
-      "migrated": "2025-10-01T06:41:13.484Z"
-    },
     "lastUpdated": "2025-10-01T06:41:13.484Z",
-    "version": "1.0.0"
+    "version": "1.0.0",
+    "sources": []
   },
   {
-    "id": "8",
+    "id": 8,
     "moduleSlug": "laravel-fundamentals",
     "title": "Registering Middleware",
     "order": 8,
@@ -415,16 +387,12 @@
       "Middleware",
       "laravel"
     ],
-    "legacy": {
-      "originalId": 8,
-      "originalTopic": "Middleware",
-      "migrated": "2025-10-01T06:41:13.484Z"
-    },
     "lastUpdated": "2025-10-01T06:41:13.484Z",
-    "version": "1.0.0"
+    "version": "1.0.0",
+    "sources": []
   },
   {
-    "id": "9",
+    "id": 9,
     "moduleSlug": "laravel-fundamentals",
     "title": "Migrations",
     "order": 9,
@@ -468,16 +436,12 @@
       "Database",
       "laravel"
     ],
-    "legacy": {
-      "originalId": 9,
-      "originalTopic": "Database",
-      "migrated": "2025-10-01T06:41:13.484Z"
-    },
     "lastUpdated": "2025-10-01T06:41:13.484Z",
-    "version": "1.0.0"
+    "version": "1.0.0",
+    "sources": []
   },
   {
-    "id": "10",
+    "id": 10,
     "moduleSlug": "laravel-fundamentals",
     "title": "Seeding Data",
     "order": 10,
@@ -521,16 +485,12 @@
       "Database",
       "laravel"
     ],
-    "legacy": {
-      "originalId": 10,
-      "originalTopic": "Database",
-      "migrated": "2025-10-01T06:41:13.484Z"
-    },
     "lastUpdated": "2025-10-01T06:41:13.484Z",
-    "version": "1.0.0"
+    "version": "1.0.0",
+    "sources": []
   },
   {
-    "id": "11",
+    "id": 11,
     "moduleSlug": "laravel-fundamentals",
     "title": "Laravel Breeze",
     "order": 11,
@@ -574,16 +534,12 @@
       "Authentication",
       "laravel"
     ],
-    "legacy": {
-      "originalId": 11,
-      "originalTopic": "Authentication",
-      "migrated": "2025-10-01T06:41:13.484Z"
-    },
     "lastUpdated": "2025-10-01T06:41:13.484Z",
-    "version": "1.0.0"
+    "version": "1.0.0",
+    "sources": []
   },
   {
-    "id": "12",
+    "id": 12,
     "moduleSlug": "laravel-fundamentals",
     "title": "API Authentication",
     "order": 12,
@@ -627,16 +583,12 @@
       "Authentication",
       "laravel"
     ],
-    "legacy": {
-      "originalId": 12,
-      "originalTopic": "Authentication",
-      "migrated": "2025-10-01T06:41:13.484Z"
-    },
     "lastUpdated": "2025-10-01T06:41:13.484Z",
-    "version": "1.0.0"
+    "version": "1.0.0",
+    "sources": []
   },
   {
-    "id": "13",
+    "id": 13,
     "moduleSlug": "laravel-fundamentals",
     "title": "Form Validation",
     "order": 13,
@@ -689,16 +641,12 @@
       "Security",
       "Laravel"
     ],
-    "legacy": {
-      "originalId": 13,
-      "originalTopic": "Form Validation",
-      "migrated": "2025-01-27T10:15:00.000Z"
-    },
     "lastUpdated": "2025-01-27T10:15:00.000Z",
-    "version": "1.0.0"
+    "version": "1.0.0",
+    "sources": []
   },
   {
-    "id": "14",
+    "id": 14,
     "moduleSlug": "laravel-fundamentals",
     "title": "Eloquent Relationships",
     "order": 14,
@@ -752,16 +700,12 @@
       "ORM",
       "Laravel"
     ],
-    "legacy": {
-      "originalId": 14,
-      "originalTopic": "Eloquent Relationships",
-      "migrated": "2025-01-27T10:15:00.000Z"
-    },
     "lastUpdated": "2025-01-27T10:15:00.000Z",
-    "version": "1.0.0"
+    "version": "1.0.0",
+    "sources": []
   },
   {
-    "id": "15",
+    "id": 15,
     "moduleSlug": "laravel-fundamentals",
     "title": "File Storage and Uploads",
     "order": 15,
@@ -815,16 +759,12 @@
       "Cloud Storage",
       "Laravel"
     ],
-    "legacy": {
-      "originalId": 15,
-      "originalTopic": "File Storage",
-      "migrated": "2025-01-27T10:15:00.000Z"
-    },
     "lastUpdated": "2025-01-27T10:15:00.000Z",
-    "version": "1.0.0"
+    "version": "1.0.0",
+    "sources": []
   },
   {
-    "id": "16",
+    "id": 16,
     "moduleSlug": "laravel-fundamentals",
     "title": "Laravel Artisan Commands",
     "order": 16,
@@ -878,16 +818,12 @@
       "CLI",
       "Laravel"
     ],
-    "legacy": {
-      "originalId": 16,
-      "originalTopic": "Artisan Commands",
-      "migrated": "2025-01-27T10:15:00.000Z"
-    },
     "lastUpdated": "2025-01-27T10:15:00.000Z",
-    "version": "1.0.0"
+    "version": "1.0.0",
+    "sources": []
   },
   {
-    "id": "17",
+    "id": 17,
     "moduleSlug": "laravel-fundamentals",
     "title": "Advanced Eloquent Relationships",
     "order": 17,
@@ -944,10 +880,11 @@
       "Laravel"
     ],
     "lastUpdated": "2025-10-03T00:00:00.000Z",
-    "version": "1.0.0"
+    "version": "1.0.0",
+    "sources": []
   },
   {
-    "id": "18",
+    "id": 18,
     "moduleSlug": "laravel-fundamentals",
     "title": "API Development with Sanctum and Passport",
     "order": 18,
@@ -1005,10 +942,11 @@
       "Laravel"
     ],
     "lastUpdated": "2025-10-03T00:00:00.000Z",
-    "version": "1.0.0"
+    "version": "1.0.0",
+    "sources": []
   },
   {
-    "id": "19",
+    "id": 19,
     "moduleSlug": "laravel-fundamentals",
     "title": "Advanced Testing Strategies with Pest and PHPUnit",
     "order": 19,
@@ -1068,10 +1006,11 @@
       "Laravel"
     ],
     "lastUpdated": "2025-10-03T10:00:00Z",
-    "version": "1.0.0"
+    "version": "1.0.0",
+    "sources": []
   },
   {
-    "id": "20",
+    "id": 20,
     "moduleSlug": "laravel-fundamentals",
     "title": "Queue Workers and Job Processing",
     "order": 20,
@@ -1130,10 +1069,11 @@
       "Laravel"
     ],
     "lastUpdated": "2025-10-03T10:00:00Z",
-    "version": "1.0.0"
+    "version": "1.0.0",
+    "sources": []
   },
   {
-    "id": "21",
+    "id": 21,
     "moduleSlug": "laravel-fundamentals",
     "title": "Event Broadcasting and Real-Time Features",
     "order": 21,
@@ -1193,10 +1133,11 @@
       "Laravel"
     ],
     "lastUpdated": "2025-10-03T10:00:00Z",
-    "version": "1.0.0"
+    "version": "1.0.0",
+    "sources": []
   },
   {
-    "id": "22",
+    "id": 22,
     "moduleSlug": "laravel-fundamentals",
     "title": "Caching Strategies and Optimization",
     "order": 22,
@@ -1255,10 +1196,11 @@
       "Laravel"
     ],
     "lastUpdated": "2025-10-03T10:00:00Z",
-    "version": "1.0.0"
+    "version": "1.0.0",
+    "sources": []
   },
   {
-    "id": "23",
+    "id": 23,
     "moduleSlug": "laravel-fundamentals",
     "title": "Deployment and DevOps Practices",
     "order": 23,
@@ -1317,6 +1259,7 @@
       "Laravel"
     ],
     "lastUpdated": "2025-10-03T10:00:00Z",
-    "version": "1.0.0"
+    "version": "1.0.0",
+    "sources": []
   }
 ]

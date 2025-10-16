@@ -127,7 +127,9 @@ def find_method_boundaries(content, method_name):
 
 def repair_dataservice():
     """Repair the DataService.cs file"""
-    dataservice_path = "/Users/veland/GlassCodeAcademy/glasscode/backend/Services/DataService.cs"
+    # Get the script directory and navigate to the project root
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    dataservice_path = os.path.join(script_dir, "glasscode", "backend", "Services", "DataService.cs")
     
     if not os.path.exists(dataservice_path):
         print(f"Error: DataService.cs not found at {dataservice_path}")

@@ -1,6 +1,49 @@
 # GlassCode Academy Backend
 
-This is the backend application for the GlassCode Academy project, built with .NET 9 and GraphQL.
+This is the backend application for the GlassCode Academy project, built with .NET 8.0 and GraphQL using HotChocolate 13.x.
+
+## Architecture
+
+### Shared Component Architecture
+
+GlassCode Academy uses a **shared component architecture** built around two foundational base classes that ensure consistency, maintainability, and type safety across all technology modules:
+
+#### Base Classes
+
+**BaseInterviewQuestion** (`Models/BaseInterviewQuestion.cs`)
+- Standardizes interview question structure across all technology modules
+- Provides consistent fields: `Id`, `Topic`, `Type`, `Question`, `Choices`, `CorrectAnswer`, `Explanation`, `Difficulty`, `IndustryContext`, `Tags`, `QuestionType`, `EstimatedTime`, `Sources`
+- Ensures uniform JSON deserialization and GraphQL schema generation
+
+**BaseLesson** (`Models/BaseLesson.cs`)
+- Standardizes lesson structure across all technology modules
+- Supports both simple and complex lesson formats
+- Core fields: `Id`, `ModuleSlug`, `Title`, `Order`, `Objectives`, `Intro`, `Code`, `Pitfalls`, `Exercises`, `Next`, `EstimatedMinutes`, `Difficulty`, `Tags`, `LastUpdated`, `Version`, `Sources`
+- Additional simple format fields: `Topic`, `Description`, `CodeExample`, `Output`
+
+#### Technology Module Implementation
+
+Each technology module (React, Laravel, Vue, TypeScript, etc.) implements the shared architecture:
+
+1. **Data Collections**: All modules use `IEnumerable<BaseLesson>` and `IEnumerable<BaseInterviewQuestion>` in `DataService.cs`
+2. **JSON Deserialization**: Consistent JSON loading using the base class structure
+3. **GraphQL Types**: Module-specific GraphQL types extend the base classes (e.g., `ReactLessonType : ObjectType<BaseLesson>`)
+4. **Data Validation**: Unified validation through `VerifyDataIntegrity()` method
+
+#### Benefits
+
+- **Consistency**: All modules follow the same data structure and validation rules
+- **Maintainability**: Changes to base classes automatically apply to all modules
+- **Type Safety**: Strong typing prevents runtime errors and ensures data integrity
+- **Scalability**: Adding new technology modules requires minimal boilerplate code
+- **Validation**: Centralized data integrity checks during application startup
+
+#### Current Modules
+
+The following technology modules are implemented using this architecture:
+- .NET, React, Laravel, Vue.js, TypeScript, Node.js, Tailwind CSS, SASS
+- Database, Testing, Programming Fundamentals, Web Fundamentals
+- Next.js, Performance Optimization, Security Fundamentals, Version Control
 
 ## Deployment Options
 
@@ -33,7 +76,7 @@ Use the provided bootstrap script to automatically set up your GlassCode Academy
    ```
 
 3. Configure the App Service:
-   - Set .NET runtime version to 9.0
+   - Set .NET runtime version to 8.0
    - Configure custom domain if needed
    - Set up SSL certificate
 

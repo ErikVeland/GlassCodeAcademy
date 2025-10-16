@@ -1,5 +1,5 @@
 {
-  "module": "dotnet-fundamentals",
+  "moduleSlug": "dotnet-fundamentals",
   "sources": [
     {
       "title": "Microsoft .NET Documentation",

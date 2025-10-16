@@ -1,6 +1,6 @@
 [
   {
-    "id": "1",
+    "id": 1,
     "moduleSlug": "database-systems",
     "title": "Relational Model and Normalization",
     "order": 1,
@@ -76,7 +76,7 @@
     "version": "1.1.0"
   },
   {
-    "id": "2",
+    "id": 2,
     "moduleSlug": "database-systems",
     "title": "Keys, Constraints, and Indexes",
     "order": 2,
@@ -151,7 +151,7 @@
     "version": "1.1.0"
   },
   {
-    "id": "3",
+    "id": 3,
     "moduleSlug": "database-systems",
     "title": "Advanced Queries with Joins, Subqueries, and Set Operations",
     "order": 3,
@@ -225,7 +225,7 @@
     "version": "1.1.0"
   },
   {
-    "id": "4",
+    "id": 4,
     "moduleSlug": "database-systems",
     "title": "ER Diagrams and Advanced Relationships",
     "order": 4,
@@ -269,16 +269,11 @@
       "Data Modeling",
       "database"
     ],
-    "legacy": {
-      "originalId": 4,
-      "originalTopic": "Data Modeling",
-      "migrated": "2025-10-01T06:41:13.481Z"
-    },
     "lastUpdated": "2025-10-01T06:41:13.481Z",
     "version": "1.0.0"
   },
   {
-    "id": "5",
+    "id": 5,
     "moduleSlug": "database-systems",
     "title": "Entity Framework Core Advanced Patterns",
     "order": 5,
@@ -322,16 +317,11 @@
       "ORM Integration",
       "database"
     ],
-    "legacy": {
-      "originalId": 5,
-      "originalTopic": "ORM Integration",
-      "migrated": "2025-10-01T06:41:13.481Z"
-    },
     "lastUpdated": "2025-10-01T06:41:13.481Z",
     "version": "1.0.0"
   },
   {
-    "id": "6",
+    "id": 6,
     "moduleSlug": "database-systems",
     "title": "ACID Properties and Transaction Management",
     "order": 6,
@@ -375,16 +365,11 @@
       "Transactions",
       "database"
     ],
-    "legacy": {
-      "originalId": 6,
-      "originalTopic": "Transactions",
-      "migrated": "2025-10-01T06:41:13.481Z"
-    },
     "lastUpdated": "2025-10-01T06:41:13.481Z",
     "version": "1.0.0"
   },
   {
-    "id": "7",
+    "id": 7,
     "moduleSlug": "database-systems",
     "title": "Query Optimization and Execution Plans",
     "order": 7,
@@ -428,16 +413,11 @@
       "Performance",
       "database"
     ],
-    "legacy": {
-      "originalId": 7,
-      "originalTopic": "Performance",
-      "migrated": "2025-10-01T06:41:13.481Z"
-    },
     "lastUpdated": "2025-10-01T06:41:13.481Z",
     "version": "1.0.0"
   },
   {
-    "id": "8",
+    "id": 8,
     "moduleSlug": "database-systems",
     "title": "Stored Procedures and User-Defined Functions",
     "order": 8,
@@ -481,16 +461,11 @@
       "Functions",
       "database"
     ],
-    "legacy": {
-      "originalId": 8,
-      "originalTopic": "Functions",
-      "migrated": "2025-10-01T06:41:13.481Z"
-    },
     "lastUpdated": "2025-10-01T06:41:13.481Z",
     "version": "1.0.0"
   },
   {
-    "id": "9",
+    "id": 9,
     "moduleSlug": "database-systems",
     "title": "Document Databases and MongoDB",
     "order": 9,
@@ -534,16 +509,11 @@
       "NoSQL",
       "database"
     ],
-    "legacy": {
-      "originalId": 9,
-      "originalTopic": "NoSQL",
-      "migrated": "2025-10-01T06:41:13.481Z"
-    },
     "lastUpdated": "2025-10-01T06:41:13.481Z",
     "version": "1.0.0"
   },
   {
-    "id": "10",
+    "id": 10,
     "moduleSlug": "database-systems",
     "title": "Database Backup and Recovery Strategies",
     "order": 10,
@@ -587,16 +557,11 @@
       "Backup",
       "database"
     ],
-    "legacy": {
-      "originalId": 10,
-      "originalTopic": "Backup",
-      "migrated": "2025-10-01T06:41:13.481Z"
-    },
     "lastUpdated": "2025-10-01T06:41:13.481Z",
     "version": "1.0.0"
   },
   {
-    "id": "11",
+    "id": 11,
     "moduleSlug": "database-systems",
     "title": "Database Security and Access Control",
     "order": 11,
@@ -640,16 +605,11 @@
       "Security",
       "database"
     ],
-    "legacy": {
-      "originalId": 11,
-      "originalTopic": "Security",
-      "migrated": "2025-10-01T06:41:13.481Z"
-    },
     "lastUpdated": "2025-10-01T06:41:13.481Z",
     "version": "1.0.0"
   },
   {
-    "id": "12",
+    "id": 12,
     "moduleSlug": "database-systems",
     "title": "Database Scaling and Replication",
     "order": 12,
@@ -693,16 +653,11 @@
       "Advanced",
       "database"
     ],
-    "legacy": {
-      "originalId": 12,
-      "originalTopic": "Advanced",
-      "migrated": "2025-10-01T06:41:13.481Z"
-    },
     "lastUpdated": "2025-10-01T06:41:13.481Z",
     "version": "1.0.0"
   },
   {
-    "id": "13",
+    "id": 13,
     "moduleSlug": "database-systems",
     "title": "Database Security and Access Control",
     "order": 13,
@@ -758,7 +713,7 @@
     "version": "1.0.0"
   },
   {
-    "id": "14",
+    "id": 14,
     "moduleSlug": "database-systems",
     "title": "Database Performance Tuning",
     "order": 14,
@@ -814,7 +769,7 @@
     "version": "1.0.0"
   },
   {
-    "id": "15",
+    "id": 15,
     "moduleSlug": "database-systems",
     "title": "NoSQL Databases and Document Stores",
     "order": 15,
@@ -870,7 +825,7 @@
     "version": "1.0.0"
   },
   {
-    "id": "16",
+    "id": 16,
     "moduleSlug": "database-systems",
     "title": "Database Administration and Monitoring",
     "order": 16,

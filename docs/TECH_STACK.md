@@ -7,59 +7,67 @@ This document outlines the technology stack used in the GlassCode Academy applic
 ```mermaid
 graph TB
     subgraph Frontend
-        A[Next.js 15] --> B[React 19]
+        A[Next.js 15.3.5] --> B[React 19.0.0]
         B --> C[Tailwind CSS]
         C --> D[TypeScript]
-        A --> E[Apollo Client]
+        A --> E[Apollo Client 3.13.8]
     end
 
     subgraph Backend
-        F[ASP.NET Core 9]
-        G[Entity Framework Core]
-        H[GraphQL Server]
-        I[Laravel API]
-        J[SQLite Database]
+        F[ASP.NET Core 8.0]
+        G[HotChocolate 13.x]
+        H[Laravel 11.0+]
+        I[Node.js Backends]
+        J[JSON Data Files]
     end
 
-    subgraph Services
-        K[GraphQL API]
+    subgraph Infrastructure
+        K[NGINX Gateway]
+        L[Module Architecture]
+        M[Systemd Services]
     end
 
-    E -- GraphQL Queries/Mutations --> K
-    K --> F
-    K --> I
-    F --> G
-    G --> J
+    E -- GraphQL Queries/Mutations --> G
+    G --> F
+    F --> J
+    H --> J
     I --> J
+    K --> A
+    K --> F
+    K --> H
 
     subgraph Development
-        L[Visual Studio Code]
-        M[Visual Studio 2022]
-        N[Git]
-        O[Docker]
+        N[Visual Studio Code]
+        O[Visual Studio 2022]
+        P[Git]
+        Q[.NET 8.0 SDK]
+        R[Node.js 18+]
     end
 
     subgraph Deployment
-        P[Docker Containers]
-        Q[Docker Containers]
+        S[Systemd Services]
+        T[NGINX Configuration]
+        U[SSL/TLS Setup]
     end
 
-    A --> P
-    F --> Q
-    I --> Q
+    A --> S
+    F --> S
+    H --> S
+    K --> T
+    T --> U
 ```
 
 ## Technology Components
 
 ### Frontend Technologies
 
-1. **Next.js 15**
+1. **Next.js 15.3.5**
    - React framework with App Router
    - Server-side rendering and static site generation
    - API routes for backend integration
    - Built-in optimization features
 
-2. **React 19**
+2. **React 19.0.0**
    - Component-based UI library
    - Hooks for state management
    - Server Components for performance
@@ -67,43 +75,43 @@ graph TB
 3. **Tailwind CSS**
    - Utility-first CSS framework
    - Responsive design system
-   - Dark mode support
+   - Technology-specific color schemes
 
 4. **TypeScript**
    - Static typing for JavaScript
    - Improved developer experience
    - Better error detection
 
-5. **Apollo Client**
+5. **Apollo Client 3.13.8**
    - GraphQL client for data fetching
    - Caching and state management
    - Integration with React components
 
 ### Backend Technologies
 
-1. **ASP.NET Core 9**
+1. **ASP.NET Core 8.0**
    - Cross-platform web framework
    - High-performance runtime
    - Built-in dependency injection
 
-2. **Entity Framework Core**
-   - Object-relational mapper (ORM)
-   - Database abstraction layer
-   - LINQ for database queries
-
-3. **GraphQL Server**
-   - Banana Cake Pop GraphQL server
+2. **HotChocolate 13.x**
+   - GraphQL server for .NET
    - Schema-first development
    - Real-time subscriptions support
 
-4. **Laravel API**
+3. **Laravel 11.0+**
    - PHP web application framework
    - Eloquent ORM for database operations
    - RESTful API endpoints
 
-5. **SQLite Database**
-   - Lightweight relational database
-   - File-based storage
+4. **Node.js Backends**
+   - Express.js framework
+   - Module-specific implementations
+   - RESTful API endpoints
+
+5. **JSON Data Files**
+   - File-based data storage
+   - Structured lesson content
    - Zero configuration setup
 
 ### Development Tools
@@ -120,63 +128,89 @@ graph TB
    - Version control system
    - Collaboration workflow
 
-4. **Docker**
-   - Containerization for consistent environments
-   - Simplified deployment process
+4. **.NET 8.0 SDK (8.0.414+)**
+   - Backend development runtime
+   - Cross-platform development
 
-### Deployment Platforms
+5. **Node.js 18+**
+   - Frontend development runtime
+   - Package management with npm
 
-1. **Docker Containers**
-   - Containerized deployment for consistency
-   - Easy scaling and management
-   - Platform-agnostic deployment
+6. **PHP 8.2+ and Composer**
+   - Laravel module development
+   - Dependency management
 
-2. **Render.com**
-   - Cloud platform for container hosting
-   - Automatic deployments from Git
-   - Free tier for development and testing
+### Infrastructure & Deployment
+
+1. **NGINX Gateway**
+   - Reverse proxy configuration
+   - SSL/TLS termination
+   - Load balancing
+
+2. **Systemd Services**
+   - Service management on Linux
+   - Automatic startup and monitoring
+   - Process management
+
+3. **Standalone Server Deployment**
+   - Self-hosted deployment option
+   - Manual configuration
+   - Full control over environment
 
 ## Integration Flow
 
 1. **Frontend to Backend Communication**
-   - Apollo Client sends GraphQL queries to the GraphQL API
-   - GraphQL server resolves queries by calling appropriate services
-   - Data is fetched from either .NET or Laravel backends
-   - Responses are returned through the GraphQL layer to the frontend
+   - Apollo Client sends GraphQL queries to the ASP.NET Core backend
+   - HotChocolate GraphQL server resolves queries
+   - Data is fetched from JSON data files
+   - Module-specific backends (Laravel, Node.js) serve their own content
+   - NGINX gateway routes requests to appropriate services
 
 2. **Data Flow**
    - User interactions trigger GraphQL queries/mutations
    - GraphQL server routes requests to appropriate resolvers
-   - Resolvers interact with .NET or Laravel services
-   - Services access data through Entity Framework Core or Eloquent ORM
-   - Data is retrieved from SQLite database
-   - Responses flow back through the stack to the UI
+   - Resolvers read from structured JSON data files
+   - Module-specific content is served by dedicated backends
+   - Responses flow back through the GraphQL layer to the frontend
 
-3. **Development Workflow**
+3. **Module Architecture**
+   - Each technology module has its own backend implementation
+   - Laravel modules use PHP with Eloquent ORM
+   - Node.js modules use Express.js framework
+   - React, Vue, and other frontend modules are served statically
+   - All modules integrate through the NGINX gateway
+
+4. **Development Workflow**
    - Code changes are committed to Git
-   - Continuous integration builds and tests changes
-   - Successful builds are automatically deployed
-   - Frontend and backend services are deployed as Docker containers
-   - Services are hosted on Render.com
+   - Local development uses multiple service ports
+   - Production deployment uses systemd services
+   - NGINX handles SSL/TLS and reverse proxy
+   - Services run as standalone processes on the server
 
 ## Benefits of This Architecture
 
-1. **Separation of Concerns**
-   - Frontend focuses on UI/UX
-   - Backend services handle business logic
-   - GraphQL layer provides a unified API
+1. **Educational Focus**
+   - Multiple backend frameworks for comprehensive learning
+   - Real-world technology stack examples
+   - Hands-on experience with different paradigms
 
-2. **Technology Diversity**
-   - Multiple backend frameworks for learning
-   - Modern frontend stack for best practices
-   - Industry-standard tools and platforms
+2. **Modular Design**
+   - Each technology module is self-contained
+   - Independent development and deployment
+   - Easy to add new learning modules
 
-3. **Scalability**
-   - Microservices architecture
-   - Independent scaling of components
-   - Cloud-native deployment
+3. **Performance & Simplicity**
+   - JSON data files for fast content delivery
+   - No database setup required
+   - Lightweight and efficient
 
-4. **Developer Experience**
+4. **Production-Ready Infrastructure**
+   - NGINX gateway for professional deployment
+   - Systemd services for reliability
+   - SSL/TLS support for security
+
+5. **Developer Experience**
    - Type safety with TypeScript
    - Hot reloading during development
+   - Multiple IDE support (VS Code, Visual Studio)
    - Comprehensive debugging tools

@@ -1,5 +1,5 @@
 {
-  "module": "typescript-fundamentals",
+  "moduleSlug": "typescript-fundamentals",
   "sources": [
     {
       "title": "TypeScript Official Documentation",

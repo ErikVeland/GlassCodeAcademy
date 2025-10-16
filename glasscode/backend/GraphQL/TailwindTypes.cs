@@ -3,9 +3,9 @@ using backend.Models;
 
 namespace backend.GraphQL
 {
-    public class TailwindLessonType : ObjectType<TailwindLesson>
+    public class TailwindLessonType : ObjectType<BaseLesson>
     {
-        protected override void Configure(IObjectTypeDescriptor<TailwindLesson> descriptor)
+        protected override void Configure(IObjectTypeDescriptor<BaseLesson> descriptor)
         {
             descriptor.Name("TailwindLesson");
             descriptor.Description("Represents a Tailwind CSS learning lesson with code examples");
@@ -19,9 +19,9 @@ namespace backend.GraphQL
         }
     }
 
-    public class TailwindInterviewQuestionType : ObjectType<TailwindInterviewQuestion>
+    public class TailwindInterviewQuestionType : ObjectType<BaseInterviewQuestion>
     {
-        protected override void Configure(IObjectTypeDescriptor<TailwindInterviewQuestion> descriptor)
+        protected override void Configure(IObjectTypeDescriptor<BaseInterviewQuestion> descriptor)
         {
             descriptor.Name("TailwindInterviewQuestion");
             descriptor.Description("Represents a Tailwind CSS interview question with multiple choice or open-ended format");

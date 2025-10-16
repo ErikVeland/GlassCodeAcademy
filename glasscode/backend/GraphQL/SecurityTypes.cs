@@ -3,9 +3,9 @@ using backend.Models;
 
 namespace backend.GraphQL
 {
-    public class SecurityLessonType : ObjectType<SecurityLesson>
+    public class SecurityLessonType : ObjectType<BaseLesson>
     {
-        protected override void Configure(IObjectTypeDescriptor<SecurityLesson> descriptor)
+        protected override void Configure(IObjectTypeDescriptor<BaseLesson> descriptor)
         {
             descriptor.Name("SecurityLesson");
             descriptor.Description("Represents a Security Fundamentals learning lesson with code examples");
@@ -19,9 +19,9 @@ namespace backend.GraphQL
         }
     }
 
-    public class SecurityInterviewQuestionType : ObjectType<SecurityInterviewQuestion>
+    public class SecurityInterviewQuestionType : ObjectType<BaseInterviewQuestion>
     {
-        protected override void Configure(IObjectTypeDescriptor<SecurityInterviewQuestion> descriptor)
+        protected override void Configure(IObjectTypeDescriptor<BaseInterviewQuestion> descriptor)
         {
             descriptor.Name("SecurityInterviewQuestion");
             descriptor.Description("Represents a Security Fundamentals interview question with multiple choice or open-ended format");

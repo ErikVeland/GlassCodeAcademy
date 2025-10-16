@@ -1,5 +1,5 @@
 {
-  "module": "version-control",
+  "moduleSlug": "version-control",
   "sources": [
     {
       "title": "Git Documentation",

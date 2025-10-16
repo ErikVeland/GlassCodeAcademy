@@ -1,1141 +1,1170 @@
-{
-  "moduleSlug": "performance-optimization",
-  "title": "Performance Optimization Assessment",
-  "description": "Comprehensive quiz covering key concepts from the Performance Optimization module",
-  "totalQuestions": 48,
-  "passingScore": 70,
-  "timeLimit": 30,
-  "questions": [
-    {
-      "id": "1",
-      "question": "What are the trade-offs between different performance optimization approaches?",
-      "topic": "Profiling",
-      "difficulty": "Advanced",
-      "choices": [
-        "Aggressive optimization can improve performance but increase complexity and maintenance costs",
-        "More optimization is always better regardless of implementation complexity",
-        "Performance optimization has no impact on development time",
-        "Simple approaches are always superior to complex optimization strategies"
-      ],
-      "correctIndex": 0,
-      "explanation": "Performance optimization trade-offs involve balancing performance gains against increased complexity and maintenance costs. Aggressive optimization techniques can significantly improve performance but may make code harder to understand and maintain. The key is identifying critical performance bottlenecks and applying targeted optimizations where they provide the most benefit relative to their complexity cost.",
-      "industryContext": "Performance optimization decisions require careful cost-benefit analysis. Companies like Google and Facebook invest heavily in performance optimization, but they also maintain strict guidelines about when and how to apply optimizations. The principle of 'measure first, optimize second' helps ensure optimizations provide meaningful benefits.",
-      "tags": [
-        "performance",
-        "optimization",
-        "trade-offs",
-        "advanced"
-      ],
-      "questionType": "multiple-choice",
-      "estimatedTime": 90,
-      "correctAnswer": 0
-    },
-    {
-      "id": "2",
-      "question": "When should you use performance optimization techniques in web development?",
-      "topic": "Optimization",
-      "difficulty": "Beginner",
-      "choices": [
-        "When profiling identifies specific bottlenecks that impact user experience",
-        "Always apply all optimization techniques regardless of need",
-        "Never optimize until the application is completely broken",
-        "Only optimize during the initial development phase"
-      ],
-      "correctIndex": 0,
-      "explanation": "Performance optimization should be applied when profiling identifies specific bottlenecks that measurably impact user experience. Premature optimization can lead to unnecessary complexity without meaningful benefits. The approach should be data-driven, focusing on the most critical performance issues first, and validated through measurement to ensure improvements.",
-      "industryContext": "The 'premature optimization is the root of all evil' principle from Donald Knuth remains relevant in modern development. Companies use performance budgets and real user monitoring to identify when optimization is needed. Tools like Lighthouse and WebPageTest help identify optimization opportunities based on real metrics.",
-      "tags": [
-        "performance",
-        "optimization",
-        "profiling",
-        "beginner"
-      ],
-      "questionType": "multiple-choice",
-      "estimatedTime": 90,
-      "correctAnswer": 0
-    },
-    {
-      "id": "3",
-      "question": "How do you implement performance optimization in a production environment?",
-      "topic": "Performance",
-      "difficulty": "Intermediate",
-      "choices": [
-        "Use continuous monitoring, implement gradual rollouts, and maintain performance budgets",
-        "Apply all optimizations at once without testing",
-        "Ignore performance in production environments",
-        "Remove all features to improve performance"
-      ],
-      "correctIndex": 0,
-      "explanation": "Production performance optimization requires continuous monitoring to detect issues early, gradual rollouts to minimize risk, and performance budgets to prevent degradation. This approach ensures optimizations provide benefits without introducing instability. A/B testing can validate that performance improvements translate to better user experience and business metrics.",
-      "industryContext": "Production performance optimization is critical for maintaining user satisfaction and business metrics. Companies like Amazon and Netflix have sophisticated performance monitoring systems that alert teams to issues within minutes. Performance budgets are integrated into deployment pipelines to prevent performance regressions.",
-      "tags": [
-        "performance",
-        "production",
-        "monitoring",
-        "intermediate"
-      ],
-      "questionType": "multiple-choice",
-      "estimatedTime": 90,
-      "correctAnswer": 0
-    },
-    {
-      "id": "4",
-      "question": "What are the trade-offs between different performance optimization approaches?",
-      "topic": "Profiling",
-      "difficulty": "Advanced",
-      "choices": [
-        "Client-side optimization improves user experience but increases complexity; server-side optimization is simpler but may not address all bottlenecks",
-        "All optimization approaches are identical with no trade-offs",
-        "Server-side optimization is always superior to client-side approaches",
-        "Client-side optimization has no impact on user experience"
-      ],
-      "correctIndex": 0,
-      "explanation": "Performance optimization trade-offs include client-side optimization that directly improves user experience but can increase code complexity and maintenance burden, versus server-side optimization that's often simpler to implement but may not address all performance bottlenecks. Effective strategies typically combine both approaches, with client-side focusing on user-perceived performance and server-side addressing infrastructure efficiency.",
-      "industryContext": "Modern web performance requires holistic optimization strategies that address both client and server concerns. Companies like Google have developed comprehensive performance frameworks that combine client-side techniques like code splitting with server-side improvements like CDN optimization. The performance team at LinkedIn reduced page load time by 30% through coordinated client and server optimizations.",
-      "tags": [
-        "performance",
-        "optimization",
-        "trade-offs",
-        "advanced"
-      ],
-      "questionType": "multiple-choice",
-      "estimatedTime": 120,
-      "correctAnswer": 0
-    },
-    {
-      "id": "5",
-      "question": "Which pattern is most effective for performance optimization architecture?",
-      "topic": "Optimization",
-      "difficulty": "Intermediate",
-      "choices": [
-        "Layered approach with caching strategies, resource optimization, and monitoring systems",
-        "Single optimization technique applied to all components",
-        "No structured approach to performance optimization",
-        "Random application of optimization techniques"
-      ],
-      "correctIndex": 0,
-      "explanation": "Effective performance optimization architecture uses a layered approach combining caching strategies at multiple levels (browser, CDN, server), resource optimization techniques (minification, compression, lazy loading), and comprehensive monitoring systems to track performance metrics. This multi-layered strategy addresses performance bottlenecks at different points in the application stack.",
-      "industryContext": "Enterprise-scale applications require sophisticated performance architectures to handle complex optimization needs. Companies like Twitter and Instagram have developed multi-layered performance optimization systems that combine edge caching, resource optimization, and real-time monitoring. The performance team at Etsy published detailed case studies on their layered optimization approach.",
-      "tags": [
-        "performance",
-        "architecture",
-        "optimization-patterns",
-        "intermediate"
-      ],
-      "questionType": "multiple-choice",
-      "estimatedTime": 90,
-      "correctAnswer": 0
-    },
-    {
-      "id": "6",
-      "question": "What is the primary purpose of performance optimization in web development?",
-      "topic": "Performance",
-      "difficulty": "Beginner",
-      "choices": [
-        "Improve user experience through faster loading times, better responsiveness, and reduced resource consumption",
-        "Make applications slower to demonstrate technical complexity",
-        "Increase server costs through inefficient resource usage",
-        "Complicate development processes without user benefits"
-      ],
-      "correctIndex": 0,
-      "explanation": "The primary purpose of performance optimization is to improve user experience through faster loading times that reduce bounce rates, better responsiveness that enhances usability, and reduced resource consumption that lowers costs and environmental impact. Performance improvements directly correlate with business metrics like conversion rates and user engagement.",
-      "industryContext": "Web performance has direct business impact, with studies showing that even 100ms delays can reduce conversion rates by 7%. Companies like Google have made performance a ranking factor in search results. The performance team at Walmart found that every 1 second of improvement in page load time increased conversions by 2%.",
-      "tags": [
-        "performance",
-        "user-experience",
-        "business-impact",
-        "beginner"
-      ],
-      "questionType": "multiple-choice",
-      "estimatedTime": 90,
-      "correctAnswer": 0
-    },
-    {
-      "id": "7",
-      "question": "What are the performance considerations when using optimization techniques?",
-      "topic": "Profiling",
-      "difficulty": "Intermediate",
-      "choices": [
-        "Balance optimization benefits against implementation complexity and maintenance overhead",
-        "Apply maximum optimization regardless of complexity costs",
-        "Ignore performance considerations entirely",
-        "Use only the most complex optimization techniques"
-      ],
-      "correctIndex": 0,
-      "explanation": "Performance optimization considerations require balancing the benefits of optimization techniques against their implementation complexity and maintenance overhead. Not all optimizations provide sufficient benefit to justify their complexity cost. Profiling helps identify which optimizations will have the most significant impact on user experience while maintaining code maintainability.",
-      "industryContext": "Professional development teams use cost-benefit analysis to prioritize optimization efforts. The performance team at Facebook developed a framework for evaluating optimization proposals based on user impact versus implementation complexity. Google's performance guidelines emphasize measuring real user impact rather than just technical metrics.",
-      "tags": [
-        "performance",
-        "optimization",
-        "cost-benefit-analysis",
-        "intermediate"
-      ],
-      "questionType": "multiple-choice",
-      "estimatedTime": 90,
-      "correctAnswer": 0
-    },
-    {
-      "id": "8",
-      "question": "When should you use performance optimization in development workflows?",
-      "topic": "Optimization",
-      "difficulty": "Beginner",
-      "choices": [
-        "Integrate performance considerations throughout development with automated testing and monitoring",
-        "Apply all optimizations only after development is complete",
-        "Ignore performance during development and fix issues later",
-        "Focus exclusively on performance to the exclusion of all other concerns"
-      ],
-      "correctIndex": 0,
-      "explanation": "Performance optimization should be integrated throughout the development workflow with automated testing to catch regressions early and continuous monitoring to track real-world performance. This approach prevents performance issues from accumulating and becoming difficult to resolve. Performance budgets in CI/CD pipelines help maintain consistent performance standards.",
-      "industryContext": "Modern development practices integrate performance considerations throughout the development lifecycle. Companies like Netflix and Airbnb have implemented performance gates in their CI/CD pipelines that prevent deployment of code that degrades performance. The shift-left approach to performance testing has become standard in DevOps practices.",
-      "tags": [
-        "performance",
-        "development-workflow",
-        "ci-cd",
-        "beginner"
-      ],
-      "questionType": "multiple-choice",
-      "estimatedTime": 90,
-      "correctAnswer": 0
-    },
-    {
-      "id": "9",
-      "question": "What is the primary purpose of implementing performance optimization strategies?",
-      "topic": "Performance",
-      "difficulty": "Beginner",
-      "choices": [
-        "Enhance user experience through reduced load times, improved responsiveness, and efficient resource usage",
-        "Slow down applications to demonstrate technical expertise",
-        "Increase server resource consumption for better performance visualization",
-        "Complicate simple applications with unnecessary optimization techniques"
-      ],
-      "correctIndex": 0,
-      "explanation": "The primary purpose of performance optimization strategies is to enhance user experience through reduced load times that improve engagement, better responsiveness that makes applications feel faster, and efficient resource usage that reduces costs and environmental impact. These improvements directly correlate with business success metrics like conversion rates and user retention.",
-      "industryContext": "Performance optimization has measurable business impact, with Amazon finding that every 100ms of improvement increased revenue by 1%. Google made page speed a ranking factor because faster sites provide better user experience. The BBC found that losing 1 second of performance resulted in a 10% loss in users.",
-      "tags": [
-        "performance",
-        "user-experience",
-        "business-impact",
-        "beginner"
-      ],
-      "questionType": "multiple-choice",
-      "estimatedTime": 90,
-      "correctAnswer": 0
-    },
-    {
-      "id": "10",
-      "question": "What are the performance considerations when using optimization techniques?",
-      "topic": "Profiling",
-      "difficulty": "Intermediate",
-      "choices": [
-        "Measure actual user impact, consider maintenance costs, and validate improvements with real data",
-        "Apply all possible optimizations regardless of user benefit",
-        "Ignore performance metrics and focus only on code aesthetics",
-        "Use theoretical performance improvements without real-world validation"
-      ],
-      "correctIndex": 0,
-      "explanation": "Performance optimization considerations include measuring actual user impact rather than just technical metrics, considering the maintenance costs of complex optimization techniques, and validating improvements with real user data rather than synthetic benchmarks. Effective optimization focuses on improvements that users will actually notice and benefit from in real-world usage scenarios.",
-      "industryContext": "Professional performance teams use real user monitoring (RUM) data to guide optimization decisions. Companies like Twitter and LinkedIn have shared case studies showing how focusing on user-perceived performance metrics led to more effective optimizations than traditional technical metrics. The performance team at Etsy developed a framework for prioritizing optimizations based on user impact data.",
-      "tags": [
-        "performance",
-        "optimization",
-        "user-impact",
-        "intermediate"
-      ],
-      "questionType": "multiple-choice",
-      "estimatedTime": 90,
-      "correctAnswer": 0
-    },
-    {
-      "id": "11",
-      "question": "When should you use performance optimization techniques in application development?",
-      "topic": "Optimization",
-      "difficulty": "Beginner",
-      "choices": [
-        "When profiling identifies specific bottlenecks that impact user experience metrics",
-        "Always apply maximum optimization regardless of actual performance issues",
-        "Never optimize until users complain about performance problems",
-        "Apply optimizations randomly without measuring their effectiveness"
-      ],
-      "correctIndex": 0,
-      "explanation": "Performance optimization techniques should be applied when profiling identifies specific bottlenecks that measurably impact user experience metrics like load time, responsiveness, and conversion rates. This data-driven approach ensures optimization efforts provide meaningful benefits. Premature optimization can lead to increased complexity without corresponding user benefits.",
-      "industryContext": "The principle of 'measure first, optimize second' is fundamental to effective performance improvement. Companies like Google and Microsoft have developed sophisticated profiling tools and methodologies to identify optimization opportunities. Performance budgets integrated into development workflows help teams focus on impactful optimizations.",
-      "tags": [
-        "performance",
-        "optimization",
-        "profiling",
-        "beginner"
-      ],
-      "questionType": "multiple-choice",
-      "estimatedTime": 90,
-      "correctAnswer": 0
-    },
-    {
-      "id": "12",
-      "question": "What is the primary purpose of performance optimization in modern web applications?",
-      "topic": "Performance",
-      "difficulty": "Beginner",
-      "choices": [
-        "Improve user satisfaction through faster interactions, reduced resource consumption, and better overall experience",
-        "Make applications intentionally slower to demonstrate optimization skills",
-        "Increase server costs through inefficient resource utilization",
-        "Complicate simple applications with unnecessary technical complexity"
-      ],
-      "correctIndex": 0,
-      "explanation": "The primary purpose of performance optimization in modern web applications is to improve user satisfaction through faster interactions that reduce bounce rates, reduced resource consumption that lowers costs, and better overall experience that increases engagement. Performance improvements directly correlate with business success metrics like conversion rates and user retention.",
-      "industryContext": "Web performance has direct business impact, with studies showing that 53% of mobile users abandon sites that take longer than 3 seconds to load. Companies like Pinterest saw a 15% increase in SEO traffic and 15% increase in conversion rates after improving performance. Google's Core Web Vitals initiative makes performance a key ranking factor.",
-      "tags": [
-        "performance",
-        "user-satisfaction",
-        "business-impact",
-        "beginner"
-      ],
-      "questionType": "multiple-choice",
-      "estimatedTime": 90,
-      "correctAnswer": 0
-    },
-    {
-      "id": "13",
-      "question": "What are the performance considerations when using optimization approaches?",
-      "topic": "Profiling",
-      "difficulty": "Intermediate",
-      "choices": [
-        "Balance user experience improvements against implementation complexity and maintenance costs",
-        "Apply maximum optimization regardless of complexity or maintenance impact",
-        "Ignore performance considerations and focus only on feature development",
-        "Use only the most complex optimization techniques available"
-      ],
-      "correctIndex": 0,
-      "explanation": "Performance optimization considerations require balancing user experience improvements against implementation complexity and maintenance costs. Not all optimizations provide sufficient user benefit to justify their complexity cost. Effective optimization focuses on techniques that provide significant user-perceived improvements while maintaining code quality and team productivity.",
-      "industryContext": "Professional development teams use cost-benefit analysis to prioritize optimization efforts. The performance team at Facebook developed frameworks for evaluating optimization proposals based on user impact versus implementation complexity. Google's performance guidelines emphasize measuring real user impact rather than just technical metrics.",
-      "tags": [
-        "performance",
-        "optimization",
-        "cost-benefit-analysis",
-        "intermediate"
-      ],
-      "questionType": "multiple-choice",
-      "estimatedTime": 90,
-      "correctAnswer": 0
-    },
-    {
-      "id": "14",
-      "question": "How do you troubleshoot complex performance optimization issues?",
-      "topic": "Optimization",
-      "difficulty": "Advanced",
-      "choices": [
-        "Use systematic profiling, analyze performance traces, implement targeted fixes, and validate with real user data",
-        "Apply random optimizations until performance improves",
-        "Ignore performance issues and hope they resolve themselves",
-        "Remove all performance optimizations to simplify troubleshooting"
-      ],
-      "correctIndex": 0,
-      "explanation": "Troubleshooting complex performance optimization issues requires systematic profiling to identify bottlenecks, analyzing performance traces to understand root causes, implementing targeted fixes based on data rather than assumptions, and validating improvements with real user data rather than synthetic tests. This methodical approach ensures effective resolution of performance problems.",
-      "industryContext": "Complex performance issues require sophisticated troubleshooting approaches. Companies like Netflix and LinkedIn have developed advanced profiling and monitoring systems to identify and resolve complex performance problems. The performance team at Twitter published detailed case studies on their systematic approach to troubleshooting performance regressions.",
-      "tags": [
-        "performance",
-        "troubleshooting",
-        "profiling",
-        "advanced"
-      ],
-      "questionType": "multiple-choice",
-      "estimatedTime": 120,
-      "correctAnswer": 0
-    },
-    {
-      "id": "15",
-      "question": "What is the primary purpose of performance optimization techniques?",
-      "topic": "Performance",
-      "difficulty": "Beginner",
-      "choices": [
-        "Enhance application speed, reduce resource consumption, and improve user experience",
-        "Slow down applications to demonstrate technical expertise",
-        "Increase server resource usage for better visualization",
-        "Complicate simple applications with unnecessary complexity"
-      ],
-      "correctIndex": 0,
-      "explanation": "The primary purpose of performance optimization techniques is to enhance application speed through faster load times and better responsiveness, reduce resource consumption to lower costs and environmental impact, and improve user experience through smoother interactions and reduced wait times. These improvements directly correlate with business success metrics.",
-      "industryContext": "Performance optimization has measurable business impact, with Akamai finding that 40% of users abandon sites that take more than 3 seconds to load. Companies like AutoAnything saw a 12.5% increase in sales after reducing page load time by half. Google's research shows that the probability of bounce increases exponentially with page load time.",
-      "tags": [
-        "performance",
-        "optimization",
-        "user-experience",
-        "beginner"
-      ],
-      "questionType": "multiple-choice",
-      "estimatedTime": 90,
-      "correctAnswer": 0
-    },
-    {
-      "id": "16",
-      "question": "What are the performance considerations when using optimization strategies?",
-      "topic": "Profiling",
-      "difficulty": "Intermediate",
-      "choices": [
-        "Measure real user impact, consider implementation costs, and validate improvements with data",
-        "Apply all possible optimizations regardless of user benefit or complexity",
-        "Ignore performance metrics and focus only on code aesthetics",
-        "Use theoretical improvements without real-world validation"
-      ],
-      "correctIndex": 0,
-      "explanation": "Performance optimization considerations include measuring real user impact rather than just technical metrics, considering the implementation costs of complex techniques, and validating improvements with real user data rather than synthetic benchmarks. Effective optimization focuses on improvements that users will actually notice and benefit from in real-world usage scenarios.",
-      "industryContext": "Professional performance teams use real user monitoring (RUM) data to guide optimization decisions. Companies like Twitter and LinkedIn have shared case studies showing how focusing on user-perceived performance metrics led to more effective optimizations than traditional technical metrics. The performance team at Etsy developed frameworks for prioritizing optimizations based on user impact data.",
-      "tags": [
-        "performance",
-        "optimization",
-        "user-impact",
-        "intermediate"
-      ],
-      "questionType": "multiple-choice",
-      "estimatedTime": 90,
-      "correctAnswer": 0
-    },
-    {
-      "id": "17",
-      "question": "What is First Contentful Paint (FCP) and why is it important?",
-      "topic": "Core Web Vitals",
-      "difficulty": "Beginner",
-      "choices": [
-        "The time when the browser renders the first piece of DOM content; important for perceived loading speed",
-        "The time when all resources are fully loaded; important for SEO rankings",
-        "The time when the largest element is rendered; important for user engagement",
-        "The time when the page becomes interactive; important for user experience"
-      ],
-      "correctIndex": 0,
-      "explanation": "First Contentful Paint (FCP) measures the time from when the page starts loading to when any part of the page's content is rendered on the screen. It's important because it marks the first visual feedback users receive, which significantly impacts their perception of loading speed.",
-      "industryContext": "FCP is one of Google's Core Web Vitals metrics that directly affects search rankings. Websites with good FCP scores (under 1.8 seconds) typically see better user engagement and lower bounce rates.",
-      "tags": [
-        "Core Web Vitals",
-        "beginner",
-        "performance"
-      ],
-      "questionType": "multiple-choice",
-      "estimatedTime": 45,
-      "correctAnswer": 0
-    },
-    {
-      "id": "18",
-      "question": "Which HTTP header helps browsers prioritize resource loading?",
-      "topic": "Resource Loading",
-      "difficulty": "Beginner",
-      "choices": [
-        "Priority Hints (e.g., fetchpriority='high')",
-        "Content-Type header",
-        "Cache-Control header",
-        "Accept-Encoding header"
-      ],
-      "correctIndex": 0,
-      "explanation": "Priority Hints allow developers to communicate the relative importance of resources to the browser, helping it make better decisions about which resources to load first. This can significantly improve loading performance by ensuring critical resources are loaded before less important ones.",
-      "industryContext": "Priority Hints are supported in modern browsers and are part of the Resource Prioritization API. Major websites like Twitter and LinkedIn have seen measurable improvements in loading times by properly implementing resource prioritization.",
-      "tags": [
-        "Resource Loading",
-        "beginner",
-        "performance"
-      ],
-      "questionType": "multiple-choice",
-      "estimatedTime": 45,
-      "correctAnswer": 0
-    },
-    {
-      "id": "19",
-      "question": "What is the primary benefit of code splitting in web applications?",
-      "topic": "Code Splitting",
-      "difficulty": "Beginner",
-      "choices": [
-        "Reduces initial bundle size and improves loading time",
-        "Eliminates all JavaScript from the application",
-        "Makes code more secure by encrypting it",
-        "Automatically fixes all performance issues"
-      ],
-      "correctIndex": 0,
-      "explanation": "Code splitting breaks down large JavaScript bundles into smaller chunks that can be loaded on demand. This reduces the initial payload that needs to be downloaded and parsed, leading to faster initial page loads and better user experience.",
-      "industryContext": "Code splitting is a fundamental optimization technique used by all major web applications. Frameworks like React, Vue, and Angular provide built-in support for code splitting, and it's considered a best practice for modern web development.",
-      "tags": [
-        "Code Splitting",
-        "beginner",
-        "performance"
-      ],
-      "questionType": "multiple-choice",
-      "estimatedTime": 45,
-      "correctAnswer": 0
-    },
-    {
-      "id": "20",
-      "question": "What does the 'defer' attribute do on a script tag?",
-      "topic": "Script Loading",
-      "difficulty": "Beginner",
-      "choices": [
-        "Downloads the script in the background and executes it after HTML parsing is complete",
-        "Prevents the script from executing entirely",
-        "Loads the script synchronously, blocking HTML parsing",
-        "Caches the script for future page loads"
-      ],
-      "correctIndex": 0,
-      "explanation": "The 'defer' attribute tells the browser to download the script in the background while continuing to parse the HTML. The script will execute after the HTML parsing is complete, in the order they appear in the document. This prevents render-blocking and improves page load performance.",
-      "industryContext": "Using 'defer' for non-critical scripts is a standard practice in web development. It's particularly important for scripts that need access to the DOM but don't need to run immediately, allowing the page to render faster.",
-      "tags": [
-        "Script Loading",
-        "beginner",
-        "performance"
-      ],
-      "questionType": "multiple-choice",
-      "estimatedTime": 45,
-      "correctAnswer": 0
-    },
-    {
-      "id": "21",
-      "question": "What is the purpose of image compression in web performance?",
-      "topic": "Image Optimization",
-      "difficulty": "Beginner",
-      "choices": [
-        "Reduce file size to decrease loading times and bandwidth usage",
-        "Increase image quality for better visual appearance",
-        "Encrypt images for security purposes",
-        "Convert all images to vector formats"
-      ],
-      "correctIndex": 0,
-      "explanation": "Image compression reduces the file size of images without significantly compromising quality, which leads to faster loading times and reduced bandwidth consumption. This is crucial because images often make up the largest portion of a webpage's total file size.",
-      "industryContext": "Image optimization can reduce page load times by 20-50% on many websites. Tools like ImageOptim, TinyPNG, and automated services like Cloudinary are widely used by professional developers to optimize images.",
-      "tags": [
-        "Image Optimization",
-        "beginner",
-        "performance"
-      ],
-      "questionType": "multiple-choice",
-      "estimatedTime": 45,
-      "correctAnswer": 0
-    },
-    {
-      "id": "22",
-      "question": "What is lazy loading and when should it be used?",
-      "topic": "Resource Loading",
-      "difficulty": "Beginner",
-      "choices": [
-        "Loading resources only when they're needed (e.g., when they come into view); useful for images below the fold",
-        "Loading all resources at once for faster interaction; useful for small websites",
-        "Loading resources in reverse order; useful for SEO",
-        "Loading resources twice for redundancy; useful for critical applications"
-      ],
-      "correctIndex": 0,
-      "explanation": "Lazy loading defers the loading of non-critical resources until they're actually needed, typically when they come into the viewport. This reduces initial page load time and saves bandwidth, especially beneficial for pages with many images or components below the fold.",
-      "industryContext": "Lazy loading is supported natively by modern browsers through the 'loading' attribute on images and iframes. It's a key technique for improving Core Web Vitals, particularly LCP (Largest Contentful Paint).",
-      "tags": [
-        "Resource Loading",
-        "beginner",
-        "performance"
-      ],
-      "questionType": "multiple-choice",
-      "estimatedTime": 45,
-      "correctAnswer": 0
-    },
-    {
-      "id": "23",
-      "question": "What is browser caching and how does it improve performance?",
-      "topic": "Caching",
-      "difficulty": "Beginner",
-      "choices": [
-        "Storing copies of resources locally to avoid re-downloading; reduces server requests and load times",
-        "Encrypting data for security; prevents unauthorized access",
-        "Compressing all files automatically; reduces bandwidth usage",
-        "Loading all resources at once; improves initial load time"
-      ],
-      "correctIndex": 0,
-      "explanation": "Browser caching stores copies of resources (like images, CSS, and JavaScript files) locally on the user's device. When the user revisits the site, these cached resources can be loaded instantly instead of being downloaded again, dramatically reducing load times for repeat visits.",
-      "industryContext": "Proper caching strategies can reduce server load by up to 80% and improve repeat visit performance significantly. HTTP caching headers like Cache-Control are essential for implementing effective browser caching.",
-      "tags": [
-        "Caching",
-        "beginner",
-        "performance"
-      ],
-      "questionType": "multiple-choice",
-      "estimatedTime": 45,
-      "correctAnswer": 0
-    },
-    {
-      "id": "24",
-      "question": "What is the benefit of using a Content Delivery Network (CDN)?",
-      "topic": "Infrastructure",
-      "difficulty": "Beginner",
-      "choices": [
-        "Serves content from servers closer to users; reduces latency and improves load times",
-        "Encrypts all website data; improves security",
-        "Automatically optimizes all images; reduces file sizes",
-        "Blocks all malicious traffic; prevents hacking"
-      ],
-      "correctIndex": 0,
-      "explanation": "A CDN distributes content across multiple geographically dispersed servers, allowing users to download resources from the server closest to them. This reduces latency by minimizing the physical distance data must travel, resulting in faster load times for users worldwide.",
-      "industryContext": "CDNs are used by 80% of websites and can reduce page load times by 20-60% depending on user location. Major CDNs like Cloudflare, Akamai, and AWS CloudFront serve trillions of requests daily.",
-      "tags": [
-        "Infrastructure",
-        "beginner",
-        "performance"
-      ],
-      "questionType": "multiple-choice",
-      "estimatedTime": 45,
-      "correctAnswer": 0
-    },
-    {
-      "id": "25",
-      "question": "What does the 'async' attribute do on a script tag?",
-      "topic": "Script Loading",
-      "difficulty": "Beginner",
-      "choices": [
-        "Downloads the script in the background and executes it as soon as it's ready, potentially before HTML parsing completes",
-        "Prevents the script from executing entirely",
-        "Loads the script synchronously, blocking HTML parsing",
-        "Defers execution until after HTML parsing is complete"
-      ],
-      "correctIndex": 0,
-      "explanation": "The 'async' attribute allows the script to be downloaded in the background without blocking HTML parsing. The script will execute as soon as it finishes downloading, which means it might run before HTML parsing is complete. This is ideal for independent scripts that don't rely on the DOM.",
-      "industryContext": "Async scripts are commonly used for analytics, ads, and other third-party scripts that don't depend on the page's DOM. However, they should be used carefully as they can execute in any order.",
-      "tags": [
-        "Script Loading",
-        "beginner",
-        "performance"
-      ],
-      "questionType": "multiple-choice",
-      "estimatedTime": 45,
-      "correctAnswer": 0
-    },
-    {
-      "id": "26",
-      "question": "What is the purpose of minification in web development?",
-      "topic": "Build Optimization",
-      "difficulty": "Beginner",
-      "choices": [
-        "Removing unnecessary characters (whitespace, comments) to reduce file size",
-        "Adding comments to make code more readable",
-        "Encrypting code for security",
-        "Converting code to a different programming language"
-      ],
-      "correctIndex": 0,
-      "explanation": "Minification removes unnecessary characters like whitespace, comments, and line breaks from code files without changing functionality. This significantly reduces file sizes, leading to faster downloads and improved page load performance.",
-      "industryContext": "Minification is a standard part of modern build processes. Tools like UglifyJS, Terser, and CSSNano are commonly used in build pipelines. Minification can reduce JavaScript and CSS file sizes by 20-80%.",
-      "tags": [
-        "Build Optimization",
-        "beginner",
-        "performance"
-      ],
-      "questionType": "multiple-choice",
-      "estimatedTime": 45,
-      "correctAnswer": 0
-    },
-    {
-      "id": "27",
-      "question": "What is Largest Contentful Paint (LCP) and why does it matter?",
-      "topic": "Core Web Vitals",
-      "difficulty": "Beginner",
-      "choices": [
-        "Measures when the largest content element becomes visible; key user experience metric",
-        "Measures when the first element becomes visible; loading speed indicator",
-        "Measures when the page becomes interactive; responsiveness metric",
-        "Measures visual stability; layout shift indicator"
-      ],
-      "correctIndex": 0,
-      "explanation": "Largest Contentful Paint (LCP) measures the time when the largest content element (image or text block) becomes visible in the viewport. It's a key user experience metric because it indicates when the main content of the page has loaded.",
-      "industryContext": "LCP is one of Google's Core Web Vitals and directly impacts search rankings. A good LCP score is under 2.5 seconds. Optimizing LCP often involves image optimization, code splitting, and server response improvements.",
-      "tags": [
-        "Core Web Vitals",
-        "beginner",
-        "performance"
-      ],
-      "questionType": "multiple-choice",
-      "estimatedTime": 45,
-      "correctAnswer": 0
-    },
-    {
-      "id": "28",
-      "question": "What is Cumulative Layout Shift (CLS) and how can it be minimized?",
-      "topic": "Core Web Vitals",
-      "difficulty": "Beginner",
-      "choices": [
-        "Measures unexpected layout shifts; minimized by reserving space for elements",
-        "Measures loading speed; minimized by reducing file sizes",
-        "Measures interactivity; minimized by optimizing JavaScript",
-        "Measures visual appeal; minimized by improving design"
-      ],
-      "correctIndex": 0,
-      "explanation": "Cumulative Layout Shift (CLS) measures the amount of unexpected layout shift that occurs during a page's lifecycle. It's minimized by reserving space for elements that will load later (images, videos, fonts) and avoiding dynamically injected content without proper sizing.",
-      "industryContext": "CLS is a Core Web Vitals metric that directly impacts user experience and search rankings. Websites with good CLS scores (under 0.1) have better user engagement and fewer accidental clicks on shifting elements.",
-      "tags": [
-        "Core Web Vitals",
-        "beginner",
-        "performance"
-      ],
-      "questionType": "multiple-choice",
-      "estimatedTime": 45,
-      "correctAnswer": 0
-    },
-    {
-      "id": "29",
-      "question": "What is the difference between service workers and HTTP caching?",
-      "topic": "Caching",
-      "difficulty": "Intermediate",
-      "choices": [
-        "Service workers provide programmatic caching with offline support; HTTP caching is server-controlled",
-        "Service workers are faster; HTTP caching is slower",
-        "Service workers only work offline; HTTP caching only works online",
-        "There is no difference; they are the same thing"
-      ],
-      "correctIndex": 0,
-      "explanation": "HTTP caching is controlled by server headers and handled automatically by the browser. Service workers are JavaScript files that run in the background, allowing developers to programmatically cache resources and provide offline functionality with fine-grained control over caching strategies.",
-      "industryContext": "Service workers are essential for Progressive Web Apps (PWAs) and offline functionality. They enable advanced caching strategies like cache-first, network-first, and stale-while-revalidate patterns that aren't possible with HTTP caching alone.",
-      "tags": [
-        "Caching",
-        "intermediate",
-        "performance"
-      ],
-      "questionType": "multiple-choice",
-      "estimatedTime": 60,
-      "correctAnswer": 0
-    },
-    {
-      "id": "30",
-      "question": "What is tree shaking and how does it improve bundle size?",
-      "topic": "Build Optimization",
-      "difficulty": "Intermediate",
-      "choices": [
-        "Removes unused code during the build process by analyzing import/export statements",
-        "Compresses code by removing whitespace and comments",
-        "Splits code into smaller bundles automatically",
-        "Encrypts code to make it smaller"
-      ],
-      "correctIndex": 0,
-      "explanation": "Tree shaking is a dead code elimination technique that removes unused exports from modules during the build process. It works by analyzing static import/export statements to determine which code is actually used, then excluding unused code from the final bundle.",
-      "industryContext": "Tree shaking is supported by modern bundlers like Webpack, Rollup, and Vite. It can reduce bundle sizes by 10-50% in applications with many dependencies, especially when using libraries that export many individual functions.",
-      "tags": [
-        "Build Optimization",
-        "intermediate",
-        "performance"
-      ],
-      "questionType": "multiple-choice",
-      "estimatedTime": 60,
-      "correctAnswer": 0
-    },
-    {
-      "id": "31",
-      "question": "What is the purpose of requestIdleCallback in performance optimization?",
-      "topic": "Runtime Optimization",
-      "difficulty": "Intermediate",
-      "choices": [
-        "Schedule non-critical work during browser idle periods to avoid blocking UI updates",
-        "Cancel network requests that are taking too long",
-        "Prioritize critical network requests",
-        "Cache API responses for faster retrieval"
-      ],
-      "correctIndex": 0,
-      "explanation": "requestIdleCallback allows developers to schedule non-critical work to run during browser idle periods when the main thread is not busy. This prevents performance-intensive tasks from blocking UI updates and user interactions, maintaining a smooth user experience.",
-      "industryContext": "requestIdleCallback is used by major libraries and frameworks for scheduling analytics, logging, and other non-critical tasks. It's particularly important for maintaining 60fps animations and responsive interfaces in complex applications.",
-      "tags": [
-        "Runtime Optimization",
-        "intermediate",
-        "performance"
-      ],
-      "questionType": "multiple-choice",
-      "estimatedTime": 60,
-      "correctAnswer": 0
-    },
-    {
-      "id": "32",
-      "question": "How does virtual scrolling improve performance for large lists?",
-      "topic": "Runtime Optimization",
-      "difficulty": "Intermediate",
-      "choices": [
-        "Only renders visible items and a small buffer, reducing DOM nodes and memory usage",
-        "Compresses list data to reduce file size",
-        "Loads list items from a CDN for faster delivery",
-        "Caches list items in localStorage for instant access"
-      ],
-      "correctIndex": 0,
-      "explanation": "Virtual scrolling renders only the items that are currently visible in the viewport plus a small buffer, rather than rendering all items at once. This dramatically reduces the number of DOM nodes, memory usage, and rendering time, making it possible to efficiently display lists with thousands of items.",
-      "industryContext": "Virtual scrolling is used by major applications like Twitter, Facebook, and Excel Online to handle large datasets. Libraries like react-window and react-virtualized have made this technique accessible to developers building data-intensive applications.",
-      "tags": [
-        "Runtime Optimization",
-        "intermediate",
-        "performance"
-      ],
-      "questionType": "multiple-choice",
-      "estimatedTime": 60,
-      "correctAnswer": 0
-    },
-    {
-      "id": "33",
-      "question": "What is the critical rendering path and why is it important?",
-      "topic": "Rendering",
-      "difficulty": "Intermediate",
-      "choices": [
-        "The sequence of steps the browser takes to convert HTML/CSS/JS into pixels; optimizing it reduces load time",
-        "The most important CSS rules for styling; optimizing it improves design consistency",
-        "The path network requests take to reach the server; optimizing it reduces latency",
-        "The order in which JavaScript files are executed; optimizing it reduces errors"
-      ],
-      "correctIndex": 0,
-      "explanation": "The critical rendering path is the sequence of steps the browser takes to process HTML, CSS, and JavaScript and render pixels to the screen. Optimizing this path involves minimizing critical resources, reducing critical bytes, and shortening critical path length to achieve faster first render.",
-      "industryContext": "Understanding and optimizing the critical rendering path is fundamental to web performance. Techniques like inlining critical CSS, deferring non-critical JavaScript, and optimizing font loading all target improvements to the critical rendering path.",
-      "tags": [
-        "Rendering",
-        "intermediate",
-        "performance"
-      ],
-      "questionType": "multiple-choice",
-      "estimatedTime": 60,
-      "correctAnswer": 0
-    },
-    {
-      "id": "34",
-      "question": "What is the benefit of using CSS containment properties?",
-      "topic": "Rendering",
-      "difficulty": "Intermediate",
-      "choices": [
-        "Isolates parts of the DOM to limit scope of layout, style, and paint calculations",
-        "Compresses CSS files to reduce file size",
-        "Encrypts CSS for security purposes",
-        "Automatically optimizes CSS selectors for performance"
-      ],
-      "correctIndex": 0,
-      "explanation": "CSS containment properties (contain: layout, style, paint) create boundaries that isolate parts of the DOM, preventing changes in one area from affecting others. This limits the scope of browser calculations for layout, style, and paint operations, improving rendering performance.",
-      "industryContext": "CSS containment is supported in all modern browsers and is particularly valuable for component-based architectures. Frameworks like React and Vue benefit from containment when rendering large component trees or complex UIs.",
-      "tags": [
-        "Rendering",
-        "intermediate",
-        "performance"
-      ],
-      "questionType": "multiple-choice",
-      "estimatedTime": 60,
-      "correctAnswer": 0
-    },
-    {
-      "id": "35",
-      "question": "What is the purpose of the Performance API in web development?",
-      "topic": "Profiling",
-      "difficulty": "Intermediate",
-      "choices": [
-        "Measure and analyze real user performance metrics for optimization decisions",
-        "Automatically optimize website performance without developer intervention",
-        "Encrypt performance data for security purposes",
-        "Generate performance reports for stakeholders"
-      ],
-      "correctIndex": 0,
-      "explanation": "The Performance API provides a standardized way to access timing and performance data in the browser. It includes interfaces for measuring navigation timing, resource timing, user timing, and other performance metrics that help developers understand and optimize their applications.",
-      "industryContext": "The Performance API is the foundation for tools like Lighthouse, WebPageTest, and real user monitoring (RUM) services. It's essential for performance debugging and measuring the impact of optimization efforts in production.",
-      "tags": [
-        "Profiling",
-        "intermediate",
-        "performance"
-      ],
-      "questionType": "multiple-choice",
-      "estimatedTime": 60,
-      "correctAnswer": 0
-    },
-    {
-      "id": "36",
-      "question": "How does HTTP/2 improve web performance compared to HTTP/1.1?",
-      "topic": "Networking",
-      "difficulty": "Intermediate",
-      "choices": [
-        "Multiplexing allows multiple requests over a single connection, reducing latency",
-        "Encrypts all traffic automatically for better security",
-        "Compresses all files by default for smaller sizes",
-        "Caches all resources automatically for faster access"
-      ],
-      "correctIndex": 0,
-      "explanation": "HTTP/2 introduces multiplexing, which allows multiple requests and responses to be sent simultaneously over a single TCP connection. This eliminates the head-of-line blocking problem in HTTP/1.1 and reduces the latency associated with establishing multiple connections.",
-      "industryContext": "HTTP/2 adoption has grown to over 90% of websites. The performance benefits are most noticeable on websites with many resources, where connection overhead was previously a significant bottleneck.",
-      "tags": [
-        "Networking",
-        "intermediate",
-        "performance"
-      ],
-      "questionType": "multiple-choice",
-      "estimatedTime": 60,
-      "correctAnswer": 0
-    },
-    {
-      "id": "37",
-      "question": "What is the benefit of using resource hints like preconnect and prefetch?",
-      "topic": "Resource Loading",
-      "difficulty": "Intermediate",
-      "choices": [
-        "Preconnect establishes early connections to third-party origins; prefetch downloads likely next resources",
-        "Preconnect encrypts connections for security; prefetch compresses resources",
-        "Preconnect blocks all third-party requests; prefetch deletes unused resources",
-        "Preconnect and prefetch are the same thing with different names"
-      ],
-      "correctIndex": 0,
-      "explanation": "Resource hints help browsers optimize resource loading. Preconnect establishes early connections to third-party origins, reducing connection setup time. Prefetch downloads resources likely to be needed in the future, storing them in the HTTP cache for instant retrieval.",
-      "industryContext": "Resource hints are widely used by performance-conscious websites. Google, Facebook, and Twitter use preconnect for critical third-party resources like CDNs, analytics, and fonts to reduce latency by 100-500ms.",
-      "tags": [
-        "Resource Loading",
-        "intermediate",
-        "performance"
-      ],
-      "questionType": "multiple-choice",
-      "estimatedTime": 60,
-      "correctAnswer": 0
-    },
-    {
-      "id": "38",
-      "question": "What is the purpose of the Intersection Observer API?",
-      "topic": "Runtime Optimization",
-      "difficulty": "Intermediate",
-      "choices": [
-        "Efficiently detect when elements enter or exit the viewport without scroll events",
-        "Observe network connection quality to adjust loading strategies",
-        "Monitor user interaction patterns for analytics",
-        "Track browser window resize events for responsive design"
-      ],
-      "correctIndex": 0,
-      "explanation": "The Intersection Observer API provides an efficient way to detect when elements intersect with the viewport or other elements. Unlike scroll events, it doesn't require constant polling and is much more performant for implementing features like lazy loading, infinite scrolling, and animation triggers.",
-      "industryContext": "The Intersection Observer API has largely replaced scroll event listeners for viewport detection. It's used by major libraries like Lodash and is the foundation for native lazy loading in modern browsers.",
-      "tags": [
-        "Runtime Optimization",
-        "intermediate",
-        "performance"
-      ],
-      "questionType": "multiple-choice",
-      "estimatedTime": 60,
-      "correctAnswer": 0
-    },
-    {
-      "id": "39",
-      "question": "How does Web Workers improve performance in JavaScript applications?",
-      "topic": "Runtime Optimization",
-      "difficulty": "Intermediate",
-      "choices": [
-        "Runs JavaScript in background threads, preventing UI blocking for heavy computations",
-        "Automatically optimizes JavaScript code for better performance",
-        "Caches JavaScript files for faster loading",
-        "Compresses JavaScript to reduce file size"
-      ],
-      "correctIndex": 0,
-      "explanation": "Web Workers allow JavaScript code to run in background threads separate from the main UI thread. This prevents heavy computational tasks from blocking the UI and causing unresponsive pages, enabling smooth user experiences even during intensive processing.",
-      "industryContext": "Web Workers are essential for applications that perform heavy computations like image processing, data analysis, or complex calculations. Libraries like Comlink have made Web Workers more accessible for modern JavaScript development.",
-      "tags": [
-        "Runtime Optimization",
-        "intermediate",
-        "performance"
-      ],
-      "questionType": "multiple-choice",
-      "estimatedTime": 60,
-      "correctAnswer": 0
-    },
-    {
-      "id": "40",
-      "question": "What is the benefit of using CSS Grid and Flexbox over traditional layout methods?",
-      "topic": "Rendering",
-      "difficulty": "Intermediate",
-      "choices": [
-        "More efficient rendering with fewer DOM elements and better browser optimization",
-        "Better browser support for older browsers",
-        "Automatic responsive design without media queries",
-        "Built-in animation capabilities"
-      ],
-      "correctIndex": 0,
-      "explanation": "CSS Grid and Flexbox provide more efficient layout mechanisms compared to float-based or table-based layouts. They require fewer wrapper elements, are optimized by browsers, and provide more predictable rendering behavior, leading to better performance and maintainability.",
-      "industryContext": "Modern browsers have highly optimized implementations of Grid and Flexbox layout algorithms. Websites that have migrated from traditional layout methods to Grid/Flexbox often see measurable improvements in rendering performance and reduced CSS complexity.",
-      "tags": [
-        "Rendering",
-        "intermediate",
-        "performance"
-      ],
-      "questionType": "multiple-choice",
-      "estimatedTime": 60,
-      "correctAnswer": 0
-    },
-    {
-      "id": "41",
-      "question": "What is the purpose of the Paint Timing API and how is it used?",
-      "topic": "Profiling",
-      "difficulty": "Advanced",
-      "choices": [
-        "Measures First Paint and First Contentful Paint for performance monitoring",
-        "Controls when elements are painted to the screen for animations",
-        "Encrypts paint operations for security purposes",
-        "Automatically optimizes paint operations for better performance"
-      ],
-      "correctIndex": 0,
-      "explanation": "The Paint Timing API provides access to First Paint (FP) and First Contentful Paint (FCP) metrics through the Performance API. It allows developers to programmatically measure these critical user experience metrics and send them to analytics services for monitoring and optimization.",
-      "industryContext": "The Paint Timing API is part of the Core Web Vitals measurement suite and is used by RUM (Real User Monitoring) tools like Google Analytics 4, New Relic, and Datadog to track user experience metrics in production environments.",
-      "tags": [
-        "Profiling",
-        "advanced",
-        "performance"
-      ],
-      "questionType": "multiple-choice",
-      "estimatedTime": 90,
-      "correctAnswer": 0
-    },
-    {
-      "id": "42",
-      "question": "What are the performance implications of using CSS custom properties (variables)?",
-      "topic": "Rendering",
-      "difficulty": "Advanced",
-      "choices": [
-        "Can cause performance issues with frequent updates due to recalculation scope",
-        "Always improve performance by reducing CSS file size",
-        "Have no performance impact as they're processed at build time",
-        "Automatically optimize rendering performance in all scenarios"
-      ],
-      "correctIndex": 0,
-      "explanation": "CSS custom properties can cause performance issues when frequently updated because they can trigger broader style recalculations compared to regular CSS properties. When a custom property changes, the browser may need to recalculate styles for all elements that inherit or use that property.",
-      "industryContext": "Performance-conscious developers carefully scope CSS custom properties and avoid animating them when possible. The CSS Working Group is aware of these performance characteristics and is working on optimizations for future browser versions.",
-      "tags": [
-        "Rendering",
-        "advanced",
-        "performance"
-      ],
-      "questionType": "multiple-choice",
-      "estimatedTime": 90,
-      "correctAnswer": 0
-    },
-    {
-      "id": "43",
-      "question": "How does the Event Loop impact JavaScript performance and what are optimization strategies?",
-      "topic": "Runtime Optimization",
-      "difficulty": "Advanced",
-      "choices": [
-        "Long tasks block the UI; optimize by breaking work into smaller chunks or using Web Workers",
-        "The Event Loop automatically optimizes JavaScript execution without developer intervention",
-        "Using more setTimeout calls improves Event Loop performance",
-        "The Event Loop only affects server-side JavaScript, not browser performance"
-      ],
-      "correctIndex": 0,
-      "explanation": "The Event Loop is single-threaded and processes tasks sequentially. Long-running JavaScript tasks can block the UI thread, causing unresponsive pages. Optimization strategies include breaking work into smaller chunks using requestIdleCallback or setTimeout, or moving intensive work to Web Workers.",
-      "industryContext": "Understanding the Event Loop is crucial for performance optimization. The Long Tasks API helps identify blocking operations, and frameworks like React use techniques like time slicing to work with the Event Loop for smooth user experiences.",
-      "tags": [
-        "Runtime Optimization",
-        "advanced",
-        "performance"
-      ],
-      "questionType": "multiple-choice",
-      "estimatedTime": 90,
-      "correctAnswer": 0
-    },
-    {
-      "id": "44",
-      "question": "What is the purpose of the Largest Contentful Paint (LCP) element and how do you optimize it?",
-      "topic": "Core Web Vitals",
-      "difficulty": "Advanced",
-      "choices": [
-        "Identify the main content element affecting LCP; optimize with lazy loading, CDN, and preloading",
-        "Remove the largest element to improve LCP score",
-        "Make all elements smaller to improve LCP",
-        "LCP element has no impact on performance metrics"
-      ],
-      "correctIndex": 0,
-      "explanation": "The LCP element is the largest content element that contributes to the Largest Contentful Paint metric. Optimizing it involves techniques like lazy loading non-critical images, using a CDN for faster delivery, preloading critical resources, and optimizing the element's size and format.",
-      "industryContext": "The LCP element is identified using the Element Timing API and Lighthouse. Websites often see significant LCP improvements by optimizing their hero images, videos, or large text blocks that typically serve as the LCP element.",
-      "tags": [
-        "Core Web Vitals",
-        "advanced",
-        "performance"
-      ],
-      "questionType": "multiple-choice",
-      "estimatedTime": 90,
-      "correctAnswer": 0
-    },
-    {
-      "id": "45",
-      "question": "What are the performance trade-offs of using CSS-in-JS libraries?",
-      "topic": "Rendering",
-      "difficulty": "Advanced",
-      "choices": [
-        "Runtime cost for style generation; potential for style recalculations on component updates",
-        "Always slower than traditional CSS due to additional JavaScript overhead",
-        "No performance impact as styles are pre-compiled",
-        "CSS-in-JS libraries automatically optimize all rendering performance"
-      ],
-      "correctIndex": 0,
-      "explanation": "CSS-in-JS libraries have runtime costs for generating and injecting styles, which can impact performance. They may cause style recalculations on component updates and can increase bundle size. However, they offer benefits like dynamic theming and component-scoped styles.",
-      "industryContext": "Performance-conscious teams carefully evaluate CSS-in-JS libraries and their runtime costs. Libraries like styled-components have introduced optimizations like static extraction, and some teams prefer zero-runtime alternatives like Linaria or vanilla extract.",
-      "tags": [
-        "Rendering",
-        "advanced",
-        "performance"
-      ],
-      "questionType": "multiple-choice",
-      "estimatedTime": 90,
-      "correctAnswer": 0
-    },
-    {
-      "id": "46",
-      "question": "How does browser speculative parsing affect performance and what are best practices?",
-      "topic": "Resource Loading",
-      "difficulty": "Advanced",
-      "choices": [
-        "Parses HTML ahead of time to discover resources; optimize with valid HTML and resource hints",
-        "Encrypts resources for faster loading",
-        "Automatically fixes HTML syntax errors",
-        "Only works with JavaScript-heavy applications"
-      ],
-      "correctIndex": 0,
-      "explanation": "Speculative parsing is when browsers parse HTML ahead of time to discover resources like images, scripts, and stylesheets before the main parser reaches them. This allows browsers to start downloading resources earlier. Best practices include writing valid HTML and using resource hints to guide speculative parsing.",
-      "industryContext": "Speculative parsing is implemented in all major browsers and can significantly reduce resource discovery time. Invalid HTML can prevent effective speculative parsing, which is why validation tools like W3C Markup Validator are important for performance optimization.",
-      "tags": [
-        "Resource Loading",
-        "advanced",
-        "performance"
-      ],
-      "questionType": "multiple-choice",
-      "estimatedTime": 90,
-      "correctAnswer": 0
-    },
-    {
-      "id": "47",
-      "question": "What is the impact of JavaScript bundle composition on parsing and execution time?",
-      "topic": "Runtime Optimization",
-      "difficulty": "Advanced",
-      "choices": [
-        "Larger bundles take longer to parse and compile; optimize with code splitting and tree shaking",
-        "Bundle size only affects download time, not parsing time",
-        "Smaller bundles always perform worse due to increased HTTP requests",
-        "JavaScript parsing time is negligible regardless of bundle size"
-      ],
-      "correctIndex": 0,
-      "explanation": "JavaScript bundles must be parsed, compiled, and executed by the browser. Larger bundles take significantly longer to process, especially on mobile devices. Optimization techniques include code splitting for loading only necessary code, tree shaking to remove unused code, and minification to reduce file size.",
-      "industryContext": "JavaScript parsing and compilation can account for 10-30% of page load time on mobile devices. Tools like webpack-bundle-analyzer help developers understand bundle composition and identify optimization opportunities.",
-      "tags": [
-        "Runtime Optimization",
-        "advanced",
-        "performance"
-      ],
-      "questionType": "multiple-choice",
-      "estimatedTime": 90,
-      "correctAnswer": 0
-    },
-    {
-      "id": "48",
-      "question": "What are the performance considerations for implementing a Progressive Web App (PWA)?",
-      "topic": "Infrastructure",
-      "difficulty": "Advanced",
-      "choices": [
-        "Service worker overhead, caching strategies, and offline functionality impact",
-        "PWAs always improve performance automatically without any considerations",
-        "Only security considerations matter for PWAs",
-        "PWAs only work on mobile devices, not desktop performance"
-      ],
-      "correctIndex": 0,
-      "explanation": "PWA implementation involves careful consideration of service worker overhead, caching strategies, and offline functionality. While PWAs can significantly improve performance through caching and offline capabilities, improper implementation can add overhead and complexity that negatively impacts performance.",
-      "industryContext": "Successful PWA implementations like Twitter Lite and Pinterest have shown 60-80% improvements in user engagement, but require careful optimization of service workers, caching strategies, and resource management to achieve performance benefits.",
-      "tags": [
-        "Infrastructure",
-        "advanced",
-        "performance"
-      ],
-      "questionType": "multiple-choice",
-      "estimatedTime": 90,
-      "correctAnswer": 0
-    }
-  ],
-  "metadata": {
+[
+  {
+    "id": 1,
+    "question": "What are the trade-offs between different performance optimization approaches?",
+    "topic": "Profiling",
     "difficulty": "Advanced",
-    "estimatedTime": "24 minutes",
-    "topics": [
-      "Performance",
-      "Profiling",
-      "Optimization"
+    "choices": [
+      "Aggressive optimization can improve performance but increase complexity and maintenance costs",
+      "More optimization is always better regardless of implementation complexity",
+      "Performance optimization has no impact on development time",
+      "Simple approaches are always superior to complex optimization strategies"
     ],
-    "lastUpdated": "2025-10-01T06:42:16.317Z",
-    "version": "1.0.0"
+    "explanation": "Performance optimization trade-offs involve balancing performance gains against increased complexity and maintenance costs. Aggressive optimization techniques can significantly improve performance but may make code harder to understand and maintain. The key is identifying critical performance bottlenecks and applying targeted optimizations where they provide the most benefit relative to their complexity cost.",
+    "industryContext": "Performance optimization decisions require careful cost-benefit analysis. Companies like Google and Facebook invest heavily in performance optimization, but they also maintain strict guidelines about when and how to apply optimizations. The principle of 'measure first, optimize second' helps ensure optimizations provide meaningful benefits.",
+    "tags": [
+      "performance",
+      "optimization",
+      "trade-offs",
+      "advanced"
+    ],
+    "questionType": "multiple-choice",
+    "estimatedTime": 90,
+    "correctAnswer": 0,
+    "type": "multiple-choice",
+    "sources": []
+  },
+  {
+    "id": 2,
+    "question": "When should you use performance optimization techniques in web development?",
+    "topic": "Optimization",
+    "difficulty": "Beginner",
+    "choices": [
+      "When profiling identifies specific bottlenecks that impact user experience",
+      "Always apply all optimization techniques regardless of need",
+      "Never optimize until the application is completely broken",
+      "Only optimize during the initial development phase"
+    ],
+    "explanation": "Performance optimization should be applied when profiling identifies specific bottlenecks that measurably impact user experience. Premature optimization can lead to unnecessary complexity without meaningful benefits. The approach should be data-driven, focusing on the most critical performance issues first, and validated through measurement to ensure improvements.",
+    "industryContext": "The 'premature optimization is the root of all evil' principle from Donald Knuth remains relevant in modern development. Companies use performance budgets and real user monitoring to identify when optimization is needed. Tools like Lighthouse and WebPageTest help identify optimization opportunities based on real metrics.",
+    "tags": [
+      "performance",
+      "optimization",
+      "profiling",
+      "beginner"
+    ],
+    "questionType": "multiple-choice",
+    "estimatedTime": 90,
+    "correctAnswer": 0,
+    "type": "multiple-choice",
+    "sources": []
+  },
+  {
+    "id": 3,
+    "question": "How do you implement performance optimization in a production environment?",
+    "topic": "Performance",
+    "difficulty": "Intermediate",
+    "choices": [
+      "Use continuous monitoring, implement gradual rollouts, and maintain performance budgets",
+      "Apply all optimizations at once without testing",
+      "Ignore performance in production environments",
+      "Remove all features to improve performance"
+    ],
+    "explanation": "Production performance optimization requires continuous monitoring to detect issues early, gradual rollouts to minimize risk, and performance budgets to prevent degradation. This approach ensures optimizations provide benefits without introducing instability. A/B testing can validate that performance improvements translate to better user experience and business metrics.",
+    "industryContext": "Production performance optimization is critical for maintaining user satisfaction and business metrics. Companies like Amazon and Netflix have sophisticated performance monitoring systems that alert teams to issues within minutes. Performance budgets are integrated into deployment pipelines to prevent performance regressions.",
+    "tags": [
+      "performance",
+      "production",
+      "monitoring",
+      "intermediate"
+    ],
+    "questionType": "multiple-choice",
+    "estimatedTime": 90,
+    "correctAnswer": 0,
+    "type": "multiple-choice",
+    "sources": []
+  },
+  {
+    "id": 4,
+    "question": "What are the trade-offs between different performance optimization approaches?",
+    "topic": "Profiling",
+    "difficulty": "Advanced",
+    "choices": [
+      "Client-side optimization improves user experience but increases complexity; server-side optimization is simpler but may not address all bottlenecks",
+      "All optimization approaches are identical with no trade-offs",
+      "Server-side optimization is always superior to client-side approaches",
+      "Client-side optimization has no impact on user experience"
+    ],
+    "explanation": "Performance optimization trade-offs include client-side optimization that directly improves user experience but can increase code complexity and maintenance burden, versus server-side optimization that's often simpler to implement but may not address all performance bottlenecks. Effective strategies typically combine both approaches, with client-side focusing on user-perceived performance and server-side addressing infrastructure efficiency.",
+    "industryContext": "Modern web performance requires holistic optimization strategies that address both client and server concerns. Companies like Google have developed comprehensive performance frameworks that combine client-side techniques like code splitting with server-side improvements like CDN optimization. The performance team at LinkedIn reduced page load time by 30% through coordinated client and server optimizations.",
+    "tags": [
+      "performance",
+      "optimization",
+      "trade-offs",
+      "advanced"
+    ],
+    "questionType": "multiple-choice",
+    "estimatedTime": 120,
+    "correctAnswer": 0,
+    "type": "multiple-choice",
+    "sources": []
+  },
+  {
+    "id": 5,
+    "question": "Which pattern is most effective for performance optimization architecture?",
+    "topic": "Optimization",
+    "difficulty": "Intermediate",
+    "choices": [
+      "Layered approach with caching strategies, resource optimization, and monitoring systems",
+      "Single optimization technique applied to all components",
+      "No structured approach to performance optimization",
+      "Random application of optimization techniques"
+    ],
+    "explanation": "Effective performance optimization architecture uses a layered approach combining caching strategies at multiple levels (browser, CDN, server), resource optimization techniques (minification, compression, lazy loading), and comprehensive monitoring systems to track performance metrics. This multi-layered strategy addresses performance bottlenecks at different points in the application stack.",
+    "industryContext": "Enterprise-scale applications require sophisticated performance architectures to handle complex optimization needs. Companies like Twitter and Instagram have developed multi-layered performance optimization systems that combine edge caching, resource optimization, and real-time monitoring. The performance team at Etsy published detailed case studies on their layered optimization approach.",
+    "tags": [
+      "performance",
+      "architecture",
+      "optimization-patterns",
+      "intermediate"
+    ],
+    "questionType": "multiple-choice",
+    "estimatedTime": 90,
+    "correctAnswer": 0,
+    "type": "multiple-choice",
+    "sources": []
+  },
+  {
+    "id": 6,
+    "question": "What is the primary purpose of performance optimization in web development?",
+    "topic": "Performance",
+    "difficulty": "Beginner",
+    "choices": [
+      "Improve user experience through faster loading times, better responsiveness, and reduced resource consumption",
+      "Make applications slower to demonstrate technical complexity",
+      "Increase server costs through inefficient resource usage",
+      "Complicate development processes without user benefits"
+    ],
+    "explanation": "The primary purpose of performance optimization is to improve user experience through faster loading times that reduce bounce rates, better responsiveness that enhances usability, and reduced resource consumption that lowers costs and environmental impact. Performance improvements directly correlate with business metrics like conversion rates and user engagement.",
+    "industryContext": "Web performance has direct business impact, with studies showing that even 100ms delays can reduce conversion rates by 7%. Companies like Google have made performance a ranking factor in search results. The performance team at Walmart found that every 1 second of improvement in page load time increased conversions by 2%.",
+    "tags": [
+      "performance",
+      "user-experience",
+      "business-impact",
+      "beginner"
+    ],
+    "questionType": "multiple-choice",
+    "estimatedTime": 90,
+    "correctAnswer": 0,
+    "type": "multiple-choice",
+    "sources": []
+  },
+  {
+    "id": 7,
+    "question": "What are the performance considerations when using optimization techniques?",
+    "topic": "Profiling",
+    "difficulty": "Intermediate",
+    "choices": [
+      "Balance optimization benefits against implementation complexity and maintenance overhead",
+      "Apply maximum optimization regardless of complexity costs",
+      "Ignore performance considerations entirely",
+      "Use only the most complex optimization techniques"
+    ],
+    "explanation": "Performance optimization considerations require balancing the benefits of optimization techniques against their implementation complexity and maintenance overhead. Not all optimizations provide sufficient benefit to justify their complexity cost. Profiling helps identify which optimizations will have the most significant impact on user experience while maintaining code maintainability.",
+    "industryContext": "Professional development teams use cost-benefit analysis to prioritize optimization efforts. The performance team at Facebook developed a framework for evaluating optimization proposals based on user impact versus implementation complexity. Google's performance guidelines emphasize measuring real user impact rather than just technical metrics.",
+    "tags": [
+      "performance",
+      "optimization",
+      "cost-benefit-analysis",
+      "intermediate"
+    ],
+    "questionType": "multiple-choice",
+    "estimatedTime": 90,
+    "correctAnswer": 0,
+    "type": "multiple-choice",
+    "sources": []
+  },
+  {
+    "id": 8,
+    "question": "When should you use performance optimization in development workflows?",
+    "topic": "Optimization",
+    "difficulty": "Beginner",
+    "choices": [
+      "Integrate performance considerations throughout development with automated testing and monitoring",
+      "Apply all optimizations only after development is complete",
+      "Ignore performance during development and fix issues later",
+      "Focus exclusively on performance to the exclusion of all other concerns"
+    ],
+    "explanation": "Performance optimization should be integrated throughout the development workflow with automated testing to catch regressions early and continuous monitoring to track real-world performance. This approach prevents performance issues from accumulating and becoming difficult to resolve. Performance budgets in CI/CD pipelines help maintain consistent performance standards.",
+    "industryContext": "Modern development practices integrate performance considerations throughout the development lifecycle. Companies like Netflix and Airbnb have implemented performance gates in their CI/CD pipelines that prevent deployment of code that degrades performance. The shift-left approach to performance testing has become standard in DevOps practices.",
+    "tags": [
+      "performance",
+      "development-workflow",
+      "ci-cd",
+      "beginner"
+    ],
+    "questionType": "multiple-choice",
+    "estimatedTime": 90,
+    "correctAnswer": 0,
+    "type": "multiple-choice",
+    "sources": []
+  },
+  {
+    "id": 9,
+    "question": "What is the primary purpose of implementing performance optimization strategies?",
+    "topic": "Performance",
+    "difficulty": "Beginner",
+    "choices": [
+      "Enhance user experience through reduced load times, improved responsiveness, and efficient resource usage",
+      "Slow down applications to demonstrate technical expertise",
+      "Increase server resource consumption for better performance visualization",
+      "Complicate simple applications with unnecessary optimization techniques"
+    ],
+    "explanation": "The primary purpose of performance optimization strategies is to enhance user experience through reduced load times that improve engagement, better responsiveness that makes applications feel faster, and efficient resource usage that reduces costs and environmental impact. These improvements directly correlate with business success metrics like conversion rates and user retention.",
+    "industryContext": "Performance optimization has measurable business impact, with Amazon finding that every 100ms of improvement increased revenue by 1%. Google made page speed a ranking factor because faster sites provide better user experience. The BBC found that losing 1 second of performance resulted in a 10% loss in users.",
+    "tags": [
+      "performance",
+      "user-experience",
+      "business-impact",
+      "beginner"
+    ],
+    "questionType": "multiple-choice",
+    "estimatedTime": 90,
+    "correctAnswer": 0,
+    "type": "multiple-choice",
+    "sources": []
+  },
+  {
+    "id": 10,
+    "question": "What are the performance considerations when using optimization techniques?",
+    "topic": "Profiling",
+    "difficulty": "Intermediate",
+    "choices": [
+      "Measure actual user impact, consider maintenance costs, and validate improvements with real data",
+      "Apply all possible optimizations regardless of user benefit",
+      "Ignore performance metrics and focus only on code aesthetics",
+      "Use theoretical performance improvements without real-world validation"
+    ],
+    "explanation": "Performance optimization considerations include measuring actual user impact rather than just technical metrics, considering the maintenance costs of complex optimization techniques, and validating improvements with real user data rather than synthetic benchmarks. Effective optimization focuses on improvements that users will actually notice and benefit from in real-world usage scenarios.",
+    "industryContext": "Professional performance teams use real user monitoring (RUM) data to guide optimization decisions. Companies like Twitter and LinkedIn have shared case studies showing how focusing on user-perceived performance metrics led to more effective optimizations than traditional technical metrics. The performance team at Etsy developed a framework for prioritizing optimizations based on user impact data.",
+    "tags": [
+      "performance",
+      "optimization",
+      "user-impact",
+      "intermediate"
+    ],
+    "questionType": "multiple-choice",
+    "estimatedTime": 90,
+    "correctAnswer": 0,
+    "type": "multiple-choice",
+    "sources": []
+  },
+  {
+    "id": 11,
+    "question": "When should you use performance optimization techniques in application development?",
+    "topic": "Optimization",
+    "difficulty": "Beginner",
+    "choices": [
+      "When profiling identifies specific bottlenecks that impact user experience metrics",
+      "Always apply maximum optimization regardless of actual performance issues",
+      "Never optimize until users complain about performance problems",
+      "Apply optimizations randomly without measuring their effectiveness"
+    ],
+    "explanation": "Performance optimization techniques should be applied when profiling identifies specific bottlenecks that measurably impact user experience metrics like load time, responsiveness, and conversion rates. This data-driven approach ensures optimization efforts provide meaningful benefits. Premature optimization can lead to increased complexity without corresponding user benefits.",
+    "industryContext": "The principle of 'measure first, optimize second' is fundamental to effective performance improvement. Companies like Google and Microsoft have developed sophisticated profiling tools and methodologies to identify optimization opportunities. Performance budgets integrated into development workflows help teams focus on impactful optimizations.",
+    "tags": [
+      "performance",
+      "optimization",
+      "profiling",
+      "beginner"
+    ],
+    "questionType": "multiple-choice",
+    "estimatedTime": 90,
+    "correctAnswer": 0,
+    "type": "multiple-choice",
+    "sources": []
+  },
+  {
+    "id": 12,
+    "question": "What is the primary purpose of performance optimization in modern web applications?",
+    "topic": "Performance",
+    "difficulty": "Beginner",
+    "choices": [
+      "Improve user satisfaction through faster interactions, reduced resource consumption, and better overall experience",
+      "Make applications intentionally slower to demonstrate optimization skills",
+      "Increase server costs through inefficient resource utilization",
+      "Complicate simple applications with unnecessary technical complexity"
+    ],
+    "explanation": "The primary purpose of performance optimization in modern web applications is to improve user satisfaction through faster interactions that reduce bounce rates, reduced resource consumption that lowers costs, and better overall experience that increases engagement. Performance improvements directly correlate with business success metrics like conversion rates and user retention.",
+    "industryContext": "Web performance has direct business impact, with studies showing that 53% of mobile users abandon sites that take longer than 3 seconds to load. Companies like Pinterest saw a 15% increase in SEO traffic and 15% increase in conversion rates after improving performance. Google's Core Web Vitals initiative makes performance a key ranking factor.",
+    "tags": [
+      "performance",
+      "user-satisfaction",
+      "business-impact",
+      "beginner"
+    ],
+    "questionType": "multiple-choice",
+    "estimatedTime": 90,
+    "correctAnswer": 0,
+    "type": "multiple-choice",
+    "sources": []
+  },
+  {
+    "id": 13,
+    "question": "What are the performance considerations when using optimization approaches?",
+    "topic": "Profiling",
+    "difficulty": "Intermediate",
+    "choices": [
+      "Balance user experience improvements against implementation complexity and maintenance costs",
+      "Apply maximum optimization regardless of complexity or maintenance impact",
+      "Ignore performance considerations and focus only on feature development",
+      "Use only the most complex optimization techniques available"
+    ],
+    "explanation": "Performance optimization considerations require balancing user experience improvements against implementation complexity and maintenance costs. Not all optimizations provide sufficient user benefit to justify their complexity cost. Effective optimization focuses on techniques that provide significant user-perceived improvements while maintaining code quality and team productivity.",
+    "industryContext": "Professional development teams use cost-benefit analysis to prioritize optimization efforts. The performance team at Facebook developed frameworks for evaluating optimization proposals based on user impact versus implementation complexity. Google's performance guidelines emphasize measuring real user impact rather than just technical metrics.",
+    "tags": [
+      "performance",
+      "optimization",
+      "cost-benefit-analysis",
+      "intermediate"
+    ],
+    "questionType": "multiple-choice",
+    "estimatedTime": 90,
+    "correctAnswer": 0,
+    "type": "multiple-choice",
+    "sources": []
+  },
+  {
+    "id": 14,
+    "question": "How do you troubleshoot complex performance optimization issues?",
+    "topic": "Optimization",
+    "difficulty": "Advanced",
+    "choices": [
+      "Use systematic profiling, analyze performance traces, implement targeted fixes, and validate with real user data",
+      "Apply random optimizations until performance improves",
+      "Ignore performance issues and hope they resolve themselves",
+      "Remove all performance optimizations to simplify troubleshooting"
+    ],
+    "explanation": "Troubleshooting complex performance optimization issues requires systematic profiling to identify bottlenecks, analyzing performance traces to understand root causes, implementing targeted fixes based on data rather than assumptions, and validating improvements with real user data rather than synthetic tests. This methodical approach ensures effective resolution of performance problems.",
+    "industryContext": "Complex performance issues require sophisticated troubleshooting approaches. Companies like Netflix and LinkedIn have developed advanced profiling and monitoring systems to identify and resolve complex performance problems. The performance team at Twitter published detailed case studies on their systematic approach to troubleshooting performance regressions.",
+    "tags": [
+      "performance",
+      "troubleshooting",
+      "profiling",
+      "advanced"
+    ],
+    "questionType": "multiple-choice",
+    "estimatedTime": 120,
+    "correctAnswer": 0,
+    "type": "multiple-choice",
+    "sources": []
+  },
+  {
+    "id": 15,
+    "question": "What is the primary purpose of performance optimization techniques?",
+    "topic": "Performance",
+    "difficulty": "Beginner",
+    "choices": [
+      "Enhance application speed, reduce resource consumption, and improve user experience",
+      "Slow down applications to demonstrate technical expertise",
+      "Increase server resource usage for better visualization",
+      "Complicate simple applications with unnecessary complexity"
+    ],
+    "explanation": "The primary purpose of performance optimization techniques is to enhance application speed through faster load times and better responsiveness, reduce resource consumption to lower costs and environmental impact, and improve user experience through smoother interactions and reduced wait times. These improvements directly correlate with business success metrics.",
+    "industryContext": "Performance optimization has measurable business impact, with Akamai finding that 40% of users abandon sites that take more than 3 seconds to load. Companies like AutoAnything saw a 12.5% increase in sales after reducing page load time by half. Google's research shows that the probability of bounce increases exponentially with page load time.",
+    "tags": [
+      "performance",
+      "optimization",
+      "user-experience",
+      "beginner"
+    ],
+    "questionType": "multiple-choice",
+    "estimatedTime": 90,
+    "correctAnswer": 0,
+    "type": "multiple-choice",
+    "sources": []
+  },
+  {
+    "id": 16,
+    "question": "What are the performance considerations when using optimization strategies?",
+    "topic": "Profiling",
+    "difficulty": "Intermediate",
+    "choices": [
+      "Measure real user impact, consider implementation costs, and validate improvements with data",
+      "Apply all possible optimizations regardless of user benefit or complexity",
+      "Ignore performance metrics and focus only on code aesthetics",
+      "Use theoretical improvements without real-world validation"
+    ],
+    "explanation": "Performance optimization considerations include measuring real user impact rather than just technical metrics, considering the implementation costs of complex techniques, and validating improvements with real user data rather than synthetic benchmarks. Effective optimization focuses on improvements that users will actually notice and benefit from in real-world usage scenarios.",
+    "industryContext": "Professional performance teams use real user monitoring (RUM) data to guide optimization decisions. Companies like Twitter and LinkedIn have shared case studies showing how focusing on user-perceived performance metrics led to more effective optimizations than traditional technical metrics. The performance team at Etsy developed frameworks for prioritizing optimizations based on user impact data.",
+    "tags": [
+      "performance",
+      "optimization",
+      "user-impact",
+      "intermediate"
+    ],
+    "questionType": "multiple-choice",
+    "estimatedTime": 90,
+    "correctAnswer": 0,
+    "type": "multiple-choice",
+    "sources": []
+  },
+  {
+    "id": 17,
+    "question": "What is First Contentful Paint (FCP) and why is it important?",
+    "topic": "Core Web Vitals",
+    "difficulty": "Beginner",
+    "choices": [
+      "The time when the browser renders the first piece of DOM content; important for perceived loading speed",
+      "The time when all resources are fully loaded; important for SEO rankings",
+      "The time when the largest element is rendered; important for user engagement",
+      "The time when the page becomes interactive; important for user experience"
+    ],
+    "explanation": "First Contentful Paint (FCP) measures the time from when the page starts loading to when any part of the page's content is rendered on the screen. It's important because it marks the first visual feedback users receive, which significantly impacts their perception of loading speed.",
+    "industryContext": "FCP is one of Google's Core Web Vitals metrics that directly affects search rankings. Websites with good FCP scores (under 1.8 seconds) typically see better user engagement and lower bounce rates.",
+    "tags": [
+      "Core Web Vitals",
+      "beginner",
+      "performance"
+    ],
+    "questionType": "multiple-choice",
+    "estimatedTime": 45,
+    "correctAnswer": 0,
+    "type": "multiple-choice",
+    "sources": []
+  },
+  {
+    "id": 18,
+    "question": "Which HTTP header helps browsers prioritize resource loading?",
+    "topic": "Resource Loading",
+    "difficulty": "Beginner",
+    "choices": [
+      "Priority Hints (e.g., fetchpriority='high')",
+      "Content-Type header",
+      "Cache-Control header",
+      "Accept-Encoding header"
+    ],
+    "explanation": "Priority Hints allow developers to communicate the relative importance of resources to the browser, helping it make better decisions about which resources to load first. This can significantly improve loading performance by ensuring critical resources are loaded before less important ones.",
+    "industryContext": "Priority Hints are supported in modern browsers and are part of the Resource Prioritization API. Major websites like Twitter and LinkedIn have seen measurable improvements in loading times by properly implementing resource prioritization.",
+    "tags": [
+      "Resource Loading",
+      "beginner",
+      "performance"
+    ],
+    "questionType": "multiple-choice",
+    "estimatedTime": 45,
+    "correctAnswer": 0,
+    "type": "multiple-choice",
+    "sources": []
+  },
+  {
+    "id": 19,
+    "question": "What is the primary benefit of code splitting in web applications?",
+    "topic": "Code Splitting",
+    "difficulty": "Beginner",
+    "choices": [
+      "Reduces initial bundle size and improves loading time",
+      "Eliminates all JavaScript from the application",
+      "Makes code more secure by encrypting it",
+      "Automatically fixes all performance issues"
+    ],
+    "explanation": "Code splitting breaks down large JavaScript bundles into smaller chunks that can be loaded on demand. This reduces the initial payload that needs to be downloaded and parsed, leading to faster initial page loads and better user experience.",
+    "industryContext": "Code splitting is a fundamental optimization technique used by all major web applications. Frameworks like React, Vue, and Angular provide built-in support for code splitting, and it's considered a best practice for modern web development.",
+    "tags": [
+      "Code Splitting",
+      "beginner",
+      "performance"
+    ],
+    "questionType": "multiple-choice",
+    "estimatedTime": 45,
+    "correctAnswer": 0,
+    "type": "multiple-choice",
+    "sources": []
+  },
+  {
+    "id": 20,
+    "question": "What does the 'defer' attribute do on a script tag?",
+    "topic": "Script Loading",
+    "difficulty": "Beginner",
+    "choices": [
+      "Downloads the script in the background and executes it after HTML parsing is complete",
+      "Prevents the script from executing entirely",
+      "Loads the script synchronously, blocking HTML parsing",
+      "Caches the script for future page loads"
+    ],
+    "explanation": "The 'defer' attribute tells the browser to download the script in the background while continuing to parse the HTML. The script will execute after the HTML parsing is complete, in the order they appear in the document. This prevents render-blocking and improves page load performance.",
+    "industryContext": "Using 'defer' for non-critical scripts is a standard practice in web development. It's particularly important for scripts that need access to the DOM but don't need to run immediately, allowing the page to render faster.",
+    "tags": [
+      "Script Loading",
+      "beginner",
+      "performance"
+    ],
+    "questionType": "multiple-choice",
+    "estimatedTime": 45,
+    "correctAnswer": 0,
+    "type": "multiple-choice",
+    "sources": []
+  },
+  {
+    "id": 21,
+    "question": "What is the purpose of image compression in web performance?",
+    "topic": "Image Optimization",
+    "difficulty": "Beginner",
+    "choices": [
+      "Reduce file size to decrease loading times and bandwidth usage",
+      "Increase image quality for better visual appearance",
+      "Encrypt images for security purposes",
+      "Convert all images to vector formats"
+    ],
+    "explanation": "Image compression reduces the file size of images without significantly compromising quality, which leads to faster loading times and reduced bandwidth consumption. This is crucial because images often make up the largest portion of a webpage's total file size.",
+    "industryContext": "Image optimization can reduce page load times by 20-50% on many websites. Tools like ImageOptim, TinyPNG, and automated services like Cloudinary are widely used by professional developers to optimize images.",
+    "tags": [
+      "Image Optimization",
+      "beginner",
+      "performance"
+    ],
+    "questionType": "multiple-choice",
+    "estimatedTime": 45,
+    "correctAnswer": 0,
+    "type": "multiple-choice",
+    "sources": []
+  },
+  {
+    "id": 22,
+    "question": "What is lazy loading and when should it be used?",
+    "topic": "Resource Loading",
+    "difficulty": "Beginner",
+    "choices": [
+      "Loading resources only when they're needed (e.g., when they come into view); useful for images below the fold",
+      "Loading all resources at once for faster interaction; useful for small websites",
+      "Loading resources in reverse order; useful for SEO",
+      "Loading resources twice for redundancy; useful for critical applications"
+    ],
+    "explanation": "Lazy loading defers the loading of non-critical resources until they're actually needed, typically when they come into the viewport. This reduces initial page load time and saves bandwidth, especially beneficial for pages with many images or components below the fold.",
+    "industryContext": "Lazy loading is supported natively by modern browsers through the 'loading' attribute on images and iframes. It's a key technique for improving Core Web Vitals, particularly LCP (Largest Contentful Paint).",
+    "tags": [
+      "Resource Loading",
+      "beginner",
+      "performance"
+    ],
+    "questionType": "multiple-choice",
+    "estimatedTime": 45,
+    "correctAnswer": 0,
+    "type": "multiple-choice",
+    "sources": []
+  },
+  {
+    "id": 23,
+    "question": "What is browser caching and how does it improve performance?",
+    "topic": "Caching",
+    "difficulty": "Beginner",
+    "choices": [
+      "Storing copies of resources locally to avoid re-downloading; reduces server requests and load times",
+      "Encrypting data for security; prevents unauthorized access",
+      "Compressing all files automatically; reduces bandwidth usage",
+      "Loading all resources at once; improves initial load time"
+    ],
+    "explanation": "Browser caching stores copies of resources (like images, CSS, and JavaScript files) locally on the user's device. When the user revisits the site, these cached resources can be loaded instantly instead of being downloaded again, dramatically reducing load times for repeat visits.",
+    "industryContext": "Proper caching strategies can reduce server load by up to 80% and improve repeat visit performance significantly. HTTP caching headers like Cache-Control are essential for implementing effective browser caching.",
+    "tags": [
+      "Caching",
+      "beginner",
+      "performance"
+    ],
+    "questionType": "multiple-choice",
+    "estimatedTime": 45,
+    "correctAnswer": 0,
+    "type": "multiple-choice",
+    "sources": []
+  },
+  {
+    "id": 24,
+    "question": "What is the benefit of using a Content Delivery Network (CDN)?",
+    "topic": "Infrastructure",
+    "difficulty": "Beginner",
+    "choices": [
+      "Serves content from servers closer to users; reduces latency and improves load times",
+      "Encrypts all website data; improves security",
+      "Automatically optimizes all images; reduces file sizes",
+      "Blocks all malicious traffic; prevents hacking"
+    ],
+    "explanation": "A CDN distributes content across multiple geographically dispersed servers, allowing users to download resources from the server closest to them. This reduces latency by minimizing the physical distance data must travel, resulting in faster load times for users worldwide.",
+    "industryContext": "CDNs are used by 80% of websites and can reduce page load times by 20-60% depending on user location. Major CDNs like Cloudflare, Akamai, and AWS CloudFront serve trillions of requests daily.",
+    "tags": [
+      "Infrastructure",
+      "beginner",
+      "performance"
+    ],
+    "questionType": "multiple-choice",
+    "estimatedTime": 45,
+    "correctAnswer": 0,
+    "type": "multiple-choice",
+    "sources": []
+  },
+  {
+    "id": 25,
+    "question": "What does the 'async' attribute do on a script tag?",
+    "topic": "Script Loading",
+    "difficulty": "Beginner",
+    "choices": [
+      "Downloads the script in the background and executes it as soon as it's ready, potentially before HTML parsing completes",
+      "Prevents the script from executing entirely",
+      "Loads the script synchronously, blocking HTML parsing",
+      "Defers execution until after HTML parsing is complete"
+    ],
+    "explanation": "The 'async' attribute allows the script to be downloaded in the background without blocking HTML parsing. The script will execute as soon as it finishes downloading, which means it might run before HTML parsing is complete. This is ideal for independent scripts that don't rely on the DOM.",
+    "industryContext": "Async scripts are commonly used for analytics, ads, and other third-party scripts that don't depend on the page's DOM. However, they should be used carefully as they can execute in any order.",
+    "tags": [
+      "Script Loading",
+      "beginner",
+      "performance"
+    ],
+    "questionType": "multiple-choice",
+    "estimatedTime": 45,
+    "correctAnswer": 0,
+    "type": "multiple-choice",
+    "sources": []
+  },
+  {
+    "id": 26,
+    "question": "What is the purpose of minification in web development?",
+    "topic": "Build Optimization",
+    "difficulty": "Beginner",
+    "choices": [
+      "Removing unnecessary characters (whitespace, comments) to reduce file size",
+      "Adding comments to make code more readable",
+      "Encrypting code for security",
+      "Converting code to a different programming language"
+    ],
+    "explanation": "Minification removes unnecessary characters like whitespace, comments, and line breaks from code files without changing functionality. This significantly reduces file sizes, leading to faster downloads and improved page load performance.",
+    "industryContext": "Minification is a standard part of modern build processes. Tools like UglifyJS, Terser, and CSSNano are commonly used in build pipelines. Minification can reduce JavaScript and CSS file sizes by 20-80%.",
+    "tags": [
+      "Build Optimization",
+      "beginner",
+      "performance"
+    ],
+    "questionType": "multiple-choice",
+    "estimatedTime": 45,
+    "correctAnswer": 0,
+    "type": "multiple-choice",
+    "sources": []
+  },
+  {
+    "id": 27,
+    "question": "What is Largest Contentful Paint (LCP) and why does it matter?",
+    "topic": "Core Web Vitals",
+    "difficulty": "Beginner",
+    "choices": [
+      "Measures when the largest content element becomes visible; key user experience metric",
+      "Measures when the first element becomes visible; loading speed indicator",
+      "Measures when the page becomes interactive; responsiveness metric",
+      "Measures visual stability; layout shift indicator"
+    ],
+    "explanation": "Largest Contentful Paint (LCP) measures the time when the largest content element (image or text block) becomes visible in the viewport. It's a key user experience metric because it indicates when the main content of the page has loaded.",
+    "industryContext": "LCP is one of Google's Core Web Vitals and directly impacts search rankings. A good LCP score is under 2.5 seconds. Optimizing LCP often involves image optimization, code splitting, and server response improvements.",
+    "tags": [
+      "Core Web Vitals",
+      "beginner",
+      "performance"
+    ],
+    "questionType": "multiple-choice",
+    "estimatedTime": 45,
+    "correctAnswer": 0,
+    "type": "multiple-choice",
+    "sources": []
+  },
+  {
+    "id": 28,
+    "question": "What is Cumulative Layout Shift (CLS) and how can it be minimized?",
+    "topic": "Core Web Vitals",
+    "difficulty": "Beginner",
+    "choices": [
+      "Measures unexpected layout shifts; minimized by reserving space for elements",
+      "Measures loading speed; minimized by reducing file sizes",
+      "Measures interactivity; minimized by optimizing JavaScript",
+      "Measures visual appeal; minimized by improving design"
+    ],
+    "explanation": "Cumulative Layout Shift (CLS) measures the amount of unexpected layout shift that occurs during a page's lifecycle. It's minimized by reserving space for elements that will load later (images, videos, fonts) and avoiding dynamically injected content without proper sizing.",
+    "industryContext": "CLS is a Core Web Vitals metric that directly impacts user experience and search rankings. Websites with good CLS scores (under 0.1) have better user engagement and fewer accidental clicks on shifting elements.",
+    "tags": [
+      "Core Web Vitals",
+      "beginner",
+      "performance"
+    ],
+    "questionType": "multiple-choice",
+    "estimatedTime": 45,
+    "correctAnswer": 0,
+    "type": "multiple-choice",
+    "sources": []
+  },
+  {
+    "id": 29,
+    "question": "What is the difference between service workers and HTTP caching?",
+    "topic": "Caching",
+    "difficulty": "Intermediate",
+    "choices": [
+      "Service workers provide programmatic caching with offline support; HTTP caching is server-controlled",
+      "Service workers are faster; HTTP caching is slower",
+      "Service workers only work offline; HTTP caching only works online",
+      "There is no difference; they are the same thing"
+    ],
+    "explanation": "HTTP caching is controlled by server headers and handled automatically by the browser. Service workers are JavaScript files that run in the background, allowing developers to programmatically cache resources and provide offline functionality with fine-grained control over caching strategies.",
+    "industryContext": "Service workers are essential for Progressive Web Apps (PWAs) and offline functionality. They enable advanced caching strategies like cache-first, network-first, and stale-while-revalidate patterns that aren't possible with HTTP caching alone.",
+    "tags": [
+      "Caching",
+      "intermediate",
+      "performance"
+    ],
+    "questionType": "multiple-choice",
+    "estimatedTime": 60,
+    "correctAnswer": 0,
+    "type": "multiple-choice",
+    "sources": []
+  },
+  {
+    "id": 30,
+    "question": "What is tree shaking and how does it improve bundle size?",
+    "topic": "Build Optimization",
+    "difficulty": "Intermediate",
+    "choices": [
+      "Removes unused code during the build process by analyzing import/export statements",
+      "Compresses code by removing whitespace and comments",
+      "Splits code into smaller bundles automatically",
+      "Encrypts code to make it smaller"
+    ],
+    "explanation": "Tree shaking is a dead code elimination technique that removes unused exports from modules during the build process. It works by analyzing static import/export statements to determine which code is actually used, then excluding unused code from the final bundle.",
+    "industryContext": "Tree shaking is supported by modern bundlers like Webpack, Rollup, and Vite. It can reduce bundle sizes by 10-50% in applications with many dependencies, especially when using libraries that export many individual functions.",
+    "tags": [
+      "Build Optimization",
+      "intermediate",
+      "performance"
+    ],
+    "questionType": "multiple-choice",
+    "estimatedTime": 60,
+    "correctAnswer": 0,
+    "type": "multiple-choice",
+    "sources": []
+  },
+  {
+    "id": 31,
+    "question": "What is the purpose of requestIdleCallback in performance optimization?",
+    "topic": "Runtime Optimization",
+    "difficulty": "Intermediate",
+    "choices": [
+      "Schedule non-critical work during browser idle periods to avoid blocking UI updates",
+      "Cancel network requests that are taking too long",
+      "Prioritize critical network requests",
+      "Cache API responses for faster retrieval"
+    ],
+    "explanation": "requestIdleCallback allows developers to schedule non-critical work to run during browser idle periods when the main thread is not busy. This prevents performance-intensive tasks from blocking UI updates and user interactions, maintaining a smooth user experience.",
+    "industryContext": "requestIdleCallback is used by major libraries and frameworks for scheduling analytics, logging, and other non-critical tasks. It's particularly important for maintaining 60fps animations and responsive interfaces in complex applications.",
+    "tags": [
+      "Runtime Optimization",
+      "intermediate",
+      "performance"
+    ],
+    "questionType": "multiple-choice",
+    "estimatedTime": 60,
+    "correctAnswer": 0,
+    "type": "multiple-choice",
+    "sources": []
+  },
+  {
+    "id": 32,
+    "question": "How does virtual scrolling improve performance for large lists?",
+    "topic": "Runtime Optimization",
+    "difficulty": "Intermediate",
+    "choices": [
+      "Only renders visible items and a small buffer, reducing DOM nodes and memory usage",
+      "Compresses list data to reduce file size",
+      "Loads list items from a CDN for faster delivery",
+      "Caches list items in localStorage for instant access"
+    ],
+    "explanation": "Virtual scrolling renders only the items that are currently visible in the viewport plus a small buffer, rather than rendering all items at once. This dramatically reduces the number of DOM nodes, memory usage, and rendering time, making it possible to efficiently display lists with thousands of items.",
+    "industryContext": "Virtual scrolling is used by major applications like Twitter, Facebook, and Excel Online to handle large datasets. Libraries like react-window and react-virtualized have made this technique accessible to developers building data-intensive applications.",
+    "tags": [
+      "Runtime Optimization",
+      "intermediate",
+      "performance"
+    ],
+    "questionType": "multiple-choice",
+    "estimatedTime": 60,
+    "correctAnswer": 0,
+    "type": "multiple-choice",
+    "sources": []
+  },
+  {
+    "id": 33,
+    "question": "What is the critical rendering path and why is it important?",
+    "topic": "Rendering",
+    "difficulty": "Intermediate",
+    "choices": [
+      "The sequence of steps the browser takes to convert HTML/CSS/JS into pixels; optimizing it reduces load time",
+      "The most important CSS rules for styling; optimizing it improves design consistency",
+      "The path network requests take to reach the server; optimizing it reduces latency",
+      "The order in which JavaScript files are executed; optimizing it reduces errors"
+    ],
+    "explanation": "The critical rendering path is the sequence of steps the browser takes to process HTML, CSS, and JavaScript and render pixels to the screen. Optimizing this path involves minimizing critical resources, reducing critical bytes, and shortening critical path length to achieve faster first render.",
+    "industryContext": "Understanding and optimizing the critical rendering path is fundamental to web performance. Techniques like inlining critical CSS, deferring non-critical JavaScript, and optimizing font loading all target improvements to the critical rendering path.",
+    "tags": [
+      "Rendering",
+      "intermediate",
+      "performance"
+    ],
+    "questionType": "multiple-choice",
+    "estimatedTime": 60,
+    "correctAnswer": 0,
+    "type": "multiple-choice",
+    "sources": []
+  },
+  {
+    "id": 34,
+    "question": "What is the benefit of using CSS containment properties?",
+    "topic": "Rendering",
+    "difficulty": "Intermediate",
+    "choices": [
+      "Isolates parts of the DOM to limit scope of layout, style, and paint calculations",
+      "Compresses CSS files to reduce file size",
+      "Encrypts CSS for security purposes",
+      "Automatically optimizes CSS selectors for performance"
+    ],
+    "explanation": "CSS containment properties (contain: layout, style, paint) create boundaries that isolate parts of the DOM, preventing changes in one area from affecting others. This limits the scope of browser calculations for layout, style, and paint operations, improving rendering performance.",
+    "industryContext": "CSS containment is supported in all modern browsers and is particularly valuable for component-based architectures. Frameworks like React and Vue benefit from containment when rendering large component trees or complex UIs.",
+    "tags": [
+      "Rendering",
+      "intermediate",
+      "performance"
+    ],
+    "questionType": "multiple-choice",
+    "estimatedTime": 60,
+    "correctAnswer": 0,
+    "type": "multiple-choice",
+    "sources": []
+  },
+  {
+    "id": 35,
+    "question": "What is the purpose of the Performance API in web development?",
+    "topic": "Profiling",
+    "difficulty": "Intermediate",
+    "choices": [
+      "Measure and analyze real user performance metrics for optimization decisions",
+      "Automatically optimize website performance without developer intervention",
+      "Encrypt performance data for security purposes",
+      "Generate performance reports for stakeholders"
+    ],
+    "explanation": "The Performance API provides a standardized way to access timing and performance data in the browser. It includes interfaces for measuring navigation timing, resource timing, user timing, and other performance metrics that help developers understand and optimize their applications.",
+    "industryContext": "The Performance API is the foundation for tools like Lighthouse, WebPageTest, and real user monitoring (RUM) services. It's essential for performance debugging and measuring the impact of optimization efforts in production.",
+    "tags": [
+      "Profiling",
+      "intermediate",
+      "performance"
+    ],
+    "questionType": "multiple-choice",
+    "estimatedTime": 60,
+    "correctAnswer": 0,
+    "type": "multiple-choice",
+    "sources": []
+  },
+  {
+    "id": 36,
+    "question": "How does HTTP/2 improve web performance compared to HTTP/1.1?",
+    "topic": "Networking",
+    "difficulty": "Intermediate",
+    "choices": [
+      "Multiplexing allows multiple requests over a single connection, reducing latency",
+      "Encrypts all traffic automatically for better security",
+      "Compresses all files by default for smaller sizes",
+      "Caches all resources automatically for faster access"
+    ],
+    "explanation": "HTTP/2 introduces multiplexing, which allows multiple requests and responses to be sent simultaneously over a single TCP connection. This eliminates the head-of-line blocking problem in HTTP/1.1 and reduces the latency associated with establishing multiple connections.",
+    "industryContext": "HTTP/2 adoption has grown to over 90% of websites. The performance benefits are most noticeable on websites with many resources, where connection overhead was previously a significant bottleneck.",
+    "tags": [
+      "Networking",
+      "intermediate",
+      "performance"
+    ],
+    "questionType": "multiple-choice",
+    "estimatedTime": 60,
+    "correctAnswer": 0,
+    "type": "multiple-choice",
+    "sources": []
+  },
+  {
+    "id": 37,
+    "question": "What is the benefit of using resource hints like preconnect and prefetch?",
+    "topic": "Resource Loading",
+    "difficulty": "Intermediate",
+    "choices": [
+      "Preconnect establishes early connections to third-party origins; prefetch downloads likely next resources",
+      "Preconnect encrypts connections for security; prefetch compresses resources",
+      "Preconnect blocks all third-party requests; prefetch deletes unused resources",
+      "Preconnect and prefetch are the same thing with different names"
+    ],
+    "explanation": "Resource hints help browsers optimize resource loading. Preconnect establishes early connections to third-party origins, reducing connection setup time. Prefetch downloads resources likely to be needed in the future, storing them in the HTTP cache for instant retrieval.",
+    "industryContext": "Resource hints are widely used by performance-conscious websites. Google, Facebook, and Twitter use preconnect for critical third-party resources like CDNs, analytics, and fonts to reduce latency by 100-500ms.",
+    "tags": [
+      "Resource Loading",
+      "intermediate",
+      "performance"
+    ],
+    "questionType": "multiple-choice",
+    "estimatedTime": 60,
+    "correctAnswer": 0,
+    "type": "multiple-choice",
+    "sources": []
+  },
+  {
+    "id": 38,
+    "question": "What is the purpose of the Intersection Observer API?",
+    "topic": "Runtime Optimization",
+    "difficulty": "Intermediate",
+    "choices": [
+      "Efficiently detect when elements enter or exit the viewport without scroll events",
+      "Observe network connection quality to adjust loading strategies",
+      "Monitor user interaction patterns for analytics",
+      "Track browser window resize events for responsive design"
+    ],
+    "explanation": "The Intersection Observer API provides an efficient way to detect when elements intersect with the viewport or other elements. Unlike scroll events, it doesn't require constant polling and is much more performant for implementing features like lazy loading, infinite scrolling, and animation triggers.",
+    "industryContext": "The Intersection Observer API has largely replaced scroll event listeners for viewport detection. It's used by major libraries like Lodash and is the foundation for native lazy loading in modern browsers.",
+    "tags": [
+      "Runtime Optimization",
+      "intermediate",
+      "performance"
+    ],
+    "questionType": "multiple-choice",
+    "estimatedTime": 60,
+    "correctAnswer": 0,
+    "type": "multiple-choice",
+    "sources": []
+  },
+  {
+    "id": 39,
+    "question": "How does Web Workers improve performance in JavaScript applications?",
+    "topic": "Runtime Optimization",
+    "difficulty": "Intermediate",
+    "choices": [
+      "Runs JavaScript in background threads, preventing UI blocking for heavy computations",
+      "Automatically optimizes JavaScript code for better performance",
+      "Caches JavaScript files for faster loading",
+      "Compresses JavaScript to reduce file size"
+    ],
+    "explanation": "Web Workers allow JavaScript code to run in background threads separate from the main UI thread. This prevents heavy computational tasks from blocking the UI and causing unresponsive pages, enabling smooth user experiences even during intensive processing.",
+    "industryContext": "Web Workers are essential for applications that perform heavy computations like image processing, data analysis, or complex calculations. Libraries like Comlink have made Web Workers more accessible for modern JavaScript development.",
+    "tags": [
+      "Runtime Optimization",
+      "intermediate",
+      "performance"
+    ],
+    "questionType": "multiple-choice",
+    "estimatedTime": 60,
+    "correctAnswer": 0,
+    "type": "multiple-choice",
+    "sources": []
+  },
+  {
+    "id": 40,
+    "question": "What is the benefit of using CSS Grid and Flexbox over traditional layout methods?",
+    "topic": "Rendering",
+    "difficulty": "Intermediate",
+    "choices": [
+      "More efficient rendering with fewer DOM elements and better browser optimization",
+      "Better browser support for older browsers",
+      "Automatic responsive design without media queries",
+      "Built-in animation capabilities"
+    ],
+    "explanation": "CSS Grid and Flexbox provide more efficient layout mechanisms compared to float-based or table-based layouts. They require fewer wrapper elements, are optimized by browsers, and provide more predictable rendering behavior, leading to better performance and maintainability.",
+    "industryContext": "Modern browsers have highly optimized implementations of Grid and Flexbox layout algorithms. Websites that have migrated from traditional layout methods to Grid/Flexbox often see measurable improvements in rendering performance and reduced CSS complexity.",
+    "tags": [
+      "Rendering",
+      "intermediate",
+      "performance"
+    ],
+    "questionType": "multiple-choice",
+    "estimatedTime": 60,
+    "correctAnswer": 0,
+    "type": "multiple-choice",
+    "sources": []
+  },
+  {
+    "id": 41,
+    "question": "What is the purpose of the Paint Timing API and how is it used?",
+    "topic": "Profiling",
+    "difficulty": "Advanced",
+    "choices": [
+      "Measures First Paint and First Contentful Paint for performance monitoring",
+      "Controls when elements are painted to the screen for animations",
+      "Encrypts paint operations for security purposes",
+      "Automatically optimizes paint operations for better performance"
+    ],
+    "explanation": "The Paint Timing API provides access to First Paint (FP) and First Contentful Paint (FCP) metrics through the Performance API. It allows developers to programmatically measure these critical user experience metrics and send them to analytics services for monitoring and optimization.",
+    "industryContext": "The Paint Timing API is part of the Core Web Vitals measurement suite and is used by RUM (Real User Monitoring) tools like Google Analytics 4, New Relic, and Datadog to track user experience metrics in production environments.",
+    "tags": [
+      "Profiling",
+      "advanced",
+      "performance"
+    ],
+    "questionType": "multiple-choice",
+    "estimatedTime": 90,
+    "correctAnswer": 0,
+    "type": "multiple-choice",
+    "sources": []
+  },
+  {
+    "id": 42,
+    "question": "What are the performance implications of using CSS custom properties (variables)?",
+    "topic": "Rendering",
+    "difficulty": "Advanced",
+    "choices": [
+      "Can cause performance issues with frequent updates due to recalculation scope",
+      "Always improve performance by reducing CSS file size",
+      "Have no performance impact as they're processed at build time",
+      "Automatically optimize rendering performance in all scenarios"
+    ],
+    "explanation": "CSS custom properties can cause performance issues when frequently updated because they can trigger broader style recalculations compared to regular CSS properties. When a custom property changes, the browser may need to recalculate styles for all elements that inherit or use that property.",
+    "industryContext": "Performance-conscious developers carefully scope CSS custom properties and avoid animating them when possible. The CSS Working Group is aware of these performance characteristics and is working on optimizations for future browser versions.",
+    "tags": [
+      "Rendering",
+      "advanced",
+      "performance"
+    ],
+    "questionType": "multiple-choice",
+    "estimatedTime": 90,
+    "correctAnswer": 0,
+    "type": "multiple-choice",
+    "sources": []
+  },
+  {
+    "id": 43,
+    "question": "How does the Event Loop impact JavaScript performance and what are optimization strategies?",
+    "topic": "Runtime Optimization",
+    "difficulty": "Advanced",
+    "choices": [
+      "Long tasks block the UI; optimize by breaking work into smaller chunks or using Web Workers",
+      "The Event Loop automatically optimizes JavaScript execution without developer intervention",
+      "Using more setTimeout calls improves Event Loop performance",
+      "The Event Loop only affects server-side JavaScript, not browser performance"
+    ],
+    "explanation": "The Event Loop is single-threaded and processes tasks sequentially. Long-running JavaScript tasks can block the UI thread, causing unresponsive pages. Optimization strategies include breaking work into smaller chunks using requestIdleCallback or setTimeout, or moving intensive work to Web Workers.",
+    "industryContext": "Understanding the Event Loop is crucial for performance optimization. The Long Tasks API helps identify blocking operations, and frameworks like React use techniques like time slicing to work with the Event Loop for smooth user experiences.",
+    "tags": [
+      "Runtime Optimization",
+      "advanced",
+      "performance"
+    ],
+    "questionType": "multiple-choice",
+    "estimatedTime": 90,
+    "correctAnswer": 0,
+    "type": "multiple-choice",
+    "sources": []
+  },
+  {
+    "id": 44,
+    "question": "What is the purpose of the Largest Contentful Paint (LCP) element and how do you optimize it?",
+    "topic": "Core Web Vitals",
+    "difficulty": "Advanced",
+    "choices": [
+      "Identify the main content element affecting LCP; optimize with lazy loading, CDN, and preloading",
+      "Remove the largest element to improve LCP score",
+      "Make all elements smaller to improve LCP",
+      "LCP element has no impact on performance metrics"
+    ],
+    "explanation": "The LCP element is the largest content element that contributes to the Largest Contentful Paint metric. Optimizing it involves techniques like lazy loading non-critical images, using a CDN for faster delivery, preloading critical resources, and optimizing the element's size and format.",
+    "industryContext": "The LCP element is identified using the Element Timing API and Lighthouse. Websites often see significant LCP improvements by optimizing their hero images, videos, or large text blocks that typically serve as the LCP element.",
+    "tags": [
+      "Core Web Vitals",
+      "advanced",
+      "performance"
+    ],
+    "questionType": "multiple-choice",
+    "estimatedTime": 90,
+    "correctAnswer": 0,
+    "type": "multiple-choice",
+    "sources": []
+  },
+  {
+    "id": 45,
+    "question": "What are the performance trade-offs of using CSS-in-JS libraries?",
+    "topic": "Rendering",
+    "difficulty": "Advanced",
+    "choices": [
+      "Runtime cost for style generation; potential for style recalculations on component updates",
+      "Always slower than traditional CSS due to additional JavaScript overhead",
+      "No performance impact as styles are pre-compiled",
+      "CSS-in-JS libraries automatically optimize all rendering performance"
+    ],
+    "explanation": "CSS-in-JS libraries have runtime costs for generating and injecting styles, which can impact performance. They may cause style recalculations on component updates and can increase bundle size. However, they offer benefits like dynamic theming and component-scoped styles.",
+    "industryContext": "Performance-conscious teams carefully evaluate CSS-in-JS libraries and their runtime costs. Libraries like styled-components have introduced optimizations like static extraction, and some teams prefer zero-runtime alternatives like Linaria or vanilla extract.",
+    "tags": [
+      "Rendering",
+      "advanced",
+      "performance"
+    ],
+    "questionType": "multiple-choice",
+    "estimatedTime": 90,
+    "correctAnswer": 0,
+    "type": "multiple-choice",
+    "sources": []
+  },
+  {
+    "id": 46,
+    "question": "How does browser speculative parsing affect performance and what are best practices?",
+    "topic": "Resource Loading",
+    "difficulty": "Advanced",
+    "choices": [
+      "Parses HTML ahead of time to discover resources; optimize with valid HTML and resource hints",
+      "Encrypts resources for faster loading",
+      "Automatically fixes HTML syntax errors",
+      "Only works with JavaScript-heavy applications"
+    ],
+    "explanation": "Speculative parsing is when browsers parse HTML ahead of time to discover resources like images, scripts, and stylesheets before the main parser reaches them. This allows browsers to start downloading resources earlier. Best practices include writing valid HTML and using resource hints to guide speculative parsing.",
+    "industryContext": "Speculative parsing is implemented in all major browsers and can significantly reduce resource discovery time. Invalid HTML can prevent effective speculative parsing, which is why validation tools like W3C Markup Validator are important for performance optimization.",
+    "tags": [
+      "Resource Loading",
+      "advanced",
+      "performance"
+    ],
+    "questionType": "multiple-choice",
+    "estimatedTime": 90,
+    "correctAnswer": 0,
+    "type": "multiple-choice",
+    "sources": []
+  },
+  {
+    "id": 47,
+    "question": "What is the impact of JavaScript bundle composition on parsing and execution time?",
+    "topic": "Runtime Optimization",
+    "difficulty": "Advanced",
+    "choices": [
+      "Larger bundles take longer to parse and compile; optimize with code splitting and tree shaking",
+      "Bundle size only affects download time, not parsing time",
+      "Smaller bundles always perform worse due to increased HTTP requests",
+      "JavaScript parsing time is negligible regardless of bundle size"
+    ],
+    "explanation": "JavaScript bundles must be parsed, compiled, and executed by the browser. Larger bundles take significantly longer to process, especially on mobile devices. Optimization techniques include code splitting for loading only necessary code, tree shaking to remove unused code, and minification to reduce file size.",
+    "industryContext": "JavaScript parsing and compilation can account for 10-30% of page load time on mobile devices. Tools like webpack-bundle-analyzer help developers understand bundle composition and identify optimization opportunities.",
+    "tags": [
+      "Runtime Optimization",
+      "advanced",
+      "performance"
+    ],
+    "questionType": "multiple-choice",
+    "estimatedTime": 90,
+    "correctAnswer": 0,
+    "type": "multiple-choice",
+    "sources": []
+  },
+  {
+    "id": 48,
+    "question": "What are the performance considerations for implementing a Progressive Web App (PWA)?",
+    "topic": "Infrastructure",
+    "difficulty": "Advanced",
+    "choices": [
+      "Service worker overhead, caching strategies, and offline functionality impact",
+      "PWAs always improve performance automatically without any considerations",
+      "Only security considerations matter for PWAs",
+      "PWAs only work on mobile devices, not desktop performance"
+    ],
+    "explanation": "PWA implementation involves careful consideration of service worker overhead, caching strategies, and offline functionality. While PWAs can significantly improve performance through caching and offline capabilities, improper implementation can add overhead and complexity that negatively impacts performance.",
+    "industryContext": "Successful PWA implementations like Twitter Lite and Pinterest have shown 60-80% improvements in user engagement, but require careful optimization of service workers, caching strategies, and resource management to achieve performance benefits.",
+    "tags": [
+      "Infrastructure",
+      "advanced",
+      "performance"
+    ],
+    "questionType": "multiple-choice",
+    "estimatedTime": 90,
+    "correctAnswer": 0,
+    "type": "multiple-choice",
+    "sources": []
   }
-}
+]

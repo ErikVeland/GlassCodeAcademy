@@ -1,38 +1,72 @@
 #!/usr/bin/env python3
+"""
+Script to fix JSON files in content/ directory by converting string IDs to integers.
+This script will:
+1. Find all .json files in the content/ directory
+2. Convert "id": "123" to "id": 123 (string to integer)
+3. Preserve all other data structure and formatting
+4. Create backups before modifying files
+"""
 
 import json
 import os
-import glob
+import re
+import shutil
+from pathlib import Path
 
-def convert_ids_to_strings(data):
-    """Recursively convert integer IDs to strings in JSON data"""
-    if isinstance(data, dict):
-        for key, value in data.items():
-            if key == "id" and isinstance(value, int):
-                data[key] = str(value)
-            else:
-                convert_ids_to_strings(value)
-    elif isinstance(data, list):
-        for item in data:
-            convert_ids_to_strings(item)
+def backup_file(file_path):
+    """Create a backup of the file before modifying it."""
+    backup_path = f"{file_path}.backup"
+    if not os.path.exists(backup_path):
+        shutil.copy2(file_path, backup_path)
+        print(f"✓ Created backup: {backup_path}")
+    else:
+        print(f"⚠ Backup already exists: {backup_path}")
 
-def fix_json_file(file_path):
-    """Fix a single JSON file by converting integer IDs to strings"""
+def fix_json_ids(file_path):
+    """Fix string IDs in a JSON file by converting them to integers."""
     try:
-        print(f"Processing: {file_path}")
-        
-        # Read the file
+        # Read the file content
         with open(file_path, 'r', encoding='utf-8') as f:
-            data = json.load(f)
+            content = f.read()
         
-        # Convert IDs
-        convert_ids_to_strings(data)
+        # Check if file contains string IDs that need fixing
+        if not re.search(r'"id":\s*"[0-9]+"', content):
+            print(f"⏭ No string IDs found in: {file_path}")
+            return False
         
-        # Write back to file
+        # Create backup before modifying
+        backup_file(file_path)
+        
+        # Parse JSON to validate structure
+        try:
+            data = json.loads(content)
+        except json.JSONDecodeError as e:
+            print(f"❌ Invalid JSON in {file_path}: {e}")
+            return False
+        
+        # Use regex to replace string IDs with integer IDs
+        # This preserves formatting better than parsing and re-serializing JSON
+        fixed_content = re.sub(
+            r'"id":\s*"([0-9]+)"',
+            r'"id": \1',
+            content
+        )
+        
+        # Verify the fix worked by parsing the modified JSON
+        try:
+            json.loads(fixed_content)
+        except json.JSONDecodeError as e:
+            print(f"❌ Fixed JSON is invalid in {file_path}: {e}")
+            return False
+        
+        # Write the fixed content back to the file
         with open(file_path, 'w', encoding='utf-8') as f:
-            json.dump(data, f, indent=2, ensure_ascii=False)
+            f.write(fixed_content)
         
-        print(f"✅ Successfully processed: {file_path}")
+        # Count how many IDs were fixed
+        id_count = len(re.findall(r'"id":\s*[0-9]+', fixed_content))
+        print(f"✅ Fixed {id_count} IDs in: {file_path}")
         return True
         
     except Exception as e:
@@ -40,39 +74,56 @@ def fix_json_file(file_path):
         return False
 
 def main():
-    """Main function to process all JSON files"""
-    print("🔧 Starting comprehensive JSON ID conversion...")
+    """Main function to process all JSON files in content/ directory."""
+    content_dir = Path("content")
     
-    # Find all JSON files in content directory
-    content_dir = "/Users/veland/GlassCodeAcademy/content"
-    json_files = []
+    if not content_dir.exists():
+        print("❌ Content directory not found!")
+        return
     
-    # Get all JSON files recursively
-    for root, dirs, files in os.walk(content_dir):
-        for file in files:
-            if file.endswith('.json') and file != 'registry.json':  # Skip registry.json
-                json_files.append(os.path.join(root, file))
+    # Find all JSON files in content/ directory and subdirectories
+    json_files = list(content_dir.rglob("*.json"))
     
-    print(f"📁 Found {len(json_files)} JSON files to process")
+    if not json_files:
+        print("❌ No JSON files found in content/ directory!")
+        return
     
-    success_count = 0
+    print(f"🔍 Found {len(json_files)} JSON files to process...")
+    print()
+    
+    fixed_count = 0
+    skipped_count = 0
     error_count = 0
     
-    for file_path in sorted(json_files):
-        if fix_json_file(file_path):
-            success_count += 1
+    for json_file in sorted(json_files):
+        # Skip backup files
+        if json_file.name.endswith('.backup'):
+            continue
+            
+        print(f"Processing: {json_file}")
+        
+        result = fix_json_ids(json_file)
+        if result is True:
+            fixed_count += 1
+        elif result is False:
+            skipped_count += 1
         else:
             error_count += 1
+        
+        print()
     
-    print(f"\n📊 Summary:")
-    print(f"✅ Successfully processed: {success_count} files")
-    print(f"❌ Errors: {error_count} files")
-    print(f"🎯 Total files: {len(json_files)}")
+    print("=" * 50)
+    print("SUMMARY:")
+    print(f"✅ Files fixed: {fixed_count}")
+    print(f"⏭ Files skipped (no string IDs): {skipped_count}")
+    print(f"❌ Files with errors: {error_count}")
+    print(f"📁 Total files processed: {len([f for f in json_files if not f.name.endswith('.backup')])}")
     
-    if error_count == 0:
-        print("🎉 All JSON files have been successfully converted!")
-    else:
-        print("⚠️  Some files had errors. Please check the output above.")
+    if fixed_count > 0:
+        print()
+        print("🎉 ID conversion completed successfully!")
+        print("💾 Backup files were created with .backup extension")
+        print("🔍 You can verify the changes by checking the modified files")
 
 if __name__ == "__main__":
     main()

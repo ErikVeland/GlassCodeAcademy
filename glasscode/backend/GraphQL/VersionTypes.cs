@@ -3,9 +3,9 @@ using backend.Models;
 
 namespace backend.GraphQL
 {
-    public class VersionLessonType : ObjectType<VersionLesson>
+    public class VersionLessonType : ObjectType<BaseLesson>
     {
-        protected override void Configure(IObjectTypeDescriptor<VersionLesson> descriptor)
+        protected override void Configure(IObjectTypeDescriptor<BaseLesson> descriptor)
         {
             descriptor.Name("VersionLesson");
             descriptor.Description("Represents a Version Control learning lesson with code examples");
@@ -19,9 +19,9 @@ namespace backend.GraphQL
         }
     }
 
-    public class VersionInterviewQuestionType : ObjectType<VersionInterviewQuestion>
+    public class VersionInterviewQuestionType : ObjectType<BaseInterviewQuestion>
     {
-        protected override void Configure(IObjectTypeDescriptor<VersionInterviewQuestion> descriptor)
+        protected override void Configure(IObjectTypeDescriptor<BaseInterviewQuestion> descriptor)
         {
             descriptor.Name("VersionInterviewQuestion");
             descriptor.Description("Represents a Version Control interview question with multiple choice or open-ended format");

@@ -16,9 +16,9 @@ namespace backend.Models
         public int LessonId { get; set; }
 
         /// <summary>
-        /// The module name (e.g., "dotnet", "nextjs", "graphql")
+        /// The module slug (e.g., "dotnet-fundamentals", "nextjs-advanced", "graphql-advanced")
         /// </summary>
-        public string Module { get; set; } = string.Empty;
+        public string ModuleSlug { get; set; } = string.Empty;
 
         /// <summary>
         /// The status of the lesson (e.g., "completed", "in-progress")

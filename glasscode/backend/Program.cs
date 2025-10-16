@@ -28,7 +28,8 @@ builder.Services.AddAuthorization();
 builder.Services.AddScoped<Query>();
 builder.Services.AddScoped<Mutation>();
 
-// Removed REST controllers and Swagger in favor of GraphQL
+// Add REST controllers back for API endpoints
+builder.Services.AddControllers();
 
 // Enhanced GraphQL server configuration
 builder.Services.AddGraphQLServer()
@@ -67,6 +68,9 @@ builder.Services.AddGraphQLServer()
     // DotNet GraphQL types
     .AddType<backend.GraphQL.DotNetLessonType>()
     .AddType<backend.GraphQL.DotNetInterviewQuestionType>()
+    // GraphQL Advanced GraphQL types
+    .AddType<backend.GraphQL.GraphQLLessonType>()
+    .AddType<backend.GraphQL.GraphQLInterviewQuestionType>()
     // Programming Fundamentals GraphQL types
     .AddType<backend.GraphQL.ProgrammingLessonType>()
     .AddType<backend.GraphQL.ProgrammingInterviewQuestionType>()
@@ -85,6 +89,11 @@ builder.Services.AddGraphQLServer()
     .ModifyRequestOptions(opt => opt.IncludeExceptionDetails = true);
 
 var app = builder.Build();
+
+// Initialize DataService to load all data during startup
+Console.WriteLine("🚀 Initializing DataService...");
+var dataService = backend.Services.DataService.Instance;
+Console.WriteLine($"✅ DataService initialized with {dataService.DotNetLessons.Count()} DotNet lessons");
 
 // Middleware to check for unlock parameter
 app.Use(async (context, next) =>
@@ -106,7 +115,8 @@ if (!app.Environment.IsDevelopment())
 app.UseRouting();
 app.UseCors("AllowFrontend");
 app.UseAuthorization();
-// Removed REST controller mapping
+// Map REST controllers for API endpoints
+app.MapControllers();
 app.MapGraphQL("/api"); // Map GraphQL to /api for backward compatibility
 app.MapGraphQL("/graphql"); // Keep original GraphQL endpoint
 
@@ -214,359 +224,375 @@ public static class TestDataGenerator
 public class Query {
     private readonly backend.Services.DataService _dataService = backend.Services.DataService.Instance;
 
-    public IEnumerable<Lesson> DotNetLessons(string? topic = null, string? sortBy = null, string? sortOrder = null, int? limit = null, int? offset = null)
+    public IEnumerable<BaseLesson> DotNetLessons(string? topic = null, string? sortBy = null, string? sortOrder = null, int? limit = null, int? offset = null)
         => backend.Services.DataService.ApplyQuery(_dataService.DotNetLessons, topic, sortBy, sortOrder, limit, offset);
     
-    public IEnumerable<Lesson> GraphQLLessons(string? topic = null, string? sortBy = null, string? sortOrder = null, int? limit = null, int? offset = null)
+    public IEnumerable<BaseLesson> GraphQLLessons(string? topic = null, string? sortBy = null, string? sortOrder = null, int? limit = null, int? offset = null)
         => backend.Services.DataService.ApplyQuery(_dataService.GraphQLLessons, topic, sortBy, sortOrder, limit, offset);
     
-    public IEnumerable<InterviewQuestion> DotNetInterviewQuestions(string? topic = null, string? sortBy = null, string? sortOrder = null, int? limit = null, int? offset = null)
-        => backend.Services.DataService.ApplyQuery(_dataService.DotNetInterviewQuestions, topic, sortBy, sortOrder, limit, offset);
+    public IEnumerable<BaseInterviewQuestion> DotNetInterviewQuestions(string? topic = null, string? sortBy = null, string? sortOrder = null, int? limit = null, int? offset = null)
+    {
+        // Use cached data from DataService instead of loading JSON file on every request
+        var questions = _dataService.DotNetInterviewQuestions;
+        if (AppState.IsUnlocked && (!questions.Any() || questions.Count() == 0))
+        {
+            questions = TestDataGenerator.GenerateTestQuestions<BaseInterviewQuestion>(".NET");
+        }
+        return backend.Services.DataService.ApplyQuery(questions, topic, sortBy, sortOrder, limit, offset);
+    }
     
-    public IEnumerable<InterviewQuestion> GraphQLInterviewQuestions(string? topic = null, string? sortBy = null, string? sortOrder = null, int? limit = null, int? offset = null)
-        => backend.Services.DataService.ApplyQuery(_dataService.GraphQLInterviewQuestions, topic, sortBy, sortOrder, limit, offset);
-    
-    // Laravel content queries - loading from JSON files
-    public IEnumerable<LaravelLesson> LaravelLessons(string? topic = null, string? sortBy = null, string? sortOrder = null, int? limit = null, int? offset = null)
+    public IEnumerable<BaseInterviewQuestion> GraphQLInterviewQuestions(string? topic = null, string? sortBy = null, string? sortOrder = null, int? limit = null, int? offset = null)
+    {
+        // Use cached data from DataService instead of loading JSON file on every request
+        var questions = _dataService.GraphQLInterviewQuestions;
+        if (AppState.IsUnlocked && (!questions.Any() || questions.Count() == 0))
+        {
+            questions = TestDataGenerator.GenerateTestQuestions<BaseInterviewQuestion>("GraphQL");
+        }
+        return backend.Services.DataService.ApplyQuery(questions, topic, sortBy, sortOrder, limit, offset);
+    }
+
+    // Laravel content queries
+    public IEnumerable<BaseLesson> LaravelLessons(string? topic = null, string? sortBy = null, string? sortOrder = null, int? limit = null, int? offset = null)
     {
         // Use cached data from DataService instead of loading JSON file on every request
         var lessons = _dataService.LaravelLessons;
         if (AppState.IsUnlocked && (!lessons.Any() || lessons.Count() == 0))
         {
-            lessons = TestDataGenerator.GenerateTestLessons<LaravelLesson>("Laravel");
+            lessons = TestDataGenerator.GenerateTestLessons<BaseLesson>("Laravel");
         }
         return backend.Services.DataService.ApplyQuery(lessons, topic, sortBy, sortOrder, limit, offset);
     }
     
-    public IEnumerable<LaravelInterviewQuestion> LaravelInterviewQuestions(string? topic = null, string? sortBy = null, string? sortOrder = null, int? limit = null, int? offset = null)
+    public IEnumerable<BaseInterviewQuestion> LaravelInterviewQuestions(string? topic = null, string? sortBy = null, string? sortOrder = null, int? limit = null, int? offset = null)
     {
         // Use cached data from DataService instead of loading JSON file on every request
         var questions = _dataService.LaravelInterviewQuestions;
         if (AppState.IsUnlocked && (!questions.Any() || questions.Count() == 0))
         {
-            questions = TestDataGenerator.GenerateTestQuestions<LaravelInterviewQuestion>("Laravel");
+            questions = TestDataGenerator.GenerateTestQuestions<BaseInterviewQuestion>("Laravel");
         }
         return backend.Services.DataService.ApplyQuery(questions, topic, sortBy, sortOrder, limit, offset);
     }
-    
+
     // React content queries
-    public IEnumerable<ReactLesson> ReactLessons(string? topic = null, string? sortBy = null, string? sortOrder = null, int? limit = null, int? offset = null)
+    public IEnumerable<BaseLesson> ReactLessons(string? topic = null, string? sortBy = null, string? sortOrder = null, int? limit = null, int? offset = null)
     {
         // Use cached data from DataService instead of loading JSON file on every request
         var lessons = _dataService.ReactLessons;
         if (AppState.IsUnlocked && (!lessons.Any() || lessons.Count() == 0))
         {
-            lessons = TestDataGenerator.GenerateTestLessons<ReactLesson>("React");
+            lessons = TestDataGenerator.GenerateTestLessons<BaseLesson>("React");
         }
         return backend.Services.DataService.ApplyQuery(lessons, topic, sortBy, sortOrder, limit, offset);
     }
     
-    public IEnumerable<ReactInterviewQuestion> ReactInterviewQuestions(string? topic = null, string? sortBy = null, string? sortOrder = null, int? limit = null, int? offset = null)
+    public IEnumerable<BaseInterviewQuestion> ReactInterviewQuestions(string? topic = null, string? sortBy = null, string? sortOrder = null, int? limit = null, int? offset = null)
     {
         // Use cached data from DataService instead of loading JSON file on every request
         var questions = _dataService.ReactInterviewQuestions;
         if (AppState.IsUnlocked && (!questions.Any() || questions.Count() == 0))
         {
-            questions = TestDataGenerator.GenerateTestQuestions<ReactInterviewQuestion>("React");
+            questions = TestDataGenerator.GenerateTestQuestions<BaseInterviewQuestion>("React");
         }
         return backend.Services.DataService.ApplyQuery(questions, topic, sortBy, sortOrder, limit, offset);
     }
-    
+
     // Tailwind content queries
-    public IEnumerable<TailwindLesson> TailwindLessons(string? topic = null, string? sortBy = null, string? sortOrder = null, int? limit = null, int? offset = null)
+    public IEnumerable<BaseLesson> TailwindLessons(string? topic = null, string? sortBy = null, string? sortOrder = null, int? limit = null, int? offset = null)
     {
         // Use cached data from DataService instead of loading JSON file on every request
         var lessons = _dataService.TailwindLessons;
         if (AppState.IsUnlocked && (!lessons.Any() || lessons.Count() == 0))
         {
-            lessons = TestDataGenerator.GenerateTestLessons<TailwindLesson>("Tailwind");
+            lessons = TestDataGenerator.GenerateTestLessons<BaseLesson>("Tailwind");
         }
         return backend.Services.DataService.ApplyQuery(lessons, topic, sortBy, sortOrder, limit, offset);
     }
     
-    public IEnumerable<TailwindInterviewQuestion> TailwindInterviewQuestions(string? topic = null, string? sortBy = null, string? sortOrder = null, int? limit = null, int? offset = null)
+    public IEnumerable<BaseInterviewQuestion> TailwindInterviewQuestions(string? topic = null, string? sortBy = null, string? sortOrder = null, int? limit = null, int? offset = null)
     {
         // Use cached data from DataService instead of loading JSON file on every request
         var questions = _dataService.TailwindInterviewQuestions;
         if (AppState.IsUnlocked && (!questions.Any() || questions.Count() == 0))
         {
-            questions = TestDataGenerator.GenerateTestQuestions<TailwindInterviewQuestion>("Tailwind");
+            questions = TestDataGenerator.GenerateTestQuestions<BaseInterviewQuestion>("Tailwind");
         }
         return backend.Services.DataService.ApplyQuery(questions, topic, sortBy, sortOrder, limit, offset);
     }
-    
-    // Node.js content queries
-    public IEnumerable<NodeLesson> NodeLessons(string? topic = null, string? sortBy = null, string? sortOrder = null, int? limit = null, int? offset = null)
+
+    // Node content queries
+    public IEnumerable<BaseLesson> NodeLessons(string? topic = null, string? sortBy = null, string? sortOrder = null, int? limit = null, int? offset = null)
     {
         // Use cached data from DataService instead of loading JSON file on every request
         var lessons = _dataService.NodeLessons;
         if (AppState.IsUnlocked && (!lessons.Any() || lessons.Count() == 0))
         {
-            lessons = TestDataGenerator.GenerateTestLessons<NodeLesson>("Node.js");
+            lessons = TestDataGenerator.GenerateTestLessons<BaseLesson>("Node");
         }
         return backend.Services.DataService.ApplyQuery(lessons, topic, sortBy, sortOrder, limit, offset);
     }
     
-    public IEnumerable<NodeInterviewQuestion> NodeInterviewQuestions(string? topic = null, string? sortBy = null, string? sortOrder = null, int? limit = null, int? offset = null)
+    public IEnumerable<BaseInterviewQuestion> NodeInterviewQuestions(string? topic = null, string? sortBy = null, string? sortOrder = null, int? limit = null, int? offset = null)
     {
         // Use cached data from DataService instead of loading JSON file on every request
         var questions = _dataService.NodeInterviewQuestions;
         if (AppState.IsUnlocked && (!questions.Any() || questions.Count() == 0))
         {
-            questions = TestDataGenerator.GenerateTestQuestions<NodeInterviewQuestion>("Node.js");
+            questions = TestDataGenerator.GenerateTestQuestions<BaseInterviewQuestion>("Node");
         }
         return backend.Services.DataService.ApplyQuery(questions, topic, sortBy, sortOrder, limit, offset);
     }
-    
-    // SASS content queries
-    public IEnumerable<SassLesson> SassLessons(string? topic = null, string? sortBy = null, string? sortOrder = null, int? limit = null, int? offset = null)
+
+    // Sass content queries
+    public IEnumerable<BaseLesson> SassLessons(string? topic = null, string? sortBy = null, string? sortOrder = null, int? limit = null, int? offset = null)
     {
         // Use cached data from DataService instead of loading JSON file on every request
         var lessons = _dataService.SassLessons;
         if (AppState.IsUnlocked && (!lessons.Any() || lessons.Count() == 0))
         {
-            lessons = TestDataGenerator.GenerateTestLessons<SassLesson>("SASS");
+            lessons = TestDataGenerator.GenerateTestLessons<BaseLesson>("Sass");
         }
         return backend.Services.DataService.ApplyQuery(lessons, topic, sortBy, sortOrder, limit, offset);
     }
     
-    public IEnumerable<SassInterviewQuestion> SassInterviewQuestions(string? topic = null, string? sortBy = null, string? sortOrder = null, int? limit = null, int? offset = null)
+    public IEnumerable<BaseInterviewQuestion> SassInterviewQuestions(string? topic = null, string? sortBy = null, string? sortOrder = null, int? limit = null, int? offset = null)
     {
         // Use cached data from DataService instead of loading JSON file on every request
         var questions = _dataService.SassInterviewQuestions;
         if (AppState.IsUnlocked && (!questions.Any() || questions.Count() == 0))
         {
-            questions = TestDataGenerator.GenerateTestQuestions<SassInterviewQuestion>("SASS");
+            questions = TestDataGenerator.GenerateTestQuestions<BaseInterviewQuestion>("Sass");
         }
         return backend.Services.DataService.ApplyQuery(questions, topic, sortBy, sortOrder, limit, offset);
     }
-    
+
     // Vue content queries
-    public IEnumerable<VueLesson> VueLessons(string? topic = null, string? sortBy = null, string? sortOrder = null, int? limit = null, int? offset = null)
+    public IEnumerable<BaseLesson> VueLessons(string? topic = null, string? sortBy = null, string? sortOrder = null, int? limit = null, int? offset = null)
     {
         // Use cached data from DataService instead of loading JSON file on every request
         var lessons = _dataService.VueLessons;
         if (AppState.IsUnlocked && (!lessons.Any() || lessons.Count() == 0))
         {
-            lessons = TestDataGenerator.GenerateTestLessons<VueLesson>("Vue");
+            lessons = TestDataGenerator.GenerateTestLessons<BaseLesson>("Vue");
         }
         return backend.Services.DataService.ApplyQuery(lessons, topic, sortBy, sortOrder, limit, offset);
     }
     
-    public IEnumerable<VueInterviewQuestion> VueInterviewQuestions(string? topic = null, string? sortBy = null, string? sortOrder = null, int? limit = null, int? offset = null)
+    public IEnumerable<BaseInterviewQuestion> VueInterviewQuestions(string? topic = null, string? sortBy = null, string? sortOrder = null, int? limit = null, int? offset = null)
     {
         // Use cached data from DataService instead of loading JSON file on every request
         var questions = _dataService.VueInterviewQuestions;
         if (AppState.IsUnlocked && (!questions.Any() || questions.Count() == 0))
         {
-            questions = TestDataGenerator.GenerateTestQuestions<VueInterviewQuestion>("Vue");
+            questions = TestDataGenerator.GenerateTestQuestions<BaseInterviewQuestion>("Vue");
         }
         return backend.Services.DataService.ApplyQuery(questions, topic, sortBy, sortOrder, limit, offset);
     }
-    
+
     // TypeScript content queries
-    public IEnumerable<TypescriptLesson> TypescriptLessons(string? topic = null, string? sortBy = null, string? sortOrder = null, int? limit = null, int? offset = null)
+    public IEnumerable<BaseLesson> TypescriptLessons(string? topic = null, string? sortBy = null, string? sortOrder = null, int? limit = null, int? offset = null)
     {
         // Use cached data from DataService instead of loading JSON file on every request
         var lessons = _dataService.TypescriptLessons;
         if (AppState.IsUnlocked && (!lessons.Any() || lessons.Count() == 0))
         {
-            lessons = TestDataGenerator.GenerateTestLessons<TypescriptLesson>("TypeScript");
+            lessons = TestDataGenerator.GenerateTestLessons<BaseLesson>("TypeScript");
         }
         return backend.Services.DataService.ApplyQuery(lessons, topic, sortBy, sortOrder, limit, offset);
     }
     
-    public IEnumerable<TypescriptInterviewQuestion> TypescriptInterviewQuestions(string? topic = null, string? sortBy = null, string? sortOrder = null, int? limit = null, int? offset = null)
+    public IEnumerable<BaseInterviewQuestion> TypescriptInterviewQuestions(string? topic = null, string? sortBy = null, string? sortOrder = null, int? limit = null, int? offset = null)
     {
         // Use cached data from DataService instead of loading JSON file on every request
         var questions = _dataService.TypescriptInterviewQuestions;
         if (AppState.IsUnlocked && (!questions.Any() || questions.Count() == 0))
         {
-            questions = TestDataGenerator.GenerateTestQuestions<TypescriptInterviewQuestion>("TypeScript");
+            questions = TestDataGenerator.GenerateTestQuestions<BaseInterviewQuestion>("TypeScript");
         }
         return backend.Services.DataService.ApplyQuery(questions, topic, sortBy, sortOrder, limit, offset);
     }
-    
+
     // Database content queries
-    public IEnumerable<DatabaseLesson> DatabaseLessons(string? topic = null, string? sortBy = null, string? sortOrder = null, int? limit = null, int? offset = null)
+    public IEnumerable<BaseLesson> DatabaseLessons(string? topic = null, string? sortBy = null, string? sortOrder = null, int? limit = null, int? offset = null)
     {
         // Use cached data from DataService instead of loading JSON file on every request
         var lessons = _dataService.DatabaseLessons;
         if (AppState.IsUnlocked && (!lessons.Any() || lessons.Count() == 0))
         {
-            lessons = TestDataGenerator.GenerateTestLessons<DatabaseLesson>("Database");
+            lessons = TestDataGenerator.GenerateTestLessons<BaseLesson>("Database");
         }
         return backend.Services.DataService.ApplyQuery(lessons, topic, sortBy, sortOrder, limit, offset);
     }
     
-    public IEnumerable<DatabaseInterviewQuestion> DatabaseInterviewQuestions(string? topic = null, string? sortBy = null, string? sortOrder = null, int? limit = null, int? offset = null)
+    public IEnumerable<BaseInterviewQuestion> DatabaseInterviewQuestions(string? topic = null, string? sortBy = null, string? sortOrder = null, int? limit = null, int? offset = null)
     {
         // Use cached data from DataService instead of loading JSON file on every request
         var questions = _dataService.DatabaseInterviewQuestions;
         if (AppState.IsUnlocked && (!questions.Any() || questions.Count() == 0))
         {
-            questions = TestDataGenerator.GenerateTestQuestions<DatabaseInterviewQuestion>("Database");
+            questions = TestDataGenerator.GenerateTestQuestions<BaseInterviewQuestion>("Database");
         }
         return backend.Services.DataService.ApplyQuery(questions, topic, sortBy, sortOrder, limit, offset);
     }
-    
+
     // Testing content queries
-    public IEnumerable<TestingLesson> TestingLessons(string? topic = null, string? sortBy = null, string? sortOrder = null, int? limit = null, int? offset = null)
+    public IEnumerable<BaseLesson> TestingLessons(string? topic = null, string? sortBy = null, string? sortOrder = null, int? limit = null, int? offset = null)
     {
         // Use cached data from DataService instead of loading JSON file on every request
         var lessons = _dataService.TestingLessons;
         if (AppState.IsUnlocked && (!lessons.Any() || lessons.Count() == 0))
         {
-            lessons = TestDataGenerator.GenerateTestLessons<TestingLesson>("Testing");
+            lessons = TestDataGenerator.GenerateTestLessons<BaseLesson>("Testing");
         }
         return backend.Services.DataService.ApplyQuery(lessons, topic, sortBy, sortOrder, limit, offset);
     }
     
-    public IEnumerable<TestingInterviewQuestion> TestingInterviewQuestions(string? topic = null, string? sortBy = null, string? sortOrder = null, int? limit = null, int? offset = null)
+    public IEnumerable<BaseInterviewQuestion> TestingInterviewQuestions(string? topic = null, string? sortBy = null, string? sortOrder = null, int? limit = null, int? offset = null)
     {
         // Use cached data from DataService instead of loading JSON file on every request
         var questions = _dataService.TestingInterviewQuestions;
         if (AppState.IsUnlocked && (!questions.Any() || questions.Count() == 0))
         {
-            questions = TestDataGenerator.GenerateTestQuestions<TestingInterviewQuestion>("Testing");
+            questions = TestDataGenerator.GenerateTestQuestions<BaseInterviewQuestion>("Testing");
         }
         return backend.Services.DataService.ApplyQuery(questions, topic, sortBy, sortOrder, limit, offset);
     }
-    
-    // Programming Fundamentals content queries
-    public IEnumerable<ProgrammingLesson> ProgrammingLessons(string? topic = null, string? sortBy = null, string? sortOrder = null, int? limit = null, int? offset = null)
+
+    // Programming content queries
+    public IEnumerable<BaseLesson> ProgrammingLessons(string? topic = null, string? sortBy = null, string? sortOrder = null, int? limit = null, int? offset = null)
     {
         // Use cached data from DataService instead of loading JSON file on every request
         var lessons = _dataService.ProgrammingLessons;
         if (AppState.IsUnlocked && (!lessons.Any() || lessons.Count() == 0))
         {
-            lessons = TestDataGenerator.GenerateTestLessons<ProgrammingLesson>("Programming");
+            lessons = TestDataGenerator.GenerateTestLessons<BaseLesson>("Programming");
         }
         return backend.Services.DataService.ApplyQuery(lessons, topic, sortBy, sortOrder, limit, offset);
     }
     
-    public IEnumerable<ProgrammingInterviewQuestion> ProgrammingInterviewQuestions(string? topic = null, string? sortBy = null, string? sortOrder = null, int? limit = null, int? offset = null)
+    public IEnumerable<BaseInterviewQuestion> ProgrammingInterviewQuestions(string? topic = null, string? sortBy = null, string? sortOrder = null, int? limit = null, int? offset = null)
     {
         // Use cached data from DataService instead of loading JSON file on every request
         var questions = _dataService.ProgrammingInterviewQuestions;
         if (AppState.IsUnlocked && (!questions.Any() || questions.Count() == 0))
         {
-            questions = TestDataGenerator.GenerateTestQuestions<ProgrammingInterviewQuestion>("Programming");
+            questions = TestDataGenerator.GenerateTestQuestions<BaseInterviewQuestion>("Programming");
         }
         return backend.Services.DataService.ApplyQuery(questions, topic, sortBy, sortOrder, limit, offset);
     }
     
     // Next.js content queries
-    public IEnumerable<NextJsLesson> NextJsLessons(string? topic = null, string? sortBy = null, string? sortOrder = null, int? limit = null, int? offset = null)
+    public IEnumerable<BaseLesson> NextJsLessons(string? topic = null, string? sortBy = null, string? sortOrder = null, int? limit = null, int? offset = null)
     {
         // Use cached data from DataService instead of loading JSON file on every request
         var lessons = _dataService.NextJsLessons;
         if (AppState.IsUnlocked && (!lessons.Any() || lessons.Count() == 0))
         {
-            lessons = TestDataGenerator.GenerateTestLessons<NextJsLesson>("Next.js");
+            lessons = TestDataGenerator.GenerateTestLessons<BaseLesson>("Next.js");
         }
         return backend.Services.DataService.ApplyQuery(lessons, topic, sortBy, sortOrder, limit, offset);
     }
     
-    public IEnumerable<NextJsInterviewQuestion> NextJsInterviewQuestions(string? topic = null, string? sortBy = null, string? sortOrder = null, int? limit = null, int? offset = null)
+    public IEnumerable<BaseInterviewQuestion> NextJsInterviewQuestions(string? topic = null, string? sortBy = null, string? sortOrder = null, int? limit = null, int? offset = null)
     {
         // Use cached data from DataService instead of loading JSON file on every request
         var questions = _dataService.NextJsInterviewQuestions;
         if (AppState.IsUnlocked && (!questions.Any() || questions.Count() == 0))
         {
-            questions = TestDataGenerator.GenerateTestQuestions<NextJsInterviewQuestion>("Next.js");
+            questions = TestDataGenerator.GenerateTestQuestions<BaseInterviewQuestion>("Next.js");
         }
         return backend.Services.DataService.ApplyQuery(questions, topic, sortBy, sortOrder, limit, offset);
     }
-    
-    // Performance Optimization content queries
-    public IEnumerable<PerformanceLesson> PerformanceLessons(string? topic = null, string? sortBy = null, string? sortOrder = null, int? limit = null, int? offset = null)
+
+    // Performance content queries
+    public IEnumerable<BaseLesson> PerformanceLessons(string? topic = null, string? sortBy = null, string? sortOrder = null, int? limit = null, int? offset = null)
     {
         // Use cached data from DataService instead of loading JSON file on every request
         var lessons = _dataService.PerformanceLessons;
         if (AppState.IsUnlocked && (!lessons.Any() || lessons.Count() == 0))
         {
-            lessons = TestDataGenerator.GenerateTestLessons<PerformanceLesson>("Performance");
+            lessons = TestDataGenerator.GenerateTestLessons<BaseLesson>("Performance");
         }
         return backend.Services.DataService.ApplyQuery(lessons, topic, sortBy, sortOrder, limit, offset);
     }
     
-    public IEnumerable<PerformanceInterviewQuestion> PerformanceInterviewQuestions(string? topic = null, string? sortBy = null, string? sortOrder = null, int? limit = null, int? offset = null)
+    public IEnumerable<BaseInterviewQuestion> PerformanceInterviewQuestions(string? topic = null, string? sortBy = null, string? sortOrder = null, int? limit = null, int? offset = null)
     {
         // Use cached data from DataService instead of loading JSON file on every request
         var questions = _dataService.PerformanceInterviewQuestions;
         if (AppState.IsUnlocked && (!questions.Any() || questions.Count() == 0))
         {
-            questions = TestDataGenerator.GenerateTestQuestions<PerformanceInterviewQuestion>("Performance");
+            questions = TestDataGenerator.GenerateTestQuestions<BaseInterviewQuestion>("Performance");
         }
         return backend.Services.DataService.ApplyQuery(questions, topic, sortBy, sortOrder, limit, offset);
     }
-    
-    // Security Fundamentals content queries
-    public IEnumerable<SecurityLesson> SecurityLessons(string? topic = null, string? sortBy = null, string? sortOrder = null, int? limit = null, int? offset = null)
+
+    // Security content queries
+    public IEnumerable<BaseLesson> SecurityLessons(string? topic = null, string? sortBy = null, string? sortOrder = null, int? limit = null, int? offset = null)
     {
         // Use cached data from DataService instead of loading JSON file on every request
         var lessons = _dataService.SecurityLessons;
         if (AppState.IsUnlocked && (!lessons.Any() || lessons.Count() == 0))
         {
-            lessons = TestDataGenerator.GenerateTestLessons<SecurityLesson>("Security");
+            lessons = TestDataGenerator.GenerateTestLessons<BaseLesson>("Security");
         }
         return backend.Services.DataService.ApplyQuery(lessons, topic, sortBy, sortOrder, limit, offset);
     }
     
-    public IEnumerable<SecurityInterviewQuestion> SecurityInterviewQuestions(string? topic = null, string? sortBy = null, string? sortOrder = null, int? limit = null, int? offset = null)
+    public IEnumerable<BaseInterviewQuestion> SecurityInterviewQuestions(string? topic = null, string? sortBy = null, string? sortOrder = null, int? limit = null, int? offset = null)
     {
         // Use cached data from DataService instead of loading JSON file on every request
         var questions = _dataService.SecurityInterviewQuestions;
         if (AppState.IsUnlocked && (!questions.Any() || questions.Count() == 0))
         {
-            questions = TestDataGenerator.GenerateTestQuestions<SecurityInterviewQuestion>("Security");
+            questions = TestDataGenerator.GenerateTestQuestions<BaseInterviewQuestion>("Security");
         }
         return backend.Services.DataService.ApplyQuery(questions, topic, sortBy, sortOrder, limit, offset);
     }
-    
+
     // Version Control content queries
-    public IEnumerable<VersionLesson> VersionLessons(string? topic = null, string? sortBy = null, string? sortOrder = null, int? limit = null, int? offset = null)
+    public IEnumerable<BaseLesson> VersionLessons(string? topic = null, string? sortBy = null, string? sortOrder = null, int? limit = null, int? offset = null)
     {
         // Use cached data from DataService instead of loading JSON file on every request
         var lessons = _dataService.VersionLessons;
         if (AppState.IsUnlocked && (!lessons.Any() || lessons.Count() == 0))
         {
-            lessons = TestDataGenerator.GenerateTestLessons<VersionLesson>("Version Control");
+            lessons = TestDataGenerator.GenerateTestLessons<BaseLesson>("Version Control");
         }
         return backend.Services.DataService.ApplyQuery(lessons, topic, sortBy, sortOrder, limit, offset);
     }
     
-    public IEnumerable<VersionInterviewQuestion> VersionInterviewQuestions(string? topic = null, string? sortBy = null, string? sortOrder = null, int? limit = null, int? offset = null)
+    public IEnumerable<BaseInterviewQuestion> VersionInterviewQuestions(string? topic = null, string? sortBy = null, string? sortOrder = null, int? limit = null, int? offset = null)
     {
         // Use cached data from DataService instead of loading JSON file on every request
         var questions = _dataService.VersionInterviewQuestions;
         if (AppState.IsUnlocked && (!questions.Any() || questions.Count() == 0))
         {
-            questions = TestDataGenerator.GenerateTestQuestions<VersionInterviewQuestion>("Version Control");
+            questions = TestDataGenerator.GenerateTestQuestions<BaseInterviewQuestion>("Version Control");
         }
         return backend.Services.DataService.ApplyQuery(questions, topic, sortBy, sortOrder, limit, offset);
     }
-    
-    // Web Fundamentals content queries
-    public IEnumerable<WebLesson> WebLessons(string? topic = null, string? sortBy = null, string? sortOrder = null, int? limit = null, int? offset = null)
+
+    // Web content queries
+    public IEnumerable<BaseLesson> WebLessons(string? topic = null, string? sortBy = null, string? sortOrder = null, int? limit = null, int? offset = null)
     {
         // Use cached data from DataService instead of loading JSON file on every request
         var lessons = _dataService.WebLessons;
         if (AppState.IsUnlocked && (!lessons.Any() || lessons.Count() == 0))
         {
-            lessons = TestDataGenerator.GenerateTestLessons<WebLesson>("Web Fundamentals");
+            lessons = TestDataGenerator.GenerateTestLessons<BaseLesson>("Web");
         }
         return backend.Services.DataService.ApplyQuery(lessons, topic, sortBy, sortOrder, limit, offset);
     }
     
-    public IEnumerable<WebInterviewQuestion> WebInterviewQuestions(string? topic = null, string? sortBy = null, string? sortOrder = null, int? limit = null, int? offset = null)
+    public IEnumerable<BaseInterviewQuestion> WebInterviewQuestions(string? topic = null, string? sortBy = null, string? sortOrder = null, int? limit = null, int? offset = null)
     {
         // Use cached data from DataService instead of loading JSON file on every request
         var questions = _dataService.WebInterviewQuestions;
         if (AppState.IsUnlocked && (!questions.Any() || questions.Count() == 0))
         {
-            questions = TestDataGenerator.GenerateTestQuestions<WebInterviewQuestion>("Web Fundamentals");
+            questions = TestDataGenerator.GenerateTestQuestions<BaseInterviewQuestion>("Web");
         }
         return backend.Services.DataService.ApplyQuery(questions, topic, sortBy, sortOrder, limit, offset);
     }
@@ -577,7 +603,7 @@ public class Mutation {
 
     public AnswerResult SubmitAnswer(string questionId, int answerIndex)
     {
-        return _dataService.ValidateAnswer(questionId, answerIndex);
+        return _dataService.ValidateAnswer(int.Parse(questionId), answerIndex);
     }
 
     public ProgressResult TrackProgress(int userId, int lessonId, string module)
@@ -597,7 +623,7 @@ public class Mutation {
                 Explanation = "Test mode: All answers are correct!" 
             };
         }
-        return _dataService.ValidateLaravelAnswer(questionId, answerIndex);
+        return _dataService.ValidateLaravelAnswer(int.Parse(questionId), answerIndex);
     }
     
     // React answer submission
@@ -612,7 +638,7 @@ public class Mutation {
                 Explanation = "Test mode: All answers are correct!" 
             };
         }
-        return _dataService.ValidateReactAnswer(questionId, answerIndex);
+        return _dataService.ValidateReactAnswer(int.Parse(questionId), answerIndex);
     }
     
     // Tailwind answer submission
@@ -627,7 +653,7 @@ public class Mutation {
                 Explanation = "Test mode: All answers are correct!" 
             };
         }
-        return _dataService.ValidateTailwindAnswer(questionId, answerIndex);
+        return _dataService.ValidateTailwindAnswer(int.Parse(questionId), answerIndex);
     }
     
     // Node.js answer submission
@@ -642,7 +668,7 @@ public class Mutation {
                 Explanation = "Test mode: All answers are correct!" 
             };
         }
-        return _dataService.ValidateNodeAnswer(questionId, answerIndex);
+        return _dataService.ValidateNodeAnswer(int.Parse(questionId), answerIndex);
     }
     
     // Sass answer submission
@@ -657,7 +683,7 @@ public class Mutation {
                 Explanation = "Test mode: All answers are correct!" 
             };
         }
-        return _dataService.ValidateSassAnswer(questionId, answerIndex);
+        return _dataService.ValidateSassAnswer(int.Parse(questionId), answerIndex);
     }
     
     // Vue answer submission
@@ -672,7 +698,7 @@ public class Mutation {
                 Explanation = "Test mode: All answers are correct!" 
             };
         }
-        return _dataService.ValidateVueAnswer(questionId, answerIndex);
+        return _dataService.ValidateVueAnswer(int.Parse(questionId), answerIndex);
     }
     
     // Web Fundamentals answer submission
@@ -687,7 +713,7 @@ public class Mutation {
                 Explanation = "Test mode: All answers are correct!" 
             };
         }
-        return _dataService.ValidateWebAnswer(questionId, answerIndex);
+        return _dataService.ValidateWebAnswer(int.Parse(questionId), answerIndex);
     }
     
     // TypeScript answer submission
@@ -702,7 +728,7 @@ public class Mutation {
                 Explanation = "Test mode: All answers are correct!" 
             };
         }
-        return _dataService.ValidateTypescriptAnswer(questionId, answerIndex);
+        return _dataService.ValidateTypescriptAnswer(int.Parse(questionId), answerIndex);
     }
     
     // Database answer submission
@@ -717,7 +743,7 @@ public class Mutation {
                 Explanation = "Test mode: All answers are correct!" 
             };
         }
-        return _dataService.ValidateDatabaseAnswer(questionId, answerIndex);
+        return _dataService.ValidateDatabaseAnswer(int.Parse(questionId), answerIndex);
     }
     
     // Testing answer submission
@@ -732,7 +758,7 @@ public class Mutation {
                 Explanation = "Test mode: All answers are correct!" 
             };
         }
-        return _dataService.ValidateTestingAnswer(questionId, answerIndex);
+        return _dataService.ValidateTestingAnswer(int.Parse(questionId), answerIndex);
     }
     
     // Programming answer submission
@@ -748,7 +774,7 @@ public class Mutation {
             };
         }
         // Use the specific programming validation method
-        return _dataService.ValidateProgrammingAnswer(questionId, answerIndex);
+        return _dataService.ValidateProgrammingAnswer(int.Parse(questionId), answerIndex);
     }
     
     // Next.js answer submission
@@ -763,7 +789,7 @@ public class Mutation {
                 Explanation = "Test mode: All answers are correct!" 
             };
         }
-        return _dataService.ValidateNextJsAnswer(questionId, answerIndex);
+        return _dataService.ValidateNextJsAnswer(int.Parse(questionId), answerIndex);
     }
     
     // Performance Optimization answer submission
@@ -778,7 +804,7 @@ public class Mutation {
                 Explanation = "Test mode: All answers are correct!" 
             };
         }
-        return _dataService.ValidatePerformanceAnswer(questionId, answerIndex);
+        return _dataService.ValidatePerformanceAnswer(int.Parse(questionId), answerIndex);
     }
     
     // Security Fundamentals answer submission
@@ -793,7 +819,7 @@ public class Mutation {
                 Explanation = "Test mode: All answers are correct!" 
             };
         }
-        return _dataService.ValidateSecurityAnswer(questionId, answerIndex);
+        return _dataService.ValidateSecurityAnswer(int.Parse(questionId), answerIndex);
     }
     
     // Version Control answer submission
@@ -808,7 +834,7 @@ public class Mutation {
                 Explanation = "Test mode: All answers are correct!" 
             };
         }
-        return _dataService.ValidateVersionAnswer(questionId, answerIndex);
+        return _dataService.ValidateVersionAnswer(int.Parse(questionId), answerIndex);
     }
 }
 

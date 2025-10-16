@@ -1,0 +1,174 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Standardized Lesson Schema",
+  "description": "This schema defines the exact structure that ALL lesson JSON files must follow for consistency",
+  "type": "array",
+  "items": {
+    "type": "object",
+    "required": [
+      "id",
+      "moduleSlug",
+      "title",
+      "order",
+      "objectives",
+      "intro",
+      "code",
+      "pitfalls",
+      "exercises",
+      "next",
+      "estimatedMinutes",
+      "difficulty",
+      "tags",
+      "lastUpdated",
+      "version"
+    ],
+    "properties": {
+      "id": {
+        "type": "integer",
+        "description": "Unique lesson identifier within the module"
+      },
+      "moduleSlug": {
+        "type": "string",
+        "description": "Module identifier in kebab-case (e.g., 'laravel-fundamentals')"
+      },
+      "title": {
+        "type": "string",
+        "description": "Human-readable lesson title"
+      },
+      "order": {
+        "type": "integer",
+        "description": "Lesson order within the module"
+      },
+      "objectives": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        },
+        "description": "Learning objectives for this lesson"
+      },
+      "intro": {
+        "type": "string",
+        "description": "Lesson introduction text"
+      },
+      "code": {
+        "type": "object",
+        "required": ["example", "explanation", "language"],
+        "properties": {
+          "example": {
+            "type": "string",
+            "description": "Code example"
+          },
+          "explanation": {
+            "type": "string",
+            "description": "Explanation of the code example"
+          },
+          "language": {
+            "type": "string",
+            "description": "Programming language of the code example"
+          }
+        },
+        "additionalProperties": false
+      },
+      "pitfalls": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "required": ["mistake", "solution", "severity"],
+          "properties": {
+            "mistake": {
+              "type": "string",
+              "description": "Description of the common mistake"
+            },
+            "solution": {
+              "type": "string",
+              "description": "How to avoid or fix the mistake"
+            },
+            "severity": {
+              "type": "string",
+              "enum": ["low", "medium", "high"],
+              "description": "Severity level of the mistake"
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "exercises": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "required": ["title", "description", "checkpoints"],
+          "properties": {
+            "title": {
+              "type": "string",
+              "description": "Exercise title"
+            },
+            "description": {
+              "type": "string",
+              "description": "Exercise description"
+            },
+            "checkpoints": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "description": "List of checkpoints for the exercise"
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "next": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        },
+        "description": "Array of next lesson identifiers (can be empty)"
+      },
+      "estimatedMinutes": {
+        "type": "integer",
+        "description": "Estimated time to complete the lesson in minutes"
+      },
+      "difficulty": {
+        "type": "string",
+        "enum": ["Beginner", "Intermediate", "Advanced"],
+        "description": "Difficulty level of the lesson"
+      },
+      "tags": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        },
+        "description": "Tags associated with the lesson"
+      },
+      "lastUpdated": {
+        "type": "string",
+        "format": "date-time",
+        "description": "ISO 8601 timestamp of last update"
+      },
+      "version": {
+        "type": "string",
+        "description": "Version number of the lesson"
+      },
+      "sources": {
+        "type": "array",
+        "description": "Optional sources/references for the lesson content",
+        "items": {
+          "type": "object",
+          "properties": {
+            "title": {
+              "type": "string"
+            },
+            "url": {
+              "type": "string",
+              "format": "uri"
+            },
+            "type": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "additionalProperties": false
+  }
+}

@@ -20,16 +20,23 @@ GlassCode Academy is a full-stack educational platform designed to help develope
 ## Technology Stack
 
 ### Frontend
-- Next.js 15
-- React 19
+- Next.js 15.3.5
+- React 19.0.0
 - TypeScript
 - Tailwind CSS
-- Apollo Client for GraphQL integration
+- Apollo Client 3.13.8 for GraphQL integration
 
 ### Backend
-- ASP.NET Core 9 Web API (C#)
-- GraphQL API (HotChocolate)
-- In-memory data storage
+- ASP.NET Core 8.0 Web API (C#) with .NET 8.0 SDK
+- GraphQL API (HotChocolate 13.x)
+- JSON file-based data storage
+- Laravel 11.0+ backend (PHP 8.2+) for Laravel-specific modules
+
+### Development Tools
+- Node.js 18+ 
+- .NET 8.0 SDK (version 8.0.414)
+- Visual Studio Code / Visual Studio 2022
+- Git version control
 
 ## System Architecture
 
@@ -39,55 +46,31 @@ The application follows a full-stack architecture with a Next.js frontend and AS
 
 ```mermaid
 graph TB
-    subgraph "Frontend Layer"
-        A[Next.js 15] --> B[React 19]
-        B --> C[Tailwind CSS]
-        C --> D[TypeScript]
-        A --> E[Apollo Client]
-    end
-
-    subgraph "API Layer"
-        E --> F[GraphQL API]
-        F --> G[Hot Chocolate Server]
-        G --> H[GraphQL Schema]
-    end
-
-    subgraph "Backend Layer"
-        H --> I[ASP.NET Core 9]
-        I --> J[.NET Controllers]
-        I --> K[Laravel Integration]
-        I --> L[Data Services]
-    end
-
-    subgraph "Data Layer"
-        L --> M[In-Memory Data]
-        M --> N[Lesson Data]
-        M --> O[Question Data]
-        M --> P[User Progress Data]
-    end
-
-    subgraph "Development Tools"
-        Q[Visual Studio Code]
-        R[Visual Studio 2022]
-        S[Git]
-    end
-
-    subgraph "Deployment"
-        T[Systemd Service - Frontend]
-        U[Systemd Service - Backend]
-        V[NGINX Reverse Proxy]
-        W[SSL/TLS Certificates]
-    end
-
-    A --> T
-    I --> U
-    T --> V
-    U --> V
-    V --> W
-    Q --> A
-    R --> I
-    S --> Q
-    S --> R
+    A[User Browser] --> B[Next.js 15.3.5 Frontend]
+    B --> C[Apollo Client 3.13.8]
+    C --> D[GraphQL API]
+    D --> E[ASP.NET Core 8.0 Backend]
+    E --> F[JSON Data Files]
+    
+    B --> G[Module-Specific Backends]
+    G --> H[Laravel 11.0+ Backend]
+    G --> I[Node.js Backends]
+    G --> J[React Module Backend]
+    
+    K[NGINX Gateway] --> B
+    K --> E
+    K --> G
+    
+    L[Quiz System] --> B
+    M[Progress Tracking] --> B
+    N[Technology Modules] --> G
+    
+    style A fill:#e1f5fe
+    style B fill:#f3e5f5
+    style E fill:#e8f5e8
+    style F fill:#fff3e0
+    style G fill:#f0f4c3
+    style K fill:#ffecb3
 ```
 
 ## Directory Structure
@@ -242,8 +225,9 @@ All data is accessed through GraphQL queries and mutations:
 ## Development Setup
 
 ### Prerequisites
-- .NET 8.0 SDK or later
-- Node.js 18+ and npm
+- .NET 8.0 SDK (version 8.0.414 or later)
+- Node.js 18+ (required for frontend)
+- PHP 8.2+ and Composer (for Laravel modules)
 - Git
 
 ### Quick Start (Development)

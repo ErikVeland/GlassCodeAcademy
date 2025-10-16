@@ -4,7 +4,9 @@ import re
 import os
 
 def fix_dataservice_errors():
-    file_path = "/Users/veland/GlassCodeAcademy/glasscode/backend/Services/DataService.cs"
+    # Get the script directory and navigate to the project root
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    file_path = os.path.join(script_dir, "glasscode", "backend", "Services", "DataService.cs")
     
     if not os.path.exists(file_path):
         print(f"File not found: {file_path}")

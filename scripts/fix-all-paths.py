@@ -8,7 +8,10 @@ import re
 import os
 
 def fix_dataservice_paths():
-    dataservice_path = "/Users/veland/GlassCodeAcademy/glasscode/backend/Services/DataService.cs"
+    # Get the script directory and navigate to the project root
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    project_root = os.path.dirname(script_dir)  # Go up one level from scripts/
+    dataservice_path = os.path.join(project_root, "glasscode", "backend", "Services", "DataService.cs")
     
     if not os.path.exists(dataservice_path):
         print(f"Error: {dataservice_path} not found")

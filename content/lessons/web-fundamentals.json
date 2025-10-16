@@ -1,6 +1,6 @@
 [
   {
-    "id": "1",
+    "id": 1,
     "moduleSlug": "web-fundamentals",
     "title": "HTML5 Semantic Elements",
     "order": 1,
@@ -53,10 +53,11 @@
       "JavaScript"
     ],
     "lastUpdated": "2025-10-01T06:42:16.315Z",
-    "version": "1.0.0"
+    "version": "1.0.0",
+    "sources": []
   },
   {
-    "id": "2",
+    "id": 2,
     "moduleSlug": "web-fundamentals",
     "title": "CSS3 Layout and Styling",
     "order": 2,
@@ -109,10 +110,11 @@
       "JavaScript"
     ],
     "lastUpdated": "2025-10-01T06:42:16.315Z",
-    "version": "1.0.0"
+    "version": "1.0.0",
+    "sources": []
   },
   {
-    "id": "3",
+    "id": 3,
     "moduleSlug": "web-fundamentals",
     "title": "DOM Manipulation and Traversal",
     "order": 3,
@@ -167,10 +169,11 @@
       "Web APIs"
     ],
     "lastUpdated": "2025-10-03T10:00:00.000Z",
-    "version": "1.0.0"
+    "version": "1.0.0",
+    "sources": []
   },
   {
-    "id": "4",
+    "id": 4,
     "moduleSlug": "web-fundamentals",
     "title": "JavaScript Event Handling",
     "order": 4,
@@ -225,10 +228,11 @@
       "DOM"
     ],
     "lastUpdated": "2025-10-03T10:00:00.000Z",
-    "version": "1.0.0"
+    "version": "1.0.0",
+    "sources": []
   },
   {
-    "id": "5",
+    "id": 5,
     "moduleSlug": "web-fundamentals",
     "title": "AJAX and Asynchronous Programming",
     "order": 5,
@@ -284,10 +288,11 @@
       "async/await"
     ],
     "lastUpdated": "2025-10-03T10:00:00.000Z",
-    "version": "1.0.0"
+    "version": "1.0.0",
+    "sources": []
   },
   {
-    "id": "6",
+    "id": 6,
     "moduleSlug": "web-fundamentals",
     "title": "Responsive Design Patterns",
     "order": 6,
@@ -343,10 +348,11 @@
       "Mobile First"
     ],
     "lastUpdated": "2025-10-03T10:00:00.000Z",
-    "version": "1.0.0"
+    "version": "1.0.0",
+    "sources": []
   },
   {
-    "id": "7",
+    "id": 7,
     "moduleSlug": "web-fundamentals",
     "title": "CSS Preprocessors",
     "order": 7,
@@ -402,10 +408,11 @@
       "Mixins"
     ],
     "lastUpdated": "2025-10-03T10:00:00.000Z",
-    "version": "1.0.0"
+    "version": "1.0.0",
+    "sources": []
   },
   {
-    "id": "8",
+    "id": 8,
     "moduleSlug": "web-fundamentals",
     "title": "Web Accessibility",
     "order": 8,
@@ -461,10 +468,11 @@
       "Screen Readers"
     ],
     "lastUpdated": "2025-10-03T10:00:00.000Z",
-    "version": "1.0.0"
+    "version": "1.0.0",
+    "sources": []
   },
   {
-    "id": "9",
+    "id": 9,
     "moduleSlug": "web-fundamentals",
     "title": "Web Performance Optimization",
     "order": 9,
@@ -520,10 +528,11 @@
       "Web Vitals"
     ],
     "lastUpdated": "2025-10-03T10:00:00.000Z",
-    "version": "1.0.0"
+    "version": "1.0.0",
+    "sources": []
   },
   {
-    "id": "10",
+    "id": 10,
     "moduleSlug": "web-fundamentals",
     "title": "Browser Developer Tools",
     "order": 10,
@@ -579,10 +588,11 @@
       "Safari Web Inspector"
     ],
     "lastUpdated": "2025-10-03T10:00:00.000Z",
-    "version": "1.0.0"
+    "version": "1.0.0",
+    "sources": []
   },
   {
-    "id": "11",
+    "id": 11,
     "moduleSlug": "web-fundamentals",
     "title": "Cross-Browser Compatibility",
     "order": 11,
@@ -638,10 +648,11 @@
       "Browser Testing"
     ],
     "lastUpdated": "2025-10-03T10:00:00.000Z",
-    "version": "1.0.0"
+    "version": "1.0.0",
+    "sources": []
   },
   {
-    "id": "12",
+    "id": 12,
     "moduleSlug": "web-fundamentals",
     "title": "Debugging Techniques",
     "order": 12,
@@ -697,10 +708,11 @@
       "Performance Debugging"
     ],
     "lastUpdated": "2025-10-03T10:00:00.000Z",
-    "version": "1.0.0"
+    "version": "1.0.0",
+    "sources": []
   },
   {
-    "id": "13",
+    "id": 13,
     "moduleSlug": "web-fundamentals",
     "title": "Modern Web APIs",
     "order": 13,
@@ -757,10 +769,11 @@
       "Notifications"
     ],
     "lastUpdated": "2025-10-03T10:00:00.000Z",
-    "version": "1.0.0"
+    "version": "1.0.0",
+    "sources": []
   },
   {
-    "id": "14",
+    "id": 14,
     "moduleSlug": "web-fundamentals",
     "title": "Web Security Fundamentals",
     "order": 14,
@@ -816,10 +829,11 @@
       "Content Security Policy"
     ],
     "lastUpdated": "2025-10-03T10:00:00.000Z",
-    "version": "1.0.0"
+    "version": "1.0.0",
+    "sources": []
   },
   {
-    "id": "15",
+    "id": 15,
     "moduleSlug": "web-fundamentals",
     "title": "Deployment and Hosting",
     "order": 15,
@@ -875,6 +889,7 @@
       "Monitoring"
     ],
     "lastUpdated": "2025-10-03T10:00:00.000Z",
-    "version": "1.0.0"
+    "version": "1.0.0",
+    "sources": []
   }
 ]

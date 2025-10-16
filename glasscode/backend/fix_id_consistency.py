@@ -29,7 +29,9 @@ def write_file(file_path, content):
 
 def fix_answer_submission():
     """Fix AnswerSubmission to use string QuestionId"""
-    file_path = "/Users/veland/GlassCodeAcademy/glasscode/backend/Models/AnswerSubmission.cs"
+    # Get the script directory and navigate to the backend root
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    file_path = os.path.join(script_dir, "Models", "AnswerSubmission.cs")
     content = read_file(file_path)
     if not content:
         return False
@@ -44,17 +46,19 @@ def fix_answer_submission():
 
 def fix_controller_methods():
     """Fix all controller methods to use string parameters"""
+    # Get the script directory and navigate to the backend root
+    script_dir = os.path.dirname(os.path.abspath(__file__))
     controller_files = [
-        "/Users/veland/GlassCodeAcademy/glasscode/backend/Controllers/InterviewQuestionsController.cs",
-        "/Users/veland/GlassCodeAcademy/glasscode/backend/Controllers/NextJsInterviewQuestionsController.cs",
-        "/Users/veland/GlassCodeAcademy/glasscode/backend/Controllers/ReactInterviewQuestionsController.cs",
-        "/Users/veland/GlassCodeAcademy/glasscode/backend/Controllers/NodeInterviewQuestionsController.cs",
-        "/Users/veland/GlassCodeAcademy/glasscode/backend/Controllers/TypescriptInterviewQuestionsController.cs",
-        "/Users/veland/GlassCodeAcademy/glasscode/backend/Controllers/DatabaseInterviewQuestionsController.cs",
-        "/Users/veland/GlassCodeAcademy/glasscode/backend/Controllers/WebInterviewQuestionsController.cs",
-        "/Users/veland/GlassCodeAcademy/glasscode/backend/Controllers/TestingInterviewQuestionsController.cs",
-        "/Users/veland/GlassCodeAcademy/glasscode/backend/Controllers/SecurityInterviewQuestionsController.cs",
-        "/Users/veland/GlassCodeAcademy/glasscode/backend/Controllers/DotNetInterviewQuestionsController.cs"
+        os.path.join(script_dir, "Controllers", "InterviewQuestionsController.cs"),
+        os.path.join(script_dir, "Controllers", "NextJsInterviewQuestionsController.cs"),
+        os.path.join(script_dir, "Controllers", "ReactInterviewQuestionsController.cs"),
+        os.path.join(script_dir, "Controllers", "NodeInterviewQuestionsController.cs"),
+        os.path.join(script_dir, "Controllers", "TypescriptInterviewQuestionsController.cs"),
+        os.path.join(script_dir, "Controllers", "DatabaseInterviewQuestionsController.cs"),
+        os.path.join(script_dir, "Controllers", "WebInterviewQuestionsController.cs"),
+        os.path.join(script_dir, "Controllers", "TestingInterviewQuestionsController.cs"),
+        os.path.join(script_dir, "Controllers", "SecurityInterviewQuestionsController.cs"),
+        os.path.join(script_dir, "Controllers", "DotNetInterviewQuestionsController.cs")
     ]
     
     success_count = 0

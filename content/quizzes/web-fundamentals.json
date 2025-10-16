@@ -1,1060 +1,1095 @@
-{
-  "moduleSlug": "web-fundamentals",
-  "title": "Web Development Basics Assessment",
-  "description": "Comprehensive quiz covering key concepts from the Web Development Basics module",
-  "totalQuestions": 55,
-  "passingScore": 70,
-  "timeLimit": 30,
-  "questions": [
-    {
-      "id": "1",
-      "question": "Which HTML5 element should be used to wrap the main navigation links of a website?",
-      "topic": "HTML5",
-      "difficulty": "Beginner",
-      "choices": [
-        "`<nav>`",
-        "`<div>`",
-        "`<header>`",
-        "`<menu>`"
-      ],
-      "correctIndex": 0,
-      "explanation": "The <nav> element is specifically designed for navigation links. It provides semantic meaning that helps screen readers and search engines understand the purpose of the content. Using <div> provides no semantic value, while <header> is for page headers and <menu> is for interactive commands.",
-      "industryContext": "Semantic HTML improves website accessibility for users with disabilities and helps search engines better understand and rank your content.",
-      "tags": [
-        "foundational",
-        "beginner"
-      ],
-      "estimatedTime": 90,
-      "questionType": "multiple-choice",
-      "correctAnswer": 0
-    },
-    {
-      "id": "2",
-      "question": "What is the correct CSS to center a div horizontally and vertically using Flexbox?",
-      "topic": "CSS3",
-      "difficulty": "Intermediate",
-      "choices": [
-        "`display: flex; `justify-content: center`; `align-items: center`;`",
-        "`display: flex; align-content: center; justify-items: center;`",
-        "`display: block; text-align: center; vertical-align: middle;`",
-        "`display: grid; `place-items: center`;`"
-      ],
-      "correctIndex": 0,
-      "explanation": "With Flexbox, `justify-content: center` centers items horizontally (main axis) and `align-items: center` centers them vertically (cross axis). The `display: grid; `place-items: center`;` solution works with CSS Grid, but the question specifically asks about Flexbox.",
-      "industryContext": "Flexbox is the most common method for centering content in modern web development, replacing older techniques like floats and positioning.",
-      "tags": [
-        "foundational",
-        "intermediate"
-      ],
-      "estimatedTime": 90,
-      "questionType": "multiple-choice",
-      "correctAnswer": 0
-    },
-    {
-      "id": "3",
-      "question": "Which JavaScript method is used to select an element by its ID?",
-      "topic": "JavaScript",
-      "difficulty": "Beginner",
-      "choices": [
-        "`document.getElementById('myId')`",
-        "`document.querySelector('#myId')`",
-        "`document.getElementByClass('myId')`",
-        "`Both `document.getElementById('myId')` and `document.querySelector('#myId')` are correct`"
-      ],
-      "correctIndex": 3,
-      "explanation": "Both `document.getElementById('myId')` and `document.querySelector('#myId')` can select an element by ID. `getElementById` is the traditional method, while `querySelector` is more flexible and can use any CSS selector. The string `document.getElementByClass('myId')` is incorrect—it should be `getElementsByClassName`, and it targets classes, not IDs.",
-      "industryContext": "DOM manipulation is fundamental to interactive web development. Understanding different selection methods helps you choose the most efficient approach for your needs.",
-      "tags": [
-        "foundational",
-        "beginner"
-      ],
-      "estimatedTime": 90,
-      "questionType": "multiple-choice",
-      "correctAnswer": 3
-    },
-    {
-      "id": "4",
-      "question": "What does this CSS media `query` do?\n\n@media (max-width: 768px) { /* styles */ }",
-      "topic": "CSS3",
-      "difficulty": "Beginner",
-      "choices": [
-        "Applies styles when screen width is 768px or less",
-        "Applies styles when screen width is exactly 768px",
-        "Applies styles when screen width is more than 768px",
-        "Only applies to tablets with 768px width"
-      ],
-      "correctIndex": 0,
-      "explanation": "The 'max-width: 768px' media `query` applies styles when the viewport width is 768 pixels or smaller. This is commonly used for mobile-first responsive design to apply mobile styles on smaller screens.",
-      "industryContext": "Media queries are essential for responsive web design, ensuring websites work well on mobile devices, tablets, and desktops. 768px is a common breakpoint for tablet/mobile design.",
-      "tags": [
-        "foundational",
-        "beginner"
-      ],
-      "estimatedTime": 90,
-      "questionType": "multiple-choice",
-      "correctAnswer": 0
-    },
-    {
-      "id": "5",
-      "question": "Which input type provides built-in email validation in HTML5?",
-      "topic": "HTML5",
-      "difficulty": "Beginner",
-      "choices": [
-        "`<input type=\"email\">`",
-        "`<input type=\"text\" pattern=\"email\">`",
-        "`<input type=\"validation\" format=\"email\">`",
-        "`<input type=\"text\" validate=\"email\">`"
-      ],
-      "correctIndex": 0,
-      "explanation": "HTML5 introduced the 'email' input type which automatically validates that the entered text follows email format (contains @ symbol and valid structure). Modern browsers will show validation errors if the format is incorrect.",
-      "industryContext": "HTML5 form validation reduces the need for custom JavaScript validation and provides better user experience with instant feedback on form inputs.",
-      "tags": [
-        "foundational",
-        "beginner"
-      ],
-      "estimatedTime": 90,
-      "questionType": "multiple-choice",
-      "correctAnswer": 0
-    },
-    {
-      "id": "41",
-      "question": "How do you implement HTML5 semantic elements for better accessibility and SEO?",
-      "topic": "HTML5",
-      "difficulty": "Beginner",
-      "choices": [
-        "Use header, nav, main, article, section, aside, and footer elements appropriately for content structure",
-        "Use only div elements with class attributes for all content",
-        "Use table elements for page layout",
-        "Use deprecated elements like font and center for styling"
-      ],
-      "correctIndex": 0,
-      "explanation": "HTML5 semantic elements like header, nav, main, article, section, aside, and footer provide meaningful structure that improves accessibility for screen readers and SEO for search engines. These elements convey the purpose of content sections, making web pages more understandable to both users and machines.",
-      "industryContext": "Major search engines like Google prioritize semantic HTML in their ranking algorithms. Accessibility tools like screen readers rely heavily on semantic elements to navigate content effectively. Companies like Microsoft and IBM have made web accessibility a core requirement for their digital products.",
-      "tags": [
-        "html5",
-        "semantics",
-        "accessibility",
-        "beginner"
-      ],
-      "estimatedTime": 90,
-      "questionType": "multiple-choice",
-      "correctAnswer": 0
-    },
-    {
-      "id": "42",
-      "question": "What are the performance considerations when using CSS3 layout techniques?",
-      "topic": "CSS3",
-      "difficulty": "Intermediate",
-      "choices": [
-        "Use Flexbox for one-dimensional layouts and Grid for two-dimensional layouts to optimize rendering performance",
-        "Use floats for all modern layouts regardless of complexity",
-        "Apply complex animations to every element for visual appeal",
-        "Use absolute positioning for all elements to avoid layout calculations"
-      ],
-      "correctIndex": 0,
-      "explanation": "CSS3 layout performance considerations include using Flexbox for one-dimensional layouts (rows or columns) and Grid for two-dimensional layouts (rows and columns together). These modern layout systems are optimized by browsers and provide better performance than older techniques like floats. Choosing the right layout method reduces browser reflow and repaint operations.",
-      "industryContext": "Browser vendors have heavily optimized Flexbox and Grid implementations. Websites like GitHub and Twitter have seen significant performance improvements by migrating from float-based to modern layout systems. CSS containment properties have been introduced to further optimize layout performance.",
-      "tags": [
-        "css3",
-        "performance",
-        "layout",
-        "intermediate"
-      ],
-      "estimatedTime": 90,
-      "questionType": "multiple-choice",
-      "correctAnswer": 0
-    },
-    {
-      "id": "43",
-      "question": "How do you implement responsive design patterns for cross-device compatibility?",
-      "topic": "CSS3",
-      "difficulty": "Intermediate",
-      "choices": [
-        "Use mobile-first approach with media queries, flexible units, and touch-friendly navigation",
-        "Create separate fixed-width designs for each device type",
-        "Use the same desktop layout on all devices without modifications",
-        "Ignore mobile devices and focus only on desktop browsers"
-      ],
-      "correctIndex": 0,
-      "explanation": "Responsive design patterns include a mobile-first approach that starts with small screens and scales up, media queries to adapt layouts for different screen sizes, flexible units (rem, em, %) instead of fixed pixels, and touch-friendly navigation elements. This approach ensures optimal user experience across all devices while maintaining a single codebase.",
-      "industryContext": "Mobile web traffic now exceeds desktop traffic globally. Companies like Airbnb and BBC have invested heavily in responsive design, seeing significant improvements in user engagement and conversion rates. Google's mobile-first indexing makes responsive design essential for SEO.",
-      "tags": [
-        "responsive-design",
-        "mobile-first",
-        "media-queries",
-        "intermediate"
-      ],
-      "estimatedTime": 90,
-      "questionType": "multiple-choice",
-      "correctAnswer": 0
-    },
-    {
-      "id": "44",
-      "question": "Which approach is most effective for HTML5 form validation and user experience?",
-      "topic": "HTML5",
-      "difficulty": "Beginner",
-      "choices": [
-        "Combine HTML5 validation attributes with JavaScript enhancement and clear error messaging",
-        "Rely solely on server-side validation without client feedback",
-        "Use only JavaScript validation and ignore HTML5 attributes",
-        "Disable all form validation to simplify the user experience"
-      ],
-      "correctIndex": 0,
-      "explanation": "Effective HTML5 form validation combines native HTML5 validation attributes (required, pattern, min/max) for immediate feedback, JavaScript enhancement for custom validation logic and improved user experience, and clear, accessible error messaging. This layered approach provides instant feedback while ensuring security through server-side validation.",
-      "industryContext": "Form conversion rates can improve by 20-40% with proper validation and user feedback. Companies like Google and Apple have established best practices for form design and validation. The Constraint Validation API provides programmatic access to HTML5 validation features.",
-      "tags": [
-        "html5",
-        "form-validation",
-        "user-experience",
-        "beginner"
-      ],
-      "estimatedTime": 90,
-      "questionType": "multiple-choice",
-      "correctAnswer": 0
-    },
-    {
-      "id": "45",
-      "question": "What are the key features of modern JavaScript that improve web development?",
-      "topic": "JavaScript",
-      "difficulty": "Beginner",
-      "choices": [
-        "ES6+ features like const/let, arrow functions, modules, and promises for better code organization",
-        "Only use var declarations and global variables for simplicity",
-        "Avoid all modern JavaScript features to maintain compatibility",
-        "Use document.write for all DOM manipulation"
-      ],
-      "correctIndex": 0,
-      "explanation": "Modern JavaScript features that improve development include const/let for better variable scoping, arrow functions for concise syntax and lexical this binding, modules for code organization and dependency management, and promises/async-await for better asynchronous programming. These features lead to more maintainable and reliable code.",
-      "industryContext": "Modern JavaScript adoption has accelerated rapidly, with over 95% of websites using ES6+ features. Frameworks like React and Vue extensively use modern JavaScript features. Browser support for ES6+ is nearly universal, making these features safe to use in production.",
-      "tags": [
-        "javascript",
-        "es6",
-        "best-practices",
-        "beginner"
-      ],
-      "estimatedTime": 90,
-      "questionType": "multiple-choice",
-      "correctAnswer": 0
-    },
-    {
-      "id": "46",
-      "question": "How do you optimize DOM manipulation for better web application performance?",
-      "topic": "DOM",
-      "difficulty": "Advanced",
-      "choices": [
-        "Batch DOM updates, use document fragments, cache DOM references, and minimize reflows",
-        "Query the DOM repeatedly within loops for fresh data",
-        "Manipulate individual elements one by one for precision",
-        "Use innerHTML for all dynamic content regardless of security implications"
-      ],
-      "correctIndex": 0,
-      "explanation": "DOM manipulation optimization techniques include batching updates to reduce reflows, using document fragments to build complex DOM structures off-DOM, caching DOM references to avoid repeated queries, and minimizing reflows and repaints through strategic update timing. These practices significantly improve application responsiveness.",
-      "industryContext": "DOM manipulation is often the performance bottleneck in web applications. Frameworks like React and Vue implement virtual DOM to optimize updates. Websites like Facebook and Twitter handle thousands of DOM updates per second through careful optimization.",
-      "tags": [
-        "dom",
-        "performance",
-        "optimization",
-        "intermediate"
-      ],
-      "estimatedTime": 90,
-      "questionType": "multiple-choice",
-      "correctAnswer": 0
-    },
-    {
-      "id": "47",
-      "question": "Which CSS3 techniques are most effective for creating engaging user interfaces?",
-      "topic": "CSS3",
-      "difficulty": "Beginner",
-      "choices": [
-        "Use transitions for smooth state changes, transforms for element manipulation, and flexbox/grid for layouts",
-        "Apply complex animations to every element for maximum visual impact",
-        "Use only basic CSS properties to ensure compatibility",
-        "Avoid all CSS3 features due to browser support concerns"
-      ],
-      "correctIndex": 0,
-      "explanation": "Effective CSS3 techniques for engaging interfaces include transitions for smooth state changes that improve user experience, transforms for efficient element manipulation without triggering layout recalculations, and modern layout systems like flexbox and grid for responsive, maintainable designs. These features enhance usability without sacrificing performance.",
-      "industryContext": "Motion design principles have become essential for modern web experiences. Companies like Google (Material Design) and Apple (Human Interface Guidelines) provide comprehensive guidance on using CSS3 features effectively. CSS3 performance is optimized in all modern browsers.",
-      "tags": [
-        "css3",
-        "transitions",
-        "transforms",
-        "beginner"
-      ],
-      "estimatedTime": 90,
-      "questionType": "multiple-choice",
-      "correctAnswer": 0
-    },
-    {
-      "id": "48",
-      "question": "What are the best practices for HTML5 accessibility implementation?",
-      "topic": "HTML5",
-      "difficulty": "Advanced",
-      "choices": [
-        "Use semantic elements, ARIA attributes when needed, proper heading hierarchy, and keyboard navigation support",
-        "Ignore accessibility concerns to focus on visual design",
-        "Use only images to convey important information",
-        "Rely solely on screen reader detection scripts"
-      ],
-      "correctIndex": 0,
-      "explanation": "HTML5 accessibility best practices include using semantic elements for built-in accessibility, ARIA attributes to enhance accessibility when semantic elements aren't sufficient, proper heading hierarchy (h1-h6) for content structure, and ensuring full keyboard navigation support. These practices make web content usable by people with disabilities.",
-      "industryContext": "Accessibility compliance is legally required in many jurisdictions (ADA, EU Web Accessibility Directive). Companies like Microsoft and IBM have made accessibility a core part of their development processes. Automated accessibility testing tools like axe and Lighthouse help identify issues.",
-      "tags": [
-        "html5",
-        "accessibility",
-        "aria",
-        "intermediate"
-      ],
-      "estimatedTime": 90,
-      "questionType": "multiple-choice",
-      "correctAnswer": 0
-    },
-    {
-      "id": "49",
-      "question": "How do you implement effective JavaScript event handling patterns?",
-      "topic": "JavaScript",
-      "difficulty": "Advanced",
-      "choices": [
-        "Use event delegation for dynamic content, remove event listeners to prevent memory leaks, and handle events at the appropriate level",
-        "Attach individual event listeners to every element regardless of performance",
-        "Use inline event handlers for simplicity",
-        "Ignore event handling and rely on page reloads for all interactions"
-      ],
-      "correctIndex": 0,
-      "explanation": "Effective JavaScript event handling includes event delegation for efficient handling of dynamic content, proper removal of event listeners to prevent memory leaks, and attaching handlers at the appropriate level in the DOM hierarchy. These patterns improve performance and maintainability while reducing memory consumption.",
-      "industryContext": "Event handling patterns are fundamental to modern web applications. Frameworks like React implement synthetic event systems for cross-browser consistency. Event delegation is particularly important for applications with large amounts of dynamic content like social media feeds.",
-      "tags": [
-        "javascript",
-        "event-handling",
-        "event-delegation",
-        "intermediate"
-      ],
-      "estimatedTime": 90,
-      "questionType": "multiple-choice",
-      "correctAnswer": 0
-    },
-    {
-      "id": "50",
-      "question": "How do you implement HTML5 in a production environment with legacy browser support?",
-      "topic": "HTML5",
-      "difficulty": "Advanced",
-      "choices": [
-        "Use feature detection, polyfills for missing features, and progressive enhancement for graceful degradation",
-        "Require the latest browsers and block older ones",
-        "Avoid all HTML5 features to maintain compatibility",
-        "Use only the newest HTML5 features regardless of browser support"
-      ],
-      "correctIndex": 0,
-      "explanation": "Production HTML5 implementation with legacy support involves feature detection to check browser capabilities, polyfills to provide missing functionality in older browsers, and progressive enhancement to ensure core functionality works everywhere while enhancing capable browsers. This approach maximizes reach while providing modern experiences.",
-      "industryContext": "Browser support varies significantly across user bases, especially in enterprise environments. Companies like GitHub and Airbnb use progressive enhancement to support diverse browser requirements. Feature detection libraries like Modernizr help implement graceful degradation strategies.",
-      "tags": [
-        "html5",
-        "browser-support",
-        "polyfills",
-        "intermediate"
-      ],
-      "estimatedTime": 90,
-      "questionType": "multiple-choice",
-      "correctAnswer": 0
-    },
-    {
-      "id": "51",
-      "question": "Which CSS3 layout approach is most effective for responsive web design?",
-      "topic": "CSS3",
-      "difficulty": "Beginner",
-      "choices": [
-        "Use CSS Grid for complex layouts and Flexbox for simpler one-dimensional arrangements",
-        "Use floats for all modern layouts",
-        "Use absolute positioning for all elements",
-        "Use tables for page layout"
-      ],
-      "correctIndex": 0,
-      "explanation": "Effective CSS3 layout for responsive design uses CSS Grid for complex two-dimensional layouts (rows and columns together) and Flexbox for simpler one-dimensional arrangements (rows or columns). This combination provides the flexibility needed for responsive designs while maintaining clean, maintainable code.",
-      "industryContext": "CSS Grid and Flexbox have become the standard layout systems, replacing older techniques like floats and positioning. Major websites like GitHub and Twitter have migrated to these modern layout systems. Browser support is nearly universal for both technologies.",
-      "tags": [
-        "css3",
-        "grid",
-        "flexbox",
-        "responsive-design",
-        "beginner"
-      ],
-      "estimatedTime": 90,
-      "questionType": "multiple-choice",
-      "correctAnswer": 0
-    },
-    {
-      "id": "52",
-      "question": "How do you troubleshoot complex HTML5 issues in cross-browser environments?",
-      "topic": "CSS3",
-      "difficulty": "Advanced",
-      "choices": [
-        "Use browser developer tools, feature detection libraries, and systematic testing across target browsers",
-        "Test only in the most popular browser",
-        "Ignore browser differences and hope for the best",
-        "Use browser-specific CSS hacks for all styling"
-      ],
-      "correctIndex": 0,
-      "explanation": "Cross-browser HTML5 troubleshooting requires using browser developer tools for debugging, feature detection libraries like Modernizr to identify capability gaps, and systematic testing across all target browsers and versions. This approach helps identify and resolve compatibility issues before they affect users.",
-      "industryContext": "Cross-browser compatibility remains challenging despite improved standards compliance. Tools like BrowserStack and Sauce Labs provide cloud-based testing environments. Companies with global reach like Facebook and Google maintain extensive browser compatibility testing infrastructures.",
-      "tags": [
-        "html5",
-        "cross-browser",
-        "troubleshooting",
-        "advanced"
-      ],
-      "estimatedTime": 120,
-      "questionType": "multiple-choice",
-      "correctAnswer": 0
-    },
-    {
-      "id": "53",
-      "question": "What JavaScript patterns are most effective for DOM manipulation and event handling?",
-      "topic": "JavaScript",
-      "difficulty": "Advanced",
-      "choices": [
-        "Use modular patterns with event delegation, DOM caching, and proper event listener management",
-        "Attach individual event listeners to every DOM element",
-        "Use global variables for all state management",
-        "Manipulate the DOM directly without any organizational patterns"
-      ],
-      "correctIndex": 0,
-      "explanation": "Effective JavaScript patterns for DOM manipulation include modular organization to encapsulate functionality, event delegation to efficiently handle events on dynamic content, DOM caching to avoid repeated queries, and proper event listener management to prevent memory leaks. These patterns create maintainable and performant code.",
-      "industryContext": "Modern JavaScript frameworks implement these patterns at scale. Libraries like jQuery popularized many of these best practices. Performance-critical applications like Google Maps and Facebook implement sophisticated DOM management strategies.",
-      "tags": [
-        "javascript",
-        "dom-manipulation",
-        "event-handling",
-        "patterns",
-        "intermediate"
-      ],
-      "estimatedTime": 90,
-      "questionType": "multiple-choice",
-      "correctAnswer": 0
-    },
-    {
-      "id": "54",
-      "question": "Which HTML5 features are essential for creating accessible web applications?",
-      "topic": "DOM",
-      "difficulty": "Beginner",
-      "choices": [
-        "Semantic elements, form labels, ARIA attributes, and keyboard navigation support",
-        "Complex visual effects and animations",
-        "Custom fonts and advanced CSS styling",
-        "Multimedia elements without captions"
-      ],
-      "correctIndex": 0,
-      "explanation": "Essential HTML5 features for accessibility include semantic elements that provide built-in meaning, proper form labels that connect inputs with their descriptions, ARIA attributes to enhance accessibility where needed, and keyboard navigation support for users who cannot use a mouse. These features ensure content is usable by people with disabilities.",
-      "industryContext": "Web Content Accessibility Guidelines (WCAG) 2.1 provide the standard for web accessibility. Companies face legal requirements for accessibility in many jurisdictions. Tools like screen readers depend heavily on proper HTML5 semantic structure and ARIA attributes.",
-      "tags": [
-        "html5",
-        "accessibility",
-        "semantics",
-        "aria",
-        "beginner"
-      ],
-      "estimatedTime": 90,
-      "questionType": "multiple-choice",
-      "correctAnswer": 0
-    },
-    {
-      "id": "55",
-      "question": "When should you use HTML5 features in web development projects?",
-      "topic": "HTML5",
-      "difficulty": "Beginner",
-      "choices": [
-        "When they solve specific problems and improve user experience, with graceful degradation for unsupported browsers",
-        "Always use the latest features regardless of browser support",
-        "Never use HTML5 features to maintain maximum compatibility",
-        "Only use features that work in Internet Explorer 6"
-      ],
-      "correctIndex": 0,
-      "explanation": "HTML5 features should be used when they solve specific problems and improve user experience, with graceful degradation strategies for browsers that don't support them. This approach leverages modern capabilities while maintaining broad compatibility. Feature detection helps determine when to apply enhancements.",
-      "industryContext": "Progressive enhancement has become the standard approach for using modern web features. Companies balance innovation with compatibility based on their user base analytics. Feature detection libraries like Modernizr help implement this strategy effectively.",
-      "tags": [
-        "html5",
-        "progressive-enhancement",
-        "feature-detection",
-        "best-practices",
-        "beginner"
-      ],
-      "estimatedTime": 90,
-      "questionType": "multiple-choice",
-      "correctAnswer": 0
-    },
-    {
-      "id": "6",
-      "question": "What is the purpose of the CSS 'box-sizing: border-box' property?",
-      "topic": "Web Fundamentals",
-      "choices": [
-        "Includes padding and border in the element's total width and height",
-        "Creates a border around the element",
-        "Adds padding to the element",
-        "Changes the element's display type to a box"
-      ],
-      "correctIndex": 0,
-      "explanation": "When 'box-sizing: border-box' is applied, the element's width and height include the padding and border, making it easier to size elements. Without this property, padding and borders are added to the specified width and height, often causing layout issues.",
-      "correctAnswer": 0,
-      "difficulty": "Beginner",
-      "questionType": "multiple-choice"
-    },
-    {
-      "id": "7",
-      "question": "Which CSS display value removes an element from the document flow?",
-      "topic": "Web Fundamentals",
-      "choices": [
-        "`display: none`",
-        "`display: block`",
-        "`display: inline`",
-        "`display: flex`"
-      ],
-      "correctIndex": 0,
-      "explanation": "'display: none' completely removes an element from the document flow, making it invisible and not taking up any space. Other display values like 'block', 'inline', and 'flex' still participate in the document flow, just with different layout behaviors.",
-      "correctAnswer": 0,
-      "difficulty": "Beginner",
-      "questionType": "multiple-choice"
-    },
-    {
-      "id": "8",
-      "question": "What is the correct way to add an event listener in JavaScript?",
-      "topic": "Web Fundamentals",
-      "choices": [
-        "element.addEventListener('click', function() { })",
-        "element.onclick = function() { }",
-        "element.attachEvent('onclick', function() { })",
-        "Both A and B are correct"
-      ],
-      "correctIndex": 3,
-      "explanation": "Both addEventListener and direct event properties (like onclick) can be used to add event listeners. addEventListener is more flexible as it allows multiple listeners for the same event and provides better control. Direct event properties are simpler but limited to one listener per event type.",
-      "correctAnswer": 3,
-      "difficulty": "Beginner",
-      "fixedChoiceOrder": true,
-      "choiceLabels": "letters",
-      "questionType": "multiple-choice"
-    },
-    {
-      "id": "9",
-      "question": "Which CSS property is used to make a flex container's items wrap to multiple lines?",
-      "topic": "Web Fundamentals",
-      "choices": [
-        "flex-wrap: wrap",
-        "flex-direction: wrap",
-        "flex-line: wrap",
-        "wrap: flex"
-      ],
-      "correctIndex": 0,
-      "explanation": "The 'flex-wrap: wrap' property allows flex items to wrap onto multiple lines when they don't fit in a single line. The default value is 'nowrap', which keeps all items on one line even if they overflow the container.",
-      "correctAnswer": 0,
-      "difficulty": "Beginner",
-      "questionType": "multiple-choice"
-    },
-    {
-      "id": "10",
-      "question": "What is the purpose of the viewport meta tag in HTML?",
-      "topic": "Web Fundamentals",
-      "choices": [
-        "Controls how the page is displayed on mobile devices",
-        "Sets the background color of the page",
-        "Defines the character encoding",
-        "Specifies the page title"
-      ],
-      "correctIndex": 0,
-      "explanation": "The viewport meta tag (<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">) controls how the page is displayed on mobile devices. It ensures the page width matches the device width and sets the initial zoom level, which is essential for responsive design.",
-      "correctAnswer": 0,
-      "difficulty": "Beginner",
-      "questionType": "multiple-choice"
-    },
-    {
-      "id": "11",
-      "question": "Which CSS property is used to change the font size of an element?",
-      "topic": "Web Fundamentals",
-      "choices": [
-        "font-size",
-        "text-size",
-        "font-style",
-        "text-style"
-      ],
-      "correctIndex": 0,
-      "explanation": "The 'font-size' property is used to change the font size of an element. It can be specified in various units such as pixels (px), ems (em), rems (rem), percentages (%), or keywords like small, medium, large.",
-      "correctAnswer": 0,
-      "difficulty": "Beginner",
-      "questionType": "multiple-choice"
-    },
-    {
-      "id": "12",
-      "question": "What is the correct way to declare a JavaScript variable?",
-      "topic": "Web Fundamentals",
-      "choices": [
-        "`let myVariable = 'value';`",
-        "variable myVariable = 'value';",
-        "declare myVariable = 'value';",
-        "var myVariable: 'value';"
-      ],
-      "correctIndex": 0,
-      "explanation": "In modern JavaScript, variables are declared using 'let' for block-scoped variables or 'const' for constants. 'var' is the older way of declaring variables with function scope. The syntax 'let myVariable = 'value';' is the correct modern approach.",
-      "correctAnswer": 0,
-      "difficulty": "Beginner",
-      "questionType": "multiple-choice"
-    },
-    {
-      "id": "13",
-      "question": "Which HTML element is used to define an independent, self-contained content section?",
-      "topic": "Web Fundamentals",
-      "choices": [
-        "`<article>`",
-        "`<section>`",
-        "`<div>`",
-        "`<span>`"
-      ],
-      "correctIndex": 0,
-      "explanation": "The <article> element is used to define independent, self-contained content that could stand alone, such as a blog post, news article, or forum post. <section> groups related content, <div> is a generic container, and <span> is an inline container.",
-      "correctAnswer": 0,
-      "difficulty": "Beginner",
-      "questionType": "multiple-choice"
-    },
-    {
-      "id": "14",
-      "question": "What is the purpose of the CSS 'z-index' property?",
-      "topic": "Web Fundamentals",
-      "choices": [
-        "Controls the stack order of positioned elements",
-        "Sets the zoom level of an element",
-        "Defines the number of columns in a grid",
-        "Specifies the indentation of text"
-      ],
-      "correctIndex": 0,
-      "explanation": "The 'z-index' property controls the stack order of positioned elements (those with position other than static). Elements with a higher z-index value will appear in front of elements with a lower z-index value.",
-      "correctAnswer": 0,
-      "difficulty": "Beginner",
-      "questionType": "multiple-choice"
-    },
-    {
-      "id": "15",
-      "question": "Which JavaScript method is used to add a new element to the end of an array?",
-      "topic": "Web Fundamentals",
-      "choices": [
-        "push()",
-        "append()",
-        "add()",
-        "insert()"
-      ],
-      "correctIndex": 0,
-      "explanation": "The 'push()' method adds one or more elements to the end of an array and returns the new length of the array. 'append()' is used for DOM manipulation, while 'add()' and 'insert()' are not standard array methods.",
-      "correctAnswer": 0,
-      "difficulty": "Beginner",
-      "questionType": "multiple-choice"
-    },
-    {
-      "id": "16",
-      "question": "What does the CSS 'position: absolute;' property do?",
-      "topic": "Web Fundamentals",
-      "choices": [
-        "Positions the element relative to its nearest positioned ancestor",
-        "Positions the element relative to the viewport",
-        "Keeps the element in the normal document flow",
-        "Centers the element horizontally and vertically"
-      ],
-      "correctIndex": 0,
-      "explanation": "'position: absolute;' removes the element from the normal document flow and positions it relative to its nearest positioned ancestor (an element with position other than static). If no positioned ancestor exists, it positions relative to the initial containing block (usually the viewport).",
-      "correctAnswer": 0,
-      "difficulty": "Beginner",
-      "questionType": "multiple-choice"
-    },
-    {
-      "id": "17",
-      "question": "Which HTML attribute is used to specify alternative text for an image?",
-      "topic": "Web Fundamentals",
-      "choices": [
-        "alt",
-        "title",
-        "description",
-        "caption"
-      ],
-      "correctIndex": 0,
-      "explanation": "The 'alt' attribute specifies alternative text for an image, which is displayed if the image cannot be loaded and is also used by screen readers for accessibility. The 'title' attribute provides tooltip text, while 'description' and 'caption' are not valid image attributes.",
-      "correctAnswer": 0,
-      "difficulty": "Beginner",
-      "questionType": "multiple-choice"
-    },
-    {
-      "id": "18",
-      "question": "What is the correct syntax for a CSS class selector?",
-      "topic": "Web Fundamentals",
-      "choices": [
-        ".className",
-        "#className",
-        "*className",
-        "$className"
-      ],
-      "correctIndex": 0,
-      "explanation": "In CSS, class selectors are prefixed with a period (.), so '.className' is the correct syntax. ID selectors use the hash symbol (#), while * and $ are not used for class selection.",
-      "correctAnswer": 0,
-      "difficulty": "Beginner",
-      "questionType": "multiple-choice"
-    },
-    {
-      "id": "19",
-      "question": "Which JavaScript operator is used to check both value and type equality?",
-      "topic": "Web Fundamentals",
-      "choices": [
-        "===",
-        "==",
-        "=",
-        "!=="
-      ],
-      "correctIndex": 0,
-      "explanation": "The strict equality operator '===' checks both value and type equality without performing type coercion. The loose equality operator '==' performs type coercion before comparison. The single '=' is for assignment, and '!== ' checks for strict inequality.",
-      "correctAnswer": 0,
-      "difficulty": "Beginner",
-      "questionType": "multiple-choice"
-    },
-    {
-      "id": "20",
-      "question": "What is the purpose of the HTML <main> element?",
-      "topic": "Web Fundamentals",
-      "choices": [
-        "Represents the dominant content of the body of a document",
-        "Defines the main navigation of the page",
-        "Contains metadata about the document",
-        "Groups related content together"
-      ],
-      "correctIndex": 0,
-      "explanation": "The <main> element represents the dominant content of the body of a document or application. It should contain the primary content that is unique to that page and directly related to the document's central topic.",
-      "correctAnswer": 0,
-      "difficulty": "Beginner",
-      "questionType": "multiple-choice"
-    },
-    {
-      "id": "21",
-      "question": "Which CSS property is used to set the space between lines of text?",
-      "topic": "Web Fundamentals",
-      "choices": [
-        "line-height",
-        "letter-spacing",
-        "word-spacing",
-        "text-spacing"
-      ],
-      "correctIndex": 0,
-      "explanation": "The 'line-height' property sets the space between lines of text. 'letter-spacing' controls the space between characters, 'word-spacing' controls the space between words, and 'text-spacing' is not a standard CSS property.",
-      "correctAnswer": 0,
-      "difficulty": "Beginner",
-      "questionType": "multiple-choice"
-    },
-    {
-      "id": "22",
-      "question": "What is the correct way to write a comment in JavaScript?",
-      "topic": "Web Fundamentals",
-      "choices": [
-        "// This is a comment",
-        "<!-- This is a comment -->",
-        "/* This is a comment */",
-        "Both A and C are correct"
-      ],
-      "correctIndex": 3,
-      "explanation": "JavaScript supports both single-line comments using '//' and multi-line comments using '/* */'. HTML comments use <!-- -->, which is not valid JavaScript syntax.",
-      "correctAnswer": 3,
-      "difficulty": "Beginner",
-      "fixedChoiceOrder": true,
-      "choiceLabels": "letters",
-      "questionType": "multiple-choice"
-    },
-    {
-      "id": "23",
-      "question": "Which CSS property is used to make text bold?",
-      "topic": "Web Fundamentals",
-      "choices": [
-        "font-weight",
-        "font-style",
-        "text-weight",
-        "bold"
-      ],
-      "correctIndex": 0,
-      "explanation": "The 'font-weight' property is used to make text bold. It accepts values like 'bold', 'bolder', 'lighter', or numeric values from 100 to 900. 'font-style' is used for italic text, and 'text-weight' and 'bold' are not valid CSS properties.",
-      "correctAnswer": 0,
-      "difficulty": "Beginner",
-      "questionType": "multiple-choice"
-    },
-    {
-      "id": "24",
-      "question": "What is the purpose of the HTML <aside> element?",
-      "topic": "Web Fundamentals",
-      "choices": [
-        "Represents content that is tangentially related to the content around it",
-        "Defines the main content of the page",
-        "Contains navigation links",
-        "Groups related elements together"
-      ],
-      "correctIndex": 0,
-      "explanation": "The <aside> element represents content that is tangentially related to the content around it, such as sidebars, pull quotes, or advertisements. It should contain content that is related to the surrounding content but not essential to the main flow.",
-      "correctAnswer": 0,
-      "difficulty": "Beginner",
-      "questionType": "multiple-choice"
-    },
-    {
-      "id": "25",
-      "question": "Which JavaScript method is used to remove the last element from an array?",
-      "topic": "Web Fundamentals",
-      "choices": [
-        "pop()",
-        "shift()",
-        "remove()",
-        "delete()"
-      ],
-      "correctIndex": 0,
-      "explanation": "The 'pop()' method removes the last element from an array and returns that element. 'shift()' removes the first element, 'remove()' is not a standard array method, and 'delete' is an operator that removes object properties.",
-      "correctAnswer": 0,
-      "difficulty": "Beginner",
-      "questionType": "multiple-choice"
-    },
-    {
-      "id": "26",
-      "question": "What does the CSS 'float' property do?",
-      "topic": "Web Fundamentals",
-      "choices": [
-        "Positions an element to the left or right, allowing other content to wrap around it",
-        "Moves an element up or down on the page",
-        "Rotates an element",
-        "Changes the display order of elements"
-      ],
-      "correctIndex": 0,
-      "explanation": "The 'float' property positions an element to the left or right side of its container, allowing other content (like text) to wrap around it. It's commonly used for creating layouts with text wrapping around images.",
-      "correctAnswer": 0,
-      "difficulty": "Beginner",
-      "questionType": "multiple-choice"
-    },
-    {
-      "id": "27",
-      "question": "Which HTML element is used to define a footer for a document or section?",
-      "topic": "Web Fundamentals",
-      "choices": [
-        "`<footer>`",
-        "`<bottom>`",
-        "`<foot>`",
-        "`<end>`"
-      ],
-      "correctIndex": 0,
-      "explanation": "The <footer> element is used to define a footer for a document or section. It typically contains information about the author, copyright data, or links to related documents. <bottom>, <foot>, and <end> are not valid HTML elements.",
-      "correctAnswer": 0,
-      "difficulty": "Beginner",
-      "questionType": "multiple-choice"
-    },
-    {
-      "id": "28",
-      "question": "What is the correct syntax for a CSS ID selector?",
-      "topic": "Web Fundamentals",
-      "choices": [
-        "#idName",
-        ".idName",
-        "*idName",
-        "@idName"
-      ],
-      "correctIndex": 0,
-      "explanation": "In CSS, ID selectors are prefixed with a hash symbol (#), so '#idName' is the correct syntax. Class selectors use the period (.), while * and @ are not used for ID selection.",
-      "correctAnswer": 0,
-      "difficulty": "Beginner",
-      "questionType": "multiple-choice"
-    },
-    {
-      "id": "29",
-      "question": "Which JavaScript method is used to convert a string to an integer?",
-      "topic": "Web Fundamentals",
-      "choices": [
-        "parseInt()",
-        "toInt()",
-        "convertInt()",
-        "stringToInt()"
-      ],
-      "correctIndex": 0,
-      "explanation": "The 'parseInt()' function is used to convert a string to an integer. It parses the string and returns an integer or NaN if the string cannot be converted. 'toInt()' and the other options are not standard JavaScript methods.",
-      "correctAnswer": 0,
-      "difficulty": "Beginner",
-      "questionType": "multiple-choice"
-    },
-    {
-      "id": "30",
-      "question": "What is the purpose of the CSS 'transition' property?",
-      "topic": "Web Fundamentals",
-      "choices": [
-        "To animate changes between CSS property values",
-        "To move elements from one position to another",
-        "To create a smooth scrolling effect",
-        "To change the display order of elements"
-      ],
-      "correctIndex": 0,
-      "explanation": "The 'transition' property is used to animate changes between CSS property values when they change, such as on hover or focus. It creates smooth animations for property changes like color, size, or position.",
-      "correctAnswer": 0,
-      "difficulty": "Beginner",
-      "questionType": "multiple-choice"
-    },
-    {
-      "id": "31",
-      "question": "Which HTML element is used to define important text?",
-      "topic": "Web Fundamentals",
-      "choices": [
-        "`<strong>`",
-        "`<b>`",
-        "`<important>`",
-        "`<em>`"
-      ],
-      "correctIndex": 0,
-      "explanation": "The <strong> element is used to define important text with strong importance, seriousness, or urgency. It is semantic and indicates that the content is important. <b> makes text bold but has no semantic meaning, <important> is not a valid HTML element, and <em> is for emphasized text.",
-      "correctAnswer": 0,
-      "difficulty": "Beginner",
-      "questionType": "multiple-choice"
-    },
-    {
-      "id": "32",
-      "question": "What is the correct way to declare a CSS rule for all <h1> elements?",
-      "topic": "Web Fundamentals",
-      "choices": [
-        "h1 { color: red; }",
-        ".h1 { color: red; }",
-        "#h1 { color: red; }",
-        "*h1 { color: red; }"
-      ],
-      "correctIndex": 0,
-      "explanation": "To target all <h1> elements in CSS, you use the element selector without any prefix: 'h1 { color: red; }'. '.h1' targets elements with class='h1', '#h1' targets an element with id='h1', and '*h1' is not valid CSS syntax.",
-      "correctAnswer": 0,
-      "difficulty": "Beginner",
-      "questionType": "multiple-choice"
-    },
-    {
-      "id": "33",
-      "question": "Which JavaScript method is used to add a new element to the beginning of an array?",
-      "topic": "Web Fundamentals",
-      "choices": [
-        "unshift()",
-        "shift()",
-        "prepend()",
-        "insertAtStart()"
-      ],
-      "correctIndex": 0,
-      "explanation": "The 'unshift()' method adds one or more elements to the beginning of an array and returns the new length of the array. 'shift()' removes the first element, 'prepend()' is a DOM method, and 'insertAtStart()' is not a standard array method.",
-      "correctAnswer": 0,
-      "difficulty": "Intermediate",
-      "questionType": "multiple-choice"
-    },
-    {
-      "id": "34",
-      "question": "What does the CSS 'display: inline-block;' property do?",
-      "topic": "Web Fundamentals",
-      "choices": [
-        "Makes an element flow like inline elements but allows setting width and height",
-        "Makes an element take up the full width of its container",
-        "Hides the element from the page",
-        "Makes an element float to the left or right"
-      ],
-      "correctIndex": 0,
-      "explanation": "'display: inline-block;' makes an element flow like inline elements (it doesn't break to a new line) but allows setting width and height properties, which regular inline elements don't allow. It combines properties of both inline and block-level elements.",
-      "correctAnswer": 0,
-      "difficulty": "Intermediate",
-      "questionType": "multiple-choice"
-    },
-    {
-      "id": "35",
-      "question": "Which HTML attribute is used to specify that an input field must be filled out before submitting?",
-      "topic": "Web Fundamentals",
-      "choices": [
-        "required",
-        "mandatory",
-        "validate",
-        "necessary"
-      ],
-      "correctIndex": 0,
-      "explanation": "The 'required' attribute is used to specify that an input field must be filled out before submitting the form. It's a boolean attribute that provides built-in HTML5 form validation. The other options are not valid HTML attributes for this purpose.",
-      "correctAnswer": 0,
-      "difficulty": "Intermediate",
-      "questionType": "multiple-choice"
-    },
-    {
-      "id": "36",
-      "question": "What is the purpose of the JavaScript 'typeof' operator?",
-      "topic": "Web Fundamentals",
-      "choices": [
-        "To return the data type of a variable or value",
-        "To convert a value to a string",
-        "To check if a variable exists",
-        "To compare two values"
-      ],
-      "correctIndex": 0,
-      "explanation": "The 'typeof' operator returns a string indicating the data type of the operand. It's useful for checking the type of a variable or value, such as 'number', 'string', 'boolean', 'object', 'function', etc.",
-      "correctAnswer": 0,
-      "difficulty": "Intermediate",
-      "questionType": "multiple-choice"
-    },
-    {
-      "id": "37",
-      "question": "Which CSS property is used to set the background color of an element?",
-      "topic": "Web Fundamentals",
-      "choices": [
-        "background-color",
-        "color",
-        "background",
-        "bgcolor"
-      ],
-      "correctIndex": 0,
-      "explanation": "The 'background-color' property is used to set the background color of an element. 'color' sets the text color, 'background' is a shorthand property that can set multiple background properties, and 'bgcolor' is an HTML attribute, not a CSS property.",
-      "correctAnswer": 0,
-      "difficulty": "Intermediate",
-      "questionType": "multiple-choice"
-    },
-    {
-      "id": "38",
-      "question": "What is the correct HTML element for playing video files?",
-      "topic": "Web Fundamentals",
-      "choices": [
-        "`<video>`",
-        "`<movie>`",
-        "`<media>`",
-        "`<play>`"
-      ],
-      "correctIndex": 0,
-      "explanation": "The <video> element is used to embed video content in HTML documents. It supports various video formats and provides built-in controls. <movie>, <media>, and <play> are not valid HTML elements for video content.",
-      "correctAnswer": 0,
-      "difficulty": "Intermediate",
-      "questionType": "multiple-choice"
-    },
-    {
-      "id": "39",
-      "question": "Which JavaScript method is used to round a number to the nearest integer?",
-      "topic": "Web Fundamentals",
-      "choices": [
-        "Math.round()",
-        "Math.floor()",
-        "Math.ceil()",
-        "Math.integer()"
-      ],
-      "correctIndex": 0,
-      "explanation": "The 'Math.round()' method rounds a number to the nearest integer. 'Math.floor()' rounds down to the nearest integer, 'Math.ceil()' rounds up to the nearest integer, and 'Math.integer()' is not a valid method.",
-      "correctAnswer": 0,
-      "difficulty": "Intermediate",
-      "questionType": "multiple-choice"
-    },
-    {
-      "id": "40",
-      "question": "What is the purpose of the CSS '@media' rule?",
-      "topic": "Web Fundamentals",
-      "choices": [
-        "To apply different styles for different media types or device characteristics",
-        "To import external CSS files",
-        "To define custom CSS properties",
-        "To create CSS animations"
-      ],
-      "correctIndex": 0,
-      "explanation": "The '@media' rule is used to apply different styles for different media types or device characteristics, such as screen size, resolution, or orientation. It's the foundation of responsive web design, allowing different styles for mobile, tablet, and desktop views.",
-      "correctAnswer": 0,
-      "difficulty": "Intermediate",
-      "questionType": "multiple-choice"
-    }
-  ],
-  "metadata": {
+[
+  {
+    "id": 1,
+    "question": "Which HTML5 element should be used to wrap the main navigation links of a website?",
+    "topic": "HTML5",
     "difficulty": "Beginner",
-    "estimatedTime": "30 minutes",
-    "topics": [
-      "HTML5",
-      "CSS3",
-      "JavaScript",
-      "DOM"
+    "choices": [
+      "`<nav>`",
+      "`<div>`",
+      "`<header>`",
+      "`<menu>`"
     ],
-    "lastUpdated": "2025-10-01T06:42:16.315Z",
-    "version": "1.0.0"
+    "explanation": "The <nav> element is specifically designed for navigation links. It provides semantic meaning that helps screen readers and search engines understand the purpose of the content. Using <div> provides no semantic value, while <header> is for page headers and <menu> is for interactive commands.",
+    "industryContext": "Semantic HTML improves website accessibility for users with disabilities and helps search engines better understand and rank your content.",
+    "tags": [
+      "foundational",
+      "beginner"
+    ],
+    "estimatedTime": 90,
+    "questionType": "multiple-choice",
+    "correctAnswer": 0,
+    "type": "multiple-choice",
+    "sources": []
+  },
+  {
+    "id": 2,
+    "question": "What is the correct CSS to center a div horizontally and vertically using Flexbox?",
+    "topic": "CSS3",
+    "difficulty": "Intermediate",
+    "choices": [
+      "`display: flex; `justify-content: center`; `align-items: center`;`",
+      "`display: flex; align-content: center; justify-items: center;`",
+      "`display: block; text-align: center; vertical-align: middle;`",
+      "`display: grid; `place-items: center`;`"
+    ],
+    "explanation": "With Flexbox, `justify-content: center` centers items horizontally (main axis) and `align-items: center` centers them vertically (cross axis). The `display: grid; `place-items: center`;` solution works with CSS Grid, but the question specifically asks about Flexbox.",
+    "industryContext": "Flexbox is the most common method for centering content in modern web development, replacing older techniques like floats and positioning.",
+    "tags": [
+      "foundational",
+      "intermediate"
+    ],
+    "estimatedTime": 90,
+    "questionType": "multiple-choice",
+    "correctAnswer": 0,
+    "type": "multiple-choice",
+    "sources": []
+  },
+  {
+    "id": 3,
+    "question": "Which JavaScript method is used to select an element by its ID?",
+    "topic": "JavaScript",
+    "difficulty": "Beginner",
+    "choices": [
+      "`document.getElementById('myId')`",
+      "`document.querySelector('#myId')`",
+      "`document.getElementByClass('myId')`",
+      "`Both `document.getElementById('myId')` and `document.querySelector('#myId')` are correct`"
+    ],
+    "explanation": "Both `document.getElementById('myId')` and `document.querySelector('#myId')` can select an element by ID. `getElementById` is the traditional method, while `querySelector` is more flexible and can use any CSS selector. The string `document.getElementByClass('myId')` is incorrect—it should be `getElementsByClassName`, and it targets classes, not IDs.",
+    "industryContext": "DOM manipulation is fundamental to interactive web development. Understanding different selection methods helps you choose the most efficient approach for your needs.",
+    "tags": [
+      "foundational",
+      "beginner"
+    ],
+    "estimatedTime": 90,
+    "questionType": "multiple-choice",
+    "correctAnswer": 3,
+    "type": "multiple-choice",
+    "sources": []
+  },
+  {
+    "id": 4,
+    "question": "What does this CSS media `query` do?\n\n@media (max-width: 768px) { /* styles */ }",
+    "topic": "CSS3",
+    "difficulty": "Beginner",
+    "choices": [
+      "Applies styles when screen width is 768px or less",
+      "Applies styles when screen width is exactly 768px",
+      "Applies styles when screen width is more than 768px",
+      "Only applies to tablets with 768px width"
+    ],
+    "explanation": "The 'max-width: 768px' media `query` applies styles when the viewport width is 768 pixels or smaller. This is commonly used for mobile-first responsive design to apply mobile styles on smaller screens.",
+    "industryContext": "Media queries are essential for responsive web design, ensuring websites work well on mobile devices, tablets, and desktops. 768px is a common breakpoint for tablet/mobile design.",
+    "tags": [
+      "foundational",
+      "beginner"
+    ],
+    "estimatedTime": 90,
+    "questionType": "multiple-choice",
+    "correctAnswer": 0,
+    "type": "multiple-choice",
+    "sources": []
+  },
+  {
+    "id": 5,
+    "question": "Which input type provides built-in email validation in HTML5?",
+    "topic": "HTML5",
+    "difficulty": "Beginner",
+    "choices": [
+      "`<input type=\"email\">`",
+      "`<input type=\"text\" pattern=\"email\">`",
+      "`<input type=\"validation\" format=\"email\">`",
+      "`<input type=\"text\" validate=\"email\">`"
+    ],
+    "explanation": "HTML5 introduced the 'email' input type which automatically validates that the entered text follows email format (contains @ symbol and valid structure). Modern browsers will show validation errors if the format is incorrect.",
+    "industryContext": "HTML5 form validation reduces the need for custom JavaScript validation and provides better user experience with instant feedback on form inputs.",
+    "tags": [
+      "foundational",
+      "beginner"
+    ],
+    "estimatedTime": 90,
+    "questionType": "multiple-choice",
+    "correctAnswer": 0,
+    "type": "multiple-choice",
+    "sources": []
+  },
+  {
+    "id": 6,
+    "question": "How do you implement HTML5 semantic elements for better accessibility and SEO?",
+    "topic": "HTML5",
+    "difficulty": "Beginner",
+    "choices": [
+      "Use header, nav, main, article, section, aside, and footer elements appropriately for content structure",
+      "Use only div elements with class attributes for all content",
+      "Use table elements for page layout",
+      "Use deprecated elements like font and center for styling"
+    ],
+    "explanation": "HTML5 semantic elements like header, nav, main, article, section, aside, and footer provide meaningful structure that improves accessibility for screen readers and SEO for search engines. These elements convey the purpose of content sections, making web pages more understandable to both users and machines.",
+    "industryContext": "Major search engines like Google prioritize semantic HTML in their ranking algorithms. Accessibility tools like screen readers rely heavily on semantic elements to navigate content effectively. Companies like Microsoft and IBM have made web accessibility a core requirement for their digital products.",
+    "tags": [
+      "html5",
+      "semantics",
+      "accessibility",
+      "beginner"
+    ],
+    "estimatedTime": 90,
+    "questionType": "multiple-choice",
+    "correctAnswer": 0,
+    "type": "multiple-choice",
+    "sources": []
+  },
+  {
+    "id": 7,
+    "question": "What are the performance considerations when using CSS3 layout techniques?",
+    "topic": "CSS3",
+    "difficulty": "Intermediate",
+    "choices": [
+      "Use Flexbox for one-dimensional layouts and Grid for two-dimensional layouts to optimize rendering performance",
+      "Use floats for all modern layouts regardless of complexity",
+      "Apply complex animations to every element for visual appeal",
+      "Use absolute positioning for all elements to avoid layout calculations"
+    ],
+    "explanation": "CSS3 layout performance considerations include using Flexbox for one-dimensional layouts (rows or columns) and Grid for two-dimensional layouts (rows and columns together). These modern layout systems are optimized by browsers and provide better performance than older techniques like floats. Choosing the right layout method reduces browser reflow and repaint operations.",
+    "industryContext": "Browser vendors have heavily optimized Flexbox and Grid implementations. Websites like GitHub and Twitter have seen significant performance improvements by migrating from float-based to modern layout systems. CSS containment properties have been introduced to further optimize layout performance.",
+    "tags": [
+      "css3",
+      "performance",
+      "layout",
+      "intermediate"
+    ],
+    "estimatedTime": 90,
+    "questionType": "multiple-choice",
+    "correctAnswer": 0,
+    "type": "multiple-choice",
+    "sources": []
+  },
+  {
+    "id": 8,
+    "question": "How do you implement responsive design patterns for cross-device compatibility?",
+    "topic": "CSS3",
+    "difficulty": "Intermediate",
+    "choices": [
+      "Use mobile-first approach with media queries, flexible units, and touch-friendly navigation",
+      "Create separate fixed-width designs for each device type",
+      "Use the same desktop layout on all devices without modifications",
+      "Ignore mobile devices and focus only on desktop browsers"
+    ],
+    "explanation": "Responsive design patterns include a mobile-first approach that starts with small screens and scales up, media queries to adapt layouts for different screen sizes, flexible units (rem, em, %) instead of fixed pixels, and touch-friendly navigation elements. This approach ensures optimal user experience across all devices while maintaining a single codebase.",
+    "industryContext": "Mobile web traffic now exceeds desktop traffic globally. Companies like Airbnb and BBC have invested heavily in responsive design, seeing significant improvements in user engagement and conversion rates. Google's mobile-first indexing makes responsive design essential for SEO.",
+    "tags": [
+      "responsive-design",
+      "mobile-first",
+      "media-queries",
+      "intermediate"
+    ],
+    "estimatedTime": 90,
+    "questionType": "multiple-choice",
+    "correctAnswer": 0,
+    "type": "multiple-choice",
+    "sources": []
+  },
+  {
+    "id": 9,
+    "question": "Which approach is most effective for HTML5 form validation and user experience?",
+    "topic": "HTML5",
+    "difficulty": "Beginner",
+    "choices": [
+      "Combine HTML5 validation attributes with JavaScript enhancement and clear error messaging",
+      "Rely solely on server-side validation without client feedback",
+      "Use only JavaScript validation and ignore HTML5 attributes",
+      "Disable all form validation to simplify the user experience"
+    ],
+    "explanation": "Effective HTML5 form validation combines native HTML5 validation attributes (required, pattern, min/max) for immediate feedback, JavaScript enhancement for custom validation logic and improved user experience, and clear, accessible error messaging. This layered approach provides instant feedback while ensuring security through server-side validation.",
+    "industryContext": "Form conversion rates can improve by 20-40% with proper validation and user feedback. Companies like Google and Apple have established best practices for form design and validation. The Constraint Validation API provides programmatic access to HTML5 validation features.",
+    "tags": [
+      "html5",
+      "form-validation",
+      "user-experience",
+      "beginner"
+    ],
+    "estimatedTime": 90,
+    "questionType": "multiple-choice",
+    "correctAnswer": 0,
+    "type": "multiple-choice",
+    "sources": []
+  },
+  {
+    "id": 10,
+    "question": "What are the key features of modern JavaScript that improve web development?",
+    "topic": "JavaScript",
+    "difficulty": "Beginner",
+    "choices": [
+      "ES6+ features like const/let, arrow functions, modules, and promises for better code organization",
+      "Only use var declarations and global variables for simplicity",
+      "Avoid all modern JavaScript features to maintain compatibility",
+      "Use document.write for all DOM manipulation"
+    ],
+    "explanation": "Modern JavaScript features that improve development include const/let for better variable scoping, arrow functions for concise syntax and lexical this binding, modules for code organization and dependency management, and promises/async-await for better asynchronous programming. These features lead to more maintainable and reliable code.",
+    "industryContext": "Modern JavaScript adoption has accelerated rapidly, with over 95% of websites using ES6+ features. Frameworks like React and Vue extensively use modern JavaScript features. Browser support for ES6+ is nearly universal, making these features safe to use in production.",
+    "tags": [
+      "javascript",
+      "es6",
+      "best-practices",
+      "beginner"
+    ],
+    "estimatedTime": 90,
+    "questionType": "multiple-choice",
+    "correctAnswer": 0,
+    "type": "multiple-choice",
+    "sources": []
+  },
+  {
+    "id": 11,
+    "question": "How do you optimize DOM manipulation for better web application performance?",
+    "topic": "DOM",
+    "difficulty": "Advanced",
+    "choices": [
+      "Batch DOM updates, use document fragments, cache DOM references, and minimize reflows",
+      "Query the DOM repeatedly within loops for fresh data",
+      "Manipulate individual elements one by one for precision",
+      "Use innerHTML for all dynamic content regardless of security implications"
+    ],
+    "explanation": "DOM manipulation optimization techniques include batching updates to reduce reflows, using document fragments to build complex DOM structures off-DOM, caching DOM references to avoid repeated queries, and minimizing reflows and repaints through strategic update timing. These practices significantly improve application responsiveness.",
+    "industryContext": "DOM manipulation is often the performance bottleneck in web applications. Frameworks like React and Vue implement virtual DOM to optimize updates. Websites like Facebook and Twitter handle thousands of DOM updates per second through careful optimization.",
+    "tags": [
+      "dom",
+      "performance",
+      "optimization",
+      "intermediate"
+    ],
+    "estimatedTime": 90,
+    "questionType": "multiple-choice",
+    "correctAnswer": 0,
+    "type": "multiple-choice",
+    "sources": []
+  },
+  {
+    "id": 12,
+    "question": "Which CSS3 techniques are most effective for creating engaging user interfaces?",
+    "topic": "CSS3",
+    "difficulty": "Beginner",
+    "choices": [
+      "Use transitions for smooth state changes, transforms for element manipulation, and flexbox/grid for layouts",
+      "Apply complex animations to every element for maximum visual impact",
+      "Use only basic CSS properties to ensure compatibility",
+      "Avoid all CSS3 features due to browser support concerns"
+    ],
+    "explanation": "Effective CSS3 techniques for engaging interfaces include transitions for smooth state changes that improve user experience, transforms for efficient element manipulation without triggering layout recalculations, and modern layout systems like flexbox and grid for responsive, maintainable designs. These features enhance usability without sacrificing performance.",
+    "industryContext": "Motion design principles have become essential for modern web experiences. Companies like Google (Material Design) and Apple (Human Interface Guidelines) provide comprehensive guidance on using CSS3 features effectively. CSS3 performance is optimized in all modern browsers.",
+    "tags": [
+      "css3",
+      "transitions",
+      "transforms",
+      "beginner"
+    ],
+    "estimatedTime": 90,
+    "questionType": "multiple-choice",
+    "correctAnswer": 0,
+    "type": "multiple-choice",
+    "sources": []
+  },
+  {
+    "id": 13,
+    "question": "What are the best practices for HTML5 accessibility implementation?",
+    "topic": "HTML5",
+    "difficulty": "Advanced",
+    "choices": [
+      "Use semantic elements, ARIA attributes when needed, proper heading hierarchy, and keyboard navigation support",
+      "Ignore accessibility concerns to focus on visual design",
+      "Use only images to convey important information",
+      "Rely solely on screen reader detection scripts"
+    ],
+    "explanation": "HTML5 accessibility best practices include using semantic elements for built-in accessibility, ARIA attributes to enhance accessibility when semantic elements aren't sufficient, proper heading hierarchy (h1-h6) for content structure, and ensuring full keyboard navigation support. These practices make web content usable by people with disabilities.",
+    "industryContext": "Accessibility compliance is legally required in many jurisdictions (ADA, EU Web Accessibility Directive). Companies like Microsoft and IBM have made accessibility a core part of their development processes. Automated accessibility testing tools like axe and Lighthouse help identify issues.",
+    "tags": [
+      "html5",
+      "accessibility",
+      "aria",
+      "intermediate"
+    ],
+    "estimatedTime": 90,
+    "questionType": "multiple-choice",
+    "correctAnswer": 0,
+    "type": "multiple-choice",
+    "sources": []
+  },
+  {
+    "id": 14,
+    "question": "How do you implement effective JavaScript event handling patterns?",
+    "topic": "JavaScript",
+    "difficulty": "Advanced",
+    "choices": [
+      "Use event delegation for dynamic content, remove event listeners to prevent memory leaks, and handle events at the appropriate level",
+      "Attach individual event listeners to every element regardless of performance",
+      "Use inline event handlers for simplicity",
+      "Ignore event handling and rely on page reloads for all interactions"
+    ],
+    "explanation": "Effective JavaScript event handling includes event delegation for efficient handling of dynamic content, proper removal of event listeners to prevent memory leaks, and attaching handlers at the appropriate level in the DOM hierarchy. These patterns improve performance and maintainability while reducing memory consumption.",
+    "industryContext": "Event handling patterns are fundamental to modern web applications. Frameworks like React implement synthetic event systems for cross-browser consistency. Event delegation is particularly important for applications with large amounts of dynamic content like social media feeds.",
+    "tags": [
+      "javascript",
+      "event-handling",
+      "event-delegation",
+      "intermediate"
+    ],
+    "estimatedTime": 90,
+    "questionType": "multiple-choice",
+    "correctAnswer": 0,
+    "type": "multiple-choice",
+    "sources": []
+  },
+  {
+    "id": 15,
+    "question": "How do you implement HTML5 in a production environment with legacy browser support?",
+    "topic": "HTML5",
+    "difficulty": "Advanced",
+    "choices": [
+      "Use feature detection, polyfills for missing features, and progressive enhancement for graceful degradation",
+      "Require the latest browsers and block older ones",
+      "Avoid all HTML5 features to maintain compatibility",
+      "Use only the newest HTML5 features regardless of browser support"
+    ],
+    "explanation": "Production HTML5 implementation with legacy support involves feature detection to check browser capabilities, polyfills to provide missing functionality in older browsers, and progressive enhancement to ensure core functionality works everywhere while enhancing capable browsers. This approach maximizes reach while providing modern experiences.",
+    "industryContext": "Browser support varies significantly across user bases, especially in enterprise environments. Companies like GitHub and Airbnb use progressive enhancement to support diverse browser requirements. Feature detection libraries like Modernizr help implement graceful degradation strategies.",
+    "tags": [
+      "html5",
+      "browser-support",
+      "polyfills",
+      "intermediate"
+    ],
+    "estimatedTime": 90,
+    "questionType": "multiple-choice",
+    "correctAnswer": 0,
+    "type": "multiple-choice",
+    "sources": []
+  },
+  {
+    "id": 16,
+    "question": "Which CSS3 layout approach is most effective for responsive web design?",
+    "topic": "CSS3",
+    "difficulty": "Beginner",
+    "choices": [
+      "Use CSS Grid for complex layouts and Flexbox for simpler one-dimensional arrangements",
+      "Use floats for all modern layouts",
+      "Use absolute positioning for all elements",
+      "Use tables for page layout"
+    ],
+    "explanation": "Effective CSS3 layout for responsive design uses CSS Grid for complex two-dimensional layouts (rows and columns together) and Flexbox for simpler one-dimensional arrangements (rows or columns). This combination provides the flexibility needed for responsive designs while maintaining clean, maintainable code.",
+    "industryContext": "CSS Grid and Flexbox have become the standard layout systems, replacing older techniques like floats and positioning. Major websites like GitHub and Twitter have migrated to these modern layout systems. Browser support is nearly universal for both technologies.",
+    "tags": [
+      "css3",
+      "grid",
+      "flexbox",
+      "responsive-design",
+      "beginner"
+    ],
+    "estimatedTime": 90,
+    "questionType": "multiple-choice",
+    "correctAnswer": 0,
+    "type": "multiple-choice",
+    "sources": []
+  },
+  {
+    "id": 17,
+    "question": "How do you troubleshoot complex HTML5 issues in cross-browser environments?",
+    "topic": "CSS3",
+    "difficulty": "Advanced",
+    "choices": [
+      "Use browser developer tools, feature detection libraries, and systematic testing across target browsers",
+      "Test only in the most popular browser",
+      "Ignore browser differences and hope for the best",
+      "Use browser-specific CSS hacks for all styling"
+    ],
+    "explanation": "Cross-browser HTML5 troubleshooting requires using browser developer tools for debugging, feature detection libraries like Modernizr to identify capability gaps, and systematic testing across all target browsers and versions. This approach helps identify and resolve compatibility issues before they affect users.",
+    "industryContext": "Cross-browser compatibility remains challenging despite improved standards compliance. Tools like BrowserStack and Sauce Labs provide cloud-based testing environments. Companies with global reach like Facebook and Google maintain extensive browser compatibility testing infrastructures.",
+    "tags": [
+      "html5",
+      "cross-browser",
+      "troubleshooting",
+      "advanced"
+    ],
+    "estimatedTime": 120,
+    "questionType": "multiple-choice",
+    "correctAnswer": 0,
+    "type": "multiple-choice",
+    "sources": []
+  },
+  {
+    "id": 18,
+    "question": "What JavaScript patterns are most effective for DOM manipulation and event handling?",
+    "topic": "JavaScript",
+    "difficulty": "Advanced",
+    "choices": [
+      "Use modular patterns with event delegation, DOM caching, and proper event listener management",
+      "Attach individual event listeners to every DOM element",
+      "Use global variables for all state management",
+      "Manipulate the DOM directly without any organizational patterns"
+    ],
+    "explanation": "Effective JavaScript patterns for DOM manipulation include modular organization to encapsulate functionality, event delegation to efficiently handle events on dynamic content, DOM caching to avoid repeated queries, and proper event listener management to prevent memory leaks. These patterns create maintainable and performant code.",
+    "industryContext": "Modern JavaScript frameworks implement these patterns at scale. Libraries like jQuery popularized many of these best practices. Performance-critical applications like Google Maps and Facebook implement sophisticated DOM management strategies.",
+    "tags": [
+      "javascript",
+      "dom-manipulation",
+      "event-handling",
+      "patterns",
+      "intermediate"
+    ],
+    "estimatedTime": 90,
+    "questionType": "multiple-choice",
+    "correctAnswer": 0,
+    "type": "multiple-choice",
+    "sources": []
+  },
+  {
+    "id": 19,
+    "question": "Which HTML5 features are essential for creating accessible web applications?",
+    "topic": "DOM",
+    "difficulty": "Beginner",
+    "choices": [
+      "Semantic elements, form labels, ARIA attributes, and keyboard navigation support",
+      "Complex visual effects and animations",
+      "Custom fonts and advanced CSS styling",
+      "Multimedia elements without captions"
+    ],
+    "explanation": "Essential HTML5 features for accessibility include semantic elements that provide built-in meaning, proper form labels that connect inputs with their descriptions, ARIA attributes to enhance accessibility where needed, and keyboard navigation support for users who cannot use a mouse. These features ensure content is usable by people with disabilities.",
+    "industryContext": "Web Content Accessibility Guidelines (WCAG) 2.1 provide the standard for web accessibility. Companies face legal requirements for accessibility in many jurisdictions. Tools like screen readers depend heavily on proper HTML5 semantic structure and ARIA attributes.",
+    "tags": [
+      "html5",
+      "accessibility",
+      "semantics",
+      "aria",
+      "beginner"
+    ],
+    "estimatedTime": 90,
+    "questionType": "multiple-choice",
+    "correctAnswer": 0,
+    "type": "multiple-choice",
+    "sources": []
+  },
+  {
+    "id": 20,
+    "question": "When should you use HTML5 features in web development projects?",
+    "topic": "HTML5",
+    "difficulty": "Beginner",
+    "choices": [
+      "When they solve specific problems and improve user experience, with graceful degradation for unsupported browsers",
+      "Always use the latest features regardless of browser support",
+      "Never use HTML5 features to maintain maximum compatibility",
+      "Only use features that work in Internet Explorer 6"
+    ],
+    "explanation": "HTML5 features should be used when they solve specific problems and improve user experience, with graceful degradation strategies for browsers that don't support them. This approach leverages modern capabilities while maintaining broad compatibility. Feature detection helps determine when to apply enhancements.",
+    "industryContext": "Progressive enhancement has become the standard approach for using modern web features. Companies balance innovation with compatibility based on their user base analytics. Feature detection libraries like Modernizr help implement this strategy effectively.",
+    "tags": [
+      "html5",
+      "progressive-enhancement",
+      "feature-detection",
+      "best-practices",
+      "beginner"
+    ],
+    "estimatedTime": 90,
+    "questionType": "multiple-choice",
+    "correctAnswer": 0,
+    "type": "multiple-choice",
+    "sources": []
+  },
+  {
+    "id": 21,
+    "question": "What is the purpose of the CSS 'box-sizing: border-box' property?",
+    "topic": "Web Fundamentals",
+    "choices": [
+      "Includes padding and border in the element's total width and height",
+      "Creates a border around the element",
+      "Adds padding to the element",
+      "Changes the element's display type to a box"
+    ],
+    "explanation": "When 'box-sizing: border-box' is applied, the element's width and height include the padding and border, making it easier to size elements. Without this property, padding and borders are added to the specified width and height, often causing layout issues.",
+    "correctAnswer": 0,
+    "difficulty": "Beginner",
+    "questionType": "multiple-choice",
+    "type": "multiple-choice",
+    "sources": []
+  },
+  {
+    "id": 22,
+    "question": "Which CSS display value removes an element from the document flow?",
+    "topic": "Web Fundamentals",
+    "choices": [
+      "`display: none`",
+      "`display: block`",
+      "`display: inline`",
+      "`display: flex`"
+    ],
+    "explanation": "'display: none' completely removes an element from the document flow, making it invisible and not taking up any space. Other display values like 'block', 'inline', and 'flex' still participate in the document flow, just with different layout behaviors.",
+    "correctAnswer": 0,
+    "difficulty": "Beginner",
+    "questionType": "multiple-choice",
+    "type": "multiple-choice",
+    "sources": []
+  },
+  {
+    "id": 23,
+    "question": "What is the correct way to add an event listener in JavaScript?",
+    "topic": "Web Fundamentals",
+    "choices": [
+      "element.addEventListener('click', function() { })",
+      "element.onclick = function() { }",
+      "element.attachEvent('onclick', function() { })",
+      "Both A and B are correct"
+    ],
+    "explanation": "Both addEventListener and direct event properties (like onclick) can be used to add event listeners. addEventListener is more flexible as it allows multiple listeners for the same event and provides better control. Direct event properties are simpler but limited to one listener per event type.",
+    "correctAnswer": 3,
+    "difficulty": "Beginner",
+    "fixedChoiceOrder": true,
+    "choiceLabels": "letters",
+    "questionType": "multiple-choice",
+    "type": "multiple-choice",
+    "sources": []
+  },
+  {
+    "id": 24,
+    "question": "Which CSS property is used to make a flex container's items wrap to multiple lines?",
+    "topic": "Web Fundamentals",
+    "choices": [
+      "flex-wrap: wrap",
+      "flex-direction: wrap",
+      "flex-line: wrap",
+      "wrap: flex"
+    ],
+    "explanation": "The 'flex-wrap: wrap' property allows flex items to wrap onto multiple lines when they don't fit in a single line. The default value is 'nowrap', which keeps all items on one line even if they overflow the container.",
+    "correctAnswer": 0,
+    "difficulty": "Beginner",
+    "questionType": "multiple-choice",
+    "type": "multiple-choice",
+    "sources": []
+  },
+  {
+    "id": 25,
+    "question": "What is the purpose of the viewport meta tag in HTML?",
+    "topic": "Web Fundamentals",
+    "choices": [
+      "Controls how the page is displayed on mobile devices",
+      "Sets the background color of the page",
+      "Defines the character encoding",
+      "Specifies the page title"
+    ],
+    "explanation": "The viewport meta tag (<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">) controls how the page is displayed on mobile devices. It ensures the page width matches the device width and sets the initial zoom level, which is essential for responsive design.",
+    "correctAnswer": 0,
+    "difficulty": "Beginner",
+    "questionType": "multiple-choice",
+    "type": "multiple-choice",
+    "sources": []
+  },
+  {
+    "id": 26,
+    "question": "Which CSS property is used to change the font size of an element?",
+    "topic": "Web Fundamentals",
+    "choices": [
+      "font-size",
+      "text-size",
+      "font-style",
+      "text-style"
+    ],
+    "explanation": "The 'font-size' property is used to change the font size of an element. It can be specified in various units such as pixels (px), ems (em), rems (rem), percentages (%), or keywords like small, medium, large.",
+    "correctAnswer": 0,
+    "difficulty": "Beginner",
+    "questionType": "multiple-choice",
+    "type": "multiple-choice",
+    "sources": []
+  },
+  {
+    "id": 27,
+    "question": "What is the correct way to declare a JavaScript variable?",
+    "topic": "Web Fundamentals",
+    "choices": [
+      "`let myVariable = 'value';`",
+      "variable myVariable = 'value';",
+      "declare myVariable = 'value';",
+      "var myVariable: 'value';"
+    ],
+    "explanation": "In modern JavaScript, variables are declared using 'let' for block-scoped variables or 'const' for constants. 'var' is the older way of declaring variables with function scope. The syntax 'let myVariable = 'value';' is the correct modern approach.",
+    "correctAnswer": 0,
+    "difficulty": "Beginner",
+    "questionType": "multiple-choice",
+    "type": "multiple-choice",
+    "sources": []
+  },
+  {
+    "id": 28,
+    "question": "Which HTML element is used to define an independent, self-contained content section?",
+    "topic": "Web Fundamentals",
+    "choices": [
+      "`<article>`",
+      "`<section>`",
+      "`<div>`",
+      "`<span>`"
+    ],
+    "explanation": "The <article> element is used to define independent, self-contained content that could stand alone, such as a blog post, news article, or forum post. <section> groups related content, <div> is a generic container, and <span> is an inline container.",
+    "correctAnswer": 0,
+    "difficulty": "Beginner",
+    "questionType": "multiple-choice",
+    "type": "multiple-choice",
+    "sources": []
+  },
+  {
+    "id": 29,
+    "question": "What is the purpose of the CSS 'z-index' property?",
+    "topic": "Web Fundamentals",
+    "choices": [
+      "Controls the stack order of positioned elements",
+      "Sets the zoom level of an element",
+      "Defines the number of columns in a grid",
+      "Specifies the indentation of text"
+    ],
+    "explanation": "The 'z-index' property controls the stack order of positioned elements (those with position other than static). Elements with a higher z-index value will appear in front of elements with a lower z-index value.",
+    "correctAnswer": 0,
+    "difficulty": "Beginner",
+    "questionType": "multiple-choice",
+    "type": "multiple-choice",
+    "sources": []
+  },
+  {
+    "id": 30,
+    "question": "Which JavaScript method is used to add a new element to the end of an array?",
+    "topic": "Web Fundamentals",
+    "choices": [
+      "push()",
+      "append()",
+      "add()",
+      "insert()"
+    ],
+    "explanation": "The 'push()' method adds one or more elements to the end of an array and returns the new length of the array. 'append()' is used for DOM manipulation, while 'add()' and 'insert()' are not standard array methods.",
+    "correctAnswer": 0,
+    "difficulty": "Beginner",
+    "questionType": "multiple-choice",
+    "type": "multiple-choice",
+    "sources": []
+  },
+  {
+    "id": 31,
+    "question": "What does the CSS 'position: absolute;' property do?",
+    "topic": "Web Fundamentals",
+    "choices": [
+      "Positions the element relative to its nearest positioned ancestor",
+      "Positions the element relative to the viewport",
+      "Keeps the element in the normal document flow",
+      "Centers the element horizontally and vertically"
+    ],
+    "explanation": "'position: absolute;' removes the element from the normal document flow and positions it relative to its nearest positioned ancestor (an element with position other than static). If no positioned ancestor exists, it positions relative to the initial containing block (usually the viewport).",
+    "correctAnswer": 0,
+    "difficulty": "Beginner",
+    "questionType": "multiple-choice",
+    "type": "multiple-choice",
+    "sources": []
+  },
+  {
+    "id": 32,
+    "question": "Which HTML attribute is used to specify alternative text for an image?",
+    "topic": "Web Fundamentals",
+    "choices": [
+      "alt",
+      "title",
+      "description",
+      "caption"
+    ],
+    "explanation": "The 'alt' attribute specifies alternative text for an image, which is displayed if the image cannot be loaded and is also used by screen readers for accessibility. The 'title' attribute provides tooltip text, while 'description' and 'caption' are not valid image attributes.",
+    "correctAnswer": 0,
+    "difficulty": "Beginner",
+    "questionType": "multiple-choice",
+    "type": "multiple-choice",
+    "sources": []
+  },
+  {
+    "id": 33,
+    "question": "What is the correct syntax for a CSS class selector?",
+    "topic": "Web Fundamentals",
+    "choices": [
+      ".className",
+      "#className",
+      "*className",
+      "$className"
+    ],
+    "explanation": "In CSS, class selectors are prefixed with a period (.), so '.className' is the correct syntax. ID selectors use the hash symbol (#), while * and $ are not used for class selection.",
+    "correctAnswer": 0,
+    "difficulty": "Beginner",
+    "questionType": "multiple-choice",
+    "type": "multiple-choice",
+    "sources": []
+  },
+  {
+    "id": 34,
+    "question": "Which JavaScript operator is used to check both value and type equality?",
+    "topic": "Web Fundamentals",
+    "choices": [
+      "===",
+      "==",
+      "=",
+      "!=="
+    ],
+    "explanation": "The strict equality operator '===' checks both value and type equality without performing type coercion. The loose equality operator '==' performs type coercion before comparison. The single '=' is for assignment, and '!== ' checks for strict inequality.",
+    "correctAnswer": 0,
+    "difficulty": "Beginner",
+    "questionType": "multiple-choice",
+    "type": "multiple-choice",
+    "sources": []
+  },
+  {
+    "id": 35,
+    "question": "What is the purpose of the HTML <main> element?",
+    "topic": "Web Fundamentals",
+    "choices": [
+      "Represents the dominant content of the body of a document",
+      "Defines the main navigation of the page",
+      "Contains metadata about the document",
+      "Groups related content together"
+    ],
+    "explanation": "The <main> element represents the dominant content of the body of a document or application. It should contain the primary content that is unique to that page and directly related to the document's central topic.",
+    "correctAnswer": 0,
+    "difficulty": "Beginner",
+    "questionType": "multiple-choice",
+    "type": "multiple-choice",
+    "sources": []
+  },
+  {
+    "id": 36,
+    "question": "Which CSS property is used to set the space between lines of text?",
+    "topic": "Web Fundamentals",
+    "choices": [
+      "line-height",
+      "letter-spacing",
+      "word-spacing",
+      "text-spacing"
+    ],
+    "explanation": "The 'line-height' property sets the space between lines of text. 'letter-spacing' controls the space between characters, 'word-spacing' controls the space between words, and 'text-spacing' is not a standard CSS property.",
+    "correctAnswer": 0,
+    "difficulty": "Beginner",
+    "questionType": "multiple-choice",
+    "type": "multiple-choice",
+    "sources": []
+  },
+  {
+    "id": 37,
+    "question": "What is the correct way to write a comment in JavaScript?",
+    "topic": "Web Fundamentals",
+    "choices": [
+      "// This is a comment",
+      "<!-- This is a comment -->",
+      "/* This is a comment */",
+      "Both A and C are correct"
+    ],
+    "explanation": "JavaScript supports both single-line comments using '//' and multi-line comments using '/* */'. HTML comments use <!-- -->, which is not valid JavaScript syntax.",
+    "correctAnswer": 3,
+    "difficulty": "Beginner",
+    "fixedChoiceOrder": true,
+    "choiceLabels": "letters",
+    "questionType": "multiple-choice",
+    "type": "multiple-choice",
+    "sources": []
+  },
+  {
+    "id": 38,
+    "question": "Which CSS property is used to make text bold?",
+    "topic": "Web Fundamentals",
+    "choices": [
+      "font-weight",
+      "font-style",
+      "text-weight",
+      "bold"
+    ],
+    "explanation": "The 'font-weight' property is used to make text bold. It accepts values like 'bold', 'bolder', 'lighter', or numeric values from 100 to 900. 'font-style' is used for italic text, and 'text-weight' and 'bold' are not valid CSS properties.",
+    "correctAnswer": 0,
+    "difficulty": "Beginner",
+    "questionType": "multiple-choice",
+    "type": "multiple-choice",
+    "sources": []
+  },
+  {
+    "id": 39,
+    "question": "What is the purpose of the HTML <aside> element?",
+    "topic": "Web Fundamentals",
+    "choices": [
+      "Represents content that is tangentially related to the content around it",
+      "Defines the main content of the page",
+      "Contains navigation links",
+      "Groups related elements together"
+    ],
+    "explanation": "The <aside> element represents content that is tangentially related to the content around it, such as sidebars, pull quotes, or advertisements. It should contain content that is related to the surrounding content but not essential to the main flow.",
+    "correctAnswer": 0,
+    "difficulty": "Beginner",
+    "questionType": "multiple-choice",
+    "type": "multiple-choice",
+    "sources": []
+  },
+  {
+    "id": 40,
+    "question": "Which JavaScript method is used to remove the last element from an array?",
+    "topic": "Web Fundamentals",
+    "choices": [
+      "pop()",
+      "shift()",
+      "remove()",
+      "delete()"
+    ],
+    "explanation": "The 'pop()' method removes the last element from an array and returns that element. 'shift()' removes the first element, 'remove()' is not a standard array method, and 'delete' is an operator that removes object properties.",
+    "correctAnswer": 0,
+    "difficulty": "Beginner",
+    "questionType": "multiple-choice",
+    "type": "multiple-choice",
+    "sources": []
+  },
+  {
+    "id": 41,
+    "question": "What does the CSS 'float' property do?",
+    "topic": "Web Fundamentals",
+    "choices": [
+      "Positions an element to the left or right, allowing other content to wrap around it",
+      "Moves an element up or down on the page",
+      "Rotates an element",
+      "Changes the display order of elements"
+    ],
+    "explanation": "The 'float' property positions an element to the left or right side of its container, allowing other content (like text) to wrap around it. It's commonly used for creating layouts with text wrapping around images.",
+    "correctAnswer": 0,
+    "difficulty": "Beginner",
+    "questionType": "multiple-choice",
+    "type": "multiple-choice",
+    "sources": []
+  },
+  {
+    "id": 42,
+    "question": "Which HTML element is used to define a footer for a document or section?",
+    "topic": "Web Fundamentals",
+    "choices": [
+      "`<footer>`",
+      "`<bottom>`",
+      "`<foot>`",
+      "`<end>`"
+    ],
+    "explanation": "The <footer> element is used to define a footer for a document or section. It typically contains information about the author, copyright data, or links to related documents. <bottom>, <foot>, and <end> are not valid HTML elements.",
+    "correctAnswer": 0,
+    "difficulty": "Beginner",
+    "questionType": "multiple-choice",
+    "type": "multiple-choice",
+    "sources": []
+  },
+  {
+    "id": 43,
+    "question": "What is the correct syntax for a CSS ID selector?",
+    "topic": "Web Fundamentals",
+    "choices": [
+      "#idName",
+      ".idName",
+      "*idName",
+      "@idName"
+    ],
+    "explanation": "In CSS, ID selectors are prefixed with a hash symbol (#), so '#idName' is the correct syntax. Class selectors use the period (.), while * and @ are not used for ID selection.",
+    "correctAnswer": 0,
+    "difficulty": "Beginner",
+    "questionType": "multiple-choice",
+    "type": "multiple-choice",
+    "sources": []
+  },
+  {
+    "id": 44,
+    "question": "Which JavaScript method is used to convert a string to an integer?",
+    "topic": "Web Fundamentals",
+    "choices": [
+      "parseInt()",
+      "toInt()",
+      "convertInt()",
+      "stringToInt()"
+    ],
+    "explanation": "The 'parseInt()' function is used to convert a string to an integer. It parses the string and returns an integer or NaN if the string cannot be converted. 'toInt()' and the other options are not standard JavaScript methods.",
+    "correctAnswer": 0,
+    "difficulty": "Beginner",
+    "questionType": "multiple-choice",
+    "type": "multiple-choice",
+    "sources": []
+  },
+  {
+    "id": 45,
+    "question": "What is the purpose of the CSS 'transition' property?",
+    "topic": "Web Fundamentals",
+    "choices": [
+      "To animate changes between CSS property values",
+      "To move elements from one position to another",
+      "To create a smooth scrolling effect",
+      "To change the display order of elements"
+    ],
+    "explanation": "The 'transition' property is used to animate changes between CSS property values when they change, such as on hover or focus. It creates smooth animations for property changes like color, size, or position.",
+    "correctAnswer": 0,
+    "difficulty": "Beginner",
+    "questionType": "multiple-choice",
+    "type": "multiple-choice",
+    "sources": []
+  },
+  {
+    "id": 46,
+    "question": "Which HTML element is used to define important text?",
+    "topic": "Web Fundamentals",
+    "choices": [
+      "`<strong>`",
+      "`<b>`",
+      "`<important>`",
+      "`<em>`"
+    ],
+    "explanation": "The <strong> element is used to define important text with strong importance, seriousness, or urgency. It is semantic and indicates that the content is important. <b> makes text bold but has no semantic meaning, <important> is not a valid HTML element, and <em> is for emphasized text.",
+    "correctAnswer": 0,
+    "difficulty": "Beginner",
+    "questionType": "multiple-choice",
+    "type": "multiple-choice",
+    "sources": []
+  },
+  {
+    "id": 47,
+    "question": "What is the correct way to declare a CSS rule for all <h1> elements?",
+    "topic": "Web Fundamentals",
+    "choices": [
+      "h1 { color: red; }",
+      ".h1 { color: red; }",
+      "#h1 { color: red; }",
+      "*h1 { color: red; }"
+    ],
+    "explanation": "To target all <h1> elements in CSS, you use the element selector without any prefix: 'h1 { color: red; }'. '.h1' targets elements with class='h1', '#h1' targets an element with id='h1', and '*h1' is not valid CSS syntax.",
+    "correctAnswer": 0,
+    "difficulty": "Beginner",
+    "questionType": "multiple-choice",
+    "type": "multiple-choice",
+    "sources": []
+  },
+  {
+    "id": 48,
+    "question": "Which JavaScript method is used to add a new element to the beginning of an array?",
+    "topic": "Web Fundamentals",
+    "choices": [
+      "unshift()",
+      "shift()",
+      "prepend()",
+      "insertAtStart()"
+    ],
+    "explanation": "The 'unshift()' method adds one or more elements to the beginning of an array and returns the new length of the array. 'shift()' removes the first element, 'prepend()' is a DOM method, and 'insertAtStart()' is not a standard array method.",
+    "correctAnswer": 0,
+    "difficulty": "Intermediate",
+    "questionType": "multiple-choice",
+    "type": "multiple-choice",
+    "sources": []
+  },
+  {
+    "id": 49,
+    "question": "What does the CSS 'display: inline-block;' property do?",
+    "topic": "Web Fundamentals",
+    "choices": [
+      "Makes an element flow like inline elements but allows setting width and height",
+      "Makes an element take up the full width of its container",
+      "Hides the element from the page",
+      "Makes an element float to the left or right"
+    ],
+    "explanation": "'display: inline-block;' makes an element flow like inline elements (it doesn't break to a new line) but allows setting width and height properties, which regular inline elements don't allow. It combines properties of both inline and block-level elements.",
+    "correctAnswer": 0,
+    "difficulty": "Intermediate",
+    "questionType": "multiple-choice",
+    "type": "multiple-choice",
+    "sources": []
+  },
+  {
+    "id": 50,
+    "question": "Which HTML attribute is used to specify that an input field must be filled out before submitting?",
+    "topic": "Web Fundamentals",
+    "choices": [
+      "required",
+      "mandatory",
+      "validate",
+      "necessary"
+    ],
+    "explanation": "The 'required' attribute is used to specify that an input field must be filled out before submitting the form. It's a boolean attribute that provides built-in HTML5 form validation. The other options are not valid HTML attributes for this purpose.",
+    "correctAnswer": 0,
+    "difficulty": "Intermediate",
+    "questionType": "multiple-choice",
+    "type": "multiple-choice",
+    "sources": []
+  },
+  {
+    "id": 51,
+    "question": "What is the purpose of the JavaScript 'typeof' operator?",
+    "topic": "Web Fundamentals",
+    "choices": [
+      "To return the data type of a variable or value",
+      "To convert a value to a string",
+      "To check if a variable exists",
+      "To compare two values"
+    ],
+    "explanation": "The 'typeof' operator returns a string indicating the data type of the operand. It's useful for checking the type of a variable or value, such as 'number', 'string', 'boolean', 'object', 'function', etc.",
+    "correctAnswer": 0,
+    "difficulty": "Intermediate",
+    "questionType": "multiple-choice",
+    "type": "multiple-choice",
+    "sources": []
+  },
+  {
+    "id": 52,
+    "question": "Which CSS property is used to set the background color of an element?",
+    "topic": "Web Fundamentals",
+    "choices": [
+      "background-color",
+      "color",
+      "background",
+      "bgcolor"
+    ],
+    "explanation": "The 'background-color' property is used to set the background color of an element. 'color' sets the text color, 'background' is a shorthand property that can set multiple background properties, and 'bgcolor' is an HTML attribute, not a CSS property.",
+    "correctAnswer": 0,
+    "difficulty": "Intermediate",
+    "questionType": "multiple-choice",
+    "type": "multiple-choice",
+    "sources": []
+  },
+  {
+    "id": 53,
+    "question": "What is the correct HTML element for playing video files?",
+    "topic": "Web Fundamentals",
+    "choices": [
+      "`<video>`",
+      "`<movie>`",
+      "`<media>`",
+      "`<play>`"
+    ],
+    "explanation": "The <video> element is used to embed video content in HTML documents. It supports various video formats and provides built-in controls. <movie>, <media>, and <play> are not valid HTML elements for video content.",
+    "correctAnswer": 0,
+    "difficulty": "Intermediate",
+    "questionType": "multiple-choice",
+    "type": "multiple-choice",
+    "sources": []
+  },
+  {
+    "id": 54,
+    "question": "Which JavaScript method is used to round a number to the nearest integer?",
+    "topic": "Web Fundamentals",
+    "choices": [
+      "Math.round()",
+      "Math.floor()",
+      "Math.ceil()",
+      "Math.integer()"
+    ],
+    "explanation": "The 'Math.round()' method rounds a number to the nearest integer. 'Math.floor()' rounds down to the nearest integer, 'Math.ceil()' rounds up to the nearest integer, and 'Math.integer()' is not a valid method.",
+    "correctAnswer": 0,
+    "difficulty": "Intermediate",
+    "questionType": "multiple-choice",
+    "type": "multiple-choice",
+    "sources": []
+  },
+  {
+    "id": 55,
+    "question": "What is the purpose of the CSS '@media' rule?",
+    "topic": "Web Fundamentals",
+    "choices": [
+      "To apply different styles for different media types or device characteristics",
+      "To import external CSS files",
+      "To define custom CSS properties",
+      "To create CSS animations"
+    ],
+    "explanation": "The '@media' rule is used to apply different styles for different media types or device characteristics, such as screen size, resolution, or orientation. It's the foundation of responsive web design, allowing different styles for mobile, tablet, and desktop views.",
+    "correctAnswer": 0,
+    "difficulty": "Intermediate",
+    "questionType": "multiple-choice",
+    "type": "multiple-choice",
+    "sources": []
   }
-}
+]

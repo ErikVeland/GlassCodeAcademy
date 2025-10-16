@@ -4,9 +4,9 @@ using backend.Models;
 namespace backend.GraphQL
 {
     // LaravelLesson type definition for GraphQL
-    public class LaravelLessonType : ObjectType<LaravelLesson>
+    public class LaravelLessonType : ObjectType<BaseLesson>
     {
-        protected override void Configure(IObjectTypeDescriptor<LaravelLesson> descriptor)
+        protected override void Configure(IObjectTypeDescriptor<BaseLesson> descriptor)
         {
             descriptor.Name("LaravelLesson");
             descriptor.Description("Represents a Laravel learning lesson with code examples");
@@ -28,9 +28,9 @@ namespace backend.GraphQL
     }
 
     // LaravelInterviewQuestion type definition for GraphQL
-    public class LaravelInterviewQuestionType : ObjectType<LaravelInterviewQuestion>
+    public class LaravelInterviewQuestionType : ObjectType<BaseInterviewQuestion>
     {
-        protected override void Configure(IObjectTypeDescriptor<LaravelInterviewQuestion> descriptor)
+        protected override void Configure(IObjectTypeDescriptor<BaseInterviewQuestion> descriptor)
         {
             descriptor.Name("LaravelInterviewQuestion");
             descriptor.Description("Represents a Laravel interview question with multiple choice or open-ended format");

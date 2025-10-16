@@ -1,0 +1,1234 @@
+=== GlassCode Academy Schema Validation ===
+
+Validating lesson files...
+OK: dotnet-fundamentals.json
+OK: vue-advanced.json
+OK: node-fundamentals.json
+OK: nextjs-advanced.json
+OK: e2e-testing.json
+OK: tailwind-advanced.json
+OK: programming-fundamentals.json
+OK: testing-fundamentals.json
+OK: version-control.json
+OK: typescript-fundamentals.json
+OK: graphql-advanced.json
+OK: sass-advanced.json
+OK: react-fundamentals.json
+OK: web-fundamentals.json
+OK: laravel-fundamentals.json
+OK: security-fundamentals.json
+OK: database-systems.json
+OK: performance-optimization.json
+
+Validating quiz files...
+ERRORS in dotnet-fundamentals.json: 90 errors
+  - Question 0 missing required field: type
+  - Question 0 field 'correctAnswer' should be string, got int
+  - Question 1 missing required field: type
+  - Question 1 field 'correctAnswer' should be string, got int
+  - Question 2 missing required field: type
+  - Question 2 field 'correctAnswer' should be string, got int
+  - Question 3 missing required field: type
+  - Question 3 field 'correctAnswer' should be string, got int
+  - Question 4 missing required field: type
+  - Question 4 field 'correctAnswer' should be string, got int
+  - Question 5 missing required field: type
+  - Question 5 field 'correctAnswer' should be string, got int
+  - Question 6 missing required field: type
+  - Question 6 field 'correctAnswer' should be string, got int
+  - Question 7 missing required field: type
+  - Question 7 field 'correctAnswer' should be string, got int
+  - Question 8 missing required field: type
+  - Question 8 field 'correctAnswer' should be string, got int
+  - Question 9 missing required field: type
+  - Question 9 field 'correctAnswer' should be string, got int
+  - Question 10 missing required field: type
+  - Question 10 field 'correctAnswer' should be string, got int
+  - Question 11 missing required field: type
+  - Question 11 field 'correctAnswer' should be string, got int
+  - Question 12 missing required field: type
+  - Question 12 field 'correctAnswer' should be string, got int
+  - Question 13 missing required field: type
+  - Question 13 field 'correctAnswer' should be string, got int
+  - Question 14 missing required field: type
+  - Question 14 field 'correctAnswer' should be string, got int
+  - Question 15 missing required field: type
+  - Question 15 field 'correctAnswer' should be string, got int
+  - Question 16 missing required field: type
+  - Question 16 field 'correctAnswer' should be string, got int
+  - Question 17 missing required field: type
+  - Question 17 field 'correctAnswer' should be string, got int
+  - Question 18 missing required field: type
+  - Question 18 field 'correctAnswer' should be string, got int
+  - Question 19 missing required field: type
+  - Question 19 field 'correctAnswer' should be string, got int
+  - Question 20 missing required field: type
+  - Question 20 field 'correctAnswer' should be string, got int
+  - Question 21 missing required field: type
+  - Question 21 field 'correctAnswer' should be string, got int
+  - Question 22 missing required field: type
+  - Question 22 field 'correctAnswer' should be string, got int
+  - Question 23 missing required field: type
+  - Question 23 field 'correctAnswer' should be string, got int
+  - Question 24 missing required field: type
+  - Question 24 field 'correctAnswer' should be string, got int
+  - Question 25 missing required field: type
+  - Question 25 field 'correctAnswer' should be string, got int
+  - Question 26 missing required field: type
+  - Question 26 field 'correctAnswer' should be string, got int
+  - Question 27 missing required field: type
+  - Question 27 field 'correctAnswer' should be string, got int
+  - Question 28 missing required field: type
+  - Question 28 field 'correctAnswer' should be string, got int
+  - Question 29 missing required field: type
+  - Question 29 field 'correctAnswer' should be string, got int
+  - Question 30 missing required field: type
+  - Question 30 field 'correctAnswer' should be string, got int
+  - Question 31 missing required field: type
+  - Question 31 field 'correctAnswer' should be string, got int
+  - Question 32 missing required field: type
+  - Question 32 field 'correctAnswer' should be string, got int
+  - Question 33 missing required field: type
+  - Question 33 field 'correctAnswer' should be string, got int
+  - Question 34 missing required field: type
+  - Question 34 field 'correctAnswer' should be string, got int
+  - Question 35 missing required field: type
+  - Question 35 field 'correctAnswer' should be string, got int
+  - Question 36 missing required field: type
+  - Question 36 field 'correctAnswer' should be string, got int
+  - Question 37 missing required field: type
+  - Question 37 field 'correctAnswer' should be string, got int
+  - Question 38 missing required field: type
+  - Question 38 field 'correctAnswer' should be string, got int
+  - Question 39 missing required field: type
+  - Question 39 field 'correctAnswer' should be string, got int
+  - Question 40 missing required field: type
+  - Question 40 field 'correctAnswer' should be string, got int
+  - Question 41 missing required field: type
+  - Question 41 field 'correctAnswer' should be string, got int
+  - Question 42 missing required field: type
+  - Question 42 field 'correctAnswer' should be string, got int
+  - Question 43 missing required field: type
+  - Question 43 field 'correctAnswer' should be string, got int
+  - Question 44 missing required field: type
+  - Question 44 field 'correctAnswer' should be string, got int
+ERRORS in vue-advanced.json: 38 errors
+  - Question 0 missing required field: type
+  - Question 0 field 'correctAnswer' should be string, got int
+  - Question 1 missing required field: type
+  - Question 1 field 'correctAnswer' should be string, got int
+  - Question 2 missing required field: type
+  - Question 2 missing required field: choices
+  - Question 2 missing required field: correctAnswer
+  - Question 3 missing required field: type
+  - Question 3 field 'correctAnswer' should be string, got int
+  - Question 4 missing required field: type
+  - Question 4 field 'correctAnswer' should be string, got int
+  - Question 5 missing required field: type
+  - Question 5 field 'correctAnswer' should be string, got int
+  - Question 6 missing required field: type
+  - Question 6 field 'correctAnswer' should be string, got int
+  - Question 7 missing required field: type
+  - Question 7 field 'correctAnswer' should be string, got int
+  - Question 8 missing required field: type
+  - Question 8 field 'correctAnswer' should be string, got int
+  - Question 9 missing required field: type
+  - Question 9 field 'correctAnswer' should be string, got int
+  - Question 10 missing required field: type
+  - Question 10 field 'correctAnswer' should be string, got int
+  - Question 11 missing required field: type
+  - Question 11 field 'correctAnswer' should be string, got int
+  - Question 12 missing required field: type
+  - Question 12 field 'correctAnswer' should be string, got int
+  - Question 13 missing required field: type
+  - Question 13 field 'correctAnswer' should be string, got int
+  - Question 14 missing required field: type
+  - Question 14 field 'correctAnswer' should be string, got int
+  - Question 15 missing required field: type
+  - Question 15 field 'correctAnswer' should be string, got int
+  - Question 16 missing required field: type
+  - Question 16 field 'correctAnswer' should be string, got int
+  - Question 17 missing required field: type
+  - Question 17 field 'correctAnswer' should be string, got int
+  - Question 18 field 'correctAnswer' should be string, got int
+ERRORS in node-fundamentals.json: 40 errors
+  - Question 0 missing required field: type
+  - Question 0 field 'correctAnswer' should be string, got int
+  - Question 1 missing required field: type
+  - Question 1 field 'correctAnswer' should be string, got int
+  - Question 2 missing required field: type
+  - Question 2 field 'correctAnswer' should be string, got int
+  - Question 3 missing required field: type
+  - Question 3 field 'correctAnswer' should be string, got int
+  - Question 4 missing required field: type
+  - Question 4 field 'correctAnswer' should be string, got int
+  - Question 5 missing required field: type
+  - Question 5 field 'correctAnswer' should be string, got int
+  - Question 6 missing required field: type
+  - Question 6 field 'correctAnswer' should be string, got int
+  - Question 7 missing required field: type
+  - Question 7 field 'correctAnswer' should be string, got int
+  - Question 8 missing required field: type
+  - Question 8 field 'correctAnswer' should be string, got int
+  - Question 9 missing required field: type
+  - Question 9 field 'correctAnswer' should be string, got int
+  - Question 10 missing required field: type
+  - Question 10 field 'correctAnswer' should be string, got int
+  - Question 11 missing required field: type
+  - Question 11 field 'correctAnswer' should be string, got int
+  - Question 12 missing required field: type
+  - Question 12 field 'correctAnswer' should be string, got int
+  - Question 13 missing required field: type
+  - Question 13 field 'correctAnswer' should be string, got int
+  - Question 14 missing required field: type
+  - Question 14 field 'correctAnswer' should be string, got int
+  - Question 15 missing required field: type
+  - Question 15 field 'correctAnswer' should be string, got int
+  - Question 16 missing required field: type
+  - Question 16 field 'correctAnswer' should be string, got int
+  - Question 17 missing required field: type
+  - Question 17 field 'correctAnswer' should be string, got int
+  - Question 18 missing required field: type
+  - Question 18 field 'correctAnswer' should be string, got int
+  - Question 19 missing required field: type
+  - Question 19 field 'correctAnswer' should be string, got int
+ERRORS in nextjs-advanced.json: 36 errors
+  - Question 0 missing required field: type
+  - Question 0 field 'correctAnswer' should be string, got int
+  - Question 1 missing required field: type
+  - Question 1 field 'correctAnswer' should be string, got int
+  - Question 2 missing required field: type
+  - Question 2 field 'correctAnswer' should be string, got int
+  - Question 3 missing required field: type
+  - Question 3 field 'correctAnswer' should be string, got int
+  - Question 4 missing required field: type
+  - Question 4 field 'correctAnswer' should be string, got int
+  - Question 5 missing required field: type
+  - Question 5 field 'correctAnswer' should be string, got int
+  - Question 6 missing required field: type
+  - Question 6 field 'correctAnswer' should be string, got int
+  - Question 7 missing required field: type
+  - Question 7 field 'correctAnswer' should be string, got int
+  - Question 8 missing required field: type
+  - Question 8 field 'correctAnswer' should be string, got int
+  - Question 9 missing required field: type
+  - Question 9 field 'correctAnswer' should be string, got int
+  - Question 10 missing required field: type
+  - Question 10 field 'correctAnswer' should be string, got int
+  - Question 11 missing required field: type
+  - Question 11 field 'correctAnswer' should be string, got int
+  - Question 12 missing required field: type
+  - Question 12 field 'correctAnswer' should be string, got int
+  - Question 13 missing required field: type
+  - Question 13 field 'correctAnswer' should be string, got int
+  - Question 14 missing required field: type
+  - Question 14 field 'correctAnswer' should be string, got int
+  - Question 15 missing required field: type
+  - Question 15 field 'correctAnswer' should be string, got int
+  - Question 16 missing required field: type
+  - Question 16 field 'correctAnswer' should be string, got int
+  - Question 17 missing required field: type
+  - Question 17 field 'correctAnswer' should be string, got int
+ERRORS in e2e-testing.json: 64 errors
+  - Question 0 missing required field: type
+  - Question 0 field 'correctAnswer' should be string, got int
+  - Question 1 missing required field: type
+  - Question 1 field 'correctAnswer' should be string, got int
+  - Question 2 missing required field: type
+  - Question 2 field 'correctAnswer' should be string, got int
+  - Question 3 missing required field: type
+  - Question 3 field 'correctAnswer' should be string, got int
+  - Question 4 missing required field: type
+  - Question 4 field 'correctAnswer' should be string, got int
+  - Question 5 missing required field: type
+  - Question 5 field 'correctAnswer' should be string, got int
+  - Question 6 missing required field: type
+  - Question 6 field 'correctAnswer' should be string, got int
+  - Question 7 missing required field: type
+  - Question 7 field 'correctAnswer' should be string, got int
+  - Question 8 missing required field: type
+  - Question 8 field 'correctAnswer' should be string, got int
+  - Question 9 missing required field: type
+  - Question 9 field 'correctAnswer' should be string, got int
+  - Question 10 missing required field: type
+  - Question 10 field 'correctAnswer' should be string, got int
+  - Question 11 missing required field: type
+  - Question 11 field 'correctAnswer' should be string, got int
+  - Question 12 missing required field: type
+  - Question 12 field 'correctAnswer' should be string, got int
+  - Question 13 missing required field: type
+  - Question 13 field 'correctAnswer' should be string, got int
+  - Question 14 missing required field: type
+  - Question 14 field 'correctAnswer' should be string, got int
+  - Question 15 missing required field: type
+  - Question 15 field 'correctAnswer' should be string, got int
+  - Question 16 missing required field: type
+  - Question 16 field 'correctAnswer' should be string, got int
+  - Question 17 missing required field: type
+  - Question 17 field 'correctAnswer' should be string, got int
+  - Question 18 missing required field: type
+  - Question 18 field 'correctAnswer' should be string, got int
+  - Question 19 missing required field: type
+  - Question 19 field 'correctAnswer' should be string, got int
+  - Question 20 missing required field: type
+  - Question 20 field 'correctAnswer' should be string, got int
+  - Question 21 missing required field: type
+  - Question 21 field 'correctAnswer' should be string, got int
+  - Question 22 missing required field: type
+  - Question 22 field 'correctAnswer' should be string, got int
+  - Question 23 missing required field: type
+  - Question 23 field 'correctAnswer' should be string, got int
+  - Question 24 missing required field: type
+  - Question 24 field 'correctAnswer' should be string, got int
+  - Question 25 missing required field: type
+  - Question 25 field 'correctAnswer' should be string, got int
+  - Question 26 missing required field: type
+  - Question 26 field 'correctAnswer' should be string, got int
+  - Question 27 missing required field: type
+  - Question 27 field 'correctAnswer' should be string, got int
+  - Question 28 missing required field: type
+  - Question 28 field 'correctAnswer' should be string, got int
+  - Question 29 missing required field: type
+  - Question 29 field 'correctAnswer' should be string, got int
+  - Question 30 missing required field: type
+  - Question 30 field 'correctAnswer' should be string, got int
+  - Question 31 missing required field: type
+  - Question 31 field 'correctAnswer' should be string, got int
+ERRORS in tailwind-advanced.json: 32 errors
+  - Question 0 missing required field: type
+  - Question 0 field 'correctAnswer' should be string, got int
+  - Question 1 missing required field: type
+  - Question 1 field 'correctAnswer' should be string, got int
+  - Question 2 missing required field: type
+  - Question 2 field 'correctAnswer' should be string, got int
+  - Question 3 missing required field: type
+  - Question 3 field 'correctAnswer' should be string, got int
+  - Question 4 missing required field: type
+  - Question 4 field 'correctAnswer' should be string, got int
+  - Question 5 missing required field: type
+  - Question 5 field 'correctAnswer' should be string, got int
+  - Question 6 missing required field: type
+  - Question 6 field 'correctAnswer' should be string, got int
+  - Question 7 missing required field: type
+  - Question 7 field 'correctAnswer' should be string, got int
+  - Question 8 missing required field: type
+  - Question 8 field 'correctAnswer' should be string, got int
+  - Question 9 missing required field: type
+  - Question 9 field 'correctAnswer' should be string, got int
+  - Question 10 missing required field: type
+  - Question 10 field 'correctAnswer' should be string, got int
+  - Question 11 missing required field: type
+  - Question 11 field 'correctAnswer' should be string, got int
+  - Question 12 missing required field: type
+  - Question 12 field 'correctAnswer' should be string, got int
+  - Question 13 missing required field: type
+  - Question 13 field 'correctAnswer' should be string, got int
+  - Question 14 missing required field: type
+  - Question 14 field 'correctAnswer' should be string, got int
+  - Question 15 missing required field: type
+  - Question 15 field 'correctAnswer' should be string, got int
+ERRORS in programming-fundamentals.json: 94 errors
+  - Question 0 field 'correctAnswer' should be string, got int
+  - Question 1 field 'correctAnswer' should be string, got int
+  - Question 2 field 'correctAnswer' should be string, got int
+  - Question 3 field 'correctAnswer' should be string, got int
+  - Question 4 field 'correctAnswer' should be string, got int
+  - Question 5 field 'correctAnswer' should be string, got int
+  - Question 6 field 'correctAnswer' should be string, got int
+  - Question 7 field 'correctAnswer' should be string, got int
+  - Question 8 field 'correctAnswer' should be string, got int
+  - Question 9 field 'correctAnswer' should be string, got int
+  - Question 10 field 'correctAnswer' should be string, got int
+  - Question 11 field 'correctAnswer' should be string, got int
+  - Question 12 field 'correctAnswer' should be string, got int
+  - Question 13 field 'correctAnswer' should be string, got int
+  - Question 14 missing required field: type
+  - Question 14 field 'correctAnswer' should be string, got int
+  - Question 15 missing required field: type
+  - Question 15 field 'correctAnswer' should be string, got int
+  - Question 16 missing required field: type
+  - Question 16 field 'correctAnswer' should be string, got int
+  - Question 17 missing required field: type
+  - Question 17 field 'correctAnswer' should be string, got int
+  - Question 18 missing required field: type
+  - Question 18 field 'correctAnswer' should be string, got int
+  - Question 19 missing required field: type
+  - Question 19 field 'correctAnswer' should be string, got int
+  - Question 20 missing required field: type
+  - Question 20 field 'correctAnswer' should be string, got int
+  - Question 21 missing required field: type
+  - Question 21 field 'correctAnswer' should be string, got int
+  - Question 22 missing required field: type
+  - Question 22 field 'correctAnswer' should be string, got int
+  - Question 23 missing required field: type
+  - Question 23 field 'correctAnswer' should be string, got int
+  - Question 24 missing required field: type
+  - Question 24 field 'correctAnswer' should be string, got int
+  - Question 25 missing required field: type
+  - Question 25 field 'correctAnswer' should be string, got int
+  - Question 26 missing required field: type
+  - Question 26 field 'correctAnswer' should be string, got int
+  - Question 27 missing required field: type
+  - Question 27 field 'correctAnswer' should be string, got int
+  - Question 28 missing required field: type
+  - Question 28 field 'correctAnswer' should be string, got int
+  - Question 29 missing required field: type
+  - Question 29 field 'correctAnswer' should be string, got int
+  - Question 30 missing required field: type
+  - Question 30 field 'correctAnswer' should be string, got int
+  - Question 31 missing required field: type
+  - Question 31 field 'correctAnswer' should be string, got int
+  - Question 32 missing required field: type
+  - Question 32 field 'correctAnswer' should be string, got int
+  - Question 33 missing required field: type
+  - Question 33 field 'correctAnswer' should be string, got int
+  - Question 34 missing required field: type
+  - Question 34 field 'correctAnswer' should be string, got int
+  - Question 35 missing required field: type
+  - Question 35 field 'correctAnswer' should be string, got int
+  - Question 36 missing required field: type
+  - Question 36 field 'correctAnswer' should be string, got int
+  - Question 37 missing required field: type
+  - Question 37 field 'correctAnswer' should be string, got int
+  - Question 38 missing required field: type
+  - Question 38 field 'correctAnswer' should be string, got int
+  - Question 39 missing required field: type
+  - Question 39 field 'correctAnswer' should be string, got int
+  - Question 40 missing required field: type
+  - Question 40 field 'correctAnswer' should be string, got int
+  - Question 41 missing required field: type
+  - Question 41 field 'correctAnswer' should be string, got int
+  - Question 42 missing required field: type
+  - Question 42 field 'correctAnswer' should be string, got int
+  - Question 43 missing required field: type
+  - Question 43 field 'correctAnswer' should be string, got int
+  - Question 44 missing required field: type
+  - Question 44 field 'correctAnswer' should be string, got int
+  - Question 45 missing required field: type
+  - Question 45 field 'correctAnswer' should be string, got int
+  - Question 46 missing required field: type
+  - Question 46 field 'correctAnswer' should be string, got int
+  - Question 47 missing required field: type
+  - Question 47 field 'correctAnswer' should be string, got int
+  - Question 48 missing required field: type
+  - Question 48 field 'correctAnswer' should be string, got int
+  - Question 49 missing required field: type
+  - Question 49 field 'correctAnswer' should be string, got int
+  - Question 50 missing required field: type
+  - Question 50 field 'correctAnswer' should be string, got int
+  - Question 51 missing required field: type
+  - Question 51 field 'correctAnswer' should be string, got int
+  - Question 52 missing required field: type
+  - Question 52 field 'correctAnswer' should be string, got int
+  - Question 53 missing required field: type
+  - Question 53 field 'correctAnswer' should be string, got int
+ERRORS in testing-fundamentals.json: 107 errors
+  - Question 0 missing required field: type
+  - Question 0 field 'correctAnswer' should be string, got int
+  - Question 1 missing required field: type
+  - Question 1 field 'correctAnswer' should be string, got int
+  - Question 2 missing required field: type
+  - Question 2 field 'correctAnswer' should be string, got int
+  - Question 3 missing required field: type
+  - Question 3 field 'correctAnswer' should be string, got int
+  - Question 4 missing required field: type
+  - Question 4 field 'correctAnswer' should be string, got int
+  - Question 5 missing required field: type
+  - Question 5 field 'correctAnswer' should be string, got int
+  - Question 6 missing required field: type
+  - Question 6 field 'correctAnswer' should be string, got int
+  - Question 7 missing required field: type
+  - Question 7 field 'correctAnswer' should be string, got int
+  - Question 8 missing required field: type
+  - Question 8 field 'correctAnswer' should be string, got int
+  - Question 9 missing required field: type
+  - Question 9 field 'correctAnswer' should be string, got int
+  - Question 10 missing required field: type
+  - Question 10 field 'correctAnswer' should be string, got int
+  - Question 11 missing required field: type
+  - Question 11 field 'correctAnswer' should be string, got int
+  - Question 12 missing required field: type
+  - Question 12 field 'correctAnswer' should be string, got int
+  - Question 13 missing required field: type
+  - Question 13 field 'correctAnswer' should be string, got int
+  - Question 14 missing required field: type
+  - Question 14 field 'correctAnswer' should be string, got int
+  - Question 15 missing required field: type
+  - Question 15 field 'correctAnswer' should be string, got int
+  - Question 16 missing required field: type
+  - Question 16 field 'correctAnswer' should be string, got int
+  - Question 17 missing required field: type
+  - Question 17 field 'correctAnswer' should be string, got int
+  - Question 18 missing required field: type
+  - Question 18 field 'correctAnswer' should be string, got int
+  - Question 19 missing required field: type
+  - Question 19 field 'correctAnswer' should be string, got int
+  - Question 20 missing required field: type
+  - Question 20 field 'correctAnswer' should be string, got int
+  - Question 21 missing required field: type
+  - Question 21 field 'correctAnswer' should be string, got int
+  - Question 22 missing required field: type
+  - Question 22 field 'correctAnswer' should be string, got int
+  - Question 23 missing required field: type
+  - Question 23 field 'correctAnswer' should be string, got int
+  - Question 24 missing required field: type
+  - Question 24 field 'correctAnswer' should be string, got int
+  - Question 25 missing required field: type
+  - Question 25 field 'correctAnswer' should be string, got int
+  - Question 26 missing required field: type
+  - Question 26 field 'correctAnswer' should be string, got int
+  - Question 27 missing required field: type
+  - Question 27 field 'correctAnswer' should be string, got int
+  - Question 28 missing required field: type
+  - Question 28 field 'correctAnswer' should be string, got int
+  - Question 29 missing required field: type
+  - Question 29 field 'correctAnswer' should be string, got int
+  - Question 30 missing required field: type
+  - Question 30 field 'correctAnswer' should be string, got int
+  - Question 31 missing required field: type
+  - Question 31 field 'correctAnswer' should be string, got int
+  - Question 32 missing required field: type
+  - Question 32 field 'correctAnswer' should be string, got int
+  - Question 33 missing required field: type
+  - Question 33 field 'correctAnswer' should be string, got int
+  - Question 34 missing required field: type
+  - Question 34 field 'correctAnswer' should be string, got int
+  - Question 35 missing required field: type
+  - Question 35 field 'correctAnswer' should be string, got int
+  - Question 36 missing required field: type
+  - Question 36 field 'correctAnswer' should be string, got int
+  - Question 37 missing required field: type
+  - Question 37 field 'correctAnswer' should be string, got int
+  - Question 38 missing required field: type
+  - Question 38 field 'correctAnswer' should be string, got int
+  - Question 39 missing required field: type
+  - Question 39 field 'correctAnswer' should be string, got int
+  - Question 40 missing required field: type
+  - Question 40 field 'correctAnswer' should be string, got int
+  - Question 41 missing required field: type
+  - Question 41 field 'correctAnswer' should be string, got int
+  - Question 42 missing required field: type
+  - Question 42 field 'correctAnswer' should be string, got int
+  - Question 43 missing required field: type
+  - Question 43 field 'correctAnswer' should be string, got int
+  - Question 44 missing required field: type
+  - Question 44 field 'correctAnswer' should be string, got int
+  - Question 45 field 'correctAnswer' should be string, got int
+  - Question 46 field 'correctAnswer' should be string, got int
+  - Question 47 field 'choices' should be list, got NoneType
+  - Question 47 missing required field: correctAnswer
+  - Question 48 field 'correctAnswer' should be string, got int
+  - Question 49 field 'choices' should be list, got NoneType
+  - Question 49 missing required field: correctAnswer
+  - Question 50 field 'correctAnswer' should be string, got int
+  - Question 51 field 'correctAnswer' should be string, got int
+  - Question 52 field 'correctAnswer' should be string, got int
+  - Question 53 field 'choices' should be list, got NoneType
+  - Question 53 missing required field: correctAnswer
+  - Question 54 field 'correctAnswer' should be string, got int
+  - Question 55 field 'correctAnswer' should be string, got int
+  - Question 56 field 'choices' should be list, got NoneType
+  - Question 56 missing required field: correctAnswer
+  - Question 57 field 'correctAnswer' should be string, got int
+ERRORS in version-control.json: 80 errors
+  - Question 0 missing required field: type
+  - Question 0 field 'correctAnswer' should be string, got int
+  - Question 1 missing required field: type
+  - Question 1 field 'correctAnswer' should be string, got int
+  - Question 2 missing required field: type
+  - Question 2 field 'correctAnswer' should be string, got int
+  - Question 3 missing required field: type
+  - Question 3 field 'correctAnswer' should be string, got int
+  - Question 4 missing required field: type
+  - Question 4 field 'correctAnswer' should be string, got int
+  - Question 5 missing required field: type
+  - Question 5 field 'correctAnswer' should be string, got int
+  - Question 6 missing required field: type
+  - Question 6 field 'correctAnswer' should be string, got int
+  - Question 7 missing required field: type
+  - Question 7 field 'correctAnswer' should be string, got int
+  - Question 8 missing required field: type
+  - Question 8 field 'correctAnswer' should be string, got int
+  - Question 9 missing required field: type
+  - Question 9 field 'correctAnswer' should be string, got int
+  - Question 10 missing required field: type
+  - Question 10 field 'correctAnswer' should be string, got int
+  - Question 11 missing required field: type
+  - Question 11 field 'correctAnswer' should be string, got int
+  - Question 12 missing required field: type
+  - Question 12 field 'correctAnswer' should be string, got int
+  - Question 13 missing required field: type
+  - Question 13 field 'correctAnswer' should be string, got int
+  - Question 14 missing required field: type
+  - Question 14 field 'correctAnswer' should be string, got int
+  - Question 15 missing required field: type
+  - Question 15 field 'correctAnswer' should be string, got int
+  - Question 16 missing required field: type
+  - Question 16 field 'correctAnswer' should be string, got int
+  - Question 17 missing required field: type
+  - Question 17 field 'correctAnswer' should be string, got int
+  - Question 18 missing required field: type
+  - Question 18 field 'correctAnswer' should be string, got int
+  - Question 19 missing required field: type
+  - Question 19 field 'correctAnswer' should be string, got int
+  - Question 20 missing required field: type
+  - Question 20 field 'correctAnswer' should be string, got int
+  - Question 21 missing required field: type
+  - Question 21 field 'correctAnswer' should be string, got int
+  - Question 22 missing required field: type
+  - Question 22 field 'correctAnswer' should be string, got int
+  - Question 23 missing required field: type
+  - Question 23 field 'correctAnswer' should be string, got int
+  - Question 24 missing required field: type
+  - Question 24 field 'correctAnswer' should be string, got int
+  - Question 25 missing required field: type
+  - Question 25 field 'correctAnswer' should be string, got int
+  - Question 26 missing required field: type
+  - Question 26 field 'correctAnswer' should be string, got int
+  - Question 27 missing required field: type
+  - Question 27 field 'correctAnswer' should be string, got int
+  - Question 28 missing required field: type
+  - Question 28 field 'correctAnswer' should be string, got int
+  - Question 29 missing required field: type
+  - Question 29 field 'correctAnswer' should be string, got int
+  - Question 30 missing required field: type
+  - Question 30 field 'correctAnswer' should be string, got int
+  - Question 31 missing required field: type
+  - Question 31 field 'correctAnswer' should be string, got int
+  - Question 32 missing required field: type
+  - Question 32 field 'correctAnswer' should be string, got int
+  - Question 33 missing required field: type
+  - Question 33 field 'correctAnswer' should be string, got int
+  - Question 34 missing required field: type
+  - Question 34 field 'correctAnswer' should be string, got int
+  - Question 35 missing required field: type
+  - Question 35 field 'correctAnswer' should be string, got int
+  - Question 36 missing required field: type
+  - Question 36 field 'correctAnswer' should be string, got int
+  - Question 37 missing required field: type
+  - Question 37 field 'correctAnswer' should be string, got int
+  - Question 38 missing required field: type
+  - Question 38 field 'correctAnswer' should be string, got int
+  - Question 39 missing required field: type
+  - Question 39 field 'correctAnswer' should be string, got int
+ERRORS in typescript-fundamentals.json: 37 errors
+  - Question 0 missing required field: type
+  - Question 0 field 'correctAnswer' should be string, got int
+  - Question 1 missing required field: type
+  - Question 1 field 'correctAnswer' should be string, got int
+  - Question 2 missing required field: type
+  - Question 2 missing required field: choices
+  - Question 2 missing required field: correctAnswer
+  - Question 3 missing required field: type
+  - Question 3 field 'correctAnswer' should be string, got int
+  - Question 4 missing required field: type
+  - Question 4 field 'correctAnswer' should be string, got int
+  - Question 5 missing required field: type
+  - Question 5 field 'correctAnswer' should be string, got int
+  - Question 6 missing required field: type
+  - Question 6 field 'correctAnswer' should be string, got int
+  - Question 7 missing required field: type
+  - Question 7 field 'correctAnswer' should be string, got int
+  - Question 8 missing required field: type
+  - Question 8 field 'correctAnswer' should be string, got int
+  - Question 9 missing required field: type
+  - Question 9 field 'correctAnswer' should be string, got int
+  - Question 10 missing required field: type
+  - Question 10 field 'correctAnswer' should be string, got int
+  - Question 11 missing required field: type
+  - Question 11 field 'correctAnswer' should be string, got int
+  - Question 12 missing required field: type
+  - Question 12 field 'correctAnswer' should be string, got int
+  - Question 13 missing required field: type
+  - Question 13 field 'correctAnswer' should be string, got int
+  - Question 14 missing required field: type
+  - Question 14 field 'correctAnswer' should be string, got int
+  - Question 15 missing required field: type
+  - Question 15 field 'correctAnswer' should be string, got int
+  - Question 16 missing required field: type
+  - Question 16 field 'correctAnswer' should be string, got int
+  - Question 17 missing required field: type
+  - Question 17 field 'correctAnswer' should be string, got int
+ERRORS in graphql-advanced.json: 59 errors
+  - Question 0 missing required field: type
+  - Question 0 field 'correctAnswer' should be string, got int
+  - Question 1 missing required field: type
+  - Question 1 field 'correctAnswer' should be string, got int
+  - Question 2 missing required field: type
+  - Question 2 field 'correctAnswer' should be string, got int
+  - Question 3 missing required field: type
+  - Question 3 field 'correctAnswer' should be string, got int
+  - Question 4 missing required field: type
+  - Question 4 field 'correctAnswer' should be string, got int
+  - Question 5 missing required field: type
+  - Question 5 field 'correctAnswer' should be string, got int
+  - Question 6 missing required field: type
+  - Question 6 field 'correctAnswer' should be string, got int
+  - Question 7 missing required field: type
+  - Question 7 field 'correctAnswer' should be string, got int
+  - Question 8 missing required field: type
+  - Question 8 field 'correctAnswer' should be string, got int
+  - Question 9 missing required field: type
+  - Question 9 field 'correctAnswer' should be string, got int
+  - Question 10 missing required field: type
+  - Question 10 field 'correctAnswer' should be string, got int
+  - Question 11 missing required field: type
+  - Question 11 field 'correctAnswer' should be string, got int
+  - Question 12 missing required field: type
+  - Question 12 field 'correctAnswer' should be string, got int
+  - Question 13 missing required field: type
+  - Question 13 field 'correctAnswer' should be string, got int
+  - Question 14 missing required field: type
+  - Question 14 field 'correctAnswer' should be string, got int
+  - Question 15 missing required field: type
+  - Question 15 field 'correctAnswer' should be string, got int
+  - Question 16 missing required field: type
+  - Question 16 field 'correctAnswer' should be string, got int
+  - Question 17 missing required field: type
+  - Question 17 field 'correctAnswer' should be string, got int
+  - Question 18 missing required field: type
+  - Question 18 field 'correctAnswer' should be string, got int
+  - Question 19 missing required field: type
+  - Question 19 field 'correctAnswer' should be string, got int
+  - Question 20 field 'choices' should be list, got NoneType
+  - Question 20 missing required field: correctAnswer
+  - Question 21 field 'choices' should be list, got NoneType
+  - Question 21 missing required field: correctAnswer
+  - Question 22 field 'correctAnswer' should be string, got int
+  - Question 23 field 'correctAnswer' should be string, got int
+  - Question 24 field 'choices' should be list, got NoneType
+  - Question 24 missing required field: correctAnswer
+  - Question 25 field 'correctAnswer' should be string, got int
+  - Question 26 field 'correctAnswer' should be string, got int
+  - Question 27 field 'choices' should be list, got NoneType
+  - Question 27 missing required field: correctAnswer
+  - Question 28 field 'correctAnswer' should be string, got int
+  - Question 29 field 'choices' should be list, got NoneType
+  - Question 29 missing required field: correctAnswer
+  - Question 30 field 'correctAnswer' should be string, got int
+  - Question 31 field 'correctAnswer' should be string, got int
+  - Question 32 field 'choices' should be list, got NoneType
+  - Question 32 missing required field: correctAnswer
+ERRORS in sass-advanced.json: 30 errors
+  - Question 0 missing required field: type
+  - Question 0 field 'correctAnswer' should be string, got int
+  - Question 1 missing required field: type
+  - Question 1 field 'correctAnswer' should be string, got int
+  - Question 2 missing required field: type
+  - Question 2 field 'correctAnswer' should be string, got int
+  - Question 3 missing required field: type
+  - Question 3 field 'correctAnswer' should be string, got int
+  - Question 4 missing required field: type
+  - Question 4 field 'correctAnswer' should be string, got int
+  - Question 5 missing required field: type
+  - Question 5 field 'correctAnswer' should be string, got int
+  - Question 6 missing required field: type
+  - Question 6 field 'correctAnswer' should be string, got int
+  - Question 7 missing required field: type
+  - Question 7 field 'correctAnswer' should be string, got int
+  - Question 8 missing required field: type
+  - Question 8 field 'correctAnswer' should be string, got int
+  - Question 9 missing required field: type
+  - Question 9 field 'correctAnswer' should be string, got int
+  - Question 10 missing required field: type
+  - Question 10 field 'correctAnswer' should be string, got int
+  - Question 11 missing required field: type
+  - Question 11 field 'correctAnswer' should be string, got int
+  - Question 12 missing required field: type
+  - Question 12 field 'correctAnswer' should be string, got int
+  - Question 13 missing required field: type
+  - Question 13 field 'correctAnswer' should be string, got int
+  - Question 14 missing required field: type
+  - Question 14 field 'correctAnswer' should be string, got int
+ERRORS in react-fundamentals.json: 40 errors
+  - Question 0 missing required field: type
+  - Question 0 field 'correctAnswer' should be string, got int
+  - Question 1 missing required field: type
+  - Question 1 field 'correctAnswer' should be string, got int
+  - Question 2 missing required field: type
+  - Question 2 field 'correctAnswer' should be string, got int
+  - Question 3 missing required field: type
+  - Question 3 field 'correctAnswer' should be string, got int
+  - Question 4 missing required field: type
+  - Question 4 field 'correctAnswer' should be string, got int
+  - Question 5 missing required field: type
+  - Question 5 field 'correctAnswer' should be string, got int
+  - Question 6 missing required field: type
+  - Question 6 field 'correctAnswer' should be string, got int
+  - Question 7 missing required field: type
+  - Question 7 field 'correctAnswer' should be string, got int
+  - Question 8 missing required field: type
+  - Question 8 field 'correctAnswer' should be string, got int
+  - Question 9 missing required field: type
+  - Question 9 field 'correctAnswer' should be string, got int
+  - Question 10 missing required field: type
+  - Question 10 field 'correctAnswer' should be string, got int
+  - Question 11 missing required field: type
+  - Question 11 field 'correctAnswer' should be string, got int
+  - Question 12 missing required field: type
+  - Question 12 field 'correctAnswer' should be string, got int
+  - Question 13 missing required field: type
+  - Question 13 field 'correctAnswer' should be string, got int
+  - Question 14 missing required field: type
+  - Question 14 field 'correctAnswer' should be string, got int
+  - Question 15 missing required field: type
+  - Question 15 field 'correctAnswer' should be string, got int
+  - Question 16 missing required field: type
+  - Question 16 field 'correctAnswer' should be string, got int
+  - Question 17 missing required field: type
+  - Question 17 field 'correctAnswer' should be string, got int
+  - Question 18 missing required field: type
+  - Question 18 field 'correctAnswer' should be string, got int
+  - Question 19 missing required field: type
+  - Question 19 field 'correctAnswer' should be string, got int
+ERRORS in web-fundamentals.json: 110 errors
+  - Question 0 missing required field: type
+  - Question 0 field 'correctAnswer' should be string, got int
+  - Question 1 missing required field: type
+  - Question 1 field 'correctAnswer' should be string, got int
+  - Question 2 missing required field: type
+  - Question 2 field 'correctAnswer' should be string, got int
+  - Question 3 missing required field: type
+  - Question 3 field 'correctAnswer' should be string, got int
+  - Question 4 missing required field: type
+  - Question 4 field 'correctAnswer' should be string, got int
+  - Question 5 missing required field: type
+  - Question 5 field 'correctAnswer' should be string, got int
+  - Question 6 missing required field: type
+  - Question 6 field 'correctAnswer' should be string, got int
+  - Question 7 missing required field: type
+  - Question 7 field 'correctAnswer' should be string, got int
+  - Question 8 missing required field: type
+  - Question 8 field 'correctAnswer' should be string, got int
+  - Question 9 missing required field: type
+  - Question 9 field 'correctAnswer' should be string, got int
+  - Question 10 missing required field: type
+  - Question 10 field 'correctAnswer' should be string, got int
+  - Question 11 missing required field: type
+  - Question 11 field 'correctAnswer' should be string, got int
+  - Question 12 missing required field: type
+  - Question 12 field 'correctAnswer' should be string, got int
+  - Question 13 missing required field: type
+  - Question 13 field 'correctAnswer' should be string, got int
+  - Question 14 missing required field: type
+  - Question 14 field 'correctAnswer' should be string, got int
+  - Question 15 missing required field: type
+  - Question 15 field 'correctAnswer' should be string, got int
+  - Question 16 missing required field: type
+  - Question 16 field 'correctAnswer' should be string, got int
+  - Question 17 missing required field: type
+  - Question 17 field 'correctAnswer' should be string, got int
+  - Question 18 missing required field: type
+  - Question 18 field 'correctAnswer' should be string, got int
+  - Question 19 missing required field: type
+  - Question 19 field 'correctAnswer' should be string, got int
+  - Question 20 missing required field: type
+  - Question 20 field 'correctAnswer' should be string, got int
+  - Question 21 missing required field: type
+  - Question 21 field 'correctAnswer' should be string, got int
+  - Question 22 missing required field: type
+  - Question 22 field 'correctAnswer' should be string, got int
+  - Question 23 missing required field: type
+  - Question 23 field 'correctAnswer' should be string, got int
+  - Question 24 missing required field: type
+  - Question 24 field 'correctAnswer' should be string, got int
+  - Question 25 missing required field: type
+  - Question 25 field 'correctAnswer' should be string, got int
+  - Question 26 missing required field: type
+  - Question 26 field 'correctAnswer' should be string, got int
+  - Question 27 missing required field: type
+  - Question 27 field 'correctAnswer' should be string, got int
+  - Question 28 missing required field: type
+  - Question 28 field 'correctAnswer' should be string, got int
+  - Question 29 missing required field: type
+  - Question 29 field 'correctAnswer' should be string, got int
+  - Question 30 missing required field: type
+  - Question 30 field 'correctAnswer' should be string, got int
+  - Question 31 missing required field: type
+  - Question 31 field 'correctAnswer' should be string, got int
+  - Question 32 missing required field: type
+  - Question 32 field 'correctAnswer' should be string, got int
+  - Question 33 missing required field: type
+  - Question 33 field 'correctAnswer' should be string, got int
+  - Question 34 missing required field: type
+  - Question 34 field 'correctAnswer' should be string, got int
+  - Question 35 missing required field: type
+  - Question 35 field 'correctAnswer' should be string, got int
+  - Question 36 missing required field: type
+  - Question 36 field 'correctAnswer' should be string, got int
+  - Question 37 missing required field: type
+  - Question 37 field 'correctAnswer' should be string, got int
+  - Question 38 missing required field: type
+  - Question 38 field 'correctAnswer' should be string, got int
+  - Question 39 missing required field: type
+  - Question 39 field 'correctAnswer' should be string, got int
+  - Question 40 missing required field: type
+  - Question 40 field 'correctAnswer' should be string, got int
+  - Question 41 missing required field: type
+  - Question 41 field 'correctAnswer' should be string, got int
+  - Question 42 missing required field: type
+  - Question 42 field 'correctAnswer' should be string, got int
+  - Question 43 missing required field: type
+  - Question 43 field 'correctAnswer' should be string, got int
+  - Question 44 missing required field: type
+  - Question 44 field 'correctAnswer' should be string, got int
+  - Question 45 missing required field: type
+  - Question 45 field 'correctAnswer' should be string, got int
+  - Question 46 missing required field: type
+  - Question 46 field 'correctAnswer' should be string, got int
+  - Question 47 missing required field: type
+  - Question 47 field 'correctAnswer' should be string, got int
+  - Question 48 missing required field: type
+  - Question 48 field 'correctAnswer' should be string, got int
+  - Question 49 missing required field: type
+  - Question 49 field 'correctAnswer' should be string, got int
+  - Question 50 missing required field: type
+  - Question 50 field 'correctAnswer' should be string, got int
+  - Question 51 missing required field: type
+  - Question 51 field 'correctAnswer' should be string, got int
+  - Question 52 missing required field: type
+  - Question 52 field 'correctAnswer' should be string, got int
+  - Question 53 missing required field: type
+  - Question 53 field 'correctAnswer' should be string, got int
+  - Question 54 missing required field: type
+  - Question 54 field 'correctAnswer' should be string, got int
+ERRORS in laravel-fundamentals.json: 70 errors
+  - Question 0 missing required field: type
+  - Question 0 field 'correctAnswer' should be string, got int
+  - Question 1 missing required field: type
+  - Question 1 field 'correctAnswer' should be string, got int
+  - Question 2 missing required field: type
+  - Question 2 field 'correctAnswer' should be string, got int
+  - Question 3 missing required field: type
+  - Question 3 field 'correctAnswer' should be string, got int
+  - Question 4 missing required field: type
+  - Question 4 field 'correctAnswer' should be string, got int
+  - Question 5 missing required field: type
+  - Question 5 field 'correctAnswer' should be string, got int
+  - Question 6 missing required field: type
+  - Question 6 field 'correctAnswer' should be string, got int
+  - Question 7 missing required field: type
+  - Question 7 field 'correctAnswer' should be string, got int
+  - Question 8 missing required field: type
+  - Question 8 field 'correctAnswer' should be string, got int
+  - Question 9 missing required field: type
+  - Question 9 field 'correctAnswer' should be string, got int
+  - Question 10 missing required field: type
+  - Question 10 field 'correctAnswer' should be string, got int
+  - Question 11 missing required field: type
+  - Question 11 field 'correctAnswer' should be string, got int
+  - Question 12 missing required field: type
+  - Question 12 field 'correctAnswer' should be string, got int
+  - Question 13 missing required field: type
+  - Question 13 field 'correctAnswer' should be string, got int
+  - Question 14 missing required field: type
+  - Question 14 field 'correctAnswer' should be string, got int
+  - Question 15 missing required field: type
+  - Question 15 field 'correctAnswer' should be string, got int
+  - Question 16 missing required field: type
+  - Question 16 field 'correctAnswer' should be string, got int
+  - Question 17 missing required field: type
+  - Question 17 field 'correctAnswer' should be string, got int
+  - Question 18 missing required field: type
+  - Question 18 field 'correctAnswer' should be string, got int
+  - Question 19 missing required field: type
+  - Question 19 field 'correctAnswer' should be string, got int
+  - Question 20 missing required field: type
+  - Question 20 field 'correctAnswer' should be string, got int
+  - Question 21 missing required field: type
+  - Question 21 field 'correctAnswer' should be string, got int
+  - Question 22 missing required field: type
+  - Question 22 field 'correctAnswer' should be string, got int
+  - Question 23 missing required field: type
+  - Question 23 field 'correctAnswer' should be string, got int
+  - Question 24 missing required field: type
+  - Question 24 field 'correctAnswer' should be string, got int
+  - Question 25 missing required field: type
+  - Question 25 field 'correctAnswer' should be string, got int
+  - Question 26 missing required field: type
+  - Question 26 field 'correctAnswer' should be string, got int
+  - Question 27 missing required field: type
+  - Question 27 field 'correctAnswer' should be string, got int
+  - Question 28 missing required field: type
+  - Question 28 field 'correctAnswer' should be string, got int
+  - Question 29 missing required field: type
+  - Question 29 field 'correctAnswer' should be string, got int
+  - Question 30 missing required field: type
+  - Question 30 field 'correctAnswer' should be string, got int
+  - Question 31 missing required field: type
+  - Question 31 field 'correctAnswer' should be string, got int
+  - Question 32 missing required field: type
+  - Question 32 field 'correctAnswer' should be string, got int
+  - Question 33 missing required field: type
+  - Question 33 field 'correctAnswer' should be string, got int
+  - Question 34 missing required field: type
+  - Question 34 field 'correctAnswer' should be string, got int
+ERRORS in security-fundamentals.json: 120 errors
+  - Question 0 missing required field: type
+  - Question 0 field 'correctAnswer' should be string, got int
+  - Question 1 missing required field: type
+  - Question 1 field 'correctAnswer' should be string, got int
+  - Question 2 missing required field: type
+  - Question 2 field 'correctAnswer' should be string, got int
+  - Question 3 missing required field: type
+  - Question 3 field 'correctAnswer' should be string, got int
+  - Question 4 missing required field: type
+  - Question 4 field 'correctAnswer' should be string, got int
+  - Question 5 missing required field: type
+  - Question 5 field 'correctAnswer' should be string, got int
+  - Question 6 missing required field: type
+  - Question 6 field 'correctAnswer' should be string, got int
+  - Question 7 missing required field: type
+  - Question 7 field 'correctAnswer' should be string, got int
+  - Question 8 missing required field: type
+  - Question 8 field 'correctAnswer' should be string, got int
+  - Question 9 missing required field: type
+  - Question 9 field 'correctAnswer' should be string, got int
+  - Question 10 missing required field: type
+  - Question 10 field 'correctAnswer' should be string, got int
+  - Question 11 missing required field: type
+  - Question 11 field 'correctAnswer' should be string, got int
+  - Question 12 missing required field: type
+  - Question 12 field 'correctAnswer' should be string, got int
+  - Question 13 missing required field: type
+  - Question 13 field 'correctAnswer' should be string, got int
+  - Question 14 missing required field: type
+  - Question 14 field 'correctAnswer' should be string, got int
+  - Question 15 missing required field: type
+  - Question 15 field 'correctAnswer' should be string, got int
+  - Question 16 missing required field: type
+  - Question 16 field 'correctAnswer' should be string, got int
+  - Question 17 missing required field: type
+  - Question 17 field 'correctAnswer' should be string, got int
+  - Question 18 missing required field: type
+  - Question 18 field 'correctAnswer' should be string, got int
+  - Question 19 missing required field: type
+  - Question 19 field 'correctAnswer' should be string, got int
+  - Question 20 missing required field: type
+  - Question 20 field 'correctAnswer' should be string, got int
+  - Question 21 missing required field: type
+  - Question 21 field 'correctAnswer' should be string, got int
+  - Question 22 missing required field: type
+  - Question 22 field 'correctAnswer' should be string, got int
+  - Question 23 missing required field: type
+  - Question 23 field 'correctAnswer' should be string, got int
+  - Question 24 missing required field: type
+  - Question 24 field 'correctAnswer' should be string, got int
+  - Question 25 missing required field: type
+  - Question 25 field 'correctAnswer' should be string, got int
+  - Question 26 missing required field: type
+  - Question 26 field 'correctAnswer' should be string, got int
+  - Question 27 missing required field: type
+  - Question 27 field 'correctAnswer' should be string, got int
+  - Question 28 missing required field: type
+  - Question 28 field 'correctAnswer' should be string, got int
+  - Question 29 missing required field: type
+  - Question 29 field 'correctAnswer' should be string, got int
+  - Question 30 missing required field: type
+  - Question 30 field 'correctAnswer' should be string, got int
+  - Question 31 missing required field: type
+  - Question 31 field 'correctAnswer' should be string, got int
+  - Question 32 missing required field: type
+  - Question 32 field 'correctAnswer' should be string, got int
+  - Question 33 missing required field: type
+  - Question 33 field 'correctAnswer' should be string, got int
+  - Question 34 missing required field: type
+  - Question 34 field 'correctAnswer' should be string, got int
+  - Question 35 missing required field: type
+  - Question 35 field 'correctAnswer' should be string, got int
+  - Question 36 missing required field: type
+  - Question 36 field 'correctAnswer' should be string, got int
+  - Question 37 missing required field: type
+  - Question 37 field 'correctAnswer' should be string, got int
+  - Question 38 missing required field: type
+  - Question 38 field 'correctAnswer' should be string, got int
+  - Question 39 missing required field: type
+  - Question 39 field 'correctAnswer' should be string, got int
+  - Question 40 missing required field: type
+  - Question 40 field 'correctAnswer' should be string, got int
+  - Question 41 missing required field: type
+  - Question 41 field 'correctAnswer' should be string, got int
+  - Question 42 missing required field: type
+  - Question 42 field 'correctAnswer' should be string, got int
+  - Question 43 missing required field: type
+  - Question 43 field 'correctAnswer' should be string, got int
+  - Question 44 missing required field: type
+  - Question 44 field 'correctAnswer' should be string, got int
+  - Question 45 missing required field: type
+  - Question 45 field 'correctAnswer' should be string, got int
+  - Question 46 missing required field: type
+  - Question 46 field 'correctAnswer' should be string, got int
+  - Question 47 missing required field: type
+  - Question 47 field 'correctAnswer' should be string, got int
+  - Question 48 missing required field: type
+  - Question 48 field 'correctAnswer' should be string, got int
+  - Question 49 missing required field: type
+  - Question 49 field 'correctAnswer' should be string, got int
+  - Question 50 missing required field: type
+  - Question 50 field 'correctAnswer' should be string, got int
+  - Question 51 missing required field: type
+  - Question 51 field 'correctAnswer' should be string, got int
+  - Question 52 missing required field: type
+  - Question 52 field 'correctAnswer' should be string, got int
+  - Question 53 missing required field: type
+  - Question 53 field 'correctAnswer' should be string, got int
+  - Question 54 missing required field: type
+  - Question 54 field 'correctAnswer' should be string, got int
+  - Question 55 missing required field: type
+  - Question 55 field 'correctAnswer' should be string, got int
+  - Question 56 missing required field: type
+  - Question 56 field 'correctAnswer' should be string, got int
+  - Question 57 missing required field: type
+  - Question 57 field 'correctAnswer' should be string, got int
+  - Question 58 missing required field: type
+  - Question 58 field 'correctAnswer' should be string, got int
+  - Question 59 missing required field: type
+  - Question 59 field 'correctAnswer' should be string, got int
+ERRORS in database-systems.json: 44 errors
+  - Question 0 missing required field: type
+  - Question 0 field 'correctAnswer' should be string, got int
+  - Question 1 missing required field: type
+  - Question 1 field 'correctAnswer' should be string, got int
+  - Question 2 missing required field: type
+  - Question 2 field 'correctAnswer' should be string, got int
+  - Question 3 missing required field: type
+  - Question 3 field 'correctAnswer' should be string, got int
+  - Question 4 missing required field: type
+  - Question 4 field 'correctAnswer' should be string, got int
+  - Question 5 missing required field: type
+  - Question 5 field 'correctAnswer' should be string, got int
+  - Question 6 missing required field: type
+  - Question 6 field 'correctAnswer' should be string, got int
+  - Question 7 missing required field: type
+  - Question 7 field 'correctAnswer' should be string, got int
+  - Question 8 missing required field: type
+  - Question 8 field 'correctAnswer' should be string, got int
+  - Question 9 missing required field: type
+  - Question 9 field 'correctAnswer' should be string, got int
+  - Question 10 missing required field: type
+  - Question 10 field 'correctAnswer' should be string, got int
+  - Question 11 missing required field: type
+  - Question 11 field 'correctAnswer' should be string, got int
+  - Question 12 missing required field: type
+  - Question 12 field 'correctAnswer' should be string, got int
+  - Question 13 missing required field: type
+  - Question 13 field 'correctAnswer' should be string, got int
+  - Question 14 missing required field: type
+  - Question 14 field 'correctAnswer' should be string, got int
+  - Question 15 missing required field: type
+  - Question 15 field 'correctAnswer' should be string, got int
+  - Question 16 missing required field: type
+  - Question 16 field 'correctAnswer' should be string, got int
+  - Question 17 missing required field: type
+  - Question 17 field 'correctAnswer' should be string, got int
+  - Question 18 missing required field: type
+  - Question 18 field 'correctAnswer' should be string, got int
+  - Question 19 missing required field: type
+  - Question 19 field 'correctAnswer' should be string, got int
+  - Question 20 missing required field: type
+  - Question 20 field 'correctAnswer' should be string, got int
+  - Question 21 missing required field: type
+  - Question 21 field 'correctAnswer' should be string, got int
+ERRORS in performance-optimization.json: 96 errors
+  - Question 0 missing required field: type
+  - Question 0 field 'correctAnswer' should be string, got int
+  - Question 1 missing required field: type
+  - Question 1 field 'correctAnswer' should be string, got int
+  - Question 2 missing required field: type
+  - Question 2 field 'correctAnswer' should be string, got int
+  - Question 3 missing required field: type
+  - Question 3 field 'correctAnswer' should be string, got int
+  - Question 4 missing required field: type
+  - Question 4 field 'correctAnswer' should be string, got int
+  - Question 5 missing required field: type
+  - Question 5 field 'correctAnswer' should be string, got int
+  - Question 6 missing required field: type
+  - Question 6 field 'correctAnswer' should be string, got int
+  - Question 7 missing required field: type
+  - Question 7 field 'correctAnswer' should be string, got int
+  - Question 8 missing required field: type
+  - Question 8 field 'correctAnswer' should be string, got int
+  - Question 9 missing required field: type
+  - Question 9 field 'correctAnswer' should be string, got int
+  - Question 10 missing required field: type
+  - Question 10 field 'correctAnswer' should be string, got int
+  - Question 11 missing required field: type
+  - Question 11 field 'correctAnswer' should be string, got int
+  - Question 12 missing required field: type
+  - Question 12 field 'correctAnswer' should be string, got int
+  - Question 13 missing required field: type
+  - Question 13 field 'correctAnswer' should be string, got int
+  - Question 14 missing required field: type
+  - Question 14 field 'correctAnswer' should be string, got int
+  - Question 15 missing required field: type
+  - Question 15 field 'correctAnswer' should be string, got int
+  - Question 16 missing required field: type
+  - Question 16 field 'correctAnswer' should be string, got int
+  - Question 17 missing required field: type
+  - Question 17 field 'correctAnswer' should be string, got int
+  - Question 18 missing required field: type
+  - Question 18 field 'correctAnswer' should be string, got int
+  - Question 19 missing required field: type
+  - Question 19 field 'correctAnswer' should be string, got int
+  - Question 20 missing required field: type
+  - Question 20 field 'correctAnswer' should be string, got int
+  - Question 21 missing required field: type
+  - Question 21 field 'correctAnswer' should be string, got int
+  - Question 22 missing required field: type
+  - Question 22 field 'correctAnswer' should be string, got int
+  - Question 23 missing required field: type
+  - Question 23 field 'correctAnswer' should be string, got int
+  - Question 24 missing required field: type
+  - Question 24 field 'correctAnswer' should be string, got int
+  - Question 25 missing required field: type
+  - Question 25 field 'correctAnswer' should be string, got int
+  - Question 26 missing required field: type
+  - Question 26 field 'correctAnswer' should be string, got int
+  - Question 27 missing required field: type
+  - Question 27 field 'correctAnswer' should be string, got int
+  - Question 28 missing required field: type
+  - Question 28 field 'correctAnswer' should be string, got int
+  - Question 29 missing required field: type
+  - Question 29 field 'correctAnswer' should be string, got int
+  - Question 30 missing required field: type
+  - Question 30 field 'correctAnswer' should be string, got int
+  - Question 31 missing required field: type
+  - Question 31 field 'correctAnswer' should be string, got int
+  - Question 32 missing required field: type
+  - Question 32 field 'correctAnswer' should be string, got int
+  - Question 33 missing required field: type
+  - Question 33 field 'correctAnswer' should be string, got int
+  - Question 34 missing required field: type
+  - Question 34 field 'correctAnswer' should be string, got int
+  - Question 35 missing required field: type
+  - Question 35 field 'correctAnswer' should be string, got int
+  - Question 36 missing required field: type
+  - Question 36 field 'correctAnswer' should be string, got int
+  - Question 37 missing required field: type
+  - Question 37 field 'correctAnswer' should be string, got int
+  - Question 38 missing required field: type
+  - Question 38 field 'correctAnswer' should be string, got int
+  - Question 39 missing required field: type
+  - Question 39 field 'correctAnswer' should be string, got int
+  - Question 40 missing required field: type
+  - Question 40 field 'correctAnswer' should be string, got int
+  - Question 41 missing required field: type
+  - Question 41 field 'correctAnswer' should be string, got int
+  - Question 42 missing required field: type
+  - Question 42 field 'correctAnswer' should be string, got int
+  - Question 43 missing required field: type
+  - Question 43 field 'correctAnswer' should be string, got int
+  - Question 44 missing required field: type
+  - Question 44 field 'correctAnswer' should be string, got int
+  - Question 45 missing required field: type
+  - Question 45 field 'correctAnswer' should be string, got int
+  - Question 46 missing required field: type
+  - Question 46 field 'correctAnswer' should be string, got int
+  - Question 47 missing required field: type
+  - Question 47 field 'correctAnswer' should be string, got int
+
+=== Validation Summary ===
+Total files checked: 36
+Files with errors: 18
+Total errors found: 1187
+Schema validation completed with errors.

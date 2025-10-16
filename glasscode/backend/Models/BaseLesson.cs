@@ -1,6 +1,6 @@
 namespace backend.Models {
     public class BaseLesson {
-        public string Id { get; set; } = string.Empty;
+        public int? Id { get; set; }
         public string ModuleSlug { get; set; } = string.Empty;
         public string Title { get; set; } = string.Empty;
         public int Order { get; set; }
@@ -13,6 +13,15 @@ namespace backend.Models {
         public int EstimatedMinutes { get; set; }
         public string Difficulty { get; set; } = string.Empty;
         public List<string> Tags { get; set; } = new List<string>();
+        public string? LastUpdated { get; set; }
+        public string? Version { get; set; }
+        public List<Source>? Sources { get; set; } = new List<Source>();
+        
+        // Additional properties for simple lesson formats
+        public string? Topic { get; set; }
+        public string? Description { get; set; }
+        public string? CodeExample { get; set; }
+        public string? Output { get; set; }
     }
 
     public class CodeExample {
@@ -32,4 +41,11 @@ namespace backend.Models {
         public string Description { get; set; } = string.Empty;
         public List<string> Checkpoints { get; set; } = new List<string>();
     }
+
+    public class Source {
+        public string Title { get; set; } = string.Empty;
+        public string Url { get; set; } = string.Empty;
+    }
+
+
 }

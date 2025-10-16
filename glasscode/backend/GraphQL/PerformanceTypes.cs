@@ -3,9 +3,9 @@ using backend.Models;
 
 namespace backend.GraphQL
 {
-    public class PerformanceLessonType : ObjectType<PerformanceLesson>
+    public class PerformanceLessonType : ObjectType<BaseLesson>
     {
-        protected override void Configure(IObjectTypeDescriptor<PerformanceLesson> descriptor)
+        protected override void Configure(IObjectTypeDescriptor<BaseLesson> descriptor)
         {
             descriptor.Name("PerformanceLesson");
             descriptor.Description("Represents a Performance Optimization learning lesson with code examples");
@@ -26,9 +26,9 @@ namespace backend.GraphQL
         }
     }
 
-    public class PerformanceInterviewQuestionType : ObjectType<PerformanceInterviewQuestion>
+    public class PerformanceInterviewQuestionType : ObjectType<BaseInterviewQuestion>
     {
-        protected override void Configure(IObjectTypeDescriptor<PerformanceInterviewQuestion> descriptor)
+        protected override void Configure(IObjectTypeDescriptor<BaseInterviewQuestion> descriptor)
         {
             descriptor.Name("PerformanceInterviewQuestion");
             descriptor.Description("Represents a Performance Optimization interview question with multiple choice or open-ended format");

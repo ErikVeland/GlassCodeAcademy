@@ -1,6 +1,6 @@
 [
   {
-    "id": "1",
+    "id": 1,
     "moduleSlug": "e2e-testing",
     "title": "Introduction to End-to-End Testing",
     "order": 1,
@@ -58,10 +58,11 @@
       "workflows"
     ],
     "lastUpdated": "2025-10-09T10:00:00.000Z",
-    "version": "1.0.0"
+    "version": "1.0.0",
+    "sources": []
   },
   {
-    "id": "2",
+    "id": 2,
     "moduleSlug": "e2e-testing",
     "title": "Cypress Fundamentals",
     "order": 2,
@@ -119,10 +120,11 @@
       "debugging"
     ],
     "lastUpdated": "2025-10-09T10:00:00.000Z",
-    "version": "1.0.0"
+    "version": "1.0.0",
+    "sources": []
   },
   {
-    "id": "3",
+    "id": 3,
     "moduleSlug": "e2e-testing",
     "title": "Playwright Essentials",
     "order": 3,
@@ -180,10 +182,11 @@
       "locators"
     ],
     "lastUpdated": "2025-10-09T10:00:00.000Z",
-    "version": "1.0.0"
+    "version": "1.0.0",
+    "sources": []
   },
   {
-    "id": "4",
+    "id": 4,
     "moduleSlug": "e2e-testing",
     "title": "Test Organization and Page Objects",
     "order": 4,
@@ -241,10 +244,11 @@
       "maintainability"
     ],
     "lastUpdated": "2025-10-09T10:00:00.000Z",
-    "version": "1.0.0"
+    "version": "1.0.0",
+    "sources": []
   },
   {
-    "id": "5",
+    "id": 5,
     "moduleSlug": "e2e-testing",
     "title": "Handling Authentication and Sessions",
     "order": 5,
@@ -302,10 +306,11 @@
       "security"
     ],
     "lastUpdated": "2025-10-09T10:00:00.000Z",
-    "version": "1.0.0"
+    "version": "1.0.0",
+    "sources": []
   },
   {
-    "id": "6",
+    "id": 6,
     "moduleSlug": "e2e-testing",
     "title": "Network Interception and API Mocking",
     "order": 6,
@@ -363,10 +368,11 @@
       "performance"
     ],
     "lastUpdated": "2025-10-09T10:00:00.000Z",
-    "version": "1.0.0"
+    "version": "1.0.0",
+    "sources": []
   },
   {
-    "id": "7",
+    "id": 7,
     "moduleSlug": "e2e-testing",
     "title": "Cross-Browser and Visual Testing",
     "order": 7,
@@ -424,10 +430,11 @@
       "compatibility"
     ],
     "lastUpdated": "2025-10-09T10:00:00.000Z",
-    "version": "1.0.0"
+    "version": "1.0.0",
+    "sources": []
   },
   {
-    "id": "8",
+    "id": 8,
     "moduleSlug": "e2e-testing",
     "title": "Performance and Reliability Optimization",
     "order": 8,
@@ -485,10 +492,11 @@
       "test-optimization"
     ],
     "lastUpdated": "2025-10-09T10:00:00.000Z",
-    "version": "1.0.0"
+    "version": "1.0.0",
+    "sources": []
   },
   {
-    "id": "9",
+    "id": 9,
     "moduleSlug": "e2e-testing",
     "title": "CI/CD Integration and Reporting",
     "order": 9,
@@ -546,10 +554,11 @@
       "pipeline-integration"
     ],
     "lastUpdated": "2025-10-09T10:00:00.000Z",
-    "version": "1.0.0"
+    "version": "1.0.0",
+    "sources": []
   },
   {
-    "id": "10",
+    "id": 10,
     "moduleSlug": "e2e-testing",
     "title": "Advanced Testing Patterns and Best Practices",
     "order": 10,
@@ -605,10 +614,11 @@
       "maintainability"
     ],
     "lastUpdated": "2025-10-09T10:00:00.000Z",
-    "version": "1.0.0"
+    "version": "1.0.0",
+    "sources": []
   },
   {
-    "id": "11",
+    "id": 11,
     "moduleSlug": "e2e-testing",
     "title": "Mobile and Device Testing",
     "order": 11,
@@ -667,10 +677,11 @@
       "Performance"
     ],
     "lastUpdated": "2025-10-09T10:00:00.000Z",
-    "version": "1.0.0"
+    "version": "1.0.0",
+    "sources": []
   },
   {
-    "id": "12",
+    "id": 12,
     "moduleSlug": "e2e-testing",
     "title": "Accessibility and Compliance Testing",
     "order": 12,
@@ -727,6 +738,7 @@
       "Compliance"
     ],
     "lastUpdated": "2025-10-09T10:00:00.000Z",
-    "version": "1.0.0"
+    "version": "1.0.0",
+    "sources": []
   }
 ]

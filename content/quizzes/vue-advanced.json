@@ -1,515 +1,444 @@
-{
-  "moduleSlug": "vue-advanced",
-  "title": "Vue Advanced Assessment",
-  "description": "Comprehensive assessment covering key concepts from the vue-advanced module",
-  "totalQuestions": 19,
-  "passingScore": 70,
-  "timeLimit": 23,
-  "questions": [
-    {
-      "id": "1",
-      "question": "What is the correct way to create a Vue application in Vue 3?",
-      "topic": "Core Concepts",
-      "difficulty": "Beginner",
-      "choices": [
-        "`Vue.createApp({})`",
-        "`new Vue({})`",
-        "`Vue.app({})`",
-        "`Vue.init({})`"
-      ],
-      "correctIndex": 0,
-      "explanation": "In Vue 3, applications are created using `Vue.createApp({})`. This is different from Vue 2 where `new Vue({})` was used. The new API provides better modularity and allows creating multiple Vue applications on the same page.",
-      "industryContext": "These skills are valuable in professional development environments.",
-      "tags": [
-        "Core Concepts",
-        "beginner",
-        "vue"
-      ],
-      "questionType": "multiple-choice",
-      "estimatedTime": 90,
-      "legacy": {
-        "originalId": 1,
-        "originalType": "multiple-choice",
-        "migrated": "2025-10-01T06:41:13.489Z"
-      },
-      "correctAnswer": 0
-    },
-    {
-      "id": "2",
-      "question": "Which directive is used for two-way data binding in Vue?",
-      "topic": "Core Concepts",
-      "difficulty": "Intermediate",
-      "choices": [
-        "`v-model`",
-        "`v-bind`",
-        "`v-on`",
-        "`v-show`"
-      ],
-      "correctIndex": 0,
-      "explanation": "The `v-model` directive is used for two-way data binding between form inputs and application state. It automatically picks the correct way to update the element based on the input type.",
-      "industryContext": "These skills are valuable in professional development environments.",
-      "tags": [
-        "Core Concepts",
-        "intermediate",
-        "vue"
-      ],
-      "questionType": "multiple-choice",
-      "estimatedTime": 90,
-      "legacy": {
-        "originalId": 2,
-        "originalType": "multiple-choice",
-        "migrated": "2025-10-01T06:41:13.489Z"
-      },
-      "correctAnswer": 0
-    },
-    {
-      "id": "3",
-      "question": "What are props in Vue and how are they used? How do they differ from the data property?",
-      "topic": "Components",
-      "difficulty": "Intermediate",
-      "explanation": "Props are custom attributes you can register on a component to pass data from parent components to child components. They are used to pass data down the component tree. Props are read-only in the child component, while data properties are mutable within the component. Props are defined in the parent component's template, while data properties are defined within the component itself.",
-      "industryContext": "These skills are valuable in professional development environments.",
-      "tags": [
-        "Components",
-        "intermediate",
-        "vue"
-      ],
-      "questionType": "open-ended",
-      "estimatedTime": 180,
-      "legacy": {
-        "originalId": 3,
-        "originalType": "open-ended",
-        "migrated": "2025-10-01T06:41:13.489Z"
-      }
-    },
-    {
-      "id": "4",
-      "question": "How do you define a global component in Vue 3?",
-      "topic": "Components",
-      "difficulty": "Beginner",
-      "choices": [
-        "`app.component('my-component', MyComponent)`",
-        "`Vue.component('my-component', MyComponent)`",
-        "`MyComponent.component('my-component')`",
-        "`component('my-component', MyComponent)`"
-      ],
-      "correctIndex": 0,
-      "explanation": "In Vue 3, global components are registered using `app.component()` where `app` is the application instance returned by `Vue.createApp()`. This is different from Vue 2 where `Vue.component()` was used. The new approach provides better encapsulation.",
-      "industryContext": "These skills are valuable in professional development environments.",
-      "tags": [
-        "Components",
-        "beginner",
-        "vue"
-      ],
-      "questionType": "multiple-choice",
-      "estimatedTime": 90,
-      "legacy": {
-        "originalId": 4,
-        "originalType": "multiple-choice",
-        "migrated": "2025-10-01T06:41:13.489Z"
-      },
-      "correctAnswer": 0
-    },
-    {
-      "id": "5",
-      "question": "What is the purpose of the setup() function in the Composition API?",
-      "topic": "Composition API",
-      "difficulty": "Beginner",
-      "choices": [
-        "It's the entry point for Composition API logic",
-        "It replaces the data option entirely",
-        "It's used only for async operations",
-        "It's deprecated in Vue 3"
-      ],
-      "correctIndex": 0,
-      "explanation": "The `setup()` function is the entry point for Composition API logic. It's executed before the component is created, once the props are resolved. It's where you define reactive state, computed properties, watchers, and lifecycle hooks when using the Composition API.",
-      "industryContext": "These skills are valuable in professional development environments.",
-      "tags": [
-        "Composition API",
-        "beginner",
-        "vue"
-      ],
-      "questionType": "multiple-choice",
-      "estimatedTime": 90,
-      "legacy": {
-        "originalId": 5,
-        "originalType": "multiple-choice",
-        "migrated": "2025-10-01T06:41:13.489Z"
-      },
-      "correctAnswer": 0
-    },
-    {
-      "id": "6",
-      "question": "What is the difference between ref and reactive in Vue 3?",
-      "topic": "Reactivity",
-      "difficulty": "Beginner",
-      "choices": [
-        "ref is for primitive values, reactive is for objects",
-        "ref is for objects, reactive is for primitive values",
-        "Both work the same way",
-        "ref is deprecated in Vue 3"
-      ],
-      "correctIndex": 0,
-      "explanation": "ref is used to create a reactive reference that can hold any value (primitive or object), and you access its value with .value. reactive is used to create a reactive object, but it only works with objects and arrays, not primitive values. For primitives, you must use ref.",
-      "industryContext": "These skills are valuable in professional development environments.",
-      "tags": [
-        "Reactivity",
-        "beginner",
-        "vue"
-      ],
-      "questionType": "multiple-choice",
-      "estimatedTime": 90,
-      "legacy": {
-        "originalId": 6,
-        "originalType": "multiple-choice",
-        "migrated": "2025-10-01T06:41:13.489Z"
-      },
-      "correctAnswer": 0
-    },
-    {
-      "id": "7",
-      "question": "Explain the Vue component lifecycle hooks and when you would use each one.",
-      "topic": "Lifecycle",
-      "difficulty": "Intermediate",
-      "choices": [
-        "created (init data), mounted (DOM ops), updated (post-render), unmounted (cleanup)",
-        "beforeCreate (DOM setup), created (API calls), mounted (data init), unmounted (rendering)",
-        "setup (all operations), render (DOM updates), destroy (cleanup)",
-        "init (everything), update (all changes), destroy (final cleanup)"
-      ],
-      "correctIndex": 0,
-      "explanation": "Vue component lifecycle hooks include: created (for initializing data and events), mounted (for DOM manipulation and API calls), updated (for operations after DOM updates), and unmounted (for cleanup). In Composition API, these are onMounted, onUpdated, onUnmounted, etc. Use created for data initialization, mounted for DOM-dependent operations, updated for post-render updates, and unmounted for cleanup. Understanding these hooks is essential for proper component management and avoiding memory leaks.",
-      "industryContext": "Understanding Vue lifecycle hooks is crucial for professional Vue.js development, especially when working with DOM manipulation, API calls, and memory management. Proper use of lifecycle hooks helps optimize performance and prevent common issues like memory leaks.",
-      "tags": [
-        "Lifecycle",
-        "intermediate",
-        "vue"
-      ],
-      "questionType": "multiple-choice",
-      "estimatedTime": 90,
-      "legacy": {
-        "originalId": 7,
-        "originalType": "open-ended",
-        "migrated": "2025-10-01T06:41:13.489Z"
-      },
-      "correctAnswer": 0
-    },
-    {
-      "id": "9",
-      "question": "What is the difference between `v-if` and `v-show`?",
-      "topic": "Directives",
-      "difficulty": "Beginner",
-      "choices": [
-        "`v-if` conditionally renders elements, `v-show` toggles CSS display property",
-        "`v-if` is for lists, `v-show` is for single elements",
-        "`v-if` is faster than `v-show`",
-        "There is no difference"
-      ],
-      "correctIndex": 0,
-      "explanation": "`v-if` conditionally renders elements by actually adding or removing them from the DOM based on the condition. `v-show` simply toggles the CSS display property to show or hide elements. `v-if` has higher toggle costs but `v-show` has higher initial render costs. Use `v-if` for rarely changed conditions and `v-show` for frequently toggled elements.",
-      "industryContext": "These skills are valuable in professional development environments.",
-      "tags": [
-        "Directives",
-        "beginner",
-        "vue"
-      ],
-      "questionType": "multiple-choice",
-      "estimatedTime": 90,
-      "legacy": {
-        "originalId": 8,
-        "originalType": "multiple-choice",
-        "migrated": "2025-10-01T06:41:13.489Z"
-      },
-      "correctAnswer": 0
-    },
-    {
-      "id": "10",
-      "question": "What is the main advantage of Vue 3's Composition API?",
-      "topic": "Composition API",
-      "difficulty": "Beginner",
-      "choices": [
-        "Better logic reuse and TypeScript support",
-        "Faster rendering",
-        "Smaller bundle size",
-        "Automatic optimization"
-      ],
-      "correctIndex": 0,
-      "explanation": "The Composition API provides better logic reuse through composables, improved TypeScript support, and cleaner organization of component logic.",
-      "industryContext": "These skills are valuable in professional development environments.",
-      "tags": [
-        "Composition API",
-        "beginner",
-        "vue"
-      ],
-      "questionType": "multiple-choice",
-      "estimatedTime": 90,
-      "legacy": {
-        "originalId": 9,
-        "originalType": "multiple-choice",
-        "migrated": "2025-10-01T06:41:13.489Z"
-      },
-      "correctAnswer": 0
-    },
-    {
-      "id": "11",
-      "question": "What is the difference between `ref()` and `reactive()` in Vue 3?",
-      "topic": "Reactivity",
-      "difficulty": "Beginner",
-      "choices": [
-        "`ref()` for primitives, `reactive()` for objects",
-        "`ref()` is faster than `reactive()`",
-        "`reactive()` is deprecated",
-        "No functional difference"
-      ],
-      "correctIndex": 0,
-      "explanation": "`ref()` is used for primitive values and returns a reactive reference, while `reactive()` is used for objects and makes them deeply reactive.",
-      "industryContext": "These skills are valuable in professional development environments.",
-      "tags": [
-        "Reactivity",
-        "beginner",
-        "vue"
-      ],
-      "questionType": "multiple-choice",
-      "estimatedTime": 90,
-      "legacy": {
-        "originalId": 10,
-        "originalType": "multiple-choice",
-        "migrated": "2025-10-01T06:41:13.489Z"
-      },
-      "correctAnswer": 0
-    },
-    {
-      "id": "12",
-      "question": "How can you optimize Vue application performance?",
-      "topic": "Performance",
-      "difficulty": "Advanced",
-      "choices": [
-        "Lazy loading, `v-show` vs `v-if`, virtual scrolling, computed optimization, `keep-alive` caching",
-        "Using only functional components and avoiding state management",
-        "Increasing bundle size with more dependencies for better features",
-        "Disabling reactivity for all components to reduce overhead"
-      ],
-      "correctIndex": 0,
-      "explanation": "Optimize Vue apps through: lazy loading components to reduce initial bundle size, using `v-show` vs `v-if` appropriately based on toggle frequency, implementing virtual scrolling for large lists, optimizing computed properties to avoid unnecessary recalculations, using `keep-alive` for cached components to prevent re-rendering, and minimizing reactivity overhead by using `shallowRef` or `markRaw` for non-reactive data. These techniques help improve load times, reduce memory usage, and enhance user experience.",
-      "industryContext": "Performance optimization is critical for professional Vue.js applications, especially in enterprise environments where user experience and SEO are important. Professional developers use these techniques to build fast, responsive applications that scale well with complex data and user interactions.",
-      "tags": [
-        "Performance",
-        "advanced",
-        "vue"
-      ],
-      "questionType": "multiple-choice",
-      "estimatedTime": 90,
-      "legacy": {
-        "originalId": 11,
-        "originalType": "open-ended",
-        "migrated": "2025-10-01T06:41:13.489Z"
-      },
-      "correctAnswer": 0
-    },
-    {
-      "id": "13",
-      "question": "What is Pinia and how does it relate to Vuex?",
-      "topic": "State Management",
-      "difficulty": "Beginner",
-      "choices": [
-        "Pinia is the recommended state management for Vue 3, replacing Vuex",
-        "Pinia is a Vue component library",
-        "Pinia is a testing framework",
-        "Pinia is a UI framework"
-      ],
-      "correctIndex": 0,
-      "explanation": "Pinia is the official state management solution for Vue 3, offering better TypeScript support, simpler API, and improved devtools compared to Vuex.",
-      "industryContext": "These skills are valuable in professional development environments.",
-      "tags": [
-        "State Management",
-        "beginner",
-        "vue"
-      ],
-      "questionType": "multiple-choice",
-      "estimatedTime": 90,
-      "legacy": {
-        "originalId": 12,
-        "originalType": "multiple-choice",
-        "migrated": "2025-10-01T06:41:13.489Z"
-      },
-      "correctAnswer": 0
-    },
-    {
-      "id": "14",
-      "question": "Which tool is recommended for testing Vue components?",
-      "topic": "Testing",
-      "difficulty": "Intermediate",
-      "choices": [
-        "Vue Test Utils with Vitest",
-        "Jest only",
-        "Selenium",
-        "Cypress only"
-      ],
-      "correctIndex": 0,
-      "explanation": "Vue Test Utils provides utilities for testing Vue components, often paired with Vitest for fast unit testing in Vue 3 projects.",
-      "industryContext": "These skills are valuable in professional development environments.",
-      "tags": [
-        "Testing",
-        "intermediate",
-        "vue"
-      ],
-      "questionType": "multiple-choice",
-      "estimatedTime": 90,
-      "legacy": {
-        "originalId": 13,
-        "originalType": "multiple-choice",
-        "migrated": "2025-10-01T06:41:13.489Z"
-      },
-      "correctAnswer": 0
-    },
-    {
-      "id": "15",
-      "question": "What are Teleports in Vue 3 and when would you use them?",
-      "topic": "Advanced",
-      "difficulty": "Intermediate",
-      "choices": [
-        "Render components outside their parent hierarchy, useful for modals and tooltips",
-        "Transfer data between components without props",
-        "Teleport users to different pages in the application",
-        "Move components between different Vue applications"
-      ],
-      "correctIndex": 0,
-      "explanation": "Teleports allow rendering component templates in different parts of the DOM tree, outside the component hierarchy. Use for modals, tooltips, or notifications that need to escape parent containers. The Teleport component takes a `'to'` prop that specifies the target DOM element where the content should be rendered. This is particularly useful for CSS positioning issues and z-index conflicts that arise when components are nested deeply in the DOM.",
-      "industryContext": "Teleports are an important Vue 3 feature for building professional UI components that need to break out of their container constraints. Professional Vue developers use Teleports for creating overlay components like modals, dropdowns, and tooltips that require proper positioning and z-index management.",
-      "tags": [
-        "Advanced",
-        "intermediate",
-        "vue"
-      ],
-      "questionType": "multiple-choice",
-      "estimatedTime": 90,
-      "legacy": {
-        "originalId": 14,
-        "originalType": "open-ended",
-        "migrated": "2025-10-01T06:41:13.489Z"
-      },
-      "correctAnswer": 0
-    },
-    {
-      "id": "16",
-      "question": "How do you create a custom directive in Vue 3?",
-      "topic": "Directives",
-      "difficulty": "Beginner",
-      "choices": [
-        "Using app.directive() method",
-        "Using Vue.directive()",
-        "Using @directive decorator",
-        "Using defineDirective()"
-      ],
-      "correctIndex": 0,
-      "explanation": "In Vue 3, custom directives are created using app.directive(name, definition) where definition is an object with lifecycle hooks.",
-      "industryContext": "These skills are valuable in professional development environments.",
-      "tags": [
-        "Directives",
-        "beginner",
-        "vue"
-      ],
-      "questionType": "multiple-choice",
-      "estimatedTime": 90,
-      "legacy": {
-        "originalId": 15,
-        "originalType": "multiple-choice",
-        "migrated": "2025-10-01T06:41:13.489Z"
-      },
-      "correctAnswer": 0
-    },
-    {
-      "id": "17",
-      "question": "What is the main benefit of using the Composition API over the Options API?",
-      "topic": "Composition API",
-      "difficulty": "Intermediate",
-      "choices": [
-        "Better logic reuse and TypeScript support",
-        "Faster component rendering",
-        "Smaller bundle size",
-        "Better backward compatibility"
-      ],
-      "correctIndex": 0,
-      "explanation": "The Composition API provides better logic reuse through composables, improved TypeScript support with better type inference, and allows for more flexible code organization compared to the Options API.",
-      "industryContext": "The Composition API is particularly valuable in large-scale applications where code reuse and maintainability are critical.",
-      "tags": [
-        "Composition API",
-        "Architecture",
-        "TypeScript"
-      ],
-      "questionType": "multiple-choice",
-      "estimatedTime": 90,
-      "correctAnswer": 0
-    },
-    {
-      "id": "18",
-      "question": "How do you implement lazy loading for Vue components?",
-      "topic": "Performance",
-      "difficulty": "Intermediate",
-      "choices": [
-        "Using `defineAsyncComponent()` or dynamic imports in router",
-        "Using v-lazy directive",
-        "Using Vue.lazy() method",
-        "Using the async attribute in component tags"
-      ],
-      "correctIndex": 0,
-      "explanation": "Lazy loading in Vue can be implemented using `defineAsyncComponent()` for individual components or dynamic imports (() => import('./Component.vue')) in Vue Router for route-level code splitting.",
-      "industryContext": "Lazy loading is essential for improving initial page load times and optimizing the user experience in large applications.",
-      "tags": [
-        "Performance",
-        "Code Splitting",
-        "Optimization"
-      ],
-      "questionType": "multiple-choice",
-      "estimatedTime": 90,
-      "correctAnswer": 0
-    },
-    {
-      "id": "19",
-      "question": "What is the purpose of the key attribute in Vue lists and why is it important?",
-      "topic": "Rendering",
-      "difficulty": "Intermediate",
-      "choices": [
-        "It helps Vue track changes and optimize re-rendering",
-        "It's required for `v-for` syntax to work",
-        "It prevents memory leaks",
-        "It enables two-way data binding"
-      ],
-      "correctIndex": 0,
-      "explanation": "The key attribute helps Vue's virtual DOM algorithm track individual list items when the list changes, enabling efficient updates and preventing rendering issues. Without proper keys, Vue might reuse elements incorrectly leading to state bugs.",
-      "industryContext": "Proper key usage is crucial for maintaining component state and avoiding subtle bugs in dynamic lists, especially important in data-driven applications.",
-      "tags": [
-        "Rendering",
-        "Virtual DOM",
-        "Performance"
-      ],
-      "questionType": "multiple-choice",
-      "estimatedTime": 90,
-      "correctAnswer": 0
-    },
-    {
-      "id": "8",
-      "topic": "Directives",
-      "type": "multiple-choice",
-      "question": "What is the difference between `v-if` and `v-show`?",
-      "choices": [
-        "`v-if` conditionally renders elements, `v-show` toggles CSS display property",
-        "`v-if` is for lists, `v-show` is for single elements",
-        "`v-if` is faster than `v-show`",
-        "There is no difference"
-      ],
-      "correctAnswer": 0,
-      "explanation": "`v-if` conditionally renders elements by actually adding or removing them from the DOM based on the condition. `v-show` simply toggles the CSS display property to show or hide elements. `v-if` has higher toggle costs but `v-show` has higher initial render costs. Use `v-if` for rarely changed conditions and `v-show` for frequently toggled elements.",
-      "correctIndex": 0,
-      "difficulty": "Beginner",
-      "questionType": "multiple-choice"
-    }
-  ],
-  "metadata": {
-    "migrated": true,
-    "originalQuestionCount": 15,
-    "migrationDate": "2025-10-01T06:41:13.489Z",
-    "lastUpdated": "2025-10-01T06:41:13.489Z",
-    "version": "1.0.0"
+[
+  {
+    "id": 1,
+    "question": "What is the correct way to create a Vue application in Vue 3?",
+    "topic": "Core Concepts",
+    "difficulty": "Beginner",
+    "choices": [
+      "`Vue.createApp({})`",
+      "`new Vue({})`",
+      "`Vue.app({})`",
+      "`Vue.init({})`"
+    ],
+    "explanation": "In Vue 3, applications are created using `Vue.createApp({})`. This is different from Vue 2 where `new Vue({})` was used. The new API provides better modularity and allows creating multiple Vue applications on the same page.",
+    "industryContext": "These skills are valuable in professional development environments.",
+    "tags": [
+      "Core Concepts",
+      "beginner",
+      "vue"
+    ],
+    "questionType": "multiple-choice",
+    "estimatedTime": 90,
+    "correctAnswer": 0,
+    "type": "multiple-choice",
+    "sources": []
+  },
+  {
+    "id": 2,
+    "question": "Which directive is used for two-way data binding in Vue?",
+    "topic": "Core Concepts",
+    "difficulty": "Intermediate",
+    "choices": [
+      "`v-model`",
+      "`v-bind`",
+      "`v-on`",
+      "`v-show`"
+    ],
+    "explanation": "The `v-model` directive is used for two-way data binding between form inputs and application state. It automatically picks the correct way to update the element based on the input type.",
+    "industryContext": "These skills are valuable in professional development environments.",
+    "tags": [
+      "Core Concepts",
+      "intermediate",
+      "vue"
+    ],
+    "questionType": "multiple-choice",
+    "estimatedTime": 90,
+    "correctAnswer": 0,
+    "type": "multiple-choice",
+    "sources": []
+  },
+  {
+    "id": 3,
+    "question": "What are props in Vue and how are they used? How do they differ from the data property?",
+    "topic": "Components",
+    "difficulty": "Intermediate",
+    "explanation": "Props are custom attributes you can register on a component to pass data from parent components to child components. They are used to pass data down the component tree. Props are read-only in the child component, while data properties are mutable within the component. Props are defined in the parent component's template, while data properties are defined within the component itself.",
+    "industryContext": "These skills are valuable in professional development environments.",
+    "tags": [
+      "Components",
+      "intermediate",
+      "vue"
+    ],
+    "questionType": "open-ended",
+    "estimatedTime": 180,
+    "type": "open-ended",
+    "sources": []
+  },
+  {
+    "id": 4,
+    "question": "How do you define a global component in Vue 3?",
+    "topic": "Components",
+    "difficulty": "Beginner",
+    "choices": [
+      "`app.component('my-component', MyComponent)`",
+      "`Vue.component('my-component', MyComponent)`",
+      "`MyComponent.component('my-component')`",
+      "`component('my-component', MyComponent)`"
+    ],
+    "explanation": "In Vue 3, global components are registered using `app.component()` where `app` is the application instance returned by `Vue.createApp()`. This is different from Vue 2 where `Vue.component()` was used. The new approach provides better encapsulation.",
+    "industryContext": "These skills are valuable in professional development environments.",
+    "tags": [
+      "Components",
+      "beginner",
+      "vue"
+    ],
+    "questionType": "multiple-choice",
+    "estimatedTime": 90,
+    "correctAnswer": 0,
+    "type": "multiple-choice",
+    "sources": []
+  },
+  {
+    "id": 5,
+    "question": "What is the purpose of the setup() function in the Composition API?",
+    "topic": "Composition API",
+    "difficulty": "Beginner",
+    "choices": [
+      "It's the entry point for Composition API logic",
+      "It replaces the data option entirely",
+      "It's used only for async operations",
+      "It's deprecated in Vue 3"
+    ],
+    "explanation": "The `setup()` function is the entry point for Composition API logic. It's executed before the component is created, once the props are resolved. It's where you define reactive state, computed properties, watchers, and lifecycle hooks when using the Composition API.",
+    "industryContext": "These skills are valuable in professional development environments.",
+    "tags": [
+      "Composition API",
+      "beginner",
+      "vue"
+    ],
+    "questionType": "multiple-choice",
+    "estimatedTime": 90,
+    "correctAnswer": 0,
+    "type": "multiple-choice",
+    "sources": []
+  },
+  {
+    "id": 6,
+    "question": "What is the difference between ref and reactive in Vue 3?",
+    "topic": "Reactivity",
+    "difficulty": "Beginner",
+    "choices": [
+      "ref is for primitive values, reactive is for objects",
+      "ref is for objects, reactive is for primitive values",
+      "Both work the same way",
+      "ref is deprecated in Vue 3"
+    ],
+    "explanation": "ref is used to create a reactive reference that can hold any value (primitive or object), and you access its value with .value. reactive is used to create a reactive object, but it only works with objects and arrays, not primitive values. For primitives, you must use ref.",
+    "industryContext": "These skills are valuable in professional development environments.",
+    "tags": [
+      "Reactivity",
+      "beginner",
+      "vue"
+    ],
+    "questionType": "multiple-choice",
+    "estimatedTime": 90,
+    "correctAnswer": 0,
+    "type": "multiple-choice",
+    "sources": []
+  },
+  {
+    "id": 7,
+    "question": "Explain the Vue component lifecycle hooks and when you would use each one.",
+    "topic": "Lifecycle",
+    "difficulty": "Intermediate",
+    "choices": [
+      "created (init data), mounted (DOM ops), updated (post-render), unmounted (cleanup)",
+      "beforeCreate (DOM setup), created (API calls), mounted (data init), unmounted (rendering)",
+      "setup (all operations), render (DOM updates), destroy (cleanup)",
+      "init (everything), update (all changes), destroy (final cleanup)"
+    ],
+    "explanation": "Vue component lifecycle hooks include: created (for initializing data and events), mounted (for DOM manipulation and API calls), updated (for operations after DOM updates), and unmounted (for cleanup). In Composition API, these are onMounted, onUpdated, onUnmounted, etc. Use created for data initialization, mounted for DOM-dependent operations, updated for post-render updates, and unmounted for cleanup. Understanding these hooks is essential for proper component management and avoiding memory leaks.",
+    "industryContext": "Understanding Vue lifecycle hooks is crucial for professional Vue.js development, especially when working with DOM manipulation, API calls, and memory management. Proper use of lifecycle hooks helps optimize performance and prevent common issues like memory leaks.",
+    "tags": [
+      "Lifecycle",
+      "intermediate",
+      "vue"
+    ],
+    "questionType": "multiple-choice",
+    "estimatedTime": 90,
+    "correctAnswer": 0,
+    "type": "multiple-choice",
+    "sources": []
+  },
+  {
+    "id": 8,
+    "question": "What is the difference between `v-if` and `v-show`?",
+    "topic": "Directives",
+    "difficulty": "Beginner",
+    "choices": [
+      "`v-if` conditionally renders elements, `v-show` toggles CSS display property",
+      "`v-if` is for lists, `v-show` is for single elements",
+      "`v-if` is faster than `v-show`",
+      "There is no difference"
+    ],
+    "explanation": "`v-if` conditionally renders elements by actually adding or removing them from the DOM based on the condition. `v-show` simply toggles the CSS display property to show or hide elements. `v-if` has higher toggle costs but `v-show` has higher initial render costs. Use `v-if` for rarely changed conditions and `v-show` for frequently toggled elements.",
+    "industryContext": "These skills are valuable in professional development environments.",
+    "tags": [
+      "Directives",
+      "beginner",
+      "vue"
+    ],
+    "questionType": "multiple-choice",
+    "estimatedTime": 90,
+    "correctAnswer": 0,
+    "type": "multiple-choice",
+    "sources": []
+  },
+  {
+    "id": 9,
+    "question": "What is the main advantage of Vue 3's Composition API?",
+    "topic": "Composition API",
+    "difficulty": "Beginner",
+    "choices": [
+      "Better logic reuse and TypeScript support",
+      "Faster rendering",
+      "Smaller bundle size",
+      "Automatic optimization"
+    ],
+    "explanation": "The Composition API provides better logic reuse through composables, improved TypeScript support, and cleaner organization of component logic.",
+    "industryContext": "These skills are valuable in professional development environments.",
+    "tags": [
+      "Composition API",
+      "beginner",
+      "vue"
+    ],
+    "questionType": "multiple-choice",
+    "estimatedTime": 90,
+    "correctAnswer": 0,
+    "type": "multiple-choice",
+    "sources": []
+  },
+  {
+    "id": 10,
+    "question": "What is the difference between `ref()` and `reactive()` in Vue 3?",
+    "topic": "Reactivity",
+    "difficulty": "Beginner",
+    "choices": [
+      "`ref()` for primitives, `reactive()` for objects",
+      "`ref()` is faster than `reactive()`",
+      "`reactive()` is deprecated",
+      "No functional difference"
+    ],
+    "explanation": "`ref()` is used for primitive values and returns a reactive reference, while `reactive()` is used for objects and makes them deeply reactive.",
+    "industryContext": "These skills are valuable in professional development environments.",
+    "tags": [
+      "Reactivity",
+      "beginner",
+      "vue"
+    ],
+    "questionType": "multiple-choice",
+    "estimatedTime": 90,
+    "correctAnswer": 0,
+    "type": "multiple-choice",
+    "sources": []
+  },
+  {
+    "id": 11,
+    "question": "How can you optimize Vue application performance?",
+    "topic": "Performance",
+    "difficulty": "Advanced",
+    "choices": [
+      "Lazy loading, `v-show` vs `v-if`, virtual scrolling, computed optimization, `keep-alive` caching",
+      "Using only functional components and avoiding state management",
+      "Increasing bundle size with more dependencies for better features",
+      "Disabling reactivity for all components to reduce overhead"
+    ],
+    "explanation": "Optimize Vue apps through: lazy loading components to reduce initial bundle size, using `v-show` vs `v-if` appropriately based on toggle frequency, implementing virtual scrolling for large lists, optimizing computed properties to avoid unnecessary recalculations, using `keep-alive` for cached components to prevent re-rendering, and minimizing reactivity overhead by using `shallowRef` or `markRaw` for non-reactive data. These techniques help improve load times, reduce memory usage, and enhance user experience.",
+    "industryContext": "Performance optimization is critical for professional Vue.js applications, especially in enterprise environments where user experience and SEO are important. Professional developers use these techniques to build fast, responsive applications that scale well with complex data and user interactions.",
+    "tags": [
+      "Performance",
+      "advanced",
+      "vue"
+    ],
+    "questionType": "multiple-choice",
+    "estimatedTime": 90,
+    "correctAnswer": 0,
+    "type": "multiple-choice",
+    "sources": []
+  },
+  {
+    "id": 12,
+    "question": "What is Pinia and how does it relate to Vuex?",
+    "topic": "State Management",
+    "difficulty": "Beginner",
+    "choices": [
+      "Pinia is the recommended state management for Vue 3, replacing Vuex",
+      "Pinia is a Vue component library",
+      "Pinia is a testing framework",
+      "Pinia is a UI framework"
+    ],
+    "explanation": "Pinia is the official state management solution for Vue 3, offering better TypeScript support, simpler API, and improved devtools compared to Vuex.",
+    "industryContext": "These skills are valuable in professional development environments.",
+    "tags": [
+      "State Management",
+      "beginner",
+      "vue"
+    ],
+    "questionType": "multiple-choice",
+    "estimatedTime": 90,
+    "correctAnswer": 0,
+    "type": "multiple-choice",
+    "sources": []
+  },
+  {
+    "id": 13,
+    "question": "Which tool is recommended for testing Vue components?",
+    "topic": "Testing",
+    "difficulty": "Intermediate",
+    "choices": [
+      "Vue Test Utils with Vitest",
+      "Jest only",
+      "Selenium",
+      "Cypress only"
+    ],
+    "explanation": "Vue Test Utils provides utilities for testing Vue components, often paired with Vitest for fast unit testing in Vue 3 projects.",
+    "industryContext": "These skills are valuable in professional development environments.",
+    "tags": [
+      "Testing",
+      "intermediate",
+      "vue"
+    ],
+    "questionType": "multiple-choice",
+    "estimatedTime": 90,
+    "correctAnswer": 0,
+    "type": "multiple-choice",
+    "sources": []
+  },
+  {
+    "id": 14,
+    "question": "What are Teleports in Vue 3 and when would you use them?",
+    "topic": "Advanced",
+    "difficulty": "Intermediate",
+    "choices": [
+      "Render components outside their parent hierarchy, useful for modals and tooltips",
+      "Transfer data between components without props",
+      "Teleport users to different pages in the application",
+      "Move components between different Vue applications"
+    ],
+    "explanation": "Teleports allow rendering component templates in different parts of the DOM tree, outside the component hierarchy. Use for modals, tooltips, or notifications that need to escape parent containers. The Teleport component takes a `'to'` prop that specifies the target DOM element where the content should be rendered. This is particularly useful for CSS positioning issues and z-index conflicts that arise when components are nested deeply in the DOM.",
+    "industryContext": "Teleports are an important Vue 3 feature for building professional UI components that need to break out of their container constraints. Professional Vue developers use Teleports for creating overlay components like modals, dropdowns, and tooltips that require proper positioning and z-index management.",
+    "tags": [
+      "Advanced",
+      "intermediate",
+      "vue"
+    ],
+    "questionType": "multiple-choice",
+    "estimatedTime": 90,
+    "correctAnswer": 0,
+    "type": "multiple-choice",
+    "sources": []
+  },
+  {
+    "id": 15,
+    "question": "How do you create a custom directive in Vue 3?",
+    "topic": "Directives",
+    "difficulty": "Beginner",
+    "choices": [
+      "Using app.directive() method",
+      "Using Vue.directive()",
+      "Using @directive decorator",
+      "Using defineDirective()"
+    ],
+    "explanation": "In Vue 3, custom directives are created using app.directive(name, definition) where definition is an object with lifecycle hooks.",
+    "industryContext": "These skills are valuable in professional development environments.",
+    "tags": [
+      "Directives",
+      "beginner",
+      "vue"
+    ],
+    "questionType": "multiple-choice",
+    "estimatedTime": 90,
+    "correctAnswer": 0,
+    "type": "multiple-choice",
+    "sources": []
+  },
+  {
+    "id": 16,
+    "question": "What is the main benefit of using the Composition API over the Options API?",
+    "topic": "Composition API",
+    "difficulty": "Intermediate",
+    "choices": [
+      "Better logic reuse and TypeScript support",
+      "Faster component rendering",
+      "Smaller bundle size",
+      "Better backward compatibility"
+    ],
+    "explanation": "The Composition API provides better logic reuse through composables, improved TypeScript support with better type inference, and allows for more flexible code organization compared to the Options API.",
+    "industryContext": "The Composition API is particularly valuable in large-scale applications where code reuse and maintainability are critical.",
+    "tags": [
+      "Composition API",
+      "Architecture",
+      "TypeScript"
+    ],
+    "questionType": "multiple-choice",
+    "estimatedTime": 90,
+    "correctAnswer": 0,
+    "type": "multiple-choice",
+    "sources": []
+  },
+  {
+    "id": 17,
+    "question": "How do you implement lazy loading for Vue components?",
+    "topic": "Performance",
+    "difficulty": "Intermediate",
+    "choices": [
+      "Using `defineAsyncComponent()` or dynamic imports in router",
+      "Using v-lazy directive",
+      "Using Vue.lazy() method",
+      "Using the async attribute in component tags"
+    ],
+    "explanation": "Lazy loading in Vue can be implemented using `defineAsyncComponent()` for individual components or dynamic imports (() => import('./Component.vue')) in Vue Router for route-level code splitting.",
+    "industryContext": "Lazy loading is essential for improving initial page load times and optimizing the user experience in large applications.",
+    "tags": [
+      "Performance",
+      "Code Splitting",
+      "Optimization"
+    ],
+    "questionType": "multiple-choice",
+    "estimatedTime": 90,
+    "correctAnswer": 0,
+    "type": "multiple-choice",
+    "sources": []
+  },
+  {
+    "id": 18,
+    "question": "What is the purpose of the key attribute in Vue lists and why is it important?",
+    "topic": "Rendering",
+    "difficulty": "Intermediate",
+    "choices": [
+      "It helps Vue track changes and optimize re-rendering",
+      "It's required for `v-for` syntax to work",
+      "It prevents memory leaks",
+      "It enables two-way data binding"
+    ],
+    "explanation": "The key attribute helps Vue's virtual DOM algorithm track individual list items when the list changes, enabling efficient updates and preventing rendering issues. Without proper keys, Vue might reuse elements incorrectly leading to state bugs.",
+    "industryContext": "Proper key usage is crucial for maintaining component state and avoiding subtle bugs in dynamic lists, especially important in data-driven applications.",
+    "tags": [
+      "Rendering",
+      "Virtual DOM",
+      "Performance"
+    ],
+    "questionType": "multiple-choice",
+    "estimatedTime": 90,
+    "correctAnswer": 0,
+    "type": "multiple-choice",
+    "sources": []
+  },
+  {
+    "id": 19,
+    "topic": "Directives",
+    "type": "multiple-choice",
+    "question": "What is the difference between `v-if` and `v-show`?",
+    "choices": [
+      "`v-if` conditionally renders elements, `v-show` toggles CSS display property",
+      "`v-if` is for lists, `v-show` is for single elements",
+      "`v-if` is faster than `v-show`",
+      "There is no difference"
+    ],
+    "correctAnswer": 0,
+    "explanation": "`v-if` conditionally renders elements by actually adding or removing them from the DOM based on the condition. `v-show` simply toggles the CSS display property to show or hide elements. `v-if` has higher toggle costs but `v-show` has higher initial render costs. Use `v-if` for rarely changed conditions and `v-show` for frequently toggled elements.",
+    "difficulty": "Beginner",
+    "questionType": "multiple-choice",
+    "sources": []
   }
-}
+]

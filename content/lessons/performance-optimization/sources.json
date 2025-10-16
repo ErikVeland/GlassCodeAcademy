@@ -1,5 +1,5 @@
 {
-  "module": "performance-optimization",
+  "moduleSlug": "performance-optimization",
   "sources": [
     {
       "title": "Web.dev Performance Documentation",
