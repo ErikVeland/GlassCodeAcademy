@@ -50,13 +50,13 @@ export default function RootLayout({
                   <AdminQueryHandler />
                 </Suspense>
                 {/* Skip to main content link for accessibility */}
-                <a 
-                  href="#main-content" 
+                <a
+                  href="#main-content"
                   className="skip-to-content"
                 >
                   Skip to main content
                 </a>
-                
+
                 {/* Animated Background Component */}
                 <AnimatedBackground />
                 <Suspense fallback={
@@ -74,8 +74,8 @@ export default function RootLayout({
                 </Suspense>
                 {/* Floating dark mode toggle in bottom-right */}
                 <FloatingDarkModeToggle />
-                <main 
-                  id="main-content" 
+                <main
+                  id="main-content"
                   className="flex-grow w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 relative"
                   tabIndex={-1}
                 >
@@ -99,7 +99,7 @@ export default function RootLayout({
                     <div className="flex flex-col sm:flex-row justify-between items-center space-y-4 sm:space-y-0">
                       <div className="flex space-x-6 text-sm">
                         <a href="/stats" className="text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors">
-                          📊 App Stats
+                          📊 GlassStats
                         </a>
                         {EXTERNAL_LINKS.REPO_URL && (
                           <a href={EXTERNAL_LINKS.REPO_URL} target="_blank" rel="noopener noreferrer" className="text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors">

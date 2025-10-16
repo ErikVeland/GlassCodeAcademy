@@ -128,12 +128,43 @@ app.MapGet("/api/health", () => {
     var dataService = backend.Services.DataService.Instance;
     var dataStats = new Dictionary<string, int>
     {
+        // Core lessons and questions
+        { "DotNetLessons", dataService.DotNetLessons.Count() },
+        { "DotNetQuestions", dataService.DotNetInterviewQuestions.Count() },
+        { "GraphQLLessons", dataService.GraphQLLessons.Count() },
+        { "GraphQLQuestions", dataService.GraphQLInterviewQuestions.Count() },
         { "LaravelLessons", dataService.LaravelLessons.Count() },
         { "LaravelQuestions", dataService.LaravelInterviewQuestions.Count() },
         { "ReactLessons", dataService.ReactLessons.Count() },
         { "ReactQuestions", dataService.ReactInterviewQuestions.Count() },
         { "NextJsLessons", dataService.NextJsLessons.Count() },
         { "NextJsQuestions", dataService.NextJsInterviewQuestions.Count() },
+        
+        // Frontend technologies
+        { "TailwindLessons", dataService.TailwindLessons.Count() },
+        { "TailwindQuestions", dataService.TailwindInterviewQuestions.Count() },
+        { "SassLessons", dataService.SassLessons.Count() },
+        { "SassQuestions", dataService.SassInterviewQuestions.Count() },
+        { "VueLessons", dataService.VueLessons.Count() },
+        { "VueQuestions", dataService.VueInterviewQuestions.Count() },
+        { "TypeScriptLessons", dataService.TypescriptLessons.Count() },
+        { "TypeScriptQuestions", dataService.TypescriptInterviewQuestions.Count() },
+        
+        // Backend and fundamentals
+        { "NodeLessons", dataService.NodeLessons.Count() },
+        { "NodeQuestions", dataService.NodeInterviewQuestions.Count() },
+        { "DatabaseLessons", dataService.DatabaseLessons.Count() },
+        { "DatabaseQuestions", dataService.DatabaseInterviewQuestions.Count() },
+        { "TestingLessons", dataService.TestingLessons.Count() },
+        { "TestingQuestions", dataService.TestingInterviewQuestions.Count() },
+        { "ProgrammingLessons", dataService.ProgrammingLessons.Count() },
+        { "ProgrammingQuestions", dataService.ProgrammingInterviewQuestions.Count() },
+        { "WebLessons", dataService.WebLessons.Count() },
+        { "WebQuestions", dataService.WebInterviewQuestions.Count() },
+        { "VersionLessons", dataService.VersionLessons.Count() },
+        { "VersionQuestions", dataService.VersionInterviewQuestions.Count() },
+        
+        // Performance and security
         { "PerformanceLessons", dataService.PerformanceLessons.Count() },
         { "PerformanceQuestions", dataService.PerformanceInterviewQuestions.Count() },
         { "SecurityLessons", dataService.SecurityLessons.Count() },

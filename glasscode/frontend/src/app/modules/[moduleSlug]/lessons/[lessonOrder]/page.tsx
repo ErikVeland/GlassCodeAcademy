@@ -28,17 +28,21 @@ export async function generateStaticParams() {
     const modules = await contentRegistry.getModules();
     const params: Array<{ moduleSlug: string; lessonOrder: string }> = [];
     
+    // Only pre-generate the first 3 lessons of each module to reduce build time
+    // Other lessons will be generated on-demand using ISR
     for (const mod of modules) {
       if (mod.status === 'active') {
         try {
           const lessons = await contentRegistry.getModuleLessons(mod.slug);
           if (lessons) {
-            lessons.forEach((_, index) => {
+            // Only generate first 3 lessons statically
+            const lessonsToGenerate = Math.min(3, lessons.length);
+            for (let i = 0; i < lessonsToGenerate; i++) {
               params.push({
                 moduleSlug: mod.slug,
-                lessonOrder: (index + 1).toString(),
+                lessonOrder: (i + 1).toString(),
               });
-            });
+            }
           }
         } catch (lessonError) {
           console.warn(`Failed to load lessons for module ${mod.slug}:`, lessonError);
@@ -46,6 +50,7 @@ export async function generateStaticParams() {
       }
     }
     
+    console.log(`Generating ${params.length} lesson pages statically`);
     return params;
   } catch (error) {
     console.warn('Failed to load modules for lesson static generation:', error);
@@ -73,6 +78,10 @@ export async function generateMetadata({ params }: LessonPageProps): Promise<Met
     keywords: lesson.tags?.join(', ') || currentModule.technologies.join(', '),
   };
 }
+
+// Enable ISR for on-demand generation of lesson pages
+export const revalidate = 3600; // Revalidate every hour
+export const dynamicParams = true; // Allow dynamic params not in generateStaticParams
 
 export default async function LessonPage({ params }: LessonPageProps) {
   const { moduleSlug, lessonOrder } = await params;

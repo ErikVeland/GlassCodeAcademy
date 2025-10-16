@@ -4,9 +4,9 @@ import { useAppStats } from '@/hooks/useAppStats';
 import StatCard from '@/components/stats/StatCard';
 import PieChart from '@/components/stats/PieChart';
 import Link from 'next/link';
-import { 
-  BookOpenIcon, 
-  QuestionMarkCircleIcon, 
+import {
+  BookOpenIcon,
+  QuestionMarkCircleIcon,
   AcademicCapIcon,
   ClockIcon,
   ChartBarIcon,
@@ -31,7 +31,7 @@ function capitalizeModuleName(name: string): string {
   };
 
   const lowerName = name.toLowerCase();
-  
+
   // Check for special cases first
   for (const [key, value] of Object.entries(specialCases)) {
     if (lowerName.includes(key)) {
@@ -72,10 +72,10 @@ export default function StatsPage() {
         {/* Header */}
         <div className="text-center mb-12">
           <h1 className="text-4xl md:text-5xl font-bold text-white dark:text-gray-100 mb-4">
-            📊 APP STATS
+            📊 GlassStats
           </h1>
           <p className="text-xl text-gray-300 dark:text-gray-400 max-w-2xl mx-auto">
-            Your personal progress dashboard - track what you&apos;ve learned, see your growth, and discover what&apos;s next
+            There is so much to learn. So much to discover.
           </p>
         </div>
         {/* Main Stats Grid */}
@@ -188,16 +188,16 @@ export default function StatsPage() {
                     href={`/modules/${moduleSlug}`}
                     className="absolute top-2 right-2 p-1.5 rounded-lg bg-white/10 hover:bg-white/20 border border-white/20 hover:border-white/40 transition-all duration-200 group/btn"
                   >
-                    <svg 
-                      className="w-4 h-4 text-white/70 group-hover/btn:text-white transition-colors" 
-                      fill="none" 
-                      stroke="currentColor" 
+                    <svg
+                      className="w-4 h-4 text-white/70 group-hover/btn:text-white transition-colors"
+                      fill="none"
+                      stroke="currentColor"
                       viewBox="0 0 24 24"
                     >
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
                     </svg>
                   </Link>
-                  
+
                   <h4 className="font-bold text-white mb-2 group-hover:text-indigo-300 transition-colors pr-8">{capitalizeModuleName(module.name)}</h4>
                   <div className="space-y-1">
                     <div className="flex justify-between text-sm">
@@ -222,7 +222,7 @@ export default function StatsPage() {
         {/* Fun Facts */}
         <div className="glass-card bg-gradient-to-r from-indigo-500/20 via-purple-500/20 to-pink-500/20 border-gradient">
           <h3 className="text-2xl font-bold mb-6 flex items-center text-white">
-            <FireIcon className="h-6 w-6 mr-2" />
+            <FireIcon className="h-6 w-6 mr-2 text-orange-400" />
             Fun Facts & Insights
           </h3>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
