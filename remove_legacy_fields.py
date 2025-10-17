@@ -48,7 +48,8 @@ def remove_legacy_fields(file_path):
 
 def main():
     # Quiz files
-    quiz_dir = "/Users/veland/GlassCodeAcademy/content/quizzes"
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    quiz_dir = os.path.join(script_dir, "content", "quizzes")
     # Process all quiz files in the directory
     quiz_files = []
     for file in os.listdir(quiz_dir):
@@ -69,7 +70,7 @@ def main():
     print(f"\nProcessed {success_count}/{total_count} quiz files successfully")
     
     # Check if lessons directory exists and process lesson files
-    lessons_dir = "/Users/veland/GlassCodeAcademy/content/lessons"
+    lessons_dir = os.path.join(script_dir, "content", "lessons")
     if os.path.exists(lessons_dir):
         print(f"\nChecking for lesson files with legacy fields...")
         for root, dirs, files in os.walk(lessons_dir):

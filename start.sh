@@ -16,13 +16,13 @@ trap cleanup SIGINT SIGTERM
 
 # Start the .NET backend
 echo "🔷 Starting .NET backend on port 5023..."
-cd /Users/veland/GlassCodeAcademy/glasscode/backend
+cd "$(dirname "$0")/glasscode/backend"
 dotnet run &
 BACKEND_PID=$!
 
 # Start the Next.js frontend
 echo "🎨 Starting Next.js frontend on port 3000..."
-cd /Users/veland/GlassCodeAcademy/glasscode/frontend
+cd "$(dirname "$0")/glasscode/frontend"
 npm run dev &
 FRONTEND_PID=$!
 

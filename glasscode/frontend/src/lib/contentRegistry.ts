@@ -411,7 +411,9 @@ class ContentRegistryLoader {
           path.join(process.cwd(), 'content', 'lessons', `${moduleSlug}.json`),
           // Legacy paths for compatibility
           path.join(__dirname, '..', '..', '..', '..', 'content', 'lessons', `${moduleSlug}.json`),
-          path.join('/srv/academy', 'content', 'lessons', `${moduleSlug}.json`),
+          // Production path (only if NEXT_PUBLIC_BASE_URL indicates production)
+          ...(process.env.NEXT_PUBLIC_BASE_URL?.includes('glasscode.academy') ? 
+            [path.join('/srv/academy', 'content', 'lessons', `${moduleSlug}.json`)] : []),
         ];
         
         let lessonsPath = '';
@@ -492,7 +494,9 @@ class ContentRegistryLoader {
           path.join(process.cwd(), '..', '..', 'content', 'quizzes', `${moduleSlug}.json`),
           path.join(process.cwd(), 'content', 'quizzes', `${moduleSlug}.json`),
           path.join(__dirname, '..', '..', '..', '..', 'content', 'quizzes', `${moduleSlug}.json`),
-          path.join('/srv/academy', 'content', 'quizzes', `${moduleSlug}.json`),
+          // Production path (only if NEXT_PUBLIC_BASE_URL indicates production)
+          ...(process.env.NEXT_PUBLIC_BASE_URL?.includes('glasscode.academy') ? 
+            [path.join('/srv/academy', 'content', 'quizzes', `${moduleSlug}.json`)] : []),
         ];
         
         let quizPath = '';
@@ -598,7 +602,9 @@ class ContentRegistryLoader {
           path.join(process.cwd(), '..', '..', 'content', 'quizzes', `programming-fundamentals.json`),
           path.join(process.cwd(), 'content', 'quizzes', `programming-fundamentals.json`),
           path.join(__dirname, '..', '..', '..', '..', 'content', 'quizzes', `programming-fundamentals.json`),
-          path.join('/srv/academy', 'content', 'quizzes', `programming-fundamentals.json`),
+          // Production path (only if NEXT_PUBLIC_BASE_URL indicates production)
+          ...(process.env.NEXT_PUBLIC_BASE_URL?.includes('glasscode.academy') ? 
+            [path.join('/srv/academy', 'content', 'quizzes', `programming-fundamentals.json`)] : []),
         ];
         for (const quizPath of possiblePaths) {
           try {

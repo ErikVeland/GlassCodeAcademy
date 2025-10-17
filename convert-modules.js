@@ -26,7 +26,7 @@ const modules = [
   { dir: 'version', slug: 'version-control' }
 ];
 
-const appDir = '/Users/veland/GlassCodeAcademy/glasscode/frontend/src/app';
+const appDir = path.join(__dirname, 'glasscode', 'frontend', 'src', 'app');
 
 // Template for main page
 function createMainPageContent(moduleDir, moduleSlug) {

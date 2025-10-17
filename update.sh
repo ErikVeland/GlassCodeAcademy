@@ -66,9 +66,17 @@ wait_for_service() {
     local max_attempts=60  # Increased attempts but shorter intervals
     local attempt=1
     local sleep_time=2     # Reduced from 5 to 2 seconds for faster detection
+    local service_failed=false
     
     log "⏳ Waiting for $service_name to start..."
     while [ $attempt -le $max_attempts ]; do
+        # Check if service failed
+        if systemctl is-failed --quiet "$service_name"; then
+            log "❌ $service_name has failed"
+            service_failed=true
+            break
+        fi
+        
         if is_service_running "$service_name"; then
             log "✅ $service_name is running (detected in $((attempt * sleep_time)) seconds)"
             return 0
@@ -80,7 +88,14 @@ wait_for_service() {
         sleep $sleep_time
         attempt=$((attempt + 1))
     done
-    log "❌ ERROR: $service_name failed to start within timeout ($((max_attempts * sleep_time)) seconds)"
+    
+    if [ "$service_failed" = "true" ]; then
+        log "❌ $service_name failed during startup"
+        systemctl status "$service_name" --no-pager || true
+        journalctl -u "$service_name" -n 20 --no-pager || true
+    else
+        log "❌ ERROR: $service_name failed to start within timeout ($((max_attempts * sleep_time)) seconds)"
+    fi
     return 1
 }
 
@@ -309,20 +324,34 @@ log "⏳ Verifying backend health before frontend build..."
 MAX_ATTEMPTS=30
 ATTEMPT=1
 SLEEP_INTERVAL=3
+BACKEND_HEALTHY=false
+
 while [[ $ATTEMPT -le $MAX_ATTEMPTS ]]; do
-    if curl -s -f http://localhost:8080/api/health >/dev/null 2>&1; then
-        HEALTH_RESPONSE=$(curl -s http://localhost:8080/api/health)
-        BACKEND_STATUS=$(echo "$HEALTH_RESPONSE" | grep -o '"status":"[^"]*"' | cut -d'"' -f4)
+    # Check if service is still running first
+    if ! systemctl is-active --quiet "${APP_NAME}-dotnet"; then
+        log "❌ Backend service stopped unexpectedly during health check"
+        break
+    fi
+    
+    # Try health check with timeout
+    if timeout 10 curl -s -f http://localhost:8080/api/health >/dev/null 2>&1; then
+        HEALTH_RESPONSE=$(timeout 10 curl -s http://localhost:8080/api/health 2>/dev/null || echo '{"status":"unknown"}')
+        BACKEND_STATUS=$(echo "$HEALTH_RESPONSE" | grep -o '"status":"[^"]*"' | cut -d'"' -f4 || echo "unknown")
         if [[ "$BACKEND_STATUS" == "healthy" ]]; then
             draw_progress "$ATTEMPT" "$MAX_ATTEMPTS" "  "
             printf "\n"
             log "✅ Backend healthy. Proceeding to build frontend."
+            BACKEND_HEALTHY=true
             break
         else
             draw_progress "$ATTEMPT" "$MAX_ATTEMPTS" "  "
             printf "\n"
             log "⚠️  Backend responding but status is $BACKEND_STATUS"
-            break
+            # Continue trying for a few more attempts in case it's still starting up
+            if [[ $ATTEMPT -gt 20 ]]; then
+                log "⚠️  Backend status not healthy after extended wait, proceeding anyway"
+                break
+            fi
         fi
     fi
     draw_progress "$ATTEMPT" "$MAX_ATTEMPTS" "  ⏳ Backend health: "
@@ -331,7 +360,7 @@ while [[ $ATTEMPT -le $MAX_ATTEMPTS ]]; do
 done
 printf "\n" 2>/dev/null || true
 
-if [[ $ATTEMPT -gt $MAX_ATTEMPTS ]]; then
+if [[ "$BACKEND_HEALTHY" != "true" && $ATTEMPT -gt $MAX_ATTEMPTS ]]; then
     log "❌ Backend failed to become healthy before frontend build."
     log "🧪 Diagnostic: systemd status"
     systemctl status ${APP_NAME}-dotnet --no-pager || true
@@ -340,7 +369,7 @@ if [[ $ATTEMPT -gt $MAX_ATTEMPTS ]]; then
     log "🧪 Diagnostic: port check"
     ss -tulpn | grep :8080 || true
     log "🧪 Diagnostic: health curl"
-    curl -v http://localhost:8080/api/health || true
+    timeout 15 curl -v http://localhost:8080/api/health || true
     rollback
 fi
 
@@ -413,14 +442,27 @@ EOF
 
     # Build frontend with timeout and retry mechanism
     log "🔨 Starting frontend build with timeout protection..."
-    if ! timeout 600 sudo -u "$DEPLOY_USER" npm run build; then
+    if ! timeout 900 sudo -u "$DEPLOY_USER" npm run build; then
         log "⚠️  Frontend build timed out or failed, attempting recovery..."
-        # Clear node_modules and try again
-        sudo -u "$DEPLOY_USER" rm -rf node_modules
+        # Check if it was a timeout or actual failure
+        BUILD_EXIT_CODE=$?
+        if [ $BUILD_EXIT_CODE -eq 124 ]; then
+            log "⚠️  Build timed out after 900 seconds"
+        else
+            log "⚠️  Build failed with exit code $BUILD_EXIT_CODE"
+        fi
+        
+        # Clear caches and try again with extended timeout
+        log "🧹 Clearing all caches for recovery build..."
+        sudo -u "$DEPLOY_USER" rm -rf node_modules .next
+        sudo -u "$DEPLOY_USER" npm cache clean --force
         sudo -u "$DEPLOY_USER" npm install
-        if ! timeout 600 sudo -u "$DEPLOY_USER" npm run build; then
-            log "❌ Frontend build failed after retry"
+        
+        log "🔨 Retry build with extended timeout (1200s)..."
+        if ! timeout 1200 sudo -u "$DEPLOY_USER" npm run build; then
+            log "❌ Frontend build failed after retry with extended timeout"
             rollback
+            exit 1
         fi
     fi
     log "✅ Frontend built"
@@ -456,8 +498,8 @@ MAX_ATTEMPTS=30
 ATTEMPT=1
 SLEEP_INTERVAL=3
 while [[ $ATTEMPT -le $MAX_ATTEMPTS ]]; do
-    if curl -s -f http://localhost:8080/api/health >/dev/null 2>&1; then
-        HEALTH_RESPONSE=$(curl -s http://localhost:8080/api/health)
+    if timeout 10 curl -s -f http://localhost:8080/api/health >/dev/null 2>&1; then
+    HEALTH_RESPONSE=$(timeout 10 curl -s http://localhost:8080/api/health)
         BACKEND_STATUS=$(echo "$HEALTH_RESPONSE" | grep -o '"status":"[^"]*"' | cut -d'"' -f4)
         if [[ "$BACKEND_STATUS" == "healthy" ]]; then
             # Finish progress bar line
@@ -494,7 +536,7 @@ if [[ $ATTEMPT -gt $MAX_ATTEMPTS ]]; then
     ss -tulpn | grep :8080 || true
 
     log "🧪 Diagnostic: Health endpoint verbose curl"
-    curl -v http://localhost:8080/api/health || true
+    timeout 15 curl -v http://localhost:8080/api/health || true
 
     log "❌ Rolling back due to backend health check failure..."
     rollback
@@ -522,8 +564,8 @@ cat >"$APP_DIR/glasscode/frontend/check_backend_health.sh" <<'EOS'
 MAX=30
 COUNT=1
 while [ $COUNT -le $MAX ]; do
-  HTTP=$(curl -s -o /dev/null -w "%{http_code}" http://127.0.0.1:8080/api/health || true)
-  RESP=$(curl -s http://127.0.0.1:8080/api/health || true)
+  HTTP=$(timeout 10 curl -s -o /dev/null -w "%{http_code}" http://127.0.0.1:8080/api/health || true)
+  RESP=$(timeout 10 curl -s http://127.0.0.1:8080/api/health || true)
   STATUS=$(echo "$RESP" | jq -r .status 2>/dev/null || echo "$RESP" | grep -o '"status":"[^"]*"' | cut -d '"' -f4)
   if [ "$HTTP" = "200" ] && [ "$STATUS" = "healthy" ]; then
     exit 0
@@ -634,7 +676,7 @@ log "🩺 Performing comprehensive health checks..."
 
 # Check backend GraphQL endpoint
 log "🔍 Checking backend GraphQL endpoint..."
-if curl -s -X POST http://localhost:8080/graphql \
+if timeout 15 curl -s -X POST http://localhost:8080/graphql \
   -H "Content-Type: application/json" \
   -d '{"query":"{ __typename }"}' | grep -q '__typename'; then
     log "✅ Backend GraphQL endpoint: PASSED"
@@ -645,10 +687,19 @@ fi
 
 # Check backend health endpoint details
 log "🔍 Checking backend health details..."
-BACKEND_HEALTH_CHECK=$(curl -s http://localhost:8080/api/health)
-BACKEND_STATUS=$(echo "$BACKEND_HEALTH_CHECK" | grep -o '"status":"[^"]*"' | cut -d'"' -f4)
+BACKEND_HEALTH_CHECK=$(timeout 15 curl -s http://localhost:8080/api/health 2>/dev/null || echo '{"status":"timeout"}')
+BACKEND_STATUS=$(echo "$BACKEND_HEALTH_CHECK" | grep -o '"status":"[^"]*"' | cut -d'"' -f4 || echo "unknown")
 if [[ "$BACKEND_STATUS" == "healthy" ]]; then
     log "✅ Backend health status: HEALTHY"
+elif [[ "$BACKEND_STATUS" == "timeout" ]]; then
+    log "⚠️  Backend health check timed out, but service appears to be running"
+    # Don't rollback for timeout if service is active
+    if systemctl is-active --quiet "${APP_NAME}-dotnet"; then
+        log "✅ Backend service is active, continuing despite health check timeout"
+    else
+        log "❌ Backend service is not active, rolling back..."
+        rollback
+    fi
 else
     log "⚠️  Backend health status: $BACKEND_STATUS"
     # Only rollback if status is not healthy
@@ -665,7 +716,7 @@ ATTEMPT=1
 SLEEP_INTERVAL=3
 FRONTEND_OK=false
 while [[ $ATTEMPT -le $MAX_ATTEMPTS ]]; do
-    if curl -s -f http://localhost:$FRONTEND_PORT >/dev/null 2>&1; then
+    if timeout 10 curl -s -f http://localhost:$FRONTEND_PORT >/dev/null 2>&1; then
         draw_progress "$ATTEMPT" "$MAX_ATTEMPTS" "  "
         printf "\n"
         log "✅ Frontend availability: PASSED"
@@ -694,7 +745,7 @@ ATTEMPT=1
 CONTENT_OK=false
 RESP=""
 while [[ $ATTEMPT -le $MAX_ATTEMPTS ]]; do
-    RESP=$(curl -s http://localhost:$FRONTEND_PORT/api/content/registry || true)
+    RESP=$(timeout 10 curl -s http://localhost:$FRONTEND_PORT/api/content/registry || true)
     if echo "$RESP" | grep -q '"modules"'; then
         draw_progress "$ATTEMPT" "$MAX_ATTEMPTS" "  "
         printf "\n"
@@ -703,7 +754,7 @@ while [[ $ATTEMPT -le $MAX_ATTEMPTS ]]; do
         break
     fi
     # Fallback: try legacy static file if API route not ready
-    STATIC_RESP=$(curl -s http://localhost:$FRONTEND_PORT/registry.json || true)
+    STATIC_RESP=$(timeout 10 curl -s http://localhost:$FRONTEND_PORT/registry.json || true)
     if echo "$STATIC_RESP" | grep -q '"modules"'; then
         draw_progress "$ATTEMPT" "$MAX_ATTEMPTS" "  "
         printf "\n"

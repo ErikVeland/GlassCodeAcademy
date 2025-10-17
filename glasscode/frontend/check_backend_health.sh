@@ -7,10 +7,10 @@ COUNT=1
 
 while [ $COUNT -le $MAX ]; do
   # Check HTTP status code
-  HTTP=$(curl -s -o /dev/null -w "%{http_code}" http://127.0.0.1:8080/api/health || true)
+  HTTP=$(timeout 10 curl -s -o /dev/null -w "%{http_code}" http://127.0.0.1:8080/api/health || true)
   
   # Get full response
-  RESP=$(curl -s http://127.0.0.1:8080/api/health || true)
+  RESP=$(timeout 10 curl -s http://127.0.0.1:8080/api/health || true)
   
   # Extract status from JSON response (try jq first, fallback to grep)
   STATUS=$(echo "$RESP" | jq -r .status 2>/dev/null || echo "$RESP" | grep -o '"status":"[^"]*"' | cut -d '"' -f4)

@@ -34,7 +34,9 @@ function findQuizFile(moduleSlug: string): string | null {
     path.join(process.cwd(), '..', '..', 'content', 'quizzes', `${moduleSlug}.json`),
     path.join(process.cwd(), 'content', 'quizzes', `${moduleSlug}.json`),
     path.join(__dirname, '..', '..', '..', '..', 'content', 'quizzes', `${moduleSlug}.json`),
-    path.join('/srv/academy', 'content', 'quizzes', `${moduleSlug}.json`),
+    // Production path (only if NEXT_PUBLIC_BASE_URL indicates production)
+    ...(process.env.NEXT_PUBLIC_BASE_URL?.includes('glasscode.academy') ? 
+      [path.join('/srv/academy', 'content', 'quizzes', `${moduleSlug}.json`)] : []),
   ];
   
   console.log('Searching for quiz file:', moduleSlug);
