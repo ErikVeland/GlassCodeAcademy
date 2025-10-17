@@ -103,20 +103,31 @@ echo "⏳ Waiting for backend to be fully loaded and healthy..."
 MAX_ATTEMPTS=30
 ATTEMPT=1
 SLEEP_INTERVAL=2
+LAST_STATUS=""
 while [[ $ATTEMPT -le $MAX_ATTEMPTS ]]; do
     if curl -s -f http://localhost:8080/api/health >/dev/null 2>&1; then
         HEALTH_RESPONSE=$(curl -s http://localhost:8080/api/health)
         BACKEND_STATUS=$(echo "$HEALTH_RESPONSE" | grep -o '"status":"[^"]*"' | cut -d'"' -f4)
         if [[ "$BACKEND_STATUS" == "healthy" ]]; then
-            draw_progress "$ATTEMPT" "$MAX_ATTEMPTS" "Backend healthy"; printf "\n"
+            printf "\n"  # Clear progress line
             echo "✅ Backend health check passed: System is healthy"
         else
-            draw_progress "$ATTEMPT" "$MAX_ATTEMPTS" "Backend degraded: $BACKEND_STATUS"; printf "\n"
-            echo "⚠️  Backend responding but status is $BACKEND_STATUS"
+            # Only log status change if it's different from last time
+            if [[ "$BACKEND_STATUS" != "$LAST_STATUS" ]]; then
+                printf "\n"  # Clear progress line
+                # Parse dataStats to show what's missing
+                MISSING_DATA=$(echo "$HEALTH_RESPONSE" | grep -o '"[^"]*":0' | cut -d'"' -f2 | tr '\n' ',' | sed 's/,$//')
+                if [[ -n "$MISSING_DATA" ]]; then
+                    echo "⚠️  Backend responding but status is $BACKEND_STATUS (missing data: $MISSING_DATA)"
+                else
+                    echo "⚠️  Backend responding but status is $BACKEND_STATUS (reason unknown)"
+                fi
+                LAST_STATUS="$BACKEND_STATUS"
+            fi
         fi
         break
     fi
-    draw_progress "$ATTEMPT" "$MAX_ATTEMPTS" "Checking backend health"; printf "\n"
+    draw_progress "$ATTEMPT" "$MAX_ATTEMPTS" "Checking backend health"
     ATTEMPT=$((ATTEMPT + 1))
     sleep $SLEEP_INTERVAL
 done
@@ -150,11 +161,11 @@ MAX_FE_ATTEMPTS=30
 FE_ATTEMPT=1
 while [[ $FE_ATTEMPT -le $MAX_FE_ATTEMPTS ]]; do
     if curl -s -f http://localhost:3000 >/dev/null 2>&1; then
-        draw_progress "$FE_ATTEMPT" "$MAX_FE_ATTEMPTS" "Frontend ready"; printf "\n"
+        printf "\n"  # Clear progress line
         echo "✅ Frontend is fully loaded and ready!"
         break
     fi
-    draw_progress "$FE_ATTEMPT" "$MAX_FE_ATTEMPTS" "Checking frontend"; printf "\n"
+    draw_progress "$FE_ATTEMPT" "$MAX_FE_ATTEMPTS" "Checking frontend"
     FE_ATTEMPT=$((FE_ATTEMPT + 1))
     sleep $SLEEP_INTERVAL
 done

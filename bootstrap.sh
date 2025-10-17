@@ -212,6 +212,48 @@ is_service_running() {
     systemctl is-active --quiet "$1"
 }
 
+# Function to ensure standalone directory exists and build if missing
+ensure_standalone_directory() {
+    local frontend_dir="$1"
+    local deploy_user="$2"
+    
+    log "🔍 Checking for Next.js standalone directory..."
+    
+    if [ ! -d "$frontend_dir/.next/standalone" ] || [ ! -f "$frontend_dir/.next/standalone/server.js" ]; then
+        log "⚠️  Standalone directory missing or incomplete, building frontend..."
+        
+        cd "$frontend_dir"
+        
+        # Clear any existing incomplete build
+        sudo -u "$deploy_user" rm -rf .next || true
+        
+        # Install dependencies if needed
+        if [ ! -d "node_modules" ]; then
+            log "📦 Installing frontend dependencies..."
+            sudo -u "$deploy_user" npm install
+        fi
+        
+        # Build the frontend to generate standalone output
+        log "🔨 Building frontend to generate standalone directory..."
+        if ! sudo -u "$deploy_user" npm run build; then
+            log "❌ ERROR: Failed to build frontend for standalone directory"
+            exit 1
+        fi
+        
+        # Verify standalone directory was created
+        if [ ! -d ".next/standalone" ] || [ ! -f ".next/standalone/server.js" ]; then
+            log "❌ ERROR: Standalone directory still missing after build"
+            log "🧪 Diagnostic: .next directory contents:"
+            ls -la .next/ || true
+            exit 1
+        fi
+        
+        log "✅ Standalone directory created successfully"
+    else
+        log "✅ Standalone directory already exists"
+    fi
+}
+
 wait_for_service() {
     local service_name=$1
     local max_attempts=60  # Increased attempts but shorter intervals
@@ -486,10 +528,12 @@ EOF
     ATTEMPT=1
     SLEEP_INTERVAL=3
     BACKEND_HEALTHY=false
+    LAST_STATUS=""
     
     while [[ $ATTEMPT -le $MAX_ATTEMPTS ]]; do
         # Check if service is still running first
         if ! systemctl is-active --quiet "${APP_NAME}-dotnet"; then
+            printf "\n"  # Clear progress line
             log "❌ Backend service stopped unexpectedly during health check"
             break
         fi
@@ -499,13 +543,26 @@ EOF
             HEALTH_RESPONSE=$(timeout 10 curl -s http://localhost:8080/api/health 2>/dev/null || echo '{"status":"unknown"}')
             BACKEND_STATUS=$(echo "$HEALTH_RESPONSE" | grep -o '"status":"[^"]*"' | cut -d'"' -f4 || echo "unknown")
             if [[ "$BACKEND_STATUS" == "healthy" ]]; then
+                printf "\n"  # Clear progress line
                 log "✅ Real backend healthy. Proceeding to build frontend."
                 BACKEND_HEALTHY=true
                 break
             else
-                log "⚠️  Real backend responding but status is $BACKEND_STATUS"
+                # Only log status change if it's different from last time
+                if [[ "$BACKEND_STATUS" != "$LAST_STATUS" ]]; then
+                    printf "\n"  # Clear progress line
+                    # Parse dataStats to show what's missing
+                    MISSING_DATA=$(echo "$HEALTH_RESPONSE" | grep -o '"[^"]*":0' | cut -d'"' -f2 | tr '\n' ',' | sed 's/,$//')
+                    if [[ -n "$MISSING_DATA" ]]; then
+                        log "⚠️  Real backend responding but status is $BACKEND_STATUS (missing data: $MISSING_DATA)"
+                    else
+                        log "⚠️  Real backend responding but status is $BACKEND_STATUS (reason unknown)"
+                    fi
+                    LAST_STATUS="$BACKEND_STATUS"
+                fi
                 # Continue trying for a few more attempts in case it's still starting up
                 if [[ $ATTEMPT -gt 20 ]]; then
+                    printf "\n"  # Clear progress line
                     log "⚠️  Backend status not healthy after extended wait, proceeding anyway"
                     break
                 fi
@@ -533,6 +590,9 @@ fi
 ### 10. Build Frontend (Next.js)
 log "🎨 Building frontend..."
 cd "$APP_DIR/glasscode/frontend"
+
+# Ensure standalone directory exists
+ensure_standalone_directory "$APP_DIR/glasscode/frontend" "$DEPLOY_USER"
 
 # Smart Frontend Build Validation
 log "🔍 Performing smart frontend validation..."

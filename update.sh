@@ -199,7 +199,49 @@ rollback() {
     else
         log "❌ No valid backup found — rollback not possible!"
     fi
-    exit 1
+    return 1
+}
+
+# Function to ensure standalone directory exists and build if missing
+ensure_standalone_directory() {
+    local frontend_dir="$1"
+    local deploy_user="$2"
+    
+    log "🔍 Checking for Next.js standalone directory..."
+    
+    if [ ! -d "$frontend_dir/.next/standalone" ] || [ ! -f "$frontend_dir/.next/standalone/server.js" ]; then
+        log "⚠️  Standalone directory missing or incomplete, building frontend..."
+        
+        cd "$frontend_dir"
+        
+        # Clear any existing incomplete build
+        sudo -u "$deploy_user" rm -rf .next || true
+        
+        # Install dependencies if needed
+        if [ ! -d "node_modules" ]; then
+            log "📦 Installing frontend dependencies..."
+            sudo -u "$deploy_user" npm install
+        fi
+        
+        # Build the frontend to generate standalone output
+        log "🔨 Building frontend to generate standalone directory..."
+        if ! sudo -u "$deploy_user" npm run build; then
+            log "❌ ERROR: Failed to build frontend for standalone directory"
+            exit 1
+        fi
+        
+        # Verify standalone directory was created
+        if [ ! -d ".next/standalone" ] || [ ! -f ".next/standalone/server.js" ]; then
+            log "❌ ERROR: Standalone directory still missing after build"
+            log "🧪 Diagnostic: .next directory contents:"
+            ls -la .next/ || true
+            exit 1
+        fi
+        
+        log "✅ Standalone directory created successfully"
+    else
+        log "✅ Standalone directory already exists"
+    fi
 }
 
 trap 'rollback' ERR INT TERM
@@ -326,9 +368,11 @@ ATTEMPT=1
 SLEEP_INTERVAL=3
 BACKEND_HEALTHY=false
 
+LAST_STATUS=""
 while [[ $ATTEMPT -le $MAX_ATTEMPTS ]]; do
     # Check if service is still running first
     if ! systemctl is-active --quiet "${APP_NAME}-dotnet"; then
+        printf "\n"  # Clear progress line
         log "❌ Backend service stopped unexpectedly during health check"
         break
     fi
@@ -338,17 +382,20 @@ while [[ $ATTEMPT -le $MAX_ATTEMPTS ]]; do
         HEALTH_RESPONSE=$(timeout 10 curl -s http://localhost:8080/api/health 2>/dev/null || echo '{"status":"unknown"}')
         BACKEND_STATUS=$(echo "$HEALTH_RESPONSE" | grep -o '"status":"[^"]*"' | cut -d'"' -f4 || echo "unknown")
         if [[ "$BACKEND_STATUS" == "healthy" ]]; then
-            draw_progress "$ATTEMPT" "$MAX_ATTEMPTS" "  "
-            printf "\n"
+            printf "\n"  # Clear progress line
             log "✅ Backend healthy. Proceeding to build frontend."
             BACKEND_HEALTHY=true
             break
         else
-            draw_progress "$ATTEMPT" "$MAX_ATTEMPTS" "  "
-            printf "\n"
-            log "⚠️  Backend responding but status is $BACKEND_STATUS"
+            # Only log status change if it's different from last time
+            if [[ "$BACKEND_STATUS" != "$LAST_STATUS" ]]; then
+                printf "\n"  # Clear progress line
+                log "⚠️  Backend responding but status is $BACKEND_STATUS"
+                LAST_STATUS="$BACKEND_STATUS"
+            fi
             # Continue trying for a few more attempts in case it's still starting up
             if [[ $ATTEMPT -gt 20 ]]; then
+                printf "\n"  # Clear progress line
                 log "⚠️  Backend status not healthy after extended wait, proceeding anyway"
                 break
             fi
@@ -376,6 +423,9 @@ fi
 ### 9. Smart Frontend Build
 log "🎨 Smart frontend build validation..."
 cd "$APP_DIR/glasscode/frontend"
+
+# Ensure standalone directory exists
+ensure_standalone_directory "$APP_DIR/glasscode/frontend" "$DEPLOY_USER"
 
 # Quick validation: check if existing build is valid
 FRONTEND_BUILD_REQUIRED=false
@@ -497,20 +547,22 @@ log "⏳ Waiting for backend to be fully loaded and healthy..."
 MAX_ATTEMPTS=30
 ATTEMPT=1
 SLEEP_INTERVAL=3
+LAST_STATUS=""
 while [[ $ATTEMPT -le $MAX_ATTEMPTS ]]; do
     if timeout 10 curl -s -f http://localhost:8080/api/health >/dev/null 2>&1; then
     HEALTH_RESPONSE=$(timeout 10 curl -s http://localhost:8080/api/health)
         BACKEND_STATUS=$(echo "$HEALTH_RESPONSE" | grep -o '"status":"[^"]*"' | cut -d'"' -f4)
         if [[ "$BACKEND_STATUS" == "healthy" ]]; then
-            # Finish progress bar line
-            draw_progress "$ATTEMPT" "$MAX_ATTEMPTS" "  "
-            printf "\n"
+            printf "\n"  # Clear progress line
             log "✅ Backend is fully loaded and healthy!"
             break
         else
-            draw_progress "$ATTEMPT" "$MAX_ATTEMPTS" "  "
-            printf "\n"
-            log "⚠️  Backend is responding but status is $BACKEND_STATUS"
+            # Only log status change if it's different from last time
+            if [[ "$BACKEND_STATUS" != "$LAST_STATUS" ]]; then
+                printf "\n"  # Clear progress line
+                log "⚠️  Backend is responding but status is $BACKEND_STATUS"
+                LAST_STATUS="$BACKEND_STATUS"
+            fi
             break
         fi
     fi
@@ -717,8 +769,7 @@ SLEEP_INTERVAL=3
 FRONTEND_OK=false
 while [[ $ATTEMPT -le $MAX_ATTEMPTS ]]; do
     if timeout 10 curl -s -f http://localhost:$FRONTEND_PORT >/dev/null 2>&1; then
-        draw_progress "$ATTEMPT" "$MAX_ATTEMPTS" "  "
-        printf "\n"
+        printf "\n"  # Clear progress line
         log "✅ Frontend availability: PASSED"
         FRONTEND_OK=true
         break
@@ -747,8 +798,7 @@ RESP=""
 while [[ $ATTEMPT -le $MAX_ATTEMPTS ]]; do
     RESP=$(timeout 10 curl -s http://localhost:$FRONTEND_PORT/api/content/registry || true)
     if echo "$RESP" | grep -q '"modules"'; then
-        draw_progress "$ATTEMPT" "$MAX_ATTEMPTS" "  "
-        printf "\n"
+        printf "\n"  # Clear progress line
         log "✅ Frontend content availability: PASSED (api/content/registry)"
         CONTENT_OK=true
         break
@@ -756,8 +806,7 @@ while [[ $ATTEMPT -le $MAX_ATTEMPTS ]]; do
     # Fallback: try legacy static file if API route not ready
     STATIC_RESP=$(timeout 10 curl -s http://localhost:$FRONTEND_PORT/registry.json || true)
     if echo "$STATIC_RESP" | grep -q '"modules"'; then
-        draw_progress "$ATTEMPT" "$MAX_ATTEMPTS" "  "
-        printf "\n"
+        printf "\n"  # Clear progress line
         log "✅ Frontend content availability: PASSED (registry.json)"
         CONTENT_OK=true
         RESP="$STATIC_RESP"
