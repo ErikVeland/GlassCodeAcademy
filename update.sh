@@ -63,7 +63,7 @@ is_service_running() {
 
 wait_for_service() {
     local service_name=$1
-    local max_attempts=60  # Increased attempts but shorter intervals
+    local max_attempts=120  # Increased from 60 to 120 (4 minutes total)
     local attempt=1
     local sleep_time=2     # Reduced from 5 to 2 seconds for faster detection
     local service_failed=false
@@ -79,10 +79,22 @@ wait_for_service() {
         
         if is_service_running "$service_name"; then
             log "✅ $service_name is running (detected in $((attempt * sleep_time)) seconds)"
-            return 0
+            # Additional health check for frontend service
+            if [ "$service_name" = "${APP_NAME}-frontend" ]; then
+                log "🔍 Performing frontend health check..."
+                sleep 5  # Give it a moment to fully initialize
+                if timeout 10 curl -s http://localhost:$FRONTEND_PORT >/dev/null 2>&1; then
+                    log "✅ Frontend health check passed"
+                    return 0
+                else
+                    log "⚠️  Frontend service running but not responding on port $FRONTEND_PORT, continuing to wait..."
+                fi
+            else
+                return 0
+            fi
         fi
-        # Only log every 5th attempt to reduce noise
-        if [ $((attempt % 5)) -eq 0 ] || [ $attempt -eq 1 ]; then
+        # Only log every 10th attempt to reduce noise
+        if [ $((attempt % 10)) -eq 0 ] || [ $attempt -eq 1 ]; then
             log "⏰ Attempt $attempt/$max_attempts: $service_name not ready yet, waiting ${sleep_time}s..."
         fi
         sleep $sleep_time
@@ -490,11 +502,30 @@ EOF
     log "🔎 Running TypeScript typecheck (frontend)"
     sudo -u "$DEPLOY_USER" npm run typecheck
 
-    # Build frontend with timeout and retry mechanism
-    log "🔨 Starting frontend build with timeout protection..."
+    # Build frontend with robust error handling and cleanup
+    log "🔨 Starting frontend build with enhanced stability..."
+    
+    # Pre-build cleanup and verification
+    log "🧹 Pre-build cleanup and verification..."
+    sudo -u "$DEPLOY_USER" rm -rf .next/cache
+    
+    # Verify package.json and dependencies
+    if [ ! -f "package.json" ]; then
+        log "❌ package.json not found in frontend directory"
+        rollback
+        exit 1
+    fi
+    
+    # Check if node_modules exists and is valid
+    if [ ! -d "node_modules" ] || [ ! -f "node_modules/.package-lock.json" ]; then
+        log "⚠️  node_modules missing or invalid, reinstalling dependencies..."
+        sudo -u "$DEPLOY_USER" rm -rf node_modules package-lock.json
+        sudo -u "$DEPLOY_USER" npm install
+    fi
+    
+    # First build attempt with standard timeout
     if ! timeout 900 sudo -u "$DEPLOY_USER" npm run build; then
         log "⚠️  Frontend build timed out or failed, attempting recovery..."
-        # Check if it was a timeout or actual failure
         BUILD_EXIT_CODE=$?
         if [ $BUILD_EXIT_CODE -eq 124 ]; then
             log "⚠️  Build timed out after 900 seconds"
@@ -502,20 +533,41 @@ EOF
             log "⚠️  Build failed with exit code $BUILD_EXIT_CODE"
         fi
         
-        # Clear caches and try again with extended timeout
-        log "🧹 Clearing all caches for recovery build..."
-        sudo -u "$DEPLOY_USER" rm -rf node_modules .next
-        sudo -u "$DEPLOY_USER" npm cache clean --force
-        sudo -u "$DEPLOY_USER" npm install
+        # Kill any existing Next.js processes that might interfere
+        log "🔄 Killing any existing Next.js processes..."
+        pkill -f "next-server\|next dev" || true
+        sleep 2
         
+        # Comprehensive cleanup for recovery build
+        log "🧹 Comprehensive cleanup for recovery build..."
+        sudo -u "$DEPLOY_USER" rm -rf node_modules .next package-lock.json
+        sudo -u "$DEPLOY_USER" npm cache clean --force
+        
+        # Fresh dependency installation
+        log "📦 Fresh dependency installation..."
+        if ! sudo -u "$DEPLOY_USER" npm install; then
+            log "❌ Failed to install dependencies during recovery"
+            rollback
+            exit 1
+        fi
+        
+        # Retry build with extended timeout
         log "🔨 Retry build with extended timeout (1200s)..."
         if ! timeout 1200 sudo -u "$DEPLOY_USER" npm run build; then
-            log "❌ Frontend build failed after retry with extended timeout"
+            log "❌ Frontend build failed after recovery attempt"
             rollback
             exit 1
         fi
     fi
-    log "✅ Frontend built"
+    
+    # Verify build artifacts
+    if [ ! -f ".next/BUILD_ID" ]; then
+        log "❌ Missing .next/BUILD_ID - build may have failed"
+        rollback
+        exit 1
+    fi
+    
+    log "✅ Frontend built successfully"
 fi
 
 # Stage Next.js standalone assets for reliable serving (always needed)
@@ -714,21 +766,56 @@ EOF
     fi
 fi
 
-systemctl restart ${APP_NAME}-frontend
+# Restart frontend service with graceful handling
+log "🔄 Restarting frontend service..."
+
+# Check if service is running and stop gracefully if needed
+if systemctl is-active --quiet ${APP_NAME}-frontend; then
+    log "⏹️  Stopping existing frontend service gracefully..."
+    systemctl stop ${APP_NAME}-frontend
+    sleep 3
+    
+    # Force kill if still running
+    if systemctl is-active --quiet ${APP_NAME}-frontend; then
+        log "⚠️  Service still running, force stopping..."
+        systemctl kill ${APP_NAME}-frontend
+        sleep 2
+    fi
+fi
+
+# Kill any orphaned Next.js processes
+log "🧹 Cleaning up any orphaned Next.js processes..."
+pkill -f "next-server\|node.*3000" || true
+sleep 2
+
+# Start the service
+log "▶️  Starting frontend service..."
+systemctl start ${APP_NAME}-frontend
+
 if ! wait_for_service "${APP_NAME}-frontend"; then
-    log "❌ Frontend failed to start, rolling back..."
+    log "❌ Frontend failed to start, collecting diagnostics..."
+    
     log "🧪 Diagnostic: systemd status for frontend"
     systemctl status ${APP_NAME}-frontend --no-pager || true
-    log "🧪 Diagnostic: recent frontend logs"
-    journalctl -u ${APP_NAME}-frontend -n 100 --no-pager || true
-    log "🧪 Diagnostic: unit file permissions"
-    # UNIT_FILE_PATH already defined at top for consistency
+    
+    log "🧪 Diagnostic: recent frontend logs (last 50 lines)"
+    journalctl -u ${APP_NAME}-frontend -n 50 --no-pager || true
+    
+    log "🧪 Diagnostic: unit file permissions and content"
     if [ -f "$UNIT_FILE_PATH" ]; then
         ls -l "$UNIT_FILE_PATH" || true
-        sed -n '1,120p' "$UNIT_FILE_PATH" || true
+        echo "--- Unit file content (first 20 lines) ---"
+        head -20 "$UNIT_FILE_PATH" || true
     else
         log "❌ Unit file missing at $UNIT_FILE_PATH"
     fi
+    
+    log "🧪 Diagnostic: port 3000 usage"
+    lsof -i :3000 || true
+    
+    log "🧪 Diagnostic: frontend directory permissions"
+    ls -la "$APP_DIR/glasscode/frontend/.next/standalone/" || true
+    
     rollback
 fi
 
