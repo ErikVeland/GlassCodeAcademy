@@ -13,7 +13,14 @@ import {
   ChartBarIcon,
   SparklesIcon,
   TrophyIcon,
-  FireIcon
+  FireIcon,
+  CogIcon,
+  UsersIcon,
+  PuzzlePieceIcon,
+  ShieldCheckIcon,
+  CurrencyDollarIcon,
+  DocumentCheckIcon,
+  ChatBubbleLeftRightIcon
 } from '@heroicons/react/24/outline';
 import '@/styles/liquid-glass.scss';
 
@@ -222,13 +229,126 @@ export default function StatsPage() {
           </div>
         </div>
 
+        {/* LMS Features Overview */}
+        <div className="glass-card mb-12">
+          <h3 className="text-2xl font-bold text-white dark:text-gray-100 mb-6 flex items-center">
+            <AcademicCapIcon className="h-6 w-6 mr-2 text-indigo-400" />
+            LMS Features & Capabilities
+          </h3>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 mb-6">
+             <StatCard
+               title="Course Management"
+               value={8}
+               icon={<CogIcon className="h-8 w-8" />}
+               color="blue"
+               description="Features"
+             />
+             <StatCard
+               title="User Engagement"
+               value={6}
+               icon={<UsersIcon className="h-8 w-8" />}
+               color="green"
+               description="Features"
+             />
+             <StatCard
+               title="Integrations"
+               value={7}
+               icon={<PuzzlePieceIcon className="h-8 w-8" />}
+               color="purple"
+               description="Features"
+             />
+             <StatCard
+               title="Admin & Support"
+               value={5}
+               icon={<ShieldCheckIcon className="h-8 w-8" />}
+               color="orange"
+               description="Features"
+             />
+             <StatCard
+               title="Marketing & Sales"
+               value={4}
+               icon={<CurrencyDollarIcon className="h-8 w-8" />}
+               color="pink"
+               description="Features"
+             />
+             <StatCard
+               title="Certification"
+               value={3}
+               icon={<DocumentCheckIcon className="h-8 w-8" />}
+               color="indigo"
+               description="Features"
+             />
+             <StatCard
+               title="Additional Tools"
+               value={3}
+               icon={<ChatBubbleLeftRightIcon className="h-8 w-8" />}
+               color="purple"
+               description="Features"
+             />
+             <StatCard
+               title="Total LMS Features"
+               value={36}
+               icon={<SparklesIcon className="h-8 w-8" />}
+               color="indigo"
+               description="Planned"
+             />
+           </div>
+          
+          {/* Feature Categories Detail */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <div className="space-y-4">
+              <h4 className="text-lg font-semibold text-white mb-3">Core LMS Features</h4>
+              <div className="space-y-3">
+                <div className="flex items-center justify-between p-3 bg-blue-500/10 rounded-lg border border-blue-400/20">
+                  <span className="text-blue-300">Advanced Course Creation</span>
+                  <span className="text-xs bg-blue-500/20 text-blue-300 px-2 py-1 rounded">Planned</span>
+                </div>
+                <div className="flex items-center justify-between p-3 bg-green-500/10 rounded-lg border border-green-400/20">
+                  <span className="text-green-300">Advanced Quiz System</span>
+                  <span className="text-xs bg-green-500/20 text-green-300 px-2 py-1 rounded">Planned</span>
+                </div>
+                <div className="flex items-center justify-between p-3 bg-purple-500/10 rounded-lg border border-purple-400/20">
+                  <span className="text-purple-300">Assignment Management</span>
+                  <span className="text-xs bg-purple-500/20 text-purple-300 px-2 py-1 rounded">Planned</span>
+                </div>
+                <div className="flex items-center justify-between p-3 bg-orange-500/10 rounded-lg border border-orange-400/20">
+                  <span className="text-orange-300">Gradebook & Analytics</span>
+                  <span className="text-xs bg-orange-500/20 text-orange-300 px-2 py-1 rounded">Planned</span>
+                </div>
+              </div>
+            </div>
+            
+            <div className="space-y-4">
+              <h4 className="text-lg font-semibold text-white mb-3">Enterprise Features</h4>
+              <div className="space-y-3">
+                <div className="flex items-center justify-between p-3 bg-indigo-500/10 rounded-lg border border-indigo-400/20">
+                  <span className="text-indigo-300">Zoom & Google Meet Integration</span>
+                  <span className="text-xs bg-indigo-500/20 text-indigo-300 px-2 py-1 rounded">Planned</span>
+                </div>
+                <div className="flex items-center justify-between p-3 bg-pink-500/10 rounded-lg border border-pink-400/20">
+                  <span className="text-pink-300">White Labeling & Branding</span>
+                  <span className="text-xs bg-pink-500/20 text-pink-300 px-2 py-1 rounded">Planned</span>
+                </div>
+                <div className="flex items-center justify-between p-3 bg-cyan-500/10 rounded-lg border border-cyan-400/20">
+                  <span className="text-cyan-300">SCORM Compliance</span>
+                  <span className="text-xs bg-cyan-500/20 text-cyan-300 px-2 py-1 rounded">Planned</span>
+                </div>
+                <div className="flex items-center justify-between p-3 bg-yellow-500/10 rounded-lg border border-yellow-400/20">
+                  <span className="text-yellow-300">Certificate Builder with QR</span>
+                  <span className="text-xs bg-yellow-500/20 text-yellow-300 px-2 py-1 rounded">Planned</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
         {/* Fun Facts */}
         <div className="glass-card bg-gradient-to-r from-indigo-500/20 via-purple-500/20 to-pink-500/20 border-gradient">
           <h3 className="text-2xl font-bold mb-6 flex items-center text-white">
             <FireIcon className="h-6 w-6 mr-2 text-orange-400" />
             Fun Facts & Insights
           </h3>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
             <div className="text-center">
               <div className="text-3xl font-bold text-white">{totalContent.toLocaleString()}</div>
               <div className="text-gray-300">Total Learning Items</div>
@@ -244,6 +364,10 @@ export default function StatsPage() {
                 {Math.round(stats.averageCompletionTime * stats.totalLessons / 60)}h
               </div>
               <div className="text-gray-300">Total Learning Time</div>
+            </div>
+            <div className="text-center">
+              <div className="text-3xl font-bold text-white">36+</div>
+              <div className="text-gray-300">LMS Features Planned</div>
             </div>
           </div>
         </div>

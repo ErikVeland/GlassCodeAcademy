@@ -598,6 +598,504 @@ CREATE TABLE quiz_attempts (
   lesson_id uuid REFERENCES lessons(id),
   score numeric(5,2) NOT NULL,
   started_at timestamptz NOT NULL,
+```
+
+#### 4.4 Advanced LMS Features Implementation
+
+##### 4.4.1 Course Management
+**Objective**: Comprehensive course creation and management system
+**Priority**: High
+
+**Advanced Course Creation**
+- Multi-media course builder supporting video, audio, text, and interactive quizzes
+- Rich content editor with drag-and-drop functionality
+- Course versioning and revision history
+- Bloom's taxonomy integration for curriculum structuring
+
+**Course Attachments & Resources**
+- File upload system for PDFs, spreadsheets, and downloadable resources
+- Version control for attachments
+- Access control and download tracking
+
+**Course Announcements**
+- Instructor announcement system with rich text formatting
+- Email notifications and in-app alerts
+- Scheduled announcements and auto-publishing
+
+**Assignment Management**
+- Assignment creation with due dates and rubrics
+- Online submission portal with file upload support
+- Automated grading for objective assessments
+- Instructor review dashboard for subjective assignments
+
+**Database Schema Extensions**
+```sql
+CREATE TABLE course_attachments (
+  id uuid PRIMARY KEY,
+  course_id uuid REFERENCES courses(id),
+  filename text NOT NULL,
+  file_path text NOT NULL,
+  file_size bigint NOT NULL,
+  mime_type text NOT NULL,
+  uploaded_by uuid REFERENCES users(id),
+  uploaded_at timestamptz NOT NULL DEFAULT now()
+);
+
+CREATE TABLE course_announcements (
+  id uuid PRIMARY KEY,
+  course_id uuid REFERENCES courses(id),
+  title text NOT NULL,
+  content text NOT NULL,
+  author_id uuid REFERENCES users(id),
+  published_at timestamptz,
+  created_at timestamptz NOT NULL DEFAULT now()
+);
+
+CREATE TABLE assignments (
+  id uuid PRIMARY KEY,
+  course_id uuid REFERENCES courses(id),
+  title text NOT NULL,
+  description text NOT NULL,
+  due_date timestamptz,
+  max_score numeric(5,2) NOT NULL DEFAULT 100,
+  created_by uuid REFERENCES users(id),
+  created_at timestamptz NOT NULL DEFAULT now()
+);
+
+CREATE TABLE assignment_submissions (
+  id uuid PRIMARY KEY,
+  assignment_id uuid REFERENCES assignments(id),
+  student_id uuid REFERENCES users(id),
+  submission_text text,
+  file_path text,
+  submitted_at timestamptz NOT NULL DEFAULT now(),
+  score numeric(5,2),
+  feedback text,
+  graded_by uuid REFERENCES users(id),
+  graded_at timestamptz
+);
+
+CREATE TABLE curriculum_taxonomy (
+  id uuid PRIMARY KEY,
+  course_id uuid REFERENCES courses(id),
+  lesson_id uuid REFERENCES lessons(id),
+  bloom_level text NOT NULL, -- remember, understand, apply, analyze, evaluate, create
+  learning_objective text NOT NULL,
+  assessment_criteria text
+);
+```
+
+##### 4.4.2 User Engagement
+**Objective**: Enhanced student engagement and interaction features
+**Priority**: High
+
+**Advanced Quiz Creation**
+- Multiple question types (MCQ, True/False, Fill-in-blank, Essay, Code submission)
+- Instant grading with detailed feedback
+- Question banks and randomization
+- Time limits and attempt restrictions
+- Progress tracking and analytics
+
+**Manual Enrollment System**
+- Bulk enrollment capabilities for administrators
+- Individual student enrollment by instructors
+- Enrollment approval workflows
+- Waitlist management
+
+**Group Course Management**
+- Organization-based course allocation
+- Bulk enrollments for corporate training
+- Group progress tracking and reporting
+- Custom pricing for organizational accounts
+
+**Database Schema Extensions**
+```sql
+CREATE TABLE quiz_questions (
+  id uuid PRIMARY KEY,
+  quiz_id uuid REFERENCES quizzes(id),
+  question_type text NOT NULL, -- mcq, true_false, fill_blank, essay, code
+  question_text text NOT NULL,
+  correct_answer text,
+  explanation text,
+  points numeric(5,2) NOT NULL DEFAULT 1,
+  order_index int NOT NULL
+);
+
+CREATE TABLE quiz_question_options (
+  id uuid PRIMARY KEY,
+  question_id uuid REFERENCES quiz_questions(id),
+  option_text text NOT NULL,
+  is_correct boolean NOT NULL DEFAULT false,
+  order_index int NOT NULL
+);
+
+CREATE TABLE enrollments (
+  id uuid PRIMARY KEY,
+  user_id uuid REFERENCES users(id),
+  course_id uuid REFERENCES courses(id),
+  enrollment_type text NOT NULL DEFAULT 'individual', -- individual, group, manual
+  enrolled_by uuid REFERENCES users(id),
+  enrolled_at timestamptz NOT NULL DEFAULT now(),
+  status text NOT NULL DEFAULT 'active' -- active, completed, dropped, pending
+);
+
+CREATE TABLE course_groups (
+  id uuid PRIMARY KEY,
+  name text NOT NULL,
+  organisation_id uuid REFERENCES organisations(id),
+  created_by uuid REFERENCES users(id),
+  created_at timestamptz NOT NULL DEFAULT now()
+);
+
+CREATE TABLE group_enrollments (
+  group_id uuid REFERENCES course_groups(id),
+  course_id uuid REFERENCES courses(id),
+  enrolled_at timestamptz NOT NULL DEFAULT now(),
+  PRIMARY KEY (group_id, course_id)
+);
+```
+
+##### 4.4.3 Integration & Customization
+**Objective**: Third-party integrations and platform customization
+**Priority**: Medium-High
+
+**Zoom Integration**
+- Schedule Zoom meetings directly from LMS
+- Automatic calendar integration
+- Recording management and playback
+- Attendance tracking
+
+**Multiple Instructors Support**
+- Team teaching capabilities
+- Role-based permissions for co-instructors
+- Collaborative course management
+- Shared grading responsibilities
+
+**White Labeling**
+- Custom branding and theming
+- Institution-specific domains
+- Logo and color scheme customization
+- Custom email templates
+
+**Payment & Currency Support**
+- Multiple currency support
+- Stripe integration for payments
+- Subscription management
+- Refund processing
+
+**SCORM Compliance**
+- SCORM 1.2 and 2004 support
+- Content package import/export
+- Progress tracking compliance
+- Reusable learning objects
+
+**Database Schema Extensions**
+```sql
+CREATE TABLE zoom_meetings (
+  id uuid PRIMARY KEY,
+  course_id uuid REFERENCES courses(id),
+  meeting_id text NOT NULL,
+  topic text NOT NULL,
+  start_time timestamptz NOT NULL,
+  duration_minutes int NOT NULL,
+  join_url text NOT NULL,
+  password text,
+  created_by uuid REFERENCES users(id),
+  created_at timestamptz NOT NULL DEFAULT now()
+);
+
+CREATE TABLE instructor_assignments (
+  course_id uuid REFERENCES courses(id),
+  instructor_id uuid REFERENCES users(id),
+  role text NOT NULL DEFAULT 'instructor', -- lead_instructor, co_instructor, teaching_assistant
+  assigned_at timestamptz NOT NULL DEFAULT now(),
+  PRIMARY KEY (course_id, instructor_id)
+);
+
+CREATE TABLE white_label_settings (
+  organisation_id uuid REFERENCES organisations(id) PRIMARY KEY,
+  domain text,
+  logo_url text,
+  primary_color text,
+  secondary_color text,
+  custom_css text,
+  email_template_header text,
+  email_template_footer text
+);
+
+CREATE TABLE payments (
+  id uuid PRIMARY KEY,
+  user_id uuid REFERENCES users(id),
+  course_id uuid REFERENCES courses(id),
+  amount numeric(10,2) NOT NULL,
+  currency text NOT NULL DEFAULT 'USD',
+  stripe_payment_intent_id text,
+  status text NOT NULL DEFAULT 'pending', -- pending, completed, failed, refunded
+  created_at timestamptz NOT NULL DEFAULT now()
+);
+
+CREATE TABLE scorm_packages (
+  id uuid PRIMARY KEY,
+  course_id uuid REFERENCES courses(id),
+  package_name text NOT NULL,
+  version text NOT NULL,
+  manifest_path text NOT NULL,
+  uploaded_by uuid REFERENCES users(id),
+  uploaded_at timestamptz NOT NULL DEFAULT now()
+);
+```
+
+##### 4.4.4 Student Support & Administration
+**Objective**: Comprehensive student support and administrative tools
+**Priority**: Medium
+
+**Event Calendar**
+- Assignment due dates
+- Quiz schedules
+- Live class sessions
+- Personal study planning
+
+**Gradebook System**
+- Comprehensive grade tracking
+- Weighted grade calculations
+- Grade export functionality
+- Parent/supervisor access
+
+**Course FAQ System**
+- Course-specific FAQ management
+- Search functionality
+- Instructor moderation
+- Student contribution system
+
+**Two-Factor Authentication**
+- OTP verification via SMS/Email
+- Authenticator app support
+- Backup codes
+- Security audit logs
+
+**Database Schema Extensions**
+```sql
+CREATE TABLE calendar_events (
+  id uuid PRIMARY KEY,
+  course_id uuid REFERENCES courses(id),
+  title text NOT NULL,
+  description text,
+  event_type text NOT NULL, -- assignment, quiz, live_session, study_session
+  start_time timestamptz NOT NULL,
+  end_time timestamptz,
+  created_by uuid REFERENCES users(id),
+  created_at timestamptz NOT NULL DEFAULT now()
+);
+
+CREATE TABLE gradebook_entries (
+  id uuid PRIMARY KEY,
+  user_id uuid REFERENCES users(id),
+  course_id uuid REFERENCES courses(id),
+  assignment_id uuid REFERENCES assignments(id),
+  quiz_id uuid REFERENCES quizzes(id),
+  grade numeric(5,2) NOT NULL,
+  max_grade numeric(5,2) NOT NULL,
+  weight numeric(3,2) NOT NULL DEFAULT 1.0,
+  graded_at timestamptz NOT NULL DEFAULT now()
+);
+
+CREATE TABLE course_faqs (
+  id uuid PRIMARY KEY,
+  course_id uuid REFERENCES courses(id),
+  question text NOT NULL,
+  answer text NOT NULL,
+  category text,
+  created_by uuid REFERENCES users(id),
+  created_at timestamptz NOT NULL DEFAULT now(),
+  updated_at timestamptz NOT NULL DEFAULT now()
+);
+
+CREATE TABLE user_2fa (
+  user_id uuid REFERENCES users(id) PRIMARY KEY,
+  secret text NOT NULL,
+  backup_codes text[],
+  enabled boolean NOT NULL DEFAULT false,
+  last_used timestamptz
+);
+```
+
+##### 4.4.5 Marketing & Monetization
+**Objective**: Course promotion and revenue generation tools
+**Priority**: Medium
+
+**Social Sharing**
+- Course promotion on social media platforms
+- Automated sharing templates
+- Referral tracking
+- Social proof integration
+
+**Coupon System**
+- Discount code creation and management
+- Usage limits and expiration dates
+- Bulk coupon generation
+- Analytics and tracking
+
+**MailChimp Integration**
+- Automated email marketing campaigns
+- Student segmentation
+- Course completion follow-ups
+- Newsletter management
+
+**Database Schema Extensions**
+```sql
+CREATE TABLE social_shares (
+  id uuid PRIMARY KEY,
+  course_id uuid REFERENCES courses(id),
+  user_id uuid REFERENCES users(id),
+  platform text NOT NULL, -- facebook, twitter, linkedin, etc.
+  shared_at timestamptz NOT NULL DEFAULT now()
+);
+
+CREATE TABLE coupons (
+  id uuid PRIMARY KEY,
+  code text UNIQUE NOT NULL,
+  discount_type text NOT NULL, -- percentage, fixed_amount
+  discount_value numeric(10,2) NOT NULL,
+  max_uses int,
+  current_uses int NOT NULL DEFAULT 0,
+  expires_at timestamptz,
+  created_by uuid REFERENCES users(id),
+  created_at timestamptz NOT NULL DEFAULT now()
+);
+
+CREATE TABLE coupon_usage (
+  id uuid PRIMARY KEY,
+  coupon_id uuid REFERENCES coupons(id),
+  user_id uuid REFERENCES users(id),
+  course_id uuid REFERENCES courses(id),
+  used_at timestamptz NOT NULL DEFAULT now()
+);
+
+CREATE TABLE email_campaigns (
+  id uuid PRIMARY KEY,
+  name text NOT NULL,
+  subject text NOT NULL,
+  content text NOT NULL,
+  mailchimp_campaign_id text,
+  status text NOT NULL DEFAULT 'draft', -- draft, scheduled, sent
+  scheduled_at timestamptz,
+  created_by uuid REFERENCES users(id),
+  created_at timestamptz NOT NULL DEFAULT now()
+);
+```
+
+##### 4.4.6 Certification & Verification
+**Objective**: Digital certification and verification system
+**Priority**: Medium-High
+
+**Certificate Builder**
+- Customizable certificate templates
+- QR code verification system
+- Digital signature integration
+- Blockchain verification (optional)
+
+**3D eBook Library**
+- Virtual library interface
+- Interactive eBook reader
+- Bookmarking and note-taking
+- Search across library content
+
+**Database Schema Extensions**
+```sql
+CREATE TABLE certificates (
+  id uuid PRIMARY KEY,
+  user_id uuid REFERENCES users(id),
+  course_id uuid REFERENCES courses(id),
+  certificate_number text UNIQUE NOT NULL,
+  qr_code text NOT NULL,
+  issued_at timestamptz NOT NULL DEFAULT now(),
+  verification_url text NOT NULL,
+  template_id uuid REFERENCES certificate_templates(id)
+);
+
+CREATE TABLE certificate_templates (
+  id uuid PRIMARY KEY,
+  name text NOT NULL,
+  template_html text NOT NULL,
+  background_image_url text,
+  created_by uuid REFERENCES users(id),
+  created_at timestamptz NOT NULL DEFAULT now()
+);
+
+CREATE TABLE ebook_library (
+  id uuid PRIMARY KEY,
+  title text NOT NULL,
+  author text NOT NULL,
+  isbn text,
+  file_path text NOT NULL,
+  cover_image_url text,
+  category text,
+  description text,
+  added_by uuid REFERENCES users(id),
+  added_at timestamptz NOT NULL DEFAULT now()
+);
+
+CREATE TABLE user_bookmarks (
+  id uuid PRIMARY KEY,
+  user_id uuid REFERENCES users(id),
+  ebook_id uuid REFERENCES ebook_library(id),
+  page_number int NOT NULL,
+  note text,
+  created_at timestamptz NOT NULL DEFAULT now()
+);
+```
+
+##### 4.4.7 Additional Features
+**Objective**: Enhanced user experience and support features
+**Priority**: Medium
+
+**Chatbot Integration**
+- WPBot-integrated FAQ assistance
+- Course navigation help
+- 24/7 student support
+- Escalation to human support
+
+**Google Meet & Classroom Integration**
+- Google Meet scheduling and management
+- Google Classroom synchronization
+- Assignment distribution
+- Grade passback integration
+
+**Database Schema Extensions**
+```sql
+CREATE TABLE chatbot_conversations (
+  id uuid PRIMARY KEY,
+  user_id uuid REFERENCES users(id),
+  session_id text NOT NULL,
+  message text NOT NULL,
+  response text NOT NULL,
+  intent text,
+  confidence_score numeric(3,2),
+  created_at timestamptz NOT NULL DEFAULT now()
+);
+
+CREATE TABLE google_meet_sessions (
+  id uuid PRIMARY KEY,
+  course_id uuid REFERENCES courses(id),
+  meet_id text NOT NULL,
+  title text NOT NULL,
+  start_time timestamptz NOT NULL,
+  duration_minutes int NOT NULL,
+  meet_url text NOT NULL,
+  created_by uuid REFERENCES users(id),
+  created_at timestamptz NOT NULL DEFAULT now()
+);
+
+CREATE TABLE google_classroom_sync (
+  id uuid PRIMARY KEY,
+  course_id uuid REFERENCES courses(id),
+  classroom_id text NOT NULL,
+  sync_enabled boolean NOT NULL DEFAULT false,
+  last_sync timestamptz,
+  created_by uuid REFERENCES users(id),
+  created_at timestamptz NOT NULL DEFAULT now()
+);
+```
   completed_at timestamptz
 );
 ```
@@ -861,6 +1359,13 @@ GET /api/users/{id}/export
 | API Latency | Unknown | p95 < 200ms | High |
 | Data Export/Deletion | None | Implemented + audited | High |
 | **Theming WCAG AA** | Dark-only UX | **Light/Dark/Auto with tokens, no flash** | **Critical** |
+| **LMS Feature Coverage** | Basic content delivery | **Full LMS capabilities (35+ features)** | **High** |
+| **Course Management** | Static JSON content | **Dynamic course creation, attachments, assignments** | **High** |
+| **User Engagement** | Basic progress tracking | **Advanced quizzes, group enrollments, manual enrollment** | **Medium** |
+| **Integration Support** | None | **Zoom, Google Meet/Classroom, SCORM, Payment gateways** | **Medium** |
+| **Certification System** | None | **QR-verified certificates, 3D eBook library** | **Medium** |
+| **Administrative Tools** | Basic user management | **Gradebook, calendar, FAQ system, 2FA** | **Medium** |
+| **Marketing & Monetization** | None | **Social sharing, coupons, MailChimp integration** | **Low** |
 
 ---
 
@@ -871,8 +1376,10 @@ GET /api/users/{id}/export
 | Phase 1 | 4 weeks | Backend tests, Serilog, Security baseline, **WCAG theming tokens + 3‑way switch** | 80% coverage, RFC7807 errors, RBAC policies, **contrast-compliant theming** |
 | Phase 2 | 4 weeks | CI/CD, Containers, IaC | Automated deploys, IaC-reviewed envs |
 | Phase 3 | 4 weeks | Observability, SLOs, Perf | Dashboards, alerts, Lighthouse CI |
-| Phase 4 | 8 weeks | Auth, CMS, Progress, Search | OAuth+RBAC, versioned CMS, persistent progress, search |
-| Phase 5 | 4+ weeks | Community, Notifications, Monetisation | Discussions live, email digests, subscriptions |
+| Phase 4 | 8 weeks | Auth, CMS, Progress, Search, **Core LMS Features** | OAuth+RBAC, versioned CMS, persistent progress, search, **course management, user engagement** |
+| Phase 5 | 6 weeks | **Advanced LMS Features**, Community, Notifications | **Zoom/Google integrations, SCORM, assignments, quizzes**, discussions live, email digests |
+| Phase 6 | 4 weeks | **Enterprise LMS Features**, Monetisation | **White labeling, payment gateways, certificates, gradebook**, subscriptions |
+| Phase 7 | 3 weeks | **Marketing & Support Features** | **Social sharing, coupons, MailChimp, chatbot, 2FA** |
 
 ---
 
