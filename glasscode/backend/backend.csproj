@@ -28,4 +28,11 @@
     <Content Remove="out/**" />
   </ItemGroup>
 
+  <!-- Exclude test files from main project -->
+  <ItemGroup>
+    <Compile Remove="Backend.Tests/**" />
+    <Content Remove="Backend.Tests/**" />
+    <None Remove="Backend.Tests/**" />
+  </ItemGroup>
+
 </Project>

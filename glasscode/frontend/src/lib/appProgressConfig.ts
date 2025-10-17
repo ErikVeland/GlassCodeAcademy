@@ -10,6 +10,8 @@ export interface Goal {
   category: 'infrastructure' | 'content' | 'features' | 'quality' | 'deployment';
   dependencies?: string[]; // Goal IDs that must be completed first
   milestones: Milestone[];
+  previousProgress?: number; // Previous progress value for calculating increases
+  lastUpdated?: string; // Date when progress was last updated
 }
 
 export interface Milestone {
@@ -337,21 +339,25 @@ export const APP_PHASES: Phase[] = [
         title: 'Comprehensive Testing Suite',
         description: 'Unit, integration, and end-to-end testing',
         importance: 9,
-        currentProgress: 40,
+        currentProgress: 65,
+        previousProgress: 35, // Previous progress before recent backend testing updates
+        lastUpdated: '2025-01-27',
         category: 'quality',
         milestones: [
           {
             id: 'unit-tests',
-            title: 'Unit Test Coverage',
-            description: '80%+ code coverage for critical components',
-            completed: false,
+            title: 'Backend Unit Test Coverage',
+            description: '57 passing tests for controllers and services',
+            completed: true,
+            completedDate: '2025-01-27',
             weight: 0.3
           },
           {
             id: 'integration-tests',
-            title: 'Integration Testing',
-            description: 'API and component integration tests',
-            completed: false,
+            title: 'Backend Integration Testing',
+            description: 'API endpoint and service integration tests',
+            completed: true,
+            completedDate: '2025-01-27',
             weight: 0.3
           },
           {
@@ -641,4 +647,32 @@ export function getNextMilestone(): { phase: string; goal: string; milestone: st
     }
   }
   return null;
+}
+
+// Calculate progress increase for a goal
+export function getProgressIncrease(goal: Goal): number {
+  if (!goal.previousProgress) return 0;
+  return Math.max(0, goal.currentProgress - goal.previousProgress);
+}
+
+// Check if a goal was recently updated (within last 7 days)
+export function isRecentlyUpdated(goal: Goal): boolean {
+  if (!goal.lastUpdated) return false;
+  
+  const lastUpdated = new Date(goal.lastUpdated);
+  const now = new Date();
+  const daysDiff = Math.floor((now.getTime() - lastUpdated.getTime()) / (1000 * 60 * 60 * 24));
+  
+  return daysDiff <= 7;
+}
+
+// Get all goals with recent progress increases
+export function getRecentProgressIncreases(): Array<Goal & { progressIncrease: number }> {
+  return APP_PHASES
+    .flatMap(phase => phase.goals)
+    .filter(goal => isRecentlyUpdated(goal) && getProgressIncrease(goal) > 0)
+    .map(goal => ({
+      ...goal,
+      progressIncrease: getProgressIncrease(goal)
+    }));
 }

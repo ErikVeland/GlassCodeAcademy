@@ -39,9 +39,9 @@ export default function PieChart({
   let cumulativePercentage = 0;
 
   return (
-    <div className={`flex items-center gap-8 ${className}`}>
+    <div className={`flex flex-col lg:flex-row lg:items-center gap-6 lg:gap-8 ${className}`}>
       {/* Chart Container */}
-      <div className="relative flex-shrink-0">
+      <div className="relative flex-shrink-0 mx-auto lg:mx-0">
         <svg width={size} height={size} className="transform -rotate-90">
           {/* Background circle */}
           <circle
@@ -106,7 +106,7 @@ export default function PieChart({
       </div>
       
       {/* Legend */}
-      <div className="flex-1 space-y-3">
+      <div className="flex-1 space-y-3 w-full lg:w-auto">
         {data.map((item, index) => {
           const percentage = total > 0 ? ((item.value / total) * 100).toFixed(1) : '0';
           return (

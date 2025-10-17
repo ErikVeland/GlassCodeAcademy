@@ -69,7 +69,7 @@ export default function StatsPage() {
 
   return (
     <div className="liquid-glass-layout min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
-      <div className="liquid-glass-content container mx-auto px-4 py-8">
+      <div className="liquid-glass-content container mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Header */}
         <div className="text-center mb-12">
           <h1 className="text-4xl md:text-5xl font-bold text-white dark:text-gray-100 mb-4">
@@ -80,7 +80,7 @@ export default function StatsPage() {
           </p>
         </div>
         {/* Main Stats Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-12">
           <StatCard
             title="Total Lessons"
             value={stats.totalLessons}
@@ -112,34 +112,36 @@ export default function StatsPage() {
         </div>
 
         {/* Difficulty & Progress Section */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8 mb-12">
           {/* Difficulty Breakdown */}
           <div className="glass-card">
             <h3 className="text-2xl font-bold text-white dark:text-gray-100 mb-6 flex items-center">
               <ChartBarIcon className="h-6 w-6 mr-2 text-indigo-400" />
               Difficulty Distribution
             </h3>
-            <PieChart
-              data={[
-                {
-                  label: 'Beginner',
-                  value: stats.difficultyBreakdown.beginner,
-                  color: '#10B981'
-                },
-                {
-                  label: 'Intermediate',
-                  value: stats.difficultyBreakdown.intermediate,
-                  color: '#F59E0B'
-                },
-                {
-                  label: 'Advanced',
-                  value: stats.difficultyBreakdown.advanced,
-                  color: '#EF4444'
-                }
-              ]}
-              size={240}
-              strokeWidth={12}
-            />
+            <div className="w-full overflow-hidden">
+              <PieChart
+                data={[
+                  {
+                    label: 'Beginner',
+                    value: stats.difficultyBreakdown.beginner,
+                    color: '#10B981'
+                  },
+                  {
+                    label: 'Intermediate',
+                    value: stats.difficultyBreakdown.intermediate,
+                    color: '#F59E0B'
+                  },
+                  {
+                    label: 'Advanced',
+                    value: stats.difficultyBreakdown.advanced,
+                    color: '#EF4444'
+                  }
+                ]}
+                size={240}
+                strokeWidth={12}
+              />
+            </div>
           </div>
 
           {/* Learning Tiers */}
@@ -148,7 +150,7 @@ export default function StatsPage() {
               <TrophyIcon className="h-6 w-6 mr-2 text-yellow-400" />
               Learning Tiers
             </h3>
-            <div className="grid grid-cols-2 gap-4 flex-1">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 flex-1">
               <div className="text-center p-4 bg-gradient-to-br from-blue-500/20 to-blue-600/20 rounded-xl border border-blue-400/30 flex flex-col justify-center">
                 <div className="text-2xl font-bold text-blue-300">{stats.tierBreakdown.foundational}</div>
                 <div className="text-sm text-blue-400 font-medium">Foundational</div>

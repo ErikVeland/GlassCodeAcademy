@@ -7,6 +7,9 @@ import {
   calculateGoalProgress,
   getProductionReadiness,
   getNextMilestone,
+  getProgressIncrease,
+  isRecentlyUpdated,
+  getRecentProgressIncreases,
   type Phase,
   type Goal 
 } from '@/lib/appProgressConfig';
@@ -19,6 +22,8 @@ interface ProgressChipProps {
 
 const ProgressChip: React.FC<ProgressChipProps> = ({ goal, isExpanded, onClick }) => {
   const progress = Math.max(goal.currentProgress, calculateGoalProgress(goal));
+  const progressIncrease = getProgressIncrease(goal);
+  const recentlyUpdated = isRecentlyUpdated(goal);
   
   // Calculate gradient colors based on progress
   const getGradientColor = (percentage: number) => {
@@ -58,15 +63,41 @@ const ProgressChip: React.FC<ProgressChipProps> = ({ goal, isExpanded, onClick }
           <div className="flex items-start justify-between mb-2">
             <div className="flex items-center gap-2">
               <span className="text-lg">{getCategoryIcon(goal.category)}</span>
+              {/* Importance indicators */}
               <div className="flex items-center gap-1">
-                {Array.from({ length: goal.importance }, (_, i) => (
-                  <div key={i} className="w-1 h-1 bg-white/60 rounded-full" />
-                ))}
+                {goal.importance >= 9 ? (
+                  <div className="flex items-center gap-1 px-2 py-0.5 rounded-full bg-red-500/20 border border-red-400/30">
+                    <span className="text-red-400 text-xs">🔥</span>
+                    <span className="text-red-400 text-xs font-medium">Critical</span>
+                  </div>
+                ) : goal.importance >= 7 ? (
+                  <div className="flex items-center gap-1 px-2 py-0.5 rounded-full bg-yellow-500/20 border border-yellow-400/30">
+                    <span className="text-yellow-400 text-xs">⭐</span>
+                    <span className="text-yellow-400 text-xs font-medium">High</span>
+                  </div>
+                ) : goal.importance >= 5 ? (
+                  <div className="flex items-center gap-1 px-2 py-0.5 rounded-full bg-blue-500/20 border border-blue-400/30">
+                    <span className="text-blue-400 text-xs">📋</span>
+                    <span className="text-blue-400 text-xs font-medium">Medium</span>
+                  </div>
+                ) : (
+                  <div className="flex items-center gap-1 px-2 py-0.5 rounded-full bg-gray-500/20 border border-gray-400/30">
+                    <span className="text-gray-400 text-xs">📝</span>
+                    <span className="text-gray-400 text-xs font-medium">Low</span>
+                  </div>
+                )}
               </div>
             </div>
-            {progress === 100 && (
-              <div className="text-green-400 text-xl">✓</div>
-            )}
+            <div className="flex items-center gap-2">
+              {recentlyUpdated && progressIncrease > 0 && (
+                <div className="bg-green-500/20 border border-green-400/30 rounded-full px-2 py-1 text-xs font-medium text-green-300 animate-pulse">
+                  +{progressIncrease}%↗
+                </div>
+              )}
+              {progress === 100 && (
+                <div className="text-green-400 text-xl">✓</div>
+              )}
+            </div>
           </div>
           
           <h4 className="text-white font-medium text-sm mb-1 line-clamp-2">
@@ -173,6 +204,7 @@ const AppProgressTracker: React.FC = () => {
   
   const productionReadiness = getProductionReadiness();
   const nextMilestone = getNextMilestone();
+  const recentIncreases = getRecentProgressIncreases();
 
   return (
     <div className="space-y-6">
@@ -185,6 +217,31 @@ const AppProgressTracker: React.FC = () => {
           Tracking our journey to production-ready GlassCode Academy
         </p>
       </div>
+
+      {/* Recent Progress Increases */}
+      {recentIncreases.length > 0 && (
+        <div className="bg-gradient-to-r from-green-500/10 to-blue-500/10 backdrop-blur-sm border border-green-400/20 rounded-xl p-4">
+          <div className="flex items-center gap-2 mb-3">
+            <span className="text-green-400 text-lg">📈</span>
+            <h3 className="text-white font-semibold">Recent Progress Updates</h3>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+            {recentIncreases.map((goal) => (
+              <div key={goal.id} className="bg-white/5 rounded-lg p-3 border border-white/10">
+                <div className="flex items-center justify-between mb-1">
+                  <span className="text-white text-sm font-medium">{goal.title}</span>
+                  <div className="bg-green-500/20 border border-green-400/30 rounded-full px-2 py-1 text-xs font-medium text-green-300">
+                    +{goal.progressIncrease}%↗
+                  </div>
+                </div>
+                <div className="text-white/60 text-xs">
+                  {goal.currentProgress - goal.progressIncrease}% → {goal.currentProgress}%
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
 
       {/* Overall Progress */}
       <div className="bg-white/5 backdrop-blur-sm border border-white/20 rounded-xl p-6">
