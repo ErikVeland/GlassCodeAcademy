@@ -3,6 +3,7 @@
 import { useAppStats } from '@/hooks/useAppStats';
 import StatCard from '@/components/stats/StatCard';
 import PieChart from '@/components/stats/PieChart';
+import AppProgressTracker from '@/components/AppProgressTracker';
 import Link from 'next/link';
 import {
   BookOpenIcon,
@@ -243,6 +244,11 @@ export default function StatsPage() {
               <div className="text-gray-300">Total Learning Time</div>
             </div>
           </div>
+        </div>
+
+        {/* App Development Progress */}
+        <div className="mb-12">
+          <AppProgressTracker />
         </div>
       </div>
     </div>

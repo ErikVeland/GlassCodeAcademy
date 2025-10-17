@@ -2,21 +2,21 @@
 
 ## 📋 Executive Summary
 
-This document extends the current improvement plan to transform GlassCode Academy into a competitive, enterprise-grade eLearning platform. It adds concrete architecture, data models, workflows, and CI/CD, security, and analytics implementations required for modular "Academies", a robust CMS, full user authorisation, and persistent progress tracking. It also includes migration, SLOs, disaster recovery, and a staged delivery plan.
+This document extends the current improvement plan to transform GlassCode Academy into a competitive, enterprise-grade eLearning platform. It adds concrete architecture, data models, workflows, and CI/CD, security, analytics, and **WCAG-compliant dark/light/auto theming** implementations required for modular "Academies", a robust CMS, full user authorisation, and persistent progress tracking. It also includes migration, SLOs, disaster recovery, and a staged delivery plan.
 
 ## 📊 Current Implementation Status
 
-**Overall Progress: 25-30% Complete**
+**Overall Progress: 25-30% Complete**  
 **Last Assessment: October 17 2025**
 
 ### Implementation Overview
-GlassCode Academy currently operates as a functional educational platform with strong frontend foundations but significant gaps in enterprise-grade infrastructure. The project demonstrates good architectural thinking and has solid content management, but requires systematic implementation of DevOps practices, comprehensive testing, monitoring, security hardening, and a proper data layer.
+GlassCode Academy currently operates as a functional educational platform with strong frontend foundations but significant gaps in enterprise-grade infrastructure. The project demonstrates good architectural thinking and has solid content management, but requires systematic implementation of DevOps practices, comprehensive testing, monitoring, security hardening, a proper data layer, **and accessible light/dark theming with an Auto mode**.
 
 ### Phase Completion Status
 
 | Phase | Progress | Status | Key Achievements | Critical Gaps |
 |-------|----------|--------|------------------|---------------|
-| **Phase 1: Foundation & Quality** | 60% | 🟡 Partial | Frontend testing suite, Error boundaries | Backend testing (0%), Structured logging |
+| **Phase 1: Foundation & Quality** | 60% | 🟡 Partial | Frontend testing suite, Error boundaries | Backend testing (0%), Structured logging, **No tokenised theming** |
 | **Phase 2: DevOps & Automation** | 10% | 🔴 Not Started | Documentation exists | No CI/CD, No containerization, No IaC |
 | **Phase 3: Monitoring & Observability** | 20% | 🔴 Minimal | Basic performance tracking | No monitoring stack, No alerting, No tracing |
 | **Phase 4: Advanced Features** | 40% | 🟡 Partial | Progress tracking hooks | No user database, No CMS, No search |
@@ -39,27 +39,27 @@ GlassCode Academy currently operates as a functional educational platform with s
 - ❌ Notification & Messaging: No email/in-app notifications
 - ❌ Community Layer: No discussions, Q&A, or collaboration
 - ❌ Monetisation: No subscriptions or licensing model
-- ❌ Accessibility & i18n: No formalised compliance plan or localisation framework
+- ❌ Accessibility & i18n: **No formalised WCAG colour-contrast theming plan or 3‑way (Auto/Dark/Light) switch**
 
 ---
 
 ## 🎯 Implementation Phases
 
 ### Phase 1: Foundation & Quality (Weeks 1-4)
-**Priority**: Critical
+**Priority**: Critical  
 **Dependencies**: JSON structure fixes
 
 #### 1.1 Comprehensive Testing Implementation
-**Objective**: Establish robust testing foundation
+**Objective**: Establish robust testing foundation  
 **Current Status**: 50% Complete - Frontend implemented, Backend missing
 
 **Backend Testing** ❌ Not Implemented (0% coverage)
-- **Unit Tests**: Controllers, Services, GraphQL resolvers
-  Target: 80%+ code coverage
-  Framework: xUnit, Moq, FluentAssertions
+- **Unit Tests**: Controllers, Services, GraphQL resolvers  
+  Target: 80%+ code coverage  
+  Framework: xUnit, Moq, FluentAssertions  
   Location: `glasscode/backend/Tests/`
 
-- **Integration Tests**: GraphQL endpoints, data loading
+- **Integration Tests**: GraphQL endpoints, data loading  
   Validate GraphQL schema compliance, data contracts, and health endpoints.
 
 - **Contract Tests**: Pact for consumer/provider agreements between frontend and backend.
@@ -97,7 +97,7 @@ public class DataServiceTests
 ```
 
 #### 1.2 Enhanced Error Handling & Logging
-**Objective**: Implement comprehensive error handling and structured logging
+**Objective**: Implement comprehensive error handling and structured logging  
 **Current Status**: 70% Complete - Frontend excellent, Backend basic
 
 **Backend Improvements**
@@ -156,7 +156,6 @@ public class GlobalExceptionMiddleware
     }
 }
 ```
-
 Add middleware in `Program.cs`:
 ```csharp
 app.UseMiddleware<GlobalExceptionMiddleware>();
@@ -178,10 +177,223 @@ builder.Services.AddAuthorization(options =>
 });
 ```
 
+#### 1.4 WCAG-Compliant Theming (Dark/Light/Auto) — **New**
+**Objective**: Add accessible, tokenised theming with Auto/Dark/Light switch that defaults to system; prevent first-paint flash; ensure WCAG 2.1 AA contrast.  
+**Scope**: Tailwind + custom CSS; no framework change required.
+
+##### 1.4.1 LLM-Friendly Step-by-Step (Acceptance Criteria Included)
+1. **Define semantic colour tokens**  
+   - Tokens: `bg`, `fg`, `surface`, `surfaceAlt`, `border`, `muted`, `primary`, `onPrimary`, `secondary`, `onSecondary`, `accent`, `onAccent`, `success`, `onSuccess`, `warning`, `onWarning`, `danger`, `onDanger`, `link`, `focusRing` (HSL channels).  
+   - Implement as CSS variables on `:root` for **light**; override in `[data-theme="dark"]`.  
+   - **Acceptance**: single source of truth; no hard-coded hex in components.
+
+2. **Map tokens into Tailwind**  
+   - `darkMode: ['class', '[data-theme="dark"]']`.  
+   - Extend `theme.colors` to `hsl(var(--token) / <alpha-value>)`.  
+   - Use semantic utilities: `bg-bg`, `text-fg`, `bg-surface`, `border-border`, `text-muted`, `bg-primary`, `text-primaryFg`.  
+   - **Acceptance**: utilities render from tokens in both themes.
+
+3. **Default Auto behaviour**  
+   - Auto = **no** `data-theme` attribute; `:root` has light tokens; `@media (prefers-color-scheme: dark)` mirrors dark tokens only when no explicit theme is set.  
+   - **Acceptance**: fresh visit follows OS theme without flash.
+
+4. **3‑way switch (Auto/Dark/Light)**  
+   - Persist `localStorage['theme']` (`'auto'|'dark'|'light'`).  
+   - `auto` → remove `data-theme`. `dark`/`light` → set attribute.  
+   - Listen for `matchMedia('(prefers-color-scheme: dark)')` changes **only** in Auto.  
+   - **Acceptance**: toggles are instant, persist across reloads, reflect OS changes in Auto.
+
+5. **Prevent first‑paint flash**  
+   - Tiny inline **boot script** in `<head>` **before** CSS/JS: apply stored theme immediately or leave Auto.  
+   - **Acceptance**: no FOUC on load or after switching.
+
+6. **WCAG contrast**  
+   - Body text vs background: **≥ 4.5:1**; large text & icons **≥ 3:1**; focus indicators **≥ 3:1**.  
+   - Tune **lightness** in HSL first; keep hue/saturation stable.  
+   - **Acceptance**: automated contrast checks pass for both themes.
+
+7. **Migrate components to tokens**  
+   - Replace raw palette classes (`text-gray-500`, `bg-slate-900`) with semantics.  
+   - Replace custom CSS hex with `hsl(var(--token))`.  
+   - **Acceptance**: no Tailwind palette names where semantics intended.
+
+8. **Focus, motion, states**  
+   - Global `:focus-visible` using `--focus-ring`.  
+   - Honour `prefers-reduced-motion`.  
+   - Use `danger/success/warning` tokens for states.  
+   - **Acceptance**: keyboard focus visible; reduced motion honoured.
+
+9. **Test matrix**  
+   - OS: macOS/Windows/iOS/Android; Browsers: Safari/Chrome/Edge.  
+   - Cases: Auto with OS flips; user overrides; reduced motion.  
+   - **Acceptance**: behaviour correct, zero flash, contrast compliant.
+
+##### 1.4.2 Copy-Ready Snippets
+**Tailwind config (semantic mapping)**
+```ts
+// tailwind.config.ts
+import type { Config } from 'tailwindcss';
+
+const config: Config = {
+  darkMode: ['class', '[data-theme="dark"]'],
+  content: ['./app/**/*.{ts,tsx,js,jsx,mdx}', './components/**/*.{ts,tsx,js,jsx,mdx}', './pages/**/*.{ts,tsx,js,jsx,mdx}'],
+  theme: {
+    extend: {
+      colors: {
+        bg: 'hsl(var(--bg) / <alpha-value>)',
+        fg: 'hsl(var(--fg) / <alpha-value>)',
+        muted: 'hsl(var(--muted) / <alpha-value>)',
+        surface: 'hsl(var(--surface) / <alpha-value>)',
+        surfaceAlt: 'hsl(var(--surface-alt) / <alpha-value>)',
+        border: 'hsl(var(--border) / <alpha-value>)',
+        primary: 'hsl(var(--primary) / <alpha-value>)',
+        primaryFg: 'hsl(var(--on-primary) / <alpha-value>)',
+        secondary: 'hsl(var(--secondary) / <alpha-value>)',
+        secondaryFg: 'hsl(var(--on-secondary) / <alpha-value>)',
+        accent: 'hsl(var(--accent) / <alpha-value>)',
+        accentFg: 'hsl(var(--on-accent) / <alpha-value>)',
+        success: 'hsl(var(--success) / <alpha-value>)',
+        successFg: 'hsl(var(--on-success) / <alpha-value>)',
+        warning: 'hsl(var(--warning) / <alpha-value>)',
+        warningFg: 'hsl(var(--on-warning) / <alpha-value>)',
+        danger: 'hsl(var(--danger) / <alpha-value>)',
+        dangerFg: 'hsl(var(--on-danger) / <alpha-value>)',
+        link: 'hsl(var(--link) / <alpha-value>)'
+      }
+    }
+  },
+  plugins: []
+};
+
+export default config;
+```
+
+**Global CSS tokens + Auto mirroring**
+```css
+/* globals.css */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --focus-ring: 210 100% 56%;
+
+  /* Light (default) */
+  --bg: 0 0% 100%;
+  --fg: 224 15% 12%;
+  --muted: 220 9% 46%;
+  --surface: 0 0% 100%;
+  --surface-alt: 210 20% 98%;
+  --border: 220 14% 90%;
+  --primary: 262 83% 56%;
+  --on-primary: 0 0% 100%;
+  --secondary: 210 16% 46%;
+  --on-secondary: 0 0% 100%;
+  --accent: 172 66% 40%;
+  --on-accent: 0 0% 100%;
+  --success: 142 72% 35%;
+  --on-success: 0 0% 100%;
+  --warning: 38 92% 50%;
+  --on-warning: 0 0% 0%;
+  --danger: 0 84% 60%;
+  --on-danger: 0 0% 100%;
+  --link: 222 90% 56%;
+}
+
+[data-theme="dark"] {
+  --bg: 224 15% 7%;
+  --fg: 0 0% 100%;
+  --muted: 220 9% 72%;
+  --surface: 224 14% 10%;
+  --surface-alt: 224 14% 13%;
+  --border: 223 9% 24%;
+  --primary: 262 83% 66%;
+  --on-primary: 0 0% 0%;
+  --secondary: 210 16% 60%;
+  --on-secondary: 0 0% 0%;
+  --accent: 172 66% 52%;
+  --on-accent: 0 0% 0%;
+  --success: 142 72% 45%;
+  --on-success: 0 0% 0%;
+  --warning: 38 92% 62%;
+  --on-warning: 0 0% 0%;
+  --danger: 0 84% 66%;
+  --on-danger: 0 0% 0%;
+  --link: 210 100% 72%;
+}
+
+/* Auto mode mirrors OS only when no data-theme is set */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]):not([data-theme="dark"]) {
+    --bg: 224 15% 7%;
+    --fg: 0 0% 100%;
+    --muted: 220 9% 72%;
+    --surface: 224 14% 10%;
+    --surface-alt: 224 14% 13%;
+    --border: 223 9% 24%;
+    --primary: 262 83% 66%;
+    --on-primary: 0 0% 0%;
+    --secondary: 210 16% 60%;
+    --on-secondary: 0 0% 0%;
+    --accent: 172 66% 52%;
+    --on-accent: 0 0% 0%;
+    --success: 142 72% 45%;
+    --on-success: 0 0% 0%;
+    --warning: 38 92% 62%;
+    --on-warning: 0 0% 0%;
+    --danger: 0 84% 66%;
+    --on-danger: 0 0% 0%;
+    --link: 210 100% 72%;
+  }
+}
+
+/* Base */
+html, body { height: 100%; }
+body { background: hsl(var(--bg)); color: hsl(var(--fg)); }
+:focus-visible { outline: 3px solid hsl(var(--focus-ring)); outline-offset: 2px; }
+a { color: hsl(var(--link)); text-underline-offset: 3px; }
+a:hover, a:focus-visible { text-decoration: underline; }
+```
+
+**No‑flash boot script (inline in <head>)**
+```html
+<script>
+(function () {
+  try {
+    var stored = localStorage.getItem('theme');
+    if (stored === 'dark' || stored === 'light') {
+      document.documentElement.setAttribute('data-theme', stored);
+    } else if (stored === 'auto' || stored === null) {
+      document.documentElement.removeAttribute('data-theme');
+    }
+  } catch (e) {}
+})();
+</script>
+```
+
+**Theme switch (logic outline)**
+- On change:  
+  - `auto` → remove `data-theme`, save `"auto"`, subscribe to `matchMedia('(prefers-color-scheme: dark)')` for live OS changes.  
+  - `dark`/`light` → set `data-theme`, save value, ignore system changes.
+
+**Migration cheat‑sheet**
+- `bg-gray-900`/`bg-slate-950` → `bg-bg` (page bg) or `bg-surface` (card).  
+- `text-gray-500` → `text-muted`.  
+- `border-gray-700`/`border-gray-200` → `border-border`.  
+- CTAs `bg-indigo-600 text-white` → `bg-primary text-primaryFg`.  
+- Links `text-blue-*` → `text-link` + underline on hover/focus.  
+- Replace custom hex with `hsl(var(--token))`.
+
+**Definition of Done (Theming)**
+- Auto follows OS; Dark/Light override OS; no first-paint flash.  
+- Contrast: text ≥ 4.5:1; large text/icons ≥ 3:1; focus ≥ 3:1.  
+- Single source of truth via tokens; no raw hex or Tailwind palette names in semantic components.  
+- Switch is keyboard and screen-reader friendly; state persists; OS changes reflected in Auto.
+
 ---
 
 ### Phase 2: DevOps, Automation & IaC (Weeks 5-8)
-**Priority**: High
+**Priority**: High  
 **Dependencies**: Phase 1 completion
 
 #### 2.1 CI/CD Pipeline Implementation
@@ -325,7 +537,7 @@ CREATE TABLE user_roles (
 ```
 
 #### 4.2 CMS (Authoring, Workflow, Versioning)
-**Content Model Hierarchy**: Academy → Track → Course → Module → Lesson → Quiz → Question
+**Content Model Hierarchy**: Academy → Track → Course → Module → Lesson → Quiz → Question  
 - Versioned content with draft, review, published states.
 - Rich editor (Markdown + code blocks + media uploads).
 - Preview environment per version.
@@ -411,21 +623,23 @@ GET    /api/quiz-attempts?user={id}&lesson={id}
 - Notification system (email + in-app) with digest preferences.
 
 #### 4.6 Accessibility & Internationalisation
-- WCAG 2.1 AA: colour contrast checks, keyboard navigation, ARIA labels, focus order.
-- i18n: locale routing, translation JSONs, pluralisation, RTL support.
+- WCAG 2.1 AA: colour contrast checks, keyboard navigation, ARIA labels, focus order.  
+- i18n: locale routing, translation JSONs, pluralisation, RTL support.  
 - Video support: captions (VTT), downloadable transcripts, audio descriptions where relevant.
 
 #### 4.7 Monetisation (Optional)
+- Stripe subscriptions (monthly/annual), coupons, tax handling (GST).
+- Course licensing for organisations with seat management.
+- Instructor payout statements and revenue share reporting.
 
 #### 4.8 Backend Dashboard & Academy Portability (Critical, Short-Term Priority)
-
-**Current State**
-- ❌ No backend dashboard for administrators or instructors.
-- ❌ No modular separation of academies or courses for export/import.
-- ❌ No editing interface for managing lessons or courses.
+**Current State**  
+- ❌ No backend dashboard for administrators or instructors.  
+- ❌ No modular separation of academies or courses for export/import.  
+- ❌ No editing interface for managing lessons or courses.  
 - ❌ No ability to generate standalone exportable academies (full static or portable deployments).
 
-**Objective**
+**Objective**  
 Build a modular, extensible backend dashboard allowing content creators, admins, and instructors to manage and export complete "Academies" as portable, self-contained websites.
 
 **Implementation Strategy**
@@ -535,7 +749,7 @@ To enable organisations or instructors to **export** and self-host academies as 
 
 ##### C. Short-Term Implementation Timeline
 | Week | Deliverable | Description |
-|------|--------------|-------------|
+|------|-------------|-------------|
 | Week 1 | Backend Admin API | CRUD endpoints for academies, courses, lessons |
 | Week 2 | Admin Frontend MVP | React dashboard with content listing, edit forms |
 | Week 3 | Academy Export CLI | CLI to export academies as static sites |
@@ -543,18 +757,10 @@ To enable organisations or instructors to **export** and self-host academies as 
 | Week 5 | Import/Sync | Ability to re-import academy archives |
 
 ##### D. Long-Term Enhancements
-Once the dashboard and export features are stable:
-- Add content version diffing.
+- Content version diffing.
 - Support academy theming and templating.
-- Add analytics view (per lesson/course performance).
-- Integrate real-time collaboration (multi-author editing).
-
-This dashboard + export system is **core infrastructure**. Messaging, community, and monetisation are **long-term** after dashboard maturity. It provides the operational backbone for all subsequent platform growth.
-
-
-- Stripe subscriptions (monthly/annual), coupons, tax handling (GST).
-- Course licensing for organisations with seat management.
-- Instructor payout statements and revenue share reporting.
+- Analytics view (per lesson/course performance).
+- Real-time collaboration (multi-author editing).
 
 ---
 
@@ -653,6 +859,7 @@ GET /api/users/{id}/export
 | Uptime Monitoring | None | >99.9% | Medium |
 | API Latency | Unknown | p95 < 200ms | High |
 | Data Export/Deletion | None | Implemented + audited | High |
+| **Theming WCAG AA** | Dark-only UX | **Light/Dark/Auto with tokens, no flash** | **Critical** |
 
 ---
 
@@ -660,7 +867,7 @@ GET /api/users/{id}/export
 
 | Phase | Duration | Key Deliverables | Success Criteria |
 |-------|----------|------------------|------------------|
-| Phase 1 | 4 weeks | Backend tests, Serilog, Security baseline | 80% coverage, RFC7807 errors, RBAC policies |
+| Phase 1 | 4 weeks | Backend tests, Serilog, Security baseline, **WCAG theming tokens + 3‑way switch** | 80% coverage, RFC7807 errors, RBAC policies, **contrast-compliant theming** |
 | Phase 2 | 4 weeks | CI/CD, Containers, IaC | Automated deploys, IaC-reviewed envs |
 | Phase 3 | 4 weeks | Observability, SLOs, Perf | Dashboards, alerts, Lighthouse CI |
 | Phase 4 | 8 weeks | Auth, CMS, Progress, Search | OAuth+RBAC, versioned CMS, persistent progress, search |
@@ -676,6 +883,7 @@ GET /api/users/{id}/export
 4. Add GitHub Actions CI, CodeQL, and Trivy scans.
 5. Define content schema in SQL and add minimal CRUD endpoints for Courses and Lessons.
 6. Introduce OpenTelemetry for traces and metrics; ship to local Jaeger and Prometheus.
+7. **Implement tokenised theming**: add CSS variables, Tailwind mapping, boot script, and 3‑way switch; migrate top 5 components to tokens and validate WCAG contrast.
 
 ---
 
@@ -735,7 +943,7 @@ badge_awarded: { userId, badgeId, ts }
 
 ---
 
-**Document Version**: 2.1
-**Last Updated**: October 17 2025
-**Next Review**: After Phase 2 completion
+**Document Version**: 2.2  
+**Last Updated**: October 17 2025  
+**Next Review**: After Phase 2 completion  
 **Owner**: Development Team
