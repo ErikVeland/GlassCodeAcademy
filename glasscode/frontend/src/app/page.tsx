@@ -542,9 +542,9 @@ const HomePage: React.FC = () => {
     <div className="liquid-glass-layout">
       {/* Ensure no gutters - content spans full width */}
       <main id="main-content" className="homepage w-full" role="main">
-        {/* Hero Section with proper styling like the dashboard */}
+        {/* Hero Section with optimized styling for better LCP */}
         <section className="w-full mb-8">
-          <div className="bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm rounded-xl shadow-lg border border-gray-200 dark:border-gray-700">
+          <div className="bg-white/95 dark:bg-gray-800/95 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700">
             <div className="p-6 md:p-8">
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
                 <div className="hero-content">

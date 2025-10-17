@@ -5,14 +5,14 @@
 
 /* CSS Custom Properties for Liquid Glass Design */
 :root {
-  /* Glass Effect Variables - Matching design document requirements */
+  /* Glass Effect Variables - Optimized for performance */
   --glass-bg: rgba(255, 255, 255, 0.1); /* Glass Panel Background */
   --glass-bg-dark: rgba(0, 0, 0, 0.2);
   --glass-border: rgba(255, 255, 255, 0.2); /* Glass Border */
   --glass-border-dark: rgba(255, 255, 255, 0.1);
-  --glass-blur: 16px; /* Backdrop Blur */
-  --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.1); /* Elevation Shadow */
-  --glass-shadow-dark: 0 8px 32px rgba(0, 0, 0, 0.3);
+  --glass-blur: 8px; /* Reduced Backdrop Blur for better performance */
+  --glass-shadow: 0 4px 16px rgba(0, 0, 0, 0.1); /* Reduced shadow complexity */
+  --glass-shadow-dark: 0 4px 16px rgba(0, 0, 0, 0.3);
   
   /* Gradient Colors for Tiers - Matching design document requirements */
   --tier-foundational: linear-gradient(135deg, #3b82f6, #06b6d4);

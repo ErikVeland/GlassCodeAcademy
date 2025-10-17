@@ -1,0 +1,19 @@
+# Modern browsers that support ES2020+ features
+# This reduces bundle size by avoiding unnecessary polyfills and transpilation
+
+# Chrome 80+ (released Jan 2020)
+Chrome >= 80
+
+# Firefox 72+ (released Jan 2020)
+Firefox >= 72
+
+# Safari 13.1+ (released Mar 2020)
+Safari >= 13.1
+
+# Edge 80+ (released Feb 2020)
+Edge >= 80
+
+# Exclude legacy browsers to avoid unnecessary transpilation
+not IE 11
+not dead
+not < 0.25%

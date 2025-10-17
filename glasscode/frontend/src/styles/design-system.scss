@@ -317,7 +317,7 @@ body {
   }
 }
 
-// Learning Path Visualization
+// Learning Path Visualization - Optimized for performance
 .learning-path-visualization {
   width: 100%;
   max-width: 400px;
@@ -329,19 +329,20 @@ body {
   }
   
   .learning-path {
-    stroke-dasharray: 1000;
-    stroke-dashoffset: 1000;
-    animation: drawPath $animation-duration-path ease-in-out forwards;
+    // Simplified animation for better performance
+    stroke-dasharray: 500;
+    stroke-dashoffset: 500;
+    animation: drawPath 1.5s ease-out forwards;
   }
   
   .tier-node {
     opacity: 0;
-    animation: fadeInNode 0.5s ease-in-out forwards;
+    animation: fadeInNode 0.3s ease-out forwards;
     
-    &:nth-child(3) { animation-delay: 0.5s; }
-    &:nth-child(4) { animation-delay: 1s; }
-    &:nth-child(5) { animation-delay: 1.5s; }
-    &:nth-child(6) { animation-delay: 2s; }
+    &:nth-child(3) { animation-delay: 0.3s; }
+    &:nth-child(4) { animation-delay: 0.6s; }
+    &:nth-child(5) { animation-delay: 0.9s; }
+    &:nth-child(6) { animation-delay: 1.2s; }
   }
 }
 

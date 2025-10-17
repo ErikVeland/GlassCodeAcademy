@@ -5,6 +5,15 @@ const nextConfig = {
     // Enable optimizations for faster builds
     optimizeCss: true,
   },
+  // Configure SWC to target modern browsers and avoid legacy transpilation
+  compiler: {
+    // Remove console.log in production
+    removeConsole: process.env.NODE_ENV === 'production',
+    // Enable SWC optimizations for modern browsers
+    styledComponents: false,
+  },
+  // Configure transpilation for modern browsers
+  transpilePackages: [],
   // Ensure static assets are properly handled
   assetPrefix: undefined,
   // Configure for production deployment
