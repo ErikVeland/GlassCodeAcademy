@@ -1,139 +1,72 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getGraphQLEndpoint } from '@/lib/urlUtils';
+import fs from 'fs';
+import path from 'path';
 
-// Mapping of module slugs to their corresponding GraphQL query names and field structures
-const MODULE_TO_GRAPHQL_QUERY: Record<string, { queryName: string; fields: string }> = {
-  'programming-fundamentals': { 
-    queryName: 'programmingLessons', 
-    fields: 'id topic title description codeExample output' 
-  },
-  'dotnet-fundamentals': { 
-    queryName: 'dotNetLessons', 
-    fields: 'id topic title description codeExample output' 
-  },
-  'web-fundamentals': { 
-    queryName: 'webLessons', 
-    fields: 'id topic title description codeExample output' 
-  },
-  'react-fundamentals': { 
-    queryName: 'reactLessons', 
-    fields: 'id topic title description codeExample output' 
-  },
-  'database-systems': { 
-    queryName: 'databaseLessons', 
-    fields: 'id topic title description codeExample output' 
-  },
-  'typescript-fundamentals': { 
-    queryName: 'typescriptLessons', 
-    fields: 'id topic title description codeExample output' 
-  },
-  'node-fundamentals': { 
-    queryName: 'nodeLessons', 
-    fields: 'id topic title description codeExample output' 
-  },
-  'laravel-fundamentals': { 
-    queryName: 'laravelLessons', 
-    fields: 'id topic title description codeExample output' 
-  },
-  'nextjs-advanced': { 
-    queryName: 'nextJsLessons', 
-    fields: 'id topic title description codeExample output' 
-  },
-  'graphql-advanced': { 
-    queryName: 'graphQLLessons', 
-    fields: 'id topic title description codeExample output' 
-  },
-  'sass-advanced': { 
-    queryName: 'sassLessons', 
-    fields: 'id topic title description codeExample output' 
-  },
-  'tailwind-advanced': { 
-    queryName: 'tailwindLessons', 
-    fields: 'id topic title description codeExample output' 
-  },
-  'vue-advanced': { 
-    queryName: 'vueLessons', 
-    fields: 'id topic title description codeExample output' 
-  },
-  'testing-fundamentals': { 
-    queryName: 'testingLessons', 
-    fields: 'id topic title description codeExample output' 
-  },
-  'performance-optimization': { 
-    queryName: 'performanceLessons', 
-    fields: 'id topic title description codeExample output' 
-  },
-  'security-fundamentals': { 
-    queryName: 'securityLessons', 
-    fields: 'id topic title description codeExample output' 
-  },
-  'version-control': { 
-    queryName: 'versionLessons', 
-    fields: 'id topic title description codeExample output' 
-  }
-};
+// File-based lesson loading function
+async function fetchLessonsFromFile(moduleSlug: string) {
+  const possiblePaths = [
+    path.join(process.cwd(), 'public', 'content', 'lessons', `${moduleSlug}.json`),
+    path.join(process.cwd(), 'src', 'data', 'lessons', `${moduleSlug}.json`),
+    path.join(process.cwd(), 'data', 'lessons', `${moduleSlug}.json`),
+    path.join(process.cwd(), 'content', 'lessons', `${moduleSlug}.json`)
+  ];
 
-// Unified GraphQL query function that works for all lesson types
-async function fetchLessonsFromGraphQL(moduleSlug: string) {
-  const queryConfig = MODULE_TO_GRAPHQL_QUERY[moduleSlug];
-  
-  if (!queryConfig) {
-    console.log(`No GraphQL query mapping found for module: ${moduleSlug}`);
-    return [];
-  }
-
-  const { queryName, fields } = queryConfig;
-  const query = `query { ${queryName} { ${fields} } }`;
-
-  try {
-    console.log(`Fetching ${queryName} from GraphQL...`);
-    const graphqlEndpoint = getGraphQLEndpoint();
-    console.log(`Fetching ${moduleSlug} lessons from GraphQL:`, graphqlEndpoint);
-    
-    const response = await fetch(graphqlEndpoint, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        query: query
-      }),
-    });
-
-    if (!response.ok) {
-      console.error('GraphQL request failed:', response.status, response.statusText);
-      throw new Error(`GraphQL request failed: ${response.status}`);
+  for (const filePath of possiblePaths) {
+    if (fs.existsSync(filePath)) {
+      try {
+        const fileContent = fs.readFileSync(filePath, 'utf-8');
+        const lessons = JSON.parse(fileContent);
+        console.log(`Successfully loaded ${lessons.length} lessons from ${filePath}`);
+        return lessons;
+      } catch (error) {
+        console.error(`Error reading lesson file ${filePath}:`, error);
+        continue;
+      }
     }
-
-    const result = await response.json();
-    
-    if (result.errors) {
-      console.error('GraphQL errors:', result.errors);
-      throw new Error('GraphQL query returned errors');
-    }
-
-    const lessons = result.data?.[queryName] || [];
-    console.log(`Successfully fetched ${lessons.length} lessons for ${moduleSlug} from GraphQL`);
-    
-    return lessons;
-  } catch (error) {
-    console.error(`Error fetching ${moduleSlug} lessons from GraphQL:`, error);
-    return [];
   }
+
+  console.log(`No lesson file found for module: ${moduleSlug}`);
+  return [];
 }
 
 
+
+// Mapping from shortSlug to moduleSlug
+const SHORT_SLUG_TO_MODULE_SLUG: Record<string, string> = {
+  'programming': 'programming-fundamentals',
+  'web': 'web-fundamentals',
+  'version': 'version-control',
+  'dotnet': 'dotnet-fundamentals',
+  'react': 'react-fundamentals',
+  'database': 'database-systems',
+  'typescript': 'typescript-fundamentals',
+  'node': 'node-fundamentals',
+  'laravel': 'laravel-fundamentals',
+  'nextjs': 'nextjs-advanced',
+  'graphql': 'graphql-advanced',
+  'sass': 'sass-advanced',
+  'tailwind': 'tailwind-advanced',
+  'vue': 'vue-advanced',
+  'testing': 'testing-fundamentals',
+  'performance': 'performance-optimization',
+  'security': 'security-fundamentals',
+  'e2e': 'e2e-testing'
+};
 
 export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ moduleSlug: string }> }
 ) {
   try {
-    const { moduleSlug } = await params;
-    console.log(`Fetching lessons for module: ${moduleSlug}`);
+    const { moduleSlug: inputSlug } = await params;
+    console.log(`Fetching lessons for input slug: ${inputSlug}`);
 
-    // Use unified GraphQL approach for all modules
-    const lessons = await fetchLessonsFromGraphQL(moduleSlug);
+    // Convert shortSlug to moduleSlug if needed
+    const moduleSlug = SHORT_SLUG_TO_MODULE_SLUG[inputSlug] || inputSlug;
+    console.log(`Resolved to module slug: ${moduleSlug}`);
+
+    // Use file-based approach for all modules
+    const lessons = await fetchLessonsFromFile(moduleSlug);
 
     return NextResponse.json(lessons);
   } catch (error) {

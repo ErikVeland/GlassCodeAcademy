@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useSession } from 'next-auth/react';
+import { contentRegistry } from '@/lib/contentRegistry';
 
 export interface ProgressData {
   moduleId: string;
@@ -167,14 +168,14 @@ export const useProgressTracking = () => {
     }
   }, [getStorageKeys]);
 
-  const updateProgress = (moduleId: string, data: Partial<ProgressData>) => {
+  const updateProgress = async (moduleId: string, data: Partial<ProgressData>) => {
     const currentTime = new Date().toISOString();
     
     // Determine tier for module using registry
-    const tier = determineTierFromRegistry(moduleId) || 'foundational';
+    const tier = (await determineTierFromRegistry(moduleId)) || 'foundational';
     
     // Get accurate lesson count from registry/content
-    const totalLessons = getActualLessonCount(moduleId);
+    const totalLessons = await getActualLessonCount(moduleId);
     
     const defaultProgressData = {
       moduleId,
@@ -220,27 +221,37 @@ export const useProgressTracking = () => {
   };
 
   // Helper function to get tier from registry
-  const determineTierFromRegistry = (moduleSlug: string): string | null => {
-    // This would integrate with the content registry
-    // For now, use the existing mapping as fallback
-    const tierEntry = Object.entries(TIER_MODULES).find(([, modules]) => 
-      modules.includes(moduleSlug)
-    );
-    return tierEntry?.[0] || null;
+  const determineTierFromRegistry = async (moduleSlug: string): Promise<string | null> => {
+    try {
+      const foundModule = await contentRegistry.getModule(moduleSlug);
+      return foundModule?.tier || null;
+    } catch (error) {
+      console.error('Error getting tier from registry:', error);
+      // Fallback to existing mapping
+      const tierEntry = Object.entries(TIER_MODULES).find(([, modules]) => 
+        modules.includes(moduleSlug)
+      );
+      return tierEntry?.[0] || null;
+    }
   };
 
   // Helper function to get actual lesson count
-  const getActualLessonCount = (moduleSlug: string): number => {
-    // This would fetch from the actual content files
-    // For now, return default based on tier
-    const tier = determineTierFromRegistry(moduleSlug);
-    const defaultCounts = {
-      foundational: 12,
-      core: 15,
-      specialized: 14,
-      quality: 14
-    };
-    return defaultCounts[tier as keyof typeof defaultCounts] || 12;
+  const getActualLessonCount = async (moduleSlug: string): Promise<number> => {
+    try {
+      const lessons = await contentRegistry.getModuleLessons(moduleSlug);
+      return lessons.length;
+    } catch (error) {
+      console.error('Error getting lesson count from registry:', error);
+      // Fallback to default based on tier
+      const tier = await determineTierFromRegistry(moduleSlug);
+      const defaultCounts = {
+        foundational: 12,
+        core: 15,
+        specialized: 14,
+        quality: 14
+      };
+      return defaultCounts[tier as keyof typeof defaultCounts] || 12;
+    }
   };
 
   const updateStreak = () => {

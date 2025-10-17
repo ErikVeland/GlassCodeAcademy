@@ -392,13 +392,36 @@ export const useProgressTrackingComplete = () => {
   }, []);
 
   // Helper: determine tier for a module via registry-backed cache with fallback
-  const resolveTierForModule = (
+  const resolveTierForModule = async (
     moduleId: string
-  ): 'foundational' | 'core' | 'specialized' | 'quality' => {
+  ): Promise<'foundational' | 'core' | 'specialized' | 'quality'> => {
     const source = Object.keys(tierModuleCache).length ? tierModuleCache : (TIER_MODULES as Record<string, string[]>);
-    const found = (Object.entries(source).find(([, mods]) => mods.includes(moduleId))?.[0] || 'foundational') as
-      'foundational' | 'core' | 'specialized' | 'quality';
-    return found;
+    
+    // First try with the moduleId as-is
+    let found = Object.entries(source).find(([, mods]) => mods.includes(moduleId))?.[0];
+    
+    // If not found, try converting between shortSlug and moduleSlug
+    if (!found) {
+      try {
+        // Try converting shortSlug to moduleSlug
+        const moduleSlug = await contentRegistry.getModuleSlugFromShortSlug(moduleId);
+        if (moduleSlug) {
+          found = Object.entries(source).find(([, mods]) => mods.includes(moduleSlug))?.[0];
+        }
+        
+        // If still not found, try converting moduleSlug to shortSlug
+        if (!found) {
+          const shortSlug = await contentRegistry.getShortSlugFromModuleSlug(moduleId);
+          if (shortSlug) {
+            found = Object.entries(source).find(([, mods]) => mods.includes(shortSlug))?.[0];
+          }
+        }
+      } catch (error) {
+        console.warn('Error resolving tier for module:', moduleId, error);
+      }
+    }
+    
+    return (found || 'foundational') as 'foundational' | 'core' | 'specialized' | 'quality';
   };
 
   // Save data to localStorage whenever it changes
@@ -434,7 +457,7 @@ export const useProgressTrackingComplete = () => {
     }
   }, [userStats]);
 
-  const updateProgress = (
+  const updateProgress = async (
     moduleId: string,
     dataOrName: string | Partial<ProgressData>,
     maybeData?: Partial<ProgressData>
@@ -446,10 +469,10 @@ export const useProgressTrackingComplete = () => {
       : (progress[moduleId]?.moduleName ?? moduleId);
     
     // Determine tier for module using registry-backed cache
-    const tier = resolveTierForModule(moduleId);
+    const tier = await resolveTierForModule(moduleId);
     
     // Get actual lesson count from content files
-    const actualLessonCount = getActualLessonCount(moduleId);
+    const actualLessonCount = await getActualLessonCount(moduleId);
     
     const defaultProgressData: ProgressData = {
       moduleId,
@@ -516,10 +539,31 @@ export const useProgressTrackingComplete = () => {
   };
 
   // Helper function to get actual lesson count from content files (registry-backed with fallback)
-  const getActualLessonCount = (moduleSlug: string): number => {
-    const fromCache = lessonCountCache[moduleSlug];
+  const getActualLessonCount = async (moduleId: string): Promise<number> => {
+    // Try to get from cache using the provided moduleId (could be shortSlug or moduleSlug)
+    let fromCache = lessonCountCache[moduleId];
     if (typeof fromCache === 'number' && fromCache > 0) return fromCache;
-    const tier = resolveTierForModule(moduleSlug);
+    
+    // If not found, try to convert between shortSlug and moduleSlug
+    try {
+      // Try as shortSlug first
+      const moduleSlugFromShort = await contentRegistry.getModuleSlugFromShortSlug(moduleId);
+      if (moduleSlugFromShort && lessonCountCache[moduleSlugFromShort]) {
+        fromCache = lessonCountCache[moduleSlugFromShort];
+        if (typeof fromCache === 'number' && fromCache > 0) return fromCache;
+      }
+      
+      // Try as moduleSlug
+      const shortSlugFromModule = await contentRegistry.getShortSlugFromModuleSlug(moduleId);
+      if (shortSlugFromModule && lessonCountCache[shortSlugFromModule]) {
+        fromCache = lessonCountCache[shortSlugFromModule];
+        if (typeof fromCache === 'number' && fromCache > 0) return fromCache;
+      }
+    } catch (error) {
+      console.warn('Error converting between shortSlug and moduleSlug:', error);
+    }
+    
+    const tier = await resolveTierForModule(moduleId);
     const defaultCounts: Record<'foundational' | 'core' | 'specialized' | 'quality', number> = {
       foundational: 12,
       core: 15,

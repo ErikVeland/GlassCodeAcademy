@@ -5,6 +5,28 @@ import { normalizeQuestion } from '@/lib/textNormalization';
 
 // Removed GraphQL fetching. API now serves only local quiz content.
 
+// Mapping from shortSlug to moduleSlug
+const SHORT_SLUG_TO_MODULE_SLUG: Record<string, string> = {
+  'programming': 'programming-fundamentals',
+  'web': 'web-fundamentals',
+  'version': 'version-control',
+  'dotnet': 'dotnet-fundamentals',
+  'react': 'react-fundamentals',
+  'database': 'database-systems',
+  'typescript': 'typescript-fundamentals',
+  'node': 'node-fundamentals',
+  'laravel': 'laravel-fundamentals',
+  'nextjs': 'nextjs-advanced',
+  'graphql': 'graphql-advanced',
+  'sass': 'sass-advanced',
+  'tailwind': 'tailwind-advanced',
+  'vue': 'vue-advanced',
+  'testing': 'testing-fundamentals',
+  'performance': 'performance-optimization',
+  'security': 'security-fundamentals',
+  'e2e': 'e2e-testing'
+};
+
 // Function to find quiz file in multiple possible locations
 function findQuizFile(moduleSlug: string): string | null {
   // Try to find the quiz file in different possible locations
@@ -36,9 +58,13 @@ function findQuizFile(moduleSlug: string): string | null {
 
 export async function GET(request: Request, context: { params: Promise<{ moduleSlug: string }> }) {
   try {
-    const { moduleSlug } = await context.params;
+    const { moduleSlug: inputSlug } = await context.params;
     console.log('=== Quiz API Route ===');
-    console.log('Received request for quiz module:', moduleSlug);
+    console.log('Received request for quiz input slug:', inputSlug);
+    
+    // Convert shortSlug to moduleSlug if needed
+    const moduleSlug = SHORT_SLUG_TO_MODULE_SLUG[inputSlug] || inputSlug;
+    console.log('Resolved to module slug:', moduleSlug);
     
     // No special handling needed. All modules load from local quiz files.
 

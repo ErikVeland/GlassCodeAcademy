@@ -90,13 +90,21 @@ function generateBreadcrumbFromPath(pathname: string): BreadcrumbItem[] {
     const isLast = i === pathSegments.length - 1;
     
     if (segment === 'modules') {
-      // Don't add 'modules' as a breadcrumb item
+      // Don't add 'modules' as a breadcrumb item (old routing)
       continue;
     } else if (pathSegments[i - 1] === 'modules') {
-      // This is a module slug
+      // This is a module slug in old routing (/modules/[moduleSlug])
       breadcrumbs.push({
         label: formatModuleName(segment),
         href: isLast ? undefined : `/modules/${segment}`,
+        isCurrentPage: isLast
+      });
+    } else if (i === 0 && segment !== 'modules' && segment !== 'api' && segment !== '_next') {
+      // This could be a shortSlug in new routing (/[shortSlug])
+      // Check if this looks like a module shortSlug (not a system route)
+      breadcrumbs.push({
+        label: formatModuleName(segment),
+        href: isLast ? undefined : `/${segment}`,
         isCurrentPage: isLast
       });
     } else if (segment === 'lessons') {
@@ -115,6 +123,13 @@ function generateBreadcrumbFromPath(pathname: string): BreadcrumbItem[] {
       // This is a lesson number
       breadcrumbs.push({
         label: `Lesson ${segment}`,
+        href: isLast ? undefined : currentPath,
+        isCurrentPage: isLast
+      });
+    } else if (pathSegments[i - 1] === 'question' && /^\d+$/.test(segment)) {
+      // This is a question number
+      breadcrumbs.push({
+        label: `Question ${segment}`,
         href: isLast ? undefined : currentPath,
         isCurrentPage: isLast
       });
@@ -194,6 +209,39 @@ export function ModuleBreadcrumb({
   return <Breadcrumb items={items} />;
 }
 
+// New breadcrumb component for shortSlug routing
+export function ShortSlugModuleBreadcrumb({ 
+  moduleTitle, 
+  shortSlug, 
+  currentPage 
+}: { 
+  moduleTitle: string; 
+  shortSlug: string; 
+  currentPage?: string;
+}) {
+  const items: BreadcrumbItem[] = [
+    {
+      label: 'Home',
+      href: '/',
+      icon: <HomeIcon className="h-4 w-4" />
+    },
+    {
+      label: moduleTitle,
+      href: currentPage ? `/${shortSlug}` : undefined,
+      isCurrentPage: !currentPage
+    }
+  ];
+
+  if (currentPage) {
+    items.push({
+      label: currentPage,
+      isCurrentPage: true
+    });
+  }
+
+  return <Breadcrumb items={items} />;
+}
+
 export function LessonBreadcrumb({ 
   moduleTitle, 
   moduleSlug, 
@@ -218,6 +266,41 @@ export function LessonBreadcrumb({
     {
       label: 'Lessons',
       href: `/modules/${moduleSlug}/lessons`
+    },
+    {
+      label: lessonTitle ? `Lesson ${lessonNumber}: ${lessonTitle}` : `Lesson ${lessonNumber}`,
+      isCurrentPage: true
+    }
+  ];
+
+  return <Breadcrumb items={items} />;
+}
+
+// New breadcrumb component for shortSlug routing
+export function ShortSlugLessonBreadcrumb({ 
+  moduleTitle, 
+  shortSlug, 
+  lessonTitle, 
+  lessonNumber 
+}: { 
+  moduleTitle: string; 
+  shortSlug: string; 
+  lessonTitle: string; 
+  lessonNumber: number;
+}) {
+  const items: BreadcrumbItem[] = [
+    {
+      label: 'Home',
+      href: '/',
+      icon: <HomeIcon className="h-4 w-4" />
+    },
+    {
+      label: moduleTitle,
+      href: `/${shortSlug}`
+    },
+    {
+      label: 'Lessons',
+      href: `/${shortSlug}/lessons`
     },
     {
       label: lessonTitle ? `Lesson ${lessonNumber}: ${lessonTitle}` : `Lesson ${lessonNumber}`,

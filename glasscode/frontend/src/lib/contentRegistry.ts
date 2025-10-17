@@ -3,8 +3,7 @@
  * Provides centralized access to content registry data for routing and navigation
  */
 
-import { getApolloClient } from '@/apolloClient';
-import { GET_PROGRAMMING_LESSONS } from '@/graphql/queries';
+
 import { normalizeQuestion } from './textNormalization';
 
 interface Module {
@@ -270,11 +269,23 @@ class ContentRegistryLoader {
   }
 
   /**
-   * Get module by slug
+   * Get module by slug (supports both moduleSlug and shortSlug)
    */
   async getModule(slug: string): Promise<Module | null> {
     const modules = await this.getModules();
-    return modules.find(module => module.slug === slug) || null;
+    
+    // First try to find by exact slug match (moduleSlug)
+    let foundModule = modules.find(m => m.slug === slug);
+    
+    // If not found, try to convert shortSlug to moduleSlug and search again
+    if (!foundModule) {
+      const moduleSlug = await this.getModuleSlugFromShortSlug(slug);
+      if (moduleSlug) {
+        foundModule = modules.find(m => m.slug === moduleSlug);
+      }
+    }
+    
+    return foundModule || null;
   }
 
   /**
@@ -381,175 +392,6 @@ class ContentRegistryLoader {
    * Get lessons for a specific module
    */
   async getModuleLessons(moduleSlug: string): Promise<Lesson[]> {
-    // Special handling for programming-fundamentals module to use GraphQL
-    if (moduleSlug === 'programming-fundamentals') {
-      try {
-        const client = getApolloClient();
-        const { data } = await client.query({
-          query: GET_PROGRAMMING_LESSONS
-        });
-        let lessons = (data.programmingLessons || []) as Lesson[];
-        // If GraphQL succeeded but returned empty, attempt file/API fallbacks
-        if (!Array.isArray(lessons) || lessons.length === 0) {
-          // Attempt a server-side file fallback first
-          if (typeof window === 'undefined') {
-            try {
-              const fs = await import('fs');
-              const path = await import('path');
-              const possiblePaths = [
-                // First try the correct path relative to the project root
-                path.join(process.cwd(), '..', '..', 'content', 'lessons', `programming-fundamentals.json`),
-                // Try from the glasscode/frontend directory going up to project root
-                path.join(process.cwd(), '..', '..', '..', 'content', 'lessons', `programming-fundamentals.json`),
-                // Try direct path from current working directory
-                path.join(process.cwd(), 'content', 'lessons', `programming-fundamentals.json`),
-                // Legacy paths for compatibility
-                path.join(__dirname, '..', '..', '..', '..', 'content', 'lessons', `programming-fundamentals.json`),
-                path.join('/srv/academy', 'content', 'lessons', `programming-fundamentals.json`),
-              ];
-              let lessonsPath = '';
-              for (const possiblePath of possiblePaths) {
-                try {
-                  if (fs.existsSync(possiblePath)) {
-                    lessonsPath = possiblePath;
-                    break;
-                  }
-                } catch {
-                  // Continue to next path
-                }
-              }
-              if (lessonsPath) {
-                const lessonsContent = fs.readFileSync(lessonsPath, 'utf8');
-                const lessonsData: unknown = JSON.parse(lessonsContent);
-                const fileLessons = Array.isArray(lessonsData) ? (lessonsData as Lesson[]) : [];
-                if (fileLessons.length > 0) {
-                  lessons = fileLessons;
-                }
-              }
-            } catch (fsError) {
-              console.error('PF server-side file fallback failed:', fsError);
-            }
-          } else {
-            // Client-side fallback: try hitting the API route
-            try {
-              const controller = new AbortController();
-              const timeoutId = setTimeout(() => controller.abort(), 15000);
-              const response = await fetch(`/api/content/lessons/programming-fundamentals`, {
-                signal: controller.signal,
-              }).finally(() => clearTimeout(timeoutId));
-              const contentType = response.headers.get('content-type');
-              if (contentType && contentType.includes('text/html')) {
-                console.error('Received HTML instead of JSON for programming-fundamentals lessons');
-              } else if (response.ok) {
-                const data: unknown = await response.json();
-                const apiLessons = Array.isArray(data) ? (data as Lesson[]) : [];
-                if (apiLessons.length > 0) {
-                  lessons = apiLessons;
-                }
-              }
-            } catch (apiErr) {
-              console.error('PF client-side API fallback failed:', apiErr);
-            }
-          }
-        }
-        // Final fallback: if still empty after GraphQL and file/API attempts,
-        // provide minimal PF lessons to avoid empty UI group counts
-        if (!Array.isArray(lessons) || lessons.length === 0) {
-          const minimalLessons: Lesson[] = [
-            { id: 1, title: 'Variables and Data Types', topic: 'basics' },
-            { id: 2, title: 'Control Structures', topic: 'basics' },
-            { id: 3, title: 'Functions', topic: 'basics' },
-            { id: 4, title: 'Arrays and Objects', topic: 'data-structures' },
-            { id: 5, title: 'Object-Oriented Programming', topic: 'data-structures' },
-            { id: 6, title: 'Error Handling', topic: 'error-handling' },
-            { id: 7, title: 'File Operations', topic: 'error-handling' },
-            { id: 8, title: 'Recursion', topic: 'algorithms' },
-            { id: 9, title: 'Sorting Algorithms', topic: 'algorithms' },
-            { id: 10, title: 'Memory Management', topic: 'advanced' },
-            { id: 11, title: 'Best Practices', topic: 'advanced' },
-            { id: 12, title: 'Project Organization', topic: 'advanced' }
-          ];
-          lessons = minimalLessons;
-        }
-        return lessons.map((l, i) => ({ ...l, order: i + 1 }));
-      } catch (error: unknown) {
-        console.error(`Failed to load programming lessons via GraphQL:`, error);
-        // Attempt a server-side file fallback first
-        if (typeof window === 'undefined') {
-          try {
-            const fs = await import('fs');
-            const path = await import('path');
-            const possiblePaths = [
-              path.join(process.cwd(), '..', '..', 'content', 'lessons', `programming-fundamentals.json`),
-              path.join(process.cwd(), 'content', 'lessons', `programming-fundamentals.json`),
-              path.join(__dirname, '..', '..', '..', '..', 'content', 'lessons', `programming-fundamentals.json`),
-              path.join('/srv/academy', 'content', 'lessons', `programming-fundamentals.json`),
-            ];
-            let lessonsPath = '';
-            for (const possiblePath of possiblePaths) {
-              try {
-                if (fs.existsSync(possiblePath)) {
-                  lessonsPath = possiblePath;
-                  break;
-                }
-              } catch {
-                // Continue to next path
-              }
-            }
-            if (lessonsPath) {
-              const lessonsContent = fs.readFileSync(lessonsPath, 'utf8');
-              const lessonsData: unknown = JSON.parse(lessonsContent);
-              const lessons = Array.isArray(lessonsData) ? (lessonsData as Lesson[]) : [];
-              if (lessons.length > 0) {
-                return lessons.map((l, i) => ({ ...l, order: i + 1 }));
-              }
-            }
-          } catch (fsError) {
-            console.error('PF server-side file fallback failed:', fsError);
-          }
-        } else {
-          // Client-side fallback: try hitting the API route
-          try {
-            const controller = new AbortController();
-            const timeoutId = setTimeout(() => controller.abort(), 15000);
-            const response = await fetch(`/api/content/lessons/programming-fundamentals`, {
-              signal: controller.signal,
-            }).finally(() => clearTimeout(timeoutId));
-            const contentType = response.headers.get('content-type');
-            if (contentType && contentType.includes('text/html')) {
-              console.error('Received HTML instead of JSON for programming-fundamentals lessons');
-            } else if (response.ok) {
-              const data: unknown = await response.json();
-              const lessons = Array.isArray(data) ? (data as Lesson[]) : [];
-              if (lessons.length > 0) {
-                return lessons.map((l, i) => ({ ...l, order: i + 1 }));
-              }
-            } else {
-              console.error(`HTTP error ${response.status} for programming-fundamentals lessons`);
-            }
-          } catch (httpError) {
-            console.error('PF client-side API fallback failed:', httpError);
-          }
-        }
-        // Final fallback: return minimal PF lessons to prevent empty content
-        const minimalLessons: Lesson[] = [
-          { id: 1, title: 'Variables and Data Types', topic: 'basics' },
-          { id: 2, title: 'Control Structures', topic: 'basics' },
-          { id: 3, title: 'Functions', topic: 'basics' },
-          { id: 4, title: 'Arrays and Objects', topic: 'data-structures' },
-          { id: 5, title: 'Object-Oriented Programming', topic: 'data-structures' },
-          { id: 6, title: 'Error Handling', topic: 'error-handling' },
-          { id: 7, title: 'File Operations', topic: 'error-handling' },
-          { id: 8, title: 'Recursion', topic: 'algorithms' },
-          { id: 9, title: 'Sorting Algorithms', topic: 'algorithms' },
-          { id: 10, title: 'Memory Management', topic: 'advanced' },
-          { id: 11, title: 'Best Practices', topic: 'advanced' },
-          { id: 12, title: 'Project Organization', topic: 'advanced' }
-        ];
-        return minimalLessons.map((l, i) => ({ ...l, order: i + 1 }));
-      }
-    }
-    
     // For server-side operations, read files directly instead of making HTTP requests
     if (typeof window === 'undefined') {
       try {
@@ -559,7 +401,9 @@ class ContentRegistryLoader {
         
         // Try to find the lesson file in different possible locations
         const possiblePaths = [
-          // First try the correct path relative to the project root
+          // First try the public directory path (where files actually are)
+          path.join(process.cwd(), 'public', 'content', 'lessons', `${moduleSlug}.json`),
+          // Try the correct path relative to the project root
           path.join(process.cwd(), '..', '..', 'content', 'lessons', `${moduleSlug}.json`),
           // Try from the glasscode/frontend directory going up to project root
           path.join(process.cwd(), '..', '..', '..', 'content', 'lessons', `${moduleSlug}.json`),
@@ -582,65 +426,52 @@ class ContentRegistryLoader {
           }
         }
         
-        if (!lessonsPath) {
-          console.error(`Lesson file not found for module: ${moduleSlug}`);
-          return [];
+        if (lessonsPath) {
+          const lessonsContent = fs.readFileSync(lessonsPath, 'utf8');
+          const lessonsData: unknown = JSON.parse(lessonsContent);
+          const lessons = Array.isArray(lessonsData) ? (lessonsData as Lesson[]) : [];
+          return lessons.map((l, i) => ({ ...l, order: i + 1 }));
         }
-        
-        const lessonsContent = fs.readFileSync(lessonsPath, 'utf8');
-        const lessonsData: unknown = JSON.parse(lessonsContent);
-        const lessons = Array.isArray(lessonsData) ? (lessonsData as Lesson[]) : [];
-        return lessons.map((l, i) => ({ ...l, order: i + 1 }));
       } catch (error: unknown) {
         console.error(`Failed to load lessons for ${moduleSlug} (server-side):`, error);
-        return [];
+      }
+    } else {
+      // For client-side, use API route
+      try {
+        const response = await fetch(`/api/content/lessons/${moduleSlug}`);
+        if (response.ok) {
+          const data: unknown = await response.json();
+          const lessons = Array.isArray(data) ? (data as Lesson[]) : [];
+          return lessons.map((l, i) => ({ ...l, order: i + 1 }));
+        } else {
+          console.error(`API request failed for ${moduleSlug} lessons:`, response.status, response.statusText);
+        }
+      } catch (error: unknown) {
+        console.error(`Failed to load lessons for ${moduleSlug} via API:`, error);
       }
     }
     
-    // For client-side, use HTTP requests
-    try {
-      
-      // Use AbortController for timeout
-      const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 15000); // 15 second timeout
-      
-      const response = await fetch(`/api/content/lessons/${moduleSlug}`, {
-        signal: controller.signal
-      }).finally(() => {
-        clearTimeout(timeoutId);
-      });
-      
-      // Check if response is HTML (error page) instead of JSON
-      const contentType = response.headers.get('content-type');
-      if (contentType && contentType.includes('text/html')) {
-        console.error(`Received HTML instead of JSON for lessons/${moduleSlug}`);
-        return [];
-      }
-      
-      if (!response.ok) {
-        console.error(`HTTP error ${response.status} for lessons/${moduleSlug}`);
-        // Client-side static fallback: try public content
-        try {
-          const staticRes = await fetch(`/content/lessons/${moduleSlug}.json`, {
-            signal: controller.signal,
-          });
-          if (staticRes.ok) {
-            const staticData: unknown = await staticRes.json();
-            return Array.isArray(staticData) ? (staticData as Lesson[]).map((l, i) => ({ ...l, order: i + 1 })) : [];
-          }
-        } catch (staticErr) {
-          console.error(`Static lessons fallback failed for ${moduleSlug}:`, staticErr);
-        }
-        return [];
-      }
-      
-      const data: unknown = await response.json();
-      return Array.isArray(data) ? (data as Lesson[]).map((l, i) => ({ ...l, order: i + 1 })) : [];
-    } catch (error: unknown) {
-      console.error(`Failed to load lessons for ${moduleSlug}:`, error);
-      // Return empty array as fallback to prevent build failures
-      return [];
+    // Fallback: return minimal lessons for programming-fundamentals to prevent empty UI
+    if (moduleSlug === 'programming-fundamentals') {
+      const minimalLessons: Lesson[] = [
+        { id: 1, title: 'Variables and Data Types', topic: 'basics' },
+        { id: 2, title: 'Control Structures', topic: 'basics' },
+        { id: 3, title: 'Functions', topic: 'basics' },
+        { id: 4, title: 'Arrays and Objects', topic: 'data-structures' },
+        { id: 5, title: 'Object-Oriented Programming', topic: 'data-structures' },
+        { id: 6, title: 'Error Handling', topic: 'error-handling' },
+        { id: 7, title: 'File Operations', topic: 'error-handling' },
+        { id: 8, title: 'Recursion', topic: 'algorithms' },
+        { id: 9, title: 'Sorting Algorithms', topic: 'algorithms' },
+        { id: 10, title: 'Memory Management', topic: 'advanced' },
+        { id: 11, title: 'Best Practices', topic: 'advanced' },
+        { id: 12, title: 'Project Organization', topic: 'advanced' }
+      ];
+      return minimalLessons.map((l, i) => ({ ...l, order: i + 1 }));
     }
+    
+    // Return empty array for other modules
+    return [];
   }
 
   /**
@@ -747,45 +578,11 @@ class ContentRegistryLoader {
   }
 
   /**
-   * Get programming fundamentals lessons via GraphQL
+   * Get programming fundamentals lessons via API
    */
   async getProgrammingLessons(): Promise<Lesson[]> {
-    // Special handling for programming-fundamentals module to use GraphQL
-    try {
-      const client = getApolloClient();
-      const { data } = await client.query({
-        query: GET_PROGRAMMING_LESSONS
-      });
-      return (data.programmingLessons || []) as Lesson[];
-    } catch (error: unknown) {
-      console.error(`Failed to load programming lessons via GraphQL:`, error);
-      // During build time or when backend is unavailable, return minimal lesson data
-      // Check for multiple build-time indicators
-      const isBuildTime = process.env.NEXT_PHASE === 'phase-production-build' || 
-                         process.env.NODE_ENV === 'production' ||
-                         typeof window === 'undefined';
-      
-      if (isBuildTime) {
-        console.log('Build phase or server-side detected, returning minimal lesson data');
-      }
-      
-      // Always return minimal lessons as fallback to prevent build failures
-      const minimalLessons: Lesson[] = [
-        { id: 1, title: 'Variables and Data Types', topic: 'basics' },
-        { id: 2, title: 'Control Structures', topic: 'basics' },
-        { id: 3, title: 'Functions', topic: 'basics' },
-        { id: 4, title: 'Arrays and Objects', topic: 'data-structures' },
-        { id: 5, title: 'Object-Oriented Programming', topic: 'data-structures' },
-        { id: 6, title: 'Error Handling', topic: 'error-handling' },
-        { id: 7, title: 'File Operations', topic: 'error-handling' },
-        { id: 8, title: 'Recursion', topic: 'algorithms' },
-        { id: 9, title: 'Sorting Algorithms', topic: 'algorithms' },
-        { id: 10, title: 'Memory Management', topic: 'advanced' },
-        { id: 11, title: 'Best Practices', topic: 'advanced' },
-        { id: 12, title: 'Project Organization', topic: 'advanced' }
-      ];
-      return minimalLessons;
-    }
+    // Use the same API route as getModuleLessons for consistency
+    return this.getModuleLessons('programming-fundamentals');
   }
 
   /**
@@ -827,6 +624,64 @@ class ContentRegistryLoader {
       console.error('Failed to load programming fundamentals questions from local content:', error);
       return [];
     }
+  }
+
+  /**
+   * Get moduleSlug from shortSlug (for backward compatibility)
+   */
+  async getModuleSlugFromShortSlug(shortSlug: string): Promise<string | null> {
+    // Define the mapping from shortSlug to moduleSlug
+    const shortSlugToModuleSlug: Record<string, string> = {
+      'programming': 'programming-fundamentals',
+      'web': 'web-fundamentals', 
+      'version': 'version-control',
+      'dotnet': 'dotnet-fundamentals',
+      'react': 'react-fundamentals',
+      'database': 'database-systems',
+      'typescript': 'typescript-fundamentals',
+      'node': 'node-fundamentals',
+      'laravel': 'laravel-fundamentals',
+      'nextjs': 'nextjs-advanced',
+      'graphql': 'graphql-advanced',
+      'sass': 'sass-advanced',
+      'tailwind': 'tailwind-advanced',
+      'vue': 'vue-advanced',
+      'testing': 'testing-fundamentals',
+      'e2e': 'e2e-testing',
+      'performance': 'performance-optimization',
+      'security': 'security-fundamentals'
+    };
+    
+    return shortSlugToModuleSlug[shortSlug] || null;
+  }
+
+  /**
+   * Get shortSlug from moduleSlug (for migration purposes)
+   */
+  async getShortSlugFromModuleSlug(moduleSlug: string): Promise<string | null> {
+    // Define the mapping from moduleSlug to shortSlug
+    const moduleSlugToShortSlug: Record<string, string> = {
+      'programming-fundamentals': 'programming',
+      'web-fundamentals': 'web',
+      'version-control': 'version',
+      'dotnet-fundamentals': 'dotnet',
+      'react-fundamentals': 'react',
+      'database-systems': 'database',
+      'typescript-fundamentals': 'typescript',
+      'node-fundamentals': 'node',
+      'laravel-fundamentals': 'laravel',
+      'nextjs-advanced': 'nextjs',
+      'graphql-advanced': 'graphql',
+      'sass-advanced': 'sass',
+      'tailwind-advanced': 'tailwind',
+      'vue-advanced': 'vue',
+      'testing-fundamentals': 'testing',
+      'e2e-testing': 'e2e',
+      'performance-optimization': 'performance',
+      'security-fundamentals': 'security'
+    };
+    
+    return moduleSlugToShortSlug[moduleSlug] || null;
   }
 
   /**
