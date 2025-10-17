@@ -172,8 +172,8 @@ const InterviewModuleCard: React.FC<{
   module: InterviewModule;
   tierKey: string;
 }> = ({ module, tierKey }) => {
-  const prerequisitesMet = module.prerequisites.length === 0;
-  const isLocked = module.prerequisites.length > 0 && !prerequisitesMet;
+  // All modules are unlocked from the start for interview preparation
+  const isLocked = false;
 
   // Define tier-specific gradient classes to match homepage
   const tierGradientClass = {
