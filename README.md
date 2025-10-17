@@ -1,5 +1,7 @@
 # GlassCode Academy - Fullstack Learning & Interview Trainer
 
+🌐 **[Visit GlassCode Academy](https://glasscode.academy)** - Live Demo & Production Site
+
 ## Project Overview
 
 GlassCode Academy is a full-stack educational platform designed to help developers learn and prepare for interviews in modern web technologies. The application provides structured learning resources and realistic interview practice with instant feedback.
