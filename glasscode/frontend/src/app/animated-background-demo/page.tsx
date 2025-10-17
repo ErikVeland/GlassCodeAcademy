@@ -197,7 +197,7 @@ export default function AnimatedBackgroundDemo() {
           /* Main Content */
           <main id="main-content" className="flex-grow flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
             <div className="w-full max-w-3xl">
-            <div className="group relative bg-white/15 dark:bg-gray-900/15 backdrop-blur-2xl rounded-2xl shadow-[0_8px_32px_rgba(0,0,0,0.12)] dark:shadow-[0_8px_32px_rgba(0,0,0,0.3)] border border-white/20 dark:border-gray-700/30 overflow-hidden hover:shadow-[0_16px_48px_rgba(0,0,0,0.15)] dark:hover:shadow-[0_16px_48px_rgba(0,0,0,0.4)] hover:scale-[1.02] transition-all duration-500 ease-out">
+            <div className="group relative bg-white/15 dark:bg-gray-900/15 backdrop-blur-2xl rounded-2xl shadow-[0_8px_32px_rgba(0,0,0,0.12)] dark:shadow-[0_8px_32px_rgba(0,0,0,0.3)] border border-white/20 dark:border-gray-700/30 overflow-hidden hover:shadow-[0_16px_48px_rgba(0,0,0,0.15)] dark:hover:shadow-[0_16px_48px_rgba(0,0,0,0.4)] transition-all duration-500 ease-out">
               {/* Enhanced liquid glass effect overlay */}
               <div className="absolute inset-0 bg-gradient-to-r from-white/8 via-white/15 to-white/8 dark:from-gray-800/8 dark:via-gray-800/15 dark:to-gray-800/8"></div>
               <div className="absolute inset-0 bg-gradient-to-b from-transparent via-white/8 to-transparent dark:via-gray-800/8"></div>
@@ -310,26 +310,6 @@ export default function AnimatedBackgroundDemo() {
                           <div className="text-sm text-blue-300/80">Create custom gradients with precise color control</div>
                         </div>
                       </button>
-                      
-                      <button
-                        onClick={saveAsAppBackground}
-                        className="w-full px-6 py-4 bg-green-500/20 hover:bg-green-500/30 border border-green-400/30 rounded-lg text-green-200 transition-colors duration-200 flex items-center justify-center group relative"
-                      >
-                        <div className="text-center">
-                          <div className="text-lg font-medium">Use as App Background</div>
-                          <div className="text-sm text-green-300/80">Save these settings for the entire app</div>
-                        </div>
-                        {saveSuccess && (
-                          <div className="absolute inset-0 bg-green-500/40 rounded-lg flex items-center justify-center">
-                            <div className="text-white font-medium flex items-center gap-2">
-                              <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                                <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                              </svg>
-                              Saved Successfully!
-                            </div>
-                          </div>
-                        )}
-                      </button>
                     </div>
                     
                     {/* Quick Presets */}
@@ -405,7 +385,7 @@ export default function AnimatedBackgroundDemo() {
                       <div className="flex-grow flex items-center justify-center">
                         <div 
                           onClick={() => setPreviewIsPaused(!previewIsPaused)}
-                          className={`relative w-64 h-40 rounded-lg overflow-hidden border-2 border-white/20 transition-all duration-500 cursor-pointer hover:border-white/40 hover:scale-105 ${
+                          className={`relative w-64 h-40 rounded-lg overflow-hidden border-2 border-white/20 transition-all duration-500 cursor-pointer hover:border-white/40 ${
                             previewIsPaused ? 'opacity-60' : 'opacity-100'
                           }`}
                           title="Click to pause/play preview animation"
@@ -475,7 +455,7 @@ export default function AnimatedBackgroundDemo() {
                 </div>
                 
                 {/* Navigation Buttons */}
-                <div className="mt-12 flex justify-between items-center">
+                <div className="mt-12 flex justify-center items-center gap-4 flex-wrap">
                   <Link 
                     href="/" 
                     className="group relative overflow-hidden bg-white/20 dark:bg-gray-800/20 backdrop-blur-sm text-gray-800 dark:text-gray-200 font-medium py-2 px-4 rounded-lg border border-white/30 dark:border-gray-600/30 hover:bg-white/30 dark:hover:bg-gray-700/30 transition-all duration-200 flex items-center gap-2 text-sm shadow-lg hover:shadow-xl"
@@ -484,6 +464,26 @@ export default function AnimatedBackgroundDemo() {
                     <span>Back to Home</span>
                     <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700"></div>
                   </Link>
+                  
+                  <button
+                    onClick={saveAsAppBackground}
+                    className="group relative overflow-hidden bg-gradient-to-r from-green-500/20 to-emerald-500/20 dark:from-green-500/20 dark:to-emerald-500/20 backdrop-blur-sm text-green-800 dark:text-green-200 font-medium py-2 px-4 rounded-lg border border-green-400/30 dark:border-green-500/30 hover:from-green-500/30 hover:to-emerald-500/30 dark:hover:from-green-500/30 dark:hover:to-emerald-500/30 transition-all duration-200 flex items-center gap-2 text-sm shadow-lg hover:shadow-xl"
+                  >
+                    <span className="text-base">💾</span> 
+                    <span>Use as App Background</span>
+                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700"></div>
+                    {saveSuccess && (
+                      <div className="absolute inset-0 bg-green-500/40 dark:bg-green-500/40 rounded-lg flex items-center justify-center">
+                        <div className="text-white dark:text-gray-100 font-medium flex items-center gap-2">
+                          <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                            <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                          </svg>
+                          Saved!
+                        </div>
+                      </div>
+                    )}
+                  </button>
+                  
                   <a
                     href={`${ROUTES.api.download.animatedBackground}?colors=${encodeURIComponent(JSON.stringify(colors))}&speed=${speed}&blur=${blur}&opacity=${opacity}&respectReducedMotion=${respectReducedMotion}`}
                     className="group relative overflow-hidden bg-gradient-to-r from-emerald-500/20 to-teal-500/20 backdrop-blur-sm text-emerald-800 dark:text-emerald-200 font-medium py-2 px-4 rounded-lg border border-emerald-400/30 dark:border-emerald-500/30 hover:from-emerald-500/30 hover:to-teal-500/30 transition-all duration-200 flex items-center gap-2 text-sm shadow-lg hover:shadow-xl"
@@ -501,7 +501,7 @@ export default function AnimatedBackgroundDemo() {
         
         {/* Quick Actions Pane */}
         <div className="relative z-10 max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 pb-12">
-          <div className="group relative bg-white/15 dark:bg-gray-900/15 backdrop-blur-2xl rounded-2xl shadow-[0_8px_32px_rgba(0,0,0,0.12)] dark:shadow-[0_8px_32px_rgba(0,0,0,0.3)] border border-white/20 dark:border-gray-700/30 overflow-hidden hover:shadow-[0_16px_48px_rgba(0,0,0,0.15)] dark:hover:shadow-[0_16px_48px_rgba(0,0,0,0.4)] hover:scale-[1.02] transition-all duration-500 ease-out">
+          <div className="group relative bg-white/15 dark:bg-gray-900/15 backdrop-blur-2xl rounded-2xl shadow-[0_8px_32px_rgba(0,0,0,0.12)] dark:shadow-[0_8px_32px_rgba(0,0,0,0.3)] border border-white/20 dark:border-gray-700/30 overflow-hidden hover:shadow-[0_16px_48px_rgba(0,0,0,0.15)] dark:hover:shadow-[0_16px_48px_rgba(0,0,0,0.4)] transition-all duration-500 ease-out">
             {/* Enhanced liquid glass effect overlay */}
             <div className="absolute inset-0 bg-gradient-to-r from-white/8 via-white/15 to-white/8 dark:from-gray-800/8 dark:via-gray-800/15 dark:to-gray-800/8"></div>
             <div className="absolute inset-0 bg-gradient-to-b from-transparent via-white/8 to-transparent dark:via-gray-800/8"></div>
@@ -518,7 +518,7 @@ export default function AnimatedBackgroundDemo() {
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
               <Link 
                 href="/curriculum" 
-                className="group relative overflow-hidden bg-gradient-to-r from-indigo-500/20 to-purple-500/20 backdrop-blur-lg text-indigo-800 dark:text-indigo-200 font-medium py-3 px-4 rounded-2xl border border-indigo-400/40 dark:border-indigo-500/40 hover:from-indigo-500/30 hover:to-purple-500/30 hover:border-indigo-400/60 dark:hover:border-indigo-500/60 transition-all duration-300 flex items-center justify-center gap-2 text-sm shadow-lg hover:shadow-2xl hover:scale-105"
+                className="group relative overflow-hidden bg-gradient-to-r from-indigo-500/20 to-purple-500/20 backdrop-blur-lg text-indigo-800 dark:text-indigo-200 font-medium py-3 px-4 rounded-2xl border border-indigo-400/40 dark:border-indigo-500/40 hover:from-indigo-500/30 hover:to-purple-500/30 hover:border-indigo-400/60 dark:hover:border-indigo-500/60 transition-all duration-300 flex items-center justify-center gap-2 text-sm shadow-lg hover:shadow-2xl"
               >
                 <span className="text-base">📚</span>
                 <span>Start Curriculum</span>
@@ -526,7 +526,7 @@ export default function AnimatedBackgroundDemo() {
               </Link>
               <Link 
                 href="/interview-prep" 
-                className="group relative overflow-hidden bg-gradient-to-r from-emerald-500/20 to-teal-500/20 backdrop-blur-lg text-emerald-800 dark:text-emerald-200 font-medium py-3 px-4 rounded-2xl border border-emerald-400/40 dark:border-emerald-500/40 hover:from-emerald-500/30 hover:to-teal-500/30 hover:border-emerald-400/60 dark:hover:border-emerald-500/60 transition-all duration-300 flex items-center justify-center gap-2 text-sm shadow-lg hover:shadow-2xl hover:scale-105"
+                className="group relative overflow-hidden bg-gradient-to-r from-emerald-500/20 to-teal-500/20 backdrop-blur-lg text-emerald-800 dark:text-emerald-200 font-medium py-3 px-4 rounded-2xl border border-emerald-400/40 dark:border-emerald-500/40 hover:from-emerald-500/30 hover:to-teal-500/30 hover:border-emerald-400/60 dark:hover:border-emerald-500/60 transition-all duration-300 flex items-center justify-center gap-2 text-sm shadow-lg hover:shadow-2xl"
               >
                 <span className="text-base">💼</span>
                 <span>Interview Prep</span>
@@ -534,7 +534,7 @@ export default function AnimatedBackgroundDemo() {
               </Link>
               <Link 
                 href="/playground" 
-                className="group relative overflow-hidden bg-gradient-to-r from-orange-500/20 to-red-500/20 backdrop-blur-lg text-orange-800 dark:text-orange-200 font-medium py-3 px-4 rounded-2xl border border-orange-400/40 dark:border-orange-500/40 hover:from-orange-500/30 hover:to-red-500/30 hover:border-orange-400/60 dark:hover:border-orange-500/60 transition-all duration-300 flex items-center justify-center gap-2 text-sm shadow-lg hover:shadow-2xl hover:scale-105"
+                className="group relative overflow-hidden bg-gradient-to-r from-orange-500/20 to-red-500/20 backdrop-blur-lg text-orange-800 dark:text-orange-200 font-medium py-3 px-4 rounded-2xl border border-orange-400/40 dark:border-orange-500/40 hover:from-orange-500/30 hover:to-red-500/30 hover:border-orange-400/60 dark:hover:border-orange-500/60 transition-all duration-300 flex items-center justify-center gap-2 text-sm shadow-lg hover:shadow-2xl"
               >
                 <span className="text-base">🛠️</span>
                 <span>Playground</span>

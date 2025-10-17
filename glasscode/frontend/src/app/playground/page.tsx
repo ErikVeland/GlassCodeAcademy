@@ -162,11 +162,11 @@ query {
           <div className="max-w-2xl mx-auto">
             <div className="bg-white/10 backdrop-blur-md rounded-2xl shadow-2xl p-8 border border-white/20 text-center">
               <div className="text-6xl mb-4">⚠️</div>
-              <h2 className="text-2xl font-bold text-white mb-4">Connection Error</h2>
-              <p className="mb-6 text-white/80 text-lg">{error}</p>
+              <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">Connection Error</h2>
+              <p className="mb-6 text-gray-700 dark:text-white/80 text-lg">{error}</p>
               <button
                 onClick={handleManualRetry}
-                className="px-8 py-3 bg-gradient-to-r from-red-500 to-orange-500 text-white rounded-xl font-semibold hover:from-red-600 hover:to-orange-600 transition-all duration-200 shadow-lg"
+                className="px-8 py-3 bg-gradient-to-r from-red-500 to-orange-500 text-white dark:text-white rounded-xl font-semibold hover:from-red-600 hover:to-orange-600 transition-all duration-200 shadow-lg"
               >
                 🔄 Try Again
               </button>
@@ -198,13 +198,13 @@ query {
               <div className="flex items-center gap-4">
                 <div className="text-4xl">🛝</div>
                 <div>
-                  <h1 className="text-3xl font-bold text-white mb-2">GraphQL Playground</h1>
-                  <p className="text-white/80">Interactive query environment for exploring our GraphQL API</p>
+                  <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">GraphQL Playground</h1>
+                  <p className="text-gray-700 dark:text-white/80">Interactive query environment for exploring our GraphQL API</p>
                 </div>
               </div>
               <Link 
                 href="/" 
-                className="bg-white/20 backdrop-blur-sm text-white font-semibold py-3 px-6 rounded-xl shadow-lg hover:bg-white/30 transition-all duration-200 flex items-center gap-2 border border-white/20"
+                className="bg-white/20 backdrop-blur-sm text-gray-900 dark:text-white font-semibold py-3 px-6 rounded-xl shadow-lg hover:bg-white/30 transition-all duration-200 flex items-center gap-2 border border-white/20"
               >
                 <span className="text-lg">←</span> Back to Home
               </Link>
@@ -215,42 +215,42 @@ query {
         {/* Quick Actions Section */}
         <div className="mb-8">
           <div className="bg-white/10 backdrop-blur-md rounded-2xl p-6 border border-white/20">
-            <h2 className="text-xl font-bold text-white mb-4 flex items-center gap-2">
+            <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
               ⚡ Quick Actions
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               <Link 
                 href="/" 
-                className="bg-gradient-to-r from-blue-500 to-cyan-500 text-white p-4 rounded-xl hover:from-blue-600 hover:to-cyan-600 transition-all duration-200 shadow-lg flex items-center gap-3 group"
+                className="bg-gradient-to-r from-blue-500 to-cyan-500 text-white dark:text-white p-4 rounded-xl hover:from-blue-600 hover:to-cyan-600 transition-all duration-200 shadow-lg flex items-center gap-3 group"
               >
                 <div className="text-2xl">📚</div>
                 <div>
                   <h3 className="font-semibold">Start Curriculum</h3>
-                  <p className="text-sm text-white/80">Begin your learning journey</p>
+                  <p className="text-sm text-white/80 dark:text-white/80">Begin your learning journey</p>
                 </div>
                 <div className="ml-auto text-lg group-hover:translate-x-1 transition-transform">→</div>
               </Link>
               
               <Link 
                 href="/interview-prep" 
-                className="bg-gradient-to-r from-purple-500 to-violet-500 text-white p-4 rounded-xl hover:from-purple-600 hover:to-violet-600 transition-all duration-200 shadow-lg flex items-center gap-3 group"
+                className="bg-gradient-to-r from-purple-500 to-violet-500 text-white dark:text-white p-4 rounded-xl hover:from-purple-600 hover:to-violet-600 transition-all duration-200 shadow-lg flex items-center gap-3 group"
               >
                 <div className="text-2xl">💼</div>
                 <div>
                   <h3 className="font-semibold">Interview Prep</h3>
-                  <p className="text-sm text-white/80">Practice technical questions</p>
+                  <p className="text-sm text-white/80 dark:text-white/80">Practice technical questions</p>
                 </div>
                 <div className="ml-auto text-lg group-hover:translate-x-1 transition-transform">→</div>
               </Link>
               
               <Link 
                 href="/animated-background-demo" 
-                className="bg-gradient-to-r from-green-500 to-emerald-500 text-white p-4 rounded-xl hover:from-green-600 hover:to-emerald-600 transition-all duration-200 shadow-lg flex items-center gap-3 group"
+                className="bg-gradient-to-r from-green-500 to-emerald-500 text-white dark:text-white p-4 rounded-xl hover:from-green-600 hover:to-emerald-600 transition-all duration-200 shadow-lg flex items-center gap-3 group"
               >
                 <div className="text-2xl">🎨</div>
                 <div>
                   <h3 className="font-semibold">Design Showcase</h3>
-                  <p className="text-sm text-white/80">Explore UI components</p>
+                  <p className="text-sm text-white/80 dark:text-white/80">Explore UI components</p>
                 </div>
                 <div className="ml-auto text-lg group-hover:translate-x-1 transition-transform">→</div>
               </Link>
@@ -264,11 +264,11 @@ query {
             {/* Query Section */}
             <div className="space-y-6">
               <div>
-                <h2 className="text-lg font-semibold mb-3 text-white flex items-center gap-2">
+                <h2 className="text-lg font-semibold mb-3 text-gray-900 dark:text-white flex items-center gap-2">
                   📄 Query Editor
                 </h2>
                 <textarea
-                  className="w-full h-80 p-4 border border-white/30 rounded-xl font-mono text-sm bg-white/10 backdrop-blur-sm text-white placeholder-white/50 focus:border-white/50 focus:ring-2 focus:ring-white/20 transition-all"
+                  className="w-full h-80 p-4 border border-white/30 rounded-xl font-mono text-sm bg-white/10 backdrop-blur-sm text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-white/50 focus:border-white/50 focus:ring-2 focus:ring-white/20 transition-all"
                   value={query}
                   onChange={(e) => setQuery(e.target.value)}
                   placeholder="Enter your GraphQL query here..."
@@ -276,11 +276,11 @@ query {
               </div>
               
               <div>
-                <h2 className="text-lg font-semibold mb-3 text-white flex items-center gap-2">
+                <h2 className="text-lg font-semibold mb-3 text-gray-900 dark:text-white flex items-center gap-2">
                   ⚙️ Variables (JSON)
                 </h2>
                 <textarea
-                  className="w-full h-32 p-4 border border-white/30 rounded-xl font-mono text-sm bg-white/10 backdrop-blur-sm text-white placeholder-white/50 focus:border-white/50 focus:ring-2 focus:ring-white/20 transition-all"
+                  className="w-full h-32 p-4 border border-white/30 rounded-xl font-mono text-sm bg-white/10 backdrop-blur-sm text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-white/50 focus:border-white/50 focus:ring-2 focus:ring-white/20 transition-all"
                   value={variables}
                   onChange={(e) => setVariables(e.target.value)}
                   placeholder='{"key": "value"}'
@@ -288,7 +288,7 @@ query {
               </div>
               
               <button
-                className="w-full px-6 py-3 bg-gradient-to-r from-purple-500 to-blue-500 text-white rounded-xl font-semibold hover:from-purple-600 hover:to-blue-600 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 shadow-lg flex items-center justify-center gap-2"
+                className="w-full px-6 py-3 bg-gradient-to-r from-purple-500 to-blue-500 text-white dark:text-white rounded-xl font-semibold hover:from-purple-600 hover:to-blue-600 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 shadow-lg flex items-center justify-center gap-2"
                 onClick={executeQuery}
                 disabled={loading}
               >
@@ -307,7 +307,7 @@ query {
             
             {/* Response Section */}
             <div>
-              <h2 className="text-lg font-semibold mb-3 text-white flex items-center gap-2">
+              <h2 className="text-lg font-semibold mb-3 text-gray-900 dark:text-white flex items-center gap-2">
                 📊 Response
               </h2>
               {error && (
@@ -318,7 +318,7 @@ query {
                   <div className="mt-2">{error}</div>
                 </div>
               )}
-              <pre className="w-full h-[34rem] p-4 border border-white/30 rounded-xl overflow-auto bg-black/20 backdrop-blur-sm font-mono text-sm text-white scrollbar-thin scrollbar-thumb-white/20 scrollbar-track-transparent">
+              <pre className="w-full h-[34rem] p-4 border border-white/30 rounded-xl overflow-auto bg-black/20 backdrop-blur-sm font-mono text-sm text-gray-900 dark:text-white scrollbar-thin scrollbar-thumb-white/20 scrollbar-track-transparent">
                 {response || '// Execute a query to see results\n// Your GraphQL response will appear here'}
               </pre>
             </div>
@@ -327,13 +327,13 @@ query {
 
         {/* Example queries section */}
         <div className="bg-white/10 backdrop-blur-md shadow-2xl rounded-2xl p-8 border border-white/20">
-          <h2 className="text-2xl font-semibold mb-6 text-white flex items-center gap-3">
+          <h2 className="text-2xl font-semibold mb-6 text-gray-900 dark:text-white flex items-center gap-3">
             📚 Example Queries
           </h2>
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <div className="space-y-4">
               <div className="bg-white/5 backdrop-blur-sm rounded-xl p-4 border border-white/10">
-                <h3 className="text-lg font-medium mb-3 text-white flex items-center gap-2">
+                <h3 className="text-lg font-medium mb-3 text-gray-900 dark:text-white flex items-center gap-2">
                   🔵 Get .NET Lessons
                 </h3>
                 <pre className="p-4 bg-black/20 border border-white/20 rounded-lg overflow-auto font-mono text-sm text-green-300 mb-3">
@@ -364,7 +364,7 @@ query {
               </div>
               
               <div className="bg-white/5 backdrop-blur-sm rounded-xl p-4 border border-white/10">
-                <h3 className="text-lg font-medium mb-3 text-white flex items-center gap-2">
+                <h3 className="text-lg font-medium mb-3 text-gray-900 dark:text-white flex items-center gap-2">
                   🔵 Submit Answer
                 </h3>
                 <pre className="p-4 bg-black/20 border border-white/20 rounded-lg overflow-auto font-mono text-sm text-green-300 mb-3">
@@ -393,7 +393,7 @@ query {
             
             <div className="space-y-4">
               <div className="bg-white/5 backdrop-blur-sm rounded-xl p-4 border border-white/10">
-                <h3 className="text-lg font-medium mb-3 text-white flex items-center gap-2">
+                <h3 className="text-lg font-medium mb-3 text-gray-900 dark:text-white flex items-center gap-2">
                   🔵 Get Interview Questions
                 </h3>
                 <pre className="p-4 bg-black/20 border border-white/20 rounded-lg overflow-auto font-mono text-sm text-green-300 mb-3">
@@ -426,7 +426,7 @@ query {
               </div>
               
               <div className="bg-white/5 backdrop-blur-sm rounded-xl p-4 border border-white/10">
-                <h3 className="text-lg font-medium mb-3 text-white flex items-center gap-2">
+                <h3 className="text-lg font-medium mb-3 text-gray-900 dark:text-white flex items-center gap-2">
                   🔵 Filter & Sort
                 </h3>
                 <pre className="p-4 bg-black/20 border border-white/20 rounded-lg overflow-auto font-mono text-sm text-green-300 mb-3">

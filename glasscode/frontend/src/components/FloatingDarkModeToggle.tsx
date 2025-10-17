@@ -9,7 +9,7 @@ export default function FloatingDarkModeToggle() {
     <button
       onClick={toggleDarkMode}
       aria-label={darkMode ? 'Switch to light mode' : 'Switch to dark mode'}
-      className="fixed bottom-[6rem] right-5 z-[1000] p-3 rounded-full shadow-lg bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200 hover:bg-gray-300 dark:hover:bg-gray-600 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500"
+      className="fixed bottom-5 right-5 z-[1000] p-3 rounded-full shadow-lg bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200 hover:bg-gray-300 dark:hover:bg-gray-600 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500"
     >
       {darkMode ? (
         // Sun icon

@@ -13,22 +13,21 @@ interface BackgroundSettings {
 
 const defaultSettings: BackgroundSettings = {
   colors: [
-    "rgba(99, 102, 241, 0.12)",   // indigo
-    "rgba(168, 85, 247, 0.12)",   // purple
-    "rgba(236, 72, 153, 0.12)",   // pink
-    "rgba(16, 185, 129, 0.12)",   // green
-    "rgba(245, 158, 11, 0.12)",   // yellow
-    "rgba(239, 68, 68, 0.12)"     // red
+    "rgba(99, 102, 241, 0.15)",   // indigo - slightly more visible
+    "rgba(168, 85, 247, 0.15)",   // purple
+    "rgba(236, 72, 153, 0.15)",   // pink
+    "rgba(16, 185, 129, 0.15)",   // green
+    "rgba(245, 158, 11, 0.15)",   // yellow
+    "rgba(239, 68, 68, 0.15)"     // red
   ],
   speed: 25,
   blur: 55,
-  opacity: 0.77,
+  opacity: 0.8,  // slightly more opaque
   respectReducedMotion: false
 };
 
 export default function GlobalAnimatedBackground() {
   const [settings, setSettings] = useState<BackgroundSettings>(defaultSettings);
-  const [isLoaded, setIsLoaded] = useState(false);
 
   useEffect(() => {
     // Load saved settings from localStorage
@@ -40,15 +39,11 @@ export default function GlobalAnimatedBackground() {
       }
     } catch (error) {
       console.error('Failed to load background settings:', error);
-    } finally {
-      setIsLoaded(true);
     }
   }, []);
 
-  // Don't render until we've checked localStorage to avoid hydration mismatch
-  if (!isLoaded) {
-    return null;
-  }
+  // Always render the background - start with defaults, then update with saved settings
+  // This ensures there's always a background visible
 
   return (
     <AnimatedBackground
