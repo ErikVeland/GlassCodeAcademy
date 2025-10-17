@@ -111,53 +111,44 @@ wait_for_service() {
     return 1
 }
 
+# Function to install npm dependencies efficiently
+install_npm_deps_workspace() {
+    local dir="$1"
+    local name="$2"
+    
+    if [ ! -f "$dir/package.json" ]; then
+        log "⚠️  No package.json found in $dir, skipping..."
+        return 0
+    fi
+    
+    log "📦 Installing $name dependencies..."
+    cd "$dir"
+    
+    # Check if lockfile exists and is newer than package.json
+    if [ -f "package-lock.json" ] && [ "package-lock.json" -nt "package.json" ]; then
+        log "📋 Using existing lockfile for $name (up to date)"
+        sudo -u "$DEPLOY_USER" npm ci || sudo -u "$DEPLOY_USER" npm install
+    else
+        log "📋 Regenerating lockfile for $name..."
+        sudo -u "$DEPLOY_USER" rm -f package-lock.json || true
+        sudo -u "$DEPLOY_USER" npm install --package-lock-only
+        sudo -u "$DEPLOY_USER" npm ci || sudo -u "$DEPLOY_USER" npm install
+    fi
+    
+    log "✅ $name dependencies installed"
+}
+
 install_npm_deps() {
     log "📦 Installing Node.js dependencies for all workspaces..."
     
-    # Root workspace
-    cd "$APP_DIR"
-    if [ -f "package.json" ]; then
-        log "📦 Processing root workspace dependencies..."
-        if [ ! -f "package-lock.json" ] || [ "package.json" -nt "package-lock.json" ]; then
-            log "📦 Regenerating root lockfile (package.json is newer)..."
-            sudo -u "$DEPLOY_USER" rm -f package-lock.json || true
-            sudo -u "$DEPLOY_USER" npm install --package-lock-only
-        else
-            log "📦 Using existing root lockfile (up to date)"
-        fi
-        log "📦 Installing root dependencies..."
-        sudo -u "$DEPLOY_USER" npm ci || sudo -u "$DEPLOY_USER" npm install
+    # Install dependencies for all workspaces
+    install_npm_deps_workspace "$APP_DIR" "root"
+
+    if [ -d "$APP_DIR/scripts" ]; then
+        install_npm_deps_workspace "$APP_DIR/scripts" "scripts"
     fi
-    
-    # Scripts workspace
-    if [ -d "$APP_DIR/scripts" ] && [ -f "$APP_DIR/scripts/package.json" ]; then
-        log "📦 Processing scripts workspace dependencies..."
-        cd "$APP_DIR/scripts"
-        if [ ! -f "package-lock.json" ] || [ "package.json" -nt "package-lock.json" ]; then
-            log "📦 Regenerating scripts lockfile (package.json is newer)..."
-            sudo -u "$DEPLOY_USER" rm -f package-lock.json || true
-            sudo -u "$DEPLOY_USER" npm install --package-lock-only
-        else
-            log "📦 Using existing scripts lockfile (up to date)"
-        fi
-        log "📦 Installing scripts dependencies..."
-        sudo -u "$DEPLOY_USER" npm ci || sudo -u "$DEPLOY_USER" npm install
-    fi
-    
-    # Frontend workspace
-    cd "$APP_DIR/glasscode/frontend"
-    if [ -f "package.json" ]; then
-        log "📦 Processing frontend workspace dependencies..."
-        if [ ! -f "package-lock.json" ] || [ "package.json" -nt "package-lock.json" ]; then
-            log "📦 Regenerating frontend lockfile (package.json is newer)..."
-            sudo -u "$DEPLOY_USER" rm -f package-lock.json || true
-            sudo -u "$DEPLOY_USER" npm install --package-lock-only
-        else
-            log "📦 Using existing frontend lockfile (up to date)"
-        fi
-        log "📦 Installing frontend dependencies..."
-        sudo -u "$DEPLOY_USER" npm ci || sudo -u "$DEPLOY_USER" npm install
-    fi
+
+    install_npm_deps_workspace "$APP_DIR/glasscode/frontend" "frontend"
     
     log "✅ All Node.js dependencies installed"
 }
@@ -481,9 +472,14 @@ if [ "$FRONTEND_BUILD_REQUIRED" = "true" ]; then
     [ -z "${APPLE_CLIENT_SECRET:-}" ] && log "⚠️  WARNING: APPLE_CLIENT_SECRET missing; Apple login will be disabled."
     ## Apple provider in NextAuth uses APPLE_CLIENT_ID and APPLE_CLIENT_SECRET in our setup
 
-    cat > .env.production <<EOF
-NEXT_PUBLIC_API_BASE=$NEXT_PUBLIC_API_BASE
-NEXT_PUBLIC_BASE_URL=$NEXT_PUBLIC_BASE_URL
+    # Check if .env.production exists and has required variables
+    if [ -f ".env.production" ] && grep -q "NEXTAUTH_SECRET" .env.production && grep -q "NEXT_PUBLIC_API_BASE" .env.production; then
+        log "📋 Using existing .env.production file (contains required variables)"
+    else
+        log "📋 Creating .env.production file..."
+        cat > .env.production <<EOF
+NEXT_PUBLIC_API_BASE=${NEXT_PUBLIC_API_BASE}
+NEXT_PUBLIC_BASE_URL=${NEXT_PUBLIC_BASE_URL}
 NODE_ENV=production
 NEXTAUTH_URL=${NEXTAUTH_URL:-https://$DOMAIN}
 NEXTAUTH_SECRET=${NEXTAUTH_SECRET:-}
@@ -495,6 +491,7 @@ APPLE_CLIENT_ID=${APPLE_CLIENT_ID:-}
 APPLE_CLIENT_SECRET=${APPLE_CLIENT_SECRET:-}
 DEMO_USERS_JSON=${DEMO_USERS_JSON:-}
 EOF
+    fi
  
     # Enforce lint and typecheck before production build
     log "🔎 Running ESLint checks (frontend)"
@@ -507,7 +504,14 @@ EOF
     
     # Pre-build cleanup and verification
     log "🧹 Pre-build cleanup and verification..."
-    sudo -u "$DEPLOY_USER" rm -rf .next/cache
+    log "🧹 Clearing Next.js cache..."
+    sudo -u "$DEPLOY_USER" rm -rf .next || true
+    log "✅ Next.js cache cleared"
+    
+    # Clear npm cache to prevent dependency resolution issues
+    log "🧹 Clearing npm cache..."
+    sudo -u "$DEPLOY_USER" npm cache clean --force || true
+    log "✅ npm cache cleared"
     
     # Verify package.json and dependencies
     if [ ! -f "package.json" ]; then
@@ -560,12 +564,24 @@ EOF
         fi
     fi
     
-    # Verify build artifacts
+    # Validate build artifacts
+    log "🔍 Validating build artifacts..."
     if [ ! -f ".next/BUILD_ID" ]; then
-        log "❌ Missing .next/BUILD_ID - build may have failed"
+        log "❌ ERROR: Missing .next/BUILD_ID - frontend build may have failed"
         rollback
         exit 1
     fi
+    if [ ! -f ".next/standalone/server.js" ]; then
+        log "❌ ERROR: Missing .next/standalone/server.js - standalone build failed"
+        rollback
+        exit 1
+    fi
+    if [ ! -d ".next/static" ]; then
+        log "❌ ERROR: Missing .next/static directory - static assets not generated"
+        rollback
+        exit 1
+    fi
+    log "✅ Build artifacts validated"
     
     log "✅ Frontend built successfully"
 fi
