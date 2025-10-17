@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useCallback } from 'react';
 
 interface AnimatedBackgroundProps {
   colors?: string[];
@@ -9,6 +9,8 @@ interface AnimatedBackgroundProps {
   opacity?: number;
   className?: string;
   respectReducedMotion?: boolean;
+  isPaused?: boolean;
+  onAnimationUpdate?: (currentPosition: number) => void;
 }
 
 const AnimatedBackground: React.FC<AnimatedBackgroundProps> = ({
@@ -26,61 +28,91 @@ const AnimatedBackground: React.FC<AnimatedBackgroundProps> = ({
     'rgba(192, 132, 252, 0.12)',  // light purple - Databases
     'rgba(249, 115, 22, 0.12)'    // orange-red - additional color for better transition
   ],
-  speed = 45, // Increased from 25 to 45 seconds to fit all colors
+  speed = 45,
   blur = 55,
   opacity = 0.77,
   className = '',
-  respectReducedMotion = true
+  respectReducedMotion = true,
+  isPaused = false,
+  onAnimationUpdate
 }) => {
   const backgroundRef = useRef<HTMLDivElement>(null);
+  const animationRef = useRef<number | undefined>();
+  const startTimeRef = useRef<number | undefined>();
+  const pausedTimeRef = useRef<number>(0);
+
+  const updateGradientPosition = useCallback((position: number) => {
+    if (backgroundRef.current) {
+      const backgroundPosition = `${position}% ${position}%`;
+      backgroundRef.current.style.backgroundPosition = backgroundPosition;
+      onAnimationUpdate?.(position);
+    }
+  }, [onAnimationUpdate]);
+
+  const animate = useCallback((timestamp: number) => {
+    if (!startTimeRef.current) {
+      startTimeRef.current = timestamp - pausedTimeRef.current;
+    }
+
+    const elapsed = timestamp - startTimeRef.current;
+    const progress = (elapsed / (speed * 1000)) % 1;
+    const position = progress * 100;
+
+    updateGradientPosition(position);
+
+    if (!isPaused) {
+      animationRef.current = requestAnimationFrame(animate);
+    } else {
+      pausedTimeRef.current = elapsed;
+    }
+  }, [speed, isPaused, updateGradientPosition]);
 
   useEffect(() => {
     if (backgroundRef.current) {
-      const updateGradient = () => {
-        if (backgroundRef.current) {
-          backgroundRef.current.style.background = `linear-gradient(
-            45deg,
-            ${colors.join(', ')}
-          )`;
-          backgroundRef.current.style.backgroundSize = '800% 800%'; // Increased from 600% to 800% for smoother transitions
-          
-          // Check if user prefers reduced motion
-          const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-          // Respect reduced motion by default; allow explicit override for demo purposes
-          if (!prefersReducedMotion || !respectReducedMotion) {
-            // Use inline !important to ensure animation works even under global reduced-motion CSS
-            backgroundRef.current.style.setProperty('animation', `gradientFlow ${speed}s ease infinite`, !respectReducedMotion ? 'important' : '');
-            backgroundRef.current.style.setProperty('animation-duration', `${speed}s`, !respectReducedMotion ? 'important' : '');
-            backgroundRef.current.style.setProperty('animation-iteration-count', 'infinite', !respectReducedMotion ? 'important' : '');
-          } else {
-            // Apply a static gradient when reduced motion is preferred
-            backgroundRef.current.style.animation = 'none';
-          }
-          
-          backgroundRef.current.style.filter = `blur(${blur}px)`;
-          backgroundRef.current.style.opacity = `${opacity}`;
-        }
-      };
-
-      updateGradient();
+      // Set up the gradient
+      backgroundRef.current.style.background = `linear-gradient(
+        45deg,
+        ${colors.join(', ')}
+      )`;
+      backgroundRef.current.style.backgroundSize = '800% 800%';
+      backgroundRef.current.style.filter = `blur(${blur}px)`;
+      
+      // Handle pause/play opacity
+      const targetOpacity = isPaused ? opacity * 0.2 : opacity;
+      backgroundRef.current.style.opacity = `${targetOpacity}`;
+      backgroundRef.current.style.transition = 'opacity 0.3s ease-in-out';
     }
-  }, [colors, speed, blur, opacity, respectReducedMotion]);
+  }, [colors, blur, opacity, isPaused]);
 
-  // Check if user prefers reduced motion
-  const prefersReducedMotion = typeof window !== 'undefined' 
-    ? window.matchMedia('(prefers-reduced-motion: reduce)').matches 
-    : false;
+  useEffect(() => {
+    if (!backgroundRef.current) return;
+
+    if (respectReducedMotion && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      // Static gradient when reduced motion is preferred
+      updateGradientPosition(0);
+      return;
+    }
+
+    if (!isPaused) {
+      startTimeRef.current = undefined;
+      animationRef.current = requestAnimationFrame(animate);
+    } else {
+      if (animationRef.current) {
+        cancelAnimationFrame(animationRef.current);
+      }
+    }
+
+    return () => {
+      if (animationRef.current) {
+        cancelAnimationFrame(animationRef.current);
+      }
+    };
+  }, [animate, isPaused, respectReducedMotion, updateGradientPosition]);
 
   return (
     <div 
       ref={backgroundRef}
       className={`fixed top-0 left-0 w-full h-full -z-10 ${className}`}
-      style={{
-        animation: prefersReducedMotion && respectReducedMotion
-          ? 'none'
-          : `gradientFlow ${speed}s ease infinite`,
-      }}
       aria-hidden="true"
       role="presentation"
     />

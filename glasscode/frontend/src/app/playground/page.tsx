@@ -212,6 +212,52 @@ query {
           </div>
         </div>
 
+        {/* Quick Actions Section */}
+        <div className="mb-8">
+          <div className="bg-white/10 backdrop-blur-md rounded-2xl p-6 border border-white/20">
+            <h2 className="text-xl font-bold text-white mb-4 flex items-center gap-2">
+              ⚡ Quick Actions
+            </h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              <Link 
+                href="/" 
+                className="bg-gradient-to-r from-blue-500 to-cyan-500 text-white p-4 rounded-xl hover:from-blue-600 hover:to-cyan-600 transition-all duration-200 shadow-lg flex items-center gap-3 group"
+              >
+                <div className="text-2xl">📚</div>
+                <div>
+                  <h3 className="font-semibold">Start Curriculum</h3>
+                  <p className="text-sm text-white/80">Begin your learning journey</p>
+                </div>
+                <div className="ml-auto text-lg group-hover:translate-x-1 transition-transform">→</div>
+              </Link>
+              
+              <Link 
+                href="/interview-prep" 
+                className="bg-gradient-to-r from-purple-500 to-violet-500 text-white p-4 rounded-xl hover:from-purple-600 hover:to-violet-600 transition-all duration-200 shadow-lg flex items-center gap-3 group"
+              >
+                <div className="text-2xl">💼</div>
+                <div>
+                  <h3 className="font-semibold">Interview Prep</h3>
+                  <p className="text-sm text-white/80">Practice technical questions</p>
+                </div>
+                <div className="ml-auto text-lg group-hover:translate-x-1 transition-transform">→</div>
+              </Link>
+              
+              <Link 
+                href="/animated-background-demo" 
+                className="bg-gradient-to-r from-green-500 to-emerald-500 text-white p-4 rounded-xl hover:from-green-600 hover:to-emerald-600 transition-all duration-200 shadow-lg flex items-center gap-3 group"
+              >
+                <div className="text-2xl">🎨</div>
+                <div>
+                  <h3 className="font-semibold">Design Showcase</h3>
+                  <p className="text-sm text-white/80">Explore UI components</p>
+                </div>
+                <div className="ml-auto text-lg group-hover:translate-x-1 transition-transform">→</div>
+              </Link>
+            </div>
+          </div>
+        </div>
+
         {/* Main playground container with glass morphism */}
         <div className="bg-white/10 backdrop-blur-md shadow-2xl rounded-2xl overflow-hidden border border-white/20 mb-8">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 p-8">
