@@ -28,6 +28,7 @@ export default function AnimatedBackgroundDemo() {
   const [error, setError] = useState(null);
   const [retryCount, setRetryCount] = useState(0);
   const [isColorEditorOpen, setIsColorEditorOpen] = useState(false);
+  const [saveSuccess, setSaveSuccess] = useState(false);
 
   const presetColors = [
     {
@@ -100,6 +101,28 @@ export default function AnimatedBackgroundDemo() {
 
   const applyPreset = (preset: { name: string; colors: string[] }) => {
     setColors(preset.colors);
+  };
+
+  const saveAsAppBackground = () => {
+    const backgroundSettings = {
+      colors,
+      speed,
+      blur,
+      opacity,
+      respectReducedMotion
+    };
+    
+    try {
+      localStorage.setItem('appBackgroundSettings', JSON.stringify(backgroundSettings));
+      setSaveSuccess(true);
+      
+      // Hide success message after 3 seconds
+      setTimeout(() => {
+        setSaveSuccess(false);
+      }, 3000);
+    } catch (error) {
+      console.error('Failed to save background settings:', error);
+    }
   };
 
   // Handle manual retry
@@ -277,7 +300,7 @@ export default function AnimatedBackgroundDemo() {
                       </div>
                     </div>
                     
-                    <div className="mt-8">
+                    <div className="mt-8 space-y-4">
                       <button
                         onClick={() => setIsColorEditorOpen(true)}
                         className="w-full px-6 py-4 bg-blue-500/20 hover:bg-blue-500/30 border border-blue-400/30 rounded-lg text-blue-200 transition-colors duration-200 flex items-center justify-center group"
@@ -286,6 +309,26 @@ export default function AnimatedBackgroundDemo() {
                           <div className="text-lg font-medium">Advanced Color Editor</div>
                           <div className="text-sm text-blue-300/80">Create custom gradients with precise color control</div>
                         </div>
+                      </button>
+                      
+                      <button
+                        onClick={saveAsAppBackground}
+                        className="w-full px-6 py-4 bg-green-500/20 hover:bg-green-500/30 border border-green-400/30 rounded-lg text-green-200 transition-colors duration-200 flex items-center justify-center group relative"
+                      >
+                        <div className="text-center">
+                          <div className="text-lg font-medium">Use as App Background</div>
+                          <div className="text-sm text-green-300/80">Save these settings for the entire app</div>
+                        </div>
+                        {saveSuccess && (
+                          <div className="absolute inset-0 bg-green-500/40 rounded-lg flex items-center justify-center">
+                            <div className="text-white font-medium flex items-center gap-2">
+                              <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                              </svg>
+                              Saved Successfully!
+                            </div>
+                          </div>
+                        )}
                       </button>
                     </div>
                     

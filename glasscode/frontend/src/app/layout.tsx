@@ -12,6 +12,7 @@ import ApolloWrapper from '../components/ApolloWrapper';
 import AuthProvider from '../components/AuthProvider';
 import ProfileProvider from '../components/ProfileProvider';
 import AdminQueryHandler from '../components/AdminQueryHandler';
+import GlobalAnimatedBackground from '../components/GlobalAnimatedBackground';
 import { Suspense } from 'react';
 import { EXTERNAL_LINKS } from '@/lib/appConfig';
 // Removed next/font usage to revert to system fonts
@@ -41,6 +42,7 @@ export default function RootLayout({
     <html lang="en">
       <head></head>
       <body className={"antialiased min-h-screen bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100 relative"}>
+        <GlobalAnimatedBackground />
         <ApolloWrapper>
           <AuthProvider>
           <ProfileProvider>

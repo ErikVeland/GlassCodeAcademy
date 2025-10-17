@@ -37,8 +37,8 @@ const AnimatedBackground: React.FC<AnimatedBackgroundProps> = ({
   onAnimationUpdate
 }) => {
   const backgroundRef = useRef<HTMLDivElement>(null);
-  const animationRef = useRef<number | undefined>();
-  const startTimeRef = useRef<number | undefined>();
+  const animationRef = useRef<number | undefined>(undefined);
+  const startTimeRef = useRef<number | undefined>(undefined);
   const pausedTimeRef = useRef<number>(0);
 
   const updateGradientPosition = useCallback((position: number) => {
