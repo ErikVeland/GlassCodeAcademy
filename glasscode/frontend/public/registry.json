@@ -91,9 +91,9 @@
         }
       },
       "routes": {
-        "overview": "/programming",
-        "lessons": "/programming/lessons",
-        "quiz": "/programming/quiz"
+        "overview": "/modules/programming-fundamentals",
+        "lessons": "/modules/programming-fundamentals/lessons",
+        "quiz": "/modules/programming-fundamentals/quiz"
       }
     },
     {
@@ -133,8 +133,8 @@
         }
       },
       "routes": {
-        "overview": "/web",
-        "lessons": "/web/lessons",
+        "overview": "/modules/web-fundamentals",
+        "lessons": "/modules/web-fundamentals/lessons",
         "quiz": "/modules/web-fundamentals/quiz"
       }
     },
@@ -172,8 +172,8 @@
         }
       },
       "routes": {
-        "overview": "/version",
-        "lessons": "/version/lessons",
+        "overview": "/modules/version-control",
+        "lessons": "/modules/version-control/lessons",
         "quiz": "/modules/version-control/quiz"
       }
     },
@@ -214,8 +214,8 @@
         }
       },
       "routes": {
-        "overview": "/dotnet",
-        "lessons": "/dotnet/lessons",
+        "overview": "/modules/dotnet-fundamentals",
+        "lessons": "/modules/dotnet-fundamentals/lessons",
         "quiz": "/modules/dotnet-fundamentals/quiz"
       }
     },

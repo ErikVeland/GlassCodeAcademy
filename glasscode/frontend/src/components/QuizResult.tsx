@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import Link from 'next/link';
 import CircularProgress from './CircularProgress';
 import CertificateAward from './CertificateAward';
 
@@ -57,13 +58,13 @@ const QuizResult: React.FC<QuizResultProps> = ({
           <div className="flex justify-end w-1/2">
             {(nextLessonHref || onNextLesson || nextModuleHref) && (
               nextLessonHref ? (
-                <a href={nextLessonHref} className="btn btn-success font-semibold" aria-label="Start Next Lesson">
+                <Link href={nextLessonHref} className="btn btn-success font-semibold" aria-label="Start Next Lesson">
                   {nextLessonTitle ? `Start ${nextLessonTitle}` : 'Start Next Lesson'}
-                </a>
+                </Link>
               ) : nextModuleHref ? (
-                <a href={nextModuleHref} className="btn btn-success font-semibold" aria-label="View Next Module">
+                <Link href={nextModuleHref} className="btn btn-success font-semibold" aria-label="View Next Module">
                   {nextModuleTitle ? `Start ${nextModuleTitle}` : 'Start Next Module'}
-                </a>
+                </Link>
               ) : (
                 <button onClick={onNextLesson} className="btn btn-success font-semibold" aria-label="Start Next Lesson">
                   {nextLessonTitle ? `Start ${nextLessonTitle}` : 'Start Next Lesson'}
