@@ -57,6 +57,14 @@ appsettings.*.json
 *.swo
 *~
 
+# Testing
+TestResults/
+**/TestResults/
+coverage.cobertura.xml
+*.trx
+*.coverage
+*.coveragexml
+
 # Logs
 logs
 *.log
