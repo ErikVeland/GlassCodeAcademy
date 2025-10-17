@@ -115,88 +115,9 @@ export default function AnimatedBackgroundDemo() {
   };
 
   // Show loading state
-  if (loading) {
-    if (retryCount > 0) {
-      return (
-        <div className="min-h-screen relative">
-          <AnimatedBackground 
-            colors={colors}
-            speed={speed}
-            blur={blur}
-            opacity={opacity}
-          />
-          <div className="relative z-10 min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
-            <div className="max-w-md mx-auto">
-              <EnhancedLoadingComponent 
-                retryCount={retryCount} 
-                maxRetries={30} 
-                onRetry={handleManualRetry}
-              />
-            </div>
-          </div>
-        </div>
-      );
-    }
-    
-    // Show initial loading state without opaque background
-    return (
-      <div className="min-h-screen relative">
-        <AnimatedBackground 
-          colors={colors}
-          speed={speed}
-          blur={blur}
-          opacity={opacity}
-        />
-        <div className="relative z-10 min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
-          <div className="max-w-3xl mx-auto">
-            <div className="animate-pulse flex flex-col items-center justify-center space-y-4">
-              <div className="h-12 w-2/3 bg-white/30 dark:bg-gray-700/30 rounded"></div>
-              <div className="h-64 w-full bg-white/30 dark:bg-gray-700/30 rounded"></div>
-              <div className="h-10 w-1/3 bg-white/30 dark:bg-gray-700/30 rounded"></div>
-            </div>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  // Show error only after loading
-  if (error) {
-    return (
-      <div className="min-h-screen relative">
-        <AnimatedBackground 
-          colors={colors}
-          speed={speed}
-          blur={blur}
-          opacity={opacity}
-        />
-        <div className="relative z-10 min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
-          <div className="w-full max-w-3xl">
-            <div className="bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm rounded-xl shadow-lg p-6 border border-gray-200 dark:border-gray-700">
-              <div className="text-center">
-                <h2 className="text-2xl font-bold text-red-600 dark:text-red-400 mb-4">Error</h2>
-                <p className="mb-4 text-gray-800 dark:text-gray-200">{error}</p>
-                <button
-                  onClick={handleManualRetry}
-                  className="px-4 py-2 bg-indigo-600 dark:bg-indigo-700 text-white rounded-lg hover:bg-indigo-700 dark:hover:bg-indigo-600 transition-colors duration-200"
-                >
-                  Try Again
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
   return (
-    // Keep the original background for this demo page since it's showcasing the animated background component
     <div className="min-h-screen relative">
-      <a href="#main-content" className="sr-only focus:absolute focus:p-4 focus:bg-white dark:focus:bg-gray-800 focus:text-blue-600 dark:focus:text-blue-400 z-50">
-        Skip to main content
-      </a>
-      {/* Animated Background Component */}
+      {/* Single AnimatedBackground for all states */}
       <AnimatedBackground 
         colors={colors}
         speed={speed}
@@ -204,16 +125,68 @@ export default function AnimatedBackgroundDemo() {
         opacity={opacity}
         respectReducedMotion={respectReducedMotion}
         isPaused={isPaused}
-        onAnimationUpdate={setAnimationPosition}
       />
+      <a href="#main-content" className="sr-only focus:absolute focus:p-4 focus:bg-white dark:focus:bg-gray-800 focus:text-blue-600 dark:focus:text-blue-400 z-50">
+        Skip to main content
+      </a>
       
       {/* Content */}
       <div className="relative z-10 min-h-screen flex flex-col">
-        {/* Main Content */}
-        <main id="main-content" className="flex-grow flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
-          <div className="w-full max-w-3xl">
-            <div className="bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm rounded-xl shadow-xl border border-gray-200 dark:border-gray-700 overflow-hidden">
-              <div className="p-6">
+        {/* Conditional Content Based on State */}
+        {loading ? (
+          <main id="main-content" className="flex-grow flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+            {retryCount > 0 ? (
+              <div className="max-w-md mx-auto">
+                <EnhancedLoadingComponent 
+                  retryCount={retryCount} 
+                  maxRetries={30} 
+                  onRetry={handleManualRetry}
+                />
+              </div>
+            ) : (
+              <div className="max-w-3xl mx-auto">
+                <div className="animate-pulse flex flex-col items-center justify-center space-y-4">
+                  <div className="h-12 w-2/3 bg-white/30 dark:bg-gray-700/30 rounded"></div>
+                  <div className="h-64 w-full bg-white/30 dark:bg-gray-700/30 rounded"></div>
+                  <div className="h-10 w-1/3 bg-white/30 dark:bg-gray-700/30 rounded"></div>
+                </div>
+              </div>
+            )}
+          </main>
+        ) : error ? (
+          <main id="main-content" className="flex-grow flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+            <div className="w-full max-w-3xl">
+              <div className="bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm rounded-xl shadow-lg p-6 border border-gray-200 dark:border-gray-700">
+                <div className="text-center">
+                  <h2 className="text-2xl font-bold text-red-600 dark:text-red-400 mb-4">Error</h2>
+                  <p className="mb-4 text-gray-800 dark:text-gray-200">{error}</p>
+                  <button
+                    onClick={handleManualRetry}
+                    className="px-4 py-2 bg-indigo-600 dark:bg-indigo-700 text-white rounded-lg hover:bg-indigo-700 dark:hover:bg-indigo-600 transition-colors duration-200"
+                  >
+                    Try Again
+                  </button>
+                </div>
+              </div>
+            </div>
+          </main>
+        ) : (
+          /* Main Content */
+          <main id="main-content" className="flex-grow flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+            <div className="w-full max-w-3xl">
+            <div className="group relative bg-white/15 dark:bg-gray-900/15 backdrop-blur-2xl rounded-2xl shadow-[0_8px_32px_rgba(0,0,0,0.12)] dark:shadow-[0_8px_32px_rgba(0,0,0,0.3)] border border-white/20 dark:border-gray-700/30 overflow-hidden hover:shadow-[0_16px_48px_rgba(0,0,0,0.15)] dark:hover:shadow-[0_16px_48px_rgba(0,0,0,0.4)] hover:scale-[1.02] transition-all duration-500 ease-out">
+              {/* Enhanced liquid glass effect overlay */}
+              <div className="absolute inset-0 bg-gradient-to-r from-white/8 via-white/15 to-white/8 dark:from-gray-800/8 dark:via-gray-800/15 dark:to-gray-800/8"></div>
+              <div className="absolute inset-0 bg-gradient-to-b from-transparent via-white/8 to-transparent dark:via-gray-800/8"></div>
+              <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 via-transparent to-purple-500/5 dark:from-blue-400/5 dark:to-purple-400/5"></div>
+              
+              {/* Enhanced glass reflection effect */}
+              <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-white/60 to-transparent dark:via-gray-400/60 rounded-t-2xl"></div>
+              <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-white/30 to-transparent dark:via-gray-600/30"></div>
+              <div className="absolute top-0 left-0 bottom-0 w-px bg-gradient-to-b from-transparent via-white/30 to-transparent dark:via-gray-600/30 rounded-l-2xl"></div>
+              <div className="absolute top-0 right-0 bottom-0 w-px bg-gradient-to-b from-transparent via-white/30 to-transparent dark:via-gray-600/30 rounded-r-2xl"></div>
+              
+              <div className="relative p-6">
                 <div className="text-center mb-8">
                   <h2 className="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-4">
                     Animated Background Component
@@ -326,10 +299,32 @@ export default function AnimatedBackgroundDemo() {
                           <button
                             key={index}
                             onClick={() => applyPreset(preset)}
-                            className="py-2 px-3 text-sm font-medium rounded-lg border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors duration-200"
+                            className="relative py-2 px-3 text-sm font-medium rounded-lg border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:text-white transition-all duration-300 overflow-hidden group"
+                            style={{
+                              background: 'transparent'
+                            }}
+                            onMouseEnter={(e) => {
+                              const gradientColors = preset.colors.map(color => {
+                                const [r, g, b, a] = color.match(/\d+\.?\d*/g) || [];
+                                return `rgba(${r}, ${g}, ${b}, ${a || 1})`;
+                              });
+                              e.currentTarget.style.background = `linear-gradient(135deg, ${gradientColors.join(', ')})`;
+                            }}
+                            onMouseLeave={(e) => {
+                              e.currentTarget.style.background = 'transparent';
+                            }}
                             aria-label={`Apply ${preset.name} color preset`}
                           >
-                            {preset.name}
+                            <span className="relative z-10">{preset.name}</span>
+                            <div 
+                              className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                              style={{
+                                background: `linear-gradient(135deg, ${preset.colors.map(color => {
+                                  const [r, g, b, a] = color.match(/\d+\.?\d*/g) || [];
+                                  return `rgba(${r}, ${g}, ${b}, ${a || 1})`;
+                                }).join(', ')})`
+                              }}
+                            />
                           </button>
                         ))}
                       </div>
@@ -447,7 +442,7 @@ export default function AnimatedBackgroundDemo() {
                     <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700"></div>
                   </Link>
                   <a
-                    href={ROUTES.api.download.animatedBackground}
+                    href={`${ROUTES.api.download.animatedBackground}?colors=${encodeURIComponent(JSON.stringify(colors))}&speed=${speed}&blur=${blur}&opacity=${opacity}&respectReducedMotion=${respectReducedMotion}`}
                     className="group relative overflow-hidden bg-gradient-to-r from-emerald-500/20 to-teal-500/20 backdrop-blur-sm text-emerald-800 dark:text-emerald-200 font-medium py-2 px-4 rounded-lg border border-emerald-400/30 dark:border-emerald-500/30 hover:from-emerald-500/30 hover:to-teal-500/30 transition-all duration-200 flex items-center gap-2 text-sm shadow-lg hover:shadow-xl"
                   >
                     <span className="text-base transition-transform group-hover:translate-y-1">⬇</span> 
@@ -459,15 +454,28 @@ export default function AnimatedBackgroundDemo() {
             </div>
           </div>
         </main>
+        )}
         
         {/* Quick Actions Pane */}
-        <div className="relative z-10 bg-white/10 dark:bg-gray-900/10 backdrop-blur-md border-t border-white/20 dark:border-gray-700/30 shadow-lg">
-          <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+        <div className="relative z-10 max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 pb-12">
+          <div className="group relative bg-white/15 dark:bg-gray-900/15 backdrop-blur-2xl rounded-2xl shadow-[0_8px_32px_rgba(0,0,0,0.12)] dark:shadow-[0_8px_32px_rgba(0,0,0,0.3)] border border-white/20 dark:border-gray-700/30 overflow-hidden hover:shadow-[0_16px_48px_rgba(0,0,0,0.15)] dark:hover:shadow-[0_16px_48px_rgba(0,0,0,0.4)] hover:scale-[1.02] transition-all duration-500 ease-out">
+            {/* Enhanced liquid glass effect overlay */}
+            <div className="absolute inset-0 bg-gradient-to-r from-white/8 via-white/15 to-white/8 dark:from-gray-800/8 dark:via-gray-800/15 dark:to-gray-800/8"></div>
+            <div className="absolute inset-0 bg-gradient-to-b from-transparent via-white/8 to-transparent dark:via-gray-800/8"></div>
+            <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/5 via-transparent to-blue-500/5 dark:from-emerald-400/5 dark:to-blue-400/5"></div>
+            
+            {/* Enhanced glass reflection effect */}
+            <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-white/60 to-transparent dark:via-gray-400/60 rounded-t-2xl"></div>
+            <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-white/30 to-transparent dark:via-gray-600/30"></div>
+            <div className="absolute top-0 left-0 bottom-0 w-px bg-gradient-to-b from-transparent via-white/30 to-transparent dark:via-gray-600/30 rounded-l-2xl"></div>
+            <div className="absolute top-0 right-0 bottom-0 w-px bg-gradient-to-b from-transparent via-white/30 to-transparent dark:via-gray-600/30 rounded-r-2xl"></div>
+            
+            <div className="relative py-6 px-6">
             <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4 text-center">Quick Actions</h3>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
               <Link 
                 href="/curriculum" 
-                className="group relative overflow-hidden bg-gradient-to-r from-indigo-500/20 to-purple-500/20 backdrop-blur-sm text-indigo-800 dark:text-indigo-200 font-medium py-3 px-4 rounded-lg border border-indigo-400/30 dark:border-indigo-500/30 hover:from-indigo-500/30 hover:to-purple-500/30 transition-all duration-200 flex items-center justify-center gap-2 text-sm shadow-lg hover:shadow-xl"
+                className="group relative overflow-hidden bg-gradient-to-r from-indigo-500/20 to-purple-500/20 backdrop-blur-lg text-indigo-800 dark:text-indigo-200 font-medium py-3 px-4 rounded-2xl border border-indigo-400/40 dark:border-indigo-500/40 hover:from-indigo-500/30 hover:to-purple-500/30 hover:border-indigo-400/60 dark:hover:border-indigo-500/60 transition-all duration-300 flex items-center justify-center gap-2 text-sm shadow-lg hover:shadow-2xl hover:scale-105"
               >
                 <span className="text-base">📚</span>
                 <span>Start Curriculum</span>
@@ -475,7 +483,7 @@ export default function AnimatedBackgroundDemo() {
               </Link>
               <Link 
                 href="/interview-prep" 
-                className="group relative overflow-hidden bg-gradient-to-r from-emerald-500/20 to-teal-500/20 backdrop-blur-sm text-emerald-800 dark:text-emerald-200 font-medium py-3 px-4 rounded-lg border border-emerald-400/30 dark:border-emerald-500/30 hover:from-emerald-500/30 hover:to-teal-500/30 transition-all duration-200 flex items-center justify-center gap-2 text-sm shadow-lg hover:shadow-xl"
+                className="group relative overflow-hidden bg-gradient-to-r from-emerald-500/20 to-teal-500/20 backdrop-blur-lg text-emerald-800 dark:text-emerald-200 font-medium py-3 px-4 rounded-2xl border border-emerald-400/40 dark:border-emerald-500/40 hover:from-emerald-500/30 hover:to-teal-500/30 hover:border-emerald-400/60 dark:hover:border-emerald-500/60 transition-all duration-300 flex items-center justify-center gap-2 text-sm shadow-lg hover:shadow-2xl hover:scale-105"
               >
                 <span className="text-base">💼</span>
                 <span>Interview Prep</span>
@@ -483,12 +491,13 @@ export default function AnimatedBackgroundDemo() {
               </Link>
               <Link 
                 href="/playground" 
-                className="group relative overflow-hidden bg-gradient-to-r from-orange-500/20 to-red-500/20 backdrop-blur-sm text-orange-800 dark:text-orange-200 font-medium py-3 px-4 rounded-lg border border-orange-400/30 dark:border-orange-500/30 hover:from-orange-500/30 hover:to-red-500/30 transition-all duration-200 flex items-center justify-center gap-2 text-sm shadow-lg hover:shadow-xl"
+                className="group relative overflow-hidden bg-gradient-to-r from-orange-500/20 to-red-500/20 backdrop-blur-lg text-orange-800 dark:text-orange-200 font-medium py-3 px-4 rounded-2xl border border-orange-400/40 dark:border-orange-500/40 hover:from-orange-500/30 hover:to-red-500/30 hover:border-orange-400/60 dark:hover:border-orange-500/60 transition-all duration-300 flex items-center justify-center gap-2 text-sm shadow-lg hover:shadow-2xl hover:scale-105"
               >
                 <span className="text-base">🛠️</span>
                 <span>Playground</span>
                 <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700"></div>
               </Link>
+            </div>
             </div>
           </div>
         </div>

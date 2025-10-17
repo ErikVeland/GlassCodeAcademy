@@ -6,7 +6,7 @@ import "../styles/liquid-glass.scss";
 import Header from '../components/Header';
 import FloatingDarkModeToggle from '../components/FloatingDarkModeToggle';
 import { DarkModeProvider } from '../components/DarkModeContext';
-import AnimatedBackground from '../components/AnimatedBackground';
+
 import { AccessibilityProvider } from '../components/AccessibilityProvider';
 import ApolloWrapper from '../components/ApolloWrapper';
 import AuthProvider from '../components/AuthProvider';
@@ -58,8 +58,7 @@ export default function RootLayout({
                   Skip to main content
                 </a>
 
-                {/* Animated Background Component */}
-                <AnimatedBackground />
+
                 <Suspense fallback={
                   <div className="py-4 px-4 sm:px-6 lg:px-8">
                     <div className="max-w-7xl mx-auto">

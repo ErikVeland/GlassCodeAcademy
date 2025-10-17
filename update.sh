@@ -518,6 +518,17 @@ EOF
     log "✅ Frontend built"
 fi
 
+# Stage Next.js standalone assets for reliable serving (always needed)
+log "📦 Staging Next.js standalone assets..."
+cd "$APP_DIR/glasscode/frontend"
+mkdir -p .next/standalone/.next
+rm -rf .next/standalone/.next/static
+cp -r .next/static .next/standalone/.next/static
+rm -rf .next/standalone/public
+cp -r public .next/standalone/public 2>/dev/null || true
+chown -R "$DEPLOY_USER":"$DEPLOY_USER" .next/standalone || true
+log "✅ Standalone assets staged"
+
 # Verify Next.js standalone server exists
 if [ ! -f ".next/standalone/server.js" ]; then
     log "❌ Next standalone server missing at .next/standalone/server.js"
