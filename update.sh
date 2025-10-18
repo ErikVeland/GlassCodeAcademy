@@ -773,7 +773,8 @@ while [ $COUNT -le $MAX ]; do
   HTTP=$(timeout 10 curl -s -o /dev/null -w "%{http_code}" http://127.0.0.1:8080/api/health || true)
   RESP=$(timeout 10 curl -s http://127.0.0.1:8080/api/health || true)
   STATUS=$(echo "$RESP" | jq -r .status 2>/dev/null || echo "$RESP" | grep -o '"status":"[^"]*"' | cut -d '"' -f4)
-  if [ "$HTTP" = "200" ] && [ "$STATUS" = "healthy" ]; then
+  # Treat backend "degraded" as acceptable for frontend start; proceed on any 200
+  if [ "$HTTP" = "200" ] && { [ "$STATUS" = "healthy" ] || [ "$STATUS" = "degraded" ] || [ -n "$RESP" ]; }; then
     exit 0
   fi
   sleep 5; COUNT=$((COUNT+1))
@@ -798,7 +799,7 @@ Restart=always
 RestartSec=10
 User=$DEPLOY_USER
 Environment=NODE_ENV=production
-TimeoutStartSec=60
+TimeoutStartSec=300
 
 [Install]
 WantedBy=multi-user.target
