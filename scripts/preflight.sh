@@ -28,13 +28,22 @@ ok() {
 REPO_ROOT="$(git rev-parse --show-toplevel 2>/dev/null || pwd)"
 cd "$REPO_ROOT" || fail "Failed to locate repository root"
 
+# Deployment strategy flags (align with update.sh)
+FAST_MODE="${FAST_MODE:-0}"
+SKIP_CONTENT_VALIDATION="${SKIP_CONTENT_VALIDATION:-0}"
+SKIP_LINT="${SKIP_LINT:-0}"
+SKIP_TYPECHECK="${SKIP_TYPECHECK:-0}"
+FRONTEND_ONLY="${FRONTEND_ONLY:-0}"
+
 section "Environment checks"
 command -v node >/dev/null 2>&1 || fail "Node.js not found in PATH"
 command -v npm >/dev/null 2>&1 || fail "npm not found in PATH"
 ok "Node: $(node -v), npm: $(npm -v)"
 
 section "Content validation"
-if [ -f "scripts/validate-content.js" ]; then
+if [ "$SKIP_CONTENT_VALIDATION" = "1" ] || [ "$FAST_MODE" = "1" ]; then
+  echo "Skipping content validation due to fast/skip mode"
+elif [ -f "scripts/validate-content.js" ]; then
   echo "Running: CI=1 node scripts/validate-content.js"
   CI=1 node scripts/validate-content.js || fail "Content validation failed"
   ok "Content valid"
@@ -69,31 +78,39 @@ else
 fi
 
 section "Frontend lint"
-echo "Running: npm run lint"
-npm run lint || fail "ESLint checks failed"
-ok "Lint passed"
+if [ "$SKIP_LINT" = "1" ] || [ "$FAST_MODE" = "1" ]; then
+  echo "Skipping ESLint due to fast/skip mode"
+else
+  echo "Running: npm run lint"
+  npm run lint || fail "ESLint checks failed"
+  ok "Lint passed"
+fi
 
 section "TypeScript typecheck"
-# Check if we're in the frontend directory, if not, navigate to it
-if [ -d "glasscode/frontend" ]; then
-  echo "Running TypeScript checks in glasscode/frontend..."
-  cd glasscode/frontend || fail "Failed to navigate to frontend directory"
-  
-  # Run TypeScript compiler check
-  echo "Running: npx tsc --noEmit"
-  npx tsc --noEmit || fail "TypeScript compilation failed"
-  
-  # Run the npm typecheck script as well
-  echo "Running: npm run typecheck"
-  npm run typecheck || fail "npm typecheck failed"
-  
-  # Navigate back to repo root
-  cd "$REPO_ROOT" || fail "Failed to return to repository root"
-  ok "TypeScript checks passed"
+if [ "$SKIP_TYPECHECK" = "1" ] || [ "$FAST_MODE" = "1" ]; then
+  echo "Skipping TypeScript checks due to fast/skip mode"
 else
-  echo "Frontend directory not found, running typecheck from current location"
-  npm run typecheck || fail "Typecheck failed"
-  ok "Typecheck passed"
+  # Check if we're in the frontend directory, if not, navigate to it
+  if [ -d "glasscode/frontend" ]; then
+    echo "Running TypeScript checks in glasscode/frontend..."
+    cd glasscode/frontend || fail "Failed to navigate to frontend directory"
+    
+    # Run TypeScript compiler check
+    echo "Running: npx tsc --noEmit"
+    npx tsc --noEmit || fail "TypeScript compilation failed"
+    
+    # Run the npm typecheck script as well
+    echo "Running: npm run typecheck"
+    npm run typecheck || fail "npm typecheck failed"
+    
+    # Navigate back to repo root
+    cd "$REPO_ROOT" || fail "Failed to return to repository root"
+    ok "TypeScript checks passed"
+  else
+    echo "Frontend directory not found, running typecheck from current location"
+    npm run typecheck || fail "Typecheck failed"
+    ok "Typecheck passed"
+  fi
 fi
 
 section "Next.js build validation"
@@ -108,17 +125,21 @@ if [ -d "glasscode/frontend" ]; then
     echo "Existing build artifacts found, performing quick validation..."
     
     # Quick syntax check without full build
-    echo "Running: npx next lint --max-warnings 0 --quiet"
-    if npx next lint --max-warnings 0 --quiet >/dev/null 2>&1; then
-      echo "Running: npx tsc --noEmit --skipLibCheck"
-      if npx tsc --noEmit --skipLibCheck >/dev/null 2>&1; then
-        BUILD_EXISTS=true
-        ok "Quick validation passed - existing build is valid"
-      else
-        echo "TypeScript errors detected, full rebuild required"
-      fi
+    if [ "$SKIP_LINT" = "1" ] || [ "$FAST_MODE" = "1" ]; then
+      echo "Skipping Next.js lint during fast/skip mode"
     else
-      echo "Lint errors detected, full rebuild required"
+      echo "Running: npx next lint --max-warnings 0 --quiet"
+      if npx next lint --max-warnings 0 --quiet >/dev/null 2>&1; then
+        echo "Running: npx tsc --noEmit --skipLibCheck"
+        if npx tsc --noEmit --skipLibCheck >/dev/null 2>&1; then
+          BUILD_EXISTS=true
+          ok "Quick validation passed - existing build is valid"
+        else
+          echo "TypeScript errors detected, full rebuild required"
+        fi
+      else
+        echo "Lint errors detected, full rebuild required"
+      fi
     fi
   else
     echo "No valid build artifacts found, full build required"
@@ -126,27 +147,30 @@ if [ -d "glasscode/frontend" ]; then
   
   # Only do expensive operations if quick validation failed
   if [ "$BUILD_EXISTS" = "false" ]; then
-    echo "Performing full clean and rebuild..."
-    
-    # Clear build cache only when rebuilding
-    if [ -d ".next" ]; then
-      echo "Clearing .next directory for clean rebuild..."
-      rm -rf .next || fail "Failed to clear Next.js build cache"
+    if [ "$FAST_MODE" = "1" ]; then
+      echo "FAST_MODE: skipping full build; rely on later CI or production build"
+    else
+      echo "Performing full clean and rebuild..."
+      
+      # Clear build cache only when rebuilding
+      if [ -d ".next" ]; then
+        rm -rf .next || fail "Failed to clear Next.js build cache"
+      fi
+      
+      # Run full build
+      echo "Running: npm run build"
+      npm run build || fail "Next.js build failed - this would fail in production"
+      
+      # Validate standalone build output for production deployment
+      echo "Validating standalone build output..."
+      if [ ! -f ".next/standalone/server.js" ]; then
+        fail "Standalone server.js missing at .next/standalone/server.js - production deployment will fail"
+      fi
+      if [ ! -d ".next/standalone/.next" ]; then
+        fail "Standalone .next directory missing - production deployment will fail"
+      fi
+      ok "Full build validation completed successfully"
     fi
-    
-    # Run full build
-    echo "Running: npm run build"
-    npm run build || fail "Next.js build failed - this would fail in production"
-    
-    # Validate standalone build output for production deployment
-    echo "Validating standalone build output..."
-    if [ ! -f ".next/standalone/server.js" ]; then
-      fail "Standalone server.js missing at .next/standalone/server.js - production deployment will fail"
-    fi
-    if [ ! -d ".next/standalone/.next" ]; then
-      fail "Standalone .next directory missing - production deployment will fail"
-    fi
-    ok "Full build validation completed successfully"
   fi
   
   # Navigate back to repo root
@@ -158,7 +182,9 @@ fi
 
 section ".NET backend build validation"
 # Smart .NET validation: only do expensive operations when needed
-if [ -d "glasscode/backend" ]; then
+if [ "$FRONTEND_ONLY" = "1" ]; then
+  echo "Skipping .NET backend checks due to frontend-only mode"
+elif [ -d "glasscode/backend" ]; then
   echo "Running smart .NET backend build validation in glasscode/backend..."
   cd glasscode/backend || fail "Failed to navigate to backend directory"
   

@@ -719,7 +719,7 @@ export function getLessonGroups(moduleSlug: string, lessons: Lesson[]): LessonGr
         id: 'advanced-topics',
         title: 'Advanced Topics',
         description: 'Deep dive into memory management, best practices, and project organization',
-        lessons: lessons.slice(9, 12), // Lessons 10-12
+        lessons: lessons.slice(9),
         order: 5
       }
     ];
@@ -796,6 +796,15 @@ export function getNextLessonGroup(moduleSlug: string, lessons: Lesson[], lesson
   
   const nextGroupIndex = currentGroupInfo.groupIndex + 1;
   return nextGroupIndex < groups.length ? groups[nextGroupIndex] : null;
+}
+
+// Wrapper exports to match API route expectations
+export async function getShortSlugFromModuleSlug(moduleSlug: string): Promise<string | null> {
+  return contentRegistry.getShortSlugFromModuleSlug(moduleSlug);
+}
+
+export async function getModuleSlugFromShortSlug(shortSlug: string): Promise<string | null> {
+  return contentRegistry.getModuleSlugFromShortSlug(shortSlug);
 }
 
 // Export types
