@@ -9,7 +9,12 @@ interface ModulePageProps {
   params: Promise<{ moduleSlug: string }>;
 }
 
+export const revalidate = 3600
+
 export async function generateStaticParams() {
+  if (process.env.ENABLE_BUILD_SSG !== 'true') {
+    return [];
+  }
   try {
     const modules = await contentRegistry.getModules();
     return modules.map((m) => ({

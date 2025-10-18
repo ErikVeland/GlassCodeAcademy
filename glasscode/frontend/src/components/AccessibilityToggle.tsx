@@ -28,7 +28,7 @@ const AccessibilityToggle: React.FC = () => {
 
   // Close panel on route change to avoid lingering overlays
   useEffect(() => {
-    if (isOpen) setIsOpen(false);
+    setIsOpen(false);
   }, [pathname]);
 
   // Focus overlay when opened for Escape key handling

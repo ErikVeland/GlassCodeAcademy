@@ -8,8 +8,7 @@ interface LessonsPageProps {
   searchParams?: Promise<Record<string, string | string[] | undefined>>;
 }
 
-const DB_MODE = (process.env.GC_CONTENT_MODE || '').toLowerCase() === 'db';
-export const dynamic = DB_MODE ? 'force-dynamic' : 'auto';
+export const dynamic = 'force-dynamic';
 
 export async function generateStaticParams() {
   if ((process.env.GC_CONTENT_MODE || '').toLowerCase() === 'db') {

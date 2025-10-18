@@ -1,3 +1,4 @@
+export const revalidate = 3600
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
@@ -10,6 +11,9 @@ interface LessonsPageProps {
 }
 
 export async function generateStaticParams() {
+  if (process.env.ENABLE_BUILD_SSG !== 'true') {
+    return [];
+  }
   const modules = await contentRegistry.getModules();
   return modules
     .filter((m) => m.status === 'active')

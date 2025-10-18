@@ -8,6 +8,7 @@
     "start": "next start",
     "start:next": "next start",
     "lint": "next lint",
+    "prewarm:ssg": "node scripts/prewarm-ssg.js",
     "typecheck": "tsc -p ./tsconfig.json --noEmit"
   },
   "dependencies": {

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { contentRegistry } from '@/lib/contentRegistry';
@@ -49,63 +49,11 @@ export default function QuizPage({ params }: { params: Promise<{ shortSlug: stri
   const [reqPercent, setReqPercent] = useState(0);
   const [debugEnabled, setDebugEnabled] = useState(false);
 
-  useEffect(() => {
-    async function initializePage() {
-      try {
-        const resolvedParams = await params;
-        const slug = resolvedParams.shortSlug;
-        console.log('=== Quiz Page Debug ===');
-        console.log('Short slug:', slug);
-
-        const moduleData = await contentRegistry.getModule(slug);
-        console.log('Module data:', moduleData);
-        if (!moduleData) {
-          setError('Module not found');
-          return;
-        }
-        setCurrentModule(moduleData);
-
-        const moduleQuiz = await contentRegistry.getModuleQuiz(moduleData.slug);
-        console.log('Module quiz:', moduleQuiz);
-        setQuiz(moduleQuiz);
-
-        const moduleThresholds = await contentRegistry.checkModuleThresholds(moduleData.slug);
-        console.log('Module thresholds:', moduleThresholds);
-        setThresholds(moduleThresholds);
-
-        if (!moduleThresholds.quizValid && process.env.NODE_ENV === 'production') {
-          setError('Quiz not available');
-          return;
-        }
-
-        const allModules = await contentRegistry.getModules();
-        const unlocking = allModules
-          .filter(m => (m.prerequisites || []).includes(moduleData.slug))
-          .map(m => ({ slug: m.slug, title: m.title, routes: { overview: m.routes.overview } }));
-        setUnlockingModules(unlocking);
-
-        // Initialize quiz data
-        await initializeQuizData(moduleData, moduleQuiz, moduleThresholds);
-      } catch (err) {
-        console.error('Error initializing quiz page:', err);
-        setError('Failed to load quiz data');
-      } finally {
-        setLoading(false);
-      }
-    }
-
-    initializePage();
-  }, [params]);
-
-  useEffect(() => {
-    setDebugEnabled(localStorage.getItem('debug') === 'true');
-  }, []);
-
-  async function initializeQuizData(
+  const initializeQuizData = useCallback(async (
     moduleData: typeof currentModule,
     moduleQuiz: typeof quiz,
     moduleThresholds: typeof thresholds
-  ) {
+  ) => {
     console.log('=== initializeQuizData Debug ===');
     console.log('moduleData:', moduleData);
     console.log('moduleQuiz:', moduleQuiz);
@@ -194,7 +142,59 @@ export default function QuizPage({ params }: { params: Promise<{ shortSlug: stri
       console.error('Error preparing quiz data:', err);
       setError('Failed to prepare quiz');
     }
-  }
+  }, [debugEnabled]);
+
+  useEffect(() => {
+    async function initializePage() {
+      try {
+        const resolvedParams = await params;
+        const slug = resolvedParams.shortSlug;
+        console.log('=== Quiz Page Debug ===');
+        console.log('Short slug:', slug);
+
+        const moduleData = await contentRegistry.getModule(slug);
+        console.log('Module data:', moduleData);
+        if (!moduleData) {
+          setError('Module not found');
+          return;
+        }
+        setCurrentModule(moduleData);
+
+        const moduleQuiz = await contentRegistry.getModuleQuiz(moduleData.slug);
+        console.log('Module quiz:', moduleQuiz);
+        setQuiz(moduleQuiz);
+
+        const moduleThresholds = await contentRegistry.checkModuleThresholds(moduleData.slug);
+        console.log('Module thresholds:', moduleThresholds);
+        setThresholds(moduleThresholds);
+
+        if (!moduleThresholds.quizValid && process.env.NODE_ENV === 'production') {
+          setError('Quiz not available');
+          return;
+        }
+
+        const allModules = await contentRegistry.getModules();
+        const unlocking = allModules
+          .filter(m => (m.prerequisites || []).includes(moduleData.slug))
+          .map(m => ({ slug: m.slug, title: m.title, routes: { overview: m.routes.overview } }));
+        setUnlockingModules(unlocking);
+
+        // Initialize quiz data
+        await initializeQuizData(moduleData, moduleQuiz, moduleThresholds);
+      } catch (err) {
+        console.error('Error initializing quiz page:', err);
+        setError('Failed to load quiz data');
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    initializePage();
+  }, [params, initializeQuizData]);
+
+  useEffect(() => {
+    setDebugEnabled(localStorage.getItem('debug') === 'true');
+  }, []);
 
   const handleStartQuiz = async () => {
     if (!quizData?._sessionSeed?.selectedQuestions || !currentModule) {

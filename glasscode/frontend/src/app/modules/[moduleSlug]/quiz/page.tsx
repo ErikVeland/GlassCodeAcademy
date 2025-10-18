@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { contentRegistry, type Module, type Quiz, type ProgrammingQuestion } from '@/lib/contentRegistry';
@@ -53,54 +53,11 @@ export default function QuizPage({ params }: QuizPageProps) {
 
   const debugEnabled = process.env.NODE_ENV === 'development';
 
-  useEffect(() => {
-    async function resolveParams() {
-      const resolvedParams = await params;
-      
-      try {
-        const moduleData = await contentRegistry.getModule(resolvedParams.moduleSlug);
-        if (!moduleData) {
-          setError('Module not found');
-          return;
-        }
-        setCurrentModule(moduleData);
-
-        const moduleQuiz = await contentRegistry.getModuleQuiz(moduleData.slug);
-        setQuiz(moduleQuiz);
-
-        const moduleThresholds = await contentRegistry.checkModuleThresholds(moduleData.slug);
-        setThresholds(moduleThresholds);
-
-        if (!moduleThresholds.quizValid && process.env.NODE_ENV === 'production') {
-          setError('Quiz not available');
-          return;
-        }
-
-        // Get unlocking modules
-        const allModules = await contentRegistry.getModules();
-        const unlocking = allModules
-          .filter(m => (m.prerequisites || []).includes(moduleData.slug))
-          .map(m => ({ slug: m.slug, title: m.title, routes: { overview: m.routes.overview } }));
-        setUnlockingModules(unlocking);
-
-        // Initialize quiz data
-        await initializeQuizData(moduleData, moduleQuiz, moduleThresholds);
-      } catch (err) {
-        console.error('Error initializing quiz page:', err);
-        setError(err instanceof Error ? err.message : 'An error occurred');
-      } finally {
-        setLoading(false);
-      }
-    }
-    
-    resolveParams();
-  }, []);
-
-  async function initializeQuizData(
+  const initializeQuizData = useCallback(async (
     moduleData: Module,
     moduleQuiz: Quiz | null,
     moduleThresholds: { lessons?: boolean; quiz?: boolean } | null
-  ) {
+  ) => {
     if (!moduleQuiz?.questions || moduleQuiz.questions.length === 0) {
       return;
     }
@@ -174,7 +131,50 @@ export default function QuizPage({ params }: QuizPageProps) {
       console.error('Error initializing quiz data:', err);
       setError('Failed to initialize quiz');
     }
-  }
+  }, [debugEnabled]);
+
+  useEffect(() => {
+    async function resolveParams() {
+      const resolvedParams = await params;
+      
+      try {
+        const moduleData = await contentRegistry.getModule(resolvedParams.moduleSlug);
+        if (!moduleData) {
+          setError('Module not found');
+          return;
+        }
+        setCurrentModule(moduleData);
+
+        const moduleQuiz = await contentRegistry.getModuleQuiz(moduleData.slug);
+        setQuiz(moduleQuiz);
+
+        const moduleThresholds = await contentRegistry.checkModuleThresholds(moduleData.slug);
+        setThresholds(moduleThresholds);
+
+        if (!moduleThresholds.quizValid && process.env.NODE_ENV === 'production') {
+          setError('Quiz not available');
+          return;
+        }
+
+        // Get unlocking modules
+        const allModules = await contentRegistry.getModules();
+        const unlocking = allModules
+          .filter(m => (m.prerequisites || []).includes(moduleData.slug))
+          .map(m => ({ slug: m.slug, title: m.title, routes: { overview: m.routes.overview } }));
+        setUnlockingModules(unlocking);
+
+        // Initialize quiz data
+        await initializeQuizData(moduleData, moduleQuiz, moduleThresholds);
+      } catch (err) {
+        console.error('Error initializing quiz page:', err);
+        setError(err instanceof Error ? err.message : 'An error occurred');
+      } finally {
+        setLoading(false);
+      }
+    }
+    
+    resolveParams();
+  }, [params, initializeQuizData]);
 
   async function handleStartQuiz() {
     if (!quizData?._sessionSeed?.selectedQuestions || !currentModule) {

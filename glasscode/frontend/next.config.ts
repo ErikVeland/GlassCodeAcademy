@@ -47,15 +47,10 @@ const nextConfig: NextConfig = {
   },
   // Enable standalone output for production deployment
   output: 'standalone',
-  // Performance optimizations
+  // Performance optimizations: disable experimental flags causing export worker issues
   experimental: {
-    optimizeCss: true,
-    optimizePackageImports: [
-      'react',
-      'react-dom',
-      '@apollo/client',
-      'next',
-    ],
+    optimizeCss: false,
+    // Remove optimizePackageImports to avoid bundler chunk resolution problems
   },
   // Image optimization
   images: {

@@ -24,8 +24,7 @@ interface Exercise {
   checkpoints?: string[];
 }
 
-const DB_MODE = (process.env.GC_CONTENT_MODE || '').toLowerCase() === 'db';
-export const dynamic = DB_MODE ? 'force-dynamic' : 'auto';
+export const dynamic = 'force-dynamic';
 
 export async function generateStaticParams() {
   const isDb = (process.env.GC_CONTENT_MODE || '').toLowerCase() === 'db';
@@ -88,7 +87,7 @@ export async function generateMetadata({ params }: LessonPageProps): Promise<Met
 }
 
 // Enable ISR for on-demand generation of lesson pages
-export const revalidate = ((process.env.GC_CONTENT_MODE || '').toLowerCase() === 'db') ? 0 : 3600;
+export const revalidate = 0;
 export const dynamicParams = true; // Allow dynamic params not in generateStaticParams
 
 export default async function LessonPage({ params }: LessonPageProps) {

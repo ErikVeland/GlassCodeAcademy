@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Development script to start the Next.js frontend directly
+# Development script to start Next.js in dev — no build; cleans .next
 
 echo "🚀 Starting GlassCode Academy Frontend (Development Mode)..."
 
@@ -20,20 +20,18 @@ if [ ! -d "node_modules" ]; then
     fi
 fi
 
-# Check if .next directory exists, if not build the project
-if [ ! -d ".next" ]; then
-    echo "⚠️  .next directory not found. Building project..."
-    if ! npm run build; then
-        echo "❌ ERROR: Failed to build the project."
-        exit 1
-    fi
-    echo "✅ Build completed successfully."
+# Clean stale .next artifacts to avoid chunk conflicts between dev/start
+CLEAN_NEXT=${CLEAN_NEXT:-true}
+if [ "$CLEAN_NEXT" = "true" ]; then
+    echo "🧹 Cleaning .next directory for a fresh dev start..."
+    rm -rf ".next"
 fi
 
-echo "🔧 Starting frontend on port 3000..."
-echo "🔗 Frontend: http://localhost:3000"
+PORT=${PORT:-3000}
+echo "🔧 Starting frontend on port ${PORT}..."
+echo "🔗 Frontend: http://localhost:${PORT}"
 echo ""
 echo "⏹️  Press Ctrl+C to stop the frontend"
 
-# Start the frontend
-npm run dev
+# Start the frontend on chosen port
+npm run dev -- -p "${PORT}"

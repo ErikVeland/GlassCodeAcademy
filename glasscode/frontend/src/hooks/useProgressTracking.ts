@@ -218,10 +218,11 @@ export const useProgressTracking = () => {
     
     // Check for new achievements
     checkAchievements(updated, moduleId);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [progress, getStorageKeys]);
 
   // Helper function to get tier from registry
-  const determineTierFromRegistry = async (moduleSlug: string): Promise<string | null> => {
+  const determineTierFromRegistry = useCallback(async (moduleSlug: string): Promise<string | null> => {
     try {
       const foundModule = await contentRegistry.getModule(moduleSlug);
       return foundModule?.tier || null;
@@ -233,10 +234,10 @@ export const useProgressTracking = () => {
       );
       return tierEntry?.[0] || null;
     }
-  };
+  }, []);
 
   // Helper function to get actual lesson count
-  const getActualLessonCount = async (moduleSlug: string): Promise<number> => {
+  const getActualLessonCount = useCallback(async (moduleSlug: string): Promise<number> => {
     try {
       const lessons = await contentRegistry.getModuleLessons(moduleSlug);
       return lessons.length;
@@ -252,7 +253,7 @@ export const useProgressTracking = () => {
       };
       return defaultCounts[tier as keyof typeof defaultCounts] || 12;
     }
-  };
+  }, [determineTierFromRegistry]);
 
   const updateStreak = useCallback(() => {
     const today = new Date().toDateString();
