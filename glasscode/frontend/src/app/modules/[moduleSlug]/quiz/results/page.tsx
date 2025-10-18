@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import ConfettiBurst from '@/components/ConfettiBurst';
+import BreadcrumbNavigation from '@/components/BreadcrumbNavigation';
 import { useProgressTrackingComplete } from '@/hooks/useProgressTrackingComplete';
 import { useProgressTracking } from '@/hooks/useProgressTracking';
 import { useNextUnlockedLesson } from '@/hooks/useNextUnlockedLesson';
@@ -226,7 +227,7 @@ export default function QuizResultsPage({ params }: { params: Promise<{ moduleSl
     }
     
     // Navigate to quiz start page for a fresh quiz
-    router.push(`/modules/${resolvedParams.moduleSlug}/quiz/start`);
+    router.push(`/modules/${resolvedParams.moduleSlug}/quiz`);
   };
 
   const handleReviewLessons = async () => {
@@ -286,31 +287,7 @@ export default function QuizResultsPage({ params }: { params: Promise<{ moduleSl
     <div className="max-w-4xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
       <ConfettiBurst active={showConfetti} durationMs={4500} />
       {/* Breadcrumb Navigation */}
-      <nav className="mb-8" aria-label="Breadcrumb">
-        <ol className="flex items-center space-x-2 text-sm">
-          <li>
-            <Link href="/" className="text-blue-600 hover:text-blue-800">
-              Home
-            </Link>
-          </li>
-          <li className="text-gray-500">/</li>
-          <li>
-            <Link href={`/modules/${moduleSlug}`} className="text-blue-600 hover:text-blue-800">
-              Module
-            </Link>
-          </li>
-          <li className="text-gray-500">/</li>
-          <li>
-            <Link href={`/modules/${moduleSlug}/quiz`} className="text-blue-600 hover:text-blue-800">
-              Quiz
-            </Link>
-          </li>
-          <li className="text-gray-500">/</li>
-          <li className="text-gray-900 dark:text-gray-100 font-medium">
-            Results
-          </li>
-        </ol>
-      </nav>
+      <BreadcrumbNavigation />
 
       {/* Results Header using shared component */}
       <header className="mb-12">

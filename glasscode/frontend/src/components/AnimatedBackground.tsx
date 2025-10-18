@@ -37,8 +37,8 @@ const AnimatedBackground: React.FC<AnimatedBackgroundProps> = ({
   onAnimationUpdate
 }) => {
   const backgroundRef = useRef<HTMLDivElement>(null);
-  const animationRef = useRef<number | undefined>(undefined);
-  const startTimeRef = useRef<number | undefined>(undefined);
+  const animationRef = useRef<number>(0);
+  const startTimeRef = useRef<number>(0);
   const pausedTimeRef = useRef<number>(0);
 
   const updateGradientPosition = useCallback((position: number) => {
@@ -60,6 +60,7 @@ const AnimatedBackground: React.FC<AnimatedBackgroundProps> = ({
 
     updateGradientPosition(position);
 
+    // Only continue animation if not paused
     if (!isPaused) {
       animationRef.current = requestAnimationFrame(animate);
     } else {
@@ -87,24 +88,32 @@ const AnimatedBackground: React.FC<AnimatedBackgroundProps> = ({
   useEffect(() => {
     if (!backgroundRef.current) return;
 
-    if (respectReducedMotion && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    // Check for reduced motion preference
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    
+    if (respectReducedMotion && prefersReducedMotion) {
       // Static gradient when reduced motion is preferred
       updateGradientPosition(0);
       return;
     }
 
+    // Start or stop animation based on isPaused
     if (!isPaused) {
-      startTimeRef.current = undefined;
+      startTimeRef.current = 0; // Reset start time
+      pausedTimeRef.current = 0; // Reset paused time
       animationRef.current = requestAnimationFrame(animate);
     } else {
       if (animationRef.current) {
         cancelAnimationFrame(animationRef.current);
+        animationRef.current = 0;
       }
     }
 
+    // Cleanup function
     return () => {
       if (animationRef.current) {
         cancelAnimationFrame(animationRef.current);
+        animationRef.current = 0;
       }
     };
   }, [animate, isPaused, respectReducedMotion, updateGradientPosition]);

@@ -1,7 +1,6 @@
 // Use the Web Request type to satisfy Next.js route handler typing
-import fs from 'fs';
-import path from 'path';
 import { normalizeQuestion } from '@/lib/textNormalization';
+import { getApiBaseStrict } from '@/lib/urlUtils';
 
 // Removed GraphQL fetching. API now serves only local quiz content.
 
@@ -27,35 +26,63 @@ const SHORT_SLUG_TO_MODULE_SLUG: Record<string, string> = {
   'e2e': 'e2e-testing'
 };
 
-// Function to find quiz file in multiple possible locations
-function findQuizFile(moduleSlug: string): string | null {
-  // Try to find the quiz file in different possible locations
-  const possiblePaths = [
-    path.join(process.cwd(), '..', '..', 'content', 'quizzes', `${moduleSlug}.json`),
-    path.join(process.cwd(), 'content', 'quizzes', `${moduleSlug}.json`),
-    path.join(__dirname, '..', '..', '..', '..', 'content', 'quizzes', `${moduleSlug}.json`),
-    // Production path (only if NEXT_PUBLIC_BASE_URL indicates production)
-    ...(process.env.NEXT_PUBLIC_BASE_URL?.includes('glasscode.academy') ? 
-      [path.join('/srv/academy', 'content', 'quizzes', `${moduleSlug}.json`)] : []),
-  ];
-  
-  console.log('Searching for quiz file:', moduleSlug);
-  console.log('Current working directory:', process.cwd());
-  
-  for (const quizPath of possiblePaths) {
-    try {
-      const exists = fs.existsSync(quizPath);
-      console.log(`Checking path: ${quizPath} - ${exists ? 'FOUND' : 'NOT FOUND'}`);
-      if (exists) {
-        return quizPath;
-      }
-    } catch (err) {
-      console.error(`Error checking ${quizPath}:`, err);
-      // Continue to next path
+// Database-based quiz loading function
+async function fetchQuizFromDatabase(moduleSlug: string) {
+  try {
+    // Use the correct endpoint to fetch quizzes for a module by slug
+    const apiBase = (() => { try { return getApiBaseStrict(); } catch { return 'http://127.0.0.1:8080'; } })();
+    const quizzesResponse = await fetch(`${apiBase}/api/modules/${moduleSlug}/quiz`);
+    if (!quizzesResponse.ok) {
+      console.error(`Failed to fetch quizzes for module ${moduleSlug}`);
+      return { questions: [] };
     }
+    
+    const quizzes = await quizzesResponse.json();
+    console.log(`Successfully loaded ${quizzes.length} quiz questions from database for module: ${moduleSlug}`);
+    
+    // Transform the database quizzes to match the expected frontend format
+    const questions = quizzes.map((quiz: {
+      id: number;
+      question: string;
+      choices?: string;
+      correctAnswer: number;
+      explanation?: string;
+      topic?: string;
+      type?: string;
+    }) => ({
+      id: quiz.id,
+      question: quiz.question,
+      choices: quiz.choices ? JSON.parse(quiz.choices) : [],
+      correctAnswer: quiz.correctAnswer,
+      explanation: quiz.explanation,
+      topic: quiz.topic || 'general',
+      type: quiz.type || 'multiple-choice'
+    }));
+    
+    return { questions };
+  } catch (error) {
+    console.error('Error fetching quiz from database:', error);
+    return { questions: [] };
   }
-  
-  return null;
+}
+
+// Fallback: Load quiz from static JSON in public/content/quizzes
+async function fetchQuizFallbackFromJson(request: Request, moduleSlug: string) {
+  try {
+    const url = new URL(request.url);
+    const origin = `${url.protocol}//${url.host}`;
+    const res = await fetch(`${origin}/content/quizzes/${moduleSlug}.json`, { cache: 'no-store' });
+    if (!res.ok) {
+      console.warn(`Quiz fallback JSON not found for module: ${moduleSlug}`);
+      return { questions: [] };
+    }
+    const data = await res.json();
+    const questions = Array.isArray(data?.questions) ? data.questions : Array.isArray(data) ? data : [];
+    return { questions };
+  } catch (err) {
+    console.error('Error fetching quiz from fallback JSON:', err);
+    return { questions: [] };
+  }
 }
 
 export async function GET(request: Request, context: { params: Promise<{ moduleSlug: string }> }) {
@@ -68,29 +95,15 @@ export async function GET(request: Request, context: { params: Promise<{ moduleS
     const moduleSlug = SHORT_SLUG_TO_MODULE_SLUG[inputSlug] || inputSlug;
     console.log('Resolved to module slug:', moduleSlug);
     
-    // No special handling needed. All modules load from local quiz files.
+    // Try database first
+    let quiz = await fetchQuizFromDatabase(moduleSlug);
 
-    // Try to find the quiz file
-    const quizPath = findQuizFile(moduleSlug);
-    
-    if (!quizPath) {
-      console.log(`Quiz file not found for module: ${moduleSlug}`);
-      // Return empty quiz with proper JSON content type
-      return new Response(JSON.stringify({ questions: [] }), {
-        status: 200,
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
+    // If database returned no questions, fall back to static JSON
+    if (!Array.isArray(quiz.questions) || quiz.questions.length === 0) {
+      console.log(`No DB quizzes for ${moduleSlug}. Falling back to JSON.`);
+      quiz = await fetchQuizFallbackFromJson(request, moduleSlug);
     }
-
-    console.log('Looking for quiz at:', quizPath);
-    console.log('File exists:', fs.existsSync(quizPath));
     
-    const quizContent = fs.readFileSync(quizPath, 'utf8');
-    const quiz = JSON.parse(quizContent);
-    console.log('Found', quiz.questions?.length || 0, 'questions');
-
     const normalizedQuestions = Array.isArray(quiz.questions)
       ? (quiz.questions as unknown[]).map((q) => normalizeQuestion(q))
       : [];

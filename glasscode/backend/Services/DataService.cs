@@ -163,51 +163,8 @@ namespace backend.Services {
     }
 
     public DataService() {
-      Console.WriteLine("🚀 DataService constructor started");
-      try {
-        Console.WriteLine("📚 Loading React data...");
-        LoadReactData();
-        Console.WriteLine("📚 Loading DotNet data...");
-        LoadDotNetData();
-        Console.WriteLine("📚 Loading Tailwind data...");
-        LoadTailwindData();
-        Console.WriteLine("📚 Loading Node data...");
-        LoadNodeData();
-        Console.WriteLine("📚 Loading Sass data...");
-        LoadSassData();
-        Console.WriteLine("📚 Loading Vue data...");
-        LoadVueData();
-        Console.WriteLine("📚 Loading TypeScript data...");
-        LoadTypescriptData();
-        Console.WriteLine("📚 Loading Database data...");
-        LoadDatabaseData();
-        Console.WriteLine("📚 Loading GraphQL data...");
-        LoadGraphQLData();
-        Console.WriteLine("📚 Loading Testing data...");
-        LoadTestingData();
-        Console.WriteLine("📚 Loading Programming data...");
-        LoadProgrammingData();
-        Console.WriteLine("📚 Loading Web data...");
-        LoadWebData();
-        Console.WriteLine("📚 Loading Next.js data...");
-        LoadNextJsData();
-        Console.WriteLine("📚 Loading Performance data...");
-        LoadPerformanceData();
-        Console.WriteLine("📚 Loading Security data...");
-        LoadSecurityData();
-        Console.WriteLine("📚 Loading Version data...");
-        LoadVersionData();
-        Console.WriteLine("📚 Loading Laravel data...");
-        LoadLaravelData();
-
-        Console.WriteLine("✅ All data loading completed");
-
-        // Verify data integrity after loading
-        VerifyDataIntegrity();
-      } catch (Exception ex) {
-        Console.WriteLine($"❌ Error in DataService constructor: {ex.Message}");
-        Console.WriteLine($"❌ Stack trace: {ex.StackTrace}");
-      }
+      Console.WriteLine("🚀 DataService constructor started - using lazy loading");
+      // Data will be loaded on-demand when properties are first accessed
     }
 
     // Verify that all data was loaded correctly with detailed error reporting
@@ -403,11 +360,18 @@ namespace backend.Services {
       }
     }
 
-    // Data collections
-    public IEnumerable < BaseLesson > DotNetLessons {
-      get;
-      private set;
-    } = new List < BaseLesson > ();
+    // Data collections with lazy loading
+    private IEnumerable<BaseLesson>? _dotNetLessons;
+    public IEnumerable<BaseLesson> DotNetLessons {
+      get {
+        if (_dotNetLessons == null) {
+          Console.WriteLine("📚 Lazy loading DotNet data...");
+          LoadDotNetData();
+        }
+        return _dotNetLessons ?? new List<BaseLesson>();
+      }
+      private set => _dotNetLessons = value;
+    }
     public IEnumerable < BaseLesson > GraphQLLessons {
       get;
       private set;
@@ -435,17 +399,31 @@ namespace backend.Services {
       private set;
     } = new List < BaseInterviewQuestion > ();
 
-    // React data collections
-    public IEnumerable < BaseLesson > ReactLessons {
-      get;
-      private set;
-    } = new List < BaseLesson > ();
+    // React data collections with lazy loading
+    private IEnumerable<BaseLesson>? _reactLessons;
+    public IEnumerable<BaseLesson> ReactLessons {
+      get {
+        if (_reactLessons == null) {
+          Console.WriteLine("📚 Lazy loading React data...");
+          LoadReactData();
+        }
+        return _reactLessons ?? new List<BaseLesson>();
+      }
+      private set => _reactLessons = value;
+    }
 
-    // Tailwind data collections
-    public IEnumerable < BaseLesson > TailwindLessons {
-      get;
-      private set;
-    } = new List < BaseLesson > ();
+    // Tailwind data collections with lazy loading
+    private IEnumerable<BaseLesson>? _tailwindLessons;
+    public IEnumerable<BaseLesson> TailwindLessons {
+      get {
+        if (_tailwindLessons == null) {
+          Console.WriteLine("📚 Lazy loading Tailwind data...");
+          LoadTailwindData();
+        }
+        return _tailwindLessons ?? new List<BaseLesson>();
+      }
+      private set => _tailwindLessons = value;
+    }
     public IEnumerable < BaseInterviewQuestion > TailwindInterviewQuestions {
       get;
       private set;

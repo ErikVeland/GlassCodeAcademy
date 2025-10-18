@@ -1,11 +1,14 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useAccessibility } from './AccessibilityProvider';
+import { usePathname } from 'next/navigation';
 
 const AccessibilityToggle: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
   const { settings, updateSetting } = useAccessibility();
+  const pathname = usePathname();
+  const overlayRef = useRef<HTMLDivElement | null>(null);
 
   // Handle keyboard shortcuts
   useEffect(() => {
@@ -22,6 +25,26 @@ const AccessibilityToggle: React.FC = () => {
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, []);
+
+  // Close panel on route change to avoid lingering overlays
+  useEffect(() => {
+    if (isOpen) setIsOpen(false);
+  }, [pathname]);
+
+  // Focus overlay when opened for Escape key handling
+  useEffect(() => {
+    if (isOpen) {
+      overlayRef.current?.focus();
+    }
+  }, [isOpen]);
+
+  // Handle Escape key when overlay is focused
+  const handleOverlayKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
+    if (e.key === 'Escape') {
+      e.stopPropagation();
+      setIsOpen(false);
+    }
+  };
 
   return (
     <>
@@ -42,8 +65,12 @@ const AccessibilityToggle: React.FC = () => {
           role="dialog"
           aria-labelledby="accessibility-panel-title"
           aria-modal="true"
+          onClick={() => setIsOpen(false)}
+          onKeyDown={handleOverlayKeyDown}
+          tabIndex={-1}
+          ref={overlayRef}
         >
-          <div className="accessibility-panel" role="document">
+          <div className="accessibility-panel" role="document" onClick={(e) => e.stopPropagation()}>
             <div className="accessibility-panel-header">
               <h2 id="accessibility-panel-title">Accessibility Settings</h2>
               <button

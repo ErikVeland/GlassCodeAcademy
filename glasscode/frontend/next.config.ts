@@ -1,5 +1,41 @@
 import type { NextConfig } from "next";
 
+const IS_PROD = process.env.NODE_ENV === 'production';
+
+const cspBase = [
+  "default-src 'self'",
+  // Allow modern script loading; avoid inline scripts in enforced policy
+  IS_PROD
+    ? "script-src 'self' 'strict-dynamic' https: blob:"
+    : "script-src 'self' 'unsafe-eval' 'strict-dynamic' https: blob:",
+  // Style: keep 'unsafe-inline' in enforced policy to avoid breaking dev; drop in report-only
+  IS_PROD
+    ? "style-src 'self' https:"
+    : "style-src 'self' 'unsafe-inline' https:",
+  "img-src 'self' data: blob: https:",
+  IS_PROD
+    ? "connect-src 'self' https: wss:"
+    : "connect-src 'self' http: https: ws: wss:",
+  "font-src 'self' https: data:",
+  "base-uri 'self'",
+  "form-action 'self'",
+  "frame-ancestors 'none'",
+  "object-src 'none'",
+].join('; ');
+
+const cspReportOnly = [
+  "default-src 'self'",
+  "script-src 'self' 'strict-dynamic' https: blob:",
+  "style-src 'self' https:",
+  "img-src 'self' data: blob: https:",
+  "connect-src 'self' https: wss:",
+  "font-src 'self' https: data:",
+  "base-uri 'self'",
+  "form-action 'self'",
+  "frame-ancestors 'none'",
+  "object-src 'none'",
+].join('; ');
+
 const nextConfig: NextConfig = {
   eslint: {
     // Enforce ESLint during production builds so invalid code fails early
@@ -23,10 +59,9 @@ const nextConfig: NextConfig = {
   },
   // Image optimization
   images: {
-    minimumCacheTTL: 60,
+    minimumCacheTTL: 86400,
     formats: ['image/avif', 'image/webp'],
   },
-  // Bundle optimization - Removed Webpack config to use Turbopack
   // Enable compression
   compress: true,
   // Enable React Server Components
@@ -39,6 +74,25 @@ const nextConfig: NextConfig = {
       {
         source: '/graphql',
         destination: `${base}/graphql`,
+      },
+    ];
+  },
+  async headers() {
+    return [
+      {
+        source: '/(.*)',
+        headers: [
+          { key: 'Strict-Transport-Security', value: 'max-age=31536000; includeSubDomains; preload' },
+          { key: 'X-Content-Type-Options', value: 'nosniff' },
+          { key: 'Referrer-Policy', value: 'strict-origin-when-cross-origin' },
+          { key: 'Permissions-Policy', value: 'camera=(), microphone=(), geolocation=(), interest-cohort=(), browsing-topics=()' },
+          { key: 'Cross-Origin-Opener-Policy', value: 'same-origin' },
+          { key: 'Cross-Origin-Resource-Policy', value: 'same-origin' },
+          // Enforced CSP (dev allows inline styles to avoid breakage)
+          { key: 'Content-Security-Policy', value: cspBase },
+          // Strict CSP in report-only to guide migration off inline styles/scripts
+          { key: 'Content-Security-Policy-Report-Only', value: cspReportOnly },
+        ],
       },
     ];
   },

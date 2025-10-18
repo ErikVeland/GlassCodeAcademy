@@ -187,11 +187,11 @@ const InterviewModuleCard: React.FC<{
     <div className={`module-card-container ${isLocked ? 'locked' : ''}`}>
       <Link
         href={isLocked ? '#' : module.href}
-        className={`block bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 p-5 hover:shadow-xl transition-all duration-300 ${
+        aria-label={module.title}
+        className={`block bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 p-5 hover:shadow-xl transition-all duration-300 cursor-pointer touch-manipulation active:scale-[0.99] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-blue-600/40 ring-offset-white dark:ring-offset-gray-800 ${
           isLocked ? 'opacity-60' : 'hover:-translate-y-1'
         }`}
         aria-disabled={isLocked}
-        role="article"
       >
         {isLocked && (
           <div className="absolute inset-0 bg-gray-900/50 backdrop-blur-sm rounded-xl flex items-center justify-center z-5">
@@ -219,26 +219,13 @@ const InterviewModuleCard: React.FC<{
                 {module.difficulty}
               </span>
               <span className="px-2 py-1 rounded-full text-xs font-medium bg-gray-500/20 text-gray-700 dark:text-gray-300">
-                {module.questionCount} questions
+                {module.category}
               </span>
             </div>
+            <p className="text-gray-700 dark:text-gray-300 text-sm text-left">
+              {module.description}
+            </p>
           </div>
-        </div>
-
-        <p className="text-gray-700 dark:text-gray-300 mb-4 text-left text-sm">
-          {module.description}
-        </p>
-
-        {/* Technologies used - Pill-shaped tags */}
-        <div className="flex flex-wrap gap-1 mb-4">
-          {module.technologies.slice(0, 3).map(tech => (
-            <span key={tech} className="px-2 py-1 bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200 rounded-full text-xs">
-              {tech}
-            </span>
-          ))}
-          {module.technologies.length > 3 && (
-            <span className="px-2 py-1 bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200 rounded-full text-xs">+{module.technologies.length - 3} more</span>
-          )}
         </div>
 
         <div className="module-meta mt-auto">
@@ -272,27 +259,29 @@ const InterviewTierSection: React.FC<{
 
   return (
     <section className="w-full mb-8" data-tier={tierKey}>
-      <div className={`rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 bg-gradient-to-br ${tierGradientClass} p-6`}>
+      <div className={`bg-gradient-to-br ${tierGradientClass} p-4 sm:p-6 rounded-none sm:rounded-xl border-none sm:border shadow-none sm:shadow-lg`}>
         <div className="tier-header mb-6">
-          <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
-            <div className="flex-1">
-              <div className="flex items-center gap-4 mb-4">
-                <div className={`w-10 h-10 rounded-full bg-white/20 flex items-center justify-center text-white font-bold text-lg backdrop-blur-sm`}>
-                  {tier.tierLevel}
-                </div>
-                <div className="text-left">
-                  <h2 className="text-xl md:text-2xl font-bold text-white text-left">
-                    {tier.title}
-                  </h2>
-                  <p className="text-white/90 mt-1 text-left text-sm">{tier.description}</p>
-                </div>
-              </div>
+          {/* Title and description */}
+          <div className="flex items-center gap-4 mb-4">
+            <div className={`w-10 h-10 rounded-full bg-white/20 flex items-center justify-center text-white font-bold text-lg backdrop-blur-sm`}>
+              {tier.tierLevel}
+            </div>
+            <div className="text-left min-w-0">
+              <h2 className="text-xl md:text-2xl font-bold text-white truncate">
+                {tier.title}
+              </h2>
+              <p className="text-white/90 mt-1 text-left text-sm">
+                {tier.description}
+              </p>
+            </div>
+          </div>
 
-              <div className="bg-white/10 rounded-lg p-4 border border-white/20 backdrop-blur-sm">
-                <p className="font-medium text-white text-left text-sm">
-                  <strong>Focus Area:</strong> {tier.focusArea}
-                </p>
-              </div>
+          {/* Mobile 2-column grid: Focus area + progress */}
+          <div className="grid grid-cols-2 gap-3 md:flex md:items-center md:justify-between">
+            <div className="bg-white/10 rounded-lg p-4 border border-white/20 backdrop-blur-sm">
+              <p className="font-medium text-white text-left text-sm">
+                <strong>Focus Area:</strong> {tier.focusArea}
+              </p>
             </div>
 
             {/* Unified progress widget like dashboard */}

@@ -1,6 +1,7 @@
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
+import BreadcrumbNavigation from '@/components/BreadcrumbNavigation';
 import { contentRegistry, getLessonGroups } from '@/lib/contentRegistry';
 
 interface LessonsPageProps {
@@ -66,25 +67,7 @@ export default async function LessonsPage({ params, searchParams }: LessonsPageP
     <>
       <div className="max-w-4xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
         {/* Breadcrumb Navigation */}
-        <nav className="mb-8" aria-label="Breadcrumb">
-          <ol className="flex items-center space-x-2 text-sm">
-            <li>
-              <Link href="/" className="text-blue-600 hover:text-blue-800">
-                Home
-              </Link>
-            </li>
-            <li className="text-gray-500">/</li>
-            <li>
-              <Link href={currentModule.routes.overview} className="text-blue-600 hover:text-blue-800">
-                {currentModule.title}
-              </Link>
-            </li>
-            <li className="text-gray-500">/</li>
-            <li className="text-gray-900 dark:text-gray-100 font-medium">
-              Lessons
-            </li>
-          </ol>
-        </nav>
+        <BreadcrumbNavigation />
 
         {/* Header */}
         <header className="mb-12">

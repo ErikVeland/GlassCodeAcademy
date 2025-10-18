@@ -420,7 +420,9 @@ export const APP_PHASES: Phase[] = [
         title: 'Security & Compliance',
         description: 'Security measures and data protection',
         importance: 9,
-        currentProgress: 25,
+        currentProgress: 45,
+        previousProgress: 25,
+        lastUpdated: '2025-10-18',
         category: 'quality',
         milestones: [
           {
@@ -441,7 +443,8 @@ export const APP_PHASES: Phase[] = [
             id: 'security-headers',
             title: 'Security Headers & CSP',
             description: 'Content Security Policy and security headers',
-            completed: false,
+            completed: true,
+            completedDate: '2025-10-18',
             weight: 0.2
           },
           {

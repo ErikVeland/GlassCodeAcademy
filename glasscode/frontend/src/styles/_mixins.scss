@@ -1,0 +1,32 @@
+@use "./_breakpoints" as bp;
+
+// Fluid type helper (example; unused by default)
+@mixin fluid-type($min, $max, $vw-min: 320, $vw-max: 1280) {
+  font-size: clamp(#{$min}, calc(#{$min} + (#{$max} - #{$min}) * ((100vw - #{$vw-min}px) / (#{$vw-max} - #{$vw-min}))), #{$max});
+}
+
+// Full-bleed edge-to-edge on mobile; revert at sm+
+@mixin edge-to-edge-mobile {
+  width: 100vw;
+  margin-left: calc(50% - 50vw);
+  margin-right: calc(50% - 50vw);
+  @include bp.desktop-only {
+    width: 100%;
+    margin-left: 0;
+    margin-right: 0;
+  }
+}
+
+// Pane reset for mobile; restore at sm+ using CSS variables for safety
+@mixin reset-pane-mobile {
+  border: none;
+  border-radius: 0;
+  margin-top: 0;
+  margin-bottom: 0;
+  @include bp.desktop-only {
+    border: var(--pane-border, 1px solid rgba(255, 255, 255, 0.2));
+    border-radius: var(--pane-radius, 1rem);
+    margin-top: var(--pane-margin-top, 1.5rem);
+    margin-bottom: var(--pane-margin-bottom, 1.5rem);
+  }
+}

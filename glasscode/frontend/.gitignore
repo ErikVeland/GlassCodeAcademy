@@ -31,6 +31,19 @@
 # misc
 .DS_Store
 *.pem
+*.key
+*.crt
+*.pfx
+*.cer
+
+# Environment files
+.env
+.env.local
+.env.development
+.env.production
+.env.test
+.env.hosted
+!.env.example
 
 # debug
 npm-debug.log*

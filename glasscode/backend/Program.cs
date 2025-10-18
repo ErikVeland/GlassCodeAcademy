@@ -1,6 +1,8 @@
 using backend.Models;
 using backend.Controllers;
 using backend.Services;
+using backend.Data;
+using Microsoft.EntityFrameworkCore;
 using System.Text.Json;
 using System.IO;
 using System.Collections.Generic;
@@ -15,14 +17,26 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowFrontend",
         policy => policy
-            .WithOrigins("http://localhost:3000", "http://localhost:3001", "http://localhost:3002", "http://localhost:3003", "http://localhost:3004", "http://localhost:3005", "http://localhost:5022", "http://192.168.6.238:3000", "http://192.168.6.238:3001", "https://glasscode.academy")
+            .WithOrigins("http://localhost:3000", "http://localhost:3001", "http://localhost:3002", "http://localhost:3003", "http://localhost:3004", "http://localhost:3005", "http://192.168.6.238:3000", "http://192.168.6.238:3001", "https://glasscode.academy")
             .AllowAnyHeader()
             .AllowAnyMethod()
             .AllowCredentials());
 });
 
+// Add Entity Framework Core with PostgreSQL
+builder.Services.AddDbContext<GlassCodeDbContext>(options =>
+    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+
 // Add authorization services
 builder.Services.AddAuthorization();
+
+// Register custom services
+builder.Services.AddScoped<backend.Services.ModuleSeedingService>();
+builder.Services.AddScoped<backend.Services.LessonSeedingService>();
+builder.Services.AddScoped<backend.Services.LessonMappingService>();
+builder.Services.AddScoped<backend.Services.QuizSeedingService>();
+builder.Services.AddScoped<backend.Services.ContentValidationService>();
+builder.Services.AddScoped<backend.Services.AutomatedMigrationService>();
 
 // Register GraphQL Query and Mutation services
 builder.Services.AddScoped<Query>();
@@ -94,6 +108,29 @@ var app = builder.Build();
 Console.WriteLine("🚀 Initializing DataService...");
 var dataService = backend.Services.DataService.Instance;
 Console.WriteLine($"✅ DataService initialized with {dataService.DotNetLessons.Count()} DotNet lessons");
+
+// Seed modules from registry.json
+Console.WriteLine("🌱 Seeding modules from registry...");
+using (var scope = app.Services.CreateScope())
+{
+    var moduleSeedingService = scope.ServiceProvider.GetRequiredService<backend.Services.ModuleSeedingService>();
+    await moduleSeedingService.SeedModulesFromRegistryAsync();
+    
+    // Seed lessons from DataService to database
+    Console.WriteLine("📚 Seeding lessons to database...");
+    var lessonSeedingService = scope.ServiceProvider.GetRequiredService<backend.Services.LessonSeedingService>();
+    await lessonSeedingService.SeedLessonsToDatabase();
+    
+    // Map lessons to modules
+    Console.WriteLine("🔗 Mapping lessons to modules...");
+    var lessonMappingService = scope.ServiceProvider.GetRequiredService<backend.Services.LessonMappingService>();
+    await lessonMappingService.MapLessonsToModulesAsync();
+    
+    // Seed quiz questions from JSON files
+    Console.WriteLine("❓ Seeding quiz questions to database...");
+    var quizSeedingService = scope.ServiceProvider.GetRequiredService<backend.Services.QuizSeedingService>();
+    await quizSeedingService.SeedQuizzesToDatabase();
+}
 
 // Middleware to check for unlock parameter
 app.Use(async (context, next) =>

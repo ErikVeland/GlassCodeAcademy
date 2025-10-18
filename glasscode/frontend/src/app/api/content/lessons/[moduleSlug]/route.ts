@@ -1,32 +1,87 @@
 import { NextRequest, NextResponse } from 'next/server';
-import fs from 'fs';
-import path from 'path';
+import { getApiBaseStrict } from '@/lib/urlUtils';
 
-// File-based lesson loading function
-async function fetchLessonsFromFile(moduleSlug: string) {
-  const possiblePaths = [
-    path.join(process.cwd(), 'public', 'content', 'lessons', `${moduleSlug}.json`),
-    path.join(process.cwd(), 'src', 'data', 'lessons', `${moduleSlug}.json`),
-    path.join(process.cwd(), 'data', 'lessons', `${moduleSlug}.json`),
-    path.join(process.cwd(), 'content', 'lessons', `${moduleSlug}.json`)
-  ];
-
-  for (const filePath of possiblePaths) {
-    if (fs.existsSync(filePath)) {
-      try {
-        const fileContent = fs.readFileSync(filePath, 'utf-8');
-        const lessons = JSON.parse(fileContent);
-        console.log(`Successfully loaded ${lessons.length} lessons from ${filePath}`);
-        return lessons;
-      } catch (error) {
-        console.error(`Error reading lesson file ${filePath}:`, error);
-        continue;
-      }
+// Database-based lesson loading function
+async function fetchLessonsFromDatabase(moduleSlug: string) {
+  try {
+    const apiBase = (() => { try { return getApiBaseStrict(); } catch { return 'http://127.0.0.1:8080/api'; } })();
+    // First, get the module ID from the backend
+    const modulesResponse = await fetch(`${apiBase}/modules`);
+    if (!modulesResponse.ok) {
+      console.error('Failed to fetch modules from backend');
+      return [];
     }
+    
+    const modules = await modulesResponse.json();
+    const foundModule = modules.find((m: { id: number; slug: string }) => m.slug === moduleSlug);
+    
+    if (!foundModule) {
+      console.log(`Module not found for slug: ${moduleSlug}`);
+      return [];
+    }
+    
+    // Fetch lessons for this module
+    const lessonsResponse = await fetch(`${apiBase}/lessons-db?moduleId=${foundModule.id}`);
+    if (!lessonsResponse.ok) {
+      console.error(`Failed to fetch lessons for module ${moduleSlug}`);
+      return [];
+    }
+    
+    const lessons = await lessonsResponse.json();
+    console.log(`Successfully loaded ${lessons.length} lessons from database for module: ${moduleSlug}`);
+    
+    // Transform the database lessons to match the expected frontend format
+    return lessons.map((lesson: {
+      id: number;
+      title: string;
+      intro?: string;
+      topic?: string;
+      tags?: string;
+      estimatedMinutes?: number;
+      objectives?: string;
+      codeExample?: string;
+      codeExplanation?: string;
+      pitfalls?: string;
+      exercises?: string;
+      order: number;
+    }) => ({
+      id: lesson.id,
+      title: lesson.title,
+      intro: lesson.intro,
+      topic: lesson.topic || 'general',
+      tags: lesson.tags ? lesson.tags.split(',').map((tag: string) => tag.trim()) : [],
+      estimatedMinutes: lesson.estimatedMinutes,
+      objectives: lesson.objectives ? lesson.objectives.split('\n').filter((obj: string) => obj.trim()) : [],
+      code: lesson.codeExample && lesson.codeExplanation ? {
+        example: lesson.codeExample,
+        explanation: lesson.codeExplanation
+      } : undefined,
+      pitfalls: lesson.pitfalls ? JSON.parse(lesson.pitfalls) : [],
+      exercises: lesson.exercises ? JSON.parse(lesson.exercises) : [],
+      order: lesson.order
+    }));
+  } catch (error) {
+    console.error('Error fetching lessons from database:', error);
+    return [];
   }
+}
 
-  console.log(`No lesson file found for module: ${moduleSlug}`);
-  return [];
+// Add fallback JSON-backed lesson loading function
+async function fetchLessonsFallbackFromJson(moduleSlug: string) {
+  try {
+    const apiBase = (() => { try { return getApiBaseStrict(); } catch { return 'http://127.0.0.1:8080/api'; } })();
+    const resp = await fetch(`${apiBase}/lessons?module=${moduleSlug}`);
+    if (!resp.ok) {
+      console.error(`Fallback lessons fetch failed for module ${moduleSlug}`);
+      return [];
+    }
+    const lessons = await resp.json();
+    console.log(`Loaded ${Array.isArray(lessons) ? lessons.length : 0} lessons via JSON fallback for ${moduleSlug}`);
+    return lessons;
+  } catch (error) {
+    console.error('Error fetching lessons via JSON fallback:', error);
+    return [];
+  }
 }
 
 
@@ -65,8 +120,14 @@ export async function GET(
     const moduleSlug = SHORT_SLUG_TO_MODULE_SLUG[inputSlug] || inputSlug;
     console.log(`Resolved to module slug: ${moduleSlug}`);
 
-    // Use file-based approach for all modules
-    const lessons = await fetchLessonsFromFile(moduleSlug);
+    // Use database-based approach for all modules
+    let lessons = await fetchLessonsFromDatabase(moduleSlug);
+
+    // Fallback to JSON-backed lessons if DB returns empty or fails
+    if (!lessons || lessons.length === 0) {
+      console.log(`No DB lessons for ${moduleSlug}; falling back to JSON lessons`);
+      lessons = await fetchLessonsFallbackFromJson(moduleSlug);
+    }
 
     return NextResponse.json(lessons);
   } catch (error) {

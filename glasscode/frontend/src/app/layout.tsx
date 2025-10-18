@@ -6,13 +6,12 @@ import "../styles/liquid-glass.scss";
 import Header from '../components/Header';
 import FloatingDarkModeToggle from '../components/FloatingDarkModeToggle';
 import { DarkModeProvider } from '../components/DarkModeContext';
-
+import AnimatedBackground from '../components/AnimatedBackground';
 import { AccessibilityProvider } from '../components/AccessibilityProvider';
 import ApolloWrapper from '../components/ApolloWrapper';
 import AuthProvider from '../components/AuthProvider';
 import ProfileProvider from '../components/ProfileProvider';
 import AdminQueryHandler from '../components/AdminQueryHandler';
-import GlobalAnimatedBackground from '../components/GlobalAnimatedBackground';
 import { Suspense } from 'react';
 import { EXTERNAL_LINKS } from '@/lib/appConfig';
 // Removed next/font usage to revert to system fonts
@@ -40,18 +39,8 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <head>
-        {/* Preload critical CSS for better LCP */}
-        <link rel="preload" href="/_next/static/css/app/globals.css" as="style" />
-        <link rel="preload" href="/_next/static/css/app/design-system.scss" as="style" />
-        <link rel="preload" href="/_next/static/css/app/liquid-glass.scss" as="style" />
-        {/* DNS prefetch for external resources */}
-        <link rel="dns-prefetch" href="//fonts.googleapis.com" />
-        {/* Optimize viewport for mobile performance */}
-        <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-      </head>
+      <head></head>
       <body className={"antialiased min-h-screen bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100 relative"}>
-        <GlobalAnimatedBackground />
         <ApolloWrapper>
           <AuthProvider>
           <ProfileProvider>
@@ -69,11 +58,12 @@ export default function RootLayout({
                   Skip to main content
                 </a>
 
-
+                {/* Animated Background Component */}
+                <AnimatedBackground />
                 <Suspense fallback={
                   <div className="py-4 px-4 sm:px-6 lg:px-8">
                     <div className="max-w-7xl mx-auto">
-                      <div className="bg-white/95 dark:bg-gray-800/95 rounded-xl shadow p-4 border border-gray-200 dark:border-gray-700">
+                      <div className="bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm rounded-xl shadow p-4 border border-gray-200 dark:border-gray-700">
                         <div className="text-center">
                           <p className="text-gray-600 dark:text-gray-300">Loading header...</p>
                         </div>
@@ -87,13 +77,13 @@ export default function RootLayout({
                 <FloatingDarkModeToggle />
                 <main
                   id="main-content"
-                  className="flex-grow w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 relative"
+                  className="flex-grow w-full sm:max-w-7xl sm:mx-auto px-0 sm:px-6 lg:px-8 py-6 relative"
                   tabIndex={-1}
                 >
                   <Suspense fallback={
                     <div className="py-12 px-4 sm:px-6 lg:px-8">
                       <div className="max-w-4xl mx-auto">
-                        <div className="bg-white/95 dark:bg-gray-800/95 rounded-xl shadow-lg p-6 border border-gray-200 dark:border-gray-700">
+                        <div className="bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm rounded-xl shadow-lg p-6 border border-gray-200 dark:border-gray-700">
                           <div className="text-center">
                             <h2 className="text-2xl font-bold text-gray-800 dark:text-gray-200 mb-2">Loading</h2>
                             <p className="text-gray-600 dark:text-gray-300">Preparing content...</p>
@@ -105,8 +95,8 @@ export default function RootLayout({
                     {children}
                   </Suspense>
                 </main>
-                <footer className="bg-white/90 dark:bg-gray-800/90 border-t border-gray-200 dark:border-gray-700 w-full mt-auto relative">
-                  <div className="py-6 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+                <footer className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm border-t border-gray-200 dark:border-gray-700 w-full mt-auto relative">
+                  <div className="py-8 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
                     <div className="flex flex-col sm:flex-row justify-between items-center space-y-4 sm:space-y-0">
                       <div className="flex space-x-6 text-sm">
                         <Link href="/stats" className="text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors">

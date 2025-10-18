@@ -1,17 +1,18 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
-import { useSearchParams, useRouter } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { contentRegistry } from '@/lib/contentRegistry';
 import type { Module, Tier } from '@/lib/contentRegistry';
-import { useProgressTracking } from '../hooks/useProgressTracking';
+import { useProgressTracking, ProgressData, AchievementData } from '../hooks/useProgressTracking';
 import GamificationDashboard from '../components/GamificationDashboard';
 import SearchFilterSystem from '../components/SearchFilterSystem';
 import '../styles/responsive.scss';
 import '../styles/design-system.scss';
 import '../styles/homepage.scss';
 import '../styles/liquid-glass.scss';
+import '../styles/mobile-first.scss';
 
 // Registry-driven learning structure
 interface TierData {
@@ -24,67 +25,19 @@ interface RegistryData {
   allModules: Module[];
 }
 
-// Enhanced ModuleCard component with accessibility, progress tracking, and achievement indicators
-const ModuleCard: React.FC<{
-  module: Module;
-  tierKey: string;
-}> = ({ module, tierKey }) => {
+// Separate component for unlock chips to avoid hook issues
+const UnlockChips: React.FC<{
+  moduleSlug: string;
+}> = ({ moduleSlug }) => {
   const router = useRouter();
-  const { progress, updateProgress, achievements } = useProgressTracking();
-  const searchParams = useSearchParams();
-  const isUnlockMode = searchParams.has('unlock');
-  const isLockMode = searchParams.has('lock');
-
-  const moduleProgress = progress[module.slug] || null;
-  const completionPercentage = moduleProgress ?
-    (moduleProgress.lessonsCompleted / moduleProgress.totalLessons) * 100 : 0;
-
-  // Check for achievements related to this module
-  const moduleAchievements = achievements.filter(a => a.moduleId === module.slug || a.tier === tierKey);
-  const hasAchievements = moduleAchievements.length > 0;
-
-  // Determine module status
-  const moduleStatus = moduleProgress?.completionStatus || 'not-started';
-
-  // Check prerequisites
-  const prerequisitesMet = (module.prerequisites || []).every(prereqId =>
-    progress[prereqId]?.completionStatus === 'completed'
-  );
-
-  const isStartModule = (module.prerequisites || []).length === 0;
-  const isLocked = (
-    // Admin unlock mode: nothing is locked
-    (isUnlockMode ? false :
-    // Admin lock mode: lock all except modules that can be started (no prerequisites)
-    (isLockMode ? !isStartModule :
-    // Default behavior: respect prerequisites
-    (module.prerequisites.length > 0 && !prerequisitesMet)))
-  );
-
-  const handleModuleClick = () => {
-    if (!isLocked) {
-      updateProgress(module.slug, {
-        lastAccessed: new Date().toISOString(),
-        timeSpent: (moduleProgress?.timeSpent || 0) + 1
-      });
-    }
-  };
-
-  // Define tier-specific gradient classes
-  const tierGradientClass = {
-    foundational: 'from-blue-500 to-cyan-500',
-    core: 'from-green-500 to-emerald-500',
-    specialized: 'from-purple-500 to-violet-500',
-    quality: 'from-orange-500 to-red-500'
-  }[tierKey] || 'from-blue-500 to-cyan-500';
-
   const [unlockingModules, setUnlockingModules] = useState<Array<{ slug: string; title: string; routes: { overview: string } }>>([]);
+  
   useEffect(() => {
     let isMounted = true;
     const loadUnlocks = async () => {
       try {
         const mods = await contentRegistry.getModules();
-        const unlocked = mods.filter(m => (m.prerequisites || []).includes(module.slug)).map(m => ({ slug: m.slug, title: m.title, routes: { overview: m.routes.overview } }));
+        const unlocked = mods.filter(m => (m.prerequisites || []).includes(moduleSlug)).map(m => ({ slug: m.slug, title: m.title, routes: { overview: m.routes.overview } }));
         if (isMounted) setUnlockingModules(unlocked);
       } catch (e) {
         console.error('Failed to load unlocking modules', e);
@@ -92,7 +45,63 @@ const ModuleCard: React.FC<{
     };
     loadUnlocks();
     return () => { isMounted = false; };
-  }, [module.slug]);
+  }, [moduleSlug]);
+
+  if (unlockingModules.length === 0) return null;
+
+  return (
+    <div className="mt-4 text-left">
+      <div className="text-xs text-gray-600 dark:text-gray-400 mb-2">Unlocks:</div>
+      <div className="flex flex-wrap gap-2">
+        {unlockingModules.map((m) => (
+          <button
+            type="button"
+            key={m.slug}
+            className="unlock-chip"
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              router.push(m.routes.overview);
+            }}
+          >
+            <span className="mr-1">🔓</span>
+            {m.title}
+          </button>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+// Enhanced ModuleCard component with accessibility, progress tracking, and achievement indicators
+const ModuleCard: React.FC<{
+  module: Module;
+  tierKey: string;
+  moduleProgress: ProgressData | null;
+  moduleStatus: string;
+  completionPercentage: number;
+  hasAchievements: boolean;
+  moduleAchievements: AchievementData[];
+  isLocked: boolean;
+  handleModuleClick: () => void;
+}> = React.memo(({ 
+  module, 
+  tierKey, 
+  moduleProgress, 
+  moduleStatus, 
+  completionPercentage, 
+  hasAchievements, 
+  moduleAchievements, 
+  isLocked, 
+  handleModuleClick 
+}) => {
+  // Define tier-specific gradient classes
+  const tierGradientClass = {
+    foundational: 'from-blue-500 to-cyan-500',
+    core: 'from-green-500 to-emerald-500',
+    specialized: 'from-purple-500 to-violet-500',
+    quality: 'from-orange-500 to-red-500'
+  }[tierKey] || 'from-blue-500 to-cyan-500';
 
   return (
     <div className={`module-card-container ${isLocked ? 'locked' : ''} h-full`}>
@@ -216,32 +225,15 @@ const ModuleCard: React.FC<{
         )}
 
         {/* Unlock chips shown when module is completed */}
-        {moduleStatus === 'completed' && unlockingModules.length > 0 && (
-          <div className="mt-4 text-left">
-            <div className="text-xs text-gray-600 dark:text-gray-400 mb-2">Unlocks:</div>
-            <div className="flex flex-wrap gap-2">
-              {unlockingModules.map((m) => (
-                <button
-                  type="button"
-                  key={m.slug}
-                  className="unlock-chip"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    router.push(m.routes.overview);
-                  }}
-                >
-                  <span className="mr-1">🔓</span>
-                  {m.title}
-                </button>
-              ))}
-            </div>
-          </div>
+        {moduleStatus === 'completed' && (
+          <UnlockChips moduleSlug={module.slug} />
         )}
       </Link>
     </div>
   );
-};
+});
+
+ModuleCard.displayName = 'ModuleCard';
 
 // Enhanced TierSection component with better accessibility and visual hierarchy
 const TierSection: React.FC<{
@@ -249,8 +241,10 @@ const TierSection: React.FC<{
   tier: Tier;
   modules: Module[];
   isVisible: boolean;
-}> = ({ tierKey, tier, modules, isVisible }) => {
-  const { getTierProgress, progress } = useProgressTracking();
+  progress: Record<string, ProgressData>;
+  achievements: AchievementData[];
+}> = React.memo(({ tierKey, tier, modules, isVisible, progress, achievements }) => {
+  const { getTierProgress } = useProgressTracking();
   const tierProgress = getTierProgress(tierKey as 'foundational' | 'core' | 'specialized' | 'quality');
   const completedModules = modules.filter(module => {
     const moduleProgress = progress[module.slug];
@@ -269,13 +263,13 @@ const TierSection: React.FC<{
 
   return (
     <section
-      className="w-full mb-8" // Consistent styling with other sections
+      className="w-full mb-8 mf-edge-to-edge mf-no-vertical-margin-mobile" // Consistent styling with other sections
       data-tier={tierKey}
       aria-labelledby={`tier-${tierKey}-heading`}
       role="region"
     >
       {/* Tier section with beautiful gradient backgrounds */}
-      <div className={`rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 bg-gradient-to-br ${tierGradientClass} p-6`}>
+      <div className={`rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 bg-gradient-to-br ${tierGradientClass} p-6 mf-pane-reset`}>
         <div className="tier-header mb-6">
           <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
             <div className="flex-1">
@@ -325,14 +319,34 @@ const TierSection: React.FC<{
 
         {/* Modules grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-6 auto-rows-fr" role="list" aria-label={`${tier.title} modules`}>
-          {modules.map((module: Module) => (
-            <div key={module.slug} role="listitem" className="h-full">
-              <ModuleCard
-                module={module}
-                tierKey={tierKey}
-              />
-            </div>
-          ))}
+          {modules.map((module: Module) => {
+            const moduleProgress = progress[module.slug] || null;
+            const completionPercentage = moduleProgress ?
+              (moduleProgress.lessonsCompleted / moduleProgress.totalLessons) * 100 : 0;
+              
+            // Check for achievements related to this module
+            const moduleAchievements = achievements.filter(a => a.moduleId === module.slug || a.tier === tierKey);
+            const hasAchievements = moduleAchievements.length > 0;
+            
+            // Determine module status
+            const moduleStatus = moduleProgress?.completionStatus || 'not-started';
+            
+            return (
+              <div key={module.slug} role="listitem" className="h-full">
+                <ModuleCard
+                  module={module}
+                  tierKey={tierKey}
+                  moduleProgress={moduleProgress}
+                  moduleStatus={moduleStatus}
+                  completionPercentage={completionPercentage}
+                  hasAchievements={hasAchievements}
+                  moduleAchievements={moduleAchievements}
+                  isLocked={false} // Will be calculated in parent
+                  handleModuleClick={() => {}} // Will be implemented in parent
+                />
+              </div>
+            );
+          })}
         </div>
 
         {/* Tier completion indicator */}
@@ -360,7 +374,9 @@ const TierSection: React.FC<{
       </div>
     </section>
   );
-};
+});
+
+TierSection.displayName = 'TierSection';
 
 // Enhanced HomePage component with integrated search/filter and progress tracking
 const HomePage: React.FC = () => {
@@ -381,43 +397,52 @@ const HomePage: React.FC = () => {
     streak
   } = useProgressTracking();
 
-  // Load registry data
-  useEffect(() => {
-    async function loadRegistryData() {
-      try {
-        setLoading(true);
-        const [tiers, modules] = await Promise.all([
-          contentRegistry.getTiers(),
-          contentRegistry.getModules()
-        ]);
-
-        // Organize modules by tier
-        const tierData: Record<string, TierData> = {};
-
-        Object.entries(tiers || {}).forEach(([tierKey, tier]) => {
-          const tierModules = modules
-            .filter(module => module.tier === tierKey)
-            .sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
-          tierData[tierKey] = {
-            tier,
-            modules: tierModules
-          };
-        });
-
-        setRegistryData({
-          tiers: tierData,
-          allModules: modules || []
-        });
-      } catch (err) {
-        console.error('Failed to load registry data:', err);
-        setError('Failed to load learning modules. Please try again.');
-      } finally {
-        setLoading(false);
-      }
-    }
-
-    loadRegistryData();
+  // Clear all filters - defined before any conditional returns
+  const clearFilters = useCallback(() => {
+    setSearchQuery('');
+    setSelectedTier(null);
+    setSelectedDifficulty(null);
+    setSelectedCategory(null);
+    setSelectedStatus(null);
   }, []);
+
+  // Load registry data with useCallback to prevent unnecessary re-renders
+  const loadRegistryData = useCallback(async () => {
+    try {
+      setLoading(true);
+      const [tiers, modules] = await Promise.all([
+        contentRegistry.getTiers(),
+        contentRegistry.getModules()
+      ]);
+
+      // Organize modules by tier
+      const tierData: Record<string, TierData> = {};
+
+      Object.entries(tiers || {}).forEach(([tierKey, tier]) => {
+        const tierModules = modules
+          .filter(module => module.tier === tierKey)
+          .sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
+        tierData[tierKey] = {
+          tier,
+          modules: tierModules
+        };
+      });
+
+      setRegistryData({
+        tiers: tierData,
+        allModules: modules || []
+      });
+    } catch (err) {
+      console.error('Failed to load registry data:', err);
+      setError('Failed to load learning modules. Please try again.');
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    loadRegistryData();
+  }, [loadRegistryData]);
 
   if (loading) {
     return (
@@ -521,17 +546,6 @@ const HomePage: React.FC = () => {
     .sort((a, b) => new Date(b.earnedDate).getTime() - new Date(a.earnedDate).getTime())
     .slice(0, 3);
 
-  // Clear all filters
-  const clearFilters = () => {
-    setSearchQuery('');
-    setSelectedTier(null);
-    setSelectedDifficulty(null);
-    setSelectedCategory(null);
-    setSelectedStatus(null);
-  };
-
-  
-
   // Define the correct tier order for display
   const tierOrder = ['foundational', 'core', 'specialized', 'quality'];
 
@@ -543,8 +557,8 @@ const HomePage: React.FC = () => {
       {/* Ensure no gutters - content spans full width */}
       <main id="main-content" className="homepage w-full" role="main">
         {/* Hero Section with optimized styling for better LCP */}
-        <section className="w-full mb-8">
-          <div className="bg-white/95 dark:bg-gray-800/95 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700">
+        <section className="w-full mb-8 mf-edge-to-edge mf-no-vertical-margin-mobile">
+          <div className="bg-white/95 dark:bg-gray-800/95 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 mf-pane-reset">
             <div className="p-6 md:p-8">
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
                 <div className="hero-content">
@@ -694,6 +708,8 @@ const HomePage: React.FC = () => {
                 modules={tierData.modules}
                 tierKey={tierKey}
                 isVisible={!hasActiveFilters || tierData.modules.length > 0}
+                progress={progress}
+                achievements={achievements}
               />
             );
           })}

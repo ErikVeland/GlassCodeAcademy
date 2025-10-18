@@ -662,6 +662,16 @@ if [ "$FRONTEND_BUILD_REQUIRED" = "true" ]; then
 
     install_npm_deps "$APP_DIR/glasscode/frontend" "frontend"
 
+    # Set default values for Next.js environment variables if not already set
+    if [ -z "${NEXT_PUBLIC_BASE_URL:-}" ]; then
+        NEXT_PUBLIC_BASE_URL="https://${DOMAIN}"
+        log "ℹ️  Setting NEXT_PUBLIC_BASE_URL to ${NEXT_PUBLIC_BASE_URL}"
+    fi
+    if [ -z "${NEXT_PUBLIC_API_BASE:-}" ]; then
+        NEXT_PUBLIC_API_BASE="https://${DOMAIN}"
+        log "ℹ️  Setting NEXT_PUBLIC_API_BASE to ${NEXT_PUBLIC_API_BASE}"
+    fi
+
     # Check if .env.production exists and has required variables
     if [ -f ".env.production" ] && grep -q "NEXTAUTH_SECRET" .env.production && grep -q "NEXT_PUBLIC_API_BASE" .env.production; then
         log "📋 Using existing .env.production file (contains required variables)"

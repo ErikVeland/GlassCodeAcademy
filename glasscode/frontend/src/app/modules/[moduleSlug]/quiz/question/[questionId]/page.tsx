@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import type { ProgrammingQuestion } from '@/lib/contentRegistry';
 import { notFound, useRouter } from 'next/navigation';
 import Link from 'next/link';
+import BreadcrumbNavigation from '@/components/BreadcrumbNavigation';
 
 // For client components in Next.js 15, params are still Promises that need to be awaited
 export default function QuizQuestionPage({ params }: { params: Promise<{ moduleSlug: string; questionId: string }> }) {
@@ -46,6 +47,7 @@ export default function QuizQuestionPage({ params }: { params: Promise<{ moduleS
     passingScore: number;
     timeLimit: number;
     startedAt: number;
+    startTime?: number;
     answers: ({ selectedIndex?: number; enteredText?: string; correct: boolean } | null)[];
   }
 
@@ -77,7 +79,8 @@ export default function QuizQuestionPage({ params }: { params: Promise<{ moduleS
         const q = session.questions[questionIndex];
         setQuestionData(q);
         // Setup countdown timer
-        const endAt = (session.startedAt || Date.now()) + (session.timeLimit || 0) * 60 * 1000;
+        const started = (session.startedAt ?? session.startTime ?? Date.now());
+        const endAt = started + (session.timeLimit || 0) * 60 * 1000;
         setQuizEndAt(endAt);
         setRemainingMs(Math.max(0, endAt - Date.now()));
         // Restore previous selection if exists
@@ -204,31 +207,7 @@ export default function QuizQuestionPage({ params }: { params: Promise<{ moduleS
   return (
     <div className="max-w-4xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
       {/* Breadcrumb Navigation */}
-      <nav className="mb-8" aria-label="Breadcrumb">
-        <ol className="flex items-center space-x-2 text-sm">
-          <li>
-            <Link href="/" className="text-blue-600 hover:text-blue-800">
-              Home
-            </Link>
-          </li>
-          <li className="text-gray-500">/</li>
-          <li>
-            <Link href={`/modules/${moduleSlug}`} className="text-blue-600 hover:text-blue-800">
-              Module
-            </Link>
-          </li>
-          <li className="text-gray-500">/</li>
-          <li>
-            <Link href={`/modules/${moduleSlug}/quiz`} className="text-blue-600 hover:text-blue-800">
-              Quiz
-            </Link>
-          </li>
-          <li className="text-gray-500">/</li>
-          <li className="text-gray-900 dark:text-gray-100 font-medium">
-            Question {questionId}
-          </li>
-        </ol>
-      </nav>
+      <BreadcrumbNavigation />
 
       {/* Quiz Progress */}
       <div className="mb-8">

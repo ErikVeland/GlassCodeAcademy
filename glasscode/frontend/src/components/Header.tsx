@@ -133,100 +133,26 @@ export default function Header() {
               }))
           }
         };
-        
-        setTierGroups(tierGroupsData);
+
+        // Enrich with progress percentages for each module if available
+        const withProgress = Object.fromEntries(
+          Object.entries(tierGroupsData).map(([key, group]) => {
+            const enrichedModules = group.modules.map(m => ({
+              ...m,
+              progress: getTierProgress(group.tier)
+            }));
+            return [key, { ...group, modules: enrichedModules }];
+          })
+        );
+
+        setTierGroups(withProgress);
       } catch (error) {
-        console.error('Failed to load registry data:', error);
-        // Fallback to hardcoded data if registry fails to load
-        setTierGroups({
-          foundational: {
-            tier: 'foundational',
-            title: 'Foundational',
-            description: 'Build essential programming skills',
-            color: 'from-blue-500 to-cyan-500',
-            icon: '🏗️',
-            modules: [
-              { id: 'programming-basics', title: 'Programming Fundamentals', lessonsPath: '/programming/lessons', quizPath: '/programming/interview', progress: 0, tier: 'foundational', category: 'backend', icon: '💻', estimatedTime: '40 hours' },
-              { id: 'web-fundamentals', title: 'Web Development Basics', lessonsPath: '/web/lessons', quizPath: '/web/interview', progress: 0, tier: 'foundational', category: 'frontend', icon: '🌐', estimatedTime: '50 hours' },
-              { id: 'version-control', title: 'Version Control with Git', lessonsPath: '/version/lessons', quizPath: '/version/interview', progress: 0, tier: 'foundational', category: 'backend', icon: '📝', estimatedTime: '20 hours' }
-            ]
-          },
-          core: {
-            tier: 'core',
-            title: 'Core Technologies',
-            description: 'Master primary development technologies',
-            color: 'from-green-500 to-emerald-500',
-            icon: '⚙️',
-            modules: [
-              { id: 'dotnet', title: '.NET Core', lessonsPath: '/dotnet/lessons', quizPath: '/dotnet/interview', progress: 0, tier: 'core', category: 'backend', icon: '⚡', estimatedTime: '80 hours' },
-              { id: 'laravel', title: 'Laravel', lessonsPath: '/modules/laravel-fundamentals/lessons', quizPath: '/modules/laravel-fundamentals/quiz', progress: 0, tier: 'core', category: 'backend', icon: '🎨', estimatedTime: '70 hours' },
-              { id: 'react', title: 'React', lessonsPath: '/modules/react-fundamentals/lessons', quizPath: '/modules/react-fundamentals/quiz', progress: 0, tier: 'core', category: 'frontend', icon: '⚛️', estimatedTime: '60 hours' },
-              { id: 'database', title: 'Databases', lessonsPath: '/modules/database-systems/lessons', quizPath: '/modules/database-systems/quiz', progress: 0, tier: 'core', category: 'backend', icon: '🗄️', estimatedTime: '70 hours' }
-            ]
-          },
-          specialized: {
-            tier: 'specialized',
-            title: 'Specialized Skills',
-            description: 'Advanced frameworks and modern practices',
-            color: 'from-purple-500 to-violet-500',
-            icon: '💎',
-            modules: [
-              { id: 'nextjs', title: 'Next.js', lessonsPath: '/modules/nextjs-advanced/lessons', quizPath: '/modules/nextjs-advanced/quiz', progress: 0, tier: 'specialized', category: 'frontend', icon: '⭐', estimatedTime: '50 hours' },
-              { id: 'graphql', title: 'GraphQL', lessonsPath: '/modules/graphql-advanced/lessons', quizPath: '/modules/graphql-advanced/quiz', progress: 0, tier: 'specialized', category: 'backend', icon: '🔗', estimatedTime: '50 hours' },
-              { id: 'node', title: 'Node.js', lessonsPath: '/modules/node-fundamentals/lessons', quizPath: '/modules/node-fundamentals/quiz', progress: 0, tier: 'specialized', category: 'backend', icon: '💚', estimatedTime: '60 hours' },
-              { id: 'typescript', title: 'TypeScript', lessonsPath: '/modules/typescript-fundamentals/lessons', quizPath: '/modules/typescript-fundamentals/quiz', progress: 0, tier: 'specialized', category: 'frontend', icon: '🔵', estimatedTime: '50 hours' },
-              { id: 'tailwind', title: 'Tailwind CSS', lessonsPath: '/modules/tailwind-advanced/lessons', quizPath: '/modules/tailwind-advanced/quiz', progress: 0, tier: 'specialized', category: 'frontend', icon: '🎨', estimatedTime: '35 hours' },
-              { id: 'sass', title: 'SASS', lessonsPath: '/modules/sass-advanced/lessons', quizPath: '/modules/sass-advanced/quiz', progress: 0, tier: 'specialized', category: 'frontend', icon: '🎨', estimatedTime: '35 hours' }
-            ]
-          },
-          quality: {
-            tier: 'quality',
-            title: 'Quality & Testing',
-            description: 'Professional quality assurance',
-            color: 'from-orange-500 to-red-500',
-            icon: '🛡️',
-            modules: [
-              { id: 'testing', title: 'Testing & QA', lessonsPath: '/modules/testing-fundamentals/lessons', quizPath: '/modules/testing-fundamentals/quiz', progress: 0, tier: 'quality', category: 'quality', icon: '🧪', estimatedTime: '50 hours' }
-            ]
-          }
-        });
+        console.error('Error loading content registry for header navigation:', error);
       }
     };
 
     loadRegistryData();
-  }, []);
-
-  // Close dropdowns when clicking outside
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (foundationalRef.current && !foundationalRef.current.contains(event.target as Node)) {
-        setIsFoundationalOpen(false);
-      }
-      if (coreRef.current && !coreRef.current.contains(event.target as Node)) {
-        setIsCoreOpen(false);
-      }
-      if (specializedRef.current && !specializedRef.current.contains(event.target as Node)) {
-        setIsSpecializedOpen(false);
-      }
-      if (qualityRef.current && !qualityRef.current.contains(event.target as Node)) {
-        setIsQualityOpen(false);
-      }
-    };
-
-    const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') {
-        closeTierDropdowns();
-        setActiveDropdown(null);
-      }
-    };
-
-    document.addEventListener('mousedown', handleClickOutside);
-    document.addEventListener('keydown', handleKeyDown);
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-      document.removeEventListener('keydown', handleKeyDown);
-    };
-  }, []);
+  }, [getTierProgress]);
 
   const isActive = (path: string) => {
     return pathname === path;
@@ -278,12 +204,12 @@ export default function Header() {
   if (!tierGroups) {
     return (
       <header className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm shadow dark:shadow-gray-700 w-full border-b border-gray-200 dark:border-gray-700 relative z-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center py-4">
-            <div className="flex-shrink-0 flex items-center">
+            <div className="flex-shrink-0 flex items-center min-w-0">
               <Link 
                 href="/" 
-                className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent focus:outline-none focus:ring-2 focus:ring-blue-500 rounded"
+                className="block truncate max-w-[60vw] sm:max-w-none text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent focus:outline-none focus:ring-2 focus:ring-blue-500 rounded"
                 aria-label="GlassCode Academy Home"
               >
                 GlassCode Academy
@@ -293,7 +219,7 @@ export default function Header() {
             {/* Loading placeholder for desktop menu */}
             <div className="hidden md:flex md:items-center md:space-x-6">
               <div className="h-8 w-24 bg-gray-200 dark:bg-gray-700 rounded animate-pulse"></div>
-              <div className="h-8 w-24 bg-gray-200 dark:bg-gray-700 rounded animate-pulse"></div>
+              <div className="h-8 w-24 bg-gray-2 00 dark:bg-gray-700 rounded animate-pulse"></div>
               <div className="h-8 w-24 bg-gray-200 dark:bg-gray-700 rounded animate-pulse"></div>
               <div className="h-8 w-24 bg-gray-200 dark:bg-gray-700 rounded animate-pulse"></div>
               <div className="h-8 w-24 bg-gray-200 dark:bg-gray-700 rounded animate-pulse"></div>
@@ -313,12 +239,12 @@ export default function Header() {
 
   return (
     <header className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm shadow dark:shadow-gray-700 w-full border-b border-gray-200 dark:border-gray-700 relative z-50">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center py-4">
-          <div className="flex-shrink-0 flex items-center">
+          <div className="flex-shrink-0 flex items-center min-w-0">
             <Link 
               href="/" 
-              className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent focus:outline-none focus:ring-2 focus:ring-blue-500 rounded"
+              className="block truncate max-w-[60vw] sm:max-w-none text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent focus:outline-none focus:ring-2 focus:ring-blue-500 rounded"
               aria-label="GlassCode Academy Home"
             >
               GlassCode Academy
@@ -526,10 +452,10 @@ export default function Header() {
               </button>
               
               {isSpecializedOpen && (
-                <div className="origin-top-right absolute right-0 mt-2 w-96 rounded-xl shadow-lg bg-white/95 dark:bg-gray-800/95 backdrop-blur-sm ring-1 ring-black ring-opacity-5 z-[9999] border border-gray-200 dark:border-gray-700 max-h-96 overflow-y-auto">
+                <div className="origin-top-right absolute right-0 mt-2 w-80 rounded-xl shadow-lg bg-white/95 dark:bg-gray-800/95 backdrop-blur-sm ring-1 ring-black ring-opacity-5 z-[9999] border border-gray-200 dark:border-gray-700 max-h-96 overflow-y-auto">
                   <div className="py-2 px-4" role="menu">
                     <div className="text-lg font-bold text-gray-900 dark:text-gray-100 mb-2">
-                      📎 {tierGroups.specialized.title}
+                      💎 {tierGroups.specialized.title}
                     </div>
                     <div className="text-sm text-gray-600 dark:text-gray-400 mb-4 border-b border-gray-200 dark:border-gray-700 pb-2">
                       {tierGroups.specialized.description}
@@ -577,7 +503,7 @@ export default function Header() {
                 </div>
               )}
             </div>
-            
+
             {/* Quality Tier Dropdown */}
             <div className="relative" ref={qualityRef}>
               <button
@@ -594,7 +520,7 @@ export default function Header() {
                 }`}
                 aria-haspopup="true"
                 aria-expanded={isQualityOpen}
-                aria-label="Quality and testing menu"
+                aria-label="Quality & testing menu"
               >
                 🛡️ Quality
                 <div className="ml-1 flex items-center">
@@ -608,7 +534,7 @@ export default function Header() {
               </button>
               
               {isQualityOpen && (
-                <div className="origin-top-right absolute right-0 mt-2 w-80 rounded-xl shadow-lg bg-white/95 dark:bg-gray-800/95 backdrop-blur-sm ring-1 ring-black ring-opacity-5 z-[9999] border border-gray-200 dark:border-gray-700">
+                <div className="origin-top-right absolute right-0 mt-2 w-80 rounded-xl shadow-lg bg-white/95 dark:bg-gray-800/95 backdrop-blur-sm ring-1 ring-black ring-opacity-5 z-[9999] border border-gray-200 dark:border-gray-700 max-h-96 overflow-y-auto">
                   <div className="py-2 px-4" role="menu">
                     <div className="text-lg font-bold text-gray-900 dark:text-gray-100 mb-2">
                       🛡️ {tierGroups.quality.title}
@@ -659,26 +585,11 @@ export default function Header() {
                 </div>
               )}
             </div>
-            
-            {/* Playground Link */}
-            <Link 
-              href="/playground" 
-              className={`px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200 flex items-center ${
-                isActive('/playground') 
-                  ? 'bg-gray-100/80 dark:bg-gray-700 text-gray-900 dark:text-gray-100' 
-                  : 'text-gray-700 hover:bg-gray-100/80 dark:text-gray-300 dark:hover:bg-gray-700 hover:text-gray-900 dark:hover:text-gray-100'
-              }`}
-              aria-label="GraphQL Playground"
-            >
-              🎮 Playground
-            </Link>
           </div>
-          
+
+          {/* Right side icons */}
           <div className="flex items-center">
-            {/* DarkModeToggle moved to floating bottom-right. Space reserved for upcoming Profile menu. */}
-            <div className="hidden md:block mr-2">
-              <ProfileMenu />
-            </div>
+            <ProfileMenu />
             <div className="md:hidden ml-2">
               <MobileMenu />
             </div>

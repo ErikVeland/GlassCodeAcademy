@@ -1,0 +1,65 @@
+/**
+ * Mobile-first utilities & scaffolding (mf-*)
+ * Defaults target mobile; desktop-only styles reintroduced at sm+ (640px).
+ * This file is additive and does not change existing layout until used.
+ */
+
+@use "./_breakpoints" as bp;
+@use "./_mixins" as mx;
+
+/* Visibility helpers */
+.mf-mobile-only {
+  display: block;
+  @include bp.desktop-only {
+    display: none !important;
+  }
+}
+
+.mf-desktop-only {
+  display: none;
+  @include bp.desktop-only {
+    display: block;
+  }
+}
+
+/* Edge-to-edge only on mobile (full-bleed) */
+.mf-edge-to-edge {
+  @include mx.edge-to-edge-mobile;
+}
+
+/* Pane reset: no border, radius, or vertical margins on mobile; restore at sm+ */
+.mf-pane-reset {
+  @include mx.reset-pane-mobile;
+}
+
+/* Mobile-only resets for common properties */
+.mf-no-radius-mobile {
+  border-radius: 0 !important;
+  @include bp.desktop-only {
+    border-radius: var(--pane-radius, 1rem) !important;
+  }
+}
+
+.mf-no-border-mobile {
+  border: none !important;
+  @include bp.desktop-only {
+    border: var(--pane-border, 1px solid rgba(255, 255, 255, 0.2)) !important;
+  }
+}
+
+.mf-no-vertical-margin-mobile {
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+  @include bp.desktop-only {
+    margin-top: var(--pane-margin-top, 1.5rem) !important;
+    margin-bottom: var(--pane-margin-bottom, 1.5rem) !important;
+  }
+}
+
+/* Typography helper example (not applied anywhere yet) */
+.mf-heading-large {
+  @include mx.fluid-type(1.5rem, 2.5rem);
+  @include bp.respond-up('md') {
+    font-weight: 700;
+  }
+}

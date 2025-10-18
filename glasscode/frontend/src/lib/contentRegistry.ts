@@ -5,6 +5,7 @@
 
 
 import { normalizeQuestion } from './textNormalization';
+import { getPublicOriginStrict } from './urlUtils';
 
 interface Module {
   slug: string;
@@ -132,6 +133,7 @@ interface LessonGroup {
 class ContentRegistryLoader {
   private static instance: ContentRegistryLoader;
   private registry: ContentRegistry | null = null;
+  private registryPromise: Promise<ContentRegistry> | null = null;
 
   constructor() {
     // Browser-safe constructor
@@ -145,13 +147,36 @@ class ContentRegistryLoader {
   }
 
   /**
-   * Load the content registry from API
+   * Load the content registry from API with caching
    */
   async loadRegistry(): Promise<ContentRegistry> {
+    // Return cached registry if available
     if (this.registry) {
       return this.registry;
     }
 
+    // Return existing promise if loading is in progress
+    if (this.registryPromise) {
+      return this.registryPromise;
+    }
+
+    // Create new promise for loading
+    this.registryPromise = this.loadRegistryInternal().then(registry => {
+      this.registry = registry;
+      this.registryPromise = null;
+      return registry;
+    }).catch(error => {
+      this.registryPromise = null;
+      throw error;
+    });
+
+    return this.registryPromise;
+  }
+
+  /**
+   * Internal method to load registry
+   */
+  private async loadRegistryInternal(): Promise<ContentRegistry> {
     try {
       // For server-side rendering, read the file directly
       // For client-side, use fetch
@@ -192,11 +217,40 @@ class ContentRegistryLoader {
         if (!registryData) {
           // Fallback to fetch even in server-side context
           console.log('Falling back to fetch for registry');
-          const response = await fetch(`/api/content/registry`, {
-            signal: AbortSignal.timeout(10000) // 10 second timeout
-          });
-          if (!response.ok) {
-            console.warn(`Registry fetch failed ${response.status} ${response.statusText}, using minimal fallback`);
+          const controller = new AbortController();
+          const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 second timeout
+          
+          try {
+            const response = await fetch(`/api/content/registry`, {
+              signal: controller.signal
+            });
+            clearTimeout(timeoutId);
+            
+            if (!response.ok) {
+              console.warn(`Registry fetch failed ${response.status} ${response.statusText}, using minimal fallback`);
+              const minimal: ContentRegistry = {
+                version: '0.0.0',
+                lastUpdated: new Date().toISOString(),
+                tiers: {
+                  foundational: { level: 1, title: 'Foundational', description: '', focusArea: 'Core', color: '#4B5563', learningObjectives: [] },
+                  core: { level: 2, title: 'Core', description: '', focusArea: 'Core', color: '#2563EB', learningObjectives: [] },
+                  specialized: { level: 3, title: 'Specialized', description: '', focusArea: 'Advanced', color: '#10B981', learningObjectives: [] },
+                  quality: { level: 4, title: 'Quality', description: '', focusArea: 'Quality', color: '#F59E0B', learningObjectives: [] },
+                },
+                modules: [],
+                globalSettings: {
+                  contentThresholds: { strictMode: false, developmentMode: true, minimumLessonsPerModule: 0, minimumQuestionsPerModule: 0, requiredSchemaCompliance: 0 },
+                  routingRules: { enableLegacyRedirects: true, generate404Fallbacks: true, requireContentThresholds: false },
+                  seoSettings: { generateSitemap: true, includeLastModified: false, excludeContentPending: false },
+                },
+              };
+              return minimal;
+            }
+            const registryDataFetch: unknown = await response.json();
+            return registryDataFetch as ContentRegistry;
+          } catch (fetchError) {
+            clearTimeout(timeoutId);
+            console.warn('Registry fetch failed, using minimal fallback:', fetchError);
             const minimal: ContentRegistry = {
               version: '0.0.0',
               lastUpdated: new Date().toISOString(),
@@ -213,28 +267,36 @@ class ContentRegistryLoader {
                 seoSettings: { generateSitemap: true, includeLastModified: false, excludeContentPending: false },
               },
             };
-            this.registry = minimal;
-            return this.registry;
+            return minimal;
           }
-          const registryDataFetch: unknown = await response.json();
-          this.registry = registryDataFetch as ContentRegistry;
-          return this.registry;
         }
         
         console.log(`Loaded registry from: ${foundPath}`);
-        this.registry = registryData as ContentRegistry;
-        return this.registry;
+        return registryData as ContentRegistry;
       } else {
-        // Client-side: fetch from public directory
-        const response = await fetch('/registry.json', {
-          signal: AbortSignal.timeout(10000) // 10 second timeout
-        });
-        if (!response.ok) {
-          throw new Error(`Failed to fetch registry.json: ${response.status} ${response.statusText}`);
+        // Client-side: fetch from public directory with timeout
+        console.log('Client-side: fetching registry.json');
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 second timeout
+        
+        try {
+          const response = await fetch('/registry.json', {
+            signal: controller.signal
+          });
+          clearTimeout(timeoutId);
+          
+          console.log('Registry fetch response:', response.status, response.statusText);
+          if (!response.ok) {
+            throw new Error(`Failed to fetch registry.json: ${response.status} ${response.statusText}`);
+          }
+          const registryData: unknown = await response.json();
+          console.log('Registry data loaded, modules count:', (registryData as ContentRegistry).modules?.length);
+          console.log('React fundamentals module:', (registryData as ContentRegistry).modules?.find(m => m.slug === 'react-fundamentals'));
+          return registryData as ContentRegistry;
+        } catch (fetchError) {
+          clearTimeout(timeoutId);
+          throw new Error(`Failed to fetch registry.json: ${fetchError instanceof Error ? fetchError.message : 'Unknown error'}`);
         }
-        const registryData: unknown = await response.json();
-        this.registry = registryData as ContentRegistry;
-        return this.registry;
       }
     } catch (error: unknown) {
       console.error('Failed to load content registry:', error);
@@ -255,8 +317,7 @@ class ContentRegistryLoader {
           seoSettings: { generateSitemap: true, includeLastModified: false, excludeContentPending: false },
         },
       };
-      this.registry = minimal;
-      return this.registry;
+      return minimal;
     }
   }
 
@@ -273,16 +334,25 @@ class ContentRegistryLoader {
    */
   async getModule(slug: string): Promise<Module | null> {
     const modules = await this.getModules();
+    console.log(`getModule(${slug}): total modules loaded:`, modules.length);
     
     // First try to find by exact slug match (moduleSlug)
     let foundModule = modules.find(m => m.slug === slug);
+    console.log(`getModule(${slug}): found by exact slug:`, foundModule?.slug);
     
     // If not found, try to convert shortSlug to moduleSlug and search again
     if (!foundModule) {
       const moduleSlug = await this.getModuleSlugFromShortSlug(slug);
+      console.log(`getModule(${slug}): converted to moduleSlug:`, moduleSlug);
       if (moduleSlug) {
         foundModule = modules.find(m => m.slug === moduleSlug);
+        console.log(`getModule(${slug}): found by moduleSlug:`, foundModule?.slug);
       }
+    }
+    
+    if (foundModule) {
+      console.log(`getModule(${slug}): returning module with metadata:`, foundModule.metadata);
+      console.log(`getModule(${slug}): returning module with thresholds:`, foundModule.thresholds);
     }
     
     return foundModule || null;
@@ -392,191 +462,35 @@ class ContentRegistryLoader {
    * Get lessons for a specific module
    */
   async getModuleLessons(moduleSlug: string): Promise<Lesson[]> {
-    // For server-side operations, read files directly instead of making HTTP requests
-    if (typeof window === 'undefined') {
-      try {
-        // Dynamically import fs and path only when needed on server-side
-        const fs = await import('fs');
-        const path = await import('path');
-        
-        // Try to find the lesson file in different possible locations
-        const possiblePaths = [
-          // First try the public directory path (where files actually are)
-          path.join(process.cwd(), 'public', 'content', 'lessons', `${moduleSlug}.json`),
-          // Try the correct path relative to the project root
-          path.join(process.cwd(), '..', '..', 'content', 'lessons', `${moduleSlug}.json`),
-          // Try from the glasscode/frontend directory going up to project root
-          path.join(process.cwd(), '..', '..', '..', 'content', 'lessons', `${moduleSlug}.json`),
-          // Try direct path from current working directory
-          path.join(process.cwd(), 'content', 'lessons', `${moduleSlug}.json`),
-          // Legacy paths for compatibility
-          path.join(__dirname, '..', '..', '..', '..', 'content', 'lessons', `${moduleSlug}.json`),
-          // Production path (only if NEXT_PUBLIC_BASE_URL indicates production)
-          ...(process.env.NEXT_PUBLIC_BASE_URL?.includes('glasscode.academy') ? 
-            [path.join('/srv/academy', 'content', 'lessons', `${moduleSlug}.json`)] : []),
-        ];
-        
-        let lessonsPath = '';
-        for (const possiblePath of possiblePaths) {
-          try {
-            if (fs.existsSync(possiblePath)) {
-              lessonsPath = possiblePath;
-              break;
-            }
-          } catch {
-            // Continue to next path
-          }
-        }
-        
-        if (lessonsPath) {
-          const lessonsContent = fs.readFileSync(lessonsPath, 'utf8');
-          const lessonsData: unknown = JSON.parse(lessonsContent);
-          const lessons = Array.isArray(lessonsData) ? (lessonsData as Lesson[]) : [];
-          return lessons.map((l, i) => ({ ...l, order: i + 1 }));
-        }
-      } catch (error: unknown) {
-        console.error(`Failed to load lessons for ${moduleSlug} (server-side):`, error);
-      }
-    } else {
-      // For client-side, use API route
-      try {
-        const response = await fetch(`/api/content/lessons/${moduleSlug}`);
-        if (response.ok) {
-          const data: unknown = await response.json();
-          const lessons = Array.isArray(data) ? (data as Lesson[]) : [];
-          return lessons.map((l, i) => ({ ...l, order: i + 1 }));
-        } else {
-          console.error(`API request failed for ${moduleSlug} lessons:`, response.status, response.statusText);
-        }
-      } catch (error: unknown) {
-        console.error(`Failed to load lessons for ${moduleSlug} via API:`, error);
-      }
+    try {
+      const origin = (() => { try { return getPublicOriginStrict(); } catch { return 'http://127.0.0.1:3000'; } })();
+      const res = await fetch(`${origin}/api/content/lessons/${moduleSlug}`, { cache: 'no-store' });
+      if (!res.ok) return [];
+      const data: unknown = await res.json();
+      const lessons = Array.isArray(data) ? (data as Lesson[]) : [];
+      return lessons.map((l, i) => (typeof l.order === 'number' ? l : { ...l, order: i + 1 }));
+    } catch (error: unknown) {
+      console.error(`Failed to load lessons for ${moduleSlug}:`, error);
+      return [];
     }
-    
-    // Fallback: return minimal lessons for programming-fundamentals to prevent empty UI
-    if (moduleSlug === 'programming-fundamentals') {
-      const minimalLessons: Lesson[] = [
-        { id: 1, title: 'Variables and Data Types', topic: 'basics' },
-        { id: 2, title: 'Control Structures', topic: 'basics' },
-        { id: 3, title: 'Functions', topic: 'basics' },
-        { id: 4, title: 'Arrays and Objects', topic: 'data-structures' },
-        { id: 5, title: 'Object-Oriented Programming', topic: 'data-structures' },
-        { id: 6, title: 'Error Handling', topic: 'error-handling' },
-        { id: 7, title: 'File Operations', topic: 'error-handling' },
-        { id: 8, title: 'Recursion', topic: 'algorithms' },
-        { id: 9, title: 'Sorting Algorithms', topic: 'algorithms' },
-        { id: 10, title: 'Memory Management', topic: 'advanced' },
-        { id: 11, title: 'Best Practices', topic: 'advanced' },
-        { id: 12, title: 'Project Organization', topic: 'advanced' }
-      ];
-      return minimalLessons.map((l, i) => ({ ...l, order: i + 1 }));
-    }
-    
-    // Return empty array for other modules
-    return [];
   }
 
   /**
    * Get quiz for a specific module
    */
   async getModuleQuiz(moduleSlug: string): Promise<Quiz | null> {
-    // Load all module quizzes from local content only
-    
-    // For server-side operations, read files directly instead of making HTTP requests
-    if (typeof window === 'undefined') {
-      try {
-        // Dynamically import fs and path only when needed on server-side
-        const fs = await import('fs');
-        const path = await import('path');
-        
-        // Try to find the quiz file in different possible locations
-        const possiblePaths = [
-          path.join(process.cwd(), '..', '..', 'content', 'quizzes', `${moduleSlug}.json`),
-          path.join(process.cwd(), 'content', 'quizzes', `${moduleSlug}.json`),
-          path.join(__dirname, '..', '..', '..', '..', 'content', 'quizzes', `${moduleSlug}.json`),
-          // Production path (only if NEXT_PUBLIC_BASE_URL indicates production)
-          ...(process.env.NEXT_PUBLIC_BASE_URL?.includes('glasscode.academy') ? 
-            [path.join('/srv/academy', 'content', 'quizzes', `${moduleSlug}.json`)] : []),
-        ];
-        
-        let quizPath = '';
-        for (const possiblePath of possiblePaths) {
-          try {
-            if (fs.existsSync(possiblePath)) {
-              quizPath = possiblePath;
-              break;
-            }
-          } catch {
-            // Continue to next path
-          }
-        }
-        
-        if (!quizPath) {
-          console.error(`Quiz file not found for module: ${moduleSlug}`);
-          return null;
-        }
-        
-        const quizContent = fs.readFileSync(quizPath, 'utf8');
-        const quizData: unknown = JSON.parse(quizContent);
-        const quiz = quizData && typeof quizData === 'object' ? (quizData as Quiz) : null;
-        if (!quiz) return null;
-        const normalizedQuestions = Array.isArray(quiz.questions) ? quiz.questions.map(q => normalizeQuestion(q)) : [];
-        return { ...quiz, questions: normalizedQuestions };
-      } catch (error: unknown) {
-        console.error(`Failed to load quiz for ${moduleSlug} (server-side):`, error);
-        return null;
-      }
-    }
-    
-    // For client-side, use HTTP requests
     try {
-      
-      // Use AbortController for timeout
-      const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 15000); // 15 second timeout
-      
-      const response = await fetch(`/api/content/quizzes/${moduleSlug}`, {
-        signal: controller.signal
-      }).finally(() => {
-        clearTimeout(timeoutId);
-      });
-      
-      // Check if response is HTML (error page) instead of JSON
-      const contentType = response.headers.get('content-type');
-      if (contentType && contentType.includes('text/html')) {
-        console.error(`Received HTML instead of JSON for quizzes/${moduleSlug}`);
-        return null;
-      }
-      
-      if (!response.ok) {
-        console.error(`HTTP error ${response.status} for quizzes/${moduleSlug}`);
-        // Client-side static fallback: try public content
-        try {
-          const staticRes = await fetch(`/content/quizzes/${moduleSlug}.json`, {
-            signal: controller.signal,
-          });
-          if (staticRes.ok) {
-            const staticData: unknown = await staticRes.json();
-            if (staticData && typeof staticData === 'object') {
-              const quiz = staticData as Quiz;
-              const normalizedQuestions = Array.isArray(quiz.questions) ? quiz.questions.map(q => normalizeQuestion(q)) : [];
-              return { ...quiz, questions: normalizedQuestions };
-            }
-          }
-        } catch (staticErr) {
-          console.error(`Static quiz fallback failed for ${moduleSlug}:`, staticErr);
-        }
-        return null;
-      }
-      
-      const data: unknown = await response.json();
+      const origin = (() => { try { return getPublicOriginStrict(); } catch { return 'http://127.0.0.1:3000'; } })();
+      const shortSlug = await this.getShortSlugFromModuleSlug(moduleSlug) || moduleSlug;
+      const res = await fetch(`${origin}/api/content/quizzes/${shortSlug}`, { cache: 'no-store' });
+      if (!res.ok) return null;
+      const data: unknown = await res.json();
       if (!(data && typeof data === 'object')) return null;
       const quiz = data as Quiz;
       const normalizedQuestions = Array.isArray(quiz.questions) ? quiz.questions.map(q => normalizeQuestion(q)) : [];
       return { ...quiz, questions: normalizedQuestions };
     } catch (error: unknown) {
       console.error(`Failed to load quiz for ${moduleSlug}:`, error);
-      // Return null as fallback to prevent build failures
       return null;
     }
   }
@@ -620,7 +534,15 @@ class ContentRegistryLoader {
         }
         return [];
       } else {
-        const response = await fetch(`/api/content/quizzes/programming-fundamentals`);
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 second timeout
+        
+        const response = await fetch(`/api/content/quizzes/programming-fundamentals`, {
+          signal: controller.signal
+        }).finally(() => {
+          clearTimeout(timeoutId);
+        });
+        
         if (!response.ok) return [];
         const data: unknown = await response.json();
         const questions = (data && typeof data === 'object' && (data as Quiz).questions) ? (data as Quiz).questions : [];

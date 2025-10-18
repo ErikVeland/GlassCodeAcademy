@@ -29,7 +29,7 @@ Use the provided bootstrap script to automatically set up your GlassCode Academy
 
 1. Create a `.env.local` file with:
    ```
-   NEXT_PUBLIC_API_BASE=http://localhost:5022
+   NEXT_PUBLIC_API_BASE=http://localhost:8080
    ```
 
 2. Run the development server:
@@ -196,3 +196,49 @@ To test the application:
 4. Navigate to `/sass/lessons` and `/sass/interview` to view SASS content
 5. Verify that content loads correctly
 6. Test quiz functionality with answer submission
+
+## Admin Dashboard
+
+The admin UI uses typed models in `src/types/admin.ts` and proxy routes to the backend.
+
+### Shared Types
+
+```ts
+export interface AdminModule { id: number; title: string; slug: string; description?: string; order: number; isPublished: boolean; courseId?: number; }
+
+export type LessonDifficulty = 'Beginner' | 'Intermediate' | 'Advanced';
+
+export interface AdminLesson { id: number; title: string; slug: string; order: number; difficulty: LessonDifficulty; estimatedMinutes?: number; isPublished: boolean; moduleId: number; content?: string; metadata?: string; }
+
+export type QuestionType = 'multiple-choice' | 'open-ended' | 'true-false' | 'coding';
+
+export interface AdminQuiz { id: number; question: string; topic?: string; difficulty: LessonDifficulty; choices?: string[] | string; explanation?: string; industryContext?: string; tags?: string[] | string; questionType: QuestionType; estimatedTime?: number; correctAnswer?: number | string | null; quizType?: string; sources?: string[] | string; sortOrder?: number; isPublished: boolean; lessonId: number; }
+
+export interface AdminCourse { id: number; title: string; }
+```
+
+### API Routes
+
+- `GET /api/modules-db` → `AdminModule[]`
+- `GET /api/modules-db/[id]` → `AdminModule`
+- `PUT /api/modules-db/[id]` → updates module
+
+- `GET /api/lessons-db` → `AdminLesson[]`
+- `GET /api/lessons-db/[id]` → `AdminLesson`
+- `PUT /api/lessons-db/[id]` → updates lesson; `content` and `metadata` are JSON strings
+
+- `GET /api/LessonQuiz` → `AdminQuiz[]`
+- `GET /api/LessonQuiz/[id]` → `AdminQuiz`
+- `PUT /api/LessonQuiz/[id]` → updates quiz; `choices`, `tags`, `sources` accept string or JSON array; `correctAnswer` may be `number | null`
+
+### Pages
+
+- `/admin` dashboard overview
+- `/admin/lessons/[id]/edit` lesson editor
+- `/admin/modules/[id]/edit` module editor
+- `/admin/quizzes/[id]/edit` quiz editor
+
+### Hooks and Effects
+
+- Data fetchers memoized with `useCallback`; effects depend on stable callbacks (`[fetchData]`).
+- Input handlers guard state presence and normalize union types for JSON fields.

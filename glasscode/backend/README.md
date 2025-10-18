@@ -134,8 +134,8 @@ Use the provided bootstrap script to automatically set up your GlassCode Academy
 - GraphQL endpoint: `http://localhost:8080/graphql`.
 - Back-compat GraphQL mapping: `http://localhost:8080/api`.
 - Override port using environment variable:
-  - Run directly: `ASPNETCORE_URLS=http://localhost:5022 dotnet run`.
-  - Run published DLL: `ASPNETCORE_URLS=http://localhost:5022 dotnet ./publish/backend.dll`.
+  - Run directly: `ASPNETCORE_URLS=http://localhost:8080 dotnet run`.
+- Run published DLL: `ASPNETCORE_URLS=http://localhost:8080 dotnet ./publish/backend.dll`.
 - If you see connection failures on `5022`, ensure the backend is bound to `8080` (default) or set `ASPNETCORE_URLS` to the desired port.
 
 ## Local Development

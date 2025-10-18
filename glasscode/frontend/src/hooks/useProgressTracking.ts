@@ -168,7 +168,7 @@ export const useProgressTracking = () => {
     }
   }, [getStorageKeys]);
 
-  const updateProgress = async (moduleId: string, data: Partial<ProgressData>) => {
+  const updateProgress = useCallback(async (moduleId: string, data: Partial<ProgressData>) => {
     const currentTime = new Date().toISOString();
     
     // Determine tier for module using registry
@@ -218,7 +218,7 @@ export const useProgressTracking = () => {
     
     // Check for new achievements
     checkAchievements(updated, moduleId);
-  };
+  }, [progress, getStorageKeys]);
 
   // Helper function to get tier from registry
   const determineTierFromRegistry = async (moduleSlug: string): Promise<string | null> => {
@@ -254,7 +254,7 @@ export const useProgressTracking = () => {
     }
   };
 
-  const updateStreak = () => {
+  const updateStreak = useCallback(() => {
     const today = new Date().toDateString();
     const yesterday = new Date(Date.now() - 24 * 60 * 60 * 1000).toDateString();
     
@@ -282,9 +282,9 @@ export const useProgressTracking = () => {
       setStreak(updatedStreak);
       localStorage.setItem(getStorageKeys().STREAK, JSON.stringify(updatedStreak));
     }
-  };
+  }, [streak, getStorageKeys]);
 
-  const checkAchievements = (progressData: Record<string, ProgressData>, moduleId: string) => {
+  const checkAchievements = useCallback((progressData: Record<string, ProgressData>, moduleId: string) => {
     const newAchievements: AchievementData[] = [];
     const currentTime = new Date().toISOString();
     
@@ -405,9 +405,9 @@ export const useProgressTracking = () => {
       setAchievements(updatedAchievements);
       localStorage.setItem(getStorageKeys().ACHIEVEMENTS, JSON.stringify(updatedAchievements));
     }
-  };
+  }, [achievements, streak.currentStreak, getStorageKeys]);
 
-  const calculateOverallProgress = () => {
+  const calculateOverallProgress = useCallback(() => {
     const allModules = Object.values(TIER_MODULES).flat();
     const totalModules = allModules.length;
     const completedModules = allModules.filter(moduleId => 
@@ -415,31 +415,31 @@ export const useProgressTracking = () => {
     ).length;
     
     return totalModules > 0 ? Math.round((completedModules / totalModules) * 100) : 0;
-  };
+  }, [progress]);
   
-  const getTierProgress = (tier: 'foundational' | 'core' | 'specialized' | 'quality') => {
+  const getTierProgress = useCallback((tier: 'foundational' | 'core' | 'specialized' | 'quality') => {
     const tierModules = TIER_MODULES[tier];
     const completedInTier = tierModules.filter(moduleId => 
       progress[moduleId]?.completionStatus === 'completed'
     ).length;
     
     return tierModules.length > 0 ? Math.round((completedInTier / tierModules.length) * 100) : 0;
-  };
+  }, [progress]);
 
-  const getCompletedModulesCount = () => {
+  const getCompletedModulesCount = useCallback(() => {
     return Object.values(progress).filter(p => p.completionStatus === 'completed').length;
-  };
+  }, [progress]);
 
-  const getTotalTimeSpent = () => {
+  const getTotalTimeSpent = useCallback(() => {
     return Object.values(progress).reduce((total, p) => total + p.timeSpent, 0);
-  };
+  }, [progress]);
 
-  const getAverageQuizScore = () => {
+  const getAverageQuizScore = useCallback(() => {
     const scores = Object.values(progress).filter(p => p.quizScore > 0).map(p => p.quizScore);
     return scores.length > 0 ? Math.round(scores.reduce((sum, score) => sum + score, 0) / scores.length) : 0;
-  };
+  }, [progress]);
 
-  const exportProgressData = () => {
+  const exportProgressData = useCallback(() => {
     const exportData = {
       progress,
       streak,
@@ -459,7 +459,7 @@ export const useProgressTracking = () => {
     link.click();
     document.body.removeChild(link);
     URL.revokeObjectURL(url);
-  };
+  }, [progress, streak, achievements]);
 
   return {
     progress,

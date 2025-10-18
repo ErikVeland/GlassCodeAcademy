@@ -226,7 +226,7 @@ export default function QuizResultsPage({ params }: { params: Promise<{ shortSlu
     }
     
     // Navigate to quiz start page for a fresh quiz
-    router.push(`/${resolvedParams.shortSlug}/quiz/start`);
+    router.push(`/${resolvedParams.shortSlug}/quiz`);
   };
 
   const handleReviewLessons = async () => {

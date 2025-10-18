@@ -43,22 +43,50 @@ export const createApolloClient = () => {
       // Add timeout for faster failure detection
       fetch: (uri, options) => {
         const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 15000); // 15 second timeout
+        const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 second timeout
         return fetch(uri, {
           ...options,
           signal: controller.signal
         }).finally(() => clearTimeout(timeoutId));
       }
     })),
-    cache: new InMemoryCache(),
+    cache: new InMemoryCache({
+      // Add cache size limits to prevent memory leaks
+      typePolicies: {
+        Query: {
+          fields: {
+            // Limit cache size for lesson queries
+            lessons: {
+              merge: false,
+            },
+            // Limit cache size for quiz queries
+            questions: {
+              merge: false,
+            }
+          }
+        }
+      }
+    }),
     defaultOptions: {
       watchQuery: {
         errorPolicy: 'ignore',
         fetchPolicy: 'cache-first',
+        // Add timeout for queries
+        context: {
+          fetchOptions: {
+            signal: AbortSignal.timeout(10000) // 10 second timeout
+          }
+        }
       },
       query: {
         errorPolicy: 'all', // Changed from 'ignore' to 'all' to handle errors properly
         fetchPolicy: 'cache-first',
+        // Add timeout for queries
+        context: {
+          fetchOptions: {
+            signal: AbortSignal.timeout(10000) // 10 second timeout
+          }
+        }
       },
     },
   });

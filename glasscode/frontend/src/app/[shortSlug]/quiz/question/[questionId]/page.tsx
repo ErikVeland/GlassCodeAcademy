@@ -46,6 +46,7 @@ export default function QuizQuestionPage({ params }: { params: Promise<{ shortSl
     passingScore: number;
     timeLimit: number;
     startedAt: number;
+    startTime?: number;
     answers: ({ selectedIndex?: number; enteredText?: string; correct: boolean } | null)[];
   }
 
@@ -67,6 +68,17 @@ export default function QuizQuestionPage({ params }: { params: Promise<{ shortSl
           return;
         }
         const session = JSON.parse(raw) as QuizSession;
+        
+        // DEBUG: Log session data
+        console.log('Quiz Question Page Debug:', {
+          sessionKey,
+          sessionExists: !!session,
+          questionsCount: session?.questions?.length ?? 0,
+          questionIndex,
+          questionId,
+          sessionQuestions: session?.questions?.map(q => ({ id: q.id, question: q.question?.substring(0, 50) + '...' })) ?? []
+        });
+        
         const total = session?.questions?.length ?? 0;
         setTotalQuestions(total);
         if (isNaN(questionIndex) || questionIndex < 0 || questionIndex >= total) {
@@ -77,7 +89,8 @@ export default function QuizQuestionPage({ params }: { params: Promise<{ shortSl
         const q = session.questions[questionIndex];
         setQuestionData(q);
         // Setup countdown timer
-        const endAt = (session.startedAt || Date.now()) + (session.timeLimit || 0) * 60 * 1000;
+        const started = (session.startedAt ?? session.startTime ?? Date.now());
+        const endAt = started + (session.timeLimit || 0) * 60 * 1000;
         setQuizEndAt(endAt);
         setRemainingMs(Math.max(0, endAt - Date.now()));
         // Restore previous selection if exists

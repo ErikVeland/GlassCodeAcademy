@@ -38,6 +38,14 @@ appsettings.*.json
 .runtimeconfig.json
 .runtimeconfig.dev.json
 
+# Environment files
+.env
+.env.local
+.env.development
+.env.production
+.env.test
+!.env.example
+
 # Visual Studio
 *.suo
 *.user

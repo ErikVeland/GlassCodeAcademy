@@ -3,32 +3,37 @@
  */
 
 /**
- * Get the GraphQL endpoint URL with no hardcoded host.
+ * Get the GraphQL endpoint URL without hardcoded localhost.
  *
  * - If `GRAPHQL_ENDPOINT` is set, use it verbatim.
- * - Otherwise, always use the relative `/api/graphql` route, which the app proxies.
+ * - Otherwise, prefer relative `/graphql` in the browser (proxied by Next/Nginx).
+ * - On the server, derive an absolute URL from `NEXT_PUBLIC_API_BASE` or public origin.
  */
 export function getGraphQLEndpoint(): string {
   const explicitEndpoint = process.env.GRAPHQL_ENDPOINT?.trim();
   if (explicitEndpoint) return explicitEndpoint;
-  const path = '/api/graphql';
-  // On the server, a relative URL like '/api/graphql' will throw ERR_INVALID_URL.
-  // Derive an absolute URL using public origin or API base.
+  const path = '/graphql';
+  // On the server, a relative URL like '/graphql' will throw ERR_INVALID_URL.
+  // Derive an absolute URL using API base or public origin.
   if (typeof window === 'undefined') {
+    const apiBase = process.env.NEXT_PUBLIC_API_BASE?.trim()?.replace(/\/+$/, '');
+    if (apiBase) return `${apiBase}${path}`;
+
     try {
       const origin = getPublicOriginStrict();
       return `${origin}${path}`;
     } catch {
       try {
-        const apiBase = getApiBaseStrict();
-        return `${apiBase}${path}`;
+        const fallbackApiBase = getApiBaseStrict();
+        return `${fallbackApiBase}${path}`;
       } catch {
-        // Final fallback; returning relative will likely fail on server.
-        return path;
+        // Explicitly signal misconfiguration on server-side usage
+        throw new Error('GraphQL endpoint configuration missing. Set NEXT_PUBLIC_API_BASE or NEXT_PUBLIC_BASE_URL/VERCEL_URL.');
       }
     }
   }
-  // In the browser a relative URL is fine and proxied by /app/api/graphql route.
+
+  // In the browser a relative URL is fine and proxied by `/graphql` rewrite.
   return path;
 }
 

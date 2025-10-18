@@ -1,6 +1,7 @@
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
+import BreadcrumbNavigation from '@/components/BreadcrumbNavigation';
 import { contentRegistry } from '@/lib/contentRegistry';
 import type { Module, Lesson, Quiz } from '@/lib/contentRegistry';
 
@@ -92,25 +93,7 @@ export default async function ModulePage({ params }: ModulePageProps) {
     <>
       <div className="max-w-4xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
         {/* Breadcrumb Navigation */}
-        <nav className="mb-8" aria-label="Breadcrumb">
-          <ol className="flex items-center space-x-2 text-sm">
-            <li>
-              <Link href="/" className="text-blue-600 hover:text-blue-800">
-                Home
-              </Link>
-            </li>
-            <li className="text-gray-500">/</li>
-            <li>
-              <span className="text-gray-500">
-                {tier?.title} Tier
-              </span>
-            </li>
-            <li className="text-gray-500">/</li>
-            <li className="text-gray-900 dark:text-gray-100 font-medium">
-              {currentModule.title}
-            </li>
-          </ol>
-        </nav>
+        <BreadcrumbNavigation />
 
         {/* Module Header */}
         <header className="mb-12">
