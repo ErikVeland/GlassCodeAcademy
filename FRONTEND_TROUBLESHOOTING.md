@@ -197,8 +197,27 @@ If issues persist after following this guide:
 4. Consider upgrading Next.js version
 5. Review application code for memory leaks
 
+## Latest Improvements (Oct 2025)
+
+- Dev-only start script avoids building during development and cleans `.next`.
+- Unified Next.js config: disabled `next.config.js` to ensure `next.config.ts` is used with `experimental.optimizeCss: false`.
+- Single dev instance policy: avoid concurrent Next processes writing to the same `.next` folder.
+- Configurable port support via `PORT`; optional `CLEAN_NEXT=true` to force a cache clean on start.
+- Chunk prevention guidance added; quiz routes stabilized under both `[moduleSlug]` and `[shortSlug]`.
+
+Usage examples:
+
+```bash
+# Clean start on a specific port
+PORT=3010 CLEAN_NEXT=true ./start-dev.sh
+
+# Start on default port without forced clean
+./start-dev.sh
+```
+
 ## Version History
 
 - v1.0: Initial troubleshooting guide
 - v1.1: Added improved scripts and prevention strategies
 - v1.2: Enhanced monitoring and diagnostics section
+- v1.3: Dev stability improvements, unified Next config, and chunk prevention guidance

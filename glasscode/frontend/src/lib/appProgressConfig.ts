@@ -171,6 +171,13 @@ export const APP_PHASES: Phase[] = [
             completed: true,
             completedDate: '2025-10-12',
             weight: 0.3
+          },
+          {
+            id: 'wcag-theming',
+            title: 'WCAG Tokenized Theming',
+            description: 'Semantic color tokens, 3-way switch, no first-paint flash',
+            completed: false,
+            weight: 0.2
           }
         ]
       }
@@ -416,6 +423,50 @@ export const APP_PHASES: Phase[] = [
         ]
       },
       {
+        id: 'dev-stability',
+        title: 'Dev Stability & Build Reliability',
+        description: 'Stable dev server, unified config, and chunk prevention',
+        importance: 8,
+        currentProgress: 70,
+        previousProgress: 40,
+        lastUpdated: '2025-10-18',
+        category: 'quality',
+        milestones: [
+          {
+            id: 'single-dev-instance',
+            title: 'Single Dev Server Enforcement',
+            description: 'Avoid concurrent Next instances writing to .next',
+            completed: true,
+            completedDate: '2025-10-18',
+            weight: 0.25
+          },
+          {
+            id: 'unified-next-config',
+            title: 'Unified Next Config',
+            description: 'Disable next.config.js; use next.config.ts',
+            completed: true,
+            completedDate: '2025-10-18',
+            weight: 0.25
+          },
+          {
+            id: 'start-dev-cleanup',
+            title: 'Dev Start Script Cleanup',
+            description: 'Clean .next and support configurable port',
+            completed: true,
+            completedDate: '2025-10-18',
+            weight: 0.25
+          },
+          {
+            id: 'chunk-prevention-doc',
+            title: 'Chunk Prevention Guidance',
+            description: 'Document practices to prevent hot reload chunk errors',
+            completed: true,
+            completedDate: '2025-10-18',
+            weight: 0.25
+          }
+        ]
+      },
+      {
         id: 'security-hardening',
         title: 'Security & Compliance',
         description: 'Security measures and data protection',
@@ -474,7 +525,7 @@ export const APP_PHASES: Phase[] = [
         title: 'CI/CD Pipeline',
         description: 'Automated testing, building, and deployment',
         importance: 8,
-        currentProgress: 15,
+        currentProgress: 10,
         category: 'deployment',
         milestones: [
           {
@@ -512,7 +563,7 @@ export const APP_PHASES: Phase[] = [
         title: 'Monitoring & Analytics',
         description: 'Application monitoring and user analytics',
         importance: 7,
-        currentProgress: 10,
+        currentProgress: 20,
         category: 'deployment',
         milestones: [
           {
