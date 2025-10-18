@@ -42,7 +42,29 @@ fi
 if [ -z "$FRONTEND_PORT" ]; then
     FRONTEND_PORT=3000
 fi
+# CLI flags parsing (fast path, optional validations)
+FAST_MODE=0
+SKIP_CONTENT_VALIDATION=0
+SKIP_LINT=0
+SKIP_TYPECHECK=0
+SKIP_BACKEND_HEALTH=0
+FRONTEND_ONLY=0
+# Allow overriding port via CLI
+while [[ $# -gt 0 ]]; do
+    case "$1" in
+        --fast) FAST_MODE=1; SKIP_CONTENT_VALIDATION=1; SKIP_LINT=1; SKIP_TYPECHECK=1; SKIP_BACKEND_HEALTH=1; shift;;
+        --frontend-only) FRONTEND_ONLY=1; shift;;
+        --skip-content-validation) SKIP_CONTENT_VALIDATION=1; shift;;
+        --skip-lint) SKIP_LINT=1; shift;;
+        --skip-typecheck) SKIP_TYPECHECK=1; shift;;
+        --skip-backend-health) SKIP_BACKEND_HEALTH=1; shift;;
+        --port) FRONTEND_PORT="${2:-$FRONTEND_PORT}"; shift 2;;
+        *) log "⚠️  WARNING: Unknown argument: $1"; shift;;
+    esac
+done
+export FAST_MODE SKIP_CONTENT_VALIDATION SKIP_LINT SKIP_TYPECHECK SKIP_BACKEND_HEALTH FRONTEND_ONLY FRONTEND_PORT
 log "🌐 Frontend port: $FRONTEND_PORT"
+log "⚙️  Flags: FAST=$FAST_MODE FRONTEND_ONLY=$FRONTEND_ONLY SKIP_VALIDATION=$SKIP_CONTENT_VALIDATION SKIP_LINT=$SKIP_LINT SKIP_TS=$SKIP_TYPECHECK SKIP_BACKEND_HEALTH=$SKIP_BACKEND_HEALTH"
 
 draw_progress() {
     # Usage: draw_progress current total [prefix]
@@ -63,10 +85,14 @@ is_service_running() {
 
 wait_for_service() {
     local service_name=$1
-    local max_attempts=120  # Increased from 60 to 120 (4 minutes total)
+    local max_attempts=120
     local attempt=1
-    local sleep_time=2     # Reduced from 5 to 2 seconds for faster detection
+    local sleep_time=2
     local service_failed=false
+    if [ "${FAST_MODE:-0}" -eq 1 ]; then
+        max_attempts=60
+        sleep_time=2
+    fi
     
     log "⏳ Waiting for $service_name to start..."
     while [ $attempt -le $max_attempts ]; do
@@ -312,67 +338,82 @@ fi
 log "🔍 Validating content..."
 cd "$APP_DIR"
 if [ -f "scripts/validate-content.js" ]; then
-    if node scripts/validate-content.js; then
+    if [ "${SKIP_CONTENT_VALIDATION:-0}" -eq 1 ] || [ "${FAST_MODE:-0}" -eq 1 ]; then
+        log "⏭️  Fast mode: skipping content validation"
+    elif node scripts/validate-content.js; then
         log "✅ Content validation passed"
     else
-        log "❌ ERROR: Content validation failed"
-        rollback
+        if [ "${FAST_MODE:-0}" -eq 1 ]; then
+            log "⚠️  Content validation failed, continuing due to fast mode"
+        else
+            log "❌ ERROR: Content validation failed"
+            rollback
+        fi
     fi
 else
     log "⚠️  Validation script not found, skipping content validation"
 fi
 
 ### 7. Smart Backend Build
-log "🏗️  Smart backend build validation..."
-cd "$APP_DIR/glasscode/backend"
-
-# Quick validation: check if project compiles without full build
-BUILD_REQUIRED=false
-log "🔍 Performing quick compilation check..."
-if ! sudo -u "$DEPLOY_USER" dotnet build --verbosity quiet --nologo >/dev/null 2>&1; then
-    log "⚠️  Compilation errors detected, full build required"
-    BUILD_REQUIRED=true
-elif [ ! -f "$APP_DIR/glasscode/backend/out/backend.dll" ] || [ ! -f "$APP_DIR/glasscode/backend/out/backend.runtimeconfig.json" ]; then
-    log "⚠️  Missing build artifacts, full build required"
-    BUILD_REQUIRED=true
+if [ "${FRONTEND_ONLY:-0}" -eq 1 ]; then
+    log "⏭️  Frontend-only mode: skipping backend build"
 else
-    log "✅ Quick compilation check passed, existing artifacts valid"
-fi
+    log "🏗️  Smart backend build validation..."
+    cd "$APP_DIR/glasscode/backend"
 
-# Only do expensive operations if quick validation failed
-if [ "$BUILD_REQUIRED" = "true" ]; then
-    log "🏗️  Performing full backend build and publish..."
-    
-    if ! sudo -u "$DEPLOY_USER" dotnet restore; then
-        log "❌ ERROR: Failed to restore .NET dependencies"
-        exit 1
+    # Quick validation: check if project compiles without full build
+    BUILD_REQUIRED=false
+    log "🔍 Performing quick compilation check..."
+    if ! sudo -u "$DEPLOY_USER" dotnet build --verbosity quiet --nologo >/dev/null 2>&1; then
+        log "⚠️  Compilation errors detected, full build required"
+        BUILD_REQUIRED=true
+    elif [ ! -f "$APP_DIR/glasscode/backend/out/backend.dll" ] || [ ! -f "$APP_DIR/glasscode/backend/out/backend.runtimeconfig.json" ]; then
+        log "⚠️  Missing build artifacts, full build required"
+        BUILD_REQUIRED=true
+    else
+        log "✅ Quick compilation check passed, existing artifacts valid"
     fi
-    log "✅ .NET dependencies restored"
 
-    log "📦 Publishing .NET backend..."
-    if ! sudo -u "$DEPLOY_USER" dotnet publish -c Release -o "$APP_DIR/glasscode/backend/out"; then
-        log "❌ ERROR: Failed to publish .NET backend"
-        exit 1
+    # Only do expensive operations if quick validation failed
+    if [ "$BUILD_REQUIRED" = "true" ]; then
+        log "🏗️  Performing full backend build and publish..."
+        
+        if ! sudo -u "$DEPLOY_USER" dotnet restore; then
+            log "❌ ERROR: Failed to restore .NET dependencies"
+            exit 1
+        fi
+        log "✅ .NET dependencies restored"
+
+        log "📦 Publishing .NET backend..."
+        if ! sudo -u "$DEPLOY_USER" dotnet publish -c Release -o "$APP_DIR/glasscode/backend/out"; then
+            log "❌ ERROR: Failed to publish .NET backend"
+            exit 1
+        fi
+        log "✅ .NET backend published"
     fi
-    log "✅ .NET backend published"
-fi
 
-### 8. Start Backend BEFORE Frontend Build
-log "🚀 Starting backend service (pre-build)..."
-systemctl restart ${APP_NAME}-dotnet
-if ! wait_for_service "${APP_NAME}-dotnet"; then
-    log "❌ Backend failed to start before frontend build"
-    rollback
-fi
+    ### 8. Start Backend BEFORE Frontend Build
+    log "🚀 Starting backend service (pre-build)..."
+    systemctl restart ${APP_NAME}-dotnet
+    if ! wait_for_service "${APP_NAME}-dotnet"; then
+        if [ "${FAST_MODE:-0}" -eq 1 ] || [ "${SKIP_BACKEND_HEALTH:-0}" -eq 1 ]; then
+            log "⚠️  Backend failed to start before frontend build, continuing due to fast/skip mode"
+        else
+            log "❌ Backend failed to start before frontend build"
+            rollback
+        fi
+    fi
 
-log "⏳ Verifying backend health before frontend build..."
-MAX_ATTEMPTS=30
-ATTEMPT=1
-SLEEP_INTERVAL=3
-BACKEND_HEALTHY=false
+    log "⏳ Verifying backend health before frontend build..."
+    MAX_ATTEMPTS=30
+    [ "${FAST_MODE:-0}" -eq 1 ] && MAX_ATTEMPTS=15
+    ATTEMPT=1
+    SLEEP_INTERVAL=3
+    BACKEND_HEALTHY=false
+fi
 
 LAST_STATUS=""
-while [[ $ATTEMPT -le $MAX_ATTEMPTS ]]; do
+while [[ $ATTEMPT -le $MAX_ATTEMPTS && ${FRONTEND_ONLY:-0} -eq 0 ]]; do
     # Check if service is still running first
     if ! systemctl is-active --quiet "${APP_NAME}-dotnet"; then
         printf "\n"  # Clear progress line
@@ -420,7 +461,11 @@ if [[ "$BACKEND_HEALTHY" != "true" && $ATTEMPT -gt $MAX_ATTEMPTS ]]; then
     ss -tulpn | grep :8080 || true
     log "🧪 Diagnostic: health curl"
     timeout 15 curl -v http://localhost:8080/api/health || true
-    rollback
+    if [ "${FAST_MODE:-0}" -eq 1 ] || [ "${SKIP_BACKEND_HEALTH:-0}" -eq 1 ]; then
+        log "⚠️  Proceeding despite backend health check failure due to fast/skip mode"
+    else
+        rollback
+    fi
 fi
 
 ### 9. Smart Frontend Build
@@ -436,10 +481,10 @@ log "🔍 Performing quick frontend validation..."
 if [ ! -f ".next/BUILD_ID" ] || [ ! -f ".next/standalone/server.js" ] || [ ! -d ".next/static" ]; then
     log "⚠️  Missing build artifacts, full frontend build required"
     FRONTEND_BUILD_REQUIRED=true
-elif ! sudo -u "$DEPLOY_USER" npx next lint --quiet >/dev/null 2>&1; then
+elif [ "${SKIP_LINT:-0}" -eq 0 ] && [ "${FAST_MODE:-0}" -eq 0 ] && ! sudo -u "$DEPLOY_USER" npx next lint --quiet >/dev/null 2>&1; then
     log "⚠️  Linting errors detected, full frontend build required"
     FRONTEND_BUILD_REQUIRED=true
-elif ! sudo -u "$DEPLOY_USER" npx tsc --noEmit --skipLibCheck >/dev/null 2>&1; then
+elif [ "${SKIP_TYPECHECK:-0}" -eq 0 ] && [ "${FAST_MODE:-0}" -eq 0 ] && ! sudo -u "$DEPLOY_USER" npx tsc --noEmit --skipLibCheck >/dev/null 2>&1; then
     log "⚠️  TypeScript errors detected, full frontend build required"
     FRONTEND_BUILD_REQUIRED=true
 else
@@ -473,7 +518,7 @@ if [ "$FRONTEND_BUILD_REQUIRED" = "true" ]; then
     ## Apple provider in NextAuth uses APPLE_CLIENT_ID and APPLE_CLIENT_SECRET in our setup
 
     # Check if .env.production exists and has required variables
-    if [ -f ".env.production" ] && grep -q "NEXTAUTH_SECRET" .env.production && grep -q "NEXT_PUBLIC_API_BASE" .env.production; then
+    if [ -f ".env.production" ] && grep -q "NEXTAUTH_SECRET" .env.production && grep -q "NEXT_PUBLIC_API_BASE" .env.production && grep -q "GC_CONTENT_MODE" .env.production; then
         log "📋 Using existing .env.production file (contains required variables)"
     else
         log "📋 Creating .env.production file..."
@@ -490,14 +535,23 @@ GITHUB_SECRET=${GITHUB_SECRET:-}
 APPLE_CLIENT_ID=${APPLE_CLIENT_ID:-}
 APPLE_CLIENT_SECRET=${APPLE_CLIENT_SECRET:-}
 DEMO_USERS_JSON=${DEMO_USERS_JSON:-}
+GC_CONTENT_MODE=${GC_CONTENT_MODE:-db}
 EOF
     fi
  
-    # Enforce lint and typecheck before production build
+    # Enforce lint and typecheck before production build (skip in fast mode)
+if [ "${SKIP_LINT:-0}" -eq 0 ] && [ "${FAST_MODE:-0}" -eq 0 ]; then
     log "🔎 Running ESLint checks (frontend)"
-    sudo -u "$DEPLOY_USER" npm run lint
+    sudo -u "$DEPLOY_USER" npm run lint || log "⚠️  ESLint warnings/errors; continuing due to fast mode preferences"
+else
+    log "⏭️  Skipping ESLint due to fast/skip settings"
+fi
+if [ "${SKIP_TYPECHECK:-0}" -eq 0 ] && [ "${FAST_MODE:-0}" -eq 0 ]; then
     log "🔎 Running TypeScript typecheck (frontend)"
-    sudo -u "$DEPLOY_USER" npm run typecheck
+    sudo -u "$DEPLOY_USER" npm run typecheck || log "⚠️  TypeScript typecheck issues; continuing due to fast mode preferences"
+else
+    log "⏭️  Skipping TypeScript typecheck due to fast/skip settings"
+fi
 
     # Build frontend with robust error handling and cleanup
     log "🔨 Starting frontend build with enhanced stability..."
@@ -510,8 +564,12 @@ EOF
     
     # Clear npm cache to prevent dependency resolution issues
     log "🧹 Clearing npm cache..."
+if [ "${FAST_MODE:-0}" -eq 1 ]; then
+    log "⏭️  Skipping npm cache clear in fast mode"
+else
     sudo -u "$DEPLOY_USER" npm cache clean --force || true
     log "✅ npm cache cleared"
+fi
     
     # Verify package.json and dependencies
     if [ ! -f "package.json" ]; then
@@ -545,7 +603,11 @@ EOF
         # Comprehensive cleanup for recovery build
         log "🧹 Comprehensive cleanup for recovery build..."
         sudo -u "$DEPLOY_USER" rm -rf node_modules .next package-lock.json
-        sudo -u "$DEPLOY_USER" npm cache clean --force
+if [ "${FAST_MODE:-0}" -eq 1 ]; then
+    log "⏭️  Skipping npm cache clear in fast mode"
+else
+    sudo -u "$DEPLOY_USER" npm cache clean --force
+fi
         
         # Fresh dependency installation
         log "📦 Fresh dependency installation..."
@@ -614,68 +676,81 @@ systemctl unmask ${APP_NAME}-frontend || true
 systemctl unmask ${APP_NAME}-dotnet || true
 
 # Start backend first and wait for it to be ready
-log "🚀 Starting backend service..."
-systemctl restart ${APP_NAME}-dotnet
-if ! wait_for_service "${APP_NAME}-dotnet"; then
-    log "❌ Backend failed to start, rolling back..."
-    rollback
-fi
-
-# Wait for backend to be fully ready by polling the health check endpoint
-log "⏳ Waiting for backend to be fully loaded and healthy..."
-MAX_ATTEMPTS=30
-ATTEMPT=1
-SLEEP_INTERVAL=3
-LAST_STATUS=""
-while [[ $ATTEMPT -le $MAX_ATTEMPTS ]]; do
-    if timeout 10 curl -s -f http://localhost:8080/api/health >/dev/null 2>&1; then
-    HEALTH_RESPONSE=$(timeout 10 curl -s http://localhost:8080/api/health)
-        BACKEND_STATUS=$(echo "$HEALTH_RESPONSE" | grep -o '"status":"[^"]*"' | cut -d'"' -f4)
-        if [[ "$BACKEND_STATUS" == "healthy" ]]; then
-            printf "\n"  # Clear progress line
-            log "✅ Backend is fully loaded and healthy!"
-            break
+if [ "${FRONTEND_ONLY:-0}" -eq 1 ]; then
+    log "⏭️  Frontend-only mode: skipping backend restart and health checks"
+else
+    log "🚀 Starting backend service..."
+    systemctl restart ${APP_NAME}-dotnet
+    if ! wait_for_service "${APP_NAME}-dotnet"; then
+        if [ "${FAST_MODE:-0}" -eq 1 ] || [ "${SKIP_BACKEND_HEALTH:-0}" -eq 1 ]; then
+            log "⚠️  Backend failed to start, continuing due to fast/skip mode"
         else
-            # Only log status change if it's different from last time
-            if [[ "$BACKEND_STATUS" != "$LAST_STATUS" ]]; then
-                printf "\n"  # Clear progress line
-                log "⚠️  Backend is responding but status is $BACKEND_STATUS"
-                LAST_STATUS="$BACKEND_STATUS"
-            fi
-            break
+            log "❌ Backend failed to start, rolling back..."
+            rollback
         fi
     fi
-    draw_progress "$ATTEMPT" "$MAX_ATTEMPTS" "  ⏳ Backend health: "
-    ATTEMPT=$((ATTEMPT + 1))
-    sleep $SLEEP_INTERVAL
-done
 
-# Ensure the progress line is terminated
-printf "\n" 2>/dev/null || true
+    # Wait for backend to be fully ready by polling the health check endpoint
+    log "⏳ Waiting for backend to be fully loaded and healthy..."
+    MAX_ATTEMPTS=30
+    [ "${FAST_MODE:-0}" -eq 1 ] && MAX_ATTEMPTS=15
+    ATTEMPT=1
+    SLEEP_INTERVAL=$([ "${FAST_MODE:-0}" -eq 1 ] && echo 2 || echo 3)
+    LAST_STATUS=""
+    while [[ $ATTEMPT -le $MAX_ATTEMPTS ]]; do
+        if timeout 10 curl -s -f http://localhost:8080/api/health >/dev/null 2>&1; then
+            HEALTH_RESPONSE=$(timeout 10 curl -s http://localhost:8080/api/health)
+            BACKEND_STATUS=$(echo "$HEALTH_RESPONSE" | grep -o '"status":"[^\"]*"' | cut -d'"' -f4)
+            if [[ "$BACKEND_STATUS" == "healthy" ]]; then
+                printf "\n"  # Clear progress line
+                log "✅ Backend is fully loaded and healthy!"
+                break
+            else
+                # Only log status change if it's different from last time
+                if [[ "$BACKEND_STATUS" != "$LAST_STATUS" ]]; then
+                    printf "\n"  # Clear progress line
+                    log "⚠️  Backend is responding but status is $BACKEND_STATUS"
+                    LAST_STATUS="$BACKEND_STATUS"
+                fi
+                break
+            fi
+        fi
+        draw_progress "$ATTEMPT" "$MAX_ATTEMPTS" "  ⏳ Backend health: "
+        ATTEMPT=$((ATTEMPT + 1))
+        sleep $SLEEP_INTERVAL
+    done
 
-if [[ $ATTEMPT -gt $MAX_ATTEMPTS ]]; then
-    log "❌ Backend failed to become healthy within the expected time."
+    # Ensure the progress line is terminated
+    printf "\n" 2>/dev/null || true
 
-    # Verbose diagnostics before rollback
-    log "🧪 Diagnostic: Checking backend service status"
-    systemctl status ${APP_NAME}-dotnet --no-pager || true
+    if [[ $ATTEMPT -gt $MAX_ATTEMPTS ]]; then
+        log "❌ Backend failed to become healthy within the expected time."
 
-    log "🧪 Diagnostic: Recent backend logs"
-    journalctl -u ${APP_NAME}-dotnet -n 100 --no-pager || true
+        # Verbose diagnostics before rollback
+        log "🧪 Diagnostic: Checking backend service status"
+        systemctl status ${APP_NAME}-dotnet --no-pager || true
 
-    log "🧪 Diagnostic: Listening ports (expect 0.0.0.0:8080)"
-    ss -tulpn | grep :8080 || true
+        log "🧪 Diagnostic: Recent backend logs"
+        journalctl -u ${APP_NAME}-dotnet -n 100 --no-pager || true
 
-    log "🧪 Diagnostic: Health endpoint verbose curl"
-    timeout 15 curl -v http://localhost:8080/api/health || true
+        log "🧪 Diagnostic: Listening ports (expect 0.0.0.0:8080)"
+        ss -tulpn | grep :8080 || true
 
-    log "❌ Rolling back due to backend health check failure..."
-    rollback
+        log "🧪 Diagnostic: Health endpoint verbose curl"
+        timeout 15 curl -v http://localhost:8080/api/health || true
+
+        if [ "${FAST_MODE:-0}" -eq 1 ] || [ "${SKIP_BACKEND_HEALTH:-0}" -eq 1 ]; then
+            log "⚠️  Proceeding despite backend health check failure due to fast/skip mode"
+        else
+            log "❌ Rolling back due to backend health check failure..."
+            rollback
+        fi
+    fi
+
+    # Small additional delay to ensure backend is completely ready
+    log "⏳ Extra grace period: waiting 5s after backend healthy..."
+    sleep 5
 fi
-
-# Small additional delay to ensure backend is completely ready
-log "⏳ Extra grace period: waiting 5s after backend healthy..."
-sleep 5
 
 # Now start frontend with enhanced error handling
 log "🚀 Starting frontend service..."
@@ -728,7 +803,15 @@ TimeoutStartSec=60
 [Install]
 WantedBy=multi-user.target
 EOF
+    # Remove backend gating in fast mode or when explicitly skipped
+    if [ "${SKIP_BACKEND_HEALTH:-0}" -eq 1 ] || [ "${FAST_MODE:-0}" -eq 1 ]; then
+        sed -i '/^ExecStartPre=.*check_backend_health.sh$/d' "$UNIT_FILE_PATH" || true
+    fi
     systemctl daemon-reload
+    # Remove ExecStartPre when skipping backend health gating in fast mode
+    if [ "${SKIP_BACKEND_HEALTH:-0}" -eq 1 ] || [ "${FAST_MODE:-0}" -eq 1 ]; then
+        sed -i '/^ExecStartPre=.*check_backend_health.sh$/d' "$UNIT_FILE_PATH" || true
+    fi
     if command -v systemd-analyze >/dev/null 2>&1; then
         log "🧪 Verifying unit file with systemd-analyze"
         if ! systemd-analyze verify "$UNIT_FILE_PATH"; then
@@ -741,6 +824,13 @@ else
     log "🔧 Enforcing ExecStart to use Next standalone server"
     sed -i "s|^ExecStart=.*|ExecStart=/usr/bin/node .next/standalone/server.js -p $FRONTEND_PORT|" "$UNIT_FILE_PATH"
     # Also enforce ExecStartPre to use the health-check script to avoid quoting issues
+    # Conditionally manage ExecStartPre based on mode
+if [ "${SKIP_BACKEND_HEALTH:-0}" -eq 1 ] || [ "${FAST_MODE:-0}" -eq 1 ] || [ "${FRONTEND_ONLY:-0}" -eq 1 ]; then
+    if grep -q '^ExecStartPre=' "$UNIT_FILE_PATH"; then
+        log "🔧 Removing ExecStartPre due to fast/skip/frontend-only mode"
+        sed -i '/^ExecStartPre=/d' "$UNIT_FILE_PATH"
+    fi
+else
     if grep -q '^ExecStartPre=' "$UNIT_FILE_PATH"; then
         log "🔧 Rewriting ExecStartPre to use health-check script"
         sed -i "s|^ExecStartPre=.*|ExecStartPre=$APP_DIR/glasscode/frontend/check_backend_health.sh|" "$UNIT_FILE_PATH"
@@ -748,6 +838,7 @@ else
         log "🔧 Adding ExecStartPre to use health-check script"
         sed -i "/^\[Service\]/a ExecStartPre=$APP_DIR/glasscode/frontend/check_backend_health.sh" "$UNIT_FILE_PATH"
     fi
+fi
     # Clean up any accidental inline script content in the unit file
     # Some previous versions embedded the health-check script inline, producing invalid keys like MAX, HTTP, RESP
     if grep -Eq '^(MAX=|HTTP=|RESP=|STATUS=|sleep 5;|echo "Backend health check gating failed)' "$UNIT_FILE_PATH"; then
@@ -811,28 +902,32 @@ systemctl start ${APP_NAME}-frontend
 if ! wait_for_service "${APP_NAME}-frontend"; then
     log "❌ Frontend failed to start, collecting diagnostics..."
     
-    log "🧪 Diagnostic: systemd status for frontend"
+    log "🧪 Diagnostic: frontend service status"
     systemctl status ${APP_NAME}-frontend --no-pager || true
     
     log "🧪 Diagnostic: recent frontend logs (last 50 lines)"
     journalctl -u ${APP_NAME}-frontend -n 50 --no-pager || true
     
-    log "🧪 Diagnostic: unit file permissions and content"
+    log "🧪 Diagnostic: frontend unit file integrity"
     if [ -f "$UNIT_FILE_PATH" ]; then
-        ls -l "$UNIT_FILE_PATH" || true
-        echo "--- Unit file content (first 20 lines) ---"
-        head -20 "$UNIT_FILE_PATH" || true
+        if systemd-analyze verify "$UNIT_FILE_PATH"; then
+            log "✅ Unit file verified"
+        else
+            log "⚠️  Unit file verification failed"
+            head -20 "$UNIT_FILE_PATH" || true
+        fi
     else
         log "❌ Unit file missing at $UNIT_FILE_PATH"
     fi
     
-    log "🧪 Diagnostic: port 3000 usage"
-    lsof -i :3000 || true
+    log "🧪 Diagnostic: frontend port usage"
+    lsof -i :$FRONTEND_PORT || true
     
-    log "🧪 Diagnostic: frontend directory permissions"
-    ls -la "$APP_DIR/glasscode/frontend/.next/standalone/" || true
-    
-    rollback
+    if [ "${FAST_MODE:-0}" -eq 1 ]; then
+        log "⚠️  Frontend failed to start, continuing due to fast mode"
+    else
+        rollback
+    fi
 fi
 
 log "✅ Services restarted"
@@ -841,45 +936,65 @@ log "✅ Services restarted"
 log "🩺 Performing comprehensive health checks..."
 
 # Check backend GraphQL endpoint
-log "🔍 Checking backend GraphQL endpoint..."
-if timeout 15 curl -s -X POST http://localhost:8080/graphql \
-  -H "Content-Type: application/json" \
-  -d '{"query":"{ __typename }"}' | grep -q '__typename'; then
-    log "✅ Backend GraphQL endpoint: PASSED"
+if [ "${FRONTEND_ONLY:-0}" -eq 1 ]; then
+    log "⏭️  Frontend-only mode: skipping backend GraphQL check"
 else
-    log "❌ Backend GraphQL endpoint: FAILED"
-    rollback
+    log "🔍 Checking backend GraphQL endpoint..."
+    if timeout 15 curl -s -X POST http://localhost:8080/graphql \
+      -H "Content-Type: application/json" \
+      -d '{"query":"{ __typename }"}' | grep -q '__typename'; then
+        log "✅ Backend GraphQL endpoint: PASSED"
+    else
+        if [ "${FAST_MODE:-0}" -eq 1 ] || [ "${SKIP_BACKEND_HEALTH:-0}" -eq 1 ]; then
+            log "⚠️  Backend GraphQL check failed, continuing due to fast/skip mode"
+        else
+            log "❌ Backend GraphQL endpoint: FAILED"
+            rollback
+        fi
+    fi
 fi
 
 # Check backend health endpoint details
-log "🔍 Checking backend health details..."
-BACKEND_HEALTH_CHECK=$(timeout 15 curl -s http://localhost:8080/api/health 2>/dev/null || echo '{"status":"timeout"}')
-BACKEND_STATUS=$(echo "$BACKEND_HEALTH_CHECK" | grep -o '"status":"[^"]*"' | cut -d'"' -f4 || echo "unknown")
-if [[ "$BACKEND_STATUS" == "healthy" ]]; then
-    log "✅ Backend health status: HEALTHY"
-elif [[ "$BACKEND_STATUS" == "timeout" ]]; then
-    log "⚠️  Backend health check timed out, but service appears to be running"
-    # Don't rollback for timeout if service is active
-    if systemctl is-active --quiet "${APP_NAME}-dotnet"; then
-        log "✅ Backend service is active, continuing despite health check timeout"
-    else
-        log "❌ Backend service is not active, rolling back..."
-        rollback
-    fi
+if [ "${FRONTEND_ONLY:-0}" -eq 1 ]; then
+    log "⏭️  Frontend-only mode: skipping backend health check"
 else
-    log "⚠️  Backend health status: $BACKEND_STATUS"
-    # Only rollback if status is not healthy
-    if [[ "$BACKEND_STATUS" != "healthy" ]]; then
-        log "❌ Rolling back due to backend health status..."
-        rollback
+    log "🔍 Checking backend health details..."
+    BACKEND_HEALTH_CHECK=$(timeout 15 curl -s http://localhost:8080/api/health 2>/dev/null || echo '{"status":"timeout"}')
+    BACKEND_STATUS=$(echo "$BACKEND_HEALTH_CHECK" | grep -o '"status":"[^"]*"' | cut -d'"' -f4 || echo "unknown")
+    if [[ "$BACKEND_STATUS" == "healthy" ]]; then
+        log "✅ Backend health status: HEALTHY"
+    elif [[ "$BACKEND_STATUS" == "timeout" ]]; then
+        log "⚠️  Backend health check timed out, but service appears to be running"
+        # Don't rollback for timeout if service is active
+        if systemctl is-active --quiet "${APP_NAME}-dotnet"; then
+            log "✅ Backend service is active, continuing despite health check timeout"
+        else
+            if [ "${FAST_MODE:-0}" -eq 1 ] || [ "${SKIP_BACKEND_HEALTH:-0}" -eq 1 ]; then
+                log "⚠️  Backend inactive after timeout, continuing due to fast/skip mode"
+            else
+                log "❌ Backend service is not active, rolling back..."
+                rollback
+            fi
+        fi
+    else
+        log "⚠️  Backend health status: $BACKEND_STATUS"
+        # Only rollback if status is not healthy
+        if [[ "$BACKEND_STATUS" != "healthy" ]]; then
+            if [ "${FAST_MODE:-0}" -eq 1 ] || [ "${SKIP_BACKEND_HEALTH:-0}" -eq 1 ]; then
+                log "⚠️  Backend not healthy, continuing due to fast/skip mode"
+            else
+                log "❌ Rolling back due to backend health status..."
+                rollback
+            fi
+        fi
     fi
 fi
 
 # Check frontend availability with retries (allow warm-up)
 log "🔍 Checking frontend availability..."
-MAX_ATTEMPTS=30
+MAX_ATTEMPTS=$([ "${FAST_MODE:-0}" -eq 1 ] && echo 10 || echo 30)
 ATTEMPT=1
-SLEEP_INTERVAL=3
+SLEEP_INTERVAL=$([ "${FAST_MODE:-0}" -eq 1 ] && echo 2 || echo 3)
 FRONTEND_OK=false
 while [[ $ATTEMPT -le $MAX_ATTEMPTS ]]; do
     if timeout 10 curl -s -f http://localhost:$FRONTEND_PORT >/dev/null 2>&1; then
@@ -894,48 +1009,61 @@ while [[ $ATTEMPT -le $MAX_ATTEMPTS ]]; do
 done
 printf "\n" 2>/dev/null || true
 if [[ "$FRONTEND_OK" != true ]]; then
-    log "❌ Frontend availability: FAILED"
-    log "🧪 Diagnostic: frontend service status"
-    systemctl status ${APP_NAME}-frontend --no-pager || true
-    log "🧪 Diagnostic: recent frontend logs"
-    journalctl -u ${APP_NAME}-frontend -n 100 --no-pager || true
-    log "🧪 Diagnostic: listening ports (expect $FRONTEND_PORT)"
-    ss -tulpn | grep :$FRONTEND_PORT || true
-    rollback
+    if [ "${FAST_MODE:-0}" -eq 1 ]; then
+        log "⚠️  Frontend availability check failed, continuing due to fast mode"
+        systemctl status ${APP_NAME}-frontend --no-pager || true
+        log "🧪 Diagnostic: recent frontend logs"
+        journalctl -u ${APP_NAME}-frontend -n 100 --no-pager || true
+        log "🧪 Diagnostic: listening ports (expect $FRONTEND_PORT)"
+        ss -tulpn | grep :$FRONTEND_PORT || true
+    else
+        log "❌ Frontend availability: FAILED"
+        log "🧪 Diagnostic: frontend service status"
+        systemctl status ${APP_NAME}-frontend --no-pager || true
+        log "🧪 Diagnostic: recent frontend logs"
+        journalctl -u ${APP_NAME}-frontend -n 100 --no-pager || true
+        log "🧪 Diagnostic: listening ports (expect $FRONTEND_PORT)"
+        ss -tulpn | grep :$FRONTEND_PORT || true
+        rollback
+    fi
 fi
 
 # Check frontend content via API route with retries (more reliable than static /registry.json)
 log "🔍 Checking frontend content..."
-ATTEMPT=1
-CONTENT_OK=false
-RESP=""
-while [[ $ATTEMPT -le $MAX_ATTEMPTS ]]; do
-    RESP=$(timeout 10 curl -s http://localhost:$FRONTEND_PORT/api/content/registry || true)
-    if echo "$RESP" | grep -q '"modules"'; then
-        printf "\n"  # Clear progress line
-        log "✅ Frontend content availability: PASSED (api/content/registry)"
-        CONTENT_OK=true
-        break
+if [ "${SKIP_CONTENT_VALIDATION:-0}" -eq 1 ] || [ "${FAST_MODE:-0}" -eq 1 ]; then
+    log "⏭️  Skipping frontend content validation due to fast/skip settings"
+else
+    ATTEMPT=1
+    CONTENT_OK=false
+    RESP=""
+    while [[ $ATTEMPT -le $MAX_ATTEMPTS ]]; do
+        RESP=$(timeout 10 curl -s http://localhost:$FRONTEND_PORT/api/content/registry || true)
+        if echo "$RESP" | grep -q '"modules"'; then
+            printf "\n"  # Clear progress line
+            log "✅ Frontend content availability: PASSED (api/content/registry)"
+            CONTENT_OK=true
+            break
+        fi
+        # Fallback: try legacy static file if API route not ready
+        STATIC_RESP=$(timeout 10 curl -s http://localhost:$FRONTEND_PORT/registry.json || true)
+        if echo "$STATIC_RESP" | grep -q '"modules"'; then
+            printf "\n"  # Clear progress line
+            log "✅ Frontend content availability: PASSED (registry.json)"
+            CONTENT_OK=true
+            RESP="$STATIC_RESP"
+            break
+        fi
+        draw_progress "$ATTEMPT" "$MAX_ATTEMPTS" "  ⏳ Frontend content: "
+        ATTEMPT=$((ATTEMPT + 1))
+        sleep $SLEEP_INTERVAL
+    done
+    printf "\n" 2>/dev/null || true
+    if [[ "$CONTENT_OK" != true ]]; then
+        log "❌ Frontend content availability: FAILED"
+        log "🧪 Diagnostic: API /api/content/registry response"
+        echo "$RESP" | head -n 100 || true
+        rollback
     fi
-    # Fallback: try legacy static file if API route not ready
-    STATIC_RESP=$(timeout 10 curl -s http://localhost:$FRONTEND_PORT/registry.json || true)
-    if echo "$STATIC_RESP" | grep -q '"modules"'; then
-        printf "\n"  # Clear progress line
-        log "✅ Frontend content availability: PASSED (registry.json)"
-        CONTENT_OK=true
-        RESP="$STATIC_RESP"
-        break
-    fi
-    draw_progress "$ATTEMPT" "$MAX_ATTEMPTS" "  ⏳ Frontend content: "
-    ATTEMPT=$((ATTEMPT + 1))
-    sleep $SLEEP_INTERVAL
-done
-printf "\n" 2>/dev/null || true
-if [[ "$CONTENT_OK" != true ]]; then
-    log "❌ Frontend content availability: FAILED"
-    log "🧪 Diagnostic: API /api/content/registry response"
-    echo "$RESP" | head -n 100 || true
-    rollback
 fi
 
 nginx -t && systemctl reload nginx

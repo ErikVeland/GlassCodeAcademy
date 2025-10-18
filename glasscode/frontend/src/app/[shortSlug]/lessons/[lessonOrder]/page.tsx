@@ -24,25 +24,27 @@ interface Exercise {
   checkpoints?: string[];
 }
 
+const DB_MODE = (process.env.GC_CONTENT_MODE || '').toLowerCase() === 'db';
+export const dynamic = DB_MODE ? 'force-dynamic' : 'auto';
+
 export async function generateStaticParams() {
+  const isDb = (process.env.GC_CONTENT_MODE || '').toLowerCase() === 'db';
+  if (isDb) {
+    // No pre-generation in DB mode; render on-demand
+    return [];
+  }
   try {
     const modules = await contentRegistry.getModules();
     const params: Array<{ shortSlug: string; lessonOrder: string }> = [];
-    
     // Only pre-generate the first 3 lessons of each module to reduce build time
-    // Other lessons will be generated on-demand using ISR
     for (const mod of modules) {
       if (mod.status === 'active') {
         try {
           const lessons = await contentRegistry.getModuleLessons(mod.slug);
           if (lessons) {
-            // Only generate first 3 lessons statically
             const lessonsToGenerate = Math.min(3, lessons.length);
             for (let i = 0; i < lessonsToGenerate; i++) {
-              params.push({
-                shortSlug: mod.slug,
-                lessonOrder: (i + 1).toString(),
-              });
+              params.push({ shortSlug: mod.slug, lessonOrder: (i + 1).toString() });
             }
           }
         } catch (lessonError) {
@@ -50,12 +52,10 @@ export async function generateStaticParams() {
         }
       }
     }
-    
     console.log(`Generating ${params.length} lesson pages statically`);
     return params;
   } catch (error) {
     console.warn('Failed to load modules for lesson static generation:', error);
-    // Return empty array to prevent build failures
     return [];
   }
 }
@@ -88,7 +88,7 @@ export async function generateMetadata({ params }: LessonPageProps): Promise<Met
 }
 
 // Enable ISR for on-demand generation of lesson pages
-export const revalidate = 3600; // Revalidate every hour
+export const revalidate = ((process.env.GC_CONTENT_MODE || '').toLowerCase() === 'db') ? 0 : 3600;
 export const dynamicParams = true; // Allow dynamic params not in generateStaticParams
 
 export default async function LessonPage({ params }: LessonPageProps) {

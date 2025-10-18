@@ -69,17 +69,31 @@ async function fetchLessonsFromDatabase(moduleSlug: string) {
 // Add fallback JSON-backed lesson loading function
 async function fetchLessonsFallbackFromJson(moduleSlug: string) {
   try {
-    const apiBase = (() => { try { return getApiBaseStrict(); } catch { return 'http://127.0.0.1:8080/api'; } })();
-    const resp = await fetch(`${apiBase}/lessons?module=${moduleSlug}`);
-    if (!resp.ok) {
-      console.error(`Fallback lessons fetch failed for module ${moduleSlug}`);
-      return [];
+    const bases: string[] = [];
+    try {
+      bases.push(getApiBaseStrict());
+    } catch {
+      // ignore; will use local fallbacks below
     }
-    const lessons = await resp.json();
-    console.log(`Loaded ${Array.isArray(lessons) ? lessons.length : 0} lessons via JSON fallback for ${moduleSlug}`);
-    return lessons;
+    bases.push('http://127.0.0.1:8081/api', 'http://127.0.0.1:8080/api');
+
+    for (const base of bases.map(b => b.replace(/\/+$/, ''))) {
+      try {
+        const resp = await fetch(`${base}/lessons?module=${moduleSlug}`);
+        if (resp.ok) {
+          const lessons = await resp.json();
+          console.log(`Loaded ${Array.isArray(lessons) ? lessons.length : 0} lessons via JSON fallback from ${base} for ${moduleSlug}`);
+          return lessons;
+        } else {
+          console.error(`Fallback lessons fetch failed from ${base} for module ${moduleSlug}: ${resp.status} ${resp.statusText}`);
+        }
+      } catch (err) {
+        console.error(`Error fetching lessons via JSON fallback from ${base}:`, err);
+      }
+    }
+    return [];
   } catch (error) {
-    console.error('Error fetching lessons via JSON fallback:', error);
+    console.error('Error assembling JSON fallback bases:', error);
     return [];
   }
 }

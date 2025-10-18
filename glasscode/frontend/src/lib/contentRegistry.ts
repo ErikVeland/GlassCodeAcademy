@@ -463,12 +463,26 @@ class ContentRegistryLoader {
    */
   async getModuleLessons(moduleSlug: string): Promise<Lesson[]> {
     try {
-      const origin = (() => { try { return getPublicOriginStrict(); } catch { return 'http://127.0.0.1:3000'; } })();
-      const res = await fetch(`${origin}/api/content/lessons/${moduleSlug}`, { cache: 'no-store' });
-      if (!res.ok) return [];
-      const data: unknown = await res.json();
-      const lessons = Array.isArray(data) ? (data as Lesson[]) : [];
-      return lessons.map((l, i) => (typeof l.order === 'number' ? l : { ...l, order: i + 1 }));
+      const origins: string[] = [];
+      try { origins.push(getPublicOriginStrict()); } catch {}
+      const devPort = process.env.PORT || '3005';
+      origins.push(`http://127.0.0.1:${devPort}`, 'http://127.0.0.1:3000');
+
+      for (const origin of origins.map(o => o.replace(/\/+$/, ''))) {
+        try {
+          const res = await fetch(`${origin}/api/content/lessons/${moduleSlug}`, { cache: 'no-store' });
+          if (res.ok) {
+            const data: unknown = await res.json();
+            const lessons = Array.isArray(data) ? (data as Lesson[]) : [];
+            return lessons.map((l, i) => (typeof l.order === 'number' ? l : { ...l, order: i + 1 }));
+          } else {
+            console.warn(`getModuleLessons(${moduleSlug}): fetch from ${origin} failed: ${res.status} ${res.statusText}`);
+          }
+        } catch (err) {
+          console.error(`getModuleLessons(${moduleSlug}): error fetching from ${origin}:`, err);
+        }
+      }
+      return [];
     } catch (error: unknown) {
       console.error(`Failed to load lessons for ${moduleSlug}:`, error);
       return [];
@@ -480,15 +494,29 @@ class ContentRegistryLoader {
    */
   async getModuleQuiz(moduleSlug: string): Promise<Quiz | null> {
     try {
-      const origin = (() => { try { return getPublicOriginStrict(); } catch { return 'http://127.0.0.1:3000'; } })();
       const shortSlug = await this.getShortSlugFromModuleSlug(moduleSlug) || moduleSlug;
-      const res = await fetch(`${origin}/api/content/quizzes/${shortSlug}`, { cache: 'no-store' });
-      if (!res.ok) return null;
-      const data: unknown = await res.json();
-      if (!(data && typeof data === 'object')) return null;
-      const quiz = data as Quiz;
-      const normalizedQuestions = Array.isArray(quiz.questions) ? quiz.questions.map(q => normalizeQuestion(q)) : [];
-      return { ...quiz, questions: normalizedQuestions };
+      const origins: string[] = [];
+      try { origins.push(getPublicOriginStrict()); } catch {}
+      const devPort = process.env.PORT || '3005';
+      origins.push(`http://127.0.0.1:${devPort}`, 'http://127.0.0.1:3000');
+
+      for (const origin of origins.map(o => o.replace(/\/+$/, ''))) {
+        try {
+          const res = await fetch(`${origin}/api/content/quizzes/${shortSlug}`, { cache: 'no-store' });
+          if (res.ok) {
+            const data: unknown = await res.json();
+            if (!(data && typeof data === 'object')) return null;
+            const quiz = data as Quiz;
+            const normalizedQuestions = Array.isArray(quiz.questions) ? quiz.questions.map(q => normalizeQuestion(q)) : [];
+            return { ...quiz, questions: normalizedQuestions };
+          } else {
+            console.warn(`getModuleQuiz(${moduleSlug}): fetch from ${origin} failed: ${res.status} ${res.statusText}`);
+          }
+        } catch (err) {
+          console.error(`getModuleQuiz(${moduleSlug}): error fetching from ${origin}:`, err);
+        }
+      }
+      return null;
     } catch (error: unknown) {
       console.error(`Failed to load quiz for ${moduleSlug}:`, error);
       return null;

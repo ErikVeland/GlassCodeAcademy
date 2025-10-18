@@ -1,6 +1,8 @@
 import { NextResponse } from 'next/server';
 import fs from 'fs';
 import path from 'path';
+import { getApiBaseStrict } from '@/lib/urlUtils';
+import { getShortSlugFromModuleSlug } from '@/lib/contentRegistry';
 
 function buildMinimalRegistry() {
   return {
@@ -63,8 +65,121 @@ function buildMinimalRegistry() {
   };
 }
 
+interface DbModule {
+  slug?: string;
+  moduleSlug?: string;
+  title?: string;
+  name?: string;
+  description?: string;
+  tier?: string;
+  track?: string;
+  order?: number;
+  icon?: string;
+  difficulty?: string;
+  estimatedHours?: number;
+  category?: string;
+  technologies?: string[];
+  prerequisites?: string[];
+  requiredLessons?: number;
+  requiredQuestions?: number;
+  thresholds?: { requiredLessons?: number; requiredQuestions?: number };
+  legacySlugs?: string[];
+  status?: string;
+  passingScore?: number;
+}
+
+async function synthesizeRegistryFromDatabase() {
+  try {
+    const apiBase = (() => { try { return getApiBaseStrict(); } catch { return 'http://127.0.0.1:8080/api'; } })();
+    const res = await fetch(`${apiBase}/modules`, { cache: 'no-store' });
+    if (!res.ok) throw new Error(`Failed to fetch modules from backend: ${res.status}`);
+    const raw: unknown = await res.json();
+    const dbModules: DbModule[] = Array.isArray(raw) ? (raw as DbModule[]) : [];
+
+    const modules = await Promise.all(dbModules.map(async (m) => {
+      const moduleSlug: string = (m.slug || m.moduleSlug || '').toString();
+      const title: string = (m.title || m.name || moduleSlug).toString();
+      const description: string = (m.description || '').toString();
+      const tier: string = (m.tier || 'foundational').toString();
+      const track: string = (m.track || 'Frontend').toString();
+      const order: number = typeof m.order === 'number' ? m.order : 1;
+      const icon: string = (m.icon || '📘').toString();
+      const difficulty: string = (m.difficulty || 'Beginner').toString();
+      const estimatedHours: number = typeof m.estimatedHours === 'number' ? m.estimatedHours : 5;
+      const category: string = (m.category || '').toString();
+      const technologies: string[] = Array.isArray(m.technologies) ? m.technologies : [];
+      const prerequisites: string[] = Array.isArray(m.prerequisites) ? m.prerequisites : [];
+      const thresholds = {
+        requiredLessons: typeof m.requiredLessons === 'number' ? m.requiredLessons : (m.thresholds?.requiredLessons ?? 0),
+        requiredQuestions: typeof m.requiredQuestions === 'number' ? m.requiredQuestions : (m.thresholds?.requiredQuestions ?? 0),
+      };
+      const legacySlugs: string[] = Array.isArray(m.legacySlugs) ? m.legacySlugs : [];
+      const status: string = (m.status || 'active').toString();
+
+      const shortSlug = (await getShortSlugFromModuleSlug(moduleSlug)) || (moduleSlug.includes('-') ? moduleSlug.split('-')[0] : moduleSlug);
+
+      const routes = {
+        overview: `/${shortSlug}`,
+        lessons: `/${shortSlug}/lessons`,
+        quiz: `/${shortSlug}/quiz`,
+      };
+
+      const metadata = {
+        thresholds: {
+          minLessons: thresholds.requiredLessons || undefined,
+          minQuizQuestions: thresholds.requiredQuestions || undefined,
+          passingScore: typeof m.passingScore === 'number' ? m.passingScore : undefined,
+        },
+      };
+
+      return {
+        slug: moduleSlug,
+        title,
+        description,
+        tier,
+        track,
+        order,
+        icon,
+        difficulty,
+        estimatedHours,
+        category,
+        technologies,
+        prerequisites,
+        thresholds,
+        legacySlugs,
+        status,
+        routes,
+        metadata,
+      };
+    }));
+
+    return {
+      version: 'db-synthesized',
+      lastUpdated: new Date().toISOString(),
+      tiers: buildMinimalRegistry().tiers,
+      modules,
+      globalSettings: buildMinimalRegistry().globalSettings,
+    };
+  } catch (err) {
+    console.error('Failed to synthesize registry from database:', err);
+    return buildMinimalRegistry();
+  }
+}
+
 export async function GET() {
   try {
+    const dbMode = (process.env.GC_CONTENT_MODE || '').toLowerCase() === 'db';
+
+    if (dbMode) {
+      const registry = await synthesizeRegistryFromDatabase();
+      return NextResponse.json(registry, {
+        status: 200,
+        headers: {
+          'Cache-Control': 'no-store',
+        },
+      });
+    }
+
     const registryPath = path.join(process.cwd(), '..', '..', 'content', 'registry.json');
     
     if (!fs.existsSync(registryPath)) {
@@ -96,3 +211,6 @@ export async function GET() {
     });
   }
 }
+
+export const runtime = 'nodejs';
+export const dynamic = 'force-dynamic';

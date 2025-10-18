@@ -94,10 +94,30 @@ fi
 
 FRONTEND_ONLY=0
 FRONTEND_PORT="${PORT:-3000}"
+FAST_MODE=0
+SKIP_BACKEND_HEALTH=0
+SKIP_LINT=0
+SKIP_TYPECHECK=0
 while [[ $# -gt 0 ]]; do
     case "$1" in
         --frontend-only)
             FRONTEND_ONLY=1
+            shift
+            ;;
+        --fast)
+            FAST_MODE=1
+            shift
+            ;;
+        --skip-backend-health)
+            SKIP_BACKEND_HEALTH=1
+            shift
+            ;;
+        --skip-lint)
+            SKIP_LINT=1
+            shift
+            ;;
+        --skip-typecheck)
+            SKIP_TYPECHECK=1
             shift
             ;;
         --port)
@@ -115,8 +135,8 @@ while [[ $# -gt 0 ]]; do
             ;;
     esac
 done
-export FRONTEND_ONLY FRONTEND_PORT
-log "⚙️  Mode: FRONTEND_ONLY=$FRONTEND_ONLY, FRONTEND_PORT=$FRONTEND_PORT"
+export FRONTEND_ONLY FRONTEND_PORT FAST_MODE SKIP_BACKEND_HEALTH SKIP_LINT SKIP_TYPECHECK
+log "⚙️  Mode: FRONTEND_ONLY=$FRONTEND_ONLY, FAST_MODE=$FAST_MODE, FRONTEND_PORT=$FRONTEND_PORT"
 
 # Perform environment preflight checks and install missing base tools
 preflight_checks() {
@@ -256,10 +276,16 @@ ensure_standalone_directory() {
 
 wait_for_service() {
     local service_name=$1
-    local max_attempts=60  # Increased attempts but shorter intervals
+    local max_attempts=60
     local attempt=1
-    local sleep_time=2     # Reduced from 5 to 2 seconds for faster detection
+    local sleep_time=2
     local service_failed=false
+
+    # Fast mode: reduce attempts and interval to shorten blocking time
+    if [ "${FAST_MODE:-0}" -eq 1 ]; then
+        max_attempts=30
+        sleep_time=2
+    fi
     
     log "⏳ Waiting for $service_name to start..."
     while [ $attempt -le $max_attempts ]; do
@@ -524,67 +550,71 @@ EOF
     systemctl start ${APP_NAME}-dotnet
 
     log "⏳ Waiting for real backend health before frontend build..."
-    MAX_ATTEMPTS=30
-    ATTEMPT=1
-    SLEEP_INTERVAL=3
-    BACKEND_HEALTHY=false
-    LAST_STATUS=""
+MAX_ATTEMPTS=$([ "${FAST_MODE:-0}" -eq 1 ] && echo 15 || echo 30)
+ATTEMPT=1
+SLEEP_INTERVAL=$([ "${FAST_MODE:-0}" -eq 1 ] && echo 2 || echo 3)
+BACKEND_HEALTHY=false
+LAST_STATUS=""
     
-    while [[ $ATTEMPT -le $MAX_ATTEMPTS ]]; do
-        # Check if service is still running first
-        if ! systemctl is-active --quiet "${APP_NAME}-dotnet"; then
+while [[ $ATTEMPT -le $MAX_ATTEMPTS ]]; do
+    # Check if service is still running first
+    if ! systemctl is-active --quiet "${APP_NAME}-dotnet"; then
+        printf "\n"  # Clear progress line
+        log "❌ Backend service stopped unexpectedly during health check"
+        break
+    fi
+    
+    # Try health check with timeout
+    if timeout 10 curl -s -f http://localhost:8080/api/health >/dev/null 2>&1; then
+        HEALTH_RESPONSE=$(timeout 10 curl -s http://localhost:8080/api/health 2>/dev/null || echo '{"status":"unknown"}')
+        BACKEND_STATUS=$(echo "$HEALTH_RESPONSE" | grep -o '"status":"[^"]*"' | cut -d'"' -f4 || echo "unknown")
+        if [[ "$BACKEND_STATUS" == "healthy" ]]; then
             printf "\n"  # Clear progress line
-            log "❌ Backend service stopped unexpectedly during health check"
+            log "✅ Real backend healthy. Proceeding to build frontend."
+            BACKEND_HEALTHY=true
             break
-        fi
-        
-        # Try health check with timeout
-        if timeout 10 curl -s -f http://localhost:8080/api/health >/dev/null 2>&1; then
-            HEALTH_RESPONSE=$(timeout 10 curl -s http://localhost:8080/api/health 2>/dev/null || echo '{"status":"unknown"}')
-            BACKEND_STATUS=$(echo "$HEALTH_RESPONSE" | grep -o '"status":"[^"]*"' | cut -d'"' -f4 || echo "unknown")
-            if [[ "$BACKEND_STATUS" == "healthy" ]]; then
+        else
+            # Only log status change if it's different from last time
+            if [[ "$BACKEND_STATUS" != "$LAST_STATUS" ]]; then
                 printf "\n"  # Clear progress line
-                log "✅ Real backend healthy. Proceeding to build frontend."
-                BACKEND_HEALTHY=true
+                # Parse dataStats to show what's missing
+                MISSING_DATA=$(echo "$HEALTH_RESPONSE" | grep -o '"[^"]*":0' | cut -d'"' -f2 | tr '\n' ',' | sed 's/,$//')
+                if [[ -n "$MISSING_DATA" ]]; then
+                    log "⚠️  Real backend responding but status is $BACKEND_STATUS (missing data: $MISSING_DATA)"
+                else
+                    log "⚠️  Real backend responding but status is $BACKEND_STATUS (reason unknown)"
+                fi
+                LAST_STATUS="$BACKEND_STATUS"
+            fi
+            # Continue trying for a few more attempts in case it's still starting up
+            if [[ $ATTEMPT -gt 20 ]]; then
+                printf "\n"  # Clear progress line
+                log "⚠️  Backend status not healthy after extended wait, proceeding anyway"
                 break
-            else
-                # Only log status change if it's different from last time
-                if [[ "$BACKEND_STATUS" != "$LAST_STATUS" ]]; then
-                    printf "\n"  # Clear progress line
-                    # Parse dataStats to show what's missing
-                    MISSING_DATA=$(echo "$HEALTH_RESPONSE" | grep -o '"[^"]*":0' | cut -d'"' -f2 | tr '\n' ',' | sed 's/,$//')
-                    if [[ -n "$MISSING_DATA" ]]; then
-                        log "⚠️  Real backend responding but status is $BACKEND_STATUS (missing data: $MISSING_DATA)"
-                    else
-                        log "⚠️  Real backend responding but status is $BACKEND_STATUS (reason unknown)"
-                    fi
-                    LAST_STATUS="$BACKEND_STATUS"
-                fi
-                # Continue trying for a few more attempts in case it's still starting up
-                if [[ $ATTEMPT -gt 20 ]]; then
-                    printf "\n"  # Clear progress line
-                    log "⚠️  Backend status not healthy after extended wait, proceeding anyway"
-                    break
-                fi
             fi
         fi
-        draw_progress "$ATTEMPT" "$MAX_ATTEMPTS" "  ⏳ Backend health: "
-        ATTEMPT=$((ATTEMPT + 1))
-        sleep $SLEEP_INTERVAL
-    done
+    fi
+    draw_progress "$ATTEMPT" "$MAX_ATTEMPTS" "  ⏳ Backend health: "
+    ATTEMPT=$((ATTEMPT + 1))
+    sleep $SLEEP_INTERVAL
+done
 
-    if [[ "$BACKEND_HEALTHY" != "true" && $ATTEMPT -gt $MAX_ATTEMPTS ]]; then
-        log "❌ Real backend failed to become healthy before frontend build."
-        log "🧪 Diagnostic: systemd status"
-        systemctl status ${APP_NAME}-dotnet --no-pager || true
-        log "🪵 Recent backend logs (journalctl)"
-        journalctl -u ${APP_NAME}-dotnet -n 200 --no-pager || true
-        log "🔌 Listening ports snapshot"
-        ss -tulpn | grep :8080 || true
-        log "🌐 Health endpoint verbose output"
-        timeout 15 curl -v http://localhost:8080/api/health || true
+if [[ "$BACKEND_HEALTHY" != "true" && $ATTEMPT -gt $MAX_ATTEMPTS ]]; then
+    log "❌ Real backend failed to become healthy before frontend build."
+    log "🧪 Diagnostic: systemd status"
+    systemctl status ${APP_NAME}-dotnet --no-pager || true
+    log "🪵 Recent backend logs (journalctl)"
+    journalctl -u ${APP_NAME}-dotnet -n 200 --no-pager || true
+    log "🔌 Listening ports snapshot"
+    ss -tulpn | grep :8080 || true
+    log "🌐 Health endpoint verbose output"
+    timeout 15 curl -v http://localhost:8080/api/health || true
+    if [ "${FAST_MODE:-0}" -eq 1 ] || [ "${SKIP_BACKEND_HEALTH:-0}" -eq 1 ]; then
+        log "⚠️  Continuing despite backend health precondition due to fast/skip mode"
+    else
         exit 1
     fi
+fi
 fi
 
 ### 10. Build Frontend (Next.js)
@@ -599,17 +629,24 @@ log "🔍 Performing smart frontend validation..."
 
 # Quick validation: check if existing build is valid
 FRONTEND_BUILD_REQUIRED=false
+# In fast mode, default to skipping lint/typecheck unless explicitly disabled
+SKIP_LINT=${SKIP_LINT:-$FAST_MODE}
+SKIP_TYPECHECK=${SKIP_TYPECHECK:-$FAST_MODE}
 if [ ! -f ".next/BUILD_ID" ] || [ ! -f ".next/standalone/server.js" ] || [ ! -d ".next/static" ]; then
     log "⚠️  Missing build artifacts, full frontend build required"
     FRONTEND_BUILD_REQUIRED=true
-elif ! sudo -u "$DEPLOY_USER" npx next lint --quiet >/dev/null 2>&1; then
+elif [ "${SKIP_LINT}" -ne 1 ] && ! sudo -u "$DEPLOY_USER" npx next lint --quiet >/dev/null 2>&1; then
     log "⚠️  Linting errors detected, full frontend build required"
     FRONTEND_BUILD_REQUIRED=true
-elif ! sudo -u "$DEPLOY_USER" npx tsc --noEmit --skipLibCheck >/dev/null 2>&1; then
+elif [ "${SKIP_TYPECHECK}" -ne 1 ] && ! sudo -u "$DEPLOY_USER" npx tsc --noEmit --skipLibCheck >/dev/null 2>&1; then
     log "⚠️  TypeScript errors detected, full frontend build required"
     FRONTEND_BUILD_REQUIRED=true
 else
-    log "✅ Quick frontend validation passed, existing build is valid"
+    if [ "${SKIP_LINT}" -eq 1 ] || [ "${SKIP_TYPECHECK}" -eq 1 ]; then
+        log "✅ Quick validation passed (lint/typecheck skipped in fast/skip mode)"
+    else
+        log "✅ Quick frontend validation passed, existing build is valid"
+    fi
 fi
 
 # Only clear caches and rebuild if validation failed
@@ -869,16 +906,20 @@ if [ "$FRONTEND_ONLY" -eq 0 ]; then
     
     # Start backend health check in background
     (
-        if wait_for_service "${APP_NAME}-dotnet"; then
-            log "✅ ${APP_NAME}-dotnet service is healthy"
+    if wait_for_service "${APP_NAME}-dotnet"; then
+        log "✅ ${APP_NAME}-dotnet service is healthy"
+    else
+        log "❌ ${APP_NAME}-dotnet did not become active within timeout"
+        systemctl status "${APP_NAME}-dotnet" --no-pager || true
+        journalctl -u "${APP_NAME}-dotnet" -n 50 --no-pager || true
+        if [ "${FAST_MODE:-0}" -eq 1 ] || [ "${SKIP_BACKEND_HEALTH:-0}" -eq 1 ]; then
+            log "⚠️  Continuing despite backend startup failure due to fast/skip mode"
         else
-            log "❌ ${APP_NAME}-dotnet did not become active within timeout"
-            systemctl status "${APP_NAME}-dotnet" --no-pager || true
-            journalctl -u "${APP_NAME}-dotnet" -n 50 --no-pager || true
             exit 1
         fi
-    ) &
-    BACKEND_HEALTH_PID=$!
+    fi
+) &
+BACKEND_HEALTH_PID=$!
 fi
 
 log "▶️  Starting ${APP_NAME}-frontend..."
@@ -897,16 +938,28 @@ fi
         log "❌ ${APP_NAME}-frontend did not become active within timeout"
         systemctl status "${APP_NAME}-frontend" --no-pager || true
         journalctl -u "${APP_NAME}-frontend" -n 50 --no-pager || true
-        exit 1
+        if [ "${FAST_MODE:-0}" -eq 1 ]; then
+            log "⚠️  Continuing despite frontend startup failure due to fast mode"
+        else
+            exit 1
+        fi
     fi
 ) &
 FRONTEND_HEALTH_PID=$!
 
 # Wait for health checks to complete
 if [ "$FRONTEND_ONLY" -eq 0 ]; then
-    wait $BACKEND_HEALTH_PID
+    if [ "${FAST_MODE:-0}" -eq 1 ] || [ "${SKIP_BACKEND_HEALTH:-0}" -eq 1 ]; then
+        wait $BACKEND_HEALTH_PID || true
+    else
+        wait $BACKEND_HEALTH_PID
+    fi
 fi
-wait $FRONTEND_HEALTH_PID
+if [ "${FAST_MODE:-0}" -eq 1 ]; then
+    wait $FRONTEND_HEALTH_PID || true
+else
+    wait $FRONTEND_HEALTH_PID
+fi
 
 ### 12. Configure Nginx
 log "🌐 Configuring Nginx..."
@@ -1005,20 +1058,29 @@ log "✅ UFW configured"
 
 ### 15. Health check
 log "🩺 Performing health checks..."
-sleep 5
+if [ "${FAST_MODE:-0}" -eq 1 ]; then
+    sleep 2
+else
+    sleep 5
+fi
 if [ "$FRONTEND_ONLY" -eq 0 ]; then
-  if timeout 15 curl -s -X POST http://localhost:8080/graphql \
-    -H "Content-Type: application/json" \
-    -d '{"query":"{ __typename }"}' | grep -q '__typename'; then
-      log "✅ Backend health check: PASSED"
+  if [ "${SKIP_BACKEND_HEALTH:-0}" -eq 1 ] || [ "${FAST_MODE:-0}" -eq 1 ]; then
+      log "ℹ️  Skipping backend health check (fast/skip mode)"
   else
-      log "⚠️  WARNING: Backend health check failed"
+      if timeout 15 curl -s -X POST http://localhost:8080/graphql \
+        -H "Content-Type: application/json" \
+        -d '{"query":"{ __typename }"}' | grep -q '__typename'; then
+          log "✅ Backend health check: PASSED"
+      else
+          log "⚠️  WARNING: Backend health check failed"
+      fi
   fi
 else
   log "ℹ️  Skipping backend health check (frontend-only mode)"
 fi
 
-if timeout 10 curl -f http://localhost:$FRONTEND_PORT >/dev/null 2>&1; then
+FRONTEND_TIMEOUT=$([ "${FAST_MODE:-0}" -eq 1 ] && echo 5 || echo 10)
+if timeout $FRONTEND_TIMEOUT curl -f http://localhost:$FRONTEND_PORT >/dev/null 2>&1; then
     log "✅ Frontend health check: PASSED"
 else
     log "⚠️  WARNING: Frontend health check failed"

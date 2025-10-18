@@ -6,7 +6,13 @@ import type { Module, Lesson, Quiz } from '@/lib/contentRegistry';
 
 
 
+const DB_MODE = (process.env.GC_CONTENT_MODE || '').toLowerCase() === 'db';
+export const dynamic = DB_MODE ? 'force-dynamic' : 'auto';
+
 export async function generateStaticParams(): Promise<Array<{ shortSlug: string }>> {
+  if ((process.env.GC_CONTENT_MODE || '').toLowerCase() === 'db') {
+    return [];
+  }
   const modules = await contentRegistry.getModules();
   return modules.map((m: Module) => ({
     shortSlug: m.slug,
