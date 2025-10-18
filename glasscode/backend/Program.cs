@@ -6,8 +6,23 @@ using Microsoft.EntityFrameworkCore;
 using System.Text.Json;
 using System.IO;
 using System.Collections.Generic;
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
+
+// Configure Serilog from appsettings and DI
+Log.Logger = new LoggerConfiguration()
+    .ReadFrom.Configuration(builder.Configuration)
+    .Enrich.FromLogContext()
+    .CreateLogger();
+
+builder.Host.UseSerilog((ctx, services, cfg) =>
+    cfg.ReadFrom.Configuration(ctx.Configuration)
+       .ReadFrom.Services(services)
+       .Enrich.FromLogContext());
+
+// Ensure logs directory exists for file sink
+Directory.CreateDirectory("logs");
 
 // Use default Kestrel configuration; prefer 8080 unless overridden by ASPNETCORE_URLS
 // Force binding to localhost to avoid macOS wildcard binding aborts
@@ -104,30 +119,33 @@ builder.Services.AddGraphQLServer()
 
 var app = builder.Build();
 
+// Global exception handler
+app.UseMiddleware<backend.Middleware.ErrorHandlingMiddleware>();
+
 // Initialize DataService to load all data during startup
-Console.WriteLine("🚀 Initializing DataService...");
+Log.Information("Initializing DataService...");
 var dataService = backend.Services.DataService.Instance;
-Console.WriteLine($"✅ DataService initialized with {dataService.DotNetLessons.Count()} DotNet lessons");
+Log.Information("DataService initialized with {DotNetLessons} DotNet lessons", dataService.DotNetLessons.Count());
 
 // Seed modules from registry.json
-Console.WriteLine("🌱 Seeding modules from registry...");
+Log.Information("Seeding modules from registry...");
 using (var scope = app.Services.CreateScope())
 {
     var moduleSeedingService = scope.ServiceProvider.GetRequiredService<backend.Services.ModuleSeedingService>();
     await moduleSeedingService.SeedModulesFromRegistryAsync();
     
     // Seed lessons from DataService to database
-    Console.WriteLine("📚 Seeding lessons to database...");
+    Log.Information("Seeding lessons to database...");
     var lessonSeedingService = scope.ServiceProvider.GetRequiredService<backend.Services.LessonSeedingService>();
     await lessonSeedingService.SeedLessonsToDatabase();
     
     // Map lessons to modules
-    Console.WriteLine("🔗 Mapping lessons to modules...");
+    Log.Information("Mapping lessons to modules...");
     var lessonMappingService = scope.ServiceProvider.GetRequiredService<backend.Services.LessonMappingService>();
     await lessonMappingService.MapLessonsToModulesAsync();
     
     // Seed quiz questions from JSON files
-    Console.WriteLine("❓ Seeding quiz questions to database...");
+    Log.Information("Seeding quiz questions to database...");
     var quizSeedingService = scope.ServiceProvider.GetRequiredService<backend.Services.QuizSeedingService>();
     await quizSeedingService.SeedQuizzesToDatabase();
 }
@@ -150,6 +168,14 @@ if (!app.Environment.IsDevelopment())
 
 // Ensure endpoint routing is set up before applying CORS
 app.UseRouting();
+
+// Add Serilog request logging
+app.UseSerilogRequestLogging(opts =>
+{
+    opts.MessageTemplate = "Handled {RequestMethod} {RequestPath} responded {StatusCode} in {Elapsed:0.0000} ms";
+    opts.IncludeQueryInRequestPath = true;
+});
+
 app.UseCors("AllowFrontend");
 app.UseAuthorization();
 // Map REST controllers for API endpoints

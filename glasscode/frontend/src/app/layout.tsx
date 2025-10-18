@@ -14,6 +14,7 @@ import ProfileProvider from '../components/ProfileProvider';
 import AdminQueryHandler from '../components/AdminQueryHandler';
 import { Suspense } from 'react';
 import { EXTERNAL_LINKS } from '@/lib/appConfig';
+import Script from 'next/script';
 // Removed next/font usage to revert to system fonts
 
 // Apollo error/dev messages for development
@@ -38,8 +39,29 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <head></head>
+    <html lang="en" suppressHydrationWarning>
+      <head>
+        <Script id="theme-preflight" strategy="beforeInteractive">
+          {`
+            try {
+              var stored = localStorage.getItem('theme');
+              var legacy = localStorage.getItem('darkMode');
+              var theme = stored === 'light' || stored === 'dark' || stored === 'system' ? stored : (legacy === 'true' ? 'dark' : legacy === 'false' ? 'light' : 'system');
+              var mediaDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+              var isDark = theme === 'dark' || (theme === 'system' && mediaDark);
+              var html = document.documentElement;
+              if (isDark) {
+                html.classList.add('dark');
+                html.style.colorScheme = 'dark';
+              } else {
+                html.classList.remove('dark');
+                html.style.colorScheme = 'light';
+              }
+              html.setAttribute('data-theme', theme === 'system' ? (isDark ? 'dark' : 'light') : theme);
+            } catch (e) {}
+          `}
+        </Script>
+      </head>
       <body className={"antialiased min-h-screen bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100 relative"}>
         <ApolloWrapper>
           <AuthProvider>
