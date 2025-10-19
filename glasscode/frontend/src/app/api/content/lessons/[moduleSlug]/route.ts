@@ -63,16 +63,25 @@ async function fetchLessonsFromDatabase(moduleSlug: string) {
 }
 
 // File-based lesson loading fallback
-async function fetchLessonsFromFiles(moduleSlug: string) {
+async function fetchLessonsFromFiles(req: NextRequest, moduleSlug: string) {
   try {
-    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000';
-    const res = await fetch(`${baseUrl}/content/lessons/${moduleSlug}.json`, { cache: 'no-store' });
+    const origin = new URL(req.url).origin;
+    const res = await fetch(`${origin}/content/lessons/${moduleSlug}.json`, { cache: 'no-store' });
     if (!res.ok) {
       console.warn(`Failed to fetch lessons file for module: ${moduleSlug}`);
       return [];
     }
-    const data = await res.json();
-    return data.lessons || [];
+    const data: unknown = await res.json();
+    let lessons: unknown[] = [];
+    if (Array.isArray(data)) {
+      lessons = data as unknown[];
+    } else if (data && typeof data === 'object') {
+      const obj = data as { lessons?: unknown[] };
+      if (Array.isArray(obj.lessons)) {
+        lessons = obj.lessons;
+      }
+    }
+    return lessons;
   } catch (error) {
     console.error('Error loading lessons from files:', error);
     return [];
@@ -101,10 +110,10 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ modu
 
   // Fallback to file-based lessons if DB loading produced no results
   if (!lessons || lessons.length === 0) {
-    lessons = await fetchLessonsFromFiles(actualSlug);
+    lessons = await fetchLessonsFromFiles(req, actualSlug);
   }
 
-  return NextResponse.json({ lessons });
+  return NextResponse.json(lessons);
 }
 
 export const runtime = 'edge';

@@ -462,31 +462,55 @@ class ContentRegistryLoader {
    * Get lessons for a specific module
    */
   async getModuleLessons(moduleSlug: string): Promise<Lesson[]> {
-    try {
-      const origins: string[] = [];
-      try { origins.push(getPublicOriginStrict()); } catch {}
-      const devPort = process.env.PORT || '3005';
-      origins.push(`http://127.0.0.1:${devPort}`, 'http://127.0.0.1:3000');
-
-      for (const origin of origins.map(o => o.replace(/\/+$/, ''))) {
-        try {
-          const res = await fetch(`${origin}/api/content/lessons/${moduleSlug}`, { cache: 'no-store' });
-          if (res.ok) {
-            const data: unknown = await res.json();
-            const lessons = Array.isArray(data) ? (data as Lesson[]) : [];
-            return lessons.map((l, i) => (typeof l.order === 'number' ? l : { ...l, order: i + 1 }));
-          } else {
-            console.warn(`getModuleLessons(${moduleSlug}): fetch from ${origin} failed: ${res.status} ${res.statusText}`);
-          }
-        } catch (err) {
-          console.error(`getModuleLessons(${moduleSlug}): error fetching from ${origin}:`, err);
-        }
-      }
-      return [];
-    } catch (error: unknown) {
-      console.error(`Failed to load lessons for ${moduleSlug}:`, error);
-      return [];
+    // Prefer relative path in the browser to avoid origin/env mismatches
+    if (typeof window !== 'undefined') {
+      const res = await fetch(`/api/content/lessons/${moduleSlug}`, { cache: 'no-store' });
+      if (!res.ok) return [];
+      const data: unknown = await res.json();
+      const lessonsArr: Lesson[] = Array.isArray(data)
+        ? (data as Lesson[])
+        : (Array.isArray((data as { lessons?: Lesson[] })?.lessons) ? ((data as { lessons?: Lesson[] }).lessons as Lesson[]) : []);
+      return lessonsArr.map((l, i) => (typeof l.order === 'number' ? l : { ...l, order: i + 1 }));
     }
+    // Server-side: first try hitting our API route via public origin; then file fallbacks
+    const origin = (() => { try { return getPublicOriginStrict(); } catch { return ''; } })();
+    if (origin) {
+      try {
+        const res = await fetch(`${origin.replace(/\/+$/, '')}/api/content/lessons/${moduleSlug}`, { cache: 'no-store' });
+        if (res.ok) {
+          const data: unknown = await res.json();
+          const lessonsArr: Lesson[] = Array.isArray(data)
+            ? (data as Lesson[])
+            : (Array.isArray((data as { lessons?: Lesson[] })?.lessons) ? ((data as { lessons?: Lesson[] }).lessons as Lesson[]) : []);
+          return lessonsArr.map((l, i) => (typeof l.order === 'number' ? l : { ...l, order: i + 1 }));
+        }
+      } catch {}
+    }
+    // File fallbacks (server-side only)
+    try {
+      const fs = await import('fs');
+      const path = await import('path');
+      const possiblePaths = [
+        path.join(process.cwd(), 'public', 'content', 'lessons', `${moduleSlug}.json`),
+        path.join(process.cwd(), '..', '..', 'content', 'lessons', moduleSlug, 'lessons.json'),
+        path.join(process.cwd(), '..', '..', 'content', 'lessons', `${moduleSlug}.json`),
+        ...(process.env.NEXT_PUBLIC_BASE_URL?.includes('glasscode.academy') ?
+          [path.join('/srv/academy', 'content', 'lessons', `${moduleSlug}.json`)] : []),
+      ];
+      for (const lessonsPath of possiblePaths) {
+        try {
+          if (fs.existsSync(lessonsPath)) {
+            const raw = fs.readFileSync(lessonsPath, 'utf8');
+            const data: unknown = JSON.parse(raw);
+            const lessonsArr: Lesson[] = Array.isArray(data)
+              ? (data as Lesson[])
+              : (Array.isArray((data as { lessons?: Lesson[] })?.lessons) ? ((data as { lessons?: Lesson[] }).lessons as Lesson[]) : []);
+            return lessonsArr.map((l, i) => (typeof l.order === 'number' ? l : { ...l, order: i + 1 }));
+          }
+        } catch {}
+      }
+    } catch {}
+    return [];
   }
 
   /**
@@ -495,27 +519,60 @@ class ContentRegistryLoader {
   async getModuleQuiz(moduleSlug: string): Promise<Quiz | null> {
     try {
       const shortSlug = await this.getShortSlugFromModuleSlug(moduleSlug) || moduleSlug;
-      const origins: string[] = [];
-      try { origins.push(getPublicOriginStrict()); } catch {}
-      const devPort = process.env.PORT || '3005';
-      origins.push(`http://127.0.0.1:${devPort}`, 'http://127.0.0.1:3000');
 
-      for (const origin of origins.map(o => o.replace(/\/+$/, ''))) {
+      // Prefer relative fetch in browser to avoid relying on env origins
+      if (typeof window !== 'undefined') {
         try {
-          const res = await fetch(`${origin}/api/content/quizzes/${shortSlug}`, { cache: 'no-store' });
-          if (res.ok) {
-            const data: unknown = await res.json();
-            if (!(data && typeof data === 'object')) return null;
-            const quiz = data as Quiz;
-            const normalizedQuestions = Array.isArray(quiz.questions) ? quiz.questions.map(q => normalizeQuestion(q)) : [];
-            return { ...quiz, questions: normalizedQuestions };
-          } else {
-            console.warn(`getModuleQuiz(${moduleSlug}): fetch from ${origin} failed: ${res.status} ${res.statusText}`);
-          }
+          const res = await fetch(`/api/content/quizzes/${shortSlug}`, { cache: 'no-store' });
+          if (!res.ok) return null;
+          const data: unknown = await res.json();
+          if (!(data && typeof data === 'object')) return null;
+          const quiz = data as Quiz;
+          const normalizedQuestions = Array.isArray(quiz.questions) ? quiz.questions.map(q => normalizeQuestion(q)) : [];
+          return { ...quiz, questions: normalizedQuestions };
         } catch (err) {
-          console.error(`getModuleQuiz(${moduleSlug}): error fetching from ${origin}:`, err);
+          console.error(`getModuleQuiz(${moduleSlug}): browser fetch failed:`, err);
+          return null;
         }
       }
+
+      // Server-side: try public origin first
+      try {
+        const origin = getPublicOriginStrict().replace(/\/+$/, '');
+        const res = await fetch(`${origin}/api/content/quizzes/${shortSlug}`, { cache: 'no-store' });
+        if (res.ok) {
+          const data: unknown = await res.json();
+          if (!(data && typeof data === 'object')) return null;
+          const quiz = data as Quiz;
+          const normalizedQuestions = Array.isArray(quiz.questions) ? quiz.questions.map(q => normalizeQuestion(q)) : [];
+          return { ...quiz, questions: normalizedQuestions };
+        }
+      } catch {}
+
+      // File fallbacks (server-side only)
+      try {
+        const fs = await import('fs');
+        const path = await import('path');
+        const possiblePaths = [
+          path.join(process.cwd(), 'public', 'content', 'quizzes', `${shortSlug}.json`),
+          path.join(process.cwd(), '..', '..', 'content', 'quizzes', `${shortSlug}.json`),
+          ...(process.env.NEXT_PUBLIC_BASE_URL?.includes('glasscode.academy') ?
+            [path.join('/srv/academy', 'content', 'quizzes', `${shortSlug}.json`)] : []),
+        ];
+        for (const quizPath of possiblePaths) {
+          try {
+            if (fs.existsSync(quizPath)) {
+              const fileContent = fs.readFileSync(quizPath, 'utf8');
+              const quizData: unknown = JSON.parse(fileContent);
+              if (!(quizData && typeof quizData === 'object')) continue;
+              const quiz = quizData as Quiz;
+              const normalizedQuestions = Array.isArray(quiz.questions) ? quiz.questions.map(q => normalizeQuestion(q)) : [];
+              return { ...quiz, questions: normalizedQuestions };
+            }
+          } catch {}
+        }
+      } catch {}
+
       return null;
     } catch (error: unknown) {
       console.error(`Failed to load quiz for ${moduleSlug}:`, error);
