@@ -52,7 +52,7 @@ const AccessibilityToggle: React.FC = () => {
         onClick={() => setIsOpen(true)}
         aria-label="Accessibility settings"
         aria-expanded={isOpen}
-        className="accessibility-toggle"
+        className="accessibility-toggle focus:outline-none focus:ring-2 ring-focus ring-offset-2 ring-offset-bg"
         data-testid="accessibility-toggle"
       >
         <span className="accessibility-icon" aria-hidden="true">♿</span>
@@ -76,7 +76,7 @@ const AccessibilityToggle: React.FC = () => {
               <button
                 onClick={() => setIsOpen(false)}
                 aria-label="Close accessibility settings"
-                className="close-button"
+                className="close-button focus:outline-none focus:ring-2 ring-focus ring-offset-2 ring-offset-bg"
               >
                 ×
               </button>
@@ -193,8 +193,8 @@ const AccessibilityToggle: React.FC = () => {
           bottom: 20px;
           right: 20px;
           z-index: 1000;
-          background: #4f46e5;
-          color: white;
+          background: hsl(var(--primary));
+          color: hsl(var(--primary-fg));
           border: none;
           border-radius: 50%;
           width: 60px;
@@ -210,10 +210,9 @@ const AccessibilityToggle: React.FC = () => {
         
         .accessibility-toggle:hover,
         .accessibility-toggle:focus {
-          background: #4338ca;
+          background: hsl(var(--primary));
           transform: scale(1.1);
-          outline: 3px solid #005fcc;
-          outline-offset: 2px;
+          outline: none;
         }
         
         .accessibility-icon {
@@ -240,13 +239,15 @@ const AccessibilityToggle: React.FC = () => {
         }
         
         .accessibility-panel {
-          background: white;
+          background: hsl(var(--surface));
+          color: hsl(var(--fg));
           border-radius: 8px;
           max-width: 500px;
           width: 90%;
           max-height: 80vh;
           overflow-y: auto;
           box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+          border: 1px solid hsl(var(--border));
         }
         
         .accessibility-panel-header {
@@ -254,13 +255,13 @@ const AccessibilityToggle: React.FC = () => {
           justify-content: space-between;
           align-items: center;
           padding: 1rem;
-          border-bottom: 1px solid #e0e0e0;
-          background: #f8fafc;
+          border-bottom: 1px solid hsl(var(--border));
+          background: hsl(var(--surface-alt));
         }
         
         .accessibility-panel-header h2 {
           margin: 0;
-          color: #1e293b;
+          color: hsl(var(--fg));
           font-size: 1.25rem;
         }
         
@@ -270,7 +271,7 @@ const AccessibilityToggle: React.FC = () => {
           font-size: 1.5rem;
           cursor: pointer;
           padding: 0.25rem;
-          color: #64748b;
+          color: hsl(var(--muted));
           border-radius: 4px;
           width: 32px;
           height: 32px;
@@ -281,9 +282,8 @@ const AccessibilityToggle: React.FC = () => {
         
         .close-button:hover,
         .close-button:focus {
-          background: #f1f5f9;
-          outline: 2px solid #005fcc;
-          outline-offset: 2px;
+          background: hsl(var(--surface-alt));
+          outline: none;
         }
         
         .accessibility-panel-body {
@@ -299,7 +299,7 @@ const AccessibilityToggle: React.FC = () => {
           align-items: center;
           margin-bottom: 0.5rem;
           font-weight: 500;
-          color: #1e293b;
+          color: hsl(var(--fg));
         }
         
         .setting-label input[type="checkbox"] {
@@ -316,46 +316,47 @@ const AccessibilityToggle: React.FC = () => {
         .setting-help {
           margin: 0.25rem 0 0 0;
           font-size: 0.875rem;
-          color: #64748b;
+          color: hsl(var(--muted));
         }
         
         .setting-group select {
           width: 100%;
           padding: 0.5rem;
-          border: 1px solid #cbd5e1;
+          border: 1px solid hsl(var(--border));
           border-radius: 4px;
-          background: white;
+          background: hsl(var(--surface));
           font-size: 1rem;
-          color: #1e293b;
+          color: hsl(var(--fg));
         }
         
         .setting-group select:focus {
-          outline: 2px solid #005fcc;
+          outline: 2px solid hsl(var(--ring-focus));
           outline-offset: 2px;
-          border-color: #94a3b8;
+          border-color: hsl(var(--border));
         }
         
         .accessibility-panel-footer {
           padding: 1rem;
-          border-top: 1px solid #e0e0e0;
-          background: #f8fafc;
+          border-top: 1px solid hsl(var(--border));
+          background: hsl(var(--surface-alt));
           text-align: right;
         }
         
         .reset-button {
-          background: #f1f5f9;
-          border: 1px solid #cbd5e1;
+          background: hsl(var(--surface-alt));
+          border: 1px solid hsl(var(--border));
           padding: 0.5rem 1rem;
           border-radius: 4px;
           cursor: pointer;
           font-weight: 500;
-          color: #1e293b;
+          color: hsl(var(--fg));
         }
         
         .reset-button:hover,
         .reset-button:focus {
-          background: #e2e8f0;
-          outline: 2px solid #005fcc;
+          background: hsl(var(--surface-alt));
+          filter: brightness(0.95);
+          outline: 2px solid hsl(var(--ring-focus));
           outline-offset: 2px;
         }
         

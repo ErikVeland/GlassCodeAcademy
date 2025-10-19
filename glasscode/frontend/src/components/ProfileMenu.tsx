@@ -70,13 +70,13 @@ export default function ProfileMenu() {
     }
     if (profile.avatarPresetId && presetAvatars[profile.avatarPresetId]) {
       return (
-        <div className="rounded-full flex items-center justify-center bg-gray-200 dark:bg-gray-700 text-xl" style={{ width: sizePx, height: sizePx }}>
+        <div className="rounded-full flex items-center justify-center bg-surface-alt text-xl" style={{ width: sizePx, height: sizePx }}>
           <span aria-hidden>{presetAvatars[profile.avatarPresetId]}</span>
         </div>
       );
     }
     return (
-      <div className="rounded-full flex items-center justify-center bg-gray-200 dark:bg-gray-700 text-xl" style={{ width: sizePx, height: sizePx }}>
+      <div className="rounded-full flex items-center justify-center bg-surface-alt text-xl" style={{ width: sizePx, height: sizePx }}>
         <span aria-hidden>👤</span>
       </div>
     );
@@ -86,16 +86,16 @@ export default function ProfileMenu() {
     <div className="relative" ref={ref}>
       <button
         aria-label="Profile menu"
-        className="rounded-full p-1 focus:outline-none focus:ring-2 focus:ring-orange-500"
+        className="rounded-full p-1 focus:outline-none focus:ring-2 ring-focus ring-offset-2 ring-offset-bg"
         onClick={() => setOpen(o => !o)}
       >
         {renderAvatar()}
       </button>
 
       {open && (
-        <div className="absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-white dark:bg-gray-800 ring-1 ring-black ring-opacity-5 z-50">
+        <div className="absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-surface/95 border border-border z-50">
           <div className="py-1">
-            <div className="px-4 py-2 text-xs text-gray-500 dark:text-gray-400">
+            <div className="px-4 py-2 text-xs text-muted">
               {session?.user ? (
                 <span>Signed in as {session.user.name || session.user.email}</span>
               ) : guestName ? (
@@ -106,26 +106,26 @@ export default function ProfileMenu() {
             </div>
             {!session?.user && !guestName && (
               <>
-                <Link href="/login" className="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700" role="menuitem">
+                <Link href="/login" className="block px-4 py-2 text-sm text-fg hover:bg-surface-alt focus:outline-none focus:ring-2 ring-focus ring-offset-2 ring-offset-bg" role="menuitem">
                   Login / Register
                 </Link>
-                <Link href="/register" className="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700" role="menuitem">
+                <Link href="/register" className="block px-4 py-2 text-sm text-fg hover:bg-surface-alt focus:outline-none focus:ring-2 ring-focus ring-offset-2 ring-offset-bg" role="menuitem">
                   Register with OAuth
                 </Link>
-                <div className="border-t border-gray-200 dark:border-gray-700 my-1" />
+                <div className="border-t border-border my-1" />
               </>
             )}
-            <Link href="/profile" className="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700" role="menuitem">
+            <Link href="/profile" className="block px-4 py-2 text-sm text-fg hover:bg-surface-alt focus:outline-none focus:ring-2 ring-focus ring-offset-2 ring-offset-bg" role="menuitem">
               Profile Overview
             </Link>
-            <Link href="/profile/edit" className="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700" role="menuitem">
+            <Link href="/profile/edit" className="block px-4 py-2 text-sm text-fg hover:bg-surface-alt focus:outline-none focus:ring-2 ring-focus ring-offset-2 ring-offset-bg" role="menuitem">
               Edit Profile
             </Link>
             {(session?.user || guestName) && (
               <>
-                <div className="border-t border-gray-200 dark:border-gray-700 my-1" />
+                <div className="border-t border-border my-1" />
                 <button
-                  className="block w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
+                  className="block w-full text-left px-4 py-2 text-sm text-fg hover:bg-surface-alt focus:outline-none focus:ring-2 ring-focus ring-offset-2 ring-offset-bg"
                   role="menuitem"
                   onClick={async () => {
                     setOpen(false);

@@ -120,6 +120,15 @@ html.theme-transition, html.theme-transition body, html.theme-transition * {
 @utility outline-focus {
   outline-color: hsl(var(--focus-ring));
 }
+@utility ring-offset-bg {
+  --tw-ring-offset-color: hsl(var(--bg));
+}
+@utility focus-ring {
+  outline: none;
+  --tw-ring-offset-color: hsl(var(--bg));
+  --tw-ring-color: hsl(var(--focus-ring));
+  box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow, 0 0 #0000);
+}
 
 /* Reusable button styles */
 @layer components {

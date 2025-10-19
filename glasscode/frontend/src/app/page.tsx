@@ -51,7 +51,7 @@ const UnlockChips: React.FC<{
 
   return (
     <div className="mt-4 text-left">
-      <div className="text-xs text-gray-600 dark:text-gray-400 mb-2">Unlocks:</div>
+      <div className="text-xs text-muted mb-2">Unlocks:</div>
       <div className="flex flex-wrap gap-2">
         {unlockingModules.map((m) => (
           <button
@@ -107,7 +107,7 @@ const ModuleCard: React.FC<{
     <div className={`module-card-container ${isLocked ? 'locked' : ''} h-full`}>
       <Link
         href={isLocked ? '#' : (module.routes?.overview || '#')}
-        className={`relative flex flex-col h-full bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 p-5 hover:shadow-xl transition-all duration-300 ${
+        className={`relative flex flex-col h-full bg-surface/95 backdrop-blur-sm rounded-xl shadow-lg border border-border p-5 hover:shadow-xl transition-all duration-300 ${
           isLocked ? 'opacity-60' : 'hover:-translate-y-1'
         }`}
         onClick={handleModuleClick}
@@ -156,21 +156,21 @@ const ModuleCard: React.FC<{
             {module.icon || '📚'}
           </div>
           <div className="flex-1">
-            <h4 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-2 text-left" id={`module-${module.slug}-title`}>
+            <h4 className="text-lg font-semibold text-fg mb-2 text-left" id={`module-${module.slug}-title`}>
               {module.title || 'Untitled Module'}
             </h4>
             <div className="flex items-center gap-2 mb-2">
               <span className={`px-2 py-1 rounded-full text-xs font-medium ${
-                (module.difficulty || 'Beginner') === 'Beginner' ? 'bg-green-500/20 text-green-700 dark:text-green-300' :
-                (module.difficulty || 'Beginner') === 'Intermediate' ? 'bg-yellow-500/20 text-yellow-700 dark:text-yellow-300' :
-                'bg-red-500/20 text-red-700 dark:text-red-300'
+                (module.difficulty || 'Beginner') === 'Beginner' ? 'bg-green-500/20 text-fg' :
+                (module.difficulty || 'Beginner') === 'Intermediate' ? 'bg-yellow-500/20 text-fg' :
+                'bg-red-500/20 text-fg'
               }`}>
                 {module.difficulty || 'Beginner'}
               </span>
               <span className={`px-2 py-1 rounded-full text-xs font-medium ${
-                moduleStatus === 'not-started' ? 'bg-gray-500/20 text-gray-700 dark:text-gray-300' :
-                moduleStatus === 'in-progress' ? 'bg-blue-500/20 text-blue-700 dark:text-blue-300' :
-                'bg-green-500/20 text-green-700 dark:text-green-300'
+                moduleStatus === 'not-started' ? 'bg-surface-alt text-fg' :
+                moduleStatus === 'in-progress' ? 'bg-blue-500/20 text-fg' :
+                'bg-green-500/20 text-fg'
               }`}>
                 {moduleStatus === 'not-started' ? '⏳ Not Started' :
                  moduleStatus === 'in-progress' ? '🔄 In Progress' :
@@ -180,30 +180,30 @@ const ModuleCard: React.FC<{
           </div>
         </div>
 
-        <p className="text-gray-700 dark:text-gray-300 mb-4 text-left text-sm" id={`module-${module.slug}-description`}>
+        <p className="text-muted mb-4 text-left text-sm" id={`module-${module.slug}-description`}>
           {module.description || 'No description available.'}
         </p>
 
         {/* Technologies used - Pill-shaped tags */}
         <div className="flex flex-wrap gap-1 mb-4">
           {(module.technologies || []).slice(0, 3).map(tech => (
-            <span key={tech} className="px-2 py-1 bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200 rounded-full text-xs">
+            <span key={tech} className="px-2 py-1 bg-surface-alt text-fg rounded-full text-xs">
               {tech}
             </span>
           ))}
           {(module.technologies || []).length > 3 && (
-            <span className="px-2 py-1 bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200 rounded-full text-xs">+{module.technologies.length - 3} more</span>
+            <span className="px-2 py-1 bg-surface-alt text-fg rounded-full text-xs">+{module.technologies.length - 3} more</span>
           )}
         </div>
 
         <div className="module-meta mt-auto">
-          <div className="flex items-center justify-between text-sm text-gray-600 dark:text-gray-400 mb-3">
+          <div className="flex items-center justify-between text-sm text-muted mb-3">
             <span>📅 {module.estimatedHours ?? 0}h</span>
             <span>{module.track || ''}</span>
           </div>
 
           {moduleProgress && (
-            <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
+            <div className="w-full bg-surface-alt rounded-full h-2">
               <div
                 className={`h-2 rounded-full bg-gradient-to-r ${tierGradientClass}`}
                 style={{ width: `${completionPercentage}%` }}
@@ -219,7 +219,7 @@ const ModuleCard: React.FC<{
 
         {/* Prerequisites indicator */}
         {(module.prerequisites || []).length > 0 && (
-          <div className="mt-3 text-xs text-gray-500 dark:text-gray-500 text-left">
+          <div className="mt-3 text-xs text-muted text-left">
             🔗 Requires: {module.prerequisites!.length} prerequisite{module.prerequisites!.length > 1 ? 's' : ''}
           </div>
         )}
@@ -281,36 +281,36 @@ const TierSection: React.FC<{
                   <h2 className="text-xl md:text-2xl font-bold text-white text-left" id={`tier-${tierKey}-heading`}>
                     {tier.title}
                   </h2>
-                  <p className="text-white/90 mt-1 text-left text-sm">{tier.description}</p>
+                  <p className="text-fg mt-1 text-left text-sm">{tier.description}</p>
                 </div>
               </div>
 
             </div>
 
-            <div className="bg-white/10 rounded-lg p-4 border border-white/20 backdrop-blur-sm">
-              <p className="font-medium text-white text-left text-sm">
+            <div className="bg-surface-alt rounded-lg p-4 border border-border backdrop-blur-sm">
+              <p className="font-medium text-fg text-left text-sm">
                 <strong>Focus Area:</strong> {tier.focusArea}
               </p>
             </div>
 
             {/* Unified progress widget like dashboard */}
-            <div className="bg-white/20 text-white p-4 rounded-lg min-w-[140px] text-center backdrop-blur-sm">
+            <div className="bg-surface-alt text-fg p-4 rounded-lg min-w-[140px] text-center backdrop-blur-sm">
               <div className="text-2xl font-bold">{tierProgress}%</div>
-              <div className="text-sm opacity-90">Complete</div>
-              <div className="text-xs opacity-80 mt-1">
+              <div className="text-sm">Complete</div>
+              <div className="text-xs mt-1">
                 {completedModules} of {modules.length} modules
               </div>
             </div>
           </div>
 
           {/* Learning objectives */}
-          <div className="bg-white/10 rounded-xl p-5 border border-white/20 mt-4 backdrop-blur-sm">
-            <h3 className="text-lg font-semibold text-white mb-3 text-left">Learning Objectives</h3>
+          <div className="bg-surface-alt rounded-xl p-5 border border-border mt-4 backdrop-blur-sm">
+            <h3 className="text-lg font-semibold text-fg mb-3 text-left">Learning Objectives</h3>
             <ul className="grid grid-cols-1 md:grid-cols-3 gap-3">
               {(tier.learningObjectives || []).map((objective, index) => (
                 <li key={index} className="flex items-start gap-2">
                   <span className="text-green-500 mt-0.5 flex-shrink-0 text-sm">✓</span>
-                  <span className="text-white/90 text-left text-sm">{objective}</span>
+                  <span className="text-fg text-left text-sm">{objective}</span>
                 </li>
               ))}
             </ul>
@@ -565,26 +565,26 @@ const HomePage: React.FC = () => {
                   <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 dark:text-gray-100 mb-4 text-left">
                     Master Modern Web Development
                   </h1>
-                  <p className="text-lg md:text-xl text-gray-600 dark:text-gray-300 mb-6 text-left">
+                  <p className="text-lg md:text-xl text-muted mb-6 text-left">
                     Comprehensive learning paths across 18 technology modules with interactive lessons,
                     real-world projects, and interview preparation.
                   </p>
 
                   <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
                     <div className="bg-gradient-to-r from-blue-500 to-cyan-500 text-white p-4 rounded-lg text-center">
-                      <div className="text-sm opacity-90">Total Modules</div>
+                      <div className="text-sm">Total Modules</div>
                       <div className="text-2xl font-bold">{totalModules}</div>
                     </div>
                     <div className="bg-gradient-to-r from-green-500 to-emerald-500 text-white p-4 rounded-lg text-center">
-                      <div className="text-sm opacity-90">Completed</div>
+                      <div className="text-sm">Completed</div>
                       <div className="text-2xl font-bold">{completedModules}</div>
                     </div>
                     <div className="bg-gradient-to-r from-purple-500 to-violet-500 text-white p-4 rounded-lg text-center">
-                      <div className="text-sm opacity-90">Progress</div>
+                      <div className="text-sm">Progress</div>
                       <div className="text-2xl font-bold">{Math.round(overallProgress)}%</div>
                     </div>
                     <div className="bg-gradient-to-r from-orange-500 to-red-500 text-white p-4 rounded-lg text-center">
-                      <div className="text-sm opacity-90">Streak</div>
+                      <div className="text-sm">Streak</div>
                       <div className="text-2xl font-bold">{streak.currentStreak} days</div>
                     </div>
                   </div>
@@ -599,7 +599,7 @@ const HomePage: React.FC = () => {
                             <div className="flex items-center">
                               <span className="text-xl mr-2">🏆</span>
                               <span className="text-gray-700 dark:text-gray-300 flex-1 text-left">{achievement.description}</span>
-                              <span className="text-xs text-gray-500 dark:text-gray-500">
+                              <span className="text-xs text-muted">
                                 {new Date(achievement.earnedDate).toLocaleDateString()}
                               </span>
                             </div>
@@ -717,26 +717,26 @@ const HomePage: React.FC = () => {
 
         {/* Quick Actions */}
         <section className="w-full py-8">
-          <div className="bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm rounded-xl shadow-lg border border-gray-200 dark:border-gray-700">
+          <div className="bg-surface rounded-xl shadow-lg border border-border">
             <div className="p-6">
-              <h2 id="quick-actions-heading" className="text-2xl font-bold text-center text-gray-900 dark:text-white mb-6">Quick Actions</h2>
+              <h2 id="quick-actions-heading" className="text-2xl font-bold text-center text-fg mb-6">Quick Actions</h2>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4" role="list">
-                <Link href="/playground" className="bg-gray-50 dark:bg-gray-700 p-6 rounded-lg border border-gray-200 dark:border-gray-600 text-center hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors" role="listitem">
+                <Link href="/playground" className="bg-surface-alt p-6 rounded-lg border border-border text-center hover:bg-surface transition-colors" role="listitem">
                   <span className="text-4xl block mb-2" role="img" aria-label="Playground icon">🛝</span>
-                  <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-1">GraphQL Playground</h3>
-                  <p className="text-sm text-gray-600 dark:text-gray-400">Experiment with queries</p>
+                  <h3 className="text-lg font-semibold text-fg mb-1">GraphQL Playground</h3>
+                  <p className="text-sm text-muted">Experiment with queries</p>
                 </Link>
 
-                <Link href="/animated-background-demo" className="bg-gray-50 dark:bg-gray-700 p-6 rounded-lg border border-gray-200 dark:border-gray-600 text-center hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors" role="listitem">
+                <Link href="/animated-background-demo" className="bg-surface-alt p-6 rounded-lg border border-border text-center hover:bg-surface transition-colors" role="listitem">
                   <span className="text-4xl block mb-2" role="img" aria-label="Design icon">🎨</span>
-                  <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-1">Design Showcase</h3>
-                  <p className="text-sm text-gray-600 dark:text-gray-400">UI components</p>
+                  <h3 className="text-lg font-semibold text-fg mb-1">Design Showcase</h3>
+                  <p className="text-sm text-muted">UI components</p>
                 </Link>
 
-                <Link href="/interview-prep" className="bg-gray-50 dark:bg-gray-700 p-6 rounded-lg border border-gray-200 dark:border-gray-600 text-center hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors" role="listitem">
+                <Link href="/interview-prep" className="bg-surface-alt p-6 rounded-lg border border-border text-center hover:bg-surface transition-colors" role="listitem">
                   <span className="text-4xl block mb-2" role="img" aria-label="Interview icon">💼</span>
-                  <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-1">Interview Prep</h3>
-                  <p className="text-sm text-gray-600 dark:text-gray-400">Practice questions</p>
+                  <h3 className="text-lg font-semibold text-fg mb-1">Interview Prep</h3>
+                  <p className="text-sm text-muted">Practice questions</p>
                 </Link>
 
                 <button
@@ -753,12 +753,12 @@ const HomePage: React.FC = () => {
                     document.body.removeChild(link);
                     URL.revokeObjectURL(url);
                   }}
-                  className="bg-gray-50 dark:bg-gray-700 p-6 rounded-lg border border-gray-200 dark:border-gray-600 text-center hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors"
+                  className="bg-surface-alt p-6 rounded-lg border border-border text-center hover:bg-surface transition-colors"
                   role="listitem"
                 >
                   <span className="text-4xl block mb-2" role="img" aria-label="Export icon">📥</span>
-                  <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-1">Export Progress</h3>
-                  <p className="text-sm text-gray-600 dark:text-gray-400">Download data</p>
+                  <h3 className="text-lg font-semibold text-fg mb-1">Export Progress</h3>
+                  <p className="text-sm text-muted">Download data</p>
                 </button>
               </div>
             </div>

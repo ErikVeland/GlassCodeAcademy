@@ -25,7 +25,9 @@
     "web-vitals": "^5.1.0"
   },
   "devDependencies": {
+    "@axe-core/playwright": "^4.10.2",
     "@eslint/eslintrc": "^3",
+    "@playwright/test": "^1.56.1",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
     "@types/react": "^19",

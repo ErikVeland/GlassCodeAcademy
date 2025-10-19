@@ -107,8 +107,8 @@ export default function RootLayout({
                       <div className="max-w-4xl mx-auto">
                         <div className="bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm rounded-xl shadow-lg p-6 border border-gray-200 dark:border-gray-700">
                           <div className="text-center">
-                            <h2 className="text-2xl font-bold text-gray-800 dark:text-gray-200 mb-2">Loading</h2>
-                            <p className="text-gray-600 dark:text-gray-300">Preparing content...</p>
+                            <h2 className="text-2xl font-bold text-fg mb-2">Loading</h2>
+                            <p className="text-muted">Preparing content...</p>
                           </div>
                         </div>
                       </div>
@@ -117,22 +117,22 @@ export default function RootLayout({
                     {children}
                   </Suspense>
                 </main>
-                <footer className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm border-t border-gray-200 dark:border-gray-700 w-full mt-auto relative">
+                <footer className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm border-t border-white/20 dark:border-white/10 w-full mt-auto relative">
                   <div className="py-8 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
                     <div className="flex flex-col sm:flex-row justify-between items-center space-y-4 sm:space-y-0">
                       <div className="flex space-x-6 text-sm">
-                        <Link href="/stats" className="text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors">
-                          📊 GlassStats
-                        </Link>
-                        {EXTERNAL_LINKS.REPO_URL && (
-                          <a href={EXTERNAL_LINKS.REPO_URL} target="_blank" rel="noopener noreferrer" className="text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors">
-                            🔗 Source Code
-                          </a>
-                        )}
-                      </div>
-                      <p className="text-center text-sm text-gray-500 dark:text-gray-400">
-                        © {new Date().getFullYear()} Glass Academy. All rights reserved.
-                      </p>
+                        <Link href="/stats" className="text-muted hover:text-fg transition-colors">
+                           📊 GlassStats
+                         </Link>
+                         {EXTERNAL_LINKS.REPO_URL && (
+                          <a href={EXTERNAL_LINKS.REPO_URL} target="_blank" rel="noopener noreferrer" className="text-muted hover:text-fg transition-colors">
+                             🔗 Source Code
+                           </a>
+                         )}
+                       </div>
+                      <p className="text-center text-sm text-muted">
+                         © {new Date().getFullYear()} Glass Academy. All rights reserved.
+                       </p>
                     </div>
                   </div>
                 </footer>

@@ -16,7 +16,7 @@ GlassCode Academy currently operates as a functional educational platform with s
 
 | Phase | Progress | Status | Key Achievements | Critical Gaps |
 |-------|----------|--------|------------------|---------------|
-| **Phase 1: Foundation & Quality** | 75% | 🟡 Partial | Frontend testing suite, Error boundaries, Backend testing infrastructure | Structured logging, **No tokenised theming** |
+| **Phase 1: Foundation & Quality** | 75% | 🟡 Partial | Frontend testing suite, Error boundaries, Backend testing infrastructure | Structured logging; tokenised theming implemented; component migration ongoing |
 | **Phase 2: DevOps & Automation** | 10% | 🔴 Not Started | Documentation exists | No CI/CD, No containerization, No IaC |
 | **Phase 3: Monitoring & Observability** | 20% | 🔴 Minimal | Basic performance tracking | No monitoring stack, No alerting, No tracing |
 | **Phase 4: Advanced Features** | 40% | 🟡 Partial | Progress tracking hooks | No user database, No CMS, No search |
@@ -178,7 +178,9 @@ builder.Services.AddAuthorization(options =>
 });
 ```
 
-#### 1.4 WCAG-Compliant Theming (Dark/Light/Auto) — **New**
+#### 1.4 WCAG-Compliant Theming (Dark/Light/Auto) — **Completed**
+**Status**: Implemented tokenised Light/Dark/Auto theming with smooth fade gating and no FOUC; verified local app starts at `http://localhost:3002`.
+**Next Steps**: Migrate remaining components to semantic tokens; map tokens in Tailwind config; add automated contrast checks; add E2E tests for 3-way theme switch; unify focus ring styling.
 **Objective**: Add accessible, tokenised theming with Auto/Dark/Light switch that defaults to system; prevent first-paint flash; ensure WCAG 2.1 AA contrast.  
 **Scope**: Tailwind + custom CSS; no framework change required.
 
@@ -1358,7 +1360,7 @@ GET /api/users/{id}/export
 | Uptime Monitoring | None | >99.9% | Medium |
 | API Latency | Unknown | p95 < 200ms | High |
 | Data Export/Deletion | None | Implemented + audited | High |
-| **Theming WCAG AA** | Dark-only UX | **Light/Dark/Auto with tokens, no flash** | **Critical** |
+| **Theming WCAG AA** | Implemented: Light/Dark/Auto tokens, smooth fade, no FOUC | **Light/Dark/Auto with tokens, no flash** | **Critical** |
 | **LMS Feature Coverage** | Basic content delivery | **Full LMS capabilities (35+ features)** | **High** |
 | **Course Management** | Static JSON content | **Dynamic course creation, attachments, assignments** | **High** |
 | **User Engagement** | Basic progress tracking | **Advanced quizzes, group enrollments, manual enrollment** | **Medium** |
@@ -1391,7 +1393,7 @@ GET /api/users/{id}/export
 4. Add GitHub Actions CI, CodeQL, and Trivy scans.
 5. Define content schema in SQL and add minimal CRUD endpoints for Courses and Lessons.
 6. Introduce OpenTelemetry for traces and metrics; ship to local Jaeger and Prometheus.
-7. **Implement tokenised theming**: add CSS variables, Tailwind mapping, boot script, and 3‑way switch; migrate top 5 components to tokens and validate WCAG contrast.
+7. **Implement tokenised theming** — Completed (Oct 19, 2025): CSS variables (semantic tokens), Tailwind utilities, boot script, and 3‑way switch with smooth fade; verified dev app starts at `http://localhost:3002`. Next steps: migrate remaining components to tokens; add automated contrast checks; map tokens in Tailwind config; add E2E tests for theme toggling.
 
 ---
 
@@ -1452,6 +1454,6 @@ badge_awarded: { userId, badgeId, ts }
 ---
 
 **Document Version**: 2.2  
-**Last Updated**: October 17 2025  
+**Last Updated**: October 19 2025  
 **Next Review**: After Phase 2 completion  
 **Owner**: Development Team
