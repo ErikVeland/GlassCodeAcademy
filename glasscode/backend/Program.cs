@@ -127,27 +127,12 @@ Log.Information("Initializing DataService...");
 var dataService = backend.Services.DataService.Instance;
 Log.Information("DataService initialized with {DotNetLessons} DotNet lessons", dataService.DotNetLessons.Count());
 
-// Seed modules from registry.json
-Log.Information("Seeding modules from registry...");
+// Run full automated content migration on startup
+Log.Information("Running full AutomatedMigrationService migration...");
 using (var scope = app.Services.CreateScope())
 {
-    var moduleSeedingService = scope.ServiceProvider.GetRequiredService<backend.Services.ModuleSeedingService>();
-    await moduleSeedingService.SeedModulesFromRegistryAsync();
-    
-    // Seed lessons from DataService to database
-    Log.Information("Seeding lessons to database...");
-    var lessonSeedingService = scope.ServiceProvider.GetRequiredService<backend.Services.LessonSeedingService>();
-    await lessonSeedingService.SeedLessonsToDatabase();
-    
-    // Map lessons to modules
-    Log.Information("Mapping lessons to modules...");
-    var lessonMappingService = scope.ServiceProvider.GetRequiredService<backend.Services.LessonMappingService>();
-    await lessonMappingService.MapLessonsToModulesAsync();
-    
-    // Seed quiz questions from JSON files
-    Log.Information("Seeding quiz questions to database...");
-    var quizSeedingService = scope.ServiceProvider.GetRequiredService<backend.Services.QuizSeedingService>();
-    await quizSeedingService.SeedQuizzesToDatabase();
+    var migrationService = scope.ServiceProvider.GetRequiredService<backend.Services.AutomatedMigrationService>();
+    await migrationService.PerformFullMigrationAsync();
 }
 
 // Middleware to check for unlock parameter

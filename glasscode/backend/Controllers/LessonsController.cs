@@ -152,6 +152,9 @@ public class LessonsController : ControllerBase
             "performance" => _dataService.PerformanceLessons,
             "security" => _dataService.SecurityLessons,
             "version" => _dataService.VersionLessons,
+            // Added explicit Laravel mapping for module slug used by frontend
+            "laravel" => _dataService.LaravelLessons,
+            "laravel-fundamentals" => _dataService.LaravelLessons,
             _ => _dataService.DotNetLessons
         };
     }

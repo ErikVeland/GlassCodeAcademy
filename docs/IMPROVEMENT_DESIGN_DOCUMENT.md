@@ -68,7 +68,7 @@ GlassCode Academy currently operates as a functional educational platform with s
 - **Static Analysis & Security**: Roslyn analyzers, .editorconfig ruleset, OWASP Dependency Check.
 
 **Frontend Testing** ✅ Well Implemented (≈80% coverage)
-- Unit tests (Jest + React Testing Library), E2E (Playwright) with deterministic fixtures and data seeding.
+- Unit tests (Jest + React Testing Library), E2E (Trae built-in browser) with deterministic fixtures and data seeding.
 
 **Implementation Steps**
 1. ✅ Create backend test projects: `GlassCode.Backend.UnitTests`, `GlassCode.Backend.IntegrationTests`.
@@ -401,7 +401,7 @@ a:hover, a:focus-visible { text-decoration: underline; }
 **Objective**: Automate testing, building, scanning, and deployment
 
 **GitHub Actions Workflows**
-- CI: build, unit/integration tests, Playwright E2E, coverage upload, CodeQL, Trivy/Snyk scans.
+- CI: build, unit/integration tests, E2E with Trae’s built-in browser, coverage upload, CodeQL, Trivy/Snyk scans.
 - CD: environment matrix (dev → staging → prod) with manual approval for prod.
 - Preview Environments: per-PR ephemeral deployments (Vercel for frontend, Azure Web Apps or Kubernetes namespace for backend).
 
@@ -442,7 +442,7 @@ jobs:
       - run: npm run lint --prefix frontend
       - run: npm run test --prefix frontend
       - run: npm run build --prefix frontend
-      - name: Playwright E2E
+      - name: Browser E2E (Trae)
         run: npm run e2e --prefix frontend
   security:
     runs-on: ubuntu-latest

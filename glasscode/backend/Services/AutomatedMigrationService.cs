@@ -159,7 +159,7 @@ namespace backend.Services
                     return;
                 }
 
-                var jsonFiles = Directory.GetFiles(lessonsPath, "*.json");
+                var jsonFiles = Directory.GetFiles(lessonsPath, "*.json", SearchOption.AllDirectories);
                 Console.WriteLine($"📁 Found {jsonFiles.Length} lesson files to process");
 
                 foreach (var file in jsonFiles)
@@ -255,14 +255,23 @@ namespace backend.Services
                     return;
                 }
 
-                // Find the module by matching filename to module slug
-                var moduleSlug = fileName.Replace("-fundamentals", "")
-                                         .Replace("-advanced", "")
-                                         .Replace("-basics", "");
-                
+                // Try exact module slug match first, then fall back to partials
+                var fileNameLower = fileName.ToLowerInvariant();
                 var module = await _context.Modules
-                    .FirstOrDefaultAsync(m => m.Slug.Contains(moduleSlug, StringComparison.OrdinalIgnoreCase) || 
-                                            fileName.Contains(m.Slug, StringComparison.OrdinalIgnoreCase));
+                    .FirstOrDefaultAsync(m => m.Slug.Equals(fileName, StringComparison.OrdinalIgnoreCase));
+
+                if (module == null)
+                {
+                    var moduleSlug = fileNameLower
+                        .Replace("-lessons", "")
+                        .Replace("-fundamentals", "")
+                        .Replace("-advanced", "")
+                        .Replace("-basics", "");
+
+                    module = await _context.Modules.FirstOrDefaultAsync(m =>
+                        m.Slug.Contains(moduleSlug, StringComparison.OrdinalIgnoreCase) ||
+                        fileNameLower.Contains(m.Slug.ToLowerInvariant()));
+                }
 
                 if (module == null)
                 {
@@ -275,35 +284,35 @@ namespace backend.Services
                     }
                 }
 
-                // Check if lesson already exists
+                // Prepare content and metadata payloads for insert/update
+                var contentData = new
+                {
+                    intro = lessonData.Intro,
+                    objectives = lessonData.Objectives,
+                    code = lessonData.Code,
+                    pitfalls = lessonData.Pitfalls,
+                    exercises = lessonData.Exercises,
+                    next = lessonData.Next,
+                    sources = lessonData.Sources
+                };
+
+                var metadataData = new
+                {
+                    tags = lessonData.Tags,
+                    topic = lessonData.Topic,
+                    description = lessonData.Description,
+                    codeExample = lessonData.CodeExample,
+                    output = lessonData.Output,
+                    version = lessonData.Version,
+                    lastUpdated = lessonData.LastUpdated
+                };
+
+                // Upsert by slug + module
                 var existingLesson = await _context.Lessons
                     .FirstOrDefaultAsync(l => l.Slug == lessonData.Slug && l.ModuleId == module.Id);
 
                 if (existingLesson == null)
                 {
-                    // Create content and metadata objects
-                    var contentData = new
-                    {
-                        intro = lessonData.Intro,
-                        objectives = lessonData.Objectives,
-                        code = lessonData.Code,
-                        pitfalls = lessonData.Pitfalls,
-                        exercises = lessonData.Exercises,
-                        next = lessonData.Next,
-                        sources = lessonData.Sources
-                    };
-
-                    var metadataData = new
-                    {
-                        tags = lessonData.Tags,
-                        topic = lessonData.Topic,
-                        description = lessonData.Description,
-                        codeExample = lessonData.CodeExample,
-                        output = lessonData.Output,
-                        version = lessonData.Version,
-                        lastUpdated = lessonData.LastUpdated
-                    };
-
                     var lesson = new Lesson
                     {
                         Title = lessonData.Title ?? "Untitled Lesson",
@@ -324,7 +333,14 @@ namespace backend.Services
                 }
                 else
                 {
-                    Console.WriteLine($"   🔄 Lesson already exists: {existingLesson.Title}");
+                    existingLesson.Title = lessonData.Title ?? existingLesson.Title;
+                    existingLesson.Order = lessonData.Order ?? existingLesson.Order;
+                    existingLesson.Content = JsonSerializer.Serialize(contentData);
+                    existingLesson.Metadata = JsonSerializer.Serialize(metadataData);
+                    existingLesson.Difficulty = lessonData.Difficulty ?? existingLesson.Difficulty;
+                    existingLesson.EstimatedMinutes = lessonData.EstimatedMinutes ?? existingLesson.EstimatedMinutes;
+                    existingLesson.UpdatedAt = DateTime.UtcNow;
+                    Console.WriteLine($"   ✏️ Updated lesson: {existingLesson.Title}");
                 }
             }
             catch (Exception ex)

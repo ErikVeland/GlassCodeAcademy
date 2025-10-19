@@ -7,7 +7,7 @@ const cspBase = [
   // Allow modern script loading; avoid inline scripts in enforced policy
   IS_PROD
     ? "script-src 'self' 'strict-dynamic' https: blob:"
-    : "script-src 'self' 'unsafe-eval' 'strict-dynamic' https: blob:",
+    : "script-src 'self' 'unsafe-inline' 'unsafe-eval' http: https: blob:",
   // Style: keep 'unsafe-inline' in enforced policy to avoid breaking dev; drop in report-only
   IS_PROD
     ? "style-src 'self' https:"
@@ -23,18 +23,20 @@ const cspBase = [
   "object-src 'none'",
 ].join('; ');
 
-const cspReportOnly = [
-  "default-src 'self'",
-  "script-src 'self' 'strict-dynamic' https: blob:",
-  "style-src 'self' https:",
-  "img-src 'self' data: blob: https:",
-  "connect-src 'self' https: wss:",
-  "font-src 'self' https: data:",
-  "base-uri 'self'",
-  "form-action 'self'",
-  "frame-ancestors 'none'",
-  "object-src 'none'",
-].join('; ');
+const cspReportOnly = IS_PROD
+  ? [
+      "default-src 'self'",
+      "script-src 'self' 'strict-dynamic' https: blob:",
+      "style-src 'self' https:",
+      "img-src 'self' data: blob: https:",
+      "connect-src 'self' https: wss:",
+      "font-src 'self' https: data:",
+      "base-uri 'self'",
+      "form-action 'self'",
+      "frame-ancestors 'none'",
+      "object-src 'none'",
+    ].join('; ')
+  : cspBase;
 
 const nextConfig: NextConfig = {
   eslint: {
@@ -83,10 +85,18 @@ const nextConfig: NextConfig = {
           { key: 'Permissions-Policy', value: 'camera=(), microphone=(), geolocation=(), interest-cohort=(), browsing-topics=()' },
           { key: 'Cross-Origin-Opener-Policy', value: 'same-origin' },
           { key: 'Cross-Origin-Resource-Policy', value: 'same-origin' },
-          // Enforced CSP (dev allows inline styles to avoid breakage)
+          // Enforced CSP (dev allows inline styles/scripts to support Next dev)
           { key: 'Content-Security-Policy', value: cspBase },
-          // Strict CSP in report-only to guide migration off inline styles/scripts
-          { key: 'Content-Security-Policy-Report-Only', value: cspReportOnly },
+          // Only send report-only in production, and include a report-to directive
+          // to avoid browser warnings. Dev omits to reduce console noise.
+          ...(
+            IS_PROD
+              ? [
+                  { key: 'Report-To', value: '{"group":"default","max_age":10886400,"endpoints":[{"url":"/api/csp-report"}]}' },
+                  { key: 'Content-Security-Policy-Report-Only', value: `${cspReportOnly}; report-to default` },
+                ]
+              : []
+          ),
         ],
       },
     ];

@@ -90,8 +90,8 @@ interface DbModule {
 
 async function synthesizeRegistryFromDatabase() {
   try {
-    const apiBase = (() => { try { return getApiBaseStrict(); } catch { return 'http://127.0.0.1:8080/api'; } })();
-    const res = await fetch(`${apiBase}/modules`, { cache: 'no-store' });
+    const apiBase = (() => { try { return getApiBaseStrict(); } catch { return 'http://127.0.0.1:8080'; } })();
+    const res = await fetch(`${apiBase}/api/modules`, { cache: 'no-store' });
     if (!res.ok) throw new Error(`Failed to fetch modules from backend: ${res.status}`);
     const raw: unknown = await res.json();
     const dbModules: DbModule[] = Array.isArray(raw) ? (raw as DbModule[]) : [];

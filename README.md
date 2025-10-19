@@ -40,6 +40,8 @@ GlassCode Academy is a full-stack educational platform designed to help develope
 - Visual Studio Code / Visual Studio 2022
 - Git version control
 
+> Testing note: For E2E demos and UI inspections in this project, prefer Trae’s built-in browser. Playwright is not required here; any references in lesson content are educational.
+
 ## System Architecture
 
 The application follows a full-stack architecture with a Next.js frontend and ASP.NET Core Web API backend, communicating via a GraphQL API.

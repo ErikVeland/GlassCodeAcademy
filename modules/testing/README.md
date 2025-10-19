@@ -41,9 +41,10 @@ testing/
 
 4. **End-to-End Testing**
    - Cypress
-   - Playwright
    - Test Automation
    - Cross-browser Testing
+
+> Note: Use Trae’s built-in browser in this repo for E2E demos and UI checks. Playwright references are educational only.
 
 ## Color Scheme
 
