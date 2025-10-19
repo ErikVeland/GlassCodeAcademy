@@ -15,7 +15,7 @@ export default function DarkModeToggle() {
   return (
     <button
       onClick={cycleTheme}
-      className="p-2 rounded-full bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200 hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors duration-200"
+      className="p-2 rounded-full bg-surface-alt text-fg hover:bg-surface transition-colors duration-160 ease-out focus:outline-none focus:ring-2 ring-focus"
       aria-label={label}
       title={`${label} — click to cycle`}
     >

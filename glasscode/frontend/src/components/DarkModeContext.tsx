@@ -1,6 +1,6 @@
 'use client'
 
-import React, { createContext, useContext, useEffect, useState } from 'react';
+import React, { createContext, useContext, useEffect, useState, useRef } from 'react';
 
 type Theme = 'light' | 'dark' | 'system';
 
@@ -16,6 +16,7 @@ const DarkModeContext = createContext<DarkModeContextType | undefined>(undefined
 export function DarkModeProvider({ children }: { children: React.ReactNode }) {
   const [theme, setTheme] = useState<Theme>('system');
   const [isDark, setIsDark] = useState<boolean>(false);
+  const firstApplyRef = useRef(true);
 
   // Read saved preference on mount, with fallback for legacy 'darkMode' key
   useEffect(() => {
@@ -55,10 +56,20 @@ export function DarkModeProvider({ children }: { children: React.ReactNode }) {
 
     try {
       localStorage.setItem('theme', theme);
-      // Optionally clear legacy key
       localStorage.removeItem('darkMode');
     } catch {
       // ignore storage errors
+    }
+
+    // Smooth fade on explicit theme changes (skip first paint)
+    if (firstApplyRef.current) {
+      firstApplyRef.current = false;
+    } else {
+      const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      if (!reduceMotion) {
+        html.classList.add('theme-transition');
+        window.setTimeout(() => html.classList.remove('theme-transition'), 220);
+      }
     }
   }, [theme]);
 
@@ -78,6 +89,13 @@ export function DarkModeProvider({ children }: { children: React.ReactNode }) {
           html.style.colorScheme = 'light';
         }
         html.setAttribute('data-theme', activeDark ? 'dark' : 'light');
+
+        // Smooth fade when OS theme changes in system mode
+        const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        if (!reduceMotion) {
+          html.classList.add('theme-transition');
+          window.setTimeout(() => html.classList.remove('theme-transition'), 220);
+        }
       }
     };
 

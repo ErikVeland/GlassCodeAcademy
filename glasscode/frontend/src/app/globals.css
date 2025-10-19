@@ -9,6 +9,118 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Theme tokens and transitions */
+:root {
+  --bg: 0 0% 100%;
+  --fg: 222 47% 11%;
+  --surface: 0 0% 100%;
+  --surface-alt: 210 40% 98%;
+  --border: 215 15% 85%;
+  --muted: 215 15% 45%;
+  --primary: 243 75% 58%;
+  --primary-fg: 0 0% 100%;
+  --success: 142 72% 35%;
+  --warning: 45 100% 45%;
+  --danger: 0 72% 45%;
+  --focus-ring: 243 75% 58%;
+  color-scheme: light;
+}
+
+[data-theme="dark"] {
+  --bg: 222 22% 10%;
+  --fg: 210 40% 96%;
+  --surface: 222 15% 12%;
+  --surface-alt: 222 15% 16%;
+  --border: 222 10% 30%;
+  --muted: 222 10% 60%;
+  --primary: 243 75% 70%;
+  --primary-fg: 0 0% 100%;
+  --success: 142 72% 45%;
+  --warning: 45 100% 55%;
+  --danger: 0 72% 60%;
+  --focus-ring: 243 75% 70%;
+  color-scheme: dark;
+}
+
+/* Auto mode mirrors OS only when no explicit theme is set */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme]) {
+    --bg: 222 22% 10%;
+    --fg: 210 40% 96%;
+    --surface: 222 15% 12%;
+    --surface-alt: 222 15% 16%;
+    --border: 222 10% 30%;
+    --muted: 222 10% 60%;
+    --primary: 243 75% 70%;
+    --primary-fg: 0 0% 100%;
+    --success: 142 72% 45%;
+    --warning: 45 100% 55%;
+    --danger: 0 72% 60%;
+    --focus-ring: 243 75% 70%;
+    color-scheme: dark;
+  }
+}
+
+/* Base app theming using tokens */
+.theme-base {
+  background-color: hsl(var(--bg));
+  color: hsl(var(--fg));
+}
+
+/* Smooth fade transitions during theme switching */
+html.theme-transition, html.theme-transition body, html.theme-transition * {
+  transition: background-color 160ms ease, color 160ms ease, border-color 160ms ease;
+}
+@media (prefers-reduced-motion: reduce) {
+  html.theme-transition, html.theme-transition body, html.theme-transition * {
+    transition: none;
+  }
+}
+
+/* Focus ring token */
+:root {
+  --focus-width: 2px;
+}
+:root :focus-visible {
+  outline: var(--focus-width) solid hsl(var(--focus-ring));
+  outline-offset: 2px;
+}
+
+/* Semantic token utilities (Tailwind v4 @utility) */
+@utility text-fg {
+  color: hsl(var(--fg));
+}
+@utility bg-bg {
+  background-color: hsl(var(--bg));
+}
+@utility bg-surface {
+  background-color: hsl(var(--surface));
+}
+@utility bg-surface-alt {
+  background-color: hsl(var(--surface-alt));
+}
+@utility border-border {
+  border-color: hsl(var(--border));
+}
+@utility text-muted {
+  color: hsl(var(--muted));
+}
+@utility text-primary {
+  color: hsl(var(--primary));
+}
+@utility bg-primary {
+  background-color: hsl(var(--primary));
+}
+@utility text-primary-fg {
+  color: hsl(var(--primary-fg));
+}
+@utility ring-focus {
+  --tw-ring-color: hsl(var(--focus-ring));
+}
+@utility outline-focus {
+  outline-color: hsl(var(--focus-ring));
+}
+
 /* Reusable button styles */
 @layer components {
   .btn {

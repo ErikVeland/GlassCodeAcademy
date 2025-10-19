@@ -2,6 +2,10 @@
 
 import { useState, useEffect, useCallback } from 'react';
 
+import { getGraphQLEndpoint } from '@/lib/urlUtils';
+import { contentRegistry } from '@/lib/contentRegistry';
+import type { Module, Lesson, ProgrammingQuestion } from '@/lib/contentRegistry';
+
 export interface AppStats {
   totalLessons: number;
   totalQuizzes: number;
@@ -32,7 +36,98 @@ export interface AppStats {
   error: string | null;
 }
 
-const GRAPHQL_ENDPOINT = process.env.NEXT_PUBLIC_GRAPHQL_URL || `${process.env.NEXT_PUBLIC_API_BASE || 'http://localhost:8080'}/api`;
+// Base type for registry fallback results
+type BaseStats = Omit<AppStats, 'isLoading' | 'error'>;
+
+async function buildStatsFromRegistry(): Promise<BaseStats> {
+  // Load modules from content registry
+  const modules: Module[] = await contentRegistry.getModules();
+
+  const moduleColors = [
+    '#3B82F6', '#10B981', '#8B5CF6', '#F59E0B', '#EF4444',
+    '#06B6D4', '#84CC16', '#F97316', '#EC4899', '#6366F1',
+    '#14B8A6', '#F59E0B', '#8B5CF6', '#EF4444', '#10B981',
+    '#3B82F6', '#F97316'
+  ];
+
+  let totalLessons = 0;
+  let totalQuestions = 0;
+  let totalTime = 0;
+
+  const moduleBreakdown: { name: string; lessons: number; questions: number; color: string }[] = [];
+  const topicDistribution: { [key: string]: number } = {};
+  const difficultyBreakdown = { beginner: 0, intermediate: 0, advanced: 0 };
+  const tierBreakdown = { foundational: 0, core: 0, specialized: 0, quality: 0 };
+
+  await Promise.all(
+    modules.map(async (mod, i) => {
+      const [lessons, quiz] = await Promise.all([
+        contentRegistry.getModuleLessons(mod.slug),
+        contentRegistry.getModuleQuiz(mod.slug),
+      ]);
+
+      const lessonCount = lessons.length;
+      const questionCount = quiz?.questions?.length || 0;
+
+      // Aggregate module-level stats
+      moduleBreakdown.push({
+        name: mod.title || mod.slug,
+        lessons: lessonCount,
+        questions: questionCount,
+        color: moduleColors[i % moduleColors.length],
+      });
+
+      // Tier breakdown counts by module contributions
+      const tierKey = (mod.tier || '').toLowerCase();
+      if (tierKey && (tierKey in tierBreakdown)) {
+        // Count contributions as sum of lessons + questions in the module
+        tierBreakdown[tierKey as keyof typeof tierBreakdown] += lessonCount + questionCount;
+      }
+
+      // Difficulty breakdown (use module-level difficulty for lessons)
+      const moduleDifficulty = (mod.difficulty || '').toLowerCase();
+      if (moduleDifficulty === 'beginner') difficultyBreakdown.beginner += lessonCount;
+      else if (moduleDifficulty === 'intermediate') difficultyBreakdown.intermediate += lessonCount;
+      else if (moduleDifficulty === 'advanced') difficultyBreakdown.advanced += lessonCount;
+
+      // Aggregate lesson topics and time
+      lessons.forEach((l: Lesson) => {
+        if (l.topic) {
+          topicDistribution[l.topic] = (topicDistribution[l.topic] || 0) + 1;
+        }
+        totalTime += l.estimatedMinutes || 0;
+      });
+
+      // Aggregate quiz topics
+      quiz?.questions?.forEach((q: ProgrammingQuestion) => {
+        if (q.topic) {
+          topicDistribution[q.topic] = (topicDistribution[q.topic] || 0) + 1;
+        }
+      });
+
+      totalLessons += lessonCount;
+      totalQuestions += questionCount;
+    })
+  );
+
+  const averageCompletionTime = (totalLessons + totalQuestions) > 0
+    ? Math.round(totalTime / (totalLessons + totalQuestions))
+    : 0;
+
+  const totalModules = modules.length;
+
+  return {
+    totalLessons,
+    totalQuizzes: totalQuestions,
+    totalModules,
+    totalQuestions,
+    averageCompletionTime,
+    difficultyBreakdown,
+    moduleBreakdown,
+    tierBreakdown,
+    topicDistribution,
+  };
+}
 
 export function useAppStats(): AppStats {
   const [stats, setStats] = useState<AppStats>({
@@ -112,7 +207,7 @@ export function useAppStats(): AppStats {
           const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 second timeout
           
           try {
-            const response = await fetch(GRAPHQL_ENDPOINT, {
+            const response = await fetch(getGraphQLEndpoint(), {
               method: 'POST',
               headers: {
                 'Content-Type': 'application/json',
@@ -131,12 +226,14 @@ export function useAppStats(): AppStats {
           } catch (error) {
             clearTimeout(timeoutId);
             // Return empty data on error to prevent complete failure
-            return { data: null, error: error instanceof Error ? error.message : 'Unknown error' };
+            return { data: null, error: error instanceof Error ? error.message : 'Unknown error' } as { data: unknown; error?: string };
           }
         })
       );
 
-      // Process the data
+      type GqlResponse = { data?: unknown; error?: string };
+
+      // Prepare accumulators and visualization palette
       interface LessonItem {
         id: string;
         title: string;
@@ -144,7 +241,6 @@ export function useAppStats(): AppStats {
         difficulty?: string;
         topic?: string;
       }
-
       interface QuestionItem {
         id: string;
         question: string;
@@ -152,12 +248,9 @@ export function useAppStats(): AppStats {
         topic?: string;
         estimatedTime?: number;
       }
-
       let allLessons: LessonItem[] = [];
       let allQuestions: QuestionItem[] = [];
       const moduleStats: { [key: string]: { lessons: number; questions: number; color: string } } = {};
-
-      // Module colors for visualization
       const moduleColors = [
         '#3B82F6', '#10B981', '#8B5CF6', '#F59E0B', '#EF4444',
         '#06B6D4', '#84CC16', '#F97316', '#EC4899', '#6366F1',
@@ -166,13 +259,16 @@ export function useAppStats(): AppStats {
       ];
 
       responses.forEach((response) => {
-        // Skip responses with errors
-        if (response.error || !response.data) return;
-        
-        const data = response.data;
-        const key = Object.keys(data)[0];
-        const items = data[key] || [];
-        
+        const r = response as GqlResponse;
+        if (r.error || !r.data || typeof r.data !== 'object') return;
+
+        const dataObj = r.data as object;
+        const keys = Object.keys(dataObj as Record<string, unknown>);
+        if (keys.length === 0) return;
+        const key = keys[0];
+        const itemsUnknown = (dataObj as Record<string, unknown>)[key];
+        if (!Array.isArray(itemsUnknown)) return;
+
         const moduleName = key.replace(/Lessons|InterviewQuestions/g, '').replace(/([A-Z])/g, ' $1').trim();
         
         if (!moduleStats[moduleName]) {
@@ -184,11 +280,13 @@ export function useAppStats(): AppStats {
         }
 
         if (key.includes('Lessons')) {
-          allLessons = [...allLessons, ...items];
-          moduleStats[moduleName].lessons = items.length;
+          const lessonItems = (itemsUnknown as unknown[]).map(i => i as LessonItem);
+          allLessons = [...allLessons, ...lessonItems];
+          moduleStats[moduleName].lessons = lessonItems.length;
         } else if (key.includes('Questions')) {
-          allQuestions = [...allQuestions, ...items];
-          moduleStats[moduleName].questions = items.length;
+          const questionItems = (itemsUnknown as unknown[]).map(i => i as QuestionItem);
+          allQuestions = [...allQuestions, ...questionItems];
+          moduleStats[moduleName].questions = questionItems.length;
         }
       });
 
@@ -213,7 +311,7 @@ export function useAppStats(): AppStats {
 
       // Average completion time
       const totalTime = allLessons.reduce((sum, lesson) => sum + (lesson.estimatedMinutes || 0), 0) +
-                       allQuestions.reduce((sum, question) => sum + (question.estimatedTime || 0) / 60, 0);
+                       allQuestions.reduce((sum, question) => sum + ((question.estimatedTime || 0) / 60), 0);
       const averageCompletionTime = totalLessons + totalQuestions > 0 
         ? Math.round(totalTime / (totalLessons + totalQuestions)) 
         : 0;
@@ -250,6 +348,17 @@ export function useAppStats(): AppStats {
         ).reduce((sum, m) => sum + m.lessons + m.questions, 0),
       };
 
+      // If GraphQL produced no data, fall back to registry-based stats
+      if (totalModules === 0 && totalLessons === 0 && totalQuestions === 0) {
+        const fallback = await buildStatsFromRegistry();
+        setStats({
+          ...fallback,
+          isLoading: false,
+          error: null,
+        });
+        return;
+      }
+
       setStats({
         totalLessons,
         totalQuizzes: totalQuestions, // Using questions as quiz indicator
@@ -266,11 +375,21 @@ export function useAppStats(): AppStats {
 
     } catch (error) {
       console.error('Error fetching app stats:', error);
-      setStats(prev => ({
-        ...prev,
-        isLoading: false,
-        error: error instanceof Error ? error.message : 'Failed to fetch stats',
-      }));
+      // Attempt registry fallback on error
+      try {
+        const fallback = await buildStatsFromRegistry();
+        setStats({
+          ...fallback,
+          isLoading: false,
+          error: null,
+        });
+      } catch {
+        setStats(prev => ({
+          ...prev,
+          isLoading: false,
+          error: error instanceof Error ? error.message : 'Failed to fetch stats',
+        }));
+      }
     }
   }, []);
 

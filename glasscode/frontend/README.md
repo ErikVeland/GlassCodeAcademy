@@ -242,3 +242,18 @@ export interface AdminCourse { id: number; title: string; }
 
 - Data fetchers memoized with `useCallback`; effects depend on stable callbacks (`[fetchData]`).
 - Input handlers guard state presence and normalize union types for JSON fields.
+
+## Environment & Endpoints
+
+- Set `NEXT_PUBLIC_API_BASE` to the public origin of your backend, e.g. `https://api.yourdomain.com` or `https://yourdomain.com` when the backend shares the same host.
+- GraphQL requests resolve using `getGraphQLEndpoint()`:
+  - Browser: `/graphql` (rewritten by Next to the backend via `next.config.ts`).
+  - Server-side: `${NEXT_PUBLIC_API_BASE}/graphql` strictly derived from environment.
+- In development, `next.config.ts` rewrites `/graphql` to `http://127.0.0.1:8080/graphql`.
+
+## Stats Fallback Behavior
+
+- The stats hook attempts GraphQL first (lessons and interview questions across modules).
+- If GraphQL is unreachable or returns empty data, it falls back to the content registry via `ContentRegistryLoader`.
+- The fallback computes totals, difficulty/topic distributions, and module breakdowns from static JSON content (`/content/lessons/*.json`, `/content/quizzes/*.json`).
+- This ensures the dashboard retains meaningful metrics even when the backend is down.

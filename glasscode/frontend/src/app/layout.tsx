@@ -62,7 +62,7 @@ export default function RootLayout({
           `}
         </Script>
       </head>
-      <body className={"antialiased min-h-screen bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100 relative"}>
+      <body className={"antialiased min-h-screen relative theme-base"}>
         <ApolloWrapper>
           <AuthProvider>
           <ProfileProvider>
