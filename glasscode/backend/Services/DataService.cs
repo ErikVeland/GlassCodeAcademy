@@ -385,15 +385,31 @@ namespace backend.Services {
       private set;
     } = new List < BaseInterviewQuestion > ();
 
-    // Laravel data collections
-    public IEnumerable < BaseLesson > LaravelLessons {
-      get;
-      private set;
-    } = new List < BaseLesson > ();
-    public IEnumerable < BaseInterviewQuestion > LaravelInterviewQuestions {
-      get;
-      private set;
-    } = new List < BaseInterviewQuestion > ();
+    // Laravel data collections with lazy loading
+    private IEnumerable<BaseLesson>? _laravelLessons;
+    private IEnumerable<BaseInterviewQuestion>? _laravelInterviewQuestions;
+
+    public IEnumerable<BaseLesson> LaravelLessons {
+      get {
+        if (_laravelLessons == null) {
+          Console.WriteLine("📚 Lazy loading Laravel data...");
+          LoadLaravelData();
+        }
+        return _laravelLessons ?? new List<BaseLesson>();
+      }
+      private set => _laravelLessons = value;
+    }
+
+    public IEnumerable<BaseInterviewQuestion> LaravelInterviewQuestions {
+      get {
+        if (_laravelInterviewQuestions == null) {
+          Console.WriteLine("📚 Lazy loading Laravel interview questions...");
+          LoadLaravelData();
+        }
+        return _laravelInterviewQuestions ?? new List<BaseInterviewQuestion>();
+      }
+      private set => _laravelInterviewQuestions = value;
+    }
     public IEnumerable < BaseInterviewQuestion > ReactInterviewQuestions {
       get;
       private set;
@@ -698,7 +714,7 @@ namespace backend.Services {
       try {
           Console.WriteLine("Starting LoadLaravelData...");
           // Load Laravel Lessons
-          var LaravelLessonsPath = System.IO.Path.Combine(ContentPath, "lessons", "Laravel-fundamentals.json");
+          var LaravelLessonsPath = System.IO.Path.Combine(ContentPath, "lessons", "laravel-fundamentals.json");
           Console.WriteLine($"Laravel lessons path: {LaravelLessonsPath}");
           Console.WriteLine($"Laravel lessons file exists: {System.IO.File.Exists(LaravelLessonsPath)}");
 
@@ -715,7 +731,7 @@ namespace backend.Services {
           }
 
           // Load Laravel Interview Questions
-          var LaravelQuestionsPath = System.IO.Path.Combine(ContentPath, "quizzes", "Laravel-fundamentals.json");
+          var LaravelQuestionsPath = System.IO.Path.Combine(ContentPath, "quizzes", "laravel-fundamentals.json");
           Console.WriteLine($"Laravel questions path: {LaravelQuestionsPath}");
           Console.WriteLine($"Laravel questions file exists: {System.IO.File.Exists(LaravelQuestionsPath)}");
 
