@@ -1130,6 +1130,7 @@ if [ "$FRONTEND_ONLY" -eq 0 ]; then
         [ -z "$SLUG" ] && SLUG="programming-fundamentals"
     else
         log "⚠️  WARNING: Modules DB endpoint failed"
+        SLUG="programming-fundamentals"
     fi
 
     if timeout 10 curl -s http://localhost:8080/api/lessons-db | grep -q '\[\s*{'; then

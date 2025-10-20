@@ -7,8 +7,15 @@ export async function GET(req: NextRequest) {
     const query = url.search || '';
     const apiBase = (() => { try { return getApiBaseStrict(); } catch { return 'http://127.0.0.1:8080'; } })();
     const backendUrl = `${apiBase}/api/lessons-db${query}`;
-    const res = await fetch(backendUrl);
+
+    console.log('[api/lessons-db] Proxying GET to:', backendUrl);
+
+    const res = await fetch(backendUrl, { cache: 'no-store' });
     const text = await res.text();
+
+    console.log('[api/lessons-db] Backend status:', res.status);
+    console.log('[api/lessons-db] Backend content-type:', res.headers.get('content-type'));
+
     const contentType = res.headers.get('content-type') || 'application/json';
     return new NextResponse(text, { status: res.status, headers: { 'Content-Type': contentType } });
   } catch (error) {
