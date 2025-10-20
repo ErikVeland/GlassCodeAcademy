@@ -61,10 +61,10 @@ async function prewarmPath(base, path) {
 
 async function getModuleSlugs(frontendBase) {
   // Try to read the frontend-served content registry
-  const registryUrl = new URL('/content/registry.json', frontendBase).toString();
+  const registryUrl = new URL('/registry.json', frontendBase).toString();
   const reg = await fetchJson(registryUrl);
   if (!reg) {
-    console.warn('Could not load /content/registry.json; falling back to defaults.');
+    console.warn('Could not load /registry.json; falling back to defaults.');
     return [];
   }
   // The registry may have different shapes; try common ones
