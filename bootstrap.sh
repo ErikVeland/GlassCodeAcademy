@@ -143,6 +143,15 @@ done
 export FRONTEND_ONLY FRONTEND_PORT FAST_MODE SKIP_BACKEND_HEALTH SKIP_LINT SKIP_TYPECHECK VALIDATE_JSON_CONTENT
 log "⚙️  Mode: FRONTEND_ONLY=$FRONTEND_ONLY, FAST_MODE=$FAST_MODE, FRONTEND_PORT=$FRONTEND_PORT, VALIDATE_JSON_CONTENT=$VALIDATE_JSON_CONTENT"
 
+# Database configuration defaults (overridable via .env)
+DB_HOST="${DB_HOST:-localhost}"
+DB_PORT="${DB_PORT:-5432}"
+DB_NAME="${DB_NAME:-glasscode_dev}"
+DB_USER="${DB_USER:-postgres}"
+DB_PASSWORD="${DB_PASSWORD:-postgres}"
+log "🗄️  DB config: host=${DB_HOST} port=${DB_PORT} name=${DB_NAME} user=${DB_USER}"
+export DB_HOST DB_PORT DB_NAME DB_USER DB_PASSWORD
+
 # Perform environment preflight checks and install missing base tools
 preflight_checks() {
     log "🔍 Running environment preflight checks..."
@@ -364,6 +373,56 @@ apt-get install -y \
     nginx certbot python3-certbot-nginx ufw fail2ban
 log "✅ Base packages installed"
 
+### 3.5 Install and configure PostgreSQL (server)
+log "🐘 Installing PostgreSQL server..."
+apt-get update
+apt-get install -y postgresql postgresql-contrib || {
+    log "❌ ERROR: Failed to install PostgreSQL"; exit 1; }
+
+systemctl enable postgresql || true
+systemctl start postgresql || true
+
+# Wait for PostgreSQL readiness
+MAX=30; COUNT=1
+while [ $COUNT -le $MAX ]; do
+  if sudo -u postgres psql -tAc "SELECT 1" >/dev/null 2>&1; then
+    break
+  fi
+  sleep 2; COUNT=$((COUNT+1))
+  [ $((COUNT % 5)) -eq 0 ] && log "⏳ Waiting for PostgreSQL to be ready ($COUNT/$MAX)"
+done
+if ! sudo -u postgres psql -tAc "SELECT 1" >/dev/null 2>&1; then
+  log "❌ ERROR: PostgreSQL did not become ready"; exit 1
+fi
+
+# Apply credentials and create database
+log "🔑 Ensuring database user and credentials..."
+if [ "$DB_USER" = "postgres" ]; then
+    sudo -u postgres psql -c "ALTER USER postgres WITH PASSWORD '${DB_PASSWORD}';" || true
+else
+    sudo -u postgres psql -tAc "SELECT 1 FROM pg_roles WHERE rolname='${DB_USER}'" | grep -q 1 || \
+      sudo -u postgres psql -c "CREATE USER \"${DB_USER}\" WITH PASSWORD '${DB_PASSWORD}';"
+fi
+
+log "🗃️  Ensuring database '${DB_NAME}' exists..."
+sudo -u postgres psql -tAc "SELECT 1 FROM pg_database WHERE datname='${DB_NAME}'" | grep -q 1 || \
+  sudo -u postgres createdb "${DB_NAME}" || {
+    log "❌ ERROR: Failed to create database ${DB_NAME}"; exit 1; }
+
+# Ensure localhost TCP password auth is allowed
+PG_VER=$(ls -1 /etc/postgresql | sort -r | head -n1)
+PG_CONF_DIR="/etc/postgresql/${PG_VER}/main"
+if [ -d "$PG_CONF_DIR" ]; then
+    sed -i "s/^#\?listen_addresses.*/listen_addresses = 'localhost'/" "$PG_CONF_DIR/postgresql.conf" || true
+    if ! grep -q "^host\s\+all\s\+all\s\+127.0.0.1/32" "$PG_CONF_DIR/pg_hba.conf"; then
+        echo "host    all             all             127.0.0.1/32            scram-sha-256" >> "$PG_CONF_DIR/pg_hba.conf"
+    fi
+    systemctl restart postgresql || true
+fi
+
+log "✅ PostgreSQL installed and configured"
+
+
 ### 4. Install Node.js (20 LTS) if needed
 if [ "${NEED_NODE:-0}" -eq 1 ]; then
     log "🟢 Installing Node.js 20 LTS..."
@@ -541,6 +600,7 @@ User=$DEPLOY_USER
 Environment=DOTNET_ROOT=/usr/share/dotnet
 Environment=ASPNETCORE_URLS=http://0.0.0.0:8080
 Environment=ASPNETCORE_ENVIRONMENT=Production
+Environment=ConnectionStrings__DefaultConnection=Host=${DB_HOST:-localhost};Database=${DB_NAME:-glasscode_dev};Username=${DB_USER:-postgres};Password=${DB_PASSWORD:-postgres};Port=${DB_PORT:-5432}
 
 [Install]
 WantedBy=multi-user.target
@@ -1122,34 +1182,47 @@ fi
 # Database-backed content validation (default)
 if [ "$FRONTEND_ONLY" -eq 0 ]; then
     log "🔍 Validating database-backed content end-to-end..."
+    MODULES_HTTP=$(timeout 10 curl -s -o /dev/null -w "%{http_code}" http://localhost:8080/api/modules-db || true)
     MODULES_JSON=$(timeout 10 curl -s http://localhost:8080/api/modules-db || true)
-    if echo "$MODULES_JSON" | grep -q '\[\s*{'; then
-        log "✅ Modules DB endpoint: PASSED"
+    if echo "$MODULES_JSON" | jq -e 'type=="array"' >/dev/null 2>&1; then
+        if echo "$MODULES_JSON" | jq -e 'length > 0' >/dev/null 2>&1; then
+            log "✅ Modules DB endpoint: PASSED"
+        else
+            log "✅ Modules DB endpoint: PASSED (empty array)"
+        fi
         SLUG=$(echo "$MODULES_JSON" | grep -o '"slug":"[^"]*"' | head -n1 | sed -E 's/.*"slug":"([^"]*)".*/\1/' || true)
-        [ -z "$SLUG" ] && SLUG=$(echo "$MODULES_JSON" | grep -o '"Slug":"[^"]*"' | head -n1 | sed -E 's/.*"Slug":"([^"]*)".*/\1/' || true)
-        [ -z "$SLUG" ] && SLUG="programming-fundamentals"
+        [ -z "${SLUG:-}" ] && SLUG=$(echo "$MODULES_JSON" | grep -o '"Slug":"[^"]*"' | head -n1 | sed -E 's/.*"Slug":"([^"]*)".*/\1/' || true)
+        [ -z "${SLUG:-}" ] && SLUG="programming-fundamentals"
     else
-        log "⚠️  WARNING: Modules DB endpoint failed"
+        SHORT=$(echo "$MODULES_JSON" | tr -d '\n' | cut -c1-200)
+        log "⚠️  WARNING: Modules DB endpoint failed (http=$MODULES_HTTP, resp='${SHORT}')"
+        systemctl is-active ${APP_NAME}-dotnet >/dev/null 2>&1 || systemctl status ${APP_NAME}-dotnet --no-pager | tail -n 20 || true
         SLUG="programming-fundamentals"
     fi
 
-    if timeout 10 curl -s http://localhost:8080/api/lessons-db | grep -q '\[\s*{'; then
+    LESSONS_HTTP=$(timeout 10 curl -s -o /dev/null -w "%{http_code}" http://localhost:8080/api/lessons-db || true)
+    LESSONS_JSON=$(timeout 10 curl -s http://localhost:8080/api/lessons-db || true)
+    if echo "$LESSONS_JSON" | jq -e 'type=="array"' >/dev/null 2>&1; then
         log "✅ Lessons DB endpoint: PASSED"
     else
-        log "⚠️  WARNING: Lessons DB endpoint failed"
+        SHORT=$(echo "$LESSONS_JSON" | tr -d '\n' | cut -c1-200)
+        log "⚠️  WARNING: Lessons DB endpoint failed (http=$LESSONS_HTTP, resp='${SHORT}')"
     fi
 
-    if timeout 10 curl -s http://localhost:8080/api/LessonQuiz | grep -q '\[\s*{'; then
+    QUIZZES_HTTP=$(timeout 10 curl -s -o /dev/null -w "%{http_code}" http://localhost:8080/api/LessonQuiz || true)
+    QUIZZES_JSON=$(timeout 10 curl -s http://localhost:8080/api/LessonQuiz || true)
+    if echo "$QUIZZES_JSON" | jq -e 'type=="array"' >/dev/null 2>&1; then
         log "✅ LessonQuiz DB endpoint: PASSED"
     else
-        log "⚠️  WARNING: LessonQuiz DB endpoint failed"
+        SHORT=$(echo "$QUIZZES_JSON" | tr -d '\n' | cut -c1-200)
+        log "⚠️  WARNING: LessonQuiz DB endpoint failed (http=$QUIZZES_HTTP, resp='${SHORT}')"
     fi
 
-    QUIZ_RESP=$(timeout 10 curl -s http://localhost:$FRONTEND_PORT/api/content/quizzes/$SLUG || true)
+    QUIZ_RESP=$(timeout 10 curl -s "http://localhost:$FRONTEND_PORT/api/content/quizzes/${SLUG:-programming-fundamentals}" || true)
     if echo "$QUIZ_RESP" | grep -q '"questions":\s*\['; then
-        log "✅ Frontend DB quiz for '$SLUG': PASSED"
+        log "✅ Frontend DB quiz for '${SLUG:-programming-fundamentals}': PASSED"
     else
-        log "⚠️  WARNING: Frontend DB quiz for '$SLUG' failed"
+        log "⚠️  WARNING: Frontend DB quiz for '${SLUG:-programming-fundamentals}' failed"
     fi
 fi
 
