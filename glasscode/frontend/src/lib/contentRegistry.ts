@@ -178,129 +178,46 @@ class ContentRegistryLoader {
    */
   private async loadRegistryInternal(): Promise<ContentRegistry> {
     try {
-      // For server-side rendering, read the file directly
-      // For client-side, use fetch
-      if (typeof window === 'undefined') {
-        // Server-side: read file directly
-        console.log('Server-side registry loading, cwd:', process.cwd());
-        
-        // Dynamically import fs and path only when needed on server-side
-        const fs = await import('fs');
-        const path = await import('path');
-        
-        // Try to find the registry.json file in different possible locations
-        const possiblePaths = [
-          path.join(process.cwd(), 'public', 'registry.json'),
-          path.join(process.cwd(), '..', '..', 'content', 'registry.json'),
-          path.join(__dirname, '..', 'public', 'registry.json'),
-        ];
-        
-        let registryData: unknown = null;
-        let foundPath = '';
-        
-        for (const registryPath of possiblePaths) {
-          try {
-            console.log(`Checking path: ${registryPath}`);
-            console.log(`File exists: ${fs.existsSync(registryPath)}`);
-            if (fs.existsSync(registryPath)) {
-              const fileContent = fs.readFileSync(registryPath, 'utf-8');
-              registryData = JSON.parse(fileContent);
-              foundPath = registryPath;
-              break;
-            }
-          } catch (_err) {
-            console.error(`Error reading ${registryPath}:`, _err);
-            // Continue to next path
-          }
-        }
-        
-        if (!registryData) {
-          // Fallback to fetch even in server-side context
-          console.log('Falling back to fetch for registry');
-          const controller = new AbortController();
-          const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 second timeout
-          
-          try {
-            const response = await fetch(`/api/content/registry`, {
-              signal: controller.signal
-            });
-            clearTimeout(timeoutId);
-            
-            if (!response.ok) {
-              console.warn(`Registry fetch failed ${response.status} ${response.statusText}, using minimal fallback`);
-              const minimal: ContentRegistry = {
-                version: '0.0.0',
-                lastUpdated: new Date().toISOString(),
-                tiers: {
-                  foundational: { level: 1, title: 'Foundational', description: '', focusArea: 'Core', color: '#4B5563', learningObjectives: [] },
-                  core: { level: 2, title: 'Core', description: '', focusArea: 'Core', color: '#2563EB', learningObjectives: [] },
-                  specialized: { level: 3, title: 'Specialized', description: '', focusArea: 'Advanced', color: '#10B981', learningObjectives: [] },
-                  quality: { level: 4, title: 'Quality', description: '', focusArea: 'Quality', color: '#F59E0B', learningObjectives: [] },
-                },
-                modules: [],
-                globalSettings: {
-                  contentThresholds: { strictMode: false, developmentMode: true, minimumLessonsPerModule: 0, minimumQuestionsPerModule: 0, requiredSchemaCompliance: 0 },
-                  routingRules: { enableLegacyRedirects: true, generate404Fallbacks: true, requireContentThresholds: false },
-                  seoSettings: { generateSitemap: true, includeLastModified: false, excludeContentPending: false },
-                },
-              };
-              return minimal;
-            }
-            const registryDataFetch: unknown = await response.json();
-            return registryDataFetch as ContentRegistry;
-          } catch (fetchError) {
-            clearTimeout(timeoutId);
-            console.warn('Registry fetch failed, using minimal fallback:', fetchError);
-            const minimal: ContentRegistry = {
-              version: '0.0.0',
-              lastUpdated: new Date().toISOString(),
-              tiers: {
-                foundational: { level: 1, title: 'Foundational', description: '', focusArea: 'Core', color: '#4B5563', learningObjectives: [] },
-                core: { level: 2, title: 'Core', description: '', focusArea: 'Core', color: '#2563EB', learningObjectives: [] },
-                specialized: { level: 3, title: 'Specialized', description: '', focusArea: 'Advanced', color: '#10B981', learningObjectives: [] },
-                quality: { level: 4, title: 'Quality', description: '', focusArea: 'Quality', color: '#F59E0B', learningObjectives: [] },
-              },
-              modules: [],
-              globalSettings: {
-                contentThresholds: { strictMode: false, developmentMode: true, minimumLessonsPerModule: 0, minimumQuestionsPerModule: 0, requiredSchemaCompliance: 0 },
-                routingRules: { enableLegacyRedirects: true, generate404Fallbacks: true, requireContentThresholds: false },
-                seoSettings: { generateSitemap: true, includeLastModified: false, excludeContentPending: false },
-              },
-            };
-            return minimal;
-          }
-        }
-        
-        console.log(`Loaded registry from: ${foundPath}`);
-        return registryData as ContentRegistry;
-      } else {
-        // Client-side: fetch from public directory with timeout
-        console.log('Client-side: fetching registry.json');
-        const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 second timeout
-        
+      const isBrowser = typeof window !== 'undefined';
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 10000);
+
+      const base = isBrowser ? '' : (() => { try { return getPublicOriginStrict().replace(/\/+$/, ''); } catch { return ''; } })();
+      const candidates = isBrowser
+        ? ['/registry.json', '/api/content/registry']
+        : (base ? [`${base}/registry.json`, `${base}/api/content/registry`] : ['/registry.json', '/api/content/registry']);
+
+      for (const url of candidates) {
         try {
-          const response = await fetch('/registry.json', {
-            signal: controller.signal
-          });
-          clearTimeout(timeoutId);
-          
-          console.log('Registry fetch response:', response.status, response.statusText);
-          if (!response.ok) {
-            throw new Error(`Failed to fetch registry.json: ${response.status} ${response.statusText}`);
+          const res = await fetch(url, { signal: controller.signal, cache: 'no-store' });
+          if (res.ok) {
+            clearTimeout(timeoutId);
+            const data: unknown = await res.json();
+            return data as ContentRegistry;
           }
-          const registryData: unknown = await response.json();
-          console.log('Registry data loaded, modules count:', (registryData as ContentRegistry).modules?.length);
-          console.log('React fundamentals module:', (registryData as ContentRegistry).modules?.find(m => m.slug === 'react-fundamentals'));
-          return registryData as ContentRegistry;
-        } catch (fetchError) {
-          clearTimeout(timeoutId);
-          throw new Error(`Failed to fetch registry.json: ${fetchError instanceof Error ? fetchError.message : 'Unknown error'}`);
+        } catch {
+          // Try next candidate
         }
       }
-    } catch (error: unknown) {
-      console.error('Failed to load content registry:', error);
-      // Safe minimal fallback to avoid breaking pages
+      clearTimeout(timeoutId);
+      const minimal: ContentRegistry = {
+        version: '0.0.0',
+        lastUpdated: new Date().toISOString(),
+        tiers: {
+          foundational: { level: 1, title: 'Foundational', description: '', focusArea: 'Core', color: '#4B5563', learningObjectives: [] },
+          core: { level: 2, title: 'Core', description: '', focusArea: 'Core', color: '#2563EB', learningObjectives: [] },
+          specialized: { level: 3, title: 'Specialized', description: '', focusArea: 'Advanced', color: '#10B981', learningObjectives: [] },
+          quality: { level: 4, title: 'Quality', description: '', focusArea: 'Quality', color: '#F59E0B', learningObjectives: [] },
+        },
+        modules: [],
+        globalSettings: {
+          contentThresholds: { strictMode: false, developmentMode: true, minimumLessonsPerModule: 0, minimumQuestionsPerModule: 0, requiredSchemaCompliance: 0 },
+          routingRules: { enableLegacyRedirects: true, generate404Fallbacks: true, requireContentThresholds: false },
+          seoSettings: { generateSitemap: true, includeLastModified: false, excludeContentPending: false },
+        },
+      };
+      return minimal;
+    } catch {
       const minimal: ContentRegistry = {
         version: '0.0.0',
         lastUpdated: new Date().toISOString(),
@@ -472,7 +389,7 @@ class ContentRegistryLoader {
         : (Array.isArray((data as { lessons?: Lesson[] })?.lessons) ? ((data as { lessons?: Lesson[] }).lessons as Lesson[]) : []);
       return lessonsArr.map((l, i) => (typeof l.order === 'number' ? l : { ...l, order: i + 1 }));
     }
-    // Server-side: first try hitting our API route via public origin; then file fallbacks
+    // Server-side: first try hitting our API route via public origin
     const origin = (() => { try { return getPublicOriginStrict(); } catch { return ''; } })();
     if (origin) {
       try {
@@ -486,30 +403,7 @@ class ContentRegistryLoader {
         }
       } catch {}
     }
-    // File fallbacks (server-side only)
-    try {
-      const fs = await import('fs');
-      const path = await import('path');
-      const possiblePaths = [
-        path.join(process.cwd(), 'public', 'content', 'lessons', `${moduleSlug}.json`),
-        path.join(process.cwd(), '..', '..', 'content', 'lessons', moduleSlug, 'lessons.json'),
-        path.join(process.cwd(), '..', '..', 'content', 'lessons', `${moduleSlug}.json`),
-        ...(process.env.NEXT_PUBLIC_BASE_URL?.includes('glasscode.academy') ?
-          [path.join('/srv/academy', 'content', 'lessons', `${moduleSlug}.json`)] : []),
-      ];
-      for (const lessonsPath of possiblePaths) {
-        try {
-          if (fs.existsSync(lessonsPath)) {
-            const raw = fs.readFileSync(lessonsPath, 'utf8');
-            const data: unknown = JSON.parse(raw);
-            const lessonsArr: Lesson[] = Array.isArray(data)
-              ? (data as Lesson[])
-              : (Array.isArray((data as { lessons?: Lesson[] })?.lessons) ? ((data as { lessons?: Lesson[] }).lessons as Lesson[]) : []);
-            return lessonsArr.map((l, i) => (typeof l.order === 'number' ? l : { ...l, order: i + 1 }));
-          }
-        } catch {}
-      }
-    } catch {}
+    // Remove server-side file fallbacks to avoid bundling Node built-ins
     return [];
   }
 
@@ -549,30 +443,6 @@ class ContentRegistryLoader {
         }
       } catch {}
 
-      // File fallbacks (server-side only)
-      try {
-        const fs = await import('fs');
-        const path = await import('path');
-        const possiblePaths = [
-          path.join(process.cwd(), 'public', 'content', 'quizzes', `${shortSlug}.json`),
-          path.join(process.cwd(), '..', '..', 'content', 'quizzes', `${shortSlug}.json`),
-          ...(process.env.NEXT_PUBLIC_BASE_URL?.includes('glasscode.academy') ?
-            [path.join('/srv/academy', 'content', 'quizzes', `${shortSlug}.json`)] : []),
-        ];
-        for (const quizPath of possiblePaths) {
-          try {
-            if (fs.existsSync(quizPath)) {
-              const fileContent = fs.readFileSync(quizPath, 'utf8');
-              const quizData: unknown = JSON.parse(fileContent);
-              if (!(quizData && typeof quizData === 'object')) continue;
-              const quiz = quizData as Quiz;
-              const normalizedQuestions = Array.isArray(quiz.questions) ? quiz.questions.map(q => normalizeQuestion(q)) : [];
-              return { ...quiz, questions: normalizedQuestions };
-            }
-          } catch {}
-        }
-      } catch {}
-
       return null;
     } catch (error: unknown) {
       console.error(`Failed to load quiz for ${moduleSlug}:`, error);
@@ -592,49 +462,23 @@ class ContentRegistryLoader {
    * Get programming fundamentals questions via GraphQL
    */
   async getProgrammingQuestions(): Promise<ProgrammingQuestion[]> {
-    // Load programming fundamentals questions from local quiz content
     try {
-      if (typeof window === 'undefined') {
-        const fs = await import('fs');
-        const path = await import('path');
-        const possiblePaths = [
-          path.join(process.cwd(), '..', '..', 'content', 'quizzes', `programming-fundamentals.json`),
-          path.join(process.cwd(), 'content', 'quizzes', `programming-fundamentals.json`),
-          path.join(__dirname, '..', '..', '..', '..', 'content', 'quizzes', `programming-fundamentals.json`),
-          // Production path (only if NEXT_PUBLIC_BASE_URL indicates production)
-          ...(process.env.NEXT_PUBLIC_BASE_URL?.includes('glasscode.academy') ? 
-            [path.join('/srv/academy', 'content', 'quizzes', `programming-fundamentals.json`)] : []),
-        ];
-        for (const quizPath of possiblePaths) {
-          try {
-            if (fs.existsSync(quizPath)) {
-              const fileContent = fs.readFileSync(quizPath, 'utf8');
-              const quizData: unknown = JSON.parse(fileContent);
-              const questions = (quizData && typeof quizData === 'object' && (quizData as Quiz).questions) ? (quizData as Quiz).questions : [];
-              return questions.map(q => normalizeQuestion(q));
-            }
-          } catch {
-            // Continue to next path
-          }
-        }
-        return [];
-      } else {
-        const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 second timeout
-        
-        const response = await fetch(`/api/content/quizzes/programming-fundamentals`, {
-          signal: controller.signal
-        }).finally(() => {
-          clearTimeout(timeoutId);
-        });
-        
-        if (!response.ok) return [];
-        const data: unknown = await response.json();
-        const questions = (data && typeof data === 'object' && (data as Quiz).questions) ? (data as Quiz).questions : [];
-        return questions.map(q => normalizeQuestion(q));
-      }
+      const isBrowser = typeof window !== 'undefined';
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 10000);
+      const base = isBrowser ? '' : (() => { try { return getPublicOriginStrict().replace(/\/+$/, ''); } catch { return ''; } })();
+      const url = isBrowser ? `/api/content/quizzes/programming-fundamentals` : (base ? `${base}/api/content/quizzes/programming-fundamentals` : `/api/content/quizzes/programming-fundamentals`);
+
+      const response = await fetch(url, { signal: controller.signal, cache: 'no-store' }).finally(() => {
+        clearTimeout(timeoutId);
+      });
+
+      if (!response.ok) return [];
+      const data: unknown = await response.json();
+      const questions = (data && typeof data === 'object' && (data as Quiz).questions) ? (data as Quiz).questions : [];
+      return questions.map(q => normalizeQuestion(q));
     } catch (error: unknown) {
-      console.error('Failed to load programming fundamentals questions from local content:', error);
+      console.error('Failed to load programming fundamentals questions:', error);
       return [];
     }
   }

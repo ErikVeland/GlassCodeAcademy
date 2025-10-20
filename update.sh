@@ -49,12 +49,14 @@ SKIP_LINT=0
 SKIP_TYPECHECK=0
 SKIP_BACKEND_HEALTH=0
 FRONTEND_ONLY=0
+VALIDATE_JSON_CONTENT=0
 # Allow overriding port via CLI
 while [[ $# -gt 0 ]]; do
     case "$1" in
         --fast) FAST_MODE=1; SKIP_CONTENT_VALIDATION=1; SKIP_LINT=1; SKIP_TYPECHECK=1; SKIP_BACKEND_HEALTH=1; shift;;
         --frontend-only) FRONTEND_ONLY=1; shift;;
         --skip-content-validation) SKIP_CONTENT_VALIDATION=1; shift;;
+        --validate-json-content) VALIDATE_JSON_CONTENT=1; shift;;
         --skip-lint) SKIP_LINT=1; shift;;
         --skip-typecheck) SKIP_TYPECHECK=1; shift;;
         --skip-backend-health) SKIP_BACKEND_HEALTH=1; shift;;
@@ -62,9 +64,9 @@ while [[ $# -gt 0 ]]; do
         *) log "⚠️  WARNING: Unknown argument: $1"; shift;;
     esac
 done
-export FAST_MODE SKIP_CONTENT_VALIDATION SKIP_LINT SKIP_TYPECHECK SKIP_BACKEND_HEALTH FRONTEND_ONLY FRONTEND_PORT
+export FAST_MODE SKIP_CONTENT_VALIDATION SKIP_LINT SKIP_TYPECHECK SKIP_BACKEND_HEALTH FRONTEND_ONLY FRONTEND_PORT VALIDATE_JSON_CONTENT
 log "🌐 Frontend port: $FRONTEND_PORT"
-log "⚙️  Flags: FAST=$FAST_MODE FRONTEND_ONLY=$FRONTEND_ONLY SKIP_VALIDATION=$SKIP_CONTENT_VALIDATION SKIP_LINT=$SKIP_LINT SKIP_TS=$SKIP_TYPECHECK SKIP_BACKEND_HEALTH=$SKIP_BACKEND_HEALTH"
+log "⚙️  Flags: FAST=$FAST_MODE FRONTEND_ONLY=$FRONTEND_ONLY SKIP_VALIDATION=$SKIP_CONTENT_VALIDATION VALIDATE_JSON=$VALIDATE_JSON_CONTENT SKIP_LINT=$SKIP_LINT SKIP_TS=$SKIP_TYPECHECK SKIP_BACKEND_HEALTH=$SKIP_BACKEND_HEALTH"
 
 draw_progress() {
     # Usage: draw_progress current total [prefix]
@@ -335,23 +337,23 @@ if command -v dotnet >/dev/null; then
 fi
 
 ### 6. Validate Content
-log "🔍 Validating content..."
+log "🔍 Content validation (JSON optional, DB-first)..."
 cd "$APP_DIR"
-if [ -f "scripts/validate-content.js" ]; then
+if [ "${VALIDATE_JSON_CONTENT:-0}" -eq 1 ] && [ -f "scripts/validate-content.js" ]; then
     if [ "${SKIP_CONTENT_VALIDATION:-0}" -eq 1 ] || [ "${FAST_MODE:-0}" -eq 1 ]; then
-        log "⏭️  Fast mode: skipping content validation"
+        log "⏭️  Fast/skip mode: skipping JSON content validation"
     elif node scripts/validate-content.js; then
-        log "✅ Content validation passed"
+        log "✅ JSON content validation passed"
     else
         if [ "${FAST_MODE:-0}" -eq 1 ]; then
-            log "⚠️  Content validation failed, continuing due to fast mode"
+            log "⚠️  JSON content validation failed, continuing due to fast mode"
         else
-            log "❌ ERROR: Content validation failed"
+            log "❌ ERROR: JSON content validation failed"
             rollback
         fi
     fi
 else
-    log "⚠️  Validation script not found, skipping content validation"
+    log "ℹ️  Skipping JSON file validation (DB-first mode)"
 fi
 
 ### 7. Smart Backend Build
@@ -1029,42 +1031,98 @@ if [[ "$FRONTEND_OK" != true ]]; then
     fi
 fi
 
-# Check frontend content via API route with retries (more reliable than static /registry.json)
-log "🔍 Checking frontend content..."
+# Database-backed content validation (default)
+log "🔍 Validating database-backed content end-to-end..."
 if [ "${SKIP_CONTENT_VALIDATION:-0}" -eq 1 ] || [ "${FAST_MODE:-0}" -eq 1 ]; then
-    log "⏭️  Skipping frontend content validation due to fast/skip settings"
+    log "⏭️  Skipping DB content validation due to fast/skip settings"
 else
+    ATTEMPT=1
+    SLEEP_INTERVAL=$([ "${FAST_MODE:-0}" -eq 1 ] && echo 2 || echo 3)
+    DB_CONTENT_OK=false
+    MODULES_JSON=""
+    SLUG=""
+    # Fetch modules from backend DB
+    while [[ $ATTEMPT -le $MAX_ATTEMPTS ]]; do
+        MODULES_JSON=$(timeout 10 curl -s http://localhost:8080/api/modules-db || true)
+        if echo "$MODULES_JSON" | grep -q '\[\s*{'; then
+            # Extract a slug (camelCase or PascalCase)
+            SLUG=$(echo "$MODULES_JSON" | grep -o '"slug":"[^"]*"' | head -n1 | sed -E 's/.*"slug":"([^"]*)".*/\1/' || true)
+            [ -z "$SLUG" ] && SLUG=$(echo "$MODULES_JSON" | grep -o '"Slug":"[^"]*"' | head -n1 | sed -E 's/.*"Slug":"([^"]*)".*/\1/' || true)
+            [ -z "$SLUG" ] && SLUG="programming-fundamentals"
+            break
+        fi
+        draw_progress "$ATTEMPT" "$MAX_ATTEMPTS" "  ⏳ Modules DB: "
+        ATTEMPT=$((ATTEMPT + 1))
+        sleep $SLEEP_INTERVAL
+    done
+    if [ -z "$MODULES_JSON" ]; then
+        log "❌ Failed to fetch modules from DB"
+        rollback
+    else
+        log "✅ Modules DB endpoint: PASSED"
+    fi
+
+    # Lessons DB
+    if timeout 10 curl -s http://localhost:8080/api/lessons-db | grep -q '\[\s*{'; then
+        log "✅ Lessons DB endpoint: PASSED"
+    else
+        log "❌ Lessons DB endpoint: FAILED"
+        rollback
+    fi
+
+    # LessonQuiz DB
+    if timeout 10 curl -s http://localhost:8080/api/LessonQuiz | grep -q '\[\s*{'; then
+        log "✅ LessonQuiz DB endpoint: PASSED"
+    else
+        log "❌ LessonQuiz DB endpoint: FAILED"
+        rollback
+    fi
+
+    # End-to-end: Frontend API consuming DB quizzes
+    QUIZ_RESP=$(timeout 10 curl -s http://localhost:$FRONTEND_PORT/api/content/quizzes/$SLUG || true)
+    if echo "$QUIZ_RESP" | grep -q '"questions":\s*\['; then
+        log "✅ Frontend DB quiz for '$SLUG': PASSED"
+        DB_CONTENT_OK=true
+    else
+        log "❌ Frontend DB quiz for '$SLUG': FAILED"
+        rollback
+    fi
+fi
+
+# Optional JSON content validation (registry)
+if [ "${VALIDATE_JSON_CONTENT:-0}" -eq 1 ]; then
+    log "🔍 Validating JSON content (optional flag enabled)..."
     ATTEMPT=1
     CONTENT_OK=false
     RESP=""
     while [[ $ATTEMPT -le $MAX_ATTEMPTS ]]; do
         RESP=$(timeout 10 curl -s http://localhost:$FRONTEND_PORT/api/content/registry || true)
         if echo "$RESP" | grep -q '"modules"'; then
-            printf "\n"  # Clear progress line
+            printf "\n"
             log "✅ Frontend content availability: PASSED (api/content/registry)"
             CONTENT_OK=true
             break
         fi
-        # Fallback: try legacy static file if API route not ready
         STATIC_RESP=$(timeout 10 curl -s http://localhost:$FRONTEND_PORT/registry.json || true)
         if echo "$STATIC_RESP" | grep -q '"modules"'; then
-            printf "\n"  # Clear progress line
+            printf "\n"
             log "✅ Frontend content availability: PASSED (registry.json)"
             CONTENT_OK=true
             RESP="$STATIC_RESP"
             break
         fi
-        draw_progress "$ATTEMPT" "$MAX_ATTEMPTS" "  ⏳ Frontend content: "
+        draw_progress "$ATTEMPT" "$MAX_ATTEMPTS" "  ⏳ Frontend JSON content: "
         ATTEMPT=$((ATTEMPT + 1))
         sleep $SLEEP_INTERVAL
     done
     printf "\n" 2>/dev/null || true
     if [[ "$CONTENT_OK" != true ]]; then
-        log "❌ Frontend content availability: FAILED"
-        log "🧪 Diagnostic: API /api/content/registry response"
+        log "❌ Frontend JSON content availability: FAILED"
         echo "$RESP" | head -n 100 || true
         rollback
     fi
+else
+    log "ℹ️  Skipping JSON content validation (not enabled)"
 fi
 
 nginx -t && systemctl reload nginx

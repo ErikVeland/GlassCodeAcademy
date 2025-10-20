@@ -98,6 +98,7 @@ FAST_MODE=0
 SKIP_BACKEND_HEALTH=0
 SKIP_LINT=0
 SKIP_TYPECHECK=0
+VALIDATE_JSON_CONTENT=0
 while [[ $# -gt 0 ]]; do
     case "$1" in
         --frontend-only)
@@ -120,6 +121,10 @@ while [[ $# -gt 0 ]]; do
             SKIP_TYPECHECK=1
             shift
             ;;
+        --validate-json-content)
+            VALIDATE_JSON_CONTENT=1
+            shift
+            ;;
         --port)
             if [[ -n "${2:-}" ]]; then
                 FRONTEND_PORT="$2"
@@ -135,8 +140,8 @@ while [[ $# -gt 0 ]]; do
             ;;
     esac
 done
-export FRONTEND_ONLY FRONTEND_PORT FAST_MODE SKIP_BACKEND_HEALTH SKIP_LINT SKIP_TYPECHECK
-log "⚙️  Mode: FRONTEND_ONLY=$FRONTEND_ONLY, FAST_MODE=$FAST_MODE, FRONTEND_PORT=$FRONTEND_PORT"
+export FRONTEND_ONLY FRONTEND_PORT FAST_MODE SKIP_BACKEND_HEALTH SKIP_LINT SKIP_TYPECHECK VALIDATE_JSON_CONTENT
+log "⚙️  Mode: FRONTEND_ONLY=$FRONTEND_ONLY, FAST_MODE=$FAST_MODE, FRONTEND_PORT=$FRONTEND_PORT, VALIDATE_JSON_CONTENT=$VALIDATE_JSON_CONTENT"
 
 # Perform environment preflight checks and install missing base tools
 preflight_checks() {
@@ -797,50 +802,75 @@ fi
 ss -tulpn 2>/dev/null | grep ":$FRONTEND_PORT" || true
 
 ### Frontend service (production mode)
-# Generate unit with conditional backend gating and standalone working directory
+# Generate unit with conditional backend gating and Next.js standalone ExecStart
 UNIT_FILE_PATH="/etc/systemd/system/${APP_NAME}-frontend.service"
+
+# Prepare backend health check gating script (used in ExecStartPre)
+cat >"$APP_DIR/glasscode/frontend/check_backend_health.sh" <<'EOS'
+#!/usr/bin/env bash
+MAX=30
+COUNT=1
+while [ $COUNT -le $MAX ]; do
+  HTTP=$(timeout 10 curl -s -o /dev/null -w "%{http_code}" http://127.0.0.1:8080/api/health || true)
+  RESP=$(timeout 10 curl -s http://127.0.0.1:8080/api/health || true)
+  STATUS=$(echo "$RESP" | jq -r .status 2>/dev/null || echo "$RESP" | grep -o '"status":"[^"]*"' | cut -d '"' -f4)
+
+  if [ "$HTTP" = "200" ] && { [ "$STATUS" = "healthy" ] || [ "$STATUS" = "degraded" ] || [ -n "$RESP" ]; }; then
+    exit 0
+  fi
+  sleep 5; COUNT=$((COUNT+1))
+done
+echo "Backend health check gating failed: http='$HTTP' status='$STATUS' resp='$RESP'"
+exit 1
+EOS
+chmod +x "$APP_DIR/glasscode/frontend/check_backend_health.sh"
+
 if [ "$FRONTEND_ONLY" -eq 0 ]; then
     log "⚙️  Writing frontend unit with backend dependency at $UNIT_FILE_PATH"
-    cat >/etc/systemd/system/${APP_NAME}-frontend.service <<EOF
+    cat >"$UNIT_FILE_PATH" <<EOF
 [Unit]
 Description=$APP_NAME Next.js Frontend
 After=network.target ${APP_NAME}-dotnet.service
 
 [Service]
-WorkingDirectory=$APP_DIR/glasscode/frontend/.next/standalone
+WorkingDirectory=$APP_DIR/glasscode/frontend
 EnvironmentFile=$APP_DIR/glasscode/frontend/.env.production
+ExecStartPre=$APP_DIR/glasscode/frontend/check_backend_health.sh
+ExecStart=/usr/bin/node .next/standalone/server.js -p $FRONTEND_PORT
 Restart=always
 RestartSec=10
 User=$DEPLOY_USER
 Environment=NODE_ENV=production
-Environment=PORT=$FRONTEND_PORT
-TimeoutStartSec=30
-ExecStart=/usr/bin/node server.js
+TimeoutStartSec=300
 
 [Install]
 WantedBy=multi-user.target
 EOF
 else
     log "⚙️  Writing frontend unit (frontend-only mode) at $UNIT_FILE_PATH"
-    cat >/etc/systemd/system/${APP_NAME}-frontend.service <<EOF
+    cat >"$UNIT_FILE_PATH" <<EOF
 [Unit]
 Description=$APP_NAME Next.js Frontend
 After=network.target
 
 [Service]
-WorkingDirectory=$APP_DIR/glasscode/frontend/.next/standalone
+WorkingDirectory=$APP_DIR/glasscode/frontend
+EnvironmentFile=$APP_DIR/glasscode/frontend/.env.production
+ExecStart=/usr/bin/node .next/standalone/server.js -p $FRONTEND_PORT
 Restart=always
 RestartSec=10
 User=$DEPLOY_USER
-EnvironmentFile=$APP_DIR/glasscode/frontend/.env.production
 Environment=NODE_ENV=production
-Environment=PORT=$FRONTEND_PORT
-TimeoutStartSec=30
-ExecStart=/usr/bin/node server.js
+TimeoutStartSec=300
 
 [Install]
 WantedBy=multi-user.target
 EOF
+fi
+
+# Remove ExecStartPre when skipping backend health gating (fast mode or explicitly skipped, or frontend-only)
+if [ "${SKIP_BACKEND_HEALTH:-0}" -eq 1 ] || [ "${FAST_MODE:-0}" -eq 1 ] || [ "$FRONTEND_ONLY" -eq 1 ]; then
+    sed -i '/^ExecStartPre=.*check_backend_health.sh$/d' "$UNIT_FILE_PATH" || true
 fi
 
 # Verify the generated unit file when systemd-analyze is available
@@ -1063,6 +1093,8 @@ if [ "${FAST_MODE:-0}" -eq 1 ]; then
 else
     sleep 5
 fi
+
+# Backend health
 if [ "$FRONTEND_ONLY" -eq 0 ]; then
   if [ "${SKIP_BACKEND_HEALTH:-0}" -eq 1 ] || [ "${FAST_MODE:-0}" -eq 1 ]; then
       log "ℹ️  Skipping backend health check (fast/skip mode)"
@@ -1079,11 +1111,63 @@ else
   log "ℹ️  Skipping backend health check (frontend-only mode)"
 fi
 
+# Frontend availability
 FRONTEND_TIMEOUT=$([ "${FAST_MODE:-0}" -eq 1 ] && echo 5 || echo 10)
 if timeout $FRONTEND_TIMEOUT curl -f http://localhost:$FRONTEND_PORT >/dev/null 2>&1; then
     log "✅ Frontend health check: PASSED"
 else
     log "⚠️  WARNING: Frontend health check failed"
+fi
+
+# Database-backed content validation (default)
+if [ "$FRONTEND_ONLY" -eq 0 ]; then
+    log "🔍 Validating database-backed content end-to-end..."
+    MODULES_JSON=$(timeout 10 curl -s http://localhost:8080/api/modules-db || true)
+    if echo "$MODULES_JSON" | grep -q '\[\s*{'; then
+        log "✅ Modules DB endpoint: PASSED"
+        SLUG=$(echo "$MODULES_JSON" | grep -o '"slug":"[^"]*"' | head -n1 | sed -E 's/.*"slug":"([^"]*)".*/\1/' || true)
+        [ -z "$SLUG" ] && SLUG=$(echo "$MODULES_JSON" | grep -o '"Slug":"[^"]*"' | head -n1 | sed -E 's/.*"Slug":"([^"]*)".*/\1/' || true)
+        [ -z "$SLUG" ] && SLUG="programming-fundamentals"
+    else
+        log "⚠️  WARNING: Modules DB endpoint failed"
+    fi
+
+    if timeout 10 curl -s http://localhost:8080/api/lessons-db | grep -q '\[\s*{'; then
+        log "✅ Lessons DB endpoint: PASSED"
+    else
+        log "⚠️  WARNING: Lessons DB endpoint failed"
+    fi
+
+    if timeout 10 curl -s http://localhost:8080/api/LessonQuiz | grep -q '\[\s*{'; then
+        log "✅ LessonQuiz DB endpoint: PASSED"
+    else
+        log "⚠️  WARNING: LessonQuiz DB endpoint failed"
+    fi
+
+    QUIZ_RESP=$(timeout 10 curl -s http://localhost:$FRONTEND_PORT/api/content/quizzes/$SLUG || true)
+    if echo "$QUIZ_RESP" | grep -q '"questions":\s*\['; then
+        log "✅ Frontend DB quiz for '$SLUG': PASSED"
+    else
+        log "⚠️  WARNING: Frontend DB quiz for '$SLUG' failed"
+    fi
+fi
+
+# Optional JSON content validation (registry)
+if [ "${VALIDATE_JSON_CONTENT:-0}" -eq 1 ]; then
+    log "🔍 Validating JSON content (optional flag enabled)..."
+    RESP=$(timeout 10 curl -s http://localhost:$FRONTEND_PORT/api/content/registry || true)
+    if echo "$RESP" | grep -q '"modules"'; then
+        log "✅ Frontend JSON content: PASSED (api/content/registry)"
+    else
+        STATIC_RESP=$(timeout 10 curl -s http://localhost:$FRONTEND_PORT/registry.json || true)
+        if echo "$STATIC_RESP" | grep -q '"modules"'; then
+            log "✅ Frontend JSON content: PASSED (registry.json)"
+        else
+            log "⚠️  WARNING: Frontend JSON content validation failed"
+        fi
+    fi
+else
+    log "ℹ️  Skipping JSON content validation (not enabled)"
 fi
 
 log "🎉 Deployment Complete!"
