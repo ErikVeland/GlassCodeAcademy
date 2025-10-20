@@ -9,10 +9,12 @@ namespace backend.Services
     {
         private readonly GlassCodeDbContext _context;
         private readonly string _contentPath;
+        private readonly LessonMappingService _lessonMappingService;
 
-        public AutomatedMigrationService(GlassCodeDbContext context)
+        public AutomatedMigrationService(GlassCodeDbContext context, LessonMappingService lessonMappingService)
         {
             _context = context;
+            _lessonMappingService = lessonMappingService;
             _contentPath = DataService.ContentPath;
         }
 
@@ -36,6 +38,10 @@ namespace backend.Services
                 // Step 3: Seed lessons from JSON files
                 Console.WriteLine("📚 Seeding lessons from JSON files...");
                 await SeedLessonsFromJsonAsync();
+
+                // Map lessons to correct modules after seeding
+                Console.WriteLine("🧭 Mapping lessons to modules...");
+                await _lessonMappingService.MapLessonsToModulesAsync();
 
                 // Step 4: Seed quizzes from JSON files
                 Console.WriteLine("❓ Seeding quizzes from JSON files...");
@@ -238,27 +244,150 @@ namespace backend.Services
         }
 
         /// <summary>
-        /// Processes a single lesson element
+        /// Processes a single lesson element with tolerant deserialization
         /// </summary>
         private async Task ProcessSingleLessonAsync(JsonElement lessonElement, string fileName)
         {
             try
             {
-                var lessonData = JsonSerializer.Deserialize<LessonData>(lessonElement.GetRawText(), new JsonSerializerOptions
+                LessonData? lessonData = null;
+                try
                 {
-                    PropertyNameCaseInsensitive = true
-                });
-
-                if (lessonData == null)
+                    lessonData = JsonSerializer.Deserialize<LessonData>(lessonElement.GetRawText(), new JsonSerializerOptions
+                    {
+                        PropertyNameCaseInsensitive = true
+                    });
+                }
+                catch (JsonException jsonEx)
                 {
-                    Console.WriteLine($"   ⚠️ Failed to deserialize lesson data");
-                    return;
+                    Console.WriteLine($"   ⚠️ Typed lesson deserialization failed: {jsonEx.Message}. Using tolerant parsing.");
                 }
 
-                // Try exact module slug match first, then fall back to partials
+                // Helpers for tolerant extraction
+                string? GetString(JsonElement root, string name)
+                {
+                    if (root.TryGetProperty(name, out var el))
+                    {
+                        if (el.ValueKind == JsonValueKind.String)
+                            return el.GetString();
+                    }
+                    return null;
+                }
+
+                int? GetInt(JsonElement root, string name)
+                {
+                    if (root.TryGetProperty(name, out var el))
+                    {
+                        if (el.ValueKind == JsonValueKind.Number)
+                            return el.GetInt32();
+                        if (el.ValueKind == JsonValueKind.String && int.TryParse(el.GetString(), out var n))
+                            return n;
+                    }
+                    return null;
+                }
+
+                List<string>? GetStrings(JsonElement root, string name)
+                {
+                    if (root.TryGetProperty(name, out var el))
+                    {
+                        if (el.ValueKind == JsonValueKind.Array)
+                        {
+                            var list = new List<string>();
+                            foreach (var item in el.EnumerateArray())
+                            {
+                                if (item.ValueKind == JsonValueKind.String && item.GetString() != null)
+                                    list.Add(item.GetString()!);
+                            }
+                            return list.Count > 0 ? list : null;
+                        }
+                        if (el.ValueKind == JsonValueKind.String && !string.IsNullOrWhiteSpace(el.GetString()))
+                            return new List<string> { el.GetString()! };
+                    }
+                    return null;
+                }
+
+                // Prefer typed values if available, otherwise tolerant extraction
+                var title = lessonData?.Title ?? GetString(lessonElement, "title");
+                var slug = lessonData?.Slug ?? GetString(lessonElement, "slug");
+                var order = lessonData?.Order ?? GetInt(lessonElement, "order");
+                var difficulty = lessonData?.Difficulty ?? GetString(lessonElement, "difficulty");
+                var estimatedMinutes = lessonData?.EstimatedMinutes ?? GetInt(lessonElement, "estimatedMinutes");
+                var intro = lessonData?.Intro ?? GetString(lessonElement, "intro");
+                var topic = lessonData?.Topic ?? GetString(lessonElement, "topic");
+                var description = lessonData?.Description ?? GetString(lessonElement, "description");
+                var codeExample = lessonData?.CodeExample ?? GetString(lessonElement, "codeExample");
+                var output = lessonData?.Output ?? GetString(lessonElement, "output");
+                var version = lessonData?.Version ?? GetString(lessonElement, "version");
+                var lastUpdated = lessonData?.LastUpdated ?? GetString(lessonElement, "lastUpdated");
+
+                JsonElement? codeEl = lessonData?.Code;
+                if (codeEl == null && lessonElement.TryGetProperty("code", out var cEl)) codeEl = cEl;
+                JsonElement? pitfallsEl = lessonData?.Pitfalls;
+                if (pitfallsEl == null && lessonElement.TryGetProperty("pitfalls", out var pEl)) pitfallsEl = pEl;
+                JsonElement? exercisesEl = lessonData?.Exercises;
+                if (exercisesEl == null && lessonElement.TryGetProperty("exercises", out var eEl)) exercisesEl = eEl;
+                JsonElement? sourcesEl = lessonData?.Sources;
+                if (sourcesEl == null && lessonElement.TryGetProperty("sources", out var sEl)) sourcesEl = sEl;
+
+                // Objectives: accept array or single string
+                List<string>? objectives = lessonData?.Objectives;
+                if (objectives == null)
+                {
+                    if (lessonElement.TryGetProperty("objectives", out var objEl))
+                    {
+                        if (objEl.ValueKind == JsonValueKind.Array)
+                        {
+                            objectives = objEl.EnumerateArray()
+                                .Where(x => x.ValueKind == JsonValueKind.String && x.GetString() != null)
+                                .Select(x => x.GetString()!)
+                                .ToList();
+                        }
+                        else if (objEl.ValueKind == JsonValueKind.String && !string.IsNullOrWhiteSpace(objEl.GetString()))
+                        {
+                            objectives = new List<string> { objEl.GetString()! };
+                        }
+                    }
+                }
+
+                // Next and tags: accept array or single string
+                List<string>? next = lessonData?.Next;
+                if (next == null && lessonElement.TryGetProperty("next", out var nextEl))
+                {
+                    if (nextEl.ValueKind == JsonValueKind.Array)
+                    {
+                        next = nextEl.EnumerateArray()
+                            .Where(x => x.ValueKind == JsonValueKind.String && x.GetString() != null)
+                            .Select(x => x.GetString()!)
+                            .ToList();
+                    }
+                    else if (nextEl.ValueKind == JsonValueKind.String && !string.IsNullOrWhiteSpace(nextEl.GetString()))
+                    {
+                        next = new List<string> { nextEl.GetString()! };
+                    }
+                }
+
+                List<string>? tags = lessonData?.Tags;
+                if (tags == null && lessonElement.TryGetProperty("tags", out var tagsEl))
+                {
+                    if (tagsEl.ValueKind == JsonValueKind.Array)
+                    {
+                        tags = tagsEl.EnumerateArray()
+                            .Where(x => x.ValueKind == JsonValueKind.String && x.GetString() != null)
+                            .Select(x => x.GetString()!)
+                            .ToList();
+                    }
+                    else if (tagsEl.ValueKind == JsonValueKind.String && !string.IsNullOrWhiteSpace(tagsEl.GetString()))
+                    {
+                        tags = new List<string> { tagsEl.GetString()! };
+                    }
+                }
+
+                // Try exact module slug match first (equality), then fall back to partials
                 var fileNameLower = fileName.ToLowerInvariant();
-                var module = await _context.Modules
-                    .FirstOrDefaultAsync(m => m.Slug.Equals(fileName, StringComparison.OrdinalIgnoreCase));
+                Module? module = await _context.Modules
+                    .FirstOrDefaultAsync(m =>
+                        m.Slug.Equals(fileName, StringComparison.OrdinalIgnoreCase) ||
+                        m.Slug.Equals(fileNameLower, StringComparison.OrdinalIgnoreCase));
 
                 if (module == null)
                 {
@@ -268,9 +397,17 @@ namespace backend.Services
                         .Replace("-advanced", "")
                         .Replace("-basics", "");
 
-                    module = await _context.Modules.FirstOrDefaultAsync(m =>
-                        m.Slug.Contains(moduleSlug, StringComparison.OrdinalIgnoreCase) ||
-                        fileNameLower.Contains(m.Slug.ToLowerInvariant()));
+                    // Try exact equality on derived module slug
+                    module = await _context.Modules
+                        .FirstOrDefaultAsync(m => m.Slug.Equals(moduleSlug, StringComparison.OrdinalIgnoreCase));
+
+                    if (module == null)
+                    {
+                        // Finally, fall back to partial matches
+                        module = await _context.Modules.FirstOrDefaultAsync(m =>
+                            m.Slug.Contains(moduleSlug, StringComparison.OrdinalIgnoreCase) ||
+                            fileNameLower.Contains(m.Slug.ToLowerInvariant()));
+                    }
                 }
 
                 if (module == null)
@@ -287,41 +424,41 @@ namespace backend.Services
                 // Prepare content and metadata payloads for insert/update
                 var contentData = new
                 {
-                    intro = lessonData.Intro,
-                    objectives = lessonData.Objectives,
-                    code = lessonData.Code,
-                    pitfalls = lessonData.Pitfalls,
-                    exercises = lessonData.Exercises,
-                    next = lessonData.Next,
-                    sources = lessonData.Sources
+                    intro = intro,
+                    objectives = objectives,
+                    code = codeEl,
+                    pitfalls = pitfallsEl,
+                    exercises = exercisesEl,
+                    next = next,
+                    sources = sourcesEl
                 };
 
                 var metadataData = new
                 {
-                    tags = lessonData.Tags,
-                    topic = lessonData.Topic,
-                    description = lessonData.Description,
-                    codeExample = lessonData.CodeExample,
-                    output = lessonData.Output,
-                    version = lessonData.Version,
-                    lastUpdated = lessonData.LastUpdated
+                    tags = tags,
+                    topic = topic,
+                    description = description,
+                    codeExample = codeExample,
+                    output = output,
+                    version = version,
+                    lastUpdated = lastUpdated
                 };
 
                 // Upsert by slug + module
                 var existingLesson = await _context.Lessons
-                    .FirstOrDefaultAsync(l => l.Slug == lessonData.Slug && l.ModuleId == module.Id);
+                    .FirstOrDefaultAsync(l => l.Slug == slug && l.ModuleId == module.Id);
 
                 if (existingLesson == null)
                 {
                     var lesson = new Lesson
                     {
-                        Title = lessonData.Title ?? "Untitled Lesson",
-                        Slug = lessonData.Slug ?? Guid.NewGuid().ToString(),
-                        Order = lessonData.Order ?? 1,
+                        Title = title ?? "Untitled Lesson",
+                        Slug = slug ?? Guid.NewGuid().ToString(),
+                        Order = order ?? 1,
                         Content = JsonSerializer.Serialize(contentData),
                         Metadata = JsonSerializer.Serialize(metadataData),
-                        Difficulty = lessonData.Difficulty ?? "Beginner",
-                        EstimatedMinutes = lessonData.EstimatedMinutes ?? 30,
+                        Difficulty = difficulty ?? "Beginner",
+                        EstimatedMinutes = estimatedMinutes ?? 30,
                         ModuleId = module.Id,
                         IsPublished = true,
                         CreatedAt = DateTime.UtcNow,
@@ -333,12 +470,12 @@ namespace backend.Services
                 }
                 else
                 {
-                    existingLesson.Title = lessonData.Title ?? existingLesson.Title;
-                    existingLesson.Order = lessonData.Order ?? existingLesson.Order;
+                    existingLesson.Title = title ?? existingLesson.Title;
+                    existingLesson.Order = order ?? existingLesson.Order;
                     existingLesson.Content = JsonSerializer.Serialize(contentData);
                     existingLesson.Metadata = JsonSerializer.Serialize(metadataData);
-                    existingLesson.Difficulty = lessonData.Difficulty ?? existingLesson.Difficulty;
-                    existingLesson.EstimatedMinutes = lessonData.EstimatedMinutes ?? existingLesson.EstimatedMinutes;
+                    existingLesson.Difficulty = difficulty ?? existingLesson.Difficulty;
+                    existingLesson.EstimatedMinutes = estimatedMinutes ?? existingLesson.EstimatedMinutes;
                     existingLesson.UpdatedAt = DateTime.UtcNow;
                     Console.WriteLine($"   ✏️ Updated lesson: {existingLesson.Title}");
                 }
@@ -521,12 +658,12 @@ namespace backend.Services
         public string? Difficulty { get; set; }
         public int? EstimatedMinutes { get; set; }
         public string? Intro { get; set; }
-        public string? Objectives { get; set; }
-        public string? Code { get; set; }
-        public string? Pitfalls { get; set; }
-        public string? Exercises { get; set; }
-        public string? Next { get; set; }
-        public List<string>? Sources { get; set; }
+        public List<string>? Objectives { get; set; }
+        public System.Text.Json.JsonElement? Code { get; set; }
+        public System.Text.Json.JsonElement? Pitfalls { get; set; }
+        public System.Text.Json.JsonElement? Exercises { get; set; }
+        public List<string>? Next { get; set; }
+        public System.Text.Json.JsonElement? Sources { get; set; }
         public List<string>? Tags { get; set; }
         public string? Topic { get; set; }
         public string? Description { get; set; }

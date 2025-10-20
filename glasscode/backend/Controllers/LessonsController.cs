@@ -142,6 +142,7 @@ public class LessonsController : ControllerBase
             "vue" => _dataService.VueLessons,
             "node" => _dataService.NodeLessons,
             "typescript" => _dataService.TypescriptLessons,
+            "typescript-fundamentals" => _dataService.TypescriptLessons,
             "database" => _dataService.DatabaseLessons,
             "testing" => _dataService.TestingLessons,
             "sass" => _dataService.SassLessons,

@@ -20,6 +20,7 @@ class RunAutomatedMigration
                                     "Host=localhost;Database=glasscode_dev;Username=postgres;Password=postgres;Port=5432"));
 
                 // Add our services
+                services.AddScoped<LessonMappingService>();
                 services.AddScoped<AutomatedMigrationService>();
             })
             .Build();
