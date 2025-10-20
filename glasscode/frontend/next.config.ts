@@ -4,13 +4,13 @@ const IS_PROD = process.env.NODE_ENV === 'production';
 
 const cspBase = [
   "default-src 'self'",
-  // Allow modern script loading; avoid inline scripts in enforced policy
+  // Allow Next.js runtime chunks and inline loader in production; keep dev permissive
   IS_PROD
-    ? "script-src 'self' 'strict-dynamic' https: blob:"
+    ? "script-src 'self' https: blob: 'unsafe-inline'"
     : "script-src 'self' 'unsafe-inline' 'unsafe-eval' http: https: blob:",
-  // Style: keep 'unsafe-inline' in enforced policy to avoid breaking dev; drop in report-only
+  // Styles: allow inline styles for Next and Tailwind in both envs
   IS_PROD
-    ? "style-src 'self' https:"
+    ? "style-src 'self' https: 'unsafe-inline'"
     : "style-src 'self' 'unsafe-inline' https:",
   "img-src 'self' data: blob: https:",
   IS_PROD
@@ -19,22 +19,24 @@ const cspBase = [
   "font-src 'self' https: data:",
   "base-uri 'self'",
   "form-action 'self'",
-  "frame-ancestors 'none'",
+  "frame-ancestors 'self'",
   "object-src 'none'",
+  "upgrade-insecure-requests",
 ].join('; ');
 
 const cspReportOnly = IS_PROD
   ? [
       "default-src 'self'",
-      "script-src 'self' 'strict-dynamic' https: blob:",
-      "style-src 'self' https:",
+      "script-src 'self' https: blob: 'unsafe-inline'",
+      "style-src 'self' https: 'unsafe-inline'",
       "img-src 'self' data: blob: https:",
       "connect-src 'self' https: wss:",
       "font-src 'self' https: data:",
       "base-uri 'self'",
       "form-action 'self'",
-      "frame-ancestors 'none'",
+      "frame-ancestors 'self'",
       "object-src 'none'",
+      "upgrade-insecure-requests",
     ].join('; ')
   : cspBase;
 
