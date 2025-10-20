@@ -110,7 +110,8 @@ while [[ $ATTEMPT -le $MAX_ATTEMPTS ]]; do
         BACKEND_STATUS=$(echo "$HEALTH_RESPONSE" | grep -o '"status":"[^"]*"' | cut -d'"' -f4)
         if [[ "$BACKEND_STATUS" == "healthy" ]]; then
             printf "\n"  # Clear progress line
-            echo "✅ Backend health check passed: System is healthy"
+-            echo "✅ Backend health check passed: System is healthy"
++            echo "✅ Backend health check passed: System is healthy (attempt $ATTEMPT/$MAX_ATTEMPTS)"
         else
             # Only log status change if it's different from last time
             if [[ "$BACKEND_STATUS" != "$LAST_STATUS" ]]; then
@@ -162,7 +163,8 @@ FE_ATTEMPT=1
 while [[ $FE_ATTEMPT -le $MAX_FE_ATTEMPTS ]]; do
     if curl -s -f http://localhost:3000 >/dev/null 2>&1; then
         printf "\n"  # Clear progress line
-        echo "✅ Frontend is fully loaded and ready!"
+-        echo "✅ Frontend is fully loaded and ready!"
++        echo "✅ Frontend is fully loaded and ready! (attempt $FE_ATTEMPT/$MAX_FE_ATTEMPTS)"
         break
     fi
     draw_progress "$FE_ATTEMPT" "$MAX_FE_ATTEMPTS" "Checking frontend"

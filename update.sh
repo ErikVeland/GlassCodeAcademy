@@ -414,57 +414,94 @@ else
     BACKEND_HEALTHY=false
 fi
 
-LAST_STATUS=""
+# Poll DB-backed endpoints for readiness (disable JSON health by default)
+MIGRATION_TRIGGERED=0
 while [[ $ATTEMPT -le $MAX_ATTEMPTS && ${FRONTEND_ONLY:-0} -eq 0 ]]; do
     # Check if service is still running first
     if ! systemctl is-active --quiet "${APP_NAME}-dotnet"; then
         printf "\n"  # Clear progress line
-        log "❌ Backend service stopped unexpectedly during health check"
+        log "❌ Backend service stopped unexpectedly during DB readiness check"
         break
     fi
-    
-    # Try health check with timeout
-    if timeout 10 curl -s -f http://localhost:8080/api/health >/dev/null 2>&1; then
-        HEALTH_RESPONSE=$(timeout 10 curl -s http://localhost:8080/api/health 2>/dev/null || echo '{"status":"unknown"}')
-        BACKEND_STATUS=$(echo "$HEALTH_RESPONSE" | grep -o '"status":"[^"]*"' | cut -d'"' -f4 || echo "unknown")
-        if [[ "$BACKEND_STATUS" == "healthy" ]]; then
-            printf "\n"  # Clear progress line
-            log "✅ Backend healthy. Proceeding to build frontend."
-            BACKEND_HEALTHY=true
-            break
-        else
-            # Only log status change if it's different from last time
-            if [[ "$BACKEND_STATUS" != "$LAST_STATUS" ]]; then
-                printf "\n"  # Clear progress line
-                log "⚠️  Backend responding but status is $BACKEND_STATUS"
-                LAST_STATUS="$BACKEND_STATUS"
-            fi
-            # Continue trying for a few more attempts in case it's still starting up
-            if [[ $ATTEMPT -gt 20 ]]; then
-                printf "\n"  # Clear progress line
-                log "⚠️  Backend status not healthy after extended wait, proceeding anyway"
-                break
+
+    MODULES_JSON=$(timeout 10 curl -s http://localhost:8080/api/modules-db || true)
+    LESSONS_JSON=$(timeout 10 curl -s http://localhost:8080/api/lessons-db || true)
+    QUIZZES_JSON=$(timeout 10 curl -s http://localhost:8080/api/LessonQuiz || true)
+    if echo "$MODULES_JSON" | grep -q '\[\s*{' \
+       && echo "$LESSONS_JSON" | grep -q '\[\s*{' \
+       && echo "$QUIZZES_JSON" | grep -q '\[\s*{' ; then
+        printf "\n"  # Clear progress line
+        log "✅ Backend DB endpoints are responding at attempt $ATTEMPT/$MAX_ATTEMPTS. Proceeding to build frontend."
+        break
+    fi
+
+    # If endpoints are arrays but currently empty, proactively trigger full migration once
+    if [[ $MIGRATION_TRIGGERED -eq 0 ]]; then
+        if echo "$MODULES_JSON" | grep -q '^\s*\[\s*\]\s*$' || echo "$LESSONS_JSON" | grep -q '^\s*\[\s*\]\s*$' || echo "$QUIZZES_JSON" | grep -q '^\s*\[\s*\]\s*$'; then
+            log "🛠️  DB endpoints return empty arrays; triggering full migration to populate data..."
+            MIGRATION_TRIGGERED=1
+            MIGRATION_RESP=$(timeout 60 curl -s -X POST http://localhost:8080/api/migration/full-migration -H "Content-Type: application/json" || true)
+            if echo "$MIGRATION_RESP" | grep -q '"Success":\s*true'; then
+                log "✅ Full migration triggered successfully"
+            else
+                SHORT=$(echo "$MIGRATION_RESP" | tr -d '\n' | cut -c1-200)
+                log "⚠️  Full migration trigger response: '${SHORT}'"
+                log "🔁 Migration API failed/unreachable; invoking CLI fallback with retries..."
+                RETRY_MAX=${MIGRATION_CLI_RETRY_MAX:-3}
+                RETRY_DELAY_BASE=$([ "${FAST_MODE:-0}" -eq 1 ] && echo 2 || echo 3)
+                for RETRY in $(seq 1 "$RETRY_MAX"); do
+                    if [ -f "$APP_DIR/glasscode/backend/out/backend.dll" ]; then
+                        timeout 300 sudo -u "$DEPLOY_USER" env RUN_AUTOMATED_MIGRATION_ONLY=1 dotnet "$APP_DIR/glasscode/backend/out/backend.dll" || true
+                    else
+                        (cd "$APP_DIR/glasscode/backend" && timeout 600 sudo -u "$DEPLOY_USER" env RUN_AUTOMATED_MIGRATION_ONLY=1 dotnet run --project "$APP_DIR/glasscode/backend/backend.csproj" || true)
+                    fi
+
+                    MODULES_JSON=$(timeout 10 curl -s http://localhost:8080/api/modules-db || true)
+                    LESSONS_JSON=$(timeout 10 curl -s http://localhost:8080/api/lessons-db || true)
+                    QUIZZES_JSON=$(timeout 10 curl -s http://localhost:8080/api/LessonQuiz || true)
+
+                    if echo "$MODULES_JSON" | grep -q '\[\s*{' && echo "$LESSONS_JSON" | grep -q '\[\s*{' && echo "$QUIZZES_JSON" | grep -q '\[\s*{'; then
+                        log "✅ CLI migration populated data; DB endpoints responding at attempt $ATTEMPT/$MAX_ATTEMPTS."
+                        break
+                    fi
+
+                    if [ "$RETRY" -lt "$RETRY_MAX" ]; then
+                        BACKOFF=$((RETRY_DELAY_BASE * (1 << (RETRY - 1))))
+                        log "⏳ CLI migration not reflected yet; retry $RETRY/$RETRY_MAX after ${BACKOFF}s..."
+                        sleep "$BACKOFF"
+                    else
+                        log "❌ CLI migration retries exhausted; continuing checks."
+                    fi
+                done
             fi
         fi
     fi
-    draw_progress "$ATTEMPT" "$MAX_ATTEMPTS" "  ⏳ Backend health: "
+
+    draw_progress "$ATTEMPT" "$MAX_ATTEMPTS" "  ⏳ Backend DB readiness: "
     ATTEMPT=$((ATTEMPT + 1))
     sleep $SLEEP_INTERVAL
+
 done
 printf "\n" 2>/dev/null || true
 
-if [[ "$BACKEND_HEALTHY" != "true" && $ATTEMPT -gt $MAX_ATTEMPTS ]]; then
-    log "❌ Backend failed to become healthy before frontend build."
+if [[ $ATTEMPT -le $MAX_ATTEMPTS ]]; then
+    log "✅ Backend DB readiness satisfied at attempt $ATTEMPT/$MAX_ATTEMPTS (pre-build)."
+fi
+
+if [[ $ATTEMPT -gt $MAX_ATTEMPTS ]]; then
+    log "❌ Backend DB endpoints failed to become ready before frontend build."
     log "🧪 Diagnostic: systemd status"
     systemctl status ${APP_NAME}-dotnet --no-pager || true
     log "🧪 Diagnostic: recent logs"
     journalctl -u ${APP_NAME}-dotnet -n 100 --no-pager || true
     log "🧪 Diagnostic: port check"
     ss -tulpn | grep :8080 || true
-    log "🧪 Diagnostic: health curl"
-    timeout 15 curl -v http://localhost:8080/api/health || true
+    log "🧪 Diagnostic: DB endpoint curls"
+    timeout 15 curl -v http://localhost:8080/api/modules-db || true
+    timeout 15 curl -v http://localhost:8080/api/lessons-db || true
+    timeout 15 curl -v http://localhost:8080/api/LessonQuiz || true
     if [ "${FAST_MODE:-0}" -eq 1 ] || [ "${SKIP_BACKEND_HEALTH:-0}" -eq 1 ]; then
-        log "⚠️  Proceeding despite backend health check failure due to fast/skip mode"
+        log "⚠️  Proceeding despite backend DB readiness failure due to fast/skip mode"
     else
         rollback
     fi
@@ -692,32 +729,67 @@ else
         fi
     fi
 
-    # Wait for backend to be fully ready by polling the health check endpoint
-    log "⏳ Waiting for backend to be fully loaded and healthy..."
+    # Wait for backend to be fully ready by polling database-backed endpoints (JSON checks disabled by default)
+    log "⏳ Waiting for backend DB endpoints to be ready..."
     MAX_ATTEMPTS=30
     [ "${FAST_MODE:-0}" -eq 1 ] && MAX_ATTEMPTS=15
     ATTEMPT=1
     SLEEP_INTERVAL=$([ "${FAST_MODE:-0}" -eq 1 ] && echo 2 || echo 3)
-    LAST_STATUS=""
+    MIGRATION_TRIGGERED=0
     while [[ $ATTEMPT -le $MAX_ATTEMPTS ]]; do
-        if timeout 10 curl -s -f http://localhost:8080/api/health >/dev/null 2>&1; then
-            HEALTH_RESPONSE=$(timeout 10 curl -s http://localhost:8080/api/health)
-            BACKEND_STATUS=$(echo "$HEALTH_RESPONSE" | grep -o '"status":"[^\"]*"' | cut -d'"' -f4)
-            if [[ "$BACKEND_STATUS" == "healthy" ]]; then
-                printf "\n"  # Clear progress line
-                log "✅ Backend is fully loaded and healthy!"
-                break
-            else
-                # Only log status change if it's different from last time
-                if [[ "$BACKEND_STATUS" != "$LAST_STATUS" ]]; then
-                    printf "\n"  # Clear progress line
-                    log "⚠️  Backend is responding but status is $BACKEND_STATUS"
-                    LAST_STATUS="$BACKEND_STATUS"
+        MODULES_JSON=$(timeout 10 curl -s http://localhost:8080/api/modules-db || true)
+        LESSONS_JSON=$(timeout 10 curl -s http://localhost:8080/api/lessons-db || true)
+        QUIZZES_JSON=$(timeout 10 curl -s http://localhost:8080/api/LessonQuiz || true)
+        if echo "$MODULES_JSON" | grep -q '\[\s*{' \
+           && echo "$LESSONS_JSON" | grep -q '\[\s*{' \
+           && echo "$QUIZZES_JSON" | grep -q '\[\s*{' ; then
+            printf "\n"  # Clear progress line
+            log "✅ Backend DB endpoints are responding with data at attempt $ATTEMPT/$MAX_ATTEMPTS!"
+            break
+        fi
+
+        # If endpoints are arrays but currently empty, proactively trigger full migration once
+        if [[ $MIGRATION_TRIGGERED -eq 0 ]]; then
+                log "🛠️  DB endpoints return empty arrays; triggering full migration to populate data..."
+                MIGRATION_TRIGGERED=1
+                MIGRATION_RESP=$(timeout 60 curl -s -X POST http://localhost:8080/api/migration/full-migration -H "Content-Type: application/json" || true)
+                if echo "$MIGRATION_RESP" | grep -q '"Success":\s*true'; then
+                    log "✅ Full migration triggered successfully"
+                else
+                    SHORT=$(echo "$MIGRATION_RESP" | tr -d '\n' | cut -c1-200)
+                    log "⚠️  Full migration trigger response: '${SHORT}'"
+                    log "🔁 Migration API failed/unreachable; invoking CLI fallback with retries..."
+                    RETRY_MAX=${MIGRATION_CLI_RETRY_MAX:-3}
+                    RETRY_DELAY_BASE=$([ "${FAST_MODE:-0}" -eq 1 ] && echo 2 || echo 3)
+                    for RETRY in $(seq 1 "$RETRY_MAX"); do
+                        if [ -f "$APP_DIR/glasscode/backend/out/backend.dll" ]; then
+                            timeout 300 sudo -u "$DEPLOY_USER" env RUN_AUTOMATED_MIGRATION_ONLY=1 dotnet "$APP_DIR/glasscode/backend/out/backend.dll" || true
+                        else
+                            (cd "$APP_DIR/glasscode/backend" && timeout 600 sudo -u "$DEPLOY_USER" env RUN_AUTOMATED_MIGRATION_ONLY=1 dotnet run --project "$APP_DIR/glasscode/backend/backend.csproj" || true)
+                        fi
+
+                        MODULES_JSON=$(timeout 10 curl -s http://localhost:8080/api/modules-db || true)
+                        LESSONS_JSON=$(timeout 10 curl -s http://localhost:8080/api/lessons-db || true)
+                        QUIZZES_JSON=$(timeout 10 curl -s http://localhost:8080/api/LessonQuiz || true)
+
+                        if echo "$MODULES_JSON" | grep -q '\[\s*{' && echo "$LESSONS_JSON" | grep -q '\[\s*{' && echo "$QUIZZES_JSON" | grep -q '\[\s*{'; then
+                            log "✅ CLI migration populated data; DB endpoints responding at attempt $ATTEMPT/$MAX_ATTEMPTS."
+                            break
+                        fi
+
+                        if [ "$RETRY" -lt "$RETRY_MAX" ]; then
+                            BACKOFF=$((RETRY_DELAY_BASE * (1 << (RETRY - 1))))
+                            log "⏳ CLI migration not reflected yet; retry $RETRY/$RETRY_MAX after ${BACKOFF}s..."
+                            sleep "$BACKOFF"
+                        else
+                            log "❌ CLI migration retries exhausted; continuing checks."
+                        fi
+                    done
                 fi
-                break
             fi
         fi
-        draw_progress "$ATTEMPT" "$MAX_ATTEMPTS" "  ⏳ Backend health: "
+
+        draw_progress "$ATTEMPT" "$MAX_ATTEMPTS" "  ⏳ Backend DB readiness: "
         ATTEMPT=$((ATTEMPT + 1))
         sleep $SLEEP_INTERVAL
     done
@@ -725,8 +797,12 @@ else
     # Ensure the progress line is terminated
     printf "\n" 2>/dev/null || true
 
+    if [[ $ATTEMPT -le $MAX_ATTEMPTS ]]; then
+        log "✅ Backend DB readiness satisfied at attempt $ATTEMPT/$MAX_ATTEMPTS (post-restart)."
+    fi
+
     if [[ $ATTEMPT -gt $MAX_ATTEMPTS ]]; then
-        log "❌ Backend failed to become healthy within the expected time."
+        log "❌ Backend DB endpoints did not become ready within the expected time."
 
         # Verbose diagnostics before rollback
         log "🧪 Diagnostic: Checking backend service status"
@@ -738,19 +814,21 @@ else
         log "🧪 Diagnostic: Listening ports (expect 0.0.0.0:8080)"
         ss -tulpn | grep :8080 || true
 
-        log "🧪 Diagnostic: Health endpoint verbose curl"
-        timeout 15 curl -v http://localhost:8080/api/health || true
+        log "🧪 Diagnostic: DB endpoint verbose curl"
+        timeout 15 curl -v http://localhost:8080/api/modules-db || true
+        timeout 15 curl -v http://localhost:8080/api/lessons-db || true
+        timeout 15 curl -v http://localhost:8080/api/LessonQuiz || true
 
         if [ "${FAST_MODE:-0}" -eq 1 ] || [ "${SKIP_BACKEND_HEALTH:-0}" -eq 1 ]; then
-            log "⚠️  Proceeding despite backend health check failure due to fast/skip mode"
+            log "⚠️  Proceeding despite backend DB readiness failure due to fast/skip mode"
         else
-            log "❌ Rolling back due to backend health check failure..."
+            log "❌ Rolling back due to backend DB readiness failure..."
             rollback
         fi
     fi
 
     # Small additional delay to ensure backend is completely ready
-    log "⏳ Extra grace period: waiting 5s after backend healthy..."
+    log "⏳ Extra grace period: waiting 5s after backend DB ready..."
     sleep 5
 fi
 
@@ -777,6 +855,7 @@ while [ $COUNT -le $MAX ]; do
   STATUS=$(echo "$RESP" | jq -r .status 2>/dev/null || echo "$RESP" | grep -o '"status":"[^"]*"' | cut -d '"' -f4)
   # Treat backend "degraded" as acceptable for frontend start; proceed on any 200
   if [ "$HTTP" = "200" ] && { [ "$STATUS" = "healthy" ] || [ "$STATUS" = "degraded" ] || [ -n "$RESP" ]; }; then
+    echo "✅ Backend health check passed at attempt $COUNT/$MAX: HTTP $HTTP, Status: ${STATUS:-unknown}"
     exit 0
   fi
   sleep 5; COUNT=$((COUNT+1))
@@ -957,39 +1036,23 @@ else
     fi
 fi
 
-# Check backend health endpoint details
+# Backend JSON health check (optional, disabled by default)
 if [ "${FRONTEND_ONLY:-0}" -eq 1 ]; then
-    log "⏭️  Frontend-only mode: skipping backend health check"
+    log "⏭️  Frontend-only mode: skipping backend JSON health check"
 else
-    log "🔍 Checking backend health details..."
-    BACKEND_HEALTH_CHECK=$(timeout 15 curl -s http://localhost:8080/api/health 2>/dev/null || echo '{"status":"timeout"}')
-    BACKEND_STATUS=$(echo "$BACKEND_HEALTH_CHECK" | grep -o '"status":"[^"]*"' | cut -d'"' -f4 || echo "unknown")
-    if [[ "$BACKEND_STATUS" == "healthy" ]]; then
-        log "✅ Backend health status: HEALTHY"
-    elif [[ "$BACKEND_STATUS" == "timeout" ]]; then
-        log "⚠️  Backend health check timed out, but service appears to be running"
-        # Don't rollback for timeout if service is active
-        if systemctl is-active --quiet "${APP_NAME}-dotnet"; then
-            log "✅ Backend service is active, continuing despite health check timeout"
+    if [ "${VALIDATE_JSON_CONTENT:-0}" -eq 1 ]; then
+        log "🔍 Checking backend JSON health details (flag enabled)..."
+        BACKEND_HEALTH_CHECK=$(timeout 15 curl -s http://localhost:8080/api/health 2>/dev/null || echo '{"status":"timeout"}')
+        BACKEND_STATUS=$(echo "$BACKEND_HEALTH_CHECK" | grep -o '"status":"[^\"]*"' | cut -d'"' -f4 || echo "unknown")
+        if [[ "$BACKEND_STATUS" == "healthy" ]]; then
+            log "✅ Backend JSON health status: HEALTHY"
+        elif [[ "$BACKEND_STATUS" == "timeout" ]]; then
+            log "⚠️  Backend JSON health timed out; service appears to be running"
         else
-            if [ "${FAST_MODE:-0}" -eq 1 ] || [ "${SKIP_BACKEND_HEALTH:-0}" -eq 1 ]; then
-                log "⚠️  Backend inactive after timeout, continuing due to fast/skip mode"
-            else
-                log "❌ Backend service is not active, rolling back..."
-                rollback
-            fi
+            log "⚠️  Backend JSON health status: $BACKEND_STATUS"
         fi
     else
-        log "⚠️  Backend health status: $BACKEND_STATUS"
-        # Only rollback if status is not healthy
-        if [[ "$BACKEND_STATUS" != "healthy" ]]; then
-            if [ "${FAST_MODE:-0}" -eq 1 ] || [ "${SKIP_BACKEND_HEALTH:-0}" -eq 1 ]; then
-                log "⚠️  Backend not healthy, continuing due to fast/skip mode"
-            else
-                log "❌ Rolling back due to backend health status..."
-                rollback
-            fi
-        fi
+        log "ℹ️  Skipping backend JSON health check (disabled by default)"
     fi
 fi
 
@@ -1002,7 +1065,7 @@ FRONTEND_OK=false
 while [[ $ATTEMPT -le $MAX_ATTEMPTS ]]; do
     if timeout 10 curl -s -f http://localhost:$FRONTEND_PORT >/dev/null 2>&1; then
         printf "\n"  # Clear progress line
-        log "✅ Frontend availability: PASSED"
+        log "✅ Frontend availability: PASSED at attempt $ATTEMPT/$MAX_ATTEMPTS"
         FRONTEND_OK=true
         break
     fi
@@ -1059,7 +1122,7 @@ else
         log "❌ Failed to fetch modules from DB"
         rollback
     else
-        log "✅ Modules DB endpoint: PASSED"
+        log "✅ Modules DB endpoint: PASSED at attempt $ATTEMPT/$MAX_ATTEMPTS"
     fi
 
     # Lessons DB
@@ -1099,14 +1162,14 @@ if [ "${VALIDATE_JSON_CONTENT:-0}" -eq 1 ]; then
         RESP=$(timeout 10 curl -s http://localhost:$FRONTEND_PORT/api/content/registry || true)
         if echo "$RESP" | grep -q '"modules"'; then
             printf "\n"
-            log "✅ Frontend content availability: PASSED (api/content/registry)"
+            log "✅ Frontend content availability: PASSED at attempt $ATTEMPT/$MAX_ATTEMPTS (api/content/registry)"
             CONTENT_OK=true
             break
         fi
         STATIC_RESP=$(timeout 10 curl -s http://localhost:$FRONTEND_PORT/registry.json || true)
         if echo "$STATIC_RESP" | grep -q '"modules"'; then
             printf "\n"
-            log "✅ Frontend content availability: PASSED (registry.json)"
+            log "✅ Frontend content availability: PASSED at attempt $ATTEMPT/$MAX_ATTEMPTS (registry.json)"
             CONTENT_OK=true
             RESP="$STATIC_RESP"
             break

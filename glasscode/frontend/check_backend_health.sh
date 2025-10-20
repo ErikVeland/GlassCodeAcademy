@@ -17,7 +17,7 @@ while [ $COUNT -le $MAX ]; do
   
   # Check if backend is healthy
   if [ "$HTTP" = "200" ] && [ "$STATUS" = "healthy" ]; then
-    echo "✅ Backend health check passed: HTTP $HTTP, Status: $STATUS"
+    echo "✅ Backend health check passed at attempt $COUNT/$MAX: HTTP $HTTP, Status: $STATUS"
     exit 0
   fi
   

@@ -119,6 +119,27 @@ builder.Services.AddGraphQLServer()
 
 var app = builder.Build();
 
+// >>> Added: Migration-only mode for CLI fallback
+if (Environment.GetEnvironmentVariable("RUN_AUTOMATED_MIGRATION_ONLY") == "1")
+{
+    Log.Information("RUN_AUTOMATED_MIGRATION_ONLY=1 set; performing full migration and exiting.");
+    using (var scope = app.Services.CreateScope())
+    {
+        var migrationService = scope.ServiceProvider.GetRequiredService<backend.Services.AutomatedMigrationService>();
+        var ok = await migrationService.PerformFullMigrationAsync();
+        if (ok)
+        {
+            Log.Information("✅ Automated migration completed. Exiting.");
+            Environment.Exit(0);
+        }
+        else
+        {
+            Log.Error("❌ Automated migration failed. Exiting with code 1.");
+            Environment.Exit(1);
+        }
+    }
+}
+
 // Global exception handler
 app.UseMiddleware<backend.Middleware.ErrorHandlingMiddleware>();
 

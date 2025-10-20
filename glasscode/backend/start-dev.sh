@@ -116,7 +116,7 @@ MAX_ATTEMPTS=30
 for ((i=1; i<=MAX_ATTEMPTS; i++)); do
   printf "[%#-30s] Checking backend health (%d/%d)\r" "" "$i" "$MAX_ATTEMPTS"
   if curl -sSf "$HEALTH_URL" > /dev/null; then
-    echo "\n✅ Backend is healthy at $HEALTH_URL"
+    echo "\n✅ Backend is healthy at $HEALTH_URL at attempt $i/$MAX_ATTEMPTS"
     wait $BACKEND_PID
     exit 0
   fi

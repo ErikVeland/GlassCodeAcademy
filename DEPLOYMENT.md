@@ -152,6 +152,19 @@ chmod +x update.sh
 ./update.sh --validate-json-content
 ```
 
+#### Migration-only mode and CLI fallback
+
+- The backend supports a migration-only mode via `RUN_AUTOMATED_MIGRATION_ONLY=1`. This runs the full automated content migration and exits without starting the web server.
+- Both `bootstrap.sh` and `update.sh` automatically trigger a full migration if DB endpoints return empty arrays, preferring the API (`POST /api/migration/full-migration`) and falling back to CLI if the API is unreachable.
+- The CLI fallback runs the published DLL if available or uses `dotnet run` from the backend project.
+- Retries: the fallback retries up to `MIGRATION_CLI_RETRY_MAX` attempts (default `3`) with exponential backoff (2–3s base depending on `FAST_MODE`). After each attempt, scripts re-check DB endpoints for populated data.
+- Manual one-off migration:
+  - Using DLL: `RUN_AUTOMATED_MIGRATION_ONLY=1 dotnet glasscode/backend/out/backend.dll`
+  - Using source: `cd glasscode/backend && RUN_AUTOMATED_MIGRATION_ONLY=1 dotnet run --project backend.csproj`
+
+Notes:
+- Optional JSON registry validation is gated by `--validate-json-content` and uses `scripts/validate-content.js` to check `registry.json` schema and content parity.
+
 The update script will:
 1. Backup the current installation
 2. Pull the latest changes from the repository

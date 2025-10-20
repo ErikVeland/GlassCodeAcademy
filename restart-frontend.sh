@@ -84,7 +84,7 @@ if command -v systemctl >/dev/null 2>&1; then
     attempt=1
     while [ $attempt -le $max_attempts ]; do
         if systemctl is-active --quiet "${APP_NAME}-frontend"; then
-            log "✅ Frontend service is running"
+            log "✅ Frontend service is running at attempt $attempt/$max_attempts"
             break
         fi
         if [ $attempt -eq $max_attempts ]; then
@@ -116,7 +116,7 @@ else
     attempt=1
     while [ $attempt -le $max_attempts ]; do
         if curl -s "http://localhost:$FRONTEND_PORT" >/dev/null 2>&1; then
-            log "✅ Frontend server is responding on port $FRONTEND_PORT"
+            log "✅ Frontend server is responding on port $FRONTEND_PORT at attempt $attempt/$max_attempts"
             break
         fi
         if [ $attempt -eq $max_attempts ]; then

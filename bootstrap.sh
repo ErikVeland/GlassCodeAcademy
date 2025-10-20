@@ -621,61 +621,98 @@ SLEEP_INTERVAL=$([ "${FAST_MODE:-0}" -eq 1 ] && echo 2 || echo 3)
 BACKEND_HEALTHY=false
 LAST_STATUS=""
     
+MIGRATION_TRIGGERED=0
 while [[ $ATTEMPT -le $MAX_ATTEMPTS ]]; do
     # Check if service is still running first
     if ! systemctl is-active --quiet "${APP_NAME}-dotnet"; then
         printf "\n"  # Clear progress line
-        log "❌ Backend service stopped unexpectedly during health check"
+        log "❌ Backend service stopped unexpectedly during DB readiness check"
         break
     fi
-    
-    # Try health check with timeout
-    if timeout 10 curl -s -f http://localhost:8080/api/health >/dev/null 2>&1; then
-        HEALTH_RESPONSE=$(timeout 10 curl -s http://localhost:8080/api/health 2>/dev/null || echo '{"status":"unknown"}')
-        BACKEND_STATUS=$(echo "$HEALTH_RESPONSE" | grep -o '"status":"[^"]*"' | cut -d'"' -f4 || echo "unknown")
-        if [[ "$BACKEND_STATUS" == "healthy" ]]; then
-            printf "\n"  # Clear progress line
-            log "✅ Real backend healthy. Proceeding to build frontend."
-            BACKEND_HEALTHY=true
-            break
-        else
-            # Only log status change if it's different from last time
-            if [[ "$BACKEND_STATUS" != "$LAST_STATUS" ]]; then
-                printf "\n"  # Clear progress line
-                # Parse dataStats to show what's missing
-                MISSING_DATA=$(echo "$HEALTH_RESPONSE" | grep -o '"[^"]*":0' | cut -d'"' -f2 | tr '\n' ',' | sed 's/,$//')
-                if [[ -n "$MISSING_DATA" ]]; then
-                    log "⚠️  Real backend responding but status is $BACKEND_STATUS (missing data: $MISSING_DATA)"
-                else
-                    log "⚠️  Real backend responding but status is $BACKEND_STATUS (reason unknown)"
-                fi
-                LAST_STATUS="$BACKEND_STATUS"
-            fi
-            # Continue trying for a few more attempts in case it's still starting up
-            if [[ $ATTEMPT -gt 20 ]]; then
-                printf "\n"  # Clear progress line
-                log "⚠️  Backend status not healthy after extended wait, proceeding anyway"
-                break
+
+    # Poll DB-backed endpoints for readiness (health endpoint may be insufficient)
+    MODULES_JSON=$(timeout 10 curl -s http://localhost:8080/api/modules-db || true)
+    LESSONS_JSON=$(timeout 10 curl -s http://localhost:8080/api/lessons-db || true)
+    QUIZZES_JSON=$(timeout 10 curl -s http://localhost:8080/api/LessonQuiz || true)
+    if echo "$MODULES_JSON" | jq -e 'type=="array" and length>0' >/dev/null 2>&1 \
+       && echo "$LESSONS_JSON" | jq -e 'type=="array" and length>0' >/dev/null 2>&1 \
+       && echo "$QUIZZES_JSON" | jq -e 'type=="array" and length>0' >/dev/null 2>&1; then
+        printf "\n"  # Clear progress line
+        log "✅ Backend DB endpoints ready with data at attempt $ATTEMPT/$MAX_ATTEMPTS. Proceeding to build frontend."
+        BACKEND_HEALTHY=true
+        break
+    fi
+
+    # Trigger full migration once if arrays are empty
+    if [[ $MIGRATION_TRIGGERED -eq 0 ]]; then
+        if echo "$MODULES_JSON" | jq -e 'type=="array" and length==0' >/dev/null 2>&1 \
+           || echo "$LESSONS_JSON" | jq -e 'type=="array" and length==0' >/dev/null 2>&1 \
+           || echo "$QUIZZES_JSON" | jq -e 'type=="array" and length==0' >/dev/null 2>&1; then
+            MIGRATION_TRIGGERED=1
+            MIGRATION_RESP=$(timeout 60 curl -s -X POST http://localhost:8080/api/migration/full-migration -H "Content-Type: application/json" || true)
+            if echo "$MIGRATION_RESP" | grep -q '"Success":\s*true'; then
+                log "✅ Full migration triggered successfully"
+            else
+                SHORT=$(echo "$MIGRATION_RESP" | tr -d '\n' | cut -c1-200)
+                log "⚠️  Full migration trigger response: '${SHORT}'"
+                log "🔁 Migration API failed/unreachable; invoking CLI fallback with retries..."
+                RETRY_MAX=${MIGRATION_CLI_RETRY_MAX:-3}
+                RETRY_DELAY_BASE=$([ "${FAST_MODE:-0}" -eq 1 ] && echo 2 || echo 3)
+                for RETRY in $(seq 1 "$RETRY_MAX"); do
+                    if [ -f "$APP_DIR/glasscode/backend/out/backend.dll" ]; then
+                        timeout 300 sudo -u "$DEPLOY_USER" env RUN_AUTOMATED_MIGRATION_ONLY=1 dotnet "$APP_DIR/glasscode/backend/out/backend.dll" || true
+                    else
+                        (cd "$APP_DIR/glasscode/backend" && timeout 600 sudo -u "$DEPLOY_USER" env RUN_AUTOMATED_MIGRATION_ONLY=1 dotnet run --project "$APP_DIR/glasscode/backend/backend.csproj" || true)
+                    fi
+
+                    MODULES_JSON=$(timeout 10 curl -s http://localhost:8080/api/modules-db || true)
+                    LESSONS_JSON=$(timeout 10 curl -s http://localhost:8080/api/lessons-db || true)
+                    QUIZZES_JSON=$(timeout 10 curl -s http://localhost:8080/api/LessonQuiz || true)
+
+                    if echo "$MODULES_JSON" | jq -e 'type=="array" and length>0' >/dev/null 2>&1 \
+                       && echo "$LESSONS_JSON" | jq -e 'type=="array" and length>0' >/dev/null 2>&1 \
+                       && echo "$QUIZZES_JSON" | jq -e 'type=="array" and length>0' >/dev/null 2>&1 ; then
+                        log "✅ CLI migration populated data; DB endpoints ready at attempt $ATTEMPT/$MAX_ATTEMPTS."
+                        BACKEND_HEALTHY=true
+                        break
+                    fi
+
+                    if [ "$RETRY" -lt "$RETRY_MAX" ]; then
+                        BACKOFF=$((RETRY_DELAY_BASE * (1 << (RETRY - 1))))
+                        log "⏳ CLI migration not reflected yet; retry $RETRY/$RETRY_MAX after ${BACKOFF}s..."
+                        sleep "$BACKOFF"
+                    else
+                        log "❌ CLI migration retries exhausted; continuing checks."
+                    fi
+                done
             fi
         fi
     fi
-    draw_progress "$ATTEMPT" "$MAX_ATTEMPTS" "  ⏳ Backend health: "
+
+    draw_progress "$ATTEMPT" "$MAX_ATTEMPTS" "  ⏳ Backend DB readiness: "
     ATTEMPT=$((ATTEMPT + 1))
     sleep $SLEEP_INTERVAL
+
 done
 
+if [[ "$BACKEND_HEALTHY" == "true" ]]; then
+    log "✅ Backend DB readiness satisfied at attempt $ATTEMPT/$MAX_ATTEMPTS (pre-build)."
+fi
+
 if [[ "$BACKEND_HEALTHY" != "true" && $ATTEMPT -gt $MAX_ATTEMPTS ]]; then
-    log "❌ Real backend failed to become healthy before frontend build."
+    log "❌ Backend DB endpoints failed to become ready before frontend build."
     log "🧪 Diagnostic: systemd status"
     systemctl status ${APP_NAME}-dotnet --no-pager || true
     log "🪵 Recent backend logs (journalctl)"
     journalctl -u ${APP_NAME}-dotnet -n 200 --no-pager || true
     log "🔌 Listening ports snapshot"
     ss -tulpn | grep :8080 || true
-    log "🌐 Health endpoint verbose output"
-    timeout 15 curl -v http://localhost:8080/api/health || true
+    log "🌐 DB endpoint verbose output"
+    timeout 15 curl -v http://localhost:8080/api/modules-db || true
+    timeout 15 curl -v http://localhost:8080/api/lessons-db || true
+    timeout 15 curl -v http://localhost:8080/api/LessonQuiz || true
     if [ "${FAST_MODE:-0}" -eq 1 ] || [ "${SKIP_BACKEND_HEALTH:-0}" -eq 1 ]; then
-        log "⚠️  Continuing despite backend health precondition due to fast/skip mode"
+        log "⚠️  Continuing despite backend DB readiness precondition due to fast/skip mode"
     else
         exit 1
     fi
@@ -876,6 +913,7 @@ while [ $COUNT -le $MAX ]; do
   STATUS=$(echo "$RESP" | jq -r .status 2>/dev/null || echo "$RESP" | grep -o '"status":"[^"]*"' | cut -d '"' -f4)
 
   if [ "$HTTP" = "200" ] && { [ "$STATUS" = "healthy" ] || [ "$STATUS" = "degraded" ] || [ -n "$RESP" ]; }; then
+    echo "✅ Backend health check passed at attempt $COUNT/$MAX: HTTP $HTTP, Status: ${STATUS:-unknown}"
     exit 0
   fi
   sleep 5; COUNT=$((COUNT+1))
