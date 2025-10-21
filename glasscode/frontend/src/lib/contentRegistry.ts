@@ -152,6 +152,18 @@ class ContentRegistryLoader {
   async loadRegistry(): Promise<ContentRegistry> {
     // Return cached registry if available
     if (this.registry) {
+      // If cached registry has no modules, attempt a fresh reload to recover
+      if (!Array.isArray(this.registry.modules) || this.registry.modules.length === 0) {
+        try {
+          const refreshed = await this.loadRegistryInternal();
+          // Only replace cache if refreshed has modules (avoid thrashing)
+          if (Array.isArray(refreshed.modules) && refreshed.modules.length > 0) {
+            this.registry = refreshed;
+          }
+        } catch {
+          // swallow and return existing minimal registry
+        }
+      }
       return this.registry;
     }
 
@@ -183,9 +195,14 @@ class ContentRegistryLoader {
       const timeoutId = setTimeout(() => controller.abort(), 10000);
 
       const base = isBrowser ? '' : (() => { try { return getPublicOriginStrict().replace(/\/+$/, ''); } catch { return ''; } })();
+      // Prefer local API route first (dynamic, merged), then local static, then remote base as last resort
       const candidates = isBrowser
-        ? ['/registry.json', '/api/content/registry']
-        : (base ? [`${base}/registry.json`, `${base}/api/content/registry`] : ['/registry.json', '/api/content/registry']);
+        ? ['/api/content/registry', '/registry.json']
+        : [
+            '/api/content/registry',
+            '/registry.json',
+            ...(base ? [`${base}/api/content/registry`, `${base}/registry.json`] : []),
+          ];
 
       for (const url of candidates) {
         try {

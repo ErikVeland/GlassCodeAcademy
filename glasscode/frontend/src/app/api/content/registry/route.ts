@@ -88,6 +88,27 @@ interface DbModule {
   passingScore?: number;
 }
 
+interface ModuleRoutes {
+  overview: string;
+  lessons: string;
+  quiz: string;
+}
+
+interface RegistryModuleLight {
+  slug: string;
+  routes?: ModuleRoutes;
+  // Allow additional fields but keep type-safe
+  [key: string]: unknown;
+}
+
+interface RegistryResponse {
+  version: string;
+  lastUpdated: string;
+  tiers: Record<string, unknown>;
+  modules: RegistryModuleLight[];
+  globalSettings: Record<string, unknown>;
+}
+
 async function synthesizeRegistryFromDatabase() {
   try {
     const apiBase = (() => { try { return getApiBaseStrict(); } catch { return 'http://127.0.0.1:8080'; } })();
@@ -166,35 +187,67 @@ async function synthesizeRegistryFromDatabase() {
   }
 }
 
+// Normalize module routes from file registry to shortSlug-based paths
+async function normalizeFileRegistryRoutes(registry: RegistryResponse): Promise<RegistryResponse> {
+  const modules: RegistryModuleLight[] = Array.isArray(registry?.modules) ? registry.modules : [];
+  const normalizedModules: RegistryModuleLight[] = await Promise.all(modules.map(async (m: RegistryModuleLight) => {
+    const slug = (m?.slug || '').toString();
+    const shortSlug = (await getShortSlugFromModuleSlug(slug)) || (slug.includes('-') ? slug.split('-')[0] : slug);
+    const routes: ModuleRoutes = {
+      overview: `/${shortSlug}`,
+      lessons: `/${shortSlug}/lessons`,
+      quiz: `/${shortSlug}/quiz`,
+    };
+    return {
+      ...m,
+      routes,
+    };
+  }));
+  return { ...registry, modules: normalizedModules };
+}
+
+// Load local file registry and normalize routes for consistency
+async function loadLocalRegistryNormalized(): Promise<RegistryResponse> {
+  const registryPath = path.join(process.cwd(), '..', '..', 'content', 'registry.json');
+  if (!fs.existsSync(registryPath)) {
+    return buildMinimalRegistry() as RegistryResponse;
+  }
+  const registryContent = fs.readFileSync(registryPath, 'utf8');
+  const parsed: RegistryResponse = JSON.parse(registryContent) as RegistryResponse;
+  return normalizeFileRegistryRoutes(parsed);
+}
+
 export async function GET() {
   try {
     const dbMode = (process.env.GC_CONTENT_MODE || '').toLowerCase() === 'db';
 
     if (dbMode) {
-      const registry = await synthesizeRegistryFromDatabase();
-      return NextResponse.json(registry, {
+      const dbRegistry = await synthesizeRegistryFromDatabase();
+      const hasModules = Array.isArray(dbRegistry.modules) && dbRegistry.modules.length > 0;
+      const hasProgrammingFundamentals = hasModules && dbRegistry.modules.some((m) => m.slug === 'programming-fundamentals');
+
+      // If DB registry is missing essential modules, merge with local file registry
+      if (!hasModules || !hasProgrammingFundamentals) {
+        const fileRegistry = await loadLocalRegistryNormalized();
+        const mergedModules = [
+          ...dbRegistry.modules,
+          ...fileRegistry.modules.filter((fm: RegistryModuleLight) => !dbRegistry.modules.some((dm: { slug: string }) => dm.slug === fm.slug)),
+        ];
+        const merged = { ...dbRegistry, modules: mergedModules };
+        return NextResponse.json(merged, {
+          status: 200,
+          headers: { 'Cache-Control': 'no-store' },
+        });
+      }
+
+      return NextResponse.json(dbRegistry, {
         status: 200,
-        headers: {
-          'Cache-Control': 'no-store',
-        },
+        headers: { 'Cache-Control': 'no-store' },
       });
     }
 
-    const registryPath = path.join(process.cwd(), '..', '..', 'content', 'registry.json');
-    
-    if (!fs.existsSync(registryPath)) {
-      // Return minimal registry to avoid breaking SSR/client rendering
-      return NextResponse.json(buildMinimalRegistry(), {
-        status: 200,
-        headers: {
-          'Cache-Control': 'no-store',
-        },
-      });
-    }
-
-    const registryContent = fs.readFileSync(registryPath, 'utf8');
-    const registry = JSON.parse(registryContent);
-
+    // File mode: return normalized local registry
+    const registry = await loadLocalRegistryNormalized();
     return NextResponse.json(registry, {
       headers: {
         'Cache-Control': 'public, max-age=300, stale-while-revalidate=86400',

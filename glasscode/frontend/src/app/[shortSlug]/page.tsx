@@ -5,6 +5,7 @@ import { contentRegistry } from '@/lib/contentRegistry';
 import type { Module, Lesson, Quiz } from '@/lib/contentRegistry';
 import { ui, classes } from '@/lib/ui';
 import { getModuleTheme } from '@/lib/moduleThemes';
+import RetryButton from '@/components/RetryButton';
 
 
 
@@ -21,11 +22,11 @@ export async function generateStaticParams(): Promise<{ shortSlug: string }[]> {
 }
 
 type Props = {
-  params: { shortSlug: string };
+  params: Promise<{ shortSlug: string }>;
 };
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const { shortSlug } = params;
+  const { shortSlug } = await params;
   const currentModule = await contentRegistry.getModule(shortSlug);
   
   if (!currentModule) {
@@ -42,7 +43,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 export default async function ModulePage({ params }: Props) {
-  const { shortSlug } = params;
+  const { shortSlug } = await params;
   
   // Add error handling for content registry
   let currentModule: Module | null = null;
@@ -79,12 +80,7 @@ export default async function ModulePage({ params }: Props) {
             We&apos;re having trouble loading the content for this module. This might be due to a temporary issue with our content registry.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <button
-              className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
-              onClick={() => window.location.reload()}
-            >
-              Try Again
-            </button>
+            <RetryButton />
             <Link 
               href="/" 
               className="px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors text-center"
@@ -98,6 +94,12 @@ export default async function ModulePage({ params }: Props) {
   }
 
   const theme = getModuleTheme(currentModule!.slug);
+
+  const difficultyBadgeClass = currentModule!.difficulty === 'Beginner'
+    ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200'
+    : currentModule!.difficulty === 'Intermediate'
+    ? 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200'
+    : 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200';
 
   return (
     <>
@@ -128,12 +130,48 @@ export default async function ModulePage({ params }: Props) {
           <div className="rounded-xl overflow-hidden">
             <div className={`h-2 ${theme.strip}`}></div>
             <div className="glass-morphism p-8">
-              <h1 className="text-4xl font-bold text-gray-900 dark:text-white">
-                {currentModule.title}
-              </h1>
-              <p className="text-xl text-gray-600 dark:text-gray-300 mb-6">
-                {currentModule.description}
-              </p>
+              <div className="flex items-start gap-6">
+                <div className="text-6xl" role="img" aria-label={`${currentModule.title} icon`}>
+                  {currentModule.icon}
+                </div>
+                <div className="flex-1">
+                  <div className="flex items-center gap-4 mb-4">
+                    <h1 className="text-4xl font-bold text-gray-900 dark:text-white">
+                      {currentModule.title}
+                    </h1>
+                    <span className={`px-3 py-1 rounded-full text-sm font-medium ${difficultyBadgeClass}`}>
+                      {currentModule.difficulty}
+                    </span>
+                  </div>
+                  <p className="text-xl text-gray-600 dark:text-gray-300 mb-6">
+                    {currentModule.description}
+                  </p>
+                  <div className="flex flex-wrap gap-2 mb-6">
+                    {currentModule.technologies.map((tech) => (
+                      <span
+                        key={tech}
+                        className="px-3 py-1 bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200 rounded-full text-sm"
+                      >
+                        {tech}
+                      </span>
+                    ))}
+                  </div>
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm text-gray-600 dark:text-gray-400">
+                    <div>
+                      <span className="font-medium">Track:</span> {currentModule.track}
+                    </div>
+                    <div>
+                      <span className="font-medium">Tier:</span> {tier?.title}
+                    </div>
+                    <div>
+                      <span className="font-medium">Duration:</span> {currentModule.estimatedHours}h
+                    </div>
+                    <div>
+                      <span className="font-medium">Lessons:</span> {lessons?.length || 0}
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </header>

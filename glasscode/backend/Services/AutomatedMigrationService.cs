@@ -562,7 +562,7 @@ namespace backend.Services
         /// <summary>
         /// Processes a single quiz JSON file
         /// </summary>
-        private async Task ProcessQuizFileAsync(string filePath)
+        private async Task ProcessQuizFileAsync(string filePath, int? targetLessonId = null, bool reassignDuplicates = false)
         {
             try
             {
@@ -581,12 +581,26 @@ namespace backend.Services
                     return;
                 }
 
-                // Try to find a matching lesson by filename
-                var lesson = await FindMatchingLessonAsync(fileName);
-                if (lesson == null)
+                // Resolve target lesson: either explicit target or by filename
+                Lesson? lesson = null;
+                if (targetLessonId.HasValue)
                 {
-                    Console.WriteLine($"   ⚠️ No matching lesson found for {fileName}. Skipping quiz migration.");
-                    return;
+                    lesson = await _context.Lessons.FindAsync(targetLessonId.Value);
+                    if (lesson == null)
+                    {
+                        Console.WriteLine($"   ⚠️ Target lesson {targetLessonId.Value} not found. Skipping quiz migration.");
+                        return;
+                    }
+                }
+                else
+                {
+                    // Try to find a matching lesson by filename
+                    lesson = await FindMatchingLessonAsync(fileName);
+                    if (lesson == null)
+                    {
+                        Console.WriteLine($"   ⚠️ No matching lesson found for {fileName}. Skipping quiz migration.");
+                        return;
+                    }
                 }
 
                 foreach (var question in quizData.Questions)
@@ -597,12 +611,20 @@ namespace backend.Services
 
                     if (existingQuiz == null)
                     {
-                        // Guard against global duplicates across lessons
-                        var duplicateGlobal = await _context.LessonQuizzes.AnyAsync(q => q.Question == question.Question);
-                        if (duplicateGlobal)
+                        // If requested, reassign a globally existing duplicate to this target lesson
+                        if (reassignDuplicates)
                         {
-                            Console.WriteLine($"   🔄 Duplicate quiz question exists globally, skipping: {question.Question.Substring(0, Math.Min(50, question.Question.Length))}...");
-                            continue;
+                            var globalQuiz = await _context.LessonQuizzes
+                                .FirstOrDefaultAsync(q => q.Question == question.Question);
+                            if (globalQuiz != null && globalQuiz.LessonId != lesson.Id)
+                            {
+                                globalQuiz.LessonId = lesson.Id;
+                                globalQuiz.IsPublished = true;
+                                globalQuiz.UpdatedAt = DateTime.UtcNow;
+                                _context.LessonQuizzes.Update(globalQuiz);
+                                Console.WriteLine($"   🔁 Reassigned quiz to lesson {lesson.Id}: {question.Question.Substring(0, Math.Min(50, question.Question.Length))}...");
+                                continue; // Skip adding a new record since we've reassigned
+                            }
                         }
 
                         var lessonQuiz = new LessonQuiz
@@ -646,7 +668,21 @@ namespace backend.Services
         private async Task<Lesson?> FindMatchingLessonAsync(string fileName)
         {
             var fileNameLower = fileName.ToLowerInvariant();
-            // Try exact lesson slug match first (case-insensitive)
+            // Prefer exact module slug match before any normalization
+            var exactModule = await _context.Modules.FirstOrDefaultAsync(m => EF.Functions.ILike(m.Slug, fileNameLower));
+            if (exactModule != null)
+            {
+                var exactModuleLesson = await _context.Lessons
+                    .Where(l => l.ModuleId == exactModule.Id)
+                    .OrderBy(l => l.Order)
+                    .FirstOrDefaultAsync();
+                if (exactModuleLesson != null)
+                {
+                    return exactModuleLesson;
+                }
+            }
+
+            // Try exact lesson slug match (case-insensitive)
             var lesson = await _context.Lessons
                 .FirstOrDefaultAsync(l => EF.Functions.ILike(l.Slug, fileNameLower));
             if (lesson != null)
@@ -654,7 +690,7 @@ namespace backend.Services
                 return lesson;
             }
 
-            // Try to match by module slug (prefer exact/normalized slug matches)
+            // Normalize slug to improve matching for files like web-development-basics.json
             var normalizedSlug = fileNameLower
                 .Replace("-quizzes", "")
                 .Replace("-questions", "")
@@ -662,15 +698,23 @@ namespace backend.Services
                 .Replace("-fundamentals", "")
                 .Replace("-advanced", "")
                 .Replace("-basics", "");
-        
+
+            // Try matching module by normalized slug with hyphen-insensitive equality
             var module = await _context.Modules
                 .FirstOrDefaultAsync(m =>
                     EF.Functions.ILike(m.Slug, normalizedSlug) ||
                     EF.Functions.ILike(m.Slug.Replace("-", ""), normalizedSlug.Replace("-", "")));
-        
+
+            // Fallback to partial matches (hyphen-insensitive)
+            if (module == null)
+            {
+                module = await _context.Modules.FirstOrDefaultAsync(m =>
+                    EF.Functions.ILike(m.Slug, $"%{normalizedSlug}%") ||
+                    EF.Functions.ILike(m.Slug.Replace("-", ""), $"%{normalizedSlug.Replace("-", "")}%"));
+            }
+
             if (module != null)
             {
-                // Pick the first lesson within the matched module to attach quizzes to
                 var moduleLesson = await _context.Lessons
                     .Where(l => l.ModuleId == module.Id)
                     .OrderBy(l => l.Order)
@@ -680,8 +724,8 @@ namespace backend.Services
                     return moduleLesson;
                 }
             }
-        
-            // Avoid misattribution to unrelated modules; if no module match, skip
+
+            // No match found
             return null;
         }
 
@@ -706,6 +750,62 @@ namespace backend.Services
             else
             {
                 Console.WriteLine($"⚠️ Migration validation has concerns - some entities are missing");
+            }
+        }
+
+        public async Task<bool> SeedQuizzesForModuleSlugAsync(string moduleSlug)
+        {
+            try
+            {
+                var module = await _context.Modules
+                    .Include(m => m.Lessons)
+                    .ThenInclude(l => l.LessonQuizzes)
+                    .FirstOrDefaultAsync(m => m.Slug == moduleSlug);
+
+                if (module == null)
+                {
+                    Console.WriteLine($"⚠️ Module not found for slug: {moduleSlug}");
+                    return false;
+                }
+
+                var hasPublishedQuizzes = module.Lessons.SelectMany(l => l.LessonQuizzes).Any(q => q.IsPublished);
+                if (hasPublishedQuizzes)
+                {
+                    Console.WriteLine($"ℹ️ Module '{moduleSlug}' already has published quizzes. Skipping backfill.");
+                    return true;
+                }
+
+                var quizzesPath = System.IO.Path.Combine(_contentPath, "quizzes");
+                var filePath = System.IO.Path.Combine(quizzesPath, $"{moduleSlug}.json");
+                if (!System.IO.File.Exists(filePath))
+                {
+                    Console.WriteLine($"⚠️ Quiz JSON not found for module '{moduleSlug}' at: {filePath}");
+                    return false;
+                }
+
+                Console.WriteLine($"🔧 Backfilling quizzes for module '{moduleSlug}' from file: {System.IO.Path.GetFileName(filePath)}");
+                var targetLesson = module.Lessons
+                    .OrderBy(l => l.Order)
+                    .FirstOrDefault();
+                if (targetLesson == null)
+                {
+                    Console.WriteLine($"⚠️ No lessons found in module '{moduleSlug}'. Cannot backfill quizzes.");
+                    return false;
+                }
+                await ProcessQuizFileAsync(filePath, targetLesson.Id, reassignDuplicates: true);
+                await _context.SaveChangesAsync();
+
+                var postHasPublishedQuizzes = module.Lessons.SelectMany(l => l.LessonQuizzes).Any(q => q.IsPublished);
+                Console.WriteLine(postHasPublishedQuizzes
+                    ? $"✅ Backfill completed for '{moduleSlug}'"
+                    : $"⚠️ Backfill finished but no published quizzes detected for '{moduleSlug}'");
+
+                return postHasPublishedQuizzes;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"❌ Error backfilling quizzes for '{moduleSlug}': {ex.Message}");
+                return false;
             }
         }
     }
@@ -735,3 +835,5 @@ namespace backend.Services
         public string? LastUpdated { get; set; }
     }
 }
+
+// Removed duplicate external SeedQuizzesForModuleSlugAsync method (moved inside class).

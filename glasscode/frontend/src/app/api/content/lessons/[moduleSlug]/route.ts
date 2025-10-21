@@ -1,62 +1,106 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getApiBaseStrict } from '@/lib/urlUtils';
+import { getModuleSlugFromShortSlug } from '@/lib/contentRegistry';
 /* eslint-disable @typescript-eslint/no-unused-vars */
 
-// Database-based lesson loading function
-async function fetchLessonsFromDatabase(moduleSlug: string) {
+type FrontendLesson = {
+  id: string;
+  title: string;
+  intro: string;
+  topic: string;
+  tags: string[];
+  estimatedMinutes: number;
+  objectives: string[];
+  codeExample: string;
+  codeExplanation: string;
+  additionalNotes: string;
+  difficulty: 'beginner' | 'intermediate' | 'advanced';
+};
+
+type RawLesson = Partial<{
+  id: number | string;
+  slug: string;
+  title: string;
+  intro: string;
+  description: string;
+  topic: string;
+  category: string;
+  tags: string[] | string;
+  estimatedMinutes: number;
+  objectives: string[] | string;
+  codeExample: string;
+  codeExplanation: string;
+  additionalNotes: string;
+  difficulty: string;
+}>;
+
+// Database-based lesson loading function with fallback to local API during dev
+async function fetchLessonsFromDatabase(moduleSlug: string): Promise<FrontendLesson[]> {
   try {
-    const apiBase = (() => { try { return getApiBaseStrict(); } catch { return 'http://127.0.0.1:8080'; } })();
-    // First, get the module ID from the backend
-    const modulesResponse = await fetch(`${apiBase}/api/modules`);
-    if (!modulesResponse.ok) {
-      console.error('Failed to fetch modules from backend');
-      return [];
+    const primaryBase = (() => { try { return getApiBaseStrict(); } catch { return 'http://127.0.0.1:8080'; } })();
+    const bases = Array.from(new Set([primaryBase, 'http://127.0.0.1:8080']));
+
+    for (const apiBase of bases) {
+      try {
+        // First, get the module ID from the backend
+        const modulesResponse = await fetch(`${apiBase}/api/modules`, { cache: 'no-store' });
+        if (!modulesResponse.ok) {
+          console.error(`[lessons] Failed modules fetch from ${apiBase}`);
+          continue;
+        }
+        const modules = await modulesResponse.json();
+        const foundModule = modules.find((m: { id: number; slug: string }) => m.slug === moduleSlug);
+        if (!foundModule) {
+          console.log(`[lessons] Module not found for slug: ${moduleSlug} on ${apiBase}`);
+          continue;
+        }
+
+        // Fetch lessons for this module
+        const lessonsResponse = await fetch(`${apiBase}/api/lessons-db?moduleId=${foundModule.id}`, { cache: 'no-store' });
+        if (!lessonsResponse.ok) {
+          console.error(`[lessons] Failed lessons fetch for ${moduleSlug} from ${apiBase}`);
+          continue;
+        }
+        const lessons = await lessonsResponse.json();
+        console.log(`[lessons] Loaded ${Array.isArray(lessons) ? lessons.length : 0} lessons from ${apiBase} for ${moduleSlug}`);
+
+        if (Array.isArray(lessons) && lessons.length > 0) {
+          // Transform the database lessons to match the expected frontend format
+          const transformed: FrontendLesson[] = lessons.map((lesson: {
+            id: number;
+            title: string;
+            intro?: string;
+            topic?: string;
+            tags?: string;
+            estimatedMinutes?: number;
+            objectives?: string;
+            codeExample?: string;
+            codeExplanation?: string;
+            additionalNotes?: string;
+            difficulty?: string;
+          }) => ({
+            id: `${lesson.id}`,
+            title: lesson.title,
+            intro: lesson.intro || '',
+            topic: lesson.topic || '',
+            tags: lesson.tags ? lesson.tags.split(',').map((t: string) => t.trim()) : [],
+            estimatedMinutes: lesson.estimatedMinutes || 10,
+            objectives: lesson.objectives ? lesson.objectives.split('\n') : [],
+            codeExample: lesson.codeExample || '',
+            codeExplanation: lesson.codeExplanation || '',
+            additionalNotes: lesson.additionalNotes || '',
+            difficulty: (lesson.difficulty ? String(lesson.difficulty).toLowerCase() : 'beginner') as 'beginner' | 'intermediate' | 'advanced',
+          }));
+          return transformed;
+        }
+      } catch (innerErr) {
+        console.error(`[lessons] Error using ${apiBase}:`, innerErr);
+        continue;
+      }
     }
-    
-    const modules = await modulesResponse.json();
-    const foundModule = modules.find((m: { id: number; slug: string }) => m.slug === moduleSlug);
-    
-    if (!foundModule) {
-      console.log(`Module not found for slug: ${moduleSlug}`);
-      return [];
-    }
-    
-    // Fetch lessons for this module
-    const lessonsResponse = await fetch(`${apiBase}/api/lessons-db?moduleId=${foundModule.id}`);
-    if (!lessonsResponse.ok) {
-      console.error(`Failed to fetch lessons for module ${moduleSlug}`);
-      return [];
-    }
-    
-    const lessons = await lessonsResponse.json();
-    console.log(`Successfully loaded ${lessons.length} lessons from database for module: ${moduleSlug}`);
-    
-    // Transform the database lessons to match the expected frontend format
-    return lessons.map((lesson: {
-      id: number;
-      title: string;
-      intro?: string;
-      topic?: string;
-      tags?: string;
-      estimatedMinutes?: number;
-      objectives?: string;
-      codeExample?: string;
-      codeExplanation?: string;
-      additionalNotes?: string;
-      difficulty?: string;
-    }) => ({
-      id: `${lesson.id}`,
-      title: lesson.title,
-      intro: lesson.intro || '',
-      topic: lesson.topic || '',
-      tags: lesson.tags ? lesson.tags.split(',').map((t: string) => t.trim()) : [],
-      estimatedMinutes: lesson.estimatedMinutes || 10,
-      objectives: lesson.objectives ? lesson.objectives.split('\n') : [],
-      codeExample: lesson.codeExample || '',
-      codeExplanation: lesson.codeExplanation || '',
-      additionalNotes: lesson.additionalNotes || '',
-      difficulty: (lesson.difficulty || 'beginner') as 'beginner' | 'intermediate' | 'advanced',
-    }));
+
+    // If nothing worked, return empty array
+    return [];
   } catch (error) {
     console.error('Error loading lessons from database:', error);
     return [];
@@ -64,7 +108,7 @@ async function fetchLessonsFromDatabase(moduleSlug: string) {
 }
 
 // File-based lesson loading fallback
-async function fetchLessonsFromFiles(req: NextRequest, moduleSlug: string) {
+async function fetchLessonsFromFiles(req: NextRequest, moduleSlug: string): Promise<FrontendLesson[]> {
   try {
     const origin = new URL(req.url).origin;
     const res = await fetch(`${origin}/content/lessons/${moduleSlug}.json`, { cache: 'no-store' });
@@ -73,15 +117,29 @@ async function fetchLessonsFromFiles(req: NextRequest, moduleSlug: string) {
       return [];
     }
     const data: unknown = await res.json();
-    let lessons: unknown[] = [];
+    let rawLessons: RawLesson[] = [];
     if (Array.isArray(data)) {
-      lessons = data as unknown[];
+      rawLessons = data as RawLesson[];
     } else if (data && typeof data === 'object') {
-      const obj = data as { lessons?: unknown[] };
+      const obj = data as { lessons?: RawLesson[] };
       if (Array.isArray(obj.lessons)) {
-        lessons = obj.lessons;
+        rawLessons = obj.lessons as RawLesson[];
       }
     }
+    // Normalize to FrontendLesson shape
+    const lessons: FrontendLesson[] = rawLessons.map((item: RawLesson) => ({
+      id: `${item.id ?? item.slug ?? Math.random().toString(36).slice(2)}`,
+      title: item.title ?? 'Untitled',
+      intro: item.intro ?? item.description ?? '',
+      topic: item.topic ?? item.category ?? '',
+      tags: Array.isArray(item.tags) ? item.tags : typeof item.tags === 'string' ? item.tags.split(',').map((t) => t.trim()) : [],
+      estimatedMinutes: typeof item.estimatedMinutes === 'number' ? item.estimatedMinutes : 10,
+      objectives: Array.isArray(item.objectives) ? item.objectives : typeof item.objectives === 'string' ? item.objectives.split('\n') : [],
+      codeExample: item.codeExample ?? '',
+      codeExplanation: item.codeExplanation ?? '',
+      additionalNotes: item.additionalNotes ?? '',
+      difficulty: (item.difficulty ? String(item.difficulty).toLowerCase() : 'beginner') as 'beginner' | 'intermediate' | 'advanced',
+    }));
     return lessons;
   } catch (error) {
     console.error('Error loading lessons from files:', error);
@@ -89,21 +147,34 @@ async function fetchLessonsFromFiles(req: NextRequest, moduleSlug: string) {
   }
 }
 
-// Map short slugs to full module slugs (e.g., graphql -> GraphQL queries)
-const SHORT_SLUG_TO_MODULE_SLUG: Record<string, string> = {
-  graphql: 'graphql',
-  js: 'javascript',
-  ts: 'typescript',
-  next: 'nextjs',
-};
-
 export async function GET(req: NextRequest, { params }: { params: Promise<{ moduleSlug: string }> }) {
   const { moduleSlug } = await params;
-  const actualSlug = SHORT_SLUG_TO_MODULE_SLUG[moduleSlug] || moduleSlug;
+  // Resolve short slugs to full module slugs using central mapping
+  const resolvedSlug = (await getModuleSlugFromShortSlug(moduleSlug)) || moduleSlug;
 
-  const lessons = await fetchLessonsFromDatabase(actualSlug);
+  let lessons = await fetchLessonsFromDatabase(resolvedSlug);
+
+  // If DB returns empty, try file fallback
+  if (!Array.isArray(lessons) || lessons.length === 0) {
+    lessons = await fetchLessonsFromFiles(req, resolvedSlug);
+  }
+
+  // Optional debug output in non-production
+  const url = new URL(req.url);
+  const debug = url.searchParams.get('debug');
+  if (debug && process.env.NODE_ENV !== 'production') {
+    return NextResponse.json({
+      debug: true,
+      inputSlug: moduleSlug,
+      resolvedSlug,
+      apiBaseCandidates: (() => { try { return [getApiBaseStrict(), 'http://127.0.0.1:8080']; } catch { return ['http://127.0.0.1:8080']; } })(),
+      lessonsCount: Array.isArray(lessons) ? lessons.length : 0,
+      source: Array.isArray(lessons) && lessons.length > 0 ? 'db-or-file' : 'none',
+    });
+  }
+
   return NextResponse.json(Array.isArray(lessons) ? lessons : []);
 }
 
-export const runtime = 'edge';
+export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';

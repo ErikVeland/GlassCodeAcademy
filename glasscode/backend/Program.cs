@@ -168,6 +168,23 @@ using (var scope = app.Services.CreateScope())
     else
     {
         Log.Information("Skipping AutomatedMigrationService migration; data already present.");
+
+        // Backfill quizzes for ALL modules missing published quizzes
+        var modules = await ctx.Modules
+            .Include(m => m.Lessons)
+            .ThenInclude(l => l.LessonQuizzes)
+            .ToListAsync();
+
+        var migrationService = scope.ServiceProvider.GetRequiredService<backend.Services.AutomatedMigrationService>();
+        foreach (var mod in modules)
+        {
+            var hasQuizzes = mod.Lessons.SelectMany(l => l.LessonQuizzes).Any(q => q.IsPublished);
+            if (!hasQuizzes)
+            {
+                Log.Information("Backfilling quizzes for module '{ModuleSlug}'...", mod.Slug);
+                await migrationService.SeedQuizzesForModuleSlugAsync(mod.Slug);
+            }
+        }
     }
 }
 

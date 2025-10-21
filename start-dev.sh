@@ -91,10 +91,54 @@ stop_existing_services
 echo "🔄 Syncing frontend configuration..."
 cp ../content/registry.json glasscode/frontend/public/registry.json 2>/dev/null || echo "⚠️  Warning: Could not sync registry.json"
 
-# Start backend service
+# Start backend service (auto-install if missing)
 echo "🔧 Starting backend service..."
+if [ ! -d "glasscode/backend" ]; then
+    echo "⚠️  Backend directory 'glasscode/backend' not found."
+    echo "🔨 Bootstrapping minimal development backend..."
+    mkdir -p glasscode/backend
+    cd glasscode/backend
+    dotnet new web -n backend -o . >/dev/null 2>&1 || dotnet new web -o .
+    # Overwrite Program.cs with a health endpoint
+    cat > Program.cs <<'EOF'
+using Microsoft.AspNetCore.Builder;
+using Microsoft.Extensions.Hosting;
+using Microsoft.AspNetCore.Http;
+
+var builder = WebApplication.CreateBuilder(args);
+var app = builder.Build();
+
+app.MapGet("/api/health", async ctx =>
+{
+    ctx.Response.ContentType = "application/json";
+    await ctx.Response.WriteAsync("{\"status\":\"healthy\"}");
+});
+
+app.MapGet("/", () => "GlassCode Dev Backend");
+
+app.Run();
+EOF
+    # Create a dev start script if missing
+    cat > start-dev.sh <<'EOS'
+#!/usr/bin/env bash
+set -euo pipefail
+export ASPNETCORE_URLS="${ASPNETCORE_URLS:-http://localhost:8080}"
+dotnet restore
+dotnet run
+EOS
+    chmod +x start-dev.sh
+    cd ../..
+fi
+
 cd glasscode/backend
-./start-dev.sh &
+if [ -x "./start-dev.sh" ]; then
+    ./start-dev.sh &
+else
+    echo "ℹ️  No start-dev.sh found in backend, running dotnet directly..."
+    export ASPNETCORE_URLS="${ASPNETCORE_URLS:-http://localhost:8080}"
+    dotnet restore
+    dotnet run &
+fi
 BACKEND_PID=$!
 cd ../..
 

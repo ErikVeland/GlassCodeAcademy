@@ -6,6 +6,7 @@ import { contentRegistry } from '@/lib/contentRegistry';
 import type { Module, Lesson, Quiz } from '@/lib/contentRegistry';
 import { ui, classes } from '@/lib/ui';
 import { getModuleTheme } from '@/lib/moduleThemes';
+import RetryButton from '@/components/RetryButton';
 
 interface ModulePageProps {
   params: Promise<{ moduleSlug: string }>;
@@ -84,12 +85,7 @@ export default async function ModulePage({ params }: ModulePageProps) {
             We&apos;re having trouble loading the content for this module. This might be due to a temporary issue with our content registry.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <button
-              className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
-              onClick={() => window.location.reload()}
-            >
-              Try Again
-            </button>
+            <RetryButton />
             <Link 
               href="/" 
               className="px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors text-center"
