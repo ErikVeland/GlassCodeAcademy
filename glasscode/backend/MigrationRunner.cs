@@ -4,7 +4,7 @@ using backend.Scripts;
 
 class MigrationRunner
 {
-    static async Task Main(string[] args)
+    static async Task RunAsync(string[] args)
     {
         var connectionString = "Host=localhost;Database=glasscode_academy;Username=veland;Password=veland123;Port=5432";
         

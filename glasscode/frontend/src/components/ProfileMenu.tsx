@@ -93,9 +93,9 @@ export default function ProfileMenu() {
       </button>
 
       {open && (
-        <div className="absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-surface/95 border border-border z-50">
-          <div className="py-1">
-            <div className="px-4 py-2 text-xs text-muted">
+        <div className="origin-top-right absolute -right-4 mt-2 min-w-[18rem] rounded-xl shadow-lg bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm border border-gray-200 dark:border-gray-700 z-[9999]">
+          <div className="py-2 px-4" role="menu">
+            <div className="text-xs text-muted mb-2">
               {session?.user ? (
                 <span>Signed in as {session.user.name || session.user.email}</span>
               ) : guestName ? (
@@ -106,26 +106,26 @@ export default function ProfileMenu() {
             </div>
             {!session?.user && !guestName && (
               <>
-                <Link href="/login" className="block px-4 py-2 text-sm text-fg hover:bg-surface-alt focus:outline-none focus:ring-2 ring-focus ring-offset-2 ring-offset-bg" role="menuitem">
-                  Login / Register
+                <Link href="/login" className="block px-3 py-2 text-sm font-medium text-muted hover:bg-surface-alt hover:text-primary rounded transition-colors duration-150" role="menuitem">
+                  <span className="mr-2">🔐</span> Login / Register
                 </Link>
-                <Link href="/register" className="block px-4 py-2 text-sm text-fg hover:bg-surface-alt focus:outline-none focus:ring-2 ring-focus ring-offset-2 ring-offset-bg" role="menuitem">
-                  Register with OAuth
+                <Link href="/register" className="block px-3 py-2 text-sm font-medium text-muted hover:bg-surface-alt hover:text-primary rounded transition-colors duration-150" role="menuitem">
+                  <span className="mr-2">🔑</span> Register with OAuth
                 </Link>
-                <div className="border-t border-border my-1" />
+                <div className="border-t border-border my-2" />
               </>
             )}
-            <Link href="/profile" className="block px-4 py-2 text-sm text-fg hover:bg-surface-alt focus:outline-none focus:ring-2 ring-focus ring-offset-2 ring-offset-bg" role="menuitem">
-              Profile Overview
+            <Link href="/profile" className="block px-3 py-2 text-sm font-medium text-muted hover:bg-surface-alt hover:text-primary rounded transition-colors duration-150" role="menuitem">
+              <span className="mr-2">👤</span> Profile Overview
             </Link>
-            <Link href="/profile/edit" className="block px-4 py-2 text-sm text-fg hover:bg-surface-alt focus:outline-none focus:ring-2 ring-focus ring-offset-2 ring-offset-bg" role="menuitem">
-              Edit Profile
+            <Link href="/profile/edit" className="block px-3 py-2 text-sm font-medium text-muted hover:bg-surface-alt hover:text-primary rounded transition-colors duration-150" role="menuitem">
+              <span className="mr-2">✏️</span> Edit Profile
             </Link>
             {(session?.user || guestName) && (
               <>
-                <div className="border-t border-border my-1" />
+                <div className="border-t border-border my-2" />
                 <button
-                  className="block w-full text-left px-4 py-2 text-sm text-fg hover:bg-surface-alt focus:outline-none focus:ring-2 ring-focus ring-offset-2 ring-offset-bg"
+                  className="block w-full text-left px-3 py-2 text-sm font-medium text-muted hover:bg-surface-alt hover:text-primary rounded transition-colors duration-150"
                   role="menuitem"
                   onClick={async () => {
                     setOpen(false);
@@ -141,7 +141,7 @@ export default function ProfileMenu() {
                     }
                   }}
                 >
-                  Sign out
+                  <span className="mr-2">🚪</span> Sign out
                 </button>
               </>
             )}

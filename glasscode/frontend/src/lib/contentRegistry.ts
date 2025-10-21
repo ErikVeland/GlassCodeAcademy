@@ -379,32 +379,24 @@ class ContentRegistryLoader {
    * Get lessons for a specific module
    */
   async getModuleLessons(moduleSlug: string): Promise<Lesson[]> {
-    // Prefer relative path in the browser to avoid origin/env mismatches
-    if (typeof window !== 'undefined') {
-      const res = await fetch(`/api/content/lessons/${moduleSlug}`, { cache: 'no-store' });
+    try {
+      const isBrowser = typeof window !== 'undefined';
+      const base = isBrowser ? '' : (() => { try { return getPublicOriginStrict().replace(/\/+$/, ''); } catch { return ''; } })();
+      const url = base ? `${base}/api/content/lessons/${moduleSlug}` : `/api/content/lessons/${moduleSlug}`;
+
+      const res = await fetch(url, { cache: 'no-store' });
       if (!res.ok) return [];
+
       const data: unknown = await res.json();
       const lessonsArr: Lesson[] = Array.isArray(data)
         ? (data as Lesson[])
         : (Array.isArray((data as { lessons?: Lesson[] })?.lessons) ? ((data as { lessons?: Lesson[] }).lessons as Lesson[]) : []);
+
       return lessonsArr.map((l, i) => (typeof l.order === 'number' ? l : { ...l, order: i + 1 }));
+    } catch (err) {
+      console.error(`getModuleLessons(${moduleSlug}) failed:`, err);
+      return [];
     }
-    // Server-side: first try hitting our API route via public origin
-    const origin = (() => { try { return getPublicOriginStrict(); } catch { return ''; } })();
-    if (origin) {
-      try {
-        const res = await fetch(`${origin.replace(/\/+$/, '')}/api/content/lessons/${moduleSlug}`, { cache: 'no-store' });
-        if (res.ok) {
-          const data: unknown = await res.json();
-          const lessonsArr: Lesson[] = Array.isArray(data)
-            ? (data as Lesson[])
-            : (Array.isArray((data as { lessons?: Lesson[] })?.lessons) ? ((data as { lessons?: Lesson[] }).lessons as Lesson[]) : []);
-          return lessonsArr.map((l, i) => (typeof l.order === 'number' ? l : { ...l, order: i + 1 }));
-        }
-      } catch {}
-    }
-    // Remove server-side file fallbacks to avoid bundling Node built-ins
-    return [];
   }
 
   /**
@@ -413,37 +405,19 @@ class ContentRegistryLoader {
   async getModuleQuiz(moduleSlug: string): Promise<Quiz | null> {
     try {
       const shortSlug = await this.getShortSlugFromModuleSlug(moduleSlug) || moduleSlug;
+      const isBrowser = typeof window !== 'undefined';
+      const base = isBrowser ? '' : (() => { try { return getPublicOriginStrict().replace(/\/+$/, ''); } catch { return ''; } })();
+      const url = base ? `${base}/api/content/quizzes/${shortSlug}` : `/api/content/quizzes/${shortSlug}`;
 
-      // Prefer relative fetch in browser to avoid relying on env origins
-      if (typeof window !== 'undefined') {
-        try {
-          const res = await fetch(`/api/content/quizzes/${shortSlug}`, { cache: 'no-store' });
-          if (!res.ok) return null;
-          const data: unknown = await res.json();
-          if (!(data && typeof data === 'object')) return null;
-          const quiz = data as Quiz;
-          const normalizedQuestions = Array.isArray(quiz.questions) ? quiz.questions.map(q => normalizeQuestion(q)) : [];
-          return { ...quiz, questions: normalizedQuestions };
-        } catch (err) {
-          console.error(`getModuleQuiz(${moduleSlug}): browser fetch failed:`, err);
-          return null;
-        }
-      }
+      const res = await fetch(url, { cache: 'no-store' });
+      if (!res.ok) return null;
 
-      // Server-side: try public origin first
-      try {
-        const origin = getPublicOriginStrict().replace(/\/+$/, '');
-        const res = await fetch(`${origin}/api/content/quizzes/${shortSlug}`, { cache: 'no-store' });
-        if (res.ok) {
-          const data: unknown = await res.json();
-          if (!(data && typeof data === 'object')) return null;
-          const quiz = data as Quiz;
-          const normalizedQuestions = Array.isArray(quiz.questions) ? quiz.questions.map(q => normalizeQuestion(q)) : [];
-          return { ...quiz, questions: normalizedQuestions };
-        }
-      } catch {}
+      const data: unknown = await res.json();
+      if (!(data && typeof data === 'object')) return null;
 
-      return null;
+      const quiz = data as Quiz;
+      const normalizedQuestions = Array.isArray(quiz.questions) ? quiz.questions.map(q => normalizeQuestion(q)) : [];
+      return { ...quiz, questions: normalizedQuestions };
     } catch (error: unknown) {
       console.error(`Failed to load quiz for ${moduleSlug}:`, error);
       return null;

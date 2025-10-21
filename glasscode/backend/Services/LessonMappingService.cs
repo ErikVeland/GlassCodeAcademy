@@ -104,12 +104,25 @@ namespace backend.Services
             }
 
             int mappedCount = 0;
+            int removedDuplicates = 0;
 
             foreach (var lesson in unmappedLessons)
             {
                 var targetModuleId = ResolveModuleIdForLesson(lesson);
                 if (targetModuleId != lesson.ModuleId)
                 {
+                    // Avoid unique index violation (ModuleId + Slug)
+                    var duplicate = await _context.Lessons
+                        .FirstOrDefaultAsync(l => l.Slug == lesson.Slug && l.ModuleId == targetModuleId);
+
+                    if (duplicate != null)
+                    {
+                        Console.WriteLine($"   ⚠️ Duplicate mapping detected for slug '{lesson.Slug}' -> moduleId {targetModuleId}. Removing unmapped duplicate.");
+                        _context.Lessons.Remove(lesson);
+                        removedDuplicates++;
+                        continue;
+                    }
+
                     lesson.ModuleId = targetModuleId;
                     lesson.UpdatedAt = DateTime.UtcNow;
                     mappedCount++;
@@ -117,7 +130,7 @@ namespace backend.Services
             }
 
             await _context.SaveChangesAsync();
-            Console.WriteLine($"✅ Mapped {mappedCount} lessons to modules.");
+            Console.WriteLine($"✅ Mapped {mappedCount} lessons to modules. 🗑️ Removed {removedDuplicates} duplicates.");
         }
     }
 }

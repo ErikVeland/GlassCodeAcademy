@@ -27,6 +27,9 @@ export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: 
       headers: {
         'Content-Type': 'application/json',
         'Accept': 'application/json',
+        // Forward admin auth headers when present
+        'Authorization': req.headers.get('authorization') || '',
+        'X-Admin-Token': req.headers.get('x-admin-token') || '',
       },
       body: JSON.stringify(body),
     });

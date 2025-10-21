@@ -135,7 +135,6 @@ public class ModulesDbController : ControllerBase
             }
         }
 
-        return NoContent();
     }
 
     // DELETE: api/modules-db/5

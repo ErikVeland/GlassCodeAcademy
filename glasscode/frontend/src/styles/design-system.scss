@@ -360,26 +360,26 @@ body {
 
 // Tier Sections
 .tier-section {
-  margin-bottom: $spacing-3xl;
+  margin-bottom: $spacing-xl;
   
   @include breakpoint('tablet') {
-    margin-bottom: 5rem;
+    margin-bottom: 2.5rem;
   }
   
   @include breakpoint('desktop') {
-    margin-bottom: 6rem;
+    margin-bottom: $spacing-2xl;
   }
   
   // New integrated tier container with colored gradient background
   .tier-container {
-    padding: $spacing-xl;
+    padding: $spacing-lg;
     border-radius: $border-radius-xl;
     color: white;
     position: relative;
     overflow: hidden;
     
     @include breakpoint('tablet') {
-      padding: $spacing-2xl;
+      padding: $spacing-xl;
     }
     
     // Glass morphism overlay
@@ -403,230 +403,9 @@ body {
     }
   }
   
-  // Tier-specific gradient backgrounds
-  &[data-tier="foundational"] .tier-container {
-    @include tier-gradient('foundational');
-  }
-  
-  &[data-tier="core"] .tier-container {
-    @include tier-gradient('core');
-  }
-  
-  &[data-tier="specialized"] .tier-container {
-    @include tier-gradient('specialized');
-  }
-  
-  &[data-tier="quality"] .tier-container {
-    @include tier-gradient('quality');
-  }
-  
-  // Direct tier container gradient classes for immediate application
-  .tier-container {
-    &.tier-foundational {
-      @include tier-gradient('foundational');
-    }
-    
-    &.tier-core {
-      @include tier-gradient('core');
-    }
-    
-    &.tier-specialized {
-      @include tier-gradient('specialized');
-    }
-    
-    &.tier-quality {
-      @include tier-gradient('quality');
-    }
-  }
-  
-  // Tier header with improved layout
-  .tier-header {
-    margin-bottom: $spacing-xl;
-    
-    .tier-header-content {
-      display: flex;
-      align-items: flex-start;
-      gap: $spacing-xl;
-      margin-bottom: $spacing-lg;
-      
-      @include breakpoint('mobile-only') {
-        flex-direction: column;
-        gap: $spacing-lg;
-      }
-      
-      .tier-main-info {
-        flex: 1;
-        
-        .tier-title {
-          @include typography-tier-title;
-          margin-bottom: $spacing-sm;
-          display: flex;
-          align-items: center;
-          gap: $spacing-sm;
-          
-          .tier-level {
-            font-size: 0.875rem;
-            background: rgba(255, 255, 255, 0.2);
-            padding: $spacing-xs $spacing-sm;
-            border-radius: $border-radius-sm;
-            font-weight: $font-weight-medium;
-          }
-        }
-        
-        .tier-description {
-          @include typography-body;
-          font-size: 1.125rem;
-          opacity: 0.9;
-          margin: 0 0 $spacing-sm 0;
-        }
-        
-        .tier-focus-area {
-          @include typography-body;
-          font-size: 1rem;
-          opacity: 0.8;
-          margin: 0;
-          
-          strong {
-            font-weight: $font-weight-semibold;
-          }
-        }
-      }
-      
-      // Unified progress summary widget
-      .tier-progress-summary {
-        display: flex;
-        align-items: center;
-        gap: $spacing-lg;
-        background: rgba(255, 255, 255, 0.1);
-        padding: $spacing-lg;
-        border-radius: $border-radius-lg;
-        backdrop-filter: blur(8px);
-        
-        @include breakpoint('mobile-only') {
-          flex-direction: column;
-          gap: $spacing-md;
-          text-align: center;
-        }
-        
-        .tier-progress-ring {
-          flex-shrink: 0;
-          
-          .circular-chart {
-            width: 64px;
-            height: 64px;
-            
-            .circle-bg {
-              fill: none;
-              stroke: rgba(255, 255, 255, 0.2);
-              stroke-width: 3.8;
-            }
-            
-            .circle {
-              fill: none;
-              stroke: currentColor;
-              stroke-width: 3.8;
-              stroke-linecap: round;
-              transform: rotate(-90deg);
-              transform-origin: 50% 50%;
-              transition: stroke-dasharray 0.5s ease;
-            }
-            
-            .percentage {
-              fill: white;
-              font-size: 0.5rem;
-              font-weight: $font-weight-bold;
-              text-anchor: middle;
-              dominant-baseline: middle;
-            }
-          }
-        }
-        
-        // Unified stats widget
-        .tier-stats {
-          display: flex;
-          flex-direction: column;
-          gap: $spacing-xs;
-          min-width: 120px;
-          
-          .stat-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background: rgba(255, 255, 255, 0.05);
-            padding: $spacing-xs $spacing-sm;
-            border-radius: $border-radius-sm;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            
-            .stat-number {
-              font-size: 1rem;
-              font-weight: $font-weight-bold;
-              line-height: 1.2;
-              color: white;
-            }
-            
-            .stat-label {
-              font-size: 0.75rem;
-              opacity: 0.8;
-              line-height: 1.1;
-              margin-left: $spacing-sm;
-              color: rgba(255, 255, 255, 0.8);
-            }
-          }
-        }
-      }
-    }
-    
-    // Learning objectives section
-    .learning-objectives {
-      .objectives-title {
-        font-family: $font-family-primary;
-        font-size: 1.125rem;
-        font-weight: $font-weight-semibold;
-        line-height: 1.4;
-        margin-bottom: $spacing-md;
-        color: white;
-      }
-      
-      .objectives-list {
-        list-style: none;
-        padding: 0;
-        margin: 0;
-        display: grid;
-        gap: $spacing-sm;
-        
-        @include breakpoint('tablet') {
-          grid-template-columns: repeat(2, 1fr);
-          gap: $spacing-md;
-        }
-        
-        .objective-item {
-          display: flex;
-          align-items: baseline; // Align to baseline for better text alignment
-          gap: $spacing-sm;
-          font-size: 0.9375rem;
-          line-height: 1.4;
-          
-          .objective-icon {
-            color: rgba(255, 255, 255, 0.8);
-            font-size: 0.875rem;
-            flex-shrink: 0;
-            // Align icon with text baseline
-            align-self: baseline;
-            margin-top: 0.125rem; // Fine-tune vertical alignment
-          }
-          
-          // Responsive adjustments
-          @include breakpoint('tablet') {
-            gap: $spacing-md; // Increase gap on tablet
-          }
-        }
-      }
-    }
-  }
-  
   // Modules grid integrated within the tier container
   .modules-grid {
-    margin-top: $spacing-xl;
+    margin-top: $spacing-lg;
   }
   
   // Tier completion celebration
@@ -697,9 +476,8 @@ body {
   
   // When inside tier-container, add proper spacing
   .tier-container & {
-    margin-top: $spacing-xl;
-    padding-top: $spacing-lg;
-    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    margin-top: $spacing-lg;
+    padding-top: $spacing-md;
   }
 }
 
@@ -1174,6 +952,32 @@ body {
   @include glass-morphism();
 }
 
+.text-fg {
+  color: white;
+}
+@media (prefers-color-scheme: light) {
+  .text-fg {
+    color: #1f2937; // Gray-800 for light mode foreground
+  }
+}
+
+.text-muted {
+  color: rgba(255, 255, 255, 0.85); // Brightened muted text for WCAG contrast
+}
+@media (prefers-color-scheme: light) {
+  .text-muted {
+    color: #6b7280; // Gray-500 in light mode
+  }
+}
+
+.bg-surface-alt {
+  background: rgba(255, 255, 255, 0.15);
+}
+@media (prefers-color-scheme: dark) {
+  .bg-surface-alt {
+    background: rgba(31, 41, 55, 0.35); // Dark surface alt tint
+  }
+}
 .sr-only {
   position: absolute;
   width: 1px;

@@ -69,6 +69,77 @@ namespace backend.Services
             return result;
         }
 
+        // New: Per-module parity
+        public async Task<List<ModuleParityResult>> GetPerModuleParityAsync()
+        {
+            var modules = await _context.Modules
+                .Include(m => m.Lessons)
+                    .ThenInclude(l => l.LessonQuizzes)
+                .ToListAsync();
+
+            var results = new List<ModuleParityResult>();
+
+            foreach (var module in modules)
+            {
+                var lessonsDb = module.Lessons.Count;
+                var quizzesDb = module.Lessons.SelectMany(l => l.LessonQuizzes).Count();
+
+                var (lessonsJson, quizzesJson) = GetJsonCountsForModuleSlug(module.Slug);
+
+                results.Add(new ModuleParityResult
+                {
+                    ModuleId = module.Id,
+                    Slug = module.Slug,
+                    LessonsDb = lessonsDb,
+                    LessonsJson = lessonsJson,
+                    QuizzesDb = quizzesDb,
+                    QuizzesJson = quizzesJson,
+                    LessonsDelta = lessonsDb - lessonsJson,
+                    QuizzesDelta = quizzesDb - quizzesJson
+                });
+            }
+
+            return results;
+        }
+
+        private (int lessonsCount, int quizzesCount) GetJsonCountsForModuleSlug(string slug)
+        {
+            var lessonsPath = System.IO.Path.Combine(DataService.ContentPath, "lessons", $"{slug}.json");
+            var quizzesPath = System.IO.Path.Combine(DataService.ContentPath, "quizzes", $"{slug}.json");
+            var lessonsCount = CountArrayItems(lessonsPath, "lessons");
+            var quizzesCount = CountArrayItems(quizzesPath, "questions");
+            return (lessonsCount, quizzesCount);
+        }
+
+        private int CountArrayItems(string filePath, string arrayPropName)
+        {
+            if (!System.IO.File.Exists(filePath))
+            {
+                return 0;
+            }
+            try
+            {
+                var json = System.IO.File.ReadAllText(filePath);
+                using var doc = JsonDocument.Parse(json);
+
+                if (doc.RootElement.ValueKind == JsonValueKind.Array)
+                {
+                    return doc.RootElement.GetArrayLength();
+                }
+                if (doc.RootElement.ValueKind == JsonValueKind.Object &&
+                    doc.RootElement.TryGetProperty(arrayPropName, out var arr) &&
+                    arr.ValueKind == JsonValueKind.Array)
+                {
+                    return arr.GetArrayLength();
+                }
+            }
+            catch
+            {
+                // Skip malformed files
+            }
+            return 0;
+        }
+
         private List<object> GetModulesFromRegistry()
         {
             var registryPath = System.IO.Path.Combine(DataService.ContentPath, "registry.json");
@@ -88,64 +159,78 @@ namespace backend.Services
 
         private int GetTotalJsonLessonsCount()
         {
-            var allLessonCollections = new[]
+            var lessonsPath = System.IO.Path.Combine(DataService.ContentPath, "lessons");
+            if (!System.IO.Directory.Exists(lessonsPath))
             {
-                _dataService.DotNetLessons,
-                _dataService.ReactLessons,
-                _dataService.TailwindLessons,
-                _dataService.NodeLessons,
-                _dataService.SassLessons,
-                _dataService.VueLessons,
-                _dataService.TypescriptLessons,
-                _dataService.DatabaseLessons,
-                _dataService.TestingLessons,
-                _dataService.ProgrammingLessons,
-                _dataService.WebLessons,
-                _dataService.NextJsLessons,
-                _dataService.PerformanceLessons,
-                _dataService.SecurityLessons,
-                _dataService.VersionLessons,
-                _dataService.LaravelLessons
-            };
+                return 0;
+            }
 
-            return allLessonCollections.Where(lessons => lessons?.Any() == true)
-                                      .Sum(lessons => lessons.Count());
+            var jsonFiles = System.IO.Directory.GetFiles(lessonsPath, "*.json", System.IO.SearchOption.AllDirectories);
+            var total = 0;
+
+            foreach (var file in jsonFiles)
+            {
+                try
+                {
+                    var json = System.IO.File.ReadAllText(file);
+                    using var doc = JsonDocument.Parse(json);
+
+                    if (doc.RootElement.ValueKind == JsonValueKind.Array)
+                    {
+                        total += doc.RootElement.GetArrayLength();
+                    }
+                    else if (doc.RootElement.ValueKind == JsonValueKind.Object &&
+                             doc.RootElement.TryGetProperty("lessons", out var lessonsElement) &&
+                             lessonsElement.ValueKind == JsonValueKind.Array)
+                    {
+                        total += lessonsElement.GetArrayLength();
+                    }
+                }
+                catch
+                {
+                    // Skip malformed files
+                }
+            }
+
+            return total;
         }
 
         private int GetTotalJsonQuizzesCount()
         {
-            var allQuestionCollections = new[]
+            var quizzesPath = System.IO.Path.Combine(DataService.ContentPath, "quizzes");
+            if (!System.IO.Directory.Exists(quizzesPath))
             {
-                _dataService.DotNetInterviewQuestions,
-                _dataService.ReactInterviewQuestions,
-                _dataService.TailwindInterviewQuestions,
-                _dataService.NodeInterviewQuestions,
-                _dataService.SassInterviewQuestions,
-                _dataService.VueInterviewQuestions,
-                _dataService.TypescriptInterviewQuestions,
-                _dataService.DatabaseInterviewQuestions,
-                _dataService.TestingInterviewQuestions,
-                _dataService.ProgrammingInterviewQuestions,
-                _dataService.WebInterviewQuestions,
-                _dataService.NextJsInterviewQuestions,
-                _dataService.PerformanceInterviewQuestions,
-                _dataService.SecurityInterviewQuestions,
-                _dataService.VersionInterviewQuestions,
-                _dataService.LaravelInterviewQuestions,
-                _dataService.GraphQLInterviewQuestions
-            };
-
-            return allQuestionCollections.Where(questions => questions?.Any() == true)
-                                        .Sum(questions => questions.Count());
-        }
-
-        public string GenerateContentHash(string content)
-        {
-            using (var sha256 = SHA256.Create())
-            {
-                var hashedBytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(content));
-                return BitConverter.ToString(hashedBytes).Replace("-", "").ToLower();
+                return 0;
             }
+
+            var jsonFiles = System.IO.Directory.GetFiles(quizzesPath, "*.json");
+            var total = 0;
+
+            foreach (var file in jsonFiles)
+            {
+                try
+                {
+                    var json = System.IO.File.ReadAllText(file);
+                    using var doc = JsonDocument.Parse(json);
+
+                    if (doc.RootElement.ValueKind == JsonValueKind.Object &&
+                        doc.RootElement.TryGetProperty("questions", out var questionsElement) &&
+                        questionsElement.ValueKind == JsonValueKind.Array)
+                    {
+                        total += questionsElement.GetArrayLength();
+                    }
+                    else if (doc.RootElement.ValueKind == JsonValueKind.Array)
+                    {
+                        total += doc.RootElement.GetArrayLength();
+                    }
+                }
+                catch
+                {
+                    // Skip malformed files
+                }
+            }
+
+            return total;
         }
     }
 
@@ -165,5 +250,15 @@ namespace backend.Services
         public bool IsConsistent { get; set; }
     }
 
-    // Reuse the ModuleRegistryData classes from ModuleSeedingService
+    public class ModuleParityResult
+    {
+        public int ModuleId { get; set; }
+        public string Slug { get; set; } = string.Empty;
+        public int LessonsDb { get; set; }
+        public int LessonsJson { get; set; }
+        public int QuizzesDb { get; set; }
+        public int QuizzesJson { get; set; }
+        public int LessonsDelta { get; set; }
+        public int QuizzesDelta { get; set; }
+    }
 }

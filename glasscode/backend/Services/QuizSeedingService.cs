@@ -137,30 +137,34 @@ namespace backend.Services
 
         private async Task<List<Lesson>> FindMatchingLessons(string quizFileName)
         {
-            // Try to match quiz file name with lesson topics or module slugs
-            var lessons = await _context.Lessons
+            // Try to match quiz file name with lesson topics or module slugs using database-side filters
+            // First try exact module slug match (case-insensitive)
+            var exactMatch = await _context.Lessons
                 .Include(l => l.Module)
+                .Where(l => EF.Functions.ILike(l.Module.Slug, quizFileName))
                 .ToListAsync();
-
-            // First try exact module slug match
-            var exactMatch = lessons.Where(l => 
-                l.Module.Slug.Equals(quizFileName, StringComparison.OrdinalIgnoreCase))
-                .ToList();
 
             if (exactMatch.Any())
                 return exactMatch;
 
-            // Try partial matches based on keywords
-            var keywordMatches = lessons.Where(l =>
-                quizFileName.Contains(l.Module.Slug.Replace("-", ""), StringComparison.OrdinalIgnoreCase) ||
-                l.Module.Slug.Replace("-", "").Contains(quizFileName.Replace("-", ""), StringComparison.OrdinalIgnoreCase))
-                .ToList();
+            // Try partial matches based on keywords using ILIKE and slug normalization
+            var normalizedQuiz = quizFileName.Replace("-", "").ToLowerInvariant();
+            var keywordMatches = await _context.Lessons
+                .Include(l => l.Module)
+                .Where(l =>
+                    EF.Functions.ILike(l.Module.Slug, $"%{normalizedQuiz}%") ||
+                    EF.Functions.ILike(l.Module.Slug.Replace("-", ""), $"%{normalizedQuiz}%"))
+                .ToListAsync();
 
             if (keywordMatches.Any())
                 return keywordMatches;
 
             // Fallback: return first lesson from first module
-            return lessons.Take(1).ToList();
+            return await _context.Lessons
+                .Include(l => l.Module)
+                .OrderBy(l => l.Id)
+                .Take(1)
+                .ToListAsync();
         }
     }
 

@@ -73,12 +73,12 @@ public class LessonQuizControllerTests : IntegrationTestBase
             if (quizzes != null && quizzes.Length > 0)
             {
                 // Act - get specific quiz
-                var response = await Client.GetAsync($"/api/LessonQuiz/{quizzes[0].Id}");
+                var detailResponse = await Client.GetAsync($"/api/LessonQuiz/{quizzes[0].Id}");
 
                 // Assert
-                response.StatusCode.Should().Be(HttpStatusCode.OK);
+                detailResponse.StatusCode.Should().Be(HttpStatusCode.OK);
                 
-                var quizContent = await response.Content.ReadAsStringAsync();
+                var quizContent = await detailResponse.Content.ReadAsStringAsync();
                 quizContent.Should().NotBeNullOrEmpty();
                 
                 Output.WriteLine($"Retrieved specific quiz by ID: {quizzes[0].Id}");
@@ -87,8 +87,8 @@ public class LessonQuizControllerTests : IntegrationTestBase
         }
         
         // If no quizzes exist, test with a non-existent ID
-        var response = await Client.GetAsync("/api/LessonQuiz/999999");
-        response.StatusCode.Should().Be(HttpStatusCode.NotFound);
+        var notFoundResponse = await Client.GetAsync("/api/LessonQuiz/999999");
+        notFoundResponse.StatusCode.Should().Be(HttpStatusCode.NotFound);
         
         Output.WriteLine("No quizzes found in database, tested with non-existent ID");
     }

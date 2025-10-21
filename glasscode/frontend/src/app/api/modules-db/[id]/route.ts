@@ -27,6 +27,9 @@ export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: 
       headers: {
         'Content-Type': 'application/json',
         'Accept': 'application/json',
+        // Forward admin auth headers when present
+        'Authorization': req.headers.get('authorization') || '',
+        'X-Admin-Token': req.headers.get('x-admin-token') || '',
       },
       body: JSON.stringify(body),
     });
@@ -44,7 +47,14 @@ export async function DELETE(_req: NextRequest, { params }: { params: Promise<{ 
     const { id } = await params;
     const apiBase = (() => { try { return getApiBaseStrict(); } catch { return 'http://127.0.0.1:8080'; } })();
     const backendUrl = `${apiBase}/api/modules-db/${id}`;
-    const res = await fetch(backendUrl, { method: 'DELETE' });
+    const res = await fetch(backendUrl, { 
+      method: 'DELETE',
+      // Forward admin auth headers when present
+      headers: {
+        'Authorization': _req.headers.get('authorization') || '',
+        'X-Admin-Token': _req.headers.get('x-admin-token') || '',
+      }
+    });
     const text = await res.text();
     const contentType = res.headers.get('content-type') || 'application/json';
     return new NextResponse(text, { status: res.status, headers: { 'Content-Type': contentType } });

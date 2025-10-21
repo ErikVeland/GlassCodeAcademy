@@ -295,9 +295,9 @@ export default async function ModulePage({ params }: ModulePageProps) {
               </h2>
               <ul className="space-y-2">
                 {tier.learningObjectives.map((objective, index) => (
-                  <li key={index} className="flex items-start gap-3">
-                    <span className="text-green-500 mt-0.5">✓</span>
-                    <span className="text-gray-600 dark:text-gray-300">{objective}</span>
+                  <li key={index} className="flex items-center gap-3">
+                    <span className="text-green-500 leading-none">✓</span>
+                    <span className="text-gray-600 dark:text-gray-300 leading-tight">{objective}</span>
                   </li>
                 ))}
               </ul>

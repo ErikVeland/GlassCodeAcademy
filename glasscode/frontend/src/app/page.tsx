@@ -3,6 +3,8 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import { ArrowRightIcon, ChartBarIcon } from '@heroicons/react/24/outline';
+
 import { contentRegistry } from '@/lib/contentRegistry';
 import type { Module, Tier } from '@/lib/contentRegistry';
 import { useProgressTracking, ProgressData, AchievementData } from '../hooks/useProgressTracking';
@@ -95,48 +97,18 @@ const ModuleCard: React.FC<{
   isLocked, 
   handleModuleClick 
 }) => {
-  // Define tier-specific gradient classes
-  const tierGradientClass = {
-    foundational: 'from-blue-500 to-cyan-500',
-    core: 'from-green-500 to-emerald-500',
-    specialized: 'from-purple-500 to-violet-500',
-    quality: 'from-orange-500 to-red-500'
-  }[tierKey] || 'from-blue-500 to-cyan-500';
+  // Using tier-container gradient variants; removed tierGradientClass
 
   return (
     <div className={`module-card-container ${isLocked ? 'locked' : ''} h-full`}>
       <Link
         href={isLocked ? '#' : (module.routes?.overview || '#')}
-        className={`relative flex flex-col h-full bg-surface/95 backdrop-blur-sm rounded-xl shadow-lg border border-border p-5 hover:shadow-xl transition-all duration-300 ${
-          isLocked ? 'opacity-60' : 'hover:-translate-y-1'
-        }`}
+        className={`glass-module-card group ${tierKey === 'core' ? 'tier-core' : tierKey === 'specialized' ? 'tier-specialized' : tierKey === 'quality' ? 'tier-quality' : 'tier-foundational'} ${isLocked ? 'opacity-60' : ''} pb-8`}
         onClick={handleModuleClick}
         aria-disabled={isLocked}
         aria-describedby={`module-${module.slug}-description`}
         >
-        {/* Achievement badges overlay */}
-        {hasAchievements && !isLocked && (
-          <div className="absolute -top-2 -right-2 z-10">
-            <div className="flex flex-wrap gap-1">
-              {moduleAchievements.slice(0, 3).map((achievement, index) => (
-                <div
-                  key={achievement.id}
-                  className="w-6 h-6 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-full flex items-center justify-center border-2 border-white shadow-lg"
-                  title={achievement.description}
-                >
-                  <span className="text-xs text-white font-bold">
-                    {index === 0 ? '🏆' : index === 1 ? '🎖️' : '⭐'}
-                  </span>
-                </div>
-              ))}
-              {moduleAchievements.length > 3 && (
-                <div className="w-6 h-6 bg-gradient-to-br from-purple-400 to-purple-600 rounded-full flex items-center justify-center border-2 border-white shadow-lg">
-                  <span className="text-xs text-white font-bold">+{moduleAchievements.length - 3}</span>
-                </div>
-              )}
-            </div>
-          </div>
-        )}
+        {/* Achievement badges overlay moved outside the Link to prevent overflow clipping */}
 
         {/* Lock overlay for prerequisites */}
         {isLocked && (
@@ -151,8 +123,8 @@ const ModuleCard: React.FC<{
           </div>
         )}
 
-        <div className="module-header flex items-start gap-4 mb-4">
-          <div className={`w-10 h-10 rounded-lg bg-gradient-to-br ${tierGradientClass} flex items-center justify-center text-white font-bold text-lg`}>
+        <div className="module-header flex items-stretch gap-4 mb-4">
+          <div className="module-icon text-white text-5xl leading-none flex items-center">
             {module.icon || '📚'}
           </div>
           <div className="flex-1">
@@ -203,9 +175,9 @@ const ModuleCard: React.FC<{
           </div>
 
           {moduleProgress && (
-            <div className="w-full bg-surface-alt rounded-full h-2">
+            <div className="glass-progress-container relative z-10 mb-4">
               <div
-                className={`h-2 rounded-full bg-gradient-to-r ${tierGradientClass}`}
+                className="glass-progress-fill"
                 style={{ width: `${completionPercentage}%` }}
                 role="progressbar"
                 aria-valuenow={completionPercentage}
@@ -219,8 +191,9 @@ const ModuleCard: React.FC<{
 
         {/* Prerequisites indicator */}
         {(module.prerequisites || []).length > 0 && (
-          <div className="mt-3 text-xs text-muted text-left">
-            🔗 Requires: {module.prerequisites!.length} prerequisite{module.prerequisites!.length > 1 ? 's' : ''}
+          <div className="mt-3 text-xs text-muted text-left flex items-center gap-2">
+            <span aria-hidden="true">🔗</span>
+            <span className="ml-1.5">Requires: {module.prerequisites!.length} prerequisite{module.prerequisites!.length > 1 ? 's' : ''}</span>
           </div>
         )}
 
@@ -228,7 +201,33 @@ const ModuleCard: React.FC<{
         {moduleStatus === 'completed' && (
           <UnlockChips moduleSlug={module.slug} />
         )}
+
+        <ArrowRightIcon className="h-5 w-5 absolute bottom-4 right-4 z-20 text-white/85 transition-transform duration-200 ease-out group-hover:translate-x-0.5" aria-hidden="true" />
       </Link>
+
+      {/* Achievement badges overlay (positioned outside card to avoid overflow clipping) */}
+      {hasAchievements && !isLocked && (
+        <div className="absolute -top-2 -right-2 z-10 pointer-events-none">
+          <div className="flex flex-wrap gap-1">
+            {moduleAchievements.slice(0, 3).map((achievement, index) => (
+              <div
+                key={achievement.id}
+                className="w-6 h-6 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-full flex items-center justify-center border-2 border-white shadow-lg"
+                title={achievement.description}
+              >
+                <span className="text-xs text-white font-bold">
+                  {index === 0 ? '🏆' : index === 1 ? '🎖️' : '⭐'}
+                </span>
+              </div>
+            ))}
+            {moduleAchievements.length > 3 && (
+              <div className="w-6 h-6 bg-gradient-to-br from-purple-400 to-purple-600 rounded-full flex items-center justify-center border-2 border-white shadow-lg">
+                <span className="text-xs text-white font-bold">+{moduleAchievements.length - 3}</span>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
     </div>
   );
 });
@@ -243,7 +242,8 @@ const TierSection: React.FC<{
   isVisible: boolean;
   progress: Record<string, ProgressData>;
   achievements: AchievementData[];
-}> = React.memo(({ tierKey, tier, modules, isVisible, progress, achievements }) => {
+  lockEnabled?: boolean;
+}> = React.memo(({ tierKey, tier, modules, isVisible, progress, achievements, lockEnabled = true }) => {
   const { getTierProgress } = useProgressTracking();
   const tierProgress = getTierProgress(tierKey as 'foundational' | 'core' | 'specialized' | 'quality');
   const completedModules = modules.filter(module => {
@@ -253,13 +253,7 @@ const TierSection: React.FC<{
 
   if (!isVisible) return null;
 
-  // Define tier-specific gradient classes
-  const tierGradientClass = {
-    foundational: 'from-blue-500 to-cyan-500',
-    core: 'from-green-500 to-emerald-500',
-    specialized: 'from-purple-500 to-violet-500',
-    quality: 'from-orange-500 to-red-500'
-  }[tierKey] || 'from-blue-500 to-cyan-500';
+  // Using tier-container gradient variants; removed tierGradientClass
 
   return (
     <section
@@ -269,12 +263,12 @@ const TierSection: React.FC<{
       role="region"
     >
       {/* Tier section with beautiful gradient backgrounds */}
-      <div className={`rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 bg-gradient-to-br ${tierGradientClass} p-6 mf-pane-reset`}>
+      <div className={`tier-container ${tierKey === 'core' ? 'tier-core' : tierKey === 'specialized' ? 'tier-specialized' : tierKey === 'quality' ? 'tier-quality' : 'tier-foundational'} mf-pane-reset`}>
         <div className="tier-header mb-6">
           <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
             <div className="flex-1">
               <div className="flex items-center gap-4 mb-4">
-                <div className={`w-10 h-10 rounded-full bg-white/20 flex items-center justify-center text-white font-bold text-lg backdrop-blur-sm`}>
+                <div className={`w-14 h-14 rounded-full bg-white/20 flex items-center justify-center text-white font-bold text-2xl backdrop-blur-sm`}>
                   {tier.level}
                 </div>
                 <div className="text-left">
@@ -287,14 +281,14 @@ const TierSection: React.FC<{
 
             </div>
 
-            <div className="bg-surface-alt rounded-lg p-4 border border-border backdrop-blur-sm">
+            <div className="glass-morphism rounded-lg p-4">
               <p className="font-medium text-fg text-left text-sm">
                 <strong>Focus Area:</strong> {tier.focusArea}
               </p>
             </div>
 
             {/* Unified progress widget like dashboard */}
-            <div className="bg-surface-alt text-fg p-4 rounded-lg min-w-[140px] text-center backdrop-blur-sm">
+            <div className="glass-morphism text-fg p-4 rounded-lg min-w-[140px] text-center">
               <div className="text-2xl font-bold">{tierProgress}%</div>
               <div className="text-sm">Complete</div>
               <div className="text-xs mt-1">
@@ -304,13 +298,13 @@ const TierSection: React.FC<{
           </div>
 
           {/* Learning objectives */}
-          <div className="bg-surface-alt rounded-xl p-5 border border-border mt-4 backdrop-blur-sm">
+          <div className="glass-morphism rounded-xl p-5 mt-4">
             <h3 className="text-lg font-semibold text-fg mb-3 text-left">Learning Objectives</h3>
             <ul className="grid grid-cols-1 md:grid-cols-3 gap-3">
               {(tier.learningObjectives || []).map((objective, index) => (
-                <li key={index} className="flex items-start gap-2">
-                  <span className="text-green-500 mt-0.5 flex-shrink-0 text-sm">✓</span>
-                  <span className="text-fg text-left text-sm">{objective}</span>
+                <li key={index} className="flex items-center gap-2">
+                  <span className="text-green-500 flex-shrink-0 text-sm leading-none">✓</span>
+                  <span className="text-fg text-left text-sm leading-tight">{objective}</span>
                 </li>
               ))}
             </ul>
@@ -330,6 +324,14 @@ const TierSection: React.FC<{
             
             // Determine module status
             const moduleStatus = moduleProgress?.completionStatus || 'not-started';
+
+            // Compute prerequisites met using progress
+            const prereqs = module.prerequisites || [];
+            const prerequisitesMet = prereqs.length === 0 || prereqs.every((slug) => {
+              const p = progress[slug];
+              return p && p.completionStatus === 'completed';
+            });
+            const isLocked = !!lockEnabled && prereqs.length > 0 && !prerequisitesMet;
             
             return (
               <div key={module.slug} role="listitem" className="h-full">
@@ -341,8 +343,8 @@ const TierSection: React.FC<{
                   completionPercentage={completionPercentage}
                   hasAchievements={hasAchievements}
                   moduleAchievements={moduleAchievements}
-                  isLocked={false} // Will be calculated in parent
-                  handleModuleClick={() => {}} // Will be implemented in parent
+                  isLocked={isLocked}
+                  handleModuleClick={() => {}}
                 />
               </div>
             );
@@ -388,6 +390,8 @@ const HomePage: React.FC = () => {
   const [selectedDifficulty, setSelectedDifficulty] = useState<string | null>(null);
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [selectedStatus, setSelectedStatus] = useState<string | null>(null);
+  // Toggle for interview module gating
+  const [moduleLockEnabled, setModuleLockEnabled] = useState<boolean>(true);
 
   const {
     progress,
@@ -396,6 +400,29 @@ const HomePage: React.FC = () => {
     achievements,
     streak
   } = useProgressTracking();
+
+  useEffect(() => {
+    try {
+      const stored = typeof window !== 'undefined' ? localStorage.getItem('gc.moduleLockEnabled') : null;
+      if (stored !== null) {
+        setModuleLockEnabled(stored === 'true');
+      }
+    } catch {
+      // ignore localStorage errors
+    }
+  }, []);
+
+  const toggleModuleLock = useCallback(() => {
+    setModuleLockEnabled((prev) => {
+      const next = !prev;
+      try {
+        localStorage.setItem('gc.moduleLockEnabled', next ? 'true' : 'false');
+      } catch {
+        // ignore
+      }
+      return next;
+    });
+  }, []);
 
   // Clear all filters - defined before any conditional returns
   const clearFilters = useCallback(() => {
@@ -558,13 +585,25 @@ const HomePage: React.FC = () => {
       <main id="main-content" className="homepage w-full" role="main">
         {/* Hero Section with optimized styling for better LCP */}
         <section className="w-full mb-8 mf-edge-to-edge mf-no-vertical-margin-mobile">
-          <div className="bg-white/95 dark:bg-gray-800/95 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 mf-pane-reset">
+          <div className="relative bg-white/95 dark:bg-gray-800/95 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 mf-pane-reset">
+            <div className="absolute top-6 right-6 md:top-8 md:right-8">
+              <button
+                type="button"
+                onClick={toggleModuleLock}
+                className="inline-flex items-center justify-center w-9 h-9 rounded-full border bg-gray-100/60 dark:bg-gray-700/40 border-gray-300/40 dark:border-gray-600/40 text-gray-600 dark:text-gray-300 hover:bg-gray-200/60 dark:hover:bg-gray-600/50 transition-colors"
+                aria-pressed={moduleLockEnabled}
+                aria-label={moduleLockEnabled ? 'Lock modules (progress gating on)' : 'Unlock modules (progress gating off)'}
+                title={moduleLockEnabled ? 'Lock modules (progress gating on)' : 'Unlock modules (progress gating off)'}
+              >
+                <ChartBarIcon className="w-5 h-5" />
+              </button>
+            </div>
             <div className="p-6 md:p-8">
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
                 <div className="hero-content">
-                  <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 dark:text-gray-100 mb-4 text-left">
-                    Master Modern Web Development
-                  </h1>
+                  <div className="flex items-center justify-between mb-4">
+                    <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 dark:text-gray-100 text-left">Master Modern Web Development</h1>
+                  </div>
                   <p className="text-lg md:text-xl text-muted mb-6 text-left">
                     Comprehensive learning paths across 18 technology modules with interactive lessons,
                     real-world projects, and interview preparation.
@@ -610,7 +649,7 @@ const HomePage: React.FC = () => {
                   )}
                 </div>
 
-                <div className="hero-visual flex justify-center">
+                <div className="hero-visual relative flex justify-center">
                   <div className="learning-path-visualization w-full max-w-md">
                     <svg viewBox="0 0 400 300" className="path-svg w-full h-auto" role="img" aria-label="Learning path visualization">
                       <defs>
@@ -649,7 +688,7 @@ const HomePage: React.FC = () => {
 
         {/* Enhanced Search and Filter System */}
         <section className="w-full mb-8">
-          <div className="bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm rounded-xl shadow-lg border border-gray-200 dark:border-gray-700">
+          <div className="glass-search-container">
             <div className="p-6">
               <SearchFilterSystem
                 searchQuery={searchQuery}
@@ -679,7 +718,7 @@ const HomePage: React.FC = () => {
           aria-label="Learning modules organized by tier"
         >
           {hasActiveFilters && Object.keys(filteredTiers).length === 0 && (
-            <div className="py-12 text-center bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm rounded-xl shadow-lg border border-gray-200 dark:border-gray-700">
+            <div className="py-12 text-center glass-morphism">
               <div className="max-w-3xl mx-auto">
                 <div className="text-6xl mb-4">🔍</div>
                 <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">No modules found</h3>
@@ -710,6 +749,7 @@ const HomePage: React.FC = () => {
                 isVisible={!hasActiveFilters || tierData.modules.length > 0}
                 progress={progress}
                 achievements={achievements}
+                lockEnabled={moduleLockEnabled}
               />
             );
           })}
@@ -717,24 +757,24 @@ const HomePage: React.FC = () => {
 
         {/* Quick Actions */}
         <section className="w-full py-8">
-          <div className="bg-surface rounded-xl shadow-lg border border-border">
+          <div className="glass-morphism rounded-xl">
             <div className="p-6">
               <h2 id="quick-actions-heading" className="text-2xl font-bold text-center text-fg mb-6">Quick Actions</h2>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4" role="list">
-                <Link href="/playground" className="bg-surface-alt p-6 rounded-lg border border-border text-center hover:bg-surface transition-colors" role="listitem">
-                  <span className="text-4xl block mb-2" role="img" aria-label="Playground icon">🛝</span>
+                <Link href="/playground" className="glass-morphism p-6 rounded-lg text-center" role="listitem">
+                  <span className="text-5xl block mb-2" role="img" aria-label="Playground icon">🛝</span>
                   <h3 className="text-lg font-semibold text-fg mb-1">GraphQL Playground</h3>
                   <p className="text-sm text-muted">Experiment with queries</p>
                 </Link>
 
-                <Link href="/animated-background-demo" className="bg-surface-alt p-6 rounded-lg border border-border text-center hover:bg-surface transition-colors" role="listitem">
-                  <span className="text-4xl block mb-2" role="img" aria-label="Design icon">🎨</span>
+                <Link href="/animated-background-demo" className="glass-morphism p-6 rounded-lg text-center" role="listitem">
+                  <span className="text-5xl block mb-2" role="img" aria-label="Design icon">🎨</span>
                   <h3 className="text-lg font-semibold text-fg mb-1">Design Showcase</h3>
                   <p className="text-sm text-muted">UI components</p>
                 </Link>
 
-                <Link href="/interview-prep" className="bg-surface-alt p-6 rounded-lg border border-border text-center hover:bg-surface transition-colors" role="listitem">
-                  <span className="text-4xl block mb-2" role="img" aria-label="Interview icon">💼</span>
+                <Link href="/interview-prep" className="glass-morphism p-6 rounded-lg text-center" role="listitem">
+                  <span className="text-5xl block mb-2" role="img" aria-label="Interview icon">💼</span>
                   <h3 className="text-lg font-semibold text-fg mb-1">Interview Prep</h3>
                   <p className="text-sm text-muted">Practice questions</p>
                 </Link>
@@ -753,10 +793,10 @@ const HomePage: React.FC = () => {
                     document.body.removeChild(link);
                     URL.revokeObjectURL(url);
                   }}
-                  className="bg-surface-alt p-6 rounded-lg border border-border text-center hover:bg-surface transition-colors"
+                  className="glass-morphism p-6 rounded-lg text-center"
                   role="listitem"
                 >
-                  <span className="text-4xl block mb-2" role="img" aria-label="Export icon">📥</span>
+                  <span className="text-5xl block mb-2" role="img" aria-label="Export icon">📥</span>
                   <h3 className="text-lg font-semibold text-fg mb-1">Export Progress</h3>
                   <p className="text-sm text-muted">Download data</p>
                 </button>

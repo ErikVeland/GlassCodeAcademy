@@ -30,7 +30,7 @@
   
   /* Responsive Margins */
   --content-margin: clamp(1.5rem, 4vw, 3rem); /* 24/32/48 px as per design document */
-  --section-spacing: clamp(2rem, 6vw, 4rem);
+  --section-spacing: clamp(1rem, 3vw, 2rem);
   
   /* Corner Radius - Matching design document requirements */
   --border-radius-card: 1rem; /* Cards */
@@ -336,7 +336,7 @@
   border-radius: var(--border-radius-card);
   box-shadow: var(--glass-shadow);
   position: relative;
-  overflow: hidden;
+  overflow: hidden; // Clip top bar pseudo-elements; achievements overlay moved outside
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   cursor: pointer;
   padding: 1.5rem;

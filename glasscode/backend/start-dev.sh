@@ -13,7 +13,7 @@ then
 fi
 
 # Check if the publish directory exists and has the correct runtime version
-REBUILD_NEEDED=false
+REBUILD_NEEDED=true
 if [ ! -d "./publish" ]; then
     echo "⚠️  Publish directory not found."
     REBUILD_NEEDED=true
@@ -116,14 +116,14 @@ MAX_ATTEMPTS=30
 for ((i=1; i<=MAX_ATTEMPTS; i++)); do
   printf "[%#-30s] Checking backend health (%d/%d)\r" "" "$i" "$MAX_ATTEMPTS"
   if curl -sSf "$HEALTH_URL" > /dev/null; then
-    echo "\n✅ Backend is healthy at $HEALTH_URL at attempt $i/$MAX_ATTEMPTS"
+    printf "\n✅ Backend is healthy at %s at attempt %d/%d\n" "$HEALTH_URL" "$i" "$MAX_ATTEMPTS"
     wait $BACKEND_PID
     exit 0
   fi
   sleep 1
 done
 
-echo "\n❌ Backend failed to start properly within the expected time."
+printf "\n❌ Backend failed to start properly within the expected time.\n"
 echo "🧪 Diagnostic: backend service status"
 ps aux | grep -E "dotnet .*backend.dll" | grep -v grep || echo "dotnet backend process not detected."
 

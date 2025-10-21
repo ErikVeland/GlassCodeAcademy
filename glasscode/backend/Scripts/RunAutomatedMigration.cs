@@ -6,7 +6,7 @@ using backend.Services;
 
 class RunAutomatedMigration
 {
-    static async Task Main(string[] args)
+    static async Task RunAsync(string[] args)
     {
         Console.WriteLine("🚀 Starting automated migration tool...");
 

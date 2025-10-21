@@ -6,7 +6,7 @@ namespace backend.Scripts
 {
     public class RunDeleteAndRemigrate
     {
-        public static async Task Main(string[] args)
+        public static async Task RunAsync(string[] args)
         {
             var connectionString = "Host=localhost;Database=glasscode_academy;Username=veland;Password=veland123;Port=5432";
             

@@ -18,6 +18,35 @@ namespace backend.Services
             _contentPath = DataService.ContentPath;
         }
 
+        private static string GenerateSlug(string source)
+        {
+            if (string.IsNullOrWhiteSpace(source)) return "untitled";
+            return source.ToLowerInvariant()
+                         .Replace(" ", "-")
+                         .Replace(".", "")
+                         .Replace("#", "sharp")
+                         .Replace("+", "plus")
+                         .Replace("&", "and")
+                         .Replace("/", "-")
+                         .Replace("\\", "-")
+                         .Replace("(", "")
+                         .Replace(")", "")
+                         .Replace("[", "")
+                         .Replace("]", "")
+                         .Replace("{", "")
+                         .Replace("}", "")
+                         .Replace(":", "")
+                         .Replace(";", "")
+                         .Replace("'", "")
+                         .Replace("\"", "")
+                         .Replace(",", "")
+                         .Replace("?", "")
+                         .Replace("!", "")
+                         .Replace("@", "at")
+                         .Replace("%", "percent")
+                         .Trim('-');
+        }
+
         /// <summary>
         /// Performs a complete migration of all content from JSON files to the database
         /// </summary>
@@ -171,14 +200,35 @@ namespace backend.Services
                 foreach (var file in jsonFiles)
                 {
                     await ProcessLessonFileAsync(file);
+                    try
+                    {
+                        await _context.SaveChangesAsync();
+                        Console.WriteLine($"✅ Saved lesson changes after file: {System.IO.Path.GetFileNameWithoutExtension(file)}");
+                    }
+                    catch (Exception saveEx)
+                    {
+                        try
+                        {
+                            var pendingAdds = _context.ChangeTracker.Entries<Lesson>().Count(e => e.State == EntityState.Added);
+                            Console.WriteLine($"🧮 Pending added lessons (after file {System.IO.Path.GetFileNameWithoutExtension(file)}): {pendingAdds}");
+                        }
+                        catch { /* ignore telemetry errors */ }
+                        Console.WriteLine($"❌ Error saving lessons after file {System.IO.Path.GetFileNameWithoutExtension(file)}: {saveEx.Message} | Inner: {saveEx.InnerException?.Message}");
+                        throw;
+                    }
                 }
 
-                await _context.SaveChangesAsync();
                 Console.WriteLine("✅ Lesson seeding completed!");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"❌ Error seeding lessons: {ex.Message}");
+                try
+                {
+                    var pendingAdds = _context.ChangeTracker.Entries<Lesson>().Count(e => e.State == EntityState.Added);
+                    Console.WriteLine($"🧮 Pending added lessons: {pendingAdds}");
+                }
+                catch { /* ignore telemetry errors */ }
+                Console.WriteLine($"❌ Error seeding lessons: {ex.Message} | Inner: {ex.InnerException?.Message}");
                 throw;
             }
         }
@@ -286,25 +336,6 @@ namespace backend.Services
                     return null;
                 }
 
-                List<string>? GetStrings(JsonElement root, string name)
-                {
-                    if (root.TryGetProperty(name, out var el))
-                    {
-                        if (el.ValueKind == JsonValueKind.Array)
-                        {
-                            var list = new List<string>();
-                            foreach (var item in el.EnumerateArray())
-                            {
-                                if (item.ValueKind == JsonValueKind.String && item.GetString() != null)
-                                    list.Add(item.GetString()!);
-                            }
-                            return list.Count > 0 ? list : null;
-                        }
-                        if (el.ValueKind == JsonValueKind.String && !string.IsNullOrWhiteSpace(el.GetString()))
-                            return new List<string> { el.GetString()! };
-                    }
-                    return null;
-                }
 
                 // Prefer typed values if available, otherwise tolerant extraction
                 var title = lessonData?.Title ?? GetString(lessonElement, "title");
@@ -386,8 +417,8 @@ namespace backend.Services
                 var fileNameLower = fileName.ToLowerInvariant();
                 Module? module = await _context.Modules
                     .FirstOrDefaultAsync(m =>
-                        m.Slug.Equals(fileName, StringComparison.OrdinalIgnoreCase) ||
-                        m.Slug.Equals(fileNameLower, StringComparison.OrdinalIgnoreCase));
+                        EF.Functions.ILike(m.Slug, fileName) ||
+                        EF.Functions.ILike(m.Slug, fileNameLower));
 
                 if (module == null)
                 {
@@ -399,14 +430,13 @@ namespace backend.Services
 
                     // Try exact equality on derived module slug
                     module = await _context.Modules
-                        .FirstOrDefaultAsync(m => m.Slug.Equals(moduleSlug, StringComparison.OrdinalIgnoreCase));
+                        .FirstOrDefaultAsync(m => EF.Functions.ILike(m.Slug, moduleSlug));
 
                     if (module == null)
                     {
                         // Finally, fall back to partial matches
                         module = await _context.Modules.FirstOrDefaultAsync(m =>
-                            m.Slug.Contains(moduleSlug, StringComparison.OrdinalIgnoreCase) ||
-                            fileNameLower.Contains(m.Slug.ToLowerInvariant()));
+                            EF.Functions.ILike(m.Slug, $"%{moduleSlug}%"));
                     }
                 }
 
@@ -445,15 +475,30 @@ namespace backend.Services
                 };
 
                 // Upsert by slug + module
-                var existingLesson = await _context.Lessons
-                    .FirstOrDefaultAsync(l => l.Slug == slug && l.ModuleId == module.Id);
+                var effectiveSlug = !string.IsNullOrWhiteSpace(slug) ? slug! : GenerateSlug(title ?? fileName);
+                // Enforce DB max length for slug (<=100)
+                if (effectiveSlug.Length > 100)
+                {
+                    effectiveSlug = effectiveSlug.Substring(0, 100);
+                }
+                // First check tracked entities to avoid duplicate adds within same run
+                var existingLesson = _context.Lessons.Local.FirstOrDefault(l => l.Slug == effectiveSlug && l.ModuleId == module.Id)
+                                      ?? await _context.Lessons
+                                          .FirstOrDefaultAsync(l => l.Slug == effectiveSlug && l.ModuleId == module.Id);
 
                 if (existingLesson == null)
                 {
+                    // Enforce DB max length for title (<=200)
+                    var safeTitle = (title ?? "Untitled Lesson");
+                    if (safeTitle.Length > 200)
+                    {
+                        safeTitle = safeTitle.Substring(0, 200);
+                    }
+
                     var lesson = new Lesson
                     {
-                        Title = title ?? "Untitled Lesson",
-                        Slug = slug ?? Guid.NewGuid().ToString(),
+                        Title = safeTitle,
+                        Slug = effectiveSlug,
                         Order = order ?? 1,
                         Content = JsonSerializer.Serialize(contentData),
                         Metadata = JsonSerializer.Serialize(metadataData),
@@ -470,7 +515,14 @@ namespace backend.Services
                 }
                 else
                 {
-                    existingLesson.Title = title ?? existingLesson.Title;
+                    // Enforce DB max length for title (<=200)
+                    var safeTitle = (title ?? existingLesson.Title);
+                    if (safeTitle.Length > 200)
+                    {
+                        safeTitle = safeTitle.Substring(0, 200);
+                    }
+
+                    existingLesson.Title = safeTitle;
                     existingLesson.Order = order ?? existingLesson.Order;
                     existingLesson.Content = JsonSerializer.Serialize(contentData);
                     existingLesson.Metadata = JsonSerializer.Serialize(metadataData);
@@ -551,12 +603,20 @@ namespace backend.Services
 
                 foreach (var question in quizData.Questions)
                 {
-                    // Check if quiz already exists
+                    // Check if quiz already exists for this lesson
                     var existingQuiz = await _context.LessonQuizzes
                         .FirstOrDefaultAsync(q => q.Question == question.Question && q.LessonId == lesson.Id);
 
                     if (existingQuiz == null)
                     {
+                        // Guard against global duplicates across lessons
+                        var duplicateGlobal = await _context.LessonQuizzes.AnyAsync(q => q.Question == question.Question);
+                        if (duplicateGlobal)
+                        {
+                            Console.WriteLine($"   🔄 Duplicate quiz question exists globally, skipping: {question.Question.Substring(0, Math.Min(50, question.Question.Length))}...");
+                            continue;
+                        }
+
                         var lessonQuiz = new LessonQuiz
                         {
                             LessonId = lesson.Id,
@@ -597,30 +657,44 @@ namespace backend.Services
         /// </summary>
         private async Task<Lesson?> FindMatchingLessonAsync(string fileName)
         {
-            // Try exact slug match first
+            var fileNameLower = fileName.ToLowerInvariant();
+            // Try exact lesson slug match first (case-insensitive)
             var lesson = await _context.Lessons
-                .FirstOrDefaultAsync(l => l.Slug == fileName);
-            
+                .FirstOrDefaultAsync(l => EF.Functions.ILike(l.Slug, fileNameLower));
             if (lesson != null)
             {
                 return lesson;
             }
 
-            // Try to find lesson by matching filename patterns
-            var searchTerms = fileName.Replace("-", " ").Split(' ');
-            
-            foreach (var term in searchTerms)
+            // Try to match by module slug (prefer exact/normalized slug matches)
+            var normalizedSlug = fileNameLower
+                .Replace("-quizzes", "")
+                .Replace("-questions", "")
+                .Replace("-lessons", "")
+                .Replace("-fundamentals", "")
+                .Replace("-advanced", "")
+                .Replace("-basics", "");
+        
+            var module = await _context.Modules
+                .FirstOrDefaultAsync(m =>
+                    EF.Functions.ILike(m.Slug, normalizedSlug) ||
+                    EF.Functions.ILike(m.Slug.Replace("-", ""), normalizedSlug.Replace("-", "")));
+        
+            if (module != null)
             {
-                lesson = await _context.Lessons
-                    .FirstOrDefaultAsync(l => l.Title.ToLower().Contains(term.ToLower()));
-                if (lesson != null)
+                // Pick the first lesson within the matched module to attach quizzes to
+                var moduleLesson = await _context.Lessons
+                    .Where(l => l.ModuleId == module.Id)
+                    .OrderBy(l => l.Order)
+                    .FirstOrDefaultAsync();
+                if (moduleLesson != null)
                 {
-                    return lesson;
+                    return moduleLesson;
                 }
             }
-
-            // Fallback: return first lesson
-            return await _context.Lessons.FirstOrDefaultAsync();
+        
+            // Avoid misattribution to unrelated modules; if no module match, skip
+            return null;
         }
 
         /// <summary>

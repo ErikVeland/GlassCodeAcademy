@@ -43,7 +43,7 @@ const AnimatedBackground: React.FC<AnimatedBackgroundProps> = ({
 
   const updateGradientPosition = useCallback((position: number) => {
     if (backgroundRef.current) {
-      const backgroundPosition = `${position}% ${position}%`;
+      const backgroundPosition = `${position}% ${100 - position}%`;
       backgroundRef.current.style.backgroundPosition = backgroundPosition;
       onAnimationUpdate?.(position);
     }
@@ -56,11 +56,17 @@ const AnimatedBackground: React.FC<AnimatedBackgroundProps> = ({
 
     const elapsed = timestamp - startTimeRef.current;
     const progress = (elapsed / (speed * 1000)) % 1;
-    const position = progress * 100;
+
+    // Triangle wave (ping-pong) for seamless looping
+    const pingPong = progress < 0.5 ? progress * 2 : (1 - progress) * 2; // 0->1->0
+
+    // Ease in-out for smoother motion
+    const eased = 0.5 - 0.5 * Math.cos(pingPong * Math.PI);
+
+    const position = eased * 100;
 
     updateGradientPosition(position);
 
-    // Only continue animation if not paused
     if (!isPaused) {
       animationRef.current = requestAnimationFrame(animate);
     } else {
@@ -70,15 +76,14 @@ const AnimatedBackground: React.FC<AnimatedBackgroundProps> = ({
 
   useEffect(() => {
     if (backgroundRef.current) {
-      // Set up the gradient
       backgroundRef.current.style.background = `linear-gradient(
         45deg,
         ${colors.join(', ')}
       )`;
       backgroundRef.current.style.backgroundSize = '800% 800%';
       backgroundRef.current.style.filter = `blur(${blur}px)`;
+      backgroundRef.current.style.willChange = 'background-position';
       
-      // Handle pause/play opacity
       const targetOpacity = isPaused ? opacity * 0.2 : opacity;
       backgroundRef.current.style.opacity = `${targetOpacity}`;
       backgroundRef.current.style.transition = 'opacity 0.3s ease-in-out';

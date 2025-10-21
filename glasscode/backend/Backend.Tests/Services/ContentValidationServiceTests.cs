@@ -2,6 +2,7 @@ using FluentAssertions;
 using Xunit;
 using backend.Services;
 using Backend.Tests.Infrastructure;
+using Xunit.Abstractions;
 
 namespace Backend.Tests.Services;
 
@@ -10,6 +11,7 @@ namespace Backend.Tests.Services;
 /// </summary>
 public class ContentValidationServiceTests : TestBase
 {
+    public ContentValidationServiceTests(ITestOutputHelper output) : base(output) {}
     [Fact]
     public void GenerateContentHash_Should_Return_Valid_Hash()
     {
@@ -23,7 +25,7 @@ public class ContentValidationServiceTests : TestBase
         // Assert
         hash.Should().NotBeNullOrEmpty();
         hash.Should().HaveLength(64); // SHA256 produces 64-character hex string
-        hash.Should().Be("e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"); // Known hash for empty string
+        hash.Should().Be("dc0cc3920cd8d2a633fded073be0082554297fde2f0cf15af5e5c2563e49d5de"); // Known SHA-256 for "Test content for hashing"
     }
 
     [Fact]

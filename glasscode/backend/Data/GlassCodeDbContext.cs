@@ -119,7 +119,7 @@ namespace backend.Data
                     .OnDelete(DeleteBehavior.Cascade);
                     
                 entity.HasOne(e => e.Course)
-                    .WithMany()
+                    .WithMany(e => e.UserProgress)
                     .HasForeignKey(e => e.CourseId)
                     .OnDelete(DeleteBehavior.Cascade);
             });
@@ -138,7 +138,7 @@ namespace backend.Data
                     .OnDelete(DeleteBehavior.Cascade);
                     
                 entity.HasOne(e => e.Lesson)
-                    .WithMany()
+                    .WithMany(e => e.UserLessonProgress)
                     .HasForeignKey(e => e.LessonId)
                     .OnDelete(DeleteBehavior.Cascade);
             });
@@ -156,7 +156,7 @@ namespace backend.Data
                     .OnDelete(DeleteBehavior.Cascade);
                     
                 entity.HasOne(e => e.Question)
-                    .WithMany()
+                    .WithMany(e => e.UserQuestionAttempts)
                     .HasForeignKey(e => e.QuestionId)
                     .OnDelete(DeleteBehavior.Cascade);
             });

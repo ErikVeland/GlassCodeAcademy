@@ -147,7 +147,6 @@ public class LessonsDbController : ControllerBase
             }
         }
 
-        return NoContent();
     }
 
     // DELETE: api/lessons-db/5

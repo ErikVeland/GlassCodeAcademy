@@ -7,7 +7,7 @@ namespace backend.Scripts
 {
     public class CheckModules
     {
-        public static async Task Main(string[] args)
+        public static async Task RunAsync(string[] args)
         {
             // Build configuration
             var configuration = new ConfigurationBuilder()

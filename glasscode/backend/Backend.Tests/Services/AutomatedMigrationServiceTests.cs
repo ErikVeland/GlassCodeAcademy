@@ -2,6 +2,8 @@ using FluentAssertions;
 using Xunit;
 using backend.Services;
 using Backend.Tests.Infrastructure;
+using Xunit.Abstractions;
+using backend.Controllers;
 
 namespace Backend.Tests.Services;
 
@@ -10,6 +12,7 @@ namespace Backend.Tests.Services;
 /// </summary>
 public class AutomatedMigrationServiceTests : TestBase
 {
+    public AutomatedMigrationServiceTests(ITestOutputHelper output) : base(output) {}
     [Fact]
     public void MigrationResult_Should_Initialize_Correctly()
     {

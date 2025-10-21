@@ -1,6 +1,7 @@
 using backend.Models;
 using backend.Controllers;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.IO;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,6 +16,79 @@ namespace backend.Services {
     // Content directory path - resolved once and cached
     private static string ? _contentPath;
     public static string ContentPath => _contentPath ??= GetContentPath();
+
+    // Shared JSON options for lessons with flexible List<string> parsing
+    private static readonly JsonSerializerOptions LessonJsonOptions = CreateLessonJsonOptions();
+
+    private static JsonSerializerOptions CreateLessonJsonOptions()
+    {
+      var options = new JsonSerializerOptions
+      {
+        PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+        PropertyNameCaseInsensitive = true
+      };
+      options.Converters.Add(new StringListFlexibleConverter());
+      return options;
+    }
+
+    // Converter to accept either a single string or an array of strings
+    private class StringListFlexibleConverter : JsonConverter<List<string>>
+    {
+      public override List<string> Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+      {
+        if (reader.TokenType == JsonTokenType.StartArray)
+        {
+          var list = new List<string>();
+          while (reader.Read())
+          {
+            if (reader.TokenType == JsonTokenType.EndArray) break;
+            if (reader.TokenType == JsonTokenType.String)
+            {
+              list.Add(reader.GetString() ?? string.Empty);
+            }
+            else
+            {
+              // Skip non-string items
+              reader.Skip();
+            }
+          }
+          return list;
+        }
+        if (reader.TokenType == JsonTokenType.String)
+        {
+          return new List<string> { reader.GetString() ?? string.Empty };
+        }
+        if (reader.TokenType == JsonTokenType.Null)
+        {
+          return new List<string>();
+        }
+
+        try
+        {
+          using var doc = JsonDocument.ParseValue(ref reader);
+          if (doc.RootElement.ValueKind == JsonValueKind.String)
+          {
+            return new List<string> { doc.RootElement.GetString() ?? string.Empty };
+          }
+        }
+        catch
+        {
+          // Ignore malformed values and return empty list
+        }
+
+        return new List<string>();
+      }
+
+      public override void Write(Utf8JsonWriter writer, List<string> value, JsonSerializerOptions options)
+      {
+        writer.WriteStartArray();
+        foreach (var s in value ?? Enumerable.Empty<string>())
+        {
+          writer.WriteStringValue(s);
+        }
+        writer.WriteEndArray();
+      }
+    }
 
     // Helper method to find the content directory using robust app root path resolution
     private static string GetContentPath() {
@@ -361,21 +435,40 @@ namespace backend.Services {
     }
 
     // Data collections with lazy loading
+    private readonly object _dotNetInitLock = new object();
     private IEnumerable<BaseLesson>? _dotNetLessons;
     public IEnumerable<BaseLesson> DotNetLessons {
       get {
         if (_dotNetLessons == null) {
-          Console.WriteLine("📚 Lazy loading DotNet data...");
-          LoadDotNetData();
+          lock (_dotNetInitLock) {
+            if (_dotNetLessons == null) {
+              Console.WriteLine("📚 Lazy loading DotNet data...");
+              LoadDotNetData();
+            }
+          }
         }
         return _dotNetLessons ?? new List<BaseLesson>();
       }
       private set => _dotNetLessons = value;
     }
-    public IEnumerable < BaseLesson > GraphQLLessons {
-      get;
-      private set;
-    } = new List < BaseLesson > ();
+
+    // GraphQL data collections with lazy loading
+    private readonly object _graphqlInitLock = new object();
+    private IEnumerable<BaseLesson>? _graphqlLessons;
+    public IEnumerable<BaseLesson> GraphQLLessons {
+      get {
+        if (_graphqlLessons == null) {
+          lock (_graphqlInitLock) {
+            if (_graphqlLessons == null) {
+              Console.WriteLine("📚 Lazy loading GraphQL data...");
+              LoadGraphQLData();
+            }
+          }
+        }
+        return _graphqlLessons ?? new List<BaseLesson>();
+      }
+      private set => _graphqlLessons = value;
+    }
     public IEnumerable < BaseInterviewQuestion > DotNetInterviewQuestions {
       get;
       private set;
@@ -386,14 +479,19 @@ namespace backend.Services {
     } = new List < BaseInterviewQuestion > ();
 
     // Laravel data collections with lazy loading
+    private readonly object _laravelInitLock = new object();
     private IEnumerable<BaseLesson>? _laravelLessons;
     private IEnumerable<BaseInterviewQuestion>? _laravelInterviewQuestions;
 
     public IEnumerable<BaseLesson> LaravelLessons {
       get {
         if (_laravelLessons == null) {
-          Console.WriteLine("📚 Lazy loading Laravel data...");
-          LoadLaravelData();
+          lock (_laravelInitLock) {
+            if (_laravelLessons == null) {
+              Console.WriteLine("📚 Lazy loading Laravel data...");
+              LoadLaravelData();
+            }
+          }
         }
         return _laravelLessons ?? new List<BaseLesson>();
       }
@@ -403,8 +501,12 @@ namespace backend.Services {
     public IEnumerable<BaseInterviewQuestion> LaravelInterviewQuestions {
       get {
         if (_laravelInterviewQuestions == null) {
-          Console.WriteLine("📚 Lazy loading Laravel interview questions...");
-          LoadLaravelData();
+          lock (_laravelInitLock) {
+            if (_laravelInterviewQuestions == null) {
+              Console.WriteLine("📚 Lazy loading Laravel interview questions...");
+              LoadLaravelData();
+            }
+          }
         }
         return _laravelInterviewQuestions ?? new List<BaseInterviewQuestion>();
       }
@@ -416,12 +518,17 @@ namespace backend.Services {
     } = new List < BaseInterviewQuestion > ();
 
     // React data collections with lazy loading
+    private readonly object _reactInitLock = new object();
     private IEnumerable<BaseLesson>? _reactLessons;
     public IEnumerable<BaseLesson> ReactLessons {
       get {
         if (_reactLessons == null) {
-          Console.WriteLine("📚 Lazy loading React data...");
-          LoadReactData();
+          lock (_reactInitLock) {
+            if (_reactLessons == null) {
+              Console.WriteLine("📚 Lazy loading React data...");
+              LoadReactData();
+            }
+          }
         }
         return _reactLessons ?? new List<BaseLesson>();
       }
@@ -429,12 +536,17 @@ namespace backend.Services {
     }
 
     // Tailwind data collections with lazy loading
+    private readonly object _tailwindInitLock = new object();
     private IEnumerable<BaseLesson>? _tailwindLessons;
     public IEnumerable<BaseLesson> TailwindLessons {
       get {
         if (_tailwindLessons == null) {
-          Console.WriteLine("📚 Lazy loading Tailwind data...");
-          LoadTailwindData();
+          lock (_tailwindInitLock) {
+            if (_tailwindLessons == null) {
+              Console.WriteLine("📚 Lazy loading Tailwind data...");
+              LoadTailwindData();
+            }
+          }
         }
         return _tailwindLessons ?? new List<BaseLesson>();
       }
@@ -445,121 +557,265 @@ namespace backend.Services {
       private set;
     } = new List < BaseInterviewQuestion > ();
 
-    // Node.js data collections
+    // Node.js data collections with lazy loading
+    private readonly object _nodeInitLock = new object();
+    private IEnumerable<BaseLesson>? _nodeLessons;
     public IEnumerable < BaseLesson > NodeLessons {
-      get;
-      private set;
-    } = new List < BaseLesson > ();
+      get {
+        if (_nodeLessons == null) {
+          lock (_nodeInitLock) {
+            if (_nodeLessons == null) {
+              Console.WriteLine("📚 Lazy loading Node data...");
+              LoadNodeData();
+            }
+          }
+        }
+        return _nodeLessons ?? new List<BaseLesson>();
+      }
+      private set => _nodeLessons = value;
+    }
     public IEnumerable < BaseInterviewQuestion > NodeInterviewQuestions {
       get;
       private set;
     } = new List < BaseInterviewQuestion > ();
 
-    // SASS data collections
+    // SASS data collections with lazy loading
+    private readonly object _sassInitLock = new object();
+    private IEnumerable<BaseLesson>? _sassLessons;
     public IEnumerable < BaseLesson > SassLessons {
-      get;
-      private set;
-    } = new List < BaseLesson > ();
+      get {
+        if (_sassLessons == null) {
+          lock (_sassInitLock) {
+            if (_sassLessons == null) {
+              Console.WriteLine("📚 Lazy loading Sass data...");
+              LoadSassData();
+            }
+          }
+        }
+        return _sassLessons ?? new List<BaseLesson>();
+      }
+      private set => _sassLessons = value;
+    }
     public IEnumerable < BaseInterviewQuestion > SassInterviewQuestions {
       get;
       private set;
     } = new List < BaseInterviewQuestion > ();
 
-    // Vue data collections
+    // Vue data collections with lazy loading
+    private readonly object _vueInitLock = new object();
+    private IEnumerable<BaseLesson>? _vueLessons;
     public IEnumerable < BaseLesson > VueLessons {
-      get;
-      private set;
-    } = new List < BaseLesson > ();
+      get {
+        if (_vueLessons == null) {
+          lock (_vueInitLock) {
+            if (_vueLessons == null) {
+              Console.WriteLine("📚 Lazy loading Vue data...");
+              LoadVueData();
+            }
+          }
+        }
+        return _vueLessons ?? new List<BaseLesson>();
+      }
+      private set => _vueLessons = value;
+    }
     public IEnumerable < BaseInterviewQuestion > VueInterviewQuestions {
       get;
       private set;
     } = new List < BaseInterviewQuestion > ();
 
-    // TypeScript data collections
+    // TypeScript data collections with lazy loading
+    private readonly object _typescriptInitLock = new object();
+    private IEnumerable<BaseLesson>? _typescriptLessons;
     public IEnumerable < BaseLesson > TypescriptLessons {
-      get;
-      private set;
-    } = new List < BaseLesson > ();
+      get {
+        if (_typescriptLessons == null) {
+          lock (_typescriptInitLock) {
+            if (_typescriptLessons == null) {
+              Console.WriteLine("📚 Lazy loading TypeScript data...");
+              LoadTypescriptData();
+            }
+          }
+        }
+        return _typescriptLessons ?? new List<BaseLesson>();
+      }
+      private set => _typescriptLessons = value;
+    }
     public IEnumerable < BaseInterviewQuestion > TypescriptInterviewQuestions {
       get;
       private set;
     } = new List < BaseInterviewQuestion > ();
 
-    // Database data collections
+    // Database data collections with lazy loading
+    private readonly object _databaseInitLock = new object();
+    private IEnumerable<BaseLesson>? _databaseLessons;
     public IEnumerable < BaseLesson > DatabaseLessons {
-      get;
-      private set;
-    } = new List < BaseLesson > ();
+      get {
+        if (_databaseLessons == null) {
+          lock (_databaseInitLock) {
+            if (_databaseLessons == null) {
+              Console.WriteLine("📚 Lazy loading Database data...");
+              LoadDatabaseData();
+            }
+          }
+        }
+        return _databaseLessons ?? new List<BaseLesson>();
+      }
+      private set => _databaseLessons = value;
+    }
     public IEnumerable < BaseInterviewQuestion > DatabaseInterviewQuestions {
       get;
       private set;
     } = new List < BaseInterviewQuestion > ();
 
-    // Testing data collections
+    // Testing data collections with lazy loading
+    private readonly object _testingInitLock = new object();
+    private IEnumerable<BaseLesson>? _testingLessons;
     public IEnumerable < BaseLesson > TestingLessons {
-      get;
-      private set;
-    } = new List < BaseLesson > ();
+      get {
+        if (_testingLessons == null) {
+          lock (_testingInitLock) {
+            if (_testingLessons == null) {
+              Console.WriteLine("📚 Lazy loading Testing data...");
+              LoadTestingData();
+            }
+          }
+        }
+        return _testingLessons ?? new List<BaseLesson>();
+      }
+      private set => _testingLessons = value;
+    }
     public IEnumerable < BaseInterviewQuestion > TestingInterviewQuestions {
       get;
       private set;
     } = new List < BaseInterviewQuestion > ();
 
-    // Programming data collections
+    // Programming data collections with lazy loading
+    private readonly object _programmingInitLock = new object();
+    private IEnumerable<BaseLesson>? _programmingLessons;
     public IEnumerable < BaseLesson > ProgrammingLessons {
-      get;
-      private set;
-    } = new List < BaseLesson > ();
+      get {
+        if (_programmingLessons == null) {
+          lock (_programmingInitLock) {
+            if (_programmingLessons == null) {
+              Console.WriteLine("📚 Lazy loading Programming data...");
+              LoadProgrammingData();
+            }
+          }
+        }
+        return _programmingLessons ?? new List<BaseLesson>();
+      }
+      private set => _programmingLessons = value;
+    }
     public IEnumerable < BaseInterviewQuestion > ProgrammingInterviewQuestions {
       get;
       private set;
     } = new List < BaseInterviewQuestion > ();
 
-    // Web Fundamentals data collections
+    // Web Fundamentals data collections with lazy loading
+    private readonly object _webInitLock = new object();
+    private IEnumerable<BaseLesson>? _webLessons;
     public IEnumerable < BaseLesson > WebLessons {
-      get;
-      private set;
-    } = new List < BaseLesson > ();
+      get {
+        if (_webLessons == null) {
+          lock (_webInitLock) {
+            if (_webLessons == null) {
+              Console.WriteLine("📚 Lazy loading Web Fundamentals data...");
+              LoadWebData();
+            }
+          }
+        }
+        return _webLessons ?? new List<BaseLesson>();
+      }
+      private set => _webLessons = value;
+    }
     public IEnumerable < BaseInterviewQuestion > WebInterviewQuestions {
       get;
       private set;
     } = new List < BaseInterviewQuestion > ();
 
-    // Next.js data collections
+    // Next.js data collections with lazy loading
+    private readonly object _nextJsInitLock = new object();
+    private IEnumerable<BaseLesson>? _nextJsLessons;
     public IEnumerable < BaseLesson > NextJsLessons {
-      get;
-      private set;
-    } = new List < BaseLesson > ();
+      get {
+        if (_nextJsLessons == null) {
+          lock (_nextJsInitLock) {
+            if (_nextJsLessons == null) {
+              Console.WriteLine("📚 Lazy loading Next.js data...");
+              LoadNextJsData();
+            }
+          }
+        }
+        return _nextJsLessons ?? new List<BaseLesson>();
+      }
+      private set => _nextJsLessons = value;
+    }
     public IEnumerable < BaseInterviewQuestion > NextJsInterviewQuestions {
       get;
       private set;
     } = new List < BaseInterviewQuestion > ();
 
-    // Performance Optimization data collections
+    // Performance Optimization data collections with lazy loading
+    private readonly object _performanceInitLock = new object();
+    private IEnumerable<BaseLesson>? _performanceLessons;
     public IEnumerable < BaseLesson > PerformanceLessons {
-      get;
-      private set;
-    } = new List < BaseLesson > ();
+      get {
+        if (_performanceLessons == null) {
+          lock (_performanceInitLock) {
+            if (_performanceLessons == null) {
+              Console.WriteLine("📚 Lazy loading Performance data...");
+              LoadPerformanceData();
+            }
+          }
+        }
+        return _performanceLessons ?? new List<BaseLesson>();
+      }
+      private set => _performanceLessons = value;
+    }
     public IEnumerable < BaseInterviewQuestion > PerformanceInterviewQuestions {
       get;
       private set;
     } = new List < BaseInterviewQuestion > ();
 
-    // Security Fundamentals data collections
+    // Security Fundamentals data collections with lazy loading
+    private readonly object _securityInitLock = new object();
+    private IEnumerable<BaseLesson>? _securityLessons;
     public IEnumerable < BaseLesson > SecurityLessons {
-      get;
-      private set;
-    } = new List < BaseLesson > ();
+      get {
+        if (_securityLessons == null) {
+          lock (_securityInitLock) {
+            if (_securityLessons == null) {
+              Console.WriteLine("📚 Lazy loading Security data...");
+              LoadSecurityData();
+            }
+          }
+        }
+        return _securityLessons ?? new List<BaseLesson>();
+      }
+      private set => _securityLessons = value;
+    }
     public IEnumerable < BaseInterviewQuestion > SecurityInterviewQuestions {
       get;
       private set;
     } = new List < BaseInterviewQuestion > ();
 
-    // Version Control data collections
+    // Version Control data collections with lazy loading
+    private readonly object _versionInitLock = new object();
+    private IEnumerable<BaseLesson>? _versionLessons;
     public IEnumerable < BaseLesson > VersionLessons {
-      get;
-      private set;
-    } = new List < BaseLesson > ();
+      get {
+        if (_versionLessons == null) {
+          lock (_versionInitLock) {
+            if (_versionLessons == null) {
+              Console.WriteLine("📚 Lazy loading Version Control data...");
+              LoadVersionData();
+            }
+          }
+        }
+        return _versionLessons ?? new List<BaseLesson>();
+      }
+      private set => _versionLessons = value;
+    }
     public IEnumerable < BaseInterviewQuestion > VersionInterviewQuestions {
       get;
       private set;
@@ -656,16 +912,13 @@ namespace backend.Services {
         Console.WriteLine("Starting LoadReactData...");
         // Load React Lessons
         var reactLessonsPath = System.IO.Path.Combine(ContentPath, "lessons", "react-fundamentals.json");
-        Console.WriteLine($"React lessons path: {reactLessonsPath}");
-        Console.WriteLine($"React lessons file exists: {System.IO.File.Exists(reactLessonsPath)}");
+        var reactLessonsExists = System.IO.File.Exists(reactLessonsPath);
+        Console.WriteLine($"React lessons path: {reactLessonsPath} {(reactLessonsExists ? "✅" : "❌")} ");
 
-        if (System.IO.File.Exists(reactLessonsPath)) {
+        if (reactLessonsExists) {
           var reactLessonsJson = System.IO.File.ReadAllText(reactLessonsPath);
           Console.WriteLine($"React lessons JSON length: {reactLessonsJson.Length}");
-          ReactLessons = JsonSerializer.Deserialize < List < BaseLesson >> (reactLessonsJson, new JsonSerializerOptions {
-            PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
-              PropertyNameCaseInsensitive = true
-          }) ?? new List < BaseLesson > ();
+          ReactLessons = JsonSerializer.Deserialize < List < BaseLesson >> (reactLessonsJson, LessonJsonOptions) ?? new List < BaseLesson > ();
           Console.WriteLine($"Loaded {ReactLessons.Count()} React lessons");
         } else {
           Console.WriteLine("React lessons file not found!");
@@ -673,10 +926,10 @@ namespace backend.Services {
 
         // Load React Interview Questions
         var reactQuestionsPath = System.IO.Path.Combine(ContentPath, "quizzes", "react-fundamentals.json");
-        Console.WriteLine($"React questions path: {reactQuestionsPath}");
-        Console.WriteLine($"React questions file exists: {System.IO.File.Exists(reactQuestionsPath)}");
+        var reactQuestionsExists = System.IO.File.Exists(reactQuestionsPath);
+        Console.WriteLine($"React questions path: {reactQuestionsPath} {(reactQuestionsExists ? "✅" : "❌")} ");
 
-        if (System.IO.File.Exists(reactQuestionsPath)) {
+        if (reactQuestionsExists) {
           var reactQuestionsJson = System.IO.File.ReadAllText(reactQuestionsPath);
           Console.WriteLine($"React questions JSON length: {reactQuestionsJson.Length}");
 
@@ -715,16 +968,13 @@ namespace backend.Services {
           Console.WriteLine("Starting LoadLaravelData...");
           // Load Laravel Lessons
           var LaravelLessonsPath = System.IO.Path.Combine(ContentPath, "lessons", "laravel-fundamentals.json");
-          Console.WriteLine($"Laravel lessons path: {LaravelLessonsPath}");
-          Console.WriteLine($"Laravel lessons file exists: {System.IO.File.Exists(LaravelLessonsPath)}");
+          var laravelLessonsExists = System.IO.File.Exists(LaravelLessonsPath);
+          Console.WriteLine($"Laravel lessons path: {LaravelLessonsPath} {(laravelLessonsExists ? "✅" : "❌")} ");
 
-          if (System.IO.File.Exists(LaravelLessonsPath)) {
+          if (laravelLessonsExists) {
             var LaravelLessonsJson = System.IO.File.ReadAllText(LaravelLessonsPath);
             Console.WriteLine($"Laravel lessons JSON length: {LaravelLessonsJson.Length}");
-            LaravelLessons = JsonSerializer.Deserialize < List < BaseLesson >> (LaravelLessonsJson, new JsonSerializerOptions {
-              PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
-                PropertyNameCaseInsensitive = true
-            }) ?? new List < BaseLesson > ();
+            LaravelLessons = JsonSerializer.Deserialize < List < BaseLesson >> (LaravelLessonsJson, LessonJsonOptions) ?? new List < BaseLesson > ();
             Console.WriteLine($"Loaded {LaravelLessons.Count()} Laravel lessons");
           } else {
             Console.WriteLine("Laravel lessons file not found!");
@@ -732,10 +982,10 @@ namespace backend.Services {
 
           // Load Laravel Interview Questions
           var LaravelQuestionsPath = System.IO.Path.Combine(ContentPath, "quizzes", "laravel-fundamentals.json");
-          Console.WriteLine($"Laravel questions path: {LaravelQuestionsPath}");
-          Console.WriteLine($"Laravel questions file exists: {System.IO.File.Exists(LaravelQuestionsPath)}");
+          var laravelQuestionsExists = System.IO.File.Exists(LaravelQuestionsPath);
+           Console.WriteLine($"Laravel questions path: {LaravelQuestionsPath} {(laravelQuestionsExists ? "✅" : "❌")} ");
 
-          if (System.IO.File.Exists(LaravelQuestionsPath)) {
+          if (laravelQuestionsExists) {
             var LaravelQuestionsJson = System.IO.File.ReadAllText(LaravelQuestionsPath);
             Console.WriteLine($"Laravel questions JSON length: {LaravelQuestionsJson.Length}");
 
@@ -788,23 +1038,14 @@ namespace backend.Services {
             var wrapper = JsonSerializer.Deserialize < JsonElement > (dotnetLessonsJson);
             if (wrapper.ValueKind == JsonValueKind.Object && wrapper.TryGetProperty("lessons", out
                 var lessonsElement)) {
-              DotNetLessons = JsonSerializer.Deserialize < List < BaseLesson >> (lessonsElement.GetRawText(), new JsonSerializerOptions {
-                PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
-                  PropertyNameCaseInsensitive = true
-              }) ?? new List < BaseLesson > ();
+              DotNetLessons = JsonSerializer.Deserialize < List < BaseLesson >> (lessonsElement.GetRawText(), LessonJsonOptions) ?? new List < BaseLesson > ();
             } else {
               // Direct array structure
-              DotNetLessons = JsonSerializer.Deserialize < List < BaseLesson >> (dotnetLessonsJson, new JsonSerializerOptions {
-                PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
-                  PropertyNameCaseInsensitive = true
-              }) ?? new List < BaseLesson > ();
+              DotNetLessons = JsonSerializer.Deserialize < List < BaseLesson >> (dotnetLessonsJson, LessonJsonOptions) ?? new List < BaseLesson > ();
             }
           } catch (JsonException) {
             // Fallback to direct array deserialization
-            DotNetLessons = JsonSerializer.Deserialize < List < BaseLesson >> (dotnetLessonsJson, new JsonSerializerOptions {
-              PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
-                PropertyNameCaseInsensitive = true
-            }) ?? new List < BaseLesson > ();
+            DotNetLessons = JsonSerializer.Deserialize < List < BaseLesson >> (dotnetLessonsJson, LessonJsonOptions) ?? new List < BaseLesson > ();
           }
 
           Console.WriteLine($"Loaded {DotNetLessons.Count()} DotNet lessons");
@@ -865,10 +1106,7 @@ namespace backend.Services {
           var tailwindLessonsJson = System.IO.File.ReadAllText(tailwindLessonsPath);
           Console.WriteLine($"📄 Read {tailwindLessonsJson.Length} characters from lessons file");
 
-          TailwindLessons = JsonSerializer.Deserialize < List < BaseLesson >> (tailwindLessonsJson, new JsonSerializerOptions {
-            PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
-              PropertyNameCaseInsensitive = true
-          }) ?? new List < BaseLesson > ();
+          TailwindLessons = JsonSerializer.Deserialize < List < BaseLesson >> (tailwindLessonsJson, LessonJsonOptions) ?? new List < BaseLesson > ();
           Console.WriteLine($"✅ Loaded {TailwindLessons.Count()} Tailwind lessons");
         } else {
           Console.WriteLine("❌ Tailwind lessons file does not exist");
@@ -933,10 +1171,7 @@ namespace backend.Services {
         var nodeLessonsPath = System.IO.Path.Combine(ContentPath, "lessons", "node-fundamentals.json");
         if (System.IO.File.Exists(nodeLessonsPath)) {
           var nodeLessonsJson = System.IO.File.ReadAllText(nodeLessonsPath);
-          NodeLessons = JsonSerializer.Deserialize < List < BaseLesson >> (nodeLessonsJson, new JsonSerializerOptions {
-            PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
-              PropertyNameCaseInsensitive = true
-          }) ?? new List < BaseLesson > ();
+          NodeLessons = JsonSerializer.Deserialize < List < BaseLesson >> (nodeLessonsJson, LessonJsonOptions) ?? new List < BaseLesson > ();
           Console.WriteLine($"Loaded {NodeLessons.Count()} Node lessons");
         }
 
@@ -981,10 +1216,7 @@ namespace backend.Services {
         var sassLessonsPath = System.IO.Path.Combine(ContentPath, "lessons", "sass-advanced.json");
         if (System.IO.File.Exists(sassLessonsPath)) {
           var sassLessonsJson = System.IO.File.ReadAllText(sassLessonsPath);
-          SassLessons = JsonSerializer.Deserialize < List < BaseLesson >> (sassLessonsJson, new JsonSerializerOptions {
-            PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
-              PropertyNameCaseInsensitive = true
-          }) ?? new List < BaseLesson > ();
+          SassLessons = JsonSerializer.Deserialize < List < BaseLesson >> (sassLessonsJson, LessonJsonOptions) ?? new List < BaseLesson > ();
           Console.WriteLine($"Loaded {SassLessons.Count()} Sass lessons");
         }
 
@@ -1029,10 +1261,7 @@ namespace backend.Services {
         var vueLessonsPath = System.IO.Path.Combine(ContentPath, "lessons", "vue-advanced.json");
         if (System.IO.File.Exists(vueLessonsPath)) {
           var vueLessonsJson = System.IO.File.ReadAllText(vueLessonsPath);
-          VueLessons = JsonSerializer.Deserialize < List < BaseLesson >> (vueLessonsJson, new JsonSerializerOptions {
-            PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
-              PropertyNameCaseInsensitive = true
-          }) ?? new List < BaseLesson > ();
+          VueLessons = JsonSerializer.Deserialize < List < BaseLesson >> (vueLessonsJson, LessonJsonOptions) ?? new List < BaseLesson > ();
           Console.WriteLine($"Loaded {VueLessons.Count()} Vue lessons");
         }
 
@@ -1077,10 +1306,7 @@ namespace backend.Services {
         var typescriptLessonsPath = System.IO.Path.Combine(ContentPath, "lessons", "typescript-fundamentals.json");
         if (System.IO.File.Exists(typescriptLessonsPath)) {
           var typescriptLessonsJson = System.IO.File.ReadAllText(typescriptLessonsPath);
-          TypescriptLessons = JsonSerializer.Deserialize < List < BaseLesson >> (typescriptLessonsJson, new JsonSerializerOptions {
-            PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
-              PropertyNameCaseInsensitive = true
-          }) ?? new List < BaseLesson > ();
+          TypescriptLessons = JsonSerializer.Deserialize < List < BaseLesson >> (typescriptLessonsJson, LessonJsonOptions) ?? new List < BaseLesson > ();
           Console.WriteLine($"Loaded {TypescriptLessons.Count()} Typescript lessons");
         }
 
@@ -1125,10 +1351,7 @@ namespace backend.Services {
         var databaseLessonsPath = System.IO.Path.Combine(ContentPath, "lessons", "database-systems.json");
         if (System.IO.File.Exists(databaseLessonsPath)) {
           var databaseLessonsJson = System.IO.File.ReadAllText(databaseLessonsPath);
-          DatabaseLessons = JsonSerializer.Deserialize < List < BaseLesson >> (databaseLessonsJson, new JsonSerializerOptions {
-            PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
-              PropertyNameCaseInsensitive = true
-          }) ?? new List < BaseLesson > ();
+          DatabaseLessons = JsonSerializer.Deserialize < List < BaseLesson >> (databaseLessonsJson, LessonJsonOptions) ?? new List < BaseLesson > ();
           Console.WriteLine($"Loaded {DatabaseLessons.Count()} Database lessons");
         }
 
@@ -1173,10 +1396,7 @@ namespace backend.Services {
         var graphqlLessonsPath = System.IO.Path.Combine(ContentPath, "lessons", "graphql-advanced.json");
         if (System.IO.File.Exists(graphqlLessonsPath)) {
           var graphqlLessonsJson = System.IO.File.ReadAllText(graphqlLessonsPath);
-          GraphQLLessons = JsonSerializer.Deserialize < List < BaseLesson >> (graphqlLessonsJson, new JsonSerializerOptions {
-            PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
-              PropertyNameCaseInsensitive = true
-          }) ?? new List < BaseLesson > ();
+          GraphQLLessons = JsonSerializer.Deserialize < List < BaseLesson >> (graphqlLessonsJson, LessonJsonOptions) ?? new List < BaseLesson > ();
           Console.WriteLine($"Loaded {GraphQLLessons.Count()} GraphQL lessons");
         }
 
@@ -1221,10 +1441,7 @@ namespace backend.Services {
         var testingLessonsPath = System.IO.Path.Combine(ContentPath, "lessons", "testing-fundamentals.json");
         if (System.IO.File.Exists(testingLessonsPath)) {
           var testingLessonsJson = System.IO.File.ReadAllText(testingLessonsPath);
-          TestingLessons = JsonSerializer.Deserialize < List < BaseLesson >> (testingLessonsJson, new JsonSerializerOptions {
-            PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
-              PropertyNameCaseInsensitive = true
-          }) ?? new List < BaseLesson > ();
+          TestingLessons = JsonSerializer.Deserialize < List < BaseLesson >> (testingLessonsJson, LessonJsonOptions) ?? new List < BaseLesson > ();
           Console.WriteLine($"Loaded {TestingLessons.Count()} Testing lessons");
         }
 
@@ -1269,10 +1486,7 @@ namespace backend.Services {
         var programmingLessonsPath = System.IO.Path.Combine(ContentPath, "lessons", "programming-fundamentals.json");
         if (System.IO.File.Exists(programmingLessonsPath)) {
           var programmingLessonsJson = System.IO.File.ReadAllText(programmingLessonsPath);
-          ProgrammingLessons = JsonSerializer.Deserialize < List < BaseLesson >> (programmingLessonsJson, new JsonSerializerOptions {
-            PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
-              PropertyNameCaseInsensitive = true
-          }) ?? new List < BaseLesson > ();
+          ProgrammingLessons = JsonSerializer.Deserialize < List < BaseLesson >> (programmingLessonsJson, LessonJsonOptions) ?? new List < BaseLesson > ();
           Console.WriteLine($"Loaded {ProgrammingLessons.Count()} Programming lessons");
         }
 
@@ -1317,10 +1531,7 @@ namespace backend.Services {
         var webLessonsPath = System.IO.Path.Combine(ContentPath, "lessons", "web-fundamentals.json");
         if (System.IO.File.Exists(webLessonsPath)) {
           var webLessonsJson = System.IO.File.ReadAllText(webLessonsPath);
-          WebLessons = JsonSerializer.Deserialize < List < BaseLesson >> (webLessonsJson, new JsonSerializerOptions {
-            PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
-              PropertyNameCaseInsensitive = true
-          }) ?? new List < BaseLesson > ();
+          WebLessons = JsonSerializer.Deserialize < List < BaseLesson >> (webLessonsJson, LessonJsonOptions) ?? new List < BaseLesson > ();
           Console.WriteLine($"Loaded {WebLessons.Count()} Web lessons");
         }
 
@@ -1365,10 +1576,7 @@ namespace backend.Services {
         var nextjsLessonsPath = System.IO.Path.Combine(ContentPath, "lessons", "nextjs-advanced.json");
         if (System.IO.File.Exists(nextjsLessonsPath)) {
           var nextjsLessonsJson = System.IO.File.ReadAllText(nextjsLessonsPath);
-          NextJsLessons = JsonSerializer.Deserialize < List < BaseLesson >> (nextjsLessonsJson, new JsonSerializerOptions {
-            PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
-              PropertyNameCaseInsensitive = true
-          }) ?? new List < BaseLesson > ();
+          NextJsLessons = JsonSerializer.Deserialize < List < BaseLesson >> (nextjsLessonsJson, LessonJsonOptions) ?? new List < BaseLesson > ();
           Console.WriteLine($"Loaded {NextJsLessons.Count()} NextJs lessons");
         }
 
@@ -1413,10 +1621,7 @@ namespace backend.Services {
         var performanceLessonsPath = System.IO.Path.Combine(ContentPath, "lessons", "performance-optimization.json");
         if (System.IO.File.Exists(performanceLessonsPath)) {
           var performanceLessonsJson = System.IO.File.ReadAllText(performanceLessonsPath);
-          PerformanceLessons = JsonSerializer.Deserialize < List < BaseLesson >> (performanceLessonsJson, new JsonSerializerOptions {
-            PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
-              PropertyNameCaseInsensitive = true
-          }) ?? new List < BaseLesson > ();
+          PerformanceLessons = JsonSerializer.Deserialize < List < BaseLesson >> (performanceLessonsJson, LessonJsonOptions) ?? new List < BaseLesson > ();
           Console.WriteLine($"Loaded {PerformanceLessons.Count()} Performance lessons");
         }
 
@@ -1459,22 +1664,19 @@ namespace backend.Services {
       try {
         // Load Security Lessons
         var securityLessonsPath = System.IO.Path.Combine(ContentPath, "lessons", "security-fundamentals.json");
-        Console.WriteLine($"Security lessons path: {securityLessonsPath}");
-        Console.WriteLine($"Security lessons file exists: {System.IO.File.Exists(securityLessonsPath)}");
-        if (System.IO.File.Exists(securityLessonsPath)) {
+        var securityLessonsExists = System.IO.File.Exists(securityLessonsPath);
+        Console.WriteLine($"Security lessons path: {securityLessonsPath} {(securityLessonsExists ? "✅" : "❌")} ");
+        if (securityLessonsExists) {
           var securityLessonsJson = System.IO.File.ReadAllText(securityLessonsPath);
-          SecurityLessons = JsonSerializer.Deserialize < List < BaseLesson >> (securityLessonsJson, new JsonSerializerOptions {
-            PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
-              PropertyNameCaseInsensitive = true
-          }) ?? new List < BaseLesson > ();
+          SecurityLessons = JsonSerializer.Deserialize < List < BaseLesson >> (securityLessonsJson, LessonJsonOptions) ?? new List < BaseLesson > ();
           Console.WriteLine($"Loaded {SecurityLessons.Count()} Security lessons");
         }
 
         // Load Security Interview Questions
         var securityQuestionsPath = System.IO.Path.Combine(ContentPath, "quizzes", "security-fundamentals.json");
-        Console.WriteLine($"Security questions path: {securityQuestionsPath}");
-        Console.WriteLine($"Security questions file exists: {System.IO.File.Exists(securityQuestionsPath)}");
-        if (System.IO.File.Exists(securityQuestionsPath)) {
+        var securityQuestionsExists = System.IO.File.Exists(securityQuestionsPath);
+        Console.WriteLine($"Security questions path: {securityQuestionsPath} {(securityQuestionsExists ? "✅" : "❌")} ");
+        if (securityQuestionsExists) {
           var securityQuestionsJson = System.IO.File.ReadAllText(securityQuestionsPath);
 
           // Parse as JsonDocument to check structure
@@ -1512,10 +1714,7 @@ namespace backend.Services {
         var lessonsPath = System.IO.Path.Combine(ContentPath, "lessons", "version-control.json");
         if (System.IO.File.Exists(lessonsPath)) {
           var lessonsJson = System.IO.File.ReadAllText(lessonsPath);
-          VersionLessons = System.Text.Json.JsonSerializer.Deserialize < List < BaseLesson >> (lessonsJson, new JsonSerializerOptions {
-            PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
-              PropertyNameCaseInsensitive = true
-          }) ?? new List < BaseLesson > ();
+          VersionLessons = System.Text.Json.JsonSerializer.Deserialize < List < BaseLesson >> (lessonsJson, LessonJsonOptions) ?? new List < BaseLesson > ();
         } else {
           Console.WriteLine($"Version lessons file not found at {lessonsPath}");
           VersionLessons = new List < BaseLesson > ();

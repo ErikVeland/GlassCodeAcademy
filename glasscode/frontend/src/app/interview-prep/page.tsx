@@ -3,6 +3,8 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import '../../styles/design-system.scss';
+import { useProgressTracking, ProgressData } from '../../hooks/useProgressTracking';
+import { ChartBarIcon } from '@heroicons/react/24/outline';
 
 // Interview Preparation Hub - Non-Gamified Educational Structure
 interface InterviewModule {
@@ -171,68 +173,69 @@ const interviewTiers: Record<string, InterviewTier> = {
 const InterviewModuleCard: React.FC<{
   module: InterviewModule;
   tierKey: string;
-}> = ({ module, tierKey }) => {
-  // All modules are unlocked from the start for interview preparation
-  const isLocked = false;
+  isLocked: boolean;
+}> = ({ module, tierKey, isLocked }) => {
+  const tierVariantClass = (
+    tierKey === 'expert' ? 'tier-quality' :
+    tierKey === 'foundational' ? 'tier-foundational' :
+    tierKey === 'core' ? 'tier-core' :
+    tierKey === 'specialized' ? 'tier-specialized' : ''
+  );
 
-  // Define tier-specific gradient classes to match homepage
-  const tierGradientClass = {
-    foundational: 'from-blue-500 to-cyan-500',
-    core: 'from-green-500 to-emerald-500',
-    specialized: 'from-purple-500 to-violet-500',
-    expert: 'from-orange-500 to-red-500'
-  }[tierKey] || 'from-blue-500 to-cyan-500';
+  const iconTierClass = (
+    tierKey === 'expert' ? 'glass-tier-quality' :
+    tierKey === 'foundational' ? 'glass-tier-foundational' :
+    tierKey === 'core' ? 'glass-tier-core' :
+    tierKey === 'specialized' ? 'glass-tier-specialized' : ''
+  );
+
+  const categoryLabel = module.category.charAt(0).toUpperCase() + module.category.slice(1);
 
   return (
     <div className={`module-card-container ${isLocked ? 'locked' : ''}`}>
       <Link
         href={isLocked ? '#' : module.href}
         aria-label={module.title}
-        className={`block bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 p-5 hover:shadow-xl transition-all duration-300 cursor-pointer touch-manipulation active:scale-[0.99] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-blue-600/40 ring-offset-white dark:ring-offset-gray-800 ${
-          isLocked ? 'opacity-60' : 'hover:-translate-y-1'
-        }`}
+        role="link"
+        title={module.title}
+        className={`glass-module-card ${tierVariantClass} group relative ${isLocked ? 'opacity-60 cursor-not-allowed' : 'cursor-pointer hover:-translate-y-1 hover:shadow-xl active:scale-[0.99] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-blue-600/40'} rounded-xl overflow-hidden`}
         aria-disabled={isLocked}
       >
+        {/* Lock overlay */}
         {isLocked && (
-          <div className="absolute inset-0 bg-gray-900/50 backdrop-blur-sm rounded-xl flex items-center justify-center z-5">
-            <div className="text-center text-white">
-              <div className="text-3xl mb-2">🔒</div>
-              <p className="text-sm font-medium">Prerequisites Required</p>
+          <div className="absolute inset-0 bg-gray-900/50 backdrop-blur-sm rounded-xl flex items-center justify-center z-10">
+            <div className="text-center">
+              <div className="w-10 h-10 bg-black/30 dark:bg-white/20 rounded-full flex items-center justify-center border border-white/20 shadow-lg mx-auto">
+                <span className="text-3xl">🔒</span>
+              </div>
+              <p className="mt-2 text-white/90 text-sm">Complete prerequisites to unlock</p>
             </div>
           </div>
         )}
 
-        <div className="module-header flex items-start gap-4 mb-4">
-          <div className={`w-10 h-10 rounded-lg bg-gradient-to-br ${tierGradientClass} flex items-center justify-center text-white font-bold text-lg`}>
-            {module.icon}
-          </div>
-          <div className="flex-1">
-            <h4 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-2 text-left">
-              {module.title}
-            </h4>
-            <div className="flex items-center gap-2 mb-2">
-              <span className={`px-2 py-1 rounded-full text-xs font-medium ${
-                module.difficulty === 'Beginner' ? 'bg-green-500/20 text-green-700 dark:text-green-300' :
-                module.difficulty === 'Intermediate' ? 'bg-yellow-500/20 text-yellow-700 dark:text-yellow-300' :
-                'bg-red-500/20 text-red-700 dark:text-red-300'
-              }`}>
-                {module.difficulty}
-              </span>
-              <span className="px-2 py-1 rounded-full text-xs font-medium bg-gray-500/20 text-gray-700 dark:text-gray-300">
-                {module.category}
-              </span>
-            </div>
-            <p className="text-gray-700 dark:text-gray-300 text-sm text-left">
-              {module.description}
-            </p>
+        {/* Icon and header */}
+        <div className={`glass-morphism ${iconTierClass} rounded-t-xl p-4 flex items-center gap-3`}>
+          <div className="text-3xl md:text-4xl leading-none" aria-hidden="true">{module.icon}</div>
+          <div className="min-w-0">
+            <h3 className="text-lg font-semibold text-fg truncate leading-tight">{module.title}</h3>
+            <p className="text-muted text-sm truncate leading-tight">{categoryLabel}</p>
           </div>
         </div>
 
-        <div className="module-meta mt-auto">
-          <div className="flex items-center justify-between text-sm text-gray-600 dark:text-gray-400">
-            <span>⏱️ {module.estimatedTime}</span>
-            <span className="capitalize">{module.category}</span>
-          </div>
+        {/* Body */}
+        <div className="p-4">
+          <p id={`module-${module.id}-description`} className="text-sm text-muted text-left">{module.description}</p>
+          {/* Prerequisites pills */}
+          {module.prerequisites && module.prerequisites.length > 0 && (
+            <div className="mt-3 text-left space-y-1">
+              <div className="text-xs text-muted mb-1.5">Requires:</div>
+              <div className="flex flex-wrap gap-2">
+                {module.prerequisites.map((p) => (
+                  <span key={p} className="unlock-chip">{p}</span>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
       </Link>
     </div>
@@ -244,26 +247,17 @@ const InterviewTierSection: React.FC<{
   tier: InterviewTier;
   tierKey: string;
   isVisible: boolean;
-}> = ({ tier, tierKey, isVisible }) => {
+  lockEnabled?: boolean;
+  progress?: Record<string, ProgressData>;
+}> = ({ tier, tierKey, isVisible, lockEnabled = true, progress = {} }) => {
   if (!isVisible) return null;
 
-  const totalQuestions = tier.modules.reduce((sum, module) => sum + module.questionCount, 0);
-
-  // Define tier-specific gradient classes to match homepage
-  const tierGradientClass = {
-    foundational: 'from-blue-500 to-cyan-500',
-    core: 'from-green-500 to-emerald-500',
-    specialized: 'from-purple-500 to-violet-500',
-    expert: 'from-orange-500 to-red-500'
-  }[tierKey] || 'from-blue-500 to-cyan-500';
-
   return (
-    <section className="w-full mb-8" data-tier={tierKey}>
-      <div className={`bg-gradient-to-br ${tierGradientClass} p-4 sm:p-6 rounded-none sm:rounded-xl border-none sm:border shadow-none sm:shadow-lg`}>
+    <section className="tier-section w-full mb-8" data-tier={tierKey === 'expert' ? 'quality' : tierKey}>
+      <div className={`tier-container bg-gradient-to-r ${tier.color}`}>
         <div className="tier-header mb-6">
-          {/* Title and description */}
           <div className="flex items-center gap-4 mb-4">
-            <div className={`w-10 h-10 rounded-full bg-white/20 flex items-center justify-center text-white font-bold text-lg backdrop-blur-sm`}>
+            <div className="glass-morphism w-14 h-14 rounded-lg flex items-center justify-center text-white font-bold text-2xl md:text-3xl">
               {tier.tierLevel}
             </div>
             <div className="text-left min-w-0">
@@ -276,59 +270,75 @@ const InterviewTierSection: React.FC<{
             </div>
           </div>
 
-          {/* Mobile 2-column grid: Focus area + progress */}
           <div className="grid grid-cols-2 gap-3 md:flex md:items-center md:justify-between">
-            <div className="bg-white/10 rounded-lg p-4 border border-white/20 backdrop-blur-sm">
+            <div className="glass-morphism rounded-lg p-4 min-h-[100px] flex items-center">
               <p className="font-medium text-white text-left text-sm">
                 <strong>Focus Area:</strong> {tier.focusArea}
               </p>
             </div>
-
-            {/* Unified progress widget like dashboard */}
-            <div className="bg-white/20 text-white p-4 rounded-lg min-w-[140px] text-center backdrop-blur-sm">
-              <div className="text-2xl font-bold">{tier.modules.length}</div>
-              <div className="text-sm opacity-90">Modules</div>
-              <div className="text-xs opacity-80 mt-1">
-                {totalQuestions} questions
-              </div>
-            </div>
-          </div>
-
-          {/* Learning objectives */}
-          <div className="bg-white/10 rounded-xl p-5 border border-white/20 mt-4 backdrop-blur-sm">
-            <h3 className="text-lg font-semibold text-white mb-3 text-left">Learning Objectives</h3>
-            <ul className="grid grid-cols-1 md:grid-cols-3 gap-3">
-              {tier.learningObjectives.map((objective, index) => (
-                <li key={index} className="flex items-start gap-2">
-                  <span className="text-green-500 mt-0.5 flex-shrink-0 text-sm">✓</span>
-                  <span className="text-white/90 text-left text-sm">{objective}</span>
-                </li>
-              ))}
-            </ul>
           </div>
         </div>
 
-        {/* Modules grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-6" role="list">
-          {tier.modules.map((module: InterviewModule) => (
-            <div key={module.id} role="listitem">
-              <InterviewModuleCard
-                module={module}
-                tierKey={tierKey}
-              />
-            </div>
-          ))}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-6 auto-rows-fr" role="list" aria-label={`${tier.title} modules`}>
+          {tier.modules.map((module: InterviewModule) => {
+            const prereqs = module.prerequisites || [];
+            const prerequisitesMet = prereqs.length === 0 || prereqs.every(slug => {
+              const moduleSlug = INTERVIEW_TO_MODULE_SLUG_MAP[slug] || slug;
+              const p = progress[moduleSlug];
+              return p && p.completionStatus === 'completed';
+            });
+            const isLocked = !!lockEnabled && prereqs.length > 0 && !prerequisitesMet;
+
+            return (
+              <div key={module.id} role="listitem" className="h-full">
+                <InterviewModuleCard module={module} tierKey={tierKey} isLocked={isLocked} />
+              </div>
+            );
+          })}
         </div>
       </div>
     </section>
   );
 };
 
+const INTERVIEW_TO_MODULE_SLUG_MAP: Record<string, string> = {
+  'javascript-questions': 'web-fundamentals',
+  'sass-questions': 'sass-advanced',
+  'react-questions': 'react-fundamentals',
+  'dotnet-questions': 'dotnet-fundamentals',
+  'typescript-questions': 'typescript-fundamentals',
+  'system-design-questions': 'system-design-fundamentals',
+};
+
 const InterviewPrepPage: React.FC = () => {
+  const { progress } = useProgressTracking();
+  const [moduleLockEnabled, setModuleLockEnabled] = React.useState<boolean>(true);
+
+  React.useEffect(() => {
+    try {
+      const stored = typeof window !== 'undefined' ? localStorage.getItem('gc.moduleLockEnabled') : null;
+      if (stored !== null) setModuleLockEnabled(stored === 'true');
+    } catch {
+      // ignore
+    }
+  }, []);
+
+  const toggleModuleLock = React.useCallback(() => {
+    setModuleLockEnabled((prev) => {
+      const next = !prev;
+      try {
+        if (typeof window !== 'undefined') {
+          localStorage.setItem('gc.moduleLockEnabled', String(next));
+        }
+      } catch {}
+      return next;
+    });
+  }, []);
   const [selectedTier, setSelectedTier] = useState<string | null>(null);
   const [selectedDifficulty, setSelectedDifficulty] = useState<string | null>(null);
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
+  const { exportProgressData } = useProgressTracking();
 
   // Filter tiers based on selected filters
   const filteredTiers = Object.entries(interviewTiers).reduce((acc, [tierKey, tier]) => {
@@ -381,20 +391,36 @@ const InterviewPrepPage: React.FC = () => {
 
   return (
     <div className="liquid-glass-layout">
+
       <main className="homepage w-full">
         {/* Hero Section with proper styling like the dashboard */}
         <section className="w-full mb-8">
-          <div className="bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm rounded-xl shadow-lg border border-gray-200 dark:border-gray-700">
+          <div className="relative bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm rounded-xl shadow-lg border border-gray-200 dark:border-gray-700">
+
+            <div className="absolute top-6 right-6 md:top-8 md:right-8">
+              <button
+                type="button"
+                onClick={toggleModuleLock}
+                className="inline-flex items-center justify-center w-9 h-9 rounded-full border bg-gray-100/60 dark:bg-gray-700/40 border-gray-300/40 dark:border-gray-600/40 text-gray-600 dark:text-gray-300 hover:bg-gray-200/60 dark:hover:bg-gray-600/50 transition-colors"
+                aria-pressed={moduleLockEnabled}
+                aria-label={moduleLockEnabled ? 'Lock modules (progress gating on)' : 'Unlock modules (progress gating off)'}
+                title={moduleLockEnabled ? 'Lock modules (progress gating on)' : 'Unlock modules (progress gating off)'}
+              >
+                <ChartBarIcon className="w-5 h-5" />
+              </button>
+            </div>
+
             <div className="p-6 md:p-8">
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
                 <div className="hero-content">
+
                   <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 dark:text-gray-100 mb-4 text-left">
                     Interview Preparation Academy
                   </h1>
-                  <p className="text-lg md:text-xl text-gray-600 dark:text-gray-300 mb-6 text-left">
+                  <p className="text-lg md:text-xl text-gray-800 dark:text-gray-200 mb-6 text-left">
                     Master Technical Interviews with Structured Learning
                   </p>
-                  <p className="text-gray-600 dark:text-gray-300 mb-6 text-left">
+                  <p className="text-gray-800 dark:text-gray-200 mb-6 text-left">
                     Prepare systematically for technical interviews through our tier-based approach.
                     From foundational concepts to expert-level system design, build confidence with
                     comprehensive question banks and detailed explanations.
@@ -420,7 +446,7 @@ const InterviewPrepPage: React.FC = () => {
                   </div>
                 </div>
 
-                <div className="hero-visual flex justify-center">
+                <div className="hero-visual relative flex justify-center">
                   <div className="interview-path-visualization w-full max-w-md">
                     <svg viewBox="0 0 400 300" className="path-svg w-full h-auto">
                       <defs>
@@ -456,8 +482,8 @@ const InterviewPrepPage: React.FC = () => {
 
         {/* Search and Filter System */}
         <section className="w-full mb-8">
-          <div className="bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm rounded-xl shadow-lg border border-gray-200 dark:border-gray-700">
-            <div className="p-6">
+          <div className="glass-search-container">
+            <div className="p-5 md:p-6">
               <div className="search-container mb-4">
                 <div className="search-input-wrapper relative">
                   <input
@@ -465,72 +491,64 @@ const InterviewPrepPage: React.FC = () => {
                     placeholder="Search interview topics, technologies, or modules..."
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
-                    className="w-full px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:focus:ring-blue-500 dark:focus:border-blue-500 text-gray-900 dark:text-white"
+                    className="glass-search-input"
                   />
-                  <span className="absolute right-3 top-3 text-gray-400">🔍</span>
+                  <span className="absolute right-3 top-3 text-gray-700 dark:text-gray-300">🔍</span>
                 </div>
               </div>
 
               <div className="filters-container grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div className="filter-group">
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Tier Level</label>
-                  <select
-                    value={selectedTier || 'all'}
-                    onChange={(e) => setSelectedTier(e.target.value === 'all' ? null : e.target.value)}
-                    className="w-full px-3 py-2 bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:focus:ring-blue-500 dark:focus:border-blue-500 text-gray-900 dark:text-white"
-                  >
-                    <option value="all">All Tiers</option>
-                    <option value="foundational">🏗️ Foundational</option>
-                    <option value="core">⚙️ Core Technologies</option>
-                    <option value="specialized">💎 Specialized Skills</option>
-                    <option value="expert">🏆 Expert Level</option>
-                  </select>
+                  <div className="relative">
+                    <select
+                      value={selectedTier || 'all'}
+                      onChange={(e) => setSelectedTier(e.target.value === 'all' ? null : e.target.value)}
+                      className="w-full px-3 py-2 pr-10 appearance-none bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:focus:ring-blue-500 dark:focus:border-blue-500 text-gray-900 dark:text-white"
+                    >
+                      <option value="all">All Tiers</option>
+                      <option value="foundational">🏗️ Foundational</option>
+                      <option value="core">⚙️ Core Technologies</option>
+                      <option value="specialized">💎 Specialized Skills</option>
+                      <option value="expert">🏆 Expert Level</option>
+                    </select>
+                    <span className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-gray-700 dark:text-gray-300">▾</span>
+                  </div>
                 </div>
 
                 <div className="filter-group">
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Difficulty</label>
-                  <select
-                    value={selectedDifficulty || 'all'}
-                    onChange={(e) => setSelectedDifficulty(e.target.value === 'all' ? null : e.target.value)}
-                    className="w-full px-3 py-2 bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:focus:ring-blue-500 dark:focus:border-blue-500 text-gray-900 dark:text-white"
-                  >
-                    <option value="all">All Levels</option>
-                    <option value="Beginner">🌱 Beginner</option>
-                    <option value="Intermediate">🚀 Intermediate</option>
-                    <option value="Advanced">🔥 Advanced</option>
-                  </select>
+                  <div className="relative">
+                    <select
+                      value={selectedDifficulty || 'all'}
+                      onChange={(e) => setSelectedDifficulty(e.target.value === 'all' ? null : e.target.value)}
+                      className="w-full px-3 py-2 pr-10 appearance-none bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:focus:ring-blue-500 dark:focus:border-blue-500 text-gray-900 dark:text-white"
+                    >
+                      <option value="all">All Levels</option>
+                      <option value="Beginner">🌱 Beginner</option>
+                      <option value="Intermediate">🚀 Intermediate</option>
+                      <option value="Advanced">🔥 Advanced</option>
+                    </select>
+                    <span className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-gray-700 dark:text-gray-300">▾</span>
+                  </div>
                 </div>
 
                 <div className="filter-group">
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Category</label>
-                  <select
-                    value={selectedCategory || 'all'}
-                    onChange={(e) => setSelectedCategory(e.target.value === 'all' ? null : e.target.value)}
-                    className="w-full px-3 py-2 bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:focus:ring-blue-500 dark:focus:border-blue-500 text-gray-900 dark:text-white"
-                  >
-                    <option value="all">All Categories</option>
-                    <option value="frontend">🎨 Frontend</option>
-                    <option value="backend">🔧 Backend</option>
-                    <option value="database">🗄️ Database</option>
-                    <option value="devops">☁️ DevOps</option>
-                    <option value="general">📁 General</option>
-                  </select>
+                  <div className="relative">
+                    <select
+                      value={selectedCategory || 'all'}
+                      onChange={(e) => setSelectedCategory(e.target.value === 'all' ? null : e.target.value)}
+                      className="w-full px-3 py-2 pr-10 appearance-none bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:focus:ring-blue-500 dark:focus:border-blue-500 text-gray-900 dark:text-white"
+                    >
+                      <option value="all">All Categories</option>
+                      <option value="frontend">🎨 Frontend</option>
+                      <option value="backend">⚙️ Backend</option>
+                      <option value="database">🗄️ Database</option>
+                      <option value="devops">🔧 DevOps</option>
+                      <option value="general">📚 General</option>
+                    </select>
+                    <span className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-gray-700 dark:text-gray-300">▾</span>
+                  </div>
                 </div>
               </div>
-
-              {hasActiveFilters && (
-                <div className="filter-results mt-4 flex items-center justify-between">
-                  <span className="text-sm text-gray-600 dark:text-gray-400">
-                    Showing {Object.values(filteredTiers).reduce((sum, tier) => sum + tier.modules.length, 0)} of {totalModules} modules
-                  </span>
-                  <button
-                    onClick={clearFilters}
-                    className="px-3 py-1 text-sm bg-gray-200 dark:bg-gray-600 text-gray-800 dark:text-gray-200 rounded-lg hover:bg-gray-300 dark:hover:bg-gray-500 transition-colors"
-                  >
-                    Clear filters
-                  </button>
-                </div>
-              )}
             </div>
           </div>
         </section>
@@ -542,7 +560,7 @@ const InterviewPrepPage: React.FC = () => {
               <div className="max-w-3xl mx-auto">
                 <div className="text-6xl mb-4">🔍</div>
                 <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">No modules found</h3>
-                <p className="text-gray-600 dark:text-gray-300 mb-6">
+                <p className="text-gray-800 dark:text-gray-200 mb-6">
                   Try adjusting your search terms or filters to find what you&#39;re looking for.
                 </p>
                 <button
@@ -561,6 +579,8 @@ const InterviewPrepPage: React.FC = () => {
               tier={tier}
               tierKey={tierKey}
               isVisible={!hasActiveFilters || tier.modules.length > 0}
+              lockEnabled={moduleLockEnabled}
+              progress={progress as Record<string, ProgressData>}
             />
           ))}
         </div>
@@ -570,24 +590,33 @@ const InterviewPrepPage: React.FC = () => {
           <div className="bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm rounded-xl shadow-lg border border-gray-200 dark:border-gray-700">
             <div className="p-6">
               <h2 className="text-2xl font-bold text-center text-gray-900 dark:text-white mb-6">Quick Actions</h2>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                 <Link href="/" className="bg-gray-50 dark:bg-gray-700 p-6 rounded-lg border border-gray-200 dark:border-gray-600 text-center hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors">
-                  <span className="text-4xl block mb-2">🎓</span>
+                  <span className="text-5xl block mb-2">🎓</span>
                   <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-1">Learning Modules</h3>
-                  <p className="text-sm text-gray-600 dark:text-gray-400">Return to main learning curriculum and lessons</p>
+                  <p className="text-sm text-gray-800 dark:text-gray-200">Return to main learning curriculum and lessons</p>
                 </Link>
 
                 <Link href="/playground" className="bg-gray-50 dark:bg-gray-700 p-6 rounded-lg border border-gray-200 dark:border-gray-600 text-center hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors">
-                  <span className="text-4xl block mb-2">🔬</span>
+                  <span className="text-5xl block mb-2">🔬</span>
                   <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-1">GraphQL Playground</h3>
-                  <p className="text-sm text-gray-600 dark:text-gray-400">Practice with interactive GraphQL queries</p>
+                  <p className="text-sm text-gray-800 dark:text-gray-200">Practice with interactive GraphQL queries</p>
                 </Link>
 
                 <Link href="/animated-background-demo" className="bg-gray-50 dark:bg-gray-700 p-6 rounded-lg border border-gray-200 dark:border-gray-600 text-center hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors">
-                  <span className="text-4xl block mb-2">🎨</span>
+                  <span className="text-5xl block mb-2">🎨</span>
                   <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-1">Design Showcase</h3>
-                  <p className="text-sm text-gray-600 dark:text-gray-400">Explore our UI components and animations</p>
+                  <p className="text-sm text-gray-800 dark:text-gray-200">Explore our UI components and animations</p>
                 </Link>
+
+                <button
+                  onClick={exportProgressData}
+                  className="bg-gray-50 dark:bg-gray-700 p-6 rounded-lg border border-gray-200 dark:border-gray-600 text-center hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors"
+                >
+                  <span className="text-5xl block mb-2">📤</span>
+                  <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-1">Export Progress</h3>
+                  <p className="text-sm text-gray-800 dark:text-gray-200">Download progress, streaks, and achievements</p>
+                </button>
               </div>
             </div>
           </div>

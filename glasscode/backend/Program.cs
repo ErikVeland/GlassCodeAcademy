@@ -7,6 +7,7 @@ using System.Text.Json;
 using System.IO;
 using System.Collections.Generic;
 using Serilog;
+using Microsoft.AspNetCore.Http;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -50,6 +51,8 @@ builder.Services.AddScoped<backend.Services.ModuleSeedingService>();
 builder.Services.AddScoped<backend.Services.LessonSeedingService>();
 builder.Services.AddScoped<backend.Services.LessonMappingService>();
 builder.Services.AddScoped<backend.Services.QuizSeedingService>();
+// Ensure DataService is available via DI for services/controllers that depend on it
+builder.Services.AddSingleton<backend.Services.DataService>(sp => backend.Services.DataService.Instance);
 builder.Services.AddScoped<backend.Services.ContentValidationService>();
 builder.Services.AddScoped<backend.Services.AutomatedMigrationService>();
 
@@ -115,7 +118,7 @@ builder.Services.AddGraphQLServer()
     // Version Control GraphQL types
     .AddType<backend.GraphQL.VersionLessonType>()
     .AddType<backend.GraphQL.VersionInterviewQuestionType>()
-    .ModifyRequestOptions(opt => opt.IncludeExceptionDetails = true);
+    .ModifyRequestOptions(opt => opt.IncludeExceptionDetails = builder.Environment.IsDevelopment());
 
 var app = builder.Build();
 
@@ -149,11 +152,23 @@ var dataService = backend.Services.DataService.Instance;
 Log.Information("DataService initialized with {DotNetLessons} DotNet lessons", dataService.DotNetLessons.Count());
 
 // Run full automated content migration on startup
-Log.Information("Running full AutomatedMigrationService migration...");
+Log.Information("Checking whether automated migration is needed...");
 using (var scope = app.Services.CreateScope())
 {
-    var migrationService = scope.ServiceProvider.GetRequiredService<backend.Services.AutomatedMigrationService>();
-    await migrationService.PerformFullMigrationAsync();
+    var ctx = scope.ServiceProvider.GetRequiredService<backend.Data.GlassCodeDbContext>();
+    var hasAnyModules = await ctx.Modules.AnyAsync();
+    var hasAnyLessons = await ctx.Lessons.AnyAsync();
+    var hasAnyQuizzes = await ctx.LessonQuizzes.AnyAsync();
+    if (!hasAnyModules || !hasAnyLessons || !hasAnyQuizzes)
+    {
+        Log.Information("Running AutomatedMigrationService migration (database not fully populated)...");
+        var migrationService = scope.ServiceProvider.GetRequiredService<backend.Services.AutomatedMigrationService>();
+        await migrationService.PerformFullMigrationAsync();
+    }
+    else
+    {
+        Log.Information("Skipping AutomatedMigrationService migration; data already present.");
+    }
 }
 
 // Middleware to check for unlock parameter
@@ -166,10 +181,20 @@ app.Use(async (context, next) =>
     await next();
 });
 
-// Enable HTTPS redirection only outside development to avoid local fetch failures
-if (!app.Environment.IsDevelopment())
+// Enable HTTPS redirection only when HTTPS is configured to avoid warnings
+var httpsUrlsConfigured = (Environment.GetEnvironmentVariable("ASPNETCORE_URLS") ?? string.Empty)
+    .Contains("https://", StringComparison.OrdinalIgnoreCase);
+var httpsPortConfigured =
+    builder.Configuration.GetValue<int?>("ASPNETCORE_HTTPS_PORT") ??
+    builder.Configuration.GetValue<int?>("HttpsPort");
+
+if (!app.Environment.IsDevelopment() && (httpsUrlsConfigured || httpsPortConfigured.HasValue))
 {
     app.UseHttpsRedirection();
+}
+else
+{
+    Log.Warning("HTTPS redirection disabled: no HTTPS URL/port configured.");
 }
 
 // Ensure endpoint routing is set up before applying CORS
@@ -180,6 +205,14 @@ app.UseSerilogRequestLogging(opts =>
 {
     opts.MessageTemplate = "Handled {RequestMethod} {RequestPath} responded {StatusCode} in {Elapsed:0.0000} ms";
     opts.IncludeQueryInRequestPath = true;
+    opts.GetLevel = (httpContext, elapsed, ex) =>
+    {
+        if (httpContext.Request.Path.StartsWithSegments("/api/health"))
+            return Serilog.Events.LogEventLevel.Debug;
+        return ex != null
+            ? Serilog.Events.LogEventLevel.Error
+            : Serilog.Events.LogEventLevel.Information;
+    };
 });
 
 app.UseCors("AllowFrontend");
@@ -189,8 +222,35 @@ app.MapControllers();
 app.MapGraphQL("/api"); // Map GraphQL to /api for backward compatibility
 app.MapGraphQL("/graphql"); // Keep original GraphQL endpoint
 
-// Configure Banana Cake Pop with a default query
-app.MapBananaCakePop("/graphql-ui");
+// Protect write operations on database-backed endpoints with an admin token
+app.Use(async (context, next) =>
+{
+    var method = context.Request.Method;
+    if (method != HttpMethods.Get && method != HttpMethods.Head && method != HttpMethods.Options)
+    {
+        var path = context.Request.Path.Value ?? string.Empty;
+        if (path.StartsWith("/api/lessons-db") || path.StartsWith("/api/modules-db") || path.StartsWith("/api/LessonQuiz"))
+        {
+            var token = app.Configuration["AdminApiToken"] ?? Environment.GetEnvironmentVariable("ADMIN_API_TOKEN");
+            var authHeader = context.Request.Headers.Authorization.ToString();
+            var headerToken = context.Request.Headers["X-Admin-Token"].ToString();
+            var bearerToken = authHeader.StartsWith("Bearer ") ? authHeader.Substring("Bearer ".Length) : string.Empty;
+
+            if (string.IsNullOrEmpty(token) || (bearerToken != token && headerToken != token))
+            {
+                context.Response.StatusCode = StatusCodes.Status401Unauthorized;
+                await context.Response.WriteAsync("Unauthorized");
+                return;
+            }
+        }
+    }
+    await next();
+});
+// Configure Banana Cake Pop with a default query (development only)
+if (app.Environment.IsDevelopment())
+{
+    app.MapBananaCakePop("/graphql-ui");
+}
 
 // Health check endpoint
 app.MapGet("/api/health", () => {

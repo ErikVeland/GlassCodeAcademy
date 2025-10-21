@@ -73,12 +73,12 @@ public class LessonsDbControllerTests : IntegrationTestBase
             if (lessons != null && lessons.Length > 0)
             {
                 // Act - get specific lesson
-                var response = await Client.GetAsync($"/api/lessons-db/{lessons[0].Id}");
+                var detailResponse = await Client.GetAsync($"/api/lessons-db/{lessons[0].Id}");
 
                 // Assert
-                response.StatusCode.Should().Be(HttpStatusCode.OK);
+                detailResponse.StatusCode.Should().Be(HttpStatusCode.OK);
                 
-                var lessonContent = await response.Content.ReadAsStringAsync();
+                var lessonContent = await detailResponse.Content.ReadAsStringAsync();
                 lessonContent.Should().NotBeNullOrEmpty();
                 
                 Output.WriteLine($"Retrieved specific lesson by ID: {lessons[0].Id}");
@@ -87,8 +87,8 @@ public class LessonsDbControllerTests : IntegrationTestBase
         }
         
         // If no lessons exist, test with a non-existent ID
-        var response = await Client.GetAsync("/api/lessons-db/999999");
-        response.StatusCode.Should().Be(HttpStatusCode.NotFound);
+        var notFoundResponse = await Client.GetAsync("/api/lessons-db/999999");
+        notFoundResponse.StatusCode.Should().Be(HttpStatusCode.NotFound);
         
         Output.WriteLine("No lessons found in database, tested with non-existent ID");
     }

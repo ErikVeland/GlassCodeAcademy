@@ -123,41 +123,28 @@
 
   // Learning Tiers with tier-specific gradient backgrounds
   .learning-tiers {
-    margin-bottom: 3rem;
-
+    margin-bottom: 1.5rem;
+    
     .tier-section {
-      margin-bottom: 4rem;
-
-      &[data-tier="foundational"] .tier-container {
-        background: linear-gradient(135deg, #3B82F6, #06B6D4);
-        border: 1px solid rgba(59, 130, 246, 0.3);
-      }
-
-      &[data-tier="core"] .tier-container {
-        background: linear-gradient(135deg, #10B981, #059669);
-        border: 1px solid rgba(16, 185, 129, 0.3);
-      }
-
-      &[data-tier="specialized"] .tier-container {
-        background: linear-gradient(135deg, #8B5CF6, #7C3AED);
-        border: 1px solid rgba(139, 92, 246, 0.3);
-      }
-
-      &[data-tier="quality"] .tier-container {
-        background: linear-gradient(135deg, #F59E0B, #EF4444);
-        border: 1px solid rgba(245, 158, 11, 0.3);
-      }
+      margin-bottom: 2rem;
     }
+  }
 
     .tier-container {
-      padding: 2rem;
+      padding: 1.5rem;
       border-radius: 1.5rem;
       color: white;
       backdrop-filter: blur(10px);
       box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
 
+      /* Restore tier-specific gradient backgrounds */
+      &.tier-foundational { background: var(--tier-foundational); }
+      &.tier-core { background: var(--tier-core); }
+      &.tier-specialized { background: var(--tier-specialized); }
+      &.tier-quality { background: var(--tier-quality); }
+      
       @media (max-width: 768px) {
-        padding: 1.5rem;
+        padding: 1rem;
       }
     }
 
@@ -644,7 +631,7 @@
         transition: all 0.2s ease;
         
         &:hover {
-          background: #2563EB;
+          background: rgba(255, 255, 255, 0.3);
           transform: translateY(-1px);
         }
       }
@@ -742,7 +729,6 @@
       }
     }
   }
-}
 
 // Animations
 @keyframes drawPath {

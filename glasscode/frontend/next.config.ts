@@ -21,7 +21,7 @@ const cspBase = [
   "form-action 'self'",
   "frame-ancestors 'self'",
   "object-src 'none'",
-  "upgrade-insecure-requests",
+  ...(IS_PROD ? ["upgrade-insecure-requests"] : []),
 ].join('; ');
 
 const cspReportOnly = IS_PROD
@@ -81,7 +81,10 @@ const nextConfig: NextConfig = {
       {
         source: '/(.*)',
         headers: [
-          { key: 'Strict-Transport-Security', value: 'max-age=31536000; includeSubDomains; preload' },
+          ...(IS_PROD
+            ? [{ key: 'Strict-Transport-Security', value: 'max-age=31536000; includeSubDomains; preload' }]
+            : []
+          ),
           { key: 'X-Content-Type-Options', value: 'nosniff' },
           { key: 'Referrer-Policy', value: 'strict-origin-when-cross-origin' },
           { key: 'Permissions-Policy', value: 'camera=(), microphone=(), geolocation=(), interest-cohort=(), browsing-topics=()' },

@@ -34,12 +34,14 @@ export default function Header() {
   const [isCoreOpen, setIsCoreOpen] = useState(false);
   const [isSpecializedOpen, setIsSpecializedOpen] = useState(false);
   const [isQualityOpen, setIsQualityOpen] = useState(false);
+  const [isExploreOpen, setIsExploreOpen] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
   const [tierGroups, setTierGroups] = useState<Record<string, TierGroup> | null>(null);
   const foundationalRef = useRef<HTMLDivElement>(null);
   const coreRef = useRef<HTMLDivElement>(null);
   const specializedRef = useRef<HTMLDivElement>(null);
   const qualityRef = useRef<HTMLDivElement>(null);
+  const exploreRef = useRef<HTMLDivElement>(null);
   const pathname = usePathname();
   const { getTierProgress } = useProgressTracking();
 
@@ -163,6 +165,7 @@ export default function Header() {
     setIsCoreOpen(false);
     setIsSpecializedOpen(false);
     setIsQualityOpen(false);
+    setIsExploreOpen(false);
   };
 
   const handleDropdownToggle = (tier: string) => {
@@ -181,6 +184,9 @@ export default function Header() {
         break;
       case 'quality':
         setIsQualityOpen(tier !== activeDropdown);
+        break;
+      case 'explore':
+        setIsExploreOpen(tier !== activeDropdown);
         break;
     }
   };
@@ -263,7 +269,7 @@ export default function Header() {
                 }`}
                 aria-expanded={isFoundationalOpen}
               >
-                <span className="mr-1">🏗️</span>
+                <span className="mr-2">🏗️</span>
                 <span>Foundation</span>
                 <div className="ml-1 flex items-center">
                   <span className="text-xs bg-primary text-primary-fg px-1.5 py-0.5 rounded-full mr-1">
@@ -275,7 +281,7 @@ export default function Header() {
                 </div>
               </button>
               {isFoundationalOpen && (
-                <div className="origin-top-left absolute left-0 mt-2 w-80 rounded-xl shadow-lg bg-surface/95 backdrop-blur-sm ring-1 ring-black ring-opacity-5 z-[9999] border border-border max-h-96 overflow-y-auto">
+                <div className="origin-top-left absolute left-0 top-full mt-2 w-80 rounded-xl shadow-lg bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm border border-gray-200 dark:border-gray-700 z-[9999]">
                   <div className="py-2 px-4" role="menu">
                     <div className="text-lg font-bold text-fg mb-2">
                       🏗️ {tierGroups.foundational.title}
@@ -284,32 +290,36 @@ export default function Header() {
                       {tierGroups.foundational.description}
                     </div>
                     {tierGroups.foundational.modules.map(module => (
-                      <div key={module.id} className="flex items-center space-x-2 mb-2">
-                        <Link
-                          href={module.lessonsPath}
-                          className={`${
-                            isActive(module.lessonsPath)
-                              ? 'bg-surface-alt text-primary'
-                              : 'text-muted hover:bg-surface-alt hover:text-primary'
-                          } block px-3 py-2 text-xs font-medium transition-colors duration-150 backdrop-blur-sm rounded flex-1 text-center focus:outline-none focus:ring-2 ring-focus ring-offset-2 ring-offset-bg`}
-                          role="menuitem"
-                          onClick={closeTierDropdowns}
-                          tabIndex={isFoundationalOpen ? 0 : -1}
-                        >
-                          📚 Lessons
-                        </Link>
-                        <Link
-                          href={module.quizPath}
-                          className={`${
-                            isActive(module.quizPath)
-                              ? 'bg-surface-alt text-primary'
-                              : 'text-muted hover:bg-surface-alt hover:text-primary'
-                          } block px-3 py-2 text-xs font-medium transition-colors duration-150 backdrop-blur-sm rounded flex-1 text-center focus:outline-none focus:ring-2 ring-focus ring-offset-2 ring-offset-bg`}
-                          role="menuitem"
-                          onClick={closeTierDropdowns}
-                        >
-                          🧪 Quiz
-                        </Link>
+                      <div key={module.id} className="mb-3">
+                        <div>
+                          <div className="text-sm text-fg font-medium truncate">{module.title}</div>
+                          <div className="mt-2 grid grid-cols-2 gap-2">
+                            <Link
+                              href={module.lessonsPath}
+                              className={`${isActive(module.lessonsPath)
+                                ? 'bg-surface-alt text-primary'
+                                : 'text-muted hover:bg-surface-alt hover:text-primary'
+                              } inline-flex items-center justify-center w-full px-3 py-2 text-xs font-medium transition-colors duration-150 rounded-lg`}
+                              role="menuitem"
+                              onClick={closeTierDropdowns}
+                              tabIndex={isFoundationalOpen ? 0 : -1}
+                            >
+                              <span className="mr-2">📚</span> Lessons
+                            </Link>
+                            <Link
+                              href={module.quizPath}
+                              className={`${isActive(module.quizPath)
+                                ? 'bg-surface-alt text-primary'
+                                : 'text-muted hover:bg-surface-alt hover:text-primary'
+                              } inline-flex items-center justify-center w-full px-3 py-2 text-xs font-medium transition-colors duration-150 rounded-lg`}
+                              role="menuitem"
+                              onClick={closeTierDropdowns}
+                            >
+                              <span className="mr-2">🧪</span> Quiz
+                            </Link>
+                          </div>
+                        </div>
+                        
                       </div>
                     ))}
                   </div>
@@ -327,10 +337,10 @@ export default function Header() {
                 }`}
                 aria-expanded={isCoreOpen}
               >
-                <span className="mr-1">⚙️</span>
+                <span className="mr-2">⚙️</span>
                 <span>Core</span>
                 <div className="ml-1 flex items-center">
-                  <span className="text-xs bg-success text-primary-fg px-1.5 py-0.5 rounded-full mr-1">
+                  <span className="text-xs bg-primary text-primary-fg px-1.5 py-0.5 rounded-full mr-1">
                     {getTierProgress('core')}%
                   </span>
                   <svg className={`h-4 w-4 transition-transform duration-200 ${isCoreOpen ? 'rotate-180' : ''}`} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
@@ -339,7 +349,7 @@ export default function Header() {
                 </div>
               </button>
               {isCoreOpen && (
-                <div className="origin-top-right absolute right-0 mt-2 w-80 rounded-xl shadow-lg bg-surface/95 backdrop-blur-sm ring-1 ring-black ring-opacity-5 z-[9999] border border-border max-h-96 overflow-y-auto">
+                <div className="origin-top-right absolute right-0 top-full mt-2 w-80 rounded-xl shadow-lg bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm border border-gray-200 dark:border-gray-700 z-[9999]">
                   <div className="py-2 px-4" role="menu">
                     <div className="text-lg font-bold text-fg mb-2">
                       ⚙️ {tierGroups.core.title}
@@ -348,31 +358,35 @@ export default function Header() {
                       {tierGroups.core.description}
                     </div>
                     {tierGroups.core.modules.map(module => (
-                      <div key={module.id} className="flex items-center space-x-2 mb-2">
-                        <Link
-                          href={module.lessonsPath}
-                          className={`${
-                            isActive(module.lessonsPath)
-                              ? 'bg-surface-alt text-primary'
-                              : 'text-muted hover:bg-surface-alt hover:text-primary'
-                          } block px-3 py-2 text-xs font-medium transition-colors duration-150 backdrop-blur-sm rounded flex-1 text-center`}
-                          role="menuitem"
-                          onClick={closeTierDropdowns}
-                        >
-                          📚 Lessons
-                        </Link>
-                        <Link
-                          href={module.quizPath}
-                          className={`${
-                            isActive(module.quizPath)
-                              ? 'bg-surface-alt text-primary'
-                              : 'text-muted hover:bg-surface-alt hover:text-primary'
-                          } block px-3 py-2 text-xs font-medium transition-colors duration-150 backdrop-blur-sm rounded flex-1 text-center`}
-                          role="menuitem"
-                          onClick={closeTierDropdowns}
-                        >
-                          🧪 Quiz
-                        </Link>
+                      <div key={module.id} className="mb-3">
+                        <div>
+                          <div className="text-sm text-fg font-medium truncate">{module.title}</div>
+                          <div className="mt-2 grid grid-cols-2 gap-2">
+                            <Link
+                              href={module.lessonsPath}
+                              className={`${isActive(module.lessonsPath)
+                                ? 'bg-surface-alt text-primary'
+                                : 'text-muted hover:bg-surface-alt hover:text-primary'
+                              } inline-flex items-center justify-center w-full px-3 py-2 text-xs font-medium transition-colors duration-150 rounded-lg`}
+                              role="menuitem"
+                              onClick={closeTierDropdowns}
+                            >
+                              <span className="mr-2">📚</span> Lessons
+                            </Link>
+                            <Link
+                              href={module.quizPath}
+                              className={`${isActive(module.quizPath)
+                                ? 'bg-surface-alt text-primary'
+                                : 'text-muted hover:bg-surface-alt hover:text-primary'
+                              } inline-flex items-center justify-center w-full px-3 py-2 text-xs font-medium transition-colors duration-150 rounded-lg`}
+                              role="menuitem"
+                              onClick={closeTierDropdowns}
+                            >
+                              <span className="mr-2">🧪</span> Quiz
+                            </Link>
+                          </div>
+                        </div>
+                        
                       </div>
                     ))}
                   </div>
@@ -390,7 +404,7 @@ export default function Header() {
                 }`}
                 aria-expanded={isSpecializedOpen}
               >
-                <span className="mr-1">💎</span>
+                <span className="mr-2">💎</span>
                 <span>Specialized</span>
                 <div className="ml-1 flex items-center">
                   <span className="text-xs bg-primary text-primary-fg px-1.5 py-0.5 rounded-full mr-1">
@@ -402,7 +416,7 @@ export default function Header() {
                 </div>
               </button>
               {isSpecializedOpen && (
-                <div className="origin-top-right absolute right-0 mt-2 w-80 rounded-xl shadow-lg bg-surface/95 backdrop-blur-sm ring-1 ring-black ring-opacity-5 z-[9999] border border-border max-h-96 overflow-y-auto">
+                <div className="origin-top-right absolute right-0 top-full mt-2 w-80 rounded-xl shadow-lg bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm border border-gray-200 dark:border-gray-700 z-[9999]">
                   <div className="py-2 px-4" role="menu">
                     <div className="text-lg font-bold text-fg mb-2">
                       💎 {tierGroups.specialized.title}
@@ -411,31 +425,35 @@ export default function Header() {
                       {tierGroups.specialized.description}
                     </div>
                     {tierGroups.specialized.modules.map(module => (
-                      <div key={module.id} className="flex items-center space-x-2 mb-2">
-                        <Link
-                          href={module.lessonsPath}
-                          className={`${
-                            isActive(module.lessonsPath)
-                              ? 'bg-surface-alt text-primary'
-                              : 'text-muted hover:bg-surface-alt hover:text-primary'
-                          } block px-3 py-2 text-xs font-medium transition-colors duration-150 backdrop-blur-sm rounded flex-1 text-center`}
-                          role="menuitem"
-                          onClick={closeTierDropdowns}
-                        >
-                          📚 Lessons
-                        </Link>
-                        <Link
-                          href={module.quizPath}
-                          className={`${
-                            isActive(module.quizPath)
-                              ? 'bg-surface-alt text-primary'
-                              : 'text-muted hover:bg-surface-alt hover:text-primary'
-                          } block px-3 py-2 text-xs font-medium transition-colors duration-150 backdrop-blur-sm rounded flex-1 text-center`}
-                          role="menuitem"
-                          onClick={closeTierDropdowns}
-                        >
-                          🧪 Quiz
-                        </Link>
+                      <div key={module.id} className="mb-3">
+                        <div>
+                          <div className="text-sm text-fg font-medium truncate">{module.title}</div>
+                          <div className="mt-2 grid grid-cols-2 gap-2">
+                            <Link
+                              href={module.lessonsPath}
+                              className={`${isActive(module.lessonsPath)
+                                ? 'bg-surface-alt text-primary'
+                                : 'text-muted hover:bg-surface-alt hover:text-primary'
+                              } inline-flex items-center justify-center w-full px-3 py-2 text-xs font-medium transition-colors duration-150 rounded-lg`}
+                              role="menuitem"
+                              onClick={closeTierDropdowns}
+                            >
+                              <span className="mr-2">📚</span> Lessons
+                            </Link>
+                            <Link
+                              href={module.quizPath}
+                              className={`${isActive(module.quizPath)
+                                ? 'bg-surface-alt text-primary'
+                                : 'text-muted hover:bg-surface-alt hover:text-primary'
+                              } inline-flex items-center justify-center w-full px-3 py-2 text-xs font-medium transition-colors duration-150 rounded-lg`}
+                              role="menuitem"
+                              onClick={closeTierDropdowns}
+                            >
+                              <span className="mr-2">🧪</span> Quiz
+                            </Link>
+                          </div>
+                        </div>
+                        
                       </div>
                     ))}
                   </div>
@@ -453,11 +471,11 @@ export default function Header() {
                 }`}
                 aria-expanded={isQualityOpen}
               >
-                <span className="mr-1">🧪</span>
+                <span className="mr-2">🧪</span>
                 <span>Quality</span>
                 <div className="ml-1 flex items-center">
-                  <span className="text-xs text-muted">
-                    {tierGroups.quality.modules.length} modules
+                  <span className="text-xs bg-primary text-primary-fg px-1.5 py-0.5 rounded-full mr-1">
+                    {getTierProgress('quality')}%
                   </span>
                   <svg className={`h-4 w-4 transition-transform duration-200 ${isQualityOpen ? 'rotate-180' : ''}`} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
                     <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
@@ -465,7 +483,7 @@ export default function Header() {
                 </div>
               </button>
               {isQualityOpen && (
-                <div className="origin-top-right absolute right-0 mt-2 w-80 rounded-xl shadow-lg bg-surface/95 backdrop-blur-sm ring-1 ring-black ring-opacity-5 z-[9999] border border-border max-h-96 overflow-y-auto">
+                <div className="origin-top-right absolute right-0 top-full mt-2 w-80 rounded-xl shadow-lg bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm border border-gray-200 dark:border-gray-700 z-[9999]">
                   <div className="py-2 px-4" role="menu">
                     <div className="text-lg font-bold text-fg mb-2">
                       🧪 {tierGroups.quality.title}
@@ -474,66 +492,66 @@ export default function Header() {
                       {tierGroups.quality.description}
                     </div>
                     {tierGroups.quality.modules.map(module => (
-                      <div key={module.id} className="flex items-center space-x-2 mb-2">
-                        <div className="flex flex-col flex-1">
-                          <div className="flex items-center justify-between">
+                      <div key={module.id} className="mb-3">
+                        <div>
+                          <div className="text-sm text-fg font-medium truncate">{module.title}</div>
+                          <div className="mt-2 grid grid-cols-2 gap-2">
                             <Link
                               href={module.lessonsPath}
-                              className={`${
-                                isActive(module.lessonsPath)
-                                  ? 'bg-surface-alt text-primary'
-                                  : 'text-muted hover:bg-surface-alt hover:text-primary'
-                              } block px-3 py-2 text-xs font-medium transition-colors duration-150 backdrop-blur-sm rounded flex-1 text-center`}
+                              className={`${isActive(module.lessonsPath)
+                                ? 'bg-surface-alt text-primary'
+                                : 'text-muted hover:bg-surface-alt hover:text-primary'
+                              } inline-flex items-center justify-center w-full px-3 py-2 text-xs font-medium transition-colors duration-150 rounded-lg`}
                               role="menuitem"
                               onClick={closeTierDropdowns}
                             >
-                              📚 Lessons
+                              <span className="mr-2">📚</span> Lessons
                             </Link>
                             <Link
                               href={module.quizPath}
-                              className={`${
-                                isActive(module.quizPath)
-                                  ? 'bg-surface-alt text-primary'
-                                  : 'text-muted hover:bg-surface-alt hover:text-primary'
-                              } block px-3 py-2 text-xs font-medium transition-colors duration-150 backdrop-blur-sm rounded flex-1 text-center`}
+                              className={`${isActive(module.quizPath)
+                                ? 'bg-surface-alt text-primary'
+                                : 'text-muted hover:bg-surface-alt hover:text-primary'
+                              } inline-flex items-center justify-center w-full px-3 py-2 text-xs font-medium transition-colors duration-150 rounded-lg`}
                               role="menuitem"
                               onClick={closeTierDropdowns}
                             >
-                              🧪 Quiz
+                              <span className="mr-2">🧪</span> Quiz
                             </Link>
                           </div>
-                          <span className="text-xs text-muted">
-                            {module.estimatedTime}
-                          </span>
                         </div>
-                        <div className="flex space-x-2">
-                          <Link
-                            href={module.lessonsPath}
-                            className={`${
-                              isActive(module.lessonsPath)
-                                ? 'bg-surface-alt text-primary'
-                                : 'text-muted hover:bg-surface-alt hover:text-primary'
-                            } block px-3 py-2 text-xs font-medium transition-colors duration-150 backdrop-blur-sm rounded flex-1 text-center`}
-                            role="menuitem"
-                            onClick={closeTierDropdowns}
-                          >
-                            📚 Lessons
-                          </Link>
-                          <Link
-                            href={module.quizPath}
-                            className={`${
-                              isActive(module.quizPath)
-                                ? 'bg-surface-alt text-primary'
-                                : 'text-muted hover:bg-surface-alt hover:text-primary'
-                            } block px-3 py-2 text-xs font-medium transition-colors duration-150 backdrop-blur-sm rounded flex-1 text-center`}
-                            role="menuitem"
-                            onClick={closeTierDropdowns}
-                          >
-                            🧪 Quiz
-                          </Link>
-                        </div>
+                        
                       </div>
                     ))}
+                  </div>
+                </div>
+              )}
+            </div>
+            {/* Explore Dropdown */}
+            <div className="relative" ref={exploreRef} data-tier="explore">
+              <button
+                onClick={() => handleDropdownToggle('explore')}
+                onKeyDown={(e) => handleDropdownKeyDown(e, 'explore')}
+                className={`inline-flex items-center px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200 focus:outline-none focus:ring-2 ring-focus ring-offset-2 ring-offset-bg ${isExploreOpen ? 'bg-surface-alt text-primary' : 'text-fg hover:bg-surface-alt hover:text-primary'}`}
+                aria-expanded={isExploreOpen}
+              >
+                <span className="mr-1">🧭</span>
+                <span>Explore</span>
+                <svg className={`ml-1 h-4 w-4 transition-transform duration-200 ${isExploreOpen ? 'rotate-180' : ''}`} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                  <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
+                </svg>
+              </button>
+              {isExploreOpen && (
+                <div className="origin-top-right absolute right-0 mt-2 w-64 rounded-xl shadow-lg bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm border border-gray-200 dark:border-gray-700 z-[9999]">
+                  <div className="py-2 px-4" role="menu">
+                    <div className="text-lg font-bold text-fg mb-2">🧭 Explore</div>
+                    <div className="text-sm text-muted mb-4 border-b border-border pb-2">Quick access</div>
+                    <div className="space-y-2">
+                      <Link href="/interview-prep" className="block px-3 py-2 text-sm font-medium text-muted hover:bg-surface-alt hover:text-primary rounded transition-colors duration-150" role="menuitem" onClick={closeTierDropdowns}><span className="mr-2">🎯</span> Interview Prep</Link>
+                      <Link href="/stats" className="block px-3 py-2 text-sm font-medium text-muted hover:bg-surface-alt hover:text-primary rounded transition-colors duration-150" role="menuitem" onClick={closeTierDropdowns}><span className="mr-2">📊</span> Stats</Link>
+                      <Link href="/playground" className="block px-3 py-2 text-sm font-medium text-muted hover:bg-surface-alt hover:text-primary rounded transition-colors duration-150" role="menuitem" onClick={closeTierDropdowns}><span className="mr-2">🔬</span> Playground</Link>
+                      <Link href="/animated-background-demo" className="block px-3 py-2 text-sm font-medium text-muted hover:bg-surface-alt hover:text-primary rounded transition-colors duration-150" role="menuitem" onClick={closeTierDropdowns}><span className="mr-2">🎨</span> Design Showcase</Link>
+                    </div>
                   </div>
                 </div>
               )}
