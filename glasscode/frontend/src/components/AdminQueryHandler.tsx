@@ -13,7 +13,7 @@ export default function AdminQueryHandler() {
   const searchParams = useSearchParams();
 
   useEffect(() => {
-    const hasReset = searchParams.has('reset') || searchParams.has('rest');
+    const hasReset = !!searchParams && (searchParams.has('reset') || searchParams.has('rest'));
     if (typeof window !== 'undefined' && hasReset) {
       try {
         // Clear storages

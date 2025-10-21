@@ -612,18 +612,25 @@ namespace backend.Services
                     if (existingQuiz == null)
                     {
                         // If requested, reassign a globally existing duplicate to this target lesson
+                        // Only reassign within the same module; otherwise allow cross-module duplicates
                         if (reassignDuplicates)
                         {
                             var globalQuiz = await _context.LessonQuizzes
+                                .Include(q => q.Lesson)
                                 .FirstOrDefaultAsync(q => q.Question == question.Question);
                             if (globalQuiz != null && globalQuiz.LessonId != lesson.Id)
                             {
-                                globalQuiz.LessonId = lesson.Id;
-                                globalQuiz.IsPublished = true;
-                                globalQuiz.UpdatedAt = DateTime.UtcNow;
-                                _context.LessonQuizzes.Update(globalQuiz);
-                                Console.WriteLine($"   🔁 Reassigned quiz to lesson {lesson.Id}: {question.Question.Substring(0, Math.Min(50, question.Question.Length))}...");
-                                continue; // Skip adding a new record since we've reassigned
+                                var sourceLesson = globalQuiz.Lesson ?? await _context.Lessons.FindAsync(globalQuiz.LessonId);
+                                if (sourceLesson != null && sourceLesson.ModuleId == lesson.ModuleId)
+                                {
+                                    globalQuiz.LessonId = lesson.Id;
+                                    globalQuiz.IsPublished = true;
+                                    globalQuiz.UpdatedAt = DateTime.UtcNow;
+                                    _context.LessonQuizzes.Update(globalQuiz);
+                                    Console.WriteLine($"   🔁 Reassigned quiz within module {sourceLesson.ModuleId} to lesson {lesson.Id}: {question.Question.Substring(0, Math.Min(50, question.Question.Length))}...");
+                                    continue; // Skip adding a new record since we've reassigned
+                                }
+                                // Different module: do not reassign; proceed to add a new record below
                             }
                         }
 

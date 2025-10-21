@@ -3,6 +3,8 @@ using Microsoft.EntityFrameworkCore;
 using backend.Data;
 using backend.Models;
 using backend.DTOs;
+using backend.Services;
+using Microsoft.Extensions.Configuration;
 
 namespace backend.Controllers
 {
@@ -11,10 +13,14 @@ namespace backend.Controllers
     public class ModulesController : ControllerBase
     {
         private readonly GlassCodeDbContext _context;
+        private readonly AutomatedMigrationService _migrationService;
+        private readonly IConfiguration _configuration;
 
-        public ModulesController(GlassCodeDbContext context)
+        public ModulesController(GlassCodeDbContext context, AutomatedMigrationService migrationService, IConfiguration configuration)
         {
             _context = context;
+            _migrationService = migrationService;
+            _configuration = configuration;
         }
 
         // GET: api/modules
@@ -165,6 +171,32 @@ namespace backend.Controllers
                 .ToList();
 
             return Ok(quizQuestions);
+        }
+
+        // POST: api/modules/{slug}/backfill-quizzes
+        [HttpPost("{slug}/backfill-quizzes")]
+        public async Task<IActionResult> BackfillQuizzesForModule(string slug)
+        {
+            // Admin token validation (aligns with global middleware behavior)
+            var configToken = _configuration["AdminApiToken"] ?? Environment.GetEnvironmentVariable("ADMIN_API_TOKEN");
+            var authHeader = Request.Headers["Authorization"].ToString();
+            var headerToken = Request.Headers["X-Admin-Token"].ToString();
+            var bearerToken = authHeader.StartsWith("Bearer ") ? authHeader.Substring("Bearer ".Length) : string.Empty;
+
+            if (!string.IsNullOrEmpty(configToken) && (bearerToken != configToken && headerToken != configToken))
+            {
+                return Unauthorized("Unauthorized");
+            }
+
+            var result = await _migrationService.SeedQuizzesForModuleSlugAsync(slug);
+            if (result)
+            {
+                return Ok(new { success = true, module = slug, message = $"Backfill completed for '{slug}'" });
+            }
+            else
+            {
+                return BadRequest(new { success = false, module = slug, message = $"Backfill failed or no quizzes published for '{slug}'" });
+            }
         }
 
         private bool ModuleExists(int id)

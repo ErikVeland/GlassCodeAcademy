@@ -19,9 +19,10 @@ interface BreadcrumbProps {
 
 export function Breadcrumb({ items, className = '' }: BreadcrumbProps) {
   const pathname = usePathname();
+  const path = pathname ?? '';
   
   // Generate breadcrumb items from pathname if not provided
-  const breadcrumbItems = items || generateBreadcrumbFromPath(pathname);
+  const breadcrumbItems = items || generateBreadcrumbFromPath(path);
 
   return (
     <nav 

@@ -11,14 +11,15 @@ export default function AdminLayout({
   children: React.ReactNode;
 }) {
   const pathname = usePathname();
+  const path = pathname ?? '';
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const navigation = [
-    { name: 'Dashboard', href: '/admin', current: pathname === '/admin' },
-    { name: 'Modules', href: '/admin/modules', current: pathname.startsWith('/admin/modules') },
-    { name: 'Lessons', href: '/admin/lessons', current: pathname.startsWith('/admin/lessons') },
-    { name: 'Quizzes', href: '/admin/quizzes', current: pathname.startsWith('/admin/quizzes') },
-    { name: 'Users', href: '/admin/users', current: pathname.startsWith('/admin/users') },
+    { name: 'Dashboard', href: '/admin', current: path === '/admin' },
+    { name: 'Modules', href: '/admin/modules', current: path.startsWith('/admin/modules') },
+    { name: 'Lessons', href: '/admin/lessons', current: path.startsWith('/admin/lessons') },
+    { name: 'Quizzes', href: '/admin/quizzes', current: path.startsWith('/admin/quizzes') },
+    { name: 'Users', href: '/admin/users', current: path.startsWith('/admin/users') },
   ];
 
   return (
