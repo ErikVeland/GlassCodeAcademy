@@ -10,7 +10,7 @@ import { getModuleTheme } from '@/lib/moduleThemes';
 
 export const dynamic = 'force-dynamic';
 
-export async function generateStaticParams(): Promise<Array<{ shortSlug: string }>> {
+export async function generateStaticParams(): Promise<{ shortSlug: string }[]> {
   if ((process.env.GC_CONTENT_MODE || '').toLowerCase() === 'db') {
     return [];
   }
@@ -21,11 +21,11 @@ export async function generateStaticParams(): Promise<Array<{ shortSlug: string 
 }
 
 type Props = {
-  params: Promise<{ shortSlug: string }>;
+  params: { shortSlug: string };
 };
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const { shortSlug } = await params;
+  const { shortSlug } = params;
   const currentModule = await contentRegistry.getModule(shortSlug);
   
   if (!currentModule) {
@@ -42,7 +42,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 export default async function ModulePage({ params }: Props) {
-  const { shortSlug } = await params;
+  const { shortSlug } = params;
   
   // Add error handling for content registry
   let currentModule: Module | null = null;
@@ -128,57 +128,12 @@ export default async function ModulePage({ params }: Props) {
           <div className="rounded-xl overflow-hidden">
             <div className={`h-2 ${theme.strip}`}></div>
             <div className="glass-morphism p-8">
-              <div className="flex items-start gap-6">
-                <div className="text-6xl" role="img" aria-label={`${currentModule.title} icon`}>
-                  {currentModule.icon}
-                </div>
-                
-                <div className="flex-1">
-                <div className="flex items-center gap-4 mb-4">
-                  <h1 className="text-4xl font-bold text-gray-900 dark:text-white">
-                    {currentModule.title}
-                  </h1>
-                  
-                  <span className={`
-                    px-3 py-1 rounded-full text-sm font-medium
-                    ${currentModule.difficulty === 'Beginner' ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200' :
-                      currentModule.difficulty === 'Intermediate' ? 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200' :
-                      'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200'}
-                  `}>
-                    {currentModule.difficulty}
-                  </span>
-                </div>
-                
-                <p className="text-xl text-gray-600 dark:text-gray-300 mb-6">
-                  {currentModule.description}
-                </p>
-                
-                <div className="flex flex-wrap gap-2 mb-6">
-                  {currentModule.technologies.map((tech) => (
-                    <span
-                      key={tech}
-                      className="px-3 py-1 bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200 rounded-full text-sm"
-                    >
-                      {tech}
-                    </span>
-                  ))}
-                </div>
-                
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm text-gray-600 dark:text-gray-400">
-                  <div>
-                    <span className="font-medium">Track:</span> {currentModule.track}
-                  </div>
-                  <div>
-                    <span className="font-medium">Tier:</span> {tier?.title}
-                  </div>
-                  <div>
-                    <span className="font-medium">Duration:</span> {currentModule.estimatedHours}h
-                  </div>
-                  <div>
-                    <span className="font-medium">Lessons:</span> {lessons?.length || 0}
-                  </div>
-                </div>
-              </div>
+              <h1 className="text-4xl font-bold text-gray-900 dark:text-white">
+                {currentModule.title}
+              </h1>
+              <p className="text-xl text-gray-600 dark:text-gray-300 mb-6">
+                {currentModule.description}
+              </p>
             </div>
           </div>
         </header>
