@@ -3,6 +3,8 @@ import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import { contentRegistry } from '@/lib/contentRegistry';
 import type { Module, Lesson, Quiz } from '@/lib/contentRegistry';
+import { ui, classes } from '@/lib/ui';
+import { getModuleTheme } from '@/lib/moduleThemes';
 
 
 
@@ -56,10 +58,16 @@ export default async function ModulePage({ params }: Props) {
       notFound();
     }
 
-    tier = await contentRegistry.getTier(currentModule.tier);
-    thresholds = await contentRegistry.checkModuleThresholds(currentModule.slug);
-    lessons = await contentRegistry.getModuleLessons(currentModule.slug);
-    quiz = await contentRegistry.getModuleQuiz(currentModule.slug);
+    const [tierResolved, thresholdsResolved, lessonsResolved, quizResolved] = await Promise.all([
+      contentRegistry.getTier(currentModule.tier),
+      contentRegistry.checkModuleThresholds(currentModule.slug),
+      contentRegistry.getModuleLessons(currentModule.slug),
+      contentRegistry.getModuleQuiz(currentModule.slug),
+    ]);
+    tier = tierResolved;
+    thresholds = thresholdsResolved as typeof thresholds;
+    lessons = lessonsResolved;
+    quiz = quizResolved;
   } catch (error) {
     console.error('Error loading module data:', error);
     // Return a more graceful error page
@@ -89,6 +97,8 @@ export default async function ModulePage({ params }: Props) {
     );
   }
 
+  const theme = getModuleTheme(currentModule!.slug);
+
   return (
     <>
       <div className="max-w-4xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
@@ -115,13 +125,15 @@ export default async function ModulePage({ params }: Props) {
 
         {/* Module Header */}
         <header className="mb-12">
-          <div className="glass-morphism p-8 rounded-xl">
-            <div className="flex items-start gap-6">
-              <div className="text-6xl" role="img" aria-label={`${currentModule.title} icon`}>
-                {currentModule.icon}
-              </div>
-              
-              <div className="flex-1">
+          <div className="rounded-xl overflow-hidden">
+            <div className={`h-2 ${theme.strip}`}></div>
+            <div className="glass-morphism p-8">
+              <div className="flex items-start gap-6">
+                <div className="text-6xl" role="img" aria-label={`${currentModule.title} icon`}>
+                  {currentModule.icon}
+                </div>
+                
+                <div className="flex-1">
                 <div className="flex items-center gap-4 mb-4">
                   <h1 className="text-4xl font-bold text-gray-900 dark:text-white">
                     {currentModule.title}
@@ -234,7 +246,7 @@ export default async function ModulePage({ params }: Props) {
                   </p>
                   <Link
                     href={currentModule.routes.lessons}
-                    className="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                    className={classes(ui.buttons.base, 'px-4 py-2', ui.buttons.lessons)}
                   >
                     Start Learning
                     <span className="ml-2">→</span>
@@ -276,7 +288,7 @@ export default async function ModulePage({ params }: Props) {
                   </p>
                   <Link
                     href={currentModule.routes.quiz}
-                    className="inline-flex items-center px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
+                    className={classes(ui.buttons.base, 'px-4 py-2', ui.buttons.quiz)}
                   >
                     Take Quiz
                     <span className="ml-2">🎯</span>

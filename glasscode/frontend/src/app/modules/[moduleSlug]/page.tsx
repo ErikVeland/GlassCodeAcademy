@@ -4,6 +4,8 @@ import Link from 'next/link';
 import BreadcrumbNavigation from '@/components/BreadcrumbNavigation';
 import { contentRegistry } from '@/lib/contentRegistry';
 import type { Module, Lesson, Quiz } from '@/lib/contentRegistry';
+import { ui, classes } from '@/lib/ui';
+import { getModuleTheme } from '@/lib/moduleThemes';
 
 interface ModulePageProps {
   params: Promise<{ moduleSlug: string }>;
@@ -61,10 +63,16 @@ export default async function ModulePage({ params }: ModulePageProps) {
       notFound();
     }
 
-    tier = await contentRegistry.getTier(currentModule.tier);
-    thresholds = await contentRegistry.checkModuleThresholds(currentModule.slug);
-    lessons = await contentRegistry.getModuleLessons(currentModule.slug);
-    quiz = await contentRegistry.getModuleQuiz(currentModule.slug);
+    const [tierResolved, thresholdsResolved, lessonsResolved, quizResolved] = await Promise.all([
+      contentRegistry.getTier(currentModule.tier),
+      contentRegistry.checkModuleThresholds(currentModule.slug),
+      contentRegistry.getModuleLessons(currentModule.slug),
+      contentRegistry.getModuleQuiz(currentModule.slug),
+    ]);
+    tier = tierResolved;
+    thresholds = thresholdsResolved as typeof thresholds;
+    lessons = lessonsResolved;
+    quiz = quizResolved;
   } catch (error) {
     console.error('Error loading module data:', error);
     // Return a more graceful error page
@@ -94,6 +102,8 @@ export default async function ModulePage({ params }: ModulePageProps) {
     );
   }
 
+  const theme = getModuleTheme(currentModule!.slug);
+
   return (
     <>
       <div className="max-w-4xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
@@ -102,55 +112,58 @@ export default async function ModulePage({ params }: ModulePageProps) {
 
         {/* Module Header */}
         <header className="mb-12">
-          <div className="glass-morphism p-8 rounded-xl">
-            <div className="flex items-start gap-6">
-              <div className="text-6xl" role="img" aria-label={`${currentModule.title} icon`}>
-                {currentModule.icon}
-              </div>
-              
-              <div className="flex-1">
-                <div className="flex items-center gap-4 mb-4">
-                  <h1 className="text-4xl font-bold text-gray-900 dark:text-white">
-                    {currentModule.title}
-                  </h1>
-                  
-                  <span className={`
-                    px-3 py-1 rounded-full text-sm font-medium
-                    ${currentModule.difficulty === 'Beginner' ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200' :
-                      currentModule.difficulty === 'Intermediate' ? 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200' :
-                      'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200'}
-                  `}>
-                    {currentModule.difficulty}
-                  </span>
+          <div className="rounded-xl overflow-hidden">
+            <div className={`h-2 ${theme.strip}`}></div>
+            <div className="glass-morphism p-8">
+              <div className="flex items-start gap-6">
+                <div className="text-6xl" role="img" aria-label={`${currentModule.title} icon`}>
+                  {currentModule.icon}
                 </div>
                 
-                <p className="text-xl text-gray-600 dark:text-gray-300 mb-6">
-                  {currentModule.description}
-                </p>
-                
-                <div className="flex flex-wrap gap-2 mb-6">
-                  {currentModule.technologies.map((tech) => (
-                    <span
-                      key={tech}
-                      className="px-3 py-1 bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200 rounded-full text-sm"
-                    >
-                      {tech}
+                <div className="flex-1">
+                  <div className="flex items-center gap-4 mb-4">
+                    <h1 className="text-4xl font-bold text-gray-900 dark:text-white">
+                      {currentModule.title}
+                    </h1>
+                    
+                    <span className={`
+                      px-3 py-1 rounded-full text-sm font-medium
+                      ${currentModule.difficulty === 'Beginner' ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200' :
+                        currentModule.difficulty === 'Intermediate' ? 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200' :
+                        'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200'}
+                    `}>
+                      {currentModule.difficulty}
                     </span>
-                  ))}
-                </div>
-                
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm text-gray-600 dark:text-gray-400">
-                  <div>
-                    <span className="font-medium">Track:</span> {currentModule.track}
                   </div>
-                  <div>
-                    <span className="font-medium">Tier:</span> {tier?.title}
+                  
+                  <p className="text-xl text-gray-600 dark:text-gray-300 mb-6">
+                    {currentModule.description}
+                  </p>
+                  
+                  <div className="flex flex-wrap gap-2 mb-6">
+                    {currentModule.technologies.map((tech) => (
+                      <span
+                        key={tech}
+                        className="px-3 py-1 bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200 rounded-full text-sm"
+                      >
+                        {tech}
+                      </span>
+                    ))}
                   </div>
-                  <div>
-                    <span className="font-medium">Duration:</span> {currentModule.estimatedHours}h
-                  </div>
-                  <div>
-                    <span className="font-medium">Lessons:</span> {lessons?.length || 0}
+                  
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm text-gray-600 dark:text-gray-400">
+                    <div>
+                      <span className="font-medium">Track:</span> {currentModule.track}
+                    </div>
+                    <div>
+                      <span className="font-medium">Tier:</span> {tier?.title}
+                    </div>
+                    <div>
+                      <span className="font-medium">Duration:</span> {currentModule.estimatedHours}h
+                    </div>
+                    <div>
+                      <span className="font-medium">Lessons:</span> {lessons?.length || 0}
+                    </div>
                   </div>
                 </div>
               </div>
@@ -221,7 +234,7 @@ export default async function ModulePage({ params }: ModulePageProps) {
                   </p>
                   <Link
                     href={currentModule.routes.lessons}
-                    className="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                    className={classes(ui.buttons.base, 'px-4 py-2', ui.buttons.lessons)}
                   >
                     Start Learning
                     <span className="ml-2">→</span>
@@ -263,7 +276,7 @@ export default async function ModulePage({ params }: ModulePageProps) {
                   </p>
                   <Link
                     href={currentModule.routes.quiz}
-                    className="inline-flex items-center px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
+                    className={classes(ui.buttons.base, 'px-4 py-2', ui.buttons.quiz)}
                   >
                     Take Quiz
                     <span className="ml-2">🎯</span>

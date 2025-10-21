@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { contentRegistry, type Module, type Quiz, type ProgrammingQuestion } from '@/lib/contentRegistry';
 import QuizLayout from '@/components/QuizLayout';
+import { ui, classes } from '@/lib/ui';
 
 interface QuizPageProps {
   params: Promise<{ moduleSlug: string }>;
@@ -369,7 +370,7 @@ export default function QuizPage({ params }: QuizPageProps) {
             <div className="flex justify-center">
               <button
                 onClick={handleStartQuiz}
-                className="inline-flex items-center px-8 py-4 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors text-lg font-medium"
+                className={classes(ui.buttons.base, 'px-8 py-4 text-lg font-medium', ui.buttons.quiz)}
               >
                 Start Quiz
                 <span className="ml-2">🎯</span>
@@ -407,7 +408,7 @@ export default function QuizPage({ params }: QuizPageProps) {
         {thresholds?.lessonsValid && (
           <Link
             href={currentModule.routes.lessons}
-            className="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+            className={classes(ui.buttons.base, 'px-4 py-2', ui.buttons.lessons)}
           >
             Review Lessons
             <span className="ml-2">📚</span>

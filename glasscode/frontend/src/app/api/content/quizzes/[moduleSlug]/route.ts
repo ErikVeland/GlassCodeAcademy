@@ -1,6 +1,7 @@
 // Use the Web Request type to satisfy Next.js route handler typing
 import { normalizeQuestion } from '@/lib/textNormalization';
 import { getApiBaseStrict } from '@/lib/urlUtils';
+/* eslint-disable @typescript-eslint/no-unused-vars */
 
 // Removed GraphQL fetching. API now serves only local quiz content.
 
@@ -95,14 +96,7 @@ export async function GET(request: Request, context: { params: Promise<{ moduleS
     const moduleSlug = SHORT_SLUG_TO_MODULE_SLUG[inputSlug] || inputSlug;
     console.log('Resolved to module slug:', moduleSlug);
     
-    // Try database first
-    let quiz = await fetchQuizFromDatabase(moduleSlug);
-
-    // If database returned no questions, fall back to static JSON
-    if (!Array.isArray(quiz.questions) || quiz.questions.length === 0) {
-      console.log(`No DB quizzes for ${moduleSlug}. Falling back to JSON.`);
-      quiz = await fetchQuizFallbackFromJson(request, moduleSlug);
-    }
+    const quiz = await fetchQuizFromDatabase(moduleSlug);
     
     const normalizedQuestions = Array.isArray(quiz.questions)
       ? (quiz.questions as unknown[]).map((q) => normalizeQuestion(q))

@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getApiBaseStrict } from '@/lib/urlUtils';
+/* eslint-disable @typescript-eslint/no-unused-vars */
 
 // Database-based lesson loading function
 async function fetchLessonsFromDatabase(moduleSlug: string) {
@@ -100,20 +101,8 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ modu
   const { moduleSlug } = await params;
   const actualSlug = SHORT_SLUG_TO_MODULE_SLUG[moduleSlug] || moduleSlug;
 
-  // Try database mode first if GC_CONTENT_MODE is 'db'
-  const contentMode = (process.env.GC_CONTENT_MODE || 'file').toLowerCase();
-  let lessons: unknown[] = [];
-
-  if (contentMode === 'db') {
-    lessons = await fetchLessonsFromDatabase(actualSlug);
-  }
-
-  // Fallback to file-based lessons if DB loading produced no results
-  if (!lessons || lessons.length === 0) {
-    lessons = await fetchLessonsFromFiles(req, actualSlug);
-  }
-
-  return NextResponse.json(lessons);
+  const lessons = await fetchLessonsFromDatabase(actualSlug);
+  return NextResponse.json(Array.isArray(lessons) ? lessons : []);
 }
 
 export const runtime = 'edge';

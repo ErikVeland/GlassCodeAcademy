@@ -301,19 +301,7 @@ namespace backend.Services
             try
             {
                 LessonData? lessonData = null;
-                try
-                {
-                    lessonData = JsonSerializer.Deserialize<LessonData>(lessonElement.GetRawText(), new JsonSerializerOptions
-                    {
-                        PropertyNameCaseInsensitive = true
-                    });
-                }
-                catch (JsonException jsonEx)
-                {
-                    Console.WriteLine($"   ⚠️ Typed lesson deserialization failed: {jsonEx.Message}. Using tolerant parsing.");
-                }
-
-                // Helpers for tolerant extraction
+                
                 string? GetString(JsonElement root, string name)
                 {
                     if (root.TryGetProperty(name, out var el))
