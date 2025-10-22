@@ -184,6 +184,7 @@ coverage/
 
 # Test results
 glasscode/backend.Tests/TestResults/
+TestResults/
 
 # Package managers
 // package-lock.json - commented out as it's needed for builds
