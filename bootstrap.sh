@@ -247,6 +247,13 @@ preflight_checks() {
     fi
 }
 
+# Function to stop running services like update.sh does
+stop_running_services() {
+    log "⏹️  Stopping any running services..."
+    systemctl stop ${APP_NAME}-frontend ${APP_NAME}-dotnet 2>/dev/null || true
+    log "✅ Services stopped"
+}
+
 is_service_running() {
     systemctl is-active --quiet "$1"
 }
@@ -358,7 +365,10 @@ preflight_checks
 
 log "🔍 Validating prerequisites..."
 
-### 2. Create deploy user if not exists
+### 2. Stop any running services (like update.sh does)
+stop_running_services
+
+### 3. Create deploy user if not exists
 log "👤 Setting up deploy user..."
 if ! id "$DEPLOY_USER" &>/dev/null; then
     log "🔧 Creating deploy user..."
@@ -369,7 +379,7 @@ else
     log "✅ Deploy user already exists"
 fi
 
-### 3. Install base packages
+### 4. Install base packages
 log "📦 Installing base packages..."
 apt-get update
 apt-get install -y \
@@ -378,7 +388,7 @@ apt-get install -y \
     nginx certbot python3-certbot-nginx ufw fail2ban
 log "✅ Base packages installed"
 
-### 3.5 Install and configure PostgreSQL (server)
+### 4.5 Install and configure PostgreSQL (server)
 log "🐘 Installing PostgreSQL server..."
 apt-get update
 apt-get install -y postgresql postgresql-contrib || {
@@ -581,7 +591,6 @@ if [ "$FRONTEND_ONLY" -eq 0 ]; then
 
     # Create and start REAL backend service before frontend build
     log "⚙️  Creating backend systemd service (real backend)..."
-    systemctl stop ${APP_NAME}-dotnet 2>/dev/null || true
     log "🔌 Port 8080 preflight: checking for conflicts..."
     # Avoid grep in pipeline under pipefail; parse PIDs with sed directly
     CONFLICT_PIDS=$(ss -tulpn 2>/dev/null | sed -n 's/.*:8080.*pid=\([0-9]\+\).*/\1/p' | sort -u)
@@ -639,6 +648,7 @@ while [[ $ATTEMPT -le $MAX_ATTEMPTS ]]; do
     MODULES_JSON=$(timeout 10 curl -s http://localhost:8080/api/modules-db || true)
     LESSONS_JSON=$(timeout 10 curl -s http://localhost:8080/api/lessons-db || true)
     QUIZZES_JSON=$(timeout 10 curl -s http://localhost:8080/api/LessonQuiz || true)
+
     if echo "$MODULES_JSON" | jq -e 'type=="array" and length>0' >/dev/null 2>&1 \
        && echo "$LESSONS_JSON" | jq -e 'type=="array" and length>0' >/dev/null 2>&1 \
        && echo "$QUIZZES_JSON" | jq -e 'type=="array" and length>0' >/dev/null 2>&1; then
@@ -963,7 +973,6 @@ log "✅ Standalone assets staged"
 
 ### 11. Create systemd services
 log "⚙️  Creating systemd services..."
-systemctl stop ${APP_NAME}-frontend 2>/dev/null || true
 log "🔌 Frontend port $FRONTEND_PORT preflight: checking for conflicts..."
 # Avoid grep in pipeline under pipefail; parse PIDs with sed directly
 FRONTEND_CONFLICT_PIDS=$(ss -tulpn 2>/dev/null | sed -n "s/.*:$FRONTEND_PORT.*pid=\([0-9]\+\).*/\1/p" | sort -u)
@@ -1081,22 +1090,7 @@ fi
 ### 11.1 Start or restart services
 log "🚀 Starting services..."
 
-# Stop services in reverse order if they're running
-if [ "$FRONTEND_ONLY" -eq 0 ]; then
-    if systemctl is-active --quiet "${APP_NAME}-frontend"; then
-        log "🛑 Stopping frontend service..."
-        systemctl stop "${APP_NAME}-frontend" || true
-    fi
-    if systemctl is-active --quiet "${APP_NAME}-dotnet"; then
-        log "🛑 Stopping backend service..."
-        systemctl stop "${APP_NAME}-dotnet" || true
-    fi
-else
-    if systemctl is-active --quiet "${APP_NAME}-frontend"; then
-        log "🛑 Stopping frontend service..."
-        systemctl stop "${APP_NAME}-frontend" || true
-    fi
-fi
+# Services already stopped by stop_running_services function
 
 # Start services with enhanced error handling and parallel startup
 if [ "$FRONTEND_ONLY" -eq 0 ]; then
