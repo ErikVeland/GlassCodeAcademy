@@ -76,7 +76,25 @@ namespace backend.Tests.Services
             {
                 new Claim(ClaimTypes.NameIdentifier, "123")
             };
-            var expiredToken = _jwtService.GenerateToken(claims, DateTime.UtcNow.AddMinutes(-5));
+            
+            // Create a token that was valid in the past but is now expired
+            var now = DateTime.UtcNow;
+            var tokenHandler = new System.IdentityModel.Tokens.Jwt.JwtSecurityTokenHandler();
+            var key = new Microsoft.IdentityModel.Tokens.SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(_testSecret));
+            var signingCredentials = new Microsoft.IdentityModel.Tokens.SigningCredentials(key, Microsoft.IdentityModel.Tokens.SecurityAlgorithms.HmacSha256);
+            
+            var tokenDescriptor = new Microsoft.IdentityModel.Tokens.SecurityTokenDescriptor
+            {
+                Subject = new ClaimsIdentity(claims),
+                Expires = now.AddMinutes(-10), // Expired 10 minutes ago
+                NotBefore = now.AddMinutes(-20), // Was valid 20 minutes ago
+                Issuer = _testIssuer,
+                Audience = _testAudience,
+                SigningCredentials = signingCredentials
+            };
+
+            var token = tokenHandler.CreateToken(tokenDescriptor);
+            var expiredToken = tokenHandler.WriteToken(token);
 
             // Act
             var isValid = _jwtService.ValidateToken(expiredToken, out var principal);
@@ -127,7 +145,25 @@ namespace backend.Tests.Services
             {
                 new Claim(ClaimTypes.NameIdentifier, "123")
             };
-            var expiredToken = _jwtService.GenerateToken(claims, DateTime.UtcNow.AddMinutes(-5));
+            
+            // Create a token that was valid in the past but is now expired
+            var now = DateTime.UtcNow;
+            var tokenHandler = new System.IdentityModel.Tokens.Jwt.JwtSecurityTokenHandler();
+            var key = new Microsoft.IdentityModel.Tokens.SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(_testSecret));
+            var signingCredentials = new Microsoft.IdentityModel.Tokens.SigningCredentials(key, Microsoft.IdentityModel.Tokens.SecurityAlgorithms.HmacSha256);
+            
+            var tokenDescriptor = new Microsoft.IdentityModel.Tokens.SecurityTokenDescriptor
+            {
+                Subject = new ClaimsIdentity(claims),
+                Expires = now.AddMinutes(-10), // Expired 10 minutes ago
+                NotBefore = now.AddMinutes(-20), // Was valid 20 minutes ago
+                Issuer = _testIssuer,
+                Audience = _testAudience,
+                SigningCredentials = signingCredentials
+            };
+
+            var token = tokenHandler.CreateToken(tokenDescriptor);
+            var expiredToken = tokenHandler.WriteToken(token);
 
             // Act
             var isExpired = _jwtService.IsTokenExpired(expiredToken);
