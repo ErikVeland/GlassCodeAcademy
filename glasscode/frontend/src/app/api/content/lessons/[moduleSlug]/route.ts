@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getApiBaseStrict } from '@/lib/urlUtils';
 import { contentRegistry } from '@/lib/contentRegistry';
+import fs from 'node:fs/promises';
+import path from 'node:path';
 
 type FrontendLesson = {
   id: string;
@@ -19,8 +21,8 @@ type FrontendLesson = {
 // Database-based lesson loading function with fallback to local API during dev
 async function fetchLessonsFromDatabase(moduleSlug: string): Promise<FrontendLesson[]> {
   try {
-    const primaryBase = (() => { try { return getApiBaseStrict(); } catch { return 'http://127.0.0.1:8080'; } })();
-    const bases = Array.from(new Set([primaryBase, 'http://127.0.0.1:8080']));
+    const primaryBase = (() => { try { return getApiBaseStrict(); } catch { return 'http://127.0.0.1:8081'; } })();
+    const bases = Array.from(new Set([primaryBase, 'http://127.0.0.1:8081']));
 
     for (const apiBase of bases) {
       try {
@@ -116,10 +118,52 @@ async function fetchLessonsFromDatabase(moduleSlug: string): Promise<FrontendLes
       }
     }
 
-    // If nothing worked, return empty array
+    // If nothing worked, return empty array and let caller fallback to file
     return [];
   } catch (error) {
     console.error('Error loading lessons from database:', error);
+    return [];
+  }
+}
+
+const toString = (v: unknown, fallback = ''): string => (typeof v === 'string' ? v : fallback);
+const toNumber = (v: unknown, fallback = 0): number => (typeof v === 'number' ? v : fallback);
+const toArrayOfStrings = (v: unknown): string[] => (Array.isArray(v) ? v.filter((x) => typeof x === 'string') : []);
+
+async function fetchLessonsFromFile(moduleSlug: string): Promise<FrontendLesson[]> {
+  try {
+    const filePath = path.join(process.cwd(), '..', '..', 'content', 'lessons', `${moduleSlug}.json`);
+    const raw = await fs.readFile(filePath, 'utf-8');
+    const json = JSON.parse(raw) as unknown;
+    const items = Array.isArray(json) ? json : [];
+
+    const lessons: FrontendLesson[] = items.map((item: unknown) => {
+      const obj = item as Record<string, unknown>;
+      const difficultyRaw = toString(obj.difficulty, 'beginner').toLowerCase();
+      const difficulty = (difficultyRaw === 'advanced' || difficultyRaw === 'intermediate' || difficultyRaw === 'beginner') ? difficultyRaw : 'beginner';
+      const codeObj = obj.code as Record<string, unknown> | string | undefined;
+      const codeExample = typeof codeObj === 'string' ? codeObj : toString(codeObj?.example, '');
+      const codeExplanation = typeof codeObj === 'string' ? '' : toString(codeObj?.explanation, '');
+
+      return {
+        id: String(obj.id ?? ''),
+        title: toString(obj.title, ''),
+        intro: toString(obj.intro, ''),
+        topic: toString(obj.topic, ''),
+        tags: toArrayOfStrings(obj.tags),
+        estimatedMinutes: toNumber(obj.estimatedMinutes, 10),
+        objectives: toArrayOfStrings(obj.objectives),
+        codeExample,
+        codeExplanation,
+        additionalNotes: '',
+        difficulty,
+      } as FrontendLesson;
+    });
+
+    console.log(`[lessons] Loaded ${lessons.length} lessons from file for ${moduleSlug}`);
+    return lessons;
+  } catch (err) {
+    console.error(`[lessons] File fallback failed for ${moduleSlug}:`, err);
     return [];
   }
 }
@@ -129,8 +173,11 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ modu
   // Resolve short slugs to full module slugs using central mapping
   const resolvedSlug = (await contentRegistry.getModuleSlugFromShortSlug(moduleSlug)) || moduleSlug;
 
-  // Load DB lessons only - no fallback to file content
-  const lessons = await fetchLessonsFromDatabase(resolvedSlug);
+  // Load lessons from DB; if empty, fallback to file content
+  let lessons = await fetchLessonsFromDatabase(resolvedSlug);
+  if (!Array.isArray(lessons) || lessons.length === 0) {
+    lessons = await fetchLessonsFromFile(resolvedSlug);
+  }
 
   // Optional debug output in non-production
   const url = new URL(req.url);
@@ -141,7 +188,7 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ modu
       inputSlug: moduleSlug,
       resolvedSlug,
       lessonsCount: Array.isArray(lessons) ? lessons.length : 0,
-      source: 'database',
+      source: Array.isArray(lessons) && lessons.length > 0 ? 'file-or-db' : 'none',
     });
   }
 

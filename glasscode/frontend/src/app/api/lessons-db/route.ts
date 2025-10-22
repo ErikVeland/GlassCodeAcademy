@@ -5,7 +5,7 @@ export async function GET(req: NextRequest) {
   try {
     const url = new URL(req.url);
     const query = url.search || '';
-    const apiBase = (() => { try { return getApiBaseStrict(); } catch { return 'http://127.0.0.1:8080'; } })();
+    const apiBase = (() => { try { return getApiBaseStrict(); } catch { return 'http://127.0.0.1:8081'; } })();
     const backendUrl = `${apiBase}/api/lessons-db${query}`;
 
     console.log('[api/lessons-db] Proxying GET to:', backendUrl);

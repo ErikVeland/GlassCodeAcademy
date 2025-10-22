@@ -1,13 +1,15 @@
 import { normalizeQuestion } from '@/lib/textNormalization';
 import { getApiBaseStrict } from '@/lib/urlUtils';
 import { contentRegistry } from '@/lib/contentRegistry';
+import fs from 'node:fs/promises';
+import path from 'node:path';
 
 // Database-based quiz loading function
 async function fetchQuizFromDatabase(moduleSlug: string) {
   try {
     // Try multiple API base candidates in case of misconfiguration
-    const primaryBase = (() => { try { return getApiBaseStrict(); } catch { return 'http://127.0.0.1:8080'; } })();
-    const bases = Array.from(new Set([primaryBase, 'http://127.0.0.1:8080']));
+    const primaryBase = (() => { try { return getApiBaseStrict(); } catch { return 'http://127.0.0.1:8081'; } })();
+    const bases = Array.from(new Set([primaryBase, 'http://127.0.0.1:8081']));
 
     for (const apiBase of bases) {
       try {
@@ -26,7 +28,7 @@ async function fetchQuizFromDatabase(moduleSlug: string) {
         const questions = quizzes.map((quiz: {
           id: number;
           question: string;
-          choices?: string;
+          choices?: unknown;
           correctAnswer: number;
           explanation?: string;
           topic?: string;
@@ -34,18 +36,34 @@ async function fetchQuizFromDatabase(moduleSlug: string) {
           difficulty?: string;
           estimatedTime?: number;
           sort_order?: number;
-        }) => ({
-          id: quiz.id,
-          question: quiz.question,
-          choices: quiz.choices ? JSON.parse(quiz.choices) : [],
-          correctAnswer: quiz.correctAnswer,
-          explanation: quiz.explanation,
-          topic: quiz.topic || 'general',
-          type: quiz.questionType || 'multiple-choice',
-          difficulty: quiz.difficulty || 'Beginner',
-          estimatedTime: quiz.estimatedTime || 90,
-          order: quiz.sort_order || 0
-        }));
+        }) => {
+          let choices: string[] = [];
+          if (Array.isArray(quiz.choices)) {
+            choices = quiz.choices as string[];
+          } else if (typeof quiz.choices === 'string') {
+            const str = quiz.choices as string;
+            try {
+              const parsed = JSON.parse(str);
+              choices = Array.isArray(parsed) ? parsed : [];
+            } catch {
+              const split = str.split(/\r?\n|\||;/).map(s => s.trim()).filter(Boolean);
+              choices = split.length > 0 ? split : (str.trim() ? [str.trim()] : []);
+            }
+          }
+
+          return {
+            id: quiz.id,
+            question: quiz.question,
+            choices,
+            correctAnswer: quiz.correctAnswer,
+            explanation: quiz.explanation,
+            topic: quiz.topic || 'general',
+            type: quiz.questionType || 'multiple-choice',
+            difficulty: (quiz.difficulty as string) || 'Beginner',
+            estimatedTime: quiz.estimatedTime || 90,
+            order: quiz.sort_order || 0
+          };
+        });
         
         return { questions };
       } catch (innerErr) {
@@ -54,10 +72,25 @@ async function fetchQuizFromDatabase(moduleSlug: string) {
       }
     }
     
-    // If nothing worked, return empty array
-    return { questions: [] };
+    // If nothing worked, try loading from local file content
+    const fileQuiz = await fetchQuizFromFile(moduleSlug);
+    return fileQuiz.questions.length ? fileQuiz : { questions: [] };
   } catch (error) {
     console.error('Error fetching quiz from database:', error);
+    return { questions: [] };
+  }
+}
+
+async function fetchQuizFromFile(moduleSlug: string): Promise<{ questions: unknown[] }> {
+  try {
+    const filePath = path.join(process.cwd(), '..', '..', 'content', 'quizzes', `${moduleSlug}.json`);
+    const raw = await fs.readFile(filePath, 'utf-8');
+    const json = JSON.parse(raw);
+    const questions = Array.isArray(json.questions) ? (json.questions as unknown[]) : [];
+    console.log(`[quizzes] Loaded ${questions.length} questions from file for ${moduleSlug}`);
+    return { questions };
+  } catch (err) {
+    console.error(`[quizzes] File fallback failed for ${moduleSlug}:`, err);
     return { questions: [] };
   }
 }

@@ -5,7 +5,7 @@ export async function GET(req: NextRequest) {
   try {
     const url = new URL(req.url);
     const query = url.search || '';
-    const apiBase = (() => { try { return getApiBaseStrict(); } catch { return 'http://127.0.0.1:8080'; } })();
+    const apiBase = (() => { try { return getApiBaseStrict(); } catch { return 'http://127.0.0.1:8081'; } })();
     const backendUrl = `${apiBase}/api/modules-db${query}`;
     const res = await fetch(backendUrl);
     const text = await res.text();
@@ -20,7 +20,7 @@ export async function GET(req: NextRequest) {
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
-    const apiBase = (() => { try { return getApiBaseStrict(); } catch { return 'http://127.0.0.1:8080'; } })();
+    const apiBase = (() => { try { return getApiBaseStrict(); } catch { return 'http://127.0.0.1:8081'; } })();
     const res = await fetch(`${apiBase}/api/modules-db`, {
       method: 'POST',
       headers: {

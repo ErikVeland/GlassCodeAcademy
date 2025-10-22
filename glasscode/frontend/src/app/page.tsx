@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import Link from 'next/link';
-import { ArrowRightIcon, ChartBarIcon } from '@heroicons/react/24/outline';
+import { ArrowRightIcon, ChartBarIcon, LockClosedIcon } from '@heroicons/react/24/outline';
 
 import { contentRegistry } from '@/lib/contentRegistry';
 import type { Module, Tier } from '@/lib/contentRegistry';
@@ -65,6 +65,27 @@ const ModuleCard: React.FC<{
         {/* Decorative top strip using module brand gradient */}
         <div className={`absolute inset-x-0 top-0 h-[4px] ${theme.strip} z-10 pointer-events-none`} aria-hidden="true"></div>
 
+        {/* Achievements overlay in top-right */}
+        {hasAchievements && (
+          <div className="absolute top-3 right-3 z-20 flex gap-2">
+            {moduleAchievements.slice(0, 3).map((achievement, index) => (
+              <div
+                key={achievement.id}
+                className="w-6 h-6 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-full flex items-center justify-center border-2 border-white shadow-lg"
+                title={achievement.description}
+              >
+                <span className="text-xs text-white font-bold">
+                  {index === 0 ? '🏆' : index === 1 ? '🎖️' : '⭐'}
+                </span>
+              </div>
+            ))}
+            {moduleAchievements.length > 3 && (
+              <div className="w-6 h-6 bg-gradient-to-br from-purple-400 to-purple-600 rounded-full flex items-center justify-center border-2 border-white shadow-lg">
+                <span className="text-xs text-white font-bold">+{moduleAchievements.length - 3}</span>
+              </div>
+            )}
+          </div>
+        )}
         {/* Lock overlay for prerequisites */}
         {isLocked && (
           <div className="absolute inset-0 bg-gray-900/50 backdrop-blur-sm rounded-xl flex items-center justify-center z-5">
@@ -129,7 +150,7 @@ const ModuleCard: React.FC<{
             <div className="progress-bar" style={{ width: `${completionPercentage}%` }}></div>
           </div>
 
-          {hasAchievements && (
+          {false && hasAchievements && (
             <div className="achievements-list mt-3">
               {moduleAchievements.slice(0, 3).map((achievement, index) => (
                 <div
@@ -407,12 +428,12 @@ const HomePage: React.FC = () => {
         const modules = await contentRegistry.getModules();
         // Pre-fetch quizzes for the first few modules
         const firstModules = modules.slice(0, 3);
-        for (const module of firstModules) {
-          contentRegistry.getModuleQuiz(module.slug).catch(() => {
+        for (const mod of firstModules) {
+          contentRegistry.getModuleQuiz(mod.slug).catch(() => {
             // Ignore errors in pre-fetching
           });
         }
-      } catch (err) {
+      } catch {
         // Ignore errors in pre-fetching
       }
     };
@@ -520,12 +541,6 @@ const HomePage: React.FC = () => {
   const completedModules = getCompletedModulesCount();
   const totalModules = registryData.allModules.length;
 
-  // Get module status helper
-  const getModuleStatus = (moduleSlug: string): 'not-started' | 'in-progress' | 'completed' => {
-    const moduleProgress = progress[moduleSlug];
-    if (!moduleProgress) return 'not-started';
-    return moduleProgress.completionStatus;
-  };
 
   // Calculate current streak and recent achievements
   const recentAchievements = achievements
@@ -554,7 +569,11 @@ const HomePage: React.FC = () => {
                 aria-label={moduleLockEnabled ? 'Lock modules (progress gating on)' : 'Unlock modules (progress gating off)'}
                 title={moduleLockEnabled ? 'Lock modules (progress gating on)' : 'Unlock modules (progress gating off)'}
               >
-                <ChartBarIcon className="w-5 h-5" />
+                {moduleLockEnabled ? (
+                  <LockClosedIcon className="w-5 h-5" />
+                ) : (
+                  <ChartBarIcon className="w-5 h-5" />
+                )}
               </button>
             </div>
             <div className="p-6 md:p-8">

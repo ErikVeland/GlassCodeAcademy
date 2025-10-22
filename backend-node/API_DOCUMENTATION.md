@@ -190,6 +190,29 @@ GET /modules/{id}
 }
 ```
 
+### Get Module Quizzes by Slug
+```
+GET /modules/{slug}/quiz
+```
+
+**Response:**
+```json
+{
+  "success": true,
+  "data": [
+    {
+      "id": 1,
+      "question": "What does HTML stand for?",
+      "topic": "html",
+      "difficulty": "Beginner",
+      "choices": ["HyperText Markup Language", "HighText Machine Language", "HyperText and Links Markup Language", "None of these"],
+      "correctAnswer": 0,
+      "explanation": "HTML stands for HyperText Markup Language"
+    }
+  ]
+}
+```
+
 ## Lessons
 
 ### Get Lesson by ID

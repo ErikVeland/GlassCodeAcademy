@@ -207,9 +207,9 @@ class NodeJsApiClient {
   constructor() {
     try {
       this.baseUrl = getApiBaseStrict();
-    } catch (error) {
+    } catch {
       // Fallback to localhost in development
-      this.baseUrl = 'http://localhost:8080';
+      this.baseUrl = 'http://localhost:8081';
     }
   }
 

@@ -143,7 +143,7 @@ interface FileRegistry {
 
 async function synthesizeRegistryFromDatabase() {
   try {
-    const apiBase = (() => { try { return getApiBaseStrict(); } catch { return 'http://127.0.0.1:8080'; } })();
+    const apiBase = (() => { try { return getApiBaseStrict(); } catch { return 'http://127.0.0.1:8081'; } })();
     const res = await fetch(`${apiBase}/api/modules`, { cache: 'no-store' });
     if (!res.ok) throw new Error(`Failed to fetch modules from backend: ${res.status}`);
     const raw: unknown = await res.json();

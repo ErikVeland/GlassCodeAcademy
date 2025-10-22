@@ -340,7 +340,8 @@ export const useCourseProgress = (courseId: number) => {
     }
   }, [courseId, fetchProgress]);
 
-  const updateProgress = useCallback(async (data: Partial<UserLessonProgress>) => {
+  const updateProgress = useCallback(async (_data: Partial<UserLessonProgress>) => {
+    void _data;
     // This would need to be called with a specific lessonId
     // For now, we'll just refetch the progress
     fetchProgress();

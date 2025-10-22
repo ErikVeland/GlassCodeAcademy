@@ -591,7 +591,7 @@ class ContentRegistryLoader {
             timestamp: Date.now(),
             data: { ...quiz, questions: normalizedQuestions }
           }));
-        } catch (e) {
+        } catch {
           // Ignore storage errors
         }
         return { ...quiz, questions: normalizedQuestions };

@@ -7,7 +7,6 @@ import React, { useState } from 'react';
 import {
   useAuth,
   useCourses,
-  useCourse,
   useModules,
   useLessons,
   useQuizzes,
@@ -43,7 +42,7 @@ const LoginForm: React.FC = () => {
           setError(result.error?.message || 'Login failed');
         }
       }
-    } catch (err) {
+    } catch {
       setError('An unexpected error occurred');
     } finally {
       setLoading(false);
@@ -290,7 +289,7 @@ const LessonQuiz: React.FC<{ lessonId: number }> = ({ lessonId }) => {
             <div key={quiz.id} className="mb-3">
               <p className="text-xs mb-1">{quiz.question}</p>
               <div className="flex flex-wrap gap-2">
-                {quiz.choices?.map((choice, index) => (
+                {quiz.choices?.map((choice: string, index: number) => (
                   <label key={index} className="flex items-center text-xs">
                     <input
                       type="radio"
