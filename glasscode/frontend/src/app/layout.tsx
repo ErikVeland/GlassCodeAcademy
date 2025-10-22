@@ -45,25 +45,8 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         {/* Preconnect to external resources */}
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         {/* Inline script to avoid initial flash of wrong theme */}
-        <Script id="apply-theme" strategy="afterInteractive">
-          {`
-            try {
-              const match = document.cookie.match(/(?:^|; )gc-theme=([^;]+)/);
-              const cookieTheme = match ? decodeURIComponent(match[1]) : '';
-              const storedTheme = localStorage.getItem('theme');
-              const legacy = localStorage.getItem('darkMode');
-              let theme = storedTheme || (legacy === 'true' ? 'dark' : legacy === 'false' ? 'light' : 'system');
-              const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-              const html = document.documentElement;
-              const finalTheme = (cookieTheme === 'dark' || cookieTheme === 'light')
-                ? cookieTheme
-                : (theme === 'system' ? (prefersDark ? 'dark' : 'light') : theme);
-              html.classList.remove('light', 'dark');
-              html.classList.add(finalTheme);
-              html.setAttribute('data-theme', finalTheme);
-            } catch (e) { /* noop */ }
-          `}
-        </Script>
+        <Script src="/theme-init.js" strategy="beforeInteractive" />
+
 
       </head>
       <body className={"antialiased min-h-screen relative theme-base"}>

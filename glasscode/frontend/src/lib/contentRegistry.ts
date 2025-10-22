@@ -245,8 +245,21 @@ class ContentRegistryLoader {
             console.debug('[ContentRegistry] candidate ok; modules length =', Array.isArray(modules) ? modules.length : 'n/a');
             // Only accept responses that include non-empty modules
             if (Array.isArray(modules) && modules.length > 0) {
+              // Normalize routes to shortSlug-based paths to avoid legacy /modules links
+              const normalizedModules = await Promise.all(modules.map(async (m) => {
+                const slug = (m?.slug || '').toString();
+                const shortSlug = (await this.getShortSlugFromModuleSlug(slug)) || (slug.includes('-') ? slug.split('-')[0] : slug);
+                const routes = {
+                  overview: `/${shortSlug}`,
+                  lessons: `/${shortSlug}/lessons`,
+                  quiz: `/${shortSlug}/quiz`,
+                };
+                return { ...m, routes };
+              }));
+
+              const normalized = { ...(data as ContentRegistry), modules: normalizedModules };
               clearTimeout(timeoutId);
-              return data as ContentRegistry;
+              return normalized as ContentRegistry;
             }
             // If modules are empty, try next candidate
           }

@@ -116,7 +116,14 @@ export function DarkModeProvider({ children }: { children: React.ReactNode }) {
   }, [theme]);
 
   const cycleTheme = () => {
-    setTheme((prev) => (prev === 'system' ? 'dark' : prev === 'dark' ? 'light' : 'system'));
+    setTheme((prev) => {
+      if (prev === 'system') {
+        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        return prefersDark ? 'light' : 'dark';
+      }
+      if (prev === 'dark') return 'light';
+      return 'system';
+    });
   };
 
   return (
