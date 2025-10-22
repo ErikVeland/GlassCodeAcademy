@@ -13,7 +13,6 @@ jobs:
     env:
       GLASSCODE_CONTENT_PATH: ${{ github.workspace }}/content
       ASPNETCORE_URLS: http://127.0.0.1:8080
-      SKIP_AUTOMATED_MIGRATION: 1
 
     steps:
       - name: Checkout

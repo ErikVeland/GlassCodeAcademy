@@ -163,6 +163,47 @@ Based on architectural analysis, the following simplifications would reduce comp
 - Improved user experience for content creators
 - Elimination of JSON file editing requirements
 
+#### 5. .NET Backend Assessment and Alternative Recommendation
+
+**Current State**: ASP.NET Core 8.0 backend with complex multi-API surface approach
+**Issues Identified**:
+- Complex dependency injection setup with manual DbContext instantiation in some controllers
+- Hybrid JSON/database content management causing synchronization issues
+- Multiple GraphQL schemas for different technology tracks leading to code duplication
+- Complex CI/CD pipeline with multiple project files causing tooling conflicts
+- JSON parsing issues requiring custom converters for handling mixed data types
+- Over-engineered architecture with multiple backend technologies (ASP.NET Core, Laravel, Node.js)
+
+**Recommended Alternative**: Node.js/Express or Next.js API Routes
+
+**Benefits of Node.js/Express**:
+- Simpler development model with JavaScript/TypeScript consistency across frontend and backend
+- Reduced complexity in dependency management and deployment
+- Easier debugging and development workflow
+- Rich ecosystem of packages for rapid development
+- Better alignment with frontend team's skillset
+- Simpler CI/CD pipeline with single project configuration
+- More straightforward JSON handling without custom converters
+- Lower memory footprint and faster startup times
+- Easier containerization and scaling
+
+**Benefits of Next.js API Routes**:
+- Unified full-stack development experience
+- Serverless deployment capabilities
+- Built-in API routes eliminating need for separate backend
+- Automatic code splitting and optimization
+- Simplified deployment with platforms like Vercel
+- Shared codebase between frontend and backend
+- Built-in TypeScript support
+
+**Migration Strategy**:
+1. Create new Node.js/Express API with simplified data models
+2. Migrate existing database schema to work with new backend
+3. Implement REST API endpoints for all current functionality
+4. Replace GraphQL endpoints with REST equivalents
+5. Update frontend to use new API endpoints
+6. Decommission .NET backend services
+
 ---
 
 ## 🎯 Implementation Phases

@@ -78,7 +78,15 @@ if (string.IsNullOrWhiteSpace(connStr))
     connStr = $"Host={host};Database={name};Username={user};Password={pwd};Port={port}";
 }
 // Use computed connection string
-builder.Services.AddDbContext<GlassCodeDbContext>(options => options.UseNpgsql(connStr));
+if (builder.Environment.IsEnvironment("Testing"))
+{
+    // In tests, use an in-memory database to avoid external dependencies
+    builder.Services.AddDbContext<GlassCodeDbContext>(options => options.UseInMemoryDatabase("TestDb"));
+}
+else
+{
+    builder.Services.AddDbContext<GlassCodeDbContext>(options => options.UseNpgsql(connStr));
+}
 
 // Add authorization services
 builder.Services.AddAuthorization(options =>
@@ -229,7 +237,7 @@ Log.Information("DataService initialized with {DotNetLessons} DotNet lessons", d
 
 // Run full automated content migration on startup
 Log.Information("Checking whether automated migration is needed...");
-var skipAutoMigration = Environment.GetEnvironmentVariable("SKIP_AUTOMATED_MIGRATION") == "1";
+var skipAutoMigration = app.Environment.IsEnvironment("Testing") || Environment.GetEnvironmentVariable("SKIP_AUTOMATED_MIGRATION") == "1";
 if (skipAutoMigration)
 {
     Log.Information("SKIP_AUTOMATED_MIGRATION=1; skipping startup migration and DB checks.");
@@ -280,27 +288,39 @@ else
 }
 
 // Ensure content is ready before accepting requests
-using (var scope = app.Services.CreateScope())
+if (app.Environment.IsEnvironment("Testing"))
 {
-    var readinessService = scope.ServiceProvider.GetRequiredService<backend.Services.ReadinessService>();
-    var cancellationTokenSource = new CancellationTokenSource(TimeSpan.FromSeconds(60)); // 60 second timeout
-
-    Log.Information("Waiting for content to be ready...");
-    var isReady = await readinessService.CheckAndSetReadinessAsync();
-
-    if (!isReady)
+    using (var scope = app.Services.CreateScope())
     {
-        Log.Information("Content not ready, waiting for readiness...");
-        isReady = await readinessService.WaitForReadinessAsync(cancellationTokenSource.Token);
+        var readinessService = scope.ServiceProvider.GetRequiredService<backend.Services.ReadinessService>();
+        await readinessService.MarkAsReadyAsync();
+        Log.Information("Testing environment detected; skipping content readiness gating.");
     }
+}
+else
+{
+    using (var scope = app.Services.CreateScope())
+    {
+        var readinessService = scope.ServiceProvider.GetRequiredService<backend.Services.ReadinessService>();
+        var cancellationTokenSource = new CancellationTokenSource(TimeSpan.FromSeconds(60)); // 60 second timeout
 
-    if (isReady)
-    {
-        Log.Information("✅ Content is ready, proceeding to accept HTTP requests");
-    }
-    else
-    {
-        Log.Warning("⚠️ Content is not ready after timeout, but proceeding to accept HTTP requests");
+        Log.Information("Waiting for content to be ready...");
+        var isReady = await readinessService.CheckAndSetReadinessAsync();
+
+        if (!isReady)
+        {
+            Log.Information("Content not ready, waiting for readiness...");
+            isReady = await readinessService.WaitForReadinessAsync(cancellationTokenSource.Token);
+        }
+
+        if (isReady)
+        {
+            Log.Information("✅ Content is ready, proceeding to accept HTTP requests");
+        }
+        else
+        {
+            Log.Warning("⚠️ Content is not ready after timeout, but proceeding to accept HTTP requests");
+        }
     }
 }
 
