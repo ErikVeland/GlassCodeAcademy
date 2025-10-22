@@ -204,7 +204,7 @@ preflight_checks() {
     fi
 
     # Ensure base tools
-    REQUIRED_CMDS=(curl git jq unzip zip ss bc)
+    REQUIRED_CMDS=(curl git jq unzip zip ss bc lsof)
     MISSING_PKGS=()
     for cmd in "${REQUIRED_CMDS[@]}"; do
         if ! command_exists "$cmd"; then
@@ -215,7 +215,7 @@ preflight_checks() {
         log "📦 Installing missing base packages: ${MISSING_PKGS[*]}"
         apt-get update
         # Map command names to packages where needed
-        apt-get install -y curl git jq unzip zip iproute2 bc || true
+        apt-get install -y curl git jq unzip zip iproute2 bc lsof || true
     else
         log "✅ Base packages already present"
     fi
@@ -256,6 +256,42 @@ stop_running_services() {
 
 is_service_running() {
     systemctl is-active --quiet "$1"
+}
+
+# Proactively free ports used by backend/frontend to avoid bind conflicts
+cleanup_ports() {
+    local ports=("$@")
+    for port in "${ports[@]}"; do
+        [ -z "$port" ] && continue
+        log "🧹 Ensuring port $port is free..."
+        # Collect PIDs using ss
+        local pids
+        pids=$(ss -tulpn 2>/dev/null | sed -n "s/.*:$port.*pid=\([0-9]\+\).*/\1/p" | sort -u | tr '\n' ' ')
+        # Fallback to lsof if available
+        if command_exists lsof; then
+            local lsof_pids
+            lsof_pids=$(lsof -t -iTCP:"$port" -sTCP:LISTEN 2>/dev/null | tr '\n' ' ')
+            pids="$(echo "$pids $lsof_pids" | tr ' ' '\n' | sort -u | tr '\n' ' ')"
+        fi
+        if [ -n "$pids" ]; then
+            log "🛑 Terminating processes on port $port (PIDs: $pids)"
+            kill -TERM $pids 2>/dev/null || true
+            sleep 2
+            # Check again and force kill if necessary
+            local remaining
+            remaining=$(ss -tulpn 2>/dev/null | sed -n "s/.*:$port.*pid=\([0-9]\+\).*/\1/p" | sort -u | tr '\n' ' ')
+            if [ -n "$remaining" ]; then
+                log "🧨 Force killing remaining PIDs on port $port (PIDs: $remaining)"
+                kill -KILL $remaining 2>/dev/null || true
+                sleep 1
+            fi
+        fi
+        if ss -tulpn 2>/dev/null | grep -q ":$port"; then
+            log "⚠️  Port $port still appears busy after cleanup; continuing."
+        else
+            log "✅ Port $port appears free"
+        fi
+    done
 }
 
 # Function to ensure standalone directory exists and build if missing
@@ -390,6 +426,9 @@ log "🔍 Validating prerequisites..."
 
 ### 2. Stop any running services (like update.sh does)
 stop_running_services
+
+# Proactively free common ports used by backend/frontend
+cleanup_ports 8080 "$FRONTEND_PORT"
 
 ### 3. Create deploy user if not exists
 log "👤 Setting up deploy user..."

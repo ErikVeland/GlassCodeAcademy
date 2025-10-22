@@ -441,10 +441,10 @@ app.MapGet("/api/health", async (backend.Services.ReadinessService readinessServ
     };
 
     // In CI or test environments, we can be more lenient
-    var isCiEnvironment = Environment.GetEnvironmentVariable("CI") == "true" || 
+    var isCiEnvironment = Environment.GetEnvironmentVariable("CI") == "true" ||
                          Environment.GetEnvironmentVariable("GITHUB_ACTIONS") == "true";
-    
-    var isHealthy = isCiEnvironment ? 
+
+    var isHealthy = isCiEnvironment ?
         (dataStats.Values.Sum() > 0) : // At least some content
         dataStats.All(stat => stat.Value > 0); // All content in production
 

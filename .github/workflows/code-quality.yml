@@ -22,14 +22,12 @@ jobs:
         with:
           dotnet-version: "8.0.x"
 
-      - name: Restore backend
-        run: dotnet restore glasscode/backend/backend.csproj
-
       - name: Install dotnet-format
         run: dotnet tool install -g dotnet-format || dotnet tool update -g dotnet-format
 
       - name: Verify formatting
-        run: dotnet format glasscode/backend/backend.csproj --verify-no-changes --severity error
+        working-directory: glasscode/backend
+        run: dotnet format backend.csproj --verify-no-changes --severity error
 
   frontend-lint:
     name: Frontend ESLint Gate
