@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import Link from 'next/link';
 import { ArrowRightIcon, ChartBarIcon } from '@heroicons/react/24/outline';
 
@@ -366,6 +366,7 @@ const HomePage: React.FC = () => {
   const loadRegistryData = useCallback(async () => {
     try {
       setLoading(true);
+      // Pre-fetch commonly used data to improve performance
       const [tiers, modules] = await Promise.all([
         contentRegistry.getTiers(),
         contentRegistry.getModules()
@@ -396,9 +397,85 @@ const HomePage: React.FC = () => {
     }
   }, []);
 
+  // Pre-fetch data on component mount
   useEffect(() => {
     loadRegistryData();
+    
+    // Pre-fetch some quiz data in the background to improve performance
+    const prefetchQuizzes = async () => {
+      try {
+        const modules = await contentRegistry.getModules();
+        // Pre-fetch quizzes for the first few modules
+        const firstModules = modules.slice(0, 3);
+        for (const module of firstModules) {
+          contentRegistry.getModuleQuiz(module.slug).catch(() => {
+            // Ignore errors in pre-fetching
+          });
+        }
+      } catch (err) {
+        // Ignore errors in pre-fetching
+      }
+    };
+    
+    prefetchQuizzes();
   }, [loadRegistryData]);
+
+  // Memoize filtered tiers to prevent unnecessary re-renders
+  const filteredTiers = useMemo(() => {
+    if (!registryData) return {};
+    
+    return Object.entries(registryData.tiers).reduce((acc, [tierKey, tierData]) => {
+      let filteredModules = tierData.modules;
+
+      // Text search filter
+      if (searchQuery) {
+        filteredModules = filteredModules.filter(module =>
+          module.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          module.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          module.technologies.some(tech => tech.toLowerCase().includes(searchQuery.toLowerCase()))
+        );
+      }
+
+      // Tier filter
+      if (selectedTier && selectedTier !== 'all' && selectedTier !== tierKey) {
+        filteredModules = [];
+      }
+
+      // Difficulty filter
+      if (selectedDifficulty && selectedDifficulty !== 'all') {
+        filteredModules = filteredModules.filter(module =>
+          module.difficulty.toLowerCase() === selectedDifficulty.toLowerCase()
+        );
+      }
+
+      // Category filter
+      if (selectedCategory && selectedCategory !== 'all') {
+        filteredModules = filteredModules.filter(module =>
+          module.category === selectedCategory
+        );
+      }
+
+      // Status filter
+      const getModuleStatus = (moduleSlug: string): 'not-started' | 'in-progress' | 'completed' => {
+        const moduleProgress = progress[moduleSlug];
+        if (!moduleProgress) return 'not-started';
+        return moduleProgress.completionStatus;
+      };
+
+      if (selectedStatus && selectedStatus !== 'all') {
+        filteredModules = filteredModules.filter(module => {
+          const moduleStatus = getModuleStatus(module.slug);
+          return moduleStatus === selectedStatus;
+        });
+      }
+
+      if (filteredModules.length > 0) {
+        acc[tierKey] = { ...tierData, modules: filteredModules };
+      }
+
+      return acc;
+    }, {} as Record<string, TierData>);
+  }, [registryData, searchQuery, selectedTier, selectedDifficulty, selectedCategory, selectedStatus, progress]);
 
   if (loading) {
     return (
@@ -449,53 +526,6 @@ const HomePage: React.FC = () => {
     if (!moduleProgress) return 'not-started';
     return moduleProgress.completionStatus;
   };
-
-  // Filter modules based on search and filters
-  const filteredTiers = Object.entries(registryData.tiers).reduce((acc, [tierKey, tierData]) => {
-    let filteredModules = tierData.modules;
-
-    // Text search filter
-    if (searchQuery) {
-      filteredModules = filteredModules.filter(module =>
-        module.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        module.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        module.technologies.some(tech => tech.toLowerCase().includes(searchQuery.toLowerCase()))
-      );
-    }
-
-    // Tier filter
-    if (selectedTier && selectedTier !== 'all' && selectedTier !== tierKey) {
-      filteredModules = [];
-    }
-
-    // Difficulty filter
-    if (selectedDifficulty && selectedDifficulty !== 'all') {
-      filteredModules = filteredModules.filter(module =>
-        module.difficulty.toLowerCase() === selectedDifficulty.toLowerCase()
-      );
-    }
-
-    // Category filter
-    if (selectedCategory && selectedCategory !== 'all') {
-      filteredModules = filteredModules.filter(module =>
-        module.category === selectedCategory
-      );
-    }
-
-    // Status filter
-    if (selectedStatus && selectedStatus !== 'all') {
-      filteredModules = filteredModules.filter(module => {
-        const moduleStatus = getModuleStatus(module.slug);
-        return moduleStatus === selectedStatus;
-      });
-    }
-
-    if (filteredModules.length > 0) {
-      acc[tierKey] = { ...tierData, modules: filteredModules };
-    }
-
-    return acc;
-  }, {} as Record<string, TierData>);
 
   // Calculate current streak and recent achievements
   const recentAchievements = achievements

@@ -12,34 +12,50 @@ jobs:
     runs-on: ubuntu-latest
     env:
       GLASSCODE_CONTENT_PATH: ${{ github.workspace }}/content
-      ASPNETCORE_URLS: http://127.0.0.1:8080
       CI: true
+    services:
+      postgres:
+        image: postgres:13
+        env:
+          POSTGRES_PASSWORD: postgres
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Setup .NET SDK
-        uses: actions/setup-dotnet@v4
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
         with:
-          dotnet-version: '8.0.x'
+          node-version: '18.x'
+          cache: 'npm'
 
-      - name: Restore backend
-        run: dotnet restore glasscode/backend/backend.csproj
+      - name: Install backend dependencies
+        run: |
+          cd backend-node
+          npm ci
 
-      - name: Build backend
-        run: dotnet build glasscode/backend/backend.csproj --configuration Release --no-restore
-
-      - name: Install jq
-        run: sudo apt-get update && sudo apt-get install -y jq
+      - name: Set up database
+        run: |
+          cd backend-node
+          npm run seed:content
 
       - name: Start backend server
-        run: nohup dotnet run --project glasscode/backend/backend.csproj --configuration Release > server.log 2>&1 &
+        run: |
+          cd backend-node
+          nohup npm run dev > server.log 2>&1 &
 
       - name: Wait for health endpoint
         shell: bash
         run: |
           for i in {1..30}; do
-            status=$(curl -s -o /dev/null -w "%{http_code}" http://127.0.0.1:8080/api/health?unlock=1 || true)
+            status=$(curl -s -o /dev/null -w "%{http_code}" http://127.0.0.1:8080/health || true)
             if [ "$status" = "200" ]; then
               echo "Health endpoint is up"
               break
@@ -54,13 +70,13 @@ jobs:
             exit 1
           fi
 
-      - name: Validate dataStats are non-zero
+      - name: Validate health endpoint
         run: |
-          curl -s http://127.0.0.1:8080/api/health?unlock=1 > health.json
+          curl -s http://127.0.0.1:8080/health > health.json
           echo "Health response:" && cat health.json
-          total_count=$(jq -r '.dataStats | to_entries | map(.value) | add' health.json)
-          if [ "$total_count" -eq 0 ]; then
-            echo "No content found in any category" >&2
+          success=$(jq -r '.success' health.json)
+          if [ "$success" != "true" ]; then
+            echo "Health check failed" >&2
             exit 1
           fi
-          echo "Total content count: $total_count. ✅"
+          echo "Health check passed. ✅"

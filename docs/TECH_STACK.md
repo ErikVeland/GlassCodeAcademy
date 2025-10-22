@@ -12,46 +12,41 @@ graph TB
         A[Next.js 15.3.5] --> B[React 19.0.0]
         B --> C[Tailwind CSS]
         C --> D[TypeScript]
-        A --> E[Apollo Client 3.13.8]
     end
 
     subgraph Backend
-        F[ASP.NET Core 8.0]
-        G[HotChocolate 13.x]
-        H[PostgreSQL Database]
-        I[Redis Cache]
+        E[Node.js/Express 18+]
+        F[PostgreSQL Database]
+        G[Sequelize ORM]
     end
 
     subgraph Infrastructure
-        J[NGINX Gateway]
-        K[Systemd Services]
+        H[NGINX Gateway]
+        I[Systemd Services]
     end
 
-    E -- GraphQL Queries/Mutations --> G
-    G --> F
-    F --> H
-    F --> I
-    J --> A
-    J --> F
+    A -- REST API --> E
+    E --> F
+    E --> G
+    H --> A
+    H --> E
 
     subgraph Development
-        L[Visual Studio Code]
-        M[Visual Studio 2022]
-        N[Git]
-        O[.NET 8.0 SDK]
-        P[Node.js 18+]
+        J[Visual Studio Code]
+        K[Git]
+        L[Node.js 18+]
     end
 
     subgraph Deployment
-        Q[Systemd Services]
-        R[NGINX Configuration]
-        S[SSL/TLS Setup]
+        M[Systemd Services]
+        N[NGINX Configuration]
+        O[SSL/TLS Setup]
     end
 
-    A --> Q
-    F --> Q
-    J --> R
-    R --> S
+    A --> M
+    E --> M
+    H --> N
+    N --> O
 ```
 
 ## Technology Components
@@ -79,53 +74,36 @@ graph TB
    - Improved developer experience
    - Better error detection
 
-5. **Apollo Client 3.13.8**
-   - GraphQL client for data fetching
-   - Caching and state management
-   - Integration with React components
-
 ### Backend Technologies
 
-1. **ASP.NET Core 8.0**
-   - Cross-platform web framework
-   - High-performance runtime
-   - Built-in dependency injection
+1. **Node.js/Express 18+**
+   - JavaScript runtime with Express framework
+   - High-performance web server
+   - Built-in middleware support
 
-2. **HotChocolate 13.x**
-   - GraphQL server for .NET
-   - Schema-first development
-   - Real-time subscriptions support
-
-3. **PostgreSQL Database**
+2. **PostgreSQL Database**
    - Primary database for all content and user data
-   - Migrating from hybrid JSON/database approach to pure database
-   - Entity Framework Core ORM for data access
+   - Pure database approach with no JSON file dependencies
+   - Sequelize ORM for data access
 
-4. **Redis Cache**
-   - Caching layer for improved performance
-   - Session state management
-   - Frequently accessed data storage
+3. **Sequelize ORM**
+   - Promise-based Node.js ORM for PostgreSQL
+   - Model validation and associations
+   - Migration support
 
 ### Development Tools
 
 1. **Visual Studio Code**
-   - Frontend development environment
-   - Extensions for Next.js and TypeScript
+   - Primary development environment
+   - Extensions for Node.js and TypeScript
+   - Integrated terminal and debugging
 
-2. **Visual Studio 2022**
-   - Backend development environment
-   - Debugging and profiling tools
-
-3. **Git**
+2. **Git**
    - Version control system
    - Collaboration workflow
 
-4. **.NET 8.0 SDK (8.0.414+)**
-   - Backend development runtime
-   - Cross-platform development
-
-5. **Node.js 18+**
-   - Frontend development runtime
+3. **Node.js 18+**
+   - Backend and frontend development runtime
    - Package management with npm
    - Content validation and import scripts
 
@@ -141,75 +119,50 @@ graph TB
    - Automatic startup and monitoring
    - Process management
 
-3. **Standalone Server Deployment**
-   - Self-hosted deployment option
-   - Manual configuration
-   - Full control over environment
+3. **PM2 Process Manager**
+   - Node.js process management
+   - Cluster mode for load balancing
+   - Automatic restart on failures
 
-## Simplification Roadmap
+4. **Docker Containers**
+   - Containerized deployment
+   - Consistent environments across dev/staging/production
+   - Easy scaling and deployment
 
-### Current State (Multi-stack Architecture)
-The current architecture uses multiple backend technologies:
-- ASP.NET Core for the main API and GraphQL services
-- Laravel for some module-specific implementations
-- Node.js for additional backend services
-- JSON files for content storage with database migration in progress
+## Migration Milestone Achieved ✅
 
-### Future State (Simplified Architecture)
-To reduce complexity and improve maintainability, the planned simplification includes:
+### Backend Technology Consolidation (Completed October 2025)
+GlassCode Academy has successfully completed a major architectural transformation by migrating from a complex multi-technology stack to a unified Node.js/Express backend. This migration addressed all the issues identified in the previous architecture:
 
-1. **Backend Technology Consolidation**
-   - **Current**: Multiple backend technologies (ASP.NET Core, Laravel, Node.js)
-   - **Future**: Single ASP.NET Core backend for all functionality
-   - **Benefits**: 
-     - Reduced operational complexity
-     - Lower deployment overhead
-     - Simplified team knowledge requirements
-     - Easier CI/CD pipeline management
+#### Migration Results:
+- ✅ **Backend Consolidation**: All functionality consolidated to Node.js/Express
+- ✅ **Database-First Approach**: Complete migration from hybrid JSON/database approach to pure database
+- ✅ **Containerization**: Docker-based deployment for consistent environments
+- ✅ **Unified Content Management**: Admin dashboard in Next.js for all content creation and editing
 
-2. **Pure Database Approach**
-   - **Current**: Hybrid JSON/database content approach
-   - **Future**: All content managed through PostgreSQL database
-   - **Benefits**:
-     - Eliminates complexity of JSON file synchronization
-     - Single source of truth for all content
-     - Real-time content updates without deployments
-     - Simplified backup and recovery processes
-
-3. **Containerization**
-   - **Current**: Standalone server deployment with systemd services
-   - **Future**: Docker-based deployment with container orchestration
-   - **Benefits**:
-     - Consistent environments across dev/staging/production
-     - Easier scaling and deployment
-     - Simplified dependency management
-     - Improved portability and reproducibility
-
-4. **Unified Content Management**
-   - **Current**: Disparate content creation and editing mechanisms
-   - **Future**: Admin dashboard in Next.js for all content management
-   - **Benefits**:
-     - Centralized content creation and editing
-     - Real-time content updates
-     - Improved user experience for content creators
-     - Elimination of JSON file editing requirements
+#### Benefits Achieved:
+- ✅ **Reduced Operational Complexity**: Single backend technology stack
+- ✅ **Improved Maintainability**: Consistent development patterns and practices
+- ✅ **Enhanced Developer Productivity**: Unified JavaScript/TypeScript experience
+- ✅ **Simplified CI/CD Pipeline**: Streamlined workflows with single project configuration
+- ✅ **Better Performance**: Lower memory footprint and faster startup times
+- ✅ **Easier Scaling**: Containerized deployment with PM2 process management
 
 ## Integration Flow
 
 1. **Frontend to Backend Communication**
-   - Apollo Client sends GraphQL queries to the ASP.NET Core backend
-   - HotChocolate GraphQL server resolves queries
-   - Data is fetched from PostgreSQL database
-   - NGINX gateway routes requests to appropriate services
+   - Frontend sends REST API requests to the Node.js/Express backend
+   - Backend processes requests and queries PostgreSQL through Sequelize ORM
+   - Responses are returned as JSON to the frontend
 
 2. **Data Flow**
-   - User interactions trigger GraphQL queries/mutations
-   - GraphQL server routes requests to appropriate resolvers
-   - Resolvers read from PostgreSQL database
-   - Responses flow back through the GraphQL layer to the frontend
+   - User interactions trigger REST API requests
+   - Requests are routed to appropriate backend endpoints
+   - Data is fetched from PostgreSQL database
+   - Responses flow back through the API layer to the frontend
 
 3. **Module Architecture**
-   - All technology modules served by single ASP.NET Core backend
+   - All technology modules served by single Node.js/Express backend
    - Content managed through unified database schema
    - Shared services and components across all modules
 
@@ -234,7 +187,6 @@ To reduce complexity and improve maintainability, the planned simplification inc
 
 3. **Performance & Simplicity**
    - Database-first approach for fast content delivery
-   - Caching with Redis for improved performance
    - Lightweight and efficient
 
 4. **Production-Ready Infrastructure**

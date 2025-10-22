@@ -12,25 +12,23 @@ jobs:
     runs-on: ubuntu-latest
     env:
       GLASSCODE_CONTENT_PATH: ${{ github.workspace }}/content
-      ASPNETCORE_URLS: http://127.0.0.1:8080
 
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Setup .NET SDK
-        uses: actions/setup-dotnet@v4
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
         with:
-          dotnet-version: '8.0.x'
+          node-version: '18.x'
+          cache: 'npm'
 
-      - name: Restore backend tests
-        run: dotnet restore glasscode/backend/Backend.Tests/Backend.Tests.csproj
-
-      - name: Build backend tests
-        run: dotnet build glasscode/backend/Backend.Tests/Backend.Tests.csproj --configuration Release --no-restore
-
-      - name: Run tests
+      - name: Install backend dependencies
         run: |
-          dotnet test glasscode/backend/Backend.Tests/Backend.Tests.csproj 
-            --configuration Release 
-            --no-build
+          cd backend-node
+          npm ci
+
+      - name: Run backend tests
+        run: |
+          cd backend-node
+          npm test

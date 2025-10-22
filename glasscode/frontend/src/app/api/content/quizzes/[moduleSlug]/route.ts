@@ -18,7 +18,8 @@ async function fetchQuizFromDatabase(moduleSlug: string) {
           continue;
         }
         
-        const quizzes = await quizResponse.json();
+        const result = await quizResponse.json();
+        const quizzes = Array.isArray(result.data) ? result.data : [];
         console.log(`[quizzes] Successfully loaded ${quizzes.length} quiz questions from ${apiBase} for module: ${moduleSlug}`);
         
         // Transform the database quizzes to match the expected frontend format
@@ -32,6 +33,7 @@ async function fetchQuizFromDatabase(moduleSlug: string) {
           questionType?: string;
           difficulty?: string;
           estimatedTime?: number;
+          sort_order?: number;
         }) => ({
           id: quiz.id,
           question: quiz.question,
@@ -41,7 +43,8 @@ async function fetchQuizFromDatabase(moduleSlug: string) {
           topic: quiz.topic || 'general',
           type: quiz.questionType || 'multiple-choice',
           difficulty: quiz.difficulty || 'Beginner',
-          estimatedTime: quiz.estimatedTime || 90
+          estimatedTime: quiz.estimatedTime || 90,
+          order: quiz.sort_order || 0
         }));
         
         return { questions };

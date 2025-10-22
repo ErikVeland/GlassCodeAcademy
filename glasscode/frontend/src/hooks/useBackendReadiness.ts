@@ -1,18 +1,12 @@
 import { useState, useEffect } from 'react';
 
-interface ReadinessResponse {
-  status: string;
-  reason?: string;
-  databaseConnected: boolean;
-  contentReady: boolean;
-  contentComplete: boolean;
-  modules: number;
-  lessons: number;
-  quizzes: number;
-  details?: Record<string, unknown>;
+interface HealthResponse {
+  success: boolean;
+  message?: string;
 }
 
-export function useBackendReadiness() {
+export function useBackendReadiness(options?: { enabled?: boolean }) {
+  const enabled = options?.enabled ?? true;
   const [isReady, setIsReady] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -20,64 +14,53 @@ export function useBackendReadiness() {
 
   useEffect(() => {
     let isCancelled = false;
-    const maxRetries = 10;
-    const retryDelay = 2000; // 2 seconds
+    const maxRetries = 5;
+    const retryDelay = 1500; // 1.5 seconds
 
     const checkReadiness = async () => {
       try {
         if (isCancelled) return;
 
-        const response = await fetch('/api/ready');
+        if (!enabled) {
+          setIsReady(true);
+          setIsLoading(false);
+          setError(null);
+          return;
+        }
+
+        const apiBase = (process.env.NEXT_PUBLIC_API_BASE || '').replace(/\/+$/, '');
+        const url = apiBase ? `${apiBase}/health` : '/health';
+        const response = await fetch(url, { cache: 'no-store' });
         
         if (response.ok) {
-          const data: ReadinessResponse = await response.json();
-          
-          if (data.status === 'ready') {
+          // Health endpoint returns a simple success payload
+          const data: HealthResponse = await response.json().catch(() => ({ success: true }));
+          if (data && (data.success || response.status === 200)) {
             if (!isCancelled) {
               setIsReady(true);
               setIsLoading(false);
               setError(null);
             }
             return;
-          } else {
-            if (!isCancelled) {
-              setError(data.reason || 'Backend is not ready');
-              
-              // Retry if we haven't exceeded max retries
-              if (retryCount < maxRetries) {
-                setTimeout(() => {
-                  if (!isCancelled) {
-                    setRetryCount(prev => prev + 1);
-                  }
-                }, retryDelay);
-              } else {
-                setIsLoading(false);
-              }
-            }
-            return;
           }
-        } else {
-          if (!isCancelled) {
-            setError(`HTTP ${response.status}: ${response.statusText}`);
-            
-            // Retry if we haven't exceeded max retries
-            if (retryCount < maxRetries) {
-              setTimeout(() => {
-                if (!isCancelled) {
-                  setRetryCount(prev => prev + 1);
-                }
-              }, retryDelay);
-            } else {
-              setIsLoading(false);
-            }
+        }
+        
+        if (!isCancelled) {
+          setError(`HTTP ${response.status}: ${response.statusText}`);
+          if (retryCount < maxRetries) {
+            setTimeout(() => {
+              if (!isCancelled) {
+                setRetryCount(prev => prev + 1);
+              }
+            }, retryDelay);
+          } else {
+            setIsLoading(false);
           }
         }
       } catch (err) {
         if (!isCancelled) {
           const errorMessage = err instanceof Error ? err.message : 'Unknown error';
           setError(`Network error: ${errorMessage}`);
-          
-          // Retry if we haven't exceeded max retries
           if (retryCount < maxRetries) {
             setTimeout(() => {
               if (!isCancelled) {
@@ -98,7 +81,7 @@ export function useBackendReadiness() {
     return () => {
       isCancelled = true;
     };
-  }, [retryCount]);
+  }, [retryCount, enabled]);
 
   return { isReady, isLoading, error, retryCount };
 }

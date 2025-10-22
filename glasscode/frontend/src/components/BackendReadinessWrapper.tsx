@@ -2,39 +2,31 @@
 
 import React from 'react';
 import { useBackendReadiness } from '../hooks/useBackendReadiness';
-import { ContentLoading } from './ContentLoading';
+import LoadingScreen from './LoadingScreen';
 import { ContentError } from './ContentError';
+import { usePathname } from 'next/navigation';
 
-interface BackendReadinessWrapperProps {
-  children: React.ReactNode;
-}
+export default function BackendReadinessWrapper({ children }: { children: React.ReactNode }) {
+  const pathname = usePathname();
+  const { isReady, isLoading, error, retryCount } = useBackendReadiness({ enabled: pathname !== '/' });
 
-export function BackendReadinessWrapper({ children }: BackendReadinessWrapperProps) {
-  const { isReady, isLoading, error, retryCount } = useBackendReadiness();
+  // Do not gate the home route with any loading screen
+  if (pathname === '/') {
+    return <>{children}</>;
+  }
 
-  // If we're ready or if we've been waiting for a long time, show content
+  // If we're ready or we've retried enough, show content
   if (isReady || retryCount > 5) {
     return <>{children}</>;
   }
 
-  // Show loading state
   if (isLoading) {
-    return <ContentLoading retryCount={retryCount} />;
+    return <LoadingScreen message="Loading content..." />;
   }
 
-  // Show error state
   if (error) {
-    return (
-      <ContentError 
-        message={error} 
-        onRetry={() => {
-          // Reset the retry count to trigger a new check
-          window.location.reload();
-        }} 
-      />
-    );
+    return <ContentError message={error} />;
   }
 
-  // Fallback - should not happen
   return <>{children}</>;
 }

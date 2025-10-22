@@ -119,6 +119,7 @@ interface ProgrammingQuestion {
   fixedChoiceOrder?: boolean;
   // Optional choice label style; when 'letters', render A/B/C/D prefixes
   choiceLabels?: 'letters' | 'none';
+  order?: number;
 }
 
 interface Quiz {
@@ -137,6 +138,8 @@ class ContentRegistryLoader {
   private static instance: ContentRegistryLoader;
   private registry: ContentRegistry | null = null;
   private registryPromise: Promise<ContentRegistry> | null = null;
+  private cacheTimestamp: number = 0;
+  private cacheDuration: number = 5 * 60 * 1000; // 5 minutes cache
 
   constructor() {
     // Browser-safe constructor
@@ -153,20 +156,10 @@ class ContentRegistryLoader {
    * Load the content registry from API with caching
    */
   async loadRegistry(): Promise<ContentRegistry> {
-    // Return cached registry if available
-    if (this.registry) {
-      // If cached registry has no modules, attempt a fresh reload to recover
-      if (!Array.isArray(this.registry.modules) || this.registry.modules.length === 0) {
-        try {
-          const refreshed = await this.loadRegistryInternal();
-          // Only replace cache if refreshed has modules (avoid thrashing)
-          if (Array.isArray(refreshed.modules) && refreshed.modules.length > 0) {
-            this.registry = refreshed;
-          }
-        } catch {
-          // swallow and return existing minimal registry
-        }
-      }
+    const now = Date.now();
+    
+    // Return cached registry if available and not expired
+    if (this.registry && (now - this.cacheTimestamp) < this.cacheDuration) {
       return this.registry;
     }
 
@@ -178,6 +171,7 @@ class ContentRegistryLoader {
     // Create new promise for loading
     this.registryPromise = this.loadRegistryInternal().then(registry => {
       this.registry = registry;
+      this.cacheTimestamp = Date.now();
       this.registryPromise = null;
       return registry;
     }).catch(error => {
@@ -320,6 +314,15 @@ class ContentRegistryLoader {
     if (!foundModule) {
       foundModule = modules.find(m => m.legacySlugs?.includes(slug));
       console.log(`getModule(${slug}): found by legacy slug:`, foundModule?.slug);
+
+      // If still not found, try to find by short slug
+      if (!foundModule) {
+        foundModule = modules.find(m => {
+          const shortSlug = m.slug.includes('-') ? m.slug.split('-')[0] : m.slug;
+          return shortSlug === slug;
+        });
+        console.log(`getModule(${slug}): found by short slug:`, foundModule?.slug);
+      }
     }
 
     if (foundModule) {
@@ -551,12 +554,12 @@ class ContentRegistryLoader {
         const cached = localStorage.getItem(cacheKey);
         
         if (cached) {
-          const { timestamp } = JSON.parse(cached);
+          const { timestamp, data } = JSON.parse(cached);
           // Use cache if less than 30 minutes old
           if (Date.now() - timestamp < 30 * 60 * 1000) {
             console.log(`[ContentRegistry] Using prefetched quiz for ${shortSlug}`);
-            // For now, we'll still fetch fresh data but we could return cached data
-            // In a real implementation, we might return the cached data directly
+            const normalizedQuestions = Array.isArray(data.questions) ? data.questions.map(q => normalizeQuestion(q)) : [];
+            return { ...data, questions: normalizedQuestions };
           }
         }
         
@@ -565,12 +568,12 @@ class ContentRegistryLoader {
         const sessionCached = sessionStorage.getItem(sessionCacheKey);
         
         if (sessionCached) {
-          const { timestamp } = JSON.parse(sessionCached);
+          const { timestamp, data } = JSON.parse(sessionCached);
           // Use cache if less than 5 minutes old
           if (Date.now() - timestamp < 5 * 60 * 1000) {
             console.log(`[ContentRegistry] Using session cached quiz for ${shortSlug}`);
-            // For now, we'll still fetch fresh data but we could return cached data
-            // In a real implementation, we might return the cached data directly
+            const normalizedQuestions = Array.isArray(data.questions) ? data.questions.map(q => normalizeQuestion(q)) : [];
+            return { ...data, questions: normalizedQuestions };
           }
         }
       }
@@ -582,6 +585,15 @@ class ContentRegistryLoader {
         if (!(data && typeof data === 'object')) return null;
         const quiz = data as Quiz;
         const normalizedQuestions = Array.isArray(quiz.questions) ? quiz.questions.map(q => normalizeQuestion(q)) : [];
+        // Cache in sessionStorage for future use
+        try {
+          sessionStorage.setItem(`prefetch_quiz_${shortSlug}`, JSON.stringify({
+            timestamp: Date.now(),
+            data: { ...quiz, questions: normalizedQuestions }
+          }));
+        } catch (e) {
+          // Ignore storage errors
+        }
         return { ...quiz, questions: normalizedQuestions };
       }
 
@@ -760,6 +772,14 @@ class ContentRegistryLoader {
       // Return safe defaults to prevent build failures
       return { lessons: false, lessonsValid: false, quiz: false, quizValid: false, overall: false };
     }
+  }
+  
+  /**
+   * Clear cache to force reload
+   */
+  clearCache(): void {
+    this.registry = null;
+    this.cacheTimestamp = 0;
   }
 }
 

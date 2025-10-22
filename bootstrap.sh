@@ -242,15 +242,14 @@ preflight_checks() {
     if [ -z "$NODE_VER" ] || ! echo "$NODE_VER" | grep -qE '^v(20|21)\.'; then
         NEED_NODE=1
     fi
-    if ! command_exists dotnet; then
-        NEED_DOTNET=1
-    fi
+    # Node.js is the sole backend; .NET detection is retired
+    NEED_DOTNET=0
 }
 
 # Function to stop running services like update.sh does
 stop_running_services() {
     log "⏹️  Stopping any running services..."
-    systemctl stop ${APP_NAME}-frontend ${APP_NAME}-dotnet 2>/dev/null || true
+    systemctl stop ${APP_NAME}-frontend ${APP_NAME}-backend 2>/dev/null || true
     log "✅ Services stopped"
 }
 
@@ -676,21 +675,19 @@ if [ "$FRONTEND_ONLY" -eq 0 ]; then
         sleep 2
     fi
     command_exists ss && ss -tulpn 2>/dev/null | grep ':8080' || true
-    cat >/etc/systemd/system/${APP_NAME}-dotnet.service <<EOF
+    cat >/etc/systemd/system/${APP_NAME}-backend.service <<EOF
 [Unit]
-Description=$APP_NAME .NET Backend
+Description=$APP_NAME Node Backend
 After=network.target
 
 [Service]
-WorkingDirectory=$APP_DIR/glasscode/backend/out
-ExecStart=/usr/bin/dotnet $APP_DIR/glasscode/backend/out/backend.dll
+WorkingDirectory=$APP_DIR/backend-node
+ExecStart=/usr/bin/node $APP_DIR/backend-node/server.js
 Restart=always
 RestartSec=10
 User=$DEPLOY_USER
-Environment=DOTNET_ROOT=/usr/share/dotnet
-Environment=ASPNETCORE_URLS=http://0.0.0.0:8080
-Environment=ASPNETCORE_ENVIRONMENT=Production
-Environment=ConnectionStrings__DefaultConnection=Host=${DB_HOST:-localhost};Database=${DB_NAME:-glasscode_dev};Username=${DB_USER:-postgres};Password=${DB_PASSWORD:-postgres};Port=${DB_PORT:-5432}
+Environment=PORT=${BACKEND_PORT:-8080}
+Environment=NODE_ENV=production
 
 [Install]
 WantedBy=multi-user.target
@@ -698,120 +695,59 @@ EOF
 
     systemctl daemon-reload
     # Always attempt to unmask backend service before enabling/starting
-    systemctl unmask ${APP_NAME}-dotnet || true
-    systemctl enable ${APP_NAME}-dotnet
+    systemctl unmask ${APP_NAME}-backend || true
+    systemctl enable ${APP_NAME}-backend
 
     log "🚀 Starting real backend service..."
-    systemctl start ${APP_NAME}-dotnet
+    systemctl start ${APP_NAME}-backend
 
-    log "⏳ Waiting for real backend health before frontend build..."
+    log "⏳ Waiting for backend health before frontend build..."
 MAX_ATTEMPTS=$([ "${FAST_MODE:-0}" -eq 1 ] && echo 15 || echo 30)
 ATTEMPT=1
 SLEEP_INTERVAL=$([ "${FAST_MODE:-0}" -eq 1 ] && echo 2 || echo 3)
 BACKEND_HEALTHY=false
 LAST_STATUS=""
-    
-MIGRATION_TRIGGERED=0
+
 while [[ $ATTEMPT -le $MAX_ATTEMPTS ]]; do
     # Check if service is still running first
-    if ! systemctl is-active --quiet "${APP_NAME}-dotnet"; then
+    if ! systemctl is-active --quiet "${APP_NAME}-backend"; then
         printf "\n"  # Clear progress line
-        log "❌ Backend service stopped unexpectedly during DB readiness check"
+        log "❌ Backend service stopped unexpectedly during health check"
         break
     fi
 
-    # Poll DB-backed endpoints for readiness (health endpoint may be insufficient)
-    MODULES_JSON=$(timeout 10 curl -s http://localhost:8080/api/modules-db || true)
-    LESSONS_JSON=$(timeout 10 curl -s http://localhost:8080/api/lessons-db || true)
-    QUIZZES_JSON=$(timeout 10 curl -s http://localhost:8080/api/LessonQuiz || true)
-
-    if echo "$MODULES_JSON" | jq -e 'type=="array" and length>0' >/dev/null 2>&1 \
-       && echo "$LESSONS_JSON" | jq -e 'type=="array" and length>0' >/dev/null 2>&1 \
-       && echo "$QUIZZES_JSON" | jq -e 'type=="array" and length>0' >/dev/null 2>&1; then
+    # Poll health endpoint for readiness
+    HEALTH_JSON=$(timeout 10 curl -s http://localhost:8080/health || true)
+    if echo "$HEALTH_JSON" | jq -e '.success == true' >/dev/null 2>&1; then
         printf "\n"  # Clear progress line
-        log "✅ Backend DB endpoints ready with data at attempt $ATTEMPT/$MAX_ATTEMPTS. Proceeding to build frontend."
+        log "✅ Backend health ready at attempt $ATTEMPT/$MAX_ATTEMPTS. Proceeding to build frontend."
         BACKEND_HEALTHY=true
         break
     fi
 
-    # Trigger full migration once if arrays are empty
-    if [[ $MIGRATION_TRIGGERED -eq 0 ]]; then
-        if echo "$MODULES_JSON" | jq -e 'type=="array" and length==0' >/dev/null 2>&1 \
-           || echo "$LESSONS_JSON" | jq -e 'type=="array" and length==0' >/dev/null 2>&1 \
-           || echo "$QUIZZES_JSON" | jq -e 'type=="array" and length==0' >/dev/null 2>&1; then
-            MIGRATION_TRIGGERED=1
-            MIGRATION_RESP=$(timeout 60 curl -s -X POST http://localhost:8080/api/migration/full-migration -H "Content-Type: application/json" || true)
-            if echo "$MIGRATION_RESP" | grep -q '"Success":\s*true'; then
-                log "✅ Full migration triggered successfully"
-            else
-                SHORT=$(echo "$MIGRATION_RESP" | tr -d '\n' | cut -c1-200)
-                log "⚠️  Full migration trigger response: '${SHORT}'"
-                log "🔁 Migration API failed/unreachable; invoking CLI fallback with retries..."
-                RETRY_MAX=${MIGRATION_CLI_RETRY_MAX:-3}
-                RETRY_DELAY_BASE=$([ "${FAST_MODE:-0}" -eq 1 ] && echo 2 || echo 3)
-                for RETRY in $(seq 1 "$RETRY_MAX"); do
-                    if [ -f "$APP_DIR/glasscode/backend/out/backend.dll" ]; then
-                        timeout 300 sudo -u "$DEPLOY_USER" env RUN_AUTOMATED_MIGRATION_ONLY=1 dotnet "$APP_DIR/glasscode/backend/out/backend.dll" || true
-                    else
-                        (cd "$APP_DIR/glasscode/backend" && timeout 600 sudo -u "$DEPLOY_USER" env RUN_AUTOMATED_MIGRATION_ONLY=1 dotnet run --project "$APP_DIR/glasscode/backend/backend.csproj" || true)
-                    fi
-
-                    MODULES_JSON=$(timeout 10 curl -s http://localhost:8080/api/modules-db || true)
-                    LESSONS_JSON=$(timeout 10 curl -s http://localhost:8080/api/lessons-db || true)
-                    QUIZZES_JSON=$(timeout 10 curl -s http://localhost:8080/api/LessonQuiz || true)
-
-                    if echo "$MODULES_JSON" | jq -e 'type=="array" and length>0' >/dev/null 2>&1 \
-                       && echo "$LESSONS_JSON" | jq -e 'type=="array" and length>0' >/dev/null 2>&1 \
-                       && echo "$QUIZZES_JSON" | jq -e 'type=="array" and length>0' >/dev/null 2>&1 ; then
-                        log "✅ CLI migration populated data; DB endpoints ready at attempt $ATTEMPT/$MAX_ATTEMPTS."
-                        BACKEND_HEALTHY=true
-                        break
-                    fi
-
-                    if [ "$RETRY" -lt "$RETRY_MAX" ]; then
-                        BACKOFF=$((RETRY_DELAY_BASE * (1 << (RETRY - 1))))
-                        log "⏳ CLI migration not reflected yet; retry $RETRY/$RETRY_MAX after ${BACKOFF}s..."
-                        sleep "$BACKOFF"
-                    else
-                        log "❌ CLI migration retries exhausted; continuing checks."
-                    fi
-                done
-            fi
-        fi
-    fi
-
-    draw_progress "$ATTEMPT" "$MAX_ATTEMPTS" "  ⏳ Backend DB readiness: "
+    printf "\r⏳ Waiting for backend health... attempt %d/%d" "$ATTEMPT" "$MAX_ATTEMPTS"
     ATTEMPT=$((ATTEMPT + 1))
-    sleep $SLEEP_INTERVAL
+    sleep "$SLEEP_INTERVAL"
+}
 
-done
-
+# Health check summary
 if [[ "$BACKEND_HEALTHY" == "true" ]]; then
-    log "✅ Backend DB readiness satisfied at attempt $ATTEMPT/$MAX_ATTEMPTS (pre-build)."
+    log "✅ Backend health satisfied at attempt $ATTEMPT/$MAX_ATTEMPTS (pre-build)."
 fi
 
 if [[ "$BACKEND_HEALTHY" != "true" && $ATTEMPT -gt $MAX_ATTEMPTS ]]; then
-    log "❌ Backend DB endpoints failed to become ready before frontend build."
+    log "❌ Backend health failed before frontend build."
     log "🧪 Diagnostic: systemd status"
-    systemctl status ${APP_NAME}-dotnet --no-pager || true
+    systemctl status ${APP_NAME}-backend --no-pager || true
     log "🪵 Recent backend logs (journalctl)"
-    journalctl -u ${APP_NAME}-dotnet -n 200 --no-pager || true
+    journalctl -u ${APP_NAME}-backend -n 200 --no-pager || true
     log "🔌 Listening ports snapshot"
     ss -tulpn | grep :8080 || true
-    log "🌐 DB endpoint verbose output"
-    timeout 15 curl -v http://localhost:8080/api/modules-db || true
-    timeout 15 curl -v http://localhost:8080/api/lessons-db || true
-    timeout 15 curl -v http://localhost:8080/api/LessonQuiz || true
+    log "🌐 Health endpoint verbose output"
+    timeout 15 curl -v http://localhost:8080/health || true
     if [ "${FAST_MODE:-0}" -eq 1 ] || [ "${SKIP_BACKEND_HEALTH:-0}" -eq 1 ]; then
-        log "⚠️  Continuing despite backend DB readiness precondition due to fast/skip mode"
+        log "⚠️  Continuing despite backend health precondition due to fast/skip mode"
     else
-        # Run enhanced content verification script to diagnose issues
-        log "🔍 Running enhanced content verification..."
-        if [ -f "$APP_DIR/glasscode/backend/Scripts/ContentVerificationReport.cs" ]; then
-            cd "$APP_DIR/glasscode/backend"
-            timeout 300 sudo -u "$DEPLOY_USER" dotnet run -c Release --no-build --no-restore -- ContentVerificationReport.cs || true
-            cd - >/dev/null
-        fi
         exit 1
     fi
 fi
@@ -1052,8 +988,8 @@ cat >"$APP_DIR/glasscode/frontend/check_backend_health.sh" <<'EOS'
 MAX=30
 COUNT=1
 while [ $COUNT -le $MAX ]; do
-  HTTP=$(timeout 10 curl -s -o /dev/null -w "%{http_code}" http://127.0.0.1:8080/api/health || true)
-  RESP=$(timeout 10 curl -s http://127.0.0.1:8080/api/health || true)
+  HTTP=$(timeout 10 curl -s -o /dev/null -w "%{http_code}" http://127.0.0.1:8080/health || true)
+  RESP=$(timeout 10 curl -s http://127.0.0.1:8080/health || true)
   STATUS=$(echo "$RESP" | jq -r .status 2>/dev/null || echo "$RESP" | grep -o '"status":"[^"]*"' | cut -d '"' -f4)
 
   if [ "$HTTP" = "200" ] && { [ "$STATUS" = "healthy" ] || [ "$STATUS" = "degraded" ] || [ -n "$RESP" ]; }; then
@@ -1072,7 +1008,7 @@ if [ "$FRONTEND_ONLY" -eq 0 ]; then
     cat >"$UNIT_FILE_PATH" <<EOF
 [Unit]
 Description=$APP_NAME Next.js Frontend
-After=network.target ${APP_NAME}-dotnet.service
+After=network.target ${APP_NAME}-backend.service
 
 [Service]
 WorkingDirectory=$APP_DIR/glasscode/frontend
@@ -1128,20 +1064,20 @@ systemctl daemon-reload
 # Always attempt to unmask services to avoid masked-unit failures
 systemctl unmask ${APP_NAME}-frontend || true
 if [ "$FRONTEND_ONLY" -eq 0 ]; then
-    systemctl unmask ${APP_NAME}-dotnet || true
+    systemctl unmask ${APP_NAME}-backend || true
 fi
 # Unmask services if previously masked
 if systemctl is-enabled ${APP_NAME}-frontend 2>/dev/null | grep -q masked; then
     log "⚠️  Frontend service is masked. Unmasking..."
     systemctl unmask ${APP_NAME}-frontend || true
 fi
-if [ "$FRONTEND_ONLY" -eq 0 ] && systemctl is-enabled ${APP_NAME}-dotnet 2>/dev/null | grep -q masked; then
+if [ "$FRONTEND_ONLY" -eq 0 ] && systemctl is-enabled ${APP_NAME}-backend 2>/dev/null | grep -q masked; then
     log "⚠️  Backend service is masked. Unmasking..."
-    systemctl unmask ${APP_NAME}-dotnet || true
+    systemctl unmask ${APP_NAME}-backend || true
 fi
 
 if [ "$FRONTEND_ONLY" -eq 0 ]; then
-    systemctl enable ${APP_NAME}-dotnet ${APP_NAME}-frontend
+    systemctl enable ${APP_NAME}-backend ${APP_NAME}-frontend
 else
     systemctl enable ${APP_NAME}-frontend
 fi
@@ -1153,24 +1089,24 @@ log "🚀 Starting services..."
 
 # Start services with enhanced error handling and parallel startup
 if [ "$FRONTEND_ONLY" -eq 0 ]; then
-    log "▶️  Starting ${APP_NAME}-dotnet..."
-    if ! systemctl start "${APP_NAME}-dotnet"; then
-        log "❌ Failed to start ${APP_NAME}-dotnet service"
-        systemctl status "${APP_NAME}-dotnet" --no-pager || true
-        journalctl -u "${APP_NAME}-dotnet" -n 100 --no-pager || true
+    log "▶️  Starting ${APP_NAME}-backend..."
+    if ! systemctl start "${APP_NAME}-backend"; then
+        log "❌ Failed to start ${APP_NAME}-backend service"
+        systemctl status "${APP_NAME}-backend" --no-pager || true
+        journalctl -u "${APP_NAME}-backend" -n 100 --no-pager || true
         exit 1
     fi
     
     # Start backend health check in background
     (
-    if wait_for_service "${APP_NAME}-dotnet"; then
-        log "✅ ${APP_NAME}-dotnet service is healthy"
+    if wait_for_service "${APP_NAME}-backend"; then
+        log "✅ ${APP_NAME}-backend service is healthy"
     else
-        log "❌ ${APP_NAME}-dotnet did not become active within timeout"
-        systemctl status "${APP_NAME}-dotnet" --no-pager || true
-        journalctl -u "${APP_NAME}-dotnet" -n 50 --no-pager || true
+        log "❌ ${APP_NAME}-backend did not become active within timeout"
+        systemctl status "${APP_NAME}-backend" --no-pager || true
+        journalctl -u "${APP_NAME}-backend" -n 50 --no-pager || true
         if [ "${FAST_MODE:-0}" -eq 1 ] || [ "${SKIP_BACKEND_HEALTH:-0}" -eq 1 ]; then
-            log "⚠️  Continuing despite backend startup failure due to fast/skip mode"
+            log "⚠️  Continuing despite backend health startup failure due to fast/skip mode"
         else
             exit 1
         fi
@@ -1269,17 +1205,6 @@ server {
         proxy_read_timeout 60s;
     }
 
-    location /graphql {
-        proxy_pass http://127.0.0.1:8080;
-        proxy_http_version 1.1;
-        proxy_set_header Host \$host;
-        proxy_set_header X-Real-IP \$remote_addr;
-        proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;
-        proxy_set_header X-Forwarded-Proto \$scheme;
-        proxy_connect_timeout 60s;
-        proxy_send_timeout 60s;
-        proxy_read_timeout 60s;
-    }
 
     location / {
         proxy_pass http://127.0.0.1:$FRONTEND_PORT;
@@ -1348,48 +1273,54 @@ fi
 
 # Database-backed content validation (default)
 if [ "$FRONTEND_ONLY" -eq 0 ]; then
-    log "🔍 Validating database-backed content end-to-end..."
-    MODULES_HTTP=$(timeout 10 curl -s -o /dev/null -w "%{http_code}" http://localhost:8080/api/modules-db || true)
-    MODULES_JSON=$(timeout 10 curl -s http://localhost:8080/api/modules-db || true)
-    if echo "$MODULES_JSON" | jq -e 'type=="array"' >/dev/null 2>&1; then
-        if echo "$MODULES_JSON" | jq -e 'length > 0' >/dev/null 2>&1; then
-            log "✅ Modules DB endpoint: PASSED"
+    log "🔍 Validating backend content via Node API..."
+    
+    COURSES_JSON=$(timeout 10 curl -s http://localhost:8080/api/courses || true)
+    if echo "$COURSES_JSON" | jq -e 'type=="array"' >/dev/null 2>&1; then
+        if echo "$COURSES_JSON" | jq -e 'length > 0' >/dev/null 2>&1; then
+            log "✅ Courses endpoint: PASSED"
+            COURSE_ID=$(echo "$COURSES_JSON" | jq -r '.[0].id' 2>/dev/null || echo "")
         else
-            log "✅ Modules DB endpoint: PASSED (empty array)"
+            log "✅ Courses endpoint: PASSED (empty array)"
+            COURSE_ID=""
         fi
-        SLUG=$(echo "$MODULES_JSON" | grep -o '"slug":"[^"]*"' | head -n1 | sed -E 's/.*"slug":"([^"]*)".*/\1/' || true)
-        [ -z "${SLUG:-}" ] && SLUG=$(echo "$MODULES_JSON" | grep -o '"Slug":"[^"]*"' | head -n1 | sed -E 's/.*"Slug":"([^"]*)".*/\1/' || true)
-        [ -z "${SLUG:-}" ] && SLUG="programming-fundamentals"
     else
-        SHORT=$(echo "$MODULES_JSON" | tr -d '\n' | cut -c1-200)
-        log "⚠️  WARNING: Modules DB endpoint failed (http=$MODULES_HTTP, resp='${SHORT}')"
-        systemctl is-active ${APP_NAME}-dotnet >/dev/null 2>&1 || systemctl status ${APP_NAME}-dotnet --no-pager | tail -n 20 || true
-        SLUG="programming-fundamentals"
+        SHORT=$(echo "$COURSES_JSON" | tr -d '\n' | cut -c1-200)
+        log "⚠️  WARNING: Courses endpoint failed (resp='${SHORT}')"
+        COURSE_ID=""
     fi
-
-    LESSONS_HTTP=$(timeout 10 curl -s -o /dev/null -w "%{http_code}" http://localhost:8080/api/lessons-db || true)
-    LESSONS_JSON=$(timeout 10 curl -s http://localhost:8080/api/lessons-db || true)
-    if echo "$LESSONS_JSON" | jq -e 'type=="array"' >/dev/null 2>&1; then
-        log "✅ Lessons DB endpoint: PASSED"
+    
+    if [ -n "$COURSE_ID" ]; then
+        COURSE_DETAIL=$(timeout 10 curl -s http://localhost:8080/api/courses/$COURSE_ID || true)
+        MODULE_ID=$(echo "$COURSE_DETAIL" | jq -r '.data.modules[0].id' 2>/dev/null || echo "")
     else
-        SHORT=$(echo "$LESSONS_JSON" | tr -d '\n' | cut -c1-200)
-        log "⚠️  WARNING: Lessons DB endpoint failed (http=$LESSONS_HTTP, resp='${SHORT}')"
+        MODULE_ID=""
     fi
-
-    QUIZZES_HTTP=$(timeout 10 curl -s -o /dev/null -w "%{http_code}" http://localhost:8080/api/LessonQuiz || true)
-    QUIZZES_JSON=$(timeout 10 curl -s http://localhost:8080/api/LessonQuiz || true)
-    if echo "$QUIZZES_JSON" | jq -e 'type=="array"' >/dev/null 2>&1; then
-        log "✅ LessonQuiz DB endpoint: PASSED"
+    
+    if [ -n "$MODULE_ID" ]; then
+        MODULE_DETAIL=$(timeout 10 curl -s http://localhost:8080/api/modules/$MODULE_ID || true)
+        if echo "$MODULE_DETAIL" | jq -e '.data.lessons | type=="array"' >/dev/null 2>&1; then
+            log "✅ Module detail with lessons: PASSED"
+            LESSON_ID=$(echo "$MODULE_DETAIL" | jq -r '.data.lessons[0].id' 2>/dev/null || echo "")
+        else
+            SHORT=$(echo "$MODULE_DETAIL" | tr -d '\n' | cut -c1-200)
+            log "⚠️  WARNING: Module detail failed to include lessons (resp='${SHORT}')"
+            LESSON_ID=""
+        fi
     else
-        SHORT=$(echo "$QUIZZES_JSON" | tr -d '\n' | cut -c1-200)
-        log "⚠️  WARNING: LessonQuiz DB endpoint failed (http=$QUIZZES_HTTP, resp='${SHORT}')"
+        LESSON_ID=""
     fi
-
-    QUIZ_RESP=$(timeout 10 curl -s "http://localhost:$FRONTEND_PORT/api/content/quizzes/${SLUG:-programming-fundamentals}" || true)
-    if echo "$QUIZ_RESP" | grep -q '"questions":\s*\['; then
-        log "✅ Frontend DB quiz for '${SLUG:-programming-fundamentals}': PASSED"
+    
+    if [ -n "$LESSON_ID" ]; then
+        QUIZZES_JSON=$(timeout 10 curl -s http://localhost:8080/api/lessons/$LESSON_ID/quizzes || true)
+        if echo "$QUIZZES_JSON" | jq -e 'type=="array"' >/dev/null 2>&1; then
+            log "✅ Lesson quizzes endpoint: PASSED"
+        else
+            SHORT=$(echo "$QUIZZES_JSON" | tr -d '\n' | cut -c1-200)
+            log "⚠️  WARNING: Lesson quizzes endpoint failed (resp='${SHORT}')"
+        fi
     else
-        log "⚠️  WARNING: Frontend DB quiz for '${SLUG:-programming-fundamentals}' failed"
+        log "ℹ️  Skipping quizzes check (no lesson discovered)"
     fi
 fi
 

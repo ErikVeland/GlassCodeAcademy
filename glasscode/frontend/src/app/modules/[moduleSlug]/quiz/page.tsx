@@ -1,10 +1,11 @@
-"use client";
+'use client';
 
 import { useEffect, useState, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { contentRegistry } from '@/lib/contentRegistry';
 import type { ProgrammingQuestion } from '@/lib/contentRegistry';
 import Link from 'next/link';
+import LoadingScreen from '@/components/LoadingScreen';
 
 interface QuizSession {
   questions: ProgrammingQuestion[];
@@ -102,14 +103,7 @@ export default function QuizPage({ params }: { params: Promise<{ moduleSlug: str
   }, [params, initializeQuiz]);
 
   if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
-          <p className="text-gray-600 dark:text-gray-300">Initializing quiz...</p>
-        </div>
-      </div>
-    );
+    return <LoadingScreen message="Initializing quiz..." />;
   }
 
   if (error) {

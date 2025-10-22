@@ -20,7 +20,7 @@ import Script from 'next/script';
 import ApolloDevMessages from '../components/ApolloDevMessages';
 import ConsoleBanner from '../components/ConsoleBanner';
 import { headers } from 'next/headers';
-import { BackendReadinessWrapper } from '../components/BackendReadinessWrapper';
+import BackendReadinessWrapper from '../components/BackendReadinessWrapper';
 
 export const metadata: Metadata = {
   title: "GlassCode Academy - Learn .NET, Next.js, GraphQL, and Laravel",

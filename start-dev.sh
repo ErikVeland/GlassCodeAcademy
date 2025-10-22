@@ -12,11 +12,7 @@ then
     exit 1
 fi
 
-if ! command -v dotnet &> /dev/null
-then
-    echo "❌ ERROR: .NET is not installed. Please install .NET 8.0 or later."
-    exit 1
-fi
+# Node.js backend no longer requires .NET
 
 # Function to clean up background processes on exit
 cleanup() {
@@ -68,17 +64,17 @@ stop_existing_services() {
         sleep 2
     fi
     
-    # Additional cleanup for any remaining dotnet or node processes
-    DOTNET_PIDS=$(pgrep -f "dotnet.*backend" 2>/dev/null)
-    if [[ -n "$DOTNET_PIDS" ]]; then
-        echo "🛑 Stopping dotnet backend processes (PIDs: $DOTNET_PIDS)"
-        kill -9 $DOTNET_PIDS 2>/dev/null || true
+    # Additional cleanup for any remaining node processes
+    NODE_BACKEND_PIDS=$(pgrep -f "node.*backend" 2>/dev/null)
+    if [[ -n "$NODE_BACKEND_PIDS" ]]; then
+        echo "🛑 Stopping node backend processes (PIDs: $NODE_BACKEND_PIDS)"
+        kill -9 $NODE_BACKEND_PIDS 2>/dev/null || true
     fi
     
-    NODE_PIDS=$(pgrep -f "node.*next" 2>/dev/null)
-    if [[ -n "$NODE_PIDS" ]]; then
-        echo "🛑 Stopping node frontend processes (PIDs: $NODE_PIDS)"
-        kill -9 $NODE_PIDS 2>/dev/null || true
+    NODE_FRONTEND_PIDS=$(pgrep -f "node.*next" 2>/dev/null)
+    if [[ -n "$NODE_FRONTEND_PIDS" ]]; then
+        echo "🛑 Stopping node frontend processes (PIDs: $NODE_FRONTEND_PIDS)"
+        kill -9 $NODE_FRONTEND_PIDS 2>/dev/null || true
     fi
     
     echo "✅ Existing services stopped"
@@ -91,56 +87,23 @@ stop_existing_services
 echo "🔄 Syncing frontend configuration..."
 cp ../content/registry.json glasscode/frontend/public/registry.json 2>/dev/null || echo "⚠️  Warning: Could not sync registry.json"
 
-# Start backend service (auto-install if missing)
-echo "🔧 Starting backend service..."
-if [ ! -d "glasscode/backend" ]; then
-    echo "⚠️  Backend directory 'glasscode/backend' not found."
-    echo "🔨 Bootstrapping minimal development backend..."
-    mkdir -p glasscode/backend
-    cd glasscode/backend
-    dotnet new web -n backend -o . >/dev/null 2>&1 || dotnet new web -o .
-    # Overwrite Program.cs with a health endpoint
-    cat > Program.cs <<'EOF'
-using Microsoft.AspNetCore.Builder;
-using Microsoft.Extensions.Hosting;
-using Microsoft.AspNetCore.Http;
-
-var builder = WebApplication.CreateBuilder(args);
-var app = builder.Build();
-
-app.MapGet("/api/health", async ctx =>
-{
-    ctx.Response.ContentType = "application/json";
-    await ctx.Response.WriteAsync("{\"status\":\"healthy\"}");
-});
-
-app.MapGet("/", () => "GlassCode Dev Backend");
-
-app.Run();
-EOF
-    # Create a dev start script if missing
-    cat > start-dev.sh <<'EOS'
-#!/usr/bin/env bash
-set -euo pipefail
-export ASPNETCORE_URLS="${ASPNETCORE_URLS:-http://localhost:8080}"
-dotnet restore
-dotnet run
-EOS
-    chmod +x start-dev.sh
-    cd ../..
+# Start Node.js backend service
+echo "🔧 Starting Node.js backend service..."
+if [ ! -d "backend-node" ]; then
+    echo "❌ ERROR: Node.js backend directory 'backend-node' not found."
+    echo "Please ensure the Node.js backend has been set up correctly."
+    exit 1
 fi
 
-cd glasscode/backend
-if [ -x "./start-dev.sh" ]; then
-    ./start-dev.sh &
+cd backend-node
+if [ -x "./scripts/start-dev.sh" ]; then
+    ./scripts/start-dev.sh &
 else
-    echo "ℹ️  No start-dev.sh found in backend, running dotnet directly..."
-    export ASPNETCORE_URLS="${ASPNETCORE_URLS:-http://localhost:8080}"
-    dotnet restore
-    dotnet run &
+    echo "ℹ️  No start-dev.sh found in backend-node, running npm directly..."
+    npm run dev &
 fi
 BACKEND_PID=$!
-cd ../..
+cd ..
 
 # Wait for backend to be fully ready by polling the health check endpoint
 echo "⏳ Waiting for backend to be fully loaded and healthy..."
@@ -149,26 +112,9 @@ ATTEMPT=1
 SLEEP_INTERVAL=2
 LAST_STATUS=""
 while [[ $ATTEMPT -le $MAX_ATTEMPTS ]]; do
-    if curl -s -f http://localhost:8080/api/health >/dev/null 2>&1; then
-        HEALTH_RESPONSE=$(curl -s http://localhost:8080/api/health)
-        BACKEND_STATUS=$(echo "$HEALTH_RESPONSE" | grep -o '"status":"[^"]*"' | cut -d'"' -f4)
-        if [[ "${BACKEND_STATUS}" == "healthy" ]]; then
-            printf "\n"  # Clear progress line
-            echo "✅ Backend health check passed: System is healthy (attempt $ATTEMPT/$MAX_ATTEMPTS)"
-        else
-            # Only log status change if it's different from last time
-            if [[ "$BACKEND_STATUS" != "$LAST_STATUS" ]]; then
-                printf "\n"  # Clear progress line
-                # Parse dataStats to show what's missing
-                MISSING_DATA=$(echo "$HEALTH_RESPONSE" | grep -o '"[^"]*":0' | cut -d'"' -f2 | tr '\n' ',' | sed 's/,$//')
-                if [[ -n "$MISSING_DATA" ]]; then
-                    echo "⚠️  Backend responding but status is $BACKEND_STATUS (missing data: $MISSING_DATA)"
-                else
-                    echo "⚠️  Backend responding but status is $BACKEND_STATUS (reason unknown)"
-                fi
-                LAST_STATUS="$BACKEND_STATUS"
-            fi
-        fi
+    if curl -s -f http://localhost:8080/health >/dev/null 2>&1; then
+        printf "\n"  # Clear progress line
+        echo "✅ Backend health check passed: System is healthy (attempt $ATTEMPT/$MAX_ATTEMPTS)"
         break
     fi
     draw_progress "$ATTEMPT" "$MAX_ATTEMPTS" "Checking backend health"
@@ -179,11 +125,11 @@ done
 if [[ $ATTEMPT -gt $MAX_ATTEMPTS ]]; then
     echo "❌ Backend failed to start properly within the expected time."
     echo "🧪 Diagnostic: backend service status"
-    ps -ef | grep -E "dotnet.*backend" | grep -v grep || true
+    ps -ef | grep -E "node.*backend" | grep -v grep || true
     echo "🧪 Diagnostic: listening ports (expect :8080)"
     ss -tulpn | grep :8080 || true
     echo "🧪 Diagnostic: health endpoint verbose output"
-    curl -v http://localhost:8080/api/health || true
+    curl -v http://localhost:8080/health || true
     echo "🛑 Stopping services..."
     kill $BACKEND_PID 2>/dev/null
     exit 1
@@ -229,9 +175,7 @@ fi
 # Final health checks
 echo "📋 Performing final health checks..."
 echo "🔍 Checking backend content availability..."
-BACKEND_CONTENT_CHECK=$(curl -s -X POST http://localhost:8080/graphql \
-  -H "Content-Type: application/json" \
-  -d '{"query":"{ __typename }"}' | grep -c '__typename')
+BACKEND_CONTENT_CHECK=$(curl -s http://localhost:8080/health | grep -c 'healthy')
 
 if [[ $BACKEND_CONTENT_CHECK -gt 0 ]]; then
     echo "✅ Backend content is accessible"
@@ -251,9 +195,7 @@ fi
 echo ""
 echo "✅ Services started and health checked!"
 echo "🔗 Frontend: http://localhost:3000"
-echo "🔗 Backend GraphQL: http://localhost:8080/graphql"
-echo "🔗 Backend GraphQL UI: http://localhost:8080/graphql-ui"
-echo "🔗 Backend Health Check: http://localhost:8080/api/health"
+echo "🔗 Backend Health Check: http://localhost:8080/health"
 echo ""
 echo "⏹️  Press Ctrl+C to stop both services"
 

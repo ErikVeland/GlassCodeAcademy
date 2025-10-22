@@ -1,8 +1,9 @@
-'use client';
+"use client";
 
 import { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import type { AdminModule, AdminCourse } from '@/types/admin';
+import LoadingScreen from '@/components/LoadingScreen';
 
 export default function EditModulePage({ params }: { params: Promise<{ id: string }> }) {
   const [module, setModule] = useState<AdminModule | null>(null);
@@ -101,16 +102,7 @@ export default function EditModulePage({ params }: { params: Promise<{ id: strin
   };
 
   if (loading) {
-    return (
-      <div className="min-h-screen bg-gray-50 py-12">
-        <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center">
-            <h1 className="text-3xl font-bold text-gray-900 mb-8">Edit Module</h1>
-            <p className="text-lg text-gray-600">Loading module data...</p>
-          </div>
-        </div>
-      </div>
-    );
+    return <LoadingScreen message="Loading module data..." />;
   }
 
   if (error) {

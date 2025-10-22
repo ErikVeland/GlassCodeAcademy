@@ -21,7 +21,7 @@ For detailed information about the current architecture, see [CURRENT_ARCHITECTU
 - **Modern UI**: Built with Next.js, React, and Tailwind CSS
 - **Responsive Design**: Adapts to different screen sizes with a wider layout for better module visibility
 - **Enhanced Security**: JWT authentication with role-based access control
-- **Structured Logging**: Comprehensive observability with Serilog
+- **Structured Logging**: Comprehensive observability
 - **Robust Testing**: 100+ automated tests with code coverage requirements
 - **WCAG-Compliant Theming**: Dark/Light/Auto theme switching with accessibility compliance
 
@@ -32,40 +32,32 @@ For detailed information about the current architecture, see [CURRENT_ARCHITECTU
 - React 19.0.0
 - TypeScript
 - Tailwind CSS
-- Apollo Client 3.13.8 for GraphQL integration
 
 ### Backend
-- ASP.NET Core 8.0 Web API (C#) with .NET 8.0 SDK
-- GraphQL API (HotChocolate 13.x)
-- PostgreSQL database with Entity Framework Core
-- Redis caching layer
-- Serilog for structured logging
+- Node.js/Express with PostgreSQL
+- Sequelize ORM for database operations
 - JWT for authentication and authorization
-- xUnit and Moq for testing
+- Jest and Supertest for testing
 
 ### Development Tools
 - Node.js 18+ 
-- .NET 8.0 SDK (version 8.0.414)
-- Visual Studio Code / Visual Studio 2022
+- Visual Studio Code
 - Git version control
 
 > Testing note: For E2E demos and UI inspections in this project, prefer Trae's built-in browser. Playwright is not required here; any references in lesson content are educational.
 
 ## System Architecture
 
-The application follows a full-stack architecture with a Next.js frontend and ASP.NET Core Web API backend, communicating via a GraphQL API.
-
-> **Architectural Note**: We've also implemented a completely separate module-based architecture where each technology is implemented using its own stack. This is purely for educational purposes - a real application would use a more sensible unified approach!
+The application follows a full-stack architecture with a Next.js frontend and Node.js/Express backend, communicating via a RESTful API.
 
 ```mermaid
 graph TB
     A[User Browser] --> B[Next.js 15.3.5 Frontend]
-    B --> C[Apollo Client 3.13.8]
-    C --> D[GraphQL API]
-    D --> E[ASP.NET Core 8.0 Backend]
+    B --> C[Node.js API Client]
+    C --> D[RESTful API]
+    D --> E[Node.js/Express 18+ Backend]
     E --> F[PostgreSQL Database]
-    E --> G[Redis Cache]
-    E --> H[Serilog]
+    E --> G[Sequelize ORM]
     
     I[JWT Authentication] --> E
     J[RBAC System] --> E
@@ -81,7 +73,6 @@ graph TB
     style E fill:#e8f5e8
     style F fill:#fff3e0
     style G fill:#fce4ec
-    style H fill:#bbdefb
     style I fill:#c8e6c9
     style J fill:#c8e6c9
     style K fill:#ffecb3
@@ -91,16 +82,18 @@ graph TB
 
 ```
 GlassCodeAcademy/
+├── backend-node/
+│   ├── src/
+│   │   ├── controllers/
+│   │   ├── models/
+│   │   ├── routes/
+│   │   ├── services/
+│   │   ├── middleware/
+│   │   ├── config/
+│   │   └── utils/
+│   ├── scripts/
+│   └── server.js
 ├── glasscode/
-│   ├── backend/
-│   │   ├── Controllers/
-│   │   ├── Data/ (Database context and migrations)
-│   │   ├── GraphQL/
-│   │   ├── Models/
-│   │   ├── Services/
-│   │   ├── Middleware/
-│   │   ├── Extensions/
-│   │   └── Program.cs
 │   └── frontend/
 │       ├── src/
 │       │   ├── app/
@@ -111,7 +104,8 @@ GlassCodeAcademy/
 │       │   │   ├── [shortSlug]/
 │       │   │   └── page.tsx
 │       │   ├── components/
-│       │   └── apolloClient.ts
+│       │   └── lib/
+│       │       └── api/
 │       └── package.json
 ├── content/
 │   ├── lessons/

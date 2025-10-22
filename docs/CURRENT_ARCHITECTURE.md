@@ -15,25 +15,19 @@ See also:
 - **React 19.0.0** - Component-based UI library
 - **TypeScript** - Typed JavaScript for improved development experience
 - **Tailwind CSS** - Utility-first CSS framework
-- **Apollo Client 3.13.8** - GraphQL client for data fetching
 - **Sass** - CSS preprocessor
 
 ### Backend
-- **ASP.NET Core 8.0** - Cross-platform web framework
-- **HotChocolate 13.x** - GraphQL server for .NET
-- **Entity Framework Core** - ORM for database operations
+- **Node.js/Express** - JavaScript runtime with Express framework
+- **Sequelize ORM** - ORM for database operations
 - **PostgreSQL** - Primary database (migrated from JSON files)
-- **Redis** - Caching layer for improved performance
-- **Serilog** - Structured logging framework
 - **JWT** - Authentication and authorization
-- **xUnit** - Unit testing framework
-- **Moq** - Mocking framework for tests
+- **Jest** - Unit testing framework
+- **Supertest** - API testing framework
 
 ### Development Tools
-- **Node.js 18+** - JavaScript runtime for frontend tooling
-- **.NET 8.0 SDK** - Development SDK for backend
-- **Visual Studio Code** - Primary IDE for frontend development
-- **Visual Studio 2022** - IDE for backend development
+- **Node.js 18+** - JavaScript runtime for frontend and backend
+- **Visual Studio Code** - Primary IDE for development
 - **Git** - Version control system
 
 ## System Architecture
@@ -41,12 +35,11 @@ See also:
 ```mermaid
 graph TB
     A[User Browser] --> B[Next.js 15.3.5 Frontend]
-    B --> C[Apollo Client 3.13.8]
-    C --> D[GraphQL API]
-    D --> E[ASP.NET Core 8.0 Backend]
+    B --> C[Node.js API Client]
+    C --> D[RESTful API]
+    D --> E[Node.js/Express 18+ Backend]
     E --> F[PostgreSQL Database]
-    E --> G[Redis Cache]
-    E --> H[Serilog]
+    E --> G[Sequelize ORM]
     
     I[JWT Authentication] --> E
     J[RBAC System] --> E
@@ -62,7 +55,6 @@ graph TB
     style E fill:#e8f5e8
     style F fill:#fff3e0
     style G fill:#fce4ec
-    style H fill:#bbdefb
     style I fill:#c8e6c9
     style J fill:#c8e6c9
     style K fill:#ffecb3
@@ -70,24 +62,24 @@ graph TB
 
 ## Simplification Roadmap
 
-### Current Architecture (Multi-stack)
-The current architecture uses multiple backend technologies:
-- ASP.NET Core for the main API and GraphQL services
-- Laravel for some module-specific implementations
-- Node.js for additional backend services
-- JSON files for content storage with database migration in progress
+### Current Architecture (Unified Node.js Stack)
+The current architecture has been simplified to use a single backend technology:
+- Node.js/Express for all backend functionality
+- PostgreSQL as the primary database with Sequelize ORM
+- Pure database-first approach with no JSON file dependencies
+- Unified development patterns and practices across the entire backend
 
 ### Target Simplified Architecture
-To reduce complexity and improve maintainability, the planned simplification includes:
+The simplification has been completed with:
 
 1. **Backend Consolidation**
-   - Migrate all Laravel and Node.js functionality to ASP.NET Core
+   - All functionality consolidated to Node.js/Express
    - Single backend technology stack for easier maintenance
    - Consistent development patterns and practices across the entire backend
 
 2. **Database-First Approach**
    - Complete migration from hybrid JSON/database approach to pure database
-   - All content managed through PostgreSQL with Entity Framework Core
+   - All content managed through PostgreSQL with Sequelize ORM
    - Elimination of JSON file synchronization complexities
 
 3. **Containerization**
@@ -106,21 +98,19 @@ The application is deployed using a standalone server approach with NGINX as a r
 
 1. **NGINX** - Reverse proxy handling SSL termination and routing
 2. **Frontend** - Next.js application served statically
-3. **Backend** - ASP.NET Core application running as a systemd service
+3. **Backend** - Node.js/Express application running as a systemd service
 4. **Database** - PostgreSQL database for persistent storage
-5. **Cache** - Redis for caching frequently accessed data
 
 ## Data Flow
 
 1. **User Request** - User accesses the application through NGINX
 2. **Authentication** - JWT tokens are validated for protected endpoints
 3. **Authorization** - Role-based access control determines access permissions
-4. **Frontend Rendering** - Next.js renders pages and makes GraphQL requests
-5. **GraphQL API** - Apollo Client sends queries to the backend
-6. **Data Processing** - ASP.NET Core processes requests and queries PostgreSQL
-7. **Caching** - Redis cache is used for frequently accessed data
-8. **Logging** - Serilog captures structured logs with correlation IDs
-9. **Response** - Data is returned through the GraphQL API to the frontend
+4. **Frontend Rendering** - Next.js renders pages and makes REST API requests
+5. **REST API** - Frontend sends requests to the Node.js backend
+6. **Data Processing** - Node.js/Express processes requests and queries PostgreSQL
+7. **Logging** - Winston captures structured logs
+8. **Response** - Data is returned through the REST API to the frontend
 
 ## Key Features
 
@@ -139,10 +129,10 @@ The application is deployed using a standalone server approach with NGINX as a r
 - Multi-tenancy support
 
 #### Structured Logging
-- Comprehensive logging with Serilog
+- Comprehensive logging with Winston
 - Correlation ID tracking across requests
 - Structured log entries with contextual information
-- Multiple output sinks (Console, File, JSON)
+- Multiple output transports
 - Performance timing and error tracking
 
 ### Quiz Prefetching
@@ -159,28 +149,31 @@ The application is deployed using a standalone server approach with NGINX as a r
 - Structured content organized by modules and tiers
 - JSON-based content structure with standardized schemas
 - Automated validation and quality control
-- Database-first approach with Entity Framework Core
+- Database-first approach with Sequelize ORM
 
 ## Directory Structure
 
 ```
 GlassCodeAcademy/
+├── backend-node/                # Node.js/Express application
+│   ├── src/
+│   │   ├── controllers/         # Route controllers
+│   │   ├── models/              # Data models
+│   │   ├── routes/              # API routes
+│   │   ├── services/            # Business logic services
+│   │   ├── middleware/          # Custom middleware
+│   │   ├── config/              # Configuration files
+│   │   └── utils/               # Utility functions
+│   ├── scripts/                 # Utility scripts
+│   └── server.js                # Application entry point
 ├── glasscode/
-│   ├── backend/                 # ASP.NET Core application
-│   │   ├── Controllers/         # API controllers
-│   │   ├── Data/                # Database context and migrations
-│   │   ├── GraphQL/             # GraphQL schema and resolvers
-│   │   ├── Models/              # Data models
-│   │   ├── Services/            # Business logic services
-│   │   ├── Middleware/          # Custom middleware
-│   │   ├── Extensions/          # Extension methods
-│   │   └── Program.cs           # Application entry point
 │   └── frontend/                # Next.js application
 │       ├── src/
 │       │   ├── app/             # App router pages
 │       │   ├── components/      # Reusable components
 │       │   ├── hooks/           # Custom React hooks
 │       │   └── lib/             # Utility functions
+│       │       └── api/         # API client and hooks
 │       └── public/              # Static assets
 ├── content/                     # Content files (lessons and quizzes)
 │   ├── lessons/                 # Lesson content JSON files
@@ -189,16 +182,14 @@ GlassCodeAcademy/
 ├── docs/                        # Documentation
 ├── scripts/                     # Utility scripts
 └── tests/                       # Test projects
-    └── Backend.Tests/           # Backend unit and integration tests
+    └── backend-node/tests/      # Backend unit and integration tests
 ```
 
 ## Development Workflow
 
 ### Prerequisites
-- .NET 8.0 SDK
 - Node.js 18+
 - PostgreSQL
-- Redis
 
 ### Quick Start
 ```bash
