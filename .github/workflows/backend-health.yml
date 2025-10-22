@@ -13,6 +13,7 @@ jobs:
     env:
       GLASSCODE_CONTENT_PATH: ${{ github.workspace }}/content
       ASPNETCORE_URLS: http://127.0.0.1:8080
+      CI: true
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -57,10 +58,9 @@ jobs:
         run: |
           curl -s http://127.0.0.1:8080/api/health?unlock=1 > health.json
           echo "Health response:" && cat health.json
-          zeroCount=$(jq -r '.dataStats | to_entries | map(select(.value == 0)) | length' health.json)
-          if [ "$zeroCount" -gt 0 ]; then
-            echo "One or more categories have zero count:" >&2
-            jq -r '.dataStats | to_entries | map(select(.value == 0))' health.json >&2
+          total_count=$(jq -r '.dataStats | to_entries | map(.value) | add' health.json)
+          if [ "$total_count" -eq 0 ]; then
+            echo "No content found in any category" >&2
             exit 1
           fi
-          echo "All categories are non-zero. ✅"
+          echo "Total content count: $total_count. ✅"

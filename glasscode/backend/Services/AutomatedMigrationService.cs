@@ -853,6 +853,8 @@ namespace backend.Services
 
             Console.WriteLine($"   Modules with published quizzes: {modulesWithQuizzes}");
 
+            // For CI/production, we need to ensure we have content
+            // But we don't need every module to have quizzes for the health check to pass
             if (moduleCount > 0 && lessonCount > 0 && modulesWithoutLessons == 0)
             {
                 Console.WriteLine($"✅ Migration validation passed");

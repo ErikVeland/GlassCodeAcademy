@@ -66,14 +66,14 @@ jobs:
           ./scripts/run-database-migration.sh
 
       - name: Restore backend tests
-        run: dotnet restore glasscode/backend.Tests/backend.Tests.csproj
+        run: dotnet restore glasscode/backend/Backend.Tests/Backend.Tests.csproj
 
       - name: Build backend tests
-        run: dotnet build glasscode/backend.Tests/backend.Tests.csproj --configuration Release --no-restore
+        run: dotnet build glasscode/backend/Backend.Tests/Backend.Tests.csproj --configuration Release --no-restore
 
       - name: Run tests with coverage
         run: |
-          dotnet test glasscode/backend.Tests/backend.Tests.csproj \
+          dotnet test glasscode/backend/Backend.Tests/Backend.Tests.csproj \
             --collect:"XPlat Code Coverage" \
             --settings glasscode/backend/Backend.Tests/coverlet.runsettings \
             --results-directory ./TestResults

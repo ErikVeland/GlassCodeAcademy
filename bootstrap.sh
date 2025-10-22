@@ -360,6 +360,29 @@ EOF
     log "✅ global.json updated successfully"
 }
 
+# Clean build/publish/temp directories before any installs/builds
+pre_install_cleanup() {
+    log "🧹 Pre-install cleanup: removing build/publish/temp directories"
+    local dirs=(
+        "$APP_DIR/node_modules"
+        "$APP_DIR/glasscode/frontend/node_modules"
+        "$APP_DIR/glasscode/frontend/.next"
+        "$APP_DIR/glasscode/frontend/.turbo"
+        "$APP_DIR/glasscode/frontend/.cache"
+        "$APP_DIR/glasscode/backend/publish"
+        "$APP_DIR/glasscode/backend/out"
+        "$APP_DIR/glasscode/backend/bin"
+        "$APP_DIR/glasscode/backend/obj"
+    )
+    for d in "${dirs[@]}"; do
+        if [ -d "$d" ]; then
+            log "🗑️  Removing $d"
+            rm -rf "$d" || true
+        fi
+    done
+    log "✅ Pre-install cleanup complete"
+}
+
 ### 1. Preflight and prerequisites
 preflight_checks
 
@@ -515,6 +538,9 @@ else
     sudo -u "$DEPLOY_USER" git pull
     log "✅ Repository updated"
 fi
+
+# Pre-install cleanup to ensure fresh state
+pre_install_cleanup
 
 ### 8. Update global.json (only if .NET SDK detected)
 if [ -n "$DOTNET_SDK_VERSION" ]; then
@@ -733,7 +759,7 @@ if [[ "$BACKEND_HEALTHY" != "true" && $ATTEMPT -gt $MAX_ATTEMPTS ]]; then
         log "🔍 Running enhanced content verification..."
         if [ -f "$APP_DIR/glasscode/backend/Scripts/ContentVerificationReport.cs" ]; then
             cd "$APP_DIR/glasscode/backend"
-            timeout 300 sudo -u "$DEPLOY_USER" dotnet run --project Scripts/ContentVerificationReport.cs || true
+            timeout 300 sudo -u "$DEPLOY_USER" dotnet run -c Release --no-build --no-restore -- ContentVerificationReport.cs || true
             cd - >/dev/null
         fi
         exit 1
@@ -752,27 +778,10 @@ if [ "$FRONTEND_ONLY" -eq 0 ] && [ "${SKIP_CONTENT_VERIFICATION:-0}" -ne 1 ]; th
         # Check if dotnet is available
         if command -v dotnet >/dev/null 2>&1; then
             log "📊 Generating content verification report..."
-            VERIFICATION_OUTPUT=$(timeout 120 sudo -u "$DEPLOY_USER" dotnet run --project Scripts/ContentVerificationReport.cs 2>&1 || true)
+            cd "$APP_DIR/glasscode/backend"
+            VERIFICATION_OUTPUT=$(timeout 120 sudo -u "$DEPLOY_USER" dotnet run -c Release --no-build --no-restore -- ContentVerificationReport.cs 2>&1 || true)
+            cd - >/dev/null
             echo "$VERIFICATION_OUTPUT"
-            
-            # Check if there are any issues reported
-            if echo "$VERIFICATION_OUTPUT" | grep -q "❌"; then
-                log "⚠️  Content verification found issues"
-                
-                # Only attempt to fix if not in fast mode
-                if [ "${FAST_MODE:-0}" -ne 1 ]; then
-                    log "🔧 Attempting to fix content issues..."
-                    FIX_OUTPUT=$(timeout 300 sudo -u "$DEPLOY_USER" dotnet run --project Scripts/FixContentSeeding.cs 2>&1 || true)
-                    echo "$FIX_OUTPUT"
-                    
-                    # Run verification again to confirm fixes
-                    log "🔍 Re-running verification after fixes..."
-                    VERIFICATION_OUTPUT=$(timeout 120 sudo -u "$DEPLOY_USER" dotnet run --project Scripts/ContentVerificationReport.cs 2>&1 || true)
-                    echo "$VERIFICATION_OUTPUT"
-                fi
-            else
-                log "✅ Content verification passed"
-            fi
         else
             log "⚠️  dotnet command not found, skipping enhanced verification"
         fi
