@@ -126,8 +126,28 @@ if ! PGPASSWORD="$DB_CHECK_PASS" "$PSQL_BIN" -h "$DB_CHECK_HOST" -p "$DB_CHECK_P
   echo "⚠️  Postgres not reachable; attempting to start service via Homebrew..."
   if command -v brew >/dev/null 2>&1; then
     brew services start postgresql@16 || true
-    sleep 2
   fi
+fi
+
+# Wait for PostgreSQL readiness
+READY_MAX=30
+READY=0
+for ((i=1; i<=READY_MAX; i++)); do
+  if PGPASSWORD="$DB_CHECK_PASS" "$PSQL_BIN" -h "$DB_CHECK_HOST" -p "$DB_CHECK_PORT" -U "$DB_CHECK_USER" -d postgres -c "SELECT 1" >/dev/null 2>&1; then
+    echo "✅ PostgreSQL is ready at ${DB_CHECK_HOST}:${DB_CHECK_PORT} (attempt $i/$READY_MAX)"
+    READY=1
+    break
+  fi
+  printf "[%#-30s] Waiting for PostgreSQL (%d/%d)\r" "" "$i" "$READY_MAX"
+  sleep 1
+  # Retry starting service once more in case it failed
+  if command -v brew >/dev/null 2>&1 && [ "$i" -eq 3 ]; then
+    brew services start postgresql@16 || true
+  fi
+done
+if [ "$READY" -ne 1 ]; then
+  echo "\n❌ ERROR: PostgreSQL is not reachable on ${DB_CHECK_HOST}:${DB_CHECK_PORT} after ${READY_MAX}s"
+  exit 1
 fi
 
 # Ensure development database exists
@@ -154,7 +174,7 @@ fi
 
 # Health check loop
 HEALTH_URL="http://localhost:$CHOSEN_PORT/api/health"
-MAX_ATTEMPTS=30
+MAX_ATTEMPTS=60
 for ((i=1; i<=MAX_ATTEMPTS; i++)); do
   printf "[%#-30s] Checking backend health (%d/%d)\r" "" "$i" "$MAX_ATTEMPTS"
   if curl -sSf "$HEALTH_URL" > /dev/null; then
@@ -163,7 +183,7 @@ for ((i=1; i<=MAX_ATTEMPTS; i++)); do
     exit 0
   fi
   sleep 1
-done
+ done
 
 printf "\n❌ Backend failed to start properly within the expected time.\n"
 echo "🧪 Diagnostic: backend service status"

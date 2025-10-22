@@ -189,37 +189,52 @@ Log.Information("DataService initialized with {DotNetLessons} DotNet lessons", d
 
 // Run full automated content migration on startup
 Log.Information("Checking whether automated migration is needed...");
-using (var scope = app.Services.CreateScope())
+var skipAutoMigration = Environment.GetEnvironmentVariable("SKIP_AUTOMATED_MIGRATION") == "1";
+if (skipAutoMigration)
 {
-    var ctx = scope.ServiceProvider.GetRequiredService<backend.Data.GlassCodeDbContext>();
-    var hasAnyModules = await ctx.Modules.AnyAsync();
-    var hasAnyLessons = await ctx.Lessons.AnyAsync();
-    var hasAnyQuizzes = await ctx.LessonQuizzes.AnyAsync();
-    if (!hasAnyModules || !hasAnyLessons || !hasAnyQuizzes)
+    Log.Information("SKIP_AUTOMATED_MIGRATION=1; skipping startup migration and DB checks.");
+}
+else
+{
+    using (var scope = app.Services.CreateScope())
     {
-        Log.Information("Running AutomatedMigrationService migration (database not fully populated)...");
-        var migrationService = scope.ServiceProvider.GetRequiredService<backend.Services.AutomatedMigrationService>();
-        await migrationService.PerformFullMigrationAsync();
-    }
-    else
-    {
-        Log.Information("Skipping AutomatedMigrationService migration; data already present.");
-
-        // Backfill quizzes for ALL modules missing published quizzes
-        var modules = await ctx.Modules
-            .Include(m => m.Lessons)
-            .ThenInclude(l => l.LessonQuizzes)
-            .ToListAsync();
-
-        var migrationService = scope.ServiceProvider.GetRequiredService<backend.Services.AutomatedMigrationService>();
-        foreach (var mod in modules)
+        try
         {
-            var hasQuizzes = mod.Lessons.SelectMany(l => l.LessonQuizzes).Any(q => q.IsPublished);
-            if (!hasQuizzes)
+            var ctx = scope.ServiceProvider.GetRequiredService<backend.Data.GlassCodeDbContext>();
+            var hasAnyModules = await ctx.Modules.AnyAsync();
+            var hasAnyLessons = await ctx.Lessons.AnyAsync();
+            var hasAnyQuizzes = await ctx.LessonQuizzes.AnyAsync();
+            if (!hasAnyModules || !hasAnyLessons || !hasAnyQuizzes)
             {
-                Log.Information("Backfilling quizzes for module '{ModuleSlug}'...", mod.Slug);
-                await migrationService.SeedQuizzesForModuleSlugAsync(mod.Slug);
+                Log.Information("Running AutomatedMigrationService migration (database not fully populated)...");
+                var migrationService = scope.ServiceProvider.GetRequiredService<backend.Services.AutomatedMigrationService>();
+                await migrationService.PerformFullMigrationAsync();
             }
+            else
+            {
+                Log.Information("Skipping AutomatedMigrationService migration; data already present.");
+
+                // Backfill quizzes for ALL modules missing published quizzes
+                var modules = await ctx.Modules
+                    .Include(m => m.Lessons)
+                    .ThenInclude(l => l.LessonQuizzes)
+                    .ToListAsync();
+
+                var migrationService = scope.ServiceProvider.GetRequiredService<backend.Services.AutomatedMigrationService>();
+                foreach (var mod in modules)
+                {
+                    var hasQuizzes = mod.Lessons.SelectMany(l => l.LessonQuizzes).Any(q => q.IsPublished);
+                    if (!hasQuizzes)
+                    {
+                        Log.Information("Backfilling quizzes for module '{ModuleSlug}'...", mod.Slug);
+                        await migrationService.SeedQuizzesForModuleSlugAsync(mod.Slug);
+                    }
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            Log.Warning("Skipping automated migration due to DB connectivity issue: {Message}", ex.Message);
         }
     }
 }
