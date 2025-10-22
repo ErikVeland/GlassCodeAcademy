@@ -3,6 +3,10 @@
 # Development script to start the .NET backend directly
 # This bypasses Docker and runs the application natively
 
+# Always operate from the script directory
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+cd "$SCRIPT_DIR"
+
 echo "🚀 Starting GlassCode Academy Backend (Development Mode)..."
 
 # Check if dotnet is installed
@@ -32,13 +36,13 @@ if [ "$REBUILD_NEEDED" = true ]; then
     rm -rf ./publish
     
     # Restore dependencies
-    if ! dotnet restore; then
+    if ! dotnet restore ./backend.csproj; then
         echo "❌ ERROR: Failed to restore dependencies."
         exit 1
     fi
     
     # Publish for .NET 8.0
-    if ! dotnet publish -c Release -o ./publish --framework net8.0; then
+    if ! dotnet publish ./backend.csproj -c Release -o ./publish --framework net8.0; then
         echo "❌ ERROR: Failed to build the backend."
         exit 1
     fi
@@ -96,6 +100,44 @@ echo "⏹️  Press Ctrl+C to stop the backend"
 
 # Ensure backend binds to chosen port unless overridden
 export ASPNETCORE_URLS="http://127.0.0.1:$CHOSEN_PORT"
+# Set environment defaults for development
+export ASPNETCORE_ENVIRONMENT="${ASPNETCORE_ENVIRONMENT:-Development}"
+# Build connection string from environment if not explicitly provided
+export ConnectionStrings__DefaultConnection="${ConnectionStrings__DefaultConnection:-Host=${DB_HOST:-127.0.0.1};Database=${DB_NAME:-glasscode_dev};Username=${DB_USER:-postgres};Password=${DB_PASSWORD:-postgres};Port=${DB_PORT:-5432}}"
+
+# Attempt to ensure PostgreSQL is reachable; start service via Homebrew if not
+DB_CHECK_HOST="${DB_HOST:-127.0.0.1}"
+DB_CHECK_PORT="${DB_PORT:-5432}"
+DB_CHECK_USER="${DB_USER:-postgres}"
+DB_CHECK_PASS="${DB_PASSWORD:-postgres}"
+
+if command -v psql >/dev/null 2>&1; then
+  PSQL_BIN="psql"
+elif command -v brew >/dev/null 2>&1 && brew --prefix postgresql@16 >/dev/null 2>&1; then
+  PSQL_BIN="$(brew --prefix postgresql@16)/bin/psql"
+elif [ -x "/usr/local/opt/postgresql@16/bin/psql" ]; then
+  PSQL_BIN="/usr/local/opt/postgresql@16/bin/psql"
+else
+  PSQL_BIN="psql"
+fi
+
+echo "🧪 Checking PostgreSQL connectivity to ${DB_CHECK_HOST}:${DB_CHECK_PORT}..."
+if ! PGPASSWORD="$DB_CHECK_PASS" "$PSQL_BIN" -h "$DB_CHECK_HOST" -p "$DB_CHECK_PORT" -U "$DB_CHECK_USER" -d postgres -c "SELECT 1" >/dev/null 2>&1; then
+  echo "⚠️  Postgres not reachable; attempting to start service via Homebrew..."
+  if command -v brew >/dev/null 2>&1; then
+    brew services start postgresql@16 || true
+    sleep 2
+  fi
+fi
+
+# Ensure development database exists
+PG_DB="${DB_NAME:-glasscode_dev}"
+PG_EXISTS_CMD="SELECT 1 FROM pg_database WHERE datname='${PG_DB}'"
+PG_DB_EXISTS=$(PGPASSWORD="$DB_CHECK_PASS" "$PSQL_BIN" -h "$DB_CHECK_HOST" -p "$DB_CHECK_PORT" -U "$DB_CHECK_USER" -d postgres -tAc "$PG_EXISTS_CMD" 2>/dev/null || echo "")
+if [ "$PG_DB_EXISTS" != "1" ]; then
+  echo "🗄️  Creating database '${PG_DB}'..."
+  PGPASSWORD="$DB_CHECK_PASS" "$PSQL_BIN" -h "$DB_CHECK_HOST" -p "$DB_CHECK_PORT" -U "$DB_CHECK_USER" -d postgres -c "CREATE DATABASE ${PG_DB};" || true
+fi
 
 # Start the backend
 dotnet ./publish/backend.dll &
@@ -103,7 +145,7 @@ dotnet ./publish/backend.dll &
 BACKEND_PID=$!
 
 # macOS-compatible listening port diagnostic (use lsof instead of ss)
-echo "🧪 Diagnostic: listening ports (expect :8080)"
+echo "🧪 Diagnostic: listening ports (expect :$CHOSEN_PORT)"
 if command -v lsof &> /dev/null; then
   lsof -nP -iTCP -sTCP:LISTEN | grep -E "(dotnet|backend)" || echo "No listening dotnet ports found yet."
 else

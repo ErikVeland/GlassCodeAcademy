@@ -40,8 +40,42 @@ builder.Services.AddCors(options =>
 });
 
 // Add Entity Framework Core with PostgreSQL
-builder.Services.AddDbContext<GlassCodeDbContext>(options =>
-    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+// Compute connection string with environment-aware fallback
+string? connStr = builder.Configuration.GetConnectionString("DefaultConnection");
+var envConnStr = Environment.GetEnvironmentVariable("CONNECTION_STRING");
+if (!string.IsNullOrWhiteSpace(envConnStr))
+    connStr = envConnStr;
+var dbUrl = Environment.GetEnvironmentVariable("DATABASE_URL");
+if (string.IsNullOrWhiteSpace(connStr) && !string.IsNullOrWhiteSpace(dbUrl))
+{
+    try
+    {
+        var uri = new Uri(dbUrl);
+        var userInfo = uri.UserInfo.Split(':');
+        var dbUser = userInfo.Length > 0 ? Uri.UnescapeDataString(userInfo[0]) : "postgres";
+        var dbPass = userInfo.Length > 1 ? Uri.UnescapeDataString(userInfo[1]) : "";
+        var dbHost = uri.Host;
+        var dbPort = uri.Port > 0 ? uri.Port : 5432;
+        var dbName = uri.AbsolutePath.Trim('/');
+
+        connStr = $"Host={dbHost};Database={dbName};Username={dbUser};Password={dbPass};Port={dbPort}";
+    }
+    catch (Exception ex)
+    {
+        Log.Warning("Failed to parse DATABASE_URL: {Message}", ex.Message);
+    }
+}
+if (string.IsNullOrWhiteSpace(connStr))
+{
+    var host = Environment.GetEnvironmentVariable("DB_HOST") ?? "localhost";
+    var name = Environment.GetEnvironmentVariable("DB_NAME") ?? "glasscode_dev";
+    var user = Environment.GetEnvironmentVariable("DB_USER") ?? "postgres";
+    var pwd = Environment.GetEnvironmentVariable("DB_PASSWORD") ?? "postgres";
+    var port = Environment.GetEnvironmentVariable("DB_PORT") ?? "5432";
+    connStr = $"Host={host};Database={name};Username={user};Password={pwd};Port={port}";
+}
+// Use computed connection string
+builder.Services.AddDbContext<GlassCodeDbContext>(options => options.UseNpgsql(connStr));
 
 // Add authorization services
 builder.Services.AddAuthorization();
