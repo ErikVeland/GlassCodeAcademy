@@ -12,6 +12,21 @@ jobs:
     env:
       GLASSCODE_CONTENT_PATH: ${{ github.workspace }}/content
       ASPNETCORE_URLS: http://127.0.0.1:8080
+      CONNECTION_STRING: Host=localhost;Database=glasscode_test;Username=postgres;Password=postgres;Port=5432
+    services:
+      postgres:
+        image: postgres:13
+        env:
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: glasscode_test
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -20,6 +35,24 @@ jobs:
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: '8.0.x'
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y postgresql-client xmlstarlet
+
+      - name: Wait for PostgreSQL
+        run: |
+          # Wait for PostgreSQL to be ready
+          until pg_isready -h localhost -p 5432 -U postgres; do
+            echo "Waiting for PostgreSQL to be ready..."
+            sleep 2
+          done
+
+      - name: Run database migrations
+        run: |
+          cd glasscode/backend
+          dotnet run --project Scripts/RunAutomatedMigration.cs
 
       - name: Restore backend tests
         run: dotnet restore glasscode/backend/Backend.Tests/Backend.Tests.csproj
