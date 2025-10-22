@@ -144,5 +144,9 @@ namespace backend.Scripts
         public int CorrectAnswer { get; set; }
         public string? Type { get; set; }
         public List<object> Sources { get; set; } = new();
+        // New fields
+        public bool? FixedChoiceOrder { get; set; }
+        public List<string>? ChoiceLabels { get; set; }
+        public List<string>? AcceptedAnswers { get; set; }
     }
 }

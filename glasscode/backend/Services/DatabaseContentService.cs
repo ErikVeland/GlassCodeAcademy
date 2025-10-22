@@ -394,39 +394,42 @@ namespace backend.Services
             {
                 Id = quiz.Id,
                 Topic = quiz.Topic ?? string.Empty,
-                Type = quiz.QuestionType,
-                Question = quiz.Question,
+                Type = quiz.QuizType,
+                Question = quiz.Question ?? string.Empty,
+                Choices = SafeDeserializeArray(quiz.Choices),
                 CorrectAnswer = quiz.CorrectAnswer,
                 Explanation = quiz.Explanation,
-                EstimatedTime = quiz.EstimatedTime
-                // Note: BaseInterviewQuestion doesn't have CreatedAt/UpdatedAt properties
+                Difficulty = quiz.Difficulty,
+                IndustryContext = quiz.IndustryContext,
+                Tags = SafeDeserializeArray(quiz.Tags),
+                QuestionType = quiz.QuestionType,
+                EstimatedTime = quiz.EstimatedTime,
+                Sources = SafeDeserializeArray(quiz.Sources),
+                FixedChoiceOrder = quiz.FixedChoiceOrder,
+                ChoiceLabels = SafeDeserializeArray(quiz.ChoiceLabels),
+                AcceptedAnswers = SafeDeserializeArray(quiz.AcceptedAnswers)
             };
 
-            // Parse choices from JSON if available
-            if (!string.IsNullOrEmpty(quiz.Choices))
-            {
-                try
-                {
-                    var choicesDoc = JsonDocument.Parse(quiz.Choices);
-                    if (choicesDoc.RootElement.ValueKind == JsonValueKind.Array)
-                    {
-                        var choices = choicesDoc.RootElement.EnumerateArray()
-                            .Where(x => x.ValueKind == JsonValueKind.String)
-                            .Select(x => x.GetString())
-                            .Where(x => x != null)
-                            .Select(x => x!)
-                            .ToArray();
-                        baseQuestion.Choices = choices;
-                    }
-                }
-                catch (Exception ex)
-                {
-                    // Log the error but don't fail the entire operation
-                    _logger.LogWarning(ex, "Error parsing quiz choices for quiz {QuizId}", quiz.Id);
-                }
-            }
-
             return baseQuestion;
+        }
+
+        // Helper: robustly parse string to string[] from JSON or pipe-delimited
+        private string[]? SafeDeserializeArray(string? raw)
+        {
+            if (string.IsNullOrWhiteSpace(raw)) return null;
+            try
+            {
+                var arr = JsonSerializer.Deserialize<string[]>(raw);
+                return arr;
+            }
+            catch
+            {
+                var parts = raw.Split('|', StringSplitOptions.RemoveEmptyEntries)
+                               .Select(s => s.Trim())
+                               .Where(s => !string.IsNullOrEmpty(s))
+                               .ToArray();
+                return parts.Length > 0 ? parts : null;
+            }
         }
     }
 }

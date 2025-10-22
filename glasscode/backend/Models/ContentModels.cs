@@ -47,5 +47,9 @@ namespace backend.Models
         public string? IndustryContext { get; set; }
         public List<string>? Tags { get; set; }
         public int? EstimatedTime { get; set; }
+        // New fields
+        public bool? FixedChoiceOrder { get; set; }
+        public List<string>? ChoiceLabels { get; set; }
+        public List<string>? AcceptedAnswers { get; set; }
     }
 }

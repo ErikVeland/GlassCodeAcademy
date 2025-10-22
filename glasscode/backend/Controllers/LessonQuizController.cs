@@ -38,6 +38,9 @@ namespace backend.Controllers
                     Topic = q.Topic,
                     Difficulty = q.Difficulty,
                     Choices = q.Choices,
+                    FixedChoiceOrder = q.FixedChoiceOrder,
+                    ChoiceLabels = q.ChoiceLabels,
+                    AcceptedAnswers = q.AcceptedAnswers,
                     Explanation = q.Explanation,
                     IndustryContext = q.IndustryContext,
                     Tags = q.Tags,
@@ -75,6 +78,9 @@ namespace backend.Controllers
                 Topic = quiz.Topic,
                 Difficulty = quiz.Difficulty,
                 Choices = quiz.Choices,
+                FixedChoiceOrder = quiz.FixedChoiceOrder,
+                ChoiceLabels = quiz.ChoiceLabels,
+                AcceptedAnswers = quiz.AcceptedAnswers,
                 Explanation = quiz.Explanation,
                 IndustryContext = quiz.IndustryContext,
                 Tags = quiz.Tags,
@@ -110,6 +116,9 @@ namespace backend.Controllers
                 Topic = createDto.Topic,
                 Difficulty = createDto.Difficulty,
                 Choices = createDto.Choices,
+                FixedChoiceOrder = createDto.FixedChoiceOrder,
+                ChoiceLabels = createDto.ChoiceLabels,
+                AcceptedAnswers = createDto.AcceptedAnswers,
                 Explanation = createDto.Explanation,
                 IndustryContext = createDto.IndustryContext,
                 Tags = createDto.Tags,
@@ -134,6 +143,9 @@ namespace backend.Controllers
                 Topic = quiz.Topic,
                 Difficulty = quiz.Difficulty,
                 Choices = quiz.Choices,
+                FixedChoiceOrder = quiz.FixedChoiceOrder,
+                ChoiceLabels = quiz.ChoiceLabels,
+                AcceptedAnswers = quiz.AcceptedAnswers,
                 Explanation = quiz.Explanation,
                 IndustryContext = quiz.IndustryContext,
                 Tags = quiz.Tags,
@@ -166,6 +178,9 @@ namespace backend.Controllers
             quiz.Topic = updateDto.Topic;
             quiz.Difficulty = updateDto.Difficulty;
             quiz.Choices = updateDto.Choices;
+            quiz.FixedChoiceOrder = updateDto.FixedChoiceOrder;
+            quiz.ChoiceLabels = updateDto.ChoiceLabels;
+            quiz.AcceptedAnswers = updateDto.AcceptedAnswers;
             quiz.Explanation = updateDto.Explanation;
             quiz.IndustryContext = updateDto.IndustryContext;
             quiz.Tags = updateDto.Tags;
@@ -201,6 +216,9 @@ namespace backend.Controllers
                 Topic = quiz.Topic,
                 Difficulty = quiz.Difficulty,
                 Choices = quiz.Choices,
+                FixedChoiceOrder = quiz.FixedChoiceOrder,
+                ChoiceLabels = quiz.ChoiceLabels,
+                AcceptedAnswers = quiz.AcceptedAnswers,
                 Explanation = quiz.Explanation,
                 IndustryContext = quiz.IndustryContext,
                 Tags = quiz.Tags,

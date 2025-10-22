@@ -370,7 +370,10 @@ namespace backend.Scripts
                             {
                                 LessonId = lesson.Id,
                                 Question = question.Question ?? "Untitled Question",
-                                Choices = question.Choices != null ? string.Join("|", question.Choices) : "",
+                                Choices = question.Choices != null ? JsonSerializer.Serialize(question.Choices) : null,
+                                FixedChoiceOrder = question.FixedChoiceOrder ?? false,
+                                ChoiceLabels = question.ChoiceLabels != null ? JsonSerializer.Serialize(question.ChoiceLabels) : null,
+                                AcceptedAnswers = question.AcceptedAnswers != null ? JsonSerializer.Serialize(question.AcceptedAnswers) : null,
                                 CorrectAnswer = question.CorrectAnswer,
                                 Explanation = question.Explanation ?? "",
                                 Difficulty = question.Difficulty ?? "Beginner",
@@ -400,7 +403,10 @@ namespace backend.Scripts
                             {
                                 LessonId = lastLesson.Id,
                                 Question = question.Question ?? "Untitled Question",
-                                Choices = question.Choices != null ? string.Join("|", question.Choices) : "",
+                                Choices = question.Choices != null ? JsonSerializer.Serialize(question.Choices) : null,
+                                FixedChoiceOrder = question.FixedChoiceOrder ?? false,
+                                ChoiceLabels = question.ChoiceLabels != null ? JsonSerializer.Serialize(question.ChoiceLabels) : null,
+                                AcceptedAnswers = question.AcceptedAnswers != null ? JsonSerializer.Serialize(question.AcceptedAnswers) : null,
                                 CorrectAnswer = question.CorrectAnswer,
                                 Explanation = question.Explanation ?? "",
                                 Difficulty = question.Difficulty ?? "Beginner",

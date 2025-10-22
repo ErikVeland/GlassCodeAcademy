@@ -209,19 +209,8 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ modu
   // Resolve short slugs to full module slugs using central mapping
   const resolvedSlug = (await contentRegistry.getModuleSlugFromShortSlug(moduleSlug)) || moduleSlug;
 
-  // Load DB lessons and merge with file content when available
-  const dbLessons = await fetchLessonsFromDatabase(resolvedSlug);
-  let lessons: FrontendLesson[] = dbLessons;
-
-  if (!Array.isArray(dbLessons) || dbLessons.length === 0) {
-    const fileLessons = await fetchLessonsFromFiles(req, resolvedSlug);
-    lessons = fileLessons;
-  } else {
-    const fileLessons = await fetchLessonsFromFiles(req, resolvedSlug);
-    if (Array.isArray(fileLessons) && fileLessons.length > 0) {
-      lessons = mergeLessonsByTitle(dbLessons, fileLessons);
-    }
-  }
+  // Load DB lessons only - no fallback to file content
+  const lessons = await fetchLessonsFromDatabase(resolvedSlug);
 
   // Optional debug output in non-production
   const url = new URL(req.url);
@@ -232,7 +221,7 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ modu
       inputSlug: moduleSlug,
       resolvedSlug,
       lessonsCount: Array.isArray(lessons) ? lessons.length : 0,
-      source: (!Array.isArray(dbLessons) || dbLessons.length === 0) ? 'file' : 'merged',
+      source: 'database',
     });
   }
 

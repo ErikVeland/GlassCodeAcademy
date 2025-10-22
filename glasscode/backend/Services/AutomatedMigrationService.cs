@@ -50,45 +50,70 @@ namespace backend.Services
         /// <summary>
         /// Performs a complete migration of all content from JSON files to the database
         /// </summary>
-        public async Task<bool> PerformFullMigrationAsync()
+        public async Task<bool> PerformFullMigrationAsync(int maxRetries = 3)
         {
-            try
+            for (int attempt = 1; attempt <= maxRetries; attempt++)
             {
-                Console.WriteLine("🚀 Starting full automated migration process...");
+                try
+                {
+                    Console.WriteLine($"🚀 Starting full automated migration process (attempt {attempt}/{maxRetries})...");
 
-                // Step 1: Ensure database is created and up to date
-                Console.WriteLine("📋 Ensuring database schema is up to date...");
-                await _context.Database.MigrateAsync();
+                    // Step 1: Ensure database is created and up to date
+                    Console.WriteLine("📋 Ensuring database schema is up to date...");
+                    await _context.Database.MigrateAsync();
 
-                // Step 2: Seed modules from registry
-                Console.WriteLine("🌱 Seeding modules from registry...");
-                await SeedModulesFromRegistryAsync();
+                    // Step 2: Seed modules from registry
+                    Console.WriteLine("🌱 Seeding modules from registry...");
+                    await SeedModulesFromRegistryAsync();
 
-                // Step 3: Seed lessons from JSON files
-                Console.WriteLine("📚 Seeding lessons from JSON files...");
-                await SeedLessonsFromJsonAsync();
+                    // Step 3: Seed lessons from JSON files
+                    Console.WriteLine("📚 Seeding lessons from JSON files...");
+                    await SeedLessonsFromJsonAsync();
 
-                // Map lessons to correct modules after seeding
-                Console.WriteLine("🧭 Mapping lessons to modules...");
-                await _lessonMappingService.MapLessonsToModulesAsync();
+                    // Map lessons to correct modules after seeding
+                    Console.WriteLine("🧭 Mapping lessons to modules...");
+                    await _lessonMappingService.MapLessonsToModulesAsync();
 
-                // Step 4: Seed quizzes from JSON files
-                Console.WriteLine("❓ Seeding quizzes from JSON files...");
-                await SeedQuizzesFromJsonAsync();
+                    // Step 4: Seed quizzes from JSON files
+                    Console.WriteLine("❓ Seeding quizzes from JSON files...");
+                    await SeedQuizzesFromJsonAsync();
 
-                // Step 5: Validate migration
-                Console.WriteLine("✅ Validating migration results...");
-                await ValidateMigrationAsync();
+                    // Step 5: Validate migration
+                    Console.WriteLine("✅ Validating migration results...");
+                    var validationResult = await ValidateMigrationAsync();
+                    
+                    if (!validationResult)
+                    {
+                        Console.WriteLine($"❌ Migration validation failed on attempt {attempt}!");
+                        if (attempt < maxRetries)
+                        {
+                            Console.WriteLine("⏳ Waiting before retry...");
+                            await Task.Delay(TimeSpan.FromSeconds(Math.Pow(2, attempt))); // Exponential backoff
+                        }
+                        continue; // Retry
+                    }
 
-                Console.WriteLine("🎉 Full migration completed successfully!");
-                return true;
+                    Console.WriteLine("🎉 Full migration completed successfully!");
+                    return true;
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"❌ Migration failed on attempt {attempt}: {ex.Message}");
+                    Console.WriteLine($"📍 Stack trace: {ex.StackTrace}");
+                    
+                    if (attempt < maxRetries)
+                    {
+                        Console.WriteLine("⏳ Waiting before retry...");
+                        await Task.Delay(TimeSpan.FromSeconds(Math.Pow(2, attempt))); // Exponential backoff
+                    }
+                    else
+                    {
+                        return false; // All retries exhausted
+                    }
+                }
             }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"❌ Migration failed: {ex.Message}");
-                Console.WriteLine($"📍 Stack trace: {ex.StackTrace}");
-                return false;
-            }
+            
+            return false; // All retries exhausted
         }
 
         /// <summary>
@@ -98,6 +123,7 @@ namespace backend.Services
         {
             try
             {
+                Console.WriteLine("🔍 Reading registry.json file...");
                 var registryPath = System.IO.Path.Combine(_contentPath, "registry.json");
                 if (!System.IO.File.Exists(registryPath))
                 {
@@ -116,6 +142,8 @@ namespace backend.Services
                     Console.WriteLine("⚠️ No modules found in registry.json");
                     return;
                 }
+
+                Console.WriteLine($"📋 Found {registryData.Modules.Count} modules in registry.json");
 
                 // Ensure we have a default course
                 var defaultCourse = await _context.Courses.FirstOrDefaultAsync();
@@ -136,6 +164,9 @@ namespace backend.Services
 
                 // Add modules from registry
                 var moduleOrder = 1;
+                var addedModules = 0;
+                var updatedModules = 0;
+                
                 foreach (var moduleData in registryData.Modules)
                 {
                     // Check if module already exists
@@ -157,20 +188,22 @@ namespace backend.Services
                         };
 
                         _context.Modules.Add(module);
-                        Console.WriteLine($"➕ Added module: {module.Title}");
+                        Console.WriteLine($"➕ Added module: {module.Title} (slug: {module.Slug})");
+                        addedModules++;
                     }
                     else
                     {
-                        Console.WriteLine($"🔄 Updated module: {existingModule.Title}");
+                        Console.WriteLine($"🔄 Updated module: {existingModule.Title} (slug: {existingModule.Slug})");
                         existingModule.Title = moduleData.Title;
                         existingModule.Description = moduleData.Description;
                         existingModule.Order = moduleOrder++;
                         existingModule.UpdatedAt = DateTime.UtcNow;
+                        updatedModules++;
                     }
                 }
 
                 await _context.SaveChangesAsync();
-                Console.WriteLine($"✅ Successfully processed {registryData.Modules.Count} modules from registry.json");
+                Console.WriteLine($"✅ Successfully processed {registryData.Modules.Count} modules from registry.json (Added: {addedModules}, Updated: {updatedModules})");
             }
             catch (Exception ex)
             {
@@ -186,6 +219,7 @@ namespace backend.Services
         {
             try
             {
+                Console.WriteLine("🔍 Looking for lessons directory...");
                 var lessonsPath = System.IO.Path.Combine(_contentPath, "lessons");
                 
                 if (!Directory.Exists(lessonsPath))
@@ -197,13 +231,30 @@ namespace backend.Services
                 var jsonFiles = Directory.GetFiles(lessonsPath, "*.json", SearchOption.AllDirectories);
                 Console.WriteLine($"📁 Found {jsonFiles.Length} lesson files to process");
 
+                var totalLessonsProcessed = 0;
+                var totalLessonsAdded = 0;
+                var totalLessonsUpdated = 0;
+                
                 foreach (var file in jsonFiles)
                 {
+                    var lessonsBefore = _context.ChangeTracker.Entries<Lesson>().Count(e => e.State == EntityState.Added || e.State == EntityState.Modified);
                     await ProcessLessonFileAsync(file);
+                    var lessonsAfter = _context.ChangeTracker.Entries<Lesson>().Count(e => e.State == EntityState.Added || e.State == EntityState.Modified);
+                    
+                    var lessonsInFile = lessonsAfter - lessonsBefore;
+                    Console.WriteLine($"📊 Processed {lessonsInFile} lessons from file: {System.IO.Path.GetFileNameWithoutExtension(file)}");
+                    totalLessonsProcessed += lessonsInFile;
+                    
                     try
                     {
                         await _context.SaveChangesAsync();
                         Console.WriteLine($"✅ Saved lesson changes after file: {System.IO.Path.GetFileNameWithoutExtension(file)}");
+                        
+                        // Count added vs updated lessons
+                        var addedLessons = _context.ChangeTracker.Entries<Lesson>().Where(e => e.State == EntityState.Added).Count();
+                        var updatedLessons = _context.ChangeTracker.Entries<Lesson>().Where(e => e.State == EntityState.Modified).Count();
+                        totalLessonsAdded += addedLessons;
+                        totalLessonsUpdated += updatedLessons;
                     }
                     catch (Exception saveEx)
                     {
@@ -218,7 +269,7 @@ namespace backend.Services
                     }
                 }
 
-                Console.WriteLine("✅ Lesson seeding completed!");
+                Console.WriteLine($"✅ Lesson seeding completed! Total lessons processed: {totalLessonsProcessed} (Added: {totalLessonsAdded}, Updated: {totalLessonsUpdated})");
             }
             catch (Exception ex)
             {
@@ -533,6 +584,7 @@ namespace backend.Services
         {
             try
             {
+                Console.WriteLine("🔍 Looking for quizzes directory...");
                 var quizzesPath = System.IO.Path.Combine(_contentPath, "quizzes");
                 
                 if (!Directory.Exists(quizzesPath))
@@ -544,13 +596,23 @@ namespace backend.Services
                 var jsonFiles = Directory.GetFiles(quizzesPath, "*.json");
                 Console.WriteLine($"📁 Found {jsonFiles.Length} quiz files to process");
 
+                var totalQuestionsProcessed = 0;
+                var totalQuestionsAdded = 0;
+                var totalQuestionsUpdated = 0;
+                
                 foreach (var file in jsonFiles)
                 {
+                    var questionsBefore = _context.ChangeTracker.Entries<LessonQuiz>().Count(e => e.State == EntityState.Added || e.State == EntityState.Modified);
                     await ProcessQuizFileAsync(file);
+                    var questionsAfter = _context.ChangeTracker.Entries<LessonQuiz>().Count(e => e.State == EntityState.Added || e.State == EntityState.Modified);
+                    
+                    var questionsInFile = questionsAfter - questionsBefore;
+                    Console.WriteLine($"📊 Processed {questionsInFile} questions from file: {System.IO.Path.GetFileNameWithoutExtension(file)}");
+                    totalQuestionsProcessed += questionsInFile;
                 }
 
                 await _context.SaveChangesAsync();
-                Console.WriteLine("✅ Quiz seeding completed!");
+                Console.WriteLine($"✅ Quiz seeding completed! Total questions processed: {totalQuestionsProcessed}");
             }
             catch (Exception ex)
             {
@@ -641,6 +703,9 @@ namespace backend.Services
                             Topic = question.Topic,
                             Difficulty = question.Difficulty ?? "Beginner",
                             Choices = question.Choices != null ? JsonSerializer.Serialize(question.Choices) : null,
+                            FixedChoiceOrder = question.FixedChoiceOrder ?? false,
+                            ChoiceLabels = question.ChoiceLabels != null ? JsonSerializer.Serialize(question.ChoiceLabels) : null,
+                            AcceptedAnswers = question.AcceptedAnswers != null ? JsonSerializer.Serialize(question.AcceptedAnswers) : null,
                             CorrectAnswer = question.CorrectAnswer,
                             Explanation = question.Explanation,
                             QuizType = question.Type ?? "multiple-choice",
@@ -739,7 +804,7 @@ namespace backend.Services
         /// <summary>
         /// Validates the migration results
         /// </summary>
-        private async Task ValidateMigrationAsync()
+        private async Task<bool> ValidateMigrationAsync()
         {
             var moduleCount = await _context.Modules.CountAsync();
             var lessonCount = await _context.Lessons.CountAsync();
@@ -750,13 +815,53 @@ namespace backend.Services
             Console.WriteLine($"   Lessons: {lessonCount}");
             Console.WriteLine($"   Quiz Questions: {quizCount}");
 
-            if (moduleCount > 0 && lessonCount > 0)
+            // Enhanced validation: ensure each module has at least one lesson
+            var modules = await _context.Modules
+                .Include(m => m.Lessons)
+                .ToListAsync();
+
+            var modulesWithLessons = modules.Count(m => m.Lessons.Any());
+            var modulesWithoutLessons = modules.Count(m => !m.Lessons.Any());
+            
+            Console.WriteLine($"   Modules with lessons: {modulesWithLessons}");
+            Console.WriteLine($"   Modules without lessons: {modulesWithoutLessons}");
+
+            // Check if all modules have lessons
+            if (modulesWithoutLessons > 0)
+            {
+                Console.WriteLine($"⚠️ Found {modulesWithoutLessons} modules without lessons. Listing modules without lessons:");
+                foreach (var module in modules.Where(m => !m.Lessons.Any()))
+                {
+                    Console.WriteLine($"      - {module.Title} ({module.Slug})");
+                }
+            }
+
+            // Check if all modules have published quizzes
+            var modulesWithQuizzes = 0;
+            foreach (var module in modules)
+            {
+                var hasQuizzes = module.Lessons.SelectMany(l => l.LessonQuizzes).Any(q => q.IsPublished);
+                if (hasQuizzes)
+                {
+                    modulesWithQuizzes++;
+                }
+                else
+                {
+                    Console.WriteLine($"⚠️ Module '{module.Title}' has no published quizzes");
+                }
+            }
+            
+            Console.WriteLine($"   Modules with published quizzes: {modulesWithQuizzes}");
+
+            if (moduleCount > 0 && lessonCount > 0 && modulesWithoutLessons == 0)
             {
                 Console.WriteLine($"✅ Migration validation passed");
+                return true;
             }
             else
             {
-                Console.WriteLine($"⚠️ Migration validation has concerns - some entities are missing");
+                Console.WriteLine($"❌ Migration validation failed - some entities are missing or incomplete");
+                return false;
             }
         }
 

@@ -28,209 +28,198 @@ public class GraphQLInterviewQuestionType
 
 public class GraphQLQuery
 {
-    public static IEnumerable<GraphQLLessonType> GetGraphQLLessons()
-    {
-        var jsonPath = System.IO.Path.Combine(backend.Services.DataService.ContentPath, "lessons", "graphql_lessons.json");
-        if (!System.IO.File.Exists(jsonPath))
-        {
-            return new List<GraphQLLessonType>();
-        }
+    private readonly backend.Services.DatabaseContentService _databaseContentService;
 
-        var jsonContent = System.IO.File.ReadAllText(jsonPath);
-        var lessons = System.Text.Json.JsonSerializer.Deserialize<List<BaseLesson>>(jsonContent, new JsonSerializerOptions
-        {
-            PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
-            PropertyNameCaseInsensitive = true
-        });
-        
-        return lessons?.Select(l => new GraphQLLessonType
-        {
-            Id = l.Id,
-            Topic = l.Topic,
-            Title = l.Title ?? string.Empty,
-            Description = l.Description ?? string.Empty,
-            CodeExample = l.CodeExample ?? string.Empty,
-            Output = l.Output ?? string.Empty
-        }) ?? new List<GraphQLLessonType>();
+    public GraphQLQuery(backend.Services.DatabaseContentService databaseContentService)
+    {
+        _databaseContentService = databaseContentService;
     }
 
-    public static GraphQLLessonType? GetGraphQLLesson(string id)
+    public async Task<IEnumerable<GraphQLLessonType>> GetGraphQLLessons()
+    {
+        try
+        {
+            var lessons = await _databaseContentService.GetLessonsByModuleSlugAsync("graphql-advanced");
+            return lessons.Select(l => new GraphQLLessonType
+            {
+                Id = l.Id,
+                Topic = l.Topic,
+                Title = l.Title ?? string.Empty,
+                Description = l.Description ?? string.Empty,
+                CodeExample = l.CodeExample ?? string.Empty,
+                Output = l.Output ?? string.Empty
+            });
+        }
+        catch (Exception ex)
+        {
+            // Log the error and return empty collection
+            Console.WriteLine($"Error fetching GraphQL lessons: {ex.Message}");
+            return new List<GraphQLLessonType>();
+        }
+    }
+
+    public async Task<GraphQLLessonType?> GetGraphQLLesson(string id)
     {
         if (!int.TryParse(id, out int parsedId)) return null;
-        var lessons = GetGraphQLLessons();
+        var lessons = await GetGraphQLLessons();
         var lesson = lessons.FirstOrDefault(l => l.Id == parsedId);
         return lesson;
     }
 
-    public static IEnumerable<GraphQLInterviewQuestionType> GetGraphQLQuestions()
+    public async Task<IEnumerable<GraphQLInterviewQuestionType>> GetGraphQLQuestions()
     {
-        var jsonPath = System.IO.Path.Combine(backend.Services.DataService.ContentPath, "quizzes", "graphql_questions.json");
-        if (!System.IO.File.Exists(jsonPath))
+        try
         {
+            var questions = await _databaseContentService.GetInterviewQuestionsByModuleSlugAsync("graphql-advanced");
+            return questions.Select(q => new GraphQLInterviewQuestionType
+            {
+                Id = q.Id,
+                Topic = q.Topic,
+                Type = q.Type,
+                Question = q.Question,
+                Choices = q.Choices,
+                CorrectAnswer = q.CorrectAnswer,
+                Explanation = q.Explanation
+            });
+        }
+        catch (Exception ex)
+        {
+            // Log the error and return empty collection
+            Console.WriteLine($"Error fetching GraphQL questions: {ex.Message}");
             return new List<GraphQLInterviewQuestionType>();
         }
-
-        var jsonContent = System.IO.File.ReadAllText(jsonPath);
-        var questions = System.Text.Json.JsonSerializer.Deserialize<List<BaseInterviewQuestion>>(jsonContent, new JsonSerializerOptions
-        {
-            PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
-            PropertyNameCaseInsensitive = true
-        });
-        
-        return questions?.Select(q => new GraphQLInterviewQuestionType
-        {
-            Id = q.Id,
-            Topic = q.Topic,
-            Type = q.Type,
-            Question = q.Question,
-            Choices = q.Choices,
-            CorrectAnswer = q.CorrectAnswer,
-            Explanation = q.Explanation
-        }) ?? new List<GraphQLInterviewQuestionType>();
     }
 
-    public static GraphQLInterviewQuestionType? GetGraphQLQuestion(string id)
+    public async Task<GraphQLInterviewQuestionType?> GetGraphQLQuestion(string id)
     {
         if (!int.TryParse(id, out int parsedId)) return null;
-        var questions = GetGraphQLQuestions();
+        var questions = await GetGraphQLQuestions();
         var question = questions.FirstOrDefault(q => q.Id == parsedId);
         return question;
     }
     
     // DotNet Lessons
-    public static IEnumerable<GraphQLLessonType> GetDotNetLessons()
+    public async Task<IEnumerable<GraphQLLessonType>> GetDotNetLessons()
     {
-        var jsonPath = System.IO.Path.Combine(backend.Services.DataService.ContentPath, "lessons", "dotnet_lessons.json");
-        if (!System.IO.File.Exists(jsonPath))
+        try
         {
+            var lessons = await _databaseContentService.GetLessonsByModuleSlugAsync("dotnet-fundamentals");
+            return lessons.Select(l => new GraphQLLessonType
+            {
+                Id = l.Id,
+                Topic = l.Topic,
+                Title = l.Title ?? string.Empty,
+                Description = l.Description ?? string.Empty,
+                CodeExample = l.CodeExample ?? string.Empty,
+                Output = l.Output ?? string.Empty
+            });
+        }
+        catch (Exception ex)
+        {
+            // Log the error and return empty collection
+            Console.WriteLine($"Error fetching DotNet lessons: {ex.Message}");
             return new List<GraphQLLessonType>();
         }
-
-        var jsonContent = System.IO.File.ReadAllText(jsonPath);
-        var lessons = System.Text.Json.JsonSerializer.Deserialize<List<BaseLesson>>(jsonContent, new JsonSerializerOptions
-        {
-            PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
-            PropertyNameCaseInsensitive = true
-        });
-        
-        return lessons?.Select(l => new GraphQLLessonType
-        {
-            Id = l.Id,
-            Topic = l.Topic,
-            Title = l.Title ?? string.Empty,
-            Description = l.Description ?? string.Empty,
-            CodeExample = l.CodeExample ?? string.Empty,
-            Output = l.Output ?? string.Empty
-        }) ?? new List<GraphQLLessonType>();
     }
 
-    public static GraphQLLessonType? GetDotNetLesson(string id)
+    public async Task<GraphQLLessonType?> GetDotNetLesson(string id)
     {
         if (!int.TryParse(id, out int parsedId)) return null;
-        var lessons = GetDotNetLessons();
+        var lessons = await GetDotNetLessons();
         return lessons.FirstOrDefault(l => l.Id == parsedId);
     }
 
-    public static IEnumerable<GraphQLInterviewQuestionType> GetDotNetQuestions()
+    public async Task<IEnumerable<GraphQLInterviewQuestionType>> GetDotNetQuestions()
     {
-        var jsonPath = System.IO.Path.Combine(backend.Services.DataService.ContentPath, "quizzes", "dotnet_questions.json");
-        if (!System.IO.File.Exists(jsonPath))
+        try
         {
+            var questions = await _databaseContentService.GetInterviewQuestionsByModuleSlugAsync("dotnet-fundamentals");
+            return questions.Select(q => new GraphQLInterviewQuestionType
+            {
+                Id = q.Id,
+                Topic = q.Topic,
+                Type = q.Type,
+                Question = q.Question,
+                Choices = q.Choices,
+                CorrectAnswer = q.CorrectAnswer,
+                Explanation = q.Explanation
+            });
+        }
+        catch (Exception ex)
+        {
+            // Log the error and return empty collection
+            Console.WriteLine($"Error fetching DotNet questions: {ex.Message}");
             return new List<GraphQLInterviewQuestionType>();
         }
-
-        var jsonContent = System.IO.File.ReadAllText(jsonPath);
-        var questions = System.Text.Json.JsonSerializer.Deserialize<List<BaseInterviewQuestion>>(jsonContent, new JsonSerializerOptions
-        {
-            PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
-            PropertyNameCaseInsensitive = true
-        });
-        
-        return questions?.Select(q => new GraphQLInterviewQuestionType
-        {
-            Id = q.Id,
-            Topic = q.Topic,
-            Type = q.Type,
-            Question = q.Question,
-            Choices = q.Choices,
-            CorrectAnswer = q.CorrectAnswer,
-            Explanation = q.Explanation
-        }) ?? new List<GraphQLInterviewQuestionType>();
     }
 
-    public static GraphQLInterviewQuestionType? GetDotNetQuestion(string id)
+    public async Task<GraphQLInterviewQuestionType?> GetDotNetQuestion(string id)
     {
         if (!int.TryParse(id, out int parsedId)) return null;
-        var questions = GetDotNetQuestions();
+        var questions = await GetDotNetQuestions();
         return questions.FirstOrDefault(q => q.Id == parsedId);
     }
 
     // Programming Lessons
-    public static IEnumerable<GraphQLLessonType> GetProgrammingLessons()
+    public async Task<IEnumerable<GraphQLLessonType>> GetProgrammingLessons()
     {
-        var jsonPath = System.IO.Path.Combine(backend.Services.DataService.ContentPath, "lessons", "programming-fundamentals.json");
-        if (!System.IO.File.Exists(jsonPath))
+        try
         {
+            var lessons = await _databaseContentService.GetLessonsByModuleSlugAsync("programming-fundamentals");
+            return lessons.Select(l => new GraphQLLessonType
+            {
+                Id = l.Id,
+                Topic = l.Topic,
+                Title = l.Title ?? string.Empty,
+                Description = l.Description ?? string.Empty,
+                CodeExample = l.CodeExample ?? string.Empty,
+                Output = l.Output ?? string.Empty
+            });
+        }
+        catch (Exception ex)
+        {
+            // Log the error and return empty collection
+            Console.WriteLine($"Error fetching Programming lessons: {ex.Message}");
             return new List<GraphQLLessonType>();
         }
-
-        var jsonContent = System.IO.File.ReadAllText(jsonPath);
-        var lessons = System.Text.Json.JsonSerializer.Deserialize<List<BaseLesson>>(jsonContent, new JsonSerializerOptions
-        {
-            PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
-            PropertyNameCaseInsensitive = true
-        });
-        
-        return lessons?.Select(l => new GraphQLLessonType
-        {
-            Id = l.Id,
-            Topic = l.Topic,
-            Title = l.Title ?? string.Empty,
-            Description = l.Description ?? string.Empty,
-            CodeExample = l.CodeExample ?? string.Empty,
-            Output = l.Output ?? string.Empty
-        }) ?? new List<GraphQLLessonType>();
     }
 
-    public static GraphQLLessonType? GetProgrammingLesson(string id)
+    public async Task<GraphQLLessonType?> GetProgrammingLesson(string id)
     {
         if (!int.TryParse(id, out int parsedId)) return null;
-        var lessons = GetProgrammingLessons();
+        var lessons = await GetProgrammingLessons();
         return lessons.FirstOrDefault(l => l.Id == parsedId);
     }
 
     // Programming Questions
-    public static IEnumerable<GraphQLInterviewQuestionType> GetProgrammingQuestions()
+    public async Task<IEnumerable<GraphQLInterviewQuestionType>> GetProgrammingQuestions()
     {
-        var jsonPath = System.IO.Path.Combine(backend.Services.DataService.ContentPath, "quizzes", "programming-fundamentals.json");
-        if (!System.IO.File.Exists(jsonPath))
+        try
         {
+            var questions = await _databaseContentService.GetInterviewQuestionsByModuleSlugAsync("programming-fundamentals");
+            return questions.Select(q => new GraphQLInterviewQuestionType
+            {
+                Id = q.Id,
+                Topic = q.Topic,
+                Type = q.Type,
+                Question = q.Question,
+                Choices = q.Choices,
+                CorrectAnswer = q.CorrectAnswer,
+                Explanation = q.Explanation
+            });
+        }
+        catch (Exception ex)
+        {
+            // Log the error and return empty collection
+            Console.WriteLine($"Error fetching Programming questions: {ex.Message}");
             return new List<GraphQLInterviewQuestionType>();
         }
-
-        var jsonContent = System.IO.File.ReadAllText(jsonPath);
-        var questions = System.Text.Json.JsonSerializer.Deserialize<List<BaseInterviewQuestion>>(jsonContent, new JsonSerializerOptions
-        {
-            PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
-            PropertyNameCaseInsensitive = true
-        });
-        
-        return questions?.Select(q => new GraphQLInterviewQuestionType
-        {
-            Id = q.Id,
-            Topic = q.Topic,
-            Type = q.Type,
-            Question = q.Question,
-            Choices = q.Choices,
-            CorrectAnswer = q.CorrectAnswer,
-            Explanation = q.Explanation
-        }) ?? new List<GraphQLInterviewQuestionType>();
     }
 
-    public static GraphQLInterviewQuestionType? GetProgrammingQuestion(string id)
+    public async Task<GraphQLInterviewQuestionType?> GetProgrammingQuestion(string id)
     {
         if (!int.TryParse(id, out int parsedId)) return null;
-        var questions = GetProgrammingQuestions();
+        var questions = await GetProgrammingQuestions();
         return questions.FirstOrDefault(q => q.Id == parsedId);
     }
 }

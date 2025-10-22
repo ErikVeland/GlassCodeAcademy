@@ -121,6 +121,7 @@ builder.Services.AddScoped<backend.Services.QuizSeedingService>();
 builder.Services.AddSingleton<backend.Services.DataService>(sp => backend.Services.DataService.Instance);
 builder.Services.AddScoped<backend.Services.ContentValidationService>();
 builder.Services.AddScoped<backend.Services.AutomatedMigrationService>();
+builder.Services.AddSingleton<backend.Services.ReadinessService>();
 
 // Register JWT validation service
 var jwtIssuer = builder.Configuration["Jwt:Issuer"] ?? "GlassCodeAcademy";
@@ -131,6 +132,7 @@ builder.Services.AddSingleton<JwtValidationService>(new JwtValidationService(jwt
 // Register GraphQL Query and Mutation services
 builder.Services.AddScoped<Query>();
 builder.Services.AddScoped<Mutation>();
+builder.Services.AddScoped<backend.GraphQL.GraphQLQuery>();
 // Register DatabaseContentService
 builder.Services.AddScoped<backend.Services.DatabaseContentService>();
 
@@ -277,6 +279,31 @@ else
     }
 }
 
+// Ensure content is ready before accepting requests
+using (var scope = app.Services.CreateScope())
+{
+    var readinessService = scope.ServiceProvider.GetRequiredService<backend.Services.ReadinessService>();
+    var cancellationTokenSource = new CancellationTokenSource(TimeSpan.FromSeconds(60)); // 60 second timeout
+    
+    Log.Information("Waiting for content to be ready...");
+    var isReady = await readinessService.CheckAndSetReadinessAsync();
+    
+    if (!isReady)
+    {
+        Log.Information("Content not ready, waiting for readiness...");
+        isReady = await readinessService.WaitForReadinessAsync(cancellationTokenSource.Token);
+    }
+    
+    if (isReady)
+    {
+        Log.Information("✅ Content is ready, proceeding to accept HTTP requests");
+    }
+    else
+    {
+        Log.Warning("⚠️ Content is not ready after timeout, but proceeding to accept HTTP requests");
+    }
+}
+
 // Add JWT authentication middleware
 app.UseJwtAuthentication(jwtIssuer, jwtAudience, jwtSecret);
 
@@ -365,7 +392,7 @@ if (app.Environment.IsDevelopment())
 }
 
 // Health check endpoint
-app.MapGet("/api/health", () => {
+app.MapGet("/api/health", async (backend.Services.ReadinessService readinessService) => {
     var dataService = backend.Services.DataService.Instance;
     var dataStats = new Dictionary<string, int>
     {
@@ -414,8 +441,12 @@ app.MapGet("/api/health", () => {
 
     var isHealthy = dataStats.All(stat => stat.Value > 0);
     
+    // Check readiness status
+    var isReady = readinessService.IsReady;
+    
     return Results.Ok(new { 
         status = isHealthy ? "healthy" : "degraded", 
+        ready = isReady,
         timestamp = DateTime.UtcNow, 
         unlocked = AppState.IsUnlocked,
         dataStats = dataStats
@@ -495,10 +526,12 @@ public static class TestDataGenerator
 // GraphQL Query type using DatabaseContentService
 public class Query {
     private readonly backend.Services.DatabaseContentService _databaseContentService;
+    private readonly backend.GraphQL.GraphQLQuery _graphQLQuery;
 
-    public Query(backend.Services.DatabaseContentService databaseContentService)
+    public Query(backend.Services.DatabaseContentService databaseContentService, backend.GraphQL.GraphQLQuery graphQLQuery)
     {
         _databaseContentService = databaseContentService;
+        _graphQLQuery = graphQLQuery;
     }
 
     // Helper method to apply query parameters

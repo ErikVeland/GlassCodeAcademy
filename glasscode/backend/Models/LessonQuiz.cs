@@ -16,6 +16,10 @@ namespace backend.Models
         
         public string? Choices { get; set; } // JSON array for multiple choice questions
         
+        public bool FixedChoiceOrder { get; set; } = false;
+        public string? ChoiceLabels { get; set; } // JSON array of labels
+        public string? AcceptedAnswers { get; set; } // JSON array of accepted open-ended answers
+        
         public string? Explanation { get; set; }
         
         public string? IndustryContext { get; set; }

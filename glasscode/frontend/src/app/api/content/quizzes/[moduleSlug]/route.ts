@@ -109,20 +109,6 @@ export async function GET(request: Request, { params }: { params: Promise<{ modu
     
     const quiz = await fetchQuizFromDatabase(moduleSlug);
     
-    // If no questions from database, try fallback
-    if (!Array.isArray(quiz.questions) || quiz.questions.length === 0) {
-      const fallbackQuiz = await fetchQuizFallbackFromJson(request, moduleSlug);
-      if (Array.isArray(fallbackQuiz.questions) && fallbackQuiz.questions.length > 0) {
-        return new Response(JSON.stringify(fallbackQuiz), {
-          status: 200,
-          headers: {
-            'Content-Type': 'application/json',
-            'Cache-Control': 'public, max-age=600, stale-while-revalidate=86400',
-          },
-        });
-      }
-    }
-    
     const normalizedQuestions = Array.isArray(quiz.questions)
       ? (quiz.questions as unknown[]).map((q) => normalizeQuestion(q))
       : [];

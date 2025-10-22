@@ -20,6 +20,7 @@ import Script from 'next/script';
 import ApolloDevMessages from '../components/ApolloDevMessages';
 import ConsoleBanner from '../components/ConsoleBanner';
 import { headers } from 'next/headers';
+import { BackendReadinessWrapper } from '../components/BackendReadinessWrapper';
 
 export const metadata: Metadata = {
   title: "GlassCode Academy - Learn .NET, Next.js, GraphQL, and Laravel",
@@ -80,7 +81,9 @@ export default async function RootLayout({ children }: { children: React.ReactNo
                   tabIndex={-1}
                 >
                   <AnimatedBackground />
-                  {children}
+                  <BackendReadinessWrapper>
+                    {children}
+                  </BackendReadinessWrapper>
                 </main>
                 <FloatingDarkModeToggle />
                 <footer className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm border-t border-white/20 dark:border-white/10 w-full mt-auto relative">

@@ -92,6 +92,9 @@ namespace backend.Services
                                     Topic = question.Topic,
                                     Difficulty = question.Difficulty ?? "Beginner",
                                     Choices = question.Choices != null ? JsonSerializer.Serialize(question.Choices) : null,
+                                    FixedChoiceOrder = question.FixedChoiceOrder ?? false,
+                                    ChoiceLabels = question.ChoiceLabels != null ? JsonSerializer.Serialize(question.ChoiceLabels) : null,
+                                    AcceptedAnswers = question.AcceptedAnswers != null ? JsonSerializer.Serialize(question.AcceptedAnswers) : null,
                                     Explanation = question.Explanation,
                                     IndustryContext = question.IndustryContext,
                                     Tags = question.Tags != null ? JsonSerializer.Serialize(question.Tags) : null,
@@ -189,5 +192,8 @@ namespace backend.Services
         public string? IndustryContext { get; set; }
         public List<string>? Tags { get; set; }
         public int? EstimatedTime { get; set; }
+        public bool? FixedChoiceOrder { get; set; }
+        public List<string>? ChoiceLabels { get; set; }
+        public List<string>? AcceptedAnswers { get; set; }
     }
 }
