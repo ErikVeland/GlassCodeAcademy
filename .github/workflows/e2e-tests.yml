@@ -1,0 +1,71 @@
+name: E2E Tests
+
+on:
+  workflow_call:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  e2e:
+    name: End-to-End Tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20.x"
+
+      - name: Install frontend dependencies
+        working-directory: glasscode/frontend
+        run: |
+          if [ -f package-lock.json ]; then
+            npm ci
+          else
+            echo "No package-lock.json found; running npm install"
+            npm install
+          fi
+
+      - name: Install Playwright browsers
+        working-directory: glasscode/frontend
+        run: npx playwright install --with-deps
+
+      - name: Start frontend server in background
+        working-directory: glasscode/frontend
+        run: |
+          npm run build
+          nohup npm run start:next > /tmp/frontend.log 2>&1 &
+          echo $! > /tmp/frontend.pid
+          # Wait for server to start
+          timeout 60 bash -c 'until curl -s http://localhost:3000 > /dev/null; do sleep 1; done'
+
+      - name: Run E2E tests
+        working-directory: glasscode/frontend
+        run: npx playwright test
+
+      - name: Stop frontend server
+        if: always()
+        run: |
+          if [ -f /tmp/frontend.pid ]; then
+            kill $(cat /tmp/frontend.pid) || true
+          fi
+
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: e2e-test-results
+          path: glasscode/frontend/test-results/
+          retention-days: 7
+
+      - name: Upload frontend logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: frontend-logs
+          path: /tmp/frontend.log
+          retention-days: 7

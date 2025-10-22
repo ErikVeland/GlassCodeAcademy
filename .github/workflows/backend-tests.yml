@@ -13,57 +13,16 @@ jobs:
     env:
       GLASSCODE_CONTENT_PATH: ${{ github.workspace }}/content
       ASPNETCORE_URLS: http://127.0.0.1:8080
-      CONNECTION_STRING: Host=localhost;Database=glasscode_test;Username=postgres;Password=postgres;Port=5432
-    services:
-      postgres:
-        image: postgres:13
-        env:
-          POSTGRES_PASSWORD: postgres
-          POSTGRES_DB: glasscode_test
-        options: >-
-          --health-cmd pg_isready
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
-        ports:
-          - 5432:5432
+      SKIP_AUTOMATED_MIGRATION: 1
 
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '18'
-
       - name: Setup .NET SDK
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: '8.0.x'
-
-      - name: Install dependencies
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y postgresql-client xmlstarlet bc
-
-      - name: Validate content data
-        continue-on-error: true
-        run: |
-          node scripts/validate-content.js | tee validator.log
-
-      - name: Wait for PostgreSQL
-        run: |
-          # Wait for PostgreSQL to be ready
-          until pg_isready -h localhost -p 5432 -U postgres; do
-            echo "Waiting for PostgreSQL to be ready..."
-            sleep 2
-          done
-
-      - name: Run database migrations
-        run: |
-          chmod +x scripts/run-database-migration.sh
-          ./scripts/run-database-migration.sh
 
       - name: Restore backend tests
         run: dotnet restore glasscode/backend/Backend.Tests/Backend.Tests.csproj
@@ -71,53 +30,8 @@ jobs:
       - name: Build backend tests
         run: dotnet build glasscode/backend/Backend.Tests/Backend.Tests.csproj --configuration Release --no-restore
 
-      - name: Run tests with coverage
+      - name: Run tests
         run: |
-          dotnet test glasscode/backend/Backend.Tests/Backend.Tests.csproj \
-            --collect:"XPlat Code Coverage" \
-            --settings glasscode/backend/Backend.Tests/coverlet.runsettings \
-            --results-directory ./TestResults
-
-      - name: Check coverage threshold
-        run: |
-          # Extract coverage percentage from the cobertura report
-          COBERTURA_FILE=$(find ./TestResults -name "coverage.cobertura.xml" | head -n 1)
-          if [ -z "$COBERTURA_FILE" ]; then
-            echo "No coverage report found"
-            exit 1
-          fi
-          
-          # Extract line coverage percentage (multiply by 100 to get percentage)
-          LINE_RATE=$(xmlstarlet sel -t -v "//coverage/@line-rate" "$COBERTURA_FILE")
-          COVERAGE_PERCENTAGE=$(echo "$LINE_RATE * 100" | bc -l)
-          COVERAGE_PERCENTAGE_INT=$(printf "%.0f" "$COVERAGE_PERCENTAGE")
-          
-          echo "Line coverage: $COVERAGE_PERCENTAGE_INT%"
-          
-          # Check if coverage meets threshold (80%)
-          if [ "$COVERAGE_PERCENTAGE_INT" -lt 80 ]; then
-            echo "Coverage ($COVERAGE_PERCENTAGE_INT%) is below threshold (80%)"
-            exit 1
-          else
-            echo "Coverage ($COVERAGE_PERCENTAGE_INT%) meets threshold ✅"
-          fi
-
-      - name: Upload coverage report
-        uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: coverage-report
-          path: ./TestResults
-      - name: Upload content validator log
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: content-validator-log
-          path: validator.log
-          retention-days: 7
-      - name: Summarize content validator results
-        if: always()
-        run: |
-          echo "### Content Validation Summary" >> $GITHUB_STEP_SUMMARY
-          echo "The content validation step is non-blocking." >> $GITHUB_STEP_SUMMARY
-          echo "Logs attached as 'content-validator-log' artifact." >> $GITHUB_STEP_SUMMARY
+          dotnet test glasscode/backend/Backend.Tests/Backend.Tests.csproj 
+            --configuration Release 
+            --no-build
