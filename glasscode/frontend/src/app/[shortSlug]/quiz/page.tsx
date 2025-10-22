@@ -93,11 +93,21 @@ export default function QuizPage({ params }: { params: Promise<{ shortSlug: stri
       const selectedQuestions = shuffled.slice(0, targetQuestions);
       console.log('Selected questions count:', selectedQuestions.length);
 
-      // Randomize choice order for multiple choice questions
+      // Randomize choice order for multiple choice questions AND preserve correctAnswer index
       const processedQuestions = selectedQuestions.map((question: ProgrammingQuestion) => {
         if (question.type === 'multiple-choice' && question.choices && !question.fixedChoiceOrder) {
-          const shuffledChoices = [...question.choices].sort(() => Math.random() - 0.5);
-          return { ...question, choices: shuffledChoices };
+          const originalChoices = question.choices;
+          const originalCorrectIndex = typeof question.correctAnswer === 'number' ? question.correctAnswer : -1;
+          const originalCorrectChoice = originalCorrectIndex >= 0 && originalCorrectIndex < originalChoices.length
+            ? originalChoices[originalCorrectIndex]
+            : undefined;
+          const shuffledChoices = [...originalChoices].sort(() => Math.random() - 0.5);
+          let newCorrectIndex = originalCorrectIndex;
+          if (originalCorrectChoice !== undefined) {
+            const idx = shuffledChoices.findIndex(c => c === originalCorrectChoice);
+            newCorrectIndex = idx >= 0 ? idx : 0; // fallback to 0 if not found
+          }
+          return { ...question, choices: shuffledChoices, correctAnswer: newCorrectIndex };
         }
         return question;
       });

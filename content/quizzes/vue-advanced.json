@@ -63,7 +63,8 @@
       "questionType": "open-ended",
       "estimatedTime": 180,
       "type": "open-ended",
-      "sources": []
+      "sources": [],
+      "acceptedAnswers": []
     },
     {
       "id": 4,

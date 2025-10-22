@@ -1,6 +1,7 @@
 name: Backend Tests
 
 on:
+  workflow_call:
   push:
     branches: [ main ]
   pull_request:
@@ -31,6 +32,11 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
       - name: Setup .NET SDK
         uses: actions/setup-dotnet@v4
         with:
@@ -39,7 +45,12 @@ jobs:
       - name: Install dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y postgresql-client xmlstarlet
+          sudo apt-get install -y postgresql-client xmlstarlet bc
+
+      - name: Validate content data
+        continue-on-error: true
+        run: |
+          node scripts/validate-content.js | tee validator.log
 
       - name: Wait for PostgreSQL
         run: |
@@ -51,18 +62,18 @@ jobs:
 
       - name: Run database migrations
         run: |
-          cd glasscode/backend
-          dotnet run --project Scripts/RunAutomatedMigration.cs
+          chmod +x scripts/run-database-migration.sh
+          ./scripts/run-database-migration.sh
 
       - name: Restore backend tests
-        run: dotnet restore glasscode/backend/Backend.Tests/Backend.Tests.csproj
+        run: dotnet restore glasscode/backend.Tests/backend.Tests.csproj
 
       - name: Build backend tests
-        run: dotnet build glasscode/backend/Backend.Tests/Backend.Tests.csproj --configuration Release --no-restore
+        run: dotnet build glasscode/backend.Tests/backend.Tests.csproj --configuration Release --no-restore
 
       - name: Run tests with coverage
         run: |
-          dotnet test glasscode/backend/Backend.Tests/Backend.Tests.csproj \
+          dotnet test glasscode/backend.Tests/backend.Tests.csproj \
             --collect:"XPlat Code Coverage" \
             --settings glasscode/backend/Backend.Tests/coverlet.runsettings \
             --results-directory ./TestResults
@@ -97,3 +108,16 @@ jobs:
         with:
           name: coverage-report
           path: ./TestResults
+      - name: Upload content validator log
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: content-validator-log
+          path: validator.log
+          retention-days: 7
+      - name: Summarize content validator results
+        if: always()
+        run: |
+          echo "### Content Validation Summary" >> $GITHUB_STEP_SUMMARY
+          echo "The content validation step is non-blocking." >> $GITHUB_STEP_SUMMARY
+          echo "Logs attached as 'content-validator-log' artifact." >> $GITHUB_STEP_SUMMARY

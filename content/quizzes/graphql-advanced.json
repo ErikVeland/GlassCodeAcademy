@@ -489,7 +489,8 @@
       "explanation": "`GraphQL` offers several advantages over REST: 1) Clients can request exactly the data they need, avoiding over-fetching and under-fetching, 2) Single endpoint for all operations instead of multiple URLs, 3) Strong type system provides better tooling and validation, 4) Real-time subscriptions built-in, 5) Introspection allows for automatic documentation and tooling.",
       "difficulty": "Beginner",
       "questionType": "open-ended",
-      "sources": []
+      "sources": [],
+      "acceptedAnswers": []
     },
     {
       "id": 22,
@@ -500,7 +501,8 @@
       "explanation": "The N+1 `query` problem occurs when fetching a list of N items requires N+1 database queries (1 for the list + N queries for related data). It can be solved using DataLoader, which batches and caches database requests, or by using more efficient database queries with joins.",
       "difficulty": "Beginner",
       "questionType": "open-ended",
-      "sources": []
+      "sources": [],
+      "acceptedAnswers": []
     },
     {
       "id": 23,
@@ -545,7 +547,8 @@
       "explanation": "Union types are used when a field can return one of several different types. Common use cases include search results that can return different types of objects, polymorphic relationships, or error handling where a field might return either a success object or an error object.",
       "difficulty": "Beginner",
       "questionType": "open-ended",
-      "sources": []
+      "sources": [],
+      "acceptedAnswers": []
     },
     {
       "id": 26,
@@ -590,7 +593,8 @@
       "explanation": "`GraphQL` APIs should be tested at multiple levels: 1) Unit tests for individual resolvers, 2) Integration tests for complete queries/mutations, 3) Schema validation tests, 4) Performance tests for complex queries, 5) Security tests for rate limiting and authentication. Tools like Jest, Apollo Server Testing, and `GraphQL` testing utilities help automate these tests.",
       "difficulty": "Beginner",
       "questionType": "open-ended",
-      "sources": []
+      "sources": [],
+      "acceptedAnswers": []
     },
     {
       "id": 29,
@@ -620,7 +624,8 @@
       "explanation": "Production `GraphQL` deployment requires: 1) Security measures (authentication, authorization, rate limiting, `query` complexity analysis), 2) Performance optimization (DataLoader, caching, `query` analysis), 3) Monitoring and logging, 4) Error handling and reporting, 5) Schema versioning strategy, 6) Disabling development features like introspection and playground.",
       "difficulty": "Beginner",
       "questionType": "open-ended",
-      "sources": []
+      "sources": [],
+      "acceptedAnswers": []
     },
     {
       "id": 31,
@@ -665,7 +670,8 @@
       "explanation": "Query complexity analysis assigns complexity scores to `GraphQL` operations based on the fields requested and their relationships. It's important because it helps prevent expensive queries from overwhelming the server, provides a standardized way to rate-limit based on resource usage rather than just request count, and helps identify potentially problematic queries before they impact performance.",
       "difficulty": "Beginner",
       "questionType": "open-ended",
-      "sources": []
+      "sources": [],
+      "acceptedAnswers": []
     }
   ]
 }
