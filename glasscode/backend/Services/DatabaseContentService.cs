@@ -1,6 +1,7 @@
 using backend.Data;
 using backend.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using System.Text.Json;
 
 namespace backend.Services
@@ -8,43 +9,92 @@ namespace backend.Services
     public class DatabaseContentService
     {
         private readonly GlassCodeDbContext _context;
+        private readonly ILogger<DatabaseContentService> _logger;
 
-        public DatabaseContentService(GlassCodeDbContext context)
+        public DatabaseContentService(GlassCodeDbContext context, ILogger<DatabaseContentService> logger)
         {
             _context = context;
+            _logger = logger;
         }
 
         // Get lessons by course slug
         public async Task<IEnumerable<BaseLesson>> GetLessonsByCourseSlugAsync(string courseSlug)
         {
-            var lessons = await _context.Lessons
-                .Include(l => l.Module)
-                .Where(l => l.Module.Slug == courseSlug)
-                .OrderBy(l => l.Order)
-                .ToListAsync();
+            _logger.LogInformation("Fetching lessons by course slug: {CourseSlug}", courseSlug);
+            var startTime = DateTime.UtcNow;
 
-            return lessons.Select(l => MapLessonToBaseLesson(l)).ToList();
+            try
+            {
+                var lessons = await _context.Lessons
+                    .Include(l => l.Module)
+                    .Where(l => l.Module.Slug == courseSlug)
+                    .OrderBy(l => l.Order)
+                    .ToListAsync();
+
+                var duration = DateTime.UtcNow - startTime;
+                _logger.LogInformation("Successfully fetched {LessonCount} lessons for course slug: {CourseSlug} in {Duration}ms", lessons.Count, courseSlug, duration.TotalMilliseconds);
+
+                return lessons.Select(l => MapLessonToBaseLesson(l)).ToList();
+            }
+            catch (Exception ex)
+            {
+                var duration = DateTime.UtcNow - startTime;
+                _logger.LogError(ex, "Failed to fetch lessons for course slug: {CourseSlug} after {Duration}ms", courseSlug, duration.TotalMilliseconds);
+                throw;
+            }
         }
 
         // Get interview questions by course slug
         public async Task<IEnumerable<BaseInterviewQuestion>> GetInterviewQuestionsByCourseSlugAsync(string courseSlug)
         {
-            var questions = await _context.LessonQuizzes
-                .Include(q => q.Lesson)
-                .ThenInclude(l => l.Module)
-                .Where(q => q.Lesson.Module.Slug == courseSlug)
-                .OrderBy(q => q.SortOrder)
-                .ToListAsync();
+            _logger.LogInformation("Fetching interview questions by course slug: {CourseSlug}", courseSlug);
+            var startTime = DateTime.UtcNow;
 
-            return questions.Select(q => MapQuizToBaseInterviewQuestion(q)).ToList();
+            try
+            {
+                var questions = await _context.LessonQuizzes
+                    .Include(q => q.Lesson)
+                    .ThenInclude(l => l.Module)
+                    .Where(q => q.Lesson.Module.Slug == courseSlug)
+                    .OrderBy(q => q.SortOrder)
+                    .ToListAsync();
+
+                var duration = DateTime.UtcNow - startTime;
+                _logger.LogInformation("Successfully fetched {QuestionCount} interview questions for course slug: {CourseSlug} in {Duration}ms", questions.Count, courseSlug, duration.TotalMilliseconds);
+
+                return questions.Select(q => MapQuizToBaseInterviewQuestion(q)).ToList();
+            }
+            catch (Exception ex)
+            {
+                var duration = DateTime.UtcNow - startTime;
+                _logger.LogError(ex, "Failed to fetch interview questions for course slug: {CourseSlug} after {Duration}ms", courseSlug, duration.TotalMilliseconds);
+                throw;
+            }
         }
 
         // Get all courses
         public async Task<IEnumerable<Course>> GetCoursesAsync()
         {
-            return await _context.Courses
-                .Include(c => c.Modules)
-                .ToListAsync();
+            _logger.LogInformation("Fetching all courses");
+            var startTime = DateTime.UtcNow;
+
+            try
+            {
+                var courses = await _context.Courses
+                    .Include(c => c.Modules)
+                    .ToListAsync();
+
+                var duration = DateTime.UtcNow - startTime;
+                _logger.LogInformation("Successfully fetched {CourseCount} courses in {Duration}ms", courses.Count, duration.TotalMilliseconds);
+
+                return courses;
+            }
+            catch (Exception ex)
+            {
+                var duration = DateTime.UtcNow - startTime;
+                _logger.LogError(ex, "Failed to fetch courses after {Duration}ms", duration.TotalMilliseconds);
+                throw;
+            }
         }
 
         // Get lessons by module slug with pagination
@@ -56,34 +106,50 @@ namespace backend.Services
             int? limit = null, 
             int? offset = null)
         {
-            var query = _context.Lessons
-                .Include(l => l.Module)
-                .Where(l => l.Module.Slug == moduleSlug)
-                .AsQueryable();
+            _logger.LogInformation("Fetching lessons by module slug: {ModuleSlug} with filters - topic: {Topic}, sortBy: {SortBy}, sortOrder: {SortOrder}, limit: {Limit}, offset: {Offset}", 
+                moduleSlug, topic, sortBy, sortOrder, limit, offset);
+            var startTime = DateTime.UtcNow;
 
-            // Apply topic filter if provided
-            if (!string.IsNullOrEmpty(topic))
+            try
             {
-                // For now, we'll filter by tags in the metadata
-                query = query.Where(l => l.Metadata != null && l.Metadata.Contains(topic));
+                var query = _context.Lessons
+                    .Include(l => l.Module)
+                    .Where(l => l.Module.Slug == moduleSlug)
+                    .AsQueryable();
+
+                // Apply topic filter if provided
+                if (!string.IsNullOrEmpty(topic))
+                {
+                    // For now, we'll filter by tags in the metadata
+                    query = query.Where(l => l.Metadata != null && l.Metadata.Contains(topic));
+                }
+
+                // Apply sorting
+                query = ApplySorting(query, sortBy, sortOrder);
+
+                // Apply pagination
+                if (offset.HasValue)
+                {
+                    query = query.Skip(offset.Value);
+                }
+
+                if (limit.HasValue)
+                {
+                    query = query.Take(limit.Value);
+                }
+
+                var lessons = await query.ToListAsync();
+                var duration = DateTime.UtcNow - startTime;
+                _logger.LogInformation("Successfully fetched {LessonCount} lessons for module slug: {ModuleSlug} in {Duration}ms", lessons.Count, moduleSlug, duration.TotalMilliseconds);
+
+                return lessons.Select(l => MapLessonToBaseLesson(l)).ToList();
             }
-
-            // Apply sorting
-            query = ApplySorting(query, sortBy, sortOrder);
-
-            // Apply pagination
-            if (offset.HasValue)
+            catch (Exception ex)
             {
-                query = query.Skip(offset.Value);
+                var duration = DateTime.UtcNow - startTime;
+                _logger.LogError(ex, "Failed to fetch lessons for module slug: {ModuleSlug} after {Duration}ms", moduleSlug, duration.TotalMilliseconds);
+                throw;
             }
-
-            if (limit.HasValue)
-            {
-                query = query.Take(limit.Value);
-            }
-
-            var lessons = await query.ToListAsync();
-            return lessons.Select(l => MapLessonToBaseLesson(l)).ToList();
         }
 
         // Get interview questions by module slug with pagination
@@ -95,34 +161,50 @@ namespace backend.Services
             int? limit = null,
             int? offset = null)
         {
-            var query = _context.LessonQuizzes
-                .Include(q => q.Lesson)
-                .ThenInclude(l => l.Module)
-                .Where(q => q.Lesson.Module.Slug == moduleSlug)
-                .AsQueryable();
+            _logger.LogInformation("Fetching interview questions by module slug: {ModuleSlug} with filters - topic: {Topic}, sortBy: {SortBy}, sortOrder: {SortOrder}, limit: {Limit}, offset: {Offset}", 
+                moduleSlug, topic, sortBy, sortOrder, limit, offset);
+            var startTime = DateTime.UtcNow;
 
-            // Apply topic filter if provided
-            if (!string.IsNullOrEmpty(topic))
+            try
             {
-                query = query.Where(q => q.Topic == topic);
+                var query = _context.LessonQuizzes
+                    .Include(q => q.Lesson)
+                    .ThenInclude(l => l.Module)
+                    .Where(q => q.Lesson.Module.Slug == moduleSlug)
+                    .AsQueryable();
+
+                // Apply topic filter if provided
+                if (!string.IsNullOrEmpty(topic))
+                {
+                    query = query.Where(q => q.Topic == topic);
+                }
+
+                // Apply sorting
+                query = ApplyQuizSorting(query, sortBy, sortOrder);
+
+                // Apply pagination
+                if (offset.HasValue)
+                {
+                    query = query.Skip(offset.Value);
+                }
+
+                if (limit.HasValue)
+                {
+                    query = query.Take(limit.Value);
+                }
+
+                var questions = await query.ToListAsync();
+                var duration = DateTime.UtcNow - startTime;
+                _logger.LogInformation("Successfully fetched {QuestionCount} interview questions for module slug: {ModuleSlug} in {Duration}ms", questions.Count, moduleSlug, duration.TotalMilliseconds);
+
+                return questions.Select(q => MapQuizToBaseInterviewQuestion(q)).ToList();
             }
-
-            // Apply sorting
-            query = ApplyQuizSorting(query, sortBy, sortOrder);
-
-            // Apply pagination
-            if (offset.HasValue)
+            catch (Exception ex)
             {
-                query = query.Skip(offset.Value);
+                var duration = DateTime.UtcNow - startTime;
+                _logger.LogError(ex, "Failed to fetch interview questions for module slug: {ModuleSlug} after {Duration}ms", moduleSlug, duration.TotalMilliseconds);
+                throw;
             }
-
-            if (limit.HasValue)
-            {
-                query = query.Take(limit.Value);
-            }
-
-            var questions = await query.ToListAsync();
-            return questions.Select(q => MapQuizToBaseInterviewQuestion(q)).ToList();
         }
 
         // Helper method to apply sorting to lessons
@@ -299,7 +381,7 @@ namespace backend.Services
             catch (Exception ex)
             {
                 // Log the error but don't fail the entire operation
-                Console.WriteLine($"Error parsing lesson content/metadata for lesson {lesson.Id}: {ex.Message}");
+                _logger.LogWarning(ex, "Error parsing lesson content/metadata for lesson {LessonId}", lesson.Id);
             }
 
             return baseLesson;
@@ -340,7 +422,7 @@ namespace backend.Services
                 catch (Exception ex)
                 {
                     // Log the error but don't fail the entire operation
-                    Console.WriteLine($"Error parsing quiz choices for quiz {quiz.Id}: {ex.Message}");
+                    _logger.LogWarning(ex, "Error parsing quiz choices for quiz {QuizId}", quiz.Id);
                 }
             }
 

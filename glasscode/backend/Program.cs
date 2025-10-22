@@ -1,13 +1,16 @@
 using backend.Models;
 using backend.Controllers;
 using backend.Services;
+using backend.Services.Auth;
 using backend.Data;
+using backend.Extensions;
 using Microsoft.EntityFrameworkCore;
 using System.Text.Json;
 using System.IO;
 using System.Collections.Generic;
 using Serilog;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Authorization;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -33,7 +36,7 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowFrontend",
         policy => policy
-            .WithOrigins("http://localhost:3000", "http://localhost:3001", "http://localhost:3002", "http://localhost:3003", "http://localhost:3004", "http://localhost:3005", "http://192.168.6.238:3000", "http://192.168.6.238:3001", "https://glasscode.academy")
+            .WithOrigins("http://localhost:3000", "http://localhost:3001", "http://localhost:3002", "http://localhost:3003", "http://localhost:3004", "http://192.168.6.238:3000", "http://192.168.6.238:3001", "https://glasscode.academy")
             .AllowAnyHeader()
             .AllowAnyMethod()
             .AllowCredentials());
@@ -78,7 +81,36 @@ if (string.IsNullOrWhiteSpace(connStr))
 builder.Services.AddDbContext<GlassCodeDbContext>(options => options.UseNpgsql(connStr));
 
 // Add authorization services
-builder.Services.AddAuthorization();
+builder.Services.AddAuthorization(options =>
+{
+    // Define role-based policies
+    options.AddPolicy("AdminOnly", policy => policy.RequireRole("Admin"));
+    options.AddPolicy("InstructorOnly", policy => policy.RequireRole("Instructor"));
+    options.AddPolicy("StudentOnly", policy => policy.RequireRole("Student"));
+    options.AddPolicy("AdminOrInstructor", policy => policy.RequireRole("Admin", "Instructor"));
+    options.AddPolicy("AuthenticatedUser", policy => policy.RequireAuthenticatedUser());
+    
+    // Define claim-based policies
+    options.AddPolicy("CanManageContent", policy => 
+        policy.RequireRole("Admin", "Instructor")
+              .RequireClaim("permissions", "manage-content"));
+    
+    options.AddPolicy("CanManageUsers", policy => 
+        policy.RequireRole("Admin")
+              .RequireClaim("permissions", "manage-users"));
+    
+    options.AddPolicy("CanViewReports", policy => 
+        policy.RequireRole("Admin", "Instructor")
+              .RequireClaim("permissions", "view-reports"));
+    
+    // Define custom role hierarchy policies
+    options.AddPolicy("RequireAdminRole", policy => policy.Requirements.Add(new RoleRequirement("Admin")));
+    options.AddPolicy("RequireInstructorRole", policy => policy.Requirements.Add(new RoleRequirement("Instructor")));
+    options.AddPolicy("RequireStudentRole", policy => policy.Requirements.Add(new RoleRequirement("Student")));
+});
+
+// Register custom authorization handlers
+builder.Services.AddScoped<IAuthorizationHandler, RoleAuthorizationHandler>();
 
 // Register custom services
 builder.Services.AddScoped<backend.Services.ModuleSeedingService>();
@@ -89,6 +121,12 @@ builder.Services.AddScoped<backend.Services.QuizSeedingService>();
 builder.Services.AddSingleton<backend.Services.DataService>(sp => backend.Services.DataService.Instance);
 builder.Services.AddScoped<backend.Services.ContentValidationService>();
 builder.Services.AddScoped<backend.Services.AutomatedMigrationService>();
+
+// Register JWT validation service
+var jwtIssuer = builder.Configuration["Jwt:Issuer"] ?? "GlassCodeAcademy";
+var jwtAudience = builder.Configuration["Jwt:Audience"] ?? "GlassCodeAcademyUsers";
+var jwtSecret = builder.Configuration["Jwt:Secret"] ?? "GlassCodeAcademySecretKey12345";
+builder.Services.AddSingleton<JwtValidationService>(new JwtValidationService(jwtIssuer, jwtAudience, jwtSecret));
 
 // Register GraphQL Query and Mutation services
 builder.Services.AddScoped<Query>();
@@ -238,6 +276,12 @@ else
         }
     }
 }
+
+// Add JWT authentication middleware
+app.UseJwtAuthentication(jwtIssuer, jwtAudience, jwtSecret);
+
+// Add role-based authorization middleware
+app.UseRoleBasedAuthorization();
 
 // Middleware to check for unlock parameter
 app.Use(async (context, next) =>
@@ -997,112 +1041,6 @@ public class Mutation {
             };
         }
         return _dataService.ValidateTypescriptAnswer(int.Parse(questionId), answerIndex);
-    }
-    
-    // Database answer submission
-    public AnswerResult SubmitDatabaseAnswer(string questionId, int answerIndex)
-    {
-        // If unlocked, accept any answer as correct for testing
-        if (AppState.IsUnlocked)
-        {
-            return new AnswerResult 
-            { 
-                IsCorrect = true, 
-                Explanation = "Test mode: All answers are correct!" 
-            };
-        }
-        return _dataService.ValidateDatabaseAnswer(int.Parse(questionId), answerIndex);
-    }
-    
-    // Testing answer submission
-    public AnswerResult SubmitTestingAnswer(string questionId, int answerIndex)
-    {
-        // If unlocked, accept any answer as correct for testing
-        if (AppState.IsUnlocked)
-        {
-            return new AnswerResult 
-            { 
-                IsCorrect = true, 
-                Explanation = "Test mode: All answers are correct!" 
-            };
-        }
-        return _dataService.ValidateTestingAnswer(int.Parse(questionId), answerIndex);
-    }
-    
-    // Programming answer submission
-    public AnswerResult SubmitProgrammingAnswer(string questionId, int answerIndex)
-    {
-        // If unlocked, accept any answer as correct for testing
-        if (AppState.IsUnlocked)
-        {
-            return new AnswerResult 
-            { 
-                IsCorrect = true, 
-                Explanation = "Test mode: All answers are correct!" 
-            };
-        }
-        // Use the specific programming validation method
-        return _dataService.ValidateProgrammingAnswer(int.Parse(questionId), answerIndex);
-    }
-    
-    // Next.js answer submission
-    public AnswerResult SubmitNextJsAnswer(string questionId, int answerIndex)
-    {
-        // If unlocked, accept any answer as correct for testing
-        if (AppState.IsUnlocked)
-        {
-            return new AnswerResult 
-            { 
-                IsCorrect = true, 
-                Explanation = "Test mode: All answers are correct!" 
-            };
-        }
-        return _dataService.ValidateNextJsAnswer(int.Parse(questionId), answerIndex);
-    }
-    
-    // Performance Optimization answer submission
-    public AnswerResult SubmitPerformanceAnswer(string questionId, int answerIndex)
-    {
-        // If unlocked, accept any answer as correct for testing
-        if (AppState.IsUnlocked)
-        {
-            return new AnswerResult 
-            { 
-                IsCorrect = true, 
-                Explanation = "Test mode: All answers are correct!" 
-            };
-        }
-        return _dataService.ValidatePerformanceAnswer(int.Parse(questionId), answerIndex);
-    }
-    
-    // Security Fundamentals answer submission
-    public AnswerResult SubmitSecurityAnswer(string questionId, int answerIndex)
-    {
-        // If unlocked, accept any answer as correct for testing
-        if (AppState.IsUnlocked)
-        {
-            return new AnswerResult 
-            { 
-                IsCorrect = true, 
-                Explanation = "Test mode: All answers are correct!" 
-            };
-        }
-        return _dataService.ValidateSecurityAnswer(int.Parse(questionId), answerIndex);
-    }
-    
-    // Version Control answer submission
-    public AnswerResult SubmitVersionAnswer(string questionId, int answerIndex)
-    {
-        // If unlocked, accept any answer as correct for testing
-        if (AppState.IsUnlocked)
-        {
-            return new AnswerResult 
-            { 
-                IsCorrect = true, 
-                Explanation = "Test mode: All answers are correct!" 
-            };
-        }
-        return _dataService.ValidateVersionAnswer(int.Parse(questionId), answerIndex);
     }
 }
 

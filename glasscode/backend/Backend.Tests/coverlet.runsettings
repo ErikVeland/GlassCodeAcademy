@@ -9,6 +9,9 @@
           <ExcludeByAttribute>Obsolete,GeneratedCodeAttribute,CompilerGeneratedAttribute</ExcludeByAttribute>
           <ExcludeByFile>**/Migrations/**</ExcludeByFile>
           <IncludeDirectory>../</IncludeDirectory>
+          <Threshold>80</Threshold>
+          <ThresholdType>line</ThresholdType>
+          <ThresholdStat>total</ThresholdStat>
         </Configuration>
       </DataCollector>
     </DataCollectors>

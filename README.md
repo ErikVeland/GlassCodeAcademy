@@ -20,6 +20,9 @@ For detailed information about the current architecture, see [CURRENT_ARCHITECTU
 - **Gamification**: Certificate rewards for completed modules
 - **Modern UI**: Built with Next.js, React, and Tailwind CSS
 - **Responsive Design**: Adapts to different screen sizes with a wider layout for better module visibility
+- **Enhanced Security**: JWT authentication with role-based access control
+- **Structured Logging**: Comprehensive observability with Serilog
+- **Robust Testing**: 100+ automated tests with code coverage requirements
 
 ## Technology Stack
 
@@ -33,8 +36,11 @@ For detailed information about the current architecture, see [CURRENT_ARCHITECTU
 ### Backend
 - ASP.NET Core 8.0 Web API (C#) with .NET 8.0 SDK
 - GraphQL API (HotChocolate 13.x)
-- JSON file-based data storage
-- Laravel 11.0+ backend (PHP 8.2+) for Laravel-specific modules
+- PostgreSQL database with Entity Framework Core
+- Redis caching layer
+- Serilog for structured logging
+- JWT for authentication and authorization
+- xUnit and Moq for testing
 
 ### Development Tools
 - Node.js 18+ 
@@ -42,7 +48,7 @@ For detailed information about the current architecture, see [CURRENT_ARCHITECTU
 - Visual Studio Code / Visual Studio 2022
 - Git version control
 
-> Testing note: For E2E demos and UI inspections in this project, prefer Trae’s built-in browser. Playwright is not required here; any references in lesson content are educational.
+> Testing note: For E2E demos and UI inspections in this project, prefer Trae's built-in browser. Playwright is not required here; any references in lesson content are educational.
 
 ## System Architecture
 
@@ -58,19 +64,26 @@ graph TB
     D --> E[ASP.NET Core 8.0 Backend]
     E --> F[PostgreSQL Database]
     E --> G[Redis Cache]
+    E --> H[Serilog]
     
-    H[NGINX Gateway] --> B
-    H --> E
+    I[JWT Authentication] --> E
+    J[RBAC System] --> E
     
-    I[Quiz Prefetch Service] --> B
-    J[Progress Tracking] --> B
+    K[NGINX Gateway] --> B
+    K --> E
+    
+    L[Quiz Prefetch Service] --> B
+    M[Progress Tracking] --> B
     
     style A fill:#e1f5fe
     style B fill:#f3e5f5
     style E fill:#e8f5e8
     style F fill:#fff3e0
     style G fill:#fce4ec
-    style H fill:#ffecb3
+    style H fill:#bbdefb
+    style I fill:#c8e6c9
+    style J fill:#c8e6c9
+    style K fill:#ffecb3
 ```
 
 ## Directory Structure
@@ -84,6 +97,8 @@ GlassCodeAcademy/
 │   │   ├── GraphQL/
 │   │   ├── Models/
 │   │   ├── Services/
+│   │   ├── Middleware/
+│   │   ├── Extensions/
 │   │   └── Program.cs
 │   └── frontend/
 │       ├── src/
@@ -106,6 +121,7 @@ GlassCodeAcademy/
 │   └── registry.json
 ├── docs/
 │   ├── CURRENT_ARCHITECTURE.md
+│   ├── PROGRESS_REPORT.md
 │   └── ... (other documentation files)
 └── README.md
 
@@ -123,11 +139,74 @@ node scripts/quiz-difficulty-report.js
 ```
 
 This prints pool sizes and predicted beginner/intermediate/advanced counts per module using tier weights and quiz length.
-```
+
+## Security Features
+
+### JWT Authentication
+- Token-based authentication with signature validation
+- Token expiration and refresh capabilities
+- Claims extraction and validation
+
+### Role-Based Access Control (RBAC)
+- Hierarchical role system (Admin, Instructor, Student, Guest)
+- Policy-based authorization with custom requirements
+- Organization and team-based scoping
+- Multi-tenancy support
+
+## Observability
+
+### Structured Logging
+- Comprehensive logging with Serilog
+- Correlation ID tracking across requests
+- Structured log entries with contextual information
+- Multiple output sinks (Console, File, JSON)
+- Performance timing and error tracking
+
+### Health Monitoring
+- Application health checks
+- Database connectivity monitoring
+- Cache performance tracking
+- API response time monitoring
+
+## Testing Infrastructure
+
+### Unit Testing
+- xUnit testing framework
+- Moq for mocking dependencies
+- Comprehensive test coverage targets (80%+)
+- Continuous integration with GitHub Actions
+
+### Integration Testing
+- Full API endpoint testing
+- Database integration tests
+- Security feature validation
+- Performance benchmarking
+
+## Recent Enhancements (October 2025)
+
+### Security Improvements
+- Implemented comprehensive JWT authentication
+- Added role-based access control system
+- Created organization and team constructs
+- Enhanced authorization policies
+
+### Observability Improvements
+- Added structured logging with Serilog
+- Implemented correlation ID tracking
+- Standardized error response formats
+- Added performance timing to operations
+
+### Testing Infrastructure
+- Enhanced test project with 100+ passing tests
+- Added code coverage requirements (80% threshold)
+- Implemented GitHub Actions CI/CD pipeline
+- Added security feature integration tests
+
+For detailed progress information, see [PROGRESS_REPORT.md](docs/PROGRESS_REPORT.md).
 
 ## Question Schema & Authoring
 
-We’ve standardized the question schema and added fields to better control multiple-choice presentation and open-ended validation:
+We've standardized the question schema and added fields to better control multiple-choice presentation and open-ended validation:
 
 - Multiple-choice
   - `fixedChoiceOrder` (boolean): prevents shuffling when order matters
@@ -197,196 +276,3 @@ Utility-first CSS framework for rapid UI development
 1. **Server-Side JavaScript**: Lessons on Node.js fundamentals and Express.js
 2. **Interactive Quizzes**: Interview questions covering Node.js concepts
 3. **Technology-Specific Styling**: Green-themed interface for Node.js content
-
-#### SASS Modules
-CSS preprocessor with variables, nesting, and mixins
-
-## API Endpoints
-
-All data is accessed through GraphQL queries and mutations:
-
-### Queries
-- `dotNetLessons`, `nextJsLessons`, `graphQLLessons`, `laravelLessons`
-- `reactLessons`, `tailwindLessons`, `nodeLessons`, `sassLessons`
-- `dotNetInterviewQuestions`, `nextJsInterviewQuestions`, `graphQLInterviewQuestions`, `laravelInterviewQuestions`
-- `reactInterviewQuestions`, `tailwindInterviewQuestions`, `nodeInterviewQuestions`, `sassInterviewQuestions`
-
-### Mutations
-- `submitAnswer` (for all modules)
-- `submitLaravelAnswer` (Laravel-specific)
-- `submitReactAnswer` (React-specific)
-- `submitTailwindAnswer` (Tailwind-specific)
-- `submitNodeAnswer` (Node.js-specific)
-- `submitSassAnswer` (SASS-specific)
-- `trackProgress`
-
-## Development Setup
-
-### Prerequisites
-- .NET 8.0 SDK (version 8.0.414 or later)
-- Node.js 18+ (required for frontend)
-- PHP 8.2+ and Composer (for Laravel modules)
-- Git
-
-### Quick Start (Development)
-
-To start both frontend and backend services in development mode:
-
-```bash
-# Make the script executable
-chmod +x start-dev.sh
-
-# Run the development script
-./start-dev.sh
-```
-
-This will start:
-- Backend on `http://localhost:8080`
-- Frontend on `http://localhost:3000`
-
-### Contributing
-
-Please read `CONTRIBUTING.md` for the content schema, validation workflow, auto-fix tools, and authoring guidelines.
-
-### Manual Start (Development)
-
-#### Backend Setup
-```bash
-cd glasscode/backend
-
-# Make the script executable
-chmod +x start-dev.sh
-
-# Run the backend development script
-./start-dev.sh
-```
-
-The backend will start on `http://localhost:8080` with:
-- GraphQL API: `http://localhost:8080/graphql`
-- GraphQL UI: `http://localhost:8080/graphql-ui`
-- Health check: `http://localhost:8080/api/health`
-
-#### Frontend Setup
-```bash
-cd glasscode/frontend
-
-# Make the script executable
-chmod +x start-dev.sh
-
-# Run the frontend development script
-./start-dev.sh
-```
-
-The frontend will start on `http://localhost:3000`
-
-## Production Deployment
-
-For production deployments, we provide a turn-key bootstrap script that automates the entire setup process:
-
-### Automated Deployment
-
-1. **Configure your environment**
-   ```bash
-   # Copy the example configuration file
-   cp .env.example .env
-   
-   # Edit the configuration for your environment
-   nano .env
-   ```
-
-2. **Run the bootstrap script**
-   ```bash
-   # Make the script executable
-   chmod +x bootstrap.sh
-   
-   # Run the bootstrap script
-   ./bootstrap.sh
-   ```
-
-The bootstrap script will:
-1. Install all required dependencies (Node.js, .NET, NGINX, etc.)
-2. Create a dedicated deploy user
-3. Clone the repository
-4. Build both frontend and backend applications
-5. Set up systemd services for automatic startup
-6. Configure NGINX as a reverse proxy
-7. Set up SSL certificates with Let's Encrypt
-8. Configure firewall rules
-9. Perform health checks
-
-### Configuration Options
-
-The deployment can be customized using the `.env` configuration file:
-
-- `APP_NAME`: Application name (used for service names)
-- `DEPLOY_USER`: System user to run the application
-- `APP_DIR`: Directory where the application will be installed
-- `REPO`: Git repository to clone
-- `DOMAIN`: Domain name for the application
-- `EMAIL`: Email for SSL certificate registration
-
-### Updating the Application
-
-To update the application to the latest version:
-
-```bash
-# Make the update script executable
-chmod +x update.sh
-
-# Run the update script
-./update.sh
-```
-
-The update script will:
-1. Backup the current installation
-2. Pull the latest changes from the repository
-3. Update dependencies and rebuild the application
-4. Restart services
-5. Perform health checks
-
-### Manual Steps (if not using bootstrap)
-
-If you prefer to set up the server manually, follow these steps:
-
-1. **Create deploy user**
-   ```bash
-   sudo adduser --disabled-password --gecos "" deploy
-   sudo usermod -aG sudo deploy
-   ```
-
-2. **Install dependencies**
-   ```bash
-   # Node.js
-   curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
-   sudo apt-get install -y nodejs
-   
-   # .NET
-   curl -sSL https://packages.microsoft.com/config/ubuntu/24.04/packages-microsoft-prod.deb -o packages-microsoft-prod.deb
-   sudo dpkg -i packages-microsoft-prod.deb
-   sudo apt-get update
-   sudo apt-get install -y dotnet-sdk-8.0 aspnetcore-runtime-8.0
-   ```
-
-3. **Clone repository**
-   ```bash
-   sudo -u deploy git clone git@github.com:ErikVeland/GlassCodeAcademy.git /srv/academy
-   ```
-
-4. **Build applications**
-   ```bash
-   # Backend
-   cd /srv/academy/glasscode/backend
-   sudo -u deploy dotnet restore
-   sudo -u deploy dotnet build -c Release
-   
-   # Frontend
-   cd /srv/academy/glasscode/frontend
-   sudo -u deploy npm ci
-   sudo -u deploy npm run build
-   ```
-
-5. **Set up systemd services**
-   Create `/etc/systemd/system/glasscode-dotnet.service` and `/etc/systemd/system/glasscode-frontend.service` as shown in the bootstrap script.
-
-6. **Configure NGINX**
-   Create NGINX configuration as shown in the bootstrap script.

@@ -198,156 +198,295 @@ If you prefer to set up the server manually, follow these steps:
 
 3. **Clone repository**
    ```bash
-   sudo -u deploy git clone git@github.com:ErikVeland/GlassCodeAcademy.git /srv/academy
+   sudo -u deploy git clone https://github.com/ErikVeland/GlassCodeAcademy.git /home/deploy/glasscode
    ```
 
 4. **Build applications**
    ```bash
-   # Backend
-   cd /srv/academy/glasscode/backend
-   sudo -u deploy dotnet restore
-   sudo -u deploy dotnet build -c Release
-   
-   # Frontend
-   cd /srv/academy/glasscode/frontend
-   sudo -u deploy npm ci
+   # Build frontend
+   cd /home/deploy/glasscode/glasscode/frontend
+   sudo -u deploy npm install
    sudo -u deploy npm run build
+   
+   # Build backend
+   cd /home/deploy/glasscode/glasscode/backend
+   sudo -u deploy dotnet publish -c Release -o out
    ```
 
 5. **Set up systemd services**
-   Create `/etc/systemd/system/glasscode-dotnet.service` and `/etc/systemd/system/glasscode-frontend.service` as shown in the bootstrap script.
+   ```bash
+   # Create frontend service
+   sudo tee /etc/systemd/system/glasscode-frontend.service > /dev/null <<EOF
+[Unit]
+Description=GlassCode Academy Frontend
+After=network.target
+
+[Service]
+Type=simple
+User=deploy
+WorkingDirectory=/home/deploy/glasscode/glasscode/frontend
+ExecStart=/usr/bin/node .next/standalone/server.js
+Restart=always
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target
+EOF
+
+   # Create backend service
+   sudo tee /etc/systemd/system/glasscode-dotnet.service > /dev/null <<EOF
+[Unit]
+Description=GlassCode Academy Backend
+After=network.target
+
+[Service]
+Type=simple
+User=deploy
+WorkingDirectory=/home/deploy/glasscode/glasscode/backend
+ExecStart=/usr/bin/dotnet /home/deploy/glasscode/glasscode/backend/out/backend.dll
+Restart=always
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target
+EOF
+
+   # Enable and start services
+   sudo systemctl daemon-reload
+   sudo systemctl enable glasscode-frontend
+   sudo systemctl enable glasscode-dotnet
+   sudo systemctl start glasscode-frontend
+   sudo systemctl start glasscode-dotnet
+   ```
 
 6. **Configure NGINX**
-   Create NGINX configuration as shown in the bootstrap script.
+   ```bash
+   sudo tee /etc/nginx/sites-available/glasscode > /dev/null <<EOF
+server {
+    listen 80;
+    server_name your-domain.com;
 
-## Cloud Deployment Options
+    location / {
+        proxy_pass http://127.0.0.1:3000;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade \$http_upgrade;
+        proxy_set_header Connection 'upgrade';
+        proxy_set_header Host \$host;
+        proxy_set_header X-Real-IP \$remote_addr;
+        proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto \$scheme;
+        proxy_cache_bypass \$http_upgrade;
+        proxy_read_timeout 60s;
+        proxy_connect_timeout 60s;
+    }
 
-### Azure App Service Deployment
+    location /api {
+        proxy_pass http://127.0.0.1:8080;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade \$http_upgrade;
+        proxy_set_header Connection 'upgrade';
+        proxy_set_header Host \$host;
+        proxy_set_header X-Real-IP \$remote_addr;
+        proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto \$scheme;
+        proxy_cache_bypass \$http_upgrade;
+        proxy_read_timeout 60s;
+        proxy_connect_timeout 60s;
+    }
 
-### Prerequisites
-- Azure account (Free tier is sufficient)
-- Azure CLI installed (optional, for CLI-based deployment)
+    location /graphql {
+        proxy_pass http://127.0.0.1:8080;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade \$http_upgrade;
+        proxy_set_header Connection 'upgrade';
+        proxy_set_header Host \$host;
+        proxy_set_header X-Real-IP \$remote_addr;
+        proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto \$scheme;
+        proxy_cache_bypass \$http_upgrade;
+        proxy_read_timeout 60s;
+        proxy_connect_timeout 60s;
+    }
+}
+EOF
 
-### Manual Deployment via Azure Portal
+   # Enable site
+   sudo ln -s /etc/nginx/sites-available/glasscode /etc/nginx/sites-enabled/
+   sudo nginx -t
+   sudo systemctl reload nginx
+   ```
 
-1. **Create Resource Group**
-   - Name: `fullstack-academy-rg`
-   - Location: `Central US` (or any region supporting free tier)
+7. **Set up SSL with Let's Encrypt**
+   ```bash
+   sudo apt-get install -y certbot python3-certbot-nginx
+   sudo certbot --nginx -d your-domain.com
+   ```
 
-2. **Create App Service Plan**
-   - Name: `fullstack-academy-plan`
-   - Operating System: Linux
-   - Pricing Tier: Free F1
+## Security Configuration
 
-3. **Create Web App**
-   - Name: `fullstack-academy-app` (must be globally unique)
-   - Runtime Stack: .NET 9 (STS) or .NET 8 (LTS)
-   - Operating System: Linux
-   - App Service Plan: Select the plan created above
+### JWT Authentication Setup
 
-4. **Deploy Application**
-   - Go to your Web App in the Azure Portal
-   - Navigate to "Deployment Center"
-   - Select "ZIP Deploy"
-   - Upload the deployment package: `glasscode/backend/publish.zip`
+The application uses JWT tokens for authentication. To configure JWT:
 
-### GitHub Actions Deployment (Recommended)
+1. Set the following environment variables:
+   ```bash
+   Jwt__Issuer=GlassCodeAcademy
+   Jwt__Audience=GlassCodeAcademyUsers
+   Jwt__Secret=YourSuperSecretKeyHere
+   ```
 
-1. Fork this repository to your GitHub account
-2. Create the Azure resources as described above
-3. Get the publishing profile from your Azure Web App:
-   - In Azure Portal, go to your Web App
-   - Click "Get publish profile" and download the file
-4. In your GitHub repository, go to Settings > Secrets and variables > Actions
-5. Create a new secret named `AZURE_WEBAPP_PUBLISH_PROFILE`
-6. Paste the contents of the publish profile file as the value
-7. Push changes to trigger the deployment workflow
+2. For production deployments, ensure the secret is stored securely and not in version control.
 
-## Alternative Deployment Options
+### Role-Based Access Control
 
-### Railway.app
-1. Create a free Railway account
-2. Create a new project
-3. Connect your GitHub repository
-4. Configure the service:
-   - Framework Preset: .NET
-   - Build Command: `cd glasscode/backend && dotnet publish -c Release -o ./publish`
-   - Start Command: `cd glasscode/backend/publish && dotnet backend.dll`
+The application implements a role-based access control system with the following roles:
+- **Admin**: Full access to all features
+- **Instructor**: Access to content management features
+- **Student**: Access to learning content
+- **Guest**: Limited access to public content
+
+Roles are configured in the PostgreSQL database and can be managed through the admin interface.
+
+### Database Security
+
+1. Use strong passwords for database connections
+2. Configure PostgreSQL to only accept connections from localhost or trusted networks
+3. Regularly update PostgreSQL to the latest stable version
+4. Implement proper backup and recovery procedures
+
+### Logging and Monitoring
+
+The application uses Serilog for structured logging with the following features:
+- Console and file output
+- JSON formatting for structured logs
+- Correlation ID tracking for request tracing
+- Performance timing for operations
+- Error categorization and grouping
+
+To configure logging levels:
+```bash
+# Set log level for different environments
+Logging__LogLevel__Default=Information
+Serilog__MinimumLevel__Default=Information
+```
+
+## Testing and Quality Assurance
+
+### Automated Testing
+
+The application includes comprehensive automated tests:
+- Unit tests for core business logic
+- Integration tests for API endpoints
+- Security feature tests
+- Performance benchmarks
+
+To run tests:
+```bash
+# Run backend tests
+cd glasscode/backend
+dotnet test Backend.Tests
+
+# Run tests with code coverage
+dotnet test Backend.Tests --collect:"XPlat Code Coverage" --settings Backend.Tests/coverlet.runsettings
+```
+
+### Code Coverage Requirements
+
+The project enforces a minimum code coverage threshold of 80%. The CI/CD pipeline will fail builds that don't meet this requirement.
+
+### Health Checks
+
+The application provides health check endpoints:
+- `/api/health`: Overall application health
+- GraphQL endpoint health check
+- Database connectivity verification
+
+## Performance Optimization
+
+### Caching Strategy
+
+The application uses Redis for caching:
+- Frequently accessed data is cached to reduce database load
+- Cache expiration is configured based on data volatility
+- Cache warming strategies are implemented for critical data
+
+### Database Optimization
+
+- Proper indexing on frequently queried fields
+- Connection pooling for efficient database access
+- Query optimization for complex operations
+- Regular database maintenance tasks
+
+### Frontend Optimization
+
+- Server-side rendering for improved initial load times
+- Static asset optimization and compression
+- Code splitting for reduced bundle sizes
+- Lazy loading for non-critical components
+
+## Monitoring and Observability
+
+### Log Analysis
+
+Structured logs are written to:
+- Console output for development
+- Log files with daily rotation
+- JSON format for easy parsing and analysis
+
+### Performance Monitoring
+
+- Response time tracking for all endpoints
+- Database query performance monitoring
+- Cache hit/miss ratios
+- Memory and CPU usage tracking
+
+### Error Tracking
+
+- Centralized error logging with context
+- Error categorization and grouping
+- Alerting for critical errors
+- Performance degradation detection
 
 ## Troubleshooting
 
 ### Common Issues
 
-1. **VM Allocation Error**
-   - Ensure you're using App Service (not Virtual Machines)
-   - Select Linux operating system
-   - Use Free F1 pricing tier
+1. **502 Bad Gateway**
+   - Check systemd service status
+   - Verify ports are listening
+   - Check NGINX configuration
+   - Review service logs
 
-2. **Runtime Stack Issues**
-   - Use .NET 9 (STS) or .NET 8 (LTS) instead of .NET Core 9.0
-   - Ensure Linux is selected as the operating system
+2. **Database Connection Issues**
+   - Verify database is running
+   - Check connection string configuration
+   - Ensure proper firewall rules
+   - Validate database credentials
 
-3. **Deployment Validation Failed**
-   - Try a different region
-   - Use a more unique web app name
-   - Ensure all resource names follow Azure naming conventions
+3. **Authentication Failures**
+   - Verify JWT configuration
+   - Check token validity and expiration
+   - Review role assignments
+   - Confirm user permissions
 
-4. **Frontend systemd service is masked (fails to start)**
-   - Symptom:
-     ```
-     Failed to restart glasscode-frontend.service: Unit glasscode-frontend.service is masked.
-     ```
-   - Cause: The unit is masked (e.g., via `systemctl mask`) and cannot be started or restarted.
-   - Fix:
-     ```bash
-     # Unmask and reload
-     sudo systemctl unmask glasscode-frontend
-     sudo systemctl daemon-reload
-     
-     # Ensure unit uses Next standalone server
-     # ExecStart=/usr/bin/node .next/standalone/server.js -p 3000
-     sudo sed -i 's|ExecStart=.\+|ExecStart=/usr/bin/node .next/standalone/server.js -p 3000|' /etc/systemd/system/glasscode-frontend.service
-     sudo systemctl daemon-reload
-     
-     # Restart service
-     sudo systemctl restart glasscode-frontend
-     ```
-   - Diagnostics:
-     ```bash
-     sudo systemctl status glasscode-frontend --no-pager
-     journalctl -u glasscode-frontend -n 100 --no-pager
-     ls -l /etc/systemd/system/glasscode-frontend.service
-     ```
-   - Note: Our deployment scripts now proactively unmask `${APP_NAME}-frontend` and `${APP_NAME}-dotnet` before enabling or restarting, and enforce the frontend unit's `ExecStart` to use the Next standalone server. If you still encounter masking issues (e.g., after manual changes), run the repair commands above, then re-run `bootstrap.sh` or `update.sh`.
+### Log Locations
 
-### Testing Your Deployment
+- Application logs: `/var/log/glasscode/`
+- Systemd service logs: `journalctl -u glasscode-frontend` and `journalctl -u glasscode-dotnet`
+- NGINX logs: `/var/log/nginx/`
 
-After deployment, test your backend API:
+### Health Check Commands
+
 ```bash
-# Test GraphQL endpoint
-curl -X POST -H "Content-Type: application/json" \
-  -d '{"query":"{ dotNetLessons { id title topic } }"}' \
-  https://glasscode.academy/graphql
+# Check frontend service
+systemctl status glasscode-frontend
 
-# Test GraphQL UI
-# Visit: https://glasscode.academy/graphql-ui
+# Check backend service
+systemctl status glasscode-dotnet
+
+# Check database connectivity
+curl -s http://127.0.0.1:8080/api/health
+
+# Check GraphQL endpoint
+curl -s -X POST http://127.0.0.1:8080/graphql -H "Content-Type: application/json" -d '{"query":"{ __typename }"}'
 ```
-
-## Configuration
-
-### CORS Settings
-The backend is configured to allow CORS from:
-- `http://localhost:3000` (local development)
-- `https://glasscode.academy` (production deployment)
-- `https://your-custom-domain.com` (custom domain)
-
-To add your frontend domain, update the CORS policy in `glasscode/backend/Program.cs`.
-
-### Environment Variables
-The application uses the following environment variables:
-- `ASPNETCORE_ENVIRONMENT` - Set to "Production" for production deployments
-
-## Support
-For deployment issues, please check:
-1. Azure Free Account limitations: https://azure.microsoft.com/en-us/free/
-2. Azure App Service documentation: https://docs.microsoft.com/en-us/azure/app-service/

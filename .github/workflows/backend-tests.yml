@@ -1,0 +1,66 @@
+name: Backend Tests
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    env:
+      GLASSCODE_CONTENT_PATH: ${{ github.workspace }}/content
+      ASPNETCORE_URLS: http://127.0.0.1:8080
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET SDK
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: Restore backend tests
+        run: dotnet restore glasscode/backend/Backend.Tests/Backend.Tests.csproj
+
+      - name: Build backend tests
+        run: dotnet build glasscode/backend/Backend.Tests/Backend.Tests.csproj --configuration Release --no-restore
+
+      - name: Run tests with coverage
+        run: |
+          dotnet test glasscode/backend/Backend.Tests/Backend.Tests.csproj \
+            --collect:"XPlat Code Coverage" \
+            --settings glasscode/backend/Backend.Tests/coverlet.runsettings \
+            --results-directory ./TestResults
+
+      - name: Check coverage threshold
+        run: |
+          # Extract coverage percentage from the cobertura report
+          COBERTURA_FILE=$(find ./TestResults -name "coverage.cobertura.xml" | head -n 1)
+          if [ -z "$COBERTURA_FILE" ]; then
+            echo "No coverage report found"
+            exit 1
+          fi
+          
+          # Extract line coverage percentage (multiply by 100 to get percentage)
+          LINE_RATE=$(xmlstarlet sel -t -v "//coverage/@line-rate" "$COBERTURA_FILE")
+          COVERAGE_PERCENTAGE=$(echo "$LINE_RATE * 100" | bc -l)
+          COVERAGE_PERCENTAGE_INT=$(printf "%.0f" "$COVERAGE_PERCENTAGE")
+          
+          echo "Line coverage: $COVERAGE_PERCENTAGE_INT%"
+          
+          # Check if coverage meets threshold (80%)
+          if [ "$COVERAGE_PERCENTAGE_INT" -lt 80 ]; then
+            echo "Coverage ($COVERAGE_PERCENTAGE_INT%) is below threshold (80%)"
+            exit 1
+          else
+            echo "Coverage ($COVERAGE_PERCENTAGE_INT%) meets threshold ✅"
+          fi
+
+      - name: Upload coverage report
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: coverage-report
+          path: ./TestResults

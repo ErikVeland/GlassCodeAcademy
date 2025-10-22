@@ -1,0 +1,156 @@
+using backend.Services.Auth;
+using System.Security.Claims;
+using Xunit;
+
+namespace backend.Tests.Services
+{
+    public class JwtValidationServiceTests
+    {
+        private readonly JwtValidationService _jwtService;
+        private readonly string _testIssuer = "TestIssuer";
+        private readonly string _testAudience = "TestAudience";
+        private readonly string _testSecret = "TestSecretKey123456789012345678901234567890";
+
+        public JwtValidationServiceTests()
+        {
+            _jwtService = new JwtValidationService(_testIssuer, _testAudience, _testSecret);
+        }
+
+        [Fact]
+        public void GenerateToken_ShouldCreateValidToken()
+        {
+            // Arrange
+            var claims = new[]
+            {
+                new Claim(ClaimTypes.NameIdentifier, "123"),
+                new Claim(ClaimTypes.Email, "test@example.com")
+            };
+
+            // Act
+            var token = _jwtService.GenerateToken(claims);
+
+            // Assert
+            Assert.False(string.IsNullOrEmpty(token));
+        }
+
+        [Fact]
+        public void ValidateToken_WithValidToken_ShouldReturnTrue()
+        {
+            // Arrange
+            var claims = new[]
+            {
+                new Claim(ClaimTypes.NameIdentifier, "123"),
+                new Claim(ClaimTypes.Email, "test@example.com")
+            };
+            var token = _jwtService.GenerateToken(claims);
+
+            // Act
+            var isValid = _jwtService.ValidateToken(token, out var principal);
+
+            // Assert
+            Assert.True(isValid);
+            Assert.NotNull(principal);
+            Assert.Equal("123", principal.FindFirst(ClaimTypes.NameIdentifier)?.Value);
+            Assert.Equal("test@example.com", principal.FindFirst(ClaimTypes.Email)?.Value);
+        }
+
+        [Fact]
+        public void ValidateToken_WithInvalidToken_ShouldReturnFalse()
+        {
+            // Arrange
+            var invalidToken = "invalid.token.here";
+
+            // Act
+            var isValid = _jwtService.ValidateToken(invalidToken, out var principal);
+
+            // Assert
+            Assert.False(isValid);
+            Assert.Null(principal);
+        }
+
+        [Fact]
+        public void ValidateToken_WithExpiredToken_ShouldReturnFalse()
+        {
+            // Arrange
+            var claims = new[]
+            {
+                new Claim(ClaimTypes.NameIdentifier, "123")
+            };
+            var expiredToken = _jwtService.GenerateToken(claims, DateTime.UtcNow.AddMinutes(-5));
+
+            // Act
+            var isValid = _jwtService.ValidateToken(expiredToken, out var principal);
+
+            // Assert
+            Assert.False(isValid);
+            Assert.Null(principal);
+        }
+
+        [Fact]
+        public void GetPrincipalFromToken_WithValidToken_ShouldReturnPrincipal()
+        {
+            // Arrange
+            var claims = new[]
+            {
+                new Claim(ClaimTypes.NameIdentifier, "123"),
+                new Claim(ClaimTypes.Email, "test@example.com")
+            };
+            var token = _jwtService.GenerateToken(claims);
+
+            // Act
+            var principal = _jwtService.GetPrincipalFromToken(token);
+
+            // Assert
+            Assert.NotNull(principal);
+            Assert.Equal("123", principal.FindFirst(ClaimTypes.NameIdentifier)?.Value);
+            Assert.Equal("test@example.com", principal.FindFirst(ClaimTypes.Email)?.Value);
+        }
+
+        [Fact]
+        public void GetPrincipalFromToken_WithInvalidToken_ShouldReturnNull()
+        {
+            // Arrange
+            var invalidToken = "invalid.token.here";
+
+            // Act
+            var principal = _jwtService.GetPrincipalFromToken(invalidToken);
+
+            // Assert
+            Assert.Null(principal);
+        }
+
+        [Fact]
+        public void IsTokenExpired_WithExpiredToken_ShouldReturnTrue()
+        {
+            // Arrange
+            var claims = new[]
+            {
+                new Claim(ClaimTypes.NameIdentifier, "123")
+            };
+            var expiredToken = _jwtService.GenerateToken(claims, DateTime.UtcNow.AddMinutes(-5));
+
+            // Act
+            var isExpired = _jwtService.IsTokenExpired(expiredToken);
+
+            // Assert
+            Assert.True(isExpired);
+        }
+
+        [Fact]
+        public void IsTokenExpired_WithValidToken_ShouldReturnFalse()
+        {
+            // Arrange
+            var claims = new[]
+            {
+                new Claim(ClaimTypes.NameIdentifier, "123")
+            };
+            var validToken = _jwtService.GenerateToken(claims, DateTime.UtcNow.AddHours(1));
+
+            // Act
+            var isExpired = _jwtService.IsTokenExpired(validToken);
+
+            // Assert
+            Assert.False(isExpired);
+        }
+    }
+}

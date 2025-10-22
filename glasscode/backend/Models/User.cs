@@ -36,5 +36,12 @@ namespace backend.Models
         public virtual ICollection<UserLessonProgress> UserLessonProgress { get; set; } = new List<UserLessonProgress>();
         
         public virtual ICollection<UserQuestionAttempt> UserQuestionAttempts { get; set; } = new List<UserQuestionAttempt>();
+        
+        // RBAC navigation properties
+        public virtual ICollection<UserRole> UserRoles { get; set; } = new List<UserRole>();
+        
+        // Organisation and team navigation properties
+        public virtual ICollection<UserOrganisation> UserOrganisations { get; set; } = new List<UserOrganisation>();
+        public virtual ICollection<UserTeam> UserTeams { get; set; } = new List<UserTeam>();
     }
 }

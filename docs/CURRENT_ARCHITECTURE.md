@@ -6,6 +6,7 @@ See also:
 - [TECH_STACK.md](TECH_STACK.md) - Detailed technology stack information
 - [TECH_STACK_INTEGRATION.md](TECH_STACK_INTEGRATION.md) - Technology integration details
 - [CONTENT_STRUCTURE.md](CONTENT_STRUCTURE.md) - Content organization and structure
+- [PROGRESS_REPORT.md](PROGRESS_REPORT.md) - Development progress and statistics
 
 ## Current Technology Stack
 
@@ -23,6 +24,10 @@ See also:
 - **Entity Framework Core** - ORM for database operations
 - **PostgreSQL** - Primary database (migrated from JSON files)
 - **Redis** - Caching layer for improved performance
+- **Serilog** - Structured logging framework
+- **JWT** - Authentication and authorization
+- **xUnit** - Unit testing framework
+- **Moq** - Mocking framework for tests
 
 ### Development Tools
 - **Node.js 18+** - JavaScript runtime for frontend tooling
@@ -41,19 +46,26 @@ graph TB
     D --> E[ASP.NET Core 8.0 Backend]
     E --> F[PostgreSQL Database]
     E --> G[Redis Cache]
+    E --> H[Serilog]
     
-    H[NGINX Gateway] --> B
-    H --> E
+    I[JWT Authentication] --> E
+    J[RBAC System] --> E
     
-    I[Quiz Prefetch Service] --> B
-    J[Progress Tracking] --> B
+    K[NGINX Gateway] --> B
+    K --> E
+    
+    L[Quiz Prefetch Service] --> B
+    M[Progress Tracking] --> B
     
     style A fill:#e1f5fe
     style B fill:#f3e5f5
     style E fill:#e8f5e8
     style F fill:#fff3e0
     style G fill:#fce4ec
-    style H fill:#ffecb3
+    style H fill:#bbdefb
+    style I fill:#c8e6c9
+    style J fill:#c8e6c9
+    style K fill:#ffecb3
 ```
 
 ## Deployment Architecture
@@ -69,13 +81,37 @@ The application is deployed using a standalone server approach with NGINX as a r
 ## Data Flow
 
 1. **User Request** - User accesses the application through NGINX
-2. **Frontend Rendering** - Next.js renders pages and makes GraphQL requests
-3. **GraphQL API** - Apollo Client sends queries to the backend
-4. **Data Processing** - ASP.NET Core processes requests and queries PostgreSQL
-5. **Caching** - Redis cache is used for frequently accessed data
-6. **Response** - Data is returned through the GraphQL API to the frontend
+2. **Authentication** - JWT tokens are validated for protected endpoints
+3. **Authorization** - Role-based access control determines access permissions
+4. **Frontend Rendering** - Next.js renders pages and makes GraphQL requests
+5. **GraphQL API** - Apollo Client sends queries to the backend
+6. **Data Processing** - ASP.NET Core processes requests and queries PostgreSQL
+7. **Caching** - Redis cache is used for frequently accessed data
+8. **Logging** - Serilog captures structured logs with correlation IDs
+9. **Response** - Data is returned through the GraphQL API to the frontend
 
 ## Key Features
+
+### Security Infrastructure
+
+#### JWT Authentication
+- Token-based authentication using JSON Web Tokens
+- Secure token validation with signature verification
+- Token expiration and refresh mechanisms
+- Claims-based authorization
+
+#### Role-Based Access Control (RBAC)
+- Hierarchical role system (Admin, Instructor, Student, Guest)
+- Policy-based authorization with custom requirements
+- Organization and team-based scoping
+- Multi-tenancy support
+
+#### Structured Logging
+- Comprehensive logging with Serilog
+- Correlation ID tracking across requests
+- Structured log entries with contextual information
+- Multiple output sinks (Console, File, JSON)
+- Performance timing and error tracking
 
 ### Quiz Prefetching
 - Background service prefetches quizzes based on tier priority
@@ -91,6 +127,7 @@ The application is deployed using a standalone server approach with NGINX as a r
 - Structured content organized by modules and tiers
 - JSON-based content structure with standardized schemas
 - Automated validation and quality control
+- Database-first approach with Entity Framework Core
 
 ## Directory Structure
 
@@ -103,6 +140,8 @@ GlassCodeAcademy/
 │   │   ├── GraphQL/             # GraphQL schema and resolvers
 │   │   ├── Models/              # Data models
 │   │   ├── Services/            # Business logic services
+│   │   ├── Middleware/          # Custom middleware
+│   │   ├── Extensions/          # Extension methods
 │   │   └── Program.cs           # Application entry point
 │   └── frontend/                # Next.js application
 │       ├── src/
@@ -116,7 +155,9 @@ GlassCodeAcademy/
 │   ├── quizzes/                 # Quiz content JSON files
 │   └── registry.json            # Content registry
 ├── docs/                        # Documentation
-└── scripts/                     # Utility scripts
+├── scripts/                     # Utility scripts
+└── tests/                       # Test projects
+    └── Backend.Tests/           # Backend unit and integration tests
 ```
 
 ## Development Workflow
@@ -154,6 +195,12 @@ chmod +x bootstrap.sh
 - **Endpoint**: `/graphql`
 - **UI**: `/graphql-ui`
 
+### Authentication
+- **Validate Token**: `POST /api/auth/validate`
+- **Refresh Token**: `POST /api/auth/refresh`
+- **Revoke Token**: `POST /api/auth/revoke`
+- **Token Info**: `POST /api/auth/info`
+
 ### Health Check
 - **Endpoint**: `/api/health`
 
@@ -184,8 +231,65 @@ Quizzes follow a standardized JSON schema with:
 - Indexes on frequently queried fields
 - Connection pooling
 - Efficient query patterns
+- Entity Framework Core optimizations
 
 ### Frontend
 - Server-side rendering
 - Static site generation where appropriate
 - Code splitting and lazy loading
+
+## Testing Infrastructure
+
+### Unit Testing
+- xUnit testing framework
+- Moq for mocking dependencies
+- Comprehensive test coverage targets (80%+)
+- Continuous integration with GitHub Actions
+
+### Integration Testing
+- Full API endpoint testing
+- Database integration tests
+- Security feature validation
+- Performance benchmarking
+
+### Code Quality
+- Static code analysis
+- Code coverage reporting
+- Automated code quality checks
+- Security scanning
+
+## Monitoring and Observability
+
+### Logging
+- Structured logging with Serilog
+- Correlation ID tracking
+- Performance timing
+- Error categorization and grouping
+
+### Health Monitoring
+- Application health checks
+- Database connectivity monitoring
+- Cache performance tracking
+- API response time monitoring
+
+## Recent Enhancements
+
+### Security Improvements (October 2025)
+- Implemented comprehensive JWT authentication
+- Added role-based access control system
+- Created organization and team constructs
+- Enhanced authorization policies
+
+### Observability Improvements (October 2025)
+- Added structured logging with Serilog
+- Implemented correlation ID tracking
+- Standardized error response formats
+- Added performance timing to operations
+
+### Testing Infrastructure (October 2025)
+- Enhanced test project with 100+ passing tests
+- Added code coverage requirements (80% threshold)
+- Implemented GitHub Actions CI/CD pipeline
+- Added security feature integration tests
+
+For detailed progress information, see [PROGRESS_REPORT.md](PROGRESS_REPORT.md).

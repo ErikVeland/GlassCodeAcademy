@@ -23,6 +23,16 @@ namespace backend.Data
         public DbSet<UserQuestionAttempt> UserQuestionAttempts { get; set; }
         public DbSet<UserLessonQuizAttempt> UserLessonQuizAttempts { get; set; }
         
+        // RBAC entities
+        public DbSet<Role> Roles { get; set; }
+        public DbSet<UserRole> UserRoles { get; set; }
+        
+        // Organisation and team entities
+        public DbSet<Organisation> Organisations { get; set; }
+        public DbSet<Team> Teams { get; set; }
+        public DbSet<UserOrganisation> UserOrganisations { get; set; }
+        public DbSet<UserTeam> UserTeams { get; set; }
+        
         // Content metadata
         public DbSet<ContentTag> ContentTags { get; set; }
         public DbSet<LessonTag> LessonTags { get; set; }
@@ -158,6 +168,89 @@ namespace backend.Data
                 entity.HasOne(e => e.Question)
                     .WithMany(e => e.UserQuestionAttempts)
                     .HasForeignKey(e => e.QuestionId)
+                    .OnDelete(DeleteBehavior.Cascade);
+            });
+
+            // Configure Role entity
+            modelBuilder.Entity<Role>(entity =>
+            {
+                entity.HasKey(e => e.Id);
+                entity.Property(e => e.Name).IsRequired().HasMaxLength(50);
+                entity.HasIndex(e => e.Name).IsUnique();
+                entity.Property(e => e.CreatedAt).HasDefaultValueSql("CURRENT_TIMESTAMP");
+                entity.Property(e => e.UpdatedAt).HasDefaultValueSql("CURRENT_TIMESTAMP");
+            });
+
+            // Configure UserRole entity
+            modelBuilder.Entity<UserRole>(entity =>
+            {
+                entity.HasKey(e => new { e.UserId, e.RoleId });
+                
+                entity.HasOne(e => e.User)
+                    .WithMany(e => e.UserRoles)
+                    .HasForeignKey(e => e.UserId)
+                    .OnDelete(DeleteBehavior.Cascade);
+                    
+                entity.HasOne(e => e.Role)
+                    .WithMany(e => e.UserRoles)
+                    .HasForeignKey(e => e.RoleId)
+                    .OnDelete(DeleteBehavior.Cascade);
+            });
+
+            // Configure Organisation entity
+            modelBuilder.Entity<Organisation>(entity =>
+            {
+                entity.HasKey(e => e.Id);
+                entity.Property(e => e.Name).IsRequired().HasMaxLength(100);
+                entity.Property(e => e.Slug).IsRequired().HasMaxLength(100);
+                entity.HasIndex(e => e.Slug).IsUnique();
+                entity.Property(e => e.CreatedAt).HasDefaultValueSql("CURRENT_TIMESTAMP");
+                entity.Property(e => e.UpdatedAt).HasDefaultValueSql("CURRENT_TIMESTAMP");
+            });
+
+            // Configure Team entity
+            modelBuilder.Entity<Team>(entity =>
+            {
+                entity.HasKey(e => e.Id);
+                entity.Property(e => e.Name).IsRequired().HasMaxLength(100);
+                entity.Property(e => e.CreatedAt).HasDefaultValueSql("CURRENT_TIMESTAMP");
+                entity.Property(e => e.UpdatedAt).HasDefaultValueSql("CURRENT_TIMESTAMP");
+                
+                entity.HasOne(e => e.Organisation)
+                    .WithMany(e => e.Teams)
+                    .HasForeignKey(e => e.OrganisationId)
+                    .OnDelete(DeleteBehavior.Cascade);
+            });
+
+            // Configure UserOrganisation entity
+            modelBuilder.Entity<UserOrganisation>(entity =>
+            {
+                entity.HasKey(e => new { e.UserId, e.OrganisationId });
+                
+                entity.HasOne(e => e.User)
+                    .WithMany(e => e.UserOrganisations)
+                    .HasForeignKey(e => e.UserId)
+                    .OnDelete(DeleteBehavior.Cascade);
+                    
+                entity.HasOne(e => e.Organisation)
+                    .WithMany(e => e.UserOrganisations)
+                    .HasForeignKey(e => e.OrganisationId)
+                    .OnDelete(DeleteBehavior.Cascade);
+            });
+
+            // Configure UserTeam entity
+            modelBuilder.Entity<UserTeam>(entity =>
+            {
+                entity.HasKey(e => new { e.UserId, e.TeamId });
+                
+                entity.HasOne(e => e.User)
+                    .WithMany(e => e.UserTeams)
+                    .HasForeignKey(e => e.UserId)
+                    .OnDelete(DeleteBehavior.Cascade);
+                    
+                entity.HasOne(e => e.Team)
+                    .WithMany(e => e.UserTeams)
+                    .HasForeignKey(e => e.TeamId)
                     .OnDelete(DeleteBehavior.Cascade);
             });
 

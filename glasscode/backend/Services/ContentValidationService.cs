@@ -232,6 +232,15 @@ namespace backend.Services
 
             return total;
         }
+
+        // Add the missing GenerateContentHash method
+        public string GenerateContentHash(string content)
+        {
+            using var sha256 = SHA256.Create();
+            var bytes = Encoding.UTF8.GetBytes(content);
+            var hashBytes = sha256.ComputeHash(bytes);
+            return Convert.ToHexString(hashBytes).ToLowerInvariant();
+        }
     }
 
     public class ContentValidationResult
