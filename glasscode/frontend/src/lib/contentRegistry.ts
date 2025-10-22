@@ -199,7 +199,6 @@ class ContentRegistryLoader {
       // Debug environment and base resolution on server
       if (!isBrowser) {
         console.debug('[ContentRegistry] env NEXT_PUBLIC_BASE_URL =', process.env.NEXT_PUBLIC_BASE_URL);
-        console.debug('[ContentRegistry] env VERCEL_URL =', process.env.VERCEL_URL);
         console.debug('[ContentRegistry] env GC_CONTENT_MODE =', process.env.GC_CONTENT_MODE);
         console.debug('[ContentRegistry] computed base =', base);
       }
@@ -213,15 +212,10 @@ class ContentRegistryLoader {
         } else {
           // Fallback to common localhost origins
           devCandidates.push(
-            'http://localhost:3010/api/content/registry',
-            'http://localhost:3010/registry.json',
-            'http://127.0.0.1:3010/api/content/registry',
-            'http://127.0.0.1:3010/registry.json',
-            // Include current dev server defaults
-            'http://localhost:3452/api/content/registry',
-            'http://localhost:3452/registry.json',
-            'http://127.0.0.1:3452/api/content/registry',
-            'http://127.0.0.1:3452/registry.json'
+            'http://localhost:3000/api/content/registry',
+            'http://localhost:3000/registry.json',
+            'http://127.0.0.1:3000/api/content/registry',
+            'http://127.0.0.1:3000/registry.json'
           );
         }
       }
@@ -292,11 +286,11 @@ class ContentRegistryLoader {
   async getModule(slug: string): Promise<Module | null> {
     const modules = await this.getModules();
     console.log(`getModule(${slug}): total modules loaded:`, modules.length);
-    
+
     // First try to find by exact slug match (moduleSlug)
     let foundModule = modules.find(m => m.slug === slug);
     console.log(`getModule(${slug}): found by exact slug:`, foundModule?.slug);
-    
+
     // If not found, try to convert shortSlug to moduleSlug and search again
     if (!foundModule) {
       const moduleSlug = await this.getModuleSlugFromShortSlug(slug);
@@ -306,18 +300,18 @@ class ContentRegistryLoader {
         console.log(`getModule(${slug}): found by moduleSlug:`, foundModule?.slug);
       }
     }
-    
+
     // If still not found, try to find by legacy slugs
     if (!foundModule) {
       foundModule = modules.find(m => m.legacySlugs?.includes(slug));
       console.log(`getModule(${slug}): found by legacy slug:`, foundModule?.slug);
     }
-    
+
     if (foundModule) {
       console.log(`getModule(${slug}): returning module with metadata:`, foundModule.metadata);
       console.log(`getModule(${slug}): returning module with thresholds:`, foundModule.thresholds);
     }
-    
+
     return foundModule || null;
   }
 
@@ -342,7 +336,7 @@ class ContentRegistryLoader {
         // Sort by tier level first, then by order within tier
         const aTier = this.getTierLevel(a.tier);
         const bTier = this.getTierLevel(b.tier);
-        
+
         if (aTier !== bTier) {
           return aTier - bTier;
         }
@@ -371,7 +365,7 @@ class ContentRegistryLoader {
    */
   async findModuleByLegacySlug(legacySlug: string): Promise<Module | null> {
     const modules = await this.getModules();
-    return modules.find(mod => 
+    return modules.find(mod =>
       mod.legacySlugs.includes(legacySlug)
     ) || null;
   }
@@ -398,7 +392,7 @@ class ContentRegistryLoader {
     for (const mod of modules) {
       // Add module overview route
       routes.push(mod.routes.overview);
-      
+
       // Add lesson routes (if content exists)
       if (mod.status === 'active') {
         routes.push(mod.routes.lessons);
@@ -454,11 +448,8 @@ class ContentRegistryLoader {
       }
       // Common localhost dev ports
       candidates.push(
-        'http://localhost:3010/api/content/lessons/' + moduleSlug,
-        'http://127.0.0.1:3010/api/content/lessons/' + moduleSlug,
-        'http://127.0.0.1:3000/api/content/lessons/' + moduleSlug,
-        'http://localhost:3452/api/content/lessons/' + moduleSlug,
-        'http://127.0.0.1:3452/api/content/lessons/' + moduleSlug
+        'http://localhost:3000/api/content/lessons/' + moduleSlug,
+        'http://127.0.0.1:3000/api/content/lessons/' + moduleSlug
       );
 
       for (const url of candidates) {
@@ -516,8 +507,7 @@ class ContentRegistryLoader {
         // ignore
       }
       candidates.push(
-        'http://localhost:3010/api/content/quizzes/' + shortSlug,
-        'http://127.0.0.1:3010/api/content/quizzes/' + shortSlug,
+        'http://localhost:3000/api/content/quizzes/' + shortSlug,
         'http://127.0.0.1:3000/api/content/quizzes/' + shortSlug
       );
 
@@ -582,7 +572,7 @@ class ContentRegistryLoader {
     // Define the mapping from shortSlug to moduleSlug
     const shortSlugToModuleSlug: Record<string, string> = {
       'programming': 'programming-fundamentals',
-      'web': 'web-fundamentals', 
+      'web': 'web-fundamentals',
       'version': 'version-control',
       'dotnet': 'dotnet-fundamentals',
       'react': 'react-fundamentals',
@@ -600,19 +590,19 @@ class ContentRegistryLoader {
       'performance': 'performance-optimization',
       'security': 'security-fundamentals'
     };
-    
+
     // First check the mapping
     const mappedSlug = shortSlugToModuleSlug[shortSlug];
     if (mappedSlug) {
       return mappedSlug;
     }
-    
+
     // If not in mapping, check if it's already a full module slug
     const modules = await this.getModules();
     if (modules.some(m => m.slug === shortSlug)) {
       return shortSlug;
     }
-    
+
     return null;
   }
 
@@ -641,7 +631,7 @@ class ContentRegistryLoader {
       'performance-optimization': 'performance',
       'security-fundamentals': 'security'
     };
-    
+
     return moduleSlugToShortSlug[moduleSlug] || null;
   }
 
@@ -661,14 +651,14 @@ class ContentRegistryLoader {
         this.getModuleQuiz(moduleSlug),
         this.getModule(moduleSlug)
       ]);
-      
+
       if (!mod) {
         return { lessons: false, lessonsValid: false, quiz: false, quizValid: false, overall: false };
       }
-      
+
       const lessonsMeetThreshold = lessons.length >= (mod.thresholds?.requiredLessons || 0);
       const quizMeetsThreshold = !!quiz && ((quiz?.questions?.length ?? 0) >= (mod.thresholds?.requiredQuestions || 0));
-      
+
       return {
         lessons: lessonsMeetThreshold,
         lessonsValid: lessonsMeetThreshold,
@@ -777,9 +767,9 @@ export function getLessonGroupForLesson(moduleSlug: string, lessons: Lesson[], l
   const groups = getLessonGroups(moduleSlug, lessons);
   const lessonIndex = lessonOrder - 1;
   const lesson = lessons[lessonIndex];
-  
+
   if (!lesson) return null;
-  
+
   for (const group of groups) {
     // Match by identity to avoid relying on potentially missing/unsynchronized order values
     if (group.lessons.some((l) => l === lesson)) {
@@ -789,16 +779,16 @@ export function getLessonGroupForLesson(moduleSlug: string, lessons: Lesson[], l
       };
     }
   }
-  
+
   return null;
 }
 
 export function getNextLessonGroup(moduleSlug: string, lessons: Lesson[], lessonOrder: number): LessonGroup | null {
   const groups = getLessonGroups(moduleSlug, lessons);
   const currentGroupInfo = getLessonGroupForLesson(moduleSlug, lessons, lessonOrder);
-  
+
   if (!currentGroupInfo) return null;
-  
+
   const nextGroupIndex = currentGroupInfo.groupIndex + 1;
   return nextGroupIndex < groups.length ? groups[nextGroupIndex] : null;
 }

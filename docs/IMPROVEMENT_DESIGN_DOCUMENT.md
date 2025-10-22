@@ -6,7 +6,7 @@ This document extends the current improvement plan to transform GlassCode Academ
 
 ## 📊 Current Implementation Status
 
-**Overall Progress: 25-30% Complete**  
+**Overall Progress: 25-30% Complete**
 **Last Assessment: October 17 2025**
 
 ### Implementation Overview
@@ -47,20 +47,20 @@ GlassCode Academy currently operates as a functional educational platform with s
 ## 🎯 Implementation Phases
 
 ### Phase 1: Foundation & Quality (Weeks 1-4)
-**Priority**: Critical  
+**Priority**: Critical
 **Dependencies**: JSON structure fixes
 
 #### 1.1 Comprehensive Testing Implementation
-**Objective**: Establish robust testing foundation  
+**Objective**: Establish robust testing foundation
 **Current Status**: 50% Complete - Frontend implemented, Backend missing
 
 **Backend Testing** ✅ Implemented (57 tests passing)
-- **Unit Tests**: Controllers, Services, GraphQL resolvers  
-  Current: 57 passing tests with comprehensive coverage  
-  Framework: xUnit, Moq, FluentAssertions  
+- **Unit Tests**: Controllers, Services, GraphQL resolvers
+  Current: 57 passing tests with comprehensive coverage
+  Framework: xUnit, Moq, FluentAssertions
   Location: `glasscode/backend/Tests/`
 
-- **Integration Tests**: GraphQL endpoints, data loading  
+- **Integration Tests**: GraphQL endpoints, data loading
   Validate GraphQL schema compliance, data contracts, and health endpoints.
 
 - **Contract Tests**: Pact for consumer/provider agreements between frontend and backend.
@@ -98,7 +98,7 @@ public class DataServiceTests
 ```
 
 #### 1.2 Enhanced Error Handling & Logging
-**Objective**: Implement comprehensive error handling and structured logging  
+**Objective**: Implement comprehensive error handling and structured logging
 **Current Status**: 70% Complete - Frontend excellent, Backend basic
 
 **Backend Improvements**
@@ -181,54 +181,54 @@ builder.Services.AddAuthorization(options =>
 #### 1.4 WCAG-Compliant Theming (Dark/Light/Auto) — **Completed**
 **Status**: Implemented tokenised Light/Dark/Auto theming with smooth fade gating and no FOUC; verified local app starts at `http://localhost:3002`.
 **Next Steps**: Migrate remaining components to semantic tokens; map tokens in Tailwind config; add automated contrast checks; add E2E tests for 3-way theme switch; unify focus ring styling.
-**Objective**: Add accessible, tokenised theming with Auto/Dark/Light switch that defaults to system; prevent first-paint flash; ensure WCAG 2.1 AA contrast.  
+**Objective**: Add accessible, tokenised theming with Auto/Dark/Light switch that defaults to system; prevent first-paint flash; ensure WCAG 2.1 AA contrast.
 **Scope**: Tailwind + custom CSS; no framework change required.
 
 ##### 1.4.1 LLM-Friendly Step-by-Step (Acceptance Criteria Included)
-1. **Define semantic colour tokens**  
-   - Tokens: `bg`, `fg`, `surface`, `surfaceAlt`, `border`, `muted`, `primary`, `onPrimary`, `secondary`, `onSecondary`, `accent`, `onAccent`, `success`, `onSuccess`, `warning`, `onWarning`, `danger`, `onDanger`, `link`, `focusRing` (HSL channels).  
-   - Implement as CSS variables on `:root` for **light**; override in `[data-theme="dark"]`.  
+1. **Define semantic colour tokens**
+   - Tokens: `bg`, `fg`, `surface`, `surfaceAlt`, `border`, `muted`, `primary`, `onPrimary`, `secondary`, `onSecondary`, `accent`, `onAccent`, `success`, `onSuccess`, `warning`, `onWarning`, `danger`, `onDanger`, `link`, `focusRing` (HSL channels).
+   - Implement as CSS variables on `:root` for **light**; override in `[data-theme="dark"]`.
    - **Acceptance**: single source of truth; no hard-coded hex in components.
 
-2. **Map tokens into Tailwind**  
-   - `darkMode: ['class', '[data-theme="dark"]']`.  
-   - Extend `theme.colors` to `hsl(var(--token) / <alpha-value>)`.  
-   - Use semantic utilities: `bg-bg`, `text-fg`, `bg-surface`, `border-border`, `text-muted`, `bg-primary`, `text-primaryFg`.  
+2. **Map tokens into Tailwind**
+   - `darkMode: ['class', '[data-theme="dark"]']`.
+   - Extend `theme.colors` to `hsl(var(--token) / <alpha-value>)`.
+   - Use semantic utilities: `bg-bg`, `text-fg`, `bg-surface`, `border-border`, `text-muted`, `bg-primary`, `text-primaryFg`.
    - **Acceptance**: utilities render from tokens in both themes.
 
-3. **Default Auto behaviour**  
-   - Auto = **no** `data-theme` attribute; `:root` has light tokens; `@media (prefers-color-scheme: dark)` mirrors dark tokens only when no explicit theme is set.  
+3. **Default Auto behaviour**
+   - Auto = **no** `data-theme` attribute; `:root` has light tokens; `@media (prefers-color-scheme: dark)` mirrors dark tokens only when no explicit theme is set.
    - **Acceptance**: fresh visit follows OS theme without flash.
 
-4. **3‑way switch (Auto/Dark/Light)**  
-   - Persist `localStorage['theme']` (`'auto'|'dark'|'light'`).  
-   - `auto` → remove `data-theme`. `dark`/`light` → set attribute.  
-   - Listen for `matchMedia('(prefers-color-scheme: dark)')` changes **only** in Auto.  
+4. **3‑way switch (Auto/Dark/Light)**
+   - Persist `localStorage['theme']` (`'auto'|'dark'|'light'`).
+   - `auto` → remove `data-theme`. `dark`/`light` → set attribute.
+   - Listen for `matchMedia('(prefers-color-scheme: dark)')` changes **only** in Auto.
    - **Acceptance**: toggles are instant, persist across reloads, reflect OS changes in Auto.
 
-5. **Prevent first‑paint flash**  
-   - Tiny inline **boot script** in `<head>` **before** CSS/JS: apply stored theme immediately or leave Auto.  
+5. **Prevent first‑paint flash**
+   - Tiny inline **boot script** in `<head>` **before** CSS/JS: apply stored theme immediately or leave Auto.
    - **Acceptance**: no FOUC on load or after switching.
 
-6. **WCAG contrast**  
-   - Body text vs background: **≥ 4.5:1**; large text & icons **≥ 3:1**; focus indicators **≥ 3:1**.  
-   - Tune **lightness** in HSL first; keep hue/saturation stable.  
+6. **WCAG contrast**
+   - Body text vs background: **≥ 4.5:1**; large text & icons **≥ 3:1**; focus indicators **≥ 3:1**.
+   - Tune **lightness** in HSL first; keep hue/saturation stable.
    - **Acceptance**: automated contrast checks pass for both themes.
 
-7. **Migrate components to tokens**  
-   - Replace raw palette classes (`text-gray-500`, `bg-slate-900`) with semantics.  
-   - Replace custom CSS hex with `hsl(var(--token))`.  
+7. **Migrate components to tokens**
+   - Replace raw palette classes (`text-gray-500`, `bg-slate-900`) with semantics.
+   - Replace custom CSS hex with `hsl(var(--token))`.
    - **Acceptance**: no Tailwind palette names where semantics intended.
 
-8. **Focus, motion, states**  
-   - Global `:focus-visible` using `--focus-ring`.  
-   - Honour `prefers-reduced-motion`.  
-   - Use `danger/success/warning` tokens for states.  
+8. **Focus, motion, states**
+   - Global `:focus-visible` using `--focus-ring`.
+   - Honour `prefers-reduced-motion`.
+   - Use `danger/success/warning` tokens for states.
    - **Acceptance**: keyboard focus visible; reduced motion honoured.
 
-9. **Test matrix**  
-   - OS: macOS/Windows/iOS/Android; Browsers: Safari/Chrome/Edge.  
-   - Cases: Auto with OS flips; user overrides; reduced motion.  
+9. **Test matrix**
+   - OS: macOS/Windows/iOS/Android; Browsers: Safari/Chrome/Edge.
+   - Cases: Auto with OS flips; user overrides; reduced motion.
    - **Acceptance**: behaviour correct, zero flash, contrast compliant.
 
 ##### 1.4.2 Copy-Ready Snippets
@@ -375,28 +375,28 @@ a:hover, a:focus-visible { text-decoration: underline; }
 ```
 
 **Theme switch (logic outline)**
-- On change:  
-  - `auto` → remove `data-theme`, save `"auto"`, subscribe to `matchMedia('(prefers-color-scheme: dark)')` for live OS changes.  
+- On change:
+  - `auto` → remove `data-theme`, save `"auto"`, subscribe to `matchMedia('(prefers-color-scheme: dark)')` for live OS changes.
   - `dark`/`light` → set `data-theme`, save value, ignore system changes.
 
 **Migration cheat‑sheet**
-- `bg-gray-900`/`bg-slate-950` → `bg-bg` (page bg) or `bg-surface` (card).  
-- `text-gray-500` → `text-muted`.  
-- `border-gray-700`/`border-gray-200` → `border-border`.  
-- CTAs `bg-indigo-600 text-white` → `bg-primary text-primaryFg`.  
-- Links `text-blue-*` → `text-link` + underline on hover/focus.  
+- `bg-gray-900`/`bg-slate-950` → `bg-bg` (page bg) or `bg-surface` (card).
+- `text-gray-500` → `text-muted`.
+- `border-gray-700`/`border-gray-200` → `border-border`.
+- CTAs `bg-indigo-600 text-white` → `bg-primary text-primaryFg`.
+- Links `text-blue-*` → `text-link` + underline on hover/focus.
 - Replace custom hex with `hsl(var(--token))`.
 
 **Definition of Done (Theming)**
-- Auto follows OS; Dark/Light override OS; no first-paint flash.  
-- Contrast: text ≥ 4.5:1; large text/icons ≥ 3:1; focus ≥ 3:1.  
-- Single source of truth via tokens; no raw hex or Tailwind palette names in semantic components.  
+- Auto follows OS; Dark/Light override OS; no first-paint flash.
+- Contrast: text ≥ 4.5:1; large text/icons ≥ 3:1; focus ≥ 3:1.
+- Single source of truth via tokens; no raw hex or Tailwind palette names in semantic components.
 - Switch is keyboard and screen-reader friendly; state persists; OS changes reflected in Auto.
 
 ---
 
 ### Phase 2: DevOps, Automation & IaC (Weeks 5-8)
-**Priority**: High  
+**Priority**: High
 **Dependencies**: Phase 1 completion
 
 #### 2.1 CI/CD Pipeline Implementation
@@ -405,7 +405,6 @@ a:hover, a:focus-visible { text-decoration: underline; }
 **GitHub Actions Workflows**
 - CI: build, unit/integration tests, E2E with Trae’s built-in browser, coverage upload, CodeQL, Trivy/Snyk scans.
 - CD: environment matrix (dev → staging → prod) with manual approval for prod.
-- Preview Environments: per-PR ephemeral deployments (Vercel for frontend, Azure Web Apps or Kubernetes namespace for backend).
 
 **Example: `.github/workflows/ci.yml`**
 ```yaml
@@ -540,7 +539,7 @@ CREATE TABLE user_roles (
 ```
 
 #### 4.2 CMS (Authoring, Workflow, Versioning)
-**Content Model Hierarchy**: Academy → Track → Course → Module → Lesson → Quiz → Question  
+**Content Model Hierarchy**: Academy → Track → Course → Module → Lesson → Quiz → Question
 - Versioned content with draft, review, published states.
 - Rich editor (Markdown + code blocks + media uploads).
 - Preview environment per version.
@@ -1124,8 +1123,8 @@ GET    /api/quiz-attempts?user={id}&lesson={id}
 - Notification system (email + in-app) with digest preferences.
 
 #### 4.6 Accessibility & Internationalisation
-- WCAG 2.1 AA: colour contrast checks, keyboard navigation, ARIA labels, focus order.  
-- i18n: locale routing, translation JSONs, pluralisation, RTL support.  
+- WCAG 2.1 AA: colour contrast checks, keyboard navigation, ARIA labels, focus order.
+- i18n: locale routing, translation JSONs, pluralisation, RTL support.
 - Video support: captions (VTT), downloadable transcripts, audio descriptions where relevant.
 
 #### 4.7 Monetisation (Optional)
@@ -1134,13 +1133,13 @@ GET    /api/quiz-attempts?user={id}&lesson={id}
 - Instructor payout statements and revenue share reporting.
 
 #### 4.8 Backend Dashboard & Academy Portability (Critical, Short-Term Priority)
-**Current State**  
-- ❌ No backend dashboard for administrators or instructors.  
-- ❌ No modular separation of academies or courses for export/import.  
-- ❌ No editing interface for managing lessons or courses.  
+**Current State**
+- ❌ No backend dashboard for administrators or instructors.
+- ❌ No modular separation of academies or courses for export/import.
+- ❌ No editing interface for managing lessons or courses.
 - ❌ No ability to generate standalone exportable academies (full static or portable deployments).
 
-**Objective**  
+**Objective**
 Build a modular, extensible backend dashboard allowing content creators, admins, and instructors to manage and export complete "Academies" as portable, self-contained websites.
 
 **Implementation Strategy**
@@ -1453,7 +1452,7 @@ badge_awarded: { userId, badgeId, ts }
 
 ---
 
-**Document Version**: 2.2  
-**Last Updated**: October 19 2025  
-**Next Review**: After Phase 2 completion  
+**Document Version**: 2.2
+**Last Updated**: October 19 2025
+**Next Review**: After Phase 2 completion
 **Owner**: Development Team
