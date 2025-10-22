@@ -83,15 +83,15 @@ public class ContentController : ControllerBase
                 topic = quiz.Topic,
                 type = quiz.QuestionType,
                 question = quiz.Question,
-                choices = !string.IsNullOrEmpty(quiz.Choices) ? 
+                choices = !string.IsNullOrEmpty(quiz.Choices) ?
                     System.Text.Json.JsonSerializer.Deserialize<string[]>(quiz.Choices) : null,
                 correctAnswer = quiz.CorrectAnswer,
                 explanation = quiz.Explanation,
                 difficulty = quiz.Difficulty,
                 estimatedTime = quiz.EstimatedTime,
-                tags = !string.IsNullOrEmpty(quiz.Tags) ? 
+                tags = !string.IsNullOrEmpty(quiz.Tags) ?
                     System.Text.Json.JsonSerializer.Deserialize<string[]>(quiz.Tags) : null,
-                sources = !string.IsNullOrEmpty(quiz.Sources) ? 
+                sources = !string.IsNullOrEmpty(quiz.Sources) ?
                     System.Text.Json.JsonSerializer.Deserialize<string[]>(quiz.Sources) : null,
                 industryContext = quiz.IndustryContext,
                 isPublished = quiz.IsPublished,
@@ -144,9 +144,9 @@ public class ContentController : ControllerBase
                 title = lesson.Title,
                 slug = lesson.Slug,
                 order = lesson.Order,
-                content = !string.IsNullOrEmpty(lesson.Content) ? 
+                content = !string.IsNullOrEmpty(lesson.Content) ?
                     System.Text.Json.JsonSerializer.Deserialize<object>(lesson.Content) : null,
-                metadata = !string.IsNullOrEmpty(lesson.Metadata) ? 
+                metadata = !string.IsNullOrEmpty(lesson.Metadata) ?
                     System.Text.Json.JsonSerializer.Deserialize<object>(lesson.Metadata) : null,
                 difficulty = lesson.Difficulty,
                 estimatedMinutes = lesson.EstimatedMinutes,

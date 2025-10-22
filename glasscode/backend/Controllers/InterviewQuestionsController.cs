@@ -49,7 +49,7 @@ public class InterviewQuestionsController : ControllerBase
             var dbQuestions = await GetQuestionsFromDatabase(module ?? "dotnet");
             if (dbQuestions != null && dbQuestions.Any())
             {
-                var filtered = dbQuestions.Where(q => 
+                var filtered = dbQuestions.Where(q =>
                 {
                     // Extract topic from metadata if it exists
                     if (q is IDictionary<string, object> dict && dict.ContainsKey("Topic"))
@@ -82,7 +82,7 @@ public class InterviewQuestionsController : ControllerBase
     {
         var module = await _dbContext.Modules
             .FirstOrDefaultAsync(m => m.Slug == moduleSlug);
-            
+
         if (module == null)
         {
             return new List<object>();

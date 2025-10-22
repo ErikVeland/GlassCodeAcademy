@@ -32,13 +32,13 @@ namespace backend.Scripts
             {
                 using var scope = host.Services.CreateScope();
                 var serviceProvider = scope.ServiceProvider;
-                
+
                 // Get the migration service
                 var migrationService = serviceProvider.GetRequiredService<AutomatedMigrationService>();
-                
+
                 // Run the migration
                 var success = await migrationService.PerformFullMigrationAsync();
-                
+
                 if (success)
                 {
                     Console.WriteLine("✅ Migration completed successfully!");

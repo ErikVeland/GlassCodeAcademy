@@ -19,7 +19,7 @@ namespace backend.Middleware
         {
             // Check if the request requires role-based authorization
             var requiredRole = GetRequiredRole(context);
-            
+
             if (!string.IsNullOrEmpty(requiredRole))
             {
                 // Check if user is authenticated
@@ -33,14 +33,14 @@ namespace backend.Middleware
                 // Check if user has the required role
                 if (!HasRequiredRole(context.User, requiredRole))
                 {
-                    _logger.LogWarning("Forbidden access attempt to {Path} - User lacks required role {Role}", 
+                    _logger.LogWarning("Forbidden access attempt to {Path} - User lacks required role {Role}",
                         context.Request.Path, requiredRole);
                     await ReturnForbiddenResponse(context, $"Access denied. Required role: {requiredRole}");
                     return;
                 }
 
-                _logger.LogInformation("Authorized access to {Path} for user {UserId} with role {Role}", 
-                    context.Request.Path, 
+                _logger.LogInformation("Authorized access to {Path} for user {UserId} with role {Role}",
+                    context.Request.Path,
                     context.User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? "unknown",
                     requiredRole ?? "none");
             }
@@ -55,22 +55,22 @@ namespace backend.Middleware
             // 1. Check route-based role requirements
             // 2. Check custom attributes on controllers/actions
             // 3. Check configuration-based role mappings
-            
+
             var path = context.Request.Path.Value?.ToLowerInvariant();
-            
+
             // Example role requirements based on path prefixes
             if (path != null)
             {
                 if (path.StartsWith("/api/admin"))
                     return "Admin";
-                    
+
                 if (path.StartsWith("/api/instructor"))
                     return "Instructor";
-                    
+
                 if (path.StartsWith("/api/student"))
                     return "Student";
             }
-            
+
             return null;
         }
 
@@ -108,14 +108,14 @@ namespace backend.Middleware
         {
             context.Response.StatusCode = StatusCodes.Status401Unauthorized;
             context.Response.ContentType = "application/json";
-            
+
             var response = new
             {
                 error = "Unauthorized",
                 message = message,
                 timestamp = DateTime.UtcNow
             };
-            
+
             await context.Response.WriteAsJsonAsync(response);
         }
 
@@ -123,14 +123,14 @@ namespace backend.Middleware
         {
             context.Response.StatusCode = StatusCodes.Status403Forbidden;
             context.Response.ContentType = "application/json";
-            
+
             var response = new
             {
                 error = "Forbidden",
                 message = message,
                 timestamp = DateTime.UtcNow
             };
-            
+
             await context.Response.WriteAsJsonAsync(response);
         }
     }

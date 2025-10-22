@@ -21,14 +21,14 @@ public class CoursesController : ControllerBase
     public async Task<ActionResult<IEnumerable<backend.Models.Course>>> GetCourses()
     {
         var courses = await _context.Courses.ToListAsync();
-        
+
         // Set navigation properties to null to prevent circular references
         foreach (var course in courses)
         {
             course.Modules = null!;
             course.UserProgress = null!;
         }
-        
+
         return courses;
     }
 

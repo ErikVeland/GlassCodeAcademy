@@ -20,7 +20,7 @@ public class MigrationController : ControllerBase
         try
         {
             var success = await _migrationService.PerformFullMigrationAsync();
-            
+
             return Ok(new MigrationResult
             {
                 Success = success,

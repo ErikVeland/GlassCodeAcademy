@@ -13,7 +13,7 @@ namespace backend.Extensions
         {
             return builder.UseMiddleware<JwtAuthenticationMiddleware>(issuer, audience, secretKey);
         }
-        
+
         public static IApplicationBuilder UseRoleBasedAuthorization(
             this IApplicationBuilder builder)
         {

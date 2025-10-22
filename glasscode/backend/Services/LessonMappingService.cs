@@ -18,7 +18,7 @@ namespace backend.Services
             // Get all lessons to debug
             var allLessons = await _context.Lessons.ToListAsync();
             Console.WriteLine($"🔍 Total lessons in database: {allLessons.Count}");
-            
+
             // Get the first module to use as temporary assignment
             var firstModule = await _context.Modules.FirstOrDefaultAsync();
             if (firstModule == null)
@@ -33,7 +33,7 @@ namespace backend.Services
                 .ToListAsync();
 
             Console.WriteLine($"🔍 Unmapped lessons found: {unmappedLessons.Count}");
-            
+
             if (!unmappedLessons.Any())
             {
                 Console.WriteLine("✅ All lessons are already mapped to modules.");

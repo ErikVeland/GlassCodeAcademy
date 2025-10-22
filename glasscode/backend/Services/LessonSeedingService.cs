@@ -68,7 +68,7 @@ namespace backend.Services
                     if (lessons?.Any() == true)
                     {
                         Console.WriteLine($"📚 Processing {lessons.Count()} {category} lessons...");
-                        
+
                         foreach (var baseLesson in lessons)
                         {
                             // Create content JSON from BaseLesson
@@ -118,17 +118,17 @@ namespace backend.Services
                 if (lessonsToSeed.Any())
                 {
                     Console.WriteLine($"💾 Saving {lessonsToSeed.Count} lessons to database...");
-                    
+
                     // Process in batches to avoid memory issues
                     var batchSize = 50;
                     var totalBatches = (int)Math.Ceiling((double)lessonsToSeed.Count / batchSize);
-                    
+
                     for (int batch = 0; batch < totalBatches; batch++)
                     {
                         var batchLessons = lessonsToSeed.Skip(batch * batchSize).Take(batchSize);
                         await _context.Lessons.AddRangeAsync(batchLessons);
                         Console.WriteLine($"📦 Processing batch {batch + 1}/{totalBatches} ({batchLessons.Count()} lessons)");
-                        
+
                         // Save each batch immediately
                         await _context.SaveChangesAsync();
                         Console.WriteLine($"✅ Saved batch {batch + 1}/{totalBatches}");

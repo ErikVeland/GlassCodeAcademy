@@ -89,20 +89,20 @@ builder.Services.AddAuthorization(options =>
     options.AddPolicy("StudentOnly", policy => policy.RequireRole("Student"));
     options.AddPolicy("AdminOrInstructor", policy => policy.RequireRole("Admin", "Instructor"));
     options.AddPolicy("AuthenticatedUser", policy => policy.RequireAuthenticatedUser());
-    
+
     // Define claim-based policies
-    options.AddPolicy("CanManageContent", policy => 
+    options.AddPolicy("CanManageContent", policy =>
         policy.RequireRole("Admin", "Instructor")
               .RequireClaim("permissions", "manage-content"));
-    
-    options.AddPolicy("CanManageUsers", policy => 
+
+    options.AddPolicy("CanManageUsers", policy =>
         policy.RequireRole("Admin")
               .RequireClaim("permissions", "manage-users"));
-    
-    options.AddPolicy("CanViewReports", policy => 
+
+    options.AddPolicy("CanViewReports", policy =>
         policy.RequireRole("Admin", "Instructor")
               .RequireClaim("permissions", "view-reports"));
-    
+
     // Define custom role hierarchy policies
     options.AddPolicy("RequireAdminRole", policy => policy.Requirements.Add(new RoleRequirement("Admin")));
     options.AddPolicy("RequireInstructorRole", policy => policy.Requirements.Add(new RoleRequirement("Instructor")));
@@ -284,16 +284,16 @@ using (var scope = app.Services.CreateScope())
 {
     var readinessService = scope.ServiceProvider.GetRequiredService<backend.Services.ReadinessService>();
     var cancellationTokenSource = new CancellationTokenSource(TimeSpan.FromSeconds(60)); // 60 second timeout
-    
+
     Log.Information("Waiting for content to be ready...");
     var isReady = await readinessService.CheckAndSetReadinessAsync();
-    
+
     if (!isReady)
     {
         Log.Information("Content not ready, waiting for readiness...");
         isReady = await readinessService.WaitForReadinessAsync(cancellationTokenSource.Token);
     }
-    
+
     if (isReady)
     {
         Log.Information("✅ Content is ready, proceeding to accept HTTP requests");
@@ -392,7 +392,8 @@ if (app.Environment.IsDevelopment())
 }
 
 // Health check endpoint
-app.MapGet("/api/health", async (backend.Services.ReadinessService readinessService) => {
+app.MapGet("/api/health", async (backend.Services.ReadinessService readinessService) =>
+{
     var dataService = backend.Services.DataService.Instance;
     var dataStats = new Dictionary<string, int>
     {
@@ -440,14 +441,15 @@ app.MapGet("/api/health", async (backend.Services.ReadinessService readinessServ
     };
 
     var isHealthy = dataStats.All(stat => stat.Value > 0);
-    
+
     // Check readiness status
     var isReady = readinessService.IsReady;
-    
-    return Results.Ok(new { 
-        status = isHealthy ? "healthy" : "degraded", 
+
+    return Results.Ok(new
+    {
+        status = isHealthy ? "healthy" : "degraded",
         ready = isReady,
-        timestamp = DateTime.UtcNow, 
+        timestamp = DateTime.UtcNow,
         unlocked = AppState.IsUnlocked,
         dataStats = dataStats
     });
@@ -468,7 +470,7 @@ public static class TestDataGenerator
     {
         var lessons = new List<T>();
         var properties = typeof(T).GetProperties();
-        
+
         for (int i = 1; i <= 5; i++)
         {
             var lesson = new T();
@@ -491,12 +493,12 @@ public static class TestDataGenerator
         }
         return lessons;
     }
-    
+
     public static List<T> GenerateTestQuestions<T>(string moduleName) where T : new()
     {
         var questions = new List<T>();
         var properties = typeof(T).GetProperties();
-        
+
         for (int i = 1; i <= 5; i++)
         {
             var question = new T();
@@ -524,7 +526,8 @@ public static class TestDataGenerator
 }
 
 // GraphQL Query type using DatabaseContentService
-public class Query {
+public class Query
+{
     private readonly backend.Services.DatabaseContentService _databaseContentService;
     private readonly backend.GraphQL.GraphQLQuery _graphQLQuery;
 
@@ -543,12 +546,12 @@ public class Query {
         {
             source = source.Skip(offset.Value);
         }
-        
+
         if (limit.HasValue)
         {
             source = source.Take(limit.Value);
         }
-        
+
         return source;
     }
 
@@ -562,7 +565,7 @@ public class Query {
         }
         return lessons;
     }
-    
+
     public async Task<IEnumerable<BaseLesson>> GraphQLLessons(string? topic = null, string? sortBy = null, string? sortOrder = null, int? limit = null, int? offset = null)
     {
         var lessons = await _databaseContentService.GetLessonsByModuleSlugAsync("graphql-advanced", topic, sortBy, sortOrder, limit, offset);
@@ -573,7 +576,7 @@ public class Query {
         }
         return lessons;
     }
-    
+
     public async Task<IEnumerable<BaseInterviewQuestion>> DotNetInterviewQuestions(string? topic = null, string? sortBy = null, string? sortOrder = null, int? limit = null, int? offset = null)
     {
         var questions = await _databaseContentService.GetInterviewQuestionsByModuleSlugAsync("dotnet-fundamentals", topic, sortBy, sortOrder, limit, offset);
@@ -584,7 +587,7 @@ public class Query {
         }
         return questions;
     }
-    
+
     public async Task<IEnumerable<BaseInterviewQuestion>> GraphQLInterviewQuestions(string? topic = null, string? sortBy = null, string? sortOrder = null, int? limit = null, int? offset = null)
     {
         var questions = await _databaseContentService.GetInterviewQuestionsByModuleSlugAsync("graphql-advanced", topic, sortBy, sortOrder, limit, offset);
@@ -607,7 +610,7 @@ public class Query {
         }
         return lessons;
     }
-    
+
     public async Task<IEnumerable<BaseInterviewQuestion>> LaravelInterviewQuestions(string? topic = null, string? sortBy = null, string? sortOrder = null, int? limit = null, int? offset = null)
     {
         var questions = await _databaseContentService.GetInterviewQuestionsByModuleSlugAsync("laravel-fundamentals", topic, sortBy, sortOrder, limit, offset);
@@ -630,7 +633,7 @@ public class Query {
         }
         return lessons;
     }
-    
+
     public async Task<IEnumerable<BaseInterviewQuestion>> ReactInterviewQuestions(string? topic = null, string? sortBy = null, string? sortOrder = null, int? limit = null, int? offset = null)
     {
         var questions = await _databaseContentService.GetInterviewQuestionsByModuleSlugAsync("react-fundamentals", topic, sortBy, sortOrder, limit, offset);
@@ -653,7 +656,7 @@ public class Query {
         }
         return lessons;
     }
-    
+
     public async Task<IEnumerable<BaseInterviewQuestion>> TailwindInterviewQuestions(string? topic = null, string? sortBy = null, string? sortOrder = null, int? limit = null, int? offset = null)
     {
         var questions = await _databaseContentService.GetInterviewQuestionsByModuleSlugAsync("tailwind-advanced", topic, sortBy, sortOrder, limit, offset);
@@ -676,7 +679,7 @@ public class Query {
         }
         return lessons;
     }
-    
+
     public async Task<IEnumerable<BaseInterviewQuestion>> NodeInterviewQuestions(string? topic = null, string? sortBy = null, string? sortOrder = null, int? limit = null, int? offset = null)
     {
         var questions = await _databaseContentService.GetInterviewQuestionsByModuleSlugAsync("node-fundamentals", topic, sortBy, sortOrder, limit, offset);
@@ -699,7 +702,7 @@ public class Query {
         }
         return lessons;
     }
-    
+
     public async Task<IEnumerable<BaseInterviewQuestion>> SassInterviewQuestions(string? topic = null, string? sortBy = null, string? sortOrder = null, int? limit = null, int? offset = null)
     {
         var questions = await _databaseContentService.GetInterviewQuestionsByModuleSlugAsync("sass-advanced", topic, sortBy, sortOrder, limit, offset);
@@ -722,7 +725,7 @@ public class Query {
         }
         return lessons;
     }
-    
+
     public async Task<IEnumerable<BaseInterviewQuestion>> VueInterviewQuestions(string? topic = null, string? sortBy = null, string? sortOrder = null, int? limit = null, int? offset = null)
     {
         var questions = await _databaseContentService.GetInterviewQuestionsByModuleSlugAsync("vue-advanced", topic, sortBy, sortOrder, limit, offset);
@@ -745,7 +748,7 @@ public class Query {
         }
         return lessons;
     }
-    
+
     public async Task<IEnumerable<BaseInterviewQuestion>> TypescriptInterviewQuestions(string? topic = null, string? sortBy = null, string? sortOrder = null, int? limit = null, int? offset = null)
     {
         var questions = await _databaseContentService.GetInterviewQuestionsByModuleSlugAsync("typescript-fundamentals", topic, sortBy, sortOrder, limit, offset);
@@ -768,7 +771,7 @@ public class Query {
         }
         return lessons;
     }
-    
+
     public async Task<IEnumerable<BaseInterviewQuestion>> DatabaseInterviewQuestions(string? topic = null, string? sortBy = null, string? sortOrder = null, int? limit = null, int? offset = null)
     {
         var questions = await _databaseContentService.GetInterviewQuestionsByModuleSlugAsync("database-systems", topic, sortBy, sortOrder, limit, offset);
@@ -791,7 +794,7 @@ public class Query {
         }
         return lessons;
     }
-    
+
     public async Task<IEnumerable<BaseInterviewQuestion>> TestingInterviewQuestions(string? topic = null, string? sortBy = null, string? sortOrder = null, int? limit = null, int? offset = null)
     {
         var questions = await _databaseContentService.GetInterviewQuestionsByModuleSlugAsync("testing-fundamentals", topic, sortBy, sortOrder, limit, offset);
@@ -814,7 +817,7 @@ public class Query {
         }
         return lessons;
     }
-    
+
     public async Task<IEnumerable<BaseInterviewQuestion>> ProgrammingInterviewQuestions(string? topic = null, string? sortBy = null, string? sortOrder = null, int? limit = null, int? offset = null)
     {
         var questions = await _databaseContentService.GetInterviewQuestionsByModuleSlugAsync("programming-fundamentals", topic, sortBy, sortOrder, limit, offset);
@@ -825,7 +828,7 @@ public class Query {
         }
         return questions;
     }
-    
+
     // Next.js content queries
     public async Task<IEnumerable<BaseLesson>> NextJsLessons(string? topic = null, string? sortBy = null, string? sortOrder = null, int? limit = null, int? offset = null)
     {
@@ -837,7 +840,7 @@ public class Query {
         }
         return lessons;
     }
-    
+
     public async Task<IEnumerable<BaseInterviewQuestion>> NextJsInterviewQuestions(string? topic = null, string? sortBy = null, string? sortOrder = null, int? limit = null, int? offset = null)
     {
         var questions = await _databaseContentService.GetInterviewQuestionsByModuleSlugAsync("nextjs-advanced", topic, sortBy, sortOrder, limit, offset);
@@ -860,7 +863,7 @@ public class Query {
         }
         return lessons;
     }
-    
+
     public async Task<IEnumerable<BaseInterviewQuestion>> PerformanceInterviewQuestions(string? topic = null, string? sortBy = null, string? sortOrder = null, int? limit = null, int? offset = null)
     {
         var questions = await _databaseContentService.GetInterviewQuestionsByModuleSlugAsync("performance-optimization", topic, sortBy, sortOrder, limit, offset);
@@ -883,7 +886,7 @@ public class Query {
         }
         return lessons;
     }
-    
+
     public async Task<IEnumerable<BaseInterviewQuestion>> SecurityInterviewQuestions(string? topic = null, string? sortBy = null, string? sortOrder = null, int? limit = null, int? offset = null)
     {
         var questions = await _databaseContentService.GetInterviewQuestionsByModuleSlugAsync("security-fundamentals", topic, sortBy, sortOrder, limit, offset);
@@ -906,7 +909,7 @@ public class Query {
         }
         return lessons;
     }
-    
+
     public async Task<IEnumerable<BaseInterviewQuestion>> VersionInterviewQuestions(string? topic = null, string? sortBy = null, string? sortOrder = null, int? limit = null, int? offset = null)
     {
         var questions = await _databaseContentService.GetInterviewQuestionsByModuleSlugAsync("version-control", topic, sortBy, sortOrder, limit, offset);
@@ -929,7 +932,7 @@ public class Query {
         }
         return lessons;
     }
-    
+
     public async Task<IEnumerable<BaseInterviewQuestion>> WebInterviewQuestions(string? topic = null, string? sortBy = null, string? sortOrder = null, int? limit = null, int? offset = null)
     {
         var questions = await _databaseContentService.GetInterviewQuestionsByModuleSlugAsync("web-fundamentals", topic, sortBy, sortOrder, limit, offset);
@@ -943,7 +946,8 @@ public class Query {
 
 }
 
-public class Mutation {
+public class Mutation
+{
     private readonly backend.Services.DataService _dataService = backend.Services.DataService.Instance;
 
     public AnswerResult SubmitAnswer(string questionId, int answerIndex)
@@ -955,122 +959,122 @@ public class Mutation {
     {
         return _dataService.TrackProgress(userId, lessonId, module);
     }
-    
+
     // Laravel answer submission - using DataService validation
     public AnswerResult SubmitLaravelAnswer(string questionId, int answerIndex)
     {
         // If unlocked, accept any answer as correct for testing
         if (AppState.IsUnlocked)
         {
-            return new AnswerResult 
-            { 
-                IsCorrect = true, 
-                Explanation = "Test mode: All answers are correct!" 
+            return new AnswerResult
+            {
+                IsCorrect = true,
+                Explanation = "Test mode: All answers are correct!"
             };
         }
         return _dataService.ValidateLaravelAnswer(int.Parse(questionId), answerIndex);
     }
-    
+
     // React answer submission
     public AnswerResult SubmitReactAnswer(string questionId, int answerIndex)
     {
         // If unlocked, accept any answer as correct for testing
         if (AppState.IsUnlocked)
         {
-            return new AnswerResult 
-            { 
-                IsCorrect = true, 
-                Explanation = "Test mode: All answers are correct!" 
+            return new AnswerResult
+            {
+                IsCorrect = true,
+                Explanation = "Test mode: All answers are correct!"
             };
         }
         return _dataService.ValidateReactAnswer(int.Parse(questionId), answerIndex);
     }
-    
+
     // Tailwind answer submission
     public AnswerResult SubmitTailwindAnswer(string questionId, int answerIndex)
     {
         // If unlocked, accept any answer as correct for testing
         if (AppState.IsUnlocked)
         {
-            return new AnswerResult 
-            { 
-                IsCorrect = true, 
-                Explanation = "Test mode: All answers are correct!" 
+            return new AnswerResult
+            {
+                IsCorrect = true,
+                Explanation = "Test mode: All answers are correct!"
             };
         }
         return _dataService.ValidateTailwindAnswer(int.Parse(questionId), answerIndex);
     }
-    
+
     // Node.js answer submission
     public AnswerResult SubmitNodeAnswer(string questionId, int answerIndex)
     {
         // If unlocked, accept any answer as correct for testing
         if (AppState.IsUnlocked)
         {
-            return new AnswerResult 
-            { 
-                IsCorrect = true, 
-                Explanation = "Test mode: All answers are correct!" 
+            return new AnswerResult
+            {
+                IsCorrect = true,
+                Explanation = "Test mode: All answers are correct!"
             };
         }
         return _dataService.ValidateNodeAnswer(int.Parse(questionId), answerIndex);
     }
-    
+
     // Sass answer submission
     public AnswerResult SubmitSassAnswer(string questionId, int answerIndex)
     {
         // If unlocked, accept any answer as correct for testing
         if (AppState.IsUnlocked)
         {
-            return new AnswerResult 
-            { 
-                IsCorrect = true, 
-                Explanation = "Test mode: All answers are correct!" 
+            return new AnswerResult
+            {
+                IsCorrect = true,
+                Explanation = "Test mode: All answers are correct!"
             };
         }
         return _dataService.ValidateSassAnswer(int.Parse(questionId), answerIndex);
     }
-    
+
     // Vue answer submission
     public AnswerResult SubmitVueAnswer(string questionId, int answerIndex)
     {
         // If unlocked, accept any answer as correct for testing
         if (AppState.IsUnlocked)
         {
-            return new AnswerResult 
-            { 
-                IsCorrect = true, 
-                Explanation = "Test mode: All answers are correct!" 
+            return new AnswerResult
+            {
+                IsCorrect = true,
+                Explanation = "Test mode: All answers are correct!"
             };
         }
         return _dataService.ValidateVueAnswer(int.Parse(questionId), answerIndex);
     }
-    
+
     // Web Fundamentals answer submission
     public AnswerResult SubmitWebAnswer(string questionId, int answerIndex)
     {
         // If unlocked, accept any answer as correct for testing
         if (AppState.IsUnlocked)
         {
-            return new AnswerResult 
-            { 
-                IsCorrect = true, 
-                Explanation = "Test mode: All answers are correct!" 
+            return new AnswerResult
+            {
+                IsCorrect = true,
+                Explanation = "Test mode: All answers are correct!"
             };
         }
         return _dataService.ValidateWebAnswer(int.Parse(questionId), answerIndex);
     }
-    
+
     // TypeScript answer submission
     public AnswerResult SubmitTypescriptAnswer(string questionId, int answerIndex)
     {
         // If unlocked, accept any answer as correct for testing
         if (AppState.IsUnlocked)
         {
-            return new AnswerResult 
-            { 
-                IsCorrect = true, 
-                Explanation = "Test mode: All answers are correct!" 
+            return new AnswerResult
+            {
+                IsCorrect = true,
+                Explanation = "Test mode: All answers are correct!"
             };
         }
         return _dataService.ValidateTypescriptAnswer(int.Parse(questionId), answerIndex);

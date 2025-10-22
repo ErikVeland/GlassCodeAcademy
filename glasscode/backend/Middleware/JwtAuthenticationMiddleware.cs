@@ -60,7 +60,7 @@ namespace backend.Middleware
         private ClaimsPrincipal? ValidateToken(string token)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
-            
+
             try
             {
                 var validationParameters = new TokenValidationParameters

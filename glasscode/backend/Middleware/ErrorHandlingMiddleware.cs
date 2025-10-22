@@ -22,7 +22,7 @@ namespace backend.Middleware
         {
             // Generate or retrieve correlation ID
             var correlationId = GetOrCreateCorrelationId(context);
-            
+
             // Add correlation ID to response headers
             context.Response.Headers.Append("X-Correlation-ID", correlationId);
 
@@ -32,7 +32,7 @@ namespace backend.Middleware
             }
             catch (Exception ex)
             {
-                Log.Error(ex, "Unhandled exception during {Method} {Path} [CorrelationId: {CorrelationId}]", 
+                Log.Error(ex, "Unhandled exception during {Method} {Path} [CorrelationId: {CorrelationId}]",
                     context.Request.Method, context.Request.Path, correlationId);
 
                 await HandleExceptionAsync(context, ex, correlationId);
@@ -46,7 +46,7 @@ namespace backend.Middleware
             {
                 return correlationId.ToString();
             }
-            
+
             // Generate new correlation ID
             return Guid.NewGuid().ToString();
         }
@@ -102,12 +102,12 @@ namespace backend.Middleware
             }
 
             context.Response.StatusCode = response.Status;
-            
-            var json = JsonSerializer.Serialize(response, new JsonSerializerOptions 
-            { 
-                PropertyNamingPolicy = JsonNamingPolicy.CamelCase 
+
+            var json = JsonSerializer.Serialize(response, new JsonSerializerOptions
+            {
+                PropertyNamingPolicy = JsonNamingPolicy.CamelCase
             });
-            
+
             await context.Response.WriteAsync(json);
         }
     }

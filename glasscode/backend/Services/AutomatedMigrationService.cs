@@ -81,7 +81,7 @@ namespace backend.Services
                     // Step 5: Validate migration
                     Console.WriteLine("✅ Validating migration results...");
                     var validationResult = await ValidateMigrationAsync();
-                    
+
                     if (!validationResult)
                     {
                         Console.WriteLine($"❌ Migration validation failed on attempt {attempt}!");
@@ -100,7 +100,7 @@ namespace backend.Services
                 {
                     Console.WriteLine($"❌ Migration failed on attempt {attempt}: {ex.Message}");
                     Console.WriteLine($"📍 Stack trace: {ex.StackTrace}");
-                    
+
                     if (attempt < maxRetries)
                     {
                         Console.WriteLine("⏳ Waiting before retry...");
@@ -112,7 +112,7 @@ namespace backend.Services
                     }
                 }
             }
-            
+
             return false; // All retries exhausted
         }
 
@@ -166,13 +166,13 @@ namespace backend.Services
                 var moduleOrder = 1;
                 var addedModules = 0;
                 var updatedModules = 0;
-                
+
                 foreach (var moduleData in registryData.Modules)
                 {
                     // Check if module already exists
                     var existingModule = await _context.Modules
                         .FirstOrDefaultAsync(m => m.Slug == moduleData.Slug);
-                    
+
                     if (existingModule == null)
                     {
                         var module = new Module
@@ -221,7 +221,7 @@ namespace backend.Services
             {
                 Console.WriteLine("🔍 Looking for lessons directory...");
                 var lessonsPath = System.IO.Path.Combine(_contentPath, "lessons");
-                
+
                 if (!Directory.Exists(lessonsPath))
                 {
                     Console.WriteLine($"⚠️ Lessons directory not found: {lessonsPath}");
@@ -234,22 +234,22 @@ namespace backend.Services
                 var totalLessonsProcessed = 0;
                 var totalLessonsAdded = 0;
                 var totalLessonsUpdated = 0;
-                
+
                 foreach (var file in jsonFiles)
                 {
                     var lessonsBefore = _context.ChangeTracker.Entries<Lesson>().Count(e => e.State == EntityState.Added || e.State == EntityState.Modified);
                     await ProcessLessonFileAsync(file);
                     var lessonsAfter = _context.ChangeTracker.Entries<Lesson>().Count(e => e.State == EntityState.Added || e.State == EntityState.Modified);
-                    
+
                     var lessonsInFile = lessonsAfter - lessonsBefore;
                     Console.WriteLine($"📊 Processed {lessonsInFile} lessons from file: {System.IO.Path.GetFileNameWithoutExtension(file)}");
                     totalLessonsProcessed += lessonsInFile;
-                    
+
                     try
                     {
                         await _context.SaveChangesAsync();
                         Console.WriteLine($"✅ Saved lesson changes after file: {System.IO.Path.GetFileNameWithoutExtension(file)}");
-                        
+
                         // Count added vs updated lessons
                         var addedLessons = _context.ChangeTracker.Entries<Lesson>().Where(e => e.State == EntityState.Added).Count();
                         var updatedLessons = _context.ChangeTracker.Entries<Lesson>().Where(e => e.State == EntityState.Modified).Count();
@@ -295,7 +295,7 @@ namespace backend.Services
                 Console.WriteLine($"📄 Processing lesson file: {fileName}");
 
                 var jsonContent = await File.ReadAllTextAsync(filePath);
-                
+
                 // Try to parse as array first
                 try
                 {
@@ -307,7 +307,7 @@ namespace backend.Services
                     if (lessons != null && lessons.Any())
                     {
                         Console.WriteLine($"   📚 Found {lessons.Count} lessons in array format");
-                        
+
                         foreach (var lessonElement in lessons)
                         {
                             await ProcessSingleLessonAsync(lessonElement, fileName);
@@ -320,12 +320,12 @@ namespace backend.Services
                     try
                     {
                         var wrapper = JsonSerializer.Deserialize<JsonElement>(jsonContent);
-                        if (wrapper.ValueKind == JsonValueKind.Object && 
-                            wrapper.TryGetProperty("lessons", out var lessonsElement) && 
+                        if (wrapper.ValueKind == JsonValueKind.Object &&
+                            wrapper.TryGetProperty("lessons", out var lessonsElement) &&
                             lessonsElement.ValueKind == JsonValueKind.Array)
                         {
                             Console.WriteLine($"   📚 Found lessons array in wrapper object");
-                            
+
                             foreach (var lessonElement in lessonsElement.EnumerateArray())
                             {
                                 await ProcessSingleLessonAsync(lessonElement, fileName);
@@ -352,7 +352,7 @@ namespace backend.Services
             try
             {
                 LessonData? lessonData = null;
-                
+
                 string? GetString(JsonElement root, string name)
                 {
                     if (root.TryGetProperty(name, out var el))
@@ -586,7 +586,7 @@ namespace backend.Services
             {
                 Console.WriteLine("🔍 Looking for quizzes directory...");
                 var quizzesPath = System.IO.Path.Combine(_contentPath, "quizzes");
-                
+
                 if (!Directory.Exists(quizzesPath))
                 {
                     Console.WriteLine($"⚠️ Quizzes directory not found: {quizzesPath}");
@@ -599,13 +599,13 @@ namespace backend.Services
                 var totalQuestionsProcessed = 0;
                 var totalQuestionsAdded = 0;
                 var totalQuestionsUpdated = 0;
-                
+
                 foreach (var file in jsonFiles)
                 {
                     var questionsBefore = _context.ChangeTracker.Entries<LessonQuiz>().Count(e => e.State == EntityState.Added || e.State == EntityState.Modified);
                     await ProcessQuizFileAsync(file);
                     var questionsAfter = _context.ChangeTracker.Entries<LessonQuiz>().Count(e => e.State == EntityState.Added || e.State == EntityState.Modified);
-                    
+
                     var questionsInFile = questionsAfter - questionsBefore;
                     Console.WriteLine($"📊 Processed {questionsInFile} questions from file: {System.IO.Path.GetFileNameWithoutExtension(file)}");
                     totalQuestionsProcessed += questionsInFile;
@@ -822,7 +822,7 @@ namespace backend.Services
 
             var modulesWithLessons = modules.Count(m => m.Lessons.Any());
             var modulesWithoutLessons = modules.Count(m => !m.Lessons.Any());
-            
+
             Console.WriteLine($"   Modules with lessons: {modulesWithLessons}");
             Console.WriteLine($"   Modules without lessons: {modulesWithoutLessons}");
 
@@ -850,7 +850,7 @@ namespace backend.Services
                     Console.WriteLine($"⚠️ Module '{module.Title}' has no published quizzes");
                 }
             }
-            
+
             Console.WriteLine($"   Modules with published quizzes: {modulesWithQuizzes}");
 
             if (moduleCount > 0 && lessonCount > 0 && modulesWithoutLessons == 0)

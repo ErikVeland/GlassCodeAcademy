@@ -26,12 +26,13 @@ namespace backend.Controllers
         {
             var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             var userEmail = User.FindFirst(ClaimTypes.Email)?.Value;
-            
-            return Ok(new { 
-                message = "This is a protected endpoint", 
+
+            return Ok(new
+            {
+                message = "This is a protected endpoint",
                 userId = userId,
                 userEmail = userEmail,
-                timestamp = DateTime.UtcNow 
+                timestamp = DateTime.UtcNow
             });
         }
 

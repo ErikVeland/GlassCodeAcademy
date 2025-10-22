@@ -99,14 +99,14 @@ namespace backend.Services
 
         // Get lessons by module slug with pagination
         public async Task<IEnumerable<BaseLesson>> GetLessonsByModuleSlugAsync(
-            string moduleSlug, 
-            string? topic = null, 
-            string? sortBy = null, 
-            string? sortOrder = null, 
-            int? limit = null, 
+            string moduleSlug,
+            string? topic = null,
+            string? sortBy = null,
+            string? sortOrder = null,
+            int? limit = null,
             int? offset = null)
         {
-            _logger.LogInformation("Fetching lessons by module slug: {ModuleSlug} with filters - topic: {Topic}, sortBy: {SortBy}, sortOrder: {SortOrder}, limit: {Limit}, offset: {Offset}", 
+            _logger.LogInformation("Fetching lessons by module slug: {ModuleSlug} with filters - topic: {Topic}, sortBy: {SortBy}, sortOrder: {SortOrder}, limit: {Limit}, offset: {Offset}",
                 moduleSlug, topic, sortBy, sortOrder, limit, offset);
             var startTime = DateTime.UtcNow;
 
@@ -161,7 +161,7 @@ namespace backend.Services
             int? limit = null,
             int? offset = null)
         {
-            _logger.LogInformation("Fetching interview questions by module slug: {ModuleSlug} with filters - topic: {Topic}, sortBy: {SortBy}, sortOrder: {SortOrder}, limit: {Limit}, offset: {Offset}", 
+            _logger.LogInformation("Fetching interview questions by module slug: {ModuleSlug} with filters - topic: {Topic}, sortBy: {SortBy}, sortOrder: {SortOrder}, limit: {Limit}, offset: {Offset}",
                 moduleSlug, topic, sortBy, sortOrder, limit, offset);
             var startTime = DateTime.UtcNow;
 

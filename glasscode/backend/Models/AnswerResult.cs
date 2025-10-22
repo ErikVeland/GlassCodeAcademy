@@ -1,6 +1,8 @@
-namespace backend.Models {
-    public class AnswerResult {
+namespace backend.Models
+{
+    public class AnswerResult
+    {
         public bool IsCorrect { get; set; }
         public string? Explanation { get; set; }
     }
-} 
+}

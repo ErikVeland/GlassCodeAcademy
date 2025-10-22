@@ -6,14 +6,14 @@ namespace backend.Services
 {
     public class ReadinessService
     {
-        private readonly GlassCodeDbContext _context;
+        private readonly IServiceProvider _serviceProvider;
         private readonly ILogger<ReadinessService> _logger;
         private bool _isReady = false;
         private readonly SemaphoreSlim _semaphore = new SemaphoreSlim(1, 1);
 
-        public ReadinessService(GlassCodeDbContext context, ILogger<ReadinessService> logger)
+        public ReadinessService(IServiceProvider serviceProvider, ILogger<ReadinessService> logger)
         {
-            _context = context;
+            _serviceProvider = serviceProvider;
             _logger = logger;
         }
 
@@ -57,15 +57,19 @@ namespace backend.Services
 
                 _logger.LogInformation("Checking content readiness...");
 
+                // Create a new scope to get a DbContext instance
+                using var scope = _serviceProvider.CreateScope();
+                var context = scope.ServiceProvider.GetRequiredService<GlassCodeDbContext>();
+
                 // Check if we have modules, lessons, and quizzes
-                var hasModules = await _context.Modules.AnyAsync();
-                var hasLessons = await _context.Lessons.AnyAsync();
-                var hasQuizzes = await _context.LessonQuizzes.AnyAsync();
+                var hasModules = await context.Modules.AnyAsync();
+                var hasLessons = await context.Lessons.AnyAsync();
+                var hasQuizzes = await context.LessonQuizzes.AnyAsync();
 
                 if (hasModules && hasLessons && hasQuizzes)
                 {
                     // Additional validation: ensure each module has at least one lesson
-                    var modules = await _context.Modules
+                    var modules = await context.Modules
                         .Include(m => m.Lessons)
                         .ToListAsync();
 

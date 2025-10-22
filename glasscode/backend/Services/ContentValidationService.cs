@@ -27,7 +27,7 @@ namespace backend.Services
                 // Validate modules
                 var dbModules = await _context.Modules.ToListAsync();
                 var registryModules = GetModulesFromRegistry();
-                
+
                 result.ModulesValidation = new ValidationSummary
                 {
                     DatabaseCount = dbModules.Count,
@@ -38,7 +38,7 @@ namespace backend.Services
                 // Validate lessons
                 var dbLessons = await _context.Lessons.ToListAsync();
                 var jsonLessonsCount = GetTotalJsonLessonsCount();
-                
+
                 result.LessonsValidation = new ValidationSummary
                 {
                     DatabaseCount = dbLessons.Count,
@@ -49,7 +49,7 @@ namespace backend.Services
                 // Validate quizzes
                 var dbQuizzes = await _context.LessonQuizzes.ToListAsync();
                 var jsonQuizzesCount = GetTotalJsonQuizzesCount();
-                
+
                 result.QuizzesValidation = new ValidationSummary
                 {
                     DatabaseCount = dbQuizzes.Count,
@@ -57,8 +57,8 @@ namespace backend.Services
                     IsConsistent = dbQuizzes.Count == jsonQuizzesCount
                 };
 
-                result.IsOverallConsistent = result.ModulesValidation.IsConsistent && 
-                                           result.LessonsValidation.IsConsistent && 
+                result.IsOverallConsistent = result.ModulesValidation.IsConsistent &&
+                                           result.LessonsValidation.IsConsistent &&
                                            result.QuizzesValidation.IsConsistent;
             }
             catch (Exception ex)

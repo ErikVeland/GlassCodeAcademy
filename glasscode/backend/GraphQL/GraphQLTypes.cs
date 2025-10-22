@@ -97,7 +97,7 @@ public class GraphQLQuery
         var question = questions.FirstOrDefault(q => q.Id == parsedId);
         return question;
     }
-    
+
     // DotNet Lessons
     public async Task<IEnumerable<GraphQLLessonType>> GetDotNetLessons()
     {

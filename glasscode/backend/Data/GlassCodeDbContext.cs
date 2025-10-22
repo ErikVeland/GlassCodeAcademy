@@ -15,24 +15,24 @@ namespace backend.Data
         public DbSet<Lesson> Lessons { get; set; }
         public DbSet<LessonQuiz> LessonQuizzes { get; set; }
         public DbSet<InterviewQuestion> InterviewQuestions { get; set; }
-        
+
         // User and progress tracking
         public DbSet<User> Users { get; set; }
         public DbSet<UserProgress> UserProgress { get; set; }
         public DbSet<UserLessonProgress> UserLessonProgress { get; set; }
         public DbSet<UserQuestionAttempt> UserQuestionAttempts { get; set; }
         public DbSet<UserLessonQuizAttempt> UserLessonQuizAttempts { get; set; }
-        
+
         // RBAC entities
         public DbSet<Role> Roles { get; set; }
         public DbSet<UserRole> UserRoles { get; set; }
-        
+
         // Organisation and team entities
         public DbSet<Organisation> Organisations { get; set; }
         public DbSet<Team> Teams { get; set; }
         public DbSet<UserOrganisation> UserOrganisations { get; set; }
         public DbSet<UserTeam> UserTeams { get; set; }
-        
+
         // Content metadata
         public DbSet<ContentTag> ContentTags { get; set; }
         public DbSet<LessonTag> LessonTags { get; set; }
@@ -64,7 +64,7 @@ namespace backend.Data
                 entity.HasIndex(e => new { e.CourseId, e.Slug }).IsUnique();
                 entity.Property(e => e.CreatedAt).HasDefaultValueSql("CURRENT_TIMESTAMP");
                 entity.Property(e => e.UpdatedAt).HasDefaultValueSql("CURRENT_TIMESTAMP");
-                
+
                 entity.HasOne(e => e.Course)
                     .WithMany(e => e.Modules)
                     .HasForeignKey(e => e.CourseId)
@@ -82,7 +82,7 @@ namespace backend.Data
                 entity.Property(e => e.Metadata).HasColumnType("jsonb");
                 entity.Property(e => e.CreatedAt).HasDefaultValueSql("CURRENT_TIMESTAMP");
                 entity.Property(e => e.UpdatedAt).HasDefaultValueSql("CURRENT_TIMESTAMP");
-                
+
                 entity.HasOne(e => e.Module)
                     .WithMany(e => e.Lessons)
                     .HasForeignKey(e => e.ModuleId)
@@ -122,12 +122,12 @@ namespace backend.Data
                 entity.HasIndex(e => new { e.UserId, e.CourseId }).IsUnique();
                 entity.Property(e => e.CreatedAt).HasDefaultValueSql("CURRENT_TIMESTAMP");
                 entity.Property(e => e.UpdatedAt).HasDefaultValueSql("CURRENT_TIMESTAMP");
-                
+
                 entity.HasOne(e => e.User)
                     .WithMany(e => e.UserProgress)
                     .HasForeignKey(e => e.UserId)
                     .OnDelete(DeleteBehavior.Cascade);
-                    
+
                 entity.HasOne(e => e.Course)
                     .WithMany(e => e.UserProgress)
                     .HasForeignKey(e => e.CourseId)
@@ -141,12 +141,12 @@ namespace backend.Data
                 entity.HasIndex(e => new { e.UserId, e.LessonId }).IsUnique();
                 entity.Property(e => e.CreatedAt).HasDefaultValueSql("CURRENT_TIMESTAMP");
                 entity.Property(e => e.UpdatedAt).HasDefaultValueSql("CURRENT_TIMESTAMP");
-                
+
                 entity.HasOne(e => e.User)
                     .WithMany(e => e.UserLessonProgress)
                     .HasForeignKey(e => e.UserId)
                     .OnDelete(DeleteBehavior.Cascade);
-                    
+
                 entity.HasOne(e => e.Lesson)
                     .WithMany(e => e.UserLessonProgress)
                     .HasForeignKey(e => e.LessonId)
@@ -159,12 +159,12 @@ namespace backend.Data
                 entity.HasKey(e => e.Id);
                 entity.Property(e => e.UserAnswer).HasColumnType("jsonb");
                 entity.Property(e => e.CreatedAt).HasDefaultValueSql("CURRENT_TIMESTAMP");
-                
+
                 entity.HasOne(e => e.User)
                     .WithMany(e => e.UserQuestionAttempts)
                     .HasForeignKey(e => e.UserId)
                     .OnDelete(DeleteBehavior.Cascade);
-                    
+
                 entity.HasOne(e => e.Question)
                     .WithMany(e => e.UserQuestionAttempts)
                     .HasForeignKey(e => e.QuestionId)
@@ -185,12 +185,12 @@ namespace backend.Data
             modelBuilder.Entity<UserRole>(entity =>
             {
                 entity.HasKey(e => new { e.UserId, e.RoleId });
-                
+
                 entity.HasOne(e => e.User)
                     .WithMany(e => e.UserRoles)
                     .HasForeignKey(e => e.UserId)
                     .OnDelete(DeleteBehavior.Cascade);
-                    
+
                 entity.HasOne(e => e.Role)
                     .WithMany(e => e.UserRoles)
                     .HasForeignKey(e => e.RoleId)
@@ -215,7 +215,7 @@ namespace backend.Data
                 entity.Property(e => e.Name).IsRequired().HasMaxLength(100);
                 entity.Property(e => e.CreatedAt).HasDefaultValueSql("CURRENT_TIMESTAMP");
                 entity.Property(e => e.UpdatedAt).HasDefaultValueSql("CURRENT_TIMESTAMP");
-                
+
                 entity.HasOne(e => e.Organisation)
                     .WithMany(e => e.Teams)
                     .HasForeignKey(e => e.OrganisationId)
@@ -226,12 +226,12 @@ namespace backend.Data
             modelBuilder.Entity<UserOrganisation>(entity =>
             {
                 entity.HasKey(e => new { e.UserId, e.OrganisationId });
-                
+
                 entity.HasOne(e => e.User)
                     .WithMany(e => e.UserOrganisations)
                     .HasForeignKey(e => e.UserId)
                     .OnDelete(DeleteBehavior.Cascade);
-                    
+
                 entity.HasOne(e => e.Organisation)
                     .WithMany(e => e.UserOrganisations)
                     .HasForeignKey(e => e.OrganisationId)
@@ -242,12 +242,12 @@ namespace backend.Data
             modelBuilder.Entity<UserTeam>(entity =>
             {
                 entity.HasKey(e => new { e.UserId, e.TeamId });
-                
+
                 entity.HasOne(e => e.User)
                     .WithMany(e => e.UserTeams)
                     .HasForeignKey(e => e.UserId)
                     .OnDelete(DeleteBehavior.Cascade);
-                    
+
                 entity.HasOne(e => e.Team)
                     .WithMany(e => e.UserTeams)
                     .HasForeignKey(e => e.TeamId)
@@ -267,12 +267,12 @@ namespace backend.Data
             modelBuilder.Entity<LessonTag>(entity =>
             {
                 entity.HasKey(e => new { e.LessonId, e.TagId });
-                
+
                 entity.HasOne(e => e.Lesson)
                     .WithMany(e => e.LessonTags)
                     .HasForeignKey(e => e.LessonId)
                     .OnDelete(DeleteBehavior.Cascade);
-                    
+
                 entity.HasOne(e => e.Tag)
                     .WithMany(e => e.LessonTags)
                     .HasForeignKey(e => e.TagId)
@@ -282,12 +282,12 @@ namespace backend.Data
             modelBuilder.Entity<QuestionTag>(entity =>
             {
                 entity.HasKey(e => new { e.QuestionId, e.TagId });
-                
+
                 entity.HasOne(e => e.Question)
                     .WithMany(e => e.QuestionTags)
                     .HasForeignKey(e => e.QuestionId)
                     .OnDelete(DeleteBehavior.Cascade);
-                    
+
                 entity.HasOne(e => e.Tag)
                     .WithMany(e => e.QuestionTags)
                     .HasForeignKey(e => e.TagId)

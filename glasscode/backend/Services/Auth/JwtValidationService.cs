@@ -24,12 +24,12 @@ namespace backend.Services.Auth
         public bool ValidateToken(string token, out ClaimsPrincipal? principal)
         {
             principal = null;
-            
+
             if (string.IsNullOrEmpty(token))
                 return false;
 
             var tokenHandler = new JwtSecurityTokenHandler();
-            
+
             try
             {
                 var validationParameters = new TokenValidationParameters
@@ -68,7 +68,7 @@ namespace backend.Services.Auth
         {
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = Encoding.UTF8.GetBytes(_secretKey);
-            
+
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(claims),
@@ -94,13 +94,13 @@ namespace backend.Services.Auth
         public bool IsTokenExpired(string token)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
-            
+
             if (tokenHandler.CanReadToken(token))
             {
                 var jwtToken = tokenHandler.ReadJwtToken(token);
                 return jwtToken.ValidTo < DateTime.UtcNow;
             }
-            
+
             return true; // If we can't read the token, consider it expired
         }
     }

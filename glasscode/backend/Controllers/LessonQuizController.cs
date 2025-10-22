@@ -23,12 +23,12 @@ namespace backend.Controllers
         public async Task<ActionResult<IEnumerable<LessonQuizResponseDto>>> GetLessonQuizzes([FromQuery] int? lessonId = null)
         {
             var query = _context.LessonQuizzes.AsQueryable();
-            
+
             if (lessonId.HasValue)
             {
                 query = query.Where(q => q.LessonId == lessonId.Value);
             }
-            
+
             var quizzes = await query
                 .OrderBy(q => q.SortOrder)
                 .Select(q => new LessonQuizResponseDto
@@ -56,7 +56,7 @@ namespace backend.Controllers
                     LessonId = q.LessonId
                 })
                 .ToListAsync();
-            
+
             return Ok(quizzes);
         }
 

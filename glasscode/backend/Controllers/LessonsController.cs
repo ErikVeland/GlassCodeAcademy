@@ -75,7 +75,7 @@ public class LessonsController : ControllerBase
     {
         var module = await _dbContext.Modules
             .FirstOrDefaultAsync(m => m.Slug == moduleSlug);
-            
+
         if (module == null)
         {
             return new List<object>();

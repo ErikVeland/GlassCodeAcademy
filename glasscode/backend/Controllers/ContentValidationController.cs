@@ -57,7 +57,7 @@ public class ContentValidationController : ControllerBase
         {
             var validationService = HttpContext.RequestServices.GetRequiredService<ContentValidationService>();
             var validationResult = await validationService.ValidateContentParityAsync();
-            
+
             return Ok(new
             {
                 status = validationResult.IsOverallConsistent ? "healthy" : "degraded",
@@ -69,7 +69,7 @@ public class ContentValidationController : ControllerBase
         {
             var logger = HttpContext.RequestServices.GetService<ILogger<ContentValidationController>>();
             logger?.LogError(ex, "Error in content validation health check");
-            
+
             var fallbackValidation = new ContentValidationResult { Error = ex.Message };
             return Ok(new
             {

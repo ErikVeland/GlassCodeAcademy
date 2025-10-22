@@ -84,7 +84,7 @@ namespace backend.Scripts
             Console.WriteLine("Re-migrating lessons from JSON files...");
 
             var lessonsPath = System.IO.Path.Combine(_contentPath, "lessons");
-            
+
             if (!Directory.Exists(lessonsPath))
             {
                 Console.WriteLine($"Lessons directory not found: {lessonsPath}");
@@ -183,7 +183,7 @@ namespace backend.Scripts
 
             _context.Set<Module>().Add(newModule);
             await _context.SaveChangesAsync();
-            
+
             Console.WriteLine($"Created new module: {newModule.Title}");
             return newModule;
         }
@@ -193,7 +193,7 @@ namespace backend.Scripts
             Console.WriteLine("Re-migrating quizzes from JSON files...");
 
             var quizzesPath = System.IO.Path.Combine(_contentPath, "quizzes");
-            
+
             if (!Directory.Exists(quizzesPath))
             {
                 Console.WriteLine($"Quizzes directory not found: {quizzesPath}");
@@ -285,7 +285,7 @@ namespace backend.Scripts
             // Try exact slug match first
             var lesson = await _context.Set<Lesson>()
                 .FirstOrDefaultAsync(l => l.Slug == fileName);
-            
+
             if (lesson != null)
             {
                 return lesson;
@@ -293,7 +293,7 @@ namespace backend.Scripts
 
             // Try to find lesson by matching filename patterns
             var searchTerms = fileName.Replace("-", " ").Split(' ');
-            
+
             foreach (var term in searchTerms)
             {
                 lesson = await _context.Set<Lesson>()

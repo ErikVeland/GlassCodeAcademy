@@ -19,7 +19,7 @@ namespace backend.Scripts
         public async Task MigrateQuizzesAsync()
         {
             var quizzesPath = System.IO.Path.Combine(_contentPath, "quizzes");
-            
+
             if (!Directory.Exists(quizzesPath))
             {
                 Console.WriteLine($"Quizzes directory not found: {quizzesPath}");
@@ -108,7 +108,7 @@ namespace backend.Scripts
         {
             // Try to find lesson by matching filename patterns
             var searchTerms = fileName.Replace("-", " ").Split(' ');
-            
+
             foreach (var term in searchTerms)
             {
                 var lesson = await _context.Set<Lesson>()

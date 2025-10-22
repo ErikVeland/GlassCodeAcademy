@@ -4,10 +4,10 @@ using backend.Models;
 namespace backend.GraphQL
 {
     public class ReactLessonType : ObjectType<BaseLesson>
-{
-    protected override void Configure(IObjectTypeDescriptor<BaseLesson> descriptor)
     {
-        descriptor.Name("ReactLesson");
+        protected override void Configure(IObjectTypeDescriptor<BaseLesson> descriptor)
+        {
+            descriptor.Name("ReactLesson");
             descriptor.Description("Represents a React learning lesson with code examples");
 
             descriptor.Field(l => l.Id).Description("The unique identifier of the lesson");

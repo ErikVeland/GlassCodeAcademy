@@ -29,7 +29,7 @@ public class LessonsDbController : ControllerBase
         }
 
         var lessons = await query.ToListAsync();
-        
+
         // Clear navigation properties to prevent circular references
         foreach (var lesson in lessons)
         {
@@ -127,7 +127,7 @@ public class LessonsDbController : ControllerBase
             existingLesson.UpdatedAt = DateTime.UtcNow;
 
             await _context.SaveChangesAsync();
-            
+
             // Set navigation properties to null to prevent circular references
             existingLesson.Module = null!;
             existingLesson.LessonTags = null!;

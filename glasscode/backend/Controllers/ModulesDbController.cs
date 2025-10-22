@@ -24,7 +24,7 @@ public class ModulesDbController : ControllerBase
         var modules = await _context.Modules
             .OrderBy(m => m.Order)
             .ToListAsync();
-            
+
         // Clear navigation properties to prevent circular references
         foreach (var module in modules)
         {
@@ -116,7 +116,7 @@ public class ModulesDbController : ControllerBase
             existingModule.UpdatedAt = DateTime.UtcNow;
 
             await _context.SaveChangesAsync();
-            
+
             // Clear navigation properties to prevent circular references
             existingModule.Course = null!;
             existingModule.Lessons = null!;
