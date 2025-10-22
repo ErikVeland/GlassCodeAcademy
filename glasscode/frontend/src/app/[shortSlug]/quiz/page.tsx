@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { contentRegistry } from '@/lib/contentRegistry';
@@ -48,6 +48,8 @@ export default function QuizPage({ params }: { params: Promise<{ shortSlug: stri
   const [poolCount, setPoolCount] = useState(0);
   const [reqPercent, setReqPercent] = useState(0);
   const [debugEnabled, setDebugEnabled] = useState(false);
+  const [prefetchStatus, setPrefetchStatus] = useState<{ isPrefetching: boolean; prefetchedCount: number; queueLength: number } | null>(null);
+  const prefetchCheckInterval = useRef<NodeJS.Timeout | null>(null);
 
   const initializeQuizData = useCallback(async (
     moduleData: typeof currentModule,
@@ -144,6 +146,42 @@ export default function QuizPage({ params }: { params: Promise<{ shortSlug: stri
     }
   }, [debugEnabled]);
 
+  // Check for prefetched quiz data
+  const checkPrefetchedQuiz = useCallback(async (moduleSlug: string) => {
+    try {
+      // Check if quiz is prefetched in localStorage
+      const cacheKey = `quiz_prefetch_${moduleSlug}`;
+      const cached = localStorage.getItem(cacheKey);
+      
+      if (cached) {
+        const { timestamp } = JSON.parse(cached);
+        // Use cache if less than 30 minutes old
+        if (Date.now() - timestamp < 30 * 60 * 1000) {
+          console.log(`[QuizPage] Using prefetched quiz for ${moduleSlug}`);
+          return true;
+        }
+      }
+      
+      // Check if quiz is prefetched in sessionStorage
+      const sessionCacheKey = `prefetch_quiz_${moduleSlug}`;
+      const sessionCached = sessionStorage.getItem(sessionCacheKey);
+      
+      if (sessionCached) {
+        const { timestamp } = JSON.parse(sessionCached);
+        // Use cache if less than 5 minutes old
+        if (Date.now() - timestamp < 5 * 60 * 1000) {
+          console.log(`[QuizPage] Using session prefetched quiz for ${moduleSlug}`);
+          return true;
+        }
+      }
+      
+      return false;
+    } catch (error) {
+      console.error(`[QuizPage] Error checking prefetched quiz for ${moduleSlug}:`, error);
+      return false;
+    }
+  }, []);
+
   useEffect(() => {
     async function initializePage() {
       try {
@@ -159,6 +197,10 @@ export default function QuizPage({ params }: { params: Promise<{ shortSlug: stri
           return;
         }
         setCurrentModule(moduleData);
+
+        // Check if quiz is prefetched before loading
+        const isPrefetched = await checkPrefetchedQuiz(moduleData.slug);
+        console.log(`Quiz for ${moduleData.slug} is ${isPrefetched ? 'prefetched' : 'not prefetched'}`);
 
         const moduleQuiz = await contentRegistry.getModuleQuiz(moduleData.slug);
         console.log('Module quiz:', moduleQuiz);
@@ -190,7 +232,34 @@ export default function QuizPage({ params }: { params: Promise<{ shortSlug: stri
     }
 
     initializePage();
-  }, [params, initializeQuizData]);
+  }, [params, initializeQuizData, checkPrefetchedQuiz]);
+
+  // Check prefetch status periodically
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      // Import the quizPrefetchService dynamically
+      import('@/lib/quizPrefetchService').then(({ quizPrefetchService }) => {
+        // Check status immediately
+        setPrefetchStatus(quizPrefetchService.getPrefetchStatus());
+        
+        // Clear any existing interval
+        if (prefetchCheckInterval.current) {
+          clearInterval(prefetchCheckInterval.current);
+        }
+        
+        // Check status every 2 seconds
+        prefetchCheckInterval.current = setInterval(() => {
+          setPrefetchStatus(quizPrefetchService.getPrefetchStatus());
+        }, 2000);
+      });
+    }
+    
+    return () => {
+      if (prefetchCheckInterval.current) {
+        clearInterval(prefetchCheckInterval.current);
+      }
+    };
+  }, []);
 
   useEffect(() => {
     setDebugEnabled(localStorage.getItem('debug') === 'true');
@@ -239,6 +308,28 @@ export default function QuizPage({ params }: { params: Promise<{ shortSlug: stri
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
           <p className="text-gray-600 dark:text-gray-300">Loading quiz...</p>
+          {prefetchStatus && (
+            <div className="mt-4 text-sm text-gray-500 dark:text-gray-400">
+              {prefetchStatus.isPrefetching ? (
+                <div>
+                  <span>Background prefetching in progress... </span>
+                  <div className="mt-2 w-64 mx-auto">
+                    <div className="bg-gray-200 dark:bg-gray-700 rounded-full h-2.5">
+                      <div 
+                        className="bg-blue-600 h-2.5 rounded-full" 
+                        style={{ width: `${Math.min(100, Math.round((prefetchStatus.prefetchedCount / Math.max(1, prefetchStatus.prefetchedCount + prefetchStatus.queueLength)) * 100))}%` }}
+                      ></div>
+                    </div>
+                    <div className="text-xs mt-1">
+                      {prefetchStatus.prefetchedCount} of {prefetchStatus.prefetchedCount + prefetchStatus.queueLength} quizzes loaded
+                    </div>
+                  </div>
+                </div>
+              ) : (
+                <span>Ready to load quiz content</span>
+              )}
+            </div>
+          )}
         </div>
       </div>
     );
@@ -275,6 +366,23 @@ export default function QuizPage({ params }: { params: Promise<{ shortSlug: stri
 
   return (
     <QuizLayout module={currentModule} quiz={quiz} thresholds={layoutThresholds} unlockingModules={unlockingModules}>
+      {/* Prefetch Status Indicator */}
+      {prefetchStatus && prefetchStatus.isPrefetching && (
+        <div className="mb-6 glass-morphism p-4 rounded-lg border border-blue-200 dark:border-blue-800">
+          <div className="flex items-center">
+            <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-blue-600 mr-3"></div>
+            <div>
+              <p className="text-sm font-medium text-blue-800 dark:text-blue-200">
+                Background quiz prefetching in progress
+              </p>
+              <p className="text-xs text-blue-600 dark:text-blue-300">
+                {prefetchStatus.prefetchedCount} quizzes loaded
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Quiz Content */}
       {quiz && quiz.questions && quiz.questions.length > 0 && quizData ? (
         <div className="space-y-8">

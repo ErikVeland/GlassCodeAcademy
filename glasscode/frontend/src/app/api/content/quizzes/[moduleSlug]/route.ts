@@ -1,44 +1,19 @@
-// Use the Web Request type to satisfy Next.js route handler typing
 import { normalizeQuestion } from '@/lib/textNormalization';
 import { getApiBaseStrict } from '@/lib/urlUtils';
-/* eslint-disable @typescript-eslint/no-unused-vars */
-
-// Removed GraphQL fetching. API now serves only local quiz content.
-
-// Mapping from shortSlug to moduleSlug
-const SHORT_SLUG_TO_MODULE_SLUG: Record<string, string> = {
-  'programming': 'programming-fundamentals',
-  'web': 'web-fundamentals',
-  'version': 'version-control',
-  'dotnet': 'dotnet-fundamentals',
-  'react': 'react-fundamentals',
-  'database': 'database-systems',
-  'typescript': 'typescript-fundamentals',
-  'node': 'node-fundamentals',
-  'laravel': 'laravel-fundamentals',
-  'nextjs': 'nextjs-advanced',
-  'graphql': 'graphql-advanced',
-  'sass': 'sass-advanced',
-  'tailwind': 'tailwind-advanced',
-  'vue': 'vue-advanced',
-  'testing': 'testing-fundamentals',
-  'performance': 'performance-optimization',
-  'security': 'security-fundamentals',
-  'e2e': 'e2e-testing'
-};
+import { contentRegistry } from '@/lib/contentRegistry';
 
 // Database-based quiz loading function
 async function fetchQuizFromDatabase(moduleSlug: string) {
   try {
     // Use the correct endpoint to fetch quizzes for a module by slug
     const apiBase = (() => { try { return getApiBaseStrict(); } catch { return 'http://127.0.0.1:8080'; } })();
-    const quizzesResponse = await fetch(`${apiBase}/api/modules/${moduleSlug}/quiz`);
-    if (!quizzesResponse.ok) {
+    const quizResponse = await fetch(`${apiBase}/api/modules/${moduleSlug}/quiz`, { cache: 'no-store' });
+    if (!quizResponse.ok) {
       console.error(`Failed to fetch quizzes for module ${moduleSlug}`);
       return { questions: [] };
     }
     
-    const quizzes = await quizzesResponse.json();
+    const quizzes = await quizResponse.json();
     console.log(`Successfully loaded ${quizzes.length} quiz questions from database for module: ${moduleSlug}`);
     
     // Transform the database quizzes to match the expected frontend format
@@ -49,7 +24,9 @@ async function fetchQuizFromDatabase(moduleSlug: string) {
       correctAnswer: number;
       explanation?: string;
       topic?: string;
-      type?: string;
+      questionType?: string;
+      difficulty?: string;
+      estimatedTime?: number;
     }) => ({
       id: quiz.id,
       question: quiz.question,
@@ -57,7 +34,9 @@ async function fetchQuizFromDatabase(moduleSlug: string) {
       correctAnswer: quiz.correctAnswer,
       explanation: quiz.explanation,
       topic: quiz.topic || 'general',
-      type: quiz.type || 'multiple-choice'
+      type: quiz.questionType || 'multiple-choice',
+      difficulty: quiz.difficulty || 'Beginner',
+      estimatedTime: quiz.estimatedTime || 90
     }));
     
     return { questions };
@@ -92,11 +71,25 @@ export async function GET(request: Request, context: { params: Promise<{ moduleS
     console.log('=== Quiz API Route ===');
     console.log('Received request for quiz input slug:', inputSlug);
     
-    // Convert shortSlug to moduleSlug if needed
-    const moduleSlug = SHORT_SLUG_TO_MODULE_SLUG[inputSlug] || inputSlug;
+    // Convert shortSlug to moduleSlug if needed using the central registry
+    const moduleSlug = (await contentRegistry.getModuleSlugFromShortSlug(inputSlug)) || inputSlug;
     console.log('Resolved to module slug:', moduleSlug);
     
     const quiz = await fetchQuizFromDatabase(moduleSlug);
+    
+    // If no questions from database, try fallback
+    if (!Array.isArray(quiz.questions) || quiz.questions.length === 0) {
+      const fallbackQuiz = await fetchQuizFallbackFromJson(request, moduleSlug);
+      if (Array.isArray(fallbackQuiz.questions) && fallbackQuiz.questions.length > 0) {
+        return new Response(JSON.stringify(fallbackQuiz), {
+          status: 200,
+          headers: {
+            'Content-Type': 'application/json',
+            'Cache-Control': 'public, max-age=600, stale-while-revalidate=86400',
+          },
+        });
+      }
+    }
     
     const normalizedQuestions = Array.isArray(quiz.questions)
       ? (quiz.questions as unknown[]).map((q) => normalizeQuestion(q))

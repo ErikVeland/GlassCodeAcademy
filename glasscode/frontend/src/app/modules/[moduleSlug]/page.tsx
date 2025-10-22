@@ -5,7 +5,7 @@ import BreadcrumbNavigation from '@/components/BreadcrumbNavigation';
 import { contentRegistry } from '@/lib/contentRegistry';
 import type { Module, Lesson, Quiz } from '@/lib/contentRegistry';
 import { ui, classes } from '@/lib/ui';
-import { getModuleTheme } from '@/lib/moduleThemes';
+import { getModuleTheme, getTechnologyChipClasses } from '@/lib/moduleThemes';
 import RetryButton from '@/components/RetryButton';
 
 interface ModulePageProps {
@@ -140,7 +140,7 @@ export default async function ModulePage({ params }: ModulePageProps) {
                     {currentModule.technologies.map((tech) => (
                       <span
                         key={tech}
-                        className="px-3 py-1 bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200 rounded-full text-sm"
+                        className={classes('px-3 py-1 rounded-full text-sm', getTechnologyChipClasses(tech))}
                       >
                         {tech}
                       </span>
@@ -230,7 +230,7 @@ export default async function ModulePage({ params }: ModulePageProps) {
                   </p>
                   <Link
                     href={currentModule.routes.lessons}
-                    className={classes(ui.buttons.base, 'px-4 py-2', ui.buttons.lessons)}
+                    className={classes(ui.buttons.base, 'px-4 py-2', theme.button)}
                   >
                     Start Learning
                     <span className="ml-2">→</span>
@@ -272,7 +272,7 @@ export default async function ModulePage({ params }: ModulePageProps) {
                   </p>
                   <Link
                     href={currentModule.routes.quiz}
-                    className={classes(ui.buttons.base, 'px-4 py-2', ui.buttons.quiz)}
+                    className={classes(ui.buttons.base, 'px-4 py-2', theme.button)}
                   >
                     Take Quiz
                     <span className="ml-2">🎯</span>
@@ -330,10 +330,12 @@ async function PrerequisiteLink({ slug }: { slug: string }) {
       );
     }
 
+    const theme = getModuleTheme(prereqModule.slug);
+
     return (
       <Link
         href={prereqModule.routes.overview}
-        className="flex items-center gap-2 text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300"
+        className={classes('flex items-center gap-2', theme.link)}
       >
         <span>{prereqModule.icon}</span>
         <span>{prereqModule.title}</span>

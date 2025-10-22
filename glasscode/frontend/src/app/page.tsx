@@ -2,7 +2,6 @@
 
 import React, { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
 import { ArrowRightIcon, ChartBarIcon } from '@heroicons/react/24/outline';
 
 import { contentRegistry } from '@/lib/contentRegistry';
@@ -15,6 +14,7 @@ import '../styles/design-system.scss';
 import '../styles/homepage.scss';
 import '../styles/liquid-glass.scss';
 import '../styles/mobile-first.scss';
+import { getModuleTheme } from '@/lib/moduleThemes';
 
 // Registry-driven learning structure
 interface TierData {
@@ -27,59 +27,10 @@ interface RegistryData {
   allModules: Module[];
 }
 
-// Separate component for unlock chips to avoid hook issues
-const UnlockChips: React.FC<{
-  moduleSlug: string;
-}> = ({ moduleSlug }) => {
-  const router = useRouter();
-  const [unlockingModules, setUnlockingModules] = useState<Array<{ slug: string; title: string; routes: { overview: string } }>>([]);
-  
-  useEffect(() => {
-    let isMounted = true;
-    const loadUnlocks = async () => {
-      try {
-        const mods = await contentRegistry.getModules();
-        const unlocked = mods.filter(m => (m.prerequisites || []).includes(moduleSlug)).map(m => ({ slug: m.slug, title: m.title, routes: { overview: m.routes.overview } }));
-        if (isMounted) setUnlockingModules(unlocked);
-      } catch (e) {
-        console.error('Failed to load unlocking modules', e);
-      }
-    };
-    loadUnlocks();
-    return () => { isMounted = false; };
-  }, [moduleSlug]);
-
-  if (unlockingModules.length === 0) return null;
-
-  return (
-    <div className="mt-4 text-left">
-      <div className="text-xs text-muted mb-2">Unlocks:</div>
-      <div className="flex flex-wrap gap-2">
-        {unlockingModules.map((m) => (
-          <button
-            type="button"
-            key={m.slug}
-            className="unlock-chip"
-            onClick={(e) => {
-              e.preventDefault();
-              e.stopPropagation();
-              router.push(m.routes.overview);
-            }}
-          >
-            <span className="mr-1">🔓</span>
-            {m.title}
-          </button>
-        ))}
-      </div>
-    </div>
-  );
-};
-
 // Enhanced ModuleCard component with accessibility, progress tracking, and achievement indicators
 const ModuleCard: React.FC<{
   module: Module;
   tierKey: string;
-  moduleProgress: ProgressData | null;
   moduleStatus: string;
   completionPercentage: number;
   hasAchievements: boolean;
@@ -89,7 +40,6 @@ const ModuleCard: React.FC<{
 }> = React.memo(({ 
   module, 
   tierKey, 
-  moduleProgress, 
   moduleStatus, 
   completionPercentage, 
   hasAchievements, 
@@ -99,16 +49,21 @@ const ModuleCard: React.FC<{
 }) => {
   // Using tier-container gradient variants; removed tierGradientClass
 
+  const theme = getModuleTheme(module.slug);
+
   return (
     <div className={`module-card-container ${isLocked ? 'locked' : ''} h-full`}>
       <Link
         href={isLocked ? '#' : (module.routes?.overview || '#')}
-        className={`glass-module-card group ${tierKey === 'core' ? 'tier-core' : tierKey === 'specialized' ? 'tier-specialized' : tierKey === 'quality' ? 'tier-quality' : 'tier-foundational'} ${isLocked ? 'opacity-60' : ''} pb-8`}
+        className={`glass-module-card group ${tierKey === 'core' ? 'tier-core' : tierKey === 'specialized' ? 'tier-specialized' : tierKey === 'quality' ? 'tier-quality' : 'tier-foundational'} ${isLocked ? 'opacity-60' : ''} pb-8 no-tier-strip`}
         onClick={handleModuleClick}
         aria-disabled={isLocked}
         aria-describedby={`module-${module.slug}-description`}
         >
         {/* Achievement badges overlay moved outside the Link to prevent overflow clipping */}
+
+        {/* Decorative top strip using module brand gradient */}
+        <div className={`absolute inset-x-0 top-0 h-[4px] ${theme.strip} z-10 pointer-events-none`} aria-hidden="true"></div>
 
         {/* Lock overlay for prerequisites */}
         {isLocked && (
@@ -168,66 +123,41 @@ const ModuleCard: React.FC<{
           )}
         </div>
 
-        <div className="module-meta mt-auto">
-          <div className="flex items-center justify-between text-sm text-muted mb-3">
-            <span>📅 {module.estimatedHours ?? 0}h</span>
-            <span>{module.track || ''}</span>
+        {/* Progress bar and Achievements */}
+        <div className="mt-auto">
+          <div className="progress-bar-container">
+            <div className="progress-bar" style={{ width: `${completionPercentage}%` }}></div>
           </div>
 
-          {moduleProgress && (
-            <div className="glass-progress-container relative z-10 mb-4">
-              <div
-                className="glass-progress-fill"
-                style={{ width: `${completionPercentage}%` }}
-                role="progressbar"
-                aria-valuenow={completionPercentage}
-                aria-valuemin={0}
-                aria-valuemax={100}
-                aria-label={`${Math.round(completionPercentage)}% complete`}
-              />
+          {hasAchievements && (
+            <div className="achievements-list mt-3">
+              {moduleAchievements.slice(0, 3).map((achievement, index) => (
+                <div
+                  key={achievement.id}
+                  className="w-6 h-6 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-full flex items-center justify-center border-2 border-white shadow-lg"
+                  title={achievement.description}
+                >
+                  <span className="text-xs text-white font-bold">
+                    {index === 0 ? '🏆' : index === 1 ? '🎖️' : '⭐'}
+                  </span>
+                </div>
+              ))}
+              {moduleAchievements.length > 3 && (
+                <div className="w-6 h-6 bg-gradient-to-br from-purple-400 to-purple-600 rounded-full flex items-center justify-center border-2 border-white shadow-lg">
+                  <span className="text-xs text-white font-bold">+{moduleAchievements.length - 3}</span>
+                </div>
+              )}
             </div>
           )}
         </div>
-
-        {/* Prerequisites indicator */}
-        {(module.prerequisites || []).length > 0 && (
-          <div className="mt-3 text-xs text-muted text-left flex items-center gap-2">
-            <span aria-hidden="true">🔗</span>
-            <span className="ml-1.5">Requires: {module.prerequisites!.length} prerequisite{module.prerequisites!.length > 1 ? 's' : ''}</span>
-          </div>
+        {/* Bottom-right arrow indicator */}
+        {!isLocked && (
+          <ArrowRightIcon
+            className="absolute right-4 bottom-4 h-5 w-5 text-white/70 group-hover:text-white transition-colors pointer-events-none"
+            aria-hidden="true"
+          />
         )}
-
-        {/* Unlock chips shown when module is completed */}
-        {moduleStatus === 'completed' && (
-          <UnlockChips moduleSlug={module.slug} />
-        )}
-
-        <ArrowRightIcon className="h-5 w-5 absolute bottom-4 right-4 z-20 text-white/85 transition-transform duration-200 ease-out group-hover:translate-x-0.5" aria-hidden="true" />
       </Link>
-
-      {/* Achievement badges overlay (positioned outside card to avoid overflow clipping) */}
-      {hasAchievements && !isLocked && (
-        <div className="absolute -top-2 -right-2 z-10 pointer-events-none">
-          <div className="flex flex-wrap gap-1">
-            {moduleAchievements.slice(0, 3).map((achievement, index) => (
-              <div
-                key={achievement.id}
-                className="w-6 h-6 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-full flex items-center justify-center border-2 border-white shadow-lg"
-                title={achievement.description}
-              >
-                <span className="text-xs text-white font-bold">
-                  {index === 0 ? '🏆' : index === 1 ? '🎖️' : '⭐'}
-                </span>
-              </div>
-            ))}
-            {moduleAchievements.length > 3 && (
-              <div className="w-6 h-6 bg-gradient-to-br from-purple-400 to-purple-600 rounded-full flex items-center justify-center border-2 border-white shadow-lg">
-                <span className="text-xs text-white font-bold">+{moduleAchievements.length - 3}</span>
-              </div>
-            )}
-          </div>
-        </div>
-      )}
     </div>
   );
 });
@@ -338,7 +268,6 @@ const TierSection: React.FC<{
                 <ModuleCard
                   module={module}
                   tierKey={tierKey}
-                  moduleProgress={moduleProgress}
                   moduleStatus={moduleStatus}
                   completionPercentage={completionPercentage}
                   hasAchievements={hasAchievements}

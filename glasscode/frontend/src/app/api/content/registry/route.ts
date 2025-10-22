@@ -66,26 +66,50 @@ function buildMinimalRegistry() {
 }
 
 interface DbModule {
-  slug?: string;
-  moduleSlug?: string;
-  title?: string;
-  name?: string;
-  description?: string;
-  tier?: string;
-  track?: string;
-  order?: number;
-  icon?: string;
-  difficulty?: string;
-  estimatedHours?: number;
-  category?: string;
-  technologies?: string[];
-  prerequisites?: string[];
-  requiredLessons?: number;
-  requiredQuestions?: number;
-  thresholds?: { requiredLessons?: number; requiredQuestions?: number };
-  legacySlugs?: string[];
-  status?: string;
-  passingScore?: number;
+  id: number;
+  slug: string;
+  title: string;
+  description: string;
+  order: number;
+  isPublished: boolean;
+  createdAt: string;
+  updatedAt: string;
+  courseId: number;
+}
+
+interface FileModule {
+  slug: string;
+  title: string;
+  description: string;
+  tier: string;
+  track: string;
+  order: number;
+  icon: string;
+  difficulty: string;
+  estimatedHours: number;
+  category: string;
+  technologies: string[];
+  prerequisites: string[];
+  thresholds: {
+    requiredLessons: number;
+    requiredQuestions: number;
+  };
+  legacySlugs: string[];
+  status: string;
+  metadata?: {
+    thresholds?: {
+      passingScore?: number;
+    };
+  };
+}
+
+interface Tier {
+  level: number;
+  title: string;
+  description: string;
+  focusArea: string;
+  color: string;
+  learningObjectives: string[];
 }
 
 interface ModuleRoutes {
@@ -104,8 +128,16 @@ interface RegistryModuleLight {
 interface RegistryResponse {
   version: string;
   lastUpdated: string;
-  tiers: Record<string, unknown>;
+  tiers: Record<string, Tier>;
   modules: RegistryModuleLight[];
+  globalSettings: Record<string, unknown>;
+}
+
+interface FileRegistry {
+  version: string;
+  lastUpdated: string;
+  tiers: Record<string, Tier>;
+  modules: FileModule[];
   globalSettings: Record<string, unknown>;
 }
 
@@ -117,68 +149,205 @@ async function synthesizeRegistryFromDatabase() {
     const raw: unknown = await res.json();
     const dbModules: DbModule[] = Array.isArray(raw) ? (raw as DbModule[]) : [];
 
+    // Load the registry.json file to get the full module information including tier data
+    const registryPath = path.join(process.cwd(), '..', '..', 'content', 'registry.json');
+    let fileRegistryModules: FileModule[] = [];
+    let fileRegistryTiers: Record<string, Tier> = buildMinimalRegistry().tiers;
+    if (fs.existsSync(registryPath)) {
+      const registryContent = fs.readFileSync(registryPath, 'utf8');
+      const parsedRegistry: FileRegistry = JSON.parse(registryContent);
+      fileRegistryModules = Array.isArray(parsedRegistry.modules) ? parsedRegistry.modules : [];
+      if (parsedRegistry.tiers) {
+        fileRegistryTiers = parsedRegistry.tiers;
+      }
+    }
+
     const modules = await Promise.all(dbModules.map(async (m) => {
-      const moduleSlug: string = (m.slug || m.moduleSlug || '').toString();
-      const title: string = (m.title || m.name || moduleSlug).toString();
-      const description: string = (m.description || '').toString();
-      const tier: string = (m.tier || 'foundational').toString();
-      const track: string = (m.track || 'Frontend').toString();
-      const order: number = typeof m.order === 'number' ? m.order : 1;
-      const icon: string = (m.icon || '📘').toString();
-      const difficulty: string = (m.difficulty || 'Beginner').toString();
-      const estimatedHours: number = typeof m.estimatedHours === 'number' ? m.estimatedHours : 5;
-      const category: string = (m.category || '').toString();
-      const technologies: string[] = Array.isArray(m.technologies) ? m.technologies : [];
-      const prerequisites: string[] = Array.isArray(m.prerequisites) ? m.prerequisites : [];
-      const thresholds = {
-        requiredLessons: typeof m.requiredLessons === 'number' ? m.requiredLessons : (m.thresholds?.requiredLessons ?? 0),
-        requiredQuestions: typeof m.requiredQuestions === 'number' ? m.requiredQuestions : (m.thresholds?.requiredQuestions ?? 0),
-      };
-      const legacySlugs: string[] = Array.isArray(m.legacySlugs) ? m.legacySlugs : [];
-      const status: string = (m.status || 'active').toString();
+      // Find the corresponding module in the registry.json file
+      const fileModule = fileRegistryModules.find((fm) => fm.slug === m.slug);
+      
+      if (fileModule) {
+        // Use the file module data which contains tier, track, etc.
+        const moduleSlug: string = fileModule.slug || '';
+        const title: string = fileModule.title || m.title || moduleSlug;
+        const description: string = fileModule.description || m.description || '';
+        const tier: string = fileModule.tier || 'foundational';
+        const track: string = fileModule.track || 'Frontend';
+        const order: number = typeof fileModule.order === 'number' ? fileModule.order : m.order;
+        const icon: string = fileModule.icon || '📘';
+        const difficulty: string = fileModule.difficulty || 'Beginner';
+        const estimatedHours: number = typeof fileModule.estimatedHours === 'number' ? fileModule.estimatedHours : 5;
+        const category: string = fileModule.category || '';
+        const technologies: string[] = Array.isArray(fileModule.technologies) ? fileModule.technologies : [];
+        const prerequisites: string[] = Array.isArray(fileModule.prerequisites) ? fileModule.prerequisites : [];
+        const thresholds = {
+          requiredLessons: typeof fileModule.thresholds?.requiredLessons === 'number' ? fileModule.thresholds.requiredLessons : 0,
+          requiredQuestions: typeof fileModule.thresholds?.requiredQuestions === 'number' ? fileModule.thresholds.requiredQuestions : 0,
+        };
+        const legacySlugs: string[] = Array.isArray(fileModule.legacySlugs) ? fileModule.legacySlugs : [];
+        const status: string = fileModule.status || 'active';
 
-      const shortSlug = (await getShortSlugFromModuleSlug(moduleSlug)) || (moduleSlug.includes('-') ? moduleSlug.split('-')[0] : moduleSlug);
+        const shortSlug = (await getShortSlugFromModuleSlug(moduleSlug)) || (moduleSlug.includes('-') ? moduleSlug.split('-')[0] : moduleSlug);
 
-      const routes = {
-        overview: `/${shortSlug}`,
-        lessons: `/${shortSlug}/lessons`,
-        quiz: `/${shortSlug}/quiz`,
-      };
+        const routes = {
+          overview: `/${shortSlug}`,
+          lessons: `/${shortSlug}/lessons`,
+          quiz: `/${shortSlug}/quiz`,
+        };
 
-      const metadata = {
-        thresholds: {
-          minLessons: thresholds.requiredLessons || undefined,
-          minQuizQuestions: thresholds.requiredQuestions || undefined,
-          passingScore: typeof m.passingScore === 'number' ? m.passingScore : undefined,
-        },
-      };
+        const metadata = {
+          thresholds: {
+            minLessons: thresholds.requiredLessons || undefined,
+            minQuizQuestions: thresholds.requiredQuestions || undefined,
+            passingScore: typeof fileModule.metadata?.thresholds?.passingScore === 'number' ? fileModule.metadata.thresholds.passingScore : undefined,
+          },
+        };
 
-      return {
-        slug: moduleSlug,
-        title,
-        description,
-        tier,
-        track,
-        order,
-        icon,
-        difficulty,
-        estimatedHours,
-        category,
-        technologies,
-        prerequisites,
-        thresholds,
-        legacySlugs,
-        status,
-        routes,
-        metadata,
-      };
+        return {
+          slug: moduleSlug,
+          title,
+          description,
+          tier,
+          track,
+          order,
+          icon,
+          difficulty,
+          estimatedHours,
+          category,
+          technologies,
+          prerequisites,
+          thresholds,
+          legacySlugs,
+          status,
+          routes,
+          metadata,
+        };
+      } else {
+        // Fallback to basic module data from database
+        const moduleSlug: string = m.slug || '';
+        const title: string = m.title || moduleSlug;
+        const description: string = m.description || '';
+        const tier: string = 'foundational'; // Default tier
+        const track: string = 'Frontend'; // Default track
+        const order: number = m.order;
+        const icon: string = '📘'; // Default icon
+        const difficulty: string = 'Beginner'; // Default difficulty
+        const estimatedHours: number = 5; // Default hours
+        const category: string = ''; // Default category
+        const technologies: string[] = []; // Default technologies
+        const prerequisites: string[] = []; // Default prerequisites
+        const thresholds = {
+          requiredLessons: 0,
+          requiredQuestions: 0,
+        };
+        const legacySlugs: string[] = []; // Default legacy slugs
+        const status: string = 'active'; // Default status
+
+        const shortSlug = (await getShortSlugFromModuleSlug(moduleSlug)) || (moduleSlug.includes('-') ? moduleSlug.split('-')[0] : moduleSlug);
+
+        const routes = {
+          overview: `/${shortSlug}`,
+          lessons: `/${shortSlug}/lessons`,
+          quiz: `/${shortSlug}/quiz`,
+        };
+
+        const metadata = {
+          thresholds: {
+            minLessons: undefined,
+            minQuizQuestions: undefined,
+            passingScore: undefined,
+          },
+        };
+
+        return {
+          slug: moduleSlug,
+          title,
+          description,
+          tier,
+          track,
+          order,
+          icon,
+          difficulty,
+          estimatedHours,
+          category,
+          technologies,
+          prerequisites,
+          thresholds,
+          legacySlugs,
+          status,
+          routes,
+          metadata,
+        };
+      }
     }));
+
+    // Also include modules from registry.json that might not be in the database yet
+    const additionalModules = fileRegistryModules
+      .filter((fm) => !dbModules.some((dm: DbModule) => dm.slug === fm.slug))
+      .map((fm) => {
+        const moduleSlug: string = fm.slug || '';
+        const title: string = fm.title || moduleSlug;
+        const description: string = fm.description || '';
+        const tier: string = fm.tier || 'foundational';
+        const track: string = fm.track || 'Frontend';
+        const order: number = typeof fm.order === 'number' ? fm.order : 1;
+        const icon: string = fm.icon || '📘';
+        const difficulty: string = fm.difficulty || 'Beginner';
+        const estimatedHours: number = typeof fm.estimatedHours === 'number' ? fm.estimatedHours : 5;
+        const category: string = fm.category || '';
+        const technologies: string[] = Array.isArray(fm.technologies) ? fm.technologies : [];
+        const prerequisites: string[] = Array.isArray(fm.prerequisites) ? fm.prerequisites : [];
+        const thresholds = {
+          requiredLessons: typeof fm.thresholds?.requiredLessons === 'number' ? fm.thresholds.requiredLessons : 0,
+          requiredQuestions: typeof fm.thresholds?.requiredQuestions === 'number' ? fm.thresholds.requiredQuestions : 0,
+        };
+        const legacySlugs: string[] = Array.isArray(fm.legacySlugs) ? fm.legacySlugs : [];
+        const status: string = fm.status || 'active';
+
+        const shortSlug = (getShortSlugFromModuleSlug(moduleSlug)) || (moduleSlug.includes('-') ? moduleSlug.split('-')[0] : moduleSlug);
+
+        const routes = {
+          overview: `/${shortSlug}`,
+          lessons: `/${shortSlug}/lessons`,
+          quiz: `/${shortSlug}/quiz`,
+        };
+
+        const metadata = {
+          thresholds: {
+            minLessons: thresholds.requiredLessons || undefined,
+            minQuizQuestions: thresholds.requiredQuestions || undefined,
+            passingScore: typeof fm.metadata?.thresholds?.passingScore === 'number' ? fm.metadata.thresholds.passingScore : undefined,
+          },
+        };
+
+        return {
+          slug: moduleSlug,
+          title,
+          description,
+          tier,
+          track,
+          order,
+          icon,
+          difficulty,
+          estimatedHours,
+          category,
+          technologies,
+          prerequisites,
+          thresholds,
+          legacySlugs,
+          status,
+          routes,
+          metadata,
+        };
+      });
+
+    const allModules = [...modules, ...additionalModules];
 
     return {
       version: 'db-synthesized',
       lastUpdated: new Date().toISOString(),
-      tiers: buildMinimalRegistry().tiers,
-      modules,
+      tiers: fileRegistryTiers,
+      modules: allModules,
       globalSettings: buildMinimalRegistry().globalSettings,
     };
   } catch (err) {

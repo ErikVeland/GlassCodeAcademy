@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getApiBaseStrict } from '@/lib/urlUtils';
-import { getModuleSlugFromShortSlug } from '@/lib/contentRegistry';
-/* eslint-disable @typescript-eslint/no-unused-vars */
+import { contentRegistry } from '@/lib/contentRegistry';
 
 type FrontendLesson = {
   id: string;
@@ -69,28 +68,63 @@ async function fetchLessonsFromDatabase(moduleSlug: string): Promise<FrontendLes
           const transformed: FrontendLesson[] = lessons.map((lesson: {
             id: number;
             title: string;
-            intro?: string;
-            topic?: string;
-            tags?: string;
-            estimatedMinutes?: number;
-            objectives?: string;
-            codeExample?: string;
-            codeExplanation?: string;
-            additionalNotes?: string;
-            difficulty?: string;
-          }) => ({
-            id: `${lesson.id}`,
-            title: lesson.title,
-            intro: lesson.intro || '',
-            topic: lesson.topic || '',
-            tags: lesson.tags ? lesson.tags.split(',').map((t: string) => t.trim()) : [],
-            estimatedMinutes: lesson.estimatedMinutes || 10,
-            objectives: lesson.objectives ? lesson.objectives.split('\n') : [],
-            codeExample: lesson.codeExample || '',
-            codeExplanation: lesson.codeExplanation || '',
-            additionalNotes: lesson.additionalNotes || '',
-            difficulty: (lesson.difficulty ? String(lesson.difficulty).toLowerCase() : 'beginner') as 'beginner' | 'intermediate' | 'advanced',
-          }));
+            content?: string;
+            metadata?: string;
+          }) => {
+            // Parse content JSON if it exists
+            let intro = '';
+            let objectives: string[] = [];
+            let codeExample = '';
+            let codeExplanation = '';
+            let tags: string[] = [];
+            let estimatedMinutes = 10;
+            let difficulty: 'beginner' | 'intermediate' | 'advanced' = 'beginner';
+            let topic = '';
+
+            if (lesson.content) {
+              try {
+                const contentObj = JSON.parse(lesson.content);
+                intro = contentObj.intro || '';
+                objectives = Array.isArray(contentObj.objectives) ? contentObj.objectives : [];
+                if (contentObj.code) {
+                  if (typeof contentObj.code === 'string') {
+                    codeExample = contentObj.code;
+                  } else if (typeof contentObj.code === 'object') {
+                    codeExample = contentObj.code.example || '';
+                    codeExplanation = contentObj.code.explanation || '';
+                  }
+                }
+                topic = contentObj.topic || '';
+              } catch (e) {
+                console.error('Error parsing lesson content:', e);
+              }
+            }
+
+            if (lesson.metadata) {
+              try {
+                const metadataObj = JSON.parse(lesson.metadata);
+                tags = Array.isArray(metadataObj.tags) ? metadataObj.tags : [];
+                estimatedMinutes = typeof metadataObj.estimatedMinutes === 'number' ? metadataObj.estimatedMinutes : 10;
+                difficulty = (metadataObj.difficulty ? String(metadataObj.difficulty).toLowerCase() : 'beginner') as 'beginner' | 'intermediate' | 'advanced';
+              } catch (e) {
+                console.error('Error parsing lesson metadata:', e);
+              }
+            }
+
+            return {
+              id: `${lesson.id}`,
+              title: lesson.title,
+              intro,
+              topic,
+              tags,
+              estimatedMinutes,
+              objectives,
+              codeExample,
+              codeExplanation,
+              additionalNotes: '',
+              difficulty,
+            };
+          });
           return transformed;
         }
       } catch (innerErr) {
@@ -150,7 +184,7 @@ async function fetchLessonsFromFiles(req: NextRequest, moduleSlug: string): Prom
 export async function GET(req: NextRequest, { params }: { params: Promise<{ moduleSlug: string }> }) {
   const { moduleSlug } = await params;
   // Resolve short slugs to full module slugs using central mapping
-  const resolvedSlug = (await getModuleSlugFromShortSlug(moduleSlug)) || moduleSlug;
+  const resolvedSlug = (await contentRegistry.getModuleSlugFromShortSlug(moduleSlug)) || moduleSlug;
 
   let lessons = await fetchLessonsFromDatabase(resolvedSlug);
 

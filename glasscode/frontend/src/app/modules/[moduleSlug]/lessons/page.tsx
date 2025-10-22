@@ -4,6 +4,7 @@ import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import BreadcrumbNavigation from '@/components/BreadcrumbNavigation';
 import { contentRegistry, getLessonGroups } from '@/lib/contentRegistry';
+import { getModuleTheme } from '@/lib/moduleThemes';
 
 interface LessonsPageProps {
   params: Promise<{ moduleSlug: string }>;
@@ -49,6 +50,7 @@ export default async function LessonsPage({ params, searchParams }: LessonsPageP
     notFound();
   }
 
+  const theme = getModuleTheme(currentModule.slug);
   const lessons = await contentRegistry.getModuleLessons(currentModule.slug);
   const thresholds = await contentRegistry.checkModuleThresholds(currentModule.slug);
   let lessonGroups = getLessonGroups(currentModule.slug, lessons);
@@ -146,7 +148,7 @@ export default async function LessonsPage({ params, searchParams }: LessonsPageP
                         <div className="mt-4 md:mt-0 md:ml-6 w-full sm:w-auto">
                           <Link
                             href={currentModule.slug === 'programming-fundamentals' ? `/programming/lessons/${lessons.indexOf(group.lessons[0]) + 1}` : `${currentModule.routes.lessons}/${lessons.indexOf(group.lessons[0]) + 1}`}
-                            className="inline-flex items-center justify-center w-full sm:w-auto px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                            className={`inline-flex items-center justify-center w-full sm:w-auto px-4 py-2 rounded-lg transition-colors ${theme.button}`}
                           >
                             Start Group
                             <span className="ml-2">→</span>
@@ -184,7 +186,7 @@ export default async function LessonsPage({ params, searchParams }: LessonsPageP
             </p>
             <Link
               href={currentModule.routes.overview}
-              className="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+              className={`inline-flex items-center px-4 py-2 rounded-lg transition-colors ${theme.button}`}
             >
               ← Back to Module
             </Link>
@@ -195,7 +197,7 @@ export default async function LessonsPage({ params, searchParams }: LessonsPageP
         <footer className="mt-12 flex justify-between items-center">
             <Link
               href={currentModule.routes.overview}
-              className="inline-flex items-center px-4 py-2 text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors"
+              className={`inline-flex items-center px-4 py-2 rounded-lg transition-colors ${theme.link}`}
             >
               ← Back to Module Overview
             </Link>
@@ -203,7 +205,7 @@ export default async function LessonsPage({ params, searchParams }: LessonsPageP
           {thresholds.quizValid && (
             <Link
               href={currentModule.routes.quiz}
-              className="inline-flex items-center px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
+              className={`inline-flex items-center px-4 py-2 rounded-lg transition-colors ${theme.button}`}
             >
               Take Assessment
               <span className="ml-2">🎯</span>

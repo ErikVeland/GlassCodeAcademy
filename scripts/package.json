@@ -5,7 +5,8 @@
   "main": "validate-data-structure.js",
   "scripts": {
     "validate": "node validate-data-structure.js",
-    "test": "node validate-data-structure.js"
+    "test": "node validate-data-structure.js",
+    "import": "ts-node importer.ts"
   },
   "keywords": [
     "fullstack",
@@ -14,5 +15,14 @@
     "data-structure"
   ],
   "author": "GlassCode Academy",
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "pg": "^8.11.0",
+    "zod": "^3.22.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "ts-node": "^10.9.0",
+    "typescript": "^5.0.0"
+  }
 }

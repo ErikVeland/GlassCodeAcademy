@@ -380,6 +380,11 @@
   background: var(--tier-quality);
 }
 
+/* Override to disable tier strip when module-specific strip is applied */
+.glass-module-card.no-tier-strip::after {
+  background: transparent !important;
+}
+
 /* Search and Filter Glass Styling */
 .glass-search-container {
   /* Replacing @apply glass-morphism; */

@@ -7,6 +7,7 @@
 import { normalizeQuestion } from './textNormalization';
 import { getPublicOriginStrict } from './urlUtils';
 
+
 interface Module {
   slug: string;
   title: string;
@@ -47,6 +48,8 @@ interface Tier {
   focusArea: string;
   color: string;
   learningObjectives: string[];
+  // Some registry variants include modules grouped by tier
+  modules?: Module[];
 }
 
 interface ContentRegistry {
@@ -191,67 +194,82 @@ class ContentRegistryLoader {
   private async loadRegistryInternal(): Promise<ContentRegistry> {
     try {
       const isBrowser = typeof window !== 'undefined';
-      const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 10000);
-
       const base = isBrowser ? '' : (() => { try { return getPublicOriginStrict().replace(/\/+$/, ''); } catch { return ''; } })();
-      // Prefer local API route first (dynamic, merged), then local static, then remote base as last resort
-      const candidates = isBrowser
-        ? ['/api/content/registry', '/registry.json']
-        : [
+
+      // Debug environment and base resolution on server
+      if (!isBrowser) {
+        console.debug('[ContentRegistry] env NEXT_PUBLIC_BASE_URL =', process.env.NEXT_PUBLIC_BASE_URL);
+        console.debug('[ContentRegistry] env VERCEL_URL =', process.env.VERCEL_URL);
+        console.debug('[ContentRegistry] env GC_CONTENT_MODE =', process.env.GC_CONTENT_MODE);
+        console.debug('[ContentRegistry] computed base =', base);
+      }
+
+      // In dev server-side, proactively include localhost candidates to avoid production base misresolution
+      const devCandidates: string[] = [];
+      if (!isBrowser && process.env.NODE_ENV !== 'production') {
+        const configuredBase = (process.env.NEXT_PUBLIC_BASE_URL || '').trim().replace(/\/+$/, '');
+        if (/localhost|127\.0\.0\.1/.test(configuredBase)) {
+          devCandidates.push(`${configuredBase}/api/content/registry`, `${configuredBase}/registry.json`);
+        } else {
+          // Fallback to common localhost origins
+          devCandidates.push(
+            'http://localhost:3010/api/content/registry',
+            'http://localhost:3010/registry.json',
+            'http://127.0.0.1:3010/api/content/registry',
+            'http://127.0.0.1:3010/registry.json',
+            // Include current dev server defaults
+            'http://localhost:3452/api/content/registry',
+            'http://localhost:3452/registry.json',
+            'http://127.0.0.1:3452/api/content/registry',
+            'http://127.0.0.1:3452/registry.json'
+          );
+        }
+      }
+
+      const candidates: string[] = isBrowser
+        ? [
+            // Prefer API route first, then fallback to static registry (browser relative URLs)
             '/api/content/registry',
             '/registry.json',
+          ]
+        : [
+            // Server-side absolute URLs only
+            ...devCandidates,
             ...(base ? [`${base}/api/content/registry`, `${base}/registry.json`] : []),
           ];
 
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 10000);
+
       for (const url of candidates) {
         try {
+          console.debug('[ContentRegistry] trying', url);
           const res = await fetch(url, { signal: controller.signal, cache: 'no-store' });
           if (res.ok) {
-            clearTimeout(timeoutId);
             const data: unknown = await res.json();
-            return data as ContentRegistry;
+            const modules = (data as ContentRegistry)?.modules;
+            console.debug('[ContentRegistry] candidate ok; modules length =', Array.isArray(modules) ? modules.length : 'n/a');
+            // Only accept responses that include non-empty modules
+            if (Array.isArray(modules) && modules.length > 0) {
+              clearTimeout(timeoutId);
+              return data as ContentRegistry;
+            }
+            // If modules are empty, try next candidate
           }
-        } catch {
+        } catch (err) {
+          console.warn('[ContentRegistry] candidate failed', url, err);
           // Try next candidate
         }
       }
+
       clearTimeout(timeoutId);
-      const minimal: ContentRegistry = {
-        version: '0.0.0',
-        lastUpdated: new Date().toISOString(),
-        tiers: {
-          foundational: { level: 1, title: 'Foundational', description: '', focusArea: 'Core', color: '#4B5563', learningObjectives: [] },
-          core: { level: 2, title: 'Core', description: '', focusArea: 'Core', color: '#2563EB', learningObjectives: [] },
-          specialized: { level: 3, title: 'Specialized', description: '', focusArea: 'Advanced', color: '#10B981', learningObjectives: [] },
-          quality: { level: 4, title: 'Quality', description: '', focusArea: 'Quality', color: '#F59E0B', learningObjectives: [] },
-        },
-        modules: [],
-        globalSettings: {
-          contentThresholds: { strictMode: false, developmentMode: true, minimumLessonsPerModule: 0, minimumQuestionsPerModule: 0, requiredSchemaCompliance: 0 },
-          routingRules: { enableLegacyRedirects: true, generate404Fallbacks: true, requireContentThresholds: false },
-          seoSettings: { generateSitemap: true, includeLastModified: false, excludeContentPending: false },
-        },
-      };
-      return minimal;
-    } catch {
-      const minimal: ContentRegistry = {
-        version: '0.0.0',
-        lastUpdated: new Date().toISOString(),
-        tiers: {
-          foundational: { level: 1, title: 'Foundational', description: '', focusArea: 'Core', color: '#4B5563', learningObjectives: [] },
-          core: { level: 2, title: 'Core', description: '', focusArea: 'Core', color: '#2563EB', learningObjectives: [] },
-          specialized: { level: 3, title: 'Specialized', description: '', focusArea: 'Advanced', color: '#10B981', learningObjectives: [] },
-          quality: { level: 4, title: 'Quality', description: '', focusArea: 'Quality', color: '#F59E0B', learningObjectives: [] },
-        },
-        modules: [],
-        globalSettings: {
-          contentThresholds: { strictMode: false, developmentMode: true, minimumLessonsPerModule: 0, minimumQuestionsPerModule: 0, requiredSchemaCompliance: 0 },
-          routingRules: { enableLegacyRedirects: true, generate404Fallbacks: true, requireContentThresholds: false },
-          seoSettings: { generateSitemap: true, includeLastModified: false, excludeContentPending: false },
-        },
-      };
-      return minimal;
+
+      // Server-side fallback temporarily disabled to avoid client bundle issues
+      // Fallback to minimal registry if all candidates fail or return empty modules
+      return buildMinimalRegistry();
+    } catch (err) {
+      console.error('Failed to load registry internally:', err);
+      return buildMinimalRegistry();
     }
   }
 
@@ -260,7 +278,12 @@ class ContentRegistryLoader {
    */
   async getModules(): Promise<Module[]> {
     const registry = await this.loadRegistry();
-    return registry.modules;
+    const mods = registry.modules;
+    if (Array.isArray(mods) && mods.length > 0) return mods;
+    // Fallback: some registries embed modules inside tiers
+    const tierValues = Object.values(registry.tiers || {});
+    const fromTiers: Module[] = tierValues.flatMap((t) => Array.isArray(t.modules) ? t.modules : []);
+    return fromTiers;
   }
 
   /**
@@ -282,6 +305,12 @@ class ContentRegistryLoader {
         foundModule = modules.find(m => m.slug === moduleSlug);
         console.log(`getModule(${slug}): found by moduleSlug:`, foundModule?.slug);
       }
+    }
+    
+    // If still not found, try to find by legacy slugs
+    if (!foundModule) {
+      foundModule = modules.find(m => m.legacySlugs?.includes(slug));
+      console.log(`getModule(${slug}): found by legacy slug:`, foundModule?.slug);
     }
     
     if (foundModule) {
@@ -398,18 +427,63 @@ class ContentRegistryLoader {
   async getModuleLessons(moduleSlug: string): Promise<Lesson[]> {
     try {
       const isBrowser = typeof window !== 'undefined';
-      const base = isBrowser ? '' : (() => { try { return getPublicOriginStrict().replace(/\/+$/, ''); } catch { return ''; } })();
-      const url = base ? `${base}/api/content/lessons/${moduleSlug}` : `/api/content/lessons/${moduleSlug}`;
+      if (isBrowser) {
+        const res = await fetch(`/api/content/lessons/${moduleSlug}`, { cache: 'no-store' });
+        if (!res.ok) return [];
+        const data: unknown = await res.json();
+        type PartialLesson = Lesson & Record<string, unknown>;
+        const lessonsArr: PartialLesson[] = Array.isArray(data)
+          ? (data as PartialLesson[])
+          : (Array.isArray((data as { lessons?: PartialLesson[] })?.lessons) ? ((data as { lessons?: PartialLesson[] }).lessons as PartialLesson[]) : []);
+        return lessonsArr.map((l, i) => {
+          const orderVal = typeof l.order === 'number' ? l.order : i + 1;
+          const codeExample = typeof l['codeExample'] === 'string' ? (l['codeExample'] as string) : undefined;
+          const codeExplanation = typeof l['codeExplanation'] === 'string' ? (l['codeExplanation'] as string) : undefined;
+          const code = l.code || ((codeExample || codeExplanation) ? { example: codeExample || '', explanation: codeExplanation || '' } : undefined);
+          return code ? { ...l, order: orderVal, code } : { ...l, order: orderVal };
+        });
+      }
 
-      const res = await fetch(url, { cache: 'no-store' });
-      if (!res.ok) return [];
+      // Server-side: Node fetch requires absolute URLs. Try local origins proactively in dev.
+      const candidates: string[] = [];
+      try {
+        const origin = getPublicOriginStrict().replace(/\/+$/, '');
+        candidates.push(`${origin}/api/content/lessons/${moduleSlug}`);
+      } catch {
+        // no configured public origin; rely on localhost candidates
+      }
+      // Common localhost dev ports
+      candidates.push(
+        'http://localhost:3010/api/content/lessons/' + moduleSlug,
+        'http://127.0.0.1:3010/api/content/lessons/' + moduleSlug,
+        'http://127.0.0.1:3000/api/content/lessons/' + moduleSlug,
+        'http://localhost:3452/api/content/lessons/' + moduleSlug,
+        'http://127.0.0.1:3452/api/content/lessons/' + moduleSlug
+      );
 
-      const data: unknown = await res.json();
-      const lessonsArr: Lesson[] = Array.isArray(data)
-        ? (data as Lesson[])
-        : (Array.isArray((data as { lessons?: Lesson[] })?.lessons) ? ((data as { lessons?: Lesson[] }).lessons as Lesson[]) : []);
+      for (const url of candidates) {
+        try {
+          const res = await fetch(url, { cache: 'no-store' });
+          if (!res.ok) continue;
+          const data: unknown = await res.json();
+          type PartialLessonSSR = Lesson & Record<string, unknown>;
+          const lessonsArr: PartialLessonSSR[] = Array.isArray(data)
+            ? (data as PartialLessonSSR[])
+            : (Array.isArray((data as { lessons?: PartialLessonSSR[] })?.lessons) ? ((data as { lessons?: PartialLessonSSR[] }).lessons as PartialLessonSSR[]) : []);
+          return lessonsArr.map((l, i) => {
+            const orderVal = typeof l.order === 'number' ? l.order : i + 1;
+            const codeExample = typeof l['codeExample'] === 'string' ? (l['codeExample'] as string) : undefined;
+            const codeExplanation = typeof l['codeExplanation'] === 'string' ? (l['codeExplanation'] as string) : undefined;
+            const code = l.code || ((codeExample || codeExplanation) ? { example: codeExample || '', explanation: codeExplanation || '' } : undefined);
+            return code ? { ...l, order: orderVal, code } : { ...l, order: orderVal };
+          });
+        } catch {
+          // try next candidate
+          continue;
+        }
+      }
 
-      return lessonsArr.map((l, i) => (typeof l.order === 'number' ? l : { ...l, order: i + 1 }));
+      return [];
     } catch (err) {
       console.error(`getModuleLessons(${moduleSlug}) failed:`, err);
       return [];
@@ -423,18 +497,45 @@ class ContentRegistryLoader {
     try {
       const shortSlug = await this.getShortSlugFromModuleSlug(moduleSlug) || moduleSlug;
       const isBrowser = typeof window !== 'undefined';
-      const base = isBrowser ? '' : (() => { try { return getPublicOriginStrict().replace(/\/+$/, ''); } catch { return ''; } })();
-      const url = base ? `${base}/api/content/quizzes/${shortSlug}` : `/api/content/quizzes/${shortSlug}`;
+      if (isBrowser) {
+        const res = await fetch(`/api/content/quizzes/${shortSlug}`, { cache: 'no-store' });
+        if (!res.ok) return null;
+        const data: unknown = await res.json();
+        if (!(data && typeof data === 'object')) return null;
+        const quiz = data as Quiz;
+        const normalizedQuestions = Array.isArray(quiz.questions) ? quiz.questions.map(q => normalizeQuestion(q)) : [];
+        return { ...quiz, questions: normalizedQuestions };
+      }
 
-      const res = await fetch(url, { cache: 'no-store' });
-      if (!res.ok) return null;
+      // Server-side: try absolute local origins first
+      const candidates: string[] = [];
+      try {
+        const origin = getPublicOriginStrict().replace(/\/+$/, '');
+        candidates.push(`${origin}/api/content/quizzes/${shortSlug}`);
+      } catch {
+        // ignore
+      }
+      candidates.push(
+        'http://localhost:3010/api/content/quizzes/' + shortSlug,
+        'http://127.0.0.1:3010/api/content/quizzes/' + shortSlug,
+        'http://127.0.0.1:3000/api/content/quizzes/' + shortSlug
+      );
 
-      const data: unknown = await res.json();
-      if (!(data && typeof data === 'object')) return null;
+      for (const url of candidates) {
+        try {
+          const res = await fetch(url, { cache: 'no-store' });
+          if (!res.ok) continue;
+          const data: unknown = await res.json();
+          if (!(data && typeof data === 'object')) continue;
+          const quiz = data as Quiz;
+          const normalizedQuestions = Array.isArray(quiz.questions) ? quiz.questions.map(q => normalizeQuestion(q)) : [];
+          return { ...quiz, questions: normalizedQuestions };
+        } catch {
+          continue;
+        }
+      }
 
-      const quiz = data as Quiz;
-      const normalizedQuestions = Array.isArray(quiz.questions) ? quiz.questions.map(q => normalizeQuestion(q)) : [];
-      return { ...quiz, questions: normalizedQuestions };
+      return null;
     } catch (error: unknown) {
       console.error(`Failed to load quiz for ${moduleSlug}:`, error);
       return null;
@@ -500,7 +601,19 @@ class ContentRegistryLoader {
       'security': 'security-fundamentals'
     };
     
-    return shortSlugToModuleSlug[shortSlug] || null;
+    // First check the mapping
+    const mappedSlug = shortSlugToModuleSlug[shortSlug];
+    if (mappedSlug) {
+      return mappedSlug;
+    }
+    
+    // If not in mapping, check if it's already a full module slug
+    const modules = await this.getModules();
+    if (modules.some(m => m.slug === shortSlug)) {
+      return shortSlug;
+    }
+    
+    return null;
   }
 
   /**
@@ -701,3 +814,36 @@ export async function getModuleSlugFromShortSlug(shortSlug: string): Promise<str
 
 // Export types
 export type { Module, Tier, ContentRegistry, Lesson, ProgrammingQuestion, Quiz };
+
+function buildMinimalRegistry(): ContentRegistry {
+  return {
+    version: '0.0.0',
+    lastUpdated: new Date().toISOString(),
+    tiers: {
+      foundational: { level: 1, title: 'Foundational', description: '', focusArea: 'Core', color: '#4B5563', learningObjectives: [] },
+      core: { level: 2, title: 'Core', description: '', focusArea: 'Core', color: '#2563EB', learningObjectives: [] },
+      specialized: { level: 3, title: 'Specialized', description: '', focusArea: 'Advanced', color: '#10B981', learningObjectives: [] },
+      quality: { level: 4, title: 'Quality', description: '', focusArea: 'Quality', color: '#F59E0B', learningObjectives: [] },
+    },
+    modules: [],
+    globalSettings: {
+      contentThresholds: {
+        strictMode: false,
+        developmentMode: true,
+        minimumLessonsPerModule: 0,
+        minimumQuestionsPerModule: 0,
+        requiredSchemaCompliance: 0,
+      },
+      routingRules: {
+        enableLegacyRedirects: true,
+        generate404Fallbacks: true,
+        requireContentThresholds: false,
+      },
+      seoSettings: {
+        generateSitemap: true,
+        includeLastModified: false,
+        excludeContentPending: false,
+      },
+    },
+  };
+}

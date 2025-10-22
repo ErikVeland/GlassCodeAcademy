@@ -11,6 +11,7 @@ import { useNextUnlockedLesson } from '@/hooks/useNextUnlockedLesson';
 import { contentRegistry } from '@/lib/contentRegistry';
 import type { ProgrammingQuestion, Module } from '@/lib/contentRegistry';
 import QuizResult from '@/components/QuizResult';
+import { getModuleTheme } from '@/lib/moduleThemes';
 
 type CategoryScore = { category: string; correct: number; total: number };
 
@@ -39,6 +40,7 @@ export default function QuizResultsPage({ params }: { params: Promise<{ moduleSl
   const [nextLessonTitle, setNextLessonTitle] = useState<string | null>(null);
   const { nextLessonHref } = useNextUnlockedLesson();
   const [moduleTitle, setModuleTitle] = useState<string | null>(null);
+  const [theme, setTheme] = useState(getModuleTheme(''));
 
   // Resolve the params promise
   useEffect(() => {
@@ -46,6 +48,7 @@ export default function QuizResultsPage({ params }: { params: Promise<{ moduleSl
       try {
         const { moduleSlug } = await params;
         setResolvedParams({ moduleSlug });
+        setTheme(getModuleTheme(moduleSlug));
         // Load quiz session from sessionStorage
         const sessionKey = `quizSession:${moduleSlug}`;
         const raw = typeof window !== 'undefined' ? sessionStorage.getItem(sessionKey) : null;
@@ -102,6 +105,7 @@ export default function QuizResultsPage({ params }: { params: Promise<{ moduleSl
         if (passed) {
           try {
             const mod = await contentRegistry.getModule(moduleSlug);
+            setTheme(getModuleTheme(mod?.slug || moduleSlug));
             const moduleName = mod?.title ?? moduleSlug.replace(/-/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
             // Try to compute accurate lessons count from registry
             let lessonsCount = 0;
@@ -271,7 +275,7 @@ export default function QuizResultsPage({ params }: { params: Promise<{ moduleSl
           <div className="flex justify-start">
             <Link
               href={`/modules/${resolvedParams?.moduleSlug || ''}/quiz`}
-              className="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+              className={`inline-flex items-center px-4 py-2 rounded-lg transition-colors ${theme.button}`}
             >
               ← Back to Quiz
             </Link>
@@ -374,7 +378,7 @@ export default function QuizResultsPage({ params }: { params: Promise<{ moduleSl
               </p>
               <button
                 onClick={handleReviewLessons}
-                className="w-full px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                className={`w-full px-4 py-2 rounded-lg transition-colors ${theme.button}`}
               >
                 Review Lessons
               </button>
@@ -392,7 +396,7 @@ export default function QuizResultsPage({ params }: { params: Promise<{ moduleSl
                   <div className="flex justify-end">
                     <Link
                       href={nextLessonHref}
-                      className="inline-flex items-center px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
+                      className={`inline-flex items-center px-4 py-2 rounded-lg transition-colors ${theme.button}`}
                     >
                       {nextLessonTitle ? `Start ${nextLessonTitle}` : 'Start Next Lesson'}
                     </Link>
@@ -401,7 +405,7 @@ export default function QuizResultsPage({ params }: { params: Promise<{ moduleSl
                   <div className="flex justify-end">
                     <Link
                       href={nextModuleHref}
-                      className="inline-flex items-center px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
+                      className={`inline-flex items-center px-4 py-2 rounded-lg transition-colors ${theme.button}`}
                     >
                       {nextModuleTitle ? `Start ${nextModuleTitle}` : 'Start Next Module'}
                     </Link>
@@ -410,7 +414,7 @@ export default function QuizResultsPage({ params }: { params: Promise<{ moduleSl
                   <div className="flex justify-start">
                     <Link
                       href={`/modules/${resolvedParams?.moduleSlug ?? ''}`}
-                      className="inline-flex items-center px-4 py-2 text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors"
+                      className={`inline-flex items-center px-4 py-2 ${theme.link}`}
                     >
                       ← Back to Module Overview
                     </Link>
@@ -426,7 +430,7 @@ export default function QuizResultsPage({ params }: { params: Promise<{ moduleSl
       <footer className="flex justify-start">
         <Link
           href={`/modules/${resolvedParams?.moduleSlug ?? ''}`}
-          className="inline-flex items-center px-4 py-2 text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors"
+          className={`inline-flex items-center px-4 py-2 ${theme.link}`}
         >
           ← Back to Module Overview
         </Link>

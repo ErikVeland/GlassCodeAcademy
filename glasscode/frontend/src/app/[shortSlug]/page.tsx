@@ -7,8 +7,6 @@ import { ui, classes } from '@/lib/ui';
 import { getModuleTheme } from '@/lib/moduleThemes';
 import RetryButton from '@/components/RetryButton';
 
-
-
 export const dynamic = 'force-dynamic';
 
 export async function generateStaticParams(): Promise<{ shortSlug: string }[]> {
@@ -56,19 +54,25 @@ export default async function ModulePage({ params }: Props) {
     currentModule = await contentRegistry.getModule(shortSlug);
     
     if (!currentModule) {
+      console.log(`Module not found for shortSlug: ${shortSlug}`);
       notFound();
     }
 
+    console.log(`Loading content for module: ${currentModule.slug}`);
+    
     const [tierResolved, thresholdsResolved, lessonsResolved, quizResolved] = await Promise.all([
       contentRegistry.getTier(currentModule.tier),
       contentRegistry.checkModuleThresholds(currentModule.slug),
       contentRegistry.getModuleLessons(currentModule.slug),
       contentRegistry.getModuleQuiz(currentModule.slug),
     ]);
+    
     tier = tierResolved;
     thresholds = thresholdsResolved as typeof thresholds;
     lessons = lessonsResolved;
     quiz = quizResolved;
+    
+    console.log(`Loaded content for module ${currentModule.slug}: ${lessons.length} lessons, ${quiz?.questions?.length || 0} quiz questions`);
   } catch (error) {
     console.error('Error loading module data:', error);
     // Return a more graceful error page

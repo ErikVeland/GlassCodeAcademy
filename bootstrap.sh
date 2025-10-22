@@ -98,6 +98,7 @@ FAST_MODE=0
 SKIP_BACKEND_HEALTH=0
 SKIP_LINT=0
 SKIP_TYPECHECK=0
+SKIP_CONTENT_VERIFICATION=0
 VALIDATE_JSON_CONTENT=0
 while [[ $# -gt 0 ]]; do
     case "$1" in
@@ -121,6 +122,10 @@ while [[ $# -gt 0 ]]; do
             SKIP_TYPECHECK=1
             shift
             ;;
+        --skip-content-verification)
+            SKIP_CONTENT_VERIFICATION=1
+            shift
+            ;;
         --validate-json-content)
             VALIDATE_JSON_CONTENT=1
             shift
@@ -140,8 +145,8 @@ while [[ $# -gt 0 ]]; do
             ;;
     esac
 done
-export FRONTEND_ONLY FRONTEND_PORT FAST_MODE SKIP_BACKEND_HEALTH SKIP_LINT SKIP_TYPECHECK VALIDATE_JSON_CONTENT
-log "⚙️  Mode: FRONTEND_ONLY=$FRONTEND_ONLY, FAST_MODE=$FAST_MODE, FRONTEND_PORT=$FRONTEND_PORT, VALIDATE_JSON_CONTENT=$VALIDATE_JSON_CONTENT"
+export FRONTEND_ONLY FRONTEND_PORT FAST_MODE SKIP_BACKEND_HEALTH SKIP_LINT SKIP_TYPECHECK SKIP_CONTENT_VERIFICATION VALIDATE_JSON_CONTENT
+log "⚙️  Mode: FRONTEND_ONLY=$FRONTEND_ONLY, FAST_MODE=$FAST_MODE, FRONTEND_PORT=$FRONTEND_PORT, SKIP_CONTENT_VERIFICATION=$SKIP_CONTENT_VERIFICATION, VALIDATE_JSON_CONTENT=$VALIDATE_JSON_CONTENT"
 
 # Database configuration defaults (overridable via .env)
 DB_HOST="${DB_HOST:-localhost}"
@@ -714,7 +719,57 @@ if [[ "$BACKEND_HEALTHY" != "true" && $ATTEMPT -gt $MAX_ATTEMPTS ]]; then
     if [ "${FAST_MODE:-0}" -eq 1 ] || [ "${SKIP_BACKEND_HEALTH:-0}" -eq 1 ]; then
         log "⚠️  Continuing despite backend DB readiness precondition due to fast/skip mode"
     else
+        # Run enhanced content verification script to diagnose issues
+        log "🔍 Running enhanced content verification..."
+        if [ -f "$APP_DIR/glasscode/backend/Scripts/ContentVerificationReport.cs" ]; then
+            cd "$APP_DIR/glasscode/backend"
+            timeout 300 sudo -u "$DEPLOY_USER" dotnet run --project Scripts/ContentVerificationReport.cs || true
+            cd - >/dev/null
+        fi
         exit 1
+    fi
+fi
+
+# Enhanced content verification - only run if needed
+if [ "$FRONTEND_ONLY" -eq 0 ] && [ "${SKIP_CONTENT_VERIFICATION:-0}" -ne 1 ]; then
+    log "🔍 Running enhanced content verification..."
+    
+    # Check if we have the verification scripts
+    if [ -f "$APP_DIR/glasscode/backend/Scripts/ContentVerificationReport.cs" ]; then
+        # Run the content verification report
+        cd "$APP_DIR/glasscode/backend"
+        
+        # Check if dotnet is available
+        if command -v dotnet >/dev/null 2>&1; then
+            log "📊 Generating content verification report..."
+            VERIFICATION_OUTPUT=$(timeout 120 sudo -u "$DEPLOY_USER" dotnet run --project Scripts/ContentVerificationReport.cs 2>&1 || true)
+            echo "$VERIFICATION_OUTPUT"
+            
+            # Check if there are any issues reported
+            if echo "$VERIFICATION_OUTPUT" | grep -q "❌"; then
+                log "⚠️  Content verification found issues"
+                
+                # Only attempt to fix if not in fast mode
+                if [ "${FAST_MODE:-0}" -ne 1 ]; then
+                    log "🔧 Attempting to fix content issues..."
+                    FIX_OUTPUT=$(timeout 300 sudo -u "$DEPLOY_USER" dotnet run --project Scripts/FixContentSeeding.cs 2>&1 || true)
+                    echo "$FIX_OUTPUT"
+                    
+                    # Run verification again to confirm fixes
+                    log "🔍 Re-running verification after fixes..."
+                    VERIFICATION_OUTPUT=$(timeout 120 sudo -u "$DEPLOY_USER" dotnet run --project Scripts/ContentVerificationReport.cs 2>&1 || true)
+                    echo "$VERIFICATION_OUTPUT"
+                fi
+            else
+                log "✅ Content verification passed"
+            fi
+        else
+            log "⚠️  dotnet command not found, skipping enhanced verification"
+        fi
+        
+        cd - >/dev/null
+    else
+        log "ℹ️  Content verification scripts not found, skipping enhanced verification"
     fi
 fi
 fi
@@ -734,15 +789,36 @@ FRONTEND_BUILD_REQUIRED=false
 # In fast mode, default to skipping lint/typecheck unless explicitly disabled
 SKIP_LINT=${SKIP_LINT:-$FAST_MODE}
 SKIP_TYPECHECK=${SKIP_TYPECHECK:-$FAST_MODE}
+
+# Detect presence of dev binaries to avoid npx fetching/hanging in production
+HAS_NEXT_BIN=0
+HAS_TSC_BIN=0
+[ -x "node_modules/.bin/next" ] && HAS_NEXT_BIN=1
+[ -x "node_modules/.bin/tsc" ] && HAS_TSC_BIN=1
+
 if [ ! -f ".next/BUILD_ID" ] || [ ! -f ".next/standalone/server.js" ] || [ ! -d ".next/static" ]; then
     log "⚠️  Missing build artifacts, full frontend build required"
     FRONTEND_BUILD_REQUIRED=true
-elif [ "${SKIP_LINT}" -ne 1 ] && ! sudo -u "$DEPLOY_USER" npx next lint --quiet >/dev/null 2>&1; then
-    log "⚠️  Linting errors detected, full frontend build required"
-    FRONTEND_BUILD_REQUIRED=true
-elif [ "${SKIP_TYPECHECK}" -ne 1 ] && ! sudo -u "$DEPLOY_USER" npx tsc --noEmit --skipLibCheck >/dev/null 2>&1; then
-    log "⚠️  TypeScript errors detected, full frontend build required"
-    FRONTEND_BUILD_REQUIRED=true
+elif [ "${SKIP_LINT}" -ne 1 ]; then
+    if [ "$HAS_NEXT_BIN" -eq 1 ]; then
+        # Protect against indefinite hangs; suppress output to keep logs clean
+        if ! sudo -u "$DEPLOY_USER" timeout 300 node_modules/.bin/next lint --quiet >/dev/null 2>&1; then
+            log "⚠️  Linting errors detected or lint timed out, full frontend build required"
+            FRONTEND_BUILD_REQUIRED=true
+        fi
+    else
+        log "ℹ️  Skipping lint: devDependencies not installed (next/eslint missing)"
+    fi
+elif [ "${SKIP_TYPECHECK}" -ne 1 ]; then
+    if [ "$HAS_TSC_BIN" -eq 1 ]; then
+        # Protect against indefinite hangs; suppress output to keep logs clean
+        if ! sudo -u "$DEPLOY_USER" timeout 300 node_modules/.bin/tsc --noEmit --skipLibCheck >/dev/null 2>&1; then
+            log "⚠️  TypeScript errors detected or typecheck timed out, full frontend build required"
+            FRONTEND_BUILD_REQUIRED=true
+        fi
+    else
+        log "ℹ️  Skipping typecheck: devDependencies not installed (typescript missing)"
+    fi
 else
     if [ "${SKIP_LINT}" -eq 1 ] || [ "${SKIP_TYPECHECK}" -eq 1 ]; then
         log "✅ Quick validation passed (lint/typecheck skipped in fast/skip mode)"

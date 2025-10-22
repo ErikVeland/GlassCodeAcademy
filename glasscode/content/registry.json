@@ -1,0 +1,56 @@
+{
+  "version": "1.0.0",
+  "lastUpdated": "2025-10-22T00:00:00.000Z",
+  "tiers": {
+    "foundational": {
+      "title": "Foundational",
+      "level": 1,
+      "description": "Build core coding habits and web basics.",
+      "color": "#8B5CF6",
+      "focusArea": "Programming basics, web fundamentals, version control",
+      "learningObjectives": [
+        "Learn core programming constructs and problem solving.",
+        "Understand HTML/CSS/JS and web development basics.",
+        "Use Git and GitHub for version control and collaboration."
+      ]
+    },
+    "core": {
+      "title": "Core",
+      "level": 2,
+      "description": "Master essential technologies used across roles.",
+      "color": "#06B6D4",
+      "focusArea": "Essential technologies (.NET, React, Database, Backend frameworks)",
+      "learningObjectives": [
+        "Build full-stack apps using React and backend APIs.",
+        "Model and query data with relational and NoSQL databases.",
+        "Develop production-grade services with .NET or Node frameworks."
+      ]
+    },
+    "specialized": {
+      "title": "Specialized",
+      "level": 3,
+      "description": "Go deep on advanced frameworks and delivery.",
+      "color": "#F59E0B",
+      "focusArea": "Advanced frameworks (Next.js, GraphQL, DevOps)",
+      "learningObjectives": [
+        "Ship features with Next.js and modern routing.",
+        "Design robust APIs using GraphQL or REST best practices.",
+        "Automate CI/CD and containerize with Docker basics."
+      ]
+    },
+    "quality": {
+      "title": "Quality",
+      "level": 4,
+      "description": "Elevate testing, performance, and security.",
+      "color": "#10B981",
+      "focusArea": "Testing, performance, security",
+      "learningObjectives": [
+        "Write unit, integration, and E2E tests confidently.",
+        "Profile and optimize performance for real-world workloads.",
+        "Apply security best practices to protect users and data."
+      ]
+    }
+  },
+  "modules": [],
+  "globalSettings": {}
+}

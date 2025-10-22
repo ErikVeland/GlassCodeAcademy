@@ -12,10 +12,11 @@ import ApolloWrapper from '../components/ApolloWrapper';
 import AuthProvider from '../components/AuthProvider';
 import ProfileProvider from '../components/ProfileProvider';
 import AdminQueryHandler from '../components/AdminQueryHandler';
+import QuizPrefetchManager from '../components/QuizPrefetchManager';
+import QuizPrefetchTest from '../components/QuizPrefetchTest';
 import { Suspense } from 'react';
 import { EXTERNAL_LINKS } from '@/lib/appConfig';
 import Script from 'next/script';
-// Removed next/font usage to revert to system fonts
 
 // Apollo error/dev messages for development
 if (typeof window !== 'undefined' && process.env.NODE_ENV !== 'production') {
@@ -26,11 +27,17 @@ if (typeof window !== 'undefined' && process.env.NODE_ENV !== 'production') {
   });
 }
 
-// Fonts are loaded via next/font to avoid hardcoded external URLs.
-
 export const metadata: Metadata = {
   title: "GlassCode Academy - Learn .NET, Next.js, GraphQL, and Laravel",
   description: "Master .NET, Next.js, GraphQL, and Laravel with step-by-step lessons and interview preparation",
+  icons: {
+    icon: [
+      { url: '/favicon.svg' },
+      { url: '/favicon-16x16.svg', sizes: '16x16' },
+      { url: '/favicon-32x32.svg', sizes: '32x32' },
+    ],
+    apple: '/apple-touch-icon.svg',
+  },
 };
 
 export default function RootLayout({
@@ -41,6 +48,12 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
+        <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+        <link rel="icon" href="/favicon-16x16.svg" sizes="16x16" type="image/svg+xml" />
+        <link rel="icon" href="/favicon-32x32.svg" sizes="32x32" type="image/svg+xml" />
+        <link rel="apple-touch-icon" href="/apple-touch-icon.svg" />
+        <link rel="manifest" href="/site.webmanifest" />
+        <meta name="theme-color" content="#4F46E5" />
         <Script id="theme-preflight" strategy="beforeInteractive">
           {`
             try {
@@ -72,6 +85,8 @@ export default function RootLayout({
                 <Suspense fallback={null}>
                   <AdminQueryHandler />
                 </Suspense>
+                <QuizPrefetchManager />
+                <QuizPrefetchTest />
                 {/* Skip to main content link for accessibility */}
                 <a
                   href="#main-content"
