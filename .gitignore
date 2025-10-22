@@ -186,7 +186,7 @@ coverage/
 glasscode/backend.Tests/TestResults/
 
 # Package managers
-package-lock.json
+// package-lock.json - commented out as it's needed for builds
 yarn.lock
 pnpm-lock.yaml
 
