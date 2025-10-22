@@ -264,13 +264,17 @@ cleanup_ports() {
     for port in "${ports[@]}"; do
         [ -z "$port" ] && continue
         log "🧹 Ensuring port $port is free..."
-        # Collect PIDs using ss
-        local pids
-        pids=$(ss -tulpn 2>/dev/null | sed -n "s/.*:$port.*pid=\([0-9]\+\).*/\1/p" | sort -u | tr '\n' ' ')
+        # Collect PIDs using ss (non-fatal if ss missing)
+        local pids=""
+        if command_exists ss; then
+            pids=$(ss -tulpn 2>/dev/null | sed -n "s/.*:$port.*pid=\([0-9]\+\).*/\1/p" | sort -u | tr '\n' ' ' || true)
+        else
+            log "ℹ️  'ss' not found; falling back to lsof only"
+        fi
         # Fallback to lsof if available
         if command_exists lsof; then
-            local lsof_pids
-            lsof_pids=$(lsof -t -iTCP:"$port" -sTCP:LISTEN 2>/dev/null | tr '\n' ' ')
+            local lsof_pids=""
+            lsof_pids=$(lsof -t -iTCP:"$port" -sTCP:LISTEN 2>/dev/null | tr '\n' ' ' || true)
             pids="$(echo "$pids $lsof_pids" | tr ' ' '\n' | sort -u | tr '\n' ' ')"
         fi
         if [ -n "$pids" ]; then
@@ -278,15 +282,17 @@ cleanup_ports() {
             kill -TERM $pids 2>/dev/null || true
             sleep 2
             # Check again and force kill if necessary
-            local remaining
-            remaining=$(ss -tulpn 2>/dev/null | sed -n "s/.*:$port.*pid=\([0-9]\+\).*/\1/p" | sort -u | tr '\n' ' ')
+            local remaining=""
+            if command_exists ss; then
+                remaining=$(ss -tulpn 2>/dev/null | sed -n "s/.*:$port.*pid=\([0-9]\+\).*/\1/p" | sort -u | tr '\n' ' ' || true)
+            fi
             if [ -n "$remaining" ]; then
                 log "🧨 Force killing remaining PIDs on port $port (PIDs: $remaining)"
                 kill -KILL $remaining 2>/dev/null || true
                 sleep 1
             fi
         fi
-        if ss -tulpn 2>/dev/null | grep -q ":$port"; then
+        if command_exists ss && ss -tulpn 2>/dev/null | grep -q ":$port"; then
             log "⚠️  Port $port still appears busy after cleanup; continuing."
         else
             log "✅ Port $port appears free"
@@ -658,13 +664,18 @@ if [ "$FRONTEND_ONLY" -eq 0 ]; then
     log "⚙️  Creating backend systemd service (real backend)..."
     log "🔌 Port 8080 preflight: checking for conflicts..."
     # Avoid grep in pipeline under pipefail; parse PIDs with sed directly
-    CONFLICT_PIDS=$(ss -tulpn 2>/dev/null | sed -n 's/.*:8080.*pid=\([0-9]\+\).*/\1/p' | sort -u)
+    CONFLICT_PIDS=""
+    if command_exists ss; then
+        CONFLICT_PIDS=$(ss -tulpn 2>/dev/null | sed -n 's/.*:8080.*pid=\([0-9]\+\).*/\1/p' | sort -u || true)
+    else
+        log "ℹ️  'ss' not found; skipping port conflict check via ss"
+    fi
     if [ -n "$CONFLICT_PIDS" ]; then
         log "🛑 Killing processes using port 8080 (PIDs: $CONFLICT_PIDS)"
         kill -9 $CONFLICT_PIDS 2>/dev/null || true
         sleep 2
     fi
-    ss -tulpn 2>/dev/null | grep ':8080' || true
+    command_exists ss && ss -tulpn 2>/dev/null | grep ':8080' || true
     cat >/etc/systemd/system/${APP_NAME}-dotnet.service <<EOF
 [Unit]
 Description=$APP_NAME .NET Backend
