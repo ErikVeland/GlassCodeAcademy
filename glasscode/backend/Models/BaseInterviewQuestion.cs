@@ -1,3 +1,5 @@
+using System.Text.Json.Serialization;
+
 namespace backend.Models
 {
     public class BaseInterviewQuestion
@@ -17,7 +19,9 @@ namespace backend.Models
         public string[]? Sources { get; set; }
         // New fields to support fixed choice order and accepted free-text answers
         public bool? FixedChoiceOrder { get; set; }
+        [JsonConverter(typeof(StringArrayFlexibleConverter))]
         public string[]? ChoiceLabels { get; set; }
+        [JsonConverter(typeof(StringArrayFlexibleConverter))]
         public string[]? AcceptedAnswers { get; set; }
     }
 }
