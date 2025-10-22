@@ -61,6 +61,14 @@ export function DarkModeProvider({ children }: { children: React.ReactNode }) {
       // ignore storage errors
     }
 
+    // Sync SSR cookie with resolved theme
+    try {
+      const resolved = theme === 'system' ? (activeDark ? 'dark' : 'light') : theme;
+      document.cookie = `gc-theme=${resolved}; path=/; max-age=31536000; SameSite=Lax`;
+    } catch {
+      // ignore cookie errors
+    }
+
     // Smooth fade on explicit theme changes (skip first paint)
     if (firstApplyRef.current) {
       firstApplyRef.current = false;

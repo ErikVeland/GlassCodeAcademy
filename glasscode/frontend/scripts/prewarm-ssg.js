@@ -109,9 +109,7 @@ async function run() {
   for (const slug of moduleSlugs) {
     paths.push(`/modules/${slug}`);
     paths.push(`/modules/${slug}/lessons`);
-    for (let i = 1; i <= 3; i++) {
-      paths.push(`/modules/${slug}/lessons/${i}`);
-    }
+    // Skip modules lesson detail pages; prefer short-slug routes where available
     if (slug === 'programming-fundamentals') {
       paths.push('/programming');
       paths.push('/programming/lessons');

@@ -1,4 +1,3 @@
-import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import { contentRegistry, getLessonGroupForLesson, getNextLessonGroup } from '@/lib/contentRegistry';
 import { Metadata } from 'next';
@@ -42,8 +41,10 @@ export async function generateStaticParams() {
           const lessons = await contentRegistry.getModuleLessons(mod.slug);
           if (lessons) {
             const lessonsToGenerate = Math.min(3, lessons.length);
+            // Use short slug for friendly routes where available
+            const shortSlug = (await contentRegistry.getShortSlugFromModuleSlug(mod.slug)) || mod.slug;
             for (let i = 0; i < lessonsToGenerate; i++) {
-              params.push({ shortSlug: mod.slug, lessonOrder: (i + 1).toString() });
+              params.push({ shortSlug, lessonOrder: (i + 1).toString() });
             }
           }
         } catch (lessonError) {
@@ -61,11 +62,13 @@ export async function generateStaticParams() {
 
 export async function generateMetadata({ params }: LessonPageProps): Promise<Metadata> {
   const { shortSlug, lessonOrder } = await params;
-  const currentModule = await contentRegistry.getModule(shortSlug);
+  const currentModule = await contentRegistry.getModule(shortSlug) 
+    || await contentRegistry.getModule(await contentRegistry.getModuleSlugFromShortSlug(shortSlug) || shortSlug);
   
+  const fallbackTitle = 'Lesson';
   if (!currentModule) {
     return {
-      title: 'Lesson Not Found',
+      title: `${fallbackTitle} - ${shortSlug}`,
     };
   }
   
@@ -73,9 +76,9 @@ export async function generateMetadata({ params }: LessonPageProps): Promise<Met
   const lessonIndex = parseInt(lessonOrder) - 1;
   const lesson = lessons?.[lessonIndex];
   
-  if (!currentModule || !lesson) {
+  if (!lesson) {
     return {
-      title: 'Lesson Not Found',
+      title: `${fallbackTitle} - ${currentModule.title}`,
     };
   }
 
@@ -92,27 +95,58 @@ export const dynamicParams = true; // Allow dynamic params not in generateStatic
 
 export default async function LessonPage({ params }: LessonPageProps) {
   const { shortSlug, lessonOrder } = await params;
-  const currentModule = await contentRegistry.getModule(shortSlug);
+  const mappedSlug = await contentRegistry.getModuleSlugFromShortSlug(shortSlug) || shortSlug;
+  let currentModule = await contentRegistry.getModule(shortSlug) || await contentRegistry.getModule(mappedSlug);
   
+  // Minimal fallback module when registry/API is unavailable
   if (!currentModule) {
-    notFound();
+    currentModule = {
+      slug: mappedSlug,
+      title: shortSlug.replace(/-/g, ' ').replace(/\b\w/g, c => c.toUpperCase()),
+      description: '',
+      tier: '',
+      track: '',
+      order: 1,
+      icon: '',
+      difficulty: 'beginner',
+      estimatedHours: 0,
+      category: '',
+      technologies: [],
+      prerequisites: [],
+      thresholds: { requiredLessons: 0, requiredQuestions: 0 },
+      legacySlugs: [],
+      status: 'active',
+      routes: { overview: `/${shortSlug}`, lessons: `/${shortSlug}/lessons`, quiz: `/${shortSlug}/quiz` },
+      metadata: {}
+    };
   }
 
-  const lessons = await contentRegistry.getModuleLessons(currentModule.slug);
+  let lessons = await contentRegistry.getModuleLessons(currentModule.slug);
+  if ((!lessons || lessons.length === 0) && mappedSlug === 'programming-fundamentals') {
+    lessons = await contentRegistry.getProgrammingLessons();
+  }
+
   const lessonIndex = parseInt(lessonOrder) - 1;
-  const lesson = lessons?.[lessonIndex];
+  let lesson = lessons?.[lessonIndex];
 
-  if (!lesson || !lessons) {
-    notFound();
+  // Fallback placeholder lesson when specific lesson not available
+  if (!lesson) {
+    lesson = {
+      order: lessonIndex + 1,
+      title: 'Lesson temporarily unavailable',
+      intro: 'This lesson content is still loading. Please try again shortly.',
+      objectives: [],
+      tags: ['fallback']
+    };
   }
 
-  // Get lesson groups and current group info
-  const currentGroupInfo = getLessonGroupForLesson(currentModule.slug, lessons, lessonIndex + 1);
-  const nextGroup = getNextLessonGroup(currentModule.slug, lessons, lessonIndex + 1);
+  // Get lesson groups and current group info (may be null on fallback)
+  const currentGroupInfo = getLessonGroupForLesson(currentModule.slug, lessons || [], lessonIndex + 1);
+  const nextGroup = getNextLessonGroup(currentModule.slug, lessons || [], lessonIndex + 1);
   
   // Determine if this is the last lesson in its group
-  const isLastInGroup = currentGroupInfo && currentGroupInfo.group.lessons[currentGroupInfo.group.lessons.length - 1] === lesson;
-  const isFirstInGroup = currentGroupInfo && currentGroupInfo.group.lessons[0] === lesson;
+  const isLastInGroup = !!(currentGroupInfo && currentGroupInfo.group.lessons[currentGroupInfo.group.lessons.length - 1] === lesson);
+  const isFirstInGroup = !!(currentGroupInfo && currentGroupInfo.group.lessons[0] === lesson);
 
   return (
     <>

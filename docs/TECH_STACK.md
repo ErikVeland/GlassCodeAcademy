@@ -2,6 +2,8 @@
 
 This document outlines the technology stack used in the GlassCode Academy application and how the different components integrate with each other.
 
+For a complete overview of the current architecture, see [CURRENT_ARCHITECTURE.md](CURRENT_ARCHITECTURE.md).
+
 ## Architecture Overview
 
 ```mermaid
@@ -16,45 +18,40 @@ graph TB
     subgraph Backend
         F[ASP.NET Core 8.0]
         G[HotChocolate 13.x]
-        H[Laravel 11.0+]
-        I[Node.js Backends]
-        J[JSON Data Files]
+        H[PostgreSQL Database]
+        I[Redis Cache]
     end
 
     subgraph Infrastructure
-        K[NGINX Gateway]
-        L[Module Architecture]
-        M[Systemd Services]
+        J[NGINX Gateway]
+        K[Systemd Services]
     end
 
     E -- GraphQL Queries/Mutations --> G
     G --> F
-    F --> J
-    H --> J
-    I --> J
-    K --> A
-    K --> F
-    K --> H
+    F --> H
+    F --> I
+    J --> A
+    J --> F
 
     subgraph Development
-        N[Visual Studio Code]
-        O[Visual Studio 2022]
-        P[Git]
-        Q[.NET 8.0 SDK]
-        R[Node.js 18+]
+        L[Visual Studio Code]
+        M[Visual Studio 2022]
+        N[Git]
+        O[.NET 8.0 SDK]
+        P[Node.js 18+]
     end
 
     subgraph Deployment
-        S[Systemd Services]
-        T[NGINX Configuration]
-        U[SSL/TLS Setup]
+        Q[Systemd Services]
+        R[NGINX Configuration]
+        S[SSL/TLS Setup]
     end
 
-    A --> S
-    F --> S
-    H --> S
-    K --> T
-    T --> U
+    A --> Q
+    F --> Q
+    J --> R
+    R --> S
 ```
 
 ## Technology Components

@@ -19,6 +19,7 @@ import { EXTERNAL_LINKS } from '@/lib/appConfig';
 import Script from 'next/script';
 import ApolloDevMessages from '../components/ApolloDevMessages';
 import ConsoleBanner from '../components/ConsoleBanner';
+import { headers } from 'next/headers';
 
 export const metadata: Metadata = {
   title: "GlassCode Academy - Learn .NET, Next.js, GraphQL, and Laravel",
@@ -34,24 +35,33 @@ export const metadata: Metadata = {
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
+  const cookieHeader = headers().get('cookie') || '';
+  const cookieThemeMatch = cookieHeader.match(/(?:^|; )gc-theme=([^;]+)/);
+  const cookieTheme = cookieThemeMatch ? decodeURIComponent(cookieThemeMatch[1]) : undefined;
+  const initialTheme = cookieTheme === 'dark' || cookieTheme === 'light' ? cookieTheme : 'light';
   return (
-    <html lang="en">
+    <html lang="en" className={initialTheme} data-theme={initialTheme}>
       <head>
         {/* Preconnect to external resources */}
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         {/* Inline script to avoid initial flash of wrong theme */}
-        <Script id="apply-theme" strategy="beforeInteractive">
+        <Script id="apply-theme" strategy="afterInteractive">
           {`
             try {
-              const stored = localStorage.getItem('darkModeSettings');
-              const settings = stored ? JSON.parse(stored) : { theme: 'system' };
-              const theme = settings.theme || 'system';
-              const isDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+              const match = document.cookie.match(/(?:^|; )gc-theme=([^;]+)/);
+              const cookieTheme = match ? decodeURIComponent(match[1]) : '';
+              const storedTheme = localStorage.getItem('theme');
+              const legacy = localStorage.getItem('darkMode');
+              let theme = storedTheme || (legacy === 'true' ? 'dark' : legacy === 'false' ? 'light' : 'system');
+              const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
               const html = document.documentElement;
+              const finalTheme = (cookieTheme === 'dark' || cookieTheme === 'light')
+                ? cookieTheme
+                : (theme === 'system' ? (prefersDark ? 'dark' : 'light') : theme);
               html.classList.remove('light', 'dark');
-              html.classList.add(theme === 'system' ? (isDark ? 'dark' : 'light') : theme);
-              html.setAttribute('data-theme', theme === 'system' ? (isDark ? 'dark' : 'light') : theme);
-            } catch (e) {}
+              html.classList.add(finalTheme);
+              html.setAttribute('data-theme', finalTheme);
+            } catch (e) { /* noop */ }
           `}
         </Script>
 
@@ -70,7 +80,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                   <AdminQueryHandler />
                 </Suspense>
                 <QuizPrefetchManager />
-                <QuizPrefetchTest />
+                <Suspense fallback={null}>
+                  <QuizPrefetchTest />
+                </Suspense>
                 {/* Skip to main content link for accessibility */}
                 <a
                   href="#main-content"

@@ -6,6 +6,8 @@
 
 GlassCode Academy is a full-stack educational platform designed to help developers learn and prepare for interviews in modern web technologies. The application provides structured learning resources and realistic interview practice with instant feedback.
 
+For detailed information about the current architecture, see [CURRENT_ARCHITECTURE.md](docs/CURRENT_ARCHITECTURE.md).
+
 > **Note**: This is purely a learning and coding challenge! No real application would (or should) be architored this way. In the real world, you wouldn't run 5+ separate technology stacks just to teach about them. But for the sake of learning and demonstrating proficiency in each technology, we've gone a bit overboard with the architecture. Think of it as an educational extreme sport!
 
 ## Features
@@ -54,27 +56,21 @@ graph TB
     B --> C[Apollo Client 3.13.8]
     C --> D[GraphQL API]
     D --> E[ASP.NET Core 8.0 Backend]
-    E --> F[JSON Data Files]
+    E --> F[PostgreSQL Database]
+    E --> G[Redis Cache]
     
-    B --> G[Module-Specific Backends]
-    G --> H[Laravel 11.0+ Backend]
-    G --> I[Node.js Backends]
-    G --> J[React Module Backend]
+    H[NGINX Gateway] --> B
+    H --> E
     
-    K[NGINX Gateway] --> B
-    K --> E
-    K --> G
-    
-    L[Quiz System] --> B
-    M[Progress Tracking] --> B
-    N[Technology Modules] --> G
+    I[Quiz Prefetch Service] --> B
+    J[Progress Tracking] --> B
     
     style A fill:#e1f5fe
     style B fill:#f3e5f5
     style E fill:#e8f5e8
     style F fill:#fff3e0
-    style G fill:#f0f4c3
-    style K fill:#ffecb3
+    style G fill:#fce4ec
+    style H fill:#ffecb3
 ```
 
 ## Directory Structure
@@ -84,7 +80,7 @@ GlassCodeAcademy/
 ├── glasscode/
 │   ├── backend/
 │   │   ├── Controllers/
-│   │   ├── Data/ (JSON files with content for all technologies)
+│   │   ├── Data/ (Database context and migrations)
 │   │   ├── GraphQL/
 │   │   ├── Models/
 │   │   ├── Services/
@@ -93,26 +89,24 @@ GlassCodeAcademy/
 │       ├── src/
 │       │   ├── app/
 │       │   │   ├── graphql/
-│       │   │   ├── interview/
+│       │   │   ├── interview-prep/
 │       │   │   ├── lessons/
-│       │   │   ├── nextjs/
-│       │   │   ├── laravel/
-│       │   │   ├── react/
-│       │   │   ├── tailwind/
-│       │   │   ├── node/
-│       │   │   ├── sass/
+│       │   │   ├── modules/
+│       │   │   ├── [shortSlug]/
 │       │   │   └── page.tsx
 │       │   ├── components/
 │       │   └── apolloClient.ts
 │       └── package.json
 ├── content/
 │   ├── lessons/
-│   │   ├── laravel-fundamentals.json
-│   │   ├── node-fundamentals.json
+│   │   ├── programming-fundamentals.json
+│   │   ├── web-development-basics.json
 │   │   └── ... (other module lessons)
 │   ├── quizzes/
 │   └── registry.json
-├── laravel-backend/ (complete Laravel application structure)
+├── docs/
+│   ├── CURRENT_ARCHITECTURE.md
+│   └── ... (other documentation files)
 └── README.md
 
 ## Quiz Difficulty & Reporting

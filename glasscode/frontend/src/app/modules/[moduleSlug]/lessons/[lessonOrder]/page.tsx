@@ -23,41 +23,9 @@ interface Exercise {
   checkpoints?: string[];
 }
 
-export async function generateStaticParams() {
-  try {
-    const modules = await contentRegistry.getModules();
-    const params: Array<{ moduleSlug: string; lessonOrder: string }> = [];
-    
-    // Only pre-generate the first 3 lessons of each module to reduce build time
-    // Other lessons will be generated on-demand using ISR
-    for (const mod of modules) {
-      if (mod.status === 'active') {
-        try {
-          const lessons = await contentRegistry.getModuleLessons(mod.slug);
-          if (lessons) {
-            // Only generate first 3 lessons statically
-            const lessonsToGenerate = Math.min(3, lessons.length);
-            for (let i = 0; i < lessonsToGenerate; i++) {
-              params.push({
-                moduleSlug: mod.slug,
-                lessonOrder: (i + 1).toString(),
-              });
-            }
-          }
-        } catch (lessonError) {
-          console.warn(`Failed to load lessons for module ${mod.slug}:`, lessonError);
-        }
-      }
-    }
-    
-    console.log(`Generating ${params.length} lesson pages statically`);
-    return params;
-  } catch (error) {
-    console.warn('Failed to load modules for lesson static generation:', error);
-    // Return empty array to prevent build failures
-    return [];
-  }
-}
+export const dynamic = 'force-dynamic';
+export const revalidate = 0; // Disable SSG and revalidation for dynamic rendering
+export const dynamicParams = true; // Allow dynamic params not in generateStaticParams
 
 export async function generateMetadata({ params }: LessonPageProps): Promise<Metadata> {
   const { moduleSlug, lessonOrder } = await params;
@@ -78,10 +46,6 @@ export async function generateMetadata({ params }: LessonPageProps): Promise<Met
     keywords: lesson.tags?.join(', ') || currentModule.technologies.join(', '),
   };
 }
-
-// Enable ISR for on-demand generation of lesson pages
-export const revalidate = 3600; // Revalidate every hour
-export const dynamicParams = true; // Allow dynamic params not in generateStaticParams
 
 export default async function LessonPage({ params }: LessonPageProps) {
   const { moduleSlug, lessonOrder } = await params;
@@ -311,7 +275,7 @@ export default async function LessonPage({ params }: LessonPageProps) {
               </Link>
             ) : (
               <Link
-                href={currentModule.slug === 'programming-fundamentals' ? `/programming/lessons/${lessonIndex}` : `${currentModule.routes.lessons}/${lessonIndex}`} // Previous lesson
+                href={currentModule.slug === 'programming-fundamentals' ? `/programming/lessons/${lessonIndex}` : `${currentModule.routes.lessons}/${lessonIndex}`}
                 className="inline-flex items-center px-4 py-2 text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors"
               >
                 ← Previous Lesson
@@ -340,7 +304,7 @@ export default async function LessonPage({ params }: LessonPageProps) {
               )
             ) : (
               <Link
-                href={currentModule.slug === 'programming-fundamentals' ? `/programming/lessons/${lessonIndex + 2}` : `${currentModule.routes.lessons}/${lessonIndex + 2}`} // Next lesson
+                href={currentModule.slug === 'programming-fundamentals' ? `/programming/lessons/${lessonIndex + 2}` : `${currentModule.routes.lessons}/${lessonIndex + 2}`}
                 className="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
               >
                 Next Lesson

@@ -33,6 +33,29 @@ type RawLesson = Partial<{
   difficulty: string;
 }>;
 
+// Merge helper: enrich DB lessons with file-based content when fields are missing
+function mergeLessonsByTitle(dbLessons: FrontendLesson[], fileLessons: FrontendLesson[]): FrontendLesson[] {
+  const fileMap = new Map<string, FrontendLesson>();
+  for (const l of fileLessons) {
+    fileMap.set((l.title || '').trim().toLowerCase(), l);
+  }
+  return dbLessons.map((dl) => {
+    const key = (dl.title || '').trim().toLowerCase();
+    const fl = fileMap.get(key);
+    return {
+      ...dl,
+      intro: dl.intro && dl.intro.trim() ? dl.intro : (fl?.intro ?? ''),
+      objectives: Array.isArray(dl.objectives) && dl.objectives.length > 0 ? dl.objectives : (fl?.objectives ?? []),
+      codeExample: dl.codeExample && dl.codeExample.trim() ? dl.codeExample : (fl?.codeExample ?? ''),
+      codeExplanation: dl.codeExplanation && dl.codeExplanation.trim() ? dl.codeExplanation : (fl?.codeExplanation ?? ''),
+      tags: Array.isArray(dl.tags) && dl.tags.length > 0 ? dl.tags : (fl?.tags ?? []),
+      estimatedMinutes: typeof dl.estimatedMinutes === 'number' && dl.estimatedMinutes > 0 ? dl.estimatedMinutes : (fl?.estimatedMinutes ?? 10),
+      difficulty: dl.difficulty || fl?.difficulty || 'beginner',
+      topic: dl.topic || fl?.topic || '',
+    };
+  });
+}
+
 // Database-based lesson loading function with fallback to local API during dev
 async function fetchLessonsFromDatabase(moduleSlug: string): Promise<FrontendLesson[]> {
   try {
@@ -186,11 +209,18 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ modu
   // Resolve short slugs to full module slugs using central mapping
   const resolvedSlug = (await contentRegistry.getModuleSlugFromShortSlug(moduleSlug)) || moduleSlug;
 
-  let lessons = await fetchLessonsFromDatabase(resolvedSlug);
+  // Load DB lessons and merge with file content when available
+  const dbLessons = await fetchLessonsFromDatabase(resolvedSlug);
+  let lessons: FrontendLesson[] = dbLessons;
 
-  // If DB returns empty, try file fallback
-  if (!Array.isArray(lessons) || lessons.length === 0) {
-    lessons = await fetchLessonsFromFiles(req, resolvedSlug);
+  if (!Array.isArray(dbLessons) || dbLessons.length === 0) {
+    const fileLessons = await fetchLessonsFromFiles(req, resolvedSlug);
+    lessons = fileLessons;
+  } else {
+    const fileLessons = await fetchLessonsFromFiles(req, resolvedSlug);
+    if (Array.isArray(fileLessons) && fileLessons.length > 0) {
+      lessons = mergeLessonsByTitle(dbLessons, fileLessons);
+    }
   }
 
   // Optional debug output in non-production
@@ -201,9 +231,8 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ modu
       debug: true,
       inputSlug: moduleSlug,
       resolvedSlug,
-      apiBaseCandidates: (() => { try { return [getApiBaseStrict(), 'http://127.0.0.1:8080']; } catch { return ['http://127.0.0.1:8080']; } })(),
       lessonsCount: Array.isArray(lessons) ? lessons.length : 0,
-      source: Array.isArray(lessons) && lessons.length > 0 ? 'db-or-file' : 'none',
+      source: (!Array.isArray(dbLessons) || dbLessons.length === 0) ? 'file' : 'merged',
     });
   }
 

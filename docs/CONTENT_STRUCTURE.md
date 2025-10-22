@@ -2,6 +2,8 @@
 
 This document outlines the content structure of the GlassCode Academy application, showing how each technology track is organized and how the Laravel module compares to the other modules.
 
+For information about the current architecture, see [CURRENT_ARCHITECTURE.md](CURRENT_ARCHITECTURE.md).
+
 ## Content Organization Overview
 
 Each technology track (.NET, Next.js, GraphQL, Laravel) follows a consistent structure:

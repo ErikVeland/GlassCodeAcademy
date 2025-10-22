@@ -2,6 +2,8 @@
 
 This document provides a comprehensive overview of how all technologies in the GlassCode Academy application integrate with each other to create a cohesive learning platform.
 
+For a complete overview of the current architecture, see [CURRENT_ARCHITECTURE.md](CURRENT_ARCHITECTURE.md).
+
 ## System Architecture Diagram
 
 ```mermaid
@@ -20,15 +22,15 @@ graph TB
     end
 
     subgraph "Backend Layer"
-        H[GraphQL Schema] --> I[ASP.NET Core 9]
+        H[GraphQL Schema] --> I[ASP.NET Core 8.0]
         I --> J[.NET Controllers]
         I --> K[Laravel Integration]
         I --> L[Data Services]
-        L --> M[In-Memory Data]
+        L --> M[PostgreSQL Database]
     end
 
     subgraph "Data Layer"
-        M[In-Memory Data] --> N[Lesson Data]
+        M[PostgreSQL Database] --> N[Lesson Data]
         M --> O[Question Data]
         M --> P[User Progress Data]
     end
@@ -40,8 +42,8 @@ graph TB
     end
 
     subgraph "Deployment"
-        T[Docker - Frontend]
-        U[Docker - Backend]
+        T[NGINX Gateway]
+        U[Systemd Services]
     end
 
     A --> T
@@ -97,7 +99,7 @@ graph TB
 
 ### 3. Backend Integration (.NET + Laravel)
 
-**ASP.NET Core 9** serves as the primary backend framework:
+**ASP.NET Core 8.0** serves as the primary backend framework:
 - Cross-platform web framework
 - High-performance runtime
 - Built-in dependency injection
@@ -117,7 +119,7 @@ graph TB
 
 ### 4. Data Layer Integration
 
-**In-Memory Data** provides development data:
+**PostgreSQL Database** provides persistent data storage:
 - Lesson content for all technologies
 - Interview questions with explanations
 - User progress tracking (localStorage)
@@ -142,15 +144,15 @@ graph TB
 
 ### 6. Deployment Integration
 
-**Docker** for containerized deployment:
-- Consistent environments across development and production
-- Easy scaling and deployment
-- Isolated services for frontend and backend
+**NGINX Gateway** for reverse proxy:
+- SSL termination and routing
+- Static file serving for frontend
+- Load balancing capabilities
 
-**Render.com** for cloud hosting:
-- Automatic deployments from Git
-- Managed Docker container hosting
-- Free tier for development and testing
+**Systemd Services** for process management:
+- Automatic startup and monitoring
+- Process isolation and resource management
+- Log management and rotation
 
 ## Data Flow Integration
 

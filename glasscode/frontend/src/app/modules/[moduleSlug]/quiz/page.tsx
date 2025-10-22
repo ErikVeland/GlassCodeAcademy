@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation';
 import { contentRegistry, type Module, type Quiz, type ProgrammingQuestion } from '@/lib/contentRegistry';
 import QuizLayout from '@/components/QuizLayout';
 import { ui, classes } from '@/lib/ui';
+import { quizPrefetchService } from '@/lib/quizPrefetchService';
 
 interface QuizPageProps {
   params: Promise<{ moduleSlug: string }>;
@@ -51,8 +52,24 @@ export default function QuizPage({ params }: QuizPageProps) {
   const [error, setError] = useState<string | null>(null);
   const [poolCount, setPoolCount] = useState(0);
   const [reqPercent, setReqPercent] = useState(0);
+  const [prefetchStatus, setPrefetchStatus] = useState({
+    isPrefetching: false,
+    prefetchedCount: 0
+  });
 
   const debugEnabled = process.env.NODE_ENV === 'development';
+
+  // Update prefetch status
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const interval = setInterval(() => {
+        const status = quizPrefetchService.getPrefetchStatus();
+        setPrefetchStatus(status);
+      }, 1000);
+      
+      return () => clearInterval(interval);
+    }
+  }, []);
 
   const initializeQuizData = useCallback(async (
     moduleData: Module,
@@ -349,6 +366,23 @@ export default function QuizPage({ params }: QuizPageProps) {
                 </li>
               ))}
             </ul>
+
+            {/* Prefetch Status */}
+            {prefetchStatus.prefetchedCount > 0 && (
+              <div className="mb-6 p-4 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg">
+                <div className="flex items-center">
+                  <span className="text-green-500 mr-2">✅</span>
+                  <span className="text-green-800 dark:text-green-200 font-medium">
+                    {prefetchStatus.prefetchedCount} quiz{prefetchStatus.prefetchedCount !== 1 ? 'zes' : ''} preloaded for faster access
+                  </span>
+                </div>
+                {prefetchStatus.isPrefetching && (
+                  <div className="mt-2 text-sm text-green-700 dark:text-green-300">
+                    Preloading more quizzes in the background...
+                  </div>
+                )}
+              </div>
+            )
 
             <div className="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg p-4 mb-6">
               <div className="flex">

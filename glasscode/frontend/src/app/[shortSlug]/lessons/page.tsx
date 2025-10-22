@@ -16,9 +16,11 @@ export async function generateStaticParams() {
     return [];
   }
   const modules = await contentRegistry.getModules();
-  return modules.map((m: Module) => ({
-    shortSlug: m.slug,
+  const params = await Promise.all(modules.map(async (m: Module) => {
+    const shortSlug = (await contentRegistry.getShortSlugFromModuleSlug(m.slug)) || m.slug;
+    return { shortSlug };
   }));
+  return params;
 }
 
 type Props = {
@@ -198,40 +200,14 @@ export default async function LessonsPage({ params, searchParams }: LessonsPageP
         ) : (
           <div className="glass-morphism p-12 rounded-xl text-center">
             <div className="text-6xl mb-4">📚</div>
-            <h2 className="text-2xl font-semibold text-gray-900 dark:text-white mb-4">
-              No Lessons Available Yet
+            <h2 className="text-2xl font-semibold text-gray-900 dark:text-white mb-2">
+              No lessons available yet
             </h2>
-            <p className="text-gray-600 dark:text-gray-300 mb-6">
-              Lessons for this module are currently being prepared. Check back soon!
+            <p className="text-gray-600 dark:text-gray-300">
+              Content is being prepared. Please check back later.
             </p>
-            <Link
-              href={currentModule.routes.overview}
-              className={`inline-flex items-center px-4 py-2 rounded-lg transition-colors ${theme.button}`}
-            >
-              ← Back to Module
-            </Link>
           </div>
         )}
-
-        {/* Navigation Footer */}
-        <footer className="mt-12 flex justify-between items-center">
-            <Link
-              href={currentModule.routes.overview}
-              className={`inline-flex items-center px-4 py-2 rounded-lg transition-colors ${theme.link}`}
-            >
-              ← Back to Module Overview
-            </Link>
-            
-          {thresholds.quizValid && (
-            <Link
-              href={currentModule.routes.quiz}
-              className={`inline-flex items-center px-4 py-2 rounded-lg transition-colors ${theme.button}`}
-            >
-              Take Assessment
-              <span className="ml-2">🎯</span>
-            </Link>
-          )}
-        </footer>
       </div>
     </>
   );
