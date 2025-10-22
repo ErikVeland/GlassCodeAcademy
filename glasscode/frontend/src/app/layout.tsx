@@ -34,8 +34,8 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
-  const cookieHeader = headers().get('cookie') || '';
+export default async function RootLayout({ children }: { children: React.ReactNode }) {
+  const cookieHeader = (await headers()).get('cookie') || '';
   const cookieThemeMatch = cookieHeader.match(/(?:^|; )gc-theme=([^;]+)/);
   const cookieTheme = cookieThemeMatch ? decodeURIComponent(cookieThemeMatch[1]) : undefined;
   const initialTheme = cookieTheme === 'dark' || cookieTheme === 'light' ? cookieTheme : 'light';
