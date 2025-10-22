@@ -431,10 +431,22 @@ class ContentRegistryLoader {
           : (Array.isArray((data as { lessons?: PartialLesson[] })?.lessons) ? ((data as { lessons?: PartialLesson[] }).lessons as PartialLesson[]) : []);
         return lessonsArr.map((l, i) => {
           const orderVal = typeof l.order === 'number' ? l.order : i + 1;
-          const codeExample = typeof l['codeExample'] === 'string' ? (l['codeExample'] as string) : undefined;
-          const codeExplanation = typeof l['codeExplanation'] === 'string' ? (l['codeExplanation'] as string) : undefined;
-          const code = l.code || ((codeExample || codeExplanation) ? { example: codeExample || '', explanation: codeExplanation || '' } : undefined);
-          return code ? { ...l, order: orderVal, code } : { ...l, order: orderVal };
+          // Transform the API response structure to match frontend expectations
+          const code = l.code || (l.codeExample || l.codeExplanation ? { 
+            example: l.codeExample || '', 
+            explanation: l.codeExplanation || '' 
+          } : undefined);
+          // Ensure all expected properties are present
+          const lesson = {
+            ...l,
+            order: orderVal,
+            code,
+            intro: l.intro || '',
+            pitfalls: Array.isArray(l.pitfalls) ? l.pitfalls : [],
+            exercises: Array.isArray(l.exercises) ? l.exercises : [],
+            objectives: Array.isArray(l.objectives) ? l.objectives : [],
+          };
+          return lesson;
         });
       }
 
@@ -463,10 +475,22 @@ class ContentRegistryLoader {
             : (Array.isArray((data as { lessons?: PartialLessonSSR[] })?.lessons) ? ((data as { lessons?: PartialLessonSSR[] }).lessons as PartialLessonSSR[]) : []);
           return lessonsArr.map((l, i) => {
             const orderVal = typeof l.order === 'number' ? l.order : i + 1;
-            const codeExample = typeof l['codeExample'] === 'string' ? (l['codeExample'] as string) : undefined;
-            const codeExplanation = typeof l['codeExplanation'] === 'string' ? (l['codeExplanation'] as string) : undefined;
-            const code = l.code || ((codeExample || codeExplanation) ? { example: codeExample || '', explanation: codeExplanation || '' } : undefined);
-            return code ? { ...l, order: orderVal, code } : { ...l, order: orderVal };
+            // Transform the API response structure to match frontend expectations
+            const code = l.code || (l.codeExample || l.codeExplanation ? { 
+              example: l.codeExample || '', 
+              explanation: l.codeExplanation || '' 
+            } : undefined);
+            // Ensure all expected properties are present
+            const lesson = {
+              ...l,
+              order: orderVal,
+              code,
+              intro: l.intro || '',
+              pitfalls: Array.isArray(l.pitfalls) ? l.pitfalls : [],
+              exercises: Array.isArray(l.exercises) ? l.exercises : [],
+              objectives: Array.isArray(l.objectives) ? l.objectives : [],
+            };
+            return lesson;
           });
         } catch {
           // try next candidate
