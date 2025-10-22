@@ -13,6 +13,14 @@ public class InterviewQuestionsController : ControllerBase
     private readonly DataService _dataService = DataService.Instance;
     private readonly GlassCodeDbContext _dbContext;
 
+    public InterviewQuestionsController()
+    {
+        var options = new DbContextOptionsBuilder<GlassCodeDbContext>()
+            // No provider configured; controller will fall back to JSON files on DB access failure
+            .Options;
+        _dbContext = new GlassCodeDbContext(options);
+    }
+
     public InterviewQuestionsController(GlassCodeDbContext dbContext)
     {
         _dbContext = dbContext;
@@ -100,6 +108,9 @@ public class InterviewQuestionsController : ControllerBase
             Type = quiz.QuestionType,
             Question = quiz.Question,
             Choices = !string.IsNullOrEmpty(quiz.Choices) ? System.Text.Json.JsonSerializer.Deserialize<string[]>(quiz.Choices) : null,
+            FixedChoiceOrder = quiz.FixedChoiceOrder,
+            ChoiceLabels = !string.IsNullOrEmpty(quiz.ChoiceLabels) ? System.Text.Json.JsonSerializer.Deserialize<string[]>(quiz.ChoiceLabels) : null,
+            AcceptedAnswers = !string.IsNullOrEmpty(quiz.AcceptedAnswers) ? System.Text.Json.JsonSerializer.Deserialize<string[]>(quiz.AcceptedAnswers) : null,
             CorrectAnswer = quiz.CorrectAnswer,
             Explanation = quiz.Explanation,
             Difficulty = quiz.Difficulty,

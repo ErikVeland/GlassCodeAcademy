@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React from 'react';
 import { useBackendReadiness } from '../hooks/useBackendReadiness';
 import { ContentLoading } from './ContentLoading';
 import { ContentError } from './ContentError';
@@ -11,10 +11,9 @@ interface BackendReadinessWrapperProps {
 
 export function BackendReadinessWrapper({ children }: BackendReadinessWrapperProps) {
   const { isReady, isLoading, error, retryCount } = useBackendReadiness();
-  const [showContent, setShowContent] = useState(false);
 
   // If we're ready or if we've been waiting for a long time, show content
-  if (isReady || showContent || retryCount > 5) {
+  if (isReady || retryCount > 5) {
     return <>{children}</>;
   }
 

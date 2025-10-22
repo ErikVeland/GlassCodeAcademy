@@ -9,7 +9,7 @@ interface ReadinessResponse {
   modules: number;
   lessons: number;
   quizzes: number;
-  details?: Record<string, any>;
+  details?: Record<string, unknown>;
 }
 
 export function useBackendReadiness() {

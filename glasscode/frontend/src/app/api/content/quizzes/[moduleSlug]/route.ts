@@ -1,5 +1,5 @@
 import { normalizeQuestion } from '@/lib/textNormalization';
-import { getApiBaseStrict, getPublicOriginStrict } from '@/lib/urlUtils';
+import { getApiBaseStrict } from '@/lib/urlUtils';
 import { contentRegistry } from '@/lib/contentRegistry';
 
 // Database-based quiz loading function
@@ -55,44 +55,6 @@ async function fetchQuizFromDatabase(moduleSlug: string) {
     return { questions: [] };
   } catch (error) {
     console.error('Error fetching quiz from database:', error);
-    return { questions: [] };
-  }
-}
-
-// Fallback: Load quiz from static JSON in public/content/quizzes
-async function fetchQuizFallbackFromJson(request: Request, moduleSlug: string) {
-  try {
-    // Server-side: Node fetch requires absolute URLs. Try local origins proactively in dev.
-    const candidates: string[] = [];
-    try {
-      const origin = getPublicOriginStrict().replace(/\/\/+$/, '');
-      candidates.push(`${origin}/content/quizzes/${moduleSlug}.json`);
-    } catch {
-      // no configured public origin; rely on localhost candidates
-    }
-    // Common localhost dev ports
-    candidates.push(
-      'http://localhost:3000/content/quizzes/' + moduleSlug + '.json',
-      'http://127.0.0.1:3000/content/quizzes/' + moduleSlug + '.json'
-    );
-
-    for (const url of candidates) {
-      try {
-        const res = await fetch(url, { cache: 'no-store' });
-        if (!res.ok) continue;
-        const data = await res.json();
-        const questions = Array.isArray(data?.questions) ? data.questions : Array.isArray(data) ? data : [];
-        return { questions };
-      } catch {
-        // try next candidate
-        continue;
-      }
-    }
-
-    console.warn(`Quiz fallback JSON not found for module: ${moduleSlug}`);
-    return { questions: [] };
-  } catch (err) {
-    console.error('Error fetching quiz from fallback JSON:', err);
     return { questions: [] };
   }
 }
