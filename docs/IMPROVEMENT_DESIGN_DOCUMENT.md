@@ -44,6 +44,125 @@ GlassCode Academy has made significant progress in transforming into an enterpri
 - ❌ Monetisation: No subscriptions or licensing model
 - ❌ Accessibility & i18n: WCAG colour-contrast theming plan implemented but needs automated contrast checks
 
+### Simplification Recommendations
+
+Based on architectural analysis, the following simplifications would reduce complexity and improve maintainability:
+
+#### 5. Dependency Injection Unification
+**Current**: Some controllers instantiate `DbContext` manually.
+**Recommended**: Enforce DI-only creation for `GlassCodeDbContext` and all services.
+
+**Benefits**:
+- Consistent lifetime management and connection pooling
+- Enables testability and mocking without special constructors
+- Removes hidden provider/config bugs from manual instantiation
+
+**Acceptance Criteria**:
+- No parameterless constructors in controllers or services
+- All controllers receive `GlassCodeDbContext` via DI
+- `Program.cs` registers `DbContext` with Npgsql provider and options
+
+#### 6. Standardized Configuration (.env + IOptions)
+**Current**: Mixed ad-hoc configuration sources.
+**Recommended**: Load env via `.env`/secrets, bind to typed `IOptions<T>`.
+
+**Benefits**:
+- Clear, typed configuration surface
+- Easy local/dev/prod parity
+- Safer secret handling and validation
+
+**Acceptance Criteria**:
+- `.env` for local development
+- `IOptions<DbSettings>` and `IOptions<AppSettings>` registered and validated
+- Controllers/services consume typed options instead of reading environment directly
+
+#### 7. CI Code Quality Gates
+**Current**: CI runs tests but formatting/lint gating is not enforced everywhere.
+**Recommended**: Add `dotnet format --verify-no-changes` and frontend ESLint with `--max-warnings=0`.
+
+**Benefits**:
+- Prevents style drift and noisy diffs
+- Catches unused/unsafe patterns early
+- Encourages consistent code across teams
+
+**Acceptance Criteria**:
+- New workflow `code-quality.yml` enforces .NET formatting and Next.js ESLint
+- CI fails on formatting changes or any linter warning
+
+#### 8. API Surface Decision (REST vs. GraphQL)
+**Current**: Dual API surfaces increase cognitive load.
+**Recommended**: Choose one primary interface. Default to REST unless a clear need for GraphQL emerges (complex data shaping, client-driven queries).
+
+**Benefits**:
+- Simpler docs, tests, and onboarding
+- Reduced schema/versioning burden
+
+**Acceptance Criteria**:
+- Either deprecate GraphQL endpoints or fully embrace them with schema governance
+- Update docs and tests accordingly
+
+#### 9. EF Provider-Specific Functions Policy
+**Current**: Uses `EF.Functions.ILike` (Npgsql-specific) in queries.
+**Recommended**: Document provider-specific usage and prefer portable alternatives when feasible.
+
+**Benefits**:
+- Easier provider portability and fewer surprises in tests
+
+**Acceptance Criteria**:
+- Annotate queries relying on provider-specific functions at repository/service level
+- Prefer case-insensitive matching with normalized values when possible
+
+---
+
+### Quick Wins Implemented (October 2025)
+- Enforced DI-only by removing parameterless controller constructors (e.g., `InterviewQuestionsController`)
+- Added `/.github/workflows/code-quality.yml` with:
+  - `dotnet format backend/backend.csproj --verify-no-changes --severity error`
+  - Frontend `npm run lint -- --max-warnings=0` on Node 20.x
+- Confirmed backend test/linter warnings stem from tooling context, not compilation issues
+- Documented simplification steps for DI, configuration, and API surface
+
+#### 1. Backend Technology Consolidation
+**Current**: Multi-stack architecture with ASP.NET Core, Laravel, and Node.js backends
+**Recommended**: Consolidate to single ASP.NET Core backend
+
+**Benefits**:
+- Reduced operational complexity of maintaining multiple backend ecosystems
+- Lower deployment overhead and infrastructure costs
+- Simplified team knowledge requirements (developers only need to master one backend stack)
+- Easier CI/CD pipeline management
+- Consistent development patterns and practices
+
+#### 2. Pure Database Approach
+**Current**: Hybrid JSON/database content approach
+**Recommended**: Migrate entirely to database-driven content management
+
+**Benefits**:
+- Eliminates complexity of JSON file synchronization
+- Single source of truth for all content
+- Real-time content updates without deployments
+- Simplified backup and recovery processes
+
+#### 3. Containerization
+**Current**: Standalone server deployment
+**Recommended**: Docker-based deployment with container orchestration
+
+**Benefits**:
+- Consistent environments across dev/staging/production
+- Easier scaling and deployment
+- Simplified dependency management
+- Improved portability and reproducibility
+
+#### 4. Unified Content Management
+**Current**: Disparate content creation and editing mechanisms
+**Recommended**: Admin dashboard in Next.js for all content management
+
+**Benefits**:
+- Centralized content creation and editing
+- Real-time content updates
+- Improved user experience for content creators
+- Elimination of JSON file editing requirements
+
 ---
 
 ## 🎯 Implementation Phases
@@ -405,7 +524,7 @@ a:hover, a:focus-visible { text-decoration: underline; }
 **Objective**: Automate testing, building, scanning, and deployment
 
 **GitHub Actions Workflows**
-- CI: build, unit/integration tests, E2E with Trae’s built-in browser, coverage upload, CodeQL, Trivy/Snyk scans.
+- CI: build, unit/integration tests, E2E with Trae's built-in browser, coverage upload, CodeQL, Trivy/Snyk scans.
 - CD: environment matrix (dev → staging → prod) with manual approval for prod.
 
 **Example: `.github/workflows/ci.yml`**
@@ -995,9 +1114,8 @@ CREATE TABLE email_campaigns (
 - Customizable certificate templates
 - QR code verification system
 - Digital signature integration
-- Blockchain verification (optional)
 
-**3D eBook Library**
+**eBook Resource Library**
 - Virtual library interface
 - Interactive eBook reader
 - Bookmarking and note-taking
@@ -1366,7 +1484,7 @@ GET /api/users/{id}/export
 | **Course Management** | Static JSON content + Database tables | **Dynamic course creation, attachments, assignments** | **High** |
 | **User Engagement** | Basic progress tracking | **Advanced quizzes, group enrollments, manual enrollment** | **Medium** |
 | **Integration Support** | None | **Zoom, Google Meet/Classroom, SCORM, Payment gateways** | **Medium** |
-| **Certification System** | None | **QR-verified certificates, 3D eBook library** | **Medium** |
+| **Certification System** | None | **QR-verified certificates** | **Medium** |
 | **Administrative Tools** | Basic user management | **Gradebook, calendar, FAQ system, 2FA** | **Medium** |
 | **Marketing & Monetization** | None | **Social sharing, coupons, MailChimp integration** | **Low** |
 
@@ -1462,7 +1580,7 @@ badge_awarded: { userId, badgeId, ts }
 
 ---
 
-**Document Version**: 2.3
-**Last Updated**: October 2025
+**Document Version**: 2.4
+**Last Updated**: 22 October 2025
 **Next Review**: After Phase 2 completion
 **Owner**: Development Team

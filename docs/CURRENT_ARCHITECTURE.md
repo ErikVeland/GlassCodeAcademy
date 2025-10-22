@@ -68,6 +68,38 @@ graph TB
     style K fill:#ffecb3
 ```
 
+## Simplification Roadmap
+
+### Current Architecture (Multi-stack)
+The current architecture uses multiple backend technologies:
+- ASP.NET Core for the main API and GraphQL services
+- Laravel for some module-specific implementations
+- Node.js for additional backend services
+- JSON files for content storage with database migration in progress
+
+### Target Simplified Architecture
+To reduce complexity and improve maintainability, the planned simplification includes:
+
+1. **Backend Consolidation**
+   - Migrate all Laravel and Node.js functionality to ASP.NET Core
+   - Single backend technology stack for easier maintenance
+   - Consistent development patterns and practices across the entire backend
+
+2. **Database-First Approach**
+   - Complete migration from hybrid JSON/database approach to pure database
+   - All content managed through PostgreSQL with Entity Framework Core
+   - Elimination of JSON file synchronization complexities
+
+3. **Containerization**
+   - Docker-based deployment for consistent environments
+   - Simplified dependency management and deployment processes
+   - Improved scalability and portability
+
+4. **Unified Content Management**
+   - Admin dashboard in Next.js for all content creation and editing
+   - Real-time content updates without manual file editing
+   - Improved user experience for content creators
+
 ## Deployment Architecture
 
 The application is deployed using a standalone server approach with NGINX as a reverse proxy:

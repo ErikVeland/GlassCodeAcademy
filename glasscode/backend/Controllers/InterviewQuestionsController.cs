@@ -13,14 +13,6 @@ public class InterviewQuestionsController : ControllerBase
     private readonly DataService _dataService = DataService.Instance;
     private readonly GlassCodeDbContext _dbContext;
 
-    public InterviewQuestionsController()
-    {
-        var options = new DbContextOptionsBuilder<GlassCodeDbContext>()
-            // No provider configured; controller will fall back to JSON files on DB access failure
-            .Options;
-        _dbContext = new GlassCodeDbContext(options);
-    }
-
     public InterviewQuestionsController(GlassCodeDbContext dbContext)
     {
         _dbContext = dbContext;

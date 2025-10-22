@@ -117,6 +117,15 @@ As of October 2025, the GlassCode Academy application has undergone significant 
 - ✅ Implemented tests for OAuth/OIDC flows
 - ✅ Added tests for secret management functionality
 
+### 4. Code Quality Gates & Simplification Quick Wins
+- Enforced DI-only creation of `GlassCodeDbContext` by removing parameterless controller constructors (e.g., `InterviewQuestionsController`).
+- Added dedicated CI workflow `/.github/workflows/code-quality.yml`:
+  - Backend: `dotnet format backend/backend.csproj --verify-no-changes --severity error`.
+  - Frontend: `npm run lint -- --max-warnings=0` using Node 20.x.
+- Documented additional simplification steps in the Improvement Design Document:
+  - DI unification, standardized `.env` + `IOptions<T>` configuration, API surface decision (REST vs GraphQL), EF provider-specific functions policy.
+- Minor linter errors observed are tooling context issues, not compilation problems.
+
 ## Current Statistics
 
 ### Test Coverage

@@ -1,0 +1,52 @@
+name: Code Quality
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+permissions:
+  contents: read
+
+jobs:
+  dotnet-format:
+    name: Backend Formatting Gate
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET SDK
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "8.0.x"
+
+      - name: Restore backend
+        run: dotnet restore backend/backend.csproj
+
+      - name: Install dotnet-format
+        run: dotnet tool install -g dotnet-format || dotnet tool update -g dotnet-format
+
+      - name: Verify formatting
+        run: dotnet format backend/backend.csproj --verify-no-changes --severity error
+
+  frontend-lint:
+    name: Frontend ESLint Gate
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20.x"
+
+      - name: Install dependencies
+        working-directory: frontend
+        run: npm ci
+
+      - name: Run ESLint (no warnings allowed)
+        working-directory: frontend
+        run: npm run lint -- --max-warnings=0

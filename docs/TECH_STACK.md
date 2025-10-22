@@ -96,20 +96,15 @@ graph TB
    - Schema-first development
    - Real-time subscriptions support
 
-3. **Laravel 11.0+**
-   - PHP web application framework
-   - Eloquent ORM for database operations
-   - RESTful API endpoints
+3. **PostgreSQL Database**
+   - Primary database for all content and user data
+   - Migrating from hybrid JSON/database approach to pure database
+   - Entity Framework Core ORM for data access
 
-4. **Node.js Backends**
-   - Express.js framework
-   - Module-specific implementations
-   - RESTful API endpoints
-
-5. **JSON Data Files**
-   - File-based data storage
-   - Structured lesson content
-   - Zero configuration setup
+4. **Redis Cache**
+   - Caching layer for improved performance
+   - Session state management
+   - Frequently accessed data storage
 
 ### Development Tools
 
@@ -132,10 +127,7 @@ graph TB
 5. **Node.js 18+**
    - Frontend development runtime
    - Package management with npm
-
-6. **PHP 8.2+ and Composer**
-   - Laravel module development
-   - Dependency management
+   - Content validation and import scripts
 
 ### Infrastructure & Deployment
 
@@ -154,42 +146,86 @@ graph TB
    - Manual configuration
    - Full control over environment
 
+## Simplification Roadmap
+
+### Current State (Multi-stack Architecture)
+The current architecture uses multiple backend technologies:
+- ASP.NET Core for the main API and GraphQL services
+- Laravel for some module-specific implementations
+- Node.js for additional backend services
+- JSON files for content storage with database migration in progress
+
+### Future State (Simplified Architecture)
+To reduce complexity and improve maintainability, the planned simplification includes:
+
+1. **Backend Technology Consolidation**
+   - **Current**: Multiple backend technologies (ASP.NET Core, Laravel, Node.js)
+   - **Future**: Single ASP.NET Core backend for all functionality
+   - **Benefits**: 
+     - Reduced operational complexity
+     - Lower deployment overhead
+     - Simplified team knowledge requirements
+     - Easier CI/CD pipeline management
+
+2. **Pure Database Approach**
+   - **Current**: Hybrid JSON/database content approach
+   - **Future**: All content managed through PostgreSQL database
+   - **Benefits**:
+     - Eliminates complexity of JSON file synchronization
+     - Single source of truth for all content
+     - Real-time content updates without deployments
+     - Simplified backup and recovery processes
+
+3. **Containerization**
+   - **Current**: Standalone server deployment with systemd services
+   - **Future**: Docker-based deployment with container orchestration
+   - **Benefits**:
+     - Consistent environments across dev/staging/production
+     - Easier scaling and deployment
+     - Simplified dependency management
+     - Improved portability and reproducibility
+
+4. **Unified Content Management**
+   - **Current**: Disparate content creation and editing mechanisms
+   - **Future**: Admin dashboard in Next.js for all content management
+   - **Benefits**:
+     - Centralized content creation and editing
+     - Real-time content updates
+     - Improved user experience for content creators
+     - Elimination of JSON file editing requirements
+
 ## Integration Flow
 
 1. **Frontend to Backend Communication**
    - Apollo Client sends GraphQL queries to the ASP.NET Core backend
    - HotChocolate GraphQL server resolves queries
-   - Data is fetched from JSON data files
-   - Module-specific backends (Laravel, Node.js) serve their own content
+   - Data is fetched from PostgreSQL database
    - NGINX gateway routes requests to appropriate services
 
 2. **Data Flow**
    - User interactions trigger GraphQL queries/mutations
    - GraphQL server routes requests to appropriate resolvers
-   - Resolvers read from structured JSON data files
-   - Module-specific content is served by dedicated backends
+   - Resolvers read from PostgreSQL database
    - Responses flow back through the GraphQL layer to the frontend
 
 3. **Module Architecture**
-   - Each technology module has its own backend implementation
-   - Laravel modules use PHP with Eloquent ORM
-   - Node.js modules use Express.js framework
-   - React, Vue, and other frontend modules are served statically
-   - All modules integrate through the NGINX gateway
+   - All technology modules served by single ASP.NET Core backend
+   - Content managed through unified database schema
+   - Shared services and components across all modules
 
 4. **Development Workflow**
    - Code changes are committed to Git
-   - Local development uses multiple service ports
-   - Production deployment uses systemd services
+   - Local development using Docker Compose
+   - Production deployment using container orchestration
    - NGINX handles SSL/TLS and reverse proxy
-   - Services run as standalone processes on the server
+   - Services run as containers on the server
 
 ## Benefits of This Architecture
 
 1. **Educational Focus**
-   - Multiple backend frameworks for comprehensive learning
+   - Single backend technology for comprehensive learning
    - Real-world technology stack examples
-   - Hands-on experience with different paradigms
+   - Hands-on experience with modern development practices
 
 2. **Modular Design**
    - Each technology module is self-contained
@@ -197,13 +233,13 @@ graph TB
    - Easy to add new learning modules
 
 3. **Performance & Simplicity**
-   - JSON data files for fast content delivery
-   - No database setup required
+   - Database-first approach for fast content delivery
+   - Caching with Redis for improved performance
    - Lightweight and efficient
 
 4. **Production-Ready Infrastructure**
    - NGINX gateway for professional deployment
-   - Systemd services for reliability
+   - Containerized services for reliability
    - SSL/TLS support for security
 
 5. **Developer Experience**
@@ -211,3 +247,30 @@ graph TB
    - Hot reloading during development
    - Multiple IDE support (VS Code, Visual Studio)
    - Comprehensive debugging tools
+
+## Benefits of Simplification
+
+1. **Reduced Complexity**
+   - Single backend technology stack
+   - Elimination of cross-technology integration challenges
+   - Simplified debugging and troubleshooting
+
+2. **Lower Maintenance Costs**
+   - Fewer technologies to maintain and update
+   - Reduced dependency management overhead
+   - Simplified security patching
+
+3. **Improved Developer Productivity**
+   - Consistent development patterns across the entire codebase
+   - Reduced context switching between different technologies
+   - Easier onboarding for new team members
+
+4. **Better Scalability**
+   - Containerized deployment for easier scaling
+   - Consistent performance characteristics
+   - Simplified load balancing and clustering
+
+5. **Enhanced Reliability**
+   - Fewer points of failure
+   - Consistent error handling and logging
+   - Simplified monitoring and observability
