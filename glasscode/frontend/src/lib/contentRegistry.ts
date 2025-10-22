@@ -238,7 +238,9 @@ class ContentRegistryLoader {
       for (const url of candidates) {
         try {
           console.debug('[ContentRegistry] trying', url);
-          const res = await fetch(url, { signal: controller.signal, cache: 'no-store' });
+          const res = await fetch(url, typeof window !== 'undefined'
+            ? { signal: controller.signal, cache: 'no-store' }
+            : { signal: controller.signal, next: { revalidate: 3600 } });
           if (res.ok) {
             const data: unknown = await res.json();
             const modules = (data as ContentRegistry)?.modules;
@@ -487,7 +489,7 @@ class ContentRegistryLoader {
 
       for (const url of candidates) {
         try {
-          const res = await fetch(url, { cache: 'no-store' });
+          const res = await fetch(url, { next: { revalidate: 3600 } });
           if (!res.ok) continue;
           const data: unknown = await res.json();
           type PartialLessonSSR = Lesson & Record<string, unknown>;
@@ -598,7 +600,7 @@ class ContentRegistryLoader {
 
       for (const url of candidates) {
         try {
-          const res = await fetch(url, { cache: 'no-store' });
+          const res = await fetch(url, { next: { revalidate: 3600 } });
           if (!res.ok) continue;
           const data: unknown = await res.json();
           if (!(data && typeof data === 'object')) continue;
@@ -636,7 +638,9 @@ class ContentRegistryLoader {
       const base = isBrowser ? '' : (() => { try { return getPublicOriginStrict().replace(/\/+$/, ''); } catch { return ''; } })();
       const url = isBrowser ? `/api/content/quizzes/programming-fundamentals` : (base ? `${base}/api/content/quizzes/programming-fundamentals` : `/api/content/quizzes/programming-fundamentals`);
 
-      const response = await fetch(url, { signal: controller.signal, cache: 'no-store' }).finally(() => {
+      const response = await fetch(url, typeof window !== 'undefined'
+        ? { signal: controller.signal, cache: 'no-store' }
+        : { signal: controller.signal, next: { revalidate: 3600 } }).finally(() => {
         clearTimeout(timeoutId);
       });
 

@@ -3,6 +3,8 @@ import { contentRegistry } from '@/lib/contentRegistry';
 import type { Lesson } from '@/lib/contentRegistry';
 import { getPublicOriginStrict } from '@/lib/urlUtils';
 
+export const revalidate = 3600;
+
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = getPublicOriginStrict();
 
@@ -52,7 +54,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         // Fallback to public content JSON if registry API is unavailable
         if (!lessons || lessons.length === 0) {
           try {
-            const res = await fetch(`${baseUrl.replace(/\/+$/, '')}/content/lessons/${mod.slug}.json`, { cache: 'no-store' });
+            const res = await fetch(`${baseUrl.replace(/\/+$/, '')}/content/lessons/${mod.slug}.json`, { next: { revalidate: 3600 } });
             if (res.ok) {
               const data: unknown = await res.json();
               lessons = Array.isArray(data) ? (data as Lesson[]) : [];
