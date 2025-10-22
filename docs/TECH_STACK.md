@@ -80,6 +80,7 @@ graph TB
    - JavaScript runtime with Express framework
    - High-performance web server
    - Built-in middleware support
+   - Logging with Winston (JSON, timestamped)
 
 2. **PostgreSQL Database**
    - Primary database for all content and user data
@@ -90,6 +91,11 @@ graph TB
    - Promise-based Node.js ORM for PostgreSQL
    - Model validation and associations
    - Migration support
+
+4. **Testing**
+   - Jest for unit tests
+   - Supertest for API integration tests
+   - Coverage via `npm run test:coverage`
 
 ### Development Tools
 

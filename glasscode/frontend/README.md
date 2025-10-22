@@ -32,12 +32,19 @@ Use the provided bootstrap script to automatically set up your GlassCode Academy
    NEXT_PUBLIC_API_BASE=http://localhost:8080
    ```
 
-2. Run the development server:
+2. Install and validate:
+   ```bash
+   npm install
+   npm run typecheck
+   npm run lint
+   ```
+
+3. Run the development server:
    ```bash
    npm run dev
    ```
 
-The application will be available at http://localhost:3000.
+The application runs at `http://localhost:3000`.
 
 ## Features
 
@@ -133,26 +140,19 @@ The frontend will start on `http://localhost:3000`
 
 ## GraphQL Integration
 
-The frontend uses Apollo Client to communicate with the backend GraphQL API.
+Apollo Client is configured, but GraphQL is optional in this project. The frontend proxies `/graphql` to the backend only if a GraphQL service is available. When GraphQL is unreachable, feature code falls back to the content registry for stats and summaries.
 
 ### Configuration
-- Apollo Client configuration in `src/apolloClient.ts`
-- GraphQL queries and mutations in page components
+- Apollo Client setup in `src/apolloClient.ts`
+- Endpoint derived by `getGraphQLEndpoint()` and proxied via `next.config.ts`
+- `NEXT_PUBLIC_API_BASE` controls the proxy destination during development
 
-### Queries Used
-- `dotNetLessons`, `nextJsLessons`, `graphQLLessons`, `laravelLessons`
-- `reactLessons`, `tailwindLessons`, `nodeLessons`, `sassLessons`
-- `dotNetInterviewQuestions`, `nextJsInterviewQuestions`, `graphQLInterviewQuestions`, `laravelInterviewQuestions`
-- `reactInterviewQuestions`, `tailwindInterviewQuestions`, `nodeInterviewQuestions`, `sassInterviewQuestions`
+### Queries (if backend provides GraphQL)
+- Examples: `programmingLessons`, `programmingInterviewQuestions`, `programmingLesson(id)`
+- Other legacy query names may exist in code history; the stats hook falls back gracefully
 
-### Mutations Used
-- `submitAnswer` - Submit answers for questions
-- `submitLaravelAnswer` - Submit answers for Laravel questions
-- `submitReactAnswer` - Submit answers for React questions
-- `submitTailwindAnswer` - Submit answers for Tailwind questions
-- `submitNodeAnswer` - Submit answers for Node.js questions
-- `submitSassAnswer` - Submit answers for SASS questions
-- `trackProgress` - Track user progress
+### Mutations
+- Mutation usage is currently minimal; most write operations go through REST APIs
 
 ## Styling
 
@@ -182,20 +182,22 @@ To modify styles:
 
 ## Testing
 
-To test the application:
-1. Start the backend server
-2. Start the frontend development server
-3. Navigate to `http://localhost:3000`
-4. Test all modules including the new technology sections
+### Static checks
+- `npm run typecheck` to verify TypeScript types across app and tests
+- `npm run lint` to enforce code quality
 
-### Testing Technology Modules
+### Local verification
+1. Start the backend (`cd ../../backend-node && npm run dev`)
+2. Start the frontend (`npm run dev`)
+3. Open `http://localhost:3000` and validate module pages
 
-1. Navigate to `/react/lessons` and `/react/interview` to view React content
-2. Navigate to `/tailwind/lessons` and `/tailwind/interview` to view Tailwind CSS content
-3. Navigate to `/node/lessons` and `/node/interview` to view Node.js content
-4. Navigate to `/sass/lessons` and `/sass/interview` to view SASS content
-5. Verify that content loads correctly
-6. Test quiz functionality with answer submission
+### Manual module verification
+- React: `/react/lessons` and `/react/interview`
+- Tailwind: `/tailwind/lessons` and `/tailwind/interview`
+- Node: `/node/lessons` and `/node/interview`
+- SASS: `/sass/lessons` and `/sass/interview`
+
+Note: Jest types are installed for tests, but the frontend does not define a `npm test` script; use typecheck/lint and pages for verification.
 
 ## Admin Dashboard
 

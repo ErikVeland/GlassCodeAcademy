@@ -183,97 +183,122 @@ class ContentRegistryLoader {
   }
 
   /**
-   * Internal method to load registry
+   * Internal method to load registry with retry mechanism
    */
   private async loadRegistryInternal(): Promise<ContentRegistry> {
-    try {
-      const isBrowser = typeof window !== 'undefined';
-      const base = isBrowser ? '' : (() => { try { return getPublicOriginStrict().replace(/\/+$/, ''); } catch { return ''; } })();
+    // Retry configuration
+    const maxRetries = 3;
+    const baseDelay = 1000; // 1 second
+    
+    const fetchWithRetry = async (retryCount = 0): Promise<ContentRegistry> => {
+      try {
+        const isBrowser = typeof window !== 'undefined';
+        const base = isBrowser ? '' : (() => { try { return getPublicOriginStrict().replace(/\/+$/, ''); } catch { return ''; } })();
 
-      // Debug environment and base resolution on server
-      if (!isBrowser) {
-        console.debug('[ContentRegistry] env NEXT_PUBLIC_BASE_URL =', process.env.NEXT_PUBLIC_BASE_URL);
-        console.debug('[ContentRegistry] env GC_CONTENT_MODE =', process.env.GC_CONTENT_MODE);
-        console.debug('[ContentRegistry] computed base =', base);
-      }
-
-      // In dev server-side, proactively include localhost candidates to avoid production base misresolution
-      const devCandidates: string[] = [];
-      if (!isBrowser && process.env.NODE_ENV !== 'production') {
-        const configuredBase = (process.env.NEXT_PUBLIC_BASE_URL || '').trim().replace(/\/+$/, '');
-        if (/localhost|127\.0\.0\.1/.test(configuredBase)) {
-          devCandidates.push(`${configuredBase}/api/content/registry`, `${configuredBase}/registry.json`);
-        } else {
-          // Fallback to common localhost origins
-          devCandidates.push(
-            'http://localhost:3000/api/content/registry',
-            'http://localhost:3000/registry.json',
-            'http://127.0.0.1:3000/api/content/registry',
-            'http://127.0.0.1:3000/registry.json'
-          );
+        // Debug environment and base resolution on server
+        if (!isBrowser) {
+          console.debug('[ContentRegistry] env NEXT_PUBLIC_BASE_URL =', process.env.NEXT_PUBLIC_BASE_URL);
+          console.debug('[ContentRegistry] env GC_CONTENT_MODE =', process.env.GC_CONTENT_MODE);
+          console.debug('[ContentRegistry] computed base =', base);
         }
-      }
 
-      const candidates: string[] = isBrowser
-        ? [
-            // Prefer API route first, then fallback to static registry (browser relative URLs)
-            '/api/content/registry',
-            '/registry.json',
-          ]
-        : [
-            // Server-side absolute URLs only
-            ...devCandidates,
-            ...(base ? [`${base}/api/content/registry`, `${base}/registry.json`] : []),
-          ];
-
-      const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 10000);
-
-      for (const url of candidates) {
-        try {
-          console.debug('[ContentRegistry] trying', url);
-          const res = await fetch(url, typeof window !== 'undefined'
-            ? { signal: controller.signal, cache: 'no-store' }
-            : { signal: controller.signal, next: { revalidate: 3600 } });
-          if (res.ok) {
-            const data: unknown = await res.json();
-            const modules = (data as ContentRegistry)?.modules;
-            console.debug('[ContentRegistry] candidate ok; modules length =', Array.isArray(modules) ? modules.length : 'n/a');
-            // Only accept responses that include non-empty modules
-            if (Array.isArray(modules) && modules.length > 0) {
-              // Normalize routes to shortSlug-based paths to avoid legacy /modules links
-              const normalizedModules = await Promise.all(modules.map(async (m) => {
-                const slug = (m?.slug || '').toString();
-                const shortSlug = (await this.getShortSlugFromModuleSlug(slug)) || (slug.includes('-') ? slug.split('-')[0] : slug);
-                const routes = {
-                  overview: `/${shortSlug}`,
-                  lessons: `/${shortSlug}/lessons`,
-                  quiz: `/${shortSlug}/quiz`,
-                };
-                return { ...m, routes };
-              }));
-
-              const normalized = { ...(data as ContentRegistry), modules: normalizedModules };
-              clearTimeout(timeoutId);
-              return normalized as ContentRegistry;
-            }
-            // If modules are empty, try next candidate
+        // In dev server-side, proactively include localhost candidates to avoid production base misresolution
+        const devCandidates: string[] = [];
+        if (!isBrowser && process.env.NODE_ENV !== 'production') {
+          const configuredBase = (process.env.NEXT_PUBLIC_BASE_URL || '').trim().replace(/\/+$/, '');
+          if (/localhost|127\.0\.0\.1/.test(configuredBase)) {
+            devCandidates.push(`${configuredBase}/api/content/registry`, `${configuredBase}/registry.json`);
+          } else {
+            // Fallback to common localhost origins
+            devCandidates.push(
+              'http://localhost:3000/api/content/registry',
+              'http://localhost:3000/registry.json',
+              'http://127.0.0.1:3000/api/content/registry',
+              'http://127.0.0.1:3000/registry.json'
+            );
           }
-        } catch (err) {
-          console.warn('[ContentRegistry] candidate failed', url, err);
-          // Try next candidate
         }
+
+        const candidates: string[] = isBrowser
+          ? [
+              // Prefer API route first, then fallback to static registry (browser relative URLs)
+              '/api/content/registry',
+              '/registry.json',
+            ]
+          : [
+              // Server-side absolute URLs only
+              ...devCandidates,
+              ...(base ? [`${base}/api/content/registry`, `${base}/registry.json`] : []),
+            ];
+
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 10000);
+
+        for (const url of candidates) {
+          try {
+            console.debug('[ContentRegistry] trying', url);
+            const res = await fetch(url, typeof window !== 'undefined'
+              ? { signal: controller.signal, cache: 'no-store' }
+              : { signal: controller.signal, next: { revalidate: 3600 } });
+            if (res.ok) {
+              const data: unknown = await res.json();
+              const modules = (data as ContentRegistry)?.modules;
+              console.debug('[ContentRegistry] candidate ok; modules length =', Array.isArray(modules) ? modules.length : 'n/a');
+              // Only accept responses that include non-empty modules
+              if (Array.isArray(modules) && modules.length > 0) {
+                // Normalize routes to shortSlug-based paths to avoid legacy /modules links
+                const normalizedModules = await Promise.all(modules.map(async (m) => {
+                  const slug = (m?.slug || '').toString();
+                  const shortSlug = (await this.getShortSlugFromModuleSlug(slug)) || (slug.includes('-') ? slug.split('-')[0] : slug);
+                  const routes = {
+                    overview: `/${shortSlug}`,
+                    lessons: `/${shortSlug}/lessons`,
+                    quiz: `/${shortSlug}/quiz`,
+                  };
+                  return { ...m, routes };
+                }));
+
+                const normalized = { ...(data as ContentRegistry), modules: normalizedModules };
+                clearTimeout(timeoutId);
+                return normalized as ContentRegistry;
+              }
+              // If modules are empty, try next candidate
+            }
+          } catch (err) {
+            console.warn('[ContentRegistry] candidate failed', url, err);
+            // For network errors, we might want to retry if this is not the last attempt
+            if (retryCount < maxRetries) {
+              throw err;
+            }
+            // Try next candidate
+          }
+        }
+
+        clearTimeout(timeoutId);
+
+        // Server-side fallback temporarily disabled to avoid client bundle issues
+        // Fallback to minimal registry if all candidates fail or return empty modules
+        return buildMinimalRegistry();
+      } catch (err) {
+        console.error('Failed to load registry internally:', err);
+        
+        // If we've exhausted retries, return minimal registry
+        if (retryCount >= maxRetries) {
+          console.error('Failed to load registry after retries, returning minimal registry');
+          return buildMinimalRegistry();
+        }
+        
+        // Wait with exponential backoff before retrying
+        const delay = baseDelay * Math.pow(2, retryCount);
+        console.log(`Retrying registry load in ${delay}ms...`);
+        await new Promise(resolve => setTimeout(resolve, delay));
+        
+        // Retry
+        return fetchWithRetry(retryCount + 1);
       }
-
-      clearTimeout(timeoutId);
-
-      // Server-side fallback temporarily disabled to avoid client bundle issues
-      // Fallback to minimal registry if all candidates fail or return empty modules
-      return buildMinimalRegistry();
-    } catch (err) {
-      console.error('Failed to load registry internally:', err);
-      return buildMinimalRegistry();
-    }
+    };
+    
+    return fetchWithRetry();
   }
 
   /**
@@ -434,71 +459,30 @@ class ContentRegistryLoader {
   }
 
   /**
-   * Get lessons for a specific module
+   * Get lessons for a specific module with retry mechanism
    */
   async getModuleLessons(moduleSlug: string): Promise<Lesson[]> {
-    try {
-      const isBrowser = typeof window !== 'undefined';
-      if (isBrowser) {
-        const res = await fetch(`/api/content/lessons/${moduleSlug}`, { cache: 'no-store' });
-        if (!res.ok) return [];
-        const data: unknown = await res.json();
-        type PartialLesson = Lesson & Record<string, unknown>;
-        const lessonsArr: PartialLesson[] = Array.isArray(data)
-          ? (data as PartialLesson[])
-          : (Array.isArray((data as { lessons?: PartialLesson[] })?.lessons) ? ((data as { lessons?: PartialLesson[] }).lessons as PartialLesson[]) : []);
-        return lessonsArr.map((l, i) => {
-          const orderVal = typeof l.order === 'number' ? l.order : i + 1;
-          const lApi = l as { codeExample?: unknown; codeExplanation?: unknown; code?: { example?: unknown; explanation?: unknown } };
-          // Normalize codeExample/codeExplanation to strings to satisfy Lesson type
-          const codeExampleStr = typeof lApi.codeExample === 'string' ? lApi.codeExample : undefined;
-          const codeExplanationStr = typeof lApi.codeExplanation === 'string' ? lApi.codeExplanation : undefined;
-          const code: Lesson['code'] | undefined =
-            lApi.code && typeof lApi.code === 'object'
-              ? {
-                  example: typeof lApi.code.example === 'string' ? lApi.code.example : undefined,
-                  explanation: typeof lApi.code.explanation === 'string' ? lApi.code.explanation : undefined,
-                }
-              : (codeExampleStr || codeExplanationStr ? { 
-                  example: codeExampleStr || '', 
-                  explanation: codeExplanationStr || '' 
-                } : undefined);
-          const lesson: Lesson = {
-            ...l,
-            order: orderVal,
-            code,
-            intro: typeof l.intro === 'string' ? l.intro : '',
-            pitfalls: Array.isArray(l.pitfalls) ? l.pitfalls : [],
-            exercises: Array.isArray(l.exercises) ? l.exercises : [],
-            objectives: Array.isArray(l.objectives) ? l.objectives : [],
-          };
-          return lesson;
-        });
-      }
-
-      // Server-side: Node fetch requires absolute URLs. Try local origins proactively in dev.
-      const candidates: string[] = [];
+    // Retry configuration
+    const maxRetries = 3;
+    const baseDelay = 1000; // 1 second
+    
+    const fetchWithRetry = async (retryCount = 0): Promise<Lesson[]> => {
       try {
-        const origin = getPublicOriginStrict().replace(/\/+$/, '');
-        candidates.push(`${origin}/api/content/lessons/${moduleSlug}`);
-      } catch {
-        // no configured public origin; rely on localhost candidates
-      }
-      // Common localhost dev ports
-      candidates.push(
-        'http://localhost:3000/api/content/lessons/' + moduleSlug,
-        'http://127.0.0.1:3000/api/content/lessons/' + moduleSlug
-      );
-
-      for (const url of candidates) {
-        try {
-          const res = await fetch(url, { next: { revalidate: 3600 } });
-          if (!res.ok) continue;
+        const isBrowser = typeof window !== 'undefined';
+        if (isBrowser) {
+          const res = await fetch(`/api/content/lessons/${moduleSlug}`, { cache: 'no-store' });
+          if (!res.ok) {
+            // For 5xx errors, we might want to retry
+            if (res.status >= 500 && retryCount < maxRetries) {
+              throw new Error(`Server error: ${res.status}`);
+            }
+            return [];
+          }
           const data: unknown = await res.json();
-          type PartialLessonSSR = Lesson & Record<string, unknown>;
-          const lessonsArr: PartialLessonSSR[] = Array.isArray(data)
-            ? (data as PartialLessonSSR[])
-            : (Array.isArray((data as { lessons?: PartialLessonSSR[] })?.lessons) ? ((data as { lessons?: PartialLessonSSR[] }).lessons as PartialLessonSSR[]) : []);
+          type PartialLesson = Lesson & Record<string, unknown>;
+          const lessonsArr: PartialLesson[] = Array.isArray(data)
+            ? (data as PartialLesson[])
+            : (Array.isArray((data as { lessons?: PartialLesson[] })?.lessons) ? ((data as { lessons?: PartialLesson[] }).lessons as PartialLesson[]) : []);
           return lessonsArr.map((l, i) => {
             const orderVal = typeof l.order === 'number' ? l.order : i + 1;
             const lApi = l as { codeExample?: unknown; codeExplanation?: unknown; code?: { example?: unknown; explanation?: unknown } };
@@ -526,109 +510,224 @@ class ContentRegistryLoader {
             };
             return lesson;
           });
-        } catch {
-          // try next candidate
-          continue;
         }
-      }
 
-      return [];
-    } catch (err) {
-      console.error(`getModuleLessons(${moduleSlug}) failed:`, err);
-      return [];
-    }
+        // Server-side: Node fetch requires absolute URLs. Try local origins proactively in dev.
+        const candidates: string[] = [];
+        try {
+          const origin = getPublicOriginStrict().replace(/\/+$/, '');
+          candidates.push(`${origin}/api/content/lessons/${moduleSlug}`);
+        } catch {
+          // no configured public origin; rely on localhost candidates
+        }
+        // Common localhost dev ports
+        candidates.push(
+          'http://localhost:3000/api/content/lessons/' + moduleSlug,
+          'http://127.0.0.1:3000/api/content/lessons/' + moduleSlug
+        );
+
+        for (const url of candidates) {
+          try {
+            const res = await fetch(url, { next: { revalidate: 3600 } });
+            if (!res.ok) {
+              // For 5xx errors, we might want to retry
+              if (res.status >= 500 && retryCount < maxRetries) {
+                throw new Error(`Server error: ${res.status}`);
+              }
+              continue;
+            }
+            const data: unknown = await res.json();
+            type PartialLessonSSR = Lesson & Record<string, unknown>;
+            const lessonsArr: PartialLessonSSR[] = Array.isArray(data)
+              ? (data as PartialLessonSSR[])
+              : (Array.isArray((data as { lessons?: PartialLessonSSR[] })?.lessons) ? ((data as { lessons?: PartialLessonSSR[] }).lessons as PartialLessonSSR[]) : []);
+            return lessonsArr.map((l, i) => {
+              const orderVal = typeof l.order === 'number' ? l.order : i + 1;
+              const lApi = l as { codeExample?: unknown; codeExplanation?: unknown; code?: { example?: unknown; explanation?: unknown } };
+              // Normalize codeExample/codeExplanation to strings to satisfy Lesson type
+              const codeExampleStr = typeof lApi.codeExample === 'string' ? lApi.codeExample : undefined;
+              const codeExplanationStr = typeof lApi.codeExplanation === 'string' ? lApi.codeExplanation : undefined;
+              const code: Lesson['code'] | undefined =
+                lApi.code && typeof lApi.code === 'object'
+                  ? {
+                      example: typeof lApi.code.example === 'string' ? lApi.code.example : undefined,
+                      explanation: typeof lApi.code.explanation === 'string' ? lApi.code.explanation : undefined,
+                    }
+                  : (codeExampleStr || codeExplanationStr ? { 
+                      example: codeExampleStr || '', 
+                      explanation: codeExplanationStr || '' 
+                    } : undefined);
+              const lesson: Lesson = {
+                ...l,
+                order: orderVal,
+                code,
+                intro: typeof l.intro === 'string' ? l.intro : '',
+                pitfalls: Array.isArray(l.pitfalls) ? l.pitfalls : [],
+                exercises: Array.isArray(l.exercises) ? l.exercises : [],
+                objectives: Array.isArray(l.objectives) ? l.objectives : [],
+              };
+              return lesson;
+            });
+          } catch (err) {
+            // For network errors, we might want to retry
+            if (retryCount < maxRetries) {
+              throw err;
+            }
+            // try next candidate
+            continue;
+          }
+        }
+
+        return [];
+      } catch (err) {
+        console.error(`getModuleLessons(${moduleSlug}) attempt ${retryCount + 1} failed:`, err);
+        
+        // If we've exhausted retries, return empty array
+        if (retryCount >= maxRetries) {
+          console.error(`getModuleLessons(${moduleSlug}) failed after ${maxRetries} retries`);
+          return [];
+        }
+        
+        // Wait with exponential backoff before retrying
+        const delay = baseDelay * Math.pow(2, retryCount);
+        console.log(`Retrying getModuleLessons(${moduleSlug}) in ${delay}ms...`);
+        await new Promise(resolve => setTimeout(resolve, delay));
+        
+        // Retry
+        return fetchWithRetry(retryCount + 1);
+      }
+    };
+    
+    return fetchWithRetry();
   }
 
   /**
-   * Get quiz for a specific module
+   * Get quiz for a specific module with retry mechanism
    */
   async getModuleQuiz(moduleSlug: string): Promise<Quiz | null> {
-    try {
-      const shortSlug = await this.getShortSlugFromModuleSlug(moduleSlug) || moduleSlug;
-      
-      // Check for prefetched data first (browser only)
-      const isBrowser = typeof window !== 'undefined';
-      if (isBrowser) {
-        // Check localStorage cache from service worker prefetching
-        const cacheKey = `quiz_prefetch_${shortSlug}`;
-        const cached = localStorage.getItem(cacheKey);
-        
-        if (cached) {
-          const { timestamp, data } = JSON.parse(cached);
-          // Use cache if less than 30 minutes old
-          if (Date.now() - timestamp < 30 * 60 * 1000) {
-            console.log(`[ContentRegistry] Using prefetched quiz for ${shortSlug}`);
-            const normalizedQuestions = Array.isArray(data.questions) ? data.questions.map(q => normalizeQuestion(q)) : [];
-            return { ...data, questions: normalizedQuestions };
-          }
-        }
-        
-        // Also check sessionStorage cache from hook prefetching
-        const sessionCacheKey = `prefetch_quiz_${shortSlug}`;
-        const sessionCached = sessionStorage.getItem(sessionCacheKey);
-        
-        if (sessionCached) {
-          const { timestamp, data } = JSON.parse(sessionCached);
-          // Use cache if less than 5 minutes old
-          if (Date.now() - timestamp < 5 * 60 * 1000) {
-            console.log(`[ContentRegistry] Using session cached quiz for ${shortSlug}`);
-            const normalizedQuestions = Array.isArray(data.questions) ? data.questions.map(q => normalizeQuestion(q)) : [];
-            return { ...data, questions: normalizedQuestions };
-          }
-        }
-      }
-      
-      if (isBrowser) {
-        const res = await fetch(`/api/content/quizzes/${shortSlug}`, { cache: 'no-store' });
-        if (!res.ok) return null;
-        const data: unknown = await res.json();
-        if (!(data && typeof data === 'object')) return null;
-        const quiz = data as Quiz;
-        const normalizedQuestions = Array.isArray(quiz.questions) ? quiz.questions.map(q => normalizeQuestion(q)) : [];
-        // Cache in sessionStorage for future use
-        try {
-          sessionStorage.setItem(`prefetch_quiz_${shortSlug}`, JSON.stringify({
-            timestamp: Date.now(),
-            data: { ...quiz, questions: normalizedQuestions }
-          }));
-        } catch {
-          // Ignore storage errors
-        }
-        return { ...quiz, questions: normalizedQuestions };
-      }
-
-      // Server-side: try absolute local origins first
-      const candidates: string[] = [];
+    // Retry configuration
+    const maxRetries = 3;
+    const baseDelay = 1000; // 1 second
+    
+    const fetchWithRetry = async (retryCount = 0): Promise<Quiz | null> => {
       try {
-        const origin = getPublicOriginStrict().replace(/\/+$/, '');
-        candidates.push(`${origin}/api/content/quizzes/${shortSlug}`);
-      } catch {
-        // ignore
-      }
-      candidates.push(
-        'http://localhost:3000/api/content/quizzes/' + shortSlug,
-        'http://127.0.0.1:3000/api/content/quizzes/' + shortSlug
-      );
-
-      for (const url of candidates) {
-        try {
-          const res = await fetch(url, { next: { revalidate: 3600 } });
-          if (!res.ok) continue;
+        const shortSlug = await this.getShortSlugFromModuleSlug(moduleSlug) || moduleSlug;
+        
+        // Check for prefetched data first (browser only)
+        const isBrowser = typeof window !== 'undefined';
+        if (isBrowser) {
+          // Check localStorage cache from service worker prefetching
+          const cacheKey = `quiz_prefetch_${shortSlug}`;
+          const cached = localStorage.getItem(cacheKey);
+          
+          if (cached) {
+            const { timestamp, data } = JSON.parse(cached);
+            // Use cache if less than 30 minutes old
+            if (Date.now() - timestamp < 30 * 60 * 1000) {
+              console.log(`[ContentRegistry] Using prefetched quiz for ${shortSlug}`);
+              const normalizedQuestions = Array.isArray(data.questions) ? data.questions.map((q: ProgrammingQuestion) => normalizeQuestion(q)) : [];
+              return { ...data, questions: normalizedQuestions };
+            }
+          }
+          
+          // Also check sessionStorage cache from hook prefetching
+          const sessionCacheKey = `prefetch_quiz_${shortSlug}`;
+          const sessionCached = sessionStorage.getItem(sessionCacheKey);
+          
+          if (sessionCached) {
+            const { timestamp, data } = JSON.parse(sessionCached);
+            // Use cache if less than 5 minutes old
+            if (Date.now() - timestamp < 5 * 60 * 1000) {
+              console.log(`[ContentRegistry] Using session cached quiz for ${shortSlug}`);
+              const normalizedQuestions = Array.isArray(data.questions) ? data.questions.map((q: ProgrammingQuestion) => normalizeQuestion(q)) : [];
+              return { ...data, questions: normalizedQuestions };
+            }
+          }
+        }
+        
+        if (isBrowser) {
+          const res = await fetch(`/api/content/quizzes/${shortSlug}`, { cache: 'no-store' });
+          if (!res.ok) {
+            // For 5xx errors, we might want to retry
+            if (res.status >= 500 && retryCount < maxRetries) {
+              throw new Error(`Server error: ${res.status}`);
+            }
+            return null;
+          }
           const data: unknown = await res.json();
-          if (!(data && typeof data === 'object')) continue;
+          if (!(data && typeof data === 'object')) return null;
           const quiz = data as Quiz;
           const normalizedQuestions = Array.isArray(quiz.questions) ? quiz.questions.map(q => normalizeQuestion(q)) : [];
+          // Cache in sessionStorage for future use
+          try {
+            sessionStorage.setItem(`prefetch_quiz_${shortSlug}`, JSON.stringify({
+              timestamp: Date.now(),
+              data: { ...quiz, questions: normalizedQuestions }
+            }));
+          } catch {
+            // Ignore storage errors
+          }
           return { ...quiz, questions: normalizedQuestions };
-        } catch {
-          continue;
         }
-      }
 
-      return null;
-    } catch (error: unknown) {
-      console.error(`Failed to load quiz for ${moduleSlug}:`, error);
-      return null;
-    }
+        // Server-side: try absolute local origins first
+        const candidates: string[] = [];
+        try {
+          const origin = getPublicOriginStrict().replace(/\/+$/, '');
+          candidates.push(`${origin}/api/content/quizzes/${shortSlug}`);
+        } catch {
+          // ignore
+        }
+        candidates.push(
+          'http://localhost:3000/api/content/quizzes/' + shortSlug,
+          'http://127.0.0.1:3000/api/content/quizzes/' + shortSlug
+        );
+
+        for (const url of candidates) {
+          try {
+            const res = await fetch(url, { next: { revalidate: 3600 } });
+            if (!res.ok) {
+              // For 5xx errors, we might want to retry
+              if (res.status >= 500 && retryCount < maxRetries) {
+                throw new Error(`Server error: ${res.status}`);
+              }
+              continue;
+            }
+            const data: unknown = await res.json();
+            if (!(data && typeof data === 'object')) continue;
+            const quiz = data as Quiz;
+            const normalizedQuestions = Array.isArray(quiz.questions) ? quiz.questions.map(q => normalizeQuestion(q)) : [];
+            return { ...quiz, questions: normalizedQuestions };
+          } catch (err) {
+            // For network errors, we might want to retry
+            if (retryCount < maxRetries) {
+              throw err;
+            }
+            continue;
+          }
+        }
+
+        return null;
+      } catch (err) {
+        console.error(`getModuleQuiz(${moduleSlug}) attempt ${retryCount + 1} failed:`, err);
+        
+        // If we've exhausted retries, return null
+        if (retryCount >= maxRetries) {
+          console.error(`getModuleQuiz(${moduleSlug}) failed after ${maxRetries} retries`);
+          return null;
+        }
+        
+        // Wait with exponential backoff before retrying
+        const delay = baseDelay * Math.pow(2, retryCount);
+        console.log(`Retrying getModuleQuiz(${moduleSlug}) in ${delay}ms...`);
+        await new Promise(resolve => setTimeout(resolve, delay));
+        
+        // Retry
+        return fetchWithRetry(retryCount + 1);
+      }
+    };
+    
+    return fetchWithRetry();
   }
 
   /**

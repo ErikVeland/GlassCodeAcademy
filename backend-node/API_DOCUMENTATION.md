@@ -190,10 +190,15 @@ GET /modules/{id}
 }
 ```
 
-### Get Module Quizzes by Slug
+### Get All Quizzes for a Module by Slug
 ```
 GET /modules/{slug}/quiz
 ```
+
+This endpoint retrieves all quizzes for a specific module identified by its slug. It aggregates quizzes from all lessons within the module.
+
+**Path Parameters:**
+- `slug` - The slug of the module (e.g., "programming-fundamentals", "react-fundamentals")
 
 **Response:**
 ```json
@@ -202,15 +207,72 @@ GET /modules/{slug}/quiz
   "data": [
     {
       "id": 1,
+      "lesson_id": 1,
       "question": "What does HTML stand for?",
       "topic": "html",
       "difficulty": "Beginner",
-      "choices": ["HyperText Markup Language", "HighText Machine Language", "HyperText and Links Markup Language", "None of these"],
+      "choices": [
+        "HyperText Markup Language",
+        "HighText Machine Language",
+        "HyperText and Links Markup Language",
+        "None of these"
+      ],
+      "fixedChoiceOrder": false,
+      "choiceLabels": "letters",
+      "acceptedAnswers": null,
+      "explanation": "HTML stands for HyperText Markup Language",
+      "industryContext": "HTML is the standard markup language for documents designed to be displayed in a web browser.",
+      "tags": ["basics", "web"],
+      "questionType": "multiple-choice",
+      "estimatedTime": 30,
       "correctAnswer": 0,
-      "explanation": "HTML stands for HyperText Markup Language"
+      "quizType": "multiple-choice",
+      "sources": [
+        {
+          "title": "MDN Web Docs",
+          "url": "https://developer.mozilla.org/en-US/docs/Web/HTML"
+        }
+      ],
+      "sort_order": 1,
+      "isPublished": true
+    },
+    {
+      "id": 2,
+      "lesson_id": 1,
+      "question": "What is the correct HTML element for the largest heading?",
+      "topic": "html",
+      "difficulty": "Beginner",
+      "choices": [
+        "<h6>",
+        "<heading>",
+        "<h1>",
+        "<head>"
+      ],
+      "fixedChoiceOrder": false,
+      "choiceLabels": "letters",
+      "acceptedAnswers": null,
+      "explanation": "The <h1> element is used for the most important heading.",
+      "industryContext": "HTML heading elements are used to define headings and subheadings in web pages.",
+      "tags": ["basics", "headings"],
+      "questionType": "multiple-choice",
+      "estimatedTime": 20,
+      "correctAnswer": 2,
+      "quizType": "multiple-choice",
+      "sources": [],
+      "sort_order": 2,
+      "isPublished": true
     }
   ]
 }
+```
+
+**Error Responses:**
+- `404 Not Found` - Module with the specified slug does not exist
+- `500 Internal Server Error` - Unexpected server error
+
+**Example Request:**
+```bash
+curl -X GET http://localhost:8080/api/modules/programming-fundamentals/quiz
 ```
 
 ## Lessons

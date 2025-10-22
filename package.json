@@ -7,5 +7,8 @@
     "typecheck": "npm --prefix glasscode/frontend run typecheck",
     "lint": "npm --prefix glasscode/frontend run lint",
     "ci:build": "npm --prefix glasscode/frontend ci && npm --prefix glasscode/frontend run lint && npm --prefix glasscode/frontend run typecheck && npm --prefix glasscode/frontend run build"
+  },
+  "devDependencies": {
+    "@types/jest": "^30.0.0"
   }
 }

@@ -28,23 +28,26 @@ For detailed information about the current architecture, see [CURRENT_ARCHITECTU
 ## Technology Stack
 
 ### Frontend
-- Next.js 15.3.5
-- React 19.0.0
-- TypeScript
-- Tailwind CSS
+- `next@15.3.5`
+- `react@19` and `react-dom@19`
+- `typescript@5`
+- `tailwindcss@4`
 
 ### Backend
-- Node.js/Express with PostgreSQL
-- Sequelize ORM for database operations
-- JWT for authentication and authorization
-- Jest and Supertest for testing
+- `node@18+` with `express@4`
+- `postgresql` with `sequelize@6`
+- `jsonwebtoken` for auth and RBAC
+- `winston@3` for structured logging
+- `jest@29` and `supertest@6` for tests
 
-### Development Tools
-- Node.js 18+ 
-- Visual Studio Code
-- Git version control
+### Developer Workflow
+- `npm install` installs all required packages (no manual extras)
+- `./start-dev.sh` boots backend on `http://localhost:8080` and frontend on `http://localhost:3000`
+- Type safety: `npm run typecheck` in `glasscode/frontend`
+- Linting: `npm run lint` in both frontend and backend
 
-> Testing note: For E2E demos and UI inspections in this project, prefer Trae's built-in browser. Playwright is not required here; any references in lesson content are educational.
+### Documentation
+- See `docs/INDEX.md` for a curated entry point that links to the architecture, tech stack, testing instructions, and service READMEs.
 
 ## System Architecture
 
@@ -182,31 +185,31 @@ This prints pool sizes and predicted beginner/intermediate/advanced counts per m
 ## Observability
 
 ### Structured Logging
-- Comprehensive logging with Serilog
+- Winston-based structured logging with JSON format
 - Correlation ID tracking across requests
-- Structured log entries with contextual information
-- Multiple output sinks (Console, File, JSON)
+- Contextual log metadata and error stacks
+- Console transport in dev; file/JSON transport in production
 - Performance timing and error tracking
 
 ### Health Monitoring
 - Application health checks
 - Database connectivity monitoring
-- Cache performance tracking
-- API response time monitoring
+- Rate limit and request metrics
+- API response time tracking
 
 ## Testing Infrastructure
 
 ### Unit Testing
-- xUnit testing framework
-- Moq for mocking dependencies
-- Comprehensive test coverage targets (80%+)
-- Continuous integration with GitHub Actions
+- Jest for unit and service tests
+- Built-in mocking utilities and test doubles
+- Coverage targets enforced via `npm run test:coverage`
+- CI-ready test scripts
 
 ### Integration Testing
-- Full API endpoint testing
-- Database integration tests
-- Security feature validation
-- Performance benchmarking
+- Supertest for API endpoint tests
+- Database integration tests via Sequelize + SQLite
+- Security feature validation (JWT, RBAC, rate limits)
+- Performance smoke checks
 
 ## Recent Enhancements (October 2025)
 

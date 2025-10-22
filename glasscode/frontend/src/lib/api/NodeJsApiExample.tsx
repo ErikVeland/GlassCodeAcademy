@@ -280,8 +280,8 @@ const LessonQuiz: React.FC<{ lessonId: number }> = ({ lessonId }) => {
       
       {result ? (
         <div className="text-xs">
-          <p>Score: {result.data?.scorePercentage.toFixed(0)}%</p>
-          <p>Correct: {result.data?.correctAnswers}/{result.data?.totalQuestions}</p>
+          <p>Score: {result.scorePercentage.toFixed(0)}%</p>
+          <p>Correct: {result.correctAnswers}/{result.totalQuestions}</p>
         </div>
       ) : (
         <>

@@ -230,15 +230,13 @@ class NodeJsApiClient {
   ): Promise<ApiResponse<T>> {
     const url = `${this.baseUrl}/api${endpoint}`;
     
-    // Set default headers
-    const headers: Record<string, string> = {
-      'Content-Type': 'application/json',
-      ...options.headers,
-    };
+    // Set default headers using Headers to support all HeadersInit variants
+    const headers = new Headers(options.headers || {});
+    headers.set('Content-Type', 'application/json');
 
     // Add authentication header if token exists
     if (this.token) {
-      headers['Authorization'] = `Bearer ${this.token}`;
+      headers.set('Authorization', `Bearer ${this.token}`);
     }
 
     try {
@@ -383,3 +381,21 @@ class NodeJsApiClient {
 
 // Export singleton instance
 export const nodeJsApiClient = new NodeJsApiClient();
+export type {
+  ApiResponse,
+  LoginRequest,
+  RegisterRequest,
+  AuthResponse,
+  ProfileResponse,
+  UpdateProfileRequest,
+  Course,
+  CourseListResponse,
+  Module,
+  Lesson,
+  QuizQuestion,
+  QuizSubmissionRequest,
+  QuizSubmissionResponse,
+  UserProgress,
+  UserLessonProgress,
+  ProgressSummary,
+};

@@ -1,13 +1,33 @@
 const { getModuleById, getLessonsByModuleId } = require('../services/contentService');
 const { Module, Lesson, LessonQuiz } = require('../models');
+const winston = require('winston');
+
+// Create a logger instance
+const logger = winston.createLogger({
+  level: 'info',
+  format: winston.format.combine(
+    winston.format.timestamp(),
+    winston.format.errors({ stack: true }),
+    winston.format.json()
+  ),
+  defaultMeta: { service: 'module-controller' },
+  transports: [
+    new winston.transports.Console({
+      format: winston.format.simple()
+    })
+  ]
+});
 
 const getModuleByIdController = async (req, res) => {
   try {
     const { id } = req.params;
     
+    logger.info('Fetching module by ID', { moduleId: id });
+    
     const module = await getModuleById(id);
     
     if (!module) {
+      logger.warn('Module not found', { moduleId: id });
       return res.status(404).json({
         success: false,
         error: {
@@ -17,11 +37,17 @@ const getModuleByIdController = async (req, res) => {
       });
     }
     
+    logger.info('Module fetched successfully', { moduleId: id });
     res.status(200).json({
       success: true,
       data: module
     });
   } catch (error) {
+    logger.error('Error fetching module by ID', { 
+      moduleId: req.params.id, 
+      error: error.message, 
+      stack: error.stack 
+    });
     res.status(500).json({
       success: false,
       error: {
@@ -36,13 +62,21 @@ const getLessonsByModuleIdController = async (req, res) => {
   try {
     const { moduleId } = req.params;
     
+    logger.info('Fetching lessons by module ID', { moduleId });
+    
     const lessons = await getLessonsByModuleId(moduleId);
     
+    logger.info('Lessons fetched successfully', { moduleId, count: lessons.length });
     res.status(200).json({
       success: true,
       data: lessons
     });
   } catch (error) {
+    logger.error('Error fetching lessons by module ID', { 
+      moduleId: req.params.moduleId, 
+      error: error.message, 
+      stack: error.stack 
+    });
     res.status(500).json({
       success: false,
       error: {
@@ -53,10 +87,12 @@ const getLessonsByModuleIdController = async (req, res) => {
   }
 };
 
-// Add new controller to get quizzes by module slug
+// Enhanced controller to get quizzes by module slug with better error handling and logging
 const getQuizzesByModuleSlugController = async (req, res) => {
   try {
     const { slug } = req.params;
+    
+    logger.info('Fetching quizzes by module slug', { moduleSlug: slug });
     
     // First find the module by slug
     const module = await Module.findOne({
@@ -66,6 +102,7 @@ const getQuizzesByModuleSlugController = async (req, res) => {
     });
     
     if (!module) {
+      logger.warn('Module not found when fetching quizzes', { moduleSlug: slug });
       return res.status(404).json({
         success: false,
         error: {
@@ -74,6 +111,8 @@ const getQuizzesByModuleSlugController = async (req, res) => {
         }
       });
     }
+    
+    logger.info('Module found, fetching lessons', { moduleSlug: slug, moduleId: module.id });
     
     // Get all lessons for this module
     const lessons = await Lesson.findAll({
@@ -84,8 +123,19 @@ const getQuizzesByModuleSlugController = async (req, res) => {
       order: [['order', 'ASC']]
     });
     
+    logger.info('Lessons fetched, fetching quizzes', { moduleSlug: slug, lessonCount: lessons.length });
+    
     // Get all quizzes for all lessons
     const lessonIds = lessons.map(lesson => lesson.id);
+    
+    if (lessonIds.length === 0) {
+      logger.warn('No lessons found for module, returning empty quiz array', { moduleSlug: slug, moduleId: module.id });
+      return res.status(200).json({
+        success: true,
+        data: []
+      });
+    }
+    
     const quizzes = await LessonQuiz.findAll({
       where: {
         lesson_id: lessonIds,
@@ -94,16 +144,23 @@ const getQuizzesByModuleSlugController = async (req, res) => {
       order: [['sort_order', 'ASC']]
     });
     
+    logger.info('Quizzes fetched successfully', { moduleSlug: slug, quizCount: quizzes.length });
+    
     res.status(200).json({
       success: true,
       data: quizzes
     });
   } catch (error) {
+    logger.error('Error fetching quizzes by module slug', { 
+      moduleSlug: req.params.slug, 
+      error: error.message, 
+      stack: error.stack 
+    });
     res.status(500).json({
       success: false,
       error: {
         code: 'INTERNAL_ERROR',
-        message: error.message
+        message: 'An error occurred while fetching quizzes. Please try again later.'
       }
     });
   }

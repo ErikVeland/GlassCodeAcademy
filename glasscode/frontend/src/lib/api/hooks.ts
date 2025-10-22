@@ -5,7 +5,7 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import { nodeJsApiClient } from './nodeJsApiClient';
-import { 
+import type { 
   Course, 
   Module, 
   Lesson, 
@@ -14,13 +14,14 @@ import {
   QuizSubmissionResponse,
   UserProgress,
   UserLessonProgress,
-  ProgressSummary
+  ProgressSummary,
+  AuthResponse
 } from './nodeJsApiClient';
 
 // Authentication hooks
 export const useAuth = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState<AuthResponse['user'] | null>(null);
   const [loading, setLoading] = useState(true);
 
   const login = useCallback(async (email: string, password: string) => {

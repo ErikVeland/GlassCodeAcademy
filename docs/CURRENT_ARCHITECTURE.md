@@ -214,18 +214,9 @@ chmod +x bootstrap.sh
 
 ## API Endpoints
 
-### GraphQL
-- **Endpoint**: `/graphql`
-- **UI**: `/graphql-ui`
-
-### Authentication
-- **Validate Token**: `POST /api/auth/validate`
-- **Refresh Token**: `POST /api/auth/refresh`
-- **Revoke Token**: `POST /api/auth/revoke`
-- **Token Info**: `POST /api/auth/info`
-
-### Health Check
-- **Endpoint**: `/api/health`
+- See `backend-node/API_DOCUMENTATION.md` for the full REST API reference, including authentication, courses, modules, lessons, quizzes, and progress endpoints.
+- GraphQL is optional; when present, the frontend proxies `/graphql` to the configured backend. Most data flows use REST.
+- Health: `GET /api/health` on the backend.
 
 ## Content Structure
 
