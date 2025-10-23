@@ -4,12 +4,20 @@ const helmet = require('helmet');
 const morgan = require('morgan');
 const dotenv = require('dotenv');
 
+// Load environment variables
+dotenv.config();
+
+// Database initialization
+const initializeDatabase = require('./src/utils/database');
+initializeDatabase();
+
+// Create Express server
+const app = express();
+const PORT = process.env.PORT || 8080;
+
 // Sentry initialization
 const Sentry = require('@sentry/node');
 const { nodeProfilingIntegration } = require('@sentry/profiling-node');
-
-// Load environment variables
-dotenv.config();
 
 // Initialize Sentry if DSN is provided
 if (process.env.SENTRY_DSN) {
@@ -30,24 +38,19 @@ if (process.env.SENTRY_DSN) {
   });
   
   console.log('Sentry initialized successfully');
+  
+  // RequestHandler creates a separate execution context using domains, so that every
+  // transaction/span/breadcrumb is attached to its own Hub instance
+  app.use(Sentry.Handlers.requestHandler());
+
+  // TracingHandler creates a trace for every incoming request
+  app.use(Sentry.Handlers.tracingHandler());
+  
+  // The error handler must be before any other error middleware and after all controllers
+  app.use(Sentry.Handlers.errorHandler());
 } else {
   console.log('Sentry DSN not provided, skipping initialization');
 }
-
-// Database initialization
-const initializeDatabase = require('./src/utils/database');
-initializeDatabase();
-
-// Create Express server
-const app = express();
-const PORT = process.env.PORT || 8080;
-
-// RequestHandler creates a separate execution context using domains, so that every
-// transaction/span/breadcrumb is attached to its own Hub instance
-app.use(Sentry.Handlers.requestHandler());
-
-// TracingHandler creates a trace for every incoming request
-app.use(Sentry.Handlers.tracingHandler());
 
 // App Configuration
 app.use(helmet()); // Security headers
@@ -77,9 +80,6 @@ app.use('/api/modules', require('./src/routes/moduleRoutes'));
 app.use('/api/lessons', require('./src/routes/lessonRoutes'));
 app.use('/api/progress', require('./src/routes/progressRoutes'));
 app.use('/api/quiz', require('./src/routes/quizRoutes'));
-
-// The error handler must be before any other error middleware and after all controllers
-app.use(Sentry.Handlers.errorHandler());
 
 // Error handling middleware
 app.use(require('./src/middleware/errorMiddleware'));

@@ -229,6 +229,11 @@ class ContentRegistryLoader {
               // Server-side absolute URLs only
               ...devCandidates,
               ...(base ? [`${base}/api/content/registry`, `${base}/registry.json`] : []),
+              // Localhost fallbacks to bypass front proxy issues (production-safe)
+              'http://localhost:3000/api/content/registry',
+              'http://localhost:3000/registry.json',
+              'http://127.0.0.1:3000/api/content/registry',
+              'http://127.0.0.1:3000/registry.json',
             ];
 
         const controller = new AbortController();
@@ -276,7 +281,51 @@ class ContentRegistryLoader {
 
         clearTimeout(timeoutId);
 
-        // Server-side fallback temporarily disabled to avoid client bundle issues
+        // As a last resort on server, attempt to read local registry files
+        if (!isBrowser) {
+          try {
+            const fs = await import('fs');
+            const path = await import('path');
+            const tryPaths = [
+              path.join(process.cwd(), '..', '..', 'content', 'registry.json'),
+              path.join(process.cwd(), 'public', 'registry.json'),
+            ];
+            for (const p of tryPaths) {
+              if (fs.existsSync(p)) {
+                const raw = fs.readFileSync(p, 'utf8');
+                const data = JSON.parse(raw) as Record<string, unknown>;
+                type FileModule = { slug: string } & Record<string, unknown>;
+                const mods: FileModule[] = Array.isArray(data['modules']) ? (data['modules'] as FileModule[]) : [];
+                if (mods.length > 0) {
+                  const normalizedModules = await Promise.all(mods.map(async (m) => {
+                    const slug = (m?.slug || '').toString();
+                    const shortSlug = (await this.getShortSlugFromModuleSlug(slug)) || (slug.includes('-') ? slug.split('-')[0] : slug);
+                    const routes = {
+                      overview: `/${shortSlug}`,
+                      lessons: `/${shortSlug}/lessons`,
+                      quiz: `/${shortSlug}/quiz`,
+                    };
+                    return { ...m, routes };
+                  }));
+                  const version = typeof data['version'] === 'string' ? (data['version'] as string) : '0.0.0';
+                  const lastUpdated = typeof data['lastUpdated'] === 'string' ? (data['lastUpdated'] as string) : new Date().toISOString();
+                  const tiers = (data['tiers'] as ContentRegistry['tiers']) || buildMinimalRegistry().tiers;
+                  const globalSettings = (data['globalSettings'] as ContentRegistry['globalSettings']) || buildMinimalRegistry().globalSettings;
+                  return {
+                    version,
+                    lastUpdated,
+                    tiers,
+                    modules: normalizedModules,
+                    globalSettings,
+                  } as ContentRegistry;
+                }
+              }
+            }
+          } catch (fsErr) {
+            console.warn('[ContentRegistry] file fallback failed:', fsErr);
+          }
+        }
+
         // Fallback to minimal registry if all candidates fail or return empty modules
         return buildMinimalRegistry();
       } catch (err) {
@@ -658,6 +707,54 @@ class ContentRegistryLoader {
             }
             // try next candidate
             continue;
+          }
+        }
+
+        // Server-side filesystem fallback when no HTTP candidate succeeds
+        if (typeof window === 'undefined') {
+          try {
+            const fs = await import('node:fs/promises');
+            const path = await import('node:path');
+            const tryPaths = [
+              path.join(process.cwd(), '..', '..', 'content', 'lessons', `${moduleSlug}.json`),
+              path.join(process.cwd(), 'public', 'content', 'lessons', `${moduleSlug}.json`),
+            ];
+            for (const p of tryPaths) {
+              try {
+                const raw = await fs.readFile(p, 'utf-8');
+                const data: unknown = JSON.parse(raw);
+                if (Array.isArray(data) && data.length > 0) {
+                  const mapped = (data as Lesson[]).map((l, i) => {
+                    const orderVal = typeof l.order === 'number' ? l.order : i + 1;
+                    const lApi = l as { codeExample?: unknown; codeExplanation?: unknown; code?: { example?: unknown; explanation?: unknown } };
+                    const codeExampleStr = typeof lApi.codeExample === 'string' ? lApi.codeExample : undefined;
+                    const codeExplanationStr = typeof lApi.codeExplanation === 'string' ? lApi.codeExplanation : undefined;
+                    const code: Lesson['code'] | undefined =
+                      lApi.code && typeof lApi.code === 'object'
+                        ? {
+                            example: typeof lApi.code.example === 'string' ? lApi.code.example : undefined,
+                            explanation: typeof lApi.code.explanation === 'string' ? lApi.code.explanation : undefined,
+                          }
+                        : (codeExampleStr || codeExplanationStr ? { example: codeExampleStr || '', explanation: codeExplanationStr || '' } : undefined);
+                    const lesson: Lesson = {
+                      ...l,
+                      order: orderVal,
+                      code,
+                      intro: typeof l.intro === 'string' ? l.intro : '',
+                      pitfalls: Array.isArray(l.pitfalls) ? l.pitfalls : [],
+                      exercises: Array.isArray(l.exercises) ? l.exercises : [],
+                      objectives: Array.isArray(l.objectives) ? l.objectives : [],
+                    };
+                    return lesson;
+                  });
+                  return mapped;
+                }
+              } catch {
+                // try next path
+              }
+            }
+          } catch {
+            // ignore fs errors
           }
         }
 

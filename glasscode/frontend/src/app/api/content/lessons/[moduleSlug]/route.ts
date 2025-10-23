@@ -132,8 +132,30 @@ const toArrayOfStrings = (v: unknown): string[] => (Array.isArray(v) ? v.filter(
 
 async function fetchLessonsFromFile(moduleSlug: string): Promise<FrontendLesson[]> {
   try {
-    const filePath = path.join(process.cwd(), '..', '..', 'content', 'lessons', `${moduleSlug}.json`);
-    const raw = await fs.readFile(filePath, 'utf-8');
+    // Try root content path first
+    const rootFilePath = path.join(process.cwd(), '..', '..', 'content', 'lessons', `${moduleSlug}.json`);
+    let raw: string | null = null;
+    try {
+      raw = await fs.readFile(rootFilePath, 'utf-8');
+    } catch {
+      raw = null;
+    }
+
+    // Fallback to public content path if root unavailable
+    if (!raw) {
+      const publicFilePath = path.join(process.cwd(), 'public', 'content', 'lessons', `${moduleSlug}.json`);
+      try {
+        raw = await fs.readFile(publicFilePath, 'utf-8');
+      } catch {
+        raw = null;
+      }
+    }
+
+    if (!raw) {
+      console.warn(`[lessons] No file content found for ${moduleSlug} in root or public`);
+      return [];
+    }
+
     const json = JSON.parse(raw) as unknown;
     const items = Array.isArray(json) ? json : [];
 

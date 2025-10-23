@@ -46,37 +46,52 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         priority: 0.7,
       });
 
-      // Add individual lesson detail pages
-      try {
-        // Prefer using the registry helper to fetch lessons
-        let lessons: Lesson[] = await contentRegistry.getModuleLessons(mod.slug);
+      // Add individual lesson detail pages (optional, disabled by default for build stability)
+      if (process.env.ENABLE_LESSON_SITEMAP === 'true') {
+        try {
+          // Prefer using the registry helper to fetch lessons
+          let lessons: Lesson[] = await contentRegistry.getModuleLessons(mod.slug);
 
-        // Fallback to public content JSON if registry API is unavailable
-        if (!lessons || lessons.length === 0) {
-          try {
-            const res = await fetch(`${baseUrl.replace(/\/+$/, '')}/content/lessons/${mod.slug}.json`, { next: { revalidate: 3600 } });
-            if (res.ok) {
-              const data: unknown = await res.json();
-              lessons = Array.isArray(data) ? (data as Lesson[]) : [];
+          // Fallback to filesystem public content JSON during build/server
+          if (!lessons || lessons.length === 0) {
+            try {
+              const fs = await import('node:fs/promises');
+              const path = await import('node:path');
+              const tryPaths = [
+                path.join(process.cwd(), '..', '..', 'content', 'lessons', `${mod.slug}.json`),
+                path.join(process.cwd(), 'public', 'content', 'lessons', `${mod.slug}.json`),
+              ];
+              for (const p of tryPaths) {
+                try {
+                  const raw = await fs.readFile(p, 'utf-8');
+                  const data: unknown = JSON.parse(raw);
+                  if (Array.isArray(data) && data.length > 0) {
+                    lessons = data as Lesson[];
+                    break;
+                  }
+                } catch {
+                  // try next path
+                }
+              }
+            } catch {
+              // ignore fallback errors
             }
-          } catch {
-            // ignore fallback errors
           }
-        }
 
-        if (lessons && lessons.length > 0) {
-          for (const [i, lesson] of lessons.entries()) {
-            const order: number = typeof lesson.order === 'number' ? lesson.order : (i + 1);
-            sitemapEntries.push({
-              url: `${baseUrl}${mod.routes.lessons}/${order}`,
-              lastModified: new Date(),
-              changeFrequency: 'weekly',
-              priority: 0.6,
-            });
+          if (lessons && lessons.length > 0) {
+            for (const [i, lesson] of lessons.entries()) {
+              const order: number = typeof lesson.order === 'number' ? lesson.order : (i + 1);
+              sitemapEntries.push({
+                url: `${baseUrl}${mod.routes.lessons}/${order}`,
+                lastModified: new Date(),
+                changeFrequency: 'weekly',
+                priority: 0.6,
+              });
+            }
           }
+        } catch {
+          // If lesson fetching fails, skip per-lesson entries for this module
         }
-      } catch {
-        // If lesson fetching fails, skip per-lesson entries for this module
       }
     }
     
