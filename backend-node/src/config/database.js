@@ -6,6 +6,15 @@ dotenv.config();
 const isTest = process.env.NODE_ENV === 'test';
 const databaseUrl = process.env.DATABASE_URL;
 
+// Discrete env vars fallback
+const DB_DIALECT = process.env.DB_DIALECT || 'postgres';
+const DB_HOST = process.env.DB_HOST;
+const DB_PORT = process.env.DB_PORT ? Number(process.env.DB_PORT) : undefined;
+const DB_NAME = process.env.DB_NAME;
+const DB_USER = process.env.DB_USER;
+const DB_PASSWORD = process.env.DB_PASSWORD;
+const DB_SSL = (process.env.DB_SSL || '').toLowerCase() === 'true';
+
 let sequelize;
 
 if (isTest && !databaseUrl) {
@@ -15,25 +24,57 @@ if (isTest && !databaseUrl) {
     logging: false,
     define: {
       timestamps: true,
-      underscored: true
-    }
+      underscored: true,
+    },
   });
-} else {
-  // Default to PostgreSQL using DATABASE_URL
+} else if (databaseUrl) {
+  // Prefer DATABASE_URL when provided (e.g., postgresql://user:pass@host:port/db)
   sequelize = new Sequelize(databaseUrl, {
-    dialect: 'postgres',
+    dialect: DB_DIALECT,
     logging: process.env.NODE_ENV === 'development' ? console.log : false,
     pool: {
       max: 5,
       min: 0,
       acquire: 30000,
-      idle: 10000
+      idle: 10000,
     },
     define: {
       timestamps: true,
-      underscored: true
-    }
+      underscored: true,
+    },
+    dialectOptions: DB_SSL
+      ? { ssl: { require: true, rejectUnauthorized: false } }
+      : undefined,
   });
+} else if (DB_HOST && DB_NAME && DB_USER) {
+  // Fallback to discrete env configuration when DATABASE_URL is missing
+  sequelize = new Sequelize(DB_NAME, DB_USER, DB_PASSWORD, {
+    host: DB_HOST,
+    port: DB_PORT,
+    dialect: DB_DIALECT,
+    logging: process.env.NODE_ENV === 'development' ? console.log : false,
+    pool: {
+      max: 5,
+      min: 0,
+      acquire: 30000,
+      idle: 10000,
+    },
+    define: {
+      timestamps: true,
+      underscored: true,
+    },
+    dialectOptions: DB_SSL
+      ? { ssl: { require: true, rejectUnauthorized: false } }
+      : undefined,
+  });
+} else {
+  // Provide a clear error message instead of crashing on undefined URL
+  throw new Error(
+    'DATABASE_URL is not set and discrete DB_* variables are incomplete.\n' +
+      'Configure one of the following:\n' +
+      '1) Set DATABASE_URL (e.g., postgresql://user:pass@host:5432/dbname)\n' +
+      '2) Set DB_DIALECT, DB_HOST, DB_PORT, DB_NAME, DB_USER, and DB_PASSWORD.'
+  );
 }
 
 module.exports = sequelize;

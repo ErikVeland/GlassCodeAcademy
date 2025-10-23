@@ -85,6 +85,7 @@ SKIP_LINT=0
 SKIP_TYPECHECK=0
 SKIP_CONTENT_VERIFICATION=0
 VALIDATE_JSON_CONTENT=0
+ENV_ONLY=0
 while [[ $# -gt 0 ]]; do
     case "$1" in
         --frontend-only)
@@ -115,6 +116,10 @@ while [[ $# -gt 0 ]]; do
             VALIDATE_JSON_CONTENT=1
             shift
             ;;
+        --env-only)
+            ENV_ONLY=1
+            shift
+            ;;
         --port)
             if [[ -n "${2:-}" ]]; then
                 FRONTEND_PORT="$2"
@@ -130,8 +135,8 @@ while [[ $# -gt 0 ]]; do
             ;;
     esac
 done
-export FRONTEND_ONLY FRONTEND_PORT FAST_MODE SKIP_BACKEND_HEALTH SKIP_LINT SKIP_TYPECHECK SKIP_CONTENT_VERIFICATION VALIDATE_JSON_CONTENT
-log "⚙️  Mode: FRONTEND_ONLY=$FRONTEND_ONLY, FAST_MODE=$FAST_MODE, FRONTEND_PORT=$FRONTEND_PORT, SKIP_CONTENT_VERIFICATION=$SKIP_CONTENT_VERIFICATION, VALIDATE_JSON_CONTENT=$VALIDATE_JSON_CONTENT"
+export FRONTEND_ONLY FRONTEND_PORT FAST_MODE SKIP_BACKEND_HEALTH SKIP_LINT SKIP_TYPECHECK SKIP_CONTENT_VERIFICATION VALIDATE_JSON_CONTENT ENV_ONLY
+log "⚙️  Mode: FRONTEND_ONLY=$FRONTEND_ONLY, FAST_MODE=$FAST_MODE, FRONTEND_PORT=$FRONTEND_PORT, SKIP_CONTENT_VERIFICATION=$SKIP_CONTENT_VERIFICATION, VALIDATE_JSON_CONTENT=$VALIDATE_JSON_CONTENT, ENV_ONLY=$ENV_ONLY"
 
 # Database configuration defaults (overridable via .env)
 DB_HOST="${DB_HOST:-localhost}"
@@ -141,6 +146,61 @@ DB_USER="${DB_USER:-postgres}"
 DB_PASSWORD="${DB_PASSWORD:-postgres}"
 log "🗄️  DB config: host=${DB_HOST} port=${DB_PORT} name=${DB_NAME} user=${DB_USER}"
 export DB_HOST DB_PORT DB_NAME DB_USER DB_PASSWORD
+
+# Env-only mode: write backend and frontend env files and exit
+if [ "${ENV_ONLY:-0}" -eq 1 ]; then
+    log "🧾 Writing environment files (env-only mode) ..."
+
+    LOCAL_REPO_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+    TARGET_DIR="$APP_DIR"
+    if [ ! -d "$TARGET_DIR/backend-node" ] || [ ! -d "$TARGET_DIR/glasscode/frontend" ]; then
+        TARGET_DIR="$LOCAL_REPO_DIR"
+    fi
+
+    DATABASE_URL="postgresql://${DB_USER}:${DB_PASSWORD}@${DB_HOST}:${DB_PORT}/${DB_NAME}"
+
+    mkdir -p "$TARGET_DIR/backend-node"
+    cat >"$TARGET_DIR/backend-node/.env" <<EOF
+NODE_ENV=production
+PORT=${BACKEND_PORT:-8080}
+DATABASE_URL=${DATABASE_URL}
+DB_DIALECT=postgres
+DB_HOST=${DB_HOST}
+DB_PORT=${DB_PORT}
+DB_NAME=${DB_NAME}
+DB_USER=${DB_USER}
+DB_PASSWORD=${DB_PASSWORD}
+EOF
+
+    # Set defaults if missing
+    if [ -z "${NEXT_PUBLIC_BASE_URL:-}" ]; then
+        NEXT_PUBLIC_BASE_URL="https://${DOMAIN}"
+    fi
+    if [ -z "${NEXT_PUBLIC_API_BASE:-}" ]; then
+        NEXT_PUBLIC_API_BASE="https://${DOMAIN}"
+    fi
+
+    mkdir -p "$TARGET_DIR/glasscode/frontend"
+    cat >"$TARGET_DIR/glasscode/frontend/.env.production" <<EOF
+NEXT_PUBLIC_API_BASE=${NEXT_PUBLIC_API_BASE}
+NEXT_PUBLIC_BASE_URL=${NEXT_PUBLIC_BASE_URL}
+NODE_ENV=production
+NEXTAUTH_URL=${NEXTAUTH_URL}
+NEXTAUTH_SECRET=${NEXTAUTH_SECRET}
+GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID:-}
+GOOGLE_CLIENT_SECRET=${GOOGLE_CLIENT_SECRET:-}
+GITHUB_ID=${GITHUB_ID:-}
+GITHUB_SECRET=${GITHUB_SECRET:-}
+APPLE_CLIENT_ID=${APPLE_CLIENT_ID:-}
+APPLE_CLIENT_SECRET=${APPLE_CLIENT_SECRET:-}
+DEMO_USERS_JSON=${DEMO_USERS_JSON:-}
+EOF
+
+    log "✅ Environment files written:"
+    log " - $TARGET_DIR/backend-node/.env"
+    log " - $TARGET_DIR/glasscode/frontend/.env.production"
+    exit 0
+fi
 
 # Perform environment preflight checks and install missing base tools
 preflight_checks() {
@@ -558,6 +618,7 @@ After=network.target
 
 [Service]
 WorkingDirectory=$APP_DIR/backend-node
+EnvironmentFile=$APP_DIR/backend-node/.env
 ExecStart=/usr/bin/node $APP_DIR/backend-node/server.js
 Restart=always
 RestartSec=10
@@ -732,36 +793,80 @@ if [ "$FRONTEND_BUILD_REQUIRED" = "true" ]; then
 
     install_npm_deps "$APP_DIR/glasscode/frontend" "frontend"
 
-    # Set default values for Next.js environment variables if not already set
-    if [ -z "${NEXT_PUBLIC_BASE_URL:-}" ]; then
-        NEXT_PUBLIC_BASE_URL="https://${DOMAIN}"
-        log "ℹ️  Setting NEXT_PUBLIC_BASE_URL to ${NEXT_PUBLIC_BASE_URL}"
-    fi
-    if [ -z "${NEXT_PUBLIC_API_BASE:-}" ]; then
-        NEXT_PUBLIC_API_BASE="https://${DOMAIN}"
-        log "ℹ️  Setting NEXT_PUBLIC_API_BASE to ${NEXT_PUBLIC_API_BASE}"
+    # Ensure .env.production variables with sensible defaults and interactive prompts
+    # Establish defaults if not already set in environment
+    [ -z "${NEXT_PUBLIC_BASE_URL:-}" ] && NEXT_PUBLIC_BASE_URL="https://${DOMAIN}"
+    [ -z "${NEXT_PUBLIC_API_BASE:-}" ] && NEXT_PUBLIC_API_BASE="https://${DOMAIN}"
+    [ -z "${NEXTAUTH_URL:-}" ] && NEXTAUTH_URL="https://${DOMAIN}"
+    if [ -z "${NEXTAUTH_SECRET:-}" ]; then
+        NEXTAUTH_SECRET="$(generate_secret || echo 'temporary-nextauth-secret-change-me')"
     fi
 
-    # Check if .env.production exists and has required variables
-    if [ -f ".env.production" ] && grep -q "NEXTAUTH_SECRET" .env.production && grep -q "NEXT_PUBLIC_API_BASE" .env.production; then
-        log "📋 Using existing .env.production file (contains required variables)"
+    # Helper to prompt for a variable if missing (uses TTY only; otherwise defaults)
+    prompt_or_default() {
+        local var="$1"; local def="$2"; local label="$3";
+        local existing=""; local current="${!var:-}"; local input="";
+        if [ -f ".env.production" ]; then
+            existing=$(grep -E "^${var}=" .env.production | tail -n1 | cut -d'=' -f2- | tr -d '\r')
+        fi
+        local effective="${existing:-$current}"
+        if [ -z "$effective" ]; then
+            if [ -t 0 ]; then
+                read -r -p "Enter ${label} [${def}]: " input || true
+            fi
+            effective="${input:-$def}"
+        fi
+        eval "${var}=\"${effective}\""; export "$var"
+    }
+
+    # Prompt for required variables (or use defaults)
+    prompt_or_default NEXT_PUBLIC_BASE_URL "${NEXT_PUBLIC_BASE_URL}" "Public base URL"
+    prompt_or_default NEXT_PUBLIC_API_BASE "${NEXT_PUBLIC_API_BASE}" "Public API base URL"
+    prompt_or_default NEXTAUTH_URL "${NEXTAUTH_URL}" "NextAuth URL"
+    prompt_or_default NEXTAUTH_SECRET "${NEXTAUTH_SECRET}" "NextAuth Secret"
+    prompt_or_default GOOGLE_CLIENT_ID "" "Google Client ID"
+    prompt_or_default GOOGLE_CLIENT_SECRET "" "Google Client Secret"
+    prompt_or_default GITHUB_ID "" "GitHub Client ID"
+    prompt_or_default GITHUB_SECRET "" "GitHub Client Secret"
+    prompt_or_default APPLE_CLIENT_ID "" "Apple Client ID"
+    prompt_or_default APPLE_CLIENT_SECRET "" "Apple Client Secret"
+    prompt_or_default DEMO_USERS_JSON "" "Demo Users JSON"
+
+    # Merge managed keys without overwriting existing ones
+    log "📋 Ensuring .env.production has required variables without overwriting existing"
+    TMP_ENV=$(mktemp 2>/dev/null || echo ".env.production.tmp")
+    if [ -f ".env.production" ]; then
+        cp .env.production "$TMP_ENV"
     else
-        log "📋 Creating .env.production file..."
-        cat > .env.production <<EOF
-NEXT_PUBLIC_API_BASE=${NEXT_PUBLIC_API_BASE}
-NEXT_PUBLIC_BASE_URL=${NEXT_PUBLIC_BASE_URL}
-NODE_ENV=production
-NEXTAUTH_URL=${NEXTAUTH_URL}
-NEXTAUTH_SECRET=${NEXTAUTH_SECRET}
-GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID:-}
-GOOGLE_CLIENT_SECRET=${GOOGLE_CLIENT_SECRET:-}
-GITHUB_ID=${GITHUB_ID:-}
-GITHUB_SECRET=${GITHUB_SECRET:-}
-APPLE_CLIENT_ID=${APPLE_CLIENT_ID:-}
-APPLE_CLIENT_SECRET=${APPLE_CLIENT_SECRET:-}
-DEMO_USERS_JSON=${DEMO_USERS_JSON:-}
-EOF
+        : > "$TMP_ENV"
     fi
+
+    add_if_missing() {
+        local key="$1"; local value="$2";
+        if ! grep -qE "^${key}=" "$TMP_ENV"; then
+            printf "%s=%s\n" "$key" "$value" >> "$TMP_ENV"
+        else
+            # Keep env variable consistent for rest of script
+            eval "${key}=\"$(grep -E \"^${key}=\" \"$TMP_ENV\" | tail -n1 | cut -d'=' -f2- | tr -d '\r')\""
+        fi
+    }
+
+    add_if_missing NEXT_PUBLIC_API_BASE "$NEXT_PUBLIC_API_BASE"
+    add_if_missing NEXT_PUBLIC_BASE_URL "$NEXT_PUBLIC_BASE_URL"
+    add_if_missing NODE_ENV "production"
+    add_if_missing NEXTAUTH_URL "$NEXTAUTH_URL"
+    add_if_missing NEXTAUTH_SECRET "$NEXTAUTH_SECRET"
+    add_if_missing GOOGLE_CLIENT_ID "$GOOGLE_CLIENT_ID"
+    add_if_missing GOOGLE_CLIENT_SECRET "$GOOGLE_CLIENT_SECRET"
+    add_if_missing GITHUB_ID "$GITHUB_ID"
+    add_if_missing GITHUB_SECRET "$GITHUB_SECRET"
+    add_if_missing APPLE_CLIENT_ID "$APPLE_CLIENT_ID"
+    add_if_missing APPLE_CLIENT_SECRET "$APPLE_CLIENT_SECRET"
+    add_if_missing DEMO_USERS_JSON "$DEMO_USERS_JSON"
+
+    mv "$TMP_ENV" .env.production
+    log "✅ .env.production updated (existing values preserved)"
+
     # Build frontend with timeout and retry mechanism
     log "🔨 Starting frontend build with timeout protection..."
     if ! timeout 900 sudo -u "$DEPLOY_USER" npm run build; then
