@@ -1,18 +1,11 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# GlassCode Academy Bootstrap Script
+# GlassCode Academy Bootstrap Script (Node.js version)
 # This script sets up the complete GlassCode Academy environment on a fresh Ubuntu/Debian system
-# It handles both backend (.NET) and frontend (Next.js) setup with proper systemd services
-#
-# SMART VALIDATION APPROACH:
-# - Backend: Quick compilation check before expensive clean/rebuild
-# - Frontend: Validates existing build artifacts and runs lint/typecheck before full rebuild
-# - Only performs expensive operations (cache clearing, full builds) when errors are detected
-# - Significantly reduces bootstrap time when code is already in good state
+# It handles both backend (Node.js) and frontend (Next.js) setup with proper systemd services
 
 ### Load configuration from .env file ###
-# Use relative path instead of hardcoded absolute path
 ENV_FILE="./.env"
 if [ -f "$ENV_FILE" ]; then
     source "$ENV_FILE"
@@ -73,7 +66,6 @@ PY
 }
 
 # Parse CLI flags and set mode/port
-# Defaults: frontend + backend, port 3000 unless overridden
 log "🔐 Checking authentication secrets..."
 if [ -z "${NEXTAUTH_SECRET:-}" ]; then
     log "⚠️  WARNING: NEXTAUTH_SECRET is missing; generating a temporary secret to avoid install failure."
@@ -84,13 +76,6 @@ if [ -z "${NEXTAUTH_URL:-}" ]; then
     NEXTAUTH_URL="https://${DOMAIN}"
     log "⚠️  WARNING: NEXTAUTH_URL missing; defaulting to ${NEXTAUTH_URL}"
 fi
-# Provider IDs/secrets warnings (non-fatal)
-[ -z "${GOOGLE_CLIENT_ID:-}" ] && log "⚠️  WARNING: GOOGLE_CLIENT_ID missing; Google login disabled."
-[ -z "${GOOGLE_CLIENT_SECRET:-}" ] && log "⚠️  WARNING: GOOGLE_CLIENT_SECRET missing; Google login disabled."
-[ -z "${GITHUB_ID:-}" ] && log "⚠️  WARNING: GITHUB_ID missing; GitHub login disabled."
-[ -z "${GITHUB_SECRET:-}" ] && log "⚠️  WARNING: GITHUB_SECRET missing; GitHub login disabled."
-[ -z "${APPLE_CLIENT_ID:-}" ] && log "⚠️  WARNING: APPLE_CLIENT_ID missing; Apple login disabled."
-[ -z "${APPLE_CLIENT_SECRET:-}" ] && log "⚠️  WARNING: APPLE_CLIENT_SECRET missing; Apple login disabled."
 
 FRONTEND_ONLY=0
 FRONTEND_PORT="${PORT:-3000}"
@@ -199,9 +184,6 @@ preflight_checks() {
     if ! curl -fsSL https://deb.nodesource.com/setup_20.x >/dev/null 2>&1; then
         log "⚠️  WARNING: nodesource.com not reachable right now; will retry during installation"
     fi
-    if ! curl -fsSL https://packages.microsoft.com >/dev/null 2>&1; then
-        log "⚠️  WARNING: packages.microsoft.com not reachable right now; will retry during installation"
-    fi
 
     # Ensure base tools
     REQUIRED_CMDS=(curl git jq unzip zip ss bc lsof)
@@ -237,13 +219,10 @@ preflight_checks() {
 
     # Flags to control conditional installations
     NEED_NODE=0
-    NEED_DOTNET=0
     NODE_VER=$(node --version 2>/dev/null || echo "")
     if [ -z "$NODE_VER" ] || ! echo "$NODE_VER" | grep -qE '^v(20|21)\.'; then
         NEED_NODE=1
     fi
-    # Node.js is the sole backend; .NET detection is retired
-    NEED_DOTNET=0
 }
 
 # Function to stop running services like update.sh does
@@ -385,22 +364,6 @@ wait_for_service() {
     return 1
 }
 
-update_global_json() {
-    local dotnet_version=$1
-    local global_json_path="$APP_DIR/global.json"
-    
-    log "📝 Updating global.json with .NET SDK version: $dotnet_version"
-    cat > "$global_json_path" <<EOF
-{
-  "sdk": {
-    "version": "$dotnet_version",
-    "rollForward": "latestFeature"
-  }
-}
-EOF
-    log "✅ global.json updated successfully"
-}
-
 # Clean build/publish/temp directories before any installs/builds
 pre_install_cleanup() {
     log "🧹 Pre-install cleanup: removing build/publish/temp directories"
@@ -410,10 +373,7 @@ pre_install_cleanup() {
         "$APP_DIR/glasscode/frontend/.next"
         "$APP_DIR/glasscode/frontend/.turbo"
         "$APP_DIR/glasscode/frontend/.cache"
-        "$APP_DIR/glasscode/backend/publish"
-        "$APP_DIR/glasscode/backend/out"
-        "$APP_DIR/glasscode/backend/bin"
-        "$APP_DIR/glasscode/backend/obj"
+        "$APP_DIR/backend-node/node_modules"
     )
     for d in "${dirs[@]}"; do
         if [ -d "$d" ]; then
@@ -504,7 +464,6 @@ fi
 
 log "✅ PostgreSQL installed and configured"
 
-
 ### 4. Install Node.js (20 LTS) if needed
 if [ "${NEED_NODE:-0}" -eq 1 ]; then
     log "🟢 Installing Node.js 20 LTS..."
@@ -514,56 +473,6 @@ else
     log "✅ Node.js already present: $(node --version)"
 fi
 log "✅ npm version: $(npm --version)"
-
-### 5. Install .NET SDK (try 9, fallback to 8) if needed
-DOTNET_SDK_VERSION=""
-# Skip .NET installation entirely in frontend-only mode
-if [ "$FRONTEND_ONLY" -eq 1 ]; then
-    NEED_DOTNET=0
-fi
-if [ "${NEED_DOTNET:-0}" -eq 1 ]; then
-    log "🔷 Installing .NET..."
-    # Choose Microsoft packages config based on OS
-    MS_URL=""
-    if [ "${OS_ID}" = "ubuntu" ]; then
-        MS_URL="https://packages.microsoft.com/config/ubuntu/${OS_VER}/packages-microsoft-prod.deb"
-    elif [ "${OS_ID}" = "debian" ]; then
-        MS_URL="https://packages.microsoft.com/config/debian/${OS_VER}/packages-microsoft-prod.deb"
-    fi
-    curl -sSL "$MS_URL" -o packages-microsoft-prod.deb || true
-    if [ -f packages-microsoft-prod.deb ]; then
-        dpkg -i packages-microsoft-prod.deb || true
-        rm -f packages-microsoft-prod.deb
-        apt-get update || true
-    fi
-
-    DOTNET_VERSION=""
-    if apt-get install -y dotnet-sdk-9.0 aspnetcore-runtime-9.0; then
-        DOTNET_VERSION="9.0"
-        log "✅ .NET 9.0 installed"
-    elif apt-get install -y dotnet-sdk-8.0 aspnetcore-runtime-8.0; then
-        DOTNET_VERSION="8.0"
-        log "✅ .NET 8.0 installed"
-    else
-        log "❌ ERROR: Failed to install .NET SDK"
-        exit 1
-    fi
-else
-    if command_exists dotnet; then
-        log "✅ .NET already present: $(dotnet --version)"
-    else
-        log "ℹ️  Skipping .NET installation (frontend-only mode)"
-    fi
-fi
-
-if command_exists dotnet; then
-    DOTNET_SDK_VERSION=$(dotnet --list-sdks | head -1 | cut -d ' ' -f 1)
-    log "✅ .NET SDK version: $DOTNET_SDK_VERSION"
-    log "✅ .NET runtime version: $(dotnet --version)"
-else
-    DOTNET_SDK_VERSION=""
-    log "ℹ️  .NET SDK not present"
-fi
 
 ### 6. Setup directories
 log "📂 Setting up directories..."
@@ -586,12 +495,7 @@ fi
 # Pre-install cleanup to ensure fresh state
 pre_install_cleanup
 
-### 8. Update global.json (only if .NET SDK detected)
-if [ -n "$DOTNET_SDK_VERSION" ]; then
-    update_global_json "$DOTNET_SDK_VERSION"
-fi
-
-### 8.1. Check disk space before builds
+### 8. Check disk space before builds
 log "💾 Checking available disk space..."
 AVAILABLE_SPACE_GB=$(df "$APP_DIR" | awk 'NR==2 {printf "%.1f", $4/1024/1024}')
 REQUIRED_SPACE_GB=5.0
@@ -602,65 +506,37 @@ if (( $(echo "$AVAILABLE_SPACE_GB < $REQUIRED_SPACE_GB" | bc -l) )); then
 fi
 log "✅ Sufficient disk space available: ${AVAILABLE_SPACE_GB}GB"
 
-### 9. Smart Backend Build (.NET) (skipped in frontend-only mode)
+### 9. Smart Backend Setup (Node.js) (skipped in frontend-only mode)
 if [ "$FRONTEND_ONLY" -eq 0 ]; then
-    log "🏗️  Smart backend build validation..."
-    cd "$APP_DIR/glasscode/backend"
+    log "🏗️  Setting up backend..."
+    cd "$APP_DIR/backend-node"
 
-    # Quick validation: check if project compiles without full build
-    BUILD_REQUIRED=false
-    log "🔍 Performing quick compilation check..."
-    if ! sudo -u "$DEPLOY_USER" dotnet build --verbosity quiet --nologo >/dev/null 2>&1; then
-        log "⚠️  Compilation errors detected, full build required"
-        BUILD_REQUIRED=true
-    elif [ ! -f "$APP_DIR/glasscode/backend/out/backend.dll" ] || [ ! -f "$APP_DIR/glasscode/backend/out/backend.runtimeconfig.json" ]; then
-        log "⚠️  Missing build artifacts, full build required"
-        BUILD_REQUIRED=true
-    else
-        log "✅ Quick compilation check passed, existing artifacts valid"
+    # Install backend dependencies
+    log "🔧 Installing backend dependencies..."
+    if ! sudo -u "$DEPLOY_USER" npm install; then
+        log "❌ ERROR: Failed to install backend dependencies"
+        exit 1
     fi
+    log "✅ Backend dependencies installed"
 
-    # Only do expensive operations if quick validation failed
-    if [ "$BUILD_REQUIRED" = "true" ]; then
-        log "🏗️  Performing full backend build and publish..."
-        
-        # Clear .NET build cache to prevent stale build artifacts
-        log "🧹 Clearing .NET build cache..."
-        sudo -u "$DEPLOY_USER" dotnet clean || true
-        sudo -u "$DEPLOY_USER" rm -rf bin obj out || true
-        log "✅ .NET cache cleared"
-
-        # Clean + restore dependencies
-        log "🔧 Restoring .NET dependencies..."
-        if ! sudo -u "$DEPLOY_USER" dotnet restore; then
-            log "❌ ERROR: Failed to restore .NET dependencies"
-            exit 1
-        fi
-        log "✅ .NET dependencies restored"
-
-        # Publish backend to /out
-        log "📦 Publishing .NET backend..."
-        if ! sudo -u "$DEPLOY_USER" dotnet publish -c Release -o "$APP_DIR/glasscode/backend/out"; then
-            log "❌ ERROR: Failed to publish .NET backend"
-            exit 1
-        fi
-        log "✅ .NET backend published"
-
-        # Validate backend build artifacts
-        log "🔍 Validating backend build artifacts..."
-        if [ ! -f "$APP_DIR/glasscode/backend/out/backend.dll" ]; then
-            log "❌ ERROR: Missing backend.dll - backend build may have failed"
-            exit 1
-        fi
-        if [ ! -f "$APP_DIR/glasscode/backend/out/backend.runtimeconfig.json" ]; then
-            log "❌ ERROR: Missing runtime config - backend publish incomplete"
-            exit 1
-        fi
-        log "✅ Backend build artifacts validated"
+    # Run database migrations
+    log "📊 Running database migrations..."
+    if ! sudo -u "$DEPLOY_USER" npm run migrate; then
+        log "❌ ERROR: Failed to run database migrations"
+        exit 1
     fi
+    log "✅ Database migrations completed"
 
-    # Create and start REAL backend service before frontend build
-    log "⚙️  Creating backend systemd service (real backend)..."
+    # Seed content
+    log "🌱 Seeding content..."
+    if ! sudo -u "$DEPLOY_USER" npm run seed; then
+        log "❌ ERROR: Failed to seed content"
+        exit 1
+    fi
+    log "✅ Content seeded"
+
+    # Create and start backend service
+    log "⚙️  Creating backend systemd service..."
     log "🔌 Port 8080 preflight: checking for conflicts..."
     # Avoid grep in pipeline under pipefail; parse PIDs with sed directly
     CONFLICT_PIDS=""
@@ -698,85 +574,59 @@ EOF
     systemctl unmask ${APP_NAME}-backend || true
     systemctl enable ${APP_NAME}-backend
 
-    log "🚀 Starting real backend service..."
+    log "🚀 Starting backend service..."
     systemctl start ${APP_NAME}-backend
 
     log "⏳ Waiting for backend health before frontend build..."
-MAX_ATTEMPTS=$([ "${FAST_MODE:-0}" -eq 1 ] && echo 15 || echo 30)
-ATTEMPT=1
-SLEEP_INTERVAL=$([ "${FAST_MODE:-0}" -eq 1 ] && echo 2 || echo 3)
-BACKEND_HEALTHY=false
-LAST_STATUS=""
+    MAX_ATTEMPTS=$([ "${FAST_MODE:-0}" -eq 1 ] && echo 15 || echo 30)
+    ATTEMPT=1
+    SLEEP_INTERVAL=$([ "${FAST_MODE:-0}" -eq 1 ] && echo 2 || echo 3)
+    BACKEND_HEALTHY=false
+    LAST_STATUS=""
 
-while [[ $ATTEMPT -le $MAX_ATTEMPTS ]]; do
-    # Check if service is still running first
-    if ! systemctl is-active --quiet "${APP_NAME}-backend"; then
-        printf "\n"  # Clear progress line
-        log "❌ Backend service stopped unexpectedly during health check"
-        break
-    fi
-
-    # Poll health endpoint for readiness
-    HEALTH_JSON=$(timeout 10 curl -s http://localhost:8080/health || true)
-    if echo "$HEALTH_JSON" | jq -e '.success == true' >/dev/null 2>&1; then
-        printf "\n"  # Clear progress line
-        log "✅ Backend health ready at attempt $ATTEMPT/$MAX_ATTEMPTS. Proceeding to build frontend."
-        BACKEND_HEALTHY=true
-        break
-    fi
-
-    printf "\r⏳ Waiting for backend health... attempt %d/%d" "$ATTEMPT" "$MAX_ATTEMPTS"
-    ATTEMPT=$((ATTEMPT + 1))
-    sleep "$SLEEP_INTERVAL"
-}
-
-# Health check summary
-if [[ "$BACKEND_HEALTHY" == "true" ]]; then
-    log "✅ Backend health satisfied at attempt $ATTEMPT/$MAX_ATTEMPTS (pre-build)."
-fi
-
-if [[ "$BACKEND_HEALTHY" != "true" && $ATTEMPT -gt $MAX_ATTEMPTS ]]; then
-    log "❌ Backend health failed before frontend build."
-    log "🧪 Diagnostic: systemd status"
-    systemctl status ${APP_NAME}-backend --no-pager || true
-    log "🪵 Recent backend logs (journalctl)"
-    journalctl -u ${APP_NAME}-backend -n 200 --no-pager || true
-    log "🔌 Listening ports snapshot"
-    ss -tulpn | grep :8080 || true
-    log "🌐 Health endpoint verbose output"
-    timeout 15 curl -v http://localhost:8080/health || true
-    if [ "${FAST_MODE:-0}" -eq 1 ] || [ "${SKIP_BACKEND_HEALTH:-0}" -eq 1 ]; then
-        log "⚠️  Continuing despite backend health precondition due to fast/skip mode"
-    else
-        exit 1
-    fi
-fi
-
-# Enhanced content verification - only run if needed
-if [ "$FRONTEND_ONLY" -eq 0 ] && [ "${SKIP_CONTENT_VERIFICATION:-0}" -ne 1 ]; then
-    log "🔍 Running enhanced content verification..."
-    
-    # Check if we have the verification scripts
-    if [ -f "$APP_DIR/glasscode/backend/Scripts/ContentVerificationReport.cs" ]; then
-        # Run the content verification report
-        cd "$APP_DIR/glasscode/backend"
-        
-        # Check if dotnet is available
-        if command -v dotnet >/dev/null 2>&1; then
-            log "📊 Generating content verification report..."
-            cd "$APP_DIR/glasscode/backend"
-            VERIFICATION_OUTPUT=$(timeout 120 sudo -u "$DEPLOY_USER" dotnet run -c Release --no-build --no-restore -- ContentVerificationReport.cs 2>&1 || true)
-            cd - >/dev/null
-            echo "$VERIFICATION_OUTPUT"
-        else
-            log "⚠️  dotnet command not found, skipping enhanced verification"
+    while [[ $ATTEMPT -le $MAX_ATTEMPTS ]]; do
+        # Check if service is still running first
+        if ! systemctl is-active --quiet "${APP_NAME}-backend"; then
+            printf "\n"  # Clear progress line
+            log "❌ Backend service stopped unexpectedly during health check"
+            break
         fi
-        
-        cd - >/dev/null
-    else
-        log "ℹ️  Content verification scripts not found, skipping enhanced verification"
+
+        # Poll health endpoint for readiness
+        HEALTH_JSON=$(timeout 10 curl -s http://localhost:8080/health || true)
+        if echo "$HEALTH_JSON" | jq -e '.success == true' >/dev/null 2>&1; then
+            printf "\n"  # Clear progress line
+            log "✅ Backend health ready at attempt $ATTEMPT/$MAX_ATTEMPTS. Proceeding to build frontend."
+            BACKEND_HEALTHY=true
+            break
+        fi
+
+        printf "\r⏳ Waiting for backend health... attempt %d/%d" "$ATTEMPT" "$MAX_ATTEMPTS"
+        ATTEMPT=$((ATTEMPT + 1))
+        sleep "$SLEEP_INTERVAL"
+    done
+
+    # Health check summary
+    if [[ "$BACKEND_HEALTHY" == "true" ]]; then
+        log "✅ Backend health satisfied at attempt $ATTEMPT/$MAX_ATTEMPTS (pre-build)."
     fi
-fi
+
+    if [[ "$BACKEND_HEALTHY" != "true" && $ATTEMPT -gt $MAX_ATTEMPTS ]]; then
+        log "❌ Backend health failed before frontend build."
+        log "🧪 Diagnostic: systemd status"
+        systemctl status ${APP_NAME}-backend --no-pager || true
+        log "🪵 Recent backend logs (journalctl)"
+        journalctl -u ${APP_NAME}-backend -n 200 --no-pager || true
+        log "🔌 Listening ports snapshot"
+        ss -tulpn | grep :8080 || true
+        log "🌐 Health endpoint verbose output"
+        timeout 15 curl -v http://localhost:8080/health || true
+        if [ "${FAST_MODE:-0}" -eq 1 ] || [ "${SKIP_BACKEND_HEALTH:-0}" -eq 1 ]; then
+            log "⚠️  Continuing despite backend health precondition due to fast/skip mode"
+        else
+            exit 1
+        fi
+    fi
 fi
 
 ### 10. Build Frontend (Next.js)
@@ -1344,5 +1194,5 @@ fi
 
 log "🎉 Deployment Complete!"
 log "🔗 Visit https://$DOMAIN"
-log "🔧 Backend: $(systemctl is-active ${APP_NAME}-dotnet)"
+log "🔧 Backend: $(systemctl is-active ${APP_NAME}-backend)"
 log "🔧 Frontend: $(systemctl is-active ${APP_NAME}-frontend)"

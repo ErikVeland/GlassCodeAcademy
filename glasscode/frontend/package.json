@@ -4,12 +4,14 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "node scripts/copy-content.js && node scripts/prepare-next.js && next build",
+    "build": "NODE_ENV=production node scripts/copy-content.js && NODE_ENV=production node scripts/prepare-next.js && NODE_ENV=production next build",
     "start": "next start",
     "start:next": "next start",
     "lint": "next lint",
     "prewarm:ssg": "node scripts/prewarm-ssg.js",
-    "typecheck": "tsc -p ./tsconfig.json --noEmit"
+    "typecheck": "tsc -p ./tsconfig.json --noEmit",
+    "test:sitemap": "node test-sitemap.js",
+    "test:env-vars": "node test-env-vars.js"
   },
   "dependencies": {
     "@apollo/client": "^3.13.8",

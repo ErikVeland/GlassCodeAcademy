@@ -5,7 +5,6 @@
 set -euo pipefail
 
 ### Load configuration from .env file ###
-# Use relative path instead of hardcoded absolute path
 ENV_FILE="./.env"
 if [ -f "$ENV_FILE" ]; then
     source "$ENV_FILE"
@@ -133,7 +132,7 @@ wait_for_service() {
     return 1
 }
 
-// Function to install npm dependencies efficiently
+# Function to install npm dependencies efficiently
 install_npm_deps_workspace() {
     local dir="$1"
     local name="$2"
@@ -146,7 +145,7 @@ install_npm_deps_workspace() {
     log "📦 Installing $name dependencies..."
     cd "$dir"
     
-    // Check if lockfile exists and is newer than package.json
+    # Check if lockfile exists and is newer than package.json
     if [ -f "package-lock.json" ] && [ "package-lock.json" -nt "package.json" ]; then
         log "📋 Using existing lockfile for $name (up to date)"
         sudo -u "$DEPLOY_USER" npm ci || sudo -u "$DEPLOY_USER" npm install
@@ -163,7 +162,7 @@ install_npm_deps_workspace() {
 install_npm_deps() {
     log "📦 Installing Node.js dependencies for all workspaces..."
     
-    // Install dependencies for all workspaces
+    # Install dependencies for all workspaces
     install_npm_deps_workspace "$APP_DIR" "root"
 
     if [ -d "$APP_DIR/scripts" ]; then
@@ -179,7 +178,7 @@ install_npm_deps() {
 rollback() {
     log "⏪ Rolling back to previous version..."
     if [ -n "${BACKUP_DIR:-}" ] && [ -d "$BACKUP_DIR" ]; then
-        // Restore the previous version
+        # Restore the previous version
         rsync -a "$BACKUP_DIR/" "$APP_DIR/"
         log "✅ Rollback completed"
     else
@@ -188,7 +187,7 @@ rollback() {
     fi
 }
 
-// Create backup of current version
+# Create backup of current version
 create_backup() {
     BACKUP_DIR="/tmp/${APP_NAME}_backup_$(date +%s)"
     log "📦 Creating backup of current version to $BACKUP_DIR"
@@ -197,34 +196,34 @@ create_backup() {
     log "✅ Backup created"
 }
 
-// Main update process
+# Main update process
 main() {
     log "🔄 Starting update process..."
     
-    // Create backup
+    # Create backup
     create_backup
     
-    // Stop services
+    # Stop services
     log "⏹️  Stopping services..."
     systemctl stop ${APP_NAME}-frontend ${APP_NAME}-backend 2>/dev/null || true
     
-    // Pull latest code
+    # Pull latest code
     log "📥 Pulling latest code..."
     cd "$APP_DIR"
     git fetch origin
     git reset --hard origin/main
     
-    // Install dependencies
+    # Install dependencies
     install_npm_deps
     
-    // Run database migrations if needed
+    # Run database migrations if needed
     if [ -d "$APP_DIR/backend-node" ] && [ "$FRONTEND_ONLY" -eq 0 ]; then
         log "📊 Running database migrations..."
         cd "$APP_DIR/backend-node"
         sudo -u "$DEPLOY_USER" npm run migrate || true
     fi
     
-    // Build frontend
+    # Build frontend
     if [ -d "$APP_DIR/glasscode/frontend" ]; then
         log "🏗️  Building frontend..."
         cd "$APP_DIR/glasscode/frontend"
@@ -240,11 +239,11 @@ main() {
         sudo -u "$DEPLOY_USER" npm run build
     fi
     
-    // Restart services
+    # Restart services
     log "🔄 Restarting services..."
     systemctl restart ${APP_NAME}-backend ${APP_NAME}-frontend 2>/dev/null || true
     
-    // Wait for services to start
+    # Wait for services to start
     if [ "$FRONTEND_ONLY" -eq 0 ]; then
         if ! wait_for_service "${APP_NAME}-backend"; then
             log "❌ Backend failed to start, rolling back..."
@@ -259,10 +258,10 @@ main() {
         exit 1
     fi
     
-    // Run health checks
+    # Run health checks
     if [ "$SKIP_BACKEND_HEALTH" -eq 0 ] && [ "$FRONTEND_ONLY" -eq 0 ]; then
         log "🩺 Running backend health checks..."
-        sleep 5  // Give backend time to fully initialize
+        sleep 5  # Give backend time to fully initialize
         if ! timeout 30 curl -s http://localhost:8080/health | grep -q '"success":true'; then
             log "❌ Backend health check failed, rolling back..."
             rollback
@@ -272,7 +271,7 @@ main() {
     fi
     
     log "🔍 Running frontend health checks..."
-    sleep 5  // Give frontend time to fully initialize
+    sleep 5  # Give frontend time to fully initialize
     if ! timeout 30 curl -s http://localhost:$FRONTEND_PORT | grep -q '<html'; then
         log "❌ Frontend health check failed, rolling back..."
         rollback
@@ -283,5 +282,5 @@ main() {
     log "✅ Update completed successfully!"
 }
 
-// Run main function
+# Run main function
 main "$@"

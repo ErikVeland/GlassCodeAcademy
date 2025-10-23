@@ -147,18 +147,25 @@ class QuizPrefetchService {
       
       // Dynamically import contentRegistry to avoid SSR issues
       const { contentRegistry } = await import('@/lib/contentRegistry');
+      const shortSlug = await contentRegistry.getShortSlugFromModuleSlug(moduleSlug) || moduleSlug;
       
       // Fetch the quiz
       const quiz = await contentRegistry.getModuleQuiz(moduleSlug);
       
-      if (quiz && quiz.questions && quiz.questions.length > 0) {
-        // Cache the result
-        localStorage.setItem(cacheKey, JSON.stringify({
-          quiz: {
-            questions: quiz.questions.length // Only store count to save space
-          },
-          timestamp: Date.now()
+      if (quiz && Array.isArray(quiz.questions) && quiz.questions.length > 0) {
+        // Cache the full quiz data in both local and session storage
+        localStorage.setItem(`quiz_prefetch_${shortSlug}`, JSON.stringify({
+          timestamp: Date.now(),
+          data: quiz
         }));
+        try {
+          sessionStorage.setItem(`prefetch_quiz_${shortSlug}`, JSON.stringify({
+            timestamp: Date.now(),
+            data: quiz
+          }));
+        } catch {
+          // Ignore storage errors
+        }
         
         this.prefetchedModules.add(moduleSlug);
         console.log(`[QuizPrefetchService] Successfully prefetched quiz for ${moduleSlug} (${quiz.questions.length} questions)`);
@@ -208,10 +215,4 @@ class QuizPrefetchService {
 // Export singleton instance
 export const quizPrefetchService = QuizPrefetchService.getInstance();
 
-// Auto-start prefetching when the service is imported (but only in browser)
-if (typeof window !== 'undefined') {
-  // Add a delay to avoid blocking initial page load
-  setTimeout(() => {
-    quizPrefetchService.startPrefetching('tier');
-  }, 10000); // Start after 10 seconds
-}
+// Auto-start disabled to avoid duplicate prefetching; start explicitly where needed.

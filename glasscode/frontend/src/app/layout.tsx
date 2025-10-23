@@ -22,6 +22,8 @@ import ConsoleBanner from '../components/ConsoleBanner';
 import { headers } from 'next/headers';
 import BackendReadinessWrapper from '../components/BackendReadinessWrapper';
 
+export const runtime = 'nodejs';
+
 export const metadata: Metadata = {
   title: "GlassCode Academy - Learn .NET, Next.js, GraphQL, and Laravel",
   description: "Master .NET, Next.js, GraphQL, and Laravel with step-by-step lessons and interview preparation",
@@ -46,7 +48,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         {/* Preconnect to external resources */}
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         {/* Inline script to avoid initial flash of wrong theme */}
-        <Script src="/theme-init.js" strategy="beforeInteractive" />
+        <Script src="/assets/theme-init.js" strategy="beforeInteractive" />
 
 
       </head>

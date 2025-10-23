@@ -48,8 +48,9 @@ export function useQuizPrefetch(options: PrefetchOptions = {}) {
 
   const prefetchQuiz = useCallback(async (moduleSlug: string) => {
     try {
-      // Check if already cached
-      const cacheKey = `prefetch_quiz_${moduleSlug}`;
+      // Resolve shortSlug for consistent cache keys with contentRegistry
+      const shortSlug = await contentRegistry.getShortSlugFromModuleSlug(moduleSlug) || moduleSlug;
+      const cacheKey = `prefetch_quiz_${shortSlug}`;
       const cached = sessionStorage.getItem(cacheKey);
       
       if (cached) {
@@ -66,13 +67,11 @@ export function useQuizPrefetch(options: PrefetchOptions = {}) {
       // Fetch the quiz
       const quiz = await contentRegistry.getModuleQuiz(moduleSlug);
       
-      if (quiz && quiz.questions && quiz.questions.length > 0) {
-        // Cache the result
+      if (quiz && Array.isArray(quiz.questions) && quiz.questions.length > 0) {
+        // Cache the full quiz data
         sessionStorage.setItem(cacheKey, JSON.stringify({
-          quiz: {
-            questions: quiz.questions.length // Store count to save space
-          },
-          timestamp: Date.now()
+          timestamp: Date.now(),
+          data: quiz
         }));
         
         console.log(`[QuizPrefetch] Successfully prefetched quiz for ${moduleSlug} (${quiz.questions.length} questions)`);

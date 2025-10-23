@@ -40,6 +40,9 @@ jobs:
   frontend-lint:
     name: Frontend ESLint Gate
     runs-on: ubuntu-latest
+    env:
+      NEXT_PUBLIC_BASE_URL: http://localhost:3000
+      NEXT_PUBLIC_API_BASE: http://localhost:3000
     steps:
       - name: Checkout
         uses: actions/checkout@v4

@@ -470,6 +470,79 @@ class ContentRegistryLoader {
       try {
         const isBrowser = typeof window !== 'undefined';
         if (isBrowser) {
+          const shortSlug = await this.getShortSlugFromModuleSlug(moduleSlug) || moduleSlug;
+
+          // Check localStorage/sessionStorage caches first
+          try {
+            const localKey = `lessons_prefetch_${shortSlug}`;
+            const localRaw = localStorage.getItem(localKey);
+            if (localRaw) {
+              const { timestamp, data } = JSON.parse(localRaw);
+              if (Date.now() - timestamp < 30 * 60 * 1000 && Array.isArray(data)) {
+                return data.map((l: Lesson, i: number) => {
+                  const orderVal = typeof l.order === 'number' ? l.order : i + 1;
+                  const lApi = l as { codeExample?: unknown; codeExplanation?: unknown; code?: { example?: unknown; explanation?: unknown } };
+                  const codeExampleStr = typeof lApi.codeExample === 'string' ? lApi.codeExample : undefined;
+                  const codeExplanationStr = typeof lApi.codeExplanation === 'string' ? lApi.codeExplanation : undefined;
+                  const code: Lesson['code'] | undefined =
+                    lApi.code && typeof lApi.code === 'object'
+                      ? {
+                          example: typeof lApi.code.example === 'string' ? lApi.code.example : undefined,
+                          explanation: typeof lApi.code.explanation === 'string' ? lApi.code.explanation : undefined,
+                        }
+                      : (codeExampleStr || codeExplanationStr ? { 
+                          example: codeExampleStr || '', 
+                          explanation: codeExplanationStr || '' 
+                        } : undefined);
+                  return {
+                    ...l,
+                    order: orderVal,
+                    code,
+                    intro: typeof l.intro === 'string' ? l.intro : '',
+                    pitfalls: Array.isArray(l.pitfalls) ? l.pitfalls : [],
+                    exercises: Array.isArray(l.exercises) ? l.exercises : [],
+                    objectives: Array.isArray(l.objectives) ? l.objectives : [],
+                  } as Lesson;
+                });
+              }
+            }
+
+            const sessionKey = `prefetch_lessons_${shortSlug}`;
+            const sessionRaw = sessionStorage.getItem(sessionKey);
+            if (sessionRaw) {
+              const { timestamp, data } = JSON.parse(sessionRaw);
+              if (Date.now() - timestamp < 5 * 60 * 1000 && Array.isArray(data)) {
+                return data.map((l: Lesson, i: number) => {
+                  const orderVal = typeof l.order === 'number' ? l.order : i + 1;
+                  const lApi = l as { codeExample?: unknown; codeExplanation?: unknown; code?: { example?: unknown; explanation?: unknown } };
+                  const codeExampleStr = typeof lApi.codeExample === 'string' ? lApi.codeExample : undefined;
+                  const codeExplanationStr = typeof lApi.codeExplanation === 'string' ? lApi.codeExplanation : undefined;
+                  const code: Lesson['code'] | undefined =
+                    lApi.code && typeof lApi.code === 'object'
+                      ? {
+                          example: typeof lApi.code.example === 'string' ? lApi.code.example : undefined,
+                          explanation: typeof lApi.code.explanation === 'string' ? lApi.code.explanation : undefined,
+                        }
+                      : (codeExampleStr || codeExplanationStr ? { 
+                          example: codeExampleStr || '', 
+                          explanation: codeExplanationStr || '' 
+                        } : undefined);
+                  return {
+                    ...l,
+                    order: orderVal,
+                    code,
+                    intro: typeof l.intro === 'string' ? l.intro : '',
+                    pitfalls: Array.isArray(l.pitfalls) ? l.pitfalls : [],
+                    exercises: Array.isArray(l.exercises) ? l.exercises : [],
+                    objectives: Array.isArray(l.objectives) ? l.objectives : [],
+                  } as Lesson;
+                });
+              }
+            }
+          } catch {
+            // ignore cache parsing errors
+          }
+
           const res = await fetch(`/api/content/lessons/${moduleSlug}`, { cache: 'no-store' });
           if (!res.ok) {
             // For 5xx errors, we might want to retry
@@ -483,7 +556,7 @@ class ContentRegistryLoader {
           const lessonsArr: PartialLesson[] = Array.isArray(data)
             ? (data as PartialLesson[])
             : (Array.isArray((data as { lessons?: PartialLesson[] })?.lessons) ? ((data as { lessons?: PartialLesson[] }).lessons as PartialLesson[]) : []);
-          return lessonsArr.map((l, i) => {
+          const mapped = lessonsArr.map((l, i) => {
             const orderVal = typeof l.order === 'number' ? l.order : i + 1;
             const lApi = l as { codeExample?: unknown; codeExplanation?: unknown; code?: { example?: unknown; explanation?: unknown } };
             // Normalize codeExample/codeExplanation to strings to satisfy Lesson type
@@ -510,6 +583,16 @@ class ContentRegistryLoader {
             };
             return lesson;
           });
+
+          // Cache in sessionStorage and localStorage
+          try {
+            sessionStorage.setItem(`prefetch_lessons_${shortSlug}`, JSON.stringify({ timestamp: Date.now(), data: mapped }));
+            localStorage.setItem(`lessons_prefetch_${shortSlug}`, JSON.stringify({ timestamp: Date.now(), data: mapped }));
+          } catch {
+            // Ignore storage errors
+          }
+
+          return mapped;
         }
 
         // Server-side: Node fetch requires absolute URLs. Try local origins proactively in dev.
@@ -621,11 +704,13 @@ class ContentRegistryLoader {
           const cached = localStorage.getItem(cacheKey);
           
           if (cached) {
-            const { timestamp, data } = JSON.parse(cached);
-            // Use cache if less than 30 minutes old
-            if (Date.now() - timestamp < 30 * 60 * 1000) {
+            const parsed = JSON.parse(cached);
+            const data = parsed.data || parsed.quiz;
+            const timestamp = parsed.timestamp || 0;
+            // Use cache if less than 30 minutes old and data is valid
+            if (Date.now() - timestamp < 30 * 60 * 1000 && data && Array.isArray(data.questions)) {
               console.log(`[ContentRegistry] Using prefetched quiz for ${shortSlug}`);
-              const normalizedQuestions = Array.isArray(data.questions) ? data.questions.map((q: ProgrammingQuestion) => normalizeQuestion(q)) : [];
+              const normalizedQuestions = data.questions.map((q: ProgrammingQuestion) => normalizeQuestion(q));
               return { ...data, questions: normalizedQuestions };
             }
           }

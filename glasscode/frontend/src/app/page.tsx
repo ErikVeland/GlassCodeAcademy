@@ -421,24 +421,18 @@ const HomePage: React.FC = () => {
   // Pre-fetch data on component mount
   useEffect(() => {
     loadRegistryData();
-    
-    // Pre-fetch some quiz data in the background to improve performance
-    const prefetchQuizzes = async () => {
-      try {
-        const modules = await contentRegistry.getModules();
-        // Pre-fetch quizzes for the first few modules
-        const firstModules = modules.slice(0, 3);
-        for (const mod of firstModules) {
-          contentRegistry.getModuleQuiz(mod.slug).catch(() => {
-            // Ignore errors in pre-fetching
-          });
-        }
-      } catch {
-        // Ignore errors in pre-fetching
-      }
-    };
-    
-    prefetchQuizzes();
+
+    // Start comprehensive background prefetch for lessons and quizzes (unlocked by tier)
+    if (typeof window !== 'undefined') {
+      // Slight delay so initial paint remains snappy
+      setTimeout(() => {
+        import('@/lib/modulePrefetchService')
+          .then(({ modulePrefetchService }) => {
+            modulePrefetchService.startPrefetching('tier');
+          })
+          .catch(() => { /* ignore prefetch bootstrap errors */ });
+      }, 1500);
+    }
   }, [loadRegistryData]);
 
   // Memoize filtered tiers to prevent unnecessary re-renders

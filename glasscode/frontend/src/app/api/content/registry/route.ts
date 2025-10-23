@@ -361,7 +361,7 @@ async function normalizeFileRegistryRoutes(registry: RegistryResponse): Promise<
   const modules: RegistryModuleLight[] = Array.isArray(registry?.modules) ? registry.modules : [];
   const normalizedModules: RegistryModuleLight[] = await Promise.all(modules.map(async (m: RegistryModuleLight) => {
     const slug = (m?.slug || '').toString();
-    const shortSlug = (await getShortSlugFromModuleSlug(slug)) || (slug.includes('-') ? slug.split('-')[0] : slug);
+    const shortSlug = slug.includes('-') ? slug.split('-')[0] : slug;
     const routes: ModuleRoutes = {
       overview: `/${shortSlug}`,
       lessons: `/${shortSlug}/lessons`,
@@ -377,12 +377,42 @@ async function normalizeFileRegistryRoutes(registry: RegistryResponse): Promise<
 
 // Load local file registry and normalize routes for consistency
 async function loadLocalRegistryNormalized(): Promise<RegistryResponse> {
-  const registryPath = path.join(process.cwd(), '..', '..', 'content', 'registry.json');
-  if (!fs.existsSync(registryPath)) {
+  const rootRegistryPath = path.join(process.cwd(), '..', '..', 'content', 'registry.json');
+  let parsed: RegistryResponse | null = null;
+
+  // Try root content registry first
+  try {
+    if (fs.existsSync(rootRegistryPath)) {
+      const raw = fs.readFileSync(rootRegistryPath, 'utf8');
+      const candidate = JSON.parse(raw) as RegistryResponse;
+      if (Array.isArray(candidate.modules) && candidate.modules.length > 0) {
+        parsed = candidate;
+      }
+    }
+  } catch (e) {
+    console.warn('[registry] Failed reading root content/registry.json:', e);
+  }
+
+  // Fallback to public/registry.json if root content registry is missing or empty
+  if (!parsed) {
+    try {
+      const publicRegistryPath = path.join(process.cwd(), 'public', 'registry.json');
+      if (fs.existsSync(publicRegistryPath)) {
+        const raw = fs.readFileSync(publicRegistryPath, 'utf8');
+        const candidate = JSON.parse(raw) as RegistryResponse;
+        if (candidate && typeof candidate === 'object') {
+          parsed = candidate;
+        }
+      }
+    } catch (e) {
+      console.warn('[registry] Failed reading public/registry.json:', e);
+    }
+  }
+
+  if (!parsed) {
     return buildMinimalRegistry() as RegistryResponse;
   }
-  const registryContent = fs.readFileSync(registryPath, 'utf8');
-  const parsed: RegistryResponse = JSON.parse(registryContent) as RegistryResponse;
+
   return normalizeFileRegistryRoutes(parsed);
 }
 
