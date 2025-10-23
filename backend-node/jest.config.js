@@ -1,6 +1,9 @@
 module.exports = {
   testEnvironment: 'node',
-  testMatch: ['**/tests/**/*.test.js'],
+  // Ensure Jest scans both project root and src for tests
+  roots: ['<rootDir>', '<rootDir>/src'],
+  // Explicitly include tests in root and under src
+  testMatch: ['<rootDir>/tests/**/*.test.js', '<rootDir>/src/tests/**/*.test.js'],
   collectCoverageFrom: [
     'src/**/*.js',
     '!src/config/*.js',
