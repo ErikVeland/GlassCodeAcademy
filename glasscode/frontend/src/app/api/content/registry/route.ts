@@ -1,7 +1,8 @@
 import { NextResponse } from 'next/server';
+import fs from 'fs';
+import path from 'path';
 import { getApiBaseStrict } from '@/lib/urlUtils';
 import { getShortSlugFromModuleSlug } from '@/lib/contentRegistry';
-
 
 interface DbModule {
   id: number;
@@ -14,7 +15,6 @@ interface DbModule {
   updatedAt: string;
   courseId: number;
 }
-
 
 interface Tier {
   level: number;
@@ -38,9 +38,57 @@ interface RegistryModuleLight {
   [key: string]: unknown;
 }
 
+interface StaticRegistryModule {
+  slug: string;
+  title: string;
+  description: string;
+  tier: string;
+  track: string;
+  order: number;
+  icon?: string;
+  difficulty?: string;
+  estimatedHours?: number;
+  category?: string;
+  technologies?: string[];
+  prerequisites?: string[];
+  thresholds?: {
+    requiredLessons?: number;
+    requiredQuestions?: number;
+  };
+  legacySlugs?: string[];
+  status?: string;
+  metadata?: Record<string, unknown>;
+  routes?: ModuleRoutes;
+}
 
+interface StaticRegistry {
+  version: string;
+  lastUpdated: string;
+  tiers: Record<string, Tier>;
+  modules: StaticRegistryModule[];
+  globalSettings?: Record<string, unknown>;
+}
+
+function loadStaticRegistry(): StaticRegistry | null {
+  try {
+    const projectRoot = process.cwd();
+    const registryPath = path.join(projectRoot, 'content', 'registry.json');
+    if (!fs.existsSync(registryPath)) return null;
+    const raw = fs.readFileSync(registryPath, 'utf-8');
+    const json = JSON.parse(raw) as StaticRegistry;
+    if (!json || !Array.isArray(json.modules)) return null;
+    return json;
+  } catch {
+    return null;
+  }
+}
 
 async function synthesizeRegistryFromDatabase() {
+  const staticRegistry = loadStaticRegistry();
+  const staticModulesBySlug = new Map<string, StaticRegistryModule>();
+  const staticModules = staticRegistry?.modules || [];
+  staticModules.forEach(m => staticModulesBySlug.set(m.slug, m));
+
   // Resolve backend base candidates (env first, then local dev)
   const candidateBases: string[] = [];
   try { candidateBases.push(getApiBaseStrict()); } catch { /* ignore */ }
@@ -63,7 +111,28 @@ async function synthesizeRegistryFromDatabase() {
     }
   }
 
+  // If backend is unreachable, fallback entirely to static registry
   if (!modulesRes || !tiersRes) {
+    if (staticRegistry) {
+      const normalizedModules: RegistryModuleLight[] = await Promise.all(staticModules.map(async (m) => {
+        const slug = (m.slug || '').toString();
+        const shortSlug = (await getShortSlugFromModuleSlug(slug)) || (slug.includes('-') ? slug.split('-')[0] : slug);
+        const routes: ModuleRoutes = {
+          overview: `/${shortSlug}`,
+          lessons: `/${shortSlug}/lessons`,
+          quiz: `/${shortSlug}/quiz`,
+        };
+        return { ...m, routes } as RegistryModuleLight;
+      }));
+
+      return {
+        version: staticRegistry.version || 'file',
+        lastUpdated: staticRegistry.lastUpdated || new Date().toISOString(),
+        tiers: staticRegistry.tiers || {},
+        modules: normalizedModules,
+        globalSettings: staticRegistry.globalSettings || {},
+      };
+    }
     throw new Error('Failed to fetch modules/tiers from backend candidates');
   }
 
@@ -73,7 +142,39 @@ async function synthesizeRegistryFromDatabase() {
   const tiersRaw = await tiersRes.json();
   const dbTiers: Record<string, Tier> = (tiersRaw && typeof tiersRaw === 'object') ? (tiersRaw as Record<string, Tier>) : {};
 
-  // Map DB modules and compute routes (derived, not synthetic content)
+  // If DB returns no modules, fallback to static modules entirely
+  if (!Array.isArray(dbModules) || dbModules.length === 0) {
+    if (staticRegistry) {
+      const normalizedModules: RegistryModuleLight[] = await Promise.all(staticModules.map(async (m) => {
+        const slug = (m.slug || '').toString();
+        const shortSlug = (await getShortSlugFromModuleSlug(slug)) || (slug.includes('-') ? slug.split('-')[0] : slug);
+        const routes: ModuleRoutes = {
+          overview: `/${shortSlug}`,
+          lessons: `/${shortSlug}/lessons`,
+          quiz: `/${shortSlug}/quiz`,
+        };
+        return { ...m, routes } as RegistryModuleLight;
+      }));
+
+      return {
+        version: staticRegistry.version || 'file',
+        lastUpdated: staticRegistry.lastUpdated || new Date().toISOString(),
+        tiers: Object.keys(dbTiers).length ? dbTiers : (staticRegistry.tiers || {}),
+        modules: normalizedModules,
+        globalSettings: staticRegistry.globalSettings || {},
+      };
+    }
+    // No static fallback available
+    return {
+      version: 'db',
+      lastUpdated: new Date().toISOString(),
+      tiers: dbTiers,
+      modules: [],
+      globalSettings: {},
+    };
+  }
+
+  // Map DB modules and compute routes, augmenting with static fields when available
   const modules: RegistryModuleLight[] = await Promise.all(dbModules.map(async (m) => {
     const moduleSlug: string = m.slug || '';
     const title: string = m.title || moduleSlug;
@@ -87,27 +188,39 @@ async function synthesizeRegistryFromDatabase() {
       quiz: `/${shortSlug}/quiz`,
     };
 
-    return {
+    const fallback = staticModulesBySlug.get(moduleSlug) || null;
+
+    // If no direct slug match, try legacy slug match from static
+    let merged: RegistryModuleLight = {
       slug: moduleSlug,
       title,
       description,
       order,
       routes,
     };
+
+    if (!fallback && staticModules.length > 0) {
+      const byLegacy = staticModules.find(sm => Array.isArray(sm.legacySlugs) && sm.legacySlugs.includes(moduleSlug));
+      if (byLegacy) {
+        merged = { ...byLegacy, ...merged };
+      }
+    }
+
+    if (fallback) {
+      merged = { ...fallback, ...merged };
+    }
+
+    return merged;
   }));
 
   return {
     version: 'db',
     lastUpdated: new Date().toISOString(),
-    tiers: dbTiers,
+    tiers: Object.keys(dbTiers).length ? dbTiers : (staticRegistry?.tiers || {}),
     modules,
-    globalSettings: {},
+    globalSettings: staticRegistry?.globalSettings || {},
   };
 }
-
-// Normalize module routes from file registry to shortSlug-based paths
-
-// Load local file registry and normalize routes for consistency
 
 export async function GET() {
   try {
@@ -117,9 +230,9 @@ export async function GET() {
       headers: { 'Cache-Control': 'no-store' },
     });
   } catch (error) {
-    console.error('Failed to load content registry (DB-only):', error);
+    console.error('Failed to load content registry (DB+file):', error);
     return NextResponse.json(
-      { error: 'Registry unavailable', reason: 'Database fetch failed' },
+      { error: 'Registry unavailable', reason: 'Database and file fallback failed' },
       {
         status: 503,
         headers: { 'Cache-Control': 'no-store' },
