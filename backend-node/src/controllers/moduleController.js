@@ -1,5 +1,6 @@
 const { getModuleById, getLessonsByModuleId } = require('../services/contentService');
 const { Module, Lesson, LessonQuiz } = require('../models');
+const { resolveSlug, isShortSlug, isValidShortSlug } = require('../utils/slugMapping');
 const winston = require('winston');
 
 // Create a logger instance
@@ -94,15 +95,9 @@ const getQuizzesByModuleSlugController = async (req, res) => {
     
     logger.info('Fetching quizzes by module slug', { moduleSlug: slug });
     
-    // First find the module by slug
-    const module = await Module.findOne({
-      where: {
-        slug: slug
-      }
-    });
-    
-    if (!module) {
-      logger.warn('Module not found when fetching quizzes', { moduleSlug: slug });
+    // Check if it's a short slug and if it's valid
+    if (isShortSlug(slug) && !isValidShortSlug(slug)) {
+      logger.warn('Invalid short slug provided', { moduleSlug: slug });
       return res.status(404).json({
         success: false,
         error: {
@@ -112,7 +107,28 @@ const getQuizzesByModuleSlugController = async (req, res) => {
       });
     }
     
-    logger.info('Module found, fetching lessons', { moduleSlug: slug, moduleId: module.id });
+    // Resolve short slug to full slug if needed
+    const resolvedSlug = resolveSlug(slug);
+    
+    // First find the module by slug
+    const module = await Module.findOne({
+      where: {
+        slug: resolvedSlug
+      }
+    });
+    
+    if (!module) {
+      logger.warn('Module not found when fetching quizzes', { moduleSlug: slug, resolvedSlug });
+      return res.status(404).json({
+        success: false,
+        error: {
+          code: 'RESOURCE_NOT_FOUND',
+          message: 'Module not found'
+        }
+      });
+    }
+    
+    logger.info('Module found, fetching lessons', { moduleSlug: slug, resolvedSlug, moduleId: module.id });
     
     // Get all lessons for this module
     const lessons = await Lesson.findAll({
@@ -123,13 +139,13 @@ const getQuizzesByModuleSlugController = async (req, res) => {
       order: [['order', 'ASC']]
     });
     
-    logger.info('Lessons fetched, fetching quizzes', { moduleSlug: slug, lessonCount: lessons.length });
+    logger.info('Lessons fetched, fetching quizzes', { moduleSlug: slug, resolvedSlug, lessonCount: lessons.length });
     
     // Get all quizzes for all lessons
     const lessonIds = lessons.map(lesson => lesson.id);
     
     if (lessonIds.length === 0) {
-      logger.warn('No lessons found for module, returning empty quiz array', { moduleSlug: slug, moduleId: module.id });
+      logger.warn('No lessons found for module, returning empty quiz array', { moduleSlug: slug, resolvedSlug, moduleId: module.id });
       return res.status(200).json({
         success: true,
         data: []
@@ -144,7 +160,7 @@ const getQuizzesByModuleSlugController = async (req, res) => {
       order: [['sort_order', 'ASC']]
     });
     
-    logger.info('Quizzes fetched successfully', { moduleSlug: slug, quizCount: quizzes.length });
+    logger.info('Quizzes fetched successfully', { moduleSlug: slug, resolvedSlug, quizCount: quizzes.length });
     
     res.status(200).json({
       success: true,

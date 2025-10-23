@@ -195,10 +195,10 @@ GET /modules/{id}
 GET /modules/{slug}/quiz
 ```
 
-This endpoint retrieves all quizzes for a specific module identified by its slug. It aggregates quizzes from all lessons within the module.
+This endpoint retrieves all quizzes for a specific module identified by its slug. It aggregates quizzes from all lessons within the module. The endpoint supports both full slugs (e.g., "programming-fundamentals") and short slugs (e.g., "programming").
 
 **Path Parameters:**
-- `slug` - The slug of the module (e.g., "programming-fundamentals", "react-fundamentals")
+- `slug` - The slug of the module (e.g., "programming-fundamentals", "react-fundamentals", or short forms like "programming", "web", "graphql")
 
 **Response:**
 ```json
@@ -266,13 +266,22 @@ This endpoint retrieves all quizzes for a specific module identified by its slug
 }
 ```
 
+**Supported Short Slugs:**
+- `programming` → `programming-fundamentals`
+- `web` → `web-fundamentals`
+- `graphql` → `graphql-advanced`
+
 **Error Responses:**
 - `404 Not Found` - Module with the specified slug does not exist
 - `500 Internal Server Error` - Unexpected server error
 
-**Example Request:**
+**Example Requests:**
 ```bash
+# Using full slug
 curl -X GET http://localhost:8080/api/modules/programming-fundamentals/quiz
+
+# Using short slug
+curl -X GET http://localhost:8080/api/modules/programming/quiz
 ```
 
 ## Lessons

@@ -48,10 +48,13 @@ function createMigrator(sequelizeInstance) {
   try {
     await sequelize.authenticate();
 
-    if (process.env.NODE_ENV === 'test') {
-      // In test mode, avoid Umzug complexity; use sync on sqlite
+    const isTest = process.env.NODE_ENV === 'test';
+    const useRealDbForTests = (process.env.USE_REAL_DB_FOR_TESTS || '').toLowerCase() === 'true';
+
+    if (isTest && !useRealDbForTests) {
+      // In test mode with sqlite, avoid Umzug complexity; use sync
       await sequelize.sync({ force: true });
-      console.log('Test mode: database synced successfully');
+      console.log('Test mode (sqlite): database synced successfully');
       process.exit(0);
     }
 

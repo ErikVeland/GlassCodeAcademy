@@ -11,10 +11,13 @@ jobs:
     uses: ./.github/workflows/backend-tests.yml
 
   backend-health:
-    uses: ./.github/workflows/backend-health.yml
+  	uses: ./.github/workflows/backend-health.yml
 
   code-quality:
     uses: ./.github/workflows/code-quality.yml
+
+  content-validation:
+    uses: ./.github/workflows/content-validation.yml
 
   e2e-tests:
     uses: ./.github/workflows/e2e-tests.yml

@@ -8,5 +8,7 @@ module.exports = {
   ],
   coverageDirectory: 'coverage',
   coverageReporters: ['text', 'lcov'],
+  // Load environment variables (including root-level .env) before tests run
+  setupFiles: ['<rootDir>/jest.setup.js'],
   setupFilesAfterEnv: []
 };

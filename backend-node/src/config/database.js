@@ -17,16 +17,33 @@ const DB_SSL = (process.env.DB_SSL || '').toLowerCase() === 'true';
 
 let sequelize;
 
-if (isTest && !databaseUrl) {
-  // Use in-memory SQLite for tests when DATABASE_URL is not provided
-  sequelize = new Sequelize('sqlite::memory:', {
-    dialect: 'sqlite',
-    logging: false,
-    define: {
-      timestamps: true,
-      underscored: true,
-    },
-  });
+if (isTest) {
+  const useRealDb = (process.env.USE_REAL_DB_FOR_TESTS || '').toLowerCase() === 'true';
+  const testDatabaseUrl = process.env.TEST_DATABASE_URL || databaseUrl;
+
+  if (useRealDb && testDatabaseUrl) {
+    sequelize = new Sequelize(testDatabaseUrl, {
+      dialect: DB_DIALECT,
+      logging: false,
+      define: {
+        timestamps: true,
+        underscored: true,
+      },
+      dialectOptions: DB_SSL
+        ? { ssl: { require: true, rejectUnauthorized: false } }
+        : undefined,
+    });
+  } else {
+    // Default to in-memory SQLite for unit tests
+    sequelize = new Sequelize('sqlite::memory:', {
+      dialect: 'sqlite',
+      logging: false,
+      define: {
+        timestamps: true,
+        underscored: true,
+      },
+    });
+  }
 } else if (databaseUrl) {
   // Prefer DATABASE_URL when provided (e.g., postgresql://user:pass@host:port/db)
   sequelize = new Sequelize(databaseUrl, {

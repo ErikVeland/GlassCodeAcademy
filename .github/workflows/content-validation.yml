@@ -1,0 +1,38 @@
+name: Content Validation
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+permissions:
+  contents: read
+
+jobs:
+  content-validation:
+    name: Content Validation
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "18.x"
+
+      - name: Install validation dependencies
+        working-directory: scripts
+        run: |
+          if [ -f package-lock.json ]; then
+            npm ci
+          else
+            echo "No package-lock.json found; running npm install"
+            npm install
+          fi
+
+      - name: Run content validation
+        working-directory: scripts
+        run: |
+          npm run validate-ci
