@@ -259,3 +259,32 @@ export interface AdminCourse { id: number; title: string; }
 - If GraphQL is unreachable or returns empty data, it falls back to the content registry via `ContentRegistryLoader`.
 - The fallback computes totals, difficulty/topic distributions, and module breakdowns from static JSON content (`/content/lessons/*.json`, `/content/quizzes/*.json`).
 - This ensures the dashboard retains meaningful metrics even when the backend is down.
+
+## API Validation & Troubleshooting
+
+- Local prerequisites:
+  - Backend runs on `http://127.0.0.1:8080` (see `backend-node` service).
+  - Frontend runs on `http://localhost:3000` with `NEXT_PUBLIC_API_BASE=http://127.0.0.1:8080`.
+  - Verify env quickly: `node test-env-vars.js` (in `frontend/`).
+- Local health checks:
+  - Backend health: `curl -s -o /dev/null -w "%{http_code}" http://127.0.0.1:8080/api/health` → expect `200`.
+  - Backend modules: `curl http://127.0.0.1:8080/api/modules` → JSON array of modules.
+  - Backend tiers: `curl http://127.0.0.1:8080/api/tiers` → JSON record of tiers.
+  - Frontend registry: `curl http://localhost:3000/api/content/registry` → JSON containing `"version": "db"` and assembled modules.
+- Production validation:
+  - Set `NEXT_PUBLIC_API_BASE` to the public backend origin, e.g. `https://api.glasscode.academy`.
+  - Backend health: `curl -s -o /dev/null -w "%{http_code}" https://api.glasscode.academy/api/health` → expect `200`.
+  - Backend modules: `curl https://api.glasscode.academy/api/modules` → JSON array of modules.
+  - Frontend registry: `curl https://glasscode.academy/api/content/registry` → JSON with `"version": "db"`.
+- Negative tests (confirm DB-only, no static fallback):
+  - Stop backend; request `http://localhost:3000/api/content/registry` → expect `503 Service Unavailable`.
+  - This verifies the frontend uses backend data exclusively and fails loudly when backend is unreachable.
+- Troubleshooting tips:
+  - HTTP `000` (curl) → server not reachable; start backend, confirm port `8080` and firewall.
+  - Frontend `502 Bad Gateway` → misconfigured `NEXT_PUBLIC_API_BASE` or backend down; fix env and restart. Use `node test-env-vars.js` to verify.
+  - Mixed content (HTTPS site calling HTTP API) → set `NEXT_PUBLIC_API_BASE` to HTTPS in production.
+  - CORS errors (production) → ensure backend includes `Access-Control-Allow-Origin` for your frontend domain.
+  - Quick backend gating: run `./check_backend_health.sh` which waits for `200` and `{ status: "healthy" }` before starting dependent services.
+- Observability:
+  - Backend: check process logs for fetches to `/api/modules` and `/api/tiers`.
+  - Frontend: inspect dev server logs for registry fetch path and browser console for network errors.

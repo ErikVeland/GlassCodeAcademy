@@ -18,6 +18,7 @@ export default function FloatingDarkModeToggle() {
       onClick={cycleTheme}
       aria-label={label}
       title={`${label} — click to cycle`}
+      data-testid="theme-toggle"
       className="fixed bottom-5 right-5 z-[1000] rounded-full shadow-lg bg-surface-alt text-fg hover:bg-surface transition-colors duration-160 ease-out focus:outline-none focus:ring-2 ring-focus w-12 h-12 inline-flex items-center justify-center"
     >
       {theme === 'system' ? (

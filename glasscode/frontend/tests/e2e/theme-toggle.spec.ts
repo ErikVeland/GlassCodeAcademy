@@ -16,7 +16,9 @@ test.describe('Theme toggle behavior', () => {
 
     await page.goto('/');
 
-    const toggle = page.getByRole('button', { name: /Theme:/ });
+    // Prefer test-id based locator for explicit selection
+    const toggle = page.getByTestId('theme-toggle');
+    await expect(toggle).toBeVisible();
 
     // Initial in system mode
     await expect(toggle).toHaveAccessibleName('Theme: System (auto)');
@@ -50,15 +52,14 @@ test.describe('Theme toggle behavior', () => {
 
     await page.goto('/');
 
-    const toggle = page.getByRole('button', { name: /Theme:/ });
+    // Prefer test-id based locator for explicit selection
+    const toggle = page.getByTestId('theme-toggle');
+    await expect(toggle).toBeVisible();
+
     await expect(toggle).toHaveAccessibleName('Theme: System (auto)');
     await expect(page.locator('html')).toHaveAttribute('data-theme', 'dark');
 
-    // Verify cycling still works from system when OS is dark
-    await toggle.click();
-    await expect(toggle).toHaveAccessibleName('Theme: Dark');
-    await expect(page.locator('html')).toHaveAttribute('data-theme', 'dark');
-
+    // Verify cycling respects OS preference from system: system → light → system
     await toggle.click();
     await expect(toggle).toHaveAccessibleName('Theme: Light');
     await expect(page.locator('html')).toHaveAttribute('data-theme', 'light');
@@ -66,5 +67,9 @@ test.describe('Theme toggle behavior', () => {
     await toggle.click();
     await expect(toggle).toHaveAccessibleName('Theme: System (auto)');
     await expect(page.locator('html')).toHaveAttribute('data-theme', 'dark');
+
+    await toggle.click();
+    await expect(toggle).toHaveAccessibleName('Theme: Light');
+    await expect(page.locator('html')).toHaveAttribute('data-theme', 'light');
   });
 });

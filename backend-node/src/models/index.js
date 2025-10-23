@@ -7,6 +7,7 @@ const UserProgress = require('./progressModel');
 const UserLessonProgress = require('./userLessonProgressModel');
 const Role = require('./roleModel');
 const UserRole = require('./userRoleModel');
+const Tier = require('./tierModel');
 
 // Initialize associations that weren't set up in the model files
 function initializeAssociations() {
@@ -67,6 +68,8 @@ function initializeAssociations() {
     otherKey: 'user_id',
     as: 'roleUsers'
   });
+
+  // Note: Tiers are standalone for now; modules embed tier key in registry synthesis
 }
 
 module.exports = {
@@ -79,5 +82,6 @@ module.exports = {
   UserLessonProgress,
   Role,
   UserRole,
+  Tier,
   initializeAssociations
 };

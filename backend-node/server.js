@@ -80,6 +80,7 @@ app.use('/api/modules', require('./src/routes/moduleRoutes'));
 app.use('/api/lessons', require('./src/routes/lessonRoutes'));
 app.use('/api/progress', require('./src/routes/progressRoutes'));
 app.use('/api/quiz', require('./src/routes/quizRoutes'));
+app.use('/api/tiers', require('./src/routes/tierRoutes'));
 
 // Error handling middleware
 app.use(require('./src/middleware/errorMiddleware'));

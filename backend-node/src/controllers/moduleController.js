@@ -1,4 +1,4 @@
-const { getModuleById, getLessonsByModuleId } = require('../services/contentService');
+const { getModuleById, getLessonsByModuleId, getAllModules } = require('../services/contentService');
 const { Module, Lesson, LessonQuiz } = require('../models');
 const { resolveSlug, isShortSlug, isValidShortSlug } = require('../utils/slugMapping');
 const winston = require('winston');
@@ -18,6 +18,24 @@ const logger = winston.createLogger({
     })
   ]
 });
+
+const getAllModulesController = async (req, res) => {
+  try {
+    logger.info('Fetching all published modules');
+    const modules = await getAllModules();
+    logger.info('Modules fetched successfully', { count: modules.length });
+    res.status(200).json(modules);
+  } catch (error) {
+    logger.error('Error fetching modules list', { error: error.message, stack: error.stack });
+    res.status(500).json({
+      success: false,
+      error: {
+        code: 'INTERNAL_ERROR',
+        message: 'An error occurred while fetching modules.'
+      }
+    });
+  }
+};
 
 const getModuleByIdController = async (req, res) => {
   try {
@@ -183,6 +201,7 @@ const getQuizzesByModuleSlugController = async (req, res) => {
 };
 
 module.exports = {
+  getAllModulesController,
   getModuleByIdController,
   getLessonsByModuleIdController,
   getQuizzesByModuleSlugController

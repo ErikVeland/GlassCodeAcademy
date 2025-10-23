@@ -50,6 +50,17 @@ const getCourseById = async (id) => {
   return course;
 };
 
+// Get all modules (published only)
+const getAllModules = async () => {
+  const modules = await Module.findAll({
+    where: {
+      isPublished: true
+    },
+    order: [['order', 'ASC']]
+  });
+  return modules;
+};
+
 // Get module by ID
 const getModuleById = async (id) => {
   const module = await Module.findByPk(id, {
@@ -101,6 +112,7 @@ const getQuizzesByLessonId = async (lessonId) => {
 module.exports = {
   getAllCourses,
   getCourseById,
+  getAllModules,
   getModuleById,
   getLessonById,
   getLessonsByModuleId,

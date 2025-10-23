@@ -137,7 +137,7 @@ export default function QuizResultsPage({ params }: { params: Promise<{ shortSlu
     };
 
     resolveParams();
-  }, [params, updateProgressComplete, updateProgressBasic]);
+  }, [params]);
 
   // Compute next module route once params are resolved
   useEffect(() => {

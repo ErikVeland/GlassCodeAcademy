@@ -2,12 +2,18 @@ const path = require('path');
 const fs = require('fs');
 const dotenv = require('dotenv');
 
-// Load env from backend-node/.env (preferred) or .env.production if present
+// Load env from backend-node/.env or .env.production, preferring production file when NODE_ENV=production
 (() => {
-  const envCandidates = [
-    path.resolve(__dirname, '../.env'),
-    path.resolve(__dirname, '../.env.production'),
-  ];
+  const isProd = process.env.NODE_ENV === 'production';
+  const envCandidates = isProd
+    ? [
+      path.resolve(__dirname, '../.env.production'),
+      path.resolve(__dirname, '../.env'),
+    ]
+    : [
+      path.resolve(__dirname, '../.env'),
+      path.resolve(__dirname, '../.env.production'),
+    ];
   for (const p of envCandidates) {
     if (fs.existsSync(p)) {
       dotenv.config({ path: p });

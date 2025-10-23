@@ -698,15 +698,18 @@ if [ "$FRONTEND_ONLY" -eq 0 ]; then
 
     # Install backend dependencies
     log "🔧 Installing backend dependencies..."
-    if ! sudo -u "$DEPLOY_USER" npm install; then
-        log "❌ ERROR: Failed to install backend dependencies"
-        exit 1
+    if ! sudo -u "$DEPLOY_USER" npm ci; then
+        log "ℹ️  npm ci failed; falling back to npm install"
+        if ! sudo -u "$DEPLOY_USER" npm install; then
+            log "❌ ERROR: Failed to install backend dependencies"
+            exit 1
+        fi
     fi
     log "✅ Backend dependencies installed"
 
     # Run database migrations
     log "📊 Running database migrations..."
-    if ! sudo -u "$DEPLOY_USER" npm run migrate; then
+    if ! sudo -u "$DEPLOY_USER" env NODE_ENV=production npm run migrate; then
         log "❌ ERROR: Failed to run database migrations"
         exit 1
     fi
@@ -714,7 +717,7 @@ if [ "$FRONTEND_ONLY" -eq 0 ]; then
 
     # Seed content
     log "🌱 Seeding content..."
-    if ! sudo -u "$DEPLOY_USER" npm run seed; then
+    if ! sudo -u "$DEPLOY_USER" env NODE_ENV=production npm run seed; then
         log "❌ ERROR: Failed to seed content"
         exit 1
     fi

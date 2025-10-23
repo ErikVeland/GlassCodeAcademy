@@ -25,6 +25,7 @@ interface Module {
     requiredLessons: number;
     requiredQuestions: number;
   };
+
   legacySlugs: string[];
   status: string;
   routes: {
@@ -207,33 +208,28 @@ class ContentRegistryLoader {
         if (!isBrowser && process.env.NODE_ENV !== 'production') {
           const configuredBase = (process.env.NEXT_PUBLIC_BASE_URL || '').trim().replace(/\/+$/, '');
           if (/localhost|127\.0\.0\.1/.test(configuredBase)) {
-            devCandidates.push(`${configuredBase}/api/content/registry`, `${configuredBase}/registry.json`);
+            devCandidates.push(`${configuredBase}/api/content/registry`);
           } else {
             // Fallback to common localhost origins
             devCandidates.push(
               'http://localhost:3000/api/content/registry',
-              'http://localhost:3000/registry.json',
-              'http://127.0.0.1:3000/api/content/registry',
-              'http://127.0.0.1:3000/registry.json'
+              'http://127.0.0.1:3000/api/content/registry'
             );
           }
         }
 
         const candidates: string[] = isBrowser
           ? [
-              // Prefer API route first, then fallback to static registry (browser relative URLs)
+              // Prefer API registry first to use DB-backed data
               '/api/content/registry',
-              '/registry.json',
             ]
           : [
               // Server-side absolute URLs only
               ...devCandidates,
-              ...(base ? [`${base}/api/content/registry`, `${base}/registry.json`] : []),
+              ...(base ? [`${base}/api/content/registry`] : []),
               // Localhost fallbacks to bypass front proxy issues (production-safe)
               'http://localhost:3000/api/content/registry',
-              'http://localhost:3000/registry.json',
               'http://127.0.0.1:3000/api/content/registry',
-              'http://127.0.0.1:3000/registry.json',
             ];
 
         const controller = new AbortController();
@@ -281,60 +277,16 @@ class ContentRegistryLoader {
 
         clearTimeout(timeoutId);
 
-        // As a last resort on server, attempt to read local registry files
-        if (!isBrowser) {
-          try {
-            const fs = await import('fs');
-            const path = await import('path');
-            const tryPaths = [
-              path.join(process.cwd(), '..', '..', 'content', 'registry.json'),
-              path.join(process.cwd(), 'public', 'registry.json'),
-            ];
-            for (const p of tryPaths) {
-              if (fs.existsSync(p)) {
-                const raw = fs.readFileSync(p, 'utf8');
-                const data = JSON.parse(raw) as Record<string, unknown>;
-                type FileModule = { slug: string } & Record<string, unknown>;
-                const mods: FileModule[] = Array.isArray(data['modules']) ? (data['modules'] as FileModule[]) : [];
-                if (mods.length > 0) {
-                  const normalizedModules = await Promise.all(mods.map(async (m) => {
-                    const slug = (m?.slug || '').toString();
-                    const shortSlug = (await this.getShortSlugFromModuleSlug(slug)) || (slug.includes('-') ? slug.split('-')[0] : slug);
-                    const routes = {
-                      overview: `/${shortSlug}`,
-                      lessons: `/${shortSlug}/lessons`,
-                      quiz: `/${shortSlug}/quiz`,
-                    };
-                    return { ...m, routes };
-                  }));
-                  const version = typeof data['version'] === 'string' ? (data['version'] as string) : '0.0.0';
-                  const lastUpdated = typeof data['lastUpdated'] === 'string' ? (data['lastUpdated'] as string) : new Date().toISOString();
-                  const tiers = (data['tiers'] as ContentRegistry['tiers']) || buildMinimalRegistry().tiers;
-                  const globalSettings = (data['globalSettings'] as ContentRegistry['globalSettings']) || buildMinimalRegistry().globalSettings;
-                  return {
-                    version,
-                    lastUpdated,
-                    tiers,
-                    modules: normalizedModules,
-                    globalSettings,
-                  } as ContentRegistry;
-                }
-              }
-            }
-          } catch (fsErr) {
-            console.warn('[ContentRegistry] file fallback failed:', fsErr);
-          }
-        }
 
-        // Fallback to minimal registry if all candidates fail or return empty modules
-        return buildMinimalRegistry();
+        // No API candidate succeeded; abort to honor DB-only policy
+        throw new Error('Registry unavailable from API');
       } catch (err) {
         console.error('Failed to load registry internally:', err);
         
-        // If we've exhausted retries, return minimal registry
+        // If we've exhausted retries, abort to honor DB-only policy
         if (retryCount >= maxRetries) {
-          console.error('Failed to load registry after retries, returning minimal registry');
-          return buildMinimalRegistry();
+          console.error('Failed to load registry after retries');
+          throw err;
         }
         
         // Wait with exponential backoff before retrying
@@ -1194,36 +1146,3 @@ export async function getModuleSlugFromShortSlug(shortSlug: string): Promise<str
 
 // Export types
 export type { Module, Tier, ContentRegistry, Lesson, ProgrammingQuestion, Quiz };
-
-function buildMinimalRegistry(): ContentRegistry {
-  return {
-    version: '0.0.0',
-    lastUpdated: new Date().toISOString(),
-    tiers: {
-      foundational: { level: 1, title: 'Foundational', description: '', focusArea: 'Core', color: '#4B5563', learningObjectives: [] },
-      core: { level: 2, title: 'Core', description: '', focusArea: 'Core', color: '#2563EB', learningObjectives: [] },
-      specialized: { level: 3, title: 'Specialized', description: '', focusArea: 'Advanced', color: '#10B981', learningObjectives: [] },
-      quality: { level: 4, title: 'Quality', description: '', focusArea: 'Quality', color: '#F59E0B', learningObjectives: [] },
-    },
-    modules: [],
-    globalSettings: {
-      contentThresholds: {
-        strictMode: false,
-        developmentMode: true,
-        minimumLessonsPerModule: 0,
-        minimumQuestionsPerModule: 0,
-        requiredSchemaCompliance: 0,
-      },
-      routingRules: {
-        enableLegacyRedirects: true,
-        generate404Fallbacks: true,
-        requireContentThresholds: false,
-      },
-      seoSettings: {
-        generateSitemap: true,
-        includeLastModified: false,
-        excludeContentPending: false,
-      },
-    },
-  };
-}

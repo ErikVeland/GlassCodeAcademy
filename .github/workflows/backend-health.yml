@@ -13,6 +13,7 @@ jobs:
     env:
       GLASSCODE_CONTENT_PATH: ${{ github.workspace }}/content
       CI: true
+      DATABASE_URL: postgresql://postgres:postgres@localhost:5432/postgres
     services:
       postgres:
         image: postgres:13
