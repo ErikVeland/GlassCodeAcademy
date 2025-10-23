@@ -139,13 +139,56 @@ export FRONTEND_ONLY FRONTEND_PORT FAST_MODE SKIP_BACKEND_HEALTH SKIP_LINT SKIP_
 log "⚙️  Mode: FRONTEND_ONLY=$FRONTEND_ONLY, FAST_MODE=$FAST_MODE, FRONTEND_PORT=$FRONTEND_PORT, SKIP_CONTENT_VERIFICATION=$SKIP_CONTENT_VERIFICATION, VALIDATE_JSON_CONTENT=$VALIDATE_JSON_CONTENT, ENV_ONLY=$ENV_ONLY"
 
 # Database configuration defaults (overridable via .env)
+DB_DIALECT="${DB_DIALECT:-postgres}"
 DB_HOST="${DB_HOST:-localhost}"
 DB_PORT="${DB_PORT:-5432}"
 DB_NAME="${DB_NAME:-glasscode_dev}"
 DB_USER="${DB_USER:-postgres}"
 DB_PASSWORD="${DB_PASSWORD:-postgres}"
-log "🗄️  DB config: host=${DB_HOST} port=${DB_PORT} name=${DB_NAME} user=${DB_USER}"
-export DB_HOST DB_PORT DB_NAME DB_USER DB_PASSWORD
+
+# Interactive prompts for missing DB settings (prefer existing backend .env)
+prompt_or_default_backend() {
+    local var="$1"; local def="$2"; local label="$3";
+    local envpath="${APP_DIR}/backend-node/.env"; local existing=""; local current="${!var:-}"; local input="";
+    if [ -f "$envpath" ]; then
+        existing=$(grep -E "^${var}=" "$envpath" | tail -n1 | cut -d'=' -f2- | tr -d '\r')
+    fi
+    local effective="${existing:-$current}"
+    if [ -z "$effective" ]; then
+        if [ -t 0 ]; then
+            read -r -p "Enter ${label} [${def}]: " input || true
+        fi
+        effective="${input:-$def}"
+    fi
+    eval "${var}=\"${effective}\""; export "$var"
+}
+
+prompt_or_default_backend DB_DIALECT "$DB_DIALECT" "Database dialect (postgres)"
+prompt_or_default_backend DB_HOST "$DB_HOST" "Database host"
+prompt_or_default_backend DB_PORT "$DB_PORT" "Database port"
+prompt_or_default_backend DB_NAME "$DB_NAME" "Database name"
+prompt_or_default_backend DB_USER "$DB_USER" "Database username"
+prompt_or_default_backend DB_PASSWORD "$DB_PASSWORD" "Database password"
+
+# Compute DATABASE_URL if missing
+if [ -z "${DATABASE_URL:-}" ]; then
+    case "$DB_DIALECT" in
+        postgres|postgresql)
+            DATABASE_URL="postgresql://${DB_USER}:${DB_PASSWORD}@${DB_HOST}:${DB_PORT}/${DB_NAME}"
+            ;;
+        mysql)
+            DATABASE_URL="mysql://${DB_USER}:${DB_PASSWORD}@${DB_HOST}:${DB_PORT}/${DB_NAME}"
+            ;;
+        *)
+            # Fallback to postgres format
+            DATABASE_URL="postgresql://${DB_USER}:${DB_PASSWORD}@${DB_HOST}:${DB_PORT}/${DB_NAME}"
+            ;;
+    esac
+fi
+export DATABASE_URL
+
+log "🗄️  DB config: dialect=${DB_DIALECT} host=${DB_HOST} port=${DB_PORT} name=${DB_NAME} user=${DB_USER}"
+export DB_DIALECT DB_HOST DB_PORT DB_NAME DB_USER DB_PASSWORD
 
 # Env-only mode: write backend and frontend env files and exit
 if [ "${ENV_ONLY:-0}" -eq 1 ]; then
@@ -164,13 +207,38 @@ if [ "${ENV_ONLY:-0}" -eq 1 ]; then
 NODE_ENV=production
 PORT=${BACKEND_PORT:-8080}
 DATABASE_URL=${DATABASE_URL}
-DB_DIALECT=postgres
+DB_DIALECT=${DB_DIALECT}
 DB_HOST=${DB_HOST}
 DB_PORT=${DB_PORT}
 DB_NAME=${DB_NAME}
 DB_USER=${DB_USER}
 DB_PASSWORD=${DB_PASSWORD}
 EOF
+
+    # Ensure backend .env.production exists and includes the same keys (merge-only)
+    BACKEND_PROD_ENV="$TARGET_DIR/backend-node/.env.production"
+    TMP_BENV=$(mktemp 2>/dev/null || echo "$BACKEND_PROD_ENV.tmp")
+    if [ -f "$BACKEND_PROD_ENV" ]; then
+        cp "$BACKEND_PROD_ENV" "$TMP_BENV"
+    else
+        : > "$TMP_BENV"
+    fi
+    add_if_missing_be_prod() {
+        local key="$1"; local value="$2";
+        if ! grep -qE "^${key}=" "$TMP_BENV"; then
+            printf "%s=%s\n" "$key" "$value" >> "$TMP_BENV"
+        fi
+    }
+    add_if_missing_be_prod NODE_ENV "production"
+    add_if_missing_be_prod PORT "${BACKEND_PORT:-8080}"
+    add_if_missing_be_prod DATABASE_URL "$DATABASE_URL"
+    add_if_missing_be_prod DB_DIALECT "$DB_DIALECT"
+    add_if_missing_be_prod DB_HOST "$DB_HOST"
+    add_if_missing_be_prod DB_PORT "$DB_PORT"
+    add_if_missing_be_prod DB_NAME "$DB_NAME"
+    add_if_missing_be_prod DB_USER "$DB_USER"
+    add_if_missing_be_prod DB_PASSWORD "$DB_PASSWORD"
+    mv "$TMP_BENV" "$BACKEND_PROD_ENV"
 
     # Set defaults if missing
     if [ -z "${NEXT_PUBLIC_BASE_URL:-}" ]; then
@@ -198,6 +266,7 @@ EOF
 
     log "✅ Environment files written:"
     log " - $TARGET_DIR/backend-node/.env"
+    log " - $TARGET_DIR/backend-node/.env.production"
     log " - $TARGET_DIR/glasscode/frontend/.env.production"
     exit 0
 fi
@@ -570,6 +639,62 @@ log "✅ Sufficient disk space available: ${AVAILABLE_SPACE_GB}GB"
 if [ "$FRONTEND_ONLY" -eq 0 ]; then
     log "🏗️  Setting up backend..."
     cd "$APP_DIR/backend-node"
+
+    # Ensure backend .env exists and is populated (merge without overwriting existing)
+    log "🧾 Ensuring backend .env is populated..."
+    BACKEND_ENV_PATH="$APP_DIR/backend-node/.env"
+    TMP_ENV=$(mktemp 2>/dev/null || echo "$BACKEND_ENV_PATH.tmp")
+    if [ -f "$BACKEND_ENV_PATH" ]; then
+        cp "$BACKEND_ENV_PATH" "$TMP_ENV"
+    else
+        : > "$TMP_ENV"
+    fi
+    add_if_missing_backend() {
+        local key="$1"; local value="$2";
+        if ! grep -qE "^${key}=" "$TMP_ENV"; then
+            printf "%s=%s\n" "$key" "$value" >> "$TMP_ENV"
+        else
+            eval "${key}=\"$(grep -E \"^${key}=\" \"$TMP_ENV\" | tail -n1 | cut -d'=' -f2- | tr -d '\r')\""
+        fi
+    }
+    add_if_missing_backend NODE_ENV "production"
+    add_if_missing_backend PORT "${BACKEND_PORT:-8080}"
+    add_if_missing_backend DB_DIALECT "$DB_DIALECT"
+    add_if_missing_backend DB_HOST "$DB_HOST"
+    add_if_missing_backend DB_PORT "$DB_PORT"
+    add_if_missing_backend DB_NAME "$DB_NAME"
+    add_if_missing_backend DB_USER "$DB_USER"
+    add_if_missing_backend DB_PASSWORD "$DB_PASSWORD"
+    add_if_missing_backend DATABASE_URL "$DATABASE_URL"
+    mv "$TMP_ENV" "$BACKEND_ENV_PATH"
+    log "✅ Backend .env updated (existing values preserved)"
+
+    # Ensure backend .env.production is populated (merge-only)
+    log "🧾 Ensuring backend .env.production is populated..."
+    BACKEND_PROD_ENV_PATH="$APP_DIR/backend-node/.env.production"
+    TMP_ENV2=$(mktemp 2>/dev/null || echo "$BACKEND_PROD_ENV_PATH.tmp")
+    if [ -f "$BACKEND_PROD_ENV_PATH" ]; then
+        cp "$BACKEND_PROD_ENV_PATH" "$TMP_ENV2"
+    else
+        : > "$TMP_ENV2"
+    fi
+    add_if_missing_backend_prod() {
+        local key="$1"; local value="$2";
+        if ! grep -qE "^${key}=" "$TMP_ENV2"; then
+            printf "%s=%s\n" "$key" "$value" >> "$TMP_ENV2"
+        fi
+    }
+    add_if_missing_backend_prod NODE_ENV "production"
+    add_if_missing_backend_prod PORT "${BACKEND_PORT:-8080}"
+    add_if_missing_backend_prod DB_DIALECT "$DB_DIALECT"
+    add_if_missing_backend_prod DB_HOST "$DB_HOST"
+    add_if_missing_backend_prod DB_PORT "$DB_PORT"
+    add_if_missing_backend_prod DB_NAME "$DB_NAME"
+    add_if_missing_backend_prod DB_USER "$DB_USER"
+    add_if_missing_backend_prod DB_PASSWORD "$DB_PASSWORD"
+    add_if_missing_backend_prod DATABASE_URL "$DATABASE_URL"
+    mv "$TMP_ENV2" "$BACKEND_PROD_ENV_PATH"
+    log "✅ Backend .env.production updated (existing values preserved)"
 
     # Install backend dependencies
     log "🔧 Installing backend dependencies..."

@@ -1,3 +1,21 @@
+const path = require('path');
+const fs = require('fs');
+const dotenv = require('dotenv');
+
+// Load env from backend-node/.env (preferred) or .env.production if present
+(() => {
+  const envCandidates = [
+    path.resolve(__dirname, '../.env'),
+    path.resolve(__dirname, '../.env.production'),
+  ];
+  for (const p of envCandidates) {
+    if (fs.existsSync(p)) {
+      dotenv.config({ path: p });
+      break;
+    }
+  }
+})();
+
 const sequelize = require('../src/config/database');
 const { Sequelize } = require('sequelize');
 const { Umzug, SequelizeStorage } = require('umzug');
