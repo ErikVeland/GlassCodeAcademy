@@ -25,34 +25,22 @@ interface Exercise {
 
 export const dynamic = 'force-dynamic';
 
-export async function generateStaticParams() {
+export async function generateStaticParams(): Promise<{ shortSlug: string; lessonOrder: string }[]> {
+  const enableSSG = process.env.ENABLE_BUILD_SSG === 'true';
   const isDb = (process.env.GC_CONTENT_MODE || '').toLowerCase() === 'db';
-  if (isDb) {
-    // No pre-generation in DB mode; render on-demand
+  if (!enableSSG || isDb) {
     return [];
   }
   try {
     const modules = await contentRegistry.getModules();
-    const params: Array<{ shortSlug: string; lessonOrder: string }> = [];
-    // Only pre-generate the first 3 lessons of each module to reduce build time
-    for (const mod of modules) {
-      if (mod.status === 'active') {
-        try {
-          const lessons = await contentRegistry.getModuleLessons(mod.slug);
-          if (lessons) {
-            const lessonsToGenerate = Math.min(3, lessons.length);
-            // Use short slug for friendly routes where available
-            const shortSlug = (await contentRegistry.getShortSlugFromModuleSlug(mod.slug)) || mod.slug;
-            for (let i = 0; i < lessonsToGenerate; i++) {
-              params.push({ shortSlug, lessonOrder: (i + 1).toString() });
-            }
-          }
-        } catch (lessonError) {
-          console.warn(`Failed to load lessons for module ${mod.slug}:`, lessonError);
-        }
+    const activeModules = modules.filter((m) => m.status === 'active');
+    const params: { shortSlug: string; lessonOrder: string }[] = [];
+    for (const m of activeModules) {
+      const shortSlug = (await contentRegistry.getShortSlugFromModuleSlug(m.slug)) || m.slug;
+      for (let i = 1; i <= 3; i++) {
+        params.push({ shortSlug, lessonOrder: String(i) });
       }
     }
-    console.log(`Generating ${params.length} lesson pages statically`);
     return params;
   } catch (error) {
     console.warn('Failed to load modules for lesson static generation:', error);

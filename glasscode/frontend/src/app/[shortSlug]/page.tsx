@@ -10,13 +10,22 @@ import RetryButton from '@/components/RetryButton';
 export const dynamic = 'force-dynamic';
 
 export async function generateStaticParams(): Promise<{ shortSlug: string }[]> {
-  if ((process.env.GC_CONTENT_MODE || '').toLowerCase() === 'db') {
+  const enableSSG = process.env.ENABLE_BUILD_SSG === 'true';
+  const isDb = (process.env.GC_CONTENT_MODE || '').toLowerCase() === 'db';
+  if (!enableSSG || isDb) {
     return [];
   }
-  const modules = await contentRegistry.getModules();
-  return modules.map((m: Module) => ({
-    shortSlug: m.slug,
-  }));
+  try {
+    const modules = await contentRegistry.getModules();
+    const params = await Promise.all(modules.map(async (m: Module) => {
+      const shortSlug = (await contentRegistry.getShortSlugFromModuleSlug(m.slug)) || m.slug;
+      return { shortSlug };
+    }));
+    return params;
+  } catch (error) {
+    console.warn('Failed to load modules for overview static generation:', error);
+    return [];
+  }
 }
 
 type Props = {

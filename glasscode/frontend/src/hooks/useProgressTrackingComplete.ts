@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { contentRegistry } from '@/lib/contentRegistry';
 
 // Enhanced interfaces matching design documentation
@@ -392,7 +392,7 @@ export const useProgressTrackingComplete = () => {
   }, []);
 
   // Helper: determine tier for a module via registry-backed cache with fallback
-  const resolveTierForModule = async (
+  const resolveTierForModule = useCallback(async (
     moduleId: string
   ): Promise<'foundational' | 'core' | 'specialized' | 'quality'> => {
     const source = Object.keys(tierModuleCache).length ? tierModuleCache : (TIER_MODULES as Record<string, string[]>);
@@ -422,7 +422,7 @@ export const useProgressTrackingComplete = () => {
     }
     
     return (found || 'foundational') as 'foundational' | 'core' | 'specialized' | 'quality';
-  };
+  }, [tierModuleCache]);
 
   // Save data to localStorage whenever it changes
   useEffect(() => {
@@ -457,89 +457,8 @@ export const useProgressTrackingComplete = () => {
     }
   }, [userStats]);
 
-  const updateProgress = async (
-    moduleId: string,
-    dataOrName: string | Partial<ProgressData>,
-    maybeData?: Partial<ProgressData>
-  ) => {
-    const currentTime = new Date().toISOString();
-    const data: Partial<ProgressData> = typeof dataOrName === 'string' ? (maybeData ?? {}) : (dataOrName as Partial<ProgressData>);
-    const resolvedModuleName = typeof dataOrName === 'string'
-      ? dataOrName
-      : (progress[moduleId]?.moduleName ?? moduleId);
-    
-    // Determine tier for module using registry-backed cache
-    const tier = await resolveTierForModule(moduleId);
-    
-    // Get actual lesson count from content files
-    const actualLessonCount = await getActualLessonCount(moduleId);
-    
-    const defaultProgressData: ProgressData = {
-      moduleId,
-      moduleName: resolvedModuleName,
-      lessonsCompleted: 0,
-      totalLessons: actualLessonCount,
-      quizScore: 0,
-      timeSpent: 0,
-      lastAccessed: currentTime,
-      completionStatus: 'not-started',
-      badges: [],
-      completedTopics: [],
-      tier,
-      streakDays: 0,
-      velocity: 0,
-      masteryLevel: 'beginner'
-    };
-    
-    const currentProgress = progress[moduleId] || defaultProgressData;
-    
-    const updatedProgress: ProgressData = {
-      ...currentProgress,
-      ...data,
-      lastAccessed: currentTime,
-      firstAccessed: currentProgress.firstAccessed || currentTime
-    };
-    
-    // Auto-calculate completion status
-    if (updatedProgress.lessonsCompleted >= updatedProgress.totalLessons && 
-        updatedProgress.quizScore >= 70) {
-      updatedProgress.completionStatus = 'completed';
-    } else if (updatedProgress.lessonsCompleted > 0 || updatedProgress.quizScore > 0) {
-      updatedProgress.completionStatus = 'in-progress';
-    }
-    
-    // Calculate mastery level based on progress
-    const progressPercentage = updatedProgress.totalLessons > 0 ? 
-      (updatedProgress.lessonsCompleted / updatedProgress.totalLessons) * 100 : 0;
-    
-    if (progressPercentage >= 90) {
-      updatedProgress.masteryLevel = 'expert';
-    } else if (progressPercentage >= 70) {
-      updatedProgress.masteryLevel = 'advanced';
-    } else if (progressPercentage >= 50) {
-      updatedProgress.masteryLevel = 'intermediate';
-    }
-    
-    // Update streak and achievements
-    const updated = {
-      ...progress,
-      [moduleId]: updatedProgress
-    };
-    
-    setProgress(updated);
-    
-    // Update streak
-    updateStreak(moduleId, data.lessonsCompleted || 0);
-    
-    // Check for new achievements
-    void checkAchievements(updated, moduleId);
-    
-    // Update user stats
-    updateUserStats(updated);
-  };
-
   // Helper function to get actual lesson count from content files (registry-backed with fallback)
-  const getActualLessonCount = async (moduleId: string): Promise<number> => {
+  const getActualLessonCount = useCallback(async (moduleId: string): Promise<number> => {
     // Try to get from cache using the provided moduleId (could be shortSlug or moduleSlug)
     let fromCache = lessonCountCache[moduleId];
     if (typeof fromCache === 'number' && fromCache > 0) return fromCache;
@@ -563,7 +482,7 @@ export const useProgressTrackingComplete = () => {
       console.warn('Error converting between shortSlug and moduleSlug:', error);
     }
     
-    const tier = await resolveTierForModule(moduleId);
+    const tier = await resolveTierForModule(moduleId) as 'foundational' | 'core' | 'specialized' | 'quality';
     const defaultCounts: Record<'foundational' | 'core' | 'specialized' | 'quality', number> = {
       foundational: 12,
       core: 15,
@@ -571,9 +490,9 @@ export const useProgressTrackingComplete = () => {
       quality: 12
     };
     return defaultCounts[tier] || 12;
-  };
+  }, [lessonCountCache, resolveTierForModule]);
 
-  const updateStreak = (moduleId: string, lessonsCompleted: number) => {
+  const updateStreak = useCallback((moduleId: string, lessonsCompleted: number) => {
     const today = new Date().toDateString();
     const yesterday = new Date(Date.now() - 24 * 60 * 60 * 1000).toDateString();
     
@@ -617,9 +536,9 @@ export const useProgressTrackingComplete = () => {
       
       setStreak(updatedStreak);
     }
-  };
+  }, [streak]);
 
-  const checkAchievements = async (progressData: Record<string, ProgressData>, moduleId: string) => {
+  const checkAchievements = useCallback(async (progressData: Record<string, ProgressData>, moduleId: string) => {
     const newAchievements: AchievementData[] = [];
     const currentTime = new Date().toISOString();
     
@@ -776,9 +695,9 @@ export const useProgressTrackingComplete = () => {
       const updatedAchievements = [...achievements, ...newAchievements];
       setAchievements(updatedAchievements);
     }
-  };
+  }, [achievements, tierModuleCache, streak]);
 
-  const updateUserStats = (progressData: Record<string, ProgressData>) => {
+  const updateUserStats = useCallback((progressData: Record<string, ProgressData>) => {
     const totalStudyTime = Object.values(progressData).reduce((sum, p) => sum + p.timeSpent, 0);
     const totalLessonsCompleted = Object.values(progressData).reduce((sum, p) => sum + p.lessonsCompleted, 0);
     const quizzesTaken = Object.values(progressData).filter(p => p.quizScore > 0).length;
@@ -828,7 +747,88 @@ export const useProgressTrackingComplete = () => {
     };
     
     setUserStats(updatedStats);
-  };
+  }, [achievements, streak, tierModuleCache]);
+
+  const updateProgress = useCallback(async (
+    moduleId: string,
+    dataOrName: string | Partial<ProgressData>,
+    maybeData?: Partial<ProgressData>
+  ) => {
+    const currentTime = new Date().toISOString();
+    const data: Partial<ProgressData> = typeof dataOrName === 'string' ? (maybeData ?? {}) : (dataOrName as Partial<ProgressData>);
+    const resolvedModuleName = typeof dataOrName === 'string'
+      ? dataOrName
+      : (progress[moduleId]?.moduleName ?? moduleId);
+    
+    // Determine tier for module using registry-backed cache
+    const tier = await resolveTierForModule(moduleId);
+    
+    // Get actual lesson count from content files
+    const actualLessonCount = await getActualLessonCount(moduleId);
+    
+    const defaultProgressData: ProgressData = {
+      moduleId,
+      moduleName: resolvedModuleName,
+      lessonsCompleted: 0,
+      totalLessons: actualLessonCount,
+      quizScore: 0,
+      timeSpent: 0,
+      lastAccessed: currentTime,
+      completionStatus: 'not-started',
+      badges: [],
+      completedTopics: [],
+      tier,
+      streakDays: 0,
+      velocity: 0,
+      masteryLevel: 'beginner'
+    };
+    
+    const currentProgress = progress[moduleId] || defaultProgressData;
+    
+    const updatedProgress: ProgressData = {
+      ...currentProgress,
+      ...data,
+      lastAccessed: currentTime,
+      firstAccessed: currentProgress.firstAccessed || currentTime
+    };
+    
+    // Auto-calculate completion status
+    if (updatedProgress.lessonsCompleted >= updatedProgress.totalLessons && 
+        updatedProgress.quizScore >= 70) {
+      updatedProgress.completionStatus = 'completed';
+    } else if (updatedProgress.lessonsCompleted > 0 || updatedProgress.quizScore > 0) {
+      updatedProgress.completionStatus = 'in-progress';
+    }
+    
+    // Calculate mastery level based on progress
+    const progressPercentage = updatedProgress.totalLessons > 0 ? 
+      (updatedProgress.lessonsCompleted / updatedProgress.totalLessons) * 100 : 0;
+    
+    if (progressPercentage >= 90) {
+      updatedProgress.masteryLevel = 'expert';
+    } else if (progressPercentage >= 70) {
+      updatedProgress.masteryLevel = 'advanced';
+    } else if (progressPercentage >= 50) {
+      updatedProgress.masteryLevel = 'intermediate';
+    }
+    
+    // Update streak and achievements
+    const updated = {
+      ...progress,
+      [moduleId]: updatedProgress
+    };
+    
+    setProgress(updated);
+    
+    // Update streak
+    updateStreak(moduleId, (data as Partial<ProgressData>).lessonsCompleted || 0);
+    
+    // Check for new achievements
+    void checkAchievements(updated, moduleId);
+    
+    // Update user stats
+    updateUserStats(updated);
+  }, [progress, resolveTierForModule, getActualLessonCount, updateStreak, checkAchievements, updateUserStats]);
 
   const calculateOverallProgress = () => {
     const source = Object.keys(tierModuleCache).length ? tierModuleCache : (TIER_MODULES as Record<string, string[]>);

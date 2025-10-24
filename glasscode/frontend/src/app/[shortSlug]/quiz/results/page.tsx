@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import ConfettiBurst from '@/components/ConfettiBurst';
@@ -40,9 +40,11 @@ export default function QuizResultsPage({ params }: { params: Promise<{ shortSlu
   const { nextLessonHref } = useNextUnlockedLesson();
   const [moduleTitle, setModuleTitle] = useState<string | null>(null);
   const [theme, setTheme] = useState(getModuleTheme(''));
+  const progressAppliedRef = useRef(false);
 
   // Resolve the params promise
   useEffect(() => {
+    if (progressAppliedRef.current) return;
     const resolveParams = async () => {
       try {
         const { shortSlug } = await params;
@@ -127,6 +129,7 @@ export default function QuizResultsPage({ params }: { params: Promise<{ shortSlu
             });
 
             setShowConfetti(true);
+            progressAppliedRef.current = true;
           } catch (e) {
             console.error('Failed to update progress', e);
           }
@@ -137,7 +140,7 @@ export default function QuizResultsPage({ params }: { params: Promise<{ shortSlu
     };
 
     resolveParams();
-  }, [params]);
+  }, [params, updateProgressComplete, updateProgressBasic]);
 
   // Compute next module route once params are resolved
   useEffect(() => {
