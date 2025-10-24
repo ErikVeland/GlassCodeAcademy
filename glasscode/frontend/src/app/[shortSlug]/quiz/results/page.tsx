@@ -10,7 +10,6 @@ import { useNextUnlockedLesson } from '@/hooks/useNextUnlockedLesson';
 import { contentRegistry } from '@/lib/contentRegistry';
 import type { ProgrammingQuestion, Module } from '@/lib/contentRegistry';
 import QuizResult from '@/components/QuizResult';
-import { getModuleTheme } from '@/lib/moduleThemes';
 
 type CategoryScore = { category: string; correct: number; total: number };
 
@@ -39,12 +38,18 @@ export default function QuizResultsPage({ params }: { params: Promise<{ shortSlu
   const [nextLessonTitle, setNextLessonTitle] = useState<string | null>(null);
   const { nextLessonHref } = useNextUnlockedLesson();
   const [moduleTitle, setModuleTitle] = useState<string | null>(null);
-  const [theme, setTheme] = useState(getModuleTheme(''));
+
   const progressAppliedRef = useRef(false);
+  const debugUpdateCompleteCountRef = useRef(0);
 
   // Resolve the params promise
   useEffect(() => {
-    if (progressAppliedRef.current) return;
+    if (progressAppliedRef.current) {
+      if (process.env.NODE_ENV !== 'production') {
+        console.debug('[Results] progress update skipped (already applied)');
+      }
+      return;
+    }
     const resolveParams = async () => {
       try {
         const { shortSlug } = await params;
@@ -105,7 +110,7 @@ export default function QuizResultsPage({ params }: { params: Promise<{ shortSlu
         if (passed) {
           try {
             const mod = await contentRegistry.getModule(shortSlug);
-            setTheme(getModuleTheme(mod?.slug || shortSlug));
+
             const moduleName = mod?.title ?? shortSlug.replace(/-/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
             // Try to compute accurate lessons count from registry
             let lessonsCount = 0;
@@ -121,6 +126,15 @@ export default function QuizResultsPage({ params }: { params: Promise<{ shortSlu
               quizScore: score,
               ...(lessonsCount > 0 ? { totalLessons: lessonsCount, lessonsCompleted: lessonsCount } : {})
             });
+            // Dev-only: count and log invocations of updateProgressComplete
+            debugUpdateCompleteCountRef.current += 1;
+            if (process.env.NODE_ENV !== 'production') {
+              console.debug(`[Results] updateProgressComplete called`, {
+                shortSlug,
+                count: debugUpdateCompleteCountRef.current,
+                score,
+              });
+            }
 
             // Update basic tracker to keep fullstack progress in sync
             updateProgressBasic(shortSlug, {
@@ -182,7 +196,7 @@ export default function QuizResultsPage({ params }: { params: Promise<{ shortSlu
             const href = shouldAppendOrder ? `${lessonsPath}/${firstLessonIndex + 1}` : lessonsPath;
             setNextModuleHref(href);
           } catch {
-            setNextModuleHref(`/modules/${next.slug}`);
+            setNextModuleHref(`/${next.slug}`);
           }
           setNextModuleTitle(next.title ?? null);
         }
@@ -235,21 +249,6 @@ export default function QuizResultsPage({ params }: { params: Promise<{ shortSlu
     router.push(`/${resolvedParams.shortSlug}/quiz`);
   };
 
-  const handleReviewLessons = async () => {
-    if (!resolvedParams) return;
-    try {
-      const mod = await contentRegistry.getModule(resolvedParams.shortSlug);
-      if (mod) {
-        const lessonsPath = mod.routes.lessons;
-        const href = lessonsPath.startsWith('/modules/') ? `${lessonsPath}/1` : lessonsPath;
-        router.push(href);
-        return;
-      }
-    } catch (e) {
-      console.error('Failed to resolve module lessons route', e);
-    }
-    router.push(`/${resolvedParams.shortSlug}`);
-  };
 
   if (loading) {
     return (
@@ -302,7 +301,7 @@ export default function QuizResultsPage({ params }: { params: Promise<{ shortSlu
           <li className="text-gray-500">/</li>
           <li>
             <Link href={`/${shortSlug}`} className="text-blue-600 hover:text-blue-800">
-              Module
+              {moduleTitle || shortSlug.replace(/-/g, ' ').replace(/\b\w/g, c => c.toUpperCase())}
             </Link>
           </li>
           <li className="text-gray-500">/</li>
@@ -318,148 +317,21 @@ export default function QuizResultsPage({ params }: { params: Promise<{ shortSlu
         </ol>
       </nav>
 
-      {/* Results Header using shared component */}
-      <header className="mb-12">
-        <div className="glass-morphism p-8 rounded-xl">
-          <QuizResult
-            moduleName={moduleTitle ?? shortSlug}
-            score={results.correctAnswers}
-            total={results.totalQuestions}
-            onRetry={handleRetakeQuiz}
-            nextLessonHref={results.passed && nextLessonHref ? nextLessonHref : undefined}
-            nextModuleHref={results.passed && !nextLessonHref && nextModuleHref ? nextModuleHref : undefined}
-            nextLessonTitle={results.passed ? nextLessonTitle ?? undefined : undefined}
-            nextModuleTitle={results.passed ? nextModuleTitle ?? undefined : undefined}
-            passThresholdPercent={results.passingScore}
-          />
-          <div className="mt-6 text-center text-sm text-gray-600 dark:text-gray-300">
-            Time Taken: <span className="font-semibold">{results.timeTaken}</span> • Time Limit: <span className="font-semibold">{results.timeLimit}</span>
-          </div>
-        </div>
-      </header>
-
-      {/* Performance by Category */}
-      <section className="mb-12">
-        <div className="glass-morphism p-8 rounded-xl">
-          <h2 className="text-2xl font-semibold text-gray-900 dark:text-white mb-6">
-            📊 Performance by Category
-          </h2>
-          
-          <div className="space-y-4">
-            {results.categoryScores.map((category: CategoryScore, index: number) => {
-              const percentage = Math.round((category.correct / category.total) * 100);
-              const isPerfect = category.correct === category.total;
-              const isGood = percentage >= 70;
-              
-              return (
-                <div key={index} className="border border-gray-200 dark:border-gray-700 rounded-lg p-4">
-                  <div className="flex justify-between items-center mb-2">
-                    <h3 className="font-medium text-gray-900 dark:text-white">
-                      {category.category}
-                    </h3>
-                    <span className={`font-semibold ${
-                      isPerfect 
-                        ? "text-green-600 dark:text-green-400" 
-                        : isGood 
-                          ? "text-blue-600 dark:text-blue-400" 
-                          : "text-yellow-600 dark:text-yellow-400"
-                    }`}>
-                      {category.correct}/{category.total} ({percentage}%)
-                    </span>
-                  </div>
-                  <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
-                    <div 
-                      className={`h-2 rounded-full ${
-                        isPerfect 
-                          ? "bg-green-500" 
-                          : isGood 
-                            ? "bg-blue-500" 
-                            : "bg-yellow-500"
-                      }`}
-                      style={{ width: `${percentage}%` }}
-                    ></div>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        </div>
-      </section>
-
-      {/* Next Steps */}
-      <section className="mb-12">
-        <div className="glass-morphism p-8 rounded-xl">
-          <h2 className="text-2xl font-semibold text-gray-900 dark:text-white mb-6">
-            🎯 Next Steps
-          </h2>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="border border-gray-200 dark:border-gray-700 rounded-lg p-6">
-              <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-3">
-                📚 Review Lessons
-              </h3>
-              <p className="text-gray-600 dark:text-gray-300 mb-4">
-                Strengthen your understanding by reviewing the module lessons.
-              </p>
-              <button
-                onClick={handleReviewLessons}
-                className={`w-full px-4 py-2 rounded-lg transition-colors ${theme.button}`}
-              >
-                Review Lessons
-              </button>
-            </div>
-            
-            {results.passed && (
-              <div className="border border-gray-200 dark:border-gray-700 rounded-lg p-6">
-                <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-3">
-                  🚀 Continue Learning
-                </h3>
-                <p className="text-gray-600 dark:text-gray-300 mb-4">
-                  Move on to the next module to continue your learning journey.
-                </p>
-                {nextLessonHref ? (
-                  <div className="flex justify-end">
-                    <Link
-                      href={nextLessonHref}
-                      className={`inline-flex items-center px-4 py-2 rounded-lg transition-colors ${theme.button}`}
-                    >
-                      {nextLessonTitle ? `Start ${nextLessonTitle}` : 'Start Next Lesson'}
-                    </Link>
-                  </div>
-                ) : nextModuleHref ? (
-                  <div className="flex justify-end">
-                    <Link
-                      href={nextModuleHref}
-                      className={`inline-flex items-center px-4 py-2 rounded-lg transition-colors ${theme.button}`}
-                    >
-                      {nextModuleTitle ? `Start ${nextModuleTitle}` : 'Start Next Module'}
-                    </Link>
-                  </div>
-                ) : (
-                  <div className="flex justify-start">
-                    <Link
-                      href={`/${resolvedParams?.shortSlug ?? ''}`}
-                      className={`inline-flex items-center px-4 py-2 transition-colors ${theme.link}`}
-                    >
-                      ← Back to Module Overview
-                    </Link>
-                  </div>
-                )}
-              </div>
-            )}
-          </div>
-        </div>
-      </section>
-
-      {/* Navigation Footer */}
-      <footer className="flex justify-start">
-        <Link
-          href={`/${resolvedParams?.shortSlug ?? ''}`}
-          className={`inline-flex items-center px-4 py-2 transition-colors ${theme.link}`}
-        >
-          ← Back to Module Overview
-        </Link>
-      </footer>
+      {/* Results Summary */}
+      <QuizResult
+        moduleName={moduleTitle ?? shortSlug}
+        score={results.correctAnswers}
+        total={results.totalQuestions}
+        onRetry={handleRetakeQuiz}
+        nextLessonHref={results.passed && nextLessonHref ? nextLessonHref : undefined}
+        nextModuleHref={results.passed && !nextLessonHref && nextModuleHref ? nextModuleHref : undefined}
+        nextLessonTitle={results.passed ? (nextLessonTitle ?? undefined) : undefined}
+        nextModuleTitle={results.passed ? (nextModuleTitle ?? undefined) : undefined}
+        passThresholdPercent={results.passingScore}
+      />
+      <div className="mt-6 text-center text-sm text-gray-600 dark:text-gray-300">
+        Time Taken: <span className="font-semibold">{results.timeTaken}</span> • Time Limit: <span className="font-semibold">{results.timeLimit}</span>
+      </div>
     </div>
   );
 }

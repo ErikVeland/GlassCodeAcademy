@@ -42,6 +42,7 @@ export default function QuizResultsPage({ params }: { params: Promise<{ moduleSl
   const [moduleTitle, setModuleTitle] = useState<string | null>(null);
   const [theme, setTheme] = useState(getModuleTheme(''));
   const progressAppliedRef = useRef(false);
+  const debugUpdateCompleteCountRef = useRef(0);
 
   // Resolve the params promise
   useEffect(() => {
@@ -123,6 +124,15 @@ export default function QuizResultsPage({ params }: { params: Promise<{ moduleSl
               quizScore: score,
               ...(lessonsCount > 0 ? { totalLessons: lessonsCount, lessonsCompleted: lessonsCount } : {})
             });
+            // Dev-only: count and log invocations of updateProgressComplete
+            debugUpdateCompleteCountRef.current += 1;
+            if (process.env.NODE_ENV !== 'production') {
+              console.debug(`[Results] updateProgressComplete called`, {
+                moduleSlug,
+                count: debugUpdateCompleteCountRef.current,
+                score,
+              });
+            }
 
             // Update basic tracker to keep fullstack progress in sync
             updateProgressBasic(moduleSlug, {

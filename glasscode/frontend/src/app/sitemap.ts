@@ -8,10 +8,15 @@ export const revalidate = 3600;
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   try {
     const baseUrl = (() => { try { return getPublicOriginStrict().replace(/\/+$/, ''); } catch { return 'http://localhost:3000'; } })();
+    const enableSSG = process.env.ENABLE_BUILD_SSG === 'true';
+    const enableLessonSitemap = process.env.ENABLE_LESSON_SITEMAP === 'true';
+    const isDb = (process.env.GC_CONTENT_MODE || '').toLowerCase() === 'db';
+
     // Generate sitemap data directly from content registry
     const modules = await contentRegistry.getModules();
+    const activeModules = modules.filter((m) => m.status === 'active');
+
     const sitemapEntries: MetadataRoute.Sitemap = [
-      // Homepage
       {
         url: baseUrl,
         lastModified: new Date(),
@@ -20,24 +25,20 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       }
     ];
     
-    // Add module pages
-    for (const mod of modules) {
+    // Add module pages (overview, lessons list, quiz) for active modules
+    for (const mod of activeModules) {
       sitemapEntries.push({
         url: `${baseUrl}${mod.routes.overview}`,
         lastModified: new Date(),
         changeFrequency: 'weekly',
         priority: 0.8,
       });
-      
-      // Add lessons overview page
       sitemapEntries.push({
         url: `${baseUrl}${mod.routes.lessons}`,
         lastModified: new Date(),
         changeFrequency: 'weekly',
         priority: 0.7,
       });
-      
-      // Add quiz page
       sitemapEntries.push({
         url: `${baseUrl}${mod.routes.quiz}`,
         lastModified: new Date(),
@@ -45,10 +46,9 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         priority: 0.7,
       });
 
-      // Add individual lesson detail pages (optional, disabled by default for build stability)
-      if (process.env.ENABLE_LESSON_SITEMAP === 'true') {
+      // Add individual lesson detail pages, gated and limited to match SSG strategy
+      if (enableLessonSitemap && enableSSG && !isDb) {
         try {
-          // Prefer using the registry helper to fetch lessons
           let lessons: Lesson[] = await contentRegistry.getModuleLessons(mod.slug);
 
           // Fallback to filesystem public content JSON during build/server
@@ -78,8 +78,10 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
           }
 
           if (lessons && lessons.length > 0) {
-            for (const [i, lesson] of lessons.entries()) {
-              const order: number = typeof lesson.order === 'number' ? lesson.order : (i + 1);
+            const count = Math.min(3, lessons.length); // align with SSG first 3 lessons
+            for (let i = 0; i < count; i++) {
+              const o = lessons[i]?.order;
+              const order: number = typeof o === 'number' ? o : (i + 1);
               sitemapEntries.push({
                 url: `${baseUrl}${mod.routes.lessons}/${order}`,
                 lastModified: new Date(),

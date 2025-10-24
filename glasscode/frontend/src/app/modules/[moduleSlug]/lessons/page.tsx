@@ -12,7 +12,11 @@ interface LessonsPageProps {
 }
 
 export async function generateStaticParams() {
+  // Align gating with SSG strategy: require ENABLE_BUILD_SSG and non-DB content mode
   if (process.env.ENABLE_BUILD_SSG !== 'true') {
+    return [];
+  }
+  if ((process.env.GC_CONTENT_MODE || '').toLowerCase() === 'db') {
     return [];
   }
   const modules = await contentRegistry.getModules();

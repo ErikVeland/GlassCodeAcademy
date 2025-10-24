@@ -12,14 +12,22 @@ interface LessonsPageProps {
 export const dynamic = 'force-dynamic';
 
 export async function generateStaticParams() {
+  // Align gating with SSG strategy: require ENABLE_BUILD_SSG and non-DB content mode
+  if (process.env.ENABLE_BUILD_SSG !== 'true') {
+    return [];
+  }
   if ((process.env.GC_CONTENT_MODE || '').toLowerCase() === 'db') {
     return [];
   }
   const modules = await contentRegistry.getModules();
-  const params = await Promise.all(modules.map(async (m: Module) => {
-    const shortSlug = (await contentRegistry.getShortSlugFromModuleSlug(m.slug)) || m.slug;
-    return { shortSlug };
-  }));
+  const params = await Promise.all(
+    modules
+      .filter((m: Module) => m.status === 'active')
+      .map(async (m: Module) => {
+        const shortSlug = (await contentRegistry.getShortSlugFromModuleSlug(m.slug)) || m.slug;
+        return { shortSlug };
+      })
+  );
   return params;
 }
 
