@@ -145,6 +145,7 @@ DB_PORT="${DB_PORT:-5432}"
 DB_NAME="${DB_NAME:-glasscode_dev}"
 DB_USER="${DB_USER:-postgres}"
 DB_PASSWORD="${DB_PASSWORD:-postgres}"
+DB_SSL="${DB_SSL:-false}"
 
 # Interactive prompts for missing DB settings (prefer existing backend .env)
 prompt_or_default_backend() {
@@ -169,6 +170,7 @@ prompt_or_default_backend DB_PORT "$DB_PORT" "Database port"
 prompt_or_default_backend DB_NAME "$DB_NAME" "Database name"
 prompt_or_default_backend DB_USER "$DB_USER" "Database username"
 prompt_or_default_backend DB_PASSWORD "$DB_PASSWORD" "Database password"
+prompt_or_default_backend DB_SSL "$DB_SSL" "Use SSL (true/false)"
 
 # Compute DATABASE_URL if missing
 if [ -z "${DATABASE_URL:-}" ]; then
@@ -188,7 +190,7 @@ fi
 export DATABASE_URL
 
 log "🗄️  DB config: dialect=${DB_DIALECT} host=${DB_HOST} port=${DB_PORT} name=${DB_NAME} user=${DB_USER}"
-export DB_DIALECT DB_HOST DB_PORT DB_NAME DB_USER DB_PASSWORD
+export DB_DIALECT DB_HOST DB_PORT DB_NAME DB_USER DB_PASSWORD DB_SSL
 
 # Env-only mode: write backend and frontend env files and exit
 if [ "${ENV_ONLY:-0}" -eq 1 ]; then
@@ -213,6 +215,7 @@ DB_PORT=${DB_PORT}
 DB_NAME=${DB_NAME}
 DB_USER=${DB_USER}
 DB_PASSWORD=${DB_PASSWORD}
+DB_SSL=${DB_SSL}
 EOF
 
     # Ensure backend .env.production exists and includes the same keys (merge-only)
@@ -230,15 +233,16 @@ EOF
         fi
     }
     add_if_missing_be_prod NODE_ENV "production"
-    add_if_missing_be_prod PORT "${BACKEND_PORT:-8080}"
-    add_if_missing_be_prod DATABASE_URL "$DATABASE_URL"
-    add_if_missing_be_prod DB_DIALECT "$DB_DIALECT"
-    add_if_missing_be_prod DB_HOST "$DB_HOST"
-    add_if_missing_be_prod DB_PORT "$DB_PORT"
-    add_if_missing_be_prod DB_NAME "$DB_NAME"
-    add_if_missing_be_prod DB_USER "$DB_USER"
-    add_if_missing_be_prod DB_PASSWORD "$DB_PASSWORD"
-    mv "$TMP_BENV" "$BACKEND_PROD_ENV"
+add_if_missing_be_prod PORT "${BACKEND_PORT:-8080}"
+add_if_missing_be_prod DATABASE_URL "$DATABASE_URL"
+add_if_missing_be_prod DB_DIALECT "$DB_DIALECT"
+add_if_missing_be_prod DB_HOST "$DB_HOST"
+add_if_missing_be_prod DB_PORT "$DB_PORT"
+add_if_missing_be_prod DB_NAME "$DB_NAME"
+add_if_missing_be_prod DB_USER "$DB_USER"
+add_if_missing_be_prod DB_PASSWORD "$DB_PASSWORD"
+add_if_missing_be_prod DB_SSL "$DB_SSL"
+mv "$TMP_BENV" "$BACKEND_PROD_ENV"
 
     # Set defaults if missing
     if [ -z "${NEXT_PUBLIC_BASE_URL:-}" ]; then
@@ -660,12 +664,13 @@ if [ "$FRONTEND_ONLY" -eq 0 ]; then
     add_if_missing_backend NODE_ENV "production"
     add_if_missing_backend PORT "${BACKEND_PORT:-8080}"
     add_if_missing_backend DB_DIALECT "$DB_DIALECT"
-    add_if_missing_backend DB_HOST "$DB_HOST"
-    add_if_missing_backend DB_PORT "$DB_PORT"
-    add_if_missing_backend DB_NAME "$DB_NAME"
-    add_if_missing_backend DB_USER "$DB_USER"
-    add_if_missing_backend DB_PASSWORD "$DB_PASSWORD"
-    add_if_missing_backend DATABASE_URL "$DATABASE_URL"
+add_if_missing_backend DB_HOST "$DB_HOST"
+add_if_missing_backend DB_PORT "$DB_PORT"
+add_if_missing_backend DB_NAME "$DB_NAME"
+add_if_missing_backend DB_USER "$DB_USER"
+add_if_missing_backend DB_PASSWORD "$DB_PASSWORD"
+add_if_missing_backend DB_SSL "$DB_SSL"
+add_if_missing_backend DATABASE_URL "$DATABASE_URL"
     mv "$TMP_ENV" "$BACKEND_ENV_PATH"
     log "✅ Backend .env updated (existing values preserved)"
 
@@ -687,12 +692,13 @@ if [ "$FRONTEND_ONLY" -eq 0 ]; then
     add_if_missing_backend_prod NODE_ENV "production"
     add_if_missing_backend_prod PORT "${BACKEND_PORT:-8080}"
     add_if_missing_backend_prod DB_DIALECT "$DB_DIALECT"
-    add_if_missing_backend_prod DB_HOST "$DB_HOST"
-    add_if_missing_backend_prod DB_PORT "$DB_PORT"
-    add_if_missing_backend_prod DB_NAME "$DB_NAME"
-    add_if_missing_backend_prod DB_USER "$DB_USER"
-    add_if_missing_backend_prod DB_PASSWORD "$DB_PASSWORD"
-    add_if_missing_backend_prod DATABASE_URL "$DATABASE_URL"
+add_if_missing_backend_prod DB_HOST "$DB_HOST"
+add_if_missing_backend_prod DB_PORT "$DB_PORT"
+add_if_missing_backend_prod DB_NAME "$DB_NAME"
+add_if_missing_backend_prod DB_USER "$DB_USER"
+add_if_missing_backend_prod DB_PASSWORD "$DB_PASSWORD"
+add_if_missing_backend_prod DB_SSL "$DB_SSL"
+add_if_missing_backend_prod DATABASE_URL "$DATABASE_URL"
     mv "$TMP_ENV2" "$BACKEND_PROD_ENV_PATH"
     log "✅ Backend .env.production updated (existing values preserved)"
 
