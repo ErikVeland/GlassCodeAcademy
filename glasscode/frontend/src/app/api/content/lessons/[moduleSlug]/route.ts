@@ -21,8 +21,8 @@ type FrontendLesson = {
 // Database-based lesson loading function with fallback to local API during dev
 async function fetchLessonsFromDatabase(moduleSlug: string): Promise<FrontendLesson[]> {
   try {
-    const primaryBase = (() => { try { return getApiBaseStrict(); } catch { return 'http://127.0.0.1:8081'; } })();
-    const bases = Array.from(new Set([primaryBase, 'http://127.0.0.1:8081']));
+    const primaryBase = (() => { try { return getApiBaseStrict(); } catch { return 'http://127.0.0.1:8080'; } })();
+    const bases = Array.from(new Set([primaryBase, 'http://127.0.0.1:8080']));
 
     for (const apiBase of bases) {
       try {
@@ -40,7 +40,7 @@ async function fetchLessonsFromDatabase(moduleSlug: string): Promise<FrontendLes
         }
 
         // Fetch lessons for this module
-        const lessonsResponse = await fetch(`${apiBase}/api/lessons-db?moduleId=${foundModule.id}`, { cache: 'no-store' });
+        const lessonsResponse = await fetch(`${apiBase}/api/modules/${foundModule.id}/lessons`, { cache: 'no-store' });
         if (!lessonsResponse.ok) {
           console.error(`[lessons] Failed lessons fetch for ${moduleSlug} from ${apiBase}`);
           continue;
@@ -193,7 +193,11 @@ async function fetchLessonsFromFile(moduleSlug: string): Promise<FrontendLesson[
 export async function GET(req: NextRequest, { params }: { params: Promise<{ moduleSlug: string }> }) {
   const { moduleSlug } = await params;
   // Resolve short slugs to full module slugs using central mapping
-  const resolvedSlug = (await contentRegistry.getModuleSlugFromShortSlug(moduleSlug)) || moduleSlug;
+  const resolvedSlug = await contentRegistry.getModuleSlugFromShortSlug(moduleSlug);
+  if (!resolvedSlug) {
+    console.warn(`[lessons] Unknown or unsupported module slug: ${moduleSlug}`);
+    return NextResponse.json({ error: 'Module not found' }, { status: 404 });
+  }
 
   // Load lessons from DB; if empty, fallback to file content
   let lessons = await fetchLessonsFromDatabase(resolvedSlug);

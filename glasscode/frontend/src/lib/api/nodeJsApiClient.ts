@@ -209,7 +209,7 @@ class NodeJsApiClient {
       this.baseUrl = getApiBaseStrict();
     } catch {
       // Fallback to localhost in development
-      this.baseUrl = 'http://localhost:8081';
+      this.baseUrl = 'http://localhost:8080';
     }
   }
 

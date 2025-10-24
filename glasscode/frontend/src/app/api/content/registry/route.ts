@@ -125,11 +125,14 @@ async function synthesizeRegistryFromDatabase() {
         return { ...m, routes } as RegistryModuleLight;
       }));
 
+      // Filter out dummy/broken modules not meant for production
+      const filteredModules = normalizedModules.filter(m => m.slug !== 'html-basics');
+
       return {
         version: staticRegistry.version || 'file',
         lastUpdated: staticRegistry.lastUpdated || new Date().toISOString(),
         tiers: staticRegistry.tiers || {},
-        modules: normalizedModules,
+        modules: filteredModules,
         globalSettings: staticRegistry.globalSettings || {},
       };
     }
@@ -156,11 +159,14 @@ async function synthesizeRegistryFromDatabase() {
         return { ...m, routes } as RegistryModuleLight;
       }));
 
+      // Filter out dummy/broken modules not meant for production
+      const filteredModules = normalizedModules.filter(m => m.slug !== 'html-basics');
+
       return {
         version: staticRegistry.version || 'file',
         lastUpdated: staticRegistry.lastUpdated || new Date().toISOString(),
         tiers: Object.keys(dbTiers).length ? dbTiers : (staticRegistry.tiers || {}),
-        modules: normalizedModules,
+        modules: filteredModules,
         globalSettings: staticRegistry.globalSettings || {},
       };
     }
@@ -213,11 +219,14 @@ async function synthesizeRegistryFromDatabase() {
     return merged;
   }));
 
+  // Filter out dummy/broken modules not meant for production
+  const filteredModules = modules.filter(m => m.slug !== 'html-basics');
+
   return {
     version: 'db',
     lastUpdated: new Date().toISOString(),
     tiers: Object.keys(dbTiers).length ? dbTiers : (staticRegistry?.tiers || {}),
-    modules,
+    modules: filteredModules,
     globalSettings: staticRegistry?.globalSettings || {},
   };
 }

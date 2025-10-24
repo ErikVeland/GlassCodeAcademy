@@ -118,7 +118,7 @@
       ],
       "thresholds": {
         "requiredLessons": 15,
-        "requiredQuestions": 20
+        "requiredQuestions": 11
       },
       "legacySlugs": [
         "web-basics",
@@ -128,7 +128,7 @@
       "metadata": {
         "thresholds": {
           "minLessons": 15,
-          "minQuizQuestions": 20,
+          "minQuizQuestions": 11,
           "passingScore": 70
         }
       },

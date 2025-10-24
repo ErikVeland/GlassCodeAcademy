@@ -8,8 +8,8 @@ import path from 'node:path';
 async function fetchQuizFromDatabase(moduleSlug: string) {
   try {
     // Try multiple API base candidates in case of misconfiguration
-    const primaryBase = (() => { try { return getApiBaseStrict(); } catch { return 'http://127.0.0.1:8081'; } })();
-    const bases = Array.from(new Set([primaryBase, 'http://127.0.0.1:8081']));
+    const primaryBase = (() => { try { return getApiBaseStrict(); } catch { return 'http://127.0.0.1:8080'; } })();
+    const bases = Array.from(new Set([primaryBase, 'http://127.0.0.1:8080']));
 
     for (const apiBase of bases) {
       try {
@@ -64,8 +64,13 @@ async function fetchQuizFromDatabase(moduleSlug: string) {
             order: quiz.sort_order || 0
           };
         });
-        
-        return { questions };
+
+        if (questions.length > 0) {
+          return { questions };
+        }
+
+        console.warn(`[quizzes] ${apiBase} returned 0 questions for ${moduleSlug}; will try next source or file fallback.`);
+        continue;
       } catch (innerErr) {
         console.error(`[quizzes] Error using ${apiBase}:`, innerErr);
         continue;
@@ -102,7 +107,15 @@ export async function GET(request: Request, { params }: { params: Promise<{ modu
     console.log('Received request for quiz input slug:', inputSlug);
     
     // Convert shortSlug to moduleSlug if needed using the central registry
-    const moduleSlug = (await contentRegistry.getModuleSlugFromShortSlug(inputSlug)) || inputSlug;
+    const moduleSlugResolved = await contentRegistry.getModuleSlugFromShortSlug(inputSlug);
+    if (!moduleSlugResolved) {
+      console.warn(`[quizzes] Unknown or unsupported module slug: ${inputSlug}`);
+      return new Response(JSON.stringify({ error: 'Module not found' }), {
+        status: 404,
+        headers: { 'Content-Type': 'application/json' },
+      });
+    }
+    const moduleSlug = moduleSlugResolved;
     console.log('Resolved to module slug:', moduleSlug);
     
     const quiz = await fetchQuizFromDatabase(moduleSlug);
