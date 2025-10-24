@@ -4,7 +4,7 @@ import { getApiBaseStrict } from '@/lib/urlUtils';
 export async function GET(_req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
     const { id } = await params;
-    const apiBase = (() => { try { return getApiBaseStrict(); } catch { return 'http://127.0.0.1:8081'; } })();
+    const apiBase = (() => { try { return getApiBaseStrict(); } catch { return 'http://127.0.0.1:8080'; } })();
     const backendUrl = `${apiBase}/api/modules-db/${id}`;
     const res = await fetch(backendUrl);
     const text = await res.text();
@@ -20,7 +20,7 @@ export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: 
   try {
     const body = await req.json();
     const { id } = await params;
-    const apiBase = (() => { try { return getApiBaseStrict(); } catch { return 'http://127.0.0.1:8081'; } })();
+    const apiBase = (() => { try { return getApiBaseStrict(); } catch { return 'http://127.0.0.1:8080'; } })();
     const backendUrl = `${apiBase}/api/modules-db/${id}`;
     const res = await fetch(backendUrl, {
       method: 'PUT',

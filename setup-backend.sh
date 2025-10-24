@@ -9,10 +9,12 @@ set -Eeuo pipefail
 #   ./setup-backend.sh
 #   REMOTE_USER=deploy REMOTE_HOST=1.2.3.4 ./setup-backend.sh
 #   REMOTE_HOST=1.2.3.4 API_DOMAIN=api.glasscode.academy CONFIGURE_NGINX=true EMAIL=admin@example.com ./setup-backend.sh
+#   SSH_TARGET=glasscode ./setup-backend.sh    # use local ssh alias
 #
 # Configurable env vars (defaults shown):
 #   REMOTE_USER="${REMOTE_USER:-deploy}"     # SSH user on Linode
 #   REMOTE_HOST="${REMOTE_HOST:-194.195.248.217}" # Linode IP/hostname
+#   SSH_TARGET="${SSH_TARGET:-}"             # If set, uses this alias directly (e.g., 'glasscode')
 #   REMOTE_APP_DIR="${REMOTE_APP_DIR:-/opt/glasscode/backend-node}" # Remote app dir
 #   LOCAL_BACKEND_DIR="${LOCAL_BACKEND_DIR:-backend-node}"         # Local source dir
 #   SERVICE_NAME="${SERVICE_NAME:-glasscode-node-backend}"         # systemd unit name
@@ -22,6 +24,7 @@ set -Eeuo pipefail
 #   CONFIGURE_NGINX="${CONFIGURE_NGINX:-false}"                     # true to configure Nginx
 #   API_DOMAIN="${API_DOMAIN:-}"                                    # e.g., api.glasscode.academy
 #   EMAIL="${EMAIL:-}"                                              # certbot email
+#   REMOTE_SUDO_PASS="${REMOTE_SUDO_PASS:-}"                        # optional sudo password for non-interactive sudo
 #
 # For production later, edit the remote env file and set:
 #   NODE_ENV=production
@@ -31,7 +34,12 @@ set -Eeuo pipefail
 
 REMOTE_USER="${REMOTE_USER:-deploy}"
 REMOTE_HOST="${REMOTE_HOST:-194.195.248.217}"
-REMOTE="${REMOTE_USER}@${REMOTE_HOST}"
+SSH_TARGET="${SSH_TARGET:-}"
+if [ -n "$SSH_TARGET" ]; then
+  REMOTE="$SSH_TARGET"
+else
+  REMOTE="${REMOTE_USER}@${REMOTE_HOST}"
+fi
 REMOTE_APP_DIR="${REMOTE_APP_DIR:-/opt/glasscode/backend-node}"
 LOCAL_BACKEND_DIR="${LOCAL_BACKEND_DIR:-backend-node}"
 SERVICE_NAME="${SERVICE_NAME:-glasscode-node-backend}"
@@ -41,6 +49,7 @@ NODE_ENV_REMOTE="${NODE_ENV_REMOTE:-test}"
 CONFIGURE_NGINX="${CONFIGURE_NGINX:-false}"
 API_DOMAIN="${API_DOMAIN:-}"
 EMAIL="${EMAIL:-}"
+REMOTE_SUDO_PASS="${REMOTE_SUDO_PASS:-}"
 
 log() { printf "\033[1;34m[setup]\033[0m %s\n" "$*"; }
 err() { printf "\033[1;31m[error]\033[0m %s\n" "$*"; }
@@ -66,14 +75,27 @@ if [ ! -d "$LOCAL_BACKEND_DIR" ] || [ ! -f "$LOCAL_BACKEND_DIR/server.js" ]; the
 fi
 
 # 2) Remote connectivity
-log "Checking remote connectivity to $REMOTE_HOST as $REMOTE_USER..."
+log "Checking remote connectivity to $REMOTE..."
 ssh -o BatchMode=yes -o ConnectTimeout=10 "$REMOTE" 'echo ok' >/dev/null || {
   err "SSH connectivity failed. Ensure SSH keys/password and host are correct."; exit 1;
 }
 
+# Helper to run sudo on remote, optionally with password
+run_remote_sudo() {
+  local cmd="$1"
+  if [ -n "$REMOTE_SUDO_PASS" ]; then
+    printf "%s\n" "$REMOTE_SUDO_PASS" | ssh "$REMOTE" "sudo -S bash -lc '$cmd'"
+  else
+    ssh "$REMOTE" "sudo bash -lc '$cmd'"
+  fi
+}
+
+# Determine the remote login user (not root)
+REMOTE_LOGIN_USER=$(ssh "$REMOTE" "whoami")
+
 # 3) Prepare remote directories
 log "Ensuring remote directory structure and ownership..."
-ssh "$REMOTE" "sudo mkdir -p /opt/glasscode && sudo chown -R \$USER:\$USER /opt/glasscode"
+run_remote_sudo "mkdir -p /opt/glasscode && chown -R $REMOTE_LOGIN_USER:$REMOTE_LOGIN_USER /opt/glasscode"
 
 # 4) Sync backend-node to remote
 log "Syncing local '$LOCAL_BACKEND_DIR' to '$REMOTE:$REMOTE_APP_DIR'..."
@@ -89,34 +111,55 @@ ssh "$REMOTE" "cd '$REMOTE_APP_DIR' && npm ci"
 
 # 7) Create remote env file (minimal for test mode)
 log "Creating remote env file at $ENV_FILE (PORT=$PORT, NODE_ENV=$NODE_ENV_REMOTE)..."
-ssh "$REMOTE" "sudo mkdir -p \"\$(dirname '$ENV_FILE')\""
-ssh "$REMOTE" "sudo bash -c 'cat > \"$ENV_FILE\" <<EOF
+ssh "$REMOTE" "cat > /tmp/backend-node.env" <<EOF
 PORT=$PORT
 NODE_ENV=$NODE_ENV_REMOTE
 # Add DB and secrets when switching to production:
 # DATABASE_URL=postgresql://user:pass@host:5432/dbname
 # JWT_SECRET=your-super-secret-jwt-key
 # DB_SSL=false
-EOF'"
+EOF
+run_remote_sudo "mkdir -p \$(dirname '$ENV_FILE') && mv /tmp/backend-node.env '$ENV_FILE'"
 
-# 8) Create systemd unit
+# 8) Resolve node binary path for systemd
+NODE_BIN_REMOTE=$(ssh "$REMOTE" "command -v node || echo /usr/bin/node")
+
+# 9) Create systemd unit using resolved node path
 log "Creating systemd service $SERVICE_NAME..."
-ssh "$REMOTE" "NODE_BIN=\$(command -v node); printf '[Unit]\nDescription=GlassCode Academy Node Backend\nAfter=network.target\n\n[Service]\nType=simple\nWorkingDirectory=%s\nEnvironmentFile=%s\nExecStart=%%s %s/server.js\nRestart=always\nRestartSec=3\nStandardOutput=journal\nStandardError=journal\n\n[Install]\nWantedBy=multi-user.target\n' '$REMOTE_APP_DIR' '$ENV_FILE' '$REMOTE_APP_DIR' \"\$NODE_BIN\" | sudo tee /etc/systemd/system/$SERVICE_NAME.service >/dev/null"
+ssh "$REMOTE" "cat > /tmp/$SERVICE_NAME.service" <<EOF
+[Unit]
+Description=GlassCode Academy Node Backend
+After=network.target
 
-# 9) Enable and start service
+[Service]
+Type=simple
+WorkingDirectory=$REMOTE_APP_DIR
+EnvironmentFile=$ENV_FILE
+ExecStart=$NODE_BIN_REMOTE $REMOTE_APP_DIR/server.js
+Restart=always
+RestartSec=3
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target
+EOF
+run_remote_sudo "mv /tmp/$SERVICE_NAME.service /etc/systemd/system/$SERVICE_NAME.service"
+
+# 10) Enable and start service
 log "Enabling and starting $SERVICE_NAME..."
-ssh "$REMOTE" "sudo systemctl daemon-reload && sudo systemctl enable '$SERVICE_NAME' && sudo systemctl restart '$SERVICE_NAME'"
+run_remote_sudo "systemctl daemon-reload && systemctl enable '$SERVICE_NAME' && systemctl restart '$SERVICE_NAME'"
 
-# 10) Show status and logs
+# 11) Show status and logs
 log "Fetching service status and recent logs..."
-ssh "$REMOTE" "sudo systemctl status '$SERVICE_NAME' --no-pager || true; sudo journalctl -u '$SERVICE_NAME' -n 200 --no-pager || true"
+run_remote_sudo "systemctl status '$SERVICE_NAME' --no-pager || true; journalctl -u '$SERVICE_NAME' -n 200 --no-pager || true"
 
-# 11) Validate local health
+# 12) Validate local health
 log "Validating local health endpoint on remote (http://127.0.0.1:$PORT/health)..."
 ssh "$REMOTE" "curl -fsS http://127.0.0.1:$PORT/health" || { err "Local health check failed."; exit 1; }
 log "Local health OK."
 
-# 12) Optional: Configure Nginx + SSL for API_DOMAIN
+# 13) Optional: Configure Nginx + SSL for API_DOMAIN
 if [ "$CONFIGURE_NGINX" = "true" ]; then
   if [ -z "$API_DOMAIN" ]; then
     err "CONFIGURE_NGINX=true requires API_DOMAIN to be set (e.g., api.glasscode.academy)."
@@ -124,9 +167,9 @@ if [ "$CONFIGURE_NGINX" = "true" ]; then
   fi
   log "Configuring Nginx for $API_DOMAIN to proxy http://127.0.0.1:$PORT..."
   # Install Nginx if missing
-  ssh "$REMOTE" "if ! command -v nginx >/dev/null 2>&1; then if command -v apt-get >/dev/null 2>&1; then sudo apt-get update && sudo apt-get install -y nginx; elif command -v dnf >/dev/null 2>&1; then sudo dnf install -y nginx; elif command -v yum >/dev/null 2>&1; then sudo yum install -y nginx; else echo 'Package manager not found for Nginx install'; exit 1; fi; fi"
+  run_remote_sudo "if ! command -v nginx >/dev/null 2>&1; then if command -v apt-get >/dev/null 2>&1; then apt-get update && apt-get install -y nginx; elif command -v dnf >/dev/null 2>&1; then dnf install -y nginx; elif command -v yum >/dev/null 2>&1; then yum install -y nginx; else echo 'Package manager not found for Nginx install'; exit 1; fi; fi"
   # Create site config
-  ssh "$REMOTE" "sudo bash -c 'cat > /etc/nginx/sites-available/$API_DOMAIN <<NGINX
+  run_remote_sudo "cat > /etc/nginx/sites-available/$API_DOMAIN <<NGINX
 server {
   listen 80;
   server_name $API_DOMAIN;
@@ -136,23 +179,23 @@ server {
   location / {
     proxy_pass http://127.0.0.1:$PORT;
     proxy_http_version 1.1;
-    proxy_set_header Upgrade $http_upgrade;
-    proxy_set_header Connection "upgrade";
-    proxy_set_header Host $host;
-    proxy_set_header X-Real-IP $remote_addr;
-    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-    proxy_set_header X-Forwarded-Proto $scheme;
+    proxy_set_header Upgrade \$http_upgrade;
+    proxy_set_header Connection \"upgrade\";
+    proxy_set_header Host \$host;
+    proxy_set_header X-Real-IP \$remote_addr;
+    proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;
+    proxy_set_header X-Forwarded-Proto \$scheme;
   }
 }
-NGINX'"
+NGINX"
   # Enable site
-  ssh "$REMOTE" "sudo mkdir -p /etc/nginx/sites-enabled && sudo ln -sf /etc/nginx/sites-available/$API_DOMAIN /etc/nginx/sites-enabled/$API_DOMAIN && sudo nginx -t && sudo systemctl reload nginx"
+  run_remote_sudo "mkdir -p /etc/nginx/sites-enabled && ln -sf /etc/nginx/sites-available/$API_DOMAIN /etc/nginx/sites-enabled/$API_DOMAIN && nginx -t && systemctl reload nginx"
 
   # Install certbot and issue certificate (optional)
   if [ -n "$EMAIL" ]; then
     log "Installing certbot and issuing SSL certificate for $API_DOMAIN..."
-    ssh "$REMOTE" "if ! command -v certbot >/dev/null 2>&1; then if command -v apt-get >/dev/null 2>&1; then sudo apt-get install -y certbot python3-certbot-nginx; elif command -v dnf >/dev/null 2>&1; then sudo dnf install -y certbot python3-certbot-nginx; elif command -v yum >/dev/null 2>&1; then sudo yum install -y certbot python3-certbot-nginx; fi; fi"
-    ssh "$REMOTE" "sudo certbot --nginx -d '$API_DOMAIN' --email '$EMAIL' --agree-tos --non-interactive || true"
+    run_remote_sudo "if ! command -v certbot >/dev/null 2>&1; then if command -v apt-get >/dev/null 2>&1; then apt-get install -y certbot python3-certbot-nginx; elif command -v dnf >/dev/null 2>&1; then dnf install -y certbot python3-certbot-nginx; elif command -v yum >/dev/null 2>&1; then yum install -y certbot python3-certbot-nginx; fi; fi"
+    run_remote_sudo "certbot --nginx -d '$API_DOMAIN' --email '$EMAIL' --agree-tos --non-interactive || true"
   else
     log "EMAIL not set; skipping SSL issuance. You can run certbot later."
   fi
@@ -165,4 +208,5 @@ fi
 log "Setup complete. Next steps:"
 log "- To switch to production: ssh $REMOTE 'sudo nano $ENV_FILE' and set NODE_ENV=production, DATABASE_URL, JWT_SECRET, DB_SSL as needed; then 'sudo systemctl restart $SERVICE_NAME'"
 log "- Validate: ssh $REMOTE 'curl -fsS http://127.0.0.1:$PORT/health'"
-log "- If configured: verify https://$API_DOMAIN/health responds 200"
+log "- If configured: verify https://$API_DOMAIN/health responds 200
+","instruction":"Add SSH alias support and a helper to run remote sudo with optional password; use non-interactive file uploads for env and systemd unit files; adjust connectivity log and sudo usage across the script.","code_language":"bash","explanation":"Enhancing the setup script to use a local ssh alias and handle non-interactive sudo so it works with the user’s ssh glasscode setup."}

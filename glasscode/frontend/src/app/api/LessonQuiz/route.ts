@@ -5,7 +5,7 @@ export async function GET(req: NextRequest) {
   try {
     const url = new URL(req.url);
     const query = url.search || '';
-    const apiBase = (() => { try { return getApiBaseStrict(); } catch { return 'http://127.0.0.1:8081'; } })();
+    const apiBase = (() => { try { return getApiBaseStrict(); } catch { return 'http://127.0.0.1:8080'; } })();
     const backendUrl = `${apiBase}/api/LessonQuiz${query}`;
     const res = await fetch(backendUrl);
     const text = await res.text();
