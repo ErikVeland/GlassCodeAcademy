@@ -1,0 +1,168 @@
+#!/usr/bin/env bash
+set -Eeuo pipefail
+
+# setup-backend.sh
+# Deploys the local backend-node to a remote Linode server, installs dependencies,
+# sets up a systemd service, and validates the health endpoint. Optionally configures Nginx+SSL.
+#
+# Usage:
+#   ./setup-backend.sh
+#   REMOTE_USER=deploy REMOTE_HOST=1.2.3.4 ./setup-backend.sh
+#   REMOTE_HOST=1.2.3.4 API_DOMAIN=api.glasscode.academy CONFIGURE_NGINX=true EMAIL=admin@example.com ./setup-backend.sh
+#
+# Configurable env vars (defaults shown):
+#   REMOTE_USER="${REMOTE_USER:-deploy}"     # SSH user on Linode
+#   REMOTE_HOST="${REMOTE_HOST:-194.195.248.217}" # Linode IP/hostname
+#   REMOTE_APP_DIR="${REMOTE_APP_DIR:-/opt/glasscode/backend-node}" # Remote app dir
+#   LOCAL_BACKEND_DIR="${LOCAL_BACKEND_DIR:-backend-node}"         # Local source dir
+#   SERVICE_NAME="${SERVICE_NAME:-glasscode-node-backend}"         # systemd unit name
+#   ENV_FILE="${ENV_FILE:-/etc/glasscode/backend-node.env}"
+#   PORT="${PORT:-8080}"
+#   NODE_ENV_REMOTE="${NODE_ENV_REMOTE:-test}"                      # start in test mode (SQLite)
+#   CONFIGURE_NGINX="${CONFIGURE_NGINX:-false}"                     # true to configure Nginx
+#   API_DOMAIN="${API_DOMAIN:-}"                                    # e.g., api.glasscode.academy
+#   EMAIL="${EMAIL:-}"                                              # certbot email
+#
+# For production later, edit the remote env file and set:
+#   NODE_ENV=production
+#   DATABASE_URL=postgresql://user:pass@host:5432/dbname
+#   JWT_SECRET=your-super-secret-jwt-key
+#   DB_SSL=true|false
+
+REMOTE_USER="${REMOTE_USER:-deploy}"
+REMOTE_HOST="${REMOTE_HOST:-194.195.248.217}"
+REMOTE="${REMOTE_USER}@${REMOTE_HOST}"
+REMOTE_APP_DIR="${REMOTE_APP_DIR:-/opt/glasscode/backend-node}"
+LOCAL_BACKEND_DIR="${LOCAL_BACKEND_DIR:-backend-node}"
+SERVICE_NAME="${SERVICE_NAME:-glasscode-node-backend}"
+ENV_FILE="${ENV_FILE:-/etc/glasscode/backend-node.env}"
+PORT="${PORT:-8080}"
+NODE_ENV_REMOTE="${NODE_ENV_REMOTE:-test}"
+CONFIGURE_NGINX="${CONFIGURE_NGINX:-false}"
+API_DOMAIN="${API_DOMAIN:-}"
+EMAIL="${EMAIL:-}"
+
+log() { printf "\033[1;34m[setup]\033[0m %s\n" "$*"; }
+err() { printf "\033[1;31m[error]\033[0m %s\n" "$*"; }
+
+require_cmd() {
+  if ! command -v "$1" >/dev/null 2>&1; then
+    err "Required command '$1' not found on local machine.";
+    exit 1;
+  fi
+}
+
+trap 'err "Script failed (line $LINENO)."' ERR
+
+# 1) Local prerequisites
+log "Checking local prerequisites (ssh, rsync)..."
+require_cmd ssh
+require_cmd rsync
+
+# Validate local backend path
+if [ ! -d "$LOCAL_BACKEND_DIR" ] || [ ! -f "$LOCAL_BACKEND_DIR/server.js" ]; then
+  err "Local backend directory '$LOCAL_BACKEND_DIR' missing or server.js not found. Run from repo root or set LOCAL_BACKEND_DIR."
+  exit 1
+fi
+
+# 2) Remote connectivity
+log "Checking remote connectivity to $REMOTE_HOST as $REMOTE_USER..."
+ssh -o BatchMode=yes -o ConnectTimeout=10 "$REMOTE" 'echo ok' >/dev/null || {
+  err "SSH connectivity failed. Ensure SSH keys/password and host are correct."; exit 1;
+}
+
+# 3) Prepare remote directories
+log "Ensuring remote directory structure and ownership..."
+ssh "$REMOTE" "sudo mkdir -p /opt/glasscode && sudo chown -R \$USER:\$USER /opt/glasscode"
+
+# 4) Sync backend-node to remote
+log "Syncing local '$LOCAL_BACKEND_DIR' to '$REMOTE:$REMOTE_APP_DIR'..."
+rsync -avz --delete "$LOCAL_BACKEND_DIR/" "$REMOTE:$REMOTE_APP_DIR/"
+
+# 5) Validate Node.js on remote
+log "Checking Node.js on remote..."
+ssh "$REMOTE" "if ! command -v node >/dev/null 2>&1; then echo 'Node.js not found (need 18+). Install Node.js and re-run.'; exit 2; fi"
+
+# 6) Install dependencies on remote (including dev deps for SQLite in test mode)
+log "Installing backend dependencies on remote with npm ci..."
+ssh "$REMOTE" "cd '$REMOTE_APP_DIR' && npm ci"
+
+# 7) Create remote env file (minimal for test mode)
+log "Creating remote env file at $ENV_FILE (PORT=$PORT, NODE_ENV=$NODE_ENV_REMOTE)..."
+ssh "$REMOTE" "sudo mkdir -p \"\$(dirname '$ENV_FILE')\""
+ssh "$REMOTE" "sudo bash -c 'cat > \"$ENV_FILE\" <<EOF
+PORT=$PORT
+NODE_ENV=$NODE_ENV_REMOTE
+# Add DB and secrets when switching to production:
+# DATABASE_URL=postgresql://user:pass@host:5432/dbname
+# JWT_SECRET=your-super-secret-jwt-key
+# DB_SSL=false
+EOF'"
+
+# 8) Create systemd unit
+log "Creating systemd service $SERVICE_NAME..."
+ssh "$REMOTE" "NODE_BIN=\$(command -v node); printf '[Unit]\nDescription=GlassCode Academy Node Backend\nAfter=network.target\n\n[Service]\nType=simple\nWorkingDirectory=%s\nEnvironmentFile=%s\nExecStart=%%s %s/server.js\nRestart=always\nRestartSec=3\nStandardOutput=journal\nStandardError=journal\n\n[Install]\nWantedBy=multi-user.target\n' '$REMOTE_APP_DIR' '$ENV_FILE' '$REMOTE_APP_DIR' \"\$NODE_BIN\" | sudo tee /etc/systemd/system/$SERVICE_NAME.service >/dev/null"
+
+# 9) Enable and start service
+log "Enabling and starting $SERVICE_NAME..."
+ssh "$REMOTE" "sudo systemctl daemon-reload && sudo systemctl enable '$SERVICE_NAME' && sudo systemctl restart '$SERVICE_NAME'"
+
+# 10) Show status and logs
+log "Fetching service status and recent logs..."
+ssh "$REMOTE" "sudo systemctl status '$SERVICE_NAME' --no-pager || true; sudo journalctl -u '$SERVICE_NAME' -n 200 --no-pager || true"
+
+# 11) Validate local health
+log "Validating local health endpoint on remote (http://127.0.0.1:$PORT/health)..."
+ssh "$REMOTE" "curl -fsS http://127.0.0.1:$PORT/health" || { err "Local health check failed."; exit 1; }
+log "Local health OK."
+
+# 12) Optional: Configure Nginx + SSL for API_DOMAIN
+if [ "$CONFIGURE_NGINX" = "true" ]; then
+  if [ -z "$API_DOMAIN" ]; then
+    err "CONFIGURE_NGINX=true requires API_DOMAIN to be set (e.g., api.glasscode.academy)."
+    exit 1
+  fi
+  log "Configuring Nginx for $API_DOMAIN to proxy http://127.0.0.1:$PORT..."
+  # Install Nginx if missing
+  ssh "$REMOTE" "if ! command -v nginx >/dev/null 2>&1; then if command -v apt-get >/dev/null 2>&1; then sudo apt-get update && sudo apt-get install -y nginx; elif command -v dnf >/dev/null 2>&1; then sudo dnf install -y nginx; elif command -v yum >/dev/null 2>&1; then sudo yum install -y nginx; else echo 'Package manager not found for Nginx install'; exit 1; fi; fi"
+  # Create site config
+  ssh "$REMOTE" "sudo bash -c 'cat > /etc/nginx/sites-available/$API_DOMAIN <<NGINX
+server {
+  listen 80;
+  server_name $API_DOMAIN;
+  access_log /var/log/nginx/${API_DOMAIN}_access.log;
+  error_log /var/log/nginx/${API_DOMAIN}_error.log;
+
+  location / {
+    proxy_pass http://127.0.0.1:$PORT;
+    proxy_http_version 1.1;
+    proxy_set_header Upgrade $http_upgrade;
+    proxy_set_header Connection "upgrade";
+    proxy_set_header Host $host;
+    proxy_set_header X-Real-IP $remote_addr;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header X-Forwarded-Proto $scheme;
+  }
+}
+NGINX'"
+  # Enable site
+  ssh "$REMOTE" "sudo mkdir -p /etc/nginx/sites-enabled && sudo ln -sf /etc/nginx/sites-available/$API_DOMAIN /etc/nginx/sites-enabled/$API_DOMAIN && sudo nginx -t && sudo systemctl reload nginx"
+
+  # Install certbot and issue certificate (optional)
+  if [ -n "$EMAIL" ]; then
+    log "Installing certbot and issuing SSL certificate for $API_DOMAIN..."
+    ssh "$REMOTE" "if ! command -v certbot >/dev/null 2>&1; then if command -v apt-get >/dev/null 2>&1; then sudo apt-get install -y certbot python3-certbot-nginx; elif command -v dnf >/dev/null 2>&1; then sudo dnf install -y certbot python3-certbot-nginx; elif command -v yum >/dev/null 2>&1; then sudo yum install -y certbot python3-certbot-nginx; fi; fi"
+    ssh "$REMOTE" "sudo certbot --nginx -d '$API_DOMAIN' --email '$EMAIL' --agree-tos --non-interactive || true"
+  else
+    log "EMAIL not set; skipping SSL issuance. You can run certbot later."
+  fi
+
+  # Test public health (may require DNS propagation)
+  log "Testing public health endpoint (https://$API_DOMAIN/health)..."
+  ssh "$REMOTE" "curl -fsS https://$API_DOMAIN/health" || log "Public health check failed (DNS/SSL/Nginx may still be propagating)."
+fi
+
+log "Setup complete. Next steps:"
+log "- To switch to production: ssh $REMOTE 'sudo nano $ENV_FILE' and set NODE_ENV=production, DATABASE_URL, JWT_SECRET, DB_SSL as needed; then 'sudo systemctl restart $SERVICE_NAME'"
+log "- Validate: ssh $REMOTE 'curl -fsS http://127.0.0.1:$PORT/health'"
+log "- If configured: verify https://$API_DOMAIN/health responds 200"

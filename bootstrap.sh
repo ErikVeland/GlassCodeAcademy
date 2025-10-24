@@ -152,7 +152,7 @@ prompt_or_default_backend() {
     local var="$1"; local def="$2"; local label="$3";
     local envpath="${APP_DIR}/backend-node/.env"; local existing=""; local current="${!var:-}"; local input="";
     if [ -f "$envpath" ]; then
-        existing=$(grep -E "^${var}=" "$envpath" | tail -n1 | cut -d'=' -f2- | tr -d '\r')
+        existing=$( (grep -E "^${var}=" "$envpath" || true) | tail -n1 | cut -d'=' -f2- | tr -d '\r')
     fi
     local effective="${existing:-$current}"
     if [ -z "$effective" ]; then
@@ -196,7 +196,7 @@ export DB_DIALECT DB_HOST DB_PORT DB_NAME DB_USER DB_PASSWORD DB_SSL
 if [ "${ENV_ONLY:-0}" -eq 1 ]; then
     log "🧾 Writing environment files (env-only mode) ..."
 
-    LOCAL_REPO_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+    LOCAL_REPO_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" 2>/dev/null && pwd || echo "$PWD")"
     TARGET_DIR="$APP_DIR"
     if [ ! -d "$TARGET_DIR/backend-node" ] || [ ! -d "$TARGET_DIR/glasscode/frontend" ]; then
         TARGET_DIR="$LOCAL_REPO_DIR"
@@ -585,7 +585,7 @@ sudo -u postgres psql -tAc "SELECT 1 FROM pg_database WHERE datname='${DB_NAME}'
     log "❌ ERROR: Failed to create database ${DB_NAME}"; exit 1; }
 
 # Ensure localhost TCP password auth is allowed
-PG_VER=$(ls -1 /etc/postgresql | sort -r | head -n1)
+PG_VER=$( (ls -1 /etc/postgresql 2>/dev/null || echo "") | sort -r | head -n1)
 PG_CONF_DIR="/etc/postgresql/${PG_VER}/main"
 if [ -d "$PG_CONF_DIR" ]; then
     sed -i "s/^#\?listen_addresses.*/listen_addresses = 'localhost'/" "$PG_CONF_DIR/postgresql.conf" || true
@@ -603,9 +603,9 @@ if [ "${NEED_NODE:-0}" -eq 1 ]; then
     curl -fsSL https://deb.nodesource.com/setup_20.x | bash -
     apt-get install -y nodejs
 else
-    log "✅ Node.js already present: $(node --version)"
+    log "✅ Node.js already present: $(node --version 2>/dev/null || echo 'unknown')"
 fi
-log "✅ npm version: $(npm --version)"
+log "✅ npm version: $(npm --version 2>/dev/null || echo 'unknown')"
 
 ### 6. Setup directories
 log "📂 Setting up directories..."
@@ -630,9 +630,10 @@ pre_install_cleanup
 
 ### 8. Check disk space before builds
 log "💾 Checking available disk space..."
-AVAILABLE_SPACE_GB=$(df "$APP_DIR" | awk 'NR==2 {printf "%.1f", $4/1024/1024}')
+AVAILABLE_SPACE_GB=$( (df "$APP_DIR" 2>/dev/null | awk 'NR==2 {printf "%.1f", $4/1024/1024}') || echo 0)
 REQUIRED_SPACE_GB=5.0
-if (( $(echo "$AVAILABLE_SPACE_GB < $REQUIRED_SPACE_GB" | bc -l) )); then
+CMP=$( (echo "$AVAILABLE_SPACE_GB < $REQUIRED_SPACE_GB" | bc -l 2>/dev/null) || awk -v a="$AVAILABLE_SPACE_GB" -v b="$REQUIRED_SPACE_GB" 'BEGIN{print (a<b)?1:0}')
+if [ "$CMP" -eq 1 ]; then
     log "❌ ERROR: Insufficient disk space. Available: ${AVAILABLE_SPACE_GB}GB, Required: ${REQUIRED_SPACE_GB}GB"
     log "💡 Consider cleaning up old builds or expanding disk space"
     exit 1
@@ -658,7 +659,7 @@ if [ "$FRONTEND_ONLY" -eq 0 ]; then
         if ! grep -qE "^${key}=" "$TMP_ENV"; then
             printf "%s=%s\n" "$key" "$value" >> "$TMP_ENV"
         else
-            eval "${key}=\"$(grep -E \"^${key}=\" \"$TMP_ENV\" | tail -n1 | cut -d'=' -f2- | tr -d '\r')\""
+            eval "${key}=\"$( (grep -E \"^${key}=\" \"$TMP_ENV\" || true) | tail -n1 | cut -d'=' -f2- | tr -d '\r')\""
         fi
     }
     add_if_missing_backend NODE_ENV "production"
@@ -941,7 +942,7 @@ if [ "$FRONTEND_BUILD_REQUIRED" = "true" ]; then
         local var="$1"; local def="$2"; local label="$3";
         local existing=""; local current="${!var:-}"; local input="";
         if [ -f ".env.production" ]; then
-            existing=$(grep -E "^${var}=" .env.production | tail -n1 | cut -d'=' -f2- | tr -d '\r')
+            existing=$( (grep -E "^${var}=" .env.production || true) | tail -n1 | cut -d'=' -f2- | tr -d '\r')
         fi
         local effective="${existing:-$current}"
         if [ -z "$effective" ]; then
@@ -981,7 +982,7 @@ if [ "$FRONTEND_BUILD_REQUIRED" = "true" ]; then
             printf "%s=%s\n" "$key" "$value" >> "$TMP_ENV"
         else
             # Keep env variable consistent for rest of script
-            eval "${key}=\"$(grep -E \"^${key}=\" \"$TMP_ENV\" | tail -n1 | cut -d'=' -f2- | tr -d '\r')\""
+            eval "${key}=\"$((grep -E \"^${key}=\" \"$TMP_ENV\" || true) | tail -n1 | cut -d'=' -f2- | tr -d '\r')\""
         fi
     }
 
@@ -1433,5 +1434,5 @@ fi
 
 log "🎉 Deployment Complete!"
 log "🔗 Visit https://$DOMAIN"
-log "🔧 Backend: $(systemctl is-active ${APP_NAME}-backend)"
-log "🔧 Frontend: $(systemctl is-active ${APP_NAME}-frontend)"
+log "🔧 Backend: $(systemctl is-active ${APP_NAME}-backend 2>/dev/null || echo inactive)"
+log "🔧 Frontend: $(systemctl is-active ${APP_NAME}-frontend 2>/dev/null || echo inactive)"
