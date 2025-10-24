@@ -234,6 +234,9 @@ class ContentRegistryLoader {
               // Localhost fallbacks to bypass front proxy issues (production-safe)
               'http://localhost:3000/api/content/registry',
               'http://127.0.0.1:3000/api/content/registry',
+              // Include common dev port 3001
+              'http://localhost:3001/api/content/registry',
+              'http://127.0.0.1:3001/api/content/registry',
               'http://localhost:3010/api/content/registry',
               'http://127.0.0.1:3010/api/content/registry',
               'http://localhost:3020/api/content/registry',
@@ -658,7 +661,10 @@ class ContentRegistryLoader {
         // Common localhost dev ports
         candidates.push(
           'http://localhost:3000/api/content/lessons/' + moduleSlug,
-          'http://127.0.0.1:3000/api/content/lessons/' + moduleSlug
+          'http://127.0.0.1:3000/api/content/lessons/' + moduleSlug,
+          // Include common dev port 3001
+          'http://localhost:3001/api/content/lessons/' + moduleSlug,
+          'http://127.0.0.1:3001/api/content/lessons/' + moduleSlug
         );
 
         for (const url of candidates) {
@@ -820,7 +826,10 @@ class ContentRegistryLoader {
         }
         candidates.push(
           'http://localhost:3000/api/content/quizzes/' + shortSlug,
-          'http://127.0.0.1:3000/api/content/quizzes/' + shortSlug
+          'http://127.0.0.1:3000/api/content/quizzes/' + shortSlug,
+          // Include common dev port 3001
+          'http://localhost:3001/api/content/quizzes/' + shortSlug,
+          'http://127.0.0.1:3001/api/content/quizzes/' + shortSlug
         );
 
         for (const url of candidates) {
