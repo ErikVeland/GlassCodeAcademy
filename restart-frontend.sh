@@ -22,7 +22,7 @@ log "🔄 Starting robust frontend restart process..."
 
 # Step 1: Kill any existing Next.js processes
 log "🛑 Stopping existing Next.js processes..."
-pkill -f "next-server\|next dev\|node.*3000" || true
+pkill -f "next-server|next start|next dev|node.*${FRONTEND_PORT}" || true
 sleep 2
 
 # Step 2: Navigate to frontend directory
@@ -100,13 +100,11 @@ if command -v systemctl >/dev/null 2>&1; then
     
 else
     # Development environment
-    log "🔧 Using development server..."
+    log "🔧 Using Next.js production server mode..."
     
-    # Start in standalone mode for better stability
-    cd .next/standalone
-    
-    # Start the server in background
-    nohup node server.js -p "$FRONTEND_PORT" > ../frontend.log 2>&1 &
+    # Start Next.js in production server mode on the chosen port
+    export NODE_ENV=production
+    PORT="$FRONTEND_PORT" nohup npm run start > .next/frontend.log 2>&1 &
     server_pid=$!
     
     log "🚀 Started frontend server with PID: $server_pid"

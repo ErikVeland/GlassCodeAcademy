@@ -4,6 +4,28 @@ import path from 'path';
 import { getApiBaseStrict } from '@/lib/urlUtils';
 import { getShortSlugFromModuleSlug } from '@/lib/contentRegistry';
 
+// Icon mapping by canonical module slug
+const iconBySlug: Record<string, string> = {
+  'programming-fundamentals': '💻',
+  'web-fundamentals': '🌐',
+  'version-control': '🔧',
+  'dotnet-fundamentals': '⚙️',
+  'react-fundamentals': '⚛️',
+  'database-systems': '🗄️',
+  'typescript-fundamentals': '📘',
+  'node-fundamentals': '🟢',
+  'laravel-fundamentals': '🧰',
+  'nextjs-advanced': '⏭️',
+  'graphql-advanced': '🔺',
+  'sass-advanced': '🎀',
+  'tailwind-advanced': '🌀',
+  'vue-advanced': '🍃',
+  'testing-fundamentals': '🧪',
+  'e2e-testing': '🧪',
+  'performance-optimization': '⚡',
+  'security-fundamentals': '🔒',
+};
+
 interface DbModule {
   id: number;
   slug: string;
@@ -136,7 +158,8 @@ async function synthesizeRegistryFromDatabase() {
           lessons: `/${shortSlug}/lessons`,
           quiz: `/${shortSlug}/quiz`,
         };
-        return { ...m, routes } as RegistryModuleLight;
+        const icon = (typeof m.icon === 'string' && m.icon.trim() !== '' && m.icon !== '📚') ? m.icon : (iconBySlug[slug] || '📚');
+        return { ...m, routes, icon } as RegistryModuleLight;
       }));
 
       // Filter out dummy/broken modules not meant for production
@@ -170,7 +193,8 @@ async function synthesizeRegistryFromDatabase() {
           lessons: `/${shortSlug}/lessons`,
           quiz: `/${shortSlug}/quiz`,
         };
-        return { ...m, routes } as RegistryModuleLight;
+        const icon = (typeof m.icon === 'string' && m.icon.trim() !== '' && m.icon !== '📚') ? m.icon : (iconBySlug[slug] || '📚');
+        return { ...m, routes, icon } as RegistryModuleLight;
       }));
 
       // Filter out dummy/broken modules not meant for production
@@ -222,13 +246,20 @@ async function synthesizeRegistryFromDatabase() {
     if (!fallback && staticModules.length > 0) {
       const byLegacy = staticModules.find(sm => Array.isArray(sm.legacySlugs) && sm.legacySlugs.includes(moduleSlug));
       if (byLegacy) {
-        merged = { ...byLegacy, ...merged };
+        merged = { ...byLegacy, ...merged } as RegistryModuleLight;
       }
     }
 
     if (fallback) {
-      merged = { ...fallback, ...merged };
+      merged = { ...fallback, ...merged } as RegistryModuleLight;
     }
+
+    type WithIcon = RegistryModuleLight & { icon?: string };
+    const mergedWithIcon: WithIcon = merged as WithIcon;
+    const icon = (typeof mergedWithIcon.icon === 'string' && mergedWithIcon.icon.trim() !== '' && mergedWithIcon.icon !== '📚')
+      ? mergedWithIcon.icon
+      : (iconBySlug[moduleSlug] || '📚');
+    merged = { ...mergedWithIcon, icon } as RegistryModuleLight;
 
     return merged;
   }));
@@ -248,19 +279,14 @@ async function synthesizeRegistryFromDatabase() {
 export async function GET() {
   try {
     const dbRegistry = await synthesizeRegistryFromDatabase();
-    return NextResponse.json(dbRegistry, {
-      status: 200,
-      headers: { 'Cache-Control': 'no-store' },
-    });
-  } catch (error) {
-    console.error('Failed to load content registry (DB+file):', error);
-    return NextResponse.json(
-      { error: 'Registry unavailable', reason: 'Database and file fallback failed' },
-      {
-        status: 503,
-        headers: { 'Cache-Control': 'no-store' },
-      }
-    );
+    return NextResponse.json(dbRegistry);
+  } catch (err) {
+    console.error('Registry GET failed:', err);
+    const staticFallback = loadStaticRegistry();
+    if (staticFallback) {
+      return NextResponse.json(staticFallback);
+    }
+    return NextResponse.json({ error: 'Unable to load registry' }, { status: 500 });
   }
 }
 

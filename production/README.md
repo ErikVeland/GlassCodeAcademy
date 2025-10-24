@@ -100,3 +100,39 @@ Check Nginx configuration:
 sudo nginx -t
 sudo systemctl status nginx
 ```
+
+## Next.js Server Mode (Production)
+
+Use the Next.js server mode for the frontend to ensure assets and API routes are correctly served.
+
+- Start script: `restart-frontend.sh` launches `npm run start` with `NODE_ENV=production`.
+- Verify script: `scripts/verify-next-pages-assets.sh` checks pages, APIs, and static assets.
+- Sample PM2 config:
+```bash
+pm2 start "PORT=3000 npm run start" --name glasscode-frontend
+pm2 save
+```
+- Nginx proxy example:
+```nginx
+server {
+    listen 443 ssl http2;
+    server_name academy.example.com;
+
+    location / {
+        proxy_pass http://127.0.0.1:3000;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+
+    location /api/ {
+        proxy_pass http://127.0.0.1:3000; # Next API routes
+        proxy_set_header Host $host;
+    }
+}
+```
+- Health check:
+```bash
+bash scripts/verify-next-pages-assets.sh https://academy.example.com
+```

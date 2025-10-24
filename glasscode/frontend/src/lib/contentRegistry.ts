@@ -218,6 +218,9 @@ class ContentRegistryLoader {
           }
         }
 
+        const portEnv = (process.env.PORT || process.env.NEXT_PUBLIC_PORT || '').toString().trim();
+        const portCandidate = portEnv ? `http://localhost:${portEnv}/api/content/registry` : null;
+
         const candidates: string[] = isBrowser
           ? [
               // Prefer API registry first to use DB-backed data
@@ -225,11 +228,16 @@ class ContentRegistryLoader {
             ]
           : [
               // Server-side absolute URLs only
+              ...(portCandidate ? [portCandidate] : []),
               ...devCandidates,
               ...(base ? [`${base}/api/content/registry`] : []),
               // Localhost fallbacks to bypass front proxy issues (production-safe)
               'http://localhost:3000/api/content/registry',
               'http://127.0.0.1:3000/api/content/registry',
+              'http://localhost:3010/api/content/registry',
+              'http://127.0.0.1:3010/api/content/registry',
+              'http://localhost:3020/api/content/registry',
+              'http://127.0.0.1:3020/api/content/registry',
             ];
 
         const controller = new AbortController();
@@ -277,46 +285,46 @@ class ContentRegistryLoader {
 
         clearTimeout(timeoutId);
 
-        // If content mode prefers filesystem or API candidates failed, try FS fallback
+        // Optional HTTP fallback to static registry.json when FS mode is preferred
         const contentMode = (process.env.GC_CONTENT_MODE || '').toLowerCase();
         const preferFs = contentMode === 'fs' || contentMode === 'file' || contentMode === 'static';
         const strictDbOnly = contentMode === 'db';
 
-        if (preferFs || !strictDbOnly) {
-          if (!isBrowser) {
-            try {
-              const fs = await import('fs');
-               const path = await import('path');
-               const tryPaths = [
-                 path.join(process.cwd(), 'public', 'registry.json'),
-                path.join(process.cwd(), 'content', 'registry.json'),
-                path.join(process.cwd(), '..', '..', 'content', 'registry.json'),
+        if (preferFs && !strictDbOnly) {
+          const registryCandidates = isBrowser
+            ? ['/registry.json']
+            : [
+                ...(base ? [`${base}/registry.json`] : []),
+                'http://localhost:3000/registry.json',
+                'http://127.0.0.1:3000/registry.json',
               ];
-              for (const p of tryPaths) {
-                try {
-                  const raw = await fs.promises.readFile(p, 'utf-8');
-                  const data: unknown = JSON.parse(raw);
-                  const modules = (data as ContentRegistry)?.modules;
-                  if (Array.isArray(modules) && modules.length > 0) {
-                    const normalizedModules = await Promise.all(modules.map(async (m) => {
-                      const slug = (m?.slug || '').toString();
-                      const shortSlug = (await this.getShortSlugFromModuleSlug(slug)) || (slug.includes('-') ? slug.split('-')[0] : slug);
-                      const routes = {
-                        overview: `/${shortSlug}`,
-                        lessons: `/${shortSlug}/lessons`,
-                        quiz: `/${shortSlug}/quiz`,
-                      };
-                      return { ...m, routes };
-                    }));
-                    const normalized = { ...(data as ContentRegistry), modules: normalizedModules };
-                    return normalized as ContentRegistry;
-                  }
-                } catch {
-                  // try next path
+          for (const url of registryCandidates) {
+            try {
+              console.debug('[ContentRegistry] trying static', url);
+              const res = await fetch(url, typeof window !== 'undefined'
+                ? { cache: 'no-store' }
+                : { next: { revalidate: 3600 } });
+              if (res.ok) {
+                const data: unknown = await res.json();
+                const modules = (data as ContentRegistry)?.modules;
+                if (Array.isArray(modules) && modules.length > 0) {
+                  const normalizedModules = await Promise.all(modules.map(async (m) => {
+                    const slug = (m?.slug || '').toString();
+                    const shortSlug = (await this.getShortSlugFromModuleSlug(slug)) || (slug.includes('-') ? slug.split('-')[0] : slug);
+                    const routes = {
+                      overview: `/${shortSlug}`,
+                      lessons: `/${shortSlug}/lessons`,
+                      quiz: `/${shortSlug}/quiz`,
+                    };
+                    return { ...m, routes };
+                  }));
+                  const normalized = { ...(data as ContentRegistry), modules: normalizedModules };
+                  return normalized as ContentRegistry;
                 }
               }
-            } catch (fsErr) {
-              console.warn('FS fallback failed:', fsErr);
+            } catch (err) {
+              console.warn('[ContentRegistry] static candidate failed', url, err);
+              // try next static candidate
             }
           }
         }
@@ -705,53 +713,8 @@ class ContentRegistryLoader {
           }
         }
 
-        // Server-side filesystem fallback when no HTTP candidate succeeds
-        if (typeof window === 'undefined') {
-          try {
-            const fs = await import('node:fs/promises');
-            const path = await import('node:path');
-            const tryPaths = [
-              path.join(process.cwd(), '..', '..', 'content', 'lessons', `${moduleSlug}.json`),
-              path.join(process.cwd(), 'public', 'content', 'lessons', `${moduleSlug}.json`),
-            ];
-            for (const p of tryPaths) {
-              try {
-                const raw = await fs.readFile(p, 'utf-8');
-                const data: unknown = JSON.parse(raw);
-                if (Array.isArray(data) && data.length > 0) {
-                  const mapped = (data as Lesson[]).map((l, i) => {
-                    const orderVal = typeof l.order === 'number' ? l.order : i + 1;
-                    const lApi = l as { codeExample?: unknown; codeExplanation?: unknown; code?: { example?: unknown; explanation?: unknown } };
-                    const codeExampleStr = typeof lApi.codeExample === 'string' ? lApi.codeExample : undefined;
-                    const codeExplanationStr = typeof lApi.codeExplanation === 'string' ? lApi.codeExplanation : undefined;
-                    const code: Lesson['code'] | undefined =
-                      lApi.code && typeof lApi.code === 'object'
-                        ? {
-                            example: typeof lApi.code.example === 'string' ? lApi.code.example : undefined,
-                            explanation: typeof lApi.code.explanation === 'string' ? lApi.code.explanation : undefined,
-                          }
-                        : (codeExampleStr || codeExplanationStr ? { example: codeExampleStr || '', explanation: codeExplanationStr || '' } : undefined);
-                    const lesson: Lesson = {
-                      ...l,
-                      order: orderVal,
-                      code,
-                      intro: typeof l.intro === 'string' ? l.intro : '',
-                      pitfalls: Array.isArray(l.pitfalls) ? l.pitfalls : [],
-                      exercises: Array.isArray(l.exercises) ? l.exercises : [],
-                      objectives: Array.isArray(l.objectives) ? l.objectives : [],
-                    };
-                    return lesson;
-                  });
-                  return mapped;
-                }
-              } catch {
-                // try next path
-              }
-            }
-          } catch {
-            // ignore fs errors
-          }
-        }
+        // Removed server-side filesystem fallback to avoid bundling fs/path in client-shared code
+        // Instead, rely solely on API/HTTP candidates above. If none succeed, return empty.
 
         return [];
       } catch (err) {
@@ -924,7 +887,14 @@ class ContentRegistryLoader {
       const controller = new AbortController();
       const timeoutId = setTimeout(() => controller.abort(), 10000);
       const base = isBrowser ? '' : (() => { try { return getPublicOriginStrict().replace(/\/+$/, ''); } catch { return ''; } })();
-      const url = isBrowser ? `/api/content/quizzes/programming-fundamentals` : (base ? `${base}/api/content/quizzes/programming-fundamentals` : `/api/content/quizzes/programming-fundamentals`);
+      const portEnvPF = !isBrowser ? (process.env.PORT || process.env.NEXT_PUBLIC_PORT || '').toString().trim() : '';
+      const url = isBrowser 
+        ? `/api/content/quizzes/programming-fundamentals` 
+        : (base 
+            ? `${base}/api/content/quizzes/programming-fundamentals` 
+            : (portEnvPF 
+                ? `http://localhost:${portEnvPF}/api/content/quizzes/programming-fundamentals` 
+                : `http://localhost:3000/api/content/quizzes/programming-fundamentals`));
 
       const response = await fetch(url, typeof window !== 'undefined'
         ? { signal: controller.signal, cache: 'no-store' }
