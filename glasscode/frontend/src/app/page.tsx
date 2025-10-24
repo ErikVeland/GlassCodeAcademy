@@ -1,5 +1,7 @@
 'use client';
 
+export const dynamic = 'force-dynamic';
+
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import Link from 'next/link';
 import { ArrowRightIcon, ChartBarIcon, LockClosedIcon } from '@heroicons/react/24/outline';
