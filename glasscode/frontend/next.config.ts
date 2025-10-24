@@ -56,6 +56,18 @@ const nextConfig: NextConfig = {
     optimizeCss: false,
     // Remove optimizePackageImports to avoid bundler chunk resolution problems
   },
+  // Security and performance: disable the X-Powered-By header
+  poweredByHeader: false,
+  // Do not ship browser source maps in production
+  productionBrowserSourceMaps: false,
+  // Keep Node HTTP connections alive to improve SSR fetch performance
+  httpAgentOptions: {
+    keepAlive: true,
+  },
+  // Remove console logs in production builds except errors and warnings
+  compiler: {
+    removeConsole: IS_PROD ? { exclude: ['error', 'warn'] } : false,
+  },
   // Image optimization
   images: {
     minimumCacheTTL: 86400,
