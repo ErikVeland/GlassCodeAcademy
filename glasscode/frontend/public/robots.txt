@@ -2,7 +2,7 @@ User-agent: *
 Allow: /
 
 # Sitemap
-Sitemap: https://fullstack-academy.com/sitemap.xml
+Sitemap: https://glasscode.academy/sitemap.xml
 
 # Disallow development/admin paths
 Disallow: /api/

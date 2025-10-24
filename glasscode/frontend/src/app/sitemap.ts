@@ -6,9 +6,8 @@ import { getPublicOriginStrict } from '@/lib/urlUtils';
 export const revalidate = 3600;
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const baseUrl = getPublicOriginStrict();
-
   try {
+    const baseUrl = (() => { try { return getPublicOriginStrict().replace(/\/+$/, ''); } catch { return 'http://localhost:3000'; } })();
     // Generate sitemap data directly from content registry
     const modules = await contentRegistry.getModules();
     const sitemapEntries: MetadataRoute.Sitemap = [
@@ -98,8 +97,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     return sitemapEntries;
   } catch (error) {
     console.error('Failed to generate sitemap:', error);
-    
-    // Fallback sitemap with just the homepage
+    const baseUrl = (() => { try { return getPublicOriginStrict().replace(/\/+$/, ''); } catch { return 'http://localhost:3000'; } })();
     return [
       {
         url: baseUrl,

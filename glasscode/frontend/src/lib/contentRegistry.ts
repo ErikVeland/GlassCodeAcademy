@@ -965,7 +965,10 @@ class ContentRegistryLoader {
       'testing': 'testing-fundamentals',
       'e2e': 'e2e-testing',
       'performance': 'performance-optimization',
-      'security': 'security-fundamentals'
+      'security': 'security-fundamentals',
+      // Added short slug aliases for JavaScript lessons
+      'js': 'web-fundamentals',
+      'javascript': 'web-fundamentals'
     };
 
     // First check the mapping

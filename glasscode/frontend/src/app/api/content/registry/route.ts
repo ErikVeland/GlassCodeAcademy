@@ -72,12 +72,26 @@ interface StaticRegistry {
 function loadStaticRegistry(): StaticRegistry | null {
   try {
     const projectRoot = process.cwd();
-    const registryPath = path.join(projectRoot, 'content', 'registry.json');
-    if (!fs.existsSync(registryPath)) return null;
-    const raw = fs.readFileSync(registryPath, 'utf-8');
-    const json = JSON.parse(raw) as StaticRegistry;
-    if (!json || !Array.isArray(json.modules)) return null;
-    return json;
+    const candidates = [
+      path.join(projectRoot, 'content', 'registry.json'),
+      path.join(projectRoot, 'public', 'registry.json'),
+    ];
+
+    for (const p of candidates) {
+      try {
+        if (fs.existsSync(p)) {
+          const raw = fs.readFileSync(p, 'utf-8');
+          const json = JSON.parse(raw) as StaticRegistry;
+          if (json && Array.isArray(json.modules)) {
+            return json;
+          }
+        }
+      } catch {
+        // continue to next candidate
+      }
+    }
+
+    return null;
   } catch {
     return null;
   }

@@ -1,0 +1,45 @@
+name: Production Smoke Check
+
+on:
+  workflow_dispatch:
+    inputs:
+      base_url:
+        description: 'Base URL to check (e.g., https://glasscode.academy)'
+        required: false
+        default: 'https://glasscode.academy'
+      strict_fail:
+        description: 'Fail the job on errors (disable continue-on-error)'
+        type: boolean
+        default: false
+  schedule:
+    - cron: '0 6 * * *' # Daily at 06:00 UTC
+
+jobs:
+  prod-smoke:
+    runs-on: ubuntu-latest
+    continue-on-error: ${{ inputs.strict_fail != true }}
+    env:
+      BASE_URL: ${{ github.event.inputs.base_url || 'https://glasscode.academy' }}
+    steps:
+      - name: Show target base URL
+        run: |
+          echo "Checking production origin: $BASE_URL"
+          echo "Strict fail: ${{ inputs.strict_fail }}"
+
+      - name: Check homepage
+        run: |
+          STATUS=$(curl -s -o /dev/null -w "%{http_code}" "$BASE_URL/")
+          echo "Homepage status: $STATUS"
+          if [ "$STATUS" -ne 200 ]; then
+            echo "Homepage check failed"
+            exit 1
+          fi
+
+      - name: Check robots.txt
+        run: |
+          STATUS=$(curl -s -o /dev/null -w "%{http_code}" "$BASE_URL/robots.txt")
+          echo "robots.txt status: $STATUS"
+          if [ "$STATUS" -ne 200 ]; then
+            echo "robots.txt check failed"
+            exit 1
+          fi
