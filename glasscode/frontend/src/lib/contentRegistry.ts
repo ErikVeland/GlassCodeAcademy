@@ -277,8 +277,51 @@ class ContentRegistryLoader {
 
         clearTimeout(timeoutId);
 
+        // If content mode prefers filesystem or API candidates failed, try FS fallback
+        const contentMode = (process.env.GC_CONTENT_MODE || '').toLowerCase();
+        const preferFs = contentMode === 'fs' || contentMode === 'file' || contentMode === 'static';
+        const strictDbOnly = contentMode === 'db';
 
-        // No API candidate succeeded; abort to honor DB-only policy
+        if (preferFs || !strictDbOnly) {
+          if (!isBrowser) {
+            try {
+              const fs = await import('fs');
+               const path = await import('path');
+               const tryPaths = [
+                 path.join(process.cwd(), 'public', 'registry.json'),
+                path.join(process.cwd(), 'content', 'registry.json'),
+                path.join(process.cwd(), '..', '..', 'content', 'registry.json'),
+              ];
+              for (const p of tryPaths) {
+                try {
+                  const raw = await fs.promises.readFile(p, 'utf-8');
+                  const data: unknown = JSON.parse(raw);
+                  const modules = (data as ContentRegistry)?.modules;
+                  if (Array.isArray(modules) && modules.length > 0) {
+                    const normalizedModules = await Promise.all(modules.map(async (m) => {
+                      const slug = (m?.slug || '').toString();
+                      const shortSlug = (await this.getShortSlugFromModuleSlug(slug)) || (slug.includes('-') ? slug.split('-')[0] : slug);
+                      const routes = {
+                        overview: `/${shortSlug}`,
+                        lessons: `/${shortSlug}/lessons`,
+                        quiz: `/${shortSlug}/quiz`,
+                      };
+                      return { ...m, routes };
+                    }));
+                    const normalized = { ...(data as ContentRegistry), modules: normalizedModules };
+                    return normalized as ContentRegistry;
+                  }
+                } catch {
+                  // try next path
+                }
+              }
+            } catch (fsErr) {
+              console.warn('FS fallback failed:', fsErr);
+            }
+          }
+        }
+
+        // No candidate succeeded
         throw new Error('Registry unavailable from API');
       } catch (err) {
         console.error('Failed to load registry internally:', err);
