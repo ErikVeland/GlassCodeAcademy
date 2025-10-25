@@ -15,6 +15,7 @@ test.describe('Theme toggle behavior', () => {
     });
 
     await page.goto('/');
+    await page.waitForFunction(() => !!document.documentElement.getAttribute('data-theme'));
 
     // Prefer test-id based locator for explicit selection
     const toggle = page.getByTestId('theme-toggle');
@@ -51,6 +52,7 @@ test.describe('Theme toggle behavior', () => {
     });
 
     await page.goto('/');
+    await page.waitForFunction(() => !!document.documentElement.getAttribute('data-theme'));
 
     // Prefer test-id based locator for explicit selection
     const toggle = page.getByTestId('theme-toggle');

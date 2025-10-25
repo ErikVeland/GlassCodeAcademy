@@ -13,42 +13,61 @@ async function withTimeout<T>(promise: Promise<T>, ms: number): Promise<T> {
   ]);
 }
 
-export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+// Resolve a safe base URL with localhost fallback, without throwing
+function resolveBaseUrl(): string {
   try {
-    const baseUrl = getPublicOriginStrict().replace(/\/+$/, '');
+    return getPublicOriginStrict().replace(/\/+$/, '');
+  } catch {
+    const port = (process.env.PORT || process.env.NEXT_PUBLIC_PORT || '3000').toString().trim();
+    return `http://localhost:${port}`;
+  }
+}
 
+// Safely load modules; fall back to filesystem registry
+async function loadModulesSafe(): Promise<Module[]> {
+  try {
+    const modules = await contentRegistry.getModules();
+    if (Array.isArray(modules) && modules.length > 0) return modules;
+  } catch {
+    // ignore and try filesystem fallback
+  }
+
+  try {
+    const fs = await import('node:fs/promises');
+    const path = await import('node:path');
+    const tryPaths = [
+      path.join(process.cwd(), 'public', 'registry.json'),
+      path.join(process.cwd(), '..', '..', 'content', 'registry.json'),
+    ];
+    for (const p of tryPaths) {
+      try {
+        const raw = await fs.readFile(p, 'utf-8');
+        const data: unknown = JSON.parse(raw);
+        const parsedModules = (data as { modules?: unknown }).modules;
+        if (Array.isArray(parsedModules) && parsedModules.length > 0) {
+          return parsedModules as Module[];
+        }
+      } catch {
+        // try next path
+      }
+    }
+  } catch {
+    // ignore fallback errors
+  }
+
+  return [];
+}
+
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+  const baseUrl = resolveBaseUrl();
+
+  try {
     const enableSSG = process.env.ENABLE_BUILD_SSG === 'true';
     const enableLessonSitemap = process.env.ENABLE_LESSON_SITEMAP === 'true';
     const isDb = process.env.GC_CONTENT_MODE === 'db';
 
-    // Fetch modules (use registry; fall back to filesystem quickly if needed)
-    let modules: Module[] = await contentRegistry.getModules();
-    if (!modules || modules.length === 0) {
-      try {
-        const fs = await import('node:fs/promises');
-        const path = await import('node:path');
-        const tryPaths = [
-          path.join(process.cwd(), 'public', 'registry.json'),
-          path.join(process.cwd(), '..', '..', 'content', 'registry.json'),
-        ];
-        for (const p of tryPaths) {
-          try {
-            const raw = await fs.readFile(p, 'utf-8');
-            const data: unknown = JSON.parse(raw);
-            const parsedModules = (data as { modules?: unknown }).modules;
-            if (Array.isArray(parsedModules) && parsedModules.length > 0) {
-              modules = parsedModules as Module[];
-              break;
-            }
-          } catch {
-            // try next path
-          }
-        }
-      } catch {
-        // ignore fallback errors
-      }
-    }
-
+    // Fetch modules using safe loader
+    const modules: Module[] = await loadModulesSafe();
     const activeModules = (modules || []).filter((m) => m && m.status !== 'inactive');
 
     const sitemapEntries: MetadataRoute.Sitemap = [];
@@ -149,13 +168,13 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       }
     }
     
+    // If we failed to load modules, at least return base entries
     return sitemapEntries;
   } catch (error) {
     console.error('Failed to generate sitemap:', error);
-    const baseUrl = (() => { try { return getPublicOriginStrict().replace(/\/+$/, ''); } catch { return 'http://localhost:3000'; } })();
     return [
       {
-        url: baseUrl,
+        url: `${baseUrl}/`,
         lastModified: new Date(),
         changeFrequency: 'daily',
         priority: 1,

@@ -1,11 +1,45 @@
 const fs = require('fs');
 const path = require('path');
-const { Course, Module, Lesson, LessonQuiz } = require('../src/models');
+const sequelize = require('../src/config/database');
+const { Course, Module, Lesson, LessonQuiz, initializeAssociations } = require('../src/models');
+
+// Ensure database schema exists before seeding
+async function ensureSchema() {
+  try {
+    await sequelize.authenticate();
+    // Initialize associations so sync creates proper FKs
+    initializeAssociations();
+
+    const qi = sequelize.getQueryInterface();
+    let tables = await qi.showAllTables();
+    tables = Array.isArray(tables)
+      ? tables.map((t) => (typeof t === 'string' ? t : t.tableName || t.name || t))
+      : [];
+
+    const required = ['courses', 'modules', 'lessons', 'lesson_quizzes'];
+    const missing = required.filter((t) => !tables.includes(t));
+
+    if (missing.length > 0) {
+      console.log(`🧱 Missing tables detected: ${missing.join(', ')} — running schema sync`);
+      // Safe sync: creates missing tables without dropping existing ones
+      await sequelize.sync();
+      console.log('✅ Schema sync completed.');
+    } else {
+      console.log('✅ Required tables already present; skipping schema sync.');
+    }
+  } catch (e) {
+    console.error('❌ Failed to verify or sync schema:', e);
+    throw e;
+  }
+}
 
 // Load content from JSON files and seed the database
 async function seedContent() {
   try {
     console.log('🔄 Starting content seeding for Node.js backend...');
+
+    // Ensure schema is present so subsequent queries don't fail
+    await ensureSchema();
     
     // Load registry to get module information
     const registryPath = path.join(__dirname, '../../content/registry.json');
@@ -87,16 +121,14 @@ async function seedContent() {
             defaults: {
               title: lessonData.title || `Lesson ${i+1}`,
               slug: `${moduleInfo.slug}-lesson-${i+1}`,
-              order: i + 1,
-              content: lessonData,
+              order: lessonData.order || i + 1,
+              content: lessonData.content || { type: 'markdown', content: lessonData.intro || '' },
               isPublished: true,
-              difficulty: moduleInfo.difficulty,
+              difficulty: lessonData.difficulty || moduleInfo.difficulty || 'Beginner',
               estimatedMinutes: lessonData.estimatedMinutes || 30,
               module_id: module.id
             }
           });
-          
-          lessons.push(lesson);
           
           if (lessonCreated) {
             console.log(`    ✅ Created lesson: ${lesson.title}`);
@@ -104,9 +136,10 @@ async function seedContent() {
             console.log(`    🔁 Updated lesson: ${lesson.title}`);
             await lesson.update({
               title: lessonData.title || `Lesson ${i+1}`,
-              content: lessonData,
+              order: lessonData.order || i + 1,
+              content: lessonData.content || { type: 'markdown', content: lessonData.intro || '' },
               isPublished: true,
-              difficulty: moduleInfo.difficulty,
+              difficulty: lessonData.difficulty || moduleInfo.difficulty || 'Beginner',
               estimatedMinutes: lessonData.estimatedMinutes || 30,
               module_id: module.id
             });
@@ -116,30 +149,26 @@ async function seedContent() {
         console.log(`  ⚠️  No lessons file found for ${moduleInfo.slug}`);
       }
       
-      // Load quizzes for this module
+      // Load quiz questions for this module
       const quizzesPath = path.join(__dirname, `../../content/quizzes/${moduleInfo.slug}.json`);
       if (fs.existsSync(quizzesPath)) {
-        const quizzesData = JSON.parse(fs.readFileSync(quizzesPath, 'utf8'));
-        console.log(`  Found ${quizzesData.questions.length} quiz questions`);
+        const quizData = JSON.parse(fs.readFileSync(quizzesPath, 'utf8'));
+        const questions = Array.isArray(quizData) ? quizData : (quizData.questions || []);
+        console.log(`  Found ${questions.length} quiz questions`);
         
-        // Create quizzes for each lesson (distribute evenly)
-        const questionsPerLesson = Math.ceil(quizzesData.questions.length / Math.max(lessons.length, 1));
+        // Find the first lesson for association
+        const firstLesson = await Lesson.findOne({ where: { module_id: module.id }, order: [['order', 'ASC']] });
+        const lessonId = firstLesson ? firstLesson.id : null;
         
-        for (let i = 0; i < quizzesData.questions.length; i++) {
-          const questionData = quizzesData.questions[i];
-          // Assign to a lesson (round-robin distribution)
-          const lessonIndex = Math.floor(i / questionsPerLesson) % Math.max(lessons.length, 1);
-          const lessonId = lessons.length > 0 ? lessons[lessonIndex].id : module.id;
+        for (let i = 0; i < questions.length; i++) {
+          const questionData = questions[i];
           
           const [quiz, quizCreated] = await LessonQuiz.findOrCreate({
-            where: { 
-              question: questionData.question,
-              lesson_id: lessonId
-            },
+            where: { sortOrder: questionData.sortOrder || i + 1, lesson_id: lessonId },
             defaults: {
-              question: questionData.question,
+              question: questionData.question || `Question ${i + 1}`,
               topic: questionData.topic || moduleInfo.title,
-              difficulty: questionData.difficulty || moduleInfo.difficulty,
+              difficulty: questionData.difficulty || moduleInfo.difficulty || 'Beginner',
               choices: questionData.choices || [],
               fixedChoiceOrder: questionData.fixedChoiceOrder || false,
               choiceLabels: questionData.choiceLabels || null,
