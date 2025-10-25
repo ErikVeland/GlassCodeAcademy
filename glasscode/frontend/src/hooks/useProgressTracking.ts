@@ -145,40 +145,61 @@ export const useProgressTracking = () => {
     };
   }, [session?.user?.email, session?.user?.name]);
 
-  // Load data from localStorage on mount
+  // Load data from localStorage on mount (with slug normalization)
   useEffect(() => {
-    try {
-      const keys = getStorageKeys();
-      const savedProgress = localStorage.getItem(keys.PROGRESS) || localStorage.getItem(STORAGE_KEYS.PROGRESS);
-      if (savedProgress) {
-        setProgress(JSON.parse(savedProgress));
-      }
+    const loadAndNormalize = async () => {
+      try {
+        const keys = getStorageKeys();
 
-      const savedStreak = localStorage.getItem(keys.STREAK) || localStorage.getItem(STORAGE_KEYS.STREAK);
-      if (savedStreak) {
-        setStreak(JSON.parse(savedStreak));
-      }
+        const savedProgressRaw = localStorage.getItem(keys.PROGRESS) || localStorage.getItem(STORAGE_KEYS.PROGRESS);
+        if (savedProgressRaw) {
+          const parsed: Record<string, ProgressData> = JSON.parse(savedProgressRaw);
+          const normalized: Record<string, ProgressData> = {};
+          for (const [k, v] of Object.entries(parsed)) {
+            const full = await contentRegistry.getModuleSlugFromShortSlug(k) || k;
+            normalized[full] = { ...v, moduleId: full };
+          }
+          setProgress(normalized);
+          localStorage.setItem(keys.PROGRESS, JSON.stringify(normalized));
+        }
 
-      const savedAchievements = localStorage.getItem(keys.ACHIEVEMENTS) || localStorage.getItem(STORAGE_KEYS.ACHIEVEMENTS);
-      if (savedAchievements) {
-        setAchievements(JSON.parse(savedAchievements));
+        const savedStreakRaw = localStorage.getItem(keys.STREAK) || localStorage.getItem(STORAGE_KEYS.STREAK);
+        if (savedStreakRaw) {
+          setStreak(JSON.parse(savedStreakRaw));
+        }
+
+        const savedAchievementsRaw = localStorage.getItem(keys.ACHIEVEMENTS) || localStorage.getItem(STORAGE_KEYS.ACHIEVEMENTS);
+        if (savedAchievementsRaw) {
+          const parsedA: AchievementData[] = JSON.parse(savedAchievementsRaw);
+          const normalizedA: AchievementData[] = await Promise.all(parsedA.map(async (a) => {
+            if (!a.moduleId) return a;
+            const full = await contentRegistry.getModuleSlugFromShortSlug(a.moduleId);
+            return full ? { ...a, moduleId: full } : a;
+          }));
+          setAchievements(normalizedA);
+          localStorage.setItem(keys.ACHIEVEMENTS, JSON.stringify(normalizedA));
+        }
+      } catch (error) {
+        console.error('Error loading progress data:', error);
       }
-    } catch (error) {
-      console.error('Error loading progress data:', error);
-    }
+    };
+    void loadAndNormalize();
   }, [getStorageKeys]);
 
   const updateProgress = useCallback(async (moduleId: string, data: Partial<ProgressData>) => {
     const currentTime = new Date().toISOString();
-    
+
+    // Normalize slug to full module slug for storage consistency
+    const fullSlug = await contentRegistry.getModuleSlugFromShortSlug(moduleId) || moduleId;
+
     // Determine tier for module using registry
-    const tier = (await determineTierFromRegistry(moduleId)) || 'foundational';
-    
+    const tier = (await determineTierFromRegistry(fullSlug)) || 'foundational';
+
     // Get accurate lesson count from registry/content
-    const totalLessons = await getActualLessonCount(moduleId);
-    
+    const totalLessons = await getActualLessonCount(fullSlug);
+
     const defaultProgressData = {
-      moduleId,
+      moduleId: fullSlug,
       lessonsCompleted: 0,
       totalLessons,
       quizScore: 0,
@@ -189,14 +210,14 @@ export const useProgressTracking = () => {
       tier,
       certificate: undefined
     };
-    
+
     const currentProgress = {
       ...defaultProgressData,
-      ...progress[moduleId],
+      ...progress[fullSlug],
       ...data,
       lastAccessed: currentTime
     };
-    
+
     // Auto-calculate completion status based on lessons and quiz
     if (currentProgress.lessonsCompleted >= currentProgress.totalLessons && 
         currentProgress.quizScore >= 70) {
@@ -204,20 +225,20 @@ export const useProgressTracking = () => {
     } else if (currentProgress.lessonsCompleted > 0 || currentProgress.quizScore > 0) {
       currentProgress.completionStatus = 'in-progress';
     }
-    
+
     const updated = {
       ...progress,
-      [moduleId]: currentProgress
+      [fullSlug]: currentProgress
     };
-    
+
     setProgress(updated);
     localStorage.setItem(getStorageKeys().PROGRESS, JSON.stringify(updated));
-    
+
     // Update streak
     updateStreak();
-    
+
     // Check for new achievements
-    checkAchievements(updated, moduleId);
+    checkAchievements(updated, fullSlug);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [progress, getStorageKeys]);
 

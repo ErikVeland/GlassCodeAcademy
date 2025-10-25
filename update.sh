@@ -289,8 +289,28 @@ EOF
 
     # Frontend unit
     local fe_unit="/etc/systemd/system/${APP_NAME}-frontend.service"
-    if [ ! -f "$fe_unit" ] && [ -d "$APP_DIR/glasscode/frontend" ]; then
-        log "⚙️  Creating frontend systemd service at $fe_unit"
+    if [ -d "$APP_DIR/glasscode/frontend" ]; then
+        log "⚙️  Ensuring frontend systemd service at $fe_unit"
+        # Write backend health gating script used in ExecStartPre
+        cat >"$APP_DIR/glasscode/frontend/check_backend_health.sh" <<'EOS'
+#!/usr/bin/env bash
+MAX=30
+COUNT=1
+while [ $COUNT -le $MAX ]; do
+  HTTP=$(timeout 10 curl -s -o /dev/null -w "%{http_code}" http://127.0.0.1:8080/health || true)
+  RESP=$(timeout 10 curl -s http://127.0.0.1:8080/health || true)
+  STATUS=$(echo "$RESP" | jq -r .status 2>/dev/null || echo "$RESP" | grep -o '"status":"[^"]*"' | cut -d '"' -f4)
+
+  if [ "$HTTP" = "200" ] && { [ "$STATUS" = "healthy" ] || [ "$STATUS" = "degraded" ] || [ -n "$RESP" ]; }; then
+    echo "✅ Backend health check passed at attempt $COUNT/$MAX: HTTP $HTTP, Status: ${STATUS:-unknown}"
+    exit 0
+  fi
+  sleep 5; COUNT=$((COUNT+1))
+done
+echo "Backend health check gating failed: http='$HTTP' status='$STATUS' resp='$RESP'"
+exit 1
+EOS
+        chmod +x "$APP_DIR/glasscode/frontend/check_backend_health.sh"
         if [ "$FRONTEND_ONLY" -eq 0 ]; then
             cat >"$fe_unit" <<EOF
 [Unit]
@@ -300,6 +320,7 @@ After=network.target ${APP_NAME}-backend.service
 [Service]
 WorkingDirectory=${APP_DIR}/glasscode/frontend
 EnvironmentFile=${APP_DIR}/glasscode/frontend/.env.production
+ExecStartPre=${APP_DIR}/glasscode/frontend/check_backend_health.sh
 ExecStart=/usr/bin/node .next/standalone/server.js -p ${FRONTEND_PORT}
 Restart=always
 RestartSec=10
@@ -404,10 +425,114 @@ main() {
         fi
         log "⚙️  Building production frontend..."
         sudo -u "$DEPLOY_USER" npm run build
+
+        # Stage Next.js standalone assets to ensure static serving parity with bootstrap
+        log "📦 Staging Next.js standalone assets..."
+        mkdir -p .next/standalone/.next
+        rm -rf .next/standalone/.next/static
+        cp -r .next/static .next/standalone/.next/static
+        rm -rf .next/standalone/public
+        cp -r public .next/standalone/public 2>/dev/null || true
+        chown -R "$DEPLOY_USER":"$DEPLOY_USER" .next/standalone || true
+        log "✅ Standalone assets staged"
     fi
     
     # Ensure systemd units exist
     ensure_systemd_units
+
+    # Configure Nginx with same flow as bootstrap
+    log "🌐 Configuring Nginx..."
+    if [ "$FRONTEND_ONLY" -eq 1 ]; then
+cat >/etc/nginx/sites-available/$APP_NAME <<EOF
+server {
+    listen 80;
+    server_name www.$DOMAIN;
+    return 301 https://$DOMAIN\$request_uri;
+}
+
+server {
+    listen 80;
+    server_name $DOMAIN;
+
+    location /api {
+        proxy_pass http://127.0.0.1:8080;
+        proxy_http_version 1.1;
+        proxy_set_header Host \$host;
+        proxy_set_header X-Real-IP \$remote_addr;
+        proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto \$scheme;
+        proxy_connect_timeout 60s;
+        proxy_send_timeout 60s;
+        proxy_read_timeout 60s;
+    }
+
+    location /graphql {
+        proxy_pass http://127.0.0.1:8080;
+        proxy_http_version 1.1;
+        proxy_set_header Host \$host;
+        proxy_set_header X-Real-IP \$remote_addr;
+        proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto \$scheme;
+        proxy_connect_timeout 60s;
+        proxy_send_timeout 60s;
+        proxy_read_timeout 60s;
+    }
+
+    location / {
+        proxy_pass http://127.0.0.1:$FRONTEND_PORT;
+        proxy_http_version 1.1;
+        proxy_set_header Host \$host;
+        proxy_set_header X-Real-IP \$remote_addr;
+        proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto \$scheme;
+        proxy_connect_timeout 60s;
+        proxy_send_timeout 60s;
+        proxy_read_timeout 60s;
+    }
+}
+EOF
+    else
+cat >/etc/nginx/sites-available/$APP_NAME <<EOF
+server {
+    listen 80;
+    server_name www.$DOMAIN;
+    return 301 https://$DOMAIN\$request_uri;
+}
+
+server {
+    listen 80;
+    server_name $DOMAIN;
+
+    location /api {
+        proxy_pass http://127.0.0.1:8080;
+        proxy_http_version 1.1;
+        proxy_set_header Host \$host;
+        proxy_set_header X-Real-IP \$remote_addr;
+        proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto \$scheme;
+        proxy_connect_timeout 60s;
+        proxy_send_timeout 60s;
+        proxy_read_timeout 60s;
+    }
+
+    location / {
+        proxy_pass http://127.0.0.1:$FRONTEND_PORT;
+        proxy_http_version 1.1;
+        proxy_set_header Host \$host;
+        proxy_set_header X-Real-IP \$remote_addr;
+        proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto \$scheme;
+        proxy_connect_timeout 60s;
+        proxy_send_timeout 60s;
+        proxy_read_timeout 60s;
+    }
+}
+EOF
+    fi
+
+    ln -sf /etc/nginx/sites-available/$APP_NAME /etc/nginx/sites-enabled/
+    nginx -t && systemctl reload nginx
+    log "✅ Nginx configured"
 
     # Restart services
     log "🚀 Restarting services..."

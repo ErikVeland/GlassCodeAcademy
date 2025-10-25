@@ -55,6 +55,26 @@ const ModuleCard: React.FC<{
 
   return (
     <div className={`module-card-container ${isLocked ? 'locked' : ''} h-full`}>
+      {hasAchievements && (
+        <div className="absolute -top-4 right-3 z-30 flex gap-2 pointer-events-auto cursor-help">
+          {moduleAchievements.slice(0, 3).map((achievement, index) => (
+            <div
+              key={achievement.id}
+              className="w-7 h-7 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-full flex items-center justify-center border-2 border-white shadow-lg"
+              title={achievement.moduleId === module.slug ? `For ${module.title}: ${achievement.description}` : achievement.tier ? `Tier ${achievement.tier} achievement: ${achievement.description}` : achievement.description}
+            >
+              <span className="text-sm text-white font-bold">
+                {index === 0 ? '🏆' : index === 1 ? '🎖️' : '⭐'}
+              </span>
+            </div>
+          ))}
+          {moduleAchievements.length > 3 && (
+            <div className="w-7 h-7 bg-white/80 rounded-full flex items-center justify-center border-2 border-white shadow-lg" title={`${moduleAchievements.length - 3} more`}> 
+              <span className="text-sm text-gray-700 font-bold">+{moduleAchievements.length - 3}</span>
+            </div>
+          )}
+        </div>
+      )}
       <Link
         href={isLocked ? '#' : (module.routes?.overview || '#')}
         className={`glass-module-card group ${tierKey === 'core' ? 'tier-core' : tierKey === 'specialized' ? 'tier-specialized' : tierKey === 'quality' ? 'tier-quality' : 'tier-foundational'} ${isLocked ? 'opacity-60' : ''} pb-8 no-tier-strip`}
@@ -62,66 +82,26 @@ const ModuleCard: React.FC<{
         aria-disabled={isLocked}
         aria-describedby={`module-${module.slug}-description`}
         >
-        {/* Achievement badges overlay moved outside the Link to prevent overflow clipping */}
-
         {/* Decorative top strip using module brand gradient */}
         <div className={`absolute inset-x-0 top-0 h-[4px] ${theme.strip} z-10 pointer-events-none`} aria-hidden="true"></div>
 
-        {/* Achievements overlay in top-right */}
-        {hasAchievements && (
-          <div className="absolute top-3 right-3 z-20 flex gap-2">
-            {moduleAchievements.slice(0, 3).map((achievement, index) => (
-              <div
-                key={achievement.id}
-                className="w-6 h-6 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-full flex items-center justify-center border-2 border-white shadow-lg"
-                title={achievement.description}
-              >
-                <span className="text-xs text-white font-bold">
-                  {index === 0 ? '🏆' : index === 1 ? '🎖️' : '⭐'}
-                </span>
-              </div>
-            ))}
-            {moduleAchievements.length > 3 && (
-              <div className="w-6 h-6 bg-gradient-to-br from-purple-400 to-purple-600 rounded-full flex items-center justify-center border-2 border-white shadow-lg">
-                <span className="text-xs text-white font-bold">+{moduleAchievements.length - 3}</span>
-              </div>
-            )}
-          </div>
-        )}
         {/* Lock overlay for prerequisites */}
         {isLocked && (
           <div className="absolute inset-0 bg-gray-900/50 backdrop-blur-sm rounded-xl flex items-center justify-center z-5">
             <div className="text-center text-white">
               <div className="text-3xl mb-2">🔒</div>
               <p className="text-sm font-medium">Prerequisites Required</p>
-              <p className="text-xs opacity-80 mt-1">
-                Complete: {module.prerequisites.join(', ')}
-              </p>
             </div>
           </div>
         )}
 
-        <div className="module-header flex items-stretch gap-4 mb-4">
-          <div className="module-icon text-white text-5xl leading-none flex items-center">
-            {module.icon || '📚'}
-          </div>
+        <div className="flex items-center gap-3 mb-4">
+          <div className="text-3xl" aria-hidden="true">{module.icon || '💻'}</div>
           <div className="flex-1">
-            <h4 className="text-lg font-semibold text-fg mb-2 text-left" id={`module-${module.slug}-title`}>
-              {module.title || 'Untitled Module'}
-            </h4>
-            <div className="flex items-center gap-2 mb-2">
-              <span className={`px-2 py-1 rounded-full text-xs font-medium ${
-                (module.difficulty || 'Beginner') === 'Beginner' ? 'bg-green-500/20 text-fg' :
-                (module.difficulty || 'Beginner') === 'Intermediate' ? 'bg-yellow-500/20 text-fg' :
-                'bg-red-500/20 text-fg'
-              }`}>
-                {module.difficulty || 'Beginner'}
-              </span>
-              <span className={`px-2 py-1 rounded-full text-xs font-medium ${
-                moduleStatus === 'not-started' ? 'bg-surface-alt text-fg' :
-                moduleStatus === 'in-progress' ? 'bg-blue-500/20 text-fg' :
-                'bg-green-500/20 text-fg'
-              }`}>
+            <h3 className="text-lg font-semibold text-white mb-1">{module.title}</h3>
+            <div className="flex items-center gap-2">
+              <span className="px-2 py-1 bg-white/10 text-white rounded-full text-xs">{module.difficulty || 'Beginner'}</span>
+              <span className="px-2 py-1 bg-white/10 text-white rounded-full text-xs">
                 {moduleStatus === 'not-started' ? '⏳ Not Started' :
                  moduleStatus === 'in-progress' ? '🔄 In Progress' :
                  '✅ Completed'}
@@ -272,7 +252,8 @@ const TierSection: React.FC<{
               (moduleProgress.lessonsCompleted / moduleProgress.totalLessons) * 100 : 0;
               
             // Check for achievements related to this module
-            const moduleAchievements = achievements.filter(a => a.moduleId === module.slug || a.tier === tierKey);
+            const shortSlug = module.slug.includes('-') ? module.slug.split('-')[0] : module.slug;
+            const moduleAchievements = achievements.filter(a => (a.moduleId === module.slug || a.moduleId === shortSlug) || a.tier === tierKey);
             const hasAchievements = moduleAchievements.length > 0;
             
             // Determine module status
