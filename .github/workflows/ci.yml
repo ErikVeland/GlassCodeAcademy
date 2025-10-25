@@ -5,13 +5,14 @@ on:
     branches: [ main ]
   pull_request:
     branches: [ main ]
+  workflow_dispatch:
 
 jobs:
   backend-tests:
     uses: ./.github/workflows/backend-tests.yml
 
   backend-health:
-  	uses: ./.github/workflows/backend-health.yml
+    uses: ./.github/workflows/backend-health.yml
 
   code-quality:
     uses: ./.github/workflows/code-quality.yml
