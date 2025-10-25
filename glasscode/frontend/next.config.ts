@@ -6,7 +6,7 @@ const cspBase = [
   "default-src 'self'",
   // Allow Next.js runtime chunks and inline loader in production; keep dev permissive
   IS_PROD
-    ? "script-src 'self' https: blob:"
+    ? "script-src 'self' https: blob: 'unsafe-inline'"
     : "script-src 'self' 'unsafe-inline' 'unsafe-eval' http: https: blob:",
   // Styles: allow inline styles for Next and Tailwind in both envs
   IS_PROD
@@ -27,7 +27,7 @@ const cspBase = [
 const cspReportOnly = IS_PROD
   ? [
       "default-src 'self'",
-      "script-src 'self' https: blob:",
+      "script-src 'self' https: blob: 'unsafe-inline'",
       "style-src 'self' https: 'unsafe-inline'",
       "img-src 'self' data: blob: https:",
       "connect-src 'self' https: wss:",
