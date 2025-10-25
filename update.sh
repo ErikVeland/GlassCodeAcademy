@@ -222,7 +222,7 @@ ensure_backend_env() {
     upsert_or_append "$TMP_ENV" DB_PASSWORD "$DB_PASSWORD"
     upsert_or_append "$TMP_ENV" DB_SSL "$DB_SSL"
     upsert_or_append "$TMP_ENV" DATABASE_URL "$DATABASE_URL"
-    mv "$TMP_ENV" "$BACKEND_ENV_PATH"
+    install -m 0644 "$TMP_ENV" "$BACKEND_ENV_PATH"
 
     # Merge-write .env.production
     TMP_ENV2=$(mktemp 2>/dev/null || echo "$BACKEND_PROD_ENV_PATH.tmp")
@@ -237,7 +237,7 @@ ensure_backend_env() {
     upsert_or_append "$TMP_ENV2" DB_PASSWORD "$DB_PASSWORD"
     upsert_or_append "$TMP_ENV2" DB_SSL "$DB_SSL"
     upsert_or_append "$TMP_ENV2" DATABASE_URL "$DATABASE_URL"
-    mv "$TMP_ENV2" "$BACKEND_PROD_ENV_PATH"
+    install -m 0644 "$TMP_ENV2" "$BACKEND_PROD_ENV_PATH"
 
     log "✅ Backend env files ensured (.env and .env.production)"
 }

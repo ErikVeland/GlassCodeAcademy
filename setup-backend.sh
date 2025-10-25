@@ -119,7 +119,9 @@ NODE_ENV=$NODE_ENV_REMOTE
 # JWT_SECRET=your-super-secret-jwt-key
 # DB_SSL=false
 EOF
-run_remote_sudo "mkdir -p \$(dirname '$ENV_FILE') && mv /tmp/backend-node.env '$ENV_FILE'"
+# Compute env dir locally to avoid remote quoting issues
+ENV_DIR_LOCAL="$(dirname "$ENV_FILE")"
+run_remote_sudo "mkdir -p $ENV_DIR_LOCAL; if [ -f $ENV_FILE ]; then grep -qE ^PORT= $ENV_FILE || echo PORT=$PORT >> $ENV_FILE; grep -qE ^NODE_ENV= $ENV_FILE || echo NODE_ENV=$NODE_ENV_REMOTE >> $ENV_FILE; else install -m 0644 /tmp/backend-node.env $ENV_FILE; fi"
 
 # 8) Resolve node binary path for systemd
 NODE_BIN_REMOTE=$(ssh "$REMOTE" "command -v node || echo /usr/bin/node")
@@ -144,19 +146,20 @@ StandardError=journal
 [Install]
 WantedBy=multi-user.target
 EOF
-run_remote_sudo "mv /tmp/$SERVICE_NAME.service /etc/systemd/system/$SERVICE_NAME.service"
+run_remote_sudo "install -m 0644 /tmp/$SERVICE_NAME.service /etc/systemd/system/$SERVICE_NAME.service"
 
 # 10) Enable and start service
 log "Enabling and starting $SERVICE_NAME..."
-run_remote_sudo "systemctl daemon-reload && systemctl enable '$SERVICE_NAME' && systemctl restart '$SERVICE_NAME'"
+run_remote_sudo "systemctl daemon-reload && systemctl enable $SERVICE_NAME && systemctl restart $SERVICE_NAME"
 
 # 11) Show status and logs
 log "Fetching service status and recent logs..."
-run_remote_sudo "systemctl status '$SERVICE_NAME' --no-pager || true; journalctl -u '$SERVICE_NAME' -n 200 --no-pager || true"
+run_remote_sudo "systemctl status $SERVICE_NAME --no-pager || true; journalctl -u $SERVICE_NAME -n 200 --no-pager || true"
 
 # 12) Validate local health
 log "Validating local health endpoint on remote (http://127.0.0.1:$PORT/health)..."
-ssh "$REMOTE" "curl -fsS http://127.0.0.1:$PORT/health" || { err "Local health check failed."; exit 1; }
+# Retry up to 30s for service to bind, then dump diagnostics
+run_remote_sudo "for i in {1..30}; do curl -fsS http://127.0.0.1:$PORT/health && exit 0; sleep 1; done; echo 'Health failed after retries. Showing diagnostics:'; systemctl status $SERVICE_NAME --no-pager || true; journalctl -u $SERVICE_NAME -n 200 --no-pager || true; (command -v ss >/dev/null && ss -tlnp || (command -v netstat >/dev/null && netstat -tlnp || true)) || true; exit 1"
 log "Local health OK."
 
 # 13) Optional: Configure Nginx + SSL for API_DOMAIN

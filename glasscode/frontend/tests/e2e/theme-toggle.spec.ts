@@ -5,6 +5,8 @@ import { test, expect } from '@playwright/test';
 // `data-theme` on <html> based on selected theme and OS preference.
 
 test.describe('Theme toggle behavior', () => {
+  const homeUrl = process.env.PLAYWRIGHT_BASE_URL ? `${process.env.PLAYWRIGHT_BASE_URL}/` : '/';
+
   test('system respects OS light, and cycles through dark → light → system', async ({ page }) => {
     await page.emulateMedia({ colorScheme: 'light' });
     await page.addInitScript(() => {
@@ -14,9 +16,12 @@ test.describe('Theme toggle behavior', () => {
       } catch {}
     });
 
-    await page.goto('/');
+    await page.goto(homeUrl, { waitUntil: 'domcontentloaded' });
+    await page.waitForLoadState('networkidle');
     await page.waitForFunction(() => !!document.documentElement.getAttribute('data-theme'));
 
+    // Ensure the prehydration or React toggle is visible before assertions
+    await page.waitForSelector('[data-testid="theme-toggle"]', { state: 'visible', timeout: 15000 });
     // Prefer test-id based locator for explicit selection
     const toggle = page.getByTestId('theme-toggle');
     await expect(toggle).toBeVisible();
@@ -51,9 +56,12 @@ test.describe('Theme toggle behavior', () => {
       } catch {}
     });
 
-    await page.goto('/');
+    await page.goto(homeUrl, { waitUntil: 'domcontentloaded' });
+    await page.waitForLoadState('networkidle');
     await page.waitForFunction(() => !!document.documentElement.getAttribute('data-theme'));
 
+    // Ensure the prehydration or React toggle is visible before assertions
+    await page.waitForSelector('[data-testid="theme-toggle"]', { state: 'visible', timeout: 15000 });
     // Prefer test-id based locator for explicit selection
     const toggle = page.getByTestId('theme-toggle');
     await expect(toggle).toBeVisible();
