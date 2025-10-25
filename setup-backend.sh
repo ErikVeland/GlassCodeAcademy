@@ -79,6 +79,14 @@ log "Checking remote connectivity to $REMOTE..."
 ssh -o BatchMode=yes -o ConnectTimeout=10 "$REMOTE" 'echo ok' >/dev/null || {
   err "SSH connectivity failed. Ensure SSH keys/password and host are correct."; exit 1;
 }
+# Warn if remote sudo will prompt and no password provided
+if ! ssh "$REMOTE" "sudo -n true" >/dev/null 2>&1; then
+  if [ -z "$REMOTE_SUDO_PASS" ]; then
+    log "Remote sudo likely requires a password. Set REMOTE_SUDO_PASS for non-interactive use or configure passwordless sudo."
+  else
+    log "Using REMOTE_SUDO_PASS for remote sudo operations."
+  fi
+fi
 
 # Helper to run sudo on remote, optionally with password
 run_remote_sudo() {
@@ -211,5 +219,4 @@ fi
 log "Setup complete. Next steps:"
 log "- To switch to production: ssh $REMOTE 'sudo nano $ENV_FILE' and set NODE_ENV=production, DATABASE_URL, JWT_SECRET, DB_SSL as needed; then 'sudo systemctl restart $SERVICE_NAME'"
 log "- Validate: ssh $REMOTE 'curl -fsS http://127.0.0.1:$PORT/health'"
-log "- If configured: verify https://$API_DOMAIN/health responds 200
-","instruction":"Add SSH alias support and a helper to run remote sudo with optional password; use non-interactive file uploads for env and systemd unit files; adjust connectivity log and sudo usage across the script.","code_language":"bash","explanation":"Enhancing the setup script to use a local ssh alias and handle non-interactive sudo so it works with the user’s ssh glasscode setup."}
+log "- If configured: verify https://$API_DOMAIN/health responds 200"
