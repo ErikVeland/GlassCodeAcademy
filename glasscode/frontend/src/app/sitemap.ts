@@ -23,15 +23,9 @@ function resolveBaseUrl(): string {
   }
 }
 
-// Safely load modules; fall back to filesystem registry
+// Safely load modules; prefer filesystem first to avoid network errors during build
 async function loadModulesSafe(): Promise<Module[]> {
-  try {
-    const modules = await contentRegistry.getModules();
-    if (Array.isArray(modules) && modules.length > 0) return modules;
-  } catch {
-    // ignore and try filesystem fallback
-  }
-
+  // Prefer filesystem registry when available
   try {
     const fs = await import('node:fs/promises');
     const path = await import('node:path');
@@ -52,7 +46,15 @@ async function loadModulesSafe(): Promise<Module[]> {
       }
     }
   } catch {
-    // ignore fallback errors
+    // ignore filesystem fallback errors
+  }
+
+  // If filesystem didn’t yield results, fall back to contentRegistry with short timeout
+  try {
+    const modules = await withTimeout(contentRegistry.getModules(), 2000);
+    if (Array.isArray(modules) && modules.length > 0) return modules;
+  } catch {
+    // ignore and return empty below
   }
 
   return [];
