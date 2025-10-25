@@ -484,8 +484,8 @@ systemctl status glasscode-frontend
 # Check backend service
 systemctl status glasscode-dotnet
 
-# Check database connectivity
-curl -s http://127.0.0.1:8080/api/health
+# Check backend health
+curl -s http://127.0.0.1:8080/health
 
 # Check GraphQL endpoint
 curl -s -X POST http://127.0.0.1:8080/graphql -H "Content-Type: application/json" -d '{"query":"{ __typename }"}'

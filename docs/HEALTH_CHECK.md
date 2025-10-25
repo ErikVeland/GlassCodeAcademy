@@ -116,4 +116,4 @@ or
 - Verify required filenames match exactly.
 - Ensure JSON is valid; use `scripts/json-clean.sh` or `content/json-fix.sh`.
 - Confirm environment variable `GLASSCODE_CONTENT_PATH` points to the repo `content` folder in CI.
-- Check the health endpoint directly: `curl "http://127.0.0.1:8080/api/health?unlock=1"`.
+- Check the health endpoint directly: `curl -s http://127.0.0.1:8080/health`.
