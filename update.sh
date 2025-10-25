@@ -258,6 +258,84 @@ install_npm_deps() {
     log "✅ All Node.js dependencies installed"
 }
 
+# Ensure systemd unit files exist (backend/frontend) before restart
+ensure_systemd_units() {
+    # Backend unit
+    local be_unit="/etc/systemd/system/${APP_NAME}-backend.service"
+    if [ ! -f "$be_unit" ] && [ -d "$APP_DIR/backend-node" ]; then
+        log "⚙️  Creating backend systemd service at $be_unit"
+        cat >"$be_unit" <<EOF
+[Unit]
+Description=${APP_NAME} Node Backend
+After=network.target
+
+[Service]
+WorkingDirectory=${APP_DIR}/backend-node
+EnvironmentFile=${APP_DIR}/backend-node/.env
+ExecStart=/usr/bin/node ${APP_DIR}/backend-node/server.js
+Restart=always
+RestartSec=10
+User=${DEPLOY_USER}
+Environment=PORT=${BACKEND_PORT:-8080}
+Environment=NODE_ENV=production
+
+[Install]
+WantedBy=multi-user.target
+EOF
+        systemctl daemon-reload
+        systemctl unmask ${APP_NAME}-backend || true
+        systemctl enable ${APP_NAME}-backend || true
+    fi
+
+    # Frontend unit
+    local fe_unit="/etc/systemd/system/${APP_NAME}-frontend.service"
+    if [ ! -f "$fe_unit" ] && [ -d "$APP_DIR/glasscode/frontend" ]; then
+        log "⚙️  Creating frontend systemd service at $fe_unit"
+        if [ "$FRONTEND_ONLY" -eq 0 ]; then
+            cat >"$fe_unit" <<EOF
+[Unit]
+Description=${APP_NAME} Next.js Frontend
+After=network.target ${APP_NAME}-backend.service
+
+[Service]
+WorkingDirectory=${APP_DIR}/glasscode/frontend
+EnvironmentFile=${APP_DIR}/glasscode/frontend/.env.production
+ExecStart=/usr/bin/node .next/standalone/server.js -p ${FRONTEND_PORT}
+Restart=always
+RestartSec=10
+User=${DEPLOY_USER}
+Environment=NODE_ENV=production
+TimeoutStartSec=300
+
+[Install]
+WantedBy=multi-user.target
+EOF
+        else
+            cat >"$fe_unit" <<EOF
+[Unit]
+Description=${APP_NAME} Next.js Frontend
+After=network.target
+
+[Service]
+WorkingDirectory=${APP_DIR}/glasscode/frontend
+EnvironmentFile=${APP_DIR}/glasscode/frontend/.env.production
+ExecStart=/usr/bin/node .next/standalone/server.js -p ${FRONTEND_PORT}
+Restart=always
+RestartSec=10
+User=${DEPLOY_USER}
+Environment=NODE_ENV=production
+TimeoutStartSec=300
+
+[Install]
+WantedBy=multi-user.target
+EOF
+        fi
+        systemctl daemon-reload
+        systemctl unmask ${APP_NAME}-frontend || true
+        systemctl enable ${APP_NAME}-frontend || true
+    fi
+}
+
 rollback() {
     log "⏪ Rolling back to previous version..."
     if [ -n "${BACKUP_DIR:-}" ] && [ -d "$BACKUP_DIR" ]; then
@@ -328,16 +406,18 @@ main() {
         sudo -u "$DEPLOY_USER" npm run build
     fi
     
+    # Ensure systemd units exist
+    ensure_systemd_units
+
     # Restart services
     log "🚀 Restarting services..."
+    # Start backend first and wait for it unless skipped
     systemctl restart ${APP_NAME}-backend || true
-    systemctl restart ${APP_NAME}-frontend || true
-    
-    # Wait for backend
     if [ "$FRONTEND_ONLY" -eq 0 ] && [ "$SKIP_BACKEND_HEALTH" -eq 0 ]; then
         wait_for_service "${APP_NAME}-backend" || true
     fi
-    
+    # Start frontend after backend is healthy
+    systemctl restart ${APP_NAME}-frontend || true
     # Wait for frontend
     wait_for_service "${APP_NAME}-frontend" || true
     
