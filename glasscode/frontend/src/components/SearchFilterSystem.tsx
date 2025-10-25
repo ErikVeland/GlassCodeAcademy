@@ -59,7 +59,7 @@ const SearchInput: React.FC<{
         className="block w-full pl-10 pr-12 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-xl text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200"
       />
       <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
-        <span className="text-xs text-gray-500 dark:text-gray-400 bg-gray-100 dark:bg-gray-600 px-2 py-1 rounded">
+        <span className="text-xs text-gray-700 dark:text-gray-100 bg-gray-100 dark:bg-gray-700 px-2 py-1 rounded">
           ⌘K
         </span>
       </div>

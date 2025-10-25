@@ -384,7 +384,7 @@ main() {
     if [ -d "$APP_DIR/backend-node" ] && [ "$FRONTEND_ONLY" -eq 0 ]; then
         log "📊 Running database migrations..."
         cd "$APP_DIR/backend-node"
-        if ! sudo -u "$DEPLOY_USER" env NODE_ENV=production npm run migrate; then
+        if ! sudo -u "$DEPLOY_USER" env NODE_ENV=production DATABASE_URL="$DATABASE_URL" DB_DIALECT="$DB_DIALECT" DB_HOST="$DB_HOST" DB_PORT="$DB_PORT" DB_NAME="$DB_NAME" DB_USER="$DB_USER" DB_PASSWORD="$DB_PASSWORD" DB_SSL="$DB_SSL" npm run migrate; then
             log "❌ ERROR: Failed to run database migrations during update"
             exit 1
         fi

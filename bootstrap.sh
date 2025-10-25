@@ -706,7 +706,8 @@ add_if_missing_backend DB_USER "$DB_USER"
 add_if_missing_backend DB_PASSWORD "$DB_PASSWORD"
 add_if_missing_backend DB_SSL "$DB_SSL"
 add_if_missing_backend DATABASE_URL "$DATABASE_URL"
-    mv "$TMP_ENV" "$BACKEND_ENV_PATH"
+    install -m 0644 "$TMP_ENV" "$BACKEND_ENV_PATH"
+    chown "$DEPLOY_USER":"$DEPLOY_USER" "$BACKEND_ENV_PATH" || true
     log "✅ Backend .env updated (existing values preserved)"
 
     # Ensure backend .env.production is populated (merge-only)
@@ -750,7 +751,8 @@ add_if_missing_backend_prod DB_USER "$DB_USER"
 add_if_missing_backend_prod DB_PASSWORD "$DB_PASSWORD"
 add_if_missing_backend_prod DB_SSL "$DB_SSL"
 add_if_missing_backend_prod DATABASE_URL "$DATABASE_URL"
-    mv "$TMP_ENV2" "$BACKEND_PROD_ENV_PATH"
+    install -m 0644 "$TMP_ENV2" "$BACKEND_PROD_ENV_PATH"
+    chown "$DEPLOY_USER":"$DEPLOY_USER" "$BACKEND_PROD_ENV_PATH" || true
     log "✅ Backend .env.production updated (existing values preserved)"
 
     # Install backend dependencies
@@ -766,7 +768,7 @@ add_if_missing_backend_prod DATABASE_URL "$DATABASE_URL"
 
     # Run database migrations
     log "📊 Running database migrations..."
-    if ! sudo -u "$DEPLOY_USER" env NODE_ENV=production npm run migrate; then
+    if ! sudo -u "$DEPLOY_USER" env NODE_ENV=production DATABASE_URL="$DATABASE_URL" DB_DIALECT="$DB_DIALECT" DB_HOST="$DB_HOST" DB_PORT="$DB_PORT" DB_NAME="$DB_NAME" DB_USER="$DB_USER" DB_PASSWORD="$DB_PASSWORD" DB_SSL="$DB_SSL" npm run migrate; then
         log "❌ ERROR: Failed to run database migrations"
         exit 1
     fi
@@ -774,7 +776,7 @@ add_if_missing_backend_prod DATABASE_URL "$DATABASE_URL"
 
     # Seed content
     log "🌱 Seeding content..."
-    if ! sudo -u "$DEPLOY_USER" env NODE_ENV=production npm run seed; then
+    if ! sudo -u "$DEPLOY_USER" env NODE_ENV=production DATABASE_URL="$DATABASE_URL" DB_DIALECT="$DB_DIALECT" DB_HOST="$DB_HOST" DB_PORT="$DB_PORT" DB_NAME="$DB_NAME" DB_USER="$DB_USER" DB_PASSWORD="$DB_PASSWORD" DB_SSL="$DB_SSL" npm run seed; then
         log "❌ ERROR: Failed to seed content"
         exit 1
     fi
