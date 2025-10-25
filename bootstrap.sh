@@ -228,7 +228,23 @@ EOF
     fi
     add_if_missing_be_prod() {
         local key="$1"; local value="$2";
-        if ! grep -qE "^${key}=" "$TMP_BENV"; then
+        # Upsert: set when missing or present but empty; otherwise keep existing
+        if grep -qE "^${key}=" "$TMP_BENV"; then
+            local current="$(grep -E "^${key}=" "$TMP_BENV" | tail -n1 | cut -d'=' -f2- | tr -d '\r')"
+            if [ -z "$current" ]; then
+                awk -v k="$key" -v v="$value" '
+                BEGIN{found=0}
+                {
+                    if ($0 ~ "^"k"=") {
+                        found=1
+                        split($0, arr, "=")
+                        if (length(arr[2])==0) { print k"="v } else { print $0 }
+                    } else { print $0 }
+                }
+                END{ if(!found) print k"="v }
+                ' "$TMP_BENV" > "$TMP_BENV.tmp" && mv "$TMP_BENV.tmp" "$TMP_BENV"
+            fi
+        else
             printf "%s=%s\n" "$key" "$value" >> "$TMP_BENV"
         fi
     }
@@ -656,10 +672,28 @@ if [ "$FRONTEND_ONLY" -eq 0 ]; then
     fi
     add_if_missing_backend() {
         local key="$1"; local value="$2";
-        if ! grep -qE "^${key}=" "$TMP_ENV"; then
-            printf "%s=%s\n" "$key" "$value" >> "$TMP_ENV"
+        # Upsert: set when missing or present but empty; otherwise keep existing
+        if grep -qE "^${key}=" "$TMP_ENV"; then
+            local current="$(grep -E "^${key}=" "$TMP_ENV" | tail -n1 | cut -d'=' -f2- | tr -d '\r')"
+            if [ -z "$current" ]; then
+                awk -v k="$key" -v v="$value" '
+                BEGIN{found=0}
+                {
+                    if ($0 ~ "^"k"=") {
+                        found=1
+                        split($0, arr, "=")
+                        if (length(arr[2])==0) { print k"="v } else { print $0 }
+                    } else { print $0 }
+                }
+                END{ if(!found) print k"="v }
+                ' "$TMP_ENV" > "$TMP_ENV.tmp" && mv "$TMP_ENV.tmp" "$TMP_ENV"
+                eval "${key}=\"${value}\""
+            else
+                eval "${key}=\"${current}\""
+            fi
         else
-            eval "${key}=\"$( (grep -E \"^${key}=\" \"$TMP_ENV\" || true) | tail -n1 | cut -d'=' -f2- | tr -d '\r')\""
+            printf "%s=%s\n" "$key" "$value" >> "$TMP_ENV"
+            eval "${key}=\"${value}\""
         fi
     }
     add_if_missing_backend NODE_ENV "production"
@@ -686,7 +720,23 @@ add_if_missing_backend DATABASE_URL "$DATABASE_URL"
     fi
     add_if_missing_backend_prod() {
         local key="$1"; local value="$2";
-        if ! grep -qE "^${key}=" "$TMP_ENV2"; then
+        # Upsert: set when missing or present but empty; otherwise keep existing
+        if grep -qE "^${key}=" "$TMP_ENV2"; then
+            local current="$(grep -E "^${key}=" "$TMP_ENV2" | tail -n1 | cut -d'=' -f2- | tr -d '\r')"
+            if [ -z "$current" ]; then
+                awk -v k="$key" -v v="$value" '
+                BEGIN{found=0}
+                {
+                    if ($0 ~ "^"k"=") {
+                        found=1
+                        split($0, arr, "=")
+                        if (length(arr[2])==0) { print k"="v } else { print $0 }
+                    } else { print $0 }
+                }
+                END{ if(!found) print k"="v }
+                ' "$TMP_ENV2" > "$TMP_ENV2.tmp" && mv "$TMP_ENV2.tmp" "$TMP_ENV2"
+            fi
+        else
             printf "%s=%s\n" "$key" "$value" >> "$TMP_ENV2"
         fi
     }
