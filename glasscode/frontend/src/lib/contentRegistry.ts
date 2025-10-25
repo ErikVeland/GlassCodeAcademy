@@ -840,7 +840,11 @@ class ContentRegistryLoader {
 
         for (const url of candidates) {
           try {
-            const res = await fetch(url, { next: { revalidate: 3600 } });
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), 10000);
+            const res = await fetch(url, { signal: controller.signal, next: { revalidate: 3600 } }).finally(() => {
+              clearTimeout(timeoutId);
+            });
             if (!res.ok) {
               // For 5xx errors, we might want to retry
               if (res.status >= 500 && retryCount < maxRetries) {
@@ -854,7 +858,7 @@ class ContentRegistryLoader {
             const normalizedQuestions = Array.isArray(quiz.questions) ? quiz.questions.map(q => normalizeQuestion(q)) : [];
             return { ...quiz, questions: normalizedQuestions };
           } catch (err) {
-            // For network errors, we might want to retry
+            // For network/timeout errors, retry if allowed
             if (retryCount < maxRetries) {
               throw err;
             }

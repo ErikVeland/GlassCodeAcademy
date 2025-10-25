@@ -4,6 +4,9 @@
 
 // Cache the resolved server-side GraphQL endpoint to avoid repeated env resolution
 let SERVER_GRAPHQLEndpoint: string | undefined;
+// Cache strict origin/API helpers to avoid repeated env parsing in SSR hot paths
+let SERVER_PUBLIC_ORIGIN: string | undefined;
+let SERVER_API_BASE: string | undefined;
 
 /**
  * Get the GraphQL endpoint URL without hardcoded localhost.
@@ -50,15 +53,19 @@ export function getGraphQLEndpoint(): string {
 
 /** Strictly derive the public origin from env; throws if not configured. */
 export function getPublicOriginStrict(): string {
+  if (typeof window === 'undefined' && SERVER_PUBLIC_ORIGIN) return SERVER_PUBLIC_ORIGIN;
   const base = (process.env.NEXT_PUBLIC_BASE_URL?.trim() ||
     (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : '')).replace(/\/+$/, '');
   if (!base) throw new Error('Base URL not configured. Set NEXT_PUBLIC_BASE_URL or VERCEL_URL.');
+  if (typeof window === 'undefined') SERVER_PUBLIC_ORIGIN = base;
   return base;
 }
 
 /** Strictly derive API base from env; throws if not configured. */
 export function getApiBaseStrict(): string {
+  if (typeof window === 'undefined' && SERVER_API_BASE) return SERVER_API_BASE;
   const apiBase = (process.env.NEXT_PUBLIC_API_BASE || '').trim().replace(/\/+$/, '');
   if (!apiBase) throw new Error('API base not configured. Set NEXT_PUBLIC_API_BASE.');
+  if (typeof window === 'undefined') SERVER_API_BASE = apiBase;
   return apiBase;
 }
