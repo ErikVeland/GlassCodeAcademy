@@ -2,6 +2,9 @@
  * Utility functions for URL handling
  */
 
+// Cache the resolved server-side GraphQL endpoint to avoid repeated env resolution
+let SERVER_GRAPHQLEndpoint: string | undefined;
+
 /**
  * Get the GraphQL endpoint URL without hardcoded localhost.
  *
@@ -16,16 +19,24 @@ export function getGraphQLEndpoint(): string {
   // On the server, a relative URL like '/graphql' will throw ERR_INVALID_URL.
   // Derive an absolute URL using API base or public origin.
   if (typeof window === 'undefined') {
+    // Return cached value if available
+    if (SERVER_GRAPHQLEndpoint) return SERVER_GRAPHQLEndpoint;
+
     const apiBase = process.env.NEXT_PUBLIC_API_BASE?.trim()?.replace(/\/+$/, '');
-    if (apiBase) return `${apiBase}${path}`;
+    if (apiBase) {
+      SERVER_GRAPHQLEndpoint = `${apiBase}${path}`;
+      return SERVER_GRAPHQLEndpoint;
+    }
 
     try {
       const origin = getPublicOriginStrict();
-      return `${origin}${path}`;
+      SERVER_GRAPHQLEndpoint = `${origin}${path}`;
+      return SERVER_GRAPHQLEndpoint;
     } catch {
       try {
         const fallbackApiBase = getApiBaseStrict();
-        return `${fallbackApiBase}${path}`;
+        SERVER_GRAPHQLEndpoint = `${fallbackApiBase}${path}`;
+        return SERVER_GRAPHQLEndpoint;
       } catch {
         // Explicitly signal misconfiguration on server-side usage
         throw new Error('GraphQL endpoint configuration missing. Set NEXT_PUBLIC_API_BASE or NEXT_PUBLIC_BASE_URL/VERCEL_URL.');

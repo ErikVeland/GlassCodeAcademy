@@ -245,6 +245,9 @@ class ContentRegistryLoader {
 
         const controller = new AbortController();
         const timeoutId = setTimeout(() => controller.abort(), 10000);
+        const cleanupTimeout = () => {
+          try { clearTimeout(timeoutId as unknown as number); } catch {}
+        };
 
         for (const url of candidates) {
           try {
@@ -255,10 +258,7 @@ class ContentRegistryLoader {
             if (res.ok) {
               const data: unknown = await res.json();
               const modules = (data as ContentRegistry)?.modules;
-              console.debug('[ContentRegistry] candidate ok; modules length =', Array.isArray(modules) ? modules.length : 'n/a');
-              // Only accept responses that include non-empty modules
               if (Array.isArray(modules) && modules.length > 0) {
-                // Normalize routes to shortSlug-based paths to avoid legacy /modules links
                 const normalizedModules = await Promise.all(modules.map(async (m) => {
                   const slug = (m?.slug || '').toString();
                   const shortSlug = (await this.getShortSlugFromModuleSlug(slug)) || (slug.includes('-') ? slug.split('-')[0] : slug);
@@ -269,16 +269,14 @@ class ContentRegistryLoader {
                   };
                   return { ...m, routes };
                 }));
-
                 const normalized = { ...(data as ContentRegistry), modules: normalizedModules };
-                clearTimeout(timeoutId);
+                cleanupTimeout();
                 return normalized as ContentRegistry;
               }
-              // If modules are empty, try next candidate
             }
+            // Try next candidate
           } catch (err) {
-            console.warn('[ContentRegistry] candidate failed', url, err);
-            // For network errors, we might want to retry if this is not the last attempt
+            // For network errors, we might want to retry
             if (retryCount < maxRetries) {
               throw err;
             }
@@ -286,7 +284,7 @@ class ContentRegistryLoader {
           }
         }
 
-        clearTimeout(timeoutId);
+        cleanupTimeout();
 
         // Optional HTTP fallback to static registry.json when FS mode is preferred
         const contentMode = (process.env.GC_CONTENT_MODE || '').toLowerCase();
@@ -322,6 +320,7 @@ class ContentRegistryLoader {
                     return { ...m, routes };
                   }));
                   const normalized = { ...(data as ContentRegistry), modules: normalizedModules };
+                  cleanupTimeout();
                   return normalized as ContentRegistry;
                 }
               }
@@ -526,7 +525,7 @@ class ContentRegistryLoader {
         const isBrowser = typeof window !== 'undefined';
         if (isBrowser) {
           const shortSlug = await this.getShortSlugFromModuleSlug(moduleSlug) || moduleSlug;
-
+  
           // Check localStorage/sessionStorage caches first
           try {
             const localKey = `lessons_prefetch_${shortSlug}`;
@@ -561,7 +560,7 @@ class ContentRegistryLoader {
                 });
               }
             }
-
+  
             const sessionKey = `prefetch_lessons_${shortSlug}`;
             const sessionRaw = sessionStorage.getItem(sessionKey);
             if (sessionRaw) {
@@ -597,8 +596,8 @@ class ContentRegistryLoader {
           } catch {
             // ignore cache parsing errors
           }
-
-          const res = await fetch(`/api/content/lessons/${moduleSlug}`, { cache: 'no-store' });
+  
+          const res = await fetch(`/api/content/lessons/${shortSlug}`, { cache: 'no-store' });
           if (!res.ok) {
             // For 5xx errors, we might want to retry
             if (res.status >= 500 && retryCount < maxRetries) {
@@ -638,7 +637,7 @@ class ContentRegistryLoader {
             };
             return lesson;
           });
-
+  
           // Cache in sessionStorage and localStorage
           try {
             sessionStorage.setItem(`prefetch_lessons_${shortSlug}`, JSON.stringify({ timestamp: Date.now(), data: mapped }));
@@ -646,10 +645,10 @@ class ContentRegistryLoader {
           } catch {
             // Ignore storage errors
           }
-
+  
           return mapped;
         }
-
+  
         // Server-side: Node fetch requires absolute URLs. Try local origins proactively in dev.
         const candidates: string[] = [];
         try {
@@ -666,62 +665,69 @@ class ContentRegistryLoader {
           'http://localhost:3001/api/content/lessons/' + moduleSlug,
           'http://127.0.0.1:3001/api/content/lessons/' + moduleSlug
         );
-
-        for (const url of candidates) {
-          try {
-            const res = await fetch(url, { next: { revalidate: 3600 } });
-            if (!res.ok) {
-              // For 5xx errors, we might want to retry
-              if (res.status >= 500 && retryCount < maxRetries) {
-                throw new Error(`Server error: ${res.status}`);
+  
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 10000);
+        try {
+          for (const url of candidates) {
+            try {
+              const res = await fetch(url, { signal: controller.signal, next: { revalidate: 3600 } });
+              if (!res.ok) {
+                // For 5xx errors, we might want to retry
+                if (res.status >= 500 && retryCount < maxRetries) {
+                  throw new Error(`Server error: ${res.status}`);
+                }
+                continue;
               }
+              const data: unknown = await res.json();
+              type PartialLessonSSR = Lesson & Record<string, unknown>;
+              const lessonsArr: PartialLessonSSR[] = Array.isArray(data)
+                ? (data as PartialLessonSSR[])
+                : (Array.isArray((data as { lessons?: PartialLessonSSR[] })?.lessons) ? ((data as { lessons?: PartialLessonSSR[] }).lessons as PartialLessonSSR[]) : []);
+              const mapped = lessonsArr.map((l, i) => {
+                const orderVal = typeof l.order === 'number' ? l.order : i + 1;
+                const lApi = l as { codeExample?: unknown; codeExplanation?: unknown; code?: { example?: unknown; explanation?: unknown } };
+                // Normalize codeExample/codeExplanation to strings to satisfy Lesson type
+                const codeExampleStr = typeof lApi.codeExample === 'string' ? lApi.codeExample : undefined;
+                const codeExplanationStr = typeof lApi.codeExplanation === 'string' ? lApi.codeExplanation : undefined;
+                const code: Lesson['code'] | undefined =
+                  lApi.code && typeof lApi.code === 'object'
+                    ? {
+                        example: typeof lApi.code.example === 'string' ? lApi.code.example : undefined,
+                        explanation: typeof lApi.code.explanation === 'string' ? lApi.code.explanation : undefined,
+                      }
+                    : (codeExampleStr || codeExplanationStr ? { 
+                        example: codeExampleStr || '', 
+                        explanation: codeExplanationStr || '' 
+                      } : undefined);
+                const lesson: Lesson = {
+                  ...l,
+                  order: orderVal,
+                  code,
+                  intro: typeof l.intro === 'string' ? l.intro : '',
+                  pitfalls: Array.isArray(l.pitfalls) ? l.pitfalls : [],
+                  exercises: Array.isArray(l.exercises) ? l.exercises : [],
+                  objectives: Array.isArray(l.objectives) ? l.objectives : [],
+                };
+                return lesson;
+              });
+              return mapped;
+            } catch (err) {
+              // For network errors, we might want to retry
+              if (retryCount < maxRetries) {
+                throw err;
+              }
+              // try next candidate
               continue;
             }
-            const data: unknown = await res.json();
-            type PartialLessonSSR = Lesson & Record<string, unknown>;
-            const lessonsArr: PartialLessonSSR[] = Array.isArray(data)
-              ? (data as PartialLessonSSR[])
-              : (Array.isArray((data as { lessons?: PartialLessonSSR[] })?.lessons) ? ((data as { lessons?: PartialLessonSSR[] }).lessons as PartialLessonSSR[]) : []);
-            return lessonsArr.map((l, i) => {
-              const orderVal = typeof l.order === 'number' ? l.order : i + 1;
-              const lApi = l as { codeExample?: unknown; codeExplanation?: unknown; code?: { example?: unknown; explanation?: unknown } };
-              // Normalize codeExample/codeExplanation to strings to satisfy Lesson type
-              const codeExampleStr = typeof lApi.codeExample === 'string' ? lApi.codeExample : undefined;
-              const codeExplanationStr = typeof lApi.codeExplanation === 'string' ? lApi.codeExplanation : undefined;
-              const code: Lesson['code'] | undefined =
-                lApi.code && typeof lApi.code === 'object'
-                  ? {
-                      example: typeof lApi.code.example === 'string' ? lApi.code.example : undefined,
-                      explanation: typeof lApi.code.explanation === 'string' ? lApi.code.explanation : undefined,
-                    }
-                  : (codeExampleStr || codeExplanationStr ? { 
-                      example: codeExampleStr || '', 
-                      explanation: codeExplanationStr || '' 
-                    } : undefined);
-              const lesson: Lesson = {
-                ...l,
-                order: orderVal,
-                code,
-                intro: typeof l.intro === 'string' ? l.intro : '',
-                pitfalls: Array.isArray(l.pitfalls) ? l.pitfalls : [],
-                exercises: Array.isArray(l.exercises) ? l.exercises : [],
-                objectives: Array.isArray(l.objectives) ? l.objectives : [],
-              };
-              return lesson;
-            });
-          } catch (err) {
-            // For network errors, we might want to retry
-            if (retryCount < maxRetries) {
-              throw err;
-            }
-            // try next candidate
-            continue;
           }
+        } finally {
+          clearTimeout(timeoutId);
         }
-
+  
         // Removed server-side filesystem fallback to avoid bundling fs/path in client-shared code
         // Instead, rely solely on API/HTTP candidates above. If none succeed, return empty.
-
+  
         return [];
       } catch (err) {
         console.error(`getModuleLessons(${moduleSlug}) attempt ${retryCount + 1} failed:`, err);
