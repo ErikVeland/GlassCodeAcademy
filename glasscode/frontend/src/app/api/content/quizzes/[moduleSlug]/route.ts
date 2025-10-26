@@ -9,7 +9,9 @@ async function fetchQuizFromDatabase(moduleSlug: string) {
   try {
     // Try multiple API base candidates in case of misconfiguration
     const primaryBase = (() => { try { return getApiBaseStrict(); } catch { return 'http://127.0.0.1:8080'; } })();
-    const bases = Array.from(new Set([primaryBase, 'http://127.0.0.1:8080']));
+    const isProd = process.env.NODE_ENV === 'production';
+    const prodFallbacks = isProd ? ['https://api.glasscode.academy'] : [];
+    const bases = Array.from(new Set([primaryBase, ...prodFallbacks, 'http://127.0.0.1:8080']));
 
     for (const apiBase of bases) {
       try {

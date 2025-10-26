@@ -19,7 +19,6 @@ import { EXTERNAL_LINKS } from '@/lib/appConfig';
 import Script from 'next/script';
 import ApolloDevMessages from '../components/ApolloDevMessages';
 import ConsoleBanner from '../components/ConsoleBanner';
-import { headers } from 'next/headers';
 import BackendReadinessWrapper from '../components/BackendReadinessWrapper';
 
 export const runtime = 'nodejs';
@@ -38,19 +37,13 @@ export const metadata: Metadata = {
 };
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
-  const cookieHeader = (await headers()).get('cookie') || '';
-  const cookieThemeMatch = cookieHeader.match(/(?:^|; )gc-theme=([^;]+)/);
-  const cookieTheme = cookieThemeMatch ? decodeURIComponent(cookieThemeMatch[1]) : undefined;
-  const initialTheme = cookieTheme === 'dark' || cookieTheme === 'light' ? cookieTheme : 'light';
   return (
-    <html lang="en" className={initialTheme} data-theme={initialTheme}>
+    <html lang="en">
       <head>
         {/* Preconnect to external resources */}
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         {/* Inline script to avoid initial flash of wrong theme */}
         <Script src="/assets/theme-init.js" strategy="beforeInteractive" />
-
-
       </head>
       <body className={"antialiased min-h-screen relative theme-base"}>
         <ApolloWrapper>
