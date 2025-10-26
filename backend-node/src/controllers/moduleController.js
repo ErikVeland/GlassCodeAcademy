@@ -2,6 +2,7 @@ const { getModuleById, getLessonsByModuleId, getAllModules } = require('../servi
 const { Module, Lesson, LessonQuiz } = require('../models');
 const { resolveSlug, isShortSlug, isValidShortSlug } = require('../utils/slugMapping');
 const winston = require('winston');
+const { Op } = require('sequelize');
 
 // Create a logger instance
 const logger = winston.createLogger({
@@ -172,7 +173,7 @@ const getQuizzesByModuleSlugController = async (req, res) => {
     
     const quizzes = await LessonQuiz.findAll({
       where: {
-        lesson_id: lessonIds,
+        lesson_id: { [Op.in]: lessonIds },
         isPublished: true
       },
       order: [['sort_order', 'ASC']]
