@@ -286,12 +286,11 @@ class ContentRegistryLoader {
 
         cleanupTimeout();
 
-        // Optional HTTP fallback to static registry.json when FS mode is preferred
+        // HTTP fallback to static registry.json (unconditional unless DB-only mode set)
         const contentMode = (process.env.GC_CONTENT_MODE || '').toLowerCase();
-        const preferFs = contentMode === 'fs' || contentMode === 'file' || contentMode === 'static';
         const strictDbOnly = contentMode === 'db';
 
-        if (preferFs && !strictDbOnly) {
+        if (!strictDbOnly) {
           const registryCandidates = isBrowser
             ? ['/registry.json']
             : [
@@ -308,7 +307,9 @@ class ContentRegistryLoader {
               if (res.ok) {
                 const data: unknown = await res.json();
                 const modules = (data as ContentRegistry)?.modules;
-                if (Array.isArray(modules) && modules.length > 0) {
+                // Accept registry even if modules array is empty; caller can read from tiers.
+                const hasModules = Array.isArray(modules) && modules.length > 0;
+                if (hasModules) {
                   const normalizedModules = await Promise.all(modules.map(async (m) => {
                     const slug = (m?.slug || '').toString();
                     const shortSlug = (await this.getShortSlugFromModuleSlug(slug)) || (slug.includes('-') ? slug.split('-')[0] : slug);
@@ -322,6 +323,9 @@ class ContentRegistryLoader {
                   const normalized = { ...(data as ContentRegistry), modules: normalizedModules };
                   cleanupTimeout();
                   return normalized as ContentRegistry;
+                } else {
+                  cleanupTimeout();
+                  return data as ContentRegistry;
                 }
               }
             } catch (err) {
