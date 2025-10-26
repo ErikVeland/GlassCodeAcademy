@@ -5,21 +5,17 @@ set -euo pipefail
 # This script sets up the complete GlassCode Academy environment on a fresh Ubuntu/Debian system
 # It handles both backend (Node.js) and frontend (Next.js) setup with proper systemd services
 
-### Load configuration from .env file ###
-ENV_FILE="./.env"
+### Load production configuration (.env.production only) ###
+ENV_FILE="./.env.production"
 if [ -f "$ENV_FILE" ]; then
+    set -a
     source "$ENV_FILE"
-    echo "✅ Loaded configuration from $ENV_FILE"
+    set +a
+    echo "✅ Loaded production configuration from $ENV_FILE"
 else
-    echo "⚠️  WARNING: Configuration file $ENV_FILE not found, using defaults"
-    
-    # Default configuration
-    APP_NAME="glasscode"
-    DEPLOY_USER="deploy"
-    APP_DIR="/srv/academy"
-    REPO="git@github.com:ErikVeland/GlassCodeAcademy.git"
-    DOMAIN="glasscode.academy"
-    EMAIL="erik@veland.au"
+    echo "❌ ERROR: Production configuration file $ENV_FILE not found. This script is for production only."
+    echo "Create $ENV_FILE with required keys: APP_NAME, DEPLOY_USER, APP_DIR, REPO, DOMAIN, EMAIL, NEXT_PUBLIC_API_BASE, NEXT_PUBLIC_BASE_URL, NEXTAUTH_URL, NEXTAUTH_SECRET."
+    exit 1
 fi
 
 echo "🚀 Bootstrap Script for $APP_NAME"
@@ -138,7 +134,7 @@ done
 export FRONTEND_ONLY FRONTEND_PORT FAST_MODE SKIP_BACKEND_HEALTH SKIP_LINT SKIP_TYPECHECK SKIP_CONTENT_VERIFICATION VALIDATE_JSON_CONTENT ENV_ONLY
 log "⚙️  Mode: FRONTEND_ONLY=$FRONTEND_ONLY, FAST_MODE=$FAST_MODE, FRONTEND_PORT=$FRONTEND_PORT, SKIP_CONTENT_VERIFICATION=$SKIP_CONTENT_VERIFICATION, VALIDATE_JSON_CONTENT=$VALIDATE_JSON_CONTENT, ENV_ONLY=$ENV_ONLY"
 
-# Database configuration defaults (overridable via .env)
+# Database configuration defaults (from .env.production)
 DB_DIALECT="${DB_DIALECT:-postgres}"
 DB_HOST="${DB_HOST:-localhost}"
 DB_PORT="${DB_PORT:-5432}"
@@ -147,10 +143,10 @@ DB_USER="${DB_USER:-postgres}"
 DB_PASSWORD="${DB_PASSWORD:-postgres}"
 DB_SSL="${DB_SSL:-false}"
 
-# Interactive prompts for missing DB settings (prefer existing backend .env)
+# Interactive prompts for missing DB settings (prefer existing backend .env.production)
 prompt_or_default_backend() {
     local var="$1"; local def="$2"; local label="$3";
-    local envpath="${APP_DIR}/backend-node/.env"; local existing=""; local current="${!var:-}"; local input="";
+    local envpath="${APP_DIR}/backend-node/.env.production"; local existing=""; local current="${!var:-}"; local input="";
     if [ -f "$envpath" ]; then
         existing=$( (grep -E "^${var}=" "$envpath" || true) | tail -n1 | cut -d'=' -f2- | tr -d '\r')
     fi
@@ -205,18 +201,7 @@ if [ "${ENV_ONLY:-0}" -eq 1 ]; then
     DATABASE_URL="postgresql://${DB_USER}:${DB_PASSWORD}@${DB_HOST}:${DB_PORT}/${DB_NAME}"
 
     mkdir -p "$TARGET_DIR/backend-node"
-    cat >"$TARGET_DIR/backend-node/.env" <<EOF
-NODE_ENV=production
-PORT=${BACKEND_PORT:-8080}
-DATABASE_URL=${DATABASE_URL}
-DB_DIALECT=${DB_DIALECT}
-DB_HOST=${DB_HOST}
-DB_PORT=${DB_PORT}
-DB_NAME=${DB_NAME}
-DB_USER=${DB_USER}
-DB_PASSWORD=${DB_PASSWORD}
-DB_SSL=${DB_SSL}
-EOF
+# Skipping local .env creation; enforce .env.production-only for production
 
     # Ensure backend .env.production exists and includes the same keys (merge-only)
     BACKEND_PROD_ENV="$TARGET_DIR/backend-node/.env.production"
@@ -285,10 +270,9 @@ DEMO_USERS_JSON=${DEMO_USERS_JSON:-}
 EOF
 
     log "✅ Environment files written:"
-    log " - $TARGET_DIR/backend-node/.env"
-    log " - $TARGET_DIR/backend-node/.env.production"
-    log " - $TARGET_DIR/glasscode/frontend/.env.production"
-    exit 0
+log " - $TARGET_DIR/backend-node/.env.production"
+log " - $TARGET_DIR/glasscode/frontend/.env.production"
+exit 0
 fi
 
 # Perform environment preflight checks and install missing base tools
@@ -661,55 +645,7 @@ if [ "$FRONTEND_ONLY" -eq 0 ]; then
     log "🏗️  Setting up backend..."
     cd "$APP_DIR/backend-node"
 
-    # Ensure backend .env exists and is populated (merge without overwriting existing)
-    log "🧾 Ensuring backend .env is populated..."
-    BACKEND_ENV_PATH="$APP_DIR/backend-node/.env"
-    TMP_ENV=$(mktemp 2>/dev/null || echo "$BACKEND_ENV_PATH.tmp")
-    if [ -f "$BACKEND_ENV_PATH" ]; then
-        cp "$BACKEND_ENV_PATH" "$TMP_ENV"
-    else
-        : > "$TMP_ENV"
-    fi
-    add_if_missing_backend() {
-        local key="$1"; local value="$2";
-        # Upsert: set when missing or present but empty; otherwise keep existing
-        if grep -qE "^${key}=" "$TMP_ENV"; then
-            local current="$(grep -E "^${key}=" "$TMP_ENV" | tail -n1 | cut -d'=' -f2- | tr -d '\r')"
-            if [ -z "$current" ]; then
-                awk -v k="$key" -v v="$value" '
-                BEGIN{found=0}
-                {
-                    if ($0 ~ "^"k"=") {
-                        found=1
-                        split($0, arr, "=")
-                        if (length(arr[2])==0) { print k"="v } else { print $0 }
-                    } else { print $0 }
-                }
-                END{ if(!found) print k"="v }
-                ' "$TMP_ENV" > "$TMP_ENV.tmp" && mv "$TMP_ENV.tmp" "$TMP_ENV"
-                eval "${key}=\"${value}\""
-            else
-                eval "${key}=\"${current}\""
-            fi
-        else
-            printf "%s=%s\n" "$key" "$value" >> "$TMP_ENV"
-            eval "${key}=\"${value}\""
-        fi
-    }
-    add_if_missing_backend NODE_ENV "production"
-    add_if_missing_backend PORT "${BACKEND_PORT:-8080}"
-    add_if_missing_backend DB_DIALECT "$DB_DIALECT"
-add_if_missing_backend DB_HOST "$DB_HOST"
-add_if_missing_backend DB_PORT "$DB_PORT"
-add_if_missing_backend DB_NAME "$DB_NAME"
-add_if_missing_backend DB_USER "$DB_USER"
-add_if_missing_backend DB_PASSWORD "$DB_PASSWORD"
-add_if_missing_backend DB_SSL "$DB_SSL"
-add_if_missing_backend DATABASE_URL "$DATABASE_URL"
-    install -m 0644 "$TMP_ENV" "$BACKEND_ENV_PATH"
-    chown "$DEPLOY_USER":"$DEPLOY_USER" "$BACKEND_ENV_PATH" || true
-    log "✅ Backend .env updated (existing values preserved)"
-
+    # Skipping backend .env population; production uses .env.production exclusively
     # Ensure backend .env.production is populated (merge-only)
     log "🧾 Ensuring backend .env.production is populated..."
     BACKEND_PROD_ENV_PATH="$APP_DIR/backend-node/.env.production"
@@ -805,7 +741,7 @@ After=network.target
 
 [Service]
 WorkingDirectory=$APP_DIR/backend-node
-EnvironmentFile=$APP_DIR/backend-node/.env
+EnvironmentFile=$APP_DIR/backend-node/.env.production
 ExecStart=/usr/bin/node $APP_DIR/backend-node/server.js
 Restart=always
 RestartSec=10

@@ -4,18 +4,17 @@
 
 set -euo pipefail
 
-### Load configuration from .env file ###
-ENV_FILE="./.env"
+### Load production configuration (.env.production only) ###
+ENV_FILE="./.env.production"
 if [ -f "$ENV_FILE" ]; then
+    set -a
     source "$ENV_FILE"
-    echo "✅ Loaded configuration from $ENV_FILE"
+    set +a
+    echo "✅ Loaded production configuration from $ENV_FILE"
 else
-    echo "⚠️  WARNING: Configuration file $ENV_FILE not found, using defaults"
-    
-    APP_NAME="glasscode"
-    DEPLOY_USER="deploy"
-    APP_DIR="/srv/academy"
-    DOMAIN="glasscode.academy"
+    echo "❌ ERROR: Production configuration file $ENV_FILE not found. This script is for production only."
+    echo "Create $ENV_FILE with required keys: APP_NAME, DEPLOY_USER, APP_DIR, DOMAIN and frontend NEXT_PUBLIC_* variables."
+    exit 1
 fi
 
 echo "🔄 Update Script for $APP_NAME (Node.js version)"
@@ -167,7 +166,6 @@ ensure_backend_env() {
     fi
     cd "$APP_DIR/backend-node"
 
-    BACKEND_ENV_PATH="$APP_DIR/backend-node/.env"
     BACKEND_PROD_ENV_PATH="$APP_DIR/backend-node/.env.production"
 
     # Defaults
@@ -182,15 +180,15 @@ ensure_backend_env() {
     # Helper to read existing key
     read_existing() { local file="$1"; local key="$2"; [ -f "$file" ] && grep -E "^${key}=" "$file" | tail -n1 | cut -d'=' -f2- | tr -d '\r'; }
 
-    # Resolve effective values preferring production env, then dev env, then current env, then defaults
-    DB_DIALECT="${DB_DIALECT:-$(read_existing "$BACKEND_PROD_ENV_PATH" DB_DIALECT || read_existing "$BACKEND_ENV_PATH" DB_DIALECT || echo "$DB_DIALECT_DEFAULT")}"
-    DB_HOST="${DB_HOST:-$(read_existing "$BACKEND_PROD_ENV_PATH" DB_HOST || read_existing "$BACKEND_ENV_PATH" DB_HOST || echo "$DB_HOST_DEFAULT")}"
-    DB_PORT="${DB_PORT:-$(read_existing "$BACKEND_PROD_ENV_PATH" DB_PORT || read_existing "$BACKEND_ENV_PATH" DB_PORT || echo "$DB_PORT_DEFAULT")}"
-    DB_NAME="${DB_NAME:-$(read_existing "$BACKEND_PROD_ENV_PATH" DB_NAME || read_existing "$BACKEND_ENV_PATH" DB_NAME || echo "$DB_NAME_DEFAULT")}"
-    DB_USER="${DB_USER:-$(read_existing "$BACKEND_PROD_ENV_PATH" DB_USER || read_existing "$BACKEND_ENV_PATH" DB_USER || echo "$DB_USER_DEFAULT")}"
-    DB_PASSWORD="${DB_PASSWORD:-$(read_existing "$BACKEND_PROD_ENV_PATH" DB_PASSWORD || read_existing "$BACKEND_ENV_PATH" DB_PASSWORD || echo "$DB_PASSWORD_DEFAULT")}"
-    DB_SSL="${DB_SSL:-$(read_existing "$BACKEND_PROD_ENV_PATH" DB_SSL || read_existing "$BACKEND_ENV_PATH" DB_SSL || echo "$DB_SSL_DEFAULT")}"
-    DATABASE_URL="${DATABASE_URL:-$(read_existing "$BACKEND_PROD_ENV_PATH" DATABASE_URL || read_existing "$BACKEND_ENV_PATH" DATABASE_URL || echo "")}"
+    # Resolve effective values preferring production env, then current env, then defaults
+    DB_DIALECT="${DB_DIALECT:-$(read_existing "$BACKEND_PROD_ENV_PATH" DB_DIALECT || echo "$DB_DIALECT_DEFAULT")}"
+    DB_HOST="${DB_HOST:-$(read_existing "$BACKEND_PROD_ENV_PATH" DB_HOST || echo "$DB_HOST_DEFAULT")}"
+    DB_PORT="${DB_PORT:-$(read_existing "$BACKEND_PROD_ENV_PATH" DB_PORT || echo "$DB_PORT_DEFAULT")}"
+    DB_NAME="${DB_NAME:-$(read_existing "$BACKEND_PROD_ENV_PATH" DB_NAME || echo "$DB_NAME_DEFAULT")}"
+    DB_USER="${DB_USER:-$(read_existing "$BACKEND_PROD_ENV_PATH" DB_USER || echo "$DB_USER_DEFAULT")}"
+    DB_PASSWORD="${DB_PASSWORD:-$(read_existing "$BACKEND_PROD_ENV_PATH" DB_PASSWORD || echo "$DB_PASSWORD_DEFAULT")}"
+    DB_SSL="${DB_SSL:-$(read_existing "$BACKEND_PROD_ENV_PATH" DB_SSL || echo "$DB_SSL_DEFAULT")}"
+    DATABASE_URL="${DATABASE_URL:-$(read_existing "$BACKEND_PROD_ENV_PATH" DATABASE_URL || echo "")}"
 
     if [ -z "$DATABASE_URL" ]; then
         case "$DB_DIALECT" in
@@ -208,22 +206,7 @@ ensure_backend_env() {
 
     export DB_DIALECT DB_HOST DB_PORT DB_NAME DB_USER DB_PASSWORD DB_SSL DATABASE_URL
 
-    # Merge-write .env
-    TMP_ENV=$(mktemp 2>/dev/null || echo "$BACKEND_ENV_PATH.tmp")
-    if [ -f "$BACKEND_ENV_PATH" ]; then cp "$BACKEND_ENV_PATH" "$TMP_ENV"; else : > "$TMP_ENV"; fi
-    upsert_or_append() { local f="$1"; local k="$2"; local v="$3"; awk -v k="$k" -v v="$v" 'BEGIN{found=0} { if ($0 ~ "^"k"=") { found=1; split($0, arr, "="); if (length(arr[2])==0) print k"="v; else print $0 } else print } END { if(!found) print k"="v }' "$f" > "$f.tmp" && mv "$f.tmp" "$f"; }
-    upsert_or_append "$TMP_ENV" NODE_ENV "production"
-    upsert_or_append "$TMP_ENV" PORT "${BACKEND_PORT:-8080}"
-    upsert_or_append "$TMP_ENV" DB_DIALECT "$DB_DIALECT"
-    upsert_or_append "$TMP_ENV" DB_HOST "$DB_HOST"
-    upsert_or_append "$TMP_ENV" DB_PORT "$DB_PORT"
-    upsert_or_append "$TMP_ENV" DB_NAME "$DB_NAME"
-    upsert_or_append "$TMP_ENV" DB_USER "$DB_USER"
-    upsert_or_append "$TMP_ENV" DB_PASSWORD "$DB_PASSWORD"
-    upsert_or_append "$TMP_ENV" DB_SSL "$DB_SSL"
-    upsert_or_append "$TMP_ENV" DATABASE_URL "$DATABASE_URL"
-    install -m 0644 "$TMP_ENV" "$BACKEND_ENV_PATH"
-
+    # Skipping dev .env write; production uses .env.production exclusively
     # Merge-write .env.production
     TMP_ENV2=$(mktemp 2>/dev/null || echo "$BACKEND_PROD_ENV_PATH.tmp")
     if [ -f "$BACKEND_PROD_ENV_PATH" ]; then cp "$BACKEND_PROD_ENV_PATH" "$TMP_ENV2"; else : > "$TMP_ENV2"; fi
@@ -239,7 +222,7 @@ ensure_backend_env() {
     upsert_or_append "$TMP_ENV2" DATABASE_URL "$DATABASE_URL"
     install -m 0644 "$TMP_ENV2" "$BACKEND_PROD_ENV_PATH"
 
-    log "✅ Backend env files ensured (.env and .env.production)"
+    log "✅ Backend production env ensured (.env.production)"
 }
 
 install_npm_deps() {
@@ -271,7 +254,7 @@ After=network.target
 
 [Service]
 WorkingDirectory=${APP_DIR}/backend-node
-EnvironmentFile=${APP_DIR}/backend-node/.env
+EnvironmentFile=${APP_DIR}/backend-node/.env.production
 ExecStart=/usr/bin/node ${APP_DIR}/backend-node/server.js
 Restart=always
 RestartSec=10

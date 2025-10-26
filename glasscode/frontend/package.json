@@ -6,7 +6,7 @@
     "dev": "next dev",
     "build": "NODE_ENV=production node scripts/copy-content.js && NODE_ENV=production node scripts/prepare-next.js && NODE_ENV=production next build",
     "start": "next start",
-    "start:next": "next start",
+    "start:next": "if [ -f .next/standalone/server.js ]; then node .next/standalone/server.js; else next start; fi",
     "lint": "next lint",
     "prewarm:ssg": "node scripts/prewarm-ssg.js",
     "typecheck": "tsc -p ./tsconfig.json --noEmit",

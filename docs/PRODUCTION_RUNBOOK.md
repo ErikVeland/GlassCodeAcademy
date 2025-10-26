@@ -19,10 +19,10 @@ This runbook documents the full deployment flow discovered and validated during 
   - `--skip-backend-health`: don’t block on backend health.
   - `--skip-lint`, `--skip-typecheck`: skip lint/TS during build.
   - `--skip-content-verification` / `--validate-json-content`: control content checks.
-  - `--env-only`: only write `.env` and `.env.production` files; no build/run.
+  - `--env-only`: only write `.env.production` files; no build/run.
   - `--port <N>`: set frontend start port.
 - Repo management: clones `REPO` into `APP_DIR` if missing; otherwise `git reset --hard && git pull`.
-- Backend env: populates `backend-node/.env` with DB settings and ports; computes `DATABASE_URL` when missing.
+- Backend env: populates `backend-node/.env.production` with DB settings and ports; computes `DATABASE_URL` when missing.
 - Frontend build: robust build with retries and cache cleaning.
 
 ### update.sh
@@ -39,7 +39,7 @@ This runbook documents the full deployment flow discovered and validated during 
 
 ## Environment Requirements
 
-### Deployment Basics (.env)
+### Deployment Basics (.env.production)
 - `APP_NAME`, `DEPLOY_USER`, `APP_DIR`, `REPO`, `DOMAIN`, `EMAIL` (for Let’s Encrypt), `FAST_MODE`.
 
 ### Frontend (.env.production)
@@ -48,7 +48,7 @@ This runbook documents the full deployment flow discovered and validated during 
 - `NEXTAUTH_URL`, `NEXTAUTH_SECRET` (required when using NextAuth)
 - Optional providers: `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET`, `GITHUB_ID`, `GITHUB_SECRET`, `APPLE_*`
 
-### Backend (`backend-node/.env`)
+### Backend (`backend-node/.env.production`)
 - `PORT` (default `8080`)
 - Either `DATABASE_URL` OR discrete `DB_DIALECT`, `DB_HOST`, `DB_PORT`, `DB_NAME`, `DB_USER`, `DB_PASSWORD`
 - `DB_SSL` (true/false) depending on managed Postgres
@@ -57,7 +57,7 @@ Notes:
 - Backend requires a valid DB in production. In `NODE_ENV=test`, it uses in-memory SQLite and can start without a real DB.
 
 ## Repository & Port Configuration
-- `BACKEND_PORT` defaults to `8080` across scripts and NGINX config; override via `.env` or flags.
+- `BACKEND_PORT` defaults to `8080` across scripts and NGINX config; override via `.env.production` or flags.
 - Health endpoints:
   - Backend: `GET http://127.0.0.1:8080/health` → `{ success: true }`
   - Frontend: served via `next start`; app pages and `/api/content/registry` should succeed when backend is up.
@@ -96,7 +96,7 @@ cd /opt && git clone <REPO> GlassCodeAcademy || true
 cd GlassCodeAcademy
 ```
 
-2) Create `.env` with deployment basics and URLs:
+2) Create `.env.production` with deployment basics and URLs:
 ```
 APP_NAME=glasscode
 DEPLOY_USER=<user>
@@ -111,7 +111,7 @@ NEXTAUTH_SECRET=<generate>
 BACKEND_PORT=8080
 ```
 
-3) Backend DB config in `.env` (or provide interactively):
+3) Backend DB config in `.env.production` (or provide interactively):
 ```
 DB_DIALECT=postgres
 DB_HOST=<db-host>
