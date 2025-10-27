@@ -20,6 +20,7 @@ import Script from 'next/script';
 import ApolloDevMessages from '../components/ApolloDevMessages';
 import ConsoleBanner from '../components/ConsoleBanner';
 import BackendReadinessWrapper from '../components/BackendReadinessWrapper';
+import { cookies } from 'next/headers';
 
 export const runtime = 'nodejs';
 
@@ -37,8 +38,12 @@ export const metadata: Metadata = {
 };
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
+  const cookieStore = await cookies();
+  const themeCookie = cookieStore.get('gc-theme')?.value;
+  const initialTheme = (themeCookie === 'dark' || themeCookie === 'light') ? themeCookie : 'light';
+
   return (
-    <html lang="en">
+    <html lang="en" data-theme={initialTheme} className={initialTheme === 'dark' ? 'dark' : undefined} style={{ colorScheme: initialTheme === 'dark' ? 'dark' : 'light' }}>
       <head>
         {/* Preconnect to external resources */}
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
