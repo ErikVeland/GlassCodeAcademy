@@ -657,9 +657,72 @@ class ContentRegistryLoader {
             clearTimeout(timeoutId);
           }
   
-          // Removed server-side filesystem fallback to avoid bundling fs/path in client-shared code
-          // Instead, rely solely on API/HTTP candidates above. If none succeed, return empty.
-  
+          // Server-side filesystem fallback: attempt to load lessons from local JSON files
+          try {
+            const fs = await import('fs');
+            const path = await import('path');
+
+            const cwd = process.cwd();
+            const fileCandidates = [
+              // Inside frontend project public dir
+              path.join(cwd, 'public', 'content', 'lessons', `${moduleSlug}.json`),
+              // Top-level content directory (../../content from frontend)
+              path.join(cwd, '..', '..', 'content', 'lessons', `${moduleSlug}.json`),
+              // Alternative relative content directory (../content)
+              path.join(cwd, '..', 'content', 'lessons', `${moduleSlug}.json`),
+            ];
+
+            for (const p of fileCandidates) {
+              try {
+                const raw = await fs.promises.readFile(p, 'utf-8');
+                const parsed: unknown = JSON.parse(raw);
+                const lessonsArr: Record<string, unknown>[] = Array.isArray(parsed)
+                  ? (parsed as Record<string, unknown> [])
+                  : (Array.isArray((parsed as { lessons?: unknown[] })?.lessons)
+                      ? ((parsed as { lessons?: unknown[] }).lessons as Record<string, unknown> [])
+                      : []);
+
+                if (lessonsArr.length === 0) continue;
+
+                const mapped = lessonsArr.map((l, i) => {
+                  const orderVal = typeof (l as { order?: unknown }).order === 'number' ? (l as { order?: number }).order! : i + 1;
+                  const lApi = l as { codeExample?: unknown; codeExplanation?: unknown; code?: { example?: unknown; explanation?: unknown } };
+                  const codeExampleStr = typeof lApi.codeExample === 'string' ? lApi.codeExample : undefined;
+                  const codeExplanationStr = typeof lApi.codeExplanation === 'string' ? lApi.codeExplanation : undefined;
+                  const code: Lesson['code'] | undefined =
+                    lApi.code && typeof lApi.code === 'object'
+                      ? {
+                          example: typeof lApi.code.example === 'string' ? lApi.code.example : undefined,
+                          explanation: typeof lApi.code.explanation === 'string' ? lApi.code.explanation : undefined,
+                        }
+                      : (codeExampleStr || codeExplanationStr ? { 
+                          example: codeExampleStr || '', 
+                          explanation: codeExplanationStr || '' 
+                        } : undefined);
+
+                  const lesson: Lesson = {
+                    ...(l as Lesson),
+                    order: orderVal,
+                    code,
+                    intro: typeof (l as { intro?: unknown }).intro === 'string' ? (l as { intro?: string }).intro! : '',
+                    pitfalls: Array.isArray((l as { pitfalls?: unknown }).pitfalls) ? (l as { pitfalls?: string[] }).pitfalls! : [],
+                    exercises: Array.isArray((l as { exercises?: unknown }).exercises) ? (l as { exercises?: string[] }).exercises! : [],
+                    objectives: Array.isArray((l as { objectives?: unknown }).objectives) ? (l as { objectives?: string[] }).objectives! : [],
+                  };
+                  return lesson;
+                });
+
+                return mapped as Lesson[];
+              } catch {
+                // try next file candidate
+                continue;
+              }
+            }
+          } catch {
+            // ignore fs/path import failures
+          }
+
+          // If all strategies failed, return empty
           return [];
         } catch (err) {
           console.error(`getModuleLessons(${moduleSlug}) attempt ${retryCount + 1} failed:`, err);
