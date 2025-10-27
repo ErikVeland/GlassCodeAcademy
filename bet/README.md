@@ -63,6 +63,44 @@ Deploy the static build to your server and configure Nginx:
    curl http://bet.glasscode.academy/health
    ```
 
+## API Proxy Verification
+
+The BET site uses a same-origin proxy for the Neds Racing API to avoid CORS.
+
+- Neds (GET expected):
+
+  ```bash
+  # HTTP redirects to HTTPS
+  curl -I 'http://bet.glasscode.academy/api/neds/?method=nextraces&count=10'
+
+  # JSON response via HTTPS
+  curl -sS 'https://bet.glasscode.academy/api/neds/?method=nextraces&count=10' | head
+
+  # If needed, mirror browser context headers
+  curl -sS 'https://bet.glasscode.academy/api/neds/?method=nextraces&count=10' \
+    -H 'Accept: application/json, text/plain, */*' \
+    -H 'Accept-Language: en-US,en;q=0.9' \
+    -H 'Origin: https://bet.glasscode.academy' \
+    -H 'Referer: https://bet.glasscode.academy/' \
+    -H 'User-Agent: Mozilla/5.0' | head
+  ```
+
+Notes:
+- HEAD requests (`curl -I`) to Neds often return `400`. Use GET.
+- The Nginx config sets `Host`, `Origin`, and `Referer` so the upstream sees a browser-like request.
+
+- Local backend proxies:
+
+  ```bash
+  curl -sS 'https://bet.glasscode.academy/api/health'
+  curl -sS -X POST 'https://bet.glasscode.academy/graphql' -H 'Content-Type: application/json' -d '{"query":"{ __typename }"}'
+  ```
+
+Troubleshooting:
+- `nginx -t && systemctl reload nginx`
+- `tail -f /var/log/nginx/bet.glasscode.academy_error.log`
+- Confirm DNS and TLS are valid; reissue certs if necessary.
+
 ### Requirements
 
 - DNS: Point `bet.glasscode.academy` A/AAAA record to your server.
