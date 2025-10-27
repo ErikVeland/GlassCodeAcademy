@@ -1397,20 +1397,58 @@ server {
 EOF
 fi
 
-ln -sf /etc/nginx/sites-available/$APP_NAME /etc/nginx/sites-enabled/
-if [ "$FRONTEND_ONLY" -eq 0 ]; then
-    ln -sf /etc/nginx/sites-available/${APP_NAME}-api /etc/nginx/sites-enabled/
+## Prefer curated domain config if present to avoid name mismatches
+if [ -f "/etc/nginx/sites-available/${DOMAIN}.conf" ]; then
+    ln -sf "/etc/nginx/sites-available/${DOMAIN}.conf" "/etc/nginx/sites-enabled/${DOMAIN}.conf"
+    rm -f "/etc/nginx/sites-enabled/$APP_NAME" || true
+else
+    ln -sf "/etc/nginx/sites-available/$APP_NAME" "/etc/nginx/sites-enabled/$APP_NAME"
 fi
+
+## Avoid duplicate API server blocks if Certbot already manages api.$DOMAIN in conf.d
+if [ "$FRONTEND_ONLY" -eq 0 ]; then
+    if [ -f "/etc/nginx/conf.d/api.${DOMAIN}.conf" ]; then
+        rm -f "/etc/nginx/sites-enabled/${APP_NAME}-api" || true
+    else
+        ln -sf "/etc/nginx/sites-available/${APP_NAME}-api" "/etc/nginx/sites-enabled/${APP_NAME}-api"
+    fi
+fi
+
 nginx -t && systemctl reload nginx
 log "✅ Nginx configured"
 
 ### 13. TLS
 log "🔒 Setting up TLS..."
+# Ensure ACME webroot exists for robust http-01 challenges
+mkdir -p /var/www/letsencrypt
+chown -R www-data:www-data /var/www/letsencrypt || true
+
+ISSUED=0
 if [ "$FRONTEND_ONLY" -eq 0 ]; then
-    certbot --nginx -d $DOMAIN -d www.$DOMAIN -d api.$DOMAIN --non-interactive --agree-tos -m $EMAIL || true
+    # Try nginx plugin first; fall back to webroot if it fails
+    if certbot --nginx -d "$DOMAIN" -d "www.$DOMAIN" -d "api.$DOMAIN" --non-interactive --agree-tos -m "$EMAIL"; then
+        ISSUED=1
+    else
+        log "⚠️  certbot --nginx failed; falling back to webroot"
+        certbot certonly --webroot -w /var/www/letsencrypt -d "$DOMAIN" -d "www.$DOMAIN" --non-interactive --agree-tos -m "$EMAIL" || true
+        certbot certonly --webroot -w /var/www/letsencrypt -d "api.$DOMAIN" --non-interactive --agree-tos -m "$EMAIL" || true
+        ISSUED=1
+    fi
 else
-    certbot --nginx -d $DOMAIN -d www.$DOMAIN --non-interactive --agree-tos -m $EMAIL || true
+    if certbot --nginx -d "$DOMAIN" -d "www.$DOMAIN" --non-interactive --agree-tos -m "$EMAIL"; then
+        ISSUED=1
+    else
+        log "⚠️  certbot --nginx failed; falling back to webroot"
+        certbot certonly --webroot -w /var/www/letsencrypt -d "$DOMAIN" -d "www.$DOMAIN" --non-interactive --agree-tos -m "$EMAIL" || true
+        ISSUED=1
+    fi
 fi
+
+# Ensure renewal timers are active
+systemctl enable --now certbot.timer || true
+systemctl enable --now snap.certbot.renew.timer || true
+
+nginx -t && systemctl reload nginx
 log "✅ TLS setup complete"
 
 ### 14. Firewall
