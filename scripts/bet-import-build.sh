@@ -99,9 +99,9 @@ case "$PM" in
     yarn install --frozen-lockfile || yarn install;;
   npm)
     if [[ -f package-lock.json ]]; then
-      npm ci || npm install
+      npm ci || npm install || npm install --legacy-peer-deps
     else
-      npm install
+      npm install || npm install --legacy-peer-deps
     fi;;
 esac
 echo "✅ Dependencies installed"

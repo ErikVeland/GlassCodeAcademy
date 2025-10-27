@@ -1375,15 +1375,42 @@ server {
     }
 }
 EOF
+
+# Configure dedicated API domain to proxy local backend when not in frontend-only mode
+cat >/etc/nginx/sites-available/${APP_NAME}-api <<EOF
+server {
+    listen 80;
+    server_name api.$DOMAIN;
+
+    location / {
+        proxy_pass http://127.0.0.1:8080;
+        proxy_http_version 1.1;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_connect_timeout 60s;
+        proxy_send_timeout 60s;
+        proxy_read_timeout 60s;
+    }
+}
+EOF
 fi
 
 ln -sf /etc/nginx/sites-available/$APP_NAME /etc/nginx/sites-enabled/
+if [ "$FRONTEND_ONLY" -eq 0 ]; then
+    ln -sf /etc/nginx/sites-available/${APP_NAME}-api /etc/nginx/sites-enabled/
+fi
 nginx -t && systemctl reload nginx
 log "✅ Nginx configured"
 
 ### 13. TLS
 log "🔒 Setting up TLS..."
-certbot --nginx -d $DOMAIN -d www.$DOMAIN --non-interactive --agree-tos -m $EMAIL || true
+if [ "$FRONTEND_ONLY" -eq 0 ]; then
+    certbot --nginx -d $DOMAIN -d www.$DOMAIN -d api.$DOMAIN --non-interactive --agree-tos -m $EMAIL || true
+else
+    certbot --nginx -d $DOMAIN -d www.$DOMAIN --non-interactive --agree-tos -m $EMAIL || true
+fi
 log "✅ TLS setup complete"
 
 ### 14. Firewall

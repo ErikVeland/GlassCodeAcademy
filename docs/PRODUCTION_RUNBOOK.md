@@ -8,6 +8,7 @@ This runbook documents the full deployment flow discovered and validated during 
 - Orchestration: `bootstrap.sh` for initial setup; `update.sh` for safe updates with rollback.
 - Health: Backend `GET /health`, Frontend served on chosen `PORT`.
 - Ports: Backend `8080` (configurable), Frontend `3000` default (override via `--port` or `PORT`).
+- API Domain: `api.${DOMAIN}` is provisioned to proxy the backend with HTTPS.
 
 ## Key Scripts & Flags
 
@@ -128,6 +129,10 @@ DB_SSL=true
 sudo -E bash bootstrap.sh --fast
 ```
 - For env-only (preparing `.env` files): `sudo -E bash bootstrap.sh --env-only`
+- Effects:
+  - Provisions Nginx for `www.${DOMAIN}`, `${DOMAIN}` (frontend), and `api.${DOMAIN}` (backend)
+  - Obtains TLS certificates for `www.${DOMAIN}`, `${DOMAIN}`, and `api.${DOMAIN}` via Let’s Encrypt
+  - Starts backend and frontend services and validates health
 
 ## Remote Update
 From the server repo directory:
@@ -135,6 +140,9 @@ From the server repo directory:
 sudo -E bash update.sh --fast
 ```
 - Optional: `--frontend-only`, `--skip-lint`, `--skip-typecheck`, `--skip-backend-health`, `--validate-json-content`, `--port 3000`
+- Effects:
+  - Ensures Nginx config is in place for `${DOMAIN}` and `api.${DOMAIN}`
+  - Restarts backend and frontend in the correct order with health checks
 
 ## Verification
 - Systemd: `systemctl status glasscode-backend glasscode-frontend`
@@ -142,6 +150,7 @@ sudo -E bash update.sh --fast
 - Backend health: `curl -f https://api.glasscode.academy/health`
 - Frontend app: open `https://glasscode.academy`
 - GraphQL rewrites (if used): frontend `/graphql` → backend `${NEXT_PUBLIC_API_BASE}/graphql` per `next.config.ts`
+ - API origin: frontend uses `NEXT_PUBLIC_API_BASE=https://api.${DOMAIN}` for all backend requests
 
 ## Operational Notes
 - Node.js 18+ required.
