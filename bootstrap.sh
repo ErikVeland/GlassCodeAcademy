@@ -250,7 +250,7 @@ mv "$TMP_BENV" "$BACKEND_PROD_ENV"
         NEXT_PUBLIC_BASE_URL="https://${DOMAIN}"
     fi
     if [ -z "${NEXT_PUBLIC_API_BASE:-}" ]; then
-        NEXT_PUBLIC_API_BASE="https://${DOMAIN}"
+        NEXT_PUBLIC_API_BASE="https://api.${DOMAIN}"
     fi
 
     mkdir -p "$TARGET_DIR/glasscode/frontend"
@@ -917,7 +917,7 @@ if [ "$FRONTEND_BUILD_REQUIRED" = "true" ]; then
     # Ensure .env.production variables with sensible defaults and interactive prompts
     # Establish defaults if not already set in environment
     [ -z "${NEXT_PUBLIC_BASE_URL:-}" ] && NEXT_PUBLIC_BASE_URL="https://${DOMAIN}"
-    [ -z "${NEXT_PUBLIC_API_BASE:-}" ] && NEXT_PUBLIC_API_BASE="https://${DOMAIN}"
+    [ -z "${NEXT_PUBLIC_API_BASE:-}" ] && NEXT_PUBLIC_API_BASE="https://api.${DOMAIN}"
     [ -z "${NEXTAUTH_URL:-}" ] && NEXTAUTH_URL="https://${DOMAIN}"
     if [ -z "${NEXTAUTH_SECRET:-}" ]; then
         NEXTAUTH_SECRET="$(generate_secret || echo 'temporary-nextauth-secret-change-me')"

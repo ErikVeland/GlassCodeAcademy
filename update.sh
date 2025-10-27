@@ -17,6 +17,30 @@ else
     exit 1
 fi
 
+# Enforce production defaults for frontend env
+[ -z "${NEXT_PUBLIC_BASE_URL:-}" ] && NEXT_PUBLIC_BASE_URL="https://${DOMAIN}"
+[ -z "${NEXT_PUBLIC_API_BASE:-}" ] && NEXT_PUBLIC_API_BASE="https://api.${DOMAIN}"
+export NEXT_PUBLIC_BASE_URL NEXT_PUBLIC_API_BASE
+
+# Production guardrails
+if [ "$(id -u)" -ne 0 ]; then
+  echo "❌ ERROR: Must run as root (use sudo). This script is production-only."
+  exit 1
+fi
+
+if [ -z "${DOMAIN:-}" ]; then
+  echo "❌ ERROR: DOMAIN is not set in $ENV_FILE."
+  exit 1
+fi
+
+if [[ "$DOMAIN" =~ ^(localhost|127\.0\.0\.1)$ || "$DOMAIN" =~ \.local$ || "$DOMAIN" =~ \.test$ ]]; then
+  echo "❌ ERROR: DOMAIN appears non-production ('$DOMAIN'). Aborting."
+  exit 1
+fi
+
+echo "🌐 Production domain: $DOMAIN"
+echo "🔗 NEXT_PUBLIC_BASE_URL=${NEXT_PUBLIC_BASE_URL}"
+echo "🔗 NEXT_PUBLIC_API_BASE=${NEXT_PUBLIC_API_BASE}"
 echo "🔄 Update Script for $APP_NAME (Node.js version)"
 
 log() {
