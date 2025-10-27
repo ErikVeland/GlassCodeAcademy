@@ -301,20 +301,33 @@ EOF
         # Write backend health gating script used in ExecStartPre
         cat >"$APP_DIR/glasscode/frontend/check_backend_health.sh" <<'EOS'
 #!/usr/bin/env bash
+# Production-only gating: never use localhost; require public API base
+RAW_BASE="${NEXT_PUBLIC_API_BASE:-}"
+# Remove quotes/backticks and trim spaces
+SANITIZED_BASE="${RAW_BASE//\"/}"
+SANITIZED_BASE="${SANITIZED_BASE//\'/}"
+SANITIZED_BASE="${SANITIZED_BASE//\`/}"
+SANITIZED_BASE="$(echo "$SANITIZED_BASE" | xargs)"
+if [ -z "$SANITIZED_BASE" ]; then
+  echo "❌ NEXT_PUBLIC_API_BASE is not set; cannot perform production health gating."
+  exit 1
+fi
+HEALTH_URL="${SANITIZED_BASE%/}/health"
 MAX=30
 COUNT=1
 while [ $COUNT -le $MAX ]; do
-  HTTP=$(timeout 10 curl -s -o /dev/null -w "%{http_code}" http://127.0.0.1:8080/health || true)
-  RESP=$(timeout 10 curl -s http://127.0.0.1:8080/health || true)
+  HTTP=$(timeout 10 curl -s -o /dev/null -w "%{http_code}" "$HEALTH_URL" || true)
+  RESP=$(timeout 10 curl -s "$HEALTH_URL" || true)
   STATUS=$(echo "$RESP" | jq -r .status 2>/dev/null || echo "$RESP" | grep -o '"status":"[^"]*"' | cut -d '"' -f4)
 
   if [ "$HTTP" = "200" ] && { [ "$STATUS" = "healthy" ] || [ "$STATUS" = "degraded" ] || [ -n "$RESP" ]; }; then
-    echo "✅ Backend health check passed at attempt $COUNT/$MAX: HTTP $HTTP, Status: ${STATUS:-unknown}"
+    echo "✅ Backend health check passed at attempt $COUNT/$MAX: HTTP $HTTP, Status: ${STATUS:-unknown}, URL: $HEALTH_URL"
     exit 0
   fi
+  echo "⏳ Attempt $COUNT/$MAX: HTTP $HTTP, Status: ${STATUS:-unknown}, URL: $HEALTH_URL"
   sleep 5; COUNT=$((COUNT+1))
 done
-echo "Backend health check gating failed: http='$HTTP' status='$STATUS' resp='$RESP'"
+echo "❌ Backend health check gating failed: url='$HEALTH_URL' http='$HTTP' status='${STATUS:-unknown}' resp='${RESP:0:512}'"
 exit 1
 EOS
         chmod +x "$APP_DIR/glasscode/frontend/check_backend_health.sh"
