@@ -6,18 +6,19 @@ const dotenv = require('dotenv');
 const fs = require('fs');
 const path = require('path');
 
-// Load environment variables, preferring .env.production when NODE_ENV=production
+// Load environment variables with a safe default to production when available
 (function loadEnv() {
   try {
-    const isProd = process.env.NODE_ENV === 'production';
-    const candidates = isProd
-      ? [path.resolve(__dirname, '.env.production'), path.resolve(__dirname, '.env')]
-      : [path.resolve(__dirname, '.env'), path.resolve(__dirname, '.env.production')];
-    for (const p of candidates) {
-      if (fs.existsSync(p)) {
-        dotenv.config({ path: p });
-        return;
-      }
+    const prodPath = path.resolve(__dirname, '.env.production');
+    const devPath = path.resolve(__dirname, '.env');
+    // Prefer .env.production whenever it exists to avoid accidental dev overrides in prod
+    if (fs.existsSync(prodPath)) {
+      dotenv.config({ path: prodPath });
+      return;
+    }
+    if (fs.existsSync(devPath)) {
+      dotenv.config({ path: devPath });
+      return;
     }
     dotenv.config();
   } catch (_) {

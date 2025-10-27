@@ -11,9 +11,24 @@ const Tier = require('./tierModel');
 
 // Initialize associations that weren't set up in the model files
 function initializeAssociations() {
-  // Course -> Modules (already defined in moduleModel.js)
-  // Module -> Lessons (already defined in lessonModel.js)
-  // Lesson -> Quizzes (already defined in quizModel.js)
+  // Content associations
+  // Course -> Modules
+  Course.hasMany(Module, {
+    foreignKey: 'course_id',
+    as: 'modules'
+  });
+
+  // Module -> Lessons
+  Module.hasMany(Lesson, {
+    foreignKey: 'module_id',
+    as: 'lessons'
+  });
+
+  // Lesson -> Quizzes
+  Lesson.hasMany(LessonQuiz, {
+    foreignKey: 'lesson_id',
+    as: 'quizzes'
+  });
   
   // User -> Progress
   User.hasMany(UserProgress, {

@@ -22,7 +22,7 @@ const initializeDatabase = async () => {
       const useAlter = !isProd || dbSyncAlterFlag; // alter in non-prod, opt-in in prod
       await sequelize.sync({ alter: useAlter });
       console.log(
-        `Database models synchronized successfully (env=\"${nodeEnv}\", alter=${useAlter}).`
+        `Database models synchronized successfully (env="${nodeEnv}", alter=${useAlter}).`
       );
     } else {
       console.log('Skipping sequelize.sync in production; schema managed by migrations.');
