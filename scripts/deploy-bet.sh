@@ -10,6 +10,7 @@ SSH_PORT="22"
 TARGET_ROOT="/var/www/bet.glasscode.academy"
 PUSH_CONF="false"
 USE_SUDO="false"
+SUDO_PASS=""
 REPO_URL=""
 BRANCH="main"
 DEST_DIR="$(pwd)/bet.glasscode.academy"
@@ -29,6 +30,7 @@ Optional:
   --target-root <path>      Remote web root (default: /var/www/bet.glasscode.academy)
   --push-conf               Also push Nginx conf and reload Nginx
   --sudo                    Use sudo for remote Nginx and mkdir operations
+  --sudo-pass <password>    Provide sudo password for non-interactive remote sudo
   --repo <git-url>          If provided, build from repo using bet-import-build.sh
   --branch <branch>         Branch for repo build (default: main)
   --dest <path>             Local destination parent dir (default: ./bet.glasscode.academy)
@@ -47,6 +49,7 @@ while [[ $# -gt 0 ]]; do
     --target-root) TARGET_ROOT="$2"; shift 2;;
     --push-conf) PUSH_CONF="true"; shift 1;;
     --sudo) USE_SUDO="true"; shift 1;;
+    --sudo-pass) SUDO_PASS="$2"; shift 2;;
     --repo) REPO_URL="$2"; shift 2;;
     --branch) BRANCH="$2"; shift 2;;
     --dest) DEST_DIR="$2"; shift 2;;
@@ -75,7 +78,13 @@ echo "📂 Using build artifacts: $BUILD_DIR"
 
 # Ensure remote target directory exists
 MKDIR_CMD="mkdir -p '$TARGET_ROOT'"
-if [[ "$USE_SUDO" == "true" ]]; then MKDIR_CMD="sudo $MKDIR_CMD"; fi
+if [[ "$USE_SUDO" == "true" ]]; then
+  if [[ -n "$SUDO_PASS" ]]; then
+    MKDIR_CMD="echo \"$SUDO_PASS\" | sudo -S mkdir -p '$TARGET_ROOT'"
+  else
+    MKDIR_CMD="sudo mkdir -p '$TARGET_ROOT'"
+  fi
+fi
 ssh -p "$SSH_PORT" "$USER@$SERVER" "$MKDIR_CMD"
 
 # Sync build to remote target root
@@ -94,7 +103,11 @@ if [[ "$PUSH_CONF" == "true" ]]; then
     # Push to a temp path then move with sudo
     TMP_PATH="/tmp/bet.glasscode.academy.conf"
     scp -P "$SSH_PORT" "$CONF_LOCAL" "$USER@$SERVER:$TMP_PATH"
-    ssh -p "$SSH_PORT" "$USER@$SERVER" "sudo mv '$TMP_PATH' '$CONF_REMOTE'"
+    if [[ -n "$SUDO_PASS" ]]; then
+      ssh -p "$SSH_PORT" "$USER@$SERVER" "echo \"$SUDO_PASS\" | sudo -S mv '$TMP_PATH' '$CONF_REMOTE'"
+    else
+      ssh -p "$SSH_PORT" "$USER@$SERVER" "sudo mv '$TMP_PATH' '$CONF_REMOTE'"
+    fi
   else
     scp -P "$SSH_PORT" "$CONF_LOCAL" "$USER@$SERVER:$SCP_PATH"
   fi
@@ -104,9 +117,15 @@ if [[ "$PUSH_CONF" == "true" ]]; then
   TEST_CMD="nginx -t"
   RELOAD_CMD="systemctl reload nginx"
   if [[ "$USE_SUDO" == "true" ]]; then
-    LN_CMD="sudo $LN_CMD"; TEST_CMD="sudo $TEST_CMD"; RELOAD_CMD="sudo $RELOAD_CMD"
+    if [[ -n "$SUDO_PASS" ]]; then
+      # Run chained commands under a single sudo session with password via -S
+      ssh -p "$SSH_PORT" "$USER@$SERVER" "echo \"$SUDO_PASS\" | sudo -S bash -lc \"$LN_CMD && $TEST_CMD && $RELOAD_CMD\""
+    else
+      ssh -p "$SSH_PORT" "$USER@$SERVER" "sudo bash -lc \"$LN_CMD && $TEST_CMD && $RELOAD_CMD\""
+    fi
+  else
+    ssh -p "$SSH_PORT" "$USER@$SERVER" "$LN_CMD && $TEST_CMD && $RELOAD_CMD"
   fi
-  ssh -p "$SSH_PORT" "$USER@$SERVER" "$LN_CMD && $TEST_CMD && $RELOAD_CMD"
   echo "✅ Nginx reloaded"
 fi
 
