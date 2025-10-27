@@ -695,19 +695,88 @@ class ContentRegistryLoader {
                           example: typeof lApi.code.example === 'string' ? lApi.code.example : undefined,
                           explanation: typeof lApi.code.explanation === 'string' ? lApi.code.explanation : undefined,
                         }
-                      : (codeExampleStr || codeExplanationStr ? { 
-                          example: codeExampleStr || '', 
-                          explanation: codeExplanationStr || '' 
+                      : (codeExampleStr || codeExplanationStr ? {
+                          example: codeExampleStr || '',
+                          explanation: codeExplanationStr || ''
                         } : undefined);
 
+                  const titleVal = typeof (l as { title?: unknown }).title === 'string'
+                    ? (l as { title?: string }).title!
+                    : `Lesson ${orderVal}`;
+                  const introVal = typeof (l as { intro?: unknown }).intro === 'string'
+                    ? (l as { intro?: string }).intro!
+                    : '';
+                  const topicVal = typeof (l as { topic?: unknown }).topic === 'string'
+                    ? (l as { topic?: string }).topic!
+                    : undefined;
+                  const tagsVal = Array.isArray((l as { tags?: unknown }).tags)
+                    ? ((l as { tags?: unknown[] }).tags!.filter((t) => typeof t === 'string') as string[])
+                    : undefined;
+                  const estimatedMinutesVal = typeof (l as { estimatedMinutes?: unknown }).estimatedMinutes === 'number'
+                    ? (l as { estimatedMinutes?: number }).estimatedMinutes!
+                    : undefined;
+                  const objectivesVal = Array.isArray((l as { objectives?: unknown }).objectives)
+                    ? ((l as { objectives?: unknown[] }).objectives!.filter((o) => typeof o === 'string') as string[])
+                    : [];
+
+                  const rawPitfalls = (l as { pitfalls?: unknown }).pitfalls;
+                  const pitfallsVal: Lesson['pitfalls'] = Array.isArray(rawPitfalls)
+                    ? rawPitfalls
+                        .map((p) => {
+                          if (typeof p === 'string') {
+                            return { mistake: p };
+                          }
+                          if (p && typeof p === 'object') {
+                            const obj = p as { mistake?: unknown; solution?: unknown; severity?: unknown };
+                            const sev = obj.severity === 'high' || obj.severity === 'medium' || obj.severity === 'low' ? (obj.severity as 'high' | 'medium' | 'low') : undefined;
+                            return {
+                              mistake: typeof obj.mistake === 'string' ? obj.mistake : undefined,
+                              solution: typeof obj.solution === 'string' ? obj.solution : undefined,
+                              severity: sev,
+                            };
+                          }
+                          return undefined;
+                        })
+                        .filter(Boolean) as Lesson['pitfalls']
+                    : [];
+
+                  const rawExercises = (l as { exercises?: unknown }).exercises;
+                  const exercisesVal: Lesson['exercises'] = Array.isArray(rawExercises)
+                    ? rawExercises
+                        .map((e) => {
+                          if (typeof e === 'string') {
+                            return { title: e };
+                          }
+                          if (e && typeof e === 'object') {
+                            const obj = e as { title?: unknown; description?: unknown; checkpoints?: unknown };
+                            const cps = Array.isArray(obj.checkpoints)
+                              ? (obj.checkpoints as unknown[]).filter((c) => typeof c === 'string')
+                              : undefined;
+                            return {
+                              title: typeof obj.title === 'string' ? obj.title : undefined,
+                              description: typeof obj.description === 'string' ? obj.description : undefined,
+                              checkpoints: cps as string[] | undefined,
+                            };
+                          }
+                          return undefined;
+                        })
+                        .filter(Boolean) as Lesson['exercises']
+                    : [];
+
+                  const idVal = typeof (l as { id?: unknown }).id === 'number' ? (l as { id?: number }).id! : undefined;
+
                   const lesson: Lesson = {
-                    ...(l as Lesson),
+                    id: idVal,
                     order: orderVal,
+                    title: titleVal,
+                    intro: introVal,
+                    topic: topicVal,
+                    tags: tagsVal,
+                    estimatedMinutes: estimatedMinutesVal,
+                    objectives: objectivesVal,
                     code,
-                    intro: typeof (l as { intro?: unknown }).intro === 'string' ? (l as { intro?: string }).intro! : '',
-                    pitfalls: Array.isArray((l as { pitfalls?: unknown }).pitfalls) ? (l as { pitfalls?: string[] }).pitfalls! : [],
-                    exercises: Array.isArray((l as { exercises?: unknown }).exercises) ? (l as { exercises?: string[] }).exercises! : [],
-                    objectives: Array.isArray((l as { objectives?: unknown }).objectives) ? (l as { objectives?: string[] }).objectives! : [],
+                    pitfalls: pitfallsVal,
+                    exercises: exercisesVal,
                   };
                   return lesson;
                 });
