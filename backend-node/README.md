@@ -119,3 +119,11 @@ docker-compose up
 ## License
 
 MIT
+
+## Debugging
+
+To diagnose production content issues (empty courses/lessons), you can run a DB summary script:
+
+- `NODE_ENV=production node backend-node/scripts/debug-db.js`
+
+This prints the effective database configuration and counts of published/total courses, modules, lessons, and quizzes. Use it to verify that the API and seeding processes point to the same database.

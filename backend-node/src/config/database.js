@@ -1,7 +1,27 @@
 const { Sequelize } = require('sequelize');
 const dotenv = require('dotenv');
+const fs = require('fs');
+const path = require('path');
 
-dotenv.config();
+// Prefer .env.production when NODE_ENV=production; otherwise fall back to .env
+(function loadEnv() {
+  try {
+    const isProd = process.env.NODE_ENV === 'production';
+    const candidates = isProd
+      ? [path.resolve(__dirname, '../../.env.production'), path.resolve(__dirname, '../../.env')]
+      : [path.resolve(__dirname, '../../.env'), path.resolve(__dirname, '../../.env.production')];
+    for (const p of candidates) {
+      if (fs.existsSync(p)) {
+        dotenv.config({ path: p });
+        return;
+      }
+    }
+    // Fallback to default behavior
+    dotenv.config();
+  } catch (_) {
+    dotenv.config();
+  }
+})();
 
 const isTest = process.env.NODE_ENV === 'test';
 const databaseUrl = process.env.DATABASE_URL;

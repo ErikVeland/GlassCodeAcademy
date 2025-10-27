@@ -3,9 +3,27 @@ const cors = require('cors');
 const helmet = require('helmet');
 const morgan = require('morgan');
 const dotenv = require('dotenv');
+const fs = require('fs');
+const path = require('path');
 
-// Load environment variables
-dotenv.config();
+// Load environment variables, preferring .env.production when NODE_ENV=production
+(function loadEnv() {
+  try {
+    const isProd = process.env.NODE_ENV === 'production';
+    const candidates = isProd
+      ? [path.resolve(__dirname, '.env.production'), path.resolve(__dirname, '.env')]
+      : [path.resolve(__dirname, '.env'), path.resolve(__dirname, '.env.production')];
+    for (const p of candidates) {
+      if (fs.existsSync(p)) {
+        dotenv.config({ path: p });
+        return;
+      }
+    }
+    dotenv.config();
+  } catch (_) {
+    dotenv.config();
+  }
+})();
 
 // Database initialization
 const initializeDatabase = require('./src/utils/database');
