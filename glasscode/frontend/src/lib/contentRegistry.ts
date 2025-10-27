@@ -192,7 +192,19 @@ class ContentRegistryLoader {
     const baseDelay = 1000; // 1 second
     
     const isBrowser = typeof window !== 'undefined';
-    const base = isBrowser ? '' : (() => { try { return getPublicOriginStrict().replace(/\/+$/, ''); } catch { return ''; } })();
+    const rawOrigin = isBrowser ? '' : (() => { try { return getPublicOriginStrict().replace(/\/+$/, ''); } catch { return ''; } })();
+    const isProdCi = !isBrowser && (process.env.NODE_ENV === 'production' || !!process.env.CI);
+    const base = (() => {
+    if (!rawOrigin) return '';
+    try {
+    const u = new URL(rawOrigin);
+    const hostIsLocal = u.hostname === 'localhost' || u.hostname === '127.0.0.1';
+    if (isProdCi && hostIsLocal) return '';
+    return rawOrigin;
+    } catch {
+    return '';
+    }
+    })();
     const includeLocalCandidates = !isBrowser && process.env.NODE_ENV !== 'production' && !process.env.CI;
     const portEnv = !isBrowser ? (process.env.PORT || process.env.NEXT_PUBLIC_PORT || '').toString().trim() : '';
     
@@ -566,19 +578,21 @@ class ContentRegistryLoader {
   
           // Server-side: Node fetch requires absolute URLs. Try local origins proactively in dev.
           const candidates: string[] = [];
+          const isProdCi = process.env.NODE_ENV === 'production' || !!process.env.CI;
           try {
             const origin = getPublicOriginStrict().replace(/\/+$/, '');
-            candidates.push(`${origin}/api/content/lessons/${moduleSlug}`);
+            const isLocalOrigin = /^https?:\/\/(?:localhost|127\.0\.0\.1)(?::\d+)?\b/.test(origin);
+            if (!isLocalOrigin || !isProdCi) {
+              candidates.push(`${origin}/api/content/lessons/${moduleSlug}`);
+            }
           } catch {
-            // no configured public origin; rely on localhost candidates
+            // no configured public origin; rely on localhost candidates in dev only
           }
           const includeLocalCandidates = process.env.NODE_ENV !== 'production' && !process.env.CI;
           if (includeLocalCandidates) {
-            // Common localhost dev ports
             candidates.push(
               'http://localhost:3000/api/content/lessons/' + moduleSlug,
               'http://127.0.0.1:3000/api/content/lessons/' + moduleSlug,
-              // Include common dev port 3001
               'http://localhost:3001/api/content/lessons/' + moduleSlug,
               'http://127.0.0.1:3001/api/content/lessons/' + moduleSlug
             );
@@ -742,9 +756,13 @@ class ContentRegistryLoader {
 
           // Server-side: try absolute local origins first
           const candidates: string[] = [];
+          const isProdCi = process.env.NODE_ENV === 'production' || !!process.env.CI;
           try {
             const origin = getPublicOriginStrict().replace(/\/+$/, '');
-            candidates.push(`${origin}/api/content/quizzes/${shortSlug}`);
+            const isLocalOrigin = /^https?:\/\/(?:localhost|127\.0\.0\.1)(?::\d+)?\b/.test(origin);
+            if (!isLocalOrigin || !isProdCi) {
+              candidates.push(`${origin}/api/content/quizzes/${shortSlug}`);
+            }
           } catch {
             // ignore
           }
@@ -753,7 +771,6 @@ class ContentRegistryLoader {
             candidates.push(
               'http://localhost:3000/api/content/quizzes/' + shortSlug,
               'http://127.0.0.1:3000/api/content/quizzes/' + shortSlug,
-              // Include common dev port 3001
               'http://localhost:3001/api/content/quizzes/' + shortSlug,
               'http://127.0.0.1:3001/api/content/quizzes/' + shortSlug
             );
