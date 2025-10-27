@@ -377,6 +377,38 @@ EOF
     fi
 }
 
+# Validate and correct frontend .env.production URLs based on DOMAIN
+fix_frontend_env_urls() {
+    local env_file="${APP_DIR}/glasscode/frontend/.env.production"
+    if [ ! -f "$env_file" ]; then
+        return
+    fi
+    local expected_base="https://${DOMAIN}"
+    local expected_api="https://api.${DOMAIN}"
+    local expected_auth="https://${DOMAIN}"
+
+    enforce_url_key() {
+        local file="$1"; local key="$2"; local expected="$3";
+        local proto host target
+        proto=$(echo "$expected" | sed -E 's~^(https?)://.*~\1~')
+        [ -z "$proto" ] && proto="https"
+        host=$(echo "$expected" | sed -E 's~^https?://([^/]+).*~\1~')
+        [ -z "$host" ] && host="$expected"
+        target="${proto}://${host}"
+        awk -v k="$key" -v v="$target" '
+        BEGIN{found=0}
+        {
+          if ($0 ~ "^"k"=") { print k"="v; found=1 } else { print $0 }
+        }
+        END{ if(!found) print k"="v }
+        ' "$file" > "$file.tmp" && mv "$file.tmp" "$file"
+    }
+
+    enforce_url_key "$env_file" "NEXT_PUBLIC_BASE_URL" "$expected_base"
+    enforce_url_key "$env_file" "NEXT_PUBLIC_API_BASE" "$expected_api"
+    enforce_url_key "$env_file" "NEXTAUTH_URL" "$expected_auth"
+}
+
 rollback() {
     log "⏪ Rolling back to previous version..."
     if [ -n "${BACKUP_DIR:-}" ] && [ -d "$BACKUP_DIR" ]; then
@@ -429,6 +461,14 @@ main() {
             log "❌ ERROR: Failed to run database migrations during update"
             exit 1
         fi
+
+        # Seed content from JSON registry to ensure courses/modules/lessons are available
+        log "🌱 Seeding database content from JSON registry..."
+        if ! sudo -u "$DEPLOY_USER" env NODE_ENV=production DATABASE_URL="$DATABASE_URL" DB_DIALECT="$DB_DIALECT" DB_HOST="$DB_HOST" DB_PORT="$DB_PORT" DB_NAME="$DB_NAME" DB_USER="$DB_USER" DB_PASSWORD="$DB_PASSWORD" DB_SSL="$DB_SSL" npm run seed:content; then
+            log "⚠️  WARNING: Content seeding failed; continuing"
+        else
+            log "✅ Content seeding completed"
+        fi
     fi
     
     # Build frontend
@@ -456,6 +496,9 @@ main() {
         chown -R "$DEPLOY_USER":"$DEPLOY_USER" .next/standalone || true
         log "✅ Standalone assets staged"
     fi
+    
+    # Validate and correct frontend .env.production URLs using DOMAIN
+    fix_frontend_env_urls
     
     # Ensure systemd units exist
     ensure_systemd_units

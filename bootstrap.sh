@@ -768,6 +768,13 @@ EOF
     BACKEND_HEALTHY=false
     LAST_STATUS=""
 
+    # Resolve public API base for readiness gate (prefer NEXT_PUBLIC_API_BASE)
+    API_BASE_RAW="${NEXT_PUBLIC_API_BASE:-}"
+    API_BASE=$(echo "$API_BASE_RAW" | tr -d '\r' | xargs)
+    [ -z "$API_BASE" ] && API_BASE="https://api.${DOMAIN}"
+    API_BASE="${API_BASE%/}"
+    HEALTH_URL="${API_BASE}/health"
+
     while [[ $ATTEMPT -le $MAX_ATTEMPTS ]]; do
         # Check if service is still running first
         if ! systemctl is-active --quiet "${APP_NAME}-backend"; then
@@ -777,7 +784,7 @@ EOF
         fi
 
         # Poll health endpoint for readiness
-        HEALTH_JSON=$(timeout 10 curl -s http://localhost:8080/health || true)
+        HEALTH_JSON=$(timeout 10 curl -s "$HEALTH_URL" || true)
         if echo "$HEALTH_JSON" | jq -e '.success == true' >/dev/null 2>&1; then
             printf "\n"  # Clear progress line
             log "✅ Backend health ready at attempt $ATTEMPT/$MAX_ATTEMPTS. Proceeding to build frontend."
@@ -802,7 +809,7 @@ EOF
         log "🪵 Recent backend logs (journalctl)"
         journalctl -u ${APP_NAME}-backend -n 200 --no-pager || true
         log "🌐 Health endpoint verbose output"
-        timeout 15 curl -v http://localhost:8080/health || true
+        timeout 15 curl -v "$HEALTH_URL" || true
         if [ "${FAST_MODE:-0}" -eq 1 ] || [ "${SKIP_BACKEND_HEALTH:-0}" -eq 1 ]; then
             log "⚠️  Continuing despite backend health precondition due to fast/skip mode"
         else
@@ -984,6 +991,36 @@ if [ "$FRONTEND_BUILD_REQUIRED" = "true" ]; then
     add_if_missing APPLE_CLIENT_ID "$APPLE_CLIENT_ID"
     add_if_missing APPLE_CLIENT_SECRET "$APPLE_CLIENT_SECRET"
     add_if_missing DEMO_USERS_JSON "$DEMO_USERS_JSON"
+
+    # Enforce correct domains for frontend URLs (override if wrong)
+    enforce_url_key() {
+        local file="$1"; local key="$2"; local expected="$3";
+        # Normalize expected to https and host-only when possible
+        local proto host
+        proto=$(echo "$expected" | sed -E 's~^(https?)://.*~\1~')
+        [ -z "$proto" ] && proto="https"
+        host=$(echo "$expected" | sed -E 's~^https?://([^/]+).*~\1~')
+        [ -z "$host" ] && host="$expected"
+        local target="${proto}://${host}"
+
+        # Replace or append the key with target value
+        awk -v k="$key" -v v="$target" '
+        BEGIN{found=0}
+        {
+          if ($0 ~ "^"k"=") { print k"="v; found=1 } else { print $0 }
+        }
+        END{ if(!found) print k"="v }
+        ' "$file" > "$file.tmp" && mv "$file.tmp" "$file"
+    }
+
+    # Determine expected URLs from DOMAIN
+    EXPECTED_BASE_URL="https://${DOMAIN}"
+    EXPECTED_API_BASE="https://api.${DOMAIN}"
+    EXPECTED_NEXTAUTH_URL="https://${DOMAIN}"
+
+    enforce_url_key "$TMP_ENV" "NEXT_PUBLIC_BASE_URL" "$EXPECTED_BASE_URL"
+    enforce_url_key "$TMP_ENV" "NEXT_PUBLIC_API_BASE" "$EXPECTED_API_BASE"
+    enforce_url_key "$TMP_ENV" "NEXTAUTH_URL" "$EXPECTED_NEXTAUTH_URL"
 
     mv "$TMP_ENV" .env.production
     log "✅ .env.production updated (existing values preserved)"
@@ -1365,14 +1402,24 @@ else
     sleep 5
 fi
 
-# Backend health
+# Resolve public API base for production checks (prefer NEXT_PUBLIC_API_BASE)
+API_BASE_RAW="${NEXT_PUBLIC_API_BASE:-}"
+if [ -z "$API_BASE_RAW" ] && [ -f "$APP_DIR/glasscode/frontend/.env.production" ]; then
+    API_BASE_RAW=$(grep -E '^NEXT_PUBLIC_API_BASE=' "$APP_DIR/glasscode/frontend/.env.production" | tail -n1 | cut -d'=' -f2- | tr -d '\r')
+fi
+[ -z "$API_BASE_RAW" ] && API_BASE_RAW="https://api.${DOMAIN}"
+# Sanitize accidental quotes/backticks/spaces and remove trailing slash
+API_BASE=$(echo "$API_BASE_RAW" | tr -d '\r' | xargs)
+API_BASE="${API_BASE%/}"
+HEALTH_URL="${API_BASE}/health"
+
+# Backend health (Node.js REST)
 if [ "$FRONTEND_ONLY" -eq 0 ]; then
   if [ "${SKIP_BACKEND_HEALTH:-0}" -eq 1 ] || [ "${FAST_MODE:-0}" -eq 1 ]; then
       log "ℹ️  Skipping backend health check (fast/skip mode)"
   else
-      if timeout 15 curl -s -X POST http://localhost:8080/graphql \
-        -H "Content-Type: application/json" \
-        -d '{"query":"{ __typename }"}' | grep -q '__typename'; then
+      HTTP=$(timeout 15 curl -s -o /dev/null -w "%{http_code}" "$HEALTH_URL" || true)
+      if [ "$HTTP" = "200" ]; then
           log "✅ Backend health check: PASSED"
       else
           log "⚠️  WARNING: Backend health check failed"
@@ -1384,7 +1431,7 @@ fi
 
 # Frontend availability
 FRONTEND_TIMEOUT=$([ "${FAST_MODE:-0}" -eq 1 ] && echo 5 || echo 10)
-if timeout $FRONTEND_TIMEOUT curl -f http://localhost:$FRONTEND_PORT >/dev/null 2>&1; then
+if timeout $FRONTEND_TIMEOUT curl -f http://127.0.0.1:$FRONTEND_PORT >/dev/null 2>&1; then
     log "✅ Frontend health check: PASSED"
 else
     log "⚠️  WARNING: Frontend health check failed"
@@ -1393,31 +1440,57 @@ fi
 # Database-backed content validation (default)
 if [ "$FRONTEND_ONLY" -eq 0 ]; then
     log "🔍 Validating backend content via Node API..."
-    
-    COURSES_JSON=$(timeout 10 curl -s http://localhost:8080/api/courses || true)
-    if echo "$COURSES_JSON" | jq -e 'type=="array"' >/dev/null 2>&1; then
-        if echo "$COURSES_JSON" | jq -e 'length > 0' >/dev/null 2>&1; then
-            log "✅ Courses endpoint: PASSED"
-            COURSE_ID=$(echo "$COURSES_JSON" | jq -r '.[0].id' 2>/dev/null || echo "")
+
+    COURSES_JSON=$(timeout 10 curl -s "${API_BASE}/api/courses" || true)
+    COURSES_SUCCESS=$(echo "$COURSES_JSON" | jq -r '.success' 2>/dev/null || echo "false")
+    COURSES_COUNT=$(echo "$COURSES_JSON" | jq -r '.data | length' 2>/dev/null || echo "0")
+
+    if [ "$COURSES_SUCCESS" = "true" ]; then
+        if [ "$COURSES_COUNT" -gt 0 ]; then
+            log "✅ Courses endpoint: PASSED ($COURSES_COUNT found)"
+            COURSE_ID=$(echo "$COURSES_JSON" | jq -r '.data[0].id' 2>/dev/null || echo "")
         else
-            log "✅ Courses endpoint: PASSED (empty array)"
+            log "⚠️  WARNING: Courses endpoint returned empty data; attempting seeding..."
             COURSE_ID=""
+            # Attempt content seeding from JSON registry
+            if [ -d "$APP_DIR/backend-node" ]; then
+                log "🌱 Seeding database content from JSON registry..."
+                (
+                  cd "$APP_DIR/backend-node" && \
+                  sudo -u "$DEPLOY_USER" env NODE_ENV=production \
+                    DATABASE_URL="${DATABASE_URL}" DB_DIALECT="${DB_DIALECT}" DB_HOST="${DB_HOST}" DB_PORT="${DB_PORT}" DB_NAME="${DB_NAME}" DB_USER="${DB_USER}" DB_PASSWORD="${DB_PASSWORD}" DB_SSL="${DB_SSL}" \
+                    npm run seed:content
+                ) || log "⚠️  WARNING: Content seeding failed; continuing"
+                # Recheck courses after seeding
+                COURSES_JSON=$(timeout 10 curl -s "${API_BASE}/api/courses" || true)
+                COURSES_SUCCESS=$(echo "$COURSES_JSON" | jq -r '.success' 2>/dev/null || echo "false")
+                COURSES_COUNT=$(echo "$COURSES_JSON" | jq -r '.data | length' 2>/dev/null || echo "0")
+                if [ "$COURSES_SUCCESS" = "true" ] && [ "$COURSES_COUNT" -gt 0 ]; then
+                    log "✅ Courses now populated after seeding ($COURSES_COUNT found)"
+                    COURSE_ID=$(echo "$COURSES_JSON" | jq -r '.data[0].id' 2>/dev/null || echo "")
+                else
+                    SHORT=$(echo "$COURSES_JSON" | tr -d '\n' | cut -c1-200)
+                    log "⚠️  WARNING: Courses remain empty after seeding (resp='${SHORT}')"
+                fi
+            else
+                log "ℹ️  Skipping seeding: backend-node directory not found"
+            fi
         fi
     else
         SHORT=$(echo "$COURSES_JSON" | tr -d '\n' | cut -c1-200)
         log "⚠️  WARNING: Courses endpoint failed (resp='${SHORT}')"
         COURSE_ID=""
     fi
-    
+
     if [ -n "$COURSE_ID" ]; then
-        COURSE_DETAIL=$(timeout 10 curl -s http://localhost:8080/api/courses/$COURSE_ID || true)
+        COURSE_DETAIL=$(timeout 10 curl -s "${API_BASE}/api/courses/$COURSE_ID" || true)
         MODULE_ID=$(echo "$COURSE_DETAIL" | jq -r '.data.modules[0].id' 2>/dev/null || echo "")
     else
         MODULE_ID=""
     fi
-    
+
     if [ -n "$MODULE_ID" ]; then
-        MODULE_DETAIL=$(timeout 10 curl -s http://localhost:8080/api/modules/$MODULE_ID || true)
+        MODULE_DETAIL=$(timeout 10 curl -s "${API_BASE}/api/modules/$MODULE_ID" || true)
         if echo "$MODULE_DETAIL" | jq -e '.data.lessons | type=="array"' >/dev/null 2>&1; then
             log "✅ Module detail with lessons: PASSED"
             LESSON_ID=$(echo "$MODULE_DETAIL" | jq -r '.data.lessons[0].id' 2>/dev/null || echo "")
@@ -1431,7 +1504,7 @@ if [ "$FRONTEND_ONLY" -eq 0 ]; then
     fi
     
     if [ -n "$LESSON_ID" ]; then
-        QUIZZES_JSON=$(timeout 10 curl -s http://localhost:8080/api/lessons/$LESSON_ID/quizzes || true)
+        QUIZZES_JSON=$(timeout 10 curl -s "${API_BASE}/api/lessons/$LESSON_ID/quizzes" || true)
         if echo "$QUIZZES_JSON" | jq -e 'type=="array"' >/dev/null 2>&1; then
             log "✅ Lesson quizzes endpoint: PASSED"
         else
