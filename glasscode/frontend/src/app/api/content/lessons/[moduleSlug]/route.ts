@@ -1,8 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getApiBaseStrict } from '@/lib/urlUtils';
 import { contentRegistry } from '@/lib/contentRegistry';
-import fs from 'node:fs/promises';
-import path from 'node:path';
+
 
 type FrontendLesson = {
   id: string;
@@ -21,8 +20,8 @@ type FrontendLesson = {
 // Database-based lesson loading function with fallback to local API during dev
 async function fetchLessonsFromDatabase(moduleSlug: string): Promise<FrontendLesson[]> {
   try {
-    const primaryBase = (() => { try { return getApiBaseStrict(); } catch { return 'http://127.0.0.1:8080'; } })();
-    const bases = Array.from(new Set([primaryBase, 'http://127.0.0.1:8080']));
+    const apiBase = getApiBaseStrict();
+    const bases = [apiBase];
 
     for (const apiBase of bases) {
       try {
@@ -132,11 +131,13 @@ const toArrayOfStrings = (v: unknown): string[] => (Array.isArray(v) ? v.filter(
 
 async function fetchLessonsFromFile(moduleSlug: string): Promise<FrontendLesson[]> {
   try {
+    const fs = await import('fs');
+    const path = await import('path');
     // Try root content path first
     const rootFilePath = path.join(process.cwd(), '..', '..', 'content', 'lessons', `${moduleSlug}.json`);
     let raw: string | null = null;
     try {
-      raw = await fs.readFile(rootFilePath, 'utf-8');
+      raw = await fs.promises.readFile(rootFilePath, 'utf-8');
     } catch {
       raw = null;
     }
@@ -145,7 +146,7 @@ async function fetchLessonsFromFile(moduleSlug: string): Promise<FrontendLesson[
     if (!raw) {
       const publicFilePath = path.join(process.cwd(), 'public', 'content', 'lessons', `${moduleSlug}.json`);
       try {
-        raw = await fs.readFile(publicFilePath, 'utf-8');
+        raw = await fs.promises.readFile(publicFilePath, 'utf-8');
       } catch {
         raw = null;
       }

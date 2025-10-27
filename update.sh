@@ -426,6 +426,8 @@ main() {
     # Configure Nginx with same flow as bootstrap
     log "🌐 Configuring Nginx..."
     if [ "$FRONTEND_ONLY" -eq 1 ]; then
+        API_BASE="${NEXT_PUBLIC_API_BASE%/}"
+        API_HOST=$(echo "$API_BASE" | sed -E 's~https?://([^/]+).*~\1~')
 cat >/etc/nginx/sites-available/$APP_NAME <<EOF
 server {
     listen 80;
@@ -438,9 +440,10 @@ server {
     server_name $DOMAIN;
 
     location /api {
-        proxy_pass http://127.0.0.1:8080;
+        proxy_pass ${API_BASE};
         proxy_http_version 1.1;
-        proxy_set_header Host \$host;
+        proxy_ssl_server_name on;
+        proxy_set_header Host ${API_HOST};
         proxy_set_header X-Real-IP \$remote_addr;
         proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;
         proxy_set_header X-Forwarded-Proto \$scheme;
@@ -450,9 +453,10 @@ server {
     }
 
     location /graphql {
-        proxy_pass http://127.0.0.1:8080;
+        proxy_pass ${API_BASE};
         proxy_http_version 1.1;
-        proxy_set_header Host \$host;
+        proxy_ssl_server_name on;
+        proxy_set_header Host ${API_HOST};
         proxy_set_header X-Real-IP \$remote_addr;
         proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;
         proxy_set_header X-Forwarded-Proto \$scheme;

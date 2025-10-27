@@ -1061,20 +1061,23 @@ UNIT_FILE_PATH="/etc/systemd/system/${APP_NAME}-frontend.service"
 # Prepare backend health check gating script (used in ExecStartPre)
 cat >"$APP_DIR/glasscode/frontend/check_backend_health.sh" <<'EOS'
 #!/usr/bin/env bash
+BASE="${NEXT_PUBLIC_API_BASE:-http://127.0.0.1:8080}"
+HEALTH_URL="${BASE%/}/health"
 MAX=30
 COUNT=1
 while [ $COUNT -le $MAX ]; do
-  HTTP=$(timeout 10 curl -s -o /dev/null -w "%{http_code}" http://127.0.0.1:8080/health || true)
-  RESP=$(timeout 10 curl -s http://127.0.0.1:8080/health || true)
+  HTTP=$(timeout 10 curl -s -o /dev/null -w "%{http_code}" "$HEALTH_URL" || true)
+  RESP=$(timeout 10 curl -s "$HEALTH_URL" || true)
+  SUCCESS=$(echo "$RESP" | jq -r '.success' 2>/dev/null || { echo "$RESP" | grep -q '"success":true' && echo "true" || echo "false"; })
   STATUS=$(echo "$RESP" | jq -r .status 2>/dev/null || echo "$RESP" | grep -o '"status":"[^"]*"' | cut -d '"' -f4)
 
-  if [ "$HTTP" = "200" ] && { [ "$STATUS" = "healthy" ] || [ "$STATUS" = "degraded" ] || [ -n "$RESP" ]; }; then
-    echo "✅ Backend health check passed at attempt $COUNT/$MAX: HTTP $HTTP, Status: ${STATUS:-unknown}"
+  if [ "$HTTP" = "200" ] && { [ "$SUCCESS" = "true" ] || [ "$STATUS" = "healthy" ] || [ "$STATUS" = "degraded" ]; }; then
+    echo "✅ Backend health check passed at attempt $COUNT/$MAX: HTTP $HTTP, URL: $HEALTH_URL, Success: $SUCCESS, Status: ${STATUS:-unknown}"
     exit 0
   fi
   sleep 5; COUNT=$((COUNT+1))
 done
-echo "Backend health check gating failed: http='$HTTP' status='$STATUS' resp='$RESP'"
+echo "Backend health check gating failed: url='$HEALTH_URL' http='$HTTP' success='$SUCCESS' status='$STATUS' resp='$RESP'"
 exit 1
 EOS
 chmod +x "$APP_DIR/glasscode/frontend/check_backend_health.sh"
@@ -1233,6 +1236,8 @@ fi
 ### 12. Configure Nginx
 log "🌐 Configuring Nginx..."
 if [ "$FRONTEND_ONLY" -eq 1 ]; then
+    API_BASE="${NEXT_PUBLIC_API_BASE%/}"
+    API_HOST=$(echo "$API_BASE" | sed -E 's~https?://([^/]+).*~\1~')
 cat >/etc/nginx/sites-available/$APP_NAME <<EOF
 server {
     listen 80;
@@ -1245,9 +1250,10 @@ server {
     server_name $DOMAIN;
 
     location /api {
-        proxy_pass http://127.0.0.1:8080;
+        proxy_pass ${API_BASE};
         proxy_http_version 1.1;
-        proxy_set_header Host \$host;
+        proxy_ssl_server_name on;
+        proxy_set_header Host ${API_HOST};
         proxy_set_header X-Real-IP \$remote_addr;
         proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;
         proxy_set_header X-Forwarded-Proto \$scheme;
@@ -1258,9 +1264,10 @@ server {
 
 
     location /graphql {
-        proxy_pass http://127.0.0.1:8080;
+        proxy_pass ${API_BASE};
         proxy_http_version 1.1;
-        proxy_set_header Host \$host;
+        proxy_ssl_server_name on;
+        proxy_set_header Host ${API_HOST};
         proxy_set_header X-Real-IP \$remote_addr;
         proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;
         proxy_set_header X-Forwarded-Proto \$scheme;

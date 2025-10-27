@@ -1,17 +1,14 @@
 import { normalizeQuestion } from '@/lib/textNormalization';
 import { getApiBaseStrict } from '@/lib/urlUtils';
 import { contentRegistry } from '@/lib/contentRegistry';
-import fs from 'node:fs/promises';
-import path from 'node:path';
+
 
 // Database-based quiz loading function
 async function fetchQuizFromDatabase(moduleSlug: string) {
   try {
     // Try multiple API base candidates in case of misconfiguration
-    const primaryBase = (() => { try { return getApiBaseStrict(); } catch { return 'http://127.0.0.1:8080'; } })();
-    const isProd = process.env.NODE_ENV === 'production';
-    const prodFallbacks = isProd ? ['https://api.glasscode.academy'] : [];
-    const bases = Array.from(new Set([primaryBase, ...prodFallbacks, 'http://127.0.0.1:8080']));
+    const apiBase = getApiBaseStrict();
+    const bases = [apiBase];
 
     for (const apiBase of bases) {
       try {
@@ -90,8 +87,10 @@ async function fetchQuizFromDatabase(moduleSlug: string) {
 
 async function fetchQuizFromFile(moduleSlug: string): Promise<{ questions: unknown[] }> {
   try {
+    const fs = await import('fs');
+    const path = await import('path');
     const filePath = path.join(process.cwd(), '..', '..', 'content', 'quizzes', `${moduleSlug}.json`);
-    const raw = await fs.readFile(filePath, 'utf-8');
+    const raw = await fs.promises.readFile(filePath, 'utf-8');
     const json = JSON.parse(raw);
     const questions = Array.isArray(json.questions) ? (json.questions as unknown[]) : [];
     console.log(`[quizzes] Loaded ${questions.length} questions from file for ${moduleSlug}`);

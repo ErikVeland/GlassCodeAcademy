@@ -255,7 +255,7 @@ class ContentRegistryLoader {
     
     if (!isBrowser) {
       try {
-        const fs = await import('fs/promises');
+        const fs = await import('fs');
         const path = await import('path');
         const cwd = process.cwd();
         const fileCandidates = [
@@ -265,7 +265,7 @@ class ContentRegistryLoader {
         ];
         for (const p of fileCandidates) {
           try {
-            const json = await fs.readFile(p, 'utf-8');
+            const json = await fs.promises.readFile(p, 'utf-8');
             const parsed = JSON.parse(json) as ContentRegistry;
             if (parsed && Array.isArray(parsed.modules)) {
               return parsed;
@@ -278,7 +278,7 @@ class ContentRegistryLoader {
         // ignore fs fallback errors
       }
     }
-    
+
     throw new Error('Registry unavailable from API');
   }
 
