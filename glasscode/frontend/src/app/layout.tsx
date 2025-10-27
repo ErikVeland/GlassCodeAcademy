@@ -51,6 +51,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         <Script src="/assets/theme-init.js" strategy="beforeInteractive" />
       </head>
       <body className={"antialiased min-h-screen relative theme-base"}>
+        <DarkModeProvider>
         <ApolloWrapper>
           <ConsoleBanner />
           {/* Dev-only Apollo messages moved to client component to avoid server bundle import issues */}
@@ -58,7 +59,6 @@ export default async function RootLayout({ children }: { children: React.ReactNo
           <AuthProvider>
           <ProfileProvider>
             <AccessibilityProvider>
-              <DarkModeProvider>
               <div className="flex flex-col min-h-screen">
                 <Suspense fallback={null}>
                   <AdminQueryHandler />
@@ -106,11 +106,11 @@ export default async function RootLayout({ children }: { children: React.ReactNo
                   </div>
                 </footer>
               </div>
-              </DarkModeProvider>
             </AccessibilityProvider>
           </ProfileProvider>
           </AuthProvider>
         </ApolloWrapper>
+        </DarkModeProvider>
       </body>
     </html>
   );

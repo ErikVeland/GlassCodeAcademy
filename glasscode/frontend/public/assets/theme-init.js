@@ -5,12 +5,19 @@
     var cookieTheme = match ? decodeURIComponent(match[1]) : '';
     var storedTheme = localStorage.getItem('theme');
     var legacy = localStorage.getItem('darkMode');
-    var initialTheme = storedTheme || (legacy === 'true' ? 'dark' : legacy === 'false' ? 'light' : 'system');
     var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
     var html = document.documentElement;
-    var finalTheme = (cookieTheme === 'dark' || cookieTheme === 'light')
-      ? cookieTheme
-      : (initialTheme === 'system' ? (prefersDark ? 'dark' : 'light') : initialTheme);
+
+    // Decide the source of truth: prefer explicit localStorage if set,
+    // then fallback to cookie, then legacy key, else system.
+    var selected = (storedTheme === 'light' || storedTheme === 'dark' || storedTheme === 'system')
+      ? storedTheme
+      : ((cookieTheme === 'light' || cookieTheme === 'dark')
+          ? cookieTheme
+          : (legacy === 'true' ? 'dark' : legacy === 'false' ? 'light' : 'system'));
+
+    var finalTheme = selected === 'system' ? (prefersDark ? 'dark' : 'light') : selected;
+
     html.classList.remove('light', 'dark');
     if (finalTheme === 'dark') {
       html.classList.add('dark');
