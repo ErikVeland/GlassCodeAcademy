@@ -67,7 +67,7 @@ export default function LoginPage() {
       <h1 className="text-2xl font-semibold mb-6">Sign in</h1>
 
       {error && (
-        <div className="mb-4 p-3 border border-red-300 bg-red-50 text-red-700 rounded">
+        <div className="mb-4 p-3 border border-border bg-surface-alt text-danger rounded">
           {error}
         </div>
       )}
@@ -108,7 +108,7 @@ export default function LoginPage() {
             placeholder="Email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className="w-full border rounded p-2"
+            className="w-full border border-border rounded p-2 bg-surface text-fg"
             required
           />
           <input
@@ -116,18 +116,18 @@ export default function LoginPage() {
             placeholder="Password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            className="w-full border rounded p-2"
+            className="w-full border border-border rounded p-2 bg-surface text-fg"
             required
           />
           <button
             type="submit"
             disabled={loading}
-            className="w-full py-2 px-4 bg-green-600 text-white rounded hover:bg-green-700 disabled:opacity-60"
+            className="w-full py-2 px-4 bg-primary text-primary-fg rounded hover:opacity-90 disabled:opacity-60"
           >
             {loading ? "Signing in…" : "Sign in"}
           </button>
           </form>
-          <p className="text-xs text-gray-500 mt-2">
+          <p className="text-xs text-muted mt-2">
             This demo credentials sign-in works only for preconfigured users.
           </p>
         </div>
@@ -141,17 +141,17 @@ export default function LoginPage() {
             placeholder="Your name"
             value={guestName}
             onChange={(e) => setGuestName(e.target.value)}
-            className="w-full border rounded p-2"
+            className="w-full border border-border rounded p-2 bg-surface text-fg"
             required
           />
           <button
             type="submit"
-            className="w-full py-2 px-4 bg-gray-200 text-gray-900 rounded hover:bg-gray-300"
+            className="w-full py-2 px-4 bg-surface-alt text-fg rounded hover:opacity-90"
           >
             Continue as guest
           </button>
         </form>
-        <p className="text-xs text-gray-500 mt-2">
+        <p className="text-xs text-muted mt-2">
           Guest mode stores your name in localStorage only on this device.
         </p>
       </div>

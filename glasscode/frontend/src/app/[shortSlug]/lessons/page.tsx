@@ -88,18 +88,18 @@ export default async function LessonsPage({ params, searchParams }: LessonsPageP
         <nav className="mb-8" aria-label="Breadcrumb">
           <ol className="flex items-center space-x-2 text-sm">
             <li>
-              <Link href="/" className="text-blue-600 hover:text-blue-800">
+              <Link href="/" className="text-primary hover:opacity-90">
                 Home
               </Link>
             </li>
-            <li className="text-gray-500">/</li>
+            <li className="text-muted">/</li>
             <li>
-              <Link href={currentModule.routes.overview} className="text-blue-600 hover:text-blue-800">
+              <Link href={currentModule.routes.overview} className="text-primary hover:opacity-90">
                 {currentModule.title}
               </Link>
             </li>
-            <li className="text-gray-500">/</li>
-            <li className="text-gray-900 dark:text-gray-100 font-medium">
+            <li className="text-muted">/</li>
+            <li className="text-fg font-medium">
               Lessons
             </li>
           </ol>
@@ -113,20 +113,20 @@ export default async function LessonsPage({ params, searchParams }: LessonsPageP
                 {currentModule.icon}
               </span>
               <div>
-                <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
+                <h1 className="text-3xl font-bold text-fg">
                   {currentModule.title} Lessons
                 </h1>
-                <p className="text-gray-600 dark:text-gray-300">
+                <p className="text-muted">
                   {lessonGroups.length} lesson group{lessonGroups.length !== 1 ? 's' : ''} available
                 </p>
                 {selectedTopic && (
                   <div className="mt-2 flex items-center gap-2">
-                    <span className="px-2 py-1 bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 rounded text-xs">
+                    <span className="px-2 py-1 bg-surface-alt text-primary rounded text-xs">
                       Topic: {selectedTopic}
                     </span>
                     <Link
                       href={currentModule.routes.lessons}
-                      className="text-xs text-blue-600 hover:text-blue-800"
+                      className="text-xs text-primary hover:opacity-90"
                     >
                       Clear filter
                     </Link>
@@ -145,30 +145,30 @@ export default async function LessonsPage({ params, searchParams }: LessonsPageP
                 <div className="flex flex-col sm:flex-row items-start justify-between">
                   <div className="flex-1">
                     <div className="flex items-center gap-3 mb-3">
-                      <span className="flex items-center justify-center w-8 h-8 bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 rounded-full text-sm font-bold">
+                      <span className="flex items-center justify-center w-8 h-8 bg-surface-alt text-primary rounded-full text-sm font-bold">
                         {group.order}
                       </span>
-                      <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
+                      <h2 className="text-xl font-semibold text-fg">
                         {group.title}
                       </h2>
-                      <span className="px-2 py-1 bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300 rounded text-sm">
+                      <span className="px-2 py-1 bg-surface-alt text-muted rounded text-sm">
                         {group.lessons.length} lessons
                       </span>
                     </div>
                     
-                    <p className="text-gray-600 dark:text-gray-300 mb-4">
+                    <p className="text-fg mb-4">
                       {group.description}
                     </p>
 
                     <div className="md:flex md:items-end md:justify-between">
                       <div className="md:flex-1 md:pr-6 mb-4 md:mb-0">
-                        <h3 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                        <h3 className="text-sm font-medium text-fg mb-2">
                           Lessons in this group:
                         </h3>
-                        <ul className="text-sm text-gray-600 dark:text-gray-400 space-y-1">
+                        <ul className="text-sm text-fg space-y-1">
                           {group.lessons.map((lesson) => (
                             <li key={lesson.id} className="flex items-center gap-2">
-                              <span className="text-blue-500">•</span>
+                              <span className="text-primary">•</span>
                               {lesson.title}
                             </li>
                           ))}
@@ -193,7 +193,7 @@ export default async function LessonsPage({ params, searchParams }: LessonsPageP
                         {group.lessons[0].topic && (
                           <Link
                             href={`${currentModule.routes.lessons}?topic=${encodeURIComponent(group.lessons[0].topic)}`}
-                            className="px-2 py-1 bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 rounded text-xs hover:bg-blue-100 dark:hover:bg-blue-900/50"
+                            className="px-2 py-1 bg-surface-alt text-primary rounded text-xs hover:opacity-90"
                           >
                             {group.lessons[0].topic}
                           </Link>
@@ -208,10 +208,10 @@ export default async function LessonsPage({ params, searchParams }: LessonsPageP
         ) : (
           <div className="glass-morphism p-12 rounded-xl text-center">
             <div className="text-6xl mb-4">📚</div>
-            <h2 className="text-2xl font-semibold text-gray-900 dark:text-white mb-2">
+            <h2 className="text-2xl font-semibold text-fg mb-2">
               No lessons available yet
             </h2>
-            <p className="text-gray-600 dark:text-gray-300">
+            <p className="text-fg">
               Content is being prepared. Please check back later.
             </p>
           </div>

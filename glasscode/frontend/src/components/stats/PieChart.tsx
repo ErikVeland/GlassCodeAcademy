@@ -27,7 +27,7 @@ export default function PieChart({
   if (total === 0) {
     return (
       <div className={`flex items-center justify-center ${className}`} style={{ width: size, height: size }}>
-        <div className="text-gray-400 text-sm">No data</div>
+        <div className="text-muted text-sm">No data</div>
       </div>
     );
   }
@@ -49,7 +49,7 @@ export default function PieChart({
             cy={center}
             r={radius}
             fill="none"
-            stroke="rgba(255, 255, 255, 0.1)"
+            stroke={"hsl(var(--border) / 0.3)"}
             strokeWidth={strokeWidth}
           />
           
@@ -76,7 +76,7 @@ export default function PieChart({
                 strokeLinecap="round"
                 className="transition-all duration-300 hover:opacity-90 cursor-pointer"
                 style={{
-                  filter: isHovered ? 'drop-shadow(0 0 8px rgba(255,255,255,0.5))' : 'none',
+                  filter: isHovered ? 'drop-shadow(0 0 8px hsl(var(--primary-fg) / 0.5))' : 'none',
                   opacity: hoveredIndex !== null && !isHovered ? 0.5 : 1
                 }}
                 onMouseEnter={() => setHoveredIndex(index)}
@@ -90,16 +90,16 @@ export default function PieChart({
         <div className="absolute inset-0 flex flex-col items-center justify-center">
           {hoveredIndex !== null ? (
             <>
-              <div className="text-2xl font-bold text-white">{data[hoveredIndex].value}</div>
-              <div className="text-sm text-gray-400 text-center px-2">{data[hoveredIndex].label}</div>
-              <div className="text-xs text-gray-500 mt-1">
+              <div className="text-2xl font-bold text-primary-fg">{data[hoveredIndex].value}</div>
+              <div className="text-sm text-muted text-center px-2">{data[hoveredIndex].label}</div>
+              <div className="text-xs text-muted mt-1">
                 {((data[hoveredIndex].value / total) * 100).toFixed(1)}%
               </div>
             </>
           ) : (
             <>
-              <div className="text-6xl font-bold text-white">{total}</div>
-              <div className="text-sm text-gray-400">Total</div>
+              <div className="text-6xl font-bold text-primary-fg">{total}</div>
+              <div className="text-sm text-muted">Total</div>
             </>
           )}
         </div>
@@ -116,11 +116,11 @@ export default function PieChart({
                   className="w-3 h-3 rounded-full mr-3" 
                   style={{ backgroundColor: item.color }}
                 />
-                <span className="text-gray-300 font-medium">{item.label}</span>
+                <span className="text-muted font-medium">{item.label}</span>
               </div>
               <div className="flex items-center space-x-2">
-                <span className="text-white font-bold">{item.value}</span>
-                <span className="text-gray-400 text-sm">({percentage}%)</span>
+                <span className="text-fg font-bold">{item.value}</span>
+                <span className="text-muted text-sm">({percentage}%)</span>
               </div>
             </div>
           );

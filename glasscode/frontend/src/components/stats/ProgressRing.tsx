@@ -16,8 +16,8 @@ export default function ProgressRing({
   progress,
   size = 120,
   strokeWidth = 8,
-  color = '#3B82F6',
-  backgroundColor = '#E5E7EB',
+  color = 'hsl(var(--primary))',
+  backgroundColor = 'hsl(var(--border))',
   children,
   className = ''
 }: ProgressRingProps) {

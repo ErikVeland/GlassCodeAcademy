@@ -58,16 +58,16 @@ export default function StatsPage() {
 
   if (stats.isLoading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 flex items-center justify-center">
-        <div className="glass-card text-white dark:text-gray-200 text-xl">Loading stats...</div>
+      <div className="min-h-screen bg-bg flex items-center justify-center">
+        <div className="glass-card text-fg text-xl">Loading stats...</div>
       </div>
     );
   }
 
   if (stats.error) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 flex items-center justify-center">
-        <div className="glass-card text-red-400 dark:text-red-300 text-xl">Error loading stats: {stats.error}</div>
+      <div className="min-h-screen bg-bg flex items-center justify-center">
+        <div className="glass-card text-danger text-xl">Error loading stats: {stats.error}</div>
       </div>
     );
   }
@@ -75,14 +75,14 @@ export default function StatsPage() {
   const totalContent = stats.totalLessons + stats.totalQuestions;
 
   return (
-    <div className="liquid-glass-layout min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
+    <div className="liquid-glass-layout min-h-screen bg-bg">
       <div className="liquid-glass-content container mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Header */}
         <div className="text-center mb-12">
-          <h1 className="text-4xl md:text-5xl font-bold text-white dark:text-gray-100 mb-4">
+          <h1 className="text-4xl md:text-5xl font-bold text-fg mb-4">
             📊 GlassStats
           </h1>
-          <p className="text-xl text-gray-300 dark:text-gray-400 max-w-2xl mx-auto">
+          <p className="text-xl text-muted max-w-2xl mx-auto">
             There is so much to learn. So much to discover.
           </p>
         </div>
@@ -122,8 +122,8 @@ export default function StatsPage() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8 mb-12">
           {/* Difficulty Breakdown */}
           <div className="glass-card">
-            <h3 className="text-2xl font-bold text-white dark:text-gray-100 mb-6 flex items-center">
-              <ChartBarIcon className="h-6 w-6 mr-2 text-indigo-400" />
+            <h3 className="text-2xl font-bold text-fg mb-6 flex items-center">
+              <ChartBarIcon className="h-6 w-6 mr-2 text-primary" />
               Difficulty Distribution
             </h3>
             <div className="w-full overflow-hidden">
@@ -153,26 +153,26 @@ export default function StatsPage() {
 
           {/* Learning Tiers */}
           <div className="glass-card flex flex-col">
-            <h3 className="text-2xl font-bold text-white dark:text-gray-100 mb-6 flex items-center">
-              <TrophyIcon className="h-6 w-6 mr-2 text-yellow-400" />
+            <h3 className="text-2xl font-bold text-fg mb-6 flex items-center">
+              <TrophyIcon className="h-6 w-6 mr-2 text-warning" />
               Learning Tiers
             </h3>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 flex-1">
-              <div className="text-center p-4 bg-gradient-to-br from-blue-500/20 to-blue-600/20 rounded-xl border border-blue-400/30 flex flex-col justify-center">
-                <div className="text-2xl font-bold text-blue-300">{stats.tierBreakdown.foundational}</div>
-                <div className="text-sm text-blue-400 font-medium">Foundational</div>
+              <div className="text-center p-4 bg-surface-alt rounded-xl border border-border flex flex-col justify-center">
+                <div className="text-2xl font-bold text-primary">{stats.tierBreakdown.foundational}</div>
+                <div className="text-sm text-primary font-medium">Foundational</div>
               </div>
-              <div className="text-center p-4 bg-gradient-to-br from-green-500/20 to-green-600/20 rounded-xl border border-green-400/30 flex flex-col justify-center">
-                <div className="text-2xl font-bold text-green-300">{stats.tierBreakdown.core}</div>
-                <div className="text-sm text-green-400 font-medium">Core</div>
+              <div className="text-center p-4 bg-surface-alt rounded-xl border border-border flex flex-col justify-center">
+                <div className="text-2xl font-bold text-success">{stats.tierBreakdown.core}</div>
+                <div className="text-sm text-success font-medium">Core</div>
               </div>
-              <div className="text-center p-4 bg-gradient-to-br from-purple-500/20 to-purple-600/20 rounded-xl border border-purple-400/30 flex flex-col justify-center">
-                <div className="text-2xl font-bold text-purple-300">{stats.tierBreakdown.specialized}</div>
-                <div className="text-sm text-purple-400 font-medium">Specialized</div>
+              <div className="text-center p-4 bg-surface-alt rounded-xl border border-border flex flex-col justify-center">
+                <div className="text-2xl font-bold text-primary">{stats.tierBreakdown.specialized}</div>
+                <div className="text-sm text-primary font-medium">Specialized</div>
               </div>
-              <div className="text-center p-4 bg-gradient-to-br from-orange-500/20 to-orange-600/20 rounded-xl border border-orange-400/30 flex flex-col justify-center">
-                <div className="text-2xl font-bold text-orange-300">{stats.tierBreakdown.quality}</div>
-                <div className="text-sm text-orange-400 font-medium">Quality</div>
+              <div className="text-center p-4 bg-surface-alt rounded-xl border border-border flex flex-col justify-center">
+                <div className="text-2xl font-bold text-warning">{stats.tierBreakdown.quality}</div>
+                <div className="text-sm text-warning font-medium">Quality</div>
               </div>
             </div>
           </div>
@@ -180,8 +180,8 @@ export default function StatsPage() {
 
         {/* Module Breakdown */}
         <div className="glass-card mb-12">
-          <h3 className="text-2xl font-bold text-white dark:text-gray-100 mb-6 flex items-center">
-            <SparklesIcon className="h-6 w-6 mr-2 text-pink-400" />
+          <h3 className="text-2xl font-bold text-fg mb-6 flex items-center">
+            <SparklesIcon className="h-6 w-6 mr-2 text-primary" />
             Technology Modules
           </h3>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
@@ -190,13 +190,13 @@ export default function StatsPage() {
               return (
                 <div
                   key={index}
-                  className="p-4 rounded-xl border border-white/20 hover:border-white/40 transition-all duration-200 hover:shadow-lg hover:scale-105 cursor-pointer bg-white/5 hover:bg-white/10 relative group"
+                  className="p-4 rounded-xl border border-border hover:opacity-90 transition-all duration-200 hover:shadow-lg hover:scale-105 cursor-pointer bg-surface-alt relative group"
                   style={{ borderLeftColor: module.color, borderLeftWidth: '4px' }}
                 >
                   {/* Direct Link Button */}
                   <Link
                     href={`/modules/${moduleSlug}`}
-                    className="absolute top-2 right-2 p-1.5 rounded-lg bg-white/10 hover:bg-white/20 border border-white/20 hover:border-white/40 transition-all duration-200 group/btn"
+                    className="absolute top-2 right-2 p-1.5 rounded-lg bg-surface-alt hover:opacity-90 border border-border transition-all duration-200 group/btn"
                   >
                     <svg
                       className="w-4 h-4 text-white/70 group-hover/btn:text-white transition-colors"
@@ -208,18 +208,18 @@ export default function StatsPage() {
                     </svg>
                   </Link>
 
-                  <h4 className="font-bold text-white mb-2 group-hover:text-indigo-300 transition-colors pr-8">{capitalizeModuleName(module.name)}</h4>
+                  <h4 className="font-bold text-fg mb-2 group-hover:text-primary transition-colors pr-8">{capitalizeModuleName(module.name)}</h4>
                   <div className="space-y-1">
                     <div className="flex justify-between text-sm">
-                      <span className="text-gray-400">Lessons:</span>
-                      <span className="font-medium text-blue-400">{module.lessons}</span>
+                      <span className="text-muted">Lessons:</span>
+                      <span className="font-medium text-primary">{module.lessons}</span>
                     </div>
                     <div className="flex justify-between text-sm">
-                      <span className="text-gray-400">Questions:</span>
-                      <span className="font-medium text-green-400">{module.questions}</span>
+                      <span className="text-muted">Questions:</span>
+                      <span className="font-medium text-success">{module.questions}</span>
                     </div>
                     <div className="flex justify-between text-sm font-bold">
-                      <span className="text-gray-300">Total:</span>
+                      <span className="text-muted">Total:</span>
                       <span style={{ color: module.color }}>{module.lessons + module.questions}</span>
                     </div>
                   </div>
@@ -297,45 +297,45 @@ export default function StatsPage() {
           {/* Feature Categories Detail */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <div className="space-y-4">
-              <h4 className="text-lg font-semibold text-white mb-3">Core LMS Features</h4>
+              <h4 className="text-lg font-semibold text-fg mb-3">Core LMS Features</h4>
               <div className="space-y-3">
-                <div className="flex items-center justify-between p-3 bg-blue-500/10 rounded-lg border border-blue-400/20">
-                  <span className="text-blue-300">Advanced Course Creation</span>
-                  <span className="text-xs bg-blue-500/20 text-blue-300 px-2 py-1 rounded">Planned</span>
+                <div className="flex items-center justify-between p-3 bg-surface-alt rounded-lg border border-border">
+                  <span className="text-primary">Advanced Course Creation</span>
+                  <span className="text-xs bg-surface-alt text-primary px-2 py-1 rounded">Planned</span>
                 </div>
-                <div className="flex items-center justify-between p-3 bg-green-500/10 rounded-lg border border-green-400/20">
-                  <span className="text-green-300">Advanced Quiz System</span>
-                  <span className="text-xs bg-green-500/20 text-green-300 px-2 py-1 rounded">Planned</span>
+                <div className="flex items-center justify-between p-3 bg-surface-alt rounded-lg border border-border">
+                  <span className="text-success">Advanced Quiz System</span>
+                  <span className="text-xs bg-surface-alt text-success px-2 py-1 rounded">Planned</span>
                 </div>
-                <div className="flex items-center justify-between p-3 bg-purple-500/10 rounded-lg border border-purple-400/20">
-                  <span className="text-purple-300">Assignment Management</span>
-                  <span className="text-xs bg-purple-500/20 text-purple-300 px-2 py-1 rounded">Planned</span>
+                <div className="flex items-center justify-between p-3 bg-surface-alt rounded-lg border border-border">
+                  <span className="text-primary">Assignment Management</span>
+                  <span className="text-xs bg-surface-alt text-primary px-2 py-1 rounded">Planned</span>
                 </div>
-                <div className="flex items-center justify-between p-3 bg-orange-500/10 rounded-lg border border-orange-400/20">
-                  <span className="text-orange-300">Gradebook & Analytics</span>
-                  <span className="text-xs bg-orange-500/20 text-orange-300 px-2 py-1 rounded">Planned</span>
+                <div className="flex items-center justify-between p-3 bg-surface-alt rounded-lg border border-border">
+                  <span className="text-warning">Gradebook & Analytics</span>
+                  <span className="text-xs bg-surface-alt text-warning px-2 py-1 rounded">Planned</span>
                 </div>
               </div>
             </div>
             
             <div className="space-y-4">
-              <h4 className="text-lg font-semibold text-white mb-3">Enterprise Features</h4>
+              <h4 className="text-lg font-semibold text-fg mb-3">Enterprise Features</h4>
               <div className="space-y-3">
-                <div className="flex items-center justify-between p-3 bg-indigo-500/10 rounded-lg border border-indigo-400/20">
-                  <span className="text-indigo-300">Zoom & Google Meet Integration</span>
-                  <span className="text-xs bg-indigo-500/20 text-indigo-300 px-2 py-1 rounded">Planned</span>
+                <div className="flex items-center justify-between p-3 bg-surface-alt rounded-lg border border-border">
+                  <span className="text-primary">Zoom & Google Meet Integration</span>
+                  <span className="text-xs bg-surface-alt text-primary px-2 py-1 rounded">Planned</span>
                 </div>
-                <div className="flex items-center justify-between p-3 bg-pink-500/10 rounded-lg border border-pink-400/20">
-                  <span className="text-pink-300">White Labeling & Branding</span>
-                  <span className="text-xs bg-pink-500/20 text-pink-300 px-2 py-1 rounded">Planned</span>
+                <div className="flex items-center justify-between p-3 bg-surface-alt rounded-lg border border-border">
+                  <span className="text-danger">White Labeling & Branding</span>
+                  <span className="text-xs bg-surface-alt text-danger px-2 py-1 rounded">Planned</span>
                 </div>
-                <div className="flex items-center justify-between p-3 bg-cyan-500/10 rounded-lg border border-cyan-400/20">
-                  <span className="text-cyan-300">SCORM Compliance</span>
-                  <span className="text-xs bg-cyan-500/20 text-cyan-300 px-2 py-1 rounded">Planned</span>
+                <div className="flex items-center justify-between p-3 bg-surface-alt rounded-lg border border-border">
+                  <span className="text-primary">SCORM Compliance</span>
+                  <span className="text-xs bg-surface-alt text-primary px-2 py-1 rounded">Planned</span>
                 </div>
-                <div className="flex items-center justify-between p-3 bg-yellow-500/10 rounded-lg border border-yellow-400/20">
-                  <span className="text-yellow-300">Certificate Builder with QR</span>
-                  <span className="text-xs bg-yellow-500/20 text-yellow-300 px-2 py-1 rounded">Planned</span>
+                <div className="flex items-center justify-between p-3 bg-surface-alt rounded-lg border border-border">
+                  <span className="text-warning">Certificate Builder with QR</span>
+                  <span className="text-xs bg-surface-alt text-warning px-2 py-1 rounded">Planned</span>
                 </div>
               </div>
             </div>
@@ -343,31 +343,31 @@ export default function StatsPage() {
         </div>
 
         {/* Fun Facts */}
-        <div className="glass-card bg-gradient-to-r from-indigo-500/20 via-purple-500/20 to-pink-500/20 border-gradient">
-          <h3 className="text-2xl font-bold mb-6 flex items-center text-white">
-            <FireIcon className="h-6 w-6 mr-2 text-orange-400" />
+        <div className="glass-card bg-surface-alt border border-border">
+          <h3 className="text-2xl font-bold mb-6 flex items-center text-fg">
+            <FireIcon className="h-6 w-6 mr-2 text-warning" />
             Fun Facts & Insights
           </h3>
           <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
             <div className="text-center">
-              <div className="text-3xl font-bold text-white">{totalContent.toLocaleString()}</div>
-              <div className="text-gray-300">Total Learning Items</div>
+              <div className="text-3xl font-bold text-fg">{totalContent.toLocaleString()}</div>
+              <div className="text-muted">Total Learning Items</div>
             </div>
             <div className="text-center">
-              <div className="text-3xl font-bold text-white">
+              <div className="text-3xl font-bold text-fg">
                 {Math.round((stats.totalLessons / totalContent) * 100)}%
               </div>
-              <div className="text-gray-300">Lessons vs Questions</div>
+              <div className="text-muted">Lessons vs Questions</div>
             </div>
             <div className="text-center">
-              <div className="text-3xl font-bold text-white">
+              <div className="text-3xl font-bold text-fg">
                 {Math.round(stats.averageCompletionTime * stats.totalLessons / 60)}h
               </div>
-              <div className="text-gray-300">Total Learning Time</div>
+              <div className="text-muted">Total Learning Time</div>
             </div>
             <div className="text-center">
-              <div className="text-3xl font-bold text-white">36+</div>
-              <div className="text-gray-300">LMS Features Planned</div>
+              <div className="text-3xl font-bold text-fg">36+</div>
+              <div className="text-muted">LMS Features Planned</div>
             </div>
           </div>
         </div>

@@ -952,31 +952,28 @@ body {
   @include glass-morphism();
 }
 
+// Foreground text color — app-level theme controlled via [data-theme]
 .text-fg {
-  color: white;
+  color: #1f2937; // Gray-800 in light mode
 }
-@media (prefers-color-scheme: light) {
-  .text-fg {
-    color: #1f2937; // Gray-800 for light mode foreground
-  }
+[data-theme="dark"] .text-fg {
+  color: rgba(255, 255, 255, 0.92); // Near-white in dark mode for contrast
 }
 
+// Muted text — consistent across app theme, not OS preference
 .text-muted {
-  color: rgba(255, 255, 255, 0.85); // Brightened muted text for WCAG contrast
+  color: #6b7280; // Gray-500 in light mode
 }
-@media (prefers-color-scheme: light) {
-  .text-muted {
-    color: #6b7280; // Gray-500 in light mode
-  }
+[data-theme="dark"] .text-muted {
+  color: rgba(255, 255, 255, 0.85); // Muted near-white in dark mode
 }
 
+// Surface alt tint — controlled by app theme
 .bg-surface-alt {
   background: rgba(255, 255, 255, 0.15);
 }
-@media (prefers-color-scheme: dark) {
-  .bg-surface-alt {
-    background: rgba(31, 41, 55, 0.35); // Dark surface alt tint
-  }
+[data-theme="dark"] .bg-surface-alt {
+  background: rgba(31, 41, 55, 0.35); // Dark surface alt tint
 }
 .sr-only {
   position: absolute;

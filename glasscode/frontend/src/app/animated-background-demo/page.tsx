@@ -149,7 +149,7 @@ export default function AnimatedBackgroundDemo() {
         respectReducedMotion={respectReducedMotion}
         isPaused={isPaused}
       />
-      <a href="#main-content" className="sr-only focus:absolute focus:p-4 focus:bg-white dark:focus:bg-gray-800 focus:text-blue-600 dark:focus:text-blue-400 z-50">
+      <a href="#main-content" className="sr-only focus:absolute focus:p-4 focus:bg-surface focus:text-primary focus:ring-2 ring-focus ring-offset-2 ring-offset-bg z-50">
         Skip to main content
       </a>
       
@@ -169,9 +169,9 @@ export default function AnimatedBackgroundDemo() {
             ) : (
               <div className="max-w-3xl mx-auto">
                 <div className="animate-pulse flex flex-col items-center justify-center space-y-4">
-                  <div className="h-12 w-2/3 bg-white/30 dark:bg-gray-700/30 rounded"></div>
-                  <div className="h-64 w-full bg-white/30 dark:bg-gray-700/30 rounded"></div>
-                  <div className="h-10 w-1/3 bg-white/30 dark:bg-gray-700/30 rounded"></div>
+                  <div className="h-12 w-2/3 bg-surface-alt rounded border border-border"></div>
+                  <div className="h-64 w-full bg-surface-alt rounded border border-border"></div>
+                  <div className="h-10 w-1/3 bg-surface-alt rounded border border-border"></div>
                 </div>
               </div>
             )}
@@ -179,13 +179,13 @@ export default function AnimatedBackgroundDemo() {
         ) : error ? (
           <main id="main-content" className="flex-grow flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
             <div className="w-full max-w-3xl">
-              <div className="bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm rounded-xl shadow-lg p-6 border border-gray-200 dark:border-gray-700">
+              <div className="bg-surface-alt backdrop-blur-sm rounded-xl shadow-lg p-6 border border-border">
                 <div className="text-center">
-                  <h2 className="text-2xl font-bold text-red-600 dark:text-red-400 mb-4">Error</h2>
-                  <p className="mb-4 text-gray-800 dark:text-gray-200">{error}</p>
+                  <h2 className="text-2xl font-bold text-danger mb-4">Error</h2>
+                  <p className="mb-4 text-fg">{error}</p>
                   <button
                     onClick={handleManualRetry}
-                    className="px-4 py-2 bg-indigo-600 dark:bg-indigo-700 text-white rounded-lg hover:bg-indigo-700 dark:hover:bg-indigo-600 transition-colors duration-200"
+                    className="btn bg-primary text-primary-fg ring-focus ring-offset-bg px-4 py-2 rounded-lg hover:opacity-90 transition-colors duration-200"
                   >
                     Try Again
                   </button>
@@ -197,24 +197,24 @@ export default function AnimatedBackgroundDemo() {
           /* Main Content */
           <main id="main-content" className="flex-grow flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
             <div className="w-full max-w-3xl">
-            <div className="group relative bg-white/15 dark:bg-gray-900/15 backdrop-blur-2xl rounded-2xl shadow-[0_8px_32px_rgba(0,0,0,0.12)] dark:shadow-[0_8px_32px_rgba(0,0,0,0.3)] border border-white/20 dark:border-gray-700/30 overflow-hidden hover:shadow-[0_16px_48px_rgba(0,0,0,0.15)] dark:hover:shadow-[0_16px_48px_rgba(0,0,0,0.4)] transition-all duration-500 ease-out">
+            <div className="group relative bg-surface-alt backdrop-blur-2xl rounded-2xl shadow-[0_8px_32px_rgba(0,0,0,0.12)] dark:shadow-[0_8px_32px_rgba(0,0,0,0.3)] border border-border overflow-hidden hover:shadow-[0_16px_48px_rgba(0,0,0,0.15)] dark:hover:shadow-[0_16px_48px_rgba(0,0,0,0.4)] transition-all duration-500 ease-out">
               {/* Enhanced liquid glass effect overlay */}
-              <div className="absolute inset-0 bg-gradient-to-r from-white/8 via-white/15 to-white/8 dark:from-gray-800/8 dark:via-gray-800/15 dark:to-gray-800/8"></div>
-              <div className="absolute inset-0 bg-gradient-to-b from-transparent via-white/8 to-transparent dark:via-gray-800/8"></div>
-              <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 via-transparent to-purple-500/5 dark:from-blue-400/5 dark:to-purple-400/5"></div>
+              <div className="absolute inset-0 bg-gradient-to-r from-[hsl(var(--primary-fg)/0.08)] via-[hsl(var(--primary-fg)/0.15)] to-[hsl(var(--primary-fg)/0.08)]"></div>
+              <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[hsl(var(--primary-fg)/0.08)] to-transparent"></div>
+              <div className="absolute inset-0 bg-gradient-to-br from-[hsl(var(--primary)/0.05)] via-transparent to-[hsl(var(--primary)/0.05)]"></div>
               
               {/* Enhanced glass reflection effect */}
-              <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-white/60 to-transparent dark:via-gray-400/60 rounded-t-2xl"></div>
-              <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-white/30 to-transparent dark:via-gray-600/30"></div>
-              <div className="absolute top-0 left-0 bottom-0 w-px bg-gradient-to-b from-transparent via-white/30 to-transparent dark:via-gray-600/30 rounded-l-2xl"></div>
-              <div className="absolute top-0 right-0 bottom-0 w-px bg-gradient-to-b from-transparent via-white/30 to-transparent dark:via-gray-600/30 rounded-r-2xl"></div>
+              <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-[hsl(var(--primary-fg)/0.6)] to-transparent rounded-t-2xl"></div>
+              <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-[hsl(var(--primary-fg)/0.3)] to-transparent"></div>
+              <div className="absolute top-0 left-0 bottom-0 w-px bg-gradient-to-b from-transparent via-[hsl(var(--primary-fg)/0.3)] to-transparent rounded-l-2xl"></div>
+              <div className="absolute top-0 right-0 bottom-0 w-px bg-gradient-to-b from-transparent via-[hsl(var(--primary-fg)/0.3)] to-transparent rounded-r-2xl"></div>
               
               <div className="relative p-6">
                 <div className="text-center mb-8">
-                  <h2 className="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-4">
+                  <h2 className="text-3xl font-bold text-fg mb-4">
                     Animated Background Component
                   </h2>
-                  <p className="text-lg text-gray-700 dark:text-gray-300 max-w-2xl mx-auto">
+                  <p className="text-lg text-muted max-w-2xl mx-auto">
                     This demo showcases a reusable animated background component that can be customized with different colors, speeds, blur, and opacity.
                   </p>
                 </div>
@@ -223,14 +223,14 @@ export default function AnimatedBackgroundDemo() {
 
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                   {/* Controls */}
-                  <div className="bg-gray-50 dark:bg-gray-700/50 rounded-xl p-6 border border-gray-200 dark:border-gray-600">
-                    <h3 className="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-4">
+                  <div className="bg-surface-alt rounded-xl p-6 border border-border">
+                    <h3 className="text-xl font-semibold text-fg mb-4">
                       Customization Controls
                     </h3>
                     
                     <div className="space-y-6">
                       <div>
-                        <label htmlFor="reduced-motion-toggle" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                        <label htmlFor="reduced-motion-toggle" className="block text-sm font-medium text-muted mb-2">
                           Respect Reduced Motion
                         </label>
                         <div className="flex items-center gap-3">
@@ -239,15 +239,15 @@ export default function AnimatedBackgroundDemo() {
                             type="checkbox"
                             checked={respectReducedMotion}
                             onChange={(e) => setRespectReducedMotion(e.target.checked)}
-                            className="h-4 w-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500"
+                            className="h-4 w-4 text-primary border-border rounded focus:ring-focus"
                           />
-                          <span className="text-sm text-gray-700 dark:text-gray-300">
+                          <span className="text-sm text-muted">
                             {respectReducedMotion ? 'Enabled' : 'Disabled (animation forced for demo)'}
                           </span>
                         </div>
                       </div>
                       <div>
-                        <label htmlFor="speed-control" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                        <label htmlFor="speed-control" className="block text-sm font-medium text-muted mb-2">
                           Animation Speed: {speed}s
                         </label>
                         <input
@@ -257,17 +257,17 @@ export default function AnimatedBackgroundDemo() {
                           max="60"
                           value={speed}
                           onChange={(e) => setSpeed(parseInt(e.target.value))}
-                          className="w-full h-2 bg-gray-200 dark:bg-gray-600 rounded-lg appearance-none cursor-pointer"
+                          className="w-full h-2 bg-surface-alt rounded-lg appearance-none cursor-pointer border border-border"
                           aria-label="Animation speed control"
                         />
-                        <div className="flex justify-between text-xs text-gray-500 dark:text-gray-400 mt-1">
+                        <div className="flex justify-between text-xs text-muted mt-1">
                           <span>Fast</span>
                           <span>Slow</span>
                         </div>
                       </div>
                       
                       <div>
-                        <label htmlFor="blur-control" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                        <label htmlFor="blur-control" className="block text-sm font-medium text-muted mb-2">
                           Blur: {blur}px
                         </label>
                         <input
@@ -277,13 +277,13 @@ export default function AnimatedBackgroundDemo() {
                           max="100"
                           value={blur}
                           onChange={(e) => setBlur(parseInt(e.target.value))}
-                          className="w-full h-2 bg-gray-200 dark:bg-gray-600 rounded-lg appearance-none cursor-pointer"
+                          className="w-full h-2 bg-surface-alt rounded-lg appearance-none cursor-pointer border border-border"
                           aria-label="Blur effect control"
                         />
                       </div>
                       
                       <div>
-                        <label htmlFor="opacity-control" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                        <label htmlFor="opacity-control" className="block text-sm font-medium text-muted mb-2">
                           Opacity: {opacity.toFixed(2)}
                         </label>
                         <input
@@ -294,7 +294,7 @@ export default function AnimatedBackgroundDemo() {
                           step="0.05"
                           value={opacity}
                           onChange={(e) => setOpacity(parseFloat(e.target.value))}
-                          className="w-full h-2 bg-gray-200 dark:bg-gray-600 rounded-lg appearance-none cursor-pointer"
+                          className="w-full h-2 bg-surface-alt rounded-lg appearance-none cursor-pointer border border-border"
                           aria-label="Background opacity control"
                         />
                       </div>
@@ -303,11 +303,11 @@ export default function AnimatedBackgroundDemo() {
                     <div className="mt-8 space-y-4">
                       <button
                         onClick={() => setIsColorEditorOpen(true)}
-                        className="w-full px-6 py-4 bg-blue-500/20 hover:bg-blue-500/30 border border-blue-400/30 rounded-lg text-blue-200 transition-colors duration-200 flex items-center justify-center group"
+                        className="w-full px-6 py-4 bg-surface-alt hover:bg-surface border border-border rounded-lg text-fg transition-colors duration-200 flex items-center justify-center group"
                       >
                         <div className="text-center">
                           <div className="text-lg font-medium">Advanced Color Editor</div>
-                          <div className="text-sm text-blue-300/80">Create custom gradients with precise color control</div>
+                          <div className="text-sm text-muted">Create custom gradients with precise color control</div>
                         </div>
                       </button>
                     </div>
@@ -356,26 +356,26 @@ export default function AnimatedBackgroundDemo() {
                   
                   {/* Preview */}
                   <div className="flex flex-col">
-                    <div className="bg-gray-900 rounded-xl p-6 flex-grow flex flex-col">
+                    <div className="bg-surface rounded-xl p-6 flex-grow flex flex-col">
                       <div className="flex items-center justify-between mb-4">
-                        <h3 className="text-xl font-semibold text-white">
+                        <h3 className="text-xl font-semibold text-fg">
                           Live Preview
                         </h3>
                         <button
                           onClick={() => setIsPaused(!isPaused)}
-                          className="flex items-center gap-2 px-3 py-2 bg-white/10 hover:bg-white/20 rounded-lg transition-colors duration-200"
+                          className="flex items-center gap-2 px-3 py-2 bg-surface-alt hover:bg-surface rounded-lg transition-colors duration-200 border border-border"
                           aria-label={isPaused ? "Play animation" : "Pause animation"}
                         >
                           {isPaused ? (
-                            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-white" fill="currentColor" viewBox="0 0 24 24">
+                            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-primary-fg" fill="currentColor" viewBox="0 0 24 24">
                               <path d="M8 5v14l11-7z"/>
                             </svg>
                           ) : (
-                            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-white" fill="currentColor" viewBox="0 0 24 24">
+                            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-primary-fg" fill="currentColor" viewBox="0 0 24 24">
                               <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>
                             </svg>
                           )}
-                          <span className="text-white text-sm">
+                          <span className="text-primary-fg text-sm">
                             {isPaused ? 'Play' : 'Pause'}
                           </span>
                         </button>
@@ -385,7 +385,7 @@ export default function AnimatedBackgroundDemo() {
                       <div className="flex-grow flex items-center justify-center">
                         <div 
                           onClick={() => setPreviewIsPaused(!previewIsPaused)}
-                          className={`relative w-64 h-40 rounded-lg overflow-hidden border-2 border-white/20 transition-all duration-500 cursor-pointer hover:border-white/40 ${
+                          className={`relative w-64 h-40 rounded-lg overflow-hidden border-2 border-border transition-all duration-500 cursor-pointer hover:opacity-90 ${
                             previewIsPaused ? 'opacity-60' : 'opacity-100'
                           }`}
                           title="Click to pause/play preview animation"
@@ -401,22 +401,22 @@ export default function AnimatedBackgroundDemo() {
                           />
                           <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
                             <div className="text-center">
-                              <div className="inline-block p-3 rounded-full bg-white/10 backdrop-blur-sm mb-2">
+                              <div className="inline-block p-3 rounded-full bg-surface-alt backdrop-blur-sm mb-2 border border-border">
                                 {previewIsPaused ? (
-                                  <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 text-white" fill="currentColor" viewBox="0 0 24 24">
+                                  <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 text-primary-fg" fill="currentColor" viewBox="0 0 24 24">
                                     <path d="M8 5v14l11-7z"/>
                                   </svg>
                                 ) : (
-                                  <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                  <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 text-primary-fg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
                                   </svg>
                                 )}
                               </div>
-                              <p className="text-white/80 text-sm font-medium">
+                              <p className="text-[hsl(var(--primary-fg)/0.8)] text-sm font-medium">
                                 {previewIsPaused ? 'Click to Play' : 'Click to Pause'}
                               </p>
-                              <p className="text-white/60 text-xs mt-1">
+                              <p className="text-[hsl(var(--primary-fg)/0.6)] text-xs mt-1">
                                 Preview Animation
                               </p>
                             </div>
@@ -425,14 +425,14 @@ export default function AnimatedBackgroundDemo() {
                       </div>
                     </div>
                     
-                    <div className="mt-6 bg-blue-50 dark:bg-blue-900/20 rounded-xl p-6 border border-blue-200 dark:border-blue-800">
-                      <h3 className="text-lg font-medium text-blue-900 dark:text-blue-100 mb-2">
+                    <div className="mt-6 bg-surface-alt rounded-xl p-6 border border-border">
+                      <h3 className="text-lg font-medium text-fg mb-2">
                         Implementation
                       </h3>
-                      <p className="text-blue-800 dark:text-blue-200 text-sm mb-3">
+                      <p className="text-muted text-sm mb-3">
                         To use this component in your pages:
                       </p>
-                      <pre className="bg-gray-800 text-gray-100 p-3 rounded-lg text-xs overflow-x-auto">
+                      <pre className="bg-surface text-fg p-3 rounded-lg text-xs overflow-x-auto border border-border">
                         {`import AnimatedBackground from '../components/AnimatedBackground';
 
 <AnimatedBackground 
@@ -448,7 +448,7 @@ export default function AnimatedBackgroundDemo() {
                 </div>
                 
                 <div className="mt-8 text-center">
-                  <p className="text-gray-600 dark:text-gray-400">
+                  <p className="text-muted">
                     This animated background component can be used on any page to create a sophisticated, 
                     customizable background effect that enhances the visual appeal of your application.
                   </p>
@@ -458,23 +458,23 @@ export default function AnimatedBackgroundDemo() {
                 <div className="mt-12 flex justify-center items-center gap-4 flex-wrap">
                   <Link 
                     href="/" 
-                    className="group relative overflow-hidden bg-white/20 dark:bg-gray-800/20 backdrop-blur-sm text-gray-800 dark:text-gray-200 font-medium py-2 px-4 rounded-lg border border-white/30 dark:border-gray-600/30 hover:bg-white/30 dark:hover:bg-gray-700/30 transition-all duration-200 flex items-center gap-2 text-sm shadow-lg hover:shadow-xl"
+                    className="group relative overflow-hidden bg-surface-alt backdrop-blur-sm text-fg font-medium py-2 px-4 rounded-lg border border-border hover:bg-surface transition-all duration-200 flex items-center gap-2 text-sm shadow-lg hover:shadow-xl"
                   >
                     <span className="text-base transition-transform group-hover:-translate-x-1">←</span> 
                     <span>Back to Home</span>
-                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700"></div>
+                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-[hsl(var(--primary-fg)/0.1)] to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700"></div>
                   </Link>
                   
                   <button
                     onClick={saveAsAppBackground}
-                    className="group relative overflow-hidden bg-gradient-to-r from-green-500/20 to-emerald-500/20 dark:from-green-500/20 dark:to-emerald-500/20 backdrop-blur-sm text-green-800 dark:text-green-200 font-medium py-2 px-4 rounded-lg border border-green-400/30 dark:border-green-500/30 hover:from-green-500/30 hover:to-emerald-500/30 dark:hover:from-green-500/30 dark:hover:to-emerald-500/30 transition-all duration-200 flex items-center gap-2 text-sm shadow-lg hover:shadow-xl"
+                    className="group relative overflow-hidden bg-[hsl(var(--primary)/0.1)] backdrop-blur-sm text-primary font-medium py-2 px-4 rounded-lg border border-border hover:bg-[hsl(var(--primary)/0.15)] transition-all duration-200 flex items-center gap-2 text-sm shadow-lg hover:shadow-xl"
                   >
                     <span className="text-base">💾</span> 
                     <span>Use as App Background</span>
-                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700"></div>
+                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-[hsl(var(--primary-fg)/0.1)] to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700"></div>
                     {saveSuccess && (
-                      <div className="absolute inset-0 bg-green-500/40 dark:bg-green-500/40 rounded-lg flex items-center justify-center">
-                        <div className="text-white dark:text-gray-100 font-medium flex items-center gap-2">
+                      <div className="absolute inset-0 bg-[hsl(var(--success)/0.4)] rounded-lg flex items-center justify-center">
+                        <div className="text-primary-fg font-medium flex items-center gap-2">
                           <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
                             <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                           </svg>
@@ -486,11 +486,11 @@ export default function AnimatedBackgroundDemo() {
                   
                   <a
                     href={`${ROUTES.api.download.animatedBackground}?colors=${encodeURIComponent(JSON.stringify(colors))}&speed=${speed}&blur=${blur}&opacity=${opacity}&respectReducedMotion=${respectReducedMotion}`}
-                    className="group relative overflow-hidden bg-gradient-to-r from-emerald-500/20 to-teal-500/20 backdrop-blur-sm text-emerald-800 dark:text-emerald-200 font-medium py-2 px-4 rounded-lg border border-emerald-400/30 dark:border-emerald-500/30 hover:from-emerald-500/30 hover:to-teal-500/30 transition-all duration-200 flex items-center gap-2 text-sm shadow-lg hover:shadow-xl"
+                    className="group relative overflow-hidden bg-[hsl(var(--primary)/0.1)] backdrop-blur-sm text-primary font-medium py-2 px-4 rounded-lg border border-border hover:bg-[hsl(var(--primary)/0.15)] transition-all duration-200 flex items-center gap-2 text-sm shadow-lg hover:shadow-xl"
                   >
                     <span className="text-base transition-transform group-hover:translate-y-1">⬇</span> 
                     <span>Download Component</span>
-                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700"></div>
+                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-[hsl(var(--primary-fg)/0.1)] to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700"></div>
                   </a>
                 </div>
               </div>
@@ -501,24 +501,24 @@ export default function AnimatedBackgroundDemo() {
         
         {/* Quick Actions Pane */}
         <div className="relative z-10 max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 pb-12">
-          <div className="group relative bg-white/15 dark:bg-gray-900/15 backdrop-blur-2xl rounded-2xl shadow-[0_8px_32px_rgba(0,0,0,0.12)] dark:shadow-[0_8px_32px_rgba(0,0,0,0.3)] border border-white/20 dark:border-gray-700/30 overflow-hidden hover:shadow-[0_16px_48px_rgba(0,0,0,0.15)] dark:hover:shadow-[0_16px_48px_rgba(0,0,0,0.4)] transition-all duration-500 ease-out">
+          <div className="group relative bg-surface-alt backdrop-blur-2xl rounded-2xl shadow-[0_8px_32px_rgba(0,0,0,0.12)] dark:shadow-[0_8px_32px_rgba(0,0,0,0.3)] border border-border overflow-hidden hover:shadow-[0_16px_48px_rgba(0,0,0,0.15)] dark:hover:shadow-[0_16px_48px_rgba(0,0,0,0.4)] transition-all duration-500 ease-out">
             {/* Enhanced liquid glass effect overlay */}
-            <div className="absolute inset-0 bg-gradient-to-r from-white/8 via-white/15 to-white/8 dark:from-gray-800/8 dark:via-gray-800/15 dark:to-gray-800/8"></div>
-            <div className="absolute inset-0 bg-gradient-to-b from-transparent via-white/8 to-transparent dark:via-gray-800/8"></div>
-            <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/5 via-transparent to-blue-500/5 dark:from-emerald-400/5 dark:to-blue-400/5"></div>
+            <div className="absolute inset-0 bg-gradient-to-r from-[hsl(var(--primary-fg)/0.08)] via-[hsl(var(--primary-fg)/0.15)] to-[hsl(var(--primary-fg)/0.08)]"></div>
+            <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[hsl(var(--primary-fg)/0.08)] to-transparent"></div>
+            <div className="absolute inset-0 bg-gradient-to-br from-[hsl(var(--primary)/0.05)] via-transparent to-[hsl(var(--primary)/0.05)]"></div>
             
             {/* Enhanced glass reflection effect */}
-            <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-white/60 to-transparent dark:via-gray-400/60 rounded-t-2xl"></div>
-            <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-white/30 to-transparent dark:via-gray-600/30"></div>
-            <div className="absolute top-0 left-0 bottom-0 w-px bg-gradient-to-b from-transparent via-white/30 to-transparent dark:via-gray-600/30 rounded-l-2xl"></div>
-            <div className="absolute top-0 right-0 bottom-0 w-px bg-gradient-to-b from-transparent via-white/30 to-transparent dark:via-gray-600/30 rounded-r-2xl"></div>
+            <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-[hsl(var(--primary-fg)/0.6)] to-transparent rounded-t-2xl"></div>
+            <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-[hsl(var(--primary-fg)/0.3)] to-transparent"></div>
+            <div className="absolute top-0 left-0 bottom-0 w-px bg-gradient-to-b from-transparent via-[hsl(var(--primary-fg)/0.3)] to-transparent rounded-l-2xl"></div>
+            <div className="absolute top-0 right-0 bottom-0 w-px bg-gradient-to-b from-transparent via-[hsl(var(--primary-fg)/0.3)] to-transparent rounded-r-2xl"></div>
             
             <div className="relative py-6 px-6">
-            <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4 text-center">Quick Actions</h3>
+            <h3 className="text-lg font-semibold text-fg mb-4 text-center">Quick Actions</h3>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
               <Link 
                 href="/curriculum" 
-                className="group relative overflow-hidden bg-gradient-to-r from-indigo-500/20 to-purple-500/20 backdrop-blur-lg text-indigo-800 dark:text-indigo-200 font-medium py-3 px-4 rounded-2xl border border-indigo-400/40 dark:border-indigo-500/40 hover:from-indigo-500/30 hover:to-purple-500/30 hover:border-indigo-400/60 dark:hover:border-indigo-500/60 transition-all duration-300 flex items-center justify-center gap-2 text-sm shadow-lg hover:shadow-2xl"
+                className="group relative overflow-hidden bg-surface-alt backdrop-blur-lg text-fg font-medium py-3 px-4 rounded-2xl border border-border hover:bg-surface transition-all duration-300 flex items-center justify-center gap-2 text-sm shadow-lg hover:shadow-2xl"
               >
                 <span className="text-base">📚</span>
                 <span>Start Curriculum</span>
@@ -526,7 +526,7 @@ export default function AnimatedBackgroundDemo() {
               </Link>
               <Link 
                 href="/interview-prep" 
-                className="group relative overflow-hidden bg-gradient-to-r from-emerald-500/20 to-teal-500/20 backdrop-blur-lg text-emerald-800 dark:text-emerald-200 font-medium py-3 px-4 rounded-2xl border border-emerald-400/40 dark:border-emerald-500/40 hover:from-emerald-500/30 hover:to-teal-500/30 hover:border-emerald-400/60 dark:hover:border-emerald-500/60 transition-all duration-300 flex items-center justify-center gap-2 text-sm shadow-lg hover:shadow-2xl"
+                className="group relative overflow-hidden bg-surface-alt backdrop-blur-lg text-fg font-medium py-3 px-4 rounded-2xl border border-border hover:bg-surface transition-all duration-300 flex items-center justify-center gap-2 text-sm shadow-lg hover:shadow-2xl"
               >
                 <span className="text-base">💼</span>
                 <span>Interview Prep</span>
@@ -534,16 +534,16 @@ export default function AnimatedBackgroundDemo() {
               </Link>
               <Link 
                 href="/playground" 
-                className="group relative overflow-hidden bg-gradient-to-r from-orange-500/20 to-red-500/20 backdrop-blur-lg text-orange-800 dark:text-orange-200 font-medium py-3 px-4 rounded-2xl border border-orange-400/40 dark:border-orange-500/40 hover:from-orange-500/30 hover:to-red-500/30 hover:border-orange-400/60 dark:hover:border-orange-500/60 transition-all duration-300 flex items-center justify-center gap-2 text-sm shadow-lg hover:shadow-2xl"
+                className="group relative overflow-hidden bg-surface-alt backdrop-blur-lg text-fg font-medium py-3 px-4 rounded-2xl border border-border hover:bg-surface transition-all duration-300 flex items-center justify-center gap-2 text-sm shadow-lg hover:shadow-2xl"
               >
                 <span className="text-base">🛠️</span>
                 <span>Playground</span>
                 <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700"></div>
               </Link>
             </div>
-            </div>
           </div>
         </div>
+      </div>
       </div>
       
       {/* Color Scheme Editor Popup */}

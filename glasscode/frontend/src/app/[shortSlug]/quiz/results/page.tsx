@@ -254,8 +254,8 @@ export default function QuizResultsPage({ params }: { params: Promise<{ shortSlu
     return (
       <div className="max-w-4xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
         <div className="glass-morphism p-12 rounded-xl text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto mb-4"></div>
-          <p className="text-gray-600 dark:text-gray-300">Calculating your results...</p>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
+          <p className="text-muted">Calculating your results...</p>
         </div>
       </div>
     );
@@ -266,16 +266,16 @@ export default function QuizResultsPage({ params }: { params: Promise<{ shortSlu
       <div className="max-w-4xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
         <div className="glass-morphism p-12 rounded-xl text-center">
           <div className="text-6xl mb-4">❌</div>
-          <h2 className="text-2xl font-semibold text-red-600 dark:text-red-400 mb-4">
+          <h2 className="text-2xl font-semibold text-danger mb-4">
             Error Loading Results
           </h2>
-          <p className="text-gray-600 dark:text-gray-300 mb-6">
+          <p className="text-muted mb-6">
             Unable to load quiz results. Please try again.
           </p>
           <div className="flex justify-start">
             <Link
               href={`/${resolvedParams?.shortSlug || ''}/quiz`}
-              className="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+              className="inline-flex items-center px-4 py-2 bg-primary text-primary-fg rounded-lg hover:opacity-90 transition-colors"
             >
               ← Back to Quiz
             </Link>
@@ -294,24 +294,24 @@ export default function QuizResultsPage({ params }: { params: Promise<{ shortSlu
       <nav className="mb-8" aria-label="Breadcrumb">
         <ol className="flex items-center space-x-2 text-sm">
           <li>
-            <Link href="/" className="text-blue-600 hover:text-blue-800">
+            <Link href="/" className="text-primary hover:opacity-90">
               Home
             </Link>
           </li>
-          <li className="text-gray-500">/</li>
+          <li className="text-muted">/</li>
           <li>
-            <Link href={`/${shortSlug}`} className="text-blue-600 hover:text-blue-800">
+            <Link href={`/${shortSlug}`} className="text-primary hover:opacity-90">
               {moduleTitle || shortSlug.replace(/-/g, ' ').replace(/\b\w/g, c => c.toUpperCase())}
             </Link>
           </li>
-          <li className="text-gray-500">/</li>
+          <li className="text-muted">/</li>
           <li>
-            <Link href={`/${shortSlug}/quiz`} className="text-blue-600 hover:text-blue-800">
+            <Link href={`/${shortSlug}/quiz`} className="text-primary hover:opacity-90">
               Quiz
             </Link>
           </li>
-          <li className="text-gray-500">/</li>
-          <li className="text-gray-900 dark:text-gray-100 font-medium">
+          <li className="text-muted">/</li>
+          <li className="text-fg font-medium">
             Results
           </li>
         </ol>
@@ -329,7 +329,7 @@ export default function QuizResultsPage({ params }: { params: Promise<{ shortSlu
         nextModuleTitle={results.passed ? (nextModuleTitle ?? undefined) : undefined}
         passThresholdPercent={results.passingScore}
       />
-      <div className="mt-6 text-center text-sm text-gray-600 dark:text-gray-300">
+      <div className="mt-6 text-center text-sm text-muted">
         Time Taken: <span className="font-semibold">{results.timeTaken}</span> • Time Limit: <span className="font-semibold">{results.timeLimit}</span>
       </div>
     </div>

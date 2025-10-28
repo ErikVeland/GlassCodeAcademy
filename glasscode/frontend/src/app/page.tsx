@@ -557,7 +557,7 @@ const HomePage: React.FC = () => {
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
                 <div className="hero-content">
                   <div className="flex items-center justify-between mb-4">
-                    <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 dark:text-gray-100 text-left">Master Modern Web Development</h1>
+                    <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-fg text-left">Master Modern Web Development</h1>
                   </div>
                   <p className="text-lg md:text-xl text-muted mb-6 text-left">
                     Comprehensive learning paths across 18 technology modules with interactive lessons,
@@ -682,7 +682,7 @@ const HomePage: React.FC = () => {
                 </p>
                 <button
                   onClick={clearFilters}
-                  className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                  className="px-6 py-3 bg-primary text-primary-fg rounded-lg hover:opacity-90 transition-colors"
                 >
                   Clear all filters
                 </button>

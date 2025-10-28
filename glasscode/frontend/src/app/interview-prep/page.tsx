@@ -198,17 +198,17 @@ const InterviewModuleCard: React.FC<{
         aria-label={module.title}
         role="link"
         title={module.title}
-        className={`glass-module-card ${tierVariantClass} group relative ${isLocked ? 'opacity-60 cursor-not-allowed' : 'cursor-pointer hover:-translate-y-1 hover:shadow-xl active:scale-[0.99] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-blue-600/40'} rounded-xl overflow-hidden`}
+        className={`glass-module-card ${tierVariantClass} group relative ${isLocked ? 'opacity-60 cursor-not-allowed' : 'cursor-pointer hover:-translate-y-1 hover:shadow-xl active:scale-[0.99] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 ring-focus ring-offset-bg'} rounded-xl overflow-hidden`}
         aria-disabled={isLocked}
       >
         {/* Lock overlay */}
         {isLocked && (
-          <div className="absolute inset-0 bg-gray-900/50 backdrop-blur-sm rounded-xl flex items-center justify-center z-10">
+          <div className="absolute inset-0 backdrop-blur-sm rounded-xl flex items-center justify-center z-10" style={{ backgroundColor: 'hsl(var(--bg) / 0.5)' }}>
             <div className="text-center">
-              <div className="w-10 h-10 bg-black/30 dark:bg-white/20 rounded-full flex items-center justify-center border border-white/20 shadow-lg mx-auto">
+              <div className="w-10 h-10 rounded-full flex items-center justify-center border border-border shadow-lg mx-auto" style={{ backgroundColor: 'hsl(var(--bg) / 0.3)' }}>
                 <span className="text-3xl">🔒</span>
               </div>
-              <p className="mt-2 text-white/90 text-sm">Complete prerequisites to unlock</p>
+              <p className="mt-2 text-primary-fg text-sm">Complete prerequisites to unlock</p>
             </div>
           </div>
         )}
@@ -395,13 +395,13 @@ const InterviewPrepPage: React.FC = () => {
       <main className="homepage w-full">
         {/* Hero Section with proper styling like the dashboard */}
         <section className="w-full mb-8">
-          <div className="relative bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm rounded-xl shadow-lg border border-gray-200 dark:border-gray-700">
+          <div className="relative bg-surface-alt backdrop-blur-sm rounded-xl shadow-lg border border-border">
 
             <div className="absolute top-6 right-6 md:top-8 md:right-8">
               <button
                 type="button"
                 onClick={toggleModuleLock}
-                className="inline-flex items-center justify-center w-9 h-9 rounded-full border bg-gray-100/60 dark:bg-gray-700/40 border-gray-300/40 dark:border-gray-600/40 text-gray-600 dark:text-gray-300 hover:bg-gray-200/60 dark:hover:bg-gray-600/50 transition-colors"
+                className="inline-flex items-center justify-center w-9 h-9 rounded-full border bg-surface-alt border-border text-muted hover:brightness-105 transition-colors"
                 aria-pressed={moduleLockEnabled}
                 aria-label={moduleLockEnabled ? 'Lock modules (progress gating on)' : 'Unlock modules (progress gating off)'}
                 title={moduleLockEnabled ? 'Lock modules (progress gating on)' : 'Unlock modules (progress gating off)'}
@@ -414,13 +414,13 @@ const InterviewPrepPage: React.FC = () => {
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
                 <div className="hero-content">
 
-                  <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 dark:text-gray-100 mb-4 text-left">
+                  <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-fg mb-4 text-left">
                     Interview Preparation Academy
                   </h1>
-                  <p className="text-lg md:text-xl text-gray-800 dark:text-gray-200 mb-6 text-left">
+                  <p className="text-lg md:text-xl text-muted mb-6 text-left">
                     Master Technical Interviews with Structured Learning
                   </p>
-                  <p className="text-gray-800 dark:text-gray-200 mb-6 text-left">
+                  <p className="text-muted mb-6 text-left">
                     Prepare systematically for technical interviews through our tier-based approach.
                     From foundational concepts to expert-level system design, build confidence with
                     comprehensive question banks and detailed explanations.
@@ -468,10 +468,10 @@ const InterviewPrepPage: React.FC = () => {
                       <circle cx="150" cy="190" r="12" fill="#10B981" className="tier-node" />
                       <circle cx="250" cy="110" r="12" fill="#8B5CF6" className="tier-node" />
                       <circle cx="350" cy="50" r="12" fill="#F59E0B" className="tier-node" />
-                      <text x="50" y="275" textAnchor="middle" fill="white" fontSize="12">Foundational</text>
-                      <text x="150" y="215" textAnchor="middle" fill="white" fontSize="12">Core</text>
-                      <text x="250" y="135" textAnchor="middle" fill="white" fontSize="12">Specialized</text>
-                      <text x="350" y="75" textAnchor="middle" fill="white" fontSize="12">Expert</text>
+                      <text x="50" y="275" textAnchor="middle" fill="currentColor" className="text-primary-fg" fontSize="12">Foundational</text>
+                      <text x="150" y="215" textAnchor="middle" fill="currentColor" className="text-primary-fg" fontSize="12">Core</text>
+                      <text x="250" y="135" textAnchor="middle" fill="currentColor" className="text-primary-fg" fontSize="12">Specialized</text>
+                      <text x="350" y="75" textAnchor="middle" fill="currentColor" className="text-primary-fg" fontSize="12">Expert</text>
                     </svg>
                   </div>
                 </div>
@@ -493,7 +493,7 @@ const InterviewPrepPage: React.FC = () => {
                     onChange={(e) => setSearchQuery(e.target.value)}
                     className="glass-search-input"
                   />
-                  <span className="absolute right-3 top-3 text-gray-700 dark:text-gray-300">🔍</span>
+                  <span className="absolute right-3 top-3 text-muted">🔍</span>
                 </div>
               </div>
 
@@ -503,7 +503,7 @@ const InterviewPrepPage: React.FC = () => {
                     <select
                       value={selectedTier || 'all'}
                       onChange={(e) => setSelectedTier(e.target.value === 'all' ? null : e.target.value)}
-                      className="w-full px-3 py-2 pr-10 appearance-none bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:focus:ring-blue-500 dark:focus:border-blue-500 text-gray-900 dark:text-white"
+                      className="w-full px-3 py-2 pr-10 appearance-none bg-surface border border-border rounded-lg focus:ring-2 ring-focus ring-offset-bg text-fg"
                     >
                       <option value="all">All Tiers</option>
                       <option value="foundational">🏗️ Foundational</option>
@@ -511,7 +511,7 @@ const InterviewPrepPage: React.FC = () => {
                       <option value="specialized">💎 Specialized Skills</option>
                       <option value="expert">🏆 Expert Level</option>
                     </select>
-                    <span className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-gray-700 dark:text-gray-300">▾</span>
+                    <span className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-muted">▾</span>
                   </div>
                 </div>
 
@@ -520,14 +520,14 @@ const InterviewPrepPage: React.FC = () => {
                     <select
                       value={selectedDifficulty || 'all'}
                       onChange={(e) => setSelectedDifficulty(e.target.value === 'all' ? null : e.target.value)}
-                      className="w-full px-3 py-2 pr-10 appearance-none bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:focus:ring-blue-500 dark:focus:border-blue-500 text-gray-900 dark:text-white"
+                      className="w-full px-3 py-2 pr-10 appearance-none bg-surface border border-border rounded-lg focus:ring-2 ring-focus ring-offset-bg text-fg"
                     >
                       <option value="all">All Levels</option>
                       <option value="Beginner">🌱 Beginner</option>
                       <option value="Intermediate">🚀 Intermediate</option>
                       <option value="Advanced">🔥 Advanced</option>
                     </select>
-                    <span className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-gray-700 dark:text-gray-300">▾</span>
+                    <span className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-muted">▾</span>
                   </div>
                 </div>
 
@@ -536,7 +536,7 @@ const InterviewPrepPage: React.FC = () => {
                     <select
                       value={selectedCategory || 'all'}
                       onChange={(e) => setSelectedCategory(e.target.value === 'all' ? null : e.target.value)}
-                      className="w-full px-3 py-2 pr-10 appearance-none bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:focus:ring-blue-500 dark:focus:border-blue-500 text-gray-900 dark:text-white"
+                      className="w-full px-3 py-2 pr-10 appearance-none bg-surface border border-border rounded-lg focus:ring-2 ring-focus ring-offset-bg text-fg"
                     >
                       <option value="all">All Categories</option>
                       <option value="frontend">🎨 Frontend</option>
@@ -545,7 +545,7 @@ const InterviewPrepPage: React.FC = () => {
                       <option value="devops">🔧 DevOps</option>
                       <option value="general">📚 General</option>
                     </select>
-                    <span className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-gray-700 dark:text-gray-300">▾</span>
+                    <span className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-muted">▾</span>
                   </div>
                 </div>
               </div>
@@ -556,16 +556,16 @@ const InterviewPrepPage: React.FC = () => {
         {/* Interview Preparation Tiers */}
         <div id="interview-tiers" className="w-full">
           {hasActiveFilters && Object.keys(filteredTiers).length === 0 && (
-            <div className="py-12 text-center bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm rounded-xl shadow-lg border border-gray-200 dark:border-gray-700">
+            <div className="py-12 text-center bg-surface-alt backdrop-blur-sm rounded-xl shadow-lg border border-border">
               <div className="max-w-3xl mx-auto">
                 <div className="text-6xl mb-4">🔍</div>
-                <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">No modules found</h3>
-                <p className="text-gray-800 dark:text-gray-200 mb-6">
+                <h3 className="text-2xl font-bold text-fg mb-2">No modules found</h3>
+                <p className="text-muted mb-6">
                   Try adjusting your search terms or filters to find what you&#39;re looking for.
                 </p>
                 <button
                   onClick={clearFilters}
-                  className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                  className="px-6 py-3 bg-primary text-primary-fg rounded-lg hover:brightness-110 transition-colors focus:ring-2 ring-focus ring-offset-bg"
                 >
                   Clear all filters
                 </button>
@@ -587,35 +587,35 @@ const InterviewPrepPage: React.FC = () => {
 
         {/* Quick Actions */}
         <section className="w-full py-8">
-          <div className="bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm rounded-xl shadow-lg border border-gray-200 dark:border-gray-700">
+          <div className="bg-surface-alt backdrop-blur-sm rounded-xl shadow-lg border border-border">
             <div className="p-6">
-              <h2 className="text-2xl font-bold text-center text-gray-900 dark:text-white mb-6">Quick Actions</h2>
+              <h2 className="text-2xl font-bold text-center text-fg mb-6">Quick Actions</h2>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                <Link href="/" className="bg-gray-50 dark:bg-gray-700 p-6 rounded-lg border border-gray-200 dark:border-gray-600 text-center hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors">
+                <Link href="/" className="bg-surface-alt p-6 rounded-lg border border-border text-center hover:brightness-105 transition-colors">
                   <span className="text-5xl block mb-2">🎓</span>
-                  <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-1">Learning Modules</h3>
-                  <p className="text-sm text-gray-800 dark:text-gray-200">Return to main learning curriculum and lessons</p>
+                  <h3 className="text-lg font-semibold text-fg mb-1">Learning Modules</h3>
+                  <p className="text-sm text-muted">Return to main learning curriculum and lessons</p>
                 </Link>
 
-                <Link href="/playground" className="bg-gray-50 dark:bg-gray-700 p-6 rounded-lg border border-gray-200 dark:border-gray-600 text-center hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors">
+                <Link href="/playground" className="bg-surface-alt p-6 rounded-lg border border-border text-center hover:brightness-105 transition-colors">
                   <span className="text-5xl block mb-2">🔬</span>
-                  <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-1">GraphQL Playground</h3>
-                  <p className="text-sm text-gray-800 dark:text-gray-200">Practice with interactive GraphQL queries</p>
+                  <h3 className="text-lg font-semibold text-fg mb-1">GraphQL Playground</h3>
+                  <p className="text-sm text-muted">Practice with interactive GraphQL queries</p>
                 </Link>
 
-                <Link href="/animated-background-demo" className="bg-gray-50 dark:bg-gray-700 p-6 rounded-lg border border-gray-200 dark:border-gray-600 text-center hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors">
+                <Link href="/animated-background-demo" className="bg-surface-alt p-6 rounded-lg border border-border text-center hover:brightness-105 transition-colors">
                   <span className="text-5xl block mb-2">🎨</span>
-                  <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-1">Design Showcase</h3>
-                  <p className="text-sm text-gray-800 dark:text-gray-200">Explore our UI components and animations</p>
+                  <h3 className="text-lg font-semibold text-fg mb-1">Design Showcase</h3>
+                  <p className="text-sm text-muted">Explore our UI components and animations</p>
                 </Link>
 
                 <button
                   onClick={exportProgressData}
-                  className="bg-gray-50 dark:bg-gray-700 p-6 rounded-lg border border-gray-200 dark:border-gray-600 text-center hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors"
+                  className="bg-surface-alt p-6 rounded-lg border border-border text-center hover:brightness-105 transition-colors"
                 >
                   <span className="text-5xl block mb-2">📤</span>
-                  <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-1">Export Progress</h3>
-                  <p className="text-sm text-gray-800 dark:text-gray-200">Download progress, streaks, and achievements</p>
+                  <h3 className="text-lg font-semibold text-fg mb-1">Export Progress</h3>
+                  <p className="text-sm text-muted">Download progress, streaks, and achievements</p>
                 </button>
               </div>
             </div>

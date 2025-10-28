@@ -37,7 +37,7 @@ export default function GlobalError({
   // If we're dealing with a 502 error, show our enhanced loading component
   if ((error.message?.includes('502') || error.message?.includes('Bad Gateway')) && shouldRetry) {
     return (
-      <div className="min-h-screen flex items-center justify-center p-4 bg-gray-50 dark:bg-gray-900">
+      <div className="min-h-screen flex items-center justify-center p-4 bg-surface">
         <div className="w-full max-w-md">
           <EnhancedLoadingComponent 
             retryCount={retryCount} 
@@ -54,15 +54,15 @@ export default function GlobalError({
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-4 bg-gray-50 dark:bg-gray-900">
-      <div className="text-center bg-white dark:bg-gray-800 p-8 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700">
-        <h2 className="text-2xl font-bold text-red-600 dark:text-red-400 mb-4">Something went wrong!</h2>
-        <p className="text-gray-600 dark:text-gray-300 mb-6">
+    <div className="min-h-screen flex items-center justify-center p-4 bg-surface">
+      <div className="text-center bg-surface-alt p-8 rounded-xl shadow-lg border border-border">
+        <h2 className="text-2xl font-bold text-danger mb-4">Something went wrong!</h2>
+        <p className="text-muted mb-6">
           {error.message || 'An unexpected error occurred'}
         </p>
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
           <button
-            className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-200"
+            className="px-4 py-2 bg-primary text-primary-fg rounded-lg hover:opacity-90 transition-colors duration-200"
             onClick={() => {
               setRetryCount(0);
               reset();
@@ -72,7 +72,7 @@ export default function GlobalError({
           </button>
           <Link 
             href="/" 
-            className="px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors duration-200 text-center"
+            className="px-4 py-2 bg-surface-alt text-fg rounded-lg hover:opacity-90 transition-colors duration-200 text-center"
           >
             Return Home
           </Link>

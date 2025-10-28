@@ -1,0 +1,13 @@
+name = "neds-proxy"
+main = "src/index.ts"
+compatibility_date = "2024-10-28"
+workers_dev = true
+
+# Attach routes for production domain
+# These can also be added in the Cloudflare dashboard, but keeping them here
+# helps self-serve deployment via `wrangler deploy`.
+routes = [
+  { pattern = "bet.glasscode.academy/api/*", zone_name = "glasscode.academy" },
+  { pattern = "bet.glasscode.academy/rest/v1/*", zone_name = "glasscode.academy" },
+  { pattern = "bet.glasscode.academy/api/rest/v1/*", zone_name = "glasscode.academy" },
+]

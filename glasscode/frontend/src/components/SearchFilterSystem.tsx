@@ -136,13 +136,13 @@ const SearchFilterSystem: React.FC<SearchFilterSystemProps> = ({
         <div className="quick-filters-header">
           <h3 className="quick-filters-heading text-gray-700 dark:text-gray-300 font-medium mb-3 text-left">Quick filters</h3>
         </div>
-        <div className="quick-filters-row flex flex-wrap items-center gap-2">
-          <div className="quick-filters-buttons flex flex-wrap gap-2">
+        <div className="quick-filters-row flex flex-col gap-3 sm:flex-row sm:items-center">
+          <div className="quick-filters-buttons grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2 w-full">
             {quickFilters.map(filter => (
               <button
                 key={`${filter.type}-${filter.value}`}
                 onClick={() => handleQuickFilter(filter.type, filter.value)}
-                className={`px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
+                className={`w-full min-h-[44px] px-3 py-2 rounded-lg text-sm font-medium transition-colors justify-center focus:outline-none focus:ring-2 focus:ring-blue-500 ${
                   isQuickFilterActive(filter.type, filter.value)
                     ? 'bg-blue-600 text-white'
                     : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
@@ -156,7 +156,7 @@ const SearchFilterSystem: React.FC<SearchFilterSystemProps> = ({
           </div>
           
           {/* Advanced Filters Toggle Button - Aligned with Quick Filters */}
-          <div className="advanced-filters-toggle-container ml-auto">
+          <div className="advanced-filters-toggle-container mt-2 sm:mt-0 sm:ml-auto">
             <button
               onClick={() => setShowAdvancedFilters(!showAdvancedFilters)}
               className={`px-3 py-2 rounded-lg text-sm font-medium transition-colors flex items-center ${

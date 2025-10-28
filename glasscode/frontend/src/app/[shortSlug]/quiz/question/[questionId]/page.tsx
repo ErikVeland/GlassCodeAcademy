@@ -199,8 +199,8 @@ export default function QuizQuestionPage({ params }: { params: Promise<{ shortSl
     return (
       <div className="max-w-4xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
         <div className="glass-morphism p-12 rounded-xl text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto mb-4"></div>
-          <p className="text-gray-600 dark:text-gray-300">Loading question...</p>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
+          <p className="text-muted">Loading question...</p>
         </div>
       </div>
     );
@@ -220,24 +220,24 @@ export default function QuizQuestionPage({ params }: { params: Promise<{ shortSl
       <nav className="mb-8" aria-label="Breadcrumb">
         <ol className="flex items-center space-x-2 text-sm">
           <li>
-            <Link href="/" className="text-blue-600 hover:text-blue-800">
+            <Link href="/" className="text-primary hover:opacity-90">
               Home
             </Link>
           </li>
-          <li className="text-gray-500">/</li>
+          <li className="text-muted">/</li>
           <li>
-            <Link href={`/${shortSlug}`} className="text-blue-600 hover:text-blue-800">
+            <Link href={`/${shortSlug}`} className="text-primary hover:opacity-90">
               Module
             </Link>
           </li>
-          <li className="text-gray-500">/</li>
+          <li className="text-muted">/</li>
           <li>
-            <Link href={`/${shortSlug}/quiz`} className="text-blue-600 hover:text-blue-800">
+            <Link href={`/${shortSlug}/quiz`} className="text-primary hover:opacity-90">
               Quiz
             </Link>
           </li>
-          <li className="text-gray-500">/</li>
-          <li className="text-gray-900 dark:text-gray-100 font-medium">
+          <li className="text-muted">/</li>
+          <li className="text-fg font-medium">
             Question {questionId}
           </li>
         </ol>
@@ -247,19 +247,19 @@ export default function QuizQuestionPage({ params }: { params: Promise<{ shortSl
       <div className="mb-8">
         <div className="glass-morphism p-4 rounded-xl">
           <div className="flex justify-between items-center mb-2">
-            <span className="text-sm text-gray-600 dark:text-gray-300">
+            <span className="text-sm text-muted">
               Question {questionId} of {totalQuestions}
             </span>
-            <span className="text-sm text-gray-600 dark:text-gray-300">
+            <span className="text-sm text-muted">
               {Math.round((questionIndex / (totalQuestions || 1)) * 100)}% Complete
             </span>
-            <span className="text-sm font-medium text-gray-900 dark:text-gray-100">
+            <span className="text-sm font-medium text-fg">
               Time Left: {new Date(remainingMs).toISOString().substring(14,19)}
             </span>
           </div>
-          <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
+          <div className="w-full bg-surface-alt rounded-full h-2">
             <div 
-              className="bg-blue-600 h-2 rounded-full" 
+              className="bg-primary h-2 rounded-full" 
               style={{ width: `${((questionIndex + 1) / (totalQuestions || 1)) * 100}%` }}
             ></div>
           </div>
@@ -269,10 +269,10 @@ export default function QuizQuestionPage({ params }: { params: Promise<{ shortSl
       {/* Question Card */}
       <div className="glass-morphism p-8 rounded-xl mb-8">
         <div className="flex items-center gap-3 mb-6">
-          <span className="flex items-center justify-center w-8 h-8 bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 rounded-full text-sm font-bold">
+          <span className="flex items-center justify-center w-8 h-8 bg-surface-alt text-fg rounded-full text-sm font-bold">
             {questionId}
           </span>
-          <h1 className="text-xl font-semibold text-gray-900 dark:text-white">
+          <h1 className="text-xl font-semibold text-fg">
             {questionData.type === 'multiple-choice' && 'Multiple Choice'}
             {questionData.type === 'true-false' && 'True or False'}
             {questionData.type === 'scenario' && 'Scenario-Based'}
@@ -280,7 +280,7 @@ export default function QuizQuestionPage({ params }: { params: Promise<{ shortSl
         </div>
 
         <div className="prose prose-lg dark:prose-invert max-w-none mb-8">
-          <p className="text-gray-800 dark:text-gray-200 text-lg">
+          <p className="text-fg text-lg">
             {renderInlineCode(questionData.question)}
           </p>
         </div>
@@ -288,14 +288,14 @@ export default function QuizQuestionPage({ params }: { params: Promise<{ shortSl
         {/* Answer Input */}
         {((questionData.type === 'open-ended') || ((questionData.acceptedAnswers ?? []).length > 0)) ? (
           <div className="mb-8">
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+            <label className="block text-sm font-medium text-muted mb-2">
               Your Answer
             </label>
             <input
               type="text"
               value={enteredText}
               onChange={(e) => !showExplanation && setEnteredText(e.target.value)}
-              className="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100"
+              className="w-full px-4 py-2 rounded-lg border border-border bg-surface text-fg"
               placeholder="Type your answer"
             />
           </div>
@@ -323,7 +323,7 @@ export default function QuizQuestionPage({ params }: { params: Promise<{ shortSl
                   <span className="sweet-radio-visual" aria-hidden="true" />
                   <span className="radio-text">
                     {showLetters && (
-                      <span className="mr-2 inline-block font-semibold text-gray-700 dark:text-gray-300" aria-hidden="true">
+                      <span className="mr-2 inline-block font-semibold text-muted" aria-hidden="true">
                         {letter}.
                       </span>
                     )}
@@ -337,22 +337,18 @@ export default function QuizQuestionPage({ params }: { params: Promise<{ shortSl
 
         {/* Explanation */}
         {showExplanation && (
-          <div className={`p-4 rounded-lg mb-6 ${
-            isCorrect 
-              ? "bg-green-50 dark:bg-green-900/30 border border-green-200 dark:border-green-800" 
-              : "bg-red-50 dark:bg-red-900/30 border border-red-200 dark:border-red-800"
-          }`}>
+          <div className={`p-4 rounded-lg mb-6 bg-surface-alt border border-border`}>
             <div className="flex items-start gap-3">
               <span className="text-xl">
                 {isCorrect ? "✅" : "❌"}
               </span>
               <div>
                 <h3 className={`font-semibold ${
-                  isCorrect ? "text-green-800 dark:text-green-200" : "text-red-800 dark:text-red-200"
+                  isCorrect ? "text-primary" : "text-danger"
                 }`}>
                   {isCorrect ? "Correct!" : "Incorrect"}
                 </h3>
-                <p className="text-gray-700 dark:text-gray-300 mt-2">
+                <p className="text-muted mt-2">
                   {renderInlineCode(questionData.explanation || '')}
                 </p>
               </div>
@@ -366,7 +362,7 @@ export default function QuizQuestionPage({ params }: { params: Promise<{ shortSl
             {questionIndex > 0 && (
               <button
                 onClick={handlePreviousQuestion}
-                className="px-6 py-2 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300 transition-colors flex items-center"
+                className="px-6 py-2 bg-surface-alt text-fg rounded-lg hover:opacity-90 transition-colors flex items-center"
               >
                 <span className="mr-2">←</span>
                 Previous
@@ -381,8 +377,8 @@ export default function QuizQuestionPage({ params }: { params: Promise<{ shortSl
                 disabled={selectedAnswer === null}
                 className={`px-6 py-2 rounded-lg transition-colors flex items-center ${
                   selectedAnswer !== null
-                    ? "bg-blue-600 text-white hover:bg-blue-700"
-                    : "bg-gray-300 text-gray-500 cursor-not-allowed"
+                    ? "bg-primary text-primary-fg hover:opacity-90"
+                    : "bg-surface-alt text-muted cursor-not-allowed"
                 }`}
               >
                 Submit Answer
@@ -391,7 +387,7 @@ export default function QuizQuestionPage({ params }: { params: Promise<{ shortSl
             ) : (
               <button
                 onClick={handleNextQuestion}
-                className="px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors flex items-center"
+                className="px-6 py-2 bg-primary text-primary-fg rounded-lg hover:opacity-90 transition-colors flex items-center"
               >
                 {questionIndex < totalQuestions - 1 ? "Next Question" : "View Results"}
                 <span className="ml-2">→</span>
@@ -405,7 +401,7 @@ export default function QuizQuestionPage({ params }: { params: Promise<{ shortSl
       <footer className="flex justify-center">
         <Link
           href={`/${shortSlug}/quiz`}
-          className="inline-flex items-center px-4 py-2 text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors"
+          className="inline-flex items-center px-4 py-2 text-muted hover:text-fg transition-colors"
         >
           ← Back to Quiz Overview
         </Link>

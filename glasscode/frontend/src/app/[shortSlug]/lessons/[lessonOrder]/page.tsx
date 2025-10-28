@@ -147,20 +147,20 @@ export default async function LessonPage({ params }: LessonPageProps) {
           <div className="glass-morphism p-8 rounded-xl">
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center gap-4">
-                <span className="flex items-center justify-center w-12 h-12 bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 rounded-full text-lg font-bold">
+                <span className="flex items-center justify-center w-12 h-12 bg-primary text-primary-fg rounded-full text-lg font-bold">
                   {lesson.order || lessonIndex + 1}
                 </span>
                 <div>
-                  <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
+                  <h1 className="text-3xl font-bold text-fg">
                     {lesson.title}
                   </h1>
-                  <p className="text-gray-600 dark:text-gray-300">
+                  <p className="text-fg">
                     {currentModule.title} • {currentGroupInfo?.group.title} • Lesson {lesson.order || lessonIndex + 1} of {lessons.length}
                   </p>
                 </div>
               </div>
               
-              <div className="text-sm text-gray-500 dark:text-gray-400">
+              <div className="text-sm text-muted">
                 <span className="flex items-center gap-1">
                   🕒 {lesson.estimatedMinutes || 30} minutes
                 </span>
@@ -169,15 +169,15 @@ export default async function LessonPage({ params }: LessonPageProps) {
 
             {/* Learning Objectives */}
             {lesson.objectives && lesson.objectives.length > 0 && (
-              <div className="border-t border-gray-200 dark:border-gray-700 pt-6">
-                <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-3">
+              <div className="border-t border-border pt-6">
+                <h2 className="text-lg font-semibold text-fg mb-3">
                   🎯 Learning Objectives
                 </h2>
                 <ul className="space-y-2">
                   {lesson.objectives.map((objective: string, index: number) => (
                     <li key={index} className="flex items-center gap-3">
-                      <span className="text-green-500 mt-0.5">✓</span>
-                      <span className="text-gray-700 dark:text-gray-300">{objective}</span>
+                      <span className="text-primary mt-0.5">✓</span>
+                      <span className="text-fg">{objective}</span>
                     </li>
                   ))}
                 </ul>
@@ -191,12 +191,12 @@ export default async function LessonPage({ params }: LessonPageProps) {
           {/* Introduction */}
           {lesson.intro && (
             <section className="glass-morphism p-8 rounded-xl">
-              <h2 className="text-2xl font-semibold text-gray-900 dark:text-white mb-4">
+              <h2 className="text-2xl font-semibold text-fg mb-4">
                 Introduction
               </h2>
               <div className="prose prose-lg dark:prose-invert max-w-none">
                 {lesson.intro.split('\n\n').map((paragraph: string, index: number) => (
-                  <p key={index} className="text-gray-700 dark:text-gray-300 mb-4">
+                  <p key={index} className="text-fg mb-4">
                     {paragraph}
                   </p>
                 ))}
@@ -207,18 +207,18 @@ export default async function LessonPage({ params }: LessonPageProps) {
           {/* Code Example */}
           {lesson.code && lesson.code.example && (
             <section className="glass-morphism p-8 rounded-xl">
-              <h2 className="text-2xl font-semibold text-gray-900 dark:text-white mb-4">
+              <h2 className="text-2xl font-semibold text-fg mb-4">
                 💻 Code Example
               </h2>
               
-              <div className="bg-gray-900 rounded-lg p-6 mb-4 overflow-x-auto">
-                <pre className="text-sm text-gray-100">
+              <div className="bg-surface rounded-lg p-6 mb-4 overflow-x-auto">
+                <pre className="text-sm text-fg">
                   <code>{lesson.code.example}</code>
                 </pre>
               </div>
               
               {lesson.code.explanation && (
-                <div className="text-gray-700 dark:text-gray-300">
+                <div className="text-fg">
                   <h3 className="font-semibold mb-2">Explanation:</h3>
                   <p>{lesson.code.explanation}</p>
                 </div>
@@ -229,28 +229,24 @@ export default async function LessonPage({ params }: LessonPageProps) {
           {/* Common Pitfalls */}
           {lesson.pitfalls && lesson.pitfalls.length > 0 && (
             <section className="glass-morphism p-8 rounded-xl">
-              <h2 className="text-2xl font-semibold text-gray-900 dark:text-white mb-4">
+              <h2 className="text-2xl font-semibold text-fg mb-4">
                 ⚠️ Common Pitfalls
               </h2>
               
               <div className="space-y-4">
                 {lesson.pitfalls.map((pitfall: Pitfall, index: number) => (
-                  <div key={index} className="border border-yellow-200 dark:border-yellow-800 bg-yellow-50 dark:bg-yellow-900/20 rounded-lg p-4">
+                  <div key={index} className="border border-border bg-surface-alt rounded-lg p-4">
                     <div className="flex items-start gap-3">
-                      <span className="text-yellow-500 text-xl mt-1">⚠️</span>
+                      <span className="text-warning text-xl mt-1">⚠️</span>
                       <div>
-                        <h3 className="font-semibold text-yellow-800 dark:text-yellow-200 mb-2">
+                        <h3 className="font-semibold text-warning mb-2">
                           {pitfall.mistake || `Pitfall ${index + 1}`}
                         </h3>
-                        <p className="text-yellow-700 dark:text-yellow-300 mb-2">
+                        <p className="text-muted mb-2">
                           <strong>Solution:</strong> {pitfall.solution || 'Review best practices and documentation.'}
                         </p>
                         {pitfall.severity && (
-                          <span className={`inline-block px-2 py-1 rounded text-xs font-medium ${
-                            pitfall.severity === 'high' ? 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200' :
-                            pitfall.severity === 'medium' ? 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200' :
-                            'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200'
-                          }`}>
+                          <span className={`inline-block px-2 py-1 rounded text-xs font-medium bg-surface-alt text-muted`}>
                             {pitfall.severity} severity
                           </span>
                         )}
@@ -265,7 +261,7 @@ export default async function LessonPage({ params }: LessonPageProps) {
           {/* Exercises */}
           {lesson.exercises && lesson.exercises.length > 0 && (
             <section className="glass-morphism p-8 rounded-xl">
-              <h2 className="text-2xl font-semibold text-gray-900 dark:text-white mb-4">
+              <h2 className="text-2xl font-semibold text-fg mb-4">
                 📝 Practice Exercises
               </h2>
               
@@ -310,14 +306,14 @@ export default async function LessonPage({ params }: LessonPageProps) {
             {isFirstInGroup ? (
               <Link
                 href={currentModule.slug === 'programming-fundamentals' ? '/programming/lessons' : currentModule.routes.lessons}
-                className="inline-flex items-center px-4 py-2 text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors"
+                className="inline-flex items-center px-4 py-2 text-fg hover:text-fg transition-colors"
               >
                 ← Back to Lessons
               </Link>
             ) : (
               <Link
                 href={currentModule.slug === 'programming-fundamentals' ? `/programming/lessons/${lessonIndex}` : `${currentModule.routes.lessons}/${lessonIndex}`} // Previous lesson
-                className="inline-flex items-center px-4 py-2 text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors"
+                className="inline-flex items-center px-4 py-2 text-fg hover:text-fg transition-colors"
               >
                 ← Previous Lesson
               </Link>
@@ -329,29 +325,29 @@ export default async function LessonPage({ params }: LessonPageProps) {
               nextGroup ? (
                 <Link
                   href={currentModule.slug === 'programming-fundamentals' ? `/programming/lessons/${lessons.indexOf(nextGroup.lessons[0]) + 1}` : `${currentModule.routes.lessons}/${lessons.indexOf(nextGroup.lessons[0]) + 1}`}
-                  className="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
-                >
-                  Next Group: {nextGroup.title}
-                  <span className="ml-2">→</span>
-                </Link>
-              ) : (
-                <Link
-                  href={currentModule.slug === 'programming-fundamentals' ? '/programming/quiz' : currentModule.routes.quiz}
-                  className="inline-flex items-center px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
-                >
-                  Take Assessment
-                  <span className="ml-2">🎯</span>
-                </Link>
-              )
-            ) : (
-              <Link
-                href={currentModule.slug === 'programming-fundamentals' ? `/programming/lessons/${lessonIndex + 2}` : `${currentModule.routes.lessons}/${lessonIndex + 2}`} // Next lesson
-                className="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                className="inline-flex items-center px-4 py-2 bg-primary text-primary-fg rounded-lg hover:opacity-90 transition-colors"
               >
-                Next Lesson
+                Next Group: {nextGroup.title}
                 <span className="ml-2">→</span>
               </Link>
-            )}
+            ) : (
+              <Link
+                href={currentModule.slug === 'programming-fundamentals' ? '/programming/quiz' : currentModule.routes.quiz}
+                className="inline-flex items-center px-4 py-2 bg-success text-primary-fg rounded-lg hover:opacity-90 transition-colors"
+              >
+                Take Assessment
+                <span className="ml-2">🎯</span>
+              </Link>
+            )
+          ) : (
+            <Link
+              href={currentModule.slug === 'programming-fundamentals' ? `/programming/lessons/${lessonIndex + 2}` : `${currentModule.routes.lessons}/${lessonIndex + 2}`} // Next lesson
+              className="inline-flex items-center px-4 py-2 bg-primary text-primary-fg rounded-lg hover:opacity-90 transition-colors"
+            >
+              Next Lesson
+              <span className="ml-2">→</span>
+            </Link>
+          )}
           </div>
         </nav>
       </div>

@@ -324,12 +324,12 @@ export default function QuizPage({ params }: { params: Promise<{ shortSlug: stri
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
           <div className="text-6xl mb-4">❌</div>
-          <h2 className="text-2xl font-semibold text-gray-900 dark:text-white mb-4">
+          <h2 className="text-2xl font-semibold text-fg mb-4">
             {error || 'Module not found'}
           </h2>
           <Link
             href="/"
-            className="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+            className="inline-flex items-center px-4 py-2 bg-primary text-primary-fg rounded-lg hover:opacity-90 transition-colors"
           >
             ← Back to Home
           </Link>
@@ -352,14 +352,14 @@ export default function QuizPage({ params }: { params: Promise<{ shortSlug: stri
     <QuizLayout module={currentModule} quiz={quiz} thresholds={layoutThresholds} unlockingModules={unlockingModules}>
       {/* Prefetch Status Indicator */}
       {prefetchStatus && prefetchStatus.isPrefetching && (
-        <div className="mb-6 glass-morphism p-4 rounded-lg border border-blue-200 dark:border-blue-800">
+        <div className="mb-6 glass-morphism p-4 rounded-lg border border-border">
           <div className="flex items-center">
-            <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-blue-600 mr-3"></div>
+            <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-primary mr-3"></div>
             <div>
-              <p className="text-sm font-medium text-blue-800 dark:text-blue-200">
+              <p className="text-sm font-medium text-primary">
                 Background quiz prefetching in progress
               </p>
-              <p className="text-xs text-blue-600 dark:text-blue-300">
+              <p className="text-xs text-muted">
                 {prefetchStatus.prefetchedCount} quizzes loaded
               </p>
             </div>
@@ -372,68 +372,68 @@ export default function QuizPage({ params }: { params: Promise<{ shortSlug: stri
         <div className="space-y-8">
           {/* Assessment Overview */}
           <div className="glass-morphism px-8 py-8 rounded-xl">
-            <h2 className="text-2xl font-semibold text-gray-900 dark:text-white mb-4">
+            <h2 className="text-2xl font-semibold text-fg mb-4">
               🎯 Assessment Overview
             </h2>
-            <p className="text-gray-600 dark:text-gray-300 mb-6">
+            <p className="text-muted mb-6">
               You will answer {quizLength} randomly selected questions covering key concepts from the {currentModule.title} module.
               Questions are chosen from a larger pool to keep each attempt fresh.
             </p>
             
             <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
               {/* Quiz Length combined with pool size */}
-              <div className="bg-blue-50 dark:bg-blue-900/30 p-4 rounded-lg">
-                <div className="text-2xl font-bold text-blue-600 dark:text-blue-300">
-                  {quizData.totalQuestions} <span className="text-sm font-medium text-blue-700 dark:text-blue-200">questions</span>
+              <div className="bg-surface-alt p-4 rounded-lg">
+                <div className="text-2xl font-bold text-primary">
+                  {quizData.totalQuestions} <span className="text-sm font-medium text-muted">questions</span>
                 </div>
-                <div className="text-xs text-gray-600 dark:text-gray-300 mt-1">
+                <div className="text-xs text-muted mt-1">
                   Pool: {poolCount}
                 </div>
               </div>
               {/* Requirement Met */}
-              <div className="bg-green-50 dark:bg-green-900/30 p-4 rounded-lg">
-                <div className="text-2xl font-bold text-green-600 dark:text-green-300">
+              <div className="bg-surface-alt p-4 rounded-lg">
+                <div className="text-2xl font-bold text-primary">
                   {reqPercent}%
                 </div>
-                <div className="text-sm text-gray-600 dark:text-gray-300">
+                <div className="text-sm text-muted">
                   Requirement Met
                 </div>
               </div>
               {/* Time Limit */}
-              <div className="bg-green-50 dark:bg-green-900/30 p-4 rounded-lg">
-                <div className="text-2xl font-bold text-green-600 dark:text-green-300">
+              <div className="bg-surface-alt p-4 rounded-lg">
+                <div className="text-2xl font-bold text-primary">
                   {quizData.timeLimit} min
                 </div>
-                <div className="text-sm text-gray-600 dark:text-gray-300">
+                <div className="text-sm text-muted">
                   Time Limit
                 </div>
               </div>
               {/* Passing Score */}
-              <div className="bg-purple-50 dark:bg-purple-900/30 p-4 rounded-lg">
-                <div className="text-2xl font-bold text-purple-600 dark:text-purple-300">
+              <div className="bg-surface-alt p-4 rounded-lg">
+                <div className="text-2xl font-bold text-primary">
                   {quizData.passingScore}%
                 </div>
-                <div className="text-sm text-gray-600 dark:text-gray-300">
+                <div className="text-sm text-muted">
                   Passing Score
                 </div>
               </div>
             </div>
 
             <div className="flex flex-wrap gap-2 mb-6">
-              <span className="px-3 py-1 bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200 rounded-full text-sm">
+              <span className="px-3 py-1 bg-surface-alt text-fg rounded-full text-sm">
                 Multiple Choice
               </span>
-              <span className="px-3 py-1 bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200 rounded-full text-sm">
+              <span className="px-3 py-1 bg-surface-alt text-fg rounded-full text-sm">
                 True/False
               </span>
-              <span className="px-3 py-1 bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200 rounded-full text-sm">
+              <span className="px-3 py-1 bg-surface-alt text-fg rounded-full text-sm">
                 Scenario-Based
               </span>
             </div>
 
             {unlockingModules && unlockingModules.length > 0 && (
-              <div className="mb-6 border-t border-gray-200 dark:border-gray-700 pt-6">
-                <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-3">Unlocks on completion</h3>
+              <div className="mb-6 border-t border-border pt-6">
+                <h3 className="text-lg font-semibold text-fg mb-3">Unlocks on completion</h3>
                 <div className="flex flex-wrap gap-2">
                   {unlockingModules.map((m) => (
                     <Link key={m.slug} href={m.routes.overview} className="unlock-chip">
@@ -449,31 +449,31 @@ export default function QuizPage({ params }: { params: Promise<{ shortSlug: stri
           {/* Quiz Instructions */}
           <div className="glass-morphism p-8 rounded-xl">
 
-            <h2 className="text-2xl font-semibold text-gray-900 dark:text-white mb-6">
+            <h2 className="text-2xl font-semibold text-fg mb-6">
               📋 Quiz Instructions
             </h2>
             
             <ul className="space-y-4 mb-8">
               {quizData.instructions.map((instruction: string, index: number) => (
                 <li key={index} className="flex items-start gap-3">
-                  <span className="flex-shrink-0 w-6 h-6 bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 rounded-full flex items-center justify-center text-sm font-bold mt-0.5">
+                  <span className="flex-shrink-0 w-6 h-6 bg-surface-alt text-fg rounded-full flex items-center justify-center text-sm font-bold mt-0.5">
                     {index + 1}
                   </span>
-                  <span className="text-gray-700 dark:text-gray-300">{instruction}</span>
+                  <span className="text-fg">{instruction}</span>
                 </li>
               ))}
             </ul>
 
-            <div className="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg p-4 mb-6">
+            <div className="bg-surface-alt border border-border rounded-lg p-4 mb-6">
               <div className="flex">
                 <div className="flex-shrink-0">
-                  <span className="text-yellow-400 text-xl">⚠️</span>
+                  <span className="text-warning text-xl">⚠️</span>
                 </div>
                 <div className="ml-3">
-                  <h3 className="text-sm font-medium text-yellow-800 dark:text-yellow-200">
+                  <h3 className="text-sm font-medium text-warning">
                     Important
                   </h3>
-                  <p className="mt-1 text-sm text-yellow-700 dark:text-yellow-300">
+                  <p className="mt-1 text-sm text-muted">
                     Once you start the quiz, the timer will begin and cannot be paused. 
                     Make sure you&apos;re ready before clicking Start Quiz.
                   </p>
@@ -484,7 +484,7 @@ export default function QuizPage({ params }: { params: Promise<{ shortSlug: stri
             <div className="flex justify-center">
               <button
                 onClick={handleStartQuiz}
-                className="inline-flex items-center px-8 py-4 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors text-lg font-medium"
+                className="inline-flex items-center px-8 py-4 bg-primary text-primary-fg rounded-lg hover:opacity-90 transition-colors text-lg font-medium"
               >
                 Start Quiz
                 <span className="ml-2">🎯</span>
@@ -495,15 +495,15 @@ export default function QuizPage({ params }: { params: Promise<{ shortSlug: stri
       ) : (
         <div className="glass-morphism p-12 rounded-xl text-center">
           <div className="text-6xl mb-4">❓</div>
-          <h2 className="text-2xl font-semibold text-gray-900 dark:text-white mb-4">
+          <h2 className="text-2xl font-semibold text-fg mb-4">
             Quiz Questions Not Available Yet
           </h2>
-          <p className="text-gray-600 dark:text-gray-300 mb-6">
+          <p className="text-muted mb-6">
             Quiz questions for this module are currently being prepared. Check back soon!
           </p>
           <Link
             href={currentModule.routes.overview}
-            className="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+            className="inline-flex items-center px-4 py-2 bg-primary text-primary-fg rounded-lg hover:opacity-90 transition-colors"
           >
             ← Back to Module
           </Link>
@@ -514,7 +514,7 @@ export default function QuizPage({ params }: { params: Promise<{ shortSlug: stri
       <footer className="mt-12 flex justify-between items-center">
         <Link
           href={currentModule.routes.overview}
-          className="inline-flex items-center px-4 py-2 text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors"
+          className="inline-flex items-center px-4 py-2 text-muted hover:text-fg transition-colors"
         >
           ← Back to Module Overview
         </Link>
@@ -522,7 +522,7 @@ export default function QuizPage({ params }: { params: Promise<{ shortSlug: stri
         {thresholds?.lessonsValid && (
           <Link
             href={currentModule.routes.lessons}
-            className="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+            className="inline-flex items-center px-4 py-2 bg-primary text-primary-fg rounded-lg hover:opacity-90 transition-colors"
           >
             Review Lessons
             <span className="ml-2">📚</span>

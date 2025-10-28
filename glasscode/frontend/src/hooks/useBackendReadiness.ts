@@ -28,8 +28,8 @@ export function useBackendReadiness(options?: { enabled?: boolean }) {
           return;
         }
 
-        const apiBase = (process.env.NEXT_PUBLIC_API_BASE || '').replace(/\/+$/, '');
-        const url = apiBase ? `${apiBase}/health` : '/health';
+        // Always use same-origin health proxy to avoid CORS and env drift
+        const url = '/health';
         const response = await fetch(url, { cache: 'no-store' });
         
         if (response.ok) {

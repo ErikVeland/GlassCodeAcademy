@@ -114,6 +114,25 @@ html.theme-transition, html.theme-transition body, html.theme-transition * {
 @utility text-primary-fg {
   color: hsl(var(--primary-fg));
 }
+/* Additional semantic utilities for status colors */
+@utility text-success {
+  color: hsl(var(--success));
+}
+@utility bg-success {
+  background-color: hsl(var(--success));
+}
+@utility text-warning {
+  color: hsl(var(--warning));
+}
+@utility bg-warning {
+  background-color: hsl(var(--warning));
+}
+@utility text-danger {
+  color: hsl(var(--danger));
+}
+@utility bg-danger {
+  background-color: hsl(var(--danger));
+}
 @utility ring-focus {
   --tw-ring-color: hsl(var(--focus-ring));
 }

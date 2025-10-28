@@ -69,6 +69,22 @@
   margin-right: auto;
 }
 
+/* Subtle animated background for light theme */
+@keyframes gentleAmbientShift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* Apply only in light mode; respects existing theme classing */
+html:not(.dark) body.theme-base {
+  background: radial-gradient(1200px 800px at 20% 0%, rgba(99, 102, 241, 0.08), transparent 60%),
+              radial-gradient(1000px 700px at 80% 100%, rgba(59, 130, 246, 0.06), transparent 60%),
+              linear-gradient(180deg, rgba(255, 255, 255, 1), rgba(248, 250, 252, 1));
+  background-size: 200% 200%, 200% 200%, 100% 100%;
+  animation: gentleAmbientShift 24s ease-in-out infinite;
+}
+
 /* Glass Morphism Base Component - Matching design document requirements */
 .glass-morphism {
   background: var(--glass-bg);
@@ -106,6 +122,26 @@
     background: var(--text-overlay-light);
     opacity: 0.05;
   }
+}
+
+/* Light mode glass: stronger surface, dark text, improved contrast */
+html:not(.dark) .glass-morphism {
+  background: rgba(255, 255, 255, 0.92);
+  border-color: rgba(31, 41, 55, 0.15);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+  color: rgb(31 41 55);
+}
+
+html:not(.dark) .glass-morphism::before {
+  opacity: 0; /* remove dark overlay to maintain contrast */
+}
+
+/* Light mode glass-card variant */
+html:not(.dark) .glass-card {
+  background: rgba(255, 255, 255, 0.95);
+  border-color: rgba(31, 41, 55, 0.15);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+  color: rgb(31 41 55);
 }
 
 /* Tier-Specific Glass Variants with proper color coding */
@@ -468,11 +504,14 @@
   padding: 0;
 }
 
-.tier-section > .glass-morphism {
-  border-radius: 0;
-  margin: 0;
-  width: 100%;
-  max-width: none;
+/* On mobile, tier internals span full width and lose radii for flush stacking */
+@media (max-width: 768px) {
+  .tier-section > .glass-morphism {
+    border-radius: 0;
+    margin: 0;
+    width: 100%;
+    max-width: none;
+  }
 }
 
 /* Responsive Design Adjustments */
