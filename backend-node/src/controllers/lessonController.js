@@ -1,5 +1,7 @@
 const { getLessonById, getQuizzesByLessonId, getModuleById } = require('../services/contentService');
 const winston = require('winston');
+const fs = require('fs');
+const path = require('path');
 
 // Create a logger instance
 const logger = winston.createLogger({
@@ -74,106 +76,141 @@ const getLessonQuizzesController = async (req, res) => {
         const module = moduleId ? await getModuleById(moduleId) : null;
         const moduleSlug = module && (module.slug || null);
 
-        if (moduleSlug) {
-          const fs = require('fs');
-          const path = require('path');
-          const filePath = path.join(process.cwd(), '..', 'content', 'quizzes', `${moduleSlug}.json`);
-          const raw = await fs.promises.readFile(filePath, 'utf-8');
-          const json = JSON.parse(raw);
-          const questions = Array.isArray(json.questions) ? json.questions : [];
+        // Resolve content directory robustly
+        const resolveContentDir = () => {
+          // 1) Use explicit env var if provided
+          if (process.env.CONTENT_DIR && fs.existsSync(process.env.CONTENT_DIR)) {
+            return process.env.CONTENT_DIR;
+          }
+          // 2) Try repo-root relative to this file location
+          const repoRoot = path.resolve(__dirname, '../../../');
+          const dirFromDirname = path.join(repoRoot, 'content', 'quizzes');
+          if (fs.existsSync(dirFromDirname)) {
+            return dirFromDirname;
+          }
+          // 3) Try process cwd relative
+          const dirFromCwd = path.join(process.cwd(), '..', 'content', 'quizzes');
+          if (fs.existsSync(dirFromCwd)) {
+            return dirFromCwd;
+          }
+          // 4) Last resort: content/quizzes under cwd
+          const fallbackDir = path.join(process.cwd(), 'content', 'quizzes');
+          return fallbackDir;
+        };
 
-          const fallbackQuizzes = questions.map((q, index) => {
-            let choices = [];
-            const rawChoices = q && q.choices;
-            if (Array.isArray(rawChoices)) {
-              choices = rawChoices;
-            } else if (typeof rawChoices === 'string') {
-              const str = rawChoices;
-              try {
-                const parsed = JSON.parse(str);
-                choices = Array.isArray(parsed) ? parsed : [];
-              } catch {
-                const split = str.split(/\r?\n|\||;/).map(s => s.trim()).filter(Boolean);
-                choices = split.length > 0 ? split : (str.trim() ? [str.trim()] : []);
+        const contentDir = resolveContentDir();
+
+        const loadAnyQuizFile = async () => {
+          const quizzesDir = contentDir;
+          const files = await fs.promises.readdir(quizzesDir);
+          const candidate = files.find(f => f.endsWith('.json'));
+          if (candidate) {
+            const raw = await fs.promises.readFile(path.join(quizzesDir, candidate), 'utf-8');
+            const json = JSON.parse(raw);
+            const questions = Array.isArray(json.questions) ? json.questions : [];
+            const fallbackQuizzes = questions.map((q, index) => {
+              let choices = [];
+              const rawChoices = q && q.choices;
+              if (Array.isArray(rawChoices)) {
+                choices = rawChoices;
+              } else if (typeof rawChoices === 'string') {
+                const str = rawChoices;
+                try {
+                  const parsed = JSON.parse(str);
+                  choices = Array.isArray(parsed) ? parsed : [];
+                } catch {
+                  const split = str.split(/\r?\n|\||;/).map(s => s.trim()).filter(Boolean);
+                  choices = split.length > 0 ? split : (str.trim() ? [str.trim()] : []);
+                }
               }
+
+              const questionType = typeof q.type === 'string' ? q.type : (typeof q.questionType === 'string' ? q.questionType : 'multiple-choice');
+
+              return {
+                id: -2000 - index,
+                lesson_id: Number(lessonId),
+                question: String((q && q.question) || '').trim() || 'Untitled question',
+                choices,
+                correctAnswer: typeof q.correctAnswer === 'number' ? q.correctAnswer : 0,
+                explanation: typeof q.explanation === 'string' ? q.explanation : undefined,
+                topic: typeof q.topic === 'string' ? q.topic : 'general',
+                questionType,
+                difficulty: typeof q.difficulty === 'string' ? q.difficulty : 'Beginner',
+                estimatedTime: typeof q.estimatedTime === 'number' ? q.estimatedTime : 90,
+                sort_order: index,
+                isPublished: true,
+                fixedChoiceOrder: typeof q.fixedChoiceOrder === 'boolean' ? q.fixedChoiceOrder : false,
+                acceptedAnswers: Array.isArray(q.acceptedAnswers) ? q.acceptedAnswers : undefined,
+                choiceLabels: q.choiceLabels
+              };
+            });
+
+            logger.info('Quizzes fallback from first available file applied', { lessonId, quizFile: candidate, quizCount: fallbackQuizzes.length });
+            return fallbackQuizzes;
+          }
+          logger.warn('No quiz files found for fallback', { lessonId });
+          return [];
+        };
+
+        if (moduleSlug) {
+          try {
+            const filePath = path.join(contentDir, `${moduleSlug}.json`);
+            const raw = await fs.promises.readFile(filePath, 'utf-8');
+            const json = JSON.parse(raw);
+            const questions = Array.isArray(json.questions) ? json.questions : [];
+
+            const fallbackQuizzes = questions.map((q, index) => {
+              let choices = [];
+              const rawChoices = q && q.choices;
+              if (Array.isArray(rawChoices)) {
+                choices = rawChoices;
+              } else if (typeof rawChoices === 'string') {
+                const str = rawChoices;
+                try {
+                  const parsed = JSON.parse(str);
+                  choices = Array.isArray(parsed) ? parsed : [];
+                } catch {
+                  const split = str.split(/\r?\n|\||;/).map(s => s.trim()).filter(Boolean);
+                  choices = split.length > 0 ? split : (str.trim() ? [str.trim()] : []);
+                }
+              }
+
+              const questionType = typeof q.type === 'string' ? q.type : (typeof q.questionType === 'string' ? q.questionType : 'multiple-choice');
+
+              return {
+                id: -1000 - index,
+                lesson_id: Number(lessonId),
+                question: String((q && q.question) || '').trim() || 'Untitled question',
+                choices,
+                correctAnswer: typeof q.correctAnswer === 'number' ? q.correctAnswer : 0,
+                explanation: typeof q.explanation === 'string' ? q.explanation : undefined,
+                topic: typeof q.topic === 'string' ? q.topic : 'general',
+                questionType,
+                difficulty: typeof q.difficulty === 'string' ? q.difficulty : 'Beginner',
+                estimatedTime: typeof q.estimatedTime === 'number' ? q.estimatedTime : 90,
+                sort_order: index,
+                isPublished: true,
+                fixedChoiceOrder: typeof q.fixedChoiceOrder === 'boolean' ? q.fixedChoiceOrder : false,
+                acceptedAnswers: Array.isArray(q.acceptedAnswers) ? q.acceptedAnswers : undefined,
+                choiceLabels: q.choiceLabels
+              };
+            });
+
+            logger.info('Quizzes fallback from file applied', { lessonId, moduleSlug, quizCount: fallbackQuizzes.length });
+            return res.status(200).json({ success: true, data: fallbackQuizzes });
+          } catch (readErr) {
+            logger.warn('Module-specific quiz file read failed, trying any quiz file', { lessonId, moduleSlug, error: readErr.message });
+            const anyFileQuizzes = await loadAnyQuizFile();
+            if (anyFileQuizzes.length > 0) {
+              return res.status(200).json({ success: true, data: anyFileQuizzes });
             }
-
-            const questionType = typeof q.type === 'string' ? q.type : (typeof q.questionType === 'string' ? q.questionType : 'multiple-choice');
-
-            return {
-              id: -1000 - index,
-              lesson_id: Number(lessonId),
-              question: String((q && q.question) || '').trim() || 'Untitled question',
-              choices,
-              correctAnswer: typeof q.correctAnswer === 'number' ? q.correctAnswer : 0,
-              explanation: typeof q.explanation === 'string' ? q.explanation : undefined,
-              topic: typeof q.topic === 'string' ? q.topic : 'general',
-              questionType,
-              difficulty: typeof q.difficulty === 'string' ? q.difficulty : 'Beginner',
-              estimatedTime: typeof q.estimatedTime === 'number' ? q.estimatedTime : 90,
-              sort_order: index,
-              isPublished: true,
-              fixedChoiceOrder: typeof q.fixedChoiceOrder === 'boolean' ? q.fixedChoiceOrder : false,
-              acceptedAnswers: Array.isArray(q.acceptedAnswers) ? q.acceptedAnswers : undefined,
-              choiceLabels: q.choiceLabels
-            };
-          });
-
-          logger.info('Quizzes fallback from file applied', { lessonId, moduleSlug, quizCount: fallbackQuizzes.length });
-          return res.status(200).json({ success: true, data: fallbackQuizzes });
+          }
         } else {
           // As a last-resort fallback, pick the first available quiz file to ensure non-empty data
           try {
-            const fs = require('fs');
-            const path = require('path');
-            const quizzesDir = path.join(process.cwd(), '..', 'content', 'quizzes');
-            const files = await fs.promises.readdir(quizzesDir);
-            const candidate = files.find(f => f.endsWith('.json'));
-            if (candidate) {
-              const raw = await fs.promises.readFile(path.join(quizzesDir, candidate), 'utf-8');
-              const json = JSON.parse(raw);
-              const questions = Array.isArray(json.questions) ? json.questions : [];
-              const fallbackQuizzes = questions.map((q, index) => {
-                let choices = [];
-                const rawChoices = q && q.choices;
-                if (Array.isArray(rawChoices)) {
-                  choices = rawChoices;
-                } else if (typeof rawChoices === 'string') {
-                  const str = rawChoices;
-                  try {
-                    const parsed = JSON.parse(str);
-                    choices = Array.isArray(parsed) ? parsed : [];
-                  } catch {
-                    const split = str.split(/\r?\n|\||;/).map(s => s.trim()).filter(Boolean);
-                    choices = split.length > 0 ? split : (str.trim() ? [str.trim()] : []);
-                  }
-                }
-
-                const questionType = typeof q.type === 'string' ? q.type : (typeof q.questionType === 'string' ? q.questionType : 'multiple-choice');
-
-                return {
-                  id: -2000 - index,
-                  lesson_id: Number(lessonId),
-                  question: String((q && q.question) || '').trim() || 'Untitled question',
-                  choices,
-                  correctAnswer: typeof q.correctAnswer === 'number' ? q.correctAnswer : 0,
-                  explanation: typeof q.explanation === 'string' ? q.explanation : undefined,
-                  topic: typeof q.topic === 'string' ? q.topic : 'general',
-                  questionType,
-                  difficulty: typeof q.difficulty === 'string' ? q.difficulty : 'Beginner',
-                  estimatedTime: typeof q.estimatedTime === 'number' ? q.estimatedTime : 90,
-                  sort_order: index,
-                  isPublished: true,
-                  fixedChoiceOrder: typeof q.fixedChoiceOrder === 'boolean' ? q.fixedChoiceOrder : false,
-                  acceptedAnswers: Array.isArray(q.acceptedAnswers) ? q.acceptedAnswers : undefined,
-                  choiceLabels: q.choiceLabels
-                };
-              });
-
-              logger.info('Quizzes fallback from first available file applied', { lessonId, quizFile: candidate, quizCount: fallbackQuizzes.length });
-              return res.status(200).json({ success: true, data: fallbackQuizzes });
-            } else {
-              logger.warn('No quiz files found for fallback', { lessonId });
+            const anyFileQuizzes = await loadAnyQuizFile();
+            if (anyFileQuizzes.length > 0) {
+              return res.status(200).json({ success: true, data: anyFileQuizzes });
             }
           } catch (anyFileErr) {
             logger.warn('Fallback using any quiz file failed', { lessonId, error: anyFileErr.message });
