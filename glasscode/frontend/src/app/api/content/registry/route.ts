@@ -119,6 +119,7 @@ function loadStaticRegistry(): StaticRegistry | null {
   }
 }
 
+/* eslint-disable @typescript-eslint/no-unused-vars */
 async function synthesizeRegistryFromDatabase() {
   const staticRegistry = loadStaticRegistry();
   const staticModulesBySlug = new Map<string, StaticRegistryModule>();
@@ -307,6 +308,7 @@ async function synthesizeRegistryFromDatabase() {
     globalSettings: staticRegistry?.globalSettings || {},
   };
 }
+/* eslint-enable @typescript-eslint/no-unused-vars */
 
 async function synthesizeRegistryFromStaticOnly() {
   const staticRegistry = loadStaticRegistry();
