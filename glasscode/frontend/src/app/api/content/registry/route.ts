@@ -308,16 +308,46 @@ async function synthesizeRegistryFromDatabase() {
   };
 }
 
+async function synthesizeRegistryFromStaticOnly() {
+  const staticRegistry = loadStaticRegistry();
+  if (!staticRegistry) {
+    throw new Error('Static registry not found');
+  }
+
+  const staticModules = Array.isArray(staticRegistry.modules) ? staticRegistry.modules : [];
+  const normalizedModules: RegistryModuleLight[] = await Promise.all(staticModules.map(async (m) => {
+    const slug = (m.slug || '').toString();
+    const shortSlug = (await getShortSlugFromModuleSlug(slug)) || (slug.includes('-') ? slug.split('-')[0] : slug);
+    const routes: ModuleRoutes = {
+      overview: `/${shortSlug}`,
+      lessons: `/${shortSlug}/lessons`,
+      quiz: `/${shortSlug}/quiz`,
+    };
+    const icon = (typeof m.icon === 'string' && m.icon.trim() !== '' && m.icon !== '📚') ? m.icon : (iconBySlug[slug] || '📚');
+    const technologies = Array.isArray(m.technologies) ? m.technologies : [];
+    const difficulty = typeof m.difficulty === 'string' && m.difficulty.trim() !== '' ? m.difficulty : 'Beginner';
+    const tier = typeof m.tier === 'string' && m.tier.trim() !== '' ? m.tier : 'core';
+    return { ...m, routes, icon, technologies, difficulty, tier } as RegistryModuleLight;
+  }));
+
+  // Filter out any unwanted/demo modules
+  const filteredModules = normalizedModules.filter(m => m.slug !== 'html-basics');
+
+  return {
+    version: staticRegistry.version || 'file',
+    lastUpdated: staticRegistry.lastUpdated || new Date().toISOString(),
+    tiers: staticRegistry.tiers || {},
+    modules: filteredModules,
+    globalSettings: staticRegistry.globalSettings || {},
+  };
+}
+
 export async function GET() {
   try {
-    const dbRegistry = await synthesizeRegistryFromDatabase();
-    return NextResponse.json(dbRegistry);
+    const staticOnly = await synthesizeRegistryFromStaticOnly();
+    return NextResponse.json(staticOnly);
   } catch (err) {
     console.error('Registry GET failed:', err);
-    const staticFallback = loadStaticRegistry();
-    if (staticFallback) {
-      return NextResponse.json(staticFallback);
-    }
     return NextResponse.json({ error: 'Unable to load registry' }, { status: 500 });
   }
 }

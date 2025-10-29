@@ -90,7 +90,7 @@ export default function PieChart({
         <div className="absolute inset-0 flex flex-col items-center justify-center">
           {hoveredIndex !== null ? (
             <>
-              <div className="text-2xl font-bold text-primary-fg">{data[hoveredIndex].value}</div>
+              <div className="text-2xl font-bold text-fg">{data[hoveredIndex].value}</div>
               <div className="text-sm text-muted text-center px-2">{data[hoveredIndex].label}</div>
               <div className="text-xs text-muted mt-1">
                 {((data[hoveredIndex].value / total) * 100).toFixed(1)}%
@@ -98,7 +98,7 @@ export default function PieChart({
             </>
           ) : (
             <>
-              <div className="text-6xl font-bold text-primary-fg">{total}</div>
+              <div className="text-6xl font-bold text-fg">{total}</div>
               <div className="text-sm text-muted">Total</div>
             </>
           )}
