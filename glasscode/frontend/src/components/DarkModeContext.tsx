@@ -4,6 +4,13 @@ import React, { createContext, useContext, useEffect, useState, useRef } from 'r
 
 type Theme = 'light' | 'dark' | 'system';
 
+declare global {
+  interface Window {
+    __gcPendingTheme?: Theme;
+    __gcRemovePreHydrationToggle?: () => void;
+  }
+}
+
 type DarkModeContextType = {
   theme: Theme;
   setTheme: (theme: Theme) => void;
@@ -40,11 +47,36 @@ export function DarkModeProvider({ children }: { children: React.ReactNode }) {
   // Remove any pre-hydration toggle injected by theme-init.js once React mounts
   useEffect(() => {
     try {
-      // @ts-expect-error optional global injected by theme-init.js
       window.__gcRemovePreHydrationToggle?.();
     } catch {
       // noop
     }
+  }, []);
+
+  // Bridge pre-hydration theme selections into React state
+  useEffect(() => {
+    try {
+      const pending = window.__gcPendingTheme;
+      if (pending === 'light' || pending === 'dark' || pending === 'system') {
+        setTheme(pending);
+        try { delete window.__gcPendingTheme; } catch {}
+      }
+    } catch {}
+
+    type ThemeChangeDetail = { theme: Theme };
+    const handler = (e: Event) => {
+      try {
+        const ce = e as CustomEvent<ThemeChangeDetail>;
+        const t = ce.detail?.theme;
+        if (t === 'light' || t === 'dark' || t === 'system') {
+          setTheme(t);
+        }
+      } catch {}
+    };
+    window.addEventListener('gc-theme-change', handler);
+    return () => {
+      window.removeEventListener('gc-theme-change', handler);
+    };
   }, []);
 
   // Apply theme to document and persist selection

@@ -40,10 +40,15 @@ export const metadata: Metadata = {
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
   const cookieStore = await cookies();
   const themeCookie = cookieStore.get('gc-theme')?.value;
-  const initialTheme = (themeCookie === 'dark' || themeCookie === 'light') ? themeCookie : 'light';
+  const hasCookieTheme = (themeCookie === 'dark' || themeCookie === 'light');
 
   return (
-    <html lang="en" data-theme={initialTheme} className={initialTheme === 'dark' ? 'dark' : undefined} style={{ colorScheme: initialTheme === 'dark' ? 'dark' : 'light' }}>
+    <html
+      lang="en"
+      data-theme={hasCookieTheme ? themeCookie : undefined}
+      className={hasCookieTheme && themeCookie === 'dark' ? 'dark' : undefined}
+      style={{ colorScheme: hasCookieTheme && themeCookie === 'dark' ? 'dark' : 'light' }}
+    >
       <head>
         {/* Preconnect to external resources */}
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
@@ -103,6 +108,12 @@ export default async function RootLayout({ children }: { children: React.ReactNo
                   try {
                     localStorage.setItem('theme', theme);
                     localStorage.removeItem('darkMode');
+                  } catch {}
+                  // Signal theme selection to React after hydration
+                  try {
+                    // Persist for immediate pickup on mount, and dispatch event for live bridging
+                    window.__gcPendingTheme = theme;
+                    window.dispatchEvent(new CustomEvent('gc-theme-change', { detail: { theme: theme } }));
                   } catch {}
                   var label = theme === 'system' ? 'Theme: System (auto)' : (theme === 'dark' ? 'Theme: Dark' : 'Theme: Light');
                   try {
