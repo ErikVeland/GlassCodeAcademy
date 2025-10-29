@@ -3,7 +3,7 @@ import { useSession } from 'next-auth/react';
 // Removed server-only contentRegistry import; use API routes instead
 
 type RegistryModule = { slug: string; tier?: string };
-type RegistryResponse = { modules: RegistryModule[]; tiers: Record<string, any> };
+type RegistryResponse = { modules: RegistryModule[]; tiers: Record<string, unknown> };
 
 const fetchRegistry = async (): Promise<RegistryResponse | null> => {
   try {
@@ -274,7 +274,7 @@ export const useProgressTracking = () => {
   const determineTierFromRegistry = useCallback(async (moduleSlug: string): Promise<string | null> => {
     try {
       const registry = await fetchRegistry();
-      const foundModule = (registry?.modules || []).find((m: any) => m.slug === moduleSlug || m.slug.startsWith(`${moduleSlug}-`));
+      const foundModule = (registry?.modules ?? []).find((m: RegistryModule) => m.slug === moduleSlug || m.slug.startsWith(`${moduleSlug}-`));
       return (foundModule && foundModule.tier) || null;
     } catch (error) {
       console.error('Error getting tier from registry:', error);

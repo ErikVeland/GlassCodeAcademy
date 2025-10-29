@@ -1,5 +1,12 @@
 import React from 'react';
-import { PrefetchStatus } from './QuizPrefetchManager';
+
+// Local type to represent quiz prefetch status used by LoadingScreen
+// Matches the shape returned by quizPrefetchService.getPrefetchStatus()
+interface PrefetchStatus {
+  isPrefetching: boolean;
+  queueLength: number;
+  prefetchedCount: number;
+}
 
 interface LoadingScreenProps {
   message?: string;
@@ -13,7 +20,7 @@ export default function LoadingScreen({ message = 'Loading...', prefetchStatus =
     <div className="min-h-screen flex items-center justify-center p-6" aria-busy="true" aria-live="polite">
       <div className="glass-morphism w-full max-w-sm rounded-xl border border-gray-200 dark:border-gray-700 shadow-md px-6 py-5">
         <div className="flex items-center gap-4">
-          <svg className="animate-spin h-8 w-8 text-blue-600 dark:text-blue-500" viewBox="0 0 24 24" role="img" aria-hidden="true">
+          <svg className={`animate-spin ${sizeClass} text-blue-600 dark:text-blue-500`} viewBox="0 0 24 24" role="img" aria-hidden="true">
             <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
             <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z" />
           </svg>
