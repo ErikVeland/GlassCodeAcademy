@@ -45,7 +45,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   return (
     <html
       lang="en"
-      data-theme={hasCookieTheme ? themeCookie : undefined}
+      data-theme={hasCookieTheme ? themeCookie : 'light'}
       className={hasCookieTheme && themeCookie === 'dark' ? 'dark' : undefined}
       style={{ colorScheme: hasCookieTheme && themeCookie === 'dark' ? 'dark' : 'light' }}
     >

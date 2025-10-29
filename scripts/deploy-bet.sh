@@ -14,6 +14,7 @@ SUDO_PASS=""
 REPO_URL=""
 BRANCH="main"
 DEST_DIR="$(pwd)/bet.glasscode.academy"
+COMMIT=""
 CONF_LOCAL="$(pwd)/bet.glasscode.academy.conf"
 CONF_REMOTE="/etc/nginx/sites-available/bet.glasscode.academy.conf"
 
@@ -33,6 +34,7 @@ Optional:
   --sudo-pass <password>    Provide sudo password for non-interactive remote sudo
   --repo <git-url>          If provided, build from repo using bet-import-build.sh
   --branch <branch>         Branch for repo build (default: main)
+  --commit <sha>            Commit SHA to build (detached HEAD)
   --dest <path>             Local destination parent dir (default: ./bet.glasscode.academy)
 
 Notes:
@@ -52,6 +54,7 @@ while [[ $# -gt 0 ]]; do
     --sudo-pass) SUDO_PASS="$2"; shift 2;;
     --repo) REPO_URL="$2"; shift 2;;
     --branch) BRANCH="$2"; shift 2;;
+    --commit) COMMIT="$2"; shift 2;;
     --dest) DEST_DIR="$2"; shift 2;;
     -h|--help) usage; exit 0;;
     *) echo "Unknown option: $1"; usage; exit 1;;
@@ -64,8 +67,12 @@ fi
 
 # If repo provided, perform build
 if [[ -n "$REPO_URL" ]]; then
-  echo "🌐 Building from repo: $REPO_URL (branch: $BRANCH)"
-  "$(pwd)/scripts/bet-import-build.sh" --repo "$REPO_URL" --branch "$BRANCH" --dest "$DEST_DIR"
+  echo "🌐 Building from repo: $REPO_URL (branch: $BRANCH${COMMIT:+, commit: $COMMIT})"
+  CMD="\"$(pwd)/scripts/bet-import-build.sh\" --repo \"$REPO_URL\" --branch \"$BRANCH\" --dest \"$DEST_DIR\""
+  if [[ -n "$COMMIT" ]]; then
+    CMD+=" --commit \"$COMMIT\""
+  fi
+  eval $CMD
 fi
 
 BUILD_DIR="$DEST_DIR/build"

@@ -7,12 +7,13 @@ This folder hosts artifacts and scripts for importing and building your Entain r
 1. Run the import + build script with your repo URL:
 
    ```bash
-   bash scripts/bet-import-build.sh --repo <git-url> [--branch <branch>] [--dest ./bet.glasscode.academy]
+   bash scripts/bet-import-build.sh --repo <git-url> [--branch <branch>] [--commit <sha>] [--dest ./bet.glasscode.academy]
    ```
 
    Examples:
    - `bash scripts/bet-import-build.sh --repo git@github.com:yourorg/entain.git`
    - `bash scripts/bet-import-build.sh --repo https://github.com/yourorg/entain.git --branch main`
+   - `bash scripts/bet-import-build.sh --repo https://github.com/yourorg/entain.git --branch main --commit 9ab58e63f71fa41ac35e940946bf34d79cacec54`
 
 2. Outputs
    - Source checkout: `bet.glasscode.academy/source`
@@ -36,7 +37,7 @@ Deploy the static build to your server and configure Nginx:
 1. Build locally (or let the deploy script build from a repo):
 
    ```bash
-   bash scripts/bet-import-build.sh --repo <git-url> --branch main --dest ./bet.glasscode.academy
+   bash scripts/bet-import-build.sh --repo <git-url> --branch main --commit <sha> --dest ./bet.glasscode.academy
    ```
 
    This produces `./bet.glasscode.academy/build`.
@@ -50,7 +51,10 @@ Deploy the static build to your server and configure Nginx:
      --ssh-port 22 \
      --target-root /var/www/bet.glasscode.academy \
      --push-conf \
-     --sudo
+     --sudo \
+     --repo <git-url> \
+     --branch main \
+     --commit 9ab58e63f71fa41ac35e940946bf34d79cacec54
    ```
 
    - Add `--repo <git-url> [--branch <branch>]` to build from the repo during deploy.

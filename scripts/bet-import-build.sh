@@ -7,14 +7,16 @@ set -euo pipefail
 REPO_URL="${ENTAIN_REPO_URL:-}"
 BRANCH="main"
 DEST_DIR="$(pwd)/bet.glasscode.academy"
+COMMIT=""
 
 usage() {
   cat <<EOF
-Usage: $0 --repo <git-url> [--branch <branch>] [--dest <path>]
+Usage: $0 --repo <git-url> [--branch <branch>] [--commit <sha>] [--dest <path>]
 
 Options:
   --repo    Git URL of the Entain repo (https/ssh)
   --branch  Branch to checkout (default: main)
+  --commit  Commit SHA to build (detached HEAD). If omitted, builds branch tip
   --dest    Destination parent directory (default: ./bet.glasscode.academy)
 
 Env:
@@ -33,6 +35,8 @@ while [[ $# -gt 0 ]]; do
       REPO_URL="$2"; shift 2;;
     --branch)
       BRANCH="$2"; shift 2;;
+    --commit)
+      COMMIT="$2"; shift 2;;
     --dest)
       DEST_DIR="$2"; shift 2;;
     -h|--help)
@@ -55,6 +59,7 @@ mkdir -p "$SOURCE_DIR" "$BUILD_DIR"
 echo "📁 Destination: $DEST_DIR"
 echo "🔗 Repo URL:    $REPO_URL"
 echo "🌿 Branch:      $BRANCH"
+[[ -n "$COMMIT" ]] && echo "🔒 Commit:      $COMMIT"
 
 # Clone or update
 if [[ -d "$SOURCE_DIR/.git" ]]; then
@@ -67,6 +72,16 @@ if [[ -d "$SOURCE_DIR/.git" ]]; then
     git checkout -b "$BRANCH" "origin/$BRANCH" || git checkout "$BRANCH" || true
   fi
   git reset --hard "origin/$BRANCH" || true
+  # If specific commit requested, checkout detached HEAD at that commit
+  if [[ -n "$COMMIT" ]]; then
+    echo "🔒 Checking out commit $COMMIT"
+    git fetch --all
+    if git rev-parse --verify "$COMMIT" >/dev/null 2>&1; then
+      git checkout -f "$COMMIT"
+    else
+      echo "❌ Commit $COMMIT not found after fetch"; exit 1
+    fi
+  fi
   popd >/dev/null
 else
   echo "⬇️  Cloning repo..."
@@ -75,6 +90,15 @@ else
   # Ensure branch
   git fetch --all
   git checkout "$BRANCH" || true
+  # If specific commit requested, checkout detached HEAD at that commit
+  if [[ -n "$COMMIT" ]]; then
+    echo "🔒 Checking out commit $COMMIT"
+    if git rev-parse --verify "$COMMIT" >/dev/null 2>&1; then
+      git checkout -f "$COMMIT"
+    else
+      echo "❌ Commit $COMMIT not found after fetch"; exit 1
+    fi
+  fi
   popd >/dev/null
 fi
 
