@@ -42,9 +42,10 @@ const SearchInput: React.FC<{
 
   return (
     <div className="relative">
-      <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-        <svg className="h-5 w-5 text-gray-500 dark:text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
-          <path fillRule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clipRule="evenodd" />
+      <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none z-10">
+        <svg className="search-icon h-6 w-6 text-fg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.75" aria-hidden="true">
+          <circle cx="8" cy="8" r="4" />
+          <line x1="12" y1="12" x2="16" y2="16" />
         </svg>
       </div>
       <input
@@ -56,7 +57,7 @@ const SearchInput: React.FC<{
         placeholder={placeholder}
         onFocus={onFocus}
         onBlur={onBlur}
-        className="block w-full pl-10 pr-12 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-xl text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200"
+        className="glass-search-input pl-10 pr-12"
       />
       <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
         <span className="text-xs text-gray-700 dark:text-gray-100 bg-gray-100 dark:bg-gray-700 px-2 py-1 rounded">
@@ -134,19 +135,15 @@ const SearchFilterSystem: React.FC<SearchFilterSystemProps> = ({
       {/* Quick Filters Section */}
       <div className="filters-section mt-4">
         <div className="quick-filters-header">
-          <h3 className="quick-filters-heading text-gray-700 dark:text-gray-300 font-medium mb-3 text-left">Quick filters</h3>
+          <h3 className="quick-filters-heading text-fg font-medium mb-3 text-left">Quick filters</h3>
         </div>
-        <div className="quick-filters-row flex flex-col gap-3 sm:flex-row sm:items-center">
-          <div className="quick-filters-buttons grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2 w-full">
+        <div className="quick-filters-row flex flex-wrap items-center gap-2">
+          <div className="quick-filters-buttons flex flex-wrap gap-2">
             {quickFilters.map(filter => (
               <button
                 key={`${filter.type}-${filter.value}`}
                 onClick={() => handleQuickFilter(filter.type, filter.value)}
-                className={`w-full min-h-[44px] px-3 py-2 rounded-lg text-sm font-medium transition-colors justify-center focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-                  isQuickFilterActive(filter.type, filter.value)
-                    ? 'bg-blue-600 text-white'
-                    : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
-                }`}
+                className={`glass-filter-tag ${isQuickFilterActive(filter.type, filter.value) ? 'active' : ''}`}
                 aria-pressed={isQuickFilterActive(filter.type, filter.value)}
               >
                 <span className="filter-icon mr-1">{filter.icon}</span>
@@ -156,14 +153,10 @@ const SearchFilterSystem: React.FC<SearchFilterSystemProps> = ({
           </div>
           
           {/* Advanced Filters Toggle Button - Aligned with Quick Filters */}
-          <div className="advanced-filters-toggle-container mt-2 sm:mt-0 sm:ml-auto">
+          <div className="advanced-filters-toggle-container ml-auto">
             <button
               onClick={() => setShowAdvancedFilters(!showAdvancedFilters)}
-              className={`px-3 py-2 rounded-lg text-sm font-medium transition-colors flex items-center ${
-                showAdvancedFilters
-                  ? 'bg-blue-600 text-white'
-                  : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
-              }`}
+              className={`glass-filter-tag ${showAdvancedFilters ? 'active' : ''} flex items-center`}
               aria-expanded={showAdvancedFilters}
               aria-controls="advanced-filters"
             >

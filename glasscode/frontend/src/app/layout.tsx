@@ -77,7 +77,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
                 <Header />
                 <main
                   id="main-content"
-                  className="flex-grow w-full sm:max-w-7xl sm:mx-auto px-0 sm:px-6 lg:px-8 py-6 relative"
+                  className="flex-grow w-full sm:max-w-7xl sm:mx-auto px-0 sm:px-6 lg:px-8 py-0 md:py-6 relative"
                   tabIndex={-1}
                 >
                   <AnimatedBackground />
@@ -90,16 +90,16 @@ export default async function RootLayout({ children }: { children: React.ReactNo
                   <div className="py-8 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
                     <div className="flex flex-col sm:flex-row justify-between items-center space-y-4 sm:space-y-0">
                       <div className="flex space-x-6 text-sm">
-                        <Link href="/stats" className="text-muted hover:text-fg transition-colors">
+                        <Link href="/stats" className="text-fg hover:text-fg transition-colors">
                           📊 GlassStats
                         </Link>
                         {EXTERNAL_LINKS.REPO_URL && (
-                          <a href={EXTERNAL_LINKS.REPO_URL} target="_blank" rel="noopener noreferrer" className="text-muted hover:text-fg transition-colors">
+                          <a href={EXTERNAL_LINKS.REPO_URL} target="_blank" rel="noopener noreferrer" className="text-fg hover:text-fg transition-colors">
                             🔗 Source Code
                           </a>
                         )}
                       </div>
-                      <p className="text-center text-sm text-muted">
+                      <p className="text-center text-sm text-fg">
                          © {new Date().getFullYear()} Glass Academy. All rights reserved.
                        </p>
                     </div>

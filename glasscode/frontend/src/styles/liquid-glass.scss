@@ -441,7 +441,8 @@ html:not(.dark) .glass-card {
   background: rgba(255, 255, 255, 0.1);
   border: 1px solid var(--glass-border);
   border-radius: var(--border-radius-panel);
-  padding: 0.75rem 1rem;
+  padding: 0.75rem 3rem;
+  padding-left: 2.75rem;
   width: 100%;
   color: inherit;
   backdrop-filter: blur(8px);
@@ -526,6 +527,13 @@ html:not(.dark) .glass-card {
   
   .glass-module-card {
     padding: 1rem;
+    border-radius: 0;
+    border: none;
+    box-shadow: none;
+    margin: 0;
+  }
+  .glass-module-card::after {
+    border-radius: 0;
   }
 }
 
@@ -732,4 +740,38 @@ html:not(.dark) .glass-card {
     outline: 2px solid #000000;
     outline-offset: 2px;
   }
+}
+
+/* ==============================
+   Light-mode specific overrides
+   (Scoped to html:not(.dark) to avoid impacting dark/desktop)
+   ============================== */
+
+/* Preserve tier theming for panes within tier containers */
+html:not(.dark) .tier-container .glass-morphism {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.24);
+  color: #f3f4f6;
+}
+html:not(.dark) .tier-container .glass-morphism::before {
+  opacity: 0.08;
+}
+
+/* Remove hardcoded light-mode inversions; rely on theme variables */
+/* Light theme now uses var(--glass-bg), var(--glass-border), and inherits text color */
+
+/* Ensure the search input has a clearly visible dark grey border in light mode */
+html:not(.dark) .glass-search-input {
+  border-color: #9CA3AF !important; /* Tailwind Gray-400 */
+}
+
+/* Make search container and filter chips more defined in light mode via theme border */
+html:not(.dark) .glass-search-container,
+html:not(.dark) .glass-filter-tag {
+  border-color: hsl(var(--border)) !important;
+}
+
+/* Module cards: give chips (rounded badges) a subtle border in light mode */
+html:not(.dark) .glass-module-card .rounded-full.bg-surface-alt {
+  border: 1px solid hsl(var(--border)) !important;
 }

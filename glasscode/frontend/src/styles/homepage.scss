@@ -18,6 +18,18 @@
     }
   }
 
+  /* Light mode: keep hero visually dark for stronger contrast */
+  html:not(.dark) & .hero-section > .relative {
+    background: #0b1220 !important; /* deep navy */
+    border-color: rgba(255, 255, 255, 0.15) !important;
+  }
+  html:not(.dark) & .hero-content {
+    color: #f3f4f6; /* text-light on dark hero */
+  }
+  html:not(.dark) & .hero-stats .stat-label {
+    color: #d1d5db; /* softer light gray on dark hero */
+  }
+
   .hero-content {
     color: rgb(75 85 99);
     
@@ -145,6 +157,13 @@
 
       /* Ensure tier header text remains legible over gradients */
       .tier-header { color: white; }
+
+      /* Light mode: adjust tier number badge for legibility over gradients */
+      html:not(.dark) & .tier-header .rounded-full {
+        background-color: rgba(255, 255, 255, 0.12) !important;
+        border: 1px solid rgba(255, 255, 255, 0.35);
+        color: #ffffff;
+      }
 
       .dark & {
         color: rgb(229 231 235); // Gray-200 for dark mode text
@@ -788,3 +807,9 @@
   white-space: nowrap;
   border: 0;
 }
+/* Light mode: darken small grey labels within tier progress summary for better legibility */
+html:not(.dark) .homepage .tier-container .tier-progress-summary .stat-label {
+  color: #111827; /* Gray-900 */
+  opacity: 0.95;
+}
+

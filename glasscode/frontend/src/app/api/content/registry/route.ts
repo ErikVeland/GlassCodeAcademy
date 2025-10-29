@@ -159,7 +159,10 @@ async function synthesizeRegistryFromDatabase() {
           quiz: `/${shortSlug}/quiz`,
         };
         const icon = (typeof m.icon === 'string' && m.icon.trim() !== '' && m.icon !== '📚') ? m.icon : (iconBySlug[slug] || '📚');
-        return { ...m, routes, icon } as RegistryModuleLight;
+        const technologies = Array.isArray(m.technologies) ? m.technologies : [];
+        const difficulty = typeof m.difficulty === 'string' && m.difficulty.trim() !== '' ? m.difficulty : 'Beginner';
+        const tier = typeof m.tier === 'string' && m.tier.trim() !== '' ? m.tier : 'core';
+        return { ...m, routes, icon, technologies, difficulty, tier } as RegistryModuleLight;
       }));
 
       // Filter out dummy/broken modules not meant for production
@@ -194,7 +197,10 @@ async function synthesizeRegistryFromDatabase() {
           quiz: `/${shortSlug}/quiz`,
         };
         const icon = (typeof m.icon === 'string' && m.icon.trim() !== '' && m.icon !== '📚') ? m.icon : (iconBySlug[slug] || '📚');
-        return { ...m, routes, icon } as RegistryModuleLight;
+        const technologies = Array.isArray(m.technologies) ? m.technologies : [];
+        const difficulty = typeof m.difficulty === 'string' && m.difficulty.trim() !== '' ? m.difficulty : 'Beginner';
+        const tier = typeof m.tier === 'string' && m.tier.trim() !== '' ? m.tier : 'core';
+        return { ...m, routes, icon, technologies, difficulty, tier } as RegistryModuleLight;
       }));
 
       // Filter out dummy/broken modules not meant for production
@@ -267,11 +273,37 @@ async function synthesizeRegistryFromDatabase() {
   // Filter out dummy/broken modules not meant for production
   const filteredModules = modules.filter(m => m.slug !== 'html-basics');
 
+  // Normalize modules to guarantee tier, technologies, and difficulty for client safety
+  const normalizedModules = filteredModules.map((m) => {
+    const slug = (m?.slug || '').toString();
+    const rec = m as Record<string, unknown>;
+
+    const tierRaw = rec['tier'];
+    const tierCandidate = typeof tierRaw === 'string' ? tierRaw : undefined;
+    const tierFromDb = tierCandidate && dbTiers && Object.prototype.hasOwnProperty.call(dbTiers, tierCandidate)
+      ? tierCandidate
+      : undefined;
+    const tierFromStatic = staticModulesBySlug.get(slug)?.tier;
+    const tier = tierFromDb || tierFromStatic || 'core';
+
+    const technologiesRaw = rec['technologies'];
+    const technologies = Array.isArray(technologiesRaw) && technologiesRaw.every(x => typeof x === 'string')
+      ? (technologiesRaw as string[])
+      : [];
+
+    const difficultyRaw = rec['difficulty'];
+    const difficulty = typeof difficultyRaw === 'string' && difficultyRaw.trim() !== ''
+      ? difficultyRaw
+      : 'Beginner';
+
+    return { ...m, tier, technologies, difficulty } as RegistryModuleLight;
+  });
+
   return {
     version: 'db',
     lastUpdated: new Date().toISOString(),
     tiers: Object.keys(dbTiers).length ? dbTiers : (staticRegistry?.tiers || {}),
-    modules: filteredModules,
+    modules: normalizedModules,
     globalSettings: staticRegistry?.globalSettings || {},
   };
 }

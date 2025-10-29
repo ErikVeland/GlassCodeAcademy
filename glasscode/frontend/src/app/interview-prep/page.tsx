@@ -3,8 +3,9 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import '../../styles/design-system.scss';
+import '../../styles/homepage.scss';
 import { useProgressTracking, ProgressData } from '../../hooks/useProgressTracking';
-import { ChartBarIcon } from '@heroicons/react/24/outline';
+import { ChartBarIcon, LockClosedIcon } from '@heroicons/react/24/outline';
 
 // Interview Preparation Hub - Non-Gamified Educational Structure
 interface InterviewModule {
@@ -256,9 +257,11 @@ const InterviewTierSection: React.FC<{
     <section className="tier-section w-full mb-8" data-tier={tierKey === 'expert' ? 'quality' : tierKey}>
       <div className={`tier-container bg-gradient-to-r ${tier.color}`}>
         <div className="tier-header mb-6">
-          <div className="flex items-center gap-4 mb-4">
-            <div className="glass-morphism w-14 h-14 rounded-lg flex items-center justify-center text-white font-bold text-2xl md:text-3xl">
-              {tier.tierLevel}
+          <div className="flex items-stretch gap-4 mb-4">
+            <div className="self-stretch flex items-center">
+              <div className="w-14 aspect-square flex-shrink-0 rounded-full bg-white/20 flex items-center justify-center text-white font-bold text-2xl backdrop-blur-sm">
+                {tier.tierLevel}
+              </div>
             </div>
             <div className="text-left min-w-0">
               <h2 className="text-xl md:text-2xl font-bold text-white truncate">
@@ -270,11 +273,10 @@ const InterviewTierSection: React.FC<{
             </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-3 md:flex md:items-center md:justify-between">
-            <div className="glass-morphism rounded-lg p-4 min-h-[100px] flex items-center">
-              <p className="font-medium text-white text-left text-sm">
-                <strong>Focus Area:</strong> {tier.focusArea}
-              </p>
+          <div className="md:flex-none md:w-[320px] grid grid-cols-1 gap-3">
+            <div className="glass-morphism rounded-lg p-3">
+              <h3 className="text-xs font-semibold uppercase tracking-wide text-white/80 text-left mb-1">Focus Area</h3>
+              <p className="text-xs text-white/90 text-left">{tier.focusArea}</p>
             </div>
           </div>
         </div>
@@ -406,7 +408,11 @@ const InterviewPrepPage: React.FC = () => {
                 aria-label={moduleLockEnabled ? 'Lock modules (progress gating on)' : 'Unlock modules (progress gating off)'}
                 title={moduleLockEnabled ? 'Lock modules (progress gating on)' : 'Unlock modules (progress gating off)'}
               >
+              {moduleLockEnabled ? (
                 <ChartBarIcon className="w-5 h-5" />
+              ) : (
+                <LockClosedIcon className="w-5 h-5" />
+              )}
               </button>
             </div>
 
@@ -493,7 +499,7 @@ const InterviewPrepPage: React.FC = () => {
                     onChange={(e) => setSearchQuery(e.target.value)}
                     className="glass-search-input"
                   />
-                  <span className="absolute right-3 top-3 text-muted">🔍</span>
+                  <span className="absolute right-3 top-3 text-fg">🔍</span>
                 </div>
               </div>
 

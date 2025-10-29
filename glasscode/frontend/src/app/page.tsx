@@ -6,8 +6,7 @@ import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import Link from 'next/link';
 import { ArrowRightIcon, ChartBarIcon, LockClosedIcon } from '@heroicons/react/24/outline';
 
-import { contentRegistry } from '@/lib/contentRegistry';
-import type { Module, Tier } from '@/lib/contentRegistry';
+// Removed server-only contentRegistry imports to avoid bundling Node APIs in client
 import { useProgressTracking, ProgressData, AchievementData } from '../hooks/useProgressTracking';
 import GamificationDashboard from '../components/GamificationDashboard';
 import SearchFilterSystem from '../components/SearchFilterSystem';
@@ -17,6 +16,32 @@ import '../styles/homepage.scss';
 import '../styles/liquid-glass.scss';
 import '../styles/mobile-first.scss';
 import { getModuleTheme } from '@/lib/moduleThemes';
+
+// Client-safe local types for registry records
+type Tier = {
+  level: number;
+  title: string;
+  description: string;
+  focusArea: string;
+  color: string;
+  learningObjectives: string[];
+};
+
+type Module = {
+  slug: string;
+  title: string;
+  description: string;
+  tier: string;
+  category?: string;
+  track?: string;
+  icon?: string;
+  difficulty?: string;
+  estimatedHours?: number;
+  technologies: string[];
+  prerequisites?: string[];
+  order?: number;
+  routes: { overview: string; lessons: string; quiz: string };
+};
 
 // Registry-driven learning structure
 interface TierData {
@@ -87,7 +112,7 @@ const ModuleCard: React.FC<{
 
         {/* Lock overlay for prerequisites */}
         {isLocked && (
-          <div className="absolute inset-0 bg-gray-900/50 backdrop-blur-sm rounded-xl flex items-center justify-center z-5">
+          <div className="absolute inset-0 bg-gray-900/50 backdrop-blur-sm rounded-none md:rounded-xl flex items-center justify-center z-5">
             <div className="text-center text-white">
               <div className="text-3xl mb-2">🔒</div>
               <p className="text-sm font-medium">Prerequisites Required</p>
@@ -200,12 +225,15 @@ const TierSection: React.FC<{
         <div className="tier-header mb-6">
           <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
             <div className="flex-1">
-              <div className="flex items-center gap-4 mb-4">
-                <div className={`w-14 h-14 rounded-full bg-white/20 flex items-center justify-center text-white font-bold text-2xl backdrop-blur-sm`}>
-                  {tier.level}
+              <div className="flex items-stretch gap-4 mb-4">
+                {/* Tier badge container stretches to match header height */}
+                <div className="self-stretch flex items-center">
+                  <div className="w-14 aspect-square flex-shrink-0 rounded-full bg-white/20 flex items-center justify-center text-white font-bold text-2xl backdrop-blur-sm">
+                    {tier.level}
+                  </div>
                 </div>
                 <div className="text-left">
-                  <h2 className="text-xl md:text-2xl font-bold text-white text-left" id={`tier-${tierKey}-heading`}>
+                  <h2 className="text-xl md:text-2xl font-bold text-white text-left truncate" id={`tier-${tierKey}-heading`}>
                     {tier.title}
                   </h2>
                   <p className="text-fg mt-1 text-left text-sm">{tier.description}</p>
@@ -214,29 +242,30 @@ const TierSection: React.FC<{
 
             </div>
 
-            <div className="glass-morphism rounded-lg p-4">
-              <p className="font-medium text-fg text-left text-sm">
-                <strong>Focus Area:</strong> {tier.focusArea}
-              </p>
-            </div>
+            <div className="md:flex-none md:w-[500px] w-full grid grid-cols-2 gap-3">
+              <div className="glass-morphism p-3 rounded-lg w-full">
+                <h3 className="text-xs font-semibold uppercase tracking-wide text-white/80 text-left mb-1">Focus Area</h3>
+                <p className="text-xs text-white/90 text-left">{tier.focusArea}</p>
+              </div>
 
-            {/* Unified progress widget like dashboard */}
-            <div className="glass-morphism text-fg p-4 rounded-lg min-w-[140px] text-center">
-              <div className="text-2xl font-bold">{tierProgress}%</div>
-              <div className="text-sm">Complete</div>
-              <div className="text-xs mt-1">
-                {completedModules} of {modules.length} modules
+              {/* Unified progress widget like dashboard */}
+              <div className="glass-morphism text-fg p-4 rounded-none md:rounded-lg text-center w-full">
+                <div className="text-2xl font-bold">{tierProgress}%</div>
+                <div className="text-sm">Complete</div>
+                <div className="text-xs mt-1">
+                  {completedModules} of {modules.length} modules
+                </div>
               </div>
             </div>
           </div>
 
           {/* Learning objectives */}
-          <div className="glass-morphism rounded-xl p-5 mt-4">
+          <div className="mf-desktop-only glass-morphism rounded-xl p-5 mt-4">
             <h3 className="text-lg font-semibold text-fg mb-3 text-left">Learning Objectives</h3>
             <ul className="grid grid-cols-1 md:grid-cols-3 gap-3">
               {(tier.learningObjectives || []).map((objective, index) => (
                 <li key={index} className="flex items-center gap-2">
-                  <span className="text-green-500 flex-shrink-0 text-sm leading-none">✓</span>
+                  <span className="flex-shrink-0 text-base leading-none" aria-hidden="true">✅</span>
                   <span className="text-fg text-left text-sm leading-tight">{objective}</span>
                 </li>
               ))}
@@ -245,7 +274,7 @@ const TierSection: React.FC<{
         </div>
 
         {/* Modules grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-6 auto-rows-fr" role="list" aria-label={`${tier.title} modules`}>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-0 md:gap-4 mt-6 auto-rows-fr" role="list" aria-label={`${tier.title} modules`}>
           {modules.map((module: Module) => {
             const moduleProgress = progress[module.slug] || null;
             const completionPercentage = moduleProgress ?
@@ -282,6 +311,19 @@ const TierSection: React.FC<{
               </div>
             );
           })}
+        </div>
+
+        {/* Learning objectives (mobile-only, moved after module selection) */}
+        <div className="mf-mobile-only glass-morphism rounded-none p-5 mt-4">
+          <h3 className="text-lg font-semibold text-fg mb-3 text-left">Learning Objectives</h3>
+          <ul className="grid grid-cols-1 gap-3">
+            {(tier.learningObjectives || []).map((objective, index) => (
+              <li key={index} className="flex items-center gap-2">
+                <span className="flex-shrink-0 text-base leading-none" aria-hidden="true">✅</span>
+                <span className="text-fg text-left text-sm leading-tight">{objective}</span>
+              </li>
+            ))}
+          </ul>
         </div>
 
         {/* Tier completion indicator */}
@@ -370,17 +412,26 @@ const HomePage: React.FC = () => {
   const loadRegistryData = useCallback(async () => {
     try {
       setLoading(true);
-      // Pre-fetch commonly used data to improve performance
-      const [tiers, modules] = await Promise.all([
-        contentRegistry.getTiers(),
-        contentRegistry.getModules()
-      ]);
+      // Fetch registry via API to keep client bundle browser-only
+      const res = await fetch('/api/content/registry', { cache: 'no-store' });
+      if (!res.ok) throw new Error(`Registry API failed: ${res.status}`);
+      const registry = await res.json();
+      const tiers: Record<string, Tier> = (registry && registry.tiers) || {};
+      const modules: Module[] = (registry && registry.modules) || [];
+
+      // Normalize to ensure client-safe fields
+      const normalizedModules: Module[] = (modules || []).map((m) => ({
+        ...m,
+        tier: (m.tier && tiers[m.tier]) ? m.tier : 'core',
+        technologies: Array.isArray(m.technologies) ? m.technologies : [],
+        difficulty: m.difficulty || 'Beginner'
+      }));
 
       // Organize modules by tier
       const tierData: Record<string, TierData> = {};
 
       Object.entries(tiers || {}).forEach(([tierKey, tier]) => {
-        const tierModules = modules
+        const tierModules = normalizedModules
           .filter(module => module.tier === tierKey)
           .sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
         tierData[tierKey] = {
@@ -389,9 +440,38 @@ const HomePage: React.FC = () => {
         };
       });
 
+      // If API returned tiers but no modules after normalization, fallback to static registry
+      if ((normalizedModules?.length || 0) === 0) {
+        try {
+          const staticRes = await fetch('/registry.json', { cache: 'no-store' });
+          if (staticRes.ok) {
+            const staticReg = await staticRes.json();
+            const staticTiers: Record<string, Tier> = (staticReg && staticReg.tiers) || tiers || {};
+            const staticModulesRaw: Module[] = (staticReg && staticReg.modules) || [];
+            const staticModules: Module[] = (staticModulesRaw || []).map((m) => ({
+              ...m,
+              tier: (m.tier && staticTiers[m.tier]) ? m.tier : 'core',
+              technologies: Array.isArray(m.technologies) ? m.technologies : [],
+              difficulty: m.difficulty || 'Beginner'
+            }));
+
+            const td: Record<string, TierData> = {};
+            Object.entries(staticTiers || {}).forEach(([tierKey, tier]) => {
+              const tierModules = staticModules
+                .filter(module => module.tier === tierKey)
+                .sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
+              td[tierKey] = { tier, modules: tierModules };
+            });
+
+            setRegistryData({ tiers: td, allModules: staticModules });
+            return;
+          }
+        } catch {}
+      }
+
       setRegistryData({
         tiers: tierData,
-        allModules: modules || []
+        allModules: normalizedModules
       });
     } catch (err) {
       console.error('Failed to load registry data:', err);
@@ -430,7 +510,7 @@ const HomePage: React.FC = () => {
         filteredModules = filteredModules.filter(module =>
           module.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
           module.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          module.technologies.some(tech => tech.toLowerCase().includes(searchQuery.toLowerCase()))
+          (module.technologies || []).some(tech => tech.toLowerCase().includes(searchQuery.toLowerCase()))
         );
       }
 
@@ -442,7 +522,7 @@ const HomePage: React.FC = () => {
       // Difficulty filter
       if (selectedDifficulty && selectedDifficulty !== 'all') {
         filteredModules = filteredModules.filter(module =>
-          module.difficulty.toLowerCase() === selectedDifficulty.toLowerCase()
+          (module.difficulty || '').toLowerCase() === selectedDifficulty.toLowerCase()
         );
       }
 
@@ -536,7 +616,7 @@ const HomePage: React.FC = () => {
       <main id="main-content" className="homepage w-full" role="main">
         {/* Hero Section with optimized styling for better LCP */}
         <section className="w-full mb-8 mf-edge-to-edge mf-no-vertical-margin-mobile">
-          <div className="relative bg-white/95 dark:bg-gray-800/95 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 mf-pane-reset">
+          <div className="relative bg-white/95 dark:bg-gray-800/95 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 mf-no-radius-mobile">
             <div className="absolute top-6 right-6 md:top-8 md:right-8">
               <button
                 type="button"
@@ -547,9 +627,9 @@ const HomePage: React.FC = () => {
                 title={moduleLockEnabled ? 'Lock modules (progress gating on)' : 'Unlock modules (progress gating off)'}
               >
                 {moduleLockEnabled ? (
-                  <LockClosedIcon className="w-5 h-5" />
-                ) : (
                   <ChartBarIcon className="w-5 h-5" />
+                ) : (
+                  <LockClosedIcon className="w-5 h-5" />
                 )}
               </button>
             </div>
@@ -557,7 +637,7 @@ const HomePage: React.FC = () => {
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
                 <div className="hero-content">
                   <div className="flex items-center justify-between mb-4">
-                    <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-fg text-left">Master Modern Web Development</h1>
+                    <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white text-left"><span className="md:hidden">Master Modern<br />Web Development</span><span className="hidden md:inline">Master Modern Web Development</span></h1>
                   </div>
                   <p className="text-lg md:text-xl text-muted mb-6 text-left">
                     Comprehensive learning paths across 18 technology modules with interactive lessons,
@@ -604,7 +684,7 @@ const HomePage: React.FC = () => {
                   )}
                 </div>
 
-                <div className="hero-visual relative flex justify-center">
+                <div className="hero-visual mf-desktop-only relative flex justify-center">
                   <div className="learning-path-visualization w-full max-w-md">
                     <svg viewBox="0 0 400 300" className="path-svg w-full h-auto" role="img" aria-label="Learning path visualization">
                       <defs>
@@ -638,31 +718,59 @@ const HomePage: React.FC = () => {
           </div>
         </section>
 
-        {/* Progress & Gamification Dashboard */}
-        <GamificationDashboard />
+        {/* Progress & Achievements Dashboard */}
+        {/* Desktop: shown inline; Mobile: collapsed in a details element */}
+        <div className="mf-desktop-only">
+          <GamificationDashboard />
+        </div>
+        <details className="mf-mobile-only glass-morphism p-4 mf-edge-to-edge mf-no-vertical-margin-mobile mf-no-radius-mobile">
+          <summary className="cursor-pointer font-semibold text-fg">Progress & Achievements</summary>
+          <div className="mt-3">
+            <GamificationDashboard />
+          </div>
+        </details>
 
-        {/* Enhanced Search and Filter System */}
-        <section className="w-full mb-8">
-          <div className="glass-search-container">
-            <div className="p-6">
-              <SearchFilterSystem
-                searchQuery={searchQuery}
-                onSearchChange={setSearchQuery}
-                selectedTier={selectedTier}
-                onTierChange={setSelectedTier}
-                selectedDifficulty={selectedDifficulty}
-                onDifficultyChange={setSelectedDifficulty}
-                selectedCategory={selectedCategory}
-                onCategoryChange={setSelectedCategory}
-                selectedStatus={selectedStatus}
-                onStatusChange={setSelectedStatus}
-                onClearFilters={clearFilters}
-                totalResults={totalModules}
-                filteredResults={Object.values(filteredTiers).reduce((sum, tier) => sum + tier.modules.length, 0)}
-              />
-            </div>
+        {/* Desktop Quick Filters - use button-based system (SearchFilterSystem) */}
+        <section className="w-full mb-8 mf-desktop-only">
+          <div className="glass-morphism p-6 rounded-xl">
+            <SearchFilterSystem
+              searchQuery={searchQuery}
+              onSearchChange={setSearchQuery}
+              selectedTier={selectedTier}
+              onTierChange={setSelectedTier}
+              selectedDifficulty={selectedDifficulty}
+              onDifficultyChange={setSelectedDifficulty}
+              selectedCategory={selectedCategory}
+              onCategoryChange={setSelectedCategory}
+              selectedStatus={selectedStatus}
+              onStatusChange={setSelectedStatus}
+              onClearFilters={clearFilters}
+              totalResults={totalModules}
+              filteredResults={Object.values(filteredTiers).reduce((sum, tier) => sum + tier.modules.length, 0)}
+            />
           </div>
         </section>
+
+        <details className="mf-mobile-only glass-morphism p-4 mf-edge-to-edge mf-no-vertical-margin-mobile mf-no-radius-mobile">
+          <summary className="cursor-pointer font-semibold text-fg">Search & Filters</summary>
+          <div className="mt-3">
+            <SearchFilterSystem
+              searchQuery={searchQuery}
+              onSearchChange={setSearchQuery}
+              selectedTier={selectedTier}
+              onTierChange={setSelectedTier}
+              selectedDifficulty={selectedDifficulty}
+              onDifficultyChange={setSelectedDifficulty}
+              selectedCategory={selectedCategory}
+              onCategoryChange={setSelectedCategory}
+              selectedStatus={selectedStatus}
+              onStatusChange={setSelectedStatus}
+              onClearFilters={clearFilters}
+              totalResults={totalModules}
+              filteredResults={Object.values(filteredTiers).reduce((sum, tier) => sum + tier.modules.length, 0)}
+            />
+          </div>
+        </details>
 
         {/* Learning Tiers - Proper 4-tier layout with consistent styling */}
         <div
@@ -711,8 +819,8 @@ const HomePage: React.FC = () => {
         </div>
 
         {/* Quick Actions */}
-        <section className="w-full py-8">
-          <div className="glass-morphism rounded-xl">
+        <section className="w-full py-0 md:py-8 mf-edge-to-edge mf-no-vertical-margin-mobile">
+          <div className="glass-morphism md:rounded-xl mf-no-radius-mobile">
             <div className="p-6">
               <h2 id="quick-actions-heading" className="text-2xl font-bold text-center text-fg mb-6">Quick Actions</h2>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4" role="list">

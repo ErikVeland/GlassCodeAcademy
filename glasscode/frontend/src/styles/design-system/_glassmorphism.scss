@@ -257,7 +257,8 @@ $glass-tier-quality: linear-gradient(135deg,
   background: rgba(255, 255, 255, 0.1);
   border: 1px solid $glass-border;
   border-radius: $border-radius-md;
-  padding: $spacing-2 $spacing-3;
+  padding: $spacing-2 $spacing-6;
+  padding-left: $spacing-7;
   width: 100%;
   color: inherit;
   backdrop-filter: blur(4px);
@@ -294,7 +295,14 @@ $glass-tier-quality: linear-gradient(135deg,
   align-items: center;
   gap: $spacing-2;
   margin: $spacing-1;
-  color: white;
+  // Theme-aware text color (light: Gray-800, dark: near-white)
+  color: #1f2937;
+  [data-theme="dark"] & {
+    color: rgba(255, 255, 255, 0.92);
+  }
+  @media (prefers-color-scheme: dark) {
+    color: rgba(255, 255, 255, 0.92);
+  }
   
   @media (prefers-color-scheme: dark) {
     color: #f3f4f6;

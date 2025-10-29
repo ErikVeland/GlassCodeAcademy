@@ -1,6 +1,34 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useSession } from 'next-auth/react';
-import { contentRegistry } from '@/lib/contentRegistry';
+// Removed server-only contentRegistry import; use API routes instead
+
+type RegistryModule = { slug: string; tier?: string };
+type RegistryResponse = { modules: RegistryModule[]; tiers: Record<string, any> };
+
+const fetchRegistry = async (): Promise<RegistryResponse | null> => {
+  try {
+    const res = await fetch('/api/content/registry', { cache: 'no-store' });
+    if (!res.ok) return null;
+    return await res.json();
+  } catch {
+    return null;
+  }
+};
+
+const resolveSlugViaRegistry = async (slug: string): Promise<string> => {
+  try {
+    const registry = await fetchRegistry();
+    const modules = registry?.modules || [];
+    if (modules.find((m) => m.slug === slug)) return slug;
+    if (!slug.includes('-')) {
+      const match = modules.find((m) => m.slug.startsWith(`${slug}-`));
+      if (match) return match.slug;
+    }
+    return slug;
+  } catch {
+    return slug;
+  }
+};
 
 export interface ProgressData {
   moduleId: string;
@@ -156,7 +184,7 @@ export const useProgressTracking = () => {
           const parsed: Record<string, ProgressData> = JSON.parse(savedProgressRaw);
           const normalized: Record<string, ProgressData> = {};
           for (const [k, v] of Object.entries(parsed)) {
-            const full = await contentRegistry.getModuleSlugFromShortSlug(k) || k;
+            const full = await resolveSlugViaRegistry(k);
             normalized[full] = { ...v, moduleId: full };
           }
           setProgress(normalized);
@@ -173,7 +201,7 @@ export const useProgressTracking = () => {
           const parsedA: AchievementData[] = JSON.parse(savedAchievementsRaw);
           const normalizedA: AchievementData[] = await Promise.all(parsedA.map(async (a) => {
             if (!a.moduleId) return a;
-            const full = await contentRegistry.getModuleSlugFromShortSlug(a.moduleId);
+            const full = await resolveSlugViaRegistry(a.moduleId);
             return full ? { ...a, moduleId: full } : a;
           }));
           setAchievements(normalizedA);
@@ -190,7 +218,7 @@ export const useProgressTracking = () => {
     const currentTime = new Date().toISOString();
 
     // Normalize slug to full module slug for storage consistency
-    const fullSlug = await contentRegistry.getModuleSlugFromShortSlug(moduleId) || moduleId;
+    const fullSlug = await resolveSlugViaRegistry(moduleId);
 
     // Determine tier for module using registry
     const tier = (await determineTierFromRegistry(fullSlug)) || 'foundational';
@@ -245,8 +273,9 @@ export const useProgressTracking = () => {
   // Helper function to get tier from registry
   const determineTierFromRegistry = useCallback(async (moduleSlug: string): Promise<string | null> => {
     try {
-      const foundModule = await contentRegistry.getModule(moduleSlug);
-      return foundModule?.tier || null;
+      const registry = await fetchRegistry();
+      const foundModule = (registry?.modules || []).find((m: any) => m.slug === moduleSlug || m.slug.startsWith(`${moduleSlug}-`));
+      return (foundModule && foundModule.tier) || null;
     } catch (error) {
       console.error('Error getting tier from registry:', error);
       // Fallback to existing mapping
@@ -260,8 +289,10 @@ export const useProgressTracking = () => {
   // Helper function to get actual lesson count
   const getActualLessonCount = useCallback(async (moduleSlug: string): Promise<number> => {
     try {
-      const lessons = await contentRegistry.getModuleLessons(moduleSlug);
-      return lessons.length;
+      const res = await fetch(`/api/content/lessons/${moduleSlug}`, { cache: 'no-store' });
+      if (!res.ok) throw new Error(`Lessons API failed: ${res.status}`);
+      const lessons = await res.json();
+      return Array.isArray(lessons) ? lessons.length : 0;
     } catch (error) {
       console.error('Error getting lesson count from registry:', error);
       // Fallback to default based on tier

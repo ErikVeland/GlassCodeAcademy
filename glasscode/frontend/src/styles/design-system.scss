@@ -833,6 +833,19 @@ body {
   }
 }
 
+/* Light-mode: make search icon more defined */
+html:not(.dark) .search-input-wrapper .search-icon {
+  opacity: 0.9;
+  color: hsl(var(--fg));
+}
+
+/* Global light-mode rule: ensure search icons are crisp and visible */
+html:not(.dark) .search-icon {
+  opacity: 1;
+  color: hsl(var(--fg));
+  filter: drop-shadow(0 1px 1px rgba(0, 0, 0, 0.08));
+}
+
 // Filter containers
 .filters-container {
   max-width: 1200px;
@@ -962,7 +975,7 @@ body {
 
 // Muted text — consistent across app theme, not OS preference
 .text-muted {
-  color: #6b7280; // Gray-500 in light mode
+  color: #4b5563; // Gray-600 in light mode for stronger definition
 }
 [data-theme="dark"] .text-muted {
   color: rgba(255, 255, 255, 0.85); // Muted near-white in dark mode

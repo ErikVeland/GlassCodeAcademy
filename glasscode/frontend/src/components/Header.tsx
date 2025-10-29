@@ -6,7 +6,7 @@ import { usePathname } from "next/navigation";
 import MobileMenu from './MobileMenu';
 import ProfileMenu from './ProfileMenu';
 import { useProgressTracking } from '../hooks/useProgressTracking';
-import { contentRegistry } from '@/lib/contentRegistry';
+// Removed server-only contentRegistry import to avoid bundling Node APIs in client
 
 interface NavigationModule {
   id: string;
@@ -49,8 +49,10 @@ export default function Header() {
   useEffect(() => {
     const loadRegistryData = async () => {
       try {
-        await contentRegistry.loadRegistry();
-        const modules = await contentRegistry.getModules();
+        const res = await fetch('/api/content/registry', { cache: 'no-store' });
+        if (!res.ok) throw new Error(`Registry API failed: ${res.status}`);
+        const registry = await res.json();
+        const modules = (registry && registry.modules) || [];
         
         // Create tier groups with actual module data from registry
         const tierGroupsData: Record<string, TierGroup> = {
@@ -69,9 +71,9 @@ export default function Header() {
                 quizPath: module.routes.quiz,
                 progress: 0,
                 tier: 'foundational' as const,
-                category: module.track.toLowerCase() as 'backend' | 'frontend' | 'quality',
+                category: (module.track || module.category || 'frontend').toLowerCase() as 'backend' | 'frontend' | 'quality',
                 icon: module.icon,
-                estimatedTime: `${module.estimatedHours} hours`
+                estimatedTime: module.estimatedHours ? `${module.estimatedHours} hours` : ''
               }))
           },
           core: {
@@ -89,9 +91,9 @@ export default function Header() {
                 quizPath: module.routes.quiz,
                 progress: 0,
                 tier: 'core' as const,
-                category: module.track.toLowerCase() as 'backend' | 'frontend' | 'quality',
+                category: (module.track || module.category || 'frontend').toLowerCase() as 'backend' | 'frontend' | 'quality',
                 icon: module.icon,
-                estimatedTime: `${module.estimatedHours} hours`
+                estimatedTime: module.estimatedHours ? `${module.estimatedHours} hours` : ''
               }))
           },
           specialized: {
@@ -109,9 +111,9 @@ export default function Header() {
                 quizPath: module.routes.quiz,
                 progress: 0,
                 tier: 'specialized' as const,
-                category: module.track.toLowerCase() as 'backend' | 'frontend' | 'quality',
+                category: (module.track || module.category || 'frontend').toLowerCase() as 'backend' | 'frontend' | 'quality',
                 icon: module.icon,
-                estimatedTime: `${module.estimatedHours} hours`
+                estimatedTime: module.estimatedHours ? `${module.estimatedHours} hours` : ''
               }))
           },
           quality: {
@@ -129,9 +131,9 @@ export default function Header() {
                 quizPath: module.routes.quiz,
                 progress: 0,
                 tier: 'quality' as const,
-                category: module.track.toLowerCase() as 'backend' | 'frontend' | 'quality',
+                category: (module.track || module.category || 'frontend').toLowerCase() as 'backend' | 'frontend' | 'quality',
                 icon: module.icon,
-                estimatedTime: `${module.estimatedHours} hours`
+                estimatedTime: module.estimatedHours ? `${module.estimatedHours} hours` : ''
               }))
           }
         };

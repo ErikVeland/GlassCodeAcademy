@@ -121,5 +121,5 @@ export function getTechnologyChipClasses(tech: string): string {
   if (t.includes('security')) return 'bg-indigo-100 text-indigo-800 dark:bg-indigo-900 dark:text-indigo-200';
   if (t.includes('performance') || t.includes('optimization')) return 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200';
   // Generic technology fallback
-  return 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200';
+  return 'bg-surface-alt text-muted border border-border';
 }
