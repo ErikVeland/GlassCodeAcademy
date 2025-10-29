@@ -935,6 +935,41 @@ class ContentRegistryLoader {
               continue;
             }
           }
+          // Server-side filesystem fallback: attempt to load quiz from local JSON files
+          try {
+            const fs = await import('fs');
+            const path = await import('path');
+
+            const cwd = process.cwd();
+            const fileCandidates = [
+              // Inside frontend project public dir
+              path.join(cwd, 'public', 'content', 'quizzes', `${moduleSlug}.json`),
+              // Top-level content directory (../../content from frontend)
+              path.join(cwd, '..', '..', 'content', 'quizzes', `${moduleSlug}.json`),
+              // Alternative relative content directory (../content)
+              path.join(cwd, '..', 'content', 'quizzes', `${moduleSlug}.json`),
+            ];
+
+            for (const p of fileCandidates) {
+              try {
+                const raw = await fs.promises.readFile(p, 'utf-8');
+                const parsed: unknown = JSON.parse(raw);
+                const questionsArr: Record<string, unknown>[] = Array.isArray((parsed as { questions?: unknown[] })?.questions)
+                  ? ((parsed as { questions?: unknown[] }).questions as Record<string, unknown> [])
+                  : [];
+
+                if (questionsArr.length === 0) continue;
+
+                const normalizedQuestions = questionsArr.map(q => normalizeQuestion(q));
+                return { questions: normalizedQuestions };
+              } catch {
+                // try next candidate
+                continue;
+              }
+            }
+          } catch {
+            // ignore fs fallback errors
+          }
 
           return null;
         } catch (err) {

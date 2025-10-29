@@ -718,6 +718,14 @@ add_if_missing_backend_prod DATABASE_URL "$DATABASE_URL"
     fi
     log "✅ Content seeded"
 
+    # Seed lessons, modules, and quizzes from JSON registry (always run)
+    log "📚 Seeding registry content (modules, lessons, quizzes)..."
+    if ! sudo -u "$DEPLOY_USER" env NODE_ENV=production DATABASE_URL="$DATABASE_URL" DB_DIALECT="$DB_DIALECT" DB_HOST="$DB_HOST" DB_PORT="$DB_PORT" DB_NAME="$DB_NAME" DB_USER="$DB_USER" DB_PASSWORD="$DB_PASSWORD" DB_SSL="$DB_SSL" npm run seed:content; then
+        log "⚠️  WARNING: Registry content seeding failed; continuing"
+    else
+        log "✅ Registry content seeding completed"
+    fi
+
     # Create and start backend service
     log "⚙️  Creating backend systemd service..."
     log "🔌 Port 8080 preflight: checking for conflicts..."
@@ -1512,13 +1520,13 @@ if [ "$FRONTEND_ONLY" -eq 0 ]; then
     log "🔍 Validating backend content via Node API..."
 
     COURSES_JSON=$(timeout 10 curl -s "${API_BASE}/api/courses" || true)
-    COURSES_SUCCESS=$(echo "$COURSES_JSON" | jq -r '.success' 2>/dev/null || echo "false")
-    COURSES_COUNT=$(echo "$COURSES_JSON" | jq -r '.data | length' 2>/dev/null || echo "0")
+    COURSES_COUNT=$(echo "$COURSES_JSON" | jq -r 'if type=="array" then length elif has("data") and (.data|type=="array") then (.data|length) else 0 end' 2>/dev/null || echo "0")
+    COURSES_SUCCESS=$(echo "$COURSES_JSON" | jq -r 'if type=="array" then "true" elif has("success") then (.success|tostring) else "false" end' 2>/dev/null || echo "false")
 
     if [ "$COURSES_SUCCESS" = "true" ]; then
         if [ "$COURSES_COUNT" -gt 0 ]; then
             log "✅ Courses endpoint: PASSED ($COURSES_COUNT found)"
-            COURSE_ID=$(echo "$COURSES_JSON" | jq -r '.data[0].id' 2>/dev/null || echo "")
+            COURSE_ID=$(echo "$COURSES_JSON" | jq -r 'if type=="array" and length>0 then .[0].id elif has("data") and (.data|type=="array") then .data[0].id else "" end' 2>/dev/null || echo "")
         else
             log "⚠️  WARNING: Courses endpoint returned empty data; attempting seeding..."
             COURSE_ID=""
@@ -1533,11 +1541,11 @@ if [ "$FRONTEND_ONLY" -eq 0 ]; then
                 ) || log "⚠️  WARNING: Content seeding failed; continuing"
                 # Recheck courses after seeding
                 COURSES_JSON=$(timeout 10 curl -s "${API_BASE}/api/courses" || true)
-                COURSES_SUCCESS=$(echo "$COURSES_JSON" | jq -r '.success' 2>/dev/null || echo "false")
-                COURSES_COUNT=$(echo "$COURSES_JSON" | jq -r '.data | length' 2>/dev/null || echo "0")
+                COURSES_COUNT=$(echo "$COURSES_JSON" | jq -r 'if type=="array" then length elif has("data") and (.data|type=="array") then (.data|length) else 0 end' 2>/dev/null || echo "0")
+                COURSES_SUCCESS=$(echo "$COURSES_JSON" | jq -r 'if type=="array" then "true" elif has("success") then (.success|tostring) else "false" end' 2>/dev/null || echo "false")
                 if [ "$COURSES_SUCCESS" = "true" ] && [ "$COURSES_COUNT" -gt 0 ]; then
                     log "✅ Courses now populated after seeding ($COURSES_COUNT found)"
-                    COURSE_ID=$(echo "$COURSES_JSON" | jq -r '.data[0].id' 2>/dev/null || echo "")
+                    COURSE_ID=$(echo "$COURSES_JSON" | jq -r 'if type=="array" and length>0 then .[0].id elif has("data") and (.data|type=="array") then .data[0].id else "" end' 2>/dev/null || echo "")
                 else
                     SHORT=$(echo "$COURSES_JSON" | tr -d '\n' | cut -c1-200)
                     log "⚠️  WARNING: Courses remain empty after seeding (resp='${SHORT}')"
@@ -1552,12 +1560,27 @@ if [ "$FRONTEND_ONLY" -eq 0 ]; then
         COURSE_ID=""
     fi
 
-    if [ -n "$COURSE_ID" ]; then
-        COURSE_DETAIL=$(timeout 10 curl -s "${API_BASE}/api/courses/$COURSE_ID" || true)
-        MODULE_ID=$(echo "$COURSE_DETAIL" | jq -r '.data.modules[0].id' 2>/dev/null || echo "")
-    else
-        MODULE_ID=""
+    # Post-seed validation: modules, lessons, quizzes
+    MODULES_JSON=$(timeout 10 curl -s "${API_BASE}/api/modules" || true)
+    MODULES_COUNT=$(echo "$MODULES_JSON" | jq -r 'if type=="array" then length elif has("data") and (.data|type=="array") then (.data|length) else 0 end' 2>/dev/null || echo "0")
+    MODULE_ID=$(echo "$MODULES_JSON" | jq -r 'if type=="array" and length>0 then .[0].id elif has("data") and (.data|type=="array") then .data[0].id else "" end' 2>/dev/null || echo "")
+    log "ℹ️  Modules count: $MODULES_COUNT (first id: ${MODULE_ID:-none})"
+
+    LESSONS_COUNT=0
+    LESSON_ID=""
+    if [ -n "$MODULE_ID" ]; then
+        LESSONS_JSON=$(timeout 10 curl -s "${API_BASE}/api/modules/$MODULE_ID/lessons" || true)
+        LESSONS_COUNT=$(echo "$LESSONS_JSON" | jq -r 'if type=="array" then length elif has("data") and (.data|type=="array") then (.data|length) else 0 end' 2>/dev/null || echo "0")
+        LESSON_ID=$(echo "$LESSONS_JSON" | jq -r 'if type=="array" and length>0 then .[0].id elif has("data") and (.data|type=="array") then .data[0].id else "" end' 2>/dev/null || echo "")
     fi
+    log "ℹ️  Lessons in first module: $LESSONS_COUNT (first id: ${LESSON_ID:-none})"
+
+    QUIZZES_COUNT=0
+    if [ -n "$LESSON_ID" ]; then
+        QUIZZES_JSON=$(timeout 10 curl -s "${API_BASE}/api/lessons/$LESSON_ID/quizzes" || true)
+        QUIZZES_COUNT=$(echo "$QUIZZES_JSON" | jq -r 'if type=="array" then length elif has("data") and (.data|type=="array") then (.data|length) elif has("count") then .count else 0 end' 2>/dev/null || echo "0")
+    fi
+    log "ℹ️  Quizzes in first lesson: $QUIZZES_COUNT"
 
     if [ -n "$MODULE_ID" ]; then
         MODULE_DETAIL=$(timeout 10 curl -s "${API_BASE}/api/modules/$MODULE_ID" || true)
