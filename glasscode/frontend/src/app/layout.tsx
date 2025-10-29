@@ -47,8 +47,91 @@ export default async function RootLayout({ children }: { children: React.ReactNo
       <head>
         {/* Preconnect to external resources */}
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        {/* Inline script to avoid initial flash of wrong theme */}
-        <Script src="/assets/theme-init.js" strategy="beforeInteractive" />
+        {/* Inline scripts to avoid initial flash and enable pre-hydration toggle clicks */}
+        <Script id="gc-theme-init" strategy="beforeInteractive" dangerouslySetInnerHTML={{
+          __html: `/* GlassCode theme initializer: applies persisted or system theme early */
+            (function(){
+              try {
+                var match = document.cookie.match(/(?:^|; )gc-theme=([^;]+)/);
+                var cookieTheme = match ? decodeURIComponent(match[1]) : '';
+                var storedTheme = localStorage.getItem('theme');
+                var legacy = localStorage.getItem('darkMode');
+                var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+                var html = document.documentElement;
+
+                var selected = (storedTheme === 'light' || storedTheme === 'dark' || storedTheme === 'system')
+                  ? storedTheme
+                  : ((cookieTheme === 'light' || cookieTheme === 'dark')
+                      ? cookieTheme
+                      : (legacy === 'true' ? 'dark' : legacy === 'false' ? 'light' : 'system'));
+
+                var finalTheme = selected === 'system' ? (prefersDark ? 'dark' : 'light') : selected;
+
+                html.classList.remove('dark');
+                if (finalTheme === 'dark') {
+                  html.classList.add('dark');
+                  try { html.style.colorScheme = 'dark'; } catch {}
+                } else {
+                  try { html.style.colorScheme = 'light'; } catch {}
+                }
+                html.setAttribute('data-theme', finalTheme);
+              } catch { /* noop */ }
+            })();
+            /* Pre-hydration toggle: make the theme button responsive before React mounts */
+            (function(){
+              try {
+                var html = document.documentElement;
+                var mql = window.matchMedia('(prefers-color-scheme: dark)');
+                var attach = function(){
+                  var btn = document.querySelector('button[data-testid="theme-toggle"]');
+                  if (!btn) return;
+                  var getNext = function(prev){
+                    if (prev === 'system') return mql.matches ? 'light' : 'dark';
+                    if (prev === 'dark') return 'light';
+                    return 'system';
+                  };
+                  var applyTheme = function(theme){
+                    var prefersDark = mql.matches;
+                    var activeDark = theme === 'dark' || (theme === 'system' && prefersDark);
+                    if (activeDark) {
+                      html.classList.add('dark');
+                      try { html.style.colorScheme = 'dark'; } catch {}
+                    } else {
+                      html.classList.remove('dark');
+                      try { html.style.colorScheme = 'light'; } catch {}
+                    }
+                    html.setAttribute('data-theme', theme === 'system' ? (activeDark ? 'dark' : 'light') : theme);
+                    try {
+                      localStorage.setItem('theme', theme);
+                      localStorage.removeItem('darkMode');
+                    } catch {}
+                    var label = theme === 'system' ? 'Theme: System (auto)' : (theme === 'dark' ? 'Theme: Dark' : 'Theme: Light');
+                    try {
+                      btn.setAttribute('aria-label', label);
+                      btn.setAttribute('title', label + ' — click to cycle');
+                    } catch {}
+                  };
+                  var handler = function(){
+                    try {
+                      var current = localStorage.getItem('theme') || 'system';
+                      var next = getNext(current);
+                      applyTheme(next);
+                    } catch {}
+                  };
+                  btn.addEventListener('click', handler, { passive: true });
+                  // Provide hook for React to remove this fallback
+                  window.__gcRemovePreHydrationToggle = function(){
+                    try { btn.removeEventListener('click', handler); delete window.__gcRemovePreHydrationToggle; } catch {}
+                  };
+                };
+                if (document.readyState === 'loading') {
+                  document.addEventListener('DOMContentLoaded', attach, { once: true });
+                } else {
+                  attach();
+                }
+              } catch { /* noop */ }
+            })();`
+        }} />
       </head>
       <body className={"antialiased min-h-screen relative theme-base"}>
         <DarkModeProvider>
