@@ -8,6 +8,20 @@ import ProfileMenu from './ProfileMenu';
 import { useProgressTracking } from '../hooks/useProgressTracking';
 // Removed server-only contentRegistry import to avoid bundling Node APIs in client
 
+// Minimal shape for modules from `/api/content/registry` used in this component
+type RegistryRoutes = { lessons: string; quiz: string; overview?: string };
+interface RegistryModuleFromRegistry {
+  slug: string;
+  title: string;
+  tier: 'foundational' | 'core' | 'specialized' | 'quality';
+  routes: RegistryRoutes;
+  track?: string;
+  category?: string;
+  icon?: string;
+  estimatedHours?: number;
+  order?: number;
+}
+
 interface NavigationModule {
   id: string;
   title: string;
@@ -52,7 +66,7 @@ export default function Header() {
         const res = await fetch('/api/content/registry', { cache: 'no-store' });
         if (!res.ok) throw new Error(`Registry API failed: ${res.status}`);
         const registry = await res.json();
-        const modules = (registry && registry.modules) || [];
+        const modules: RegistryModuleFromRegistry[] = (registry && registry.modules) || [];
         
         // Create tier groups with actual module data from registry
         const tierGroupsData: Record<string, TierGroup> = {
@@ -72,7 +86,7 @@ export default function Header() {
                 progress: 0,
                 tier: 'foundational' as const,
                 category: (module.track || module.category || 'frontend').toLowerCase() as 'backend' | 'frontend' | 'quality',
-                icon: module.icon,
+                icon: module.icon ?? '',
                 estimatedTime: module.estimatedHours ? `${module.estimatedHours} hours` : ''
               }))
           },
@@ -92,7 +106,7 @@ export default function Header() {
                 progress: 0,
                 tier: 'core' as const,
                 category: (module.track || module.category || 'frontend').toLowerCase() as 'backend' | 'frontend' | 'quality',
-                icon: module.icon,
+                icon: module.icon ?? '',
                 estimatedTime: module.estimatedHours ? `${module.estimatedHours} hours` : ''
               }))
           },
@@ -112,7 +126,7 @@ export default function Header() {
                 progress: 0,
                 tier: 'specialized' as const,
                 category: (module.track || module.category || 'frontend').toLowerCase() as 'backend' | 'frontend' | 'quality',
-                icon: module.icon,
+                icon: module.icon ?? '',
                 estimatedTime: module.estimatedHours ? `${module.estimatedHours} hours` : ''
               }))
           },
@@ -132,7 +146,7 @@ export default function Header() {
                 progress: 0,
                 tier: 'quality' as const,
                 category: (module.track || module.category || 'frontend').toLowerCase() as 'backend' | 'frontend' | 'quality',
-                icon: module.icon,
+                icon: module.icon ?? '',
                 estimatedTime: module.estimatedHours ? `${module.estimatedHours} hours` : ''
               }))
           }
