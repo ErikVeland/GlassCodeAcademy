@@ -1424,22 +1424,27 @@ mkdir -p /var/www/letsencrypt
 chown -R www-data:www-data /var/www/letsencrypt || true
 
 ISSUED=0
-if [ "$FRONTEND_ONLY" -eq 0 ]; then
-    # Try nginx plugin first; fall back to webroot if it fails
-    if certbot --nginx -d "$DOMAIN" -d "www.$DOMAIN" -d "api.$DOMAIN" --non-interactive --agree-tos -m "$EMAIL"; then
-        ISSUED=1
-    else
-        log "⚠️  certbot --nginx failed; falling back to webroot"
-        certbot certonly --webroot -w /var/www/letsencrypt -d "$DOMAIN" -d "www.$DOMAIN" --non-interactive --agree-tos -m "$EMAIL" || true
-        certbot certonly --webroot -w /var/www/letsencrypt -d "api.$DOMAIN" --non-interactive --agree-tos -m "$EMAIL" || true
-        ISSUED=1
-    fi
+
+# Ensure per-domain webroots exist to match Nginx configs
+mkdir -p /var/www/glasscode.academy /var/www/api.glasscode.academy
+chown -R www-data:www-data /var/www/glasscode.academy /var/www/api.glasscode.academy || true
+
+# Issue/renew apex+www certificate (separate from api) using nginx plugin, fallback to matching webroot
+if certbot --nginx -d "$DOMAIN" -d "www.$DOMAIN" --non-interactive --agree-tos -m "$EMAIL" --keep-until-expiring; then
+    ISSUED=1
 else
-    if certbot --nginx -d "$DOMAIN" -d "www.$DOMAIN" --non-interactive --agree-tos -m "$EMAIL"; then
+    log "⚠️  certbot --nginx for $DOMAIN failed; falling back to webroot"
+    certbot certonly --webroot -w /var/www/glasscode.academy -d "$DOMAIN" -d "www.$DOMAIN" --non-interactive --agree-tos -m "$EMAIL" --keep-until-expiring || true
+    ISSUED=1
+fi
+
+# Only handle api cert when backend is included
+if [ "$FRONTEND_ONLY" -eq 0 ]; then
+    if certbot --nginx -d "api.$DOMAIN" --non-interactive --agree-tos -m "$EMAIL" --keep-until-expiring; then
         ISSUED=1
     else
-        log "⚠️  certbot --nginx failed; falling back to webroot"
-        certbot certonly --webroot -w /var/www/letsencrypt -d "$DOMAIN" -d "www.$DOMAIN" --non-interactive --agree-tos -m "$EMAIL" || true
+        log "⚠️  certbot --nginx for api.$DOMAIN failed; falling back to webroot"
+        certbot certonly --webroot -w /var/www/api.glasscode.academy -d "api.$DOMAIN" --non-interactive --agree-tos -m "$EMAIL" --keep-until-expiring || true
         ISSUED=1
     fi
 fi

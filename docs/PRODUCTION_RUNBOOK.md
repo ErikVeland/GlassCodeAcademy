@@ -128,6 +128,13 @@ DB_SSL=true
 ```
 sudo -E bash bootstrap.sh --fast
 ```
+
+TLS issuance notes:
+- Certificates are issued separately for `glasscode.academy`/`www.glasscode.academy` and `api.glasscode.academy` to match Nginx configs.
+- The bootstrap prefers the Nginx plugin and falls back to webroot paths aligned with server blocks:
+  - Apex/www: `--webroot -w /var/www/glasscode.academy -d glasscode.academy -d www.glasscode.academy`
+  - API: `--webroot -w /var/www/api.glasscode.academy -d api.glasscode.academy`
+- This approach avoids interactive `--expand` prompts and ensures cert paths used by Nginx remain consistent.
 - For env-only (preparing `.env` files): `sudo -E bash bootstrap.sh --env-only`
 - Effects:
   - Provisions Nginx for `www.${DOMAIN}`, `${DOMAIN}` (frontend), and `api.${DOMAIN}` (backend)

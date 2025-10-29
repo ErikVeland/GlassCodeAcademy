@@ -615,8 +615,8 @@ const HomePage: React.FC = () => {
       {/* Ensure no gutters - content spans full width */}
       <main id="main-content" className="homepage w-full" role="main">
         {/* Hero Section with optimized styling for better LCP */}
-        <section className="w-full mb-8 mf-edge-to-edge mf-no-vertical-margin-mobile">
-          <div className="relative bg-surface rounded-xl shadow-lg border border-border mf-no-radius-mobile">
+        <section className="hero-section w-full mb-8 mf-edge-to-edge mf-no-vertical-margin-mobile">
+          <div className="relative bg-surface rounded-xl shadow-lg border border-border mf-no-radius-mobile mf-no-border-mobile">
             <div className="absolute top-6 right-6 md:top-8 md:right-8">
               <button
                 type="button"

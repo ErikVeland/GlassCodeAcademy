@@ -396,8 +396,8 @@ const InterviewPrepPage: React.FC = () => {
 
       <main className="homepage w-full">
         {/* Hero Section with proper styling like the dashboard */}
-        <section className="w-full mb-8">
-          <div className="relative bg-surface-alt backdrop-blur-sm rounded-xl shadow-lg border border-border">
+        <section className="hero-section w-full mb-8">
+          <div className="relative bg-surface-alt backdrop-blur-sm rounded-xl shadow-lg border border-border mf-no-border-mobile">
 
             <div className="absolute top-6 right-6 md:top-8 md:right-8">
               <button

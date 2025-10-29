@@ -77,57 +77,81 @@ export default async function RootLayout({ children }: { children: React.ReactNo
                 html.setAttribute('data-theme', finalTheme);
               } catch { /* noop */ }
             })();
-            /* Pre-hydration toggle: make the theme button responsive before React mounts */
+            /* Pre-hydration toggle: robust attachment and labeling before React mounts */
             (function(){
               try {
                 var html = document.documentElement;
                 var mql = window.matchMedia('(prefers-color-scheme: dark)');
-                var attach = function(){
+                var attached = false;
+                var btnRef = null;
+                var getNext = function(prev){
+                  if (prev === 'system') return mql.matches ? 'light' : 'dark';
+                  if (prev === 'dark') return 'light';
+                  return 'system';
+                };
+                var applyTheme = function(theme){
+                  var prefersDark = mql.matches;
+                  var activeDark = theme === 'dark' || (theme === 'system' && prefersDark);
+                  if (activeDark) {
+                    html.classList.add('dark');
+                    try { html.style.colorScheme = 'dark'; } catch {}
+                  } else {
+                    html.classList.remove('dark');
+                    try { html.style.colorScheme = 'light'; } catch {}
+                  }
+                  html.setAttribute('data-theme', theme === 'system' ? (activeDark ? 'dark' : 'light') : theme);
+                  try {
+                    localStorage.setItem('theme', theme);
+                    localStorage.removeItem('darkMode');
+                  } catch {}
+                  var label = theme === 'system' ? 'Theme: System (auto)' : (theme === 'dark' ? 'Theme: Dark' : 'Theme: Light');
+                  try {
+                    if (btnRef) {
+                      btnRef.setAttribute('aria-label', label);
+                      btnRef.setAttribute('title', label + ' — click to cycle');
+                    }
+                  } catch {}
+                };
+                var handler = function(){
+                  try {
+                    var current = localStorage.getItem('theme') || 'system';
+                    var next = getNext(current);
+                    applyTheme(next);
+                  } catch {}
+                };
+                var tryAttach = function(){
+                  if (attached) return;
                   var btn = document.querySelector('button[data-testid="theme-toggle"]');
                   if (!btn) return;
-                  var getNext = function(prev){
-                    if (prev === 'system') return mql.matches ? 'light' : 'dark';
-                    if (prev === 'dark') return 'light';
-                    return 'system';
-                  };
-                  var applyTheme = function(theme){
-                    var prefersDark = mql.matches;
-                    var activeDark = theme === 'dark' || (theme === 'system' && prefersDark);
-                    if (activeDark) {
-                      html.classList.add('dark');
-                      try { html.style.colorScheme = 'dark'; } catch {}
-                    } else {
-                      html.classList.remove('dark');
-                      try { html.style.colorScheme = 'light'; } catch {}
-                    }
-                    html.setAttribute('data-theme', theme === 'system' ? (activeDark ? 'dark' : 'light') : theme);
-                    try {
-                      localStorage.setItem('theme', theme);
-                      localStorage.removeItem('darkMode');
-                    } catch {}
-                    var label = theme === 'system' ? 'Theme: System (auto)' : (theme === 'dark' ? 'Theme: Dark' : 'Theme: Light');
-                    try {
-                      btn.setAttribute('aria-label', label);
-                      btn.setAttribute('title', label + ' — click to cycle');
-                    } catch {}
-                  };
-                  var handler = function(){
-                    try {
-                      var current = localStorage.getItem('theme') || 'system';
-                      var next = getNext(current);
-                      applyTheme(next);
-                    } catch {}
-                  };
+                  btnRef = btn;
                   btn.addEventListener('click', handler, { passive: true });
+                  attached = true;
                   // Provide hook for React to remove this fallback
                   window.__gcRemovePreHydrationToggle = function(){
-                    try { btn.removeEventListener('click', handler); delete window.__gcRemovePreHydrationToggle; } catch {}
+                    try { btn.removeEventListener('click', handler); attached = false; btnRef = null; delete window.__gcRemovePreHydrationToggle; } catch {}
                   };
                 };
+                // Attach immediately if available, otherwise observe until present
                 if (document.readyState === 'loading') {
-                  document.addEventListener('DOMContentLoaded', attach, { once: true });
+                  document.addEventListener('DOMContentLoaded', function(){
+                    tryAttach();
+                    if (!attached) {
+                      var mo = new MutationObserver(function(){
+                        tryAttach();
+                        if (attached && mo) mo.disconnect();
+                      });
+                      mo.observe(document.body, { childList: true, subtree: true });
+                    }
+                  }, { once: true });
                 } else {
-                  attach();
+                  tryAttach();
+                  if (!attached) {
+                    var mo2 = new MutationObserver(function(){
+                      tryAttach();
+                      if (attached && mo2) mo2.disconnect();
+                    });
+                    mo2.observe(document.body, { childList: true, subtree: true });
+                  }
                 }
               } catch { /* noop */ }
             })();`
