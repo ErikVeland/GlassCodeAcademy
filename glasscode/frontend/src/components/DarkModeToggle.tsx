@@ -1,10 +1,18 @@
 'use client'
 
+import { useEffect } from 'react';
 import { useDarkMode } from './DarkModeContext';
 import { SunIcon, MoonIcon, ComputerDesktopIcon, DevicePhoneMobileIcon } from '@heroicons/react/24/solid';
 
 export default function DarkModeToggle() {
   const { theme, isDark, cycleTheme } = useDarkMode();
+
+  // Remove prehydration click handler once this toggle is mounted
+  useEffect(() => {
+    try {
+      window.__gcRemovePreHydrationToggle?.();
+    } catch {}
+  }, []);
 
   const label =
     theme === 'system'

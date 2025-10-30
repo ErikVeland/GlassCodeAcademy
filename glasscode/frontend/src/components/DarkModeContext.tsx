@@ -44,14 +44,6 @@ export function DarkModeProvider({ children }: { children: React.ReactNode }) {
     }
   }, []);
 
-  // Remove any pre-hydration toggle injected by theme-init.js once React mounts
-  useEffect(() => {
-    try {
-      window.__gcRemovePreHydrationToggle?.();
-    } catch {
-      // noop
-    }
-  }, []);
 
   // Bridge pre-hydration theme selections into React state
   useEffect(() => {
