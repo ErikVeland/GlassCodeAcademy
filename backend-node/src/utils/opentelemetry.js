@@ -1,10 +1,14 @@
 const opentelemetry = require('@opentelemetry/sdk-node');
 const { JaegerExporter } = require('@opentelemetry/exporter-jaeger');
 const { PrometheusExporter } = require('@opentelemetry/exporter-prometheus');
-const { ExpressInstrumentation } = require('@opentelemetry/instrumentation-express');
+const {
+  ExpressInstrumentation,
+} = require('@opentelemetry/instrumentation-express');
 const { HttpInstrumentation } = require('@opentelemetry/instrumentation-http');
 const { PgInstrumentation } = require('@opentelemetry/instrumentation-pg');
-const { SemanticResourceAttributes } = require('@opentelemetry/semantic-conventions');
+const {
+  SemanticResourceAttributes,
+} = require('@opentelemetry/semantic-conventions');
 
 // Create the Prometheus exporter
 const prometheusExporter = new PrometheusExporter({

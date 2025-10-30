@@ -8,15 +8,15 @@ const createBusinessOperationSpan = (operationName, attributes = {}) => {
   return tracer.startSpan(operationName, {
     attributes: {
       'business.operation': operationName,
-      ...attributes
-    }
+      ...attributes,
+    },
   });
 };
 
 // Function to wrap an async function with tracing
 const traceAsyncFunction = async (operationName, fn, attributes = {}) => {
   const span = createBusinessOperationSpan(operationName, attributes);
-  
+
   try {
     const result = await opentelemetry.context.with(
       opentelemetry.trace.setSpan(opentelemetry.context.active(), span),
@@ -27,7 +27,7 @@ const traceAsyncFunction = async (operationName, fn, attributes = {}) => {
   } catch (error) {
     span.setStatus({
       code: opentelemetry.SpanStatusCode.ERROR,
-      message: error.message
+      message: error.message,
     });
     span.setAttribute('error', true);
     span.setAttribute('error.message', error.message);
@@ -40,7 +40,7 @@ const traceAsyncFunction = async (operationName, fn, attributes = {}) => {
 // Function to wrap a synchronous function with tracing
 const traceSyncFunction = (operationName, fn, attributes = {}) => {
   const span = createBusinessOperationSpan(operationName, attributes);
-  
+
   try {
     const result = opentelemetry.context.with(
       opentelemetry.trace.setSpan(opentelemetry.context.active(), span),
@@ -51,7 +51,7 @@ const traceSyncFunction = (operationName, fn, attributes = {}) => {
   } catch (error) {
     span.setStatus({
       code: opentelemetry.SpanStatusCode.ERROR,
-      message: error.message
+      message: error.message,
     });
     span.setAttribute('error', true);
     span.setAttribute('error.message', error.message);
@@ -67,7 +67,10 @@ const addDatabaseQueryInfo = (queryText, queryParameters = []) => {
   if (currentSpan) {
     currentSpan.setAttribute('db.query.text', queryText);
     if (queryParameters.length > 0) {
-      currentSpan.setAttribute('db.query.parameters', JSON.stringify(queryParameters));
+      currentSpan.setAttribute(
+        'db.query.parameters',
+        JSON.stringify(queryParameters)
+      );
     }
   }
 };
@@ -89,5 +92,5 @@ module.exports = {
   traceAsyncFunction,
   traceSyncFunction,
   addDatabaseQueryInfo,
-  addUserJourneyInfo
+  addUserJourneyInfo,
 };

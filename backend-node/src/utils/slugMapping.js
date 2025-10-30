@@ -4,9 +4,9 @@
 
 // Define the slug mapping based on the registry.json
 const slugMap = {
-  'programming': 'programming-fundamentals',
-  'web': 'web-fundamentals',
-  'graphql': 'graphql-advanced'
+  programming: 'programming-fundamentals',
+  web: 'web-fundamentals',
+  graphql: 'graphql-advanced',
 };
 
 /**
@@ -69,5 +69,5 @@ module.exports = {
   isValidShortSlug,
   getShortSlugs,
   getShortSlug,
-  slugMap
+  slugMap,
 };

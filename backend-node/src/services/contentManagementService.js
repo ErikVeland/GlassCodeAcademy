@@ -14,21 +14,21 @@ const getAllCourses = async (options = {}) => {
   try {
     const { page = 1, limit = 10, sort = 'order', order = 'ASC' } = options;
     const offset = (page - 1) * limit;
-    
+
     const { count, rows } = await Course.findAndCountAll({
       order: [[sort, order]],
       limit: parseInt(limit),
-      offset: parseInt(offset)
+      offset: parseInt(offset),
     });
-    
+
     return {
       courses: rows,
       pagination: {
         page: parseInt(page),
         limit: parseInt(limit),
         total: count,
-        pages: Math.ceil(count / limit)
-      }
+        pages: Math.ceil(count / limit),
+      },
     };
   } catch (error) {
     throw new Error(`Error getting courses: ${error.message}`);
@@ -47,13 +47,13 @@ const getCourseById = async (id) => {
 const updateCourse = async (id, updateData) => {
   try {
     const [updatedRows] = await Course.update(updateData, {
-      where: { id }
+      where: { id },
     });
-    
+
     if (updatedRows === 0) {
       throw new Error('Course not found');
     }
-    
+
     const updatedCourse = await Course.findByPk(id);
     return updatedCourse;
   } catch (error) {
@@ -64,13 +64,13 @@ const updateCourse = async (id, updateData) => {
 const deleteCourse = async (id) => {
   try {
     const deletedRows = await Course.destroy({
-      where: { id }
+      where: { id },
     });
-    
+
     if (deletedRows === 0) {
       throw new Error('Course not found');
     }
-    
+
     return { message: 'Course deleted successfully' };
   } catch (error) {
     throw new Error(`Error deleting course: ${error.message}`);
@@ -82,7 +82,7 @@ const createModule = async (moduleId, moduleData) => {
   try {
     const module = await Module.create({
       ...moduleData,
-      course_id: moduleId
+      course_id: moduleId,
     });
     return module;
   } catch (error) {
@@ -94,7 +94,7 @@ const getModulesByCourseId = async (courseId) => {
   try {
     const modules = await Module.findAll({
       where: { course_id: courseId },
-      order: [['order', 'ASC']]
+      order: [['order', 'ASC']],
     });
     return modules;
   } catch (error) {
@@ -114,13 +114,13 @@ const getModuleById = async (id) => {
 const updateModule = async (id, updateData) => {
   try {
     const [updatedRows] = await Module.update(updateData, {
-      where: { id }
+      where: { id },
     });
-    
+
     if (updatedRows === 0) {
       throw new Error('Module not found');
     }
-    
+
     const updatedModule = await Module.findByPk(id);
     return updatedModule;
   } catch (error) {
@@ -131,13 +131,13 @@ const updateModule = async (id, updateData) => {
 const deleteModule = async (id) => {
   try {
     const deletedRows = await Module.destroy({
-      where: { id }
+      where: { id },
     });
-    
+
     if (deletedRows === 0) {
       throw new Error('Module not found');
     }
-    
+
     return { message: 'Module deleted successfully' };
   } catch (error) {
     throw new Error(`Error deleting module: ${error.message}`);
@@ -149,7 +149,7 @@ const createLesson = async (moduleId, lessonData) => {
   try {
     const lesson = await Lesson.create({
       ...lessonData,
-      module_id: moduleId
+      module_id: moduleId,
     });
     return lesson;
   } catch (error) {
@@ -161,7 +161,7 @@ const getLessonsByModuleId = async (moduleId) => {
   try {
     const lessons = await Lesson.findAll({
       where: { module_id: moduleId },
-      order: [['order', 'ASC']]
+      order: [['order', 'ASC']],
     });
     return lessons;
   } catch (error) {
@@ -181,13 +181,13 @@ const getLessonById = async (id) => {
 const updateLesson = async (id, updateData) => {
   try {
     const [updatedRows] = await Lesson.update(updateData, {
-      where: { id }
+      where: { id },
     });
-    
+
     if (updatedRows === 0) {
       throw new Error('Lesson not found');
     }
-    
+
     const updatedLesson = await Lesson.findByPk(id);
     return updatedLesson;
   } catch (error) {
@@ -198,13 +198,13 @@ const updateLesson = async (id, updateData) => {
 const deleteLesson = async (id) => {
   try {
     const deletedRows = await Lesson.destroy({
-      where: { id }
+      where: { id },
     });
-    
+
     if (deletedRows === 0) {
       throw new Error('Lesson not found');
     }
-    
+
     return { message: 'Lesson deleted successfully' };
   } catch (error) {
     throw new Error(`Error deleting lesson: ${error.message}`);
@@ -216,7 +216,7 @@ const createQuiz = async (lessonId, quizData) => {
   try {
     const quiz = await LessonQuiz.create({
       ...quizData,
-      lesson_id: lessonId
+      lesson_id: lessonId,
     });
     return quiz;
   } catch (error) {
@@ -228,7 +228,7 @@ const getQuizzesByLessonId = async (lessonId) => {
   try {
     const quizzes = await LessonQuiz.findAll({
       where: { lesson_id: lessonId },
-      order: [['sort_order', 'ASC']]
+      order: [['sort_order', 'ASC']],
     });
     return quizzes;
   } catch (error) {
@@ -248,13 +248,13 @@ const getQuizById = async (id) => {
 const updateQuiz = async (id, updateData) => {
   try {
     const [updatedRows] = await LessonQuiz.update(updateData, {
-      where: { id }
+      where: { id },
     });
-    
+
     if (updatedRows === 0) {
       throw new Error('Quiz not found');
     }
-    
+
     const updatedQuiz = await LessonQuiz.findByPk(id);
     return updatedQuiz;
   } catch (error) {
@@ -265,13 +265,13 @@ const updateQuiz = async (id, updateData) => {
 const deleteQuiz = async (id) => {
   try {
     const deletedRows = await LessonQuiz.destroy({
-      where: { id }
+      where: { id },
     });
-    
+
     if (deletedRows === 0) {
       throw new Error('Quiz not found');
     }
-    
+
     return { message: 'Quiz deleted successfully' };
   } catch (error) {
     throw new Error(`Error deleting quiz: ${error.message}`);
@@ -285,25 +285,25 @@ module.exports = {
   getCourseById,
   updateCourse,
   deleteCourse,
-  
+
   // Module operations
   createModule,
   getModulesByCourseId,
   getModuleById,
   updateModule,
   deleteModule,
-  
+
   // Lesson operations
   createLesson,
   getLessonsByModuleId,
   getLessonById,
   updateLesson,
   deleteLesson,
-  
+
   // Quiz operations
   createQuiz,
   getQuizzesByLessonId,
   getQuizById,
   updateQuiz,
-  deleteQuiz
+  deleteQuiz,
 };

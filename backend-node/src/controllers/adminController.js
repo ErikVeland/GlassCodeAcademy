@@ -9,9 +9,9 @@ const getAllUsersController = async (req, res, next) => {
         title: 'Success',
         status: 200,
         data: [{ id: 1, email: 'admin@test.com' }],
-        meta: { pagination: { page: 1, limit: 10, total: 1, pages: 1 } }
+        meta: { pagination: { page: 1, limit: 10, total: 1, pages: 1 } },
       };
-      
+
       return res.status(200).json(successResponse);
     }
 
@@ -21,14 +21,16 @@ const getAllUsersController = async (req, res, next) => {
 
     const { count, rows } = await User.findAndCountAll({
       attributes: { exclude: ['passwordHash'] }, // Exclude password from response
-      include: [{
-        model: Role,
-        as: 'roles',
-        through: { attributes: [] } // Don't include UserRole attributes
-      }],
+      include: [
+        {
+          model: Role,
+          as: 'roles',
+          through: { attributes: [] }, // Don't include UserRole attributes
+        },
+      ],
       limit,
       offset,
-      order: [['createdAt', 'DESC']]
+      order: [['createdAt', 'DESC']],
     });
 
     const successResponse = {
@@ -41,11 +43,11 @@ const getAllUsersController = async (req, res, next) => {
           page,
           limit,
           total: count,
-          pages: Math.ceil(count / limit)
-        }
-      }
+          pages: Math.ceil(count / limit),
+        },
+      },
     };
-    
+
     res.status(200).json(successResponse);
   } catch (error) {
     // Let the error middleware handle RFC 7807 compliant error responses
@@ -61,9 +63,9 @@ const getUserByIdController = async (req, res, next) => {
         type: 'https://glasscode/errors/success',
         title: 'Success',
         status: 200,
-        data: { id: 1, email: 'admin@test.com' }
+        data: { id: 1, email: 'admin@test.com' },
       };
-      
+
       return res.status(200).json(successResponse);
     }
 
@@ -71,11 +73,13 @@ const getUserByIdController = async (req, res, next) => {
 
     const user = await User.findByPk(id, {
       attributes: { exclude: ['passwordHash'] }, // Exclude password from response
-      include: [{
-        model: Role,
-        as: 'roles',
-        through: { attributes: [] } // Don't include UserRole attributes
-      }]
+      include: [
+        {
+          model: Role,
+          as: 'roles',
+          through: { attributes: [] }, // Don't include UserRole attributes
+        },
+      ],
     });
 
     if (!user) {
@@ -85,9 +89,9 @@ const getUserByIdController = async (req, res, next) => {
         status: 404,
         detail: 'User not found',
         instance: req.originalUrl,
-        traceId: req.correlationId
+        traceId: req.correlationId,
       };
-      
+
       return res.status(404).json(errorResponse);
     }
 
@@ -95,9 +99,9 @@ const getUserByIdController = async (req, res, next) => {
       type: 'https://glasscode/errors/success',
       title: 'Success',
       status: 200,
-      data: user
+      data: user,
     };
-    
+
     res.status(200).json(successResponse);
   } catch (error) {
     // Let the error middleware handle RFC 7807 compliant error responses
@@ -113,9 +117,9 @@ const assignRoleToUserController = async (req, res, next) => {
         type: 'https://glasscode/errors/success',
         title: 'Success',
         status: 201,
-        data: { userId: req.body.userId, roleId: req.body.roleId }
+        data: { userId: req.body.userId, roleId: req.body.roleId },
       };
-      
+
       return res.status(201).json(successResponse);
     }
 
@@ -130,9 +134,9 @@ const assignRoleToUserController = async (req, res, next) => {
         status: 404,
         detail: 'User not found',
         instance: req.originalUrl,
-        traceId: req.correlationId
+        traceId: req.correlationId,
       };
-      
+
       return res.status(404).json(errorResponse);
     }
 
@@ -145,9 +149,9 @@ const assignRoleToUserController = async (req, res, next) => {
         status: 404,
         detail: 'Role not found',
         instance: req.originalUrl,
-        traceId: req.correlationId
+        traceId: req.correlationId,
       };
-      
+
       return res.status(404).json(errorResponse);
     }
 
@@ -155,8 +159,8 @@ const assignRoleToUserController = async (req, res, next) => {
     const existingUserRole = await UserRole.findOne({
       where: {
         userId,
-        roleId
-      }
+        roleId,
+      },
     });
 
     if (existingUserRole) {
@@ -166,9 +170,9 @@ const assignRoleToUserController = async (req, res, next) => {
         status: 409,
         detail: 'User already has this role',
         instance: req.originalUrl,
-        traceId: req.correlationId
+        traceId: req.correlationId,
       };
-      
+
       return res.status(409).json(errorResponse);
     }
 
@@ -176,16 +180,16 @@ const assignRoleToUserController = async (req, res, next) => {
     const userRole = await UserRole.create({
       userId,
       roleId,
-      assignedAt: new Date()
+      assignedAt: new Date(),
     });
 
     const successResponse = {
       type: 'https://glasscode/errors/success',
       title: 'Success',
       status: 201,
-      data: userRole
+      data: userRole,
     };
-    
+
     res.status(201).json(successResponse);
   } catch (error) {
     // Let the error middleware handle RFC 7807 compliant error responses
@@ -201,9 +205,9 @@ const removeRoleFromUserController = async (req, res, next) => {
         type: 'https://glasscode/errors/success',
         title: 'Success',
         status: 200,
-        data: { message: 'Role removed from user successfully' }
+        data: { message: 'Role removed from user successfully' },
       };
-      
+
       return res.status(200).json(successResponse);
     }
 
@@ -213,8 +217,8 @@ const removeRoleFromUserController = async (req, res, next) => {
     const userRole = await UserRole.findOne({
       where: {
         userId,
-        roleId
-      }
+        roleId,
+      },
     });
 
     if (!userRole) {
@@ -224,9 +228,9 @@ const removeRoleFromUserController = async (req, res, next) => {
         status: 404,
         detail: 'User-role relationship not found',
         instance: req.originalUrl,
-        traceId: req.correlationId
+        traceId: req.correlationId,
       };
-      
+
       return res.status(404).json(errorResponse);
     }
 
@@ -238,10 +242,10 @@ const removeRoleFromUserController = async (req, res, next) => {
       title: 'Success',
       status: 200,
       data: {
-        message: 'Role removed from user successfully'
-      }
+        message: 'Role removed from user successfully',
+      },
     };
-    
+
     res.status(200).json(successResponse);
   } catch (error) {
     // Let the error middleware handle RFC 7807 compliant error responses
@@ -257,23 +261,23 @@ const getAllRolesController = async (req, res, next) => {
         type: 'https://glasscode/errors/success',
         title: 'Success',
         status: 200,
-        data: [{ id: 1, name: 'admin' }]
+        data: [{ id: 1, name: 'admin' }],
       };
-      
+
       return res.status(200).json(successResponse);
     }
 
     const roles = await Role.findAll({
-      order: [['name', 'ASC']]
+      order: [['name', 'ASC']],
     });
 
     const successResponse = {
       type: 'https://glasscode/errors/success',
       title: 'Success',
       status: 200,
-      data: roles
+      data: roles,
     };
-    
+
     res.status(200).json(successResponse);
   } catch (error) {
     // Let the error middleware handle RFC 7807 compliant error responses
@@ -286,5 +290,5 @@ module.exports = {
   getUserByIdController,
   assignRoleToUserController,
   removeRoleFromUserController,
-  getAllRolesController
+  getAllRolesController,
 };

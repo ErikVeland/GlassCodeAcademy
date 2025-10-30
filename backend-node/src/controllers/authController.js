@@ -12,39 +12,42 @@ const logger = winston.createLogger({
   defaultMeta: { service: 'auth-controller' },
   transports: [
     new winston.transports.Console({
-      format: winston.format.simple()
-    })
-  ]
+      format: winston.format.simple(),
+    }),
+  ],
 });
 
 const registerController = async (req, res, next) => {
   try {
     const { email, password, firstName, lastName } = req.body;
-    
+
     logger.info('User registration attempt', { email });
-    
+
     const result = await register({
       email,
       password,
       firstName,
-      lastName
+      lastName,
     });
-    
-    logger.info('User registered successfully', { userId: result.user.id, email });
-    
+
+    logger.info('User registered successfully', {
+      userId: result.user.id,
+      email,
+    });
+
     const successResponse = {
       type: 'https://glasscode/errors/success',
       title: 'Success',
       status: 201,
-      data: result
+      data: result,
     };
-    
+
     res.status(201).json(successResponse);
   } catch (error) {
-    logger.error('User registration failed', { 
+    logger.error('User registration failed', {
       email: req.body.email,
       error: error.message,
-      stack: error.stack
+      stack: error.stack,
     });
     // Let the error middleware handle RFC 7807 compliant error responses
     next(error);
@@ -54,26 +57,29 @@ const registerController = async (req, res, next) => {
 const loginController = async (req, res, next) => {
   try {
     const { email, password } = req.body;
-    
+
     logger.info('User login attempt', { email });
-    
+
     const result = await login(email, password);
-    
-    logger.info('User logged in successfully', { userId: result.user.id, email });
-    
+
+    logger.info('User logged in successfully', {
+      userId: result.user.id,
+      email,
+    });
+
     const successResponse = {
       type: 'https://glasscode/errors/success',
       title: 'Success',
       status: 200,
-      data: result
+      data: result,
     };
-    
+
     res.status(200).json(successResponse);
   } catch (error) {
-    logger.error('User login failed', { 
+    logger.error('User login failed', {
       email: req.body.email,
       error: error.message,
-      stack: error.stack
+      stack: error.stack,
     });
     // Let the error middleware handle RFC 7807 compliant error responses
     next(error);
@@ -82,5 +88,5 @@ const loginController = async (req, res, next) => {
 
 module.exports = {
   registerController,
-  loginController
+  loginController,
 };

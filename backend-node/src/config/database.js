@@ -8,8 +8,14 @@ const path = require('path');
   try {
     const isProd = process.env.NODE_ENV === 'production';
     const candidates = isProd
-      ? [path.resolve(__dirname, '../../.env.production'), path.resolve(__dirname, '../../.env')]
-      : [path.resolve(__dirname, '../../.env'), path.resolve(__dirname, '../../.env.production')];
+      ? [
+          path.resolve(__dirname, '../../.env.production'),
+          path.resolve(__dirname, '../../.env'),
+        ]
+      : [
+          path.resolve(__dirname, '../../.env'),
+          path.resolve(__dirname, '../../.env.production'),
+        ];
     for (const p of candidates) {
       if (fs.existsSync(p)) {
         dotenv.config({ path: p });
@@ -38,7 +44,8 @@ const DB_SSL = (process.env.DB_SSL || '').toLowerCase() === 'true';
 let sequelize;
 
 if (isTest) {
-  const useRealDb = (process.env.USE_REAL_DB_FOR_TESTS || '').toLowerCase() === 'true';
+  const useRealDb =
+    (process.env.USE_REAL_DB_FOR_TESTS || '').toLowerCase() === 'true';
   const testDatabaseUrl = process.env.TEST_DATABASE_URL || databaseUrl;
 
   if (useRealDb && testDatabaseUrl) {

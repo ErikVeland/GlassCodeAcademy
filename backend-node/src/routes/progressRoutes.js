@@ -1,8 +1,8 @@
 const express = require('express');
-const { 
+const {
   getUserCourseProgressController,
   updateUserLessonProgressController,
-  getUserLessonProgressController
+  getUserLessonProgressController,
 } = require('../controllers/progressController');
 const authenticate = require('../middleware/authMiddleware');
 const { generalLimiter } = require('../middleware/rateLimitMiddleware');
@@ -10,8 +10,23 @@ const { generalLimiter } = require('../middleware/rateLimitMiddleware');
 const router = express.Router();
 
 // Routes
-router.get('/courses/:courseId', authenticate, generalLimiter, getUserCourseProgressController);
-router.post('/lessons/:lessonId', authenticate, generalLimiter, updateUserLessonProgressController);
-router.get('/lessons/:lessonId', authenticate, generalLimiter, getUserLessonProgressController);
+router.get(
+  '/courses/:courseId',
+  authenticate,
+  generalLimiter,
+  getUserCourseProgressController
+);
+router.post(
+  '/lessons/:lessonId',
+  authenticate,
+  generalLimiter,
+  updateUserLessonProgressController
+);
+router.get(
+  '/lessons/:lessonId',
+  authenticate,
+  generalLimiter,
+  getUserLessonProgressController
+);
 
 module.exports = router;

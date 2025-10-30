@@ -1,7 +1,7 @@
 const express = require('express');
-const { 
-  getAllCoursesController, 
-  getCourseByIdController 
+const {
+  getAllCoursesController,
+  getCourseByIdController,
 } = require('../controllers/courseController');
 const { generalLimiter } = require('../middleware/rateLimitMiddleware');
 

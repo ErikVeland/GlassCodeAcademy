@@ -21,7 +21,7 @@ const logAction = async ({
   resourceName,
   details,
   ipAddress,
-  userAgent
+  userAgent,
 }) => {
   try {
     const auditLog = await AuditLog.create({
@@ -32,9 +32,9 @@ const logAction = async ({
       resourceName,
       details,
       ipAddress,
-      userAgent
+      userAgent,
     });
-    
+
     return auditLog;
   } catch (error) {
     // Log the error but don't throw it to avoid breaking the main flow
@@ -44,5 +44,5 @@ const logAction = async ({
 };
 
 module.exports = {
-  logAction
+  logAction,
 };

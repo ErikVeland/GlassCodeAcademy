@@ -6,7 +6,7 @@ let redisClient;
 try {
   if (process.env.REDIS_URL) {
     redisClient = Redis.createClient({
-      url: process.env.REDIS_URL
+      url: process.env.REDIS_URL,
     });
     redisClient.connect().catch(console.error);
   }
@@ -27,11 +27,12 @@ class RedisStore {
     }
 
     try {
-      const [_, value] = await this.client.multi()
+      const [_, value] = await this.client
+        .multi()
         .incr(key)
         .expire(key, 900) // 15 minutes TTL
         .exec();
-      
+
       return value[1]; // Return the incremented value
     } catch (error) {
       console.error('Redis rate limit error:', error);
@@ -41,7 +42,7 @@ class RedisStore {
 
   async resetKey(key) {
     if (!this.client || !this.client.isOpen) return;
-    
+
     try {
       await this.client.del(key);
     } catch (error) {
@@ -60,13 +61,13 @@ const generalLimiter = rateLimit({
     success: false,
     error: {
       code: 'RATE_LIMIT_EXCEEDED',
-      message: 'Too many requests, please try again later.'
-    }
+      message: 'Too many requests, please try again later.',
+    },
   },
   standardHeaders: true,
   legacyHeaders: false,
   skip: () => process.env.NODE_ENV === 'test',
-  store: redisStore
+  store: redisStore,
 });
 
 // Strict rate limiter for auth endpoints
@@ -77,13 +78,13 @@ const strictLimiter = rateLimit({
     success: false,
     error: {
       code: 'RATE_LIMIT_EXCEEDED',
-      message: 'Too many requests, please try again later.'
-    }
+      message: 'Too many requests, please try again later.',
+    },
   },
   standardHeaders: true,
   legacyHeaders: false,
   skip: () => process.env.NODE_ENV === 'test',
-  store: redisStore
+  store: redisStore,
 });
 
 // API key rate limiter
@@ -94,8 +95,8 @@ const apiKeyLimiter = rateLimit({
     success: false,
     error: {
       code: 'RATE_LIMIT_EXCEEDED',
-      message: 'Too many requests, please try again later.'
-    }
+      message: 'Too many requests, please try again later.',
+    },
   },
   standardHeaders: true,
   legacyHeaders: false,
@@ -104,7 +105,7 @@ const apiKeyLimiter = rateLimit({
   keyGenerator: (req) => {
     // Use API key from header if available, otherwise fallback to IP
     return req.headers['x-api-key'] || req.ip;
-  }
+  },
 });
 
 // User-specific rate limiter (for authenticated users)
@@ -115,8 +116,8 @@ const userRateLimiter = rateLimit({
     success: false,
     error: {
       code: 'RATE_LIMIT_EXCEEDED',
-      message: 'Too many requests, please try again later.'
-    }
+      message: 'Too many requests, please try again later.',
+    },
   },
   standardHeaders: true,
   legacyHeaders: false,
@@ -125,12 +126,12 @@ const userRateLimiter = rateLimit({
   keyGenerator: (req) => {
     // Use user ID if available, otherwise fallback to IP
     return req.user ? `user:${req.user.id}` : req.ip;
-  }
+  },
 });
 
 module.exports = {
   generalLimiter,
   strictLimiter,
   apiKeyLimiter,
-  userRateLimiter
+  userRateLimiter,
 };

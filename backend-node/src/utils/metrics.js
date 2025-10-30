@@ -4,10 +4,13 @@ const opentelemetry = require('@opentelemetry/api');
 const meter = opentelemetry.metrics.getMeter('glasscode-backend');
 
 // Create custom metrics
-const httpRequestDuration = meter.createHistogram('http_request_duration_seconds', {
-  description: 'HTTP request duration in seconds',
-  unit: 'seconds',
-});
+const httpRequestDuration = meter.createHistogram(
+  'http_request_duration_seconds',
+  {
+    description: 'HTTP request duration in seconds',
+    unit: 'seconds',
+  }
+);
 
 const httpRequestCount = meter.createCounter('http_requests_total', {
   description: 'Total number of HTTP requests',
@@ -19,10 +22,13 @@ const dbQueryDuration = meter.createHistogram('db_query_duration_seconds', {
   unit: 'seconds',
 });
 
-const businessOperationDuration = meter.createHistogram('business_operation_duration_seconds', {
-  description: 'Business operation duration in seconds',
-  unit: 'seconds',
-});
+const businessOperationDuration = meter.createHistogram(
+  'business_operation_duration_seconds',
+  {
+    description: 'Business operation duration in seconds',
+    unit: 'seconds',
+  }
+);
 
 const userActivityCounter = meter.createCounter('user_activity_total', {
   description: 'Total user activities',
@@ -34,10 +40,13 @@ const quizAttemptCounter = meter.createCounter('quiz_attempts_total', {
   unit: 'attempts',
 });
 
-const lessonProgressCounter = meter.createCounter('lesson_progress_updates_total', {
-  description: 'Total lesson progress updates',
-  unit: 'updates',
-});
+const lessonProgressCounter = meter.createCounter(
+  'lesson_progress_updates_total',
+  {
+    description: 'Total lesson progress updates',
+    unit: 'updates',
+  }
+);
 
 const errorCounter = meter.createCounter('errors_total', {
   description: 'Total errors',
@@ -51,7 +60,7 @@ const recordHttpRequest = (method, route, statusCode, duration) => {
     route: route,
     status_code: statusCode.toString(),
   });
-  
+
   httpRequestCount.add(1, {
     method: method,
     route: route,

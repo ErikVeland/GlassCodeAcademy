@@ -1,7 +1,7 @@
 const express = require('express');
-const { 
-  getProfileController, 
-  updateProfileController 
+const {
+  getProfileController,
+  updateProfileController,
 } = require('../controllers/profileController');
 const authenticate = require('../middleware/authMiddleware');
 const { generalLimiter } = require('../middleware/rateLimitMiddleware');
@@ -14,11 +14,17 @@ const router = express.Router();
 const updateProfileSchema = Joi.object({
   firstName: Joi.string().optional(),
   lastName: Joi.string().optional(),
-  username: Joi.string().optional().min(3).max(50)
+  username: Joi.string().optional().min(3).max(50),
 });
 
 // Routes
 router.get('/profile', authenticate, generalLimiter, getProfileController);
-router.put('/profile', authenticate, generalLimiter, validate(updateProfileSchema), updateProfileController);
+router.put(
+  '/profile',
+  authenticate,
+  generalLimiter,
+  validate(updateProfileSchema),
+  updateProfileController
+);
 
 module.exports = router;

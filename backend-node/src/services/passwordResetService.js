@@ -16,12 +16,12 @@ const generatePasswordResetToken = (user) => {
 const verifyPasswordResetToken = (token) => {
   try {
     const decoded = jwt.verify(token, jwtSecret);
-    
+
     // Check if this is a password reset token
     if (decoded.action !== 'password-reset') {
       throw new Error('Invalid token type');
     }
-    
+
     return decoded;
   } catch (error) {
     throw new Error('Invalid or expired token');
@@ -34,28 +34,30 @@ const requestPasswordReset = async (email) => {
     // Find user
     const user = await User.findOne({
       where: {
-        email
-      }
+        email,
+      },
     });
-    
+
     if (!user) {
       // Don't reveal if user exists or not for security
       return { success: true };
     }
-    
+
     // Generate reset token
     const resetToken = generatePasswordResetToken(user);
-    
+
     // In a real application, you would send an email here
     // For now, we'll just log it
-    logger.info(`Password reset token generated for user ${user.email}: ${resetToken}`);
-    
+    logger.info(
+      `Password reset token generated for user ${user.email}: ${resetToken}`
+    );
+
     // Return success (in real app, you'd send email)
-    return { 
+    return {
       success: true,
       // In a real app, you wouldn't return the token in the response
       // This is just for testing purposes
-      token: resetToken 
+      token: resetToken,
     };
   } catch (error) {
     logger.error('Error requesting password reset:', error);
@@ -68,21 +70,21 @@ const resetPassword = async (token, newPassword) => {
   try {
     // Verify token
     const decoded = verifyPasswordResetToken(token);
-    
+
     // Find user
     const user = await User.findByPk(decoded.userId);
-    
+
     if (!user) {
       throw new Error('User not found');
     }
-    
+
     // Update password
     await user.update({
-      passwordHash: newPassword
+      passwordHash: newPassword,
     });
-    
+
     logger.info(`Password reset successfully for user ${user.email}`);
-    
+
     return { success: true };
   } catch (error) {
     logger.error('Error resetting password:', error);
@@ -92,5 +94,5 @@ const resetPassword = async (token, newPassword) => {
 
 module.exports = {
   requestPasswordReset,
-  resetPassword
+  resetPassword,
 };

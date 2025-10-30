@@ -1,11 +1,11 @@
 const express = require('express');
-const { 
+const {
   createAcademyController,
   getAllAcademiesController,
   getAcademyByIdController,
   updateAcademyController,
   deleteAcademyController,
-  exportAcademyController
+  exportAcademyController,
 } = require('../controllers/academyController');
 const authenticate = require('../middleware/authMiddleware');
 const authorize = require('../middleware/authorizeMiddleware');
@@ -22,7 +22,7 @@ const createAcademySchema = Joi.object({
   description: Joi.string().max(1000).optional(),
   isPublished: Joi.boolean().optional(),
   version: Joi.string().max(20).optional(),
-  theme: Joi.object().optional()
+  theme: Joi.object().optional(),
 });
 
 const updateAcademySchema = Joi.object({
@@ -31,16 +31,54 @@ const updateAcademySchema = Joi.object({
   description: Joi.string().max(1000).optional(),
   isPublished: Joi.boolean().optional(),
   version: Joi.string().max(20).optional(),
-  theme: Joi.object().optional()
+  theme: Joi.object().optional(),
 });
 
 // Routes with RBAC enforcement
 // Only admin and instructor roles can access academy management endpoints
-router.post('/', authenticate, authorize('admin', 'instructor'), generalLimiter, validate(createAcademySchema), createAcademyController);
-router.get('/', authenticate, authorize('admin', 'instructor'), generalLimiter, getAllAcademiesController);
-router.get('/:id', authenticate, authorize('admin', 'instructor'), generalLimiter, getAcademyByIdController);
-router.put('/:id', authenticate, authorize('admin', 'instructor'), generalLimiter, validate(updateAcademySchema), updateAcademyController);
-router.delete('/:id', authenticate, authorize('admin'), generalLimiter, deleteAcademyController);
-router.get('/:id/export', authenticate, authorize('admin', 'instructor'), generalLimiter, exportAcademyController);
+router.post(
+  '/',
+  authenticate,
+  authorize('admin', 'instructor'),
+  generalLimiter,
+  validate(createAcademySchema),
+  createAcademyController
+);
+router.get(
+  '/',
+  authenticate,
+  authorize('admin', 'instructor'),
+  generalLimiter,
+  getAllAcademiesController
+);
+router.get(
+  '/:id',
+  authenticate,
+  authorize('admin', 'instructor'),
+  generalLimiter,
+  getAcademyByIdController
+);
+router.put(
+  '/:id',
+  authenticate,
+  authorize('admin', 'instructor'),
+  generalLimiter,
+  validate(updateAcademySchema),
+  updateAcademyController
+);
+router.delete(
+  '/:id',
+  authenticate,
+  authorize('admin'),
+  generalLimiter,
+  deleteAcademyController
+);
+router.get(
+  '/:id/export',
+  authenticate,
+  authorize('admin', 'instructor'),
+  generalLimiter,
+  exportAcademyController
+);
 
 module.exports = router;

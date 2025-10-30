@@ -11,9 +11,9 @@ const logger = winston.createLogger({
   defaultMeta: { service: 'tier-controller' },
   transports: [
     new winston.transports.Console({
-      format: winston.format.simple()
-    })
-  ]
+      format: winston.format.simple(),
+    }),
+  ],
 });
 
 const getAllTiersController = async (req, res, next) => {
@@ -23,7 +23,7 @@ const getAllTiersController = async (req, res, next) => {
 
     // Return as record keyed by tier.key to ease frontend usage
     const record = {};
-    tiers.forEach(t => {
+    tiers.forEach((t) => {
       record[t.key] = {
         id: t.id,
         key: t.key,
@@ -32,25 +32,28 @@ const getAllTiersController = async (req, res, next) => {
         description: t.description,
         focusArea: t.focusArea,
         color: t.color,
-        learningObjectives: t.learningObjectives
+        learningObjectives: t.learningObjectives,
       };
     });
 
-    logger.info('Tiers fetched', { count: tiers.length, correlationId: req.correlationId });
-    
+    logger.info('Tiers fetched', {
+      count: tiers.length,
+      correlationId: req.correlationId,
+    });
+
     const successResponse = {
       type: 'https://glasscode/errors/success',
       title: 'Success',
       status: 200,
-      data: record
+      data: record,
     };
-    
+
     res.status(200).json(successResponse);
   } catch (error) {
-    logger.error('Error fetching tiers', { 
-      error: error.message, 
+    logger.error('Error fetching tiers', {
+      error: error.message,
       stack: error.stack,
-      correlationId: req.correlationId
+      correlationId: req.correlationId,
     });
     // Let the error middleware handle RFC 7807 compliant error responses
     next(error);
@@ -58,5 +61,5 @@ const getAllTiersController = async (req, res, next) => {
 };
 
 module.exports = {
-  getAllTiersController
+  getAllTiersController,
 };

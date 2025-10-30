@@ -1,6 +1,12 @@
 const express = require('express');
 const router = express.Router();
-const { generateOAuthUrl, exchangeCodeForToken, getUserInfo, createOrUpdateOAuthUser, generateOAuthToken } = require('../services/oauthService');
+const {
+  generateOAuthUrl,
+  exchangeCodeForToken,
+  getUserInfo,
+  createOrUpdateOAuthUser,
+  generateOAuthToken,
+} = require('../services/oauthService');
 
 // GET /auth/google
 // Redirect to Google OAuth
@@ -13,8 +19,8 @@ router.get('/google', (req, res) => {
       success: false,
       error: {
         code: 'OAUTH_ERROR',
-        message: error.message
-      }
+        message: error.message,
+      },
     });
   }
 });
@@ -24,29 +30,29 @@ router.get('/google', (req, res) => {
 router.get('/google/callback', async (req, res) => {
   try {
     const { code } = req.query;
-    
+
     if (!code) {
       return res.status(400).json({
         success: false,
         error: {
           code: 'MISSING_CODE',
-          message: 'Authorization code is missing'
-        }
+          message: 'Authorization code is missing',
+        },
       });
     }
-    
+
     // Exchange code for access token
     const tokenData = await exchangeCodeForToken('google', code);
-    
+
     // Get user info
     const userInfo = await getUserInfo('google', tokenData.access_token);
-    
+
     // Create or update user
     const user = await createOrUpdateOAuthUser(userInfo);
-    
+
     // Generate JWT token
     const token = generateOAuthToken(user);
-    
+
     // Redirect to frontend with token
     const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:3000';
     res.redirect(`${frontendUrl}/auth/callback?token=${token}`);
@@ -55,8 +61,8 @@ router.get('/google/callback', async (req, res) => {
       success: false,
       error: {
         code: 'OAUTH_ERROR',
-        message: error.message
-      }
+        message: error.message,
+      },
     });
   }
 });
@@ -72,8 +78,8 @@ router.get('/github', (req, res) => {
       success: false,
       error: {
         code: 'OAUTH_ERROR',
-        message: error.message
-      }
+        message: error.message,
+      },
     });
   }
 });
@@ -83,29 +89,29 @@ router.get('/github', (req, res) => {
 router.get('/github/callback', async (req, res) => {
   try {
     const { code } = req.query;
-    
+
     if (!code) {
       return res.status(400).json({
         success: false,
         error: {
           code: 'MISSING_CODE',
-          message: 'Authorization code is missing'
-        }
+          message: 'Authorization code is missing',
+        },
       });
     }
-    
+
     // Exchange code for access token
     const tokenData = await exchangeCodeForToken('github', code);
-    
+
     // Get user info
     const userInfo = await getUserInfo('github', tokenData.access_token);
-    
+
     // Create or update user
     const user = await createOrUpdateOAuthUser(userInfo);
-    
+
     // Generate JWT token
     const token = generateOAuthToken(user);
-    
+
     // Redirect to frontend with token
     const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:3000';
     res.redirect(`${frontendUrl}/auth/callback?token=${token}`);
@@ -114,8 +120,8 @@ router.get('/github/callback', async (req, res) => {
       success: false,
       error: {
         code: 'OAUTH_ERROR',
-        message: error.message
-      }
+        message: error.message,
+      },
     });
   }
 });

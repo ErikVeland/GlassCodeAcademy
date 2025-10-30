@@ -1,5 +1,10 @@
 const express = require('express');
-const { getAllModulesController, getModuleByIdController, getLessonsByModuleIdController, getQuizzesByModuleSlugController } = require('../controllers/moduleController');
+const {
+  getAllModulesController,
+  getModuleByIdController,
+  getLessonsByModuleIdController,
+  getQuizzesByModuleSlugController,
+} = require('../controllers/moduleController');
 const { generalLimiter } = require('../middleware/rateLimitMiddleware');
 
 const router = express.Router();
@@ -7,7 +12,11 @@ const router = express.Router();
 // Routes
 router.get('/', generalLimiter, getAllModulesController);
 router.get('/:id', generalLimiter, getModuleByIdController);
-router.get('/:moduleId/lessons', generalLimiter, getLessonsByModuleIdController);
+router.get(
+  '/:moduleId/lessons',
+  generalLimiter,
+  getLessonsByModuleIdController
+);
 // Add new route to get quizzes by module slug
 router.get('/:slug/quiz', generalLimiter, getQuizzesByModuleSlugController);
 
