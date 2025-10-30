@@ -24,22 +24,6 @@ const cspBase = [
   ...(IS_PROD ? ["upgrade-insecure-requests"] : []),
 ].join('; ');
 
-const cspReportOnly = IS_PROD
-  ? [
-      "default-src 'self'",
-      "script-src 'self' https: blob: 'unsafe-inline'",
-      "style-src 'self' https: 'unsafe-inline'",
-      "img-src 'self' data: blob: https:",
-      "connect-src 'self' https: wss:",
-      "font-src 'self' https: data:",
-      "base-uri 'self'",
-      "form-action 'self'",
-      "frame-ancestors 'self'",
-      "object-src 'none'",
-      "upgrade-insecure-requests",
-    ].join('; ')
-  : cspBase;
-
 const nextConfig: NextConfig = {
   eslint: {
     // Enforce ESLint during production builds so invalid code fails early
@@ -77,6 +61,11 @@ const nextConfig: NextConfig = {
   compress: true,
   // Enable React Server Components
   reactStrictMode: true,
+  // Configure Sass options
+  sassOptions: {
+    // Silence deprecation warnings
+    silenceDeprecations: ['legacy-js-api'],
+  },
   // Dev proxy: forward frontend `/graphql` to backend GraphQL API
   async rewrites() {
     // Prefer configured API base if provided; otherwise default to local backend
@@ -103,17 +92,7 @@ const nextConfig: NextConfig = {
           { key: 'Cross-Origin-Opener-Policy', value: 'same-origin' },
           { key: 'Cross-Origin-Resource-Policy', value: 'same-origin' },
           // Enforced CSP (dev allows inline styles/scripts to support Next dev)
-          { key: 'Content-Security-Policy', value: cspBase },
-          // Only send report-only in production, and include a report-to directive
-          // to avoid browser warnings. Dev omits to reduce console noise.
-          ...(
-            IS_PROD
-              ? [
-                  { key: 'Report-To', value: '{"group":"default","max_age":10886400,"endpoints":[{"url":"/api/csp-report"}]}' },
-                  { key: 'Content-Security-Policy-Report-Only', value: `${cspReportOnly}; report-to default` },
-                ]
-              : []
-          ),
+          { key: 'Content-Security-Policy', value: cspBase }
         ],
       },
     ];

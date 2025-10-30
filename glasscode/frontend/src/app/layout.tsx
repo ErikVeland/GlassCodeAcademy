@@ -1,8 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import Link from "next/link";
 import "./globals.css";
-import "../styles/design-system.scss";
-import "../styles/liquid-glass.scss";
 import Header from '../components/Header';
 import FloatingDarkModeToggle from '../components/FloatingDarkModeToggle';
 import { DarkModeProvider } from '../components/DarkModeContext';
@@ -21,6 +19,7 @@ import ApolloDevMessages from '../components/ApolloDevMessages';
 import ConsoleBanner from '../components/ConsoleBanner';
 import BackendReadinessWrapper from '../components/BackendReadinessWrapper';
 import { cookies } from 'next/headers';
+import GlobalStyles from '../components/GlobalStyles';
 
 export const runtime = 'nodejs';
 
@@ -179,6 +178,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         }} />
       </head>
       <body className={"antialiased min-h-screen relative theme-base"}>
+        <GlobalStyles />
         <DarkModeProvider>
         <ApolloWrapper>
           <ConsoleBanner />
