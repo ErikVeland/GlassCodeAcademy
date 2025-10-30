@@ -22,6 +22,7 @@ import {
   DocumentCheckIcon,
   ChatBubbleLeftRightIcon
 } from '@heroicons/react/24/outline';
+import LoadingScreen from '@/components/LoadingScreen';
 import '@/styles/liquid-glass.scss';
 
 // Function to properly capitalize module names
@@ -58,9 +59,7 @@ export default function StatsPage() {
 
   if (stats.isLoading) {
     return (
-      <div className="min-h-screen bg-bg flex items-center justify-center">
-        <div className="glass-card text-fg text-xl">Loading stats...</div>
-      </div>
+      <LoadingScreen message="Loading stats..." />
     );
   }
 

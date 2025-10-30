@@ -2,6 +2,49 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getApiBaseStrict } from '@/lib/urlUtils';
 import { contentRegistry } from '@/lib/contentRegistry';
 
+// Safely read required lessons from static registry without relying on network/contentRegistry
+async function getRequiredLessonsFromRegistry(moduleSlug: string): Promise<number> {
+  try {
+    const fs = await import('fs');
+    const path = await import('path');
+    const cwd = process.cwd();
+    const candidates = [
+      path.join(cwd, 'public', 'registry.json'),
+      path.join(cwd, '..', '..', 'content', 'registry.json'),
+    ];
+    for (const p of candidates) {
+      try {
+        const raw = await fs.promises.readFile(p, 'utf-8');
+        const parsedUnknown: unknown = JSON.parse(raw);
+        if (Array.isArray(parsedUnknown)) {
+          type RegistryModuleThresholds = { requiredLessons?: number; minLessons?: number };
+          type RegistryModuleSummary = { slug: string; thresholds?: RegistryModuleThresholds };
+          const arr = parsedUnknown as unknown[];
+          const modules = arr.filter((m): m is RegistryModuleSummary => {
+            if (typeof m !== 'object' || m === null) return false;
+            const obj = m as { slug?: unknown; thresholds?: unknown };
+            const slugValid = typeof obj.slug === 'string';
+            const thresholdsValid =
+              obj.thresholds === undefined ||
+              (typeof obj.thresholds === 'object' && obj.thresholds !== null);
+            return slugValid && thresholdsValid;
+          });
+          const found = modules.find((m) => m.slug === moduleSlug);
+          const thresholds = found?.thresholds;
+          const required = (thresholds?.requiredLessons ?? thresholds?.minLessons ?? 0);
+          return typeof required === 'number' ? required : 0;
+        }
+      } catch {
+        // try next candidate
+        continue;
+      }
+    }
+  } catch {
+    // ignore fs errors
+  }
+  return 0;
+}
+
 
 type FrontendLesson = {
   id: string;
@@ -192,34 +235,54 @@ async function fetchLessonsFromFile(moduleSlug: string): Promise<FrontendLesson[
 }
 
 export async function GET(req: NextRequest, { params }: { params: Promise<{ moduleSlug: string }> }) {
-  const { moduleSlug } = await params;
-  // Resolve short slugs to full module slugs using central mapping
-  const resolvedSlug = await contentRegistry.getModuleSlugFromShortSlug(moduleSlug);
-  if (!resolvedSlug) {
-    console.warn(`[lessons] Unknown or unsupported module slug: ${moduleSlug}`);
-    return NextResponse.json({ error: 'Module not found' }, { status: 404 });
-  }
+  try {
+    const { moduleSlug } = await params;
+    // Resolve short slugs to full module slugs using central mapping
+    const resolvedSlug = await contentRegistry.getModuleSlugFromShortSlug(moduleSlug);
+    if (!resolvedSlug) {
+      console.warn(`[lessons] Unknown or unsupported module slug: ${moduleSlug}`);
+      return NextResponse.json({ error: 'Module not found' }, { status: 404 });
+    }
 
-  // Load lessons from DB; if empty, fallback to file content
-  let lessons = await fetchLessonsFromDatabase(resolvedSlug);
-  if (!Array.isArray(lessons) || lessons.length === 0) {
-    lessons = await fetchLessonsFromFile(resolvedSlug);
-  }
+    // Load lessons from DB; if empty, fallback to file content
+    let sourceUsed: 'db' | 'file' | 'none' = 'none';
+    let lessons = await fetchLessonsFromDatabase(resolvedSlug);
+    if (Array.isArray(lessons) && lessons.length > 0) {
+      sourceUsed = 'db';
+    }
 
-  // Optional debug output in non-production
-  const url = new URL(req.url);
-  const debug = url.searchParams.get('debug');
-  if (debug && process.env.NODE_ENV !== 'production') {
-    return NextResponse.json({
-      debug: true,
-      inputSlug: moduleSlug,
-      resolvedSlug,
-      lessonsCount: Array.isArray(lessons) ? lessons.length : 0,
-      source: Array.isArray(lessons) && lessons.length > 0 ? 'file-or-db' : 'none',
-    });
-  }
+    // Always attempt file fallback and prefer whichever source has more entries
+    const fileLessons = await fetchLessonsFromFile(resolvedSlug);
+    if (Array.isArray(fileLessons) && fileLessons.length > (Array.isArray(lessons) ? lessons.length : 0)) {
+      lessons = fileLessons;
+      sourceUsed = 'file';
+    }
 
-  return NextResponse.json(Array.isArray(lessons) ? lessons : []);
+    // If still fewer than registry thresholds, keep lessons as-is but log for visibility
+    const requiredLessons = await getRequiredLessonsFromRegistry(resolvedSlug);
+    if ((Array.isArray(lessons) ? lessons.length : 0) < requiredLessons) {
+      console.warn(`[lessons] Content count (${Array.isArray(lessons) ? lessons.length : 0}) is below requiredLessons (${requiredLessons}) for ${resolvedSlug}`);
+    }
+
+    // Optional debug output in non-production
+    const url = new URL(req.url);
+    const debug = url.searchParams.get('debug');
+    if (debug && process.env.NODE_ENV !== 'production') {
+      return NextResponse.json({
+        debug: true,
+        inputSlug: moduleSlug,
+        resolvedSlug,
+        lessonsCount: Array.isArray(lessons) ? lessons.length : 0,
+        source: sourceUsed,
+      });
+    }
+
+    return NextResponse.json(Array.isArray(lessons) ? lessons : []);
+  } catch (err) {
+    console.error('[lessons] GET handler error:', err);
+    // Always return JSON to avoid generic 500 page in development
+    return NextResponse.json([], { status: 200 });
+  }
 }
 
 export const runtime = 'nodejs';

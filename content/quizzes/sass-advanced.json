@@ -116,7 +116,7 @@
       ],
       "questionType": "multiple-choice",
       "estimatedTime": 90,
-      "correctAnswer": 2,
+      "correctAnswer": 0,
       "type": "multiple-choice",
       "sources": []
     },
@@ -140,7 +140,7 @@
       ],
       "questionType": "multiple-choice",
       "estimatedTime": 90,
-      "correctAnswer": 1,
+      "correctAnswer": 0,
       "type": "multiple-choice",
       "sources": []
     },
@@ -338,20 +338,20 @@
     },
     {
       "id": 15,
-      "question": "What is the difference between SASS and SCSS syntax?",
-      "topic": "Compilation",
-      "difficulty": "Beginner",
+      "question": "Which SASS directive is recommended for loading styles with namespacing and avoiding duplicate imports?",
+      "topic": "Modules",
+      "difficulty": "Advanced",
       "choices": [
-        "SASS uses indentation, SCSS uses brackets and semicolons",
-        "SASS is newer than SCSS",
-        "SCSS is faster than SASS",
-        "No functional difference"
+        "@use",
+        "@import",
+        "@extend",
+        "@forward"
       ],
-      "explanation": "SASS (indented syntax) uses indentation and newlines like Python, while SCSS (Sassy CSS) uses brackets and semicolons like CSS. Both compile to the same CSS output.",
-      "industryContext": "These skills are valuable in professional development environments.",
+      "explanation": "@use loads a stylesheet as a module once, applies namespacing, and prevents duplicate imports. @import is deprecated because it can cause repeated loads and global scope issues; @forward re-exports members for consumers.",
+      "industryContext": "Modern SASS projects adopt modular design using @use and @forward to improve maintainability and avoid global collisions.",
       "tags": [
-        "Compilation",
-        "beginner",
+        "Modules",
+        "advanced",
         "sass"
       ],
       "questionType": "multiple-choice",

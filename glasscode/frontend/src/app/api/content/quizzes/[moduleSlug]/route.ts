@@ -85,20 +85,38 @@ async function fetchQuizFromDatabase(moduleSlug: string) {
   }
 }
 
-async function fetchQuizFromFile(moduleSlug: string): Promise<{ questions: unknown[] }> {
+// Removed duplicate fetchQuizFromFile definition; using the more robust implementation below
+
+// File-based quiz loading function with support for both array and { questions: [] } shapes
+async function fetchQuizFromFile(moduleSlug: string) {
   try {
     const fs = await import('fs');
     const path = await import('path');
-    const filePath = path.join(process.cwd(), '..', '..', 'content', 'quizzes', `${moduleSlug}.json`);
-    const raw = await fs.promises.readFile(filePath, 'utf-8');
-    const json = JSON.parse(raw);
-    const questions = Array.isArray(json.questions) ? (json.questions as unknown[]) : [];
-    console.log(`[quizzes] Loaded ${questions.length} questions from file for ${moduleSlug}`);
-    return { questions };
-  } catch (err) {
-    console.error(`[quizzes] File fallback failed for ${moduleSlug}:`, err);
-    return { questions: [] };
+    const cwd = process.cwd();
+    const candidates = [
+      path.join(cwd, '..', '..', 'content', 'quizzes', `${moduleSlug}.json`),
+      path.join(cwd, 'public', 'content', 'quizzes', `${moduleSlug}.json`),
+    ];
+    for (const p of candidates) {
+      try {
+        const raw = await fs.promises.readFile(p, 'utf-8');
+        const parsed: unknown = JSON.parse(raw);
+        const questionsArr: unknown[] = Array.isArray(parsed)
+          ? parsed
+          : (Array.isArray((parsed as { questions?: unknown[] })?.questions) ? ((parsed as { questions?: unknown[] }).questions as unknown[]) : []);
+        const normalizedQuestions = questionsArr.map((q) => normalizeQuestion(q));
+        if (normalizedQuestions.length > 0) {
+          return { questions: normalizedQuestions };
+        }
+      } catch {
+        // try next candidate
+        continue;
+      }
+    }
+  } catch {
+    // ignore fs fallback errors
   }
+  return { questions: [] };
 }
 
 export async function GET(request: Request, { params }: { params: Promise<{ moduleSlug: string }> }) {
@@ -119,7 +137,26 @@ export async function GET(request: Request, { params }: { params: Promise<{ modu
     const moduleSlug = moduleSlugResolved;
     console.log('Resolved to module slug:', moduleSlug);
     
-    const quiz = await fetchQuizFromDatabase(moduleSlug);
+    let quiz = await fetchQuizFromDatabase(moduleSlug);
+    const dbCount = Array.isArray(quiz.questions) ? quiz.questions.length : 0;
+
+    // If DB returns below module thresholds, prefer the file fallback when it has more
+    try {
+      const mod = await contentRegistry.getModule(moduleSlug);
+      const requiredQuestions = (mod?.thresholds?.requiredQuestions ?? (mod?.metadata?.thresholds?.minQuizQuestions ?? 0)) || 0;
+      if (dbCount < requiredQuestions) {
+        const fileQuiz = await fetchQuizFromFile(moduleSlug);
+        const fileCount = Array.isArray(fileQuiz.questions) ? fileQuiz.questions.length : 0;
+        if (fileCount > dbCount) {
+          quiz = fileQuiz;
+        }
+      }
+    } catch {
+      // If registry check fails, still attempt file fallback when DB was empty
+      if (dbCount === 0) {
+        quiz = await fetchQuizFromFile(moduleSlug);
+      }
+    }
     
     const normalizedQuestions = Array.isArray(quiz.questions)
       ? (quiz.questions as unknown[]).map((q) => normalizeQuestion(q))
