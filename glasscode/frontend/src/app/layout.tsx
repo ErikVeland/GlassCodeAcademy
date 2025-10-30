@@ -96,7 +96,11 @@ export default async function RootLayout({ children }: { children: React.ReactNo
                 var mql = window.matchMedia('(prefers-color-scheme: dark)');
                 var attachedButtons = new Set();
                 var getNext = function(prev){
-                  if (prev === 'system') return mql.matches ? 'light' : 'dark';
+                  if (prev === 'system') {
+                    var prefersDark = mql.matches;
+                    // When in system mode, cycle to dark if OS prefers light, or to light if OS prefers dark
+                    return prefersDark ? 'light' : 'dark';
+                  }
                   if (prev === 'dark') return 'light';
                   return 'system';
                 };

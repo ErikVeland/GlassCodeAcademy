@@ -46,6 +46,20 @@ const authenticate = async (req, res, next) => {
       return res.status(401).json(errorResponse);
     }
     
+    // Check if this is an OAuth user and if they're still linked to the OAuth provider
+    if (decoded.oauth && (!user.oauthProvider || !user.oauthId)) {
+      const errorResponse = {
+        type: 'https://glasscode/errors/authentication-required',
+        title: 'Authentication Required',
+        status: 401,
+        detail: 'OAuth account no longer linked',
+        instance: req.originalUrl,
+        traceId: req.correlationId
+      };
+      
+      return res.status(401).json(errorResponse);
+    }
+    
     // Attach user to request
     req.user = user;
     next();

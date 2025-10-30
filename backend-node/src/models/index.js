@@ -11,6 +11,7 @@ const Tier = require('./tierModel');
 const Academy = require('./academyModel');
 const AuditLog = require('./auditLogModel');
 const QuizAttempt = require('./quizAttemptModel');
+const ApiKey = require('./apiKeyModel');
 
 // Initialize associations that weren't set up in the model files
 function initializeAssociations() {
@@ -116,6 +117,16 @@ function initializeAssociations() {
   });
 
   // Note: Tiers are standalone for now; modules embed tier key in registry synthesis
+  
+  // User -> Api Keys
+  User.hasMany(ApiKey, {
+    foreignKey: 'user_id',
+    as: 'apiKeys'
+  });
+  ApiKey.belongsTo(User, {
+    foreignKey: 'user_id',
+    as: 'user'
+  });
 }
 
 module.exports = {
@@ -132,5 +143,6 @@ module.exports = {
   Academy,
   AuditLog,
   QuizAttempt,
+  ApiKey,
   initializeAssociations
 };

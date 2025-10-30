@@ -413,8 +413,8 @@ export default function Header() {
             {/* Specialised Tier Dropdown */}
             <div className="relative" ref={specializedRef} data-tier="specialized">
               <button
-                onClick={() => handleDropdownToggle('specialised')}
-                onKeyDown={(e) => handleDropdownKeyDown(e, 'specialised')}
+                onClick={() => handleDropdownToggle('specialized')}
+                onKeyDown={(e) => handleDropdownKeyDown(e, 'specialized')}
                 className={`inline-flex items-center px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200 focus:outline-none focus:ring-2 ring-focus ring-offset-2 ring-offset-bg ${
                   isSpecialisedOpen ? 'bg-surface-alt text-primary' : 'text-fg hover:bg-surface-alt hover:text-primary'
                 }`}

@@ -19,7 +19,7 @@ module.exports = {
     'node_modules/(?!uuid)/'
   ],
   moduleNameMapper: {
-    '^uuid$': '<rootDir>/node_modules/uuid/dist-node/index.js'
+    '^uuid$': require.resolve('uuid')
   },
   // Transform ES modules to CommonJS
   transform: {

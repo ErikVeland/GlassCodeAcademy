@@ -153,6 +153,7 @@ export function DarkModeProvider({ children }: { children: React.ReactNode }) {
     setTheme((prev) => {
       if (prev === 'system') {
         const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        // When in system mode, cycle to dark if OS prefers light, or to light if OS prefers dark
         return prefersDark ? 'light' : 'dark';
       }
       if (prev === 'dark') return 'light';

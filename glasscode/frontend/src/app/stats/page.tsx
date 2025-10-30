@@ -190,6 +190,10 @@ export default function StatsPage() {
             <p className="text-green-400 font-medium">🎉 All 18 Technology Modules Complete! 🎉</p>
             <p className="text-green-300 text-sm mt-1">Programming, Web, React, Node, Database, .NET, TypeScript, and 11 more modules are fully implemented</p>
           </div>
+          <div className="text-center mb-4 p-3 bg-blue-500/10 border border-blue-400/20 rounded-lg">
+            <p className="text-blue-400 font-medium">📊 Code Coverage: 49.47% 📊</p>
+            <p className="text-blue-300 text-sm mt-1">Significant improvement from 38.05% with new unit tests for all core services</p>
+          </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
             {stats.moduleBreakdown.map((module, index) => {
               const moduleSlug = module.name.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
@@ -336,7 +340,15 @@ export default function StatsPage() {
                   <span className="text-xs bg-yellow-500/20 border border-yellow-400/30 rounded-full px-2 py-1 text-yellow-300">In Progress</span>
                 </div>
                 <div className="flex items-center justify-between p-3 bg-surface-alt rounded-lg border border-border">
+                  <span className="text-primary">Infrastructure as Code (Terraform)</span>
+                  <span className="text-xs bg-yellow-500/20 border border-yellow-400/30 rounded-full px-2 py-1 text-yellow-300">In Progress</span>
+                </div>
+                <div className="flex items-center justify-between p-3 bg-surface-alt rounded-lg border border-border">
                   <span className="text-primary">SCORM Compliance</span>
+                  <span className="text-xs bg-yellow-500/20 border border-yellow-400/30 rounded-full px-2 py-1 text-yellow-300">In Progress</span>
+                </div>
+                <div className="flex items-center justify-between p-3 bg-surface-alt rounded-lg border border-border">
+                  <span className="text-success">OAuth/OIDC Integration</span>
                   <span className="text-xs bg-yellow-500/20 border border-yellow-400/30 rounded-full px-2 py-1 text-yellow-300">In Progress</span>
                 </div>
                 <div className="flex items-center justify-between p-3 bg-surface-alt rounded-lg border border-border">

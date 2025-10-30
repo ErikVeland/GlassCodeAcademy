@@ -3,7 +3,8 @@
  * Provides a centralized client for interacting with the new Node.js backend API
  */
 
-import { getApiBaseStrict } from '@/lib/urlUtils';
+import { getApiBaseStrict, getPublicOriginStrict } from '@/lib/urlUtils';
+import { getShortSlugFromModuleSlug } from '@/lib/contentRegistry';
 import { isNetworkError } from '@/lib/isNetworkError';
 
 // Define response types
@@ -347,7 +348,91 @@ class NodeJsApiClient {
 
   // Quiz endpoints
   async getQuizzesByLessonId(lessonId: number): Promise<ApiResponse<QuizQuestion[]>> {
-    return this.fetch<QuizQuestion[]>(`/lessons/${lessonId}/quizzes`);
+    // First attempt: fetch from backend by lessonId
+    const primary = await this.fetch<QuizQuestion[]>(`/lessons/${lessonId}/quizzes`);
+    const hasEmptyPrimary = primary.success && Array.isArray(primary.data) && primary.data.length === 0;
+    if (!hasEmptyPrimary) return primary;
+
+    // Fallback: derive module slug and use content-based quizzes for the module
+    try {
+      const lessonResp = await this.getLessonById(lessonId);
+      if (!lessonResp.success || !lessonResp.data) return primary;
+
+      const moduleId = lessonResp.data.moduleId;
+      const moduleResp = await this.getModuleById(moduleId);
+      if (!moduleResp.success || !moduleResp.data) return primary;
+
+      const moduleSlug = moduleResp.data.slug;
+      // Convert module slug to short slug for content API route compatibility
+      const shortSlug = await getShortSlugFromModuleSlug(moduleSlug) || moduleSlug;
+      const isBrowser = typeof window !== 'undefined';
+      const origin = isBrowser ? '' : (() => { try { return getPublicOriginStrict().replace(/\/+$/, ''); } catch { return ''; } })();
+      const url = isBrowser ? `/api/content/quizzes/${shortSlug}` : (origin ? `${origin}/api/content/quizzes/${shortSlug}` : '');
+      if (!url) return primary;
+
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 10000);
+      const res = await fetch(url, isBrowser ? { signal: controller.signal, cache: 'no-store' } : { signal: controller.signal, next: { revalidate: 600 } }).finally(() => {
+        clearTimeout(timeoutId);
+      });
+      if (!res.ok) return primary;
+      const json: unknown = await res.json();
+      const questionsRaw: unknown[] = Array.isArray((json as { questions?: unknown[] })?.questions)
+        ? (((json as { questions?: unknown[] }).questions as unknown[]) || [])
+        : Array.isArray(json) ? (json as unknown[]) : [];
+
+      // Map file-based questions into backend QuizQuestion shape
+      const nowIso = new Date().toISOString();
+      const mapped: QuizQuestion[] = questionsRaw.map((qRaw, idx) => {
+        const q: Record<string, unknown> = (qRaw && typeof qRaw === 'object') ? (qRaw as Record<string, unknown>) : {};
+        const questionText = typeof q["question"] === 'string' ? (q["question"] as string)
+          : typeof q["prompt"] === 'string' ? (q["prompt"] as string) : '';
+
+        const choicesArr: unknown = q["choices"] ?? q["options"] ?? [];
+        const choices: string[] = Array.isArray(choicesArr) ? choicesArr.map(v => String(v)) : [];
+
+        const correctCandidate = q["correctAnswer"] ?? q["correct_index"] ?? q["answerIndex"] ?? 0;
+        const correctAnswer = typeof correctCandidate === 'number' ? correctCandidate : Number(correctCandidate) || 0;
+
+        const estimatedCandidate = q["estimatedTime"] ?? q["estimated_time"] ?? 90;
+        const estimatedTime = typeof estimatedCandidate === 'number' ? estimatedCandidate : Number(estimatedCandidate) || 90;
+
+        const sortOrderCandidate = q["order"] ?? q["sortOrder"] ?? idx;
+        const sortOrder = typeof sortOrderCandidate === 'number' ? sortOrderCandidate : Number(sortOrderCandidate) || idx;
+
+        return {
+          id: typeof q["id"] === 'number' ? (q["id"] as number) : Number(`${lessonId}${idx}`),
+          question: questionText,
+          topic: typeof q["topic"] === 'string' ? (q["topic"] as string) : 'general',
+          difficulty: typeof q["difficulty"] === 'string' ? (q["difficulty"] as string) : 'Beginner',
+          choices,
+          fixedChoiceOrder: !!q["fixedChoiceOrder"],
+          choiceLabels: (q["choiceLabels"] && typeof q["choiceLabels"] === 'object') ? (q["choiceLabels"] as Record<string, unknown>) : undefined,
+          acceptedAnswers: Array.isArray(q["acceptedAnswers"]) ? (q["acceptedAnswers"] as unknown[]).map(v => String(v)) : undefined,
+          explanation: typeof q["explanation"] === 'string' ? (q["explanation"] as string) : undefined,
+          industryContext: typeof q["industryContext"] === 'string' ? (q["industryContext"] as string) : undefined,
+          tags: Array.isArray(q["tags"]) ? (q["tags"] as unknown[]).map(v => String(v)) : undefined,
+          questionType: typeof q["type"] === 'string' ? (q["type"] as string) : 'multiple-choice',
+          estimatedTime,
+          correctAnswer,
+          quizType: typeof q["quizType"] === 'string' ? (q["quizType"] as string) : 'module',
+          sources: (q["sources"] && typeof q["sources"] === 'object') ? (q["sources"] as Record<string, unknown>) : undefined,
+          sortOrder,
+          isPublished: true,
+          lessonId: lessonId,
+          createdAt: nowIso,
+          updatedAt: nowIso,
+        };
+      });
+
+      if (mapped.length > 0) {
+        return { success: true, data: mapped };
+      }
+      return primary;
+    } catch {
+      // If anything fails in fallback path, return original response
+      return primary;
+    }
   }
 
   async submitQuizAnswers(

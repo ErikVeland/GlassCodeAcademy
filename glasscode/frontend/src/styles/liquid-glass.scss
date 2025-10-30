@@ -784,3 +784,32 @@ html:not(.dark) .glass-filter-tag {
 html:not(.dark) .glass-module-card .rounded-full.bg-surface-alt {
   border: 1px solid hsl(var(--border)) !important;
 }
+
+/* Fix for theme consistency on mobile devices */
+@media (max-width: 768px) {
+  /* Ensure theme is consistently applied on mobile */
+  html[data-theme="dark"] .glass-morphism,
+  html[data-theme="dark"] .glass-card {
+    background: var(--glass-bg-dark) !important;
+    border-color: var(--glass-border-dark) !important;
+    box-shadow: var(--glass-shadow-dark) !important;
+  }
+  
+  html[data-theme="light"] .glass-morphism,
+  html[data-theme="light"] .glass-card {
+    background: rgba(255, 255, 255, 0.92) !important;
+    border-color: rgba(31, 41, 55, 0.15) !important;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08) !important;
+    color: rgb(31 41 55) !important;
+  }
+  
+  /* Ensure theme-specific styles are applied consistently on mobile */
+  [data-theme="dark"] .glass-morphism::before {
+    background: var(--text-overlay-light);
+    opacity: 0.05;
+  }
+  
+  html[data-theme="light"] .glass-morphism::before {
+    opacity: 0;
+  }
+}

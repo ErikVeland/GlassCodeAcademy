@@ -455,6 +455,60 @@ describe('NodeJsApiClient', () => {
         })
       );
     });
+
+    it('falls back to content quizzes when backend returns empty', async () => {
+      // Ensure public origin is configured for server-side URL resolution
+      const originalBaseUrl = process.env.NEXT_PUBLIC_BASE_URL;
+      process.env.NEXT_PUBLIC_BASE_URL = 'http://localhost:3000';
+
+      // Mock fetch to respond based on URL
+      (global.fetch as jest.Mock).mockImplementation((url: string) => {
+        if (url === 'http://localhost:8080/api/lessons/1/quizzes') {
+          // Primary quiz endpoint returns empty
+          return Promise.resolve({ ok: true, json: () => Promise.resolve({ success: true, data: [] }) });
+        }
+        if (url === 'http://localhost:8080/api/lessons/1') {
+          // Lesson lookup returns moduleId
+          return Promise.resolve({ ok: true, json: () => Promise.resolve({ success: true, data: { id: 1, title: 'L1', slug: 'l1', order: 1, content: {}, metadata: {}, isPublished: true, difficulty: 'Beginner', estimatedMinutes: 30, moduleId: 99, createdAt: '2023-01-01T00:00:00Z', updatedAt: '2023-01-01T00:00:00Z' } }) });
+        }
+        if (url === 'http://localhost:8080/api/modules/99') {
+          // Module lookup returns long slug
+          return Promise.resolve({ ok: true, json: () => Promise.resolve({ success: true, data: { id: 99, title: 'Programming Fundamentals', description: 'desc', slug: 'programming-fundamentals', order: 1, isPublished: true, courseId: 1, createdAt: '2023-01-01T00:00:00Z', updatedAt: '2023-01-01T00:00:00Z' } }) });
+        }
+        if (url === 'http://localhost:3000/api/content/quizzes/programming') {
+          // Content quizzes return normalized questions
+          return Promise.resolve({ ok: true, json: () => Promise.resolve({ questions: [ { question: 'Content Q1?', choices: ['A','B'], correctAnswer: 0, topic: 'general', difficulty: 'Beginner', estimatedTime: 90, order: 1 } ] }) });
+        }
+        // Unexpected URL in this test
+        return Promise.reject(new Error(`Unexpected fetch URL: ${url}`));
+      });
+
+      const response = await nodeJsApiClient.getQuizzesByLessonId(1);
+
+      expect(response.success).toBe(true);
+      expect(Array.isArray(response.data)).toBe(true);
+      expect(response.data?.length).toBe(1);
+      expect(response.data?.[0]?.question).toBe('Content Q1?');
+      expect(global.fetch).toHaveBeenCalledWith(
+        'http://localhost:8080/api/lessons/1/quizzes',
+        expect.objectContaining({ method: 'GET', headers: { 'Content-Type': 'application/json' } })
+      );
+      expect(global.fetch).toHaveBeenCalledWith(
+        'http://localhost:8080/api/lessons/1',
+        expect.objectContaining({ method: 'GET', headers: { 'Content-Type': 'application/json' } })
+      );
+      expect(global.fetch).toHaveBeenCalledWith(
+        'http://localhost:8080/api/modules/99',
+        expect.objectContaining({ method: 'GET', headers: { 'Content-Type': 'application/json' } })
+      );
+      expect(global.fetch).toHaveBeenCalledWith(
+        'http://localhost:3000/api/content/quizzes/programming',
+        expect.any(Object)
+      );
+
+      // Restore env var
+      process.env.NEXT_PUBLIC_BASE_URL = originalBaseUrl;
+    });
   });
 
   describe('Progress', () => {

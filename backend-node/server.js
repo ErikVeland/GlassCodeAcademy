@@ -1,3 +1,6 @@
+/* eslint-disable no-undef */
+/* eslint-disable no-unused-vars */
+
 const express = require('express');
 const cors = require('cors');
 const helmet = require('helmet');
@@ -87,6 +90,13 @@ app.use(helmet()); // Security headers
 app.use(cors()); // Enable CORS
 app.use(morgan('combined')); // Logging
 
+// Add correlation ID middleware
+const correlationMiddleware = require('./src/middleware/correlationMiddleware');
+app.use(correlationMiddleware);
+
+app.use(express.json()); // Parse JSON bodies
+app.use(express.urlencoded({ extended: true })); // Parse URL-encoded bodies
+
 // Add metrics middleware
 const metricsMiddleware = require('./src/middleware/metricsMiddleware');
 app.use(metricsMiddleware);
@@ -99,12 +109,10 @@ app.use(sloTrackingMiddleware);
 const userJourneyMiddleware = require('./src/middleware/userJourneyMiddleware');
 app.use(userJourneyMiddleware);
 
-// Add correlation ID middleware
-const correlationMiddleware = require('./src/middleware/correlationMiddleware');
-app.use(correlationMiddleware);
-
-app.use(express.json()); // Parse JSON bodies
-app.use(express.urlencoded({ extended: true })); // Parse URL-encoded bodies
+// Apply rate limiting middleware BEFORE routes
+const rateLimitMiddleware = require('./src/middleware/rateLimitMiddleware');
+app.use('/api/auth', rateLimitMiddleware.strictLimiter);
+app.use('/api/oauth', rateLimitMiddleware.generalLimiter);
 
 // Health check endpoint
 app.get('/health', (req, res) => {
@@ -119,6 +127,7 @@ app.get('/health', (req, res) => {
 
 // Routes
 app.use('/api/auth', require('./src/routes/authRoutes'));
+app.use('/api/oauth', require('./src/routes/oauthRoutes'));
 app.use('/api/profile', require('./src/routes/profileRoutes'));
 app.use('/api/admin', require('./src/routes/adminRoutes'));
 app.use('/api/admin/academies', require('./src/routes/academyRoutes'));
@@ -129,6 +138,10 @@ app.use('/api/lessons', require('./src/routes/lessonRoutes'));
 app.use('/api/progress', require('./src/routes/progressRoutes'));
 app.use('/api/quiz', require('./src/routes/quizRoutes'));
 app.use('/api/tiers', require('./src/routes/tierRoutes'));
+app.use('/api/api-keys', rateLimitMiddleware.apiKeyLimiter, require('./src/routes/apiKeyRoutes'));
+
+// Apply general rate limiting to all other API routes
+app.use('/api/', rateLimitMiddleware.generalLimiter);
 
 // Error handling middleware
 app.use(require('./src/middleware/errorMiddleware'));

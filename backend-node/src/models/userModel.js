@@ -31,7 +31,7 @@ const User = sequelize.define('User', {
   },
   passwordHash: {
     type: DataTypes.STRING,
-    allowNull: false,
+    allowNull: true,
     field: 'password_hash'
   },
   isActive: {
@@ -42,20 +42,36 @@ const User = sequelize.define('User', {
   lastLoginAt: {
     type: DataTypes.DATE,
     field: 'last_login_at'
+  },
+  oauthProvider: {
+    type: DataTypes.STRING(50),
+    field: 'oauth_provider'
+  },
+  oauthId: {
+    type: DataTypes.STRING(255),
+    field: 'oauth_id'
   }
 }, {
   tableName: 'users',
   timestamps: true,
   underscored: true,
+  indexes: [
+    {
+      unique: true,
+      fields: ['oauth_provider', 'oauth_id']
+    }
+  ],
   hooks: {
     beforeCreate: async (user) => {
-      if (user.passwordHash) {
+      // Only hash password if user is not using OAuth
+      if (user.passwordHash && !user.oauthProvider) {
         const salt = await bcrypt.genSalt(10);
         user.passwordHash = await bcrypt.hash(user.passwordHash, salt);
       }
     },
     beforeUpdate: async (user) => {
-      if (user.changed('passwordHash')) {
+      // Only hash password if it's being changed and user is not using OAuth
+      if (user.changed('passwordHash') && !user.oauthProvider) {
         const salt = await bcrypt.genSalt(10);
         user.passwordHash = await bcrypt.hash(user.passwordHash, salt);
       }
@@ -65,6 +81,10 @@ const User = sequelize.define('User', {
 
 // Method to validate password
 User.prototype.validatePassword = async function(password) {
+  // OAuth users don't have passwords
+  if (this.oauthProvider) {
+    return false;
+  }
   return bcrypt.compare(password, this.passwordHash);
 };
 
