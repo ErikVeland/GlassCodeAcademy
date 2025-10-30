@@ -8,6 +8,7 @@ class QuizPrefetchService {
   private isPrefetching = false;
   private prefetchQueue: string[] = [];
   private prefetchedModules = new Set<string>();
+  private shortSlugByModuleSlug = new Map<string, string>();
   private maxConcurrent = 2;
   private delayBetweenRequests = 1000;
   private batchSize = 3;
@@ -90,7 +91,11 @@ class QuizPrefetchService {
       }).filter(m => m.slug);
 
       // Prefer storing mapping for later use
-      normalized.forEach(m => this.prefetchedModules.has(m.slug) || (this as any).shortSlugByModuleSlug?.set?.(m.slug, m.shortSlug));
+      normalized.forEach(m => {
+        if (!this.prefetchedModules.has(m.slug)) {
+          this.shortSlugByModuleSlug.set(m.slug, m.shortSlug);
+        }
+      });
 
       switch (priorityOrder) {
         case 'tier': {

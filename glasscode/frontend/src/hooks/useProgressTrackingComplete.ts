@@ -269,6 +269,8 @@ interface RegistryModule {
     overview?: string;
     quiz?: string;
   };
+  // Optional shortSlug to avoid using any casts when matching
+  shortSlug?: string;
 }
 
 interface RegistryResponse {
@@ -383,7 +385,7 @@ export const useProgressTrackingComplete = () => {
     const match = reg.modules.find((m) => {
       const overview = m.routes?.overview || '';
       const short = overview.startsWith('/') ? overview.slice(1) : overview;
-      return short === shortSlug || m.slug === shortSlug || (m as any).shortSlug === shortSlug;
+      return short === shortSlug || m.slug === shortSlug || m.shortSlug === shortSlug;
     });
     return match?.slug ?? null;
   };
