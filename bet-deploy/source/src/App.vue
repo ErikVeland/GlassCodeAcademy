@@ -311,8 +311,8 @@ onUnmounted(() => {
       @restart="handleRestart"
     />
 
-    <!-- Betslip Drawer -->
-    <BetslipDrawer ref="betslipDrawer" />
+    <!-- Betslip Drawer (controlled instance) -->
+    <!-- Removed duplicate uncontrolled instance to avoid conflicts on mobile -->
 
     <header class="bg-surface-raised shadow-card py-6 px-4 sm:px-6 lg:px-8">
       <div class="flex flex-col md:flex-row md:items-center md:justify-between">

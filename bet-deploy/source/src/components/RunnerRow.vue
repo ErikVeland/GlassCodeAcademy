@@ -256,21 +256,14 @@ const handleOddsClick = () => {
   
   // ALLOWED: Adding runner to betslip
   
-  // Emit event to open betslip drawer
-  const event = new CustomEvent('open-betslip', { 
-    detail: { 
-      race: {
-        id: props.raceId,
-        meeting_name: props.raceName,
-        race_number: props.raceNumber
-      },
-      runner: {
-        ...props.runner,
-        raceName: props.raceName,
-        raceNumber: props.raceNumber
-      }
-    }
+  // Emit Vue event to parent chain; parent components will open the betslip
+  emit('add-to-betslip', {
+    ...props.runner,
+    raceName: props.raceName,
+    raceNumber: props.raceNumber
   })
-  window.dispatchEvent(event)
 }
 </script>
+const emit = defineEmits<{
+  (e: 'add-to-betslip', runner: any): void
+}>()

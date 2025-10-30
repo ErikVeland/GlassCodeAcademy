@@ -240,7 +240,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted, onUnmounted } from 'vue'
+import { ref, computed, onMounted, onUnmounted, watch } from 'vue'
 import { useBettingLogic } from '../composables/useBettingLogic'
 import { useBetsStore } from '../stores/bets'
 import { useRacesStore } from '../stores/races'
@@ -268,6 +268,13 @@ const betslipSelections = ref<BetSelection[]>([])
 
 // Track stake inputs separately to enable real-time validation
 const stakeInputs = ref<Record<string, number>>({})
+
+// Props & emits for controlled open state
+const props = defineProps<{ isOpen?: boolean }>()
+const emit = defineEmits<{
+  (e: 'update:isOpen', value: boolean): void
+  (e: 'close'): void
+}>()
 
 // State
 const isOpen = ref(false)
@@ -481,6 +488,7 @@ const placeBets = () => {
 // Methods for drawer
 const toggleDrawer = () => {
   isOpen.value = !isOpen.value
+  emit('update:isOpen', isOpen.value)
   if (isOpen.value) {
     // Focus the first focusable element when opening
     setTimeout(() => {
@@ -494,6 +502,8 @@ const toggleDrawer = () => {
 
 const closeDrawer = () => {
   isOpen.value = false
+  emit('update:isOpen', false)
+  emit('close')
   // Return focus to the element that opened the drawer
   const openButton = document.querySelector('[aria-label="Open betslip"]') as HTMLElement
   if (openButton) {
@@ -568,6 +578,31 @@ const handleOpenBetslip = (event: CustomEvent) => {
   toggleDrawer()
 }
 
+// Handle adding selection without toggling drawer (when controlled by parent)
+const handleAddToBetslipEvent = (event: CustomEvent) => {
+  const { race, runner } = event.detail
+  const raceId = race?.id
+  if (runner) {
+    let odds: number | 'SP' = 'SP'
+    if (runner.odds !== 'SP') {
+      const oddsNum = typeof runner.odds === 'number' ? runner.odds : parseFloat(runner.odds)
+      if (!isNaN(oddsNum)) {
+        odds = oddsNum
+      }
+    }
+    addSelection({
+      raceId: raceId,
+      raceName: race?.meeting_name || runner.raceName || 'Unknown Race',
+      raceNumber: race?.race_number || runner.raceNumber || 1,
+      runnerId: runner.id,
+      runnerNumber: runner.number,
+      runnerName: runner.name,
+      odds,
+      market: 'win'
+    })
+  }
+}
+
 // Lifecycle
 onMounted(() => {
   checkScreenSize()
@@ -575,9 +610,14 @@ onMounted(() => {
   window.addEventListener('keydown', handleEscape)
   window.addEventListener('keydown', trapFocus)
   window.addEventListener('open-betslip', handleOpenBetslip as EventListener)
+  window.addEventListener('add-to-betslip', handleAddToBetslipEvent as EventListener)
   
   // Initialize audio for betting feedback
   initAudio()
+  // Sync controlled prop
+  watch(() => props.isOpen, (val) => {
+    isOpen.value = !!val
+  }, { immediate: true })
 })
 
 onUnmounted(() => {
@@ -585,6 +625,7 @@ onUnmounted(() => {
   window.removeEventListener('keydown', handleEscape)
   window.removeEventListener('keydown', trapFocus)
   window.removeEventListener('open-betslip', handleOpenBetslip as EventListener)
+  window.removeEventListener('add-to-betslip', handleAddToBetslipEvent as EventListener)
 })
 
 // Expose methods for parent components
