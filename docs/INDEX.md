@@ -19,15 +19,19 @@ Use this index to navigate all project docs. It reflects the current Node.js bac
 ## Key Files and References
 - Dev orchestrator: `/start-dev.sh`
 - Frontend build (Docker): `/glasscode/frontend/build.sh`
-- Frontend config (GraphQL proxy + rewrites): `/frontend/next.config.ts`
-- GraphQL endpoint resolution: `/frontend/src/lib/urlUtils.ts`
-- Apollo Client setup (optional GraphQL): `/frontend/src/apolloClient.ts`
+- Frontend config (GraphQL proxy + rewrites): `/glasscode/frontend/next.config.ts`
+- GraphQL endpoint resolution: `/glasscode/frontend/src/lib/urlUtils.ts`
+- Apollo Client setup (optional GraphQL): `/glasscode/frontend/src/apolloClient.ts`
 
-## Migration and CI
-- Migration Guide: `/MIGRATION_GUIDE.md`
-- Backend migration notes: `/backend-node/MIGRATION_SUMMARY.md`
-- Phase 2 summary: `/backend-node/PHASE2_SUMMARY.md`
-- CI/CD (backend): `/backend-node/CI_CD.md` (if present)
+## Operations
+- Health checks: `/docs/HEALTH_CHECK.md`
+- Production runbook: `/docs/PRODUCTION_RUNBOOK.md`
+- CI/CD (backend): `/backend-node/CI_CD.md`
+
+## Content & Authoring
+- Content structure: `/docs/CONTENT_STRUCTURE.md`
+- Lesson template: `/docs/LESSON_TEMPLATE.md`
+- Quiz difficulty: `/docs/QUIZ_DIFFICULTY.md`
 
 ## Health and Observability
 - Backend health: `GET http://localhost:8080/api/health`
@@ -35,7 +39,7 @@ Use this index to navigate all project docs. It reflects the current Node.js bac
 
 ## Notes on GraphQL
 - GraphQL is optional. Most reads/writes use REST.
-- Frontend proxies `/graphql` via `frontend/next.config.ts` when backend exposes it.
+- Frontend proxies `/graphql` via `glasscode/frontend/next.config.ts` when backend exposes it.
 - Fallback behavior: if GraphQL is unreachable, stats/summaries use the content registry.
 
 ## Conventions
@@ -49,3 +53,4 @@ Use this index to navigate all project docs. It reflects the current Node.js bac
 2. Follow `/docs/TESTING_INSTRUCTIONS.md` to validate locally.
 3. Use `/backend-node/API_DOCUMENTATION.md` when integrating or verifying endpoints.
 4. See `/docs/CURRENT_ARCHITECTURE.md` for data flow and monorepo layout.
+5. For deployment and ops, start with `/docs/PRODUCTION_RUNBOOK.md` and `/docs/HEALTH_CHECK.md`.

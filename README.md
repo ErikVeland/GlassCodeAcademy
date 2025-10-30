@@ -135,16 +135,16 @@ The GlassCode Academy application has made significant progress in implementing 
 - Policy-based authorization with custom requirements
 
 ### Observability ✅
-- Structured logging with Serilog (Console and File sinks)
+- Structured logging with Winston (JSON format)
 - Correlation ID tracking across requests
-- Standardized error responses with RFC 7807 ProblemDetails
+- Standardized error responses with RFC 7807-style problem details
 - Performance timing for operations
 
 ### Testing Infrastructure ✅
-- Comprehensive test suite with 100+ passing tests
+- Comprehensive test suite
 - Code coverage requirements (80% threshold)
 - GitHub Actions CI/CD pipeline with automated testing
-- xUnit and Moq for unit and integration testing
+- Jest and Supertest for backend tests; Playwright for E2E
 
 ### Accessibility ✅
 - WCAG-compliant dark/light/auto theming
