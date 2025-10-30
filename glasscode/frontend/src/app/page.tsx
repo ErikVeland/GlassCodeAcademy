@@ -704,11 +704,11 @@ const HomePage: React.FC = () => {
                       />
                       <circle cx="50" cy="250" r="12" fill="#3B82F6" className="tier-node" aria-label="Foundational tier" />
                       <circle cx="150" cy="190" r="12" fill="#10B981" className="tier-node" aria-label="Core technologies tier" />
-                      <circle cx="250" cy="110" r="12" fill="#8B5CF6" className="tier-node" aria-label="Specialized skills tier" />
+                      <circle cx="250" cy="110" r="12" fill="#8B5CF6" className="tier-node" aria-label="Specialised skills tier" />
                       <circle cx="350" cy="50" r="12" fill="#F59E0B" className="tier-node" aria-label="Quality and testing tier" />
                       <text x="50" y="275" textAnchor="middle" fill="white" fontSize="12">Foundational</text>
                       <text x="150" y="215" textAnchor="middle" fill="white" fontSize="12">Core</text>
-                      <text x="250" y="135" textAnchor="middle" fill="white" fontSize="12">Specialized</text>
+                      <text x="250" y="135" textAnchor="middle" fill="white" fontSize="12">Specialised</text>
                       <text x="350" y="75" textAnchor="middle" fill="white" fontSize="12">Quality</text>
                     </svg>
                   </div>

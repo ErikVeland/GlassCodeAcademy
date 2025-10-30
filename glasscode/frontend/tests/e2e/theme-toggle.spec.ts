@@ -4,7 +4,7 @@ import { test, expect } from '@playwright/test';
 // with accessible name starting with "Theme:". The provider applies
 // `data-theme` on <html> based on selected theme and OS preference.
 
-test.describe('Theme toggle behavior', () => {
+test.describe('Theme toggle behaviour', () => {
   const homeUrl = process.env.PLAYWRIGHT_BASE_URL ? `${process.env.PLAYWRIGHT_BASE_URL}/` : '/';
 
   test('system respects OS light, and cycles through dark → light → system', async ({ page }) => {
@@ -25,6 +25,7 @@ test.describe('Theme toggle behavior', () => {
     // Prefer test-id based locator for explicit selection
     const toggle = page.getByTestId('theme-toggle');
     await expect(toggle).toBeVisible();
+    
 
     // Initial in system mode
     await expect(toggle).toHaveAccessibleName('Theme: System (auto)');
@@ -65,6 +66,7 @@ test.describe('Theme toggle behavior', () => {
     // Prefer test-id based locator for explicit selection
     const toggle = page.getByTestId('theme-toggle');
     await expect(toggle).toBeVisible();
+    
 
     await expect(toggle).toHaveAccessibleName('Theme: System (auto)');
     await expect(page.locator('html')).toHaveAttribute('data-theme', 'dark');

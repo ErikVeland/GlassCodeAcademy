@@ -160,8 +160,19 @@ async function seedContent() {
         const firstLesson = await Lesson.findOne({ where: { module_id: module.id }, order: [['order', 'ASC']] });
         const lessonId = firstLesson ? firstLesson.id : null;
         
+        if (!lessonId) {
+          console.log(`  ⚠️  No lesson found for module ${moduleInfo.slug}, skipping quiz seeding`);
+          continue;
+        }
+        
         for (let i = 0; i < questions.length; i++) {
           const questionData = questions[i];
+          
+          // Validate question data
+          if (!questionData.question) {
+            console.log(`  ⚠️  Skipping quiz question ${i+1} - missing question text`);
+            continue;
+          }
           
           const [quiz, quizCreated] = await LessonQuiz.findOrCreate({
             where: { sortOrder: questionData.sortOrder || i + 1, lesson_id: lessonId },
@@ -189,6 +200,11 @@ async function seedContent() {
           
           if (quizCreated) {
             console.log(`    ✅ Created quiz question: ${quiz.question.substring(0, 50)}...`);
+            
+            // Validate that the created quiz has a positive ID
+            if (quiz.id <= 0) {
+              console.log(`    ⚠️  Warning: Created quiz has invalid ID: ${quiz.id}`);
+            }
           } else {
             console.log(`    🔁 Updated quiz question: ${quiz.question.substring(0, 50)}...`);
             await quiz.update({
@@ -209,6 +225,11 @@ async function seedContent() {
               sortOrder: questionData.sortOrder || i + 1,
               isPublished: true
             });
+            
+            // Validate that the updated quiz has a positive ID
+            if (quiz.id <= 0) {
+              console.log(`    ⚠️  Warning: Updated quiz has invalid ID: ${quiz.id}`);
+            }
           }
         }
       } else {

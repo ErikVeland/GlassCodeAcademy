@@ -167,7 +167,7 @@ export default function StatsPage() {
               </div>
               <div className="text-center p-4 bg-surface-alt rounded-xl border border-border flex flex-col justify-center">
                 <div className="text-2xl font-bold text-primary">{stats.tierBreakdown.specialized}</div>
-                <div className="text-sm text-primary font-medium">Specialized</div>
+                <div className="text-sm text-primary font-medium">Specialised</div>
               </div>
               <div className="text-center p-4 bg-surface-alt rounded-xl border border-border flex flex-col justify-center">
                 <div className="text-2xl font-bold text-warning">{stats.tierBreakdown.quality}</div>

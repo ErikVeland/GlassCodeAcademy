@@ -1,4 +1,4 @@
-// Shared interview/quiz utilities for consistent behavior across modules
+// Shared interview/quiz utilities for consistent behaviour across modules
 // Types are intentionally generic to match backend contract
 
 export type BaseInterviewQuestion = {

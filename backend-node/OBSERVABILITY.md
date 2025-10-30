@@ -2,7 +2,7 @@
 
 ## Overview
 
-This document describes the observability infrastructure implemented for the GlassCode Academy platform. The setup includes distributed tracing, metrics collection, and structured logging to provide comprehensive visibility into the application's performance and behavior.
+This document describes the observability infrastructure implemented for the GlassCode Academy platform. The setup includes distributed tracing, metrics collection, and structured logging to provide comprehensive visibility into the application's performance and behaviour.
 
 ## Architecture
 

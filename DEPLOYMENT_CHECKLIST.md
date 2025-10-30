@@ -305,7 +305,7 @@
 
 - [ ] User access uninterrupted (or minimal)
 - [ ] No user complaints
-- [ ] Performance improvements realized
+- [ ] Performance improvements realised
 - [ ] New features working as expected
 - [ ] Stakeholder satisfaction
 - [ ] Business continuity maintained

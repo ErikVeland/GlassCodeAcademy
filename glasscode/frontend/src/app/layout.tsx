@@ -75,9 +75,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
 
                 var selected = (storedTheme === 'light' || storedTheme === 'dark' || storedTheme === 'system')
                   ? storedTheme
-                  : ((cookieTheme === 'light' || cookieTheme === 'dark')
-                      ? cookieTheme
-                      : (legacy === 'true' ? 'dark' : legacy === 'false' ? 'light' : 'system'));
+                  : (legacy === 'true' ? 'dark' : legacy === 'false' ? 'light' : 'system');
 
                 var finalTheme = selected === 'system' ? (prefersDark ? 'dark' : 'light') : selected;
 
@@ -91,17 +89,26 @@ export default async function RootLayout({ children }: { children: React.ReactNo
                 html.setAttribute('data-theme', finalTheme);
               } catch { /* noop */ }
             })();
-            /* Pre-hydration toggle: robust attachment and labeling before React mounts */
+            /* Pre-hydration toggle: attach to ALL buttons and keep labels in sync */
             (function(){
               try {
                 var html = document.documentElement;
                 var mql = window.matchMedia('(prefers-color-scheme: dark)');
-                var attached = false;
-                var btnRef = null;
+                var attachedButtons = new Set();
                 var getNext = function(prev){
                   if (prev === 'system') return mql.matches ? 'light' : 'dark';
                   if (prev === 'dark') return 'light';
                   return 'system';
+                };
+                var updateAllLabels = function(label){
+                  try {
+                    attachedButtons.forEach(function(btn){
+                      try {
+                        btn.setAttribute('aria-label', label);
+                        btn.setAttribute('title', label + ' — click to cycle');
+                      } catch {}
+                    });
+                  } catch {}
                 };
                 var applyTheme = function(theme){
                   var prefersDark = mql.matches;
@@ -120,17 +127,11 @@ export default async function RootLayout({ children }: { children: React.ReactNo
                   } catch {}
                   // Signal theme selection to React after hydration
                   try {
-                    // Persist for immediate pickup on mount, and dispatch event for live bridging
                     window.__gcPendingTheme = theme;
                     window.dispatchEvent(new CustomEvent('gc-theme-change', { detail: { theme: theme } }));
                   } catch {}
                   var label = theme === 'system' ? 'Theme: System (auto)' : (theme === 'dark' ? 'Theme: Dark' : 'Theme: Light');
-                  try {
-                    if (btnRef) {
-                      btnRef.setAttribute('aria-label', label);
-                      btnRef.setAttribute('title', label + ' — click to cycle');
-                    }
-                  } catch {}
+                  updateAllLabels(label);
                 };
                 var handler = function(){
                   try {
@@ -139,39 +140,59 @@ export default async function RootLayout({ children }: { children: React.ReactNo
                     applyTheme(next);
                   } catch {}
                 };
-                var tryAttach = function(){
-                  if (attached) return;
-                  var btn = document.querySelector('button[data-testid="theme-toggle"]');
-                  if (!btn) return;
-                  btnRef = btn;
-                  btn.addEventListener('click', handler, { passive: true });
-                  attached = true;
-                  // Provide hook for React to remove this fallback
+                var attachToAll = function(){
+                  var btns = document.querySelectorAll('button[data-testid="theme-toggle"]');
+                  if (!btns || btns.length === 0) return;
+                  btns.forEach(function(btn){
+                    if (!attachedButtons.has(btn)) {
+                      // Pre-hydration handler should fully handle clicks and prevent React double-toggling
+                      var wrapped = function(ev){
+                        try {
+                          ev.preventDefault();
+                          ev.stopPropagation();
+                          // Stop other listeners on the same element from firing
+                          if (typeof ev.stopImmediatePropagation === 'function') ev.stopImmediatePropagation();
+                        } catch {}
+                        handler();
+                      };
+                      btn.addEventListener('click', wrapped, { passive: false });
+                      attachedButtons.add(btn);
+                      // Store original handler reference for removal later
+                      try { (btn).__gcPreHydrationWrapped = wrapped; } catch {}
+                      try {
+                        var current = localStorage.getItem('theme') || 'system';
+                        var label = current === 'system' ? 'Theme: System (auto)' : (current === 'dark' ? 'Theme: Dark' : 'Theme: Light');
+                        btn.setAttribute('aria-label', label);
+                        btn.setAttribute('title', label + ' — click to cycle');
+                      } catch {}
+                    }
+                  });
+                  // Provide hook for React to remove this fallback from ALL buttons
                   window.__gcRemovePreHydrationToggle = function(){
-                    try { btn.removeEventListener('click', handler); attached = false; btnRef = null; delete window.__gcRemovePreHydrationToggle; } catch {}
+                    try {
+                      attachedButtons.forEach(function(btn){
+                        try {
+                          var w = (btn).__gcPreHydrationWrapped;
+                          if (w) { btn.removeEventListener('click', w); }
+                          delete (btn).__gcPreHydrationWrapped;
+                        } catch {}
+                      });
+                      attachedButtons.clear();
+                      delete window.__gcRemovePreHydrationToggle;
+                    } catch {}
                   };
                 };
-                // Attach immediately if available, otherwise observe until present
+                // Attach immediately if available, otherwise observe until present or new buttons appear
                 if (document.readyState === 'loading') {
                   document.addEventListener('DOMContentLoaded', function(){
-                    tryAttach();
-                    if (!attached) {
-                      var mo = new MutationObserver(function(){
-                        tryAttach();
-                        if (attached && mo) mo.disconnect();
-                      });
-                      mo.observe(document.body, { childList: true, subtree: true });
-                    }
+                    attachToAll();
+                    var mo = new MutationObserver(function(){ attachToAll(); });
+                    mo.observe(document.body, { childList: true, subtree: true });
                   }, { once: true });
                 } else {
-                  tryAttach();
-                  if (!attached) {
-                    var mo2 = new MutationObserver(function(){
-                      tryAttach();
-                      if (attached && mo2) mo2.disconnect();
-                    });
-                    mo2.observe(document.body, { childList: true, subtree: true });
-                  }
+                  attachToAll();
+                  var mo2 = new MutationObserver(function(){ attachToAll(); });
+                  mo2.observe(document.body, { childList: true, subtree: true });
                 }
               } catch { /* noop */ }
             })();`

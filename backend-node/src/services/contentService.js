@@ -106,7 +106,10 @@ const getQuizzesByLessonId = async (lessonId) => {
     }
   });
   
-  return quizzes;
+  // Filter out any quizzes with invalid IDs
+  const validQuizzes = quizzes.filter(quiz => quiz.id && quiz.id > 0);
+  
+  return validQuizzes;
 };
 
 module.exports = {

@@ -211,7 +211,7 @@ const SearchFilterSystem: React.FC<SearchFilterSystemProps> = ({
                 <option value="">All Tiers</option>
                 <option value="foundational">🏗️ Foundational</option>
                 <option value="core">🔧 Core Technologies</option>
-                <option value="specialized">✨ Specialized Skills</option>
+                <option value="specialized">✨ Specialised Skills</option>
                 <option value="quality">🔒 Quality & Testing</option>
               </select>
             </div>

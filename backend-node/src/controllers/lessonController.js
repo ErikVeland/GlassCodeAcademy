@@ -83,13 +83,26 @@ const getLessonQuizzesController = async (req, res, next) => {
       return res.status(200).json(successResponse);
     }
     
-    logger.info('Quizzes fetched successfully', { lessonId, quizCount: quizzes.length });
+    // Ensure all quiz IDs are valid positive integers
+    const validQuizzes = quizzes.filter(quiz => {
+      const isValid = quiz.id && Number.isInteger(quiz.id) && quiz.id > 0;
+      if (!isValid) {
+        logger.warn('Invalid quiz ID detected', { 
+          lessonId, 
+          quizId: quiz.id, 
+          quizQuestion: quiz.question?.substring(0, 50) 
+        });
+      }
+      return isValid;
+    });
+    
+    logger.info('Quizzes fetched successfully', { lessonId, quizCount: validQuizzes.length });
     
     const successResponse = {
       type: 'https://glasscode/errors/success',
       title: 'Success',
       status: 200,
-      data: quizzes
+      data: validQuizzes
     };
     
     res.status(200).json(successResponse);

@@ -115,7 +115,7 @@ const interviewTiers: Record<string, InterviewTier> = {
     ]
   },
   specialized: {
-    title: 'Specialized Interview Topics',
+    title: 'Specialised Interview Topics',
     description: 'Advanced frameworks, modern development practices, and emerging technologies',
     color: 'from-purple-500 to-violet-500',
     tierLevel: 3,
@@ -476,7 +476,7 @@ const InterviewPrepPage: React.FC = () => {
                       <circle cx="350" cy="50" r="12" fill="#F59E0B" className="tier-node" />
                       <text x="50" y="275" textAnchor="middle" fill="currentColor" className="text-primary-fg" fontSize="12">Foundational</text>
                       <text x="150" y="215" textAnchor="middle" fill="currentColor" className="text-primary-fg" fontSize="12">Core</text>
-                      <text x="250" y="135" textAnchor="middle" fill="currentColor" className="text-primary-fg" fontSize="12">Specialized</text>
+                      <text x="250" y="135" textAnchor="middle" fill="currentColor" className="text-primary-fg" fontSize="12">Specialised</text>
                       <text x="350" y="75" textAnchor="middle" fill="currentColor" className="text-primary-fg" fontSize="12">Expert</text>
                     </svg>
                   </div>
@@ -514,7 +514,7 @@ const InterviewPrepPage: React.FC = () => {
                       <option value="all">All Tiers</option>
                       <option value="foundational">🏗️ Foundational</option>
                       <option value="core">⚙️ Core Technologies</option>
-                      <option value="specialized">💎 Specialized Skills</option>
+                      <option value="specialized">💎 Specialised Skills</option>
                       <option value="expert">🏆 Expert Level</option>
                     </select>
                     <span className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-muted">▾</span>

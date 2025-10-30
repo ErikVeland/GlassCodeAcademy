@@ -58,7 +58,7 @@ async function seedDatabase() {
       {
         key: 'specialized',
         level: 3,
-        title: 'Specialized Skills',
+        title: 'Specialised Skills',
         description: 'Develop expertise in modern development practices',
         focusArea: 'Advanced frameworks (Next.js, GraphQL, DevOps)',
         color: 'from-purple-500 to-violet-500',

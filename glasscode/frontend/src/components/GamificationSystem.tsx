@@ -60,7 +60,7 @@ const achievements: Record<string, Achievement> = {
     rarity: 'rare',
     tier: 'specialized',
     badgeUrl: '/badges/specialist.svg',
-    unlockCondition: 'Complete Specialized Skills Tier'
+    unlockCondition: 'Complete Specialised Skills Tier'
   },
   'quality-guardian': { 
     id: 'quality-guardian',
@@ -450,7 +450,7 @@ export const GamificationDashboard: React.FC = () => {
             <div className="w-16 h-16 mx-auto mb-2 bg-gradient-to-br from-purple-500 to-violet-500 rounded-full flex items-center justify-center text-white font-bold">
               {tierProgress.specialized}%
             </div>
-            <p className="text-white/80 text-sm font-medium">Specialized</p>
+            <p className="text-white/80 text-sm font-medium">Specialised</p>
           </div>
           <div className="text-center">
             <div className="w-16 h-16 mx-auto mb-2 bg-gradient-to-br from-orange-500 to-red-500 rounded-full flex items-center justify-center text-white font-bold">
@@ -544,7 +544,7 @@ export const GamificationDashboard: React.FC = () => {
                 <option value="all">All</option>
                 <option value="foundational">Foundational</option>
                 <option value="core">Core</option>
-                <option value="specialized">Specialized</option>
+                <option value="specialized">Specialised</option>
                 <option value="quality">Quality</option>
               </select>
             </div>

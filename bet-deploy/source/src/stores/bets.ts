@@ -37,7 +37,7 @@ export const useBetsStore = defineStore('bets', {
     useSimulatedData: false,
     // Track last won bet for animations
     lastWonBetId: '',
-    // Track if game over dialog should be shown
+    // Track if game over dialogue should be shown
     showGameOver: false
   }),
   
@@ -70,7 +70,7 @@ export const useBetsStore = defineStore('bets', {
       this.engine.addCredits(10000) // Add $100 in cents
     },
     
-    // Method to check if game over dialog should be shown
+    // Method to check if game over dialogue should be shown
     // Game over should only occur when balance is zero/negative AND no pending bets exist
     checkGameOver() {
       const bankroll = this.engine.getBankroll()

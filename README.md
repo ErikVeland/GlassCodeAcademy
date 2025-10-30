@@ -4,7 +4,7 @@
 
 ## Project Overview
 
-GlassCode Academy is a full-stack educational platform designed to help developers learn and prepare for interviews in modern web technologies. The application provides structured learning resources and realistic interview practice with instant feedback.
+GlassCode Academy is a full-stack educational platform designed to help developers learn and prepare for interviews in modern web technologies. The application provides structured learning resources and realistic interview practise with instant feedback.
 
 For detailed information about the current architecture, see [CURRENT_ARCHITECTURE.md](docs/CURRENT_ARCHITECTURE.md).
 
@@ -53,7 +53,7 @@ For detailed information about the current architecture, see [CURRENT_ARCHITECTU
 
 The application follows a full-stack architecture with a Next.js frontend and Node.js/Express backend, communicating via a RESTful API.
 
-```mermaid
+```
 graph TB
     A[User Browser] --> B[Next.js 15.3.5 Frontend]
     B --> C[Node.js API Client]
@@ -148,7 +148,7 @@ The GlassCode Academy application has made significant progress in implementing 
 
 ### Accessibility ✅
 - WCAG-compliant dark/light/auto theming
-- Semantic color tokens with smooth transitions
+- Semantic colour tokens with smooth transitions
 - No first-paint flash prevention
 - Keyboard navigation support
 
@@ -156,7 +156,7 @@ For detailed progress tracking, see [IMPLEMENTATION_PROGRESS_TRACKER.md](docs/IM
 
 ## Quiz Difficulty & Reporting
 
-We use tier-weighted difficulty targets to keep quizzes aligned with module tiers (e.g., foundational favors beginner content). A reporting script summarizes predicted per-attempt difficulty based on current pools:
+We use tier-weighted difficulty targets to keep quizzes aligned with module tiers (e.g., foundational favours beginner content). A reporting script summarizes predicted per-attempt difficulty based on current pools:
 
 - Script: `scripts/quiz-difficulty-report.js`
 - Docs: `docs/QUIZ_DIFFICULTY.md`
@@ -233,7 +233,7 @@ This prints pool sizes and predicted beginner/intermediate/advanced counts per m
 
 ### Accessibility Improvements
 - Implemented WCAG-compliant dark/light/auto theming
-- Added semantic color tokens with smooth transitions
+- Added semantic colour tokens with smooth transitions
 - Prevented first-paint flash with boot script
 - Ensured keyboard navigation support
 
@@ -287,7 +287,7 @@ After running, start the app and visit module quiz pages to confirm A/B/C/D pref
 3. **Data Synchronization**: Laravel content is stored as JSON files in the .NET backend but maintains the Laravel data structure
 
 ##### Laravel Content Structure
-- Routing fundamentals (Basic Routing, Route Parameters)
+- Routing fundamentals (Basic Routing, Route Parametres)
 - Eloquent ORM basics (Introduction to Eloquent, Querying Models)
 - Blade templating (Blade Basics, Blade Control Structures)
 - Middleware (Creating Middleware, Registering Middleware)

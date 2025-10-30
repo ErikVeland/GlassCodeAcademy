@@ -136,48 +136,47 @@ export default async function ModulePage({ params }: Props) {
 
         {/* Module Header */}
         <header className="mb-12">
-          <div className="rounded-xl overflow-hidden">
-            <div className={`h-2 ${theme.strip}`}></div>
-            <div className="glass-morphism p-8">
-              <div className="flex items-start gap-6">
-                <div className="text-6xl" role="img" aria-label={`${currentModule.title} icon`}>
-                  {currentModule.icon}
+          {/* Integrate branding strip into the box */}
+          <div className="glass-morphism relative rounded-xl overflow-hidden p-6 sm:p-8">
+            <div className={`absolute inset-x-0 top-0 h-1.5 sm:h-2 ${theme.strip}`} aria-hidden="true"></div>
+            <div className="flex flex-col sm:flex-row items-start gap-4 sm:gap-6">
+              <div className="text-4xl sm:text-6xl leading-none" role="img" aria-label={`${currentModule.title} icon`}>
+                {currentModule.icon}
+              </div>
+              <div className="flex-1 min-w-0">
+                <div className="flex flex-wrap items-center gap-3 sm:gap-4 mb-3 sm:mb-4">
+                  <h1 className="text-2xl sm:text-4xl font-bold text-fg truncate">
+                    {currentModule.title}
+                  </h1>
+                  <span className={`px-3 py-1 rounded-full text-xs sm:text-sm font-medium ${difficultyBadgeClass}`}>
+                    {currentModule.difficulty}
+                  </span>
                 </div>
-                <div className="flex-1">
-                  <div className="flex items-center gap-4 mb-4">
-                    <h1 className="text-4xl font-bold text-fg">
-                      {currentModule.title}
-                    </h1>
-                    <span className={`px-3 py-1 rounded-full text-sm font-medium ${difficultyBadgeClass}`}>
-                      {currentModule.difficulty}
+                <p className="text-base sm:text-xl text-muted mb-4 sm:mb-6">
+                  {currentModule.description}
+                </p>
+                <div className="flex flex-wrap gap-2 mb-4 sm:mb-6">
+                  {currentModule.technologies.map((tech) => (
+                    <span
+                      key={tech}
+                      className="px-3 py-1 bg-surface-alt text-fg rounded-full text-xs sm:text-sm"
+                    >
+                      {tech}
                     </span>
+                  ))}
+                </div>
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 text-xs sm:text-sm text-muted">
+                  <div className="min-w-0">
+                    <span className="font-bold">Track:</span> {currentModule.track}
                   </div>
-                  <p className="text-xl text-muted mb-6">
-                    {currentModule.description}
-                  </p>
-                  <div className="flex flex-wrap gap-2 mb-6">
-                    {currentModule.technologies.map((tech) => (
-                      <span
-                        key={tech}
-                        className="px-3 py-1 bg-surface-alt text-fg rounded-full text-sm"
-                      >
-                        {tech}
-                      </span>
-                    ))}
+                  <div className="min-w-0">
+                    <span className="font-bold">Tier:</span> {tier?.title}
                   </div>
-                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm text-muted">
-                    <div>
-                      <span className="font-medium">Track:</span> {currentModule.track}
-                    </div>
-                    <div>
-                      <span className="font-medium">Tier:</span> {tier?.title}
-                    </div>
-                    <div>
-                      <span className="font-medium">Duration:</span> {currentModule.estimatedHours}h
-                    </div>
-                    <div>
-                      <span className="font-medium">Lessons:</span> {lessons?.length || 0}
-                    </div>
+                  <div className="min-w-0">
+                    <span className="font-bold">Duration:</span> {currentModule.estimatedHours}h
+                  </div>
+                  <div className="min-w-0">
+                    <span className="font-bold">Lessons:</span> {lessons?.length || 0}
                   </div>
                 </div>
               </div>

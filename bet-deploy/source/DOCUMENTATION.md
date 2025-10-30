@@ -34,7 +34,7 @@ The "Next to Go Racing" application is a real-time racing event dashboard that d
 
 ## Architecture
 
-The application follows a component-based architecture with Vue 3 Composition API and TypeScript. The architecture is organized as follows:
+The application follows a component-based architecture with Vue 3 Composition API and TypeScript. The architecture is organised as follows:
 
 ```
 src/
@@ -83,7 +83,7 @@ Orchestrates the display of active races in a grid layout, applying sorting and 
 - Displays exactly 5 races at all times
 - Loading, error, and empty states
 - Responsive grid layout
-- Carousel behavior for race transitions
+- Carousel behaviour for race transitions
 
 ### RaceColumn.vue
 Displays individual race information in a card format with header, runners, and betting controls.
@@ -552,7 +552,7 @@ src/
 ```
 
 ### Key Test Areas
-- Component rendering and behavior
+- Component rendering and behaviour
 - State management
 - Composable functions
 - Betting engine logic

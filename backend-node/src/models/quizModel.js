@@ -6,7 +6,11 @@ const LessonQuiz = sequelize.define('LessonQuiz', {
   id: {
     type: DataTypes.INTEGER,
     primaryKey: true,
-    autoIncrement: true
+    autoIncrement: true,
+    validate: {
+      isInt: true,
+      min: 1
+    }
   },
   question: {
     type: DataTypes.STRING(2000),
@@ -81,7 +85,22 @@ const LessonQuiz = sequelize.define('LessonQuiz', {
 }, {
   tableName: 'lesson_quizzes',
   timestamps: true,
-  underscored: true
+  underscored: true,
+  // Add hooks to validate data before saving
+  hooks: {
+    beforeCreate: (quiz) => {
+      // Ensure ID is positive if manually set
+      if (quiz.id && quiz.id <= 0) {
+        throw new Error('Quiz ID must be a positive integer');
+      }
+    },
+    beforeUpdate: (quiz) => {
+      // Ensure ID is positive if manually set
+      if (quiz.id && quiz.id <= 0) {
+        throw new Error('Quiz ID must be a positive integer');
+      }
+    }
+  }
 });
 
 // Define associations

@@ -378,7 +378,7 @@ export const CompleteProgressTracker: React.FC = () => {
       tier: 'specialized',
       badgeUrl: '/badges/specialist.svg',
       points: 200,
-      unlockCondition: 'Complete Specialized Skills Tier'
+      unlockCondition: 'Complete Specialised Skills Tier'
     },
     'quality-guardian': {
       id: 'quality-guardian',
@@ -537,7 +537,7 @@ export const CompleteProgressTracker: React.FC = () => {
             completed={tierModuleCounts.core.completed}
           />
           <TierProgressCard 
-            tierName="Specialized" 
+            tierName="Specialised" 
             tierKey="specialized"
             progress={tierProgress.specialized}
             modules={tierModuleCounts.specialized.total}
@@ -691,7 +691,7 @@ export const CompleteProgressTracker: React.FC = () => {
                 <option value="all">All</option>
                 <option value="foundational">Foundational</option>
                 <option value="core">Core</option>
-                <option value="specialized">Specialized</option>
+                <option value="specialized">Specialised</option>
                 <option value="quality">Quality</option>
               </select>
             </div>

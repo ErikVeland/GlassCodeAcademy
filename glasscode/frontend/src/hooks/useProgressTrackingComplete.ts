@@ -157,7 +157,7 @@ const ACHIEVEMENT_DEFINITIONS: Record<string, Omit<AchievementData, 'earnedDate'
     tier: 'specialized',
     badgeUrl: '/badges/specialist.svg',
     points: 200,
-    unlockCondition: 'Complete Specialized Skills Tier'
+    unlockCondition: 'Complete Specialised Skills Tier'
   },
   'quality-guardian': {
     id: 'quality-guardian',

@@ -251,7 +251,7 @@ export const APP_PHASES: Phase[] = [
       {
         id: 'advanced-modules',
         title: 'Advanced Technology Modules',
-        description: 'Specialized frameworks and advanced concepts',
+        description: 'Specialised frameworks and advanced concepts',
         importance: 7,
         currentProgress: 100,
         previousProgress: 45,
@@ -620,7 +620,7 @@ export const APP_PHASES: Phase[] = [
           {
             id: 'user-analytics',
             title: 'User Analytics',
-            description: 'Learning behavior and engagement analytics',
+            description: 'Learning behaviour and engagement analytics',
             completed: false,
             weight: 0.25
           },

@@ -21,7 +21,7 @@ const logger = winston.createLogger({
   ]
 });
 
-const getUserCourseProgressController = async (req, res) => {
+const getUserCourseProgressController = async (req, res, next) => {
   try {
     const { courseId } = req.params;
     const userId = req.user.id;

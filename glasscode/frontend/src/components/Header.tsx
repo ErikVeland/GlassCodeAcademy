@@ -46,7 +46,7 @@ interface TierGroup {
 export default function Header() {
   const [isFoundationalOpen, setIsFoundationalOpen] = useState(false);
   const [isCoreOpen, setIsCoreOpen] = useState(false);
-  const [isSpecializedOpen, setIsSpecializedOpen] = useState(false);
+  const [isSpecialisedOpen, setIsSpecialisedOpen] = useState(false);
   const [isQualityOpen, setIsQualityOpen] = useState(false);
   const [isExploreOpen, setIsExploreOpen] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
@@ -112,7 +112,7 @@ export default function Header() {
           },
           specialized: {
             tier: 'specialized',
-            title: 'Specialized Skills',
+            title: 'Specialised Skills',
             description: 'Advanced frameworks and modern practices',
             color: 'from-purple-500 to-violet-500',
             icon: '💎',
@@ -179,7 +179,7 @@ export default function Header() {
   const closeTierDropdowns = () => {
     setIsFoundationalOpen(false);
     setIsCoreOpen(false);
-    setIsSpecializedOpen(false);
+    setIsSpecialisedOpen(false);
     setIsQualityOpen(false);
     setIsExploreOpen(false);
   };
@@ -196,7 +196,7 @@ export default function Header() {
         setIsCoreOpen(tier !== activeDropdown);
         break;
       case 'specialized':
-        setIsSpecializedOpen(tier !== activeDropdown);
+        setIsSpecialisedOpen(tier !== activeDropdown);
         break;
       case 'quality':
         setIsQualityOpen(tier !== activeDropdown);
@@ -410,28 +410,28 @@ export default function Header() {
               )}
             </div>
 
-            {/* Specialized Tier Dropdown */}
+            {/* Specialised Tier Dropdown */}
             <div className="relative" ref={specializedRef} data-tier="specialized">
               <button
-                onClick={() => handleDropdownToggle('specialized')}
-                onKeyDown={(e) => handleDropdownKeyDown(e, 'specialized')}
+                onClick={() => handleDropdownToggle('specialised')}
+                onKeyDown={(e) => handleDropdownKeyDown(e, 'specialised')}
                 className={`inline-flex items-center px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200 focus:outline-none focus:ring-2 ring-focus ring-offset-2 ring-offset-bg ${
-                  isSpecializedOpen ? 'bg-surface-alt text-primary' : 'text-fg hover:bg-surface-alt hover:text-primary'
+                  isSpecialisedOpen ? 'bg-surface-alt text-primary' : 'text-fg hover:bg-surface-alt hover:text-primary'
                 }`}
-                aria-expanded={isSpecializedOpen}
+                aria-expanded={isSpecialisedOpen}
               >
                 <span className="mr-2">💎</span>
-                <span>Specialized</span>
+                <span>Specialised</span>
                 <div className="ml-1 flex items-center">
                   <span className="text-xs bg-primary text-primary-fg px-1.5 py-0.5 rounded-full mr-1">
                     {getTierProgress('specialized')}%
                   </span>
-                  <svg className={`h-4 w-4 transition-transform duration-200 ${isSpecializedOpen ? 'rotate-180' : ''}`} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                  <svg className={`h-4 w-4 transition-transform duration-200 ${isSpecialisedOpen ? 'rotate-180' : ''}`} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
                     <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
                   </svg>
                 </div>
               </button>
-              {isSpecializedOpen && (
+              {isSpecialisedOpen && (
                 <div className="origin-top-right absolute right-0 top-full mt-2 w-80 rounded-xl shadow-lg bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm border border-gray-200 dark:border-gray-700 z-[9999]">
                   <div className="py-2 px-4" role="menu">
                     <div className="text-lg font-bold text-fg mb-2">

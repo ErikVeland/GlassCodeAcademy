@@ -729,7 +729,7 @@
       "topic": "Complex UI Testing",
       "difficulty": "Advanced",
       "choices": [
-        "Specialized interaction patterns and careful handling of asynchronous updates",
+        "Specialised interaction patterns and careful handling of asynchronous updates",
         "Simplified test scenarios",
         "Reduced number of assertions",
         "Elimination of visual testing"

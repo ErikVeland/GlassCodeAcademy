@@ -1172,7 +1172,7 @@ const updateQuizController = async (req, res, next) => {
     const updateData = req.body;
     
     // Check if quiz exists
-    const quiz = await LessonQuiz.findByPk(id);
+    const quiz = await getQuizById(id);
     
     if (!quiz) {
       const errorResponse = {
@@ -1244,7 +1244,7 @@ const deleteQuizController = async (req, res, next) => {
     const { id } = req.params;
     
     // Check if quiz exists
-    const quiz = await LessonQuiz.findByPk(id);
+    const quiz = await getQuizById(id);
     
     if (!quiz) {
       const errorResponse = {

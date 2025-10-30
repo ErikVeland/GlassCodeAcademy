@@ -177,7 +177,7 @@ function formatSegmentName(segment: string): string {
   return segment.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
 }
 
-// Specialized breadcrumb components for common patterns
+// Specialised breadcrumb components for common patterns
 export function ModuleBreadcrumb({ 
   moduleTitle, 
   moduleSlug, 

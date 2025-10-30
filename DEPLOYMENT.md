@@ -4,7 +4,7 @@ This guide provides detailed instructions for deploying the GlassCode Academy ap
 
 ## Content Management
 
-All lesson content is organized in the [content/lessons/](file:///Users/veland/GlassCodeAcademy/content/lessons) directory with each module having its own JSON file containing all lessons for that technology.
+All lesson content is organised in the [content/lessons/](file:///Users/veland/GlassCodeAcademy/content/lessons) directory with each module having its own JSON file containing all lessons for that technology.
 
 ## Standalone Server Deployment (Recommended)
 

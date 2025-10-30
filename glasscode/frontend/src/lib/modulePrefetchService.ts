@@ -26,6 +26,7 @@ class ModulePrefetchService {
   private isPrefetching = false;
   private prefetchQueue: string[] = [];
   private completed = new Set<string>();
+  private shortSlugByModuleSlug = new Map<string, string>();
 
   // Adaptive network settings
   private maxConcurrent = 3;
@@ -103,8 +104,34 @@ class ModulePrefetchService {
   }
 
   private async getUnlockedModules(priority: PrefetchPriority): Promise<ModuleMeta[]> {
-    const { contentRegistry } = await import('@/lib/contentRegistry');
-    const all = await contentRegistry.getModules() as ModuleMeta[];
+    // Fetch registry from API to avoid importing server-only modules in client
+    let all: ModuleMeta[] = [];
+    try {
+      const res = await fetch('/api/content/registry', { cache: 'no-store' });
+      if (res.ok) {
+        const data = await res.json();
+        const modules = Array.isArray(data?.modules) ? data.modules : [];
+        // Populate shortSlug mapping from routes if available
+        this.shortSlugByModuleSlug.clear();
+        modules.forEach((m: any) => {
+          const slug = (m?.slug || '').toString();
+          const overview: string | undefined = m?.routes?.overview;
+          const shortSlug = typeof overview === 'string' && overview.trim() !== ''
+            ? overview.replace(/^\/+/, '').split('/')[0]
+            : (slug.includes('-') ? slug.split('-')[0] : slug);
+          if (slug) this.shortSlugByModuleSlug.set(slug, shortSlug);
+        });
+        all = modules.map((m: any) => ({
+          slug: (m?.slug || '').toString(),
+          title: (m?.title || '').toString(),
+          order: typeof m?.order === 'number' ? m.order : undefined,
+          tier: (m?.tier || 'core').toString(),
+          prerequisites: Array.isArray(m?.prerequisites) ? m.prerequisites : [],
+        })) as ModuleMeta[];
+      }
+    } catch (err) {
+      console.warn('[ModulePrefetchService] Failed to fetch registry; using empty module list', err);
+    }
 
     const lockEnabled = this.getLockEnabled();
     const progress = this.getProgressStore();
@@ -183,8 +210,7 @@ class ModulePrefetchService {
   private async prefetchForModule(moduleSlug: string) {
     if (this.completed.has(moduleSlug)) return;
     try {
-      const { contentRegistry } = await import('@/lib/contentRegistry');
-      const shortSlug = await contentRegistry.getShortSlugFromModuleSlug(moduleSlug) || moduleSlug;
+      const shortSlug = this.shortSlugByModuleSlug.get(moduleSlug) || (moduleSlug.includes('-') ? moduleSlug.split('-')[0] : moduleSlug);
 
       await Promise.all([
         this.prefetchLessons(shortSlug, moduleSlug),
@@ -202,8 +228,12 @@ class ModulePrefetchService {
     if (this.isFresh(cacheKey, 30 * 60 * 1000)) return;
 
     try {
-      const { contentRegistry } = await import('@/lib/contentRegistry');
-      const lessons = await contentRegistry.getModuleLessons(moduleSlug);
+      const res = await fetch(`/api/content/lessons/${shortSlug}`, { cache: 'no-store' });
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const data = await res.json();
+      const lessons = Array.isArray(data)
+        ? data
+        : (Array.isArray((data as { lessons?: unknown[] })?.lessons) ? (data as { lessons?: unknown[] }).lessons : []);
       if (Array.isArray(lessons) && lessons.length > 0) {
         this.safeSetItem('localStorage', cacheKey, JSON.stringify({ timestamp: Date.now(), data: lessons }));
         this.safeSetItem('sessionStorage', `prefetch_lessons_${shortSlug}`, JSON.stringify({ timestamp: Date.now(), data: lessons }));
@@ -219,8 +249,9 @@ class ModulePrefetchService {
     if (this.isFresh(cacheKey, 30 * 60 * 1000)) return;
 
     try {
-      const { contentRegistry } = await import('@/lib/contentRegistry');
-      const quiz = await contentRegistry.getModuleQuiz(moduleSlug);
+      const res = await fetch(`/api/content/quizzes/${shortSlug}`, { cache: 'no-store' });
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const quiz = await res.json();
       if (quiz && Array.isArray(quiz.questions) && quiz.questions.length > 0) {
         this.safeSetItem('localStorage', cacheKey, JSON.stringify({ timestamp: Date.now(), data: quiz }));
         this.safeSetItem('sessionStorage', `prefetch_quiz_${shortSlug}`, JSON.stringify({ timestamp: Date.now(), data: quiz }));
