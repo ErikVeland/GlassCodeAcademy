@@ -691,11 +691,18 @@ add_if_missing_backend_prod DATABASE_URL "$DATABASE_URL"
     chown "$DEPLOY_USER":"$DEPLOY_USER" "$BACKEND_PROD_ENV_PATH" || true
     log "✅ Backend .env.production updated (existing values preserved)"
 
-    # Install backend dependencies
+    # Install backend dependencies (ci when lockfile exists; else install)
     log "🔧 Installing backend dependencies..."
-    if ! sudo -u "$DEPLOY_USER" npm ci; then
-        log "ℹ️  npm ci failed; falling back to npm install"
-        if ! sudo -u "$DEPLOY_USER" npm install; then
+    if [[ -f package-lock.json ]]; then
+        if ! sudo -u "$DEPLOY_USER" npm ci --no-audit --no-fund; then
+            log "ℹ️  npm ci failed; falling back to npm install"
+            if ! sudo -u "$DEPLOY_USER" npm install --no-audit --no-fund || sudo -u "$DEPLOY_USER" npm install --legacy-peer-deps --no-audit --no-fund; then
+                log "❌ ERROR: Failed to install backend dependencies"
+                exit 1
+            fi
+        fi
+    else
+        if ! sudo -u "$DEPLOY_USER" npm install --no-audit --no-fund || sudo -u "$DEPLOY_USER" npm install --legacy-peer-deps --no-audit --no-fund; then
             log "❌ ERROR: Failed to install backend dependencies"
             exit 1
         fi

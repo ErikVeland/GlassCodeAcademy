@@ -17,6 +17,7 @@ DEST_DIR="$(pwd)/bet.glasscode.academy"
 COMMIT=""
 CONF_LOCAL="$(pwd)/bet.glasscode.academy.conf"
 CONF_REMOTE="/etc/nginx/sites-available/bet.glasscode.academy.conf"
+SSH_TTY_OPTS=""
 
 usage() {
   cat <<EOF
@@ -65,6 +66,11 @@ if [[ -z "$SERVER" ]]; then
   echo "❌ --server is required"; usage; exit 1
 fi
 
+# Allocate a TTY when using sudo to ensure password piping works
+if [[ "$USE_SUDO" == "true" ]]; then
+  SSH_TTY_OPTS="-tt"
+fi
+
 # If repo provided, perform build
 if [[ -n "$REPO_URL" ]]; then
   echo "🌐 Building from repo: $REPO_URL (branch: $BRANCH${COMMIT:+, commit: $COMMIT})"
@@ -92,7 +98,7 @@ if [[ "$USE_SUDO" == "true" ]]; then
     MKDIR_CMD="sudo mkdir -p '$TARGET_ROOT'"
   fi
 fi
-ssh -p "$SSH_PORT" "$USER@$SERVER" "$MKDIR_CMD"
+ssh $SSH_TTY_OPTS -p "$SSH_PORT" "$USER@$SERVER" "$MKDIR_CMD"
 
 # Sync build to remote target root
 echo "🚚 Syncing files to $USER@$SERVER:$TARGET_ROOT"
@@ -111,9 +117,9 @@ if [[ "$PUSH_CONF" == "true" ]]; then
     TMP_PATH="/tmp/bet.glasscode.academy.conf"
     scp -P "$SSH_PORT" "$CONF_LOCAL" "$USER@$SERVER:$TMP_PATH"
     if [[ -n "$SUDO_PASS" ]]; then
-      ssh -p "$SSH_PORT" "$USER@$SERVER" "echo \"$SUDO_PASS\" | sudo -S mv '$TMP_PATH' '$CONF_REMOTE'"
+      ssh $SSH_TTY_OPTS -p "$SSH_PORT" "$USER@$SERVER" "echo \"$SUDO_PASS\" | sudo -S mv '$TMP_PATH' '$CONF_REMOTE'"
     else
-      ssh -p "$SSH_PORT" "$USER@$SERVER" "sudo mv '$TMP_PATH' '$CONF_REMOTE'"
+      ssh $SSH_TTY_OPTS -p "$SSH_PORT" "$USER@$SERVER" "sudo mv '$TMP_PATH' '$CONF_REMOTE'"
     fi
   else
     scp -P "$SSH_PORT" "$CONF_LOCAL" "$USER@$SERVER:$SCP_PATH"
@@ -126,9 +132,9 @@ if [[ "$PUSH_CONF" == "true" ]]; then
   if [[ "$USE_SUDO" == "true" ]]; then
     if [[ -n "$SUDO_PASS" ]]; then
       # Run chained commands under a single sudo session with password via -S
-      ssh -p "$SSH_PORT" "$USER@$SERVER" "echo \"$SUDO_PASS\" | sudo -S bash -lc \"$LN_CMD && $TEST_CMD && $RELOAD_CMD\""
+      ssh $SSH_TTY_OPTS -p "$SSH_PORT" "$USER@$SERVER" "echo \"$SUDO_PASS\" | sudo -S bash -lc \"$LN_CMD && $TEST_CMD && $RELOAD_CMD\""
     else
-      ssh -p "$SSH_PORT" "$USER@$SERVER" "sudo bash -lc \"$LN_CMD && $TEST_CMD && $RELOAD_CMD\""
+      ssh $SSH_TTY_OPTS -p "$SSH_PORT" "$USER@$SERVER" "sudo bash -lc \"$LN_CMD && $TEST_CMD && $RELOAD_CMD\""
     fi
   else
     ssh -p "$SSH_PORT" "$USER@$SERVER" "$LN_CMD && $TEST_CMD && $RELOAD_CMD"
