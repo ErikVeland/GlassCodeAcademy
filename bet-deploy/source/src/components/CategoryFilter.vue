@@ -4,7 +4,7 @@
       v-for="category in categories"
       :key="category.id"
       @click="toggleCategory(category.id)"
-      class="px-4 py-3 rounded-xl2 font-medium transition-all duration-300 flex items-center focus:outline-none focus:ring-2 focus:ring-brand-primary transform hover:scale-105 min-w-[100px] justify-between flex-1"
+      class="px-4 py-3 rounded-xl2 font-medium transition-all duration-300 flex items-center focus:outline-none focus:ring-2 focus:ring-brand-primary transform hover:scale-105 min-w-[100px] w-auto flex-none justify-start"
       :class="[
         category.active 
           ? 'text-text-inverse shadow-card' 
@@ -18,17 +18,17 @@
         <!-- Category icon -->
         <span 
           v-if="category.name === 'horse'" 
-          class="text-[36px] mr-3"
+          class="text-[36px] mr-3 hidden sm:inline"
           :class="category.active ? 'text-white' : 'text-horse'"
         >🏇</span>
         <span 
           v-else-if="category.name === 'greyhound'" 
-          class="text-[36px] mr-3"
+          class="text-[36px] mr-3 hidden sm:inline"
           :class="category.active ? 'text-white' : 'text-greyhound'"
         >🐕</span>
         <span 
           v-else-if="category.name === 'harness'" 
-          class="text-[36px] mr-3"
+          class="text-[36px] mr-3 hidden sm:inline"
           :class="category.active ? 'text-white' : 'text-harness'"
         >🛞</span>
         

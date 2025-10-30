@@ -28,7 +28,7 @@
             v-for="category in categories"
             :key="category.id"
             @click="toggleCategory(category.id)"
-            class="px-3 py-1 rounded-lg font-medium transition-all duration-200 flex items-center focus:outline-none focus:ring-2 focus:ring-brand-primary text-sm min-w-[80px] justify-between flex-1 sm:flex-none"
+            class="px-3 py-1 rounded-lg font-medium transition-all duration-200 flex items-center focus:outline-none focus:ring-2 focus:ring-brand-primary text-sm min-w-[80px] w-auto flex-none justify-start"
             :class="[
               category.active 
                 ? 'text-text-inverse shadow-sm' 
@@ -42,17 +42,17 @@
               <!-- Category icon -->
               <span 
                 v-if="category.name === 'horse'" 
-                class="text-lg mr-1.5"
+                class="text-lg mr-1.5 hidden sm:inline"
                 :class="category.active ? 'text-white' : 'text-horse'"
               >🏇</span>
               <span 
                 v-else-if="category.name === 'greyhound'" 
-                class="text-lg mr-1.5"
+                class="text-lg mr-1.5 hidden sm:inline"
                 :class="category.active ? 'text-white' : 'text-greyhound'"
               >🐕</span>
               <span 
                 v-else-if="category.name === 'harness'" 
-                class="text-lg mr-1.5"
+                class="text-lg mr-1.5 hidden sm:inline"
                 :class="category.active ? 'text-white' : 'text-harness'"
               >🛞</span>
               
