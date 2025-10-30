@@ -60,35 +60,53 @@ class QuizPrefetchService {
    */
   private async getModulesByPriority(priorityOrder: string) {
     try {
-      // Dynamically import contentRegistry to avoid SSR issues
-      const { contentRegistry } = await import('@/lib/contentRegistry');
-      
-      const modules = await contentRegistry.getModules();
-      // const tiers = await contentRegistry.getTiers(); // Unused variable
-      
+      type RegistryModule = {
+        slug?: string;
+        title?: string;
+        order?: number;
+        tier?: string;
+        routes?: { overview?: string };
+      };
+
+      const res = await fetch('/api/content/registry', { cache: 'no-store' });
+      if (!res.ok) return [];
+      const data = await res.json();
+      const modules: RegistryModule[] = Array.isArray(data?.modules) ? data.modules : [];
+
+      // Build shortSlug mapping for later quiz fetches
+      const normalized = modules.map((m) => {
+        const slug = (m?.slug || '').toString();
+        const overview = m?.routes?.overview;
+        const shortSlug = typeof overview === 'string' && overview.trim() !== ''
+          ? overview.replace(/^\/+/, '').split('/')[0]
+          : (slug.includes('-') ? slug.split('-')[0] : slug);
+        return {
+          slug,
+          title: (m?.title || '').toString(),
+          order: typeof m?.order === 'number' ? m.order : 0,
+          tier: (m?.tier || 'core').toString(),
+          shortSlug,
+        };
+      }).filter(m => m.slug);
+
+      // Prefer storing mapping for later use
+      normalized.forEach(m => this.prefetchedModules.has(m.slug) || (this as any).shortSlugByModuleSlug?.set?.(m.slug, m.shortSlug));
+
       switch (priorityOrder) {
-        case 'tier':
-          // Sort by tier level (foundational -> core -> specialized -> quality)
+        case 'tier': {
           const tierOrder = ['foundational', 'core', 'specialized', 'quality'];
-          return modules.sort((a, b) => {
+          return normalized.sort((a, b) => {
             const aTierIndex = tierOrder.indexOf(a.tier);
             const bTierIndex = tierOrder.indexOf(b.tier);
-            
-            if (aTierIndex !== bTierIndex) {
-              return aTierIndex - bTierIndex;
-            }
-            
-            // Within same tier, sort by order
+            if (aTierIndex !== bTierIndex) return aTierIndex - bTierIndex;
             return (a.order || 0) - (b.order || 0);
-          });
-          
+          }).map(m => ({ slug: m.slug, title: m.title, order: m.order, tier: m.tier }));
+        }
         case 'popularity':
-          // For now, just sort alphabetically as we don't have popularity data
-          return modules.sort((a, b) => a.title.localeCompare(b.title));
-          
         case 'alphabetical':
         default:
-          return modules.sort((a, b) => a.title.localeCompare(b.title));
+          return normalized.sort((a, b) => a.title.localeCompare(b.title))
+            .map(m => ({ slug: m.slug, title: m.title, order: m.order, tier: m.tier }));
       }
     } catch (error) {
       console.error('[QuizPrefetchService] Error getting modules:', error);
@@ -145,12 +163,24 @@ class QuizPrefetchService {
       
       console.log(`[QuizPrefetchService] Fetching quiz for ${moduleSlug}`);
       
-      // Dynamically import contentRegistry to avoid SSR issues
-      const { contentRegistry } = await import('@/lib/contentRegistry');
-      const shortSlug = await contentRegistry.getShortSlugFromModuleSlug(moduleSlug) || moduleSlug;
-      
-      // Fetch the quiz
-      const quiz = await contentRegistry.getModuleQuiz(moduleSlug);
+      // Determine short slug from registry or slug heuristic
+      let shortSlug = moduleSlug;
+      try {
+        const res = await fetch('/api/content/registry', { cache: 'no-store' });
+        if (res.ok) {
+          const data = await res.json();
+          const modules: Array<{ slug?: string; routes?: { overview?: string } }> = Array.isArray(data?.modules) ? data.modules : [];
+          const match = modules.find(m => (m?.slug || '') === moduleSlug);
+          const overview = match?.routes?.overview;
+          shortSlug = typeof overview === 'string' && overview.trim() !== ''
+            ? overview.replace(/^\/+/, '').split('/')[0]
+            : (moduleSlug.includes('-') ? moduleSlug.split('-')[0] : moduleSlug);
+        }
+      } catch {}
+
+      // Fetch the quiz via API
+      const resQuiz = await fetch(`/api/content/quizzes/${shortSlug}`, { cache: 'no-store' });
+      const quiz = resQuiz.ok ? await resQuiz.json() : null;
       
       if (quiz && Array.isArray(quiz.questions) && quiz.questions.length > 0) {
         // Cache the full quiz data in both local and session storage

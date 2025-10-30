@@ -20,7 +20,9 @@ import {
   ShieldCheckIcon,
   CurrencyDollarIcon,
   DocumentCheckIcon,
-  ChatBubbleLeftRightIcon
+  ChatBubbleLeftRightIcon,
+  BellIcon,
+  ArrowsRightLeftIcon
 } from '@heroicons/react/24/outline';
 import LoadingScreen from '@/components/LoadingScreen';
 import '@/styles/liquid-glass.scss';
@@ -75,9 +77,10 @@ export default function StatsPage() {
 
   return (
     <div className="liquid-glass-layout min-h-screen bg-bg overflow-x-hidden">
-      <div className="liquid-glass-content container mx-auto px-4 sm:px-6 lg:px-8 py-8 overflow-x-hidden">
+      {/* Use scoped liquid-glass gutters; remove Tailwind container/px to avoid conflicts */}
+      <div className="liquid-glass-content mx-auto py-8 overflow-x-hidden">
         {/* Header */}
-        <div className="text-center mb-12">
+        <div className="text-center mb-16 mt-4 sm:mt-0">
           <h1 className="text-4xl md:text-5xl font-bold text-fg mb-4">
             📊 GlassStats
           </h1>
@@ -292,7 +295,7 @@ export default function StatsPage() {
                title="Total LMS Features"
                value={36}
                icon={<SparklesIcon className="h-8 w-8" />}
-               color="indigo"
+               color="orange"
                description="Planned"
              />
            </div>
@@ -338,6 +341,92 @@ export default function StatsPage() {
                 </div>
                 <div className="flex items-center justify-between p-3 bg-surface-alt rounded-lg border border-border">
                   <span className="text-warning">Certificate Builder with QR</span>
+                  <span className="text-xs bg-green-500/20 border border-green-400/30 rounded-full px-2 py-1 text-green-300">Completed</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Monitoring & Observability */}
+        <div className="glass-card mb-12">
+          <h3 className="text-2xl font-bold text-white dark:text-gray-100 mb-6 flex items-center">
+            <ChartBarIcon className="h-6 w-6 mr-2 text-blue-400" />
+            Monitoring & Observability
+          </h3>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+            <StatCard
+              title="Metrics Collected"
+              value={25}
+              icon={<ChartBarIcon className="h-8 w-8" />}
+              color="blue"
+              description="Custom Metrics"
+            />
+            <StatCard
+              title="Alert Rules"
+              value={5}
+              icon={<BellIcon className="h-8 w-8" />}
+              color="orange"
+              description="Active Alerts"
+            />
+            <StatCard
+              title="SLOs Tracked"
+              value={4}
+              icon={<DocumentCheckIcon className="h-8 w-8" />}
+              color="green"
+              description="Service Levels"
+            />
+            <StatCard
+              title="Tracing Enabled"
+              value={100}
+              suffix="%"
+              icon={<ArrowsRightLeftIcon className="h-8 w-8" />}
+              color="purple"
+              description="Request Coverage"
+            />
+          </div>
+          
+          {/* Monitoring Stack */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <div className="space-y-4">
+              <h4 className="text-lg font-semibold text-fg mb-3">Observability Stack</h4>
+              <div className="space-y-3">
+                <div className="flex items-center justify-between p-3 bg-surface-alt rounded-lg border border-border">
+                  <span className="text-primary">OpenTelemetry SDK</span>
+                  <span className="text-xs bg-green-500/20 border border-green-400/30 rounded-full px-2 py-1 text-green-300">Active</span>
+                </div>
+                <div className="flex items-center justify-between p-3 bg-surface-alt rounded-lg border border-border">
+                  <span className="text-success">Prometheus Metrics</span>
+                  <span className="text-xs bg-green-500/20 border border-green-400/30 rounded-full px-2 py-1 text-green-300">Active</span>
+                </div>
+                <div className="flex items-center justify-between p-3 bg-surface-alt rounded-lg border border-border">
+                  <span className="text-primary">Grafana Dashboards</span>
+                  <span className="text-xs bg-green-500/20 border border-green-400/30 rounded-full px-2 py-1 text-green-300">Active</span>
+                </div>
+                <div className="flex items-center justify-between p-3 bg-surface-alt rounded-lg border border-border">
+                  <span className="text-warning">Jaeger Tracing</span>
+                  <span className="text-xs bg-green-500/20 border border-green-400/30 rounded-full px-2 py-1 text-green-300">Active</span>
+                </div>
+              </div>
+            </div>
+            
+            <div className="space-y-4">
+              <h4 className="text-lg font-semibold text-fg mb-3">Monitoring Features</h4>
+              <div className="space-y-3">
+                <div className="flex items-center justify-between p-3 bg-surface-alt rounded-lg border border-border">
+                  <span className="text-primary">SLO Tracking</span>
+                  <span className="text-xs bg-green-500/20 border border-green-400/30 rounded-full px-2 py-1 text-green-300">Completed</span>
+                </div>
+                <div className="flex items-center justify-between p-3 bg-surface-alt rounded-lg border border-border">
+                  <span className="text-success">Alertmanager</span>
+                  <span className="text-xs bg-green-500/20 border border-green-400/30 rounded-full px-2 py-1 text-green-300">Completed</span>
+                </div>
+                <div className="flex items-center justify-between p-3 bg-surface-alt rounded-lg border border-border">
+                  <span className="text-primary">User Journey Tracking</span>
+                  <span className="text-xs bg-green-500/20 border border-green-400/30 rounded-full px-2 py-1 text-green-300">Completed</span>
+                </div>
+                <div className="flex items-center justify-between p-3 bg-surface-alt rounded-lg border border-border">
+                  <span className="text-warning">Business Metrics</span>
                   <span className="text-xs bg-green-500/20 border border-green-400/30 rounded-full px-2 py-1 text-green-300">Completed</span>
                 </div>
               </div>

@@ -3,10 +3,95 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { contentRegistry } from '@/lib/contentRegistry';
-import type { ProgrammingQuestion, Module } from '@/lib/contentRegistry';
+import type { Module } from '@/lib/contentRegistry';
 import QuizLayout from '@/components/QuizLayout';
 import LoadingScreen from '@/components/LoadingScreen';
+
+// Client-safe types for registry and quizzes
+interface RegistryModule {
+  slug: string;
+  shortSlug?: string;
+  title: string;
+  description?: string;
+  icon?: string;
+  technologies?: string[];
+  difficulty?: string;
+  tier?: string;
+  thresholds?: {
+    requiredLessons?: number;
+    requiredQuestions?: number;
+    passingScore?: number;
+  };
+  metadata?: {
+    thresholds?: {
+      minLessons?: number;
+      minQuizQuestions?: number;
+      passingScore?: number;
+    };
+  };
+  routes: {
+    overview: string;
+    lessons: string;
+    quiz: string;
+    results?: string;
+  };
+  prerequisites?: string[];
+}
+
+interface RegistryResponse {
+  modules: RegistryModule[];
+}
+
+interface ProgrammingQuestion {
+  id: string | number;
+  question: string;
+  choices?: string[];
+  correctAnswer?: number;
+  explanation?: string;
+  topic?: string;
+  type?: string;
+  difficulty?: string;
+  estimatedTime?: number;
+  order?: number;
+  fixedChoiceOrder?: boolean;
+}
+
+interface QuizResponse {
+  questions: ProgrammingQuestion[];
+}
+
+// Helper to fetch JSON with simple error handling
+async function fetchJSON<T>(url: string, init?: RequestInit): Promise<T> {
+  const res = await fetch(url, { ...init, cache: 'no-store' });
+  if (!res.ok) {
+    const text = await res.text().catch(() => '');
+    throw new Error(`Request failed: ${res.status} ${res.statusText} - ${text}`);
+  }
+  return res.json() as Promise<T>;
+}
+
+function findModuleByShortSlug(mods: RegistryModule[], shortSlug: string): RegistryModule | undefined {
+  return (
+    mods.find(m => m.routes?.overview === `/${shortSlug}`) ||
+    mods.find(m => m.routes?.quiz?.startsWith(`/${shortSlug}/quiz`)) ||
+    mods.find(m => m.shortSlug === shortSlug) ||
+    mods.find(m => m.slug === shortSlug)
+  );
+}
+
+function computeThresholds(mod: RegistryModule, lessonsCount: number, quizCount: number) {
+  const requiredLessons = mod.thresholds?.requiredLessons ?? mod.metadata?.thresholds?.minLessons ?? 1;
+  const requiredQuestions = mod.metadata?.thresholds?.minQuizQuestions ?? mod.thresholds?.requiredQuestions ?? 14;
+  const passingScore = mod.metadata?.thresholds?.passingScore ?? mod.thresholds?.passingScore ?? 70;
+  return {
+    quizValid: quizCount >= requiredQuestions,
+    lessonsValid: lessonsCount >= requiredLessons,
+    lessons: lessonsCount >= requiredLessons,
+    quiz: quizCount >= requiredQuestions,
+    passingScore,
+    requiredQuestions,
+  };
+}
 
 interface QuizData {
   title: string;
@@ -200,40 +285,58 @@ export default function QuizPage({ params }: { params: Promise<{ shortSlug: stri
         const slug = resolvedParams.shortSlug;
         console.log('=== Quiz Page Debug ===');
         console.log('Short slug:', slug);
-
-        const moduleData = await contentRegistry.getModule(slug);
-        console.log('Module data:', moduleData);
-        if (!moduleData) {
+        // Fetch registry and locate the module by shortSlug
+        const registry = await fetchJSON<RegistryResponse>('/api/content/registry');
+        const moduleDataRaw = findModuleByShortSlug(registry.modules, slug);
+        console.log('Module data:', moduleDataRaw);
+        if (!moduleDataRaw) {
           setError('Module not found');
           return;
         }
+        // Cast to Module for layout compatibility
+        const moduleData = moduleDataRaw as unknown as Module;
         setCurrentModule(moduleData);
 
         // Check if quiz is prefetched before loading
-        const isPrefetched = await checkPrefetchedQuiz(moduleData.slug);
-        console.log(`Quiz for ${moduleData.slug} is ${isPrefetched ? 'prefetched' : 'not prefetched'}`);
+        const isPrefetched = await checkPrefetchedQuiz(moduleDataRaw.slug);
+        console.log(`Quiz for ${moduleDataRaw.slug} is ${isPrefetched ? 'prefetched' : 'not prefetched'}`);
 
-        const moduleQuiz = await contentRegistry.getModuleQuiz(moduleData.slug);
+        // Fetch quiz questions
+        const moduleQuiz = await fetchJSON<QuizResponse>(`/api/content/quizzes/${moduleDataRaw.slug}`);
         console.log('Module quiz:', moduleQuiz);
         setQuiz(moduleQuiz);
 
-        const moduleThresholds = await contentRegistry.checkModuleThresholds(moduleData.slug);
-        console.log('Module thresholds:', moduleThresholds);
-        setThresholds(moduleThresholds);
+        // Fetch lessons to compute thresholds
+        const lessonsRes = await fetchJSON<{ lessons: unknown[] }>(`/api/content/lessons/${moduleDataRaw.slug}`);
+        const lessonsCount = Array.isArray(lessonsRes.lessons) ? lessonsRes.lessons.length : 0;
+        const quizCount = Array.isArray(moduleQuiz?.questions) ? moduleQuiz.questions.length : 0;
+        const computedThresholds = computeThresholds(moduleDataRaw, lessonsCount, quizCount);
+        console.log('Module thresholds:', computedThresholds);
+        setThresholds({
+          quizValid: computedThresholds.quizValid,
+          lessonsValid: computedThresholds.lessonsValid,
+          lessons: computedThresholds.lessons,
+          quiz: computedThresholds.quiz,
+        });
 
-        if (!moduleThresholds.quizValid && process.env.NODE_ENV === 'production') {
+        if (!computedThresholds.quizValid && process.env.NODE_ENV === 'production') {
           setError('Quiz not available');
           return;
         }
 
-        const allModules = await contentRegistry.getModules();
-        const unlocking = allModules
-          .filter(m => (m.prerequisites || []).includes(moduleData.slug))
+        // Compute unlocking modules from registry
+        const unlocking = registry.modules
+          .filter(m => (m.prerequisites || []).includes(moduleDataRaw.slug))
           .map(m => ({ slug: m.slug, title: m.title, routes: { overview: m.routes.overview } }));
         setUnlockingModules(unlocking);
 
         // Initialize quiz data
-        await initializeQuizData(moduleData, moduleQuiz, moduleThresholds);
+        await initializeQuizData(moduleData, moduleQuiz, {
+          quizValid: computedThresholds.quizValid,
+          lessonsValid: computedThresholds.lessonsValid,
+          lessons: computedThresholds.lessons,
+          quiz: computedThresholds.quiz,
+        });
       } catch (err) {
         console.error('Error initializing quiz page:', err);
         setError('Failed to load quiz data');
@@ -349,7 +452,7 @@ export default function QuizPage({ params }: { params: Promise<{ shortSlug: stri
   const quizLength = currentModule.metadata?.thresholds?.minQuizQuestions ?? currentModule.thresholds?.requiredQuestions ?? 14;
 
   return (
-    <QuizLayout module={currentModule} quiz={quiz} thresholds={layoutThresholds} unlockingModules={unlockingModules}>
+    <QuizLayout module={currentModule} thresholds={layoutThresholds} unlockingModules={unlockingModules}>
       {/* Prefetch Status Indicator */}
       {prefetchStatus && prefetchStatus.isPrefetching && (
         <div className="mb-6 glass-morphism p-4 rounded-lg border border-border">

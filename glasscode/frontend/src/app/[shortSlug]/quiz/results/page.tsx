@@ -7,8 +7,7 @@ import ConfettiBurst from '@/components/ConfettiBurst';
 import { useProgressTrackingComplete } from '@/hooks/useProgressTrackingComplete';
 import { useProgressTracking } from '@/hooks/useProgressTracking';
 import { useNextUnlockedLesson } from '@/hooks/useNextUnlockedLesson';
-import { contentRegistry } from '@/lib/contentRegistry';
-import type { ProgrammingQuestion, Module } from '@/lib/contentRegistry';
+type ProgrammingQuestion = { topic?: string } & Record<string, unknown>;
 import QuizResult from '@/components/QuizResult';
 
 type CategoryScore = { category: string; correct: number; total: number };
@@ -109,14 +108,26 @@ export default function QuizResultsPage({ params }: { params: Promise<{ shortSlu
         setLoading(false);
         if (passed) {
           try {
-            const mod = await contentRegistry.getModule(shortSlug);
+            // Resolve module name from registry
+            let moduleName = shortSlug.replace(/-/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
+            try {
+              const res = await fetch('/api/content/registry', { cache: 'no-store' });
+              if (res.ok) {
+                const data = await res.json();
+                const modules: Array<{ title?: string; routes?: { overview?: string } }> = Array.isArray(data?.modules) ? data.modules : [];
+                const match = modules.find(m => m?.routes?.overview === `/${shortSlug}`);
+                if (match?.title) moduleName = String(match.title);
+              }
+            } catch {}
 
-            const moduleName = mod?.title ?? shortSlug.replace(/-/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
-            // Try to compute accurate lessons count from registry
+            // Try to compute accurate lessons count via API
             let lessonsCount = 0;
             try {
-              const lessons = await contentRegistry.getModuleLessons(shortSlug);
-              lessonsCount = Array.isArray(lessons) ? lessons.length : 0;
+              const lessonsRes = await fetch(`/api/content/lessons/${shortSlug}`, { cache: 'no-store' });
+              if (lessonsRes.ok) {
+                const lessons = await lessonsRes.json();
+                lessonsCount = Array.isArray(lessons) ? lessons.length : 0;
+              }
             } catch (err) {
               console.warn('Unable to load lessons for completion update:', err);
             }
@@ -126,7 +137,6 @@ export default function QuizResultsPage({ params }: { params: Promise<{ shortSlu
               quizScore: score,
               ...(lessonsCount > 0 ? { totalLessons: lessonsCount, lessonsCompleted: lessonsCount } : {})
             });
-            // Dev-only: count and log invocations of updateProgressComplete
             debugUpdateCompleteCountRef.current += 1;
             if (process.env.NODE_ENV !== 'production') {
               console.debug(`[Results] updateProgressComplete called`, {
@@ -161,37 +171,45 @@ export default function QuizResultsPage({ params }: { params: Promise<{ shortSlu
     const computeNext = async () => {
       if (!resolvedParams) return;
       try {
-        const current = await contentRegistry.getModule(resolvedParams.shortSlug);
+        const res = await fetch('/api/content/registry', { cache: 'no-store' });
+        if (!res.ok) return;
+        const data = await res.json();
+        const modules: Array<{ slug?: string; title?: string; tier?: string; order?: number; routes?: { overview?: string; lessons?: string } }> = Array.isArray(data?.modules) ? data.modules : [];
+        const tiers: Record<string, { level?: number }> = (data?.tiers && typeof data.tiers === 'object') ? data.tiers : {};
+        const current = modules.find(m => m?.routes?.overview === `/${resolvedParams.shortSlug}`);
         if (!current) return;
-        setModuleTitle(current.title ?? null);
-        // Next module within same tier by order; if none, next tier's first
-        const tierModules = await contentRegistry.getModulesByTier(current.tier);
-        const idx = tierModules.findIndex(m => m.slug === current.slug);
+        setModuleTitle(current.title ? String(current.title) : null);
+        const currentTier = String(current.tier || 'core');
+        const tierModules = modules
+          .filter(m => String(m.tier || 'core') === currentTier)
+          .map(m => ({ slug: String(m.slug || ''), title: String(m.title || ''), order: typeof m.order === 'number' ? m.order : 0, routes: m.routes || { overview: '', lessons: '' } }))
+          .sort((a, b) => (a.order || 0) - (b.order || 0));
+
+        const idx = tierModules.findIndex(m => m.slug === String(current.slug || ''));
         let next: typeof tierModules[number] | null = null;
         if (idx >= 0 && idx < tierModules.length - 1) {
           next = tierModules[idx + 1];
         } else {
-          // move to next tier level
-          const tiers = await contentRegistry.getTiers();
-          const tierLevels = Object.keys(tiers).sort((a, b) =>
-            (tiers[a].level ?? 0) - (tiers[b].level ?? 0)
-          );
-          const currentIdx = tierLevels.findIndex(t => t === current.tier);
+          const tierLevels = Object.keys(tiers).sort((a, b) => (Number(tiers[a]?.level || 0) - Number(tiers[b]?.level || 0)));
+          const currentIdx = tierLevels.findIndex(t => t === currentTier);
           if (currentIdx >= 0 && currentIdx < tierLevels.length - 1) {
             const nextTierKey = tierLevels[currentIdx + 1];
-            const nextTierModules = await contentRegistry.getModulesByTier(nextTierKey);
+            const nextTierModules = modules
+              .filter(m => String(m.tier || 'core') === nextTierKey)
+              .map(m => ({ slug: String(m.slug || ''), title: String(m.title || ''), order: typeof m.order === 'number' ? m.order : 0, routes: m.routes || { overview: '', lessons: '' } }))
+              .sort((a, b) => (a.order || 0) - (b.order || 0));
             if (nextTierModules.length > 0) next = nextTierModules[0];
           }
         }
         if (next) {
           try {
-            const lessons = await contentRegistry.getModuleLessons(next.slug);
-            // Compute first lesson index similar to hook
+            const resLessons = await fetch(`/api/content/lessons/${next.slug}`, { cache: 'no-store' });
+            const lessons = resLessons.ok ? await resLessons.json() : [];
             let firstLessonIndex = 0;
             if (Array.isArray(lessons) && lessons.length > 0) {
               firstLessonIndex = 0;
             }
-            const lessonsPath = next.routes.lessons;
+            const lessonsPath = next.routes?.lessons || `/${next.slug}/lessons`;
             const shouldAppendOrder = lessonsPath.startsWith('/modules/');
             const href = shouldAppendOrder ? `${lessonsPath}/${firstLessonIndex + 1}` : lessonsPath;
             setNextModuleHref(href);
@@ -215,12 +233,14 @@ export default function QuizResultsPage({ params }: { params: Promise<{ shortSlu
           setNextLessonTitle(null);
           return;
         }
-        const modules = await contentRegistry.getModules();
+        const res = await fetch('/api/content/registry', { cache: 'no-store' });
+        const data = res.ok ? await res.json() : {};
+        const modules: Array<{ title?: string; routes?: { lessons?: string } }> = Array.isArray(data?.modules) ? data.modules : [];
         let candidatePath = nextLessonHref;
         if (candidatePath.startsWith('/modules/') && candidatePath.includes('/lessons/')) {
           candidatePath = candidatePath.replace(/\/lessons\/.*$/, '/lessons');
         }
-        const target = modules.find((m: Module) => m?.routes?.lessons === candidatePath);
+        const target = modules.find((m) => m?.routes?.lessons === candidatePath);
         setNextLessonTitle(target ? target.title : null);
       } catch {
         setNextLessonTitle(null);

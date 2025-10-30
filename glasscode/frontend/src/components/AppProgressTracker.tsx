@@ -45,7 +45,7 @@ const ProgressChip: React.FC<ProgressChipProps> = ({ goal, isExpanded, onClick }
   };
 
   return (
-    <div className="relative group cursor-pointer transition-transform hover:scale-102 active:scale-98">
+            <div className="relative group cursor-pointer transition-transform md:hover:scale-[1.01] lg:hover:scale-102 active:scale-98 transform-gpu will-change-transform">
       <div 
         className="relative overflow-hidden rounded-xl bg-white/10 backdrop-blur-sm border border-white/20 p-4 min-h-[120px]"
         onClick={onClick}

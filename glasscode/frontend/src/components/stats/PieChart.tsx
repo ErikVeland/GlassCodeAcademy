@@ -41,8 +41,12 @@ export default function PieChart({
   return (
     <div className={`flex flex-col lg:flex-row lg:items-center gap-6 lg:gap-8 ${className}`}>
       {/* Chart Container */}
-      <div className="relative flex-shrink-0 mx-auto lg:mx-0">
-        <svg width={size} height={size} className="transform -rotate-90">
+      <div className="relative mx-auto lg:mx-0 w-full">
+        <svg
+          viewBox={`0 0 ${size} ${size}`}
+          className="w-full h-auto aspect-square transform -rotate-90"
+          preserveAspectRatio="xMidYMid meet"
+        >
           {/* Background circle */}
           <circle
             cx={center}

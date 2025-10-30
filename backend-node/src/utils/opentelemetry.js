@@ -6,6 +6,12 @@ const { HttpInstrumentation } = require('@opentelemetry/instrumentation-http');
 const { PgInstrumentation } = require('@opentelemetry/instrumentation-pg');
 const { SemanticResourceAttributes } = require('@opentelemetry/semantic-conventions');
 
+// Create the Prometheus exporter
+const prometheusExporter = new PrometheusExporter({
+  port: 9464,
+  endpoint: '/metrics',
+});
+
 // Configure the SDK
 const sdk = new opentelemetry.NodeSDK({
   resource: opentelemetry.resources.resourceFromAttributes({
@@ -15,10 +21,7 @@ const sdk = new opentelemetry.NodeSDK({
   traceExporter: new JaegerExporter({
     endpoint: 'http://localhost:14268/api/traces',
   }),
-  metricExporter: new PrometheusExporter({
-    port: 9464,
-    endpoint: '/metrics',
-  }),
+  metricReader: prometheusExporter, // Use metricReader instead of metricExporter
   instrumentations: [
     new HttpInstrumentation({
       // Propagate correlation IDs through HTTP headers
@@ -44,4 +47,4 @@ const sdk = new opentelemetry.NodeSDK({
   ],
 });
 
-module.exports = { sdk };
+module.exports = { sdk, prometheusExporter };

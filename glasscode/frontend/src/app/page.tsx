@@ -723,7 +723,7 @@ const HomePage: React.FC = () => {
         <div className="mf-desktop-only">
           <GamificationDashboard />
         </div>
-        <details className="mf-mobile-only glass-morphism p-4 mf-edge-to-edge mf-no-vertical-margin-mobile mf-no-radius-mobile">
+        <details className="mf-mobile-only glass-morphism p-4 mf-edge-to-edge mf-no-vertical-margin-mobile mf-no-radius-mobile mf-no-side-borders-mobile mf-no-bottom-border-mobile">
           <summary className="cursor-pointer font-semibold text-fg">Progress & Achievements</summary>
           <div className="mt-3">
             <GamificationDashboard />
@@ -751,7 +751,7 @@ const HomePage: React.FC = () => {
           </div>
         </section>
 
-        <details className="mf-mobile-only glass-morphism p-4 mf-edge-to-edge mf-no-vertical-margin-mobile mf-no-radius-mobile">
+        <details className="mf-mobile-only glass-morphism p-4 mf-edge-to-edge mf-no-vertical-margin-mobile mf-no-radius-mobile mf-no-side-borders-mobile">
           <summary className="cursor-pointer font-semibold text-fg">Search & Filters</summary>
           <div className="mt-3">
             <SearchFilterSystem

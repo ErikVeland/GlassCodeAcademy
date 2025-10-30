@@ -34,7 +34,42 @@
           {
             "format": "short"
           }
-        ]
+        ],
+        "alert": {
+          "alertRuleTags": {},
+          "conditions": [
+            {
+              "evaluator": {
+                "params": [
+                  0
+                ],
+                "type": "lt"
+              },
+              "operator": {
+                "type": "and"
+              },
+              "query": {
+                "params": [
+                  "A",
+                  "5m",
+                  "now"
+                ]
+              },
+              "reducer": {
+                "params": [],
+                "type": "avg"
+              },
+              "type": "query"
+            }
+          ],
+          "executionErrorState": "alerting",
+          "for": "2m",
+          "frequency": "1m",
+          "handler": 1,
+          "name": "Service Down",
+          "noDataState": "no_data",
+          "notifications": []
+        }
       },
       {
         "id": 2,
@@ -62,7 +97,42 @@
           {
             "format": "short"
           }
-        ]
+        ],
+        "alert": {
+          "alertRuleTags": {},
+          "conditions": [
+            {
+              "evaluator": {
+                "params": [
+                  0.05
+                ],
+                "type": "gt"
+              },
+              "operator": {
+                "type": "and"
+              },
+              "query": {
+                "params": [
+                  "A",
+                  "5m",
+                  "now"
+                ]
+              },
+              "reducer": {
+                "params": [],
+                "type": "avg"
+              },
+              "type": "query"
+            }
+          ],
+          "executionErrorState": "alerting",
+          "for": "5m",
+          "frequency": "1m",
+          "handler": 1,
+          "name": "High Error Rate",
+          "noDataState": "no_data",
+          "notifications": []
+        }
       },
       {
         "id": 3,
@@ -90,7 +160,42 @@
           {
             "format": "short"
           }
-        ]
+        ],
+        "alert": {
+          "alertRuleTags": {},
+          "conditions": [
+            {
+              "evaluator": {
+                "params": [
+                  0.2
+                ],
+                "type": "gt"
+              },
+              "operator": {
+                "type": "and"
+              },
+              "query": {
+                "params": [
+                  "A",
+                  "10m",
+                  "now"
+                ]
+              },
+              "reducer": {
+                "params": [],
+                "type": "avg"
+              },
+              "type": "query"
+            }
+          ],
+          "executionErrorState": "alerting",
+          "for": "10m",
+          "frequency": "1m",
+          "handler": 1,
+          "name": "High Latency",
+          "noDataState": "no_data",
+          "notifications": []
+        }
       },
       {
         "id": 4,
@@ -118,7 +223,269 @@
           {
             "format": "short"
           }
-        ]
+        ],
+        "alert": {
+          "alertRuleTags": {},
+          "conditions": [
+            {
+              "evaluator": {
+                "params": [
+                  0.5
+                ],
+                "type": "gt"
+              },
+              "operator": {
+                "type": "and"
+              },
+              "query": {
+                "params": [
+                  "A",
+                  "5m",
+                  "now"
+                ]
+              },
+              "reducer": {
+                "params": [],
+                "type": "avg"
+              },
+              "type": "query"
+            }
+          ],
+          "executionErrorState": "alerting",
+          "for": "5m",
+          "frequency": "1m",
+          "handler": 1,
+          "name": "Database Performance",
+          "noDataState": "no_data",
+          "notifications": []
+        }
+      },
+      {
+        "id": 5,
+        "type": "graph",
+        "title": "Success Rate",
+        "gridPos": {
+          "x": 0,
+          "y": 16,
+          "w": 12,
+          "h": 8
+        },
+        "targets": [
+          {
+            "expr": "sum(rate(http_requests_total{code!~\"5..\"}[10m])) by (job) / sum(rate(http_requests_total[10m])) by (job)",
+            "legendFormat": "{{job}}",
+            "refId": "A"
+          }
+        ],
+        "datasource": "Prometheus",
+        "yaxes": [
+          {
+            "format": "percentunit",
+            "label": "Success rate"
+          },
+          {
+            "format": "short"
+          }
+        ],
+        "alert": {
+          "alertRuleTags": {},
+          "conditions": [
+            {
+              "evaluator": {
+                "params": [
+                  0.95
+                ],
+                "type": "lt"
+              },
+              "operator": {
+                "type": "and"
+              },
+              "query": {
+                "params": [
+                  "A",
+                  "10m",
+                  "now"
+                ]
+              },
+              "reducer": {
+                "params": [],
+                "type": "avg"
+              },
+              "type": "query"
+            }
+          ],
+          "executionErrorState": "alerting",
+          "for": "10m",
+          "frequency": "1m",
+          "handler": 1,
+          "name": "Low Success Rate",
+          "noDataState": "no_data",
+          "notifications": []
+        }
+      },
+      {
+        "id": 6,
+        "type": "stat",
+        "title": "API Availability SLO",
+        "gridPos": {
+          "x": 12,
+          "y": 16,
+          "w": 6,
+          "h": 4
+        },
+        "targets": [
+          {
+            "expr": "(1 - sum(increase(http_requests_total{code=~\"5..\"}[30d])) / sum(increase(http_requests_total[30d]))) * 100",
+            "refId": "A"
+          }
+        ],
+        "datasource": "Prometheus",
+        "fieldConfig": {
+          "defaults": {
+            "unit": "percent",
+            "decimals": 2,
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "red",
+                  "value": null
+                },
+                {
+                  "color": "orange",
+                  "value": 99.0
+                },
+                {
+                  "color": "green",
+                  "value": 99.9
+                }
+              ]
+            }
+          }
+        }
+      },
+      {
+        "id": 7,
+        "type": "stat",
+        "title": "API Latency SLO",
+        "gridPos": {
+          "x": 18,
+          "y": 16,
+          "w": 6,
+          "h": 4
+        },
+        "targets": [
+          {
+            "expr": "histogram_quantile(0.95, sum(rate(http_request_duration_seconds_bucket[30d])) by (le)) * 1000",
+            "refId": "A"
+          }
+        ],
+        "datasource": "Prometheus",
+        "fieldConfig": {
+          "defaults": {
+            "unit": "ms",
+            "decimals": 0,
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "green",
+                  "value": null
+                },
+                {
+                  "color": "orange",
+                  "value": 150
+                },
+                {
+                  "color": "red",
+                  "value": 200
+                }
+              ]
+            }
+          }
+        }
+      },
+      {
+        "id": 8,
+        "type": "stat",
+        "title": "Database Query SLO",
+        "gridPos": {
+          "x": 12,
+          "y": 20,
+          "w": 6,
+          "h": 4
+        },
+        "targets": [
+          {
+            "expr": "histogram_quantile(0.99, sum(rate(db_query_duration_seconds_bucket[30d])) by (le)) * 1000",
+            "refId": "A"
+          }
+        ],
+        "datasource": "Prometheus",
+        "fieldConfig": {
+          "defaults": {
+            "unit": "ms",
+            "decimals": 0,
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "green",
+                  "value": null
+                },
+                {
+                  "color": "orange",
+                  "value": 400
+                },
+                {
+                  "color": "red",
+                  "value": 500
+                }
+              ]
+            }
+          }
+        }
+      },
+      {
+        "id": 9,
+        "type": "stat",
+        "title": "Error Budget Remaining",
+        "gridPos": {
+          "x": 18,
+          "y": 20,
+          "w": 6,
+          "h": 4
+        },
+        "targets": [
+          {
+            "expr": "((0.999 - (1 - sum(increase(http_requests_total{code=~\"5..\"}[30d])) / sum(increase(http_requests_total[30d])))) / 0.999) * 100",
+            "refId": "A"
+          }
+        ],
+        "datasource": "Prometheus",
+        "fieldConfig": {
+          "defaults": {
+            "unit": "percent",
+            "decimals": 2,
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "red",
+                  "value": null
+                },
+                {
+                  "color": "orange",
+                  "value": 10
+                },
+                {
+                  "color": "green",
+                  "value": 50
+                }
+              ]
+            }
+          }
+        }
       }
     ],
     "templating": {

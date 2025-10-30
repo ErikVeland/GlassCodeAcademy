@@ -61,12 +61,21 @@
 
 .liquid-glass-content {
   width: 100%;
-  margin: 0 var(--content-margin);
-  padding: 0;
+  margin: 0 auto;
+  padding: 0 var(--content-margin);
   background: none;
   max-width: 1400px; /* Main content container max-width as per design document */
-  margin-left: auto;
-  margin-right: auto;
+  box-sizing: border-box; /* ensure padding is included in width for proper gutters */
+  position: relative; /* contain transformed children */
+  overflow-x: hidden;  /* prevent horizontal overflow from internal effects */
+}
+
+/* Ensure symmetric inner gutters from medium view upward to avoid edge hugging */
+@media (min-width: 768px) {
+  .liquid-glass-content {
+    padding-left: var(--content-margin);
+    padding-right: var(--content-margin);
+  }
 }
 
 /* Subtle animated background for light theme */
@@ -518,7 +527,7 @@ html:not(.dark) .glass-card {
 /* Responsive Design Adjustments */
 @media (max-width: 768px) {
   .liquid-glass-content {
-    margin: 0 var(--content-margin);
+    padding: 0 var(--content-margin);
   }
   
   .glass-card {

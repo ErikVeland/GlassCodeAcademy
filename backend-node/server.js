@@ -21,13 +21,13 @@ const path = require('path');
       return;
     }
     dotenv.config();
-  } catch (_) {
+  } catch (error) {
     dotenv.config();
   }
 })();
 
 // Initialize OpenTelemetry
-const { sdk } = require('./src/utils/opentelemetry');
+const { sdk, prometheusExporter } = require('./src/utils/opentelemetry');
 
 // Database initialization
 const initializeDatabase = require('./src/utils/database');
@@ -87,6 +87,18 @@ app.use(helmet()); // Security headers
 app.use(cors()); // Enable CORS
 app.use(morgan('combined')); // Logging
 
+// Add metrics middleware
+const metricsMiddleware = require('./src/middleware/metricsMiddleware');
+app.use(metricsMiddleware);
+
+// Add SLO tracking middleware
+const sloTrackingMiddleware = require('./src/middleware/sloTrackingMiddleware');
+app.use(sloTrackingMiddleware);
+
+// Add user journey tracking middleware
+const userJourneyMiddleware = require('./src/middleware/userJourneyMiddleware');
+app.use(userJourneyMiddleware);
+
 // Add correlation ID middleware
 const correlationMiddleware = require('./src/middleware/correlationMiddleware');
 app.use(correlationMiddleware);
@@ -136,7 +148,7 @@ app.use('*', (req, res) => {
 });
 
 // Start server
-app.listen(PORT, () => {
+const server = app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
 

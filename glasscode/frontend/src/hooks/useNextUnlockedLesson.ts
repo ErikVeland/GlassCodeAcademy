@@ -1,6 +1,25 @@
 import { useEffect, useState } from 'react';
-import { contentRegistry, getLessonGroups } from '@/lib/contentRegistry';
 import { useProgressTracking } from '@/hooks/useProgressTracking';
+
+interface RegistryModule {
+  slug: string;
+  prerequisites?: string[];
+  tier?: string;
+  routes: {
+    lessons: string;
+  };
+}
+
+interface RegistryResponse {
+  modules: RegistryModule[];
+  tiers: Record<string, { level?: number }>;
+}
+
+const fetchJSON = async <T>(url: string): Promise<T> => {
+  const res = await fetch(url, { cache: 'no-store' });
+  if (!res.ok) throw new Error(`Request failed: ${res.status}`);
+  return (await res.json()) as T;
+};
 
 // Computes the next unlocked lesson URL based on current module completion and prerequisites
 export const useNextUnlockedLesson = () => {
@@ -10,29 +29,34 @@ export const useNextUnlockedLesson = () => {
   useEffect(() => {
     const compute = async () => {
       try {
-        // Get tiers ordered by level
-        const tiers = await contentRegistry.getTiers();
-        const tierOrder = Object.keys(tiers).sort((a, b) =>
-          (tiers[a].level ?? 0) - (tiers[b].level ?? 0)
+        // Load registry and compute tier order
+        const registry = await fetchJSON<RegistryResponse>('/api/content/registry');
+        const tiers = registry.tiers || {};
+        let tierOrder = Object.keys(tiers).sort((a, b) =>
+          (tiers[a]?.level ?? 0) - (tiers[b]?.level ?? 0)
         );
+        if (tierOrder.length === 0) {
+          tierOrder = ['foundational', 'core', 'specialized', 'quality'];
+        }
 
         // Iterate tiers then modules to find first unlocked, not-completed module
         for (const tierKey of tierOrder) {
-          const modules = await contentRegistry.getModulesByTier(tierKey);
+          const modules = registry.modules.filter((m) => m.tier === tierKey);
           for (const mod of modules) {
             const prereqsMet = (mod.prerequisites || []).every(p =>
               progress[p]?.completionStatus === 'completed'
             );
             const status = progress[mod.slug]?.completionStatus || 'not-started';
             if (prereqsMet && status !== 'completed') {
-              // Determine first lesson index from lesson groups for robust routing
-              const lessons = await contentRegistry.getModuleLessons(mod.slug);
-              const groups = getLessonGroups(mod.slug, lessons);
+              // Determine first lesson index by fetching lessons and selecting index 0
               let firstLessonIndex = 0;
-              if (groups && groups.length > 0 && groups[0].lessons && groups[0].lessons.length > 0) {
-                const first = groups[0].lessons[0];
-                const idx = lessons.indexOf(first);
-                firstLessonIndex = idx >= 0 ? idx : 0;
+              try {
+                const lessons = await fetchJSON<unknown[]>(`/api/content/lessons/${mod.slug}`);
+                if (Array.isArray(lessons) && lessons.length > 0) {
+                  firstLessonIndex = 0;
+                }
+              } catch {
+                firstLessonIndex = 0;
               }
               {
                 const lessonsPath = mod.routes.lessons;
@@ -47,17 +71,18 @@ export const useNextUnlockedLesson = () => {
 
         // Fallback: find next module by tier order, ignore prerequisites
         for (const tierKey of tierOrder) {
-          const modules = await contentRegistry.getModulesByTier(tierKey);
+          const modules = registry.modules.filter((m) => m.tier === tierKey);
           for (const mod of modules) {
             const status = progress[mod.slug]?.completionStatus || 'not-started';
             if (status !== 'completed') {
-              const lessons = await contentRegistry.getModuleLessons(mod.slug);
-              const groups = getLessonGroups(mod.slug, lessons);
               let firstLessonIndex = 0;
-              if (groups && groups.length > 0 && groups[0].lessons && groups[0].lessons.length > 0) {
-                const first = groups[0].lessons[0];
-                const idx = lessons.indexOf(first);
-                firstLessonIndex = idx >= 0 ? idx : 0;
+              try {
+                const lessons = await fetchJSON<unknown[]>(`/api/content/lessons/${mod.slug}`);
+                if (Array.isArray(lessons) && lessons.length > 0) {
+                  firstLessonIndex = 0;
+                }
+              } catch {
+                firstLessonIndex = 0;
               }
               {
                 const lessonsPath = mod.routes.lessons;

@@ -1,5 +1,4 @@
 import { useState, useEffect, useCallback } from 'react';
-import { contentRegistry } from '@/lib/contentRegistry';
 
 // Enhanced interfaces matching design documentation
 export interface ProgressData {
@@ -259,6 +258,31 @@ const STREAK_MILESTONES = [
   { title: 'Legend', description: '90-day streak', threshold: 90, achieved: false, achievedDate: undefined }
 ];
 
+// Client-safe registry types and helpers
+interface RegistryModule {
+  slug: string;
+  title?: string;
+  order?: number;
+  tier?: 'foundational' | 'core' | 'specialized' | 'quality' | string;
+  track?: string;
+  routes?: {
+    overview?: string;
+    quiz?: string;
+  };
+}
+
+interface RegistryResponse {
+  modules: RegistryModule[];
+  tiers?: Record<string, unknown>;
+  tracks?: Record<string, RegistryModule[]>;
+}
+
+const fetchJSON = async <T>(url: string): Promise<T> => {
+  const res = await fetch(url, { cache: 'no-store' });
+  if (!res.ok) throw new Error(`Request failed: ${res.status}`);
+  return (await res.json()) as T;
+};
+
 export const useProgressTrackingComplete = () => {
   const [progress, setProgress] = useState<Record<string, ProgressData>>({});
   const [tierModuleCache, setTierModuleCache] = useState<Record<string, string[]>>({});
@@ -311,6 +335,67 @@ export const useProgressTrackingComplete = () => {
     }
   }, []);
 
+  // Registry helpers scoped to hook instance
+  let registryCache: RegistryResponse | null = null;
+  const getRegistryCached = async (): Promise<RegistryResponse> => {
+    if (registryCache) return registryCache;
+    try {
+      registryCache = await fetchJSON<RegistryResponse>('/api/content/registry');
+    } catch (err) {
+      console.warn('Content registry fetch failed:', err);
+      registryCache = { modules: [], tiers: {} };
+    }
+    return registryCache;
+  };
+
+  const getTiers = async (): Promise<Record<string, unknown>> => {
+    const reg = await getRegistryCached();
+    return reg.tiers || {};
+  };
+
+  const getModulesByTier = async (tierSlug: string): Promise<RegistryModule[]> => {
+    const reg = await getRegistryCached();
+    return reg.modules
+      .filter((m) => (m.tier === tierSlug))
+      .sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
+  };
+
+  const getModulesByTrack = async (track: string): Promise<RegistryModule[]> => {
+    const reg = await getRegistryCached();
+    const fromTracks = reg.tracks?.[track];
+    if (Array.isArray(fromTracks) && fromTracks.length) return fromTracks;
+    return reg.modules
+      .filter((m) => m.track === track)
+      .sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
+  };
+
+  const getModuleLessons = async (moduleSlug: string): Promise<unknown[]> => {
+    try {
+      const lessons = await fetchJSON<unknown[]>(`/api/content/lessons/${moduleSlug}`);
+      return Array.isArray(lessons) ? lessons : [];
+    } catch {
+      return [];
+    }
+  };
+
+  const getModuleSlugFromShortSlug = async (shortSlug: string): Promise<string | null> => {
+    const reg = await getRegistryCached();
+    const match = reg.modules.find((m) => {
+      const overview = m.routes?.overview || '';
+      const short = overview.startsWith('/') ? overview.slice(1) : overview;
+      return short === shortSlug || m.slug === shortSlug || (m as any).shortSlug === shortSlug;
+    });
+    return match?.slug ?? null;
+  };
+
+  const getShortSlugFromModuleSlug = async (moduleSlug: string): Promise<string> => {
+    const reg = await getRegistryCached();
+    const m = reg.modules.find((mod) => mod.slug === moduleSlug);
+    const overview = m?.routes?.overview || '';
+    const short = overview.startsWith('/') ? overview.slice(1) : overview;
+    return short || moduleSlug;
+  };
+
   // Normalize module items into slug list
   const normalizeModuleSlugs = (items: unknown[]): string[] => {
     return items
@@ -330,7 +415,7 @@ export const useProgressTrackingComplete = () => {
     let mounted = true;
     (async () => {
       try {
-        await contentRegistry.loadRegistry();
+        await getRegistryCached();
 
         const tierMap: Record<string, string[]> = {};
         const lessonCounts: Record<string, number> = {};
@@ -344,7 +429,7 @@ export const useProgressTrackingComplete = () => {
         ];
 
         try {
-          const tiersRecord = await contentRegistry.getTiers();
+          const tiersRecord = await getTiers();
           const candidateSlugs = Object.keys(tiersRecord);
           const validSlugs = candidateSlugs.filter((s) =>
             s === 'foundational' || s === 'core' || s === 'specialized' || s === 'quality'
@@ -357,7 +442,7 @@ export const useProgressTrackingComplete = () => {
         for (const tierSlug of tierSlugs) {
           let mods: unknown[] = [];
           try {
-            mods = await contentRegistry.getModulesByTier(tierSlug);
+            mods = await getModulesByTier(tierSlug);
           } catch {
             mods = (TIER_MODULES[tierSlug] || []) as unknown[];
           }
@@ -367,7 +452,7 @@ export const useProgressTrackingComplete = () => {
           // Populate lesson counts per module
           for (const modSlug of moduleSlugs) {
             try {
-              const lessons = await contentRegistry.getModuleLessons(modSlug);
+              const lessons = await getModuleLessons(modSlug);
               lessonCounts[modSlug] = Array.isArray(lessons) ? lessons.length : (lessonCounts[modSlug] || 0);
             } catch {
               // Leave default if registry fails
@@ -404,14 +489,14 @@ export const useProgressTrackingComplete = () => {
     if (!found) {
       try {
         // Try converting shortSlug to moduleSlug
-        const moduleSlug = await contentRegistry.getModuleSlugFromShortSlug(moduleId);
+        const moduleSlug = await getModuleSlugFromShortSlug(moduleId);
         if (moduleSlug) {
           found = Object.entries(source).find(([, mods]) => mods.includes(moduleSlug))?.[0];
         }
         
         // If still not found, try converting moduleSlug to shortSlug
         if (!found) {
-          const shortSlug = await contentRegistry.getShortSlugFromModuleSlug(moduleId);
+          const shortSlug = await getShortSlugFromModuleSlug(moduleId);
           if (shortSlug) {
             found = Object.entries(source).find(([, mods]) => mods.includes(shortSlug))?.[0];
           }
@@ -466,14 +551,14 @@ export const useProgressTrackingComplete = () => {
     // If not found, try to convert between shortSlug and moduleSlug
     try {
       // Try as shortSlug first
-      const moduleSlugFromShort = await contentRegistry.getModuleSlugFromShortSlug(moduleId);
+      const moduleSlugFromShort = await getModuleSlugFromShortSlug(moduleId);
       if (moduleSlugFromShort && lessonCountCache[moduleSlugFromShort]) {
         fromCache = lessonCountCache[moduleSlugFromShort];
         if (typeof fromCache === 'number' && fromCache > 0) return fromCache;
       }
       
       // Try as moduleSlug
-      const shortSlugFromModule = await contentRegistry.getShortSlugFromModuleSlug(moduleId);
+      const shortSlugFromModule = await getShortSlugFromModuleSlug(moduleId);
       if (shortSlugFromModule && lessonCountCache[shortSlugFromModule]) {
         fromCache = lessonCountCache[shortSlugFromModule];
         if (typeof fromCache === 'number' && fromCache > 0) return fromCache;
@@ -666,12 +751,12 @@ export const useProgressTrackingComplete = () => {
       let backendTrackItems: unknown[] = [];
       let frontendTrackItems: unknown[] = [];
       try {
-        backendTrackItems = await contentRegistry.getModulesByTrack('backend');
+        backendTrackItems = await getModulesByTrack('backend');
       } catch {
         backendTrackItems = ['dotnet', 'laravel', 'database-systems'];
       }
       try {
-        frontendTrackItems = await contentRegistry.getModulesByTrack('frontend');
+        frontendTrackItems = await getModulesByTrack('frontend');
       } catch {
         frontendTrackItems = ['react', 'nextjs', 'vue'];
       }

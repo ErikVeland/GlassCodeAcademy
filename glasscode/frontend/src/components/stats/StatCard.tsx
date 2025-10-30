@@ -103,7 +103,7 @@ export default function StatCard({
             className={`
                 relative overflow-hidden rounded-xl backdrop-blur-md bg-surface-alt
                 border border-border
-                transition-all duration-500 hover:shadow-xl hover:scale-105
+                transition-all duration-500 hover:shadow-xl md:hover:scale-[1.02] lg:hover:scale-105 transform-gpu will-change-transform
                 group glass-card h-40 min-h-[10rem]
             `}
         >

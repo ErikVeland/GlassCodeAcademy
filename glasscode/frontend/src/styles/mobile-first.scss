@@ -47,6 +47,22 @@
   }
 }
 
+.mf-no-side-borders-mobile {
+  border-left: none !important;
+  border-right: none !important;
+  @include bp.desktop-only {
+    border-left: var(--pane-border, 1px solid rgba(255, 255, 255, 0.2)) !important;
+    border-right: var(--pane-border, 1px solid rgba(255, 255, 255, 0.2)) !important;
+  }
+}
+
+.mf-no-bottom-border-mobile {
+  border-bottom: none !important;
+  @include bp.desktop-only {
+    border-bottom: var(--pane-border, 1px solid rgba(255, 255, 255, 0.2)) !important;
+  }
+}
+
 .mf-no-vertical-margin-mobile {
   margin-top: 0 !important;
   margin-bottom: 0 !important;

@@ -1,0 +1,52 @@
+groups:
+- name: glasscode-alerts
+  rules:
+  # High Error Rate Alert
+  - alert: HighErrorRate
+    expr: sum(rate(http_requests_total{code=~"5.."}[5m])) by (job) / sum(rate(http_requests_total[5m])) by (job) > 0.05
+    for: 5m
+    labels:
+      severity: critical
+    annotations:
+      summary: "High error rate detected"
+      description: "The error rate for {{ $labels.job }} is {{ $value | humanizePercentage }} which is above the threshold of 5%."
+
+  # High Latency Alert
+  - alert: HighLatency
+    expr: histogram_quantile(0.95, sum(rate(http_request_duration_seconds_bucket[10m])) by (le, job)) > 0.2
+    for: 10m
+    labels:
+      severity: warning
+    annotations:
+      summary: "High latency detected"
+      description: "The p95 latency for {{ $labels.job }} is {{ $value }} seconds which is above the threshold of 200ms."
+
+  # Service Down Alert
+  - alert: ServiceDown
+    expr: absent(up{job="glasscode-backend"}) == 1
+    for: 2m
+    labels:
+      severity: critical
+    annotations:
+      summary: "Service is down"
+      description: "The GlassCode backend service is not sending metrics and may be down."
+
+  # Database Performance Alert
+  - alert: DatabasePerformance
+    expr: histogram_quantile(0.95, sum(rate(db_query_duration_seconds_bucket[5m])) by (le, job)) > 0.5
+    for: 5m
+    labels:
+      severity: warning
+    annotations:
+      summary: "Database performance degradation"
+      description: "The p95 database query latency for {{ $labels.job }} is {{ $value }} seconds which is above the threshold of 500ms."
+
+  # Low Success Rate Alert
+  - alert: LowSuccessRate
+    expr: sum(rate(http_requests_total{code!~"5.."}[10m])) by (job) / sum(rate(http_requests_total[10m])) by (job) < 0.95
+    for: 10m
+    labels:
+      severity: warning
+    annotations:
+      summary: "Low success rate detected"
+      description: "The success rate for {{ $labels.job }} is {{ $value | humanizePercentage }} which is below the threshold of 95%."

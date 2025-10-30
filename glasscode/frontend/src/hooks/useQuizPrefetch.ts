@@ -1,7 +1,6 @@
 'use client';
 
 import { useEffect, useCallback } from 'react';
-import { contentRegistry } from '@/lib/contentRegistry';
 
 interface PrefetchOptions {
   enabled?: boolean;
@@ -23,23 +22,26 @@ export function useQuizPrefetch(options: PrefetchOptions = {}) {
 
   const getModulesByTierPriority = useCallback(async () => {
     try {
-      const modules = await contentRegistry.getModules();
-      // const tiers = await contentRegistry.getTiers(); // Unused variable
-      
-      // Sort modules by tier level (foundational -> core -> specialized -> quality)
+      const res = await fetch('/api/content/registry', { cache: 'no-store' });
+      if (!res.ok) return [];
+      const data = await res.json();
+      const modules: Array<{ slug?: string; title?: string; order?: number; tier?: string }> = Array.isArray(data?.modules) ? data.modules : [];
+
       const tierOrder = ['foundational', 'core', 'specialized', 'quality'];
-      
-      return modules.sort((a, b) => {
-        const aTierIndex = tierOrder.indexOf(a.tier);
-        const bTierIndex = tierOrder.indexOf(b.tier);
-        
-        if (aTierIndex !== bTierIndex) {
-          return aTierIndex - bTierIndex;
-        }
-        
-        // Within same tier, sort by order
-        return (a.order || 0) - (b.order || 0);
-      });
+      return modules
+        .filter(m => typeof m.slug === 'string')
+        .map(m => ({
+          slug: String(m.slug),
+          title: String(m.title || m.slug),
+          order: typeof m.order === 'number' ? m.order : 0,
+          tier: String(m.tier || 'core'),
+        }))
+        .sort((a, b) => {
+          const aTierIndex = tierOrder.indexOf(a.tier);
+          const bTierIndex = tierOrder.indexOf(b.tier);
+          if (aTierIndex !== bTierIndex) return aTierIndex - bTierIndex;
+          return (a.order || 0) - (b.order || 0);
+        });
     } catch (error) {
       console.error('Error getting modules for prefetch:', error);
       return [];
@@ -48,8 +50,20 @@ export function useQuizPrefetch(options: PrefetchOptions = {}) {
 
   const prefetchQuiz = useCallback(async (moduleSlug: string) => {
     try {
-      // Resolve shortSlug for consistent cache keys with contentRegistry
-      const shortSlug = await contentRegistry.getShortSlugFromModuleSlug(moduleSlug) || moduleSlug;
+      // Resolve shortSlug via registry routes or fallback heuristic
+      let shortSlug = moduleSlug;
+      try {
+        const res = await fetch('/api/content/registry', { cache: 'no-store' });
+        if (res.ok) {
+          const data = await res.json();
+          const modules: Array<{ slug?: string; routes?: { overview?: string } }> = Array.isArray(data?.modules) ? data.modules : [];
+          const match = modules.find(m => (m?.slug || '') === moduleSlug);
+          const overview = match?.routes?.overview;
+          shortSlug = typeof overview === 'string' && overview.trim() !== ''
+            ? overview.replace(/^\/+/, '').split('/')[0]
+            : (moduleSlug.includes('-') ? moduleSlug.split('-')[0] : moduleSlug);
+        }
+      } catch {}
       const cacheKey = `prefetch_quiz_${shortSlug}`;
       const cached = sessionStorage.getItem(cacheKey);
       
@@ -64,8 +78,9 @@ export function useQuizPrefetch(options: PrefetchOptions = {}) {
       
       console.log(`[QuizPrefetch] Fetching quiz for ${moduleSlug}`);
       
-      // Fetch the quiz
-      const quiz = await contentRegistry.getModuleQuiz(moduleSlug);
+      // Fetch the quiz via API
+      const resQuiz = await fetch(`/api/content/quizzes/${shortSlug}`, { cache: 'no-store' });
+      const quiz = resQuiz.ok ? await resQuiz.json() : null;
       
       if (quiz && Array.isArray(quiz.questions) && quiz.questions.length > 0) {
         // Cache the full quiz data
@@ -92,13 +107,19 @@ export function useQuizPrefetch(options: PrefetchOptions = {}) {
     try {
       console.log('[QuizPrefetch] Starting quiz prefetch process');
       
-      let modules = [];
+      let modules: Array<{ slug: string; title: string; order: number; tier: string }> = [];
       if (priorityOrder === 'tier') {
         modules = await getModulesByTierPriority();
       } else {
-        const allModules = await contentRegistry.getModules();
-        // For now, just sort alphabetically for other priority orders
-        modules = allModules.sort((a, b) => a.title.localeCompare(b.title));
+        const res = await fetch('/api/content/registry', { cache: 'no-store' });
+        if (res.ok) {
+          const data = await res.json();
+          const allModules: Array<{ slug?: string; title?: string; order?: number; tier?: string }> = Array.isArray(data?.modules) ? data.modules : [];
+          modules = allModules
+            .filter(m => typeof m.slug === 'string')
+            .map(m => ({ slug: String(m.slug), title: String(m.title || m.slug), order: typeof m.order === 'number' ? m.order : 0, tier: String(m.tier || 'core') }))
+            .sort((a, b) => a.title.localeCompare(b.title));
+        }
       }
       
       // Limit to first 15 modules to avoid overwhelming

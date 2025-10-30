@@ -8,6 +8,13 @@
     margin-bottom: 3rem;
     width: 100%;
     
+    // Mobile: remove vertical spacing to ensure no top/bottom gaps
+    @media (max-width: 768px) {
+      padding-top: 0;
+      padding-bottom: 0;
+      margin-bottom: 0;
+    }
+    
     .edge-to-edge-content {
       width: 100%;
       max-width: none;

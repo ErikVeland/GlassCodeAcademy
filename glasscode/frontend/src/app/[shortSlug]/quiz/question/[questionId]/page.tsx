@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from 'react';
-import type { ProgrammingQuestion } from '@/lib/contentRegistry';
+import type { ProgrammingQuestion } from '@/lib/clientTypes';
 import { notFound, useRouter } from 'next/navigation';
 import Link from 'next/link';
 
