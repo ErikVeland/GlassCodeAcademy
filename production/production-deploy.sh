@@ -98,7 +98,16 @@ sudo chown -R $DEPLOY_USER:$DEPLOY_USER $APP_DIR
 # Install backend dependencies
 echo_step "Installing backend dependencies"
 cd backend-node
-npm ci --only=production
+if [ ! -f "package-lock.json" ]; then
+    echo_warn "package-lock.json not found, generating it with npm install"
+    npm install
+fi
+
+# Try npm ci first, fall back to npm install if it fails
+if ! npm ci --only=production; then
+    echo_warn "npm ci failed, falling back to npm install --only=production"
+    npm install --only=production
+fi
 
 # Create .env file for production
 echo_step "Configuring environment variables"

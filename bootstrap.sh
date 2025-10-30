@@ -694,17 +694,40 @@ add_if_missing_backend_prod DATABASE_URL "$DATABASE_URL"
     # Install backend dependencies (ci when lockfile exists; else install)
     log "🔧 Installing backend dependencies..."
     if [[ -f package-lock.json ]]; then
-        if ! sudo -u "$DEPLOY_USER" npm ci --no-audit --no-fund; then
-            log "ℹ️  npm ci failed; falling back to npm install"
-            if ! sudo -u "$DEPLOY_USER" npm install --no-audit --no-fund || sudo -u "$DEPLOY_USER" npm install --legacy-peer-deps --no-audit --no-fund; then
-                log "❌ ERROR: Failed to install backend dependencies"
+        # Verify package-lock.json is properly formatted and accessible
+        if sudo -u "$DEPLOY_USER" npm ls --json >/dev/null 2>&1; then
+            if ! sudo -u "$DEPLOY_USER" npm ci --no-audit --no-fund; then
+                log "ℹ️  npm ci failed; falling back to npm install"
+                if ! sudo -u "$DEPLOY_USER" npm install --no-audit --no-fund; then
+                    if ! sudo -u "$DEPLOY_USER" npm install --legacy-peer-deps --no-audit --no-fund; then
+                        log "❌ ERROR: Failed to install backend dependencies"
+                        exit 1
+                    fi
+                fi
+            fi
+        else
+            log "⚠️  package-lock.json appears to be invalid or inaccessible; regenerating..."
+            sudo -u "$DEPLOY_USER" rm -f package-lock.json || true
+            if ! sudo -u "$DEPLOY_USER" npm install --package-lock-only; then
+                log "❌ ERROR: Failed to regenerate package-lock.json"
                 exit 1
+            fi
+            if ! sudo -u "$DEPLOY_USER" npm ci --no-audit --no-fund; then
+                log "ℹ️  npm ci failed after regenerating lockfile; falling back to npm install"
+                if ! sudo -u "$DEPLOY_USER" npm install --no-audit --no-fund; then
+                    if ! sudo -u "$DEPLOY_USER" npm install --legacy-peer-deps --no-audit --no-fund; then
+                        log "❌ ERROR: Failed to install backend dependencies"
+                        exit 1
+                    fi
+                fi
             fi
         fi
     else
-        if ! sudo -u "$DEPLOY_USER" npm install --no-audit --no-fund || sudo -u "$DEPLOY_USER" npm install --legacy-peer-deps --no-audit --no-fund; then
-            log "❌ ERROR: Failed to install backend dependencies"
-            exit 1
+        if ! sudo -u "$DEPLOY_USER" npm install --no-audit --no-fund; then
+            if ! sudo -u "$DEPLOY_USER" npm install --legacy-peer-deps --no-audit --no-fund; then
+                log "❌ ERROR: Failed to install backend dependencies"
+                exit 1
+            fi
         fi
     fi
     log "✅ Backend dependencies installed"

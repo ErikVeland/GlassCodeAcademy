@@ -62,7 +62,11 @@ fi
 # Install backend dependencies
 log "📦 Installing backend dependencies..."
 cd "$APP_DIR/backend-node"
-sudo -u "$DEPLOY_USER" npm ci --production
+# Try npm ci first, fall back to npm install if it fails
+if ! sudo -u "$DEPLOY_USER" npm ci --production; then
+    log "⚠️  npm ci failed, falling back to npm install --production"
+    sudo -u "$DEPLOY_USER" npm install --production
+fi
 
 # Create environment file
 log "⚙️  Creating environment configuration..."

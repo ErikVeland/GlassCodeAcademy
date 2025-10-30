@@ -121,7 +121,8 @@ deploy() {
     create_deploy_dir
     
     log "Copying application files..."
-    cp -r ./* $DEPLOY_DIR/
+    # Use rsync to ensure all files including hidden ones are copied correctly
+    rsync -av --exclude='node_modules' --exclude='.git' . $DEPLOY_DIR/
     
     install_dependencies
     run_migrations

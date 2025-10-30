@@ -170,8 +170,20 @@ install_npm_deps_workspace() {
     
     # Check if lockfile exists and is newer than package.json
     if [ -f "package-lock.json" ] && [ "package-lock.json" -nt "package.json" ]; then
-        log "📋 Using existing lockfile for $name (up to date)"
-        sudo -u "$DEPLOY_USER" npm ci || sudo -u "$DEPLOY_USER" npm install
+        # Verify package-lock.json is properly formatted and accessible
+        if sudo -u "$DEPLOY_USER" npm ls --json >/dev/null 2>&1; then
+            log "📋 Using existing lockfile for $name (up to date)"
+            sudo -u "$DEPLOY_USER" npm ci || sudo -u "$DEPLOY_USER" npm install
+        else
+            log "⚠️  package-lock.json appears to be invalid or inaccessible for $name; regenerating..."
+            sudo -u "$DEPLOY_USER" rm -f package-lock.json || true
+            if sudo -u "$DEPLOY_USER" npm install --package-lock-only; then
+                sudo -u "$DEPLOY_USER" npm ci || sudo -u "$DEPLOY_USER" npm install
+            else
+                log "❌ Failed to regenerate package-lock.json for $name; falling back to npm install"
+                sudo -u "$DEPLOY_USER" npm install
+            fi
+        fi
     else
         log "📋 Regenerating lockfile for $name..."
         sudo -u "$DEPLOY_USER" rm -f package-lock.json || true
