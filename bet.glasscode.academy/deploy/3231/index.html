@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" href="/favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>RaceHub | Entain Challenge</title>
+    <style>
+      /* Prevent flash of unstyled content */
+      html {
+        background-color: #0B1220; /* dark theme surface color */
+        color: #F8FAFC; /* dark theme text color */
+        transition: background-color 300ms ease, color 300ms ease;
+      }
+      
+      /* Apply theme immediately if set in localStorage */
+      html[data-theme="dark"] {
+        background-color: #0B1220;
+        color: #F8FAFC;
+      }
+      
+      html[data-theme="light"] {
+        background-color: #FFFFFF;
+        color: #0F172A;
+      }
+      
+      html[data-theme="high-contrast"] {
+        background-color: #FFFFFF;
+        color: #000000;
+      }
+    </style>
+    <script type="module" crossorigin src="/assets/index-Hpcu6qok.js"></script>
+    <link rel="stylesheet" crossorigin href="/assets/index-CaqaUtCY.css">
+  </head>
+  <body>
+    <div id="app"></div>
+  </body>
+</html>

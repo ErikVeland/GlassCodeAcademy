@@ -1,0 +1,6 @@
+Repo:   git@github.com:ErikVeland/entain.git
+Branch: main
+Commit: 5301fceaab991469fc2143f12bacf79e4bd6ae81
+Date:   2025-10-30T08:37:09+10:00
+Source: /Users/veland/GlassCodeAcademy/bet.glasscode.academy/source
+Output: dist
