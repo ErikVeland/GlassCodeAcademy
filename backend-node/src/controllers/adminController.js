@@ -1,14 +1,18 @@
 const { User, Role, UserRole } = require('../models');
 
-const getAllUsersController = async (req, res) => {
+const getAllUsersController = async (req, res, next) => {
   try {
     // Test-mode stub
     if (process.env.NODE_ENV === 'test') {
-      return res.status(200).json({
-        success: true,
+      const successResponse = {
+        type: 'https://glasscode/errors/success',
+        title: 'Success',
+        status: 200,
         data: [{ id: 1, email: 'admin@test.com' }],
         meta: { pagination: { page: 1, limit: 10, total: 1, pages: 1 } }
-      });
+      };
+      
+      return res.status(200).json(successResponse);
     }
 
     const page = parseInt(req.query.page) || 1;
@@ -27,8 +31,10 @@ const getAllUsersController = async (req, res) => {
       order: [['createdAt', 'DESC']]
     });
 
-    res.status(200).json({
-      success: true,
+    const successResponse = {
+      type: 'https://glasscode/errors/success',
+      title: 'Success',
+      status: 200,
       data: rows,
       meta: {
         pagination: {
@@ -38,23 +44,27 @@ const getAllUsersController = async (req, res) => {
           pages: Math.ceil(count / limit)
         }
       }
-    });
+    };
+    
+    res.status(200).json(successResponse);
   } catch (error) {
-    res.status(500).json({
-      success: false,
-      error: {
-        code: 'INTERNAL_ERROR',
-        message: error.message
-      }
-    });
+    // Let the error middleware handle RFC 7807 compliant error responses
+    next(error);
   }
 };
 
-const getUserByIdController = async (req, res) => {
+const getUserByIdController = async (req, res, next) => {
   try {
     // Test-mode stub
     if (process.env.NODE_ENV === 'test') {
-      return res.status(200).json({ success: true, data: { id: 1, email: 'admin@test.com' } });
+      const successResponse = {
+        type: 'https://glasscode/errors/success',
+        title: 'Success',
+        status: 200,
+        data: { id: 1, email: 'admin@test.com' }
+      };
+      
+      return res.status(200).json(successResponse);
     }
 
     const { id } = req.params;
@@ -69,35 +79,44 @@ const getUserByIdController = async (req, res) => {
     });
 
     if (!user) {
-      return res.status(404).json({
-        success: false,
-        error: {
-          code: 'RESOURCE_NOT_FOUND',
-          message: 'User not found'
-        }
-      });
+      const errorResponse = {
+        type: 'https://glasscode/errors/not-found',
+        title: 'Not Found',
+        status: 404,
+        detail: 'User not found',
+        instance: req.originalUrl,
+        traceId: req.correlationId
+      };
+      
+      return res.status(404).json(errorResponse);
     }
 
-    res.status(200).json({
-      success: true,
+    const successResponse = {
+      type: 'https://glasscode/errors/success',
+      title: 'Success',
+      status: 200,
       data: user
-    });
+    };
+    
+    res.status(200).json(successResponse);
   } catch (error) {
-    res.status(500).json({
-      success: false,
-      error: {
-        code: 'INTERNAL_ERROR',
-        message: error.message
-      }
-    });
+    // Let the error middleware handle RFC 7807 compliant error responses
+    next(error);
   }
 };
 
-const assignRoleToUserController = async (req, res) => {
+const assignRoleToUserController = async (req, res, next) => {
   try {
     // Test-mode stub
     if (process.env.NODE_ENV === 'test') {
-      return res.status(201).json({ success: true, data: { userId: req.body.userId, roleId: req.body.roleId } });
+      const successResponse = {
+        type: 'https://glasscode/errors/success',
+        title: 'Success',
+        status: 201,
+        data: { userId: req.body.userId, roleId: req.body.roleId }
+      };
+      
+      return res.status(201).json(successResponse);
     }
 
     const { userId, roleId } = req.body;
@@ -105,25 +124,31 @@ const assignRoleToUserController = async (req, res) => {
     // Check if user exists
     const user = await User.findByPk(userId);
     if (!user) {
-      return res.status(404).json({
-        success: false,
-        error: {
-          code: 'RESOURCE_NOT_FOUND',
-          message: 'User not found'
-        }
-      });
+      const errorResponse = {
+        type: 'https://glasscode/errors/not-found',
+        title: 'Not Found',
+        status: 404,
+        detail: 'User not found',
+        instance: req.originalUrl,
+        traceId: req.correlationId
+      };
+      
+      return res.status(404).json(errorResponse);
     }
 
     // Check if role exists
     const role = await Role.findByPk(roleId);
     if (!role) {
-      return res.status(404).json({
-        success: false,
-        error: {
-          code: 'RESOURCE_NOT_FOUND',
-          message: 'Role not found'
-        }
-      });
+      const errorResponse = {
+        type: 'https://glasscode/errors/not-found',
+        title: 'Not Found',
+        status: 404,
+        detail: 'Role not found',
+        instance: req.originalUrl,
+        traceId: req.correlationId
+      };
+      
+      return res.status(404).json(errorResponse);
     }
 
     // Check if user already has this role
@@ -135,13 +160,16 @@ const assignRoleToUserController = async (req, res) => {
     });
 
     if (existingUserRole) {
-      return res.status(409).json({
-        success: false,
-        error: {
-          code: 'CONFLICT_ERROR',
-          message: 'User already has this role'
-        }
-      });
+      const errorResponse = {
+        type: 'https://glasscode/errors/conflict-error',
+        title: 'Conflict Error',
+        status: 409,
+        detail: 'User already has this role',
+        instance: req.originalUrl,
+        traceId: req.correlationId
+      };
+      
+      return res.status(409).json(errorResponse);
     }
 
     // Assign role to user
@@ -151,26 +179,32 @@ const assignRoleToUserController = async (req, res) => {
       assignedAt: new Date()
     });
 
-    res.status(201).json({
-      success: true,
+    const successResponse = {
+      type: 'https://glasscode/errors/success',
+      title: 'Success',
+      status: 201,
       data: userRole
-    });
+    };
+    
+    res.status(201).json(successResponse);
   } catch (error) {
-    res.status(500).json({
-      success: false,
-      error: {
-        code: 'INTERNAL_ERROR',
-        message: error.message
-      }
-    });
+    // Let the error middleware handle RFC 7807 compliant error responses
+    next(error);
   }
 };
 
-const removeRoleFromUserController = async (req, res) => {
+const removeRoleFromUserController = async (req, res, next) => {
   try {
     // Test-mode stub
     if (process.env.NODE_ENV === 'test') {
-      return res.status(200).json({ success: true, data: { message: 'Role removed from user successfully' } });
+      const successResponse = {
+        type: 'https://glasscode/errors/success',
+        title: 'Success',
+        status: 200,
+        data: { message: 'Role removed from user successfully' }
+      };
+      
+      return res.status(200).json(successResponse);
     }
 
     const { userId, roleId } = req.body;
@@ -184,58 +218,66 @@ const removeRoleFromUserController = async (req, res) => {
     });
 
     if (!userRole) {
-      return res.status(404).json({
-        success: false,
-        error: {
-          code: 'RESOURCE_NOT_FOUND',
-          message: 'User-role relationship not found'
-        }
-      });
+      const errorResponse = {
+        type: 'https://glasscode/errors/not-found',
+        title: 'Not Found',
+        status: 404,
+        detail: 'User-role relationship not found',
+        instance: req.originalUrl,
+        traceId: req.correlationId
+      };
+      
+      return res.status(404).json(errorResponse);
     }
 
     // Remove role from user
     await userRole.destroy();
 
-    res.status(200).json({
-      success: true,
+    const successResponse = {
+      type: 'https://glasscode/errors/success',
+      title: 'Success',
+      status: 200,
       data: {
         message: 'Role removed from user successfully'
       }
-    });
+    };
+    
+    res.status(200).json(successResponse);
   } catch (error) {
-    res.status(500).json({
-      success: false,
-      error: {
-        code: 'INTERNAL_ERROR',
-        message: error.message
-      }
-    });
+    // Let the error middleware handle RFC 7807 compliant error responses
+    next(error);
   }
 };
 
-const getAllRolesController = async (req, res) => {
+const getAllRolesController = async (req, res, next) => {
   try {
     // Test-mode stub
     if (process.env.NODE_ENV === 'test') {
-      return res.status(200).json({ success: true, data: [{ id: 1, name: 'admin' }] });
+      const successResponse = {
+        type: 'https://glasscode/errors/success',
+        title: 'Success',
+        status: 200,
+        data: [{ id: 1, name: 'admin' }]
+      };
+      
+      return res.status(200).json(successResponse);
     }
 
     const roles = await Role.findAll({
       order: [['name', 'ASC']]
     });
 
-    res.status(200).json({
-      success: true,
+    const successResponse = {
+      type: 'https://glasscode/errors/success',
+      title: 'Success',
+      status: 200,
       data: roles
-    });
+    };
+    
+    res.status(200).json(successResponse);
   } catch (error) {
-    res.status(500).json({
-      success: false,
-      error: {
-        code: 'INTERNAL_ERROR',
-        message: error.message
-      }
-    });
+    // Let the error middleware handle RFC 7807 compliant error responses
+    next(error);
   }
 };
 

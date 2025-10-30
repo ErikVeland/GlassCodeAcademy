@@ -8,6 +8,9 @@ const UserLessonProgress = require('./userLessonProgressModel');
 const Role = require('./roleModel');
 const UserRole = require('./userRoleModel');
 const Tier = require('./tierModel');
+const Academy = require('./academyModel');
+const AuditLog = require('./auditLogModel');
+const QuizAttempt = require('./quizAttemptModel');
 
 // Initialize associations that weren't set up in the model files
 function initializeAssociations() {
@@ -84,6 +87,34 @@ function initializeAssociations() {
     as: 'roleUsers'
   });
 
+  // User -> Audit Logs
+  User.hasMany(AuditLog, {
+    foreignKey: 'user_id',
+    as: 'auditLogs'
+  });
+  AuditLog.belongsTo(User, {
+    foreignKey: 'user_id',
+    as: 'auditUser'
+  });
+
+  // User -> Quiz Attempts
+  User.hasMany(QuizAttempt, {
+    foreignKey: 'user_id',
+    as: 'quizAttempts'
+  });
+
+  // Lesson -> Quiz Attempts
+  Lesson.hasMany(QuizAttempt, {
+    foreignKey: 'lesson_id',
+    as: 'quizAttempts'
+  });
+
+  // Quiz -> Quiz Attempts
+  LessonQuiz.hasMany(QuizAttempt, {
+    foreignKey: 'quiz_id',
+    as: 'quizAttempts'
+  });
+
   // Note: Tiers are standalone for now; modules embed tier key in registry synthesis
 }
 
@@ -98,5 +129,8 @@ module.exports = {
   Role,
   UserRole,
   Tier,
+  Academy,
+  AuditLog,
+  QuizAttempt,
   initializeAssociations
 };

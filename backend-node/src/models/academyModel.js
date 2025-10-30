@@ -1,28 +1,24 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require('../config/database');
-const Course = require('./courseModel');
 
-const Module = sequelize.define('Module', {
+const Academy = sequelize.define('Academy', {
   id: {
     type: DataTypes.INTEGER,
     primaryKey: true,
     autoIncrement: true
   },
-  title: {
+  name: {
     type: DataTypes.STRING(200),
     allowNull: false
+  },
+  slug: {
+    type: DataTypes.STRING(100),
+    allowNull: false,
+    unique: true
   },
   description: {
     type: DataTypes.STRING(1000),
     allowNull: true
-  },
-  slug: {
-    type: DataTypes.STRING(100),
-    allowNull: false
-  },
-  order: {
-    type: DataTypes.INTEGER,
-    allowNull: false
   },
   isPublished: {
     type: DataTypes.BOOLEAN,
@@ -32,17 +28,19 @@ const Module = sequelize.define('Module', {
   version: {
     type: DataTypes.STRING(20),
     defaultValue: '1.0.0'
+  },
+  theme: {
+    type: DataTypes.JSONB,
+    allowNull: true
+  },
+  metadata: {
+    type: DataTypes.JSONB,
+    allowNull: true
   }
 }, {
-  tableName: 'modules',
+  tableName: 'academies',
   timestamps: true,
   underscored: true
 });
 
-// Define associations
-Module.belongsTo(Course, {
-  foreignKey: 'course_id',
-  as: 'course'
-});
-
-module.exports = Module;
+module.exports = Academy;

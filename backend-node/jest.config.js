@@ -13,5 +13,16 @@ module.exports = {
   coverageReporters: ['text', 'lcov'],
   // Load environment variables (including root-level .env) before tests run
   setupFiles: ['<rootDir>/jest.setup.js'],
-  setupFilesAfterEnv: []
+  setupFilesAfterEnv: [],
+  // Handle ES modules
+  transformIgnorePatterns: [
+    'node_modules/(?!uuid)/'
+  ],
+  moduleNameMapper: {
+    '^uuid$': '<rootDir>/node_modules/uuid/dist-node/index.js'
+  },
+  // Transform ES modules to CommonJS
+  transform: {
+    '^.+\\.js$': 'babel-jest'
+  }
 };

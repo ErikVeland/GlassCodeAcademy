@@ -1,4 +1,4 @@
-const { UserProgress, UserLessonProgress, LessonQuiz } = require('../models');
+const { UserProgress, UserLessonProgress, LessonQuiz, QuizAttempt } = require('../models');
 
 // Get user progress for a course
 const getUserCourseProgress = async (userId, courseId) => {
@@ -103,6 +103,61 @@ const submitQuizAnswers = async (userId, lessonId, answers) => {
   }
 };
 
+// Record a quiz attempt
+const recordQuizAttempt = async (userId, lessonId, quizId, attemptData) => {
+  try {
+    const quizAttempt = await QuizAttempt.create({
+      userId,
+      lessonId,
+      quizId,
+      ...attemptData
+    });
+    
+    return quizAttempt;
+  } catch (error) {
+    throw new Error(`Error recording quiz attempt: ${error.message}`);
+  }
+};
+
+// Get quiz attempts for a user and lesson
+const getQuizAttempts = async (userId, lessonId) => {
+  try {
+    const attempts = await QuizAttempt.findAll({
+      where: {
+        user_id: userId,
+        lesson_id: lessonId
+      },
+      order: [['completed_at', 'DESC']],
+      include: [{
+        model: LessonQuiz,
+        as: 'quiz',
+        attributes: ['question', 'questionType']
+      }]
+    });
+    
+    return attempts;
+  } catch (error) {
+    throw new Error(`Error fetching quiz attempts: ${error.message}`);
+  }
+};
+
+// Get quiz attempts for a specific quiz
+const getQuizAttemptsByQuizId = async (userId, quizId) => {
+  try {
+    const attempts = await QuizAttempt.findAll({
+      where: {
+        user_id: userId,
+        quiz_id: quizId
+      },
+      order: [['completed_at', 'DESC']]
+    });
+    
+    return attempts;
+  } catch (error) {
+    throw new Error(`Error fetching quiz attempts: ${error.message}`);
+  }
+};
+
 // Get user progress summary
 const getUserProgressSummary = async (userId) => {
   try {
@@ -124,6 +179,15 @@ const getUserProgressSummary = async (userId) => {
       }
     });
     
+    // Get recent quiz attempts
+    const recentQuizAttempts = await QuizAttempt.findAll({
+      where: {
+        user_id: userId
+      },
+      order: [['completed_at', 'DESC']],
+      limit: 10
+    });
+    
     // Calculate summary statistics
     const completedLessons = lessonProgress.filter(lp => lp.isCompleted).length;
     const totalLessons = lessonProgress.length;
@@ -134,7 +198,14 @@ const getUserProgressSummary = async (userId) => {
       totalLessons,
       completedLessons,
       progressPercentage: totalLessons > 0 ? (completedLessons / totalLessons) * 100 : 0,
-      courseProgress
+      courseProgress,
+      recentQuizAttempts: recentQuizAttempts.map(attempt => ({
+        id: attempt.id,
+        lessonId: attempt.lessonId,
+        quizId: attempt.quizId,
+        score: attempt.score,
+        completedAt: attempt.completedAt
+      }))
     };
     
     return summary;
@@ -148,5 +219,8 @@ module.exports = {
   updateUserLessonProgress,
   getUserLessonProgress,
   submitQuizAnswers,
+  recordQuizAttempt,
+  getQuizAttempts,
+  getQuizAttemptsByQuizId,
   getUserProgressSummary
 };

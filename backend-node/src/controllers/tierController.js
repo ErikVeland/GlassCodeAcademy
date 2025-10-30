@@ -16,9 +16,9 @@ const logger = winston.createLogger({
   ]
 });
 
-const getAllTiersController = async (req, res) => {
+const getAllTiersController = async (req, res, next) => {
   try {
-    logger.info('Fetching all tiers');
+    logger.info('Fetching all tiers', { correlationId: req.correlationId });
     const tiers = await getAllTiers();
 
     // Return as record keyed by tier.key to ease frontend usage
@@ -36,17 +36,24 @@ const getAllTiersController = async (req, res) => {
       };
     });
 
-    logger.info('Tiers fetched', { count: tiers.length });
-    res.status(200).json(record);
+    logger.info('Tiers fetched', { count: tiers.length, correlationId: req.correlationId });
+    
+    const successResponse = {
+      type: 'https://glasscode/errors/success',
+      title: 'Success',
+      status: 200,
+      data: record
+    };
+    
+    res.status(200).json(successResponse);
   } catch (error) {
-    logger.error('Error fetching tiers', { error: error.message, stack: error.stack });
-    res.status(500).json({
-      success: false,
-      error: {
-        code: 'INTERNAL_ERROR',
-        message: 'An error occurred while fetching tiers.'
-      }
+    logger.error('Error fetching tiers', { 
+      error: error.message, 
+      stack: error.stack,
+      correlationId: req.correlationId
     });
+    // Let the error middleware handle RFC 7807 compliant error responses
+    next(error);
   }
 };
 

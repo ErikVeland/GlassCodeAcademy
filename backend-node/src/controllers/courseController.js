@@ -1,6 +1,6 @@
 const { getAllCourses, getCourseById } = require('../services/contentService');
 
-const getAllCoursesController = async (req, res) => {
+const getAllCoursesController = async (req, res, next) => {
   try {
     const options = {
       page: req.query.page,
@@ -10,52 +10,53 @@ const getAllCoursesController = async (req, res) => {
     
     const result = await getAllCourses(options);
     
-    res.status(200).json({
-      success: true,
+    const successResponse = {
+      type: 'https://glasscode/errors/success',
+      title: 'Success',
+      status: 200,
       data: result.courses,
       meta: {
         pagination: result.pagination
       }
-    });
+    };
+    
+    res.status(200).json(successResponse);
   } catch (error) {
-    res.status(500).json({
-      success: false,
-      error: {
-        code: 'INTERNAL_ERROR',
-        message: error.message
-      }
-    });
+    // Let the error middleware handle RFC 7807 compliant error responses
+    next(error);
   }
 };
 
-const getCourseByIdController = async (req, res) => {
+const getCourseByIdController = async (req, res, next) => {
   try {
     const { id } = req.params;
     
     const course = await getCourseById(id);
     
     if (!course) {
-      return res.status(404).json({
-        success: false,
-        error: {
-          code: 'RESOURCE_NOT_FOUND',
-          message: 'Course not found'
-        }
-      });
+      const errorResponse = {
+        type: 'https://glasscode/errors/not-found',
+        title: 'Not Found',
+        status: 404,
+        detail: 'Course not found',
+        instance: req.originalUrl,
+        traceId: req.correlationId
+      };
+      
+      return res.status(404).json(errorResponse);
     }
     
-    res.status(200).json({
-      success: true,
+    const successResponse = {
+      type: 'https://glasscode/errors/success',
+      title: 'Success',
+      status: 200,
       data: course
-    });
+    };
+    
+    res.status(200).json(successResponse);
   } catch (error) {
-    res.status(500).json({
-      success: false,
-      error: {
-        code: 'INTERNAL_ERROR',
-        message: error.message
-      }
-    });
+    // Let the error middleware handle RFC 7807 compliant error responses
+    next(error);
   }
 };
 

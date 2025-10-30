@@ -1,4 +1,5 @@
 const winston = require('winston');
+const { v4: uuidv4 } = require('uuid');
 
 // Create a logger instance
 const logger = winston.createLogger({
@@ -16,9 +17,21 @@ const logger = winston.createLogger({
   ]
 });
 
+// Generate a correlation ID for request tracing
+const generateCorrelationId = () => {
+  return uuidv4();
+};
+
 const errorHandler = (err, req, res, next) => {
-  // Log the error with request context
+  // Generate correlation ID if not already present
+  const correlationId = req.correlationId || generateCorrelationId();
+  
+  // Add correlation ID to request for logging
+  req.correlationId = correlationId;
+  
+  // Log the error with request context and correlation ID
   logger.error('Unhandled error occurred', {
+    correlationId,
     error: err.message,
     stack: err.stack,
     url: req.url,
@@ -28,71 +41,154 @@ const errorHandler = (err, req, res, next) => {
     userId: req.user?.id
   });
   
+  // RFC 7807 compliant error response structure
+  const errorResponse = {
+    type: 'https://glasscode/errors/internal-error',
+    title: 'Internal Server Error',
+    status: 500,
+    detail: 'An unexpected error occurred',
+    instance: req.originalUrl,
+    traceId: correlationId
+  };
+  
   // Joi validation error
   if (err.isJoi) {
     logger.warn('Validation error', {
+      correlationId,
       details: err.details,
       url: req.url,
       method: req.method,
       userId: req.user?.id
     });
     
-    return res.status(400).json({
-      success: false,
-      error: {
-        code: 'VALIDATION_ERROR',
-        message: 'Validation failed',
-        details: err.details
-      }
-    });
+    errorResponse.type = 'https://glasscode/errors/validation-error';
+    errorResponse.title = 'Validation Error';
+    errorResponse.status = 400;
+    errorResponse.detail = 'Request validation failed';
+    errorResponse.validationErrors = err.details;
+    
+    return res.status(400).json(errorResponse);
   }
   
   // Sequelize validation error
   if (err.name === 'SequelizeValidationError') {
     logger.warn('Sequelize validation error', {
+      correlationId,
       errors: err.errors,
       url: req.url,
       method: req.method,
       userId: req.user?.id
     });
     
-    return res.status(400).json({
-      success: false,
-      error: {
-        code: 'VALIDATION_ERROR',
-        message: 'Validation failed',
-        details: err.errors.map(e => ({
-          field: e.path,
-          message: e.message
-        }))
-      }
-    });
+    errorResponse.type = 'https://glasscode/errors/validation-error';
+    errorResponse.title = 'Validation Error';
+    errorResponse.status = 400;
+    errorResponse.detail = 'Database validation failed';
+    errorResponse.validationErrors = err.errors.map(e => ({
+      field: e.path,
+      message: e.message
+    }));
+    
+    return res.status(400).json(errorResponse);
   }
   
   // Sequelize unique constraint error
   if (err.name === 'SequelizeUniqueConstraintError') {
     logger.warn('Sequelize unique constraint error', {
+      correlationId,
       errors: err.errors,
       url: req.url,
       method: req.method,
       userId: req.user?.id
     });
     
-    return res.status(409).json({
-      success: false,
-      error: {
-        code: 'CONFLICT_ERROR',
-        message: 'Resource already exists',
-        details: err.errors.map(e => ({
-          field: e.path,
-          message: e.message
-        }))
-      }
+    errorResponse.type = 'https://glasscode/errors/conflict-error';
+    errorResponse.title = 'Conflict Error';
+    errorResponse.status = 409;
+    errorResponse.detail = 'Resource already exists';
+    errorResponse.conflictErrors = err.errors.map(e => ({
+      field: e.path,
+      message: e.message
+    }));
+    
+    return res.status(409).json(errorResponse);
+  }
+  
+  // Sequelize foreign key constraint error
+  if (err.name === 'SequelizeForeignKeyConstraintError') {
+    logger.warn('Sequelize foreign key constraint error', {
+      correlationId,
+      errors: err.errors,
+      url: req.url,
+      method: req.method,
+      userId: req.user?.id
     });
+    
+    errorResponse.type = 'https://glasscode/errors/foreign-key-error';
+    errorResponse.title = 'Foreign Key Constraint Error';
+    errorResponse.status = 400;
+    errorResponse.detail = 'Referenced resource does not exist';
+    
+    return res.status(400).json(errorResponse);
+  }
+  
+  // Sequelize database error
+  if (err.name === 'SequelizeDatabaseError') {
+    logger.error('Sequelize database error', {
+      correlationId,
+      error: err.message,
+      sql: err.sql,
+      url: req.url,
+      method: req.method,
+      userId: req.user?.id
+    });
+    
+    errorResponse.type = 'https://glasscode/errors/database-error';
+    errorResponse.title = 'Database Error';
+    errorResponse.status = 500;
+    errorResponse.detail = 'A database error occurred';
+    
+    return res.status(500).json(errorResponse);
+  }
+  
+  // Authorization error
+  if (err.name === 'AuthorizationError') {
+    logger.warn('Authorization error', {
+      correlationId,
+      error: err.message,
+      url: req.url,
+      method: req.method,
+      userId: req.user?.id
+    });
+    
+    errorResponse.type = 'https://glasscode/errors/authorization-error';
+    errorResponse.title = 'Authorization Error';
+    errorResponse.status = 403;
+    errorResponse.detail = err.message;
+    
+    return res.status(403).json(errorResponse);
+  }
+  
+  // Authentication error
+  if (err.name === 'AuthenticationError') {
+    logger.warn('Authentication error', {
+      correlationId,
+      error: err.message,
+      url: req.url,
+      method: req.method
+    });
+    
+    errorResponse.type = 'https://glasscode/errors/authentication-error';
+    errorResponse.title = 'Authentication Error';
+    errorResponse.status = 401;
+    errorResponse.detail = err.message;
+    
+    return res.status(401).json(errorResponse);
   }
   
   // Default error
   logger.error('Internal server error', {
+    correlationId,
     error: err.message,
     stack: err.stack,
     url: req.url,
@@ -100,13 +196,7 @@ const errorHandler = (err, req, res, next) => {
     userId: req.user?.id
   });
   
-  res.status(500).json({
-    success: false,
-    error: {
-      code: 'INTERNAL_ERROR',
-      message: 'Something went wrong!'
-    }
-  });
+  res.status(500).json(errorResponse);
 };
 
 module.exports = errorHandler;

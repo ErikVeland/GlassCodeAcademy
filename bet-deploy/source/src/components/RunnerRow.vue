@@ -78,6 +78,11 @@ const props = defineProps<{
   isExpired?: boolean
 }>()
 
+// Emit for communicating with parent components
+const emit = defineEmits<{
+  (e: 'add-to-betslip', runner: any): void
+}>()
+
 // Track previous odds for animation (store as numbers for accurate comparison)
 const previousOddsNum = ref<number>(0)
 const oddsAnimation = ref('')
@@ -264,6 +269,3 @@ const handleOddsClick = () => {
   })
 }
 </script>
-const emit = defineEmits<{
-  (e: 'add-to-betslip', runner: any): void
-}>()

@@ -7,13 +7,16 @@ const authenticate = async (req, res, next) => {
     const authHeader = req.headers.authorization;
     
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
-      return res.status(401).json({
-        success: false,
-        error: {
-          code: 'AUTHENTICATION_REQUIRED',
-          message: 'Authentication required'
-        }
-      });
+      const errorResponse = {
+        type: 'https://glasscode/errors/authentication-required',
+        title: 'Authentication Required',
+        status: 401,
+        detail: 'Authentication required',
+        instance: req.originalUrl,
+        traceId: req.correlationId
+      };
+      
+      return res.status(401).json(errorResponse);
     }
 
     const token = authHeader.split(' ')[1];
@@ -31,26 +34,32 @@ const authenticate = async (req, res, next) => {
     const user = await User.findByPk(decoded.userId);
     
     if (!user) {
-      return res.status(401).json({
-        success: false,
-        error: {
-          code: 'AUTHENTICATION_REQUIRED',
-          message: 'Invalid token'
-        }
-      });
+      const errorResponse = {
+        type: 'https://glasscode/errors/authentication-required',
+        title: 'Authentication Required',
+        status: 401,
+        detail: 'Invalid token',
+        instance: req.originalUrl,
+        traceId: req.correlationId
+      };
+      
+      return res.status(401).json(errorResponse);
     }
     
     // Attach user to request
     req.user = user;
     next();
   } catch (error) {
-    return res.status(401).json({
-      success: false,
-      error: {
-        code: 'AUTHENTICATION_REQUIRED',
-        message: 'Invalid token'
-      }
-    });
+    const errorResponse = {
+      type: 'https://glasscode/errors/authentication-required',
+      title: 'Authentication Required',
+      status: 401,
+      detail: 'Invalid token',
+      instance: req.originalUrl,
+      traceId: req.correlationId
+    };
+    
+    return res.status(401).json(errorResponse);
   }
 };
 

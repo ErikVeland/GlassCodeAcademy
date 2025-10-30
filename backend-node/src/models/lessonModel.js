@@ -40,6 +40,10 @@ const Lesson = sequelize.define('Lesson', {
   estimatedMinutes: {
     type: DataTypes.INTEGER,
     field: 'estimated_minutes'
+  },
+  version: {
+    type: DataTypes.STRING(20),
+    defaultValue: '1.0.0'
   }
 }, {
   tableName: 'lessons',

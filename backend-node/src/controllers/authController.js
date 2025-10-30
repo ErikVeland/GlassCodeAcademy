@@ -17,7 +17,7 @@ const logger = winston.createLogger({
   ]
 });
 
-const registerController = async (req, res) => {
+const registerController = async (req, res, next) => {
   try {
     const { email, password, firstName, lastName } = req.body;
     
@@ -32,27 +32,26 @@ const registerController = async (req, res) => {
     
     logger.info('User registered successfully', { userId: result.user.id, email });
     
-    res.status(201).json({
-      success: true,
+    const successResponse = {
+      type: 'https://glasscode/errors/success',
+      title: 'Success',
+      status: 201,
       data: result
-    });
+    };
+    
+    res.status(201).json(successResponse);
   } catch (error) {
     logger.error('User registration failed', { 
       email: req.body.email,
       error: error.message,
       stack: error.stack
     });
-    res.status(400).json({
-      success: false,
-      error: {
-        code: 'VALIDATION_ERROR',
-        message: error.message
-      }
-    });
+    // Let the error middleware handle RFC 7807 compliant error responses
+    next(error);
   }
 };
 
-const loginController = async (req, res) => {
+const loginController = async (req, res, next) => {
   try {
     const { email, password } = req.body;
     
@@ -62,23 +61,22 @@ const loginController = async (req, res) => {
     
     logger.info('User logged in successfully', { userId: result.user.id, email });
     
-    res.status(200).json({
-      success: true,
+    const successResponse = {
+      type: 'https://glasscode/errors/success',
+      title: 'Success',
+      status: 200,
       data: result
-    });
+    };
+    
+    res.status(200).json(successResponse);
   } catch (error) {
     logger.error('User login failed', { 
       email: req.body.email,
       error: error.message,
       stack: error.stack
     });
-    res.status(401).json({
-      success: false,
-      error: {
-        code: 'AUTHENTICATION_FAILED',
-        message: error.message
-      }
-    });
+    // Let the error middleware handle RFC 7807 compliant error responses
+    next(error);
   }
 };
 

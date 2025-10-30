@@ -1,11 +1,37 @@
 const { User } = require('../models');
+const winston = require('winston');
 
-const getProfileController = async (req, res) => {
+// Create a logger instance
+const logger = winston.createLogger({
+  level: 'info',
+  format: winston.format.combine(
+    winston.format.timestamp(),
+    winston.format.errors({ stack: true }),
+    winston.format.json()
+  ),
+  defaultMeta: { service: 'profile-controller' },
+  transports: [
+    new winston.transports.Console({
+      format: winston.format.simple()
+    })
+  ]
+});
+
+const getProfileController = async (req, res, next) => {
   try {
     // Test-mode stub
     if (process.env.NODE_ENV === 'test') {
-      return res.status(200).json({ success: true, data: { id: 1, email: 'test@example.com', firstName: 'Test', lastName: 'User' } });
+      const successResponse = {
+        type: 'https://glasscode/errors/success',
+        title: 'Success',
+        status: 200,
+        data: { id: 1, email: 'test@example.com', firstName: 'Test', lastName: 'User' }
+      };
+      
+      return res.status(200).json(successResponse);
     }
+
+    logger.info('Fetching user profile', { userId: req.user.id, correlationId: req.correlationId });
 
     // Get user with roles
     const user = await User.findByPk(req.user.id, {
@@ -18,38 +44,59 @@ const getProfileController = async (req, res) => {
     });
 
     if (!user) {
-      return res.status(404).json({
-        success: false,
-        error: {
-          code: 'RESOURCE_NOT_FOUND',
-          message: 'User not found'
-        }
-      });
+      logger.warn('User not found when fetching profile', { userId: req.user.id, correlationId: req.correlationId });
+      
+      const errorResponse = {
+        type: 'https://glasscode/errors/not-found',
+        title: 'Not Found',
+        status: 404,
+        detail: 'User not found',
+        instance: req.originalUrl,
+        traceId: req.correlationId
+      };
+      
+      return res.status(404).json(errorResponse);
     }
 
-    res.status(200).json({
-      success: true,
+    logger.info('User profile fetched successfully', { userId: req.user.id, correlationId: req.correlationId });
+    
+    const successResponse = {
+      type: 'https://glasscode/errors/success',
+      title: 'Success',
+      status: 200,
       data: user
-    });
+    };
+    
+    res.status(200).json(successResponse);
   } catch (error) {
-    res.status(500).json({
-      success: false,
-      error: {
-        code: 'INTERNAL_ERROR',
-        message: error.message
-      }
+    logger.error('Error fetching user profile', { 
+      userId: req.user?.id,
+      error: error.message,
+      stack: error.stack,
+      correlationId: req.correlationId
     });
+    // Let the error middleware handle RFC 7807 compliant error responses
+    next(error);
   }
 };
 
-const updateProfileController = async (req, res) => {
+const updateProfileController = async (req, res, next) => {
   try {
     // Test-mode stub
     if (process.env.NODE_ENV === 'test') {
-      return res.status(200).json({ success: true, data: { id: 1, email: 'test@example.com', firstName: req.body.firstName || 'Test', lastName: req.body.lastName || 'User' } });
+      const successResponse = {
+        type: 'https://glasscode/errors/success',
+        title: 'Success',
+        status: 200,
+        data: { id: 1, email: 'test@example.com', firstName: req.body.firstName || 'Test', lastName: req.body.lastName || 'User' }
+      };
+      
+      return res.status(200).json(successResponse);
     }
 
     const { firstName, lastName, username } = req.body;
+    
+    logger.info('Updating user profile', { userId: req.user.id, correlationId: req.correlationId });
     
     // Update user
     const [updatedRows] = await User.update({
@@ -63,13 +110,18 @@ const updateProfileController = async (req, res) => {
     });
 
     if (updatedRows === 0) {
-      return res.status(404).json({
-        success: false,
-        error: {
-          code: 'RESOURCE_NOT_FOUND',
-          message: 'User not found'
-        }
-      });
+      logger.warn('User not found when updating profile', { userId: req.user.id, correlationId: req.correlationId });
+      
+      const errorResponse = {
+        type: 'https://glasscode/errors/not-found',
+        title: 'Not Found',
+        status: 404,
+        detail: 'User not found',
+        instance: req.originalUrl,
+        traceId: req.correlationId
+      };
+      
+      return res.status(404).json(errorResponse);
     }
 
     // Get updated user
@@ -77,18 +129,25 @@ const updateProfileController = async (req, res) => {
       attributes: { exclude: ['passwordHash'] } // Exclude password from response
     });
 
-    res.status(200).json({
-      success: true,
+    logger.info('User profile updated successfully', { userId: req.user.id, correlationId: req.correlationId });
+    
+    const successResponse = {
+      type: 'https://glasscode/errors/success',
+      title: 'Success',
+      status: 200,
       data: user
-    });
+    };
+    
+    res.status(200).json(successResponse);
   } catch (error) {
-    res.status(500).json({
-      success: false,
-      error: {
-        code: 'INTERNAL_ERROR',
-        message: error.message
-      }
+    logger.error('Error updating user profile', { 
+      userId: req.user?.id,
+      error: error.message,
+      stack: error.stack,
+      correlationId: req.correlationId
     });
+    // Let the error middleware handle RFC 7807 compliant error responses
+    next(error);
   }
 };
 

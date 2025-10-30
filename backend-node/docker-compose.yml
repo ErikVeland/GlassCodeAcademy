@@ -1,30 +1,44 @@
 version: '3.8'
 
 services:
-  backend:
-    build: .
+  # Jaeger for distributed tracing
+  jaeger:
+    image: jaegertracing/all-in-one:latest
     ports:
-      - "8080:8080"
+      - "16686:16686"  # Jaeger UI
+      - "14268:14268"  # Jaeger collector
     environment:
-      - DATABASE_URL=postgresql://postgres:password@db:5432/glasscode_dev
-      - JWT_SECRET=your-super-secret-jwt-key
-      - NODE_ENV=development
-    depends_on:
-      - db
-    volumes:
-      - .:/usr/src/app
-      - /usr/src/app/node_modules
+      - COLLECTOR_ZIPKIN_HOST_PORT=:9411
+    networks:
+      - observability
 
-  db:
-    image: postgres:15
-    environment:
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=password
-      - POSTGRES_DB=glasscode_dev
+  # Prometheus for metrics collection
+  prometheus:
+    image: prom/prometheus:latest
     ports:
-      - "5432:5432"
+      - "9090:9090"
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+    networks:
+      - observability
+
+  # Grafana for metrics visualization
+  grafana:
+    image: grafana/grafana-enterprise
+    ports:
+      - "3001:3000"
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+    volumes:
+      - grafana-storage:/var/lib/grafana
+    depends_on:
+      - prometheus
+    networks:
+      - observability
+
+networks:
+  observability:
+    driver: bridge
 
 volumes:
-  postgres_data:
+  grafana-storage:

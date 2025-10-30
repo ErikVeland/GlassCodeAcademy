@@ -3,6 +3,23 @@ const {
   updateUserLessonProgress, 
   getUserLessonProgress 
 } = require('../services/progressService');
+const winston = require('winston');
+
+// Create a logger instance
+const logger = winston.createLogger({
+  level: 'info',
+  format: winston.format.combine(
+    winston.format.timestamp(),
+    winston.format.errors({ stack: true }),
+    winston.format.json()
+  ),
+  defaultMeta: { service: 'progress-controller' },
+  transports: [
+    new winston.transports.Console({
+      format: winston.format.simple()
+    })
+  ]
+});
 
 const getUserCourseProgressController = async (req, res) => {
   try {
@@ -11,22 +28,22 @@ const getUserCourseProgressController = async (req, res) => {
     
     const progress = await getUserCourseProgress(userId, courseId);
     
-    res.status(200).json({
-      success: true,
+    // RFC 7807 compliant success response
+    const successResponse = {
+      type: 'https://glasscode/errors/success',
+      title: 'Success',
+      status: 200,
       data: progress || {}
-    });
+    };
+    
+    res.status(200).json(successResponse);
   } catch (error) {
-    res.status(500).json({
-      success: false,
-      error: {
-        code: 'INTERNAL_ERROR',
-        message: error.message
-      }
-    });
+    // Let the error middleware handle RFC 7807 compliant error responses
+    next(error);
   }
 };
 
-const updateUserLessonProgressController = async (req, res) => {
+const updateUserLessonProgressController = async (req, res, next) => {
   try {
     const { lessonId } = req.params;
     const userId = req.user.id;
@@ -34,40 +51,40 @@ const updateUserLessonProgressController = async (req, res) => {
     
     const progress = await updateUserLessonProgress(userId, lessonId, updates);
     
-    res.status(200).json({
-      success: true,
+    // RFC 7807 compliant success response
+    const successResponse = {
+      type: 'https://glasscode/errors/success',
+      title: 'Success',
+      status: 200,
       data: progress
-    });
+    };
+    
+    res.status(200).json(successResponse);
   } catch (error) {
-    res.status(500).json({
-      success: false,
-      error: {
-        code: 'INTERNAL_ERROR',
-        message: error.message
-      }
-    });
+    // Let the error middleware handle RFC 7807 compliant error responses
+    next(error);
   }
 };
 
-const getUserLessonProgressController = async (req, res) => {
+const getUserLessonProgressController = async (req, res, next) => {
   try {
     const { lessonId } = req.params;
     const userId = req.user.id;
     
     const progress = await getUserLessonProgress(userId, lessonId);
     
-    res.status(200).json({
-      success: true,
+    // RFC 7807 compliant success response
+    const successResponse = {
+      type: 'https://glasscode/errors/success',
+      title: 'Success',
+      status: 200,
       data: progress || {}
-    });
+    };
+    
+    res.status(200).json(successResponse);
   } catch (error) {
-    res.status(500).json({
-      success: false,
-      error: {
-        code: 'INTERNAL_ERROR',
-        message: error.message
-      }
-    });
+    // Let the error middleware handle RFC 7807 compliant error responses
+    next(error);
   }
 };
 

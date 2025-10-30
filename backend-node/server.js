@@ -26,6 +26,9 @@ const path = require('path');
   }
 })();
 
+// Initialize OpenTelemetry
+const { sdk } = require('./src/utils/opentelemetry');
+
 // Database initialization
 const initializeDatabase = require('./src/utils/database');
 initializeDatabase();
@@ -71,10 +74,23 @@ if (process.env.SENTRY_DSN) {
   console.log('Sentry DSN not provided, skipping initialization');
 }
 
+// Start OpenTelemetry SDK
+try {
+  sdk.start();
+  console.log('OpenTelemetry SDK started');
+} catch (error) {
+  console.error('Error starting OpenTelemetry SDK:', error);
+}
+
 // App Configuration
 app.use(helmet()); // Security headers
 app.use(cors()); // Enable CORS
 app.use(morgan('combined')); // Logging
+
+// Add correlation ID middleware
+const correlationMiddleware = require('./src/middleware/correlationMiddleware');
+app.use(correlationMiddleware);
+
 app.use(express.json()); // Parse JSON bodies
 app.use(express.urlencoded({ extended: true })); // Parse URL-encoded bodies
 
@@ -93,6 +109,7 @@ app.get('/health', (req, res) => {
 app.use('/api/auth', require('./src/routes/authRoutes'));
 app.use('/api/profile', require('./src/routes/profileRoutes'));
 app.use('/api/admin', require('./src/routes/adminRoutes'));
+app.use('/api/admin/academies', require('./src/routes/academyRoutes'));
 app.use('/api/content', require('./src/routes/contentManagementRoutes'));
 app.use('/api/courses', require('./src/routes/courseRoutes'));
 app.use('/api/modules', require('./src/routes/moduleRoutes'));
@@ -106,18 +123,29 @@ app.use(require('./src/middleware/errorMiddleware'));
 
 // 404 handler
 app.use('*', (req, res) => {
-  res.status(404).json({
-    success: false,
-    error: {
-      code: 'RESOURCE_NOT_FOUND',
-      message: 'Route not found'
-    }
-  });
+  const errorResponse = {
+    type: 'https://glasscode/errors/not-found',
+    title: 'Not Found',
+    status: 404,
+    detail: 'The requested resource was not found',
+    instance: req.originalUrl,
+    traceId: req.correlationId
+  };
+  
+  res.status(404).json(errorResponse);
 });
 
 // Start server
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
+});
+
+// Graceful shutdown
+process.on('SIGTERM', () => {
+  sdk.shutdown()
+    .then(() => console.log('OpenTelemetry SDK shut down successfully'))
+    .catch(error => console.error('Error shutting down OpenTelemetry SDK:', error))
+    .finally(() => process.exit(0));
 });
 
 module.exports = app;

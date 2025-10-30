@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import Link from "next/link";
 import "./globals.css";
 import "../styles/design-system.scss";
@@ -35,6 +35,16 @@ export const metadata: Metadata = {
     ],
     apple: '/apple-touch-icon.svg',
   },
+};
+
+// Lock viewport on mobile to prevent accidental zooming
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 1,
+  minimumScale: 1,
+  userScalable: false,
+  viewportFit: 'cover',
 };
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {

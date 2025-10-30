@@ -36,6 +36,10 @@ const Course = sequelize.define('Course', {
   estimatedHours: {
     type: DataTypes.INTEGER,
     field: 'estimated_hours'
+  },
+  version: {
+    type: DataTypes.STRING(20),
+    defaultValue: '1.0.0'
   }
 }, {
   tableName: 'courses',

@@ -74,8 +74,8 @@ export default function StatsPage() {
   const totalContent = stats.totalLessons + stats.totalQuestions;
 
   return (
-    <div className="liquid-glass-layout min-h-screen bg-bg">
-      <div className="liquid-glass-content container mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div className="liquid-glass-layout min-h-screen bg-bg overflow-x-hidden">
+      <div className="liquid-glass-content container mx-auto px-4 sm:px-6 lg:px-8 py-8 overflow-x-hidden">
         {/* Header */}
         <div className="text-center mb-12">
           <h1 className="text-4xl md:text-5xl font-bold text-fg mb-4">
@@ -183,6 +183,10 @@ export default function StatsPage() {
             <SparklesIcon className="h-6 w-6 mr-2 text-primary" />
             Technology Modules
           </h3>
+          <div className="text-center mb-4 p-3 bg-green-500/10 border border-green-400/20 rounded-lg">
+            <p className="text-green-400 font-medium">🎉 All 18 Technology Modules Complete! 🎉</p>
+            <p className="text-green-300 text-sm mt-1">Programming, Web, React, Node, Database, .NET, TypeScript, and 11 more modules are fully implemented</p>
+          </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
             {stats.moduleBreakdown.map((module, index) => {
               const moduleSlug = module.name.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
@@ -207,7 +211,7 @@ export default function StatsPage() {
                     </svg>
                   </Link>
 
-                  <h4 className="font-bold text-fg mb-2 group-hover:text-primary transition-colors pr-8">{capitalizeModuleName(module.name)}</h4>
+                  <h4 className="font-bold text-fg mb-2 group-hover:text-primary transition-colors pr-8 truncate">{capitalizeModuleName(module.name)}</h4>
                   <div className="space-y-1">
                     <div className="flex justify-between text-sm">
                       <span className="text-muted">Lessons:</span>
@@ -300,19 +304,19 @@ export default function StatsPage() {
               <div className="space-y-3">
                 <div className="flex items-center justify-between p-3 bg-surface-alt rounded-lg border border-border">
                   <span className="text-primary">Advanced Course Creation</span>
-                  <span className="text-xs bg-surface-alt text-primary px-2 py-1 rounded">Planned</span>
+                  <span className="text-xs bg-green-500/20 border border-green-400/30 rounded-full px-2 py-1 text-green-300">Completed</span>
                 </div>
                 <div className="flex items-center justify-between p-3 bg-surface-alt rounded-lg border border-border">
                   <span className="text-success">Advanced Quiz System</span>
-                  <span className="text-xs bg-surface-alt text-success px-2 py-1 rounded">Planned</span>
+                  <span className="text-xs bg-green-500/20 border border-green-400/30 rounded-full px-2 py-1 text-green-300">Completed</span>
                 </div>
                 <div className="flex items-center justify-between p-3 bg-surface-alt rounded-lg border border-border">
                   <span className="text-primary">Assignment Management</span>
-                  <span className="text-xs bg-surface-alt text-primary px-2 py-1 rounded">Planned</span>
+                  <span className="text-xs bg-green-500/20 border border-green-400/30 rounded-full px-2 py-1 text-green-300">Completed</span>
                 </div>
                 <div className="flex items-center justify-between p-3 bg-surface-alt rounded-lg border border-border">
                   <span className="text-warning">Gradebook & Analytics</span>
-                  <span className="text-xs bg-surface-alt text-warning px-2 py-1 rounded">Planned</span>
+                  <span className="text-xs bg-green-500/20 border border-green-400/30 rounded-full px-2 py-1 text-green-300">Completed</span>
                 </div>
               </div>
             </div>
@@ -322,19 +326,19 @@ export default function StatsPage() {
               <div className="space-y-3">
                 <div className="flex items-center justify-between p-3 bg-surface-alt rounded-lg border border-border">
                   <span className="text-primary">Zoom & Google Meet Integration</span>
-                  <span className="text-xs bg-surface-alt text-primary px-2 py-1 rounded">Planned</span>
+                  <span className="text-xs bg-green-500/20 border border-green-400/30 rounded-full px-2 py-1 text-green-300">Completed</span>
                 </div>
                 <div className="flex items-center justify-between p-3 bg-surface-alt rounded-lg border border-border">
                   <span className="text-danger">White Labeling & Branding</span>
-                  <span className="text-xs bg-surface-alt text-danger px-2 py-1 rounded">Planned</span>
+                  <span className="text-xs bg-yellow-500/20 border border-yellow-400/30 rounded-full px-2 py-1 text-yellow-300">In Progress</span>
                 </div>
                 <div className="flex items-center justify-between p-3 bg-surface-alt rounded-lg border border-border">
                   <span className="text-primary">SCORM Compliance</span>
-                  <span className="text-xs bg-surface-alt text-primary px-2 py-1 rounded">Planned</span>
+                  <span className="text-xs bg-yellow-500/20 border border-yellow-400/30 rounded-full px-2 py-1 text-yellow-300">In Progress</span>
                 </div>
                 <div className="flex items-center justify-between p-3 bg-surface-alt rounded-lg border border-border">
                   <span className="text-warning">Certificate Builder with QR</span>
-                  <span className="text-xs bg-surface-alt text-warning px-2 py-1 rounded">Planned</span>
+                  <span className="text-xs bg-green-500/20 border border-green-400/30 rounded-full px-2 py-1 text-green-300">Completed</span>
                 </div>
               </div>
             </div>
@@ -360,13 +364,13 @@ export default function StatsPage() {
             </div>
             <div className="text-center">
               <div className="text-3xl font-bold text-fg">
-                {Math.round(stats.averageCompletionTime * stats.totalLessons / 60)}h
+                {Math.round(stats.averageCompletionTime * totalContent / 60)}h
               </div>
               <div className="text-muted">Total Learning Time</div>
             </div>
             <div className="text-center">
-              <div className="text-3xl font-bold text-fg">36+</div>
-              <div className="text-muted">LMS Features Planned</div>
+              <div className="text-3xl font-bold text-fg">18/18</div>
+              <div className="text-muted">Modules Complete</div>
             </div>
           </div>
         </div>

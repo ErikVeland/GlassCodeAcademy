@@ -20,110 +20,127 @@ const logger = winston.createLogger({
   ]
 });
 
-const getAllModulesController = async (req, res) => {
+const getAllModulesController = async (req, res, next) => {
   try {
-    logger.info('Fetching all published modules');
+    logger.info('Fetching all published modules', { correlationId: req.correlationId });
     const modules = await getAllModules();
-    logger.info('Modules fetched successfully', { count: modules.length });
-    res.status(200).json(modules);
+    logger.info('Modules fetched successfully', { count: modules.length, correlationId: req.correlationId });
+    
+    const successResponse = {
+      type: 'https://glasscode/errors/success',
+      title: 'Success',
+      status: 200,
+      data: modules
+    };
+    
+    res.status(200).json(successResponse);
   } catch (error) {
-    logger.error('Error fetching modules list', { error: error.message, stack: error.stack });
-    res.status(500).json({
-      success: false,
-      error: {
-        code: 'INTERNAL_ERROR',
-        message: 'An error occurred while fetching modules.'
-      }
+    logger.error('Error fetching modules list', { 
+      error: error.message, 
+      stack: error.stack,
+      correlationId: req.correlationId
     });
+    // Let the error middleware handle RFC 7807 compliant error responses
+    next(error);
   }
 };
 
-const getModuleByIdController = async (req, res) => {
+const getModuleByIdController = async (req, res, next) => {
   try {
     const { id } = req.params;
     
-    logger.info('Fetching module by ID', { moduleId: id });
+    logger.info('Fetching module by ID', { moduleId: id, correlationId: req.correlationId });
     
     const module = await getModuleById(id);
     
     if (!module) {
-      logger.warn('Module not found', { moduleId: id });
-      return res.status(404).json({
-        success: false,
-        error: {
-          code: 'RESOURCE_NOT_FOUND',
-          message: 'Module not found'
-        }
-      });
+      logger.warn('Module not found', { moduleId: id, correlationId: req.correlationId });
+      
+      const errorResponse = {
+        type: 'https://glasscode/errors/not-found',
+        title: 'Not Found',
+        status: 404,
+        detail: 'Module not found',
+        instance: req.originalUrl,
+        traceId: req.correlationId
+      };
+      
+      return res.status(404).json(errorResponse);
     }
     
-    logger.info('Module fetched successfully', { moduleId: id });
-    res.status(200).json({
-      success: true,
+    logger.info('Module fetched successfully', { moduleId: id, correlationId: req.correlationId });
+    
+    const successResponse = {
+      type: 'https://glasscode/errors/success',
+      title: 'Success',
+      status: 200,
       data: module
-    });
+    };
+    
+    res.status(200).json(successResponse);
   } catch (error) {
     logger.error('Error fetching module by ID', { 
       moduleId: req.params.id, 
       error: error.message, 
-      stack: error.stack 
+      stack: error.stack,
+      correlationId: req.correlationId
     });
-    res.status(500).json({
-      success: false,
-      error: {
-        code: 'INTERNAL_ERROR',
-        message: error.message
-      }
-    });
+    // Let the error middleware handle RFC 7807 compliant error responses
+    next(error);
   }
 };
 
-const getLessonsByModuleIdController = async (req, res) => {
+const getLessonsByModuleIdController = async (req, res, next) => {
   try {
     const { moduleId } = req.params;
     
-    logger.info('Fetching lessons by module ID', { moduleId });
+    logger.info('Fetching lessons by module ID', { moduleId, correlationId: req.correlationId });
     
     const lessons = await getLessonsByModuleId(moduleId);
     
-    logger.info('Lessons fetched successfully', { moduleId, count: lessons.length });
-    res.status(200).json({
-      success: true,
+    logger.info('Lessons fetched successfully', { moduleId, count: lessons.length, correlationId: req.correlationId });
+    
+    const successResponse = {
+      type: 'https://glasscode/errors/success',
+      title: 'Success',
+      status: 200,
       data: lessons
-    });
+    };
+    
+    res.status(200).json(successResponse);
   } catch (error) {
     logger.error('Error fetching lessons by module ID', { 
       moduleId: req.params.moduleId, 
       error: error.message, 
-      stack: error.stack 
+      stack: error.stack,
+      correlationId: req.correlationId
     });
-    res.status(500).json({
-      success: false,
-      error: {
-        code: 'INTERNAL_ERROR',
-        message: error.message
-      }
-    });
+    // Let the error middleware handle RFC 7807 compliant error responses
+    next(error);
   }
 };
 
 // Enhanced controller to get quizzes by module slug with better error handling and logging
-const getQuizzesByModuleSlugController = async (req, res) => {
+const getQuizzesByModuleSlugController = async (req, res, next) => {
   try {
     const { slug } = req.params;
     
-    logger.info('Fetching quizzes by module slug', { moduleSlug: slug });
+    logger.info('Fetching quizzes by module slug', { moduleSlug: slug, correlationId: req.correlationId });
     
     // Check if it's a short slug and if it's valid
     if (isShortSlug(slug) && !isValidShortSlug(slug)) {
-      logger.warn('Invalid short slug provided', { moduleSlug: slug });
-      return res.status(404).json({
-        success: false,
-        error: {
-          code: 'RESOURCE_NOT_FOUND',
-          message: 'Module not found'
-        }
-      });
+      logger.warn('Invalid short slug provided', { moduleSlug: slug, correlationId: req.correlationId });
+      
+      const errorResponse = {
+        type: 'https://glasscode/errors/not-found',
+        title: 'Not Found',
+        status: 404,
+        detail: 'Module not found',
+        instance: req.originalUrl,
+        traceId: req.correlationId
+      };
+      
+      return res.status(404).json(errorResponse);
     }
     
     // Resolve short slug to full slug if needed
@@ -137,17 +154,21 @@ const getQuizzesByModuleSlugController = async (req, res) => {
     });
     
     if (!module) {
-      logger.warn('Module not found when fetching quizzes', { moduleSlug: slug, resolvedSlug });
-      return res.status(404).json({
-        success: false,
-        error: {
-          code: 'RESOURCE_NOT_FOUND',
-          message: 'Module not found'
-        }
-      });
+      logger.warn('Module not found when fetching quizzes', { moduleSlug: slug, resolvedSlug, correlationId: req.correlationId });
+      
+      const errorResponse = {
+        type: 'https://glasscode/errors/not-found',
+        title: 'Not Found',
+        status: 404,
+        detail: 'Module not found',
+        instance: req.originalUrl,
+        traceId: req.correlationId
+      };
+      
+      return res.status(404).json(errorResponse);
     }
     
-    logger.info('Module found, fetching lessons', { moduleSlug: slug, resolvedSlug, moduleId: module.id });
+    logger.info('Module found, fetching lessons', { moduleSlug: slug, resolvedSlug, moduleId: module.id, correlationId: req.correlationId });
     
     // Get all lessons for this module
     const lessons = await Lesson.findAll({
@@ -158,18 +179,25 @@ const getQuizzesByModuleSlugController = async (req, res) => {
       order: [['order', 'ASC']]
     });
     
-    logger.info('Lessons fetched, fetching quizzes', { moduleSlug: slug, resolvedSlug, lessonCount: lessons.length });
+    logger.info('Lessons fetched, fetching quizzes', { moduleSlug: slug, resolvedSlug, lessonCount: lessons.length, correlationId: req.correlationId });
     
     // Get all quizzes for all lessons
     const lessonIds = lessons.map(lesson => lesson.id);
     
     if (lessonIds.length === 0) {
-      logger.warn('No lessons found for module, returning empty quiz array', { moduleSlug: slug, resolvedSlug, moduleId: module.id });
-      return res.status(200).json({
-        success: true,
+      logger.warn('No lessons found for module, returning empty quiz array', { moduleSlug: slug, resolvedSlug, moduleId: module.id, correlationId: req.correlationId });
+      
+      const successResponse = {
+        type: 'https://glasscode/errors/success',
+        title: 'Success',
+        status: 200,
         data: []
-      });
+      };
+      
+      return res.status(200).json(successResponse);
     }
+    
+    logger.info('About to call LessonQuiz.findAll', { lessonIds, correlationId: req.correlationId });
     
     const quizzes = await LessonQuiz.findAll({
       where: {
@@ -179,25 +207,25 @@ const getQuizzesByModuleSlugController = async (req, res) => {
       order: [['sort_order', 'ASC']]
     });
     
-    logger.info('Quizzes fetched successfully', { moduleSlug: slug, resolvedSlug, quizCount: quizzes.length });
+    logger.info('Quizzes fetched successfully', { moduleSlug: slug, resolvedSlug, quizCount: quizzes.length, correlationId: req.correlationId });
     
-    res.status(200).json({
-      success: true,
+    const successResponse = {
+      type: 'https://glasscode/errors/success',
+      title: 'Success',
+      status: 200,
       data: quizzes
-    });
+    };
+    
+    res.status(200).json(successResponse);
   } catch (error) {
     logger.error('Error fetching quizzes by module slug', { 
       moduleSlug: req.params.slug, 
       error: error.message, 
-      stack: error.stack 
+      stack: error.stack,
+      correlationId: req.correlationId
     });
-    res.status(500).json({
-      success: false,
-      error: {
-        code: 'INTERNAL_ERROR',
-        message: 'An error occurred while fetching quizzes. Please try again later.'
-      }
-    });
+    // Let the error middleware handle RFC 7807 compliant error responses
+    next(error);
   }
 };
 
