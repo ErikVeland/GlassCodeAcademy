@@ -1,0 +1,106 @@
+// Theme Variables
+// ===============
+
+// Default dark theme (applied immediately to prevent FOUC)
+:root, html[data-theme="dark"] {
+  // Colors
+  --color-brand-primary: #F97316; // orange-500
+  --color-brand-secondary: #0F172A; // slate-900
+  --color-brand-accent: #FACC15; // yellow-400
+  
+  --color-surface: #0B1220; // deep background
+  --color-surface-raised: #111827; // gray-900
+  --color-surface-sunken: #0A0F1C;
+  
+  --color-text-base: #F8FAFC; // slate-50
+  --color-text-muted: #94A3B8; // slate-400
+  --color-text-inverse: #111827;
+  
+  --color-success: #16A34A;
+  --color-warning: #F59E0B;
+  --color-danger: #DC2626;
+  --color-info: #2563EB;
+  
+  // Race type colors
+  --color-horse: #F97316; // Orange (same as brand-primary)
+  --color-greyhound: #C0C0C0; // Coppery silver
+  --color-harness: #DC2626; // Red (more red than orangey red)
+  
+  // Typography
+  --font-family-sans: 'Inter', system-ui, 'Segoe UI', Roboto, Helvetica, Arial, 'Apple Color Emoji', 'Segoe UI Emoji', sans-serif;
+  --font-family-mono: 'SFMono-Regular', Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
+  
+  // Spacing
+  --spacing-xs: 0.25rem; // 4px
+  --spacing-sm: 0.5rem; // 8px
+  --spacing-md: 1rem; // 16px
+  --spacing-lg: 1.5rem; // 24px
+  --spacing-xl: 2rem; // 32px
+  --spacing-2xl: 3rem; // 48px
+  --spacing-3xl: 4rem; // 64px
+  
+  // Border Radius
+  --border-radius-sm: 0.25rem; // 4px
+  --border-radius-md: 0.5rem; // 8px
+  --border-radius-lg: 0.75rem; // 12px
+  --border-radius-xl: 1rem; // 16px
+  --border-radius-xl2: 1.25rem; // 20px
+  
+  // Shadows
+  --shadow-card: 0 6px 24px rgba(0, 0, 0, 0.18);
+  
+  // Transitions
+  --transition-fast: 150ms ease;
+  --transition-normal: 300ms ease;
+  --transition-slow: 500ms ease;
+}
+
+// Light Theme
+[data-theme="light"] {
+  --color-brand-primary: #F97316; // orange-500
+  --color-brand-secondary: #0F172A; // slate-900
+  --color-brand-accent: #FACC15; // yellow-400
+  
+  --color-surface: #F8FAFC; // slate-50 (light background)
+  --color-surface-raised: #FFFFFF; // white (raised elements)
+  --color-surface-sunken: #E2E8F0; // slate-200 (sunken elements)
+  
+  --color-text-base: #0B1220; // deep background (dark text)
+  --color-text-muted: #64748B; // slate-500 (muted text)
+  --color-text-inverse: #F8FAFC; // slate-50 (light text)
+  
+  --color-success: #16A34A;
+  --color-warning: #F59E0B;
+  --color-danger: #DC2626;
+  --color-info: #2563EB;
+  
+  // Race type colors
+  --color-horse: #F97316; // Orange (same as brand-primary)
+  --color-greyhound: #C0C0C0; // Coppery silver
+  --color-harness: #DC2626; // Red (more red than orangey red)
+}
+
+// High Contrast Theme
+[data-theme="high-contrast"] {
+  --color-brand-primary: #FF6B00; // Vibrant orange for better contrast
+  --color-brand-secondary: #000000;
+  --color-brand-accent: #FFD700; // Bright yellow
+  
+  --color-surface: #ffffff;
+  --color-surface-raised: #ffffff;
+  --color-surface-sunken: #f0f0f0;
+  
+  --color-text-base: #000000;
+  --color-text-muted: #444444;
+  --color-text-inverse: #ffffff;
+  
+  --color-success: #008000; // Standard green
+  --color-warning: #FF8C00; // Bright orange
+  --color-danger: #FF0000; // Pure red
+  --color-info: #0000FF; // Pure blue
+  
+  // Race type colors
+  --color-horse: #FF6B00; // Vibrant orange
+  --color-greyhound: #808080; // Gray
+  --color-harness: #FF0000; // Pure red
+}

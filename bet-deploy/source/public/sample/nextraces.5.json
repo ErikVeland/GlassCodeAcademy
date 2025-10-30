@@ -1,0 +1,49 @@
+{
+  "status": 200,
+  "data": {
+    "next_to_go_ids": [
+      "demo-race-1",
+      "demo-race-2",
+      "demo-race-3",
+      "demo-race-4",
+      "demo-race-5"
+    ],
+    "race_summaries": {
+      "demo-race-1": {
+        "race_id": "demo-race-1",
+        "meeting_name": "Flemington",
+        "race_number": 1,
+        "advertised_start": { "seconds": 1761621000 },
+        "category_id": "4a2788f8-e825-4d36-9894-efd4baf1cfae"
+      },
+      "demo-race-2": {
+        "race_id": "demo-race-2",
+        "meeting_name": "Sandown Park",
+        "race_number": 6,
+        "advertised_start": { "seconds": 1761621600 },
+        "category_id": "9daef0d7-bf3c-4f50-921d-8e818c60fe61"
+      },
+      "demo-race-3": {
+        "race_id": "demo-race-3",
+        "meeting_name": "Menangle",
+        "race_number": 3,
+        "advertised_start": { "seconds": 1761622200 },
+        "category_id": "161d9be2-e909-4326-8c2c-35ed71fb460b"
+      },
+      "demo-race-4": {
+        "race_id": "demo-race-4",
+        "meeting_name": "Ascot",
+        "race_number": 4,
+        "advertised_start": { "seconds": 1761622800 },
+        "category_id": "4a2788f8-e825-4d36-9894-efd4baf1cfae"
+      },
+      "demo-race-5": {
+        "race_id": "demo-race-5",
+        "meeting_name": "Wentworth Park",
+        "race_number": 8,
+        "advertised_start": { "seconds": 1761623400 },
+        "category_id": "9daef0d7-bf3c-4f50-921d-8e818c60fe61"
+      }
+    }
+  }
+}

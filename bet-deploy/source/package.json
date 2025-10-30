@@ -1,0 +1,50 @@
+{
+  "name": "racehub",
+  "version": "1.0.0",
+  "description": "A Vue 3 application that displays upcoming horse, greyhound, and harness races from the Neds API",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "start": "node server.js",
+    "test": "vitest",
+    "coverage": "vitest run --coverage"
+  },
+  "dependencies": {
+    "chart.js": "^4.5.1",
+    "express": "^4.21.2",
+    "http-proxy-middleware": "^2.0.9",
+    "pinia": "^2.1.7",
+    "puppeteer": "^24.26.1",
+    "vue": "^3.4.0",
+    "vue-chartjs": "^5.3.2",
+    "vue-i18n": "^9.14.5"
+  },
+  "devDependencies": {
+    "@pinia/testing": "^1.0.2",
+    "@tailwindcss/forms": "^0.5.7",
+    "@tailwindcss/typography": "^0.5.10",
+    "@vitejs/plugin-vue": "^5.0.0",
+    "@vitest/coverage-v8": "^1.0.0",
+    "@vue/test-utils": "^2.4.6",
+    "autoprefixer": "^10.4.16",
+    "jsdom": "^22.1.0",
+    "postcss": "^8.4.32",
+    "sass": "^1.69.5",
+    "tailwindcss": "^3.3.6",
+    "typescript": "^5.3.3",
+    "vite": "^5.0.0",
+    "vitest": "^1.0.0",
+    "vue-tsc": "^1.8.25"
+  },
+  "keywords": [
+    "vue",
+    "pinia",
+    "tailwindcss",
+    "racing",
+    "neds-api"
+  ],
+  "author": "Entain Front-End Challenge",
+  "license": "MIT"
+}

@@ -1,0 +1,15 @@
+/* Immediate theme application to prevent FOUC */
+html[data-theme="dark"] {
+  background-color: #0B1220;
+  color: #F8FAFC;
+}
+
+html[data-theme="light"] {
+  background-color: #111827;
+  color: #0B1220;
+}
+
+html[data-theme="high-contrast"] {
+  background-color: #ffffff;
+  color: #000000;
+}

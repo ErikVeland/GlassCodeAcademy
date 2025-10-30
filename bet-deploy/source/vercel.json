@@ -1,0 +1,8 @@
+{
+  "rewrites": [
+    {
+      "source": "/api/(.*)",
+      "destination": "https://api.neds.com.au/$1"
+    }
+  ]
+}
