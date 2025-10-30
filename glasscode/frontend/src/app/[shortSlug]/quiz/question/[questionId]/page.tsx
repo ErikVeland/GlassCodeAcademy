@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from 'react';
-import type { ProgrammingQuestion } from '@/lib/clientTypes';
+import type { ProgrammingQuestion } from '@/lib/contentRegistry';
 import { notFound, useRouter } from 'next/navigation';
 import Link from 'next/link';
 
@@ -142,7 +142,7 @@ export default function QuizQuestionPage({ params }: { params: Promise<{ shortSl
 
     const isOpenEnded = (questionData.type === 'open-ended') || ((questionData.acceptedAnswers ?? []).length > 0);
     if (isOpenEnded) {
-      const accepted = (questionData.acceptedAnswers ?? []).map(a => String(a).trim().toLowerCase());
+      const accepted = (questionData.acceptedAnswers ?? []).map((a: string) => String(a).trim().toLowerCase());
       const candidate = String(enteredText || '').trim().toLowerCase();
       correct = candidate.length > 0 && accepted.includes(candidate);
     } else {

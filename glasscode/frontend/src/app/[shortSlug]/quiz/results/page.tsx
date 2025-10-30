@@ -241,7 +241,7 @@ export default function QuizResultsPage({ params }: { params: Promise<{ shortSlu
           candidatePath = candidatePath.replace(/\/lessons\/.*$/, '/lessons');
         }
         const target = modules.find((m) => m?.routes?.lessons === candidatePath);
-        setNextLessonTitle(target ? target.title : null);
+        setNextLessonTitle(target?.title ?? null);
       } catch {
         setNextLessonTitle(null);
       }
