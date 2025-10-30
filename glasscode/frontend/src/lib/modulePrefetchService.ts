@@ -21,6 +21,16 @@ type ModuleMeta = {
   prerequisites?: string[];
 };
 
+// Shape of a module item in the content registry response
+type RegistryModule = {
+  slug?: string;
+  title?: string;
+  order?: number;
+  tier?: string;
+  prerequisites?: string[];
+  routes?: { overview?: string };
+};
+
 class ModulePrefetchService {
   private static instance: ModulePrefetchService;
   private isPrefetching = false;
@@ -113,7 +123,7 @@ class ModulePrefetchService {
         const modules = Array.isArray(data?.modules) ? data.modules : [];
         // Populate shortSlug mapping from routes if available
         this.shortSlugByModuleSlug.clear();
-        modules.forEach((m: any) => {
+        modules.forEach((m: RegistryModule) => {
           const slug = (m?.slug || '').toString();
           const overview: string | undefined = m?.routes?.overview;
           const shortSlug = typeof overview === 'string' && overview.trim() !== ''
@@ -121,7 +131,7 @@ class ModulePrefetchService {
             : (slug.includes('-') ? slug.split('-')[0] : slug);
           if (slug) this.shortSlugByModuleSlug.set(slug, shortSlug);
         });
-        all = modules.map((m: any) => ({
+        all = modules.map((m: RegistryModule) => ({
           slug: (m?.slug || '').toString(),
           title: (m?.title || '').toString(),
           order: typeof m?.order === 'number' ? m.order : undefined,
