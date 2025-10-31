@@ -82,7 +82,10 @@ const loginController = async (req, res, next) => {
       stack: error.stack,
     });
 
-    if (error.message && error.message.toLowerCase().includes('invalid credentials')) {
+    if (
+      error.message &&
+      error.message.toLowerCase().includes('invalid credentials')
+    ) {
       const unauthorizedResponse = {
         type: 'https://glasscode/errors/unauthorized',
         title: 'Unauthorized',

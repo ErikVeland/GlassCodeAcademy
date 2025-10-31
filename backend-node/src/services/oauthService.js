@@ -32,12 +32,12 @@ const generateOAuthUrl = (providerName) => {
   // For GitHub: https://github.com/login/oauth/authorize
 
   switch (providerName) {
-  case 'google':
-    return `https://accounts.google.com/o/oauth2/v2/auth?client_id=${provider.clientId}&redirect_uri=${provider.redirectUri}&response_type=code&scope=email profile&access_type=offline`;
-  case 'github':
-    return `https://github.com/login/oauth/authorize?client_id=${provider.clientId}&redirect_uri=${provider.redirectUri}&scope=user:email`;
-  default:
-    throw new Error(`Unsupported OAuth provider: ${providerName}`);
+    case 'google':
+      return `https://accounts.google.com/o/oauth2/v2/auth?client_id=${provider.clientId}&redirect_uri=${provider.redirectUri}&response_type=code&scope=email profile&access_type=offline`;
+    case 'github':
+      return `https://github.com/login/oauth/authorize?client_id=${provider.clientId}&redirect_uri=${provider.redirectUri}&scope=user:email`;
+    default:
+      throw new Error(`Unsupported OAuth provider: ${providerName}`);
   }
 };
 
