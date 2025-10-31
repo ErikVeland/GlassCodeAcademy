@@ -12,9 +12,9 @@ const logger = winston.createLogger({
   defaultMeta: { service: 'error-middleware' },
   transports: [
     new winston.transports.Console({
-      format: winston.format.simple()
-    })
-  ]
+      format: winston.format.simple(),
+    }),
+  ],
 });
 
 // Generate a correlation ID for request tracing
@@ -26,10 +26,10 @@ const errorHandler = (err, req, res, next) => {
   const isTest = process.env.NODE_ENV === 'test';
   // Generate correlation ID if not already present
   const correlationId = req.correlationId || generateCorrelationId();
-  
+
   // Add correlation ID to request for logging
   req.correlationId = correlationId;
-  
+
   // Log the error with request context and correlation ID
   logger.error('Unhandled error occurred', {
     correlationId,
@@ -39,9 +39,9 @@ const errorHandler = (err, req, res, next) => {
     method: req.method,
     ip: req.ip,
     userAgent: req.get('User-Agent'),
-    userId: req.user?.id
+    userId: req.user?.id,
   });
-  
+
   // RFC 7807 compliant error response structure
   const errorResponse = {
     type: 'https://glasscode/errors/internal-error',
@@ -49,9 +49,9 @@ const errorHandler = (err, req, res, next) => {
     status: 500,
     detail: 'An unexpected error occurred',
     instance: req.originalUrl,
-    traceId: correlationId
+    traceId: correlationId,
   };
-  
+
   // Joi validation error
   if (err.isJoi) {
     logger.warn('Validation error', {
@@ -59,13 +59,16 @@ const errorHandler = (err, req, res, next) => {
       details: err.details,
       url: req.url,
       method: req.method,
-      userId: req.user?.id
+      userId: req.user?.id,
     });
-    
+
     if (isTest) {
       return res.status(400).json({
         success: false,
-        error: { code: 'VALIDATION_ERROR', message: 'Request validation failed' }
+        error: {
+          code: 'VALIDATION_ERROR',
+          message: 'Request validation failed',
+        },
       });
     }
 
@@ -74,10 +77,10 @@ const errorHandler = (err, req, res, next) => {
     errorResponse.status = 400;
     errorResponse.detail = 'Request validation failed';
     errorResponse.validationErrors = err.details;
-    
+
     return res.status(400).json(errorResponse);
   }
-  
+
   // Sequelize validation error
   if (err.name === 'SequelizeValidationError') {
     logger.warn('Sequelize validation error', {
@@ -85,13 +88,16 @@ const errorHandler = (err, req, res, next) => {
       errors: err.errors,
       url: req.url,
       method: req.method,
-      userId: req.user?.id
+      userId: req.user?.id,
     });
-    
+
     if (isTest) {
       return res.status(400).json({
         success: false,
-        error: { code: 'VALIDATION_ERROR', message: 'Database validation failed' }
+        error: {
+          code: 'VALIDATION_ERROR',
+          message: 'Database validation failed',
+        },
       });
     }
 
@@ -99,14 +105,14 @@ const errorHandler = (err, req, res, next) => {
     errorResponse.title = 'Validation Error';
     errorResponse.status = 400;
     errorResponse.detail = 'Database validation failed';
-    errorResponse.validationErrors = err.errors.map(e => ({
+    errorResponse.validationErrors = err.errors.map((e) => ({
       field: e.path,
-      message: e.message
+      message: e.message,
     }));
-    
+
     return res.status(400).json(errorResponse);
   }
-  
+
   // Sequelize unique constraint error
   if (err.name === 'SequelizeUniqueConstraintError') {
     logger.warn('Sequelize unique constraint error', {
@@ -114,13 +120,13 @@ const errorHandler = (err, req, res, next) => {
       errors: err.errors,
       url: req.url,
       method: req.method,
-      userId: req.user?.id
+      userId: req.user?.id,
     });
-    
+
     if (isTest) {
       return res.status(409).json({
         success: false,
-        error: { code: 'CONFLICT_ERROR', message: 'Resource already exists' }
+        error: { code: 'CONFLICT_ERROR', message: 'Resource already exists' },
       });
     }
 
@@ -128,14 +134,14 @@ const errorHandler = (err, req, res, next) => {
     errorResponse.title = 'Conflict Error';
     errorResponse.status = 409;
     errorResponse.detail = 'Resource already exists';
-    errorResponse.conflictErrors = err.errors.map(e => ({
+    errorResponse.conflictErrors = err.errors.map((e) => ({
       field: e.path,
-      message: e.message
+      message: e.message,
     }));
-    
+
     return res.status(409).json(errorResponse);
   }
-  
+
   // Sequelize foreign key constraint error
   if (err.name === 'SequelizeForeignKeyConstraintError') {
     logger.warn('Sequelize foreign key constraint error', {
@@ -143,13 +149,16 @@ const errorHandler = (err, req, res, next) => {
       errors: err.errors,
       url: req.url,
       method: req.method,
-      userId: req.user?.id
+      userId: req.user?.id,
     });
-    
+
     if (isTest) {
       return res.status(400).json({
         success: false,
-        error: { code: 'FOREIGN_KEY_ERROR', message: 'Referenced resource does not exist' }
+        error: {
+          code: 'FOREIGN_KEY_ERROR',
+          message: 'Referenced resource does not exist',
+        },
       });
     }
 
@@ -157,10 +166,10 @@ const errorHandler = (err, req, res, next) => {
     errorResponse.title = 'Foreign Key Constraint Error';
     errorResponse.status = 400;
     errorResponse.detail = 'Referenced resource does not exist';
-    
+
     return res.status(400).json(errorResponse);
   }
-  
+
   // Sequelize database error
   if (err.name === 'SequelizeDatabaseError') {
     logger.error('Sequelize database error', {
@@ -169,13 +178,13 @@ const errorHandler = (err, req, res, next) => {
       sql: err.sql,
       url: req.url,
       method: req.method,
-      userId: req.user?.id
+      userId: req.user?.id,
     });
-    
+
     if (isTest) {
       return res.status(500).json({
         success: false,
-        error: { code: 'INTERNAL_ERROR', message: 'A database error occurred' }
+        error: { code: 'INTERNAL_ERROR', message: 'A database error occurred' },
       });
     }
 
@@ -183,10 +192,10 @@ const errorHandler = (err, req, res, next) => {
     errorResponse.title = 'Database Error';
     errorResponse.status = 500;
     errorResponse.detail = 'A database error occurred';
-    
+
     return res.status(500).json(errorResponse);
   }
-  
+
   // Authorization error
   if (err.name === 'AuthorizationError') {
     logger.warn('Authorization error', {
@@ -194,13 +203,13 @@ const errorHandler = (err, req, res, next) => {
       error: err.message,
       url: req.url,
       method: req.method,
-      userId: req.user?.id
+      userId: req.user?.id,
     });
-    
+
     if (isTest) {
       return res.status(403).json({
         success: false,
-        error: { code: 'ACCESS_DENIED', message: err.message }
+        error: { code: 'ACCESS_DENIED', message: err.message },
       });
     }
 
@@ -208,23 +217,23 @@ const errorHandler = (err, req, res, next) => {
     errorResponse.title = 'Authorization Error';
     errorResponse.status = 403;
     errorResponse.detail = err.message;
-    
+
     return res.status(403).json(errorResponse);
   }
-  
+
   // Authentication error
   if (err.name === 'AuthenticationError') {
     logger.warn('Authentication error', {
       correlationId,
       error: err.message,
       url: req.url,
-      method: req.method
+      method: req.method,
     });
-    
+
     if (isTest) {
       return res.status(401).json({
         success: false,
-        error: { code: 'AUTHENTICATION_REQUIRED', message: err.message }
+        error: { code: 'AUTHENTICATION_REQUIRED', message: err.message },
       });
     }
 
@@ -232,10 +241,10 @@ const errorHandler = (err, req, res, next) => {
     errorResponse.title = 'Authentication Error';
     errorResponse.status = 401;
     errorResponse.detail = err.message;
-    
+
     return res.status(401).json(errorResponse);
   }
-  
+
   // Default error
   logger.error('Internal server error', {
     correlationId,
@@ -243,13 +252,16 @@ const errorHandler = (err, req, res, next) => {
     stack: err.stack,
     url: req.url,
     method: req.method,
-    userId: req.user?.id
+    userId: req.user?.id,
   });
-  
+
   if (isTest) {
     return res.status(500).json({
       success: false,
-      error: { code: 'INTERNAL_ERROR', message: 'An unexpected error occurred' }
+      error: {
+        code: 'INTERNAL_ERROR',
+        message: 'An unexpected error occurred',
+      },
     });
   }
 
