@@ -84,3 +84,13 @@ output "github_oidc_arn" {
   description = "ARN of the GitHub OIDC provider"
   value       = module.github_oidc.oidc_provider_arn
 }
+
+output "github_oidc_url" {
+  description = "URL of the GitHub OIDC provider"
+  value       = module.github_oidc.oidc_provider_url
+}
+
+output "github_actions_role_arn" {
+  description = "ARN of the GitHub Actions role"
+  value       = module.github_oidc.github_actions_role_arn
+}

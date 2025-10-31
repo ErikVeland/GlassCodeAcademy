@@ -30,6 +30,11 @@ output "oidc_provider_url" {
   value       = aws_iam_openid_connect_provider.github.url
 }
 
+output "github_actions_role_arn" {
+  description = "ARN of the GitHub Actions role"
+  value       = aws_iam_role.github_actions.arn
+}
+
 terraform {
   required_version = ">= 1.0"
   required_providers {

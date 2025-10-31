@@ -1,11 +1,11 @@
 const {
-  getUserCourseProgress,
-  updateUserLessonProgress,
-  getUserLessonProgress,
-  getCourseLessonProgress,
-  getUserQuizStatistics,
-  getLeaderboard,
-} = require('../services/progressService');
+  getUserCertificates,
+  getCertificateById,
+  isUserEligibleForCertificate,
+  generateCertificate,
+  revokeCertificate,
+  verifyCertificate,
+} = require('../services/certificateService');
 const winston = require('winston');
 
 // Create a logger instance
@@ -16,7 +16,7 @@ const logger = winston.createLogger({
     winston.format.errors({ stack: true }),
     winston.format.json()
   ),
-  defaultMeta: { service: 'progress-controller' },
+  defaultMeta: { service: 'certificate-controller' },
   transports: [
     new winston.transports.Console({
       format: winston.format.simple(),
@@ -24,19 +24,73 @@ const logger = winston.createLogger({
   ],
 });
 
-const getUserCourseProgressController = async (req, res, next) => {
+const getUserCertificatesController = async (req, res, next) => {
   try {
+    const userId = req.user.id;
+    const certificates = await getUserCertificates(userId);
+
+    // RFC 7807 compliant success response
+    const successResponse = {
+      type: 'https://glasscode/errors/success',
+      title: 'Success',
+      status: 200,
+      data: certificates,
+    };
+
+    res.status(200).json(successResponse);
+  } catch (error) {
+    // Let the error middleware handle RFC 7807 compliant error responses
+    next(error);
+  }
+};
+
+const getCertificateByIdController = async (req, res, next) => {
+  try {
+    const { certificateId } = req.params;
+    const certificate = await getCertificateById(certificateId);
+
+    if (!certificate) {
+      const errorResponse = {
+        type: 'https://glasscode/errors/not-found',
+        title: 'Not Found',
+        status: 404,
+        detail: 'Certificate not found',
+        instance: req.originalUrl,
+      };
+      return res.status(404).json(errorResponse);
+    }
+
+    // RFC 7807 compliant success response
+    const successResponse = {
+      type: 'https://glasscode/errors/success',
+      title: 'Success',
+      status: 200,
+      data: certificate,
+    };
+
+    res.status(200).json(successResponse);
+  } catch (error) {
+    // Let the error middleware handle RFC 7807 compliant error responses
+    next(error);
+  }
+};
+
+const checkCertificateEligibilityController = async (req, res, next) => {
+  try {
+    const userId = req.user.id;
     const { courseId } = req.params;
-    const userId = req.user.id;
-
-    const progress = await getUserCourseProgress(userId, courseId);
+    const isEligible = await isUserEligibleForCertificate(userId, courseId);
 
     // RFC 7807 compliant success response
     const successResponse = {
       type: 'https://glasscode/errors/success',
       title: 'Success',
       status: 200,
-      data: progress || {},
+      data: {
+        isEligible,
+        userId,
+        courseId,
+      },
     };
 
     res.status(200).json(successResponse);
@@ -46,64 +100,41 @@ const getUserCourseProgressController = async (req, res, next) => {
   }
 };
 
-const updateUserLessonProgressController = async (req, res, next) => {
+const generateCertificateController = async (req, res, next) => {
   try {
-    const { lessonId } = req.params;
     const userId = req.user.id;
-    const updates = req.body;
-
-    const progress = await updateUserLessonProgress(userId, lessonId, updates);
-
-    // RFC 7807 compliant success response
-    const successResponse = {
-      type: 'https://glasscode/errors/success',
-      title: 'Success',
-      status: 200,
-      data: progress,
-    };
-
-    res.status(200).json(successResponse);
-  } catch (error) {
-    // Let the error middleware handle RFC 7807 compliant error responses
-    next(error);
-  }
-};
-
-const getUserLessonProgressController = async (req, res, next) => {
-  try {
-    const { lessonId } = req.params;
-    const userId = req.user.id;
-
-    const progress = await getUserLessonProgress(userId, lessonId);
-
-    // RFC 7807 compliant success response
-    const successResponse = {
-      type: 'https://glasscode/errors/success',
-      title: 'Success',
-      status: 200,
-      data: progress || {},
-    };
-
-    res.status(200).json(successResponse);
-  } catch (error) {
-    // Let the error middleware handle RFC 7807 compliant error responses
-    next(error);
-  }
-};
-
-const getCourseLessonProgressController = async (req, res, next) => {
-  try {
     const { courseId } = req.params;
-    const userId = req.user.id;
+    const additionalData = req.body;
 
-    const progress = await getCourseLessonProgress(userId, courseId);
+    const certificate = await generateCertificate(userId, courseId, additionalData);
+
+    // RFC 7807 compliant success response
+    const successResponse = {
+      type: 'https://glasscode/errors/success',
+      title: 'Success',
+      status: 201,
+      data: certificate,
+    };
+
+    res.status(201).json(successResponse);
+  } catch (error) {
+    // Let the error middleware handle RFC 7807 compliant error responses
+    next(error);
+  }
+};
+
+const revokeCertificateController = async (req, res, next) => {
+  try {
+    const { certificateId } = req.params;
+    const { reason } = req.body;
+    const certificate = await revokeCertificate(certificateId, reason);
 
     // RFC 7807 compliant success response
     const successResponse = {
       type: 'https://glasscode/errors/success',
       title: 'Success',
       status: 200,
-      data: progress,
+      data: certificate,
     };
 
     res.status(200).json(successResponse);
@@ -113,38 +144,17 @@ const getCourseLessonProgressController = async (req, res, next) => {
   }
 };
 
-const getUserQuizStatisticsController = async (req, res, next) => {
+const verifyCertificateController = async (req, res, next) => {
   try {
-    const userId = req.user.id;
-
-    const statistics = await getUserQuizStatistics(userId);
+    const { certificateId } = req.params;
+    const verificationResult = await verifyCertificate(certificateId);
 
     // RFC 7807 compliant success response
     const successResponse = {
       type: 'https://glasscode/errors/success',
       title: 'Success',
       status: 200,
-      data: statistics,
-    };
-
-    res.status(200).json(successResponse);
-  } catch (error) {
-    // Let the error middleware handle RFC 7807 compliant error responses
-    next(error);
-  }
-};
-
-const getLeaderboardController = async (req, res, next) => {
-  try {
-    const { limit = 10 } = req.query;
-    const leaderboard = await getLeaderboard(parseInt(limit));
-
-    // RFC 7807 compliant success response
-    const successResponse = {
-      type: 'https://glasscode/errors/success',
-      title: 'Success',
-      status: 200,
-      data: leaderboard,
+      data: verificationResult,
     };
 
     res.status(200).json(successResponse);
@@ -155,10 +165,10 @@ const getLeaderboardController = async (req, res, next) => {
 };
 
 module.exports = {
-  getUserCourseProgressController,
-  updateUserLessonProgressController,
-  getUserLessonProgressController,
-  getCourseLessonProgressController,
-  getUserQuizStatisticsController,
-  getLeaderboardController,
+  getUserCertificatesController,
+  getCertificateByIdController,
+  checkCertificateEligibilityController,
+  generateCertificateController,
+  revokeCertificateController,
+  verifyCertificateController,
 };

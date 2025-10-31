@@ -12,6 +12,9 @@ const Academy = require('./academyModel');
 const AuditLog = require('./auditLogModel');
 const QuizAttempt = require('./quizAttemptModel');
 const ApiKey = require('./apiKeyModel');
+const Badge = require('./badgeModel');
+const UserBadge = require('./userBadgeModel');
+const Certificate = require('./certificateModel');
 
 // Initialize associations that weren't set up in the model files
 function initializeAssociations() {
@@ -127,6 +130,40 @@ function initializeAssociations() {
     foreignKey: 'user_id',
     as: 'user',
   });
+  
+  // Badge associations
+  Badge.belongsToMany(User, {
+    through: UserBadge,
+    foreignKey: 'badge_id',
+    otherKey: 'user_id',
+    as: 'users',
+  });
+  User.belongsToMany(Badge, {
+    through: UserBadge,
+    foreignKey: 'user_id',
+    otherKey: 'badge_id',
+    as: 'badges',
+  });
+  
+  // UserBadge associations
+  UserBadge.belongsTo(User, {
+    foreignKey: 'user_id',
+    as: 'user',
+  });
+  UserBadge.belongsTo(Badge, {
+    foreignKey: 'badge_id',
+    as: 'badge',
+  });
+  
+  // Certificate associations
+  Certificate.belongsTo(User, {
+    foreignKey: 'user_id',
+    as: 'user',
+  });
+  Certificate.belongsTo(Course, {
+    foreignKey: 'course_id',
+    as: 'course',
+  });
 }
 
 module.exports = {
@@ -144,5 +181,8 @@ module.exports = {
   AuditLog,
   QuizAttempt,
   ApiKey,
+  Badge,
+  UserBadge,
+  Certificate,
   initializeAssociations,
 };

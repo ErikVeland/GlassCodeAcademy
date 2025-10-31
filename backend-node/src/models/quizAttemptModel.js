@@ -57,6 +57,28 @@ const QuizAttempt = sequelize.define(
       type: DataTypes.INTEGER,
       field: 'time_spent_seconds',
     },
+    ipAddress: {
+      type: DataTypes.STRING,
+      field: 'ip_address',
+    },
+    userAgent: {
+      type: DataTypes.TEXT,
+      field: 'user_agent',
+    },
+    deviceType: {
+      type: DataTypes.STRING,
+      field: 'device_type',
+    },
+    hintsUsed: {
+      type: DataTypes.INTEGER,
+      defaultValue: 0,
+      field: 'hints_used',
+    },
+    timedOut: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false,
+      field: 'timed_out',
+    },
   },
   {
     tableName: 'quiz_attempts',

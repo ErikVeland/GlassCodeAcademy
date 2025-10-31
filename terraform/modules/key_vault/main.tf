@@ -26,6 +26,31 @@ output "key_vault_name" {
   value       = var.project_name
 }
 
+# Dynamic outputs for each secret
+output "database_password" {
+  description = "Database password"
+  value       = var.secrets["database_password"]
+  sensitive   = true
+}
+
+output "jwt_secret" {
+  description = "JWT secret"
+  value       = var.secrets["jwt_secret"]
+  sensitive   = true
+}
+
+output "redis_password" {
+  description = "Redis password"
+  value       = var.secrets["redis_password"]
+  sensitive   = true
+}
+
+output "grafana_admin_password" {
+  description = "Grafana admin password"
+  value       = "${var.secrets["grafana_admin_password"] != null ? var.secrets["grafana_admin_password"] : "admin"}"
+  sensitive   = true
+}
+
 terraform {
   required_version = ">= 1.0"
   required_providers {

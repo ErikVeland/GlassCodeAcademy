@@ -54,9 +54,9 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   return (
     <html
       lang="en"
-      data-theme={hasCookieTheme ? themeCookie : 'light'}
+      data-theme={hasCookieTheme ? themeCookie : undefined}
       className={hasCookieTheme && themeCookie === 'dark' ? 'dark' : undefined}
-      style={{ colorScheme: hasCookieTheme && themeCookie === 'dark' ? 'dark' : 'light' }}
+      style={{ colorScheme: hasCookieTheme style={{ colorScheme: hasCookieTheme && themeCookie === 'dark' ? 'dark' : 'light' }}style={{ colorScheme: hasCookieTheme && themeCookie === 'dark' ? 'dark' : 'light' }} themeCookie === 'dark' ? 'dark' : undefined }}
     >
       <head>
         {/* Preconnect to external resources */}

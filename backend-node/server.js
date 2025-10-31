@@ -138,6 +138,8 @@ app.use('/api/lessons', require('./src/routes/lessonRoutes'));
 app.use('/api/progress', require('./src/routes/progressRoutes'));
 app.use('/api/quiz', require('./src/routes/quizRoutes'));
 app.use('/api/tiers', require('./src/routes/tierRoutes'));
+app.use('/api/badges', require('./src/routes/badgeRoutes'));
+app.use('/api/certificates', require('./src/routes/certificateRoutes'));
 app.use('/api/api-keys', rateLimitMiddleware.apiKeyLimiter, require('./src/routes/apiKeyRoutes'));
 
 // Apply general rate limiting to all other API routes

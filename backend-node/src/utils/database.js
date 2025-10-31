@@ -1,5 +1,6 @@
 const sequelize = require('../config/database');
 const { initializeAssociations } = require('../models');
+const { createDefaultBadges } = require('./defaultBadges');
 
 const initializeDatabase = async () => {
   try {
@@ -30,6 +31,8 @@ const initializeDatabase = async () => {
         'Skipping sequelize.sync in production; schema managed by migrations.'
       );
     }
+    // Create default badges
+    await createDefaultBadges();
   } catch (error) {
     console.error('Unable to connect to the database:', error);
     process.exit(1);

@@ -48,6 +48,18 @@ variable "jaeger_namespace" {
   default     = "observability"
 }
 
+variable "grafana_admin_user" {
+  description = "Grafana admin username"
+  type        = string
+  default     = "admin"
+}
+
+variable "grafana_admin_password" {
+  description = "Grafana admin password"
+  type        = string
+  default     = "admin"
+}
+
 output "prometheus_endpoint" {
   description = "Endpoint of the Prometheus server"
   value       = "http://prometheus-server.${var.prometheus_namespace}.svc.cluster.local"
@@ -61,6 +73,54 @@ output "grafana_endpoint" {
 output "jaeger_endpoint" {
   description = "Endpoint of the Jaeger server"
   value       = "http://jaeger-query.${var.jaeger_namespace}.svc.cluster.local"
+}
+
+# Create basic auth secret for Grafana
+resource "kubernetes_secret" "grafana_basic_auth" {
+  metadata {
+    name      = "grafana-basic-auth"
+    namespace = var.grafana_namespace
+  }
+
+  data = {
+    auth = "${var.grafana_admin_user}:${bcrypt(var.grafana_admin_password)}"
+  }
+
+  type = "Opaque"
+
+  depends_on = [kubernetes_namespace.monitoring]
+}
+
+# Create basic auth secret for Prometheus
+resource "kubernetes_secret" "prometheus_basic_auth" {
+  metadata {
+    name      = "prometheus-basic-auth"
+    namespace = var.prometheus_namespace
+  }
+
+  data = {
+    auth = "admin:${bcrypt("prometheus-secret-password")}"
+  }
+
+  type = "Opaque"
+
+  depends_on = [kubernetes_namespace.monitoring]
+}
+
+# Create basic auth secret for Jaeger
+resource "kubernetes_secret" "jaeger_basic_auth" {
+  metadata {
+    name      = "jaeger-basic-auth"
+    namespace = var.jaeger_namespace
+  }
+
+  data = {
+    auth = "admin:${bcrypt("jaeger-secret-password")}"
+  }
+
+  type = "Opaque"
+
+  depends_on = [kubernetes_namespace.observability]
 }
 
 terraform {
@@ -169,12 +229,12 @@ resource "helm_release" "grafana" {
 
   set {
     name  = "adminUser"
-    value = "admin"
+    value = var.grafana_admin_user
   }
 
   set {
     name  = "adminPassword"
-    value = "admin"
+    value = var.grafana_admin_password
   }
 
   set {
@@ -255,6 +315,8 @@ resource "kubernetes_ingress_v1" "prometheus" {
       "kubernetes.io/ingress.class" = "alb"
       "alb.ingress.kubernetes.io/scheme" = "internal"
       "alb.ingress.kubernetes.io/target-type" = "ip"
+      "alb.ingress.kubernetes.io/auth-type" = "basic"
+      "alb.ingress.kubernetes.io/auth-secret" = "prometheus-basic-auth"
     }
   }
 
@@ -276,7 +338,7 @@ resource "kubernetes_ingress_v1" "prometheus" {
     }
   }
 
-  depends_on = [helm_release.prometheus]
+  depends_on = [helm_release.prometheus, kubernetes_secret.prometheus_basic_auth]
 }
 
 # Create ingress for Grafana
@@ -288,6 +350,8 @@ resource "kubernetes_ingress_v1" "grafana" {
       "kubernetes.io/ingress.class" = "alb"
       "alb.ingress.kubernetes.io/scheme" = "internal"
       "alb.ingress.kubernetes.io/target-type" = "ip"
+      "alb.ingress.kubernetes.io/auth-type" = "basic"
+      "alb.ingress.kubernetes.io/auth-secret" = "grafana-basic-auth"
     }
   }
 
@@ -309,7 +373,7 @@ resource "kubernetes_ingress_v1" "grafana" {
     }
   }
 
-  depends_on = [helm_release.grafana]
+  depends_on = [helm_release.grafana, kubernetes_secret.grafana_basic_auth]
 }
 
 # Create ingress for Jaeger
@@ -321,6 +385,8 @@ resource "kubernetes_ingress_v1" "jaeger" {
       "kubernetes.io/ingress.class" = "alb"
       "alb.ingress.kubernetes.io/scheme" = "internal"
       "alb.ingress.kubernetes.io/target-type" = "ip"
+      "alb.ingress.kubernetes.io/auth-type" = "basic"
+      "alb.ingress.kubernetes.io/auth-secret" = "jaeger-basic-auth"
     }
   }
 
@@ -342,5 +408,5 @@ resource "kubernetes_ingress_v1" "jaeger" {
     }
   }
 
-  depends_on = [helm_release.jaeger]
+  depends_on = [helm_release.jaeger, kubernetes_secret.jaeger_basic_auth]
 }

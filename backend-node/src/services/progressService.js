@@ -76,11 +76,26 @@ const updateUserLessonProgress = async (userId, lessonId, updates) => {
             [userId, lessonId]
           );
         } else {
+          // For updates, we need to handle time tracking specially
+          const updateData = { ...updates };
+          
+          // If we're adding time, increment the existing time values
+          if (updateData.timeSpentSeconds !== undefined) {
+            updateData.timeSpentSeconds = progress.timeSpentSeconds + updateData.timeSpentSeconds;
+            updateData.timeSpentMinutes = Math.floor(updateData.timeSpentSeconds / 60);
+          }
+          
+          // Update access count and last accessed time
+          if (updateData.timeSpentSeconds !== undefined || updateData.isCompleted !== undefined) {
+            updateData.accessCount = progress.accessCount + 1;
+            updateData.lastAccessedAt = new Date();
+          }
+          
           addDatabaseQueryInfo(
             'UPDATE user_lesson_progress SET ... WHERE user_id = ? AND lesson_id = ?',
             [userId, lessonId]
           );
-          await progress.update(updates);
+          await progress.update(updateData);
         }
 
         // Record metrics
@@ -229,11 +244,33 @@ const createQuizAttempt = async (userId, lessonId, quizId, attemptData) => {
     return await traceAsyncFunction(
       'record_quiz_attempt',
       async () => {
+        // Calculate additional metrics if not provided
+        const enhancedAttemptData = { ...attemptData };
+        
+        // Calculate time spent if not provided and we have start/end times
+        if (!enhancedAttemptData.timeSpentSeconds && enhancedAttemptData.startedAt && enhancedAttemptData.completedAt) {
+          enhancedAttemptData.timeSpentSeconds = Math.floor(
+            (new Date(enhancedAttemptData.completedAt) - new Date(enhancedAttemptData.startedAt)) / 1000
+          );
+        }
+        
+        // Determine device type based on user agent if provided
+        if (enhancedAttemptData.userAgent) {
+          const userAgent = enhancedAttemptData.userAgent.toLowerCase();
+          if (userAgent.includes('mobile') || userAgent.includes('android') || userAgent.includes('iphone')) {
+            enhancedAttemptData.deviceType = 'mobile';
+          } else if (userAgent.includes('tablet') || userAgent.includes('ipad')) {
+            enhancedAttemptData.deviceType = 'tablet';
+          } else {
+            enhancedAttemptData.deviceType = 'desktop';
+          }
+        }
+        
         const quizAttempt = await QuizAttempt.create({
           userId,
           lessonId,
           quizId,
-          ...attemptData,
+          ...enhancedAttemptData,
         });
 
         // Add database query information to the span
@@ -244,6 +281,7 @@ const createQuizAttempt = async (userId, lessonId, quizId, attemptData) => {
 
         const duration = (Date.now() - startTime) / 1000;
         recordBusinessOperation('record_quiz_attempt', duration, userId);
+        recordQuizAttemptMetric(userId, lessonId, quizAttempt.score >= 70);
 
         return quizAttempt;
       },
@@ -398,6 +436,19 @@ const getUserProgressSummary = async (userId) => {
           (lp) => lp.isCompleted
         ).length;
         const totalLessons = lessonProgress.length;
+        
+        // Calculate total time spent
+        const totalTimeSpentSeconds = lessonProgress.reduce(
+          (total, lp) => total + (lp.timeSpentSeconds || 0), 0
+        );
+        
+        // Calculate average quiz score
+        const totalQuizScore = recentQuizAttempts.reduce(
+          (total, attempt) => total + (parseFloat(attempt.score) || 0), 0
+        );
+        const averageQuizScore = recentQuizAttempts.length > 0 
+          ? totalQuizScore / recentQuizAttempts.length 
+          : 0;
 
         const summary = {
           totalCourses: courseProgress.length,
@@ -407,6 +458,9 @@ const getUserProgressSummary = async (userId) => {
           completedLessons,
           progressPercentage:
             totalLessons > 0 ? (completedLessons / totalLessons) * 100 : 0,
+          totalTimeSpentSeconds,
+          totalTimeSpentFormatted: `${Math.floor(totalTimeSpentSeconds / 3600)}h ${Math.floor((totalTimeSpentSeconds % 3600) / 60)}m ${totalTimeSpentSeconds % 60}s`,
+          averageQuizScore: parseFloat(averageQuizScore.toFixed(2)),
           courseProgress,
           recentQuizAttempts: recentQuizAttempts.map((attempt) => ({
             id: attempt.id,
@@ -431,6 +485,274 @@ const getUserProgressSummary = async (userId) => {
   }
 };
 
+// Get detailed lesson progress for a course
+const getCourseLessonProgress = async (userId, courseId) => {
+  const startTime = Date.now();
+
+  try {
+    return await traceAsyncFunction(
+      'get_course_lesson_progress',
+      async () => {
+        // Get course progress
+        const courseProgress = await UserProgress.findOne({
+          where: {
+            user_id: userId,
+            course_id: courseId,
+          },
+        });
+
+        // Add database query information to the span
+        addDatabaseQueryInfo(
+          'SELECT * FROM user_progress WHERE user_id = ? AND course_id = ?',
+          [userId, courseId]
+        );
+
+        // Get all lessons for this course
+        const lessons = await require('../models/lessonModel').findAll({
+          where: {
+            course_id: courseId,
+          },
+          order: [['sort_order', 'ASC']],
+        });
+
+        // Add database query information to the span
+        addDatabaseQueryInfo(
+          'SELECT * FROM lessons WHERE course_id = ? ORDER BY sort_order ASC',
+          [courseId]
+        );
+
+        // Get lesson progress for each lesson
+        const lessonProgressPromises = lessons.map(async (lesson) => {
+          const progress = await UserLessonProgress.findOne({
+            where: {
+              user_id: userId,
+              lesson_id: lesson.id,
+            },
+          });
+
+          return {
+            lessonId: lesson.id,
+            lessonTitle: lesson.title,
+            isCompleted: progress ? progress.isCompleted : false,
+            timeSpentSeconds: progress ? progress.timeSpentSeconds : 0,
+            lastAccessedAt: progress ? progress.lastAccessedAt : null,
+            accessCount: progress ? progress.accessCount : 0,
+          };
+        });
+
+        const lessonProgress = await Promise.all(lessonProgressPromises);
+
+        const summary = {
+          courseId,
+          courseProgress,
+          lessons: lessonProgress,
+          totalLessons: lessons.length,
+          completedLessons: lessonProgress.filter(lp => lp.isCompleted).length,
+        };
+
+        const duration = (Date.now() - startTime) / 1000;
+        recordBusinessOperation('get_course_lesson_progress', duration, userId);
+
+        return summary;
+      },
+      { userId, courseId }
+    );
+  } catch (error) {
+    const duration = (Date.now() - startTime) / 1000;
+    recordBusinessOperation('get_course_lesson_progress', duration, userId);
+    throw new Error(`Error getting course lesson progress: ${error.message}`);
+  }
+};
+
+// Get quiz statistics for a user
+const getUserQuizStatistics = async (userId) => {
+  const startTime = Date.now();
+
+  try {
+    return await traceAsyncFunction(
+      'get_user_quiz_statistics',
+      async () => {
+        // Get all quiz attempts for the user
+        const allQuizAttempts = await QuizAttempt.findAll({
+          where: {
+            user_id: userId,
+          },
+          include: [
+            {
+              model: require('../models/lessonModel'),
+              as: 'attemptLesson',
+              attributes: ['title'],
+            },
+          ],
+          order: [['completed_at', 'DESC']],
+        });
+
+        // Add database query information to the span
+        addDatabaseQueryInfo(
+          'SELECT * FROM quiz_attempts WHERE user_id = ? ORDER BY completed_at DESC',
+          [userId]
+        );
+
+        // Calculate statistics
+        const totalAttempts = allQuizAttempts.length;
+        const passedAttempts = allQuizAttempts.filter(attempt => parseFloat(attempt.score) >= 70).length;
+        const failedAttempts = totalAttempts - passedAttempts;
+        
+        // Calculate average score
+        const totalScore = allQuizAttempts.reduce(
+          (total, attempt) => total + (parseFloat(attempt.score) || 0), 0
+        );
+        const averageScore = totalAttempts > 0 ? totalScore / totalAttempts : 0;
+        
+        // Find best and worst scores
+        const scores = allQuizAttempts.map(attempt => parseFloat(attempt.score)).filter(score => !isNaN(score));
+        const bestScore = scores.length > 0 ? Math.max(...scores) : 0;
+        const worstScore = scores.length > 0 ? Math.min(...scores) : 0;
+        
+        // Group by lesson
+        const lessonStats = {};
+        allQuizAttempts.forEach(attempt => {
+          const lessonId = attempt.lessonId;
+          if (!lessonStats[lessonId]) {
+            lessonStats[lessonId] = {
+              lessonTitle: attempt.attemptLesson ? attempt.attemptLesson.title : 'Unknown Lesson',
+              attempts: 0,
+              totalScore: 0,
+              bestScore: 0,
+              worstScore: 100,
+            };
+          }
+          
+          lessonStats[lessonId].attempts++;
+          lessonStats[lessonId].totalScore += parseFloat(attempt.score);
+          lessonStats[lessonId].bestScore = Math.max(lessonStats[lessonId].bestScore, parseFloat(attempt.score));
+          lessonStats[lessonId].worstScore = Math.min(lessonStats[lessonId].worstScore, parseFloat(attempt.score));
+        });
+        
+        // Calculate averages for each lesson
+        Object.values(lessonStats).forEach(stats => {
+          stats.averageScore = parseFloat((stats.totalScore / stats.attempts).toFixed(2));
+        });
+
+        const statistics = {
+          totalAttempts,
+          passedAttempts,
+          failedAttempts,
+          passRate: totalAttempts > 0 ? parseFloat(((passedAttempts / totalAttempts) * 100).toFixed(2)) : 0,
+          averageScore: parseFloat(averageScore.toFixed(2)),
+          bestScore,
+          worstScore,
+          lessonStatistics: lessonStats,
+        };
+
+        const duration = (Date.now() - startTime) / 1000;
+        recordBusinessOperation('get_user_quiz_statistics', duration, userId);
+
+        return statistics;
+      },
+      { userId }
+    );
+  } catch (error) {
+    const duration = (Date.now() - startTime) / 1000;
+    recordBusinessOperation('get_user_quiz_statistics', duration, userId);
+    throw new Error(`Error getting user quiz statistics: ${error.message}`);
+  }
+};
+
+// Get leaderboard data
+const getLeaderboard = async (limit = 10) => {
+  const startTime = Date.now();
+
+  try {
+    return await traceAsyncFunction(
+      'get_leaderboard',
+      async () => {
+        // Get all users with their progress data
+        const users = await require('../models/userModel').findAll({
+          attributes: ['id', 'firstName', 'lastName', 'username'],
+          include: [
+            {
+              model: UserProgress,
+              as: 'progress',
+              attributes: ['completedLessons', 'totalLessons', 'progressPercentage'],
+            },
+            {
+              model: QuizAttempt,
+              as: 'quizAttempts',
+              attributes: ['score'],
+            }
+          ]
+        });
+
+        // Add database query information to the span
+        addDatabaseQueryInfo(
+          'SELECT * FROM users JOIN user_progress ON users.id = user_progress.user_id JOIN quiz_attempts ON users.id = quiz_attempts.user_id',
+          []
+        );
+
+        // Calculate leaderboard scores for each user
+        const leaderboardData = users.map(user => {
+          // Calculate completion score (0-50 points based on lesson completion)
+          const totalLessons = user.progress.reduce((total, p) => total + (p.totalLessons || 0), 0);
+          const completedLessons = user.progress.reduce((total, p) => total + (p.completedLessons || 0), 0);
+          const completionScore = totalLessons > 0 ? (completedLessons / totalLessons) * 50 : 0;
+          
+          // Calculate quiz score (0-30 points based on average quiz scores)
+          const totalQuizScore = user.quizAttempts.reduce(
+            (total, attempt) => total + (parseFloat(attempt.score) || 0), 0
+          );
+          const averageQuizScore = user.quizAttempts.length > 0 
+            ? totalQuizScore / user.quizAttempts.length 
+            : 0;
+          const quizScore = (averageQuizScore / 100) * 30;
+          
+          // Calculate activity score (0-20 points based on number of quiz attempts)
+          const activityScore = Math.min((user.quizAttempts.length / 10) * 20, 20);
+          
+          // Calculate total score
+          const totalScore = completionScore + quizScore + activityScore;
+          
+          return {
+            userId: user.id,
+            username: user.username,
+            firstName: user.firstName,
+            lastName: user.lastName,
+            totalScore: parseFloat(totalScore.toFixed(2)),
+            completionScore: parseFloat(completionScore.toFixed(2)),
+            quizScore: parseFloat(quizScore.toFixed(2)),
+            activityScore: parseFloat(activityScore.toFixed(2)),
+            completedLessons,
+            totalLessons,
+            quizAttempts: user.quizAttempts.length,
+            averageQuizScore: parseFloat(averageQuizScore.toFixed(2))
+          };
+        });
+
+        // Sort by total score descending
+        leaderboardData.sort((a, b) => b.totalScore - a.totalScore);
+        
+        // Take only the top N users
+        const leaderboard = leaderboardData.slice(0, limit);
+        
+        // Add rankings
+        leaderboard.forEach((user, index) => {
+          user.rank = index + 1;
+        });
+
+        const duration = (Date.now() - startTime) / 1000;
+        recordBusinessOperation('get_leaderboard', duration, 'system');
+
+        return leaderboard;
+      },
+      { limit }
+    );
+  } catch (error) {
+    const duration = (Date.now() - startTime) / 1000;
+    recordBusinessOperation('get_leaderboard', duration, 'system');
+    throw new Error(`Error getting leaderboard: ${error.message}`);
+  }
+};
+
 module.exports = {
   getUserCourseProgress,
   updateUserLessonProgress,
@@ -440,4 +762,7 @@ module.exports = {
   getQuizAttempts,
   getQuizAttemptsByQuizId,
   getUserProgressSummary,
+  getCourseLessonProgress,
+  getUserQuizStatistics,
+  getLeaderboard,
 };

@@ -1,11 +1,12 @@
 const {
-  getUserCourseProgress,
-  updateUserLessonProgress,
-  getUserLessonProgress,
-  getCourseLessonProgress,
-  getUserQuizStatistics,
-  getLeaderboard,
-} = require('../services/progressService');
+  getAllBadges,
+  getUserBadges,
+  awardBadgeToUser,
+  checkAndAwardProgressBadges,
+  createBadge,
+  updateBadge,
+  deleteBadge,
+} = require('../services/badgeService');
 const winston = require('winston');
 
 // Create a logger instance
@@ -16,7 +17,7 @@ const logger = winston.createLogger({
     winston.format.errors({ stack: true }),
     winston.format.json()
   ),
-  defaultMeta: { service: 'progress-controller' },
+  defaultMeta: { service: 'badge-controller' },
   transports: [
     new winston.transports.Console({
       format: winston.format.simple(),
@@ -24,19 +25,16 @@ const logger = winston.createLogger({
   ],
 });
 
-const getUserCourseProgressController = async (req, res, next) => {
+const getAllBadgesController = async (req, res, next) => {
   try {
-    const { courseId } = req.params;
-    const userId = req.user.id;
-
-    const progress = await getUserCourseProgress(userId, courseId);
+    const badges = await getAllBadges();
 
     // RFC 7807 compliant success response
     const successResponse = {
       type: 'https://glasscode/errors/success',
       title: 'Success',
       status: 200,
-      data: progress || {},
+      data: badges,
     };
 
     res.status(200).json(successResponse);
@@ -46,20 +44,17 @@ const getUserCourseProgressController = async (req, res, next) => {
   }
 };
 
-const updateUserLessonProgressController = async (req, res, next) => {
+const getUserBadgesController = async (req, res, next) => {
   try {
-    const { lessonId } = req.params;
     const userId = req.user.id;
-    const updates = req.body;
-
-    const progress = await updateUserLessonProgress(userId, lessonId, updates);
+    const userBadges = await getUserBadges(userId);
 
     // RFC 7807 compliant success response
     const successResponse = {
       type: 'https://glasscode/errors/success',
       title: 'Success',
       status: 200,
-      data: progress,
+      data: userBadges,
     };
 
     res.status(200).json(successResponse);
@@ -69,19 +64,19 @@ const updateUserLessonProgressController = async (req, res, next) => {
   }
 };
 
-const getUserLessonProgressController = async (req, res, next) => {
+const awardBadgeToUserController = async (req, res, next) => {
   try {
-    const { lessonId } = req.params;
-    const userId = req.user.id;
-
-    const progress = await getUserLessonProgress(userId, lessonId);
+    const { userId, badgeId } = req.params;
+    const awardedBy = req.user.id; // The user who is awarding the badge
+    
+    const userBadge = await awardBadgeToUser(userId, badgeId, awardedBy);
 
     // RFC 7807 compliant success response
     const successResponse = {
       type: 'https://glasscode/errors/success',
       title: 'Success',
       status: 200,
-      data: progress || {},
+      data: userBadge,
     };
 
     res.status(200).json(successResponse);
@@ -91,19 +86,17 @@ const getUserLessonProgressController = async (req, res, next) => {
   }
 };
 
-const getCourseLessonProgressController = async (req, res, next) => {
+const checkAndAwardProgressBadgesController = async (req, res, next) => {
   try {
-    const { courseId } = req.params;
     const userId = req.user.id;
-
-    const progress = await getCourseLessonProgress(userId, courseId);
+    const awardedBadges = await checkAndAwardProgressBadges(userId);
 
     // RFC 7807 compliant success response
     const successResponse = {
       type: 'https://glasscode/errors/success',
       title: 'Success',
       status: 200,
-      data: progress,
+      data: awardedBadges,
     };
 
     res.status(200).json(successResponse);
@@ -113,18 +106,38 @@ const getCourseLessonProgressController = async (req, res, next) => {
   }
 };
 
-const getUserQuizStatisticsController = async (req, res, next) => {
+const createBadgeController = async (req, res, next) => {
   try {
-    const userId = req.user.id;
+    const badgeData = req.body;
+    const badge = await createBadge(badgeData);
 
-    const statistics = await getUserQuizStatistics(userId);
+    // RFC 7807 compliant success response
+    const successResponse = {
+      type: 'https://glasscode/errors/success',
+      title: 'Success',
+      status: 201,
+      data: badge,
+    };
+
+    res.status(201).json(successResponse);
+  } catch (error) {
+    // Let the error middleware handle RFC 7807 compliant error responses
+    next(error);
+  }
+};
+
+const updateBadgeController = async (req, res, next) => {
+  try {
+    const { badgeId } = req.params;
+    const badgeData = req.body;
+    const badge = await updateBadge(badgeId, badgeData);
 
     // RFC 7807 compliant success response
     const successResponse = {
       type: 'https://glasscode/errors/success',
       title: 'Success',
       status: 200,
-      data: statistics,
+      data: badge,
     };
 
     res.status(200).json(successResponse);
@@ -134,17 +147,17 @@ const getUserQuizStatisticsController = async (req, res, next) => {
   }
 };
 
-const getLeaderboardController = async (req, res, next) => {
+const deleteBadgeController = async (req, res, next) => {
   try {
-    const { limit = 10 } = req.query;
-    const leaderboard = await getLeaderboard(parseInt(limit));
+    const { badgeId } = req.params;
+    const badge = await deleteBadge(badgeId);
 
     // RFC 7807 compliant success response
     const successResponse = {
       type: 'https://glasscode/errors/success',
       title: 'Success',
       status: 200,
-      data: leaderboard,
+      data: badge,
     };
 
     res.status(200).json(successResponse);
@@ -155,10 +168,11 @@ const getLeaderboardController = async (req, res, next) => {
 };
 
 module.exports = {
-  getUserCourseProgressController,
-  updateUserLessonProgressController,
-  getUserLessonProgressController,
-  getCourseLessonProgressController,
-  getUserQuizStatisticsController,
-  getLeaderboardController,
+  getAllBadgesController,
+  getUserBadgesController,
+  awardBadgeToUserController,
+  checkAndAwardProgressBadgesController,
+  createBadgeController,
+  updateBadgeController,
+  deleteBadgeController,
 };

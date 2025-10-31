@@ -3,6 +3,9 @@ const {
   getUserCourseProgressController,
   updateUserLessonProgressController,
   getUserLessonProgressController,
+  getCourseLessonProgressController,
+  getUserQuizStatisticsController,
+  getLeaderboardController,
 } = require('../controllers/progressController');
 const authenticate = require('../middleware/authMiddleware');
 const { generalLimiter } = require('../middleware/rateLimitMiddleware');
@@ -27,6 +30,28 @@ router.get(
   authenticate,
   generalLimiter,
   getUserLessonProgressController
+);
+
+// New routes for enhanced progress tracking
+router.get(
+  '/courses/:courseId/lessons',
+  authenticate,
+  generalLimiter,
+  getCourseLessonProgressController
+);
+
+router.get(
+  '/quiz-statistics',
+  authenticate,
+  generalLimiter,
+  getUserQuizStatisticsController
+);
+
+router.get(
+  '/leaderboard',
+  authenticate,
+  generalLimiter,
+  getLeaderboardController
 );
 
 module.exports = router;

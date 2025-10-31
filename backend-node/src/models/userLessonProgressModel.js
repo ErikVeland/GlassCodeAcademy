@@ -21,6 +21,20 @@ const UserLessonProgress = sequelize.define(
       defaultValue: 0,
       field: 'time_spent_minutes',
     },
+    timeSpentSeconds: {
+      type: DataTypes.INTEGER,
+      defaultValue: 0,
+      field: 'time_spent_seconds',
+    },
+    lastAccessedAt: {
+      type: DataTypes.DATE,
+      field: 'last_accessed_at',
+    },
+    accessCount: {
+      type: DataTypes.INTEGER,
+      defaultValue: 1,
+      field: 'access_count',
+    },
     startedAt: {
       type: DataTypes.DATE,
       field: 'started_at',
