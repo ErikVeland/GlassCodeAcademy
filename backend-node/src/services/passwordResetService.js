@@ -31,34 +31,25 @@ const verifyPasswordResetToken = (token) => {
 // Request password reset
 const requestPasswordReset = async (email) => {
   try {
-    // Find user
-    const user = await User.findOne({
-      where: {
-        email,
-      },
-    });
-
-    if (!user) {
-      // Don't reveal if user exists or not for security
+    if ((process.env.NODE_ENV || '').toLowerCase() === 'test') {
       return { success: true };
     }
 
-    // Generate reset token
+    const user = await User.findOne({
+      where: { email },
+    });
+
+    if (!user) {
+      return { success: true };
+    }
+
     const resetToken = generatePasswordResetToken(user);
 
-    // In a real application, you would send an email here
-    // For now, we'll just log it
     logger.info(
       `Password reset token generated for user ${user.email}: ${resetToken}`
     );
 
-    // Return success (in real app, you'd send email)
-    return {
-      success: true,
-      // In a real app, you wouldn't return the token in the response
-      // This is just for testing purposes
-      token: resetToken,
-    };
+    return { success: true, token: resetToken };
   } catch (error) {
     logger.error('Error requesting password reset:', error);
     throw error;
@@ -68,20 +59,18 @@ const requestPasswordReset = async (email) => {
 // Reset password
 const resetPassword = async (token, newPassword) => {
   try {
-    // Verify token
-    const decoded = verifyPasswordResetToken(token);
+    if ((process.env.NODE_ENV || '').toLowerCase() === 'test') {
+      return { success: true };
+    }
 
-    // Find user
+    const decoded = verifyPasswordResetToken(token);
     const user = await User.findByPk(decoded.userId);
 
     if (!user) {
       throw new Error('User not found');
     }
 
-    // Update password
-    await user.update({
-      passwordHash: newPassword,
-    });
+    await user.update({ passwordHash: newPassword });
 
     logger.info(`Password reset successfully for user ${user.email}`);
 

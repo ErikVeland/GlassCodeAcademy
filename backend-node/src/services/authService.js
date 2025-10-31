@@ -3,6 +3,14 @@ const bcrypt = require('bcryptjs');
 const { jwtSecret, jwtExpiresIn } = require('../config/auth');
 const { User } = require('../models');
 
+let _testDbSynced = false;
+async function ensureTestDbSynced() {
+  if ((process.env.NODE_ENV || '').toLowerCase() !== 'test') return;
+  if (_testDbSynced) return;
+  await User.sequelize.sync();
+  _testDbSynced = true;
+}
+
 const generateToken = (user) => {
   return jwt.sign({ userId: user.id, email: user.email }, jwtSecret, {
     expiresIn: jwtExpiresIn,
@@ -10,6 +18,7 @@ const generateToken = (user) => {
 };
 
 const register = async (userData) => {
+  await ensureTestDbSynced();
   // Check if user already exists
   const existingUser = await User.findOne({
     where: {
@@ -44,6 +53,7 @@ const register = async (userData) => {
 };
 
 const login = async (email, password) => {
+  await ensureTestDbSynced();
   // Find user
   const user = await User.findOne({
     where: {

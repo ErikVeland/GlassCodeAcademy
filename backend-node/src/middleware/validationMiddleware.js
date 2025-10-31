@@ -4,17 +4,6 @@ const validate = (schema) => (req, res, next) => {
   const { error } = schema.validate(req.body);
 
   if (error) {
-    // Test-mode: return legacy shape expected by tests
-    if (process.env.NODE_ENV === 'test') {
-      return res.status(400).json({
-        success: false,
-        error: {
-          code: 'VALIDATION_ERROR',
-          message: 'Validation failed',
-        },
-      });
-    }
-
     const errorResponse = {
       type: 'https://glasscode/errors/validation-error',
       title: 'Validation Error',

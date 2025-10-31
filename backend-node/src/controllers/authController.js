@@ -81,7 +81,18 @@ const loginController = async (req, res, next) => {
       error: error.message,
       stack: error.stack,
     });
-    // Let the error middleware handle RFC 7807 compliant error responses
+
+    if (error.message && error.message.toLowerCase().includes('invalid credentials')) {
+      const unauthorizedResponse = {
+        type: 'https://glasscode/errors/unauthorized',
+        title: 'Unauthorized',
+        status: 401,
+        detail: 'Invalid credentials',
+        instance: req.originalUrl,
+      };
+      return res.status(401).json(unauthorizedResponse);
+    }
+
     next(error);
   }
 };
