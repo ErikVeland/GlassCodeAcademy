@@ -141,6 +141,12 @@ app.use('/api/tiers', require('./src/routes/tierRoutes'));
 app.use('/api/badges', require('./src/routes/badgeRoutes'));
 app.use('/api/certificates', require('./src/routes/certificateRoutes'));
 app.use('/api/api-keys', rateLimitMiddleware.apiKeyLimiter, require('./src/routes/apiKeyRoutes'));
+app.use('/api/notifications', require('./src/routes/notificationRoutes'));
+app.use('/api/forum', require('./src/routes/forumRoutes'));
+app.use('/api/announcements', require('./src/routes/announcementRoutes'));
+app.use('/api/faqs', require('./src/routes/faqRoutes'));
+app.use('/api/admin/moderation', require('./src/routes/moderationRoutes'));
+app.use('/api/reports', require('./src/routes/reportRoutes'));
 
 // Apply general rate limiting to all other API routes
 app.use('/api/', rateLimitMiddleware.generalLimiter);

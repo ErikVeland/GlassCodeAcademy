@@ -18,7 +18,6 @@ import Script from 'next/script';
 import ApolloDevMessages from '../components/ApolloDevMessages';
 import ConsoleBanner from '../components/ConsoleBanner';
 import BackendReadinessWrapper from '../components/BackendReadinessWrapper';
-import { cookies } from 'next/headers';
 import GlobalStyles from '../components/GlobalStyles';
 
 export const runtime = 'nodejs';
@@ -46,18 +45,10 @@ export const viewport: Viewport = {
   viewportFit: 'cover',
 };
 
-export default async function RootLayout({ children }: { children: React.ReactNode }) {
-  const cookieStore = await cookies();
-  const themeCookie = cookieStore.get('gc-theme')?.value;
-  const hasCookieTheme = (themeCookie === 'dark' || themeCookie === 'light');
+export default function RootLayout({ children }: { children: React.ReactNode }) {
 
   return (
-    <html
-      lang="en"
-      data-theme={hasCookieTheme ? themeCookie : undefined}
-      className={hasCookieTheme && themeCookie === 'dark' ? 'dark' : undefined}
-      style={{ colorScheme: hasCookieTheme style={{ colorScheme: hasCookieTheme && themeCookie === 'dark' ? 'dark' : 'light' }}style={{ colorScheme: hasCookieTheme && themeCookie === 'dark' ? 'dark' : 'light' }} themeCookie === 'dark' ? 'dark' : undefined }}
-    >
+    <html lang="en">
       <head>
         {/* Preconnect to external resources */}
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
@@ -73,9 +64,16 @@ export default async function RootLayout({ children }: { children: React.ReactNo
                 var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
                 var html = document.documentElement;
 
-                var selected = (storedTheme === 'light' || storedTheme === 'dark' || storedTheme === 'system')
-                  ? storedTheme
-                  : (legacy === 'true' ? 'dark' : legacy === 'false' ? 'light' : 'system');
+                var selected;
+                if (storedTheme === 'light' || storedTheme === 'dark' || storedTheme === 'system') {
+                  selected = storedTheme;
+                } else if (legacy === 'true') {
+                  selected = 'dark';
+                } else if (legacy === 'false') {
+                  selected = 'light';
+                } else {
+                  selected = 'system';
+                }
 
                 var finalTheme = selected === 'system' ? (prefersDark ? 'dark' : 'light') : selected;
 

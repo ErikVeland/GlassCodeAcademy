@@ -13,6 +13,7 @@ const {
   traceAsyncFunction,
   addDatabaseQueryInfo,
 } = require('../utils/tracing');
+const { sendLessonCompletionNotification, sendQuizResultNotification } = require('./notificationIntegrationService');
 
 // Get user progress for a course
 const getUserCourseProgress = async (userId, courseId) => {
@@ -96,6 +97,15 @@ const updateUserLessonProgress = async (userId, lessonId, updates) => {
             [userId, lessonId]
           );
           await progress.update(updateData);
+        }
+
+        // Send notification if lesson is completed
+        if (updates.isCompleted && !progress.isCompleted) {
+          // Lesson was just completed
+          await sendLessonCompletionNotification(userId, lessonId, {
+            // TODO: Add logic to determine next lesson
+            nextLessonId: null,
+          });
         }
 
         // Record metrics
@@ -218,7 +228,14 @@ const submitQuizAnswers = async (userId, lessonId, answers) => {
           scorePercentage:
             quizzes.length > 0 ? (correctAnswers / quizzes.length) * 100 : 0,
           results,
+          passed: quizzes.length > 0 ? (correctAnswers / quizzes.length) * 100 >= 70 : false,
         };
+
+        // Send notification with quiz results
+        await sendQuizResultNotification(userId, lessonId, {
+          scorePercentage: score.scorePercentage,
+          passed: score.passed,
+        });
 
         // Record metrics
         const duration = (Date.now() - startTime) / 1000;

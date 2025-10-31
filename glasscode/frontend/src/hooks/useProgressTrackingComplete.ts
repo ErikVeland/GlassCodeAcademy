@@ -476,7 +476,7 @@ export const useProgressTrackingComplete = () => {
     return () => {
       mounted = false;
     };
-  }, []);
+  }, [getModulesByTier, getRegistryCached, getTiers]);
 
   // Helper: determine tier for a module via registry-backed cache with fallback
   const resolveTierForModule = useCallback(async (
@@ -509,7 +509,7 @@ export const useProgressTrackingComplete = () => {
     }
     
     return (found || 'foundational') as 'foundational' | 'core' | 'specialized' | 'quality';
-  }, [tierModuleCache]);
+  }, [tierModuleCache, getModuleSlugFromShortSlug, getShortSlugFromModuleSlug]);
 
   // Save data to localStorage whenever it changes
   useEffect(() => {
@@ -577,7 +577,7 @@ export const useProgressTrackingComplete = () => {
       quality: 12
     };
     return defaultCounts[tier] || 12;
-  }, [lessonCountCache, resolveTierForModule]);
+  }, [lessonCountCache, resolveTierForModule, getModuleSlugFromShortSlug, getShortSlugFromModuleSlug]);
 
   const updateStreak = useCallback((moduleId: string, lessonsCompleted: number) => {
     const today = new Date().toDateString();
@@ -782,7 +782,7 @@ export const useProgressTrackingComplete = () => {
       const updatedAchievements = [...achievements, ...newAchievements];
       setAchievements(updatedAchievements);
     }
-  }, [achievements, tierModuleCache, streak]);
+  }, [achievements, tierModuleCache, streak, getModulesByTrack]);
 
   const updateUserStats = useCallback((progressData: Record<string, ProgressData>) => {
     const totalStudyTime = Object.values(progressData).reduce((sum, p) => sum + p.timeSpent, 0);
