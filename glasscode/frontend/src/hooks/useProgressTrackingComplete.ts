@@ -338,49 +338,49 @@ export const useProgressTrackingComplete = () => {
   }, []);
 
   // Registry helpers scoped to hook instance
-  let registryCache: RegistryResponse | null = null;
-  const getRegistryCached = async (): Promise<RegistryResponse> => {
-    if (registryCache) return registryCache;
+  const registryCacheRef = useRef<RegistryResponse | null>(null);
+  const getRegistryCached = useCallback(async (): Promise<RegistryResponse> => {
+    if (registryCacheRef.current) return registryCacheRef.current;
     try {
-      registryCache = await fetchJSON<RegistryResponse>('/api/content/registry');
+      registryCacheRef.current = await fetchJSON<RegistryResponse>('/api/content/registry');
     } catch (err) {
       console.warn('Content registry fetch failed:', err);
-      registryCache = { modules: [], tiers: {} };
+      registryCacheRef.current = { modules: [], tiers: {} };
     }
-    return registryCache;
-  };
+    return registryCacheRef.current;
+  }, []);
 
-  const getTiers = async (): Promise<Record<string, unknown>> => {
+  const getTiers = useCallback(async (): Promise<Record<string, unknown>> => {
     const reg = await getRegistryCached();
     return reg.tiers || {};
-  };
+  }, [getRegistryCached]);
 
-  const getModulesByTier = async (tierSlug: string): Promise<RegistryModule[]> => {
+  const getModulesByTier = useCallback(async (tierSlug: string): Promise<RegistryModule[]> => {
     const reg = await getRegistryCached();
     return reg.modules
       .filter((m) => (m.tier === tierSlug))
       .sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
-  };
+  }, [getRegistryCached]);
 
-  const getModulesByTrack = async (track: string): Promise<RegistryModule[]> => {
+  const getModulesByTrack = useCallback(async (track: string): Promise<RegistryModule[]> => {
     const reg = await getRegistryCached();
     const fromTracks = reg.tracks?.[track];
     if (Array.isArray(fromTracks) && fromTracks.length) return fromTracks;
     return reg.modules
       .filter((m) => m.track === track)
       .sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
-  };
+  }, [getRegistryCached]);
 
-  const getModuleLessons = async (moduleSlug: string): Promise<unknown[]> => {
+  const getModuleLessons = useCallback(async (moduleSlug: string): Promise<unknown[]> => {
     try {
       const lessons = await fetchJSON<unknown[]>(`/api/content/lessons/${moduleSlug}`);
       return Array.isArray(lessons) ? lessons : [];
     } catch {
       return [];
     }
-  };
+  }, []);
 
-  const getModuleSlugFromShortSlug = async (shortSlug: string): Promise<string | null> => {
+  const getModuleSlugFromShortSlug = useCallback(async (shortSlug: string): Promise<string | null> => {
     const reg = await getRegistryCached();
     const match = reg.modules.find((m) => {
       const overview = m.routes?.overview || '';
@@ -388,18 +388,18 @@ export const useProgressTrackingComplete = () => {
       return short === shortSlug || m.slug === shortSlug || m.shortSlug === shortSlug;
     });
     return match?.slug ?? null;
-  };
+  }, [getRegistryCached]);
 
-  const getShortSlugFromModuleSlug = async (moduleSlug: string): Promise<string> => {
+  const getShortSlugFromModuleSlug = useCallback(async (moduleSlug: string): Promise<string> => {
     const reg = await getRegistryCached();
     const m = reg.modules.find((mod) => mod.slug === moduleSlug);
     const overview = m?.routes?.overview || '';
     const short = overview.startsWith('/') ? overview.slice(1) : overview;
     return short || moduleSlug;
-  };
+  }, [getRegistryCached]);
 
   // Normalize module items into slug list
-  const normalizeModuleSlugs = (items: unknown[]): string[] => {
+  const normalizeModuleSlugs = useCallback((items: unknown[]): string[] => {
     return items
       .map((item) => {
         if (typeof item === 'string') return item;
@@ -410,7 +410,7 @@ export const useProgressTrackingComplete = () => {
         return '';
       })
       .filter((s): s is string => Boolean(s));
-  };
+  }, []);
 
   // Load content registry and build caches (tier modules and lesson counts)
   useEffect(() => {

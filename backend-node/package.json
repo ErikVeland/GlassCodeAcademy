@@ -18,7 +18,8 @@
     "health": "node scripts/health-check.js",
     "migrate": "node scripts/migrate.js",
     "seed": "node scripts/seed.js",
-    "seed:content": "node scripts/seed-content.js"
+    "seed:content": "node scripts/seed-content.js",
+    "verify-migrations": "node scripts/verify-migrations.js"
   },
   "keywords": [
     "nodejs",

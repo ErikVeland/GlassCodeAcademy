@@ -80,6 +80,45 @@ stop_existing_services() {
     echo "✅ Existing services stopped"
 }
 
+# Function to run database migrations
+run_migrations() {
+    echo "🔄 Running database migrations..."
+    cd backend-node
+    # Check if database is accessible before running migrations
+    if timeout 5 npm run health >/dev/null 2>&1; then
+        npm run migrate
+        if [ $? -ne 0 ]; then
+            echo "❌ Database migrations failed"
+            cd ..
+            return 1
+        fi
+        echo "✅ Database migrations completed"
+    else
+        echo "⚠️  Database not accessible, skipping migrations"
+    fi
+    cd ..
+    return 0
+}
+
+# Add a flag to skip migrations
+SKIP_MIGRATIONS=0
+for arg in "$@"; do
+    if [ "$arg" = "--skip-migrations" ]; then
+        SKIP_MIGRATIONS=1
+    fi
+done
+
+# Run migrations unless skipped
+if [ $SKIP_MIGRATIONS -eq 0 ]; then
+    run_migrations
+    if [ $? -ne 0 ]; then
+        echo "❌ Failed to run migrations, exiting"
+        exit 1
+    fi
+else
+    echo "⏭️  Skipping database migrations"
+fi
+
 # Stop any existing services before starting new ones
 stop_existing_services
 
