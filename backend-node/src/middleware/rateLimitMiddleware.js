@@ -67,7 +67,8 @@ const generalLimiter = rateLimit({
   standardHeaders: true,
   legacyHeaders: false,
   skip: () => process.env.NODE_ENV === 'test',
-  store: redisStore,
+  // Only set store when Redis is available; otherwise use default memory store
+  store: redisStore || undefined,
 });
 
 // Strict rate limiter for auth endpoints
@@ -84,7 +85,7 @@ const strictLimiter = rateLimit({
   standardHeaders: true,
   legacyHeaders: false,
   skip: () => process.env.NODE_ENV === 'test',
-  store: redisStore,
+  store: redisStore || undefined,
 });
 
 // API key rate limiter
@@ -101,7 +102,7 @@ const apiKeyLimiter = rateLimit({
   standardHeaders: true,
   legacyHeaders: false,
   skip: () => process.env.NODE_ENV === 'test',
-  store: redisStore,
+  store: redisStore || undefined,
   keyGenerator: (req) => {
     // Use API key from header if available, otherwise fallback to IP
     return req.headers['x-api-key'] || req.ip;
@@ -122,7 +123,7 @@ const userRateLimiter = rateLimit({
   standardHeaders: true,
   legacyHeaders: false,
   skip: (req) => process.env.NODE_ENV === 'test' || !req.user,
-  store: redisStore,
+  store: redisStore || undefined,
   keyGenerator: (req) => {
     // Use user ID if available, otherwise fallback to IP
     return req.user ? `user:${req.user.id}` : req.ip;

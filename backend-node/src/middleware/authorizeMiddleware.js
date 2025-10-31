@@ -12,8 +12,8 @@ const authorize = (...roles) => {
             success: false,
             error: {
               code: 'AUTHENTICATION_REQUIRED',
-              message: 'Authentication required',
-            },
+              message: 'Authentication required'
+            }
           });
         }
 
@@ -23,9 +23,9 @@ const authorize = (...roles) => {
           status: 401,
           detail: 'Authentication required',
           instance: req.originalUrl,
-          traceId: req.correlationId,
+          traceId: req.correlationId
         };
-
+        
         return res.status(401).json(errorResponse);
       }
 
@@ -41,20 +41,18 @@ const authorize = (...roles) => {
 
       // Get user with roles
       const userWithRoles = await User.findByPk(req.user.id, {
-        include: [
-          {
-            model: Role,
-            as: 'roles',
-            through: { attributes: [] }, // Don't include UserRole attributes
-          },
-        ],
+        include: [{
+          model: Role,
+          as: 'roles',
+          through: { attributes: [] } // Don't include UserRole attributes
+        }]
       });
 
       // Extract role names
-      const userRoles = userWithRoles.roles.map((role) => role.name);
+      const userRoles = userWithRoles.roles.map(role => role.name);
 
       // Check if user has any of the required roles
-      const hasRequiredRole = roles.some((role) => userRoles.includes(role));
+      const hasRequiredRole = roles.some(role => userRoles.includes(role));
 
       if (!hasRequiredRole) {
         // Test-mode: return legacy shape expected by tests
@@ -63,8 +61,8 @@ const authorize = (...roles) => {
             success: false,
             error: {
               code: 'ACCESS_DENIED',
-              message: 'Insufficient permissions',
-            },
+              message: 'Insufficient permissions'
+            }
           });
         }
 
@@ -74,9 +72,9 @@ const authorize = (...roles) => {
           status: 403,
           detail: 'Insufficient permissions',
           instance: req.originalUrl,
-          traceId: req.correlationId,
+          traceId: req.correlationId
         };
-
+        
         return res.status(403).json(errorResponse);
       }
 
@@ -88,8 +86,8 @@ const authorize = (...roles) => {
           success: false,
           error: {
             code: 'INTERNAL_ERROR',
-            message: 'Authorization check failed',
-          },
+            message: 'Authorization check failed'
+          }
         });
       }
 
@@ -99,9 +97,9 @@ const authorize = (...roles) => {
         status: 500,
         detail: 'Authorization check failed',
         instance: req.originalUrl,
-        traceId: req.correlationId,
+        traceId: req.correlationId
       };
-
+      
       return res.status(500).json(errorResponse);
     }
   };
