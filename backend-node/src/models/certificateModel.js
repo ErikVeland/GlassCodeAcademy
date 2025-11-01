@@ -1,7 +1,5 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require('../config/database');
-const User = require('./userModel');
-const Course = require('./courseModel');
 
 const Certificate = sequelize.define(
   'Certificate',
@@ -110,15 +108,6 @@ const Certificate = sequelize.define(
   }
 );
 
-// Define associations
-Certificate.belongsTo(User, {
-  foreignKey: 'user_id',
-  as: 'user',
-});
-
-Certificate.belongsTo(Course, {
-  foreignKey: 'course_id',
-  as: 'course',
-});
+// Course association defined centrally in src/models/index.js
 
 module.exports = Certificate;

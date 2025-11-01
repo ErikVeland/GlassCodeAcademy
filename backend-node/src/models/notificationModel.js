@@ -1,116 +1,7 @@
-<<<<<<< Local
-const { DataTypes } = require('sequelize');
-const sequelize = require('../config/database');
-const User = require('./userModel');
-=======
 const { DataTypes } = require('sequelize');
 const { sequelize } = require('../config/database');
->>>>>>> Remote
+const User = require('./userModel');
 
-<<<<<<< Local
-const Notification = sequelize.define(
-  'Notification',
-  {
-    id: {
-      type: DataTypes.INTEGER,
-      primaryKey: true,
-      autoIncrement: true,
-    },
-    userId: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-      field: 'user_id',
-      references: {
-        model: 'users',
-        key: 'id',
-      },
-    },
-    title: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
-    message: {
-      type: DataTypes.TEXT,
-      allowNull: false,
-    },
-    type: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      defaultValue: 'info', // info, warning, success, error
-    },
-    isRead: {
-      type: DataTypes.BOOLEAN,
-      defaultValue: false,
-      field: 'is_read',
-    },
-    readAt: {
-      type: DataTypes.DATE,
-      field: 'read_at',
-    },
-    priority: {
-      type: DataTypes.INTEGER,
-      defaultValue: 0, // 0 = low, 1 = medium, 2 = high
-    },
-    category: {
-      type: DataTypes.STRING,
-      allowNull: true, // e.g., 'lesson', 'quiz', 'announcement', 'system'
-    },
-    entityId: {
-      type: DataTypes.INTEGER,
-      field: 'entity_id',
-      comment: 'ID of the related entity (e.g., lesson_id, quiz_id)',
-    },
-    metadata: {
-      type: DataTypes.JSONB,
-      allowNull: true,
-      comment: 'Additional metadata about the notification',
-    },
-    sentAt: {
-      type: DataTypes.DATE,
-      defaultValue: DataTypes.NOW,
-      field: 'sent_at',
-    },
-    deliveredAt: {
-      type: DataTypes.DATE,
-      field: 'delivered_at',
-    },
-    deliveryMethod: {
-      type: DataTypes.STRING,
-      field: 'delivery_method', // 'email', 'in_app', 'sms', 'push'
-    },
-  },
-  {
-    tableName: 'notifications',
-    timestamps: true,
-    underscored: true,
-    indexes: [
-      {
-        fields: ['user_id'],
-      },
-      {
-        fields: ['is_read'],
-      },
-      {
-        fields: ['type'],
-      },
-      {
-        fields: ['category'],
-      },
-      {
-        fields: ['sent_at'],
-      },
-    ],
-  }
-);
-
-// Define associations
-Notification.belongsTo(User, {
-  foreignKey: 'user_id',
-  as: 'user',
-});
-
-module.exports = Notification;
-=======
 const Notification = sequelize.define(
   'Notification',
   {
@@ -217,5 +108,10 @@ const Notification = sequelize.define(
   }
 );
 
+// Define associations
+Notification.belongsTo(User, {
+  foreignKey: 'user_id',
+  as: 'notificationUser',
+});
+
 module.exports = Notification;
->>>>>>> Remote

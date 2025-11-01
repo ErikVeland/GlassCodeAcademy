@@ -72,7 +72,7 @@ const getCertificateById = async (certificateId) => {
           include: [
             {
               model: User,
-              as: 'user',
+              as: 'certificateUser',
               attributes: ['id', 'firstName', 'lastName', 'email'],
             },
             {
@@ -341,7 +341,7 @@ const verifyCertificate = async (certificateId) => {
           include: [
             {
               model: User,
-              as: 'user',
+              as: 'certificateUser',
               attributes: ['firstName', 'lastName'],
             },
             {

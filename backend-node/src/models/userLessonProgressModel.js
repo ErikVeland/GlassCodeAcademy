@@ -1,6 +1,5 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require('../config/database');
-const User = require('./userModel');
 const Lesson = require('./lessonModel');
 
 const UserLessonProgress = sequelize.define(
@@ -50,12 +49,6 @@ const UserLessonProgress = sequelize.define(
     underscored: true,
   }
 );
-
-// Define associations
-UserLessonProgress.belongsTo(User, {
-  foreignKey: 'user_id',
-  as: 'user',
-});
 
 UserLessonProgress.belongsTo(Lesson, {
   foreignKey: 'lesson_id',

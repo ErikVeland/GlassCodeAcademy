@@ -46,7 +46,7 @@ const UserProgress = sequelize.define(
 // Define associations
 UserProgress.belongsTo(User, {
   foreignKey: 'user_id',
-  as: 'user',
+  as: 'progressUser',
 });
 
 UserProgress.belongsTo(Course, {

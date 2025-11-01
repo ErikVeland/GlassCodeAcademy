@@ -95,17 +95,17 @@ async function processUserDigest(user, frequency) {
     let since;
 
     switch (frequency) {
-      case 'hourly':
-        since = new Date(now.getTime() - 60 * 60 * 1000); // 1 hour ago
-        break;
-      case 'daily':
-        since = new Date(now.getTime() - 24 * 60 * 60 * 1000); // 24 hours ago
-        break;
-      case 'weekly':
-        since = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000); // 7 days ago
-        break;
-      default:
-        throw new Error(`Unsupported frequency: ${frequency}`);
+    case 'hourly':
+      since = new Date(now.getTime() - 60 * 60 * 1000); // 1 hour ago
+      break;
+    case 'daily':
+      since = new Date(now.getTime() - 24 * 60 * 60 * 1000); // 24 hours ago
+      break;
+    case 'weekly':
+      since = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000); // 7 days ago
+      break;
+    default:
+      throw new Error(`Unsupported frequency: ${frequency}`);
     }
 
     // Get unread notifications since the time window
@@ -147,7 +147,7 @@ async function processDigests(frequency) {
       },
       include: [{
         model: require('../models').User,
-        as: 'user',
+        as: 'notificationPreferenceUser',
       }],
     });
 

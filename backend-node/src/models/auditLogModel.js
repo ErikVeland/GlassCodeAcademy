@@ -1,6 +1,5 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require('../config/database');
-const User = require('./userModel');
 
 const AuditLog = sequelize.define(
   'AuditLog',
@@ -56,10 +55,6 @@ const AuditLog = sequelize.define(
   }
 );
 
-// Define associations
-AuditLog.belongsTo(User, {
-  foreignKey: 'user_id',
-  as: 'user',
-});
+// Associations initialized centrally in src/models/index.js
 
 module.exports = AuditLog;

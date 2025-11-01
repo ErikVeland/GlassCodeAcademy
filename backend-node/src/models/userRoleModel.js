@@ -30,7 +30,7 @@ const UserRole = sequelize.define(
 // Define associations
 UserRole.belongsTo(User, {
   foreignKey: 'user_id',
-  as: 'user',
+  as: 'roleUser',
 });
 
 UserRole.belongsTo(Role, {

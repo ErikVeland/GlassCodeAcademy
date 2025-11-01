@@ -1,6 +1,5 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require('../config/database');
-const User = require('./userModel');
 
 const Badge = sequelize.define(
   'Badge',
@@ -49,13 +48,5 @@ const Badge = sequelize.define(
     underscored: true,
   }
 );
-
-// Define associations
-Badge.belongsToMany(User, {
-  through: 'user_badges',
-  foreignKey: 'badge_id',
-  otherKey: 'user_id',
-  as: 'users',
-});
 
 module.exports = Badge;

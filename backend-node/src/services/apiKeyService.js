@@ -45,7 +45,7 @@ const validateApiKey = async (key) => {
     include: [
       {
         model: User,
-        as: 'user',
+        as: 'apiKeyUser',
       },
     ],
   });

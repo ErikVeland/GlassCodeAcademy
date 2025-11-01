@@ -128,7 +128,7 @@ function initializeAssociations() {
   });
   ApiKey.belongsTo(User, {
     foreignKey: 'user_id',
-    as: 'user',
+    as: 'apiKeyUser',
   });
   
   // Badge associations
@@ -148,7 +148,7 @@ function initializeAssociations() {
   // UserBadge associations
   UserBadge.belongsTo(User, {
     foreignKey: 'user_id',
-    as: 'user',
+    as: 'userBadgeUser',
   });
   UserBadge.belongsTo(Badge, {
     foreignKey: 'badge_id',
@@ -158,7 +158,7 @@ function initializeAssociations() {
   // Certificate associations
   Certificate.belongsTo(User, {
     foreignKey: 'user_id',
-    as: 'user',
+    as: 'certificateUser',
   });
   Certificate.belongsTo(Course, {
     foreignKey: 'course_id',
