@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 
 // Enhanced interfaces matching design documentation
 export interface ProgressData {
@@ -476,7 +476,7 @@ export const useProgressTrackingComplete = () => {
     return () => {
       mounted = false;
     };
-  }, [getModulesByTier, getRegistryCached, getTiers]);
+  }, [getModulesByTier, getRegistryCached, getTiers, getModuleLessons, normalizeModuleSlugs]);
 
   // Helper: determine tier for a module via registry-backed cache with fallback
   const resolveTierForModule = useCallback(async (
@@ -782,7 +782,7 @@ export const useProgressTrackingComplete = () => {
       const updatedAchievements = [...achievements, ...newAchievements];
       setAchievements(updatedAchievements);
     }
-  }, [achievements, tierModuleCache, streak, getModulesByTrack]);
+  }, [achievements, tierModuleCache, streak, getModulesByTrack, normalizeModuleSlugs]);
 
   const updateUserStats = useCallback((progressData: Record<string, ProgressData>) => {
     const totalStudyTime = Object.values(progressData).reduce((sum, p) => sum + p.timeSpent, 0);
