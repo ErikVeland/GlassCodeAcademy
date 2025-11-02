@@ -21,17 +21,25 @@ async function getNotifications(req, res) {
       unreadOnly: unreadOnly === 'true',
     });
 
-    res.json({
-      success: true,
+    const successResponse = {
+      type: 'https://glasscode/errors/success',
+      title: 'Success',
+      status: 200,
       data: notifications,
-    });
+    };
+
+    res.status(200).json(successResponse);
   } catch (error) {
     logger.error('Error fetching notifications:', error);
-    res.status(500).json({
-      success: false,
-      message: 'Failed to fetch notifications',
-      error: error.message,
-    });
+    const errorResponse = {
+      type: 'https://glasscode/errors/internal-error',
+      title: 'Internal Server Error',
+      status: 500,
+      detail: 'Failed to fetch notifications',
+      instance: req.originalUrl,
+      traceId: req.correlationId,
+    };
+    res.status(500).json(errorResponse);
   }
 }
 
@@ -100,17 +108,25 @@ async function getNotificationPreferences(req, res) {
       },
     });
 
-    res.json({
-      success: true,
+    const successResponse = {
+      type: 'https://glasscode/errors/success',
+      title: 'Success',
+      status: 200,
       data: preferences,
-    });
+    };
+
+    res.status(200).json(successResponse);
   } catch (error) {
     logger.error('Error fetching notification preferences:', error);
-    res.status(500).json({
-      success: false,
-      message: 'Failed to fetch notification preferences',
-      error: error.message,
-    });
+    const errorResponse = {
+      type: 'https://glasscode/errors/internal-error',
+      title: 'Internal Server Error',
+      status: 500,
+      detail: 'Failed to fetch notification preferences',
+      instance: req.originalUrl,
+      traceId: req.correlationId,
+    };
+    res.status(500).json(errorResponse);
   }
 }
 

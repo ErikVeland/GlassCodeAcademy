@@ -54,6 +54,41 @@ const registerController = async (req, res, next) => {
   }
 };
 
+const getMeController = async (req, res, next) => {
+  try {
+    // User is already attached by authenticate middleware
+    const user = req.user;
+
+    // Remove sensitive fields
+    const userResponse = {
+      id: user.id,
+      email: user.email,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      role: user.role,
+      isActive: user.isActive,
+      createdAt: user.createdAt,
+      updatedAt: user.updatedAt,
+    };
+
+    const successResponse = {
+      type: 'https://glasscode/errors/success',
+      title: 'Success',
+      status: 200,
+      data: userResponse,
+    };
+
+    res.status(200).json(successResponse);
+  } catch (error) {
+    logger.error('Get user profile failed', {
+      userId: req.user?.id,
+      error: error.message,
+      stack: error.stack,
+    });
+    next(error);
+  }
+};
+
 const loginController = async (req, res, next) => {
   try {
     const { email, password } = req.body;
@@ -103,4 +138,5 @@ const loginController = async (req, res, next) => {
 module.exports = {
   registerController,
   loginController,
+  getMeController,
 };

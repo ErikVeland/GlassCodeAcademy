@@ -23,17 +23,25 @@ async function getCategories(req, res) {
   try {
     const categories = await getForumCategories();
 
-    res.json({
-      success: true,
+    const successResponse = {
+      type: 'https://glasscode/errors/success',
+      title: 'Success',
+      status: 200,
       data: categories,
-    });
+    };
+
+    res.status(200).json(successResponse);
   } catch (error) {
     logger.error('Error fetching forum categories:', error);
-    res.status(500).json({
-      success: false,
-      message: 'Failed to fetch forum categories',
-      error: error.message,
-    });
+    const errorResponse = {
+      type: 'https://glasscode/errors/internal-error',
+      title: 'Internal Server Error',
+      status: 500,
+      detail: 'Failed to fetch forum categories',
+      instance: req.originalUrl,
+      traceId: req.correlationId,
+    };
+    res.status(500).json(errorResponse);
   }
 }
 
@@ -120,10 +128,15 @@ async function createThreadHandler(req, res) {
 
     // Validate required fields
     if (!title || !content) {
-      return res.status(400).json({
-        success: false,
-        message: 'Title and content are required',
-      });
+      const errorResponse = {
+        type: 'https://glasscode/errors/validation-error',
+        title: 'Validation Error',
+        status: 400,
+        detail: 'Title and content are required',
+        instance: req.originalUrl,
+        traceId: req.correlationId,
+      };
+      return res.status(400).json(errorResponse);
     }
 
     const thread = await createThread(userId, categoryId, {
@@ -131,18 +144,25 @@ async function createThreadHandler(req, res) {
       content,
     });
 
-    res.status(201).json({
-      success: true,
+    const successResponse = {
+      type: 'https://glasscode/errors/success',
+      title: 'Success',
+      status: 201,
       data: thread,
-      message: 'Thread created successfully',
-    });
+    };
+
+    res.status(201).json(successResponse);
   } catch (error) {
     logger.error('Error creating forum thread:', error);
-    res.status(500).json({
-      success: false,
-      message: 'Failed to create forum thread',
-      error: error.message,
-    });
+    const errorResponse = {
+      type: 'https://glasscode/errors/internal-error',
+      title: 'Internal Server Error',
+      status: 500,
+      detail: 'Failed to create forum thread',
+      instance: req.originalUrl,
+      traceId: req.correlationId,
+    };
+    res.status(500).json(errorResponse);
   }
 }
 

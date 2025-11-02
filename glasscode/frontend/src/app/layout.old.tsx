@@ -19,7 +19,6 @@ import ApolloDevMessages from '../components/ApolloDevMessages';
 import ConsoleBanner from '../components/ConsoleBanner';
 import BackendReadinessWrapper from '../components/BackendReadinessWrapper';
 import GlobalStyles from '../components/GlobalStyles';
-import { cookies } from 'next/headers';
 
 export const runtime = 'nodejs';
 
@@ -47,14 +46,9 @@ export const viewport: Viewport = {
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
-  // SSR theme attributes based on cookie; falls back to light when unknown
-  const cookieTheme = cookies().get('gc-theme')?.value;
-  const initialTheme = cookieTheme === 'dark' || cookieTheme === 'light' ? cookieTheme : 'light';
-  const htmlClassName = initialTheme === 'dark' ? 'dark' : '';
-  const colorScheme = initialTheme === 'dark' ? 'dark' : 'light';
 
   return (
-    <html lang="en" suppressHydrationWarning data-theme={initialTheme} className={htmlClassName} style={{ colorScheme }}>
+    <html lang="en">
       <head>
         {/* Preconnect to external resources */}
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
@@ -73,8 +67,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                 var selected;
                 if (storedTheme === 'light' || storedTheme === 'dark' || storedTheme === 'system') {
                   selected = storedTheme;
-                } else if (cookieTheme === 'light' || cookieTheme === 'dark' || cookieTheme === 'system') {
-                  selected = cookieTheme;
                 } else if (legacy === 'true') {
                   selected = 'dark';
                 } else if (legacy === 'false') {
@@ -208,7 +200,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             })();`
         }} />
       </head>
-      <body suppressHydrationWarning className={"antialiased min-h-screen relative theme-base"}>
+      <body className={"antialiased min-h-screen relative theme-base"}>
         <GlobalStyles />
         <DarkModeProvider>
         <ApolloWrapper>

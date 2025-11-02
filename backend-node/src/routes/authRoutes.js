@@ -2,8 +2,10 @@ const express = require('express');
 const {
   registerController,
   loginController,
+  getMeController,
 } = require('../controllers/authController');
 const { strictLimiter } = require('../middleware/rateLimitMiddleware');
+const authenticate = require('../middleware/authMiddleware');
 const validate = require('../middleware/validationMiddleware');
 const Joi = require('joi');
 
@@ -30,6 +32,7 @@ router.post(
   registerController
 );
 router.post('/login', strictLimiter, validate(loginSchema), loginController);
+router.get('/me', authenticate, getMeController);
 router.use('/password', require('./passwordResetRoutes'));
 
 module.exports = router;

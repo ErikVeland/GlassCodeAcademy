@@ -1,3 +1,4 @@
+const sequelize = require('../config/database');
 const Course = require('./courseModel');
 const Module = require('./moduleModel');
 const Lesson = require('./lessonModel');
@@ -219,6 +220,7 @@ function initializeAssociations() {
 }
 
 module.exports = {
+  sequelize,
   Course,
   Module,
   Lesson,

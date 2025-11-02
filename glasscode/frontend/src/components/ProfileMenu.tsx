@@ -56,28 +56,28 @@ export default function ProfileMenu() {
   };
 
   const renderAvatar = () => {
+    const containerClass = "rounded-full overflow-hidden flex items-center justify-center bg-surface-alt aspect-square";
+    const containerStyle = { width: sizePx, height: sizePx } as const;
     if (profile.avatarUrl) {
       return (
-        <Image
-          src={profile.avatarUrl}
-          alt="Profile"
-          className="rounded-full object-cover"
-          width={sizePx}
-          height={sizePx}
-          unoptimized
-        />
-      );
-    }
-    if (profile.avatarPresetId && presetAvatars[profile.avatarPresetId]) {
-      return (
-        <div className="rounded-full flex items-center justify-center bg-surface-alt text-xl" style={{ width: sizePx, height: sizePx }}>
-          <span aria-hidden>{presetAvatars[profile.avatarPresetId]}</span>
+        <div className={containerClass} style={containerStyle}>
+          <Image
+            src={profile.avatarUrl}
+            alt="Profile"
+            className="object-cover w-full h-full"
+            width={sizePx}
+            height={sizePx}
+            unoptimized
+          />
         </div>
       );
     }
+    const emoji = profile.avatarPresetId && presetAvatars[profile.avatarPresetId]
+      ? presetAvatars[profile.avatarPresetId]
+      : '👤';
     return (
-      <div className="rounded-full flex items-center justify-center bg-surface-alt text-xl" style={{ width: sizePx, height: sizePx }}>
-        <span aria-hidden>👤</span>
+      <div className={containerClass} style={containerStyle}>
+        <span aria-hidden className="text-xl">{emoji}</span>
       </div>
     );
   };

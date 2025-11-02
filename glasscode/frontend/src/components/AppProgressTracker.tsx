@@ -45,7 +45,7 @@ const ProgressChip: React.FC<ProgressChipProps> = ({ goal, isExpanded, onClick }
   };
 
   return (
-            <div className="relative group cursor-pointer transition-transform md:hover:scale-[1.01] lg:hover:scale-102 active:scale-98 transform-gpu will-change-transform">
+    <div className="relative group cursor-pointer transition-transform md:hover:scale-[1.01] lg:hover:scale-102 active:scale-98 transform-gpu will-change-transform">
       <div 
         className="relative overflow-hidden rounded-xl bg-white/10 backdrop-blur-sm border border-white/20 p-4 min-h-[120px]"
         onClick={onClick}
@@ -115,13 +115,13 @@ const ProgressChip: React.FC<ProgressChipProps> = ({ goal, isExpanded, onClick }
         </div>
       </div>
       
-      {/* Expanded details */}
+      {/* Expanded details - using conditional rendering instead of dynamic display */}
       {isExpanded && (
         <div className="mt-2 bg-white/5 backdrop-blur-sm border border-white/10 rounded-lg p-3 transition-all duration-300">
           <p className="text-white/80 text-xs mb-3">{goal.description}</p>
           <div className="space-y-2">
             {goal.milestones.map((milestone) => (
-              <div key={milestone.id} className="flex items-center gap-2">
+              <div key={`${goal.id}-${milestone.id}`} className="flex items-center gap-2">
                 <div className={`w-3 h-3 rounded-full border-2 flex items-center justify-center ${
                   milestone.completed 
                     ? 'bg-green-500 border-green-500' 
@@ -293,7 +293,7 @@ const AppProgressTracker: React.FC = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
           {APP_PHASES.flatMap(phase => phase.goals).map((goal) => (
             <ProgressChip
-              key={goal.id}
+              key={`goal-${goal.id}`} // Using a more unique key
               goal={goal}
               isExpanded={expandedGoal === goal.id}
               onClick={() => setExpandedGoal(expandedGoal === goal.id ? null : goal.id)}

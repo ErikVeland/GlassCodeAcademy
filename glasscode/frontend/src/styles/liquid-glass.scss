@@ -85,8 +85,8 @@
   100% { background-position: 0% 50%; }
 }
 
-/* Apply only in light mode; respects existing theme classing */
-html:not(.dark) body.theme-base {
+/* Apply only in light mode; respects app-selected theme via data-theme */
+html[data-theme="light"] body.theme-base {
   background: radial-gradient(1200px 800px at 20% 0%, rgba(99, 102, 241, 0.08), transparent 60%),
               radial-gradient(1000px 700px at 80% 100%, rgba(59, 130, 246, 0.06), transparent 60%),
               linear-gradient(180deg, rgba(255, 255, 255, 1), rgba(248, 250, 252, 1));
@@ -119,34 +119,32 @@ html:not(.dark) body.theme-base {
   z-index: -1;
 }
 
-/* Dark mode glass adjustments */
-@media (prefers-color-scheme: dark) {
-  .glass-morphism {
-    background: var(--glass-bg-dark);
-    border-color: var(--glass-border-dark);
-    box-shadow: var(--glass-shadow-dark);
-  }
-  
-  .glass-morphism::before {
-    background: var(--text-overlay-light);
-    opacity: 0.05;
-  }
+/* Dark mode glass adjustments respecting selected theme */
+[data-theme="dark"] .glass-morphism {
+  background: var(--glass-bg-dark);
+  border-color: var(--glass-border-dark);
+  box-shadow: var(--glass-shadow-dark);
+}
+
+[data-theme="dark"] .glass-morphism::before {
+  background: var(--text-overlay-light);
+  opacity: 0.05;
 }
 
 /* Light mode glass: stronger surface, dark text, improved contrast */
-html:not(.dark) .glass-morphism {
+html[data-theme="light"] .glass-morphism {
   background: rgba(255, 255, 255, 0.92);
   border-color: rgba(31, 41, 55, 0.15);
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
   color: rgb(31 41 55);
 }
 
-html:not(.dark) .glass-morphism::before {
+html[data-theme="light"] .glass-morphism::before {
   opacity: 0; /* remove dark overlay to maintain contrast */
 }
 
 /* Light mode glass-card variant */
-html:not(.dark) .glass-card {
+html[data-theme="light"] .glass-card {
   background: rgba(255, 255, 255, 0.95);
   border-color: rgba(31, 41, 55, 0.15);
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
@@ -710,10 +708,9 @@ html:not(.dark) .glass-card {
   transform: translateY(0) scale(1);
 }
 
-@media (prefers-color-scheme: dark) {
-  .glass-nav-item {
-    color: #f3f4f6;
-  }
+/* Dark theme nav item text color respecting selected theme */
+[data-theme="dark"] .glass-nav-item {
+  color: #f3f4f6;
 }
 
 .glass-nav-item.active {
@@ -725,10 +722,9 @@ html:not(.dark) .glass-card {
   background: rgba(255, 255, 255, 0.1);
 }
 
-@media (prefers-color-scheme: dark) {
-  .glass-nav-item:hover:not(.active) {
-    background: rgba(255, 255, 255, 0.05);
-  }
+/* Dark theme nav item hover respecting selected theme */
+[data-theme="dark"] .glass-nav-item:hover:not(.active) {
+  background: rgba(255, 255, 255, 0.05);
 }
 
 // Accessibility Enhancements
@@ -757,12 +753,12 @@ html:not(.dark) .glass-card {
    ============================== */
 
 /* Preserve tier theming for panes within tier containers */
-html:not(.dark) .tier-container .glass-morphism {
+html[data-theme="light"] .tier-container .glass-morphism {
   background: rgba(255, 255, 255, 0.08);
   border-color: rgba(255, 255, 255, 0.24);
   color: #f3f4f6;
 }
-html:not(.dark) .tier-container .glass-morphism::before {
+html[data-theme="light"] .tier-container .glass-morphism::before {
   opacity: 0.08;
 }
 
@@ -770,18 +766,18 @@ html:not(.dark) .tier-container .glass-morphism::before {
 /* Light theme now uses var(--glass-bg), var(--glass-border), and inherits text color */
 
 /* Ensure the search input has a clearly visible dark grey border in light mode */
-html:not(.dark) .glass-search-input {
+html[data-theme="light"] .glass-search-input {
   border-color: #9CA3AF !important; /* Tailwind Gray-400 */
 }
 
 /* Make search container and filter chips more defined in light mode via theme border */
-html:not(.dark) .glass-search-container,
-html:not(.dark) .glass-filter-tag {
+html[data-theme="light"] .glass-search-container,
+html[data-theme="light"] .glass-filter-tag {
   border-color: hsl(var(--border)) !important;
 }
 
 /* Module cards: give chips (rounded badges) a subtle border in light mode */
-html:not(.dark) .glass-module-card .rounded-full.bg-surface-alt {
+html[data-theme="light"] .glass-module-card .rounded-full.bg-surface-alt {
   border: 1px solid hsl(var(--border)) !important;
 }
 

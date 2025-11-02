@@ -17,6 +17,14 @@ const oauthProviders = {
       process.env.GITHUB_REDIRECT_URI ||
       'http://localhost:3000/auth/github/callback',
   },
+  apple: {
+    keyId: process.env.APPLE_KEY_ID,
+    clientId: process.env.APPLE_CLIENT_ID,
+    clientSecret: process.env.APPLE_CLIENT_SECRET,
+    redirectUri:
+      process.env.APPLE_REDIRECT_URI ||
+      'http://localhost:3000/auth/apple/callback',
+  },
 };
 
 // Generate OAuth authorization URL
@@ -36,6 +44,8 @@ const generateOAuthUrl = (providerName) => {
     return `https://accounts.google.com/o/oauth2/v2/auth?client_id=${provider.clientId}&redirect_uri=${provider.redirectUri}&response_type=code&scope=email profile&access_type=offline`;
   case 'github':
     return `https://github.com/login/oauth/authorize?client_id=${provider.clientId}&redirect_uri=${provider.redirectUri}&scope=user:email`;
+  case 'apple':
+    return `https://appleid.apple.com/auth/authorize?client_id=${provider.clientId}&redirect_uri=${provider.redirectUri}&response_type=code&scope=email name&response_mode=form_post`;
   default:
     throw new Error(`Unsupported OAuth provider: ${providerName}`);
   }

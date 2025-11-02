@@ -1,4 +1,4 @@
-const { getAllCourses, getCourseById } = require('../services/contentService');
+const { getAllCourses, getCourseById, createCourse, updateCourse, deleteCourse } = require('../services/contentService');
 
 const getAllCoursesController = async (req, res, next) => {
   try {
@@ -7,15 +7,6 @@ const getAllCoursesController = async (req, res, next) => {
       limit: req.query.limit,
       sort: req.query.sort,
     };
-
-    // Test-mode: return legacy success shape expected by tests
-    if (process.env.NODE_ENV === 'test') {
-      return res.status(200).json({
-        success: true,
-        data: [{ id: 1, title: 'Test Course' }],
-        meta: { pagination: { page: 1, limit: 10, total: 1, pages: 1 } },
-      });
-    }
 
     const result = await getAllCourses(options);
 
@@ -39,14 +30,6 @@ const getAllCoursesController = async (req, res, next) => {
 const getCourseByIdController = async (req, res, next) => {
   try {
     const { id } = req.params;
-
-    // Test-mode: return legacy success shape expected by tests
-    if (process.env.NODE_ENV === 'test') {
-      return res.status(200).json({
-        success: true,
-        data: { id: Number(id), title: 'Test Course' },
-      });
-    }
 
     const course = await getCourseById(id);
 
@@ -77,7 +60,69 @@ const getCourseByIdController = async (req, res, next) => {
   }
 };
 
+const createCourseController = async (req, res, next) => {
+  try {
+    const courseData = req.body;
+    const createdBy = req.user.id;
+
+    const course = await createCourse(courseData, createdBy);
+
+    const successResponse = {
+      type: 'https://glasscode/errors/success',
+      title: 'Success',
+      status: 201,
+      data: course,
+    };
+
+    res.status(201).json(successResponse);
+  } catch (error) {
+    next(error);
+  }
+};
+
+const updateCourseController = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const courseData = req.body;
+
+    const course = await updateCourse(id, courseData);
+
+    const successResponse = {
+      type: 'https://glasscode/errors/success',
+      title: 'Success',
+      status: 200,
+      data: course,
+    };
+
+    res.status(200).json(successResponse);
+  } catch (error) {
+    next(error);
+  }
+};
+
+const deleteCourseController = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+
+    const result = await deleteCourse(id);
+
+    const successResponse = {
+      type: 'https://glasscode/errors/success',
+      title: 'Success',
+      status: 200,
+      data: result,
+    };
+
+    res.status(200).json(successResponse);
+  } catch (error) {
+    next(error);
+  }
+};
+
 module.exports = {
   getAllCoursesController,
   getCourseByIdController,
+  createCourseController,
+  updateCourseController,
+  deleteCourseController,
 };

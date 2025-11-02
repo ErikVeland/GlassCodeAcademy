@@ -126,4 +126,63 @@ router.get('/github/callback', async (req, res) => {
   }
 });
 
+// GET /auth/apple
+// Redirect to Apple OAuth
+router.get('/apple', (req, res) => {
+  try {
+    const authUrl = generateOAuthUrl('apple');
+    res.redirect(authUrl);
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      error: {
+        code: 'OAUTH_ERROR',
+        message: error.message,
+      },
+    });
+  }
+});
+
+// POST /auth/apple/callback
+// Handle Apple OAuth callback (Apple uses POST)
+router.post('/apple/callback', async (req, res) => {
+  try {
+    const { code } = req.body;
+
+    if (!code) {
+      return res.status(400).json({
+        success: false,
+        error: {
+          code: 'MISSING_CODE',
+          message: 'Authorization code is missing',
+        },
+      });
+    }
+
+    // Exchange code for access token
+    const tokenData = await exchangeCodeForToken('apple', code);
+
+    // Get user info
+    const userInfo = await getUserInfo('apple', tokenData.access_token);
+
+    // Create or update user
+    const user = await createOrUpdateOAuthUser(userInfo);
+
+    // Generate JWT token
+    const token = generateOAuthToken(user);
+
+    // Redirect to frontend with token
+    const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:3000';
+    res.redirect(`${frontendUrl}/auth/callback?token=${token}`);
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      error: {
+        code: 'OAUTH_ERROR',
+        message: error.message,
+      },
+    });
+  }
+});
+
 module.exports = router;

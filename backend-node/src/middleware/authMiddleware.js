@@ -7,17 +7,6 @@ const authenticate = async (req, res, next) => {
     const authHeader = req.headers.authorization;
 
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
-      // Test-mode: return legacy shape expected by tests
-      if (process.env.NODE_ENV === 'test') {
-        return res.status(401).json({
-          success: false,
-          error: {
-            code: 'AUTHENTICATION_REQUIRED',
-            message: 'Authentication required',
-          },
-        });
-      }
-
       const errorResponse = {
         type: 'https://glasscode/errors/authentication-required',
         title: 'Authentication Required',
@@ -45,17 +34,6 @@ const authenticate = async (req, res, next) => {
     const user = await User.findByPk(decoded.userId);
 
     if (!user) {
-      // Test-mode: return legacy shape expected by tests
-      if (process.env.NODE_ENV === 'test') {
-        return res.status(401).json({
-          success: false,
-          error: {
-            code: 'AUTHENTICATION_REQUIRED',
-            message: 'Invalid token',
-          },
-        });
-      }
-
       const errorResponse = {
         type: 'https://glasscode/errors/authentication-required',
         title: 'Authentication Required',
@@ -70,17 +48,6 @@ const authenticate = async (req, res, next) => {
 
     // Check if this is an OAuth user and if they're still linked to the OAuth provider
     if (decoded.oauth && (!user.oauthProvider || !user.oauthId)) {
-      // Test-mode: return legacy shape expected by tests
-      if (process.env.NODE_ENV === 'test') {
-        return res.status(401).json({
-          success: false,
-          error: {
-            code: 'AUTHENTICATION_REQUIRED',
-            message: 'OAuth account no longer linked',
-          },
-        });
-      }
-
       const errorResponse = {
         type: 'https://glasscode/errors/authentication-required',
         title: 'Authentication Required',
@@ -97,17 +64,6 @@ const authenticate = async (req, res, next) => {
     req.user = user;
     next();
   } catch (_error) {
-    // Test-mode: return legacy shape expected by tests
-    if (process.env.NODE_ENV === 'test') {
-      return res.status(401).json({
-        success: false,
-        error: {
-          code: 'AUTHENTICATION_REQUIRED',
-          message: 'Invalid token',
-        },
-      });
-    }
-
     const errorResponse = {
       type: 'https://glasscode/errors/authentication-required',
       title: 'Authentication Required',

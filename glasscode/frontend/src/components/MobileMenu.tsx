@@ -179,6 +179,14 @@ export default function MobileMenu() {
           <div className="border-t border-border my-2"></div>
           
           <Link
+            href="/forum"
+            className={`${isActive('/forum') ? 'bg-surface-alt text-primary border-primary' : 'border-transparent text-muted hover:bg-surface-alt hover:border-border hover:text-primary'} block pl-3 pr-4 py-2 border-l-4 text-base font-medium backdrop-blur-sm focus:outline-none focus:ring-2 ring-focus ring-offset-2 ring-offset-bg`}
+            onClick={() => setIsOpen(false)}
+          >
+            Forum
+          </Link>
+
+          <Link
             href="/"
             className={`${isActive('/') ? 'bg-surface-alt text-primary border-primary' : 'border-transparent text-muted hover:bg-surface-alt hover:border-border hover:text-primary'} block pl-3 pr-4 py-2 border-l-4 text-base font-medium backdrop-blur-sm focus:outline-none focus:ring-2 ring-focus ring-offset-2 ring-offset-bg`}
             onClick={() => setIsOpen(false)}

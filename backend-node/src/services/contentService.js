@@ -1,4 +1,5 @@
 const { Course, Module, Lesson, LessonQuiz } = require('../models');
+const logger = require('../utils/logger');
 
 // Get all courses
 const getAllCourses = async (options = {}) => {
@@ -118,9 +119,108 @@ const getQuizzesByLessonId = async (lessonId) => {
   return validQuizzes;
 };
 
+// Create a new course
+const createCourse = async (courseData, createdBy) => {
+  try {
+    // Auto-generate slug from title if not provided
+    const slug = courseData.slug || courseData.title
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, '-')
+      .replace(/^-|-$/g, '');
+
+    // Get the next order number if not provided
+    let order = courseData.order;
+    if (!order) {
+      const maxOrder = await Course.max('order');
+      order = (maxOrder || 0) + 1;
+    }
+
+    const course = await Course.create({
+      ...courseData,
+      slug,
+      order,
+      created_by: createdBy,
+      isPublished: courseData.isPublished || false,
+    });
+
+    logger.info('Course created successfully', {
+      courseId: course.id,
+      title: course.title,
+      createdBy,
+    });
+
+    return course;
+  } catch (error) {
+    logger.error('Course creation failed', {
+      error: error.message,
+      courseData,
+      createdBy,
+    });
+    throw error;
+  }
+};
+
+// Update a course
+const updateCourse = async (id, courseData) => {
+  try {
+    const course = await Course.findByPk(id);
+    
+    if (!course) {
+      const error = new Error('Course not found');
+      error.statusCode = 404;
+      throw error;
+    }
+
+    await course.update(courseData);
+
+    logger.info('Course updated successfully', {
+      courseId: course.id,
+      title: course.title,
+    });
+
+    return course;
+  } catch (error) {
+    logger.error('Course update failed', {
+      error: error.message,
+      courseId: id,
+    });
+    throw error;
+  }
+};
+
+// Delete a course
+const deleteCourse = async (id) => {
+  try {
+    const course = await Course.findByPk(id);
+    
+    if (!course) {
+      const error = new Error('Course not found');
+      error.statusCode = 404;
+      throw error;
+    }
+
+    await course.destroy();
+
+    logger.info('Course deleted successfully', {
+      courseId: id,
+    });
+
+    return { message: 'Course deleted successfully' };
+  } catch (error) {
+    logger.error('Course deletion failed', {
+      error: error.message,
+      courseId: id,
+    });
+    throw error;
+  }
+};
+
 module.exports = {
   getAllCourses,
   getCourseById,
+  createCourse,
+  updateCourse,
+  deleteCourse,
   getAllModules,
   getModuleById,
   getLessonById,

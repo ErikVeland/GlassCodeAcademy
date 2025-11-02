@@ -29,6 +29,14 @@ router.get(
   getUserBadgesController
 );
 
+// Get badges for a specific user (public or admin)
+router.get(
+  '/user/:userId',
+  authenticate,
+  generalLimiter,
+  getUserBadgesController
+);
+
 router.post(
   '/check-progress',
   authenticate,

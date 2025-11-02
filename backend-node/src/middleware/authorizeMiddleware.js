@@ -29,8 +29,20 @@ const authorize = (...roles) => {
         return res.status(401).json(errorResponse);
       }
 
-      // In test environment, bypass role checks to simplify controller testing
-      if (process.env.NODE_ENV === 'test') {
+      // In test environment, check simple role field if available
+      if (process.env.NODE_ENV === 'test' && req.user.role) {
+        const hasRequiredRole = roles.includes(req.user.role);
+        if (!hasRequiredRole) {
+          const errorResponse = {
+            type: 'https://glasscode/errors/access-denied',
+            title: 'Access Denied',
+            status: 403,
+            detail: 'Insufficient permissions',
+            instance: req.originalUrl,
+            traceId: req.correlationId,
+          };
+          return res.status(403).json(errorResponse);
+        }
         return next();
       }
 

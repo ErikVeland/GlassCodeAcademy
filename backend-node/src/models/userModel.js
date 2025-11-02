@@ -31,6 +31,13 @@ const User = sequelize.define(
       type: DataTypes.STRING(100),
       field: 'last_name',
     },
+    role: {
+      type: DataTypes.STRING(20),
+      defaultValue: 'student',
+      validate: {
+        isIn: [['admin', 'instructor', 'student', 'guest']],
+      },
+    },
     passwordHash: {
       type: DataTypes.STRING,
       allowNull: true,

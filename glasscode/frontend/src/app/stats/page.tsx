@@ -200,7 +200,7 @@ export default function StatsPage() {
               const moduleSlug = module.name.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
               return (
                 <div
-                  key={index}
+                  key={`${module.name}-${index}`} // Using a more unique key
                   className="p-4 rounded-xl border border-border hover:opacity-90 transition-all duration-200 hover:shadow-lg hover:scale-105 cursor-pointer bg-surface-alt relative group"
                   style={{ borderLeftColor: module.color, borderLeftWidth: '4px' }}
                 >
@@ -418,10 +418,14 @@ export default function StatsPage() {
               description="Total"
             />
           </div>
-          <div className="text-center">
+          <div className="text-center flex items-center justify-center gap-3">
             <Link href="/" className="inline-flex items-center px-4 py-2 bg-primary text-primary-fg rounded-lg hover:opacity-90 transition-colors">
               <TrophyIcon className="h-5 w-5 mr-2" />
               View Achievements
+            </Link>
+            <Link href="/forum" className="inline-flex items-center px-4 py-2 bg-surface-alt text-fg border border-border rounded-lg hover:opacity-90 transition-colors">
+              <ChatBubbleLeftRightIcon className="h-5 w-5 mr-2" />
+              Open Forum
             </Link>
           </div>
         </div>

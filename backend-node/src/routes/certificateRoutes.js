@@ -15,6 +15,13 @@ const router = express.Router();
 
 // User routes (authenticated)
 router.get(
+  '/',
+  authenticate,
+  generalLimiter,
+  getUserCertificatesController
+);
+
+router.get(
   '/my-certificates',
   authenticate,
   generalLimiter,
