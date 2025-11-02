@@ -1,5 +1,5 @@
 const jwt = require('jsonwebtoken');
-const { jwtSecret, jwtExpiresIn } = require('../config/auth');
+const { jwtSecret } = require('../config/auth');
 const { User } = require('../models');
 const logger = require('../utils/logger');
 
@@ -23,7 +23,7 @@ const verifyPasswordResetToken = (token) => {
     }
 
     return decoded;
-  } catch (error) {
+  } catch (_error) {
     throw new Error('Invalid or expired token');
   }
 };

@@ -22,7 +22,7 @@ const generateCorrelationId = () => {
   return uuidv4();
 };
 
-const errorHandler = (err, req, res, next) => {
+const errorHandler = (err, req, res, _next) => {
   const isTest = process.env.NODE_ENV === 'test';
   // Generate correlation ID if not already present
   const correlationId = req.correlationId || generateCorrelationId();

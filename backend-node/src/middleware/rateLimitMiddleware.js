@@ -27,7 +27,7 @@ class RedisStore {
     }
 
     try {
-      const [_, value] = await this.client
+      const [_result, value] = await this.client
         .multi()
         .incr(key)
         .expire(key, 900) // 15 minutes TTL

@@ -42,7 +42,7 @@ const generateOAuthUrl = (providerName) => {
 };
 
 // Exchange OAuth code for access token
-const exchangeCodeForToken = async (providerName, code) => {
+const exchangeCodeForToken = async (providerName, _code) => {
   const provider = oauthProviders[providerName];
 
   if (!provider) {
@@ -60,7 +60,7 @@ const exchangeCodeForToken = async (providerName, code) => {
 };
 
 // Get user info from OAuth provider
-const getUserInfo = async (providerName, accessToken) => {
+const getUserInfo = async (providerName, _accessToken) => {
   // In a real implementation, this would make an HTTP request to get user info
   // For now, we'll return mock user data
   return {
