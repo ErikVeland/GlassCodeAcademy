@@ -14,15 +14,40 @@ jobs:
   deploy:
     name: Deploy
     runs-on: ubuntu-latest
+    env:
+      AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
+      AWS_ROLE_ARN: ${{ secrets.AWS_ROLE_ARN }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Compute AWS role ARN
+        id: compute_arn
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [ -n "${AWS_ROLE_ARN:-}" ]; then
+            if echo "$AWS_ROLE_ARN" | grep -Eq '^arn:(aws|aws-us-gov|aws-cn):iam::[0-9]{12}:role/.+$'; then
+              echo "role_arn=$AWS_ROLE_ARN" >> "$GITHUB_OUTPUT"
+            else
+              echo "Invalid AWS role ARN format in AWS_ROLE_ARN secret" >&2
+              exit 1
+            fi
+          elif [ -n "${AWS_ACCOUNT_ID:-}" ] && echo "$AWS_ACCOUNT_ID" | grep -Eq '^[0-9]{12}$'; then
+            ROLE_ARN="arn:aws:iam::${AWS_ACCOUNT_ID}:role/glasscode-academy-github-actions-role"
+            echo "role_arn=$ROLE_ARN" >> "$GITHUB_OUTPUT"
+          else
+            echo "Missing AWS_ROLE_ARN secret and invalid AWS_ACCOUNT_ID; please set one of them" >&2
+            exit 1
+          fi
+
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
-          role-to-assume: arn:aws:iam::${{ secrets.AWS_ACCOUNT_ID }}:role/glasscode-academy-github-actions-role
+          role-to-assume: ${{ steps.compute_arn.outputs.role_arn }}
           aws-region: us-west-2
+          role-session-name: github-${{ github.run_id }}
+          audience: sts.amazonaws.com
 
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3

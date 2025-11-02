@@ -1,4 +1,4 @@
-const { Badge, UserBadge, User, UserProgress, QuizAttempt } = require('../models');
+const { Badge, UserBadge, UserProgress, QuizAttempt } = require('../models');
 const {
   recordBusinessOperation,
 } = require('../utils/metrics');
@@ -194,47 +194,45 @@ const checkAndAwardProgressBadges = async (userId) => {
           let meetsCriteria = false;
           
           switch (criteria.type) {
-            case 'course_completion':
-              // Check if user has completed a certain number of courses
-              const completedCourses = userProgress.filter(
-                (progress) => progress.completedAt
-              ).length;
-              meetsCriteria = completedCourses >= (criteria.minCourses || 1);
-              break;
-              
-            case 'lesson_completion':
-              // Check if user has completed a certain number of lessons
-              const completedLessons = userProgress.reduce(
-                (total, progress) => total + (progress.completedLessons || 0), 0
-              );
-              meetsCriteria = completedLessons >= (criteria.minLessons || 1);
-              break;
-              
-            case 'quiz_excellence':
-              // Check if user has achieved high scores on quizzes
-              if (quizAttempts.length > 0) {
-                const averageScore = quizAttempts.reduce(
-                  (total, attempt) => total + (parseFloat(attempt.score) || 0), 0
-                ) / quizAttempts.length;
-                meetsCriteria = averageScore >= (criteria.minAverageScore || 90);
-              }
-              break;
-              
-            case 'quiz_participation':
-              // Check if user has attempted a certain number of quizzes
-              meetsCriteria = quizAttempts.length >= (criteria.minAttempts || 1);
-              break;
-              
-            case 'perfect_score':
-              // Check if user has achieved a perfect score on any quiz
-              meetsCriteria = quizAttempts.some(
-                (attempt) => parseFloat(attempt.score) === 100
-              );
-              break;
-              
-            default:
-              // Unknown badge type
-              break;
+          case 'course_completion': {
+            // Check if user has completed a certain number of courses
+            const completedCourses = userProgress.filter(
+              (progress) => progress.completedAt
+            ).length;
+            meetsCriteria = completedCourses >= (criteria.minCourses || 1);
+            break;
+          }
+          case 'lesson_completion': {
+            // Check if user has completed a certain number of lessons
+            const completedLessons = userProgress.reduce(
+              (total, progress) => total + (progress.completedLessons || 0), 0
+            );
+            meetsCriteria = completedLessons >= (criteria.minLessons || 1);
+            break;
+          }
+          case 'quiz_excellence': {
+            // Check if user has achieved high scores on quizzes
+            if (quizAttempts.length > 0) {
+              const averageScore = quizAttempts.reduce(
+                (total, attempt) => total + (parseFloat(attempt.score) || 0), 0
+              ) / quizAttempts.length;
+              meetsCriteria = averageScore >= (criteria.minAverageScore || 90);
+            }
+            break;
+          }
+          case 'quiz_participation':
+            // Check if user has attempted a certain number of quizzes
+            meetsCriteria = quizAttempts.length >= (criteria.minAttempts || 1);
+            break;
+          case 'perfect_score':
+            // Check if user has achieved a perfect score on any quiz
+            meetsCriteria = quizAttempts.some(
+              (attempt) => parseFloat(attempt.score) === 100
+            );
+            break;
+          default:
+            // Unknown badge type
+            break;
           }
           
           // Award badge if criteria are met
