@@ -1,8 +1,5 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require('../config/database');
-const User = require('./userModel');
-const Course = require('./courseModel');
-const Lesson = require('./lessonModel');
 
 const UserProgress = sequelize.define(
   'UserProgress',
@@ -43,15 +40,6 @@ const UserProgress = sequelize.define(
   }
 );
 
-// Define associations
-UserProgress.belongsTo(User, {
-  foreignKey: 'user_id',
-  as: 'progressUser',
-});
-
-UserProgress.belongsTo(Course, {
-  foreignKey: 'course_id',
-  as: 'course',
-});
+// Associations are initialized centrally in src/models/index.js
 
 module.exports = UserProgress;

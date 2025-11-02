@@ -42,15 +42,11 @@ function initializeAssociations() {
     foreignKey: 'user_id',
     as: 'userProgressRecords',
   });
-  UserProgress.belongsTo(User, {
-    foreignKey: 'user_id',
-    as: 'progressUser',
-  });
 
   // User -> Lesson Progress
   User.hasMany(UserLessonProgress, {
     foreignKey: 'user_id',
-    as: 'lessonProgressRecords',
+    as: 'userLessonProgressRecords',
   });
   UserLessonProgress.belongsTo(User, {
     foreignKey: 'user_id',
@@ -60,7 +56,7 @@ function initializeAssociations() {
   // Lesson -> Lesson Progress
   Lesson.hasMany(UserLessonProgress, {
     foreignKey: 'lesson_id',
-    as: 'progressRecords',
+    as: 'lessonProgressRecords',
   });
   UserLessonProgress.belongsTo(Lesson, {
     foreignKey: 'lesson_id',
@@ -70,7 +66,7 @@ function initializeAssociations() {
   // Course -> Progress
   Course.hasMany(UserProgress, {
     foreignKey: 'course_id',
-    as: 'progressRecords',
+    as: 'courseProgressRecords',
   });
   UserProgress.belongsTo(Course, {
     foreignKey: 'course_id',
@@ -104,19 +100,19 @@ function initializeAssociations() {
   // User -> Quiz Attempts
   User.hasMany(QuizAttempt, {
     foreignKey: 'user_id',
-    as: 'quizAttempts',
+    as: 'userQuizAttempts',
   });
 
   // Lesson -> Quiz Attempts
   Lesson.hasMany(QuizAttempt, {
     foreignKey: 'lesson_id',
-    as: 'quizAttempts',
+    as: 'lessonQuizAttempts',
   });
 
   // Quiz -> Quiz Attempts
   LessonQuiz.hasMany(QuizAttempt, {
     foreignKey: 'quiz_id',
-    as: 'quizAttempts',
+    as: 'quizQuestionAttempts',
   });
 
   // Note: Tiers are standalone for now; modules embed tier key in registry synthesis
