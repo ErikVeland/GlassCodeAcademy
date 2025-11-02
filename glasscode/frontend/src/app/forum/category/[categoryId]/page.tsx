@@ -33,8 +33,9 @@ async function fetchThreads(categoryId: string): Promise<{ threads: Thread[]; pa
   return { threads, pagination: json?.pagination };
 }
 
-export default async function CategoryThreadsPage({ params }: { params: { categoryId: string } }) {
-  const { threads } = await fetchThreads(params.categoryId);
+export default async function CategoryThreadsPage({ params }: { params: Promise<{ categoryId: string }> }) {
+  const { categoryId } = await params;
+  const { threads } = await fetchThreads(categoryId);
 
   return (
     <div className="liquid-glass-layout min-h-screen bg-bg">

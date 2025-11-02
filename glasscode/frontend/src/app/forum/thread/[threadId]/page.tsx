@@ -51,8 +51,9 @@ function PostItem({ post, depth = 0 }: { post: Post; depth?: number }) {
   );
 }
 
-export default async function ThreadPage({ params }: { params: { threadId: string } }) {
-  const { thread, posts } = await fetchThread(params.threadId);
+export default async function ThreadPage({ params }: { params: Promise<{ threadId: string }> }) {
+  const { threadId } = await params;
+  const { thread, posts } = await fetchThread(threadId);
 
   if (!thread) {
     return (
