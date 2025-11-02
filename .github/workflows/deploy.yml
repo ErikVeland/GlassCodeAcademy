@@ -1,9 +1,7 @@
 name: Deploy to AWS
 
 on:
-  push:
-    branches:
-      - main
+  # Disable automatic deploys; allow only manual runs for future use
   workflow_dispatch:
 
 permissions:
@@ -13,6 +11,8 @@ permissions:
 jobs:
   deploy:
     name: Deploy
+    # Gate deploys behind a repository variable. If not explicitly enabled, skip.
+    if: ${{ vars.ENABLE_AWS_DEPLOY == 'true' }}
     runs-on: ubuntu-latest
     env:
       AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}

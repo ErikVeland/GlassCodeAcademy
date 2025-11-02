@@ -96,7 +96,7 @@ const authenticate = async (req, res, next) => {
     // Attach user to request
     req.user = user;
     next();
-  } catch (error) {
+  } catch (_error) {
     // Test-mode: return legacy shape expected by tests
     if (process.env.NODE_ENV === 'test') {
       return res.status(401).json({

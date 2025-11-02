@@ -7,7 +7,7 @@ const requestPasswordResetController = async (req, res, next) => {
   try {
     const { email } = req.body;
 
-    const result = await requestPasswordReset(email);
+    await requestPasswordReset(email);
 
     const successResponse = {
       type: 'https://glasscode/errors/success',
@@ -29,7 +29,7 @@ const resetPasswordController = async (req, res, next) => {
   try {
     const { token, newPassword } = req.body;
 
-    const result = await resetPassword(token, newPassword);
+    await resetPassword(token, newPassword);
 
     const successResponse = {
       type: 'https://glasscode/errors/success',

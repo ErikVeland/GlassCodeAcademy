@@ -1,13 +1,11 @@
 const {
-  sendNotification,
   markAsRead,
   getUserNotifications,
   deleteNotification,
-  getUserPreferences,
   createInAppNotification,
 } = require('../services/notificationService');
 const { processUserDigest } = require('../services/notificationDigestService');
-const { Notification, NotificationPreference, User } = require('../models');
+const { NotificationPreference, User } = require('../models');
 const logger = require('../utils/logger');
 
 /**

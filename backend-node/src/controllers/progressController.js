@@ -8,22 +8,6 @@ const {
 } = require('../services/progressService');
 const winston = require('winston');
 
-// Create a logger instance
-const logger = winston.createLogger({
-  level: 'info',
-  format: winston.format.combine(
-    winston.format.timestamp(),
-    winston.format.errors({ stack: true }),
-    winston.format.json()
-  ),
-  defaultMeta: { service: 'progress-controller' },
-  transports: [
-    new winston.transports.Console({
-      format: winston.format.simple(),
-    }),
-  ],
-});
-
 const getUserCourseProgressController = async (req, res, next) => {
   try {
     const { courseId } = req.params;

@@ -8,22 +8,6 @@ const {
 } = require('../services/certificateService');
 const winston = require('winston');
 
-// Create a logger instance
-const logger = winston.createLogger({
-  level: 'info',
-  format: winston.format.combine(
-    winston.format.timestamp(),
-    winston.format.errors({ stack: true }),
-    winston.format.json()
-  ),
-  defaultMeta: { service: 'certificate-controller' },
-  transports: [
-    new winston.transports.Console({
-      format: winston.format.simple(),
-    }),
-  ],
-});
-
 const getUserCertificatesController = async (req, res, next) => {
   try {
     const userId = req.user.id;

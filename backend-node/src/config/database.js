@@ -24,7 +24,7 @@ const path = require('path');
     }
     // Fallback to default behavior
     dotenv.config();
-  } catch (_) {
+  } catch (_error) {
     dotenv.config();
   }
 })();

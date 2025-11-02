@@ -9,22 +9,6 @@ const {
 } = require('../services/badgeService');
 const winston = require('winston');
 
-// Create a logger instance
-const logger = winston.createLogger({
-  level: 'info',
-  format: winston.format.combine(
-    winston.format.timestamp(),
-    winston.format.errors({ stack: true }),
-    winston.format.json()
-  ),
-  defaultMeta: { service: 'badge-controller' },
-  transports: [
-    new winston.transports.Console({
-      format: winston.format.simple(),
-    }),
-  ],
-});
-
 const getAllBadgesController = async (req, res, next) => {
   try {
     const badges = await getAllBadges();

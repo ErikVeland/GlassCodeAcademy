@@ -1,6 +1,5 @@
 const {
   getForumCategories,
-  getForumCategoryById,
   getThreadsByCategory,
   getThreadById,
   createThread,

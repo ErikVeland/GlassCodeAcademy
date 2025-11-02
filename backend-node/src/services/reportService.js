@@ -74,17 +74,17 @@ async function validateTargetExists(targetType, targetId) {
   try {
     let model;
     switch (targetType) {
-      case 'thread':
-        model = ForumThread;
-        break;
-      case 'post':
-        model = ForumPost;
-        break;
-      case 'user':
-        model = User;
-        break;
-      default:
-        return false;
+    case 'thread':
+      model = ForumThread;
+      break;
+    case 'post':
+      model = ForumPost;
+      break;
+    case 'user':
+      model = User;
+      break;
+    default:
+      return false;
     }
 
     const target = await model.findByPk(targetId);
@@ -104,14 +104,14 @@ async function incrementTargetReportCount(targetType, targetId) {
   try {
     let model;
     switch (targetType) {
-      case 'thread':
-        model = ForumThread;
-        break;
-      case 'post':
-        model = ForumPost;
-        break;
-      default:
-        return;
+    case 'thread':
+      model = ForumThread;
+      break;
+    case 'post':
+      model = ForumPost;
+      break;
+    default:
+      return;
     }
 
     const target = await model.findByPk(targetId);
@@ -318,14 +318,14 @@ async function autoModerateContent(targetType, targetId, threshold = 5) {
       // Auto-hide content
       let model;
       switch (targetType) {
-        case 'thread':
-          model = ForumThread;
-          break;
-        case 'post':
-          model = ForumPost;
-          break;
-        default:
-          return;
+      case 'thread':
+        model = ForumThread;
+        break;
+      case 'post':
+        model = ForumPost;
+        break;
+      default:
+        return;
       }
 
       const target = await model.findByPk(targetId);

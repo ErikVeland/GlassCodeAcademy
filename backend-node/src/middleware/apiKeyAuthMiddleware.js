@@ -1,5 +1,4 @@
 const { validateApiKey } = require('../services/apiKeyService');
-const User = require('../models/userModel');
 
 const authenticateApiKey = async (req, res, next) => {
   try {

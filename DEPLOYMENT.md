@@ -2,6 +2,17 @@
 
 This guide provides detailed instructions for deploying the GlassCode Academy application to various platforms.
 
+## AWS Deployment (Optional, Disabled by Default)
+
+AWS-based deployment via GitHub Actions is currently disabled to keep things lightweight. The workflow will only run when explicitly enabled and triggered manually.
+
+To enable later:
+- Set repository variable `ENABLE_AWS_DEPLOY` to `true`.
+- Set one of the secrets: `AWS_ROLE_ARN` (full IAM role ARN) or `AWS_ACCOUNT_ID` (12-digit account ID).
+- Run the "Deploy to AWS" workflow manually from the Actions tab.
+
+Until enabled, use the standalone server deployment below or a simple host (e.g., Render, Railway, Vercel/Netlify for the frontend).
+
 ## Content Management
 
 All lesson content is organised in the [content/lessons/](file:///Users/veland/GlassCodeAcademy/content/lessons) directory with each module having its own JSON file containing all lessons for that technology.
