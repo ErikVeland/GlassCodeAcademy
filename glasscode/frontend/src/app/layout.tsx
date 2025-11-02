@@ -46,9 +46,10 @@ export const viewport: Viewport = {
   viewportFit: 'cover',
 };
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default async function RootLayout({ children }: { children: React.ReactNode }) {
   // SSR theme attributes based on cookie; falls back to light when unknown
-  const cookieTheme = cookies().get('gc-theme')?.value;
+  const cookieStore = await cookies();
+  const cookieTheme = cookieStore.get('gc-theme')?.value;
   const initialTheme = cookieTheme === 'dark' || cookieTheme === 'light' ? cookieTheme : 'light';
   const htmlClassName = initialTheme === 'dark' ? 'dark' : '';
   const colorScheme = initialTheme === 'dark' ? 'dark' : 'light';
