@@ -33,6 +33,7 @@ app.get('/health', (req, res) => {
 app.use('/api/auth', require('./routes/authRoutes'));
 app.use('/api/profile', require('./routes/profileRoutes'));
 app.use('/api/admin', require('./routes/adminRoutes'));
+app.use('/api/admin/academies', require('./routes/academyRoutes'));
 app.use('/api/content', require('./routes/contentManagementRoutes'));
 app.use('/api/courses', require('./routes/courseRoutes'));
 app.use('/api/modules', require('./routes/moduleRoutes'));

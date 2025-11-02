@@ -24,6 +24,7 @@ import {
   BellIcon,
   ArrowsRightLeftIcon
 } from '@heroicons/react/24/outline';
+import { KeyIcon } from '@heroicons/react/24/outline';
 import LoadingScreen from '@/components/LoadingScreen';
 import '@/styles/liquid-glass.scss';
 
@@ -357,6 +358,71 @@ export default function StatsPage() {
                 </div>
               </div>
             </div>
+          </div>
+        </div>
+
+        {/* Platform Features Summary */}
+        <div className="glass-card mb-12">
+          <h3 className="text-2xl font-bold text-white dark:text-gray-100 mb-6 flex items-center">
+            <ShieldCheckIcon className="h-6 w-6 mr-2 text-green-400" />
+            Platform Features Summary
+          </h3>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 mb-6">
+            <StatCard
+              title="Forum & Community"
+              value={5}
+              icon={<ChatBubbleLeftRightIcon className="h-8 w-8" />}
+              color="purple"
+              description="Features"
+            />
+            <StatCard
+              title="Notifications"
+              value={4}
+              icon={<BellIcon className="h-8 w-8" />}
+              color="blue"
+              description="Channels"
+            />
+            <StatCard
+              title="Gamification"
+              value={3}
+              icon={<TrophyIcon className="h-8 w-8" />}
+              color="orange"
+              description="Systems"
+            />
+            <StatCard
+              title="Certificates"
+              value={3}
+              icon={<DocumentCheckIcon className="h-8 w-8" />}
+              color="indigo"
+              description="Services"
+            />
+            <StatCard
+              title="OAuth Providers"
+              value={2}
+              icon={<ArrowsRightLeftIcon className="h-8 w-8" />}
+              color="green"
+              description="Active"
+            />
+            <StatCard
+              title="API Key Mgmt"
+              value={4}
+              icon={<KeyIcon className="h-8 w-8" />}
+              color="pink"
+              description="Features"
+            />
+            <StatCard
+              title="Database Models"
+              value={28}
+              icon={<CogIcon className="h-8 w-8" />}
+              color="orange"
+              description="Total"
+            />
+          </div>
+          <div className="text-center">
+            <Link href="/" className="inline-flex items-center px-4 py-2 bg-primary text-primary-fg rounded-lg hover:opacity-90 transition-colors">
+              <TrophyIcon className="h-5 w-5 mr-2" />
+              View Achievements
+            </Link>
           </div>
         </div>
 

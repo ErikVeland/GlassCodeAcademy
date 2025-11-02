@@ -35,10 +35,48 @@ GlassCode Academy has made significant progress in transforming into an enterpri
 - ✅ Containerization: Docker-based deployment with consistent environments
 - ✅ Performance Optimizations: Significant loading time improvements and resource usage reduction
 
+### Feature Coverage Overview (Current State)
+
+#### Forum & Community System
+- Full forum capabilities: threads, posts, categories, voting, reporting, and audit trails.
+- Moderation tools: approve/reject, delete, lock/unlock, pin/unpin with history tracking.
+- Key components: `backend-node/src/controllers/forumController.js`, `backend-node/src/services/forumService.js`, `backend-node/src/services/moderationService.js`.
+
+#### Multi-channel Notification System
+- Implemented channels: Email and In-App notifications with digest preferences and announcements.
+- Extensible roadmap: Push notifications and SMS listed as future channels.
+- Key components: `backend-node/src/services/notificationService.js`, `backend-node/src/services/notificationIntegrationService.js`, `backend-node/src/services/notificationDigestService.js`, `backend-node/src/services/announcementService.js`, `backend-node/src/routes/notificationRoutes.js`.
+
+#### Gamification (Badges & Certificates)
+- Badge awarding based on progress, attempts, and lesson/course completion.
+- Certificate generation, retrieval, and verification with QR/URL verification.
+- Key components: `backend-node/src/services/badgeService.js`, `backend-node/src/services/certificateService.js`, `backend-node/src/config/defaultBadges.js`, `glasscode/frontend/src/components/GamificationDashboard`.
+
+#### OAuth Integration
+- Google and GitHub OAuth flows with redirect, code exchange, user info, and JWT issuance.
+- Account linking: merges with existing accounts on email match.
+- Key components: `backend-node/src/routes/oauthRoutes.js`, `backend-node/src/services/oauthService.js`.
+
+#### API Key Management
+- Secure generation, hashed storage, validation, rotation, and expiration.
+- Per-user management and route protection via middleware.
+- Key components: `backend-node/src/services/apiKeyService.js`, `backend-node/src/routes/apiKeyRoutes.js`, `backend-node/src/middleware/apiKeyAuthMiddleware.js`, `backend-node/src/models/apiKeyModel.js`.
+
+#### Database Models & Backend Services
+- Model files present: 28 in `backend-node/src/models` (27 Sequelize models + central index aggregator).
+- Coverage highlights:
+  - Users, roles, userRoles, academies, courses, modules, lessons, quizzes, quizAttempts.
+  - Progress and userLessonProgress tracking.
+  - Forum: threads, posts, categories, votes; moderation history.
+  - Notifications: notifications and notification preferences.
+  - Engagement: badges, userBadges, certificates.
+  - Admin: audit logs, FAQ, reports, tiers.
+  - Security: API keys.
+- Associations orchestrated centrally in `backend-node/src/models/index.js`.
+
 ### Critical Infrastructure Gaps
 - ⚠️ Infrastructure as Code: IaC implementation in progress
-- ❌ Notification & Messaging: No email/in-app notifications
-- ❌ Community Layer: No discussions, Q&A, or collaboration
+ - ❌ Community Layer: No discussions, Q&A, or collaboration (superseded by Forum & Community System above)
 - ❌ Monetisation: No subscriptions or licensing model
 - ❌ Accessibility & i18n: WCAG colour-contrast theming plan implemented but needs automated contrast checks
 

@@ -12,6 +12,7 @@ const initializeDatabase = async () => {
     initializeAssociations();
 
     // Sync models with database
+    // DISABLED: Relying on migrations only to avoid sync loop
     // In production, rely on migrations by default to avoid destructive/locking changes.
     // Allow opt-in via env flags: DB_SYNC=true and optional DB_SYNC_ALTER=true.
     const nodeEnv = (process.env.NODE_ENV || '').toLowerCase();
@@ -20,15 +21,16 @@ const initializeDatabase = async () => {
     const dbSyncAlterFlag =
       (process.env.DB_SYNC_ALTER || '').toLowerCase() === 'true';
 
-    if (!isProd || dbSyncFlag) {
-      const useAlter = !isProd || dbSyncAlterFlag; // alter in non-prod, opt-in in prod
+    if (dbSyncFlag) {
+      // Only sync if explicitly enabled via DB_SYNC=true
+      const useAlter = !isProd || dbSyncAlterFlag;
       await sequelize.sync({ alter: useAlter });
       console.log(
         `Database models synchronized successfully (env="${nodeEnv}", alter=${useAlter}).`
       );
     } else {
       console.log(
-        'Skipping sequelize.sync in production; schema managed by migrations.'
+        'Skipping sequelize.sync; schema managed by migrations.'
       );
     }
     // Create default badges

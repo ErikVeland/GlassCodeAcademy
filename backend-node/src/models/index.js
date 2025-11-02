@@ -15,6 +15,12 @@ const ApiKey = require('./apiKeyModel');
 const Badge = require('./badgeModel');
 const UserBadge = require('./userBadgeModel');
 const Certificate = require('./certificateModel');
+const ForumCategory = require('./forumCategoryModel');
+const ForumThread = require('./forumThreadModel');
+const ForumPost = require('./forumPostModel');
+const ForumVote = require('./forumVoteModel');
+const Notification = require('./notificationModel');
+const NotificationPreference = require('./notificationPreferenceModel');
 
 // Initialize associations that weren't set up in the model files
 function initializeAssociations() {
@@ -157,8 +163,58 @@ function initializeAssociations() {
     as: 'certificateUser',
   });
   Certificate.belongsTo(Course, {
-    foreignKey: 'course_id',
+    foreignKey: 'user_id',
     as: 'course',
+  });
+  
+  // Forum associations
+  ForumCategory.hasMany(ForumThread, {
+    foreignKey: 'category_id',
+    as: 'threads',
+  });
+  ForumThread.belongsTo(ForumCategory, {
+    foreignKey: 'category_id',
+    as: 'category',
+  });
+  ForumThread.belongsTo(User, {
+    foreignKey: 'user_id',
+    as: 'author',
+  });
+  ForumThread.hasMany(ForumPost, {
+    foreignKey: 'thread_id',
+    as: 'posts',
+  });
+  ForumPost.belongsTo(ForumThread, {
+    foreignKey: 'thread_id',
+    as: 'thread',
+  });
+  ForumPost.belongsTo(User, {
+    foreignKey: 'user_id',
+    as: 'author',
+  });
+  ForumPost.hasMany(ForumVote, {
+    foreignKey: 'post_id',
+    as: 'votes',
+  });
+  ForumVote.belongsTo(ForumPost, {
+    foreignKey: 'post_id',
+    as: 'post',
+  });
+  ForumVote.belongsTo(User, {
+    foreignKey: 'user_id',
+    as: 'voter',
+  });
+  
+  // Notification associations are already defined in the model files
+  // User -> Notifications (hasMany)
+  User.hasMany(Notification, {
+    foreignKey: 'user_id',
+    as: 'notifications',
+  });
+  // User -> Notification Preferences (hasOne)
+  User.hasOne(NotificationPreference, {
+    foreignKey: 'user_id',
+    as: 'notificationPreferences',
   });
 }
 
@@ -180,5 +236,11 @@ module.exports = {
   Badge,
   UserBadge,
   Certificate,
+  ForumCategory,
+  ForumThread,
+  ForumPost,
+  ForumVote,
+  Notification,
+  NotificationPreference,
   initializeAssociations,
 };

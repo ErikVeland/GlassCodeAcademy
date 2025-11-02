@@ -2,15 +2,28 @@ module.exports = {
   testEnvironment: 'node',
   // Ensure Jest scans both project root and src for tests
   roots: ['<rootDir>', '<rootDir>/src'],
-  // Explicitly include tests in root and under src
-  testMatch: ['<rootDir>/tests/**/*.test.js', '<rootDir>/src/tests/**/*.test.js'],
+  // Explicitly include tests in __tests__ directory and legacy test locations
+  testMatch: [
+    '<rootDir>/tests/**/*.test.js',
+    '<rootDir>/src/tests/**/*.test.js',
+    '<rootDir>/src/__tests__/**/*.test.js'
+  ],
   collectCoverageFrom: [
     'src/**/*.js',
     '!src/config/*.js',
     '!src/models/index.js'
   ],
   coverageDirectory: 'coverage',
-  coverageReporters: ['text', 'lcov'],
+  coverageReporters: ['text', 'lcov', 'html'],
+  // Set coverage thresholds
+  coverageThreshold: {
+    global: {
+      branches: 60,
+      functions: 60,
+      lines: 60,
+      statements: 60
+    }
+  },
   // Load environment variables (including root-level .env) before tests run
   setupFiles: ['<rootDir>/jest.setup.js'],
   setupFilesAfterEnv: [],

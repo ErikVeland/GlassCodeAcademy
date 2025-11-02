@@ -98,6 +98,19 @@ All 18 technology modules are now complete:
 | Monitoring Stack | ✅ Implemented |
 | GitHub OIDC | ✅ Implemented |
 
+## Platform Features Summary
+| Feature | Status | Notes |
+|---------|--------|-------|
+| Forum & Community | ✅ Implemented | Threads, posts, categories; moderation actions; audit logs |
+| Notification System | ✅ Email + In-App | Digest preferences, announcements; Push/SMS planned |
+| Gamification | ✅ Badges + Certificates | Badge awarding, achievements, certificate generation/verification |
+| OAuth Integration | ✅ Google + GitHub | Account linking and JWT issuance |
+| API Keys | ✅ Management + Rotation | Hashed storage, expiry, per-user management |
+| Database Models | 28 | 27 Sequelize models + index aggregator |
+
+### Backend Services Coverage
+- Extensive controllers, services, and routes for academy, content, forum, moderation, notifications, gamification, authentication, and API keys.
+
 ## LMS Features Implementation
 | Category | Features | Status |
 |----------|----------|--------|
