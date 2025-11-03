@@ -93,7 +93,7 @@ const loginController = async (req, res, next) => {
   try {
     const { email, password } = req.body;
 
-  logger.info('User login attempt', { email });
+    logger.info('User login attempt', { email });
 
     // Test-only small delay to ensure tokens differ in integration flow
     if ((process.env.NODE_ENV || '').toLowerCase() === 'test') {
