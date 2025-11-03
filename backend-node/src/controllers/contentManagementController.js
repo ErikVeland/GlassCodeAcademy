@@ -104,19 +104,6 @@ const getAllCoursesController = async (req, res, next) => {
       order: req.query.order,
     };
 
-    // Test-mode stub
-    if (process.env.NODE_ENV === 'test') {
-      const successResponse = {
-        type: 'https://glasscode/errors/success',
-        title: 'Success',
-        status: 200,
-        data: [{ id: 1, title: 'Test Course' }],
-        meta: { pagination: { page: 1, limit: 10, total: 1, pages: 1 } },
-      };
-
-      return res.status(200).json(successResponse);
-    }
-
     const result = await getAllCourses(options);
 
     const successResponse = {
@@ -139,18 +126,6 @@ const getAllCoursesController = async (req, res, next) => {
 const getCourseByIdController = async (req, res, next) => {
   try {
     const { id } = req.params;
-
-    // Test-mode stub
-    if (process.env.NODE_ENV === 'test') {
-      const successResponse = {
-        type: 'https://glasscode/errors/success',
-        title: 'Success',
-        status: 200,
-        data: { id: Number(id), title: 'Test Course' },
-      };
-
-      return res.status(200).json(successResponse);
-    }
 
     const course = await getCourseById(id);
 

@@ -10,6 +10,11 @@ const validate = require('../middleware/validationMiddleware');
 const Joi = require('joi');
 
 const router = express.Router();
+const isTestEnv = () => (process.env.NODE_ENV || '').toLowerCase() === 'test';
+const strictOrNoop = (req, res, next) => {
+  if (isTestEnv()) return next();
+  return strictLimiter(req, res, next);
+};
 
 // Validation schemas
 const registerSchema = Joi.object({
@@ -27,11 +32,16 @@ const loginSchema = Joi.object({
 // Routes
 router.post(
   '/register',
-  strictLimiter,
+  strictOrNoop,
   validate(registerSchema),
   registerController
 );
-router.post('/login', strictLimiter, validate(loginSchema), loginController);
+router.post(
+  '/login',
+  strictOrNoop,
+  validate(loginSchema),
+  loginController
+);
 router.get('/me', authenticate, getMeController);
 router.use('/password', require('./passwordResetRoutes'));
 

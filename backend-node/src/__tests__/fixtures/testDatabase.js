@@ -1,58 +1,33 @@
-const { Sequelize } = require('sequelize');
-const path = require('path');
+// Test Database Utilities sourcing the same Sequelize instance as the models
+// This ensures associations and model registrations are consistent in tests.
+
+const { sequelize, initializeAssociations } = require('../../models');
+const { createDefaultBadges } = require('../../utils/defaultBadges');
 
 /**
- * Test Database Utilities
- * Creates an in-memory SQLite database for testing
+ * Initialize and sync test database (sqlite::memory: when NODE_ENV=test)
  */
-
-let sequelize = null;
-
-/**
- * Initialize test database
- * @returns {Promise<Sequelize>}
- */
-async function initTestDatabase() {
-  // Use SQLite in-memory database for tests
-  sequelize = new Sequelize('sqlite::memory:', {
-    logging: false,
-    define: {
-      timestamps: true,
-      underscored: true,
-    },
-  });
-
-  // Import models
-  const db = require('../../models');
-  
-  // Sync all models
-  await db.sequelize.sync({ force: true });
-
-  return sequelize;
+async function setupTestDb() {
+  // Initialize associations once
+  initializeAssociations();
+  // Force sync to start with a clean schema per test suite
+  await sequelize.sync({ force: true });
+  // Seed default badges to satisfy badges-related integration tests
+  await createDefaultBadges();
 }
 
 /**
  * Close test database connection
- * @returns {Promise<void>}
  */
-async function closeTestDatabase() {
-  if (sequelize) {
-    await sequelize.close();
-    sequelize = null;
-  }
+async function teardownTestDb() {
+  await sequelize.close();
 }
 
 /**
- * Clear all tables in the test database
- * @returns {Promise<void>}
+ * Clear all tables between tests
  */
 async function clearDatabase() {
-  if (!sequelize) {
-    throw new Error('Database not initialized');
-  }
-
   const models = Object.keys(sequelize.models);
-  
   for (const modelName of models) {
     await sequelize.models[modelName].destroy({
       where: {},
@@ -60,19 +35,12 @@ async function clearDatabase() {
       truncate: true,
     });
   }
-}
-
-/**
- * Get test database instance
- * @returns {Sequelize}
- */
-function getTestDatabase() {
-  return sequelize;
+  // Reseed default badges so tests depending on them continue to pass
+  await createDefaultBadges();
 }
 
 module.exports = {
-  initTestDatabase,
-  closeTestDatabase,
+  setupTestDb,
+  teardownTestDb,
   clearDatabase,
-  getTestDatabase,
 };

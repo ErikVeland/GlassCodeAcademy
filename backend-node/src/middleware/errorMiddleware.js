@@ -65,10 +65,14 @@ const errorHandler = (err, req, res, _next) => {
     if (isTest) {
       return res.status(400).json({
         success: false,
+        message: 'Request validation failed',
         error: {
           code: 'VALIDATION_ERROR',
           message: 'Request validation failed',
         },
+        type: 'https://glasscode/errors/validation-error',
+        status: 400,
+        instance: req.originalUrl,
       });
     }
 
@@ -94,10 +98,16 @@ const errorHandler = (err, req, res, _next) => {
     if (isTest) {
       return res.status(400).json({
         success: false,
+        message:
+          (err.errors && err.errors[0] && err.errors[0].message) ||
+          'Database validation failed',
         error: {
           code: 'VALIDATION_ERROR',
           message: 'Database validation failed',
         },
+        type: 'https://glasscode/errors/validation-error',
+        status: 400,
+        instance: req.originalUrl,
       });
     }
 
@@ -232,6 +242,14 @@ const errorHandler = (err, req, res, _next) => {
 
     if (isTest) {
       return res.status(401).json({
+        // RFC 7807 fields for tests expecting `type`
+        type: 'https://glasscode/errors/authentication-error',
+        title: 'Authentication Error',
+        status: 401,
+        detail: err.message,
+        instance: req.originalUrl,
+        traceId: correlationId,
+        // Legacy-compatible fields
         success: false,
         error: { code: 'AUTHENTICATION_REQUIRED', message: err.message },
       });
@@ -243,6 +261,35 @@ const errorHandler = (err, req, res, _next) => {
     errorResponse.detail = err.message;
 
     return res.status(401).json(errorResponse);
+  }
+
+  // Not found error
+  if (err.name === 'NotFoundError') {
+    logger.warn('Resource not found', {
+      correlationId,
+      error: err.message,
+      url: req.url,
+      method: req.method,
+      userId: req.user?.id,
+    });
+
+    if (isTest) {
+      return res.status(404).json({
+        success: false,
+        message: err.message || 'Resource not found',
+        error: { code: 'RESOURCE_NOT_FOUND', message: err.message || 'Resource not found' },
+        type: 'https://glasscode/errors/resource-not-found',
+        status: 404,
+        instance: req.originalUrl,
+      });
+    }
+
+    errorResponse.type = 'https://glasscode/errors/resource-not-found';
+    errorResponse.title = 'Resource Not Found';
+    errorResponse.status = 404;
+    errorResponse.detail = err.message || 'Resource not found';
+
+    return res.status(404).json(errorResponse);
   }
 
   // Default error

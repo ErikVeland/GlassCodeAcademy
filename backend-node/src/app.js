@@ -16,6 +16,7 @@ function createApp(options = {}) {
   const {
     enableSentry = !!process.env.SENTRY_DSN,
     enableMetrics = true,
+    disableRateLimit = false,
   } = options;
 
   const app = express();
@@ -72,8 +73,10 @@ function createApp(options = {}) {
 
   // Rate limiting middleware
   const rateLimitMiddleware = require('./middleware/rateLimitMiddleware');
-  app.use('/api/auth', rateLimitMiddleware.strictLimiter);
-  app.use('/api/oauth', rateLimitMiddleware.generalLimiter);
+  if (!disableRateLimit) {
+    app.use('/api/auth', rateLimitMiddleware.strictLimiter);
+    app.use('/api/oauth', rateLimitMiddleware.generalLimiter);
+  }
 
   // Health check endpoint
   app.get('/health', (req, res) => {
@@ -114,7 +117,9 @@ function createApp(options = {}) {
   app.use('/api/reports', require('./routes/reportRoutes'));
 
   // General rate limiting for remaining API routes
-  app.use('/api/', rateLimitMiddleware.generalLimiter);
+  if (!disableRateLimit) {
+    app.use('/api/', rateLimitMiddleware.generalLimiter);
+  }
 
   // Sentry error handler (must be before other error handlers)
   if (enableSentry && process.env.SENTRY_DSN) {

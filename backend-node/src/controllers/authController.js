@@ -127,6 +127,9 @@ const loginController = async (req, res, next) => {
         status: 401,
         detail: 'Invalid credentials',
         instance: req.originalUrl,
+        // Legacy-compatible field expected by some tests
+        success: false,
+        message: 'Invalid credentials',
       };
       return res.status(401).json(unauthorizedResponse);
     }

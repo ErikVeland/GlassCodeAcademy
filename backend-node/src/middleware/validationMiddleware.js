@@ -2,6 +2,7 @@ const validate = (schema) => (req, res, next) => {
   const { error } = schema.validate(req.body);
 
   if (error) {
+    // RFC 7807 shape with added compatibility fields expected by some tests
     const errorResponse = {
       type: 'https://glasscode/errors/validation-error',
       title: 'Validation Error',
@@ -13,6 +14,9 @@ const validate = (schema) => (req, res, next) => {
         field: detail.path.join('.'),
         message: detail.message,
       })),
+      // Legacy-compatible fields
+      success: false,
+      message: `Validation failed: ${error.details.map(d => d.path.join('.')).join(', ')}`,
     };
 
     return res.status(400).json(errorResponse);
