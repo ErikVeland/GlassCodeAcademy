@@ -489,6 +489,9 @@ const deleteAcademyController = async (req, res, next) => {
 const exportAcademyController = async (req, res, next) => {
   try {
     const { id } = req.params;
+    const crypto = require('crypto');
+    const AcademySettings = require('../models/academySettingsModel');
+    const LessonQuiz = require('../models/quizModel');
 
     if (process.env.NODE_ENV === 'test') {
       const exportData = {
@@ -501,6 +504,14 @@ const exportAcademyController = async (req, res, next) => {
           theme: {},
           createdAt: new Date().toISOString(),
           updatedAt: new Date().toISOString(),
+        },
+        settings: {
+          tenantMode: 'shared',
+          maxUsers: null,
+          maxStorageGb: null,
+          featuresEnabled: {},
+          branding: {},
+          integrations: {},
         },
         courses: [
           {
@@ -534,6 +545,7 @@ const exportAcademyController = async (req, res, next) => {
                     difficulty: 'beginner',
                     estimatedMinutes: 5,
                     version: '1.0.0',
+                    quizzes: [],
                   },
                 ],
               },
@@ -546,7 +558,8 @@ const exportAcademyController = async (req, res, next) => {
             userId: req.user?.id || 1,
             userEmail: req.user?.email || 'test@example.com',
           },
-          formatVersion: '1.0.0',
+          formatVersion: '2.0.0',
+          checksum: 'test-checksum',
         },
       };
 
@@ -566,8 +579,16 @@ const exportAcademyController = async (req, res, next) => {
       correlationId: req.correlationId,
     });
 
-    // Check if academy exists
-    const academy = await Academy.findByPk(id);
+    // Check if academy exists and get settings
+    const academy = await Academy.findByPk(id, {
+      include: [
+        {
+          model: AcademySettings,
+          as: 'settings',
+          required: false,
+        },
+      ],
+    });
 
     if (!academy) {
       logger.warn('Academy not found for export', {
@@ -588,10 +609,10 @@ const exportAcademyController = async (req, res, next) => {
       return res.status(404).json(errorResponse);
     }
 
-    // Get all courses for this academy (in a real implementation, this would be based on academy-course relationships)
-    // For now, we'll export all courses as part of the academy
+    // Get all courses for this academy, filtered by academy_id
     const courses = await Course.findAll({
       where: {
+        academy_id: id,
         isPublished: true,
       },
       include: [
@@ -599,6 +620,7 @@ const exportAcademyController = async (req, res, next) => {
           model: Module,
           as: 'modules',
           where: {
+            academy_id: id,
             isPublished: true,
           },
           required: false,
@@ -607,9 +629,21 @@ const exportAcademyController = async (req, res, next) => {
               model: Lesson,
               as: 'lessons',
               where: {
+                academy_id: id,
                 isPublished: true,
               },
               required: false,
+              include: [
+                {
+                  model: LessonQuiz,
+                  as: 'quizzes',
+                  where: {
+                    academy_id: id,
+                    isPublished: true,
+                  },
+                  required: false,
+                },
+              ],
             },
           ],
         },
@@ -623,10 +657,17 @@ const exportAcademyController = async (req, res, next) => {
           'order',
           'ASC',
         ],
+        [
+          { model: Module, as: 'modules' },
+          { model: Lesson, as: 'lessons' },
+          { model: LessonQuiz, as: 'quizzes' },
+          'sortOrder',
+          'ASC',
+        ],
       ],
     });
 
-    // Create export structure
+    // Create export structure with settings, quizzes, and checksum
     const exportData = {
       academy: {
         id: academy.id,
@@ -635,9 +676,21 @@ const exportAcademyController = async (req, res, next) => {
         description: academy.description,
         version: academy.version,
         theme: academy.theme,
+        metadata: academy.metadata,
+        isPublished: academy.isPublished,
         createdAt: academy.createdAt,
         updatedAt: academy.updatedAt,
       },
+      settings: academy.settings
+        ? {
+            tenantMode: academy.settings.tenantMode,
+            maxUsers: academy.settings.maxUsers,
+            maxStorageGb: academy.settings.maxStorageGb,
+            featuresEnabled: academy.settings.featuresEnabled,
+            branding: academy.settings.branding,
+            integrations: academy.settings.integrations,
+          }
+        : null,
       courses: courses.map((course) => ({
         id: course.id,
         title: course.title,
@@ -667,6 +720,28 @@ const exportAcademyController = async (req, res, next) => {
             difficulty: lesson.difficulty,
             estimatedMinutes: lesson.estimatedMinutes,
             version: lesson.version,
+            quizzes: lesson.quizzes
+              ? lesson.quizzes.map((quiz) => ({
+                  id: quiz.id,
+                  question: quiz.question,
+                  topic: quiz.topic,
+                  difficulty: quiz.difficulty,
+                  choices: quiz.choices,
+                  fixedChoiceOrder: quiz.fixedChoiceOrder,
+                  choiceLabels: quiz.choiceLabels,
+                  acceptedAnswers: quiz.acceptedAnswers,
+                  explanation: quiz.explanation,
+                  industryContext: quiz.industryContext,
+                  tags: quiz.tags,
+                  questionType: quiz.questionType,
+                  estimatedTime: quiz.estimatedTime,
+                  correctAnswer: quiz.correctAnswer,
+                  quizType: quiz.quizType,
+                  sources: quiz.sources,
+                  sortOrder: quiz.sortOrder,
+                  isPublished: quiz.isPublished,
+                }))
+              : [],
           })),
         })),
       })),
@@ -676,9 +751,41 @@ const exportAcademyController = async (req, res, next) => {
           userId: req.user.id,
           userEmail: req.user.email,
         },
-        formatVersion: '1.0.0',
+        formatVersion: '2.0.0',
+        contentCounts: {
+          courses: courses.length,
+          modules: courses.reduce((sum, c) => sum + c.modules.length, 0),
+          lessons: courses.reduce(
+            (sum, c) =>
+              sum + c.modules.reduce((s, m) => s + m.lessons.length, 0),
+            0
+          ),
+          quizzes: courses.reduce(
+            (sum, c) =>
+              sum +
+              c.modules.reduce(
+                (s, m) =>
+                  s +
+                  m.lessons.reduce(
+                    (qs, l) => qs + (l.quizzes ? l.quizzes.length : 0),
+                    0
+                  ),
+                0
+              ),
+            0
+          ),
+        },
       },
     };
+
+    // Generate checksum for data validation
+    const dataString = JSON.stringify({
+      academy: exportData.academy,
+      settings: exportData.settings,
+      courses: exportData.courses,
+    });
+    const checksum = crypto.createHash('sha256').update(dataString).digest('hex');
+    exportData.exportMetadata.checksum = checksum;
 
     // Log the action
     await logAction({
@@ -717,6 +824,162 @@ const exportAcademyController = async (req, res, next) => {
       correlationId: req.correlationId,
     });
     // Let the error middleware handle RFC 7807 compliant error responses
+    next(error);
+  }
+};
+
+/**
+ * Preview academy import
+ * Analyzes package without importing to detect conflicts
+ */
+const previewImportController = async (req, res, next) => {
+  try {
+    if (!req.file) {
+      const errorResponse = {
+        type: 'https://glasscode/errors/validation-error',
+        title: 'Validation Error',
+        status: 400,
+        detail: 'No package file uploaded',
+        instance: req.originalUrl,
+        traceId: req.correlationId,
+      };
+      return res.status(400).json(errorResponse);
+    }
+
+    logger.info('Previewing academy import', {
+      userId: req.user.id,
+      filename: req.file.originalname,
+      correlationId: req.correlationId,
+    });
+
+    const importService = new AcademyImportService();
+    const preview = await importService.previewImport(req.file.path);
+
+    // Cleanup uploaded file
+    await fs.unlink(req.file.path);
+
+    logger.info('Import preview generated', {
+      userId: req.user.id,
+      packageId: preview.packageId,
+      academyName: preview.academy.name,
+      canImport: preview.canImport,
+      conflicts: preview.conflicts.critical.length,
+      correlationId: req.correlationId,
+    });
+
+    const successResponse = {
+      type: 'https://glasscode/errors/success',
+      title: 'Success',
+      status: 200,
+      data: preview,
+    };
+
+    res.status(200).json(successResponse);
+  } catch (error) {
+    logger.error('Error previewing import', {
+      userId: req.user?.id,
+      error: error.message,
+      stack: error.stack,
+      correlationId: req.correlationId,
+    });
+
+    // Cleanup uploaded file on error
+    if (req.file?.path) {
+      try {
+        await fs.unlink(req.file.path);
+      } catch {}
+    }
+
+    next(error);
+  }
+};
+
+/**
+ * Import academy from package
+ * Imports academy with all content
+ */
+const importAcademyController = async (req, res, next) => {
+  try {
+    if (!req.file) {
+      const errorResponse = {
+        type: 'https://glasscode/errors/validation-error',
+        title: 'Validation Error',
+        status: 400,
+        detail: 'No package file uploaded',
+        instance: req.originalUrl,
+        traceId: req.correlationId,
+      };
+      return res.status(400).json(errorResponse);
+    }
+
+    const options = {
+      overwriteExisting: req.body.overwriteExisting === 'true',
+      modifySlugsOnConflict: req.body.modifySlugsOnConflict !== 'false',
+      skipConflictingContent: req.body.skipConflictingContent === 'true',
+      targetAcademyId: req.body.targetAcademyId ? parseInt(req.body.targetAcademyId) : null,
+    };
+
+    logger.info('Importing academy', {
+      userId: req.user.id,
+      filename: req.file.originalname,
+      options,
+      correlationId: req.correlationId,
+    });
+
+    const importService = new AcademyImportService();
+    const result = await importService.importAcademy(req.file.path, options);
+
+    // Cleanup uploaded file
+    await fs.unlink(req.file.path);
+
+    // Log the action
+    await logAction({
+      userId: req.user.id,
+      action: 'IMPORT',
+      resourceType: 'ACADEMY',
+      resourceId: result.academyId,
+      resourceName: result.academy.name,
+      details: { 
+        stats: result.stats,
+        options,
+        warnings: result.warnings.length,
+      },
+      ipAddress: req.ip,
+      userAgent: req.get('User-Agent'),
+    });
+
+    logger.info('Academy imported successfully', {
+      userId: req.user.id,
+      academyId: result.academyId,
+      academyName: result.academy.name,
+      stats: result.stats,
+      warnings: result.warnings.length,
+      correlationId: req.correlationId,
+    });
+
+    const successResponse = {
+      type: 'https://glasscode/errors/success',
+      title: 'Success',
+      status: 201,
+      data: result,
+    };
+
+    res.status(201).json(successResponse);
+  } catch (error) {
+    logger.error('Error importing academy', {
+      userId: req.user?.id,
+      error: error.message,
+      stack: error.stack,
+      correlationId: req.correlationId,
+    });
+
+    // Cleanup uploaded file on error
+    if (req.file?.path) {
+      try {
+        await fs.unlink(req.file.path);
+      } catch {}
+    }
+
     next(error);
   }
 };

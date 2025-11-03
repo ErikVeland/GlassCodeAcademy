@@ -10,6 +10,15 @@ const Module = sequelize.define(
       primaryKey: true,
       autoIncrement: true,
     },
+    academyId: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+      field: 'academy_id',
+      references: {
+        model: 'academies',
+        key: 'id',
+      },
+    },
     title: {
       type: DataTypes.STRING(200),
       allowNull: false,

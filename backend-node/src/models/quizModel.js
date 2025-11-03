@@ -14,6 +14,15 @@ const LessonQuiz = sequelize.define(
         min: 1,
       },
     },
+    academyId: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+      field: 'academy_id',
+      references: {
+        model: 'academies',
+        key: 'id',
+      },
+    },
     question: {
       type: DataTypes.STRING(2000),
       allowNull: false,

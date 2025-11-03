@@ -10,6 +10,8 @@ const Role = require('./roleModel');
 const UserRole = require('./userRoleModel');
 const Tier = require('./tierModel');
 const Academy = require('./academyModel');
+const AcademySettings = require('./academySettingsModel');
+const AcademyMembership = require('./academyMembershipModel');
 const AuditLog = require('./auditLogModel');
 const QuizAttempt = require('./quizAttemptModel');
 const ApiKey = require('./apiKeyModel');
@@ -45,6 +47,36 @@ const Report = require('./reportModel');
 
 // Initialize associations that weren't set up in the model files
 function initializeAssociations() {
+  // Academy -> Settings (One-to-One)
+  Academy.hasOne(AcademySettings, {
+    foreignKey: 'academy_id',
+    as: 'settings',
+  });
+  AcademySettings.belongsTo(Academy, {
+    foreignKey: 'academy_id',
+    as: 'academy',
+  });
+
+  // Academy -> Memberships (One-to-Many)
+  Academy.hasMany(AcademyMembership, {
+    foreignKey: 'academy_id',
+    as: 'memberships',
+  });
+  AcademyMembership.belongsTo(Academy, {
+    foreignKey: 'academy_id',
+    as: 'academy',
+  });
+
+  // User -> Academy Memberships (One-to-Many)
+  User.hasMany(AcademyMembership, {
+    foreignKey: 'user_id',
+    as: 'academyMemberships',
+  });
+  AcademyMembership.belongsTo(User, {
+    foreignKey: 'user_id',
+    as: 'user',
+  });
+
   // Content associations
   // Course -> Modules
   Course.hasMany(Module, {
@@ -470,6 +502,8 @@ module.exports = {
   UserRole,
   Tier,
   Academy,
+  AcademySettings,
+  AcademyMembership,
   AuditLog,
   QuizAttempt,
   ApiKey,
