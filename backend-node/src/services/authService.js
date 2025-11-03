@@ -15,12 +15,12 @@ const generateToken = (user) => {
   const options = {
     expiresIn: jwtExpiresIn,
   };
-  
-  // Only add jwtid in production mode to maintain test compatibility
+
+  // Only add jwtid outside of test to keep unit tests stable
   if (process.env.NODE_ENV !== 'test') {
     options.jwtid = uuidv4();
   }
-  
+
   return jwt.sign(
     { userId: user.id, email: user.email },
     jwtSecret,
@@ -79,7 +79,10 @@ const login = async (email, password) => {
   });
 
   if (!user) {
-    throw new Error('Invalid credentials');
+    // Distinguish missing user for 404 handling while preserving message for unit tests
+    const err = new Error('Invalid credentials');
+    err.code = 'USER_NOT_FOUND';
+    throw err;
   }
 
   // Validate password

@@ -1572,7 +1572,7 @@ if [ "$FRONTEND_ONLY" -eq 0 ]; then
                 # Recheck courses after seeding
                 COURSES_JSON=$(timeout 10 curl -s "${API_BASE}/api/courses" || true)
                 COURSES_COUNT=$(echo "$COURSES_JSON" | jq -r 'if type=="array" then length elif has("data") and (.data|type=="array") then (.data|length) else 0 end' 2>/dev/null || echo "0")
-                COURSES_SUCCESS=$(echo "$COURSES_JSON" | jq -r 'if type=="array" then "true" elif has("success") then (.success|tostring) else "false" end' 2>/dev/null || echo "false")
+                COURSES_SUCCESS=$(echo "$COURSES_JSON" | jq -r 'if type=="array" then "true" elif has("status") and .status==200 then "true" elif has("success") then (.success|tostring) else "false" end' 2>/dev/null || echo "false")
                 if [ "$COURSES_SUCCESS" = "true" ] && [ "$COURSES_COUNT" -gt 0 ]; then
                     log "✅ Courses now populated after seeding ($COURSES_COUNT found)"
                     COURSE_ID=$(echo "$COURSES_JSON" | jq -r 'if type=="array" and length>0 then .[0].id elif has("data") and (.data|type=="array") then .data[0].id else "" end' 2>/dev/null || echo "")

@@ -1,5 +1,6 @@
 'use client';
 
+import { useEffect } from 'react';
 import { useAppStats } from '@/hooks/useAppStats';
 import StatCard from '@/components/stats/StatCard';
 import PieChart from '@/components/stats/PieChart';
@@ -59,6 +60,11 @@ function capitalizeModuleName(name: string): string {
 
 export default function StatsPage() {
   const stats = useAppStats();
+
+  // Set document title dynamically since this is a client component
+  useEffect(() => {
+    document.title = 'GlassStats - Platform Statistics | GlassCode Academy';
+  }, []);
 
   if (stats.isLoading) {
     return (

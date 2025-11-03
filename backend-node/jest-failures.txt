@@ -1,0 +1,95 @@
+numFailedTests= 4 numPassedTests= 245
+FAILED FILE: /Users/veland/GlassCodeAcademy/backend-node/src/__tests__/integration/api/auth.integration.test.js
+ - Authentication API Integration Tests POST /api/auth/login should return 404 for non-existent user
+   messages: Error: expected 404 "Not Found", got 401 "Unauthorized"
+    at Object.expect (/Users/veland/GlassCodeAcademy/backend-node/src/__tests__/integration/api/auth.integration.test.js:149:10)
+    at Promise.finally.completed (/Users/veland/GlassCodeAcademy/backend-node/node_modules/jest-circus/build/jestAdapterInit.js:1557:28)
+    at new Promise (<anonymous>)
+    at callAsyncCircusFn (/Users/veland/GlassCodeAcademy/backend-node/node_modules/jest-circus/build/jestAdapterInit.js:1497:10)
+    at _callCircusTest (/Users/veland/GlassCodeAcademy/backend-node/node_modules/jest-circus/build/jestAdapterInit.js:1007:40)
+    at processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at _runTest (/Users/veland/GlassCodeAcademy/backend-node/node_modules/jest-circus/build/jestAdapterInit.js:947:3)
+    at /Users/veland/GlassCodeAcademy/backend-node/node_modules/jest-circus/build/jestAdapterInit.js:849:7
+    at _runTestsForDescribeBlock (/Users/veland/GlassCodeAcademy/backend-node/node_modules/jest-circus/build/jestAdapterInit.js:862:11)
+    at _runTestsForDescribeBlock (/Users/veland/GlassCodeAcademy/backend-node/node_modules/jest-circus/build/jestAdapterInit.js:857:11)
+    at _runTestsForDescribeBlock (/Users/veland/GlassCodeAcademy/backend-node/node_modules/jest-circus/build/jestAdapterInit.js:857:11)
+    at run (/Users/veland/GlassCodeAcademy/backend-node/node_modules/jest-circus/build/jestAdapterInit.js:761:3)
+    at runAndTransformResultsToJestFormat (/Users/veland/GlassCodeAcademy/backend-node/node_modules/jest-circus/build/jestAdapterInit.js:1918:21)
+    at jestAdapter (/Users/veland/GlassCodeAcademy/backend-node/node_modules/jest-circus/build/runner.js:103:25)
+    at runTestInternal (/Users/veland/GlassCodeAcademy/backend-node/node_modules/jest-runner/build/index.js:300:22)
+    at runTest (/Users/veland/GlassCodeAcademy/backend-node/node_modules/jest-runner/build/index.js:368:13)
+----
+    at Test._assertStatus (/Users/veland/GlassCodeAcademy/backend-node/node_modules/supertest/lib/test.js:309:14)
+    at assertFn (/Users/veland/GlassCodeAcademy/backend-node/node_modules/supertest/lib/test.js:365:13)
+    at Test.fn [as _assertFunction] (/Users/veland/GlassCodeAcademy/backend-node/node_modules/supertest/lib/test.js:342:13)
+    at Test._assertFunction [as assert] (/Users/veland/GlassCodeAcademy/backend-node/node_modules/supertest/lib/test.js:195:23)
+    at assert (/Users/veland/GlassCodeAcademy/backend-node/node_modules/supertest/lib/test.js:138:14)
+    at Server.localAssert (/Users/veland/GlassCodeAcademy/backend-node/node_modules/supertest/lib/test.js:152:11)
+    at Object.onceWrapper (node:events:638:28)
+    at Server.emit (node:events:524:28)
+    at emitCloseNT (node:net:2344:8)
+    at processTicksAndRejections (node:internal/process/task_queues:81:21)
+ - Authentication API Integration Tests Authentication Flow should complete full registration and login flow
+   messages: Error: [2mexpect([22m[31mreceived[39m[2m).[22mnot[2m.[22mtoBe[2m([22m[32mexpected[39m[2m) // Object.is equality[22m
+
+Expected: not [32m"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjcsImVtYWlsIjoiZmxvd0BleGFtcGxlLmNvbSIsImlhdCI6MTc2MjEzMTUwOSwiZXhwIjoxNzYyMjE3OTA5fQ.KlzTwfb1mzC8H6L694VmYrOyNxE27KzTmUr-8YF3wF8"[39m
+    at Object.toBe (/Users/veland/GlassCodeAcademy/backend-node/src/__tests__/integration/api/auth.integration.test.js:199:30)
+    at processTicksAndRejections (node:internal/process/task_queues:95:5)
+FAILED FILE: /Users/veland/GlassCodeAcademy/backend-node/tests/course.test.js
+ - Course API GET /api/courses should get all courses
+   messages: Error: expected 200 "OK", got 500 "Internal Server Error"
+    at Object.expect (/Users/veland/GlassCodeAcademy/backend-node/tests/course.test.js:15:10)
+    at Promise.finally.completed (/Users/veland/GlassCodeAcademy/backend-node/node_modules/jest-circus/build/jestAdapterInit.js:1557:28)
+    at new Promise (<anonymous>)
+    at callAsyncCircusFn (/Users/veland/GlassCodeAcademy/backend-node/node_modules/jest-circus/build/jestAdapterInit.js:1497:10)
+    at _callCircusTest (/Users/veland/GlassCodeAcademy/backend-node/node_modules/jest-circus/build/jestAdapterInit.js:1007:40)
+    at _runTest (/Users/veland/GlassCodeAcademy/backend-node/node_modules/jest-circus/build/jestAdapterInit.js:947:3)
+    at /Users/veland/GlassCodeAcademy/backend-node/node_modules/jest-circus/build/jestAdapterInit.js:849:7
+    at _runTestsForDescribeBlock (/Users/veland/GlassCodeAcademy/backend-node/node_modules/jest-circus/build/jestAdapterInit.js:862:11)
+    at _runTestsForDescribeBlock (/Users/veland/GlassCodeAcademy/backend-node/node_modules/jest-circus/build/jestAdapterInit.js:857:11)
+    at _runTestsForDescribeBlock (/Users/veland/GlassCodeAcademy/backend-node/node_modules/jest-circus/build/jestAdapterInit.js:857:11)
+    at run (/Users/veland/GlassCodeAcademy/backend-node/node_modules/jest-circus/build/jestAdapterInit.js:761:3)
+    at runAndTransformResultsToJestFormat (/Users/veland/GlassCodeAcademy/backend-node/node_modules/jest-circus/build/jestAdapterInit.js:1918:21)
+    at jestAdapter (/Users/veland/GlassCodeAcademy/backend-node/node_modules/jest-circus/build/runner.js:103:25)
+    at runTestInternal (/Users/veland/GlassCodeAcademy/backend-node/node_modules/jest-runner/build/index.js:300:22)
+    at runTest (/Users/veland/GlassCodeAcademy/backend-node/node_modules/jest-runner/build/index.js:368:13)
+----
+    at Test._assertStatus (/Users/veland/GlassCodeAcademy/backend-node/node_modules/supertest/lib/test.js:309:14)
+    at assertFn (/Users/veland/GlassCodeAcademy/backend-node/node_modules/supertest/lib/test.js:365:13)
+    at Test.fn [as _assertFunction] (/Users/veland/GlassCodeAcademy/backend-node/node_modules/supertest/lib/test.js:342:13)
+    at Test._assertFunction [as assert] (/Users/veland/GlassCodeAcademy/backend-node/node_modules/supertest/lib/test.js:195:23)
+    at assert (/Users/veland/GlassCodeAcademy/backend-node/node_modules/supertest/lib/test.js:138:14)
+    at Server.localAssert (/Users/veland/GlassCodeAcademy/backend-node/node_modules/supertest/lib/test.js:152:11)
+    at Object.onceWrapper (node:events:638:28)
+    at Server.emit (node:events:524:28)
+    at emitCloseNT (node:net:2344:8)
+    at processTicksAndRejections (node:internal/process/task_queues:81:21)
+ - Course API GET /api/courses should get courses with pagination
+   messages: Error: expected 200 "OK", got 500 "Internal Server Error"
+    at Object.expect (/Users/veland/GlassCodeAcademy/backend-node/tests/course.test.js:26:10)
+    at Promise.finally.completed (/Users/veland/GlassCodeAcademy/backend-node/node_modules/jest-circus/build/jestAdapterInit.js:1557:28)
+    at new Promise (<anonymous>)
+    at callAsyncCircusFn (/Users/veland/GlassCodeAcademy/backend-node/node_modules/jest-circus/build/jestAdapterInit.js:1497:10)
+    at _callCircusTest (/Users/veland/GlassCodeAcademy/backend-node/node_modules/jest-circus/build/jestAdapterInit.js:1007:40)
+    at processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at _runTest (/Users/veland/GlassCodeAcademy/backend-node/node_modules/jest-circus/build/jestAdapterInit.js:947:3)
+    at /Users/veland/GlassCodeAcademy/backend-node/node_modules/jest-circus/build/jestAdapterInit.js:849:7
+    at _runTestsForDescribeBlock (/Users/veland/GlassCodeAcademy/backend-node/node_modules/jest-circus/build/jestAdapterInit.js:862:11)
+    at _runTestsForDescribeBlock (/Users/veland/GlassCodeAcademy/backend-node/node_modules/jest-circus/build/jestAdapterInit.js:857:11)
+    at _runTestsForDescribeBlock (/Users/veland/GlassCodeAcademy/backend-node/node_modules/jest-circus/build/jestAdapterInit.js:857:11)
+    at run (/Users/veland/GlassCodeAcademy/backend-node/node_modules/jest-circus/build/jestAdapterInit.js:761:3)
+    at runAndTransformResultsToJestFormat (/Users/veland/GlassCodeAcademy/backend-node/node_modules/jest-circus/build/jestAdapterInit.js:1918:21)
+    at jestAdapter (/Users/veland/GlassCodeAcademy/backend-node/node_modules/jest-circus/build/runner.js:103:25)
+    at runTestInternal (/Users/veland/GlassCodeAcademy/backend-node/node_modules/jest-runner/build/index.js:300:22)
+    at runTest (/Users/veland/GlassCodeAcademy/backend-node/node_modules/jest-runner/build/index.js:368:13)
+----
+    at Test._assertStatus (/Users/veland/GlassCodeAcademy/backend-node/node_modules/supertest/lib/test.js:309:14)
+    at assertFn (/Users/veland/GlassCodeAcademy/backend-node/node_modules/supertest/lib/test.js:365:13)
+    at Test.fn [as _assertFunction] (/Users/veland/GlassCodeAcademy/backend-node/node_modules/supertest/lib/test.js:342:13)
+    at Test._assertFunction [as assert] (/Users/veland/GlassCodeAcademy/backend-node/node_modules/supertest/lib/test.js:195:23)
+    at assert (/Users/veland/GlassCodeAcademy/backend-node/node_modules/supertest/lib/test.js:138:14)
+    at Server.localAssert (/Users/veland/GlassCodeAcademy/backend-node/node_modules/supertest/lib/test.js:152:11)
+    at Object.onceWrapper (node:events:638:28)
+    at Server.emit (node:events:524:28)
+    at emitCloseNT (node:net:2344:8)
+    at processTicksAndRejections (node:internal/process/task_queues:81:21)

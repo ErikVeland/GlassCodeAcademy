@@ -6,6 +6,9 @@ const morgan = require('morgan');
 // Create Express server
 const app = express();
 
+// Indicate simple test mode to controllers
+process.env.SIMPLE_TEST_MODE = 'true';
+
 // App Configuration
 app.use(helmet()); // Security headers
 app.use(cors()); // Enable CORS

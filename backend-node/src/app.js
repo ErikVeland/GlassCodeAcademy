@@ -89,7 +89,10 @@ function createApp(options = {}) {
     });
   });
 
-  // API Routes
+  // API Routes v2 (Multi-tenant academy management)
+  app.use('/api/v2', require('./routes/v2'));
+
+  // API Routes v1 (Legacy)
   app.use('/api/auth', require('./routes/authRoutes'));
   app.use('/api/oauth', require('./routes/oauthRoutes'));
   app.use('/api/profile', require('./routes/profileRoutes'));
