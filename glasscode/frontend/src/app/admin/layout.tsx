@@ -28,7 +28,7 @@ export default function AdminLayout({
       <div className="md:hidden">
         <button
           onClick={() => setSidebarOpen(!sidebarOpen)}
-          className="fixed top-4 left-4 z-50 p-2 rounded-md bg-gray-800 text-white"
+          className="fixed top-4 left-4 z-50 p-2 rounded-md bg-surface border border-border text-fg shadow-lg"
         >
           <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
@@ -37,9 +37,9 @@ export default function AdminLayout({
       </div>
 
       {/* Sidebar */}
-      <div className={`fixed inset-y-0 left-0 z-40 w-64 bg-gray-800 text-white transform ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'} md:translate-x-0 transition-transform duration-300 ease-in-out`}>
-        <div className="flex items-center justify-center h-16 bg-gray-900">
-          <h1 className="text-xl font-bold">GlassCode Admin</h1>
+      <div className={`fixed inset-y-0 left-0 z-40 w-64 bg-surface border-r border-border transform ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'} md:translate-x-0 transition-transform duration-300 ease-in-out`}>
+        <div className="flex items-center justify-center h-16 bg-surface-alt border-b border-border">
+          <h1 className="text-xl font-bold text-fg">GlassCode Admin</h1>
         </div>
         <nav className="mt-5 px-2">
           <div className="space-y-1">
@@ -49,9 +49,9 @@ export default function AdminLayout({
                 href={item.href}
                 className={`${
                   item.current
-                    ? 'bg-gray-900 text-white'
-                    : 'text-gray-300 hover:bg-gray-700 hover:text-white'
-                } group flex items-center px-2 py-2 text-base font-medium rounded-md`}
+                    ? 'bg-primary text-primary-fg'
+                    : 'text-muted hover:bg-surface-alt hover:text-fg'
+                } group flex items-center px-2 py-2 text-base font-medium rounded-md transition-colors`}
                 onClick={() => setSidebarOpen(false)}
               >
                 {item.name}

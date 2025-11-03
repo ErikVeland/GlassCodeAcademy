@@ -23,6 +23,26 @@ const ForumVote = require('./forumVoteModel');
 const Notification = require('./notificationModel');
 const NotificationPreference = require('./notificationPreferenceModel');
 
+// Phase 2 Models
+const AcademySettings = require('./academySettingsModel');
+const AcademyMembership = require('./academyMembershipModel');
+const Department = require('./departmentModel');
+const Permission = require('./permissionModel');
+const RolePermission = require('./rolePermissionModel');
+const ContentVersion = require('./contentVersionModel');
+const ContentWorkflow = require('./contentWorkflowModel');
+const ContentApproval = require('./contentApprovalModel');
+const Asset = require('./assetModel');
+const AssetUsage = require('./assetUsageModel');
+const ValidationRule = require('./validationRuleModel');
+const ValidationResult = require('./validationResultModel');
+const ContentPackage = require('./contentPackageModel');
+const ContentImport = require('./contentImportModel');
+const Announcement = require('./announcementModel');
+const FAQ = require('./faqModel');
+const ModerationAction = require('./moderationModel');
+const Report = require('./reportModel');
+
 // Initialize associations that weren't set up in the model files
 function initializeAssociations() {
   // Content associations
@@ -217,6 +237,224 @@ function initializeAssociations() {
     foreignKey: 'user_id',
     as: 'notificationPreferences',
   });
+  
+  // Phase 2 Associations
+  // Academy -> Settings (One-to-One)
+  Academy.hasOne(AcademySettings, {
+    foreignKey: 'academy_id',
+    as: 'settings',
+  });
+  AcademySettings.belongsTo(Academy, {
+    foreignKey: 'academy_id',
+    as: 'academy',
+  });
+  
+  // Academy -> Memberships
+  Academy.hasMany(AcademyMembership, {
+    foreignKey: 'academy_id',
+    as: 'memberships',
+  });
+  AcademyMembership.belongsTo(Academy, {
+    foreignKey: 'academy_id',
+    as: 'academy',
+  });
+  AcademyMembership.belongsTo(User, {
+    foreignKey: 'user_id',
+    as: 'user',
+  });
+  User.hasMany(AcademyMembership, {
+    foreignKey: 'user_id',
+    as: 'academyMemberships',
+  });
+  
+  // Academy -> Departments
+  Academy.hasMany(Department, {
+    foreignKey: 'academy_id',
+    as: 'departments',
+  });
+  Department.belongsTo(Academy, {
+    foreignKey: 'academy_id',
+    as: 'academy',
+  });
+  // Department hierarchy
+  Department.hasMany(Department, {
+    foreignKey: 'parent_id',
+    as: 'subDepartments',
+  });
+  Department.belongsTo(Department, {
+    foreignKey: 'parent_id',
+    as: 'parentDepartment',
+  });
+  
+  // Role -> Permissions (Many-to-Many)
+  Role.belongsToMany(Permission, {
+    through: RolePermission,
+    foreignKey: 'role_id',
+    otherKey: 'permission_id',
+    as: 'permissions',
+  });
+  Permission.belongsToMany(Role, {
+    through: RolePermission,
+    foreignKey: 'permission_id',
+    otherKey: 'role_id',
+    as: 'roles',
+  });
+  
+  // Content Versioning
+  Academy.hasMany(ContentVersion, {
+    foreignKey: 'academy_id',
+    as: 'contentVersions',
+  });
+  ContentVersion.belongsTo(Academy, {
+    foreignKey: 'academy_id',
+    as: 'academy',
+  });
+  ContentVersion.belongsTo(User, {
+    foreignKey: 'created_by',
+    as: 'creator',
+  });
+  
+  // Content Workflows
+  Academy.hasMany(ContentWorkflow, {
+    foreignKey: 'academy_id',
+    as: 'workflows',
+  });
+  ContentWorkflow.belongsTo(Academy, {
+    foreignKey: 'academy_id',
+    as: 'academy',
+  });
+  ContentWorkflow.hasMany(ContentApproval, {
+    foreignKey: 'workflow_id',
+    as: 'approvals',
+  });
+  ContentApproval.belongsTo(ContentWorkflow, {
+    foreignKey: 'workflow_id',
+    as: 'workflow',
+  });
+  ContentApproval.belongsTo(User, {
+    foreignKey: 'approver_id',
+    as: 'approver',
+  });
+  
+  // Assets
+  Academy.hasMany(Asset, {
+    foreignKey: 'academy_id',
+    as: 'assets',
+  });
+  Asset.belongsTo(Academy, {
+    foreignKey: 'academy_id',
+    as: 'academy',
+  });
+  Asset.belongsTo(User, {
+    foreignKey: 'uploaded_by',
+    as: 'uploader',
+  });
+  Asset.hasMany(AssetUsage, {
+    foreignKey: 'asset_id',
+    as: 'usages',
+  });
+  AssetUsage.belongsTo(Asset, {
+    foreignKey: 'asset_id',
+    as: 'asset',
+  });
+  
+  // Validation Rules and Results
+  Academy.hasMany(ValidationRule, {
+    foreignKey: 'academy_id',
+    as: 'validationRules',
+  });
+  ValidationRule.belongsTo(Academy, {
+    foreignKey: 'academy_id',
+    as: 'academy',
+  });
+  ValidationRule.hasMany(ValidationResult, {
+    foreignKey: 'rule_id',
+    as: 'results',
+  });
+  ValidationResult.belongsTo(ValidationRule, {
+    foreignKey: 'rule_id',
+    as: 'rule',
+  });
+  
+  // Content Packages and Imports
+  Academy.hasMany(ContentPackage, {
+    foreignKey: 'academy_id',
+    as: 'packages',
+  });
+  ContentPackage.belongsTo(Academy, {
+    foreignKey: 'academy_id',
+    as: 'academy',
+  });
+  ContentPackage.belongsTo(User, {
+    foreignKey: 'created_by',
+    as: 'creator',
+  });
+  ContentPackage.hasMany(ContentImport, {
+    foreignKey: 'package_id',
+    as: 'imports',
+  });
+  ContentImport.belongsTo(ContentPackage, {
+    foreignKey: 'package_id',
+    as: 'package',
+  });
+  ContentImport.belongsTo(Academy, {
+    foreignKey: 'academy_id',
+    as: 'academy',
+  });
+  ContentImport.belongsTo(User, {
+    foreignKey: 'imported_by',
+    as: 'importer',
+  });
+  
+  // Announcements and FAQs
+  Academy.hasMany(Announcement, {
+    foreignKey: 'academy_id',
+    as: 'announcements',
+  });
+  Announcement.belongsTo(Academy, {
+    foreignKey: 'academy_id',
+    as: 'academy',
+  });
+  Announcement.belongsTo(User, {
+    foreignKey: 'created_by',
+    as: 'creator',
+  });
+  
+  Academy.hasMany(FAQ, {
+    foreignKey: 'academy_id',
+    as: 'faqs',
+  });
+  FAQ.belongsTo(Academy, {
+    foreignKey: 'academy_id',
+    as: 'academy',
+  });
+  FAQ.belongsTo(User, {
+    foreignKey: 'created_by',
+    as: 'creator',
+  });
+  
+  // Moderation and Reports
+  User.hasMany(ModerationAction, {
+    foreignKey: 'moderator_id',
+    as: 'moderationActions',
+  });
+  ModerationAction.belongsTo(User, {
+    foreignKey: 'moderator_id',
+    as: 'moderator',
+  });
+  
+  User.hasMany(Report, {
+    foreignKey: 'reporter_id',
+    as: 'reports',
+  });
+  Report.belongsTo(User, {
+    foreignKey: 'reporter_id',
+    as: 'reporter',
+  });
+  Report.belongsTo(User, {
+    foreignKey: 'reviewed_by',
+    as: 'reviewer',
+  });
 }
 
 module.exports = {
@@ -244,5 +482,24 @@ module.exports = {
   ForumVote,
   Notification,
   NotificationPreference,
+  // Phase 2 Models
+  AcademySettings,
+  AcademyMembership,
+  Department,
+  Permission,
+  RolePermission,
+  ContentVersion,
+  ContentWorkflow,
+  ContentApproval,
+  Asset,
+  AssetUsage,
+  ValidationRule,
+  ValidationResult,
+  ContentPackage,
+  ContentImport,
+  Announcement,
+  FAQ,
+  ModerationAction,
+  Report,
   initializeAssociations,
 };
