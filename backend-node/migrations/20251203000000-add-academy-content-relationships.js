@@ -42,15 +42,26 @@ module.exports = {
         onDelete: 'SET NULL'
       }, { transaction });
       
-      // Create default academy for existing content
-      const [defaultAcademyResult] = await queryInterface.sequelize.query(
-        `INSERT INTO academies (name, slug, description, is_published, version, created_at, updated_at) 
-         VALUES ('GlassCode Academy', 'glasscode-academy', 'The original GlassCode Academy content', true, '1.0.0', NOW(), NOW()) 
-         RETURNING id;`,
+      // Create default academy for existing content (or use existing one)
+      let defaultAcademyId;
+      const [existingAcademy] = await queryInterface.sequelize.query(
+        `SELECT id FROM academies WHERE slug = 'glasscode-academy' LIMIT 1;`,
         { transaction }
       );
       
-      const defaultAcademyId = defaultAcademyResult[0].id;
+      if (existingAcademy && existingAcademy.length > 0) {
+        defaultAcademyId = existingAcademy[0].id;
+        console.log(`✓ Using existing academy with ID: ${defaultAcademyId}`);
+      } else {
+        const [defaultAcademyResult] = await queryInterface.sequelize.query(
+          `INSERT INTO academies (name, slug, description, is_published, version, created_at, updated_at) 
+           VALUES ('GlassCode Academy', 'glasscode-academy', 'The original GlassCode Academy content', true, '1.0.0', NOW(), NOW()) 
+           RETURNING id;`,
+          { transaction }
+        );
+        defaultAcademyId = defaultAcademyResult[0].id;
+        console.log(`✓ Created new default academy with ID: ${defaultAcademyId}`);
+      }
       
       // Assign existing content to default academy
       await queryInterface.sequelize.query(
@@ -133,7 +144,6 @@ module.exports = {
       
       await transaction.commit();
       console.log('✓ Successfully added academy_id to all content tables');
-      console.log(`✓ Created default academy with ID: ${defaultAcademyId}`);
       console.log('✓ All existing content assigned to default academy');
     } catch (error) {
       await transaction.rollback();
