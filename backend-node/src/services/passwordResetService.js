@@ -23,7 +23,7 @@ const verifyPasswordResetToken = (token) => {
     }
 
     return decoded;
-  } catch (_error) {
+  } catch {
     throw new Error('Invalid or expired token');
   }
 };

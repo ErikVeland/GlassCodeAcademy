@@ -93,7 +93,7 @@ const authorize = (...roles) => {
       }
 
       next();
-    } catch (_error) {
+    } catch {
       // Test-mode: return legacy shape expected by tests
       if (process.env.NODE_ENV === 'test') {
         return res.status(500).json({

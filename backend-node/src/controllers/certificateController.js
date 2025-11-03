@@ -6,7 +6,6 @@ const {
   revokeCertificate,
   verifyCertificate,
 } = require('../services/certificateService');
-const winston = require('winston');
 
 const getUserCertificatesController = async (req, res, next) => {
   try {

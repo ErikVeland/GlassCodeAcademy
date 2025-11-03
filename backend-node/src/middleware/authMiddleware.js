@@ -43,7 +43,7 @@ const authenticate = async (req, res, next) => {
       if (process.env.NODE_ENV === 'test') {
         try {
           decoded = jwt.verify(token, process.env.JWT_SECRET || 'test-secret-key');
-        } catch (fallbackErr) {
+        } catch {
           throw verifyErr; // rethrow original error to be handled below
         }
       } else {
@@ -109,7 +109,7 @@ const authenticate = async (req, res, next) => {
     // Attach user to request
     req.user = user;
     next();
-  } catch (_error) {
+  } catch {
     // In test mode, route through error handler for legacy shape
     if (process.env.NODE_ENV === 'test') {
       const err = new Error('Invalid token');

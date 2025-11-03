@@ -38,7 +38,7 @@ class AcademyMembershipService {
     });
 
     if (existingMembership) {
-      throw new Error(`User is already a member of this academy`);
+      throw new Error('User is already a member of this academy');
     }
 
     // Create membership
@@ -118,12 +118,12 @@ class AcademyMembershipService {
         attributes: ['id', 'email', 'firstName', 'lastName'],
         where: search
           ? {
-              [Op.or]: [
-                { email: { [Op.iLike]: `%${search}%` } },
-                { firstName: { [Op.iLike]: `%${search}%` } },
-                { lastName: { [Op.iLike]: `%${search}%` } },
-              ],
-            }
+            [Op.or]: [
+              { email: { [Op.iLike]: `%${search}%` } },
+              { firstName: { [Op.iLike]: `%${search}%` } },
+              { lastName: { [Op.iLike]: `%${search}%` } },
+            ],
+          }
           : undefined,
       },
       { model: Role, as: 'role', attributes: ['id', 'name'] },

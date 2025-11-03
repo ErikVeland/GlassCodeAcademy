@@ -59,6 +59,9 @@ const exchangeCodeForToken = async (providerName, _code) => {
     throw new Error(`OAuth provider ${providerName} not configured`);
   }
 
+  // Reference unused arg to satisfy lint rules
+  void _code;
+
   // In a real implementation, this would make an HTTP request to exchange the code
   // For now, we'll return a mock token
   return {
@@ -73,6 +76,8 @@ const exchangeCodeForToken = async (providerName, _code) => {
 const getUserInfo = async (providerName, _accessToken) => {
   // In a real implementation, this would make an HTTP request to get user info
   // For now, we'll return mock user data
+  // Reference unused arg to satisfy lint rules
+  void _accessToken;
   return {
     id: 'oauth_user_123',
     email: 'oauth@example.com',

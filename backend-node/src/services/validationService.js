@@ -244,8 +244,8 @@ class ValidationService {
       for (const rule of rules) {
         const result = await this.executeRule(rule, content, { autoFix });
 
-        // Store validation result
-        const validationResult = await ValidationResult.create(
+        // Store validation result (no local binding needed)
+        await ValidationResult.create(
           {
             contentType: contentType.toLowerCase(),
             contentId,
@@ -317,27 +317,27 @@ class ValidationService {
     try {
       // Execute rule based on type
       switch (ruleDefinition.type) {
-        case 'required_field':
-          return this.checkRequiredField(content, ruleDefinition, { autoFix });
+      case 'required_field':
+        return this.checkRequiredField(content, ruleDefinition, { autoFix });
 
-        case 'min_length':
-          return this.checkMinLength(content, ruleDefinition, { autoFix });
+      case 'min_length':
+        return this.checkMinLength(content, ruleDefinition, { autoFix });
 
-        case 'max_length':
-          return this.checkMaxLength(content, ruleDefinition, { autoFix });
+      case 'max_length':
+        return this.checkMaxLength(content, ruleDefinition, { autoFix });
 
-        case 'format':
-          return this.checkFormat(content, ruleDefinition, { autoFix });
+      case 'format':
+        return this.checkFormat(content, ruleDefinition, { autoFix });
 
-        case 'custom':
-          return this.executeCustomRule(content, ruleDefinition, { autoFix });
+      case 'custom':
+        return this.executeCustomRule(content, ruleDefinition, { autoFix });
 
-        default:
-          return {
-            status: 'warning',
-            details: { message: `Unknown rule type: ${ruleDefinition.type}` },
-            autoFixed: false,
-          };
+      default:
+        return {
+          status: 'warning',
+          details: { message: `Unknown rule type: ${ruleDefinition.type}` },
+          autoFixed: false,
+        };
       }
     } catch (error) {
       return {
@@ -361,6 +361,8 @@ class ValidationService {
    * @private
    */
   checkRequiredField(content, ruleDefinition, options = {}) {
+    // Reference unused options to satisfy lint rules
+    void options;
     const { field } = ruleDefinition;
     const value = content[field];
 
@@ -392,6 +394,8 @@ class ValidationService {
    * @private
    */
   checkMinLength(content, ruleDefinition, options = {}) {
+    // Reference unused options to satisfy lint rules
+    void options;
     const { field, minLength } = ruleDefinition;
     const value = content[field];
 
@@ -427,6 +431,8 @@ class ValidationService {
    * @private
    */
   checkMaxLength(content, ruleDefinition, options = {}) {
+    // Reference unused options to satisfy lint rules
+    void options;
     const { field, maxLength } = ruleDefinition;
     const value = content[field];
 
@@ -460,6 +466,8 @@ class ValidationService {
    * @private
    */
   checkFormat(content, ruleDefinition, options = {}) {
+    // Reference unused options to satisfy lint rules
+    void options;
     const { field, pattern, patternDescription } = ruleDefinition;
     const value = content[field];
 
@@ -503,6 +511,8 @@ class ValidationService {
    * @private
    */
   executeCustomRule(content, ruleDefinition, options = {}) {
+    // Reference unused options to satisfy lint rules
+    void options;
     // Custom rules require external implementation
     // This is a placeholder for future extension
     return {

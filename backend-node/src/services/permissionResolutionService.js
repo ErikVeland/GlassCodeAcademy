@@ -1,4 +1,4 @@
-const { Permission, Role, RolePermission, AcademyMembership, User } = require('../models');
+const { Permission, Role, RolePermission, AcademyMembership } = require('../models');
 const { Op } = require('sequelize');
 
 /**
@@ -14,7 +14,7 @@ class PermissionResolutionService {
    * @returns {Promise<boolean>} Has permission
    */
   async hasPermission(userId, permissionName, context = {}) {
-    const { academyId = null, departmentId = null, resourceId = null } = context;
+    const { academyId = null } = context;
 
     // Get user's effective permissions
     const permissions = await this.getUserPermissions(userId, academyId);

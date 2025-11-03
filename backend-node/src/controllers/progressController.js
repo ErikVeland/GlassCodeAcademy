@@ -6,7 +6,6 @@ const {
   getUserQuizStatistics,
   getLeaderboard,
 } = require('../services/progressService');
-const winston = require('winston');
 
 const getUserCourseProgressController = async (req, res, next) => {
   try {

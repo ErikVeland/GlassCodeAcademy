@@ -10,7 +10,7 @@ try {
     });
     redisClient.connect().catch(console.error);
   }
-} catch (error) {
+} catch {
   console.warn('Redis not available for rate limiting, using in-memory store');
 }
 
@@ -27,7 +27,7 @@ class RedisStore {
     }
 
     try {
-      const [_result, value] = await this.client
+      const [, value] = await this.client
         .multi()
         .incr(key)
         .expire(key, 900) // 15 minutes TTL

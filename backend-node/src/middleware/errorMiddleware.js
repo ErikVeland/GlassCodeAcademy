@@ -23,6 +23,8 @@ const generateCorrelationId = () => {
 };
 
 const errorHandler = (err, req, res, _next) => {
+  // Reference the unused parameter to satisfy lint rules without changing behavior
+  void _next;
   const isTest = process.env.NODE_ENV === 'test';
   // Generate correlation ID if not already present
   const correlationId = req.correlationId || generateCorrelationId();

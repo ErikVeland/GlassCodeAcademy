@@ -7,7 +7,6 @@ const {
   updateBadge,
   deleteBadge,
 } = require('../services/badgeService');
-const winston = require('winston');
 
 const getAllBadgesController = async (req, res, next) => {
   try {

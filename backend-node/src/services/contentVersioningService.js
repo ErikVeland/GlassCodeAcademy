@@ -251,7 +251,10 @@ class ContentVersioningService {
       }
 
       // Update content with snapshot data (excluding system fields)
-      const { id, createdAt, updatedAt, ...restoreData } = contentSnapshot;
+      const restoreData = { ...contentSnapshot };
+      delete restoreData.id;
+      delete restoreData.createdAt;
+      delete restoreData.updatedAt;
       await content.update(restoreData, { transaction });
 
       // Create new version marking the restore
