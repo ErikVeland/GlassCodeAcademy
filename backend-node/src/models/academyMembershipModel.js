@@ -1,5 +1,6 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require('../config/database');
+const { getJSONType } = require('../utils/databaseTypes');
 
 const AcademyMembership = sequelize.define(
   'AcademyMembership',
@@ -57,14 +58,14 @@ const AcademyMembership = sequelize.define(
       field: 'joined_at',
     },
     customPermissions: {
-      type: DataTypes.JSONB,
+      type: getJSONType(),
       allowNull: true,
       defaultValue: {},
       field: 'custom_permissions',
       comment: 'User-specific permission overrides',
     },
     metadata: {
-      type: DataTypes.JSONB,
+      type: getJSONType(),
       allowNull: true,
       defaultValue: {},
       comment: 'Additional membership data',

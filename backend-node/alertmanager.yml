@@ -4,38 +4,154 @@ global:
   smtp_smarthost: 'smtp.gmail.com:587'
   smtp_from: 'alerts@glasscode.academy'
   smtp_auth_username: 'alerts@glasscode.academy'
-  smtp_auth_password: 'your-app-specific-password'
+  smtp_auth_password: '${SMTP_PASSWORD}'  # Set via environment variable
   smtp_require_tls: true
 
+# Routing tree for alerts
 route:
-  group_by: ['alertname']
+  receiver: 'default-receiver'
+  group_by: ['alertname', 'severity', 'team']
   group_wait: 10s
-  group_interval: 10s
-  repeat_interval: 1h
-  receiver: 'slack-notifications'
+  group_interval: 5m
+  repeat_interval: 4h
+  
+  # Route based on severity
+  routes:
+  # Critical alerts - immediate notification to all channels
+  - match:
+      severity: critical
+    receiver: 'critical-alerts'
+    group_wait: 0s
+    group_interval: 1m
+    repeat_interval: 30m
+    continue: false
+  
+  # Warning alerts - Slack only during business hours
+  - match:
+      severity: warning
+    receiver: 'warning-alerts'
+    group_wait: 30s
+    group_interval: 10m
+    repeat_interval: 2h
+  
+  # Info alerts - Slack only, low priority
+  - match:
+      severity: info
+    receiver: 'info-alerts'
+    group_wait: 5m
+    group_interval: 30m
+    repeat_interval: 12h
 
+# Inhibition rules - prevent alert spam
+inhibit_rules:
+  # If service is down, don't alert on high error rate
+  - source_match:
+      alertname: 'ServiceDown'
+    target_match:
+      alertname: 'HighErrorRate'
+    equal: ['job']
+  
+  # If service is down, don't alert on high latency
+  - source_match:
+      alertname: 'ServiceDown'
+    target_match:
+      alertname: 'HighLatency'
+    equal: ['job']
+  
+  # If DB pool exhausted, don't alert on slow queries
+  - source_match:
+      alertname: 'DatabaseConnectionPoolExhausted'
+    target_match:
+      alertname: 'SlowDatabaseQueries'
+    equal: ['job']
+
+# Receiver configurations
 receivers:
-- name: 'slack-notifications'
+# Critical alerts - Send to Slack + Email + PagerDuty
+- name: 'critical-alerts'
   slack_configs:
-  - api_url: 'https://hooks.slack.com/services/YOUR/SLACK/WEBHOOK'  # Replace with actual Slack webhook URL
-    channel: '#alerts'
+  - api_url: '${SLACK_WEBHOOK_URL}'  # Set via environment variable
+    channel: '#alerts-critical'
     send_resolved: true
-    title: '{{ template "slack.title" . }}'
-    text: '{{ template "slack.text" . }}'
+    title: '🚨 CRITICAL: {{ .GroupLabels.alertname }}'
+    text: |-
+      *Summary:* {{ range .Alerts }}{{ .Annotations.summary }}{{ end }}
+      *Description:* {{ range .Alerts }}{{ .Annotations.description }}{{ end }}
+      *Impact:* {{ range .Alerts }}{{ .Annotations.impact }}{{ end }}
+      *Action Required:* {{ range .Alerts }}{{ .Annotations.action }}{{ end }}
+      *Runbook:* {{ range .Alerts }}{{ .Annotations.runbook }}{{ end }}
+      *Severity:* {{ .GroupLabels.severity }}
+      *Team:* {{ .GroupLabels.team }}
     icon_emoji: ':rotating_light:'
-    username: 'GlassCode Academy Alerts'
-
-- name: 'email-notifications'
+    username: 'GlassCode Alerts'
+    color: '{{ if eq .Status "firing" }}danger{{ else }}good{{ end }}'
+  
   email_configs:
-  - to: 'devops@glasscode.academy'
+  - to: 'devops@glasscode.academy,oncall@glasscode.academy'
     from: 'alerts@glasscode.academy'
-    smarthost: 'smtp.gmail.com:587'
-    auth_username: 'alerts@glasscode.academy'
-    auth_password: 'your-app-specific-password'  # Replace with actual app-specific password
     send_resolved: true
     headers:
-      Subject: '{{ template "email.default.subject" . }}'
-    html: '{{ template "email.default.html" . }}'
+      Subject: '🚨 CRITICAL ALERT: {{ .GroupLabels.alertname }}'
+    html: |
+      <h2 style="color: #d32f2f;">🚨 CRITICAL ALERT</h2>
+      <p><strong>Alert:</strong> {{ .GroupLabels.alertname }}</p>
+      <p><strong>Status:</strong> {{ .Status | toUpper }}</p>
+      <p><strong>Severity:</strong> {{ .GroupLabels.severity }}</p>
+      <p><strong>Team:</strong> {{ .GroupLabels.team }}</p>
+      <hr>
+      {{ range .Alerts }}
+      <h3>{{ .Annotations.summary }}</h3>
+      <p><strong>Description:</strong> {{ .Annotations.description }}</p>
+      <p><strong>Impact:</strong> {{ .Annotations.impact }}</p>
+      <p><strong>Required Action:</strong> {{ .Annotations.action }}</p>
+      <p><strong>Runbook:</strong> <a href="{{ .Annotations.runbook }}">{{ .Annotations.runbook }}</a></p>
+      <p><strong>Started:</strong> {{ .StartsAt }}</p>
+      {{ if .EndsAt }}<p><strong>Ended:</strong> {{ .EndsAt }}</p>{{ end }}
+      {{ end }}
 
-templates:
-- '/etc/alertmanager/template/*.tmpl'
+# Warning alerts - Slack during business hours
+- name: 'warning-alerts'
+  slack_configs:
+  - api_url: '${SLACK_WEBHOOK_URL}'
+    channel: '#alerts-warning'
+    send_resolved: true
+    title: '⚠️ WARNING: {{ .GroupLabels.alertname }}'
+    text: |-
+      *Summary:* {{ range .Alerts }}{{ .Annotations.summary }}{{ end }}
+      *Description:* {{ range .Alerts }}{{ .Annotations.description }}{{ end }}
+      *Impact:* {{ range .Alerts }}{{ .Annotations.impact }}{{ end }}
+      *Recommended Action:* {{ range .Alerts }}{{ .Annotations.action }}{{ end }}
+      *Runbook:* {{ range .Alerts }}{{ .Annotations.runbook }}{{ end }}
+    icon_emoji: ':warning:'
+    username: 'GlassCode Alerts'
+    color: '{{ if eq .Status "firing" }}warning{{ else }}good{{ end }}'
+
+# Info alerts - Slack only, low priority
+- name: 'info-alerts'
+  slack_configs:
+  - api_url: '${SLACK_WEBHOOK_URL}'
+    channel: '#alerts-info'
+    send_resolved: false
+    title: 'ℹ️ INFO: {{ .GroupLabels.alertname }}'
+    text: |-
+      *Summary:* {{ range .Alerts }}{{ .Annotations.summary }}{{ end }}
+      *Description:* {{ range .Alerts }}{{ .Annotations.description }}{{ end }}
+    icon_emoji: ':information_source:'
+    username: 'GlassCode Alerts'
+    color: '#2196F3'
+
+# Default receiver (fallback)
+- name: 'default-receiver'
+  slack_configs:
+  - api_url: '${SLACK_WEBHOOK_URL}'
+    channel: '#alerts'
+    send_resolved: true
+    title: '{{ .GroupLabels.alertname }}'
+    text: |-
+      *Alert:* {{ .GroupLabels.alertname }}
+      *Status:* {{ .Status }}
+      {{ range .Alerts }}
+      *Summary:* {{ .Annotations.summary }}
+      *Description:* {{ .Annotations.description }}
+      {{ end }}
+    username: 'GlassCode Alerts'

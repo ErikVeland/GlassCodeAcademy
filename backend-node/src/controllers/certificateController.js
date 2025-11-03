@@ -89,7 +89,11 @@ const generateCertificateController = async (req, res, next) => {
     const { courseId } = req.params;
     const additionalData = req.body;
 
-    const certificate = await generateCertificate(userId, courseId, additionalData);
+    const certificate = await generateCertificate(
+      userId,
+      courseId,
+      additionalData
+    );
 
     // RFC 7807 compliant success response
     const successResponse = {

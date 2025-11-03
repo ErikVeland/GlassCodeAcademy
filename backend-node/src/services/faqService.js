@@ -33,7 +33,10 @@ async function getPublishedFaqs(options = {}) {
           attributes: ['id', 'name', 'email'],
         },
       ],
-      order: [['order', 'ASC'], ['createdAt', 'DESC']],
+      order: [
+        ['order', 'ASC'],
+        ['createdAt', 'DESC'],
+      ],
       limit,
       offset,
     });
@@ -86,7 +89,12 @@ async function getFaqById(id) {
  */
 async function getAllFaqs(options = {}) {
   try {
-    const { page = 1, limit = 20, category, includeUnpublished = false } = options;
+    const {
+      page = 1,
+      limit = 20,
+      category,
+      includeUnpublished = false,
+    } = options;
     const offset = (page - 1) * limit;
 
     const whereClause = {};
@@ -106,7 +114,10 @@ async function getAllFaqs(options = {}) {
           attributes: ['id', 'name', 'email'],
         },
       ],
-      order: [['order', 'ASC'], ['createdAt', 'DESC']],
+      order: [
+        ['order', 'ASC'],
+        ['createdAt', 'DESC'],
+      ],
       limit,
       offset,
     });
@@ -135,21 +146,21 @@ async function getFaqCategories() {
     const categories = await FAQ.findAll({
       attributes: [
         'category',
-        [FAQ.sequelize.fn('COUNT', FAQ.sequelize.col('id')), 'count']
+        [FAQ.sequelize.fn('COUNT', FAQ.sequelize.col('id')), 'count'],
       ],
       where: {
         isPublished: true,
         category: {
-          [Op.not]: null
-        }
+          [Op.not]: null,
+        },
       },
       group: ['category'],
       order: [[FAQ.sequelize.fn('COUNT', FAQ.sequelize.col('id')), 'DESC']],
     });
 
-    return categories.map(cat => ({
+    return categories.map((cat) => ({
       name: cat.category,
-      count: parseInt(cat.get('count'))
+      count: parseInt(cat.get('count')),
     }));
   } catch (error) {
     logger.error('Error fetching FAQ categories:', error);
@@ -254,7 +265,7 @@ async function deleteFaq(id) {
 async function reorderFaqs(faqOrder, userId) {
   try {
     const updatedFaqs = [];
-    
+
     for (const { id, order } of faqOrder) {
       const faq = await FAQ.findByPk(id);
       if (faq) {

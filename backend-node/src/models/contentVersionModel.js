@@ -1,5 +1,6 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require('../config/database');
+const { getJSONType } = require('../utils/databaseTypes');
 
 const ContentVersion = sequelize.define(
   'ContentVersion',
@@ -37,13 +38,13 @@ const ContentVersion = sequelize.define(
       comment: 'Semantic version number (e.g., 1.0.0, 1.1.0)',
     },
     contentSnapshot: {
-      type: DataTypes.JSONB,
+      type: getJSONType(),
       allowNull: false,
       field: 'content_snapshot',
       comment: 'Complete content state at this version',
     },
     delta: {
-      type: DataTypes.JSONB,
+      type: getJSONType(),
       allowNull: true,
       comment: 'Changes from previous version',
     },
@@ -68,7 +69,7 @@ const ContentVersion = sequelize.define(
       comment: 'Description of changes in this version',
     },
     metadata: {
-      type: DataTypes.JSONB,
+      type: getJSONType(),
       allowNull: true,
       defaultValue: {},
       comment: 'Additional version metadata',

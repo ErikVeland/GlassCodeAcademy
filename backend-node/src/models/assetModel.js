@@ -1,5 +1,11 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require('../config/database');
+const {
+  getJSONType,
+  getArrayType,
+  getArrayDefault,
+  arrayGetterSetter,
+} = require('../utils/databaseTypes');
 
 const Asset = sequelize.define(
   'Asset',
@@ -73,19 +79,21 @@ const Asset = sequelize.define(
       comment: 'Number of times this asset is referenced',
     },
     tags: {
-      type: DataTypes.ARRAY(DataTypes.TEXT),
+      type: getArrayType(DataTypes.TEXT),
       allowNull: true,
-      defaultValue: [],
+      defaultValue: getArrayDefault(),
       comment: 'Search tags',
+      get: arrayGetterSetter.get,
+      set: arrayGetterSetter.set,
     },
     metadata: {
-      type: DataTypes.JSONB,
+      type: getJSONType(),
       allowNull: true,
       defaultValue: {},
       comment: 'EXIF data and custom metadata',
     },
     variants: {
-      type: DataTypes.JSONB,
+      type: getJSONType(),
       allowNull: true,
       defaultValue: {},
       comment: 'Processed variants (thumbnails, different sizes, etc.)',

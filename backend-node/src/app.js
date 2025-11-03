@@ -80,11 +80,22 @@ function createApp(options = {}) {
 
   // Health check endpoint
   app.get('/health', (req, res) => {
+    const secrets = require('./config/secrets');
+    const configStatus = secrets.getConfigStatus();
+    
     res.status(200).json({
       success: true,
       data: {
         message: 'Server is running',
         timestamp: new Date().toISOString(),
+        environment: secrets.NODE_ENV,
+        configuration: {
+          secretsConfigured: configStatus.secretsConfigured,
+          secretsMissing: configStatus.secretsMissing,
+          warnings: configStatus.secretsWithWarnings,
+          // Don't expose which specific secrets are missing in production
+          details: secrets.isProduction ? null : configStatus.secrets,
+        },
       },
     });
   });

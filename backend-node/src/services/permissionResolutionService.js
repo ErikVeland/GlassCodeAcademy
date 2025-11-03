@@ -1,4 +1,9 @@
-const { Permission, Role, RolePermission, AcademyMembership } = require('../models');
+const {
+  Permission,
+  Role,
+  RolePermission,
+  AcademyMembership,
+} = require('../models');
 const { Op } = require('sequelize');
 
 /**
@@ -20,7 +25,7 @@ class PermissionResolutionService {
     const permissions = await this.getUserPermissions(userId, academyId);
 
     // Check if user has the specific permission
-    const hasPermission = permissions.some(perm => {
+    const hasPermission = permissions.some((perm) => {
       if (perm.name !== permissionName) {
         return false;
       }
@@ -90,8 +95,13 @@ class PermissionResolutionService {
       }
 
       // Add custom permissions from membership
-      if (membership.customPermissions && Object.keys(membership.customPermissions).length > 0) {
-        for (const [permName, allowed] of Object.entries(membership.customPermissions)) {
+      if (
+        membership.customPermissions &&
+        Object.keys(membership.customPermissions).length > 0
+      ) {
+        for (const [permName, allowed] of Object.entries(
+          membership.customPermissions
+        )) {
           if (allowed) {
             allPermissions.push({
               name: permName,
@@ -127,7 +137,7 @@ class PermissionResolutionService {
       ],
     });
 
-    return memberships.map(m => m.role).filter(Boolean);
+    return memberships.map((m) => m.role).filter(Boolean);
   }
 
   /**
@@ -139,7 +149,9 @@ class PermissionResolutionService {
    */
   async hasRole(userId, academyId, roleName) {
     const roles = await this.getUserRolesInAcademy(userId, academyId);
-    return roles.some(role => role.name.toLowerCase() === roleName.toLowerCase());
+    return roles.some(
+      (role) => role.name.toLowerCase() === roleName.toLowerCase()
+    );
   }
 
   /**
@@ -212,7 +224,10 @@ class PermissionResolutionService {
 
     const permissions = await Permission.findAll({
       where,
-      order: [['resourceType', 'ASC'], ['action', 'ASC']],
+      order: [
+        ['resourceType', 'ASC'],
+        ['action', 'ASC'],
+      ],
     });
 
     return permissions;
@@ -224,7 +239,13 @@ class PermissionResolutionService {
    * @returns {Promise<Object>} Created permission
    */
   async createPermission(permissionData) {
-    const { name, resourceType, action, description, isSystem = false } = permissionData;
+    const {
+      name,
+      resourceType,
+      action,
+      description,
+      isSystem = false,
+    } = permissionData;
 
     // Check if permission already exists
     const existing = await Permission.findOne({ where: { name } });
@@ -300,7 +321,7 @@ class PermissionResolutionService {
    */
   async removePermissionFromRole(roleId, permissionId, academyId = null) {
     const where = { roleId, permissionId };
-    
+
     if (academyId !== null) {
       where.academyId = academyId;
     }
@@ -336,7 +357,7 @@ class PermissionResolutionService {
       ],
     });
 
-    return rolePermissions.map(rp => rp.permission);
+    return rolePermissions.map((rp) => rp.permission);
   }
 
   /**
@@ -350,7 +371,11 @@ class PermissionResolutionService {
     const results = {};
 
     for (const permissionName of permissionNames) {
-      results[permissionName] = await this.hasPermission(userId, permissionName, context);
+      results[permissionName] = await this.hasPermission(
+        userId,
+        permissionName,
+        context
+      );
     }
 
     return results;

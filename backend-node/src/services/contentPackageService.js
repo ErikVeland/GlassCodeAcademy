@@ -8,9 +8,7 @@ const fs = require('fs').promises;
 const path = require('path');
 const archiver = require('archiver');
 const crypto = require('crypto');
-const { promisify } = require('util');
-const stream = require('stream');
-const pipeline = promisify(stream.pipeline);
+// Removed unused pipeline helpers
 
 class ContentPackageService {
   constructor() {
@@ -36,11 +34,7 @@ class ContentPackageService {
    * @returns {Promise<Object>} Package metadata
    */
   async createPackage(exportData, options = {}) {
-    const {
-      format = 'zip',
-      includeAssets = false,
-      compression = 'default',
-    } = options;
+    const { format = 'zip', compression = 'default' } = options;
 
     // Validate export data
     const validation = this.validateExportData(exportData);
@@ -128,7 +122,9 @@ class ContentPackageService {
       exportData.exportMetadata &&
       exportData.exportMetadata.formatVersion !== '2.0.0'
     ) {
-      errors.push(`Unsupported format version: ${exportData.exportMetadata.formatVersion}`);
+      errors.push(
+        `Unsupported format version: ${exportData.exportMetadata.formatVersion}`
+      );
     }
 
     // Verify checksum
@@ -216,7 +212,7 @@ class ContentPackageService {
    * @param {Object} exportData - Export data
    * @returns {Promise<Object>} Manifest
    */
-  async createManifest(packageDir, exportData) {
+  async createManifest(packageDir) {
     const files = await fs.readdir(packageDir);
     const manifest = {
       version: '1.0.0',
@@ -251,7 +247,12 @@ class ContentPackageService {
    * @param {string} compression - Compression level
    * @returns {Promise<string>} Path to archive
    */
-  async compressPackage(packageDir, packageId, format = 'zip', compression = 'default') {
+  async compressPackage(
+    packageDir,
+    packageId,
+    format = 'zip',
+    compression = 'default'
+  ) {
     const archivePath = path.join(
       this.packagesDir,
       `${packageId}.${format === 'tar.gz' ? 'tar.gz' : 'zip'}`
@@ -323,7 +324,11 @@ class ContentPackageService {
     const errors = [];
 
     // Check required files
-    const requiredFiles = ['academy-data.json', 'package-meta.json', 'manifest.json'];
+    const requiredFiles = [
+      'academy-data.json',
+      'package-meta.json',
+      'manifest.json',
+    ];
     for (const file of requiredFiles) {
       const filePath = path.join(packageDir, file);
       try {

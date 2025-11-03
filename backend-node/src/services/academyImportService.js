@@ -3,7 +3,15 @@
  * Handles importing academy packages with preview, conflict detection, and rollback
  */
 
-const { sequelize, Academy, AcademySettings, Course, Module, Lesson, LessonQuiz } = require('../models');
+const {
+  sequelize,
+  Academy,
+  AcademySettings,
+  Course,
+  Module,
+  Lesson,
+  LessonQuiz,
+} = require('../models');
 const ContentPackageService = require('./contentPackageService');
 const fs = require('fs').promises;
 const path = require('path');
@@ -20,13 +28,22 @@ class AcademyImportService {
    */
   async previewImport(packagePath) {
     // Extract package to temp directory
-    const extractDir = path.join(__dirname, '../../temp', `preview-${Date.now()}`);
-    const packageMeta = await this.packageService.extractPackage(packagePath, extractDir);
+    const extractDir = path.join(
+      __dirname,
+      '../../temp',
+      `preview-${Date.now()}`
+    );
+    const packageMeta = await this.packageService.extractPackage(
+      packagePath,
+      extractDir
+    );
 
     // Verify package integrity
     const verification = await this.packageService.verifyPackage(extractDir);
     if (!verification.valid) {
-      throw new Error(`Package verification failed: ${verification.errors.join(', ')}`);
+      throw new Error(
+        `Package verification failed: ${verification.errors.join(', ')}`
+      );
     }
 
     // Read academy data
@@ -146,22 +163,21 @@ class AcademyImportService {
    * @returns {Promise<Object>} Import result
    */
   async importAcademy(packagePath, options = {}) {
-    const {
-      overwriteExisting = false,
-      modifySlugsOnConflict = true,
-      skipConflictingContent = false,
-      targetAcademyId = null,
-    } = options;
-
     // Extract package
-    const extractDir = path.join(__dirname, '../../temp', `import-${Date.now()}`);
-    const packageMeta = await this.packageService.extractPackage(packagePath, extractDir);
+    const extractDir = path.join(
+      __dirname,
+      '../../temp',
+      `import-${Date.now()}`
+    );
+    await this.packageService.extractPackage(packagePath, extractDir);
 
     // Verify package
     const verification = await this.packageService.verifyPackage(extractDir);
     if (!verification.valid) {
       await fs.rm(extractDir, { recursive: true, force: true });
-      throw new Error(`Package verification failed: ${verification.errors.join(', ')}`);
+      throw new Error(
+        `Package verification failed: ${verification.errors.join(', ')}`
+      );
     }
 
     // Read academy data
@@ -235,7 +251,9 @@ class AcademyImportService {
             message: `Academy slug modified to avoid conflict: ${exportData.academy.slug}`,
           });
         } else {
-          throw new Error(`Academy with slug '${exportData.academy.slug}' already exists`);
+          throw new Error(
+            `Academy with slug '${exportData.academy.slug}' already exists`
+          );
         }
       }
 
@@ -305,7 +323,8 @@ class AcademyImportService {
    * @returns {Promise<Object>} Import statistics
    */
   async importCourses(courses, academyId, options, transaction) {
-    const { modifySlugsOnConflict = true, skipConflictingContent = false } = options;
+    const { modifySlugsOnConflict = true, skipConflictingContent = false } =
+      options;
     const stats = { created: 0, updated: 0, skipped: 0, warnings: [] };
 
     for (const courseData of courses) {
@@ -387,7 +406,8 @@ class AcademyImportService {
    * @returns {Promise<Object>} Import statistics
    */
   async importModules(modules, courseId, academyId, options, transaction) {
-    const { modifySlugsOnConflict = true, skipConflictingContent = false } = options;
+    const { modifySlugsOnConflict = true, skipConflictingContent = false } =
+      options;
     const stats = { created: 0, updated: 0, skipped: 0, warnings: [] };
 
     for (const moduleData of modules) {

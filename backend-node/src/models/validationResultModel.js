@@ -1,5 +1,6 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require('../config/database');
+const { getJSONType } = require('../utils/databaseTypes');
 
 const ValidationResult = sequelize.define(
   'ValidationResult',
@@ -35,7 +36,7 @@ const ValidationResult = sequelize.define(
       allowNull: false,
     },
     details: {
-      type: DataTypes.JSONB,
+      type: getJSONType(),
       allowNull: true,
       defaultValue: {},
       comment: 'Detailed validation results and messages',

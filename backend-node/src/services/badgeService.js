@@ -1,7 +1,5 @@
 const { Badge, UserBadge, UserProgress, QuizAttempt } = require('../models');
-const {
-  recordBusinessOperation,
-} = require('../utils/metrics');
+const { recordBusinessOperation } = require('../utils/metrics');
 const {
   traceAsyncFunction,
   addDatabaseQueryInfo,
@@ -12,27 +10,21 @@ const getAllBadges = async () => {
   const startTime = Date.now();
 
   try {
-    return await traceAsyncFunction(
-      'get_all_badges',
-      async () => {
-        const badges = await Badge.findAll({
-          where: {
-            isActive: true,
-          },
-        });
+    return await traceAsyncFunction('get_all_badges', async () => {
+      const badges = await Badge.findAll({
+        where: {
+          isActive: true,
+        },
+      });
 
-        // Add database query information to the span
-        addDatabaseQueryInfo(
-          'SELECT * FROM badges WHERE is_active = true',
-          []
-        );
+      // Add database query information to the span
+      addDatabaseQueryInfo('SELECT * FROM badges WHERE is_active = true', []);
 
-        const duration = (Date.now() - startTime) / 1000;
-        recordBusinessOperation('get_all_badges', duration, 'system');
+      const duration = (Date.now() - startTime) / 1000;
+      recordBusinessOperation('get_all_badges', duration, 'system');
 
-        return badges;
-      }
-    );
+      return badges;
+    });
   } catch (error) {
     const duration = (Date.now() - startTime) / 1000;
     recordBusinessOperation('get_all_badges', duration, 'system');
@@ -56,8 +48,15 @@ const getUserBadges = async (userId) => {
             {
               model: Badge,
               as: 'badge',
-              attributes: ['id', 'name', 'description', 'icon', 'category', 'points'],
-            }
+              attributes: [
+                'id',
+                'name',
+                'description',
+                'icon',
+                'category',
+                'points',
+              ],
+            },
           ],
           order: [['awarded_at', 'DESC']],
         });
@@ -154,10 +153,9 @@ const checkAndAwardProgressBadges = async (userId) => {
         });
 
         // Add database query information to the span
-        addDatabaseQueryInfo(
-          'SELECT * FROM user_progress WHERE user_id = ?',
-          [userId]
-        );
+        addDatabaseQueryInfo('SELECT * FROM user_progress WHERE user_id = ?', [
+          userId,
+        ]);
 
         // Get quiz attempts
         const quizAttempts = await QuizAttempt.findAll({
@@ -167,10 +165,9 @@ const checkAndAwardProgressBadges = async (userId) => {
         });
 
         // Add database query information to the span
-        addDatabaseQueryInfo(
-          'SELECT * FROM quiz_attempts WHERE user_id = ?',
-          [userId]
-        );
+        addDatabaseQueryInfo('SELECT * FROM quiz_attempts WHERE user_id = ?', [
+          userId,
+        ]);
 
         // Get all active badges
         const badges = await Badge.findAll({
@@ -180,61 +177,64 @@ const checkAndAwardProgressBadges = async (userId) => {
         });
 
         // Add database query information to the span
-        addDatabaseQueryInfo(
-          'SELECT * FROM badges WHERE is_active = true',
-          []
-        );
+        addDatabaseQueryInfo('SELECT * FROM badges WHERE is_active = true', []);
 
         // Check each badge's criteria
         const awardedBadges = [];
         for (const badge of badges) {
           const criteria = badge.criteria;
-          
+
           // Check if user meets the criteria
           let meetsCriteria = false;
-          
+
           switch (criteria.type) {
-          case 'course_completion': {
-            // Check if user has completed a certain number of courses
-            const completedCourses = userProgress.filter(
-              (progress) => progress.completedAt
-            ).length;
-            meetsCriteria = completedCourses >= (criteria.minCourses || 1);
-            break;
-          }
-          case 'lesson_completion': {
-            // Check if user has completed a certain number of lessons
-            const completedLessons = userProgress.reduce(
-              (total, progress) => total + (progress.completedLessons || 0), 0
-            );
-            meetsCriteria = completedLessons >= (criteria.minLessons || 1);
-            break;
-          }
-          case 'quiz_excellence': {
-            // Check if user has achieved high scores on quizzes
-            if (quizAttempts.length > 0) {
-              const averageScore = quizAttempts.reduce(
-                (total, attempt) => total + (parseFloat(attempt.score) || 0), 0
-              ) / quizAttempts.length;
-              meetsCriteria = averageScore >= (criteria.minAverageScore || 90);
+            case 'course_completion': {
+              // Check if user has completed a certain number of courses
+              const completedCourses = userProgress.filter(
+                (progress) => progress.completedAt
+              ).length;
+              meetsCriteria = completedCourses >= (criteria.minCourses || 1);
+              break;
             }
-            break;
+            case 'lesson_completion': {
+              // Check if user has completed a certain number of lessons
+              const completedLessons = userProgress.reduce(
+                (total, progress) => total + (progress.completedLessons || 0),
+                0
+              );
+              meetsCriteria = completedLessons >= (criteria.minLessons || 1);
+              break;
+            }
+            case 'quiz_excellence': {
+              // Check if user has achieved high scores on quizzes
+              if (quizAttempts.length > 0) {
+                const averageScore =
+                  quizAttempts.reduce(
+                    (total, attempt) =>
+                      total + (parseFloat(attempt.score) || 0),
+                    0
+                  ) / quizAttempts.length;
+                meetsCriteria =
+                  averageScore >= (criteria.minAverageScore || 90);
+              }
+              break;
+            }
+            case 'quiz_participation':
+              // Check if user has attempted a certain number of quizzes
+              meetsCriteria =
+                quizAttempts.length >= (criteria.minAttempts || 1);
+              break;
+            case 'perfect_score':
+              // Check if user has achieved a perfect score on any quiz
+              meetsCriteria = quizAttempts.some(
+                (attempt) => parseFloat(attempt.score) === 100
+              );
+              break;
+            default:
+              // Unknown badge type
+              break;
           }
-          case 'quiz_participation':
-            // Check if user has attempted a certain number of quizzes
-            meetsCriteria = quizAttempts.length >= (criteria.minAttempts || 1);
-            break;
-          case 'perfect_score':
-            // Check if user has achieved a perfect score on any quiz
-            meetsCriteria = quizAttempts.some(
-              (attempt) => parseFloat(attempt.score) === 100
-            );
-            break;
-          default:
-            // Unknown badge type
-            break;
-          }
-          
+
           // Award badge if criteria are met
           if (meetsCriteria) {
             const awardedBadge = await awardBadgeToUser(userId, badge.id);
@@ -243,7 +243,11 @@ const checkAndAwardProgressBadges = async (userId) => {
         }
 
         const duration = (Date.now() - startTime) / 1000;
-        recordBusinessOperation('check_and_award_progress_badges', duration, userId);
+        recordBusinessOperation(
+          'check_and_award_progress_badges',
+          duration,
+          userId
+        );
 
         return awardedBadges;
       },
@@ -251,8 +255,14 @@ const checkAndAwardProgressBadges = async (userId) => {
     );
   } catch (error) {
     const duration = (Date.now() - startTime) / 1000;
-    recordBusinessOperation('check_and_award_progress_badges', duration, userId);
-    throw new Error(`Error checking and awarding progress badges: ${error.message}`);
+    recordBusinessOperation(
+      'check_and_award_progress_badges',
+      duration,
+      userId
+    );
+    throw new Error(
+      `Error checking and awarding progress badges: ${error.message}`
+    );
   }
 };
 
@@ -269,7 +279,15 @@ const createBadge = async (badgeData) => {
         // Add database query information to the span
         addDatabaseQueryInfo(
           'INSERT INTO badges (name, description, icon, criteria, category, points, is_active) VALUES (?, ?, ?, ?, ?, ?, ?)',
-          [badgeData.name, badgeData.description, badgeData.icon, JSON.stringify(badgeData.criteria), badgeData.category, badgeData.points, badgeData.isActive]
+          [
+            badgeData.name,
+            badgeData.description,
+            badgeData.icon,
+            JSON.stringify(badgeData.criteria),
+            badgeData.category,
+            badgeData.points,
+            badgeData.isActive,
+          ]
         );
 
         const duration = (Date.now() - startTime) / 1000;
@@ -297,10 +315,7 @@ const updateBadge = async (badgeId, badgeData) => {
         const badge = await Badge.findByPk(badgeId);
 
         // Add database query information to the span
-        addDatabaseQueryInfo(
-          'SELECT * FROM badges WHERE id = ?',
-          [badgeId]
-        );
+        addDatabaseQueryInfo('SELECT * FROM badges WHERE id = ?', [badgeId]);
 
         if (!badge) {
           throw new Error('Badge not found');
@@ -311,7 +326,16 @@ const updateBadge = async (badgeId, badgeData) => {
         // Add database query information to the span
         addDatabaseQueryInfo(
           'UPDATE badges SET name = ?, description = ?, icon = ?, criteria = ?, category = ?, points = ?, is_active = ? WHERE id = ?',
-          [badgeData.name, badgeData.description, badgeData.icon, JSON.stringify(badgeData.criteria), badgeData.category, badgeData.points, badgeData.isActive, badgeId]
+          [
+            badgeData.name,
+            badgeData.description,
+            badgeData.icon,
+            JSON.stringify(badgeData.criteria),
+            badgeData.category,
+            badgeData.points,
+            badgeData.isActive,
+            badgeId,
+          ]
         );
 
         const duration = (Date.now() - startTime) / 1000;
@@ -339,10 +363,7 @@ const deleteBadge = async (badgeId) => {
         const badge = await Badge.findByPk(badgeId);
 
         // Add database query information to the span
-        addDatabaseQueryInfo(
-          'SELECT * FROM badges WHERE id = ?',
-          [badgeId]
-        );
+        addDatabaseQueryInfo('SELECT * FROM badges WHERE id = ?', [badgeId]);
 
         if (!badge) {
           throw new Error('Badge not found');

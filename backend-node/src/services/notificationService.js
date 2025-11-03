@@ -42,7 +42,7 @@ async function getUserPreferences(userId, category) {
         category,
       },
     });
-    
+
     // Return default preferences if none found
     if (!preference) {
       return {
@@ -53,7 +53,7 @@ async function getUserPreferences(userId, category) {
         digestFrequency: 'immediately',
       };
     }
-    
+
     return preference;
   } catch (error) {
     logger.error('Error fetching user notification preferences:', error);
@@ -83,7 +83,9 @@ async function sendEmailNotification(user, subject, message, options = {}) {
     }
 
     const mailOptions = {
-      from: process.env.EMAIL_FROM || '"GlassCode Academy" <no-reply@glasscode.academy>',
+      from:
+        process.env.EMAIL_FROM ||
+        '"GlassCode Academy" <no-reply@glasscode.academy>',
       to: user.email,
       subject,
       text: message,
@@ -120,7 +122,7 @@ async function createInAppNotification(userId, title, message, options = {}) {
       entityType: options.entityType,
       metadata: options.metadata,
     });
-    
+
     return notification;
   } catch (error) {
     logger.error('Error creating in-app notification:', error);
@@ -144,10 +146,16 @@ async function sendNotification(userId, title, message, options = {}) {
     }
 
     // Get user preferences for this category
-    const preferences = await getUserPreferences(userId, options.category || 'general');
+    const preferences = await getUserPreferences(
+      userId,
+      options.category || 'general'
+    );
 
     // If digest frequency is not immediate, don't send now
-    if (preferences.digestFrequency && preferences.digestFrequency !== 'immediately') {
+    if (
+      preferences.digestFrequency &&
+      preferences.digestFrequency !== 'immediately'
+    ) {
       // Create in-app notification only, email will be sent in digest
       if (preferences.inAppEnabled) {
         await createInAppNotification(userId, title, message, {
@@ -178,7 +186,7 @@ async function sendNotification(userId, title, message, options = {}) {
 
     // TODO: Implement push notifications and SMS
     // For now, we're focusing on email and in-app notifications
-    
+
     logger.info('Notification sent successfully', { userId, title });
   } catch (error) {
     logger.error('Error sending notification:', error);
@@ -225,7 +233,7 @@ async function markAsRead(notificationId, userId) {
 async function getUserNotifications(userId, options = {}) {
   try {
     const { limit = 20, offset = 0, unreadOnly = false } = options;
-    
+
     const whereClause = { userId };
     if (unreadOnly) {
       whereClause.isRead = false;

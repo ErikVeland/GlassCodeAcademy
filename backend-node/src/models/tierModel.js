@@ -1,5 +1,6 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require('../config/database');
+const { getJSONType } = require('../utils/databaseTypes');
 
 const Tier = sequelize.define(
   'Tier',
@@ -38,7 +39,7 @@ const Tier = sequelize.define(
       allowNull: true,
     },
     learningObjectives: {
-      type: DataTypes.JSONB,
+      type: getJSONType(),
       allowNull: true,
       field: 'learning_objectives',
     },

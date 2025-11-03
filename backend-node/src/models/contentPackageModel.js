@@ -1,5 +1,6 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require('../config/database');
+const { getJSONType } = require('../utils/databaseTypes');
 
 const ContentPackage = sequelize.define(
   'ContentPackage',
@@ -36,7 +37,7 @@ const ContentPackage = sequelize.define(
       comment: 'Package version',
     },
     manifest: {
-      type: DataTypes.JSONB,
+      type: getJSONType(),
       allowNull: false,
       comment: 'Package metadata and manifest',
     },

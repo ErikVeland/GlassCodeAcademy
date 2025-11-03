@@ -1,10 +1,10 @@
 /**
  * Content Versioning Service
- * 
+ *
  * Manages version control for all content types (courses, modules, lessons, quizzes).
  * Provides version creation, restoration, comparison, and history tracking.
  * Supports semantic versioning and delta tracking between versions.
- * 
+ *
  * @module services/contentVersioningService
  */
 
@@ -24,7 +24,7 @@ const Academy = require('../models/academyModel');
 class ContentVersioningService {
   /**
    * Get the Sequelize model for a content type
-   * 
+   *
    * @param {string} contentType - Type of content (course, module, lesson, quiz)
    * @returns {Object} Sequelize model
    * @throws {Error} If content type is invalid
@@ -47,7 +47,7 @@ class ContentVersioningService {
 
   /**
    * Create a new version of content
-   * 
+   *
    * @param {string} contentType - Type of content
    * @param {number} contentId - ID of the content
    * @param {number} academyId - ID of the academy
@@ -76,7 +76,9 @@ class ContentVersioningService {
 
     // Get the latest version to calculate delta and next version number
     const latestVersion = await this.getLatestVersion(contentType, contentId);
-    const previousSnapshot = latestVersion ? latestVersion.contentSnapshot : null;
+    const previousSnapshot = latestVersion
+      ? latestVersion.contentSnapshot
+      : null;
     const nextVersionNumber = this.calculateNextVersion(
       latestVersion ? latestVersion.versionNumber : '0.0.0',
       status
@@ -86,7 +88,9 @@ class ContentVersioningService {
     const contentSnapshot = content.toJSON();
 
     // Calculate delta if there's a previous version
-    const delta = previousSnapshot ? this.calculateDelta(previousSnapshot, contentSnapshot) : null;
+    const delta = previousSnapshot
+      ? this.calculateDelta(previousSnapshot, contentSnapshot)
+      : null;
 
     // Create the new version
     const version = await ContentVersion.create({
@@ -107,7 +111,7 @@ class ContentVersioningService {
 
   /**
    * Get version by ID
-   * 
+   *
    * @param {string} versionId - UUID of the version
    * @returns {Promise<Object|null>} Version with associations
    */
@@ -122,7 +126,7 @@ class ContentVersioningService {
 
   /**
    * Get all versions for a content item
-   * 
+   *
    * @param {string} contentType - Type of content
    * @param {number} contentId - ID of the content
    * @param {Object} options - Query options
@@ -143,15 +147,20 @@ class ContentVersioningService {
       where.status = status;
     }
 
-    const { rows: versions, count: total } = await ContentVersion.findAndCountAll({
-      where,
-      include: [
-        { model: User, as: 'author', attributes: ['id', 'username', 'email'] },
-      ],
-      order: [['created_at', 'DESC']],
-      limit,
-      offset,
-    });
+    const { rows: versions, count: total } =
+      await ContentVersion.findAndCountAll({
+        where,
+        include: [
+          {
+            model: User,
+            as: 'author',
+            attributes: ['id', 'username', 'email'],
+          },
+        ],
+        order: [['created_at', 'DESC']],
+        limit,
+        offset,
+      });
 
     return {
       versions,
@@ -164,7 +173,7 @@ class ContentVersioningService {
 
   /**
    * Get the latest version of content
-   * 
+   *
    * @param {string} contentType - Type of content
    * @param {number} contentId - ID of the content
    * @param {string} status - Optional status filter
@@ -191,7 +200,7 @@ class ContentVersioningService {
 
   /**
    * Get a specific version by version number
-   * 
+   *
    * @param {string} contentType - Type of content
    * @param {number} contentId - ID of the content
    * @param {string} versionNumber - Version number (e.g., '1.0.0')
@@ -212,7 +221,7 @@ class ContentVersioningService {
 
   /**
    * Restore content to a specific version
-   * 
+   *
    * @param {string} versionId - UUID of the version to restore
    * @param {number} userId - ID of the user performing the restore
    * @param {Object} options - Restore options
@@ -285,7 +294,7 @@ class ContentVersioningService {
 
   /**
    * Compare two versions
-   * 
+   *
    * @param {string} versionId1 - UUID of first version
    * @param {string} versionId2 - UUID of second version
    * @returns {Promise<Object>} Comparison result with differences
@@ -298,11 +307,17 @@ class ContentVersioningService {
       throw new Error('One or both versions not found');
     }
 
-    if (version1.contentType !== version2.contentType || version1.contentId !== version2.contentId) {
+    if (
+      version1.contentType !== version2.contentType ||
+      version1.contentId !== version2.contentId
+    ) {
       throw new Error('Cannot compare versions from different content items');
     }
 
-    const differences = this.calculateDelta(version1.contentSnapshot, version2.contentSnapshot);
+    const differences = this.calculateDelta(
+      version1.contentSnapshot,
+      version2.contentSnapshot
+    );
 
     return {
       version1: {
@@ -324,7 +339,7 @@ class ContentVersioningService {
 
   /**
    * Calculate delta (differences) between two objects
-   * 
+   *
    * @param {Object} oldObj - Previous object state
    * @param {Object} newObj - New object state
    * @returns {Object} Delta containing only changed fields
@@ -347,7 +362,7 @@ class ContentVersioningService {
 
   /**
    * Calculate next version number based on semantic versioning
-   * 
+   *
    * @param {string} currentVersion - Current version (e.g., '1.0.0')
    * @param {string} status - Version status (draft, review, published)
    * @returns {string} Next version number
@@ -366,7 +381,7 @@ class ContentVersioningService {
 
   /**
    * Update version status
-   * 
+   *
    * @param {string} versionId - UUID of the version
    * @param {string} newStatus - New status (draft, review, published, archived)
    * @returns {Promise<Object>} Updated version
@@ -388,7 +403,7 @@ class ContentVersioningService {
 
   /**
    * Get version history for an academy
-   * 
+   *
    * @param {number} academyId - ID of the academy
    * @param {Object} options - Query options
    * @param {number} options.limit - Maximum number of versions
@@ -410,15 +425,20 @@ class ContentVersioningService {
       where.status = status;
     }
 
-    const { rows: versions, count: total } = await ContentVersion.findAndCountAll({
-      where,
-      include: [
-        { model: User, as: 'author', attributes: ['id', 'username', 'email'] },
-      ],
-      order: [['created_at', 'DESC']],
-      limit,
-      offset,
-    });
+    const { rows: versions, count: total } =
+      await ContentVersion.findAndCountAll({
+        where,
+        include: [
+          {
+            model: User,
+            as: 'author',
+            attributes: ['id', 'username', 'email'],
+          },
+        ],
+        order: [['created_at', 'DESC']],
+        limit,
+        offset,
+      });
 
     return {
       versions,
@@ -431,7 +451,7 @@ class ContentVersioningService {
 
   /**
    * Delete old versions (cleanup)
-   * 
+   *
    * @param {string} contentType - Type of content
    * @param {number} contentId - ID of the content
    * @param {Object} options - Cleanup options

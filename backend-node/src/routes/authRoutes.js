@@ -36,12 +36,7 @@ router.post(
   validate(registerSchema),
   registerController
 );
-router.post(
-  '/login',
-  strictOrNoop,
-  validate(loginSchema),
-  loginController
-);
+router.post('/login', strictOrNoop, validate(loginSchema), loginController);
 router.get('/me', authenticate, getMeController);
 router.use('/password', require('./passwordResetRoutes'));
 

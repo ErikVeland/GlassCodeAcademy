@@ -1,5 +1,6 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require('../config/database');
+const { getJSONType } = require('../utils/databaseTypes');
 const Module = require('./moduleModel');
 
 const Lesson = sequelize.define(
@@ -32,11 +33,11 @@ const Lesson = sequelize.define(
       allowNull: false,
     },
     content: {
-      type: DataTypes.JSONB,
+      type: getJSONType(),
       allowNull: true,
     },
     metadata: {
-      type: DataTypes.JSONB,
+      type: getJSONType(),
       allowNull: true,
     },
     isPublished: {

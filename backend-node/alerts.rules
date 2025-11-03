@@ -1,52 +1,223 @@
 groups:
-- name: glasscode-alerts
+- name: glasscode-critical-alerts
+  interval: 30s
   rules:
-  # High Error Rate Alert
-  - alert: HighErrorRate
-    expr: sum(rate(http_requests_total{code=~"5.."}[5m])) by (job) / sum(rate(http_requests_total[5m])) by (job) > 0.05
-    for: 5m
-    labels:
-      severity: critical
-    annotations:
-      summary: "High error rate detected"
-      description: "The error rate for {{ $labels.job }} is {{ $value | humanizePercentage }} which is above the threshold of 5%."
-
-  # High Latency Alert
-  - alert: HighLatency
-    expr: histogram_quantile(0.95, sum(rate(http_request_duration_seconds_bucket[10m])) by (le, job)) > 0.2
-    for: 10m
-    labels:
-      severity: warning
-    annotations:
-      summary: "High latency detected"
-      description: "The p95 latency for {{ $labels.job }} is {{ $value }} seconds which is above the threshold of 200ms."
-
-  # Service Down Alert
+  # Service Down Alert - CRITICAL
   - alert: ServiceDown
-    expr: absent(up{job="glasscode-backend"}) == 1
+    expr: up{job="glasscode-backend"} == 0
     for: 2m
     labels:
       severity: critical
+      team: backend
     annotations:
-      summary: "Service is down"
-      description: "The GlassCode backend service is not sending metrics and may be down."
+      summary: "GlassCode Backend Service Down"
+      description: "The GlassCode backend service has been down for more than 2 minutes. No metrics being received."
+      impact: "Users cannot access the application. All API endpoints are unavailable."
+      action: "1. Check server health. 2. Review logs. 3. Check Docker containers. 4. Verify network connectivity."
+      runbook: "https://docs.glasscode.academy/runbooks/service-down"
 
-  # Database Performance Alert
-  - alert: DatabasePerformance
-    expr: histogram_quantile(0.95, sum(rate(db_query_duration_seconds_bucket[5m])) by (le, job)) > 0.5
+  # High Error Rate Alert - CRITICAL
+  - alert: HighErrorRate
+    expr: |
+      sum(rate(http_requests_total{code=~"5.."}[5m])) by (job)
+      /
+      sum(rate(http_requests_total[5m])) by (job)
+      > 0.05
     for: 5m
     labels:
-      severity: warning
+      severity: critical
+      team: backend
     annotations:
-      summary: "Database performance degradation"
-      description: "The p95 database query latency for {{ $labels.job }} is {{ $value }} seconds which is above the threshold of 500ms."
+      summary: "High 5xx Error Rate (>5%)"
+      description: "The error rate for {{ $labels.job }} is {{ $value | humanizePercentage }} which is above the critical threshold of 5%."
+      impact: "Significant number of user requests are failing. User experience is degraded."
+      action: "1. Check application logs for errors. 2. Review recent deployments. 3. Check database connectivity. 4. Verify external service status."
+      runbook: "https://docs.glasscode.academy/runbooks/high-error-rate"
 
-  # Low Success Rate Alert
-  - alert: LowSuccessRate
-    expr: sum(rate(http_requests_total{code!~"5.."}[10m])) by (job) / sum(rate(http_requests_total[10m])) by (job) < 0.95
+  # Database Connection Pool Exhaustion - CRITICAL
+  - alert: DatabaseConnectionPoolExhausted
+    expr: |
+      db_connection_pool_active{job="glasscode-backend"}
+      /
+      db_connection_pool_max{job="glasscode-backend"}
+      > 0.9
+    for: 5m
+    labels:
+      severity: critical
+      team: backend
+    annotations:
+      summary: "Database Connection Pool Near Exhaustion"
+      description: "Database connection pool usage is at {{ $value | humanizePercentage }} of maximum capacity."
+      impact: "Application may start rejecting requests due to lack of available database connections."
+      action: "1. Check for connection leaks. 2. Review long-running queries. 3. Consider increasing pool size. 4. Check for deadlocks."
+      runbook: "https://docs.glasscode.academy/runbooks/db-pool-exhaustion"
+
+  # Memory Usage Critical - CRITICAL
+  - alert: MemoryUsageCritical
+    expr: |
+      process_resident_memory_bytes{job="glasscode-backend"}
+      /
+      node_memory_MemTotal_bytes
+      > 0.85
+    for: 5m
+    labels:
+      severity: critical
+      team: backend
+    annotations:
+      summary: "Memory Usage Above 85%"
+      description: "Memory usage is at {{ $value | humanizePercentage }} which may cause OOM kills."
+      impact: "Application at risk of being killed by OOM killer. Performance degradation likely."
+      action: "1. Check for memory leaks. 2. Review memory-intensive operations. 3. Consider increasing memory limits. 4. Restart service if necessary."
+      runbook: "https://docs.glasscode.academy/runbooks/high-memory"
+
+- name: glasscode-warning-alerts
+  interval: 60s
+  rules:
+  # High Latency Alert - WARNING
+  - alert: HighLatency
+    expr: |
+      histogram_quantile(0.95,
+        sum(rate(http_request_duration_seconds_bucket[10m])) by (le, job, route)
+      ) > 0.5
     for: 10m
     labels:
       severity: warning
+      team: backend
     annotations:
-      summary: "Low success rate detected"
-      description: "The success rate for {{ $labels.job }} is {{ $value | humanizePercentage }} which is below the threshold of 95%."
+      summary: "High API Latency (p95 > 500ms)"
+      description: "The p95 latency for {{ $labels.route }} is {{ $value }} seconds which is above the threshold of 500ms."
+      impact: "Users experiencing slow response times. UX degradation."
+      action: "1. Check slow query logs. 2. Review cache hit rates. 3. Check external service latencies. 4. Consider scaling."
+      runbook: "https://docs.glasscode.academy/runbooks/high-latency"
+
+  # Database Query Performance - WARNING
+  - alert: SlowDatabaseQueries
+    expr: |
+      histogram_quantile(0.95,
+        sum(rate(db_query_duration_seconds_bucket[5m])) by (le, job)
+      ) > 0.5
+    for: 5m
+    labels:
+      severity: warning
+      team: backend
+    annotations:
+      summary: "Slow Database Queries (p95 > 500ms)"
+      description: "The p95 database query latency is {{ $value }} seconds which is above the threshold of 500ms."
+      impact: "Database performance degradation affecting overall application responsiveness."
+      action: "1. Review slow query log. 2. Check database load. 3. Analyze query plans. 4. Consider adding indexes."
+      runbook: "https://docs.glasscode.academy/runbooks/slow-queries"
+
+  # Low Cache Hit Rate - WARNING  
+  - alert: LowCacheHitRate
+    expr: |
+      sum(rate(cache_hits_total[10m])) by (job)
+      /
+      (sum(rate(cache_hits_total[10m])) by (job) + sum(rate(cache_misses_total[10m])) by (job))
+      < 0.7
+    for: 15m
+    labels:
+      severity: warning
+      team: backend
+    annotations:
+      summary: "Low Cache Hit Rate (<70%)"
+      description: "Cache hit rate is {{ $value | humanizePercentage }} which is below the threshold of 70%."
+      impact: "Increased database load. Higher latencies. Reduced cost efficiency."
+      action: "1. Review cache configuration. 2. Check TTL values. 3. Verify cache invalidation logic. 4. Monitor cache size."
+      runbook: "https://docs.glasscode.academy/runbooks/low-cache-hit-rate"
+
+  # CPU Usage High - WARNING
+  - alert: CPUUsageHigh
+    expr: |
+      rate(process_cpu_seconds_total{job="glasscode-backend"}[5m]) > 0.8
+    for: 10m
+    labels:
+      severity: warning
+      team: backend
+    annotations:
+      summary: "CPU Usage Above 80%"
+      description: "CPU usage has been above 80% for more than 10 minutes."
+      impact: "Performance degradation. Request processing slowdown."
+      action: "1. Check for CPU-intensive operations. 2. Review recent code changes. 3. Consider horizontal scaling. 4. Profile application."
+      runbook: "https://docs.glasscode.academy/runbooks/high-cpu"
+
+  # Disk Space Low - WARNING
+  - alert: DiskSpaceLow
+    expr: |
+      (
+        node_filesystem_avail_bytes{mountpoint="/"}
+        /
+        node_filesystem_size_bytes{mountpoint="/"}
+      ) < 0.15
+    for: 10m
+    labels:
+      severity: warning
+      team: devops
+    annotations:
+      summary: "Disk Space Below 15%"
+      description: "Available disk space is at {{ $value | humanizePercentage }} which is below the threshold of 15%."
+      impact: "Application may fail when disk is full. Log rotation may fail."
+      action: "1. Clean old logs. 2. Remove unused files. 3. Increase disk size. 4. Review disk usage patterns."
+      runbook: "https://docs.glasscode.academy/runbooks/low-disk-space"
+
+  # High Request Rate - WARNING
+  - alert: HighRequestRate
+    expr: |
+      sum(rate(http_requests_total[5m])) by (job) > 1000
+    for: 10m
+    labels:
+      severity: warning
+      team: backend
+    annotations:
+      summary: "High Request Rate (>1000 req/s)"
+      description: "Request rate is {{ $value }} requests per second which is unusually high."
+      impact: "Potential DDoS attack or traffic spike. May overwhelm resources."
+      action: "1. Check traffic sources. 2. Verify rate limiting is working. 3. Check for bot traffic. 4. Consider scaling."
+      runbook: "https://docs.glasscode.academy/runbooks/high-request-rate"
+
+- name: glasscode-info-alerts
+  interval: 300s
+  rules:
+  # Service Restarted - INFO
+  - alert: ServiceRestarted
+    expr: |
+      time() - process_start_time_seconds{job="glasscode-backend"} < 300
+    for: 1m
+    labels:
+      severity: info
+      team: backend
+    annotations:
+      summary: "Service Recently Restarted"
+      description: "The GlassCode backend service restarted {{ $value | humanizeDuration }} ago."
+      impact: "Brief interruption of service. Cache may be cold."
+      action: "1. Verify restart was planned. 2. Check startup logs. 3. Monitor for errors. 4. Verify all health checks pass."
+
+  # Deployment Detected - INFO
+  - alert: NewVersion Deployed
+    expr: |
+      changes(app_version_info[10m]) > 0
+    labels:
+      severity: info
+      team: backend
+    annotations:
+      summary: "New Application Version Deployed"
+      description: "A new version of the application has been deployed."
+      impact: "Normal deployment activity. Monitor for any issues."
+      action: "1. Monitor error rates. 2. Check performance metrics. 3. Verify new features. 4. Review deployment logs."
+
+  # Low Success Rate - INFO (degraded from WARNING in original)
+  - alert: SuccessRateDegraded
+    expr: |
+      sum(rate(http_requests_total{code!~"5.."}[10m])) by (job)
+      /
+      sum(rate(http_requests_total[10m])) by (job)
+      < 0.95
+    for: 10m
+    labels:
+      severity: info
+      team: backend
+    annotations:
+      summary: "Success Rate Below 95%"
+      description: "The success rate is {{ $value | humanizePercentage }} which is below the threshold of 95%."
+      impact: "Slightly elevated error rate. Monitor for degradation."
+      action: "1. Check recent changes. 2. Review error logs. 3. Monitor for escalation. 4. Verify external dependencies."
+      runbook: "https://docs.glasscode.academy/runbooks/success-rate-degraded"

@@ -1,6 +1,8 @@
 const { Academy, Course, Module, Lesson } = require('../models');
 const { logAction } = require('../services/auditService');
 const winston = require('winston');
+const AcademyImportService = require('../services/academyImportService');
+const fs = require('fs').promises;
 
 // Create a logger instance
 const logger = winston.createLogger({
@@ -264,7 +266,8 @@ const updateAcademyController = async (req, res, next) => {
           id: Number(id) || 1,
           name: updateData?.name || 'Updated Test Academy',
           slug: updateData?.slug || 'test-academy',
-          description: updateData?.description || 'Updated test academy description',
+          description:
+            updateData?.description || 'Updated test academy description',
           isPublished: updateData?.isPublished ?? true,
           version: updateData?.version || '1.0.0',
           theme: updateData?.theme || {},
@@ -784,7 +787,10 @@ const exportAcademyController = async (req, res, next) => {
       settings: exportData.settings,
       courses: exportData.courses,
     });
-    const checksum = crypto.createHash('sha256').update(dataString).digest('hex');
+    const checksum = crypto
+      .createHash('sha256')
+      .update(dataString)
+      .digest('hex');
     exportData.exportMetadata.checksum = checksum;
 
     // Log the action
@@ -887,7 +893,12 @@ const previewImportController = async (req, res, next) => {
     if (req.file?.path) {
       try {
         await fs.unlink(req.file.path);
-      } catch {}
+      } catch (cleanupError) {
+        logger.warn('Failed to cleanup uploaded file', {
+          error: cleanupError?.message,
+          correlationId: req.correlationId,
+        });
+      }
     }
 
     next(error);
@@ -916,7 +927,9 @@ const importAcademyController = async (req, res, next) => {
       overwriteExisting: req.body.overwriteExisting === 'true',
       modifySlugsOnConflict: req.body.modifySlugsOnConflict !== 'false',
       skipConflictingContent: req.body.skipConflictingContent === 'true',
-      targetAcademyId: req.body.targetAcademyId ? parseInt(req.body.targetAcademyId) : null,
+      targetAcademyId: req.body.targetAcademyId
+        ? parseInt(req.body.targetAcademyId)
+        : null,
     };
 
     logger.info('Importing academy', {
@@ -939,7 +952,7 @@ const importAcademyController = async (req, res, next) => {
       resourceType: 'ACADEMY',
       resourceId: result.academyId,
       resourceName: result.academy.name,
-      details: { 
+      details: {
         stats: result.stats,
         options,
         warnings: result.warnings.length,
@@ -977,7 +990,12 @@ const importAcademyController = async (req, res, next) => {
     if (req.file?.path) {
       try {
         await fs.unlink(req.file.path);
-      } catch {}
+      } catch (cleanupError) {
+        logger.warn('Failed to cleanup uploaded file', {
+          error: cleanupError?.message,
+          correlationId: req.correlationId,
+        });
+      }
     }
 
     next(error);
@@ -991,4 +1009,6 @@ module.exports = {
   updateAcademyController,
   deleteAcademyController,
   exportAcademyController,
+  previewImportController,
+  importAcademyController,
 };

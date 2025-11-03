@@ -1,9 +1,4 @@
-const { 
-  ForumThread, 
-  ForumPost, 
-  User, 
-  ModerationAction 
-} = require('../models');
+const { ForumThread, ForumPost, User, ModerationAction } = require('../models');
 const logger = require('../utils/logger');
 
 /**
@@ -43,7 +38,7 @@ async function getPendingItems(options = {}) {
         limit,
         offset,
       });
-      
+
       threads = threadResult.rows;
       threadCount = threadResult.count;
     }
@@ -70,7 +65,7 @@ async function getPendingItems(options = {}) {
         limit,
         offset,
       });
-      
+
       posts = postResult.rows;
       postCount = postResult.count;
     }

@@ -21,11 +21,7 @@ const generateToken = (user) => {
     options.jwtid = uuidv4();
   }
 
-  return jwt.sign(
-    { userId: user.id, email: user.email },
-    jwtSecret,
-    options
-  );
+  return jwt.sign({ userId: user.id, email: user.email }, jwtSecret, options);
 };
 
 const register = async (userData) => {
@@ -41,9 +37,7 @@ const register = async (userData) => {
     const err = new Error('User already exists with this email');
     // Use a validation-style error so error middleware maps to 400 in test
     err.name = 'SequelizeValidationError';
-    err.errors = [
-      { path: 'email', message: 'email must be unique' },
-    ];
+    err.errors = [{ path: 'email', message: 'email must be unique' }];
     throw err;
   }
 

@@ -51,7 +51,7 @@ const awardBadgeToUserController = async (req, res, next) => {
   try {
     const { userId, badgeId } = req.params;
     const awardedBy = req.user.id; // The user who is awarding the badge
-    
+
     const userBadge = await awardBadgeToUser(userId, badgeId, awardedBy);
 
     // RFC 7807 compliant success response

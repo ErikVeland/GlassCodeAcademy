@@ -10,8 +10,8 @@ const defaultBadges = [
     points: 10,
     criteria: {
       type: 'lesson_completion',
-      minLessons: 1
-    }
+      minLessons: 1,
+    },
   },
   {
     name: 'Course Master',
@@ -21,8 +21,8 @@ const defaultBadges = [
     points: 50,
     criteria: {
       type: 'course_completion',
-      minCourses: 1
-    }
+      minCourses: 1,
+    },
   },
   {
     name: 'Quiz Champion',
@@ -31,8 +31,8 @@ const defaultBadges = [
     category: 'excellence',
     points: 30,
     criteria: {
-      type: 'perfect_score'
-    }
+      type: 'perfect_score',
+    },
   },
   {
     name: 'Knowledge Seeker',
@@ -42,8 +42,8 @@ const defaultBadges = [
     points: 25,
     criteria: {
       type: 'lesson_completion',
-      minLessons: 10
-    }
+      minLessons: 10,
+    },
   },
   {
     name: 'Quiz Expert',
@@ -53,8 +53,8 @@ const defaultBadges = [
     points: 40,
     criteria: {
       type: 'quiz_excellence',
-      minAverageScore: 90
-    }
+      minAverageScore: 90,
+    },
   },
   {
     name: 'Dedicated Learner',
@@ -64,8 +64,8 @@ const defaultBadges = [
     points: 100,
     criteria: {
       type: 'lesson_completion',
-      minLessons: 50
-    }
+      minLessons: 50,
+    },
   },
   {
     name: 'Quiz Enthusiast',
@@ -75,8 +75,8 @@ const defaultBadges = [
     points: 20,
     criteria: {
       type: 'quiz_participation',
-      minAttempts: 20
-    }
+      minAttempts: 20,
+    },
   },
   {
     name: 'Speed Learner',
@@ -86,9 +86,9 @@ const defaultBadges = [
     points: 35,
     criteria: {
       type: 'speed_completion',
-      maxTimeMinutes: 10
-    }
-  }
+      maxTimeMinutes: 10,
+    },
+  },
 ];
 
 // Function to create default badges
@@ -98,8 +98,8 @@ const createDefaultBadges = async () => {
       // Check if badge already exists
       const existingBadge = await Badge.findOne({
         where: {
-          name: badgeData.name
-        }
+          name: badgeData.name,
+        },
       });
 
       if (!existingBadge) {
@@ -116,5 +116,5 @@ const createDefaultBadges = async () => {
 
 module.exports = {
   defaultBadges,
-  createDefaultBadges
+  createDefaultBadges,
 };

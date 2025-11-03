@@ -1,18 +1,18 @@
 const { sendNotification } = require('./notificationService');
-const { 
-  getLessonById, 
+const {
+  getLessonById,
   getModuleById,
-  getCourseById 
+  getCourseById,
 } = require('./contentService');
 const { User } = require('../models');
 const logger = require('../utils/logger');
-const { 
+const {
   welcomeTemplate,
   lessonCompletionTemplate,
   quizResultTemplate,
   newCourseTemplate,
   certificateEarnedTemplate,
-  forumReplyTemplate
+  forumReplyTemplate,
 } = require('../utils/notificationTemplates');
 
 /**
@@ -29,13 +29,13 @@ async function sendWelcomeNotification(userId, userName) {
   try {
     const templateData = { userName };
     const template = welcomeTemplate(templateData);
-    
+
     await sendNotification(userId, template.subject, template.text, {
       category: 'welcome',
       type: 'success',
       html: template.html,
     });
-    
+
     logger.info('Welcome notification sent', { userId, userName });
   } catch (error) {
     logger.error('Error sending welcome notification:', error);
@@ -48,7 +48,11 @@ async function sendWelcomeNotification(userId, userName) {
  * @param {number} lessonId - Lesson ID
  * @param {Object} options - Additional options
  */
-async function sendLessonCompletionNotification(userId, lessonId, options = {}) {
+async function sendLessonCompletionNotification(
+  userId,
+  lessonId,
+  options = {}
+) {
   try {
     // Get user details
     const user = await User.findByPk(userId);
@@ -88,7 +92,7 @@ async function sendLessonCompletionNotification(userId, lessonId, options = {}) 
     };
 
     const template = lessonCompletionTemplate(templateData);
-    
+
     await sendNotification(userId, template.subject, template.text, {
       category: 'lesson_completion',
       type: 'success',
@@ -96,7 +100,7 @@ async function sendLessonCompletionNotification(userId, lessonId, options = {}) 
       entityType: 'lesson',
       html: template.html,
     });
-    
+
     logger.info('Lesson completion notification sent', { userId, lessonId });
   } catch (error) {
     logger.error('Error sending lesson completion notification:', error);
@@ -136,7 +140,7 @@ async function sendQuizResultNotification(userId, lessonId, quizResult) {
     }
 
     const { scorePercentage, passed } = quizResult;
-    
+
     const templateData = {
       userName: user.name || user.email,
       quizTitle: lesson.title,
@@ -146,7 +150,7 @@ async function sendQuizResultNotification(userId, lessonId, quizResult) {
     };
 
     const template = quizResultTemplate(templateData);
-    
+
     await sendNotification(userId, template.subject, template.text, {
       category: 'quiz_result',
       type: passed ? 'success' : 'warning',
@@ -154,8 +158,12 @@ async function sendQuizResultNotification(userId, lessonId, quizResult) {
       entityType: 'quiz',
       html: template.html,
     });
-    
-    logger.info('Quiz result notification sent', { userId, lessonId, scorePercentage });
+
+    logger.info('Quiz result notification sent', {
+      userId,
+      lessonId,
+      scorePercentage,
+    });
   } catch (error) {
     logger.error('Error sending quiz result notification:', error);
   }
@@ -188,7 +196,7 @@ async function sendCertificateNotification(userId, courseId, certificateId) {
     };
 
     const template = certificateEarnedTemplate(templateData);
-    
+
     await sendNotification(userId, template.subject, template.text, {
       category: 'certificate',
       type: 'success',
@@ -196,8 +204,12 @@ async function sendCertificateNotification(userId, courseId, certificateId) {
       entityType: 'course',
       html: template.html,
     });
-    
-    logger.info('Certificate notification sent', { userId, courseId, certificateId });
+
+    logger.info('Certificate notification sent', {
+      userId,
+      courseId,
+      certificateId,
+    });
   } catch (error) {
     logger.error('Error sending certificate notification:', error);
   }
@@ -217,7 +229,7 @@ async function sendForumReplyNotification(userId, replyData) {
     }
 
     const { postTitle, replierName, replyContent } = replyData;
-    
+
     const templateData = {
       userName: user.name || user.email,
       postTitle,
@@ -226,13 +238,13 @@ async function sendForumReplyNotification(userId, replyData) {
     };
 
     const template = forumReplyTemplate(templateData);
-    
+
     await sendNotification(userId, template.subject, template.text, {
       category: 'forum_reply',
       type: 'info',
       html: template.html,
     });
-    
+
     logger.info('Forum reply notification sent', { userId, postTitle });
   } catch (error) {
     logger.error('Error sending forum reply notification:', error);
@@ -247,7 +259,7 @@ async function sendForumReplyNotification(userId, replyData) {
 async function sendNewCourseNotification(userIds, courseData) {
   try {
     const { courseTitle, courseDescription } = courseData;
-    
+
     // Send to each user
     for (const userId of userIds) {
       try {
@@ -265,13 +277,13 @@ async function sendNewCourseNotification(userIds, courseData) {
         };
 
         const template = newCourseTemplate(templateData);
-        
+
         await sendNotification(userId, template.subject, template.text, {
           category: 'new_course',
           type: 'info',
           html: template.html,
         });
-        
+
         logger.info('New course notification sent', { userId, courseTitle });
       } catch (userError) {
         logger.error('Error sending new course notification to user:', {

@@ -1,5 +1,6 @@
 const sequelize = require('../config/database');
 const { DataTypes } = require('sequelize');
+const { getJSONType } = require('../utils/databaseTypes');
 const User = require('./userModel');
 
 const Notification = sequelize.define(
@@ -59,7 +60,7 @@ const Notification = sequelize.define(
       comment: 'Type of entity referenced (lesson, quiz, etc.)',
     },
     metadata: {
-      type: DataTypes.JSONB,
+      type: getJSONType(),
       allowNull: true,
       comment: 'Additional data related to the notification',
     },

@@ -1,11 +1,13 @@
-const { 
-  ForumCategory, 
-  ForumThread, 
-  ForumPost, 
-  ForumVote, 
-  User 
+const {
+  ForumCategory,
+  ForumThread,
+  ForumPost,
+  ForumVote,
+  User,
 } = require('../models');
-const { sendForumReplyNotification } = require('./notificationIntegrationService');
+const {
+  sendForumReplyNotification,
+} = require('./notificationIntegrationService');
 const { autoModerateContent } = require('./reportService');
 const logger = require('../utils/logger');
 const { Op } = require('sequelize');
@@ -58,7 +60,12 @@ async function getForumCategoryById(categoryId) {
  */
 async function getThreadsByCategory(categoryId, options = {}) {
   try {
-    const { page = 1, limit = 20, sortBy = 'lastReplyAt', sortOrder = 'DESC' } = options;
+    const {
+      page = 1,
+      limit = 20,
+      sortBy = 'lastReplyAt',
+      sortOrder = 'DESC',
+    } = options;
     const offset = (page - 1) * limit;
 
     const whereClause = {

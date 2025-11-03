@@ -1,10 +1,10 @@
 /**
  * Validation Service
- * 
+ *
  * Manages content quality validation for all content types.
  * Provides rule creation, content validation, auto-fixing, and quality reports.
  * Supports both academy-specific and global validation rules.
- * 
+ *
  * @module services/validationService
  */
 
@@ -24,7 +24,7 @@ const Quiz = require('../models/quizModel');
 class ValidationService {
   /**
    * Get the Sequelize model for a content type
-   * 
+   *
    * @param {string} contentType - Type of content
    * @returns {Object} Sequelize model
    * @throws {Error} If content type is invalid
@@ -47,7 +47,7 @@ class ValidationService {
 
   /**
    * Create a new validation rule
-   * 
+   *
    * @param {Object} ruleData - Rule configuration
    * @param {number} ruleData.academyId - Academy ID (null for global rules)
    * @param {string} ruleData.ruleName - Name of the rule
@@ -95,21 +95,19 @@ class ValidationService {
 
   /**
    * Get validation rule by ID
-   * 
+   *
    * @param {number} ruleId - ID of the rule
    * @returns {Promise<Object|null>} Rule with associations
    */
   async getRuleById(ruleId) {
     return await ValidationRule.findByPk(ruleId, {
-      include: [
-        { model: Academy, as: 'academy', attributes: ['id', 'name'] },
-      ],
+      include: [{ model: Academy, as: 'academy', attributes: ['id', 'name'] }],
     });
   }
 
   /**
    * Get all validation rules
-   * 
+   *
    * @param {Object} options - Query options
    * @param {number} options.academyId - Filter by academy (includes global rules)
    * @param {string} options.contentType - Filter by content type
@@ -141,9 +139,7 @@ class ValidationService {
 
     return await ValidationRule.findAll({
       where,
-      include: [
-        { model: Academy, as: 'academy', attributes: ['id', 'name'] },
-      ],
+      include: [{ model: Academy, as: 'academy', attributes: ['id', 'name'] }],
       order: [
         ['severity', 'ASC'], // Errors first
         ['rule_name', 'ASC'],
@@ -153,7 +149,7 @@ class ValidationService {
 
   /**
    * Update validation rule
-   * 
+   *
    * @param {number} ruleId - ID of the rule
    * @param {Object} updates - Fields to update
    * @returns {Promise<Object>} Updated rule
@@ -175,7 +171,7 @@ class ValidationService {
 
   /**
    * Delete validation rule
-   * 
+   *
    * @param {number} ruleId - ID of the rule
    * @returns {Promise<boolean>} Success status
    */
@@ -191,7 +187,7 @@ class ValidationService {
 
   /**
    * Validate content against all applicable rules
-   * 
+   *
    * @param {string} contentType - Type of content
    * @param {number} contentId - ID of the content
    * @param {number} academyId - Academy ID (for rule filtering)
@@ -292,7 +288,8 @@ class ValidationService {
         warnings: warningCount,
         autoFixed: autoFixedCount,
         results,
-        overallStatus: failedCount > 0 ? 'failed' : warningCount > 0 ? 'warning' : 'passed',
+        overallStatus:
+          failedCount > 0 ? 'failed' : warningCount > 0 ? 'warning' : 'passed',
       };
     } catch (error) {
       await transaction.rollback();
@@ -302,7 +299,7 @@ class ValidationService {
 
   /**
    * Execute a validation rule against content
-   * 
+   *
    * @param {Object} rule - Validation rule
    * @param {Object} content - Content to validate
    * @param {Object} options - Execution options
@@ -317,27 +314,27 @@ class ValidationService {
     try {
       // Execute rule based on type
       switch (ruleDefinition.type) {
-      case 'required_field':
-        return this.checkRequiredField(content, ruleDefinition, { autoFix });
+        case 'required_field':
+          return this.checkRequiredField(content, ruleDefinition, { autoFix });
 
-      case 'min_length':
-        return this.checkMinLength(content, ruleDefinition, { autoFix });
+        case 'min_length':
+          return this.checkMinLength(content, ruleDefinition, { autoFix });
 
-      case 'max_length':
-        return this.checkMaxLength(content, ruleDefinition, { autoFix });
+        case 'max_length':
+          return this.checkMaxLength(content, ruleDefinition, { autoFix });
 
-      case 'format':
-        return this.checkFormat(content, ruleDefinition, { autoFix });
+        case 'format':
+          return this.checkFormat(content, ruleDefinition, { autoFix });
 
-      case 'custom':
-        return this.executeCustomRule(content, ruleDefinition, { autoFix });
+        case 'custom':
+          return this.executeCustomRule(content, ruleDefinition, { autoFix });
 
-      default:
-        return {
-          status: 'warning',
-          details: { message: `Unknown rule type: ${ruleDefinition.type}` },
-          autoFixed: false,
-        };
+        default:
+          return {
+            status: 'warning',
+            details: { message: `Unknown rule type: ${ruleDefinition.type}` },
+            autoFixed: false,
+          };
       }
     } catch (error) {
       return {
@@ -353,7 +350,7 @@ class ValidationService {
 
   /**
    * Check if required field is present
-   * 
+   *
    * @param {Object} content - Content object
    * @param {Object} ruleDefinition - Rule definition
    * @param {Object} options - Options
@@ -386,7 +383,7 @@ class ValidationService {
 
   /**
    * Check minimum length requirement
-   * 
+   *
    * @param {Object} content - Content object
    * @param {Object} ruleDefinition - Rule definition
    * @param {Object} options - Options
@@ -423,7 +420,7 @@ class ValidationService {
 
   /**
    * Check maximum length requirement
-   * 
+   *
    * @param {Object} content - Content object
    * @param {Object} ruleDefinition - Rule definition
    * @param {Object} options - Options
@@ -458,7 +455,7 @@ class ValidationService {
 
   /**
    * Check format requirement (regex)
-   * 
+   *
    * @param {Object} content - Content object
    * @param {Object} ruleDefinition - Rule definition
    * @param {Object} options - Options
@@ -503,7 +500,7 @@ class ValidationService {
 
   /**
    * Execute custom validation rule
-   * 
+   *
    * @param {Object} content - Content object
    * @param {Object} ruleDefinition - Rule definition
    * @param {Object} options - Options
@@ -527,7 +524,7 @@ class ValidationService {
 
   /**
    * Get validation history for content
-   * 
+   *
    * @param {string} contentType - Type of content
    * @param {number} contentId - ID of the content
    * @param {Object} options - Query options
@@ -550,7 +547,11 @@ class ValidationService {
     return await ValidationResult.findAll({
       where,
       include: [
-        { model: ValidationRule, as: 'rule', attributes: ['id', 'ruleName', 'severity'] },
+        {
+          model: ValidationRule,
+          as: 'rule',
+          attributes: ['id', 'ruleName', 'severity'],
+        },
       ],
       order: [['validated_at', 'DESC']],
       limit,
@@ -559,7 +560,7 @@ class ValidationService {
 
   /**
    * Get validation summary for academy
-   * 
+   *
    * @param {number} academyId - ID of the academy
    * @param {Object} options - Query options
    * @param {string} options.contentType - Filter by content type
@@ -632,7 +633,7 @@ class ValidationService {
 
   /**
    * Validate rule definition structure
-   * 
+   *
    * @param {Object} definition - Rule definition to validate
    * @throws {Error} If rule definition is invalid
    * @private
@@ -646,9 +647,17 @@ class ValidationService {
       throw new Error('Rule definition must have a type');
     }
 
-    const validTypes = ['required_field', 'min_length', 'max_length', 'format', 'custom'];
+    const validTypes = [
+      'required_field',
+      'min_length',
+      'max_length',
+      'format',
+      'custom',
+    ];
     if (!validTypes.includes(definition.type)) {
-      throw new Error(`Invalid rule type: ${definition.type}. Must be one of: ${validTypes.join(', ')}`);
+      throw new Error(
+        `Invalid rule type: ${definition.type}. Must be one of: ${validTypes.join(', ')}`
+      );
     }
 
     // Type-specific validation
@@ -656,15 +665,24 @@ class ValidationService {
       throw new Error('Required field rule must specify a field');
     }
 
-    if (definition.type === 'min_length' && (!definition.field || !definition.minLength)) {
+    if (
+      definition.type === 'min_length' &&
+      (!definition.field || !definition.minLength)
+    ) {
       throw new Error('Min length rule must specify field and minLength');
     }
 
-    if (definition.type === 'max_length' && (!definition.field || !definition.maxLength)) {
+    if (
+      definition.type === 'max_length' &&
+      (!definition.field || !definition.maxLength)
+    ) {
       throw new Error('Max length rule must specify field and maxLength');
     }
 
-    if (definition.type === 'format' && (!definition.field || !definition.pattern)) {
+    if (
+      definition.type === 'format' &&
+      (!definition.field || !definition.pattern)
+    ) {
       throw new Error('Format rule must specify field and pattern');
     }
 

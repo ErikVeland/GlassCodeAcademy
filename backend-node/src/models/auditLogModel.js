@@ -1,5 +1,6 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require('../config/database');
+const { getJSONType } = require('../utils/databaseTypes');
 
 const AuditLog = sequelize.define(
   'AuditLog',
@@ -34,7 +35,7 @@ const AuditLog = sequelize.define(
       field: 'resource_name',
     },
     details: {
-      type: DataTypes.JSONB,
+      type: getJSONType(),
       allowNull: true,
     },
     ipAddress: {

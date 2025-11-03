@@ -42,7 +42,10 @@ const authenticate = async (req, res, next) => {
       // In test environment, accept tokens signed with the fixtures' default secret
       if (process.env.NODE_ENV === 'test') {
         try {
-          decoded = jwt.verify(token, process.env.JWT_SECRET || 'test-secret-key');
+          decoded = jwt.verify(
+            token,
+            process.env.JWT_SECRET || 'test-secret-key'
+          );
         } catch {
           throw verifyErr; // rethrow original error to be handled below
         }

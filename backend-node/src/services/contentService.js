@@ -123,10 +123,12 @@ const getQuizzesByLessonId = async (lessonId) => {
 const createCourse = async (courseData, createdBy) => {
   try {
     // Auto-generate slug from title if not provided
-    const slug = courseData.slug || courseData.title
-      .toLowerCase()
-      .replace(/[^a-z0-9]+/g, '-')
-      .replace(/^-|-$/g, '');
+    const slug =
+      courseData.slug ||
+      courseData.title
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, '-')
+        .replace(/^-|-$/g, '');
 
     // Get the next order number if not provided
     let order = courseData.order;
@@ -164,7 +166,7 @@ const createCourse = async (courseData, createdBy) => {
 const updateCourse = async (id, courseData) => {
   try {
     const course = await Course.findByPk(id);
-    
+
     if (!course) {
       const error = new Error('Course not found');
       error.statusCode = 404;
@@ -192,7 +194,7 @@ const updateCourse = async (id, courseData) => {
 const deleteCourse = async (id) => {
   try {
     const course = await Course.findByPk(id);
-    
+
     if (!course) {
       const error = new Error('Course not found');
       error.statusCode = 404;

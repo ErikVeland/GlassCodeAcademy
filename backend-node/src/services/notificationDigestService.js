@@ -47,7 +47,7 @@ function formatDigestContent(notifications) {
   let html = '<h2>Your Notifications</h2>';
   html += '<ul>';
 
-  notifications.forEach(notification => {
+  notifications.forEach((notification) => {
     html += `<li>
       <strong>${notification.title}</strong>
       <p>${notification.message}</p>
@@ -68,14 +68,14 @@ async function sendDigestEmail(user, notifications) {
   try {
     const subject = `GlassCode Academy Digest - ${notifications.length} Notifications`;
     const content = formatDigestContent(notifications);
-    
+
     await sendEmailNotification(user, subject, content, {
       html: content,
     });
 
-    logger.info('Digest email sent successfully', { 
-      userId: user.id, 
-      notificationCount: notifications.length 
+    logger.info('Digest email sent successfully', {
+      userId: user.id,
+      notificationCount: notifications.length,
     });
   } catch (error) {
     logger.error('Error sending digest email:', error);
@@ -95,17 +95,17 @@ async function processUserDigest(user, frequency) {
     let since;
 
     switch (frequency) {
-    case 'hourly':
-      since = new Date(now.getTime() - 60 * 60 * 1000); // 1 hour ago
-      break;
-    case 'daily':
-      since = new Date(now.getTime() - 24 * 60 * 60 * 1000); // 24 hours ago
-      break;
-    case 'weekly':
-      since = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000); // 7 days ago
-      break;
-    default:
-      throw new Error(`Unsupported frequency: ${frequency}`);
+      case 'hourly':
+        since = new Date(now.getTime() - 60 * 60 * 1000); // 1 hour ago
+        break;
+      case 'daily':
+        since = new Date(now.getTime() - 24 * 60 * 60 * 1000); // 24 hours ago
+        break;
+      case 'weekly':
+        since = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000); // 7 days ago
+        break;
+      default:
+        throw new Error(`Unsupported frequency: ${frequency}`);
     }
 
     // Get unread notifications since the time window
@@ -113,9 +113,9 @@ async function processUserDigest(user, frequency) {
 
     // If no notifications, nothing to send
     if (notifications.length === 0) {
-      logger.info('No notifications to include in digest', { 
-        userId: user.id, 
-        frequency 
+      logger.info('No notifications to include in digest', {
+        userId: user.id,
+        frequency,
       });
       return;
     }
@@ -145,15 +145,17 @@ async function processDigests(frequency) {
       where: {
         digestFrequency: frequency,
       },
-      include: [{
-        model: require('../models').User,
-        as: 'notificationPreferenceUser',
-      }],
+      include: [
+        {
+          model: require('../models').User,
+          as: 'notificationPreferenceUser',
+        },
+      ],
     });
 
-    logger.info('Found users for digest processing', { 
-      frequency, 
-      count: preferences.length 
+    logger.info('Found users for digest processing', {
+      frequency,
+      count: preferences.length,
     });
 
     // Process each user's digest
@@ -185,11 +187,14 @@ async function processDigests(frequency) {
  */
 function scheduleDigests() {
   // Hourly digests
-  setInterval(() => {
-    processDigests('hourly').catch(error => {
-      logger.error('Error in hourly digest processing:', error);
-    });
-  }, 60 * 60 * 1000); // Every hour
+  setInterval(
+    () => {
+      processDigests('hourly').catch((error) => {
+        logger.error('Error in hourly digest processing:', error);
+      });
+    },
+    60 * 60 * 1000
+  ); // Every hour
 
   // Daily digests at midnight
   const runDaily = () => {
@@ -205,7 +210,7 @@ function scheduleDigests() {
     const timeUntilMidnight = nextMidnight.getTime() - now.getTime();
 
     setTimeout(() => {
-      processDigests('daily').catch(error => {
+      processDigests('daily').catch((error) => {
         logger.error('Error in daily digest processing:', error);
       });
       // Schedule next day
@@ -228,7 +233,7 @@ function scheduleDigests() {
       0,
       0
     );
-    
+
     // If today is Sunday and it's already past midnight, schedule for next Sunday
     if (daysUntilSunday === 0 && now.getHours() > 0) {
       nextSunday.setDate(nextSunday.getDate() + 7);
@@ -237,7 +242,7 @@ function scheduleDigests() {
     const timeUntilSunday = nextSunday.getTime() - now.getTime();
 
     setTimeout(() => {
-      processDigests('weekly').catch(error => {
+      processDigests('weekly').catch((error) => {
         logger.error('Error in weekly digest processing:', error);
       });
       // Schedule next week

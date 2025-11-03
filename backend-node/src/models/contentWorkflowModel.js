@@ -1,5 +1,6 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require('../config/database');
+const { getJSONType } = require('../utils/databaseTypes');
 
 const ContentWorkflow = sequelize.define(
   'ContentWorkflow',
@@ -30,7 +31,7 @@ const ContentWorkflow = sequelize.define(
       field: 'workflow_name',
     },
     workflowDefinition: {
-      type: DataTypes.JSONB,
+      type: getJSONType(),
       allowNull: false,
       field: 'workflow_definition',
       comment: 'State machine configuration and rules',

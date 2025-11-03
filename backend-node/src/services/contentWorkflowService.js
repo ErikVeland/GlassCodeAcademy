@@ -1,10 +1,10 @@
 /**
  * Content Workflow Service
- * 
+ *
  * Manages approval workflows for content (courses, modules, lessons, quizzes).
  * Provides workflow creation, state transitions, approval routing, and audit trails.
  * Supports customizable multi-step approval processes per academy.
- * 
+ *
  * @module services/contentWorkflowService
  */
 
@@ -22,7 +22,7 @@ const Academy = require('../models/academyModel');
 class ContentWorkflowService {
   /**
    * Create a new workflow configuration
-   * 
+   *
    * @param {number} academyId - ID of the academy
    * @param {Object} workflowData - Workflow configuration
    * @param {string} workflowData.contentType - Type of content (course, module, lesson, quiz)
@@ -32,7 +32,12 @@ class ContentWorkflowService {
    * @returns {Promise<Object>} Created workflow
    */
   async createWorkflow(academyId, workflowData) {
-    const { contentType, workflowName, workflowDefinition, isActive = true } = workflowData;
+    const {
+      contentType,
+      workflowName,
+      workflowDefinition,
+      isActive = true,
+    } = workflowData;
 
     // Validate workflow definition
     this.validateWorkflowDefinition(workflowDefinition);
@@ -47,7 +52,9 @@ class ContentWorkflowService {
     });
 
     if (existingWorkflow) {
-      throw new Error(`Active workflow already exists for ${contentType} in this academy`);
+      throw new Error(
+        `Active workflow already exists for ${contentType} in this academy`
+      );
     }
 
     const workflow = await ContentWorkflow.create({
@@ -63,21 +70,19 @@ class ContentWorkflowService {
 
   /**
    * Get workflow by ID
-   * 
+   *
    * @param {number} workflowId - ID of the workflow
    * @returns {Promise<Object|null>} Workflow with associations
    */
   async getWorkflowById(workflowId) {
     return await ContentWorkflow.findByPk(workflowId, {
-      include: [
-        { model: Academy, as: 'academy', attributes: ['id', 'name'] },
-      ],
+      include: [{ model: Academy, as: 'academy', attributes: ['id', 'name'] }],
     });
   }
 
   /**
    * Get active workflow for content type in academy
-   * 
+   *
    * @param {number} academyId - ID of the academy
    * @param {string} contentType - Type of content
    * @returns {Promise<Object|null>} Active workflow or null
@@ -89,15 +94,13 @@ class ContentWorkflowService {
         contentType: contentType.toLowerCase(),
         isActive: true,
       },
-      include: [
-        { model: Academy, as: 'academy', attributes: ['id', 'name'] },
-      ],
+      include: [{ model: Academy, as: 'academy', attributes: ['id', 'name'] }],
     });
   }
 
   /**
    * Get all workflows for an academy
-   * 
+   *
    * @param {number} academyId - ID of the academy
    * @param {Object} options - Query options
    * @param {boolean} options.activeOnly - Return only active workflows
@@ -119,7 +122,7 @@ class ContentWorkflowService {
 
   /**
    * Update workflow configuration
-   * 
+   *
    * @param {number} workflowId - ID of the workflow
    * @param {Object} updates - Fields to update
    * @returns {Promise<Object>} Updated workflow
@@ -141,7 +144,7 @@ class ContentWorkflowService {
 
   /**
    * Deactivate a workflow
-   * 
+   *
    * @param {number} workflowId - ID of the workflow
    * @returns {Promise<Object>} Updated workflow
    */
@@ -151,7 +154,7 @@ class ContentWorkflowService {
 
   /**
    * Submit content for approval
-   * 
+   *
    * @param {string} contentType - Type of content
    * @param {number} contentId - ID of the content
    * @param {string} versionId - UUID of the version to approve
@@ -161,7 +164,13 @@ class ContentWorkflowService {
    * @param {string} options.comments - Submission comments
    * @returns {Promise<Object>} Created approval request
    */
-  async submitForApproval(contentType, contentId, versionId, requestedBy, options = {}) {
+  async submitForApproval(
+    contentType,
+    contentId,
+    versionId,
+    requestedBy,
+    options = {}
+  ) {
     const { assignedTo, comments } = options;
 
     // Get the version to verify it exists
@@ -171,13 +180,17 @@ class ContentWorkflowService {
     }
 
     // Get the active workflow for this content type
-    const workflow = await this.getActiveWorkflow(version.academyId, contentType);
+    const workflow = await this.getActiveWorkflow(
+      version.academyId,
+      contentType
+    );
     if (!workflow) {
       throw new Error(`No active workflow found for ${contentType}`);
     }
 
     // Get the initial state from workflow definition
-    const initialState = workflow.workflowDefinition.initialState || 'submitted';
+    const initialState =
+      workflow.workflowDefinition.initialState || 'submitted';
 
     // Check if there's already a pending approval for this version
     const existingApproval = await ContentApproval.findOne({
@@ -208,15 +221,23 @@ class ContentWorkflowService {
 
   /**
    * Get approval request by ID
-   * 
+   *
    * @param {number} approvalId - ID of the approval
    * @returns {Promise<Object|null>} Approval with associations
    */
   async getApprovalById(approvalId) {
     return await ContentApproval.findByPk(approvalId, {
       include: [
-        { model: User, as: 'requester', attributes: ['id', 'username', 'email'] },
-        { model: User, as: 'reviewer', attributes: ['id', 'username', 'email'] },
+        {
+          model: User,
+          as: 'requester',
+          attributes: ['id', 'username', 'email'],
+        },
+        {
+          model: User,
+          as: 'reviewer',
+          attributes: ['id', 'username', 'email'],
+        },
         {
           model: ContentVersion,
           as: 'version',
@@ -228,7 +249,7 @@ class ContentWorkflowService {
 
   /**
    * Get approval requests for content
-   * 
+   *
    * @param {string} contentType - Type of content
    * @param {number} contentId - ID of the content
    * @param {Object} options - Query options
@@ -250,8 +271,16 @@ class ContentWorkflowService {
     return await ContentApproval.findAll({
       where,
       include: [
-        { model: User, as: 'requester', attributes: ['id', 'username', 'email'] },
-        { model: User, as: 'reviewer', attributes: ['id', 'username', 'email'] },
+        {
+          model: User,
+          as: 'requester',
+          attributes: ['id', 'username', 'email'],
+        },
+        {
+          model: User,
+          as: 'reviewer',
+          attributes: ['id', 'username', 'email'],
+        },
         {
           model: ContentVersion,
           as: 'version',
@@ -264,7 +293,7 @@ class ContentWorkflowService {
 
   /**
    * Get pending approvals for a reviewer
-   * 
+   *
    * @param {number} reviewerId - ID of the reviewer
    * @param {Object} options - Query options
    * @param {number} options.academyId - Filter by academy
@@ -285,7 +314,13 @@ class ContentWorkflowService {
       {
         model: ContentVersion,
         as: 'version',
-        attributes: ['id', 'versionNumber', 'status', 'changeSummary', 'academyId'],
+        attributes: [
+          'id',
+          'versionNumber',
+          'status',
+          'changeSummary',
+          'academyId',
+        ],
       },
     ];
 
@@ -294,13 +329,14 @@ class ContentWorkflowService {
       include[1].where = { academyId };
     }
 
-    const { rows: approvals, count: total } = await ContentApproval.findAndCountAll({
-      where,
-      include,
-      order: [['created_at', 'ASC']],
-      limit,
-      offset,
-    });
+    const { rows: approvals, count: total } =
+      await ContentApproval.findAndCountAll({
+        where,
+        include,
+        order: [['created_at', 'ASC']],
+        limit,
+        offset,
+      });
 
     return {
       approvals,
@@ -313,7 +349,7 @@ class ContentWorkflowService {
 
   /**
    * Approve content
-   * 
+   *
    * @param {number} approvalId - ID of the approval
    * @param {number} reviewerId - ID of the reviewer
    * @param {Object} options - Approval options
@@ -353,7 +389,9 @@ class ContentWorkflowService {
 
       // Update version status if publishing immediately
       if (publishImmediately) {
-        const version = await ContentVersion.findByPk(approval.versionId, { transaction });
+        const version = await ContentVersion.findByPk(approval.versionId, {
+          transaction,
+        });
         if (version) {
           await version.update({ status: 'published' }, { transaction });
         }
@@ -370,7 +408,7 @@ class ContentWorkflowService {
 
   /**
    * Reject content
-   * 
+   *
    * @param {number} approvalId - ID of the approval
    * @param {number} reviewerId - ID of the reviewer
    * @param {string} comments - Rejection comments (required)
@@ -406,7 +444,7 @@ class ContentWorkflowService {
 
   /**
    * Reassign approval to another reviewer
-   * 
+   *
    * @param {number} approvalId - ID of the approval
    * @param {number} newReviewerId - ID of the new reviewer
    * @returns {Promise<Object>} Updated approval
@@ -433,7 +471,7 @@ class ContentWorkflowService {
 
   /**
    * Get approval statistics for academy
-   * 
+   *
    * @param {number} academyId - ID of the academy
    * @param {Object} options - Query options
    * @param {Date} options.startDate - Start date for statistics
@@ -492,7 +530,7 @@ class ContentWorkflowService {
 
   /**
    * Validate workflow definition structure
-   * 
+   *
    * @param {Object} definition - Workflow definition to validate
    * @throws {Error} If workflow definition is invalid
    * @private
@@ -525,7 +563,9 @@ class ContentWorkflowService {
       }
 
       if (!definition.states.includes(transition.from)) {
-        throw new Error(`Transition ${index}: 'from' state not in states array`);
+        throw new Error(
+          `Transition ${index}: 'from' state not in states array`
+        );
       }
 
       if (!definition.states.includes(transition.to)) {

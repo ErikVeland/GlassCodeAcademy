@@ -1,5 +1,6 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require('../config/database');
+const { getJSONType } = require('../utils/databaseTypes');
 const Lesson = require('./lessonModel');
 
 const LessonQuiz = sequelize.define(
@@ -36,7 +37,7 @@ const LessonQuiz = sequelize.define(
       defaultValue: 'Beginner',
     },
     choices: {
-      type: DataTypes.JSONB,
+      type: getJSONType(),
       allowNull: true,
     },
     fixedChoiceOrder: {
@@ -45,11 +46,11 @@ const LessonQuiz = sequelize.define(
       field: 'fixed_choice_order',
     },
     choiceLabels: {
-      type: DataTypes.JSONB,
+      type: getJSONType(),
       field: 'choice_labels',
     },
     acceptedAnswers: {
-      type: DataTypes.JSONB,
+      type: getJSONType(),
       field: 'accepted_answers',
     },
     explanation: {
@@ -61,7 +62,7 @@ const LessonQuiz = sequelize.define(
       field: 'industry_context',
     },
     tags: {
-      type: DataTypes.JSONB,
+      type: getJSONType(),
     },
     questionType: {
       type: DataTypes.STRING,
@@ -82,7 +83,7 @@ const LessonQuiz = sequelize.define(
       field: 'quiz_type',
     },
     sources: {
-      type: DataTypes.JSONB,
+      type: getJSONType(),
     },
     sortOrder: {
       type: DataTypes.INTEGER,

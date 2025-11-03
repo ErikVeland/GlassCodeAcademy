@@ -10,7 +10,7 @@
  */
 function welcomeTemplate(data) {
   const { userName } = data;
-  
+
   return {
     subject: 'Welcome to GlassCode Academy!',
     text: `Hi ${userName},
@@ -26,7 +26,7 @@ The GlassCode Academy Team`,
 <p>Welcome to GlassCode Academy! We're excited to have you join our learning community.</p>
 <p>Get started by exploring our courses and begin your journey to mastering code.</p>
 <p>Best regards,<br/>
-The GlassCode Academy Team</p>`
+The GlassCode Academy Team</p>`,
   };
 }
 
@@ -37,14 +37,14 @@ The GlassCode Academy Team</p>`
  */
 function lessonCompletionTemplate(data) {
   const { userName, lessonTitle, courseTitle, nextLessonTitle } = data;
-  
+
   return {
     subject: `Lesson Completed: ${lessonTitle}`,
     text: `Hi ${userName},
 
 Congratulations on completing "${lessonTitle}" in "${courseTitle}"!
 
-${nextLessonTitle ? `Continue your learning journey with "${nextLessonTitle}".` : 'Check out what\'s next in your course.'}
+${nextLessonTitle ? `Continue your learning journey with "${nextLessonTitle}".` : "Check out what's next in your course."}
 
 Keep up the great work!
 
@@ -53,10 +53,10 @@ The GlassCode Academy Team`,
     html: `<h1>Lesson Completed!</h1>
 <p>Hi ${userName},</p>
 <p>Congratulations on completing <strong>"${lessonTitle}"</strong> in <strong>"${courseTitle}"</strong>!</p>
-${nextLessonTitle ? `<p>Continue your learning journey with <strong>"${nextLessonTitle}"</strong>.</p>` : '<p>Check out what\'s next in your course.</p>'}
+${nextLessonTitle ? `<p>Continue your learning journey with <strong>"${nextLessonTitle}"</strong>.</p>` : "<p>Check out what's next in your course.</p>"}
 <p>Keep up the great work!</p>
 <p>Best regards,<br/>
-The GlassCode Academy Team</p>`
+The GlassCode Academy Team</p>`,
   };
 }
 
@@ -67,12 +67,12 @@ The GlassCode Academy Team</p>`
  */
 function quizResultTemplate(data) {
   const { userName, quizTitle, score, passed, courseTitle } = data;
-  
+
   const resultText = passed ? 'passed' : 'did not pass';
-  const encouragement = passed 
-    ? 'Great job! Keep up the excellent work.' 
-    : 'Don\'t worry, you can review the material and try again.';
-  
+  const encouragement = passed
+    ? 'Great job! Keep up the excellent work.'
+    : "Don't worry, you can review the material and try again.";
+
   return {
     subject: `Quiz Result: ${quizTitle}`,
     text: `Hi ${userName},
@@ -91,7 +91,7 @@ The GlassCode Academy Team`,
 <p>${encouragement}</p>
 <p>View your full results in your dashboard.</p>
 <p>Best regards,<br/>
-The GlassCode Academy Team</p>`
+The GlassCode Academy Team</p>`,
   };
 }
 
@@ -102,7 +102,7 @@ The GlassCode Academy Team</p>`
  */
 function newCourseTemplate(data) {
   const { userName, courseTitle, courseDescription } = data;
-  
+
   return {
     subject: `New Course Available: ${courseTitle}`,
     text: `Hi ${userName},
@@ -121,7 +121,7 @@ The GlassCode Academy Team`,
 <p>${courseDescription}</p>
 <p><a href="/courses">Enroll now</a> and start learning today.</p>
 <p>Best regards,<br/>
-The GlassCode Academy Team</p>`
+The GlassCode Academy Team</p>`,
   };
 }
 
@@ -132,7 +132,7 @@ The GlassCode Academy Team</p>`
  */
 function certificateEarnedTemplate(data) {
   const { userName, courseTitle, certificateId } = data;
-  
+
   return {
     subject: `Certificate Earned: ${courseTitle}`,
     text: `Hi ${userName},
@@ -151,7 +151,7 @@ The GlassCode Academy Team`,
 <p><a href="/dashboard/certificates/${certificateId}">View and download your certificate</a> from your dashboard.</p>
 <p>Congratulations on your achievement!</p>
 <p>Best regards,<br/>
-The GlassCode Academy Team</p>`
+The GlassCode Academy Team</p>`,
   };
 }
 
@@ -162,7 +162,7 @@ The GlassCode Academy Team</p>`
  */
 function forumReplyTemplate(data) {
   const { userName, postTitle, replierName, replyContent } = data;
-  
+
   return {
     subject: `New Reply to Your Post: ${postTitle}`,
     text: `Hi ${userName},
@@ -181,7 +181,7 @@ The GlassCode Academy Team`,
 <blockquote>"${replyContent}"</blockquote>
 <p><a href="/forum/posts">View the full discussion</a> in the forum.</p>
 <p>Best regards,<br/>
-The GlassCode Academy Team</p>`
+The GlassCode Academy Team</p>`,
   };
 }
 

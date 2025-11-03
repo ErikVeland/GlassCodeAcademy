@@ -1,5 +1,6 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require('../config/database');
+const { getJSONType } = require('../utils/databaseTypes');
 
 const ContentImport = sequelize.define(
   'ContentImport',
@@ -40,7 +41,14 @@ const ContentImport = sequelize.define(
       comment: 'How to handle conflicts: skip, overwrite, merge, create_new',
     },
     status: {
-      type: DataTypes.ENUM('pending', 'preview', 'executing', 'completed', 'failed', 'rolled_back'),
+      type: DataTypes.ENUM(
+        'pending',
+        'preview',
+        'executing',
+        'completed',
+        'failed',
+        'rolled_back'
+      ),
       defaultValue: 'pending',
       allowNull: false,
     },
@@ -63,14 +71,14 @@ const ContentImport = sequelize.define(
       field: 'items_failed',
     },
     changeSummary: {
-      type: DataTypes.JSONB,
+      type: getJSONType(),
       allowNull: true,
       defaultValue: {},
       field: 'change_summary',
       comment: 'Summary of changes made',
     },
     errorLog: {
-      type: DataTypes.JSONB,
+      type: getJSONType(),
       allowNull: true,
       defaultValue: [],
       field: 'error_log',

@@ -1,5 +1,6 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require('../config/database');
+const { getJSONType } = require('../utils/databaseTypes');
 
 const Certificate = sequelize.define(
   'Certificate',
@@ -75,7 +76,7 @@ const Certificate = sequelize.define(
       comment: 'Number of hours spent on the course',
     },
     metadata: {
-      type: DataTypes.JSONB,
+      type: getJSONType(),
       allowNull: true,
       comment: 'Additional metadata about the certificate',
     },

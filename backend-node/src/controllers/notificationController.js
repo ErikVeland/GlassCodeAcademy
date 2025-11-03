@@ -169,7 +169,9 @@ async function updateNotificationPreferences(req, res) {
     res.json({
       success: true,
       data: preference,
-      message: created ? 'Preferences created successfully' : 'Preferences updated successfully',
+      message: created
+        ? 'Preferences created successfully'
+        : 'Preferences updated successfully',
     });
   } catch (error) {
     logger.error('Error updating notification preferences:', error);
@@ -188,12 +190,17 @@ async function updateNotificationPreferences(req, res) {
 async function sendTestNotification(req, res) {
   try {
     const { title, message, type } = req.body;
-    
+
     // Create in-app notification
-    const notification = await createInAppNotification(req.user.id, title, message, {
-      type: type || 'info',
-      category: 'test',
-    });
+    const notification = await createInAppNotification(
+      req.user.id,
+      title,
+      message,
+      {
+        type: type || 'info',
+        category: 'test',
+      }
+    );
 
     res.json({
       success: true,
@@ -233,7 +240,10 @@ async function triggerUserDigest(req, res) {
 
     // Process digest for each frequency
     for (const preference of preferences) {
-      if (preference.digestFrequency && preference.digestFrequency !== 'immediately') {
+      if (
+        preference.digestFrequency &&
+        preference.digestFrequency !== 'immediately'
+      ) {
         await processUserDigest(user, preference.digestFrequency);
       }
     }

@@ -279,7 +279,10 @@ const errorHandler = (err, req, res, _next) => {
       return res.status(404).json({
         success: false,
         message: err.message || 'Resource not found',
-        error: { code: 'RESOURCE_NOT_FOUND', message: err.message || 'Resource not found' },
+        error: {
+          code: 'RESOURCE_NOT_FOUND',
+          message: err.message || 'Resource not found',
+        },
         type: 'https://glasscode/errors/resource-not-found',
         status: 404,
         instance: req.originalUrl,

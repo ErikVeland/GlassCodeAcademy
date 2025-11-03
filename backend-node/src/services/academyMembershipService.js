@@ -1,4 +1,10 @@
-const { AcademyMembership, User, Role, Academy, Department } = require('../models');
+const {
+  AcademyMembership,
+  User,
+  Role,
+  Academy,
+  Department,
+} = require('../models');
 const { Op } = require('sequelize');
 
 /**
@@ -12,7 +18,8 @@ class AcademyMembershipService {
    * @returns {Promise<Object>} Created membership
    */
   async addMember(membershipData) {
-    const { academyId, userId, roleId, departmentId, customPermissions } = membershipData;
+    const { academyId, userId, roleId, departmentId, customPermissions } =
+      membershipData;
 
     // Verify academy exists
     const academy = await Academy.findByPk(academyId);
@@ -63,10 +70,18 @@ class AcademyMembershipService {
   async getMembershipById(membershipId) {
     const membership = await AcademyMembership.findByPk(membershipId, {
       include: [
-        { model: User, as: 'user', attributes: ['id', 'email', 'firstName', 'lastName'] },
+        {
+          model: User,
+          as: 'user',
+          attributes: ['id', 'email', 'firstName', 'lastName'],
+        },
         { model: Role, as: 'role', attributes: ['id', 'name'] },
         { model: Academy, as: 'academy', attributes: ['id', 'name', 'slug'] },
-        { model: Department, as: 'department', attributes: ['id', 'name', 'slug'] },
+        {
+          model: Department,
+          as: 'department',
+          attributes: ['id', 'name', 'slug'],
+        },
       ],
     });
 
@@ -118,16 +133,20 @@ class AcademyMembershipService {
         attributes: ['id', 'email', 'firstName', 'lastName'],
         where: search
           ? {
-            [Op.or]: [
-              { email: { [Op.iLike]: `%${search}%` } },
-              { firstName: { [Op.iLike]: `%${search}%` } },
-              { lastName: { [Op.iLike]: `%${search}%` } },
-            ],
-          }
+              [Op.or]: [
+                { email: { [Op.iLike]: `%${search}%` } },
+                { firstName: { [Op.iLike]: `%${search}%` } },
+                { lastName: { [Op.iLike]: `%${search}%` } },
+              ],
+            }
           : undefined,
       },
       { model: Role, as: 'role', attributes: ['id', 'name'] },
-      { model: Department, as: 'department', attributes: ['id', 'name', 'slug'] },
+      {
+        model: Department,
+        as: 'department',
+        attributes: ['id', 'name', 'slug'],
+      },
     ];
 
     const { count, rows } = await AcademyMembership.findAndCountAll({
@@ -172,7 +191,11 @@ class AcademyMembershipService {
           attributes: ['id', 'name', 'slug', 'description', 'isPublished'],
         },
         { model: Role, as: 'role', attributes: ['id', 'name'] },
-        { model: Department, as: 'department', attributes: ['id', 'name', 'slug'] },
+        {
+          model: Department,
+          as: 'department',
+          attributes: ['id', 'name', 'slug'],
+        },
       ],
       order: [['joinedAt', 'DESC']],
     });
@@ -205,7 +228,9 @@ class AcademyMembershipService {
     if (updateData.departmentId) {
       const department = await Department.findByPk(updateData.departmentId);
       if (!department) {
-        throw new Error(`Department with ID ${updateData.departmentId} not found`);
+        throw new Error(
+          `Department with ID ${updateData.departmentId} not found`
+        );
       }
     }
 
@@ -269,7 +294,11 @@ class AcademyMembershipService {
       where: { userId, academyId },
       include: [
         { model: Role, as: 'role', attributes: ['id', 'name'] },
-        { model: Department, as: 'department', attributes: ['id', 'name', 'slug'] },
+        {
+          model: Department,
+          as: 'department',
+          attributes: ['id', 'name', 'slug'],
+        },
       ],
     });
 
@@ -300,12 +329,13 @@ class AcademyMembershipService {
    * @returns {Promise<Object>} Membership statistics
    */
   async getAcademyMembershipStatistics(academyId) {
-    const [totalMembers, activeMembers, pendingMembers, suspendedMembers] = await Promise.all([
-      AcademyMembership.count({ where: { academyId } }),
-      AcademyMembership.count({ where: { academyId, status: 'active' } }),
-      AcademyMembership.count({ where: { academyId, status: 'pending' } }),
-      AcademyMembership.count({ where: { academyId, status: 'suspended' } }),
-    ]);
+    const [totalMembers, activeMembers, pendingMembers, suspendedMembers] =
+      await Promise.all([
+        AcademyMembership.count({ where: { academyId } }),
+        AcademyMembership.count({ where: { academyId, status: 'active' } }),
+        AcademyMembership.count({ where: { academyId, status: 'pending' } }),
+        AcademyMembership.count({ where: { academyId, status: 'suspended' } }),
+      ]);
 
     return {
       academyId,

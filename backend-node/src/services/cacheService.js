@@ -25,7 +25,7 @@ class CacheService {
     this.client = null;
     this.isEnabled = process.env.REDIS_ENABLED === 'true';
     this.defaultTTL = parseInt(process.env.REDIS_TTL || '3600'); // 1 hour default
-    
+
     if (this.isEnabled) {
       this.initialize();
     } else {
@@ -125,7 +125,7 @@ class CacheService {
     try {
       const serialized = JSON.stringify(value);
       const expiry = ttl || this.defaultTTL;
-      
+
       await this.client.setEx(key, expiry, serialized);
       logger.debug('Cache set', { key, ttl: expiry });
       return true;
@@ -170,12 +170,15 @@ class CacheService {
       if (keys.length === 0) {
         return 0;
       }
-      
+
       await this.client.del(keys);
       logger.debug('Cache pattern deleted', { pattern, count: keys.length });
       return keys.length;
     } catch (error) {
-      logger.error('Cache pattern delete error', { pattern, error: error.message });
+      logger.error('Cache pattern delete error', {
+        pattern,
+        error: error.message,
+      });
       return 0;
     }
   }
@@ -245,7 +248,7 @@ class CacheService {
   async invalidateUserPermissions(userId, academyId = null) {
     if (academyId) {
       const key = this.generateKey('user', userId, `permissions:${academyId}`);
-      return await this.del(key) ? 1 : 0;
+      return (await this.del(key)) ? 1 : 0;
     } else {
       const pattern = this.generateKey('user', userId, 'permissions:*');
       return await this.delPattern(pattern);
@@ -285,7 +288,7 @@ class CacheService {
   async invalidateMembership(userId, academyId = null) {
     if (academyId) {
       const key = this.generateKey('membership', userId, academyId);
-      return await this.del(key) ? 1 : 0;
+      return (await this.del(key)) ? 1 : 0;
     } else {
       const pattern = this.generateKey('membership', userId, '*');
       return await this.delPattern(pattern);
@@ -347,7 +350,7 @@ class CacheService {
       const info = await this.client.info('stats');
       const lines = info.split('\r\n');
       const stats = {};
-      
+
       lines.forEach((line) => {
         if (line.includes(':')) {
           const [key, value] = line.split(':');

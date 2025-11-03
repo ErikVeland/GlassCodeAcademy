@@ -15,19 +15,10 @@ const { authorizeRoles } = require('../middleware/rbacMiddleware');
 const router = express.Router();
 
 // Public routes
-router.get(
-  '/',
-  generalLimiter,
-  getAllBadgesController
-);
+router.get('/', generalLimiter, getAllBadgesController);
 
 // User routes (authenticated)
-router.get(
-  '/my-badges',
-  authenticate,
-  generalLimiter,
-  getUserBadgesController
-);
+router.get('/my-badges', authenticate, generalLimiter, getUserBadgesController);
 
 // Get badges for a specific user (public or admin)
 router.get(

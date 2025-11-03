@@ -20,10 +20,7 @@ async function getPublishedAnnouncements(options = {}) {
     const announcements = await Announcement.findAll({
       where: {
         isPublished: true,
-        [Op.or]: [
-          { expiresAt: null },
-          { expiresAt: { [Op.gt]: new Date() } },
-        ],
+        [Op.or]: [{ expiresAt: null }, { expiresAt: { [Op.gt]: new Date() } }],
       },
       include: [
         {
@@ -32,7 +29,10 @@ async function getPublishedAnnouncements(options = {}) {
           attributes: ['id', 'name', 'email'],
         },
       ],
-      order: [['priority', 'DESC'], ['publishedAt', 'DESC']],
+      order: [
+        ['priority', 'DESC'],
+        ['publishedAt', 'DESC'],
+      ],
       limit,
       offset,
     });
@@ -256,12 +256,17 @@ async function sendAnnouncementNotification(announcement) {
     // Send notification to each user
     for (const user of users) {
       try {
-        await sendNotification(user.id, announcement.title, announcement.content, {
-          category: 'announcement',
-          type: announcement.type || 'info',
-          entityId: announcement.id,
-          entityType: 'announcement',
-        });
+        await sendNotification(
+          user.id,
+          announcement.title,
+          announcement.content,
+          {
+            category: 'announcement',
+            type: announcement.type || 'info',
+            entityId: announcement.id,
+            entityType: 'announcement',
+          }
+        );
       } catch (userError) {
         logger.error('Error sending announcement notification to user:', {
           userId: user.id,
@@ -271,9 +276,9 @@ async function sendAnnouncementNotification(announcement) {
       }
     }
 
-    logger.info('Announcement notifications sent', { 
-      announcementId: announcement.id, 
-      userCount: users.length 
+    logger.info('Announcement notifications sent', {
+      announcementId: announcement.id,
+      userCount: users.length,
     });
   } catch (error) {
     logger.error('Error sending announcement notifications:', error);

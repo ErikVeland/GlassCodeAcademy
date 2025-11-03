@@ -12,7 +12,8 @@ class DepartmentService {
    * @returns {Promise<Object>} Created department
    */
   async createDepartment(departmentData) {
-    const { academyId, parentId, name, slug, description, managerId } = departmentData;
+    const { academyId, parentId, name, slug, description, managerId } =
+      departmentData;
 
     // Verify academy exists
     const academy = await Academy.findByPk(academyId);
@@ -26,7 +27,9 @@ class DepartmentService {
     });
 
     if (existingDepartment) {
-      throw new Error(`Department with slug '${slug}' already exists in this academy`);
+      throw new Error(
+        `Department with slug '${slug}' already exists in this academy`
+      );
     }
 
     // Verify parent department if specified
@@ -36,7 +39,9 @@ class DepartmentService {
       });
 
       if (!parentDepartment) {
-        throw new Error(`Parent department with ID ${parentId} not found in this academy`);
+        throw new Error(
+          `Parent department with ID ${parentId} not found in this academy`
+        );
       }
     }
 
@@ -72,7 +77,11 @@ class DepartmentService {
       include: [
         { model: Academy, as: 'academy', attributes: ['id', 'name', 'slug'] },
         { model: Department, as: 'parent', attributes: ['id', 'name', 'slug'] },
-        { model: User, as: 'manager', attributes: ['id', 'email', 'firstName', 'lastName'] },
+        {
+          model: User,
+          as: 'manager',
+          attributes: ['id', 'email', 'firstName', 'lastName'],
+        },
       ],
     });
 
@@ -107,7 +116,11 @@ class DepartmentService {
       where,
       include: [
         { model: Department, as: 'parent', attributes: ['id', 'name', 'slug'] },
-        { model: User, as: 'manager', attributes: ['id', 'email', 'firstName', 'lastName'] },
+        {
+          model: User,
+          as: 'manager',
+          attributes: ['id', 'email', 'firstName', 'lastName'],
+        },
       ],
       order: [['name', 'ASC']],
     });
@@ -133,7 +146,7 @@ class DepartmentService {
 
       for (const department of departments) {
         const children = await this.getDepartmentTree(academyId, department.id);
-        
+
         tree.push({
           ...department.toJSON(),
           children,
@@ -159,7 +172,9 @@ class DepartmentService {
       path.unshift(currentDepartment);
 
       if (currentDepartment.parentId) {
-        currentDepartment = await this.getDepartmentById(currentDepartment.parentId);
+        currentDepartment = await this.getDepartmentById(
+          currentDepartment.parentId
+        );
       } else {
         currentDepartment = null;
       }
@@ -212,15 +227,22 @@ class DepartmentService {
       });
 
       if (existingDepartment) {
-        throw new Error(`Department with slug '${updateData.slug}' already exists in this academy`);
+        throw new Error(
+          `Department with slug '${updateData.slug}' already exists in this academy`
+        );
       }
     }
 
     // Prevent circular references in parent-child relationships
     if (updateData.parentId && updateData.parentId !== department.parentId) {
-      const isDescendant = await this.isDescendant(departmentId, updateData.parentId);
+      const isDescendant = await this.isDescendant(
+        departmentId,
+        updateData.parentId
+      );
       if (isDescendant) {
-        throw new Error('Cannot set parent to a descendant department (circular reference)');
+        throw new Error(
+          'Cannot set parent to a descendant department (circular reference)'
+        );
       }
     }
 
@@ -250,9 +272,13 @@ class DepartmentService {
       }
     } else {
       // Check if department has children
-      const childCount = await Department.count({ where: { parentId: departmentId } });
+      const childCount = await Department.count({
+        where: { parentId: departmentId },
+      });
       if (childCount > 0) {
-        throw new Error('Cannot delete department with children. Delete children first or use deleteChildren option.');
+        throw new Error(
+          'Cannot delete department with children. Delete children first or use deleteChildren option.'
+        );
       }
     }
 
@@ -302,7 +328,11 @@ class DepartmentService {
     const { count, rows } = await AcademyMembership.findAndCountAll({
       where: { departmentId },
       include: [
-        { model: User, as: 'user', attributes: ['id', 'email', 'firstName', 'lastName'] },
+        {
+          model: User,
+          as: 'user',
+          attributes: ['id', 'email', 'firstName', 'lastName'],
+        },
       ],
       limit,
       offset,
@@ -328,7 +358,7 @@ class DepartmentService {
    */
   async isDescendant(departmentId, potentialAncestorId) {
     const path = await this.getDepartmentPath(departmentId);
-    return path.some(dept => dept.id === potentialAncestorId);
+    return path.some((dept) => dept.id === potentialAncestorId);
   }
 
   /**

@@ -3,6 +3,7 @@ const {
   getLessonsByModuleId,
   getAllModules,
 } = require('../services/contentService');
+const cacheService = require('../services/cacheService');
 const { Module, Lesson, LessonQuiz } = require('../models');
 const {
   resolveSlug,
@@ -33,11 +34,33 @@ const getAllModulesController = async (req, res, next) => {
     logger.info('Fetching all published modules', {
       correlationId: req.correlationId,
     });
+
+    // Try to get from cache
+    const cacheKey = 'modules:all';
+    const cachedModules = await cacheService.get(cacheKey);
+    if (cachedModules) {
+      logger.info('Modules retrieved from cache', {
+        count: cachedModules.length,
+        correlationId: req.correlationId,
+      });
+      const successResponse = {
+        type: 'https://glasscode/errors/success',
+        title: 'Success',
+        status: 200,
+        data: cachedModules,
+        meta: { cached: true },
+      };
+      return res.status(200).json(successResponse);
+    }
+
     const modules = await getAllModules();
     logger.info('Modules fetched successfully', {
       count: modules.length,
       correlationId: req.correlationId,
     });
+
+    // Cache for 30 minutes
+    await cacheService.set(cacheKey, modules, 1800);
 
     const successResponse = {
       type: 'https://glasscode/errors/success',
@@ -67,6 +90,24 @@ const getModuleByIdController = async (req, res, next) => {
       correlationId: req.correlationId,
     });
 
+    // Try to get from cache
+    const cacheKey = `module:${id}`;
+    const cachedModule = await cacheService.get(cacheKey);
+    if (cachedModule) {
+      logger.info('Module retrieved from cache', {
+        moduleId: id,
+        correlationId: req.correlationId,
+      });
+      const successResponse = {
+        type: 'https://glasscode/errors/success',
+        title: 'Success',
+        status: 200,
+        data: cachedModule,
+        meta: { cached: true },
+      };
+      return res.status(200).json(successResponse);
+    }
+
     const module = await getModuleById(id);
 
     if (!module) {
@@ -91,6 +132,9 @@ const getModuleByIdController = async (req, res, next) => {
       moduleId: id,
       correlationId: req.correlationId,
     });
+
+    // Cache for 1 hour
+    await cacheService.set(cacheKey, module, 3600);
 
     const successResponse = {
       type: 'https://glasscode/errors/success',
@@ -121,6 +165,25 @@ const getLessonsByModuleIdController = async (req, res, next) => {
       correlationId: req.correlationId,
     });
 
+    // Try to get from cache
+    const cacheKey = `module:${moduleId}:lessons`;
+    const cachedLessons = await cacheService.get(cacheKey);
+    if (cachedLessons) {
+      logger.info('Lessons retrieved from cache', {
+        moduleId,
+        count: cachedLessons.length,
+        correlationId: req.correlationId,
+      });
+      const successResponse = {
+        type: 'https://glasscode/errors/success',
+        title: 'Success',
+        status: 200,
+        data: cachedLessons,
+        meta: { cached: true },
+      };
+      return res.status(200).json(successResponse);
+    }
+
     const lessons = await getLessonsByModuleId(moduleId);
 
     logger.info('Lessons fetched successfully', {
@@ -128,6 +191,9 @@ const getLessonsByModuleIdController = async (req, res, next) => {
       count: lessons.length,
       correlationId: req.correlationId,
     });
+
+    // Cache for 1 hour
+    await cacheService.set(cacheKey, lessons, 3600);
 
     const successResponse = {
       type: 'https://glasscode/errors/success',

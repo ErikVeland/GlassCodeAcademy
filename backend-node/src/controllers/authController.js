@@ -123,7 +123,8 @@ const loginController = async (req, res, next) => {
     });
 
     if (error.code === 'USER_NOT_FOUND') {
-      const simpleTestMode = (process.env.SIMPLE_TEST_MODE || '').toLowerCase() === 'true';
+      const simpleTestMode =
+        (process.env.SIMPLE_TEST_MODE || '').toLowerCase() === 'true';
       if (simpleTestMode) {
         const unauthorizedResponse = {
           type: 'https://glasscode/errors/unauthorized',
@@ -149,7 +150,10 @@ const loginController = async (req, res, next) => {
       return res.status(404).json(notFoundResponse);
     }
 
-    if (error.message && error.message.toLowerCase().includes('invalid credentials')) {
+    if (
+      error.message &&
+      error.message.toLowerCase().includes('invalid credentials')
+    ) {
       const unauthorizedResponse = {
         type: 'https://glasscode/errors/unauthorized',
         title: 'Unauthorized',

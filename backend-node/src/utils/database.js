@@ -29,9 +29,7 @@ const initializeDatabase = async () => {
         `Database models synchronized successfully (env="${nodeEnv}", alter=${useAlter}).`
       );
     } else {
-      console.log(
-        'Skipping sequelize.sync; schema managed by migrations.'
-      );
+      console.log('Skipping sequelize.sync; schema managed by migrations.');
     }
     // Create default badges
     await createDefaultBadges();

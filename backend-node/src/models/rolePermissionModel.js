@@ -1,5 +1,6 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require('../config/database');
+const { getJSONType } = require('../utils/databaseTypes');
 
 const RolePermission = sequelize.define(
   'RolePermission',
@@ -38,7 +39,7 @@ const RolePermission = sequelize.define(
       comment: 'Academy context for permission, null for global',
     },
     scope: {
-      type: DataTypes.JSONB,
+      type: getJSONType(),
       allowNull: true,
       defaultValue: {},
       comment: 'Additional scope constraints for permission',

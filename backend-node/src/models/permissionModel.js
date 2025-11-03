@@ -13,7 +13,8 @@ const Permission = sequelize.define(
       type: DataTypes.STRING(100),
       allowNull: false,
       unique: true,
-      comment: 'Unique permission identifier (e.g., content.create, user.manage)',
+      comment:
+        'Unique permission identifier (e.g., content.create, user.manage)',
     },
     resourceType: {
       type: DataTypes.STRING(50),

@@ -1,4 +1,11 @@
-const { getAllCourses, getCourseById, createCourse, updateCourse, deleteCourse } = require('../services/contentService');
+const {
+  getAllCourses,
+  getCourseById,
+  createCourse,
+  updateCourse,
+  deleteCourse,
+} = require('../services/contentService');
+const cacheService = require('../services/cacheService');
 
 const getAllCoursesController = async (req, res, next) => {
   try {
@@ -32,7 +39,33 @@ const getAllCoursesController = async (req, res, next) => {
       return res.status(200).json(successResponse);
     }
 
+    // Generate cache key based on query parameters
+    const page = options.page || 1;
+    const limit = options.limit || 10;
+    const sort = options.sort || 'default';
+    const cacheKey = `courses:all:page:${page}:limit:${limit}:sort:${sort}`;
+
+    // Try to get from cache
+    const cachedData = await cacheService.get(cacheKey);
+    if (cachedData) {
+      const successResponse = {
+        type: 'https://glasscode/errors/success',
+        title: 'Success',
+        status: 200,
+        success: true,
+        data: cachedData.courses,
+        meta: {
+          pagination: cachedData.pagination,
+          cached: true,
+        },
+      };
+      return res.status(200).json(successResponse);
+    }
+
     const result = await getAllCourses(options);
+
+    // Cache the result for 30 minutes
+    await cacheService.set(cacheKey, result, 1800);
 
     const successResponse = {
       type: 'https://glasscode/errors/success',
@@ -56,7 +89,19 @@ const getCourseByIdController = async (req, res, next) => {
   try {
     const { id } = req.params;
 
-    // In test environment, rely on default empty list from GET /api/courses
+    // Try to get from cache
+    const cacheKey = `course:${id}`;
+    const cachedCourse = await cacheService.get(cacheKey);
+    if (cachedCourse) {
+      const successResponse = {
+        type: 'https://glasscode/errors/success',
+        title: 'Success',
+        status: 200,
+        data: cachedCourse,
+        meta: { cached: true },
+      };
+      return res.status(200).json(successResponse);
+    }
 
     const course = await getCourseById(id);
 
@@ -72,6 +117,9 @@ const getCourseByIdController = async (req, res, next) => {
 
       return res.status(404).json(errorResponse);
     }
+
+    // Cache for 1 hour
+    await cacheService.set(cacheKey, course, 3600);
 
     const successResponse = {
       type: 'https://glasscode/errors/success',
@@ -114,6 +162,11 @@ const updateCourseController = async (req, res, next) => {
 
     const course = await updateCourse(id, courseData);
 
+    // Invalidate caches
+    await cacheService.del(`course:${id}`);
+    // Invalidate list caches (wildcard pattern)
+    await cacheService.delPattern('courses:all:*');
+
     const successResponse = {
       type: 'https://glasscode/errors/success',
       title: 'Success',
@@ -132,6 +185,10 @@ const deleteCourseController = async (req, res, next) => {
     const { id } = req.params;
 
     const result = await deleteCourse(id);
+
+    // Invalidate caches
+    await cacheService.del(`course:${id}`);
+    await cacheService.delPattern('courses:all:*');
 
     const successResponse = {
       type: 'https://glasscode/errors/success',

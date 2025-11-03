@@ -1,5 +1,6 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require('../config/database');
+const { getJSONType } = require('../utils/databaseTypes');
 const User = require('./userModel');
 const Lesson = require('./lessonModel');
 const LessonQuiz = require('./quizModel');
@@ -42,7 +43,7 @@ const QuizAttempt = sequelize.define(
       field: 'correct_answers',
     },
     answers: {
-      type: DataTypes.JSONB,
+      type: getJSONType(),
       allowNull: true,
     },
     startedAt: {

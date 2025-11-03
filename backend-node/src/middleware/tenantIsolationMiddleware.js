@@ -37,7 +37,10 @@ const requireAcademyMembership = async (req, res, next) => {
     }
 
     // Check if user is member of academy
-    const isMember = await academyMembershipService.isUserMember(userId, academyId);
+    const isMember = await academyMembershipService.isUserMember(
+      userId,
+      academyId
+    );
 
     if (!isMember) {
       return res.status(403).json({
@@ -51,7 +54,11 @@ const requireAcademyMembership = async (req, res, next) => {
     }
 
     // Attach academy membership to request
-    const membership = await academyMembershipService.getUserMembershipInAcademy(userId, academyId);
+    const membership =
+      await academyMembershipService.getUserMembershipInAcademy(
+        userId,
+        academyId
+      );
     req.academyMembership = membership;
     req.academyId = academyId;
 
@@ -82,7 +89,7 @@ const enforceAcademyScope = async (req, res, next) => {
 
     // Get user's academies
     const memberships = await academyMembershipService.getUserAcademies(userId);
-    const academyIds = memberships.map(m => m.academyId);
+    const academyIds = memberships.map((m) => m.academyId);
 
     // Attach academy IDs to request for query filtering
     req.userAcademyIds = academyIds;
@@ -128,7 +135,10 @@ const validateAcademyAccess = (resourceAcademyIdGetter) => {
       }
 
       // Check if user is member of the resource's academy
-      const isMember = await academyMembershipService.isUserMember(userId, resourceAcademyId);
+      const isMember = await academyMembershipService.isUserMember(
+        userId,
+        resourceAcademyId
+      );
 
       if (!isMember) {
         return res.status(403).json({

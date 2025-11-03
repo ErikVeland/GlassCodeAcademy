@@ -85,13 +85,16 @@ const requireAnyPermission = (permissionNames, options = {}) => {
         ...options.context,
       };
 
-      const permissions = await permissionResolutionService.checkMultiplePermissions(
-        userId,
-        permissionNames,
-        context
-      );
+      const permissions =
+        await permissionResolutionService.checkMultiplePermissions(
+          userId,
+          permissionNames,
+          context
+        );
 
-      const hasAnyPermission = Object.values(permissions).some(hasIt => hasIt);
+      const hasAnyPermission = Object.values(permissions).some(
+        (hasIt) => hasIt
+      );
 
       if (!hasAnyPermission) {
         return res.status(403).json({
@@ -139,13 +142,16 @@ const requireAllPermissions = (permissionNames, options = {}) => {
         ...options.context,
       };
 
-      const permissions = await permissionResolutionService.checkMultiplePermissions(
-        userId,
-        permissionNames,
-        context
-      );
+      const permissions =
+        await permissionResolutionService.checkMultiplePermissions(
+          userId,
+          permissionNames,
+          context
+        );
 
-      const missingPermissions = permissionNames.filter(perm => !permissions[perm]);
+      const missingPermissions = permissionNames.filter(
+        (perm) => !permissions[perm]
+      );
 
       if (missingPermissions.length > 0) {
         return res.status(403).json({
@@ -201,7 +207,9 @@ const requireRole = (roleNames) => {
 
       // Check if user has any of the required roles
       const hasRole = await Promise.all(
-        roles.map(role => permissionResolutionService.hasRole(userId, academyId, role))
+        roles.map((role) =>
+          permissionResolutionService.hasRole(userId, academyId, role)
+        )
       );
 
       if (!hasRole.some(Boolean)) {
@@ -236,7 +244,10 @@ const attachUserPermissions = async (req, res, next) => {
     }
 
     const academyId = req.academyId || req.params.academyId;
-    const permissions = await permissionResolutionService.getUserPermissions(userId, academyId);
+    const permissions = await permissionResolutionService.getUserPermissions(
+      userId,
+      academyId
+    );
 
     req.userPermissions = permissions;
 

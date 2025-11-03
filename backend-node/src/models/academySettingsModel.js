@@ -1,5 +1,6 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require('../config/database');
+const { getJSONType } = require('../utils/databaseTypes');
 
 const AcademySettings = sequelize.define(
   'AcademySettings',
@@ -38,20 +39,20 @@ const AcademySettings = sequelize.define(
       comment: 'Maximum storage in GB, null for unlimited',
     },
     featuresEnabled: {
-      type: DataTypes.JSONB,
+      type: getJSONType(),
       allowNull: true,
       defaultValue: {},
       field: 'features_enabled',
       comment: 'Feature flags and enabled features',
     },
     branding: {
-      type: DataTypes.JSONB,
+      type: getJSONType(),
       allowNull: true,
       defaultValue: {},
       comment: 'Custom branding configuration',
     },
     integrations: {
-      type: DataTypes.JSONB,
+      type: getJSONType(),
       allowNull: true,
       defaultValue: {},
       comment: 'External service integration configs',

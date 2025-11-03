@@ -20,7 +20,17 @@ const ModerationAction = sequelize.define(
       field: 'target_id',
     },
     actionType: {
-      type: DataTypes.ENUM('approve', 'reject', 'delete', 'lock', 'unlock', 'pin', 'unpin', 'warn', 'ban'),
+      type: DataTypes.ENUM(
+        'approve',
+        'reject',
+        'delete',
+        'lock',
+        'unlock',
+        'pin',
+        'unpin',
+        'warn',
+        'ban'
+      ),
       allowNull: false,
       field: 'action_type',
     },

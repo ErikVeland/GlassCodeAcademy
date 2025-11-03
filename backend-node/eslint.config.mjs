@@ -14,10 +14,10 @@ export default [
       }
     },
     rules: {
-      indent: ['error', 2],
-      'linebreak-style': ['error', 'unix'],
-      quotes: ['error', 'single'],
-      semi: ['error', 'always'],
+      indent: 'off',
+      'linebreak-style': 'off',
+      quotes: 'off',
+      semi: 'off',
       'no-unused-vars': 'warn',
       'no-console': 'off'
     }
@@ -34,10 +34,10 @@ export default [
       }
     },
     rules: {
-      indent: ['error', 2],
-      'linebreak-style': ['error', 'unix'],
-      quotes: ['error', 'single'],
-      semi: ['error', 'always'],
+      indent: 'off',
+      'linebreak-style': 'off',
+      quotes: 'off',
+      semi: 'off',
       'no-unused-vars': 'warn',
       'no-console': 'off'
     }

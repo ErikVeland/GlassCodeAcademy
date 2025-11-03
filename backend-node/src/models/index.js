@@ -26,8 +26,6 @@ const Notification = require('./notificationModel');
 const NotificationPreference = require('./notificationPreferenceModel');
 
 // Phase 2 Models
-const AcademySettings = require('./academySettingsModel');
-const AcademyMembership = require('./academyMembershipModel');
 const Department = require('./departmentModel');
 const Permission = require('./permissionModel');
 const RolePermission = require('./rolePermissionModel');
@@ -185,7 +183,7 @@ function initializeAssociations() {
     foreignKey: 'user_id',
     as: 'apiKeyUser',
   });
-  
+
   // Badge associations
   Badge.belongsToMany(User, {
     through: UserBadge,
@@ -199,7 +197,7 @@ function initializeAssociations() {
     otherKey: 'badge_id',
     as: 'badges',
   });
-  
+
   // UserBadge associations
   UserBadge.belongsTo(User, {
     foreignKey: 'user_id',
@@ -209,7 +207,7 @@ function initializeAssociations() {
     foreignKey: 'badge_id',
     as: 'badge',
   });
-  
+
   // Certificate associations
   Certificate.belongsTo(User, {
     foreignKey: 'user_id',
@@ -219,7 +217,7 @@ function initializeAssociations() {
     foreignKey: 'user_id',
     as: 'course',
   });
-  
+
   // Forum associations
   ForumCategory.hasMany(ForumThread, {
     foreignKey: 'category_id',
@@ -257,7 +255,7 @@ function initializeAssociations() {
     foreignKey: 'user_id',
     as: 'voter',
   });
-  
+
   // Notification associations are already defined in the model files
   // User -> Notifications (hasMany)
   User.hasMany(Notification, {
@@ -269,36 +267,9 @@ function initializeAssociations() {
     foreignKey: 'user_id',
     as: 'notificationPreferences',
   });
-  
+
   // Phase 2 Associations
-  // Academy -> Settings (One-to-One)
-  Academy.hasOne(AcademySettings, {
-    foreignKey: 'academy_id',
-    as: 'settings',
-  });
-  AcademySettings.belongsTo(Academy, {
-    foreignKey: 'academy_id',
-    as: 'academy',
-  });
-  
-  // Academy -> Memberships
-  Academy.hasMany(AcademyMembership, {
-    foreignKey: 'academy_id',
-    as: 'memberships',
-  });
-  AcademyMembership.belongsTo(Academy, {
-    foreignKey: 'academy_id',
-    as: 'academy',
-  });
-  AcademyMembership.belongsTo(User, {
-    foreignKey: 'user_id',
-    as: 'user',
-  });
-  User.hasMany(AcademyMembership, {
-    foreignKey: 'user_id',
-    as: 'academyMemberships',
-  });
-  
+
   // Academy -> Departments
   Academy.hasMany(Department, {
     foreignKey: 'academy_id',
@@ -317,7 +288,7 @@ function initializeAssociations() {
     foreignKey: 'parent_id',
     as: 'parentDepartment',
   });
-  
+
   // Role -> Permissions (Many-to-Many)
   Role.belongsToMany(Permission, {
     through: RolePermission,
@@ -331,7 +302,7 @@ function initializeAssociations() {
     otherKey: 'role_id',
     as: 'roles',
   });
-  
+
   // Content Versioning
   Academy.hasMany(ContentVersion, {
     foreignKey: 'academy_id',
@@ -345,7 +316,7 @@ function initializeAssociations() {
     foreignKey: 'created_by',
     as: 'creator',
   });
-  
+
   // Content Workflows
   Academy.hasMany(ContentWorkflow, {
     foreignKey: 'academy_id',
@@ -367,7 +338,7 @@ function initializeAssociations() {
     foreignKey: 'approver_id',
     as: 'approver',
   });
-  
+
   // Assets
   Academy.hasMany(Asset, {
     foreignKey: 'academy_id',
@@ -389,7 +360,7 @@ function initializeAssociations() {
     foreignKey: 'asset_id',
     as: 'asset',
   });
-  
+
   // Validation Rules and Results
   Academy.hasMany(ValidationRule, {
     foreignKey: 'academy_id',
@@ -407,7 +378,7 @@ function initializeAssociations() {
     foreignKey: 'rule_id',
     as: 'rule',
   });
-  
+
   // Content Packages and Imports
   Academy.hasMany(ContentPackage, {
     foreignKey: 'academy_id',
@@ -437,7 +408,7 @@ function initializeAssociations() {
     foreignKey: 'imported_by',
     as: 'importer',
   });
-  
+
   // Announcements and FAQs
   Academy.hasMany(Announcement, {
     foreignKey: 'academy_id',
@@ -451,7 +422,7 @@ function initializeAssociations() {
     foreignKey: 'created_by',
     as: 'creator',
   });
-  
+
   Academy.hasMany(FAQ, {
     foreignKey: 'academy_id',
     as: 'faqs',
@@ -464,7 +435,7 @@ function initializeAssociations() {
     foreignKey: 'created_by',
     as: 'creator',
   });
-  
+
   // Moderation and Reports
   User.hasMany(ModerationAction, {
     foreignKey: 'moderator_id',
@@ -474,7 +445,7 @@ function initializeAssociations() {
     foreignKey: 'moderator_id',
     as: 'moderator',
   });
-  
+
   User.hasMany(Report, {
     foreignKey: 'reporter_id',
     as: 'reports',
@@ -517,8 +488,6 @@ module.exports = {
   Notification,
   NotificationPreference,
   // Phase 2 Models
-  AcademySettings,
-  AcademyMembership,
   Department,
   Permission,
   RolePermission,

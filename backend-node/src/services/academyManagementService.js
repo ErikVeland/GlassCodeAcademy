@@ -1,4 +1,10 @@
-const { Academy, AcademySettings, Course, Module, Lesson } = require('../models');
+const {
+  Academy,
+  AcademySettings,
+  Course,
+  Module,
+  Lesson,
+} = require('../models');
 const { Op } = require('sequelize');
 
 /**
@@ -35,7 +41,9 @@ class AcademyManagementService {
         integrations: settingsData.integrations || {},
       };
 
-      const settings = await AcademySettings.create(defaultSettings, { transaction });
+      const settings = await AcademySettings.create(defaultSettings, {
+        transaction,
+      });
 
       await transaction.commit();
 
@@ -305,7 +313,9 @@ class AcademyManagementService {
     }
 
     if (academyData.slug && !/^[a-z0-9-]+$/.test(academyData.slug)) {
-      errors.push('Academy slug must contain only lowercase letters, numbers, and hyphens');
+      errors.push(
+        'Academy slug must contain only lowercase letters, numbers, and hyphens'
+      );
     }
 
     return {

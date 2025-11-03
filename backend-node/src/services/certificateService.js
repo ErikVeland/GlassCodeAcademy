@@ -1,7 +1,5 @@
 const { Certificate, User, Course, UserProgress } = require('../models');
-const {
-  recordBusinessOperation,
-} = require('../utils/metrics');
+const { recordBusinessOperation } = require('../utils/metrics');
 const {
   traceAsyncFunction,
   addDatabaseQueryInfo,
@@ -31,7 +29,7 @@ const getUserCertificates = async (userId) => {
               model: Course,
               as: 'course',
               attributes: ['id', 'title', 'description'],
-            }
+            },
           ],
           order: [['issued_at', 'DESC']],
         });
@@ -79,7 +77,7 @@ const getCertificateById = async (certificateId) => {
               model: Course,
               as: 'course',
               attributes: ['id', 'title', 'description'],
-            }
+            },
           ],
         });
 
@@ -131,14 +129,18 @@ const isUserEligibleForCertificate = async (userId, courseId) => {
 
         // Check if course is completed
         const isCompleted = userProgress.completedAt !== null;
-        
+
         // Check if progress is 100%
         const isFullyProgressed = userProgress.progressPercentage === 100;
 
         const isEligible = isCompleted && isFullyProgressed;
 
         const duration = (Date.now() - startTime) / 1000;
-        recordBusinessOperation('check_user_certificate_eligibility', duration, userId);
+        recordBusinessOperation(
+          'check_user_certificate_eligibility',
+          duration,
+          userId
+        );
 
         return isEligible;
       },
@@ -146,7 +148,11 @@ const isUserEligibleForCertificate = async (userId, courseId) => {
     );
   } catch (error) {
     const duration = (Date.now() - startTime) / 1000;
-    recordBusinessOperation('check_user_certificate_eligibility', duration, userId);
+    recordBusinessOperation(
+      'check_user_certificate_eligibility',
+      duration,
+      userId
+    );
     throw new Error(`Error checking certificate eligibility: ${error.message}`);
   }
 };
@@ -161,9 +167,11 @@ const generateCertificate = async (userId, courseId, additionalData = {}) => {
       async () => {
         // Check if user is eligible for certificate
         const isEligible = await isUserEligibleForCertificate(userId, courseId);
-        
+
         if (!isEligible) {
-          throw new Error('User is not eligible for certificate for this course');
+          throw new Error(
+            'User is not eligible for certificate for this course'
+          );
         }
 
         // Check if certificate already exists
@@ -219,7 +227,7 @@ const generateCertificate = async (userId, courseId, additionalData = {}) => {
         // Calculate grade based on quiz scores (if available)
         let grade = 'Pass';
         let score = userProgress ? userProgress.progressPercentage : null;
-        
+
         if (score !== null) {
           if (score >= 90) grade = 'A';
           else if (score >= 80) grade = 'B';
@@ -255,7 +263,20 @@ const generateCertificate = async (userId, courseId, additionalData = {}) => {
         // Add database query information to the span
         addDatabaseQueryInfo(
           'INSERT INTO certificates (user_id, course_id, certificate_id, title, description, issued_at, verification_url, template, grade, score, hours, metadata) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
-          [certificateData.user_id, certificateData.course_id, certificateData.certificate_id, certificateData.title, certificateData.description, certificateData.issued_at, certificateData.verification_url, certificateData.template, certificateData.grade, certificateData.score, certificateData.hours, JSON.stringify(certificateData.metadata)]
+          [
+            certificateData.user_id,
+            certificateData.course_id,
+            certificateData.certificate_id,
+            certificateData.title,
+            certificateData.description,
+            certificateData.issued_at,
+            certificateData.verification_url,
+            certificateData.template,
+            certificateData.grade,
+            certificateData.score,
+            certificateData.hours,
+            JSON.stringify(certificateData.metadata),
+          ]
         );
 
         const duration = (Date.now() - startTime) / 1000;
@@ -348,7 +369,7 @@ const verifyCertificate = async (certificateId) => {
               model: Course,
               as: 'course',
               attributes: ['title'],
-            }
+            },
           ],
         });
 

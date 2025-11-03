@@ -1,3 +1,5 @@
+/* eslint-env node */
+/* global require, console, process */
 const sequelize = require('../src/config/database');
 const { Course, Module, Lesson, User, Role, Tier, initializeAssociations } = require('../src/models');
 
@@ -9,26 +11,29 @@ async function seedDatabase() {
     // Initialize model associations
     initializeAssociations();
     
-    // Sync all models
-    await sequelize.sync({ force: true });
+    // Conditional sync: only for Postgres environments
+    const shouldSync = process.env.DB_DIALECT === 'postgres';
+    if (shouldSync) {
+      await sequelize.sync({ force: true });
+      console.log('Database synced via sequelize for Postgres dialect');
+    } else {
+      console.log('Skipping sequelize.sync — using existing migrated schema');
+    }
     
-    console.log('Database synced successfully!');
-    
-    // Create roles
-    const adminRole = await Role.create({
-      name: 'admin',
-      description: 'Administrator role'
+    // Create roles idempotently
+    await Role.findOrCreate({
+      where: { name: 'admin' },
+      defaults: { description: 'Administrator role' }
     });
-    
-    const userRole = await Role.create({
-      name: 'user',
-      description: 'Regular user role'
+    await Role.findOrCreate({
+      where: { name: 'user' },
+      defaults: { description: 'Regular user role' }
     });
     
     console.log('Roles created successfully!');
     
-    // Create tiers aligned with content registry
-    await Tier.bulkCreate([
+    // Create tiers idempotently aligned with content registry
+    const tiers = [
       {
         key: 'foundational',
         level: 1,
@@ -81,58 +86,73 @@ async function seedDatabase() {
           'Secure applications with best practices'
         ]
       }
-    ]);
+    ];
+
+    for (const tier of tiers) {
+      await Tier.findOrCreate({
+        where: { key: tier.key },
+        defaults: tier,
+      });
+    }
 
     console.log('Tiers created successfully!');
     
     // Create a sample course
-    const course = await Course.create({
-      title: 'Web Development Fundamentals',
-      description: 'Learn the fundamentals of web development',
-      slug: 'web-fundamentals',
-      isPublished: true,
-      order: 1,
-      difficulty: 'Beginner',
-      estimatedHours: 10
+    const [course] = await Course.findOrCreate({
+      where: { slug: 'web-fundamentals' },
+      defaults: {
+        title: 'Web Development Fundamentals',
+        description: 'Learn the fundamentals of web development',
+        isPublished: true,
+        order: 1,
+        difficulty: 'Beginner',
+        estimatedHours: 10,
+      }
     });
     
     console.log('Course created successfully!');
     
     // Create a sample module
-    const module = await Module.create({
-      title: 'HTML Basics',
-      description: 'Introduction to HTML',
-      slug: 'html-basics',
-      order: 1,
-      isPublished: true,
-      course_id: course.id
+    const [module] = await Module.findOrCreate({
+      where: { slug: 'html-basics' },
+      defaults: {
+        title: 'HTML Basics',
+        description: 'Introduction to HTML',
+        order: 1,
+        isPublished: true,
+        course_id: course.id
+      }
     });
     
     console.log('Module created successfully!');
     
     // Create a sample lesson
-    const lesson = await Lesson.create({
-      title: 'HTML Structure',
-      slug: 'html-structure',
-      order: 1,
-      content: {
-        type: 'html',
-        content: '<p>HTML stands for HyperText Markup Language</p>'
-      },
-      isPublished: true,
-      difficulty: 'Beginner',
-      estimatedMinutes: 30,
-      module_id: module.id
+    await Lesson.findOrCreate({
+      where: { slug: 'html-structure', module_id: module.id },
+      defaults: {
+        title: 'HTML Structure',
+        order: 1,
+        content: {
+          type: 'html',
+          content: '<p>HTML stands for HyperText Markup Language</p>'
+        },
+        isPublished: true,
+        difficulty: 'Beginner',
+        estimatedMinutes: 30,
+        module_id: module.id
+      }
     });
     
     console.log('Lesson created successfully!');
     
     // Create a sample user
-    const user = await User.create({
-      email: 'admin@example.com',
-      firstName: 'Admin',
-      lastName: 'User',
-      passwordHash: 'password123'
+    await User.findOrCreate({
+      where: { email: 'admin@example.com' },
+      defaults: {
+        firstName: 'Admin',
+        lastName: 'User',
+        passwordHash: 'password123'
+      }
     });
     
     console.log('User created successfully!');

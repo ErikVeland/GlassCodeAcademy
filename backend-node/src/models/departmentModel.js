@@ -1,5 +1,6 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require('../config/database');
+const { getJSONType } = require('../utils/databaseTypes');
 
 const Department = sequelize.define(
   'Department',
@@ -56,7 +57,7 @@ const Department = sequelize.define(
       field: 'is_active',
     },
     metadata: {
-      type: DataTypes.JSONB,
+      type: getJSONType(),
       allowNull: true,
       defaultValue: {},
       comment: 'Custom fields and additional data',

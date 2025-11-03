@@ -16,7 +16,7 @@ const validate = (schema) => (req, res, next) => {
       })),
       // Legacy-compatible fields
       success: false,
-      message: `Validation failed: ${error.details.map(d => d.path.join('.')).join(', ')}`,
+      message: `Validation failed: ${error.details.map((d) => d.path.join('.')).join(', ')}`,
     };
 
     return res.status(400).json(errorResponse);

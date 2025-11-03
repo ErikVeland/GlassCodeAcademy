@@ -11,5 +11,23 @@ if [ -f "scripts/validate-content.js" ]; then
     fi
 fi
 
+# Run backend lint and formatting checks
+if [ -d "backend-node" ]; then
+    echo "Linting backend-node with ESLint (no warnings allowed)..."
+    pushd backend-node >/dev/null
+    if ! npm run lint -- --max-warnings=0; then
+        popd >/dev/null
+        echo "❌ ESLint failed. Please fix lint issues before committing."
+        exit 1
+    fi
+    echo "Checking backend-node formatting with Prettier..."
+    if ! npm run format:check; then
+        popd >/dev/null
+        echo "❌ Prettier check failed. Please format your code (npm run format)."
+        exit 1
+    fi
+    popd >/dev/null
+fi
+
 echo "✅ Pre-commit validation passed"
 exit 0

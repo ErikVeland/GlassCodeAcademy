@@ -1,5 +1,6 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require('../config/database');
+const { getJSONType } = require('../utils/databaseTypes');
 
 const Badge = sequelize.define(
   'Badge',
@@ -22,14 +23,15 @@ const Badge = sequelize.define(
       allowNull: true,
     },
     criteria: {
-      type: DataTypes.JSONB,
+      type: getJSONType(),
       allowNull: false,
       comment: 'JSON object defining the criteria for earning this badge',
     },
     category: {
       type: DataTypes.STRING,
       allowNull: true,
-      comment: 'Category of the badge (e.g., completion, excellence, participation)',
+      comment:
+        'Category of the badge (e.g., completion, excellence, participation)',
     },
     points: {
       type: DataTypes.INTEGER,

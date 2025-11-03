@@ -1,5 +1,6 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require('../config/database');
+const { getJSONType } = require('../utils/databaseTypes');
 
 const ValidationRule = sequelize.define(
   'ValidationRule',
@@ -31,7 +32,7 @@ const ValidationRule = sequelize.define(
       comment: 'Content type this rule applies to',
     },
     ruleDefinition: {
-      type: DataTypes.JSONB,
+      type: getJSONType(),
       allowNull: false,
       field: 'rule_definition',
       comment: 'Rule specification and conditions',

@@ -1,5 +1,6 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require('../config/database');
+const { getJSONType } = require('../utils/databaseTypes');
 
 const Academy = sequelize.define(
   'Academy',
@@ -32,11 +33,11 @@ const Academy = sequelize.define(
       defaultValue: '1.0.0',
     },
     theme: {
-      type: DataTypes.JSONB,
+      type: getJSONType(),
       allowNull: true,
     },
     metadata: {
-      type: DataTypes.JSONB,
+      type: getJSONType(),
       allowNull: true,
     },
   },
