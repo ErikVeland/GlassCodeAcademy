@@ -6,6 +6,14 @@ SANITIZED_BASE="${RAW_BASE//\"/}"
 SANITIZED_BASE="${SANITIZED_BASE//\'/}"
 SANITIZED_BASE="${SANITIZED_BASE//\`/}"
 SANITIZED_BASE="$(echo "$SANITIZED_BASE" | xargs)"
+# Strip trailing punctuation that can break URLs
+while [[ "$SANITIZED_BASE" =~ [,:;]$ ]]; do
+  SANITIZED_BASE="${SANITIZED_BASE%?}"
+done
+# Ensure scheme for production gating
+if ! [[ "$SANITIZED_BASE" =~ ^https?:// ]]; then
+  SANITIZED_BASE="https://$SANITIZED_BASE"
+fi
 if [ -z "$SANITIZED_BASE" ]; then
   echo "❌ NEXT_PUBLIC_API_BASE is not set; cannot perform production health gating."
   exit 1

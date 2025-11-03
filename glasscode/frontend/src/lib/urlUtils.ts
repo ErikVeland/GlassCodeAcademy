@@ -64,8 +64,21 @@ export function getPublicOriginStrict(): string {
 /** Strictly derive API base from env; throws if not configured. */
 export function getApiBaseStrict(): string {
   if (typeof window === 'undefined' && SERVER_API_BASE) return SERVER_API_BASE;
-  const apiBase = (process.env.NEXT_PUBLIC_API_BASE || '').trim().replace(/\/+$/, '');
-  if (!apiBase) throw new Error('API base not configured. Set NEXT_PUBLIC_API_BASE.');
-  if (typeof window === 'undefined') SERVER_API_BASE = apiBase;
-  return apiBase;
+  // Read raw value
+  let base = (process.env.NEXT_PUBLIC_API_BASE || '').trim();
+  // Remove quotes/backticks
+  base = base.replace(/[`'\"]/g, '');
+  // Trim whitespace
+  base = base.trim();
+  // Strip trailing punctuation (commas, colons, semicolons)
+  base = base.replace(/[,:;]+$/, '');
+  // Remove trailing slashes
+  base = base.replace(/\/+$/, '');
+  // Ensure scheme
+  if (base && !/^https?:\/\//.test(base)) {
+    base = `https://${base}`;
+  }
+  if (!base) throw new Error('API base not configured. Set NEXT_PUBLIC_API_BASE.');
+  if (typeof window === 'undefined') SERVER_API_BASE = base;
+  return base;
 }

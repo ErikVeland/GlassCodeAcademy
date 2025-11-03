@@ -75,6 +75,10 @@ async function fetchLessonsFromDatabase(moduleSlug: string): Promise<FrontendLes
           continue;
         }
         const modules = await modulesResponse.json();
+        if (!Array.isArray(modules)) {
+          console.error(`[lessons] Modules response is not an array from ${apiBase}`);
+          continue;
+        }
         const foundModule = modules.find((m: { id: number; slug: string }) => m.slug === moduleSlug);
         if (!foundModule) {
           console.log(`[lessons] Module not found for slug: ${moduleSlug} on ${apiBase}`);
