@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
-import { authOptions } from '@/app/api/auth/[...nextauth]/route';
+import { getAuthOptions } from '@/app/api/auth/[...nextauth]/route';
 import { getApiBaseStrict } from '@/lib/urlUtils';
 
 interface Session {
@@ -13,6 +13,7 @@ interface Session {
 }
 
 async function forward(req: NextRequest, method: 'POST' | 'DELETE') {
+  const authOptions = getAuthOptions();
   const session = await getServerSession(authOptions);
   const token = (session as Session)?.backendToken as string | undefined;
   if (!token) {

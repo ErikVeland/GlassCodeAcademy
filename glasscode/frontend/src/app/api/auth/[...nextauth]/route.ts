@@ -143,7 +143,7 @@ if (authProviders.some(p => p.id === 'credentials')) {
   }));
 }
 
-const authOptions: NextAuthOptions = {
+const getAuthOptions = (): NextAuthOptions => ({
   providers,
   session: { strategy: 'jwt' },
   pages: {
@@ -210,8 +210,11 @@ const authOptions: NextAuthOptions = {
   },
   // IMPORTANT: set NEXTAUTH_SECRET and NEXTAUTH_URL in production
   secret: env('NEXTAUTH_SECRET'),
-};
+});
 
-const handler = NextAuth(authOptions);
+const handler = NextAuth(getAuthOptions());
 
-export { handler as GET, handler as POST, providers, authOptions };
+// Export a function to get auth options for use in other API routes
+export { getAuthOptions };
+
+export { handler as GET, handler as POST };
