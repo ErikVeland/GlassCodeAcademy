@@ -37,7 +37,7 @@ export const testUsers = {
  */
 export async function login(page: Page, user: TestUser): Promise<void> {
   // Navigate to login page
-  await page.goto('/auth/login');
+  await page.goto('/login');
 
   // Wait for login form to be visible
   await page.waitForSelector('form', { state: 'visible' });
@@ -62,7 +62,7 @@ export async function login(page: Page, user: TestUser): Promise<void> {
  */
 export async function register(page: Page, user: TestUser): Promise<void> {
   // Navigate to registration page
-  await page.goto('/auth/register');
+  await page.goto('/register');
 
   // Wait for registration form
   await page.waitForSelector('form', { state: 'visible' });
@@ -188,8 +188,14 @@ export async function ensureLoggedIn(page: Page, user: TestUser): Promise<void> 
  */
 export async function clearAuthState(page: Page): Promise<void> {
   await page.context().clearCookies();
-  await page.evaluate(() => {
-    localStorage.clear();
-    sessionStorage.clear();
-  });
+  try {
+    await page.evaluate(() => {
+      localStorage.clear();
+      sessionStorage.clear();
+    });
+  } catch (error) {
+    // Ignore errors related to localStorage access in certain environments
+    // This is a known issue in headless browsers or restricted contexts
+    console.warn('Could not clear localStorage/sessionStorage:', error instanceof Error ? error.message : String(error));
+  }
 }

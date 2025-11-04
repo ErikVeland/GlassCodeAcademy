@@ -75,6 +75,10 @@ const nextConfig: NextConfig = {
         source: '/graphql',
         destination: `${base}/graphql`,
       },
+      {
+        source: '/api/:path*',
+        destination: `${base}/api/:path*`,
+      },
     ];
   },
   async headers() {

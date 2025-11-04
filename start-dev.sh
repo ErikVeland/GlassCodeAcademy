@@ -100,6 +100,36 @@ run_migrations() {
     return 0
 }
 
+# Function to run database seeding
+run_seeding() {
+    echo "🌱 Running database seeding..."
+    cd backend-node
+    # Check if database is accessible before running seeding
+    if timeout 5 npm run health >/dev/null 2>&1; then
+        # Run basic seeding
+        npm run seed
+        if [ $? -ne 0 ]; then
+            echo "❌ Database basic seeding failed"
+            cd ..
+            return 1
+        fi
+        echo "✅ Database basic seeding completed"
+        
+        # Run content seeding
+        npm run seed:content
+        if [ $? -ne 0 ]; then
+            echo "❌ Database content seeding failed"
+            cd ..
+            return 1
+        fi
+        echo "✅ Database content seeding completed"
+    else
+        echo "⚠️  Database not accessible, skipping seeding"
+    fi
+    cd ..
+    return 0
+}
+
 # Add a flag to skip migrations
 SKIP_MIGRATIONS=0
 for arg in "$@"; do
@@ -117,6 +147,17 @@ if [ $SKIP_MIGRATIONS -eq 0 ]; then
     fi
 else
     echo "⏭️  Skipping database migrations"
+fi
+
+# Run seeding after migrations (unless migrations are skipped)
+if [ $SKIP_MIGRATIONS -eq 0 ]; then
+    run_seeding
+    if [ $? -ne 0 ]; then
+        echo "❌ Failed to run seeding, exiting"
+        exit 1
+    fi
+else
+    echo "⏭️  Skipping database seeding"
 fi
 
 # Stop any existing services before starting new ones

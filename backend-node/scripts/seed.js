@@ -157,6 +157,49 @@ async function seedDatabase() {
     
     console.log('User created successfully!');
     
+    // Create default forum categories
+    const ForumCategory = require('../src/models/forumCategoryModel');
+    
+    const defaultCategories = [
+      {
+        name: 'General Discussion',
+        slug: 'general-discussion',
+        description: 'General discussions about programming, technology, and learning',
+        order: 1,
+        is_active: true
+      },
+      {
+        name: 'Course Help',
+        slug: 'course-help',
+        description: 'Get help with course content, lessons, and exercises',
+        order: 2,
+        is_active: true
+      },
+      {
+        name: 'Career Advice',
+        slug: 'career-advice',
+        description: 'Discuss career paths, job opportunities, and professional development',
+        order: 3,
+        is_active: true
+      },
+      {
+        name: 'Show & Tell',
+        slug: 'show-and-tell',
+        description: 'Share your projects, achievements, and learning milestones',
+        order: 4,
+        is_active: true
+      }
+    ];
+    
+    for (const category of defaultCategories) {
+      await ForumCategory.findOrCreate({
+        where: { name: category.name },
+        defaults: category,
+      });
+    }
+    
+    console.log('Forum categories created successfully!');
+    
     console.log('Database seeding completed successfully!');
     process.exit(0);
   } catch (error) {

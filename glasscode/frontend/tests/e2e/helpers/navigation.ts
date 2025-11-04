@@ -9,7 +9,8 @@ import { Page, expect } from '@playwright/test';
  */
 export async function goToHome(page: Page): Promise<void> {
   await page.goto('/');
-  await page.waitForLoadState('networkidle');
+  await page.waitForLoadState('domcontentloaded');
+  await page.waitForTimeout(500);
 }
 
 /**
@@ -17,7 +18,8 @@ export async function goToHome(page: Page): Promise<void> {
  */
 export async function goToCourses(page: Page): Promise<void> {
   await page.goto('/courses');
-  await page.waitForLoadState('networkidle');
+  await page.waitForLoadState('domcontentloaded');
+  await page.waitForTimeout(500);
 }
 
 /**
@@ -25,7 +27,8 @@ export async function goToCourses(page: Page): Promise<void> {
  */
 export async function goToModule(page: Page, moduleSlug: string): Promise<void> {
   await page.goto(`/modules/${moduleSlug}`);
-  await page.waitForLoadState('networkidle');
+  await page.waitForLoadState('domcontentloaded');
+  await page.waitForTimeout(500);
 }
 
 /**
@@ -33,7 +36,8 @@ export async function goToModule(page: Page, moduleSlug: string): Promise<void> 
  */
 export async function goToLesson(page: Page, moduleSlug: string, lessonSlug: string): Promise<void> {
   await page.goto(`/modules/${moduleSlug}/lessons/${lessonSlug}`);
-  await page.waitForLoadState('networkidle');
+  await page.waitForLoadState('domcontentloaded');
+  await page.waitForTimeout(500);
 }
 
 /**
@@ -41,7 +45,8 @@ export async function goToLesson(page: Page, moduleSlug: string, lessonSlug: str
  */
 export async function goToForum(page: Page): Promise<void> {
   await page.goto('/forum');
-  await page.waitForLoadState('networkidle');
+  await page.waitForLoadState('domcontentloaded');
+  await page.waitForTimeout(500);
 }
 
 /**
@@ -49,7 +54,10 @@ export async function goToForum(page: Page): Promise<void> {
  */
 export async function goToAdmin(page: Page): Promise<void> {
   await page.goto('/admin');
-  await page.waitForLoadState('networkidle');
+  // Wait for basic page load instead of networkidle which can timeout
+  await page.waitForLoadState('domcontentloaded');
+  // Additional wait for dynamic content if needed
+  await page.waitForTimeout(1000);
 }
 
 /**
