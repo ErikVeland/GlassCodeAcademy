@@ -6,11 +6,17 @@ export async function GET(req: NextRequest) {
     const url = new URL(req.url);
     const query = url.search || '';
     const apiBase = (() => { try { return getApiBaseStrict(); } catch { return 'http://127.0.0.1:8080'; } })();
-    const backendUrl = `${apiBase}/api/modules-db${query}`;
-    const res = await fetch(backendUrl);
+    const backendUrl = `${apiBase}/api/modules${query}`;
+    const res = await fetch(backendUrl, { cache: 'no-store' });
     const text = await res.text();
-    const contentType = res.headers.get('content-type') || 'application/json';
-    return new NextResponse(text, { status: res.status, headers: { 'Content-Type': contentType } });
+    let body = text;
+    try {
+      const parsed = JSON.parse(text);
+      body = JSON.stringify(Array.isArray(parsed) ? parsed : parsed?.data ?? parsed);
+    } catch {
+      // leave body as-is if not JSON
+    }
+    return new NextResponse(body, { status: res.status, headers: { 'Content-Type': 'application/json' } });
   } catch (error) {
     console.error('Proxy GET /api/modules-db failed:', error);
     return NextResponse.json({ error: 'Failed to fetch modules from backend' }, { status: 502 });
@@ -20,8 +26,8 @@ export async function GET(req: NextRequest) {
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
-    const apiBase = (() => { try { return getApiBaseStrict(); } catch { return 'http://127.0.0.1:8081'; } })();
-    const res = await fetch(`${apiBase}/api/modules-db`, {
+    const apiBase = (() => { try { return getApiBaseStrict(); } catch { return 'http://127.0.0.1:8080'; } })();
+    const res = await fetch(`${apiBase}/api/content/modules`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

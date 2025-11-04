@@ -756,6 +756,51 @@ add_if_missing_backend_prod DATABASE_URL "$DATABASE_URL"
         log "✅ Registry content seeding completed"
     fi
 
+    # Prompt to create an admin user if none exists
+    log "🔐 Checking for admin user..."
+    cd "$APP_DIR/backend-node"
+    sudo -u "$DEPLOY_USER" env NODE_ENV=production DATABASE_URL="$DATABASE_URL" DB_DIALECT="$DB_DIALECT" DB_HOST="$DB_HOST" DB_PORT="$DB_PORT" DB_NAME="$DB_NAME" DB_USER="$DB_USER" DB_PASSWORD="$DB_PASSWORD" DB_SSL="$DB_SSL" node scripts/create-admin-user.js --check || CHECK_CODE=$?
+    CHECK_CODE=${CHECK_CODE:-0}
+    if [ "$CHECK_CODE" -eq 2 ]; then
+        log "👤 No admin user found."
+        if [ -t 0 ]; then
+            read -r -p "Would you like to create an admin user now? [Y/n]: " REPLY || true
+        else
+            REPLY="Y"
+        fi
+        if [[ -z "$REPLY" || "$REPLY" =~ ^[Yy]$ ]]; then
+            if [ -t 0 ]; then
+                read -r -p "Admin email: " ADMIN_EMAIL_INPUT || true
+                read -r -p "First name [Admin]: " ADMIN_FIRST_NAME_INPUT || true
+                read -r -p "Last name [User]: " ADMIN_LAST_NAME_INPUT || true
+                read -s -p "Password (min 8 chars, mixed): " ADMIN_PASSWORD_INPUT || true; echo
+                read -s -p "Confirm password: " ADMIN_PASSWORD_CONFIRM || true; echo
+            fi
+            ADMIN_EMAIL="${ADMIN_EMAIL_INPUT:-${ADMIN_EMAIL:-}}"
+            ADMIN_FIRST_NAME="${ADMIN_FIRST_NAME_INPUT:-${ADMIN_FIRST_NAME:-Admin}}"
+            ADMIN_LAST_NAME="${ADMIN_LAST_NAME_INPUT:-${ADMIN_LAST_NAME:-User}}"
+            ADMIN_PASSWORD="${ADMIN_PASSWORD_INPUT:-${ADMIN_PASSWORD:-}}"
+            if [ -z "$ADMIN_EMAIL" ] || [ -z "$ADMIN_PASSWORD" ]; then
+                log "❌ ERROR: Admin email and password are required"
+                exit 1
+            fi
+            if [ -n "$ADMIN_PASSWORD_INPUT" ] && [ "$ADMIN_PASSWORD_INPUT" != "$ADMIN_PASSWORD_CONFIRM" ]; then
+                log "❌ ERROR: Passwords do not match"
+                exit 1
+            fi
+            log "🔧 Creating admin user..."
+            if ! sudo -u "$DEPLOY_USER" env NODE_ENV=production DATABASE_URL="$DATABASE_URL" DB_DIALECT="$DB_DIALECT" DB_HOST="$DB_HOST" DB_PORT="$DB_PORT" DB_NAME="$DB_NAME" DB_USER="$DB_USER" DB_PASSWORD="$DB_PASSWORD" DB_SSL="$DB_SSL" ADMIN_EMAIL="$ADMIN_EMAIL" ADMIN_PASSWORD="$ADMIN_PASSWORD" ADMIN_FIRST_NAME="$ADMIN_FIRST_NAME" ADMIN_LAST_NAME="$ADMIN_LAST_NAME" node scripts/create-admin-user.js; then
+                log "❌ ERROR: Failed to create admin user"
+                exit 1
+            fi
+            log "✅ Admin user created"
+        else
+            log "ℹ️  Skipping admin user creation"
+        fi
+    else
+        log "✅ Admin user exists"
+    fi
+
     # Create and start backend service
     log "⚙️  Creating backend systemd service..."
     log "🔌 Port 8080 preflight: checking for conflicts..."

@@ -1,6 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 const sequelize = require('../src/config/database');
+const { Op } = require('sequelize');
 const { Course, Module, Lesson, LessonQuiz, initializeAssociations } = require('../src/models');
 
 // Ensure database schema exists before seeding
@@ -155,27 +156,39 @@ async function seedContent() {
         const quizData = JSON.parse(fs.readFileSync(quizzesPath, 'utf8'));
         const questions = Array.isArray(quizData) ? quizData : (quizData.questions || []);
         console.log(`  Found ${questions.length} quiz questions`);
-        
-        // Find the first lesson for association
-        const firstLesson = await Lesson.findOne({ where: { module_id: module.id }, order: [['order', 'ASC']] });
-        const lessonId = firstLesson ? firstLesson.id : null;
-        
-        if (!lessonId) {
+
+        // Fetch all lessons for distribution
+        const lessonList = await Lesson.findAll({
+          where: { module_id: module.id },
+          order: [['order', 'ASC']]
+        });
+        if (!lessonList || lessonList.length === 0) {
           console.log(`  ⚠️  No lesson found for module ${moduleInfo.slug}, skipping quiz seeding`);
           continue;
         }
-        
+        const lessonIds = lessonList.map(l => l.id);
+
+        // Remove existing quizzes for this module's lessons to avoid duplicates
+        await LessonQuiz.destroy({
+          where: { lesson_id: { [Op.in]: lessonIds } }
+        });
+
         for (let i = 0; i < questions.length; i++) {
           const questionData = questions[i];
-          
+
           // Validate question data
           if (!questionData.question) {
             console.log(`  ⚠️  Skipping quiz question ${i+1} - missing question text`);
             continue;
           }
-          
+
+          // Distribute questions across lessons in order
+          const targetLesson = lessonList[i % lessonList.length];
+          const targetLessonId = targetLesson.id;
+          const sortOrder = questionData.sortOrder || i + 1;
+
           const [quiz, quizCreated] = await LessonQuiz.findOrCreate({
-            where: { sortOrder: questionData.sortOrder || i + 1, lesson_id: lessonId },
+            where: { sortOrder, lesson_id: targetLessonId },
             defaults: {
               question: questionData.question || `Question ${i + 1}`,
               topic: questionData.topic || moduleInfo.title,
@@ -192,21 +205,19 @@ async function seedContent() {
               correctAnswer: questionData.correctAnswer !== undefined ? questionData.correctAnswer : 0,
               quizType: questionData.quizType || 'multiple-choice',
               sources: questionData.sources || null,
-              sortOrder: questionData.sortOrder || i + 1,
+              sortOrder,
               isPublished: true,
-              lesson_id: lessonId
+              lesson_id: targetLessonId
             }
           });
-          
+
           if (quizCreated) {
-            console.log(`    ✅ Created quiz question: ${quiz.question.substring(0, 50)}...`);
-            
-            // Validate that the created quiz has a positive ID
+            console.log(`    ✅ Created quiz for lesson ${targetLesson.slug}: ${quiz.question.substring(0, 50)}...`);
             if (quiz.id <= 0) {
               console.log(`    ⚠️  Warning: Created quiz has invalid ID: ${quiz.id}`);
             }
           } else {
-            console.log(`    🔁 Updated quiz question: ${quiz.question.substring(0, 50)}...`);
+            console.log(`    🔁 Updated quiz for lesson ${targetLesson.slug}: ${quiz.question.substring(0, 50)}...`);
             await quiz.update({
               topic: questionData.topic || moduleInfo.title,
               difficulty: questionData.difficulty || moduleInfo.difficulty,
@@ -222,11 +233,9 @@ async function seedContent() {
               correctAnswer: questionData.correctAnswer !== undefined ? questionData.correctAnswer : 0,
               quizType: questionData.quizType || 'multiple-choice',
               sources: questionData.sources || null,
-              sortOrder: questionData.sortOrder || i + 1,
+              sortOrder,
               isPublished: true
             });
-            
-            // Validate that the updated quiz has a positive ID
             if (quiz.id <= 0) {
               console.log(`    ⚠️  Warning: Updated quiz has invalid ID: ${quiz.id}`);
             }

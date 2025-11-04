@@ -20,11 +20,12 @@ export default function EditModulePage({ params }: { params: Promise<{ id: strin
       
       const moduleRes = await fetch(`/api/modules-db/${id}`);
       const moduleData = await moduleRes.json();
-      setModule(moduleData as AdminModule);
+      setModule((moduleData?.data ?? moduleData) as AdminModule);
       
-      const coursesRes = await fetch('/api/Courses');
-      const coursesData = await coursesRes.json();
-      setCourses(coursesData as AdminCourse[]);
+      const coursesRes = await fetch('/api/courses');
+      const coursesResult = await coursesRes.json();
+      const normalizedCourses = Array.isArray(coursesResult) ? coursesResult : (coursesResult?.data ?? []);
+      setCourses(normalizedCourses as AdminCourse[]);
       
       setLoading(false);
     } catch (err) {

@@ -16,9 +16,17 @@ const dotenv = require('dotenv');
 
   for (const envPath of candidates) {
     if (fs.existsSync(envPath)) {
+      console.log('Loading env from:', envPath);
       dotenv.config({ path: envPath });
       break;
     }
+  }
+  
+  // Explicitly load .env.test if it exists
+  const envTestPath = path.resolve(__dirname, '.env.test');
+  if (fs.existsSync(envTestPath)) {
+    console.log('Explicitly loading .env.test from:', envTestPath);
+    dotenv.config({ path: envTestPath });
   }
 })();
 

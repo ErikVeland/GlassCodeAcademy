@@ -4,12 +4,16 @@ import { getApiBaseStrict } from '@/lib/urlUtils';
 export async function GET(_req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
     const { id } = await params;
-    const apiBase = (() => { try { return getApiBaseStrict(); } catch { return 'http://127.0.0.1:8081'; } })();
-    const backendUrl = `${apiBase}/api/LessonQuiz/${id}`;
+    const apiBase = (() => { try { return getApiBaseStrict(); } catch { return 'http://127.0.0.1:8080'; } })();
+    const backendUrl = `${apiBase}/api/content/quizzes/${id}`;
     const res = await fetch(backendUrl);
     const text = await res.text();
-    const contentType = res.headers.get('content-type') || 'application/json';
-    return new NextResponse(text, { status: res.status, headers: { 'Content-Type': contentType } });
+    let body = text;
+    try {
+      const parsed = JSON.parse(text);
+      body = JSON.stringify(parsed?.data ?? parsed);
+    } catch {}
+    return new NextResponse(body, { status: res.status, headers: { 'Content-Type': 'application/json' } });
   } catch (error) {
     console.error('Proxy GET /api/LessonQuiz/[id] failed:', error);
     return NextResponse.json({ error: 'Failed to fetch quiz from backend' }, { status: 502 });
@@ -20,8 +24,8 @@ export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: 
   try {
     const body = await req.json();
     const { id } = await params;
-    const apiBase = (() => { try { return getApiBaseStrict(); } catch { return 'http://127.0.0.1:8081'; } })();
-    const backendUrl = `${apiBase}/api/LessonQuiz/${id}`;
+    const apiBase = (() => { try { return getApiBaseStrict(); } catch { return 'http://127.0.0.1:8080'; } })();
+    const backendUrl = `${apiBase}/api/content/quizzes/${id}`;
     const res = await fetch(backendUrl, {
       method: 'PUT',
       headers: {
@@ -45,8 +49,8 @@ export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: 
 export async function DELETE(_req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
     const { id } = await params;
-    const apiBase = (() => { try { return getApiBaseStrict(); } catch { return 'http://127.0.0.1:8081'; } })();
-    const backendUrl = `${apiBase}/api/LessonQuiz/${id}`;
+    const apiBase = (() => { try { return getApiBaseStrict(); } catch { return 'http://127.0.0.1:8080'; } })();
+    const backendUrl = `${apiBase}/api/content/quizzes/${id}`;
     const res = await fetch(backendUrl, {
       method: 'DELETE',
       // Forward admin auth headers when present

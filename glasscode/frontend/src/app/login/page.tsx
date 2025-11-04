@@ -1,5 +1,6 @@
 "use client";
-import { signIn } from "next-auth/react";
+import { signIn, getProviders } from "next-auth/react";
+import Link from "next/link";
 import React, { useEffect, useState } from "react";
 
 export default function LoginPage() {
@@ -14,9 +15,26 @@ export default function LoginPage() {
     // Fetch configured auth providers from NextAuth
     const loadProviders = async () => {
       try {
-        const res = await fetch("/api/auth/providers");
-        const data = await res.json();
-        setProviders(data || {});
+        // First try the NextAuth getProviders function
+        const nextAuthProviders = await getProviders();
+        if (nextAuthProviders) {
+          // Normalize providers to match expected format
+          const normalized: Record<string, { id: string; name: string }> = {};
+          Object.values(nextAuthProviders).forEach(provider => {
+            normalized[provider.id] = { id: provider.id, name: provider.name };
+          });
+          setProviders(normalized);
+        } else {
+          // Fallback to our custom API endpoint
+          const res = await fetch("/api/auth/providers");
+          if (res.ok) {
+            const data = await res.json();
+            // Normalize and guard against unexpected shapes
+            if (data && typeof data === 'object' && !Array.isArray(data)) {
+              setProviders(data);
+            }
+          }
+        }
       } catch (e) {
         // Silently ignore; credentials/guest will still be available
         console.warn("Failed to load auth providers", e);
@@ -75,7 +93,7 @@ export default function LoginPage() {
       <div className="space-y-4">
         {/* Dynamically render available OAuth providers */}
         {Object.values(providers)
-          .filter(p => p.id !== "credentials")
+          .filter(p => p && p.id && p.name && p.id !== "credentials")
           .map(p => (
             <button
               key={p.id}
@@ -91,7 +109,7 @@ export default function LoginPage() {
                   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M12 0C5.37 0 0 5.52 0 12.34c0 5.46 3.44 10.08 8.21 11.72.6.11.82-.27.82-.6 0-.3-.01-1.1-.02-2.16-3.34.75-4.05-1.67-4.05-1.67-.55-1.43-1.36-1.82-1.36-1.82-1.11-.78.08-.76.08-.76 1.23.09 1.88 1.3 1.88 1.3 1.09 1.9 2.86 1.35 3.56 1.03.11-.81.43-1.35.78-1.66-2.67-.31-5.48-1.37-5.48-6.08 0-1.34.46-2.44 1.22-3.3-.12-.31-.53-1.55.12-3.22 0 0 1-.33 3.28 1.26A11.15 11.15 0 0 1 12 5.84c1.01.01 2.03.14 2.98.4 2.27-1.59 3.27-1.26 3.27-1.26.66 1.67.25 2.91.13 3.22.76.86 1.22 1.96 1.22 3.3 0 4.72-2.82 5.77-5.5 6.08.44.38.83 1.12.83 2.26 0 1.63-.02 2.94-.02 3.34 0 .33.22.71.83.59C20.56 22.42 24 17.8 24 12.34 24 5.52 18.63 0 12 0z"/></svg>
                 ) : (
                   // Google or other providers: use simple G icon placeholder
-                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18"><text x="6" y="16" fontSize="12" fontFamily="system-ui">{p.name[0]}</text></svg>
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18"><text x="6" y="16" fontSize="12" fontFamily="system-ui">{p.name?.[0] ?? p.id?.[0] ?? '?'}</text></svg>
                 )}
               </span>
               <span className="btn-text">Continue with {p.name}</span>
@@ -127,8 +145,16 @@ export default function LoginPage() {
             {loading ? "Signing in…" : "Sign in"}
           </button>
           </form>
+          <div className="mt-2 text-center">
+            <p className="text-sm text-muted">
+              Don&apos;t have an account?{" "}
+              <Link href="/register" className="text-primary hover:underline">
+                Register
+              </Link>
+            </p>
+          </div>
           <p className="text-xs text-muted mt-2">
-            This demo credentials sign-in works only for preconfigured users.
+            Sign in with your email and password
           </p>
         </div>
       )}

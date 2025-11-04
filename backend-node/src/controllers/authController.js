@@ -1,4 +1,9 @@
-const { register, login } = require('../services/authService');
+const {
+  register,
+  login,
+  changePassword,
+  resetPassword,
+} = require('../services/authService');
 const winston = require('winston');
 
 // Create a logger instance
@@ -67,6 +72,7 @@ const getMeController = async (req, res, next) => {
       lastName: user.lastName,
       role: user.role,
       isActive: user.isActive,
+      lastLoginAt: user.lastLoginAt,
       createdAt: user.createdAt,
       updatedAt: user.updatedAt,
     };
@@ -167,6 +173,99 @@ const loginController = async (req, res, next) => {
       return res.status(401).json(unauthorizedResponse);
     }
 
+    if (
+      error.message &&
+      error.message.toLowerCase().includes('account is deactivated')
+    ) {
+      const forbiddenResponse = {
+        type: 'https://glasscode/errors/forbidden',
+        title: 'Forbidden',
+        status: 403,
+        detail: 'Account is deactivated',
+        instance: req.originalUrl,
+        success: false,
+        message: 'Account is deactivated',
+      };
+      return res.status(403).json(forbiddenResponse);
+    }
+
+    next(error);
+  }
+};
+
+const changePasswordController = async (req, res, next) => {
+  try {
+    const { currentPassword, newPassword } = req.body;
+    const userId = req.user.id;
+
+    logger.info('Password change attempt', { userId });
+
+    const result = await changePassword(userId, currentPassword, newPassword);
+
+    logger.info('Password changed successfully', { userId });
+
+    const successResponse = {
+      type: 'https://glasscode/errors/success',
+      title: 'Success',
+      status: 200,
+      data: result,
+    };
+
+    res.status(200).json(successResponse);
+  } catch (error) {
+    logger.error('Password change failed', {
+      userId: req.user?.id,
+      error: error.message,
+      stack: error.stack,
+    });
+
+    if (
+      error.message &&
+      (error.message.toLowerCase().includes('incorrect') ||
+        error.message.toLowerCase().includes('password'))
+    ) {
+      const unauthorizedResponse = {
+        type: 'https://glasscode/errors/unauthorized',
+        title: 'Unauthorized',
+        status: 401,
+        detail: 'Current password is incorrect',
+        instance: req.originalUrl,
+        success: false,
+        message: 'Current password is incorrect',
+      };
+      return res.status(401).json(unauthorizedResponse);
+    }
+
+    next(error);
+  }
+};
+
+const resetPasswordController = async (req, res, next) => {
+  try {
+    const { email } = req.body;
+
+    logger.info('Password reset requested', { email });
+
+    const result = await resetPassword(email);
+
+    logger.info('Password reset process completed', { email });
+
+    const successResponse = {
+      type: 'https://glasscode/errors/success',
+      title: 'Success',
+      status: 200,
+      data: result,
+      message:
+        'If an account exists with this email, a password reset link has been sent.',
+    };
+
+    res.status(200).json(successResponse);
+  } catch (error) {
+    logger.error('Password reset failed', {
+      email: req.body.email,
+      error: error.message,
+      stack: error.stack,
+    });
     next(error);
   }
 };
@@ -175,4 +274,6 @@ module.exports = {
   registerController,
   loginController,
   getMeController,
+  changePasswordController,
+  resetPasswordController,
 };

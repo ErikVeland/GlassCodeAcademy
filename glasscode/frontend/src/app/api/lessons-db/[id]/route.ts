@@ -5,11 +5,15 @@ export async function GET(_req: NextRequest, { params }: { params: Promise<{ id:
   try {
     const { id } = await params;
     const apiBase = (() => { try { return getApiBaseStrict(); } catch { return 'http://127.0.0.1:8080'; } })();
-    const backendUrl = `${apiBase}/api/lessons-db/${id}`;
+    const backendUrl = `${apiBase}/api/lessons/${id}`;
     const res = await fetch(backendUrl);
     const text = await res.text();
-    const contentType = res.headers.get('content-type') || 'application/json';
-    return new NextResponse(text, { status: res.status, headers: { 'Content-Type': contentType } });
+    let body = text;
+    try {
+      const parsed = JSON.parse(text);
+      body = JSON.stringify(parsed?.data ?? parsed);
+    } catch {}
+    return new NextResponse(body, { status: res.status, headers: { 'Content-Type': 'application/json' } });
   } catch (error) {
     console.error('Proxy GET /api/lessons-db/[id] failed:', error);
     return NextResponse.json({ error: 'Failed to fetch lesson from backend' }, { status: 502 });
@@ -21,7 +25,7 @@ export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: 
     const body = await req.json();
     const { id } = await params;
     const apiBase = (() => { try { return getApiBaseStrict(); } catch { return 'http://127.0.0.1:8080'; } })();
-    const backendUrl = `${apiBase}/api/lessons-db/${id}`;
+    const backendUrl = `${apiBase}/api/content/lessons/${id}`;
     const res = await fetch(backendUrl, {
       method: 'PUT',
       headers: {

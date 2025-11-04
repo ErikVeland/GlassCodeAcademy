@@ -2,11 +2,15 @@
 
 🌐 **[Visit GlassCode Academy](https://glasscode.academy)** - Live Demo & Production Site
 
+> **Note**: This documentation has been consolidated. For information about documentation organization, see [DOCUMENTATION_CONSOLIDATION_GUIDE.md](docs/DOCUMENTATION_CONSOLIDATION_GUIDE.md).
+
 ## Project Overview
 
 GlassCode Academy is a full-stack educational platform designed to help developers learn and prepare for interviews in modern web technologies. The application provides structured learning resources and realistic interview practise with instant feedback.
 
 For detailed information about the current architecture, see [CURRENT_ARCHITECTURE.md](docs/CURRENT_ARCHITECTURE.md).
+
+For current project status, see [PROJECT_STATUS_SUMMARY.md](docs/PROJECT_STATUS_SUMMARY.md).
 
 > **Note**: This is purely a learning and coding challenge! No real application would (or should) be architored this way. In the real world, you wouldn't run 5+ separate technology stacks just to teach about them. But for the sake of learning and demonstrating proficiency in each technology, we've gone a bit overboard with the architecture. Think of it as an educational extreme sport!
 

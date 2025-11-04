@@ -1,4 +1,4 @@
-const { User, Role } = require('../models');
+const { getUserRoleNames } = require('../services/userRoleService');
 
 // Check if user has a specific role
 const authorize = (...roles) => {
@@ -51,19 +51,8 @@ const authorize = (...roles) => {
         return next();
       }
 
-      // Get user with roles
-      const userWithRoles = await User.findByPk(req.user.id, {
-        include: [
-          {
-            model: Role,
-            as: 'roles',
-            through: { attributes: [] }, // Don't include UserRole attributes
-          },
-        ],
-      });
-
-      // Extract role names
-      const userRoles = userWithRoles.roles.map((role) => role.name);
+      // Get role names via centralized service
+      const userRoles = await getUserRoleNames(req.user.id);
 
       // Check if user has any of the required roles
       const hasRequiredRole = roles.some((role) => userRoles.includes(role));

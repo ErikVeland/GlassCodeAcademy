@@ -1,12 +1,13 @@
 # GlassCode Academy Current Architecture
 
-This document provides an up-to-date overview of the GlassCode Academy technology stack and architecture as of October 2025.
+This document provides an up-to-date overview of the GlassCode Academy technology stack and architecture as of November 2025.
 
 See also:
 - [TECH_STACK.md](TECH_STACK.md) - Detailed technology stack information
 - [TECH_STACK_INTEGRATION.md](TECH_STACK_INTEGRATION.md) - Technology integration details
 - [CONTENT_STRUCTURE.md](CONTENT_STRUCTURE.md) - Content organization and structure
 - [PROGRESS_REPORT.md](PROGRESS_REPORT.md) - Development progress and statistics
+- [PROJECT_STATUS_SUMMARY.md](PROJECT_STATUS_SUMMARY.md) - Current project status and test results
 
 ## Current Technology Stack
 

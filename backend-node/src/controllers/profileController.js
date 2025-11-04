@@ -19,8 +19,11 @@ const logger = winston.createLogger({
 
 const getProfileController = async (req, res, next) => {
   try {
-    // Test-mode stub
-    if (process.env.NODE_ENV === 'test') {
+    // Test-mode stub guarded by SIMPLE_TEST_MODE for unit-style tests
+    if (
+      process.env.NODE_ENV === 'test' &&
+      process.env.SIMPLE_TEST_MODE === 'true'
+    ) {
       return res.status(200).json({
         success: true,
         data: {
@@ -37,16 +40,11 @@ const getProfileController = async (req, res, next) => {
       correlationId: req.correlationId,
     });
 
-    // Get user with roles
-    const user = await User.findByPk(req.user.id, {
-      attributes: { exclude: ['passwordHash'] }, // Exclude password from response
-      include: [
-        {
-          model: require('../models/roleModel'),
-          as: 'roles',
-          through: { attributes: [] }, // Don't include UserRole attributes
-        },
-      ],
+    // Get user with roles via centralized service
+    const { getUserWithRoles } = require('../services/userRoleService');
+    const user = await getUserWithRoles(req.user.id, {
+      attributes: { exclude: ['passwordHash'] },
+      throughAttributes: [],
     });
 
     if (!user) {
@@ -94,8 +92,11 @@ const getProfileController = async (req, res, next) => {
 
 const updateProfileController = async (req, res, next) => {
   try {
-    // Test-mode stub
-    if (process.env.NODE_ENV === 'test') {
+    // Test-mode stub guarded by SIMPLE_TEST_MODE for unit-style tests
+    if (
+      process.env.NODE_ENV === 'test' &&
+      process.env.SIMPLE_TEST_MODE === 'true'
+    ) {
       return res.status(200).json({
         success: true,
         data: {

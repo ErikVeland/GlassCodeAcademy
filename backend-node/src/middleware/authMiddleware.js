@@ -28,10 +28,30 @@ const authenticate = async (req, res, next) => {
 
     const token = authHeader.split(' ')[1];
 
-    // Test environment shortcut for token handling
-    if (process.env.NODE_ENV === 'test' && token === 'mock-jwt-token') {
-      req.user = { id: 1, email: 'test@example.com', role: 'admin' };
-      return next();
+    // Test environment shortcuts for token handling
+    if (process.env.NODE_ENV === 'test') {
+      if (token === 'mock-jwt-token') {
+        // Default mock token used by unit tests - non-admin user
+        req.user = {
+          id: 1,
+          email: 'test@example.com',
+          role: 'student',
+          firstName: 'Test',
+          lastName: 'User',
+        };
+        return next();
+      }
+      if (token === 'mock-admin-token') {
+        // Admin-specific mock token used by integration tests
+        req.user = {
+          id: 1,
+          email: 'admin@test.com',
+          role: 'admin',
+          firstName: 'Admin',
+          lastName: 'User',
+        };
+        return next();
+      }
     }
 
     // Verify token (with test-mode fallback secret)
@@ -54,12 +74,26 @@ const authenticate = async (req, res, next) => {
       }
     }
 
-    // In test environment, accept tokens signed with test secret and attach a simple user
+    // In test environment, try to attach full user from DB for richer profile fields
     if (process.env.NODE_ENV === 'test') {
+      try {
+        if (decoded && (decoded.userId || decoded.id)) {
+          const user = await User.findByPk(decoded.userId || decoded.id);
+          if (user) {
+            req.user = user;
+            return next();
+          }
+        }
+      } catch {
+        // Fall through to simple user attachment below
+      }
+
       const simpleUser = {
         id: decoded.userId || decoded.id || 1,
         email: decoded.email || 'test@example.com',
         role: decoded.role || 'student',
+        firstName: decoded.firstName,
+        lastName: decoded.lastName,
       };
       req.user = simpleUser;
       return next();

@@ -2,8 +2,10 @@ const { User, Role, UserRole } = require('../models');
 
 const getAllUsersController = async (req, res, next) => {
   try {
-    // Test-mode stub
-    if (process.env.NODE_ENV === 'test') {
+    // Test-mode stub (enabled when SIMPLE_TEST_MODE is true)
+    const simpleTestMode =
+      (process.env.SIMPLE_TEST_MODE || '').toLowerCase() === 'true';
+    if (process.env.NODE_ENV === 'test' && simpleTestMode) {
       const successResponse = {
         type: 'https://glasscode/errors/success',
         title: 'Success',
@@ -24,7 +26,7 @@ const getAllUsersController = async (req, res, next) => {
       include: [
         {
           model: Role,
-          as: 'roles',
+          as: 'userRoles',
           through: { attributes: [] }, // Don't include UserRole attributes
         },
       ],
@@ -57,8 +59,10 @@ const getAllUsersController = async (req, res, next) => {
 
 const getUserByIdController = async (req, res, next) => {
   try {
-    // Test-mode stub
-    if (process.env.NODE_ENV === 'test') {
+    // Test-mode stub (enabled when SIMPLE_TEST_MODE is true)
+    const simpleTestMode =
+      (process.env.SIMPLE_TEST_MODE || '').toLowerCase() === 'true';
+    if (process.env.NODE_ENV === 'test' && simpleTestMode) {
       const successResponse = {
         type: 'https://glasscode/errors/success',
         title: 'Success',
@@ -76,7 +80,7 @@ const getUserByIdController = async (req, res, next) => {
       include: [
         {
           model: Role,
-          as: 'roles',
+          as: 'userRoles',
           through: { attributes: [] }, // Don't include UserRole attributes
         },
       ],
@@ -111,8 +115,10 @@ const getUserByIdController = async (req, res, next) => {
 
 const assignRoleToUserController = async (req, res, next) => {
   try {
-    // Test-mode stub
-    if (process.env.NODE_ENV === 'test') {
+    // Test-mode stub (enabled when SIMPLE_TEST_MODE is true)
+    const simpleTestMode =
+      (process.env.SIMPLE_TEST_MODE || '').toLowerCase() === 'true';
+    if (process.env.NODE_ENV === 'test' && simpleTestMode) {
       const successResponse = {
         type: 'https://glasscode/errors/success',
         title: 'Success',
@@ -155,15 +161,13 @@ const assignRoleToUserController = async (req, res, next) => {
       return res.status(404).json(errorResponse);
     }
 
-    // Check if user already has this role
-    const existingUserRole = await UserRole.findOne({
-      where: {
-        userId,
-        roleId,
-      },
+    // Assign role to user using findOrCreate to avoid race with unique constraints
+    const [userRole, created] = await UserRole.findOrCreate({
+      where: { userId, roleId },
+      defaults: { assignedAt: new Date() },
     });
 
-    if (existingUserRole) {
+    if (!created) {
       const errorResponse = {
         type: 'https://glasscode/errors/conflict-error',
         title: 'Conflict Error',
@@ -175,13 +179,6 @@ const assignRoleToUserController = async (req, res, next) => {
 
       return res.status(409).json(errorResponse);
     }
-
-    // Assign role to user
-    const userRole = await UserRole.create({
-      userId,
-      roleId,
-      assignedAt: new Date(),
-    });
 
     const successResponse = {
       type: 'https://glasscode/errors/success',
@@ -199,8 +196,10 @@ const assignRoleToUserController = async (req, res, next) => {
 
 const removeRoleFromUserController = async (req, res, next) => {
   try {
-    // Test-mode stub
-    if (process.env.NODE_ENV === 'test') {
+    // Test-mode stub (enabled when SIMPLE_TEST_MODE is true)
+    const simpleTestMode =
+      (process.env.SIMPLE_TEST_MODE || '').toLowerCase() === 'true';
+    if (process.env.NODE_ENV === 'test' && simpleTestMode) {
       const successResponse = {
         type: 'https://glasscode/errors/success',
         title: 'Success',
@@ -255,8 +254,10 @@ const removeRoleFromUserController = async (req, res, next) => {
 
 const getAllRolesController = async (req, res, next) => {
   try {
-    // Test-mode stub
-    if (process.env.NODE_ENV === 'test') {
+    // Test-mode stub (enabled when SIMPLE_TEST_MODE is true)
+    const simpleTestMode =
+      (process.env.SIMPLE_TEST_MODE || '').toLowerCase() === 'true';
+    if (process.env.NODE_ENV === 'test' && simpleTestMode) {
       const successResponse = {
         type: 'https://glasscode/errors/success',
         title: 'Success',

@@ -21,11 +21,11 @@ async function seedDatabase() {
     }
     
     // Create roles idempotently
-    await Role.findOrCreate({
+    const [adminRole] = await Role.findOrCreate({
       where: { name: 'admin' },
       defaults: { description: 'Administrator role' }
     });
-    await Role.findOrCreate({
+    const [userRole] = await Role.findOrCreate({
       where: { name: 'user' },
       defaults: { description: 'Regular user role' }
     });
@@ -146,16 +146,43 @@ async function seedDatabase() {
     console.log('Lesson created successfully!');
     
     // Create a sample user
-    await User.findOrCreate({
+    const [adminUser] = await User.findOrCreate({
       where: { email: 'admin@example.com' },
       defaults: {
         firstName: 'Admin',
         lastName: 'User',
-        passwordHash: 'password123'
+        passwordHash: 'password123',
+        role: 'admin'
       }
     });
     
     console.log('User created successfully!');
+    
+    // Assign admin role to admin user
+    const UserRole = require('../src/models/userRoleModel');
+    try {
+      // Try to find if the association already exists
+      const existingAssoc = await UserRole.findOne({
+        where: { 
+          userId: adminUser.id,
+          roleId: adminRole.id
+        }
+      });
+      
+      if (!existingAssoc) {
+        // Create the association manually
+        await UserRole.create({
+          userId: adminUser.id,
+          roleId: adminRole.id,
+          assignedAt: new Date()
+        });
+        console.log('Admin role assigned to admin user successfully!');
+      } else {
+        console.log('Admin user already has admin role assigned.');
+      }
+    } catch (error) {
+      console.error('Error assigning admin role:', error.message);
+    }
     
     // Create default forum categories
     const ForumCategory = require('../src/models/forumCategoryModel');

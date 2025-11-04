@@ -70,16 +70,27 @@ const nextConfig: NextConfig = {
   async rewrites() {
     // Prefer configured API base if provided; otherwise default to local backend
     const base = process.env.NEXT_PUBLIC_API_BASE?.replace(/\/+$/, '') || 'http://127.0.0.1:8080';
-    return [
-      {
-        source: '/graphql',
-        destination: `${base}/graphql`,
-      },
-      {
-        source: '/api/:path*',
-        destination: `${base}/api/:path*`,
-      },
-    ];
+    return {
+      // Ensure NextAuth routes are handled by Next.js and NOT proxied
+      beforeFiles: [
+        {
+          source: '/api/auth/:path*',
+          destination: '/api/auth/:path*',
+        },
+      ],
+      // Proxy other API routes to the backend after filesystem routes are checked
+      afterFiles: [
+        {
+          source: '/graphql',
+          destination: `${base}/graphql`,
+        },
+        {
+          source: '/api/:path*',
+          destination: `${base}/api/:path*`,
+        },
+      ],
+      fallback: [],
+    };
   },
   async headers() {
     return [

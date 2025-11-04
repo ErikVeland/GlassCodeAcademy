@@ -54,3 +54,6 @@ Use this index to navigate all project docs. It reflects the current Node.js bac
 3. Use `/backend-node/API_DOCUMENTATION.md` when integrating or verifying endpoints.
 4. See `/docs/CURRENT_ARCHITECTURE.md` for data flow and monorepo layout.
 5. For deployment and ops, start with `/docs/PRODUCTION_RUNBOOK.md` and `/docs/HEALTH_CHECK.md`.
+
+## Consolidated Documentation
+For information about documentation organization and consolidation, see `/docs/DOCUMENTATION_CONSOLIDATION_GUIDE.md`.

@@ -9,10 +9,12 @@ const UserRole = sequelize.define(
     userId: {
       type: DataTypes.INTEGER,
       field: 'user_id',
+      allowNull: false,
     },
     roleId: {
       type: DataTypes.INTEGER,
       field: 'role_id',
+      allowNull: false,
     },
     assignedAt: {
       type: DataTypes.DATE,
