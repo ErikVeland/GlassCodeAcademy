@@ -42,9 +42,9 @@ function printEnvHint(error) {
 function createMigrator(sequelizeInstance) {
   return new Umzug({
     migrations: {
-      glob: ['../src/migrations/*.js', { cwd: __dirname }],
+      glob: ['../migrations/*.js', { cwd: __dirname }],
     },
-    context: sequelizeInstance.getQueryInterface(),
+    context: { queryInterface: sequelizeInstance.getQueryInterface(), Sequelize: sequelizeInstance.constructor }, // Pass both queryInterface and Sequelize constructor
     storage: new SequelizeStorage({ sequelize: sequelizeInstance }),
     logger: console,
   });

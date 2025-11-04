@@ -13,8 +13,12 @@ const Joi = require('joi');
 
 const router = express.Router();
 const isTestEnv = () => (process.env.NODE_ENV || '').toLowerCase() === 'test';
+const isDevEnv = () =>
+  (process.env.NODE_ENV || '').toLowerCase() === 'development';
+
+// In development, disable rate limiting
 const strictOrNoop = (req, res, next) => {
-  if (isTestEnv()) return next();
+  if (isTestEnv() || isDevEnv()) return next();
   return strictLimiter(req, res, next);
 };
 

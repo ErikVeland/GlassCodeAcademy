@@ -2,7 +2,7 @@
 
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
-  async up(queryInterface, Sequelize) {
+  async up({ queryInterface, Sequelize }) {
     // Add profile_data column
     await queryInterface.addColumn('users', 'profile_data', {
       type: Sequelize.JSONB,
@@ -51,7 +51,7 @@ module.exports = {
     });
   },
 
-  async down(queryInterface, Sequelize) {
+  async down({ queryInterface, Sequelize }) {
     // Remove indexes
     await queryInterface.removeIndex('users', 'users_status_idx');
     await queryInterface.removeIndex('users', 'users_last_activity_at_idx');

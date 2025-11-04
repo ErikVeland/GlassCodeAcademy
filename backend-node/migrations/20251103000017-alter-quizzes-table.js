@@ -2,10 +2,10 @@
 
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
-  async up(queryInterface, Sequelize) {
+  async up({ queryInterface, Sequelize }) {
     // Note: Assuming quizzes table name is 'quizzes' or 'lesson_quizzes'
     // Adjust table name if different
-    const tableName = 'quizzes';
+    const tableName = 'lesson_quizzes';
 
     // Add academy_id column to quizzes table
     await queryInterface.addColumn(tableName, 'academy_id', {
@@ -65,19 +65,19 @@ module.exports = {
 
     // Add indexes
     await queryInterface.addIndex(tableName, ['academy_id'], {
-      name: 'quizzes_academy_id_idx'
+      name: 'lesson_quizzes_academy_id_idx'
     });
 
     await queryInterface.addIndex(tableName, ['department_id'], {
-      name: 'quizzes_department_id_idx'
+      name: 'lesson_quizzes_department_id_idx'
     });
 
     await queryInterface.addIndex(tableName, ['workflow_state'], {
-      name: 'quizzes_workflow_state_idx'
+      name: 'lesson_quizzes_workflow_state_idx'
     });
 
     await queryInterface.addIndex(tableName, ['quality_score'], {
-      name: 'quizzes_quality_score_idx'
+      name: 'lesson_quizzes_quality_score_idx'
     });
 
     // Set academy_id from parent lesson
@@ -101,14 +101,14 @@ module.exports = {
     });
   },
 
-  async down(queryInterface, Sequelize) {
+  async down({ queryInterface, Sequelize }) {
     const tableName = 'quizzes';
 
     // Remove indexes
-    await queryInterface.removeIndex(tableName, 'quizzes_academy_id_idx');
-    await queryInterface.removeIndex(tableName, 'quizzes_department_id_idx');
-    await queryInterface.removeIndex(tableName, 'quizzes_workflow_state_idx');
-    await queryInterface.removeIndex(tableName, 'quizzes_quality_score_idx');
+    await queryInterface.removeIndex(tableName, 'lesson_quizzes_academy_id_idx');
+    await queryInterface.removeIndex(tableName, 'lesson_quizzes_department_id_idx');
+    await queryInterface.removeIndex(tableName, 'lesson_quizzes_workflow_state_idx');
+    await queryInterface.removeIndex(tableName, 'lesson_quizzes_quality_score_idx');
 
     // Remove columns
     await queryInterface.removeColumn(tableName, 'last_validated_at');

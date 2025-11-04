@@ -130,7 +130,6 @@ const register = async (userData) => {
 
 const login = async (email, password) => {
   await ensureTestDbSynced();
-
   // Find user
   const user = await User.findOne({
     where: {

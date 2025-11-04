@@ -1,3 +1,0 @@
-Total: 249
-Passed: 249
-Failed: 0

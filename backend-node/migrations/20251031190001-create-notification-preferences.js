@@ -2,7 +2,7 @@
 
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
-  async up (queryInterface, Sequelize) {
+  async up ({ queryInterface, Sequelize }) {
     await queryInterface.createTable('notification_preferences', {
       id: {
         type: Sequelize.INTEGER,
@@ -73,7 +73,7 @@ module.exports = {
     });
   },
 
-  async down (queryInterface, Sequelize) {
+  async down ({ queryInterface, Sequelize }) {
     await queryInterface.dropTable('notification_preferences');
   }
 };

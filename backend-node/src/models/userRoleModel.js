@@ -10,11 +10,19 @@ const UserRole = sequelize.define(
       type: DataTypes.INTEGER,
       field: 'user_id',
       allowNull: false,
+      references: {
+        model: 'users',
+        key: 'id',
+      },
     },
     roleId: {
       type: DataTypes.INTEGER,
       field: 'role_id',
       allowNull: false,
+      references: {
+        model: 'roles',
+        key: 'id',
+      },
     },
     assignedAt: {
       type: DataTypes.DATE,
@@ -31,12 +39,12 @@ const UserRole = sequelize.define(
 
 // Define associations
 UserRole.belongsTo(User, {
-  foreignKey: 'user_id',
+  foreignKey: 'userId',
   as: 'roleUser',
 });
 
 UserRole.belongsTo(Role, {
-  foreignKey: 'role_id',
+  foreignKey: 'roleId',
   as: 'role',
 });
 

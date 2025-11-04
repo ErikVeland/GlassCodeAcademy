@@ -2,6 +2,7 @@
 /* global require, console, process */
 const sequelize = require('../src/config/database');
 const { Course, Module, Lesson, User, Role, Tier, initializeAssociations } = require('../src/models');
+const { ForumCategory } = require('../src/models');
 
 console.log('Seeding using DATABASE_URL:', process.env.DATABASE_URL || '(not set)');
 console.log('Seeding using DB_DIALECT:', process.env.DB_DIALECT || '(not set)');
@@ -97,6 +98,61 @@ async function seedDatabase() {
 
     console.log('Tiers created successfully!');
     
+    // Create forum categories
+    const forumCategories = [
+      {
+        name: 'General Discussion',
+        description: 'General discussions about programming, career advice, and learning resources',
+        slug: 'general-discussion',
+        order: 1,
+        icon: '💬'
+      },
+      {
+        name: 'Web Development',
+        description: 'Questions and discussions about web development technologies',
+        slug: 'web-development',
+        order: 2,
+        icon: '🌐'
+      },
+      {
+        name: 'Backend Development',
+        description: 'Backend frameworks, databases, and server-side technologies',
+        slug: 'backend-development',
+        order: 3,
+        icon: '⚙️'
+      },
+      {
+        name: 'Frontend Development',
+        description: 'Frontend frameworks, UI/UX, and client-side technologies',
+        slug: 'frontend-development',
+        order: 4,
+        icon: '🎨'
+      },
+      {
+        name: 'DevOps & Deployment',
+        description: 'CI/CD, deployment, containers, and infrastructure',
+        slug: 'devops-deployment',
+        order: 5,
+        icon: '🚀'
+      },
+      {
+        name: 'Career & Jobs',
+        description: 'Career advice, job postings, and professional development',
+        slug: 'career-jobs',
+        order: 6,
+        icon: '💼'
+      }
+    ];
+
+    for (const category of forumCategories) {
+      await ForumCategory.findOrCreate({
+        where: { slug: category.slug },
+        defaults: category,
+      });
+    }
+
+    console.log('Forum categories created successfully!');
+    
     // Create a sample course
     const [course] = await Course.findOrCreate({
       where: { slug: 'web-fundamentals' },
@@ -156,8 +212,9 @@ async function seedDatabase() {
       }
     });
     
-    console.log('User created successfully!');
+    console.log('User created successfully with ID:', adminUser.id);
     
+<<<<<<< Local
     // Assign admin role to admin user
     const UserRole = require('../src/models/userRoleModel');
     try {
@@ -227,6 +284,44 @@ async function seedDatabase() {
     
     console.log('Forum categories created successfully!');
     
+=======
+    // Assign admin role to admin user
+    const adminRole = await Role.findOne({ where: { name: 'admin' } });
+    if (adminRole) {
+      console.log('Admin role found with ID:', adminRole.id);
+      const UserRole = require('../src/models/userRoleModel');
+      try {
+        // Try to find if the association already exists
+        const existingUserRole = await UserRole.findOne({
+          where: { 
+            userId: adminUser.id,
+            roleId: adminRole.id
+          }
+        });
+        
+        if (!existingUserRole) {
+          console.log('Creating new UserRole with userId:', adminUser.id, 'and roleId:', adminRole.id);
+          // Use raw SQL query to create the association
+          await sequelize.query(
+            'INSERT INTO user_roles (user_id, role_id, assigned_at, created_at, updated_at) VALUES (?, ?, NOW(), NOW(), NOW())',
+            {
+              replacements: [adminUser.id, adminRole.id],
+              type: sequelize.QueryTypes.INSERT
+            }
+          );
+          console.log('Admin role assigned to admin user successfully!');
+        } else {
+          console.log('Admin user already has admin role assigned.');
+        }
+      } catch (error) {
+        console.error('Error assigning admin role:', error.message);
+        console.error('Full error:', error);
+        console.error('User ID:', adminUser.id);
+        console.error('Role ID:', adminRole.id);
+      }
+    }
+    
+>>>>>>> Remote
     console.log('Database seeding completed successfully!');
     process.exit(0);
   } catch (error) {

@@ -2,7 +2,7 @@
 
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
-  async up(queryInterface, Sequelize) {
+  async up({ queryInterface, Sequelize }) {
     // Add academy_id column to lessons table
     await queryInterface.addColumn('lessons', 'academy_id', {
       type: Sequelize.INTEGER,
@@ -97,7 +97,7 @@ module.exports = {
     });
   },
 
-  async down(queryInterface, Sequelize) {
+  async down({ queryInterface, Sequelize }) {
     // Remove indexes
     await queryInterface.removeIndex('lessons', 'lessons_academy_id_idx');
     await queryInterface.removeIndex('lessons', 'lessons_department_id_idx');

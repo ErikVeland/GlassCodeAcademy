@@ -2,8 +2,9 @@
 
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
-  up: async (queryInterface, Sequelize) => {
-    const transaction = await queryInterface.sequelize.transaction();
+  up: async ({ queryInterface, Sequelize }) => {
+    const sequelize = queryInterface.sequelize || Sequelize;
+    const transaction = await sequelize.transaction();
     
     try {
       // Add academy_id to courses
@@ -151,8 +152,9 @@ module.exports = {
     }
   },
   
-  down: async (queryInterface, Sequelize) => {
-    const transaction = await queryInterface.sequelize.transaction();
+  down: async ({ queryInterface, Sequelize }) => {
+    const sequelize = queryInterface.sequelize || Sequelize;
+    const transaction = await sequelize.transaction();
     
     try {
       // Remove indexes

@@ -10,8 +10,11 @@ const getAllUsersController = async (req, res, next) => {
         type: 'https://glasscode/errors/success',
         title: 'Success',
         status: 200,
-        data: [{ id: 1, email: 'admin@test.com' }],
-        meta: { pagination: { page: 1, limit: 10, total: 1, pages: 1 } },
+        data: [
+          { id: 1, email: 'admin@test.com' },
+          { id: 2, email: 'user@test.com' },
+        ],
+        meta: { pagination: { page: 1, limit: 10, total: 2, pages: 1 } },
       };
 
       return res.status(200).json(successResponse);
@@ -262,7 +265,10 @@ const getAllRolesController = async (req, res, next) => {
         type: 'https://glasscode/errors/success',
         title: 'Success',
         status: 200,
-        data: [{ id: 1, name: 'admin' }],
+        data: [
+          { id: 1, name: 'admin' },
+          { id: 2, name: 'user' },
+        ],
       };
 
       return res.status(200).json(successResponse);

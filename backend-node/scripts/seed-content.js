@@ -26,7 +26,13 @@ async function ensureSchema() {
       await sequelize.sync();
       console.log('✅ Schema sync completed.');
     } else {
-      console.log('✅ Required tables already present; skipping schema sync.');
+      console.log('🔧 Required tables present; altering core content tables to add missing columns');
+      // Targeted alter sync to avoid issues in unrelated models
+      await Course.sync({ alter: true });
+      await Module.sync({ alter: true });
+      await Lesson.sync({ alter: true });
+      await LessonQuiz.sync({ alter: true });
+      console.log('✅ Targeted schema alter sync completed.');
     }
   } catch (e) {
     console.error('❌ Failed to verify or sync schema:', e);

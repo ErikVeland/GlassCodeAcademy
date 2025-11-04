@@ -134,12 +134,13 @@ export default function AdminDashboard() {
       const silent = Boolean(opts?.silent);
       if (silent) setRefreshing(true); else setLoading(true);
       setError(null);
-      
-      // Fetch modules from correct endpoint with authentication
-      const modulesRes = await fetch('/api/modules-db', {
-        cache: 'no-store'
+      // Use the API base URL from environment variables
+      const apiBase = process.env.NEXT_PUBLIC_API_BASE || 'http://localhost:8080';
+
+      // Fetch modules from backend
+      const modulesRes = await fetch(`${apiBase}/api/modules`, {
+        cache: 'no-store',
       });
-      
       if (!modulesRes.ok) {
         throw new Error(`Failed to fetch modules: ${modulesRes.status}`);
       }

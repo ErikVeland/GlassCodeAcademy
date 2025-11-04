@@ -1,7 +1,0 @@
-All tests are currently passing. No failing tests detected.
-
-Test results from the latest run:
-- Authentication API Integration Tests: 9/9 tests passed
-- Course API Tests: 3/3 tests passed
-
-Total: 298 tests passed, 0 failed

@@ -40,6 +40,18 @@ command -v node >/dev/null 2>&1 || fail "Node.js not found in PATH"
 command -v npm >/dev/null 2>&1 || fail "npm not found in PATH"
 ok "Node: $(node -v), npm: $(npm -v)"
 
+section "Prettier formatting"
+# Ensure code style consistency before other checks to avoid noisy failures
+if [ -d "backend-node" ]; then
+  echo "Running Prettier format in backend-node..."
+  (cd backend-node && npm run format) || fail "Prettier format failed in backend-node"
+  echo "Verifying Prettier formatting in backend-node..."
+  (cd backend-node && npm run format:check) || fail "Prettier check failed in backend-node"
+  ok "Backend-node formatting is clean"
+else
+  echo "backend-node directory not found; skipping backend formatting"
+fi
+
 section "Content validation"
 if [ "$SKIP_CONTENT_VALIDATION" = "1" ] || [ "$FAST_MODE" = "1" ]; then
   echo "Skipping content validation due to fast/skip mode"

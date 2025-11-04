@@ -10,5 +10,8 @@
   },
   "devDependencies": {
     "@types/jest": "^30.0.0"
+  },
+  "dependencies": {
+    "pg": "^8.16.3"
   }
 }

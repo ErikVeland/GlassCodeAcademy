@@ -1,5 +1,3 @@
- 
-
 const express = require('express');
 const cors = require('cors');
 const helmet = require('helmet');
@@ -14,9 +12,9 @@ const morgan = require('morgan');
  */
 function createApp(options = {}) {
   const {
-    enableSentry = !!process.env.SENTRY_DSN,
+    enableSentry = false, // Disable Sentry by default for local development
     enableMetrics = true,
-    disableRateLimit = false,
+    disableRateLimit = true, // Disable rate limiting for local development
   } = options;
 
   const app = express();
@@ -29,19 +27,23 @@ function createApp(options = {}) {
     Sentry.init({
       dsn: process.env.SENTRY_DSN,
       integrations: [
-        new Sentry.Integrations.Http({ tracing: true }),
-        new Sentry.Integrations.Express({ app }),
+        // Use the correct integration for Express in newer versions
+        Sentry.expressIntegration(),
         nodeProfilingIntegration(),
       ],
-      tracesSampleRate: 1.0,
+      tracesSampleRate: parseFloat(process.env.SENTRY_TRACES_SAMPLE_RATE || '1.0'),
       profilesSampleRate: 1.0,
     });
 
     console.log('Sentry initialized successfully');
 
-    // Request and tracing handlers
+    // Request handler
     app.use(Sentry.Handlers.requestHandler());
-    app.use(Sentry.Handlers.tracingHandler());
+    
+    // Tracing handler (if tracing is enabled)
+    if (process.env.SENTRY_TRACES_SAMPLE_RATE && parseFloat(process.env.SENTRY_TRACES_SAMPLE_RATE) > 0) {
+      app.use(Sentry.Handlers.tracingHandler());
+    }
   } else {
     console.log('Sentry disabled or DSN not provided');
   }

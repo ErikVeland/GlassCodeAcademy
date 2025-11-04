@@ -2,7 +2,7 @@
 
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
-  async up (queryInterface, Sequelize) {
+  async up ({ queryInterface, Sequelize }) {
     // Add moderation columns to forum_threads
     await queryInterface.addColumn('forum_threads', 'is_approved', {
       type: Sequelize.BOOLEAN,
@@ -42,7 +42,7 @@ module.exports = {
     });
   },
 
-  async down (queryInterface, Sequelize) {
+  async down ({ queryInterface, Sequelize }) {
     // Remove indexes first
     await queryInterface.removeIndex('forum_threads', 'forum_threads_is_approved_idx');
     await queryInterface.removeIndex('forum_threads', 'forum_threads_report_count_idx');
