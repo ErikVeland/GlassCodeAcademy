@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
-import { getAuthOptions } from '@/app/api/auth/[...nextauth]/route';
+import { getAuthOptions } from '@/lib/authOptions';
 import { getApiBaseStrict } from '@/lib/urlUtils';
 
 interface Session {
