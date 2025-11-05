@@ -67,13 +67,37 @@ async function buildStatsFromRegistryApi(): Promise<BaseStats> {
   const difficultyBreakdown = { beginner: 0, intermediate: 0, advanced: 0 };
   const tierBreakdown = { foundational: 0, core: 0, specialized: 0, quality: 0 };
 
-  // Helper to extract short slug from routes or canonical slug
+  // Helper to derive short slug reliably from the module's canonical slug
+  // The registry routes may be in the form "/modules/<moduleSlug>/...";
+  // extracting the first path segment ("modules") is incorrect.
+  // Instead, derive short slug from the canonical module slug.
   const toShortSlug = (m: RegistryModule): string => {
-    const lessonsRoute = m.routes?.lessons || '';
-    const match = lessonsRoute.match(/^\/(.*?)\//);
-    if (match && match[1]) return match[1];
-    // fallback: first token before '-' or original slug
-    return (m.slug.includes('-') ? m.slug.split('-')[0] : m.slug);
+    const slug = (m.slug || '').toString();
+    if (!slug) return '';
+    // Map well-known module slugs to their short slugs when needed
+    const explicitMap: Record<string, string> = {
+      'programming-fundamentals': 'programming',
+      'web-fundamentals': 'web',
+      'version-control': 'version',
+      'dotnet-fundamentals': 'dotnet',
+      'react-fundamentals': 'react',
+      'database-systems': 'database',
+      'typescript-fundamentals': 'typescript',
+      'node-fundamentals': 'node',
+      'laravel-fundamentals': 'laravel',
+      'nextjs-advanced': 'nextjs',
+      'graphql-advanced': 'graphql',
+      'sass-advanced': 'sass',
+      'tailwind-advanced': 'tailwind',
+      'vue-advanced': 'vue',
+      'testing-fundamentals': 'testing',
+      'e2e-testing': 'e2e',
+      'performance-optimization': 'performance',
+      'security-fundamentals': 'security',
+    };
+    if (explicitMap[slug]) return explicitMap[slug];
+    // Generic fallback: use the first token before '-' which matches our naming convention
+    return slug.includes('-') ? slug.split('-')[0] : slug;
   };
 
   await Promise.all(modules.map(async (mod, i) => {

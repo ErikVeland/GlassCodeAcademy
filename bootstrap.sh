@@ -799,6 +799,41 @@ add_if_missing_backend_prod DATABASE_URL "$DATABASE_URL"
         fi
     else
         log "✅ Admin user exists"
+        # Prompt to replace existing admin user
+        if [ -t 0 ]; then
+            read -r -p "Would you like to replace the existing admin user with a new one? [y/N]: " REPLACE_REPLY || true
+        else
+            REPLACE_REPLY="N"
+        fi
+        if [[ "$REPLACE_REPLY" =~ ^[Yy]$ ]]; then
+            if [ -t 0 ]; then
+                read -r -p "Admin email: " ADMIN_EMAIL_INPUT || true
+                read -r -p "First name [Admin]: " ADMIN_FIRST_NAME_INPUT || true
+                read -r -p "Last name [User]: " ADMIN_LAST_NAME_INPUT || true
+                read -s -p "Password (min 8 chars, mixed): " ADMIN_PASSWORD_INPUT || true; echo
+                read -s -p "Confirm password: " ADMIN_PASSWORD_CONFIRM || true; echo
+            fi
+            ADMIN_EMAIL="${ADMIN_EMAIL_INPUT:-${ADMIN_EMAIL:-}}"
+            ADMIN_FIRST_NAME="${ADMIN_FIRST_NAME_INPUT:-${ADMIN_FIRST_NAME:-Admin}}"
+            ADMIN_LAST_NAME="${ADMIN_LAST_NAME_INPUT:-${ADMIN_LAST_NAME:-User}}"
+            ADMIN_PASSWORD="${ADMIN_PASSWORD_INPUT:-${ADMIN_PASSWORD:-}}"
+            if [ -z "$ADMIN_EMAIL" ] || [ -z "$ADMIN_PASSWORD" ]; then
+                log "❌ ERROR: Admin email and password are required"
+                exit 1
+            fi
+            if [ -n "$ADMIN_PASSWORD_INPUT" ] && [ "$ADMIN_PASSWORD_INPUT" != "$ADMIN_PASSWORD_CONFIRM" ]; then
+                log "❌ ERROR: Passwords do not match"
+                exit 1
+            fi
+            log "🔧 Replacing admin user..."
+            if ! sudo -u "$DEPLOY_USER" env NODE_ENV=production DATABASE_URL="$DATABASE_URL" DB_DIALECT="$DB_DIALECT" DB_HOST="$DB_HOST" DB_PORT="$DB_PORT" DB_NAME="$DB_NAME" DB_USER="$DB_USER" DB_PASSWORD="$DB_PASSWORD" DB_SSL="$DB_SSL" ADMIN_EMAIL="$ADMIN_EMAIL" ADMIN_PASSWORD="$ADMIN_PASSWORD" ADMIN_FIRST_NAME="$ADMIN_FIRST_NAME" ADMIN_LAST_NAME="$ADMIN_LAST_NAME" node scripts/create-admin-user.js --force-replace; then
+                log "❌ ERROR: Failed to replace admin user"
+                exit 1
+            fi
+            log "✅ Admin user replaced"
+        else
+            log "ℹ️  Keeping existing admin user"
+        fi
     fi
 
     # Create and start backend service

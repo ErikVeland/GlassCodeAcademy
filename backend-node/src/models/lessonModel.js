@@ -15,7 +15,7 @@ const Lesson = sequelize.define(
       allowNull: true,
       field: 'academy_id',
       references: {
-        model: 'Academies',
+        model: 'academies', // Changed to lowercase table name
         key: 'id',
       },
     },
@@ -24,7 +24,7 @@ const Lesson = sequelize.define(
       allowNull: false,
       field: 'module_id',
       references: {
-        model: 'Modules',
+        model: 'modules', // Changed to lowercase table name
         key: 'id',
       },
     },

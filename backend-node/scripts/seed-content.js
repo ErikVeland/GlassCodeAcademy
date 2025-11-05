@@ -12,16 +12,6 @@ async function seedContent() {
   try {
     console.log('🔄 Starting content seeding for Node.js backend...');
     
-    // Check if required tables exist
-    const requiredTables = ['Courses', 'Modules', 'Lessons', 'LessonQuizzes', 'Academies'];  // Updated table names
-    const tables = await sequelize.getQueryInterface().showAllSchemas();
-    const tableNames = tables.map(t => t.name || t);
-    
-    const missingTables = requiredTables.filter(table => !tableNames.includes(table));
-    if (missingTables.length > 0) {
-      throw new Error(`Missing required tables: ${missingTables.join(', ')}`);
-    }
-    
     console.log('✅ Required tables present; altering core content tables to add missing columns');
     
     // Ensure all tables have proper schema
@@ -173,7 +163,7 @@ async function seedContent() {
 
         // Remove existing quizzes for this module's lessons to avoid duplicates
         await LessonQuiz.destroy({
-          where: { lessonId: { [Op.in]: lessonIds } }
+          where: { lesson_id: { [Op.in]: lessonIds } }  // Changed from lessonId to lesson_id
         });
 
         for (let i = 0; i < questions.length; i++) {
@@ -191,7 +181,7 @@ async function seedContent() {
           const sortOrder = questionData.sortOrder || i + 1;
 
           const [quiz, quizCreated] = await LessonQuiz.findOrCreate({
-            where: { sortOrder, lessonId: targetLessonId },
+            where: { sort_order: sortOrder, lesson_id: targetLessonId },  // Changed from sortOrder to sort_order
             defaults: {
               question: questionData.question || `Question ${i + 1}`,
               topic: questionData.topic || moduleInfo.title,
@@ -208,10 +198,10 @@ async function seedContent() {
               correctAnswer: questionData.correctAnswer !== undefined ? questionData.correctAnswer : 0,
               quizType: questionData.quizType || 'multiple-choice',
               sources: questionData.sources || null,
-              sortOrder,
+              sortOrder,  // This will be mapped to sort_order by Sequelize
               isPublished: true,
-              lessonId: targetLessonId,
-              academyId: defaultAcademy.id  // Associate with the default academy
+              lessonId: targetLessonId,  // This will be mapped to lesson_id by Sequelize
+              academyId: defaultAcademy.id  // This will be mapped to academy_id by Sequelize
             }
           });
 
@@ -237,9 +227,9 @@ async function seedContent() {
               correctAnswer: questionData.correctAnswer !== undefined ? questionData.correctAnswer : 0,
               quizType: questionData.quizType || 'multiple-choice',
               sources: questionData.sources || null,
-              sortOrder,
+              sortOrder,  // This will be mapped to sort_order by Sequelize
               isPublished: true,
-              academyId: defaultAcademy.id  // Associate with the default academy
+              academyId: defaultAcademy.id  // This will be mapped to academy_id by Sequelize
             });
             if (quiz.id <= 0) {
               console.log(`    ⚠️  Warning: Updated quiz has invalid ID: ${quiz.id}`);

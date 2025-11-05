@@ -43,6 +43,7 @@ async function assignAdminRole(user, adminRole) {
 async function main() {
   const args = process.argv.slice(2);
   const checkOnly = args.includes('--check');
+  const forceReplace = args.includes('--force-replace');
   try {
     const exists = await adminExists();
     if (checkOnly) {
@@ -55,9 +56,42 @@ async function main() {
       }
     }
 
-    if (exists) {
-      console.log('Admin user already exists. Skipping creation.');
-      return;
+    if (exists && !forceReplace) {
+      console.log('Admin user already exists.');
+      // Check if we're in a non-interactive environment
+      if (!process.stdin.isTTY) {
+        console.log('Skipping creation (non-interactive mode).');
+        return;
+      }
+      
+      // Interactive prompt to replace existing admin
+      const readline = require('readline');
+      const rl = readline.createInterface({
+        input: process.stdin,
+        output: process.stdout
+      });
+      
+      const answer = await new Promise((resolve) => {
+        rl.question('Would you like to replace the existing admin user with a new one? (y/N): ', (answer) => {
+          rl.close();
+          resolve(answer.toLowerCase());
+        });
+      });
+      
+      if (answer !== 'y' && answer !== 'yes') {
+        console.log('Keeping existing admin user.');
+        return;
+      }
+      
+      // Delete existing admin users
+      console.log('Removing existing admin users...');
+      const adminRole = await Role.findOne({ where: { name: 'admin' } });
+      if (adminRole) {
+        // Remove user role associations first
+        await UserRole.destroy({ where: { roleId: adminRole.id } });
+        // Update legacy admin users
+        await User.update({ role: 'student' }, { where: { role: 'admin' } });
+      }
     }
 
     const email = process.env.ADMIN_EMAIL;

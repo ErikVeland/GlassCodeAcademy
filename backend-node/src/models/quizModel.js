@@ -20,7 +20,7 @@ const LessonQuiz = sequelize.define(
       allowNull: true,
       field: 'academy_id',
       references: {
-        model: 'Academies',
+        model: 'academies', // Changed to lowercase table name
         key: 'id',
       },
     },
