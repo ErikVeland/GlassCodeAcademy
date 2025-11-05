@@ -3,7 +3,9 @@
 
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
-  async up(queryInterface, Sequelize) {
+  async up(ctxOrQI, maybeSequelize) {
+    const queryInterface = ctxOrQI && ctxOrQI.queryInterface ? ctxOrQI.queryInterface : ctxOrQI;
+    const Sequelize = ctxOrQI && ctxOrQI.Sequelize ? ctxOrQI.Sequelize : (maybeSequelize || require('sequelize'));
     // Add OAuth provider column
     await queryInterface.addColumn('users', 'oauth_provider', {
       type: Sequelize.STRING(50),
@@ -25,7 +27,8 @@ module.exports = {
     });
   },
 
-  async down(queryInterface) {
+  async down(ctxOrQI) {
+    const queryInterface = ctxOrQI && ctxOrQI.queryInterface ? ctxOrQI.queryInterface : ctxOrQI;
     // Remove composite index
     await queryInterface.removeIndex(
       'users',
@@ -37,3 +40,4 @@ module.exports = {
     await queryInterface.removeColumn('users', 'oauth_provider');
   },
 };
+/* eslint-env node */

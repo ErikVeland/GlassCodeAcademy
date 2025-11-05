@@ -1,3 +1,4 @@
+/* eslint-env node */
 const fs = require('fs');
 const path = require('path');
 const sequelize = require('../src/config/database');
@@ -28,9 +29,10 @@ async function runMigrations() {
           await migration.up({ queryInterface, Sequelize: sequelize.constructor });
           console.log(`Migration ${file} completed successfully`);
         } catch (error) {
-          // If it's a duplicate index error, continue
-          if (error.parent && (error.parent.code === '42P07' || error.parent.code === '42701')) {
-            console.log(`Migration ${file} skipped (indexes/columns already exist)`);
+          // If it's a duplicate index/column or unique constraint error, continue
+          const code = error.parent && error.parent.code;
+          if (code === '42P07' || code === '42701' || code === '23505') {
+            console.log(`Migration ${file} skipped for existing objects (code ${code})`);
           } else {
             throw error;
           }

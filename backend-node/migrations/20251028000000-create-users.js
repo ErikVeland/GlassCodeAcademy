@@ -21,9 +21,11 @@ module.exports = {
       },
       first_name: {
         type: Sequelize.STRING(100),
+        allowNull: true,
       },
       last_name: {
         type: Sequelize.STRING(100),
+        allowNull: true,
       },
       role: {
         type: Sequelize.STRING(20),
@@ -82,3 +84,5 @@ module.exports = {
     await queryInterface.dropTable('users');
   },
 };
+/* eslint-env node */
+ 

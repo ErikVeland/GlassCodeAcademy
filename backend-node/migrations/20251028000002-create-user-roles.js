@@ -63,3 +63,5 @@ module.exports = {
     await queryInterface.dropTable('user_roles');
   },
 };
+/* eslint-env node */
+ 

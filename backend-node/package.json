@@ -16,8 +16,8 @@
     "format:check": "prettier --check src/**/*.js",
     "build": "echo 'No build step required for Node.js application'",
     "health": "node scripts/health-check.js",
-    "migrate": "node scripts/migrate.js",
-    "migrate:manual": "node scripts/run-migrations.js",
+    "migrate": "node scripts/run-migrations.js",
+    "migrate:umzug": "node scripts/migrate.js",
     "seed": "node scripts/seed.js",
     "seed:content": "node scripts/seed-content.js",
     "verify-migrations": "node scripts/verify-migrations.js"
