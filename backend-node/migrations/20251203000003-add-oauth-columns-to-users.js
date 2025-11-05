@@ -1,3 +1,4 @@
+/* eslint-env node */
 'use strict';
 
 /** @type {import('sequelize-cli').Migration} */
@@ -51,10 +52,28 @@ module.exports = {
       console.log('Unique index for oauth_provider and oauth_id does not exist');
     }
     
-    // Remove oauth_id column from users table
-    await queryInterface.removeColumn('users', 'oauth_id');
+    // Remove oauth_id column from users table (defensive)
+    try {
+      await queryInterface.removeColumn('users', 'oauth_id');
+    } catch (error) {
+      const code = error.parent && error.parent.code;
+      if (code === '42703' || code === '42P01') {
+        // missing column/table – safe to ignore
+      } else {
+        throw error;
+      }
+    }
     
-    // Remove oauth_provider column from users table
-    await queryInterface.removeColumn('users', 'oauth_provider');
+    // Remove oauth_provider column from users table (defensive)
+    try {
+      await queryInterface.removeColumn('users', 'oauth_provider');
+    } catch (error) {
+      const code = error.parent && error.parent.code;
+      if (code === '42703' || code === '42P01') {
+        // missing column/table – safe to ignore
+      } else {
+        throw error;
+      }
+    }
   }
 };

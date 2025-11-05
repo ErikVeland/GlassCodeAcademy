@@ -1,3 +1,6 @@
+/* eslint-env node */
+/* global module, console */
+/* eslint-disable no-unused-vars */
 'use strict';
 
 /** @type {import('sequelize-cli').Migration} */
@@ -30,7 +33,16 @@ module.exports = {
   },
 
   async down({ queryInterface, Sequelize }) {
-    // Remove role column from users table
-    await queryInterface.removeColumn('users', 'role');
+    // Remove role column from users table (defensive)
+    try {
+      await queryInterface.removeColumn('users', 'role');
+    } catch (error) {
+      const code = error.parent && error.parent.code;
+      if (code === '42703' || code === '42P01') {
+        // missing column/table – safe to ignore
+      } else {
+        throw error;
+      }
+    }
   }
 };

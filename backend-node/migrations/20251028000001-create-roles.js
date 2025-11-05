@@ -40,8 +40,8 @@ module.exports = {
       name: 'roles_name_unique',
     });
 
-    // Insert default roles
-    await queryInterface.bulkInsert('roles', [
+    // Insert default roles - use findOrCreate pattern to avoid duplicates
+    const roles = [
       {
         name: 'admin',
         description: 'Administrator with full access',
@@ -70,7 +70,19 @@ module.exports = {
         created_at: new Date(),
         updated_at: new Date(),
       },
-    ]);
+    ];
+
+    // Insert roles one by one to handle duplicates gracefully
+    for (const role of roles) {
+      try {
+        await queryInterface.bulkInsert('roles', [role]);
+      } catch (error) {
+        // Ignore duplicate key errors
+        if (error.name !== 'SequelizeUniqueConstraintError') {
+          throw error;
+        }
+      }
+    }
   },
 
   async down({ queryInterface }) {

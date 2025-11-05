@@ -73,11 +73,6 @@ module.exports = {
       unique: true,
       name: 'users_username_unique',
     });
-
-    await queryInterface.addIndex('users', ['oauth_provider', 'oauth_id'], {
-      unique: true,
-      name: 'users_oauth_provider_oauth_id_unique',
-    });
   },
 
   async down({ queryInterface }) {
