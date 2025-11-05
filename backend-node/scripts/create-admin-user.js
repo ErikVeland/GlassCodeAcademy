@@ -27,6 +27,12 @@ async function ensureAdminRole() {
 }
 
 async function assignAdminRole(user, adminRole) {
+  if (!user || !user.id) {
+    throw new Error('Cannot assign admin role: user is missing or has no id');
+  }
+  if (!adminRole || !adminRole.id) {
+    throw new Error('Cannot assign admin role: role is missing or has no id');
+  }
   // Set legacy role column for compatibility
   if (user.role !== 'admin') {
     await user.update({ role: 'admin' });
@@ -94,19 +100,29 @@ async function main() {
       }
     }
 
-    const email = process.env.ADMIN_EMAIL;
-    const password = process.env.ADMIN_PASSWORD;
-    const firstName = process.env.ADMIN_FIRST_NAME || 'Admin';
-    const lastName = process.env.ADMIN_LAST_NAME || 'User';
+    const email = (process.env.ADMIN_EMAIL || '').trim();
+    const password = (process.env.ADMIN_PASSWORD || '').trim();
+    const firstName = (process.env.ADMIN_FIRST_NAME || 'Admin').trim();
+    const lastName = (process.env.ADMIN_LAST_NAME || 'User').trim();
 
     if (!email || !password) {
       console.error('Missing ADMIN_EMAIL or ADMIN_PASSWORD environment variables.');
       process.exit(1);
     }
 
-    // Create user via auth service (enforces password strength and hooks)
-    await register({ email, firstName, lastName, password });
-    const createdUser = await User.findOne({ where: { email } });
+    // If user already exists, update details; otherwise register
+    let createdUser = await User.findOne({ where: { email } });
+    if (createdUser) {
+      await createdUser.update({ firstName, lastName, passwordHash: password });
+    } else {
+      // Create user via auth service (enforces password strength and hooks)
+      const regResult = await register({ email, firstName, lastName, password });
+      // Load a full Sequelize instance using the returned id to avoid any lookup mismatch
+      createdUser = await User.findByPk(regResult.user.id);
+      if (!createdUser) {
+        throw new Error(`User creation succeeded but lookup failed for email ${email}`);
+      }
+    }
 
     const adminRole = await ensureAdminRole();
     await assignAdminRole(createdUser, adminRole);

@@ -131,16 +131,17 @@ function initializeAssociations() {
   });
 
   // User -> Roles (Many-to-Many)
+  // Use model attribute names for foreign keys to avoid duplicate column definitions
   User.belongsToMany(Role, {
     through: UserRole,
-    foreignKey: 'user_id',
-    otherKey: 'role_id',
+    foreignKey: 'userId',
+    otherKey: 'roleId',
     as: 'userRoles',
   });
   Role.belongsToMany(User, {
     through: UserRole,
-    foreignKey: 'role_id',
-    otherKey: 'user_id',
+    foreignKey: 'roleId',
+    otherKey: 'userId',
     as: 'roleUsers',
   });
 

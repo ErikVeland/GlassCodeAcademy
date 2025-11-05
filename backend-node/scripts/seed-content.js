@@ -200,7 +200,7 @@ async function seedContent() {
               sources: questionData.sources || null,
               sortOrder,  // This will be mapped to sort_order by Sequelize
               isPublished: true,
-              lessonId: targetLessonId,  // This will be mapped to lesson_id by Sequelize
+              lesson_id: targetLessonId,  // Fixed: Use lesson_id instead of lessonId
               academyId: defaultAcademy.id  // This will be mapped to academy_id by Sequelize
             }
           });
@@ -229,6 +229,7 @@ async function seedContent() {
               sources: questionData.sources || null,
               sortOrder,  // This will be mapped to sort_order by Sequelize
               isPublished: true,
+              lesson_id: targetLessonId,  // Fixed: Add lesson_id field
               academyId: defaultAcademy.id  // This will be mapped to academy_id by Sequelize
             });
             if (quiz.id <= 0) {
