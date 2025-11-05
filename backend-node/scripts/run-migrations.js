@@ -1,5 +1,4 @@
 /* eslint-env node */
-/* global require, __dirname, process, console */
 const fs = require('fs');
 const path = require('path');
 const sequelize = require('../src/config/database');
@@ -32,7 +31,7 @@ async function runMigrations() {
         } catch (error) {
           // If it's a duplicate index/column or unique constraint error, continue
           const code = error.parent && error.parent.code;
-          if (code === '42P07' || code === '42701' || code === '23505' || code === '42710' || code === '42703') {
+          if (code === '42P07' || code === '42701' || code === '23505' || code === '42710') {
             console.log(`Migration ${file} skipped for existing objects (code ${code})`);
           } else {
             throw error;
