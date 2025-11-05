@@ -15,7 +15,16 @@ const Module = sequelize.define(
       allowNull: true,
       field: 'academy_id',
       references: {
-        model: 'academies',
+        model: 'Academies',
+        key: 'id',
+      },
+    },
+    courseId: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      field: 'course_id',
+      references: {
+        model: 'Courses',
         key: 'id',
       },
     },
@@ -30,15 +39,16 @@ const Module = sequelize.define(
     slug: {
       type: DataTypes.STRING(100),
       allowNull: false,
-    },
-    order: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
+      unique: true,
     },
     isPublished: {
       type: DataTypes.BOOLEAN,
       defaultValue: false,
       field: 'is_published',
+    },
+    order: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
     },
     version: {
       type: DataTypes.STRING(20),

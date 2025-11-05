@@ -1,52 +1,43 @@
 const fs = require('fs');
 const path = require('path');
-const sequelize = require('../src/config/database');
 const { Op } = require('sequelize');
-const { Course, Module, Lesson, LessonQuiz, initializeAssociations } = require('../src/models');
+const sequelize = require('../src/config/database');
+const Course = require('../src/models/courseModel');
+const Module = require('../src/models/moduleModel');
+const Lesson = require('../src/models/lessonModel');
+const LessonQuiz = require('../src/models/quizModel');  // This is the correct path
+const Academy = require('../src/models/academyModel');
 
-// Ensure database schema exists before seeding
-async function ensureSchema() {
-  try {
-    await sequelize.authenticate();
-    // Initialize associations so sync creates proper FKs
-    initializeAssociations();
-
-    const qi = sequelize.getQueryInterface();
-    let tables = await qi.showAllTables();
-    tables = Array.isArray(tables)
-      ? tables.map((t) => (typeof t === 'string' ? t : t.tableName || t.name || t))
-      : [];
-
-    const required = ['courses', 'modules', 'lessons', 'lesson_quizzes'];
-    const missing = required.filter((t) => !tables.includes(t));
-
-    if (missing.length > 0) {
-      console.log(`🧱 Missing tables detected: ${missing.join(', ')} — running schema sync`);
-      // Safe sync: creates missing tables without dropping existing ones
-      await sequelize.sync();
-      console.log('✅ Schema sync completed.');
-    } else {
-      console.log('🔧 Required tables present; altering core content tables to add missing columns');
-      // Targeted alter sync to avoid issues in unrelated models
-      await Course.sync({ alter: true });
-      await Module.sync({ alter: true });
-      await Lesson.sync({ alter: true });
-      await LessonQuiz.sync({ alter: true });
-      console.log('✅ Targeted schema alter sync completed.');
-    }
-  } catch (e) {
-    console.error('❌ Failed to verify or sync schema:', e);
-    throw e;
-  }
-}
-
-// Load content from JSON files and seed the database
 async function seedContent() {
   try {
     console.log('🔄 Starting content seeding for Node.js backend...');
-
-    // Ensure schema is present so subsequent queries don't fail
-    await ensureSchema();
+    
+    // Check if required tables exist
+    const requiredTables = ['Courses', 'Modules', 'Lessons', 'LessonQuizzes', 'Academies'];  // Updated table names
+    const tables = await sequelize.getQueryInterface().showAllSchemas();
+    const tableNames = tables.map(t => t.name || t);
+    
+    const missingTables = requiredTables.filter(table => !tableNames.includes(table));
+    if (missingTables.length > 0) {
+      throw new Error(`Missing required tables: ${missingTables.join(', ')}`);
+    }
+    
+    console.log('✅ Required tables present; altering core content tables to add missing columns');
+    
+    // Ensure all tables have proper schema
+    await sequelize.sync({ alter: true });
+    console.log('✅ Targeted schema alter sync completed.');
+    
+    // Get the default academy
+    const defaultAcademy = await Academy.findOne({
+      where: { slug: 'glasscode-academy' }
+    });
+    
+    if (!defaultAcademy) {
+      throw new Error('Default academy not found. Please run database seeding first.');
+    }
+    
+    console.log(`Using academy: ${defaultAcademy.name} (ID: ${defaultAcademy.id})`);
     
     // Load registry to get module information
     const registryPath = path.join(__dirname, '../../content/registry.json');
@@ -68,7 +59,8 @@ async function seedContent() {
           order: moduleInfo.order,
           difficulty: moduleInfo.difficulty,
           isPublished: true,
-          estimatedHours: moduleInfo.estimatedHours || 10
+          estimatedHours: moduleInfo.estimatedHours || 10,
+          academyId: defaultAcademy.id  // Associate with the default academy
         }
       });
       
@@ -82,7 +74,8 @@ async function seedContent() {
           order: moduleInfo.order,
           difficulty: moduleInfo.difficulty,
           isPublished: true,
-          estimatedHours: moduleInfo.estimatedHours || 10
+          estimatedHours: moduleInfo.estimatedHours || 10,
+          academyId: defaultAcademy.id  // Associate with the default academy
         });
       }
       
@@ -95,7 +88,8 @@ async function seedContent() {
           slug: moduleInfo.slug,
           order: moduleInfo.order,
           isPublished: true,
-          course_id: course.id
+          courseId: course.id,
+          academyId: defaultAcademy.id  // Associate with the default academy
         }
       });
       
@@ -108,7 +102,8 @@ async function seedContent() {
           description: moduleInfo.description,
           order: moduleInfo.order,
           isPublished: true,
-          course_id: course.id
+          courseId: course.id,
+          academyId: defaultAcademy.id  // Associate with the default academy
         });
       }
       
@@ -133,7 +128,8 @@ async function seedContent() {
               isPublished: true,
               difficulty: lessonData.difficulty || moduleInfo.difficulty || 'Beginner',
               estimatedMinutes: lessonData.estimatedMinutes || 30,
-              module_id: module.id
+              moduleId: module.id,
+              academyId: defaultAcademy.id  // Associate with the default academy
             }
           });
           
@@ -148,7 +144,8 @@ async function seedContent() {
               isPublished: true,
               difficulty: lessonData.difficulty || moduleInfo.difficulty || 'Beginner',
               estimatedMinutes: lessonData.estimatedMinutes || 30,
-              module_id: module.id
+              moduleId: module.id,
+              academyId: defaultAcademy.id  // Associate with the default academy
             });
           }
         }
@@ -165,7 +162,7 @@ async function seedContent() {
 
         // Fetch all lessons for distribution
         const lessonList = await Lesson.findAll({
-          where: { module_id: module.id },
+          where: { moduleId: module.id },
           order: [['order', 'ASC']]
         });
         if (!lessonList || lessonList.length === 0) {
@@ -176,7 +173,7 @@ async function seedContent() {
 
         // Remove existing quizzes for this module's lessons to avoid duplicates
         await LessonQuiz.destroy({
-          where: { lesson_id: { [Op.in]: lessonIds } }
+          where: { lessonId: { [Op.in]: lessonIds } }
         });
 
         for (let i = 0; i < questions.length; i++) {
@@ -194,7 +191,7 @@ async function seedContent() {
           const sortOrder = questionData.sortOrder || i + 1;
 
           const [quiz, quizCreated] = await LessonQuiz.findOrCreate({
-            where: { sortOrder, lesson_id: targetLessonId },
+            where: { sortOrder, lessonId: targetLessonId },
             defaults: {
               question: questionData.question || `Question ${i + 1}`,
               topic: questionData.topic || moduleInfo.title,
@@ -213,7 +210,8 @@ async function seedContent() {
               sources: questionData.sources || null,
               sortOrder,
               isPublished: true,
-              lesson_id: targetLessonId
+              lessonId: targetLessonId,
+              academyId: defaultAcademy.id  // Associate with the default academy
             }
           });
 
@@ -240,7 +238,8 @@ async function seedContent() {
               quizType: questionData.quizType || 'multiple-choice',
               sources: questionData.sources || null,
               sortOrder,
-              isPublished: true
+              isPublished: true,
+              academyId: defaultAcademy.id  // Associate with the default academy
             });
             if (quiz.id <= 0) {
               console.log(`    ⚠️  Warning: Updated quiz has invalid ID: ${quiz.id}`);
@@ -248,14 +247,21 @@ async function seedContent() {
           }
         }
       } else {
-        console.log(`  ⚠️  No quizzes file found for ${moduleInfo.slug}`);
+        console.log(`  ⚠️  No quiz file found for ${moduleInfo.slug}`);
       }
     }
     
-    console.log('✅ Content seeding completed successfully!');
+    console.log('🎉 Content seeding completed successfully!');
     process.exit(0);
   } catch (error) {
-    console.error('❌ Content seeding failed:', error);
+    console.error('❌ Content seeding failed:', error?.message || error);
+    if (error?.original) {
+      console.error('Original error:', error.original);
+    }
+    if (error?.parent) {
+      console.error('Parent error:', error.parent);
+    }
+    console.error('Full error object:', JSON.stringify(error, null, 2));
     process.exit(1);
   }
 }

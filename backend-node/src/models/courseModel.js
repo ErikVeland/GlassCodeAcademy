@@ -14,7 +14,7 @@ const Course = sequelize.define(
       allowNull: true,
       field: 'academy_id',
       references: {
-        model: 'academies',
+        model: 'Academies',
         key: 'id',
       },
     },

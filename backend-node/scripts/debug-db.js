@@ -1,3 +1,4 @@
+/* eslint-env node */
 const fs = require('fs');
 const path = require('path');
 const dotenv = require('dotenv');
@@ -15,13 +16,12 @@ const dotenv = require('dotenv');
         break;
       }
     }
-  } catch (_) {
+  } catch {
     dotenv.config();
   }
 })();
 
 const sequelize = require('../src/config/database');
-const { Course, Module, Lesson, LessonQuiz } = require('../src/models');
 
 async function main() {
   try {
@@ -51,34 +51,47 @@ async function main() {
     const { initializeAssociations } = require('../src/models');
     initializeAssociations();
 
-    const counts = {
-      courses_total: await Course.count(),
-      courses_published: await Course.count({ where: { isPublished: true } }),
-      modules_total: await Module.count(),
-      modules_published: await Module.count({ where: { isPublished: true } }),
-      lessons_total: await Lesson.count(),
-      lessons_published: await Lesson.count({ where: { isPublished: true } }),
-      quizzes_total: await LessonQuiz.count(),
-      quizzes_published: await LessonQuiz.count({ where: { isPublished: true } }),
-    };
-    console.log('Counts:', counts);
+    // Use raw SQL for counts to avoid any model/table-name casing mismatches
+    const [[coursesTotal]] = await sequelize.query('SELECT count(*)::int AS count FROM courses');
+    const [[coursesPublished]] = await sequelize.query('SELECT count(*)::int AS count FROM courses WHERE is_published = true');
+    const [[modulesTotal]] = await sequelize.query('SELECT count(*)::int AS count FROM modules');
+    const [[modulesPublished]] = await sequelize.query('SELECT count(*)::int AS count FROM modules WHERE is_published = true');
+    const [[lessonsTotal]] = await sequelize.query('SELECT count(*)::int AS count FROM lessons');
+    const [[lessonsPublished]] = await sequelize.query('SELECT count(*)::int AS count FROM lessons WHERE is_published = true');
+    const [[quizzesTotal]] = await sequelize.query('SELECT count(*)::int AS count FROM lesson_quizzes');
+    const [[quizzesPublished]] = await sequelize.query('SELECT count(*)::int AS count FROM lesson_quizzes WHERE is_published = true');
 
-    const sampleCourse = await Course.findOne({
-      where: { isPublished: true },
-      order: [['createdAt', 'DESC']],
-      include: [{ model: Module, as: 'modules', include: [{ model: Lesson, as: 'lessons' }] }],
-    }).catch(() => null);
+    console.log('Counts:', {
+      courses_total: coursesTotal.count,
+      courses_published: coursesPublished.count,
+      modules_total: modulesTotal.count,
+      modules_published: modulesPublished.count,
+      lessons_total: lessonsTotal.count,
+      lessons_published: lessonsPublished.count,
+      quizzes_total: quizzesTotal.count,
+      quizzes_published: quizzesPublished.count,
+    });
 
-    if (sampleCourse) {
+    // Show a recent published course with module/lesson counts via raw SQL
+    const [recentCourses] = await sequelize.query(
+      `SELECT id, title, slug FROM courses WHERE is_published = true ORDER BY updated_at DESC LIMIT 1`
+    );
+    if (recentCourses && recentCourses.length > 0) {
+      const course = recentCourses[0];
+      const [[moduleCount]] = await sequelize.query(
+        `SELECT count(*)::int AS count FROM modules WHERE course_id = $1`,
+        { bind: [course.id] }
+      );
+      const [[lessonCount]] = await sequelize.query(
+        `SELECT count(*)::int AS count FROM lessons WHERE module_id IN (SELECT id FROM modules WHERE course_id = $1)`,
+        { bind: [course.id] }
+      );
       console.log('Recent published course:', {
-        id: sampleCourse.id,
-        title: sampleCourse.title,
-        slug: sampleCourse.slug,
-        moduleCount: sampleCourse.modules ? sampleCourse.modules.length : 0,
-        lessonCount:
-          sampleCourse.modules && sampleCourse.modules[0] && sampleCourse.modules[0].lessons
-            ? sampleCourse.modules[0].lessons.length
-            : 0,
+        id: course.id,
+        title: course.title,
+        slug: course.slug,
+        moduleCount: moduleCount.count,
+        lessonCount: lessonCount.count,
       });
     } else {
       console.log('No published course found.');

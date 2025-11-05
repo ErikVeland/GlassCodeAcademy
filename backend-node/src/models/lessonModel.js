@@ -1,6 +1,5 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require('../config/database');
-const { getJSONType } = require('../utils/databaseTypes');
 const Module = require('./moduleModel');
 
 const Lesson = sequelize.define(
@@ -16,7 +15,16 @@ const Lesson = sequelize.define(
       allowNull: true,
       field: 'academy_id',
       references: {
-        model: 'academies',
+        model: 'Academies',
+        key: 'id',
+      },
+    },
+    moduleId: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      field: 'module_id',
+      references: {
+        model: 'Modules',
         key: 'id',
       },
     },
@@ -27,17 +35,14 @@ const Lesson = sequelize.define(
     slug: {
       type: DataTypes.STRING(100),
       allowNull: false,
+      unique: true,
     },
     order: {
       type: DataTypes.INTEGER,
       allowNull: false,
     },
     content: {
-      type: getJSONType(),
-      allowNull: true,
-    },
-    metadata: {
-      type: getJSONType(),
+      type: DataTypes.JSONB,
       allowNull: true,
     },
     isPublished: {
@@ -52,10 +57,6 @@ const Lesson = sequelize.define(
     estimatedMinutes: {
       type: DataTypes.INTEGER,
       field: 'estimated_minutes',
-    },
-    version: {
-      type: DataTypes.STRING(20),
-      defaultValue: '1.0.0',
     },
   },
   {
