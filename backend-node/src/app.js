@@ -118,6 +118,7 @@ function createApp(options = {}) {
   app.use('/api/progress', require('./routes/progressRoutes'));
   app.use('/api/quiz', require('./routes/quizRoutes'));
   app.use('/api/tiers', require('./routes/tierRoutes'));
+  app.use('/api/stats', require('./routes/statsRoutes'));
   app.use('/api/badges', require('./routes/badgeRoutes'));
   app.use('/api/certificates', require('./routes/certificateRoutes'));
   app.use(

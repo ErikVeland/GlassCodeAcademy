@@ -28,35 +28,9 @@ import {
 import { KeyIcon } from '@heroicons/react/24/outline';
 import LoadingScreen from '@/components/LoadingScreen';
 import '@/styles/liquid-glass.scss';
+import { capitalizeModuleName } from '@/lib/stats/formatters';
 
-// Function to properly capitalize module names
-function capitalizeModuleName(name: string): string {
-  // Special cases that should maintain specific capitalization
-  const specialCases: { [key: string]: string } = {
-    'dotnet': 'dotNet',
-    'dot net': 'dotNet',
-    'nextjs': 'nextJS',
-    'next js': 'nextJS',
-    'graphql': 'graphQL',
-    'graph q l': 'graphQL',
-    'sass': 'SASS',
-    'scss': 'SASS'
-  };
-
-  const lowerName = name.toLowerCase();
-
-  // Check for special cases first
-  for (const [key, value] of Object.entries(specialCases)) {
-    if (lowerName.includes(key)) {
-      return value;
-    }
-  }
-
-  // For regular names, capitalize each word
-  return name.split(' ')
-    .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
-    .join(' ');
-}
+// Use shared formatter for consistent capitalization across the app
 
 export default function StatsPage() {
   const stats = useAppStats();
@@ -194,8 +168,8 @@ export default function StatsPage() {
             Technology Modules
           </h3>
           <div className="text-center mb-4 p-3 bg-green-500/10 border border-green-400/20 rounded-lg">
-            <p className="text-green-400 font-medium">🎉 All 18 Technology Modules Complete! 🎉</p>
-            <p className="text-green-300 text-sm mt-1">Programming, Web, React, Node, Database, .NET, TypeScript, and 11 more modules are fully implemented</p>
+            <p className="text-green-400 font-medium">🎉 All Modules Loaded: {stats.totalModules} 🎉</p>
+            <p className="text-green-300 text-sm mt-1">Programming, Web, React, Node, Database, .NET, TypeScript, and more are available</p>
           </div>
           <div className="text-center mb-4 p-3 bg-blue-500/10 border border-blue-400/20 rounded-lg">
             <p className="text-blue-400 font-medium">📊 Code Coverage: 49.47% 📊</p>
@@ -546,7 +520,7 @@ export default function StatsPage() {
               <div className="text-muted">Total Learning Time</div>
             </div>
             <div className="text-center">
-              <div className="text-3xl font-bold text-fg">18/18</div>
+              <div className="text-3xl font-bold text-fg">{stats.totalModules}/{stats.totalModules}</div>
               <div className="text-muted">Modules Complete</div>
             </div>
           </div>

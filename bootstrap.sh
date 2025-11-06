@@ -758,6 +758,18 @@ add_if_missing_backend_prod DATABASE_URL "$DATABASE_URL"
 
     # Verify default academy exists after seeding
     log "🔎 Verifying default academy exists (slug 'glasscode-academy')..."
+    # Derive API_BASE safely even under 'set -u'
+    API_BASE_RAW="${NEXT_PUBLIC_API_BASE:-}"
+    if [ -z "$API_BASE_RAW" ] && [ -f "$APP_DIR/glasscode/frontend/.env.production" ]; then
+        API_BASE_RAW=$(grep -E '^NEXT_PUBLIC_API_BASE=' "$APP_DIR/glasscode/frontend/.env.production" | tail -n1 | cut -d'=' -f2- | tr -d '\r')
+    fi
+    # Fallback to localhost backend port if domain/env not configured yet
+    if [ -z "$API_BASE_RAW" ]; then
+        API_BASE_RAW="http://localhost:${BACKEND_PORT:-8080}"
+    fi
+    # Sanitize accidental whitespace and strip trailing slash
+    API_BASE=$(echo "$API_BASE_RAW" | tr -d '\r' | xargs)
+    API_BASE="${API_BASE%/}"
     ACADEMIES_JSON=$(timeout 10 curl -s "${API_BASE}/api/academies" || true)
     DEFAULT_COUNT=$(echo "$ACADEMIES_JSON" | jq -r '
       if type=="array" then

@@ -3,54 +3,11 @@
 import { useState, useEffect, useCallback } from 'react';
 
 import { getGraphQLEndpoint } from '@/lib/urlUtils';
-// Avoid importing server-only modules in client. We will use API endpoints.
-
-export interface AppStats {
-  totalLessons: number;
-  totalQuizzes: number;
-  totalModules: number;
-  totalQuestions: number;
-  averageCompletionTime: number;
-  difficultyBreakdown: {
-    beginner: number;
-    intermediate: number;
-    advanced: number;
-  };
-  moduleBreakdown: {
-    name: string;
-    lessons: number;
-    questions: number;
-    color: string;
-  }[];
-  tierBreakdown: {
-    foundational: number;
-    core: number;
-    specialized: number;
-    quality: number;
-  };
-  topicDistribution: {
-    [key: string]: number;
-  };
-  isLoading: boolean;
-  error: string | null;
-}
-
-// Base type for registry-based results
-type BaseStats = Omit<AppStats, 'isLoading' | 'error'>;
+import { AppStats, BaseStats, RegistryModule, RegistryResponse } from '@/lib/stats/types';
+import { moduleColors, toShortSlug } from '@/lib/stats/constants';
 
 // Build stats from local content APIs (registry, lessons, quizzes)
 async function buildStatsFromRegistryApi(): Promise<BaseStats> {
-  interface ModuleRoutes { overview?: string; lessons?: string; quiz?: string }
-  interface RegistryModule { slug: string; title?: string; difficulty?: string; tier?: string; routes?: ModuleRoutes }
-  interface RegistryResponse { modules: RegistryModule[] }
-
-  const moduleColors = [
-    '#3B82F6', '#10B981', '#8B5CF6', '#F59E0B', '#EF4444',
-    '#06B6D4', '#84CC16', '#F97316', '#EC4899', '#6366F1',
-    '#14B8A6', '#F59E0B', '#8B5CF6', '#EF4444', '#10B981',
-    '#3B82F6', '#F97316'
-  ];
-
   const regRes = await fetch('/api/content/registry', { cache: 'no-store' });
   if (!regRes.ok) throw new Error(`Registry fetch failed: ${regRes.status}`);
   const regJson: unknown = await regRes.json();
@@ -67,41 +24,10 @@ async function buildStatsFromRegistryApi(): Promise<BaseStats> {
   const difficultyBreakdown = { beginner: 0, intermediate: 0, advanced: 0 };
   const tierBreakdown = { foundational: 0, core: 0, specialized: 0, quality: 0 };
 
-  // Helper to derive short slug reliably from the module's canonical slug
-  // The registry routes may be in the form "/modules/<moduleSlug>/...";
-  // extracting the first path segment ("modules") is incorrect.
-  // Instead, derive short slug from the canonical module slug.
-  const toShortSlug = (m: RegistryModule): string => {
-    const slug = (m.slug || '').toString();
-    if (!slug) return '';
-    // Map well-known module slugs to their short slugs when needed
-    const explicitMap: Record<string, string> = {
-      'programming-fundamentals': 'programming',
-      'web-fundamentals': 'web',
-      'version-control': 'version',
-      'dotnet-fundamentals': 'dotnet',
-      'react-fundamentals': 'react',
-      'database-systems': 'database',
-      'typescript-fundamentals': 'typescript',
-      'node-fundamentals': 'node',
-      'laravel-fundamentals': 'laravel',
-      'nextjs-advanced': 'nextjs',
-      'graphql-advanced': 'graphql',
-      'sass-advanced': 'sass',
-      'tailwind-advanced': 'tailwind',
-      'vue-advanced': 'vue',
-      'testing-fundamentals': 'testing',
-      'e2e-testing': 'e2e',
-      'performance-optimization': 'performance',
-      'security-fundamentals': 'security',
-    };
-    if (explicitMap[slug]) return explicitMap[slug];
-    // Generic fallback: use the first token before '-' which matches our naming convention
-    return slug.includes('-') ? slug.split('-')[0] : slug;
-  };
+  // Use short slug helper from constants
 
   await Promise.all(modules.map(async (mod, i) => {
-    const shortSlug = toShortSlug(mod);
+    const shortSlug = toShortSlug(mod.slug);
     // Apply timeout to client fetches to avoid hanging
     const lessonsController = new AbortController();
     const quizController = new AbortController();
@@ -168,7 +94,7 @@ async function buildStatsFromRegistryApi(): Promise<BaseStats> {
     ? Math.round(totalTime / (totalLessons + totalQuestions))
     : 0;
 
-  const totalModules = 18; // All modules are now complete
+  const totalModules = modules.length;
 
   return {
     totalLessons,
