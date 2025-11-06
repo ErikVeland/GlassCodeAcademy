@@ -753,7 +753,39 @@ add_if_missing_backend_prod DATABASE_URL "$DATABASE_URL"
     if ! sudo -u "$DEPLOY_USER" env NODE_ENV=production DATABASE_URL="$DATABASE_URL" DB_DIALECT="$DB_DIALECT" DB_HOST="$DB_HOST" DB_PORT="$DB_PORT" DB_NAME="$DB_NAME" DB_USER="$DB_USER" DB_PASSWORD="$DB_PASSWORD" DB_SSL="$DB_SSL" npm run seed:content; then
         log "⚠️  WARNING: Registry content seeding failed; continuing"
     else
-        log "✅ Registry content seeding completed"
+    log "✅ Registry content seeding completed"
+    fi
+
+    # Verify default academy exists after seeding
+    log "🔎 Verifying default academy exists (slug 'glasscode-academy')..."
+    ACADEMIES_JSON=$(timeout 10 curl -s "${API_BASE}/api/academies" || true)
+    DEFAULT_COUNT=$(echo "$ACADEMIES_JSON" | jq -r '
+      if type=="array" then
+        [ .[] | select(.slug=="glasscode-academy") ] | length
+      elif has("data") and (.data|type=="array") then
+        [ .data[] | select(.slug=="glasscode-academy") ] | length
+      else 0 end' 2>/dev/null || echo "0")
+    if [ "$DEFAULT_COUNT" -gt 0 ]; then
+        log "✅ Default academy present via API (count=$DEFAULT_COUNT)"
+    else
+        log "⚠️  Default academy not visible via API; checking DB directly"
+        (
+          cd "$APP_DIR/backend-node" && \
+          sudo -u "$DEPLOY_USER" env NODE_ENV=production \
+            DATABASE_URL="${DATABASE_URL}" DB_DIALECT="${DB_DIALECT}" DB_HOST="${DB_HOST}" DB_PORT="${DB_PORT}" DB_NAME="${DB_NAME}" DB_USER="${DB_USER}" DB_PASSWORD="${DB_PASSWORD}" DB_SSL="${DB_SSL}" \
+            node -e '
+              const { sequelize, Academy } = require("./src/models");
+              (async () => {
+                try {
+                  await sequelize.authenticate();
+                  const a = await Academy.findOne({ where: { slug: "glasscode-academy" } });
+                  if (!a) { console.error("DEFAULT_ACADEMY_MISSING"); process.exit(2); }
+                  console.log("DEFAULT_ACADEMY_OK", a.id);
+                  process.exit(0);
+                } catch (e) { console.error("DEFAULT_ACADEMY_ERROR", e?.message || e); process.exit(1); }
+              })();
+            '
+        ) && log "✅ Default academy present in DB" || log "❌ ERROR: Default academy missing after seed"
     fi
 
     # Prompt to create an admin user if none exists
