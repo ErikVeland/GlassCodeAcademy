@@ -753,8 +753,47 @@ add_if_missing_backend_prod DATABASE_URL "$DATABASE_URL"
     if ! sudo -u "$DEPLOY_USER" env NODE_ENV=production DATABASE_URL="$DATABASE_URL" DB_DIALECT="$DB_DIALECT" DB_HOST="$DB_HOST" DB_PORT="$DB_PORT" DB_NAME="$DB_NAME" DB_USER="$DB_USER" DB_PASSWORD="$DB_PASSWORD" DB_SSL="$DB_SSL" npm run seed:content; then
         log "⚠️  WARNING: Registry content seeding failed; continuing"
     else
-    log "✅ Registry content seeding completed"
+        log "✅ Registry content seeding completed"
     fi
+    
+    # Enhanced content validation
+    log "🔍 Validating content seeding..."
+    (
+      cd "$APP_DIR/backend-node" && \
+      sudo -u "$DEPLOY_USER" env NODE_ENV=production \
+        DATABASE_URL="${DATABASE_URL}" DB_DIALECT="${DB_DIALECT}" DB_HOST="${DB_HOST}" DB_PORT="${DB_PORT}" DB_NAME="${DB_NAME}" DB_USER="${DB_USER}" DB_PASSWORD="${DB_PASSWORD}" DB_SSL="${DB_SSL}" \
+        node -e '
+          const { Course, Module, Lesson, LessonQuiz, Academy } = require("./src/models");
+          (async () => {
+            try {
+              const academy = await Academy.findOne({ where: { slug: "glasscode-academy" } });
+              if (!academy) {
+                console.error("DEFAULT_ACADEMY_MISSING");
+                process.exit(2);
+              }
+              
+              const courseCount = await Course.count({ where: { academyId: academy.id } });
+              const moduleCount = await Module.count({ where: { academyId: academy.id } });
+              const lessonCount = await Lesson.count({ where: { academyId: academy.id } });
+              const quizCount = await LessonQuiz.count({ where: { academyId: academy.id } });
+              
+              console.log(`CONTENT_VALIDATION_RESULTS: courses=${courseCount}, modules=${moduleCount}, lessons=${lessonCount}, quizzes=${quizCount}`);
+              
+              // Check if we have reasonable content counts
+              if (courseCount > 0 && moduleCount > 0 && lessonCount > 0) {
+                console.log("CONTENT_SEEDING_VALID");
+                process.exit(0);
+              } else {
+                console.error("CONTENT_SEEDING_INCOMPLETE");
+                process.exit(1);
+              }
+            } catch (e) {
+              console.error("CONTENT_VALIDATION_ERROR", e?.message || e);
+              process.exit(1);
+            }
+          })();
+        '
+    ) && log "✅ Content seeding validation passed" || log "❌ ERROR: Content seeding validation failed"
 
     # Verify default academy exists after seeding
     log "🔎 Verifying default academy exists (slug 'glasscode-academy')..."
@@ -1779,6 +1818,23 @@ if [ "${VALIDATE_JSON_CONTENT:-0}" -eq 1 ]; then
     fi
 else
     log "ℹ️  Skipping JSON content validation (not enabled)"
+fi
+
+# Enhanced GlassStats validation
+log "📊 Validating GlassStats data availability..."
+STATS_RESP=$(timeout 10 curl -s "${API_BASE}/api/stats/aggregate" || true)
+if echo "$STATS_RESP" | grep -q '"totalLessons"'; then
+    LESSONS_COUNT=$(echo "$STATS_RESP" | jq -r '.data.totalLessons // 0' 2>/dev/null || echo "0")
+    MODULES_COUNT=$(echo "$STATS_RESP" | jq -r '.data.totalModules // 0' 2>/dev/null || echo "0")
+    QUIZZES_COUNT=$(echo "$STATS_RESP" | jq -r '.data.totalQuizzes // 0' 2>/dev/null || echo "0")
+    
+    if [ "$LESSONS_COUNT" -gt 0 ] && [ "$MODULES_COUNT" -gt 0 ]; then
+        log "✅ GlassStats data validation: PASSED (modules: $MODULES_COUNT, lessons: $LESSONS_COUNT, quizzes: $QUIZZES_COUNT)"
+    else
+        log "⚠️  WARNING: GlassStats data validation incomplete (modules: $MODULES_COUNT, lessons: $LESSONS_COUNT, quizzes: $QUIZZES_COUNT)"
+    fi
+else
+    log "⚠️  WARNING: GlassStats API endpoint failed"
 fi
 
 log "🎉 Deployment Complete!"

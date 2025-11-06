@@ -27,12 +27,28 @@ const User = require('../src/models/userModel');
 const Role = require('../src/models/roleModel');
 const UserRole = require('../src/models/userRoleModel');
 const ForumCategory = require('../src/models/forumCategoryModel');
+const Academy = require('../src/models/academyModel');
 
 async function seedDatabase() {
   try {
     // Authenticate database connection
     await sequelize.authenticate();
     console.log('Database connection established successfully');
+
+    // Ensure default academy exists
+    let defaultAcademy = await Academy.findOne({ where: { slug: 'glasscode-academy' } });
+    if (!defaultAcademy) {
+      defaultAcademy = await Academy.create({
+        name: 'GlassCode Academy',
+        slug: 'glasscode-academy',
+        description: 'Default GlassCode Academy',
+        isPublished: true,
+        version: '1.0.0',
+      });
+      console.log('Created default academy with ID:', defaultAcademy.id);
+    } else {
+      console.log('Default academy already exists with ID:', defaultAcademy.id);
+    }
 
     // Create default roles if they don't exist
     const roles = [

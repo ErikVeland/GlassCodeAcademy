@@ -111,6 +111,9 @@ function createApp(options = {}) {
   app.use('/api/profile', require('./routes/profileRoutes'));
   app.use('/api/admin', require('./routes/adminRoutes'));
   app.use('/api/admin/academies', require('./routes/academyRoutes'));
+  // Public content routes should be mounted before admin-protected content management
+  app.use('/api/content', require('./routes/contentPublicRoutes'));
+  app.use('/api/content', require('./routes/contentRegistryRoutes'));
   app.use('/api/content', require('./routes/contentManagementRoutes'));
   app.use('/api/courses', require('./routes/courseRoutes'));
   app.use('/api/modules', require('./routes/moduleRoutes'));

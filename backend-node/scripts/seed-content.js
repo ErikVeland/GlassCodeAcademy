@@ -35,12 +35,22 @@ async function seedContent() {
     
     console.log(`Found ${registry.modules.length} modules in registry`);
     
+    // Track seeding statistics
+    let coursesCreated = 0;
+    let coursesUpdated = 0;
+    let modulesCreated = 0;
+    let modulesUpdated = 0;
+    let lessonsCreated = 0;
+    let lessonsUpdated = 0;
+    let quizzesCreated = 0;
+    let quizzesUpdated = 0;
+    
     // Create courses (one for each module)
     for (const moduleInfo of registry.modules) {
       console.log(`Processing module: ${moduleInfo.title}`);
       
       // Create course
-      const [course, courseCreated] = await Course.findOrCreate({
+      const [course, courseCreatedFlag] = await Course.findOrCreate({
         where: { slug: moduleInfo.slug },
         defaults: {
           title: moduleInfo.title,
@@ -54,9 +64,11 @@ async function seedContent() {
         }
       });
       
-      if (courseCreated) {
+      if (courseCreatedFlag) {
+        coursesCreated++;
         console.log(`  ✅ Created course: ${course.title}`);
       } else {
+        coursesUpdated++;
         console.log(`  🔁 Updated course: ${course.title}`);
         await course.update({
           title: moduleInfo.title,
@@ -70,7 +82,7 @@ async function seedContent() {
       }
       
       // Create module
-      const [module, moduleCreated] = await Module.findOrCreate({
+      const [module, moduleCreatedFlag] = await Module.findOrCreate({
         where: { slug: moduleInfo.slug },
         defaults: {
           title: moduleInfo.title,
@@ -83,9 +95,11 @@ async function seedContent() {
         }
       });
       
-      if (moduleCreated) {
+      if (moduleCreatedFlag) {
+        modulesCreated++;
         console.log(`  ✅ Created module: ${module.title}`);
       } else {
+        modulesUpdated++;
         console.log(`  🔁 Updated module: ${module.title}`);
         await module.update({
           title: moduleInfo.title,
@@ -108,7 +122,7 @@ async function seedContent() {
         for (let i = 0; i < lessonsData.length; i++) {
           const lessonData = lessonsData[i];
           
-          const [lesson, lessonCreated] = await Lesson.findOrCreate({
+          const [lesson, lessonCreatedFlag] = await Lesson.findOrCreate({
             where: { slug: `${moduleInfo.slug}-lesson-${i+1}` },
             defaults: {
               title: lessonData.title || `Lesson ${i+1}`,
@@ -123,9 +137,11 @@ async function seedContent() {
             }
           });
           
-          if (lessonCreated) {
+          if (lessonCreatedFlag) {
+            lessonsCreated++;
             console.log(`    ✅ Created lesson: ${lesson.title}`);
           } else {
+            lessonsUpdated++;
             console.log(`    🔁 Updated lesson: ${lesson.title}`);
             await lesson.update({
               title: lessonData.title || `Lesson ${i+1}`,
@@ -180,7 +196,7 @@ async function seedContent() {
           const targetLessonId = targetLesson.id;
           const sortOrder = questionData.sortOrder || i + 1;
 
-          const [quiz, quizCreated] = await LessonQuiz.findOrCreate({
+          const [quiz, quizCreatedFlag] = await LessonQuiz.findOrCreate({
             where: { sort_order: sortOrder, lesson_id: targetLessonId },  // Changed from sortOrder to sort_order
             defaults: {
               question: questionData.question || `Question ${i + 1}`,
@@ -205,12 +221,14 @@ async function seedContent() {
             }
           });
 
-          if (quizCreated) {
+          if (quizCreatedFlag) {
+            quizzesCreated++;
             console.log(`    ✅ Created quiz for lesson ${targetLesson.slug}: ${quiz.question.substring(0, 50)}...`);
             if (quiz.id <= 0) {
               console.log(`    ⚠️  Warning: Created quiz has invalid ID: ${quiz.id}`);
             }
           } else {
+            quizzesUpdated++;
             console.log(`    🔁 Updated quiz for lesson ${targetLesson.slug}: ${quiz.question.substring(0, 50)}...`);
             await quiz.update({
               topic: questionData.topic || moduleInfo.title,
@@ -241,6 +259,39 @@ async function seedContent() {
         console.log(`  ⚠️  No quiz file found for ${moduleInfo.slug}`);
       }
     }
+    
+    // Print seeding statistics
+    console.log(`📊 Seeding Statistics:`);
+    console.log(`  - Courses: ${coursesCreated} created, ${coursesUpdated} updated`);
+    console.log(`  - Modules: ${modulesCreated} created, ${modulesUpdated} updated`);
+    console.log(`  - Lessons: ${lessonsCreated} created, ${lessonsUpdated} updated`);
+    console.log(`  - Quizzes: ${quizzesCreated} created, ${quizzesUpdated} updated`);
+    
+    // Verification step: Check that all content is associated with the default academy
+    console.log('🔍 Verifying academy associations...');
+    const academyCourses = await Course.count({ where: { academyId: defaultAcademy.id } });
+    const academyModules = await Module.count({ where: { academyId: defaultAcademy.id } });
+    const academyLessons = await Lesson.count({ where: { academyId: defaultAcademy.id } });
+    const academyQuizzes = await LessonQuiz.count({ where: { academyId: defaultAcademy.id } });
+    
+    console.log(`✅ Academy Association Verification:`);
+    console.log(`  - Courses associated with academy: ${academyCourses}`);
+    console.log(`  - Modules associated with academy: ${academyModules}`);
+    console.log(`  - Lessons associated with academy: ${academyLessons}`);
+    console.log(`  - Quizzes associated with academy: ${academyQuizzes}`);
+    
+    // Verification step: Check that all content is published
+    console.log('🔍 Verifying publication status...');
+    const publishedCourses = await Course.count({ where: { isPublished: true, academyId: defaultAcademy.id } });
+    const publishedModules = await Module.count({ where: { isPublished: true, academyId: defaultAcademy.id } });
+    const publishedLessons = await Lesson.count({ where: { isPublished: true, academyId: defaultAcademy.id } });
+    const publishedQuizzes = await LessonQuiz.count({ where: { isPublished: true, academyId: defaultAcademy.id } });
+    
+    console.log(`✅ Publication Status Verification:`);
+    console.log(`  - Published courses: ${publishedCourses}/${academyCourses}`);
+    console.log(`  - Published modules: ${publishedModules}/${academyModules}`);
+    console.log(`  - Published lessons: ${publishedLessons}/${academyLessons}`);
+    console.log(`  - Published quizzes: ${publishedQuizzes}/${academyQuizzes}`);
     
     console.log('🎉 Content seeding completed successfully!');
     process.exit(0);

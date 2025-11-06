@@ -30,7 +30,17 @@ const path = require('path');
 })();
 
 const isTest = process.env.NODE_ENV === 'test';
-const databaseUrl = process.env.DATABASE_URL;
+let databaseUrl = process.env.DATABASE_URL;
+
+// Normalize sqlite path to absolute, anchored at backend-node directory
+if (databaseUrl && databaseUrl.startsWith('sqlite:')) {
+  const rawPath = databaseUrl.replace(/^sqlite:/, '');
+  if (rawPath && !rawPath.startsWith('/') && rawPath !== ':memory:') {
+    const anchorDir = path.resolve(__dirname, '../../');
+    const resolved = path.resolve(anchorDir, rawPath);
+    databaseUrl = `sqlite:${resolved}`;
+  }
+}
 
 // Discrete env vars fallback
 const DB_DIALECT = process.env.DB_DIALECT || 'postgres';
@@ -73,8 +83,11 @@ if (isTest) {
   }
 } else if (databaseUrl) {
   // Prefer DATABASE_URL when provided (e.g., postgresql://user:pass@host:port/db)
+  const inferredDialect = databaseUrl.startsWith('sqlite:')
+    ? 'sqlite'
+    : DB_DIALECT;
   sequelize = new Sequelize(databaseUrl, {
-    dialect: DB_DIALECT,
+    dialect: inferredDialect,
     logging: process.env.NODE_ENV === 'development' ? console.log : false,
     pool: {
       max: 5,

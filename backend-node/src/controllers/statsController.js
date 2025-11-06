@@ -3,6 +3,7 @@ const {
   Module,
   Lesson,
   LessonQuiz,
+  Academy,
   initializeAssociations,
 } = require('../models');
 const { Sequelize } = require('sequelize');
@@ -33,16 +34,31 @@ async function computeAggregateStats() {
     // ignore if already initialized
   }
 
-  // Totals
+  // Get the default academy
+  const defaultAcademy = await Academy.findOne({
+    where: { slug: 'glasscode-academy' },
+  });
+
+  if (!defaultAcademy) {
+    throw new Error('Default academy not found');
+  }
+
+  // Totals - filtered by academy association
   const [totalModules, totalLessons, totalQuizzes] = await Promise.all([
-    Module.count({ where: { isPublished: true } }),
-    Lesson.count({ where: { isPublished: true } }),
-    LessonQuiz.count({ where: { isPublished: true } }),
+    Module.count({
+      where: { isPublished: true, academyId: defaultAcademy.id },
+    }),
+    Lesson.count({
+      where: { isPublished: true, academyId: defaultAcademy.id },
+    }),
+    LessonQuiz.count({
+      where: { isPublished: true, academyId: defaultAcademy.id },
+    }),
   ]);
 
   // Average completion time: mean of per-item estimated minutes
   const lessonsTimeRow = await Lesson.findOne({
-    where: { isPublished: true },
+    where: { isPublished: true, academyId: defaultAcademy.id },
     attributes: [
       [
         Sequelize.fn(
@@ -56,7 +72,7 @@ async function computeAggregateStats() {
     raw: true,
   });
   const quizzesTimeRow = await LessonQuiz.findOne({
-    where: { isPublished: true },
+    where: { isPublished: true, academyId: defaultAcademy.id },
     attributes: [
       [
         Sequelize.fn(
@@ -79,16 +95,16 @@ async function computeAggregateStats() {
         )
       : 0;
 
-  // Module breakdown: lessons and quizzes per module
+  // Module breakdown: lessons and quizzes per module - filtered by academy
   const modules = await Module.findAll({
-    where: { isPublished: true },
+    where: { isPublished: true, academyId: defaultAcademy.id },
     attributes: ['id', 'title', 'slug', 'order'],
     order: [['order', 'ASC']],
     raw: true,
   });
 
   const lessonCounts = await Lesson.findAll({
-    where: { isPublished: true },
+    where: { isPublished: true, academyId: defaultAcademy.id },
     attributes: [
       ['module_id', 'moduleId'],
       [Sequelize.fn('COUNT', Sequelize.col('id')), 'lessons'],
@@ -100,9 +116,9 @@ async function computeAggregateStats() {
     lessonCounts.map((r) => [r.moduleId, parseInt(r.lessons, 10)])
   );
 
-  // Quizzes per module: group by lesson.module_id
+  // Quizzes per module: group by lesson.module_id - filtered by academy
   const quizCounts = await LessonQuiz.findAll({
-    where: { isPublished: true },
+    where: { isPublished: true, academyId: defaultAcademy.id },
     include: [{ model: Lesson, as: 'lesson', attributes: [] }],
     attributes: [
       [Sequelize.col('lesson.module_id'), 'moduleId'],
@@ -184,4 +200,5 @@ const getAggregateStatsController = async (req, res, next) => {
 
 module.exports = {
   getAggregateStatsController,
+  computeAggregateStats, // Export for testing
 };
