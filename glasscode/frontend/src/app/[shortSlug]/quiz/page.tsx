@@ -46,7 +46,7 @@ interface ProgrammingQuestion {
   id: string | number;
   question: string;
   choices?: string[];
-  correctAnswer?: number;
+  correctAnswer?: number | string;
   explanation?: string;
   topic?: string;
   type?: string;
@@ -70,12 +70,13 @@ async function fetchJSON<T>(url: string, init?: RequestInit): Promise<T> {
   return res.json() as Promise<T>;
 }
 
-function findModuleByShortSlug(mods: RegistryModule[], shortSlug: string): RegistryModule | undefined {
+function findModuleByShortSlug(mods: RegistryModule[] | undefined, shortSlug: string): RegistryModule | undefined {
+  const list = Array.isArray(mods) ? mods : [];
   return (
-    mods.find(m => m.routes?.overview === `/${shortSlug}`) ||
-    mods.find(m => m.routes?.quiz?.startsWith(`/${shortSlug}/quiz`)) ||
-    mods.find(m => m.shortSlug === shortSlug) ||
-    mods.find(m => m.slug === shortSlug)
+    list.find(m => m.routes?.overview === `/${shortSlug}`) ||
+    list.find(m => m.routes?.quiz?.startsWith(`/${shortSlug}/quiz`)) ||
+    list.find(m => m.shortSlug === shortSlug) ||
+    list.find(m => m.slug === shortSlug)
   );
 }
 
@@ -176,7 +177,8 @@ export default function QuizPage({ params }: { params: Promise<{ shortSlug: stri
 
       // Shuffle and select questions
       const shuffled = [...questionsToUse].sort(() => Math.random() - 0.5);
-      const selectedQuestions = shuffled.slice(0, targetQuestions);
+      const effectiveTarget = Math.min(targetQuestions, shuffled.length);
+      const selectedQuestions = shuffled.slice(0, effectiveTarget);
       console.log('Selected questions count:', selectedQuestions.length);
 
       // Randomize choice order for multiple choice questions AND preserve correctAnswer index
@@ -202,7 +204,7 @@ export default function QuizPage({ params }: { params: Promise<{ shortSlug: stri
       }
 
       // Calculate time limit and passing score
-      const timeLimit = Math.min(Math.max(Math.ceil(targetQuestions * 1.5), 10), 45);
+      const timeLimit = Math.min(Math.max(Math.ceil((Math.min(targetQuestions, selectedQuestions.length)) * 1.5), 10), 45);
       const passingScore = moduleData.metadata?.thresholds?.passingScore || 70;
 
       // Calculate requirement percentage
@@ -211,11 +213,11 @@ export default function QuizPage({ params }: { params: Promise<{ shortSlug: stri
 
       const quizOverview: QuizData = {
         title: `${moduleData.title} Assessment`,
-        totalQuestions: targetQuestions,
+        totalQuestions: Math.min(targetQuestions, selectedQuestions.length),
         timeLimit,
         passingScore,
         instructions: [
-          `You will answer ${targetQuestions} questions covering key concepts from the ${moduleData.title} module.`,
+          `You will answer ${Math.min(targetQuestions, selectedQuestions.length)} questions covering key concepts from the ${moduleData.title} module.`,
           'Questions are randomly selected from a larger pool to keep each attempt fresh.',
           'Read each question carefully before selecting your answer.',
           'You can review and change your answers before submitting.',
@@ -287,7 +289,8 @@ export default function QuizPage({ params }: { params: Promise<{ shortSlug: stri
         console.log('Short slug:', slug);
         // Fetch registry and locate the module by shortSlug
         const registry = await fetchJSON<RegistryResponse>('/api/content/registry');
-        const moduleDataRaw = findModuleByShortSlug(registry.modules, slug);
+        const mods = Array.isArray(registry?.modules) ? registry.modules : [];
+        const moduleDataRaw = findModuleByShortSlug(mods, slug);
         console.log('Module data:', moduleDataRaw);
         if (!moduleDataRaw) {
           setError('Module not found');
@@ -306,9 +309,22 @@ export default function QuizPage({ params }: { params: Promise<{ shortSlug: stri
         console.log('Module quiz:', moduleQuiz);
         setQuiz(moduleQuiz);
 
-        // Fetch lessons to compute thresholds
-        const lessonsRes = await fetchJSON<{ lessons: unknown[] }>(`/api/content/lessons/${moduleDataRaw.slug}`);
-        const lessonsCount = Array.isArray(lessonsRes.lessons) ? lessonsRes.lessons.length : 0;
+        // Fetch lessons to compute thresholds (robust to array or { lessons: [] } and HTTP failures)
+        let lessonsCount = 0;
+        try {
+          const lessonsResp = await fetch(`/api/content/lessons/${moduleDataRaw.slug}`, { cache: 'no-store' });
+          if (lessonsResp.ok) {
+            const data = await lessonsResp.json();
+            lessonsCount = Array.isArray(data)
+              ? data.length
+              : (Array.isArray((data as { lessons?: unknown[] })?.lessons) ? ((data as { lessons?: unknown[] }).lessons?.length || 0) : 0);
+          } else {
+            const text = await lessonsResp.text().catch(() => '');
+            console.warn(`Lessons fetch failed: ${lessonsResp.status} ${lessonsResp.statusText} - ${text}`);
+          }
+        } catch (e) {
+          console.warn('Lessons fetch error:', e);
+        }
         const quizCount = Array.isArray(moduleQuiz?.questions) ? moduleQuiz.questions.length : 0;
         const computedThresholds = computeThresholds(moduleDataRaw, lessonsCount, quizCount);
         console.log('Module thresholds:', computedThresholds);
@@ -319,7 +335,10 @@ export default function QuizPage({ params }: { params: Promise<{ shortSlug: stri
           quiz: computedThresholds.quiz,
         });
 
-        if (!computedThresholds.quizValid && process.env.NODE_ENV === 'production') {
+        // In production, only block when there are zero questions.
+        // Allow quizzes to load even if below minimum thresholds.
+        const totalQuestions = Array.isArray(moduleQuiz?.questions) ? moduleQuiz.questions.length : 0;
+        if (totalQuestions === 0 && process.env.NODE_ENV === 'production') {
           setError('Quiz not available');
           return;
         }
@@ -380,20 +399,52 @@ export default function QuizPage({ params }: { params: Promise<{ shortSlug: stri
   }, []);
 
   const handleStartQuiz = async () => {
-    if (!quizData?._sessionSeed?.selectedQuestions || !currentModule) {
-      console.error('Quiz data not ready');
+    if (!currentModule || !quiz || !Array.isArray(quiz.questions) || quiz.questions.length === 0) {
+      console.error('Quiz not ready');
       return;
     }
 
     try {
-      const selectedQuestions = quizData._sessionSeed.selectedQuestions;
+      // Use precomputed seed if available; otherwise derive a selection now
+      let selectedQuestions: ProgrammingQuestion[] = (quizData?._sessionSeed?.selectedQuestions ?? []) as ProgrammingQuestion[];
+      if (!selectedQuestions.length) {
+        const shuffledPool = [...quiz.questions].sort(() => Math.random() - 0.5);
+        const target = Math.min(quizLength, shuffledPool.length);
+        const pick = shuffledPool.slice(0, target);
+        selectedQuestions = pick.map((q) => {
+          const originalChoices = (q.choices || []).map((c) => String(c));
+          // Determine the correct choice from either index or text
+          let originalCorrectIndex = -1;
+          if (typeof q.correctAnswer === 'number') {
+            originalCorrectIndex = q.correctAnswer;
+          } else if (typeof q.correctAnswer === 'string') {
+            const correctText = String(q.correctAnswer);
+            originalCorrectIndex = originalChoices.findIndex(c => c === correctText);
+          }
+          const originalCorrectChoice = originalCorrectIndex >= 0 && originalCorrectIndex < originalChoices.length
+            ? originalChoices[originalCorrectIndex]
+            : undefined;
+          const shuffledChoices = [...originalChoices].sort(() => Math.random() - 0.5);
+          let newCorrectIndex = 0;
+          if (originalCorrectChoice !== undefined) {
+            const idx = shuffledChoices.findIndex(c => c === originalCorrectChoice);
+            newCorrectIndex = idx >= 0 ? idx : 0;
+          }
+          return {
+            ...q,
+            choices: shuffledChoices,
+            correctAnswer: newCorrectIndex,
+          } as ProgrammingQuestion;
+        });
+      }
+
       const sessionPayload: QuizSession = {
         questions: selectedQuestions,
-        totalQuestions: quizData.totalQuestions,
-        passingScore: quizData.passingScore,
-        timeLimit: quizData.timeLimit,
+        totalQuestions: selectedQuestions.length,
+        passingScore: quizData?.passingScore ?? passingScore,
+        timeLimit: quizData?.timeLimit ?? Math.min(Math.max(Math.ceil(selectedQuestions.length * 1.5), 10), 45),
         startedAt: Date.now(),
-        answers: new Array(quizData.totalQuestions).fill(null)
+        answers: new Array(selectedQuestions.length).fill(null)
       };
 
       // Store session in sessionStorage
@@ -408,7 +459,7 @@ export default function QuizPage({ params }: { params: Promise<{ shortSlug: stri
       const updatedHistory = [...newQuestionIds, ...currentHistory].slice(0, 200);
       localStorage.setItem(historyKey, JSON.stringify(updatedHistory));
 
-      // Navigate to first question
+      // Navigate to first question (our questions are 1-indexed in routes)
       router.push(`/${currentModule.slug}/quiz/question/1`);
     } catch (err) {
       console.error('Error starting quiz:', err);
@@ -450,6 +501,10 @@ export default function QuizPage({ params }: { params: Promise<{ shortSlug: stri
     passingScore: number;
   };
   const quizLength = currentModule.metadata?.thresholds?.minQuizQuestions ?? currentModule.thresholds?.requiredQuestions ?? 14;
+  const poolSize = Array.isArray(quiz?.questions) ? quiz.questions.length : 0;
+  const derivedTotal = quizData?.totalQuestions ?? Math.min(quizLength, poolSize);
+  const derivedTimeLimit = quizData?.timeLimit ?? Math.min(Math.max(Math.ceil(derivedTotal * 1.5), 10), 45);
+  const derivedPassingScore = quizData?.passingScore ?? passingScore;
 
   return (
     <QuizLayout module={currentModule} thresholds={layoutThresholds} unlockingModules={unlockingModules}>
@@ -471,7 +526,7 @@ export default function QuizPage({ params }: { params: Promise<{ shortSlug: stri
       )}
 
       {/* Quiz Content */}
-      {quiz && quiz.questions && quiz.questions.length > 0 && quizData ? (
+      {quiz && Array.isArray(quiz.questions) && quiz.questions.length > 0 ? (
         <div className="space-y-8">
           {/* Assessment Overview */}
           <div className="glass-morphism px-8 py-8 rounded-xl">
@@ -479,7 +534,7 @@ export default function QuizPage({ params }: { params: Promise<{ shortSlug: stri
               🎯 Assessment Overview
             </h2>
             <p className="text-muted mb-6">
-              You will answer {quizLength} randomly selected questions covering key concepts from the {currentModule.title} module.
+              You will answer {derivedTotal} randomly selected questions covering key concepts from the {currentModule.title} module.
               Questions are chosen from a larger pool to keep each attempt fresh.
             </p>
             
@@ -487,10 +542,10 @@ export default function QuizPage({ params }: { params: Promise<{ shortSlug: stri
               {/* Quiz Length combined with pool size */}
               <div className="bg-surface-alt p-4 rounded-lg">
                 <div className="text-2xl font-bold text-primary">
-                  {quizData.totalQuestions} <span className="text-sm font-medium text-muted">questions</span>
+                  {derivedTotal} <span className="text-sm font-medium text-muted">questions</span>
                 </div>
                 <div className="text-xs text-muted mt-1">
-                  Pool: {poolCount}
+                  Pool: {poolCount || poolSize}
                 </div>
               </div>
               {/* Requirement Met */}
@@ -505,7 +560,7 @@ export default function QuizPage({ params }: { params: Promise<{ shortSlug: stri
               {/* Time Limit */}
               <div className="bg-surface-alt p-4 rounded-lg">
                 <div className="text-2xl font-bold text-primary">
-                  {quizData.timeLimit} min
+                  {derivedTimeLimit} min
                 </div>
                 <div className="text-sm text-muted">
                   Time Limit
@@ -514,7 +569,7 @@ export default function QuizPage({ params }: { params: Promise<{ shortSlug: stri
               {/* Passing Score */}
               <div className="bg-surface-alt p-4 rounded-lg">
                 <div className="text-2xl font-bold text-primary">
-                  {quizData.passingScore}%
+                  {derivedPassingScore}%
                 </div>
                 <div className="text-sm text-muted">
                   Passing Score
@@ -557,7 +612,15 @@ export default function QuizPage({ params }: { params: Promise<{ shortSlug: stri
             </h2>
             
             <ul className="space-y-4 mb-8">
-              {quizData.instructions.map((instruction: string, index: number) => (
+              {(quizData?.instructions ?? [
+                `You will answer ${derivedTotal} questions covering key concepts from the ${currentModule.title} module.`,
+                'Questions are randomly selected from a larger pool to keep each attempt fresh.',
+                'Read each question carefully before selecting your answer.',
+                'You can review and change your answers before submitting.',
+                `You need ${derivedPassingScore}% or higher to pass this assessment.`,
+                'The timer will start as soon as you begin the quiz.',
+                'Make sure you have a stable internet connection before starting.'
+              ]).map((instruction: string, index: number) => (
                 <li key={index} className="flex items-start gap-3">
                   <span className="flex-shrink-0 w-6 h-6 bg-surface-alt text-fg rounded-full flex items-center justify-center text-sm font-bold mt-0.5">
                     {index + 1}

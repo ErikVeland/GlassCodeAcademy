@@ -44,16 +44,15 @@ router.get('/registry', generalLimiter, async (req, res, next) => {
 
     const registryData = JSON.parse(fs.readFileSync(registryPath, 'utf8'));
 
-    // Return registry data with academy information
+    // Return registry data directly (not wrapped in data object) to match frontend expectations
     return res.status(200).json({
-      success: true,
-      data: {
-        ...registryData,
-        academy: {
-          id: defaultAcademy.id,
-          name: defaultAcademy.name,
-          slug: defaultAcademy.slug,
-        },
+      ...registryData,
+      version: 'db', // Indicate this is from database/api
+      lastUpdated: new Date().toISOString(),
+      academy: {
+        id: defaultAcademy.id,
+        name: defaultAcademy.name,
+        slug: defaultAcademy.slug,
       },
     });
   } catch (err) {

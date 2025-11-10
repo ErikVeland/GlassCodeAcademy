@@ -16,17 +16,18 @@ const initializeDatabase = async () => {
     // In production, rely on migrations by default to avoid destructive/locking changes.
     // Allow opt-in via env flags: DB_SYNC=true and optional DB_SYNC_ALTER=true.
     const nodeEnv = (process.env.NODE_ENV || '').toLowerCase();
-    const isProd = nodeEnv === 'production';
     const dbSyncFlag = (process.env.DB_SYNC || '').toLowerCase() === 'true';
     const dbSyncAlterFlag =
       (process.env.DB_SYNC_ALTER || '').toLowerCase() === 'true';
 
     if (dbSyncFlag) {
       // Only sync if explicitly enabled via DB_SYNC=true
-      const useAlter = !isProd || dbSyncAlterFlag;
+      // Avoid destructive alter operations on SQLite (schema migration issues)
+      const isSqlite = sequelize.getDialect() === 'sqlite';
+      const useAlter = dbSyncAlterFlag && !isSqlite;
       await sequelize.sync({ alter: useAlter });
       console.log(
-        `Database models synchronized successfully (env="${nodeEnv}", alter=${useAlter}).`
+        `Database models synchronized successfully (env="${nodeEnv}", dialect=${sequelize.getDialect()}, alter=${useAlter}).`
       );
     } else {
       console.log('Skipping sequelize.sync; schema managed by migrations.');

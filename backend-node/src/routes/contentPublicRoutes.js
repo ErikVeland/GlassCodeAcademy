@@ -1,4 +1,5 @@
 const express = require('express');
+const { Op } = require('sequelize');
 const { generalLimiter } = require('../middleware/rateLimitMiddleware');
 const Module = require('../models/moduleModel');
 const Lesson = require('../models/lessonModel');
@@ -44,7 +45,7 @@ router.get('/quizzes/:slug', generalLimiter, async (req, res, next) => {
 
     const lessonIds = lessons.map((l) => l.id);
     const quizzes = await LessonQuiz.findAll({
-      where: { lesson_id: lessonIds },
+      where: { lesson_id: { [Op.in]: lessonIds } },
       order: [['sortOrder', 'ASC']],
       attributes: [
         'id',

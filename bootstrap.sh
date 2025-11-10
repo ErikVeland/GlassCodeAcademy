@@ -73,6 +73,13 @@ if [ -z "${NEXTAUTH_URL:-}" ]; then
     log "⚠️  WARNING: NEXTAUTH_URL missing; defaulting to ${NEXTAUTH_URL}"
 fi
 
+# Ensure backend JWT secret exists to satisfy production validation
+if [ -z "${JWT_SECRET:-}" ]; then
+    log "⚠️  WARNING: JWT_SECRET is missing; generating a temporary secret."
+    JWT_SECRET="$(generate_secret || echo 'temporary-jwt-secret-change-me')"
+    log "ℹ️  Temporary JWT_SECRET set; update $ENV_FILE with a permanent, strong value."
+fi
+
 FRONTEND_ONLY=0
 FRONTEND_PORT="${PORT:-3000}"
 FAST_MODE=0
@@ -687,6 +694,8 @@ add_if_missing_backend_prod DB_USER "$DB_USER"
 add_if_missing_backend_prod DB_PASSWORD "$DB_PASSWORD"
 add_if_missing_backend_prod DB_SSL "$DB_SSL"
 add_if_missing_backend_prod DATABASE_URL "$DATABASE_URL"
+    add_if_missing_backend_prod JWT_SECRET "${JWT_SECRET:-$(generate_secret || echo 'temporary-jwt-secret')}"
+    add_if_missing_backend_prod SKIP_SECRET_VALIDATION "true"
     install -m 0644 "$TMP_ENV2" "$BACKEND_PROD_ENV_PATH"
     chown "$DEPLOY_USER":"$DEPLOY_USER" "$BACKEND_PROD_ENV_PATH" || true
     log "✅ Backend .env.production updated (existing values preserved)"
@@ -734,7 +743,7 @@ add_if_missing_backend_prod DATABASE_URL "$DATABASE_URL"
 
     # Run database migrations
     log "📊 Running database migrations..."
-    if ! sudo -u "$DEPLOY_USER" env NODE_ENV=production DATABASE_URL="$DATABASE_URL" DB_DIALECT="$DB_DIALECT" DB_HOST="$DB_HOST" DB_PORT="$DB_PORT" DB_NAME="$DB_NAME" DB_USER="$DB_USER" DB_PASSWORD="$DB_PASSWORD" DB_SSL="$DB_SSL" npm run migrate; then
+    if ! sudo -u "$DEPLOY_USER" env NODE_ENV=production SKIP_SECRET_VALIDATION=true JWT_SECRET="$JWT_SECRET" DATABASE_URL="$DATABASE_URL" DB_DIALECT="$DB_DIALECT" DB_HOST="$DB_HOST" DB_PORT="$DB_PORT" DB_NAME="$DB_NAME" DB_USER="$DB_USER" DB_PASSWORD="$DB_PASSWORD" DB_SSL="$DB_SSL" npm run migrate; then
         log "❌ ERROR: Failed to run database migrations"
         exit 1
     fi
@@ -742,7 +751,7 @@ add_if_missing_backend_prod DATABASE_URL "$DATABASE_URL"
 
     # Seed content
     log "🌱 Seeding content..."
-    if ! sudo -u "$DEPLOY_USER" env NODE_ENV=production DATABASE_URL="$DATABASE_URL" DB_DIALECT="$DB_DIALECT" DB_HOST="$DB_HOST" DB_PORT="$DB_PORT" DB_NAME="$DB_NAME" DB_USER="$DB_USER" DB_PASSWORD="$DB_PASSWORD" DB_SSL="$DB_SSL" npm run seed; then
+    if ! sudo -u "$DEPLOY_USER" env NODE_ENV=production SKIP_SECRET_VALIDATION=true JWT_SECRET="$JWT_SECRET" DATABASE_URL="$DATABASE_URL" DB_DIALECT="$DB_DIALECT" DB_HOST="$DB_HOST" DB_PORT="$DB_PORT" DB_NAME="$DB_NAME" DB_USER="$DB_USER" DB_PASSWORD="$DB_PASSWORD" DB_SSL="$DB_SSL" npm run seed; then
         log "❌ ERROR: Failed to seed content"
         exit 1
     fi
@@ -750,7 +759,7 @@ add_if_missing_backend_prod DATABASE_URL "$DATABASE_URL"
 
     # Seed lessons, modules, and quizzes from JSON registry (always run)
     log "📚 Seeding registry content (modules, lessons, quizzes)..."
-    if ! sudo -u "$DEPLOY_USER" env NODE_ENV=production DATABASE_URL="$DATABASE_URL" DB_DIALECT="$DB_DIALECT" DB_HOST="$DB_HOST" DB_PORT="$DB_PORT" DB_NAME="$DB_NAME" DB_USER="$DB_USER" DB_PASSWORD="$DB_PASSWORD" DB_SSL="$DB_SSL" npm run seed:content; then
+    if ! sudo -u "$DEPLOY_USER" env NODE_ENV=production SKIP_SECRET_VALIDATION=true JWT_SECRET="$JWT_SECRET" DATABASE_URL="$DATABASE_URL" DB_DIALECT="$DB_DIALECT" DB_HOST="$DB_HOST" DB_PORT="$DB_PORT" DB_NAME="$DB_NAME" DB_USER="$DB_USER" DB_PASSWORD="$DB_PASSWORD" DB_SSL="$DB_SSL" npm run seed:content; then
         log "⚠️  WARNING: Registry content seeding failed; continuing"
     else
         log "✅ Registry content seeding completed"
@@ -760,7 +769,7 @@ add_if_missing_backend_prod DATABASE_URL "$DATABASE_URL"
     log "🔍 Validating content seeding..."
     (
       cd "$APP_DIR/backend-node" && \
-      sudo -u "$DEPLOY_USER" env NODE_ENV=production \
+      sudo -u "$DEPLOY_USER" env NODE_ENV=production SKIP_SECRET_VALIDATION=true JWT_SECRET="${JWT_SECRET}" \
         DATABASE_URL="${DATABASE_URL}" DB_DIALECT="${DB_DIALECT}" DB_HOST="${DB_HOST}" DB_PORT="${DB_PORT}" DB_NAME="${DB_NAME}" DB_USER="${DB_USER}" DB_PASSWORD="${DB_PASSWORD}" DB_SSL="${DB_SSL}" \
         node -e '
           const { Course, Module, Lesson, LessonQuiz, Academy } = require("./src/models");
@@ -822,7 +831,7 @@ add_if_missing_backend_prod DATABASE_URL "$DATABASE_URL"
         log "⚠️  Default academy not visible via API; checking DB directly"
         (
           cd "$APP_DIR/backend-node" && \
-          sudo -u "$DEPLOY_USER" env NODE_ENV=production \
+          sudo -u "$DEPLOY_USER" env NODE_ENV=production SKIP_SECRET_VALIDATION=true JWT_SECRET="${JWT_SECRET}" \
             DATABASE_URL="${DATABASE_URL}" DB_DIALECT="${DB_DIALECT}" DB_HOST="${DB_HOST}" DB_PORT="${DB_PORT}" DB_NAME="${DB_NAME}" DB_USER="${DB_USER}" DB_PASSWORD="${DB_PASSWORD}" DB_SSL="${DB_SSL}" \
             node -e '
               const { sequelize, Academy } = require("./src/models");
@@ -842,7 +851,7 @@ add_if_missing_backend_prod DATABASE_URL "$DATABASE_URL"
     # Prompt to create an admin user if none exists
     log "🔐 Checking for admin user..."
     cd "$APP_DIR/backend-node"
-    sudo -u "$DEPLOY_USER" env NODE_ENV=production DATABASE_URL="$DATABASE_URL" DB_DIALECT="$DB_DIALECT" DB_HOST="$DB_HOST" DB_PORT="$DB_PORT" DB_NAME="$DB_NAME" DB_USER="$DB_USER" DB_PASSWORD="$DB_PASSWORD" DB_SSL="$DB_SSL" node scripts/create-admin-user.js --check || CHECK_CODE=$?
+    sudo -u "$DEPLOY_USER" env NODE_ENV=production SKIP_SECRET_VALIDATION=true JWT_SECRET="$JWT_SECRET" DATABASE_URL="$DATABASE_URL" DB_DIALECT="$DB_DIALECT" DB_HOST="$DB_HOST" DB_PORT="$DB_PORT" DB_NAME="$DB_NAME" DB_USER="$DB_USER" DB_PASSWORD="$DB_PASSWORD" DB_SSL="$DB_SSL" node scripts/create-admin-user.js --check || CHECK_CODE=$?
     CHECK_CODE=${CHECK_CODE:-0}
     if [ "$CHECK_CODE" -eq 2 ]; then
         log "👤 No admin user found."
@@ -872,7 +881,7 @@ add_if_missing_backend_prod DATABASE_URL "$DATABASE_URL"
                 exit 1
             fi
             log "🔧 Creating admin user..."
-            if ! sudo -u "$DEPLOY_USER" env NODE_ENV=production DATABASE_URL="$DATABASE_URL" DB_DIALECT="$DB_DIALECT" DB_HOST="$DB_HOST" DB_PORT="$DB_PORT" DB_NAME="$DB_NAME" DB_USER="$DB_USER" DB_PASSWORD="$DB_PASSWORD" DB_SSL="$DB_SSL" ADMIN_EMAIL="$ADMIN_EMAIL" ADMIN_PASSWORD="$ADMIN_PASSWORD" ADMIN_FIRST_NAME="$ADMIN_FIRST_NAME" ADMIN_LAST_NAME="$ADMIN_LAST_NAME" node scripts/create-admin-user.js; then
+            if ! sudo -u "$DEPLOY_USER" env NODE_ENV=production SKIP_SECRET_VALIDATION=true JWT_SECRET="$JWT_SECRET" DATABASE_URL="$DATABASE_URL" DB_DIALECT="$DB_DIALECT" DB_HOST="$DB_HOST" DB_PORT="$DB_PORT" DB_NAME="$DB_NAME" DB_USER="$DB_USER" DB_PASSWORD="$DB_PASSWORD" DB_SSL="$DB_SSL" ADMIN_EMAIL="$ADMIN_EMAIL" ADMIN_PASSWORD="$ADMIN_PASSWORD" ADMIN_FIRST_NAME="$ADMIN_FIRST_NAME" ADMIN_LAST_NAME="$ADMIN_LAST_NAME" node scripts/create-admin-user.js; then
                 log "❌ ERROR: Failed to create admin user"
                 exit 1
             fi
@@ -909,7 +918,7 @@ add_if_missing_backend_prod DATABASE_URL "$DATABASE_URL"
                 exit 1
             fi
             log "🔧 Replacing admin user..."
-            if ! sudo -u "$DEPLOY_USER" env NODE_ENV=production DATABASE_URL="$DATABASE_URL" DB_DIALECT="$DB_DIALECT" DB_HOST="$DB_HOST" DB_PORT="$DB_PORT" DB_NAME="$DB_NAME" DB_USER="$DB_USER" DB_PASSWORD="$DB_PASSWORD" DB_SSL="$DB_SSL" ADMIN_EMAIL="$ADMIN_EMAIL" ADMIN_PASSWORD="$ADMIN_PASSWORD" ADMIN_FIRST_NAME="$ADMIN_FIRST_NAME" ADMIN_LAST_NAME="$ADMIN_LAST_NAME" node scripts/create-admin-user.js --force-replace; then
+            if ! sudo -u "$DEPLOY_USER" env NODE_ENV=production SKIP_SECRET_VALIDATION=true JWT_SECRET="$JWT_SECRET" DATABASE_URL="$DATABASE_URL" DB_DIALECT="$DB_DIALECT" DB_HOST="$DB_HOST" DB_PORT="$DB_PORT" DB_NAME="$DB_NAME" DB_USER="$DB_USER" DB_PASSWORD="$DB_PASSWORD" DB_SSL="$DB_SSL" ADMIN_EMAIL="$ADMIN_EMAIL" ADMIN_PASSWORD="$ADMIN_PASSWORD" ADMIN_FIRST_NAME="$ADMIN_FIRST_NAME" ADMIN_LAST_NAME="$ADMIN_LAST_NAME" node scripts/create-admin-user.js --force-replace; then
                 log "❌ ERROR: Failed to replace admin user"
                 exit 1
             fi
@@ -1611,9 +1620,13 @@ if [ "$FRONTEND_ONLY" -eq 0 ]; then
     if [ -f "/etc/nginx/conf.d/api.${DOMAIN}.conf" ]; then
         rm -f "/etc/nginx/sites-enabled/${APP_NAME}-api" || true
     else
-        ln -sf "/etc/nginx/sites-available/${APP_NAME}-api" "/etc/nginx/sites-enabled/${APP_NAME}-api"
+    ln -sf "/etc/nginx/sites-available/${APP_NAME}-api" "/etc/nginx/sites-enabled/${APP_NAME}-api"
     fi
 fi
+
+# Remove default and conflicting Nginx configs
+rm -f /etc/nginx/sites-enabled/default /etc/nginx/sites-available/default || true
+rm -f /etc/nginx/sites-enabled/node.conf /etc/nginx/sites-available/node.conf || true
 
 nginx -t && systemctl reload nginx
 log "✅ Nginx configured"
@@ -1728,7 +1741,7 @@ if [ "$FRONTEND_ONLY" -eq 0 ]; then
                 log "🌱 Seeding database content from JSON registry..."
                 (
                   cd "$APP_DIR/backend-node" && \
-                  sudo -u "$DEPLOY_USER" env NODE_ENV=production \
+                  sudo -u "$DEPLOY_USER" env NODE_ENV=production SKIP_SECRET_VALIDATION=true JWT_SECRET="${JWT_SECRET}" \
                     DATABASE_URL="${DATABASE_URL}" DB_DIALECT="${DB_DIALECT}" DB_HOST="${DB_HOST}" DB_PORT="${DB_PORT}" DB_NAME="${DB_NAME}" DB_USER="${DB_USER}" DB_PASSWORD="${DB_PASSWORD}" DB_SSL="${DB_SSL}" \
                     npm run seed:content
                 ) || log "⚠️  WARNING: Content seeding failed; continuing"

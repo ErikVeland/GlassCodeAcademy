@@ -1,6 +1,8 @@
 import type { Metadata, Viewport } from "next";
 import Link from "next/link";
 import "./globals.css";
+import "../styles/design-system.scss";
+import "../styles/liquid-glass.scss";
 import Header from '../components/Header';
 import FloatingDarkModeToggle from '../components/FloatingDarkModeToggle';
 import { DarkModeProvider } from '../components/DarkModeContext';
@@ -18,8 +20,8 @@ import Script from 'next/script';
 import ApolloDevMessages from '../components/ApolloDevMessages';
 import ConsoleBanner from '../components/ConsoleBanner';
 import BackendReadinessWrapper from '../components/BackendReadinessWrapper';
-import GlobalStyles from '../components/GlobalStyles';
 import { cookies } from 'next/headers';
+import StatusBanner from '../components/StatusBanner';
 
 export const runtime = 'nodejs';
 
@@ -210,7 +212,6 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         }} />
       </head>
       <body suppressHydrationWarning className={"antialiased min-h-screen relative theme-base"}>
-        <GlobalStyles />
         <DarkModeProvider>
         <ApolloWrapper>
           <ConsoleBanner />
@@ -234,6 +235,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
                 >
                   Skip to main content
                 </a>
+                <StatusBanner />
                 <Header />
                 <main
                   id="main-content"

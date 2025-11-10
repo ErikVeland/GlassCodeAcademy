@@ -77,16 +77,21 @@ const nextConfig: NextConfig = {
           source: '/api/auth/:path*',
           destination: '/api/auth/:path*',
         },
+        // Ensure content quiz and registry routes are served by Next and not proxied
+        {
+          source: '/api/content/registry',
+          destination: '/api/content/registry',
+        },
+        {
+          source: '/api/content/quizzes/:slug',
+          destination: '/api/content/quizzes/:slug',
+        },
       ],
       // Proxy other API routes to the backend after filesystem routes are checked
       afterFiles: [
         {
           source: '/graphql',
           destination: `${base}/graphql`,
-        },
-        {
-          source: '/api/:path*',
-          destination: `${base}/api/:path*`,
         },
       ],
       fallback: [],

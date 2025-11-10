@@ -15,8 +15,11 @@ async function seedContent() {
     console.log('✅ Required tables present; altering core content tables to add missing columns');
     
     // Ensure all tables have proper schema
-    await sequelize.sync({ alter: true });
-    console.log('✅ Targeted schema alter sync completed.');
+    const isSqlite = sequelize.getDialect() === 'sqlite';
+    await sequelize.sync({ alter: !isSqlite });
+    console.log(
+      `✅ Schema sync completed (dialect=${sequelize.getDialect()}, alter=${!isSqlite}).`
+    );
     
     // Get the default academy
     const defaultAcademy = await Academy.findOne({

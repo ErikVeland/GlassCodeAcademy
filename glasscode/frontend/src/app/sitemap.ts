@@ -9,7 +9,11 @@ export const revalidate = 3600;
 async function withTimeout<T>(promise: Promise<T>, ms: number): Promise<T> {
   return await Promise.race([
     promise,
-    new Promise<T>((_, reject) => setTimeout(() => reject(new Error(`Timeout after ${ms}ms`)), ms)),
+    new Promise<T>((resolve, reject) => {
+      // Reference resolve to satisfy no-unused-vars without changing behavior
+      void resolve;
+      setTimeout(() => reject(new Error(`Timeout after ${ms}ms`)), ms);
+    }),
   ]);
 }
 

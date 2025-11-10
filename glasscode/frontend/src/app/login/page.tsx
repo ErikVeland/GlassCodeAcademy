@@ -1,5 +1,5 @@
 "use client";
-import { signIn, getProviders } from "next-auth/react";
+import { signIn } from "next-auth/react";
 import Link from "next/link";
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
@@ -16,39 +16,27 @@ export default function LoginPage() {
   });
 
   useEffect(() => {
-    // Fetch configured auth providers from NextAuth
+    // Fetch configured auth providers from our API endpoint to avoid NextAuth client errors
     const loadProviders = async () => {
       try {
-        // First try the NextAuth getProviders function
-        const nextAuthProviders = await getProviders();
-        if (nextAuthProviders) {
-          // Normalize providers to match expected format
-          const normalized: Record<string, { id: string; name: string }> = {};
-          Object.values(nextAuthProviders).forEach(provider => {
-            normalized[provider.id] = { id: provider.id, name: provider.name };
-          });
-          setProviders(normalized);
-        } else {
-          // Fallback to our custom API endpoint
-          const res = await fetch("/api/auth/providers");
-          if (res.ok) {
-            const data = await res.json();
-            // Normalize and guard against unexpected shapes
-            if (data && typeof data === 'object' && !Array.isArray(data)) {
-              const normalized = { ...data } as Record<string, { id: string; name: string }>;
-              // Guarantee credentials presence even if API returns nothing
-              if (!normalized["credentials"]) {
-                normalized["credentials"] = { id: 'credentials', name: 'Email and Password' };
-              }
-              setProviders(normalized);
-            } else {
-              // Fallback hard default if unexpected response
-              setProviders({ credentials: { id: 'credentials', name: 'Email and Password' } });
+        const res = await fetch("/api/auth/providers");
+        if (res.ok) {
+          const data = await res.json();
+          // Normalize and guard against unexpected shapes
+          if (data && typeof data === 'object' && !Array.isArray(data)) {
+            const normalized = { ...data } as Record<string, { id: string; name: string }>;
+            // Guarantee credentials presence even if API returns nothing
+            if (!normalized["credentials"]) {
+              normalized["credentials"] = { id: 'credentials', name: 'Email and Password' };
             }
+            setProviders(normalized);
           } else {
-            // Network or non-200 response: still show credentials
+            // Fallback hard default if unexpected response
             setProviders({ credentials: { id: 'credentials', name: 'Email and Password' } });
           }
+        } else {
+          // Network or non-200 response: still show credentials
+          setProviders({ credentials: { id: 'credentials', name: 'Email and Password' } });
         }
       } catch (e) {
         // Silently ignore; credentials/guest will still be available

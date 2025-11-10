@@ -1,69 +1,28 @@
 # Frontend Environment Configuration
 
-This app resolves public and API URLs at build/runtime. Misconfiguration can cause ECONNREFUSED or localhost fetches during CI/production. Configure the variables below according to your deployment.
+This app relies on a few env vars that affect SSR fetches and routing.
 
-## Required Variables (Production/CI)
+Recommended setup for local development:
 
-- NEXT_PUBLIC_BASE_URL
-  - Public origin of the frontend, no trailing slash.
-  - Examples: `https://glasscodeacademy.com`, `https://your-app.vercel.app`
-  - Used by server-side code to build absolute URLs.
-
-- NEXT_PUBLIC_API_BASE
-  - Base URL of the Node.js backend the frontend talks to, no trailing slash.
-  - Examples: `https://api.glasscodeacademy.com`, `https://glasscodeacademy.com` (if proxied)
-  - Required for `nodeJsApiClient`. Missing in prod/CI now throws to surface misconfig.
-
-- VERCEL_URL (automatically set on Vercel)
-  - If `NEXT_PUBLIC_BASE_URL` is not set, code uses `https://${VERCEL_URL}`.
-
-## Optional Variables
-
-- GRAPHQL_ENDPOINT
-  - Full URL to GraphQL. If omitted, the browser uses `/graphql` and the server derives from `NEXT_PUBLIC_API_BASE` or `NEXT_PUBLIC_BASE_URL`.
-
-## Development Defaults
-
-- You can run locally without setting `NEXT_PUBLIC_BASE_URL` by relying on relative fetches, but setting it avoids server-side absolute URL errors.
-- Typical dev values:
-  - `NEXT_PUBLIC_BASE_URL=http://localhost:3000`
-  - `NEXT_PUBLIC_API_BASE=http://localhost:8080`
-
-## Behavior in Code
-
-- `getPublicOriginStrict()`
-  - Uses `NEXT_PUBLIC_BASE_URL` or `https://${VERCEL_URL}`. Throws if neither is set.
-
-- `getApiBaseStrict()`
-  - Uses `NEXT_PUBLIC_API_BASE`. Throws if not set.
-
-- `nodeJsApiClient`
-  - Uses `getApiBaseStrict()`. In development (not production and not CI), falls back to `http://localhost:8080`.
-  - In production/CI, throws if `NEXT_PUBLIC_API_BASE` is missing to prevent silent localhost fetches.
-
-- Content loaders (registry/lessons/quizzes)
-  - Prefer relative `/api/...` and static `/registry.json`.
-  - Gate localhost candidates to dev-only; production/CI will not attempt `http://localhost:*` during prerender.
-
-## Examples
-
-### .env.local (development)
 ```
+# .env.local
 NEXT_PUBLIC_BASE_URL=http://localhost:3000
-NEXT_PUBLIC_API_BASE=http://localhost:8080
+NEXT_PUBLIC_API_BASE=http://127.0.0.1:8080
+NEXT_PUBLIC_GRAPHQL_ENDPOINT=/api/graphql
+NEXT_PUBLIC_DEBUG=true
 ```
 
-### .env.production (self-hosted/CI)
-```
-NEXT_PUBLIC_BASE_URL=https://glasscodeacademy.com
-NEXT_PUBLIC_API_BASE=https://api.glasscodeacademy.com
-```
+Notes:
+- `NEXT_PUBLIC_BASE_URL` must match the running frontend dev port. SSR routes derive absolute URLs from this.
+- `NEXT_PUBLIC_API_BASE` should point directly to the backend origin used by SSR. Avoid mixing with the public origin.
+- `NEXT_PUBLIC_GRAPHQL_ENDPOINT` can be absolute or proxied path; keep it consistent with your proxy rules.
+- `NEXT_PUBLIC_DEBUG` gates verbose logs and enables the StatusBanner even when everything is healthy.
 
-### Vercel
-- `VERCEL_URL` is automatically set on preview/production. Optionally set `NEXT_PUBLIC_BASE_URL` for canonical origins.
-- Always set `NEXT_PUBLIC_API_BASE` to your backend.
+Common pitfalls:
+- Mismatched `NEXT_PUBLIC_BASE_URL` and dev server port causes SSR fetches to fail or be incorrectly proxied.
+- Using public origin helpers where backend API base is required leads to mixed-origin issues. Prefer `API_BASE` for server-side fetches.
+- Inline scripts with CSP: ensure CSP allows required inline scripts or replace them with modules and nonces.
 
-## Verify Configuration
-
-- Run `npm run build` in `frontend/` and ensure there are no `ECONNREFUSED` or localhost fetch attempts in logs.
-- At runtime, open your app and check network requests; API calls should target `NEXT_PUBLIC_API_BASE`.
+Health endpoints:
+- Frontend: `GET /health` should respond with a simple OK and optionally proxy backend health.
+- Registry: `GET /api/content/registry` returns the content registry and is a good proxy readiness signal.

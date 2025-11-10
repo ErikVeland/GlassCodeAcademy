@@ -103,6 +103,22 @@ if (isTest) {
       ? { ssl: { require: true, rejectUnauthorized: false } }
       : undefined,
   });
+  // Development-time visibility into DB configuration
+  if (process.env.NODE_ENV === 'development') {
+    try {
+      const info = {
+        dialect: inferredDialect,
+        url: databaseUrl,
+        storage:
+          inferredDialect === 'sqlite'
+            ? databaseUrl.replace(/^sqlite:/, '')
+            : undefined,
+      };
+      console.log('[DB Config]', info);
+    } catch {
+      // ignore logging errors
+    }
+  }
 } else if (DB_HOST && DB_NAME && DB_USER) {
   // Fallback to discrete env configuration when DATABASE_URL is missing
   sequelize = new Sequelize(DB_NAME, DB_USER, DB_PASSWORD, {

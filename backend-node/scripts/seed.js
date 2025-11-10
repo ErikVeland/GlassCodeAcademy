@@ -108,12 +108,13 @@ async function seedDatabase() {
         
         if (!existingUserRole) {
           console.log('Creating new UserRole with userId:', adminUser.id, 'and roleId:', adminRole.id);
-          // Use raw SQL query to create the association
+          // Insert using raw SQL without NOW() to avoid SQLite incompatibility
+          const now = new Date().toISOString();
           await sequelize.query(
-            'INSERT INTO user_roles (user_id, role_id, assigned_at, created_at, updated_at) VALUES (?, ?, NOW(), NOW(), NOW())',
+            'INSERT INTO user_roles (user_id, role_id, assigned_at, created_at, updated_at) VALUES (?, ?, ?, ?, ?)',
             {
-              replacements: [adminUser.id, adminRole.id],
-              type: sequelize.QueryTypes.INSERT
+              replacements: [adminUser.id, adminRole.id, now, now, now],
+              type: sequelize.QueryTypes.INSERT,
             }
           );
           console.log('Admin role assigned to admin user successfully!');

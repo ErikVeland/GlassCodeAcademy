@@ -119,13 +119,7 @@ function loadStaticRegistry(): StaticRegistry | null {
   }
 }
 
-/* eslint-disable @typescript-eslint/no-unused-vars */
 async function synthesizeRegistryFromDatabase() {
-  const staticRegistry = loadStaticRegistry();
-  const staticModulesBySlug = new Map<string, StaticRegistryModule>();
-  const staticModules = staticRegistry?.modules || [];
-  staticModules.forEach(m => staticModulesBySlug.set(m.slug, m));
-
   // Resolve backend base candidates (env first, then local dev)
   const candidateBases: string[] = [];
   try { candidateBases.push(getApiBaseStrict()); } catch { /* ignore */ }
@@ -148,74 +142,23 @@ async function synthesizeRegistryFromDatabase() {
     }
   }
 
-  // If backend is unreachable, fallback entirely to static registry
   if (!modulesRes || !tiersRes) {
-    if (staticRegistry) {
-      const normalizedModules: RegistryModuleLight[] = await Promise.all(staticModules.map(async (m) => {
-        const slug = (m.slug || '').toString();
-        const shortSlug = (await getShortSlugFromModuleSlug(slug)) || (slug.includes('-') ? slug.split('-')[0] : slug);
-        const routes: ModuleRoutes = {
-          overview: `/${shortSlug}`,
-          lessons: `/${shortSlug}/lessons`,
-          quiz: `/${shortSlug}/quiz`,
-        };
-        const icon = (typeof m.icon === 'string' && m.icon.trim() !== '' && m.icon !== '📚') ? m.icon : (iconBySlug[slug] || '📚');
-        const technologies = Array.isArray(m.technologies) ? m.technologies : [];
-        const difficulty = typeof m.difficulty === 'string' && m.difficulty.trim() !== '' ? m.difficulty : 'Beginner';
-        const tier = typeof m.tier === 'string' && m.tier.trim() !== '' ? m.tier : 'core';
-        return { ...m, routes, icon, technologies, difficulty, tier } as RegistryModuleLight;
-      }));
-
-      // Filter out dummy/broken modules not meant for production
-      const filteredModules = normalizedModules.filter(m => m.slug !== 'html-basics');
-
-      return {
-        version: staticRegistry.version || 'file',
-        lastUpdated: staticRegistry.lastUpdated || new Date().toISOString(),
-        tiers: staticRegistry.tiers || {},
-        modules: filteredModules,
-        globalSettings: staticRegistry.globalSettings || {},
-      };
-    }
-    throw new Error('Failed to fetch modules/tiers from backend candidates');
+    throw new Error('Failed to fetch modules/tiers from backend');
   }
 
-  const raw: unknown = await modulesRes.json();
-  const dbModules: DbModule[] = Array.isArray(raw) ? (raw as DbModule[]) : [];
+  const modulesEnvelope: unknown = await modulesRes.json();
+  const modulesData = (modulesEnvelope && typeof modulesEnvelope === 'object' && Array.isArray((modulesEnvelope as { data?: unknown }).data))
+    ? ((modulesEnvelope as { data?: unknown[] }).data as unknown[])
+    : (Array.isArray(modulesEnvelope) ? (modulesEnvelope as unknown[]) : []);
+  const dbModules: DbModule[] = modulesData as DbModule[];
 
-  const tiersRaw = await tiersRes.json();
-  const dbTiers: Record<string, Tier> = (tiersRaw && typeof tiersRaw === 'object') ? (tiersRaw as Record<string, Tier>) : {};
+  const tiersEnvelope: unknown = await tiersRes.json();
+  const tiersData = (tiersEnvelope && typeof tiersEnvelope === 'object' && (tiersEnvelope as { data?: unknown }).data && typeof (tiersEnvelope as { data?: unknown }).data === 'object')
+    ? ((tiersEnvelope as { data?: Record<string, Tier> }).data as Record<string, Tier>)
+    : (tiersEnvelope as Record<string, Tier> | object);
+  const dbTiers: Record<string, Tier> = tiersData as Record<string, Tier>;
 
-  // If DB returns no modules, fallback to static modules entirely
   if (!Array.isArray(dbModules) || dbModules.length === 0) {
-    if (staticRegistry) {
-      const normalizedModules: RegistryModuleLight[] = await Promise.all(staticModules.map(async (m) => {
-        const slug = (m.slug || '').toString();
-        const shortSlug = (await getShortSlugFromModuleSlug(slug)) || (slug.includes('-') ? slug.split('-')[0] : slug);
-        const routes: ModuleRoutes = {
-          overview: `/${shortSlug}`,
-          lessons: `/${shortSlug}/lessons`,
-          quiz: `/${shortSlug}/quiz`,
-        };
-        const icon = (typeof m.icon === 'string' && m.icon.trim() !== '' && m.icon !== '📚') ? m.icon : (iconBySlug[slug] || '📚');
-        const technologies = Array.isArray(m.technologies) ? m.technologies : [];
-        const difficulty = typeof m.difficulty === 'string' && m.difficulty.trim() !== '' ? m.difficulty : 'Beginner';
-        const tier = typeof m.tier === 'string' && m.tier.trim() !== '' ? m.tier : 'core';
-        return { ...m, routes, icon, technologies, difficulty, tier } as RegistryModuleLight;
-      }));
-
-      // Filter out dummy/broken modules not meant for production
-      const filteredModules = normalizedModules.filter(m => m.slug !== 'html-basics');
-
-      return {
-        version: staticRegistry.version || 'file',
-        lastUpdated: staticRegistry.lastUpdated || new Date().toISOString(),
-        tiers: Object.keys(dbTiers).length ? dbTiers : (staticRegistry.tiers || {}),
-        modules: filteredModules,
-        globalSettings: staticRegistry.globalSettings || {},
-      };
-    }
-    // No static fallback available
     return {
       version: 'db',
       lastUpdated: new Date().toISOString(),
@@ -225,7 +168,7 @@ async function synthesizeRegistryFromDatabase() {
     };
   }
 
-  // Map DB modules and compute routes, augmenting with static fields when available
+  // Map DB modules and compute routes
   const modules: RegistryModuleLight[] = await Promise.all(dbModules.map(async (m) => {
     const moduleSlug: string = m.slug || '';
     const title: string = m.title || moduleSlug;
@@ -239,76 +182,62 @@ async function synthesizeRegistryFromDatabase() {
       quiz: `/${shortSlug}/quiz`,
     };
 
-    const fallback = staticModulesBySlug.get(moduleSlug) || null;
+    const icon = iconBySlug[moduleSlug] || '📚';
 
-    // If no direct slug match, try legacy slug match from static
-    let merged: RegistryModuleLight = {
+    return {
       slug: moduleSlug,
       title,
       description,
       order,
       routes,
-    };
-
-    if (!fallback && staticModules.length > 0) {
-      const byLegacy = staticModules.find(sm => Array.isArray(sm.legacySlugs) && sm.legacySlugs.includes(moduleSlug));
-      if (byLegacy) {
-        merged = { ...byLegacy, ...merged } as RegistryModuleLight;
-      }
-    }
-
-    if (fallback) {
-      merged = { ...fallback, ...merged } as RegistryModuleLight;
-    }
-
-    type WithIcon = RegistryModuleLight & { icon?: string };
-    const mergedWithIcon: WithIcon = merged as WithIcon;
-    const icon = (typeof mergedWithIcon.icon === 'string' && mergedWithIcon.icon.trim() !== '' && mergedWithIcon.icon !== '📚')
-      ? mergedWithIcon.icon
-      : (iconBySlug[moduleSlug] || '📚');
-    merged = { ...mergedWithIcon, icon } as RegistryModuleLight;
-
-    return merged;
+      icon,
+    } as RegistryModuleLight;
   }));
 
-  // Filter out dummy/broken modules not meant for production
-  const filteredModules = modules.filter(m => m.slug !== 'html-basics');
+  // Enrich modules from static registry (tier, technologies, difficulty, icon, etc.)
+  const staticRegistry = loadStaticRegistry();
+  const staticModulesBySlug: Record<string, StaticRegistryModule> = Array.isArray(staticRegistry?.modules)
+    ? (staticRegistry!.modules.reduce((acc, mod) => { acc[String(mod.slug)] = mod; return acc; }, {} as Record<string, StaticRegistryModule>))
+    : {};
 
-  // Normalize modules to guarantee tier, technologies, and difficulty for client safety
-  const normalizedModules = filteredModules.map((m) => {
-    const slug = (m?.slug || '').toString();
-    const rec = m as Record<string, unknown>;
+  // Normalize modules to guarantee client-safe fields while preserving static metadata when available
+  const normalizedModules = modules.map((m) => {
+    const slug = String(m.slug);
+    const staticMeta = staticModulesBySlug[slug];
+    const tier = (staticMeta && typeof staticMeta.tier === 'string' && staticMeta.tier.trim() !== '') ? staticMeta.tier : 'core';
+    const technologies = (staticMeta && Array.isArray(staticMeta.technologies)) ? staticMeta.technologies : [];
+    const difficulty = (staticMeta && typeof staticMeta.difficulty === 'string' && staticMeta.difficulty.trim() !== '') ? staticMeta.difficulty : 'Beginner';
+    const icon = (typeof (m as { icon?: string }).icon === 'string' && (m as { icon?: string }).icon && (m as { icon?: string }).icon !== '📚')
+      ? (m as { icon?: string }).icon!
+      : ((staticMeta && typeof staticMeta.icon === 'string' && staticMeta.icon.trim() !== '') ? staticMeta.icon : (iconBySlug[slug] || '📚'));
 
-    const tierRaw = rec['tier'];
-    const tierCandidate = typeof tierRaw === 'string' ? tierRaw : undefined;
-    const tierFromDb = tierCandidate && dbTiers && Object.prototype.hasOwnProperty.call(dbTiers, tierCandidate)
-      ? tierCandidate
-      : undefined;
-    const tierFromStatic = staticModulesBySlug.get(slug)?.tier;
-    const tier = tierFromDb || tierFromStatic || 'core';
-
-    const technologiesRaw = rec['technologies'];
-    const technologies = Array.isArray(technologiesRaw) && technologiesRaw.every(x => typeof x === 'string')
-      ? (technologiesRaw as string[])
-      : [];
-
-    const difficultyRaw = rec['difficulty'];
-    const difficulty = typeof difficultyRaw === 'string' && difficultyRaw.trim() !== ''
-      ? difficultyRaw
-      : 'Beginner';
-
-    return { ...m, tier, technologies, difficulty } as RegistryModuleLight;
+    // Preserve title/description/order/routes from DB mapping, layer in static fields
+    return {
+      ...m,
+      tier,
+      technologies,
+      difficulty,
+      icon,
+      track: staticMeta?.track,
+      estimatedHours: staticMeta?.estimatedHours,
+      category: staticMeta?.category,
+      prerequisites: staticMeta?.prerequisites,
+      thresholds: staticMeta?.thresholds,
+      legacySlugs: staticMeta?.legacySlugs,
+      status: staticMeta?.status,
+      metadata: staticMeta?.metadata,
+    } as RegistryModuleLight;
   });
 
   return {
     version: 'db',
     lastUpdated: new Date().toISOString(),
-    tiers: Object.keys(dbTiers).length ? dbTiers : (staticRegistry?.tiers || {}),
+    tiers: dbTiers,
     modules: normalizedModules,
-    globalSettings: staticRegistry?.globalSettings || {},
+    globalSettings: {},
   };
 }
-/* eslint-enable @typescript-eslint/no-unused-vars */
+// eslint-enable removed: no corresponding disable remains
 
 async function synthesizeRegistryFromStaticOnly() {
   const staticRegistry = loadStaticRegistry();
@@ -346,13 +275,20 @@ async function synthesizeRegistryFromStaticOnly() {
 
 export async function GET() {
   try {
-    const staticOnly = await synthesizeRegistryFromStaticOnly();
-    return NextResponse.json(staticOnly);
+    const registry = await synthesizeRegistryFromDatabase();
+    return NextResponse.json(registry);
   } catch (err) {
     console.error('Registry GET failed:', err);
-    return NextResponse.json({ error: 'Unable to load registry' }, { status: 500 });
+    try {
+      const fallback = await synthesizeRegistryFromStaticOnly();
+      return NextResponse.json(fallback);
+    } catch (fileErr) {
+      console.error('Registry static fallback failed:', fileErr);
+      return NextResponse.json({ error: 'Unable to load registry' }, { status: 502 });
+    }
   }
 }
 
 export const runtime = 'nodejs';
-export const dynamic = 'force-dynamic';
+export const revalidate = 60; // cache registry for 60 seconds to reduce backend pressure
+export const dynamic = 'force-static';

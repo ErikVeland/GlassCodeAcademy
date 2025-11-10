@@ -1,18 +1,36 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getApiBaseStrict } from '@/lib/urlUtils';
 
+function safeParseJson(text: string): unknown {
+  try {
+    return JSON.parse(text) as unknown;
+  } catch {
+    return text;
+  }
+}
+
+function isRecord(v: unknown): v is Record<string, unknown> {
+  return typeof v === 'object' && v !== null;
+}
+
+function unwrapData<T = unknown>(value: unknown): T | unknown {
+  if (Array.isArray(value)) return value;
+  if (isRecord(value) && 'data' in value) {
+    const data = (value as { data?: unknown }).data;
+    return data as T;
+  }
+  return value as T;
+}
+
 export async function GET(_req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
     const { id } = await params;
     const apiBase = (() => { try { return getApiBaseStrict(); } catch { return 'http://127.0.0.1:8080'; } })();
     const backendUrl = `${apiBase}/api/content/quizzes/${id}`;
     const res = await fetch(backendUrl);
-    const text = await res.text();
-    let body = text;
-    try {
-      const parsed = JSON.parse(text);
-      body = JSON.stringify(parsed?.data ?? parsed);
-    } catch {}
+    const parsed = safeParseJson(await res.text());
+    const unwrapped = unwrapData(parsed);
+    const body = typeof unwrapped === 'string' ? unwrapped : JSON.stringify(unwrapped);
     return new NextResponse(body, { status: res.status, headers: { 'Content-Type': 'application/json' } });
   } catch (error) {
     console.error('Proxy GET /api/LessonQuiz/[id] failed:', error);
@@ -22,7 +40,7 @@ export async function GET(_req: NextRequest, { params }: { params: Promise<{ id:
 
 export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
-    const body = await req.json();
+    const body: unknown = await req.json();
     const { id } = await params;
     const apiBase = (() => { try { return getApiBaseStrict(); } catch { return 'http://127.0.0.1:8080'; } })();
     const backendUrl = `${apiBase}/api/content/quizzes/${id}`;
