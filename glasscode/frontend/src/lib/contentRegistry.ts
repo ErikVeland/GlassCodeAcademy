@@ -233,9 +233,11 @@ class ContentRegistryLoader {
         try {
           const controller = new AbortController();
           const timeoutId = setTimeout(() => controller.abort(), 10000);
-          const response = await fetch(url, isBrowser
+          // Use type assertion to allow Next.js specific options
+          const fetchOptions: RequestInit & { next?: { revalidate: number } } = isBrowser
             ? { signal: controller.signal, cache: 'no-store' }
-            : { signal: controller.signal, next: { revalidate: 3600 } }).finally(() => {
+            : { signal: controller.signal, next: { revalidate: 3600 } };
+          const response = await fetch(url, fetchOptions).finally(() => {
             clearTimeout(timeoutId);
           });
           if (!response.ok) continue;
@@ -603,7 +605,12 @@ class ContentRegistryLoader {
           try {
             for (const url of candidates) {
               try {
-                const res = await fetch(url, { signal: controller.signal, next: { revalidate: 3600 } });
+                // Use type assertion to allow Next.js specific options
+                const fetchOptions: RequestInit & { next?: { revalidate: number } } = { 
+                  signal: controller.signal, 
+                  next: { revalidate: 3600 } 
+                };
+                const res = await fetch(url, fetchOptions);
                 if (!res.ok) {
                   // For 5xx errors, we might want to retry
                   if (res.status >= 500 && retryCount < maxRetries) {
@@ -914,7 +921,9 @@ class ContentRegistryLoader {
             try {
               const controller = new AbortController();
               const timeoutId = setTimeout(() => controller.abort(), 10000);
-              const res = await fetch(url, { signal: controller.signal, next: { revalidate: 3600 } }).finally(() => {
+              // Use type assertion to allow Next.js specific options
+              const fetchOptions: RequestInit & { next?: { revalidate: number } } = { signal: controller.signal, next: { revalidate: 3600 } };
+              const res = await fetch(url, fetchOptions).finally(() => {
                 clearTimeout(timeoutId);
               });
               if (!res.ok) {
@@ -1027,9 +1036,11 @@ class ContentRegistryLoader {
                       : `http://localhost:3000/api/content/quizzes/programming-fundamentals`) 
                   : ''));
 
-        const response = await fetch(url, typeof window !== 'undefined'
+        // Use type assertion to allow Next.js specific options
+        const fetchOptions: RequestInit & { next?: { revalidate: number } } = typeof window !== 'undefined'
           ? { signal: controller.signal, cache: 'no-store' }
-          : { signal: controller.signal, next: { revalidate: 3600 } }).finally(() => {
+          : { signal: controller.signal, next: { revalidate: 3600 } };
+        const response = await fetch(url, fetchOptions).finally(() => {
           clearTimeout(timeoutId);
         });
 

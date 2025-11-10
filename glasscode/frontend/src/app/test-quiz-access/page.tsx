@@ -52,8 +52,8 @@ export default function TestQuizAccess() {
   return (
     <div>
       <h1>Test Quiz Access</h1>
-      <p>Questions count: {data?.questions?.length || 0}</p>
-      {data?.questions?.length > 0 && (
+      <p>Questions count: {data?.questions?.length ?? 0}</p>
+      {data?.questions && data.questions.length > 0 && (
         <div>
           <h2>First Question:</h2>
           <p>{data.questions[0].question}</p>

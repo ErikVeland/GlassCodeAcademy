@@ -88,9 +88,9 @@ async function fetchQuizFromDatabase(moduleSlug: string) {
 
 // Removed file-based quiz fallback implementation
 
-export async function GET(request: Request, { params }: { params: { moduleSlug: string } }) {
+export async function GET(request: Request, { params }: { params: Promise<{ moduleSlug: string }> }) {
   try {
-    const { moduleSlug: inputSlug } = params || { moduleSlug: '' } as { moduleSlug: string };
+    const { moduleSlug: inputSlug } = await params;
     debugLog('=== Quiz API Route ===');
     debugLog('Received request for quiz input slug:', inputSlug);
     
