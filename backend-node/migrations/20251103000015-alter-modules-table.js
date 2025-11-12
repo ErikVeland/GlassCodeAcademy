@@ -76,6 +76,32 @@ module.exports = {
       name: 'modules_quality_score_idx'
     });
 
+    // Ensure course_id column exists (handle legacy camelCase "courseId")
+    let moduleColumns = {};
+    try {
+      moduleColumns = await queryInterface.describeTable('modules');
+    } catch (err) {
+      // If describe fails due to missing table, rethrow
+      const code = (err.parent && err.parent.code) || err.code;
+      if (code === '42P01') throw err;
+    }
+
+    if (!moduleColumns.course_id && moduleColumns.courseId) {
+      // Add snake_case course_id and backfill from legacy camelCase column
+      await queryInterface.addColumn('modules', 'course_id', {
+        type: Sequelize.INTEGER,
+        allowNull: true,
+        references: { model: 'courses', key: 'id' },
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE'
+      });
+
+      // Copy data from camelCase column into new snake_case column
+      await queryInterface.sequelize.query(
+        'UPDATE modules SET course_id = "courseId" WHERE course_id IS NULL;'
+      );
+    }
+
     // Set academy_id from parent course
     await queryInterface.sequelize.query(`
       UPDATE modules m

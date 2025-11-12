@@ -71,6 +71,24 @@ module.exports = {
 
       // Courses - Published course lookups
       console.log('Adding indexes for courses...');
+      // Ensure snake_case is_published exists on courses (handle legacy camelCase)
+      try {
+        const courseColumns = await queryInterface.describeTable('courses');
+        if (!courseColumns.is_published && courseColumns.isPublished) {
+          await queryInterface.addColumn('courses', 'is_published', {
+            type: Sequelize.BOOLEAN,
+            allowNull: false,
+            defaultValue: false
+          }, { transaction });
+
+          await queryInterface.sequelize.query(
+            'UPDATE courses SET is_published = "isPublished" WHERE is_published IS NULL;',
+            { transaction }
+          );
+        }
+      } catch (err) {
+        // If describe fails, continue; index creation may still work
+      }
       await queryInterface.addIndex('courses', 
         ['academy_id', 'is_published'], 
         { name: 'idx_course_academy_published', transaction }
@@ -78,6 +96,26 @@ module.exports = {
 
       // Modules - Course relationship queries
       console.log('Adding indexes for modules...');
+      // Ensure snake_case course_id exists on modules (handle legacy camelCase)
+      try {
+        const moduleColumns = await queryInterface.describeTable('modules');
+        if (!moduleColumns.course_id && moduleColumns.courseId) {
+          await queryInterface.addColumn('modules', 'course_id', {
+            type: Sequelize.INTEGER,
+            allowNull: true,
+            references: { model: 'courses', key: 'id' },
+            onUpdate: 'CASCADE',
+            onDelete: 'CASCADE'
+          }, { transaction });
+
+          await queryInterface.sequelize.query(
+            'UPDATE modules SET course_id = "courseId" WHERE course_id IS NULL;',
+            { transaction }
+          );
+        }
+      } catch (err) {
+        // If describe fails, continue; index creation may still work
+      }
       await queryInterface.addIndex('modules', 
         ['academy_id', 'course_id'], 
         { name: 'idx_module_academy_course', transaction }
@@ -85,6 +123,26 @@ module.exports = {
 
       // Lessons - Module relationship queries
       console.log('Adding indexes for lessons...');
+      // Ensure snake_case module_id exists on lessons (handle legacy camelCase)
+      try {
+        const lessonColumns = await queryInterface.describeTable('lessons');
+        if (!lessonColumns.module_id && lessonColumns.moduleId) {
+          await queryInterface.addColumn('lessons', 'module_id', {
+            type: Sequelize.INTEGER,
+            allowNull: true,
+            references: { model: 'modules', key: 'id' },
+            onUpdate: 'CASCADE',
+            onDelete: 'CASCADE'
+          }, { transaction });
+
+          await queryInterface.sequelize.query(
+            'UPDATE lessons SET module_id = "moduleId" WHERE module_id IS NULL;',
+            { transaction }
+          );
+        }
+      } catch (err) {
+        // If describe fails, continue
+      }
       await queryInterface.addIndex('lessons', 
         ['academy_id', 'module_id'], 
         { name: 'idx_lesson_academy_module', transaction }
@@ -92,10 +150,61 @@ module.exports = {
 
       // Quizzes - Lesson relationship queries
       console.log('Adding indexes for lesson_quizzes...');
-      await queryInterface.addIndex('lesson_quizzes', 
-        ['academy_id', 'lesson_id'], 
-        { name: 'idx_quiz_academy_lesson', transaction }
-      );
+      // Ensure snake_case lesson_id exists on lesson_quizzes (handle legacy camelCase)
+      try {
+        const quizColumns = await queryInterface.describeTable('lesson_quizzes');
+        if (!quizColumns.lesson_id && quizColumns.lessonId) {
+          await queryInterface.addColumn('lesson_quizzes', 'lesson_id', {
+            type: Sequelize.INTEGER,
+            allowNull: true,
+            references: { model: 'lessons', key: 'id' },
+            onUpdate: 'CASCADE',
+            onDelete: 'CASCADE'
+          }, { transaction });
+
+          await queryInterface.sequelize.query(
+            'UPDATE lesson_quizzes SET lesson_id = "lessonId" WHERE lesson_id IS NULL;',
+            { transaction }
+          );
+        }
+      } catch (err) {
+        // If describe fails, continue
+      }
+      // Create the most appropriate composite index depending on FK present
+      try {
+        const quizCols = await queryInterface.describeTable('lesson_quizzes');
+        if (quizCols.lesson_id) {
+          await queryInterface.addIndex(
+            'lesson_quizzes',
+            ['academy_id', 'lesson_id'],
+            { name: 'idx_quiz_academy_lesson', transaction }
+          );
+        } else {
+          // Prefer module_id if lesson_id not present
+          if (!quizCols.module_id && quizCols.moduleId) {
+            await queryInterface.addColumn('lesson_quizzes', 'module_id', {
+              type: Sequelize.INTEGER,
+              allowNull: true,
+              references: { model: 'modules', key: 'id' },
+              onUpdate: 'CASCADE',
+              onDelete: 'CASCADE'
+            }, { transaction });
+
+            await queryInterface.sequelize.query(
+              'UPDATE lesson_quizzes SET module_id = "moduleId" WHERE module_id IS NULL;',
+              { transaction }
+            );
+          }
+
+          await queryInterface.addIndex(
+            'lesson_quizzes',
+            ['academy_id', 'module_id'],
+            { name: 'idx_quiz_academy_module', transaction }
+          );
+        }
+      } catch (err) {
+        // Index creation best-effort; continue
+      }
 
       // Assets - Type and academy filtering
       console.log('Adding indexes for assets...');

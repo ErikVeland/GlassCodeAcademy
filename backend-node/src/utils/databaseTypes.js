@@ -1,80 +1,65 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require('../config/database');
 
-/**
- * Database type helper that returns appropriate types based on dialect
- * Ensures compatibility between PostgreSQL (production) and SQLite (tests)
- */
+function getDialect() {
+  try {
+    return sequelize.getDialect();
+  } catch {
+    return 'sqlite';
+  }
+}
 
 /**
- * Returns JSONB for PostgreSQL, JSON for SQLite
- * @returns {DataTypes}
+ * Returns a JSON-capable column type compatible with the current dialect.
+ * - For SQLite, use TEXT to avoid unsupported JSON type errors.
+ * - For PostgreSQL/MySQL, use native JSON.
  */
 function getJSONType() {
-  const dialect = sequelize.getDialect();
-  return dialect === 'postgres' ? DataTypes.JSONB : DataTypes.JSON;
+  const dialect = getDialect();
+  return dialect === 'sqlite' ? DataTypes.TEXT : DataTypes.JSON;
 }
 
 /**
- * Returns ARRAY type for PostgreSQL, TEXT for SQLite (stores JSON stringified array)
- * @param {DataTypes} type - The array element type
- * @returns {DataTypes}
+ * Returns an ARRAY type for dialects that support it; for SQLite, fallback to TEXT.
  */
-function getArrayType(type) {
-  const dialect = sequelize.getDialect();
-  if (dialect === 'postgres') {
-    return DataTypes.ARRAY(type);
-  }
-  // For SQLite, store as JSON text
-  return DataTypes.TEXT;
+function getArrayType(baseType = DataTypes.TEXT) {
+  const dialect = getDialect();
+  return dialect === 'sqlite' ? DataTypes.TEXT : DataTypes.ARRAY(baseType);
 }
 
-/**
- * Returns appropriate default value for array fields
- * PostgreSQL uses [] directly, SQLite needs JSON string
- * @returns {string|array}
- */
+/** Default value for array-like columns across dialects */
 function getArrayDefault() {
-  const dialect = sequelize.getDialect();
-  if (dialect === 'postgres') {
-    return [];
-  }
-  // For SQLite, return JSON string of empty array
-  return '[]';
+  const dialect = getDialect();
+  return dialect === 'sqlite' ? '[]' : [];
 }
 
 /**
- * Getter/Setter for array fields in SQLite
- * In PostgreSQL, arrays are native, but in SQLite we need to serialize/deserialize
+ * Getter/setter helpers for the `tags` attribute in models using array columns.
+ * This utility specifically supports the `Asset.tags` field.
  */
 const arrayGetterSetter = {
   get() {
-    const dialect = sequelize.getDialect();
-    const rawValue = this.getDataValue(arguments[0]);
-
+    const dialect = getDialect();
+    const raw = this.getDataValue('tags');
+    if (raw == null) return [];
     if (dialect === 'sqlite') {
-      if (!rawValue) return [];
       try {
-        return JSON.parse(rawValue);
+        return JSON.parse(raw);
       } catch {
         return [];
       }
     }
-    return rawValue || [];
+    return Array.isArray(raw) ? raw : [raw];
   },
   set(value) {
-    const dialect = sequelize.getDialect();
+    const dialect = getDialect();
+    const arr = Array.isArray(value) ? value : value == null ? [] : [value];
     if (dialect === 'sqlite') {
-      this.setDataValue(arguments[0], JSON.stringify(value || []));
+      this.setDataValue('tags', JSON.stringify(arr));
     } else {
-      this.setDataValue(arguments[0], value);
+      this.setDataValue('tags', arr);
     }
   },
 };
 
-module.exports = {
-  getJSONType,
-  getArrayType,
-  getArrayDefault,
-  arrayGetterSetter,
-};
+module.exports = { getDialect, getJSONType, getArrayType, getArrayDefault, arrayGetterSetter };

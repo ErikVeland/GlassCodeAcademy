@@ -73,14 +73,14 @@ const ContentImport = sequelize.define(
     changeSummary: {
       type: getJSONType(),
       allowNull: true,
-      defaultValue: {},
+      defaultValue: null,
       field: 'change_summary',
       comment: 'Summary of changes made',
     },
     errorLog: {
       type: getJSONType(),
       allowNull: true,
-      defaultValue: [],
+      defaultValue: null,
       field: 'error_log',
       comment: 'Detailed error log',
     },

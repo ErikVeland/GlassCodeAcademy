@@ -38,7 +38,7 @@ const ValidationResult = sequelize.define(
     details: {
       type: getJSONType(),
       allowNull: true,
-      defaultValue: {},
+      defaultValue: null,
       comment: 'Detailed validation results and messages',
     },
     autoFixed: {

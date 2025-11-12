@@ -30,9 +30,14 @@ async function runMigrations() {
           console.log(`Migration ${file} completed successfully`);
         } catch (error) {
           // If it's a duplicate index/column or unique constraint error, continue
-          const code = error.parent && error.parent.code;
-          if (code === '42P07' || code === '42701' || code === '23505' || code === '42710') {
-            console.log(`Migration ${file} skipped for existing objects (code ${code})`);
+          const parent = error.parent || {};
+          const code = parent.code;
+          const message = (parent.message || error.message || '').toLowerCase();
+          const isPgDuplicate = code === '42P07' || code === '42701' || code === '23505' || code === '42710';
+          const isSqliteDuplicate = code === 'SQLITE_ERROR' && /already exists/.test(message);
+
+          if (isPgDuplicate || isSqliteDuplicate) {
+            console.log(`Migration ${file} skipped for existing objects (code ${code || 'N/A'})`);
           } else {
             throw error;
           }

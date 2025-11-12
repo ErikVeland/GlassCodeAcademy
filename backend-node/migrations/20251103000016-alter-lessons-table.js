@@ -76,6 +76,29 @@ module.exports = {
       name: 'lessons_quality_score_idx'
     });
 
+    // Ensure module_id column exists (handle legacy camelCase "moduleId")
+    let lessonColumns = {};
+    try {
+      lessonColumns = await queryInterface.describeTable('lessons');
+    } catch (err) {
+      const code = (err.parent && err.parent.code) || err.code;
+      if (code === '42P01') throw err;
+    }
+
+    if (!lessonColumns.module_id && lessonColumns.moduleId) {
+      await queryInterface.addColumn('lessons', 'module_id', {
+        type: Sequelize.INTEGER,
+        allowNull: true,
+        references: { model: 'modules', key: 'id' },
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE'
+      });
+
+      await queryInterface.sequelize.query(
+        'UPDATE lessons SET module_id = "moduleId" WHERE module_id IS NULL;'
+      );
+    }
+
     // Set academy_id from parent module
     await queryInterface.sequelize.query(`
       UPDATE lessons l

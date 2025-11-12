@@ -1,4 +1,5 @@
 const { Badge } = require('../models');
+const { getDialect } = require('../utils/databaseTypes');
 
 // Default badges to be created when the application starts
 const defaultBadges = [
@@ -103,8 +104,16 @@ const createDefaultBadges = async () => {
       });
 
       if (!existingBadge) {
-        // Create the badge
-        await Badge.create(badgeData);
+        // Create the badge, ensure JSON fields are stored correctly on SQLite
+        const dialect = getDialect();
+        const dataToCreate = {
+          ...badgeData,
+          criteria:
+            dialect === 'sqlite'
+              ? JSON.stringify(badgeData.criteria)
+              : badgeData.criteria,
+        };
+        await Badge.create(dataToCreate);
         console.log(`Created badge: ${badgeData.name}`);
       }
     }

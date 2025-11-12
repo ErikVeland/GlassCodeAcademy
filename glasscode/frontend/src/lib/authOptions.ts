@@ -150,6 +150,31 @@ export const getAuthOptions = (): NextAuthOptions => {
     cookies: {
       // Rely on secure defaults; ensure `NEXTAUTH_URL` is set in env in production
     },
+    logger: {
+      error(code: unknown, ...metadata: unknown[]) {
+        // Silence noisy client fetch errors in development
+        if (code === 'CLIENT_FETCH_ERROR' && process.env.NODE_ENV !== 'production') {
+          return;
+        }
+        if (metadata.length) {
+          console.error('[next-auth][error]', code, ...metadata);
+        } else {
+          console.error('[next-auth][error]', code);
+        }
+      },
+      warn(code: unknown) {
+        console.warn('[next-auth][warn]', code);
+      },
+      debug(_code: unknown, ..._metadata: unknown[]) {
+        // ensure parameters are considered used for linting
+        void _code; void _metadata;
+        if (process.env.NODE_ENV !== 'production') {
+          // Keep debug minimal; uncomment if deeper debugging is required
+          // if (_metadata.length) console.debug('[next-auth][debug]', _code, ..._metadata);
+          // else console.debug('[next-auth][debug]', _code);
+        }
+      },
+    },
     callbacks: {
       async jwt({ token, user, account }) {
         // Initial sign in

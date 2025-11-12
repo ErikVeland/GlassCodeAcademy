@@ -43,11 +43,15 @@ ok "Node: $(node -v), npm: $(npm -v)"
 section "Prettier formatting"
 # Ensure code style consistency before other checks to avoid noisy failures
 if [ -d "backend-node" ]; then
-  echo "Running Prettier format in backend-node..."
-  (cd backend-node && npm run format) || fail "Prettier format failed in backend-node"
-  echo "Verifying Prettier formatting in backend-node..."
-  (cd backend-node && npm run format:check) || fail "Prettier check failed in backend-node"
-  ok "Backend-node formatting is clean"
+  if [ -f "backend-node/package.json" ]; then
+    echo "Running Prettier format in backend-node..."
+    (cd backend-node && npm run format) || fail "Prettier format failed in backend-node"
+    echo "Verifying Prettier formatting in backend-node..."
+    (cd backend-node && npm run format:check) || fail "Prettier check failed in backend-node"
+    ok "Backend-node formatting is clean"
+  else
+    echo "backend-node found but no package.json; skipping backend formatting"
+  fi
 else
   echo "backend-node directory not found; skipping backend formatting"
 fi

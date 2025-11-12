@@ -161,7 +161,7 @@ export default function QuizPage({ params }: { params: Promise<{ shortSlug: stri
     }
 
     try {
-      const targetQuestions = moduleData.metadata?.thresholds?.minQuizQuestions ?? moduleData.thresholds?.requiredQuestions ?? 14;
+      const targetQuestions = moduleData.metadata?.thresholds?.minQuizQuestions ?? moduleData.thresholds?.requiredQuestions ?? 15;
       const allQuestions = moduleQuiz.questions;
       setPoolCount(allQuestions.length);
       console.log('Pool count set to:', allQuestions.length);
@@ -500,7 +500,7 @@ export default function QuizPage({ params }: { params: Promise<{ shortSlug: stri
     requiredQuestions?: number;
     passingScore: number;
   };
-  const quizLength = currentModule.metadata?.thresholds?.minQuizQuestions ?? currentModule.thresholds?.requiredQuestions ?? 14;
+  const quizLength = currentModule.metadata?.thresholds?.minQuizQuestions ?? currentModule.thresholds?.requiredQuestions ?? 15;
   const poolSize = Array.isArray(quiz?.questions) ? quiz.questions.length : 0;
   const derivedTotal = quizData?.totalQuestions ?? Math.min(quizLength, poolSize);
   const derivedTimeLimit = quizData?.timeLimit ?? Math.min(Math.max(Math.ceil(derivedTotal * 1.5), 10), 45);

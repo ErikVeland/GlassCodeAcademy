@@ -60,14 +60,14 @@ const AcademyMembership = sequelize.define(
     customPermissions: {
       type: getJSONType(),
       allowNull: true,
-      defaultValue: {},
+      defaultValue: null,
       field: 'custom_permissions',
       comment: 'User-specific permission overrides',
     },
     metadata: {
       type: getJSONType(),
       allowNull: true,
-      defaultValue: {},
+      defaultValue: null,
       comment: 'Additional membership data',
     },
   },

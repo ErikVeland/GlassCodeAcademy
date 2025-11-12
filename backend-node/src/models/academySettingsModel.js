@@ -41,20 +41,20 @@ const AcademySettings = sequelize.define(
     featuresEnabled: {
       type: getJSONType(),
       allowNull: true,
-      defaultValue: {},
+      defaultValue: null,
       field: 'features_enabled',
       comment: 'Feature flags and enabled features',
     },
     branding: {
       type: getJSONType(),
       allowNull: true,
-      defaultValue: {},
+      defaultValue: null,
       comment: 'Custom branding configuration',
     },
     integrations: {
       type: getJSONType(),
       allowNull: true,
-      defaultValue: {},
+      defaultValue: null,
       comment: 'External service integration configs',
     },
   },

@@ -94,9 +94,11 @@ interface StaticRegistry {
 function loadStaticRegistry(): StaticRegistry | null {
   try {
     const projectRoot = process.cwd();
+    // Prefer the public registry.json first, as it contains up-to-date thresholds
+    // and metadata for the frontend. Fall back to content/registry.json when needed.
     const candidates = [
-      path.join(projectRoot, 'content', 'registry.json'),
       path.join(projectRoot, 'public', 'registry.json'),
+      path.join(projectRoot, 'content', 'registry.json'),
     ];
 
     for (const p of candidates) {
@@ -274,18 +276,20 @@ async function synthesizeRegistryFromStaticOnly() {
 }
 
 export async function GET() {
+  // Attempt DB synthesis, but avoid logging errors on expected dev setups
+  const registryFromDb = await synthesizeRegistryFromDatabase().catch(() => null);
+  if (registryFromDb) {
+    return NextResponse.json(registryFromDb);
+  }
+
+  // Graceful fallback to static registry without emitting errors in normal dev flows
   try {
-    const registry = await synthesizeRegistryFromDatabase();
-    return NextResponse.json(registry);
-  } catch (err) {
-    console.error('Registry GET failed:', err);
-    try {
-      const fallback = await synthesizeRegistryFromStaticOnly();
-      return NextResponse.json(fallback);
-    } catch (fileErr) {
-      console.error('Registry static fallback failed:', fileErr);
-      return NextResponse.json({ error: 'Unable to load registry' }, { status: 502 });
-    }
+    const fallback = await synthesizeRegistryFromStaticOnly();
+    return NextResponse.json(fallback);
+  } catch (fileErr) {
+    // Only log when static fallback genuinely fails (unexpected)
+    console.error('Registry static fallback failed:', fileErr);
+    return NextResponse.json({ error: 'Unable to load registry' }, { status: 502 });
   }
 }
 

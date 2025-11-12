@@ -89,13 +89,13 @@ const Asset = sequelize.define(
     metadata: {
       type: getJSONType(),
       allowNull: true,
-      defaultValue: {},
+      defaultValue: null,
       comment: 'EXIF data and custom metadata',
     },
     variants: {
       type: getJSONType(),
       allowNull: true,
-      defaultValue: {},
+      defaultValue: null,
       comment: 'Processed variants (thumbnails, different sizes, etc.)',
     },
     isPublic: {

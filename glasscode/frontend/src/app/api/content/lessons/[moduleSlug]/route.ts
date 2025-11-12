@@ -150,8 +150,101 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ modu
       return NextResponse.json({ error: 'Module not found' }, { status: 404 });
     }
 
-    // Load lessons strictly from DB
-    const lessons = await fetchLessonsFromDatabase(resolvedSlug);
+    // Load lessons from DB first
+    let lessons = await fetchLessonsFromDatabase(resolvedSlug);
+
+    // If DB returns no lessons, attempt filesystem fallback
+    if (!Array.isArray(lessons) || lessons.length === 0) {
+      try {
+        const { promises: fs } = await import('fs');
+        const path = await import('path');
+
+        const cwd = process.cwd();
+        const fileCandidates = [
+          // Inside frontend project public dir
+          path.join(cwd, 'public', 'content', 'lessons', `${resolvedSlug}.json`),
+          // Top-level content directory (../../content from frontend)
+          path.join(cwd, '..', '..', 'content', 'lessons', `${resolvedSlug}.json`),
+          // Alternative relative content directory (../content)
+          path.join(cwd, '..', 'content', 'lessons', `${resolvedSlug}.json`),
+        ];
+
+        for (const p of fileCandidates) {
+          try {
+            const raw = await fs.readFile(p, 'utf-8');
+            const parsed: unknown = JSON.parse(raw);
+            const lessonsArr: Record<string, unknown>[] = Array.isArray(parsed)
+              ? (parsed as Record<string, unknown> [])
+              : (Array.isArray((parsed as { lessons?: unknown[] })?.lessons)
+                  ? ((parsed as { lessons?: unknown[] }).lessons as Record<string, unknown> [])
+                  : []);
+
+            if (!Array.isArray(lessonsArr) || lessonsArr.length === 0) {
+              continue;
+            }
+
+            const transformed = lessonsArr.map((l, i) => {
+              const idVal = typeof (l as { id?: unknown }).id === 'number' || typeof (l as { id?: unknown }).id === 'string'
+                ? String((l as { id?: number | string }).id as number | string)
+                : String(i + 1);
+              const titleVal = typeof (l as { title?: unknown }).title === 'string' ? (l as { title?: string }).title! : `Lesson ${i + 1}`;
+              const introVal = typeof (l as { intro?: unknown }).intro === 'string' ? (l as { intro?: string }).intro! : '';
+              const objectivesVal = Array.isArray((l as { objectives?: unknown }).objectives)
+                ? ((l as { objectives?: unknown[] }).objectives!.filter(o => typeof o === 'string') as string[])
+                : [];
+              const topicVal = typeof (l as { topic?: unknown }).topic === 'string' ? (l as { topic?: string }).topic! : '';
+              const tagsVal = Array.isArray((l as { tags?: unknown }).tags)
+                ? ((l as { tags?: unknown[] }).tags!.filter(t => typeof t === 'string') as string[])
+                : [];
+              const estimatedMinutesVal = typeof (l as { estimatedMinutes?: unknown }).estimatedMinutes === 'number'
+                ? (l as { estimatedMinutes?: number }).estimatedMinutes!
+                : 10;
+              const codeObj = (l as { code?: unknown }).code;
+              let codeExample = '';
+              let codeExplanation = '';
+              if (typeof codeObj === 'string') {
+                codeExample = codeObj;
+              } else if (codeObj && typeof codeObj === 'object') {
+                const c = codeObj as { example?: unknown; explanation?: unknown };
+                codeExample = typeof c.example === 'string' ? c.example : '';
+                codeExplanation = typeof c.explanation === 'string' ? c.explanation : '';
+              } else {
+                const codeExampleStr = typeof (l as { codeExample?: unknown }).codeExample === 'string' ? (l as { codeExample?: string }).codeExample! : '';
+                const codeExplanationStr = typeof (l as { codeExplanation?: unknown }).codeExplanation === 'string' ? (l as { codeExplanation?: string }).codeExplanation! : '';
+                codeExample = codeExampleStr;
+                codeExplanation = codeExplanationStr;
+              }
+              const difficultyRaw = (l as { difficulty?: unknown }).difficulty;
+              const difficultyVal = typeof difficultyRaw === 'string' && ['beginner','intermediate','advanced'].includes(difficultyRaw.toLowerCase())
+                ? (difficultyRaw.toLowerCase() as 'beginner' | 'intermediate' | 'advanced')
+                : 'beginner';
+
+              return {
+                id: idVal,
+                title: titleVal,
+                intro: introVal,
+                topic: topicVal,
+                tags: tagsVal,
+                estimatedMinutes: estimatedMinutesVal,
+                objectives: objectivesVal,
+                codeExample,
+                codeExplanation,
+                additionalNotes: '',
+                difficulty: difficultyVal,
+              } as FrontendLesson;
+            });
+
+            lessons = transformed;
+            break; // stop at first successful file
+          } catch {
+            // try next candidate
+            continue;
+          }
+        }
+      } catch (fallbackErr) {
+        console.error('[lessons] File fallback error:', fallbackErr);
+      }
+    }
 
     // Optional debug output in non-production
     const url = new URL(req.url);

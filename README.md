@@ -1,6 +1,6 @@
 # GlassCode Academy - Fullstack Learning & Interview Trainer
 
-🌐 **[Visit GlassCode Academy](https://glasscode.academy)** - Live Demo & Production Site
+[Visit GlassCode Academy](https://glasscode.academy) - Live Demo & Production Site
 
 > **Note**: This documentation has been consolidated. For information about documentation organization, see [DOCUMENTATION_CONSOLIDATION_GUIDE.md](docs/DOCUMENTATION_CONSOLIDATION_GUIDE.md).
 
@@ -16,7 +16,7 @@ For current project status, see [PROJECT_STATUS_SUMMARY.md](docs/PROJECT_STATUS_
 
 ## Features
 
-- **Learning Tracks**: Comprehensive lessons for .NET, Next.js, GraphQL, Laravel, React, Tailwind CSS, Node.js, and SASS
+- **Learning Tracks**: Comprehensive lessons for Next.js, GraphQL, React, Tailwind CSS, Node.js, and SASS
 - **Step-by-Step Lessons**: Code examples with expected outputs
 - **Interview Quizzes**: Multiple-choice and open-ended questions
   - Tier-weighted difficulty reporting and selection (see docs)
@@ -38,11 +38,13 @@ For current project status, see [PROJECT_STATUS_SUMMARY.md](docs/PROJECT_STATUS_
 - `tailwindcss@4`
 
 ### Backend
-- `node@18+` with `express@4`
-- `postgresql` with `sequelize@6`
+- `node@18+` with `fastify@5`
+- `postgresql` with `prisma@5`
+- `redis` for caching
 - `jsonwebtoken` for auth and RBAC
-- `winston@3` for structured logging
-- `jest@29` and `supertest@6` for tests
+- `pino` for structured logging
+- `jest@30` and `supertest@7` for tests
+- `zod` for validation
 
 ### Developer Workflow
 - `npm install` installs all required packages (no manual extras)
@@ -55,16 +57,17 @@ For current project status, see [PROJECT_STATUS_SUMMARY.md](docs/PROJECT_STATUS_
 
 ## System Architecture
 
-The application follows a full-stack architecture with a Next.js frontend and Node.js/Express backend, communicating via a RESTful API.
+The application follows a modern full-stack architecture with a Next.js frontend and Node.js/Fastify backend, communicating via a RESTful API. The backend has been standardized to use a monorepo structure with shared packages for better code reuse and maintainability.
 
 ```
 graph TB
     A[User Browser] --> B[Next.js 15.3.5 Frontend]
     B --> C[Node.js API Client]
     C --> D[RESTful API]
-    D --> E[Node.js/Express 18+ Backend]
+    D --> E[Node.js/Fastify 18+ Backend]
     E --> F[PostgreSQL Database]
-    E --> G[Sequelize ORM]
+    E --> G[Prisma ORM]
+    E --> H[Redis Cache]
     
     I[JWT Authentication] --> E
     J[RBAC System] --> E
@@ -80,6 +83,7 @@ graph TB
     style E fill:#e8f5e8
     style F fill:#fff3e0
     style G fill:#fce4ec
+    style H fill:#bbdefb
     style I fill:#c8e6c9
     style J fill:#c8e6c9
     style K fill:#ffecb3
@@ -89,44 +93,42 @@ graph TB
 
 ```
 GlassCodeAcademy/
-├── backend-node/
-│   ├── src/
-│   │   ├── controllers/
-│   │   ├── models/
-│   │   ├── routes/
-│   │   ├── services/
-│   │   ├── middleware/
-│   │   ├── config/
-│   │   └── utils/
-│   ├── scripts/
-│   └── server.js
+├── apps/
+│   ├── api/                     # Node.js/Fastify application
+│   │   ├── src/
+│   │   │   ├── controllers/     # Route controllers
+│   │   │   ├── models/          # Data models
+│   │   │   ├── routes/          # API routes
+│   │   │   ├── services/        # Business logic services
+│   │   │   ├── middleware/      # Custom middleware
+│   │   │   ├── plugins/         # Fastify plugins
+│   │   │   ├── config/          # Configuration files
+│   │   │   └── utils/           # Utility functions
+│   │   ├── scripts/             # Utility scripts
+│   │   └── server.js            # Application entry point
+│   └── frontend/                # Next.js application
+├── packages/
+│   ├── shared/                  # Shared types, Zod schemas, utilities
+│   └── config/                 # Shared configuration, ESLint/Prettier
+├── infra/                      # Infrastructure code (Docker, Terraform, etc.)
 ├── glasscode/
-│   └── frontend/
+│   └── frontend/               # Next.js application
 │       ├── src/
-│       │   ├── app/
-│       │   │   ├── graphql/
-│       │   │   ├── interview-prep/
-│       │   │   ├── lessons/
-│       │   │   ├── modules/
-│       │   │   ├── [shortSlug]/
-│       │   │   └── page.tsx
-│       │   ├── components/
-│       │   └── lib/
-│       │       └── api/
-│       └── package.json
-├── content/
-│   ├── lessons/
-│   │   ├── programming-fundamentals.json
-│   │   ├── web-development-basics.json
-│   │   └── ... (other module lessons)
-│   ├── quizzes/
-│   └── registry.json
-├── docs/
-│   ├── CURRENT_ARCHITECTURE.md
-│   ├── PROGRESS_REPORT.md
-│   ├── IMPLEMENTATION_PROGRESS_TRACKER.md
-│   └── ... (other documentation files)
-└── README.md
+│       │   ├── app/            # App router pages
+│       │   ├── components/     # Reusable components
+│       │   ├── hooks/          # Custom React hooks
+│       │   └── lib/            # Utility functions
+│       │       └── api/        # API client and hooks
+│       └── public/             # Static assets
+├── content/                    # Content files (lessons and quizzes)
+│   ├── lessons/                # Lesson content JSON files
+│   ├── quizzes/                # Quiz content JSON files
+│   └── registry.json           # Content registry
+├── docs/                       # Documentation
+├── scripts/                    # Utility scripts
+└── tests/                      # Test projects
+    └── backend-node/tests/     # Backend unit and integration tests
+```
 
 ## Implementation Progress
 
@@ -139,7 +141,7 @@ The GlassCode Academy application has made significant progress in implementing 
 - Policy-based authorization with custom requirements
 
 ### Observability ✅
-- Structured logging with Winston (JSON format)
+- Structured logging with Pino (JSON format)
 - Correlation ID tracking across requests
 - Standardized error responses with RFC 7807-style problem details
 - Performance timing for operations
@@ -189,7 +191,7 @@ This prints pool sizes and predicted beginner/intermediate/advanced counts per m
 ## Observability
 
 ### Structured Logging
-- Winston-based structured logging with JSON format
+- Pino-based structured logging with JSON format
 - Correlation ID tracking across requests
 - Contextual log metadata and error stacks
 - Console transport in dev; file/JSON transport in production
@@ -211,20 +213,26 @@ This prints pool sizes and predicted beginner/intermediate/advanced counts per m
 
 ### Integration Testing
 - Supertest for API endpoint tests
-- Database integration tests via Sequelize + SQLite
+- Database integration tests via Prisma + PostgreSQL
 - Security feature validation (JWT, RBAC, rate limits)
 - Performance smoke checks
 
-## Recent Enhancements (October 2025)
+## Recent Enhancements (November 2025)
+
+### Backend Standardization
+- Migrated from Express.js to Fastify for improved performance
+- Replaced Sequelize ORM with Prisma for better type safety
+- Implemented Redis caching for frequently accessed data
+- Standardized validation with Zod schemas
 
 ### Security Improvements
-- Implemented comprehensive JWT authentication
+- Enhanced JWT authentication with improved token handling
 - Added role-based access control system
 - Created organization and team constructs
 - Enhanced authorization policies
 
 ### Observability Improvements
-- Added structured logging with Serilog
+- Replaced Winston with Pino for better performance
 - Implemented correlation ID tracking
 - Standardized error response formats
 - Added performance timing to operations
@@ -234,12 +242,6 @@ This prints pool sizes and predicted beginner/intermediate/advanced counts per m
 - Added code coverage requirements (80% threshold)
 - Implemented GitHub Actions CI/CD pipeline
 - Added security feature integration tests
-
-### Accessibility Improvements
-- Implemented WCAG-compliant dark/light/auto theming
-- Added semantic colour tokens with smooth transitions
-- Prevented first-paint flash with boot script
-- Ensured keyboard navigation support
 
 For detailed progress information, see [PROGRESS_REPORT.md](docs/PROGRESS_REPORT.md) and [IMPLEMENTATION_PROGRESS_TRACKER.md](docs/IMPLEMENTATION_PROGRESS_TRACKER.md).
 
@@ -282,24 +284,26 @@ After running, start the app and visit module quiz pages to confirm A/B/C/D pref
 
 ### Backend Technologies
 
-#### .NET, Next.js, and GraphQL Modules
+#### Fastify API Modules
 - Core modules with structured lessons and interview questions
+- RESTful API built with Fastify and Prisma
+- Redis caching for improved performance
+- Zod validation for type safety
 
-#### Laravel Modules
-1. **Standalone Laravel Backend**: A complete Laravel application structure with models, controllers, and routes
-2. **GraphQL Integration**: Laravel content is seamlessly integrated into the .NET GraphQL API
-3. **Data Synchronization**: Laravel content is stored as JSON files in the .NET backend but maintains the Laravel data structure
+#### Authentication System
+1. **JWT Authentication**: Token-based authentication with signature validation
+2. **OAuth Integration**: Support for Google, GitHub, and Apple authentication
+3. **Role-Based Access Control**: Hierarchical role system (Admin, Instructor, Student, Guest)
 
-##### Laravel Content Structure
-- Routing fundamentals (Basic Routing, Route Parametres)
-- Eloquent ORM basics (Introduction to Eloquent, Querying Models)
-- Blade templating (Blade Basics, Blade Control Structures)
-- Middleware (Creating Middleware, Registering Middleware)
-- Database (Migrations, Seeding Data)
-- Authentication (Laravel Breeze, API Authentication)
+##### API Content Structure
+- Courses with modules and lessons
+- Interactive quizzes with multiple-choice and open-ended questions
+- Progress tracking and completion certificates
+- Content versioning and publishing workflows
 
-##### Laravel Interview Questions
-- 35 professional multiple-choice and open-ended questions covering core Laravel concepts
+##### Interview Questions
+- 100+ professional multiple-choice and open-ended questions covering core web development concepts
+- Tier-weighted difficulty reporting and selection
 
 ### Frontend Technologies
 
@@ -312,6 +316,6 @@ After running, start the app and visit module quiz pages to confirm A/B/C/D pref
 Utility-first CSS framework for rapid UI development
 
 #### Node.js Modules
-1. **Server-Side JavaScript**: Lessons on Node.js fundamentals and Express.js
+1. **Server-Side JavaScript**: Lessons on Node.js fundamentals
 2. **Interactive Quizzes**: Interview questions covering Node.js concepts
 3. **Technology-Specific Styling**: Green-themed interface for Node.js content

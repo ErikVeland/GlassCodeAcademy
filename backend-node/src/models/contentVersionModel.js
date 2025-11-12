@@ -71,7 +71,7 @@ const ContentVersion = sequelize.define(
     metadata: {
       type: getJSONType(),
       allowNull: true,
-      defaultValue: {},
+      defaultValue: null,
       comment: 'Additional version metadata',
     },
   },

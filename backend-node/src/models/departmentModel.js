@@ -59,7 +59,7 @@ const Department = sequelize.define(
     metadata: {
       type: getJSONType(),
       allowNull: true,
-      defaultValue: {},
+      defaultValue: null,
       comment: 'Custom fields and additional data',
     },
   },

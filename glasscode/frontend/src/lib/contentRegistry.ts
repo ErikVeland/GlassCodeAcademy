@@ -802,12 +802,12 @@ class ContentRegistryLoader {
 
           // If all strategies failed, return empty
           return [];
-        } catch (err) {
-          console.error(`getModuleLessons(${moduleSlug}) attempt ${retryCount + 1} failed:`, err);
+        } catch {
+          console.log(`[ContentRegistry] getModuleLessons(${moduleSlug}) attempt ${retryCount + 1} failed; continuing or retrying as appropriate.`);
           
           // If we've exhausted retries, return empty array
           if (retryCount >= maxRetries) {
-            console.error(`getModuleLessons(${moduleSlug}) failed after ${maxRetries} retries`);
+            console.log(`[ContentRegistry] getModuleLessons(${moduleSlug}) exhausted ${maxRetries} retries; returning empty array.`);
             return [];
           }
           
@@ -985,12 +985,12 @@ class ContentRegistryLoader {
           }
 
           return null;
-        } catch (err) {
-          console.error(`getModuleQuiz(${moduleSlug}) attempt ${retryCount + 1} failed:`, err);
+        } catch {
+          console.log(`[ContentRegistry] getModuleQuiz(${moduleSlug}) attempt ${retryCount + 1} failed; continuing or retrying as appropriate.`);
           
           // If we've exhausted retries, return null
           if (retryCount >= maxRetries) {
-            console.error(`getModuleQuiz(${moduleSlug}) failed after ${maxRetries} retries`);
+            console.log(`[ContentRegistry] getModuleQuiz(${moduleSlug}) exhausted ${maxRetries} retries; returning null.`);
             return null;
           }
           
@@ -1158,8 +1158,8 @@ class ContentRegistryLoader {
           quizValid: quizMeetsThreshold,
           overall: lessonsMeetThreshold && quizMeetsThreshold
         };
-      } catch (error) {
-        console.error(`Failed to check thresholds for ${moduleSlug}:`, error);
+      } catch {
+        console.log(`[ContentRegistry] Threshold check failed for ${moduleSlug}; returning safe defaults.`);
         // Return safe defaults to prevent build failures
         return { lessons: false, lessonsValid: false, quiz: false, quizValid: false, overall: false };
       }

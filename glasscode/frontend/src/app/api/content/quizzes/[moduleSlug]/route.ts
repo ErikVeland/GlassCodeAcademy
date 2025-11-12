@@ -3,6 +3,30 @@ import { getApiBaseStrict } from '@/lib/urlUtils';
 import { contentRegistry } from '@/lib/contentRegistry';
 import { debugLog } from '@/lib/httpUtils';
 
+// Minimums: at least 15 questions per quiz from pool >= 30
+const MIN_QUIZ_LENGTH = 15;
+const MIN_POOL_SIZE = MIN_QUIZ_LENGTH * 2;
+
+function mergeQuestions(a: Array<Record<string, unknown>>, b: Array<Record<string, unknown>>): Array<Record<string, unknown>> {
+  const out: Array<Record<string, unknown>> = [];
+  const seen = new Set<string>();
+  const keyOf = (q: Record<string, unknown>) => {
+    const id = (q as { id?: unknown }).id;
+    const question = (q as { question?: unknown }).question;
+    const idKey = typeof id === 'number' ? String(id) : (typeof id === 'string' ? id : undefined);
+    const qKey = typeof question === 'string' ? question.trim().toLowerCase() : undefined;
+    return idKey || qKey || JSON.stringify(q).slice(0, 256);
+  };
+  for (const q of [...a, ...b]) {
+    const key = keyOf(q);
+    if (!seen.has(key)) {
+      seen.add(key);
+      out.push(q);
+    }
+  }
+  return out;
+}
+
 
 // Database-based quiz loading function
 async function fetchQuizFromDatabase(moduleSlug: string) {
@@ -86,7 +110,39 @@ async function fetchQuizFromDatabase(moduleSlug: string) {
   return { questions: [] };
 }
 
-// Removed file-based quiz fallback implementation
+// File-based quiz fallback implementation (used when DB is insufficient)
+async function loadQuizFromFiles(moduleSlug: string): Promise<Array<Record<string, unknown>>> {
+  try {
+    const { promises: fs } = await import('fs');
+    const path = await import('path');
+
+    const cwd = process.cwd();
+    const fileCandidates = [
+      path.join(cwd, 'public', 'content', 'quizzes', `${moduleSlug}.json`),
+      path.join(cwd, '..', '..', 'content', 'quizzes', `${moduleSlug}.json`),
+      path.join(cwd, '..', 'content', 'quizzes', `${moduleSlug}.json`),
+    ];
+
+    for (const p of fileCandidates) {
+      try {
+        const raw = await fs.readFile(p, 'utf-8');
+        const parsed: unknown = JSON.parse(raw);
+        const questionsArr: Record<string, unknown>[] = Array.isArray(parsed)
+          ? (parsed as Record<string, unknown> [])
+          : (Array.isArray((parsed as { questions?: unknown[] })?.questions)
+              ? ((parsed as { questions?: unknown[] }).questions as Record<string, unknown> [])
+              : []);
+
+        if (Array.isArray(questionsArr) && questionsArr.length > 0) {
+          return questionsArr;
+        }
+      } catch {}
+    }
+  } catch (fallbackErr) {
+    console.error('[quizzes] File fallback error:', fallbackErr);
+  }
+  return [];
+}
 
 export async function GET(request: Request, { params }: { params: Promise<{ moduleSlug: string }> }) {
   try {
@@ -106,10 +162,21 @@ export async function GET(request: Request, { params }: { params: Promise<{ modu
     const moduleSlug = moduleSlugResolved;
     debugLog('Resolved to module slug:', moduleSlug);
     
-    const quiz = await fetchQuizFromDatabase(moduleSlug);
+    let quiz = await fetchQuizFromDatabase(moduleSlug);
+
+    // If DB returned insufficient questions, augment from files
+    if (!quiz || !Array.isArray(quiz.questions) || quiz.questions.length < MIN_POOL_SIZE) {
+      const fileQuestions = await loadQuizFromFiles(moduleSlug);
+      const mergedRaw = mergeQuestions(
+        Array.isArray(quiz?.questions) ? (quiz!.questions as unknown[] as Record<string, unknown>[]) : [],
+        fileQuestions
+      );
+      const normalizedQuestions = mergedRaw.map(q => normalizeQuestion(q));
+      quiz = { questions: normalizedQuestions };
+    }
     
     const normalizedQuestions = Array.isArray(quiz.questions)
-      ? (quiz.questions as unknown[]).map((q) => normalizeQuestion(q))
+      ? quiz.questions
       : [];
     const normalizedQuiz = { ...quiz, questions: normalizedQuestions };
 

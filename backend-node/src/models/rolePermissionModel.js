@@ -41,7 +41,7 @@ const RolePermission = sequelize.define(
     scope: {
       type: getJSONType(),
       allowNull: true,
-      defaultValue: {},
+      defaultValue: null,
       comment: 'Additional scope constraints for permission',
     },
   },
