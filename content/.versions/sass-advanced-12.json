@@ -1,0 +1,17 @@
+{
+  "id": "sass-advanced-12",
+  "type": "lesson",
+  "slug": "sass-advanced-12",
+  "title": "Modern SASS Features and CSS Grid Integration",
+  "versions": [
+    {
+      "version": "1.0.0",
+      "lastUpdated": "2025-11-12T02:37:42.923Z",
+      "changes": [
+        "Initial version import"
+      ],
+      "author": "system",
+      "hash": "70c5a101"
+    }
+  ]
+}

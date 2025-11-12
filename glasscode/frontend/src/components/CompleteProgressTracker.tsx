@@ -1,48 +1,51 @@
-'use client'
+"use client";
 
-import React, { useState } from 'react';
-import { useProgressTrackingComplete } from '../hooks/useProgressTrackingComplete';
-import type { ProgressData, AchievementData } from '../hooks/useProgressTrackingComplete';
+import React, { useState } from "react";
+import { useProgressTrackingComplete } from "../hooks/useProgressTrackingComplete";
+import type {
+  ProgressData,
+  AchievementData,
+} from "../hooks/useProgressTrackingComplete";
 
-type AchievementDefinition = Omit<AchievementData, 'earnedDate' | 'moduleId'>;
+type AchievementDefinition = Omit<AchievementData, "earnedDate" | "moduleId">;
 
 // Tier colors matching design system
 const getTierColor = (tier?: string) => {
   const colors: Record<string, string> = {
-    foundational: 'from-blue-500 to-cyan-500',
-    core: 'from-green-500 to-emerald-500',
-    specialized: 'from-purple-500 to-violet-500',
-    quality: 'from-orange-500 to-red-500'
+    foundational: "from-blue-500 to-cyan-500",
+    core: "from-green-500 to-emerald-500",
+    specialized: "from-purple-500 to-violet-500",
+    quality: "from-orange-500 to-red-500",
   };
-  return colors[tier || 'foundational'] || 'from-gray-400 to-gray-600';
+  return colors[tier || "foundational"] || "from-gray-400 to-gray-600";
 };
 
 // Rarity colors according to design documentation
 const getRarityColor = (rarity: string) => {
   const colors: Record<string, string> = {
-    common: 'from-gray-400 to-gray-600',
-    uncommon: 'from-green-400 to-green-600',
-    rare: 'from-blue-400 to-blue-600',
-    epic: 'from-purple-400 to-purple-600',
-    legendary: 'from-yellow-400 to-orange-500'
+    common: "from-gray-400 to-gray-600",
+    uncommon: "from-green-400 to-green-600",
+    rare: "from-blue-400 to-blue-600",
+    epic: "from-purple-400 to-purple-600",
+    legendary: "from-yellow-400 to-orange-500",
   };
   return colors[rarity] || colors.common;
 };
 
-const ProgressRing: React.FC<{ 
-  percentage: number; 
-  size?: number; 
+const ProgressRing: React.FC<{
+  percentage: number;
+  size?: number;
   strokeWidth?: number;
   showLabel?: boolean;
   label?: string;
   gradient?: string;
-}> = ({ 
-  percentage, 
-  size = 80, 
+}> = ({
+  percentage,
+  size = 80,
   strokeWidth = 6,
   showLabel = true,
   label,
-  gradient = 'from-blue-500 to-cyan-500'
+  gradient = "from-blue-500 to-cyan-500",
 }) => {
   const radius = (size - strokeWidth) / 2;
   const circumference = radius * 2 * Math.PI;
@@ -51,11 +54,7 @@ const ProgressRing: React.FC<{
 
   return (
     <div className="relative" style={{ width: size, height: size }}>
-      <svg
-        className="transform -rotate-90"
-        width={size}
-        height={size}
-      >
+      <svg className="transform -rotate-90" width={size} height={size}>
         <circle
           cx={size / 2}
           cy={size / 2}
@@ -68,7 +67,7 @@ const ProgressRing: React.FC<{
           cx={size / 2}
           cy={size / 2}
           r={radius}
-          stroke={`url(#progressGradient-${gradient.replace(/\s+/g, '-')})`}
+          stroke={`url(#progressGradient-${gradient.replace(/\s+/g, "-")})`}
           strokeWidth={strokeWidth}
           fill="none"
           strokeDasharray={strokeDasharray}
@@ -78,13 +77,25 @@ const ProgressRing: React.FC<{
         />
         <defs>
           {(() => {
-            const parts = (gradient || '').trim().split(/\s+/);
-            const fromPart = parts.find(p => p.startsWith('from-')) || parts[0] || 'from-blue-500';
-            const toPart = parts.find(p => p.startsWith('to-')) || parts[1] || 'to-cyan-500';
-            const fromColor = fromPart.replace('from-', '');
-            const toColor = toPart.replace('to-', '');
+            const parts = (gradient || "").trim().split(/\s+/);
+            const fromPart =
+              parts.find((p) => p.startsWith("from-")) ||
+              parts[0] ||
+              "from-blue-500";
+            const toPart =
+              parts.find((p) => p.startsWith("to-")) ||
+              parts[1] ||
+              "to-cyan-500";
+            const fromColor = fromPart.replace("from-", "");
+            const toColor = toPart.replace("to-", "");
             return (
-              <linearGradient id={`progressGradient-${gradient.replace(/\s+/g, '-')}`} x1="0%" y1="0%" x2="100%" y2="0%">
+              <linearGradient
+                id={`progressGradient-${gradient.replace(/\s+/g, "-")}`}
+                x1="0%"
+                y1="0%"
+                x2="100%"
+                y2="0%"
+              >
                 <stop offset="0%" stopColor={fromColor} />
                 <stop offset="100%" stopColor={toColor} />
               </linearGradient>
@@ -94,61 +105,60 @@ const ProgressRing: React.FC<{
       </svg>
       {showLabel && (
         <div className="absolute inset-0 flex flex-col items-center justify-center">
-          <span className="text-lg font-bold text-white">
-            {percentage}%
-          </span>
-          {label && (
-            <span className="text-xs text-white/70 mt-1">
-              {label}
-            </span>
-          )}
+          <span className="text-lg font-bold text-white">{percentage}%</span>
+          {label && <span className="text-xs text-white/70 mt-1">{label}</span>}
         </div>
       )}
     </div>
   );
 };
 
-const AchievementCard: React.FC<{ 
-  achievement: AchievementDefinition; 
-  earned: boolean; 
+const AchievementCard: React.FC<{
+  achievement: AchievementDefinition;
+  earned: boolean;
   earnedDate?: string;
-  showUnlockCondition?: boolean; 
-}> = ({ 
-  achievement, 
-  earned, 
-  earnedDate,
-  showUnlockCondition = false 
-}) => {
+  showUnlockCondition?: boolean;
+}> = ({ achievement, earned, earnedDate, showUnlockCondition = false }) => {
   return (
-    <div className={`relative p-4 rounded-xl border-2 transition-all duration-300 transform hover:scale-105 ${
-      earned 
-        ? `bg-gradient-to-br ${achievement.tier ? getTierColor(achievement.tier) : getRarityColor(achievement.rarity)} text-white shadow-lg border-white/20` 
-        : 'bg-white/10 backdrop-blur-sm border-white/20 opacity-60 hover:opacity-80'
-    }`}>
+    <div
+      className={`relative p-4 rounded-xl border-2 transition-all duration-300 transform hover:scale-105 ${
+        earned
+          ? `bg-gradient-to-br ${achievement.tier ? getTierColor(achievement.tier) : getRarityColor(achievement.rarity)} text-white shadow-lg border-white/20`
+          : "bg-white/10 backdrop-blur-sm border-white/20 opacity-60 hover:opacity-80"
+      }`}
+    >
       <div className="flex items-center space-x-3">
-        <div className={`text-3xl transition-all duration-300 ${
-          earned ? 'grayscale-0 drop-shadow-sm' : 'grayscale opacity-50'
-        }`}>
+        <div
+          className={`text-3xl transition-all duration-300 ${
+            earned ? "grayscale-0 drop-shadow-sm" : "grayscale opacity-50"
+          }`}
+        >
           {achievement.icon}
         </div>
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2 mb-1">
-            <h4 className={`font-semibold text-sm truncate ${
-              earned ? 'text-white' : 'text-gray-200'
-            }`}>
+            <h4
+              className={`font-semibold text-sm truncate ${
+                earned ? "text-white" : "text-gray-200"
+              }`}
+            >
               {achievement.title}
             </h4>
-            <span className={`px-2 py-1 text-xs rounded-full font-medium ${
-              earned 
-                ? 'bg-white/20 text-white' 
-                : 'bg-gray-500/20 text-gray-300'
-            }`}>
+            <span
+              className={`px-2 py-1 text-xs rounded-full font-medium ${
+                earned
+                  ? "bg-white/20 text-white"
+                  : "bg-gray-500/20 text-gray-300"
+              }`}
+            >
               {achievement.rarity}
             </span>
           </div>
-          <p className={`text-xs mb-2 ${
-            earned ? 'text-white/90' : 'text-gray-300'
-          }`}>
+          <p
+            className={`text-xs mb-2 ${
+              earned ? "text-white/90" : "text-gray-300"
+            }`}
+          >
             {achievement.description}
           </p>
           {showUnlockCondition && !earned && (
@@ -164,35 +174,50 @@ const AchievementCard: React.FC<{
           {achievement.tier && (
             <div className="flex items-center gap-1 mt-1">
               <span className="text-xs text-white/75">
-                {achievement.tier.charAt(0).toUpperCase() + achievement.tier.slice(1)} Tier
+                {achievement.tier.charAt(0).toUpperCase() +
+                  achievement.tier.slice(1)}{" "}
+                Tier
               </span>
             </div>
           )}
         </div>
       </div>
-      
+
       {/* Achievement Badge */}
       {earned && (
         <div className="absolute -top-2 -right-2">
           <div className="w-6 h-6 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-full flex items-center justify-center border-2 border-white shadow-lg">
-            <svg className="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20">
-              <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+            <svg
+              className="w-3 h-3 text-white"
+              fill="currentColor"
+              viewBox="0 0 20 20"
+            >
+              <path
+                fillRule="evenodd"
+                d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                clipRule="evenodd"
+              />
             </svg>
           </div>
         </div>
       )}
-      
+
       {/* Rarity indicator */}
-      <div className={`absolute top-2 left-2 w-2 h-2 rounded-full ${
-        earned 
-          ? 'bg-white shadow-sm' 
-          : `bg-gradient-to-br ${getRarityColor(achievement.rarity)} opacity-60`
-      }`} />
+      <div
+        className={`absolute top-2 left-2 w-2 h-2 rounded-full ${
+          earned
+            ? "bg-white shadow-sm"
+            : `bg-gradient-to-br ${getRarityColor(achievement.rarity)} opacity-60`
+        }`}
+      />
     </div>
   );
 };
 
-const StreakCounter: React.FC<{ streak: number; longestStreak: number }> = ({ streak, longestStreak }) => {
+const StreakCounter: React.FC<{ streak: number; longestStreak: number }> = ({
+  streak,
+  longestStreak,
+}) => {
   return (
     <div className="bg-gradient-to-br from-orange-400 to-red-500 text-white p-4 rounded-xl shadow-lg">
       <div className="flex items-center space-x-3">
@@ -209,47 +234,51 @@ const StreakCounter: React.FC<{ streak: number; longestStreak: number }> = ({ st
   );
 };
 
-const StatsCard: React.FC<{ 
-  title: string; 
-  value: string | number; 
-  icon: string; 
+const StatsCard: React.FC<{
+  title: string;
+  value: string | number;
+  icon: string;
   subtitle?: string;
   gradient: string;
 }> = ({ title, value, icon, subtitle, gradient }) => {
   return (
-    <div className={`bg-gradient-to-br ${gradient} text-white p-4 rounded-xl shadow-lg`}>
+    <div
+      className={`bg-gradient-to-br ${gradient} text-white p-4 rounded-xl shadow-lg`}
+    >
       <div className="flex items-center space-x-3">
         <div className="text-2xl">{icon}</div>
         <div>
           <div className="text-2xl font-bold">{value}</div>
           <div className="text-sm opacity-90">{title}</div>
-          {subtitle && (
-            <div className="text-xs opacity-75">{subtitle}</div>
-          )}
+          {subtitle && <div className="text-xs opacity-75">{subtitle}</div>}
         </div>
       </div>
     </div>
   );
 };
 
-const TierProgressCard: React.FC<{ 
-  tierName: string; 
+const TierProgressCard: React.FC<{
+  tierName: string;
   tierKey: string;
   progress: number;
   modules: number;
   completed: number;
 }> = ({ tierName, tierKey, progress, modules, completed }) => {
   const tierColor = getTierColor(tierKey);
-  
+
   return (
-    <div className={`bg-gradient-to-br ${tierColor} p-4 rounded-xl text-white shadow-lg`}>
+    <div
+      className={`bg-gradient-to-br ${tierColor} p-4 rounded-xl text-white shadow-lg`}
+    >
       <h3 className="font-bold text-lg mb-2">{tierName}</h3>
       <div className="flex items-center justify-between mb-2">
-        <span className="text-sm">{completed}/{modules}</span>
+        <span className="text-sm">
+          {completed}/{modules}
+        </span>
         <span className="text-sm font-bold">{progress}%</span>
       </div>
       <div className="w-full bg-white/20 rounded-full h-2">
-        <div 
+        <div
           className="bg-white h-2 rounded-full transition-all duration-500 ease-out"
           style={{ width: `${progress}%` }}
         ></div>
@@ -270,43 +299,46 @@ export const CompleteProgressTracker: React.FC = () => {
     getAverageQuizScore,
     getStreakMotivation,
     exportProgressData,
-    importProgressData
+    importProgressData,
   } = useProgressTrackingComplete();
 
   const [showAllAchievements, setShowAllAchievements] = useState(false);
-  const [filterCategory, setFilterCategory] = useState<string>('all');
-  const [filterTier, setFilterTier] = useState<string>('all');
-  const [importData, setImportData] = useState<string>('');
-  const [importResult, setImportResult] = useState<{ success: boolean; message: string } | null>(null);
+  const [filterCategory, setFilterCategory] = useState<string>("all");
+  const [filterTier, setFilterTier] = useState<string>("all");
+  const [importData, setImportData] = useState<string>("");
+  const [importResult, setImportResult] = useState<{
+    success: boolean;
+    message: string;
+  } | null>(null);
 
   const overallProgress = calculateOverallProgress();
   const completedCount = getCompletedModulesCount();
   const totalTime = getTotalTimeSpent();
   const avgScore = getAverageQuizScore();
 
-  const earnedAchievementIds = achievements.map(a => a.id);
+  const earnedAchievementIds = achievements.map((a) => a.id);
   const earnedCount = earnedAchievementIds.length;
   const totalAchievements = Object.keys({
-    'first-lesson': {},
-    'foundation-master': {},
-    'core-developer': {},
-    'specialist': {},
-    'quality-guardian': {},
-    'speed-learner': {},
-    'perfectionist': {},
-    'streak-warrior': {},
-    'streak-legend': {},
-    'full-stack': {},
-    'quiz-master': {},
-    'consistent-learner': {}
+    "first-lesson": {},
+    "foundation-master": {},
+    "core-developer": {},
+    specialist: {},
+    "quality-guardian": {},
+    "speed-learner": {},
+    perfectionist: {},
+    "streak-warrior": {},
+    "streak-legend": {},
+    "full-stack": {},
+    "quiz-master": {},
+    "consistent-learner": {},
   }).length;
 
   // Tier progress calculations
   const tierProgress = {
-    foundational: getTierProgress('foundational'),
-    core: getTierProgress('core'),
-    specialized: getTierProgress('specialized'),
-    quality: getTierProgress('quality')
+    foundational: getTierProgress("foundational"),
+    core: getTierProgress("core"),
+    specialized: getTierProgress("specialized"),
+    quality: getTierProgress("quality"),
   };
 
   // Tier module counts
@@ -314,13 +346,17 @@ export const CompleteProgressTracker: React.FC = () => {
     foundational: { total: 3, completed: 0 },
     core: { total: 6, completed: 0 },
     specialized: { total: 5, completed: 0 },
-    quality: { total: 4, completed: 0 }
+    quality: { total: 4, completed: 0 },
   };
 
   // Update tier module counts based on actual progress
   Object.entries(tierModuleCounts).forEach(([tier, counts]) => {
-    const tierModules = Object.values(progress as Record<string, ProgressData>).filter((p) => p.tier === tier);
-    counts.completed = tierModules.filter((p) => p.completionStatus === 'completed').length;
+    const tierModules = Object.values(
+      progress as Record<string, ProgressData>,
+    ).filter((p) => p.tier === tier);
+    counts.completed = tierModules.filter(
+      (p) => p.completionStatus === "completed",
+    ).length;
   });
 
   // Format time for display
@@ -333,218 +369,223 @@ export const CompleteProgressTracker: React.FC = () => {
 
   // Achievement catalog and filtered list
   const ACHIEVEMENT_CATALOG: Record<string, AchievementDefinition> = {
-    'first-lesson': {
-      id: 'first-lesson',
-      title: 'First Steps',
-      icon: '👶',
-      description: 'Completed your first lesson',
-      category: 'velocity',
-      rarity: 'common',
-      badgeUrl: '/badges/first-lesson.svg',
+    "first-lesson": {
+      id: "first-lesson",
+      title: "First Steps",
+      icon: "👶",
+      description: "Completed your first lesson",
+      category: "velocity",
+      rarity: "common",
+      badgeUrl: "/badges/first-lesson.svg",
       points: 10,
-      unlockCondition: 'Complete any lesson'
+      unlockCondition: "Complete any lesson",
     },
-    'foundation-master': {
-      id: 'foundation-master',
-      title: 'Foundation Master',
-      icon: '🎓',
-      description: 'Master of foundational concepts',
-      category: 'completion',
-      rarity: 'uncommon',
-      tier: 'foundational',
-      badgeUrl: '/badges/foundation-master.svg',
+    "foundation-master": {
+      id: "foundation-master",
+      title: "Foundation Master",
+      icon: "🎓",
+      description: "Master of foundational concepts",
+      category: "completion",
+      rarity: "uncommon",
+      tier: "foundational",
+      badgeUrl: "/badges/foundation-master.svg",
       points: 50,
-      unlockCondition: 'Complete Foundational Tier'
+      unlockCondition: "Complete Foundational Tier",
     },
-    'core-developer': {
-      id: 'core-developer',
-      title: 'Core Developer',
-      icon: '⚙️',
-      description: 'Core technologies specialist',
-      category: 'completion',
-      rarity: 'uncommon',
-      tier: 'core',
-      badgeUrl: '/badges/core-developer.svg',
+    "core-developer": {
+      id: "core-developer",
+      title: "Core Developer",
+      icon: "⚙️",
+      description: "Core technologies specialist",
+      category: "completion",
+      rarity: "uncommon",
+      tier: "core",
+      badgeUrl: "/badges/core-developer.svg",
       points: 100,
-      unlockCondition: 'Complete Core Technologies Tier'
+      unlockCondition: "Complete Core Technologies Tier",
     },
-    'specialist': {
-      id: 'specialist',
-      title: 'Specialist',
-      icon: '💎',
-      description: 'Advanced skills specialist',
-      category: 'completion',
-      rarity: 'rare',
-      tier: 'specialized',
-      badgeUrl: '/badges/specialist.svg',
+    specialist: {
+      id: "specialist",
+      title: "Specialist",
+      icon: "💎",
+      description: "Advanced skills specialist",
+      category: "completion",
+      rarity: "rare",
+      tier: "specialized",
+      badgeUrl: "/badges/specialist.svg",
       points: 200,
-      unlockCondition: 'Complete Specialised Skills Tier'
+      unlockCondition: "Complete Specialised Skills Tier",
     },
-    'quality-guardian': {
-      id: 'quality-guardian',
-      title: 'Quality Guardian',
-      icon: '🛡️',
-      description: 'Quality and testing expert',
-      category: 'completion',
-      rarity: 'epic',
-      tier: 'quality',
-      badgeUrl: '/badges/quality-guardian.svg',
+    "quality-guardian": {
+      id: "quality-guardian",
+      title: "Quality Guardian",
+      icon: "🛡️",
+      description: "Quality and testing expert",
+      category: "completion",
+      rarity: "epic",
+      tier: "quality",
+      badgeUrl: "/badges/quality-guardian.svg",
       points: 300,
-      unlockCondition: 'Complete Quality & Testing Tier'
+      unlockCondition: "Complete Quality & Testing Tier",
     },
-    'speed-learner': {
-      id: 'speed-learner',
-      title: 'Speed Learner',
-      icon: '⚡',
-      description: 'Completed 5 lessons in one day',
-      category: 'velocity',
-      rarity: 'rare',
-      badgeUrl: '/badges/speed-learner.svg',
+    "speed-learner": {
+      id: "speed-learner",
+      title: "Speed Learner",
+      icon: "⚡",
+      description: "Completed 5 lessons in one day",
+      category: "velocity",
+      rarity: "rare",
+      badgeUrl: "/badges/speed-learner.svg",
       points: 75,
-      unlockCondition: '5 lessons in one day'
+      unlockCondition: "5 lessons in one day",
     },
-    'perfectionist': {
-      id: 'perfectionist',
-      title: 'Perfectionist',
-      icon: '💯',
-      description: 'Achieved perfect scores on 10 quizzes',
-      category: 'skill',
-      rarity: 'epic',
-      badgeUrl: '/badges/perfectionist.svg',
+    perfectionist: {
+      id: "perfectionist",
+      title: "Perfectionist",
+      icon: "💯",
+      description: "Achieved perfect scores on 10 quizzes",
+      category: "skill",
+      rarity: "epic",
+      badgeUrl: "/badges/perfectionist.svg",
       points: 150,
-      unlockCondition: '100% on 10 quizzes'
+      unlockCondition: "100% on 10 quizzes",
     },
-    'streak-warrior': {
-      id: 'streak-warrior',
-      title: 'Streak Warrior',
-      icon: '🔥',
-      description: 'Maintained a 7-day learning streak',
-      category: 'streak',
-      rarity: 'epic',
-      badgeUrl: '/badges/streak-warrior.svg',
+    "streak-warrior": {
+      id: "streak-warrior",
+      title: "Streak Warrior",
+      icon: "🔥",
+      description: "Maintained a 7-day learning streak",
+      category: "streak",
+      rarity: "epic",
+      badgeUrl: "/badges/streak-warrior.svg",
       points: 100,
-      unlockCondition: '7-day learning streak'
+      unlockCondition: "7-day learning streak",
     },
-    'streak-legend': {
-      id: 'streak-legend',
-      title: 'Streak Legend',
-      icon: '🌟',
-      description: 'Maintained a 30-day learning streak',
-      category: 'streak',
-      rarity: 'legendary',
-      badgeUrl: '/badges/streak-legend.svg',
+    "streak-legend": {
+      id: "streak-legend",
+      title: "Streak Legend",
+      icon: "🌟",
+      description: "Maintained a 30-day learning streak",
+      category: "streak",
+      rarity: "legendary",
+      badgeUrl: "/badges/streak-legend.svg",
       points: 500,
-      unlockCondition: '30-day learning streak'
+      unlockCondition: "30-day learning streak",
     },
-    'full-stack': {
-      id: 'full-stack',
-      title: 'Full Stack Developer',
-      icon: '🚀',
-      description: 'Completed both frontend and backend modules',
-      category: 'skill',
-      rarity: 'legendary',
-      badgeUrl: '/badges/full-stack.svg',
+    "full-stack": {
+      id: "full-stack",
+      title: "Full Stack Developer",
+      icon: "🚀",
+      description: "Completed both frontend and backend modules",
+      category: "skill",
+      rarity: "legendary",
+      badgeUrl: "/badges/full-stack.svg",
       points: 1000,
-      unlockCondition: 'Master both frontend and backend'
+      unlockCondition: "Master both frontend and backend",
     },
-    'quiz-master': {
-      id: 'quiz-master',
-      title: 'Quiz Master',
-      icon: '🧠',
-      description: 'Achieved 90%+ on 20 quizzes',
-      category: 'skill',
-      rarity: 'epic',
-      badgeUrl: '/badges/quiz-master.svg',
+    "quiz-master": {
+      id: "quiz-master",
+      title: "Quiz Master",
+      icon: "🧠",
+      description: "Achieved 90%+ on 20 quizzes",
+      category: "skill",
+      rarity: "epic",
+      badgeUrl: "/badges/quiz-master.svg",
       points: 200,
-      unlockCondition: '90%+ on 20 quizzes'
+      unlockCondition: "90%+ on 20 quizzes",
     },
-    'consistent-learner': {
-      id: 'consistent-learner',
-      title: 'Consistent Learner',
-      icon: '📅',
-      description: 'Studied for 30 consecutive days',
-      category: 'streak',
-      rarity: 'legendary',
-      badgeUrl: '/badges/consistent-learner.svg',
+    "consistent-learner": {
+      id: "consistent-learner",
+      title: "Consistent Learner",
+      icon: "📅",
+      description: "Studied for 30 consecutive days",
+      category: "streak",
+      rarity: "legendary",
+      badgeUrl: "/badges/consistent-learner.svg",
       points: 300,
-      unlockCondition: '30 consecutive days of learning'
-    }
+      unlockCondition: "30 consecutive days of learning",
+    },
   };
-  const filteredAchievements = Object.values(ACHIEVEMENT_CATALOG).filter((achievement) => {
-    if (!showAllAchievements && !earnedAchievementIds.includes(achievement.id)) {
-      return false;
-    }
-    
-    if (filterCategory !== 'all' && achievement.category !== filterCategory) {
-      return false;
-    }
-    
-    if (filterTier !== 'all' && achievement.tier !== filterTier) {
-      return false;
-    }
-    
-    return true;
-  });
+  const filteredAchievements = Object.values(ACHIEVEMENT_CATALOG).filter(
+    (achievement) => {
+      if (
+        !showAllAchievements &&
+        !earnedAchievementIds.includes(achievement.id)
+      ) {
+        return false;
+      }
+
+      if (filterCategory !== "all" && achievement.category !== filterCategory) {
+        return false;
+      }
+
+      if (filterTier !== "all" && achievement.tier !== filterTier) {
+        return false;
+      }
+
+      return true;
+    },
+  );
 
   const handleImport = () => {
     if (importData.trim()) {
       const result = importProgressData(importData);
       setImportResult(result);
       if (result.success) {
-        setImportData('');
+        setImportData("");
       }
     }
   };
 
   return (
     <div className="w-full max-w-7xl mx-auto mb-12 p-4">
-      
       <div className="text-center mb-8">
         <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
           Your Learning Journey
         </h2>
         <p className="text-white/80 text-lg">
-          Track your progress, earn achievements, and celebrate your learning milestones
+          Track your progress, earn achievements, and celebrate your learning
+          milestones
         </p>
       </div>
 
       {/* Main Progress Ring with Tier Breakdown */}
       <div className="flex flex-col items-center mb-8">
         <div className="mb-6">
-          <ProgressRing 
-            percentage={overallProgress} 
-            size={140} 
-            strokeWidth={12} 
+          <ProgressRing
+            percentage={overallProgress}
+            size={140}
+            strokeWidth={12}
             label="Overall Progress"
             gradient="from-blue-500 to-purple-600"
           />
         </div>
-        
+
         {/* Tier Progress Indicators */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 w-full max-w-2xl">
-          <TierProgressCard 
-            tierName="Foundational" 
+          <TierProgressCard
+            tierName="Foundational"
             tierKey="foundational"
             progress={tierProgress.foundational}
             modules={tierModuleCounts.foundational.total}
             completed={tierModuleCounts.foundational.completed}
           />
-          <TierProgressCard 
-            tierName="Core" 
+          <TierProgressCard
+            tierName="Core"
             tierKey="core"
             progress={tierProgress.core}
             modules={tierModuleCounts.core.total}
             completed={tierModuleCounts.core.completed}
           />
-          <TierProgressCard 
-            tierName="Specialised" 
+          <TierProgressCard
+            tierName="Specialised"
             tierKey="specialized"
             progress={tierProgress.specialized}
             modules={tierModuleCounts.specialized.total}
             completed={tierModuleCounts.specialized.completed}
           />
-          <TierProgressCard 
-            tierName="Quality" 
+          <TierProgressCard
+            tierName="Quality"
             tierKey="quality"
             progress={tierProgress.quality}
             modules={tierModuleCounts.quality.total}
@@ -571,34 +612,41 @@ export const CompleteProgressTracker: React.FC = () => {
         />
         <StatsCard
           title="Avg Score"
-          value={avgScore > 0 ? `${avgScore}%` : '-'}
+          value={avgScore > 0 ? `${avgScore}%` : "-"}
           icon="🎯"
           subtitle="quiz average"
           gradient="from-purple-400 to-purple-600"
         />
-        <StreakCounter streak={streak.currentStreak} longestStreak={streak.longestStreak} />
+        <StreakCounter
+          streak={streak.currentStreak}
+          longestStreak={streak.longestStreak}
+        />
       </div>
 
       {/* Streak and Motivation */}
       <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 shadow-xl border border-white/20 mb-8">
         <div className="flex flex-col md:flex-row items-center gap-6">
           <div className="flex-1">
-            <h3 className="text-xl font-bold text-white mb-2">Learning Streak</h3>
+            <h3 className="text-xl font-bold text-white mb-2">
+              Learning Streak
+            </h3>
             <div className="flex items-center gap-4 mb-4">
               <div className="text-4xl">🔥</div>
               <div>
-                <div className="text-3xl font-bold text-white">{streak.currentStreak}</div>
+                <div className="text-3xl font-bold text-white">
+                  {streak.currentStreak}
+                </div>
                 <div className="text-white/80">Current Streak</div>
               </div>
               <div className="h-12 w-px bg-white/20"></div>
               <div>
-                <div className="text-xl font-bold text-white">{streak.longestStreak}</div>
+                <div className="text-xl font-bold text-white">
+                  {streak.longestStreak}
+                </div>
                 <div className="text-white/80">Longest Streak</div>
               </div>
             </div>
-            <p className="text-white/80 italic">
-              {getStreakMotivation()}
-            </p>
+            <p className="text-white/80 italic">{getStreakMotivation()}</p>
           </div>
           <div className="flex flex-col gap-2">
             <button
@@ -609,9 +657,9 @@ export const CompleteProgressTracker: React.FC = () => {
             </button>
             <button
               onClick={() => {
-                const fileInput = document.createElement('input');
-                fileInput.type = 'file';
-                fileInput.accept = '.json';
+                const fileInput = document.createElement("input");
+                fileInput.type = "file";
+                fileInput.accept = ".json";
                 fileInput.onchange = (e: Event) => {
                   const file = (e.target as HTMLInputElement).files?.[0];
                   if (file) {
@@ -632,7 +680,10 @@ export const CompleteProgressTracker: React.FC = () => {
               📤 Import Progress
             </button>
             {importResult && (
-              <div role="status" className={`mt-2 text-sm ${importResult.success ? 'text-green-300' : 'text-red-300'}`}>
+              <div
+                role="status"
+                className={`mt-2 text-sm ${importResult.success ? "text-green-300" : "text-red-300"}`}
+              >
                 {importResult.message}
               </div>
             )}
@@ -644,11 +695,9 @@ export const CompleteProgressTracker: React.FC = () => {
       <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 shadow-xl border border-white/20">
         <div className="flex items-center justify-between mb-6">
           <div>
-            <h3 className="text-2xl font-bold text-white mb-2">
-              Achievements
-            </h3>
+            <h3 className="text-2xl font-bold text-white mb-2">Achievements</h3>
             <p className="text-white/80">
-              {earnedCount} of {totalAchievements} unlocked • 
+              {earnedCount} of {totalAchievements} unlocked •
               <span className="text-yellow-300 font-medium ml-1">
                 {Math.round((earnedCount / totalAchievements) * 100)}% Complete
               </span>
@@ -659,19 +708,23 @@ export const CompleteProgressTracker: React.FC = () => {
               onClick={() => setShowAllAchievements(!showAllAchievements)}
               className="px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white text-sm font-medium rounded-lg transition-colors duration-200"
             >
-              {showAllAchievements ? 'Show Earned Only' : 'Show All'}
+              {showAllAchievements ? "Show Earned Only" : "Show All"}
             </button>
           </div>
         </div>
-        
+
         {/* Achievement Filters */}
         {showAllAchievements && (
           <div className="flex flex-wrap gap-3 mb-6 p-4 bg-white/5 rounded-xl">
             <div className="flex items-center gap-2">
-              <label className="text-white/80 text-sm font-medium">Category:</label>
-              <select 
-                value={filterCategory} 
-                onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setFilterCategory(e.target.value)}
+              <label className="text-white/80 text-sm font-medium">
+                Category:
+              </label>
+              <select
+                value={filterCategory}
+                onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
+                  setFilterCategory(e.target.value)
+                }
                 className="bg-white/10 text-white border border-white/20 rounded-lg px-3 py-1 text-sm"
               >
                 <option value="all">All</option>
@@ -683,9 +736,11 @@ export const CompleteProgressTracker: React.FC = () => {
             </div>
             <div className="flex items-center gap-2">
               <label className="text-white/80 text-sm font-medium">Tier:</label>
-              <select 
-                value={filterTier} 
-                onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setFilterTier(e.target.value)}
+              <select
+                value={filterTier}
+                onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
+                  setFilterTier(e.target.value)
+                }
                 className="bg-white/10 text-white border border-white/20 rounded-lg px-3 py-1 text-sm"
               >
                 <option value="all">All</option>
@@ -700,19 +755,21 @@ export const CompleteProgressTracker: React.FC = () => {
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {filteredAchievements.map((achievement: AchievementDefinition) => {
-              const earned = earnedAchievementIds.includes(achievement.id);
-              const earnedData = achievements.find((a: AchievementData) => a.id === achievement.id);
-              
-              return (
-                <AchievementCard
-                  key={achievement.id}
-                  achievement={achievement}
-                  earned={earned}
-                  earnedDate={earnedData?.earnedDate}
-                  showUnlockCondition={!earned}
-                />
-              );
-            })}
+            const earned = earnedAchievementIds.includes(achievement.id);
+            const earnedData = achievements.find(
+              (a: AchievementData) => a.id === achievement.id,
+            );
+
+            return (
+              <AchievementCard
+                key={achievement.id}
+                achievement={achievement}
+                earned={earned}
+                earnedDate={earnedData?.earnedDate}
+                showUnlockCondition={!earned}
+              />
+            );
+          })}
         </div>
 
         {!showAllAchievements && earnedCount === 0 && (
@@ -722,7 +779,8 @@ export const CompleteProgressTracker: React.FC = () => {
               Ready to Start Your Journey?
             </h4>
             <p className="text-white/80 mb-6 max-w-md mx-auto">
-              Complete your first lesson to unlock achievements and start building your learning streak!
+              Complete your first lesson to unlock achievements and start
+              building your learning streak!
             </p>
             <div className="flex gap-3 justify-center">
               <button
@@ -734,10 +792,12 @@ export const CompleteProgressTracker: React.FC = () => {
             </div>
           </div>
         )}
-        
+
         {showAllAchievements && filteredAchievements.length === 0 && (
           <div className="text-center py-8">
-            <p className="text-white/60">No achievements match your current filters.</p>
+            <p className="text-white/60">
+              No achievements match your current filters.
+            </p>
           </div>
         )}
       </div>

@@ -1,0 +1,17 @@
+{
+  "id": "graphql-advanced-9",
+  "type": "lesson",
+  "slug": "graphql-advanced-9",
+  "title": "Query Complexity Analysis and Rate Limiting",
+  "versions": [
+    {
+      "version": "1.0.0",
+      "lastUpdated": "2025-11-12T02:37:42.902Z",
+      "changes": [
+        "Initial version import"
+      ],
+      "author": "system",
+      "hash": "-675059ca"
+    }
+  ]
+}

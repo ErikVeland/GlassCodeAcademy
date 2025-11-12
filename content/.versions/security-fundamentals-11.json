@@ -1,0 +1,17 @@
+{
+  "id": "security-fundamentals-11",
+  "type": "lesson",
+  "slug": "security-fundamentals-11",
+  "title": "OAuth2 and OpenID Connect",
+  "versions": [
+    {
+      "version": "1.0.0",
+      "lastUpdated": "2025-11-12T02:37:42.926Z",
+      "changes": [
+        "Initial version import"
+      ],
+      "author": "system",
+      "hash": "1e731b05"
+    }
+  ]
+}

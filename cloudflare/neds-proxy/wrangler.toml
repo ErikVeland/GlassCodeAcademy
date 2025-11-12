@@ -3,6 +3,12 @@ main = "src/index.ts"
 compatibility_date = "2024-10-28"
 workers_dev = true
 
+[vars]
+# Strict CORS production origin
+ALLOWED_ORIGIN = "https://bet.glasscode.academy"
+# Default edge cache TTL in seconds (route-specific overrides apply)
+DEFAULT_TTL = "15"
+
 # Attach routes for production domain
 # These can also be added in the Cloudflare dashboard, but keeping them here
 # helps self-serve deployment via `wrangler deploy`.

@@ -1,0 +1,17 @@
+{
+  "id": "typescript-fundamentals",
+  "type": "quiz",
+  "slug": "typescript-fundamentals",
+  "title": "Quiz for typescript-fundamentals",
+  "versions": [
+    {
+      "version": "1.0.0",
+      "lastUpdated": "2025-11-12T02:37:42.949Z",
+      "changes": [
+        "Initial version import"
+      ],
+      "author": "system",
+      "hash": "-34e8c280"
+    }
+  ]
+}

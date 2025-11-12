@@ -1,0 +1,17 @@
+{
+  "id": "tailwind-advanced-4",
+  "type": "lesson",
+  "slug": "tailwind-advanced-4",
+  "title": "Responsive Design",
+  "versions": [
+    {
+      "version": "1.0.0",
+      "lastUpdated": "2025-11-12T02:37:42.928Z",
+      "changes": [
+        "Initial version import"
+      ],
+      "author": "system",
+      "hash": "46ae2a4c"
+    }
+  ]
+}

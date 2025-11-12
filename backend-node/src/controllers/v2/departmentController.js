@@ -238,7 +238,7 @@ exports.moveDepartment = async (req, res) => {
   } catch (error) {
     console.error('Error moving department:', error);
     const status = error.message.includes('circular') ? 409 : 
-                   error.message.includes('not found') ? 404 : 500;
+      error.message.includes('not found') ? 404 : 500;
     res.status(status).json({
       type: `https://glasscode/errors/${status === 409 ? 'conflict' : status === 404 ? 'not-found' : 'internal-error'}`,
       title: status === 409 ? 'Conflict' : status === 404 ? 'Not Found' : 'Internal Server Error',

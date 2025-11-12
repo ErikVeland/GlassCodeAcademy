@@ -1,0 +1,17 @@
+{
+  "id": "typescript-fundamentals-2",
+  "type": "lesson",
+  "slug": "typescript-fundamentals-2",
+  "title": "Arrays, Tuples, and Enums",
+  "versions": [
+    {
+      "version": "1.1.0",
+      "lastUpdated": "2025-11-12T02:37:42.933Z",
+      "changes": [
+        "Initial version import"
+      ],
+      "author": "system",
+      "hash": "-542b5280"
+    }
+  ]
+}

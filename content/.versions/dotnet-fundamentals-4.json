@@ -1,0 +1,17 @@
+{
+  "id": "dotnet-fundamentals-4",
+  "type": "lesson",
+  "slug": "dotnet-fundamentals-4",
+  "title": "Entity Framework Core for Data Access",
+  "versions": [
+    {
+      "version": "1.0.0",
+      "lastUpdated": "2025-11-12T02:37:42.894Z",
+      "changes": [
+        "Initial version import"
+      ],
+      "author": "system",
+      "hash": "5aed2f91"
+    }
+  ]
+}

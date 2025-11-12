@@ -1,0 +1,17 @@
+{
+  "id": "version-control-1",
+  "type": "lesson",
+  "slug": "version-control-1",
+  "title": "Git Fundamentals and Setup",
+  "versions": [
+    {
+      "version": "1.0.0",
+      "lastUpdated": "2025-11-12T02:37:42.936Z",
+      "changes": [
+        "Initial version import"
+      ],
+      "author": "system",
+      "hash": "76f65ac"
+    }
+  ]
+}

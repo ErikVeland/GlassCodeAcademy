@@ -1,0 +1,17 @@
+{
+  "id": "version-control-9",
+  "type": "lesson",
+  "slug": "version-control-9",
+  "title": "Team Collaboration and Code Review Processes",
+  "versions": [
+    {
+      "version": "1.0.0",
+      "lastUpdated": "2025-11-12T02:37:42.937Z",
+      "changes": [
+        "Initial version import"
+      ],
+      "author": "system",
+      "hash": "e5f044f"
+    }
+  ]
+}

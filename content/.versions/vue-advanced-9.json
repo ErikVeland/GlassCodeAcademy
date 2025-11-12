@@ -1,0 +1,17 @@
+{
+  "id": "vue-advanced-9",
+  "type": "lesson",
+  "slug": "vue-advanced-9",
+  "title": "Performance Optimization",
+  "versions": [
+    {
+      "version": "1.0.0",
+      "lastUpdated": "2025-11-12T02:37:42.939Z",
+      "changes": [
+        "Initial version import"
+      ],
+      "author": "system",
+      "hash": "37e94ccd"
+    }
+  ]
+}

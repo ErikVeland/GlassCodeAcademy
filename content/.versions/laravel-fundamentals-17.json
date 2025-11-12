@@ -1,0 +1,17 @@
+{
+  "id": "laravel-fundamentals-17",
+  "type": "lesson",
+  "slug": "laravel-fundamentals-17",
+  "title": "Advanced Eloquent Relationships",
+  "versions": [
+    {
+      "version": "1.0.0",
+      "lastUpdated": "2025-11-12T02:37:42.906Z",
+      "changes": [
+        "Initial version import"
+      ],
+      "author": "system",
+      "hash": "-1be6db94"
+    }
+  ]
+}

@@ -1,5 +1,5 @@
-import Link from 'next/link';
-import { getApiBaseStrict } from '@/lib/urlUtils';
+import Link from "next/link";
+import { getApiBaseStrict } from "@/lib/urlUtils";
 
 type User = { id: number; name: string; email?: string };
 type Category = { id: number; name: string; slug?: string };
@@ -19,11 +19,22 @@ type Thread = {
   category?: Category;
 };
 
-export const dynamic = 'force-dynamic';
+export const dynamic = "force-dynamic";
 
-async function fetchThread(threadId: string): Promise<{ thread: Thread | null; posts: Post[] }> {
-  const apiBase = (() => { try { return getApiBaseStrict(); } catch { return 'http://127.0.0.1:8080'; } })();
-  const res = await fetch(`${apiBase}/api/forum/threads/${threadId}?page=1&limit=20`, { cache: 'no-store' });
+async function fetchThread(
+  threadId: string,
+): Promise<{ thread: Thread | null; posts: Post[] }> {
+  const apiBase = (() => {
+    try {
+      return getApiBaseStrict();
+    } catch {
+      return "http://127.0.0.1:8080";
+    }
+  })();
+  const res = await fetch(
+    `${apiBase}/api/forum/threads/${threadId}?page=1&limit=20`,
+    { cache: "no-store" },
+  );
   if (!res.ok) return { thread: null, posts: [] };
   const json = await res.json();
   const thread = json?.data?.thread ?? null;
@@ -36,7 +47,11 @@ function PostItem({ post, depth = 0 }: { post: Post; depth?: number }) {
   return (
     <div className="glass-card p-4 mb-3" style={{ marginLeft: depth * 20 }}>
       <div className="text-sm text-muted mb-2">
-        {post.author?.name ? <span>By {post.author.name}</span> : <span>By Member</span>}
+        {post.author?.name ? (
+          <span>By {post.author.name}</span>
+        ) : (
+          <span>By Member</span>
+        )}
         {ts && <span className="ml-3">{new Date(ts).toLocaleString()}</span>}
       </div>
       <div className="text-fg whitespace-pre-wrap">{post.content}</div>
@@ -51,7 +66,11 @@ function PostItem({ post, depth = 0 }: { post: Post; depth?: number }) {
   );
 }
 
-export default async function ThreadPage({ params }: { params: Promise<{ threadId: string }> }) {
+export default async function ThreadPage({
+  params,
+}: {
+  params: Promise<{ threadId: string }>;
+}) {
   const { threadId } = await params;
   const { thread, posts } = await fetchThread(threadId);
 
@@ -62,7 +81,12 @@ export default async function ThreadPage({ params }: { params: Promise<{ threadI
           <div className="glass-card p-6 text-center">
             <p className="text-muted">Thread not found.</p>
             <div className="mt-4 flex gap-3 justify-center">
-              <Link href="/forum" className="px-4 py-2 bg-primary text-primary-fg rounded-lg">Back to Forum</Link>
+              <Link
+                href="/forum"
+                className="px-4 py-2 bg-primary text-primary-fg rounded-lg"
+              >
+                Back to Forum
+              </Link>
             </div>
           </div>
         </div>
@@ -80,7 +104,12 @@ export default async function ThreadPage({ params }: { params: Promise<{ threadI
               <p className="text-muted">Category: {thread.category.name}</p>
             )}
           </div>
-          <Link href={`/forum/category/${thread.category?.id ?? ''}`} className="text-sm px-3 py-2 bg-surface-alt border border-border rounded-md hover:opacity-90">← Back to Threads</Link>
+          <Link
+            href={`/forum/category/${thread.category?.id ?? ""}`}
+            className="text-sm px-3 py-2 bg-surface-alt border border-border rounded-md hover:opacity-90"
+          >
+            ← Back to Threads
+          </Link>
         </div>
 
         {thread.content && (
@@ -92,7 +121,9 @@ export default async function ThreadPage({ params }: { params: Promise<{ threadI
         <h2 className="text-xl font-semibold text-fg mb-3">Replies</h2>
         {posts.length === 0 ? (
           <div className="glass-card p-6 text-center">
-            <p className="text-muted">No replies yet. Be the first to respond!</p>
+            <p className="text-muted">
+              No replies yet. Be the first to respond!
+            </p>
           </div>
         ) : (
           <div>
@@ -103,7 +134,12 @@ export default async function ThreadPage({ params }: { params: Promise<{ threadI
         )}
 
         <div className="text-center mt-10">
-          <Link href="/forum" className="inline-flex items-center px-4 py-2 bg-primary text-primary-fg rounded-lg hover:opacity-90 transition-colors">💬 Back to Forum</Link>
+          <Link
+            href="/forum"
+            className="inline-flex items-center px-4 py-2 bg-primary text-primary-fg rounded-lg hover:opacity-90 transition-colors"
+          >
+            💬 Back to Forum
+          </Link>
         </div>
       </div>
     </div>

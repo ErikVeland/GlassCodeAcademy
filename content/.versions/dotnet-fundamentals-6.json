@@ -1,0 +1,17 @@
+{
+  "id": "dotnet-fundamentals-6",
+  "type": "lesson",
+  "slug": "dotnet-fundamentals-6",
+  "title": "Middleware and Request Pipeline",
+  "versions": [
+    {
+      "version": "1.0.0",
+      "lastUpdated": "2025-11-12T02:37:42.895Z",
+      "changes": [
+        "Initial version import"
+      ],
+      "author": "system",
+      "hash": "-4a89a182"
+    }
+  ]
+}

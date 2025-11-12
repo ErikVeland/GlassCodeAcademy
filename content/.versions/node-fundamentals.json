@@ -1,0 +1,17 @@
+{
+  "id": "node-fundamentals",
+  "type": "quiz",
+  "slug": "node-fundamentals",
+  "title": "Quiz for node-fundamentals",
+  "versions": [
+    {
+      "version": "1.0.0",
+      "lastUpdated": "2025-11-12T02:37:42.946Z",
+      "changes": [
+        "Initial version import"
+      ],
+      "author": "system",
+      "hash": "b90f586"
+    }
+  ]
+}

@@ -31,9 +31,21 @@ export interface AppStats {
 }
 
 // Base type for registry-based results (no loading/error)
-export type BaseStats = Omit<AppStats, 'isLoading' | 'error'>;
+export type BaseStats = Omit<AppStats, "isLoading" | "error">;
 
 // Client-safe registry shapes used by stats
-export interface ModuleRoutes { overview?: string; lessons?: string; quiz?: string }
-export interface RegistryModule { slug: string; title?: string; difficulty?: string; tier?: string; routes?: ModuleRoutes }
-export interface RegistryResponse { modules: RegistryModule[] }
+export interface ModuleRoutes {
+  overview?: string;
+  lessons?: string;
+  quiz?: string;
+}
+export interface RegistryModule {
+  slug: string;
+  title?: string;
+  difficulty?: string;
+  tier?: string;
+  routes?: ModuleRoutes;
+}
+export interface RegistryResponse {
+  modules: RegistryModule[];
+}

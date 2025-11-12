@@ -21,7 +21,7 @@ const cspBase = [
   "form-action 'self'",
   "frame-ancestors 'self'",
   "object-src 'none'",
-  ...(IS_PROD ? ["upgrade-insecure-requests"] : []),
+  ...(IS_PROD ? ["upgrade-insecure-requests", "report-to csp-endpoint"] : []),
 ].join('; ');
 
 const nextConfig: NextConfig = {
@@ -111,6 +111,20 @@ const nextConfig: NextConfig = {
           { key: 'Permissions-Policy', value: 'camera=(), microphone=(), geolocation=(), interest-cohort=(), browsing-topics=()' },
           { key: 'Cross-Origin-Opener-Policy', value: 'same-origin' },
           { key: 'Cross-Origin-Resource-Policy', value: 'same-origin' },
+          ...(IS_PROD
+            ? [
+                {
+                  key: 'Report-To',
+                  value:
+                    '{"group":"csp-endpoint","max_age":10800,"endpoints":[{"url":"/api/csp-report"}]}'
+                },
+                {
+                  key: 'Reporting-Endpoints',
+                  value: 'csp-endpoint="/api/csp-report"'
+                }
+              ]
+            : []
+          ),
           // Enforced CSP (dev allows inline styles/scripts to support Next dev)
           { key: 'Content-Security-Policy', value: cspBase }
         ],

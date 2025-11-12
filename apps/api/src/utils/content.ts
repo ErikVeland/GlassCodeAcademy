@@ -51,7 +51,9 @@ export async function getAllModules(): Promise<Module[]> {
   return registry.modules;
 }
 
-export async function findModuleBySlugOrLegacy(value: string): Promise<Module | null> {
+export async function findModuleBySlugOrLegacy(
+  value: string
+): Promise<Module | null> {
   const modules = await getAllModules();
   const direct = modules.find((m) => m.slug === value);
   if (direct) return direct;
@@ -60,12 +62,20 @@ export async function findModuleBySlugOrLegacy(value: string): Promise<Module | 
 }
 
 export async function getLessonsByModuleSlug(moduleSlug: string): Promise<any> {
-  const lessonsPath = path.join(resolveContentDir(), 'lessons', `${moduleSlug}.json`);
+  const lessonsPath = path.join(
+    resolveContentDir(),
+    'lessons',
+    `${moduleSlug}.json`
+  );
   return await readJson<any>(lessonsPath);
 }
 
 export async function getQuizzesByModuleSlug(moduleSlug: string): Promise<any> {
-  const quizzesPath = path.join(resolveContentDir(), 'quizzes', `${moduleSlug}.json`);
+  const quizzesPath = path.join(
+    resolveContentDir(),
+    'quizzes',
+    `${moduleSlug}.json`
+  );
   return await readJson<any>(quizzesPath);
 }
 
@@ -82,7 +92,9 @@ async function buildLessonIndex(): Promise<Map<string, string>> {
     const full = path.join(lessonsDir, file);
     try {
       const lessonsJson = await readJson<any>(full);
-      const lessons = Array.isArray(lessonsJson) ? lessonsJson : lessonsJson?.lessons || [];
+      const lessons = Array.isArray(lessonsJson)
+        ? lessonsJson
+        : lessonsJson?.lessons || [];
       const moduleSlug = file.replace(/\.json$/, '');
       for (const l of lessons) {
         if (l && l.id !== undefined) {
@@ -97,7 +109,9 @@ async function buildLessonIndex(): Promise<Map<string, string>> {
   return index;
 }
 
-export async function getQuizzesByLessonId(lessonId: number | string): Promise<any | null> {
+export async function getQuizzesByLessonId(
+  lessonId: number | string
+): Promise<any | null> {
   const key = String(lessonId);
   const index = lessonIndexCache || (await buildLessonIndex());
   const moduleSlug = index.get(key);

@@ -1,0 +1,17 @@
+{
+  "id": "security-fundamentals-7",
+  "type": "lesson",
+  "slug": "security-fundamentals-7",
+  "title": "Security Review Processes and Collaboration",
+  "versions": [
+    {
+      "version": "1.1.0",
+      "lastUpdated": "2025-11-12T02:37:42.925Z",
+      "changes": [
+        "Initial version import"
+      ],
+      "author": "system",
+      "hash": "654fff85"
+    }
+  ]
+}

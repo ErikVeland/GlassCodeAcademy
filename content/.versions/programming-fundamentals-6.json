@@ -1,0 +1,17 @@
+{
+  "id": "programming-fundamentals-6",
+  "type": "lesson",
+  "slug": "programming-fundamentals-6",
+  "title": "Objects and Object Methods",
+  "versions": [
+    {
+      "version": "1.0.0",
+      "lastUpdated": "2025-11-12T02:37:42.917Z",
+      "changes": [
+        "Initial version import"
+      ],
+      "author": "system",
+      "hash": "-28e5fd83"
+    }
+  ]
+}

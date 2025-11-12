@@ -1,0 +1,17 @@
+{
+  "id": "graphql-advanced-6",
+  "type": "lesson",
+  "slug": "graphql-advanced-6",
+  "title": "Resolvers and Data Fetching",
+  "versions": [
+    {
+      "version": "1.0.0",
+      "lastUpdated": "2025-11-12T02:37:42.901Z",
+      "changes": [
+        "Initial version import"
+      ],
+      "author": "system",
+      "hash": "-8aad920"
+    }
+  ]
+}

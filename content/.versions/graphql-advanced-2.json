@@ -1,0 +1,17 @@
+{
+  "id": "graphql-advanced-2",
+  "type": "lesson",
+  "slug": "graphql-advanced-2",
+  "title": "Schema Definition Language and Type System",
+  "versions": [
+    {
+      "version": "1.0.0",
+      "lastUpdated": "2025-11-12T02:37:42.900Z",
+      "changes": [
+        "Initial version import"
+      ],
+      "author": "system",
+      "hash": "-5eaa79dc"
+    }
+  ]
+}

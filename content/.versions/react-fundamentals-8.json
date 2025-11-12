@@ -1,0 +1,26 @@
+{
+  "id": "react-fundamentals-8",
+  "type": "lesson",
+  "slug": "react-fundamentals-8",
+  "title": "State Management with MobX",
+  "versions": [
+    {
+      "version": "1.1.0",
+      "lastUpdated": "2025-11-12T02:37:42.920Z",
+      "changes": [
+        "Initial version import"
+      ],
+      "author": "system",
+      "hash": "-32de29"
+    },
+    {
+      "version": "1.1.0",
+      "lastUpdated": "2025-11-12T02:37:42.921Z",
+      "changes": [
+        "Initial version import"
+      ],
+      "author": "system",
+      "hash": "51b3d08f"
+    }
+  ]
+}

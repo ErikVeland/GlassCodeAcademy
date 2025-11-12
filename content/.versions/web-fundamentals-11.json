@@ -1,0 +1,17 @@
+{
+  "id": "web-fundamentals-11",
+  "type": "lesson",
+  "slug": "web-fundamentals-11",
+  "title": "Cross-Browser Compatibility",
+  "versions": [
+    {
+      "version": "1.0.0",
+      "lastUpdated": "2025-11-12T02:37:42.943Z",
+      "changes": [
+        "Initial version import"
+      ],
+      "author": "system",
+      "hash": "6d4ac578"
+    }
+  ]
+}

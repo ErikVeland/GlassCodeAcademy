@@ -1,0 +1,17 @@
+{
+  "id": "node-fundamentals-4",
+  "type": "lesson",
+  "slug": "node-fundamentals-4",
+  "title": "Middleware in Express",
+  "versions": [
+    {
+      "version": "1.0.0",
+      "lastUpdated": "2025-11-12T02:37:42.911Z",
+      "changes": [
+        "Initial version import"
+      ],
+      "author": "system",
+      "hash": "-5bc3ba9d"
+    }
+  ]
+}

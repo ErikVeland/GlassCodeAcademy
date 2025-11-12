@@ -1,0 +1,17 @@
+{
+  "id": "web-fundamentals-4",
+  "type": "lesson",
+  "slug": "web-fundamentals-4",
+  "title": "JavaScript Event Handling",
+  "versions": [
+    {
+      "version": "1.0.0",
+      "lastUpdated": "2025-11-12T02:37:42.941Z",
+      "changes": [
+        "Initial version import"
+      ],
+      "author": "system",
+      "hash": "4e035a68"
+    }
+  ]
+}

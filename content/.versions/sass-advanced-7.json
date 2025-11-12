@@ -1,0 +1,17 @@
+{
+  "id": "sass-advanced-7",
+  "type": "lesson",
+  "slug": "sass-advanced-7",
+  "title": "Inheritance with @extend",
+  "versions": [
+    {
+      "version": "1.0.0",
+      "lastUpdated": "2025-11-12T02:37:42.922Z",
+      "changes": [
+        "Initial version import"
+      ],
+      "author": "system",
+      "hash": "-640c89d6"
+    }
+  ]
+}

@@ -18,14 +18,17 @@ let SERVER_API_BASE: string | undefined;
 export function getGraphQLEndpoint(): string {
   const explicitEndpoint = process.env.GRAPHQL_ENDPOINT?.trim();
   if (explicitEndpoint) return explicitEndpoint;
-  const path = '/graphql';
+  const path = "/graphql";
   // On the server, a relative URL like '/graphql' will throw ERR_INVALID_URL.
   // Derive an absolute URL using API base or public origin.
-  if (typeof window === 'undefined') {
+  if (typeof window === "undefined") {
     // Return cached value if available
     if (SERVER_GRAPHQLEndpoint) return SERVER_GRAPHQLEndpoint;
 
-    const apiBase = process.env.NEXT_PUBLIC_API_BASE?.trim()?.replace(/\/+$/, '');
+    const apiBase = process.env.NEXT_PUBLIC_API_BASE?.trim()?.replace(
+      /\/+$/,
+      "",
+    );
     if (apiBase) {
       SERVER_GRAPHQLEndpoint = `${apiBase}${path}`;
       return SERVER_GRAPHQLEndpoint;
@@ -42,7 +45,9 @@ export function getGraphQLEndpoint(): string {
         return SERVER_GRAPHQLEndpoint;
       } catch {
         // Explicitly signal misconfiguration on server-side usage
-        throw new Error('GraphQL endpoint configuration missing. Set NEXT_PUBLIC_API_BASE or NEXT_PUBLIC_BASE_URL/VERCEL_URL.');
+        throw new Error(
+          "GraphQL endpoint configuration missing. Set NEXT_PUBLIC_API_BASE or NEXT_PUBLIC_BASE_URL/VERCEL_URL.",
+        );
       }
     }
   }
@@ -53,32 +58,39 @@ export function getGraphQLEndpoint(): string {
 
 /** Strictly derive the public origin from env; throws if not configured. */
 export function getPublicOriginStrict(): string {
-  if (typeof window === 'undefined' && SERVER_PUBLIC_ORIGIN) return SERVER_PUBLIC_ORIGIN;
-  const base = (process.env.NEXT_PUBLIC_BASE_URL?.trim() ||
-    (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : '')).replace(/\/+$/, '');
-  if (!base) throw new Error('Base URL not configured. Set NEXT_PUBLIC_BASE_URL or VERCEL_URL.');
-  if (typeof window === 'undefined') SERVER_PUBLIC_ORIGIN = base;
+  if (typeof window === "undefined" && SERVER_PUBLIC_ORIGIN)
+    return SERVER_PUBLIC_ORIGIN;
+  const base = (
+    process.env.NEXT_PUBLIC_BASE_URL?.trim() ||
+    (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : "")
+  ).replace(/\/+$/, "");
+  if (!base)
+    throw new Error(
+      "Base URL not configured. Set NEXT_PUBLIC_BASE_URL or VERCEL_URL.",
+    );
+  if (typeof window === "undefined") SERVER_PUBLIC_ORIGIN = base;
   return base;
 }
 
 /** Strictly derive API base from env; throws if not configured. */
 export function getApiBaseStrict(): string {
-  if (typeof window === 'undefined' && SERVER_API_BASE) return SERVER_API_BASE;
+  if (typeof window === "undefined" && SERVER_API_BASE) return SERVER_API_BASE;
   // Read raw value
-  let base = (process.env.NEXT_PUBLIC_API_BASE || '').trim();
+  let base = (process.env.NEXT_PUBLIC_API_BASE || "").trim();
   // Remove quotes/backticks
-  base = base.replace(/[`'\"]/g, '');
+  base = base.replace(/[`'\"]/g, "");
   // Trim whitespace
   base = base.trim();
   // Strip trailing punctuation (commas, colons, semicolons)
-  base = base.replace(/[,:;]+$/, '');
+  base = base.replace(/[,:;]+$/, "");
   // Remove trailing slashes
-  base = base.replace(/\/+$/, '');
+  base = base.replace(/\/+$/, "");
   // Ensure scheme
   if (base && !/^https?:\/\//.test(base)) {
     base = `https://${base}`;
   }
-  if (!base) throw new Error('API base not configured. Set NEXT_PUBLIC_API_BASE.');
-  if (typeof window === 'undefined') SERVER_API_BASE = base;
+  if (!base)
+    throw new Error("API base not configured. Set NEXT_PUBLIC_API_BASE.");
+  if (typeof window === "undefined") SERVER_API_BASE = base;
   return base;
 }

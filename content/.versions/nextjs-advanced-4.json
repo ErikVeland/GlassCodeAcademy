@@ -1,0 +1,17 @@
+{
+  "id": "nextjs-advanced-4",
+  "type": "lesson",
+  "slug": "nextjs-advanced-4",
+  "title": "Static Site Generation (SSG)",
+  "versions": [
+    {
+      "version": "1.0.0",
+      "lastUpdated": "2025-11-12T02:37:42.908Z",
+      "changes": [
+        "Initial version import"
+      ],
+      "author": "system",
+      "hash": "7b9ebe6b"
+    }
+  ]
+}

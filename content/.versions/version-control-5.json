@@ -1,0 +1,17 @@
+{
+  "id": "version-control-5",
+  "type": "lesson",
+  "slug": "version-control-5",
+  "title": "Advanced Git Commands and Techniques",
+  "versions": [
+    {
+      "version": "1.0.0",
+      "lastUpdated": "2025-11-12T02:37:42.936Z",
+      "changes": [
+        "Initial version import"
+      ],
+      "author": "system",
+      "hash": "-3c358059"
+    }
+  ]
+}

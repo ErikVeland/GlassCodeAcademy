@@ -1,0 +1,17 @@
+{
+  "id": "programming-fundamentals",
+  "type": "quiz",
+  "slug": "programming-fundamentals",
+  "title": "Quiz for programming-fundamentals",
+  "versions": [
+    {
+      "version": "1.0.0",
+      "lastUpdated": "2025-11-12T02:37:42.947Z",
+      "changes": [
+        "Initial version import"
+      ],
+      "author": "system",
+      "hash": "-7e521991"
+    }
+  ]
+}

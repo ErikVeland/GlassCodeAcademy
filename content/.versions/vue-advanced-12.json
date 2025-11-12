@@ -1,0 +1,17 @@
+{
+  "id": "vue-advanced-12",
+  "type": "lesson",
+  "slug": "vue-advanced-12",
+  "title": "Custom Directives and Plugins",
+  "versions": [
+    {
+      "version": "1.0.0",
+      "lastUpdated": "2025-11-12T02:37:42.939Z",
+      "changes": [
+        "Initial version import"
+      ],
+      "author": "system",
+      "hash": "49a5d7d1"
+    }
+  ]
+}

@@ -1,0 +1,17 @@
+{
+  "id": "testing-fundamentals-4",
+  "type": "lesson",
+  "slug": "testing-fundamentals-4",
+  "title": "Mocking and Test Doubles",
+  "versions": [
+    {
+      "version": "1.0.0",
+      "lastUpdated": "2025-11-12T02:37:42.931Z",
+      "changes": [
+        "Initial version import"
+      ],
+      "author": "system",
+      "hash": "cbc131b"
+    }
+  ]
+}

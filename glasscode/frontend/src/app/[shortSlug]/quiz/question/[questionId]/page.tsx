@@ -1,38 +1,55 @@
 "use client";
 
-import { useState, useEffect } from 'react';
-import type { ProgrammingQuestion } from '@/lib/contentRegistry';
-import { notFound, useRouter } from 'next/navigation';
-import Link from 'next/link';
+import { useState, useEffect } from "react";
+import type { ProgrammingQuestion } from "@/lib/contentRegistry";
+import { notFound, useRouter } from "next/navigation";
+import Link from "next/link";
 
 // For client components in Next.js 15, params are still Promises that need to be awaited
-export default function QuizQuestionPage({ params }: { params: Promise<{ shortSlug: string; questionId: string }> }) {
+export default function QuizQuestionPage({
+  params,
+}: {
+  params: Promise<{ shortSlug: string; questionId: string }>;
+}) {
   const renderInlineCode = (text: string) => {
     // Split by backticked segments while preserving them
-    const parts = String(text).split(/(`[^`]+`)/g).filter(p => p.length > 0);
+    const parts = String(text)
+      .split(/(`[^`]+`)/g)
+      .filter((p) => p.length > 0);
     // Merge adjacent code parts into a single code element for readability
-    const merged: Array<{ type: 'code' | 'text'; value: string }> = [];
+    const merged: Array<{ type: "code" | "text"; value: string }> = [];
     for (const part of parts) {
       const codeMatch = part.match(/^`([^`]+)`$/);
       if (codeMatch) {
         const val = codeMatch[1];
         const last = merged[merged.length - 1];
-        if (last && last.type === 'code') {
+        if (last && last.type === "code") {
           last.value += ` ${val}`;
         } else {
-          merged.push({ type: 'code', value: val });
+          merged.push({ type: "code", value: val });
         }
       } else {
-        merged.push({ type: 'text', value: part });
+        merged.push({ type: "text", value: part });
       }
     }
-    return merged.map((seg, i) => (seg.type === 'code' ? <code key={i}>{seg.value}</code> : <span key={i}>{seg.value}</span>));
+    return merged.map((seg, i) =>
+      seg.type === "code" ? (
+        <code key={i}>{seg.value}</code>
+      ) : (
+        <span key={i}>{seg.value}</span>
+      ),
+    );
   };
   const router = useRouter();
-  const [resolvedParams, setResolvedParams] = useState<{ shortSlug: string; questionId: string } | null>(null);
-  const [questionData, setQuestionData] = useState<ProgrammingQuestion | null>(null);
+  const [resolvedParams, setResolvedParams] = useState<{
+    shortSlug: string;
+    questionId: string;
+  } | null>(null);
+  const [questionData, setQuestionData] = useState<ProgrammingQuestion | null>(
+    null,
+  );
   const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
-  const [enteredText, setEnteredText] = useState<string>('');
+  const [enteredText, setEnteredText] = useState<string>("");
   const [showExplanation, setShowExplanation] = useState(false);
   const [isCorrect, setIsCorrect] = useState<boolean | null>(null);
   const [loading, setLoading] = useState(true);
@@ -47,7 +64,11 @@ export default function QuizQuestionPage({ params }: { params: Promise<{ shortSl
     timeLimit: number;
     startedAt: number;
     startTime?: number;
-    answers: ({ selectedIndex?: number; enteredText?: string; correct: boolean } | null)[];
+    answers: ({
+      selectedIndex?: number;
+      enteredText?: string;
+      correct: boolean;
+    } | null)[];
   }
 
   // Resolve the params promise
@@ -61,27 +82,38 @@ export default function QuizQuestionPage({ params }: { params: Promise<{ shortSl
 
         // Load quiz session
         const sessionKey = `quizSession:${shortSlug}`;
-        const raw = typeof window !== 'undefined' ? sessionStorage.getItem(sessionKey) : null;
+        const raw =
+          typeof window !== "undefined"
+            ? sessionStorage.getItem(sessionKey)
+            : null;
         if (!raw) {
           setLoading(false);
           notFound();
           return;
         }
         const session = JSON.parse(raw) as QuizSession;
-        
+
         // DEBUG: Log session data
-        console.log('Quiz Question Page Debug:', {
+        console.log("Quiz Question Page Debug:", {
           sessionKey,
           sessionExists: !!session,
           questionsCount: session?.questions?.length ?? 0,
           questionIndex,
           questionId,
-          sessionQuestions: session?.questions?.map(q => ({ id: q.id, question: q.question?.substring(0, 50) + '...' })) ?? []
+          sessionQuestions:
+            session?.questions?.map((q) => ({
+              id: q.id,
+              question: q.question?.substring(0, 50) + "...",
+            })) ?? [],
         });
-        
+
         const total = session?.questions?.length ?? 0;
         setTotalQuestions(total);
-        if (isNaN(questionIndex) || questionIndex < 0 || questionIndex >= total) {
+        if (
+          isNaN(questionIndex) ||
+          questionIndex < 0 ||
+          questionIndex >= total
+        ) {
           // End of quiz or invalid index
           router.push(`/${shortSlug}/quiz/results`);
           return;
@@ -89,17 +121,17 @@ export default function QuizQuestionPage({ params }: { params: Promise<{ shortSl
         const q = session.questions[questionIndex];
         setQuestionData(q);
         // Setup countdown timer
-        const started = (session.startedAt ?? session.startTime ?? Date.now());
+        const started = session.startedAt ?? session.startTime ?? Date.now();
         const endAt = started + (session.timeLimit || 0) * 60 * 1000;
         setQuizEndAt(endAt);
         setRemainingMs(Math.max(0, endAt - Date.now()));
         // Restore previous selection if exists
         const prev = session.answers?.[questionIndex] ?? null;
         if (prev) {
-          if (typeof prev.selectedIndex === 'number') {
+          if (typeof prev.selectedIndex === "number") {
             setSelectedAnswer(prev.selectedIndex);
           }
-          if (typeof prev.enteredText === 'string') {
+          if (typeof prev.enteredText === "string") {
             setEnteredText(prev.enteredText);
           }
           setIsCorrect(prev.correct);
@@ -107,7 +139,7 @@ export default function QuizQuestionPage({ params }: { params: Promise<{ shortSl
         }
         setLoading(false);
       } catch (error) {
-        console.error('Error resolving params:', error);
+        console.error("Error resolving params:", error);
         notFound();
       }
     };
@@ -140,10 +172,16 @@ export default function QuizQuestionPage({ params }: { params: Promise<{ shortSl
     if (!questionData || !resolvedParams) return;
     let correct = false;
 
-    const isOpenEnded = (questionData.type === 'open-ended') || ((questionData.acceptedAnswers ?? []).length > 0);
+    const isOpenEnded =
+      questionData.type === "open-ended" ||
+      (questionData.acceptedAnswers ?? []).length > 0;
     if (isOpenEnded) {
-      const accepted = (questionData.acceptedAnswers ?? []).map((a: string) => String(a).trim().toLowerCase());
-      const candidate = String(enteredText || '').trim().toLowerCase();
+      const accepted = (questionData.acceptedAnswers ?? []).map((a: string) =>
+        String(a).trim().toLowerCase(),
+      );
+      const candidate = String(enteredText || "")
+        .trim()
+        .toLowerCase();
       correct = candidate.length > 0 && accepted.includes(candidate);
     } else {
       if (selectedAnswer === null) return; // must select
@@ -166,7 +204,7 @@ export default function QuizQuestionPage({ params }: { params: Promise<{ shortSl
       session.answers[qIndex] = payload;
       sessionStorage.setItem(sessionKey, JSON.stringify(session));
     } catch (e) {
-      console.error('Failed to save answer', e);
+      console.error("Failed to save answer", e);
     }
   };
 
@@ -186,10 +224,10 @@ export default function QuizQuestionPage({ params }: { params: Promise<{ shortSl
 
   const handlePreviousQuestion = () => {
     if (!resolvedParams) return;
-    
+
     const { shortSlug, questionId } = resolvedParams;
     const questionIndex = parseInt(questionId) - 1;
-    
+
     if (questionIndex > 0) {
       router.push(`/${shortSlug}/quiz/question/${questionIndex}`);
     }
@@ -226,20 +264,24 @@ export default function QuizQuestionPage({ params }: { params: Promise<{ shortSl
           </li>
           <li className="text-muted">/</li>
           <li>
-            <Link href={`/${shortSlug}`} className="text-primary hover:opacity-90">
+            <Link
+              href={`/${shortSlug}`}
+              className="text-primary hover:opacity-90"
+            >
               Module
             </Link>
           </li>
           <li className="text-muted">/</li>
           <li>
-            <Link href={`/${shortSlug}/quiz`} className="text-primary hover:opacity-90">
+            <Link
+              href={`/${shortSlug}/quiz`}
+              className="text-primary hover:opacity-90"
+            >
               Quiz
             </Link>
           </li>
           <li className="text-muted">/</li>
-          <li className="text-fg font-medium">
-            Question {questionId}
-          </li>
+          <li className="text-fg font-medium">Question {questionId}</li>
         </ol>
       </nav>
 
@@ -251,16 +293,19 @@ export default function QuizQuestionPage({ params }: { params: Promise<{ shortSl
               Question {questionId} of {totalQuestions}
             </span>
             <span className="text-sm text-muted">
-              {Math.round((questionIndex / (totalQuestions || 1)) * 100)}% Complete
+              {Math.round((questionIndex / (totalQuestions || 1)) * 100)}%
+              Complete
             </span>
             <span className="text-sm font-medium text-fg">
-              Time Left: {new Date(remainingMs).toISOString().substring(14,19)}
+              Time Left: {new Date(remainingMs).toISOString().substring(14, 19)}
             </span>
           </div>
           <div className="w-full bg-surface-alt rounded-full h-2">
-            <div 
-              className="bg-primary h-2 rounded-full" 
-              style={{ width: `${((questionIndex + 1) / (totalQuestions || 1)) * 100}%` }}
+            <div
+              className="bg-primary h-2 rounded-full"
+              style={{
+                width: `${((questionIndex + 1) / (totalQuestions || 1)) * 100}%`,
+              }}
             ></div>
           </div>
         </div>
@@ -273,9 +318,9 @@ export default function QuizQuestionPage({ params }: { params: Promise<{ shortSl
             {questionId}
           </span>
           <h1 className="text-xl font-semibold text-fg">
-            {questionData.type === 'multiple-choice' && 'Multiple Choice'}
-            {questionData.type === 'true-false' && 'True or False'}
-            {questionData.type === 'scenario' && 'Scenario-Based'}
+            {questionData.type === "multiple-choice" && "Multiple Choice"}
+            {questionData.type === "true-false" && "True or False"}
+            {questionData.type === "scenario" && "Scenario-Based"}
           </h1>
         </div>
 
@@ -286,7 +331,8 @@ export default function QuizQuestionPage({ params }: { params: Promise<{ shortSl
         </div>
 
         {/* Answer Input */}
-        {((questionData.type === 'open-ended') || ((questionData.acceptedAnswers ?? []).length > 0)) ? (
+        {questionData.type === "open-ended" ||
+        (questionData.acceptedAnswers ?? []).length > 0 ? (
           <div className="mb-8">
             <label className="block text-sm font-medium text-muted mb-2">
               Your Answer
@@ -294,62 +340,81 @@ export default function QuizQuestionPage({ params }: { params: Promise<{ shortSl
             <input
               type="text"
               value={enteredText}
-              onChange={(e) => !showExplanation && setEnteredText(e.target.value)}
+              onChange={(e) =>
+                !showExplanation && setEnteredText(e.target.value)
+              }
               className="w-full px-4 py-2 rounded-lg border border-border bg-surface text-fg"
               placeholder="Type your answer"
             />
           </div>
         ) : (
           <div className="space-y-3 mb-8">
-            {(questionData.choices ?? []).map((choice: string, index: number) => {
-              const isSelected = selectedAnswer === index;
-              const isCorrectAnswer = index === questionData.correctAnswer;
-              const baseClasses = 'radio-option';
-              const stateClass = showExplanation
-                ? (isCorrectAnswer ? ' is-correct' : (isSelected && !isCorrectAnswer ? ' is-incorrect' : ''))
-                : (isSelected ? ' is-selected' : '');
-              const showLetters = (questionData as { choiceLabels?: 'letters' | 'none' }).choiceLabels === 'letters';
-              const letter = String.fromCharCode(65 + index);
-              return (
-                <label key={index} className={baseClasses + stateClass}>
-                  <input
-                    type="radio"
-                    name="answer"
-                    className="sweet-radio-input"
-                    checked={selectedAnswer === index}
-                    onChange={() => !showExplanation && handleAnswerSelect(index)}
-                    aria-checked={selectedAnswer === index}
-                  />
-                  <span className="sweet-radio-visual" aria-hidden="true" />
-                  <span className="radio-text">
-                    {showLetters && (
-                      <span className="mr-2 inline-block font-semibold text-muted" aria-hidden="true">
-                        {letter}.
-                      </span>
-                    )}
-                    {renderInlineCode(choice)}
-                  </span>
-                </label>
-              );
-            })}
+            {(questionData.choices ?? []).map(
+              (choice: string, index: number) => {
+                const isSelected = selectedAnswer === index;
+                const isCorrectAnswer = index === questionData.correctAnswer;
+                const baseClasses = "radio-option";
+                const stateClass = showExplanation
+                  ? isCorrectAnswer
+                    ? " is-correct"
+                    : isSelected && !isCorrectAnswer
+                      ? " is-incorrect"
+                      : ""
+                  : isSelected
+                    ? " is-selected"
+                    : "";
+                const showLetters =
+                  (questionData as { choiceLabels?: "letters" | "none" })
+                    .choiceLabels === "letters";
+                const letter = String.fromCharCode(65 + index);
+                return (
+                  <label key={index} className={baseClasses + stateClass}>
+                    <input
+                      type="radio"
+                      name="answer"
+                      className="sweet-radio-input"
+                      checked={selectedAnswer === index}
+                      onChange={() =>
+                        !showExplanation && handleAnswerSelect(index)
+                      }
+                      aria-checked={selectedAnswer === index}
+                    />
+                    <span className="sweet-radio-visual" aria-hidden="true" />
+                    <span className="radio-text">
+                      {showLetters && (
+                        <span
+                          className="mr-2 inline-block font-semibold text-muted"
+                          aria-hidden="true"
+                        >
+                          {letter}.
+                        </span>
+                      )}
+                      {renderInlineCode(choice)}
+                    </span>
+                  </label>
+                );
+              },
+            )}
           </div>
         )}
 
         {/* Explanation */}
         {showExplanation && (
-          <div className={`p-4 rounded-lg mb-6 bg-surface-alt border border-border`}>
+          <div
+            className={`p-4 rounded-lg mb-6 bg-surface-alt border border-border`}
+          >
             <div className="flex items-start gap-3">
-              <span className="text-xl">
-                {isCorrect ? "✅" : "❌"}
-              </span>
+              <span className="text-xl">{isCorrect ? "✅" : "❌"}</span>
               <div>
-                <h3 className={`font-semibold ${
-                  isCorrect ? "text-primary" : "text-danger"
-                }`}>
+                <h3
+                  className={`font-semibold ${
+                    isCorrect ? "text-primary" : "text-danger"
+                  }`}
+                >
                   {isCorrect ? "Correct!" : "Incorrect"}
                 </h3>
                 <p className="text-muted mt-2">
-                  {renderInlineCode(questionData.explanation || '')}
+                  {renderInlineCode(questionData.explanation || "")}
                 </p>
               </div>
             </div>
@@ -369,7 +434,7 @@ export default function QuizQuestionPage({ params }: { params: Promise<{ shortSl
               </button>
             )}
           </div>
-          
+
           <div className="flex gap-4">
             {!showExplanation ? (
               <button
@@ -389,7 +454,9 @@ export default function QuizQuestionPage({ params }: { params: Promise<{ shortSl
                 onClick={handleNextQuestion}
                 className="px-6 py-2 bg-primary text-primary-fg rounded-lg hover:opacity-90 transition-colors flex items-center"
               >
-                {questionIndex < totalQuestions - 1 ? "Next Question" : "View Results"}
+                {questionIndex < totalQuestions - 1
+                  ? "Next Question"
+                  : "View Results"}
                 <span className="ml-2">→</span>
               </button>
             )}

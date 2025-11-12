@@ -1,0 +1,17 @@
+{
+  "id": "version-control-8",
+  "type": "lesson",
+  "slug": "version-control-8",
+  "title": "Git Internals and Performance Optimization",
+  "versions": [
+    {
+      "version": "1.0.0",
+      "lastUpdated": "2025-11-12T02:37:42.937Z",
+      "changes": [
+        "Initial version import"
+      ],
+      "author": "system",
+      "hash": "7b158d75"
+    }
+  ]
+}

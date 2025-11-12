@@ -1,0 +1,17 @@
+{
+  "id": "laravel-fundamentals-14",
+  "type": "lesson",
+  "slug": "laravel-fundamentals-14",
+  "title": "Eloquent Relationships",
+  "versions": [
+    {
+      "version": "1.0.0",
+      "lastUpdated": "2025-11-12T02:37:42.905Z",
+      "changes": [
+        "Initial version import"
+      ],
+      "author": "system",
+      "hash": "-13e09f5f"
+    }
+  ]
+}

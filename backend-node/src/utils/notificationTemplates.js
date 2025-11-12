@@ -42,9 +42,9 @@ function lessonCompletionTemplate(data) {
     subject: `Lesson Completed: ${lessonTitle}`,
     text: `Hi ${userName},
 
-Congratulations on completing "${lessonTitle}" in "${courseTitle}"!
+Congratulations on completing '${lessonTitle}' in '${courseTitle}'!
 
-${nextLessonTitle ? `Continue your learning journey with "${nextLessonTitle}".` : "Check out what's next in your course."}
+${nextLessonTitle ? `Continue your learning journey with '${nextLessonTitle}'.` : "Check out what's next in your course."}
 
 Keep up the great work!
 
@@ -52,8 +52,8 @@ Best regards,
 The GlassCode Academy Team`,
     html: `<h1>Lesson Completed!</h1>
 <p>Hi ${userName},</p>
-<p>Congratulations on completing <strong>"${lessonTitle}"</strong> in <strong>"${courseTitle}"</strong>!</p>
-${nextLessonTitle ? `<p>Continue your learning journey with <strong>"${nextLessonTitle}"</strong>.</p>` : "<p>Check out what's next in your course.</p>"}
+<p>Congratulations on completing <strong>'${lessonTitle}'</strong> in <strong>'${courseTitle}'</strong>!</p>
+${nextLessonTitle ? `<p>Continue your learning journey with <strong>'${nextLessonTitle}'</strong>.</p>` : "<p>Check out what's next in your course.</p>"}
 <p>Keep up the great work!</p>
 <p>Best regards,<br/>
 The GlassCode Academy Team</p>`,
@@ -77,7 +77,7 @@ function quizResultTemplate(data) {
     subject: `Quiz Result: ${quizTitle}`,
     text: `Hi ${userName},
 
-You ${resultText} the quiz "${quizTitle}" in "${courseTitle}" with a score of ${score}%.
+You ${resultText} the quiz '${quizTitle}' in '${courseTitle}' with a score of ${score}%.
 
 ${encouragement}
 
@@ -87,7 +87,7 @@ Best regards,
 The GlassCode Academy Team`,
     html: `<h1>Quiz Result</h1>
 <p>Hi ${userName},</p>
-<p>You <strong>${resultText}</strong> the quiz <strong>"${quizTitle}"</strong> in <strong>"${courseTitle}"</strong> with a score of <strong>${score}%</strong>.</p>
+<p>You <strong>${resultText}</strong> the quiz <strong>'${quizTitle}'</strong> in <strong>'${courseTitle}'</strong> with a score of <strong>${score}%</strong>.</p>
 <p>${encouragement}</p>
 <p>View your full results in your dashboard.</p>
 <p>Best regards,<br/>
@@ -107,7 +107,7 @@ function newCourseTemplate(data) {
     subject: `New Course Available: ${courseTitle}`,
     text: `Hi ${userName},
 
-We're excited to announce a new course: "${courseTitle}"!
+We're excited to announce a new course: '${courseTitle}'!
 
 ${courseDescription}
 
@@ -117,9 +117,9 @@ Best regards,
 The GlassCode Academy Team`,
     html: `<h1>New Course Available!</h1>
 <p>Hi ${userName},</p>
-<p>We're excited to announce a new course: <strong>"${courseTitle}"</strong>!</p>
+<p>We're excited to announce a new course: <strong>'${courseTitle}'</strong>!</p>
 <p>${courseDescription}</p>
-<p><a href="/courses">Enroll now</a> and start learning today.</p>
+<p><a href='/courses'>Enroll now</a> and start learning today.</p>
 <p>Best regards,<br/>
 The GlassCode Academy Team</p>`,
   };
@@ -137,7 +137,7 @@ function certificateEarnedTemplate(data) {
     subject: `Certificate Earned: ${courseTitle}`,
     text: `Hi ${userName},
 
-Congratulations! You've earned a certificate for completing "${courseTitle}".
+Congratulations! You've earned a certificate for completing '${courseTitle}'.
 
 View and download your certificate from your dashboard.
 
@@ -147,8 +147,8 @@ Best regards,
 The GlassCode Academy Team`,
     html: `<h1>Certificate Earned!</h1>
 <p>Hi ${userName},</p>
-<p>Congratulations! You've earned a certificate for completing <strong>"${courseTitle}"</strong>.</p>
-<p><a href="/dashboard/certificates/${certificateId}">View and download your certificate</a> from your dashboard.</p>
+<p>Congratulations! You've earned a certificate for completing <strong>'${courseTitle}'</strong>.</p>
+<p><a href='/dashboard/certificates/${certificateId}'>View and download your certificate</a> from your dashboard.</p>
 <p>Congratulations on your achievement!</p>
 <p>Best regards,<br/>
 The GlassCode Academy Team</p>`,
@@ -167,9 +167,9 @@ function forumReplyTemplate(data) {
     subject: `New Reply to Your Post: ${postTitle}`,
     text: `Hi ${userName},
 
-${replierName} replied to your post "${postTitle}":
+${replierName} replied to your post '${postTitle}':
 
-"${replyContent}"
+'${replyContent}'
 
 View the full discussion in the forum.
 
@@ -177,9 +177,9 @@ Best regards,
 The GlassCode Academy Team`,
     html: `<h1>New Reply to Your Post</h1>
 <p>Hi ${userName},</p>
-<p><strong>${replierName}</strong> replied to your post <strong>"${postTitle}"</strong>:</p>
-<blockquote>"${replyContent}"</blockquote>
-<p><a href="/forum/posts">View the full discussion</a> in the forum.</p>
+<p><strong>${replierName}</strong> replied to your post <strong>'${postTitle}'</strong>:</p>
+<blockquote>'${replyContent}'</blockquote>
+<p><a href='/forum/posts'>View the full discussion</a> in the forum.</p>
 <p>Best regards,<br/>
 The GlassCode Academy Team</p>`,
   };

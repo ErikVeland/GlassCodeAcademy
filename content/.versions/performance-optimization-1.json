@@ -1,0 +1,17 @@
+{
+  "id": "performance-optimization-1",
+  "type": "lesson",
+  "slug": "performance-optimization-1",
+  "title": "Performance Fundamentals and Profiling",
+  "versions": [
+    {
+      "version": "1.0.0",
+      "lastUpdated": "2025-11-12T02:37:42.914Z",
+      "changes": [
+        "Initial version import"
+      ],
+      "author": "system",
+      "hash": "-1649dc57"
+    }
+  ]
+}

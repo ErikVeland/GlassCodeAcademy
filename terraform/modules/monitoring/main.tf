@@ -60,6 +60,18 @@ variable "grafana_admin_password" {
   default     = "admin"
 }
 
+variable "prometheus_admin_password" {
+  description = "Admin password for Prometheus basic auth"
+  type        = string
+  sensitive   = true
+}
+
+variable "jaeger_admin_password" {
+  description = "Admin password for Jaeger basic auth"
+  type        = string
+  sensitive   = true
+}
+
 output "prometheus_endpoint" {
   description = "Endpoint of the Prometheus server"
   value       = "http://prometheus-server.${var.prometheus_namespace}.svc.cluster.local"
@@ -99,7 +111,7 @@ resource "kubernetes_secret" "prometheus_basic_auth" {
   }
 
   data = {
-    auth = "admin:${bcrypt("prometheus-secret-password")}"
+    auth = "admin:${bcrypt(var.prometheus_admin_password)}"
   }
 
   type = "Opaque"
@@ -115,7 +127,7 @@ resource "kubernetes_secret" "jaeger_basic_auth" {
   }
 
   data = {
-    auth = "admin:${bcrypt("jaeger-secret-password")}"
+    auth = "admin:${bcrypt(var.jaeger_admin_password)}"
   }
 
   type = "Opaque"

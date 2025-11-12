@@ -1,0 +1,17 @@
+{
+  "id": "web-fundamentals-7",
+  "type": "lesson",
+  "slug": "web-fundamentals-7",
+  "title": "CSS Preprocessors",
+  "versions": [
+    {
+      "version": "1.0.0",
+      "lastUpdated": "2025-11-12T02:37:42.942Z",
+      "changes": [
+        "Initial version import"
+      ],
+      "author": "system",
+      "hash": "-11390fae"
+    }
+  ]
+}

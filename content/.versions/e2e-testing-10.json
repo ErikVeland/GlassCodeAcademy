@@ -1,0 +1,17 @@
+{
+  "id": "e2e-testing-10",
+  "type": "lesson",
+  "slug": "e2e-testing-10",
+  "title": "Advanced Testing Patterns and Best Practices",
+  "versions": [
+    {
+      "version": "1.0.0",
+      "lastUpdated": "2025-11-12T02:37:42.899Z",
+      "changes": [
+        "Initial version import"
+      ],
+      "author": "system",
+      "hash": "54554ffe"
+    }
+  ]
+}

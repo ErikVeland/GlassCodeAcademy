@@ -3,7 +3,9 @@ const { Client } = require('pg');
 const table = process.argv[2] || 'lesson_quizzes';
 
 (async () => {
-  const conn = process.env.DATABASE_URL || 'postgresql://postgres:postgres@localhost:5432/glasscode_dev';
+  const conn =
+    process.env.DATABASE_URL ||
+    'postgresql://postgres:postgres@localhost:5432/glasscode_dev';
   const client = new Client({ connectionString: conn });
   await client.connect();
   const res = await client.query(

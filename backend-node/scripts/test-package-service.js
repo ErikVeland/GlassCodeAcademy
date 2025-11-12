@@ -135,8 +135,12 @@ async function testContentPackageService() {
     });
     console.log(`✅ Package created: ${packageMeta.packageId}`);
     console.log(`   Format version: ${packageMeta.formatVersion}`);
-    console.log(`   Archive size: ${Math.round(packageMeta.archive.size / 1024)}KB`);
-    console.log(`   Archive checksum: ${packageMeta.archive.checksum.substring(0, 16)}...`);
+    console.log(
+      `   Archive size: ${Math.round(packageMeta.archive.size / 1024)}KB`
+    );
+    console.log(
+      `   Archive checksum: ${packageMeta.archive.checksum.substring(0, 16)}...`
+    );
 
     // Test 3: Verify package metadata
     console.log('\nTest 3: Verifying package metadata...');
@@ -144,7 +148,9 @@ async function testContentPackageService() {
       console.log('✅ Package metadata is complete');
       console.log(`   Package ID: ${packageMeta.packageId}`);
       console.log(`   Academy: ${packageMeta.academy.name}`);
-      console.log(`   Content: ${packageMeta.content.courses} courses, ${packageMeta.content.modules} modules`);
+      console.log(
+        `   Content: ${packageMeta.content.courses} courses, ${packageMeta.content.modules} modules`
+      );
     } else {
       console.log('❌ Package metadata is incomplete');
       return;
@@ -152,11 +158,20 @@ async function testContentPackageService() {
 
     // Test 4: Extract package
     console.log('\nTest 4: Extracting package...');
-    const extractDir = path.join(__dirname, '../packages', `${packageMeta.packageId}-extracted`);
-    const extractedMeta = await service.extractPackage(packageMeta.archive.path, extractDir);
+    const extractDir = path.join(
+      __dirname,
+      '../packages',
+      `${packageMeta.packageId}-extracted`
+    );
+    const extractedMeta = await service.extractPackage(
+      packageMeta.archive.path,
+      extractDir
+    );
     console.log('✅ Package extracted successfully');
     console.log(`   Extracted to: ${extractDir}`);
-    console.log(`   Metadata matches: ${extractedMeta.packageId === packageMeta.packageId}`);
+    console.log(
+      `   Metadata matches: ${extractedMeta.packageId === packageMeta.packageId}`
+    );
 
     // Test 5: Verify extracted package integrity
     console.log('\nTest 5: Verifying package integrity...');
@@ -183,7 +198,10 @@ async function testContentPackageService() {
     const invalidData = { ...sampleExportData };
     delete invalidData.academy.name;
     const invalidValidation = service.validateExportData(invalidData);
-    if (!invalidValidation.valid && invalidValidation.errors.includes('Missing academy.name')) {
+    if (
+      !invalidValidation.valid &&
+      invalidValidation.errors.includes('Missing academy.name')
+    ) {
       console.log('✅ Invalid data correctly rejected');
     } else {
       console.log('❌ Invalid data not properly handled');
@@ -194,7 +212,10 @@ async function testContentPackageService() {
     const tamperedData = { ...sampleExportData };
     tamperedData.exportMetadata.checksum = 'invalid-checksum';
     const checksumValidation = service.validateExportData(tamperedData);
-    if (!checksumValidation.valid && checksumValidation.errors.some((e) => e.includes('Checksum mismatch'))) {
+    if (
+      !checksumValidation.valid &&
+      checksumValidation.errors.some((e) => e.includes('Checksum mismatch'))
+    ) {
       console.log('✅ Checksum mismatch correctly detected');
     } else {
       console.log('❌ Checksum mismatch not detected');
@@ -204,7 +225,10 @@ async function testContentPackageService() {
     console.log('\nTest 9: Testing checksum calculation...');
     const checksum1 = service.calculateDataChecksum(sampleExportData);
     const checksum2 = service.calculateDataChecksum(sampleExportData);
-    if (checksum1 === checksum2 && checksum1 === sampleExportData.exportMetadata.checksum) {
+    if (
+      checksum1 === checksum2 &&
+      checksum1 === sampleExportData.exportMetadata.checksum
+    ) {
       console.log('✅ Checksum calculation is deterministic and correct');
       console.log(`   Checksum: ${checksum1.substring(0, 32)}...`);
     } else {
@@ -234,14 +258,17 @@ async function testContentPackageService() {
     }
 
     // Delete extracted directory
-    const extractDir2 = path.join(__dirname, '../packages', `${packageMeta.packageId}-extracted`);
+    const extractDir2 = path.join(
+      __dirname,
+      '../packages',
+      `${packageMeta.packageId}-extracted`
+    );
     try {
       await fs.rm(extractDir2, { recursive: true, force: true });
       console.log('✅ Extracted files cleaned up\n');
     } catch {
       // Ignore
     }
-
   } catch (error) {
     console.error('❌ Error testing Content Package Service:', error.message);
     console.error(error.stack);

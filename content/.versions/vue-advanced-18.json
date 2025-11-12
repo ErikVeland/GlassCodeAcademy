@@ -1,0 +1,17 @@
+{
+  "id": "vue-advanced-18",
+  "type": "lesson",
+  "slug": "vue-advanced-18",
+  "title": "Advanced Testing Strategies",
+  "versions": [
+    {
+      "version": "1.0.0",
+      "lastUpdated": "2025-11-12T02:37:42.940Z",
+      "changes": [
+        "Initial version import"
+      ],
+      "author": "system",
+      "hash": "26578b0f"
+    }
+  ]
+}

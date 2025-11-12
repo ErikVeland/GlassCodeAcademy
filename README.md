@@ -55,6 +55,29 @@ For current project status, see [PROJECT_STATUS_SUMMARY.md](docs/PROJECT_STATUS_
 ### Documentation
 - See `docs/INDEX.md` for a curated entry point that links to the architecture, tech stack, testing instructions, and service READMEs.
 
+### Local Development & Verification
+
+- Backend (apps/api):
+  - `cd apps/api && npm ci && npm test && npm run lint`
+  - Health scripts: `node scripts/check-db.js`, `node scripts/check-quizzes.js`
+- Frontend (glasscode/frontend):
+  - `cd glasscode/frontend && npm ci && npm run typecheck && npm run lint && npm run build`
+  - Start (standalone build): `PORT=3000 NEXT_PUBLIC_API_BASE=http://localhost:8081 node .next/standalone/server.js`
+- Docker Compose (dev):
+  - `docker compose up -d` to start `api`, `frontend`, `postgres`, and `redis`
+  - Frontend in Compose uses `NEXT_PUBLIC_API_BASE=http://api:8081`
+- Services and Ports:
+  - Frontend: `http://localhost:3000`
+  - API: `http://localhost:8081`
+  - PostgreSQL: `localhost:5432` (`postgres`/`postgres`)
+  - Redis: `localhost:6379`
+- Observability (optional):
+  - See `apps/api/docker-compose.yml` for Grafana, Prometheus, Jaeger; Grafana defaults to `http://localhost:3005`
+
+Notes:
+- In dev, NextAuth may log a client fetch error if `NEXTAUTH_URL`/`NEXTAUTH_SECRET` are unset; set `.env.local` for full auth.
+- Terraform operations require AWS credentials; export an `AWS_PROFILE` or set `AWS_ACCESS_KEY_ID`/`AWS_SECRET_ACCESS_KEY`.
+
 ## System Architecture
 
 The application follows a modern full-stack architecture with a Next.js frontend and Node.js/Fastify backend, communicating via a RESTful API. The backend has been standardized to use a monorepo structure with shared packages for better code reuse and maintainability.
@@ -236,6 +259,18 @@ This prints pool sizes and predicted beginner/intermediate/advanced counts per m
 - Implemented correlation ID tracking
 - Standardized error response formats
 - Added performance timing to operations
+
+### Performance Optimizations
+- Added request compression middleware
+- Implemented comprehensive input validation
+- Enhanced caching with time-based invalidation
+- Added performance monitoring and metrics
+
+### Infrastructure Improvements
+- Containerized application with Docker
+- Created multi-stage Dockerfile for optimized images
+- Implemented docker-compose for local development
+- Added CI/CD pipeline with GitHub Actions
 
 ### Testing Infrastructure
 - Enhanced test project with 100+ passing tests

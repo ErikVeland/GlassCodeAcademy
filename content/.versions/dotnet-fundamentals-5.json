@@ -1,0 +1,17 @@
+{
+  "id": "dotnet-fundamentals-5",
+  "type": "lesson",
+  "slug": "dotnet-fundamentals-5",
+  "title": "Dependency Injection and Services",
+  "versions": [
+    {
+      "version": "1.0.0",
+      "lastUpdated": "2025-11-12T02:37:42.894Z",
+      "changes": [
+        "Initial version import"
+      ],
+      "author": "system",
+      "hash": "690a1fd3"
+    }
+  ]
+}

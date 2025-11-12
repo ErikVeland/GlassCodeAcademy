@@ -1,0 +1,17 @@
+{
+  "id": "web-fundamentals-1",
+  "type": "lesson",
+  "slug": "web-fundamentals-1",
+  "title": "HTML5 Semantic Elements",
+  "versions": [
+    {
+      "version": "1.0.0",
+      "lastUpdated": "2025-11-12T02:37:42.941Z",
+      "changes": [
+        "Initial version import"
+      ],
+      "author": "system",
+      "hash": "-2806038d"
+    }
+  ]
+}

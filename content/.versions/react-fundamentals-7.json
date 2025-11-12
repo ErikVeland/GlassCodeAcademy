@@ -1,0 +1,26 @@
+{
+  "id": "react-fundamentals-7",
+  "type": "lesson",
+  "slug": "react-fundamentals-7",
+  "title": "State Management with Redux",
+  "versions": [
+    {
+      "version": "1.1.0",
+      "lastUpdated": "2025-11-12T02:37:42.920Z",
+      "changes": [
+        "Initial version import"
+      ],
+      "author": "system",
+      "hash": "66a4ad8e"
+    },
+    {
+      "version": "1.1.0",
+      "lastUpdated": "2025-11-12T02:37:42.920Z",
+      "changes": [
+        "Initial version import"
+      ],
+      "author": "system",
+      "hash": "23edbd3b"
+    }
+  ]
+}

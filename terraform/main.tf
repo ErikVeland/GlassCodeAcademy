@@ -55,6 +55,10 @@ module "redis" {
   replication_group_id = "${var.project_name}-${var.environment}"
   node_type            = var.redis_node_type
 
+  # Security: enforce in-transit encryption and Redis AUTH token
+  transit_encryption_enabled = true
+  auth_token                 = var.redis_password
+
   subnet_ids             = module.vpc.private_subnets
   vpc_security_group_ids = [module.security_groups.redis_sg_id]
 }
@@ -79,9 +83,9 @@ module "eks" {
 module "cdn" {
   source = "./modules/cdn"
 
-  bucket_domain_name      = module.storage.s3_bucket_bucket_domain_name
-  bucket_hosted_zone_id   = module.storage.s3_bucket_hosted_zone_id
-  aliases                 = ["${var.project_name}.com"]
+  bucket_domain_name    = module.storage.s3_bucket_domain_name
+  bucket_hosted_zone_id = module.storage.s3_bucket_hosted_zone_id
+  aliases               = ["${var.project_name}.com"]
 }
 
 # Create key vault
@@ -91,10 +95,10 @@ module "key_vault" {
   project_name = var.project_name
   environment  = var.environment
   secrets = {
-    database_password     = var.database_password
-    jwt_secret            = "super-secret-jwt-key"
-    redis_password        = "super-secret-redis-password"
-    grafana_admin_password = "super-secret-grafana-password"
+    database_password      = var.database_password
+    jwt_secret             = var.jwt_secret
+    redis_password         = var.redis_password
+    grafana_admin_password = var.grafana_admin_password
   }
 }
 
@@ -102,15 +106,17 @@ module "key_vault" {
 module "monitoring" {
   source = "./modules/monitoring"
 
-  cluster_name                    = module.eks.cluster_name
-  cluster_endpoint                = module.eks.cluster_endpoint
+  cluster_name                       = module.eks.cluster_name
+  cluster_endpoint                   = module.eks.cluster_endpoint
   cluster_certificate_authority_data = module.eks.cluster_certificate_authority_data
-  oidc_provider_arn               = module.eks.cluster_oidc_issuer_url
-  vpc_id                          = module.vpc.vpc_id
-  subnet_ids                      = module.vpc.private_subnets
+  oidc_provider_arn                  = module.eks.cluster_oidc_issuer_url
+  vpc_id                             = module.vpc.vpc_id
+  subnet_ids                         = module.vpc.private_subnets
 
-  grafana_admin_user              = "admin"
-  grafana_admin_password          = "${module.key_vault.grafana_admin_password}"
+  grafana_admin_user        = "admin"
+  grafana_admin_password    = var.grafana_admin_password
+  prometheus_admin_password = var.prometheus_admin_password
+  jaeger_admin_password     = var.jaeger_admin_password
 }
 
 # Create GitHub OIDC
@@ -127,5 +133,6 @@ module "github_oidc" {
 module "security_groups" {
   source = "./modules/security_groups"
 
-  vpc_id = module.vpc.vpc_id
+  vpc_id   = module.vpc.vpc_id
+  vpc_cidr = module.vpc.vpc_cidr
 }

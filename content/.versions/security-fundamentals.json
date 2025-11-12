@@ -1,0 +1,17 @@
+{
+  "id": "security-fundamentals",
+  "type": "quiz",
+  "slug": "security-fundamentals",
+  "title": "Quiz for security-fundamentals",
+  "versions": [
+    {
+      "version": "1.0.0",
+      "lastUpdated": "2025-11-12T02:37:42.948Z",
+      "changes": [
+        "Initial version import"
+      ],
+      "author": "system",
+      "hash": "-7e43c5b1"
+    }
+  ]
+}

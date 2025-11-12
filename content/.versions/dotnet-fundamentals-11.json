@@ -1,0 +1,17 @@
+{
+  "id": "dotnet-fundamentals-11",
+  "type": "lesson",
+  "slug": "dotnet-fundamentals-11",
+  "title": "Advanced LINQ and Data Processing",
+  "versions": [
+    {
+      "version": "1.0.0",
+      "lastUpdated": "2025-11-12T02:37:42.896Z",
+      "changes": [
+        "Initial version import"
+      ],
+      "author": "system",
+      "hash": "6a2c5a95"
+    }
+  ]
+}

@@ -1,0 +1,17 @@
+{
+  "id": "dotnet-fundamentals-16",
+  "type": "lesson",
+  "slug": "dotnet-fundamentals-16",
+  "title": "Caching Strategies",
+  "versions": [
+    {
+      "version": "1.0.0",
+      "lastUpdated": "2025-11-12T02:37:42.897Z",
+      "changes": [
+        "Initial version import"
+      ],
+      "author": "system",
+      "hash": "725ade7d"
+    }
+  ]
+}

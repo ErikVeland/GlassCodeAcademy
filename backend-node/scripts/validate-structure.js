@@ -16,18 +16,18 @@ function validateStructure() {
     'src/middleware',
     'src/utils',
     'src/config',
-    'tests'
+    'tests',
   ];
 
   const missingDirs = [];
-  
+
   for (const dir of requiredDirs) {
     const fullPath = path.join(__dirname, '..', dir);
     if (!fileExists(fullPath)) {
       missingDirs.push(dir);
     }
   }
-  
+
   return missingDirs;
 }
 
@@ -57,18 +57,18 @@ function validateFiles() {
     'src/middleware/validationMiddleware.js',
     'src/middleware/rateLimitMiddleware.js',
     'src/utils/database.js',
-    'src/utils/logger.js'
+    'src/utils/logger.js',
   ];
 
   const missingFiles = [];
-  
+
   for (const file of requiredFiles) {
     const fullPath = path.join(__dirname, '..', file);
     if (!fileExists(fullPath)) {
       missingFiles.push(file);
     }
   }
-  
+
   return missingFiles;
 }
 
@@ -78,7 +78,7 @@ console.log('Validating Node.js backend structure...\n');
 const missingDirs = validateStructure();
 if (missingDirs.length > 0) {
   console.log('Missing directories:');
-  missingDirs.forEach(dir => console.log(`  - ${dir}`));
+  missingDirs.forEach((dir) => console.log(`  - ${dir}`));
 } else {
   console.log('✓ All required directories present');
 }
@@ -86,15 +86,19 @@ if (missingDirs.length > 0) {
 const missingFiles = validateFiles();
 if (missingFiles.length > 0) {
   console.log('\nMissing files:');
-  missingFiles.forEach(file => console.log(`  - ${file}`));
+  missingFiles.forEach((file) => console.log(`  - ${file}`));
 } else {
   console.log('✓ All required files present');
 }
 
 if (missingDirs.length === 0 && missingFiles.length === 0) {
-  console.log('\n🎉 Validation successful! Node.js backend structure is complete.');
+  console.log(
+    '\n🎉 Validation successful! Node.js backend structure is complete.'
+  );
   process.exit(0);
 } else {
-  console.log('\n❌ Validation failed! Please check the missing directories and files.');
+  console.log(
+    '\n❌ Validation failed! Please check the missing directories and files.'
+  );
   process.exit(1);
 }

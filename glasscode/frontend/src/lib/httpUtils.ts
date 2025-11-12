@@ -5,7 +5,7 @@ export type ParsedBody = unknown;
 
 export function safeJsonParse(text: string): ParsedBody | null {
   try {
-    const trimmed = (text || '').trim();
+    const trimmed = (text || "").trim();
     if (!trimmed) return null;
     return JSON.parse(trimmed);
   } catch {
@@ -15,9 +15,9 @@ export function safeJsonParse(text: string): ParsedBody | null {
 
 // Unwrap common backend envelopes that place payload under `data`
 export function unwrapData<T = unknown>(value: unknown): T | unknown {
-  if (value && typeof value === 'object') {
+  if (value && typeof value === "object") {
     const maybe = value as { data?: unknown };
-    if (Object.prototype.hasOwnProperty.call(maybe, 'data')) {
+    if (Object.prototype.hasOwnProperty.call(maybe, "data")) {
       return (maybe.data as T) ?? null;
     }
   }
@@ -31,9 +31,11 @@ export interface ProxyJsonResult<T = unknown> {
   raw: unknown; // original parsed value before unwrapping
 }
 
-export async function proxyJsonResponse<T = unknown>(res: Response): Promise<ProxyJsonResult<T>> {
+export async function proxyJsonResponse<T = unknown>(
+  res: Response,
+): Promise<ProxyJsonResult<T>> {
   const status = res.status;
-  const contentType = res.headers.get('content-type') || undefined;
+  const contentType = res.headers.get("content-type") || undefined;
   const text = await res.text();
   const parsed = safeJsonParse(text);
   const unwrapped = unwrapData<T>(parsed);
@@ -81,18 +83,19 @@ export async function retryFetch(
     }
   }
   // Should be unreachable; throw last error if any
-  throw lastError ?? new Error('retryFetch failed without specific error');
+  throw lastError ?? new Error("retryFetch failed without specific error");
 }
 
 function sleep(ms: number) {
-  return new Promise(resolve => setTimeout(resolve, ms));
+  return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
 // Gate debug logs behind env flags to reduce noise
 export function debugLog(...args: unknown[]) {
-  const isDev = process.env.NODE_ENV !== 'production';
-  const enabled = (process.env.NEXT_PUBLIC_DEBUG || '').toLowerCase() === 'true';
+  const isDev = process.env.NODE_ENV !== "production";
+  const enabled =
+    (process.env.NEXT_PUBLIC_DEBUG || "").toLowerCase() === "true";
   if (isDev && enabled) {
-    console.log('[dev]', ...args);
+    console.log("[dev]", ...args);
   }
 }

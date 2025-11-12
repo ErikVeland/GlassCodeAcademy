@@ -1,0 +1,17 @@
+{
+  "id": "vue-advanced",
+  "type": "quiz",
+  "slug": "vue-advanced",
+  "title": "Quiz for vue-advanced",
+  "versions": [
+    {
+      "version": "1.0.0",
+      "lastUpdated": "2025-11-12T02:37:42.950Z",
+      "changes": [
+        "Initial version import"
+      ],
+      "author": "system",
+      "hash": "-5efbc856"
+    }
+  ]
+}

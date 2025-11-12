@@ -1,0 +1,17 @@
+{
+  "id": "dotnet-fundamentals-15",
+  "type": "lesson",
+  "slug": "dotnet-fundamentals-15",
+  "title": "API Versioning Strategies",
+  "versions": [
+    {
+      "version": "1.0.0",
+      "lastUpdated": "2025-11-12T02:37:42.896Z",
+      "changes": [
+        "Initial version import"
+      ],
+      "author": "system",
+      "hash": "395e8e38"
+    }
+  ]
+}

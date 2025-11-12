@@ -1,0 +1,17 @@
+{
+  "id": "dotnet-fundamentals-7",
+  "type": "lesson",
+  "slug": "dotnet-fundamentals-7",
+  "title": "Authentication and Authorization",
+  "versions": [
+    {
+      "version": "1.0.0",
+      "lastUpdated": "2025-11-12T02:37:42.895Z",
+      "changes": [
+        "Initial version import"
+      ],
+      "author": "system",
+      "hash": "-26b3f2f3"
+    }
+  ]
+}

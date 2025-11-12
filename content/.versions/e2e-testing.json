@@ -1,0 +1,17 @@
+{
+  "id": "e2e-testing",
+  "type": "quiz",
+  "slug": "e2e-testing",
+  "title": "Quiz for e2e-testing",
+  "versions": [
+    {
+      "version": "1.0.0",
+      "lastUpdated": "2025-11-12T02:37:42.945Z",
+      "changes": [
+        "Initial version import"
+      ],
+      "author": "system",
+      "hash": "48892267"
+    }
+  ]
+}

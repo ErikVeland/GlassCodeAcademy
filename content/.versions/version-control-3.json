@@ -1,0 +1,17 @@
+{
+  "id": "version-control-3",
+  "type": "lesson",
+  "slug": "version-control-3",
+  "title": "Remote Repositories and Collaboration",
+  "versions": [
+    {
+      "version": "1.0.0",
+      "lastUpdated": "2025-11-12T02:37:42.936Z",
+      "changes": [
+        "Initial version import"
+      ],
+      "author": "system",
+      "hash": "-5558d602"
+    }
+  ]
+}

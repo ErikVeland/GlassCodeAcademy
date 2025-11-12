@@ -1,0 +1,17 @@
+{
+  "id": "programming-fundamentals-3",
+  "type": "lesson",
+  "slug": "programming-fundamentals-3",
+  "title": "Control Structures: Loops",
+  "versions": [
+    {
+      "version": "1.0.0",
+      "lastUpdated": "2025-11-12T02:37:42.916Z",
+      "changes": [
+        "Initial version import"
+      ],
+      "author": "system",
+      "hash": "-549b4fba"
+    }
+  ]
+}

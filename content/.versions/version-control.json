@@ -1,0 +1,17 @@
+{
+  "id": "version-control",
+  "type": "quiz",
+  "slug": "version-control",
+  "title": "Quiz for version-control",
+  "versions": [
+    {
+      "version": "1.0.0",
+      "lastUpdated": "2025-11-12T02:37:42.950Z",
+      "changes": [
+        "Initial version import"
+      ],
+      "author": "system",
+      "hash": "-6099b264"
+    }
+  ]
+}

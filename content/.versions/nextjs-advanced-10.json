@@ -1,0 +1,17 @@
+{
+  "id": "nextjs-advanced-10",
+  "type": "lesson",
+  "slug": "nextjs-advanced-10",
+  "title": "Deployment and Production Optimization",
+  "versions": [
+    {
+      "version": "1.0.0",
+      "lastUpdated": "2025-11-12T02:37:42.909Z",
+      "changes": [
+        "Initial version import"
+      ],
+      "author": "system",
+      "hash": "15b0c516"
+    }
+  ]
+}

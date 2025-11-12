@@ -48,20 +48,25 @@ const CertificateAward: React.FC<CertificateAwardProps> = ({
 
   // Respect system reduced motion preference
   useEffect(() => {
-    if (typeof window === 'undefined') return;
-    const mq = window.matchMedia('(prefers-reduced-motion: reduce)');
+    if (typeof window === "undefined") return;
+    const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
     const updatePref = () => setIsReducedMotion(mq.matches);
     updatePref();
-    mq.addEventListener?.('change', updatePref);
-    return () => mq.removeEventListener?.('change', updatePref);
+    mq.addEventListener?.("change", updatePref);
+    return () => mq.removeEventListener?.("change", updatePref);
   }, []);
 
   return (
     <div className={`relative mx-auto max-w-2xl ${className}`}>
       {/* Only celebrate with confetti for High Distinction (disabled if reduced motion) */}
-      <ConfettiBurst active={isHighDistinction && !isReducedMotion} durationMs={6000} />
+      <ConfettiBurst
+        active={isHighDistinction && !isReducedMotion}
+        durationMs={6000}
+      />
 
-      <div className={`relative rounded-2xl p-8 bg-gradient-to-br from-blue-50 via-white to-indigo-50 dark:from-blue-950/40 dark:via-gray-900 dark:to-indigo-900/40 border-4 border-blue-200 dark:border-blue-700 shadow-xl ${isHighDistinction && showLightning ? 'badge-hd-award' : ''}`}>
+      <div
+        className={`relative rounded-2xl p-8 bg-gradient-to-br from-blue-50 via-white to-indigo-50 dark:from-blue-950/40 dark:via-gray-900 dark:to-indigo-900/40 border-4 border-blue-200 dark:border-blue-700 shadow-xl ${isHighDistinction && showLightning ? "badge-hd-award" : ""}`}
+      >
         {/* Decorative corner seals */}
         <div className="absolute -top-3 -left-3 h-12 w-12 rounded-full border-4 border-blue-200 dark:border-blue-700 bg-white dark:bg-gray-900" />
         <div className="absolute -top-3 -right-3 h-12 w-12 rounded-full border-4 border-blue-200 dark:border-blue-700 bg-white dark:bg-gray-900" />
@@ -85,7 +90,9 @@ const CertificateAward: React.FC<CertificateAwardProps> = ({
 
         {/* Recipient and details */}
         <div className="space-y-2 text-center">
-          <p className="text-gray-800 dark:text-gray-200 text-lg">This certifies that</p>
+          <p className="text-gray-800 dark:text-gray-200 text-lg">
+            This certifies that
+          </p>
           <p className="text-2xl font-semibold text-blue-700 dark:text-blue-300 certificate-name">
             {profile.displayName || "You"}
           </p>
@@ -93,7 +100,11 @@ const CertificateAward: React.FC<CertificateAwardProps> = ({
             successfully completed the {moduleName} Interview Preparation Quiz
           </p>
           <p className="text-gray-700 dark:text-gray-300">
-            with a score of <span className="font-semibold">{score}/{total}</span> ({percent}%).
+            with a score of{" "}
+            <span className="font-semibold">
+              {score}/{total}
+            </span>{" "}
+            ({percent}%).
           </p>
           {isHighDistinction && (
             <p className="mt-2 text-amber-600 dark:text-amber-400 font-semibold">
@@ -104,24 +115,32 @@ const CertificateAward: React.FC<CertificateAwardProps> = ({
 
         {/* Seal */}
         <div className="mt-8 flex items-center justify-center gap-6">
-          <div className={`h-20 w-20 rounded-full shadow-lg border-4 flex items-center justify-center ${
-            isHighDistinction
-              ? "bg-gradient-to-br from-emerald-400 to-green-600 border-green-300 dark:from-emerald-500 dark:to-green-700 dark:border-green-800"
-              : "bg-gradient-to-br from-green-400 to-emerald-500 border-green-200 dark:from-green-500 dark:to-emerald-600 dark:border-emerald-700"
-          }`}>
+          <div
+            className={`h-20 w-20 rounded-full shadow-lg border-4 flex items-center justify-center ${
+              isHighDistinction
+                ? "bg-gradient-to-br from-emerald-400 to-green-600 border-green-300 dark:from-emerald-500 dark:to-green-700 dark:border-green-800"
+                : "bg-gradient-to-br from-green-400 to-emerald-500 border-green-200 dark:from-green-500 dark:to-emerald-600 dark:border-emerald-700"
+            }`}
+          >
             <span className="text-white font-bold">
               {isHighDistinction ? "HD" : "PASS"}
             </span>
           </div>
           <div className="text-left">
-            <p className="text-sm text-gray-600 dark:text-gray-400">Issued on {new Date().toLocaleDateString()}</p>
-            <p className="text-sm text-gray-600 dark:text-gray-400">Certificate ID: {certificateId}</p>
+            <p className="text-sm text-gray-600 dark:text-gray-400">
+              Issued on {new Date().toLocaleDateString()}
+            </p>
+            <p className="text-sm text-gray-600 dark:text-gray-400">
+              Certificate ID: {certificateId}
+            </p>
           </div>
         </div>
 
         {/* Signature line */}
         <div className="mt-8 border-t border-dashed border-gray-300 dark:border-gray-700 pt-4 text-center">
-          <p className="text-sm text-gray-600 dark:text-gray-400">Authorized by GlassCode Academy</p>
+          <p className="text-sm text-gray-600 dark:text-gray-400">
+            Authorized by GlassCode Academy
+          </p>
         </div>
       </div>
     </div>

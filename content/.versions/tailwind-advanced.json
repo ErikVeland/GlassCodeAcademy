@@ -1,0 +1,17 @@
+{
+  "id": "tailwind-advanced",
+  "type": "quiz",
+  "slug": "tailwind-advanced",
+  "title": "Quiz for tailwind-advanced",
+  "versions": [
+    {
+      "version": "1.0.0",
+      "lastUpdated": "2025-11-12T02:37:42.948Z",
+      "changes": [
+        "Initial version import"
+      ],
+      "author": "system",
+      "hash": "-7843c0aa"
+    }
+  ]
+}

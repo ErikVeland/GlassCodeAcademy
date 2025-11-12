@@ -1,0 +1,17 @@
+{
+  "id": "graphql-advanced-10",
+  "type": "lesson",
+  "slug": "graphql-advanced-10",
+  "title": "GraphQL Testing Strategies",
+  "versions": [
+    {
+      "version": "1.0.0",
+      "lastUpdated": "2025-11-12T02:37:42.902Z",
+      "changes": [
+        "Initial version import"
+      ],
+      "author": "system",
+      "hash": "-a00f537"
+    }
+  ]
+}

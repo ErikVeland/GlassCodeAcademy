@@ -1,0 +1,17 @@
+{
+  "id": "database-systems-5",
+  "type": "lesson",
+  "slug": "database-systems-5",
+  "title": "Entity Framework Core Advanced Patterns",
+  "versions": [
+    {
+      "version": "1.0.0",
+      "lastUpdated": "2025-11-12T02:37:42.891Z",
+      "changes": [
+        "Initial version import"
+      ],
+      "author": "system",
+      "hash": "16abcd0a"
+    }
+  ]
+}

@@ -1,0 +1,17 @@
+{
+  "id": "react-fundamentals-6",
+  "type": "lesson",
+  "slug": "react-fundamentals-6",
+  "title": "State Management with Context API",
+  "versions": [
+    {
+      "version": "1.1.0",
+      "lastUpdated": "2025-11-12T02:37:42.919Z",
+      "changes": [
+        "Initial version import"
+      ],
+      "author": "system",
+      "hash": "45b570ea"
+    }
+  ]
+}

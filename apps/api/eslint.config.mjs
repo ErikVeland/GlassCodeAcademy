@@ -1,45 +1,64 @@
 import js from '@eslint/js';
 import globals from 'globals';
+import tseslint from 'typescript-eslint';
+import { dirname } from 'node:path';
+import { fileURLToPath } from 'node:url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 export default [
+  // JavaScript recommended rules
   js.configs.recommended,
+
+  // TypeScript recommended rules (type-unaware)
+  ...tseslint.configs.recommended,
+
+  // Project-specific settings for TS files
   {
-    files: ['src/**/*.js'],
+    files: ['src/**/*.ts'],
     languageOptions: {
       ecmaVersion: 2021,
-      sourceType: 'commonjs',
+      sourceType: 'module',
       globals: {
         ...globals.node,
-        ...globals.jest
-      }
+        ...globals.jest,
+      },
+      parserOptions: {
+        tsconfigRootDir: __dirname,
+      },
     },
     rules: {
-      indent: 'off',
-      'linebreak-style': 'off',
-      quotes: 'off',
-      semi: 'off',
-      'no-unused-vars': 'warn',
-      'no-console': 'off'
-    }
+      // Keep console allowed for server logging
+      'no-console': 'off',
+      // Use TS-aware unused vars and ignore underscore-prefixed args
+      'no-unused-vars': 'off',
+      '@typescript-eslint/no-unused-vars': [
+        'warn',
+        {
+          argsIgnorePattern: '^_',
+          caughtErrorsIgnorePattern: '^_',
+        },
+      ],
+      // Allow any temporarily in migrating codebase; tighten later
+      '@typescript-eslint/no-explicit-any': 'off',
+    },
   },
-  // Apply Node/Jest globals and CommonJS to test files as well
+
+  // Tests and JS utility files
   {
-    files: ['tests/**/*.js', '**/*.test.js'],
+    files: ['tests/**/*.js', '**/*.test.js', 'src/**/*.js'],
     languageOptions: {
       ecmaVersion: 2021,
       sourceType: 'commonjs',
       globals: {
         ...globals.node,
-        ...globals.jest
-      }
+        ...globals.jest,
+      },
     },
     rules: {
-      indent: 'off',
-      'linebreak-style': 'off',
-      quotes: 'off',
-      semi: 'off',
+      'no-console': 'off',
       'no-unused-vars': 'warn',
-      'no-console': 'off'
-    }
-  }
+    },
+  },
 ];

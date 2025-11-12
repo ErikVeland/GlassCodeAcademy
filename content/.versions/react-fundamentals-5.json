@@ -1,0 +1,17 @@
+{
+  "id": "react-fundamentals-5",
+  "type": "lesson",
+  "slug": "react-fundamentals-5",
+  "title": "Context API for Global State",
+  "versions": [
+    {
+      "version": "1.1.0",
+      "lastUpdated": "2025-11-12T02:37:42.919Z",
+      "changes": [
+        "Initial version import"
+      ],
+      "author": "system",
+      "hash": "337247bc"
+    }
+  ]
+}

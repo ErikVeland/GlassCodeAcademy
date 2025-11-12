@@ -5,6 +5,11 @@ variable "vpc_id" {
   type        = string
 }
 
+variable "vpc_cidr" {
+  description = "CIDR block of the VPC for restricting egress and internal ingress"
+  type        = string
+}
+
 output "database_sg_id" {
   description = "ID of the database security group"
   value       = aws_security_group.database.id
@@ -48,7 +53,7 @@ resource "aws_security_group" "database" {
     from_port   = 0
     to_port     = 0
     protocol    = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
+    cidr_blocks = [var.vpc_cidr]
   }
 
   tags = {
@@ -74,7 +79,7 @@ resource "aws_security_group" "redis" {
     from_port   = 0
     to_port     = 0
     protocol    = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
+    cidr_blocks = [var.vpc_cidr]
   }
 
   tags = {
@@ -88,27 +93,20 @@ resource "aws_security_group" "eks" {
   description = "Security group for EKS"
   vpc_id      = var.vpc_id
 
+  # Minimize ingress: restrict node HTTPS to VPC only; remove public HTTP
   ingress {
-    description = "HTTPS access from anywhere"
+    description = "HTTPS access within VPC"
     from_port   = 443
     to_port     = 443
     protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
-  ingress {
-    description = "HTTP access from anywhere"
-    from_port   = 80
-    to_port     = 80
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
+    cidr_blocks = [var.vpc_cidr]
   }
 
   egress {
     from_port   = 0
     to_port     = 0
     protocol    = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
+    cidr_blocks = [var.vpc_cidr]
   }
 
   tags = {

@@ -1,0 +1,17 @@
+{
+  "id": "typescript-fundamentals-1",
+  "type": "lesson",
+  "slug": "typescript-fundamentals-1",
+  "title": "Primitive Types and Type Annotations",
+  "versions": [
+    {
+      "version": "1.1.0",
+      "lastUpdated": "2025-11-12T02:37:42.933Z",
+      "changes": [
+        "Initial version import"
+      ],
+      "author": "system",
+      "hash": "-664b1cae"
+    }
+  ]
+}

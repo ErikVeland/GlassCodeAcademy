@@ -1,0 +1,17 @@
+{
+  "id": "programming-fundamentals-10",
+  "type": "lesson",
+  "slug": "programming-fundamentals-10",
+  "title": "Numbers and Mathematical Operations",
+  "versions": [
+    {
+      "version": "1.0.0",
+      "lastUpdated": "2025-11-12T02:37:42.917Z",
+      "changes": [
+        "Initial version import"
+      ],
+      "author": "system",
+      "hash": "-687144f8"
+    }
+  ]
+}

@@ -1,0 +1,17 @@
+{
+  "id": "database-systems-4",
+  "type": "lesson",
+  "slug": "database-systems-4",
+  "title": "ER Diagrams and Advanced Relationships",
+  "versions": [
+    {
+      "version": "1.0.0",
+      "lastUpdated": "2025-11-12T02:37:42.890Z",
+      "changes": [
+        "Initial version import"
+      ],
+      "author": "system",
+      "hash": "f3a867b"
+    }
+  ]
+}

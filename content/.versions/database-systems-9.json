@@ -1,0 +1,17 @@
+{
+  "id": "database-systems-9",
+  "type": "lesson",
+  "slug": "database-systems-9",
+  "title": "Document Databases and MongoDB",
+  "versions": [
+    {
+      "version": "1.0.0",
+      "lastUpdated": "2025-11-12T02:37:42.892Z",
+      "changes": [
+        "Initial version import"
+      ],
+      "author": "system",
+      "hash": "-7a06b1d2"
+    }
+  ]
+}

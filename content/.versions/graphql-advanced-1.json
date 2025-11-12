@@ -1,0 +1,17 @@
+{
+  "id": "graphql-advanced-1",
+  "type": "lesson",
+  "slug": "graphql-advanced-1",
+  "title": "Introduction to GraphQL and Query Language Basics",
+  "versions": [
+    {
+      "version": "1.0.0",
+      "lastUpdated": "2025-11-12T02:37:42.900Z",
+      "changes": [
+        "Initial version import"
+      ],
+      "author": "system",
+      "hash": "2012f1b5"
+    }
+  ]
+}

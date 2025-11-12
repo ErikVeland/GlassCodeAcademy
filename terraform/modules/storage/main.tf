@@ -67,6 +67,11 @@ output "s3_bucket_domain_name" {
   value       = module.s3_bucket.s3_bucket_bucket_domain_name
 }
 
+output "s3_bucket_hosted_zone_id" {
+  description = "Hosted zone ID of the S3 bucket"
+  value       = module.s3_bucket.s3_bucket_hosted_zone_id
+}
+
 terraform {
   required_version = ">= 1.0"
   required_providers {

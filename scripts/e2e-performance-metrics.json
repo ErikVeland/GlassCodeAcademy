@@ -1,0 +1,72 @@
+[
+  {
+    "endpoint": "/api/registry/modules",
+    "duration": 9,
+    "statusCode": 200,
+    "dataSize": 1813,
+    "timestamp": "2025-11-12T01:41:21.308Z"
+  },
+  {
+    "endpoint": "/api/modules/programming-fundamentals/lessons",
+    "duration": 1,
+    "statusCode": 200,
+    "dataSize": 51819,
+    "timestamp": "2025-11-12T01:41:21.310Z"
+  },
+  {
+    "endpoint": "/api/modules/web-fundamentals/lessons",
+    "duration": 2,
+    "statusCode": 200,
+    "dataSize": 189105,
+    "timestamp": "2025-11-12T01:41:21.312Z"
+  },
+  {
+    "endpoint": "/api/modules/version-control/lessons",
+    "duration": 1,
+    "statusCode": 200,
+    "dataSize": 64537,
+    "timestamp": "2025-11-12T01:41:21.313Z"
+  },
+  {
+    "endpoint": "/api/modules/programming-fundamentals/quiz",
+    "duration": 1,
+    "statusCode": 200,
+    "dataSize": 36468,
+    "timestamp": "2025-11-12T01:41:21.314Z"
+  },
+  {
+    "endpoint": "/api/modules/web-fundamentals/quiz",
+    "duration": 1,
+    "statusCode": 200,
+    "dataSize": 43927,
+    "timestamp": "2025-11-12T01:41:21.315Z"
+  },
+  {
+    "endpoint": "/api/modules/version-control/quiz",
+    "duration": 1,
+    "statusCode": 200,
+    "dataSize": 32855,
+    "timestamp": "2025-11-12T01:41:21.316Z"
+  },
+  {
+    "endpoint": "/api/lessons/1/quizzes",
+    "duration": 1,
+    "statusCode": 200,
+    "dataSize": 43927,
+    "timestamp": "2025-11-12T01:41:21.317Z"
+  },
+  {
+    "endpoint": "/api/lessons/1/quizzes",
+    "duration": 0,
+    "statusCode": 200,
+    "dataSize": 43927,
+    "timestamp": "2025-11-12T01:41:21.318Z"
+  },
+  {
+    "endpoint": "/api/lessons/1/quizzes",
+    "duration": 0,
+    "statusCode": 200,
+    "dataSize": 43927,
+    "timestamp": "2025-11-12T01:41:21.318Z"
+  }
+]

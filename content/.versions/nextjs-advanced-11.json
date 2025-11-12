@@ -1,0 +1,17 @@
+{
+  "id": "nextjs-advanced-11",
+  "type": "lesson",
+  "slug": "nextjs-advanced-11",
+  "title": "Testing Next.js Applications",
+  "versions": [
+    {
+      "version": "1.0.0",
+      "lastUpdated": "2025-11-12T02:37:42.909Z",
+      "changes": [
+        "Initial version import"
+      ],
+      "author": "system",
+      "hash": "6f1eeced"
+    }
+  ]
+}

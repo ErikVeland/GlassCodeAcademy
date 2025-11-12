@@ -1,0 +1,17 @@
+{
+  "id": "programming-fundamentals-11",
+  "type": "lesson",
+  "slug": "programming-fundamentals-11",
+  "title": "Dates and Time Handling",
+  "versions": [
+    {
+      "version": "1.0.0",
+      "lastUpdated": "2025-11-12T02:37:42.918Z",
+      "changes": [
+        "Initial version import"
+      ],
+      "author": "system",
+      "hash": "7beca310"
+    }
+  ]
+}

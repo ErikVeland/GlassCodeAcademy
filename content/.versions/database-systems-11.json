@@ -1,0 +1,17 @@
+{
+  "id": "database-systems-11",
+  "type": "lesson",
+  "slug": "database-systems-11",
+  "title": "Database Security and Access Control",
+  "versions": [
+    {
+      "version": "1.0.0",
+      "lastUpdated": "2025-11-12T02:37:42.892Z",
+      "changes": [
+        "Initial version import"
+      ],
+      "author": "system",
+      "hash": "621ff672"
+    }
+  ]
+}

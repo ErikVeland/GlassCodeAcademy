@@ -8,7 +8,10 @@ interface ConfettiBurstProps {
 }
 
 // Lightweight canvas confetti with no external dependencies
-export default function ConfettiBurst({ active, durationMs = 4000 }: ConfettiBurstProps) {
+export default function ConfettiBurst({
+  active,
+  durationMs = 4000,
+}: ConfettiBurstProps) {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const rafRef = useRef<number | null>(null);
   const startRef = useRef<number | null>(null);
@@ -16,12 +19,12 @@ export default function ConfettiBurst({ active, durationMs = 4000 }: ConfettiBur
 
   // Respect system reduced motion preference
   useEffect(() => {
-    if (typeof window === 'undefined') return;
-    const mq = window.matchMedia('(prefers-reduced-motion: reduce)');
+    if (typeof window === "undefined") return;
+    const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
     const updatePref = () => setIsReducedMotion(mq.matches);
     updatePref();
-    mq.addEventListener?.('change', updatePref);
-    return () => mq.removeEventListener?.('change', updatePref);
+    mq.addEventListener?.("change", updatePref);
+    return () => mq.removeEventListener?.("change", updatePref);
   }, []);
 
   useEffect(() => {
@@ -92,9 +95,10 @@ export default function ConfettiBurst({ active, durationMs = 4000 }: ConfettiBur
 
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       const wind = Math.sin(elapsed * 0.002) * 0.08;
-      const fadeFactor = elapsed > emissionEndMs
-        ? Math.max(0, (durationMs - elapsed) / (durationMs - emissionEndMs))
-        : 1;
+      const fadeFactor =
+        elapsed > emissionEndMs
+          ? Math.max(0, (durationMs - elapsed) / (durationMs - emissionEndMs))
+          : 1;
       for (const p of pieces) {
         // physics integration
         p.vy += gravity;
@@ -106,7 +110,8 @@ export default function ConfettiBurst({ active, durationMs = 4000 }: ConfettiBur
         p.rot += p.vrot;
 
         // recycle when out of bounds (below screen or far off sides)
-        const outOfBounds = p.y > canvas.height + 80 || p.x < -80 || p.x > canvas.width + 80;
+        const outOfBounds =
+          p.y > canvas.height + 80 || p.x < -80 || p.x > canvas.width + 80;
         if (outOfBounds) {
           if (elapsed <= emissionEndMs) {
             const theta = -Math.PI / 2 + (Math.random() - 0.5) * spread;
@@ -148,7 +153,9 @@ export default function ConfettiBurst({ active, durationMs = 4000 }: ConfettiBur
   // Do not render canvas when reduced motion is requested
   if (isReducedMotion) return null;
   return (
-    <div className={`pointer-events-none fixed inset-0 z-40 ${active ? '' : 'hidden'}`}>
+    <div
+      className={`pointer-events-none fixed inset-0 z-40 ${active ? "" : "hidden"}`}
+    >
       <canvas ref={canvasRef} className="w-full h-full" />
     </div>
   );

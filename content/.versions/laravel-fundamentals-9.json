@@ -1,0 +1,17 @@
+{
+  "id": "laravel-fundamentals-9",
+  "type": "lesson",
+  "slug": "laravel-fundamentals-9",
+  "title": "Migrations",
+  "versions": [
+    {
+      "version": "1.0.0",
+      "lastUpdated": "2025-11-12T02:37:42.904Z",
+      "changes": [
+        "Initial version import"
+      ],
+      "author": "system",
+      "hash": "-4e27cd39"
+    }
+  ]
+}

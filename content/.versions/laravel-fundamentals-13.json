@@ -1,0 +1,17 @@
+{
+  "id": "laravel-fundamentals-13",
+  "type": "lesson",
+  "slug": "laravel-fundamentals-13",
+  "title": "Form Validation",
+  "versions": [
+    {
+      "version": "1.0.0",
+      "lastUpdated": "2025-11-12T02:37:42.905Z",
+      "changes": [
+        "Initial version import"
+      ],
+      "author": "system",
+      "hash": "-36c72993"
+    }
+  ]
+}

@@ -1,0 +1,17 @@
+{
+  "id": "node-fundamentals-7",
+  "type": "lesson",
+  "slug": "node-fundamentals-7",
+  "title": "File System Operations",
+  "versions": [
+    {
+      "version": "1.0.0",
+      "lastUpdated": "2025-11-12T02:37:42.911Z",
+      "changes": [
+        "Initial version import"
+      ],
+      "author": "system",
+      "hash": "59ea563a"
+    }
+  ]
+}

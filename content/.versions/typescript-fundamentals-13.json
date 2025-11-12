@@ -1,0 +1,17 @@
+{
+  "id": "typescript-fundamentals-13",
+  "type": "lesson",
+  "slug": "typescript-fundamentals-13",
+  "title": "Advanced TypeScript Patterns and Utility Types",
+  "versions": [
+    {
+      "version": "1.0.0",
+      "lastUpdated": "2025-11-12T02:37:42.935Z",
+      "changes": [
+        "Initial version import"
+      ],
+      "author": "system",
+      "hash": "6dac78ae"
+    }
+  ]
+}

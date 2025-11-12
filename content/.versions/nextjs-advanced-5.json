@@ -1,0 +1,17 @@
+{
+  "id": "nextjs-advanced-5",
+  "type": "lesson",
+  "slug": "nextjs-advanced-5",
+  "title": "API Routes and Backend Integration",
+  "versions": [
+    {
+      "version": "1.0.0",
+      "lastUpdated": "2025-11-12T02:37:42.908Z",
+      "changes": [
+        "Initial version import"
+      ],
+      "author": "system",
+      "hash": "3acd79f3"
+    }
+  ]
+}

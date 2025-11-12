@@ -1,0 +1,17 @@
+{
+  "id": "e2e-testing-7",
+  "type": "lesson",
+  "slug": "e2e-testing-7",
+  "title": "Cross-Browser and Visual Testing",
+  "versions": [
+    {
+      "version": "1.0.0",
+      "lastUpdated": "2025-11-12T02:37:42.899Z",
+      "changes": [
+        "Initial version import"
+      ],
+      "author": "system",
+      "hash": "81be4d9"
+    }
+  ]
+}

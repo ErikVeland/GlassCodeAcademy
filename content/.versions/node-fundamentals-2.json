@@ -1,0 +1,17 @@
+{
+  "id": "node-fundamentals-2",
+  "type": "lesson",
+  "slug": "node-fundamentals-2",
+  "title": "Node.js Modules",
+  "versions": [
+    {
+      "version": "1.0.0",
+      "lastUpdated": "2025-11-12T02:37:42.910Z",
+      "changes": [
+        "Initial version import"
+      ],
+      "author": "system",
+      "hash": "-313d8d5b"
+    }
+  ]
+}

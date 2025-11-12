@@ -1,0 +1,17 @@
+{
+  "id": "typescript-fundamentals-4",
+  "type": "lesson",
+  "slug": "typescript-fundamentals-4",
+  "title": "Class Implementation with Access Modifiers and Abstract Classes",
+  "versions": [
+    {
+      "version": "1.1.0",
+      "lastUpdated": "2025-11-12T02:37:42.934Z",
+      "changes": [
+        "Initial version import"
+      ],
+      "author": "system",
+      "hash": "4243733e"
+    }
+  ]
+}

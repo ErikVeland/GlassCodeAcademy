@@ -1,0 +1,17 @@
+{
+  "id": "laravel-fundamentals-15",
+  "type": "lesson",
+  "slug": "laravel-fundamentals-15",
+  "title": "File Storage and Uploads",
+  "versions": [
+    {
+      "version": "1.0.0",
+      "lastUpdated": "2025-11-12T02:37:42.905Z",
+      "changes": [
+        "Initial version import"
+      ],
+      "author": "system",
+      "hash": "-68b5e3c"
+    }
+  ]
+}

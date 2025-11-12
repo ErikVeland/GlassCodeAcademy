@@ -1,0 +1,17 @@
+{
+  "id": "database-systems-10",
+  "type": "lesson",
+  "slug": "database-systems-10",
+  "title": "Database Backup and Recovery Strategies",
+  "versions": [
+    {
+      "version": "1.0.0",
+      "lastUpdated": "2025-11-12T02:37:42.892Z",
+      "changes": [
+        "Initial version import"
+      ],
+      "author": "system",
+      "hash": "1baa312e"
+    }
+  ]
+}

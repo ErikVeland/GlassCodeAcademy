@@ -1,0 +1,17 @@
+{
+  "id": "sass-advanced-13",
+  "type": "lesson",
+  "slug": "sass-advanced-13",
+  "title": "Advanced Architecture Patterns and the 7-1 Pattern",
+  "versions": [
+    {
+      "version": "1.0.0",
+      "lastUpdated": "2025-11-12T02:37:42.923Z",
+      "changes": [
+        "Initial version import"
+      ],
+      "author": "system",
+      "hash": "-663eebc8"
+    }
+  ]
+}

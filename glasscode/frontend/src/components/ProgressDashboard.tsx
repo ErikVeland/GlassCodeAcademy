@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react';
-import { useProgressTracking } from '../hooks/useProgressTracking';
-import { useStreakTracking } from '../hooks/useStreakTracking';
-import { useAchievements } from '../hooks/useAchievements';
-import './ProgressDashboard.scss';
+import React, { useState, useEffect } from "react";
+import { useProgressTracking } from "../hooks/useProgressTracking";
+import { useStreakTracking } from "../hooks/useStreakTracking";
+import { useAchievements } from "../hooks/useAchievements";
+import "./ProgressDashboard.scss";
 
 interface DashboardStats {
   totalModules: number;
@@ -20,18 +20,18 @@ interface DashboardStats {
 
 interface VisualProgressProps {
   percentage: number;
-  size?: 'small' | 'medium' | 'large';
-  variant?: 'circular' | 'linear' | 'radial';
+  size?: "small" | "medium" | "large";
+  variant?: "circular" | "linear" | "radial";
   showLabel?: boolean;
   animated?: boolean;
 }
 
 const VisualProgress: React.FC<VisualProgressProps> = ({
   percentage,
-  size = 'medium',
-  variant = 'circular',
+  size = "medium",
+  variant = "circular",
   showLabel = true,
-  animated = true
+  animated = true,
 }) => {
   const [animatedPercentage, setAnimatedPercentage] = useState(0);
 
@@ -48,39 +48,53 @@ const VisualProgress: React.FC<VisualProgressProps> = ({
 
   const getSize = () => {
     switch (size) {
-      case 'small': return 60;
-      case 'large': return 120;
-      default: return 80;
+      case "small":
+        return 60;
+      case "large":
+        return 120;
+      default:
+        return 80;
     }
   };
 
   const radius = getSize() / 2 - 8;
   const circumference = 2 * Math.PI * radius;
-  const strokeDashoffset = circumference - (animatedPercentage / 100) * circumference;
+  const strokeDashoffset =
+    circumference - (animatedPercentage / 100) * circumference;
 
-  if (variant === 'linear') {
+  if (variant === "linear") {
     return (
       <div className={`progress-linear progress-${size}`}>
         <div className="progress-track">
-          <div 
+          <div
             className="progress-fill"
-            style={{ 
+            style={{
               width: `${animatedPercentage}%`,
-              transition: animated ? 'width 1.5s cubic-bezier(0.4, 0, 0.2, 1)' : 'none'
+              transition: animated
+                ? "width 1.5s cubic-bezier(0.4, 0, 0.2, 1)"
+                : "none",
             }}
           />
         </div>
-        {showLabel && <span className="progress-label">{Math.round(percentage)}%</span>}
+        {showLabel && (
+          <span className="progress-label">{Math.round(percentage)}%</span>
+        )}
       </div>
     );
   }
 
-  if (variant === 'radial') {
+  if (variant === "radial") {
     return (
       <div className={`progress-radial progress-${size}`}>
         <svg width={getSize()} height={getSize()}>
           <defs>
-            <linearGradient id="progressGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+            <linearGradient
+              id="progressGradient"
+              x1="0%"
+              y1="0%"
+              x2="100%"
+              y2="0%"
+            >
               <stop offset="0%" stopColor="#4f46e5" />
               <stop offset="100%" stopColor="#06b6d4" />
             </linearGradient>
@@ -104,9 +118,11 @@ const VisualProgress: React.FC<VisualProgressProps> = ({
             strokeDasharray={circumference}
             strokeDashoffset={strokeDashoffset}
             style={{
-              transition: animated ? 'stroke-dashoffset 1.5s cubic-bezier(0.4, 0, 0.2, 1)' : 'none',
-              transform: 'rotate(-90deg)',
-              transformOrigin: '50% 50%'
+              transition: animated
+                ? "stroke-dashoffset 1.5s cubic-bezier(0.4, 0, 0.2, 1)"
+                : "none",
+              transform: "rotate(-90deg)",
+              transformOrigin: "50% 50%",
             }}
           />
         </svg>
@@ -141,9 +157,11 @@ const VisualProgress: React.FC<VisualProgressProps> = ({
           strokeDasharray={circumference}
           strokeDashoffset={strokeDashoffset}
           style={{
-            transition: animated ? 'stroke-dashoffset 1.5s cubic-bezier(0.4, 0, 0.2, 1)' : 'none',
-            transform: 'rotate(-90deg)',
-            transformOrigin: '50% 50%'
+            transition: animated
+              ? "stroke-dashoffset 1.5s cubic-bezier(0.4, 0, 0.2, 1)"
+              : "none",
+            transform: "rotate(-90deg)",
+            transformOrigin: "50% 50%",
           }}
         />
       </svg>
@@ -157,32 +175,45 @@ const VisualProgress: React.FC<VisualProgressProps> = ({
 };
 
 interface ModuleSummary {
-  completionStatus: 'completed' | 'in_progress' | 'pending';
+  completionStatus: "completed" | "in_progress" | "pending";
   title: string;
 }
 
-const TierProgressCard: React.FC<{ tierName: string; modules: ModuleSummary[] }> = ({ tierName, modules }) => {
-  const completedModules = modules.filter(m => m.completionStatus === 'completed').length;
-  const percentage = modules.length > 0 ? (completedModules / modules.length) * 100 : 0;
+const TierProgressCard: React.FC<{
+  tierName: string;
+  modules: ModuleSummary[];
+}> = ({ tierName, modules }) => {
+  const completedModules = modules.filter(
+    (m) => m.completionStatus === "completed",
+  ).length;
+  const percentage =
+    modules.length > 0 ? (completedModules / modules.length) * 100 : 0;
 
   return (
     <div className="tier-progress-card">
       <div className="tier-header">
         <h3 className="tier-title">{tierName}</h3>
-        <span className="tier-count">{completedModules}/{modules.length}</span>
+        <span className="tier-count">
+          {completedModules}/{modules.length}
+        </span>
       </div>
-      <VisualProgress 
-        percentage={percentage} 
-        variant="linear" 
-        size="small" 
+      <VisualProgress
+        percentage={percentage}
+        variant="linear"
+        size="small"
         showLabel={false}
       />
       <div className="tier-modules">
         {modules.map((module, index) => (
-          <div 
+          <div
             key={index}
-            className={`module-indicator ${module.completionStatus === 'completed' ? 'completed' : 
-              module.completionStatus === 'in_progress' ? 'in-progress' : 'pending'}`}
+            className={`module-indicator ${
+              module.completionStatus === "completed"
+                ? "completed"
+                : module.completionStatus === "in_progress"
+                  ? "in-progress"
+                  : "pending"
+            }`}
             title={module.title}
           />
         ))}
@@ -198,20 +229,22 @@ interface Achievement {
   earnedDate?: string | number | Date;
 }
 
-const AchievementBadge: React.FC<{ achievement: Achievement; size?: 'small' | 'medium' | 'large' }> = ({ 
-  achievement, 
-  size = 'medium' 
-}) => {
+const AchievementBadge: React.FC<{
+  achievement: Achievement;
+  size?: "small" | "medium" | "large";
+}> = ({ achievement, size = "medium" }) => {
   return (
-    <div className={`achievement-badge achievement-${size} ${achievement.earned ? 'earned' : 'locked'}`}>
-      <div className="badge-icon">
-        {achievement.earned ? '🏆' : '🔒'}
-      </div>
+    <div
+      className={`achievement-badge achievement-${size} ${achievement.earned ? "earned" : "locked"}`}
+    >
+      <div className="badge-icon">{achievement.earned ? "🏆" : "🔒"}</div>
       <div className="badge-info">
         <h4 className="badge-title">{achievement.title}</h4>
         <p className="badge-description">{achievement.description}</p>
         {achievement.earned && achievement.earnedDate && (
-          <span className="badge-date">Earned: {new Date(achievement.earnedDate).toLocaleDateString()}</span>
+          <span className="badge-date">
+            Earned: {new Date(achievement.earnedDate).toLocaleDateString()}
+          </span>
         )}
       </div>
     </div>
@@ -220,34 +253,55 @@ const AchievementBadge: React.FC<{ achievement: Achievement; size?: 'small' | 'm
 
 export const ProgressDashboard: React.FC = () => {
   const { progress, getTotalTimeSpent } = useProgressTracking();
-  const { streakData, getStreakStatus, getStreakMotivation } = useStreakTracking();
+  const { streakData, getStreakStatus, getStreakMotivation } =
+    useStreakTracking();
   const { achievements, getRecentAchievements } = useAchievements();
-  
-  const [activeTab, setActiveTab] = useState<'overview' | 'progress' | 'achievements' | 'streaks'>('overview');
+
+  const [activeTab, setActiveTab] = useState<
+    "overview" | "progress" | "achievements" | "streaks"
+  >("overview");
   const [stats, setStats] = useState<DashboardStats | null>(null);
 
   useEffect(() => {
     // Calculate dashboard statistics
     const allProgress = progress;
-    
+
     const totalModules = Object.keys(allProgress).length;
-    const completedModules = Object.values(allProgress).filter(p => p.completionStatus === 'completed').length;
-    const totalLessons = Object.values(allProgress).reduce((sum, p) => sum + p.totalLessons, 0);
-    const completedLessons = Object.values(allProgress).reduce((sum, p) => sum + p.lessonsCompleted, 0);
-    const totalQuizzes = Object.values(allProgress).filter(p => p.quizScore !== null).length;
-    const passedQuizzes = Object.values(allProgress).filter(p => p.quizScore && p.quizScore >= 70).length;
-    const averageQuizScore = totalQuizzes > 0 ? 
-      Object.values(allProgress).reduce((sum, p) => sum + (p.quizScore || 0), 0) / totalQuizzes : 0;
+    const completedModules = Object.values(allProgress).filter(
+      (p) => p.completionStatus === "completed",
+    ).length;
+    const totalLessons = Object.values(allProgress).reduce(
+      (sum, p) => sum + p.totalLessons,
+      0,
+    );
+    const completedLessons = Object.values(allProgress).reduce(
+      (sum, p) => sum + p.lessonsCompleted,
+      0,
+    );
+    const totalQuizzes = Object.values(allProgress).filter(
+      (p) => p.quizScore !== null,
+    ).length;
+    const passedQuizzes = Object.values(allProgress).filter(
+      (p) => p.quizScore && p.quizScore >= 70,
+    ).length;
+    const averageQuizScore =
+      totalQuizzes > 0
+        ? Object.values(allProgress).reduce(
+            (sum, p) => sum + (p.quizScore || 0),
+            0,
+          ) / totalQuizzes
+        : 0;
     const studyTime = getTotalTimeSpent();
 
     // Simplified tier calculation
-    const currentTier = 'foundational'; // This would be calculated based on progress
-    const nextTier = 'core'; // This would be calculated based on progress
+    const currentTier = "foundational"; // This would be calculated based on progress
+    const nextTier = "core"; // This would be calculated based on progress
 
     setStats({
       totalModules,
       completedModules,
-      completionPercentage: totalModules > 0 ? (completedModules / totalModules) * 100 : 0,
+      completionPercentage:
+        totalModules > 0 ? (completedModules / totalModules) * 100 : 0,
       totalLessons,
       completedLessons,
       totalQuizzes,
@@ -255,7 +309,7 @@ export const ProgressDashboard: React.FC = () => {
       averageQuizScore,
       studyTime,
       currentTier,
-      nextTier
+      nextTier,
     });
   }, [progress, getTotalTimeSpent]);
 
@@ -263,7 +317,9 @@ export const ProgressDashboard: React.FC = () => {
   const recentAchievements = getRecentAchievements();
 
   if (!stats) {
-    return <div className="progress-dashboard loading">Loading dashboard...</div>;
+    return (
+      <div className="progress-dashboard loading">Loading dashboard...</div>
+    );
   }
 
   return (
@@ -272,13 +328,20 @@ export const ProgressDashboard: React.FC = () => {
         <h1>Learning Progress Dashboard</h1>
         <div className="dashboard-summary">
           <div className="summary-card">
-            <VisualProgress percentage={stats.completionPercentage} size="large" variant="radial" />
+            <VisualProgress
+              percentage={stats.completionPercentage}
+              size="large"
+              variant="radial"
+            />
             <div className="summary-info">
               <h2>Overall Progress</h2>
-              <p>{stats.completedModules} of {stats.totalModules} modules completed</p>
+              <p>
+                {stats.completedModules} of {stats.totalModules} modules
+                completed
+              </p>
             </div>
           </div>
-          
+
           <div className="quick-stats">
             <div className="stat-item">
               <span className="stat-value">{streakData.currentStreak}</span>
@@ -289,11 +352,15 @@ export const ProgressDashboard: React.FC = () => {
               <span className="stat-label">Lessons</span>
             </div>
             <div className="stat-item">
-              <span className="stat-value">{Math.round(stats.averageQuizScore)}%</span>
+              <span className="stat-value">
+                {Math.round(stats.averageQuizScore)}%
+              </span>
               <span className="stat-label">Avg Score</span>
             </div>
             <div className="stat-item">
-              <span className="stat-value">{Math.round(stats.studyTime / 60)}h</span>
+              <span className="stat-value">
+                {Math.round(stats.studyTime / 60)}h
+              </span>
               <span className="stat-label">Study Time</span>
             </div>
           </div>
@@ -301,46 +368,52 @@ export const ProgressDashboard: React.FC = () => {
       </div>
 
       <div className="dashboard-tabs">
-        <button 
-          className={`tab-button ${activeTab === 'overview' ? 'active' : ''}`}
-          onClick={() => setActiveTab('overview')}
+        <button
+          className={`tab-button ${activeTab === "overview" ? "active" : ""}`}
+          onClick={() => setActiveTab("overview")}
         >
           Overview
         </button>
-        <button 
-          className={`tab-button ${activeTab === 'progress' ? 'active' : ''}`}
-          onClick={() => setActiveTab('progress')}
+        <button
+          className={`tab-button ${activeTab === "progress" ? "active" : ""}`}
+          onClick={() => setActiveTab("progress")}
         >
           Module Progress
         </button>
-        <button 
-          className={`tab-button ${activeTab === 'achievements' ? 'active' : ''}`}
-          onClick={() => setActiveTab('achievements')}
+        <button
+          className={`tab-button ${activeTab === "achievements" ? "active" : ""}`}
+          onClick={() => setActiveTab("achievements")}
         >
           Achievements
         </button>
-        <button 
-          className={`tab-button ${activeTab === 'streaks' ? 'active' : ''}`}
-          onClick={() => setActiveTab('streaks')}
+        <button
+          className={`tab-button ${activeTab === "streaks" ? "active" : ""}`}
+          onClick={() => setActiveTab("streaks")}
         >
           Streaks
         </button>
       </div>
 
       <div className="dashboard-content">
-        {activeTab === 'overview' && (
+        {activeTab === "overview" && (
           <div className="overview-tab">
             <div className="progress-grid">
               <div className="grid-item">
                 <h3>Learning Streak</h3>
                 <div className="streak-info">
                   <div className="streak-current">
-                    <span className="streak-number">{streakData.currentStreak}</span>
+                    <span className="streak-number">
+                      {streakData.currentStreak}
+                    </span>
                     <span className="streak-label">days</span>
                   </div>
                   <div className="streak-status">
-                    <span className={`status-indicator ${streakStatus.status}`} />
-                    <span className="status-message">{streakStatus.message}</span>
+                    <span
+                      className={`status-indicator ${streakStatus.status}`}
+                    />
+                    <span className="status-message">
+                      {streakStatus.message}
+                    </span>
                   </div>
                   <p className="streak-motivation">{getStreakMotivation()}</p>
                 </div>
@@ -350,9 +423,15 @@ export const ProgressDashboard: React.FC = () => {
                 <h3>Recent Achievements</h3>
                 <div className="recent-achievements">
                   {recentAchievements.length > 0 ? (
-                    recentAchievements.slice(0, 3).map((achievement, index) => (
-                      <AchievementBadge key={index} achievement={achievement} size="small" />
-                    ))
+                    recentAchievements
+                      .slice(0, 3)
+                      .map((achievement, index) => (
+                        <AchievementBadge
+                          key={index}
+                          achievement={achievement}
+                          size="small"
+                        />
+                      ))
                   ) : (
                     <p>Complete lessons and quizzes to earn achievements!</p>
                   )}
@@ -364,23 +443,31 @@ export const ProgressDashboard: React.FC = () => {
                 <div className="metrics-list">
                   <div className="metric">
                     <span className="metric-label">Lesson Completion Rate</span>
-                    <VisualProgress 
-                      percentage={stats.totalLessons > 0 ? (stats.completedLessons / stats.totalLessons) * 100 : 0}
+                    <VisualProgress
+                      percentage={
+                        stats.totalLessons > 0
+                          ? (stats.completedLessons / stats.totalLessons) * 100
+                          : 0
+                      }
                       variant="linear"
                       size="small"
                     />
                   </div>
                   <div className="metric">
                     <span className="metric-label">Quiz Pass Rate</span>
-                    <VisualProgress 
-                      percentage={stats.totalQuizzes > 0 ? (stats.passedQuizzes / stats.totalQuizzes) * 100 : 0}
+                    <VisualProgress
+                      percentage={
+                        stats.totalQuizzes > 0
+                          ? (stats.passedQuizzes / stats.totalQuizzes) * 100
+                          : 0
+                      }
                       variant="linear"
                       size="small"
                     />
                   </div>
                   <div className="metric">
                     <span className="metric-label">Average Quiz Score</span>
-                    <VisualProgress 
+                    <VisualProgress
                       percentage={stats.averageQuizScore}
                       variant="linear"
                       size="small"
@@ -392,19 +479,22 @@ export const ProgressDashboard: React.FC = () => {
           </div>
         )}
 
-        {activeTab === 'progress' && (
+        {activeTab === "progress" && (
           <div className="progress-tab">
             <div className="tier-progress-grid">
               {/* This would be populated with actual tier data from the registry */}
               <TierProgressCard tierName="Foundational" modules={[]} />
               <TierProgressCard tierName="Core Technologies" modules={[]} />
               <TierProgressCard tierName="Advanced Applications" modules={[]} />
-              <TierProgressCard tierName="Professional Practices" modules={[]} />
+              <TierProgressCard
+                tierName="Professional Practices"
+                modules={[]}
+              />
             </div>
           </div>
         )}
 
-        {activeTab === 'achievements' && (
+        {activeTab === "achievements" && (
           <div className="achievements-tab">
             <div className="achievements-grid">
               {achievements.map((achievement, index) => (
@@ -414,22 +504,28 @@ export const ProgressDashboard: React.FC = () => {
           </div>
         )}
 
-        {activeTab === 'streaks' && (
+        {activeTab === "streaks" && (
           <div className="streaks-tab">
             <div className="streak-details">
               <div className="streak-overview">
                 <h3>Streak Overview</h3>
                 <div className="streak-stats">
                   <div className="streak-stat">
-                    <span className="stat-value">{streakData.currentStreak}</span>
+                    <span className="stat-value">
+                      {streakData.currentStreak}
+                    </span>
                     <span className="stat-label">Current Streak</span>
                   </div>
                   <div className="streak-stat">
-                    <span className="stat-value">{streakData.longestStreak}</span>
+                    <span className="stat-value">
+                      {streakData.longestStreak}
+                    </span>
                     <span className="stat-label">Longest Streak</span>
                   </div>
                   <div className="streak-stat">
-                    <span className="stat-value">{streakData.streakHistory.length}</span>
+                    <span className="stat-value">
+                      {streakData.streakHistory.length}
+                    </span>
                     <span className="stat-label">Total Activities</span>
                   </div>
                 </div>
@@ -439,14 +535,19 @@ export const ProgressDashboard: React.FC = () => {
                 <h3>Milestone Progress</h3>
                 <div className="milestones-list">
                   {streakData.milestones.map((milestone, index) => (
-                    <div key={index} className={`milestone ${milestone.achieved ? 'achieved' : 'pending'}`}>
+                    <div
+                      key={index}
+                      className={`milestone ${milestone.achieved ? "achieved" : "pending"}`}
+                    >
                       <div className="milestone-icon">
-                        {milestone.achieved ? '✅' : '⏳'}
+                        {milestone.achieved ? "✅" : "⏳"}
                       </div>
                       <div className="milestone-info">
                         <h4>{milestone.title}</h4>
                         <p>{milestone.description}</p>
-                        <span className="milestone-threshold">{milestone.threshold} days</span>
+                        <span className="milestone-threshold">
+                          {milestone.threshold} days
+                        </span>
                       </div>
                     </div>
                   ))}
@@ -456,13 +557,20 @@ export const ProgressDashboard: React.FC = () => {
               <div className="streak-history">
                 <h3>Recent Activity</h3>
                 <div className="activity-list">
-                  {streakData.streakHistory.slice(-10).reverse().map((activity, index) => (
-                    <div key={index} className="activity-item">
-                      <span className="activity-date">{activity.date}</span>
-                      <span className="activity-description">{activity.activity}</span>
-                      <span className="activity-points">+{activity.points} pts</span>
-                    </div>
-                  ))}
+                  {streakData.streakHistory
+                    .slice(-10)
+                    .reverse()
+                    .map((activity, index) => (
+                      <div key={index} className="activity-item">
+                        <span className="activity-date">{activity.date}</span>
+                        <span className="activity-description">
+                          {activity.activity}
+                        </span>
+                        <span className="activity-points">
+                          +{activity.points} pts
+                        </span>
+                      </div>
+                    ))}
                 </div>
               </div>
             </div>

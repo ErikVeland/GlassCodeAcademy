@@ -1,0 +1,17 @@
+{
+  "id": "dotnet-fundamentals-14",
+  "type": "lesson",
+  "slug": "dotnet-fundamentals-14",
+  "title": "Advanced Middleware Patterns",
+  "versions": [
+    {
+      "version": "1.0.0",
+      "lastUpdated": "2025-11-12T02:37:42.896Z",
+      "changes": [
+        "Initial version import"
+      ],
+      "author": "system",
+      "hash": "-2ef68202"
+    }
+  ]
+}

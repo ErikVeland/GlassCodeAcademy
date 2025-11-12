@@ -1,0 +1,17 @@
+{
+  "id": "typescript-fundamentals-14",
+  "type": "lesson",
+  "slug": "typescript-fundamentals-14",
+  "title": "TypeScript in Production and Migration Strategies",
+  "versions": [
+    {
+      "version": "1.0.0",
+      "lastUpdated": "2025-11-12T02:37:42.935Z",
+      "changes": [
+        "Initial version import"
+      ],
+      "author": "system",
+      "hash": "-3c6dd62c"
+    }
+  ]
+}

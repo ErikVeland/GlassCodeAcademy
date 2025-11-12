@@ -1,0 +1,17 @@
+{
+  "id": "tailwind-advanced-6",
+  "type": "lesson",
+  "slug": "tailwind-advanced-6",
+  "title": "Building Reusable Components",
+  "versions": [
+    {
+      "version": "1.0.0",
+      "lastUpdated": "2025-11-12T02:37:42.928Z",
+      "changes": [
+        "Initial version import"
+      ],
+      "author": "system",
+      "hash": "608e6944"
+    }
+  ]
+}

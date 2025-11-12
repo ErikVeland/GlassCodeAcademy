@@ -3,9 +3,9 @@
  * Provides a centralized client for interacting with the new Node.js backend API
  */
 
-import { getApiBaseStrict, getPublicOriginStrict } from '@/lib/urlUtils';
-import { getShortSlugFromModuleSlug } from '@/lib/contentRegistry';
-import { isNetworkError } from '@/lib/isNetworkError';
+import { getApiBaseStrict, getPublicOriginStrict } from "@/lib/urlUtils";
+import { getShortSlugFromModuleSlug } from "@/lib/contentRegistry";
+import { isNetworkError } from "@/lib/isNetworkError";
 
 // Define response types
 interface ApiResponse<T> {
@@ -210,11 +210,13 @@ class NodeJsApiClient {
       this.baseUrl = getApiBaseStrict();
     } catch {
       // Fallback to localhost only in development (non-CI)
-      const isDev = process.env.NODE_ENV !== 'production' && !process.env.CI;
+      const isDev = process.env.NODE_ENV !== "production" && !process.env.CI;
       if (isDev) {
-        this.baseUrl = 'http://localhost:8080';
+        this.baseUrl = "http://localhost:8080";
       } else {
-        throw new Error('API base not configured. Set NEXT_PUBLIC_API_BASE for production/CI environments.');
+        throw new Error(
+          "API base not configured. Set NEXT_PUBLIC_API_BASE for production/CI environments.",
+        );
       }
     }
   }
@@ -232,17 +234,17 @@ class NodeJsApiClient {
   // Generic fetch helper
   private async fetch<T>(
     endpoint: string,
-    options: RequestInit = {}
+    options: RequestInit = {},
   ): Promise<ApiResponse<T>> {
     const url = `${this.baseUrl}/api${endpoint}`;
-    
+
     // Set default headers using Headers to support all HeadersInit variants
     const headers = new Headers(options.headers || {});
-    headers.set('Content-Type', 'application/json');
+    headers.set("Content-Type", "application/json");
 
     // Add authentication header if token exists
     if (this.token) {
-      headers.set('Authorization', `Bearer ${this.token}`);
+      headers.set("Authorization", `Bearer ${this.token}`);
     }
 
     try {
@@ -262,8 +264,8 @@ class NodeJsApiClient {
         return {
           success: false,
           error: {
-            code: 'NETWORK_ERROR',
-            message: 'Network error occurred. Please check your connection.',
+            code: "NETWORK_ERROR",
+            message: "Network error occurred. Please check your connection.",
           },
         };
       }
@@ -271,8 +273,11 @@ class NodeJsApiClient {
       return {
         success: false,
         error: {
-          code: 'INTERNAL_ERROR',
-          message: error instanceof Error ? error.message : 'An unknown error occurred',
+          code: "INTERNAL_ERROR",
+          message:
+            error instanceof Error
+              ? error.message
+              : "An unknown error occurred",
         },
       };
     }
@@ -280,48 +285,58 @@ class NodeJsApiClient {
 
   // Authentication endpoints
   async register(data: RegisterRequest): Promise<ApiResponse<AuthResponse>> {
-    return this.fetch<AuthResponse>('/auth/register', {
-      method: 'POST',
+    return this.fetch<AuthResponse>("/auth/register", {
+      method: "POST",
       body: JSON.stringify(data),
     });
   }
 
   async login(data: LoginRequest): Promise<ApiResponse<AuthResponse>> {
-    return this.fetch<AuthResponse>('/auth/login', {
-      method: 'POST',
+    return this.fetch<AuthResponse>("/auth/login", {
+      method: "POST",
       body: JSON.stringify(data),
     });
   }
 
   async requestPasswordReset(email: string): Promise<ApiResponse<unknown>> {
-    return this.fetch<unknown>('/auth/password/request-reset', {
-      method: 'POST',
+    return this.fetch<unknown>("/auth/password/request-reset", {
+      method: "POST",
       body: JSON.stringify({ email }),
     });
   }
 
-  async resetPassword(token: string, newPassword: string): Promise<ApiResponse<unknown>> {
-    return this.fetch<unknown>('/auth/password/reset', {
-      method: 'POST',
+  async resetPassword(
+    token: string,
+    newPassword: string,
+  ): Promise<ApiResponse<unknown>> {
+    return this.fetch<unknown>("/auth/password/reset", {
+      method: "POST",
       body: JSON.stringify({ token, newPassword }),
     });
   }
 
   // Profile endpoints
   async getProfile(): Promise<ApiResponse<ProfileResponse>> {
-    return this.fetch<ProfileResponse>('/profile/profile');
+    return this.fetch<ProfileResponse>("/profile/profile");
   }
 
-  async updateProfile(data: UpdateProfileRequest): Promise<ApiResponse<ProfileResponse>> {
-    return this.fetch<ProfileResponse>('/profile/profile', {
-      method: 'PUT',
+  async updateProfile(
+    data: UpdateProfileRequest,
+  ): Promise<ApiResponse<ProfileResponse>> {
+    return this.fetch<ProfileResponse>("/profile/profile", {
+      method: "PUT",
       body: JSON.stringify(data),
     });
   }
 
   // Course endpoints
-  async getCourses(page = 1, limit = 10): Promise<ApiResponse<CourseListResponse>> {
-    return this.fetch<CourseListResponse>(`/courses?page=${page}&limit=${limit}`);
+  async getCourses(
+    page = 1,
+    limit = 10,
+  ): Promise<ApiResponse<CourseListResponse>> {
+    return this.fetch<CourseListResponse>(
+      `/courses?page=${page}&limit=${limit}`,
+    );
   }
 
   async getCourseById(id: number): Promise<ApiResponse<Course>> {
@@ -347,10 +362,17 @@ class NodeJsApiClient {
   }
 
   // Quiz endpoints
-  async getQuizzesByLessonId(lessonId: number): Promise<ApiResponse<QuizQuestion[]>> {
+  async getQuizzesByLessonId(
+    lessonId: number,
+  ): Promise<ApiResponse<QuizQuestion[]>> {
     // First attempt: fetch from backend by lessonId
-    const primary = await this.fetch<QuizQuestion[]>(`/lessons/${lessonId}/quizzes`);
-    const hasEmptyPrimary = primary.success && Array.isArray(primary.data) && primary.data.length === 0;
+    const primary = await this.fetch<QuizQuestion[]>(
+      `/lessons/${lessonId}/quizzes`,
+    );
+    const hasEmptyPrimary =
+      primary.success &&
+      Array.isArray(primary.data) &&
+      primary.data.length === 0;
     if (!hasEmptyPrimary) return primary;
 
     // Fallback: derive module slug and use content-based quizzes for the module
@@ -364,59 +386,130 @@ class NodeJsApiClient {
 
       const moduleSlug = moduleResp.data.slug;
       // Convert module slug to short slug for content API route compatibility
-      const shortSlug = await getShortSlugFromModuleSlug(moduleSlug) || moduleSlug;
-      const isBrowser = typeof window !== 'undefined';
-      const origin = isBrowser ? '' : (() => { try { return getPublicOriginStrict().replace(/\/+$/, ''); } catch { return ''; } })();
-      const url = isBrowser ? `/api/content/quizzes/${shortSlug}` : (origin ? `${origin}/api/content/quizzes/${shortSlug}` : '');
+      const shortSlug =
+        (await getShortSlugFromModuleSlug(moduleSlug)) || moduleSlug;
+      const isBrowser = typeof window !== "undefined";
+      const origin = isBrowser
+        ? ""
+        : (() => {
+            try {
+              return getPublicOriginStrict().replace(/\/+$/, "");
+            } catch {
+              return "";
+            }
+          })();
+      const url = isBrowser
+        ? `/api/content/quizzes/${shortSlug}`
+        : origin
+          ? `${origin}/api/content/quizzes/${shortSlug}`
+          : "";
       if (!url) return primary;
 
       const controller = new AbortController();
       const timeoutId = setTimeout(() => controller.abort(), 10000);
-      const res = await fetch(url, isBrowser ? { signal: controller.signal, cache: 'no-store' } : { signal: controller.signal, next: { revalidate: 600 } }).finally(() => {
+      const res = await fetch(
+        url,
+        isBrowser
+          ? { signal: controller.signal, cache: "no-store" }
+          : { signal: controller.signal, next: { revalidate: 600 } },
+      ).finally(() => {
         clearTimeout(timeoutId);
       });
       if (!res.ok) return primary;
       const json: unknown = await res.json();
-      const questionsRaw: unknown[] = Array.isArray((json as { questions?: unknown[] })?.questions)
-        ? (((json as { questions?: unknown[] }).questions as unknown[]) || [])
-        : Array.isArray(json) ? (json as unknown[]) : [];
+      const questionsRaw: unknown[] = Array.isArray(
+        (json as { questions?: unknown[] })?.questions,
+      )
+        ? ((json as { questions?: unknown[] }).questions as unknown[]) || []
+        : Array.isArray(json)
+          ? (json as unknown[])
+          : [];
 
       // Map file-based questions into backend QuizQuestion shape
       const nowIso = new Date().toISOString();
       const mapped: QuizQuestion[] = questionsRaw.map((qRaw, idx) => {
-        const q: Record<string, unknown> = (qRaw && typeof qRaw === 'object') ? (qRaw as Record<string, unknown>) : {};
-        const questionText = typeof q["question"] === 'string' ? (q["question"] as string)
-          : typeof q["prompt"] === 'string' ? (q["prompt"] as string) : '';
+        const q: Record<string, unknown> =
+          qRaw && typeof qRaw === "object"
+            ? (qRaw as Record<string, unknown>)
+            : {};
+        const questionText =
+          typeof q["question"] === "string"
+            ? (q["question"] as string)
+            : typeof q["prompt"] === "string"
+              ? (q["prompt"] as string)
+              : "";
 
         const choicesArr: unknown = q["choices"] ?? q["options"] ?? [];
-        const choices: string[] = Array.isArray(choicesArr) ? choicesArr.map(v => String(v)) : [];
+        const choices: string[] = Array.isArray(choicesArr)
+          ? choicesArr.map((v) => String(v))
+          : [];
 
-        const correctCandidate = q["correctAnswer"] ?? q["correct_index"] ?? q["answerIndex"] ?? 0;
-        const correctAnswer = typeof correctCandidate === 'number' ? correctCandidate : Number(correctCandidate) || 0;
+        const correctCandidate =
+          q["correctAnswer"] ?? q["correct_index"] ?? q["answerIndex"] ?? 0;
+        const correctAnswer =
+          typeof correctCandidate === "number"
+            ? correctCandidate
+            : Number(correctCandidate) || 0;
 
-        const estimatedCandidate = q["estimatedTime"] ?? q["estimated_time"] ?? 90;
-        const estimatedTime = typeof estimatedCandidate === 'number' ? estimatedCandidate : Number(estimatedCandidate) || 90;
+        const estimatedCandidate =
+          q["estimatedTime"] ?? q["estimated_time"] ?? 90;
+        const estimatedTime =
+          typeof estimatedCandidate === "number"
+            ? estimatedCandidate
+            : Number(estimatedCandidate) || 90;
 
         const sortOrderCandidate = q["order"] ?? q["sortOrder"] ?? idx;
-        const sortOrder = typeof sortOrderCandidate === 'number' ? sortOrderCandidate : Number(sortOrderCandidate) || idx;
+        const sortOrder =
+          typeof sortOrderCandidate === "number"
+            ? sortOrderCandidate
+            : Number(sortOrderCandidate) || idx;
 
         return {
-          id: typeof q["id"] === 'number' ? (q["id"] as number) : Number(`${lessonId}${idx}`),
+          id:
+            typeof q["id"] === "number"
+              ? (q["id"] as number)
+              : Number(`${lessonId}${idx}`),
           question: questionText,
-          topic: typeof q["topic"] === 'string' ? (q["topic"] as string) : 'general',
-          difficulty: typeof q["difficulty"] === 'string' ? (q["difficulty"] as string) : 'Beginner',
+          topic:
+            typeof q["topic"] === "string" ? (q["topic"] as string) : "general",
+          difficulty:
+            typeof q["difficulty"] === "string"
+              ? (q["difficulty"] as string)
+              : "Beginner",
           choices,
           fixedChoiceOrder: !!q["fixedChoiceOrder"],
-          choiceLabels: (q["choiceLabels"] && typeof q["choiceLabels"] === 'object') ? (q["choiceLabels"] as Record<string, unknown>) : undefined,
-          acceptedAnswers: Array.isArray(q["acceptedAnswers"]) ? (q["acceptedAnswers"] as unknown[]).map(v => String(v)) : undefined,
-          explanation: typeof q["explanation"] === 'string' ? (q["explanation"] as string) : undefined,
-          industryContext: typeof q["industryContext"] === 'string' ? (q["industryContext"] as string) : undefined,
-          tags: Array.isArray(q["tags"]) ? (q["tags"] as unknown[]).map(v => String(v)) : undefined,
-          questionType: typeof q["type"] === 'string' ? (q["type"] as string) : 'multiple-choice',
+          choiceLabels:
+            q["choiceLabels"] && typeof q["choiceLabels"] === "object"
+              ? (q["choiceLabels"] as Record<string, unknown>)
+              : undefined,
+          acceptedAnswers: Array.isArray(q["acceptedAnswers"])
+            ? (q["acceptedAnswers"] as unknown[]).map((v) => String(v))
+            : undefined,
+          explanation:
+            typeof q["explanation"] === "string"
+              ? (q["explanation"] as string)
+              : undefined,
+          industryContext:
+            typeof q["industryContext"] === "string"
+              ? (q["industryContext"] as string)
+              : undefined,
+          tags: Array.isArray(q["tags"])
+            ? (q["tags"] as unknown[]).map((v) => String(v))
+            : undefined,
+          questionType:
+            typeof q["type"] === "string"
+              ? (q["type"] as string)
+              : "multiple-choice",
           estimatedTime,
           correctAnswer,
-          quizType: typeof q["quizType"] === 'string' ? (q["quizType"] as string) : 'module',
-          sources: (q["sources"] && typeof q["sources"] === 'object') ? (q["sources"] as Record<string, unknown>) : undefined,
+          quizType:
+            typeof q["quizType"] === "string"
+              ? (q["quizType"] as string)
+              : "module",
+          sources:
+            q["sources"] && typeof q["sources"] === "object"
+              ? (q["sources"] as Record<string, unknown>)
+              : undefined,
           sortOrder,
           isPublished: true,
           lessonId: lessonId,
@@ -437,35 +530,42 @@ class NodeJsApiClient {
 
   async submitQuizAnswers(
     lessonId: number,
-    data: QuizSubmissionRequest
+    data: QuizSubmissionRequest,
   ): Promise<ApiResponse<QuizSubmissionResponse>> {
-    return this.fetch<QuizSubmissionResponse>(`/quiz/lessons/${lessonId}/submit`, {
-      method: 'POST',
-      body: JSON.stringify(data),
-    });
+    return this.fetch<QuizSubmissionResponse>(
+      `/quiz/lessons/${lessonId}/submit`,
+      {
+        method: "POST",
+        body: JSON.stringify(data),
+      },
+    );
   }
 
   // Progress endpoints
-  async getCourseProgress(courseId: number): Promise<ApiResponse<UserProgress>> {
+  async getCourseProgress(
+    courseId: number,
+  ): Promise<ApiResponse<UserProgress>> {
     return this.fetch<UserProgress>(`/progress/courses/${courseId}`);
   }
 
   async updateLessonProgress(
     lessonId: number,
-    data: Partial<UserLessonProgress>
+    data: Partial<UserLessonProgress>,
   ): Promise<ApiResponse<UserLessonProgress>> {
     return this.fetch<UserLessonProgress>(`/progress/lessons/${lessonId}`, {
-      method: 'POST',
+      method: "POST",
       body: JSON.stringify(data),
     });
   }
 
-  async getLessonProgress(lessonId: number): Promise<ApiResponse<UserLessonProgress>> {
+  async getLessonProgress(
+    lessonId: number,
+  ): Promise<ApiResponse<UserLessonProgress>> {
     return this.fetch<UserLessonProgress>(`/progress/lessons/${lessonId}`);
   }
 
   async getProgressSummary(): Promise<ApiResponse<ProgressSummary>> {
-    return this.fetch<ProgressSummary>('/quiz/summary');
+    return this.fetch<ProgressSummary>("/quiz/summary");
   }
 }
 

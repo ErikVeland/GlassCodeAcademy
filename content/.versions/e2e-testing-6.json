@@ -1,0 +1,17 @@
+{
+  "id": "e2e-testing-6",
+  "type": "lesson",
+  "slug": "e2e-testing-6",
+  "title": "Network Interception and API Mocking",
+  "versions": [
+    {
+      "version": "1.0.0",
+      "lastUpdated": "2025-11-12T02:37:42.898Z",
+      "changes": [
+        "Initial version import"
+      ],
+      "author": "system",
+      "hash": "-aa1bb0a"
+    }
+  ]
+}

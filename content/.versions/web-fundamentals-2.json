@@ -1,0 +1,17 @@
+{
+  "id": "web-fundamentals-2",
+  "type": "lesson",
+  "slug": "web-fundamentals-2",
+  "title": "CSS3 Layout and Styling",
+  "versions": [
+    {
+      "version": "1.0.0",
+      "lastUpdated": "2025-11-12T02:37:42.941Z",
+      "changes": [
+        "Initial version import"
+      ],
+      "author": "system",
+      "hash": "-6d335cb6"
+    }
+  ]
+}

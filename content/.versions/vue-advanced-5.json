@@ -1,0 +1,17 @@
+{
+  "id": "vue-advanced-5",
+  "type": "lesson",
+  "slug": "vue-advanced-5",
+  "title": "Reactive References and Composables",
+  "versions": [
+    {
+      "version": "1.0.0",
+      "lastUpdated": "2025-11-12T02:37:42.938Z",
+      "changes": [
+        "Initial version import"
+      ],
+      "author": "system",
+      "hash": "496beb6a"
+    }
+  ]
+}

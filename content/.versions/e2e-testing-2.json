@@ -1,0 +1,17 @@
+{
+  "id": "e2e-testing-2",
+  "type": "lesson",
+  "slug": "e2e-testing-2",
+  "title": "Cypress Fundamentals",
+  "versions": [
+    {
+      "version": "1.0.0",
+      "lastUpdated": "2025-11-12T02:37:42.898Z",
+      "changes": [
+        "Initial version import"
+      ],
+      "author": "system",
+      "hash": "70371804"
+    }
+  ]
+}

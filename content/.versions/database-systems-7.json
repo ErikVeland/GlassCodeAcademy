@@ -1,0 +1,17 @@
+{
+  "id": "database-systems-7",
+  "type": "lesson",
+  "slug": "database-systems-7",
+  "title": "Query Optimization and Execution Plans",
+  "versions": [
+    {
+      "version": "1.0.0",
+      "lastUpdated": "2025-11-12T02:37:42.891Z",
+      "changes": [
+        "Initial version import"
+      ],
+      "author": "system",
+      "hash": "a627919"
+    }
+  ]
+}

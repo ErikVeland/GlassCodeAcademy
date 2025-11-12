@@ -1,0 +1,17 @@
+{
+  "id": "security-fundamentals-12",
+  "type": "lesson",
+  "slug": "security-fundamentals-12",
+  "title": "API Security Best Practices",
+  "versions": [
+    {
+      "version": "1.0.0",
+      "lastUpdated": "2025-11-12T02:37:42.926Z",
+      "changes": [
+        "Initial version import"
+      ],
+      "author": "system",
+      "hash": "771cc16b"
+    }
+  ]
+}

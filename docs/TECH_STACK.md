@@ -150,6 +150,31 @@ graph TB
    - Consistent environments across dev/staging/production
    - Easy scaling and deployment
 
+### Local Verification & Dev
+
+#### Verified Services and Ports
+- Frontend (Next.js): `http://localhost:3000`
+- Backend API (Fastify): `http://localhost:8081`
+- PostgreSQL: `localhost:5432` (default user/password: `postgres`)
+- Redis: `localhost:6379`
+
+#### Docker Compose (Dev)
+- Root `docker-compose.yml` defines `api`, `frontend`, `postgres`, and `redis` services with health checks.
+- Frontend points to API via `NEXT_PUBLIC_API_BASE=http://api:8081` when run inside Compose.
+- Observability: `apps/api/docker-compose.yml` contains Grafana/Prometheus/Jaeger services which can be run separately.
+
+#### Quick Checks
+- Backend (apps/api):
+  - `npm ci && npm test && npm run lint`
+  - Build step is N/A by design (scripts run directly; CI compiles TypeScript when needed).
+- Frontend (glasscode/frontend):
+  - `npm ci && npm run typecheck && npm run lint && npm run build`
+  - Start (standalone output): `PORT=3000 node .next/standalone/server.js`
+
+#### Notes
+- The frontend may log a non-blocking NextAuth client error in development if `NEXTAUTH_URL`/`NEXTAUTH_SECRET` are not set. This does not prevent general navigation; set these in `.env.local` for full auth flows.
+- Terraform validation currently requires AWS credentials; run plan/apply with a valid `AWS_PROFILE` or environment keys.
+
 ## Modernization Milestone Achieved ✅
 
 ### Backend Technology Modernization (Completed November 2025)

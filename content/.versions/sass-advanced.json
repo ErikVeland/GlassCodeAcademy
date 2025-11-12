@@ -1,0 +1,17 @@
+{
+  "id": "sass-advanced",
+  "type": "quiz",
+  "slug": "sass-advanced",
+  "title": "Quiz for sass-advanced",
+  "versions": [
+    {
+      "version": "1.0.0",
+      "lastUpdated": "2025-11-12T02:37:42.948Z",
+      "changes": [
+        "Initial version import"
+      ],
+      "author": "system",
+      "hash": "29143c38"
+    }
+  ]
+}

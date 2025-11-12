@@ -26,31 +26,35 @@ class QuizPrefetchService {
   /**
    * Start prefetching quizzes in the background
    */
-  async startPrefetching(priorityOrder: 'tier' | 'popularity' | 'alphabetical' = 'tier') {
+  async startPrefetching(
+    priorityOrder: "tier" | "popularity" | "alphabetical" = "tier",
+  ) {
     if (this.isPrefetching) {
-      console.log('[QuizPrefetchService] Already prefetching, skipping');
+      console.log("[QuizPrefetchService] Already prefetching, skipping");
       return;
     }
 
     this.isPrefetching = true;
-    console.log('[QuizPrefetchService] Starting quiz prefetch process');
+    console.log("[QuizPrefetchService] Starting quiz prefetch process");
 
     try {
       // Get modules in priority order
       const modules = await this.getModulesByPriority(priorityOrder);
-      
+
       // Add to queue
-      this.prefetchQueue = modules.map(m => m.slug);
+      this.prefetchQueue = modules.map((m) => m.slug);
       this.queueLength = this.prefetchQueue.length;
-      
-      console.log(`[QuizPrefetchService] Queue initialized with ${this.queueLength} modules`);
-      
+
+      console.log(
+        `[QuizPrefetchService] Queue initialized with ${this.queueLength} modules`,
+      );
+
       // Process queue
       await this.processQueue();
-      
-      console.log('[QuizPrefetchService] Completed quiz prefetch process');
+
+      console.log("[QuizPrefetchService] Completed quiz prefetch process");
     } catch (error) {
-      console.error('[QuizPrefetchService] Error in prefetch process:', error);
+      console.error("[QuizPrefetchService] Error in prefetch process:", error);
     } finally {
       this.isPrefetching = false;
     }
@@ -69,52 +73,72 @@ class QuizPrefetchService {
         routes?: { overview?: string };
       };
 
-      const res = await fetch('/api/content/registry', { cache: 'no-store' });
+      const res = await fetch("/api/content/registry", { cache: "no-store" });
       if (!res.ok) return [];
       const data = await res.json();
-      const modules: RegistryModule[] = Array.isArray(data?.modules) ? data.modules : [];
+      const modules: RegistryModule[] = Array.isArray(data?.modules)
+        ? data.modules
+        : [];
 
       // Build shortSlug mapping for later quiz fetches
-      const normalized = modules.map((m) => {
-        const slug = (m?.slug || '').toString();
-        const overview = m?.routes?.overview;
-        const shortSlug = typeof overview === 'string' && overview.trim() !== ''
-          ? overview.replace(/^\/+/, '').split('/')[0]
-          : (slug.includes('-') ? slug.split('-')[0] : slug);
-        return {
-          slug,
-          title: (m?.title || '').toString(),
-          order: typeof m?.order === 'number' ? m.order : 0,
-          tier: (m?.tier || 'core').toString(),
-          shortSlug,
-        };
-      }).filter(m => m.slug);
+      const normalized = modules
+        .map((m) => {
+          const slug = (m?.slug || "").toString();
+          const overview = m?.routes?.overview;
+          const shortSlug =
+            typeof overview === "string" && overview.trim() !== ""
+              ? overview.replace(/^\/+/, "").split("/")[0]
+              : slug.includes("-")
+                ? slug.split("-")[0]
+                : slug;
+          return {
+            slug,
+            title: (m?.title || "").toString(),
+            order: typeof m?.order === "number" ? m.order : 0,
+            tier: (m?.tier || "core").toString(),
+            shortSlug,
+          };
+        })
+        .filter((m) => m.slug);
 
       // Prefer storing mapping for later use
-      normalized.forEach(m => {
+      normalized.forEach((m) => {
         if (!this.prefetchedModules.has(m.slug)) {
           this.shortSlugByModuleSlug.set(m.slug, m.shortSlug);
         }
       });
 
       switch (priorityOrder) {
-        case 'tier': {
-          const tierOrder = ['foundational', 'core', 'specialized', 'quality'];
-          return normalized.sort((a, b) => {
-            const aTierIndex = tierOrder.indexOf(a.tier);
-            const bTierIndex = tierOrder.indexOf(b.tier);
-            if (aTierIndex !== bTierIndex) return aTierIndex - bTierIndex;
-            return (a.order || 0) - (b.order || 0);
-          }).map(m => ({ slug: m.slug, title: m.title, order: m.order, tier: m.tier }));
+        case "tier": {
+          const tierOrder = ["foundational", "core", "specialized", "quality"];
+          return normalized
+            .sort((a, b) => {
+              const aTierIndex = tierOrder.indexOf(a.tier);
+              const bTierIndex = tierOrder.indexOf(b.tier);
+              if (aTierIndex !== bTierIndex) return aTierIndex - bTierIndex;
+              return (a.order || 0) - (b.order || 0);
+            })
+            .map((m) => ({
+              slug: m.slug,
+              title: m.title,
+              order: m.order,
+              tier: m.tier,
+            }));
         }
-        case 'popularity':
-        case 'alphabetical':
+        case "popularity":
+        case "alphabetical":
         default:
-          return normalized.sort((a, b) => a.title.localeCompare(b.title))
-            .map(m => ({ slug: m.slug, title: m.title, order: m.order, tier: m.tier }));
+          return normalized
+            .sort((a, b) => a.title.localeCompare(b.title))
+            .map((m) => ({
+              slug: m.slug,
+              title: m.title,
+              order: m.order,
+              tier: m.tier,
+            }));
       }
     } catch (error) {
-      console.error('[QuizPrefetchService] Error getting modules:', error);
+      console.error("[QuizPrefetchService] Error getting modules:", error);
       return [];
     }
   }
@@ -126,17 +150,23 @@ class QuizPrefetchService {
     while (this.prefetchQueue.length > 0) {
       // Take a batch from the queue
       const batch = this.prefetchQueue.splice(0, this.batchSize);
-      
-      console.log(`[QuizPrefetchService] Processing batch: ${batch.join(', ')}. Remaining: ${this.prefetchQueue.length}`);
-      
+
+      console.log(
+        `[QuizPrefetchService] Processing batch: ${batch.join(", ")}. Remaining: ${this.prefetchQueue.length}`,
+      );
+
       // Process batch concurrently
-      const promises = batch.map(slug => this.prefetchQuiz(slug));
+      const promises = batch.map((slug) => this.prefetchQuiz(slug));
       await Promise.all(promises);
-      
+
       // Add delay between batches
       if (this.prefetchQueue.length > 0) {
-        console.log(`[QuizPrefetchService] Waiting ${this.delayBetweenRequests}ms before next batch`);
-        await new Promise(resolve => setTimeout(resolve, this.delayBetweenRequests));
+        console.log(
+          `[QuizPrefetchService] Waiting ${this.delayBetweenRequests}ms before next batch`,
+        );
+        await new Promise((resolve) =>
+          setTimeout(resolve, this.delayBetweenRequests),
+        );
       }
     }
   }
@@ -147,7 +177,9 @@ class QuizPrefetchService {
   private async prefetchQuiz(moduleSlug: string) {
     // Skip if already prefetched
     if (this.prefetchedModules.has(moduleSlug)) {
-      console.log(`[QuizPrefetchService] Already prefetched ${moduleSlug}, skipping`);
+      console.log(
+        `[QuizPrefetchService] Already prefetched ${moduleSlug}, skipping`,
+      );
       return;
     }
 
@@ -155,60 +187,83 @@ class QuizPrefetchService {
       // Check cache first
       const cacheKey = `quiz_prefetch_${moduleSlug}`;
       const cached = localStorage.getItem(cacheKey);
-      
+
       if (cached) {
         const { timestamp } = JSON.parse(cached);
         // Reuse cache if less than 30 minutes old
         if (Date.now() - timestamp < 30 * 60 * 1000) {
-          console.log(`[QuizPrefetchService] Using cached quiz for ${moduleSlug}`);
+          console.log(
+            `[QuizPrefetchService] Using cached quiz for ${moduleSlug}`,
+          );
           this.prefetchedModules.add(moduleSlug);
           return;
         }
       }
-      
+
       console.log(`[QuizPrefetchService] Fetching quiz for ${moduleSlug}`);
-      
+
       // Determine short slug from registry or slug heuristic
       let shortSlug = moduleSlug;
       try {
-        const res = await fetch('/api/content/registry', { cache: 'no-store' });
+        const res = await fetch("/api/content/registry", { cache: "no-store" });
         if (res.ok) {
           const data = await res.json();
-          const modules: Array<{ slug?: string; routes?: { overview?: string } }> = Array.isArray(data?.modules) ? data.modules : [];
-          const match = modules.find(m => (m?.slug || '') === moduleSlug);
+          const modules: Array<{
+            slug?: string;
+            routes?: { overview?: string };
+          }> = Array.isArray(data?.modules) ? data.modules : [];
+          const match = modules.find((m) => (m?.slug || "") === moduleSlug);
           const overview = match?.routes?.overview;
-          shortSlug = typeof overview === 'string' && overview.trim() !== ''
-            ? overview.replace(/^\/+/, '').split('/')[0]
-            : (moduleSlug.includes('-') ? moduleSlug.split('-')[0] : moduleSlug);
+          shortSlug =
+            typeof overview === "string" && overview.trim() !== ""
+              ? overview.replace(/^\/+/, "").split("/")[0]
+              : moduleSlug.includes("-")
+                ? moduleSlug.split("-")[0]
+                : moduleSlug;
         }
       } catch {}
 
       // Fetch the quiz via API
-      const resQuiz = await fetch(`/api/content/quizzes/${shortSlug}`, { cache: 'no-store' });
+      const resQuiz = await fetch(`/api/content/quizzes/${shortSlug}`, {
+        cache: "no-store",
+      });
       const quiz = resQuiz.ok ? await resQuiz.json() : null;
-      
+
       if (quiz && Array.isArray(quiz.questions) && quiz.questions.length > 0) {
         // Cache the full quiz data in both local and session storage
-        localStorage.setItem(`quiz_prefetch_${shortSlug}`, JSON.stringify({
-          timestamp: Date.now(),
-          data: quiz
-        }));
-        try {
-          sessionStorage.setItem(`prefetch_quiz_${shortSlug}`, JSON.stringify({
+        localStorage.setItem(
+          `quiz_prefetch_${shortSlug}`,
+          JSON.stringify({
             timestamp: Date.now(),
-            data: quiz
-          }));
+            data: quiz,
+          }),
+        );
+        try {
+          sessionStorage.setItem(
+            `prefetch_quiz_${shortSlug}`,
+            JSON.stringify({
+              timestamp: Date.now(),
+              data: quiz,
+            }),
+          );
         } catch {
           // Ignore storage errors
         }
-        
+
         this.prefetchedModules.add(moduleSlug);
-        console.log(`[QuizPrefetchService] Successfully prefetched quiz for ${moduleSlug} (${quiz.questions.length} questions)`);
+        console.log(
+          `[QuizPrefetchService] Successfully prefetched quiz for ${moduleSlug} (${quiz.questions.length} questions)`,
+        );
       } else {
-        console.log(`[QuizPrefetchService] No questions found for ${moduleSlug}`);
+        console.log(
+          `[QuizPrefetchService] No questions found for ${moduleSlug}`,
+        );
       }
     } catch (error) {
-      console.error(`[QuizPrefetchService] Error prefetching quiz for ${moduleSlug}:`, error);
+      console.error(
+        `[QuizPrefetchService] Error prefetching quiz for ${moduleSlug}:`,
+        error,
+      );
     }
   }
 
@@ -226,7 +281,7 @@ class QuizPrefetchService {
     return {
       isPrefetching: this.isPrefetching,
       queueLength: this.prefetchQueue.length,
-      prefetchedCount: this.prefetchedModules.size
+      prefetchedCount: this.prefetchedModules.size,
     };
   }
 
@@ -237,13 +292,13 @@ class QuizPrefetchService {
     // Clear all quiz prefetch cache entries
     for (let i = 0; i < localStorage.length; i++) {
       const key = localStorage.key(i);
-      if (key && key.startsWith('quiz_prefetch_')) {
+      if (key && key.startsWith("quiz_prefetch_")) {
         localStorage.removeItem(key);
       }
     }
-    
+
     this.prefetchedModules.clear();
-    console.log('[QuizPrefetchService] Cache cleared');
+    console.log("[QuizPrefetchService] Cache cleared");
   }
 }
 

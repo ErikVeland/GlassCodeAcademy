@@ -1,0 +1,17 @@
+{
+  "id": "typescript-fundamentals-5",
+  "type": "lesson",
+  "slug": "typescript-fundamentals-5",
+  "title": "Generic Types and Constraints",
+  "versions": [
+    {
+      "version": "1.1.0",
+      "lastUpdated": "2025-11-12T02:37:42.934Z",
+      "changes": [
+        "Initial version import"
+      ],
+      "author": "system",
+      "hash": "70aca38a"
+    }
+  ]
+}

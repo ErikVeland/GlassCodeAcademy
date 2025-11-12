@@ -1,0 +1,17 @@
+{
+  "id": "vue-advanced-1",
+  "type": "lesson",
+  "slug": "vue-advanced-1",
+  "title": "Vue Instance and Lifecycle",
+  "versions": [
+    {
+      "version": "1.0.0",
+      "lastUpdated": "2025-11-12T02:37:42.938Z",
+      "changes": [
+        "Initial version import"
+      ],
+      "author": "system",
+      "hash": "1230ebed"
+    }
+  ]
+}

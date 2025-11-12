@@ -1,0 +1,17 @@
+{
+  "id": "e2e-testing-5",
+  "type": "lesson",
+  "slug": "e2e-testing-5",
+  "title": "Handling Authentication and Sessions",
+  "versions": [
+    {
+      "version": "1.0.0",
+      "lastUpdated": "2025-11-12T02:37:42.898Z",
+      "changes": [
+        "Initial version import"
+      ],
+      "author": "system",
+      "hash": "-5a829065"
+    }
+  ]
+}

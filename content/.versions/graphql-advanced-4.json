@@ -1,0 +1,17 @@
+{
+  "id": "graphql-advanced-4",
+  "type": "lesson",
+  "slug": "graphql-advanced-4",
+  "title": "Mutations and Data Modification",
+  "versions": [
+    {
+      "version": "1.0.0",
+      "lastUpdated": "2025-11-12T02:37:42.901Z",
+      "changes": [
+        "Initial version import"
+      ],
+      "author": "system",
+      "hash": "-7833bf7c"
+    }
+  ]
+}

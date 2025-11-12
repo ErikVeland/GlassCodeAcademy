@@ -1,0 +1,17 @@
+{
+  "id": "tailwind-advanced-15",
+  "type": "lesson",
+  "slug": "tailwind-advanced-15",
+  "title": "Design System Implementation",
+  "versions": [
+    {
+      "version": "1.0.0",
+      "lastUpdated": "2025-11-12T02:37:42.929Z",
+      "changes": [
+        "Initial version import"
+      ],
+      "author": "system",
+      "hash": "22055769"
+    }
+  ]
+}

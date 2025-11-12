@@ -1,0 +1,17 @@
+{
+  "id": "nextjs-advanced-14",
+  "type": "lesson",
+  "slug": "nextjs-advanced-14",
+  "title": "Internationalization (i18n) and Localization",
+  "versions": [
+    {
+      "version": "1.0.0",
+      "lastUpdated": "2025-11-12T02:37:42.910Z",
+      "changes": [
+        "Initial version import"
+      ],
+      "author": "system",
+      "hash": "27f3d834"
+    }
+  ]
+}

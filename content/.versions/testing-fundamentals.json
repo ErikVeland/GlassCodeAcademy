@@ -1,0 +1,17 @@
+{
+  "id": "testing-fundamentals",
+  "type": "quiz",
+  "slug": "testing-fundamentals",
+  "title": "Quiz for testing-fundamentals",
+  "versions": [
+    {
+      "version": "1.0.0",
+      "lastUpdated": "2025-11-12T02:37:42.949Z",
+      "changes": [
+        "Initial version import"
+      ],
+      "author": "system",
+      "hash": "-1d80c325"
+    }
+  ]
+}

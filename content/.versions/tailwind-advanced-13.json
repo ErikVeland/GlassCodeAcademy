@@ -1,0 +1,17 @@
+{
+  "id": "tailwind-advanced-13",
+  "type": "lesson",
+  "slug": "tailwind-advanced-13",
+  "title": "Advanced Tailwind CSS Patterns and Best Practices",
+  "versions": [
+    {
+      "version": "1.0.0",
+      "lastUpdated": "2025-11-12T02:37:42.929Z",
+      "changes": [
+        "Initial version import"
+      ],
+      "author": "system",
+      "hash": "42bb01af"
+    }
+  ]
+}

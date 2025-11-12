@@ -1,0 +1,17 @@
+{
+  "id": "sass-advanced-15",
+  "type": "lesson",
+  "slug": "sass-advanced-15",
+  "title": "Advanced Responsive Design Techniques with Sass",
+  "versions": [
+    {
+      "version": "1.0.0",
+      "lastUpdated": "2025-11-12T02:37:42.923Z",
+      "changes": [
+        "Initial version import"
+      ],
+      "author": "system",
+      "hash": "-6ff68eec"
+    }
+  ]
+}

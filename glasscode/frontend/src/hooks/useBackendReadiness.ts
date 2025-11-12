@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect } from "react";
 
 interface HealthResponse {
   success: boolean;
@@ -29,12 +29,14 @@ export function useBackendReadiness(options?: { enabled?: boolean }) {
         }
 
         // Always use same-origin health proxy to avoid CORS and env drift
-        const url = '/health';
-        const response = await fetch(url, { cache: 'no-store' });
-        
+        const url = "/health";
+        const response = await fetch(url, { cache: "no-store" });
+
         if (response.ok) {
           // Health endpoint returns a simple success payload
-          const data: HealthResponse = await response.json().catch(() => ({ success: true }));
+          const data: HealthResponse = await response
+            .json()
+            .catch(() => ({ success: true }));
           if (data && (data.success || response.status === 200)) {
             if (!isCancelled) {
               setIsReady(true);
@@ -44,13 +46,13 @@ export function useBackendReadiness(options?: { enabled?: boolean }) {
             return;
           }
         }
-        
+
         if (!isCancelled) {
           setError(`HTTP ${response.status}: ${response.statusText}`);
           if (retryCount < maxRetries) {
             setTimeout(() => {
               if (!isCancelled) {
-                setRetryCount(prev => prev + 1);
+                setRetryCount((prev) => prev + 1);
               }
             }, retryDelay);
           } else {
@@ -59,12 +61,13 @@ export function useBackendReadiness(options?: { enabled?: boolean }) {
         }
       } catch (err) {
         if (!isCancelled) {
-          const errorMessage = err instanceof Error ? err.message : 'Unknown error';
+          const errorMessage =
+            err instanceof Error ? err.message : "Unknown error";
           setError(`Network error: ${errorMessage}`);
           if (retryCount < maxRetries) {
             setTimeout(() => {
               if (!isCancelled) {
-                setRetryCount(prev => prev + 1);
+                setRetryCount((prev) => prev + 1);
               }
             }, retryDelay);
           } else {

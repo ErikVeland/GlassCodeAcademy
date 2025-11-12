@@ -2,119 +2,119 @@
  * Tests for Node.js API Client
  */
 
-import { nodeJsApiClient } from '../nodeJsApiClient';
+import { nodeJsApiClient } from "../nodeJsApiClient";
 
 // Mock fetch globally
 global.fetch = jest.fn();
 
-describe('NodeJsApiClient', () => {
+describe("NodeJsApiClient", () => {
   beforeEach(() => {
     // Clear all mocks before each test
     jest.clearAllMocks();
   });
 
-  describe('Authentication', () => {
-    it('should register a new user', async () => {
+  describe("Authentication", () => {
+    it("should register a new user", async () => {
       const mockResponse = {
         success: true,
         data: {
           user: {
             id: 1,
-            email: 'test@example.com',
-            firstName: 'Test',
-            lastName: 'User'
+            email: "test@example.com",
+            firstName: "Test",
+            lastName: "User",
           },
-          token: 'mock-token'
-        }
+          token: "mock-token",
+        },
       };
 
       (global.fetch as jest.Mock).mockResolvedValue({
         ok: true,
-        json: () => Promise.resolve(mockResponse)
+        json: () => Promise.resolve(mockResponse),
       });
 
       const response = await nodeJsApiClient.register({
-        email: 'test@example.com',
-        password: 'password123',
-        firstName: 'Test',
-        lastName: 'User'
+        email: "test@example.com",
+        password: "password123",
+        firstName: "Test",
+        lastName: "User",
       });
 
       expect(response).toEqual(mockResponse);
       expect(global.fetch).toHaveBeenCalledWith(
-        'http://localhost:8080/api/auth/register',
+        "http://localhost:8080/api/auth/register",
         expect.objectContaining({
-          method: 'POST',
+          method: "POST",
           headers: {
-            'Content-Type': 'application/json'
+            "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            email: 'test@example.com',
-            password: 'password123',
-            firstName: 'Test',
-            lastName: 'User'
-          })
-        })
+            email: "test@example.com",
+            password: "password123",
+            firstName: "Test",
+            lastName: "User",
+          }),
+        }),
       );
     });
 
-    it('should login an existing user', async () => {
+    it("should login an existing user", async () => {
       const mockResponse = {
         success: true,
         data: {
           user: {
             id: 1,
-            email: 'test@example.com',
-            firstName: 'Test',
-            lastName: 'User'
+            email: "test@example.com",
+            firstName: "Test",
+            lastName: "User",
           },
-          token: 'mock-token'
-        }
+          token: "mock-token",
+        },
       };
 
       (global.fetch as jest.Mock).mockResolvedValue({
         ok: true,
-        json: () => Promise.resolve(mockResponse)
+        json: () => Promise.resolve(mockResponse),
       });
 
       const response = await nodeJsApiClient.login({
-        email: 'test@example.com',
-        password: 'password123'
+        email: "test@example.com",
+        password: "password123",
       });
 
       expect(response).toEqual(mockResponse);
       expect(global.fetch).toHaveBeenCalledWith(
-        'http://localhost:8080/api/auth/login',
+        "http://localhost:8080/api/auth/login",
         expect.objectContaining({
-          method: 'POST',
+          method: "POST",
           headers: {
-            'Content-Type': 'application/json'
+            "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            email: 'test@example.com',
-            password: 'password123'
-          })
-        })
+            email: "test@example.com",
+            password: "password123",
+          }),
+        }),
       );
     });
 
-    it('should handle network errors gracefully', async () => {
-      (global.fetch as jest.Mock).mockRejectedValue(new Error('Network error'));
+    it("should handle network errors gracefully", async () => {
+      (global.fetch as jest.Mock).mockRejectedValue(new Error("Network error"));
 
       const response = await nodeJsApiClient.login({
-        email: 'test@example.com',
-        password: 'password123'
+        email: "test@example.com",
+        password: "password123",
       });
 
       expect(response.success).toBe(false);
-      expect(response.error?.code).toBe('NETWORK_ERROR');
+      expect(response.error?.code).toBe("NETWORK_ERROR");
     });
   });
 
-  describe('Profile', () => {
+  describe("Profile", () => {
     beforeEach(() => {
       // Set auth token for protected endpoints
-      nodeJsApiClient.setAuthToken('test-token');
+      nodeJsApiClient.setAuthToken("test-token");
     });
 
     afterEach(() => {
@@ -122,294 +122,294 @@ describe('NodeJsApiClient', () => {
       nodeJsApiClient.clearAuthToken();
     });
 
-    it('should get user profile', async () => {
+    it("should get user profile", async () => {
       const mockResponse = {
         success: true,
         data: {
           id: 1,
-          email: 'test@example.com',
-          firstName: 'Test',
-          lastName: 'User',
+          email: "test@example.com",
+          firstName: "Test",
+          lastName: "User",
           isActive: true,
-          createdAt: '2023-01-01T00:00:00Z',
-          updatedAt: '2023-01-01T00:00:00Z',
-          roles: []
-        }
+          createdAt: "2023-01-01T00:00:00Z",
+          updatedAt: "2023-01-01T00:00:00Z",
+          roles: [],
+        },
       };
 
       (global.fetch as jest.Mock).mockResolvedValue({
         ok: true,
-        json: () => Promise.resolve(mockResponse)
+        json: () => Promise.resolve(mockResponse),
       });
 
       const response = await nodeJsApiClient.getProfile();
 
       expect(response).toEqual(mockResponse);
       expect(global.fetch).toHaveBeenCalledWith(
-        'http://localhost:8080/api/profile/profile',
+        "http://localhost:8080/api/profile/profile",
         expect.objectContaining({
-          method: 'GET',
+          method: "GET",
           headers: {
-            'Content-Type': 'application/json',
-            'Authorization': 'Bearer test-token'
-          }
-        })
+            "Content-Type": "application/json",
+            Authorization: "Bearer test-token",
+          },
+        }),
       );
     });
 
-    it('should update user profile', async () => {
+    it("should update user profile", async () => {
       const mockResponse = {
         success: true,
         data: {
           id: 1,
-          email: 'test@example.com',
-          firstName: 'Updated',
-          lastName: 'Name',
+          email: "test@example.com",
+          firstName: "Updated",
+          lastName: "Name",
           isActive: true,
-          createdAt: '2023-01-01T00:00:00Z',
-          updatedAt: '2023-01-01T00:00:00Z',
-          roles: []
-        }
+          createdAt: "2023-01-01T00:00:00Z",
+          updatedAt: "2023-01-01T00:00:00Z",
+          roles: [],
+        },
       };
 
       (global.fetch as jest.Mock).mockResolvedValue({
         ok: true,
-        json: () => Promise.resolve(mockResponse)
+        json: () => Promise.resolve(mockResponse),
       });
 
       const response = await nodeJsApiClient.updateProfile({
-        firstName: 'Updated',
-        lastName: 'Name'
+        firstName: "Updated",
+        lastName: "Name",
       });
 
       expect(response).toEqual(mockResponse);
       expect(global.fetch).toHaveBeenCalledWith(
-        'http://localhost:8080/api/profile/profile',
+        "http://localhost:8080/api/profile/profile",
         expect.objectContaining({
-          method: 'PUT',
+          method: "PUT",
           headers: {
-            'Content-Type': 'application/json',
-            'Authorization': 'Bearer test-token'
+            "Content-Type": "application/json",
+            Authorization: "Bearer test-token",
           },
           body: JSON.stringify({
-            firstName: 'Updated',
-            lastName: 'Name'
-          })
-        })
+            firstName: "Updated",
+            lastName: "Name",
+          }),
+        }),
       );
     });
   });
 
-  describe('Courses', () => {
-    it('should get courses with pagination', async () => {
+  describe("Courses", () => {
+    it("should get courses with pagination", async () => {
       const mockResponse = {
         success: true,
         data: {
           courses: [
             {
               id: 1,
-              title: 'Test Course',
-              description: 'A test course',
-              slug: 'test-course',
+              title: "Test Course",
+              description: "A test course",
+              slug: "test-course",
               isPublished: true,
               order: 1,
-              difficulty: 'Beginner',
+              difficulty: "Beginner",
               estimatedHours: 10,
-              createdAt: '2023-01-01T00:00:00Z',
-              updatedAt: '2023-01-01T00:00:00Z'
-            }
+              createdAt: "2023-01-01T00:00:00Z",
+              updatedAt: "2023-01-01T00:00:00Z",
+            },
           ],
           pagination: {
             page: 1,
             limit: 10,
             total: 1,
-            pages: 1
-          }
-        }
+            pages: 1,
+          },
+        },
       };
 
       (global.fetch as jest.Mock).mockResolvedValue({
         ok: true,
-        json: () => Promise.resolve(mockResponse)
+        json: () => Promise.resolve(mockResponse),
       });
 
       const response = await nodeJsApiClient.getCourses(1, 10);
 
       expect(response).toEqual(mockResponse);
       expect(global.fetch).toHaveBeenCalledWith(
-        'http://localhost:8080/api/courses?page=1&limit=10',
+        "http://localhost:8080/api/courses?page=1&limit=10",
         expect.objectContaining({
-          method: 'GET',
+          method: "GET",
           headers: {
-            'Content-Type': 'application/json'
-          }
-        })
+            "Content-Type": "application/json",
+          },
+        }),
       );
     });
 
-    it('should get course by ID', async () => {
+    it("should get course by ID", async () => {
       const mockResponse = {
         success: true,
         data: {
           id: 1,
-          title: 'Test Course',
-          description: 'A test course',
-          slug: 'test-course',
+          title: "Test Course",
+          description: "A test course",
+          slug: "test-course",
           isPublished: true,
           order: 1,
-          difficulty: 'Beginner',
+          difficulty: "Beginner",
           estimatedHours: 10,
-          createdAt: '2023-01-01T00:00:00Z',
-          updatedAt: '2023-01-01T00:00:00Z'
-        }
+          createdAt: "2023-01-01T00:00:00Z",
+          updatedAt: "2023-01-01T00:00:00Z",
+        },
       };
 
       (global.fetch as jest.Mock).mockResolvedValue({
         ok: true,
-        json: () => Promise.resolve(mockResponse)
+        json: () => Promise.resolve(mockResponse),
       });
 
       const response = await nodeJsApiClient.getCourseById(1);
 
       expect(response).toEqual(mockResponse);
       expect(global.fetch).toHaveBeenCalledWith(
-        'http://localhost:8080/api/courses/1',
+        "http://localhost:8080/api/courses/1",
         expect.objectContaining({
-          method: 'GET',
+          method: "GET",
           headers: {
-            'Content-Type': 'application/json'
-          }
-        })
+            "Content-Type": "application/json",
+          },
+        }),
       );
     });
   });
 
-  describe('Modules', () => {
-    it('should get modules by course ID', async () => {
+  describe("Modules", () => {
+    it("should get modules by course ID", async () => {
       const mockResponse = {
         success: true,
         data: [
           {
             id: 1,
-            title: 'Test Module',
-            description: 'A test module',
-            slug: 'test-module',
+            title: "Test Module",
+            description: "A test module",
+            slug: "test-module",
             order: 1,
             isPublished: true,
             courseId: 1,
-            createdAt: '2023-01-01T00:00:00Z',
-            updatedAt: '2023-01-01T00:00:00Z'
-          }
-        ]
+            createdAt: "2023-01-01T00:00:00Z",
+            updatedAt: "2023-01-01T00:00:00Z",
+          },
+        ],
       };
 
       (global.fetch as jest.Mock).mockResolvedValue({
         ok: true,
-        json: () => Promise.resolve(mockResponse)
+        json: () => Promise.resolve(mockResponse),
       });
 
       const response = await nodeJsApiClient.getModulesByCourseId(1);
 
       expect(response).toEqual(mockResponse);
       expect(global.fetch).toHaveBeenCalledWith(
-        'http://localhost:8080/api/courses/1/modules',
+        "http://localhost:8080/api/courses/1/modules",
         expect.objectContaining({
-          method: 'GET',
+          method: "GET",
           headers: {
-            'Content-Type': 'application/json'
-          }
-        })
+            "Content-Type": "application/json",
+          },
+        }),
       );
     });
   });
 
-  describe('Lessons', () => {
-    it('should get lessons by module ID', async () => {
+  describe("Lessons", () => {
+    it("should get lessons by module ID", async () => {
       const mockResponse = {
         success: true,
         data: [
           {
             id: 1,
-            title: 'Test Lesson',
-            slug: 'test-lesson',
+            title: "Test Lesson",
+            slug: "test-lesson",
             order: 1,
             content: {},
             metadata: {},
             isPublished: true,
-            difficulty: 'Beginner',
+            difficulty: "Beginner",
             estimatedMinutes: 30,
             moduleId: 1,
-            createdAt: '2023-01-01T00:00:00Z',
-            updatedAt: '2023-01-01T00:00:00Z'
-          }
-        ]
+            createdAt: "2023-01-01T00:00:00Z",
+            updatedAt: "2023-01-01T00:00:00Z",
+          },
+        ],
       };
 
       (global.fetch as jest.Mock).mockResolvedValue({
         ok: true,
-        json: () => Promise.resolve(mockResponse)
+        json: () => Promise.resolve(mockResponse),
       });
 
       const response = await nodeJsApiClient.getLessonsByModuleId(1);
 
       expect(response).toEqual(mockResponse);
       expect(global.fetch).toHaveBeenCalledWith(
-        'http://localhost:8080/api/modules/1/lessons',
+        "http://localhost:8080/api/modules/1/lessons",
         expect.objectContaining({
-          method: 'GET',
+          method: "GET",
           headers: {
-            'Content-Type': 'application/json'
-          }
-        })
+            "Content-Type": "application/json",
+          },
+        }),
       );
     });
   });
 
-  describe('Quizzes', () => {
-    it('should get quizzes by lesson ID', async () => {
+  describe("Quizzes", () => {
+    it("should get quizzes by lesson ID", async () => {
       const mockResponse = {
         success: true,
         data: [
           {
             id: 1,
-            question: 'Test question?',
-            topic: 'test',
-            difficulty: 'Beginner',
-            choices: ['A', 'B', 'C', 'D'],
+            question: "Test question?",
+            topic: "test",
+            difficulty: "Beginner",
+            choices: ["A", "B", "C", "D"],
             fixedChoiceOrder: false,
-            questionType: 'multiple-choice',
+            questionType: "multiple-choice",
             estimatedTime: 90,
             correctAnswer: 0,
-            quizType: 'multiple-choice',
+            quizType: "multiple-choice",
             sortOrder: 1,
             isPublished: true,
             lessonId: 1,
-            createdAt: '2023-01-01T00:00:00Z',
-            updatedAt: '2023-01-01T00:00:00Z'
-          }
-        ]
+            createdAt: "2023-01-01T00:00:00Z",
+            updatedAt: "2023-01-01T00:00:00Z",
+          },
+        ],
       };
 
       (global.fetch as jest.Mock).mockResolvedValue({
         ok: true,
-        json: () => Promise.resolve(mockResponse)
+        json: () => Promise.resolve(mockResponse),
       });
 
       const response = await nodeJsApiClient.getQuizzesByLessonId(1);
 
       expect(response).toEqual(mockResponse);
       expect(global.fetch).toHaveBeenCalledWith(
-        'http://localhost:8080/api/lessons/1/quizzes',
+        "http://localhost:8080/api/lessons/1/quizzes",
         expect.objectContaining({
-          method: 'GET',
+          method: "GET",
           headers: {
-            'Content-Type': 'application/json'
-          }
-        })
+            "Content-Type": "application/json",
+          },
+        }),
       );
     });
 
-    it('should submit quiz answers', async () => {
+    it("should submit quiz answers", async () => {
       const mockResponse = {
         success: true,
         data: {
@@ -421,63 +421,122 @@ describe('NodeJsApiClient', () => {
               quizId: 1,
               isCorrect: true,
               correctAnswer: 0,
-              explanation: 'Correct!'
-            }
-          ]
-        }
+              explanation: "Correct!",
+            },
+          ],
+        },
       };
 
       const submissionData = {
         answers: [
           {
             quizId: 1,
-            selectedAnswer: 0
-          }
-        ]
+            selectedAnswer: 0,
+          },
+        ],
       };
 
       (global.fetch as jest.Mock).mockResolvedValue({
         ok: true,
-        json: () => Promise.resolve(mockResponse)
+        json: () => Promise.resolve(mockResponse),
       });
 
-      const response = await nodeJsApiClient.submitQuizAnswers(1, submissionData);
+      const response = await nodeJsApiClient.submitQuizAnswers(
+        1,
+        submissionData,
+      );
 
       expect(response).toEqual(mockResponse);
       expect(global.fetch).toHaveBeenCalledWith(
-        'http://localhost:8080/api/quiz/lessons/1/submit',
+        "http://localhost:8080/api/quiz/lessons/1/submit",
         expect.objectContaining({
-          method: 'POST',
+          method: "POST",
           headers: {
-            'Content-Type': 'application/json'
+            "Content-Type": "application/json",
           },
-          body: JSON.stringify(submissionData)
-        })
+          body: JSON.stringify(submissionData),
+        }),
       );
     });
 
-    it('falls back to content quizzes when backend returns empty', async () => {
+    it("falls back to content quizzes when backend returns empty", async () => {
       // Ensure public origin is configured for server-side URL resolution
       const originalBaseUrl = process.env.NEXT_PUBLIC_BASE_URL;
-      process.env.NEXT_PUBLIC_BASE_URL = 'http://localhost:3000';
+      process.env.NEXT_PUBLIC_BASE_URL = "http://localhost:3000";
 
       // Mock fetch to respond based on URL
       (global.fetch as jest.Mock).mockImplementation((url: string) => {
-        if (url === 'http://localhost:8080/api/lessons/1/quizzes') {
+        if (url === "http://localhost:8080/api/lessons/1/quizzes") {
           // Primary quiz endpoint returns empty
-          return Promise.resolve({ ok: true, json: () => Promise.resolve({ success: true, data: [] }) });
+          return Promise.resolve({
+            ok: true,
+            json: () => Promise.resolve({ success: true, data: [] }),
+          });
         }
-        if (url === 'http://localhost:8080/api/lessons/1') {
+        if (url === "http://localhost:8080/api/lessons/1") {
           // Lesson lookup returns moduleId
-          return Promise.resolve({ ok: true, json: () => Promise.resolve({ success: true, data: { id: 1, title: 'L1', slug: 'l1', order: 1, content: {}, metadata: {}, isPublished: true, difficulty: 'Beginner', estimatedMinutes: 30, moduleId: 99, createdAt: '2023-01-01T00:00:00Z', updatedAt: '2023-01-01T00:00:00Z' } }) });
+          return Promise.resolve({
+            ok: true,
+            json: () =>
+              Promise.resolve({
+                success: true,
+                data: {
+                  id: 1,
+                  title: "L1",
+                  slug: "l1",
+                  order: 1,
+                  content: {},
+                  metadata: {},
+                  isPublished: true,
+                  difficulty: "Beginner",
+                  estimatedMinutes: 30,
+                  moduleId: 99,
+                  createdAt: "2023-01-01T00:00:00Z",
+                  updatedAt: "2023-01-01T00:00:00Z",
+                },
+              }),
+          });
         }
-        if (url === 'http://localhost:8080/api/modules/99') {
+        if (url === "http://localhost:8080/api/modules/99") {
           // Module lookup returns long slug
-          return Promise.resolve({ ok: true, json: () => Promise.resolve({ success: true, data: { id: 99, title: 'Programming Fundamentals', description: 'desc', slug: 'programming-fundamentals', order: 1, isPublished: true, courseId: 1, createdAt: '2023-01-01T00:00:00Z', updatedAt: '2023-01-01T00:00:00Z' } }) });
+          return Promise.resolve({
+            ok: true,
+            json: () =>
+              Promise.resolve({
+                success: true,
+                data: {
+                  id: 99,
+                  title: "Programming Fundamentals",
+                  description: "desc",
+                  slug: "programming-fundamentals",
+                  order: 1,
+                  isPublished: true,
+                  courseId: 1,
+                  createdAt: "2023-01-01T00:00:00Z",
+                  updatedAt: "2023-01-01T00:00:00Z",
+                },
+              }),
+          });
         }
-        if (url === 'http://localhost:3000/api/content/quizzes/programming') {
+        if (url === "http://localhost:3000/api/content/quizzes/programming") {
           // Content quizzes return normalized questions
-          return Promise.resolve({ ok: true, json: () => Promise.resolve({ questions: [ { question: 'Content Q1?', choices: ['A','B'], correctAnswer: 0, topic: 'general', difficulty: 'Beginner', estimatedTime: 90, order: 1 } ] }) });
+          return Promise.resolve({
+            ok: true,
+            json: () =>
+              Promise.resolve({
+                questions: [
+                  {
+                    question: "Content Q1?",
+                    choices: ["A", "B"],
+                    correctAnswer: 0,
+                    topic: "general",
+                    difficulty: "Beginner",
+                    estimatedTime: 90,
+                    order: 1,
+                  },
+                ],
+              }),
+          });
         }
         // Unexpected URL in this test
         return Promise.reject(new Error(`Unexpected fetch URL: ${url}`));
@@ -488,22 +547,31 @@ describe('NodeJsApiClient', () => {
       expect(response.success).toBe(true);
       expect(Array.isArray(response.data)).toBe(true);
       expect(response.data?.length).toBe(1);
-      expect(response.data?.[0]?.question).toBe('Content Q1?');
+      expect(response.data?.[0]?.question).toBe("Content Q1?");
       expect(global.fetch).toHaveBeenCalledWith(
-        'http://localhost:8080/api/lessons/1/quizzes',
-        expect.objectContaining({ method: 'GET', headers: { 'Content-Type': 'application/json' } })
+        "http://localhost:8080/api/lessons/1/quizzes",
+        expect.objectContaining({
+          method: "GET",
+          headers: { "Content-Type": "application/json" },
+        }),
       );
       expect(global.fetch).toHaveBeenCalledWith(
-        'http://localhost:8080/api/lessons/1',
-        expect.objectContaining({ method: 'GET', headers: { 'Content-Type': 'application/json' } })
+        "http://localhost:8080/api/lessons/1",
+        expect.objectContaining({
+          method: "GET",
+          headers: { "Content-Type": "application/json" },
+        }),
       );
       expect(global.fetch).toHaveBeenCalledWith(
-        'http://localhost:8080/api/modules/99',
-        expect.objectContaining({ method: 'GET', headers: { 'Content-Type': 'application/json' } })
+        "http://localhost:8080/api/modules/99",
+        expect.objectContaining({
+          method: "GET",
+          headers: { "Content-Type": "application/json" },
+        }),
       );
       expect(global.fetch).toHaveBeenCalledWith(
-        'http://localhost:3000/api/content/quizzes/programming',
-        expect.any(Object)
+        "http://localhost:3000/api/content/quizzes/programming",
+        expect.any(Object),
       );
 
       // Restore env var
@@ -511,10 +579,10 @@ describe('NodeJsApiClient', () => {
     });
   });
 
-  describe('Progress', () => {
+  describe("Progress", () => {
     beforeEach(() => {
       // Set auth token for protected endpoints
-      nodeJsApiClient.setAuthToken('test-token');
+      nodeJsApiClient.setAuthToken("test-token");
     });
 
     afterEach(() => {
@@ -522,7 +590,7 @@ describe('NodeJsApiClient', () => {
       nodeJsApiClient.clearAuthToken();
     });
 
-    it('should get course progress', async () => {
+    it("should get course progress", async () => {
       const mockResponse = {
         success: true,
         data: {
@@ -532,32 +600,32 @@ describe('NodeJsApiClient', () => {
           progressPercentage: 50,
           userId: 1,
           courseId: 1,
-          createdAt: '2023-01-01T00:00:00Z',
-          updatedAt: '2023-01-01T00:00:00Z'
-        }
+          createdAt: "2023-01-01T00:00:00Z",
+          updatedAt: "2023-01-01T00:00:00Z",
+        },
       };
 
       (global.fetch as jest.Mock).mockResolvedValue({
         ok: true,
-        json: () => Promise.resolve(mockResponse)
+        json: () => Promise.resolve(mockResponse),
       });
 
       const response = await nodeJsApiClient.getCourseProgress(1);
 
       expect(response).toEqual(mockResponse);
       expect(global.fetch).toHaveBeenCalledWith(
-        'http://localhost:8080/api/progress/courses/1',
+        "http://localhost:8080/api/progress/courses/1",
         expect.objectContaining({
-          method: 'GET',
+          method: "GET",
           headers: {
-            'Content-Type': 'application/json',
-            'Authorization': 'Bearer test-token'
-          }
-        })
+            "Content-Type": "application/json",
+            Authorization: "Bearer test-token",
+          },
+        }),
       );
     });
 
-    it('should get progress summary', async () => {
+    it("should get progress summary", async () => {
       const mockResponse = {
         success: true,
         data: {
@@ -566,27 +634,27 @@ describe('NodeJsApiClient', () => {
           totalLessons: 50,
           completedLessons: 25,
           progressPercentage: 50,
-          courseProgress: []
-        }
+          courseProgress: [],
+        },
       };
 
       (global.fetch as jest.Mock).mockResolvedValue({
         ok: true,
-        json: () => Promise.resolve(mockResponse)
+        json: () => Promise.resolve(mockResponse),
       });
 
       const response = await nodeJsApiClient.getProgressSummary();
 
       expect(response).toEqual(mockResponse);
       expect(global.fetch).toHaveBeenCalledWith(
-        'http://localhost:8080/api/quiz/summary',
+        "http://localhost:8080/api/quiz/summary",
         expect.objectContaining({
-          method: 'GET',
+          method: "GET",
           headers: {
-            'Content-Type': 'application/json',
-            'Authorization': 'Bearer test-token'
-          }
-        })
+            "Content-Type": "application/json",
+            Authorization: "Bearer test-token",
+          },
+        }),
       );
     });
   });

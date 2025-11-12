@@ -1,9 +1,9 @@
-'use client';
+"use client";
 
-import React from 'react';
-import Link from 'next/link';
-import CircularProgress from './CircularProgress';
-import CertificateAward from './CertificateAward';
+import React from "react";
+import Link from "next/link";
+import CircularProgress from "./CircularProgress";
+import CertificateAward from "./CertificateAward";
 
 type QuizResultProps = {
   moduleName: string;
@@ -35,7 +35,9 @@ const QuizResult: React.FC<QuizResultProps> = ({
 
   return (
     <div className="text-center">
-      <h2 className="text-3xl font-bold text-gray-800 dark:text-gray-200 mb-4">Quiz Completed</h2>
+      <h2 className="text-3xl font-bold text-gray-800 dark:text-gray-200 mb-4">
+        Quiz Completed
+      </h2>
       <div className="mb-6 flex flex-col items-center">
         <CircularProgress percent={percent} />
         <p className="mt-2 text-xl font-semibold text-gray-800 dark:text-gray-200">
@@ -50,29 +52,53 @@ const QuizResult: React.FC<QuizResultProps> = ({
 
       {passed && (
         <div className="mt-10">
-          <CertificateAward moduleName={moduleName} score={score} total={total} percent={percent} />
-        <div className="mt-8 flex items-center justify-between">
-          <div className="flex justify-start w-1/2">
-            <button onClick={onRetry} className="btn btn-secondary">← Try Again</button>
+          <CertificateAward
+            moduleName={moduleName}
+            score={score}
+            total={total}
+            percent={percent}
+          />
+          <div className="mt-8 flex items-center justify-between">
+            <div className="flex justify-start w-1/2">
+              <button onClick={onRetry} className="btn btn-secondary">
+                ← Try Again
+              </button>
+            </div>
+            <div className="flex justify-end w-1/2">
+              {(nextLessonHref || onNextLesson || nextModuleHref) &&
+                (nextLessonHref ? (
+                  <Link
+                    href={nextLessonHref}
+                    className="btn btn-success font-semibold"
+                    aria-label="Start Next Lesson"
+                  >
+                    {nextLessonTitle
+                      ? `Start ${nextLessonTitle}`
+                      : "Start Next Lesson"}
+                  </Link>
+                ) : nextModuleHref ? (
+                  <Link
+                    href={nextModuleHref}
+                    className="btn btn-success font-semibold"
+                    aria-label="View Next Module"
+                  >
+                    {nextModuleTitle
+                      ? `Start ${nextModuleTitle}`
+                      : "Start Next Module"}
+                  </Link>
+                ) : (
+                  <button
+                    onClick={onNextLesson}
+                    className="btn btn-success font-semibold"
+                    aria-label="Start Next Lesson"
+                  >
+                    {nextLessonTitle
+                      ? `Start ${nextLessonTitle}`
+                      : "Start Next Lesson"}
+                  </button>
+                ))}
+            </div>
           </div>
-          <div className="flex justify-end w-1/2">
-            {(nextLessonHref || onNextLesson || nextModuleHref) && (
-              nextLessonHref ? (
-                <Link href={nextLessonHref} className="btn btn-success font-semibold" aria-label="Start Next Lesson">
-                  {nextLessonTitle ? `Start ${nextLessonTitle}` : 'Start Next Lesson'}
-                </Link>
-              ) : nextModuleHref ? (
-                <Link href={nextModuleHref} className="btn btn-success font-semibold" aria-label="View Next Module">
-                  {nextModuleTitle ? `Start ${nextModuleTitle}` : 'Start Next Module'}
-                </Link>
-              ) : (
-                <button onClick={onNextLesson} className="btn btn-success font-semibold" aria-label="Start Next Lesson">
-                  {nextLessonTitle ? `Start ${nextLessonTitle}` : 'Start Next Lesson'}
-                </button>
-              )
-            )}
-          </div>
-        </div>
         </div>
       )}
       {!passed && (

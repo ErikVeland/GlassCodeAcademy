@@ -65,3 +65,33 @@ variable "github_repo" {
   type        = string
   default     = "GlassCodeAcademy"
 }
+
+variable "jwt_secret" {
+  description = "JWT signing secret"
+  type        = string
+  sensitive   = true
+}
+
+variable "redis_password" {
+  description = "Redis AUTH token/password"
+  type        = string
+  sensitive   = true
+}
+
+variable "grafana_admin_password" {
+  description = "Grafana admin password"
+  type        = string
+  sensitive   = true
+}
+
+variable "prometheus_admin_password" {
+  description = "Admin password for Prometheus basic auth"
+  type        = string
+  sensitive   = true
+}
+
+variable "jaeger_admin_password" {
+  description = "Admin password for Jaeger basic auth"
+  type        = string
+  sensitive   = true
+}

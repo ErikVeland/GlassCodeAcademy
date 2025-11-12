@@ -1,0 +1,17 @@
+{
+  "id": "dotnet-fundamentals",
+  "type": "quiz",
+  "slug": "dotnet-fundamentals",
+  "title": "Quiz for dotnet-fundamentals",
+  "versions": [
+    {
+      "version": "1.0.0",
+      "lastUpdated": "2025-11-12T02:37:42.945Z",
+      "changes": [
+        "Initial version import"
+      ],
+      "author": "system",
+      "hash": "3e49dafd"
+    }
+  ]
+}

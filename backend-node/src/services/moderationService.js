@@ -3,7 +3,11 @@
  * Real logic can be wired later; for now, return deterministic placeholders.
  */
 
-async function getPendingItems({ page = 1, limit = 20, itemType = 'all' } = {}) {
+async function getPendingItems({
+  page = 1,
+  limit = 20,
+  itemType = 'all',
+} = {}) {
   return {
     page,
     limit,
@@ -14,23 +18,48 @@ async function getPendingItems({ page = 1, limit = 20, itemType = 'all' } = {}) 
 }
 
 async function approveThread(threadId, moderatorId, reason) {
-  return { id: threadId, moderatorId, reason: reason || null, status: 'approved' };
+  return {
+    id: threadId,
+    moderatorId,
+    reason: reason || null,
+    status: 'approved',
+  };
 }
 
 async function rejectThread(threadId, moderatorId, reason) {
-  return { id: threadId, moderatorId, reason: reason || null, status: 'rejected' };
+  return {
+    id: threadId,
+    moderatorId,
+    reason: reason || null,
+    status: 'rejected',
+  };
 }
 
 async function approvePost(postId, moderatorId, reason) {
-  return { id: postId, moderatorId, reason: reason || null, status: 'approved' };
+  return {
+    id: postId,
+    moderatorId,
+    reason: reason || null,
+    status: 'approved',
+  };
 }
 
 async function rejectPost(postId, moderatorId, reason) {
-  return { id: postId, moderatorId, reason: reason || null, status: 'rejected' };
+  return {
+    id: postId,
+    moderatorId,
+    reason: reason || null,
+    status: 'rejected',
+  };
 }
 
 async function deleteThread(threadId, moderatorId, reason) {
-  return { id: threadId, moderatorId, reason: reason || null, status: 'deleted' };
+  return {
+    id: threadId,
+    moderatorId,
+    reason: reason || null,
+    status: 'deleted',
+  };
 }
 
 async function deletePost(postId, moderatorId, reason) {

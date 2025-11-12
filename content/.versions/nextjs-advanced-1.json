@@ -1,0 +1,17 @@
+{
+  "id": "nextjs-advanced-1",
+  "type": "lesson",
+  "slug": "nextjs-advanced-1",
+  "title": "Next.js Fundamentals and Setup",
+  "versions": [
+    {
+      "version": "1.0.0",
+      "lastUpdated": "2025-11-12T02:37:42.908Z",
+      "changes": [
+        "Initial version import"
+      ],
+      "author": "system",
+      "hash": "-7fb65bce"
+    }
+  ]
+}

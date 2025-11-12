@@ -1,0 +1,17 @@
+{
+  "id": "e2e-testing-1",
+  "type": "lesson",
+  "slug": "e2e-testing-1",
+  "title": "Introduction to End-to-End Testing",
+  "versions": [
+    {
+      "version": "1.0.0",
+      "lastUpdated": "2025-11-12T02:37:42.898Z",
+      "changes": [
+        "Initial version import"
+      ],
+      "author": "system",
+      "hash": "-6f1094bf"
+    }
+  ]
+}

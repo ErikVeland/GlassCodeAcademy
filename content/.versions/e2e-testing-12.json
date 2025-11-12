@@ -1,0 +1,17 @@
+{
+  "id": "e2e-testing-12",
+  "type": "lesson",
+  "slug": "e2e-testing-12",
+  "title": "Accessibility and Compliance Testing",
+  "versions": [
+    {
+      "version": "1.0.0",
+      "lastUpdated": "2025-11-12T02:37:42.900Z",
+      "changes": [
+        "Initial version import"
+      ],
+      "author": "system",
+      "hash": "-5fe9e586"
+    }
+  ]
+}

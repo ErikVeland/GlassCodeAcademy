@@ -1,0 +1,17 @@
+{
+  "id": "graphql-advanced-7",
+  "type": "lesson",
+  "slug": "graphql-advanced-7",
+  "title": "Advanced Schema Patterns",
+  "versions": [
+    {
+      "version": "1.0.0",
+      "lastUpdated": "2025-11-12T02:37:42.901Z",
+      "changes": [
+        "Initial version import"
+      ],
+      "author": "system",
+      "hash": "-6d1a3e02"
+    }
+  ]
+}

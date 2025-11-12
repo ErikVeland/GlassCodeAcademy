@@ -1,7 +1,7 @@
-'use client';
+"use client";
 
-import React, { useEffect, useState } from 'react';
-import AnimatedBackground from './AnimatedBackground';
+import React, { useEffect, useState } from "react";
+import AnimatedBackground from "./AnimatedBackground";
 
 interface BackgroundSettings {
   colors: string[];
@@ -13,17 +13,17 @@ interface BackgroundSettings {
 
 const defaultSettings: BackgroundSettings = {
   colors: [
-    "rgba(99, 102, 241, 0.15)",   // indigo - slightly more visible
-    "rgba(168, 85, 247, 0.15)",   // purple
-    "rgba(236, 72, 153, 0.15)",   // pink
-    "rgba(16, 185, 129, 0.15)",   // green
-    "rgba(245, 158, 11, 0.15)",   // yellow
-    "rgba(239, 68, 68, 0.15)"     // red
+    "rgba(99, 102, 241, 0.15)", // indigo - slightly more visible
+    "rgba(168, 85, 247, 0.15)", // purple
+    "rgba(236, 72, 153, 0.15)", // pink
+    "rgba(16, 185, 129, 0.15)", // green
+    "rgba(245, 158, 11, 0.15)", // yellow
+    "rgba(239, 68, 68, 0.15)", // red
   ],
   speed: 25,
   blur: 55,
-  opacity: 0.8,  // slightly more opaque
-  respectReducedMotion: false
+  opacity: 0.8, // slightly more opaque
+  respectReducedMotion: false,
 };
 
 export default function GlobalAnimatedBackground() {
@@ -32,13 +32,13 @@ export default function GlobalAnimatedBackground() {
   useEffect(() => {
     // Load saved settings from localStorage
     try {
-      const savedSettings = localStorage.getItem('appBackgroundSettings');
+      const savedSettings = localStorage.getItem("appBackgroundSettings");
       if (savedSettings) {
         const parsedSettings = JSON.parse(savedSettings);
         setSettings(parsedSettings);
       }
     } catch (error) {
-      console.error('Failed to load background settings:', error);
+      console.error("Failed to load background settings:", error);
     }
   }, []);
 

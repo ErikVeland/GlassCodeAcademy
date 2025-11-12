@@ -1,0 +1,17 @@
+{
+  "id": "web-fundamentals-8",
+  "type": "lesson",
+  "slug": "web-fundamentals-8",
+  "title": "Web Accessibility",
+  "versions": [
+    {
+      "version": "1.0.0",
+      "lastUpdated": "2025-11-12T02:37:42.942Z",
+      "changes": [
+        "Initial version import"
+      ],
+      "author": "system",
+      "hash": "-28095c63"
+    }
+  ]
+}

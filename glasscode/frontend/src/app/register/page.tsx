@@ -20,7 +20,7 @@ export default function RegisterPage() {
     setLoading(true);
     setError(null);
     setSuccess(null);
-    
+
     try {
       const response = await fetch(`${getApiBaseStrict()}/auth/register`, {
         method: "POST",
@@ -47,7 +47,9 @@ export default function RegisterPage() {
         router.push("/login?registered=true");
       }, 2000);
     } catch (err) {
-      setError(err instanceof Error ? err.message : "An unexpected error occurred");
+      setError(
+        err instanceof Error ? err.message : "An unexpected error occurred",
+      );
     } finally {
       setLoading(false);
     }

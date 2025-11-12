@@ -8,7 +8,7 @@ export interface AdminModule {
   courseId?: number;
 }
 
-export type LessonDifficulty = 'Beginner' | 'Intermediate' | 'Advanced';
+export type LessonDifficulty = "Beginner" | "Intermediate" | "Advanced";
 
 export interface AdminLesson {
   id: number;
@@ -23,7 +23,11 @@ export interface AdminLesson {
   metadata?: string;
 }
 
-export type QuestionType = 'multiple-choice' | 'open-ended' | 'true-false' | 'coding';
+export type QuestionType =
+  | "multiple-choice"
+  | "open-ended"
+  | "true-false"
+  | "coding";
 
 export interface AdminQuiz {
   id: number;

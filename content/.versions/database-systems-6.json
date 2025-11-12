@@ -1,0 +1,17 @@
+{
+  "id": "database-systems-6",
+  "type": "lesson",
+  "slug": "database-systems-6",
+  "title": "ACID Properties and Transaction Management",
+  "versions": [
+    {
+      "version": "1.0.0",
+      "lastUpdated": "2025-11-12T02:37:42.891Z",
+      "changes": [
+        "Initial version import"
+      ],
+      "author": "system",
+      "hash": "253988b3"
+    }
+  ]
+}

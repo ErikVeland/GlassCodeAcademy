@@ -1,6 +1,5 @@
 #!/usr/bin/env node
 /* eslint-env node */
-/* global require, __dirname, console, process */
 const fs = require('fs');
 const path = require('path');
 
@@ -12,7 +11,12 @@ try {
 } catch (e) {
   console.warn('Env load warning:', e && e.message ? e.message : e);
 }
-const { Module, Lesson, LessonQuiz, initializeAssociations } = require('../src/models');
+const {
+  Module,
+  Lesson,
+  LessonQuiz,
+  initializeAssociations,
+} = require('../src/models');
 const { Op } = require('sequelize');
 
 async function seedModuleQuizzes(targetSlug) {
@@ -40,14 +44,18 @@ async function seedModuleQuizzes(targetSlug) {
   }
   const quizzesPath = path.join(quizzesDir, `${quizFileSlug}.json`);
   if (!fs.existsSync(quizzesPath)) {
-    console.error(`❌ No quiz file found for slug '${targetSlug}' (looked for '${quizzesPath}')`);
+    console.error(
+      `❌ No quiz file found for slug '${targetSlug}' (looked for '${quizzesPath}')`
+    );
     process.exit(1);
   }
 
   const raw = fs.readFileSync(quizzesPath, 'utf8');
   const json = JSON.parse(raw);
-  const questions = Array.isArray(json) ? json : (json.questions || []);
-  console.log(`📘 Using quiz file: ${quizFileSlug}.json (${questions.length} questions)`);
+  const questions = Array.isArray(json) ? json : json.questions || [];
+  console.log(
+    `📘 Using quiz file: ${quizFileSlug}.json (${questions.length} questions)`
+  );
 
   // Fetch lessons for distribution
   const lessonList = await Lesson.findAll({
@@ -95,13 +103,18 @@ async function seedModuleQuizzes(targetSlug) {
       });
       created++;
     } catch (e) {
-      console.error(`⚠️  Failed to create quiz #${i + 1} for lesson ${targetLesson.slug}:`, e?.message || e);
+      console.error(
+        `⚠️  Failed to create quiz #${i + 1} for lesson ${targetLesson.slug}:`,
+        e?.message || e
+      );
       if (e?.parent?.message) console.error('DB error:', e.parent.message);
       if (e?.sql) console.error('SQL:', e.sql);
     }
   }
 
-  console.log(`✅ Seeded ${created} quizzes across ${lessonList.length} lesson(s) for module '${targetSlug}'`);
+  console.log(
+    `✅ Seeded ${created} quizzes across ${lessonList.length} lesson(s) for module '${targetSlug}'`
+  );
 }
 
 const targetSlug = process.argv[2] || 'web-fundamentals';

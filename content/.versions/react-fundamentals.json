@@ -1,0 +1,17 @@
+{
+  "id": "react-fundamentals",
+  "type": "quiz",
+  "slug": "react-fundamentals",
+  "title": "Quiz for react-fundamentals",
+  "versions": [
+    {
+      "version": "1.0.0",
+      "lastUpdated": "2025-11-12T02:37:42.948Z",
+      "changes": [
+        "Initial version import"
+      ],
+      "author": "system",
+      "hash": "-237ca7a0"
+    }
+  ]
+}

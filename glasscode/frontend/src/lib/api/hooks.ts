@@ -3,37 +3,37 @@
  * Provides custom hooks for interacting with the Node.js backend API
  */
 
-import { useState, useEffect, useCallback } from 'react';
-import { nodeJsApiClient } from './nodeJsApiClient';
-import type { 
-  Course, 
-  Module, 
-  Lesson, 
-  QuizQuestion, 
-  QuizSubmissionRequest, 
+import { useState, useEffect, useCallback } from "react";
+import { nodeJsApiClient } from "./nodeJsApiClient";
+import type {
+  Course,
+  Module,
+  Lesson,
+  QuizQuestion,
+  QuizSubmissionRequest,
   QuizSubmissionResponse,
   UserProgress,
   UserLessonProgress,
   ProgressSummary,
-  AuthResponse
-} from './nodeJsApiClient';
+  AuthResponse,
+} from "./nodeJsApiClient";
 
 // Authentication hooks
 export const useAuth = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [user, setUser] = useState<AuthResponse['user'] | null>(null);
+  const [user, setUser] = useState<AuthResponse["user"] | null>(null);
   const [loading, setLoading] = useState(true);
 
   const login = useCallback(async (email: string, password: string) => {
     const response = await nodeJsApiClient.login({ email, password });
-    
+
     if (response.success && response.data) {
       nodeJsApiClient.setAuthToken(response.data.token);
       setUser(response.data.user);
       setIsAuthenticated(true);
       return { success: true, data: response.data };
     }
-    
+
     return { success: false, error: response.error };
   }, []);
 
@@ -43,18 +43,31 @@ export const useAuth = () => {
     setIsAuthenticated(false);
   }, []);
 
-  const register = useCallback(async (email: string, password: string, firstName: string, lastName: string) => {
-    const response = await nodeJsApiClient.register({ email, password, firstName, lastName });
-    
-    if (response.success && response.data) {
-      nodeJsApiClient.setAuthToken(response.data.token);
-      setUser(response.data.user);
-      setIsAuthenticated(true);
-      return { success: true, data: response.data };
-    }
-    
-    return { success: false, error: response.error };
-  }, []);
+  const register = useCallback(
+    async (
+      email: string,
+      password: string,
+      firstName: string,
+      lastName: string,
+    ) => {
+      const response = await nodeJsApiClient.register({
+        email,
+        password,
+        firstName,
+        lastName,
+      });
+
+      if (response.success && response.data) {
+        nodeJsApiClient.setAuthToken(response.data.token);
+        setUser(response.data.user);
+        setIsAuthenticated(true);
+        return { success: true, data: response.data };
+      }
+
+      return { success: false, error: response.error };
+    },
+    [],
+  );
 
   // Check authentication status on mount
   useEffect(() => {
@@ -69,7 +82,7 @@ export const useAuth = () => {
     loading,
     login,
     logout,
-    register
+    register,
   };
 };
 
@@ -82,24 +95,26 @@ export const useCourses = (page = 1, limit = 10) => {
     page: 1,
     limit: 10,
     total: 0,
-    pages: 1
+    pages: 1,
   });
 
   const fetchCourses = useCallback(async () => {
     setLoading(true);
     setError(null);
-    
+
     try {
       const response = await nodeJsApiClient.getCourses(page, limit);
-      
+
       if (response.success && response.data) {
         setCourses(response.data.courses);
         setPagination(response.data.pagination);
       } else {
-        setError(response.error?.message || 'Failed to fetch courses');
+        setError(response.error?.message || "Failed to fetch courses");
       }
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'An unknown error occurred');
+      setError(
+        err instanceof Error ? err.message : "An unknown error occurred",
+      );
     } finally {
       setLoading(false);
     }
@@ -114,7 +129,7 @@ export const useCourses = (page = 1, limit = 10) => {
     loading,
     error,
     pagination,
-    refetch: fetchCourses
+    refetch: fetchCourses,
   };
 };
 
@@ -126,17 +141,19 @@ export const useCourse = (id: number) => {
   const fetchCourse = useCallback(async () => {
     setLoading(true);
     setError(null);
-    
+
     try {
       const response = await nodeJsApiClient.getCourseById(id);
-      
+
       if (response.success && response.data) {
         setCourse(response.data);
       } else {
-        setError(response.error?.message || 'Failed to fetch course');
+        setError(response.error?.message || "Failed to fetch course");
       }
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'An unknown error occurred');
+      setError(
+        err instanceof Error ? err.message : "An unknown error occurred",
+      );
     } finally {
       setLoading(false);
     }
@@ -152,7 +169,7 @@ export const useCourse = (id: number) => {
     course,
     loading,
     error,
-    refetch: fetchCourse
+    refetch: fetchCourse,
   };
 };
 
@@ -165,17 +182,19 @@ export const useModules = (courseId: number) => {
   const fetchModules = useCallback(async () => {
     setLoading(true);
     setError(null);
-    
+
     try {
       const response = await nodeJsApiClient.getModulesByCourseId(courseId);
-      
+
       if (response.success && response.data) {
         setModules(response.data);
       } else {
-        setError(response.error?.message || 'Failed to fetch modules');
+        setError(response.error?.message || "Failed to fetch modules");
       }
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'An unknown error occurred');
+      setError(
+        err instanceof Error ? err.message : "An unknown error occurred",
+      );
     } finally {
       setLoading(false);
     }
@@ -191,7 +210,7 @@ export const useModules = (courseId: number) => {
     modules,
     loading,
     error,
-    refetch: fetchModules
+    refetch: fetchModules,
   };
 };
 
@@ -204,17 +223,19 @@ export const useLessons = (moduleId: number) => {
   const fetchLessons = useCallback(async () => {
     setLoading(true);
     setError(null);
-    
+
     try {
       const response = await nodeJsApiClient.getLessonsByModuleId(moduleId);
-      
+
       if (response.success && response.data) {
         setLessons(response.data);
       } else {
-        setError(response.error?.message || 'Failed to fetch lessons');
+        setError(response.error?.message || "Failed to fetch lessons");
       }
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'An unknown error occurred');
+      setError(
+        err instanceof Error ? err.message : "An unknown error occurred",
+      );
     } finally {
       setLoading(false);
     }
@@ -230,7 +251,7 @@ export const useLessons = (moduleId: number) => {
     lessons,
     loading,
     error,
-    refetch: fetchLessons
+    refetch: fetchLessons,
   };
 };
 
@@ -243,17 +264,19 @@ export const useQuizzes = (lessonId: number) => {
   const fetchQuizzes = useCallback(async () => {
     setLoading(true);
     setError(null);
-    
+
     try {
       const response = await nodeJsApiClient.getQuizzesByLessonId(lessonId);
-      
+
       if (response.success && response.data) {
         setQuizzes(response.data);
       } else {
-        setError(response.error?.message || 'Failed to fetch quizzes');
+        setError(response.error?.message || "Failed to fetch quizzes");
       }
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'An unknown error occurred');
+      setError(
+        err instanceof Error ? err.message : "An unknown error occurred",
+      );
     } finally {
       setLoading(false);
     }
@@ -269,7 +292,7 @@ export const useQuizzes = (lessonId: number) => {
     quizzes,
     loading,
     error,
-    refetch: fetchQuizzes
+    refetch: fetchQuizzes,
   };
 };
 
@@ -278,35 +301,42 @@ export const useQuizSubmission = () => {
   const [error, setError] = useState<string | null>(null);
   const [result, setResult] = useState<QuizSubmissionResponse | null>(null);
 
-  const submitQuiz = useCallback(async (lessonId: number, data: QuizSubmissionRequest) => {
-    setLoading(true);
-    setError(null);
-    setResult(null);
-    
-    try {
-      const response = await nodeJsApiClient.submitQuizAnswers(lessonId, data);
-      
-      if (response.success && response.data) {
-        setResult(response.data);
-        return { success: true, data: response.data };
-      } else {
-        setError(response.error?.message || 'Failed to submit quiz');
-        return { success: false, error: response.error };
+  const submitQuiz = useCallback(
+    async (lessonId: number, data: QuizSubmissionRequest) => {
+      setLoading(true);
+      setError(null);
+      setResult(null);
+
+      try {
+        const response = await nodeJsApiClient.submitQuizAnswers(
+          lessonId,
+          data,
+        );
+
+        if (response.success && response.data) {
+          setResult(response.data);
+          return { success: true, data: response.data };
+        } else {
+          setError(response.error?.message || "Failed to submit quiz");
+          return { success: false, error: response.error };
+        }
+      } catch (err) {
+        const errorMessage =
+          err instanceof Error ? err.message : "An unknown error occurred";
+        setError(errorMessage);
+        return { success: false, error: { message: errorMessage } };
+      } finally {
+        setLoading(false);
       }
-    } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : 'An unknown error occurred';
-      setError(errorMessage);
-      return { success: false, error: { message: errorMessage } };
-    } finally {
-      setLoading(false);
-    }
-  }, []);
+    },
+    [],
+  );
 
   return {
     submitQuiz,
     loading,
     error,
-    result
+    result,
   };
 };
 
@@ -319,17 +349,19 @@ export const useCourseProgress = (courseId: number) => {
   const fetchProgress = useCallback(async () => {
     setLoading(true);
     setError(null);
-    
+
     try {
       const response = await nodeJsApiClient.getCourseProgress(courseId);
-      
+
       if (response.success && response.data) {
         setProgress(response.data);
       } else {
-        setError(response.error?.message || 'Failed to fetch progress');
+        setError(response.error?.message || "Failed to fetch progress");
       }
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'An unknown error occurred');
+      setError(
+        err instanceof Error ? err.message : "An unknown error occurred",
+      );
     } finally {
       setLoading(false);
     }
@@ -341,19 +373,22 @@ export const useCourseProgress = (courseId: number) => {
     }
   }, [courseId, fetchProgress]);
 
-  const updateProgress = useCallback(async (_data: Partial<UserLessonProgress>) => {
-    void _data;
-    // This would need to be called with a specific lessonId
-    // For now, we'll just refetch the progress
-    fetchProgress();
-  }, [fetchProgress]);
+  const updateProgress = useCallback(
+    async (_data: Partial<UserLessonProgress>) => {
+      void _data;
+      // This would need to be called with a specific lessonId
+      // For now, we'll just refetch the progress
+      fetchProgress();
+    },
+    [fetchProgress],
+  );
 
   return {
     progress,
     loading,
     error,
     refetch: fetchProgress,
-    updateProgress
+    updateProgress,
   };
 };
 
@@ -365,17 +400,19 @@ export const useLessonProgress = (lessonId: number) => {
   const fetchProgress = useCallback(async () => {
     setLoading(true);
     setError(null);
-    
+
     try {
       const response = await nodeJsApiClient.getLessonProgress(lessonId);
-      
+
       if (response.success && response.data) {
         setProgress(response.data);
       } else {
-        setError(response.error?.message || 'Failed to fetch lesson progress');
+        setError(response.error?.message || "Failed to fetch lesson progress");
       }
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'An unknown error occurred');
+      setError(
+        err instanceof Error ? err.message : "An unknown error occurred",
+      );
     } finally {
       setLoading(false);
     }
@@ -387,30 +424,39 @@ export const useLessonProgress = (lessonId: number) => {
     }
   }, [lessonId, fetchProgress]);
 
-  const updateProgress = useCallback(async (data: Partial<UserLessonProgress>) => {
-    try {
-      const response = await nodeJsApiClient.updateLessonProgress(lessonId, data);
-      
-      if (response.success && response.data) {
-        setProgress(response.data);
-        return { success: true, data: response.data };
-      } else {
-        setError(response.error?.message || 'Failed to update lesson progress');
-        return { success: false, error: response.error };
+  const updateProgress = useCallback(
+    async (data: Partial<UserLessonProgress>) => {
+      try {
+        const response = await nodeJsApiClient.updateLessonProgress(
+          lessonId,
+          data,
+        );
+
+        if (response.success && response.data) {
+          setProgress(response.data);
+          return { success: true, data: response.data };
+        } else {
+          setError(
+            response.error?.message || "Failed to update lesson progress",
+          );
+          return { success: false, error: response.error };
+        }
+      } catch (err) {
+        const errorMessage =
+          err instanceof Error ? err.message : "An unknown error occurred";
+        setError(errorMessage);
+        return { success: false, error: { message: errorMessage } };
       }
-    } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : 'An unknown error occurred';
-      setError(errorMessage);
-      return { success: false, error: { message: errorMessage } };
-    }
-  }, [lessonId]);
+    },
+    [lessonId],
+  );
 
   return {
     progress,
     loading,
     error,
     refetch: fetchProgress,
-    updateProgress
+    updateProgress,
   };
 };
 
@@ -422,17 +468,19 @@ export const useProgressSummary = () => {
   const fetchSummary = useCallback(async () => {
     setLoading(true);
     setError(null);
-    
+
     try {
       const response = await nodeJsApiClient.getProgressSummary();
-      
+
       if (response.success && response.data) {
         setSummary(response.data);
       } else {
-        setError(response.error?.message || 'Failed to fetch progress summary');
+        setError(response.error?.message || "Failed to fetch progress summary");
       }
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'An unknown error occurred');
+      setError(
+        err instanceof Error ? err.message : "An unknown error occurred",
+      );
     } finally {
       setLoading(false);
     }
@@ -446,6 +494,6 @@ export const useProgressSummary = () => {
     summary,
     loading,
     error,
-    refetch: fetchSummary
+    refetch: fetchSummary,
   };
 };

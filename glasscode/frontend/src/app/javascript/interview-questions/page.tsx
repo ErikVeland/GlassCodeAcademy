@@ -1,5 +1,5 @@
-import { redirect } from 'next/navigation';
+import { redirect } from "next/navigation";
 
 export default function InterviewRedirect() {
-  redirect('/modules/web-fundamentals/quiz');
+  redirect("/modules/web-fundamentals/quiz");
 }

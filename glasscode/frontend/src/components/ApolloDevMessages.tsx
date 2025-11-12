@@ -8,7 +8,10 @@ export default function ApolloDevMessages() {
     if (enabled && process.env.NODE_ENV !== "production") {
       (async () => {
         try {
-          type ApolloDevModule = { loadDevMessages?: () => void; loadErrorMessages?: () => void };
+          type ApolloDevModule = {
+            loadDevMessages?: () => void;
+            loadErrorMessages?: () => void;
+          };
           const mod = (await import("@apollo/client/dev")) as ApolloDevModule;
           const { loadDevMessages, loadErrorMessages } = mod;
           try {

@@ -1,12 +1,13 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import Link from 'next/link';
-import EnhancedLoadingComponent from '../../components/EnhancedLoadingComponent';
-import { getGraphQLEndpoint } from '@/lib/urlUtils';
+import { useState } from "react";
+import Link from "next/link";
+import EnhancedLoadingComponent from "../../components/EnhancedLoadingComponent";
+import { getGraphQLEndpoint } from "@/lib/urlUtils";
 
 export default function GraphQLPlayground() {
-  const [query, setQuery] = useState(`# Welcome to the GlassCode GraphQL Playground
+  const [query, setQuery] =
+    useState(`# Welcome to the GlassCode GraphQL Playground
 # Try running some queries!
 
 query {
@@ -16,23 +17,23 @@ query {
     title
   }
 }`);
-  const [variables, setVariables] = useState('{}');
-  const [response, setResponse] = useState('');
+  const [variables, setVariables] = useState("{}");
+  const [response, setResponse] = useState("");
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
   const [retryCount, setRetryCount] = useState(0);
 
   const executeQuery = async () => {
     setLoading(true);
-    setError('');
+    setError("");
     try {
       // Resolve GraphQL endpoint via shared utility
       const graphqlUrl = getGraphQLEndpoint();
-      
+
       const res = await fetch(graphqlUrl, {
-        method: 'POST',
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({
           query,
@@ -43,7 +44,7 @@ query {
       const data = await res.json();
       setResponse(JSON.stringify(data, null, 2));
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'An error occurred');
+      setError(err instanceof Error ? err.message : "An error occurred");
     } finally {
       setLoading(false);
     }
@@ -52,19 +53,19 @@ query {
   // Handle manual retry
   const handleManualRetry = () => {
     setRetryCount(0);
-    setError('');
+    setError("");
     setLoading(true);
-    
+
     // Reset the fetch process
     const fetchGraphQL = async () => {
       try {
         // Resolve GraphQL endpoint via shared utility
         const graphqlUrl = getGraphQLEndpoint();
-        
+
         const res = await fetch(graphqlUrl, {
-          method: 'POST',
+          method: "POST",
           headers: {
-            'Content-Type': 'application/json',
+            "Content-Type": "application/json",
           },
           body: JSON.stringify({
             query: `# Welcome to the GlassCode GraphQL Playground
@@ -85,11 +86,11 @@ query {
         setResponse(JSON.stringify(data, null, 2));
         setLoading(false);
       } catch (err) {
-        setError(err instanceof Error ? err.message : 'An error occurred');
+        setError(err instanceof Error ? err.message : "An error occurred");
         setLoading(false);
       }
     };
-    
+
     fetchGraphQL();
   };
 
@@ -98,20 +99,21 @@ query {
     if (retryCount > 0) {
       return (
         <div className="min-h-screen flex flex-col">
-          <div 
-            className="fixed top-0 left-0 w-full h-full -z-10" 
+          <div
+            className="fixed top-0 left-0 w-full h-full -z-10"
             style={{
-              background: 'linear-gradient(135deg, #8B5CF6 0%, #3B82F6 25%, #10B981 50%, #F59E0B 75%, #EF4444 100%)',
-              animation: 'gradientFlow 45s ease infinite'
+              background:
+                "linear-gradient(135deg, #8B5CF6 0%, #3B82F6 25%, #10B981 50%, #F59E0B 75%, #EF4444 100%)",
+              animation: "gradientFlow 45s ease infinite",
             }}
-            aria-hidden="true" 
+            aria-hidden="true"
             role="presentation"
           />
           <div className="flex-grow flex items-center justify-center px-4">
             <div className="max-w-md mx-auto">
-              <EnhancedLoadingComponent 
-                retryCount={retryCount} 
-                maxRetries={30} 
+              <EnhancedLoadingComponent
+                retryCount={retryCount}
+                maxRetries={30}
                 onRetry={handleManualRetry}
               />
             </div>
@@ -119,17 +121,18 @@ query {
         </div>
       );
     }
-    
+
     // Show initial loading state with glass morphism effect
     return (
       <div className="min-h-screen flex flex-col">
-        <div 
-          className="fixed top-0 left-0 w-full h-full -z-10" 
+        <div
+          className="fixed top-0 left-0 w-full h-full -z-10"
           style={{
-            background: 'linear-gradient(135deg, #8B5CF6 0%, #3B82F6 25%, #10B981 50%, #F59E0B 75%, #EF4444 100%)',
-            animation: 'gradientFlow 45s ease infinite'
+            background:
+              "linear-gradient(135deg, #8B5CF6 0%, #3B82F6 25%, #10B981 50%, #F59E0B 75%, #EF4444 100%)",
+            animation: "gradientFlow 45s ease infinite",
           }}
-          aria-hidden="true" 
+          aria-hidden="true"
           role="presentation"
         />
         <div className="flex-grow flex items-center justify-center px-4">
@@ -149,21 +152,26 @@ query {
   if (error) {
     return (
       <div className="min-h-screen flex flex-col">
-        <div 
-          className="fixed top-0 left-0 w-full h-full -z-10" 
+        <div
+          className="fixed top-0 left-0 w-full h-full -z-10"
           style={{
-            background: 'linear-gradient(135deg, #8B5CF6 0%, #3B82F6 25%, #10B981 50%, #F59E0B 75%, #EF4444 100%)',
-            animation: 'gradientFlow 45s ease infinite'
+            background:
+              "linear-gradient(135deg, #8B5CF6 0%, #3B82F6 25%, #10B981 50%, #F59E0B 75%, #EF4444 100%)",
+            animation: "gradientFlow 45s ease infinite",
           }}
-          aria-hidden="true" 
+          aria-hidden="true"
           role="presentation"
         />
         <div className="flex-grow flex items-center justify-center px-4">
           <div className="max-w-2xl mx-auto">
             <div className="bg-white/10 backdrop-blur-md rounded-2xl shadow-2xl p-8 border border-white/20 text-center">
               <div className="text-6xl mb-4">⚠️</div>
-              <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">Connection Error</h2>
-              <p className="mb-6 text-gray-700 dark:text-white/80 text-lg">{error}</p>
+              <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
+                Connection Error
+              </h2>
+              <p className="mb-6 text-gray-700 dark:text-white/80 text-lg">
+                {error}
+              </p>
               <button
                 onClick={handleManualRetry}
                 className="px-8 py-3 bg-gradient-to-r from-red-500 to-orange-500 text-white dark:text-white rounded-xl font-semibold hover:from-red-600 hover:to-orange-600 transition-all duration-200 shadow-lg"
@@ -181,15 +189,15 @@ query {
     // Updated container with tier-specific gradient background
     <div className="min-h-screen flex flex-col">
       {/* Fixed animated background with tier gradient */}
-      <div 
-        className="fixed top-0 left-0 w-full h-full -z-10" 
+      <div
+        className="fixed top-0 left-0 w-full h-full -z-10"
         style={{
-          background: 'linear-gradient(135deg, #8B5CF6 0%, #7C3AED 100%)',
+          background: "linear-gradient(135deg, #8B5CF6 0%, #7C3AED 100%)",
         }}
-        aria-hidden="true" 
+        aria-hidden="true"
         role="presentation"
       />
-      
+
       <div className="flex-grow w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
         {/* Header with consistent design */}
         <div className="mb-8">
@@ -198,12 +206,16 @@ query {
               <div className="flex items-center gap-4">
                 <div className="text-4xl">🛝</div>
                 <div>
-                  <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">GraphQL Playground</h1>
-                  <p className="text-gray-700 dark:text-white/80">Interactive query environment for exploring our GraphQL API</p>
+                  <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
+                    GraphQL Playground
+                  </h1>
+                  <p className="text-gray-700 dark:text-white/80">
+                    Interactive query environment for exploring our GraphQL API
+                  </p>
                 </div>
               </div>
-              <Link 
-                href="/" 
+              <Link
+                href="/"
                 className="bg-white/20 backdrop-blur-sm text-gray-900 dark:text-white font-semibold py-3 px-6 rounded-xl shadow-lg hover:bg-white/30 transition-all duration-200 flex items-center gap-2 border border-white/20"
               >
                 <span className="text-lg">←</span> Back to Home
@@ -219,40 +231,52 @@ query {
               ⚡ Quick Actions
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              <Link 
-                href="/" 
+              <Link
+                href="/"
                 className="bg-gradient-to-r from-blue-500 to-cyan-500 text-white dark:text-white p-4 rounded-xl hover:from-blue-600 hover:to-cyan-600 transition-all duration-200 shadow-lg flex items-center gap-3 group"
               >
                 <div className="text-2xl">📚</div>
                 <div>
                   <h3 className="font-semibold">Start Curriculum</h3>
-                  <p className="text-sm text-white/80 dark:text-white/80">Begin your learning journey</p>
+                  <p className="text-sm text-white/80 dark:text-white/80">
+                    Begin your learning journey
+                  </p>
                 </div>
-                <div className="ml-auto text-lg group-hover:translate-x-1 transition-transform">→</div>
+                <div className="ml-auto text-lg group-hover:translate-x-1 transition-transform">
+                  →
+                </div>
               </Link>
-              
-              <Link 
-                href="/interview-prep" 
+
+              <Link
+                href="/interview-prep"
                 className="bg-gradient-to-r from-purple-500 to-violet-500 text-white dark:text-white p-4 rounded-xl hover:from-purple-600 hover:to-violet-600 transition-all duration-200 shadow-lg flex items-center gap-3 group"
               >
                 <div className="text-2xl">💼</div>
                 <div>
                   <h3 className="font-semibold">Interview Prep</h3>
-                  <p className="text-sm text-white/80 dark:text-white/80">Practice technical questions</p>
+                  <p className="text-sm text-white/80 dark:text-white/80">
+                    Practice technical questions
+                  </p>
                 </div>
-                <div className="ml-auto text-lg group-hover:translate-x-1 transition-transform">→</div>
+                <div className="ml-auto text-lg group-hover:translate-x-1 transition-transform">
+                  →
+                </div>
               </Link>
-              
-              <Link 
-                href="/animated-background-demo" 
+
+              <Link
+                href="/animated-background-demo"
                 className="bg-gradient-to-r from-green-500 to-emerald-500 text-white dark:text-white p-4 rounded-xl hover:from-green-600 hover:to-emerald-600 transition-all duration-200 shadow-lg flex items-center gap-3 group"
               >
                 <div className="text-2xl">🎨</div>
                 <div>
                   <h3 className="font-semibold">Design Showcase</h3>
-                  <p className="text-sm text-white/80 dark:text-white/80">Explore UI components</p>
+                  <p className="text-sm text-white/80 dark:text-white/80">
+                    Explore UI components
+                  </p>
                 </div>
-                <div className="ml-auto text-lg group-hover:translate-x-1 transition-transform">→</div>
+                <div className="ml-auto text-lg group-hover:translate-x-1 transition-transform">
+                  →
+                </div>
               </Link>
             </div>
           </div>
@@ -274,7 +298,7 @@ query {
                   placeholder="Enter your GraphQL query here..."
                 />
               </div>
-              
+
               <div>
                 <h2 className="text-lg font-semibold mb-3 text-gray-900 dark:text-white flex items-center gap-2">
                   ⚙️ Variables (JSON)
@@ -286,7 +310,7 @@ query {
                   placeholder='{"key": "value"}'
                 />
               </div>
-              
+
               <button
                 className="w-full px-6 py-3 bg-gradient-to-r from-purple-500 to-blue-500 text-white dark:text-white rounded-xl font-semibold hover:from-purple-600 hover:to-blue-600 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 shadow-lg flex items-center justify-center gap-2"
                 onClick={executeQuery}
@@ -298,13 +322,11 @@ query {
                     Executing...
                   </>
                 ) : (
-                  <>
-                    ▶️ Execute Query
-                  </>
+                  <>▶️ Execute Query</>
                 )}
               </button>
             </div>
-            
+
             {/* Response Section */}
             <div>
               <h2 className="text-lg font-semibold mb-3 text-gray-900 dark:text-white flex items-center gap-2">
@@ -319,7 +341,8 @@ query {
                 </div>
               )}
               <pre className="w-full h-[34rem] p-4 border border-white/30 rounded-xl overflow-auto bg-black/20 backdrop-blur-sm font-mono text-sm text-gray-900 dark:text-white scrollbar-thin scrollbar-thumb-white/20 scrollbar-track-transparent">
-                {response || '// Execute a query to see results\n// Your GraphQL response will appear here'}
+                {response ||
+                  "// Execute a query to see results\n// Your GraphQL response will appear here"}
               </pre>
             </div>
           </div>
@@ -337,7 +360,7 @@ query {
                   🔵 Get .NET Lessons
                 </h3>
                 <pre className="p-4 bg-black/20 border border-white/20 rounded-lg overflow-auto font-mono text-sm text-green-300 mb-3">
-{`query {
+                  {`query {
   dotNetLessons {
     id
     topic
@@ -362,13 +385,13 @@ query {
                   → Use this query
                 </button>
               </div>
-              
+
               <div className="bg-white/5 backdrop-blur-sm rounded-xl p-4 border border-white/10">
                 <h3 className="text-lg font-medium mb-3 text-gray-900 dark:text-white flex items-center gap-2">
                   🔵 Submit Answer
                 </h3>
                 <pre className="p-4 bg-black/20 border border-white/20 rounded-lg overflow-auto font-mono text-sm text-green-300 mb-3">
-{`mutation {
+                  {`mutation {
   submitAnswer(questionId: 1, answerIndex: 0) {
     isCorrect
     explanation
@@ -390,14 +413,14 @@ query {
                 </button>
               </div>
             </div>
-            
+
             <div className="space-y-4">
               <div className="bg-white/5 backdrop-blur-sm rounded-xl p-4 border border-white/10">
                 <h3 className="text-lg font-medium mb-3 text-gray-900 dark:text-white flex items-center gap-2">
                   🔵 Get Interview Questions
                 </h3>
                 <pre className="p-4 bg-black/20 border border-white/20 rounded-lg overflow-auto font-mono text-sm text-green-300 mb-3">
-{`query {
+                  {`query {
   dotNetInterviewQuestions {
     id
     topic
@@ -424,13 +447,13 @@ query {
                   → Use this query
                 </button>
               </div>
-              
+
               <div className="bg-white/5 backdrop-blur-sm rounded-xl p-4 border border-white/10">
                 <h3 className="text-lg font-medium mb-3 text-gray-900 dark:text-white flex items-center gap-2">
                   🔵 Filter & Sort
                 </h3>
                 <pre className="p-4 bg-black/20 border border-white/20 rounded-lg overflow-auto font-mono text-sm text-green-300 mb-3">
-{`query {
+                  {`query {
   dotNetLessons(
     topic: "OOP"
     sortBy: "id"

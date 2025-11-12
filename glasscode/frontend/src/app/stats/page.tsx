@@ -1,11 +1,11 @@
-'use client';
+"use client";
 
-import { useEffect } from 'react';
-import { useAppStats } from '@/hooks/useAppStats';
-import StatCard from '@/components/stats/StatCard';
-import PieChart from '@/components/stats/PieChart';
-import AppProgressTracker from '@/components/AppProgressTracker';
-import Link from 'next/link';
+import { useEffect } from "react";
+import { useAppStats } from "@/hooks/useAppStats";
+import StatCard from "@/components/stats/StatCard";
+import PieChart from "@/components/stats/PieChart";
+import AppProgressTracker from "@/components/AppProgressTracker";
+import Link from "next/link";
 import {
   BookOpenIcon,
   QuestionMarkCircleIcon,
@@ -23,12 +23,12 @@ import {
   DocumentCheckIcon,
   ChatBubbleLeftRightIcon,
   BellIcon,
-  ArrowsRightLeftIcon
-} from '@heroicons/react/24/outline';
-import { KeyIcon } from '@heroicons/react/24/outline';
-import LoadingScreen from '@/components/LoadingScreen';
-import '@/styles/liquid-glass.scss';
-import { capitalizeModuleName } from '@/lib/stats/formatters';
+  ArrowsRightLeftIcon,
+} from "@heroicons/react/24/outline";
+import { KeyIcon } from "@heroicons/react/24/outline";
+import LoadingScreen from "@/components/LoadingScreen";
+import "@/styles/liquid-glass.scss";
+import { capitalizeModuleName } from "@/lib/stats/formatters";
 
 // Use shared formatter for consistent capitalization across the app
 
@@ -37,19 +37,19 @@ export default function StatsPage() {
 
   // Set document title dynamically since this is a client component
   useEffect(() => {
-    document.title = 'GlassStats - Platform Statistics | GlassCode Academy';
+    document.title = "GlassStats - Platform Statistics | GlassCode Academy";
   }, []);
 
   if (stats.isLoading) {
-    return (
-      <LoadingScreen message="Loading stats..." />
-    );
+    return <LoadingScreen message="Loading stats..." />;
   }
 
   if (stats.error) {
     return (
       <div className="min-h-screen bg-bg flex items-center justify-center">
-        <div className="glass-card text-danger text-xl">Error loading stats: {stats.error}</div>
+        <div className="glass-card text-danger text-xl">
+          Error loading stats: {stats.error}
+        </div>
       </div>
     );
   }
@@ -113,20 +113,20 @@ export default function StatsPage() {
               <PieChart
                 data={[
                   {
-                    label: 'Beginner',
+                    label: "Beginner",
                     value: stats.difficultyBreakdown.beginner,
-                    color: '#10B981'
+                    color: "#10B981",
                   },
                   {
-                    label: 'Intermediate',
+                    label: "Intermediate",
                     value: stats.difficultyBreakdown.intermediate,
-                    color: '#F59E0B'
+                    color: "#F59E0B",
                   },
                   {
-                    label: 'Advanced',
+                    label: "Advanced",
                     value: stats.difficultyBreakdown.advanced,
-                    color: '#EF4444'
-                  }
+                    color: "#EF4444",
+                  },
                 ]}
                 size={240}
                 strokeWidth={12}
@@ -142,19 +142,31 @@ export default function StatsPage() {
             </h3>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 flex-1">
               <div className="text-center p-4 bg-surface-alt rounded-xl border border-border flex flex-col justify-center">
-                <div className="text-2xl font-bold text-primary">{stats.tierBreakdown.foundational}</div>
-                <div className="text-sm text-primary font-medium">Foundational</div>
+                <div className="text-2xl font-bold text-primary">
+                  {stats.tierBreakdown.foundational}
+                </div>
+                <div className="text-sm text-primary font-medium">
+                  Foundational
+                </div>
               </div>
               <div className="text-center p-4 bg-surface-alt rounded-xl border border-border flex flex-col justify-center">
-                <div className="text-2xl font-bold text-success">{stats.tierBreakdown.core}</div>
+                <div className="text-2xl font-bold text-success">
+                  {stats.tierBreakdown.core}
+                </div>
                 <div className="text-sm text-success font-medium">Core</div>
               </div>
               <div className="text-center p-4 bg-surface-alt rounded-xl border border-border flex flex-col justify-center">
-                <div className="text-2xl font-bold text-primary">{stats.tierBreakdown.specialized}</div>
-                <div className="text-sm text-primary font-medium">Specialised</div>
+                <div className="text-2xl font-bold text-primary">
+                  {stats.tierBreakdown.specialized}
+                </div>
+                <div className="text-sm text-primary font-medium">
+                  Specialised
+                </div>
               </div>
               <div className="text-center p-4 bg-surface-alt rounded-xl border border-border flex flex-col justify-center">
-                <div className="text-2xl font-bold text-warning">{stats.tierBreakdown.quality}</div>
+                <div className="text-2xl font-bold text-warning">
+                  {stats.tierBreakdown.quality}
+                </div>
                 <div className="text-sm text-warning font-medium">Quality</div>
               </div>
             </div>
@@ -168,21 +180,37 @@ export default function StatsPage() {
             Technology Modules
           </h3>
           <div className="text-center mb-4 p-3 bg-green-500/10 border border-green-400/20 rounded-lg">
-            <p className="text-green-400 font-medium">🎉 All Modules Loaded: {stats.totalModules} 🎉</p>
-            <p className="text-green-300 text-sm mt-1">Programming, Web, React, Node, Database, .NET, TypeScript, and more are available</p>
+            <p className="text-green-400 font-medium">
+              🎉 All Modules Loaded: {stats.totalModules} 🎉
+            </p>
+            <p className="text-green-300 text-sm mt-1">
+              Programming, Web, React, Node, Database, .NET, TypeScript, and
+              more are available
+            </p>
           </div>
           <div className="text-center mb-4 p-3 bg-blue-500/10 border border-blue-400/20 rounded-lg">
-            <p className="text-blue-400 font-medium">📊 Code Coverage: 49.47% 📊</p>
-            <p className="text-blue-300 text-sm mt-1">Significant improvement from 38.05% with new unit tests for all core services</p>
+            <p className="text-blue-400 font-medium">
+              📊 Code Coverage: 49.47% 📊
+            </p>
+            <p className="text-blue-300 text-sm mt-1">
+              Significant improvement from 38.05% with new unit tests for all
+              core services
+            </p>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
             {stats.moduleBreakdown.map((module, index) => {
-              const moduleSlug = module.name.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
+              const moduleSlug = module.name
+                .toLowerCase()
+                .replace(/\s+/g, "-")
+                .replace(/[^a-z0-9-]/g, "");
               return (
                 <div
                   key={`${module.name}-${index}`} // Using a more unique key
                   className="p-4 rounded-xl border border-border hover:opacity-90 transition-all duration-200 hover:shadow-lg hover:scale-105 cursor-pointer bg-surface-alt relative group"
-                  style={{ borderLeftColor: module.color, borderLeftWidth: '4px' }}
+                  style={{
+                    borderLeftColor: module.color,
+                    borderLeftWidth: "4px",
+                  }}
                 >
                   {/* Direct Link Button */}
                   <Link
@@ -195,23 +223,36 @@ export default function StatsPage() {
                       stroke="currentColor"
                       viewBox="0 0 24 24"
                     >
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
+                      />
                     </svg>
                   </Link>
 
-                  <h4 className="font-bold text-fg mb-2 group-hover:text-primary transition-colors pr-8 truncate">{capitalizeModuleName(module.name)}</h4>
+                  <h4 className="font-bold text-fg mb-2 group-hover:text-primary transition-colors pr-8 truncate">
+                    {capitalizeModuleName(module.name)}
+                  </h4>
                   <div className="space-y-1">
                     <div className="flex justify-between text-sm">
                       <span className="text-muted">Lessons:</span>
-                      <span className="font-medium text-primary">{module.lessons}</span>
+                      <span className="font-medium text-primary">
+                        {module.lessons}
+                      </span>
                     </div>
                     <div className="flex justify-between text-sm">
                       <span className="text-muted">Questions:</span>
-                      <span className="font-medium text-success">{module.questions}</span>
+                      <span className="font-medium text-success">
+                        {module.questions}
+                      </span>
                     </div>
                     <div className="flex justify-between text-sm font-bold">
                       <span className="text-muted">Total:</span>
-                      <span style={{ color: module.color }}>{module.lessons + module.questions}</span>
+                      <span style={{ color: module.color }}>
+                        {module.lessons + module.questions}
+                      </span>
                     </div>
                   </div>
                 </div>
@@ -227,114 +268,144 @@ export default function StatsPage() {
             LMS Features & Capabilities
           </h3>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 mb-6">
-             <StatCard
-               title="Course Management"
-               value={8}
-               icon={<CogIcon className="h-8 w-8" />}
-               color="blue"
-               description="Features"
-             />
-             <StatCard
-               title="User Engagement"
-               value={6}
-               icon={<UsersIcon className="h-8 w-8" />}
-               color="green"
-               description="Features"
-             />
-             <StatCard
-               title="Integrations"
-               value={7}
-               icon={<PuzzlePieceIcon className="h-8 w-8" />}
-               color="purple"
-               description="Features"
-             />
-             <StatCard
-               title="Admin & Support"
-               value={5}
-               icon={<ShieldCheckIcon className="h-8 w-8" />}
-               color="orange"
-               description="Features"
-             />
-             <StatCard
-               title="Marketing & Sales"
-               value={4}
-               icon={<CurrencyDollarIcon className="h-8 w-8" />}
-               color="pink"
-               description="Features"
-             />
-             <StatCard
-               title="Certification"
-               value={3}
-               icon={<DocumentCheckIcon className="h-8 w-8" />}
-               color="indigo"
-               description="Features"
-             />
-             <StatCard
-               title="Additional Tools"
-               value={3}
-               icon={<ChatBubbleLeftRightIcon className="h-8 w-8" />}
-               color="purple"
-               description="Features"
-             />
-             <StatCard
-               title="Total LMS Features"
-               value={36}
-               icon={<SparklesIcon className="h-8 w-8" />}
-               color="orange"
-               description="Planned"
-             />
-           </div>
-          
+            <StatCard
+              title="Course Management"
+              value={8}
+              icon={<CogIcon className="h-8 w-8" />}
+              color="blue"
+              description="Features"
+            />
+            <StatCard
+              title="User Engagement"
+              value={6}
+              icon={<UsersIcon className="h-8 w-8" />}
+              color="green"
+              description="Features"
+            />
+            <StatCard
+              title="Integrations"
+              value={7}
+              icon={<PuzzlePieceIcon className="h-8 w-8" />}
+              color="purple"
+              description="Features"
+            />
+            <StatCard
+              title="Admin & Support"
+              value={5}
+              icon={<ShieldCheckIcon className="h-8 w-8" />}
+              color="orange"
+              description="Features"
+            />
+            <StatCard
+              title="Marketing & Sales"
+              value={4}
+              icon={<CurrencyDollarIcon className="h-8 w-8" />}
+              color="pink"
+              description="Features"
+            />
+            <StatCard
+              title="Certification"
+              value={3}
+              icon={<DocumentCheckIcon className="h-8 w-8" />}
+              color="indigo"
+              description="Features"
+            />
+            <StatCard
+              title="Additional Tools"
+              value={3}
+              icon={<ChatBubbleLeftRightIcon className="h-8 w-8" />}
+              color="purple"
+              description="Features"
+            />
+            <StatCard
+              title="Total LMS Features"
+              value={36}
+              icon={<SparklesIcon className="h-8 w-8" />}
+              color="orange"
+              description="Planned"
+            />
+          </div>
+
           {/* Feature Categories Detail */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <div className="space-y-4">
-              <h4 className="text-lg font-semibold text-fg mb-3">Core LMS Features</h4>
+              <h4 className="text-lg font-semibold text-fg mb-3">
+                Core LMS Features
+              </h4>
               <div className="space-y-3">
                 <div className="flex items-center justify-between p-3 bg-surface-alt rounded-lg border border-border">
                   <span className="text-primary">Advanced Course Creation</span>
-                  <span className="text-xs bg-green-500/20 border border-green-400/30 rounded-full px-2 py-1 text-green-300">Completed</span>
+                  <span className="text-xs bg-green-500/20 border border-green-400/30 rounded-full px-2 py-1 text-green-300">
+                    Completed
+                  </span>
                 </div>
                 <div className="flex items-center justify-between p-3 bg-surface-alt rounded-lg border border-border">
                   <span className="text-success">Advanced Quiz System</span>
-                  <span className="text-xs bg-green-500/20 border border-green-400/30 rounded-full px-2 py-1 text-green-300">Completed</span>
+                  <span className="text-xs bg-green-500/20 border border-green-400/30 rounded-full px-2 py-1 text-green-300">
+                    Completed
+                  </span>
                 </div>
                 <div className="flex items-center justify-between p-3 bg-surface-alt rounded-lg border border-border">
                   <span className="text-primary">Assignment Management</span>
-                  <span className="text-xs bg-green-500/20 border border-green-400/30 rounded-full px-2 py-1 text-green-300">Completed</span>
+                  <span className="text-xs bg-green-500/20 border border-green-400/30 rounded-full px-2 py-1 text-green-300">
+                    Completed
+                  </span>
                 </div>
                 <div className="flex items-center justify-between p-3 bg-surface-alt rounded-lg border border-border">
                   <span className="text-warning">Gradebook & Analytics</span>
-                  <span className="text-xs bg-green-500/20 border border-green-400/30 rounded-full px-2 py-1 text-green-300">Completed</span>
+                  <span className="text-xs bg-green-500/20 border border-green-400/30 rounded-full px-2 py-1 text-green-300">
+                    Completed
+                  </span>
                 </div>
               </div>
             </div>
-            
+
             <div className="space-y-4">
-              <h4 className="text-lg font-semibold text-fg mb-3">Enterprise Features</h4>
+              <h4 className="text-lg font-semibold text-fg mb-3">
+                Enterprise Features
+              </h4>
               <div className="space-y-3">
                 <div className="flex items-center justify-between p-3 bg-surface-alt rounded-lg border border-border">
-                  <span className="text-primary">Zoom & Google Meet Integration</span>
-                  <span className="text-xs bg-green-500/20 border border-green-400/30 rounded-full px-2 py-1 text-green-300">Completed</span>
+                  <span className="text-primary">
+                    Zoom & Google Meet Integration
+                  </span>
+                  <span className="text-xs bg-green-500/20 border border-green-400/30 rounded-full px-2 py-1 text-green-300">
+                    Completed
+                  </span>
                 </div>
                 <div className="flex items-center justify-between p-3 bg-surface-alt rounded-lg border border-border">
                   <span className="text-danger">White Labeling & Branding</span>
-                  <span className="text-xs bg-yellow-500/20 border border-yellow-400/30 rounded-full px-2 py-1 text-yellow-300">In Progress</span>
+                  <span className="text-xs bg-yellow-500/20 border border-yellow-400/30 rounded-full px-2 py-1 text-yellow-300">
+                    In Progress
+                  </span>
                 </div>
                 <div className="flex items-center justify-between p-3 bg-surface-alt rounded-lg border border-border">
-                  <span className="text-primary">Infrastructure as Code (Terraform)</span>
-                  <span className="text-xs bg-yellow-500/20 border border-yellow-400/30 rounded-full px-2 py-1 text-yellow-300">In Progress</span>
+                  <span className="text-primary">
+                    Infrastructure as Code (Terraform)
+                  </span>
+                  <span className="text-xs bg-yellow-500/20 border border-yellow-400/30 rounded-full px-2 py-1 text-yellow-300">
+                    In Progress
+                  </span>
                 </div>
                 <div className="flex items-center justify-between p-3 bg-surface-alt rounded-lg border border-border">
                   <span className="text-primary">SCORM Compliance</span>
-                  <span className="text-xs bg-yellow-500/20 border border-yellow-400/30 rounded-full px-2 py-1 text-yellow-300">In Progress</span>
+                  <span className="text-xs bg-yellow-500/20 border border-yellow-400/30 rounded-full px-2 py-1 text-yellow-300">
+                    In Progress
+                  </span>
                 </div>
                 <div className="flex items-center justify-between p-3 bg-surface-alt rounded-lg border border-border">
                   <span className="text-success">OAuth/OIDC Integration</span>
-                  <span className="text-xs bg-yellow-500/20 border border-yellow-400/30 rounded-full px-2 py-1 text-yellow-300">In Progress</span>
+                  <span className="text-xs bg-yellow-500/20 border border-yellow-400/30 rounded-full px-2 py-1 text-yellow-300">
+                    In Progress
+                  </span>
                 </div>
                 <div className="flex items-center justify-between p-3 bg-surface-alt rounded-lg border border-border">
-                  <span className="text-warning">Certificate Builder with QR</span>
-                  <span className="text-xs bg-green-500/20 border border-green-400/30 rounded-full px-2 py-1 text-green-300">Completed</span>
+                  <span className="text-warning">
+                    Certificate Builder with QR
+                  </span>
+                  <span className="text-xs bg-green-500/20 border border-green-400/30 rounded-full px-2 py-1 text-green-300">
+                    Completed
+                  </span>
                 </div>
               </div>
             </div>
@@ -399,11 +470,17 @@ export default function StatsPage() {
             />
           </div>
           <div className="text-center flex items-center justify-center gap-3">
-            <Link href="/" className="inline-flex items-center px-4 py-2 bg-primary text-primary-fg rounded-lg hover:opacity-90 transition-colors">
+            <Link
+              href="/"
+              className="inline-flex items-center px-4 py-2 bg-primary text-primary-fg rounded-lg hover:opacity-90 transition-colors"
+            >
               <TrophyIcon className="h-5 w-5 mr-2" />
               View Achievements
             </Link>
-            <Link href="/forum" className="inline-flex items-center px-4 py-2 bg-surface-alt text-fg border border-border rounded-lg hover:opacity-90 transition-colors">
+            <Link
+              href="/forum"
+              className="inline-flex items-center px-4 py-2 bg-surface-alt text-fg border border-border rounded-lg hover:opacity-90 transition-colors"
+            >
               <ChatBubbleLeftRightIcon className="h-5 w-5 mr-2" />
               Open Forum
             </Link>
@@ -447,49 +524,69 @@ export default function StatsPage() {
               description="Request Coverage"
             />
           </div>
-          
+
           {/* Monitoring Stack */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <div className="space-y-4">
-              <h4 className="text-lg font-semibold text-fg mb-3">Observability Stack</h4>
+              <h4 className="text-lg font-semibold text-fg mb-3">
+                Observability Stack
+              </h4>
               <div className="space-y-3">
                 <div className="flex items-center justify-between p-3 bg-surface-alt rounded-lg border border-border">
                   <span className="text-primary">OpenTelemetry SDK</span>
-                  <span className="text-xs bg-green-500/20 border border-green-400/30 rounded-full px-2 py-1 text-green-300">Active</span>
+                  <span className="text-xs bg-green-500/20 border border-green-400/30 rounded-full px-2 py-1 text-green-300">
+                    Active
+                  </span>
                 </div>
                 <div className="flex items-center justify-between p-3 bg-surface-alt rounded-lg border border-border">
                   <span className="text-success">Prometheus Metrics</span>
-                  <span className="text-xs bg-green-500/20 border border-green-400/30 rounded-full px-2 py-1 text-green-300">Active</span>
+                  <span className="text-xs bg-green-500/20 border border-green-400/30 rounded-full px-2 py-1 text-green-300">
+                    Active
+                  </span>
                 </div>
                 <div className="flex items-center justify-between p-3 bg-surface-alt rounded-lg border border-border">
                   <span className="text-primary">Grafana Dashboards</span>
-                  <span className="text-xs bg-green-500/20 border border-green-400/30 rounded-full px-2 py-1 text-green-300">Active</span>
+                  <span className="text-xs bg-green-500/20 border border-green-400/30 rounded-full px-2 py-1 text-green-300">
+                    Active
+                  </span>
                 </div>
                 <div className="flex items-center justify-between p-3 bg-surface-alt rounded-lg border border-border">
                   <span className="text-warning">Jaeger Tracing</span>
-                  <span className="text-xs bg-green-500/20 border border-green-400/30 rounded-full px-2 py-1 text-green-300">Active</span>
+                  <span className="text-xs bg-green-500/20 border border-green-400/30 rounded-full px-2 py-1 text-green-300">
+                    Active
+                  </span>
                 </div>
               </div>
             </div>
-            
+
             <div className="space-y-4">
-              <h4 className="text-lg font-semibold text-fg mb-3">Monitoring Features</h4>
+              <h4 className="text-lg font-semibold text-fg mb-3">
+                Monitoring Features
+              </h4>
               <div className="space-y-3">
                 <div className="flex items-center justify-between p-3 bg-surface-alt rounded-lg border border-border">
                   <span className="text-primary">SLO Tracking</span>
-                  <span className="text-xs bg-green-500/20 border border-green-400/30 rounded-full px-2 py-1 text-green-300">Completed</span>
+                  <span className="text-xs bg-green-500/20 border border-green-400/30 rounded-full px-2 py-1 text-green-300">
+                    Completed
+                  </span>
                 </div>
                 <div className="flex items-center justify-between p-3 bg-surface-alt rounded-lg border border-border">
                   <span className="text-success">Alertmanager</span>
-                  <span className="text-xs bg-green-500/20 border border-green-400/30 rounded-full px-2 py-1 text-green-300">Completed</span>
+                  <span className="text-xs bg-green-500/20 border border-green-400/30 rounded-full px-2 py-1 text-green-300">
+                    Completed
+                  </span>
                 </div>
                 <div className="flex items-center justify-between p-3 bg-surface-alt rounded-lg border border-border">
                   <span className="text-primary">User Journey Tracking</span>
-                  <span className="text-xs bg-green-500/20 border border-green-400/30 rounded-full px-2 py-1 text-green-300">Completed</span>
+                  <span className="text-xs bg-green-500/20 border border-green-400/30 rounded-full px-2 py-1 text-green-300">
+                    Completed
+                  </span>
                 </div>
                 <div className="flex items-center justify-between p-3 bg-surface-alt rounded-lg border border-border">
                   <span className="text-warning">Business Metrics</span>
-                  <span className="text-xs bg-green-500/20 border border-green-400/30 rounded-full px-2 py-1 text-green-300">Completed</span>
+                  <span className="text-xs bg-green-500/20 border border-green-400/30 rounded-full px-2 py-1 text-green-300">
+                    Completed
+                  </span>
                 </div>
               </div>
             </div>
@@ -504,7 +601,9 @@ export default function StatsPage() {
           </h3>
           <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
             <div className="text-center">
-              <div className="text-3xl font-bold text-fg">{totalContent.toLocaleString()}</div>
+              <div className="text-3xl font-bold text-fg">
+                {totalContent.toLocaleString()}
+              </div>
               <div className="text-muted">Total Learning Items</div>
             </div>
             <div className="text-center">
@@ -515,12 +614,14 @@ export default function StatsPage() {
             </div>
             <div className="text-center">
               <div className="text-3xl font-bold text-fg">
-                {Math.round(stats.averageCompletionTime * totalContent / 60)}h
+                {Math.round((stats.averageCompletionTime * totalContent) / 60)}h
               </div>
               <div className="text-muted">Total Learning Time</div>
             </div>
             <div className="text-center">
-              <div className="text-3xl font-bold text-fg">{stats.totalModules}/{stats.totalModules}</div>
+              <div className="text-3xl font-bold text-fg">
+                {stats.totalModules}/{stats.totalModules}
+              </div>
               <div className="text-muted">Modules Complete</div>
             </div>
           </div>

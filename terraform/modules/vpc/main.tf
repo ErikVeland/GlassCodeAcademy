@@ -64,6 +64,11 @@ output "nat_public_ips" {
   value       = module.vpc.nat_public_ips
 }
 
+output "vpc_cidr" {
+  description = "CIDR block of the created VPC"
+  value       = module.vpc.vpc_cidr_block
+}
+
 terraform {
   required_version = ">= 1.0"
   required_providers {

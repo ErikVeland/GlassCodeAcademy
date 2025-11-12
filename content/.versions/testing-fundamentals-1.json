@@ -1,0 +1,17 @@
+{
+  "id": "testing-fundamentals-1",
+  "type": "lesson",
+  "slug": "testing-fundamentals-1",
+  "title": "Introduction to Software Testing",
+  "versions": [
+    {
+      "version": "1.0.0",
+      "lastUpdated": "2025-11-12T02:37:42.930Z",
+      "changes": [
+        "Initial version import"
+      ],
+      "author": "system",
+      "hash": "-68b87a9d"
+    }
+  ]
+}

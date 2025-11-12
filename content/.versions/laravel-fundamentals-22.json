@@ -1,0 +1,17 @@
+{
+  "id": "laravel-fundamentals-22",
+  "type": "lesson",
+  "slug": "laravel-fundamentals-22",
+  "title": "Caching Strategies and Optimization",
+  "versions": [
+    {
+      "version": "1.0.0",
+      "lastUpdated": "2025-11-12T02:37:42.907Z",
+      "changes": [
+        "Initial version import"
+      ],
+      "author": "system",
+      "hash": "-1e30648"
+    }
+  ]
+}

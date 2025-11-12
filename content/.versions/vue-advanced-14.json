@@ -1,0 +1,17 @@
+{
+  "id": "vue-advanced-14",
+  "type": "lesson",
+  "slug": "vue-advanced-14",
+  "title": "Vue 3 Ecosystem and Production Deployment",
+  "versions": [
+    {
+      "version": "1.0.0",
+      "lastUpdated": "2025-11-12T02:37:42.940Z",
+      "changes": [
+        "Initial version import"
+      ],
+      "author": "system",
+      "hash": "-32a178aa"
+    }
+  ]
+}

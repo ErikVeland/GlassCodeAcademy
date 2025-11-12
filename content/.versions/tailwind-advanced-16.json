@@ -1,0 +1,17 @@
+{
+  "id": "tailwind-advanced-16",
+  "type": "lesson",
+  "slug": "tailwind-advanced-16",
+  "title": "Component Library Development",
+  "versions": [
+    {
+      "version": "1.0.0",
+      "lastUpdated": "2025-11-12T02:37:42.930Z",
+      "changes": [
+        "Initial version import"
+      ],
+      "author": "system",
+      "hash": "-46fee10d"
+    }
+  ]
+}

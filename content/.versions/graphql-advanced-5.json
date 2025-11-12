@@ -1,0 +1,17 @@
+{
+  "id": "graphql-advanced-5",
+  "type": "lesson",
+  "slug": "graphql-advanced-5",
+  "title": "Subscriptions and Real-time Data",
+  "versions": [
+    {
+      "version": "1.0.0",
+      "lastUpdated": "2025-11-12T02:37:42.901Z",
+      "changes": [
+        "Initial version import"
+      ],
+      "author": "system",
+      "hash": "3a701610"
+    }
+  ]
+}

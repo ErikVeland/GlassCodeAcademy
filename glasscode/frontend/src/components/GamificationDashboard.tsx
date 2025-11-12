@@ -1,7 +1,7 @@
-'use client'
+"use client";
 
-import React, { useState, useEffect } from 'react';
-import { useProgressTracking } from '../hooks/useProgressTracking';
+import React, { useState, useEffect } from "react";
+import { useProgressTracking } from "../hooks/useProgressTracking";
 
 interface StreakData {
   current: number;
@@ -10,21 +10,32 @@ interface StreakData {
 }
 
 const GamificationDashboard: React.FC = () => {
-  const { progress, achievements, getCompletedModulesCount, calculateOverallProgress } = useProgressTracking();
-  const [streakData, setStreakData] = useState<StreakData>({ current: 0, longest: 0, lastActivity: null });
-  const [selectedRarity, setSelectedRarity] = useState<string>('all');
+  const {
+    progress,
+    achievements,
+    getCompletedModulesCount,
+    calculateOverallProgress,
+  } = useProgressTracking();
+  const [streakData, setStreakData] = useState<StreakData>({
+    current: 0,
+    longest: 0,
+    lastActivity: null,
+  });
+  const [selectedRarity, setSelectedRarity] = useState<string>("all");
   const [isCollapsed, setIsCollapsed] = useState(false);
 
   // Initialize gamification data
   useEffect(() => {
     const initializeGamification = () => {
       // Load streak data from localStorage
-      const savedStreak = localStorage.getItem('learning_streak');
+      const savedStreak = localStorage.getItem("learning_streak");
       if (savedStreak) {
         const parsed = JSON.parse(savedStreak);
         setStreakData({
           ...parsed,
-          lastActivity: parsed.lastActivity ? new Date(parsed.lastActivity) : null
+          lastActivity: parsed.lastActivity
+            ? new Date(parsed.lastActivity)
+            : null,
         });
       }
     };
@@ -34,25 +45,26 @@ const GamificationDashboard: React.FC = () => {
 
   // Streak updates are managed by `initializeGamification`; additional helpers can be added when needed.
 
-  const filteredAchievements = achievements.filter(achievement => 
-    selectedRarity === 'all' || achievement.type === selectedRarity
+  const filteredAchievements = achievements.filter(
+    (achievement) =>
+      selectedRarity === "all" || achievement.type === selectedRarity,
   );
 
   const getRarityColor = (type: string) => {
     const colors = {
-      completion: 'text-blue-600 bg-blue-100',
-      streak: 'text-green-600 bg-green-100',
-      skill: 'text-purple-600 bg-purple-100',
-      velocity: 'text-yellow-600 bg-yellow-100'
+      completion: "text-blue-600 bg-blue-100",
+      streak: "text-green-600 bg-green-100",
+      skill: "text-purple-600 bg-purple-100",
+      velocity: "text-yellow-600 bg-yellow-100",
     };
     return colors[type as keyof typeof colors] || colors.completion;
   };
 
   const getStreakIcon = () => {
-    if (streakData.current >= 30) return '🔥🔥🔥';
-    if (streakData.current >= 14) return '🔥🔥';
-    if (streakData.current >= 7) return '🔥';
-    return '📅';
+    if (streakData.current >= 30) return "🔥🔥🔥";
+    if (streakData.current >= 14) return "🔥🔥";
+    if (streakData.current >= 7) return "🔥";
+    return "📅";
   };
 
   return (
@@ -65,9 +77,9 @@ const GamificationDashboard: React.FC = () => {
           <button
             onClick={() => setIsCollapsed(!isCollapsed)}
             className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 transition-colors"
-            aria-label={isCollapsed ? 'Expand dashboard' : 'Collapse dashboard'}
+            aria-label={isCollapsed ? "Expand dashboard" : "Collapse dashboard"}
           >
-            {isCollapsed ? '▼' : '▲'}
+            {isCollapsed ? "▼" : "▲"}
           </button>
         </div>
 
@@ -79,7 +91,9 @@ const GamificationDashboard: React.FC = () => {
                 <div className="flex items-center justify-between">
                   <div>
                     <div className="text-sm opacity-90">Modules Completed</div>
-                    <div className="text-2xl font-bold">{getCompletedModulesCount()}</div>
+                    <div className="text-2xl font-bold">
+                      {getCompletedModulesCount()}
+                    </div>
                   </div>
                   <div className="text-3xl">📚</div>
                 </div>
@@ -89,7 +103,9 @@ const GamificationDashboard: React.FC = () => {
                 <div className="flex items-center justify-between">
                   <div>
                     <div className="text-sm opacity-90">Overall Progress</div>
-                    <div className="text-2xl font-bold">{calculateOverallProgress()}%</div>
+                    <div className="text-2xl font-bold">
+                      {calculateOverallProgress()}%
+                    </div>
                   </div>
                   <div className="text-3xl">📊</div>
                 </div>
@@ -99,7 +115,9 @@ const GamificationDashboard: React.FC = () => {
                 <div className="flex items-center justify-between">
                   <div>
                     <div className="text-sm opacity-90">Current Streak</div>
-                    <div className="text-2xl font-bold">{streakData.current} days</div>
+                    <div className="text-2xl font-bold">
+                      {streakData.current} days
+                    </div>
                   </div>
                   <div className="text-3xl">{getStreakIcon()}</div>
                 </div>
@@ -126,9 +144,9 @@ const GamificationDashboard: React.FC = () => {
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
-                {filteredAchievements.map(achievement => (
-                  <div 
-                    key={achievement.id} 
+                {filteredAchievements.map((achievement) => (
+                  <div
+                    key={achievement.id}
                     className="bg-gray-50 dark:bg-gray-700 p-3 rounded-lg border border-gray-200 dark:border-gray-600"
                   >
                     <div className="flex items-start space-x-3">
@@ -136,9 +154,13 @@ const GamificationDashboard: React.FC = () => {
                       <div className="flex-1">
                         <div className="flex items-center space-x-2 mb-1">
                           <h4 className="font-medium text-gray-900 dark:text-gray-100 text-sm">
-                            {achievement.type.charAt(0).toUpperCase() + achievement.type.slice(1)} Achievement
+                            {achievement.type.charAt(0).toUpperCase() +
+                              achievement.type.slice(1)}{" "}
+                            Achievement
                           </h4>
-                          <span className={`px-2 py-1 text-xs rounded-full ${getRarityColor(achievement.type)}`}>
+                          <span
+                            className={`px-2 py-1 text-xs rounded-full ${getRarityColor(achievement.type)}`}
+                          >
                             {achievement.type}
                           </span>
                         </div>
@@ -146,7 +168,10 @@ const GamificationDashboard: React.FC = () => {
                           {achievement.description}
                         </p>
                         <div className="text-xs text-gray-500 dark:text-gray-500">
-                          Unlocked {new Date(achievement.earnedDate).toLocaleDateString()}
+                          Unlocked{" "}
+                          {new Date(
+                            achievement.earnedDate,
+                          ).toLocaleDateString()}
                         </div>
                       </div>
                     </div>

@@ -1,7 +1,7 @@
-'use client';
+"use client";
 
-import { useState, useEffect } from 'react';
-import EnhancedLoadingComponent from '../components/EnhancedLoadingComponent';
+import { useState, useEffect } from "react";
+import EnhancedLoadingComponent from "../components/EnhancedLoadingComponent";
 
 export default function Custom502() {
   const [retryCount, setRetryCount] = useState(0);
@@ -10,7 +10,7 @@ export default function Custom502() {
   useEffect(() => {
     const timer = setTimeout(() => {
       if (retryCount < 30) {
-        setRetryCount(prev => prev + 1);
+        setRetryCount((prev) => prev + 1);
       }
     }, 2000);
 
@@ -20,9 +20,9 @@ export default function Custom502() {
   return (
     <div className="min-h-screen flex items-center justify-center p-4 bg-gray-50 dark:bg-gray-900">
       <div className="w-full max-w-md">
-        <EnhancedLoadingComponent 
-          retryCount={retryCount} 
-          maxRetries={30} 
+        <EnhancedLoadingComponent
+          retryCount={retryCount}
+          maxRetries={30}
           onRetry={() => setRetryCount(0)}
         />
       </div>

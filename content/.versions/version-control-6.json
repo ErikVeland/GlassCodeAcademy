@@ -1,0 +1,17 @@
+{
+  "id": "version-control-6",
+  "type": "lesson",
+  "slug": "version-control-6",
+  "title": "Git Troubleshooting and Recovery",
+  "versions": [
+    {
+      "version": "1.0.0",
+      "lastUpdated": "2025-11-12T02:37:42.936Z",
+      "changes": [
+        "Initial version import"
+      ],
+      "author": "system",
+      "hash": "66f1ff70"
+    }
+  ]
+}

@@ -1,11 +1,11 @@
-'use client';
+"use client";
 
-import React, { useState, useRef, useEffect } from 'react';
-import Image from 'next/image';
-import Link from 'next/link';
-import { useProfile } from './ProfileProvider';
-import { usePathname } from 'next/navigation';
-import { useSession, signOut } from 'next-auth/react';
+import React, { useState, useRef, useEffect } from "react";
+import Image from "next/image";
+import Link from "next/link";
+import { useProfile } from "./ProfileProvider";
+import { usePathname } from "next/navigation";
+import { useSession, signOut } from "next-auth/react";
 
 export default function ProfileMenu() {
   const { data: session } = useSession();
@@ -21,8 +21,8 @@ export default function ProfileMenu() {
         setOpen(false);
       }
     };
-    document.addEventListener('click', handleClick);
-    return () => document.removeEventListener('click', handleClick);
+    document.addEventListener("click", handleClick);
+    return () => document.removeEventListener("click", handleClick);
   }, []);
 
   useEffect(() => {
@@ -31,7 +31,7 @@ export default function ProfileMenu() {
 
   useEffect(() => {
     try {
-      const raw = localStorage.getItem('guestUser');
+      const raw = localStorage.getItem("guestUser");
       if (raw) {
         const parsed = JSON.parse(raw);
         if (parsed?.name) setGuestName(String(parsed.name));
@@ -48,15 +48,16 @@ export default function ProfileMenu() {
   const sizePx = 36;
 
   const presetAvatars: Record<string, string> = {
-    cat: '🐱',
-    dog: '🐶',
-    rocket: '🚀',
-    book: '📘',
-    code: '💻',
+    cat: "🐱",
+    dog: "🐶",
+    rocket: "🚀",
+    book: "📘",
+    code: "💻",
   };
 
   const renderAvatar = () => {
-    const containerClass = "rounded-full overflow-hidden flex items-center justify-center bg-surface-alt aspect-square";
+    const containerClass =
+      "rounded-full overflow-hidden flex items-center justify-center bg-surface-alt aspect-square";
     const containerStyle = { width: sizePx, height: sizePx } as const;
     if (profile.avatarUrl) {
       return (
@@ -72,12 +73,15 @@ export default function ProfileMenu() {
         </div>
       );
     }
-    const emoji = profile.avatarPresetId && presetAvatars[profile.avatarPresetId]
-      ? presetAvatars[profile.avatarPresetId]
-      : '👤';
+    const emoji =
+      profile.avatarPresetId && presetAvatars[profile.avatarPresetId]
+        ? presetAvatars[profile.avatarPresetId]
+        : "👤";
     return (
       <div className={containerClass} style={containerStyle}>
-        <span aria-hidden className="text-xl">{emoji}</span>
+        <span aria-hidden className="text-xl">
+          {emoji}
+        </span>
       </div>
     );
   };
@@ -87,7 +91,7 @@ export default function ProfileMenu() {
       <button
         aria-label="Profile menu"
         className="rounded-full p-1 focus:outline-none focus:ring-2 ring-focus ring-offset-2 ring-offset-bg"
-        onClick={() => setOpen(o => !o)}
+        onClick={() => setOpen((o) => !o)}
       >
         {renderAvatar()}
       </button>
@@ -97,7 +101,9 @@ export default function ProfileMenu() {
           <div className="py-2 px-4" role="menu">
             <div className="text-xs text-muted mb-2">
               {session?.user ? (
-                <span>Signed in as {session.user.name || session.user.email}</span>
+                <span>
+                  Signed in as {session.user.name || session.user.email}
+                </span>
               ) : guestName ? (
                 <span>Guest: {guestName}</span>
               ) : (
@@ -106,19 +112,35 @@ export default function ProfileMenu() {
             </div>
             {!session?.user && !guestName && (
               <>
-                <Link href="/login" className="block px-3 py-2 text-sm font-medium text-muted hover:bg-surface-alt hover:text-primary rounded transition-colors duration-150" role="menuitem">
+                <Link
+                  href="/login"
+                  className="block px-3 py-2 text-sm font-medium text-muted hover:bg-surface-alt hover:text-primary rounded transition-colors duration-150"
+                  role="menuitem"
+                >
                   <span className="mr-2">🔐</span> Login / Register
                 </Link>
-                <Link href="/register" className="block px-3 py-2 text-sm font-medium text-muted hover:bg-surface-alt hover:text-primary rounded transition-colors duration-150" role="menuitem">
+                <Link
+                  href="/register"
+                  className="block px-3 py-2 text-sm font-medium text-muted hover:bg-surface-alt hover:text-primary rounded transition-colors duration-150"
+                  role="menuitem"
+                >
                   <span className="mr-2">🔑</span> Register with OAuth
                 </Link>
                 <div className="border-t border-border my-2" />
               </>
             )}
-            <Link href="/profile" className="block px-3 py-2 text-sm font-medium text-muted hover:bg-surface-alt hover:text-primary rounded transition-colors duration-150" role="menuitem">
+            <Link
+              href="/profile"
+              className="block px-3 py-2 text-sm font-medium text-muted hover:bg-surface-alt hover:text-primary rounded transition-colors duration-150"
+              role="menuitem"
+            >
               <span className="mr-2">👤</span> Profile Overview
             </Link>
-            <Link href="/profile/edit" className="block px-3 py-2 text-sm font-medium text-muted hover:bg-surface-alt hover:text-primary rounded transition-colors duration-150" role="menuitem">
+            <Link
+              href="/profile/edit"
+              className="block px-3 py-2 text-sm font-medium text-muted hover:bg-surface-alt hover:text-primary rounded transition-colors duration-150"
+              role="menuitem"
+            >
               <span className="mr-2">✏️</span> Edit Profile
             </Link>
             {(session?.user || guestName) && (
@@ -131,10 +153,10 @@ export default function ProfileMenu() {
                     setOpen(false);
                     try {
                       if (session?.user) {
-                        await signOut({ callbackUrl: '/' });
+                        await signOut({ callbackUrl: "/" });
                       } else {
-                        localStorage.removeItem('guestUser');
-                        window.location.href = '/';
+                        localStorage.removeItem("guestUser");
+                        window.location.href = "/";
                       }
                     } catch {
                       // ignore

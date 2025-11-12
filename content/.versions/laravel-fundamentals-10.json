@@ -1,0 +1,17 @@
+{
+  "id": "laravel-fundamentals-10",
+  "type": "lesson",
+  "slug": "laravel-fundamentals-10",
+  "title": "Seeding Data",
+  "versions": [
+    {
+      "version": "1.0.0",
+      "lastUpdated": "2025-11-12T02:37:42.904Z",
+      "changes": [
+        "Initial version import"
+      ],
+      "author": "system",
+      "hash": "63f351e7"
+    }
+  ]
+}

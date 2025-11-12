@@ -1,0 +1,17 @@
+{
+  "id": "nextjs-advanced-12",
+  "type": "lesson",
+  "slug": "nextjs-advanced-12",
+  "title": "Advanced Next.js Patterns and Best Practices",
+  "versions": [
+    {
+      "version": "1.0.0",
+      "lastUpdated": "2025-11-12T02:37:42.909Z",
+      "changes": [
+        "Initial version import"
+      ],
+      "author": "system",
+      "hash": "-205bf7ba"
+    }
+  ]
+}

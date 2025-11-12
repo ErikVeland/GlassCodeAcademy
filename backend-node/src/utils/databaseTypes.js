@@ -62,4 +62,10 @@ const arrayGetterSetter = {
   },
 };
 
-module.exports = { getDialect, getJSONType, getArrayType, getArrayDefault, arrayGetterSetter };
+module.exports = {
+  getDialect,
+  getJSONType,
+  getArrayType,
+  getArrayDefault,
+  arrayGetterSetter,
+};

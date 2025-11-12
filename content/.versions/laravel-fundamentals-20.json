@@ -1,0 +1,17 @@
+{
+  "id": "laravel-fundamentals-20",
+  "type": "lesson",
+  "slug": "laravel-fundamentals-20",
+  "title": "Queue Workers and Job Processing",
+  "versions": [
+    {
+      "version": "1.0.0",
+      "lastUpdated": "2025-11-12T02:37:42.906Z",
+      "changes": [
+        "Initial version import"
+      ],
+      "author": "system",
+      "hash": "-2d21782f"
+    }
+  ]
+}

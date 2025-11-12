@@ -1,0 +1,17 @@
+{
+  "id": "web-fundamentals-14",
+  "type": "lesson",
+  "slug": "web-fundamentals-14",
+  "title": "Web Security Fundamentals",
+  "versions": [
+    {
+      "version": "1.0.0",
+      "lastUpdated": "2025-11-12T02:37:42.944Z",
+      "changes": [
+        "Initial version import"
+      ],
+      "author": "system",
+      "hash": "-7abd02e"
+    }
+  ]
+}

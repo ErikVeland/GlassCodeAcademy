@@ -1,0 +1,17 @@
+{
+  "id": "testing-fundamentals-11",
+  "type": "lesson",
+  "slug": "testing-fundamentals-11",
+  "title": "Test Data Management",
+  "versions": [
+    {
+      "version": "1.0.0",
+      "lastUpdated": "2025-11-12T02:37:42.932Z",
+      "changes": [
+        "Initial version import"
+      ],
+      "author": "system",
+      "hash": "-7ead4b36"
+    }
+  ]
+}

@@ -1,0 +1,17 @@
+{
+  "id": "nextjs-advanced-3",
+  "type": "lesson",
+  "slug": "nextjs-advanced-3",
+  "title": "Server-Side Rendering (SSR)",
+  "versions": [
+    {
+      "version": "1.0.0",
+      "lastUpdated": "2025-11-12T02:37:42.908Z",
+      "changes": [
+        "Initial version import"
+      ],
+      "author": "system",
+      "hash": "4bf8dac6"
+    }
+  ]
+}

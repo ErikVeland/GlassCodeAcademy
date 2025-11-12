@@ -1,0 +1,17 @@
+{
+  "id": "graphql-advanced-8",
+  "type": "lesson",
+  "slug": "graphql-advanced-8",
+  "title": "DataLoader and N+1 Query Problem",
+  "versions": [
+    {
+      "version": "1.0.0",
+      "lastUpdated": "2025-11-12T02:37:42.901Z",
+      "changes": [
+        "Initial version import"
+      ],
+      "author": "system",
+      "hash": "-887f609"
+    }
+  ]
+}

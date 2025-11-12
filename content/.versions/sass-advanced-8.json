@@ -1,0 +1,17 @@
+{
+  "id": "sass-advanced-8",
+  "type": "lesson",
+  "slug": "sass-advanced-8",
+  "title": "Organizing Code with Partials and @import",
+  "versions": [
+    {
+      "version": "1.0.0",
+      "lastUpdated": "2025-11-12T02:37:42.922Z",
+      "changes": [
+        "Initial version import"
+      ],
+      "author": "system",
+      "hash": "6d9e47e7"
+    }
+  ]
+}

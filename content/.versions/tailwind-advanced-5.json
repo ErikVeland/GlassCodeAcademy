@@ -1,0 +1,17 @@
+{
+  "id": "tailwind-advanced-5",
+  "type": "lesson",
+  "slug": "tailwind-advanced-5",
+  "title": "Customizing Tailwind",
+  "versions": [
+    {
+      "version": "1.0.0",
+      "lastUpdated": "2025-11-12T02:37:42.928Z",
+      "changes": [
+        "Initial version import"
+      ],
+      "author": "system",
+      "hash": "596b02a1"
+    }
+  ]
+}

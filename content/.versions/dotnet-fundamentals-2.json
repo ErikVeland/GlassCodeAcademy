@@ -1,0 +1,17 @@
+{
+  "id": "dotnet-fundamentals-2",
+  "type": "lesson",
+  "slug": "dotnet-fundamentals-2",
+  "title": "Object-Oriented Programming in C#",
+  "versions": [
+    {
+      "version": "1.0.0",
+      "lastUpdated": "2025-11-12T02:37:42.894Z",
+      "changes": [
+        "Initial version import"
+      ],
+      "author": "system",
+      "hash": "501ff47e"
+    }
+  ]
+}

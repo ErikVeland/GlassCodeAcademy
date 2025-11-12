@@ -1,0 +1,17 @@
+{
+  "id": "version-control-4",
+  "type": "lesson",
+  "slug": "version-control-4",
+  "title": "Git Workflows and Best Practices",
+  "versions": [
+    {
+      "version": "1.0.0",
+      "lastUpdated": "2025-11-12T02:37:42.936Z",
+      "changes": [
+        "Initial version import"
+      ],
+      "author": "system",
+      "hash": "700c27d4"
+    }
+  ]
+}

@@ -1,0 +1,17 @@
+{
+  "id": "web-fundamentals",
+  "type": "quiz",
+  "slug": "web-fundamentals",
+  "title": "Quiz for web-fundamentals",
+  "versions": [
+    {
+      "version": "1.0.0",
+      "lastUpdated": "2025-11-12T02:37:42.950Z",
+      "changes": [
+        "Initial version import"
+      ],
+      "author": "system",
+      "hash": "-62dcd573"
+    }
+  ]
+}

@@ -1,0 +1,17 @@
+{
+  "id": "dotnet-fundamentals-10",
+  "type": "lesson",
+  "slug": "dotnet-fundamentals-10",
+  "title": "Deployment and Configuration",
+  "versions": [
+    {
+      "version": "1.0.0",
+      "lastUpdated": "2025-11-12T02:37:42.895Z",
+      "changes": [
+        "Initial version import"
+      ],
+      "author": "system",
+      "hash": "-3972e4de"
+    }
+  ]
+}

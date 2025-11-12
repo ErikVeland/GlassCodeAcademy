@@ -1,0 +1,17 @@
+{
+  "id": "programming-fundamentals-12",
+  "type": "lesson",
+  "slug": "programming-fundamentals-12",
+  "title": "File I/O and Data Persistence",
+  "versions": [
+    {
+      "version": "1.0.0",
+      "lastUpdated": "2025-11-12T02:37:42.918Z",
+      "changes": [
+        "Initial version import"
+      ],
+      "author": "system",
+      "hash": "-1c8fc462"
+    }
+  ]
+}

@@ -5,34 +5,34 @@ export const getAuthProviders = () => {
   const providers = [];
 
   // Google OAuth
-  if (env('GOOGLE_CLIENT_ID') && env('GOOGLE_CLIENT_SECRET')) {
+  if (env("GOOGLE_CLIENT_ID") && env("GOOGLE_CLIENT_SECRET")) {
     providers.push({
-      id: 'google',
-      name: 'Google',
+      id: "google",
+      name: "Google",
     });
   }
 
   // GitHub OAuth
-  if (env('GITHUB_ID') && env('GITHUB_SECRET')) {
+  if (env("GITHUB_ID") && env("GITHUB_SECRET")) {
     providers.push({
-      id: 'github',
-      name: 'GitHub',
+      id: "github",
+      name: "GitHub",
     });
   }
 
   // Apple OAuth (requires proper credentials)
-  if (env('APPLE_CLIENT_ID') && env('APPLE_CLIENT_SECRET')) {
+  if (env("APPLE_CLIENT_ID") && env("APPLE_CLIENT_SECRET")) {
     providers.push({
-      id: 'apple',
-      name: 'Apple',
+      id: "apple",
+      name: "Apple",
     });
   }
 
   // Email/Password via Credentials
   // Always include credentials provider for full user lifecycle
   providers.push({
-    id: 'credentials',
-    name: 'Email and Password',
+    id: "credentials",
+    name: "Email and Password",
   });
 
   return providers;

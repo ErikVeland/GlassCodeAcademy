@@ -1,0 +1,17 @@
+{
+  "id": "nextjs-advanced-6",
+  "type": "lesson",
+  "slug": "nextjs-advanced-6",
+  "title": "Image Optimization and Performance",
+  "versions": [
+    {
+      "version": "1.0.0",
+      "lastUpdated": "2025-11-12T02:37:42.908Z",
+      "changes": [
+        "Initial version import"
+      ],
+      "author": "system",
+      "hash": "-40f4afde"
+    }
+  ]
+}

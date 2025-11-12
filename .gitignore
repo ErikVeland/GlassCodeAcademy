@@ -140,6 +140,10 @@ dotnetquiz-deployment/
 .env.development
 .env.test
 
+# Terraform variable files (contain secrets)
+terraform/*.tfvars
+*.tfvars
+
 # Secrets (repo-wide)
 **/.env
 **/.env.local

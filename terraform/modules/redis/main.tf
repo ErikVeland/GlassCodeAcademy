@@ -74,9 +74,21 @@ variable "multi_az_enabled" {
   default     = true
 }
 
+variable "transit_encryption_enabled" {
+  description = "Enable in-transit encryption for Redis"
+  type        = bool
+  default     = true
+}
+
+variable "auth_token" {
+  description = "Redis AUTH token (required when transit encryption is enabled)"
+  type        = string
+  sensitive   = true
+}
+
 output "redis_endpoint" {
   description = "Endpoint of the Redis cluster"
-  value       = module.redis.elasticache_replication_group_primary_endpoint_address
+  value       = module.redis.replication_group_primary_endpoint_address
 }
 
 output "redis_port" {
@@ -86,7 +98,7 @@ output "redis_port" {
 
 output "redis_cluster_id" {
   description = "ID of the Redis cluster"
-  value       = module.redis.elasticache_replication_group_id
+  value       = module.redis.replication_group_id
 }
 
 terraform {
@@ -114,6 +126,9 @@ module "redis" {
   apply_immediately             = var.apply_immediately
   automatic_failover_enabled    = var.automatic_failover_enabled
   multi_az_enabled              = var.multi_az_enabled
+  transit_encryption_enabled    = var.transit_encryption_enabled
+  auth_token                    = var.auth_token
+  auth_token_update_strategy    = "SET"
 
   subnet_ids                   = var.subnet_ids
   security_group_ids           = var.vpc_security_group_ids

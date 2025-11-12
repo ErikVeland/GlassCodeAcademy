@@ -1,0 +1,17 @@
+{
+  "id": "performance-optimization-9",
+  "type": "lesson",
+  "slug": "performance-optimization-9",
+  "title": "Performance Optimization Techniques",
+  "versions": [
+    {
+      "version": "1.0.0",
+      "lastUpdated": "2025-11-12T02:37:42.915Z",
+      "changes": [
+        "Initial version import"
+      ],
+      "author": "system",
+      "hash": "10915f64"
+    }
+  ]
+}

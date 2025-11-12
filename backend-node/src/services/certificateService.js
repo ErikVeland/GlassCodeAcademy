@@ -226,7 +226,7 @@ const generateCertificate = async (userId, courseId, additionalData = {}) => {
 
         // Calculate grade based on quiz scores (if available)
         let grade = 'Pass';
-        let score = userProgress ? userProgress.progressPercentage : null;
+        const score = userProgress ? userProgress.progressPercentage : null;
 
         if (score !== null) {
           if (score >= 90) grade = 'A';

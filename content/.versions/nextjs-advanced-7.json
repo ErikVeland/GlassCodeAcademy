@@ -1,0 +1,17 @@
+{
+  "id": "nextjs-advanced-7",
+  "type": "lesson",
+  "slug": "nextjs-advanced-7",
+  "title": "Middleware and Edge Functions",
+  "versions": [
+    {
+      "version": "1.0.0",
+      "lastUpdated": "2025-11-12T02:37:42.909Z",
+      "changes": [
+        "Initial version import"
+      ],
+      "author": "system",
+      "hash": "-4f476501"
+    }
+  ]
+}

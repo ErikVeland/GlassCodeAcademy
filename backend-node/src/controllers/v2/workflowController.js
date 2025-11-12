@@ -184,7 +184,7 @@ exports.submitForApproval = async (req, res) => {
   } catch (error) {
     console.error('Error submitting for approval:', error);
     const status = error.message.includes('not found') ? 404 :
-                   error.message.includes('already has') ? 409 : 500;
+      error.message.includes('already has') ? 409 : 500;
     res.status(status).json({
       type: `https://glasscode/errors/${status === 404 ? 'not-found' : status === 409 ? 'conflict' : 'internal-error'}`,
       title: status === 404 ? 'Not Found' : status === 409 ? 'Conflict' : 'Internal Server Error',
@@ -318,7 +318,7 @@ exports.approveContent = async (req, res) => {
   } catch (error) {
     console.error('Error approving content:', error);
     const status = error.message.includes('not found') ? 404 :
-                   error.message.includes('not pending') || error.message.includes('not assigned') ? 403 : 500;
+      error.message.includes('not pending') || error.message.includes('not assigned') ? 403 : 500;
     res.status(status).json({
       type: `https://glasscode/errors/${status === 404 ? 'not-found' : status === 403 ? 'forbidden' : 'internal-error'}`,
       title: status === 404 ? 'Not Found' : status === 403 ? 'Forbidden' : 'Internal Server Error',
@@ -356,7 +356,7 @@ exports.rejectContent = async (req, res) => {
   } catch (error) {
     console.error('Error rejecting content:', error);
     const status = error.message.includes('not found') ? 404 :
-                   error.message.includes('not pending') || error.message.includes('not assigned') ? 403 : 500;
+      error.message.includes('not pending') || error.message.includes('not assigned') ? 403 : 500;
     res.status(status).json({
       type: `https://glasscode/errors/${status === 404 ? 'not-found' : status === 403 ? 'forbidden' : 'internal-error'}`,
       title: status === 404 ? 'Not Found' : status === 403 ? 'Forbidden' : 'Internal Server Error',

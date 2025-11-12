@@ -1,0 +1,17 @@
+{
+  "id": "nextjs-advanced-2",
+  "type": "lesson",
+  "slug": "nextjs-advanced-2",
+  "title": "File-based Routing System",
+  "versions": [
+    {
+      "version": "1.0.0",
+      "lastUpdated": "2025-11-12T02:37:42.908Z",
+      "changes": [
+        "Initial version import"
+      ],
+      "author": "system",
+      "hash": "63da0e38"
+    }
+  ]
+}

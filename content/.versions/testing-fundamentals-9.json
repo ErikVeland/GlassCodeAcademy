@@ -1,0 +1,17 @@
+{
+  "id": "testing-fundamentals-9",
+  "type": "lesson",
+  "slug": "testing-fundamentals-9",
+  "title": "Integration Testing Patterns",
+  "versions": [
+    {
+      "version": "1.0.0",
+      "lastUpdated": "2025-11-12T02:37:42.932Z",
+      "changes": [
+        "Initial version import"
+      ],
+      "author": "system",
+      "hash": "-592a81a4"
+    }
+  ]
+}

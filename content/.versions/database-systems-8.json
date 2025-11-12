@@ -1,0 +1,17 @@
+{
+  "id": "database-systems-8",
+  "type": "lesson",
+  "slug": "database-systems-8",
+  "title": "Stored Procedures and User-Defined Functions",
+  "versions": [
+    {
+      "version": "1.0.0",
+      "lastUpdated": "2025-11-12T02:37:42.891Z",
+      "changes": [
+        "Initial version import"
+      ],
+      "author": "system",
+      "hash": "-619e45df"
+    }
+  ]
+}

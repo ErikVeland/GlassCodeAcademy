@@ -47,7 +47,7 @@ const requiredFiles = [
   'alerts.rules',
   'alertmanager.yml',
   'prometheus.yml',
-  'grafana-dashboard.json'
+  'grafana-dashboard.json',
 ];
 
 console.log('Checking required monitoring files...');
@@ -65,7 +65,7 @@ console.log('Checking docker-compose.yml for monitoring services...');
 try {
   const dockerCompose = fs.readFileSync('docker-compose.yml', 'utf8');
   const requiredServices = ['prometheus', 'grafana', 'jaeger', 'alertmanager'];
-  
+
   for (const service of requiredServices) {
     if (dockerCompose.includes(service)) {
       ok(`${service} service found in docker-compose.yml`);
@@ -85,9 +85,9 @@ try {
   const requiredMiddleware = [
     'metricsMiddleware',
     'sloTrackingMiddleware',
-    'userJourneyMiddleware'
+    'userJourneyMiddleware',
   ];
-  
+
   for (const middleware of requiredMiddleware) {
     if (serverJs.includes(middleware)) {
       ok(`${middleware} found in server.js`);
@@ -103,12 +103,12 @@ try {
 section('Service Instrumentation Validation');
 console.log('Checking progress service for tracing instrumentation...');
 try {
-  const progressService = fs.readFileSync('src/services/progressService.js', 'utf8');
-  const requiredTracingImports = [
-    'traceAsyncFunction',
-    'addDatabaseQueryInfo'
-  ];
-  
+  const progressService = fs.readFileSync(
+    'src/services/progressService.js',
+    'utf8'
+  );
+  const requiredTracingImports = ['traceAsyncFunction', 'addDatabaseQueryInfo'];
+
   for (const importName of requiredTracingImports) {
     if (progressService.includes(importName)) {
       ok(`${importName} found in progress service`);
@@ -130,9 +130,9 @@ try {
     'HighLatency',
     'ServiceDown',
     'DatabasePerformance',
-    'LowSuccessRate'
+    'LowSuccessRate',
   ];
-  
+
   for (const alert of requiredAlerts) {
     if (alertsRules.includes(alert)) {
       ok(`${alert} alert rule found`);
@@ -148,9 +148,11 @@ try {
 section('Grafana Dashboard Validation');
 console.log('Checking grafana-dashboard.json for required panels...');
 try {
-  const grafanaDashboard = JSON.parse(fs.readFileSync('grafana-dashboard.json', 'utf8'));
+  const grafanaDashboard = JSON.parse(
+    fs.readFileSync('grafana-dashboard.json', 'utf8')
+  );
   const panels = grafanaDashboard.dashboard.panels;
-  
+
   // Check for required panel types
   const requiredPanelTitles = [
     'Request Rate',
@@ -161,11 +163,11 @@ try {
     'API Availability SLO',
     'API Latency SLO',
     'Database Query SLO',
-    'Error Budget Remaining'
+    'Error Budget Remaining',
   ];
-  
-  const foundPanels = panels.map(panel => panel.title);
-  
+
+  const foundPanels = panels.map((panel) => panel.title);
+
   for (const title of requiredPanelTitles) {
     if (foundPanels.includes(title)) {
       ok(`${title} panel found`);

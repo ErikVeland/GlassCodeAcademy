@@ -1,0 +1,17 @@
+{
+  "id": "laravel-fundamentals-19",
+  "type": "lesson",
+  "slug": "laravel-fundamentals-19",
+  "title": "Advanced Testing Strategies with Pest and PHPUnit",
+  "versions": [
+    {
+      "version": "1.0.0",
+      "lastUpdated": "2025-11-12T02:37:42.906Z",
+      "changes": [
+        "Initial version import"
+      ],
+      "author": "system",
+      "hash": "-6285c975"
+    }
+  ]
+}

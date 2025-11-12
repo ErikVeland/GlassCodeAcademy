@@ -1,0 +1,29 @@
+#############################################
+# Terraform variables (example - do not commit secrets)
+# Copy this file to `terraform.tfvars` and fill with secure values.
+#############################################
+
+# Core
+project_name = "glasscode-academy"
+environment  = "dev"
+aws_region   = "us-west-2"
+vpc_cidr     = "10.0.0.0/16"
+
+# Database
+database_name     = "glasscode"
+database_username = "glasscode"
+database_password = "CHANGE_ME_SECURELY"
+
+# Redis
+redis_node_type = "cache.t3.micro"
+redis_password  = "CHANGE_ME_SECURELY"
+
+# GitHub OIDC
+github_org  = "glasscode-academy"
+github_repo = "GlassCodeAcademy"
+
+# App secrets
+jwt_secret              = "CHANGE_ME_SECURELY"
+grafana_admin_password  = "CHANGE_ME_SECURELY"
+prometheus_admin_password = "CHANGE_ME_SECURELY"
+jaeger_admin_password     = "CHANGE_ME_SECURELY"

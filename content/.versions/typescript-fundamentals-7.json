@@ -1,0 +1,17 @@
+{
+  "id": "typescript-fundamentals-7",
+  "type": "lesson",
+  "slug": "typescript-fundamentals-7",
+  "title": "Type Guards and Type Assertions",
+  "versions": [
+    {
+      "version": "1.1.0",
+      "lastUpdated": "2025-11-12T02:37:42.934Z",
+      "changes": [
+        "Initial version import"
+      ],
+      "author": "system",
+      "hash": "-7017f3a9"
+    }
+  ]
+}

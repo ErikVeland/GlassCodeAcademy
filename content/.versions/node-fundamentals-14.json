@@ -1,0 +1,17 @@
+{
+  "id": "node-fundamentals-14",
+  "type": "lesson",
+  "slug": "node-fundamentals-14",
+  "title": "Microservices Architecture with Node.js",
+  "versions": [
+    {
+      "version": "1.0.0",
+      "lastUpdated": "2025-11-12T02:37:42.912Z",
+      "changes": [
+        "Initial version import"
+      ],
+      "author": "system",
+      "hash": "5afb040a"
+    }
+  ]
+}

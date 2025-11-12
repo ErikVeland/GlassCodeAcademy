@@ -1,0 +1,17 @@
+{
+  "id": "nextjs-advanced",
+  "type": "quiz",
+  "slug": "nextjs-advanced",
+  "title": "Quiz for nextjs-advanced",
+  "versions": [
+    {
+      "version": "1.0.0",
+      "lastUpdated": "2025-11-12T02:37:42.946Z",
+      "changes": [
+        "Initial version import"
+      ],
+      "author": "system",
+      "hash": "-e5a85ad"
+    }
+  ]
+}

@@ -1,0 +1,17 @@
+{
+  "id": "laravel-fundamentals-6",
+  "type": "lesson",
+  "slug": "laravel-fundamentals-6",
+  "title": "Blade Control Structures",
+  "versions": [
+    {
+      "version": "1.0.0",
+      "lastUpdated": "2025-11-12T02:37:42.904Z",
+      "changes": [
+        "Initial version import"
+      ],
+      "author": "system",
+      "hash": "-11a2edb8"
+    }
+  ]
+}

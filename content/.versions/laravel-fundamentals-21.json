@@ -1,0 +1,17 @@
+{
+  "id": "laravel-fundamentals-21",
+  "type": "lesson",
+  "slug": "laravel-fundamentals-21",
+  "title": "Event Broadcasting and Real-Time Features",
+  "versions": [
+    {
+      "version": "1.0.0",
+      "lastUpdated": "2025-11-12T02:37:42.907Z",
+      "changes": [
+        "Initial version import"
+      ],
+      "author": "system",
+      "hash": "55ec7d4b"
+    }
+  ]
+}

@@ -89,9 +89,10 @@ module "cdn" {
   retain_on_delete    = false
   wait_for_deployment = false
 
-  # Logging
-  logging = {
+  # Logging (module expects logging_config)
+  logging_config = {
     bucket = var.bucket_domain_name
+    include_cookies = false
     prefix = "cloudfront-logs/"
   }
 
@@ -137,18 +138,12 @@ module "cdn" {
       domain_name = var.bucket_domain_name
       origin_id   = "s3_origin"
 
-      s3_origin_config = {
-        origin_access_identity = "origin-access-identity/cloudfront/${module.cdn.cloudfront_origin_access_identity}"
-      }
+      # Let the module manage Origin Access Identity; no direct reference inside the module call
+      s3_origin_config = {}
     }
   }
 
-  # Restrictions
-  restrictions = {
-    geo_restriction = {
-      restriction_type = "none"
-    }
-  }
+  # Restrictions disabled (module does not accept `restrictions` input in v3)
 
   # SSL certificate
   viewer_certificate = {
@@ -156,6 +151,9 @@ module "cdn" {
     ssl_support_method       = "sni-only"
     minimum_protocol_version = var.minimum_protocol_version
   }
+
+  # Create and attach an Origin Access Identity securely via module-managed resource
+  create_origin_access_identity = true
 
   tags = {
     Project     = "glasscode-academy"

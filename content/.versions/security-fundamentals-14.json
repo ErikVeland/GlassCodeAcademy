@@ -1,0 +1,17 @@
+{
+  "id": "security-fundamentals-14",
+  "type": "lesson",
+  "slug": "security-fundamentals-14",
+  "title": "Security Headers and Content Security Policy",
+  "versions": [
+    {
+      "version": "1.0.0",
+      "lastUpdated": "2025-11-12T02:37:42.927Z",
+      "changes": [
+        "Initial version import"
+      ],
+      "author": "system",
+      "hash": "c570276"
+    }
+  ]
+}

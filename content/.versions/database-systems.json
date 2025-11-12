@@ -1,0 +1,17 @@
+{
+  "id": "database-systems",
+  "type": "quiz",
+  "slug": "database-systems",
+  "title": "Quiz for database-systems",
+  "versions": [
+    {
+      "version": "1.0.0",
+      "lastUpdated": "2025-11-12T02:37:42.944Z",
+      "changes": [
+        "Initial version import"
+      ],
+      "author": "system",
+      "hash": "6aa97ba6"
+    }
+  ]
+}

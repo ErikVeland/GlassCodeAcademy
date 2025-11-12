@@ -1,11 +1,15 @@
-'use client';
+"use client";
 
-import { useState, useEffect, useCallback } from 'react';
-import { useRouter } from 'next/navigation';
-import type { AdminLesson, AdminModule } from '@/types/admin';
-import LoadingScreen from '@/components/LoadingScreen';
+import { useState, useEffect, useCallback } from "react";
+import { useRouter } from "next/navigation";
+import type { AdminLesson, AdminModule } from "@/types/admin";
+import LoadingScreen from "@/components/LoadingScreen";
 
-export default function EditLessonPage({ params }: { params: Promise<{ id: string }> }) {
+export default function EditLessonPage({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) {
   const [lesson, setLesson] = useState<AdminLesson | null>(null);
   const [modules, setModules] = useState<AdminModule[]>([]);
   const [loading, setLoading] = useState(true);
@@ -17,18 +21,18 @@ export default function EditLessonPage({ params }: { params: Promise<{ id: strin
   const fetchData = useCallback(async (id: string) => {
     try {
       setLoading(true);
-      
+
       const lessonRes = await fetch(`/api/lessons-db/${id}`);
       const lessonData = await lessonRes.json();
       setLesson(lessonData as AdminLesson);
-      
-      const modulesRes = await fetch('/api/modules-db');
+
+      const modulesRes = await fetch("/api/modules-db");
       const modulesData = await modulesRes.json();
       setModules(modulesData as AdminModule[]);
-      
+
       setLoading(false);
     } catch (err) {
-      setError('Failed to fetch data');
+      setError("Failed to fetch data");
       setLoading(false);
       console.error(err);
     }
@@ -37,14 +41,14 @@ export default function EditLessonPage({ params }: { params: Promise<{ id: strin
   useEffect(() => {
     let mounted = true;
     Promise.resolve(params)
-      .then(p => {
+      .then((p) => {
         if (!mounted) return;
         setResolvedId(p.id);
         fetchData(p.id);
       })
-      .catch(err => {
-        console.error('Error resolving params', err);
-        setError('Failed to resolve route params');
+      .catch((err) => {
+        console.error("Error resolving params", err);
+        setError("Failed to resolve route params");
         setLoading(false);
       });
     return () => {
@@ -61,14 +65,14 @@ export default function EditLessonPage({ params }: { params: Promise<{ id: strin
 
     try {
       setSaving(true);
-      
+
       const contentObj = lesson.content ? JSON.parse(lesson.content) : {};
       const metadataObj = lesson.metadata ? JSON.parse(lesson.metadata) : {};
-      
-      const response = await fetch(`/api/lessons-db/${lesson.id}` , {
-        method: 'PUT',
+
+      const response = await fetch(`/api/lessons-db/${lesson.id}`, {
+        method: "PUT",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({
           title: lesson.title,
@@ -84,13 +88,13 @@ export default function EditLessonPage({ params }: { params: Promise<{ id: strin
       });
 
       if (response.ok) {
-        router.push('/admin');
+        router.push("/admin");
       } else {
         const errorData = await response.json();
-        setError(errorData.error || 'Failed to update lesson');
+        setError(errorData.error || "Failed to update lesson");
       }
     } catch (err) {
-      setError('Failed to update lesson');
+      setError("Failed to update lesson");
       console.error(err);
     } finally {
       setSaving(false);
@@ -98,15 +102,18 @@ export default function EditLessonPage({ params }: { params: Promise<{ id: strin
   };
 
   const handleInputChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    >,
   ) => {
     if (!lesson) return;
     const { name, value, type } = e.target;
-    const checked = type === 'checkbox' ? (e.target as HTMLInputElement).checked : undefined;
-    
+    const checked =
+      type === "checkbox" ? (e.target as HTMLInputElement).checked : undefined;
+
     setLesson({
       ...lesson,
-      [name]: type === 'checkbox' ? checked : value,
+      [name]: type === "checkbox" ? checked : value,
     } as AdminLesson);
   };
 
@@ -135,10 +142,12 @@ export default function EditLessonPage({ params }: { params: Promise<{ id: strin
       <div className="min-h-screen bg-gray-50 py-12">
         <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
-            <h1 className="text-3xl font-bold text-gray-900 mb-8">Edit Lesson</h1>
+            <h1 className="text-3xl font-bold text-gray-900 mb-8">
+              Edit Lesson
+            </h1>
             <div className="bg-red-50 border border-red-200 rounded-lg p-6">
               <p className="text-red-800">{error}</p>
-              <button 
+              <button
                 onClick={() => resolvedId && fetchData(resolvedId)}
                 className="mt-4 px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700"
               >
@@ -156,7 +165,9 @@ export default function EditLessonPage({ params }: { params: Promise<{ id: strin
       <div className="min-h-screen bg-gray-50 py-12">
         <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
-            <h1 className="text-3xl font-bold text-gray-900 mb-8">Edit Lesson</h1>
+            <h1 className="text-3xl font-bold text-gray-900 mb-8">
+              Edit Lesson
+            </h1>
             <p className="text-lg text-gray-600">Lesson not found</p>
           </div>
         </div>
@@ -169,11 +180,21 @@ export default function EditLessonPage({ params }: { params: Promise<{ id: strin
       <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="mb-8">
           <button
-            onClick={() => router.push('/admin')}
+            onClick={() => router.push("/admin")}
             className="flex items-center text-indigo-600 hover:text-indigo-800"
           >
-            <svg className="h-5 w-5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+            <svg
+              className="h-5 w-5 mr-1"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M10 19l-7-7m0 0l7-7m-7 7h18"
+              />
             </svg>
             Back to Dashboard
           </button>
@@ -183,11 +204,14 @@ export default function EditLessonPage({ params }: { params: Promise<{ id: strin
           <div className="px-6 py-4 border-b border-gray-200">
             <h1 className="text-2xl font-bold text-gray-800">Edit Lesson</h1>
           </div>
-          
+
           <form onSubmit={handleSubmit} className="px-6 py-8">
             <div className="space-y-6">
               <div>
-                <label htmlFor="title" className="block text-sm font-medium text-gray-700">
+                <label
+                  htmlFor="title"
+                  className="block text-sm font-medium text-gray-700"
+                >
                   Title
                 </label>
                 <input
@@ -202,7 +226,10 @@ export default function EditLessonPage({ params }: { params: Promise<{ id: strin
               </div>
 
               <div>
-                <label htmlFor="slug" className="block text-sm font-medium text-gray-700">
+                <label
+                  htmlFor="slug"
+                  className="block text-sm font-medium text-gray-700"
+                >
                   Slug
                 </label>
                 <input
@@ -217,7 +244,10 @@ export default function EditLessonPage({ params }: { params: Promise<{ id: strin
               </div>
 
               <div>
-                <label htmlFor="order" className="block text-sm font-medium text-gray-700">
+                <label
+                  htmlFor="order"
+                  className="block text-sm font-medium text-gray-700"
+                >
                   Order
                 </label>
                 <input
@@ -232,7 +262,10 @@ export default function EditLessonPage({ params }: { params: Promise<{ id: strin
               </div>
 
               <div>
-                <label htmlFor="difficulty" className="block text-sm font-medium text-gray-700">
+                <label
+                  htmlFor="difficulty"
+                  className="block text-sm font-medium text-gray-700"
+                >
                   Difficulty
                 </label>
                 <select
@@ -250,7 +283,10 @@ export default function EditLessonPage({ params }: { params: Promise<{ id: strin
               </div>
 
               <div>
-                <label htmlFor="estimatedMinutes" className="block text-sm font-medium text-gray-700">
+                <label
+                  htmlFor="estimatedMinutes"
+                  className="block text-sm font-medium text-gray-700"
+                >
                   Estimated Minutes
                 </label>
                 <input
@@ -265,7 +301,10 @@ export default function EditLessonPage({ params }: { params: Promise<{ id: strin
               </div>
 
               <div>
-                <label htmlFor="moduleId" className="block text-sm font-medium text-gray-700">
+                <label
+                  htmlFor="moduleId"
+                  className="block text-sm font-medium text-gray-700"
+                >
                   Module
                 </label>
                 <select
@@ -286,7 +325,10 @@ export default function EditLessonPage({ params }: { params: Promise<{ id: strin
               </div>
 
               <div>
-                <label htmlFor="content" className="block text-sm font-medium text-gray-700">
+                <label
+                  htmlFor="content"
+                  className="block text-sm font-medium text-gray-700"
+                >
                   Content (JSON)
                 </label>
                 <textarea
@@ -304,7 +346,10 @@ export default function EditLessonPage({ params }: { params: Promise<{ id: strin
               </div>
 
               <div>
-                <label htmlFor="metadata" className="block text-sm font-medium text-gray-700">
+                <label
+                  htmlFor="metadata"
+                  className="block text-sm font-medium text-gray-700"
+                >
                   Metadata (JSON)
                 </label>
                 <textarea
@@ -330,7 +375,10 @@ export default function EditLessonPage({ params }: { params: Promise<{ id: strin
                   onChange={handleInputChange}
                   className="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
                 />
-                <label htmlFor="isPublished" className="ml-2 block text-sm text-gray-900">
+                <label
+                  htmlFor="isPublished"
+                  className="ml-2 block text-sm text-gray-900"
+                >
                   Published
                 </label>
               </div>
@@ -339,7 +387,7 @@ export default function EditLessonPage({ params }: { params: Promise<{ id: strin
             <div className="mt-8 flex justify-end space-x-3">
               <button
                 type="button"
-                onClick={() => router.push('/admin')}
+                onClick={() => router.push("/admin")}
                 className="bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
               >
                 Cancel
@@ -349,7 +397,7 @@ export default function EditLessonPage({ params }: { params: Promise<{ id: strin
                 disabled={saving}
                 className="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50"
               >
-                {saving ? 'Saving...' : 'Save Changes'}
+                {saving ? "Saving..." : "Save Changes"}
               </button>
             </div>
           </form>

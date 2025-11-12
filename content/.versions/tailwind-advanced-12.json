@@ -1,0 +1,17 @@
+{
+  "id": "tailwind-advanced-12",
+  "type": "lesson",
+  "slug": "tailwind-advanced-12",
+  "title": "Framework Integration",
+  "versions": [
+    {
+      "version": "1.0.0",
+      "lastUpdated": "2025-11-12T02:37:42.929Z",
+      "changes": [
+        "Initial version import"
+      ],
+      "author": "system",
+      "hash": "5cfd852f"
+    }
+  ]
+}

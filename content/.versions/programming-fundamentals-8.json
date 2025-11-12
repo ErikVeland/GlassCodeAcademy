@@ -1,0 +1,17 @@
+{
+  "id": "programming-fundamentals-8",
+  "type": "lesson",
+  "slug": "programming-fundamentals-8",
+  "title": "Basic Algorithms and Problem Solving",
+  "versions": [
+    {
+      "version": "1.0.0",
+      "lastUpdated": "2025-11-12T02:37:42.917Z",
+      "changes": [
+        "Initial version import"
+      ],
+      "author": "system",
+      "hash": "5964235b"
+    }
+  ]
+}

@@ -46,28 +46,38 @@ export const generateOAuthUrl = (provider: string): string => {
   return `${config.authUrl}?${params.toString()}`;
 };
 
-export const exchangeCodeForToken = async (provider: string, code: string): Promise<any> => {
+export const exchangeCodeForToken = async (
+  provider: string,
+  code: string
+): Promise<any> => {
   const config = oauthConfigs[provider];
   if (!config) {
     throw new Error(`OAuth provider ${provider} is not configured`);
   }
 
-  const response = await axios.post(config.tokenUrl, {
-    client_id: config.clientId,
-    client_secret: config.clientSecret,
-    code,
-    redirect_uri: `${process.env.API_BASE_URL}/auth/${provider}/callback`,
-    grant_type: 'authorization_code',
-  }, {
-    headers: {
-      'Accept': 'application/json',
+  const response = await axios.post(
+    config.tokenUrl,
+    {
+      client_id: config.clientId,
+      client_secret: config.clientSecret,
+      code,
+      redirect_uri: `${process.env.API_BASE_URL}/auth/${provider}/callback`,
+      grant_type: 'authorization_code',
     },
-  });
+    {
+      headers: {
+        Accept: 'application/json',
+      },
+    }
+  );
 
   return response.data;
 };
 
-export const getUserInfo = async (provider: string, accessToken: string): Promise<any> => {
+export const getUserInfo = async (
+  provider: string,
+  accessToken: string
+): Promise<any> => {
   const config = oauthConfigs[provider];
   if (!config) {
     throw new Error(`OAuth provider ${provider} is not configured`);
@@ -75,7 +85,7 @@ export const getUserInfo = async (provider: string, accessToken: string): Promis
 
   const response = await axios.get(config.userInfoUrl, {
     headers: {
-      'Authorization': `Bearer ${accessToken}`,
+      Authorization: `Bearer ${accessToken}`,
     },
   });
 
@@ -91,7 +101,8 @@ export const createOrUpdateOAuthUser = async (userInfo: any): Promise<User> => {
     email: userInfo.email,
     username: userInfo.username || null,
     firstName: userInfo.firstName || userInfo.name?.split(' ')[0] || null,
-    lastName: userInfo.lastName || userInfo.name?.split(' ').slice(1).join(' ') || null,
+    lastName:
+      userInfo.lastName || userInfo.name?.split(' ').slice(1).join(' ') || null,
     role: 'student',
     passwordHash: null,
     isActive: true,

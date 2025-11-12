@@ -1,0 +1,17 @@
+{
+  "id": "vue-advanced-6",
+  "type": "lesson",
+  "slug": "vue-advanced-6",
+  "title": "Pinia State Management",
+  "versions": [
+    {
+      "version": "1.0.0",
+      "lastUpdated": "2025-11-12T02:37:42.938Z",
+      "changes": [
+        "Initial version import"
+      ],
+      "author": "system",
+      "hash": "-5024782d"
+    }
+  ]
+}

@@ -1,0 +1,17 @@
+{
+  "id": "graphql-advanced-11",
+  "type": "lesson",
+  "slug": "graphql-advanced-11",
+  "title": "GraphQL Development Tools and Debugging",
+  "versions": [
+    {
+      "version": "1.0.0",
+      "lastUpdated": "2025-11-12T02:37:42.902Z",
+      "changes": [
+        "Initial version import"
+      ],
+      "author": "system",
+      "hash": "-3c7e736a"
+    }
+  ]
+}

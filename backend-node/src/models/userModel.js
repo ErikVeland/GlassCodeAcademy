@@ -75,14 +75,14 @@ const User = sequelize.define(
       beforeCreate: async (user) => {
         // Only hash password if user is not using OAuth
         if (user.passwordHash && !user.oauthProvider) {
-          const salt = await bcrypt.genSalt(10);
+          const salt = await bcrypt.genSalt(12);
           user.passwordHash = await bcrypt.hash(user.passwordHash, salt);
         }
       },
       beforeUpdate: async (user) => {
         // Only hash password if it's being changed and user is not using OAuth
         if (user.changed('passwordHash') && !user.oauthProvider) {
-          const salt = await bcrypt.genSalt(10);
+          const salt = await bcrypt.genSalt(12);
           user.passwordHash = await bcrypt.hash(user.passwordHash, salt);
         }
       },

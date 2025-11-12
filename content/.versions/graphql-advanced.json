@@ -1,0 +1,17 @@
+{
+  "id": "graphql-advanced",
+  "type": "quiz",
+  "slug": "graphql-advanced",
+  "title": "Quiz for graphql-advanced",
+  "versions": [
+    {
+      "version": "1.0.0",
+      "lastUpdated": "2025-11-12T02:37:42.945Z",
+      "changes": [
+        "Initial version import"
+      ],
+      "author": "system",
+      "hash": "2d3ee67b"
+    }
+  ]
+}

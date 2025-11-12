@@ -1,0 +1,17 @@
+{
+  "id": "tailwind-advanced-9",
+  "type": "lesson",
+  "slug": "tailwind-advanced-9",
+  "title": "Dark Mode Implementation",
+  "versions": [
+    {
+      "version": "1.0.0",
+      "lastUpdated": "2025-11-12T02:37:42.929Z",
+      "changes": [
+        "Initial version import"
+      ],
+      "author": "system",
+      "hash": "1d28ba28"
+    }
+  ]
+}

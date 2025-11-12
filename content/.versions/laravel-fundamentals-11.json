@@ -1,0 +1,17 @@
+{
+  "id": "laravel-fundamentals-11",
+  "type": "lesson",
+  "slug": "laravel-fundamentals-11",
+  "title": "Laravel Breeze",
+  "versions": [
+    {
+      "version": "1.0.0",
+      "lastUpdated": "2025-11-12T02:37:42.904Z",
+      "changes": [
+        "Initial version import"
+      ],
+      "author": "system",
+      "hash": "7a0bd069"
+    }
+  ]
+}

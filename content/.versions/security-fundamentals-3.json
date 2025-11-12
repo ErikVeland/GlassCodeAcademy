@@ -1,0 +1,17 @@
+{
+  "id": "security-fundamentals-3",
+  "type": "lesson",
+  "slug": "security-fundamentals-3",
+  "title": "Input Validation and Data Sanitization",
+  "versions": [
+    {
+      "version": "1.1.0",
+      "lastUpdated": "2025-11-12T02:37:42.924Z",
+      "changes": [
+        "Initial version import"
+      ],
+      "author": "system",
+      "hash": "-419d76c5"
+    }
+  ]
+}

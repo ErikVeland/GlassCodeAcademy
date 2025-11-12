@@ -1,0 +1,17 @@
+{
+  "id": "testing-fundamentals-3",
+  "type": "lesson",
+  "slug": "testing-fundamentals-3",
+  "title": "Test-Driven Development (TDD)",
+  "versions": [
+    {
+      "version": "1.0.0",
+      "lastUpdated": "2025-11-12T02:37:42.931Z",
+      "changes": [
+        "Initial version import"
+      ],
+      "author": "system",
+      "hash": "-2d1116bd"
+    }
+  ]
+}

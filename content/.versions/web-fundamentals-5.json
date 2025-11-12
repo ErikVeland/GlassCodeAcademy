@@ -1,0 +1,17 @@
+{
+  "id": "web-fundamentals-5",
+  "type": "lesson",
+  "slug": "web-fundamentals-5",
+  "title": "AJAX and Asynchronous Programming",
+  "versions": [
+    {
+      "version": "1.0.0",
+      "lastUpdated": "2025-11-12T02:37:42.942Z",
+      "changes": [
+        "Initial version import"
+      ],
+      "author": "system",
+      "hash": "2c78c3d6"
+    }
+  ]
+}

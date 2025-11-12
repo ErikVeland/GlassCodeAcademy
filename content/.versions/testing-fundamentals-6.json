@@ -1,0 +1,17 @@
+{
+  "id": "testing-fundamentals-6",
+  "type": "lesson",
+  "slug": "testing-fundamentals-6",
+  "title": "Testing Frameworks and Tools",
+  "versions": [
+    {
+      "version": "1.0.0",
+      "lastUpdated": "2025-11-12T02:37:42.931Z",
+      "changes": [
+        "Initial version import"
+      ],
+      "author": "system",
+      "hash": "-1c2d45d2"
+    }
+  ]
+}

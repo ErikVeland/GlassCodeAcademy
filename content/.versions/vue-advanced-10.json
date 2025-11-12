@@ -1,0 +1,17 @@
+{
+  "id": "vue-advanced-10",
+  "type": "lesson",
+  "slug": "vue-advanced-10",
+  "title": "Component Testing",
+  "versions": [
+    {
+      "version": "1.0.0",
+      "lastUpdated": "2025-11-12T02:37:42.939Z",
+      "changes": [
+        "Initial version import"
+      ],
+      "author": "system",
+      "hash": "-529d7876"
+    }
+  ]
+}

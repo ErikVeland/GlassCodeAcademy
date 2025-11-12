@@ -1,0 +1,17 @@
+{
+  "id": "typescript-fundamentals-10",
+  "type": "lesson",
+  "slug": "typescript-fundamentals-10",
+  "title": "Module System and Namespaces",
+  "versions": [
+    {
+      "version": "1.1.0",
+      "lastUpdated": "2025-11-12T02:37:42.935Z",
+      "changes": [
+        "Initial version import"
+      ],
+      "author": "system",
+      "hash": "2bbb6480"
+    }
+  ]
+}

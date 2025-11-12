@@ -10,14 +10,21 @@ type EndpointStatus = {
   error?: string;
 };
 
-const DEBUG = typeof process !== "undefined" && process.env.NEXT_PUBLIC_DEBUG === "true";
+const DEBUG =
+  typeof process !== "undefined" && process.env.NEXT_PUBLIC_DEBUG === "true";
 
-async function checkEndpoint(url: string, timeoutMs = 4000): Promise<EndpointStatus> {
+async function checkEndpoint(
+  url: string,
+  timeoutMs = 4000,
+): Promise<EndpointStatus> {
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), timeoutMs);
   const start = Date.now();
   try {
-    const res = await fetch(url, { signal: controller.signal, cache: "no-store" });
+    const res = await fetch(url, {
+      signal: controller.signal,
+      cache: "no-store",
+    });
     const latencyMs = Date.now() - start;
     clearTimeout(timeout);
     return { url, ok: res.ok, status: res.status, latencyMs };
@@ -43,7 +50,11 @@ export default function StatusBanner() {
       if (!mounted) return;
       setHealth(h);
       setRegistry(r);
-      const hasIssue = !h.ok || !r.ok || (h.latencyMs ?? 0) > 1500 || (r.latencyMs ?? 0) > 1500;
+      const hasIssue =
+        !h.ok ||
+        !r.ok ||
+        (h.latencyMs ?? 0) > 1500 ||
+        (r.latencyMs ?? 0) > 1500;
       setVisible(hasIssue || DEBUG);
     })();
     return () => {
@@ -53,13 +64,17 @@ export default function StatusBanner() {
 
   if (!visible) return null;
 
-  const items: EndpointStatus[] = [health, registry].filter(Boolean) as EndpointStatus[];
-  const anyError = items.some(i => !i.ok);
+  const items: EndpointStatus[] = [health, registry].filter(
+    Boolean,
+  ) as EndpointStatus[];
+  const anyError = items.some((i) => !i.ok);
 
   return (
-    <div className={`w-full z-50 ${anyError ? "bg-red-600" : "bg-amber-500"} text-white`}
-         role="status"
-         aria-live="polite">
+    <div
+      className={`w-full z-50 ${anyError ? "bg-red-600" : "bg-amber-500"} text-white`}
+      role="status"
+      aria-live="polite"
+    >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2 text-sm">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
           <div className="font-medium">
@@ -71,14 +86,19 @@ export default function StatusBanner() {
                 <span className="px-2 py-0.5 rounded bg-black/20">
                   {item.url}
                 </span>
-                <span className={`px-2 py-0.5 rounded ${item.ok ? "bg-green-700" : "bg-red-700"}`}>
+                <span
+                  className={`px-2 py-0.5 rounded ${item.ok ? "bg-green-700" : "bg-red-700"}`}
+                >
                   {item.ok ? `OK ${item.status}` : `ERR ${item.status ?? ""}`}
                 </span>
                 <span className="px-2 py-0.5 rounded bg-black/20">
                   {item.latencyMs != null ? `${item.latencyMs}ms` : "n/a"}
                 </span>
                 {item.error && (
-                  <span className="px-2 py-0.5 rounded bg-black/20 max-w-[30ch] truncate" title={item.error}>
+                  <span
+                    className="px-2 py-0.5 rounded bg-black/20 max-w-[30ch] truncate"
+                    title={item.error}
+                  >
                     {item.error}
                   </span>
                 )}

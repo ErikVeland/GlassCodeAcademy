@@ -143,15 +143,20 @@ async function testAcademyImportService() {
     console.log(`   Can import: ${preview.canImport}`);
     console.log(`   Critical conflicts: ${preview.conflicts.critical.length}`);
     console.log(`   Warnings: ${preview.conflicts.warnings.length}`);
-    console.log(`   Stats: ${preview.stats.courses} courses, ${preview.stats.modules} modules, ${preview.stats.lessons} lessons, ${preview.stats.quizzes} quizzes`);
+    console.log(
+      `   Stats: ${preview.stats.courses} courses, ${preview.stats.modules} modules, ${preview.stats.lessons} lessons, ${preview.stats.quizzes} quizzes`
+    );
 
     // Test 3: Detect conflicts
     console.log('\nTest 3: Testing conflict detection...');
     const conflictExportData = createTestExportData('glasscode-academy');
-    const conflictCheck = await importService.detectConflicts(conflictExportData);
+    const conflictCheck =
+      await importService.detectConflicts(conflictExportData);
     if (conflictCheck.critical.length > 0) {
       console.log('✅ Conflict detection working');
-      console.log(`   Detected ${conflictCheck.critical.length} critical conflict(s):`);
+      console.log(
+        `   Detected ${conflictCheck.critical.length} critical conflict(s):`
+      );
       conflictCheck.critical.forEach((c) => {
         console.log(`   - ${c.type}: ${c.message}`);
       });
@@ -169,7 +174,9 @@ async function testAcademyImportService() {
     console.log(`   Academy ID: ${importResult.academyId}`);
     console.log(`   Academy Name: ${importResult.academy.name}`);
     console.log(`   Academy Slug: ${importResult.academy.slug}`);
-    console.log(`   Stats: Created ${importResult.stats.created}, Updated ${importResult.stats.updated}, Skipped ${importResult.stats.skipped}`);
+    console.log(
+      `   Stats: Created ${importResult.stats.created}, Updated ${importResult.stats.updated}, Skipped ${importResult.stats.skipped}`
+    );
     console.log(`   Warnings: ${importResult.warnings.length}`);
 
     importedAcademyId = importResult.academyId;
@@ -196,7 +203,9 @@ async function testAcademyImportService() {
       console.log('✅ Academy found in database');
       console.log(`   Name: ${importedAcademy.name}`);
       console.log(`   Slug: ${importedAcademy.slug}`);
-      console.log(`   Has settings: ${importedAcademy.settings ? 'Yes' : 'No'}`);
+      console.log(
+        `   Has settings: ${importedAcademy.settings ? 'Yes' : 'No'}`
+      );
       if (importedAcademy.settings) {
         console.log(`   Tenant mode: ${importedAcademy.settings.tenantMode}`);
         console.log(`   Max users: ${importedAcademy.settings.maxUsers}`);
@@ -212,14 +221,15 @@ async function testAcademyImportService() {
       const invalidExportData = createTestExportData(`invalid-${Date.now()}`);
       invalidExportData.courses[0].title = null; // This should cause an error
 
-      const invalidPackageMeta = await packageService.createPackage(invalidExportData);
-      
+      const invalidPackageMeta =
+        await packageService.createPackage(invalidExportData);
+
       await importService.importAcademy(invalidPackageMeta.archive.path, {
         modifySlugsOnConflict: true,
       });
 
       console.log('❌ Rollback test failed - invalid import succeeded');
-      
+
       // Cleanup
       await packageService.deletePackage(invalidPackageMeta.packageId);
     } catch (error) {
@@ -249,7 +259,6 @@ async function testAcademyImportService() {
     console.log('✅ Rollback on error: PASS');
     console.log('✅ Statistics calculation: PASS');
     console.log('\n🎉 All Academy Import Service tests PASSED!\n');
-
   } catch (error) {
     console.error('❌ Error testing Academy Import Service:', error.message);
     console.error(error.stack);

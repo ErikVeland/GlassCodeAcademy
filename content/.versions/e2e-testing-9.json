@@ -1,0 +1,17 @@
+{
+  "id": "e2e-testing-9",
+  "type": "lesson",
+  "slug": "e2e-testing-9",
+  "title": "CI/CD Integration and Reporting",
+  "versions": [
+    {
+      "version": "1.0.0",
+      "lastUpdated": "2025-11-12T02:37:42.899Z",
+      "changes": [
+        "Initial version import"
+      ],
+      "author": "system",
+      "hash": "-3c56ba98"
+    }
+  ]
+}

@@ -1,35 +1,36 @@
 "use client";
 
-import React from 'react';
+import React from "react";
 
 interface SkeletonLoaderProps {
-  type?: 'lesson' | 'quiz' | 'module' | 'text' | 'card';
+  type?: "lesson" | "quiz" | "module" | "text" | "card";
   count?: number;
 }
 
-const SkeletonLoader: React.FC<SkeletonLoaderProps> = ({ 
-  type = 'text',
-  count = 1
+const SkeletonLoader: React.FC<SkeletonLoaderProps> = ({
+  type = "text",
+  count = 1,
 }) => {
   // Generate shimmer effect with CSS
-  const shimmerClasses = "animate-pulse bg-gradient-to-r from-gray-200 via-gray-300 to-gray-200 bg-[length:400%_400%] dark:from-gray-700 dark:via-gray-600 dark:to-gray-700";
+  const shimmerClasses =
+    "animate-pulse bg-gradient-to-r from-gray-200 via-gray-300 to-gray-200 bg-[length:400%_400%] dark:from-gray-700 dark:via-gray-600 dark:to-gray-700";
 
   // Render different skeleton types
   const renderSkeleton = () => {
     switch (type) {
-      case 'lesson':
+      case "lesson":
         return (
           <div className="space-y-4">
             {/* Lesson title */}
             <div className="h-8 bg-gray-300 dark:bg-gray-600 rounded w-3/4"></div>
-            
+
             {/* Lesson intro */}
             <div className="space-y-2">
               <div className="h-4 bg-gray-300 dark:bg-gray-600 rounded w-full"></div>
               <div className="h-4 bg-gray-300 dark:bg-gray-600 rounded w-5/6"></div>
               <div className="h-4 bg-gray-300 dark:bg-gray-600 rounded w-4/6"></div>
             </div>
-            
+
             {/* Code example */}
             <div className="p-4 bg-gray-100 dark:bg-gray-800 rounded-lg">
               <div className="h-6 bg-gray-300 dark:bg-gray-600 rounded w-1/3 mb-2"></div>
@@ -39,7 +40,7 @@ const SkeletonLoader: React.FC<SkeletonLoaderProps> = ({
                 <div className="h-4 bg-gray-300 dark:bg-gray-600 rounded w-4/6"></div>
               </div>
             </div>
-            
+
             {/* Objectives */}
             <div className="space-y-2">
               <div className="h-6 bg-gray-300 dark:bg-gray-600 rounded w-1/4"></div>
@@ -58,8 +59,8 @@ const SkeletonLoader: React.FC<SkeletonLoaderProps> = ({
             </div>
           </div>
         );
-      
-      case 'quiz':
+
+      case "quiz":
         return (
           <div className="space-y-6">
             {/* Quiz question */}
@@ -84,7 +85,7 @@ const SkeletonLoader: React.FC<SkeletonLoaderProps> = ({
                 </div>
               </div>
             </div>
-            
+
             {/* Explanation placeholder */}
             <div className="p-4 bg-gray-100 dark:bg-gray-800 rounded-lg">
               <div className="h-5 bg-gray-300 dark:bg-gray-600 rounded w-1/3 mb-3"></div>
@@ -95,8 +96,8 @@ const SkeletonLoader: React.FC<SkeletonLoaderProps> = ({
             </div>
           </div>
         );
-      
-      case 'module':
+
+      case "module":
         return (
           <div className="p-6 bg-white dark:bg-gray-800 rounded-lg shadow">
             <div className="flex items-start space-x-4">
@@ -113,8 +114,8 @@ const SkeletonLoader: React.FC<SkeletonLoaderProps> = ({
             </div>
           </div>
         );
-      
-      case 'card':
+
+      case "card":
         return (
           <div className="p-4 bg-white dark:bg-gray-800 rounded-lg shadow">
             <div className="h-4 bg-gray-300 dark:bg-gray-600 rounded w-3/4 mb-3"></div>
@@ -123,14 +124,14 @@ const SkeletonLoader: React.FC<SkeletonLoaderProps> = ({
             <div className="h-3 bg-gray-300 dark:bg-gray-600 rounded w-2/3"></div>
           </div>
         );
-      
-      case 'text':
+
+      case "text":
       default:
         return (
           <div className="space-y-2">
             {[...Array(count)].map((_, i) => (
-              <div 
-                key={i} 
+              <div
+                key={i}
                 className={`h-4 ${shimmerClasses} rounded`}
                 style={{ width: `${Math.max(70, 100 - i * 10)}%` }}
               ></div>
@@ -140,11 +141,7 @@ const SkeletonLoader: React.FC<SkeletonLoaderProps> = ({
     }
   };
 
-  return (
-    <div className={shimmerClasses}>
-      {renderSkeleton()}
-    </div>
-  );
+  return <div className={shimmerClasses}>{renderSkeleton()}</div>;
 };
 
 export default SkeletonLoader;

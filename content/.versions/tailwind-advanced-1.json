@@ -1,0 +1,17 @@
+{
+  "id": "tailwind-advanced-1",
+  "type": "lesson",
+  "slug": "tailwind-advanced-1",
+  "title": "Introduction to Tailwind CSS",
+  "versions": [
+    {
+      "version": "1.0.0",
+      "lastUpdated": "2025-11-12T02:37:42.927Z",
+      "changes": [
+        "Initial version import"
+      ],
+      "author": "system",
+      "hash": "11ca33bd"
+    }
+  ]
+}

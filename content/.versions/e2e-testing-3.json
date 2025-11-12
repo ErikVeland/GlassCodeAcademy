@@ -1,0 +1,17 @@
+{
+  "id": "e2e-testing-3",
+  "type": "lesson",
+  "slug": "e2e-testing-3",
+  "title": "Playwright Essentials",
+  "versions": [
+    {
+      "version": "1.0.0",
+      "lastUpdated": "2025-11-12T02:37:42.898Z",
+      "changes": [
+        "Initial version import"
+      ],
+      "author": "system",
+      "hash": "-39a19225"
+    }
+  ]
+}

@@ -1,0 +1,17 @@
+{
+  "id": "tailwind-advanced-17",
+  "type": "lesson",
+  "slug": "tailwind-advanced-17",
+  "title": "Theming and Dark Mode Strategies",
+  "versions": [
+    {
+      "version": "1.0.0",
+      "lastUpdated": "2025-11-12T02:37:42.930Z",
+      "changes": [
+        "Initial version import"
+      ],
+      "author": "system",
+      "hash": "f8e1ff6"
+    }
+  ]
+}

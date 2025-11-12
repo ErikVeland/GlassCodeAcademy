@@ -1,0 +1,17 @@
+{
+  "id": "security-fundamentals-4",
+  "type": "lesson",
+  "slug": "security-fundamentals-4",
+  "title": "Security Performance Testing and Optimization",
+  "versions": [
+    {
+      "version": "1.1.0",
+      "lastUpdated": "2025-11-12T02:37:42.924Z",
+      "changes": [
+        "Initial version import"
+      ],
+      "author": "system",
+      "hash": "e921b45"
+    }
+  ]
+}

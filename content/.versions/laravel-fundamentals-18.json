@@ -1,0 +1,17 @@
+{
+  "id": "laravel-fundamentals-18",
+  "type": "lesson",
+  "slug": "laravel-fundamentals-18",
+  "title": "API Development with Sanctum and Passport",
+  "versions": [
+    {
+      "version": "1.0.0",
+      "lastUpdated": "2025-11-12T02:37:42.906Z",
+      "changes": [
+        "Initial version import"
+      ],
+      "author": "system",
+      "hash": "-720eb6f0"
+    }
+  ]
+}

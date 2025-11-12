@@ -1,0 +1,17 @@
+{
+  "id": "laravel-fundamentals-23",
+  "type": "lesson",
+  "slug": "laravel-fundamentals-23",
+  "title": "Deployment and DevOps Practices",
+  "versions": [
+    {
+      "version": "1.0.0",
+      "lastUpdated": "2025-11-12T02:37:42.907Z",
+      "changes": [
+        "Initial version import"
+      ],
+      "author": "system",
+      "hash": "6d276ca"
+    }
+  ]
+}

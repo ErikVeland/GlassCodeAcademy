@@ -1,14 +1,14 @@
-import { contentRegistry } from '@/lib/contentRegistry';
+import { contentRegistry } from "@/lib/contentRegistry";
 
 export default async function TestShortSlugPage() {
   // Test the short slug mapping
   const testSlugs = [
-    'programming',
-    'web',
-    'dotnet',
-    'react',
-    'graphql',
-    'nextjs'
+    "programming",
+    "web",
+    "dotnet",
+    "react",
+    "graphql",
+    "nextjs",
   ];
 
   const results = await Promise.all(
@@ -17,10 +17,10 @@ export default async function TestShortSlugPage() {
       return {
         shortSlug,
         found: !!moduleData,
-        moduleName: moduleData?.title || 'Not found',
-        fullSlug: moduleData?.slug || 'N/A'
+        moduleName: moduleData?.title || "Not found",
+        fullSlug: moduleData?.slug || "N/A",
       };
-    })
+    }),
   );
 
   return (
@@ -33,16 +33,20 @@ export default async function TestShortSlugPage() {
             <div key={index} className="p-4 border rounded-lg">
               <div className="grid grid-cols-4 gap-4">
                 <div>
-                  <span className="font-medium">Short Slug:</span> {result.shortSlug}
+                  <span className="font-medium">Short Slug:</span>{" "}
+                  {result.shortSlug}
                 </div>
                 <div>
-                  <span className="font-medium">Found:</span> {result.found ? '✅' : '❌'}
+                  <span className="font-medium">Found:</span>{" "}
+                  {result.found ? "✅" : "❌"}
                 </div>
                 <div>
-                  <span className="font-medium">Module:</span> {result.moduleName}
+                  <span className="font-medium">Module:</span>{" "}
+                  {result.moduleName}
                 </div>
                 <div>
-                  <span className="font-medium">Full Slug:</span> {result.fullSlug}
+                  <span className="font-medium">Full Slug:</span>{" "}
+                  {result.fullSlug}
                 </div>
               </div>
             </div>

@@ -1,4 +1,4 @@
-import { gql } from '@apollo/client';
+import { gql } from "@apollo/client";
 
 // Query for programming fundamentals lessons
 export const GET_PROGRAMMING_LESSONS = gql`

@@ -1,0 +1,17 @@
+{
+  "id": "database-systems-16",
+  "type": "lesson",
+  "slug": "database-systems-16",
+  "title": "Database Administration and Monitoring",
+  "versions": [
+    {
+      "version": "1.0.0",
+      "lastUpdated": "2025-11-12T02:37:42.893Z",
+      "changes": [
+        "Initial version import"
+      ],
+      "author": "system",
+      "hash": "7b43b61b"
+    }
+  ]
+}

@@ -1,0 +1,17 @@
+{
+  "id": "database-systems-15",
+  "type": "lesson",
+  "slug": "database-systems-15",
+  "title": "NoSQL Databases and Document Stores",
+  "versions": [
+    {
+      "version": "1.0.0",
+      "lastUpdated": "2025-11-12T02:37:42.893Z",
+      "changes": [
+        "Initial version import"
+      ],
+      "author": "system",
+      "hash": "-3086ac4c"
+    }
+  ]
+}

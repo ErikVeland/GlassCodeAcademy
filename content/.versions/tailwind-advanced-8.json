@@ -1,0 +1,17 @@
+{
+  "id": "tailwind-advanced-8",
+  "type": "lesson",
+  "slug": "tailwind-advanced-8",
+  "title": "Animations and Transitions",
+  "versions": [
+    {
+      "version": "1.0.0",
+      "lastUpdated": "2025-11-12T02:37:42.928Z",
+      "changes": [
+        "Initial version import"
+      ],
+      "author": "system",
+      "hash": "19af67fa"
+    }
+  ]
+}

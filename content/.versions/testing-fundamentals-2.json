@@ -1,0 +1,17 @@
+{
+  "id": "testing-fundamentals-2",
+  "type": "lesson",
+  "slug": "testing-fundamentals-2",
+  "title": "Unit Testing Principles",
+  "versions": [
+    {
+      "version": "1.0.0",
+      "lastUpdated": "2025-11-12T02:37:42.930Z",
+      "changes": [
+        "Initial version import"
+      ],
+      "author": "system",
+      "hash": "3dab7fc2"
+    }
+  ]
+}

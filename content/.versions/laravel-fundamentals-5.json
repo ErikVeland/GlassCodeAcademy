@@ -1,0 +1,17 @@
+{
+  "id": "laravel-fundamentals-5",
+  "type": "lesson",
+  "slug": "laravel-fundamentals-5",
+  "title": "Blade Basics",
+  "versions": [
+    {
+      "version": "1.0.0",
+      "lastUpdated": "2025-11-12T02:37:42.903Z",
+      "changes": [
+        "Initial version import"
+      ],
+      "author": "system",
+      "hash": "2e40badd"
+    }
+  ]
+}

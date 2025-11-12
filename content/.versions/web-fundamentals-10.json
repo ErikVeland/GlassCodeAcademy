@@ -1,0 +1,17 @@
+{
+  "id": "web-fundamentals-10",
+  "type": "lesson",
+  "slug": "web-fundamentals-10",
+  "title": "Browser Developer Tools",
+  "versions": [
+    {
+      "version": "1.0.0",
+      "lastUpdated": "2025-11-12T02:37:42.943Z",
+      "changes": [
+        "Initial version import"
+      ],
+      "author": "system",
+      "hash": "-6cadaf41"
+    }
+  ]
+}

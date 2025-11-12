@@ -1,0 +1,17 @@
+{
+  "id": "laravel-fundamentals-1",
+  "type": "lesson",
+  "slug": "laravel-fundamentals-1",
+  "title": "Basic Routing in Laravel",
+  "versions": [
+    {
+      "version": "1.0.0",
+      "lastUpdated": "2025-11-12T02:37:42.903Z",
+      "changes": [
+        "Initial version import"
+      ],
+      "author": "system",
+      "hash": "3cb4a9b0"
+    }
+  ]
+}

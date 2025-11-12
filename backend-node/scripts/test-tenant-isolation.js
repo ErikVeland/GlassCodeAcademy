@@ -3,10 +3,16 @@
  * Tests academy access verification, role requirements, and filtering
  */
 
-const { sequelize, Academy, User, AcademyMembership, Role, initializeAssociations } = require('../src/models');
+const {
+  sequelize,
+  Academy,
+  User,
+  AcademyMembership,
+  Role,
+  initializeAssociations,
+} = require('../src/models');
 const {
   verifyAcademyAccess,
-  requireAcademyRole,
   applyAcademyFilter,
 } = require('../src/middleware/tenantIsolationMiddleware');
 
@@ -27,11 +33,11 @@ const createMockReq = (overrides = {}) => ({
 
 const createMockRes = () => {
   const res = {
-    status: function(code) {
+    status: function (code) {
       this.statusCode = code;
       return this;
     },
-    json: function(data) {
+    json: function (data) {
       this.jsonData = data;
       return this;
     },
@@ -53,7 +59,7 @@ async function testTenantIsolationMiddleware() {
   try {
     // Setup: Create test data
     console.log('Setup: Creating test data...');
-    
+
     // Create roles
     memberRole = await Role.create({
       name: `member-${Date.now()}`,
@@ -64,7 +70,7 @@ async function testTenantIsolationMiddleware() {
       name: `admin-${Date.now()}`,
       description: 'Admin role',
     });
-    
+
     testUser = await User.create({
       email: `test-${Date.now()}@example.com`,
       password: 'hashedpassword123',
@@ -87,7 +93,7 @@ async function testTenantIsolationMiddleware() {
       status: 'active',
     });
 
-    console.log(`✅ Test data created`);
+    console.log('✅ Test data created');
     console.log(`   User ID: ${testUser.id}`);
     console.log(`   Academy ID: ${testAcademy.id}`);
     console.log(`   Membership Role ID: ${testMembership.roleId}`);
@@ -168,11 +174,13 @@ async function testTenantIsolationMiddleware() {
 
     // Test 4: Role-based access control
     console.log('\nTest 4: Role-based access control...');
-    
+
     // For this test, we'll check role by name instead of using requireAcademyRole
     // since the middleware checks membership.role which is a string in the old schema
     // but roleId (number) in the new schema
-    console.log('✅ Role verification skipped (schema uses roleId, not role string)');
+    console.log(
+      '✅ Role verification skipped (schema uses roleId, not role string)'
+    );
     console.log(`   User has roleId: ${testMembership.roleId}`);
     console.log(`   Member role: ${memberRole.name}`);
     console.log(`   Admin role: ${adminRole.name}`);
@@ -189,9 +197,15 @@ async function testTenantIsolationMiddleware() {
       nextCalled = true;
     });
 
-    if (nextCalled && req5.userAcademyIds && req5.userAcademyIds.includes(testAcademy.id)) {
+    if (
+      nextCalled &&
+      req5.userAcademyIds &&
+      req5.userAcademyIds.includes(testAcademy.id)
+    ) {
       console.log('✅ Academy filter applied');
-      console.log(`   User has access to ${req5.userAcademyIds.length} academy(ies)`);
+      console.log(
+        `   User has access to ${req5.userAcademyIds.length} academy(ies)`
+      );
       console.log(`   Academy IDs: ${req5.userAcademyIds.join(', ')}`);
     } else {
       console.log('❌ Academy filter not applied correctly');
@@ -226,24 +240,26 @@ async function testTenantIsolationMiddleware() {
     console.log('✅ Academy filter application: PASS');
     console.log('✅ Skip without academy ID: PASS');
     console.log('\n🎉 All Tenant Isolation Middleware tests PASSED!\n');
-
   } catch (error) {
-    console.error('❌ Error testing tenant isolation middleware:', error.message);
+    console.error(
+      '❌ Error testing tenant isolation middleware:',
+      error.message
+    );
     console.error(error.stack);
   } finally {
     // Cleanup
     console.log('🧹 Cleaning up test data...');
-    
+
     if (testMembership) {
       await testMembership.destroy();
       console.log('✅ Test membership deleted');
     }
-    
+
     if (testAcademy) {
       await testAcademy.destroy();
       console.log('✅ Test academy deleted');
     }
-    
+
     if (testUser) {
       await testUser.destroy();
       console.log('✅ Test user deleted');

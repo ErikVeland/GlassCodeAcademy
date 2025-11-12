@@ -7,13 +7,13 @@ const path = require('path');
   const isProd = process.env.NODE_ENV === 'production';
   const envCandidates = isProd
     ? [
-      path.resolve(__dirname, '../.env.production'),
-      path.resolve(__dirname, '../.env'),
-    ]
+        path.resolve(__dirname, '../.env.production'),
+        path.resolve(__dirname, '../.env'),
+      ]
     : [
-      path.resolve(__dirname, '../.env'),
-      path.resolve(__dirname, '../.env.production'),
-    ];
+        path.resolve(__dirname, '../.env'),
+        path.resolve(__dirname, '../.env.production'),
+      ];
   for (const p of envCandidates) {
     if (fs.existsSync(p)) {
       dotenv.config({ path: p });
@@ -36,7 +36,9 @@ async function seedDatabase() {
     console.log('Database connection established successfully');
 
     // Ensure default academy exists
-    let defaultAcademy = await Academy.findOne({ where: { slug: 'glasscode-academy' } });
+    let defaultAcademy = await Academy.findOne({
+      where: { slug: 'glasscode-academy' },
+    });
     if (!defaultAcademy) {
       defaultAcademy = await Academy.create({
         name: 'GlassCode Academy',
@@ -53,17 +55,20 @@ async function seedDatabase() {
     // Create default roles if they don't exist
     const roles = [
       { name: 'admin', description: 'Administrator with full access' },
-      { name: 'instructor', description: 'Instructor with course management access' },
+      {
+        name: 'instructor',
+        description: 'Instructor with course management access',
+      },
       { name: 'student', description: 'Student user' },
-      { name: 'guest', description: 'Guest user with limited access' }
+      { name: 'guest', description: 'Guest user with limited access' },
     ];
 
     for (const roleData of roles) {
       const [role, created] = await Role.findOrCreate({
         where: { name: roleData.name },
-        defaults: { ...roleData, is_active: true }
+        defaults: { ...roleData, is_active: true },
       });
-      
+
       if (created) {
         console.log(`Created role: ${role.name}`);
       } else {
@@ -74,7 +79,7 @@ async function seedDatabase() {
     // Create admin user if it doesn't exist
     const adminEmail = process.env.ADMIN_EMAIL || 'admin@example.com';
     const adminPassword = process.env.ADMIN_PASSWORD || 'admin123';
-    
+
     const [adminUser, userCreated] = await User.findOrCreate({
       where: { email: adminEmail },
       defaults: {
@@ -82,16 +87,16 @@ async function seedDatabase() {
         passwordHash: adminPassword,
         firstName: 'Admin',
         lastName: 'User',
-        role: 'admin'
-      }
+        role: 'admin',
+      },
     });
-    
+
     if (userCreated) {
       console.log('Admin user created successfully with ID:', adminUser.id);
     } else {
       console.log('Admin user already exists with ID:', adminUser.id);
     }
-    
+
     // Assign admin role to admin user
     const adminRole = await Role.findOne({ where: { name: 'admin' } });
     if (adminRole) {
@@ -99,15 +104,20 @@ async function seedDatabase() {
       try {
         // Try to find if the association already exists
         const existingUserRole = await UserRole.findOne({
-          where: { 
+          where: {
             userId: adminUser.id,
-            roleId: adminRole.id
+            roleId: adminRole.id,
           },
-          attributes: ['userId', 'roleId'] // Don't select id field since it doesn't exist
+          attributes: ['userId', 'roleId'], // Don't select id field since it doesn't exist
         });
-        
+
         if (!existingUserRole) {
-          console.log('Creating new UserRole with userId:', adminUser.id, 'and roleId:', adminRole.id);
+          console.log(
+            'Creating new UserRole with userId:',
+            adminUser.id,
+            'and roleId:',
+            adminRole.id
+          );
           // Insert using raw SQL without NOW() to avoid SQLite incompatibility
           const now = new Date().toISOString();
           await sequelize.query(
@@ -128,48 +138,51 @@ async function seedDatabase() {
         console.error('Role ID:', adminRole.id);
       }
     }
-    
+
     // Create default forum categories
     const defaultCategories = [
       {
         name: 'General Discussion',
         slug: 'general-discussion',
-        description: 'General discussions about programming, technology, and learning',
+        description:
+          'General discussions about programming, technology, and learning',
         order: 1,
-        is_active: true
+        is_active: true,
       },
       {
         name: 'Course Help',
         slug: 'course-help',
         description: 'Get help with course content, lessons, and exercises',
         order: 2,
-        is_active: true
+        is_active: true,
       },
       {
         name: 'Career Advice',
         slug: 'career-advice',
-        description: 'Discuss career paths, job opportunities, and professional development',
+        description:
+          'Discuss career paths, job opportunities, and professional development',
         order: 3,
-        is_active: true
+        is_active: true,
       },
       {
         name: 'Show & Tell',
         slug: 'show-and-tell',
-        description: 'Share your projects, achievements, and learning milestones',
+        description:
+          'Share your projects, achievements, and learning milestones',
         order: 4,
-        is_active: true
-      }
+        is_active: true,
+      },
     ];
-    
+
     for (const category of defaultCategories) {
       await ForumCategory.findOrCreate({
         where: { name: category.name },
         defaults: category,
       });
     }
-    
+
     console.log('Forum categories created successfully!');
-    
+
     console.log('Database seeding completed successfully!');
     process.exit(0);
   } catch (error) {

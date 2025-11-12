@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect } from "react";
 
 export interface ProgressData {
   moduleId: string;
@@ -7,10 +7,10 @@ export interface ProgressData {
   quizScore: number;
   timeSpent: number;
   lastAccessed: string;
-  completionStatus: 'not-started' | 'in-progress' | 'completed';
+  completionStatus: "not-started" | "in-progress" | "completed";
   badges: string[];
   completedTopics: string[];
-  tier: 'foundational' | 'core' | 'specialized' | 'quality';
+  tier: "foundational" | "core" | "specialized" | "quality";
   certificate?: {
     earned: boolean;
     earnedDate: string;
@@ -27,84 +27,84 @@ export interface StreakData {
 
 export interface AchievementData {
   id: string;
-  type: 'completion' | 'streak' | 'skill' | 'velocity';
+  type: "completion" | "streak" | "skill" | "velocity";
   earnedDate: string;
   description: string;
   badgeUrl: string;
   moduleId?: string;
-  tier?: 'foundational' | 'core' | 'specialized' | 'quality';
+  tier?: "foundational" | "core" | "specialized" | "quality";
 }
 
 const STORAGE_KEYS = {
-  PROGRESS: 'fullstack_progress_veland',
-  STREAK: 'fullstack_streak_veland',
-  ACHIEVEMENTS: 'fullstack_achievements_veland'
+  PROGRESS: "fullstack_progress_veland",
+  STREAK: "fullstack_streak_veland",
+  ACHIEVEMENTS: "fullstack_achievements_veland",
 };
 
 // Tier-based module mapping according to design documentation
 const TIER_MODULES = {
-  foundational: ['programming-basics', 'web-fundamentals', 'version-control'],
-  core: ['dotnet-core', 'react', 'database', 'laravel'],
-  specialized: ['nextjs', 'graphql', 'microservices', 'devops'],
-  quality: ['testing-fundamentals', 'e2e-testing', 'performance', 'security']
+  foundational: ["programming-basics", "web-fundamentals", "version-control"],
+  core: ["dotnet-core", "react", "database", "laravel"],
+  specialized: ["nextjs", "graphql", "microservices", "devops"],
+  quality: ["testing-fundamentals", "e2e-testing", "performance", "security"],
 };
 
 // Achievement definitions with proper metadata
 const ACHIEVEMENT_DEFINITIONS = {
-  'first-lesson': {
-    type: 'velocity' as const,
-    description: 'Completed your first lesson',
-    badgeUrl: '/badges/first-lesson.svg'
+  "first-lesson": {
+    type: "velocity" as const,
+    description: "Completed your first lesson",
+    badgeUrl: "/badges/first-lesson.svg",
   },
-  'foundation-master': {
-    type: 'completion' as const,
-    description: 'Master of foundational concepts',
-    badgeUrl: '/badges/foundation-master.svg',
-    tier: 'foundational' as const
+  "foundation-master": {
+    type: "completion" as const,
+    description: "Master of foundational concepts",
+    badgeUrl: "/badges/foundation-master.svg",
+    tier: "foundational" as const,
   },
-  'core-developer': {
-    type: 'completion' as const,
-    description: 'Core technologies specialist',
-    badgeUrl: '/badges/core-developer.svg',
-    tier: 'core' as const
+  "core-developer": {
+    type: "completion" as const,
+    description: "Core technologies specialist",
+    badgeUrl: "/badges/core-developer.svg",
+    tier: "core" as const,
   },
-  'specialist': {
-    type: 'completion' as const,
-    description: 'Advanced skills specialist',
-    badgeUrl: '/badges/specialist.svg',
-    tier: 'specialized' as const
+  specialist: {
+    type: "completion" as const,
+    description: "Advanced skills specialist",
+    badgeUrl: "/badges/specialist.svg",
+    tier: "specialized" as const,
   },
-  'quality-guardian': {
-    type: 'completion' as const,
-    description: 'Quality and testing expert',
-    badgeUrl: '/badges/quality-guardian.svg',
-    tier: 'quality' as const
+  "quality-guardian": {
+    type: "completion" as const,
+    description: "Quality and testing expert",
+    badgeUrl: "/badges/quality-guardian.svg",
+    tier: "quality" as const,
   },
-  'speed-learner': {
-    type: 'velocity' as const,
-    description: 'Completed 5 lessons in one day',
-    badgeUrl: '/badges/speed-learner.svg'
+  "speed-learner": {
+    type: "velocity" as const,
+    description: "Completed 5 lessons in one day",
+    badgeUrl: "/badges/speed-learner.svg",
   },
-  'perfectionist': {
-    type: 'skill' as const,
-    description: 'Achieved perfect scores on 10 quizzes',
-    badgeUrl: '/badges/perfectionist.svg'
+  perfectionist: {
+    type: "skill" as const,
+    description: "Achieved perfect scores on 10 quizzes",
+    badgeUrl: "/badges/perfectionist.svg",
   },
-  'streak-warrior': {
-    type: 'streak' as const,
-    description: 'Maintained a 7-day learning streak',
-    badgeUrl: '/badges/streak-warrior.svg'
+  "streak-warrior": {
+    type: "streak" as const,
+    description: "Maintained a 7-day learning streak",
+    badgeUrl: "/badges/streak-warrior.svg",
   },
-  'streak-legend': {
-    type: 'streak' as const,
-    description: 'Maintained a 30-day learning streak',
-    badgeUrl: '/badges/streak-legend.svg'
+  "streak-legend": {
+    type: "streak" as const,
+    description: "Maintained a 30-day learning streak",
+    badgeUrl: "/badges/streak-legend.svg",
   },
-  'full-stack': {
-    type: 'skill' as const,
-    description: 'Completed both frontend and backend modules',
-    badgeUrl: '/badges/full-stack.svg'
-  }
+  "full-stack": {
+    type: "skill" as const,
+    description: "Completed both frontend and backend modules",
+    badgeUrl: "/badges/full-stack.svg",
+  },
 };
 
 export const useProgressTrackingEnhanced = () => {
@@ -112,8 +112,8 @@ export const useProgressTrackingEnhanced = () => {
   const [streak, setStreak] = useState<StreakData>({
     currentStreak: 0,
     longestStreak: 0,
-    lastActiveDate: '',
-    activityDates: []
+    lastActiveDate: "",
+    activityDates: [],
   });
   const [achievements, setAchievements] = useState<AchievementData[]>([]);
 
@@ -135,7 +135,7 @@ export const useProgressTrackingEnhanced = () => {
         setAchievements(JSON.parse(savedAchievements));
       }
     } catch (error) {
-      console.error('Error loading progress data:', error);
+      console.error("Error loading progress data:", error);
     }
   }, []);
 
@@ -146,16 +146,16 @@ export const useProgressTrackingEnhanced = () => {
       streak,
       achievements,
       exportedAt: new Date().toISOString(),
-      version: '1.0'
+      version: "1.0",
     };
-    
+
     const dataStr = JSON.stringify(exportData, null, 2);
-    const dataBlob = new Blob([dataStr], { type: 'application/json' });
+    const dataBlob = new Blob([dataStr], { type: "application/json" });
     const url = URL.createObjectURL(dataBlob);
-    
-    const link = document.createElement('a');
+
+    const link = document.createElement("a");
     link.href = url;
-    link.download = `fullstack-progress-${new Date().toISOString().split('T')[0]}.json`;
+    link.download = `fullstack-progress-${new Date().toISOString().split("T")[0]}.json`;
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -164,44 +164,46 @@ export const useProgressTrackingEnhanced = () => {
 
   const updateProgress = (moduleId: string, data: Partial<ProgressData>) => {
     const currentTime = new Date().toISOString();
-    
+
     // Determine tier for module
-    const tier = Object.entries(TIER_MODULES).find(([, modules]) => 
-      modules.includes(moduleId)
-    )?.[0] as 'foundational' | 'core' | 'specialized' | 'quality' || 'foundational';
-    
+    const tier =
+      (Object.entries(TIER_MODULES).find(([, modules]) =>
+        modules.includes(moduleId),
+      )?.[0] as "foundational" | "core" | "specialized" | "quality") ||
+      "foundational";
+
     const defaultProgressData = {
       moduleId,
       lessonsCompleted: 0,
       totalLessons: 10, // Default lesson count
       quizScore: 0,
       timeSpent: 0,
-      completionStatus: 'not-started' as const,
+      completionStatus: "not-started" as const,
       badges: [],
       completedTopics: [],
       tier,
-      certificate: undefined
+      certificate: undefined,
     };
-    
+
     const updated = {
       ...progress,
       [moduleId]: {
         ...defaultProgressData,
         ...progress[moduleId],
         ...data,
-        lastAccessed: currentTime
-      }
+        lastAccessed: currentTime,
+      },
     };
-    
+
     setProgress(updated);
     localStorage.setItem(STORAGE_KEYS.PROGRESS, JSON.stringify(updated));
-    
+
     // Update streak
     updateStreak();
-    
+
     // Check for new achievements
     checkAchievements(updated, moduleId);
-    
+
     // Export progress for data portability (10% chance for periodic backup)
     if (Math.random() < 0.1) {
       exportProgressData();
@@ -211,13 +213,13 @@ export const useProgressTrackingEnhanced = () => {
   const updateStreak = () => {
     const today = new Date().toDateString();
     const yesterday = new Date(Date.now() - 24 * 60 * 60 * 1000).toDateString();
-    
+
     const updatedStreak = { ...streak };
-    
+
     if (streak.lastActiveDate !== today) {
       // Add today to activity dates
       const newActivityDates = [...streak.activityDates, today];
-      
+
       if (streak.lastActiveDate === yesterday) {
         // Consecutive day
         updatedStreak.currentStreak += 1;
@@ -228,22 +230,31 @@ export const useProgressTrackingEnhanced = () => {
         // First day
         updatedStreak.currentStreak = 1;
       }
-      
-      updatedStreak.longestStreak = Math.max(updatedStreak.longestStreak, updatedStreak.currentStreak);
+
+      updatedStreak.longestStreak = Math.max(
+        updatedStreak.longestStreak,
+        updatedStreak.currentStreak,
+      );
       updatedStreak.lastActiveDate = today;
       updatedStreak.activityDates = newActivityDates.slice(-365); // Keep last year of data
-      
+
       setStreak(updatedStreak);
       localStorage.setItem(STORAGE_KEYS.STREAK, JSON.stringify(updatedStreak));
     }
   };
 
-  const checkAchievements = (progressData: Record<string, ProgressData>, moduleId: string) => {
+  const checkAchievements = (
+    progressData: Record<string, ProgressData>,
+    moduleId: string,
+  ) => {
     const newAchievements: AchievementData[] = [];
     const currentTime = new Date().toISOString();
-    
+
     // Helper function to create achievement with proper metadata
-    const createAchievement = (id: keyof typeof ACHIEVEMENT_DEFINITIONS, moduleId?: string): AchievementData => {
+    const createAchievement = (
+      id: keyof typeof ACHIEVEMENT_DEFINITIONS,
+      moduleId?: string,
+    ): AchievementData => {
       const definition = ACHIEVEMENT_DEFINITIONS[id];
       return {
         id,
@@ -252,132 +263,159 @@ export const useProgressTrackingEnhanced = () => {
         description: definition.description,
         badgeUrl: definition.badgeUrl,
         moduleId,
-        tier: 'tier' in definition ? definition.tier : undefined
+        tier: "tier" in definition ? definition.tier : undefined,
       };
     };
-    
+
     // First lesson achievement
-    if (!achievements.find(a => a.id === 'first-lesson')) {
-      const hasCompletedLesson = Object.values(progressData).some(p => p.lessonsCompleted > 0);
+    if (!achievements.find((a) => a.id === "first-lesson")) {
+      const hasCompletedLesson = Object.values(progressData).some(
+        (p) => p.lessonsCompleted > 0,
+      );
       if (hasCompletedLesson) {
-        newAchievements.push(createAchievement('first-lesson', moduleId));
+        newAchievements.push(createAchievement("first-lesson", moduleId));
       }
     }
-    
+
     // Tier completion achievements
-    if (!achievements.find(a => a.id === 'foundation-master')) {
+    if (!achievements.find((a) => a.id === "foundation-master")) {
       const foundationalModules = TIER_MODULES.foundational;
-      const foundationCompleted = foundationalModules.every(mod => 
-        progressData[mod]?.completionStatus === 'completed'
+      const foundationCompleted = foundationalModules.every(
+        (mod) => progressData[mod]?.completionStatus === "completed",
       );
       if (foundationCompleted) {
-        newAchievements.push(createAchievement('foundation-master', moduleId));
+        newAchievements.push(createAchievement("foundation-master", moduleId));
       }
     }
-    
-    if (!achievements.find(a => a.id === 'core-developer')) {
+
+    if (!achievements.find((a) => a.id === "core-developer")) {
       const coreModules = TIER_MODULES.core;
-      const coreCompleted = coreModules.every(mod => 
-        progressData[mod]?.completionStatus === 'completed'
+      const coreCompleted = coreModules.every(
+        (mod) => progressData[mod]?.completionStatus === "completed",
       );
       if (coreCompleted) {
-        newAchievements.push(createAchievement('core-developer', moduleId));
+        newAchievements.push(createAchievement("core-developer", moduleId));
       }
     }
-    
-    if (!achievements.find(a => a.id === 'specialist')) {
+
+    if (!achievements.find((a) => a.id === "specialist")) {
       const specializedModules = TIER_MODULES.specialized;
-      const specializedCompleted = specializedModules.every(mod => 
-        progressData[mod]?.completionStatus === 'completed'
+      const specializedCompleted = specializedModules.every(
+        (mod) => progressData[mod]?.completionStatus === "completed",
       );
       if (specializedCompleted) {
-        newAchievements.push(createAchievement('specialist', moduleId));
+        newAchievements.push(createAchievement("specialist", moduleId));
       }
     }
-    
-    if (!achievements.find(a => a.id === 'quality-guardian')) {
+
+    if (!achievements.find((a) => a.id === "quality-guardian")) {
       const qualityModules = TIER_MODULES.quality;
-      const qualityCompleted = qualityModules.every(mod => 
-        progressData[mod]?.completionStatus === 'completed'
+      const qualityCompleted = qualityModules.every(
+        (mod) => progressData[mod]?.completionStatus === "completed",
       );
       if (qualityCompleted) {
-        newAchievements.push(createAchievement('quality-guardian', moduleId));
+        newAchievements.push(createAchievement("quality-guardian", moduleId));
       }
     }
-    
+
     // Speed learner achievement (5 lessons in one day)
     const today = new Date().toDateString();
-    const todaysProgress = Object.values(progressData).filter(p => 
-      new Date(p.lastAccessed).toDateString() === today
+    const todaysProgress = Object.values(progressData).filter(
+      (p) => new Date(p.lastAccessed).toDateString() === today,
     );
-    const lessonsToday = todaysProgress.reduce((sum, p) => sum + p.lessonsCompleted, 0);
-    
-    if (lessonsToday >= 5 && !achievements.find(a => a.id === 'speed-learner')) {
-      newAchievements.push(createAchievement('speed-learner', moduleId));
+    const lessonsToday = todaysProgress.reduce(
+      (sum, p) => sum + p.lessonsCompleted,
+      0,
+    );
+
+    if (
+      lessonsToday >= 5 &&
+      !achievements.find((a) => a.id === "speed-learner")
+    ) {
+      newAchievements.push(createAchievement("speed-learner", moduleId));
     }
-    
+
     // Perfectionist achievement (100% on 10 quizzes)
-    if (!achievements.find(a => a.id === 'perfectionist')) {
-      const perfectScores = Object.values(progressData).filter(p => p.quizScore === 100);
+    if (!achievements.find((a) => a.id === "perfectionist")) {
+      const perfectScores = Object.values(progressData).filter(
+        (p) => p.quizScore === 100,
+      );
       if (perfectScores.length >= 10) {
-        newAchievements.push(createAchievement('perfectionist', moduleId));
+        newAchievements.push(createAchievement("perfectionist", moduleId));
       }
     }
-    
+
     // Streak achievements
-    if (streak.currentStreak >= 7 && !achievements.find(a => a.id === 'streak-warrior')) {
-      newAchievements.push(createAchievement('streak-warrior', moduleId));
+    if (
+      streak.currentStreak >= 7 &&
+      !achievements.find((a) => a.id === "streak-warrior")
+    ) {
+      newAchievements.push(createAchievement("streak-warrior", moduleId));
     }
-    
-    if (streak.currentStreak >= 30 && !achievements.find(a => a.id === 'streak-legend')) {
-      newAchievements.push(createAchievement('streak-legend', moduleId));
+
+    if (
+      streak.currentStreak >= 30 &&
+      !achievements.find((a) => a.id === "streak-legend")
+    ) {
+      newAchievements.push(createAchievement("streak-legend", moduleId));
     }
-    
+
     // Full stack achievement
-    if (!achievements.find(a => a.id === 'full-stack')) {
-      const backendModules = ['dotnet-core', 'laravel', 'database'];
-      const frontendModules = ['react', 'nextjs'];
-      
-      const backendCompleted = backendModules.some(mod => 
-        progressData[mod]?.completionStatus === 'completed'
+    if (!achievements.find((a) => a.id === "full-stack")) {
+      const backendModules = ["dotnet-core", "laravel", "database"];
+      const frontendModules = ["react", "nextjs"];
+
+      const backendCompleted = backendModules.some(
+        (mod) => progressData[mod]?.completionStatus === "completed",
       );
-      const frontendCompleted = frontendModules.some(mod => 
-        progressData[mod]?.completionStatus === 'completed'
+      const frontendCompleted = frontendModules.some(
+        (mod) => progressData[mod]?.completionStatus === "completed",
       );
-      
+
       if (backendCompleted && frontendCompleted) {
-        newAchievements.push(createAchievement('full-stack', moduleId));
+        newAchievements.push(createAchievement("full-stack", moduleId));
       }
     }
-    
+
     if (newAchievements.length > 0) {
       const updatedAchievements = [...achievements, ...newAchievements];
       setAchievements(updatedAchievements);
-      localStorage.setItem(STORAGE_KEYS.ACHIEVEMENTS, JSON.stringify(updatedAchievements));
+      localStorage.setItem(
+        STORAGE_KEYS.ACHIEVEMENTS,
+        JSON.stringify(updatedAchievements),
+      );
     }
   };
 
   const calculateOverallProgress = () => {
     const allModules = Object.values(TIER_MODULES).flat();
     const totalModules = allModules.length;
-    const completedModules = allModules.filter(moduleId => 
-      progress[moduleId]?.completionStatus === 'completed'
+    const completedModules = allModules.filter(
+      (moduleId) => progress[moduleId]?.completionStatus === "completed",
     ).length;
-    
-    return totalModules > 0 ? Math.round((completedModules / totalModules) * 100) : 0;
+
+    return totalModules > 0
+      ? Math.round((completedModules / totalModules) * 100)
+      : 0;
   };
-  
-  const getTierProgress = (tier: 'foundational' | 'core' | 'specialized' | 'quality') => {
+
+  const getTierProgress = (
+    tier: "foundational" | "core" | "specialized" | "quality",
+  ) => {
     const tierModules = TIER_MODULES[tier];
-    const completedInTier = tierModules.filter(moduleId => 
-      progress[moduleId]?.completionStatus === 'completed'
+    const completedInTier = tierModules.filter(
+      (moduleId) => progress[moduleId]?.completionStatus === "completed",
     ).length;
-    
-    return tierModules.length > 0 ? Math.round((completedInTier / tierModules.length) * 100) : 0;
+
+    return tierModules.length > 0
+      ? Math.round((completedInTier / tierModules.length) * 100)
+      : 0;
   };
 
   const getCompletedModulesCount = () => {
-    return Object.values(progress).filter(p => p.completionStatus === 'completed').length;
+    return Object.values(progress).filter(
+      (p) => p.completionStatus === "completed",
+    ).length;
   };
 
   const getTotalTimeSpent = () => {
@@ -385,8 +423,14 @@ export const useProgressTrackingEnhanced = () => {
   };
 
   const getAverageQuizScore = () => {
-    const scores = Object.values(progress).filter(p => p.quizScore > 0).map(p => p.quizScore);
-    return scores.length > 0 ? Math.round(scores.reduce((sum, score) => sum + score, 0) / scores.length) : 0;
+    const scores = Object.values(progress)
+      .filter((p) => p.quizScore > 0)
+      .map((p) => p.quizScore);
+    return scores.length > 0
+      ? Math.round(
+          scores.reduce((sum, score) => sum + score, 0) / scores.length,
+        )
+      : 0;
   };
 
   return {
@@ -399,6 +443,6 @@ export const useProgressTrackingEnhanced = () => {
     getCompletedModulesCount,
     getTotalTimeSpent,
     getAverageQuizScore,
-    exportProgressData
+    exportProgressData,
   };
 };
