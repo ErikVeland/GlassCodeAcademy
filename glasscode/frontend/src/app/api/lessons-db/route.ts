@@ -3,13 +3,7 @@ import { getApiBaseStrict } from "@/lib/urlUtils";
 
 export async function GET(req: NextRequest) {
   try {
-    const apiBase = (() => {
-      try {
-        return getApiBaseStrict();
-      } catch {
-        return "http://127.0.0.1:8080";
-      }
-    })();
+    const apiBase = (() => { try { return getApiBaseStrict(); } catch { return 'http://127.0.0.1:8081'; } })();
     type ModuleItem = { id?: string; moduleId?: string } | string;
     type JsonArray = Record<string, unknown>[];
     // Fetch all modules first

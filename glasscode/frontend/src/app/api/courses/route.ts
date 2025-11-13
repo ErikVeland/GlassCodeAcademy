@@ -4,14 +4,8 @@ import { getApiBaseStrict } from "@/lib/urlUtils";
 export async function GET(req: NextRequest) {
   try {
     const url = new URL(req.url);
-    const query = url.search || "";
-    const apiBase = (() => {
-      try {
-        return getApiBaseStrict();
-      } catch {
-        return "http://127.0.0.1:8080";
-      }
-    })();
+    const query = url.search || '';
+    const apiBase = (() => { try { return getApiBaseStrict(); } catch { return 'http://127.0.0.1:8081'; } })();
     const backendUrl = `${apiBase}/api/courses${query}`;
     const res = await fetch(backendUrl, {
       cache: "no-store",

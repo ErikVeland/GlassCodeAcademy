@@ -29,39 +29,8 @@ async function fetchLessonsFromDatabase(
 
     for (const apiBase of bases) {
       try {
-        // First, get the module ID from the backend
-        const modulesResponse = await fetch(`${apiBase}/api/modules`, {
-          cache: "no-store",
-        });
-        if (!modulesResponse.ok) {
-          console.error(`[lessons] Failed modules fetch from ${apiBase}`);
-          continue;
-        }
-        const modulesEnvelope: unknown = await modulesResponse.json();
-        const modulesData: unknown[] =
-          modulesEnvelope &&
-          typeof modulesEnvelope === "object" &&
-          Array.isArray((modulesEnvelope as { data?: unknown }).data)
-            ? ((modulesEnvelope as { data?: unknown[] }).data as unknown[])
-            : Array.isArray(modulesEnvelope)
-              ? (modulesEnvelope as unknown[])
-              : [];
-        const foundModule = modulesData.find((m: unknown) => {
-          const rec = m as { id?: unknown; slug?: unknown };
-          return typeof rec?.slug === "string" && rec.slug === moduleSlug;
-        }) as { id: number; slug: string } | undefined;
-        if (!foundModule) {
-          debugLog(
-            `[lessons] Module not found for slug: ${moduleSlug} on ${apiBase}`,
-          );
-          continue;
-        }
-
-        // Fetch lessons for this module
-        const lessonsResponse = await fetch(
-          `${apiBase}/api/modules/${foundModule.id}/lessons`,
-          { cache: "no-store" },
-        );
+        // Fetch lessons for this module by slug
+        const lessonsResponse = await fetch(`${apiBase}/api/modules/${moduleSlug}/lessons`, { cache: 'no-store' });
         if (!lessonsResponse.ok) {
           console.error(
             `[lessons] Failed lessons fetch for ${moduleSlug} from ${apiBase}`,

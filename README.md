@@ -49,6 +49,7 @@ For current project status, see [PROJECT_STATUS_SUMMARY.md](docs/PROJECT_STATUS_
 ### Developer Workflow
 - `npm install` installs all required packages (no manual extras)
 - `./start-dev.sh` boots backend on `http://localhost:8080` and frontend on `http://localhost:3000`
+ - `./start-dev.sh` boots backend on `http://localhost:8081` and frontend on `http://localhost:3000`
 - Type safety: `npm run typecheck` in `glasscode/frontend`
 - Linting: `npm run lint` in both frontend and backend
 
@@ -149,8 +150,7 @@ GlassCodeAcademy/
 │   └── registry.json           # Content registry
 ├── docs/                       # Documentation
 ├── scripts/                    # Utility scripts
-└── tests/                      # Test projects
-    └── backend-node/tests/     # Backend unit and integration tests
+└── tests/                      # Test projects (see app-specific test folders)
 ```
 
 ## Implementation Progress

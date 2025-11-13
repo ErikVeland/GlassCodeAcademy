@@ -18,6 +18,11 @@ Notes:
 - `NEXT_PUBLIC_GRAPHQL_ENDPOINT` can be absolute or proxied path; keep it consistent with your proxy rules.
 - `NEXT_PUBLIC_DEBUG` gates verbose logs and enables the StatusBanner even when everything is healthy.
 
+Quiz content fallback (development only):
+- The quizzes API (`/api/content/quizzes/[moduleSlug]`) first queries the backend at `NEXT_PUBLIC_API_BASE`.
+- If the backend returns zero questions, the route will attempt a file-based fallback from `../../content/quizzes/[moduleSlug].json` relative to the frontend project root.
+- Keep quiz JSON files in `content/quizzes/` using the standard question template. This ensures interview questions are available while backend content is being populated.
+
 Common pitfalls:
 - Mismatched `NEXT_PUBLIC_BASE_URL` and dev server port causes SSR fetches to fail or be incorrectly proxied.
 - Using public origin helpers where backend API base is required leads to mixed-origin issues. Prefer `API_BASE` for server-side fetches.

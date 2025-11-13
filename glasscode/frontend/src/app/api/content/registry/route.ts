@@ -129,7 +129,7 @@ async function synthesizeRegistryFromDatabase() {
   } catch {
     /* ignore */
   }
-  candidateBases.push("http://127.0.0.1:8080");
+  candidateBases.push("http://127.0.0.1:8081");
 
   // Try fetching from candidates until one succeeds for both modules and tiers
   let modulesRes: Response | null = null;

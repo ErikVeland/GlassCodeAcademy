@@ -35,7 +35,7 @@ export async function GET(req: NextRequest) {
       try {
         return getApiBaseStrict();
       } catch {
-        return "http://127.0.0.1:8080";
+  return "http://127.0.0.1:8081";
       }
     })();
 
@@ -136,7 +136,7 @@ export async function POST(req: NextRequest) {
       try {
         return getApiBaseStrict();
       } catch {
-        return "http://127.0.0.1:8080";
+  return "http://127.0.0.1:8081";
       }
     })();
     const res = await fetch(

@@ -1,19 +1,19 @@
-"use strict";
+'use strict';
 
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up({ queryInterface, Sequelize }) {
     let columns = {};
     try {
-      columns = await queryInterface.describeTable("modules");
+      columns = await queryInterface.describeTable('modules');
     } catch (err) {
       const code = (err.parent && err.parent.code) || err.code;
-      if (code === "42P01") throw err;
+      if (code === '42P01') throw err;
     }
 
     // Add snake_case column and backfill from legacy camelCase
     if (!columns.is_published) {
-      await queryInterface.addColumn("modules", "is_published", {
+      await queryInterface.addColumn('modules', 'is_published', {
         type: Sequelize.BOOLEAN,
         allowNull: false,
         defaultValue: false,
@@ -30,20 +30,24 @@ module.exports = {
 
     // Optional index for published filter
     try {
-      await queryInterface.addIndex("modules", ["is_published"], {
-        name: "modules_is_published_idx",
+      await queryInterface.addIndex('modules', ['is_published'], {
+        name: 'modules_is_published_idx',
       });
-    } catch (err) {}
+    } catch (err) {
+      // Ignore errors when adding index
+    }
   },
 
   async down({ queryInterface, Sequelize }) {
     let columns = {};
     try {
-      columns = await queryInterface.describeTable("modules");
-    } catch (err) {}
+      columns = await queryInterface.describeTable('modules');
+    } catch (err) {
+      // Ignore errors when describing table
+    }
     if (columns.is_published) {
-      await queryInterface.removeIndex("modules", "modules_is_published_idx").catch(() => {});
-      await queryInterface.removeColumn("modules", "is_published");
+      await queryInterface.removeIndex('modules', 'modules_is_published_idx').catch(() => {});
+      await queryInterface.removeColumn('modules', 'is_published');
     }
   },
 };

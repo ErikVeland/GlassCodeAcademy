@@ -164,7 +164,7 @@ export default function AdminDashboard() {
         setError(null);
         // Use the API base URL from environment variables
         const apiBase =
-          process.env.NEXT_PUBLIC_API_BASE || "http://localhost:8080";
+  process.env.NEXT_PUBLIC_API_BASE || "http://localhost:8081";
 
         // Fetch modules from backend
         const modulesRes = await fetch(`${apiBase}/api/modules`, {

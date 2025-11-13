@@ -30,7 +30,7 @@ async function fetchThreads(
     try {
       return getApiBaseStrict();
     } catch {
-      return "http://127.0.0.1:8080";
+  return "http://127.0.0.1:8081";
     }
   })();
   const url = `${apiBase}/api/forum/categories/${categoryId}/threads?page=1&limit=20`;

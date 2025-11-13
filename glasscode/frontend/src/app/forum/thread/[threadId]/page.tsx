@@ -28,7 +28,7 @@ async function fetchThread(
     try {
       return getApiBaseStrict();
     } catch {
-      return "http://127.0.0.1:8080";
+  return "http://127.0.0.1:8081";
     }
   })();
   const res = await fetch(

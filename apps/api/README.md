@@ -1,130 +1,28 @@
-# GlassCode Academy Node.js Backend
+# GlassCode Fastify API (Migration Target)
 
-This is the standardized Node.js backend for GlassCode Academy, built with Fastify and Prisma.
+This service provides a modern TypeScript backend using Fastify. It currently serves content registry and quizzes from static JSON under `content/` to enable a smooth migration from legacy services.
 
-## Features
+## Commands
 
-- RESTful API for courses, modules, lessons, and quizzes
-- User authentication with JWT
-- Progress tracking
-- PostgreSQL database integration
-- Docker containerization
-- Comprehensive test suite
+- `npm run dev` — start in dev mode (port 8081)
+- `npm run build` — compile TypeScript to `dist`
+- `npm start` — run compiled server
 
-## Tech Stack
+## Endpoints
 
-- Node.js 18+
-- Fastify 4+
-- PostgreSQL with Prisma ORM
-- JWT for authentication
-- Zod for validation
-- Redis for caching
-- Jest for testing
-- Docker for containerization
+- `GET /health` — basic health check
+- `GET /api/content/registry` — serves `content/registry.json`
+- `GET /api/modules/:slug/quiz` — serves normalized quiz questions from `content/quizzes/*.json`
+- `GET /api/modules` — lists module identifiers (slugs) from registry
+- `GET /api/modules/:slug/lessons` — lists lessons for a module from `content/lessons/*.json`
+- `GET /api/lessons/:id` — fetch a single lesson by numeric id from content
 
-## Getting Started
+## Frontend Integration
 
-### Prerequisites
+Set `NEXT_PUBLIC_API_BASE=http://127.0.0.1:8081` in `glasscode/frontend/.env.local` to have the frontend proxy to this API during migration. Alternatively, the frontend may fall back to `127.0.0.1:8081` if configured.
 
-- Node.js 18+
-- PostgreSQL
-- Docker (optional, for containerization)
+## Next Steps
 
-### Installation
-
-1. Clone the repository
-2. Navigate to the backend-node directory
-3. Install dependencies:
-   ```bash
-   npm install
-   ```
-
-### Configuration
-
-1. Copy the example environment file:
-   ```bash
-   cp .env.example .env
-   ```
-2. Update the environment variables in `.env` as needed
-
-### Running the Application
-
-#### Development Mode
-
-```bash
-npm run dev
-```
-
-#### Production Mode
-
-```bash
-npm start
-```
-
-### Running Tests
-
-```bash
-# Run all tests
-npm test
-
-# Run tests with coverage
-npm run test:coverage
-```
-
-### Docker
-
-To run the application with Docker:
-
-```bash
-docker-compose up
-```
-
-## API Endpoints
-
-### Authentication
-- `POST /api/auth/register` - Register a new user
-- `POST /api/auth/login` - Login existing user
-
-### Courses
-- `GET /api/courses` - Get all courses (paginated)
-- `GET /api/courses/:id` - Get specific course
-
-### Modules
-- `GET /api/modules/:id` - Get specific module
-
-### Lessons
-- `GET /api/lessons/:id` - Get specific lesson
-- `GET /api/lessons/:lessonId/quizzes` - Get quizzes for a lesson
-
-### Progress
-- `GET /api/progress/courses/:courseId` - Get user progress for a course
-- `POST /api/progress/lessons/:lessonId` - Update lesson progress
-- `GET /api/progress/lessons/:lessonId` - Get lesson progress
-
-## Environment Variables
-
-- `PORT` - Server port (default: 8080)
-- `DATABASE_URL` - PostgreSQL connection string
-- `JWT_SECRET` - Secret for JWT token generation
-- `JWT_EXPIRES_IN` - JWT token expiration time
-- `NODE_ENV` - Environment (development/production)
-
-## Contributing
-
-1. Fork the repository
-2. Create a feature branch
-3. Commit your changes
-4. Push to the branch
-5. Create a pull request
-
-## License
-
-MIT
-
-## Debugging
-
-To diagnose production content issues (empty courses/lessons), you can run a DB summary script:
-
-- `NODE_ENV=production node backend-node/scripts/debug-db.js`
-
-This prints the effective database configuration and counts of published/total courses, modules, lessons, and quizzes. Use it to verify that the API and seeding processes point to the same database.
+- Add Prisma models and database-backed endpoints
+- Migrate write endpoints (admin) with dual-write during rollout
+- Expand routes to cover lessons, modules, and progress

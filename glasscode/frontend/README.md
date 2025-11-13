@@ -28,9 +28,12 @@ Use the provided bootstrap script to automatically set up your GlassCode Academy
 ### Local Development
 
 1. Create a `.env.local` file with:
-   ```
-   NEXT_PUBLIC_API_BASE=http://localhost:8080
-   ```
+  ```
+  NEXT_PUBLIC_BASE_URL=http://localhost:3000
+  NEXT_PUBLIC_API_BASE=http://127.0.0.1:8081
+  NEXT_PUBLIC_GRAPHQL_ENDPOINT=/api/graphql
+  NEXT_PUBLIC_DEBUG=true
+  ```
 
 2. Install and validate:
    ```bash
@@ -40,11 +43,16 @@ Use the provided bootstrap script to automatically set up your GlassCode Academy
    ```
 
 3. Run the development server:
-   ```bash
-   npm run dev
-   ```
+  ```bash
+  npm run dev
+  ```
 
-The application runs at `http://localhost:3000`.
+The application runs at `http://localhost:3000` (or the configured port). Ensure `NEXT_PUBLIC_BASE_URL` matches your dev server port so SSR fetches resolve correctly.
+
+#### Quiz Content Fallback (Development)
+- The quizzes route (`/api/content/quizzes/[moduleSlug]`) first loads questions from the backend at `NEXT_PUBLIC_API_BASE`.
+- If the backend returns 0 questions, it falls back to a file-based source at `../../content/quizzes/[moduleSlug].json` relative to the frontend root.
+- Keep quiz files in `content/quizzes/` following the schema defined in `docs/QUESTION_TEMPLATE.md`.
 
 ## Features
 
@@ -185,9 +193,10 @@ To modify styles:
 ### Static checks
 - `npm run typecheck` to verify TypeScript types across app and tests
 - `npm run lint` to enforce code quality
+  - Lint and type-checks must pass cleanly; avoid using `any` except in guarded parsing where `unknown` can be narrowed.
 
 ### Local verification
-1. Start the backend (`cd ../../backend-node && npm run dev`)
+1. Start the backend (`cd ../../apps/api && npm run dev`)
 2. Start the frontend (`npm run dev`)
 3. Open `http://localhost:3000` and validate module pages
 

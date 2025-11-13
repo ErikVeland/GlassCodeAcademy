@@ -212,7 +212,7 @@ class NodeJsApiClient {
       // Fallback to localhost only in development (non-CI)
       const isDev = process.env.NODE_ENV !== "production" && !process.env.CI;
       if (isDev) {
-        this.baseUrl = "http://localhost:8080";
+    this.baseUrl = "http://localhost:8081";
       } else {
         throw new Error(
           "API base not configured. Set NEXT_PUBLIC_API_BASE for production/CI environments.",

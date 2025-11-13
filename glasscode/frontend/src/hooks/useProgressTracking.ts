@@ -231,70 +231,7 @@ export const useProgressTracking = () => {
     void loadAndNormalize();
   }, [getStorageKeys]);
 
-  const updateProgress = useCallback(
-    async (moduleId: string, data: Partial<ProgressData>) => {
-      const currentTime = new Date().toISOString();
-
-      // Normalize slug to full module slug for storage consistency
-      const fullSlug = await resolveSlugViaRegistry(moduleId);
-
-      // Determine tier for module using registry
-      const tier =
-        (await determineTierFromRegistry(fullSlug)) || "foundational";
-
-      // Get accurate lesson count from registry/content
-      const totalLessons = await getActualLessonCount(fullSlug);
-
-      const defaultProgressData = {
-        moduleId: fullSlug,
-        lessonsCompleted: 0,
-        totalLessons,
-        quizScore: 0,
-        timeSpent: 0,
-        completionStatus: "not-started" as const,
-        badges: [],
-        completedTopics: [],
-        tier,
-        certificate: undefined,
-      };
-
-      const currentProgress = {
-        ...defaultProgressData,
-        ...progress[fullSlug],
-        ...data,
-        lastAccessed: currentTime,
-      };
-
-      // Auto-calculate completion status based on lessons and quiz
-      if (
-        currentProgress.lessonsCompleted >= currentProgress.totalLessons &&
-        currentProgress.quizScore >= 70
-      ) {
-        currentProgress.completionStatus = "completed";
-      } else if (
-        currentProgress.lessonsCompleted > 0 ||
-        currentProgress.quizScore > 0
-      ) {
-        currentProgress.completionStatus = "in-progress";
-      }
-
-      const updated = {
-        ...progress,
-        [fullSlug]: currentProgress,
-      };
-
-      setProgress(updated);
-      localStorage.setItem(getStorageKeys().PROGRESS, JSON.stringify(updated));
-
-      // Update streak
-      updateStreak();
-
-      // Check for new achievements
-      checkAchievements(updated, fullSlug);
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-    },
-    [progress, getStorageKeys],
-  );
+  // updateProgress is defined after helper callbacks to avoid "used before declaration" errors
 
   // Helper function to get tier from registry
   const determineTierFromRegistry = useCallback(
@@ -528,6 +465,77 @@ export const useProgressTracking = () => {
       }
     },
     [achievements, streak.currentStreak, getStorageKeys],
+  );
+
+  const updateProgress = useCallback(
+    async (moduleId: string, data: Partial<ProgressData>) => {
+      const currentTime = new Date().toISOString();
+
+      // Normalize slug to full module slug for storage consistency
+      const fullSlug = await resolveSlugViaRegistry(moduleId);
+
+      // Determine tier for module using registry
+      const tier =
+        (await determineTierFromRegistry(fullSlug)) || "foundational";
+
+      // Get accurate lesson count from registry/content
+      const totalLessons = await getActualLessonCount(fullSlug);
+
+      const defaultProgressData = {
+        moduleId: fullSlug,
+        lessonsCompleted: 0,
+        totalLessons,
+        quizScore: 0,
+        timeSpent: 0,
+        completionStatus: "not-started" as const,
+        badges: [],
+        completedTopics: [],
+        tier,
+        certificate: undefined,
+      };
+
+      const currentProgress = {
+        ...defaultProgressData,
+        ...progress[fullSlug],
+        ...data,
+        lastAccessed: currentTime,
+      };
+
+      // Auto-calculate completion status based on lessons and quiz
+      if (
+        currentProgress.lessonsCompleted >= currentProgress.totalLessons &&
+        currentProgress.quizScore >= 70
+      ) {
+        currentProgress.completionStatus = "completed";
+      } else if (
+        currentProgress.lessonsCompleted > 0 ||
+        currentProgress.quizScore > 0
+      ) {
+        currentProgress.completionStatus = "in-progress";
+      }
+
+      const updated = {
+        ...progress,
+        [fullSlug]: currentProgress,
+      };
+
+      setProgress(updated);
+      localStorage.setItem(getStorageKeys().PROGRESS, JSON.stringify(updated));
+
+      // Update streak
+      updateStreak();
+
+      // Check for new achievements
+      checkAchievements(updated, fullSlug);
+    },
+    [
+      progress,
+      getStorageKeys,
+      determineTierFromRegistry,
+      getActualLessonCount,
+      updateStreak,
+      checkAchievements,
+    ],
   );
 
   const calculateOverallProgress = useCallback(() => {
