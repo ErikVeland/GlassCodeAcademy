@@ -144,6 +144,10 @@ dotnetquiz-deployment/
 terraform/*.tfvars
 *.tfvars
 
+# Terraform directories (contain binaries and state)
+.terraform/
+terraform/.terraform/
+
 # Secrets (repo-wide)
 **/.env
 **/.env.local
