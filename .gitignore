@@ -140,13 +140,12 @@ dotnetquiz-deployment/
 .env.development
 .env.test
 
-# Terraform variable files (contain secrets)
+# Terraform files (contain secrets or large binaries)
 terraform/*.tfvars
 *.tfvars
-
-# Terraform directories (contain binaries and state)
 .terraform/
 terraform/.terraform/
+terraform/.terraform.lock.hcl
 
 # Secrets (repo-wide)
 **/.env
