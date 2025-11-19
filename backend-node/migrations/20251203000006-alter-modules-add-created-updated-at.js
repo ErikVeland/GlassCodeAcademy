@@ -46,7 +46,7 @@ module.exports = {
     }
   },
 
-  async down({ queryInterface, Sequelize }) {
+  async down({ queryInterface, Sequelize: _Sequelize }) {
     let columns = {};
     try {
       columns = await queryInterface.describeTable('modules');

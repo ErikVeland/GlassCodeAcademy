@@ -1,0 +1,20 @@
+{
+  "name": "backend-node",
+  "version": "1.0.0",
+  "description": "Node.js backend for GlassCode Academy",
+  "main": "server.js",
+  "scripts": {
+    "lint": "eslint src/**/*.js scripts/**/*.js migrations/**/*.js",
+    "lint:fix": "eslint src/**/*.js scripts/**/*.js migrations/**/*.js --fix",
+    "format": "prettier --write src/**/*.js scripts/**/*.js migrations/**/*.js",
+    "format:check": "prettier --check src/**/*.js scripts/**/*.js migrations/**/*.js"
+  },
+  "keywords": [],
+  "author": "GlassCode Academy",
+  "license": "MIT",
+  "devDependencies": {
+    "eslint": "^8.0.0",
+    "prettier": "^3.0.0",
+    "globals": "^13.0.0"
+  }
+}

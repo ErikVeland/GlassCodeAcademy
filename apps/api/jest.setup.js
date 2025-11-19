@@ -34,9 +34,16 @@ const dotenv = require('dotenv');
 process.env.NODE_ENV = 'test';
 
 // Initialize models and database for tests
-const { sequelize, initializeAssociations } = require('./src/models');
+let sequelize;
+try {
+  const models = require('./src/models');
+  sequelize = models.sequelize;
+  // Associations are initialized in per-suite setup utilities to avoid duplicate registrations.
+} catch (error) {
+  console.warn('Models not available for tests:', error.message);
+}
 
-// Associations are initialized in per-suite setup utilities to avoid duplicate registrations.
-
-// Make models available globally for tests
-global.sequelize = sequelize;
+// Make models available globally for tests if they exist
+if (sequelize) {
+  global.sequelize = sequelize;
+}

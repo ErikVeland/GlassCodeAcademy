@@ -46,7 +46,9 @@ module.exports = {
       // Ignore errors when describing table
     }
     if (columns.is_published) {
-      await queryInterface.removeIndex('modules', 'modules_is_published_idx').catch(() => {});
+      await queryInterface
+        .removeIndex('modules', 'modules_is_published_idx')
+        .catch(() => {});
       await queryInterface.removeColumn('modules', 'is_published');
     }
   },

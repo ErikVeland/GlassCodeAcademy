@@ -7,11 +7,21 @@ import {
   initializeVersionTracking,
 } from '../utils/content-versioning';
 import { getAllModules } from '../utils/optimized-content';
+import { z } from 'zod';
+import { ModuleSlugSchema, VersionSchema, VersionComparisonSchema } from '../utils/validation';
 
 export async function registerVersioningRoutes(app: FastifyInstance) {
   // Get version history for a specific content item
   app.get('/api/versioning/:slug/history', async (request, reply) => {
     const { slug } = request.params as { slug: string };
+
+    try {
+      // Validate the slug parameter
+      ModuleSlugSchema.parse(slug);
+    } catch (error) {
+      reply.code(400);
+      return { error: 'Invalid module slug format' };
+    }
 
     try {
       const history = getContentVersionHistory(slug);
@@ -33,6 +43,15 @@ export async function registerVersioningRoutes(app: FastifyInstance) {
       slug: string;
       version: string;
     };
+
+    try {
+      // Validate the parameters
+      ModuleSlugSchema.parse(slug);
+      VersionSchema.parse(version);
+    } catch (error) {
+      reply.code(400);
+      return { error: 'Invalid parameters format' };
+    }
 
     try {
       const contentVersion = getContentVersion(slug, version);
@@ -57,14 +76,18 @@ export async function registerVersioningRoutes(app: FastifyInstance) {
     };
 
     try {
-      if (!version1 || !version2) {
-        reply.code(400);
-        return {
-          error: 'Both version1 and version2 query parameters are required',
-        };
-      }
+      // Validate the slug parameter
+      ModuleSlugSchema.parse(slug);
+      
+      // Validate the query parameters
+      VersionComparisonSchema.parse({ version1, version2 });
+    } catch (error) {
+      reply.code(400);
+      return { error: 'Invalid parameters format' };
+    }
 
-      const comparison = compareContentVersions(slug, version1, version2);
+    try {
+      const comparison = compareContentVersions(slug, version1!, version2!);
       if (!comparison) {
         reply.code(404);
         return { error: 'Content or versions not found' };

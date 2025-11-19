@@ -1,0 +1,49 @@
+# Dependencies
+node_modules
+
+# Logs
+logs
+*.log
+
+# Runtime data
+pids
+*.pid
+*.seed
+*.pid.lock
+
+# Coverage directory
+coverage
+.nyc_output
+
+# Build output
+dist
+build
+.next
+
+# Environment files
+.env*
+!.env.example
+
+# IDE files
+.vscode
+.idea
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# Testing
+.nyc_output
+.coverage
+
+# Docker
+docker-compose*.yml
+Dockerfile*
+
+# Temporary files
+tmp
+temp
+
+# Cache
+.cache
+.eslintcache

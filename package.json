@@ -5,7 +5,8 @@
     "start:both": "bash start-dev.sh",
     "ci:validate": "CI=1 node scripts/validate-content.js",
     "typecheck": "npm --prefix glasscode/frontend run typecheck",
-    "lint": "npm --prefix glasscode/frontend run lint",
+    "lint": "npm --prefix glasscode/frontend run lint && npm --prefix backend-node run lint",
+    "lint:fix": "npm --prefix backend-node run lint:fix",
     "ci:build": "npm --prefix glasscode/frontend ci && npm --prefix glasscode/frontend run lint && npm --prefix glasscode/frontend run typecheck && npm --prefix glasscode/frontend run build"
   },
   "devDependencies": {

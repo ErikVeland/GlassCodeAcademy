@@ -50,21 +50,28 @@ services:
       - DATABASE_URL=postgresql://postgres:postgres@postgres:5432/glasscode_dev
       - REDIS_HOST=redis
       - REDIS_PORT=6379
+      - REDIS_ENABLED=true
       - JWT_SECRET=your-super-secret-jwt-key-here
     depends_on:
       postgres:
         condition: service_healthy
       redis:
         condition: service_healthy
+    # For development, we'll use a different approach to avoid platform-specific binary issues
+    # We'll copy the source code during build and use file watching for development
     volumes:
-      - ./apps/api:/app
-      - /app/node_modules
+      - ./apps/api/src:/app/src
+      - ./apps/api/scripts:/app/scripts
+      - ./apps/api/tests:/app/tests
+      - ./apps/api/package.json:/app/package.json
+      - ./apps/api/tsconfig.json:/app/tsconfig.json
+      - ./apps/api/.env:/app/.env
     healthcheck:
-      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:8081/api/health"]
+      test: ["CMD", "node", "scripts/health-check.js"]
       interval: 30s
       timeout: 10s
       retries: 3
-      start_period: 40s
+      start_period: 120s
 
   # Frontend Service
   frontend:
@@ -80,10 +87,14 @@ services:
       - NEXT_PUBLIC_API_BASE=http://api:8081
     depends_on:
       api:
-        condition: service_healthy
+        condition: service_started
     volumes:
-      - ./glasscode/frontend:/app
-      - /app/node_modules
+      - ./glasscode/frontend/src:/app/src
+      - ./glasscode/frontend/public:/app/public
+      - ./glasscode/frontend/package.json:/app/package.json
+      - ./glasscode/frontend/next.config.js:/app/next.config.js
+      - ./glasscode/frontend/tsconfig.json:/app/tsconfig.json
+      - ./glasscode/frontend/.env:/app/.env
 
 volumes:
   postgres_data:

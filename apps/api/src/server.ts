@@ -78,7 +78,7 @@ export async function buildServer() {
     maxAge: 600,
   });
 
-  // Global rate limiting (Redis if configured)
+  // Global rate limiting (no Redis for now to avoid complications)
   await app.register(rateLimit, {
     max: 100,
     timeWindow: '1 minute',
@@ -86,13 +86,6 @@ export async function buildServer() {
     keyGenerator: (req) =>
       (req.headers['x-forwarded-for'] as string) || req.ip || 'unknown',
     allowList: (req) => Boolean(req.headers['x-internal-allow']),
-    redis: process.env.REDIS_HOST
-      ? {
-          host: process.env.REDIS_HOST,
-          port: Number(process.env.REDIS_PORT || 6379),
-          password: process.env.REDIS_PASSWORD || undefined,
-        }
-      : undefined,
     skipOnError: true,
   });
 

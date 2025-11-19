@@ -26,6 +26,15 @@ export const ApiErrorSchema = z.object({
   statusCode: z.number().optional(),
 });
 
+// Schema for version parameter validation
+export const VersionSchema = z.string().min(1).max(50);
+
+// Schema for version comparison query parameters
+export const VersionComparisonSchema = z.object({
+  version1: z.string().min(1).max(50),
+  version2: z.string().min(1).max(50),
+});
+
 // Validation utility function
 export function validateParams<T>(schema: z.ZodSchema<T>, data: unknown): T {
   const result = schema.safeParse(data);

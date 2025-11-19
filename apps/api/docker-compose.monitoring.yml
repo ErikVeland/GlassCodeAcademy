@@ -29,7 +29,7 @@ services:
   prometheus:
     image: prom/prometheus:latest
     ports:
-      - "9090:9090"
+      - "9095:9090"  # Changed from 9090:9090 to 9095:9090 to avoid port conflict
     volumes:
       - ./prometheus.yml:/etc/prometheus/prometheus.yml
       - ./alerts.rules:/etc/prometheus/alerts.rules

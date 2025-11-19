@@ -3,16 +3,16 @@
 const http = require('http');
 
 // Configuration
-const PORT = process.env.PORT || 8080;
+const PORT = process.env.PORT || 8081;
 const HEALTH_CHECK_TIMEOUT = 5000; // 5 seconds
 
 // Health check function
 function checkHealth() {
   return new Promise((resolve, reject) => {
     const options = {
-      hostname: 'localhost',
+      hostname: '127.0.0.1',
       port: PORT,
-      path: '/health',
+      path: '/api/health',
       method: 'GET',
       timeout: HEALTH_CHECK_TIMEOUT
     };
@@ -28,7 +28,7 @@ function checkHealth() {
         if (res.statusCode === 200) {
           try {
             const jsonData = JSON.parse(data);
-            if (jsonData.success) {
+            if (jsonData.status === 'healthy') {
               resolve('Health check passed');
             } else {
               reject(new Error('Health check failed: Unexpected response format'));

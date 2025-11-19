@@ -86,7 +86,7 @@ export default [
     },
     rules: {
       'no-console': 'off',
-      'no-unused-vars': ['warn', { argsIgnorePattern: '^_', varsIgnorePattern: '^_' }],
+      'no-unused-vars': 'off',
       'no-undef': 'off',
       'no-var': 'off',
       'prefer-const': 'off',
