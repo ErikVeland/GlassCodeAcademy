@@ -22,8 +22,9 @@ const dotenv = require('dotenv');
   }
 })();
 
-// Use Prisma migrate instead of Sequelize
-const { execSync } = require('child_process');
+// Use Sequelize with Umzug for migrations instead of Prisma
+const { Sequelize } = require('sequelize');
+const { Umzug, SequelizeStorage } = require('umzug');
 
 function printEnvHint(error) {
   const hasUrl = !!process.env.DATABASE_URL;
@@ -52,10 +53,37 @@ function printEnvHint(error) {
       process.exit(0);
     }
 
-    // Run Prisma migrations
-    console.log('Running Prisma migrations...');
-    execSync('npx prisma migrate deploy', { stdio: 'inherit' });
-    console.log('Prisma migrations executed successfully');
+    // Set up Sequelize
+    const sequelize = new Sequelize(process.env.DATABASE_URL, {
+      logging: false // Set to console.log if you want to see SQL queries
+    });
+
+    // Set up Umzug for running migrations
+    const umzug = new Umzug({
+      migrations: {
+        glob: ['migrations/*.js', { cwd: __dirname }],
+        resolve: ({ name, path, context }) => {
+          // Adjust the migration from the migrations folder to match the expected Umzug interface
+          const migration = require(path);
+          return {
+            name,
+            up: async () => migration.up(context),
+            down: async () => migration.down(context),
+          };
+        },
+      },
+      context: sequelize.getQueryInterface(),
+      storage: new SequelizeStorage({
+        sequelize,
+        modelName: 'SequelizeMeta' // Default table name for migration metadata
+      }),
+      logger: console,
+    });
+
+    // Run pending migrations
+    console.log('Running Sequelize migrations...');
+    await umzug.up();
+    console.log('Sequelize migrations executed successfully');
     process.exit(0);
   } catch (error) {
     console.error('❌ ERROR: Failed to run database migrations');
