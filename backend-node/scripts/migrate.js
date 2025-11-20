@@ -73,8 +73,10 @@ function printEnvHint(error) {
           const migration = require(path);
           return {
             name,
-            up: async () => migration.up(context),
-            down: async () => migration.down(context),
+            up: async () =>
+              migration.up({ queryInterface: context, Sequelize }),
+            down: async () =>
+              migration.down({ queryInterface: context, Sequelize }),
           };
         },
       },
