@@ -78,7 +78,6 @@ temp/
 .nyc_output/
 
 # Testing
-.nyc_output/
 .coverage/
 *.test.js
 *.spec.js

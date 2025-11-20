@@ -1,0 +1,16 @@
+{
+  "name": "glasscode-content-migration",
+  "version": "1.0.0",
+  "description": "Data migration scripts for GlassCode Academy content",
+  "main": "migrate-content.js",
+  "scripts": {
+    "migrate": "node migrate-content.js",
+    "test": "node test-migration.js"
+  },
+  "dependencies": {
+    "sequelize": "^6.37.3",
+    "pg": "^8.11.5"
+  },
+  "author": "GlassCode Academy",
+  "license": "MIT"
+}
