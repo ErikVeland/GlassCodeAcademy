@@ -19,16 +19,18 @@ export async function registerQuizRoutes(app: FastifyInstance) {
         reply.code(404);
         return { error: 'Module not found' };
       }
-      
+
       // Get all lessons for this module, then get all quizzes for those lessons
       const lessons = await contentService.getLessonsByModuleId(module.id);
       const allQuizzes = [];
-      
+
       for (const lesson of lessons) {
-        const lessonQuizzes = await contentService.getQuizzesByLessonId(lesson.id);
+        const lessonQuizzes = await contentService.getQuizzesByLessonId(
+          lesson.id
+        );
         allQuizzes.push(...lessonQuizzes);
       }
-      
+
       return allQuizzes;
     } catch (error) {
       reply.code(500);
@@ -39,14 +41,14 @@ export async function registerQuizRoutes(app: FastifyInstance) {
   // Get quiz by ID
   app.get('/api/quizzes/:id', async (request, reply) => {
     const { id } = request.params as { id: string };
-    
+
     try {
       const quizId = parseInt(id, 10);
       if (isNaN(quizId)) {
         reply.code(400);
         return { error: 'Invalid quiz ID' };
       }
-      
+
       const quiz = await contentService.getQuizById(quizId);
       if (!quiz) {
         reply.code(404);

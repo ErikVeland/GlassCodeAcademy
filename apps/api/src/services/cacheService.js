@@ -1,6 +1,6 @@
 /**
  * Redis Cache Service
- * 
+ *
  * Provides caching functionality for academy settings, user permissions,
  * memberships, and course content with automatic reconnection and
  * graceful degradation.
@@ -12,14 +12,15 @@ import { createClient } from 'redis';
 const REDIS_ENABLED = process.env.REDIS_ENABLED === 'true';
 const REDIS_HOST = process.env.REDIS_HOST || 'localhost';
 const REDIS_PORT = process.env.REDIS_PORT || 6379;
-const REDIS_URL = process.env.REDIS_URL || `redis://${REDIS_HOST}:${REDIS_PORT}`;
+const REDIS_URL =
+  process.env.REDIS_URL || `redis://${REDIS_HOST}:${REDIS_PORT}`;
 const DEFAULT_TTL = parseInt(process.env.REDIS_TTL) || 3600; // 1 hour default
 
 // Cache statistics
 let cacheStats = {
   hits: 0,
   misses: 0,
-  errors: 0
+  errors: 0,
 };
 
 // Redis client
@@ -38,7 +39,7 @@ function initializeRedis() {
   try {
     console.log(`Connecting to Redis at ${REDIS_URL}`);
     redisClient = createClient({
-      url: REDIS_URL
+      url: REDIS_URL,
     });
 
     redisClient.on('connect', () => {
@@ -68,7 +69,7 @@ function initializeRedis() {
     });
 
     // Connect immediately
-    redisClient.connect().catch(err => {
+    redisClient.connect().catch((err) => {
       console.error('Failed to connect to Redis:', err);
       isConnected = false;
     });
@@ -89,7 +90,9 @@ initializeRedis();
  * @returns {Promise<any>} Cached value or null if not found
  */
 async function get(key) {
-  console.log(`Cache get: enabled=${REDIS_ENABLED}, connected=${isConnected}, hasClient=${!!redisClient}`);
+  console.log(
+    `Cache get: enabled=${REDIS_ENABLED}, connected=${isConnected}, hasClient=${!!redisClient}`
+  );
   if (!REDIS_ENABLED || !isConnected || !redisClient) {
     cacheStats.misses++;
     return null;
@@ -119,7 +122,9 @@ async function get(key) {
  * @returns {Promise<boolean>} Success status
  */
 async function set(key, value, ttl = DEFAULT_TTL) {
-  console.log(`Cache set: enabled=${REDIS_ENABLED}, connected=${isConnected}, hasClient=${!!redisClient}`);
+  console.log(
+    `Cache set: enabled=${REDIS_ENABLED}, connected=${isConnected}, hasClient=${!!redisClient}`
+  );
   if (!REDIS_ENABLED || !isConnected || !redisClient) {
     return false;
   }
@@ -166,9 +171,13 @@ function getStats() {
     hits: cacheStats.hits,
     misses: cacheStats.misses,
     errors: cacheStats.errors,
-    hitRate: cacheStats.hits + cacheStats.misses > 0 
-      ? (cacheStats.hits / (cacheStats.hits + cacheStats.misses) * 100).toFixed(2) + '%'
-      : '0%'
+    hitRate:
+      cacheStats.hits + cacheStats.misses > 0
+        ? (
+            (cacheStats.hits / (cacheStats.hits + cacheStats.misses)) *
+            100
+          ).toFixed(2) + '%'
+        : '0%',
   };
 }
 
@@ -185,14 +194,14 @@ async function invalidateAcademyCache(academyId) {
   try {
     // Delete academy settings
     await del(`academy:${academyId}:settings`);
-    
+
     // Delete all user permissions for this academy
     // Note: This would require pattern-based deletion which is more complex
     // For now, we'll just invalidate specific known patterns
-    
+
     // Delete all courses for this academy
     // This would also require pattern-based deletion
-    
+
     return true;
   } catch (err) {
     console.error('Cache invalidation error:', err);
@@ -340,27 +349,27 @@ module.exports = {
   set,
   del,
   getStats,
-  
+
   // Academy settings
   getAcademySettings,
   setAcademySettings,
   invalidateAcademySettings,
-  
+
   // User permissions
   getUserPermissions,
   setUserPermissions,
   invalidateUserPermissions,
-  
+
   // Academy membership
   getMembership,
   setMembership,
   invalidateMembership,
-  
+
   // Course content
   getCourse,
   setCourse,
   invalidateCourse,
-  
+
   // Cache invalidation
-  invalidateAcademyCache
+  invalidateAcademyCache,
 };

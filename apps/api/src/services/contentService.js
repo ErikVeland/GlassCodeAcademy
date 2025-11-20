@@ -7,18 +7,22 @@ class ContentService {
       return await Course.findAll({
         where: { isPublished: true },
         order: [['order', 'ASC']],
-        include: [{
-          model: Module,
-          as: 'modules',
-          where: { isPublished: true },
-          required: false,
-          include: [{
-            model: Lesson,
-            as: 'lessons',
+        include: [
+          {
+            model: Module,
+            as: 'modules',
             where: { isPublished: true },
-            required: false
-          }]
-        }]
+            required: false,
+            include: [
+              {
+                model: Lesson,
+                as: 'lessons',
+                where: { isPublished: true },
+                required: false,
+              },
+            ],
+          },
+        ],
       });
     } catch (error) {
       throw new Error(`Failed to fetch courses: ${error.message}`);
@@ -29,20 +33,24 @@ class ContentService {
     try {
       return await Course.findOne({
         where: { slug, isPublished: true },
-        include: [{
-          model: Module,
-          as: 'modules',
-          where: { isPublished: true },
-          required: false,
-          order: [['order', 'ASC']],
-          include: [{
-            model: Lesson,
-            as: 'lessons',
+        include: [
+          {
+            model: Module,
+            as: 'modules',
             where: { isPublished: true },
             required: false,
-            order: [['order', 'ASC']]
-          }]
-        }]
+            order: [['order', 'ASC']],
+            include: [
+              {
+                model: Lesson,
+                as: 'lessons',
+                where: { isPublished: true },
+                required: false,
+                order: [['order', 'ASC']],
+              },
+            ],
+          },
+        ],
       });
     } catch (error) {
       throw new Error(`Failed to fetch course: ${error.message}`);
@@ -52,21 +60,27 @@ class ContentService {
   async getCourseById(id) {
     try {
       return await Course.findByPk(id, {
-        include: [{
-          model: Module,
-          as: 'modules',
-          order: [['order', 'ASC']],
-          include: [{
-            model: Lesson,
-            as: 'lessons',
+        include: [
+          {
+            model: Module,
+            as: 'modules',
             order: [['order', 'ASC']],
-            include: [{
-              model: Quiz,
-              as: 'quizzes',
-              order: [['sortOrder', 'ASC']]
-            }]
-          }]
-        }]
+            include: [
+              {
+                model: Lesson,
+                as: 'lessons',
+                order: [['order', 'ASC']],
+                include: [
+                  {
+                    model: Quiz,
+                    as: 'quizzes',
+                    order: [['sortOrder', 'ASC']],
+                  },
+                ],
+              },
+            ],
+          },
+        ],
       });
     } catch (error) {
       throw new Error(`Failed to fetch course: ${error.message}`);
@@ -78,7 +92,7 @@ class ContentService {
     try {
       return await Module.findAll({
         where: { courseId, isPublished: true },
-        order: [['order', 'ASC']]
+        order: [['order', 'ASC']],
       });
     } catch (error) {
       throw new Error(`Failed to fetch modules: ${error.message}`);
@@ -89,12 +103,14 @@ class ContentService {
     try {
       return await Module.findOne({
         where: { slug, isPublished: true },
-        include: [{
-          model: Lesson,
-          as: 'lessons',
-          where: { isPublished: true },
-          order: [['order', 'ASC']]
-        }]
+        include: [
+          {
+            model: Lesson,
+            as: 'lessons',
+            where: { isPublished: true },
+            order: [['order', 'ASC']],
+          },
+        ],
       });
     } catch (error) {
       throw new Error(`Failed to fetch module: ${error.message}`);
@@ -104,16 +120,20 @@ class ContentService {
   async getModuleById(id) {
     try {
       return await Module.findByPk(id, {
-        include: [{
-          model: Lesson,
-          as: 'lessons',
-          order: [['order', 'ASC']],
-          include: [{
-            model: Quiz,
-            as: 'quizzes',
-            order: [['sortOrder', 'ASC']]
-          }]
-        }]
+        include: [
+          {
+            model: Lesson,
+            as: 'lessons',
+            order: [['order', 'ASC']],
+            include: [
+              {
+                model: Quiz,
+                as: 'quizzes',
+                order: [['sortOrder', 'ASC']],
+              },
+            ],
+          },
+        ],
       });
     } catch (error) {
       throw new Error(`Failed to fetch module: ${error.message}`);
@@ -125,7 +145,7 @@ class ContentService {
     try {
       return await Lesson.findAll({
         where: { moduleId, isPublished: true },
-        order: [['order', 'ASC']]
+        order: [['order', 'ASC']],
       });
     } catch (error) {
       throw new Error(`Failed to fetch lessons: ${error.message}`);
@@ -136,11 +156,13 @@ class ContentService {
     try {
       return await Lesson.findOne({
         where: { slug, isPublished: true },
-        include: [{
-          model: Quiz,
-          as: 'quizzes',
-          order: [['sortOrder', 'ASC']]
-        }]
+        include: [
+          {
+            model: Quiz,
+            as: 'quizzes',
+            order: [['sortOrder', 'ASC']],
+          },
+        ],
       });
     } catch (error) {
       throw new Error(`Failed to fetch lesson: ${error.message}`);
@@ -150,11 +172,13 @@ class ContentService {
   async getLessonById(id) {
     try {
       return await Lesson.findByPk(id, {
-        include: [{
-          model: Quiz,
-          as: 'quizzes',
-          order: [['sortOrder', 'ASC']]
-        }]
+        include: [
+          {
+            model: Quiz,
+            as: 'quizzes',
+            order: [['sortOrder', 'ASC']],
+          },
+        ],
       });
     } catch (error) {
       throw new Error(`Failed to fetch lesson: ${error.message}`);
@@ -166,7 +190,7 @@ class ContentService {
     try {
       return await Quiz.findAll({
         where: { lessonId, isPublished: true },
-        order: [['sortOrder', 'ASC']]
+        order: [['sortOrder', 'ASC']],
       });
     } catch (error) {
       throw new Error(`Failed to fetch quizzes: ${error.message}`);

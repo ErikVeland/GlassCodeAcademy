@@ -32,14 +32,14 @@ export async function registerModuleRoutes(app: FastifyInstance) {
   // Get module by ID
   app.get('/api/modules/:id', async (request, reply) => {
     const { id } = request.params as { id: string };
-    
+
     try {
       const moduleId = parseInt(id, 10);
       if (isNaN(moduleId)) {
         reply.code(400);
         return { error: 'Invalid module ID' };
       }
-      
+
       const module = await contentService.getModuleById(moduleId);
       if (!module) {
         reply.code(404);

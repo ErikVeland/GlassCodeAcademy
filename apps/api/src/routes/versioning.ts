@@ -8,7 +8,11 @@ import {
 } from '../utils/content-versioning';
 import { getAllModules } from '../utils/optimized-content';
 import { z } from 'zod';
-import { ModuleSlugSchema, VersionSchema, VersionComparisonSchema } from '../utils/validation';
+import {
+  ModuleSlugSchema,
+  VersionSchema,
+  VersionComparisonSchema,
+} from '../utils/validation';
 
 export async function registerVersioningRoutes(app: FastifyInstance) {
   // Get version history for a specific content item
@@ -78,7 +82,7 @@ export async function registerVersioningRoutes(app: FastifyInstance) {
     try {
       // Validate the slug parameter
       ModuleSlugSchema.parse(slug);
-      
+
       // Validate the query parameters
       VersionComparisonSchema.parse({ version1, version2 });
     } catch (error) {

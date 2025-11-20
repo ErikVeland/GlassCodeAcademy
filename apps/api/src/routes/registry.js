@@ -25,7 +25,7 @@ export async function registerRegistryRoutes(app) {
             prerequisites: module.prerequisites,
             version: module.version,
             createdAt: module.createdAt,
-            updatedAt: module.updatedAt
+            updatedAt: module.updatedAt,
           });
         }
       }

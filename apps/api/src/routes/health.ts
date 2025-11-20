@@ -14,13 +14,13 @@ export async function registerHealthRoutes(app: FastifyInstance) {
     // @ts-ignore
     const redisStats = cacheService.getStats();
     const status = redisStats.connected ? 'healthy' : 'degraded';
-    return { 
-      status, 
+    return {
+      status,
       timestamp: new Date().toISOString(),
       redis: {
         enabled: redisStats.enabled,
-        connected: redisStats.connected
-      }
+        connected: redisStats.connected,
+      },
     };
   });
 

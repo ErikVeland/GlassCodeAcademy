@@ -7,11 +7,19 @@
     "lint": "eslint src/**/*.js scripts/**/*.js migrations/**/*.js",
     "lint:fix": "eslint src/**/*.js scripts/**/*.js migrations/**/*.js --fix",
     "format": "prettier --write src/**/*.js scripts/**/*.js migrations/**/*.js",
-    "format:check": "prettier --check src/**/*.js scripts/**/*.js migrations/**/*.js"
+    "format:check": "prettier --check src/**/*.js scripts/**/*.js migrations/**/*.js",
+    "migrate": "node scripts/migrate.js",
+    "seed": "node scripts/seed.js"
   },
   "keywords": [],
   "author": "GlassCode Academy",
   "license": "MIT",
+  "dependencies": {
+    "sequelize": "^6.32.1",
+    "umzug": "^3.6.0",
+    "pg": "^8.16.3",
+    "dotenv": "^16.3.1"
+  },
   "devDependencies": {
     "eslint": "^8.0.0",
     "prettier": "^3.0.0",
