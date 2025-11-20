@@ -1,6 +1,22 @@
 import axios from 'axios';
-import type { User } from '@prisma/client';
 import { generateToken } from './tokenService';
+
+// Define User interface to replace Prisma type
+interface User {
+  id: string;
+  email: string;
+  username: string | null;
+  firstName: string | null;
+  lastName: string | null;
+  role: string;
+  passwordHash: string | null;
+  isActive: boolean;
+  lastLoginAt: Date;
+  oauthProvider: string;
+  oauthId: string;
+  createdAt: Date;
+  updatedAt: Date;
+}
 
 // OAuth provider configurations
 const oauthConfigs: Record<string, any> = {

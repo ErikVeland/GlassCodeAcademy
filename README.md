@@ -39,7 +39,7 @@ For current project status, see [PROJECT_STATUS_SUMMARY.md](docs/PROJECT_STATUS_
 
 ### Backend
 - `node@18+` with `fastify@5`
-- `postgresql` with `prisma@5`
+- `postgresql` with `sequelize@6`
 - `redis` for caching
 - `jsonwebtoken` for auth and RBAC
 - `pino` for structured logging
@@ -60,7 +60,7 @@ For current project status, see [PROJECT_STATUS_SUMMARY.md](docs/PROJECT_STATUS_
 
 - Backend (apps/api):
   - `cd apps/api && npm ci && npm test && npm run lint`
-  - Health scripts: `node scripts/check-db.js`, `node scripts/check-quizzes.js`
+  - Health scripts: `node scripts/check-db-coverage.js`
 - Frontend (glasscode/frontend):
   - `cd glasscode/frontend && npm ci && npm run typecheck && npm run lint && npm run build`
   - Start (standalone build): `PORT=3000 NEXT_PUBLIC_API_BASE=http://localhost:8081 node .next/standalone/server.js`
@@ -90,7 +90,7 @@ graph TB
     C --> D[RESTful API]
     D --> E[Node.js/Fastify 18+ Backend]
     E --> F[PostgreSQL Database]
-    E --> G[Prisma ORM]
+    E --> G[Sequelize ORM]
     E --> H[Redis Cache]
     
     I[JWT Authentication] --> E
@@ -236,7 +236,7 @@ This prints pool sizes and predicted beginner/intermediate/advanced counts per m
 
 ### Integration Testing
 - Supertest for API endpoint tests
-- Database integration tests via Prisma + PostgreSQL
+- Database integration tests via Sequelize + PostgreSQL
 - Security feature validation (JWT, RBAC, rate limits)
 - Performance smoke checks
 
@@ -244,7 +244,7 @@ This prints pool sizes and predicted beginner/intermediate/advanced counts per m
 
 ### Backend Standardization
 - Migrated from Express.js to Fastify for improved performance
-- Replaced Sequelize ORM with Prisma for better type safety
+- Enhanced Sequelize ORM with better type safety
 - Implemented Redis caching for frequently accessed data
 - Standardized validation with Zod schemas
 
@@ -321,7 +321,7 @@ After running, start the app and visit module quiz pages to confirm A/B/C/D pref
 
 #### Fastify API Modules
 - Core modules with structured lessons and interview questions
-- RESTful API built with Fastify and Prisma
+- RESTful API built with Fastify and Sequelize
 - Redis caching for improved performance
 - Zod validation for type safety
 

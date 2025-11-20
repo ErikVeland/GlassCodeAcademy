@@ -29,7 +29,6 @@
     "nodejs",
     "fastify",
     "postgresql",
-    "prisma",
     "api"
   ],
   "author": "GlassCode Academy",
