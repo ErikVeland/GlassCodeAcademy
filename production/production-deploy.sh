@@ -12,11 +12,13 @@ REPO="https://github.com/ErikVeland/GlassCodeAcademy.git"
 NODE_VERSION="18"
 FRONTEND_PORT="3000"
 BACKEND_PORT="8080"
+BACKUP_DIR="/tmp/${APP_NAME}_prod_backup_$(date +%s)"
 
 # Colors for output
 RED='\033[0;31m'
 GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
+BLUE='\033[0;34m'
 NC='\033[0m' # No Color
 
 echo_step() {
@@ -31,16 +33,139 @@ echo_error() {
     echo -e "${RED}[ERROR]${NC} $1"
 }
 
-# Check if running as root
-if [[ $EUID -eq 0 ]]; then
-   echo_error "This script should not be run as root"
-   exit 1
-fi
+echo_info() {
+    echo -e "${BLUE}[INFO]${NC} $1"
+}
 
-# Ensure we're in home directory
-cd ~
+# CLI flags parsing
+DRY_RUN=0
+SKIP_BACKUP=0
+ROLLBACK=0
 
-echo_step "Starting production deployment of $APP_NAME"
+while [[ $# -gt 0 ]]; do
+    case "$1" in
+        --dry-run) DRY_RUN=1; shift;;
+        --skip-backup) SKIP_BACKUP=1; shift;;
+        --rollback) ROLLBACK=1; shift;;
+        --domain) PROD_DOMAIN="$2"; shift 2;;
+        *) echo_warn "Unknown argument: $1"; shift;;
+    esac
+done
+
+# Create backup of current version
+create_backup() {
+    if [ $SKIP_BACKUP -eq 1 ]; then
+        echo_warn "Skipping backup creation as requested"
+        return 0
+    fi
+    
+    echo_step "Creating backup of current version to $BACKUP_DIR"
+    
+    if [ $DRY_RUN -eq 1 ]; then
+        echo_info "DRY RUN: Would create backup of $APP_DIR to $BACKUP_DIR"
+        return 0
+    fi
+    
+    mkdir -p "$BACKUP_DIR"
+    if rsync -a "$APP_DIR/" "$BACKUP_DIR/"; then
+        echo_step "Backup created successfully"
+    else
+        echo_error "Failed to create backup"
+        exit 1
+    fi
+}
+
+# Rollback to previous version
+rollback() {
+    echo_step "Rolling back to previous version..."
+    
+    if [ $DRY_RUN -eq 1 ]; then
+        echo_info "DRY RUN: Would restore from $BACKUP_DIR to $APP_DIR"
+        return 0
+    fi
+    
+    if [ -n "${BACKUP_DIR:-}" ] && [ -d "$BACKUP_DIR" ]; then
+        # Stop services before rollback
+        stop_services
+        
+        # Restore the previous version
+        if rsync -a "$BACKUP_DIR/" "$APP_DIR/"; then
+            echo_step "Rollback completed successfully"
+            
+            # Restart services with rolled back version
+            start_services
+            echo_step "Services restarted with rolled back version"
+        else
+            echo_error "Failed to restore from backup"
+            exit 1
+        fi
+    else
+        echo_error "No backup found, cannot rollback"
+        exit 1
+    fi
+}
+
+# Stop services
+stop_services() {
+    echo_step "Stopping services..."
+    
+    if [ $DRY_RUN -eq 1 ]; then
+        echo_info "DRY RUN: Would stop services"
+        return 0
+    fi
+    
+    # Stop PM2 services if they exist
+    if command -v pm2 &> /dev/null; then
+        pm2 stop ecosystem.config.js 2>/dev/null || true
+        pm2 stop ecosystem.frontend.config.js 2>/dev/null || true
+    fi
+}
+
+# Start services
+start_services() {
+    echo_step "Starting services..."
+    
+    if [ $DRY_RUN -eq 1 ]; then
+        echo_info "DRY RUN: Would start services"
+        return 0
+    fi
+    
+    # Start backend service
+    if [ -f "$APP_DIR/backend-node/ecosystem.config.js" ]; then
+        cd "$APP_DIR/backend-node"
+        pm2 start ecosystem.config.js --env production || pm2 restart ecosystem.config.js --env production
+    fi
+    
+    # Start frontend service
+    if [ -f "$APP_DIR/glasscode/frontend/ecosystem.frontend.config.js" ]; then
+        cd "$APP_DIR/glasscode/frontend"
+        pm2 start ecosystem.frontend.config.js --env production || pm2 restart ecosystem.frontend.config.js --env production
+    fi
+}
+
+# Main function
+main() {
+    if [ $ROLLBACK -eq 1 ]; then
+        rollback
+        return 0
+    fi
+    
+    # Check if running as root
+    if [[ $EUID -eq 0 ]]; then
+       echo_error "This script should not be run as root"
+       exit 1
+    fi
+    
+    # Ensure we're in home directory
+    cd ~
+    
+    echo_step "Starting production deployment of $APP_NAME"
+    
+    # Create backup unless skipped
+    create_backup
+    
+    # Stop services before deployment
+    stop_services
 
 # Install Node.js if not present
 if ! command -v node &> /dev/null; then
@@ -199,3 +324,7 @@ echo_step "Backend API: https://$PROD_DOMAIN"
 echo_step "Frontend: https://glasscode.academy"
 echo_step "Database: glasscode_prod (user: glasscode_app)"
 echo_step "PM2 services are running and configured to start on boot"
+}
+
+# Run main function
+main "$@"

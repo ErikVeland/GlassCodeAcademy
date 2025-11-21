@@ -214,7 +214,7 @@ run_migrations() {
 # Function to run database seeding
 run_seeding() {
     echo "🌱 Running database seeding..."
-    cd apps/api
+    cd backend-node
     # Set database environment variables explicitly for this subprocess
     export DATABASE_URL="postgresql://postgres:postgres@localhost:5432/glasscode_dev"
     export DB_DIALECT="postgres"
@@ -223,11 +223,6 @@ run_seeding() {
     export DB_NAME="glasscode_dev"
     export DB_USER="postgres"
     export DB_PASSWORD="postgres"
-    
-    # Skip seeding for now since the apps/api doesn't have the proper structure
-    echo "⏭️  Skipping database seeding - apps/api structure not compatible with seeding scripts"
-    cd ..
-    return 0
     
     # Check if database is accessible before running seeding
     MAX_DB_CHECKS=30
@@ -244,7 +239,7 @@ run_seeding() {
             process.env.DB_USER = 'postgres';
             process.env.DB_PASSWORD = 'postgres';
             
-            const sequelize = require('./src/config/database');
+            const { sequelize } = require('./src/config/database');
             sequelize.authenticate().then(() => {
                 console.log('Database connection established');
                 process.exit(0);
@@ -254,36 +249,13 @@ run_seeding() {
             });
         " >/dev/null 2>&1; then
             echo "✅ Database is accessible"
-            # Run basic seeding
-            if DATABASE_URL="postgresql://postgres:postgres@localhost:5432/glasscode_dev" \
-               DB_DIALECT="postgres" \
-               DB_HOST="localhost" \
-               DB_PORT="5432" \
-               DB_NAME="glasscode_dev" \
-               DB_USER="postgres" \
-               DB_PASSWORD="postgres" \
-               node scripts/seed.js; then
-                echo "✅ Database basic seeding completed"
-                
-                # Run content seeding
-                if DATABASE_URL="postgresql://postgres:postgres@localhost:5432/glasscode_dev" \
-                   DB_DIALECT="postgres" \
-                   DB_HOST="localhost" \
-                   DB_PORT="5432" \
-                   DB_NAME="glasscode_dev" \
-                   DB_USER="postgres" \
-                   DB_PASSWORD="postgres" \
-                   node scripts/seed-content.js; then
-                    echo "✅ Database content seeding completed"
-                    cd ..
-                    return 0
-                else
-                    echo "❌ Database content seeding failed"
-                    cd ..
-                    return 1
-                fi
+            # Run seeding
+            if POSTGRES_HOST="localhost" npm run seed; then
+                echo "✅ Database seeding completed"
+                cd ..
+                return 0
             else
-                echo "❌ Database basic seeding failed"
+                echo "❌ Database seeding failed"
                 cd ..
                 return 1
             fi

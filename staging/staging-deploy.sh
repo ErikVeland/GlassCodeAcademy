@@ -12,14 +12,46 @@ REPO="https://github.com/ErikVeland/GlassCodeAcademy.git"
 NODE_VERSION="18"
 FRONTEND_PORT="3000"
 BACKEND_PORT="8080"
+BACKUP_DIR="/tmp/${APP_NAME}_staging_backup_$(date +%s)"
 
 log() {
     echo "[$(date +'%Y-%m-%d %H:%M:%S')] $1"
 }
 
+echo_step() {
+    echo -e "${GREEN}[STEP]${NC} $1"
+}
+
+echo_warn() {
+    echo -e "${YELLOW}[WARN]${NC} $1"
+}
+
+echo_error() {
+    echo -e "${RED}[ERROR]${NC} $1"
+}
+
+echo_info() {
+    echo -e "${BLUE}[INFO]${NC} $1"
+}
+
 command_exists() {
     command -v "$1" >/dev/null 2>&1
 }
+
+# CLI flags parsing
+DRY_RUN=0
+SKIP_BACKUP=0
+ROLLBACK=0
+
+while [[ $# -gt 0 ]]; do
+    case "$1" in
+        --dry-run) DRY_RUN=1; shift;;
+        --skip-backup) SKIP_BACKUP=1; shift;;
+        --rollback) ROLLBACK=1; shift;;
+        --domain) STAGING_DOMAIN="$2"; shift 2;;
+        *) echo_warn "Unknown argument: $1"; shift;;
+    esac
+done
 
 # Check if running as root
 if [ "${EUID:-$(id -u)}" -ne 0 ]; then
@@ -27,12 +59,27 @@ if [ "${EUID:-$(id -u)}" -ne 0 ]; then
     exit 1
 fi
 
-log "🚀 Starting staging deployment for $APP_NAME"
-
-# Install required packages
-log "📦 Installing required packages..."
-apt-get update
-apt-get install -y curl wget git nginx postgresql postgresql-contrib certbot python3-certbot-nginx
+# Main function
+main() {
+    if [ $ROLLBACK -eq 1 ]; then
+        rollback
+        return 0
+    fi
+    
+    log "🚀 Starting staging deployment for $APP_NAME"
+    
+    # Create backup unless skipped
+    create_backup
+    
+    # Stop services before deployment
+    stop_services
+    
+    # Install required packages
+    log "📦 Installing required packages..."
+    if [ $DRY_RUN -eq 0 ]; then
+        apt-get update
+        apt-get install -y curl wget git nginx postgresql postgresql-contrib certbot python3-certbot-nginx
+    fi
 
 # Install Node.js
 log "📦 Installing Node.js $NODE_VERSION..."
@@ -46,10 +93,87 @@ if ! id "$DEPLOY_USER" &>/dev/null; then
     usermod -aG sudo "$DEPLOY_USER"
 fi
 
-# Create application directory
-log "📁 Creating application directory..."
-mkdir -p "$APP_DIR"
-chown "$DEPLOY_USER:$DEPLOY_USER" "$APP_DIR"
+# Create backup of current version
+create_backup() {
+    if [ $SKIP_BACKUP -eq 1 ]; then
+        echo_warn "Skipping backup creation as requested"
+        return 0
+    fi
+    
+    echo_step "Creating backup of current version to $BACKUP_DIR"
+    
+    if [ $DRY_RUN -eq 1 ]; then
+        echo_info "DRY RUN: Would create backup of $APP_DIR to $BACKUP_DIR"
+        return 0
+    fi
+    
+    mkdir -p "$BACKUP_DIR"
+    if rsync -a "$APP_DIR/" "$BACKUP_DIR/"; then
+        echo_step "Backup created successfully"
+    else
+        echo_error "Failed to create backup"
+        exit 1
+    fi
+}
+
+# Rollback to previous version
+rollback() {
+    echo_step "Rolling back to previous version..."
+    
+    if [ $DRY_RUN -eq 1 ]; then
+        echo_info "DRY RUN: Would restore from $BACKUP_DIR to $APP_DIR"
+        return 0
+    fi
+    
+    if [ -n "${BACKUP_DIR:-}" ] && [ -d "$BACKUP_DIR" ]; then
+        # Stop services before rollback
+        stop_services
+        
+        # Restore the previous version
+        if rsync -a "$BACKUP_DIR/" "$APP_DIR/"; then
+            echo_step "Rollback completed successfully"
+            
+            # Restart services with rolled back version
+            start_services
+            echo_step "Services restarted with rolled back version"
+        else
+            echo_error "Failed to restore from backup"
+            exit 1
+        fi
+    else
+        echo_error "No backup found, cannot rollback"
+        exit 1
+    fi
+}
+
+# Stop services
+stop_services() {
+    echo_step "Stopping services..."
+    
+    if [ $DRY_RUN -eq 1 ]; then
+        echo_info "DRY RUN: Would stop services"
+        return 0
+    fi
+    
+    # Stop systemd services if they exist
+    systemctl stop "$APP_NAME"-backend.service "$APP_NAME"-frontend.service 2>/dev/null || true
+}
+
+# Start services
+start_services() {
+    echo_step "Starting services..."
+    
+    if [ $DRY_RUN -eq 1 ]; then
+        echo_info "DRY RUN: Would start services"
+        return 0
+    fi
+    
+    # Start backend service
+    systemctl start "$APP_NAME"-backend.service 2>/dev/null || true
+    
+    # Start frontend service
+    systemctl start "$APP_NAME"-frontend.service 2>/dev/null || true
+}
 
 # Clone or update repository
 log "📥 Cloning repository..."
@@ -278,3 +402,7 @@ fi
 log "🎉 Staging deployment completed!"
 log "🌐 Access your application at: https://$STAGING_DOMAIN"
 log "📊 Backend API documentation available at: https://$STAGING_DOMAIN/api/docs"
+}
+
+# Run main function
+main "$@"
