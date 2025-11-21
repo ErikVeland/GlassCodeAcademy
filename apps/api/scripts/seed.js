@@ -11,13 +11,13 @@ const path = require('path');
 async function runScript(scriptName) {
   return new Promise((resolve, reject) => {
     console.log(`🌱 Running ${scriptName}...`);
-    
+
     const scriptPath = path.join(__dirname, scriptName);
     const child = spawn('node', [scriptPath], {
       stdio: 'inherit',
-      env: process.env
+      env: process.env,
     });
-    
+
     child.on('close', (code) => {
       if (code === 0) {
         console.log(`✅ ${scriptName} completed successfully`);
@@ -27,7 +27,7 @@ async function runScript(scriptName) {
         reject(new Error(`${scriptName} failed`));
       }
     });
-    
+
     child.on('error', (error) => {
       console.error(`❌ Failed to start ${scriptName}:`, error.message);
       reject(error);
@@ -38,13 +38,13 @@ async function runScript(scriptName) {
 async function main() {
   try {
     console.log('🌱 Starting database seeding...');
-    
+
     // Run basic seeding first
     await runScript('seed-academy.js');
-    
+
     // Then run content seeding
     await runScript('seed-content.js');
-    
+
     console.log('✅ All seeding completed successfully');
   } catch (error) {
     console.error('❌ Seeding failed:', error.message);

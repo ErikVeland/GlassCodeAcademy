@@ -1,8 +1,8 @@
 /* eslint-env node */
 /* global console */
 
-const { User, Role, UserRole, initializeAssociations } = require('./src/models');
-const sequelize = require('./src/config/database');
+import { User, Role, UserRole, initializeAssociations } from './src/models/index.js';
+import { sequelize } from './src/config/database.js';
 
 async function fixUserRole() {
   try {

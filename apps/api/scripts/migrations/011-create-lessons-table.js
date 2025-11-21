@@ -6,89 +6,89 @@ module.exports = {
       id: {
         type: DataTypes.INTEGER,
         primaryKey: true,
-        autoIncrement: true
+        autoIncrement: true,
       },
       module_id: {
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {
           model: 'modules',
-          key: 'id'
+          key: 'id',
         },
-        onDelete: 'CASCADE'
+        onDelete: 'CASCADE',
       },
       title: {
         type: DataTypes.STRING(200),
-        allowNull: false
+        allowNull: false,
       },
       slug: {
         type: DataTypes.STRING(100),
-        allowNull: false
+        allowNull: false,
       },
       order: {
         type: DataTypes.INTEGER,
-        defaultValue: 0
+        defaultValue: 0,
       },
       content: {
         type: DataTypes.JSONB,
-        allowNull: true
+        allowNull: true,
       },
       metadata: {
         type: DataTypes.JSONB,
-        allowNull: true
+        allowNull: true,
       },
       is_published: {
         type: DataTypes.BOOLEAN,
-        defaultValue: false
+        defaultValue: false,
       },
       difficulty: {
         type: DataTypes.ENUM('Beginner', 'Intermediate', 'Advanced'),
-        allowNull: true
+        allowNull: true,
       },
       estimated_minutes: {
         type: DataTypes.INTEGER,
-        allowNull: true
+        allowNull: true,
       },
       version: {
         type: DataTypes.STRING(20),
-        defaultValue: '1.0.0'
+        defaultValue: '1.0.0',
       },
       created_at: {
         type: DataTypes.DATE,
         allowNull: false,
-        defaultValue: DataTypes.NOW
+        defaultValue: DataTypes.NOW,
       },
       updated_at: {
         type: DataTypes.DATE,
         allowNull: false,
-        defaultValue: DataTypes.NOW
+        defaultValue: DataTypes.NOW,
       },
       academy_id: {
         type: DataTypes.INTEGER,
-        allowNull: true
+        allowNull: true,
       },
       department_id: {
         type: DataTypes.INTEGER,
-        allowNull: true
+        allowNull: true,
       },
       workflow_state: {
         type: DataTypes.STRING(50),
-        allowNull: true
+        allowNull: true,
       },
       current_version_id: {
         type: DataTypes.UUID,
-        allowNull: true
+        allowNull: true,
       },
       quality_score: {
         type: DataTypes.INTEGER,
-        allowNull: true
+        allowNull: true,
       },
       last_validated_at: {
         type: DataTypes.DATE,
-        allowNull: true
-      }
+        allowNull: true,
+      },
     });
-    
+
     // Add indexes for better query performance
     await queryInterface.addIndex('lessons', ['module_id']);
     await queryInterface.addIndex('lessons', ['slug']);
@@ -97,5 +97,5 @@ module.exports = {
 
   down: async (queryInterface) => {
     await queryInterface.dropTable('lessons');
-  }
+  },
 };

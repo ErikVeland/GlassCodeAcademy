@@ -9,17 +9,28 @@
     const passwordArgIndex = args.findIndex((a) => a === '--password');
 
     const cliEmail = emailArgIndex !== -1 ? args[emailArgIndex + 1] : undefined;
-    const cliPassword = passwordArgIndex !== -1 ? args[passwordArgIndex + 1] : undefined;
+    const cliPassword =
+      passwordArgIndex !== -1 ? args[passwordArgIndex + 1] : undefined;
 
     const targetEmail = (process.env.TARGET_EMAIL || cliEmail || '').trim();
-    const targetPassword = (process.env.TARGET_PASSWORD || cliPassword || '').trim();
+    const targetPassword = (
+      process.env.TARGET_PASSWORD ||
+      cliPassword ||
+      ''
+    ).trim();
 
     if (!targetEmail || !targetPassword) {
-      console.error('Missing target email or password. Provide via TARGET_EMAIL/TARGET_PASSWORD env or --email/--password CLI args.');
+      console.error(
+        'Missing target email or password. Provide via TARGET_EMAIL/TARGET_PASSWORD env or --email/--password CLI args.'
+      );
       process.exit(1);
     }
 
-    const { sequelize, User, initializeAssociations } = require('../src/models');
+    const {
+      sequelize,
+      User,
+      initializeAssociations,
+    } = require('../src/models');
     initializeAssociations();
 
     const user = await User.findOne({ where: { email: targetEmail } });

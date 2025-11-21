@@ -12,9 +12,7 @@ process.env.NODE_ENV = 'test';
       password: 'SecurePassword123!',
     };
 
-    const res = await request(app)
-      .post('/api/auth/register')
-      .send(userData);
+    const res = await request(app).post('/api/auth/register').send(userData);
     console.log('Status:', res.status);
     console.log('Body:', res.body);
     process.exit(0);

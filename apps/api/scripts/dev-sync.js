@@ -11,7 +11,9 @@ async function main() {
     const nodeEnv = (process.env.NODE_ENV || '').toLowerCase();
     const useAlter = true; // safe for local dev, ensures columns are added
     await sequelize.sync({ alter: useAlter });
-    console.log(`Sequelize sync completed (env="${nodeEnv}", alter=${useAlter}).`);
+    console.log(
+      `Sequelize sync completed (env="${nodeEnv}", alter=${useAlter}).`
+    );
 
     // Print a quick summary of some key tables existing
     const [tables] = await sequelize.query(

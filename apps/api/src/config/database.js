@@ -1,4 +1,4 @@
-const { Sequelize } = require('sequelize');
+import { Sequelize } from 'sequelize';
 
 // Use environment variables or default values
 const sequelize = new Sequelize(
@@ -17,4 +17,4 @@ const sequelize = new Sequelize(
   }
 );
 
-module.exports = { sequelize };
+export { sequelize };

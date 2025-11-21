@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "Node.js backend for GlassCode Academy",
   "main": "server.js",
+  "type": "module",
   "scripts": {
     "lint": "eslint src/**/*.js scripts/**/*.js migrations/**/*.js",
     "lint:fix": "eslint src/**/*.js scripts/**/*.js migrations/**/*.js --fix",

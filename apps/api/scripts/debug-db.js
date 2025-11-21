@@ -8,8 +8,14 @@ const dotenv = require('dotenv');
   try {
     const isProd = process.env.NODE_ENV === 'production';
     const candidates = isProd
-      ? [path.resolve(__dirname, '../.env.production'), path.resolve(__dirname, '../.env')]
-      : [path.resolve(__dirname, '../.env'), path.resolve(__dirname, '../.env.production')];
+      ? [
+          path.resolve(__dirname, '../.env.production'),
+          path.resolve(__dirname, '../.env'),
+        ]
+      : [
+          path.resolve(__dirname, '../.env'),
+          path.resolve(__dirname, '../.env.production'),
+        ];
     for (const p of candidates) {
       if (fs.existsSync(p)) {
         dotenv.config({ path: p });
@@ -52,14 +58,30 @@ async function main() {
     initializeAssociations();
 
     // Use raw SQL for counts to avoid any model/table-name casing mismatches
-    const [[coursesTotal]] = await sequelize.query('SELECT count(*)::int AS count FROM courses');
-    const [[coursesPublished]] = await sequelize.query('SELECT count(*)::int AS count FROM courses WHERE is_published = true');
-    const [[modulesTotal]] = await sequelize.query('SELECT count(*)::int AS count FROM modules');
-    const [[modulesPublished]] = await sequelize.query('SELECT count(*)::int AS count FROM modules WHERE is_published = true');
-    const [[lessonsTotal]] = await sequelize.query('SELECT count(*)::int AS count FROM lessons');
-    const [[lessonsPublished]] = await sequelize.query('SELECT count(*)::int AS count FROM lessons WHERE is_published = true');
-    const [[quizzesTotal]] = await sequelize.query('SELECT count(*)::int AS count FROM lesson_quizzes');
-    const [[quizzesPublished]] = await sequelize.query('SELECT count(*)::int AS count FROM lesson_quizzes WHERE is_published = true');
+    const [[coursesTotal]] = await sequelize.query(
+      'SELECT count(*)::int AS count FROM courses'
+    );
+    const [[coursesPublished]] = await sequelize.query(
+      'SELECT count(*)::int AS count FROM courses WHERE is_published = true'
+    );
+    const [[modulesTotal]] = await sequelize.query(
+      'SELECT count(*)::int AS count FROM modules'
+    );
+    const [[modulesPublished]] = await sequelize.query(
+      'SELECT count(*)::int AS count FROM modules WHERE is_published = true'
+    );
+    const [[lessonsTotal]] = await sequelize.query(
+      'SELECT count(*)::int AS count FROM lessons'
+    );
+    const [[lessonsPublished]] = await sequelize.query(
+      'SELECT count(*)::int AS count FROM lessons WHERE is_published = true'
+    );
+    const [[quizzesTotal]] = await sequelize.query(
+      'SELECT count(*)::int AS count FROM lesson_quizzes'
+    );
+    const [[quizzesPublished]] = await sequelize.query(
+      'SELECT count(*)::int AS count FROM lesson_quizzes WHERE is_published = true'
+    );
 
     console.log('Counts:', {
       courses_total: coursesTotal.count,

@@ -7,13 +7,13 @@ const dotenv = require('dotenv');
   const isProd = process.env.NODE_ENV === 'production';
   const envCandidates = isProd
     ? [
-      path.resolve(__dirname, '../.env.production'),
-      path.resolve(__dirname, '../.env'),
-    ]
+        path.resolve(__dirname, '../.env.production'),
+        path.resolve(__dirname, '../.env'),
+      ]
     : [
-      path.resolve(__dirname, '../.env'),
-      path.resolve(__dirname, '../.env.production'),
-    ];
+        path.resolve(__dirname, '../.env'),
+        path.resolve(__dirname, '../.env.production'),
+      ];
   for (const p of envCandidates) {
     if (fs.existsSync(p)) {
       dotenv.config({ path: p });
@@ -33,7 +33,10 @@ function printEnvHint(error) {
     console.error('Set DATABASE_URL.');
     console.error('Example:');
     console.error('  DATABASE_URL=postgresql://user:pass@host:5432/dbname');
-    console.error('\nOriginal error:', error && error.message ? error.message : error);
+    console.error(
+      '\nOriginal error:',
+      error && error.message ? error.message : error
+    );
   }
 }
 
@@ -45,17 +48,20 @@ function printEnvHint(error) {
     }
 
     const isTest = process.env.NODE_ENV === 'test';
-    const useRealDbForTests = (process.env.USE_REAL_DB_FOR_TESTS || '').toLowerCase() === 'true';
+    const useRealDbForTests =
+      (process.env.USE_REAL_DB_FOR_TESTS || '').toLowerCase() === 'true';
 
     if (isTest && !useRealDbForTests) {
       // In test mode with sqlite, avoid migration complexity
-      console.log('Test mode: Skipping database migrations (use real DB for tests if needed)');
+      console.log(
+        'Test mode: Skipping database migrations (use real DB for tests if needed)'
+      );
       process.exit(0);
     }
 
     // Set up Sequelize
     const sequelize = new Sequelize(process.env.DATABASE_URL, {
-      logging: false // Set to console.log if you want to see SQL queries
+      logging: false, // Set to console.log if you want to see SQL queries
     });
 
     // Set up Umzug for running migrations
@@ -75,7 +81,7 @@ function printEnvHint(error) {
       context: sequelize.getQueryInterface(),
       storage: new SequelizeStorage({
         sequelize,
-        modelName: 'SequelizeMeta' // Default table name for migration metadata
+        modelName: 'SequelizeMeta', // Default table name for migration metadata
       }),
       logger: console,
     });

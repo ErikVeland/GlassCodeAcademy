@@ -1,14 +1,14 @@
-const fs = require('fs');
-const path = require('path');
-const { Op } = require('sequelize');
+import fs from 'fs';
+import path from 'path';
+import { Op } from 'sequelize';
 
 // Use models from apps/api directory
-const { sequelize } = require('../../apps/api/src/config/database');
-const Course = require('../../apps/api/src/models/courseModel');
-const Module = require('../../apps/api/src/models/moduleModel');
-const Lesson = require('../../apps/api/src/models/lessonModel');
-const LessonQuiz = require('../../apps/api/src/models/quizModel');
-const Academy = require('../../apps/api/src/models/academyModel');
+import { sequelize } from '../../apps/api/src/config/database.js';
+import Course from '../../apps/api/src/models/courseModel.js';
+import Module from '../../apps/api/src/models/moduleModel.js';
+import Lesson from '../../apps/api/src/models/lessonModel.js';
+import LessonQuiz from '../../apps/api/src/models/quizModel.js';
+import Academy from '../../apps/api/src/models/academyModel.js';
 
 async function seedContent() {
   try {

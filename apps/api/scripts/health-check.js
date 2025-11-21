@@ -14,16 +14,16 @@ function checkHealth() {
       port: PORT,
       path: '/api/health',
       method: 'GET',
-      timeout: HEALTH_CHECK_TIMEOUT
+      timeout: HEALTH_CHECK_TIMEOUT,
     };
 
     const req = http.request(options, (res) => {
       let data = '';
-      
+
       res.on('data', (chunk) => {
         data += chunk;
       });
-      
+
       res.on('end', () => {
         if (res.statusCode === 200) {
           try {
@@ -31,10 +31,16 @@ function checkHealth() {
             if (jsonData.status === 'healthy') {
               resolve('Health check passed');
             } else {
-              reject(new Error('Health check failed: Unexpected response format'));
+              reject(
+                new Error('Health check failed: Unexpected response format')
+              );
             }
           } catch (parseError) {
-            reject(new Error(`Health check failed: Invalid JSON response - ${parseError.message}`));
+            reject(
+              new Error(
+                `Health check failed: Invalid JSON response - ${parseError.message}`
+              )
+            );
           }
         } else {
           reject(new Error(`Health check failed: HTTP ${res.statusCode}`));

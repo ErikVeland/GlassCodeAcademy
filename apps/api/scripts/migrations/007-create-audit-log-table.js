@@ -6,49 +6,49 @@ module.exports = {
       id: {
         type: DataTypes.INTEGER,
         primaryKey: true,
-        autoIncrement: true
+        autoIncrement: true,
       },
       user_id: {
         type: DataTypes.INTEGER,
-        allowNull: false
+        allowNull: false,
       },
       action: {
         type: DataTypes.STRING(100),
-        allowNull: false
+        allowNull: false,
       },
       resource_type: {
         type: DataTypes.STRING(50),
-        allowNull: false
+        allowNull: false,
       },
       resource_id: {
         type: DataTypes.INTEGER,
-        allowNull: true
+        allowNull: true,
       },
       resource_name: {
         type: DataTypes.STRING(200),
-        allowNull: true
+        allowNull: true,
       },
       details: {
         type: DataTypes.JSONB,
-        allowNull: true
+        allowNull: true,
       },
       ip_address: {
         type: DataTypes.STRING(45),
-        allowNull: true
+        allowNull: true,
       },
       user_agent: {
         type: DataTypes.STRING(500),
-        allowNull: true
+        allowNull: true,
       },
       created_at: {
         type: DataTypes.DATE,
         allowNull: false,
-        defaultValue: DataTypes.NOW
-      }
+        defaultValue: DataTypes.NOW,
+      },
     });
   },
 
   down: async (queryInterface) => {
     await queryInterface.dropTable('audit_logs');
-  }
+  },
 };

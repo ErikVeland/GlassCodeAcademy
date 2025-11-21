@@ -13,7 +13,12 @@ try {
 } catch {}
 
 const sequelize = require('../src/config/database');
-const { Module, Lesson, LessonQuiz, initializeAssociations } = require('../src/models');
+const {
+  Module,
+  Lesson,
+  LessonQuiz,
+  initializeAssociations,
+} = require('../src/models');
 
 async function main() {
   const moduleId = Number(process.argv[2] || 19);
@@ -35,7 +40,9 @@ async function main() {
     console.log(`Module ${moduleId} has ${lessons.length} lessons`);
 
     for (const l of lessons.slice(0, 10)) {
-      const count = await LessonQuiz.count({ where: { lesson_id: l.id, is_published: true } });
+      const count = await LessonQuiz.count({
+        where: { lesson_id: l.id, is_published: true },
+      });
       console.log(`  Lesson ${l.id} (${l.slug}) -> quizzes: ${count}`);
     }
 
@@ -46,14 +53,18 @@ async function main() {
     });
     console.log(`\nSample quizzes for lesson ${lessonId}: ${quizzes.length}`);
     quizzes.forEach((q, i) => {
-      console.log(`  ${i + 1}. [${q.id}] ${String(q.question).substring(0, 80)}...`);
+      console.log(
+        `  ${i + 1}. [${q.id}] ${String(q.question).substring(0, 80)}...`
+      );
     });
 
     await sequelize.close();
     process.exit(0);
   } catch (err) {
     console.error('❌ Inspect failed:', err?.message || err);
-    try { await sequelize.close(); } catch {}
+    try {
+      await sequelize.close();
+    } catch {}
     process.exit(1);
   }
 }

@@ -15,7 +15,7 @@ const migrateScript = path.join(scriptDir, 'migrate.js');
 
 // Spawn the migrate.js script with the same arguments
 const child = spawn('node', [migrateScript, ...process.argv.slice(2)], {
-  stdio: 'inherit'
+  stdio: 'inherit',
 });
 
 // Handle exit codes

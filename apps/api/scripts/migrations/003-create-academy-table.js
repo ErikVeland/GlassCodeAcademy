@@ -6,51 +6,51 @@ module.exports = {
       id: {
         type: DataTypes.INTEGER,
         primaryKey: true,
-        autoIncrement: true
+        autoIncrement: true,
       },
       name: {
         type: DataTypes.STRING(200),
-        allowNull: false
+        allowNull: false,
       },
       slug: {
         type: DataTypes.STRING(100),
         allowNull: false,
-        unique: true
+        unique: true,
       },
       description: {
         type: DataTypes.STRING(1000),
-        allowNull: true
+        allowNull: true,
       },
       is_published: {
         type: DataTypes.BOOLEAN,
-        defaultValue: false
+        defaultValue: false,
       },
       version: {
         type: DataTypes.STRING(20),
-        defaultValue: '1.0.0'
+        defaultValue: '1.0.0',
       },
       theme: {
         type: DataTypes.JSONB,
-        allowNull: true
+        allowNull: true,
       },
       metadata: {
         type: DataTypes.JSONB,
-        allowNull: true
+        allowNull: true,
       },
       created_at: {
         type: DataTypes.DATE,
         allowNull: false,
-        defaultValue: DataTypes.NOW
+        defaultValue: DataTypes.NOW,
       },
       updated_at: {
         type: DataTypes.DATE,
         allowNull: false,
-        defaultValue: DataTypes.NOW
-      }
+        defaultValue: DataTypes.NOW,
+      },
     });
   },
 
   down: async (queryInterface) => {
     await queryInterface.dropTable('academies');
-  }
+  },
 };

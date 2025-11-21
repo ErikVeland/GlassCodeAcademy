@@ -2,15 +2,23 @@
 /* global require, process, console */
 
 // Load database and models (env resolution handled by config/database)
-const { sequelize, User, Role, UserRole, initializeAssociations } = require('../src/models');
-const { register } = require('../src/services/authService');
+import {
+  sequelize,
+  User,
+  Role,
+  UserRole,
+  initializeAssociations,
+} from '../src/models/index.js';
+import { register } from '../src/services/authService.js';
 
 async function adminExists() {
   initializeAssociations();
   // Ensure roles table checked first
   const adminRole = await Role.findOne({ where: { name: 'admin' } });
   if (adminRole) {
-    const userRole = await UserRole.findOne({ where: { roleId: adminRole.id } });
+    const userRole = await UserRole.findOne({
+      where: { roleId: adminRole.id },
+    });
     if (userRole) return true;
   }
   // Fallback: legacy users with role column set
@@ -42,7 +50,11 @@ async function assignAdminRole(user, adminRole) {
     where: { userId: user.id, roleId: adminRole.id },
   });
   if (!existing) {
-    await UserRole.create({ userId: user.id, roleId: adminRole.id, assignedAt: new Date() });
+    await UserRole.create({
+      userId: user.id,
+      roleId: adminRole.id,
+      assignedAt: new Date(),
+    });
   }
 }
 
@@ -69,26 +81,29 @@ async function main() {
         console.log('Skipping creation (non-interactive mode).');
         return;
       }
-      
+
       // Interactive prompt to replace existing admin
       const readline = require('readline');
       const rl = readline.createInterface({
         input: process.stdin,
-        output: process.stdout
+        output: process.stdout,
       });
-      
+
       const answer = await new Promise((resolve) => {
-        rl.question('Would you like to replace the existing admin user with a new one? (y/N): ', (answer) => {
-          rl.close();
-          resolve(answer.toLowerCase());
-        });
+        rl.question(
+          'Would you like to replace the existing admin user with a new one? (y/N): ',
+          (answer) => {
+            rl.close();
+            resolve(answer.toLowerCase());
+          }
+        );
       });
-      
+
       if (answer !== 'y' && answer !== 'yes') {
         console.log('Keeping existing admin user.');
         return;
       }
-      
+
       // Delete existing admin users
       console.log('Removing existing admin users...');
       const adminRole = await Role.findOne({ where: { name: 'admin' } });
@@ -106,7 +121,9 @@ async function main() {
     const lastName = (process.env.ADMIN_LAST_NAME || 'User').trim();
 
     if (!email || !password) {
-      console.error('Missing ADMIN_EMAIL or ADMIN_PASSWORD environment variables.');
+      console.error(
+        'Missing ADMIN_EMAIL or ADMIN_PASSWORD environment variables.'
+      );
       process.exit(1);
     }
 
@@ -116,11 +133,18 @@ async function main() {
       await createdUser.update({ firstName, lastName, passwordHash: password });
     } else {
       // Create user via auth service (enforces password strength and hooks)
-      const regResult = await register({ email, firstName, lastName, password });
+      const regResult = await register({
+        email,
+        firstName,
+        lastName,
+        password,
+      });
       // Load a full Sequelize instance using the returned id to avoid any lookup mismatch
       createdUser = await User.findByPk(regResult.user.id);
       if (!createdUser) {
-        throw new Error(`User creation succeeded but lookup failed for email ${email}`);
+        throw new Error(
+          `User creation succeeded but lookup failed for email ${email}`
+        );
       }
     }
 
@@ -129,7 +153,10 @@ async function main() {
 
     console.log(`Admin user created: ${email}`);
   } catch (err) {
-    console.error('Admin creation failed:', err && err.message ? err.message : err);
+    console.error(
+      'Admin creation failed:',
+      err && err.message ? err.message : err
+    );
     process.exit(1);
   } finally {
     try {

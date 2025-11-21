@@ -14,7 +14,9 @@ const cacheService = require('../src/services/cacheService');
 async function main() {
   try {
     if (!cacheService || cacheService.isEnabled !== true) {
-      console.log('Redis caching is disabled or unavailable. Nothing to flush.');
+      console.log(
+        'Redis caching is disabled or unavailable. Nothing to flush.'
+      );
       process.exit(0);
     }
 

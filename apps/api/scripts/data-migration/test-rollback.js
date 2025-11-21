@@ -2,7 +2,7 @@ const { rollbackMigration } = require('./robust-migrate-content');
 
 async function testRollback() {
   console.log('Testing rollback functionality...');
-  
+
   try {
     await rollbackMigration();
     console.log('Rollback test completed successfully!');

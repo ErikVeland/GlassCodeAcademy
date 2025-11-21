@@ -6,69 +6,69 @@ module.exports = {
       id: {
         type: DataTypes.INTEGER,
         primaryKey: true,
-        autoIncrement: true
+        autoIncrement: true,
       },
       title: {
         type: DataTypes.STRING(200),
-        allowNull: false
+        allowNull: false,
       },
       description: {
         type: DataTypes.TEXT,
-        allowNull: true
+        allowNull: true,
       },
       slug: {
         type: DataTypes.STRING(100),
         allowNull: false,
-        unique: true
+        unique: true,
       },
       is_published: {
         type: DataTypes.BOOLEAN,
-        defaultValue: false
+        defaultValue: false,
       },
       order: {
         type: DataTypes.INTEGER,
-        defaultValue: 0
+        defaultValue: 0,
       },
       difficulty: {
         type: DataTypes.ENUM('Beginner', 'Intermediate', 'Advanced'),
-        allowNull: true
+        allowNull: true,
       },
       estimated_hours: {
         type: DataTypes.DECIMAL(4, 1),
-        allowNull: true
+        allowNull: true,
       },
       category: {
         type: DataTypes.STRING(100),
-        allowNull: true
+        allowNull: true,
       },
       technologies: {
         type: DataTypes.JSONB,
-        allowNull: true
+        allowNull: true,
       },
       prerequisites: {
         type: DataTypes.JSONB,
-        allowNull: true
+        allowNull: true,
       },
       metadata: {
         type: DataTypes.JSONB,
-        allowNull: true
+        allowNull: true,
       },
       version: {
         type: DataTypes.STRING(20),
-        defaultValue: '1.0.0'
+        defaultValue: '1.0.0',
       },
       created_at: {
         type: DataTypes.DATE,
         allowNull: false,
-        defaultValue: DataTypes.NOW
+        defaultValue: DataTypes.NOW,
       },
       updated_at: {
         type: DataTypes.DATE,
         allowNull: false,
-        defaultValue: DataTypes.NOW
-      }
+        defaultValue: DataTypes.NOW,
+      },
     });
-    
+
     // Add indexes for better query performance
     await queryInterface.addIndex('courses', ['slug']);
     await queryInterface.addIndex('courses', ['is_published']);
@@ -77,5 +77,5 @@ module.exports = {
 
   down: async (queryInterface) => {
     await queryInterface.dropTable('courses');
-  }
+  },
 };

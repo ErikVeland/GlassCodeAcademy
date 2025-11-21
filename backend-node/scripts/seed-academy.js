@@ -1,5 +1,5 @@
-const sequelize = require('../../apps/api/src/config/database').sequelize;
-const Academy = require('../../apps/api/src/models/academyModel');
+import { sequelize } from '../../apps/api/src/config/database.js';
+import Academy from '../../apps/api/src/models/academyModel.js';
 
 async function ensureDefaultAcademy() {
   try {
