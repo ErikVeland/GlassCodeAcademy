@@ -20,6 +20,10 @@ fi
 
 echo "🚀 Bootstrap Script for $APP_NAME"
 
+log() {
+    echo "[$(date +'%Y-%m-%d %H:%M:%S')] $1"
+}
+
 # CLI flags
 DRY_RUN=0
 SKIP_BACKUP=0
@@ -101,10 +105,6 @@ fi
 
 # Create backup before proceeding with installation
 create_backup
-
-log() {
-    echo "[$(date +'%Y-%m-%d %H:%M:%S')] $1"
-}
 
 # Draw progress bar for waits
 draw_progress() {
