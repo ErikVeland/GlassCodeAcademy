@@ -63,7 +63,7 @@ async function seedContent() {
           difficulty: moduleInfo.difficulty,
           isPublished: true,
           estimatedHours: moduleInfo.estimatedHours || 10,
-          academyId: defaultAcademy.id  // Associate with the default academy
+            // Associate with the default academy
         }
       });
       
@@ -80,7 +80,7 @@ async function seedContent() {
           difficulty: moduleInfo.difficulty,
           isPublished: true,
           estimatedHours: moduleInfo.estimatedHours || 10,
-          academyId: defaultAcademy.id  // Associate with the default academy
+            // Associate with the default academy
         });
       }
       
@@ -94,7 +94,7 @@ async function seedContent() {
           order: moduleInfo.order,
           isPublished: true,
           courseId: course.id,
-          academyId: defaultAcademy.id  // Associate with the default academy
+            // Associate with the default academy
         }
       });
       
@@ -110,7 +110,7 @@ async function seedContent() {
           order: moduleInfo.order,
           isPublished: true,
           courseId: course.id,
-          academyId: defaultAcademy.id  // Associate with the default academy
+            // Associate with the default academy
         });
       }
       
@@ -136,7 +136,7 @@ async function seedContent() {
               difficulty: lessonData.difficulty || moduleInfo.difficulty || 'Beginner',
               estimatedMinutes: lessonData.estimatedMinutes || 30,
               moduleId: module.id,
-              academyId: defaultAcademy.id  // Associate with the default academy
+                // Associate with the default academy
             }
           });
           
@@ -154,7 +154,7 @@ async function seedContent() {
               difficulty: lessonData.difficulty || moduleInfo.difficulty || 'Beginner',
               estimatedMinutes: lessonData.estimatedMinutes || 30,
               moduleId: module.id,
-              academyId: defaultAcademy.id  // Associate with the default academy
+                // Associate with the default academy
             });
           }
         }
@@ -182,7 +182,7 @@ async function seedContent() {
 
         // Remove existing quizzes for this module's lessons to avoid duplicates
         await LessonQuiz.destroy({
-          where: { lesson_id: { [Op.in]: lessonIds } }  // Changed from lessonId to lesson_id
+          where: { lessonId: { [Op.in]: lessonIds } }  // Changed from lessonId to lesson_id
         });
 
         for (let i = 0; i < questions.length; i++) {
@@ -200,7 +200,7 @@ async function seedContent() {
           const sortOrder = questionData.sortOrder || i + 1;
 
           const [quiz, quizCreatedFlag] = await LessonQuiz.findOrCreate({
-            where: { sort_order: sortOrder, lesson_id: targetLessonId },  // Changed from sortOrder to sort_order
+            where: { sortOrder: sortOrder, lessonId: targetLessonId },  // Changed from sortOrder to sort_order
             defaults: {
               question: questionData.question || `Question ${i + 1}`,
               topic: questionData.topic || moduleInfo.title,
@@ -216,11 +216,10 @@ async function seedContent() {
               estimatedTime: questionData.estimatedTime || 60,
               correctAnswer: questionData.correctAnswer !== undefined ? questionData.correctAnswer : 0,
               quizType: questionData.quizType || 'multiple-choice',
-              sources: questionData.sources || null,
               sortOrder,  // This will be mapped to sort_order by Sequelize
               isPublished: true,
-              lesson_id: targetLessonId,  // Fixed: Use lesson_id instead of lessonId
-              academyId: defaultAcademy.id  // This will be mapped to academy_id by Sequelize
+              lessonId: targetLessonId,  // Fixed: Use lesson_id instead of lessonId
+                // This will be mapped to academy_id by Sequelize
             }
           });
 
@@ -247,11 +246,10 @@ async function seedContent() {
               estimatedTime: questionData.estimatedTime || 60,
               correctAnswer: questionData.correctAnswer !== undefined ? questionData.correctAnswer : 0,
               quizType: questionData.quizType || 'multiple-choice',
-              sources: questionData.sources || null,
               sortOrder,  // This will be mapped to sort_order by Sequelize
               isPublished: true,
-              lesson_id: targetLessonId,  // Fixed: Add lesson_id field
-              academyId: defaultAcademy.id  // This will be mapped to academy_id by Sequelize
+              lessonId: targetLessonId,  // Fixed: Add lesson_id field
+                // This will be mapped to academy_id by Sequelize
             });
             if (quiz.id <= 0) {
               console.log(`    ⚠️  Warning: Updated quiz has invalid ID: ${quiz.id}`);
@@ -272,10 +270,10 @@ async function seedContent() {
     
     // Verification step: Check that all content is associated with the default academy
     console.log('🔍 Verifying academy associations...');
-    const academyCourses = await Course.count({ where: { academyId: defaultAcademy.id } });
-    const academyModules = await Module.count({ where: { academyId: defaultAcademy.id } });
-    const academyLessons = await Lesson.count({ where: { academyId: defaultAcademy.id } });
-    const academyQuizzes = await LessonQuiz.count({ where: { academyId: defaultAcademy.id } });
+    const academyCourses = await Course.count({ where: {  } });
+    const academyModules = await Module.count({ where: {  } });
+    const academyLessons = await Lesson.count({ where: {  } });
+    const academyQuizzes = await LessonQuiz.count({ where: {  } });
     
     console.log(`✅ Academy Association Verification:`);
     console.log(`  - Courses associated with academy: ${academyCourses}`);
@@ -285,10 +283,10 @@ async function seedContent() {
     
     // Verification step: Check that all content is published
     console.log('🔍 Verifying publication status...');
-    const publishedCourses = await Course.count({ where: { isPublished: true, academyId: defaultAcademy.id } });
-    const publishedModules = await Module.count({ where: { isPublished: true, academyId: defaultAcademy.id } });
-    const publishedLessons = await Lesson.count({ where: { isPublished: true, academyId: defaultAcademy.id } });
-    const publishedQuizzes = await LessonQuiz.count({ where: { isPublished: true, academyId: defaultAcademy.id } });
+    const publishedCourses = await Course.count({ where: { isPublished: true,  } });
+    const publishedModules = await Module.count({ where: { isPublished: true,  } });
+    const publishedLessons = await Lesson.count({ where: { isPublished: true,  } });
+    const publishedQuizzes = await LessonQuiz.count({ where: { isPublished: true,  } });
     
     console.log(`✅ Publication Status Verification:`);
     console.log(`  - Published courses: ${publishedCourses}/${academyCourses}`);

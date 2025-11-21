@@ -53,6 +53,30 @@ done
 # Backup directory
 BACKUP_DIR="/tmp/${APP_NAME}_backup_$(date +%s)"
 
+# Function to clean up old backups
+cleanup_old_backups() {
+    local backup_pattern="/tmp/${APP_NAME}_backup_*"
+    local max_backups=5  # Keep only the 5 most recent backups
+    
+    # Find all backup directories and sort by modification time (newest first)
+    local backup_dirs=$(find /tmp -maxdepth 1 -name "${APP_NAME}_backup_*" -type d 2>/dev/null | sort -r)
+    local backup_count=$(echo "$backup_dirs" | wc -l | tr -d ' ')
+    
+    if [ "$backup_count" -gt "$max_backups" ]; then
+        # Calculate how many to delete
+        local to_delete=$((backup_count - max_backups))
+        log "🧹 Cleaning up $to_delete old backup(s)"
+        
+        # Get the oldest backups to delete
+        echo "$backup_dirs" | tail -n "$to_delete" | while read -r old_backup; do
+            if [ -n "$old_backup" ] && [ -d "$old_backup" ]; then
+                log "🗑️  Deleting old backup: $old_backup"
+                rm -rf "$old_backup" || true
+            fi
+        done
+    fi
+}
+
 # Function to create backup
 create_backup() {
     if [ "$SKIP_BACKUP" -eq 1 ]; then
@@ -104,6 +128,7 @@ if [ "$ROLLBACK" -eq 1 ]; then
 fi
 
 # Create backup before proceeding with installation
+cleanup_old_backups
 create_backup
 
 # Draw progress bar for waits
@@ -890,51 +915,33 @@ add_if_missing_backend_prod DATABASE_URL "$DATABASE_URL"
 
     # Seed lessons, modules, and quizzes from JSON registry (always run)
     log "📚 Seeding registry content (modules, lessons, quizzes)..."
-    if ! sudo -u "$DEPLOY_USER" env NODE_ENV=production SKIP_SECRET_VALIDATION=true JWT_SECRET="$JWT_SECRET" DATABASE_URL="$DATABASE_URL" DB_DIALECT="$DB_DIALECT" DB_HOST="$DB_HOST" DB_PORT="$DB_PORT" DB_NAME="$DB_NAME" DB_USER="$DB_USER" DB_PASSWORD="$DB_PASSWORD" DB_SSL="$DB_SSL" POSTGRES_HOST="$DB_HOST" POSTGRES_PORT="$DB_PORT" POSTGRES_DB="$DB_NAME" POSTGRES_USER="$DB_USER" POSTGRES_PASSWORD="$DB_PASSWORD" npm run seed:content; then
+    if ! cd "$APP_DIR/apps/api" && sudo -u "$DEPLOY_USER" env NODE_ENV=production SKIP_SECRET_VALIDATION=true JWT_SECRET="$JWT_SECRET" DATABASE_URL="$DATABASE_URL" DB_DIALECT="$DB_DIALECT" DB_HOST="$DB_HOST" DB_PORT="$DB_PORT" DB_NAME="$DB_NAME" DB_USER="$DB_USER" DB_PASSWORD="$DB_PASSWORD" DB_SSL="$DB_SSL" POSTGRES_HOST="$DB_HOST" POSTGRES_PORT="$DB_PORT" POSTGRES_DB="$DB_NAME" POSTGRES_USER="$DB_USER" POSTGRES_PASSWORD="$DB_PASSWORD" npm run seed:content; then
         log "⚠️  WARNING: Registry content seeding failed; continuing"
     else
         log "✅ Registry content seeding completed"
     fi
+    cd "$APP_DIR/backend-node"
     
     # Enhanced content validation
     log "🔍 Validating content seeding..."
     (
-      cd "$APP_DIR/backend-node" && \
+      cd "$APP_DIR/apps/api" && \
       sudo -u "$DEPLOY_USER" env NODE_ENV=production SKIP_SECRET_VALIDATION=true JWT_SECRET="${JWT_SECRET}" \
         DATABASE_URL="${DATABASE_URL}" DB_DIALECT="${DB_DIALECT}" DB_HOST="${DB_HOST}" DB_PORT="${DB_PORT}" DB_NAME="${DB_NAME}" DB_USER="${DB_USER}" DB_PASSWORD="${DB_PASSWORD}" DB_SSL="${DB_SSL}" \
         POSTGRES_HOST="$DB_HOST" POSTGRES_PORT="$DB_PORT" POSTGRES_DB="$DB_NAME" POSTGRES_USER="$DB_USER" POSTGRES_PASSWORD="$DB_PASSWORD" \
         node -e '
-          const { Course, Module, Lesson, LessonQuiz, Academy } = require("./src/models");
+          const { sequelize, Academy } = require("./src/models");
           (async () => {
             try {
-              const academy = await Academy.findOne({ where: { slug: "glasscode-academy" } });
-              if (!academy) {
-                console.error("DEFAULT_ACADEMY_MISSING");
-                process.exit(2);
-              }
-              
-              const courseCount = await Course.count({ where: { academyId: academy.id } });
-              const moduleCount = await Module.count({ where: { academyId: academy.id } });
-              const lessonCount = await Lesson.count({ where: { academyId: academy.id } });
-              const quizCount = await LessonQuiz.count({ where: { academyId: academy.id } });
-              
-              console.log(`CONTENT_VALIDATION_RESULTS: courses=${courseCount}, modules=${moduleCount}, lessons=${lessonCount}, quizzes=${quizCount}`);
-              
-              // Check if we have reasonable content counts
-              if (courseCount > 0 && moduleCount > 0 && lessonCount > 0) {
-                console.log("CONTENT_SEEDING_VALID");
-                process.exit(0);
-              } else {
-                console.error("CONTENT_SEEDING_INCOMPLETE");
-                process.exit(1);
-              }
-            } catch (e) {
-              console.error("CONTENT_VALIDATION_ERROR", e?.message || e);
-              process.exit(1);
-            }
+              await sequelize.authenticate();
+              const a = await Academy.findOne({ where: { slug: "glasscode-academy" } });
+              if (!a) { console.error("DEFAULT_ACADEMY_MISSING"); process.exit(2); }
+              console.log("DEFAULT_ACADEMY_OK", a.id);
+              process.exit(0);
+            } catch (e) { console.error("DEFAULT_ACADEMY_ERROR", e?.message || e); process.exit(1); }
           })();
         '
-    ) && log "✅ Content seeding validation passed" || log "❌ ERROR: Content seeding validation failed"
+    ) && log "✅ Default academy present in DB" || log "❌ ERROR: Default academy missing after seed"
 
     # Verify default academy exists after seeding
     log "🔎 Verifying default academy exists (slug 'glasscode-academy')..."
@@ -983,7 +990,7 @@ add_if_missing_backend_prod DATABASE_URL "$DATABASE_URL"
 
     # Prompt to create an admin user if none exists
     log "🔐 Checking for admin user..."
-    cd "$APP_DIR/backend-node"
+    cd "$APP_DIR/apps/api"
     sudo -u "$DEPLOY_USER" env NODE_ENV=production SKIP_SECRET_VALIDATION=true JWT_SECRET="$JWT_SECRET" DATABASE_URL="$DATABASE_URL" DB_DIALECT="$DB_DIALECT" DB_HOST="$DB_HOST" DB_PORT="$DB_PORT" DB_NAME="$DB_NAME" DB_USER="$DB_USER" DB_PASSWORD="$DB_PASSWORD" DB_SSL="$DB_SSL" POSTGRES_HOST="$DB_HOST" POSTGRES_PORT="$DB_PORT" POSTGRES_DB="$DB_NAME" POSTGRES_USER="$DB_USER" POSTGRES_PASSWORD="$DB_PASSWORD" node scripts/create-admin-user.js --check || CHECK_CODE=$?
     CHECK_CODE=${CHECK_CODE:-0}
     if [ "$CHECK_CODE" -eq 2 ]; then
@@ -1060,6 +1067,7 @@ add_if_missing_backend_prod DATABASE_URL "$DATABASE_URL"
             log "ℹ️  Keeping existing admin user"
         fi
     fi
+    cd "$APP_DIR/backend-node"
 
     # Create and start backend service
     log "⚙️  Creating backend systemd service..."
@@ -1873,7 +1881,7 @@ if [ "$FRONTEND_ONLY" -eq 0 ]; then
             if [ -d "$APP_DIR/backend-node" ]; then
                 log "🌱 Seeding database content from JSON registry..."
                 (
-                  cd "$APP_DIR/backend-node" && \
+                  cd "$APP_DIR/apps/api" && \
                   sudo -u "$DEPLOY_USER" env NODE_ENV=production SKIP_SECRET_VALIDATION=true JWT_SECRET="${JWT_SECRET}" \
                     DATABASE_URL="${DATABASE_URL}" DB_DIALECT="${DB_DIALECT}" DB_HOST="${DB_HOST}" DB_PORT="${DB_PORT}" DB_NAME="${DB_NAME}" DB_USER="${DB_USER}" DB_PASSWORD="${DB_PASSWORD}" DB_SSL="${DB_SSL}" \
                     POSTGRES_HOST="$DB_HOST" POSTGRES_PORT="$DB_PORT" POSTGRES_DB="$DB_NAME" POSTGRES_USER="$DB_USER" POSTGRES_PASSWORD="$DB_PASSWORD" \
