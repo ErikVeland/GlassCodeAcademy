@@ -20,6 +20,88 @@ fi
 
 echo "🚀 Bootstrap Script for $APP_NAME"
 
+# CLI flags
+DRY_RUN=0
+SKIP_BACKUP=0
+ROLLBACK=0
+
+while [[ $# -gt 0 ]]; do
+    case "$1" in
+        --dry-run)
+            DRY_RUN=1
+            shift
+            ;;
+        --skip-backup)
+            SKIP_BACKUP=1
+            shift
+            ;;
+        --rollback)
+            ROLLBACK=1
+            shift
+            ;;
+        *)
+            # Pass other arguments to the existing argument parser
+            break
+            ;;
+    esac
+done
+
+# Backup directory
+BACKUP_DIR="/tmp/${APP_NAME}_backup_$(date +%s)"
+
+# Function to create backup
+create_backup() {
+    if [ "$SKIP_BACKUP" -eq 1 ]; then
+        log "⏭️  Skipping backup as requested"
+        return 0
+    fi
+    
+    log "📦 Creating backup of current installation to $BACKUP_DIR"
+    if [ "$DRY_RUN" -eq 1 ]; then
+        log "📄 [DRY RUN] Would create backup of $APP_DIR to $BACKUP_DIR"
+        return 0
+    fi
+    
+    mkdir -p "$BACKUP_DIR"
+    if [ -d "$APP_DIR" ]; then
+        rsync -a "$APP_DIR/" "$BACKUP_DIR/"
+    fi
+    log "✅ Backup created"
+}
+
+# Function to rollback
+rollback() {
+    log "⏪ Rolling back to previous version..."
+    if [ ! -d "$BACKUP_DIR" ] || [ -z "$(ls -A "$BACKUP_DIR")" ]; then
+        log "❌ No backup found, cannot rollback"
+        exit 1
+    fi
+    
+    if [ "$DRY_RUN" -eq 1 ]; then
+        log "📄 [DRY RUN] Would restore $BACKUP_DIR to $APP_DIR"
+        return 0
+    fi
+    
+    # Stop services before rollback
+    systemctl stop ${APP_NAME}-frontend ${APP_NAME}-backend 2>/dev/null || true
+    
+    # Restore the previous version
+    rsync -a "$BACKUP_DIR/" "$APP_DIR/"
+    log "✅ Rollback completed"
+    
+    # Restart services
+    systemctl start ${APP_NAME}-backend ${APP_NAME}-frontend 2>/dev/null || true
+    exit 0
+}
+
+# Check if rollback is requested
+if [ "$ROLLBACK" -eq 1 ]; then
+    rollback
+fi
+
+# Create backup before proceeding with installation
+create_backup
+
 log() {
     echo "[$(date +'%Y-%m-%d %H:%M:%S')] $1"
 }

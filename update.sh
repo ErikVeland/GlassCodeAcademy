@@ -43,9 +43,10 @@ echo "🔗 NEXT_PUBLIC_BASE_URL=${NEXT_PUBLIC_BASE_URL}"
 echo "🔗 NEXT_PUBLIC_API_BASE=${NEXT_PUBLIC_API_BASE}"
 echo "🔄 Update Script for $APP_NAME (Node.js version)"
 
-log() {
-    echo "[$(date +'%Y-%m-%d %H:%M:%S')] $1"
-}
+# CLI flags
+DRY_RUN=0
+SKIP_BACKUP=0
+ROLLBACK=0
 
 # Determine frontend port from env, unit file, or default
 # Prefer PORT from .env; otherwise extract from existing unit; fallback to 3000
@@ -69,20 +70,124 @@ VALIDATE_JSON_CONTENT=0
 # Allow overriding port via CLI
 while [[ $# -gt 0 ]]; do
     case "$1" in
-        --fast) FAST_MODE=1; SKIP_CONTENT_VALIDATION=1; SKIP_LINT=1; SKIP_TYPECHECK=1; SKIP_BACKEND_HEALTH=1; shift;;
-        --frontend-only) FRONTEND_ONLY=1; shift;;
-        --skip-content-validation) SKIP_CONTENT_VALIDATION=1; shift;;
-        --validate-json-content) VALIDATE_JSON_CONTENT=1; shift;;
-        --skip-lint) SKIP_LINT=1; shift;;
-        --skip-typecheck) SKIP_TYPECHECK=1; shift;;
-        --skip-backend-health) SKIP_BACKEND_HEALTH=1; shift;;
-        --port) FRONTEND_PORT="${2:-$FRONTEND_PORT}"; shift 2;;
-        *) log "⚠️  WARNING: Unknown argument: $1"; shift;;
+        --dry-run)
+            DRY_RUN=1
+            shift
+            ;;
+        --skip-backup)
+            SKIP_BACKUP=1
+            shift
+            ;;
+        --rollback)
+            ROLLBACK=1
+            shift
+            ;;
+        --fast) 
+            FAST_MODE=1; 
+            SKIP_CONTENT_VALIDATION=1; 
+            SKIP_LINT=1; 
+            SKIP_TYPECHECK=1; 
+            SKIP_BACKEND_HEALTH=1; 
+            shift
+            ;;
+        --frontend-only) 
+            FRONTEND_ONLY=1; 
+            shift
+            ;;
+        --skip-content-validation) 
+            SKIP_CONTENT_VALIDATION=1; 
+            shift
+            ;;
+        --validate-json-content) 
+            VALIDATE_JSON_CONTENT=1; 
+            shift
+            ;;
+        --skip-lint) 
+            SKIP_LINT=1; 
+            shift
+            ;;
+        --skip-typecheck) 
+            SKIP_TYPECHECK=1; 
+            shift
+            ;;
+        --skip-backend-health) 
+            SKIP_BACKEND_HEALTH=1; 
+            shift
+            ;;
+        --port) 
+            FRONTEND_PORT="${2:-$FRONTEND_PORT}"; 
+            shift 2
+            ;;
+        *) 
+            log "⚠️  WARNING: Unknown argument: $1"; 
+            shift
+            ;;
     esac
 done
-export FAST_MODE SKIP_CONTENT_VALIDATION SKIP_LINT SKIP_TYPECHECK SKIP_BACKEND_HEALTH FRONTEND_ONLY FRONTEND_PORT VALIDATE_JSON_CONTENT
+
+export FAST_MODE SKIP_CONTENT_VALIDATION SKIP_LINT SKIP_TYPECHECK SKIP_BACKEND_HEALTH FRONTEND_ONLY FRONTEND_PORT VALIDATE_JSON_CONTENT DRY_RUN SKIP_BACKUP ROLLBACK
 log "🌐 Frontend port: $FRONTEND_PORT"
-log "⚙️  Flags: FAST=$FAST_MODE FRONTEND_ONLY=$FRONTEND_ONLY SKIP_VALIDATION=$SKIP_CONTENT_VALIDATION VALIDATE_JSON=$VALIDATE_JSON_CONTENT SKIP_LINT=$SKIP_LINT SKIP_TS=$SKIP_TYPECHECK SKIP_BACKEND_HEALTH=$SKIP_BACKEND_HEALTH"
+log "⚙️  Flags: FAST=$FAST_MODE FRONTEND_ONLY=$FRONTEND_ONLY SKIP_VALIDATION=$SKIP_CONTENT_VALIDATION VALIDATE_JSON=$VALIDATE_JSON_CONTENT SKIP_LINT=$SKIP_LINT SKIP_TS=$SKIP_TYPECHECK SKIP_BACKEND_HEALTH=$SKIP_BACKEND_HEALTH DRY_RUN=$DRY_RUN SKIP_BACKUP=$SKIP_BACKUP ROLLBACK=$ROLLBACK"
+
+log() {
+    echo "[$(date +'%Y-%m-%d %H:%M:%S')] $1"
+}
+
+# Backup directory
+BACKUP_DIR="/tmp/${APP_NAME}_backup_$(date +%s)"
+
+# Function to create backup
+create_backup() {
+    if [ "$SKIP_BACKUP" -eq 1 ]; then
+        log "⏭️  Skipping backup as requested"
+        return 0
+    fi
+    
+    log "📦 Creating backup of current installation to $BACKUP_DIR"
+    if [ "$DRY_RUN" -eq 1 ]; then
+        log "📄 [DRY RUN] Would create backup of $APP_DIR to $BACKUP_DIR"
+        return 0
+    fi
+    
+    mkdir -p "$BACKUP_DIR"
+    if [ -d "$APP_DIR" ]; then
+        rsync -a "$APP_DIR/" "$BACKUP_DIR/"
+    fi
+    log "✅ Backup created"
+}
+
+# Function to rollback
+rollback() {
+    log "⏪ Rolling back to previous version..."
+    if [ ! -d "$BACKUP_DIR" ] || [ -z "$(ls -A "$BACKUP_DIR")" ]; then
+        log "❌ No backup found, cannot rollback"
+        exit 1
+    fi
+    
+    if [ "$DRY_RUN" -eq 1 ]; then
+        log "📄 [DRY RUN] Would restore $BACKUP_DIR to $APP_DIR"
+        return 0
+    fi
+    
+    # Stop services before rollback
+    systemctl stop ${APP_NAME}-frontend ${APP_NAME}-backend 2>/dev/null || true
+    
+    # Restore the previous version
+    rsync -a "$BACKUP_DIR/" "$APP_DIR/"
+    log "✅ Rollback completed"
+    
+    # Restart services
+    systemctl start ${APP_NAME}-backend ${APP_NAME}-frontend 2>/dev/null || true
+    exit 0
+}
+
+# Check if rollback is requested
+if [ "$ROLLBACK" -eq 1 ]; then
+    rollback
+fi
+
+# Create backup before proceeding with update
+create_backup
 
 draw_progress() {
     # Usage: draw_progress current total [prefix]
@@ -419,27 +524,6 @@ fix_frontend_env_urls() {
     enforce_url_key "$env_file" "NEXT_PUBLIC_BASE_URL" "$expected_base"
     enforce_url_key "$env_file" "NEXT_PUBLIC_API_BASE" "$expected_api"
     enforce_url_key "$env_file" "NEXTAUTH_URL" "$expected_auth"
-}
-
-rollback() {
-    log "⏪ Rolling back to previous version..."
-    if [ -n "${BACKUP_DIR:-}" ] && [ -d "$BACKUP_DIR" ]; then
-        # Restore the previous version
-        rsync -a "$BACKUP_DIR/" "$APP_DIR/"
-        log "✅ Rollback completed"
-    else
-        log "❌ No backup found, cannot rollback"
-        exit 1
-    fi
-}
-
-# Create backup of current version
-create_backup() {
-    BACKUP_DIR="/tmp/${APP_NAME}_backup_$(date +%s)"
-    log "📦 Creating backup of current version to $BACKUP_DIR"
-    mkdir -p "$BACKUP_DIR"
-    rsync -a "$APP_DIR/" "$BACKUP_DIR/"
-    log "✅ Backup created"
 }
 
 # Main update process
