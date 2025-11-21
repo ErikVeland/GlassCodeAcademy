@@ -823,8 +823,52 @@ add_if_missing_backend_prod DATABASE_URL "$DATABASE_URL"
     fi
     log "✅ Backend dependencies installed"
 
+    # Install API dependencies to ensure sequelize is available for seeding
+    log "🔧 Installing API dependencies..."
+    cd "$APP_DIR/apps/api"
+    if [[ -f package-lock.json ]]; then
+        # Verify package-lock.json is properly formatted and accessible
+        if sudo -u "$DEPLOY_USER" npm ls --json >/dev/null 2>&1; then
+            if ! sudo -u "$DEPLOY_USER" npm ci --no-audit --no-fund; then
+                log "ℹ️  npm ci failed; falling back to npm install"
+                if ! sudo -u "$DEPLOY_USER" npm install --no-audit --no-fund; then
+                    if ! sudo -u "$DEPLOY_USER" npm install --legacy-peer-deps --no-audit --no-fund; then
+                        log "❌ ERROR: Failed to install API dependencies"
+                        exit 1
+                    fi
+                fi
+            fi
+        else
+            log "⚠️  package-lock.json appears to be invalid or inaccessible; regenerating..."
+            sudo -u "$DEPLOY_USER" rm -f package-lock.json || true
+            if ! sudo -u "$DEPLOY_USER" npm install --package-lock-only; then
+                log "❌ ERROR: Failed to regenerate package-lock.json"
+                exit 1
+            fi
+            if ! sudo -u "$DEPLOY_USER" npm ci --no-audit --no-fund; then
+                log "ℹ️  npm ci failed after regenerating lockfile; falling back to npm install"
+                if ! sudo -u "$DEPLOY_USER" npm install --no-audit --no-fund; then
+                    if ! sudo -u "$DEPLOY_USER" npm install --legacy-peer-deps --no-audit --no-fund; then
+                        log "❌ ERROR: Failed to install API dependencies"
+                        exit 1
+                    fi
+                fi
+            fi
+        fi
+    else
+        if ! sudo -u "$DEPLOY_USER" npm install --no-audit --no-fund; then
+            if ! sudo -u "$DEPLOY_USER" npm install --legacy-peer-deps --no-audit --no-fund; then
+                log "❌ ERROR: Failed to install API dependencies"
+                exit 1
+            fi
+        fi
+    fi
+    log "✅ API dependencies installed"
+    cd "$APP_DIR/backend-node"
+
     # Run database migrations
     log "📊 Running database migrations..."
+
     if ! sudo -u "$DEPLOY_USER" env NODE_ENV=production SKIP_SECRET_VALIDATION=true JWT_SECRET="$JWT_SECRET" DATABASE_URL="$DATABASE_URL" DB_DIALECT="$DB_DIALECT" DB_HOST="$DB_HOST" DB_PORT="$DB_PORT" DB_NAME="$DB_NAME" DB_USER="$DB_USER" DB_PASSWORD="$DB_PASSWORD" DB_SSL="$DB_SSL" npm run migrate; then
         log "❌ ERROR: Failed to run database migrations"
         exit 1
