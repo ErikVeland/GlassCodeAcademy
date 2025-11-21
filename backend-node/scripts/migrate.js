@@ -1,6 +1,6 @@
-const path = require('path');
-const fs = require('fs');
-const dotenv = require('dotenv');
+import path from 'path';
+import fs from 'fs';
+import dotenv from 'dotenv';
 
 // Load environment variables
 (() => {
@@ -23,8 +23,8 @@ const dotenv = require('dotenv');
 })();
 
 // Use Sequelize with Umzug for migrations
-const { Sequelize } = require('sequelize');
-const { Umzug, SequelizeStorage } = require('umzug');
+import { Sequelize } from 'sequelize';
+import { Umzug, SequelizeStorage } from 'umzug';
 
 function printEnvHint(error) {
   const hasUrl = !!process.env.DATABASE_URL;
@@ -68,9 +68,11 @@ function printEnvHint(error) {
     const umzug = new Umzug({
       migrations: {
         glob: ['../migrations/*.js', { cwd: __dirname }],
-        resolve: ({ name, path, context }) => {
+        resolve: async ({ name, path, context }) => {
           // Adjust the migration from the migrations folder to match the expected Umzug interface
-          const migration = require(path);
+          // Use dynamic import for ES modules
+          const migrationModule = await import(path);
+          const migration = migrationModule.default || migrationModule;
           return {
             name,
             up: async () =>
