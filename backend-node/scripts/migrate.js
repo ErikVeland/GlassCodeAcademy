@@ -1,6 +1,11 @@
 import path from 'path';
 import fs from 'fs';
 import dotenv from 'dotenv';
+import { fileURLToPath } from 'url';
+import { dirname } from 'path';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 // Load environment variables
 (() => {
@@ -44,7 +49,9 @@ function printEnvHint(error) {
   try {
     // Check if DATABASE_URL is set
     if (!process.env.DATABASE_URL) {
-      throw new Error('DATABASE_URL environment variable is required');
+      // Set default DATABASE_URL for local development
+      process.env.DATABASE_URL =
+        'postgresql://postgres:postgres@localhost:5432/glasscode_dev';
     }
 
     const isTest = process.env.NODE_ENV === 'test';
@@ -72,13 +79,30 @@ function printEnvHint(error) {
           // Adjust the migration from the migrations folder to match the expected Umzug interface
           // Use dynamic import for ES modules
           const migrationModule = await import(path);
+
+          // Handle both default export and named exports
           const migration = migrationModule.default || migrationModule;
+
           return {
             name,
-            up: async () =>
-              migration.up({ queryInterface: context, Sequelize }),
-            down: async () =>
-              migration.down({ queryInterface: context, Sequelize }),
+            up: async () => {
+              if (typeof migration.up === 'function') {
+                return migration.up({ queryInterface: context, Sequelize });
+              } else {
+                throw new Error(
+                  `Migration ${name} does not export an 'up' function`
+                );
+              }
+            },
+            down: async () => {
+              if (typeof migration.down === 'function') {
+                return migration.down({ queryInterface: context, Sequelize });
+              } else {
+                throw new Error(
+                  `Migration ${name} does not export a 'down' function`
+                );
+              }
+            },
           };
         },
       },

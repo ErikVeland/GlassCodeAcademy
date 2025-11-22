@@ -1,5 +1,10 @@
 import { sequelize } from '../../apps/api/src/config/database.js';
 import Academy from '../../apps/api/src/models/academyModel.js';
+import { fileURLToPath } from 'url';
+import { dirname } from 'path';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 async function ensureDefaultAcademy() {
   try {

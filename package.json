@@ -1,4 +1,5 @@
 {
+  "type": "module",
   "scripts": {
     "start": "bash start.sh",
     "start:dev": "bash start-dev.sh",

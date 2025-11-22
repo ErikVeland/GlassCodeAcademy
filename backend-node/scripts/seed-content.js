@@ -1,6 +1,8 @@
 import fs from 'fs';
 import path from 'path';
 import { Op } from 'sequelize';
+import { fileURLToPath } from 'url';
+import { dirname } from 'path';
 
 // Use models from apps/api directory
 import { sequelize } from '../../apps/api/src/config/database.js';
@@ -9,6 +11,9 @@ import Module from '../../apps/api/src/models/moduleModel.js';
 import Lesson from '../../apps/api/src/models/lessonModel.js';
 import LessonQuiz from '../../apps/api/src/models/quizModel.js';
 import Academy from '../../apps/api/src/models/academyModel.js';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 async function seedContent() {
   try {
