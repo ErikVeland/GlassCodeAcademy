@@ -75,36 +75,6 @@ function printEnvHint(error) {
     const umzug = new Umzug({
       migrations: {
         glob: ['../migrations/*.js', { cwd: __dirname }],
-        resolve: async ({ name, path, context }) => {
-          // Adjust the migration from the migrations folder to match the expected Umzug interface
-          // Use dynamic import for ES modules
-          const migrationModule = await import(path);
-
-          // Handle both default export and named exports
-          const migration = migrationModule.default || migrationModule;
-
-          return {
-            name,
-            up: async () => {
-              if (typeof migration.up === 'function') {
-                return migration.up({ queryInterface: context, Sequelize });
-              } else {
-                throw new Error(
-                  `Migration ${name} does not export an 'up' function`
-                );
-              }
-            },
-            down: async () => {
-              if (typeof migration.down === 'function') {
-                return migration.down({ queryInterface: context, Sequelize });
-              } else {
-                throw new Error(
-                  `Migration ${name} does not export a 'down' function`
-                );
-              }
-            },
-          };
-        },
       },
       context: sequelize.getQueryInterface(),
       storage: new SequelizeStorage({
