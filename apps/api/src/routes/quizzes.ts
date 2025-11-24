@@ -21,18 +21,18 @@ export async function registerQuizRoutes(app: FastifyInstance) {
       }
 
       // Get all lessons for this module, then get all quizzes for those lessons
-      const lessons = await contentService.getLessonsByModuleId(module.id);
+      const lessons = await contentService.getLessonsByModuleId((module as any).id);
       const allQuizzes = [];
 
       for (const lesson of lessons) {
         const lessonQuizzes = await contentService.getQuizzesByLessonId(
-          lesson.id
+          (lesson as any).id
         );
         allQuizzes.push(...lessonQuizzes);
       }
 
       return allQuizzes;
-    } catch (error) {
+    } catch (_error) {
       reply.code(500);
       return { error: 'Failed to fetch quizzes' };
     }
@@ -55,7 +55,7 @@ export async function registerQuizRoutes(app: FastifyInstance) {
         return { error: 'Quiz not found' };
       }
       return quiz;
-    } catch (error) {
+    } catch (_error) {
       reply.code(500);
       return { error: 'Failed to fetch quiz' };
     }

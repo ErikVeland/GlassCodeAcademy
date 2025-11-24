@@ -7,7 +7,6 @@ import {
   initializeVersionTracking,
 } from '../utils/content-versioning';
 import { getAllModules } from '../utils/optimized-content';
-import { z } from 'zod';
 import {
   ModuleSlugSchema,
   VersionSchema,
@@ -22,7 +21,7 @@ export async function registerVersioningRoutes(app: FastifyInstance) {
     try {
       // Validate the slug parameter
       ModuleSlugSchema.parse(slug);
-    } catch (error) {
+    } catch (_error) {
       reply.code(400);
       return { error: 'Invalid module slug format' };
     }
@@ -52,7 +51,7 @@ export async function registerVersioningRoutes(app: FastifyInstance) {
       // Validate the parameters
       ModuleSlugSchema.parse(slug);
       VersionSchema.parse(version);
-    } catch (error) {
+    } catch (_error) {
       reply.code(400);
       return { error: 'Invalid parameters format' };
     }
@@ -85,7 +84,7 @@ export async function registerVersioningRoutes(app: FastifyInstance) {
 
       // Validate the query parameters
       VersionComparisonSchema.parse({ version1, version2 });
-    } catch (error) {
+    } catch (_error) {
       reply.code(400);
       return { error: 'Invalid parameters format' };
     }

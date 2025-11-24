@@ -21,9 +21,9 @@ export async function registerModuleRoutes(app: FastifyInstance) {
         reply.code(404);
         return { error: 'Module not found' };
       }
-      const lessons = await contentService.getLessonsByModuleId(module.id);
+      const lessons = await contentService.getLessonsByModuleId((module as any).id);
       return lessons;
-    } catch (error) {
+    } catch (_error) {
       reply.code(500);
       return { error: 'Failed to fetch lessons' };
     }
@@ -46,7 +46,7 @@ export async function registerModuleRoutes(app: FastifyInstance) {
         return { error: 'Module not found' };
       }
       return module;
-    } catch (error) {
+    } catch (_error) {
       reply.code(500);
       return { error: 'Failed to fetch module' };
     }

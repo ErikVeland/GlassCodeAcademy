@@ -22,7 +22,7 @@ export async function registerLessonRoutes(app: FastifyInstance) {
 
       const quizzes = await contentService.getQuizzesByLessonId(id);
       return quizzes;
-    } catch (error) {
+    } catch (_error) {
       reply.code(500);
       return { error: 'Failed to fetch quizzes' };
     }
@@ -45,7 +45,7 @@ export async function registerLessonRoutes(app: FastifyInstance) {
         return { error: 'Lesson not found' };
       }
       return lesson;
-    } catch (error) {
+    } catch (_error) {
       reply.code(500);
       return { error: 'Failed to fetch lesson' };
     }

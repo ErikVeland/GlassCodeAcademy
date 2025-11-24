@@ -1,5 +1,5 @@
 import jwt from 'jsonwebtoken';
-import { User } from '../models/index.js';
+import type { Model } from 'sequelize';
 
 // Define the payload structure for JWT tokens
 interface JwtPayload {
@@ -9,12 +9,20 @@ interface JwtPayload {
   lastName: string;
 }
 
+// Define the User type based on the Sequelize model
+type UserType = Model & {
+  id: number;
+  email: string;
+  firstName: string;
+  lastName: string;
+};
+
 /**
  * Generate a JWT token for a user
  * @param user The user object
  * @returns JWT token string
  */
-export function generateToken(user: User): string {
+export function generateToken(user: UserType): string {
   const payload: JwtPayload = {
     userId: user.id,
     email: user.email,
@@ -43,7 +51,7 @@ export function verifyToken(token: string): JwtPayload | null {
     const secret = process.env.JWT_SECRET || 'default_secret_key';
     const decoded = jwt.verify(token, secret) as JwtPayload;
     return decoded;
-  } catch (error) {
+  } catch (_error) {
     // Token is invalid or expired
     return null;
   }

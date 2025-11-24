@@ -54,7 +54,7 @@ export async function registerAuthRoutes(app) {
 
   // Get profile endpoint
   app.get('/api/auth/me', async (request, reply) => {
-    // @ts-ignore - Fastify request decoration
+    // @ts-expect-error - Fastify request decoration
     const userId = request.user?.id;
 
     if (!userId) {

@@ -1,10 +1,9 @@
 import type { FastifyInstance } from 'fastify';
-import { User, Role, UserRole } from '../models';
+import { User, Role } from '../models';
 import {
   register as registerUserService,
   login as loginUserService,
 } from '../services/authService';
-import { hashSync } from 'bcryptjs';
 
 export async function registerAuthRoutes(app: FastifyInstance) {
   // Register endpoint
@@ -68,7 +67,7 @@ export async function registerAuthRoutes(app: FastifyInstance) {
 
   // Get profile endpoint
   app.get('/api/auth/me', async (request, reply) => {
-    // @ts-ignore - Fastify request decoration
+    // @ts-expect-error - Fastify request decoration
     const userId = request.user?.id;
 
     if (!userId) {
