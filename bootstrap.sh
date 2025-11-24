@@ -897,6 +897,13 @@ add_if_missing_backend_prod DATABASE_URL "$DATABASE_URL"
     log "✅ API dependencies installed"
     cd "$APP_DIR/backend-node"
 
+    # Create symlinks for server.js and models directory to enable proper module resolution
+    log "🔗 Creating symlinks for backend-node..."
+    mkdir -p src
+    ln -sf ../../apps/api/src/models src/models
+    ln -sf ../apps/api/server.js server.js
+    log "✅ Symlinks created"
+
     # Run database migrations
     log "📊 Running database migrations..."
     if ! sudo -u "$DEPLOY_USER" env NODE_ENV=production SKIP_SECRET_VALIDATION=true JWT_SECRET="$JWT_SECRET" DATABASE_URL="$DATABASE_URL" DB_DIALECT="$DB_DIALECT" DB_HOST="$DB_HOST" DB_PORT="$DB_PORT" DB_NAME="$DB_NAME" DB_USER="$DB_USER" DB_PASSWORD="$DB_PASSWORD" DB_SSL="$DB_SSL" POSTGRES_HOST="$DB_HOST" POSTGRES_PORT="$DB_PORT" POSTGRES_DB="$DB_NAME" POSTGRES_USER="$DB_USER" POSTGRES_PASSWORD="$DB_PASSWORD" npm run migrate; then

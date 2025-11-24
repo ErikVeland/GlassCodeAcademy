@@ -543,6 +543,15 @@ main() {
     git fetch origin
     git reset --hard origin/main
     
+    # Create symlinks for backend-node to ensure proper module resolution
+    log "🔗 Creating symlinks for backend-node..."
+    cd "$APP_DIR/backend-node"
+    mkdir -p src
+    ln -sf ../../apps/api/src/models src/models
+    ln -sf ../apps/api/server.js server.js
+    cd "$APP_DIR"
+    log "✅ Symlinks created"
+
     # Install dependencies
     install_npm_deps
 
