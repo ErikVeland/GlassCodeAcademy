@@ -1,4 +1,4 @@
-import { FastifyInstance } from 'fastify';
+import type { FastifyInstance } from 'fastify';
 import { User, Role, UserRole } from '../models';
 import {
   register as registerUserService,

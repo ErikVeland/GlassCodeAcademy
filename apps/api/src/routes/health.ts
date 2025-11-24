@@ -1,18 +1,25 @@
-import { FastifyInstance } from 'fastify';
+import type { FastifyInstance } from 'fastify';
 import { getCacheStats } from '../utils/optimized-content';
 import {
   getPerformanceMetrics,
   getPerformanceSummary,
 } from '../utils/monitoring';
-// @ts-ignore
-const cacheService = require('../services/cacheService');
+import * as cacheService from '../services/cacheService.js';
+
+interface CacheStats {
+  enabled: boolean;
+  connected: boolean;
+  hits: number;
+  misses: number;
+  errors: number;
+  hitRate: string;
+}
 
 // Simple health check
 export async function registerHealthRoutes(app: FastifyInstance) {
   // Basic health check endpoint
   app.get('/api/health', async () => {
-    // @ts-ignore
-    const redisStats = cacheService.getStats();
+    const redisStats = cacheService.getStats() as CacheStats;
     const status = redisStats.connected ? 'healthy' : 'degraded';
     return {
       status,
@@ -28,8 +35,7 @@ export async function registerHealthRoutes(app: FastifyInstance) {
   app.get('/api/health/detailed', async () => {
     const cacheStats = getCacheStats();
     const performanceSummary = getPerformanceSummary();
-    // @ts-ignore
-    const redisStats = cacheService.getStats();
+    const redisStats = cacheService.getStats() as CacheStats;
 
     // Check if Redis is properly connected for health status
     const overallStatus = redisStats.connected ? 'healthy' : 'degraded';

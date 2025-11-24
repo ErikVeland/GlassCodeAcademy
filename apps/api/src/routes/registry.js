@@ -1,5 +1,4 @@
-import { FastifyInstance } from 'fastify';
-import contentService from '../services/contentService';
+import contentService from '../services/contentService.js';
 
 export async function registerRegistryRoutes(app) {
   app.get('/api/registry/modules', async () => {

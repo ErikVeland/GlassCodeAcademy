@@ -343,7 +343,7 @@ async function invalidateCourse(courseId) {
   return await del(`course:${courseId}`);
 }
 
-module.exports = {
+export {
   // Core cache functions
   get,
   set,

@@ -2,12 +2,16 @@
 'use strict';
 
 // Minimal Fastify server to satisfy local connectivity for frontend
-const fastify = require('fastify');
-const helmet = require('@fastify/helmet');
-const cors = require('@fastify/cors');
-const rateLimit = require('@fastify/rate-limit');
+import fastify from 'fastify';
+import helmet from '@fastify/helmet';
+import cors from '@fastify/cors';
+import rateLimit from '@fastify/rate-limit';
+import process from 'process';
+// Import route registration functions
+import { registerAuthRoutes } from './src/routes/auth.js';
+import { registerRegistryRoutes } from './src/routes/registry.js';
 
-const PORT = Number(process.env.PORT || 8081);
+const PORT = Number(process.env.PORT || 8082);
 
 const app = fastify({ logger: true, bodyLimit: 1_048_576, trustProxy: true });
 
@@ -36,6 +40,10 @@ app.get('/health', async () => ({ success: true, status: 'ok' }));
 
 // Basic root for sanity
 app.get('/', async () => ({ ok: true }));
+
+// Register API routes
+await registerAuthRoutes(app);
+await registerRegistryRoutes(app);
 
 app
   .listen({ port: PORT, host: '0.0.0.0' })

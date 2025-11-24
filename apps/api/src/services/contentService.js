@@ -1,4 +1,4 @@
-const { Course, Module, Lesson, Quiz } = require('../models');
+import { Course, Module, Lesson, Quiz } from '../models/index.js';
 
 class ContentService {
   // Course methods
@@ -335,4 +335,5 @@ class ContentService {
   }
 }
 
-module.exports = new ContentService();
+const contentService = new ContentService();
+export default contentService;

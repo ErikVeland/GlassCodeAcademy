@@ -1,9 +1,9 @@
-const { Course, Module, Lesson, LessonQuiz } = require('./backend-node/src/models');
+import { Course, Module, Lesson, Quiz, initializeAssociations } from './apps/api/src/models/index.js';
 
 async function checkContent() {
   try {
     // Initialize associations
-    require('./backend-node/src/models/index').initializeAssociations();
+    initializeAssociations();
     
     console.log('Checking content counts...');
     
@@ -11,7 +11,7 @@ async function checkContent() {
     const courseCount = await Course.count();
     const moduleCount = await Module.count();
     const lessonCount = await Lesson.count();
-    const quizCount = await LessonQuiz.count();
+    const quizCount = await Quiz.count();
     
     console.log(`Courses: ${courseCount}`);
     console.log(`Modules: ${moduleCount}`);
@@ -20,7 +20,7 @@ async function checkContent() {
     
     // Get a sample of quizzes to see the data
     console.log('\nSample quizzes:');
-    const sampleQuizzes = await LessonQuiz.findAll({
+    const sampleQuizzes = await Quiz.findAll({
       limit: 3,
       order: [['id', 'ASC']],
       attributes: ['id', 'question', 'lesson_id']
@@ -35,7 +35,7 @@ async function checkContent() {
     console.log('\nLessons with quiz counts:');
     const lessonsWithQuizzes = await Lesson.findAll({
       include: [{
-        model: LessonQuiz,
+        model: Quiz,
         as: 'quizzes',
         attributes: ['id']
       }]
