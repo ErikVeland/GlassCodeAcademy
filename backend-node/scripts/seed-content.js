@@ -209,7 +209,7 @@ async function seedContent() {
 
         // Remove existing quizzes for this module's lessons to avoid duplicates
         await LessonQuiz.destroy({
-          where: { lesson_id: { [Op.in]: lessonIds } },
+          where: { lessonId: { [Op.in]: lessonIds } },
         });
 
         for (let i = 0; i < questions.length; i++) {
@@ -229,7 +229,7 @@ async function seedContent() {
           const sortOrder = questionData.sortOrder || i + 1;
 
           const [quiz, quizCreatedFlag] = await LessonQuiz.findOrCreate({
-            where: { sort_order: sortOrder, lesson_id: targetLessonId },
+            where: { sortOrder: sortOrder, lessonId: targetLessonId },
             defaults: {
               question: questionData.question || `Question ${i + 1}`,
               topic: questionData.topic || moduleInfo.title,
@@ -267,8 +267,10 @@ async function seedContent() {
               `    🔁 Updated quiz for lesson ${targetLesson.slug}: ${quiz.question.substring(0, 50)}...`
             );
             await quiz.update({
+              question: questionData.question || `Question ${i + 1}`,
               topic: questionData.topic || moduleInfo.title,
-              difficulty: questionData.difficulty || moduleInfo.difficulty,
+              difficulty:
+                questionData.difficulty || moduleInfo.difficulty || 'Beginner',
               choices: questionData.choices || [],
               fixedChoiceOrder: questionData.fixedChoiceOrder || false,
               choiceLabels: questionData.choiceLabels || null,

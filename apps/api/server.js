@@ -10,6 +10,10 @@ import process from 'process';
 // Import route registration functions
 import { registerAuthRoutes } from './src/routes/auth.js';
 import { registerRegistryRoutes } from './src/routes/registry.js';
+import { registerModuleRoutes } from './src/routes/modules.js';
+import { registerLessonRoutes } from './src/routes/lessons.js';
+import { registerQuizRoutes } from './src/routes/quizzes.js';
+import { registerHealthRoutes } from './src/routes/health.js';
 
 const PORT = Number(process.env.PORT || 8082);
 
@@ -44,6 +48,10 @@ app.get('/', async () => ({ ok: true }));
 // Register API routes
 await registerAuthRoutes(app);
 await registerRegistryRoutes(app);
+await registerModuleRoutes(app);
+await registerLessonRoutes(app);
+await registerQuizRoutes(app);
+await registerHealthRoutes(app);
 
 app
   .listen({ port: PORT, host: '0.0.0.0' })

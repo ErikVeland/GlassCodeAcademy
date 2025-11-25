@@ -1098,9 +1098,9 @@ Description=$APP_NAME Node Backend
 After=network.target
 
 [Service]
-WorkingDirectory=$APP_DIR/backend-node
-EnvironmentFile=$APP_DIR/backend-node/.env.production
-ExecStart=/usr/bin/node $APP_DIR/backend-node/server.js
+WorkingDirectory=$APP_DIR/apps/api
+EnvironmentFile=$APP_DIR/apps/api/.env.production
+ExecStart=/usr/bin/node $APP_DIR/apps/api/server.js
 Restart=always
 RestartSec=10
 User=$DEPLOY_USER
