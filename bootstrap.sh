@@ -1100,12 +1100,13 @@ After=network.target
 [Service]
 WorkingDirectory=$APP_DIR/apps/api
 EnvironmentFile=$APP_DIR/apps/api/.env.production
-ExecStart=/usr/bin/node $APP_DIR/apps/api/server.js
+ExecStart=/usr/bin/node server.js
 Restart=always
 RestartSec=10
 User=$DEPLOY_USER
 Environment=PORT=${BACKEND_PORT:-8080}
 Environment=NODE_ENV=production
+WorkingDirectory=$APP_DIR/apps/api
 
 [Install]
 WantedBy=multi-user.target
@@ -1117,6 +1118,41 @@ EOF
     systemctl enable ${APP_NAME}-backend
 
     log "🚀 Starting backend service..."
+    
+    # Validate required files exist
+    if [ ! -f "$APP_DIR/apps/api/server.js" ]; then
+        log "❌ ERROR: server.js not found at $APP_DIR/apps/api/server.js"
+        exit 1
+    fi
+    
+    # Validate environment file
+    if [ ! -f "$APP_DIR/apps/api/.env.production" ]; then
+        log "❌ ERROR: .env.production not found at $APP_DIR/apps/api/.env.production"
+        exit 1
+    fi
+    
+    # Test service configuration before enabling
+    if command -v systemd-analyze >/dev/null 2>&1; then
+        if ! systemd-analyze verify /etc/systemd/system/${APP_NAME}-backend.service >/dev/null 2>&1; then
+            log "⚠️  WARNING: Service file validation failed"
+        fi
+    fi
+    
+    # Check port availability
+    if command_exists ss; then
+        if ss -tulpn 2>/dev/null | grep -q ":${BACKEND_PORT:-8080}"; then
+            log "⚠️  Port ${BACKEND_PORT:-8080} appears to be in use"
+            PORT_PIDS=$(ss -tulpn 2>/dev/null | sed -n "s/.*:${BACKEND_PORT:-8080}.*pid=\([0-9]\+\).*/\1/p" | sort -u | tr '\n' ' ')
+            if [ -n "$PORT_PIDS" ]; then
+                log "🛑 Killing processes using port ${BACKEND_PORT:-8080} (PIDs: $PORT_PIDS)"
+                kill -TERM $PORT_PIDS 2>/dev/null || true
+                sleep 2
+                # Force kill if still running
+                kill -KILL $PORT_PIDS 2>/dev/null || true
+            fi
+        fi
+    fi
+    
     systemctl start ${APP_NAME}-backend
 
     log "⏳ Waiting for backend health before frontend build..."
@@ -1132,6 +1168,39 @@ EOF
     [ -z "$API_BASE" ] && API_BASE="https://api.${DOMAIN}"
     API_BASE="${API_BASE%/}"
     HEALTH_URL="${API_BASE}/health"
+
+    # Check if service started successfully
+    if ! systemctl is-active --quiet "${APP_NAME}-backend"; then
+        log "❌ Backend service failed to start"
+        log "🧪 Diagnostic: systemd status"
+        systemctl status ${APP_NAME}-backend --no-pager || true
+        log "🪵 Recent backend logs (journalctl)"
+        journalctl -u ${APP_NAME}-backend -n 50 --no-pager || true
+        
+        # Try to start service manually for debugging
+        log "🔧 Attempting manual start for debugging..."
+        cd "$APP_DIR/apps/api"
+        sudo -u "$DEPLOY_USER" PORT=8080 NODE_ENV=production /usr/bin/node server.js &
+        MANUAL_PID=$!
+        sleep 5
+        
+        if kill -0 $MANUAL_PID 2>/dev/null; then
+            log "✅ Manual start successful - service is running with PID $MANUAL_PID"
+            kill $MANUAL_PID 2>/dev/null || true
+        else
+            log "❌ Manual start failed"
+            # Check exit code
+            wait $MANUAL_PID 2>/dev/null
+            EXIT_CODE=$?
+            log "🔧 Manual start exit code: $EXIT_CODE"
+        fi
+        
+        if [ "${FAST_MODE:-0}" -eq 1 ] || [ "${SKIP_BACKEND_HEALTH:-0}" -eq 1 ]; then
+            log "⚠️  Continuing despite backend startup failure due to fast/skip mode"
+        else
+            exit 1
+        fi
+    fi
 
     while [[ $ATTEMPT -le $MAX_ATTEMPTS ]]; do
         # Check if service is still running first
