@@ -3,7 +3,7 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
 import { Op } from 'sequelize';
-import sequelize from '../src/config/database.js';
+import { sequelize } from '../src/config/database.js';
 import Course from '../src/models/courseModel.js';
 import Module from '../src/models/moduleModel.js';
 import Lesson from '../src/models/lessonModel.js';
