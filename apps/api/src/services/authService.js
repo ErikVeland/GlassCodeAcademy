@@ -38,7 +38,7 @@ export async function register(userData) {
     firstName: user.firstName,
     lastName: user.lastName,
     createdAt: user.createdAt,
-    updatedAt: user.updatedAt
+    updatedAt: user.updatedAt,
   };
   return {
     user: userWithoutPassword,
@@ -75,7 +75,7 @@ export async function login(credentials) {
     firstName: user.firstName,
     lastName: user.lastName,
     createdAt: user.createdAt,
-    updatedAt: user.updatedAt
+    updatedAt: user.updatedAt,
   };
   return {
     user: userWithoutPassword,

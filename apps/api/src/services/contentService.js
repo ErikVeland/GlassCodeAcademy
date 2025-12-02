@@ -11,14 +11,18 @@ class ContentService {
           {
             model: Module,
             as: 'modules',
-            where: { isPublished: true },
             required: false,
+            separate: true, // Fix: Use separate query to avoid filtering parent records
+            where: { isPublished: true },
+            order: [['order', 'ASC']],
             include: [
               {
                 model: Lesson,
                 as: 'lessons',
-                where: { isPublished: true },
                 required: false,
+                separate: true, // Fix: Use separate query
+                where: { isPublished: true },
+                order: [['order', 'ASC']],
               },
             ],
           },

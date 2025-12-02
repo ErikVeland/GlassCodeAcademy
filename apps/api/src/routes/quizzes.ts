@@ -21,7 +21,9 @@ export async function registerQuizRoutes(app: FastifyInstance) {
       }
 
       // Get all lessons for this module, then get all quizzes for those lessons
-      const lessons = await contentService.getLessonsByModuleId((module as any).id);
+      const lessons = await contentService.getLessonsByModuleId(
+        (module as any).id
+      );
       const allQuizzes = [];
 
       for (const lesson of lessons) {

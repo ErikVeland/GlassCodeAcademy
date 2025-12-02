@@ -1,4 +1,7 @@
-import { register as registerUserService, login as loginUserService } from '../services/authService.js';
+import {
+  register as registerUserService,
+  login as loginUserService,
+} from '../services/authService.js';
 
 export async function registerAuthRoutes(app) {
   // Register endpoint

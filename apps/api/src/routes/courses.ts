@@ -10,25 +10,25 @@ export async function registerCourseRoutes(app: FastifyInstance) {
       const query = request.query as { page?: string; limit?: string };
       const page = parseInt(query.page || '1', 10);
       const limit = parseInt(query.limit || '10', 10);
-      
+
       // Validate pagination parameters
       if (isNaN(page) || page < 1) {
         reply.code(400);
         return { error: 'Invalid page parameter' };
       }
-      
+
       if (isNaN(limit) || limit < 1 || limit > 100) {
         reply.code(400);
         return { error: 'Invalid limit parameter (must be between 1 and 100)' };
       }
-      
+
       const courses = await contentService.getAllCourses();
-      
+
       // Simulate pagination (in a real implementation, this would be done at the database level)
       const startIndex = (page - 1) * limit;
       const endIndex = startIndex + limit;
       const paginatedCourses = courses.slice(startIndex, endIndex);
-      
+
       return {
         success: true,
         data: {
@@ -37,15 +37,15 @@ export async function registerCourseRoutes(app: FastifyInstance) {
             page,
             limit,
             total: courses.length,
-            pages: Math.ceil(courses.length / limit)
-          }
-        }
+            pages: Math.ceil(courses.length / limit),
+          },
+        },
       };
     } catch (_error) {
       reply.code(500);
-      return { 
+      return {
         success: false,
-        error: 'Failed to fetch courses' 
+        error: 'Failed to fetch courses',
       };
     }
   });
@@ -59,9 +59,9 @@ export async function registerCourseRoutes(app: FastifyInstance) {
       validateParams(ModuleSlugSchema, slug);
     } catch (_error) {
       reply.code(400);
-      return { 
+      return {
         success: false,
-        error: 'Invalid course slug format' 
+        error: 'Invalid course slug format',
       };
     }
 
@@ -69,21 +69,21 @@ export async function registerCourseRoutes(app: FastifyInstance) {
       const course = await contentService.getCourseBySlug(slug);
       if (!course) {
         reply.code(404);
-        return { 
+        return {
           success: false,
-          error: 'Course not found' 
+          error: 'Course not found',
         };
       }
-      
+
       return {
         success: true,
-        data: course
+        data: course,
       };
     } catch (_error) {
       reply.code(500);
-      return { 
+      return {
         success: false,
-        error: 'Failed to fetch course' 
+        error: 'Failed to fetch course',
       };
     }
   });
@@ -96,30 +96,30 @@ export async function registerCourseRoutes(app: FastifyInstance) {
       const courseId = parseInt(id, 10);
       if (isNaN(courseId)) {
         reply.code(400);
-        return { 
+        return {
           success: false,
-          error: 'Invalid course ID' 
+          error: 'Invalid course ID',
         };
       }
 
       const course = await contentService.getCourseById(courseId);
       if (!course) {
         reply.code(404);
-        return { 
+        return {
           success: false,
-          error: 'Course not found' 
+          error: 'Course not found',
         };
       }
-      
+
       return {
         success: true,
-        data: course
+        data: course,
       };
     } catch (_error) {
       reply.code(500);
-      return { 
+      return {
         success: false,
-        error: 'Failed to fetch course' 
+        error: 'Failed to fetch course',
       };
     }
   });

@@ -1,64 +1,32 @@
 import type { FastifyInstance } from 'fastify';
 import contentService from '../services/contentService';
 
-// Type definitions for nested content structure
-interface Question {
-  id: number;
-  question: string;
-  choices?: string[];
-}
-
-interface Quiz {
-  id: number;
-  lessonId: number;
-  questions?: Question[];
-  choices?: string[];
-  quizzes?: Quiz[];
-}
-
-interface Lesson {
-  id: number;
-  moduleId: number;
-  quizzes?: Quiz[];
-}
-
-interface Module {
-  id: number;
-  courseId: number;
-  lessons?: Lesson[];
-}
-
-interface Course {
-  id: number;
-  modules?: Module[];
-}
-
 export async function registerStatsRoutes(app: FastifyInstance) {
   // Get aggregated statistics for all content
   app.get('/api/stats/aggregate', async (_request, reply) => {
     try {
       // Fetch all courses with nested modules, lessons, and quizzes
-      const courses = await contentService.getAllCourses() as any[];
-      
+      const courses = (await contentService.getAllCourses()) as any[];
+
       // Initialize counters
       let totalModules = 0;
       let totalLessons = 0;
       let totalQuizzes = 0;
       let totalQuestions = 0;
-      
+
       // Traverse the nested structure and count
       for (const course of courses) {
         if (course.modules && Array.isArray(course.modules)) {
           totalModules += course.modules.length;
-          
+
           for (const module of course.modules) {
             if (module.lessons && Array.isArray(module.lessons)) {
               totalLessons += module.lessons.length;
-              
+
               for (const lesson of module.lessons) {
                 if (lesson.quizzes && Array.isArray(lesson.quizzes)) {
                   totalQuizzes += lesson.quizzes.length;
-                  
+
                   // Count questions in each quiz
                   for (const quiz of lesson.quizzes) {
                     // If quiz has a questions array, count them
@@ -76,7 +44,7 @@ export async function registerStatsRoutes(app: FastifyInstance) {
           }
         }
       }
-      
+
       // Return aggregated statistics
       return {
         data: {
@@ -84,15 +52,15 @@ export async function registerStatsRoutes(app: FastifyInstance) {
           totalLessons,
           totalQuizzes,
           totalQuestions,
-          totalCourses: courses.length
-        }
+          totalCourses: courses.length,
+        },
       };
     } catch (error: any) {
       app.log.error({ err: error }, 'Failed to fetch aggregate stats');
       reply.code(500);
       return {
         success: false,
-        error: 'Failed to fetch aggregate statistics'
+        error: 'Failed to fetch aggregate statistics',
       };
     }
   });

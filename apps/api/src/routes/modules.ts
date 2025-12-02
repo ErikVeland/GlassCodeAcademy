@@ -21,7 +21,9 @@ export async function registerModuleRoutes(app: FastifyInstance) {
         reply.code(404);
         return { error: 'Module not found' };
       }
-      const lessons = await contentService.getLessonsByModuleId((module as any).id);
+      const lessons = await contentService.getLessonsByModuleId(
+        (module as any).id
+      );
       return lessons;
     } catch (_error) {
       reply.code(500);
