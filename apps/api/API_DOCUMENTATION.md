@@ -5,6 +5,69 @@
 http://localhost:8080/api
 ```
 
+## Health Check
+
+### Basic Health Check
+```
+GET /health
+```
+
+**Response:**
+```json
+{
+  "success": true,
+  "status": "ok"
+}
+```
+
+### Detailed Health Check
+```
+GET /api/health/detailed
+```
+
+**Response:**
+```json
+{
+  "status": "healthy",
+  "timestamp": "2025-12-02T10:30:00.000Z",
+  "uptime": 3600,
+  "memory": {
+    "rss": "150 MB",
+    "heapTotal": "100 MB",
+    "heapUsed": "80 MB"
+  }
+}
+```
+
+## Statistics
+
+### Get Aggregate Statistics
+```
+GET /api/stats/aggregate
+```
+
+Returns aggregated statistics about all content in the system.
+
+**Response:**
+```json
+{
+  "data": {
+    "totalModules": 18,
+    "totalLessons": 274,
+    "totalQuizzes": 0,
+    "totalQuestions": 0,
+    "totalCourses": 19
+  }
+}
+```
+
+**Fields:**
+- `totalModules` - Number of published modules across all courses
+- `totalLessons` - Number of published lessons across all modules
+- `totalQuizzes` - Number of quizzes across all lessons
+- `totalQuestions` - Total number of quiz questions
+- `totalCourses` - Number of published courses
+
 ## Authentication
 
 ### Register
@@ -71,45 +134,48 @@ POST /auth/login
 
 ### Get All Courses
 ```
-GET /courses
+GET /api/courses
 ```
 
 **Query Parameters:**
 - `page` (optional) - Page number (default: 1)
-- `limit` (optional) - Items per page (default: 10)
-- `sort` (optional) - Sort field (default: 'order')
+- `limit` (optional) - Items per page (default: 10, max: 100)
 
 **Response:**
 ```json
 {
   "success": true,
-  "data": [
-    {
-      "id": 1,
-      "title": "Web Development Fundamentals",
-      "description": "Learn the fundamentals of web development",
-      "slug": "web-fundamentals",
-      "isPublished": true,
-      "order": 1,
-      "difficulty": "Beginner",
-      "estimatedHours": 10
-    }
-  ],
-  "meta": {
+  "data": {
+    "courses": [
+      {
+        "id": 1,
+        "title": "Web Development Fundamentals",
+        "description": "Learn the fundamentals of web development",
+        "slug": "web-fundamentals",
+        "isPublished": true,
+        "order": 1,
+        "difficulty": "Beginner",
+        "estimatedHours": "10.0",
+        "modules": [...]
+      }
+    ],
     "pagination": {
       "page": 1,
       "limit": 10,
-      "total": 1,
-      "pages": 1
+      "total": 19,
+      "pages": 2
     }
   }
 }
 ```
 
-### Get Course by ID
+### Get Course by Slug
 ```
-GET /courses/{id}
+GET /api/courses/:slug
 ```
+
+**Path Parameters:**
+- `slug` - Course slug (e.g., "web-fundamentals")
 
 **Response:**
 ```json
@@ -123,7 +189,7 @@ GET /courses/{id}
     "isPublished": true,
     "order": 1,
     "difficulty": "Beginner",
-    "estimatedHours": 10,
+    "estimatedHours": "10.0",
     "modules": [
       {
         "id": 1,

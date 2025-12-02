@@ -13,6 +13,7 @@ import { registerSearchRoutes } from './routes/search';
 import { registerVersioningRoutes } from './routes/versioning';
 import { registerAuthRoutes } from './routes/auth';
 import { registerCourseRoutes } from './routes/courses';
+import { registerStatsRoutes } from './routes/stats';
 import { performanceMonitor } from './utils/monitoring';
 import { scheduleCacheWarming } from './utils/cache-warmer';
 import { registerMetricsEndpoint } from './utils/prometheus-metrics';
@@ -102,15 +103,16 @@ export async function buildServer() {
   });
 
   // Register all routes
+  await registerHealthRoutes(app);
+  await registerStatsRoutes(app);
+  await registerAuthRoutes(app);
+  await registerCourseRoutes(app);
   await registerRegistryRoutes(app);
   await registerModuleRoutes(app);
   await registerLessonRoutes(app);
   await registerQuizRoutes(app);
-  await registerHealthRoutes(app);
   await registerSearchRoutes(app);
   await registerVersioningRoutes(app);
-  await registerAuthRoutes(app);
-  await registerCourseRoutes(app);
 
   // Schedule cache warming (every 30 minutes)
   scheduleCacheWarming(30);

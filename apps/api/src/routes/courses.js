@@ -1,13 +1,11 @@
-import type { FastifyInstance } from 'fastify';
-import contentService from '../services/contentService';
-import { ModuleSlugSchema, validateParams } from '../utils/validation';
+import contentService from '../services/contentService.js';
 
-export async function registerCourseRoutes(app: FastifyInstance) {
+export async function registerCourseRoutes(app) {
   // Get all courses with pagination support
   app.get('/api/courses', async (request, reply) => {
     try {
       // Extract pagination parameters
-      const query = request.query as { page?: string; limit?: string };
+      const query = request.query || {};
       const page = parseInt(query.page || '1', 10);
       const limit = parseInt(query.limit || '10', 10);
       
@@ -41,7 +39,7 @@ export async function registerCourseRoutes(app: FastifyInstance) {
           }
         }
       };
-    } catch (_error) {
+    } catch (error) {
       reply.code(500);
       return { 
         success: false,
@@ -53,17 +51,7 @@ export async function registerCourseRoutes(app: FastifyInstance) {
   // Get course by slug
   app.get('/api/courses/:slug', async (request, reply) => {
     // Validate the slug parameter
-    const { slug } = request.params as { slug: string };
-
-    try {
-      validateParams(ModuleSlugSchema, slug);
-    } catch (_error) {
-      reply.code(400);
-      return { 
-        success: false,
-        error: 'Invalid course slug format' 
-      };
-    }
+    const { slug } = request.params;
 
     try {
       const course = await contentService.getCourseBySlug(slug);
@@ -79,7 +67,7 @@ export async function registerCourseRoutes(app: FastifyInstance) {
         success: true,
         data: course
       };
-    } catch (_error) {
+    } catch (error) {
       reply.code(500);
       return { 
         success: false,
@@ -88,9 +76,9 @@ export async function registerCourseRoutes(app: FastifyInstance) {
     }
   });
 
-  // Get course by ID (must come before slug route to avoid conflicts)
+  // Get course by ID (use different path to avoid conflict with slug)
   app.get('/api/courses/id/:id', async (request, reply) => {
-    const { id } = request.params as { id: string };
+    const { id } = request.params;
 
     try {
       const courseId = parseInt(id, 10);
@@ -115,7 +103,7 @@ export async function registerCourseRoutes(app: FastifyInstance) {
         success: true,
         data: course
       };
-    } catch (_error) {
+    } catch (error) {
       reply.code(500);
       return { 
         success: false,
