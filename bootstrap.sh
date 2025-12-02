@@ -1956,13 +1956,18 @@ if [ "$FRONTEND_ONLY" -eq 0 ]; then
             # Attempt content seeding from JSON registry
             if [ -d "$APP_DIR/backend-node" ]; then
                 log "🌱 Seeding database content from JSON registry..."
-                (
+                if ! (
                   cd "$APP_DIR/apps/api" && \
                   sudo -u "$DEPLOY_USER" env NODE_ENV=production SKIP_SECRET_VALIDATION=true JWT_SECRET="${JWT_SECRET}" \
                     DATABASE_URL="${DATABASE_URL}" DB_DIALECT="${DB_DIALECT}" DB_HOST="${DB_HOST}" DB_PORT="${DB_PORT}" DB_NAME="${DB_NAME}" DB_USER="${DB_USER}" DB_PASSWORD="${DB_PASSWORD}" DB_SSL="${DB_SSL}" \
                     POSTGRES_HOST="$DB_HOST" POSTGRES_PORT="$DB_PORT" POSTGRES_DB="$DB_NAME" POSTGRES_USER="$DB_USER" POSTGRES_PASSWORD="$DB_PASSWORD" \
                     npm run seed:content
-                ) || log "⚠️  WARNING: Content seeding failed; continuing"
+                ); then
+                    log "❌ ERROR: Content seeding failed - this is mandatory for production deployment"
+                    log "💡 Content seeding is required to populate courses, modules, lessons, and quizzes"
+                    log "🔄 Deployment halted to prevent missing content in production"
+                    exit 1
+                fi
                 # Recheck courses after seeding
                 COURSES_JSON=$(timeout 10 curl -s "${API_BASE}/api/courses" || true)
                 COURSES_COUNT=$(echo "$COURSES_JSON" | jq -r 'if type=="array" then length elif has("data") and (.data|type=="array") then (.data|length) else 0 end' 2>/dev/null || echo "0")

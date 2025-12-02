@@ -570,10 +570,12 @@ main() {
         # Seed content from JSON registry to ensure courses/modules/lessons are available
         log "🌱 Seeding database content from JSON registry..."
         if ! sudo -u "$DEPLOY_USER" env NODE_ENV=production DATABASE_URL="$DATABASE_URL" DB_DIALECT="$DB_DIALECT" DB_HOST="$DB_HOST" DB_PORT="$DB_PORT" DB_NAME="$DB_NAME" DB_USER="$DB_USER" DB_PASSWORD="$DB_PASSWORD" DB_SSL="$DB_SSL" npm run seed:content; then
-            log "⚠️  WARNING: Content seeding failed; continuing"
-        else
-            log "✅ Content seeding completed"
+            log "❌ ERROR: Content seeding failed - this is mandatory for production deployment"
+            log "💡 Content seeding is required to populate courses, modules, lessons, and quizzes"
+            log "🔄 Deployment halted to prevent missing content in production"
+            exit 1
         fi
+        log "✅ Content seeding completed successfully"
     fi
     
     # Build frontend
