@@ -1,12 +1,17 @@
-const fs = require('fs');
-const path = require('path');
-const { Op } = require('sequelize');
-const sequelize = require('../src/config/database');
-const Course = require('../src/models/courseModel');
-const Module = require('../src/models/moduleModel');
-const Lesson = require('../src/models/lessonModel');
-const LessonQuiz = require('../src/models/quizModel'); // This is the correct path
-const Academy = require('../src/models/academyModel');
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
+import { dirname } from 'path';
+import { Op } from 'sequelize';
+import sequelize from '../src/config/database.js';
+import Course from '../src/models/courseModel.js';
+import Module from '../src/models/moduleModel.js';
+import Lesson from '../src/models/lessonModel.js';
+import LessonQuiz from '../src/models/quizModel.js';
+import Academy from '../src/models/academyModel.js';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 async function seedContent() {
   try {
