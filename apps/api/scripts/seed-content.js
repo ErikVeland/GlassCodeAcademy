@@ -44,7 +44,7 @@ async function seedContent() {
     );
 
     // Load registry to get module information
-    const registryPath = path.join(__dirname, '../../content/registry.json');
+    const registryPath = path.join(__dirname, '../../../content/registry.json');
     const registry = JSON.parse(fs.readFileSync(registryPath, 'utf8'));
 
     console.log(`Found ${registry.modules.length} modules in registry`);
@@ -128,7 +128,7 @@ async function seedContent() {
       // Load lessons for this module
       const lessonsPath = path.join(
         __dirname,
-        `../../content/lessons/${moduleInfo.slug}.json`
+        `../../../content/lessons/${moduleInfo.slug}.json`
       );
       let lessons = [];
 
@@ -187,7 +187,7 @@ async function seedContent() {
       // Load quiz questions for this module
       const quizzesPath = path.join(
         __dirname,
-        `../../content/quizzes/${moduleInfo.slug}.json`
+        `../../../content/quizzes/${moduleInfo.slug}.json`
       );
       if (fs.existsSync(quizzesPath)) {
         const quizData = JSON.parse(fs.readFileSync(quizzesPath, 'utf8'));
