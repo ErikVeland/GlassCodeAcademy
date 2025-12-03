@@ -212,6 +212,20 @@
   "contact": {
     "title": "Start et prosjekt",
     "intro": "Klar til å jobbe sammen? Fortell oss om prosjektet ditt så svarer vi innen 2 virkedager.",
+    "info_cards": {
+      "quick_response": {
+        "heading": "Rask respons",
+        "description": "Vi svarer vanligvis innen 24 timer på virkedager."
+      },
+      "start_conversation": {
+        "heading": "Start en samtale",
+        "description": "Enten du har et fullt utviklet prosjekt eller bare en idé, vil vi gjerne høre fra deg."
+      },
+      "no_obligation": {
+        "heading": "Ingen forpliktelse",
+        "description": "Innledende konsultasjoner er alltid gratis. La oss utforske om vi passer sammen."
+      }
+    },
     "form": {
       "fields": {
         "name": {
@@ -223,15 +237,15 @@
           "placeholder": "din@epost.no"
         },
         "organisation": {
-          "label": "Organisasjon (valgfritt)",
+          "label": "Organisasjon",
           "placeholder": "Din organisasjon"
         },
         "projectType": {
-          "label": "Prosjekttype (valgfritt)",
+          "label": "Prosjekttype",
           "placeholder": "Velg en type"
         },
         "budget": {
-          "label": "Budsjettområde (valgfritt)",
+          "label": "Budsjettområde",
           "placeholder": "Velg et område"
         },
         "message": {

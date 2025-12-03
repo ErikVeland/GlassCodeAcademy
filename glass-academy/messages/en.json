@@ -167,6 +167,20 @@
   "contact": {
     "title": "Start a Project",
     "intro": "Ready to work together? Tell us about your project and we'll get back to you within 2 business days.",
+    "info_cards": {
+      "quick_response": {
+        "heading": "Quick Response",
+        "description": "We typically respond within 24 hours during business days."
+      },
+      "start_conversation": {
+        "heading": "Start a Conversation",
+        "description": "Whether you have a fully formed project or just an idea, we'd love to hear from you."
+      },
+      "no_obligation": {
+        "heading": "No Obligation",
+        "description": "Initial consultations are always free. Let's explore if we're a good fit."
+      }
+    },
     "form": {
       "fields": {
         "name": {
@@ -178,15 +192,15 @@
           "placeholder": "your@email.com"
         },
         "organisation": {
-          "label": "Organization (optional)",
+          "label": "Organization",
           "placeholder": "Your organization"
         },
         "projectType": {
-          "label": "Project Type (optional)",
+          "label": "Project Type",
           "placeholder": "Select a type"
         },
         "budget": {
-          "label": "Budget Range (optional)",
+          "label": "Budget Range",
           "placeholder": "Select a range"
         },
         "message": {

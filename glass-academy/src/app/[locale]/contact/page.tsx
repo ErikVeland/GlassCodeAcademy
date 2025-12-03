@@ -37,18 +37,18 @@ export default async function ContactPage({ params }: PageProps) {
 
               <div className="space-y-6 pt-8">
                 <div className="glass rounded-2xl p-6">
-                  <h3 className="text-lg font-semibold mb-2">Quick Response</h3>
-                  <p className="text-muted-foreground">We typically respond within 24 hours during business days.</p>
+                  <h3 className="text-lg font-semibold mb-2">{t('info_cards.quick_response.heading')}</h3>
+                  <p className="text-muted-foreground">{t('info_cards.quick_response.description')}</p>
                 </div>
                 
                 <div className="glass rounded-2xl p-6">
-                  <h3 className="text-lg font-semibold mb-2">Start a Conversation</h3>
-                  <p className="text-muted-foreground">Whether you have a fully formed project or just an idea, we'd love to hear from you.</p>
+                  <h3 className="text-lg font-semibold mb-2">{t('info_cards.start_conversation.heading')}</h3>
+                  <p className="text-muted-foreground">{t('info_cards.start_conversation.description')}</p>
                 </div>
 
                 <div className="glass rounded-2xl p-6">
-                  <h3 className="text-lg font-semibold mb-2">No Obligation</h3>
-                  <p className="text-muted-foreground">Initial consultations are always free. Let's explore if we're a good fit.</p>
+                  <h3 className="text-lg font-semibold mb-2">{t('info_cards.no_obligation.heading')}</h3>
+                  <p className="text-muted-foreground">{t('info_cards.no_obligation.description')}</p>
                 </div>
               </div>
             </div>
