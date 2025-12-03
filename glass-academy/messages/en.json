@@ -1,0 +1,23 @@
+{
+  "site": {
+    "title": "Glass Academy"
+  },
+  "nav": {
+    "home": "Home",
+    "work": "Work",
+    "services": "Services",
+    "process": "Process",
+    "about": "About",
+    "contact": "Contact"
+  },
+  "hero": {
+    "title": "We build digital experiences.",
+    "subtitle": "Glass Academy is a digital agency focused on education and investigation."
+  },
+  "case": {
+    "context": "Context",
+    "approach": "Approach",
+    "solution": "Solution",
+    "outcome": "Outcome"
+  }
+}

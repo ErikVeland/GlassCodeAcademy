@@ -1,0 +1,23 @@
+{
+  "site": {
+    "title": "Glass Academy"
+  },
+  "nav": {
+    "home": "Hjem",
+    "work": "Arbeid",
+    "services": "Tjenester",
+    "process": "Prosess",
+    "about": "Om oss",
+    "contact": "Kontakt"
+  },
+  "hero": {
+    "title": "Vi bygger digitale opplevelser.",
+    "subtitle": "Glass Academy er et digitalt byrå med fokus på utdanning og etterforskning."
+  },
+  "case": {
+    "context": "Kontekst",
+    "approach": "Tilnærming",
+    "solution": "Løsning",
+    "outcome": "Resultat"
+  }
+}
