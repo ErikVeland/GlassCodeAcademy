@@ -11,13 +11,78 @@
     "contact": "Kontakt"
   },
   "hero": {
-    "title": "Vi bygger digitale opplevelser.",
-    "subtitle": "Glass Academy er et digitalt byrå med fokus på utdanning og etterforskning."
+    "title": "Vi bygger digitale opplevelser som betyr noe.",
+    "subtitle": "Glass Academy lager plattformer for utdanning, etterforskning og dataanalyse—vi gjør komplekse problemer om til tydelige, kraftige verktøy.",
+    "primaryCta": "Se vårt arbeid",
+    "secondaryCta": "Start et prosjekt"
+  },
+  "home": {
+    "featured": {
+      "heading": "Utvalgte prosjekter",
+      "intro": "Et utvalg prosjekter som viser hvordan vi jobber med komplekse utfordringer."
+    },
+    "services": {
+      "heading": "Hva vi gjør",
+      "digital_products": {
+        "heading": "Digitale produkter og plattformer",
+        "description": "Vi designer og bygger webapplikasjoner, læringsplattformer og skreddersydde verktøy som løser reelle problemer. Fra konsept til produksjon håndterer vi hele stacken."
+      },
+      "data_viz": {
+        "heading": "Datavisualisering og nettverksanalyse",
+        "description": "Vi transformerer komplekse datasett til interaktive visualiseringer som avslører mønstre og sammenhenger. Enten det gjelder å kartlegge relasjoner eller utforske historiske data, gjør vi informasjon tilgjengelig."
+      },
+      "investigative": {
+        "heading": "Etterforsknings- og forskningsverktøy",
+        "description": "Vi bygger plattformer for journalister og forskere til å analysere dokumenter, trekke ut enheter og spore nettverk. Våre verktøy bringer forensisk nøyaktighet til etterforskningsarbeid."
+      },
+      "education": {
+        "heading": "Utdanning og læringsopplevelser",
+        "description": "Vi lager læringsplattformer og pensum for folk som vil bygge faktiske produkter. Praktisk, produksjonsfokusert og laget av aktive utviklere."
+      }
+    }
+  },
+  "work": {
+    "title": "Vårt arbeid",
+    "intro": "Vi spesialiserer oss på utdanningsplattformer, etterforskningsverktøy, datavisualisering og eksperimentelle produkter. Utforsk vår portefelje etter område.",
+    "filters": {
+      "all": "Alle prosjekter",
+      "investigative": "Etterforskning",
+      "education": "Utdanning",
+      "dataviz": "Datavisualisering",
+      "experimental": "Eksperimentelt"
+    },
+    "visitSite": "Besøk nettsiden"
+  },
+  "domains": {
+    "Investigative": "Etterforskning",
+    "Education": "Utdanning",
+    "Data viz": "Datavisualisering",
+    "Experimental": "Eksperimentelt"
+  },
+  "status": {
+    "Live": "I drift",
+    "Prototype": "Prototype",
+    "Internal": "Internt"
   },
   "case": {
-    "context": "Kontekst",
-    "approach": "Tilnærming",
-    "solution": "Løsning",
-    "outcome": "Resultat"
+    "context": {
+      "heading": "Kontekst"
+    },
+    "approach": {
+      "heading": "Tilnærming"
+    },
+    "solution": {
+      "heading": "Løsning"
+    },
+    "outcome": {
+      "heading": "Resultat"
+    },
+    "meta": {
+      "domain": "Område",
+      "status": "Status",
+      "clientType": "Klienttype",
+      "techStack": "Teknologi",
+      "role": "Vår rolle"
+    }
   }
 }

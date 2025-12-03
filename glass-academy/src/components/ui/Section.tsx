@@ -9,7 +9,7 @@ interface SectionProps extends HTMLAttributes<HTMLElement> {
 export default function Section({ children, className = '', ...props }: SectionProps) {
   return (
     <section
-      className={`py-12 md:py-16 ${className}`}
+      className={`py-12 md:py-16 max-w-5xl mx-auto px-6 ${className}`}
       {...props}
     >
       {children}

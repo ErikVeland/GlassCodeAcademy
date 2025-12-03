@@ -11,13 +11,242 @@
     "contact": "Contact"
   },
   "hero": {
-    "title": "We build digital experiences.",
-    "subtitle": "Glass Academy is a digital agency focused on education and investigation."
+    "title": "We build digital experiences that matter.",
+    "subtitle": "Glass Academy creates platforms for education, investigation, and data exploration—turning complex problems into clear, powerful tools.",
+    "primaryCta": "View Our Work",
+    "secondaryCta": "Start a Project"
+  },
+  "home": {
+    "featured": {
+      "heading": "Featured Work",
+      "intro": "A selection of projects that demonstrate our approach to complex problems."
+    },
+    "services": {
+      "heading": "What We Do",
+      "digital_products": {
+        "heading": "Digital Products & Platforms",
+        "description": "We design and build web applications, learning platforms, and custom tools that solve real problems. From concept to production, we handle the full stack."
+      },
+      "data_viz": {
+        "heading": "Data Visualization & Network Analysis",
+        "description": "We transform complex datasets into interactive visualizations that reveal patterns and connections. Whether mapping relationships or exploring historical data, we make information accessible."
+      },
+      "investigative": {
+        "heading": "Investigative & Research Tools",
+        "description": "We build platforms for journalists and researchers to analyze documents, extract entities, and trace networks. Our tools bring forensic rigor to investigative work."
+      },
+      "education": {
+        "heading": "Education & Learning Experiences",
+        "description": "We create learning platforms and curricula for people who want to build real products. Hands-on, production-focused, and built by working engineers."
+      }
+    }
+  },
+  "work": {
+    "title": "Our Work",
+    "intro": "We specialize in education platforms, investigative tools, data visualization, and experimental products. Browse our portfolio by domain.",
+    "filters": {
+      "all": "All Projects",
+      "investigative": "Investigative",
+      "education": "Education",
+      "dataviz": "Data Visualization",
+      "experimental": "Experimental"
+    },
+    "visitSite": "Visit Live Site"
+  },
+  "domains": {
+    "Investigative": "Investigative",
+    "Education": "Education",
+    "Data viz": "Data Visualization",
+    "Experimental": "Experimental"
+  },
+  "status": {
+    "Live": "Live",
+    "Prototype": "Prototype",
+    "Internal": "Internal"
+  },
+  "services": {
+    "title": "Our Services",
+    "intro": "We partner with clients across education, investigative journalism, data visualization, and experimental product development.",
+    "items": {
+      "digital_products": {
+        "heading": "Digital Products & Platforms",
+        "audience": "Organizations and startups that need custom web applications, learning platforms, or data-driven tools built from the ground up.",
+        "deliverables": "Full-stack web applications, API design and development, database architecture, deployment pipelines, ongoing maintenance and support.",
+        "engagement": "We typically start with a discovery phase to understand requirements, followed by iterative development cycles with regular client feedback."
+      },
+      "data_viz": {
+        "heading": "Data Visualization & Network Analysis",
+        "audience": "Researchers, cultural organizations, and institutions with complex datasets that need to be made accessible and explorable.",
+        "deliverables": "Interactive visualizations, network graphs, data transformation pipelines, custom exploration interfaces.",
+        "engagement": "We begin with data assessment and design prototypes, then build production-ready visualizations with your team's input."
+      },
+      "investigative": {
+        "heading": "Investigative & Research Tools",
+        "audience": "Journalists, researchers, and legal teams who need to analyze large document sets, extract entities, and trace relationships.",
+        "deliverables": "Document analysis platforms, entity extraction systems, search interfaces, relationship mapping tools, secure collaboration environments.",
+        "engagement": "Security and data integrity are paramount. We work closely with your team to ensure tools meet rigorous investigative standards."
+      },
+      "education": {
+        "heading": "Education & Learning Experiences",
+        "audience": "Educational institutions, bootcamps, and companies building internal training programs that require custom learning platforms.",
+        "deliverables": "Learning management systems, interactive curricula, assessment tools, progress tracking, hands-on coding environments.",
+        "engagement": "We design curricula based on learning outcomes, then build platforms that support active learning and real-world application."
+      }
+    }
+  },
+  "process": {
+    "title": "How We Work",
+    "intro": "Our process is built on transparency, collaboration, and iterative improvement.",
+    "steps": {
+      "discovery": {
+        "title": "Discovery",
+        "description": "We start by understanding your problem, goals, and constraints.",
+        "activities": ["Stakeholder interviews", "Requirements gathering", "Technical feasibility assessment"]
+      },
+      "research": {
+        "title": "Research",
+        "description": "We research similar problems, existing solutions, and user needs.",
+        "activities": ["Competitive analysis", "User research", "Technical exploration"]
+      },
+      "design": {
+        "title": "Design",
+        "description": "We create wireframes, prototypes, and design systems.",
+        "activities": ["Information architecture", "Interaction design", "Visual design"]
+      },
+      "build": {
+        "title": "Build",
+        "description": "We develop your product iteratively with regular feedback cycles.",
+        "activities": ["Frontend and backend development", "Regular demos and feedback", "Testing and refinement"]
+      },
+      "launch": {
+        "title": "Launch",
+        "description": "We deploy your product and ensure smooth operation.",
+        "activities": ["Deployment and infrastructure setup", "Monitoring and optimization", "Training and documentation"]
+      },
+      "iteration": {
+        "title": "Iteration",
+        "description": "We continue improving based on real-world usage and feedback.",
+        "activities": ["Analytics and user feedback", "Feature enhancements", "Performance optimization"]
+      }
+    }
+  },
+  "about": {
+    "title": "About Glass Academy",
+    "intro": "Glass Academy is a digital agency specializing in education, investigation, data visualization, and experimental products. We build tools that make complex information accessible and actionable.",
+    "specialization": "We work with clients who have challenging problems: journalists analyzing thousands of documents, educators building learning platforms, researchers visualizing network data. Our approach combines technical depth with investigative rigor.",
+    "philosophy": "We believe in clarity over complexity, evidence over assumption, and building tools that empower people to understand their world. Every project is an opportunity to learn, question, and create something meaningful.",
+    "values": {
+      "heading": "Our Values",
+      "items": {
+        "clarity": {
+          "heading": "Clarity",
+          "description": "We make complex information understandable. Whether visualizing data or designing interfaces, our goal is always to reveal insight, not obscure it."
+        },
+        "investigative": {
+          "heading": "Investigative Mindset",
+          "description": "We question assumptions, dig into details, and base decisions on evidence. This approach serves us whether building educational tools or investigative platforms."
+        },
+        "accessibility": {
+          "heading": "Accessibility",
+          "description": "We build for everyone. Our work supports screen readers, keyboard navigation, and multilingual audiences. Access to information should be universal."
+        },
+        "multilingual": {
+          "heading": "Multilingual by Default",
+          "description": "We build with Norwegian and English language support from the start. Cultural and linguistic context matters in everything we create."
+        }
+      }
+    }
+  },
+  "contact": {
+    "title": "Start a Project",
+    "intro": "Ready to work together? Tell us about your project and we'll get back to you within 2 business days.",
+    "form": {
+      "fields": {
+        "name": {
+          "label": "Name",
+          "placeholder": "Your name"
+        },
+        "email": {
+          "label": "Email",
+          "placeholder": "your@email.com"
+        },
+        "organisation": {
+          "label": "Organization (optional)",
+          "placeholder": "Your organization"
+        },
+        "projectType": {
+          "label": "Project Type (optional)",
+          "placeholder": "Select a type"
+        },
+        "budget": {
+          "label": "Budget Range (optional)",
+          "placeholder": "Select a range"
+        },
+        "message": {
+          "label": "Tell us about your project",
+          "placeholder": "Describe your project, goals, and timeline..."
+        }
+      },
+      "projectTypes": {
+        "product": "Digital Product / Platform",
+        "dataviz": "Data Visualization",
+        "investigative": "Investigative Tool",
+        "education": "Education Platform",
+        "other": "Other"
+      },
+      "budgets": {
+        "under_25k": "Under $25,000",
+        "25k_50k": "$25,000 - $50,000",
+        "50k_100k": "$50,000 - $100,000",
+        "100k_plus": "$100,000+",
+        "not_sure": "Not sure yet"
+      },
+      "submit": "Send Message",
+      "submitting": "Sending...",
+      "success": {
+        "heading": "Message Sent!",
+        "message": "Thanks for reaching out. We'll review your message and get back to you within 2 business days."
+      },
+      "error": {
+        "heading": "Something went wrong",
+        "message": "We couldn't send your message. Please try again or email us directly.",
+        "network": "Network error. Please check your connection and try again."
+      },
+      "errors": {
+        "name": {
+          "required": "Name is required",
+          "tooShort": "Name must be at least 2 characters"
+        },
+        "email": {
+          "required": "Email is required",
+          "invalid": "Please enter a valid email address"
+        },
+        "message": {
+          "required": "Message is required",
+          "tooShort": "Message must be at least 20 characters"
+        }
+      }
+    }
   },
   "case": {
-    "context": "Context",
-    "approach": "Approach",
-    "solution": "Solution",
-    "outcome": "Outcome"
+    "context": {
+      "heading": "Context"
+    },
+    "approach": {
+      "heading": "Approach"
+    },
+    "solution": {
+      "heading": "Solution"
+    },
+    "outcome": {
+      "heading": "Outcome"
+    },
+    "meta": {
+      "domain": "Domain",
+      "status": "Status",
+      "clientType": "Client Type",
+      "techStack": "Tech Stack",
+      "role": "Our Role"
+    }
   }
 }

@@ -1,15 +1,34 @@
-import { notFound } from 'next/navigation';
-import { getProjectBySlug } from '@/lib/projects';
+import {notFound} from 'next/navigation';
+import {getProjectBySlug} from '@/lib/projects';
+import {getTranslations} from 'next-intl/server';
+import {Metadata} from 'next';
 import Section from '@/components/ui/Section';
 import Tag from '@/components/ui/Tag';
-import { useTranslations } from 'next-intl';
-import { Link } from '@/i18n/routing';
+import {Link} from '@/i18n/routing';
+import Button from '@/components/ui/Button';
 
-export default async function ProjectPage({
-  params
-}: {
+type PageProps = {
   params: Promise<{ slug: string; locale: string }>;
-}) {
+};
+
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+  const { slug, locale } = await params;
+  const project = getProjectBySlug(slug);
+  
+  if (!project) {
+    return {
+      title: 'Not Found | Glass Academy',
+    };
+  }
+  
+  const currentLocale = locale as 'en' | 'nb' | 'nn';
+  return {
+    title: `${project.title[currentLocale]} | Glass Academy`,
+    description: project.shortDescription[currentLocale],
+  };
+}
+
+export default async function ProjectPage({ params }: PageProps) {
   const { slug, locale } = await params;
   const project = getProjectBySlug(slug);
 
@@ -17,92 +36,167 @@ export default async function ProjectPage({
     notFound();
   }
 
-  // Helper to get localized string safely
-  const getLocalized = (obj: { en: string; nb: string; nn: string }) => {
-    return obj[locale as 'en' | 'nb' | 'nn'] || obj.en;
-  };
+  const currentLocale = locale as 'en' | 'nb' | 'nn';
+  const tCase = await getTranslations({ locale, namespace: 'case' });
+  const tDomains = await getTranslations({ locale, namespace: 'domains' });
+  const tStatus = await getTranslations({ locale, namespace: 'status' });
+  const tWork = await getTranslations({ locale, namespace: 'work' });
 
   return (
     <div className="container mx-auto px-4">
       <Section>
-        <div className="mb-8">
-          <Link href="/work" className="text-sm text-gray-500 hover:text-primary mb-4 inline-block">
-            ← Back to Work
+        <div className="max-w-5xl mx-auto">
+          {/* Back Link */}
+          <Link 
+            href="/work" 
+            className="text-sm text-primary hover:underline mb-6 inline-flex items-center gap-1 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 rounded"
+          >
+            ← {tWork('title')}
           </Link>
-          <h1 className="text-4xl font-bold mb-4">{getLocalized(project.title)}</h1>
-          <div className="flex flex-wrap gap-2 mb-6">
-            <Tag className="bg-primary/10 text-primary">{project.status}</Tag>
-            <Tag>{project.domain}</Tag>
-            {project.clientType && <Tag>{project.clientType}</Tag>}
+          
+          {/* Project Header */}
+          <h1 className="text-4xl md:text-5xl font-bold mb-6 mt-4">
+            {project.title[currentLocale]}
+          </h1>
+          
+          {/* Meta Tags */}
+          <div className="flex flex-wrap gap-2 mb-8">
+            <Tag className="bg-green-50 text-green-700 dark:bg-green-900/30 dark:text-green-300">
+              {tStatus(project.status)}
+            </Tag>
+            <Tag>{tDomains(project.domain)}</Tag>
+            <Tag className="bg-gray-50 text-gray-700 dark:bg-gray-800/30 dark:text-gray-300">
+              {project.clientType}
+            </Tag>
           </div>
-          <p className="text-xl text-gray-600 dark:text-gray-300 max-w-3xl">
-            {getLocalized(project.summary)}
+          
+          {/* Summary */}
+          <p className="text-xl text-gray-600 dark:text-gray-300 leading-relaxed mb-8">
+            {project.summary[currentLocale]}
           </p>
-        </div>
 
-        {project.links.live && (
-          <div className="mb-12">
-            <a 
-              href={project.links.live} 
-              target="_blank" 
-              rel="noopener noreferrer"
-              className="inline-flex items-center justify-center rounded-md px-6 py-3 text-sm font-medium bg-primary text-primary-foreground hover:bg-blue-700 transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary"
-            >
-              Visit Live Site ↗
-            </a>
-          </div>
-        )}
+          {/* Live Link */}
+          {project.links.live && (
+            <div className="mb-12">
+              <Button 
+                href={project.links.live}
+                variant="primary"
+                className="inline-flex items-center gap-2"
+              >
+                {tWork('visitSite')} ↗
+              </Button>
+            </div>
+          )}
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
-          <div className="md:col-span-2 space-y-12">
-            <div>
-              <h2 className="text-2xl font-bold mb-4">Context</h2>
-              <p className="text-gray-600 dark:text-gray-400">
-                {/* Placeholder content */}
-                This project addresses a critical need in the {project.domain.toLowerCase()} space. 
-                We worked closely with stakeholders to understand the problem domain and identify key opportunities for impact.
-              </p>
-            </div>
-            <div>
-              <h2 className="text-2xl font-bold mb-4">Approach</h2>
-              <p className="text-gray-600 dark:text-gray-400">
-                Our approach combined rigorous research with iterative prototyping. 
-                We focused on user-centric design principles to ensure the solution was both intuitive and powerful.
-              </p>
-            </div>
-            <div>
-              <h2 className="text-2xl font-bold mb-4">Solution</h2>
-              <p className="text-gray-600 dark:text-gray-400">
-                The final solution leverages modern web technologies to deliver a seamless experience. 
-                Key features include real-time data visualization and responsive design.
-              </p>
-            </div>
-            <div>
-              <h2 className="text-2xl font-bold mb-4">Outcome</h2>
-              <p className="text-gray-600 dark:text-gray-400">
-                Since launch, the project has seen significant engagement and positive feedback from users.
-                It has successfully achieved its primary objectives and set a new standard in the field.
-              </p>
-            </div>
-          </div>
+          {/* Main Content Grid */}
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
+            {/* Case Study Narrative */}
+            <div className="lg:col-span-2 space-y-12">
+              {/* Context Section */}
+              <section>
+                <h2 className="text-3xl font-bold mb-4">
+                  {tCase('context.heading')}
+                </h2>
+                <div className="prose prose-lg dark:prose-invert max-w-none">
+                  <p className="text-gray-600 dark:text-gray-400 leading-relaxed">
+                    {project.summary[currentLocale]}
+                  </p>
+                </div>
+              </section>
 
-          <div className="space-y-8">
-            <div>
-              <h3 className="text-lg font-semibold mb-3">Tech Stack</h3>
-              <div className="flex flex-wrap gap-2">
-                {project.techStack.map(tech => (
-                  <Tag key={tech}>{tech}</Tag>
-                ))}
+              {/* Approach Section */}
+              <section>
+                <h2 className="text-3xl font-bold mb-4">
+                  {tCase('approach.heading')}
+                </h2>
+                <div className="prose prose-lg dark:prose-invert max-w-none">
+                  <p className="text-gray-600 dark:text-gray-400 leading-relaxed">
+                    Our approach focused on {project.domain.toLowerCase()} methodologies, 
+                    combining technical excellence with user-centered design principles to deliver 
+                    a solution that meets real-world needs.
+                  </p>
+                </div>
+              </section>
+
+              {/* Solution Section */}
+              <section>
+                <h2 className="text-3xl font-bold mb-4">
+                  {tCase('solution.heading')}
+                </h2>
+                <div className="prose prose-lg dark:prose-invert max-w-none">
+                  <p className="text-gray-600 dark:text-gray-400 leading-relaxed">
+                    The solution leverages modern web technologies including {project.techStack.slice(0, 3).join(', ')} 
+                    to create a robust, scalable platform. We implemented responsive design, 
+                    accessibility features, and performance optimizations throughout.
+                  </p>
+                </div>
+              </section>
+
+              {/* Outcome Section */}
+              <section>
+                <h2 className="text-3xl font-bold mb-4">
+                  {tCase('outcome.heading')}
+                </h2>
+                <div className="prose prose-lg dark:prose-invert max-w-none">
+                  <p className="text-gray-600 dark:text-gray-400 leading-relaxed">
+                    The project successfully launched and is currently {project.status.toLowerCase()}. 
+                    It demonstrates our capability in the {project.domain.toLowerCase()} domain 
+                    and serves as a reference for similar future projects.
+                  </p>
+                </div>
+              </section>
+            </div>
+
+            {/* Sidebar Meta Information */}
+            <aside className="space-y-8">
+              {/* Tech Stack */}
+              <div>
+                <h3 className="text-lg font-semibold mb-3">
+                  {tCase('meta.techStack')}
+                </h3>
+                <div className="flex flex-wrap gap-2">
+                  {project.techStack.map(tech => (
+                    <Tag key={tech} className="bg-blue-50 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300">
+                      {tech}
+                    </Tag>
+                  ))}
+                </div>
               </div>
-            </div>
-            <div>
-              <h3 className="text-lg font-semibold mb-3">Roles</h3>
-              <ul className="list-disc list-inside text-gray-600 dark:text-gray-400">
-                {project.role.map(r => (
-                  <li key={r}>{r}</li>
-                ))}
-              </ul>
-            </div>
+
+              {/* Our Role */}
+              <div>
+                <h3 className="text-lg font-semibold mb-3">
+                  {tCase('meta.role')}
+                </h3>
+                <ul className="space-y-2 text-gray-600 dark:text-gray-400">
+                  {project.role.map(r => (
+                    <li key={r} className="flex items-start gap-2">
+                      <span className="text-primary mt-1">•</span>
+                      <span>{r}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+
+              {/* Domain & Client Type */}
+              <div>
+                <h3 className="text-lg font-semibold mb-3">
+                  {tCase('meta.domain')}
+                </h3>
+                <p className="text-gray-600 dark:text-gray-400">
+                  {tDomains(project.domain)}
+                </p>
+              </div>
+
+              <div>
+                <h3 className="text-lg font-semibold mb-3">
+                  {tCase('meta.clientType')}
+                </h3>
+                <p className="text-gray-600 dark:text-gray-400">
+                  {project.clientType}
+                </p>
+              </div>
+            </aside>
           </div>
         </div>
       </Section>

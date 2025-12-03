@@ -1,46 +1,83 @@
-import { useTranslations } from 'next-intl';
+import {getTranslations} from 'next-intl/server';
 import Section from '@/components/ui/Section';
-import Card from '@/components/ui/Card';
-import { Metadata } from 'next';
+import Button from '@/components/ui/Button';
+import {Metadata} from 'next';
 
-export const metadata: Metadata = {
-  title: 'Services | Glass Academy',
-  description: 'Our services include digital products, data visualization, and educational platforms.',
+type PageProps = {
+  params: Promise<{ locale: string }>;
 };
 
-export default function ServicesPage() {
-  const t = useTranslations('nav');
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: 'services' });
   
-  // In a real app, these would be in messages.json
+  return {
+    title: `${t('title')} | Glass Academy`,
+    description: t('intro'),
+  };
+}
+
+export default async function ServicesPage({ params }: PageProps) {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: 'services' });
+  
   const services = [
-    {
-      title: 'Digital products & platforms',
-      description: 'We build robust, scalable digital products that solve real problems.'
-    },
-    {
-      title: 'Data visualisation & network analysis',
-      description: 'Transforming complex data into clear, actionable insights through interactive visualizations.'
-    },
-    {
-      title: 'Investigative & research tools',
-      description: 'Specialized tools for journalists and researchers to uncover the truth.'
-    },
-    {
-      title: 'Education & learning experiences',
-      description: 'Engaging educational platforms that make learning accessible and effective.'
-    }
+    'digital_products',
+    'data_viz',
+    'investigative',
+    'education'
   ];
 
   return (
     <div className="container mx-auto px-4">
       <Section>
-        <h1 className="text-4xl font-bold mb-8">{t('services')}</h1>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          {services.map((service, index) => (
-            <Card key={index} title={service.title}>
-              <p>{service.description}</p>
-            </Card>
-          ))}
+        <div className="max-w-5xl mx-auto">
+          <h1 className="text-4xl md:text-5xl font-bold mb-4 text-center">{t('title')}</h1>
+          <p className="text-lg text-gray-600 dark:text-gray-400 text-center mb-16 max-w-3xl mx-auto">
+            {t('intro')}
+          </p>
+          
+          <div className="space-y-16">
+            {services.map((service) => (
+              <div key={service} className="border-l-4 border-primary pl-6 py-2">
+                <h2 className="text-3xl font-bold mb-4">
+                  {t(`items.${service}.heading`)}
+                </h2>
+                <div className="space-y-4 text-gray-600 dark:text-gray-400">
+                  <div>
+                    <h3 className="text-sm font-semibold uppercase tracking-wide text-gray-500 dark:text-gray-500 mb-2">
+                      Who it&apos;s for
+                    </h3>
+                    <p className="leading-relaxed">
+                      {t(`items.${service}.audience`)}
+                    </p>
+                  </div>
+                  <div>
+                    <h3 className="text-sm font-semibold uppercase tracking-wide text-gray-500 dark:text-gray-500 mb-2">
+                      What we deliver
+                    </h3>
+                    <p className="leading-relaxed">
+                      {t(`items.${service}.deliverables`)}
+                    </p>
+                  </div>
+                  <div>
+                    <h3 className="text-sm font-semibold uppercase tracking-wide text-gray-500 dark:text-gray-500 mb-2">
+                      How we engage
+                    </h3>
+                    <p className="leading-relaxed">
+                      {t(`items.${service}.engagement`)}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          <div className="mt-16 text-center">
+            <Button href="/contact" variant="primary">
+              Start a Project
+            </Button>
+          </div>
         </div>
       </Section>
     </div>

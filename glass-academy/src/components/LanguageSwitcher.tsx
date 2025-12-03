@@ -1,34 +1,35 @@
 'use client';
 
 import {useLocale} from 'next-intl';
-import {usePathname, useRouter} from '@/i18n/routing';
-import {ChangeEvent, useTransition} from 'react';
+import {usePathname, Link} from '@/i18n/routing';
 
 export default function LanguageSwitcher() {
   const locale = useLocale();
-  const router = useRouter();
   const pathname = usePathname();
-  const [isPending, startTransition] = useTransition();
 
-  function onSelectChange(event: ChangeEvent<HTMLSelectElement>) {
-    const nextLocale = event.target.value;
-    startTransition(() => {
-      router.replace(pathname, {locale: nextLocale});
-    });
-  }
+  const languages = [
+    { code: 'en', label: 'English' },
+    { code: 'nb', label: 'Bokmål' },
+    { code: 'nn', label: 'Nynorsk' }
+  ];
 
   return (
-    <nav aria-label="Language">
-      <select
-        defaultValue={locale}
-        onChange={onSelectChange}
-        disabled={isPending}
-        className="bg-transparent py-1 px-2 rounded border border-gray-300 dark:border-gray-700 text-sm focus:ring-2 focus:ring-primary focus:outline-none"
-      >
-        <option value="en">English</option>
-        <option value="nb">Bokmål</option>
-        <option value="nn">Nynorsk</option>
-      </select>
+    <nav aria-label="Language" className="flex gap-2">
+      {languages.map((lang) => (
+        <Link
+          key={lang.code}
+          href={pathname}
+          locale={lang.code}
+          className={`px-2 py-1 text-sm rounded transition-colors focus:outline-none focus:ring-2 focus:ring-primary ${
+            locale === lang.code
+              ? 'bg-gray-100 dark:bg-gray-800 font-medium text-foreground'
+              : 'text-gray-500 hover:text-foreground hover:bg-gray-50 dark:hover:bg-gray-900'
+          }`}
+          aria-current={locale === lang.code ? 'page' : undefined}
+        >
+          {lang.label}
+        </Link>
+      ))}
     </nav>
   );
 }
