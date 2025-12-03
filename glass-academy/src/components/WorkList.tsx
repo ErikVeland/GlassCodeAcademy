@@ -76,7 +76,7 @@ export default function WorkList({ locale }: WorkListProps) {
             className="h-full flex flex-col"
           >
             <div className="flex-grow space-y-4">
-              <p className="text-gray-600 dark:text-gray-400">
+              <p className="text-muted-foreground">
                 {project.shortDescription[locale]}
               </p>
               
@@ -87,7 +87,7 @@ export default function WorkList({ locale }: WorkListProps) {
                 </Tag>
               </div>
 
-              <div className="text-sm text-gray-500 dark:text-gray-400">
+              <div className="text-sm text-muted-foreground">
                 <span className="font-medium">Tech:</span> {project.techStack.slice(0, 3).join(', ')}
                 {project.techStack.length > 3 && ` +${project.techStack.length - 3}`}
               </div>

@@ -4,6 +4,7 @@ import {getMessages} from 'next-intl/server';
 import {notFound} from 'next/navigation';
 import {routing} from '@/i18n/routing';
 import Layout from "@/components/layout/Layout";
+import {ThemeProvider} from '@/contexts/ThemeContext';
 import "../globals.css";
 
 export const metadata: Metadata = {
@@ -31,9 +32,30 @@ export default async function RootLayout({
  
   return (
     <html lang={locale}>
+      <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              (function() {
+                try {
+                  var theme = localStorage.getItem('theme-preference') || 'auto';
+                  var resolved = theme;
+                  if (theme === 'auto') {
+                    resolved = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+                  }
+                  document.documentElement.classList.add(resolved);
+                  document.documentElement.setAttribute('data-theme', resolved);
+                } catch (e) {}
+              })();
+            `,
+          }}
+        />
+      </head>
       <body>
         <NextIntlClientProvider messages={messages}>
-          <Layout>{children}</Layout>
+          <ThemeProvider>
+            <Layout>{children}</Layout>
+          </ThemeProvider>
         </NextIntlClientProvider>
       </body>
     </html>

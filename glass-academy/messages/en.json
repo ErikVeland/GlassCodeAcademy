@@ -135,6 +135,13 @@
     "intro": "Glass Academy is a digital agency specializing in education, investigation, data visualization, and experimental products. We build tools that make complex information accessible and actionable.",
     "specialization": "We work with clients who have challenging problems: journalists analyzing thousands of documents, educators building learning platforms, researchers visualizing network data. Our approach combines technical depth with investigative rigor.",
     "philosophy": "We believe in clarity over complexity, evidence over assumption, and building tools that empower people to understand their world. Every project is an opportunity to learn, question, and create something meaningful.",
+    "founder": {
+      "heading": "Studio Lead",
+      "intro": "Glass Academy is led by Erik Veland, a technologist and product designer who has spent more than a decade building digital products where the details really matter: investigative tools, data-heavy editorial projects, civic platforms and learning environments for engineers.",
+      "paragraph1": "Erik's background combines full-stack engineering, UX and content strategy with hands-on experience in digital experience and technology leadership. He has worked with media, cultural institutions, public-sector organisations and product teams to ship software that has to be both explainable and reliable – not just impressive in a demo.",
+      "paragraph2": "Over the years he has designed and led teams delivering projects like document and entity explorers for investigative journalism, network visualisations of cultural history, education platforms for working developers, and internal tools that help organisations actually understand their own data. The through-line is an investigative mindset: traceability, clear language and systems that reveal how they work rather than hiding behind buzzwords.",
+      "paragraph3": "At Glass Academy, Erik brings that mix of rigour and pragmatism into every engagement. He cares about good architecture and maintainable code, but just as much about whether a time-poor journalist, case worker or engineer can open the product and immediately see what to do next. Clients come to him when they need a partner who can talk to stakeholders, sketch flows, tune a search index and still care about the microcopy on the error states."
+    },
     "values": {
       "heading": "Our Values",
       "items": {

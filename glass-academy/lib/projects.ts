@@ -10,6 +10,11 @@ export interface LocalisedText {
 	nn: string;
 }
 
+export interface ScreenshotSet {
+	hero: string;
+	details: string[];
+}
+
 export interface Project {
 	id: 'askoy-rocketre' | 'glasscode-academy' | 'epstein-investigation-project' | 'racehub';
 	slug: string;
@@ -26,6 +31,7 @@ export interface Project {
 		repo?: string;
 	};
 	featured: boolean;
+	screenshots: ScreenshotSet;
 }
 
 export const allProjects: Project[] = [
@@ -38,7 +44,7 @@ export const allProjects: Project[] = [
 			nn: 'Askøy Rocketre'
 		},
 		shortDescription: {
-			en: 'Interactive network visualisation of Askøy’s music scene and its connections to global culture.',
+			en: "Interactive network visualisation of Askøy's music scene and its connections to global culture.",
 			nb: 'Interaktiv nettverksvisualisering av musikkscenen på Askøy og koblingene til global kultur.',
 			nn: 'Interaktiv nettverksvisualisering av musikkscena på Askøy og koplingane til global kultur.'
 		},
@@ -66,7 +72,15 @@ export const allProjects: Project[] = [
 		links: {
 			live: 'https://askoytreet.vercel.app'
 		},
-		featured: true
+		featured: true,
+		screenshots: {
+			hero: '/screenshots/askoy-rocketre/hero.png',
+			details: [
+				'/screenshots/askoy-rocketre/detail-1.png',
+				'/screenshots/askoy-rocketre/detail-2.png',
+				'/screenshots/askoy-rocketre/detail-3.png'
+			]
+		}
 	},
 	{
 		id: 'glasscode-academy',
@@ -109,7 +123,14 @@ export const allProjects: Project[] = [
 		links: {
 			live: 'https://glasscode.academy'
 		},
-		featured: true
+		featured: true,
+		screenshots: {
+			hero: '/screenshots/glasscode-academy/hero.png',
+			details: [
+				'/screenshots/glasscode-academy/detail-1.png',
+				'/screenshots/glasscode-academy/detail-2.png'
+			]
+		}
 	},
 	{
 		id: 'epstein-investigation-project',
@@ -152,7 +173,14 @@ export const allProjects: Project[] = [
 		links: {
 			live: 'https://epstein.academy'
 		},
-		featured: true
+		featured: true,
+		screenshots: {
+			hero: '/screenshots/epstein-investigation-project/hero.png',
+			details: [
+				'/screenshots/epstein-investigation-project/detail-1.png',
+				'/screenshots/epstein-investigation-project/detail-2.png'
+			]
+		}
 	},
 	{
 		id: 'racehub',
@@ -192,7 +220,14 @@ export const allProjects: Project[] = [
 		links: {
 			live: 'https://bet.glasscode.academy'
 		},
-		featured: true
+		featured: true,
+		screenshots: {
+			hero: '/screenshots/racehub/hero.png',
+			details: [
+				'/screenshots/racehub/detail-1.png',
+				'/screenshots/racehub/detail-2.png'
+			]
+		}
 	}
 ];
 
@@ -202,4 +237,20 @@ export function getProjectBySlug(slug: string): Project | undefined {
 
 export function getFeaturedProjects(): Project[] {
 	return allProjects.filter(project => project.featured);
+}
+
+/**
+ * Get screenshot path(s) for a project
+ * @param project - The project object
+ * @param variant - 'hero' for single hero image, 'details' for detail images array
+ * @returns Screenshot path(s) or fallback placeholder
+ */
+export function getProjectScreenshots(
+	project: Project,
+	variant: 'hero' | 'details'
+): string | string[] {
+	if (variant === 'hero') {
+		return project.screenshots?.hero || '/screenshots/placeholder-hero.png';
+	}
+	return project.screenshots?.details || [];
 }

@@ -64,6 +64,40 @@
     "Prototype": "Prototype",
     "Internal": "Internt"
   },
+  "about": {
+    "title": "Om Glass Academy",
+    "intro": "Glass Academy er et digitalt byrå som spesialiserer seg på utdanning, etterforskning, datavisualisering og eksperimentelle produkter. Vi bygger verktøy som gjør kompleks informasjon tilgjengelig og handlingsbar.",
+    "specialization": "Vi jobber med kunder som har utfordrende problemer: journalister som analyserer tusenvis av dokumenter, utdannere som bygger læringsplattformer, forskere som visualiserer nettverksdata. Vår tilnærming kombinerer teknisk dybde med etterforskningsrigor.",
+    "philosophy": "Vi tror på klarhet fremfor kompleksitet, bevis fremfor antakelser, og å bygge verktøy som styrker folk til å forstå verden sin. Hvert prosjekt er en mulighet til å lære, stille spørsmål og skape noe meningsfylt.",
+    "founder": {
+      "heading": "Studioeier",
+      "intro": "Glass Academy ledes av Erik Veland, en teknolog og produktdesigner med over ti års erfaring fra digitale produkter der detaljene faktisk betyr noe: etterforskningsverktøy, datatunge redaksjonelle prosjekter, offentlige plattformer og læringsmiljøer for utviklere.",
+      "paragraph1": "Erik har bakgrunn som fullstack-utvikler, UX- og innholdsdesigner, og har jobbet som faglig leder innen digital opplevelse og teknologi. Han har samarbeidet med medier, kulturinstitusjoner, offentlig sektor og produktteam for å levere løsninger som må være både etterprøvbare og stabile – ikke bare se imponerende ut i en presentasjon.",
+      "paragraph2": "Gjennom årene har han vært med på å designe og bygge blant annet dokument- og enhetsutforskere for undersøkende journalistikk, nettverksvisualiseringer av kulturhistorie, læringsplattformer for utviklere i arbeid, og interne verktøy som hjelper organisasjoner å forstå egne data. Fellesnevneren er en undersøkende tilnærming: sporbarhet, klare ord og systemer som viser hvordan de fungerer i stedet for å gjemme seg bak buzzord.",
+      "paragraph3": "I Glass Academy tar Erik med seg denne kombinasjonen av grundighet og pragmatisme inn i hvert oppdrag. Han er opptatt av god arkitektur og vedlikeholdbar kode, men like mye av om en travel journalist, saksbehandler eller utvikler kan åpne løsningen og umiddelbart forstå hva som er neste steg. Kunder kommer til ham når de trenger en partner som kan snakke med interessenter, skissere brukerflyt, finjustere et søk og samtidig bry seg om mikroteksten i feilmeldingene."
+    },
+    "values": {
+      "heading": "Våre verdier",
+      "items": {
+        "clarity": {
+          "heading": "Klarhet",
+          "description": "Vi gjør kompleks informasjon forståelig. Enten vi visualiserer data eller designer grensesnitt, er målet alltid å avdekke innsikt, ikke skjule det."
+        },
+        "investigative": {
+          "heading": "Etterforskende holdning",
+          "description": "Vi stiller spørsmål ved antakelser, graver i detaljer og baserer beslutninger på bevis. Denne tilnærmingen tjener oss enten vi bygger utdanningsverktøy eller etterforskningsplattformer."
+        },
+        "accessibility": {
+          "heading": "Tilgjengelighet",
+          "description": "Vi bygger for alle. Arbeidet vårt støtter skjermlesere, tastaturnavigasjon og flerspråklige brukere. Tilgang til informasjon skal være universell."
+        },
+        "multilingual": {
+          "heading": "Flerspråklig som standard",
+          "description": "Vi bygger med norsk og engelsk språkstøtte fra starten. Kulturell og språklig kontekst betyr noe i alt vi lager."
+        }
+      }
+    }
+  },
   "case": {
     "context": {
       "heading": "Kontekst"
@@ -83,6 +117,167 @@
       "clientType": "Klienttype",
       "techStack": "Teknologi",
       "role": "Vår rolle"
+    }
+  },
+  "services": {
+    "title": "Våre tjenester",
+    "intro": "Vi samarbeider med kunder innen utdanning, undersøkende journalistikk, datavisualisering og eksperimentell produktutvikling.",
+    "items": {
+      "digital_products": {
+        "heading": "Digitale produkter og plattformer",
+        "audience": "Organisasjoner og startups som trenger tilpassede webapplikasjoner, læringsplattformer eller datadrevne verktøy bygd fra grunnen av.",
+        "deliverables": "Full-stack webapplikasjoner, API-design og -utvikling, databasearkitektur, distribusjonsrørledninger, løpende vedlikehold og støtte.",
+        "engagement": "Vi starter vanligvis med en oppdagelsesfase for å forstå kravene, fulgt av iterative utviklings sykluser med regelmessig tilbakemelding fra kunden."
+      },
+      "data_viz": {
+        "heading": "Datavisualisering og nettverksanalyse",
+        "audience": "Forskere, kulturorganisasjoner og institusjoner med komplekse datasett som må gjøres tilgjengelige og utforskbar.",
+        "deliverables": "Interaktive visualiseringer, nettverksgrafer, data-transformasjonsrørledninger, tilpassede utforskningsgrensesnitt.",
+        "engagement": "Vi begynner med dataevaluering og designprototyper, deretter bygger vi produksjonsklare visualiseringer med ditt teams innspill."
+      },
+      "investigative": {
+        "heading": "Undersøkelses- og forskningsverktøy",
+        "audience": "Journalister, forskere og juridiske team som trenger å analysere store dokumentsett, ekstrahere enheter og spore relasjoner.",
+        "deliverables": "Dokumentanalyseplattformer, enhetsekstraheringssystemer, søkegrensesnitt, verktøy for relasjonskartlegging, sikre samarbeidsmiljøer.",
+        "engagement": "Sikkerhet og dataintegritet er av ytterste viktighet. Vi jobber tett med ditt team for å sikre at verktøyene møter strenge undersøkelsesstandarder."
+      },
+      "education": {
+        "heading": "Utdanning og læringsopplevelser",
+        "audience": "Utdanningsinstitusjoner, bootcamp og bedrifter som bygger interne treningsprogrammer som krever tilpassede læringsplattformer.",
+        "deliverables": "Læringssystemer, interaktive læreplaner, vurderingsverktøy, fremgangssporing, praktiske kodingsmiljøer.",
+        "engagement": "Vi designer læreplaner basert på læringsresultater, deretter bygger vi plattformer som støtter aktiv læring og anvendelse i virkeligheten."
+      }
+    }
+  },
+  "process": {
+    "title": "Hvordan vi jobber",
+    "intro": "Vår prosess er bygd på åpenhet, samarbeid og iterativ forbedring.",
+    "steps": {
+      "discovery": {
+        "title": "Oppdagelse",
+        "description": "Vi starter med å forstå ditt problem, mål og begrensninger.",
+        "activities": [
+          "Intervjuer med interessenter",
+          "Innsamling av krav",
+          "Vurdering av teknisk gjennomførbarhet"
+        ]
+      },
+      "research": {
+        "title": "Forskning",
+        "description": "Vi forsker på lignende problemer, eksisterende løsninger og brukernes behov.",
+        "activities": [
+          "Konkurranseanalyse",
+          "Brukerforskning",
+          "Teknisk utforskning"
+        ]
+      },
+      "design": {
+        "title": "Design",
+        "description": "Vi lager wireframes, prototyper og designsystemer.",
+        "activities": [
+          "Informasjonsarkitektur",
+          "Interaksjonsdesign",
+          "Visuelt design"
+        ]
+      },
+      "build": {
+        "title": "Bygge",
+        "description": "Vi utvikler produktet ditt iterativt med regelmessige tilbakemeldingssykluser.",
+        "activities": [
+          "Frontend- og backend-utvikling",
+          "Regelmessige demonstrasjoner og tilbakemeldinger",
+          "Testing og finjustering"
+        ]
+      },
+      "launch": {
+        "title": "Lansering",
+        "description": "Vi distribuerer produktet ditt og sikrer jevn drift.",
+        "activities": [
+          "Distribusjon og infrastrukturoppsett",
+          "Overvåking og optimalisering",
+          "Opplæring og dokumentasjon"
+        ]
+      },
+      "iteration": {
+        "title": "Iterasjon",
+        "description": "Vi fortsetter å forbedre basert på reell bruksdata og tilbakemeldinger.",
+        "activities": [
+          "Analyser og brukertilbakemeldinger",
+          "Funksjonsforbedringer",
+          "Ytelsesoptimalisering"
+        ]
+      }
+    }
+  },
+  "contact": {
+    "title": "Start et prosjekt",
+    "intro": "Klar til å jobbe sammen? Fortell oss om prosjektet ditt så svarer vi innen 2 virkedager.",
+    "form": {
+      "fields": {
+        "name": {
+          "label": "Navn",
+          "placeholder": "Ditt navn"
+        },
+        "email": {
+          "label": "E-post",
+          "placeholder": "din@epost.no"
+        },
+        "organisation": {
+          "label": "Organisasjon (valgfritt)",
+          "placeholder": "Din organisasjon"
+        },
+        "projectType": {
+          "label": "Prosjekttype (valgfritt)",
+          "placeholder": "Velg en type"
+        },
+        "budget": {
+          "label": "Budsjettområde (valgfritt)",
+          "placeholder": "Velg et område"
+        },
+        "message": {
+          "label": "Fortell oss om prosjektet ditt",
+          "placeholder": "Beskriv prosjektet ditt, målene og tidslinjen..."
+        }
+      },
+      "projectTypes": {
+        "product": "Digitalt produkt / plattform",
+        "dataviz": "Datavisualisering",
+        "investigative": "Undersøkelsesverktøy",
+        "education": "Utdanningsplattform",
+        "other": "Annet"
+      },
+      "budgets": {
+        "under_25k": "Under 250.000 kr",
+        "25k_50k": "250.000 - 500.000 kr",
+        "50k_100k": "500.000 - 1.000.000 kr",
+        "100k_plus": "1.000.000+ kr",
+        "not_sure": "Ikke sikker ennå"
+      },
+      "submit": "Send melding",
+      "submitting": "Sender...",
+      "success": {
+        "heading": "Melding sendt!",
+        "message": "Takk for din henvendelse. Vi vil vurdere meldingen din og svare innen 2 virkedager."
+      },
+      "error": {
+        "heading": "Noe gikk galt",
+        "message": "Vi kunne ikke sende meldingen din. Vennligst prøv igjen eller send oss en e-post direkte.",
+        "network": "Nettverksfeil. Vennligst sjekk tilkoblingen din og prøv igjen."
+      },
+      "errors": {
+        "name": {
+          "required": "Navn er påkrevd",
+          "tooShort": "Navn må være minst 2 tegn"
+        },
+        "email": {
+          "required": "E-post er påkrevd",
+          "invalid": "Vennligst skriv inn en gyldig e-postadresse"
+        },
+        "message": {
+          "required": "Melding er påkrevd",
+          "tooShort": "Melding må være minst 20 tegn"
+        }
+      }
     }
   }
 }

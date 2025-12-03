@@ -150,7 +150,7 @@ export default function ContactForm({ locale }: ContactFormProps) {
               aria-required="true"
               aria-invalid={errors.name ? 'true' : 'false'}
               aria-describedby={errors.name ? 'name-error' : undefined}
-              className="w-full px-4 py-2 rounded-md border border-gray-300 dark:border-gray-700 bg-transparent focus:ring-2 focus:ring-primary focus:outline-none"
+              className="w-full px-4 py-2 rounded-md border border-border bg-transparent focus:ring-2 focus:ring-primary focus:outline-none"
             />
             {errors.name && (
               <p id="name-error" className="mt-1 text-sm text-red-600 dark:text-red-400" role="alert">
@@ -174,7 +174,7 @@ export default function ContactForm({ locale }: ContactFormProps) {
               aria-required="true"
               aria-invalid={errors.email ? 'true' : 'false'}
               aria-describedby={errors.email ? 'email-error' : undefined}
-              className="w-full px-4 py-2 rounded-md border border-gray-300 dark:border-gray-700 bg-transparent focus:ring-2 focus:ring-primary focus:outline-none"
+              className="w-full px-4 py-2 rounded-md border border-border bg-transparent focus:ring-2 focus:ring-primary focus:outline-none"
             />
             {errors.email && (
               <p id="email-error" className="mt-1 text-sm text-red-600 dark:text-red-400" role="alert">
@@ -194,7 +194,7 @@ export default function ContactForm({ locale }: ContactFormProps) {
             id="organisation" 
             name="organisation"
             placeholder={t('fields.organisation.placeholder')}
-            className="w-full px-4 py-2 rounded-md border border-gray-300 dark:border-gray-700 bg-transparent focus:ring-2 focus:ring-primary focus:outline-none"
+            className="w-full px-4 py-2 rounded-md border border-border bg-transparent focus:ring-2 focus:ring-primary focus:outline-none"
           />
         </div>
 
@@ -207,7 +207,7 @@ export default function ContactForm({ locale }: ContactFormProps) {
             <select 
               id="projectType" 
               name="projectType"
-              className="w-full px-4 py-2 rounded-md border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 focus:ring-2 focus:ring-primary focus:outline-none"
+              className="w-full px-4 py-2 rounded-md border border-border bg-background focus:ring-2 focus:ring-primary focus:outline-none"
             >
               <option value="">{t('fields.projectType.placeholder')}</option>
               <option value="product">{t('projectTypes.product')}</option>
@@ -226,7 +226,7 @@ export default function ContactForm({ locale }: ContactFormProps) {
             <select 
               id="budget" 
               name="budget"
-              className="w-full px-4 py-2 rounded-md border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 focus:ring-2 focus:ring-primary focus:outline-none"
+              className="w-full px-4 py-2 rounded-md border border-border bg-background focus:ring-2 focus:ring-primary focus:outline-none"
             >
               <option value="">{t('fields.budget.placeholder')}</option>
               <option value="under_25k">{t('budgets.under_25k')}</option>
@@ -253,7 +253,7 @@ export default function ContactForm({ locale }: ContactFormProps) {
             aria-required="true"
             aria-invalid={errors.message ? 'true' : 'false'}
             aria-describedby={errors.message ? 'message-error' : undefined}
-            className="w-full px-4 py-2 rounded-md border border-gray-300 dark:border-gray-700 bg-transparent focus:ring-2 focus:ring-primary focus:outline-none"
+            className="w-full px-4 py-2 rounded-md border border-border bg-transparent focus:ring-2 focus:ring-primary focus:outline-none"
           />
           {errors.message && (
             <p id="message-error" className="mt-1 text-sm text-red-600 dark:text-red-400" role="alert">

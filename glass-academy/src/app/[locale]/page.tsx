@@ -2,9 +2,9 @@ import {getTranslations} from 'next-intl/server';
 import {Metadata} from 'next';
 import Button from '@/components/ui/Button';
 import Section from '@/components/ui/Section';
-import Card from '@/components/ui/Card';
-import Tag from '@/components/ui/Tag';
 import {getFeaturedProjects} from '@/lib/projects';
+import HeroProjectCarousel from '@/components/hero/HeroProjectCarousel';
+import ClientStrip from '@/components/home/ClientStrip';
 
 type PageProps = {
   params: Promise<{ locale: string }>;
@@ -24,118 +24,95 @@ export default async function HomePage({ params }: PageProps) {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: 'hero' });
   const tHome = await getTranslations({ locale, namespace: 'home' });
-  const tWork = await getTranslations({ locale, namespace: 'work' });
-  const tDomains = await getTranslations({ locale, namespace: 'domains' });
   
   const featuredProjects = getFeaturedProjects();
   const currentLocale = locale as 'en' | 'nb' | 'nn';
 
   return (
     <>
-      {/* Hero Section */}
-      <Section className="flex flex-col items-center justify-center text-center min-h-[60vh]">
-        <h1 className="text-5xl md:text-6xl font-bold tracking-tight mb-6 text-foreground">
-          {t('title')}
-        </h1>
-        <p className="text-xl text-gray-600 dark:text-gray-400 max-w-2xl mb-10">
-          {t('subtitle')}
-        </p>
-        <div className="flex gap-4 flex-wrap justify-center">
-          <Button href="/work" variant="primary">
-            {t('primaryCta')}
-          </Button>
-          <Button href="/contact" variant="secondary">
-            {t('secondaryCta')}
-          </Button>
-        </div>
-      </Section>
-
-      {/* Featured Work Section */}
-      <Section className="bg-gray-50 dark:bg-gray-900/50">
-        <div className="max-w-7xl mx-auto">
-          <h2 className="text-3xl md:text-4xl font-bold mb-4 text-center">
-            {tHome('featured.heading')}
-          </h2>
-          <p className="text-lg text-gray-600 dark:text-gray-400 text-center mb-12 max-w-3xl mx-auto">
-            {tHome('featured.intro')}
+      {/* Hero Section with Gradient Glow */}
+      <Section fullWidth className="relative flex flex-col items-center justify-center text-center min-h-[85vh] py-20 lg:py-32 bg-gradient-glow">
+        <div className="max-w-5xl mx-auto px-6">
+          <h1 className="text-display mb-8 leading-none">
+            {t('title')}
+          </h1>
+          <p className="text-xl md:text-2xl text-muted-foreground max-w-3xl mx-auto mb-12 leading-relaxed font-light">
+            {t('subtitle')}
           </p>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6">
-            {featuredProjects.map((project) => (
-              <Card
-                key={project.id}
-                title={project.title[currentLocale]}
-                href={`/work/${project.slug}`}
-                className="h-full"
-              >
-                <div className="space-y-3">
-                  <p className="text-gray-600 dark:text-gray-400">
-                    {project.shortDescription[currentLocale]}
-                  </p>
-                  <div className="flex flex-wrap gap-2">
-                    <Tag>{tDomains(project.domain)}</Tag>
-                  </div>
-                  {project.links.live && (
-                    <a 
-                      href={project.links.live}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-block text-sm text-primary hover:underline"
-                    >
-                      {tWork('visitSite')} →
-                    </a>
-                  )}
-                </div>
-              </Card>
-            ))}
+          <div className="flex gap-6 flex-wrap justify-center">
+            <Button href="/work" variant="gradient">
+              {t('primaryCta')}
+            </Button>
+            <Button href="/contact" variant="secondary">
+              {t('secondaryCta')}
+            </Button>
           </div>
         </div>
       </Section>
 
+      {/* Client/Domain Strip */}
+      <ClientStrip />
+
+      {/* Featured Projects Carousel */}
+      <Section fullWidth className="relative py-20 lg:py-32">
+        <div className="absolute inset-0 bg-gradient-subtle pointer-events-none" />
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6">
+              {tHome('featured.heading')}
+            </h2>
+            <p className="text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
+              {tHome('featured.intro')}
+            </p>
+          </div>
+          <HeroProjectCarousel projects={featuredProjects} locale={currentLocale} />
+        </div>
+      </Section>
+
       {/* Services Overview Section */}
-      <Section>
-        <div className="max-w-7xl mx-auto">
-          <h2 className="text-3xl md:text-4xl font-bold mb-12 text-center">
+      <Section className="py-20 lg:py-32">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <h2 className="text-4xl md:text-5xl font-bold mb-16 text-center">
             {tHome('services.heading')}
           </h2>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-12">
             {/* Digital Products */}
-            <div className="space-y-3">
-              <h3 className="text-2xl font-semibold text-foreground">
+            <div className="glass rounded-2xl p-8 hover:glass-strong transition-all duration-500 group">
+              <h3 className="text-2xl md:text-3xl font-bold mb-4 group-hover:text-primary transition-colors">
                 {tHome('services.digital_products.heading')}
               </h3>
-              <p className="text-gray-600 dark:text-gray-400 leading-relaxed">
+              <p className="text-muted-foreground leading-relaxed text-lg group-hover:text-foreground transition-colors">
                 {tHome('services.digital_products.description')}
               </p>
             </div>
 
             {/* Data Visualization */}
-            <div className="space-y-3">
-              <h3 className="text-2xl font-semibold text-foreground">
+            <div className="glass rounded-2xl p-8 hover:glass-strong transition-all duration-500 group">
+              <h3 className="text-2xl md:text-3xl font-bold mb-4 group-hover:text-primary transition-colors">
                 {tHome('services.data_viz.heading')}
               </h3>
-              <p className="text-gray-600 dark:text-gray-400 leading-relaxed">
+              <p className="text-muted-foreground leading-relaxed text-lg group-hover:text-foreground transition-colors">
                 {tHome('services.data_viz.description')}
               </p>
             </div>
 
             {/* Investigative */}
-            <div className="space-y-3">
-              <h3 className="text-2xl font-semibold text-foreground">
+            <div className="glass rounded-2xl p-8 hover:glass-strong transition-all duration-500 group">
+              <h3 className="text-2xl md:text-3xl font-bold mb-4 group-hover:text-primary transition-colors">
                 {tHome('services.investigative.heading')}
               </h3>
-              <p className="text-gray-600 dark:text-gray-400 leading-relaxed">
+              <p className="text-muted-foreground leading-relaxed text-lg group-hover:text-foreground transition-colors">
                 {tHome('services.investigative.description')}
               </p>
             </div>
 
             {/* Education */}
-            <div className="space-y-3">
-              <h3 className="text-2xl font-semibold text-foreground">
+            <div className="glass rounded-2xl p-8 hover:glass-strong transition-all duration-500 group">
+              <h3 className="text-2xl md:text-3xl font-bold mb-4 group-hover:text-primary transition-colors">
                 {tHome('services.education.heading')}
               </h3>
-              <p className="text-gray-600 dark:text-gray-400 leading-relaxed">
+              <p className="text-muted-foreground leading-relaxed text-lg group-hover:text-foreground transition-colors">
                 {tHome('services.education.description')}
               </p>
             </div>

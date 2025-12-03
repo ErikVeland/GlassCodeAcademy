@@ -41,6 +41,25 @@ export default async function AboutPage({ params }: PageProps) {
             </p>
           </div>
 
+          {/* Founder Bio Section */}
+          <div className="mb-16">
+            <h2 className="text-3xl font-bold mb-6">{t('founder.heading')}</h2>
+            <div className="prose prose-lg dark:prose-invert max-w-none space-y-4">
+              <p className="text-xl text-gray-700 dark:text-gray-300 leading-relaxed">
+                {t('founder.intro')}
+              </p>
+              <p className="text-gray-600 dark:text-gray-400 leading-relaxed">
+                {t('founder.paragraph1')}
+              </p>
+              <p className="text-gray-600 dark:text-gray-400 leading-relaxed">
+                {t('founder.paragraph2')}
+              </p>
+              <p className="text-gray-600 dark:text-gray-400 leading-relaxed">
+                {t('founder.paragraph3')}
+              </p>
+            </div>
+          </div>
+
           <div className="mb-16">
             <h2 className="text-3xl font-bold mb-8">{t('values.heading')}</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
