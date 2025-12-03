@@ -31,9 +31,9 @@ export default async function ServicesPage({ params }: PageProps) {
   return (
     <div className="container mx-auto px-4">
       <Section>
-        <div className="max-w-5xl mx-auto">
-          <h1 className="text-4xl md:text-5xl font-bold mb-4 text-center">{t('title')}</h1>
-          <p className="text-lg text-gray-600 dark:text-gray-400 text-center mb-16 max-w-3xl mx-auto">
+        <div className="max-w-7xl mx-auto">
+          <h1 className="text-4xl md:text-5xl font-bold mb-4">{t('title')}</h1>
+          <p className="text-lg text-gray-600 dark:text-gray-400 mb-16">
             {t('intro')}
           </p>
           
@@ -73,7 +73,7 @@ export default async function ServicesPage({ params }: PageProps) {
             ))}
           </div>
 
-          <div className="mt-16 text-center">
+          <div className="mt-16">
             <Button href="/contact" variant="primary">
               Start a Project
             </Button>

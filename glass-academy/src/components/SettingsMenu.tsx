@@ -4,6 +4,7 @@ import { useTheme } from '@/contexts/ThemeContext';
 import { useLocale } from 'next-intl';
 import { usePathname, Link } from '@/i18n/routing';
 import { useState, useRef, useEffect } from 'react';
+import { useUserAnimationPreference } from '@/hooks/useUserAnimationPreference';
 
 const themes = [
   { value: 'light' as const, label: 'Light', icon: '☀️' },

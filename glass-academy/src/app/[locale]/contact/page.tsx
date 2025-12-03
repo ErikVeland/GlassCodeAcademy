@@ -22,14 +22,42 @@ export default async function ContactPage({ params }: PageProps) {
   const t = await getTranslations({ locale, namespace: 'contact' });
 
   return (
-    <div className="container mx-auto px-4">
-      <Section>
-        <div className="max-w-3xl mx-auto">
-          <h1 className="text-4xl md:text-5xl font-bold mb-4 text-center">{t('title')}</h1>
-          <p className="text-lg text-gray-600 dark:text-gray-400 text-center mb-12">
-            {t('intro')}
-          </p>
-          <ContactForm locale={locale as 'en' | 'nb' | 'nn'} />
+    <div className="w-full">
+      <Section fullWidth className="py-16 lg:py-24">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16">
+            {/* Left Column - Info */}
+            <div className="space-y-8">
+              <div>
+                <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 leading-tight">{t('title')}</h1>
+                <p className="text-lg md:text-xl text-gray-600 dark:text-gray-400 leading-relaxed">
+                  {t('intro')}
+                </p>
+              </div>
+
+              <div className="space-y-6 pt-8">
+                <div className="glass rounded-2xl p-6">
+                  <h3 className="text-lg font-semibold mb-2">Quick Response</h3>
+                  <p className="text-muted-foreground">We typically respond within 24 hours during business days.</p>
+                </div>
+                
+                <div className="glass rounded-2xl p-6">
+                  <h3 className="text-lg font-semibold mb-2">Start a Conversation</h3>
+                  <p className="text-muted-foreground">Whether you have a fully formed project or just an idea, we'd love to hear from you.</p>
+                </div>
+
+                <div className="glass rounded-2xl p-6">
+                  <h3 className="text-lg font-semibold mb-2">No Obligation</h3>
+                  <p className="text-muted-foreground">Initial consultations are always free. Let's explore if we're a good fit.</p>
+                </div>
+              </div>
+            </div>
+
+            {/* Right Column - Form */}
+            <div className="glass-strong rounded-2xl p-8 lg:p-10">
+              <ContactForm locale={locale as 'en' | 'nb' | 'nn'} />
+            </div>
+          </div>
         </div>
       </Section>
     </div>

@@ -76,7 +76,7 @@ export default async function AboutPage({ params }: PageProps) {
             </div>
           </div>
 
-          <div className="text-center">
+          <div>
             <Button href="/contact" variant="primary">
               Work With Us
             </Button>

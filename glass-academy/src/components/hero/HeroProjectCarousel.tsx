@@ -72,7 +72,7 @@ export default function HeroProjectCarousel({ projects, locale }: HeroProjectCar
     >
       {/* Main Carousel Container */}
       <div
-        className="relative overflow-hidden rounded-2xl bg-muted-background"
+        className="relative overflow-hidden rounded-2xl glass border border-border/30"
         id="hero-carousel-slides"
         role="region"
         aria-label="Featured projects carousel"
@@ -150,7 +150,7 @@ export default function HeroProjectCarousel({ projects, locale }: HeroProjectCar
             onClick={goToPrevious}
             aria-label="Previous project"
             aria-controls="hero-carousel-slides"
-            className="px-4 py-2 rounded-lg bg-card-background border border-card-border hover:border-gray-300 dark:hover:border-[rgba(255,255,255,0.2)] transition-all focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
+            className="px-4 py-2 rounded-lg glass hover:glass-strong border border-border/30 transition-all focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
           >
             ← Previous
           </button>
@@ -158,7 +158,7 @@ export default function HeroProjectCarousel({ projects, locale }: HeroProjectCar
             onClick={goToNext}
             aria-label="Next project"
             aria-controls="hero-carousel-slides"
-            className="px-4 py-2 rounded-lg bg-card-background border border-card-border hover:border-gray-300 dark:hover:border-[rgba(255,255,255,0.2)] transition-all focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
+            className="px-4 py-2 rounded-lg glass hover:glass-strong border border-border/30 transition-all focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
           >
             Next →
           </button>

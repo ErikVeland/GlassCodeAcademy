@@ -31,15 +31,15 @@ export default async function HomePage({ params }: PageProps) {
   return (
     <>
       {/* Hero Section with Gradient Glow */}
-      <Section fullWidth className="relative flex flex-col items-center justify-center text-center min-h-[85vh] py-20 lg:py-32 bg-gradient-glow">
-        <div className="max-w-5xl mx-auto px-6">
+      <Section fullWidth className="relative flex flex-col items-start justify-center min-h-[85vh] py-20 lg:py-32 bg-gradient-glow">
+        <div className="w-full max-w-7xl mx-auto px-6">
           <h1 className="text-display mb-8 leading-none">
             {t('title')}
           </h1>
-          <p className="text-xl md:text-2xl text-muted-foreground max-w-3xl mx-auto mb-12 leading-relaxed font-light">
+          <p className="text-xl md:text-2xl text-muted-foreground mb-12 leading-relaxed font-light">
             {t('subtitle')}
           </p>
-          <div className="flex gap-6 flex-wrap justify-center">
+          <div className="flex gap-6 flex-wrap">
             <Button href="/work" variant="gradient">
               {t('primaryCta')}
             </Button>
@@ -54,14 +54,20 @@ export default async function HomePage({ params }: PageProps) {
       <ClientStrip />
 
       {/* Featured Projects Carousel */}
-      <Section fullWidth className="relative py-20 lg:py-32">
+      <Section 
+        fullWidth 
+        className="relative py-20 lg:py-20 border-b border-border/10" 
+        style={{ 
+          boxShadow: '0 12px 48px 0 rgba(99, 102, 241, 0.2), inset 0 -1px 0 0 rgba(99, 102, 241, 0.3)'
+        }}
+      >
         <div className="absolute inset-0 bg-gradient-subtle pointer-events-none" />
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
+          <div className="mb-16">
             <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6">
               {tHome('featured.heading')}
             </h2>
-            <p className="text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
+            <p className="text-lg md:text-xl text-muted-foreground leading-relaxed">
               {tHome('featured.intro')}
             </p>
           </div>
@@ -72,7 +78,7 @@ export default async function HomePage({ params }: PageProps) {
       {/* Services Overview Section */}
       <Section className="py-20 lg:py-32">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-4xl md:text-5xl font-bold mb-16 text-center">
+          <h2 className="text-4xl md:text-5xl font-bold mb-16">
             {tHome('services.heading')}
           </h2>
           

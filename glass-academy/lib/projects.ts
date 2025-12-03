@@ -191,14 +191,14 @@ export const allProjects: Project[] = [
 			nn: 'RaceHub'
 		},
 		shortDescription: {
-			en: 'A prototype racing and betting analytics hub that turns messy race data into clean, explorable insight.',
-			nb: 'En prototype for et analyseverktøy for løp og betting som gjør ustrukturert løpsdata om til ryddig, utforskbar innsikt.',
-			nn: 'Ein prototype for eit analyseverktøy for løp og betting som gjer ustrukturert løpsdata om til ryddig, utforskbar innsikt.'
+			en: 'A prototype racing and betting analytics hub that turns messy race data into clean, explorable insight. Includes a fully functional betting simulator as a bonus.',
+			nb: 'En prototype for et analyseverktøy for løp og betting som gjør ustrukturert løpsdata om til ryddig, utforskbar innsikt. Inkluderer en fullt funksjonell betting-simulator som bonus.',
+			nn: 'Ein prototype for eit analyseverktøy for løp og betting som gjer ustrukturert løpsdata om til ryddig, utforskbar innsikt. Inkluderer ein fullt funksjonell betting-simulator som bonus.'
 		},
 		summary: {
-			en: 'RaceHub is an experimental product prototype that ingests race cards, results and odds data and restructures it into a fast, queryable interface. It explores how serious bettors and analysts might slice and compare runners, tracks and markets in real time without drowning in spreadsheets or ad-heavy dashboards.',
-			nb: 'RaceHub er en eksperimentell produktprototype som leser inn løpsprogram, resultater og oddsdata og omstrukturerer alt til et raskt, søkbart grensesnitt. Prosjektet utforsker hvordan seriøse spillere og analytikere kan sammenligne hester, baner og markeder i sanntid uten å drukne i regneark eller reklametunge dashbord.',
-			nn: 'RaceHub er ein eksperimentell produktprototype som les inn løpsprogram, resultat og oddsdata og omstrukturerer alt til eit raskt, søkbart grensesnitt. Prosjektet utforskar korleis seriøse spelarar og analytikarar kan samanlikne hestar, baner og marknader i sanntid utan å drukne i rekneark eller reklametunge dashbord.'
+			en: 'RaceHub is an experimental product prototype that ingests race cards, results and odds data and restructures it into a fast, queryable interface. It explores how serious bettors and analysts might slice and compare runners, tracks and markets in real time without drowning in spreadsheets or ad-heavy dashboards. As a bonus feature, it includes a fully functional betting simulator that lets users test strategies with realistic market conditions.',
+			nb: 'RaceHub er en eksperimentell produktprototype som leser inn løpsprogram, resultater og oddsdata og omstrukturerer alt til et raskt, søkbart grensesnitt. Prosjektet utforsker hvordan seriøse spillere og analytikere kan sammenligne hester, baner og markeder i sanntid uten å drukne i regneark eller reklametunge dashbord. Som bonusfunksjon inkluderer det en fullt funksjonell betting-simulator som lar brukere teste strategier under realistiske markedsforhold.',
+			nn: 'RaceHub er ein eksperimentell produktprototype som les inn løpsprogram, resultat og oddsdata og omstrukturerer alt til eit raskt, søkbart grensesnitt. Prosjektet utforskar korleis seriøse spelarar og analytikarar kan samanlikne hestar, baner og marknader i sanntid utan å drukne i rekneark eller reklametunge dashbord. Som bonusfunksjon inkluderer det ein fullt funksjonell betting-simulator som lèt brukarar teste strategiar under realistiske marknadsforhold.'
 		},
 		role: [
 			'Product prototyping',

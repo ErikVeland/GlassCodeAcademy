@@ -1,7 +1,7 @@
 import {Link} from '@/i18n/routing';
 import {useTranslations} from 'next-intl';
 import {ReactNode} from 'react';
-import AdvancedBackground from '../visual/AdvancedBackground';
+import RaveBackground from '../visual/RaveBackground';
 import AnimationToggle from '../visual/AnimationToggle';
 import GlassLogo from './GlassLogo';
 import SettingsMenu from '../SettingsMenu';
@@ -15,7 +15,6 @@ export default function Layout({ children }: LayoutProps) {
   const t = useTranslations('nav');
 
   const navLinks = [
-    { href: '/', label: t('home') },
     { href: '/work', label: t('work') },
     { href: '/services', label: t('services') },
     { href: '/process', label: t('process') },
@@ -25,8 +24,8 @@ export default function Layout({ children }: LayoutProps) {
 
   return (
     <div className="min-h-screen flex flex-col relative">
-      {/* Advanced Fluid Background */}
-      <AdvancedBackground />
+      {/* Rave Background */}
+      <RaveBackground />
 
       <a
         href="#main-content"
@@ -69,7 +68,7 @@ export default function Layout({ children }: LayoutProps) {
         </div>
       </header>
 
-      <main id="main-content" className="flex-grow prose-content py-8 w-full focus:outline-none" tabIndex={-1}>
+      <main id="main-content" className="flex-grow prose-content w-full focus:outline-none" tabIndex={-1}>
         {children}
       </main>
 

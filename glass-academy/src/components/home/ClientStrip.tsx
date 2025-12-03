@@ -19,9 +19,14 @@ export default function ClientStrip() {
 
   return (
     <div
-      className="relative overflow-hidden py-8 border-y border-border"
+      className="relative overflow-hidden py-4 glass-strong border-y border-border/20 shadow-lg"
       aria-label="Project domains and focus areas"
+      style={{
+        boxShadow: '0 8px 32px 0 rgba(99, 102, 241, 0.15), inset 0 0 40px 0 rgba(99, 102, 241, 0.05)'
+      }}
     >
+      <div className="absolute inset-0 bg-gradient-to-r from-primary/5 via-accent/5 to-primary/5 pointer-events-none" />
+      <div className="absolute inset-0 bg-gradient-subtle opacity-40 pointer-events-none" />
       <div className="relative">
         {prefersReducedMotion ? (
           // Static display when reduced motion is preferred
