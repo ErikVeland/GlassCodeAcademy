@@ -11,10 +11,10 @@
     "contact": "Kontakt"
   },
   "hero": {
-    "title": "Vi bygger digitale opplevelser som betyr noe.",
-    "subtitle": "Glass Academy lager plattformer for utdanning, etterforskning og dataanalyse—vi gjør komplekse problemer om til tydelige, kraftige verktøy.",
+    "title": "Vi bygger verktøy for de nysgjerrige.",
+    "subtitle": "Glass Academy er et digitalt produktstudio. Vi hjelper organisasjoner med å gjøre komplekse data om til klar innsikt gjennom skreddersydd programvare, datavisualisering og undersøkende verktøy.",
     "primaryCta": "Se vårt arbeid",
-    "secondaryCta": "Start et prosjekt"
+    "secondaryCta": "Jobb med oss"
   },
   "home": {
     "featured": {
@@ -22,22 +22,22 @@
       "intro": "Et utvalg prosjekter som viser hvordan vi jobber med komplekse utfordringer."
     },
     "services": {
-      "heading": "Hva vi gjør",
+      "heading": "Vår ekspertise",
       "digital_products": {
         "heading": "Digitale produkter og plattformer",
-        "description": "Vi designer og bygger webapplikasjoner, læringsplattformer og skreddersydde verktøy som løser reelle problemer. Fra konsept til produksjon håndterer vi hele stacken."
+        "description": "Vi bygger robuste, skalerbare webapplikasjoner som løser virkelige problemer. Fra konsept til produksjon håndterer vi hele stacken."
       },
       "data_viz": {
-        "heading": "Datavisualisering og nettverksanalyse",
-        "description": "Vi transformerer komplekse datasett til interaktive visualiseringer som avslører mønstre og sammenhenger. Enten det gjelder å kartlegge relasjoner eller utforske historiske data, gjør vi informasjon tilgjengelig."
+        "heading": "Datavisualisering",
+        "description": "Vi gjør det usynlige synlig. Våre interaktive visualiseringer hjelper deg å utforske komplekse datasett, avdekke mønstre og kommunisere innsikt effektivt."
       },
       "investigative": {
-        "heading": "Etterforsknings- og forskningsverktøy",
-        "description": "Vi bygger plattformer for journalister og forskere til å analysere dokumenter, trekke ut enheter og spore nettverk. Våre verktøy bringer forensisk nøyaktighet til etterforskningsarbeid."
+        "heading": "Undersøkende verktøy",
+        "description": "Vi styrker forskere og journalister. Våre skreddersydde verktøy forenkler dokumentanalyse, enhetsutvinning og nettverkskartlegging for dype undersøkelser."
       },
       "education": {
-        "heading": "Utdanning og læringsopplevelser",
-        "description": "Vi lager læringsplattformer og pensum for folk som vil bygge faktiske produkter. Praktisk, produksjonsfokusert og laget av aktive utviklere."
+        "heading": "Teknisk utdanning",
+        "description": "Vi lærer bort det vi praktiserer. Våre praktiske læringsplattformer og læreplaner hjelper utviklere å mestre moderne webutvikling og data engineering."
       }
     }
   },

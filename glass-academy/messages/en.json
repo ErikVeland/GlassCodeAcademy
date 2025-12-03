@@ -11,10 +11,10 @@
     "contact": "Contact"
   },
   "hero": {
-    "title": "We build digital experiences that matter.",
-    "subtitle": "Glass Academy creates platforms for education, investigation, and data exploration—turning complex problems into clear, powerful tools.",
-    "primaryCta": "View Our Work",
-    "secondaryCta": "Start a Project"
+    "title": "We build tools for the curious.",
+    "subtitle": "Glass Academy is a digital product studio. We help organizations turn complex data into clear, actionable insights through custom software, data visualization, and investigative tools.",
+    "primaryCta": "See our work",
+    "secondaryCta": "Work with us"
   },
   "home": {
     "featured": {
@@ -22,22 +22,22 @@
       "intro": "A selection of projects that demonstrate our approach to complex problems."
     },
     "services": {
-      "heading": "What We Do",
+      "heading": "Our Expertise",
       "digital_products": {
         "heading": "Digital Products & Platforms",
-        "description": "We design and build web applications, learning platforms, and custom tools that solve real problems. From concept to production, we handle the full stack."
+        "description": "We build robust, scalable web applications that solve real problems. From initial concept to production deployment, we handle the full stack."
       },
       "data_viz": {
-        "heading": "Data Visualization & Network Analysis",
-        "description": "We transform complex datasets into interactive visualizations that reveal patterns and connections. Whether mapping relationships or exploring historical data, we make information accessible."
+        "heading": "Data Visualization",
+        "description": "We make the invisible visible. Our interactive visualizations help you explore complex datasets, reveal patterns, and communicate insights effectively."
       },
       "investigative": {
-        "heading": "Investigative & Research Tools",
-        "description": "We build platforms for journalists and researchers to analyze documents, extract entities, and trace networks. Our tools bring forensic rigor to investigative work."
+        "heading": "Investigative Tools",
+        "description": "We empower researchers and journalists. Our custom tools facilitate document analysis, entity extraction, and network mapping for deep investigations."
       },
       "education": {
-        "heading": "Education & Learning Experiences",
-        "description": "We create learning platforms and curricula for people who want to build real products. Hands-on, production-focused, and built by working engineers."
+        "heading": "Technical Education",
+        "description": "We teach what we practice. Our hands-on learning platforms and curricula help engineers master modern web development and data engineering."
       }
     }
   },

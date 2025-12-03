@@ -4,15 +4,15 @@ import {ReactNode} from 'react';
 import AdvancedBackground from '../visual/AdvancedBackground';
 import AnimationToggle from '../visual/AnimationToggle';
 import GlassLogo from './GlassLogo';
-import PremiumGlassLogo from './PremiumGlassLogo';
 import SettingsMenu from '../SettingsMenu';
+import MobileMenu from './MobileMenu';
+
 interface LayoutProps {
   children: ReactNode;
 }
 
 export default function Layout({ children }: LayoutProps) {
   const t = useTranslations('nav');
-  const tSite = useTranslations('site');
 
   const navLinks = [
     { href: '/', label: t('home') },
@@ -36,41 +36,46 @@ export default function Layout({ children }: LayoutProps) {
       </a>
 
       <header className="glass-strong sticky top-0 z-40 border-b border-border/50">
-        <div className="prose-content py-6 flex flex-col md:flex-row justify-between items-center gap-6">
-          <div>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-between h-20">
+            {/* Logo */}
             <Link 
               href="/" 
-              className="focus:outline-none focus-ring-glow rounded-sm block transition-transform duration-300 hover:scale-105"
+              className="flex-shrink-0 focus:outline-none focus-ring-glow rounded-sm transition-transform duration-300 hover:scale-105"
             >
               <GlassLogo />
-            </Link>          </div>
-          
-          <div className="flex flex-col md:flex-row items-center gap-8">
-            <nav className="flex flex-wrap justify-center gap-6 md:gap-8">
+            </Link>
+
+            {/* Desktop Navigation - Single Line */}
+            <nav className="hidden md:flex items-center gap-8">
               {navLinks.map((link) => (
                 <Link 
                   key={link.href} 
                   href={link.href} 
-                  className="relative text-base font-medium text-foreground/80 hover:text-primary transition-colors focus:outline-none focus-ring-glow rounded-sm group"
+                  className="relative text-base font-medium text-foreground/80 hover:text-primary transition-colors focus:outline-none focus-ring-glow rounded-sm group whitespace-nowrap"
                 >
                   {link.label}
                   <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-primary group-hover:w-full transition-all duration-300" />
                 </Link>
               ))}
             </nav>
-            <div className="flex items-center gap-4 border-l border-border/50 pl-6">
+
+            {/* Right Side - Settings + Mobile Menu */}
+            <div className="flex items-center gap-4">
               <SettingsMenu />
-            </div>          </div>
+              <MobileMenu navLinks={navLinks} />
+            </div>
+          </div>
         </div>
       </header>
 
-      <main id="main-content" className="flex-grow w-full focus:outline-none" tabIndex={-1}>
+      <main id="main-content" className="flex-grow prose-content py-8 w-full focus:outline-none" tabIndex={-1}>
         {children}
       </main>
 
       <footer className="border-t border-border/50 mt-auto glass-subtle">
         <div className="prose-content py-12">
-          <div className="flex flex-col md:flex-row justify-between items-center gap-6">
+          <div className="flex flex-row flex-wrap justify-between items-center gap-6">
             <p className="text-sm text-muted-foreground text-center md:text-left flex items-center justify-center md:justify-start gap-2 flex-wrap">
               © {new Date().getFullYear()} <GlassLogo />. All rights reserved.
             </p>
