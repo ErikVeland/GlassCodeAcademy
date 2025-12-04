@@ -1,7 +1,1 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16">
-  <rect width="16" height="16" fill="#ffffff"/>
-  <path fill="#4F46E5" fill-rule="evenodd" d="M2 3h12v10a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V3zm-1-1h14v12a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V2z"/>
-  <circle cx="5" cy="7" r="1" fill="#4F46E5"/>
-  <circle cx="8" cy="7" r="1" fill="#4F46E5"/>
-  <circle cx="11" cy="7" r="1" fill="#4F46E5"/>
-</svg>
+<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"><path fill="#fff" d="M0 0H16V16H0z"/><path fill="#4F46E5" fill-rule="evenodd" d="M2 3h12v10a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V3zM1 2h14v12a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V2z"/><circle cx="5" cy="7" r="1" fill="#4F46E5"/><circle cx="8" cy="7" r="1" fill="#4F46E5"/><circle cx="11" cy="7" r="1" fill="#4F46E5"/></svg>
