@@ -93,7 +93,7 @@ export default function RaveBackground() {
 
   return (
     <div className="fixed inset-0 -z-10 bg-background" aria-hidden="true">
-      <Canvas camera={{ position: [0, 0, 1] }}>
+      <Canvas camera={{ position: [0, 0, 1] }} dpr={[1, 1.5]} gl={{ antialias: false, powerPreference: 'low-power' }}>
         <PlasmaMesh theme={resolvedTheme} />
       </Canvas>
       <div className="absolute inset-0 bg-gradient-to-b from-transparent via-background/50 to-background pointer-events-none" />

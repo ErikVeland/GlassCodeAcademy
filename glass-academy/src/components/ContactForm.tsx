@@ -2,7 +2,7 @@
 
 import {useTranslations} from 'next-intl';
 import Button from '@/components/ui/Button';
-import {FormEvent, useState} from 'react';
+import {FormEvent, useEffect, useRef, useState} from 'react';
 
 type ContactFormProps = {
   locale: 'en' | 'nb' | 'nn';
@@ -21,6 +21,12 @@ export default function ContactForm({ locale }: ContactFormProps) {
   const [errors, setErrors] = useState<FormErrors>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle');
+  const [formStart, setFormStart] = useState<number>(0);
+  const websiteRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    setFormStart(Date.now());
+  }, []);
 
   const validateField = (name: string, value: string): string | undefined => {
     if (name === 'name') {
@@ -56,7 +62,9 @@ export default function ContactForm({ locale }: ContactFormProps) {
       projectType: formData.get('projectType') as string,
       budget: formData.get('budget') as string,
       message: formData.get('message') as string,
-      locale
+      locale,
+      website: (formData.get('website') as string) || '',
+      formStart
     };
 
     // Validate all required fields
@@ -134,6 +142,16 @@ export default function ContactForm({ locale }: ContactFormProps) {
       )}
 
       <form onSubmit={handleSubmit} className="space-y-6" noValidate>
+        <input type="hidden" name="formStart" value={formStart} />
+        <input 
+          type="text" 
+          name="website" 
+          tabIndex={-1}
+          aria-hidden="true"
+          autoComplete="off"
+          ref={websiteRef}
+          className="sr-only"
+        />
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {/* Name */}
           <div>
@@ -147,6 +165,7 @@ export default function ContactForm({ locale }: ContactFormProps) {
               placeholder={t('fields.name.placeholder')}
               onBlur={handleBlur}
               required
+              autoComplete="name"
               aria-required="true"
               aria-invalid={errors.name ? 'true' : 'false'}
               aria-describedby={errors.name ? 'name-error' : undefined}
@@ -171,6 +190,8 @@ export default function ContactForm({ locale }: ContactFormProps) {
               placeholder={t('fields.email.placeholder')}
               onBlur={handleBlur}
               required
+              inputMode="email"
+              autoComplete="email"
               aria-required="true"
               aria-invalid={errors.email ? 'true' : 'false'}
               aria-describedby={errors.email ? 'email-error' : undefined}
@@ -194,6 +215,7 @@ export default function ContactForm({ locale }: ContactFormProps) {
             id="organisation" 
             name="organisation"
             placeholder={t('fields.organisation.placeholder')}
+            autoComplete="organization"
             className="w-full px-4 py-2 rounded-md border border-border bg-transparent focus:ring-2 focus:ring-primary focus:outline-none"
           />
         </div>

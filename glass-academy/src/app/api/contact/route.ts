@@ -8,6 +8,8 @@ type ContactFormData = {
   budget?: string;
   message: string;
   locale: string;
+  website?: string;
+  formStart?: number;
 };
 
 // Email validation regex
@@ -52,6 +54,16 @@ export async function POST(request: NextRequest) {
         { success: false, errors: validation.errors },
         { status: 400 }
       );
+    }
+
+    const now = Date.now();
+    const started = typeof data.formStart === 'number' ? data.formStart : now;
+    const elapsedMs = now - started;
+    if (data.website && data.website.trim() !== '') {
+      return NextResponse.json({ success: true, message: 'Submission received' }, { status: 200 });
+    }
+    if (elapsedMs < 4000) {
+      return NextResponse.json({ success: true, message: 'Submission received' }, { status: 200 });
     }
 
     // Sanitize inputs
