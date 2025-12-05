@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://glasscode.academy/sitemap.xml

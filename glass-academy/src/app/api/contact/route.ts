@@ -66,6 +66,19 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ success: true, message: 'Submission received' }, { status: 200 });
     }
 
+    const last = request.cookies.get('contact_last');
+    if (last) {
+      const lastTs = parseInt(last.value, 10);
+      if (!isNaN(lastTs) && now - lastTs < 60000) {
+        const resp429 = NextResponse.json(
+          { success: false, message: 'Too many requests' },
+          { status: 429 }
+        );
+        resp429.headers.set('Retry-After', '60');
+        return resp429;
+      }
+    }
+
     // Sanitize inputs
     const sanitizedData = {
       name: sanitizeInput(data.name),
@@ -138,10 +151,35 @@ export async function POST(request: NextRequest) {
       console.warn('RESEND_API_KEY not set; enquiry not emailed');
     }
 
-    return NextResponse.json(
+    if (process.env.SLACK_WEBHOOK_URL) {
+      try {
+        const slackPayload = {
+          text: `New enquiry: ${sanitizedData.name} <${sanitizedData.email}>\nOrganisation: ${sanitizedData.organisation || 'N/A'}\nProject: ${sanitizedData.projectType || 'N/A'}\nBudget: ${sanitizedData.budget || 'N/A'}\n\n${sanitizedData.message}`
+        };
+        const sresp = await fetch(process.env.SLACK_WEBHOOK_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(slackPayload)
+        });
+        if (!sresp.ok) {
+          console.error('Slack notification failed:', await sresp.text());
+        }
+      } catch (e) {
+        console.error('Slack notification error:', e);
+      }
+    }
+
+    const response = NextResponse.json(
       { success: true, message: 'Submission received' },
       { status: 200 }
     );
+    response.cookies.set('contact_last', String(now), {
+      httpOnly: true,
+      sameSite: 'lax',
+      secure: true,
+      maxAge: 3600
+    });
+    return response;
   } catch (error) {
     console.error('Contact form API error:', error);
     return NextResponse.json(
