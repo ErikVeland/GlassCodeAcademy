@@ -65,45 +65,66 @@ export async function POST(request: NextRequest) {
       locale: data.locale
     };
 
-    // Log submission to console (in production, this would send to email/CRM)
-    console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
-    console.log('[Contact Form Submission]');
-    console.log('Time:', new Date().toISOString());
-    console.log('Locale:', sanitizedData.locale);
-    console.log('Name:', sanitizedData.name);
-    console.log('Email:', sanitizedData.email);
-    console.log('Organisation:', sanitizedData.organisation || 'N/A');
-    console.log('Project Type:', sanitizedData.projectType || 'N/A');
-    console.log('Budget:', sanitizedData.budget || 'N/A');
-    console.log('Message:', sanitizedData.message);
-    console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+    const toEmail = process.env.CONTACT_TO || 'erik@veland.au';
+    const apiKey = process.env.RESEND_API_KEY;
 
-    // TODO: In production, integrate with:
-    // - Email service (SendGrid, AWS SES, Mailgun)
-    // - CRM (HubSpot, Salesforce, Pipedrive)
-    // - Slack/Discord notifications
-    // - Database storage
+    if (apiKey) {
+      const subject = `New enquiry from ${sanitizedData.name}`;
+      const text = [
+        `Time: ${new Date().toISOString()}`,
+        `Locale: ${sanitizedData.locale}`,
+        `Name: ${sanitizedData.name}`,
+        `Email: ${sanitizedData.email}`,
+        `Organisation: ${sanitizedData.organisation || 'N/A'}`,
+        `Project Type: ${sanitizedData.projectType || 'N/A'}`,
+        `Budget: ${sanitizedData.budget || 'N/A'}`,
+        '',
+        'Message:',
+        sanitizedData.message
+      ].join('\n');
 
-    // Example email service integration (commented out):
-    /*
-    if (process.env.EMAIL_SERVICE_API_KEY) {
-      await sendEmail({
-        to: process.env.CONTACT_EMAIL || 'contact@glasscode.academy',
-        from: process.env.FROM_EMAIL || 'noreply@glasscode.academy',
-        subject: `New Contact Form Submission from ${sanitizedData.name}`,
-        text: `
-          Name: ${sanitizedData.name}
-          Email: ${sanitizedData.email}
-          Organisation: ${sanitizedData.organisation || 'N/A'}
-          Project Type: ${sanitizedData.projectType || 'N/A'}
-          Budget: ${sanitizedData.budget || 'N/A'}
-          
-          Message:
-          ${sanitizedData.message}
-        `
+      const html = `
+        <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; color:#111;">
+          <h2 style="margin:0 0 12px">New enquiry</h2>
+          <p><strong>Time:</strong> ${new Date().toLocaleString()}</p>
+          <p><strong>Locale:</strong> ${sanitizedData.locale}</p>
+          <p><strong>Name:</strong> ${sanitizedData.name}</p>
+          <p><strong>Email:</strong> <a href="mailto:${sanitizedData.email}">${sanitizedData.email}</a></p>
+          <p><strong>Organisation:</strong> ${sanitizedData.organisation || 'N/A'}</p>
+          <p><strong>Project Type:</strong> ${sanitizedData.projectType || 'N/A'}</p>
+          <p><strong>Budget:</strong> ${sanitizedData.budget || 'N/A'}</p>
+          <hr style="margin:16px 0;border:none;border-top:1px solid #e5e7eb" />
+          <p style="white-space:pre-wrap;">${sanitizedData.message}</p>
+        </div>
+      `;
+
+      const resp = await fetch('https://api.resend.com/emails', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${apiKey}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          from: process.env.CONTACT_FROM || 'noreply@glasscode.academy',
+          to: [toEmail],
+          reply_to: sanitizedData.email,
+          subject,
+          text,
+          html
+        })
       });
+
+      if (!resp.ok) {
+        const errText = await resp.text();
+        console.error('Email send failed:', errText);
+        return NextResponse.json(
+          { success: false, message: 'Failed to send email' },
+          { status: 502 }
+        );
+      }
+    } else {
+      console.warn('RESEND_API_KEY not set; enquiry not emailed');
     }
-    */
 
     return NextResponse.json(
       { success: true, message: 'Submission received' },
