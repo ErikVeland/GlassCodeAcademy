@@ -14,11 +14,14 @@ export default function MobileMenu({ navLinks }: MobileMenuProps) {
   useEffect(() => {
     if (isOpen) {
       document.body.style.overflow = 'hidden';
+      document.documentElement.style.overflow = 'hidden';
     } else {
-      document.body.style.overflow = '';
+      document.body.style.removeProperty('overflow');
+      document.documentElement.style.removeProperty('overflow');
     }
     return () => {
-      document.body.style.overflow = '';
+      document.body.style.removeProperty('overflow');
+      document.documentElement.style.removeProperty('overflow');
     };
   }, [isOpen]);
 
@@ -34,6 +37,7 @@ export default function MobileMenu({ navLinks }: MobileMenuProps) {
     }
   }, [isOpen]);
 
+
   return (
     <>
       {/* Mobile Menu Button */}
@@ -42,6 +46,7 @@ export default function MobileMenu({ navLinks }: MobileMenuProps) {
         className="md:hidden flex items-center justify-center p-2 text-foreground hover:text-primary transition-colors focus:outline-none focus-ring-glow rounded"
         aria-label="Toggle navigation menu"
         aria-expanded={isOpen}
+        type="button"
       >
         {isOpen ? (
           <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -60,10 +65,13 @@ export default function MobileMenu({ navLinks }: MobileMenuProps) {
           <div 
             className="fixed inset-0 bg-background/95 backdrop-blur-md z-50 md:hidden"
             onClick={() => setIsOpen(false)}
+            onTouchMove={(e) => e.preventDefault()}
           />
           <nav 
             className="fixed top-20 left-0 right-0 bottom-0 z-50 md:hidden glass-strong border-t border-border/50 overflow-y-auto"
             aria-label="Mobile navigation"
+            aria-modal="true"
+            role="dialog"
           >
             <div className="flex flex-col p-6 gap-2">
               {navLinks.map((link) => (
