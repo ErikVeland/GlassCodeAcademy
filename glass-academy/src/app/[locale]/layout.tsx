@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { cookies } from 'next/headers';
 import {NextIntlClientProvider} from 'next-intl';
 import {getMessages} from 'next-intl/server';
 import {notFound} from 'next/navigation';
@@ -20,6 +21,8 @@ export default async function RootLayout({
   params: Promise<{locale: string}>;
 }) {
   const {locale} = await params;
+  const cookieStore = await cookies();
+  const nonce = cookieStore.get('csp-nonce')?.value;
   
   // Ensure that the incoming `locale` is valid
   if (!routing.locales.includes(locale as typeof routing.locales[number])) {
@@ -52,6 +55,7 @@ export default async function RootLayout({
               })();
             `,
           }}
+          nonce={nonce}
         />
       </head>
       <body>
