@@ -1,19 +1,22 @@
 {
-  "type": "module",
+  "name": "glass-code-academy",
+  "version": "1.0.0",
+  "private": true,
+  "workspaces": [
+    "apps/*"
+  ],
   "scripts": {
-    "start": "bash start.sh",
-    "start:dev": "bash start-dev.sh",
-    "start:both": "bash start-dev.sh",
-    "ci:validate": "CI=1 node scripts/validate-content.js",
-    "typecheck": "npm --prefix glasscode/frontend run typecheck",
-    "lint": "npm --prefix glasscode/frontend run lint && npm --prefix backend-node run lint",
-    "lint:fix": "npm --prefix backend-node run lint:fix",
-    "ci:build": "npm --prefix glasscode/frontend ci && npm --prefix glasscode/frontend run lint && npm --prefix glasscode/frontend run typecheck && npm --prefix glasscode/frontend run build"
+    "dev": "npm run dev --workspaces",
+    "build": "npm run build --workspaces",
+    "lint": "npm run lint --workspaces",
+    "test": "npm run test --workspaces",
+    "start": "npm run start --workspaces",
+    "clean": "rm -rf node_modules apps/*/node_modules"
   },
   "devDependencies": {
-    "@types/jest": "^30.0.0"
+    "concurrently": "^8.2.2"
   },
-  "dependencies": {
-    "pg": "^8.16.3"
+  "engines": {
+    "node": ">=18.0.0"
   }
 }

@@ -57,8 +57,6 @@ services:
         condition: service_healthy
       redis:
         condition: service_healthy
-    # For development, we'll use a different approach to avoid platform-specific binary issues
-    # We'll copy the source code during build and use file watching for development
     volumes:
       - ./apps/api/src:/app/src
       - ./apps/api/scripts:/app/scripts
@@ -74,11 +72,11 @@ services:
       start_period: 120s
 
   # Frontend Service
-  frontend:
+  web:
     build:
-      context: ./glasscode/frontend
+      context: ./apps/web
       dockerfile: Dockerfile
-    container_name: glasscode_frontend
+    container_name: glasscode_web
     restart: unless-stopped
     ports:
       - "3000:3000"
@@ -89,12 +87,12 @@ services:
       api:
         condition: service_started
     volumes:
-      - ./glasscode/frontend/src:/app/src
-      - ./glasscode/frontend/public:/app/public
-      - ./glasscode/frontend/package.json:/app/package.json
-      - ./glasscode/frontend/next.config.js:/app/next.config.js
-      - ./glasscode/frontend/tsconfig.json:/app/tsconfig.json
-      - ./glasscode/frontend/.env:/app/.env
+      - ./apps/web/src:/app/src
+      - ./apps/web/public:/app/public
+      - ./apps/web/package.json:/app/package.json
+      - ./apps/web/next.config.ts:/app/next.config.ts
+      - ./apps/web/tsconfig.json:/app/tsconfig.json
+      - ./apps/web/.env:/app/.env
 
 volumes:
   postgres_data:
