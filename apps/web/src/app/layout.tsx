@@ -281,6 +281,14 @@ export default async function RootLayout({
                             >
                               📊 GlassStats
                             </Link>
+                            <a
+                              href="https://about.glasscode.academy/en"
+                              className="text-fg hover:text-fg transition-colors"
+                              target="_blank"
+                              rel="noopener noreferrer"
+                            >
+                              ℹ️ About
+                            </a>
                             {EXTERNAL_LINKS.REPO_URL && (
                               <a
                                 href={EXTERNAL_LINKS.REPO_URL}

@@ -1,5 +1,5 @@
 {
-  "name": "frontend",
+  "name": "@glass-code-academy/web",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -48,8 +48,7 @@
     "**/*.bak.ts",
     "**/*.bak.tsx",
     "**/*.bak.js",
-    "**/*.bak.jsx",
-    "src/middleware.ts.disabled"
+    "**/*.bak.jsx"
   ],
   "engines": {
     "node": ">=18.0.0"
