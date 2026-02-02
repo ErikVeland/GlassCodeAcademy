@@ -30,7 +30,10 @@ async function fetchLessonsFromDatabase(
     for (const apiBase of bases) {
       try {
         // Fetch lessons for this module by slug
-        const lessonsResponse = await fetch(`${apiBase}/api/modules/${moduleSlug}/lessons`, { cache: 'no-store' });
+        const lessonsResponse = await fetch(
+          `${apiBase}/api/modules/${moduleSlug}/lessons`,
+          { cache: "no-store" },
+        );
         if (!lessonsResponse.ok) {
           console.error(
             `[lessons] Failed lessons fetch for ${moduleSlug} from ${apiBase}`,

@@ -1,5 +1,5 @@
 import path from 'node:path';
-import { promises as fs } from 'node:fs';
+import * as fs from 'node:fs';
 import { z } from 'zod';
 
 // Basic schemas to assert expected shapes from JSON content files
@@ -67,7 +67,7 @@ function resolveContentDir(): string {
 }
 
 async function readJson<T>(filePath: string): Promise<T> {
-  const raw = await fs.readFile(filePath, 'utf8');
+  const raw = await fs.promises.readFile(filePath, 'utf8');
   return JSON.parse(raw) as T;
 }
 
@@ -205,7 +205,7 @@ async function buildLessonIndex(): Promise<Map<string, string>> {
     const index = new Map<string, string>();
     const contentDir = resolveContentDir();
     const lessonsDir = path.join(contentDir, 'lessons');
-    const files = await fs.readdir(lessonsDir);
+    const files = await fs.promises.readdir(lessonsDir);
     const jsonFiles = files.filter((f) => f.endsWith('.json'));
 
     for (const file of jsonFiles) {

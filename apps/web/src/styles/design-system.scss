@@ -6,38 +6,42 @@
 // =============================================
 
 // 4-Tier Learning Structure Colors
-$tier-foundational-primary: #3B82F6; // Blue
-$tier-foundational-secondary: #06B6D4; // Cyan
-$tier-foundational-gradient: linear-gradient(135deg, #3B82F6 0%, #06B6D4 100%);
+$tier-foundational-primary: #3b82f6; // Blue
+$tier-foundational-secondary: #06b6d4; // Cyan
+$tier-foundational-gradient: linear-gradient(135deg, #3b82f6 0%, #06b6d4 100%);
 
-$tier-core-primary: #10B981; // Emerald
+$tier-core-primary: #10b981; // Emerald
 $tier-core-secondary: #059669; // Green
-$tier-core-gradient: linear-gradient(135deg, #10B981 0%, #059669 100%);
+$tier-core-gradient: linear-gradient(135deg, #10b981 0%, #059669 100%);
 
-$tier-specialized-primary: #8B5CF6; // Violet
-$tier-specialized-secondary: #7C3AED; // Purple
-$tier-specialized-gradient: linear-gradient(135deg, #8B5CF6 0%, #7C3AED 100%);
+$tier-specialized-primary: #8b5cf6; // Violet
+$tier-specialized-secondary: #7c3aed; // Purple
+$tier-specialized-gradient: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
 
-$tier-quality-primary: #F59E0B; // Amber
-$tier-quality-secondary: #EF4444; // Red
-$tier-quality-gradient: linear-gradient(135deg, #F59E0B 0%, #EF4444 100%);
+$tier-quality-primary: #f59e0b; // Amber
+$tier-quality-secondary: #ef4444; // Red
+$tier-quality-gradient: linear-gradient(135deg, #f59e0b 0%, #ef4444 100%);
 
 // Tier Gradient Mixins
 @mixin tier-gradient($tier) {
-  @if $tier == 'foundational' {
+  @if $tier == "foundational" {
     background: $tier-foundational-gradient;
-  } @else if $tier == 'core' {
+  } @else if $tier == "core" {
     background: $tier-core-gradient;
-  } @else if $tier == 'specialized' {
+  } @else if $tier == "specialized" {
     background: $tier-specialized-gradient;
-  } @else if $tier == 'quality' {
+  } @else if $tier == "quality" {
     background: $tier-quality-gradient;
   }
 }
 
 // Typography Hierarchy
-$font-family-primary: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-$font-family-mono: SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
+$font-family-primary:
+  -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue",
+  Arial, sans-serif;
+$font-family-mono:
+  SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New",
+  monospace;
 
 // Responsive Typography using clamp()
 $hero-title-size: clamp(2rem, 5vw, 3.5rem);
@@ -75,12 +79,12 @@ $animation-easing-bounce: cubic-bezier(0.68, -0.55, 0.265, 1.55);
 
 // Spacing System (8px grid)
 $spacing-xs: 0.25rem; // 4px
-$spacing-sm: 0.5rem;  // 8px
-$spacing-md: 1rem;    // 16px
-$spacing-lg: 1.5rem;  // 24px
-$spacing-xl: 2rem;    // 32px
-$spacing-2xl: 3rem;   // 48px
-$spacing-3xl: 4rem;   // 64px
+$spacing-sm: 0.5rem; // 8px
+$spacing-md: 1rem; // 16px
+$spacing-lg: 1.5rem; // 24px
+$spacing-xl: 2rem; // 32px
+$spacing-2xl: 3rem; // 48px
+$spacing-3xl: 4rem; // 64px
 
 // Border Radius
 $border-radius-sm: 0.5rem;
@@ -100,15 +104,15 @@ $shadow-xl: 0 12px 24px rgba(0, 0, 0, 0.15);
 
 // Responsive Breakpoint Mixin
 @mixin breakpoint($size) {
-  @if $size == 'tablet' {
+  @if $size == "tablet" {
     @media (min-width: $breakpoint-tablet) {
       @content;
     }
-  } @else if $size == 'desktop' {
+  } @else if $size == "desktop" {
     @media (min-width: $breakpoint-desktop) {
       @content;
     }
-  } @else if $size == 'large' {
+  } @else if $size == "large" {
     @media (min-width: $breakpoint-large) {
       @content;
     }
@@ -121,7 +125,7 @@ $shadow-xl: 0 12px 24px rgba(0, 0, 0, 0.15);
   backdrop-filter: blur($blur);
   -webkit-backdrop-filter: blur($blur);
   border: 1px solid rgba(255, 255, 255, 0.2);
-  
+
   @media (prefers-color-scheme: dark) {
     background: rgba(31, 41, 55, $opacity);
     border: 1px solid rgba(75, 85, 99, 0.3);
@@ -130,31 +134,34 @@ $shadow-xl: 0 12px 24px rgba(0, 0, 0, 0.15);
 
 // Tier Color Mixin
 @mixin tier-gradient($tier) {
-  @if $tier == 'foundational' {
+  @if $tier == "foundational" {
     background: $tier-foundational-gradient;
-  } @else if $tier == 'core' {
+  } @else if $tier == "core" {
     background: $tier-core-gradient;
-  } @else if $tier == 'specialized' {
+  } @else if $tier == "specialized" {
     background: $tier-specialized-gradient;
-  } @else if $tier == 'quality' {
+  } @else if $tier == "quality" {
     background: $tier-quality-gradient;
   }
 }
 
 // Animation Mixins
-@mixin smooth-transition($duration: $animation-duration-normal, $easing: $animation-easing) {
+@mixin smooth-transition(
+  $duration: $animation-duration-normal,
+  $easing: $animation-easing
+) {
   transition: all $duration $easing;
 }
 
 @mixin hover-lift {
   @include smooth-transition();
-  
+
   &:hover {
     transform: translateY(-4px);
     box-shadow: $shadow-lg;
   }
-  
-  @include breakpoint('desktop') {
+
+  @include breakpoint("desktop") {
     &:hover {
       transform: translateY(-6px);
       box-shadow: $shadow-xl;
@@ -214,7 +221,7 @@ $shadow-xl: 0 12px 24px rgba(0, 0, 0, 0.15);
 :root {
   --font-primary: #{$font-family-primary};
   --font-mono: #{$font-family-mono};
-  
+
   // Tier colors as CSS custom properties for JS access
   --tier-foundational-primary: #{$tier-foundational-primary};
   --tier-foundational-secondary: #{$tier-foundational-secondary};
@@ -252,26 +259,26 @@ body {
   max-width: 1200px;
   margin: 0 auto;
   align-items: center;
-  
-  @include breakpoint('tablet') {
+
+  @include breakpoint("tablet") {
     grid-template-columns: 1fr 1fr;
     gap: $spacing-2xl;
     padding: $spacing-3xl $spacing-xl;
   }
-  
+
   .hero-content {
     color: white;
     text-align: center;
-    
-    @include breakpoint('tablet') {
+
+    @include breakpoint("tablet") {
       text-align: left;
     }
   }
-  
+
   .hero-title {
     @include typography-hero;
     margin-bottom: $spacing-md;
-    
+
     .hero-subtitle {
       display: block;
       font-size: 0.7em;
@@ -280,7 +287,7 @@ body {
       margin-top: $spacing-sm;
     }
   }
-  
+
   .hero-description {
     @include typography-body;
     font-size: 1.125rem;
@@ -288,26 +295,26 @@ body {
     margin-bottom: $spacing-xl;
     color: white;
   }
-  
+
   .hero-stats {
     display: flex;
     gap: $spacing-xl;
     justify-content: center;
-    
-    @include breakpoint('tablet') {
+
+    @include breakpoint("tablet") {
       justify-content: flex-start;
     }
-    
+
     .stat-item {
       text-align: center;
-      
+
       .stat-number {
         display: block;
         font-size: 2rem;
         font-weight: $font-weight-extrabold;
-        color: #FDE68A;
+        color: #fde68a;
       }
-      
+
       .stat-label {
         @include typography-meta;
         opacity: 0.8;
@@ -322,27 +329,35 @@ body {
   width: 100%;
   max-width: 400px;
   margin: 0 auto;
-  
+
   .path-svg {
     width: 100%;
     height: auto;
   }
-  
+
   .learning-path {
     // Simplified animation for better performance
     stroke-dasharray: 500;
     stroke-dashoffset: 500;
     animation: drawPath 1.5s ease-out forwards;
   }
-  
+
   .tier-node {
     opacity: 0;
     animation: fadeInNode 0.3s ease-out forwards;
-    
-    &:nth-child(3) { animation-delay: 0.3s; }
-    &:nth-child(4) { animation-delay: 0.6s; }
-    &:nth-child(5) { animation-delay: 0.9s; }
-    &:nth-child(6) { animation-delay: 1.2s; }
+
+    &:nth-child(3) {
+      animation-delay: 0.3s;
+    }
+    &:nth-child(4) {
+      animation-delay: 0.6s;
+    }
+    &:nth-child(5) {
+      animation-delay: 0.9s;
+    }
+    &:nth-child(6) {
+      animation-delay: 1.2s;
+    }
   }
 }
 
@@ -361,15 +376,15 @@ body {
 // Tier Sections
 .tier-section {
   margin-bottom: $spacing-xl;
-  
-  @include breakpoint('tablet') {
+
+  @include breakpoint("tablet") {
     margin-bottom: 2.5rem;
   }
-  
-  @include breakpoint('desktop') {
+
+  @include breakpoint("desktop") {
     margin-bottom: $spacing-2xl;
   }
-  
+
   // New integrated tier container with colored gradient background
   .tier-container {
     padding: $spacing-lg;
@@ -377,14 +392,14 @@ body {
     color: white;
     position: relative;
     overflow: hidden;
-    
-    @include breakpoint('tablet') {
+
+    @include breakpoint("tablet") {
       padding: $spacing-xl;
     }
-    
+
     // Glass morphism overlay
     &::before {
-      content: '';
+      content: "";
       position: absolute;
       top: 0;
       left: 0;
@@ -395,19 +410,19 @@ body {
       border-radius: inherit;
       z-index: 0;
     }
-    
+
     // Ensure content is above the glass overlay
     > * {
       position: relative;
       z-index: 1;
     }
   }
-  
+
   // Modules grid integrated within the tier container
   .modules-grid {
     margin-top: $spacing-lg;
   }
-  
+
   // Tier completion celebration
   .tier-completion-celebration {
     margin-top: $spacing-xl;
@@ -416,14 +431,14 @@ body {
     padding: $spacing-xl;
     border-radius: $border-radius-lg;
     backdrop-filter: blur(8px);
-    
+
     .celebration-content {
       .celebration-icon {
         font-size: 3rem;
         margin-bottom: $spacing-md;
         display: block;
       }
-      
+
       .celebration-title {
         font-family: $font-family-primary;
         font-size: 1.25rem;
@@ -432,13 +447,13 @@ body {
         margin-bottom: $spacing-sm;
         color: white;
       }
-      
+
       .celebration-message {
         @include typography-body;
         opacity: 0.9;
         margin-bottom: $spacing-lg;
       }
-      
+
       .next-tier-button {
         background: rgba(255, 255, 255, 0.2);
         color: white;
@@ -448,7 +463,7 @@ body {
         font-weight: $font-weight-medium;
         cursor: pointer;
         transition: all $animation-duration-fast ease;
-        
+
         &:hover {
           background: rgba(255, 255, 255, 0.3);
           transform: translateY(-2px);
@@ -463,17 +478,17 @@ body {
   display: grid;
   grid-template-columns: 1fr;
   gap: $spacing-lg;
-  
-  @include breakpoint('tablet') {
+
+  @include breakpoint("tablet") {
     grid-template-columns: repeat(2, 1fr);
     gap: $spacing-xl;
   }
-  
-  @include breakpoint('desktop') {
+
+  @include breakpoint("desktop") {
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
     gap: $spacing-xl;
   }
-  
+
   // When inside tier-container, add proper spacing
   .tier-container & {
     margin-top: $spacing-lg;
@@ -490,73 +505,73 @@ body {
   color: white;
   text-decoration: none;
   display: block;
-  
-  @include breakpoint('tablet') {
+
+  @include breakpoint("tablet") {
     padding: $spacing-xl;
     border-radius: $border-radius-xl;
   }
-  
+
   .module-header {
     display: flex;
     align-items: center;
     gap: $spacing-md;
     margin-bottom: $spacing-md;
-    
+
     .module-icon {
       font-size: 2rem;
       flex-shrink: 0;
       margin-right: $spacing-xs; // Extra space after icon
     }
-    
+
     .module-info {
       flex: 1;
       min-width: 0; // Allows text truncation
-      
+
       .module-title {
         @include typography-module-title;
         color: white;
         margin-bottom: $spacing-xs;
         line-height: 1.3;
       }
-      
+
       .difficulty-badge {
         @include typography-meta;
         font-size: 0.75rem;
         padding: $spacing-xs $spacing-sm;
         border-radius: $border-radius-sm;
         font-weight: $font-weight-medium;
-        
+
         &.beginner {
           background: rgba(34, 197, 94, 0.2);
-          color: #86EFAC;
+          color: #86efac;
         }
-        
+
         &.intermediate {
           background: rgba(251, 191, 36, 0.2);
-          color: #FDE68A;
+          color: #fde68a;
         }
-        
+
         &.advanced {
           background: rgba(239, 68, 68, 0.2);
-          color: #FCA5A5;
+          color: #fca5a5;
         }
       }
     }
   }
-  
+
   .module-description {
     @include typography-body;
     color: rgba(255, 255, 255, 0.9);
     margin-bottom: $spacing-md;
   }
-  
+
   // Pill-shaped technology tags
   .technologies-tags {
     display: flex;
     flex-wrap: wrap;
     gap: $spacing-xs;
     margin-bottom: $spacing-md;
-    
+
     .tech-pill {
       @include typography-meta;
       font-size: 0.75rem;
@@ -567,12 +582,12 @@ body {
       border: 1px solid rgba(255, 255, 255, 0.2);
       font-weight: $font-weight-medium;
       transition: all $animation-duration-fast ease;
-      
+
       &:hover {
         background: rgba(255, 255, 255, 0.25);
         transform: translateY(-1px);
       }
-      
+
       &.tech-pill-more {
         background: rgba(255, 255, 255, 0.1);
         font-style: italic;
@@ -580,14 +595,14 @@ body {
       }
     }
   }
-  
+
   .module-meta {
     display: flex;
     justify-content: space-between;
     align-items: center;
     margin-top: $spacing-md;
     gap: $spacing-md;
-    
+
     .estimated-time {
       @include typography-meta;
       color: rgba(255, 255, 255, 0.8);
@@ -600,7 +615,7 @@ body {
       border: 1px solid rgba(255, 255, 255, 0.1);
       white-space: nowrap;
     }
-    
+
     .progress-indicator {
       display: flex;
       align-items: center;
@@ -609,7 +624,7 @@ body {
       padding: $spacing-xs $spacing-sm;
       border-radius: $border-radius-sm;
       border: 1px solid rgba(255, 255, 255, 0.1);
-      
+
       .progress-bar {
         width: 80px;
         height: 8px;
@@ -618,16 +633,20 @@ body {
         overflow: hidden;
         backdrop-filter: blur(4px);
         border: 1px solid rgba(255, 255, 255, 0.1);
-        
+
         .progress-fill {
           height: 100%;
           border-radius: 4px;
           transition: width $animation-duration-slow ease;
-          background: linear-gradient(90deg, rgba(255, 255, 255, 0.8), rgba(255, 255, 255, 0.6));
+          background: linear-gradient(
+            90deg,
+            rgba(255, 255, 255, 0.8),
+            rgba(255, 255, 255, 0.6)
+          );
           box-shadow: 0 0 8px rgba(255, 255, 255, 0.3);
         }
       }
-      
+
       .progress-text {
         @include typography-meta;
         font-size: 0.75rem;
@@ -646,29 +665,29 @@ body {
   max-width: 1200px;
   margin: 0 auto;
   padding: $spacing-xl $spacing-lg;
-  
+
   h2 {
     @include typography-tier-title;
     text-align: center;
     margin-bottom: $spacing-xl;
     color: white;
   }
-  
+
   .actions-grid {
     display: grid;
     grid-template-columns: 1fr;
     gap: $spacing-lg;
-    
-    @include breakpoint('tablet') {
+
+    @include breakpoint("tablet") {
       grid-template-columns: repeat(2, 1fr);
       gap: $spacing-xl;
     }
-    
-    @include breakpoint('desktop') {
+
+    @include breakpoint("desktop") {
       grid-template-columns: repeat(3, 1fr);
     }
   }
-  
+
   .action-card {
     @include glass-morphism(0.1, $glass-blur);
     @include hover-lift;
@@ -678,23 +697,23 @@ body {
     color: white;
     text-decoration: none;
     display: block;
-    
-    @include breakpoint('tablet') {
+
+    @include breakpoint("tablet") {
       padding: $spacing-xl;
     }
-    
+
     .action-icon {
       font-size: 3rem;
       display: block;
       margin-bottom: $spacing-md;
     }
-    
+
     h3 {
       @include typography-module-title;
       color: white;
       margin-bottom: $spacing-sm;
     }
-    
+
     p {
       @include typography-body;
       color: rgba(255, 255, 255, 0.9);
@@ -709,9 +728,10 @@ body {
 
 // High Contrast Mode
 @media (prefers-contrast: high) {
-  .module-card, .action-card {
+  .module-card,
+  .action-card {
     border: 2px solid currentColor;
-    
+
     &:focus-within {
       outline: 3px solid #005fcc;
       outline-offset: 2px;
@@ -726,12 +746,12 @@ body {
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
   }
-  
+
   .learning-path {
     stroke-dasharray: none;
     stroke-dashoffset: 0;
   }
-  
+
   .tier-node {
     opacity: 1;
     animation: none;
@@ -739,7 +759,8 @@ body {
 }
 
 // Focus Indicators
-.module-card, .action-card {
+.module-card,
+.action-card {
   &:focus-visible {
     outline: 2px solid #005fcc;
     outline-offset: 2px;
@@ -752,10 +773,11 @@ body {
 
 @media (prefers-color-scheme: dark) {
   .hero-section .hero-stats .stat-number {
-    color: #FCD34D; // Slightly adjusted for better contrast
+    color: #fcd34d; // Slightly adjusted for better contrast
   }
-  
-  .module-card, .action-card {
+
+  .module-card,
+  .action-card {
     background: rgba(31, 41, 55, 0.15);
     border-color: rgba(75, 85, 99, 0.4);
   }
@@ -789,8 +811,8 @@ body {
   padding: $spacing-lg;
   border-radius: $border-radius-lg;
   backdrop-filter: blur(8px);
-  
-  @include breakpoint('mobile-only') {
+
+  @include breakpoint("mobile-only") {
     flex-direction: column;
     gap: $spacing-md;
     text-align: center;
@@ -802,7 +824,7 @@ body {
   position: relative;
   max-width: 600px;
   margin: 0 auto;
-  
+
   .search-input {
     width: 100%;
     padding: 1rem 3rem 1rem 1rem;
@@ -812,18 +834,18 @@ body {
     color: white;
     font-size: 1rem;
     backdrop-filter: blur(10px);
-    
+
     &::placeholder {
       color: rgba(255, 255, 255, 0.6);
     }
-    
+
     &:focus {
       outline: none;
       border-color: rgba(59, 130, 246, 0.5);
       box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
     }
   }
-  
+
   .search-icon {
     position: absolute;
     right: 1rem;
@@ -855,7 +877,7 @@ html:not(.dark) .search-icon {
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
   gap: 1.5rem;
   margin-bottom: 2rem;
-  
+
   .filter-group {
     .filter-label {
       display: block;
@@ -867,7 +889,7 @@ html:not(.dark) .search-icon {
       letter-spacing: 0.05em;
       color: rgba(255, 255, 255, 0.9);
     }
-    
+
     .filter-select {
       width: 100%;
       background: rgba(255, 255, 255, 0.1);
@@ -878,13 +900,13 @@ html:not(.dark) .search-icon {
       font-size: 0.875rem;
       cursor: pointer;
       transition: all 0.2s ease;
-      
+
       &:focus {
         outline: none;
         border-color: rgba(59, 130, 246, 0.5);
         box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
       }
-      
+
       option {
         background: #1f2937;
         color: white;
@@ -905,21 +927,21 @@ html:not(.dark) .search-icon {
   color: white;
   margin: 0 auto 1.5rem;
   max-width: 1200px;
-  
+
   .results-text {
     font-size: 0.875rem;
   }
-  
+
   .clear-filters-button {
     background: transparent;
     border: 1px solid rgba(59, 130, 246, 0.3);
-    color: #93C5FD;
+    color: #93c5fd;
     padding: 0.5rem 1rem;
     border-radius: 0.5rem;
     font-size: 0.875rem;
     cursor: pointer;
     transition: all 0.2s ease;
-    
+
     &:hover {
       background: rgba(59, 130, 246, 0.2);
       color: white;
@@ -932,7 +954,7 @@ html:not(.dark) .search-icon {
   width: 100%;
   max-width: 400px;
   margin: 0 auto;
-  
+
   .path-svg {
     width: 100%;
     height: auto;
@@ -944,15 +966,17 @@ html:not(.dark) .search-icon {
 // =============================================
 
 @media print {
-  .module-card, .action-card {
+  .module-card,
+  .action-card {
     break-inside: avoid;
     page-break-inside: avoid;
     background: white !important;
     color: black !important;
     border: 1px solid #ccc !important;
   }
-  
-  .hero-visual, .learning-path-visualization {
+
+  .hero-visual,
+  .learning-path-visualization {
     display: none;
   }
 }

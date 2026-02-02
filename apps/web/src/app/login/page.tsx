@@ -116,7 +116,9 @@ export default function LoginPage() {
             </div>
           </div>
           <h1 className="text-3xl font-bold text-fg mb-2">GlassCode Academy</h1>
-          <p className="text-muted">Sign in to continue your learning journey</p>
+          <p className="text-muted">
+            Sign in to continue your learning journey
+          </p>
         </div>
         <div className="bg-surface/80 backdrop-blur-lg rounded-2xl border border-border p-6 shadow-xl">
           <div className="mb-6">

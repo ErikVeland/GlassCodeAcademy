@@ -304,7 +304,9 @@ export async function registerSearchRoutes(app: FastifyInstance) {
         reply.code(400);
         return {
           error: 'Invalid search parameters',
-          details: error.errors?.map((e) => e.message) || [error.message],
+          details: (error as any).errors?.map((e: any) => e.message) || [
+            (error as any).message,
+          ],
         };
       }
 

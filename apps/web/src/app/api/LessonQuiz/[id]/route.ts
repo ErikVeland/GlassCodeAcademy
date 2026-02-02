@@ -28,7 +28,13 @@ export async function GET(
 ) {
   try {
     const { id } = await params;
-    const apiBase = (() => { try { return getApiBaseStrict(); } catch { return 'http://127.0.0.1:8081'; } })();
+    const apiBase = (() => {
+      try {
+        return getApiBaseStrict();
+      } catch {
+        return "http://127.0.0.1:8081";
+      }
+    })();
     const backendUrl = `${apiBase}/api/content/quizzes/${id}`;
     const res = await fetch(backendUrl);
     const parsed = safeParseJson(await res.text());
@@ -55,7 +61,13 @@ export async function PUT(
   try {
     const body: unknown = await req.json();
     const { id } = await params;
-    const apiBase = (() => { try { return getApiBaseStrict(); } catch { return 'http://127.0.0.1:8081'; } })();
+    const apiBase = (() => {
+      try {
+        return getApiBaseStrict();
+      } catch {
+        return "http://127.0.0.1:8081";
+      }
+    })();
     const backendUrl = `${apiBase}/api/content/quizzes/${id}`;
     const res = await fetch(backendUrl, {
       method: "PUT",
@@ -93,7 +105,7 @@ export async function DELETE(
       try {
         return getApiBaseStrict();
       } catch {
-  return "http://127.0.0.1:8081";
+        return "http://127.0.0.1:8081";
       }
     })();
     const backendUrl = `${apiBase}/api/content/quizzes/${id}`;

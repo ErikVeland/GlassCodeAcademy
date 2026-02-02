@@ -1,0 +1,51 @@
+name: Lint and Prettier
+
+on:
+  pull_request:
+    branches: [ main, develop ]
+  push:
+    branches: [ main, develop ]
+
+permissions:
+  contents: read
+
+jobs:
+  lint_prettier:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20.x"
+          cache: npm
+
+      - name: Install dependencies (monorepo)
+        run: npm ci
+
+      - name: Prettier check (apps/api)
+        run: npm -w @glass-code-academy/api run format:check
+
+      - name: Prettier check (apps/web)
+        run: npm -w @glass-code-academy/web run format:check
+
+      - name: Lint (apps/api)
+        run: npm -w @glass-code-academy/api run lint
+
+      - name: Lint (apps/web)
+        run: npm -w @glass-code-academy/web run lint
+
+      - name: Install dependencies (glass-stats-starter)
+        working-directory: glass-stats-starter
+        run: npm ci
+
+      - name: Prettier check (glass-stats-starter)
+        working-directory: glass-stats-starter
+        run: npm run format:check
+
+      - name: Lint (glass-stats-starter)
+        working-directory: glass-stats-starter
+        run: npm run lint
+

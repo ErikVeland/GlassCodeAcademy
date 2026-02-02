@@ -1,6 +1,7 @@
 import { NodeSDK } from '@opentelemetry/sdk-node';
 import { getNodeAutoInstrumentations } from '@opentelemetry/auto-instrumentations-node';
 import { PrometheusExporter } from '@opentelemetry/exporter-prometheus';
+import { resourceFromAttributes } from '@opentelemetry/resources';
 import { SemanticResourceAttributes } from '@opentelemetry/semantic-conventions';
 
 // Create Prometheus exporter
@@ -11,12 +12,12 @@ const prometheusExporter = new PrometheusExporter({
 
 // Create and start the OpenTelemetry SDK
 const sdk = new NodeSDK({
-  resource: {
+  resource: resourceFromAttributes({
     [SemanticResourceAttributes.SERVICE_NAME]: 'glasscode-backend',
     [SemanticResourceAttributes.SERVICE_VERSION]: '1.0.0',
     [SemanticResourceAttributes.SERVICE_NAMESPACE]: 'glasscode',
     [SemanticResourceAttributes.SERVICE_INSTANCE_ID]: `glasscode-backend-${process.pid}`,
-  },
+  }),
   traceExporter: undefined, // Disable tracing for now to focus on metrics
   metricReader: prometheusExporter,
   instrumentations: [

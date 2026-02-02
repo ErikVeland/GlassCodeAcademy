@@ -7,13 +7,12 @@ on:
     branches: [ main, develop ]
 
 jobs:
-  # Test job
   test:
     runs-on: ubuntu-latest
     
     strategy:
       matrix:
-        node-version: [18.x]
+        node-version: [20.x]
     
     services:
       postgres:
@@ -42,42 +41,35 @@ jobs:
 
     steps:
     - name: Checkout code
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
 
     - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v3
+      uses: actions/setup-node@v4
       with:
         node-version: ${{ matrix.node-version }}
-        cache: 'npm'
-        cache-dependency-path: apps/api/package-lock.json
+        cache: npm
 
-    - name: Install API dependencies
-      run: |
-        cd apps/api
-        npm ci
+    - name: Install dependencies
+      run: npm ci
 
-    - name: Install Frontend dependencies
+    - name: Run Prettier checks
       run: |
-        cd glasscode/frontend
-        npm ci
+        npm -w @glass-code-academy/api run format:check
+        npm -w @glass-code-academy/web run format:check
 
     - name: Run linting
       run: |
-        cd apps/api
-        npm run lint
-        cd ../..
-        cd glasscode/frontend
-        npm run lint
+        npm -w @glass-code-academy/api run lint
+        npm -w @glass-code-academy/web run lint
 
     - name: Run type checking
       run: |
-        cd glasscode/frontend
-        npm run typecheck
+        npm -w @glass-code-academy/api run typecheck
+        npm -w @glass-code-academy/web run typecheck
 
     - name: Run tests
       run: |
-        cd apps/api
-        npm run test
+        npm -w @glass-code-academy/api run test
       env:
         DATABASE_URL: postgresql://postgres:postgres@localhost:5432/glasscode_test
         REDIS_HOST: localhost
@@ -91,15 +83,12 @@ jobs:
     
     steps:
     - name: Checkout code
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
 
     - name: Run security audit
       run: |
-        cd apps/api
-        npm audit --audit-level high
-        cd ../..
-        cd glasscode/frontend
-        npm audit --audit-level high
+        npm -w @glass-code-academy/api audit --audit-level high
+        npm -w @glass-code-academy/web audit --audit-level high
 
   # Build job
   build:
@@ -108,37 +97,29 @@ jobs:
     
     steps:
     - name: Checkout code
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
 
     - name: Use Node.js 18.x
-      uses: actions/setup-node@v3
+      uses: actions/setup-node@v4
       with:
-        node-version: 18.x
-        cache: 'npm'
-        cache-dependency-path: apps/api/package-lock.json
+        node-version: 20.x
+        cache: npm
 
     - name: Install dependencies
-      run: |
-        cd apps/api
-        npm ci
-        cd ../..
-        cd glasscode/frontend
-        npm ci
+      run: npm ci
 
     - name: Build API
       run: |
-        cd apps/api
-        npm run build
+        npm -w @glass-code-academy/api run build
 
     - name: Build Frontend
       run: |
-        cd glasscode/frontend
-        npm run build
+        npm -w @glass-code-academy/web run build
 
     - name: Save build artifacts
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: glasscode-build
         path: |
           apps/api/dist/
-          glasscode/frontend/.next/
+          apps/web/.next/

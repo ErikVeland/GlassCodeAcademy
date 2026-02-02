@@ -51,15 +51,24 @@
   border-left: none !important;
   border-right: none !important;
   @include bp.desktop-only {
-    border-left: var(--pane-border, 1px solid rgba(255, 255, 255, 0.2)) !important;
-    border-right: var(--pane-border, 1px solid rgba(255, 255, 255, 0.2)) !important;
+    border-left: var(
+      --pane-border,
+      1px solid rgba(255, 255, 255, 0.2)
+    ) !important;
+    border-right: var(
+      --pane-border,
+      1px solid rgba(255, 255, 255, 0.2)
+    ) !important;
   }
 }
 
 .mf-no-bottom-border-mobile {
   border-bottom: none !important;
   @include bp.desktop-only {
-    border-bottom: var(--pane-border, 1px solid rgba(255, 255, 255, 0.2)) !important;
+    border-bottom: var(
+      --pane-border,
+      1px solid rgba(255, 255, 255, 0.2)
+    ) !important;
   }
 }
 
@@ -75,7 +84,7 @@
 /* Typography helper example (not applied anywhere yet) */
 .mf-heading-large {
   @include mx.fluid-type(1.5rem, 2.5rem);
-  @include bp.respond-up('md') {
+  @include bp.respond-up("md") {
     font-weight: 700;
   }
 }

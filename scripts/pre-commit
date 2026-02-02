@@ -11,25 +11,35 @@ if [ -f "scripts/validate-content.js" ]; then
     fi
 fi
 
-# Run backend lint and formatting checks
-if [ -d "backend-node" ]; then
-    if [ -f "backend-node/package.json" ]; then
-        echo "Linting backend-node with ESLint (no warnings allowed)..."
-        pushd backend-node >/dev/null
-        if ! npm run lint -- --max-warnings=0; then
-            popd >/dev/null
-            echo "❌ ESLint failed. Please fix lint issues before committing."
-            exit 1
-        fi
-        echo "Checking backend-node formatting with Prettier..."
-        if ! npm run format:check; then
-            popd >/dev/null
-            echo "❌ Prettier check failed. Please format your code (npm run format)."
-            exit 1
-        fi
-        popd >/dev/null
-    else
-        echo "ℹ️ Skipping backend-node lint/format: package.json not found."
+echo "Checking formatting (Prettier)..."
+if ! npm -w @glass-code-academy/api run format:check; then
+    echo "❌ Prettier check failed in apps/api. Please run: npm -w @glass-code-academy/api run format"
+    exit 1
+fi
+if ! npm -w @glass-code-academy/web run format:check; then
+    echo "❌ Prettier check failed in apps/web. Please run: npm -w @glass-code-academy/web run format"
+    exit 1
+fi
+if [ -f "glass-stats-starter/package.json" ]; then
+    if ! npm -C glass-stats-starter run format:check; then
+        echo "❌ Prettier check failed in glass-stats-starter. Please run: npm -C glass-stats-starter run format"
+        exit 1
+    fi
+fi
+
+echo "Running lint..."
+if ! npm -w @glass-code-academy/api run lint; then
+    echo "❌ ESLint failed in apps/api."
+    exit 1
+fi
+if ! npm -w @glass-code-academy/web run lint; then
+    echo "❌ ESLint failed in apps/web."
+    exit 1
+fi
+if [ -f "glass-stats-starter/package.json" ]; then
+    if ! npm -C glass-stats-starter run lint; then
+        echo "❌ ESLint failed in glass-stats-starter."
+        exit 1
     fi
 fi
 

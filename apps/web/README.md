@@ -7,6 +7,7 @@ This is the frontend application for the GlassCode Academy project, built with N
 For production deployments, we recommend using our standalone server setup which runs both the frontend and backend on the same server.
 
 ### Prerequisites
+
 - Ubuntu 24.04 LTS server
 - Domain name pointing to your server (glasscode.academy)
 - SSH access to the server
@@ -28,14 +29,16 @@ Use the provided bootstrap script to automatically set up your GlassCode Academy
 ### Local Development
 
 1. Create a `.env.local` file with:
-  ```
-  NEXT_PUBLIC_BASE_URL=http://localhost:3000
-  NEXT_PUBLIC_API_BASE=http://127.0.0.1:8081
-  NEXT_PUBLIC_GRAPHQL_ENDPOINT=/api/graphql
-  NEXT_PUBLIC_DEBUG=true
-  ```
+
+```
+NEXT_PUBLIC_BASE_URL=http://localhost:3000
+NEXT_PUBLIC_API_BASE=http://127.0.0.1:8081
+NEXT_PUBLIC_GRAPHQL_ENDPOINT=/api/graphql
+NEXT_PUBLIC_DEBUG=true
+```
 
 2. Install and validate:
+
    ```bash
    npm install
    npm run typecheck
@@ -43,13 +46,15 @@ Use the provided bootstrap script to automatically set up your GlassCode Academy
    ```
 
 3. Run the development server:
-  ```bash
-  npm run dev
-  ```
+
+```bash
+npm run dev
+```
 
 The application runs at `http://localhost:3000` (or the configured port). Ensure `NEXT_PUBLIC_BASE_URL` matches your dev server port so SSR fetches resolve correctly.
 
 #### Quiz Content Fallback (Development)
+
 - The quizzes route (`/api/content/quizzes/[moduleSlug]`) first loads questions from the backend at `NEXT_PUBLIC_API_BASE`.
 - If the backend returns 0 questions, it falls back to a file-based source at `../../content/quizzes/[moduleSlug].json` relative to the frontend root.
 - Keep quiz files in `content/quizzes/` following the schema defined in `docs/QUESTION_TEMPLATE.md`.
@@ -105,10 +110,13 @@ src/
 ## Frontend Technologies Implementation
 
 ### .NET, Next.js, and GraphQL Modules
+
 - Core modules with structured lessons and interview questions
 
 ### Laravel Modules
+
 Located in `src/app/laravel/`
+
 - Lessons in `src/app/laravel/lessons/page.tsx`
 - Interview quizzes in `src/app/laravel/interview/page.tsx`
 - Interactive lesson viewer with code examples and expected outputs
@@ -116,7 +124,9 @@ Located in `src/app/laravel/`
 - Red-themed interface for Laravel content
 
 ### React Modules
+
 Located in `src/app/react/`
+
 - Lessons in `src/app/react/lessons/page.tsx`
 - Interview quizzes in `src/app/react/interview/page.tsx`
 - Interactive lesson viewer with code examples and expected outputs
@@ -124,10 +134,13 @@ Located in `src/app/react/`
 - Blue-themed interface for React content
 
 ### Tailwind CSS Modules
+
 Utility-first CSS framework for rapid UI development
 
 ### Node.js Modules
+
 Located in `src/app/node/`
+
 - Lessons in `src/app/node/lessons/page.tsx`
 - Interview quizzes in `src/app/node/interview/page.tsx`
 - Interactive lesson viewer with code examples and expected outputs
@@ -135,6 +148,7 @@ Located in `src/app/node/`
 - Green-themed interface for Node.js content
 
 ### SASS Modules
+
 CSS preprocessor with variables, nesting, and mixins
 
 ## Setup Instructions
@@ -151,20 +165,24 @@ The frontend will start on `http://localhost:3000`
 Apollo Client is configured, but GraphQL is optional in this project. The frontend proxies `/graphql` to the backend only if a GraphQL service is available. When GraphQL is unreachable, feature code falls back to the content registry for stats and summaries.
 
 ### Configuration
+
 - Apollo Client setup in `src/apolloClient.ts`
 - Endpoint derived by `getGraphQLEndpoint()` and proxied via `next.config.ts`
 - `NEXT_PUBLIC_API_BASE` controls the proxy destination during development
 
 ### Queries (if backend provides GraphQL)
+
 - Examples: `programmingLessons`, `programmingInterviewQuestions`, `programmingLesson(id)`
 - Other legacy query names may exist in code history; the stats hook falls back gracefully
 
 ### Mutations
+
 - Mutation usage is currently minimal; most write operations go through REST APIs
 
 ## Styling
 
 The application uses Tailwind CSS for styling with technology-specific color schemes:
+
 - Blue: React content
 - Teal: Tailwind CSS content
 - Green: Node.js content
@@ -178,6 +196,7 @@ The application uses Tailwind CSS for styling with technology-specific color sch
 ### Adding New Pages
 
 To add new pages:
+
 1. Create a new directory in `src/app/`
 2. Add a `page.tsx` file with the page content
 3. Use Apollo Client hooks for data fetching
@@ -185,22 +204,26 @@ To add new pages:
 ### Modifying Styles
 
 To modify styles:
+
 1. Use Tailwind CSS classes in component files
 2. For custom styles, modify `src/app/globals.css`
 
 ## Testing
 
 ### Static checks
+
 - `npm run typecheck` to verify TypeScript types across app and tests
 - `npm run lint` to enforce code quality
   - Lint and type-checks must pass cleanly; avoid using `any` except in guarded parsing where `unknown` can be narrowed.
 
 ### Local verification
+
 1. Start the backend (`cd ../../apps/api && npm run dev`)
 2. Start the frontend (`npm run dev`)
 3. Open `http://localhost:3000` and validate module pages
 
 ### Manual module verification
+
 - React: `/react/lessons` and `/react/interview`
 - Tailwind: `/tailwind/lessons` and `/tailwind/interview`
 - Node: `/node/lessons` and `/node/interview`
@@ -215,17 +238,60 @@ The admin UI uses typed models in `src/types/admin.ts` and proxy routes to the b
 ### Shared Types
 
 ```ts
-export interface AdminModule { id: number; title: string; slug: string; description?: string; order: number; isPublished: boolean; courseId?: number; }
+export interface AdminModule {
+  id: number;
+  title: string;
+  slug: string;
+  description?: string;
+  order: number;
+  isPublished: boolean;
+  courseId?: number;
+}
 
-export type LessonDifficulty = 'Beginner' | 'Intermediate' | 'Advanced';
+export type LessonDifficulty = "Beginner" | "Intermediate" | "Advanced";
 
-export interface AdminLesson { id: number; title: string; slug: string; order: number; difficulty: LessonDifficulty; estimatedMinutes?: number; isPublished: boolean; moduleId: number; content?: string; metadata?: string; }
+export interface AdminLesson {
+  id: number;
+  title: string;
+  slug: string;
+  order: number;
+  difficulty: LessonDifficulty;
+  estimatedMinutes?: number;
+  isPublished: boolean;
+  moduleId: number;
+  content?: string;
+  metadata?: string;
+}
 
-export type QuestionType = 'multiple-choice' | 'open-ended' | 'true-false' | 'coding';
+export type QuestionType =
+  | "multiple-choice"
+  | "open-ended"
+  | "true-false"
+  | "coding";
 
-export interface AdminQuiz { id: number; question: string; topic?: string; difficulty: LessonDifficulty; choices?: string[] | string; explanation?: string; industryContext?: string; tags?: string[] | string; questionType: QuestionType; estimatedTime?: number; correctAnswer?: number | string | null; quizType?: string; sources?: string[] | string; sortOrder?: number; isPublished: boolean; lessonId: number; }
+export interface AdminQuiz {
+  id: number;
+  question: string;
+  topic?: string;
+  difficulty: LessonDifficulty;
+  choices?: string[] | string;
+  explanation?: string;
+  industryContext?: string;
+  tags?: string[] | string;
+  questionType: QuestionType;
+  estimatedTime?: number;
+  correctAnswer?: number | string | null;
+  quizType?: string;
+  sources?: string[] | string;
+  sortOrder?: number;
+  isPublished: boolean;
+  lessonId: number;
+}
 
-export interface AdminCourse { id: number; title: string; }
+export interface AdminCourse {
+  id: number;
+  title: string;
+}
 ```
 
 ### API Routes

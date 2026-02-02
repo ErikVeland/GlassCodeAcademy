@@ -19,12 +19,8 @@ jobs:
           node-version: '18.x'
           cache: 'npm'
 
-      - name: Install backend dependencies
-        run: |
-          cd backend-node
-          npm ci
+      - name: Install dependencies
+        run: npm ci
 
       - name: Run backend tests
-        run: |
-          cd backend-node
-          npm test
+        run: npm -w @glass-code-academy/api run test

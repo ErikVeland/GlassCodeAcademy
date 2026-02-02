@@ -19,40 +19,40 @@ function fail(msg) {
 }
 
 async function main() {
-  const fs = await import('node:fs');
-  const path = await import('node:path');
-  const FEED_PATH = path.join(__dirname, 'public', 'feed.xml');
-  const REGISTRY_PATH = path.join(__dirname, 'public', 'registry.json');
+  const fs = await import("node:fs");
+  const path = await import("node:path");
+  const FEED_PATH = path.join(__dirname, "public", "feed.xml");
+  const REGISTRY_PATH = path.join(__dirname, "public", "registry.json");
   try {
     // Check feed.xml exists and has a feed root
     if (!fs.existsSync(FEED_PATH)) {
-      fail('Missing public/feed.xml');
+      fail("Missing public/feed.xml");
       return;
     }
-    const feed = fs.readFileSync(FEED_PATH, 'utf8');
-    const hasFeed = !!feed && feed.toLowerCase().includes('<feed');
-    const hasRss = !!feed && feed.toLowerCase().includes('<rss');
+    const feed = fs.readFileSync(FEED_PATH, "utf8");
+    const hasFeed = !!feed && feed.toLowerCase().includes("<feed");
+    const hasRss = !!feed && feed.toLowerCase().includes("<rss");
     if (!hasFeed && !hasRss) {
-      fail('feed.xml is present but missing <feed> or <rss> root');
+      fail("feed.xml is present but missing <feed> or <rss> root");
       return;
     }
-    ok('feed.xml exists and contains a valid feed root (<feed>/<rss>)');
+    ok("feed.xml exists and contains a valid feed root (<feed>/<rss>)");
 
     // Check registry.json exists and has modules
     if (!fs.existsSync(REGISTRY_PATH)) {
-      fail('Missing public/registry.json');
+      fail("Missing public/registry.json");
       return;
     }
-    const registryRaw = fs.readFileSync(REGISTRY_PATH, 'utf8');
+    const registryRaw = fs.readFileSync(REGISTRY_PATH, "utf8");
     const registry = JSON.parse(registryRaw);
     const modules = Array.isArray(registry?.modules) ? registry.modules : [];
     if (modules.length === 0) {
-      fail('registry.json has no modules defined');
+      fail("registry.json has no modules defined");
       return;
     }
     ok(`registry.json found with ${modules.length} modules`);
 
-    ok('Sitemap/registry validation passed');
+    ok("Sitemap/registry validation passed");
   } catch (err) {
     fail(`Unexpected error: ${err?.message || err}`);
   }

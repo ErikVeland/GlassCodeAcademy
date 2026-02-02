@@ -42,18 +42,18 @@ ok "Node: $(node -v), npm: $(npm -v)"
 
 section "Prettier formatting"
 # Ensure code style consistency before other checks to avoid noisy failures
-if [ -d "backend-node" ]; then
-  if [ -f "backend-node/package.json" ]; then
-    echo "Running Prettier format in backend-node..."
-    (cd backend-node && npm run format) || fail "Prettier format failed in backend-node"
-    echo "Verifying Prettier formatting in backend-node..."
-    (cd backend-node && npm run format:check) || fail "Prettier check failed in backend-node"
-    ok "Backend-node formatting is clean"
+if [ -d "apps/api" ]; then
+  if [ -f "apps/api/package.json" ]; then
+    echo "Running Prettier format in apps/api..."
+    (cd apps/api && npm run format) || fail "Prettier format failed in apps/api"
+    echo "Verifying Prettier formatting in apps/api..."
+    (cd apps/api && npm run format:check) || fail "Prettier check failed in apps/api"
+    ok "Backend formatting is clean"
   else
-    echo "backend-node found but no package.json; skipping backend formatting"
+    echo "apps/api found but no package.json; skipping backend formatting"
   fi
 else
-  echo "backend-node directory not found; skipping backend formatting"
+  echo "apps/api directory not found; skipping backend formatting"
 fi
 
 section "Content validation"
@@ -93,7 +93,7 @@ else
   echo "Set PRECHECK_LINKS=1 to enable link checks"
 fi
 
-section "Frontend lint"
+section "Lint checks"
 if [ "$SKIP_LINT" = "1" ] || [ "$FAST_MODE" = "1" ]; then
   echo "Skipping ESLint due to fast/skip mode"
 else
@@ -106,34 +106,16 @@ section "TypeScript typecheck"
 if [ "$SKIP_TYPECHECK" = "1" ] || [ "$FAST_MODE" = "1" ]; then
   echo "Skipping TypeScript checks due to fast/skip mode"
 else
-  # Check if we're in the frontend directory, if not, navigate to it
-  if [ -d "glasscode/frontend" ]; then
-    echo "Running TypeScript checks in glasscode/frontend..."
-    cd glasscode/frontend || fail "Failed to navigate to frontend directory"
-    
-    # Run TypeScript compiler check
-    echo "Running: npx tsc --noEmit"
-    npx tsc --noEmit || fail "TypeScript compilation failed"
-    
-    # Run the npm typecheck script as well
-    echo "Running: npm run typecheck"
-    npm run typecheck || fail "npm typecheck failed"
-    
-    # Navigate back to repo root
-    cd "$REPO_ROOT" || fail "Failed to return to repository root"
-    ok "TypeScript checks passed"
-  else
-    echo "Frontend directory not found, running typecheck from current location"
-    npm run typecheck || fail "Typecheck failed"
-    ok "Typecheck passed"
-  fi
+  echo "Running workspace typecheck..."
+  npm run typecheck || fail "Typecheck failed"
+  ok "Typecheck passed"
 fi
 
 section "Next.js build validation"
 # Smart build validation: only do expensive operations when needed
-if [ -d "glasscode/frontend" ]; then
-  echo "Running smart Next.js build validation in glasscode/frontend..."
-  cd glasscode/frontend || fail "Failed to navigate to frontend directory"
+if [ -d "apps/web" ]; then
+  echo "Running smart Next.js build validation in apps/web..."
+  cd apps/web || fail "Failed to navigate to apps/web"
   
   # First, try a quick validation if build artifacts exist
   BUILD_EXISTS=false
@@ -196,9 +178,6 @@ else
   echo "Frontend directory not found, skipping Next.js build validation"
 fi
 
-# .NET backend build validation has been removed as it's not implemented
-# If .NET backend is added in the future, this section can be re-enabled
-
 section "API route validation"
 if [ -f "scripts/validate-api-routes.js" ]; then
   echo "Running: node scripts/validate-api-routes.js"
@@ -211,7 +190,7 @@ fi
 # Attempt to source environment files if required vars are missing
 load_env_if_missing() {
   if [ -z "${GRAPHQL_ENDPOINT:-}" ] && [ -z "${NEXT_PUBLIC_BASE_URL:-}" ] && [ -z "${NEXT_PUBLIC_API_BASE:-}" ]; then
-    for f in glasscode/frontend/.env.local glasscode/frontend/.env.production glasscode/frontend/.env.hosted; do
+    for f in apps/web/.env.local apps/web/.env.production apps/web/.env.hosted; do
       if [ -f "$f" ]; then
         echo "Sourcing env from $f"
         set -a; . "$f"; set +a

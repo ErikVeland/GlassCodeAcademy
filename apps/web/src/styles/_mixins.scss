@@ -2,7 +2,14 @@
 
 // Fluid type helper (example; unused by default)
 @mixin fluid-type($min, $max, $vw-min: 320, $vw-max: 1280) {
-  font-size: clamp(#{$min}, calc(#{$min} + (#{$max} - #{$min}) * ((100vw - #{$vw-min}px) / (#{$vw-max} - #{$vw-min}))), #{$max});
+  font-size: clamp(
+    #{$min},
+    calc(
+      #{$min} + (#{$max} - #{$min}) *
+        ((100vw - #{$vw-min}px) / (#{$vw-max} - #{$vw-min}))
+    ),
+    #{$max}
+  );
 }
 
 // Full-bleed edge-to-edge on mobile; revert at sm+

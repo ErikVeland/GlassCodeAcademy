@@ -1,5 +1,5 @@
-@import '../styles/variables';
-@import '../styles/mixins';
+@import "../styles/variables";
+@import "../styles/mixins";
 
 .progress-dashboard {
   max-width: 1200px;
@@ -117,15 +117,24 @@
   display: inline-block;
 
   &.progress-small {
-    svg { width: 60px; height: 60px; }
+    svg {
+      width: 60px;
+      height: 60px;
+    }
   }
 
   &.progress-medium {
-    svg { width: 80px; height: 80px; }
+    svg {
+      width: 80px;
+      height: 80px;
+    }
   }
 
   &.progress-large {
-    svg { width: 120px; height: 120px; }
+    svg {
+      width: 120px;
+      height: 120px;
+    }
   }
 
   .progress-center-label {
@@ -174,13 +183,18 @@
       position: relative;
 
       &::after {
-        content: '';
+        content: "";
         position: absolute;
         top: 0;
         left: 0;
         right: 0;
         bottom: 0;
-        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+        background: linear-gradient(
+          90deg,
+          transparent,
+          rgba(255, 255, 255, 0.3),
+          transparent
+        );
         animation: shimmer 2s infinite;
       }
     }
@@ -196,8 +210,12 @@
 }
 
 @keyframes shimmer {
-  0% { transform: translateX(-100%); }
-  100% { transform: translateX(100%); }
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
 }
 
 // Dashboard Tabs
@@ -270,7 +288,7 @@
   display: flex;
   flex-direction: column;
   height: 100%; // Take up full height of grid cell
-  
+
   h3 {
     color: $color-text-primary;
     font-size: 1.25rem;
@@ -279,11 +297,11 @@
     border-bottom: 1px solid $color-glass-border;
     padding-bottom: $spacing-sm; // 8px - following 8px grid system
   }
-  
+
   .grid-item-content {
     flex: 1; // Take up remaining space
   }
-  
+
   .grid-item-footer {
     margin-top: auto; // Push to bottom
     padding-top: $spacing-md; // 16px - following 8px grid system
@@ -322,10 +340,18 @@
       height: 8px;
       border-radius: 50%;
 
-      &.active { background: $color-success; }
-      &.pending { background: $color-warning; }
-      &.broken { background: $color-error; }
-      &.new { background: $color-text-secondary; }
+      &.active {
+        background: $color-success;
+      }
+      &.pending {
+        background: $color-warning;
+      }
+      &.broken {
+        background: $color-error;
+      }
+      &.new {
+        background: $color-text-secondary;
+      }
     }
 
     .status-message {
@@ -370,24 +396,42 @@
 
   &.achievement-small {
     padding: $spacing-sm; // 8px - following 8px grid system
-    
-    .badge-icon { font-size: 1.5rem; }
-    .badge-title { font-size: 0.875rem; }
-    .badge-description { font-size: 0.75rem; }
+
+    .badge-icon {
+      font-size: 1.5rem;
+    }
+    .badge-title {
+      font-size: 0.875rem;
+    }
+    .badge-description {
+      font-size: 0.75rem;
+    }
   }
 
   &.achievement-medium {
-    .badge-icon { font-size: 2rem; }
-    .badge-title { font-size: 1rem; }
-    .badge-description { font-size: 0.875rem; }
+    .badge-icon {
+      font-size: 2rem;
+    }
+    .badge-title {
+      font-size: 1rem;
+    }
+    .badge-description {
+      font-size: 0.875rem;
+    }
   }
 
   &.achievement-large {
     padding: $spacing-lg; // 24px - following 8px grid system
-    
-    .badge-icon { font-size: 2.5rem; }
-    .badge-title { font-size: 1.25rem; }
-    .badge-description { font-size: 1rem; }
+
+    .badge-icon {
+      font-size: 2.5rem;
+    }
+    .badge-title {
+      font-size: 1.25rem;
+    }
+    .badge-description {
+      font-size: 1rem;
+    }
   }
 
   .badge-icon {
@@ -497,11 +541,11 @@
       background: rgba(255, 255, 255, 0.1);
     }
   }
-  
+
   .tier-content {
     flex: 1; // Take up remaining space
   }
-  
+
   .tier-footer {
     margin-top: auto; // Push to bottom
     padding-top: $spacing-md; // 16px - following 8px grid system
@@ -513,7 +557,7 @@
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   gap: $spacing-md; // 16px - following 8px grid system
-  
+
   // Set minimum height for consistent card alignment
   .achievement-badge {
     min-height: 140px; // Consistent height for achievement cards
@@ -533,7 +577,7 @@
     grid-template-columns: repeat(3, 1fr);
     gap: $spacing-md; // 16px - following 8px grid system
     margin-top: $spacing-md; // 16px - following 8px grid system
-    
+
     // Set consistent minimum height for stat cards
     .streak-stat {
       min-height: 140px; // Consistent height for stat cards
@@ -695,12 +739,12 @@
     grid-template-columns: repeat(2, 1fr);
     gap: $spacing-md; // 16px - following 8px grid system
   }
-  
+
   // Adjust component heights for tablet
   .stat-item {
     min-height: 120px; // Consistent height for stat cards on tablet
   }
-  
+
   .grid-item {
     min-height: 160px; // Consistent height for grid items on tablet
   }
@@ -711,7 +755,7 @@
   .progress-dashboard {
     padding: $spacing-sm; // 8px - following 8px grid system
   }
-  
+
   .dashboard-header h1 {
     font-size: 2rem;
   }
@@ -729,16 +773,16 @@
     padding: $spacing-sm $spacing-md; // 8px 16px - following 8px grid system
     font-size: 0.8rem;
   }
-  
+
   // Adjust component heights for mobile
   .stat-item {
     min-height: 100px; // Consistent height for stat cards on mobile
   }
-  
+
   .grid-item {
     min-height: 140px; // Consistent height for grid items on mobile
   }
-  
+
   .achievement-badge {
     min-height: 120px; // Consistent height for achievement cards on mobile
   }
@@ -752,16 +796,16 @@
   .streak-details {
     gap: $spacing-xl; // 32px - following 8px grid system
   }
-  
+
   // Increase component heights for large screens
   .stat-item {
     min-height: 160px; // Consistent height for stat cards on large screens
   }
-  
+
   .grid-item {
     min-height: 200px; // Consistent height for grid items on large screens
   }
-  
+
   .achievement-badge {
     min-height: 180px; // Consistent height for achievement cards on large screens
   }

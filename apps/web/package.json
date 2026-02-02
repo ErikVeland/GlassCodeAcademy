@@ -8,6 +8,8 @@
     "start": "next start",
     "start:next": "if [ -f .next/standalone/server.js ]; then node .next/standalone/server.js; else next start; fi",
     "lint": "next lint",
+    "format": "prettier --write \"src/**/*.{js,jsx,ts,tsx,json,css,scss,md,yml,yaml}\" \"*.{js,ts,json,md,yml,yaml}\"",
+    "format:check": "prettier --check \"src/**/*.{js,jsx,ts,tsx,json,css,scss,md,yml,yaml}\" \"*.{js,ts,json,md,yml,yaml}\"",
     "prewarm:ssg": "node scripts/prewarm-ssg.js",
     "typecheck": "tsc -p ./tsconfig.json --noEmit",
     "test:sitemap": "node test-sitemap.js",

@@ -302,12 +302,12 @@ install_npm_deps_workspace() {
 # Ensure backend env files exist and include DB settings before migrations
 ensure_backend_env() {
     log "🧾 Ensuring backend env files exist and include DB settings..."
-    if [ ! -d "$APP_DIR/backend-node" ] || [ "$FRONTEND_ONLY" -eq 1 ]; then
+    if [ ! -d "$APP_DIR/apps/api" ] || [ "$FRONTEND_ONLY" -eq 1 ]; then
         return 0
     fi
-    cd "$APP_DIR/backend-node"
+    cd "$APP_DIR/apps/api"
 
-    BACKEND_PROD_ENV_PATH="$APP_DIR/backend-node/.env.production"
+    BACKEND_PROD_ENV_PATH="$APP_DIR/apps/api/.env.production"
 
     # Defaults
     DB_DIALECT_DEFAULT="postgres"
@@ -376,8 +376,8 @@ install_npm_deps() {
         install_npm_deps_workspace "$APP_DIR/scripts" "scripts"
     fi
 
-    install_npm_deps_workspace "$APP_DIR/glasscode/frontend" "frontend"
-    install_npm_deps_workspace "$APP_DIR/backend-node" "backend"
+    install_npm_deps_workspace "$APP_DIR/apps/web" "frontend"
+    install_npm_deps_workspace "$APP_DIR/apps/api" "backend"
     
     log "✅ All Node.js dependencies installed"
 }
@@ -386,7 +386,7 @@ install_npm_deps() {
 ensure_systemd_units() {
     # Backend unit
     local be_unit="/etc/systemd/system/${APP_NAME}-backend.service"
-    if [ ! -f "$be_unit" ] && [ -d "$APP_DIR/backend-node" ]; then
+    if [ ! -f "$be_unit" ] && [ -d "$APP_DIR/apps/api" ]; then
         log "⚙️  Creating backend systemd service at $be_unit"
         cat >"$be_unit" <<EOF
 [Unit]
@@ -396,7 +396,7 @@ After=network.target
 [Service]
 WorkingDirectory=${APP_DIR}/apps/api
 EnvironmentFile=${APP_DIR}/apps/api/.env.production
-ExecStart=/usr/bin/node ${APP_DIR}/apps/api/server.js
+ExecStart=/usr/bin/node ${APP_DIR}/apps/api/dist/server.js
 Restart=always
 RestartSec=10
 User=${DEPLOY_USER}
@@ -413,10 +413,10 @@ EOF
 
     # Frontend unit
     local fe_unit="/etc/systemd/system/${APP_NAME}-frontend.service"
-    if [ -d "$APP_DIR/glasscode/frontend" ]; then
+    if [ -d "$APP_DIR/apps/web" ]; then
         log "⚙️  Ensuring frontend systemd service at $fe_unit"
         # Write backend health gating script used in ExecStartPre
-        cat >"$APP_DIR/glasscode/frontend/check_backend_health.sh" <<'EOS'
+        cat >"$APP_DIR/apps/web/check_backend_health.sh" <<'EOS'
 #!/usr/bin/env bash
 # Production-only gating: never use localhost; require public API base
 RAW_BASE="${NEXT_PUBLIC_API_BASE:-}"
@@ -447,7 +447,7 @@ done
 echo "❌ Backend health check gating failed: url='$HEALTH_URL' http='$HTTP' status='${STATUS:-unknown}' resp='${RESP:0:512}'"
 exit 1
 EOS
-        chmod +x "$APP_DIR/glasscode/frontend/check_backend_health.sh"
+        chmod +x "$APP_DIR/apps/web/check_backend_health.sh"
         if [ "$FRONTEND_ONLY" -eq 0 ]; then
             cat >"$fe_unit" <<EOF
 [Unit]
@@ -455,9 +455,9 @@ Description=${APP_NAME} Next.js Frontend
 After=network.target ${APP_NAME}-backend.service
 
 [Service]
-WorkingDirectory=${APP_DIR}/glasscode/frontend
-EnvironmentFile=${APP_DIR}/glasscode/frontend/.env.production
-ExecStartPre=${APP_DIR}/glasscode/frontend/check_backend_health.sh
+WorkingDirectory=${APP_DIR}/apps/web
+EnvironmentFile=${APP_DIR}/apps/web/.env.production
+ExecStartPre=${APP_DIR}/apps/web/check_backend_health.sh
 ExecStart=/usr/bin/node .next/standalone/server.js -p ${FRONTEND_PORT}
 Restart=always
 RestartSec=10
@@ -475,8 +475,8 @@ Description=${APP_NAME} Next.js Frontend
 After=network.target
 
 [Service]
-WorkingDirectory=${APP_DIR}/glasscode/frontend
-EnvironmentFile=${APP_DIR}/glasscode/frontend/.env.production
+WorkingDirectory=${APP_DIR}/apps/web
+EnvironmentFile=${APP_DIR}/apps/web/.env.production
 ExecStart=/usr/bin/node .next/standalone/server.js -p ${FRONTEND_PORT}
 Restart=always
 RestartSec=10
@@ -496,7 +496,7 @@ EOF
 
 # Validate and correct frontend .env.production URLs based on DOMAIN
 fix_frontend_env_urls() {
-    local env_file="${APP_DIR}/glasscode/frontend/.env.production"
+    local env_file="${APP_DIR}/apps/web/.env.production"
     if [ ! -f "$env_file" ]; then
         return
     fi
@@ -515,7 +515,7 @@ fix_frontend_env_urls() {
         awk -v k="$key" -v v="$target" '
         BEGIN{found=0}
         {
-          if ($0 ~ "^"k"=") { print k"="v; found=1 } else { print $0 }
+            if ($0 ~ "^"k"=") { print k"="v; found=1 } else { print $0 }
         }
         END{ if(!found) print k"="v }
         ' "$file" > "$file.tmp" && mv "$file.tmp" "$file"
@@ -543,15 +543,6 @@ main() {
     git fetch origin
     git reset --hard origin/main
     
-    # Create symlinks for backend-node to ensure proper module resolution
-    log "🔗 Creating symlinks for backend-node..."
-    cd "$APP_DIR/backend-node"
-    mkdir -p src
-    ln -sf ../../apps/api/src/models src/models
-    ln -sf ../apps/api/server.js server.js
-    cd "$APP_DIR"
-    log "✅ Symlinks created"
-
     # Install dependencies
     install_npm_deps
 
@@ -559,9 +550,9 @@ main() {
     ensure_backend_env
     
     # Run database migrations if needed
-    if [ -d "$APP_DIR/backend-node" ] && [ "$FRONTEND_ONLY" -eq 0 ]; then
+    if [ -d "$APP_DIR/apps/api" ] && [ "$FRONTEND_ONLY" -eq 0 ]; then
         log "📊 Running database migrations..."
-        cd "$APP_DIR/backend-node"
+        cd "$APP_DIR/apps/api"
         if ! sudo -u "$DEPLOY_USER" env NODE_ENV=production DATABASE_URL="$DATABASE_URL" DB_DIALECT="$DB_DIALECT" DB_HOST="$DB_HOST" DB_PORT="$DB_PORT" DB_NAME="$DB_NAME" DB_USER="$DB_USER" DB_PASSWORD="$DB_PASSWORD" DB_SSL="$DB_SSL" npm run migrate; then
             log "❌ ERROR: Failed to run database migrations during update"
             exit 1
@@ -579,9 +570,9 @@ main() {
     fi
     
     # Build frontend
-    if [ -d "$APP_DIR/glasscode/frontend" ]; then
+    if [ -d "$APP_DIR/apps/web" ]; then
         log "🏗️  Building frontend..."
-        cd "$APP_DIR/glasscode/frontend"
+        cd "$APP_DIR/apps/web"
         if [ "$SKIP_LINT" -eq 0 ]; then
             log "🔍 Running lint checks..."
             sudo -u "$DEPLOY_USER" npm run lint || true

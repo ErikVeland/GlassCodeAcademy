@@ -21,7 +21,6 @@ interface QuizPayload {
   questions: QuizQuestion[];
 }
 
-
 // Database-based quiz loading function
 async function fetchQuizFromDatabase(moduleSlug: string): Promise<QuizPayload> {
   // Build candidate backend bases robustly, even if env is misconfigured
@@ -33,7 +32,7 @@ async function fetchQuizFromDatabase(moduleSlug: string): Promise<QuizPayload> {
   }
   // Always include localhost dev fallback
   // Try new Fastify API first, then legacy
-  bases.push('http://127.0.0.1:8081');
+  bases.push("http://127.0.0.1:8081");
   // Removed legacy Express fallback on :8080; Fastify runs on :8081
 
   for (const apiBase of bases) {
@@ -51,67 +50,106 @@ async function fetchQuizFromDatabase(moduleSlug: string): Promise<QuizPayload> {
       }
 
       const result: unknown = await quizResponse.json();
-      const candidate: unknown[] = Array.isArray((result as { data?: unknown[] }).data)
-        ? ((result as { data: unknown[] }).data)
+      const candidate: unknown[] = Array.isArray(
+        (result as { data?: unknown[] }).data,
+      )
+        ? (result as { data: unknown[] }).data
         : Array.isArray((result as { questions?: unknown[] }).questions)
-        ? ((result as { questions: unknown[] }).questions)
-        : Array.isArray(result)
-        ? (result as unknown[])
-        : [];
+          ? (result as { questions: unknown[] }).questions
+          : Array.isArray(result)
+            ? (result as unknown[])
+            : [];
 
-      debugLog(`[quizzes] Loaded ${candidate.length} quiz questions from ${apiBase} for module: ${moduleSlug}`);
+      debugLog(
+        `[quizzes] Loaded ${candidate.length} quiz questions from ${apiBase} for module: ${moduleSlug}`,
+      );
 
       // Transform database items into strict QuizQuestion objects
-      const questions: QuizQuestion[] = candidate.map((quizUnknown): QuizQuestion => {
-        const quiz = quizUnknown as Record<string, unknown>;
+      const questions: QuizQuestion[] = candidate.map(
+        (quizUnknown): QuizQuestion => {
+          const quiz = quizUnknown as Record<string, unknown>;
 
-        // Normalize choices
-        let choices: string[] = [];
-        const rawChoices = quiz['choices'];
-        if (Array.isArray(rawChoices)) {
-          choices = (rawChoices as unknown[]).filter((c): c is string => typeof c === 'string');
-        } else if (typeof rawChoices === 'string') {
-          const str = rawChoices;
-          try {
-            const parsed = JSON.parse(str);
-            if (Array.isArray(parsed)) {
-              choices = parsed.filter((c): c is string => typeof c === 'string');
+          // Normalize choices
+          let choices: string[] = [];
+          const rawChoices = quiz["choices"];
+          if (Array.isArray(rawChoices)) {
+            choices = (rawChoices as unknown[]).filter(
+              (c): c is string => typeof c === "string",
+            );
+          } else if (typeof rawChoices === "string") {
+            const str = rawChoices;
+            try {
+              const parsed = JSON.parse(str);
+              if (Array.isArray(parsed)) {
+                choices = parsed.filter(
+                  (c): c is string => typeof c === "string",
+                );
+              }
+            } catch {
+              const split = str
+                .split(/\r?\n|\||;/)
+                .map((s) => s.trim())
+                .filter(Boolean);
+              choices =
+                split.length > 0 ? split : str.trim() ? [str.trim()] : [];
             }
-          } catch {
-            const split = str.split(/\r?\n|\||;/).map(s => s.trim()).filter(Boolean);
-            choices = split.length > 0 ? split : (str.trim() ? [str.trim()] : []);
           }
-        }
 
-        const idRaw = quiz['id'];
-        const id: number | string = typeof idRaw === 'number' || typeof idRaw === 'string' ? idRaw : 0;
+          const idRaw = quiz["id"];
+          const id: number | string =
+            typeof idRaw === "number" || typeof idRaw === "string" ? idRaw : 0;
 
-        const questionRaw = quiz['question'];
-        const question = typeof questionRaw === 'string' ? questionRaw : '';
+          const questionRaw = quiz["question"];
+          const question = typeof questionRaw === "string" ? questionRaw : "";
 
-        const correctRaw = quiz['correctAnswer'];
-        const correctAnswer: number | string = typeof correctRaw === 'number' || typeof correctRaw === 'string' ? correctRaw : 0;
+          const correctRaw = quiz["correctAnswer"];
+          const correctAnswer: number | string =
+            typeof correctRaw === "number" || typeof correctRaw === "string"
+              ? correctRaw
+              : 0;
 
-        const explanationRaw = quiz['explanation'];
-        const explanation = typeof explanationRaw === 'string' ? explanationRaw : undefined;
+          const explanationRaw = quiz["explanation"];
+          const explanation =
+            typeof explanationRaw === "string" ? explanationRaw : undefined;
 
-        const topicRaw = quiz['topic'];
-        const topic = typeof topicRaw === 'string' && topicRaw.trim() ? topicRaw : 'general';
+          const topicRaw = quiz["topic"];
+          const topic =
+            typeof topicRaw === "string" && topicRaw.trim()
+              ? topicRaw
+              : "general";
 
-        const typeRaw = (quiz['questionType'] ?? quiz['type']);
-        const type = typeof typeRaw === 'string' && typeRaw.trim() ? typeRaw : 'multiple-choice';
+          const typeRaw = quiz["questionType"] ?? quiz["type"];
+          const type =
+            typeof typeRaw === "string" && typeRaw.trim()
+              ? typeRaw
+              : "multiple-choice";
 
-        const difficultyRaw = quiz['difficulty'];
-        const difficulty = typeof difficultyRaw === 'string' && difficultyRaw.trim() ? difficultyRaw : 'Beginner';
+          const difficultyRaw = quiz["difficulty"];
+          const difficulty =
+            typeof difficultyRaw === "string" && difficultyRaw.trim()
+              ? difficultyRaw
+              : "Beginner";
 
-        const estRaw = quiz['estimatedTime'];
-        const estimatedTime = typeof estRaw === 'number' ? estRaw : 90;
+          const estRaw = quiz["estimatedTime"];
+          const estimatedTime = typeof estRaw === "number" ? estRaw : 90;
 
-        const orderRaw = (quiz['sort_order'] ?? quiz['order']);
-        const order = typeof orderRaw === 'number' ? orderRaw : 0;
+          const orderRaw = quiz["sort_order"] ?? quiz["order"];
+          const order = typeof orderRaw === "number" ? orderRaw : 0;
 
-        return { id, question, choices, correctAnswer, explanation, topic, type, difficulty, estimatedTime, order };
-      });
+          return {
+            id,
+            question,
+            choices,
+            correctAnswer,
+            explanation,
+            topic,
+            type,
+            difficulty,
+            estimatedTime,
+            order,
+          };
+        },
+      );
 
       if (questions.length > 0) {
         return { questions };
@@ -130,7 +168,6 @@ async function fetchQuizFromDatabase(moduleSlug: string): Promise<QuizPayload> {
   // Backend-only: if fetches failed or returned nothing, return empty
   return { questions: [] };
 }
-
 
 export async function GET(
   request: Request,
@@ -152,41 +189,56 @@ export async function GET(
       });
     }
     const moduleSlug = moduleSlugResolved;
-    debugLog('Resolved to module slug:', moduleSlug);
-    
+    debugLog("Resolved to module slug:", moduleSlug);
+
     const quiz = await fetchQuizFromDatabase(moduleSlug);
 
     // If backend returned no questions, attempt file-based fallback for development content
     let effectiveQuiz: QuizPayload = quiz;
     if (!Array.isArray(quiz.questions) || quiz.questions.length === 0) {
       try {
-        const { promises: fs } = await import('fs');
-        const path = await import('path');
-        const filePath = path.join(process.cwd(), '../../content/quizzes', `${moduleSlug}.json`);
-        const raw = await fs.readFile(filePath, 'utf-8');
+        const { promises: fs } = await import("fs");
+        const path = await import("path");
+        const filePath = path.join(
+          process.cwd(),
+          "../../content/quizzes",
+          `${moduleSlug}.json`,
+        );
+        const raw = await fs.readFile(filePath, "utf-8");
         const parsed: unknown = JSON.parse(raw);
 
         let fileQuestionsUnknown: unknown[] = [];
         if (Array.isArray(parsed)) {
           fileQuestionsUnknown = parsed;
-        } else if (Array.isArray((parsed as { questions?: unknown[] }).questions)) {
-          fileQuestionsUnknown = ((parsed as { questions: unknown[] }).questions);
+        } else if (
+          Array.isArray((parsed as { questions?: unknown[] }).questions)
+        ) {
+          fileQuestionsUnknown = (parsed as { questions: unknown[] }).questions;
         }
 
         if (fileQuestionsUnknown.length > 0) {
-          const normalizedFromFile: QuizQuestion[] = fileQuestionsUnknown.map((q) => normalizeQuestion(q) as QuizQuestion);
+          const normalizedFromFile: QuizQuestion[] = fileQuestionsUnknown.map(
+            (q) => normalizeQuestion(q) as QuizQuestion,
+          );
           effectiveQuiz = { questions: normalizedFromFile };
-          debugLog(`[quizzes] Loaded ${normalizedFromFile.length} fallback questions from file for ${moduleSlug}`);
+          debugLog(
+            `[quizzes] Loaded ${normalizedFromFile.length} fallback questions from file for ${moduleSlug}`,
+          );
         }
       } catch {
         // no fallback file found; keep empty
       }
     }
 
-    const normalizedQuestions: QuizQuestion[] = Array.isArray(effectiveQuiz.questions)
+    const normalizedQuestions: QuizQuestion[] = Array.isArray(
+      effectiveQuiz.questions,
+    )
       ? effectiveQuiz.questions.map((q) => normalizeQuestion(q) as QuizQuestion)
       : [];
-    const normalizedQuiz: QuizPayload = { ...effectiveQuiz, questions: normalizedQuestions };
+    const normalizedQuiz: QuizPayload = {
+      ...effectiveQuiz,
+      questions: normalizedQuestions,
+    };
 
     return new Response(JSON.stringify(normalizedQuiz), {
       status: 200,
@@ -211,7 +263,6 @@ export async function GET(
       },
     );
   }
-
 }
 
 export const runtime = "nodejs";

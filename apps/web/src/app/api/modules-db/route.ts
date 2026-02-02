@@ -4,8 +4,14 @@ import { getApiBaseStrict } from "@/lib/urlUtils";
 export async function GET(req: NextRequest) {
   try {
     const url = new URL(req.url);
-    const query = url.search || '';
-    const apiBase = (() => { try { return getApiBaseStrict(); } catch { return 'http://127.0.0.1:8081'; } })();
+    const query = url.search || "";
+    const apiBase = (() => {
+      try {
+        return getApiBaseStrict();
+      } catch {
+        return "http://127.0.0.1:8081";
+      }
+    })();
     const backendUrl = `${apiBase}/api/modules${query}`;
     const res = await fetch(backendUrl, { cache: "no-store" });
     const text = await res.text();
@@ -38,7 +44,7 @@ export async function POST(req: NextRequest) {
       try {
         return getApiBaseStrict();
       } catch {
-  return "http://127.0.0.1:8081";
+        return "http://127.0.0.1:8081";
       }
     })();
     const res = await fetch(`${apiBase}/api/content/modules`, {

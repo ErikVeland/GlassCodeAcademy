@@ -26,7 +26,7 @@ async function forward(req: NextRequest, method: "POST" | "DELETE") {
       try {
         return getApiBaseStrict();
       } catch {
-  return "http://127.0.0.1:8081";
+        return "http://127.0.0.1:8081";
       }
     })();
 

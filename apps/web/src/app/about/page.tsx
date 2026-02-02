@@ -15,9 +15,11 @@ export default function AboutPage() {
             About GlassCode Academy
           </h1>
           <p className="text-xl text-fg/90 max-w-3xl leading-relaxed">
-            GlassCode Academy is an open-source educational platform dedicated to mastering modern web development.
-            We believe in learning by doing, providing a realistic, full-stack environment where developers can
-            practice, experiment, and prepare for technical interviews.
+            GlassCode Academy is an open-source educational platform dedicated
+            to mastering modern web development. We believe in learning by
+            doing, providing a realistic, full-stack environment where
+            developers can practice, experiment, and prepare for technical
+            interviews.
           </p>
         </section>
 
@@ -27,9 +29,10 @@ export default function AboutPage() {
               <span className="text-3xl">🚀</span> Our Mission
             </h2>
             <p className="text-fg/80 leading-relaxed">
-              To bridge the gap between theoretical knowledge and production-ready skills.
-              We provide deep dives into complex topics like authentication, caching, state management,
-              and system design, wrapped in a gamified learning experience.
+              To bridge the gap between theoretical knowledge and
+              production-ready skills. We provide deep dives into complex topics
+              like authentication, caching, state management, and system design,
+              wrapped in a gamified learning experience.
             </p>
           </section>
 
@@ -38,35 +41,47 @@ export default function AboutPage() {
               <span className="text-3xl">🛠️</span> The Tech Stack
             </h2>
             <p className="text-fg/80 leading-relaxed">
-              We don&apos;t just teach the stack; we are built on it. GlassCode Academy is a living example
-              of a modern monorepo architecture, featuring Next.js 15, Node.js with Fastify, PostgreSQL,
-              Redis, and a robust CI/CD pipeline.
+              We don&apos;t just teach the stack; we are built on it. GlassCode
+              Academy is a living example of a modern monorepo architecture,
+              featuring Next.js 15, Node.js with Fastify, PostgreSQL, Redis, and
+              a robust CI/CD pipeline.
             </p>
           </section>
         </div>
 
         <section className="glass-morphism p-8 md:p-12 rounded-2xl mb-12 animate-in fade-in slide-in-from-bottom-8 duration-700 delay-300">
-          <h2 className="text-3xl font-bold text-fg mb-8 text-center">Newest Additions</h2>
+          <h2 className="text-3xl font-bold text-fg mb-8 text-center">
+            Newest Additions
+          </h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <div className="bg-white/5 p-6 rounded-lg border border-white/10 hover:bg-white/10 transition-colors">
               <div className="text-4xl mb-4">⚡</div>
-              <h3 className="text-xl font-semibold text-fg mb-2">Fastify Backend</h3>
+              <h3 className="text-xl font-semibold text-fg mb-2">
+                Fastify Backend
+              </h3>
               <p className="text-sm text-fg/70">
-                Migrated to Fastify for high-performance API handling and reduced latency.
+                Migrated to Fastify for high-performance API handling and
+                reduced latency.
               </p>
             </div>
             <div className="bg-white/5 p-6 rounded-lg border border-white/10 hover:bg-white/10 transition-colors">
               <div className="text-4xl mb-4">🏎️</div>
-              <h3 className="text-xl font-semibold text-fg mb-2">Redis Caching</h3>
+              <h3 className="text-xl font-semibold text-fg mb-2">
+                Redis Caching
+              </h3>
               <p className="text-sm text-fg/70">
-                Implemented comprehensive caching strategies for content and session management.
+                Implemented comprehensive caching strategies for content and
+                session management.
               </p>
             </div>
             <div className="bg-white/5 p-6 rounded-lg border border-white/10 hover:bg-white/10 transition-colors">
               <div className="text-4xl mb-4">🎮</div>
-              <h3 className="text-xl font-semibold text-fg mb-2">Gamification 2.0</h3>
+              <h3 className="text-xl font-semibold text-fg mb-2">
+                Gamification 2.0
+              </h3>
               <p className="text-sm text-fg/70">
-                New achievements, streaks, and tier-based progression system to keep you motivated.
+                New achievements, streaks, and tier-based progression system to
+                keep you motivated.
               </p>
             </div>
           </div>

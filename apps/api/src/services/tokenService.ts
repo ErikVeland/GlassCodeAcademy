@@ -1,21 +1,21 @@
 import jwt from 'jsonwebtoken';
-import type { Model } from 'sequelize';
 
 // Define the payload structure for JWT tokens
 interface JwtPayload {
-  userId: number;
+  userId: string;
   email: string;
   firstName: string;
   lastName: string;
 }
 
-// Define the User type based on the Sequelize model
-type UserType = Model & {
-  id: number;
+// Define the User type compatible with both legacy Sequelize and new objects
+interface UserType {
+  id: string | number;
   email: string;
-  firstName: string;
-  lastName: string;
-};
+  firstName: string | null;
+  lastName: string | null;
+  [key: string]: any;
+}
 
 /**
  * Generate a JWT token for a user
@@ -24,10 +24,10 @@ type UserType = Model & {
  */
 export function generateToken(user: UserType): string {
   const payload: JwtPayload = {
-    userId: user.id,
+    userId: String(user.id),
     email: user.email,
-    firstName: user.firstName,
-    lastName: user.lastName,
+    firstName: user.firstName || '',
+    lastName: user.lastName || '',
   };
 
   // Use the JWT_SECRET from environment variables or a default value
