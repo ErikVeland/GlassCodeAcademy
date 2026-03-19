@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
-import { useState, useEffect } from "react";
-import EnhancedLoadingComponent from "../components/EnhancedLoadingComponent";
+import { useState, useEffect } from 'react';
+import EnhancedLoadingComponent from '../components/EnhancedLoadingComponent';
 
 export default function Custom502() {
   const [retryCount, setRetryCount] = useState(0);

@@ -1,6 +1,6 @@
-"use client";
+'use client';
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect } from 'react';
 
 interface EnhancedLoadingComponentProps {
   retryCount: number;
@@ -36,13 +36,13 @@ const EnhancedLoadingComponent: React.FC<EnhancedLoadingComponentProps> = ({
   const errorMessage: string | null = (() => {
     if (error == null) return null;
     if (error instanceof Error) return error.message;
-    if (typeof error === "string") return error;
+    if (typeof error === 'string') return error;
     if (
-      typeof error === "object" &&
-      "message" in (error as Record<string, unknown>)
+      typeof error === 'object' &&
+      'message' in (error as Record<string, unknown>)
     ) {
       const m = (error as { message?: unknown }).message;
-      return typeof m === "string" ? m : null;
+      return typeof m === 'string' ? m : null;
     }
     return null;
   })();
@@ -68,16 +68,16 @@ const EnhancedLoadingComponent: React.FC<EnhancedLoadingComponentProps> = ({
     // Calculate progress percentage with a minimum of 10% to show some progress immediately
     const progress = Math.min(
       Math.max(Math.round((retryCount / maxRetries) * 100), 10),
-      95,
+      95
     );
 
     // Friendly messages based on retry count
-    let statusMessage = "Backend is starting up, please wait...";
+    let statusMessage = 'Backend is starting up, please wait...';
     if (retryCount > 5) {
-      statusMessage = "Still working on it... The server is warming up.";
+      statusMessage = 'Still working on it... The server is warming up.';
     }
     if (retryCount > 15) {
-      statusMessage = "Almost there! Just a bit more time...";
+      statusMessage = 'Almost there! Just a bit more time...';
     }
 
     return (

@@ -1,7 +1,7 @@
-import { normalizeQuestion } from "@/lib/textNormalization";
-import { getApiBaseStrict } from "@/lib/urlUtils";
-import { contentRegistry } from "@/lib/contentRegistry";
-import { debugLog } from "@/lib/httpUtils";
+import { normalizeQuestion } from '@/lib/textNormalization';
+import { getApiBaseStrict } from '@/lib/urlUtils';
+import { contentRegistry } from '@/lib/contentRegistry';
+import { debugLog } from '@/lib/httpUtils';
 
 // Strict types for quiz payloads
 interface QuizQuestion {
@@ -32,7 +32,7 @@ async function fetchQuizFromDatabase(moduleSlug: string): Promise<QuizPayload> {
   }
   // Always include localhost dev fallback
   // Try new Fastify API first, then legacy
-  bases.push("http://127.0.0.1:8081");
+  bases.push('http://127.0.0.1:8081');
   // Removed legacy Express fallback on :8080; Fastify runs on :8081
 
   for (const apiBase of bases) {
@@ -40,18 +40,18 @@ async function fetchQuizFromDatabase(moduleSlug: string): Promise<QuizPayload> {
       // Use the correct endpoint to fetch quizzes for a module by slug
       const quizResponse = await fetch(
         `${apiBase}/api/modules/${moduleSlug}/quiz`,
-        { cache: "no-store" },
+        { cache: 'no-store' }
       );
       if (!quizResponse.ok) {
         console.error(
-          `[quizzes] Failed to fetch quizzes for module ${moduleSlug} from ${apiBase}`,
+          `[quizzes] Failed to fetch quizzes for module ${moduleSlug} from ${apiBase}`
         );
         continue;
       }
 
       const result: unknown = await quizResponse.json();
       const candidate: unknown[] = Array.isArray(
-        (result as { data?: unknown[] }).data,
+        (result as { data?: unknown[] }).data
       )
         ? (result as { data: unknown[] }).data
         : Array.isArray((result as { questions?: unknown[] }).questions)
@@ -61,7 +61,7 @@ async function fetchQuizFromDatabase(moduleSlug: string): Promise<QuizPayload> {
             : [];
 
       debugLog(
-        `[quizzes] Loaded ${candidate.length} quiz questions from ${apiBase} for module: ${moduleSlug}`,
+        `[quizzes] Loaded ${candidate.length} quiz questions from ${apiBase} for module: ${moduleSlug}`
       );
 
       // Transform database items into strict QuizQuestion objects
@@ -71,18 +71,18 @@ async function fetchQuizFromDatabase(moduleSlug: string): Promise<QuizPayload> {
 
           // Normalize choices
           let choices: string[] = [];
-          const rawChoices = quiz["choices"];
+          const rawChoices = quiz['choices'];
           if (Array.isArray(rawChoices)) {
             choices = (rawChoices as unknown[]).filter(
-              (c): c is string => typeof c === "string",
+              (c): c is string => typeof c === 'string'
             );
-          } else if (typeof rawChoices === "string") {
+          } else if (typeof rawChoices === 'string') {
             const str = rawChoices;
             try {
               const parsed = JSON.parse(str);
               if (Array.isArray(parsed)) {
                 choices = parsed.filter(
-                  (c): c is string => typeof c === "string",
+                  (c): c is string => typeof c === 'string'
                 );
               }
             } catch {
@@ -95,46 +95,46 @@ async function fetchQuizFromDatabase(moduleSlug: string): Promise<QuizPayload> {
             }
           }
 
-          const idRaw = quiz["id"];
+          const idRaw = quiz['id'];
           const id: number | string =
-            typeof idRaw === "number" || typeof idRaw === "string" ? idRaw : 0;
+            typeof idRaw === 'number' || typeof idRaw === 'string' ? idRaw : 0;
 
-          const questionRaw = quiz["question"];
-          const question = typeof questionRaw === "string" ? questionRaw : "";
+          const questionRaw = quiz['question'];
+          const question = typeof questionRaw === 'string' ? questionRaw : '';
 
-          const correctRaw = quiz["correctAnswer"];
+          const correctRaw = quiz['correctAnswer'];
           const correctAnswer: number | string =
-            typeof correctRaw === "number" || typeof correctRaw === "string"
+            typeof correctRaw === 'number' || typeof correctRaw === 'string'
               ? correctRaw
               : 0;
 
-          const explanationRaw = quiz["explanation"];
+          const explanationRaw = quiz['explanation'];
           const explanation =
-            typeof explanationRaw === "string" ? explanationRaw : undefined;
+            typeof explanationRaw === 'string' ? explanationRaw : undefined;
 
-          const topicRaw = quiz["topic"];
+          const topicRaw = quiz['topic'];
           const topic =
-            typeof topicRaw === "string" && topicRaw.trim()
+            typeof topicRaw === 'string' && topicRaw.trim()
               ? topicRaw
-              : "general";
+              : 'general';
 
-          const typeRaw = quiz["questionType"] ?? quiz["type"];
+          const typeRaw = quiz['questionType'] ?? quiz['type'];
           const type =
-            typeof typeRaw === "string" && typeRaw.trim()
+            typeof typeRaw === 'string' && typeRaw.trim()
               ? typeRaw
-              : "multiple-choice";
+              : 'multiple-choice';
 
-          const difficultyRaw = quiz["difficulty"];
+          const difficultyRaw = quiz['difficulty'];
           const difficulty =
-            typeof difficultyRaw === "string" && difficultyRaw.trim()
+            typeof difficultyRaw === 'string' && difficultyRaw.trim()
               ? difficultyRaw
-              : "Beginner";
+              : 'Beginner';
 
-          const estRaw = quiz["estimatedTime"];
-          const estimatedTime = typeof estRaw === "number" ? estRaw : 90;
+          const estRaw = quiz['estimatedTime'];
+          const estimatedTime = typeof estRaw === 'number' ? estRaw : 90;
 
-          const orderRaw = quiz["sort_order"] ?? quiz["order"];
-          const order = typeof orderRaw === "number" ? orderRaw : 0;
+          const orderRaw = quiz['sort_order'] ?? quiz['order'];
+          const order = typeof orderRaw === 'number' ? orderRaw : 0;
 
           return {
             id,
@@ -148,7 +148,7 @@ async function fetchQuizFromDatabase(moduleSlug: string): Promise<QuizPayload> {
             estimatedTime,
             order,
           };
-        },
+        }
       );
 
       if (questions.length > 0) {
@@ -156,7 +156,7 @@ async function fetchQuizFromDatabase(moduleSlug: string): Promise<QuizPayload> {
       }
 
       debugLog(
-        `[quizzes] ${apiBase} returned 0 questions for ${moduleSlug}; will try next source or file fallback.`,
+        `[quizzes] ${apiBase} returned 0 questions for ${moduleSlug}; will try next source or file fallback.`
       );
       continue;
     } catch (innerErr) {
@@ -171,25 +171,25 @@ async function fetchQuizFromDatabase(moduleSlug: string): Promise<QuizPayload> {
 
 export async function GET(
   request: Request,
-  { params }: { params: Promise<{ moduleSlug: string }> },
+  { params }: { params: Promise<{ moduleSlug: string }> }
 ) {
   try {
     const { moduleSlug: inputSlug } = await params;
-    debugLog("=== Quiz API Route ===");
-    debugLog("Received request for quiz input slug:", inputSlug);
+    debugLog('=== Quiz API Route ===');
+    debugLog('Received request for quiz input slug:', inputSlug);
 
     // Convert shortSlug to moduleSlug if needed using the central registry
     const moduleSlugResolved =
       await contentRegistry.getModuleSlugFromShortSlug(inputSlug);
     if (!moduleSlugResolved) {
       debugLog(`[quizzes] Unknown or unsupported module slug: ${inputSlug}`);
-      return new Response(JSON.stringify({ error: "Module not found" }), {
+      return new Response(JSON.stringify({ error: 'Module not found' }), {
         status: 404,
-        headers: { "Content-Type": "application/json" },
+        headers: { 'Content-Type': 'application/json' },
       });
     }
     const moduleSlug = moduleSlugResolved;
-    debugLog("Resolved to module slug:", moduleSlug);
+    debugLog('Resolved to module slug:', moduleSlug);
 
     const quiz = await fetchQuizFromDatabase(moduleSlug);
 
@@ -197,14 +197,14 @@ export async function GET(
     let effectiveQuiz: QuizPayload = quiz;
     if (!Array.isArray(quiz.questions) || quiz.questions.length === 0) {
       try {
-        const { promises: fs } = await import("fs");
-        const path = await import("path");
+        const { promises: fs } = await import('fs');
+        const path = await import('path');
         const filePath = path.join(
           process.cwd(),
-          "../../content/quizzes",
-          `${moduleSlug}.json`,
+          '../../content/quizzes',
+          `${moduleSlug}.json`
         );
-        const raw = await fs.readFile(filePath, "utf-8");
+        const raw = await fs.readFile(filePath, 'utf-8');
         const parsed: unknown = JSON.parse(raw);
 
         let fileQuestionsUnknown: unknown[] = [];
@@ -218,11 +218,11 @@ export async function GET(
 
         if (fileQuestionsUnknown.length > 0) {
           const normalizedFromFile: QuizQuestion[] = fileQuestionsUnknown.map(
-            (q) => normalizeQuestion(q) as QuizQuestion,
+            (q) => normalizeQuestion(q) as QuizQuestion
           );
           effectiveQuiz = { questions: normalizedFromFile };
           debugLog(
-            `[quizzes] Loaded ${normalizedFromFile.length} fallback questions from file for ${moduleSlug}`,
+            `[quizzes] Loaded ${normalizedFromFile.length} fallback questions from file for ${moduleSlug}`
           );
         }
       } catch {
@@ -231,7 +231,7 @@ export async function GET(
     }
 
     const normalizedQuestions: QuizQuestion[] = Array.isArray(
-      effectiveQuiz.questions,
+      effectiveQuiz.questions
     )
       ? effectiveQuiz.questions.map((q) => normalizeQuestion(q) as QuizQuestion)
       : [];
@@ -243,28 +243,28 @@ export async function GET(
     return new Response(JSON.stringify(normalizedQuiz), {
       status: 200,
       headers: {
-        "Content-Type": "application/json",
-        "Cache-Control": "public, max-age=600, stale-while-revalidate=86400",
+        'Content-Type': 'application/json',
+        'Cache-Control': 'public, max-age=600, stale-while-revalidate=86400',
       },
     });
   } catch (error) {
-    console.error("Failed to load quiz:", error);
+    console.error('Failed to load quiz:', error);
     // Return error without falling back to file content
     return new Response(
       JSON.stringify({
-        error: "Failed to load quiz from backend",
+        error: 'Failed to load quiz from backend',
         questions: [],
       }),
       {
         status: 502,
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
-      },
+      }
     );
   }
 }
 
-export const runtime = "nodejs";
+export const runtime = 'nodejs';
 export const revalidate = 60; // cache responses for 60 seconds to reduce backend load
-export const dynamic = "force-static";
+export const dynamic = 'force-static';

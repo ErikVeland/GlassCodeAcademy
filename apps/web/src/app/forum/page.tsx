@@ -1,5 +1,5 @@
-import Link from "next/link";
-import { getApiBaseStrict } from "@/lib/urlUtils";
+import Link from 'next/link';
+import { getApiBaseStrict } from '@/lib/urlUtils';
 
 type ForumCategory = {
   id: number;
@@ -10,7 +10,7 @@ type ForumCategory = {
   isActive?: boolean;
 };
 
-export const dynamic = "force-dynamic";
+export const dynamic = 'force-dynamic';
 
 async function fetchCategories(): Promise<ForumCategory[]> {
   // Try to resolve API base; fall back in dev to typical backend port
@@ -18,11 +18,11 @@ async function fetchCategories(): Promise<ForumCategory[]> {
     try {
       return getApiBaseStrict();
     } catch {
-      return "http://127.0.0.1:8081";
+      return 'http://127.0.0.1:8081';
     }
   })();
   const res = await fetch(`${apiBase}/api/forum/categories`, {
-    cache: "no-store",
+    cache: 'no-store',
   });
   if (!res.ok) {
     // Return empty list on failure so page still renders

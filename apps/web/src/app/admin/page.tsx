@@ -1,10 +1,10 @@
-"use client";
+'use client';
 
-import { useState, useEffect, useCallback, useMemo } from "react";
-import { useRouter, useSearchParams, usePathname } from "next/navigation";
-import { useSession } from "next-auth/react";
-import type { AdminLesson, AdminModule, AdminQuiz } from "@/types/admin";
-import { useBackendReadiness } from "@/hooks/useBackendReadiness";
+import { useState, useEffect, useCallback, useMemo } from 'react';
+import { useRouter, useSearchParams, usePathname } from 'next/navigation';
+import { useSession } from 'next-auth/react';
+import type { AdminLesson, AdminModule, AdminQuiz } from '@/types/admin';
+import { useBackendReadiness } from '@/hooks/useBackendReadiness';
 
 // Types for user management
 type AdminUser = {
@@ -59,22 +59,22 @@ export default function AdminDashboard() {
     isLoading: backendLoading,
     error: backendError,
     retryCount,
-  } = useBackendReadiness({ enabled: pathname !== "/" });
+  } = useBackendReadiness({ enabled: pathname !== '/' });
   const showBackendStatus =
-    process.env.NODE_ENV !== "production" ||
-    process.env.NEXT_PUBLIC_SHOW_BACKEND_STATUS === "1";
+    process.env.NODE_ENV !== 'production' ||
+    process.env.NEXT_PUBLIC_SHOW_BACKEND_STATUS === '1';
 
-  const [searchQuery, setSearchQuery] = useState("");
-  const [userSearchQuery, setUserSearchQuery] = useState("");
+  const [searchQuery, setSearchQuery] = useState('');
+  const [userSearchQuery, setUserSearchQuery] = useState('');
   const [selectedUser, setSelectedUser] = useState<AdminUser | null>(null);
   const [showRoleModal, setShowRoleModal] = useState(false);
-  const [selectedRole, setSelectedRole] = useState<number | "">("");
+  const [selectedRole, setSelectedRole] = useState<number | ''>('');
   const [assigningRole, setAssigningRole] = useState(false);
   const [roleAssignmentError, setRoleAssignmentError] = useState<string | null>(
-    null,
+    null
   );
 
-  const MODULES_CACHE_KEY = "admin_modules_cache";
+  const MODULES_CACHE_KEY = 'admin_modules_cache';
 
   const readModulesCache = useCallback((): {
     data: AdminModule[];
@@ -82,14 +82,14 @@ export default function AdminDashboard() {
   } | null => {
     try {
       const raw =
-        typeof window !== "undefined"
+        typeof window !== 'undefined'
           ? localStorage.getItem(MODULES_CACHE_KEY)
           : null;
       if (!raw) return null;
       const parsed = JSON.parse(raw) as { data: unknown; timestamp: number };
       if (!parsed || !Array.isArray(parsed.data)) return null;
       const valid = (parsed.data as unknown[]).every(
-        (m) => m && typeof (m as AdminModule).id === "number",
+        (m) => m && typeof (m as AdminModule).id === 'number'
       );
       if (!valid) return null;
       return {
@@ -103,10 +103,10 @@ export default function AdminDashboard() {
 
   const writeModulesCache = useCallback((data: AdminModule[]) => {
     try {
-      if (typeof window !== "undefined") {
+      if (typeof window !== 'undefined') {
         localStorage.setItem(
           MODULES_CACHE_KEY,
-          JSON.stringify({ data, timestamp: Date.now() }),
+          JSON.stringify({ data, timestamp: Date.now() })
         );
       }
     } catch {
@@ -127,12 +127,12 @@ export default function AdminDashboard() {
         totalQuizzes: quizzes.length,
         activeUsers: users.filter((u) => u.isActive).length,
         userGrowth: [
-          { date: "2023-01", count: 10 },
-          { date: "2023-02", count: 25 },
-          { date: "2023-03", count: 45 },
-          { date: "2023-04", count: 78 },
-          { date: "2023-05", count: 120 },
-          { date: "2023-06", count: 180 },
+          { date: '2023-01', count: 10 },
+          { date: '2023-02', count: 25 },
+          { date: '2023-03', count: 45 },
+          { date: '2023-04', count: 78 },
+          { date: '2023-05', count: 120 },
+          { date: '2023-06', count: 180 },
         ],
         moduleDistribution: modules.slice(0, 5).map((module) => ({
           name:
@@ -145,7 +145,7 @@ export default function AdminDashboard() {
 
       setStats(simulatedStats);
     } catch (err) {
-      console.error("Failed to fetch stats:", err);
+      console.error('Failed to fetch stats:', err);
     } finally {
       setStatsLoading(false);
     }
@@ -155,7 +155,7 @@ export default function AdminDashboard() {
     async (opts?: { silent?: boolean }) => {
       try {
         // Check if user is authenticated
-        if (status !== "authenticated") {
+        if (status !== 'authenticated') {
           return;
         }
         const silent = Boolean(opts?.silent);
@@ -164,11 +164,11 @@ export default function AdminDashboard() {
         setError(null);
         // Use the API base URL from environment variables
         const apiBase =
-          process.env.NEXT_PUBLIC_API_BASE || "http://localhost:8081";
+          process.env.NEXT_PUBLIC_API_BASE || 'http://localhost:8081';
 
         // Fetch modules from backend
         const modulesRes = await fetch(`${apiBase}/api/modules`, {
-          cache: "no-store",
+          cache: 'no-store',
         });
         if (!modulesRes.ok) {
           throw new Error(`Failed to fetch modules: ${modulesRes.status}`);
@@ -195,14 +195,14 @@ export default function AdminDashboard() {
         else setLoading(false);
       } catch (err) {
         const errorMessage =
-          err instanceof Error ? err.message : "Failed to fetch data";
+          err instanceof Error ? err.message : 'Failed to fetch data';
         setError(errorMessage);
         setLoading(false);
         setRefreshing(false);
-        console.error("Admin dashboard fetch error:", err);
+        console.error('Admin dashboard fetch error:', err);
       }
     },
-    [status, writeModulesCache],
+    [status, writeModulesCache]
   );
 
   const fetchUsers = useCallback(async () => {
@@ -211,10 +211,10 @@ export default function AdminDashboard() {
       setUsersError(null);
 
       // Fetch users
-      const usersRes = await fetch("/api/admin/users", {
-        cache: "no-store",
+      const usersRes = await fetch('/api/admin/users', {
+        cache: 'no-store',
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
       });
 
@@ -228,10 +228,10 @@ export default function AdminDashboard() {
       setUsers(usersData);
 
       // Fetch roles
-      const rolesRes = await fetch("/api/admin/roles", {
-        cache: "no-store",
+      const rolesRes = await fetch('/api/admin/roles', {
+        cache: 'no-store',
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
       });
 
@@ -245,18 +245,18 @@ export default function AdminDashboard() {
       setRoles(rolesData);
     } catch (err) {
       const errorMessage =
-        err instanceof Error ? err.message : "Failed to fetch users";
+        err instanceof Error ? err.message : 'Failed to fetch users';
       setUsersError(errorMessage);
-      console.error("Admin users fetch error:", err);
+      console.error('Admin users fetch error:', err);
     } finally {
       setUsersLoading(false);
     }
   }, []);
 
   useEffect(() => {
-    if (status === "unauthenticated") {
-      router.push("/login");
-    } else if (status === "authenticated") {
+    if (status === 'unauthenticated') {
+      router.push('/login');
+    } else if (status === 'authenticated') {
       const cached = readModulesCache();
       if (cached && Array.isArray(cached.data)) {
         setModules(cached.data);
@@ -282,8 +282,8 @@ export default function AdminDashboard() {
     if (!q) return modules;
     return modules.filter((m) =>
       [m.title, m.slug, String(m.order)].some((v) =>
-        String(v).toLowerCase().includes(q),
-      ),
+        String(v).toLowerCase().includes(q)
+      )
     );
   }, [modules, searchQuery]);
 
@@ -292,8 +292,8 @@ export default function AdminDashboard() {
     if (!q) return users;
     return users.filter((u) =>
       [u.email, u.firstName, u.lastName].some((v) =>
-        String(v).toLowerCase().includes(q),
-      ),
+        String(v).toLowerCase().includes(q)
+      )
     );
   }, [users, userSearchQuery]);
 
@@ -312,21 +312,21 @@ export default function AdminDashboard() {
   const handleAssignRole = (user: AdminUser) => {
     setSelectedUser(user);
     setShowRoleModal(true);
-    setSelectedRole("");
+    setSelectedRole('');
     setRoleAssignmentError(null);
   };
 
   const handleRoleAssignment = async () => {
-    if (!selectedUser || selectedRole === "") return;
+    if (!selectedUser || selectedRole === '') return;
 
     try {
       setAssigningRole(true);
       setRoleAssignmentError(null);
 
-      const response = await fetch("/api/admin/users/roles", {
-        method: "POST",
+      const response = await fetch('/api/admin/users/roles', {
+        method: 'POST',
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify({
           userId: selectedUser.id,
@@ -336,7 +336,7 @@ export default function AdminDashboard() {
 
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.message || "Failed to assign role");
+        throw new Error(errorData.message || 'Failed to assign role');
       }
 
       // Refresh users data
@@ -345,10 +345,10 @@ export default function AdminDashboard() {
       // Close modal
       setShowRoleModal(false);
       setSelectedUser(null);
-      setSelectedRole("");
+      setSelectedRole('');
     } catch (err) {
       const errorMessage =
-        err instanceof Error ? err.message : "Failed to assign role";
+        err instanceof Error ? err.message : 'Failed to assign role';
       setRoleAssignmentError(errorMessage);
     } finally {
       setAssigningRole(false);
@@ -357,10 +357,10 @@ export default function AdminDashboard() {
 
   const handleRemoveRole = async (userId: number, roleId: number) => {
     try {
-      const response = await fetch("/api/admin/users/roles", {
-        method: "DELETE",
+      const response = await fetch('/api/admin/users/roles', {
+        method: 'DELETE',
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify({
           userId,
@@ -370,14 +370,14 @@ export default function AdminDashboard() {
 
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.message || "Failed to remove role");
+        throw new Error(errorData.message || 'Failed to remove role');
       }
 
       // Refresh users data
       await fetchUsers();
     } catch (err) {
       const errorMessage =
-        err instanceof Error ? err.message : "Failed to remove role";
+        err instanceof Error ? err.message : 'Failed to remove role';
       setUsersError(errorMessage);
       setTimeout(() => setUsersError(null), 3000);
     }
@@ -428,7 +428,7 @@ export default function AdminDashboard() {
     );
   };
 
-  if (status === "loading") {
+  if (status === 'loading') {
     return (
       <div className="min-h-screen bg-bg py-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -470,7 +470,7 @@ export default function AdminDashboard() {
   return (
     <div className="min-h-screen bg-bg py-12">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {showBackendStatus && pathname !== "/" && !backendReady && (
+        {showBackendStatus && pathname !== '/' && !backendReady && (
           <div
             role="status"
             aria-live="polite"
@@ -483,21 +483,21 @@ export default function AdminDashboard() {
               />
               <p className="text-sm text-fg">
                 {backendLoading
-                  ? "Connecting to backend…"
+                  ? 'Connecting to backend…'
                   : backendError
-                    ? "Backend not reachable. Showing local content."
-                    : "Backend connected."}
+                    ? 'Backend not reachable. Showing local content.'
+                    : 'Backend connected.'}
               </p>
               {backendError && (
                 <span className="ml-auto text-xs text-muted">
-                  {retryCount > 0 ? `Retries: ${retryCount}` : ""}
+                  {retryCount > 0 ? `Retries: ${retryCount}` : ''}
                 </span>
               )}
             </div>
           </div>
         )}
         {(() => {
-          const authError = searchParams?.get("error");
+          const authError = searchParams?.get('error');
           return authError ? (
             <div
               className="mb-6 glass-card bg-danger/10 border-danger/20 p-4"
@@ -513,7 +513,7 @@ export default function AdminDashboard() {
           <p className="mt-2 text-lg text-muted">
             Manage your GlassCode Academy content
           </p>
-          {status !== "authenticated" && (
+          {status !== 'authenticated' && (
             <div
               className="mt-6 glass-card bg-warning/10 border-warning/20 p-4"
               role="alert"
@@ -523,7 +523,7 @@ export default function AdminDashboard() {
                 You are not signed in. Please login to manage content.
               </p>
               <button
-                onClick={() => router.push("/login")}
+                onClick={() => router.push('/login')}
                 className="mt-3 px-4 py-2 bg-warning text-warning-fg rounded-md hover:opacity-90 transition-opacity"
                 aria-label="Go to Login"
               >
@@ -703,14 +703,14 @@ export default function AdminDashboard() {
                 width:
                   stats && stats.totalUsers > 0
                     ? `${(stats.activeUsers / stats.totalUsers) * 100}%`
-                    : "0%",
+                    : '0%',
               }}
             ></div>
           </div>
           <div className="mt-2 text-sm text-muted">
             {stats && stats.totalUsers > 0
               ? `${Math.round((stats.activeUsers / stats.totalUsers) * 100)}% of total users`
-              : "0% of total users"}
+              : '0% of total users'}
           </div>
         </div>
 
@@ -823,7 +823,7 @@ export default function AdminDashboard() {
                         className="px-6 py-8 text-center text-muted"
                       >
                         No users found
-                        {userSearchQuery ? " for your search." : "."}
+                        {userSearchQuery ? ' for your search.' : '.'}
                       </td>
                     </tr>
                   )}
@@ -872,16 +872,16 @@ export default function AdminDashboard() {
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap">
                           <span
-                            className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${user.isActive ? "bg-success/20 text-success border border-success/30" : "bg-danger/20 text-danger border border-danger/30"}`}
+                            className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${user.isActive ? 'bg-success/20 text-success border border-success/30' : 'bg-danger/20 text-danger border border-danger/30'}`}
                           >
-                            {user.isActive ? "Active" : "Inactive"}
+                            {user.isActive ? 'Active' : 'Inactive'}
                           </span>
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap">
                           <div className="text-sm text-muted">
                             {user.lastLoginAt
                               ? new Date(user.lastLoginAt).toLocaleDateString()
-                              : "Never"}
+                              : 'Never'}
                           </div>
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
@@ -1000,7 +1000,7 @@ export default function AdminDashboard() {
                         className="px-6 py-8 text-center text-muted"
                       >
                         No modules found
-                        {searchQuery ? " for your search." : "."}
+                        {searchQuery ? ' for your search.' : '.'}
                       </td>
                     </tr>
                   )}
@@ -1027,9 +1027,9 @@ export default function AdminDashboard() {
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap">
                           <span
-                            className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${module.isPublished ? "bg-success/20 text-success border border-success/30" : "bg-danger/20 text-danger border border-danger/30"}`}
+                            className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${module.isPublished ? 'bg-success/20 text-success border border-success/30' : 'bg-danger/20 text-danger border border-danger/30'}`}
                           >
-                            {module.isPublished ? "Published" : "Draft"}
+                            {module.isPublished ? 'Published' : 'Draft'}
                           </span>
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
@@ -1155,9 +1155,9 @@ export default function AdminDashboard() {
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap">
                           <span
-                            className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${lesson.isPublished ? "bg-success/20 text-success border border-success/30" : "bg-danger/20 text-danger border border-danger/30"}`}
+                            className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${lesson.isPublished ? 'bg-success/20 text-success border border-success/30' : 'bg-danger/20 text-danger border border-danger/30'}`}
                           >
-                            {lesson.isPublished ? "Published" : "Draft"}
+                            {lesson.isPublished ? 'Published' : 'Draft'}
                           </span>
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
@@ -1309,7 +1309,7 @@ export default function AdminDashboard() {
                   id="role-select"
                   value={selectedRole}
                   onChange={(e) =>
-                    setSelectedRole(Number(e.target.value) || "")
+                    setSelectedRole(Number(e.target.value) || '')
                   }
                   className="w-full px-3 py-2 rounded-md bg-surface-alt border border-border text-fg focus:outline-none focus:ring-2 focus:ring-primary"
                 >
@@ -1332,7 +1332,7 @@ export default function AdminDashboard() {
                 onClick={() => {
                   setShowRoleModal(false);
                   setSelectedUser(null);
-                  setSelectedRole("");
+                  setSelectedRole('');
                   setRoleAssignmentError(null);
                 }}
                 className="px-4 py-2 rounded-md bg-surface-alt text-fg hover:opacity-90 transition-opacity"
@@ -1341,10 +1341,10 @@ export default function AdminDashboard() {
               </button>
               <button
                 onClick={handleRoleAssignment}
-                disabled={selectedRole === "" || assigningRole}
+                disabled={selectedRole === '' || assigningRole}
                 className="px-4 py-2 rounded-md bg-primary text-primary-fg hover:opacity-90 transition-opacity disabled:opacity-50"
               >
-                {assigningRole ? "Assigning..." : "Assign Role"}
+                {assigningRole ? 'Assigning...' : 'Assign Role'}
               </button>
             </div>
           </div>

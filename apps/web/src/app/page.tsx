@@ -1,29 +1,29 @@
-"use client";
+'use client';
 
-export const dynamic = "force-dynamic";
+export const dynamic = 'force-dynamic';
 
-import React, { useState, useEffect, useCallback, useMemo } from "react";
-import Link from "next/link";
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
+import Link from 'next/link';
 import {
   ArrowRightIcon,
   ChartBarIcon,
   LockClosedIcon,
-} from "@heroicons/react/24/outline";
+} from '@heroicons/react/24/outline';
 
 // Removed server-only contentRegistry imports to avoid bundling Node APIs in client
 import {
   useProgressTracking,
   ProgressData,
   AchievementData,
-} from "../hooks/useProgressTracking";
-import GamificationDashboard from "../components/GamificationDashboard";
-import SearchFilterSystem from "../components/SearchFilterSystem";
-import "../styles/responsive.scss";
-import "../styles/design-system.scss";
-import "../styles/homepage.scss";
-import "../styles/liquid-glass.scss";
-import "../styles/mobile-first.scss";
-import { getModuleTheme } from "@/lib/moduleThemes";
+} from '../hooks/useProgressTracking';
+import GamificationDashboard from '../components/GamificationDashboard';
+import SearchFilterSystem from '../components/SearchFilterSystem';
+import '../styles/responsive.scss';
+import '../styles/design-system.scss';
+import '../styles/homepage.scss';
+import '../styles/liquid-glass.scss';
+import '../styles/mobile-first.scss';
+import { getModuleTheme } from '@/lib/moduleThemes';
 
 // Client-safe local types for registry records
 type Tier = {
@@ -89,7 +89,7 @@ const ModuleCard: React.FC<{
 
     return (
       <div
-        className={`module-card-container ${isLocked ? "locked" : ""} h-full`}
+        className={`module-card-container ${isLocked ? 'locked' : ''} h-full`}
       >
         {hasAchievements && (
           <div className="absolute -top-4 right-3 z-30 flex gap-2 pointer-events-auto cursor-help">
@@ -106,7 +106,7 @@ const ModuleCard: React.FC<{
                 }
               >
                 <span className="text-sm text-white font-bold">
-                  {index === 0 ? "🏆" : index === 1 ? "🎖️" : "⭐"}
+                  {index === 0 ? '🏆' : index === 1 ? '🎖️' : '⭐'}
                 </span>
               </div>
             ))}
@@ -123,8 +123,8 @@ const ModuleCard: React.FC<{
           </div>
         )}
         <Link
-          href={isLocked ? "#" : module.routes?.overview || "#"}
-          className={`glass-module-card group ${tierKey === "core" ? "tier-core" : tierKey === "specialized" ? "tier-specialized" : tierKey === "quality" ? "tier-quality" : "tier-foundational"} ${isLocked ? "opacity-60" : ""} pb-8 no-tier-strip`}
+          href={isLocked ? '#' : module.routes?.overview || '#'}
+          className={`glass-module-card group ${tierKey === 'core' ? 'tier-core' : tierKey === 'specialized' ? 'tier-specialized' : tierKey === 'quality' ? 'tier-quality' : 'tier-foundational'} ${isLocked ? 'opacity-60' : ''} pb-8 no-tier-strip`}
           onClick={handleModuleClick}
           aria-disabled={isLocked}
           aria-describedby={`module-${module.slug}-description`}
@@ -147,7 +147,7 @@ const ModuleCard: React.FC<{
 
           <div className="flex items-center gap-3 mb-4">
             <div className="text-3xl" aria-hidden="true">
-              {module.icon || "💻"}
+              {module.icon || '💻'}
             </div>
             <div className="flex-1">
               <h3 className="text-lg font-semibold text-white mb-1">
@@ -155,14 +155,14 @@ const ModuleCard: React.FC<{
               </h3>
               <div className="flex items-center gap-2">
                 <span className="px-2 py-1 bg-white/10 text-white rounded-full text-xs">
-                  {module.difficulty || "Beginner"}
+                  {module.difficulty || 'Beginner'}
                 </span>
                 <span className="px-2 py-1 bg-white/10 text-white rounded-full text-xs">
-                  {moduleStatus === "not-started"
-                    ? "⏳ Not Started"
-                    : moduleStatus === "in-progress"
-                      ? "🔄 In Progress"
-                      : "✅ Completed"}
+                  {moduleStatus === 'not-started'
+                    ? '⏳ Not Started'
+                    : moduleStatus === 'in-progress'
+                      ? '🔄 In Progress'
+                      : '✅ Completed'}
                 </span>
               </div>
             </div>
@@ -172,7 +172,7 @@ const ModuleCard: React.FC<{
             className="text-muted mb-4 text-left text-sm"
             id={`module-${module.slug}-description`}
           >
-            {module.description || "No description available."}
+            {module.description || 'No description available.'}
           </p>
 
           {/* Technologies used - Pill-shaped tags */}
@@ -210,7 +210,7 @@ const ModuleCard: React.FC<{
                     title={achievement.description}
                   >
                     <span className="text-xs text-white font-bold">
-                      {index === 0 ? "🏆" : index === 1 ? "🎖️" : "⭐"}
+                      {index === 0 ? '🏆' : index === 1 ? '🎖️' : '⭐'}
                     </span>
                   </div>
                 ))}
@@ -234,10 +234,10 @@ const ModuleCard: React.FC<{
         </Link>
       </div>
     );
-  },
+  }
 );
 
-ModuleCard.displayName = "ModuleCard";
+ModuleCard.displayName = 'ModuleCard';
 
 // Enhanced TierSection component with better accessibility and visual hierarchy
 const TierSection: React.FC<{
@@ -260,11 +260,11 @@ const TierSection: React.FC<{
   }) => {
     const { getTierProgress } = useProgressTracking();
     const tierProgress = getTierProgress(
-      tierKey as "foundational" | "core" | "specialized" | "quality",
+      tierKey as 'foundational' | 'core' | 'specialized' | 'quality'
     );
     const completedModules = modules.filter((module) => {
       const moduleProgress = progress[module.slug];
-      return moduleProgress?.completionStatus === "completed";
+      return moduleProgress?.completionStatus === 'completed';
     }).length;
 
     if (!isVisible) return null;
@@ -280,7 +280,7 @@ const TierSection: React.FC<{
       >
         {/* Tier section with beautiful gradient backgrounds */}
         <div
-          className={`tier-container ${tierKey === "core" ? "tier-core" : tierKey === "specialized" ? "tier-specialized" : tierKey === "quality" ? "tier-quality" : "tier-foundational"} mf-pane-reset`}
+          className={`tier-container ${tierKey === 'core' ? 'tier-core' : tierKey === 'specialized' ? 'tier-specialized' : tierKey === 'quality' ? 'tier-quality' : 'tier-foundational'} mf-pane-reset`}
         >
           <div className="tier-header mb-6">
             <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
@@ -365,20 +365,20 @@ const TierSection: React.FC<{
                 : 0;
 
               // Check for achievements related to this module
-              const shortSlug = module.slug.includes("-")
-                ? module.slug.split("-")[0]
+              const shortSlug = module.slug.includes('-')
+                ? module.slug.split('-')[0]
                 : module.slug;
               const moduleAchievements = achievements.filter(
                 (a) =>
                   a.moduleId === module.slug ||
                   a.moduleId === shortSlug ||
-                  a.tier === tierKey,
+                  a.tier === tierKey
               );
               const hasAchievements = moduleAchievements.length > 0;
 
               // Determine module status
               const moduleStatus =
-                moduleProgress?.completionStatus || "not-started";
+                moduleProgress?.completionStatus || 'not-started';
 
               // Compute prerequisites met using progress
               const prereqs = module.prerequisites || [];
@@ -386,7 +386,7 @@ const TierSection: React.FC<{
                 prereqs.length === 0 ||
                 prereqs.every((slug) => {
                   const p = progress[slug];
-                  return p && p.completionStatus === "completed";
+                  return p && p.completionStatus === 'completed';
                 });
               const isLocked =
                 !!lockEnabled && prereqs.length > 0 && !prerequisitesMet;
@@ -440,12 +440,12 @@ const TierSection: React.FC<{
               <p className="text-white/90 mb-4">
                 Congratulations! You&apos;ve mastered the {tier.title} tier.
               </p>
-              {tierKey !== "quality" && (
+              {tierKey !== 'quality' && (
                 <button className="px-6 py-2 bg-white/20 text-white rounded-lg hover:bg-white/30 transition-colors backdrop-blur-sm">
                   → Continue to Next Tier
                 </button>
               )}
-              {tierKey === "quality" && (
+              {tierKey === 'quality' && (
                 <div className="mt-4">
                   <span className="text-3xl block">🏆</span>
                   <h4 className="text-lg font-bold text-white mt-1">
@@ -462,20 +462,20 @@ const TierSection: React.FC<{
         </div>
       </section>
     );
-  },
+  }
 );
 
-TierSection.displayName = "TierSection";
+TierSection.displayName = 'TierSection';
 
 // Enhanced HomePage component with integrated search/filter and progress tracking
 const HomePage: React.FC = () => {
   const [registryData, setRegistryData] = useState<RegistryData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [searchQuery, setSearchQuery] = useState("");
+  const [searchQuery, setSearchQuery] = useState('');
   const [selectedTier, setSelectedTier] = useState<string | null>(null);
   const [selectedDifficulty, setSelectedDifficulty] = useState<string | null>(
-    null,
+    null
   );
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [selectedStatus, setSelectedStatus] = useState<string | null>(null);
@@ -493,11 +493,11 @@ const HomePage: React.FC = () => {
   useEffect(() => {
     try {
       const stored =
-        typeof window !== "undefined"
-          ? localStorage.getItem("gc.moduleLockEnabled")
+        typeof window !== 'undefined'
+          ? localStorage.getItem('gc.moduleLockEnabled')
           : null;
       if (stored !== null) {
-        setModuleLockEnabled(stored === "true");
+        setModuleLockEnabled(stored === 'true');
       }
     } catch {
       // ignore localStorage errors
@@ -508,7 +508,7 @@ const HomePage: React.FC = () => {
     setModuleLockEnabled((prev) => {
       const next = !prev;
       try {
-        localStorage.setItem("gc.moduleLockEnabled", next ? "true" : "false");
+        localStorage.setItem('gc.moduleLockEnabled', next ? 'true' : 'false');
       } catch {
         // ignore
       }
@@ -518,7 +518,7 @@ const HomePage: React.FC = () => {
 
   // Clear all filters - defined before any conditional returns
   const clearFilters = useCallback(() => {
-    setSearchQuery("");
+    setSearchQuery('');
     setSelectedTier(null);
     setSelectedDifficulty(null);
     setSelectedCategory(null);
@@ -530,7 +530,7 @@ const HomePage: React.FC = () => {
     try {
       setLoading(true);
       // Fetch registry via API to keep client bundle browser-only
-      const res = await fetch("/api/content/registry", { cache: "no-store" });
+      const res = await fetch('/api/content/registry', { cache: 'no-store' });
       if (!res.ok) throw new Error(`Registry API failed: ${res.status}`);
       const registry = await res.json();
       const tiers: Record<string, Tier> = (registry && registry.tiers) || {};
@@ -539,9 +539,9 @@ const HomePage: React.FC = () => {
       // Normalize to ensure client-safe fields
       const normalizedModules: Module[] = (modules || []).map((m) => ({
         ...m,
-        tier: m.tier && tiers[m.tier] ? m.tier : "core",
+        tier: m.tier && tiers[m.tier] ? m.tier : 'core',
         technologies: Array.isArray(m.technologies) ? m.technologies : [],
-        difficulty: m.difficulty || "Beginner",
+        difficulty: m.difficulty || 'Beginner',
       }));
 
       // Organize modules by tier
@@ -560,8 +560,8 @@ const HomePage: React.FC = () => {
       // If API returned tiers but no modules after normalization, fallback to static registry
       if ((normalizedModules?.length || 0) === 0) {
         try {
-          const staticRes = await fetch("/registry.json", {
-            cache: "no-store",
+          const staticRes = await fetch('/registry.json', {
+            cache: 'no-store',
           });
           if (staticRes.ok) {
             const staticReg = await staticRes.json();
@@ -572,12 +572,12 @@ const HomePage: React.FC = () => {
             const staticModules: Module[] = (staticModulesRaw || []).map(
               (m) => ({
                 ...m,
-                tier: m.tier && staticTiers[m.tier] ? m.tier : "core",
+                tier: m.tier && staticTiers[m.tier] ? m.tier : 'core',
                 technologies: Array.isArray(m.technologies)
                   ? m.technologies
                   : [],
-                difficulty: m.difficulty || "Beginner",
-              }),
+                difficulty: m.difficulty || 'Beginner',
+              })
             );
 
             const td: Record<string, TierData> = {};
@@ -599,8 +599,8 @@ const HomePage: React.FC = () => {
         allModules: normalizedModules,
       });
     } catch (err) {
-      console.error("Failed to load registry data:", err);
-      setError("Failed to load learning modules. Please try again.");
+      console.error('Failed to load registry data:', err);
+      setError('Failed to load learning modules. Please try again.');
     } finally {
       setLoading(false);
     }
@@ -611,12 +611,12 @@ const HomePage: React.FC = () => {
     loadRegistryData();
 
     // Start comprehensive background prefetch for lessons and quizzes (unlocked by tier)
-    if (typeof window !== "undefined") {
+    if (typeof window !== 'undefined') {
       // Slight delay so initial paint remains snappy
       setTimeout(() => {
-        import("@/lib/modulePrefetchService")
+        import('@/lib/modulePrefetchService')
           .then(({ modulePrefetchService }) => {
-            modulePrefetchService.startPrefetching("tier");
+            modulePrefetchService.startPrefetching('tier');
           })
           .catch(() => {
             /* ignore prefetch bootstrap errors */
@@ -642,46 +642,46 @@ const HomePage: React.FC = () => {
                 .toLowerCase()
                 .includes(searchQuery.toLowerCase()) ||
               (module.technologies || []).some((tech) =>
-                tech.toLowerCase().includes(searchQuery.toLowerCase()),
-              ),
+                tech.toLowerCase().includes(searchQuery.toLowerCase())
+              )
           );
         }
 
         // Tier filter
         if (
           selectedTier &&
-          selectedTier !== "all" &&
+          selectedTier !== 'all' &&
           selectedTier !== tierKey
         ) {
           filteredModules = [];
         }
 
         // Difficulty filter
-        if (selectedDifficulty && selectedDifficulty !== "all") {
+        if (selectedDifficulty && selectedDifficulty !== 'all') {
           filteredModules = filteredModules.filter(
             (module) =>
-              (module.difficulty || "").toLowerCase() ===
-              selectedDifficulty.toLowerCase(),
+              (module.difficulty || '').toLowerCase() ===
+              selectedDifficulty.toLowerCase()
           );
         }
 
         // Category filter
-        if (selectedCategory && selectedCategory !== "all") {
+        if (selectedCategory && selectedCategory !== 'all') {
           filteredModules = filteredModules.filter(
-            (module) => module.category === selectedCategory,
+            (module) => module.category === selectedCategory
           );
         }
 
         // Status filter
         const getModuleStatus = (
-          moduleSlug: string,
-        ): "not-started" | "in-progress" | "completed" => {
+          moduleSlug: string
+        ): 'not-started' | 'in-progress' | 'completed' => {
           const moduleProgress = progress[moduleSlug];
-          if (!moduleProgress) return "not-started";
+          if (!moduleProgress) return 'not-started';
           return moduleProgress.completionStatus;
         };
 
-        if (selectedStatus && selectedStatus !== "all") {
+        if (selectedStatus && selectedStatus !== 'all') {
           filteredModules = filteredModules.filter((module) => {
             const moduleStatus = getModuleStatus(module.slug);
             return moduleStatus === selectedStatus;
@@ -694,7 +694,7 @@ const HomePage: React.FC = () => {
 
         return acc;
       },
-      {} as Record<string, TierData>,
+      {} as Record<string, TierData>
     );
   }, [
     registryData,
@@ -731,7 +731,7 @@ const HomePage: React.FC = () => {
               Something went wrong
             </h2>
             <p className="text-gray-600 dark:text-gray-300 mb-6">
-              {error || "Unable to load learning modules"}
+              {error || 'Unable to load learning modules'}
             </p>
             <button
               onClick={() => window.location.reload()}
@@ -753,12 +753,12 @@ const HomePage: React.FC = () => {
   const recentAchievements = achievements
     .sort(
       (a, b) =>
-        new Date(b.earnedDate).getTime() - new Date(a.earnedDate).getTime(),
+        new Date(b.earnedDate).getTime() - new Date(a.earnedDate).getTime()
     )
     .slice(0, 3);
 
   // Define the correct tier order for display
-  const tierOrder = ["foundational", "core", "specialized", "quality"];
+  const tierOrder = ['foundational', 'core', 'specialized', 'quality'];
 
   // Define hasActiveFilters similar to the interview-prep page
   const hasActiveFilters =
@@ -783,13 +783,13 @@ const HomePage: React.FC = () => {
                 aria-pressed={moduleLockEnabled}
                 aria-label={
                   moduleLockEnabled
-                    ? "Unlock modules (disable progress gating)"
-                    : "Lock modules (enable progress gating)"
+                    ? 'Unlock modules (disable progress gating)'
+                    : 'Lock modules (enable progress gating)'
                 }
                 title={
                   moduleLockEnabled
-                    ? "Unlock modules (disable progress gating)"
-                    : "Lock modules (enable progress gating)"
+                    ? 'Unlock modules (disable progress gating)'
+                    : 'Lock modules (enable progress gating)'
                 }
               >
                 {moduleLockEnabled ? (
@@ -864,7 +864,7 @@ const HomePage: React.FC = () => {
                               </span>
                               <span className="text-xs text-muted">
                                 {new Date(
-                                  achievement.earnedDate,
+                                  achievement.earnedDate
                                 ).toLocaleDateString()}
                               </span>
                             </div>
@@ -1012,7 +1012,7 @@ const HomePage: React.FC = () => {
               totalResults={totalModules}
               filteredResults={Object.values(filteredTiers).reduce(
                 (sum, tier) => sum + tier.modules.length,
-                0,
+                0
               )}
             />
           </div>
@@ -1038,7 +1038,7 @@ const HomePage: React.FC = () => {
               totalResults={totalModules}
               filteredResults={Object.values(filteredTiers).reduce(
                 (sum, tier) => sum + tier.modules.length,
-                0,
+                0
               )}
             />
           </div>
@@ -1166,12 +1166,12 @@ const HomePage: React.FC = () => {
                     const progressData = { progress, achievements, streak };
                     const dataStr = JSON.stringify(progressData, null, 2);
                     const dataBlob = new Blob([dataStr], {
-                      type: "application/json",
+                      type: 'application/json',
                     });
                     const url = URL.createObjectURL(dataBlob);
-                    const link = document.createElement("a");
+                    const link = document.createElement('a');
                     link.href = url;
-                    link.download = `learning-progress-${new Date().toISOString().split("T")[0]}.json`;
+                    link.download = `learning-progress-${new Date().toISOString().split('T')[0]}.json`;
                     document.body.appendChild(link);
                     link.click();
                     document.body.removeChild(link);

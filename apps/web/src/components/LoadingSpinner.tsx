@@ -1,17 +1,17 @@
-"use client";
+'use client';
 
-import React from "react";
+import React from 'react';
 
 interface LoadingSpinnerProps {
   message?: string;
   moduleName?: string;
-  size?: "sm" | "md" | "lg";
+  size?: 'sm' | 'md' | 'lg';
 }
 
 const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({
-  message = "Loading your learning content...",
+  message = 'Loading your learning content...',
   moduleName,
-  size = "md",
+  size = 'md',
 }) => {
   // Contextual message
   const displayMessage = moduleName
@@ -25,20 +25,20 @@ const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({
         <div
           className="relative"
           style={{
-            height: size === "sm" ? 32 : size === "md" ? 64 : 96,
-            width: size === "sm" ? 32 : size === "md" ? 64 : 96,
+            height: size === 'sm' ? 32 : size === 'md' ? 64 : 96,
+            width: size === 'sm' ? 32 : size === 'md' ? 64 : 96,
           }}
         >
           <svg
-            viewBox={`0 0 ${size === "sm" ? 32 : size === "md" ? 64 : 96} ${size === "sm" ? 32 : size === "md" ? 64 : 96}`}
+            viewBox={`0 0 ${size === 'sm' ? 32 : size === 'md' ? 64 : 96} ${size === 'sm' ? 32 : size === 'md' ? 64 : 96}`}
             className="animate-spin"
-            style={{ animationDuration: "2s" }}
+            style={{ animationDuration: '2s' }}
           >
             {/* Circle 1: Course content (book icon) */}
             <circle
-              cx={size === "sm" ? 16 : size === "md" ? 32 : 48}
-              cy={size === "sm" ? 16 : size === "md" ? 32 : 48}
-              r={size === "sm" ? 12 : size === "md" ? 28 : 44}
+              cx={size === 'sm' ? 16 : size === 'md' ? 32 : 48}
+              cy={size === 'sm' ? 16 : size === 'md' ? 32 : 48}
+              r={size === 'sm' ? 12 : size === 'md' ? 28 : 44}
               stroke="#3B82F6"
               strokeWidth="3"
               fill="none"
@@ -49,36 +49,36 @@ const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({
 
             {/* Circle 2: Interactive lessons (lightbulb icon) */}
             <circle
-              cx={size === "sm" ? 16 : size === "md" ? 32 : 48}
-              cy={size === "sm" ? 16 : size === "md" ? 32 : 48}
-              r={size === "sm" ? 8 : size === "md" ? 20 : 32}
+              cx={size === 'sm' ? 16 : size === 'md' ? 32 : 48}
+              cy={size === 'sm' ? 16 : size === 'md' ? 32 : 48}
+              r={size === 'sm' ? 8 : size === 'md' ? 20 : 32}
               stroke="#10B981"
               strokeWidth="3"
               fill="none"
               strokeDasharray="40 110"
               strokeLinecap="round"
               opacity="0.8"
-              style={{ animationDelay: "0.3s" }}
+              style={{ animationDelay: '0.3s' }}
             />
 
             {/* Circle 3: Quiz challenges (question mark icon) */}
             <circle
-              cx={size === "sm" ? 16 : size === "md" ? 32 : 48}
-              cy={size === "sm" ? 16 : size === "md" ? 32 : 48}
-              r={size === "sm" ? 4 : size === "md" ? 12 : 20}
+              cx={size === 'sm' ? 16 : size === 'md' ? 32 : 48}
+              cy={size === 'sm' ? 16 : size === 'md' ? 32 : 48}
+              r={size === 'sm' ? 4 : size === 'md' ? 12 : 20}
               stroke="#8B5CF6"
               strokeWidth="3"
               fill="none"
               strokeDasharray="20 130"
               strokeLinecap="round"
               opacity="0.8"
-              style={{ animationDelay: "0.6s" }}
+              style={{ animationDelay: '0.6s' }}
             />
 
             {/* Center icon representing learning */}
             <circle
-              cx={size === "sm" ? 16 : size === "md" ? 32 : 48}
-              cy={size === "sm" ? 16 : size === "md" ? 32 : 48}
+              cx={size === 'sm' ? 16 : size === 'md' ? 32 : 48}
+              cy={size === 'sm' ? 16 : size === 'md' ? 32 : 48}
               r="4"
               fill="#4F46E5"
               className="animate-pulse"
@@ -100,11 +100,11 @@ const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({
         <div className="h-2 w-2 bg-indigo-600 rounded-full animate-bounce"></div>
         <div
           className="h-2 w-2 bg-indigo-600 rounded-full animate-bounce"
-          style={{ animationDelay: "0.2s" }}
+          style={{ animationDelay: '0.2s' }}
         ></div>
         <div
           className="h-2 w-2 bg-indigo-600 rounded-full animate-bounce"
-          style={{ animationDelay: "0.4s" }}
+          style={{ animationDelay: '0.4s' }}
         ></div>
       </div>
     </div>

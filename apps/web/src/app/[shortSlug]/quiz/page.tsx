@@ -1,11 +1,11 @@
-"use client";
+'use client';
 
-import { useState, useEffect, useCallback, useRef } from "react";
-import { useRouter } from "next/navigation";
-import Link from "next/link";
-import type { Module } from "@/lib/contentRegistry";
-import QuizLayout from "@/components/QuizLayout";
-import LoadingScreen from "@/components/LoadingScreen";
+import { useState, useEffect, useCallback, useRef } from 'react';
+import { useRouter } from 'next/navigation';
+import Link from 'next/link';
+import type { Module } from '@/lib/contentRegistry';
+import QuizLayout from '@/components/QuizLayout';
+import LoadingScreen from '@/components/LoadingScreen';
 
 // Client-safe types for registry and quizzes
 interface RegistryModule {
@@ -62,11 +62,11 @@ interface QuizResponse {
 
 // Helper to fetch JSON with simple error handling
 async function fetchJSON<T>(url: string, init?: RequestInit): Promise<T> {
-  const res = await fetch(url, { ...init, cache: "no-store" });
+  const res = await fetch(url, { ...init, cache: 'no-store' });
   if (!res.ok) {
-    const text = await res.text().catch(() => "");
+    const text = await res.text().catch(() => '');
     throw new Error(
-      `Request failed: ${res.status} ${res.statusText} - ${text}`,
+      `Request failed: ${res.status} ${res.statusText} - ${text}`
     );
   }
   return res.json() as Promise<T>;
@@ -74,7 +74,7 @@ async function fetchJSON<T>(url: string, init?: RequestInit): Promise<T> {
 
 function findModuleByShortSlug(
   mods: RegistryModule[] | undefined,
-  shortSlug: string,
+  shortSlug: string
 ): RegistryModule | undefined {
   const list = Array.isArray(mods) ? mods : [];
   return (
@@ -88,7 +88,7 @@ function findModuleByShortSlug(
 function computeThresholds(
   mod: RegistryModule,
   lessonsCount: number,
-  quizCount: number,
+  quizCount: number
 ) {
   const requiredLessons =
     mod.thresholds?.requiredLessons ??
@@ -140,7 +140,7 @@ export default function QuizPage({
   const router = useRouter();
   const [currentModule, setCurrentModule] = useState<Module | null>(null);
   const [quiz, setQuiz] = useState<{ questions: ProgrammingQuestion[] } | null>(
-    null,
+    null
   );
   const [thresholds, setThresholds] = useState<{
     quizValid: boolean;
@@ -172,25 +172,25 @@ export default function QuizPage({
     async (
       moduleData: typeof currentModule,
       moduleQuiz: typeof quiz,
-      moduleThresholds: typeof thresholds,
+      moduleThresholds: typeof thresholds
     ) => {
-      console.log("=== initializeQuizData Debug ===");
-      console.log("moduleData:", moduleData);
-      console.log("moduleQuiz:", moduleQuiz);
-      console.log("moduleQuiz?.questions:", moduleQuiz?.questions);
+      console.log('=== initializeQuizData Debug ===');
+      console.log('moduleData:', moduleData);
+      console.log('moduleQuiz:', moduleQuiz);
+      console.log('moduleQuiz?.questions:', moduleQuiz?.questions);
       console.log(
-        "moduleQuiz?.questions?.length:",
-        moduleQuiz?.questions?.length,
+        'moduleQuiz?.questions?.length:',
+        moduleQuiz?.questions?.length
       );
 
       // Add null checks at the beginning
       if (!moduleData) {
-        console.log("Early return: No module data");
+        console.log('Early return: No module data');
         return;
       }
 
       if (!moduleQuiz?.questions || moduleQuiz.questions.length === 0) {
-        console.log("Early return: No quiz questions available");
+        console.log('Early return: No quiz questions available');
         return;
       }
 
@@ -201,7 +201,7 @@ export default function QuizPage({
           15;
         const allQuestions = moduleQuiz.questions;
         setPoolCount(allQuestions.length);
-        console.log("Pool count set to:", allQuestions.length);
+        console.log('Pool count set to:', allQuestions.length);
 
         // Get history from localStorage to avoid recently used questions
         const historyKey = `quiz_history_${moduleData.slug}`;
@@ -210,7 +210,7 @@ export default function QuizPage({
 
         // Filter out recently used questions
         const availableQuestions = allQuestions.filter(
-          (q: ProgrammingQuestion) => !recentQuestionIds.includes(q.id),
+          (q: ProgrammingQuestion) => !recentQuestionIds.includes(q.id)
         );
         const questionsToUse =
           availableQuestions.length >= targetQuestions
@@ -221,19 +221,19 @@ export default function QuizPage({
         const shuffled = [...questionsToUse].sort(() => Math.random() - 0.5);
         const effectiveTarget = Math.min(targetQuestions, shuffled.length);
         const selectedQuestions = shuffled.slice(0, effectiveTarget);
-        console.log("Selected questions count:", selectedQuestions.length);
+        console.log('Selected questions count:', selectedQuestions.length);
 
         // Randomize choice order for multiple choice questions AND preserve correctAnswer index
         const processedQuestions = selectedQuestions.map(
           (question: ProgrammingQuestion) => {
             if (
-              question.type === "multiple-choice" &&
+              question.type === 'multiple-choice' &&
               question.choices &&
               !question.fixedChoiceOrder
             ) {
               const originalChoices = question.choices;
               const originalCorrectIndex =
-                typeof question.correctAnswer === "number"
+                typeof question.correctAnswer === 'number'
                   ? question.correctAnswer
                   : -1;
               const originalCorrectChoice =
@@ -242,12 +242,12 @@ export default function QuizPage({
                   ? originalChoices[originalCorrectIndex]
                   : undefined;
               const shuffledChoices = [...originalChoices].sort(
-                () => Math.random() - 0.5,
+                () => Math.random() - 0.5
               );
               let newCorrectIndex = originalCorrectIndex;
               if (originalCorrectChoice !== undefined) {
                 const idx = shuffledChoices.findIndex(
-                  (c) => c === originalCorrectChoice,
+                  (c) => c === originalCorrectChoice
                 );
                 newCorrectIndex = idx >= 0 ? idx : 0; // fallback to 0 if not found
               }
@@ -258,12 +258,12 @@ export default function QuizPage({
               };
             }
             return question;
-          },
+          }
         );
         if (debugEnabled) {
           console.log(
-            "Selected IDs:",
-            processedQuestions.map((q: ProgrammingQuestion) => q.id),
+            'Selected IDs:',
+            processedQuestions.map((q: ProgrammingQuestion) => q.id)
           );
         }
 
@@ -271,11 +271,11 @@ export default function QuizPage({
         const timeLimit = Math.min(
           Math.max(
             Math.ceil(
-              Math.min(targetQuestions, selectedQuestions.length) * 1.5,
+              Math.min(targetQuestions, selectedQuestions.length) * 1.5
             ),
-            10,
+            10
           ),
-          45,
+          45
         );
         const passingScore =
           moduleData.metadata?.thresholds?.passingScore || 70;
@@ -293,35 +293,35 @@ export default function QuizPage({
           passingScore,
           instructions: [
             `You will answer ${Math.min(targetQuestions, selectedQuestions.length)} questions covering key concepts from the ${moduleData.title} module.`,
-            "Questions are randomly selected from a larger pool to keep each attempt fresh.",
-            "Read each question carefully before selecting your answer.",
-            "You can review and change your answers before submitting.",
+            'Questions are randomly selected from a larger pool to keep each attempt fresh.',
+            'Read each question carefully before selecting your answer.',
+            'You can review and change your answers before submitting.',
             `You need ${passingScore}% or higher to pass this assessment.`,
-            "The timer will start as soon as you begin the quiz.",
-            "Make sure you have a stable internet connection before starting.",
+            'The timer will start as soon as you begin the quiz.',
+            'Make sure you have a stable internet connection before starting.',
           ],
           _sessionSeed: { selectedQuestions: processedQuestions },
         };
 
-        console.log("Setting quizData:", quizOverview);
+        console.log('Setting quizData:', quizOverview);
         setQuizData(quizOverview);
 
         // Store session seed for debugging
         if (debugEnabled) {
           sessionStorage.setItem(
-            "_sessionSeed",
+            '_sessionSeed',
             JSON.stringify({
               selectedQuestions: processedQuestions,
               timestamp: Date.now(),
-            }),
+            })
           );
         }
       } catch (err) {
-        console.error("Error preparing quiz data:", err);
-        setError("Failed to prepare quiz");
+        console.error('Error preparing quiz data:', err);
+        setError('Failed to prepare quiz');
       }
     },
-    [debugEnabled],
+    [debugEnabled]
   );
 
   // Check for prefetched quiz data
@@ -349,7 +349,7 @@ export default function QuizPage({
         // Use cache if less than 5 minutes old
         if (Date.now() - timestamp < 5 * 60 * 1000) {
           console.log(
-            `[QuizPage] Using session prefetched quiz for ${moduleSlug}`,
+            `[QuizPage] Using session prefetched quiz for ${moduleSlug}`
           );
           return true;
         }
@@ -359,7 +359,7 @@ export default function QuizPage({
     } catch (error) {
       console.error(
         `[QuizPage] Error checking prefetched quiz for ${moduleSlug}:`,
-        error,
+        error
       );
       return false;
     }
@@ -370,17 +370,17 @@ export default function QuizPage({
       try {
         const resolvedParams = await params;
         const slug = resolvedParams.shortSlug;
-        console.log("=== Quiz Page Debug ===");
-        console.log("Short slug:", slug);
+        console.log('=== Quiz Page Debug ===');
+        console.log('Short slug:', slug);
         // Fetch registry and locate the module by shortSlug
         const registry = await fetchJSON<RegistryResponse>(
-          "/api/content/registry",
+          '/api/content/registry'
         );
         const mods = Array.isArray(registry?.modules) ? registry.modules : [];
         const moduleDataRaw = findModuleByShortSlug(mods, slug);
-        console.log("Module data:", moduleDataRaw);
+        console.log('Module data:', moduleDataRaw);
         if (!moduleDataRaw) {
-          setError("Module not found");
+          setError('Module not found');
           return;
         }
         // Cast to Module for layout compatibility
@@ -390,14 +390,14 @@ export default function QuizPage({
         // Check if quiz is prefetched before loading
         const isPrefetched = await checkPrefetchedQuiz(moduleDataRaw.slug);
         console.log(
-          `Quiz for ${moduleDataRaw.slug} is ${isPrefetched ? "prefetched" : "not prefetched"}`,
+          `Quiz for ${moduleDataRaw.slug} is ${isPrefetched ? 'prefetched' : 'not prefetched'}`
         );
 
         // Fetch quiz questions
         const moduleQuiz = await fetchJSON<QuizResponse>(
-          `/api/content/quizzes/${moduleDataRaw.slug}`,
+          `/api/content/quizzes/${moduleDataRaw.slug}`
         );
-        console.log("Module quiz:", moduleQuiz);
+        console.log('Module quiz:', moduleQuiz);
         setQuiz(moduleQuiz);
 
         // Fetch lessons to compute thresholds (robust to array or { lessons: [] } and HTTP failures)
@@ -405,7 +405,7 @@ export default function QuizPage({
         try {
           const lessonsResp = await fetch(
             `/api/content/lessons/${moduleDataRaw.slug}`,
-            { cache: "no-store" },
+            { cache: 'no-store' }
           );
           if (lessonsResp.ok) {
             const data = await lessonsResp.json();
@@ -415,13 +415,13 @@ export default function QuizPage({
                 ? (data as { lessons?: unknown[] }).lessons?.length || 0
                 : 0;
           } else {
-            const text = await lessonsResp.text().catch(() => "");
+            const text = await lessonsResp.text().catch(() => '');
             console.warn(
-              `Lessons fetch failed: ${lessonsResp.status} ${lessonsResp.statusText} - ${text}`,
+              `Lessons fetch failed: ${lessonsResp.status} ${lessonsResp.statusText} - ${text}`
             );
           }
         } catch (e) {
-          console.warn("Lessons fetch error:", e);
+          console.warn('Lessons fetch error:', e);
         }
         const quizCount = Array.isArray(moduleQuiz?.questions)
           ? moduleQuiz.questions.length
@@ -429,9 +429,9 @@ export default function QuizPage({
         const computedThresholds = computeThresholds(
           moduleDataRaw,
           lessonsCount,
-          quizCount,
+          quizCount
         );
-        console.log("Module thresholds:", computedThresholds);
+        console.log('Module thresholds:', computedThresholds);
         setThresholds({
           quizValid: computedThresholds.quizValid,
           lessonsValid: computedThresholds.lessonsValid,
@@ -444,8 +444,8 @@ export default function QuizPage({
         const totalQuestions = Array.isArray(moduleQuiz?.questions)
           ? moduleQuiz.questions.length
           : 0;
-        if (totalQuestions === 0 && process.env.NODE_ENV === "production") {
-          setError("Quiz not available");
+        if (totalQuestions === 0 && process.env.NODE_ENV === 'production') {
+          setError('Quiz not available');
           return;
         }
 
@@ -467,8 +467,8 @@ export default function QuizPage({
           quiz: computedThresholds.quiz,
         });
       } catch (err) {
-        console.error("Error initializing quiz page:", err);
-        setError("Failed to load quiz data");
+        console.error('Error initializing quiz page:', err);
+        setError('Failed to load quiz data');
       } finally {
         setLoading(false);
       }
@@ -479,9 +479,9 @@ export default function QuizPage({
 
   // Check prefetch status periodically
   useEffect(() => {
-    if (typeof window !== "undefined") {
+    if (typeof window !== 'undefined') {
       // Import the quizPrefetchService dynamically
-      import("@/lib/quizPrefetchService").then(({ quizPrefetchService }) => {
+      import('@/lib/quizPrefetchService').then(({ quizPrefetchService }) => {
         // Check status immediately
         setPrefetchStatus(quizPrefetchService.getPrefetchStatus());
 
@@ -505,7 +505,7 @@ export default function QuizPage({
   }, []);
 
   useEffect(() => {
-    setDebugEnabled(localStorage.getItem("debug") === "true");
+    setDebugEnabled(localStorage.getItem('debug') === 'true');
   }, []);
 
   const handleStartQuiz = async () => {
@@ -515,7 +515,7 @@ export default function QuizPage({
       !Array.isArray(quiz.questions) ||
       quiz.questions.length === 0
     ) {
-      console.error("Quiz not ready");
+      console.error('Quiz not ready');
       return;
     }
 
@@ -525,7 +525,7 @@ export default function QuizPage({
         ?.selectedQuestions ?? []) as ProgrammingQuestion[];
       if (!selectedQuestions.length) {
         const shuffledPool = [...quiz.questions].sort(
-          () => Math.random() - 0.5,
+          () => Math.random() - 0.5
         );
         const target = Math.min(quizLength, shuffledPool.length);
         const pick = shuffledPool.slice(0, target);
@@ -533,12 +533,12 @@ export default function QuizPage({
           const originalChoices = (q.choices || []).map((c) => String(c));
           // Determine the correct choice from either index or text
           let originalCorrectIndex = -1;
-          if (typeof q.correctAnswer === "number") {
+          if (typeof q.correctAnswer === 'number') {
             originalCorrectIndex = q.correctAnswer;
-          } else if (typeof q.correctAnswer === "string") {
+          } else if (typeof q.correctAnswer === 'string') {
             const correctText = String(q.correctAnswer);
             originalCorrectIndex = originalChoices.findIndex(
-              (c) => c === correctText,
+              (c) => c === correctText
             );
           }
           const originalCorrectChoice =
@@ -547,12 +547,12 @@ export default function QuizPage({
               ? originalChoices[originalCorrectIndex]
               : undefined;
           const shuffledChoices = [...originalChoices].sort(
-            () => Math.random() - 0.5,
+            () => Math.random() - 0.5
           );
           let newCorrectIndex = 0;
           if (originalCorrectChoice !== undefined) {
             const idx = shuffledChoices.findIndex(
-              (c) => c === originalCorrectChoice,
+              (c) => c === originalCorrectChoice
             );
             newCorrectIndex = idx >= 0 ? idx : 0;
           }
@@ -584,19 +584,19 @@ export default function QuizPage({
       const historyData = localStorage.getItem(historyKey);
       const currentHistory = historyData ? JSON.parse(historyData) : [];
       const newQuestionIds = selectedQuestions.map(
-        (q: ProgrammingQuestion) => q.id,
+        (q: ProgrammingQuestion) => q.id
       );
       const updatedHistory = [...newQuestionIds, ...currentHistory].slice(
         0,
-        200,
+        200
       );
       localStorage.setItem(historyKey, JSON.stringify(updatedHistory));
 
       // Navigate to first question (our questions are 1-indexed in routes)
       router.push(`/${currentModule.slug}/quiz/question/1`);
     } catch (err) {
-      console.error("Error starting quiz:", err);
-      setError("Failed to start quiz");
+      console.error('Error starting quiz:', err);
+      setError('Failed to start quiz');
     }
   };
 
@@ -615,7 +615,7 @@ export default function QuizPage({
         <div className="text-center">
           <div className="text-6xl mb-4">❌</div>
           <h2 className="text-2xl font-semibold text-fg mb-4">
-            {error || "Module not found"}
+            {error || 'Module not found'}
           </h2>
           <Link
             href="/"
@@ -690,7 +690,7 @@ export default function QuizPage({
               {/* Quiz Length combined with pool size */}
               <div className="bg-surface-alt p-4 rounded-lg">
                 <div className="text-2xl font-bold text-primary">
-                  {derivedTotal}{" "}
+                  {derivedTotal}{' '}
                   <span className="text-sm font-medium text-muted">
                     questions
                   </span>
@@ -765,12 +765,12 @@ export default function QuizPage({
               {(
                 quizData?.instructions ?? [
                   `You will answer ${derivedTotal} questions covering key concepts from the ${currentModule.title} module.`,
-                  "Questions are randomly selected from a larger pool to keep each attempt fresh.",
-                  "Read each question carefully before selecting your answer.",
-                  "You can review and change your answers before submitting.",
+                  'Questions are randomly selected from a larger pool to keep each attempt fresh.',
+                  'Read each question carefully before selecting your answer.',
+                  'You can review and change your answers before submitting.',
                   `You need ${derivedPassingScore}% or higher to pass this assessment.`,
-                  "The timer will start as soon as you begin the quiz.",
-                  "Make sure you have a stable internet connection before starting.",
+                  'The timer will start as soon as you begin the quiz.',
+                  'Make sure you have a stable internet connection before starting.',
                 ]
               ).map((instruction: string, index: number) => (
                 <li key={index} className="flex items-start gap-3">

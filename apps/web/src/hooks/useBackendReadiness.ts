@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect } from 'react';
 
 interface HealthResponse {
   success: boolean;
@@ -29,8 +29,8 @@ export function useBackendReadiness(options?: { enabled?: boolean }) {
         }
 
         // Always use same-origin health proxy to avoid CORS and env drift
-        const url = "/health";
-        const response = await fetch(url, { cache: "no-store" });
+        const url = '/health';
+        const response = await fetch(url, { cache: 'no-store' });
 
         if (response.ok) {
           // Health endpoint returns a simple success payload
@@ -62,7 +62,7 @@ export function useBackendReadiness(options?: { enabled?: boolean }) {
       } catch (err) {
         if (!isCancelled) {
           const errorMessage =
-            err instanceof Error ? err.message : "Unknown error";
+            err instanceof Error ? err.message : 'Unknown error';
           setError(`Network error: ${errorMessage}`);
           if (retryCount < maxRetries) {
             setTimeout(() => {

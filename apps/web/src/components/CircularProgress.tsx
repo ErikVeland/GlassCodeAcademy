@@ -1,6 +1,6 @@
-"use client";
+'use client';
 
-import React from "react";
+import React from 'react';
 
 type CircularProgressProps = {
   percent: number;
@@ -15,9 +15,9 @@ export const CircularProgress: React.FC<CircularProgressProps> = ({
   percent,
   size = 64,
   stroke = 6,
-  color = "#3b82f6",
-  trackColor = "#e5e7eb",
-  className = "",
+  color = '#3b82f6',
+  trackColor = '#e5e7eb',
+  className = '',
 }) => {
   const radius = size / 2;
   const normalizedRadius = radius - stroke / 2;
@@ -48,7 +48,7 @@ export const CircularProgress: React.FC<CircularProgressProps> = ({
         strokeWidth={stroke}
         strokeLinecap="round"
         strokeDasharray={`${circumference} ${circumference}`}
-        style={{ strokeDashoffset, transition: "stroke-dashoffset 0.5s ease" }}
+        style={{ strokeDashoffset, transition: 'stroke-dashoffset 0.5s ease' }}
         r={normalizedRadius}
         cx={radius}
         cy={radius}

@@ -1,11 +1,11 @@
-"use client";
+'use client';
 
-import React, { useState, useRef, useEffect } from "react";
-import Image from "next/image";
-import Link from "next/link";
-import { useProfile } from "./ProfileProvider";
-import { usePathname } from "next/navigation";
-import { useSession, signOut } from "next-auth/react";
+import React, { useState, useRef, useEffect } from 'react';
+import Image from 'next/image';
+import Link from 'next/link';
+import { useProfile } from './ProfileProvider';
+import { usePathname } from 'next/navigation';
+import { useSession, signOut } from 'next-auth/react';
 
 export default function ProfileMenu() {
   const { data: session } = useSession();
@@ -21,8 +21,8 @@ export default function ProfileMenu() {
         setOpen(false);
       }
     };
-    document.addEventListener("click", handleClick);
-    return () => document.removeEventListener("click", handleClick);
+    document.addEventListener('click', handleClick);
+    return () => document.removeEventListener('click', handleClick);
   }, []);
 
   useEffect(() => {
@@ -31,7 +31,7 @@ export default function ProfileMenu() {
 
   useEffect(() => {
     try {
-      const raw = localStorage.getItem("guestUser");
+      const raw = localStorage.getItem('guestUser');
       if (raw) {
         const parsed = JSON.parse(raw);
         if (parsed?.name) setGuestName(String(parsed.name));
@@ -48,16 +48,16 @@ export default function ProfileMenu() {
   const sizePx = 36;
 
   const presetAvatars: Record<string, string> = {
-    cat: "🐱",
-    dog: "🐶",
-    rocket: "🚀",
-    book: "📘",
-    code: "💻",
+    cat: '🐱',
+    dog: '🐶',
+    rocket: '🚀',
+    book: '📘',
+    code: '💻',
   };
 
   const renderAvatar = () => {
     const containerClass =
-      "rounded-full overflow-hidden flex items-center justify-center bg-surface-alt aspect-square";
+      'rounded-full overflow-hidden flex items-center justify-center bg-surface-alt aspect-square';
     const containerStyle = { width: sizePx, height: sizePx } as const;
     if (profile.avatarUrl) {
       return (
@@ -76,7 +76,7 @@ export default function ProfileMenu() {
     const emoji =
       profile.avatarPresetId && presetAvatars[profile.avatarPresetId]
         ? presetAvatars[profile.avatarPresetId]
-        : "👤";
+        : '👤';
     return (
       <div className={containerClass} style={containerStyle}>
         <span aria-hidden className="text-xl">
@@ -153,10 +153,10 @@ export default function ProfileMenu() {
                     setOpen(false);
                     try {
                       if (session?.user) {
-                        await signOut({ callbackUrl: "/" });
+                        await signOut({ callbackUrl: '/' });
                       } else {
-                        localStorage.removeItem("guestUser");
-                        window.location.href = "/";
+                        localStorage.removeItem('guestUser');
+                        window.location.href = '/';
                       }
                     } catch {
                       // ignore

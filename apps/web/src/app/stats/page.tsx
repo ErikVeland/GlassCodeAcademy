@@ -1,11 +1,11 @@
-"use client";
+'use client';
 
-import { useEffect } from "react";
-import { useAppStats } from "@/hooks/useAppStats";
-import StatCard from "@/components/stats/StatCard";
-import PieChart from "@/components/stats/PieChart";
-import AppProgressTracker from "@/components/AppProgressTracker";
-import Link from "next/link";
+import { useEffect } from 'react';
+import { useAppStats } from '@/hooks/useAppStats';
+import StatCard from '@/components/stats/StatCard';
+import PieChart from '@/components/stats/PieChart';
+import AppProgressTracker from '@/components/AppProgressTracker';
+import Link from 'next/link';
 import {
   BookOpenIcon,
   QuestionMarkCircleIcon,
@@ -24,11 +24,11 @@ import {
   ChatBubbleLeftRightIcon,
   BellIcon,
   ArrowsRightLeftIcon,
-} from "@heroicons/react/24/outline";
-import { KeyIcon } from "@heroicons/react/24/outline";
-import LoadingScreen from "@/components/LoadingScreen";
-import "@/styles/liquid-glass.scss";
-import { capitalizeModuleName } from "@/lib/stats/formatters";
+} from '@heroicons/react/24/outline';
+import { KeyIcon } from '@heroicons/react/24/outline';
+import LoadingScreen from '@/components/LoadingScreen';
+import '@/styles/liquid-glass.scss';
+import { capitalizeModuleName } from '@/lib/stats/formatters';
 
 // Use shared formatter for consistent capitalization across the app
 
@@ -37,7 +37,7 @@ export default function StatsPage() {
 
   // Set document title dynamically since this is a client component
   useEffect(() => {
-    document.title = "GlassStats - Platform Statistics | GlassCode Academy";
+    document.title = 'GlassStats - Platform Statistics | GlassCode Academy';
   }, []);
 
   if (stats.isLoading) {
@@ -113,19 +113,19 @@ export default function StatsPage() {
               <PieChart
                 data={[
                   {
-                    label: "Beginner",
+                    label: 'Beginner',
                     value: stats.difficultyBreakdown.beginner,
-                    color: "#10B981",
+                    color: '#10B981',
                   },
                   {
-                    label: "Intermediate",
+                    label: 'Intermediate',
                     value: stats.difficultyBreakdown.intermediate,
-                    color: "#F59E0B",
+                    color: '#F59E0B',
                   },
                   {
-                    label: "Advanced",
+                    label: 'Advanced',
                     value: stats.difficultyBreakdown.advanced,
-                    color: "#EF4444",
+                    color: '#EF4444',
                   },
                 ]}
                 size={240}
@@ -201,15 +201,15 @@ export default function StatsPage() {
             {stats.moduleBreakdown.map((module, index) => {
               const moduleSlug = module.name
                 .toLowerCase()
-                .replace(/\s+/g, "-")
-                .replace(/[^a-z0-9-]/g, "");
+                .replace(/\s+/g, '-')
+                .replace(/[^a-z0-9-]/g, '');
               return (
                 <div
                   key={`${module.name}-${index}`} // Using a more unique key
                   className="p-4 rounded-xl border border-border hover:opacity-90 transition-all duration-200 hover:shadow-lg hover:scale-105 cursor-pointer bg-surface-alt relative group"
                   style={{
                     borderLeftColor: module.color,
-                    borderLeftWidth: "4px",
+                    borderLeftWidth: '4px',
                   }}
                 >
                   {/* Direct Link Button */}

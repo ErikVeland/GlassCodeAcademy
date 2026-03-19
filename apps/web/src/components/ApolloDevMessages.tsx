@@ -1,18 +1,18 @@
-"use client";
+'use client';
 
-import { useEffect } from "react";
+import { useEffect } from 'react';
 
 export default function ApolloDevMessages() {
   useEffect(() => {
-    const enabled = process.env.NEXT_PUBLIC_ENABLE_APOLLO_DEV === "true";
-    if (enabled && process.env.NODE_ENV !== "production") {
+    const enabled = process.env.NEXT_PUBLIC_ENABLE_APOLLO_DEV === 'true';
+    if (enabled && process.env.NODE_ENV !== 'production') {
       (async () => {
         try {
           type ApolloDevModule = {
             loadDevMessages?: () => void;
             loadErrorMessages?: () => void;
           };
-          const mod = (await import("@apollo/client/dev")) as ApolloDevModule;
+          const mod = (await import('@apollo/client/dev')) as ApolloDevModule;
           const { loadDevMessages, loadErrorMessages } = mod;
           try {
             loadDevMessages?.();

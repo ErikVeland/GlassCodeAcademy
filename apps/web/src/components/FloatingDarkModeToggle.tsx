@@ -1,13 +1,13 @@
-"use client";
+'use client';
 
-import { useEffect } from "react";
-import { useDarkMode } from "./DarkModeContext";
+import { useEffect } from 'react';
+import { useDarkMode } from './DarkModeContext';
 import {
   SunIcon,
   MoonIcon,
   ComputerDesktopIcon,
   DevicePhoneMobileIcon,
-} from "@heroicons/react/24/solid";
+} from '@heroicons/react/24/solid';
 
 export default function FloatingDarkModeToggle() {
   const { theme, isDark, cycleTheme } = useDarkMode();
@@ -20,11 +20,11 @@ export default function FloatingDarkModeToggle() {
   }, []);
 
   const label =
-    theme === "system"
-      ? "Theme: System (auto)"
-      : theme === "dark"
-        ? "Theme: Dark"
-        : "Theme: Light";
+    theme === 'system'
+      ? 'Theme: System (auto)'
+      : theme === 'dark'
+        ? 'Theme: Dark'
+        : 'Theme: Light';
 
   return (
     <button
@@ -34,7 +34,7 @@ export default function FloatingDarkModeToggle() {
       data-testid="theme-toggle"
       className="fixed bottom-5 right-5 z-[1000] rounded-full shadow-lg bg-surface-alt text-fg hover:bg-surface transition-colors duration-160 ease-out focus:outline-none focus:ring-2 ring-focus w-12 h-12 inline-flex items-center justify-center"
     >
-      {theme === "system" ? (
+      {theme === 'system' ? (
         // System icon when in auto/system mode
         // Show phone icon on mobile viewports, desktop icon on larger screens
         <span className="inline-flex items-center justify-center leading-none align-middle">

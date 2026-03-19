@@ -22,13 +22,13 @@ async function main() {
   try {
     // NODE_ENV is often unset in bare npm scripts; warn instead of failing
     if (!process.env.NODE_ENV) {
-      warn("NODE_ENV is not set; assuming development");
+      warn('NODE_ENV is not set; assuming development');
     } else {
       ok(`NODE_ENV=${process.env.NODE_ENV}`);
     }
 
     // Optional NextAuth vars – warn if missing but do not fail
-    const nextAuthUrl = process.env.NEXTAUTH_URL || "http://localhost:3003";
+    const nextAuthUrl = process.env.NEXTAUTH_URL || 'http://localhost:3003';
     if (!process.env.NEXTAUTH_URL) {
       warn(`NEXTAUTH_URL not set; defaulting to ${nextAuthUrl}`);
     } else {
@@ -36,19 +36,19 @@ async function main() {
     }
 
     if (!process.env.NEXTAUTH_SECRET) {
-      warn("NEXTAUTH_SECRET not set (OK for local dev, required in prod)");
+      warn('NEXTAUTH_SECRET not set (OK for local dev, required in prod)');
     } else {
-      ok("NEXTAUTH_SECRET is set");
+      ok('NEXTAUTH_SECRET is set');
     }
 
     // Optional public site URL
     if (process.env.NEXT_PUBLIC_SITE_URL) {
       ok(`NEXT_PUBLIC_SITE_URL=${process.env.NEXT_PUBLIC_SITE_URL}`);
     } else {
-      warn("NEXT_PUBLIC_SITE_URL not set; using defaults in app code");
+      warn('NEXT_PUBLIC_SITE_URL not set; using defaults in app code');
     }
 
-    ok("Environment sanity check passed");
+    ok('Environment sanity check passed');
   } catch (err) {
     fail(`Unexpected error: ${err?.message || err}`);
   }

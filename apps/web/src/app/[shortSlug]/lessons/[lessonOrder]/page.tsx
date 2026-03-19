@@ -1,11 +1,12 @@
-import Link from "next/link";
+import Link from 'next/link';
 import {
   contentRegistry,
   getLessonGroupForLesson,
   getNextLessonGroup,
-} from "@/lib/contentRegistry";
-import { Metadata } from "next";
-import BreadcrumbNavigation from "@/components/BreadcrumbNavigation";
+} from '@/lib/contentRegistry';
+import { Metadata } from 'next';
+import BreadcrumbNavigation from '@/components/BreadcrumbNavigation';
+import MarkdownContent from '@/components/MarkdownContent';
 
 interface LessonPageProps {
   params: Promise<{
@@ -18,7 +19,7 @@ interface LessonPageProps {
 interface Pitfall {
   mistake?: string;
   solution?: string;
-  severity?: "high" | "medium" | "low";
+  severity?: 'high' | 'medium' | 'low';
 }
 
 interface Exercise {
@@ -27,19 +28,19 @@ interface Exercise {
   checkpoints?: string[];
 }
 
-export const dynamic = "force-dynamic";
+export const dynamic = 'force-dynamic';
 
 export async function generateStaticParams(): Promise<
   { shortSlug: string; lessonOrder: string }[]
 > {
-  const enableSSG = process.env.ENABLE_BUILD_SSG === "true";
-  const isDb = (process.env.GC_CONTENT_MODE || "").toLowerCase() === "db";
+  const enableSSG = process.env.ENABLE_BUILD_SSG === 'true';
+  const isDb = (process.env.GC_CONTENT_MODE || '').toLowerCase() === 'db';
   if (!enableSSG || isDb) {
     return [];
   }
   try {
     const modules = await contentRegistry.getModules();
-    const activeModules = modules.filter((m) => m.status === "active");
+    const activeModules = modules.filter((m) => m.status === 'active');
     const params: { shortSlug: string; lessonOrder: string }[] = [];
     for (const m of activeModules) {
       const shortSlug =
@@ -50,7 +51,7 @@ export async function generateStaticParams(): Promise<
     }
     return params;
   } catch (error) {
-    console.warn("Failed to load modules for lesson static generation:", error);
+    console.warn('Failed to load modules for lesson static generation:', error);
     return [];
   }
 }
@@ -62,11 +63,10 @@ export async function generateMetadata({
   const currentModule =
     (await contentRegistry.getModule(shortSlug)) ||
     (await contentRegistry.getModule(
-      (await contentRegistry.getModuleSlugFromShortSlug(shortSlug)) ||
-        shortSlug,
+      (await contentRegistry.getModuleSlugFromShortSlug(shortSlug)) || shortSlug
     ));
 
-  const fallbackTitle = "Lesson";
+  const fallbackTitle = 'Lesson';
   if (!currentModule) {
     return {
       title: `${fallbackTitle} - ${shortSlug}`,
@@ -88,7 +88,7 @@ export async function generateMetadata({
     description:
       lesson.intro?.substring(0, 160) ||
       `Learn ${lesson.title} in the ${currentModule.title} module.`,
-    keywords: lesson.tags?.join(", ") || currentModule.technologies.join(", "),
+    keywords: lesson.tags?.join(', ') || currentModule.technologies.join(', '),
   };
 }
 
@@ -109,21 +109,21 @@ export default async function LessonPage({ params }: LessonPageProps) {
     currentModule = {
       slug: mappedSlug,
       title: shortSlug
-        .replace(/-/g, " ")
+        .replace(/-/g, ' ')
         .replace(/\b\w/g, (c) => c.toUpperCase()),
-      description: "",
-      tier: "",
-      track: "",
+      description: '',
+      tier: '',
+      track: '',
       order: 1,
-      icon: "",
-      difficulty: "beginner",
+      icon: '',
+      difficulty: 'beginner',
       estimatedHours: 0,
-      category: "",
+      category: '',
       technologies: [],
       prerequisites: [],
       thresholds: { requiredLessons: 0, requiredQuestions: 0 },
       legacySlugs: [],
-      status: "active",
+      status: 'active',
       routes: {
         overview: `/${shortSlug}`,
         lessons: `/${shortSlug}/lessons`,
@@ -136,7 +136,7 @@ export default async function LessonPage({ params }: LessonPageProps) {
   let lessons = await contentRegistry.getModuleLessons(currentModule.slug);
   if (
     (!lessons || lessons.length === 0) &&
-    mappedSlug === "programming-fundamentals"
+    mappedSlug === 'programming-fundamentals'
   ) {
     lessons = await contentRegistry.getProgrammingLessons();
   }
@@ -148,10 +148,10 @@ export default async function LessonPage({ params }: LessonPageProps) {
   if (!lesson) {
     lesson = {
       order: lessonIndex + 1,
-      title: "Lesson temporarily unavailable",
-      intro: "This lesson content is still loading. Please try again shortly.",
+      title: 'Lesson temporarily unavailable',
+      intro: 'This lesson content is still loading. Please try again shortly.',
       objectives: [],
-      tags: ["fallback"],
+      tags: ['fallback'],
     };
   }
 
@@ -159,12 +159,12 @@ export default async function LessonPage({ params }: LessonPageProps) {
   const currentGroupInfo = getLessonGroupForLesson(
     currentModule.slug,
     lessons || [],
-    lessonIndex + 1,
+    lessonIndex + 1
   );
   const nextGroup = getNextLessonGroup(
     currentModule.slug,
     lessons || [],
-    lessonIndex + 1,
+    lessonIndex + 1
   );
 
   // Determine if this is the last lesson in its group
@@ -235,15 +235,7 @@ export default async function LessonPage({ params }: LessonPageProps) {
               <h2 className="text-2xl font-semibold text-fg mb-4">
                 Introduction
               </h2>
-              <div className="prose prose-lg dark:prose-invert max-w-none">
-                {lesson.intro
-                  .split("\n\n")
-                  .map((paragraph: string, index: number) => (
-                    <p key={index} className="text-fg mb-4">
-                      {paragraph}
-                    </p>
-                  ))}
-              </div>
+              <MarkdownContent content={lesson.intro} />
             </section>
           )}
 
@@ -263,7 +255,7 @@ export default async function LessonPage({ params }: LessonPageProps) {
               {lesson.code.explanation && (
                 <div className="text-fg">
                   <h3 className="font-semibold mb-2">Explanation:</h3>
-                  <p>{lesson.code.explanation}</p>
+                  <MarkdownContent content={lesson.code.explanation} />
                 </div>
               )}
             </section>
@@ -289,9 +281,9 @@ export default async function LessonPage({ params }: LessonPageProps) {
                           {pitfall.mistake || `Pitfall ${index + 1}`}
                         </h3>
                         <p className="text-muted mb-2">
-                          <strong>Solution:</strong>{" "}
+                          <strong>Solution:</strong>{' '}
                           {pitfall.solution ||
-                            "Review best practices and documentation."}
+                            'Review best practices and documentation.'}
                         </p>
                         {pitfall.severity && (
                           <span
@@ -326,9 +318,10 @@ export default async function LessonPage({ params }: LessonPageProps) {
                     </h3>
 
                     {exercise.description && (
-                      <p className="text-blue-800 dark:text-blue-200 mb-4">
-                        {exercise.description}
-                      </p>
+                      <MarkdownContent
+                        content={exercise.description}
+                        className="text-blue-800 dark:text-blue-200 mb-4"
+                      />
                     )}
 
                     {exercise.checkpoints &&
@@ -349,7 +342,7 @@ export default async function LessonPage({ params }: LessonPageProps) {
                                     {checkpoint}
                                   </span>
                                 </li>
-                              ),
+                              )
                             )}
                           </ul>
                         </div>
@@ -367,8 +360,8 @@ export default async function LessonPage({ params }: LessonPageProps) {
             {isFirstInGroup ? (
               <Link
                 href={
-                  currentModule.slug === "programming-fundamentals"
-                    ? "/programming/lessons"
+                  currentModule.slug === 'programming-fundamentals'
+                    ? '/programming/lessons'
                     : currentModule.routes.lessons
                 }
                 className="inline-flex items-center px-4 py-2 text-fg hover:text-fg transition-colors"
@@ -378,7 +371,7 @@ export default async function LessonPage({ params }: LessonPageProps) {
             ) : (
               <Link
                 href={
-                  currentModule.slug === "programming-fundamentals"
+                  currentModule.slug === 'programming-fundamentals'
                     ? `/programming/lessons/${lessonIndex}`
                     : `${currentModule.routes.lessons}/${lessonIndex}`
                 } // Previous lesson
@@ -394,7 +387,7 @@ export default async function LessonPage({ params }: LessonPageProps) {
               nextGroup ? (
                 <Link
                   href={
-                    currentModule.slug === "programming-fundamentals"
+                    currentModule.slug === 'programming-fundamentals'
                       ? `/programming/lessons/${lessons.indexOf(nextGroup.lessons[0]) + 1}`
                       : `${currentModule.routes.lessons}/${lessons.indexOf(nextGroup.lessons[0]) + 1}`
                   }
@@ -406,8 +399,8 @@ export default async function LessonPage({ params }: LessonPageProps) {
               ) : (
                 <Link
                   href={
-                    currentModule.slug === "programming-fundamentals"
-                      ? "/programming/quiz"
+                    currentModule.slug === 'programming-fundamentals'
+                      ? '/programming/quiz'
                       : currentModule.routes.quiz
                   }
                   className="inline-flex items-center px-4 py-2 bg-success text-primary-fg rounded-lg hover:opacity-90 transition-colors"
@@ -419,7 +412,7 @@ export default async function LessonPage({ params }: LessonPageProps) {
             ) : (
               <Link
                 href={
-                  currentModule.slug === "programming-fundamentals"
+                  currentModule.slug === 'programming-fundamentals'
                     ? `/programming/lessons/${lessonIndex + 2}`
                     : `${currentModule.routes.lessons}/${lessonIndex + 2}`
                 } // Next lesson

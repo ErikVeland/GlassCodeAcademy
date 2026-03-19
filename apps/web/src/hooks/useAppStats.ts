@@ -1,24 +1,24 @@
-"use client";
+'use client';
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback } from 'react';
 
-import { getGraphQLEndpoint } from "@/lib/urlUtils";
+import { getGraphQLEndpoint } from '@/lib/urlUtils';
 import {
   AppStats,
   BaseStats,
   RegistryModule,
   RegistryResponse,
-} from "@/lib/stats/types";
-import { moduleColors, toShortSlug } from "@/lib/stats/constants";
+} from '@/lib/stats/types';
+import { moduleColors, toShortSlug } from '@/lib/stats/constants';
 
 // Build stats from local content APIs (registry, lessons, quizzes)
 async function buildStatsFromRegistryApi(): Promise<BaseStats> {
-  const regRes = await fetch("/api/content/registry", { cache: "no-store" });
+  const regRes = await fetch('/api/content/registry', { cache: 'no-store' });
   if (!regRes.ok) throw new Error(`Registry fetch failed: ${regRes.status}`);
   const regJson: unknown = await regRes.json();
   const modules: RegistryModule[] =
     regJson &&
-    typeof regJson === "object" &&
+    typeof regJson === 'object' &&
     Array.isArray((regJson as RegistryResponse).modules)
       ? (regJson as RegistryResponse).modules
       : [];
@@ -59,11 +59,11 @@ async function buildStatsFromRegistryApi(): Promise<BaseStats> {
       try {
         const [lessonsRes, quizRes] = await Promise.all([
           fetch(`/api/content/lessons/${shortSlug}`, {
-            cache: "no-store",
+            cache: 'no-store',
             signal: lessonsController.signal,
           }),
           fetch(`/api/content/quizzes/${shortSlug}`, {
-            cache: "no-store",
+            cache: 'no-store',
             signal: quizController.signal,
           }),
         ]);
@@ -78,7 +78,7 @@ async function buildStatsFromRegistryApi(): Promise<BaseStats> {
         if (quizRes.ok) {
           const qj: unknown = await quizRes.json();
           const qs: unknown =
-            qj && typeof qj === "object"
+            qj && typeof qj === 'object'
               ? (qj as { questions?: unknown }).questions
               : null;
           questions = Array.isArray(qs)
@@ -98,18 +98,18 @@ async function buildStatsFromRegistryApi(): Promise<BaseStats> {
         color: moduleColors[i % moduleColors.length],
       });
 
-      const tierKey = (mod.tier || "").toLowerCase();
+      const tierKey = (mod.tier || '').toLowerCase();
       if (tierKey && tierKey in tierBreakdown) {
         (tierBreakdown as Record<string, number>)[tierKey] +=
           lessonCount + questionCount;
       }
 
-      const moduleDifficulty = (mod.difficulty || "").toLowerCase();
-      if (moduleDifficulty === "beginner")
+      const moduleDifficulty = (mod.difficulty || '').toLowerCase();
+      if (moduleDifficulty === 'beginner')
         difficultyBreakdown.beginner += lessonCount;
-      else if (moduleDifficulty === "intermediate")
+      else if (moduleDifficulty === 'intermediate')
         difficultyBreakdown.intermediate += lessonCount;
-      else if (moduleDifficulty === "advanced")
+      else if (moduleDifficulty === 'advanced')
         difficultyBreakdown.advanced += lessonCount;
 
       lessons.forEach((l) => {
@@ -126,7 +126,7 @@ async function buildStatsFromRegistryApi(): Promise<BaseStats> {
 
       totalLessons += lessonCount;
       totalQuestions += questionCount;
-    }),
+    })
   );
 
   const averageCompletionTime =
@@ -191,141 +191,141 @@ export function useAppStats(): AppStats {
         // Lessons
         {
           query:
-            "{ dotNetLessons { id title estimatedMinutes difficulty topic } }",
+            '{ dotNetLessons { id title estimatedMinutes difficulty topic } }',
         },
         {
           query:
-            "{ graphQLLessons { id title estimatedMinutes difficulty topic } }",
+            '{ graphQLLessons { id title estimatedMinutes difficulty topic } }',
         },
         {
           query:
-            "{ laravelLessons { id title estimatedMinutes difficulty topic } }",
+            '{ laravelLessons { id title estimatedMinutes difficulty topic } }',
         },
         {
           query:
-            "{ reactLessons { id title estimatedMinutes difficulty topic } }",
+            '{ reactLessons { id title estimatedMinutes difficulty topic } }',
         },
         {
           query:
-            "{ tailwindLessons { id title estimatedMinutes difficulty topic } }",
+            '{ tailwindLessons { id title estimatedMinutes difficulty topic } }',
         },
         {
           query:
-            "{ nodeLessons { id title estimatedMinutes difficulty topic } }",
+            '{ nodeLessons { id title estimatedMinutes difficulty topic } }',
         },
         {
           query:
-            "{ sassLessons { id title estimatedMinutes difficulty topic } }",
+            '{ sassLessons { id title estimatedMinutes difficulty topic } }',
         },
         {
           query:
-            "{ vueLessons { id title estimatedMinutes difficulty topic } }",
+            '{ vueLessons { id title estimatedMinutes difficulty topic } }',
         },
         {
           query:
-            "{ typescriptLessons { id title estimatedMinutes difficulty topic } }",
+            '{ typescriptLessons { id title estimatedMinutes difficulty topic } }',
         },
         {
           query:
-            "{ databaseLessons { id title estimatedMinutes difficulty topic } }",
+            '{ databaseLessons { id title estimatedMinutes difficulty topic } }',
         },
         {
           query:
-            "{ testingLessons { id title estimatedMinutes difficulty topic } }",
+            '{ testingLessons { id title estimatedMinutes difficulty topic } }',
         },
         {
           query:
-            "{ programmingLessons { id title estimatedMinutes difficulty topic } }",
+            '{ programmingLessons { id title estimatedMinutes difficulty topic } }',
         },
         {
           query:
-            "{ webLessons { id title estimatedMinutes difficulty topic } }",
+            '{ webLessons { id title estimatedMinutes difficulty topic } }',
         },
         {
           query:
-            "{ nextJsLessons { id title estimatedMinutes difficulty topic } }",
+            '{ nextJsLessons { id title estimatedMinutes difficulty topic } }',
         },
         {
           query:
-            "{ performanceLessons { id title estimatedMinutes difficulty topic } }",
+            '{ performanceLessons { id title estimatedMinutes difficulty topic } }',
         },
         {
           query:
-            "{ securityLessons { id title estimatedMinutes difficulty topic } }",
+            '{ securityLessons { id title estimatedMinutes difficulty topic } }',
         },
         {
           query:
-            "{ versionLessons { id title estimatedMinutes difficulty topic } }",
+            '{ versionLessons { id title estimatedMinutes difficulty topic } }',
         },
 
         // Questions
         {
           query:
-            "{ dotNetInterviewQuestions { id question difficulty topic estimatedTime } }",
+            '{ dotNetInterviewQuestions { id question difficulty topic estimatedTime } }',
         },
         {
           query:
-            "{ graphQLInterviewQuestions { id question difficulty topic estimatedTime } }",
+            '{ graphQLInterviewQuestions { id question difficulty topic estimatedTime } }',
         },
         {
           query:
-            "{ laravelInterviewQuestions { id question difficulty topic estimatedTime } }",
+            '{ laravelInterviewQuestions { id question difficulty topic estimatedTime } }',
         },
         {
           query:
-            "{ reactInterviewQuestions { id question difficulty topic estimatedTime } }",
+            '{ reactInterviewQuestions { id question difficulty topic estimatedTime } }',
         },
         {
           query:
-            "{ tailwindInterviewQuestions { id question difficulty topic estimatedTime } }",
+            '{ tailwindInterviewQuestions { id question difficulty topic estimatedTime } }',
         },
         {
           query:
-            "{ nodeInterviewQuestions { id question difficulty topic estimatedTime } }",
+            '{ nodeInterviewQuestions { id question difficulty topic estimatedTime } }',
         },
         {
           query:
-            "{ sassInterviewQuestions { id question difficulty topic estimatedTime } }",
+            '{ sassInterviewQuestions { id question difficulty topic estimatedTime } }',
         },
         {
           query:
-            "{ vueInterviewQuestions { id question difficulty topic estimatedTime } }",
+            '{ vueInterviewQuestions { id question difficulty topic estimatedTime } }',
         },
         {
           query:
-            "{ typescriptInterviewQuestions { id question difficulty topic estimatedTime } }",
+            '{ typescriptInterviewQuestions { id question difficulty topic estimatedTime } }',
         },
         {
           query:
-            "{ databaseInterviewQuestions { id question difficulty topic estimatedTime } }",
+            '{ databaseInterviewQuestions { id question difficulty topic estimatedTime } }',
         },
         {
           query:
-            "{ testingInterviewQuestions { id question difficulty topic estimatedTime } }",
+            '{ testingInterviewQuestions { id question difficulty topic estimatedTime } }',
         },
         {
           query:
-            "{ programmingInterviewQuestions { id question difficulty topic estimatedTime } }",
+            '{ programmingInterviewQuestions { id question difficulty topic estimatedTime } }',
         },
         {
           query:
-            "{ webInterviewQuestions { id question difficulty topic estimatedTime } }",
+            '{ webInterviewQuestions { id question difficulty topic estimatedTime } }',
         },
         {
           query:
-            "{ nextJsInterviewQuestions { id question difficulty topic estimatedTime } }",
+            '{ nextJsInterviewQuestions { id question difficulty topic estimatedTime } }',
         },
         {
           query:
-            "{ performanceInterviewQuestions { id question difficulty topic estimatedTime } }",
+            '{ performanceInterviewQuestions { id question difficulty topic estimatedTime } }',
         },
         {
           query:
-            "{ securityInterviewQuestions { id question difficulty topic estimatedTime } }",
+            '{ securityInterviewQuestions { id question difficulty topic estimatedTime } }',
         },
         {
           query:
-            "{ versionInterviewQuestions { id question difficulty topic estimatedTime } }",
+            '{ versionInterviewQuestions { id question difficulty topic estimatedTime } }',
         },
       ];
 
@@ -338,9 +338,9 @@ export function useAppStats(): AppStats {
 
           try {
             const response = await fetch(getGraphQLEndpoint(), {
-              method: "POST",
+              method: 'POST',
               headers: {
-                "Content-Type": "application/json",
+                'Content-Type': 'application/json',
               },
               body: JSON.stringify({ query }),
               signal: controller.signal,
@@ -358,10 +358,10 @@ export function useAppStats(): AppStats {
             // Return empty data on error to prevent complete failure
             return {
               data: null,
-              error: error instanceof Error ? error.message : "Unknown error",
+              error: error instanceof Error ? error.message : 'Unknown error',
             } as { data: unknown; error?: string };
           }
-        }),
+        })
       );
 
       type GqlResponse = { data?: unknown; error?: string };
@@ -387,28 +387,28 @@ export function useAppStats(): AppStats {
         [key: string]: { lessons: number; questions: number; color: string };
       } = {};
       const moduleColors = [
-        "#3B82F6",
-        "#10B981",
-        "#8B5CF6",
-        "#F59E0B",
-        "#EF4444",
-        "#06B6D4",
-        "#84CC16",
-        "#F97316",
-        "#EC4899",
-        "#6366F1",
-        "#14B8A6",
-        "#F59E0B",
-        "#8B5CF6",
-        "#EF4444",
-        "#10B981",
-        "#3B82F6",
-        "#F97316",
+        '#3B82F6',
+        '#10B981',
+        '#8B5CF6',
+        '#F59E0B',
+        '#EF4444',
+        '#06B6D4',
+        '#84CC16',
+        '#F97316',
+        '#EC4899',
+        '#6366F1',
+        '#14B8A6',
+        '#F59E0B',
+        '#8B5CF6',
+        '#EF4444',
+        '#10B981',
+        '#3B82F6',
+        '#F97316',
       ];
 
       responses.forEach((response) => {
         const r = response as GqlResponse;
-        if (r.error || !r.data || typeof r.data !== "object") return;
+        if (r.error || !r.data || typeof r.data !== 'object') return;
 
         const dataObj = r.data as object;
         const keys = Object.keys(dataObj as Record<string, unknown>);
@@ -418,8 +418,8 @@ export function useAppStats(): AppStats {
         if (!Array.isArray(itemsUnknown)) return;
 
         const moduleName = key
-          .replace(/Lessons|InterviewQuestions/g, "")
-          .replace(/([A-Z])/g, " $1")
+          .replace(/Lessons|InterviewQuestions/g, '')
+          .replace(/([A-Z])/g, ' $1')
           .trim();
 
         if (!moduleStats[moduleName]) {
@@ -433,15 +433,15 @@ export function useAppStats(): AppStats {
           };
         }
 
-        if (key.includes("Lessons")) {
+        if (key.includes('Lessons')) {
           const lessonItems = (itemsUnknown as unknown[]).map(
-            (i) => i as LessonItem,
+            (i) => i as LessonItem
           );
           allLessons = [...allLessons, ...lessonItems];
           moduleStats[moduleName].lessons = lessonItems.length;
-        } else if (key.includes("Questions")) {
+        } else if (key.includes('Questions')) {
           const questionItems = (itemsUnknown as unknown[]).map(
-            (i) => i as QuestionItem,
+            (i) => i as QuestionItem
           );
           allQuestions = [...allQuestions, ...questionItems];
           moduleStats[moduleName].questions = questionItems.length;
@@ -462,21 +462,21 @@ export function useAppStats(): AppStats {
 
       [...allLessons, ...allQuestions].forEach((item) => {
         const difficulty = item.difficulty?.toLowerCase();
-        if (difficulty === "beginner") difficultyBreakdown.beginner++;
-        else if (difficulty === "intermediate")
+        if (difficulty === 'beginner') difficultyBreakdown.beginner++;
+        else if (difficulty === 'intermediate')
           difficultyBreakdown.intermediate++;
-        else if (difficulty === "advanced") difficultyBreakdown.advanced++;
+        else if (difficulty === 'advanced') difficultyBreakdown.advanced++;
       });
 
       // Average completion time
       const totalTime =
         allLessons.reduce(
           (sum, lesson) => sum + (lesson.estimatedMinutes || 0),
-          0,
+          0
         ) +
         allQuestions.reduce(
           (sum, question) => sum + (question.estimatedTime || 0) / 60,
-          0,
+          0
         );
       const averageCompletionTime =
         totalLessons + totalQuestions > 0
@@ -490,7 +490,7 @@ export function useAppStats(): AppStats {
           lessons: stats.lessons,
           questions: stats.questions,
           color: stats.color,
-        }),
+        })
       );
 
       // Topic distribution
@@ -506,28 +506,28 @@ export function useAppStats(): AppStats {
       const tierBreakdown = {
         foundational: moduleBreakdown
           .filter((m) =>
-            ["web", "programming", "version"].includes(m.name.toLowerCase()),
+            ['web', 'programming', 'version'].includes(m.name.toLowerCase())
           )
           .reduce((sum, m) => sum + m.lessons + m.questions, 0),
         core: moduleBreakdown
           .filter((m) =>
-            ["react", "laravel", "database", "node"].includes(
-              m.name.toLowerCase(),
-            ),
+            ['react', 'laravel', 'database', 'node'].includes(
+              m.name.toLowerCase()
+            )
           )
           .reduce((sum, m) => sum + m.lessons + m.questions, 0),
         specialized: moduleBreakdown
           .filter((m) =>
-            ["next js", "graph q l", "vue", "typescript"].includes(
-              m.name.toLowerCase(),
-            ),
+            ['next js', 'graph q l', 'vue', 'typescript'].includes(
+              m.name.toLowerCase()
+            )
           )
           .reduce((sum, m) => sum + m.lessons + m.questions, 0),
         quality: moduleBreakdown
           .filter((m) =>
-            ["testing", "performance", "security"].includes(
-              m.name.toLowerCase(),
-            ),
+            ['testing', 'performance', 'security'].includes(
+              m.name.toLowerCase()
+            )
           )
           .reduce((sum, m) => sum + m.lessons + m.questions, 0),
       };
@@ -578,7 +578,7 @@ export function useAppStats(): AppStats {
         error: null,
       });
     } catch (error) {
-      console.error("Error fetching app stats:", error);
+      console.error('Error fetching app stats:', error);
       // Attempt local content API fallback on error
       try {
         const fallback = await buildStatsFromRegistryApi();
@@ -592,7 +592,7 @@ export function useAppStats(): AppStats {
           ...prev,
           isLoading: false,
           error:
-            error instanceof Error ? error.message : "Failed to fetch stats",
+            error instanceof Error ? error.message : 'Failed to fetch stats',
         }));
       }
     }

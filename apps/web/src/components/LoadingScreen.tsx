@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react';
 
 // Local type to represent quiz prefetch status used by LoadingScreen
 // Matches the shape returned by quizPrefetchService.getPrefetchStatus()
@@ -15,7 +15,7 @@ interface LoadingScreenProps {
 }
 
 export default function LoadingScreen({
-  message = "Loading...",
+  message = 'Loading...',
   prefetchStatus = null,
   spinnerSize = 48,
 }: LoadingScreenProps) {
@@ -70,9 +70,9 @@ export default function LoadingScreen({
                     ></div>
                   </div>
                   <div className="text-xs mt-1 text-gray-600 dark:text-gray-400">
-                    {prefetchStatus.prefetchedCount} of{" "}
+                    {prefetchStatus.prefetchedCount} of{' '}
                     {prefetchStatus.prefetchedCount +
-                      prefetchStatus.queueLength}{" "}
+                      prefetchStatus.queueLength}{' '}
                     quizzes loaded
                   </div>
                 </div>

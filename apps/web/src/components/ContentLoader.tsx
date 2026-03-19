@@ -1,11 +1,11 @@
-"use client";
+'use client';
 
-import React from "react";
-import LoadingSpinner from "./LoadingSpinner";
-import SkeletonLoader from "./SkeletonLoader";
+import React from 'react';
+import LoadingSpinner from './LoadingSpinner';
+import SkeletonLoader from './SkeletonLoader';
 
 interface ContentLoaderProps {
-  type: "lesson" | "quiz" | "module";
+  type: 'lesson' | 'quiz' | 'module';
   moduleName?: string;
   isLoading: boolean;
   hasError?: boolean;
@@ -69,9 +69,9 @@ const ContentLoader: React.FC<ContentLoaderProps> = ({
         <LoadingSpinner
           moduleName={moduleName}
           message={
-            type === "lesson"
-              ? "Loading lesson content..."
-              : "Loading quiz content..."
+            type === 'lesson'
+              ? 'Loading lesson content...'
+              : 'Loading quiz content...'
           }
         />
         <div className="mt-8">

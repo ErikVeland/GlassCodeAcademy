@@ -1,6 +1,6 @@
-"use client";
+'use client';
 
-import { useState, useEffect } from "react";
+import { useState, useEffect } from 'react';
 
 interface ProgrammingQuestion {
   id: number;
@@ -30,7 +30,7 @@ export default function TestQuizAccess() {
         setLoading(true);
         // Test direct API access
         const res = await fetch(
-          "/api/content/quizzes/programming-fundamentals",
+          '/api/content/quizzes/programming-fundamentals'
         );
         if (!res.ok) {
           throw new Error(`API request failed: ${res.status}`);
@@ -38,8 +38,8 @@ export default function TestQuizAccess() {
         const result = await res.json();
         setData(result);
       } catch (err) {
-        setError(err instanceof Error ? err.message : "Unknown error");
-        console.error("Error fetching data:", err);
+        setError(err instanceof Error ? err.message : 'Unknown error');
+        console.error('Error fetching data:', err);
       } finally {
         setLoading(false);
       }

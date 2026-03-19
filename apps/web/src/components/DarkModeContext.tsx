@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import React, {
   createContext,
@@ -6,9 +6,9 @@ import React, {
   useEffect,
   useState,
   useRef,
-} from "react";
+} from 'react';
 
-type Theme = "light" | "dark" | "system";
+type Theme = 'light' | 'dark' | 'system';
 
 declare global {
   interface Window {
@@ -25,27 +25,27 @@ type DarkModeContextType = {
 };
 
 const DarkModeContext = createContext<DarkModeContextType | undefined>(
-  undefined,
+  undefined
 );
 
 export function DarkModeProvider({ children }: { children: React.ReactNode }) {
-  const [theme, setTheme] = useState<Theme>("system");
+  const [theme, setTheme] = useState<Theme>('system');
   const [isDark, setIsDark] = useState<boolean>(false);
   const firstApplyRef = useRef(true);
 
   // Read saved preference on mount, with fallback for legacy 'darkMode' key
   useEffect(() => {
     try {
-      const saved = localStorage.getItem("theme");
-      if (saved === "light" || saved === "dark" || saved === "system") {
+      const saved = localStorage.getItem('theme');
+      if (saved === 'light' || saved === 'dark' || saved === 'system') {
         setTheme(saved as Theme);
         return;
       }
-      const legacy = localStorage.getItem("darkMode");
-      if (legacy === "true") {
-        setTheme("dark");
-      } else if (legacy === "false") {
-        setTheme("light");
+      const legacy = localStorage.getItem('darkMode');
+      if (legacy === 'true') {
+        setTheme('dark');
+      } else if (legacy === 'false') {
+        setTheme('light');
       }
     } catch {
       // ignore storage errors
@@ -56,7 +56,7 @@ export function DarkModeProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     try {
       const pending = window.__gcPendingTheme;
-      if (pending === "light" || pending === "dark" || pending === "system") {
+      if (pending === 'light' || pending === 'dark' || pending === 'system') {
         setTheme(pending);
         try {
           delete window.__gcPendingTheme;
@@ -69,14 +69,14 @@ export function DarkModeProvider({ children }: { children: React.ReactNode }) {
       try {
         const ce = e as CustomEvent<ThemeChangeDetail>;
         const t = ce.detail?.theme;
-        if (t === "light" || t === "dark" || t === "system") {
+        if (t === 'light' || t === 'dark' || t === 'system') {
           setTheme(t);
         }
       } catch {}
     };
-    window.addEventListener("gc-theme-change", handler);
+    window.addEventListener('gc-theme-change', handler);
     return () => {
-      window.removeEventListener("gc-theme-change", handler);
+      window.removeEventListener('gc-theme-change', handler);
     };
   }, []);
 
@@ -84,27 +84,27 @@ export function DarkModeProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     const html = document.documentElement;
     const prefersDark = window.matchMedia(
-      "(prefers-color-scheme: dark)",
+      '(prefers-color-scheme: dark)'
     ).matches;
-    const activeDark = theme === "dark" || (theme === "system" && prefersDark);
+    const activeDark = theme === 'dark' || (theme === 'system' && prefersDark);
 
     setIsDark(activeDark);
 
     if (activeDark) {
-      html.classList.add("dark");
-      html.style.colorScheme = "dark";
+      html.classList.add('dark');
+      html.style.colorScheme = 'dark';
     } else {
-      html.classList.remove("dark");
-      html.style.colorScheme = "light";
+      html.classList.remove('dark');
+      html.style.colorScheme = 'light';
     }
     html.setAttribute(
-      "data-theme",
-      theme === "system" ? (activeDark ? "dark" : "light") : theme,
+      'data-theme',
+      theme === 'system' ? (activeDark ? 'dark' : 'light') : theme
     );
 
     try {
-      localStorage.setItem("theme", theme);
-      localStorage.removeItem("darkMode");
+      localStorage.setItem('theme', theme);
+      localStorage.removeItem('darkMode');
     } catch {
       // ignore storage errors
     }
@@ -112,7 +112,7 @@ export function DarkModeProvider({ children }: { children: React.ReactNode }) {
     // Sync SSR cookie with resolved theme
     try {
       const resolved =
-        theme === "system" ? (activeDark ? "dark" : "light") : theme;
+        theme === 'system' ? (activeDark ? 'dark' : 'light') : theme;
       document.cookie = `gc-theme=${resolved}; path=/; max-age=31536000; SameSite=Lax`;
     } catch {
       // ignore cookie errors
@@ -123,65 +123,65 @@ export function DarkModeProvider({ children }: { children: React.ReactNode }) {
       firstApplyRef.current = false;
     } else {
       const reduceMotion = window.matchMedia(
-        "(prefers-reduced-motion: reduce)",
+        '(prefers-reduced-motion: reduce)'
       ).matches;
       if (!reduceMotion) {
-        html.classList.add("theme-transition");
-        window.setTimeout(() => html.classList.remove("theme-transition"), 220);
+        html.classList.add('theme-transition');
+        window.setTimeout(() => html.classList.remove('theme-transition'), 220);
       }
     }
   }, [theme]);
 
   // Keep in sync with system preference when in system mode
   useEffect(() => {
-    const mql = window.matchMedia("(prefers-color-scheme: dark)");
+    const mql = window.matchMedia('(prefers-color-scheme: dark)');
     const handler = () => {
-      if (theme === "system") {
+      if (theme === 'system') {
         const activeDark = mql.matches;
         setIsDark(activeDark);
         const html = document.documentElement;
         if (activeDark) {
-          html.classList.add("dark");
-          html.style.colorScheme = "dark";
+          html.classList.add('dark');
+          html.style.colorScheme = 'dark';
         } else {
-          html.classList.remove("dark");
-          html.style.colorScheme = "light";
+          html.classList.remove('dark');
+          html.style.colorScheme = 'light';
         }
-        html.setAttribute("data-theme", activeDark ? "dark" : "light");
+        html.setAttribute('data-theme', activeDark ? 'dark' : 'light');
 
         // Smooth fade when OS theme changes in system mode
         const reduceMotion = window.matchMedia(
-          "(prefers-reduced-motion: reduce)",
+          '(prefers-reduced-motion: reduce)'
         ).matches;
         if (!reduceMotion) {
-          html.classList.add("theme-transition");
+          html.classList.add('theme-transition');
           window.setTimeout(
-            () => html.classList.remove("theme-transition"),
-            220,
+            () => html.classList.remove('theme-transition'),
+            220
           );
         }
       }
     };
 
-    if (theme === "system") {
-      mql.addEventListener("change", handler);
+    if (theme === 'system') {
+      mql.addEventListener('change', handler);
     }
     return () => {
-      mql.removeEventListener("change", handler);
+      mql.removeEventListener('change', handler);
     };
   }, [theme]);
 
   const cycleTheme = () => {
     setTheme((prev) => {
-      if (prev === "system") {
+      if (prev === 'system') {
         const prefersDark = window.matchMedia(
-          "(prefers-color-scheme: dark)",
+          '(prefers-color-scheme: dark)'
         ).matches;
         // When in system mode, cycle to dark if OS prefers light, or to light if OS prefers dark
-        return prefersDark ? "light" : "dark";
+        return prefersDark ? 'light' : 'dark';
       }
-      if (prev === "dark") return "light";
-      return "system";
+      if (prev === 'dark') return 'light';
+      return 'system';
     });
   };
 
@@ -195,7 +195,7 @@ export function DarkModeProvider({ children }: { children: React.ReactNode }) {
 export function useDarkMode() {
   const context = useContext(DarkModeContext);
   if (context === undefined) {
-    throw new Error("useDarkMode must be used within a DarkModeProvider");
+    throw new Error('useDarkMode must be used within a DarkModeProvider');
   }
   return context;
 }

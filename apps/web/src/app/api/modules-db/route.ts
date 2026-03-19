@@ -1,38 +1,38 @@
-import { NextRequest, NextResponse } from "next/server";
-import { getApiBaseStrict } from "@/lib/urlUtils";
+import { NextRequest, NextResponse } from 'next/server';
+import { getApiBaseStrict } from '@/lib/urlUtils';
 
 export async function GET(req: NextRequest) {
   try {
     const url = new URL(req.url);
-    const query = url.search || "";
+    const query = url.search || '';
     const apiBase = (() => {
       try {
         return getApiBaseStrict();
       } catch {
-        return "http://127.0.0.1:8081";
+        return 'http://127.0.0.1:8081';
       }
     })();
     const backendUrl = `${apiBase}/api/modules${query}`;
-    const res = await fetch(backendUrl, { cache: "no-store" });
+    const res = await fetch(backendUrl, { cache: 'no-store' });
     const text = await res.text();
     let body = text;
     try {
       const parsed = JSON.parse(text);
       body = JSON.stringify(
-        Array.isArray(parsed) ? parsed : (parsed?.data ?? parsed),
+        Array.isArray(parsed) ? parsed : (parsed?.data ?? parsed)
       );
     } catch {
       // leave body as-is if not JSON
     }
     return new NextResponse(body, {
       status: res.status,
-      headers: { "Content-Type": "application/json" },
+      headers: { 'Content-Type': 'application/json' },
     });
   } catch (error) {
-    console.error("Proxy GET /api/modules-db failed:", error);
+    console.error('Proxy GET /api/modules-db failed:', error);
     return NextResponse.json(
-      { error: "Failed to fetch modules from backend" },
-      { status: 502 },
+      { error: 'Failed to fetch modules from backend' },
+      { status: 502 }
     );
   }
 }
@@ -44,34 +44,34 @@ export async function POST(req: NextRequest) {
       try {
         return getApiBaseStrict();
       } catch {
-        return "http://127.0.0.1:8081";
+        return 'http://127.0.0.1:8081';
       }
     })();
     const res = await fetch(`${apiBase}/api/content/modules`, {
-      method: "POST",
+      method: 'POST',
       headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json",
+        'Content-Type': 'application/json',
+        Accept: 'application/json',
         // Forward admin auth headers when present
-        Authorization: req.headers.get("authorization") || "",
-        "X-Admin-Token": req.headers.get("x-admin-token") || "",
+        Authorization: req.headers.get('authorization') || '',
+        'X-Admin-Token': req.headers.get('x-admin-token') || '',
       },
       body: JSON.stringify(body),
     });
     const text = await res.text();
-    const contentType = res.headers.get("content-type") || "application/json";
+    const contentType = res.headers.get('content-type') || 'application/json';
     return new NextResponse(text, {
       status: res.status,
-      headers: { "Content-Type": contentType },
+      headers: { 'Content-Type': contentType },
     });
   } catch (error) {
-    console.error("Proxy POST /api/modules-db failed:", error);
+    console.error('Proxy POST /api/modules-db failed:', error);
     return NextResponse.json(
-      { error: "Failed to create module in backend" },
-      { status: 502 },
+      { error: 'Failed to create module in backend' },
+      { status: 502 }
     );
   }
 }
 
-export const runtime = "nodejs";
-export const dynamic = "force-dynamic";
+export const runtime = 'nodejs';
+export const dynamic = 'force-dynamic';

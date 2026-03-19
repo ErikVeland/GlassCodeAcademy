@@ -1,61 +1,61 @@
-"use client";
-import { signIn } from "next-auth/react";
-import Link from "next/link";
-import Image from "next/image";
-import React, { useEffect, useState } from "react";
+'use client';
+import { signIn } from 'next-auth/react';
+import Link from 'next/link';
+import Image from 'next/image';
+import React, { useEffect, useState } from 'react';
 
 export default function LoginPage() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [guestName, setGuestName] = useState("");
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [guestName, setGuestName] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [providers, setProviders] = useState<
     Record<string, { id: string; name: string }>
   >({
     // Ensure credentials are always available even if provider fetch fails
-    credentials: { id: "credentials", name: "Email and Password" },
+    credentials: { id: 'credentials', name: 'Email and Password' },
   });
 
   useEffect(() => {
     // Fetch configured auth providers from our API endpoint to avoid NextAuth client errors
     const loadProviders = async () => {
       try {
-        const res = await fetch("/api/auth/providers");
+        const res = await fetch('/api/auth/providers');
         if (res.ok) {
           const data = await res.json();
           // Normalize and guard against unexpected shapes
-          if (data && typeof data === "object" && !Array.isArray(data)) {
+          if (data && typeof data === 'object' && !Array.isArray(data)) {
             const normalized = { ...data } as Record<
               string,
               { id: string; name: string }
             >;
             // Guarantee credentials presence even if API returns nothing
-            if (!normalized["credentials"]) {
-              normalized["credentials"] = {
-                id: "credentials",
-                name: "Email and Password",
+            if (!normalized['credentials']) {
+              normalized['credentials'] = {
+                id: 'credentials',
+                name: 'Email and Password',
               };
             }
             setProviders(normalized);
           } else {
             // Fallback hard default if unexpected response
             setProviders({
-              credentials: { id: "credentials", name: "Email and Password" },
+              credentials: { id: 'credentials', name: 'Email and Password' },
             });
           }
         } else {
           // Network or non-200 response: still show credentials
           setProviders({
-            credentials: { id: "credentials", name: "Email and Password" },
+            credentials: { id: 'credentials', name: 'Email and Password' },
           });
         }
       } catch (e) {
         // Silently ignore; credentials/guest will still be available
-        console.warn("Failed to load auth providers", e);
+        console.warn('Failed to load auth providers', e);
         // Ensure credentials are shown on errors
         setProviders({
-          credentials: { id: "credentials", name: "Email and Password" },
+          credentials: { id: 'credentials', name: 'Email and Password' },
         });
       }
     };
@@ -67,16 +67,16 @@ export default function LoginPage() {
     setLoading(true);
     setError(null);
     try {
-      const res = await signIn("credentials", {
+      const res = await signIn('credentials', {
         email,
         password,
         redirect: false,
       });
       if (res?.error) {
-        setError("Invalid email or password");
+        setError('Invalid email or password');
       }
     } catch {
-      setError("Unexpected error. Please try again.");
+      setError('Unexpected error. Please try again.');
     } finally {
       setLoading(false);
     }
@@ -85,17 +85,17 @@ export default function LoginPage() {
   const handleGuest = (e: React.FormEvent) => {
     e.preventDefault();
     if (!guestName.trim()) {
-      setError("Please enter a name for guest mode");
+      setError('Please enter a name for guest mode');
       return;
     }
     try {
       localStorage.setItem(
-        "guestUser",
-        JSON.stringify({ name: guestName.trim() }),
+        'guestUser',
+        JSON.stringify({ name: guestName.trim() })
       );
       setError(null);
     } catch {
-      setError("Unable to store guest profile");
+      setError('Unable to store guest profile');
     }
   };
 
@@ -138,7 +138,7 @@ export default function LoginPage() {
           )}
 
           {/* Credentials */}
-          {providers["credentials"] && (
+          {providers['credentials'] && (
             <div className="mt-2">
               <form
                 onSubmit={handleCredentials}
@@ -184,12 +184,12 @@ export default function LoginPage() {
                   disabled={loading}
                   className="w-full py-2.5 px-4 rounded-xl bg-primary text-primary-fg font-medium hover:opacity-90 disabled:opacity-60 transition"
                 >
-                  {loading ? "Signing in…" : "Continue"}
+                  {loading ? 'Signing in…' : 'Continue'}
                 </button>
               </form>
               <div className="mt-3 text-left">
                 <p className="text-sm text-muted">
-                  Don&apos;t have an account?{" "}
+                  Don&apos;t have an account?{' '}
                   <Link
                     href="/register"
                     className="text-primary hover:underline"
@@ -251,20 +251,20 @@ export default function LoginPage() {
               Sign in with OAuth
             </h3>
             {Object.values(providers)
-              .filter((p) => p && p.id && p.name && p.id !== "credentials")
+              .filter((p) => p && p.id && p.name && p.id !== 'credentials')
               .map((p) => {
                 const id = p.id;
                 const btnClass =
-                  id === "github"
-                    ? "btn-github"
-                    : id === "apple"
-                      ? "btn-apple"
-                      : "btn-google";
+                  id === 'github'
+                    ? 'btn-github'
+                    : id === 'apple'
+                      ? 'btn-apple'
+                      : 'btn-google';
                 const label =
-                  id === "google"
-                    ? "Sign in with Google"
-                    : id === "apple"
-                      ? "Sign in with Apple"
+                  id === 'google'
+                    ? 'Sign in with Google'
+                    : id === 'apple'
+                      ? 'Sign in with Apple'
                       : `Sign in with ${p.name}`;
                 return (
                   <button
@@ -274,7 +274,7 @@ export default function LoginPage() {
                     aria-label={label}
                   >
                     <span className="btn-ico" aria-hidden="true">
-                      {id === "google" && (
+                      {id === 'google' && (
                         <Image
                           src="/brand/google_g_logo.svg"
                           width={18}
@@ -282,7 +282,7 @@ export default function LoginPage() {
                           alt=""
                         />
                       )}
-                      {id === "apple" && (
+                      {id === 'apple' && (
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
                           viewBox="0 0 24 24"
@@ -293,7 +293,7 @@ export default function LoginPage() {
                           <path d="M16.365 1.43c-.887.52-1.654 1.387-1.517 2.435 1.048.084 2.12-.532 2.733-1.37.571-.788.987-1.895.781-2.995-.834.03-1.732.415-1.997.93zm4.348 8.09c-2.365-.142-3.32 1.324-4.298 1.324-.979 0-2.302-1.282-3.806-1.247-1.962.056-3.772 1.148-4.77 2.903-2.042 3.54-.525 8.797 1.45 11.685.957 1.376 2.114 2.92 3.65 2.866 1.466-.057 2.018-.926 3.789-.926 1.771 0 2.269.926 3.822.898 1.584-.027 2.586-1.41 3.535-2.803 1.06-1.54 1.5-3.03 1.528-3.106-.033-.014-2.936-1.126-2.969-4.46-.028-2.81 2.29-4.088 2.397-4.152-1.311-1.92-3.345-2.681-3.328-2.692z" />
                         </svg>
                       )}
-                      {id === "github" && (
+                      {id === 'github' && (
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
                           viewBox="0 0 24 24"

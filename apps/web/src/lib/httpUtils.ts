@@ -5,7 +5,7 @@ export type ParsedBody = unknown;
 
 export function safeJsonParse(text: string): ParsedBody | null {
   try {
-    const trimmed = (text || "").trim();
+    const trimmed = (text || '').trim();
     if (!trimmed) return null;
     return JSON.parse(trimmed);
   } catch {
@@ -13,13 +13,17 @@ export function safeJsonParse(text: string): ParsedBody | null {
   }
 }
 
-// Unwrap common backend envelopes that place payload under `data`
+// Unwrap common backend envelopes that place payload under `data`.
+// Returns the `data` field only when the envelope is a plain object (not array).
+// A missing `data` key falls through and returns the original value unchanged.
 export function unwrapData<T = unknown>(value: unknown): T | unknown {
-  if (value && typeof value === "object") {
-    const maybe = value as { data?: unknown };
-    if (Object.prototype.hasOwnProperty.call(maybe, "data")) {
-      return (maybe.data as T) ?? null;
-    }
+  if (
+    value !== null &&
+    typeof value === 'object' &&
+    !Array.isArray(value) &&
+    Object.prototype.hasOwnProperty.call(value, 'data')
+  ) {
+    return (value as { data: unknown }).data as T;
   }
   return value as T;
 }
@@ -32,10 +36,10 @@ export interface ProxyJsonResult<T = unknown> {
 }
 
 export async function proxyJsonResponse<T = unknown>(
-  res: Response,
+  res: Response
 ): Promise<ProxyJsonResult<T>> {
   const status = res.status;
-  const contentType = res.headers.get("content-type") || undefined;
+  const contentType = res.headers.get('content-type') || undefined;
   const text = await res.text();
   const parsed = safeJsonParse(text);
   const unwrapped = unwrapData<T>(parsed);
@@ -53,7 +57,7 @@ export async function retryFetch(
   options: RequestInit & { cache?: RequestCache } = {},
   attempts = 3,
   backoffMs = 300,
-  shouldRetry?: (res: Response, error?: unknown) => boolean,
+  shouldRetry?: (res: Response, error?: unknown) => boolean
 ): Promise<Response> {
   let lastError: unknown;
   for (let i = 0; i < Math.max(1, attempts); i++) {
@@ -83,7 +87,7 @@ export async function retryFetch(
     }
   }
   // Should be unreachable; throw last error if any
-  throw lastError ?? new Error("retryFetch failed without specific error");
+  throw lastError ?? new Error('retryFetch failed without specific error');
 }
 
 function sleep(ms: number) {
@@ -92,10 +96,10 @@ function sleep(ms: number) {
 
 // Gate debug logs behind env flags to reduce noise
 export function debugLog(...args: unknown[]) {
-  const isDev = process.env.NODE_ENV !== "production";
+  const isDev = process.env.NODE_ENV !== 'production';
   const enabled =
-    (process.env.NEXT_PUBLIC_DEBUG || "").toLowerCase() === "true";
+    (process.env.NEXT_PUBLIC_DEBUG || '').toLowerCase() === 'true';
   if (isDev && enabled) {
-    console.log("[dev]", ...args);
+    console.log('[dev]', ...args);
   }
 }

@@ -1,5 +1,5 @@
-import { redirect, notFound } from "next/navigation";
-import { getShortSlugFromModuleSlug } from "@/lib/contentRegistry";
+import { redirect, notFound } from 'next/navigation';
+import { getShortSlugFromModuleSlug } from '@/lib/contentRegistry';
 
 export default async function LegacyModuleOverviewRedirect({
   params,

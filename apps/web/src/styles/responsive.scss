@@ -1,13 +1,13 @@
 // Responsive Design System for GlassCode Academy
 // Mobile-first approach with SCSS mixins
-@use "sass:map";
+@use 'sass:map';
 
 // Breakpoints following user's SCSS preference
 $breakpoints: (
-  "mobile": 0,
-  "tablet": 768px,
-  "desktop": 1024px,
-  "wide": 1440px,
+  'mobile': 0,
+  'tablet': 768px,
+  'desktop': 1024px,
+  'wide': 1440px,
 );
 
 @mixin respond-to($breakpoint) {
@@ -37,17 +37,17 @@ $breakpoints: (
   gap: 1rem;
   grid-template-columns: 1fr;
 
-  @include respond-to("tablet") {
+  @include respond-to('tablet') {
     grid-template-columns: repeat(2, 1fr);
     gap: 1.5rem;
   }
 
-  @include respond-to("desktop") {
+  @include respond-to('desktop') {
     grid-template-columns: repeat(3, 1fr);
     gap: 2rem;
   }
 
-  @include respond-to("wide") {
+  @include respond-to('wide') {
     grid-template-columns: repeat(4, 1fr);
   }
 }
@@ -56,11 +56,11 @@ $breakpoints: (
 .tier-section {
   margin-bottom: 4rem;
 
-  @include respond-to("tablet") {
+  @include respond-to('tablet') {
     margin-bottom: 5rem;
   }
 
-  @include respond-to("desktop") {
+  @include respond-to('desktop') {
     margin-bottom: 6rem;
   }
 }
@@ -71,12 +71,12 @@ $breakpoints: (
   text-align: center;
   margin-bottom: 2rem;
 
-  @include respond-to("tablet") {
+  @include respond-to('tablet') {
     font-size: 2rem;
     margin-bottom: 2.5rem;
   }
 
-  @include respond-to("desktop") {
+  @include respond-to('desktop') {
     font-size: 2.5rem;
     margin-bottom: 3rem;
   }
@@ -90,12 +90,12 @@ $breakpoints: (
   border-radius: 0.75rem;
   transition: all 0.3s ease;
 
-  @include respond-to("tablet") {
+  @include respond-to('tablet') {
     padding: 1.5rem;
     border-radius: 1rem;
   }
 
-  @include respond-to("desktop") {
+  @include respond-to('desktop') {
     padding: 2rem;
     border-radius: 1.25rem;
   }
@@ -104,7 +104,7 @@ $breakpoints: (
     transform: translateY(-2px) scale(1.02);
     box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
 
-    @include respond-to("desktop") {
+    @include respond-to('desktop') {
       transform: translateY(-4px) scale(1.03);
       box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
     }
@@ -115,7 +115,7 @@ $breakpoints: (
     gap: 0.5rem;
     margin-top: 1rem;
 
-    @include respond-to("tablet") {
+    @include respond-to('tablet') {
       gap: 0.75rem;
       margin-top: 1.5rem;
     }
@@ -129,13 +129,13 @@ $breakpoints: (
       border-radius: 0.5rem;
       transition: all 0.2s ease;
 
-      @include respond-to("tablet") {
+      @include respond-to('tablet') {
         padding: 0.875rem 1.25rem;
         font-size: 0.9375rem;
         border-radius: 0.625rem;
       }
 
-      @include respond-to("desktop") {
+      @include respond-to('desktop') {
         padding: 1rem 1.5rem;
         font-size: 1rem;
         border-radius: 0.75rem;
@@ -149,12 +149,12 @@ $breakpoints: (
   width: 48px;
   height: 48px;
 
-  @include respond-to("tablet") {
+  @include respond-to('tablet') {
     width: 56px;
     height: 56px;
   }
 
-  @include respond-to("desktop") {
+  @include respond-to('desktop') {
     width: 64px;
     height: 64px;
   }
@@ -173,12 +173,12 @@ $breakpoints: (
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
   z-index: 50;
 
-  @include respond-to("tablet") {
+  @include respond-to('tablet') {
     min-width: 320px;
     border-radius: 1rem;
   }
 
-  @include respond-to("desktop") {
+  @include respond-to('desktop') {
     min-width: 380px;
     border-radius: 1.25rem;
   }
@@ -197,7 +197,7 @@ $breakpoints: (
     @include glass-morphism(0.9, 8px);
     border: 1px solid rgba(156, 163, 175, 0.3);
 
-    @include respond-to("tablet") {
+    @include respond-to('tablet') {
       padding: 1rem 1.25rem;
       font-size: 1.125rem;
       border-radius: 1rem;
@@ -216,7 +216,7 @@ $breakpoints: (
     gap: 0.75rem;
     margin-top: 1rem;
 
-    @include respond-to("tablet") {
+    @include respond-to('tablet') {
       grid-template-columns: repeat(4, 1fr);
       gap: 1rem;
     }
@@ -228,7 +228,7 @@ $breakpoints: (
       @include glass-morphism(0.8, 6px);
       border: 1px solid rgba(156, 163, 175, 0.3);
 
-      @include respond-to("tablet") {
+      @include respond-to('tablet') {
         padding: 0.625rem 1rem;
         font-size: 0.9375rem;
         border-radius: 0.625rem;
@@ -248,7 +248,7 @@ $breakpoints: (
     gap: 1rem;
     margin-bottom: 2rem;
 
-    @include respond-to("tablet") {
+    @include respond-to('tablet') {
       grid-template-columns: repeat(4, 1fr);
       gap: 1.5rem;
     }
@@ -259,12 +259,12 @@ $breakpoints: (
     grid-template-columns: 1fr;
     gap: 1rem;
 
-    @include respond-to("tablet") {
+    @include respond-to('tablet') {
       grid-template-columns: repeat(2, 1fr);
       gap: 1.5rem;
     }
 
-    @include respond-to("desktop") {
+    @include respond-to('desktop') {
       grid-template-columns: repeat(3, 1fr);
       gap: 2rem;
     }
@@ -277,15 +277,15 @@ $breakpoints: (
     font-size: 2rem;
     line-height: 1.2;
 
-    @include respond-to("tablet") {
+    @include respond-to('tablet') {
       font-size: 2.5rem;
     }
 
-    @include respond-to("desktop") {
+    @include respond-to('desktop') {
       font-size: 3rem;
     }
 
-    @include respond-to("wide") {
+    @include respond-to('wide') {
       font-size: 3.5rem;
     }
   }
@@ -294,11 +294,11 @@ $breakpoints: (
     font-size: 1.5rem;
     line-height: 1.3;
 
-    @include respond-to("tablet") {
+    @include respond-to('tablet') {
       font-size: 1.875rem;
     }
 
-    @include respond-to("desktop") {
+    @include respond-to('desktop') {
       font-size: 2.25rem;
     }
   }
@@ -307,12 +307,12 @@ $breakpoints: (
     font-size: 1rem;
     line-height: 1.6;
 
-    @include respond-to("tablet") {
+    @include respond-to('tablet') {
       font-size: 1.125rem;
       line-height: 1.7;
     }
 
-    @include respond-to("desktop") {
+    @include respond-to('desktop') {
       font-size: 1.25rem;
       line-height: 1.8;
     }

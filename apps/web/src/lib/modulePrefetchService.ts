@@ -4,7 +4,7 @@
  * Caches results in localStorage (30m) and sessionStorage (5m) for fast, reliable loads
  */
 
-export type PrefetchPriority = "tier" | "alphabetical";
+export type PrefetchPriority = 'tier' | 'alphabetical';
 
 interface PrefetchStatus {
   isPrefetching: boolean;
@@ -17,7 +17,7 @@ type ModuleMeta = {
   slug: string;
   title: string;
   order?: number;
-  tier: "foundational" | "core" | "specialized" | "quality" | string;
+  tier: 'foundational' | 'core' | 'specialized' | 'quality' | string;
   prerequisites?: string[];
 };
 
@@ -52,7 +52,7 @@ class ModulePrefetchService {
     return ModulePrefetchService.instance;
   }
 
-  async startPrefetching(priority: PrefetchPriority = "tier") {
+  async startPrefetching(priority: PrefetchPriority = 'tier') {
     if (this.isPrefetching) return;
 
     this.isPrefetching = true;
@@ -63,7 +63,7 @@ class ModulePrefetchService {
 
       await this.processQueue();
     } catch (err) {
-      console.error("[ModulePrefetchService] startPrefetching error:", err);
+      console.error('[ModulePrefetchService] startPrefetching error:', err);
     } finally {
       this.isPrefetching = false;
     }
@@ -78,14 +78,14 @@ class ModulePrefetchService {
   }
 
   clearCache() {
-    if (typeof window === "undefined") return;
+    if (typeof window === 'undefined') return;
     const keysToClear: string[] = [];
     for (let i = 0; i < localStorage.length; i++) {
       const key = localStorage.key(i);
       if (!key) continue;
       if (
-        key.startsWith("lessons_prefetch_") ||
-        key.startsWith("quiz_prefetch_")
+        key.startsWith('lessons_prefetch_') ||
+        key.startsWith('quiz_prefetch_')
       ) {
         keysToClear.push(key);
       }
@@ -101,12 +101,12 @@ class ModulePrefetchService {
         effectiveType?: string;
       }
       const nav = navigator as Navigator & { connection?: NetworkInformation };
-      const type = nav.connection?.effectiveType || "4g";
-      if (type === "2g" || type === "slow-2g") {
+      const type = nav.connection?.effectiveType || '4g';
+      if (type === '2g' || type === 'slow-2g') {
         this.maxConcurrent = 1;
         this.batchSize = 2;
         this.delayBetweenBatches = 2000;
-      } else if (type === "3g") {
+      } else if (type === '3g') {
         this.maxConcurrent = 2;
         this.batchSize = 3;
         this.delayBetweenBatches = 1200;
@@ -119,40 +119,40 @@ class ModulePrefetchService {
   }
 
   private async getUnlockedModules(
-    priority: PrefetchPriority,
+    priority: PrefetchPriority
   ): Promise<ModuleMeta[]> {
     // Fetch registry from API to avoid importing server-only modules in client
     let all: ModuleMeta[] = [];
     try {
-      const res = await fetch("/api/content/registry", { cache: "no-store" });
+      const res = await fetch('/api/content/registry', { cache: 'no-store' });
       if (res.ok) {
         const data = await res.json();
         const modules = Array.isArray(data?.modules) ? data.modules : [];
         // Populate shortSlug mapping from routes if available
         this.shortSlugByModuleSlug.clear();
         modules.forEach((m: RegistryModule) => {
-          const slug = (m?.slug || "").toString();
+          const slug = (m?.slug || '').toString();
           const overview: string | undefined = m?.routes?.overview;
           const shortSlug =
-            typeof overview === "string" && overview.trim() !== ""
-              ? overview.replace(/^\/+/, "").split("/")[0]
-              : slug.includes("-")
-                ? slug.split("-")[0]
+            typeof overview === 'string' && overview.trim() !== ''
+              ? overview.replace(/^\/+/, '').split('/')[0]
+              : slug.includes('-')
+                ? slug.split('-')[0]
                 : slug;
           if (slug) this.shortSlugByModuleSlug.set(slug, shortSlug);
         });
         all = modules.map((m: RegistryModule) => ({
-          slug: (m?.slug || "").toString(),
-          title: (m?.title || "").toString(),
-          order: typeof m?.order === "number" ? m.order : undefined,
-          tier: (m?.tier || "core").toString(),
+          slug: (m?.slug || '').toString(),
+          title: (m?.title || '').toString(),
+          order: typeof m?.order === 'number' ? m.order : undefined,
+          tier: (m?.tier || 'core').toString(),
           prerequisites: Array.isArray(m?.prerequisites) ? m.prerequisites : [],
         })) as ModuleMeta[];
       }
     } catch (err) {
       console.warn(
-        "[ModulePrefetchService] Failed to fetch registry; using empty module list",
-        err,
+        '[ModulePrefetchService] Failed to fetch registry; using empty module list',
+        err
       );
     }
 
@@ -164,14 +164,14 @@ class ModulePrefetchService {
       const prereqs = Array.isArray(mod.prerequisites) ? mod.prerequisites : [];
       if (prereqs.length === 0) return true;
       return prereqs.every(
-        (slug: string) => progress[slug]?.completionStatus === "completed",
+        (slug: string) => progress[slug]?.completionStatus === 'completed'
       );
     };
 
     const unlocked = all.filter(isUnlocked);
 
-    const tierOrder = ["foundational", "core", "specialized", "quality"];
-    if (priority === "tier") {
+    const tierOrder = ['foundational', 'core', 'specialized', 'quality'];
+    if (priority === 'tier') {
       unlocked.sort((a, b) => {
         const ai = tierOrder.indexOf(a.tier);
         const bi = tierOrder.indexOf(b.tier);
@@ -187,8 +187,8 @@ class ModulePrefetchService {
 
   private getLockEnabled(): boolean {
     try {
-      const val = localStorage.getItem("gc.moduleLockEnabled");
-      return val === "true";
+      const val = localStorage.getItem('gc.moduleLockEnabled');
+      return val === 'true';
     } catch {
       return true;
     }
@@ -196,28 +196,28 @@ class ModulePrefetchService {
 
   private getProgressStore(): Record<
     string,
-    { completionStatus?: "not_started" | "in_progress" | "completed" }
+    { completionStatus?: 'not_started' | 'in_progress' | 'completed' }
   > {
     const stores: string[] = [];
     try {
       // Prefer user-scoped progress first
       for (let i = 0; i < localStorage.length; i++) {
         const key = localStorage.key(i);
-        if (key && key.startsWith("fullstack_progress_")) {
+        if (key && key.startsWith('fullstack_progress_')) {
           stores.push(key);
         }
       }
       // Fallback default
-      stores.push("fullstack_progress_veland");
+      stores.push('fullstack_progress_veland');
 
       for (const k of stores) {
         const raw = localStorage.getItem(k);
         if (raw) {
           const parsed = JSON.parse(raw) as Record<
             string,
-            { completionStatus?: "not_started" | "in_progress" | "completed" }
+            { completionStatus?: 'not_started' | 'in_progress' | 'completed' }
           >;
-          if (parsed && typeof parsed === "object") return parsed;
+          if (parsed && typeof parsed === 'object') return parsed;
         }
       }
     } catch {}
@@ -243,7 +243,7 @@ class ModulePrefetchService {
     try {
       const shortSlug =
         this.shortSlugByModuleSlug.get(moduleSlug) ||
-        (moduleSlug.includes("-") ? moduleSlug.split("-")[0] : moduleSlug);
+        (moduleSlug.includes('-') ? moduleSlug.split('-')[0] : moduleSlug);
 
       await Promise.all([
         this.prefetchLessons(shortSlug, moduleSlug),
@@ -254,7 +254,7 @@ class ModulePrefetchService {
     } catch (err) {
       console.warn(
         `[ModulePrefetchService] prefetch failed for ${moduleSlug}:`,
-        err,
+        err
       );
     }
   }
@@ -265,7 +265,7 @@ class ModulePrefetchService {
 
     try {
       const res = await fetch(`/api/content/lessons/${shortSlug}`, {
-        cache: "no-store",
+        cache: 'no-store',
       });
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       const data = await res.json();
@@ -276,23 +276,23 @@ class ModulePrefetchService {
           : [];
       if (Array.isArray(lessons) && lessons.length > 0) {
         this.safeSetItem(
-          "localStorage",
+          'localStorage',
           cacheKey,
-          JSON.stringify({ timestamp: Date.now(), data: lessons }),
+          JSON.stringify({ timestamp: Date.now(), data: lessons })
         );
         this.safeSetItem(
-          "sessionStorage",
+          'sessionStorage',
           `prefetch_lessons_${shortSlug}`,
-          JSON.stringify({ timestamp: Date.now(), data: lessons }),
+          JSON.stringify({ timestamp: Date.now(), data: lessons })
         );
         console.log(
-          `[ModulePrefetchService] Lessons cached for ${moduleSlug} (${lessons.length})`,
+          `[ModulePrefetchService] Lessons cached for ${moduleSlug} (${lessons.length})`
         );
       }
     } catch (err) {
       console.debug(
         `[ModulePrefetchService] Lessons fetch fallback for ${moduleSlug}`,
-        err,
+        err
       );
     }
   }
@@ -303,29 +303,29 @@ class ModulePrefetchService {
 
     try {
       const res = await fetch(`/api/content/quizzes/${shortSlug}`, {
-        cache: "no-store",
+        cache: 'no-store',
       });
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       const quiz = await res.json();
       if (quiz && Array.isArray(quiz.questions) && quiz.questions.length > 0) {
         this.safeSetItem(
-          "localStorage",
+          'localStorage',
           cacheKey,
-          JSON.stringify({ timestamp: Date.now(), data: quiz }),
+          JSON.stringify({ timestamp: Date.now(), data: quiz })
         );
         this.safeSetItem(
-          "sessionStorage",
+          'sessionStorage',
           `prefetch_quiz_${shortSlug}`,
-          JSON.stringify({ timestamp: Date.now(), data: quiz }),
+          JSON.stringify({ timestamp: Date.now(), data: quiz })
         );
         console.log(
-          `[ModulePrefetchService] Quiz cached for ${moduleSlug} (${quiz.questions.length} questions)`,
+          `[ModulePrefetchService] Quiz cached for ${moduleSlug} (${quiz.questions.length} questions)`
         );
       }
     } catch (err) {
       console.debug(
         `[ModulePrefetchService] Quiz fetch fallback for ${moduleSlug}`,
-        err,
+        err
       );
     }
   }
@@ -335,19 +335,19 @@ class ModulePrefetchService {
       const raw = localStorage.getItem(cacheKey);
       if (!raw) return false;
       const { timestamp } = JSON.parse(raw) as { timestamp?: number };
-      return typeof timestamp === "number" && Date.now() - timestamp < ttlMs;
+      return typeof timestamp === 'number' && Date.now() - timestamp < ttlMs;
     } catch {
       return false;
     }
   }
 
   private safeSetItem(
-    storageType: "localStorage" | "sessionStorage",
+    storageType: 'localStorage' | 'sessionStorage',
     key: string,
-    value: string,
+    value: string
   ) {
     try {
-      if (storageType === "localStorage") {
+      if (storageType === 'localStorage') {
         localStorage.setItem(key, value);
       } else {
         sessionStorage.setItem(key, value);

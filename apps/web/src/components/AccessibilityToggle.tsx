@@ -1,8 +1,8 @@
-"use client";
+'use client';
 
-import React, { useState, useEffect, useRef } from "react";
-import { useAccessibility } from "./AccessibilityProvider";
-import { usePathname } from "next/navigation";
+import React, { useState, useEffect, useRef } from 'react';
+import { useAccessibility } from './AccessibilityProvider';
+import { usePathname } from 'next/navigation';
 
 const AccessibilityToggle: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -15,15 +15,15 @@ const AccessibilityToggle: React.FC = () => {
     const handleKeyDown = (e: KeyboardEvent) => {
       // Ctrl + Option + A (Mac) or Ctrl + Alt + A (Windows) to toggle panel
       if ((e.ctrlKey && e.altKey) || (e.ctrlKey && e.metaKey)) {
-        if (e.key === "a" || e.key === "A") {
+        if (e.key === 'a' || e.key === 'A') {
           e.preventDefault();
           setIsOpen((prev) => !prev);
         }
       }
     };
 
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
   }, []);
 
   // Close panel on route change to avoid lingering overlays
@@ -40,7 +40,7 @@ const AccessibilityToggle: React.FC = () => {
 
   // Handle Escape key when overlay is focused
   const handleOverlayKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
-    if (e.key === "Escape") {
+    if (e.key === 'Escape') {
       e.stopPropagation();
       setIsOpen(false);
     }
@@ -95,7 +95,7 @@ const AccessibilityToggle: React.FC = () => {
                     type="checkbox"
                     checked={settings.highContrast}
                     onChange={(e) =>
-                      updateSetting("highContrast", e.target.checked)
+                      updateSetting('highContrast', e.target.checked)
                     }
                     aria-describedby="high-contrast-help"
                   />
@@ -112,7 +112,7 @@ const AccessibilityToggle: React.FC = () => {
                     type="checkbox"
                     checked={settings.reducedMotion}
                     onChange={(e) =>
-                      updateSetting("reducedMotion", e.target.checked)
+                      updateSetting('reducedMotion', e.target.checked)
                     }
                     aria-describedby="reduced-motion-help"
                   />
@@ -132,8 +132,8 @@ const AccessibilityToggle: React.FC = () => {
                   value={settings.textSize}
                   onChange={(e) =>
                     updateSetting(
-                      "textSize",
-                      e.target.value as typeof settings.textSize,
+                      'textSize',
+                      e.target.value as typeof settings.textSize
                     )
                   }
                   aria-describedby="text-size-help"
@@ -154,7 +154,7 @@ const AccessibilityToggle: React.FC = () => {
                     type="checkbox"
                     checked={settings.screenReaderOptimized}
                     onChange={(e) =>
-                      updateSetting("screenReaderOptimized", e.target.checked)
+                      updateSetting('screenReaderOptimized', e.target.checked)
                     }
                     aria-describedby="screen-reader-help"
                   />
@@ -173,7 +173,7 @@ const AccessibilityToggle: React.FC = () => {
                     type="checkbox"
                     checked={settings.focusIndicators}
                     onChange={(e) =>
-                      updateSetting("focusIndicators", e.target.checked)
+                      updateSetting('focusIndicators', e.target.checked)
                     }
                     aria-describedby="focus-indicators-help"
                   />
@@ -190,11 +190,11 @@ const AccessibilityToggle: React.FC = () => {
             <div className="accessibility-panel-footer">
               <button
                 onClick={() => {
-                  updateSetting("highContrast", false);
-                  updateSetting("reducedMotion", false);
-                  updateSetting("textSize", "medium");
-                  updateSetting("screenReaderOptimized", false);
-                  updateSetting("focusIndicators", true);
+                  updateSetting('highContrast', false);
+                  updateSetting('reducedMotion', false);
+                  updateSetting('textSize', 'medium');
+                  updateSetting('screenReaderOptimized', false);
+                  updateSetting('focusIndicators', true);
                 }}
                 className="reset-button"
               >
@@ -320,7 +320,7 @@ const AccessibilityToggle: React.FC = () => {
           color: hsl(var(--fg));
         }
 
-        .setting-label input[type="checkbox"] {
+        .setting-label input[type='checkbox'] {
           margin-right: 0.75rem;
           width: 18px;
           height: 18px;

@@ -10,7 +10,9 @@ const runContrastCheck = async (page: import('@playwright/test').Page) => {
     .disableRules(['bypass'])
     .analyze();
 
-  const colorContrastViolations = results.violations.filter(v => v.id === 'color-contrast');
+  const colorContrastViolations = results.violations.filter(
+    (v: { id: string }) => v.id === 'color-contrast'
+  );
   return { results, colorContrastViolations };
 };
 
@@ -27,7 +29,10 @@ test.describe('Accessibility — color contrast', () => {
 
     const { colorContrastViolations } = await runContrastCheck(page);
     if (colorContrastViolations.length) {
-      console.log('Light mode color contrast violations:', JSON.stringify(colorContrastViolations, null, 2));
+      console.log(
+        'Light mode color contrast violations:',
+        JSON.stringify(colorContrastViolations, null, 2)
+      );
     }
     expect(colorContrastViolations).toEqual([]);
   });
@@ -44,7 +49,10 @@ test.describe('Accessibility — color contrast', () => {
 
     const { colorContrastViolations } = await runContrastCheck(page);
     if (colorContrastViolations.length) {
-      console.log('Dark mode color contrast violations:', JSON.stringify(colorContrastViolations, null, 2));
+      console.log(
+        'Dark mode color contrast violations:',
+        JSON.stringify(colorContrastViolations, null, 2)
+      );
     }
     expect(colorContrastViolations).toEqual([]);
   });

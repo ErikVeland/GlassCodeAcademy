@@ -1,10 +1,10 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback } from 'react';
 
 export interface StreakData {
   currentStreak: number;
   longestStreak: number;
   lastActivityDate: string;
-  streakType: "daily" | "weekly" | "monthly";
+  streakType: 'daily' | 'weekly' | 'monthly';
   milestones: StreakMilestone[];
   streakHistory: StreakEntry[];
   isActive: boolean;
@@ -14,7 +14,7 @@ export interface StreakData {
 export interface StreakEntry {
   date: string;
   activity: string;
-  type: "lesson" | "quiz" | "module_completion" | "badge_earned";
+  type: 'lesson' | 'quiz' | 'module_completion' | 'badge_earned';
   points: number;
 }
 
@@ -24,7 +24,7 @@ export interface StreakMilestone {
   title: string;
   description: string;
   reward: {
-    type: "badge" | "points" | "title";
+    type: 'badge' | 'points' | 'title';
     value: string | number;
   };
   achieved: boolean;
@@ -33,64 +33,64 @@ export interface StreakMilestone {
 
 const STREAK_MILESTONES: StreakMilestone[] = [
   {
-    id: "streak-3",
+    id: 'streak-3',
     threshold: 3,
-    title: "Getting Started",
-    description: "Complete activities for 3 consecutive days",
-    reward: { type: "points", value: 50 },
+    title: 'Getting Started',
+    description: 'Complete activities for 3 consecutive days',
+    reward: { type: 'points', value: 50 },
     achieved: false,
   },
   {
-    id: "streak-7",
+    id: 'streak-7',
     threshold: 7,
-    title: "Week Warrior",
-    description: "Maintain a 7-day learning streak",
-    reward: { type: "badge", value: "week-warrior" },
+    title: 'Week Warrior',
+    description: 'Maintain a 7-day learning streak',
+    reward: { type: 'badge', value: 'week-warrior' },
     achieved: false,
   },
   {
-    id: "streak-14",
+    id: 'streak-14',
     threshold: 14,
-    title: "Fortnight Fighter",
-    description: "Keep learning for 14 consecutive days",
-    reward: { type: "points", value: 200 },
+    title: 'Fortnight Fighter',
+    description: 'Keep learning for 14 consecutive days',
+    reward: { type: 'points', value: 200 },
     achieved: false,
   },
   {
-    id: "streak-30",
+    id: 'streak-30',
     threshold: 30,
-    title: "Monthly Master",
-    description: "Achieve a 30-day learning streak",
-    reward: { type: "badge", value: "monthly-master" },
+    title: 'Monthly Master',
+    description: 'Achieve a 30-day learning streak',
+    reward: { type: 'badge', value: 'monthly-master' },
     achieved: false,
   },
   {
-    id: "streak-60",
+    id: 'streak-60',
     threshold: 60,
-    title: "Dedication Devotee",
-    description: "Maintain learning habits for 60 days",
-    reward: { type: "title", value: "Dedicated Learner" },
+    title: 'Dedication Devotee',
+    description: 'Maintain learning habits for 60 days',
+    reward: { type: 'title', value: 'Dedicated Learner' },
     achieved: false,
   },
   {
-    id: "streak-100",
+    id: 'streak-100',
     threshold: 100,
-    title: "Centurion Scholar",
-    description: "Reach the legendary 100-day streak",
-    reward: { type: "badge", value: "centurion-scholar" },
+    title: 'Centurion Scholar',
+    description: 'Reach the legendary 100-day streak',
+    reward: { type: 'badge', value: 'centurion-scholar' },
     achieved: false,
   },
   {
-    id: "streak-365",
+    id: 'streak-365',
     threshold: 365,
-    title: "Year-Round Champion",
-    description: "Complete a full year of consistent learning",
-    reward: { type: "badge", value: "year-champion" },
+    title: 'Year-Round Champion',
+    description: 'Complete a full year of consistent learning',
+    reward: { type: 'badge', value: 'year-champion' },
     achieved: false,
   },
 ];
 
-const STORAGE_KEY = "fullstack-academy-streak-data";
+const STORAGE_KEY = 'fullstack-academy-streak-data';
 
 export const useStreakTracking = () => {
   const [streakData, setStreakData] = useState<StreakData>(() => {
@@ -101,16 +101,16 @@ export const useStreakTracking = () => {
         return {
           currentStreak: parsed.currentStreak ?? 0,
           longestStreak: parsed.longestStreak ?? 0,
-          lastActivityDate: parsed.lastActivityDate ?? "",
-          streakType: parsed.streakType ?? "daily",
+          lastActivityDate: parsed.lastActivityDate ?? '',
+          streakType: parsed.streakType ?? 'daily',
           milestones: STREAK_MILESTONES.map((milestone) => ({
             ...milestone,
             achieved:
               parsed.milestones?.find(
-                (m: StreakMilestone) => m.id === milestone.id,
+                (m: StreakMilestone) => m.id === milestone.id
               )?.achieved || false,
             achievedDate: parsed.milestones?.find(
-              (m: StreakMilestone) => m.id === milestone.id,
+              (m: StreakMilestone) => m.id === milestone.id
             )?.achievedDate,
           })),
           streakHistory: parsed.streakHistory ?? [],
@@ -118,15 +118,15 @@ export const useStreakTracking = () => {
           nextMilestone: parsed.nextMilestone,
         };
       } catch (error) {
-        console.error("Failed to parse streak data from localStorage:", error);
+        console.error('Failed to parse streak data from localStorage:', error);
       }
     }
 
     return {
       currentStreak: 0,
       longestStreak: 0,
-      lastActivityDate: "",
-      streakType: "daily",
+      lastActivityDate: '',
+      streakType: 'daily',
       milestones: [...STREAK_MILESTONES],
       streakHistory: [],
       isActive: false,
@@ -140,7 +140,7 @@ export const useStreakTracking = () => {
 
   // Check if streak should be broken on component mount
   const checkStreakStatus = useCallback(() => {
-    const today = new Date().toISOString().split("T")[0];
+    const today = new Date().toISOString().split('T')[0];
     const { lastActivityDate } = streakData;
 
     if (!lastActivityDate) return;
@@ -181,11 +181,11 @@ export const useStreakTracking = () => {
 
   const recordActivity = useCallback(
     (
-      activityType: "lesson" | "quiz" | "module_completion" | "badge_earned",
+      activityType: 'lesson' | 'quiz' | 'module_completion' | 'badge_earned',
       details: string,
-      points: number = 10,
+      points: number = 10
     ) => {
-      const today = new Date().toISOString().split("T")[0];
+      const today = new Date().toISOString().split('T')[0];
 
       setStreakData((prev) => {
         const {
@@ -237,7 +237,7 @@ export const useStreakTracking = () => {
 
         // Find next milestone
         const nextMilestone = updatedMilestones.find(
-          (m) => !m.achieved && m.threshold > newStreak,
+          (m) => !m.achieved && m.threshold > newStreak
         );
 
         return {
@@ -260,7 +260,7 @@ export const useStreakTracking = () => {
         };
       });
     },
-    [],
+    []
   );
 
   const resetStreak = useCallback(() => {
@@ -277,30 +277,30 @@ export const useStreakTracking = () => {
   }, []);
 
   const getStreakStatus = useCallback(() => {
-    const today = new Date().toISOString().split("T")[0];
+    const today = new Date().toISOString().split('T')[0];
     const { lastActivityDate, currentStreak } = streakData;
 
     if (!lastActivityDate) {
-      return { status: "new", message: "Start your learning streak today!" };
+      return { status: 'new', message: 'Start your learning streak today!' };
     }
 
     if (isSameDay(lastActivityDate, today)) {
       return {
-        status: "active",
+        status: 'active',
         message: `Great! You're on a ${currentStreak}-day streak. Keep it up!`,
       };
     }
 
     if (isConsecutiveDay(lastActivityDate, today)) {
       return {
-        status: "pending",
+        status: 'pending',
         message: `Continue your ${currentStreak}-day streak by completing an activity today!`,
       };
     }
 
     return {
-      status: "broken",
-      message: "Your streak was broken. Start a new one today!",
+      status: 'broken',
+      message: 'Your streak was broken. Start a new one today!',
     };
   }, [streakData]);
 
@@ -309,7 +309,7 @@ export const useStreakTracking = () => {
 
     if (nextMilestone) {
       const remaining = nextMilestone.threshold - currentStreak;
-      return `${remaining} more day${remaining === 1 ? "" : "s"} to unlock "${nextMilestone.title}"!`;
+      return `${remaining} more day${remaining === 1 ? '' : 's'} to unlock "${nextMilestone.title}"!`;
     }
 
     if (currentStreak >= 365) {
@@ -328,7 +328,7 @@ export const useStreakTracking = () => {
       return "Great momentum! You're building an excellent learning routine!";
     }
 
-    return "Every day counts! Keep building your learning habit!";
+    return 'Every day counts! Keep building your learning habit!';
   }, [streakData]);
 
   const getRecentlyAchievedMilestones = useCallback(() => {
@@ -339,7 +339,7 @@ export const useStreakTracking = () => {
       (milestone) =>
         milestone.achieved &&
         milestone.achievedDate &&
-        new Date(milestone.achievedDate) >= sevenDaysAgo,
+        new Date(milestone.achievedDate) >= sevenDaysAgo
     );
   }, [streakData]);
 

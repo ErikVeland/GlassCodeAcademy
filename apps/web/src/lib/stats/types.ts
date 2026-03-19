@@ -31,7 +31,7 @@ export interface AppStats {
 }
 
 // Base type for registry-based results (no loading/error)
-export type BaseStats = Omit<AppStats, "isLoading" | "error">;
+export type BaseStats = Omit<AppStats, 'isLoading' | 'error'>;
 
 // Client-safe registry shapes used by stats
 export interface ModuleRoutes {

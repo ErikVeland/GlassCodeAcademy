@@ -1,9 +1,9 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-import Link from "next/link";
-import EnhancedLoadingComponent from "../../components/EnhancedLoadingComponent";
-import { getGraphQLEndpoint } from "@/lib/urlUtils";
+import { useState } from 'react';
+import Link from 'next/link';
+import EnhancedLoadingComponent from '../../components/EnhancedLoadingComponent';
+import { getGraphQLEndpoint } from '@/lib/urlUtils';
 
 export default function GraphQLPlayground() {
   const [query, setQuery] =
@@ -17,23 +17,23 @@ query {
     title
   }
 }`);
-  const [variables, setVariables] = useState("{}");
-  const [response, setResponse] = useState("");
+  const [variables, setVariables] = useState('{}');
+  const [response, setResponse] = useState('');
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
+  const [error, setError] = useState('');
   const [retryCount, setRetryCount] = useState(0);
 
   const executeQuery = async () => {
     setLoading(true);
-    setError("");
+    setError('');
     try {
       // Resolve GraphQL endpoint via shared utility
       const graphqlUrl = getGraphQLEndpoint();
 
       const res = await fetch(graphqlUrl, {
-        method: "POST",
+        method: 'POST',
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify({
           query,
@@ -44,7 +44,7 @@ query {
       const data = await res.json();
       setResponse(JSON.stringify(data, null, 2));
     } catch (err) {
-      setError(err instanceof Error ? err.message : "An error occurred");
+      setError(err instanceof Error ? err.message : 'An error occurred');
     } finally {
       setLoading(false);
     }
@@ -53,7 +53,7 @@ query {
   // Handle manual retry
   const handleManualRetry = () => {
     setRetryCount(0);
-    setError("");
+    setError('');
     setLoading(true);
 
     // Reset the fetch process
@@ -63,9 +63,9 @@ query {
         const graphqlUrl = getGraphQLEndpoint();
 
         const res = await fetch(graphqlUrl, {
-          method: "POST",
+          method: 'POST',
           headers: {
-            "Content-Type": "application/json",
+            'Content-Type': 'application/json',
           },
           body: JSON.stringify({
             query: `# Welcome to the GlassCode GraphQL Playground
@@ -86,7 +86,7 @@ query {
         setResponse(JSON.stringify(data, null, 2));
         setLoading(false);
       } catch (err) {
-        setError(err instanceof Error ? err.message : "An error occurred");
+        setError(err instanceof Error ? err.message : 'An error occurred');
         setLoading(false);
       }
     };
@@ -103,8 +103,8 @@ query {
             className="fixed top-0 left-0 w-full h-full -z-10"
             style={{
               background:
-                "linear-gradient(135deg, #8B5CF6 0%, #3B82F6 25%, #10B981 50%, #F59E0B 75%, #EF4444 100%)",
-              animation: "gradientFlow 45s ease infinite",
+                'linear-gradient(135deg, #8B5CF6 0%, #3B82F6 25%, #10B981 50%, #F59E0B 75%, #EF4444 100%)',
+              animation: 'gradientFlow 45s ease infinite',
             }}
             aria-hidden="true"
             role="presentation"
@@ -129,8 +129,8 @@ query {
           className="fixed top-0 left-0 w-full h-full -z-10"
           style={{
             background:
-              "linear-gradient(135deg, #8B5CF6 0%, #3B82F6 25%, #10B981 50%, #F59E0B 75%, #EF4444 100%)",
-            animation: "gradientFlow 45s ease infinite",
+              'linear-gradient(135deg, #8B5CF6 0%, #3B82F6 25%, #10B981 50%, #F59E0B 75%, #EF4444 100%)',
+            animation: 'gradientFlow 45s ease infinite',
           }}
           aria-hidden="true"
           role="presentation"
@@ -156,8 +156,8 @@ query {
           className="fixed top-0 left-0 w-full h-full -z-10"
           style={{
             background:
-              "linear-gradient(135deg, #8B5CF6 0%, #3B82F6 25%, #10B981 50%, #F59E0B 75%, #EF4444 100%)",
-            animation: "gradientFlow 45s ease infinite",
+              'linear-gradient(135deg, #8B5CF6 0%, #3B82F6 25%, #10B981 50%, #F59E0B 75%, #EF4444 100%)',
+            animation: 'gradientFlow 45s ease infinite',
           }}
           aria-hidden="true"
           role="presentation"
@@ -192,7 +192,7 @@ query {
       <div
         className="fixed top-0 left-0 w-full h-full -z-10"
         style={{
-          background: "linear-gradient(135deg, #8B5CF6 0%, #7C3AED 100%)",
+          background: 'linear-gradient(135deg, #8B5CF6 0%, #7C3AED 100%)',
         }}
         aria-hidden="true"
         role="presentation"
@@ -342,7 +342,7 @@ query {
               )}
               <pre className="w-full h-[34rem] p-4 border border-white/30 rounded-xl overflow-auto bg-black/20 backdrop-blur-sm font-mono text-sm text-gray-900 dark:text-white scrollbar-thin scrollbar-thumb-white/20 scrollbar-track-transparent">
                 {response ||
-                  "// Execute a query to see results\n// Your GraphQL response will appear here"}
+                  '// Execute a query to see results\n// Your GraphQL response will appear here'}
               </pre>
             </div>
           </div>

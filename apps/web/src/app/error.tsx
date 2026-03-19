@@ -1,8 +1,8 @@
-"use client";
+'use client';
 
-import { useEffect, useState } from "react";
-import Link from "next/link";
-import EnhancedLoadingComponent from "../components/EnhancedLoadingComponent";
+import { useEffect, useState } from 'react';
+import Link from 'next/link';
+import EnhancedLoadingComponent from '../components/EnhancedLoadingComponent';
 
 export default function Error({
   error,
@@ -16,12 +16,12 @@ export default function Error({
 
   useEffect(() => {
     // Log the error to an error reporting service
-    console.error("Global error caught:", error);
+    console.error('Global error caught:', error);
 
     // If this is a 502 error, we want to automatically retry
     if (
-      error.message?.includes("502") ||
-      error.message?.includes("Bad Gateway")
+      error.message?.includes('502') ||
+      error.message?.includes('Bad Gateway')
     ) {
       // Start the retry process
       const retryTimer = setTimeout(() => {
@@ -39,8 +39,8 @@ export default function Error({
 
   // If we're dealing with a 502 error, show our enhanced loading component
   if (
-    (error.message?.includes("502") ||
-      error.message?.includes("Bad Gateway")) &&
+    (error.message?.includes('502') ||
+      error.message?.includes('Bad Gateway')) &&
     shouldRetry
   ) {
     return (
@@ -67,7 +67,7 @@ export default function Error({
           Something went wrong!
         </h2>
         <p className="text-gray-600 dark:text-gray-300 mb-6">
-          {error.message || "An unexpected error occurred"}
+          {error.message || 'An unexpected error occurred'}
         </p>
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
           <button

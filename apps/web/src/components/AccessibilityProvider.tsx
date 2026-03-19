@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import React, {
   createContext,
@@ -6,13 +6,13 @@ import React, {
   useState,
   useEffect,
   useCallback,
-} from "react";
+} from 'react';
 
 // WCAG 2.1 AA Compliance Features Interface
 interface AccessibilitySettings {
   highContrast: boolean;
   reducedMotion: boolean;
-  textSize: "small" | "medium" | "large" | "extra-large";
+  textSize: 'small' | 'medium' | 'large' | 'extra-large';
   focusIndicators: boolean;
   screenReaderOptimized: boolean;
   keyboardNavigation: boolean;
@@ -22,7 +22,7 @@ interface AccessibilityContextType {
   settings: AccessibilitySettings;
   updateSetting: <K extends keyof AccessibilitySettings>(
     key: K,
-    value: AccessibilitySettings[K],
+    value: AccessibilitySettings[K]
   ) => void;
   resetSettings: () => void;
   announceToScreenReader: (message: string) => void;
@@ -35,7 +35,7 @@ interface AccessibilityContextType {
 const defaultSettings: AccessibilitySettings = {
   highContrast: false,
   reducedMotion: false,
-  textSize: "medium",
+  textSize: 'medium',
   focusIndicators: true,
   screenReaderOptimized: false,
   keyboardNavigation: true,
@@ -49,7 +49,7 @@ export const useAccessibility = () => {
   const context = useContext(AccessibilityContext);
   if (!context) {
     throw new Error(
-      "useAccessibility must be used within an AccessibilityProvider",
+      'useAccessibility must be used within an AccessibilityProvider'
     );
   }
   return context;
@@ -68,22 +68,22 @@ export const AccessibilityProvider: React.FC<AccessibilityProviderProps> = ({
 
   // Load settings from localStorage on mount
   useEffect(() => {
-    const savedSettings = localStorage.getItem("accessibility-settings");
+    const savedSettings = localStorage.getItem('accessibility-settings');
     if (savedSettings) {
       try {
         const parsed = JSON.parse(savedSettings);
         setSettings({ ...defaultSettings, ...parsed });
       } catch (error) {
-        console.warn("Failed to parse accessibility settings:", error);
+        console.warn('Failed to parse accessibility settings:', error);
       }
     }
 
     // Check for system preferences
     const prefersReducedMotion = window.matchMedia(
-      "(prefers-reduced-motion: reduce)",
+      '(prefers-reduced-motion: reduce)'
     ).matches;
     const prefersHighContrast = window.matchMedia(
-      "(prefers-contrast: high)",
+      '(prefers-contrast: high)'
     ).matches;
 
     if (prefersReducedMotion || prefersHighContrast) {
@@ -97,7 +97,7 @@ export const AccessibilityProvider: React.FC<AccessibilityProviderProps> = ({
 
   // Save settings to localStorage when they change
   useEffect(() => {
-    localStorage.setItem("accessibility-settings", JSON.stringify(settings));
+    localStorage.setItem('accessibility-settings', JSON.stringify(settings));
   }, [settings]);
 
   // Apply settings to document
@@ -106,44 +106,44 @@ export const AccessibilityProvider: React.FC<AccessibilityProviderProps> = ({
 
     // High contrast mode
     if (settings.highContrast) {
-      root.classList.add("high-contrast");
+      root.classList.add('high-contrast');
     } else {
-      root.classList.remove("high-contrast");
+      root.classList.remove('high-contrast');
     }
 
     // Reduced motion
     if (settings.reducedMotion) {
-      root.classList.add("reduced-motion");
+      root.classList.add('reduced-motion');
     } else {
-      root.classList.remove("reduced-motion");
+      root.classList.remove('reduced-motion');
     }
 
     // Text size
-    root.setAttribute("data-text-size", settings.textSize);
+    root.setAttribute('data-text-size', settings.textSize);
 
     // Focus indicators
     if (settings.focusIndicators) {
-      root.classList.add("enhanced-focus");
+      root.classList.add('enhanced-focus');
     } else {
-      root.classList.remove("enhanced-focus");
+      root.classList.remove('enhanced-focus');
     }
 
     // Screen reader optimization
     if (settings.screenReaderOptimized) {
-      root.classList.add("screen-reader-optimized");
+      root.classList.add('screen-reader-optimized');
     } else {
-      root.classList.remove("screen-reader-optimized");
+      root.classList.remove('screen-reader-optimized');
     }
   }, [settings]);
 
   const updateSetting = useCallback(
     <K extends keyof AccessibilitySettings>(
       key: K,
-      value: AccessibilitySettings[K],
+      value: AccessibilitySettings[K]
     ) => {
       setSettings((prev) => ({ ...prev, [key]: value }));
     },
-    [],
+    []
   );
 
   const resetSettings = useCallback(() => {
@@ -152,10 +152,10 @@ export const AccessibilityProvider: React.FC<AccessibilityProviderProps> = ({
 
   // Screen reader announcements
   const announceToScreenReader = useCallback((message: string) => {
-    const announcement = document.createElement("div");
-    announcement.setAttribute("aria-live", "polite");
-    announcement.setAttribute("aria-atomic", "true");
-    announcement.className = "sr-only";
+    const announcement = document.createElement('div');
+    announcement.setAttribute('aria-live', 'polite');
+    announcement.setAttribute('aria-atomic', 'true');
+    announcement.className = 'sr-only';
     announcement.textContent = message;
 
     document.body.appendChild(announcement);
@@ -168,14 +168,14 @@ export const AccessibilityProvider: React.FC<AccessibilityProviderProps> = ({
   // Focus trap for modals and dropdowns
   const trapFocus = useCallback((container: HTMLElement) => {
     const focusableElements = container.querySelectorAll(
-      'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])',
+      'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
     ) as NodeListOf<HTMLElement>;
 
     const firstElement = focusableElements[0];
     const lastElement = focusableElements[focusableElements.length - 1];
 
     const handleTabKey = (e: KeyboardEvent) => {
-      if (e.key !== "Tab") return;
+      if (e.key !== 'Tab') return;
 
       if (e.shiftKey) {
         if (document.activeElement === firstElement) {
@@ -190,7 +190,7 @@ export const AccessibilityProvider: React.FC<AccessibilityProviderProps> = ({
       }
     };
 
-    container.addEventListener("keydown", handleTabKey);
+    container.addEventListener('keydown', handleTabKey);
 
     // Focus first element
     if (firstElement) {
@@ -198,20 +198,20 @@ export const AccessibilityProvider: React.FC<AccessibilityProviderProps> = ({
     }
 
     return () => {
-      container.removeEventListener("keydown", handleTabKey);
+      container.removeEventListener('keydown', handleTabKey);
     };
   }, []);
 
   // Skip to main content
   const skipToContent = useCallback(() => {
     const mainContent =
-      document.getElementById("main-content") ||
-      document.querySelector("main") ||
+      document.getElementById('main-content') ||
+      document.querySelector('main') ||
       document.querySelector('[role="main"]');
 
     if (mainContent) {
       (mainContent as HTMLElement).focus();
-      mainContent.scrollIntoView({ behavior: "smooth" });
+      mainContent.scrollIntoView({ behavior: 'smooth' });
     }
   }, []);
 
@@ -285,26 +285,26 @@ export const AccessibilityProvider: React.FC<AccessibilityProviderProps> = ({
         .enhanced-focus input:focus,
         .enhanced-focus select:focus,
         .enhanced-focus textarea:focus,
-        .enhanced-focus [role="button"]:focus,
-        .enhanced-focus [tabindex]:not([tabindex="-1"]):focus {
+        .enhanced-focus [role='button']:focus,
+        .enhanced-focus [tabindex]:not([tabindex='-1']):focus {
           outline: 3px solid #005fcc;
           outline-offset: 2px;
         }
 
         /* Text size adjustments */
-        [data-text-size="small"] {
+        [data-text-size='small'] {
           font-size: 0.875rem;
         }
 
-        [data-text-size="medium"] {
+        [data-text-size='medium'] {
           font-size: 1rem;
         }
 
-        [data-text-size="large"] {
+        [data-text-size='large'] {
           font-size: 1.125rem;
         }
 
-        [data-text-size="extra-large"] {
+        [data-text-size='extra-large'] {
           font-size: 1.25rem;
         }
 
@@ -343,7 +343,7 @@ export const AccessibilityPanel: React.FC<{
 
   const handleSettingChange = <K extends keyof AccessibilitySettings>(
     key: K,
-    value: AccessibilitySettings[K],
+    value: AccessibilitySettings[K]
   ) => {
     updateSetting(key, value);
     announceToScreenReader(`${key} setting updated`);
@@ -375,7 +375,7 @@ export const AccessibilityPanel: React.FC<{
                 type="checkbox"
                 checked={settings.highContrast}
                 onChange={(e) =>
-                  handleSettingChange("highContrast", e.target.checked)
+                  handleSettingChange('highContrast', e.target.checked)
                 }
               />
               High Contrast Mode
@@ -388,7 +388,7 @@ export const AccessibilityPanel: React.FC<{
                 type="checkbox"
                 checked={settings.reducedMotion}
                 onChange={(e) =>
-                  handleSettingChange("reducedMotion", e.target.checked)
+                  handleSettingChange('reducedMotion', e.target.checked)
                 }
               />
               Reduce Motion
@@ -402,8 +402,8 @@ export const AccessibilityPanel: React.FC<{
               value={settings.textSize}
               onChange={(e) =>
                 handleSettingChange(
-                  "textSize",
-                  e.target.value as AccessibilitySettings["textSize"],
+                  'textSize',
+                  e.target.value as AccessibilitySettings['textSize']
                 )
               }
             >
@@ -420,7 +420,7 @@ export const AccessibilityPanel: React.FC<{
                 type="checkbox"
                 checked={settings.screenReaderOptimized}
                 onChange={(e) =>
-                  handleSettingChange("screenReaderOptimized", e.target.checked)
+                  handleSettingChange('screenReaderOptimized', e.target.checked)
                 }
               />
               Screen Reader Optimization
@@ -433,7 +433,7 @@ export const AccessibilityPanel: React.FC<{
                 type="checkbox"
                 checked={settings.focusIndicators}
                 onChange={(e) =>
-                  handleSettingChange("focusIndicators", e.target.checked)
+                  handleSettingChange('focusIndicators', e.target.checked)
                 }
               />
               Enhanced Focus Indicators
@@ -500,7 +500,7 @@ export const AccessibilityPanel: React.FC<{
           margin-bottom: 0.5rem;
         }
 
-        .setting-group input[type="checkbox"] {
+        .setting-group input[type='checkbox'] {
           margin-right: 0.5rem;
         }
 

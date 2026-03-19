@@ -1,13 +1,13 @@
-"use client";
+'use client';
 
-import { useEffect } from "react";
-import { useDarkMode } from "./DarkModeContext";
+import { useEffect } from 'react';
+import { useDarkMode } from './DarkModeContext';
 import {
   SunIcon,
   MoonIcon,
   ComputerDesktopIcon,
   DevicePhoneMobileIcon,
-} from "@heroicons/react/24/solid";
+} from '@heroicons/react/24/solid';
 
 export default function DarkModeToggle() {
   const { theme, isDark, cycleTheme } = useDarkMode();
@@ -20,11 +20,11 @@ export default function DarkModeToggle() {
   }, []);
 
   const label =
-    theme === "system"
-      ? "Theme: System (auto)"
-      : theme === "dark"
-        ? "Theme: Dark"
-        : "Theme: Light";
+    theme === 'system'
+      ? 'Theme: System (auto)'
+      : theme === 'dark'
+        ? 'Theme: Dark'
+        : 'Theme: Light';
 
   return (
     <button
@@ -34,7 +34,7 @@ export default function DarkModeToggle() {
       title={`${label} — click to cycle`}
       data-testid="theme-toggle"
     >
-      {theme === "system" ? (
+      {theme === 'system' ? (
         // Auto/system mode: phone icon on mobile, desktop icon on larger screens
         <span className="inline-flex items-center justify-center leading-none align-middle">
           <DevicePhoneMobileIcon

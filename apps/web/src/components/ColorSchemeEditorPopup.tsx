@@ -1,6 +1,6 @@
-"use client";
+'use client';
 
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback } from 'react';
 
 interface ColorStop {
   color: string;
@@ -19,10 +19,10 @@ const ColorSchemeEditorPopup: React.FC<ColorSchemeEditorPopupProps> = ({
   onClose,
   onColorsChange,
   initialColors = [
-    "rgba(99, 102, 241, 0.12)",
-    "rgba(168, 85, 247, 0.12)",
-    "rgba(236, 72, 153, 0.12)",
-    "rgba(16, 185, 129, 0.12)",
+    'rgba(99, 102, 241, 0.12)',
+    'rgba(168, 85, 247, 0.12)',
+    'rgba(236, 72, 153, 0.12)',
+    'rgba(16, 185, 129, 0.12)',
   ],
 }) => {
   const [colorStops, setColorStops] = useState<ColorStop[]>(() => {
@@ -42,7 +42,7 @@ const ColorSchemeEditorPopup: React.FC<ColorSchemeEditorPopupProps> = ({
         return updated;
       });
     },
-    [onColorsChange],
+    [onColorsChange]
   );
 
   const updatePosition = useCallback(
@@ -60,7 +60,7 @@ const ColorSchemeEditorPopup: React.FC<ColorSchemeEditorPopupProps> = ({
         return updated;
       });
     },
-    [onColorsChange],
+    [onColorsChange]
   );
 
   const addColorStop = useCallback(() => {
@@ -70,7 +70,7 @@ const ColorSchemeEditorPopup: React.FC<ColorSchemeEditorPopupProps> = ({
       const updated = [
         ...prev,
         {
-          color: "rgba(59, 130, 246, 0.12)",
+          color: 'rgba(59, 130, 246, 0.12)',
           position: Math.min(100, newPosition),
         },
       ];
@@ -91,21 +91,21 @@ const ColorSchemeEditorPopup: React.FC<ColorSchemeEditorPopupProps> = ({
         return updated;
       });
     },
-    [colorStops.length, onColorsChange],
+    [colorStops.length, onColorsChange]
   );
 
   const extractColorValue = (colorString: string): string => {
     const rgbaMatch = colorString.match(/rgba?\(([^)]+)\)/);
     if (rgbaMatch) {
-      const values = rgbaMatch[1].split(",").map((v) => v.trim());
+      const values = rgbaMatch[1].split(',').map((v) => v.trim());
       if (values.length >= 3) {
         const r = parseInt(values[0]);
         const g = parseInt(values[1]);
         const b = parseInt(values[2]);
-        return `#${r.toString(16).padStart(2, "0")}${g.toString(16).padStart(2, "0")}${b.toString(16).padStart(2, "0")}`;
+        return `#${r.toString(16).padStart(2, '0')}${g.toString(16).padStart(2, '0')}${b.toString(16).padStart(2, '0')}`;
       }
     }
-    return "#000000";
+    return '#000000';
   };
 
   const createRgbaFromHex = (hex: string, alpha: number = 0.12): string => {
@@ -153,9 +153,9 @@ const ColorSchemeEditorPopup: React.FC<ColorSchemeEditorPopupProps> = ({
             <div
               className="h-20 rounded-lg border border-white/20"
               style={{
-                background: `linear-gradient(45deg, ${colorStops.map((stop) => stop.color).join(", ")})`,
-                backgroundSize: "200% 200%",
-                animation: "gradient-shift 3s ease infinite",
+                background: `linear-gradient(45deg, ${colorStops.map((stop) => stop.color).join(', ')})`,
+                backgroundSize: '200% 200%',
+                animation: 'gradient-shift 3s ease infinite',
               }}
             />
           </div>
@@ -251,7 +251,7 @@ const ColorSchemeEditorPopup: React.FC<ColorSchemeEditorPopupProps> = ({
               <button
                 onClick={() => {
                   const sorted = [...colorStops].sort(
-                    (a, b) => a.position - b.position,
+                    (a, b) => a.position - b.position
                   );
                   setColorStops(sorted);
                   onColorsChange(sorted.map((stop) => stop.color));

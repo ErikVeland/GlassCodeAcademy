@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
-import React, { useState, useEffect } from "react";
-import { useProgressTracking } from "../hooks/useProgressTracking";
+import React, { useState, useEffect } from 'react';
+import { useProgressTracking } from '../hooks/useProgressTracking';
 
 interface StreakData {
   current: number;
@@ -21,14 +21,14 @@ const GamificationDashboard: React.FC = () => {
     longest: 0,
     lastActivity: null,
   });
-  const [selectedRarity, setSelectedRarity] = useState<string>("all");
+  const [selectedRarity, setSelectedRarity] = useState<string>('all');
   const [isCollapsed, setIsCollapsed] = useState(false);
 
   // Initialize gamification data
   useEffect(() => {
     const initializeGamification = () => {
       // Load streak data from localStorage
-      const savedStreak = localStorage.getItem("learning_streak");
+      const savedStreak = localStorage.getItem('learning_streak');
       if (savedStreak) {
         const parsed = JSON.parse(savedStreak);
         setStreakData({
@@ -47,24 +47,24 @@ const GamificationDashboard: React.FC = () => {
 
   const filteredAchievements = achievements.filter(
     (achievement) =>
-      selectedRarity === "all" || achievement.type === selectedRarity,
+      selectedRarity === 'all' || achievement.type === selectedRarity
   );
 
   const getRarityColor = (type: string) => {
     const colors = {
-      completion: "text-blue-600 bg-blue-100",
-      streak: "text-green-600 bg-green-100",
-      skill: "text-purple-600 bg-purple-100",
-      velocity: "text-yellow-600 bg-yellow-100",
+      completion: 'text-blue-600 bg-blue-100',
+      streak: 'text-green-600 bg-green-100',
+      skill: 'text-purple-600 bg-purple-100',
+      velocity: 'text-yellow-600 bg-yellow-100',
     };
     return colors[type as keyof typeof colors] || colors.completion;
   };
 
   const getStreakIcon = () => {
-    if (streakData.current >= 30) return "🔥🔥🔥";
-    if (streakData.current >= 14) return "🔥🔥";
-    if (streakData.current >= 7) return "🔥";
-    return "📅";
+    if (streakData.current >= 30) return '🔥🔥🔥';
+    if (streakData.current >= 14) return '🔥🔥';
+    if (streakData.current >= 7) return '🔥';
+    return '📅';
   };
 
   return (
@@ -77,9 +77,9 @@ const GamificationDashboard: React.FC = () => {
           <button
             onClick={() => setIsCollapsed(!isCollapsed)}
             className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 transition-colors"
-            aria-label={isCollapsed ? "Expand dashboard" : "Collapse dashboard"}
+            aria-label={isCollapsed ? 'Expand dashboard' : 'Collapse dashboard'}
           >
-            {isCollapsed ? "▼" : "▲"}
+            {isCollapsed ? '▼' : '▲'}
           </button>
         </div>
 
@@ -155,7 +155,7 @@ const GamificationDashboard: React.FC = () => {
                         <div className="flex items-center space-x-2 mb-1">
                           <h4 className="font-medium text-gray-900 dark:text-gray-100 text-sm">
                             {achievement.type.charAt(0).toUpperCase() +
-                              achievement.type.slice(1)}{" "}
+                              achievement.type.slice(1)}{' '}
                             Achievement
                           </h4>
                           <span
@@ -168,9 +168,9 @@ const GamificationDashboard: React.FC = () => {
                           {achievement.description}
                         </p>
                         <div className="text-xs text-gray-500 dark:text-gray-500">
-                          Unlocked{" "}
+                          Unlocked{' '}
                           {new Date(
-                            achievement.earnedDate,
+                            achievement.earnedDate
                           ).toLocaleDateString()}
                         </div>
                       </div>

@@ -1,6 +1,6 @@
-"use client";
+'use client';
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState } from 'react';
 
 type EndpointStatus = {
   url: string;
@@ -11,11 +11,11 @@ type EndpointStatus = {
 };
 
 const DEBUG =
-  typeof process !== "undefined" && process.env.NEXT_PUBLIC_DEBUG === "true";
+  typeof process !== 'undefined' && process.env.NEXT_PUBLIC_DEBUG === 'true';
 
 async function checkEndpoint(
   url: string,
-  timeoutMs = 4000,
+  timeoutMs = 4000
 ): Promise<EndpointStatus> {
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), timeoutMs);
@@ -23,7 +23,7 @@ async function checkEndpoint(
   try {
     const res = await fetch(url, {
       signal: controller.signal,
-      cache: "no-store",
+      cache: 'no-store',
     });
     const latencyMs = Date.now() - start;
     clearTimeout(timeout);
@@ -44,8 +44,8 @@ export default function StatusBanner() {
     let mounted = true;
     (async () => {
       const [h, r] = await Promise.all([
-        checkEndpoint("/health"),
-        checkEndpoint("/api/content/registry"),
+        checkEndpoint('/health'),
+        checkEndpoint('/api/content/registry'),
       ]);
       if (!mounted) return;
       setHealth(h);
@@ -65,20 +65,20 @@ export default function StatusBanner() {
   if (!visible) return null;
 
   const items: EndpointStatus[] = [health, registry].filter(
-    Boolean,
+    Boolean
   ) as EndpointStatus[];
   const anyError = items.some((i) => !i.ok);
 
   return (
     <div
-      className={`w-full z-50 ${anyError ? "bg-red-600" : "bg-amber-500"} text-white`}
+      className={`w-full z-50 ${anyError ? 'bg-red-600' : 'bg-amber-500'} text-white`}
       role="status"
       aria-live="polite"
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2 text-sm">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
           <div className="font-medium">
-            {anyError ? "Connectivity issues detected" : "Connectivity check"}
+            {anyError ? 'Connectivity issues detected' : 'Connectivity check'}
           </div>
           <div className="flex flex-wrap gap-3">
             {items.map((item, idx) => (
@@ -87,12 +87,12 @@ export default function StatusBanner() {
                   {item.url}
                 </span>
                 <span
-                  className={`px-2 py-0.5 rounded ${item.ok ? "bg-green-700" : "bg-red-700"}`}
+                  className={`px-2 py-0.5 rounded ${item.ok ? 'bg-green-700' : 'bg-red-700'}`}
                 >
-                  {item.ok ? `OK ${item.status}` : `ERR ${item.status ?? ""}`}
+                  {item.ok ? `OK ${item.status}` : `ERR ${item.status ?? ''}`}
                 </span>
                 <span className="px-2 py-0.5 rounded bg-black/20">
-                  {item.latencyMs != null ? `${item.latencyMs}ms` : "n/a"}
+                  {item.latencyMs != null ? `${item.latencyMs}ms` : 'n/a'}
                 </span>
                 {item.error && (
                   <span

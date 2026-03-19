@@ -1,0 +1,5 @@
+# Run lint-staged per workspace so each uses its own eslint config and cwd
+(cd apps/web && npx lint-staged --allow-empty) || exit 1
+(cd apps/api && npx lint-staged --allow-empty) || exit 1
+# Root-level files (json, md, yml)
+npx lint-staged --allow-empty

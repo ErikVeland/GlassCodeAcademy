@@ -1,8 +1,8 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback } from 'react';
 import {
   ENHANCED_ACHIEVEMENTS,
   ExtendedAchievement,
-} from "../lib/enhancedAchievements";
+} from '../lib/enhancedAchievements';
 
 interface UserAchievement extends ExtendedAchievement {
   earned: boolean;
@@ -36,7 +36,7 @@ type AchievementStorage = Record<
   }
 >;
 
-const STORAGE_KEY = "fullstack-academy-achievements";
+const STORAGE_KEY = 'fullstack-academy-achievements';
 
 export const useAchievements = () => {
   const [achievements, setAchievements] = useState<UserAchievement[]>(() => {
@@ -51,7 +51,7 @@ export const useAchievements = () => {
           progress: parsed[achievement.id]?.progress || 0,
         }));
       } catch (error) {
-        console.error("Failed to parse achievements from localStorage:", error);
+        console.error('Failed to parse achievements from localStorage:', error);
       }
     }
 
@@ -73,7 +73,7 @@ export const useAchievements = () => {
         };
         return acc;
       },
-      {} as AchievementStorage,
+      {} as AchievementStorage
     );
 
     localStorage.setItem(STORAGE_KEY, JSON.stringify(achievementData));
@@ -93,22 +93,22 @@ export const useAchievements = () => {
         let currentValue = 0;
 
         switch (requirement.type) {
-          case "module_completion":
+          case 'module_completion':
             currentValue = progressData.completedModules || 0;
             break;
-          case "lesson_count":
+          case 'lesson_count':
             currentValue = progressData.completedLessons || 0;
             break;
-          case "quiz_score":
+          case 'quiz_score':
             currentValue = progressData.averageQuizScore || 0;
             break;
-          case "streak_days":
+          case 'streak_days':
             currentValue = progressData.currentStreak || 0;
             break;
-          case "time_spent":
+          case 'time_spent':
             currentValue = progressData.totalStudyTime || 0;
             break;
-          case "tier_completion":
+          case 'tier_completion':
             // Check if specific tier is completed based on the achievement's tier
             {
               const tierProgressValue = achievement.tier
@@ -123,13 +123,13 @@ export const useAchievements = () => {
 
         // Check if requirement is met based on condition
         switch (requirement.condition) {
-          case "minimum":
+          case 'minimum':
             requirementMet = currentValue >= requirement.target;
             break;
-          case "exact":
+          case 'exact':
             requirementMet = currentValue === requirement.target;
             break;
-          case "maximum":
+          case 'maximum':
             requirementMet = currentValue <= requirement.target;
             break;
           default:
@@ -144,7 +144,7 @@ export const useAchievements = () => {
       }
 
       const progressPercentage = Math.round(
-        (progress / totalRequirements) * 100,
+        (progress / totalRequirements) * 100
       );
 
       return {
@@ -152,17 +152,17 @@ export const useAchievements = () => {
         progress: progressPercentage,
         currentValues: achievement.requirements.map((req) => {
           switch (req.type) {
-            case "module_completion":
+            case 'module_completion':
               return progressData.completedModules || 0;
-            case "lesson_count":
+            case 'lesson_count':
               return progressData.completedLessons || 0;
-            case "quiz_score":
+            case 'quiz_score':
               return progressData.averageQuizScore || 0;
-            case "streak_days":
+            case 'streak_days':
               return progressData.currentStreak || 0;
-            case "time_spent":
+            case 'time_spent':
               return progressData.totalStudyTime || 0;
-            case "tier_completion": {
+            case 'tier_completion': {
               const tierProgressValue = achievement.tier
                 ? progressData.tierProgress?.[achievement.tier] || 0
                 : 0;
@@ -174,7 +174,7 @@ export const useAchievements = () => {
         }),
       };
     },
-    [],
+    []
   );
 
   const updateAchievements = useCallback(
@@ -204,13 +204,13 @@ export const useAchievements = () => {
             newAchievements = true;
 
             // Trigger notification or celebration
-            if (typeof window !== "undefined") {
+            if (typeof window !== 'undefined') {
               console.log(`🎉 Achievement Unlocked: ${achievement.title}!`);
               // You could dispatch a custom event here for UI notifications
               window.dispatchEvent(
-                new CustomEvent("achievement-unlocked", {
+                new CustomEvent('achievement-unlocked', {
                   detail: { achievement: updatedAchievement },
-                }),
+                })
               );
             }
           }
@@ -221,7 +221,7 @@ export const useAchievements = () => {
 
       return newAchievements;
     },
-    [checkAchievement],
+    [checkAchievement]
   );
 
   const getAchievementProgress = useCallback(
@@ -238,7 +238,7 @@ export const useAchievements = () => {
         percentage: achievement.progress || 0,
       };
     },
-    [achievements],
+    [achievements]
   );
 
   const getEarnedAchievements = useCallback(() => {
@@ -255,33 +255,33 @@ export const useAchievements = () => {
           (achievement) =>
             achievement.earned &&
             achievement.earnedDate &&
-            new Date(achievement.earnedDate) >= cutoffDate,
+            new Date(achievement.earnedDate) >= cutoffDate
         )
         .sort(
           (a, b) =>
             new Date(b.earnedDate!).getTime() -
-            new Date(a.earnedDate!).getTime(),
+            new Date(a.earnedDate!).getTime()
         );
     },
-    [achievements],
+    [achievements]
   );
 
   const getAchievementsByCategory = useCallback(
     (category: string) => {
       return achievements.filter(
-        (achievement) => achievement.category === category,
+        (achievement) => achievement.category === category
       );
     },
-    [achievements],
+    [achievements]
   );
 
   const getAchievementsByRarity = useCallback(
     (rarity: string) => {
       return achievements.filter(
-        (achievement) => achievement.rarity === rarity,
+        (achievement) => achievement.rarity === rarity
       );
     },
-    [achievements],
+    [achievements]
   );
 
   const getTotalPoints = useCallback(() => {
@@ -301,8 +301,7 @@ export const useAchievements = () => {
   const getNearestAchievements = useCallback(() => {
     return achievements
       .filter(
-        (achievement) =>
-          !achievement.earned && (achievement.progress || 0) > 50,
+        (achievement) => !achievement.earned && (achievement.progress || 0) > 50
       )
       .sort((a, b) => (b.progress || 0) - (a.progress || 0))
       .slice(0, 3);
@@ -314,7 +313,7 @@ export const useAchievements = () => {
         ...achievement,
         earned: false,
         progress: 0,
-      })),
+      }))
     );
   }, []);
 

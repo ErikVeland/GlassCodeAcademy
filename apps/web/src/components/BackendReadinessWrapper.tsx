@@ -1,8 +1,8 @@
-"use client";
+'use client';
 
-import React from "react";
-import { useBackendReadiness } from "../hooks/useBackendReadiness";
-import { usePathname } from "next/navigation";
+import React from 'react';
+import { useBackendReadiness } from '../hooks/useBackendReadiness';
+import { usePathname } from 'next/navigation';
 
 export default function BackendReadinessWrapper({
   children,
@@ -11,16 +11,16 @@ export default function BackendReadinessWrapper({
 }) {
   const pathname = usePathname();
   const { isReady, isLoading, error, retryCount } = useBackendReadiness({
-    enabled: pathname !== "/",
+    enabled: pathname !== '/',
   });
 
   const showStatus =
-    process.env.NODE_ENV !== "production" ||
-    process.env.NEXT_PUBLIC_SHOW_BACKEND_STATUS === "1";
+    process.env.NODE_ENV !== 'production' ||
+    process.env.NEXT_PUBLIC_SHOW_BACKEND_STATUS === '1';
 
   return (
     <div className="relative">
-      {showStatus && pathname !== "/" && !isReady && (
+      {showStatus && pathname !== '/' && !isReady && (
         <div
           role="status"
           aria-live="polite"
@@ -33,14 +33,14 @@ export default function BackendReadinessWrapper({
             />
             <p className="text-sm text-gray-800 dark:text-gray-200">
               {isLoading
-                ? "Connecting to backend…"
+                ? 'Connecting to backend…'
                 : error
-                  ? "Backend not reachable. Showing local content."
-                  : "Backend connected."}
+                  ? 'Backend not reachable. Showing local content.'
+                  : 'Backend connected.'}
             </p>
             {error && (
               <span className="ml-auto text-xs text-gray-600 dark:text-gray-400">
-                {retryCount > 0 ? `Retries: ${retryCount}` : ""}
+                {retryCount > 0 ? `Retries: ${retryCount}` : ''}
               </span>
             )}
           </div>

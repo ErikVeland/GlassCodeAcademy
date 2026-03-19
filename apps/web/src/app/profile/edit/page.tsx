@@ -1,15 +1,15 @@
-"use client";
+'use client';
 
-import React, { useRef } from "react";
-import Image from "next/image";
-import { useProfile } from "../../../components/ProfileProvider";
+import React, { useRef } from 'react';
+import Image from 'next/image';
+import { useProfile } from '../../../components/ProfileProvider';
 
 const presetAvatars: { id: string; emoji: string }[] = [
-  { id: "cat", emoji: "🐱" },
-  { id: "dog", emoji: "🐶" },
-  { id: "rocket", emoji: "🚀" },
-  { id: "book", emoji: "📘" },
-  { id: "code", emoji: "💻" },
+  { id: 'cat', emoji: '🐱' },
+  { id: 'dog', emoji: '🐶' },
+  { id: 'rocket', emoji: '🚀' },
+  { id: 'book', emoji: '📘' },
+  { id: 'code', emoji: '💻' },
 ];
 
 export default function EditProfilePage() {
@@ -51,7 +51,7 @@ export default function EditProfilePage() {
                 {profile.avatarPresetId
                   ? presetAvatars.find((a) => a.id === profile.avatarPresetId)
                       ?.emoji
-                  : "👤"}
+                  : '👤'}
               </span>
             </div>
           )}
@@ -61,7 +61,7 @@ export default function EditProfilePage() {
             </label>
             <input
               type="text"
-              defaultValue={profile.displayName || ""}
+              defaultValue={profile.displayName || ''}
               onBlur={(e) => setDisplayName(e.target.value)}
               className="w-full px-3 py-2 rounded-md border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900"
               placeholder="Enter display name"
@@ -91,7 +91,7 @@ export default function EditProfilePage() {
             {presetAvatars.map((a) => (
               <button
                 key={a.id}
-                className={`w-12 h-12 rounded-full flex items-center justify-center text-2xl border ${profile.avatarPresetId === a.id ? "border-blue-600" : "border-gray-300 dark:border-gray-700"} bg-gray-100 dark:bg-gray-700`}
+                className={`w-12 h-12 rounded-full flex items-center justify-center text-2xl border ${profile.avatarPresetId === a.id ? 'border-blue-600' : 'border-gray-300 dark:border-gray-700'} bg-gray-100 dark:bg-gray-700`}
                 onClick={() => setPresetAvatar(a.id)}
                 aria-label={`Select avatar ${a.emoji}`}
               >

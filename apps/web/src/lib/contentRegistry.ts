@@ -3,8 +3,8 @@
  * Provides centralized access to content registry data for routing and navigation
  */
 
-import { normalizeQuestion } from "./textNormalization";
-import { getPublicOriginStrict } from "./urlUtils";
+import { normalizeQuestion } from './textNormalization';
+import { getPublicOriginStrict } from './urlUtils';
 
 interface Module {
   slug: string;
@@ -94,7 +94,7 @@ interface Lesson {
   pitfalls?: Array<{
     mistake?: string;
     solution?: string;
-    severity?: "high" | "medium" | "low";
+    severity?: 'high' | 'medium' | 'low';
   }>;
   exercises?: Array<{
     title?: string;
@@ -117,7 +117,7 @@ interface ProgrammingQuestion {
   // If true, keep choices in fixed order and do not shuffle
   fixedChoiceOrder?: boolean;
   // Optional choice label style; when 'letters', render A/B/C/D prefixes
-  choiceLabels?: "letters" | "none";
+  choiceLabels?: 'letters' | 'none';
   order?: number;
 }
 
@@ -191,53 +191,53 @@ class ContentRegistryLoader {
     const maxRetries = 3;
     const baseDelay = 1000; // 1 second
 
-    const isBrowser = typeof window !== "undefined";
+    const isBrowser = typeof window !== 'undefined';
     const rawOrigin = isBrowser
-      ? ""
+      ? ''
       : (() => {
           try {
-            return getPublicOriginStrict().replace(/\/+$/, "");
+            return getPublicOriginStrict().replace(/\/+$/, '');
           } catch {
-            return "";
+            return '';
           }
         })();
     const isProdCi =
-      !isBrowser && (process.env.NODE_ENV === "production" || !!process.env.CI);
+      !isBrowser && (process.env.NODE_ENV === 'production' || !!process.env.CI);
     const base = (() => {
-      if (!rawOrigin) return "";
+      if (!rawOrigin) return '';
       try {
         const u = new URL(rawOrigin);
         const hostIsLocal =
-          u.hostname === "localhost" || u.hostname === "127.0.0.1";
-        if (isProdCi && hostIsLocal) return "";
+          u.hostname === 'localhost' || u.hostname === '127.0.0.1';
+        if (isProdCi && hostIsLocal) return '';
         return rawOrigin;
       } catch {
-        return "";
+        return '';
       }
     })();
     const includeLocalCandidates =
-      !isBrowser && process.env.NODE_ENV !== "production" && !process.env.CI;
+      !isBrowser && process.env.NODE_ENV !== 'production' && !process.env.CI;
     const portEnv = !isBrowser
-      ? (process.env.PORT || process.env.NEXT_PUBLIC_PORT || "")
+      ? (process.env.PORT || process.env.NEXT_PUBLIC_PORT || '')
           .toString()
           .trim()
-      : "";
+      : '';
 
     const candidateUrls: string[] = (() => {
       if (isBrowser) {
-        return ["/api/content/registry", "/registry.json"];
+        return ['/api/content/registry', '/registry.json'];
       }
       const urls: string[] = [];
       if (base) {
         urls.push(`${base}/api/content/registry`, `${base}/registry.json`);
       }
       if (includeLocalCandidates) {
-        const devPort = portEnv || "3000";
+        const devPort = portEnv || '3000';
         urls.push(
           `http://localhost:${devPort}/api/content/registry`,
           `http://127.0.0.1:${devPort}/api/content/registry`,
           `http://localhost:${devPort}/registry.json`,
-          `http://127.0.0.1:${devPort}/registry.json`,
+          `http://127.0.0.1:${devPort}/registry.json`
         );
       }
       return Array.from(new Set(urls));
@@ -251,7 +251,7 @@ class ContentRegistryLoader {
           // Use type assertion to allow Next.js specific options
           const fetchOptions: RequestInit & { next?: { revalidate: number } } =
             isBrowser
-              ? { signal: controller.signal, cache: "no-store" }
+              ? { signal: controller.signal, cache: 'no-store' }
               : { signal: controller.signal, next: { revalidate: 3600 } };
           const response = await fetch(url, fetchOptions).finally(() => {
             clearTimeout(timeoutId);
@@ -268,24 +268,24 @@ class ContentRegistryLoader {
       }
       if (attempt < maxRetries) {
         await new Promise((res) =>
-          setTimeout(res, baseDelay * Math.pow(2, attempt)),
+          setTimeout(res, baseDelay * Math.pow(2, attempt))
         );
       }
     }
 
     if (!isBrowser) {
       try {
-        const { promises: fs } = await import("fs");
-        const path = await import("path");
+        const { promises: fs } = await import('fs');
+        const path = await import('path');
         const cwd = process.cwd();
         const fileCandidates = [
-          path.join(cwd, "public", "registry.json"),
-          path.join(cwd, "content", "registry.json"),
-          path.join(cwd, "..", "content", "registry.json"),
+          path.join(cwd, 'public', 'registry.json'),
+          path.join(cwd, 'content', 'registry.json'),
+          path.join(cwd, '..', 'content', 'registry.json'),
         ];
         for (const p of fileCandidates) {
           try {
-            const json = await fs.readFile(p, "utf-8");
+            const json = await fs.readFile(p, 'utf-8');
             const parsed = JSON.parse(json) as ContentRegistry;
             if (parsed && Array.isArray(parsed.modules)) {
               return parsed;
@@ -299,7 +299,7 @@ class ContentRegistryLoader {
       }
     }
 
-    throw new Error("Registry unavailable from API");
+    throw new Error('Registry unavailable from API');
   }
 
   /**
@@ -312,7 +312,7 @@ class ContentRegistryLoader {
     // Fallback: some registries embed modules inside tiers
     const tierValues = Object.values(registry.tiers || {});
     const fromTiers: Module[] = tierValues.flatMap((t) =>
-      Array.isArray(t.modules) ? t.modules : [],
+      Array.isArray(t.modules) ? t.modules : []
     );
     return fromTiers;
   }
@@ -322,57 +322,31 @@ class ContentRegistryLoader {
    */
   async getModule(slug: string): Promise<Module | null> {
     const modules = await this.getModules();
-    console.log(`getModule(${slug}): total modules loaded:`, modules.length);
 
     // First try to find by exact slug match (moduleSlug)
     let foundModule = modules.find((m) => m.slug === slug);
-    console.log(`getModule(${slug}): found by exact slug:`, foundModule?.slug);
 
     // If not found, try to convert shortSlug to moduleSlug and search again
     if (!foundModule) {
       const moduleSlug = await this.getModuleSlugFromShortSlug(slug);
-      console.log(`getModule(${slug}): converted to moduleSlug:`, moduleSlug);
       if (moduleSlug) {
         foundModule = modules.find((m) => m.slug === moduleSlug);
-        console.log(
-          `getModule(${slug}): found by moduleSlug:`,
-          foundModule?.slug,
-        );
       }
     }
 
     // If still not found, try to find by legacy slugs
     if (!foundModule) {
       foundModule = modules.find((m) => m.legacySlugs?.includes(slug));
-      console.log(
-        `getModule(${slug}): found by legacy slug:`,
-        foundModule?.slug,
-      );
 
       // If still not found, try to find by short slug
       if (!foundModule) {
         foundModule = modules.find((m) => {
-          const shortSlug = m.slug.includes("-")
-            ? m.slug.split("-")[0]
+          const shortSlug = m.slug.includes('-')
+            ? m.slug.split('-')[0]
             : m.slug;
           return shortSlug === slug;
         });
-        console.log(
-          `getModule(${slug}): found by short slug:`,
-          foundModule?.slug,
-        );
       }
-    }
-
-    if (foundModule) {
-      console.log(
-        `getModule(${slug}): returning module with metadata:`,
-        foundModule.metadata,
-      );
-      console.log(
-        `getModule(${slug}): returning module with thresholds:`,
-        foundModule.thresholds,
-      );
     }
 
     return foundModule || null;
@@ -441,7 +415,7 @@ class ContentRegistryLoader {
         (mod) =>
           mod.routes?.overview === routePath ||
           mod.routes?.lessons === routePath ||
-          mod.routes?.quiz === routePath,
+          mod.routes?.quiz === routePath
       ) || null
     );
   }
@@ -458,7 +432,7 @@ class ContentRegistryLoader {
       routes.push(mod.routes.overview);
 
       // Add lesson routes (if content exists)
-      if (mod.status === "active") {
+      if (mod.status === 'active') {
         routes.push(mod.routes.lessons);
         routes.push(mod.routes.quiz);
       }
@@ -489,7 +463,7 @@ class ContentRegistryLoader {
 
     const fetchWithRetry = async (retryCount = 0): Promise<Lesson[]> => {
       try {
-        const isBrowser = typeof window !== "undefined";
+        const isBrowser = typeof window !== 'undefined';
         if (isBrowser) {
           const shortSlug =
             (await this.getShortSlugFromModuleSlug(moduleSlug)) || moduleSlug;
@@ -506,43 +480,43 @@ class ContentRegistryLoader {
               ) {
                 return data.map((l: Lesson, i: number) => {
                   const orderVal =
-                    typeof l.order === "number" ? l.order : i + 1;
+                    typeof l.order === 'number' ? l.order : i + 1;
                   const lApi = l as {
                     codeExample?: unknown;
                     codeExplanation?: unknown;
                     code?: { example?: unknown; explanation?: unknown };
                   };
                   const codeExampleStr =
-                    typeof lApi.codeExample === "string"
+                    typeof lApi.codeExample === 'string'
                       ? lApi.codeExample
                       : undefined;
                   const codeExplanationStr =
-                    typeof lApi.codeExplanation === "string"
+                    typeof lApi.codeExplanation === 'string'
                       ? lApi.codeExplanation
                       : undefined;
-                  const code: Lesson["code"] | undefined =
-                    lApi.code && typeof lApi.code === "object"
+                  const code: Lesson['code'] | undefined =
+                    lApi.code && typeof lApi.code === 'object'
                       ? {
                           example:
-                            typeof lApi.code.example === "string"
+                            typeof lApi.code.example === 'string'
                               ? lApi.code.example
                               : undefined,
                           explanation:
-                            typeof lApi.code.explanation === "string"
+                            typeof lApi.code.explanation === 'string'
                               ? lApi.code.explanation
                               : undefined,
                         }
                       : codeExampleStr || codeExplanationStr
                         ? {
-                            example: codeExampleStr || "",
-                            explanation: codeExplanationStr || "",
+                            example: codeExampleStr || '',
+                            explanation: codeExplanationStr || '',
                           }
                         : undefined;
                   return {
                     ...l,
                     order: orderVal,
                     code,
-                    intro: typeof l.intro === "string" ? l.intro : "",
+                    intro: typeof l.intro === 'string' ? l.intro : '',
                     pitfalls: Array.isArray(l.pitfalls) ? l.pitfalls : [],
                     exercises: Array.isArray(l.exercises) ? l.exercises : [],
                     objectives: Array.isArray(l.objectives) ? l.objectives : [],
@@ -561,43 +535,43 @@ class ContentRegistryLoader {
               ) {
                 return data.map((l: Lesson, i: number) => {
                   const orderVal =
-                    typeof l.order === "number" ? l.order : i + 1;
+                    typeof l.order === 'number' ? l.order : i + 1;
                   const lApi = l as {
                     codeExample?: unknown;
                     codeExplanation?: unknown;
                     code?: { example?: unknown; explanation?: unknown };
                   };
                   const codeExampleStr =
-                    typeof lApi.codeExample === "string"
+                    typeof lApi.codeExample === 'string'
                       ? lApi.codeExample
                       : undefined;
                   const codeExplanationStr =
-                    typeof lApi.codeExplanation === "string"
+                    typeof lApi.codeExplanation === 'string'
                       ? lApi.codeExplanation
                       : undefined;
-                  const code: Lesson["code"] | undefined =
-                    lApi.code && typeof lApi.code === "object"
+                  const code: Lesson['code'] | undefined =
+                    lApi.code && typeof lApi.code === 'object'
                       ? {
                           example:
-                            typeof lApi.code.example === "string"
+                            typeof lApi.code.example === 'string'
                               ? lApi.code.example
                               : undefined,
                           explanation:
-                            typeof lApi.code.explanation === "string"
+                            typeof lApi.code.explanation === 'string'
                               ? lApi.code.explanation
                               : undefined,
                         }
                       : codeExampleStr || codeExplanationStr
                         ? {
-                            example: codeExampleStr || "",
-                            explanation: codeExplanationStr || "",
+                            example: codeExampleStr || '',
+                            explanation: codeExplanationStr || '',
                           }
                         : undefined;
                   return {
                     ...l,
                     order: orderVal,
                     code,
-                    intro: typeof l.intro === "string" ? l.intro : "",
+                    intro: typeof l.intro === 'string' ? l.intro : '',
                     pitfalls: Array.isArray(l.pitfalls) ? l.pitfalls : [],
                     exercises: Array.isArray(l.exercises) ? l.exercises : [],
                     objectives: Array.isArray(l.objectives) ? l.objectives : [],
@@ -610,7 +584,7 @@ class ContentRegistryLoader {
           }
 
           const res = await fetch(`/api/content/lessons/${shortSlug}`, {
-            cache: "no-store",
+            cache: 'no-store',
           });
           if (!res.ok) {
             // For 5xx errors, we might want to retry
@@ -628,7 +602,7 @@ class ContentRegistryLoader {
                   .lessons as PartialLesson[])
               : [];
           const mapped = lessonsArr.map((l, i) => {
-            const orderVal = typeof l.order === "number" ? l.order : i + 1;
+            const orderVal = typeof l.order === 'number' ? l.order : i + 1;
             const lApi = l as {
               codeExample?: unknown;
               codeExplanation?: unknown;
@@ -636,36 +610,36 @@ class ContentRegistryLoader {
             };
             // Normalize codeExample/codeExplanation to strings to satisfy Lesson type
             const codeExampleStr =
-              typeof lApi.codeExample === "string"
+              typeof lApi.codeExample === 'string'
                 ? lApi.codeExample
                 : undefined;
             const codeExplanationStr =
-              typeof lApi.codeExplanation === "string"
+              typeof lApi.codeExplanation === 'string'
                 ? lApi.codeExplanation
                 : undefined;
-            const code: Lesson["code"] | undefined =
-              lApi.code && typeof lApi.code === "object"
+            const code: Lesson['code'] | undefined =
+              lApi.code && typeof lApi.code === 'object'
                 ? {
                     example:
-                      typeof lApi.code.example === "string"
+                      typeof lApi.code.example === 'string'
                         ? lApi.code.example
                         : undefined,
                     explanation:
-                      typeof lApi.code.explanation === "string"
+                      typeof lApi.code.explanation === 'string'
                         ? lApi.code.explanation
                         : undefined,
                   }
                 : codeExampleStr || codeExplanationStr
                   ? {
-                      example: codeExampleStr || "",
-                      explanation: codeExplanationStr || "",
+                      example: codeExampleStr || '',
+                      explanation: codeExplanationStr || '',
                     }
                   : undefined;
             const lesson: Lesson = {
               ...l,
               order: orderVal,
               code,
-              intro: typeof l.intro === "string" ? l.intro : "",
+              intro: typeof l.intro === 'string' ? l.intro : '',
               pitfalls: Array.isArray(l.pitfalls) ? l.pitfalls : [],
               exercises: Array.isArray(l.exercises) ? l.exercises : [],
               objectives: Array.isArray(l.objectives) ? l.objectives : [],
@@ -677,11 +651,11 @@ class ContentRegistryLoader {
           try {
             sessionStorage.setItem(
               `prefetch_lessons_${shortSlug}`,
-              JSON.stringify({ timestamp: Date.now(), data: mapped }),
+              JSON.stringify({ timestamp: Date.now(), data: mapped })
             );
             localStorage.setItem(
               `lessons_prefetch_${shortSlug}`,
-              JSON.stringify({ timestamp: Date.now(), data: mapped }),
+              JSON.stringify({ timestamp: Date.now(), data: mapped })
             );
           } catch {
             // Ignore storage errors
@@ -693,9 +667,9 @@ class ContentRegistryLoader {
         // Server-side: Node fetch requires absolute URLs. Try local origins proactively in dev.
         const candidates: string[] = [];
         const isProdCi =
-          process.env.NODE_ENV === "production" || !!process.env.CI;
+          process.env.NODE_ENV === 'production' || !!process.env.CI;
         try {
-          const origin = getPublicOriginStrict().replace(/\/+$/, "");
+          const origin = getPublicOriginStrict().replace(/\/+$/, '');
           const isLocalOrigin =
             /^https?:\/\/(?:localhost|127\.0\.0\.1)(?::\d+)?\b/.test(origin);
           if (!isLocalOrigin || !isProdCi) {
@@ -705,13 +679,13 @@ class ContentRegistryLoader {
           // no configured public origin; rely on localhost candidates in dev only
         }
         const includeLocalCandidates =
-          process.env.NODE_ENV !== "production" && !process.env.CI;
+          process.env.NODE_ENV !== 'production' && !process.env.CI;
         if (includeLocalCandidates) {
           candidates.push(
-            "http://localhost:3000/api/content/lessons/" + moduleSlug,
-            "http://127.0.0.1:3000/api/content/lessons/" + moduleSlug,
-            "http://localhost:3001/api/content/lessons/" + moduleSlug,
-            "http://127.0.0.1:3001/api/content/lessons/" + moduleSlug,
+            'http://localhost:3000/api/content/lessons/' + moduleSlug,
+            'http://127.0.0.1:3000/api/content/lessons/' + moduleSlug,
+            'http://localhost:3001/api/content/lessons/' + moduleSlug,
+            'http://127.0.0.1:3001/api/content/lessons/' + moduleSlug
           );
         }
 
@@ -740,13 +714,13 @@ class ContentRegistryLoader {
               const lessonsArr: PartialLessonSSR[] = Array.isArray(data)
                 ? (data as PartialLessonSSR[])
                 : Array.isArray(
-                      (data as { lessons?: PartialLessonSSR[] })?.lessons,
+                      (data as { lessons?: PartialLessonSSR[] })?.lessons
                     )
                   ? ((data as { lessons?: PartialLessonSSR[] })
                       .lessons as PartialLessonSSR[])
                   : [];
               const mapped = lessonsArr.map((l, i) => {
-                const orderVal = typeof l.order === "number" ? l.order : i + 1;
+                const orderVal = typeof l.order === 'number' ? l.order : i + 1;
                 const lApi = l as {
                   codeExample?: unknown;
                   codeExplanation?: unknown;
@@ -754,36 +728,36 @@ class ContentRegistryLoader {
                 };
                 // Normalize codeExample/codeExplanation to strings to satisfy Lesson type
                 const codeExampleStr =
-                  typeof lApi.codeExample === "string"
+                  typeof lApi.codeExample === 'string'
                     ? lApi.codeExample
                     : undefined;
                 const codeExplanationStr =
-                  typeof lApi.codeExplanation === "string"
+                  typeof lApi.codeExplanation === 'string'
                     ? lApi.codeExplanation
                     : undefined;
-                const code: Lesson["code"] | undefined =
-                  lApi.code && typeof lApi.code === "object"
+                const code: Lesson['code'] | undefined =
+                  lApi.code && typeof lApi.code === 'object'
                     ? {
                         example:
-                          typeof lApi.code.example === "string"
+                          typeof lApi.code.example === 'string'
                             ? lApi.code.example
                             : undefined,
                         explanation:
-                          typeof lApi.code.explanation === "string"
+                          typeof lApi.code.explanation === 'string'
                             ? lApi.code.explanation
                             : undefined,
                       }
                     : codeExampleStr || codeExplanationStr
                       ? {
-                          example: codeExampleStr || "",
-                          explanation: codeExplanationStr || "",
+                          example: codeExampleStr || '',
+                          explanation: codeExplanationStr || '',
                         }
                       : undefined;
                 const lesson: Lesson = {
                   ...l,
                   order: orderVal,
                   code,
-                  intro: typeof l.intro === "string" ? l.intro : "",
+                  intro: typeof l.intro === 'string' ? l.intro : '',
                   pitfalls: Array.isArray(l.pitfalls) ? l.pitfalls : [],
                   exercises: Array.isArray(l.exercises) ? l.exercises : [],
                   objectives: Array.isArray(l.objectives) ? l.objectives : [],
@@ -805,41 +779,43 @@ class ContentRegistryLoader {
         }
 
         // Server-side filesystem fallback: attempt to load lessons from local JSON files
-        if (typeof window === "undefined") {
+        if (typeof window === 'undefined') {
           // Only run on server
           try {
-            const { promises: fs } = await import("fs");
-            const path = await import("path");
+            const { promises: fs } = await import('fs');
+            const path = await import('path');
 
+            // Sanitize slug: strip any directory traversal components
+            const safeSlug = path.basename(moduleSlug);
             const cwd = process.cwd();
             const fileCandidates = [
               // Inside frontend project public dir
               path.join(
                 cwd,
-                "public",
-                "content",
-                "lessons",
-                `${moduleSlug}.json`,
+                'public',
+                'content',
+                'lessons',
+                `${safeSlug}.json`
               ),
               // Top-level content directory (../../content from frontend)
               path.join(
                 cwd,
-                "..",
-                "..",
-                "content",
-                "lessons",
-                `${moduleSlug}.json`,
+                '..',
+                '..',
+                'content',
+                'lessons',
+                `${safeSlug}.json`
               ),
               // Alternative relative content directory (../content)
-              path.join(cwd, "..", "content", "lessons", `${moduleSlug}.json`),
+              path.join(cwd, '..', 'content', 'lessons', `${safeSlug}.json`),
             ];
 
             for (const p of fileCandidates) {
               try {
-                const raw = await fs.readFile(p, "utf-8");
+                const raw = await fs.readFile(p, 'utf-8');
                 const parsed: unknown = JSON.parse(raw);
                 const lessonsArr: Record<string, unknown>[] = Array.isArray(
-                  parsed,
+                  parsed
                 )
                   ? (parsed as Record<string, unknown>[])
                   : Array.isArray((parsed as { lessons?: unknown[] })?.lessons)
@@ -853,7 +829,7 @@ class ContentRegistryLoader {
 
                 const mapped = lessonsArr.map((l, i) => {
                   const orderVal =
-                    typeof (l as { order?: unknown }).order === "number"
+                    typeof (l as { order?: unknown }).order === 'number'
                       ? (l as { order?: number }).order!
                       : i + 1;
                   const lApi = l as {
@@ -862,90 +838,90 @@ class ContentRegistryLoader {
                     code?: { example?: unknown; explanation?: unknown };
                   };
                   const codeExampleStr =
-                    typeof lApi.codeExample === "string"
+                    typeof lApi.codeExample === 'string'
                       ? lApi.codeExample
                       : undefined;
                   const codeExplanationStr =
-                    typeof lApi.codeExplanation === "string"
+                    typeof lApi.codeExplanation === 'string'
                       ? lApi.codeExplanation
                       : undefined;
-                  const code: Lesson["code"] | undefined =
-                    lApi.code && typeof lApi.code === "object"
+                  const code: Lesson['code'] | undefined =
+                    lApi.code && typeof lApi.code === 'object'
                       ? {
                           example:
-                            typeof lApi.code.example === "string"
+                            typeof lApi.code.example === 'string'
                               ? lApi.code.example
                               : undefined,
                           explanation:
-                            typeof lApi.code.explanation === "string"
+                            typeof lApi.code.explanation === 'string'
                               ? lApi.code.explanation
                               : undefined,
                         }
                       : codeExampleStr || codeExplanationStr
                         ? {
-                            example: codeExampleStr || "",
-                            explanation: codeExplanationStr || "",
+                            example: codeExampleStr || '',
+                            explanation: codeExplanationStr || '',
                           }
                         : undefined;
 
                   const titleVal =
-                    typeof (l as { title?: unknown }).title === "string"
+                    typeof (l as { title?: unknown }).title === 'string'
                       ? (l as { title?: string }).title!
                       : `Lesson ${orderVal}`;
                   const introVal =
-                    typeof (l as { intro?: unknown }).intro === "string"
+                    typeof (l as { intro?: unknown }).intro === 'string'
                       ? (l as { intro?: string }).intro!
-                      : "";
+                      : '';
                   const topicVal =
-                    typeof (l as { topic?: unknown }).topic === "string"
+                    typeof (l as { topic?: unknown }).topic === 'string'
                       ? (l as { topic?: string }).topic!
                       : undefined;
                   const tagsVal = Array.isArray((l as { tags?: unknown }).tags)
                     ? ((l as { tags?: unknown[] }).tags!.filter(
-                        (t) => typeof t === "string",
+                        (t) => typeof t === 'string'
                       ) as string[])
                     : undefined;
                   const estimatedMinutesVal =
                     typeof (l as { estimatedMinutes?: unknown })
-                      .estimatedMinutes === "number"
+                      .estimatedMinutes === 'number'
                       ? (l as { estimatedMinutes?: number }).estimatedMinutes!
                       : undefined;
                   const objectivesVal = Array.isArray(
-                    (l as { objectives?: unknown }).objectives,
+                    (l as { objectives?: unknown }).objectives
                   )
                     ? ((l as { objectives?: unknown[] }).objectives!.filter(
-                        (o) => typeof o === "string",
+                        (o) => typeof o === 'string'
                       ) as string[])
                     : [];
 
                   const rawPitfalls = (l as { pitfalls?: unknown }).pitfalls;
-                  const pitfallsVal: Lesson["pitfalls"] = Array.isArray(
-                    rawPitfalls,
+                  const pitfallsVal: Lesson['pitfalls'] = Array.isArray(
+                    rawPitfalls
                   )
                     ? (rawPitfalls
                         .map((p) => {
-                          if (typeof p === "string") {
+                          if (typeof p === 'string') {
                             return { mistake: p };
                           }
-                          if (p && typeof p === "object") {
+                          if (p && typeof p === 'object') {
                             const obj = p as {
                               mistake?: unknown;
                               solution?: unknown;
                               severity?: unknown;
                             };
                             const sev =
-                              obj.severity === "high" ||
-                              obj.severity === "medium" ||
-                              obj.severity === "low"
-                                ? (obj.severity as "high" | "medium" | "low")
+                              obj.severity === 'high' ||
+                              obj.severity === 'medium' ||
+                              obj.severity === 'low'
+                                ? (obj.severity as 'high' | 'medium' | 'low')
                                 : undefined;
                             return {
                               mistake:
-                                typeof obj.mistake === "string"
+                                typeof obj.mistake === 'string'
                                   ? obj.mistake
                                   : undefined,
                               solution:
-                                typeof obj.solution === "string"
+                                typeof obj.solution === 'string'
                                   ? obj.solution
                                   : undefined,
                               severity: sev,
@@ -953,19 +929,19 @@ class ContentRegistryLoader {
                           }
                           return undefined;
                         })
-                        .filter(Boolean) as Lesson["pitfalls"])
+                        .filter(Boolean) as Lesson['pitfalls'])
                     : [];
 
                   const rawExercises = (l as { exercises?: unknown }).exercises;
-                  const exercisesVal: Lesson["exercises"] = Array.isArray(
-                    rawExercises,
+                  const exercisesVal: Lesson['exercises'] = Array.isArray(
+                    rawExercises
                   )
                     ? (rawExercises
                         .map((e) => {
-                          if (typeof e === "string") {
+                          if (typeof e === 'string') {
                             return { title: e };
                           }
-                          if (e && typeof e === "object") {
+                          if (e && typeof e === 'object') {
                             const obj = e as {
                               title?: unknown;
                               description?: unknown;
@@ -973,16 +949,16 @@ class ContentRegistryLoader {
                             };
                             const cps = Array.isArray(obj.checkpoints)
                               ? (obj.checkpoints as unknown[]).filter(
-                                  (c) => typeof c === "string",
+                                  (c) => typeof c === 'string'
                                 )
                               : undefined;
                             return {
                               title:
-                                typeof obj.title === "string"
+                                typeof obj.title === 'string'
                                   ? obj.title
                                   : undefined,
                               description:
-                                typeof obj.description === "string"
+                                typeof obj.description === 'string'
                                   ? obj.description
                                   : undefined,
                               checkpoints: cps as string[] | undefined,
@@ -990,11 +966,11 @@ class ContentRegistryLoader {
                           }
                           return undefined;
                         })
-                        .filter(Boolean) as Lesson["exercises"])
+                        .filter(Boolean) as Lesson['exercises'])
                     : [];
 
                   const idVal =
-                    typeof (l as { id?: unknown }).id === "number"
+                    typeof (l as { id?: unknown }).id === 'number'
                       ? (l as { id?: number }).id!
                       : undefined;
 
@@ -1029,13 +1005,13 @@ class ContentRegistryLoader {
         return [];
       } catch {
         console.log(
-          `[ContentRegistry] getModuleLessons(${moduleSlug}) attempt ${retryCount + 1} failed; continuing or retrying as appropriate.`,
+          `[ContentRegistry] getModuleLessons(${moduleSlug}) attempt ${retryCount + 1} failed; continuing or retrying as appropriate.`
         );
 
         // If we've exhausted retries, return empty array
         if (retryCount >= maxRetries) {
           console.log(
-            `[ContentRegistry] getModuleLessons(${moduleSlug}) exhausted ${maxRetries} retries; returning empty array.`,
+            `[ContentRegistry] getModuleLessons(${moduleSlug}) exhausted ${maxRetries} retries; returning empty array.`
           );
           return [];
         }
@@ -1043,7 +1019,7 @@ class ContentRegistryLoader {
         // Wait with exponential backoff before retrying
         const delay = baseDelay * Math.pow(2, retryCount);
         console.log(
-          `Retrying getModuleLessons(${moduleSlug}) in ${delay}ms...`,
+          `Retrying getModuleLessons(${moduleSlug}) in ${delay}ms...`
         );
         await new Promise((resolve) => setTimeout(resolve, delay));
 
@@ -1069,7 +1045,7 @@ class ContentRegistryLoader {
           (await this.getShortSlugFromModuleSlug(moduleSlug)) || moduleSlug;
 
         // Check for prefetched data first (browser only)
-        const isBrowser = typeof window !== "undefined";
+        const isBrowser = typeof window !== 'undefined';
         if (isBrowser) {
           // Check localStorage cache from service worker prefetching
           const cacheKey = `quiz_prefetch_${shortSlug}`;
@@ -1086,10 +1062,10 @@ class ContentRegistryLoader {
               Array.isArray(data.questions)
             ) {
               console.log(
-                `[ContentRegistry] Using prefetched quiz for ${shortSlug}`,
+                `[ContentRegistry] Using prefetched quiz for ${shortSlug}`
               );
               const normalizedQuestions = data.questions.map(
-                (q: ProgrammingQuestion) => normalizeQuestion(q),
+                (q: ProgrammingQuestion) => normalizeQuestion(q)
               );
               return { ...data, questions: normalizedQuestions };
             }
@@ -1104,11 +1080,11 @@ class ContentRegistryLoader {
             // Use cache if less than 5 minutes old
             if (Date.now() - timestamp < 5 * 60 * 1000) {
               console.log(
-                `[ContentRegistry] Using session cached quiz for ${shortSlug}`,
+                `[ContentRegistry] Using session cached quiz for ${shortSlug}`
               );
               const normalizedQuestions = Array.isArray(data.questions)
                 ? data.questions.map((q: ProgrammingQuestion) =>
-                    normalizeQuestion(q),
+                    normalizeQuestion(q)
                   )
                 : [];
               return { ...data, questions: normalizedQuestions };
@@ -1118,7 +1094,7 @@ class ContentRegistryLoader {
 
         if (isBrowser) {
           const res = await fetch(`/api/content/quizzes/${shortSlug}`, {
-            cache: "no-store",
+            cache: 'no-store',
           });
           if (!res.ok) {
             // For 5xx errors, we might want to retry
@@ -1128,7 +1104,7 @@ class ContentRegistryLoader {
             return null;
           }
           const data: unknown = await res.json();
-          if (!(data && typeof data === "object")) return null;
+          if (!(data && typeof data === 'object')) return null;
           const quiz = data as Quiz;
           const normalizedQuestions = Array.isArray(quiz.questions)
             ? quiz.questions.map((q) => normalizeQuestion(q))
@@ -1140,7 +1116,7 @@ class ContentRegistryLoader {
               JSON.stringify({
                 timestamp: Date.now(),
                 data: { ...quiz, questions: normalizedQuestions },
-              }),
+              })
             );
           } catch {
             // Ignore storage errors
@@ -1151,9 +1127,9 @@ class ContentRegistryLoader {
         // Server-side: try absolute local origins first
         const candidates: string[] = [];
         const isProdCi =
-          process.env.NODE_ENV === "production" || !!process.env.CI;
+          process.env.NODE_ENV === 'production' || !!process.env.CI;
         try {
-          const origin = getPublicOriginStrict().replace(/\/+$/, "");
+          const origin = getPublicOriginStrict().replace(/\/+$/, '');
           const isLocalOrigin =
             /^https?:\/\/(?:localhost|127\.0\.0\.1)(?::\d+)?\b/.test(origin);
           if (!isLocalOrigin || !isProdCi) {
@@ -1163,13 +1139,13 @@ class ContentRegistryLoader {
           // ignore
         }
         const includeLocalCandidates =
-          process.env.NODE_ENV !== "production" && !process.env.CI;
+          process.env.NODE_ENV !== 'production' && !process.env.CI;
         if (includeLocalCandidates) {
           candidates.push(
-            "http://localhost:3000/api/content/quizzes/" + shortSlug,
-            "http://127.0.0.1:3000/api/content/quizzes/" + shortSlug,
-            "http://localhost:3001/api/content/quizzes/" + shortSlug,
-            "http://127.0.0.1:3001/api/content/quizzes/" + shortSlug,
+            'http://localhost:3000/api/content/quizzes/' + shortSlug,
+            'http://127.0.0.1:3000/api/content/quizzes/' + shortSlug,
+            'http://localhost:3001/api/content/quizzes/' + shortSlug,
+            'http://127.0.0.1:3001/api/content/quizzes/' + shortSlug
           );
         }
 
@@ -1192,7 +1168,7 @@ class ContentRegistryLoader {
               continue;
             }
             const data: unknown = await res.json();
-            if (!(data && typeof data === "object")) continue;
+            if (!(data && typeof data === 'object')) continue;
             const quiz = data as Quiz;
             const normalizedQuestions = Array.isArray(quiz.questions)
               ? quiz.questions.map((q) => normalizeQuestion(q))
@@ -1207,41 +1183,43 @@ class ContentRegistryLoader {
           }
         }
         // Server-side filesystem fallback: attempt to load quiz from local JSON files
-        if (typeof window === "undefined") {
+        if (typeof window === 'undefined') {
           // Only run on server
           try {
-            const { promises: fs } = await import("fs");
-            const path = await import("path");
+            const { promises: fs } = await import('fs');
+            const path = await import('path');
 
+            // Sanitize slug: strip any directory traversal components
+            const safeSlug = path.basename(moduleSlug);
             const cwd = process.cwd();
             const fileCandidates = [
               // Inside frontend project public dir
               path.join(
                 cwd,
-                "public",
-                "content",
-                "quizzes",
-                `${moduleSlug}.json`,
+                'public',
+                'content',
+                'quizzes',
+                `${safeSlug}.json`
               ),
               // Top-level content directory (../../content from frontend)
               path.join(
                 cwd,
-                "..",
-                "..",
-                "content",
-                "quizzes",
-                `${moduleSlug}.json`,
+                '..',
+                '..',
+                'content',
+                'quizzes',
+                `${safeSlug}.json`
               ),
               // Alternative relative content directory (../content)
-              path.join(cwd, "..", "content", "quizzes", `${moduleSlug}.json`),
+              path.join(cwd, '..', 'content', 'quizzes', `${safeSlug}.json`),
             ];
 
             for (const p of fileCandidates) {
               try {
-                const raw = await fs.readFile(p, "utf-8");
+                const raw = await fs.readFile(p, 'utf-8');
                 const parsed: unknown = JSON.parse(raw);
                 const questionsArr: Record<string, unknown>[] = Array.isArray(
-                  (parsed as { questions?: unknown[] })?.questions,
+                  (parsed as { questions?: unknown[] })?.questions
                 )
                   ? ((parsed as { questions?: unknown[] }).questions as Record<
                       string,
@@ -1252,7 +1230,7 @@ class ContentRegistryLoader {
                 if (questionsArr.length === 0) continue;
 
                 const normalizedQuestions = questionsArr.map((q) =>
-                  normalizeQuestion(q),
+                  normalizeQuestion(q)
                 );
                 return { questions: normalizedQuestions };
               } catch {
@@ -1268,13 +1246,13 @@ class ContentRegistryLoader {
         return null;
       } catch {
         console.log(
-          `[ContentRegistry] getModuleQuiz(${moduleSlug}) attempt ${retryCount + 1} failed; continuing or retrying as appropriate.`,
+          `[ContentRegistry] getModuleQuiz(${moduleSlug}) attempt ${retryCount + 1} failed; continuing or retrying as appropriate.`
         );
 
         // If we've exhausted retries, return null
         if (retryCount >= maxRetries) {
           console.log(
-            `[ContentRegistry] getModuleQuiz(${moduleSlug}) exhausted ${maxRetries} retries; returning null.`,
+            `[ContentRegistry] getModuleQuiz(${moduleSlug}) exhausted ${maxRetries} retries; returning null.`
           );
           return null;
         }
@@ -1297,7 +1275,7 @@ class ContentRegistryLoader {
    */
   async getProgrammingLessons(): Promise<Lesson[]> {
     // Use the same API route as getModuleLessons for consistency
-    return this.getModuleLessons("programming-fundamentals");
+    return this.getModuleLessons('programming-fundamentals');
   }
 
   /**
@@ -1305,25 +1283,25 @@ class ContentRegistryLoader {
    */
   async getProgrammingQuestions(): Promise<ProgrammingQuestion[]> {
     try {
-      const isBrowser = typeof window !== "undefined";
+      const isBrowser = typeof window !== 'undefined';
       const controller = new AbortController();
       const timeoutId = setTimeout(() => controller.abort(), 10000);
       const base = isBrowser
-        ? ""
+        ? ''
         : (() => {
             try {
-              return getPublicOriginStrict().replace(/\/+$/, "");
+              return getPublicOriginStrict().replace(/\/+$/, '');
             } catch {
-              return "";
+              return '';
             }
           })();
       const portEnvPF = !isBrowser
-        ? (process.env.PORT || process.env.NEXT_PUBLIC_PORT || "")
+        ? (process.env.PORT || process.env.NEXT_PUBLIC_PORT || '')
             .toString()
             .trim()
-        : "";
+        : '';
       const includeLocalCandidates =
-        !isBrowser && process.env.NODE_ENV !== "production" && !process.env.CI;
+        !isBrowser && process.env.NODE_ENV !== 'production' && !process.env.CI;
       const url = isBrowser
         ? `/api/content/quizzes/programming-fundamentals`
         : base
@@ -1332,12 +1310,12 @@ class ContentRegistryLoader {
             ? portEnvPF
               ? `http://localhost:${portEnvPF}/api/content/quizzes/programming-fundamentals`
               : `http://localhost:3000/api/content/quizzes/programming-fundamentals`
-            : "";
+            : '';
 
       // Use type assertion to allow Next.js specific options
       const fetchOptions: RequestInit & { next?: { revalidate: number } } =
-        typeof window !== "undefined"
-          ? { signal: controller.signal, cache: "no-store" }
+        typeof window !== 'undefined'
+          ? { signal: controller.signal, cache: 'no-store' }
           : { signal: controller.signal, next: { revalidate: 3600 } };
       const response = await fetch(url, fetchOptions).finally(() => {
         clearTimeout(timeoutId);
@@ -1346,14 +1324,14 @@ class ContentRegistryLoader {
       if (!response.ok) return [];
       const data: unknown = await response.json();
       const questions =
-        data && typeof data === "object" && (data as Quiz).questions
+        data && typeof data === 'object' && (data as Quiz).questions
           ? (data as Quiz).questions
           : [];
       return questions.map((q) => normalizeQuestion(q));
     } catch (error: unknown) {
       console.error(
-        "Failed to load programming fundamentals questions:",
-        error,
+        'Failed to load programming fundamentals questions:',
+        error
       );
       return [];
     }
@@ -1365,27 +1343,27 @@ class ContentRegistryLoader {
   async getModuleSlugFromShortSlug(shortSlug: string): Promise<string | null> {
     // Define the mapping from shortSlug to moduleSlug
     const shortSlugToModuleSlug: Record<string, string> = {
-      programming: "programming-fundamentals",
-      web: "web-fundamentals",
-      version: "version-control",
-      dotnet: "dotnet-fundamentals",
-      react: "react-fundamentals",
-      database: "database-systems",
-      typescript: "typescript-fundamentals",
-      node: "node-fundamentals",
-      laravel: "laravel-fundamentals",
-      nextjs: "nextjs-advanced",
-      graphql: "graphql-advanced",
-      sass: "sass-advanced",
-      tailwind: "tailwind-advanced",
-      vue: "vue-advanced",
-      testing: "testing-fundamentals",
-      e2e: "e2e-testing",
-      performance: "performance-optimization",
-      security: "security-fundamentals",
+      programming: 'programming-fundamentals',
+      web: 'web-fundamentals',
+      version: 'version-control',
+      dotnet: 'dotnet-fundamentals',
+      react: 'react-fundamentals',
+      database: 'database-systems',
+      typescript: 'typescript-fundamentals',
+      node: 'node-fundamentals',
+      laravel: 'laravel-fundamentals',
+      nextjs: 'nextjs-advanced',
+      graphql: 'graphql-advanced',
+      sass: 'sass-advanced',
+      tailwind: 'tailwind-advanced',
+      vue: 'vue-advanced',
+      testing: 'testing-fundamentals',
+      e2e: 'e2e-testing',
+      performance: 'performance-optimization',
+      security: 'security-fundamentals',
       // Added short slug aliases for JavaScript lessons
-      js: "web-fundamentals",
-      javascript: "web-fundamentals",
+      js: 'web-fundamentals',
+      javascript: 'web-fundamentals',
     };
 
     // First check the mapping
@@ -1409,24 +1387,24 @@ class ContentRegistryLoader {
   async getShortSlugFromModuleSlug(moduleSlug: string): Promise<string | null> {
     // Define the mapping from moduleSlug to shortSlug
     const moduleSlugToShortSlug: Record<string, string> = {
-      "programming-fundamentals": "programming",
-      "web-fundamentals": "web",
-      "version-control": "version",
-      "dotnet-fundamentals": "dotnet",
-      "react-fundamentals": "react",
-      "database-systems": "database",
-      "typescript-fundamentals": "typescript",
-      "node-fundamentals": "node",
-      "laravel-fundamentals": "laravel",
-      "nextjs-advanced": "nextjs",
-      "graphql-advanced": "graphql",
-      "sass-advanced": "sass",
-      "tailwind-advanced": "tailwind",
-      "vue-advanced": "vue",
-      "testing-fundamentals": "testing",
-      "e2e-testing": "e2e",
-      "performance-optimization": "performance",
-      "security-fundamentals": "security",
+      'programming-fundamentals': 'programming',
+      'web-fundamentals': 'web',
+      'version-control': 'version',
+      'dotnet-fundamentals': 'dotnet',
+      'react-fundamentals': 'react',
+      'database-systems': 'database',
+      'typescript-fundamentals': 'typescript',
+      'node-fundamentals': 'node',
+      'laravel-fundamentals': 'laravel',
+      'nextjs-advanced': 'nextjs',
+      'graphql-advanced': 'graphql',
+      'sass-advanced': 'sass',
+      'tailwind-advanced': 'tailwind',
+      'vue-advanced': 'vue',
+      'testing-fundamentals': 'testing',
+      'e2e-testing': 'e2e',
+      'performance-optimization': 'performance',
+      'security-fundamentals': 'security',
     };
 
     return moduleSlugToShortSlug[moduleSlug] || null;
@@ -1475,7 +1453,7 @@ class ContentRegistryLoader {
       };
     } catch {
       console.log(
-        `[ContentRegistry] Threshold check failed for ${moduleSlug}; returning safe defaults.`,
+        `[ContentRegistry] Threshold check failed for ${moduleSlug}; returning safe defaults.`
       );
       // Return safe defaults to prevent build failures
       return {
@@ -1503,48 +1481,48 @@ export const contentRegistry = ContentRegistryLoader.getInstance();
 // Export utility functions for lesson grouping
 export function getLessonGroups(
   moduleSlug: string,
-  lessons: Lesson[],
+  lessons: Lesson[]
 ): LessonGroup[] {
-  if (moduleSlug === "programming-fundamentals") {
+  if (moduleSlug === 'programming-fundamentals') {
     // Group programming fundamentals lessons into logical categories
     return [
       {
-        id: "basic-concepts",
-        title: "Basic Programming Concepts",
+        id: 'basic-concepts',
+        title: 'Basic Programming Concepts',
         description:
-          "Learn fundamental programming concepts including variables, control structures, and functions",
+          'Learn fundamental programming concepts including variables, control structures, and functions',
         lessons: lessons.slice(0, 3), // Lessons 1-3
         order: 1,
       },
       {
-        id: "data-structures",
-        title: "Data Structures",
+        id: 'data-structures',
+        title: 'Data Structures',
         description:
-          "Explore arrays, objects, and object-oriented programming concepts",
+          'Explore arrays, objects, and object-oriented programming concepts',
         lessons: lessons.slice(3, 5), // Lessons 4-5
         order: 2,
       },
       {
-        id: "error-handling",
-        title: "Error Handling & File Operations",
+        id: 'error-handling',
+        title: 'Error Handling & File Operations',
         description:
-          "Master error handling techniques and file input/output operations",
+          'Master error handling techniques and file input/output operations',
         lessons: lessons.slice(5, 7), // Lessons 6-7
         order: 3,
       },
       {
-        id: "algorithms",
-        title: "Algorithms & Recursion",
+        id: 'algorithms',
+        title: 'Algorithms & Recursion',
         description:
-          "Develop algorithmic thinking and understand recursive problem solving",
+          'Develop algorithmic thinking and understand recursive problem solving',
         lessons: lessons.slice(7, 9), // Lessons 8-9
         order: 4,
       },
       {
-        id: "advanced-topics",
-        title: "Advanced Topics",
+        id: 'advanced-topics',
+        title: 'Advanced Topics',
         description:
-          "Deep dive into memory management, best practices, and project organization",
+          'Deep dive into memory management, best practices, and project organization',
         lessons: lessons.slice(9),
         order: 5,
       },
@@ -1570,19 +1548,19 @@ export function getLessonGroups(
       ([title, groupLessons], idx) => ({
         id: `group-${idx + 1}`,
         title,
-        description: "",
+        description: '',
         lessons: groupLessons,
         order: idx + 1,
-      }),
+      })
     );
 
     // Sort groups by the smallest lesson order within each group when available
     groups.sort((a, b) => {
       const aOrder = Math.min(
-        ...a.lessons.map((l) => l.order ?? Number.MAX_SAFE_INTEGER),
+        ...a.lessons.map((l) => l.order ?? Number.MAX_SAFE_INTEGER)
       );
       const bOrder = Math.min(
-        ...b.lessons.map((l) => l.order ?? Number.MAX_SAFE_INTEGER),
+        ...b.lessons.map((l) => l.order ?? Number.MAX_SAFE_INTEGER)
       );
       return aOrder - bOrder;
     });
@@ -1598,7 +1576,7 @@ export function getLessonGroups(
   return lessons.map((lesson, index) => ({
     id: `group-${index + 1}`,
     title: lesson.title,
-    description: lesson.intro ? lesson.intro.split("\n")[0] : "",
+    description: lesson.intro ? lesson.intro.split('\n')[0] : '',
     lessons: [lesson],
     order: index + 1,
   }));
@@ -1607,7 +1585,7 @@ export function getLessonGroups(
 export function getLessonGroupForLesson(
   moduleSlug: string,
   lessons: Lesson[],
-  lessonOrder: number,
+  lessonOrder: number
 ): { group: LessonGroup; groupIndex: number } | null {
   const groups = getLessonGroups(moduleSlug, lessons);
   const lessonIndex = lessonOrder - 1;
@@ -1631,13 +1609,13 @@ export function getLessonGroupForLesson(
 export function getNextLessonGroup(
   moduleSlug: string,
   lessons: Lesson[],
-  lessonOrder: number,
+  lessonOrder: number
 ): LessonGroup | null {
   const groups = getLessonGroups(moduleSlug, lessons);
   const currentGroupInfo = getLessonGroupForLesson(
     moduleSlug,
     lessons,
-    lessonOrder,
+    lessonOrder
   );
 
   if (!currentGroupInfo) return null;
@@ -1648,13 +1626,13 @@ export function getNextLessonGroup(
 
 // Wrapper exports to match API route expectations
 export async function getShortSlugFromModuleSlug(
-  moduleSlug: string,
+  moduleSlug: string
 ): Promise<string | null> {
   return contentRegistry.getShortSlugFromModuleSlug(moduleSlug);
 }
 
 export async function getModuleSlugFromShortSlug(
-  shortSlug: string,
+  shortSlug: string
 ): Promise<string | null> {
   return contentRegistry.getModuleSlugFromShortSlug(shortSlug);
 }

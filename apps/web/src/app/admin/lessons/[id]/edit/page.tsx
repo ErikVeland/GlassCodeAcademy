@@ -1,9 +1,9 @@
-"use client";
+'use client';
 
-import { useState, useEffect, useCallback } from "react";
-import { useRouter } from "next/navigation";
-import type { AdminLesson, AdminModule } from "@/types/admin";
-import LoadingScreen from "@/components/LoadingScreen";
+import { useState, useEffect, useCallback } from 'react';
+import { useRouter } from 'next/navigation';
+import type { AdminLesson, AdminModule } from '@/types/admin';
+import LoadingScreen from '@/components/LoadingScreen';
 
 export default function EditLessonPage({
   params,
@@ -26,13 +26,13 @@ export default function EditLessonPage({
       const lessonData = await lessonRes.json();
       setLesson(lessonData as AdminLesson);
 
-      const modulesRes = await fetch("/api/modules-db");
+      const modulesRes = await fetch('/api/modules-db');
       const modulesData = await modulesRes.json();
       setModules(modulesData as AdminModule[]);
 
       setLoading(false);
     } catch (err) {
-      setError("Failed to fetch data");
+      setError('Failed to fetch data');
       setLoading(false);
       console.error(err);
     }
@@ -47,8 +47,8 @@ export default function EditLessonPage({
         fetchData(p.id);
       })
       .catch((err) => {
-        console.error("Error resolving params", err);
-        setError("Failed to resolve route params");
+        console.error('Error resolving params', err);
+        setError('Failed to resolve route params');
         setLoading(false);
       });
     return () => {
@@ -70,9 +70,9 @@ export default function EditLessonPage({
       const metadataObj = lesson.metadata ? JSON.parse(lesson.metadata) : {};
 
       const response = await fetch(`/api/lessons-db/${lesson.id}`, {
-        method: "PUT",
+        method: 'PUT',
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify({
           title: lesson.title,
@@ -88,13 +88,13 @@ export default function EditLessonPage({
       });
 
       if (response.ok) {
-        router.push("/admin");
+        router.push('/admin');
       } else {
         const errorData = await response.json();
-        setError(errorData.error || "Failed to update lesson");
+        setError(errorData.error || 'Failed to update lesson');
       }
     } catch (err) {
-      setError("Failed to update lesson");
+      setError('Failed to update lesson');
       console.error(err);
     } finally {
       setSaving(false);
@@ -104,16 +104,16 @@ export default function EditLessonPage({
   const handleInputChange = (
     e: React.ChangeEvent<
       HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
-    >,
+    >
   ) => {
     if (!lesson) return;
     const { name, value, type } = e.target;
     const checked =
-      type === "checkbox" ? (e.target as HTMLInputElement).checked : undefined;
+      type === 'checkbox' ? (e.target as HTMLInputElement).checked : undefined;
 
     setLesson({
       ...lesson,
-      [name]: type === "checkbox" ? checked : value,
+      [name]: type === 'checkbox' ? checked : value,
     } as AdminLesson);
   };
 
@@ -180,7 +180,7 @@ export default function EditLessonPage({
       <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="mb-8">
           <button
-            onClick={() => router.push("/admin")}
+            onClick={() => router.push('/admin')}
             className="flex items-center text-indigo-600 hover:text-indigo-800"
           >
             <svg
@@ -387,7 +387,7 @@ export default function EditLessonPage({
             <div className="mt-8 flex justify-end space-x-3">
               <button
                 type="button"
-                onClick={() => router.push("/admin")}
+                onClick={() => router.push('/admin')}
                 className="bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
               >
                 Cancel
@@ -397,7 +397,7 @@ export default function EditLessonPage({
                 disabled={saving}
                 className="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50"
               >
-                {saving ? "Saving..." : "Save Changes"}
+                {saving ? 'Saving...' : 'Save Changes'}
               </button>
             </div>
           </form>

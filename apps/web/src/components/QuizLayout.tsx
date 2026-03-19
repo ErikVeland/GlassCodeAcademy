@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
-import BreadcrumbNavigation from "./BreadcrumbNavigation";
-import type { Module, Quiz } from "@/lib/contentRegistry";
+import BreadcrumbNavigation from './BreadcrumbNavigation';
+import type { Module, Quiz } from '@/lib/contentRegistry';
 
 interface QuizLayoutProps {
   module: Module;

@@ -1,5 +1,5 @@
-import { getServerSession } from "next-auth";
-import { getAuthOptions } from "@/lib/authOptions";
+import { getServerSession } from 'next-auth';
+import { getAuthOptions } from '@/lib/authOptions';
 // Session endpoint: returns current session object or null for unauthenticated
 
 export async function GET() {
@@ -10,8 +10,8 @@ export async function GET() {
     return new Response(JSON.stringify(body), {
       status: 200,
       headers: {
-        "Content-Type": "application/json",
-        "Cache-Control": "no-store",
+        'Content-Type': 'application/json',
+        'Cache-Control': 'no-store',
       },
     });
   } catch {
@@ -19,12 +19,12 @@ export async function GET() {
     return new Response(JSON.stringify({ user: null, expires: null }), {
       status: 200,
       headers: {
-        "Content-Type": "application/json",
-        "Cache-Control": "no-store",
+        'Content-Type': 'application/json',
+        'Cache-Control': 'no-store',
       },
     });
   }
 }
 
-export const runtime = "nodejs";
-export const dynamic = "force-dynamic";
+export const runtime = 'nodejs';
+export const dynamic = 'force-dynamic';

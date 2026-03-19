@@ -1,10 +1,10 @@
-"use client";
+'use client';
 
-import React from "react";
-import Link from "next/link";
-import Image from "next/image";
-import { useProfile } from "../../components/ProfileProvider";
-import { useProgressTracking } from "../../hooks/useProgressTracking";
+import React from 'react';
+import Link from 'next/link';
+import Image from 'next/image';
+import { useProfile } from '../../components/ProfileProvider';
+import { useProgressTracking } from '../../hooks/useProgressTracking';
 
 export default function ProfileOverviewPage() {
   const { profile } = useProfile();
@@ -25,7 +25,7 @@ export default function ProfileOverviewPage() {
   const recentAchievements = [...achievements]
     .sort(
       (a, b) =>
-        new Date(b.earnedDate).getTime() - new Date(a.earnedDate).getTime(),
+        new Date(b.earnedDate).getTime() - new Date(a.earnedDate).getTime()
     )
     .slice(0, 5);
 
@@ -52,7 +52,7 @@ export default function ProfileOverviewPage() {
           )}
           <div>
             <div className="text-lg font-semibold">
-              {profile.displayName || "Anonymous Learner"}
+              {profile.displayName || 'Anonymous Learner'}
             </div>
             <div className="text-sm text-gray-600 dark:text-gray-400">
               Keep learning and earning achievements!
@@ -179,7 +179,7 @@ export default function ProfileOverviewPage() {
                   <div>
                     <div className="font-medium">{ach.description}</div>
                     <div className="text-xs text-gray-600 dark:text-gray-400">
-                      {new Date(ach.earnedDate).toLocaleDateString()} •{" "}
+                      {new Date(ach.earnedDate).toLocaleDateString()} •{' '}
                       {ach.type}
                     </div>
                   </div>

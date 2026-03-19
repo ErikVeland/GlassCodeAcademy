@@ -1,5 +1,5 @@
-import Link from "next/link";
-import { getApiBaseStrict } from "@/lib/urlUtils";
+import Link from 'next/link';
+import { getApiBaseStrict } from '@/lib/urlUtils';
 
 type ThreadAuthor = { id: number; name: string; email?: string };
 type Thread = {
@@ -21,20 +21,20 @@ type Pagination = {
   pages: number;
 };
 
-export const dynamic = "force-dynamic";
+export const dynamic = 'force-dynamic';
 
 async function fetchThreads(
-  categoryId: string,
+  categoryId: string
 ): Promise<{ threads: Thread[]; pagination?: Pagination }> {
   const apiBase = (() => {
     try {
       return getApiBaseStrict();
     } catch {
-      return "http://127.0.0.1:8081";
+      return 'http://127.0.0.1:8081';
     }
   })();
   const url = `${apiBase}/api/forum/categories/${categoryId}/threads?page=1&limit=20`;
-  const res = await fetch(url, { cache: "no-store" });
+  const res = await fetch(url, { cache: 'no-store' });
   if (!res.ok) return { threads: [] };
   const json = (await res.json()) as {
     success: boolean;

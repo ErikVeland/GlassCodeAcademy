@@ -1,5 +1,5 @@
-import { useEffect, useState } from "react";
-import { useProgressTracking } from "@/hooks/useProgressTracking";
+import { useEffect, useState } from 'react';
+import { useProgressTracking } from '@/hooks/useProgressTracking';
 
 interface RegistryModule {
   slug: string;
@@ -16,7 +16,7 @@ interface RegistryResponse {
 }
 
 const fetchJSON = async <T>(url: string): Promise<T> => {
-  const res = await fetch(url, { cache: "no-store" });
+  const res = await fetch(url, { cache: 'no-store' });
   if (!res.ok) throw new Error(`Request failed: ${res.status}`);
   return (await res.json()) as T;
 };
@@ -31,14 +31,14 @@ export const useNextUnlockedLesson = () => {
       try {
         // Load registry and compute tier order
         const registry = await fetchJSON<RegistryResponse>(
-          "/api/content/registry",
+          '/api/content/registry'
         );
         const tiers = registry.tiers || {};
         let tierOrder = Object.keys(tiers).sort(
-          (a, b) => (tiers[a]?.level ?? 0) - (tiers[b]?.level ?? 0),
+          (a, b) => (tiers[a]?.level ?? 0) - (tiers[b]?.level ?? 0)
         );
         if (tierOrder.length === 0) {
-          tierOrder = ["foundational", "core", "specialized", "quality"];
+          tierOrder = ['foundational', 'core', 'specialized', 'quality'];
         }
 
         // Iterate tiers then modules to find first unlocked, not-completed module
@@ -46,16 +46,16 @@ export const useNextUnlockedLesson = () => {
           const modules = registry.modules.filter((m) => m.tier === tierKey);
           for (const mod of modules) {
             const prereqsMet = (mod.prerequisites || []).every(
-              (p) => progress[p]?.completionStatus === "completed",
+              (p) => progress[p]?.completionStatus === 'completed'
             );
             const status =
-              progress[mod.slug]?.completionStatus || "not-started";
-            if (prereqsMet && status !== "completed") {
+              progress[mod.slug]?.completionStatus || 'not-started';
+            if (prereqsMet && status !== 'completed') {
               // Determine first lesson index by fetching lessons and selecting index 0
               let firstLessonIndex = 0;
               try {
                 const lessons = await fetchJSON<unknown[]>(
-                  `/api/content/lessons/${mod.slug}`,
+                  `/api/content/lessons/${mod.slug}`
                 );
                 if (Array.isArray(lessons) && lessons.length > 0) {
                   firstLessonIndex = 0;
@@ -65,7 +65,7 @@ export const useNextUnlockedLesson = () => {
               }
               {
                 const lessonsPath = mod.routes.lessons;
-                const shouldAppendOrder = lessonsPath.startsWith("/modules/");
+                const shouldAppendOrder = lessonsPath.startsWith('/modules/');
                 const href = shouldAppendOrder
                   ? `${lessonsPath}/${firstLessonIndex + 1}`
                   : lessonsPath;
@@ -81,12 +81,12 @@ export const useNextUnlockedLesson = () => {
           const modules = registry.modules.filter((m) => m.tier === tierKey);
           for (const mod of modules) {
             const status =
-              progress[mod.slug]?.completionStatus || "not-started";
-            if (status !== "completed") {
+              progress[mod.slug]?.completionStatus || 'not-started';
+            if (status !== 'completed') {
               let firstLessonIndex = 0;
               try {
                 const lessons = await fetchJSON<unknown[]>(
-                  `/api/content/lessons/${mod.slug}`,
+                  `/api/content/lessons/${mod.slug}`
                 );
                 if (Array.isArray(lessons) && lessons.length > 0) {
                   firstLessonIndex = 0;
@@ -96,7 +96,7 @@ export const useNextUnlockedLesson = () => {
               }
               {
                 const lessonsPath = mod.routes.lessons;
-                const shouldAppendOrder = lessonsPath.startsWith("/modules/");
+                const shouldAppendOrder = lessonsPath.startsWith('/modules/');
                 const href = shouldAppendOrder
                   ? `${lessonsPath}/${firstLessonIndex + 1}`
                   : lessonsPath;
@@ -110,7 +110,7 @@ export const useNextUnlockedLesson = () => {
         // If everything completed, return null
         setNextLessonHref(null);
       } catch (e) {
-        console.error("Failed to compute next unlocked lesson", e);
+        console.error('Failed to compute next unlocked lesson', e);
         setNextLessonHref(null);
       }
     };

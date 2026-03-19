@@ -1,15 +1,15 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
-import Link from "next/link";
-import { getApiBaseStrict } from "@/lib/urlUtils";
+import { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import Link from 'next/link';
+import { getApiBaseStrict } from '@/lib/urlUtils';
 
 export default function RegisterPage() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
@@ -23,9 +23,9 @@ export default function RegisterPage() {
 
     try {
       const response = await fetch(`${getApiBaseStrict()}/auth/register`, {
-        method: "POST",
+        method: 'POST',
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify({
           email,
@@ -38,17 +38,17 @@ export default function RegisterPage() {
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.message || data.detail || "Registration failed");
+        throw new Error(data.message || data.detail || 'Registration failed');
       }
 
       // Show success message and redirect to login page after a short delay
-      setSuccess("Account created successfully! Redirecting to login...");
+      setSuccess('Account created successfully! Redirecting to login...');
       setTimeout(() => {
-        router.push("/login?registered=true");
+        router.push('/login?registered=true');
       }, 2000);
     } catch (err) {
       setError(
-        err instanceof Error ? err.message : "An unexpected error occurred",
+        err instanceof Error ? err.message : 'An unexpected error occurred'
       );
     } finally {
       setLoading(false);
@@ -137,13 +137,13 @@ export default function RegisterPage() {
           disabled={loading}
           className="w-full py-2 px-4 bg-primary text-primary-fg rounded hover:opacity-90 disabled:opacity-60"
         >
-          {loading ? "Creating Account..." : "Create Account"}
+          {loading ? 'Creating Account...' : 'Create Account'}
         </button>
       </form>
 
       <div className="mt-4 text-center">
         <p className="text-sm text-muted">
-          Already have an account?{" "}
+          Already have an account?{' '}
           <Link href="/login" className="text-primary hover:underline">
             Sign in
           </Link>

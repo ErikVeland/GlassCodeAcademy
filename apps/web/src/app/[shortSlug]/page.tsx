@@ -1,17 +1,17 @@
-import { Metadata } from "next";
-import { notFound } from "next/navigation";
-import Link from "next/link";
-import { contentRegistry } from "@/lib/contentRegistry";
-import type { Module, Lesson, Quiz } from "@/lib/contentRegistry";
-import { ui, classes } from "@/lib/ui";
-import { getModuleTheme } from "@/lib/moduleThemes";
-import RetryButton from "@/components/RetryButton";
+import { Metadata } from 'next';
+import { notFound } from 'next/navigation';
+import Link from 'next/link';
+import { contentRegistry } from '@/lib/contentRegistry';
+import type { Module, Lesson, Quiz } from '@/lib/contentRegistry';
+import { ui, classes } from '@/lib/ui';
+import { getModuleTheme } from '@/lib/moduleThemes';
+import RetryButton from '@/components/RetryButton';
 
-export const dynamic = "force-dynamic";
+export const dynamic = 'force-dynamic';
 
 export async function generateStaticParams(): Promise<{ shortSlug: string }[]> {
-  const enableSSG = process.env.ENABLE_BUILD_SSG === "true";
-  const isDb = (process.env.GC_CONTENT_MODE || "").toLowerCase() === "db";
+  const enableSSG = process.env.ENABLE_BUILD_SSG === 'true';
+  const isDb = (process.env.GC_CONTENT_MODE || '').toLowerCase() === 'db';
   if (!enableSSG || isDb) {
     return [];
   }
@@ -22,13 +22,13 @@ export async function generateStaticParams(): Promise<{ shortSlug: string }[]> {
         const shortSlug =
           (await contentRegistry.getShortSlugFromModuleSlug(m.slug)) || m.slug;
         return { shortSlug };
-      }),
+      })
     );
     return params;
   } catch (error) {
     console.warn(
-      "Failed to load modules for overview static generation:",
-      error,
+      'Failed to load modules for overview static generation:',
+      error
     );
     return [];
   }
@@ -44,14 +44,14 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   if (!currentModule) {
     return {
-      title: "Module Not Found",
+      title: 'Module Not Found',
     };
   }
 
   return {
     title: `${currentModule.title} - Fullstack Learning Platform`,
     description: currentModule.description,
-    keywords: currentModule.technologies.join(", "),
+    keywords: currentModule.technologies.join(', '),
   };
 }
 
@@ -95,10 +95,10 @@ export default async function ModulePage({ params }: Props) {
     quiz = quizResolved;
 
     console.log(
-      `Loaded content for module ${currentModule.slug}: ${lessons.length} lessons, ${quiz?.questions?.length || 0} quiz questions`,
+      `Loaded content for module ${currentModule.slug}: ${lessons.length} lessons, ${quiz?.questions?.length || 0} quiz questions`
     );
   } catch (error) {
-    console.error("Error loading module data:", error);
+    console.error('Error loading module data:', error);
     // Return a more graceful error page
     return (
       <div className="max-w-4xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
@@ -126,7 +126,7 @@ export default async function ModulePage({ params }: Props) {
 
   const theme = getModuleTheme(currentModule!.slug);
 
-  const difficultyBadgeClass = "bg-surface-alt text-fg";
+  const difficultyBadgeClass = 'bg-surface-alt text-fg';
 
   return (
     <>
@@ -190,18 +190,18 @@ export default async function ModulePage({ params }: Props) {
                 </div>
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 text-xs sm:text-sm text-muted">
                   <div className="min-w-0">
-                    <span className="font-bold">Track:</span>{" "}
+                    <span className="font-bold">Track:</span>{' '}
                     {currentModule.track}
                   </div>
                   <div className="min-w-0">
                     <span className="font-bold">Tier:</span> {tier?.title}
                   </div>
                   <div className="min-w-0">
-                    <span className="font-bold">Duration:</span>{" "}
+                    <span className="font-bold">Duration:</span>{' '}
                     {currentModule.estimatedHours}h
                   </div>
                   <div className="min-w-0">
-                    <span className="font-bold">Lessons:</span>{" "}
+                    <span className="font-bold">Lessons:</span>{' '}
                     {lessons?.length || 0}
                   </div>
                 </div>
@@ -211,7 +211,7 @@ export default async function ModulePage({ params }: Props) {
         </header>
 
         {/* Content Status Alert */}
-        {currentModule.status === "content-pending" && (
+        {currentModule.status === 'content-pending' && (
           <div className="mb-8 p-4 bg-surface-alt border border-border rounded-lg">
             <div className="flex">
               <div className="flex-shrink-0">
@@ -275,8 +275,8 @@ export default async function ModulePage({ params }: Props) {
                     href={currentModule.routes.lessons}
                     className={classes(
                       ui.buttons.base,
-                      "px-4 py-2",
-                      ui.buttons.lessons,
+                      'px-4 py-2',
+                      ui.buttons.lessons
                     )}
                   >
                     Start Learning
@@ -320,8 +320,8 @@ export default async function ModulePage({ params }: Props) {
                     href={currentModule.routes.quiz}
                     className={classes(
                       ui.buttons.base,
-                      "px-4 py-2",
-                      ui.buttons.quiz,
+                      'px-4 py-2',
+                      ui.buttons.quiz
                     )}
                   >
                     Take Quiz
@@ -386,7 +386,7 @@ async function PrerequisiteLink({ slug }: { slug: string }) {
       </Link>
     );
   } catch (error) {
-    console.error("Error loading prerequisite module:", error);
+    console.error('Error loading prerequisite module:', error);
     return <span className="text-muted">{slug} (error loading module)</span>;
   }
 }

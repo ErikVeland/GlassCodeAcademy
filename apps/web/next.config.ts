@@ -1,6 +1,6 @@
-import type { NextConfig } from "next";
+import type { NextConfig } from 'next';
 
-const IS_PROD = process.env.NODE_ENV === "production";
+const IS_PROD = process.env.NODE_ENV === 'production';
 
 const cspBase = [
   "default-src 'self'",
@@ -21,8 +21,8 @@ const cspBase = [
   "form-action 'self'",
   "frame-ancestors 'self'",
   "object-src 'none'",
-  ...(IS_PROD ? ["upgrade-insecure-requests", "report-to csp-endpoint"] : []),
-].join("; ");
+  ...(IS_PROD ? ['upgrade-insecure-requests', 'report-to csp-endpoint'] : []),
+].join('; ');
 
 const nextConfig: NextConfig = {
   eslint: {
@@ -34,7 +34,7 @@ const nextConfig: NextConfig = {
     ignoreBuildErrors: false,
   },
   // Enable standalone output for production deployment
-  output: "standalone",
+  output: 'standalone',
   // Performance optimizations: disable experimental flags causing export worker issues
   experimental: {
     optimizeCss: false,
@@ -50,12 +50,12 @@ const nextConfig: NextConfig = {
   },
   // Remove console logs in production builds except errors and warnings
   compiler: {
-    removeConsole: IS_PROD ? { exclude: ["error", "warn"] } : false,
+    removeConsole: IS_PROD ? { exclude: ['error', 'warn'] } : false,
   },
   // Image optimization
   images: {
     minimumCacheTTL: 86400,
-    formats: ["image/avif", "image/webp"],
+    formats: ['image/avif', 'image/webp'],
   },
   // Enable compression
   compress: true,
@@ -64,35 +64,35 @@ const nextConfig: NextConfig = {
   // Configure Sass options
   sassOptions: {
     // Silence deprecation warnings
-    silenceDeprecations: ["legacy-js-api"],
+    silenceDeprecations: ['legacy-js-api'],
   },
   // Dev proxy: forward frontend `/graphql` to backend GraphQL API
   async rewrites() {
     // Prefer configured API base if provided; otherwise default to local backend
     const base =
-      process.env.NEXT_PUBLIC_API_BASE?.replace(/\/+$/, "") ||
-      "http://127.0.0.1:8081";
+      process.env.NEXT_PUBLIC_API_BASE?.replace(/\/+$/, '') ||
+      'http://127.0.0.1:8081';
     return {
       // Ensure NextAuth routes are handled by Next.js and NOT proxied
       beforeFiles: [
         {
-          source: "/api/auth/:path*",
-          destination: "/api/auth/:path*",
+          source: '/api/auth/:path*',
+          destination: '/api/auth/:path*',
         },
         // Ensure content quiz and registry routes are served by Next and not proxied
         {
-          source: "/api/content/registry",
-          destination: "/api/content/registry",
+          source: '/api/content/registry',
+          destination: '/api/content/registry',
         },
         {
-          source: "/api/content/quizzes/:slug",
-          destination: "/api/content/quizzes/:slug",
+          source: '/api/content/quizzes/:slug',
+          destination: '/api/content/quizzes/:slug',
         },
       ],
       // Proxy other API routes to the backend after filesystem routes are checked
       afterFiles: [
         {
-          source: "/graphql",
+          source: '/graphql',
           destination: `${base}/graphql`,
         },
       ],
@@ -102,40 +102,40 @@ const nextConfig: NextConfig = {
   async headers() {
     return [
       {
-        source: "/(.*)",
+        source: '/(.*)',
         headers: [
           ...(IS_PROD
             ? [
                 {
-                  key: "Strict-Transport-Security",
-                  value: "max-age=31536000; includeSubDomains; preload",
+                  key: 'Strict-Transport-Security',
+                  value: 'max-age=31536000; includeSubDomains; preload',
                 },
               ]
             : []),
-          { key: "X-Content-Type-Options", value: "nosniff" },
-          { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
+          { key: 'X-Content-Type-Options', value: 'nosniff' },
+          { key: 'Referrer-Policy', value: 'strict-origin-when-cross-origin' },
           {
-            key: "Permissions-Policy",
+            key: 'Permissions-Policy',
             value:
-              "camera=(), microphone=(), geolocation=(), interest-cohort=(), browsing-topics=()",
+              'camera=(), microphone=(), geolocation=(), interest-cohort=(), browsing-topics=()',
           },
-          { key: "Cross-Origin-Opener-Policy", value: "same-origin" },
-          { key: "Cross-Origin-Resource-Policy", value: "same-origin" },
+          { key: 'Cross-Origin-Opener-Policy', value: 'same-origin' },
+          { key: 'Cross-Origin-Resource-Policy', value: 'same-origin' },
           ...(IS_PROD
             ? [
                 {
-                  key: "Report-To",
+                  key: 'Report-To',
                   value:
                     '{"group":"csp-endpoint","max_age":10800,"endpoints":[{"url":"/api/csp-report"}]}',
                 },
                 {
-                  key: "Reporting-Endpoints",
+                  key: 'Reporting-Endpoints',
                   value: 'csp-endpoint="/api/csp-report"',
                 },
               ]
             : []),
           // Enforced CSP (dev allows inline styles/scripts to support Next dev)
-          { key: "Content-Security-Policy", value: cspBase },
+          { key: 'Content-Security-Policy', value: cspBase },
         ],
       },
     ];

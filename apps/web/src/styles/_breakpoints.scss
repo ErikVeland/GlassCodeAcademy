@@ -1,12 +1,12 @@
-@use "sass:map";
+@use 'sass:map';
 
 // Tailwind-aligned breakpoints for mobile-first SCSS
 $breakpoints: (
-  "sm": 640px,
-  "md": 768px,
-  "lg": 1024px,
-  "xl": 1280px,
-  "2xl": 1536px,
+  'sm': 640px,
+  'md': 768px,
+  'lg': 1024px,
+  'xl': 1280px,
+  '2xl': 1536px,
 );
 
 @function bp($key) {
@@ -36,14 +36,14 @@ $breakpoints: (
 
 // mobile-only (below sm)
 @mixin mobile-only {
-  @media (max-width: (bp("sm") - 1px)) {
+  @media (max-width: (bp('sm') - 1px)) {
     @content;
   }
 }
 
 // desktop-only (sm and up)
 @mixin desktop-only {
-  @media (min-width: bp("sm")) {
+  @media (min-width: bp('sm')) {
     @content;
   }
 }

@@ -4,52 +4,52 @@ export function isNetworkError(error: unknown): boolean {
 
   // Check common network error patterns
   const base: Record<string, unknown> =
-    typeof error === "object" && error !== null
+    typeof error === 'object' && error !== null
       ? (error as Record<string, unknown>)
       : {};
 
   const networkError: Record<string, unknown> | undefined =
-    typeof base["networkError"] === "object" && base["networkError"] !== null
-      ? (base["networkError"] as Record<string, unknown>)
+    typeof base['networkError'] === 'object' && base['networkError'] !== null
+      ? (base['networkError'] as Record<string, unknown>)
       : undefined;
 
   const statusCandidate = [
-    base["status"],
-    base["statusCode"],
-    networkError?.["status"],
-    networkError?.["statusCode"],
-  ].find((v): v is number => typeof v === "number");
+    base['status'],
+    base['statusCode'],
+    networkError?.['status'],
+    networkError?.['statusCode'],
+  ].find((v): v is number => typeof v === 'number');
 
-  const rawMessage = base["message"];
+  const rawMessage = base['message'];
   const message: string =
-    typeof rawMessage === "string"
+    typeof rawMessage === 'string'
       ? rawMessage
       : rawMessage != null
         ? String(rawMessage)
-        : "";
+        : '';
   const status: number | undefined = statusCandidate;
 
   const msg = message.toLowerCase();
   const messageHints = [
-    "failed to fetch",
-    "networkerror",
-    "econnrefused",
-    "econnreset",
-    "timeout",
-    "timed out",
-    "etimedout",
-    "econnaborted",
-    "bad gateway",
-    "service unavailable",
-    "gateway timeout",
-    "request timeout",
-    "dns",
-    "enotfound",
-    "eai_again",
+    'failed to fetch',
+    'networkerror',
+    'econnrefused',
+    'econnreset',
+    'timeout',
+    'timed out',
+    'etimedout',
+    'econnaborted',
+    'bad gateway',
+    'service unavailable',
+    'gateway timeout',
+    'request timeout',
+    'dns',
+    'enotfound',
+    'eai_again',
   ];
 
   const statusIndicatesNetwork =
-    typeof status === "number" && (status === 408 || status >= 500);
+    typeof status === 'number' && (status === 408 || status >= 500);
   const messageHasHttpCodes = /\b(408|500|502|503|504)\b/.test(message);
 
   return (

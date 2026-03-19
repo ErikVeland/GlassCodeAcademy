@@ -1,9 +1,9 @@
-"use client";
+'use client';
 
-import React from "react";
-import Link from "next/link";
-import CircularProgress from "./CircularProgress";
-import CertificateAward from "./CertificateAward";
+import React from 'react';
+import Link from 'next/link';
+import CircularProgress from './CircularProgress';
+import CertificateAward from './CertificateAward';
 
 type QuizResultProps = {
   moduleName: string;
@@ -74,7 +74,7 @@ const QuizResult: React.FC<QuizResultProps> = ({
                   >
                     {nextLessonTitle
                       ? `Start ${nextLessonTitle}`
-                      : "Start Next Lesson"}
+                      : 'Start Next Lesson'}
                   </Link>
                 ) : nextModuleHref ? (
                   <Link
@@ -84,7 +84,7 @@ const QuizResult: React.FC<QuizResultProps> = ({
                   >
                     {nextModuleTitle
                       ? `Start ${nextModuleTitle}`
-                      : "Start Next Module"}
+                      : 'Start Next Module'}
                   </Link>
                 ) : (
                   <button
@@ -94,7 +94,7 @@ const QuizResult: React.FC<QuizResultProps> = ({
                   >
                     {nextLessonTitle
                       ? `Start ${nextLessonTitle}`
-                      : "Start Next Lesson"}
+                      : 'Start Next Lesson'}
                   </button>
                 ))}
             </div>

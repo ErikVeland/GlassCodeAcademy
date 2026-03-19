@@ -1,52 +1,52 @@
-import type { Metadata, Viewport } from "next";
-import Link from "next/link";
-import "./globals.css";
-import "../styles/design-system.scss";
-import "../styles/liquid-glass.scss";
-import Header from "../components/Header";
-import FloatingDarkModeToggle from "../components/FloatingDarkModeToggle";
-import { DarkModeProvider } from "../components/DarkModeContext";
-import AnimatedBackground from "../components/AnimatedBackground";
-import { AccessibilityProvider } from "../components/AccessibilityProvider";
-import ApolloWrapper from "../components/ApolloWrapper";
-import AuthProvider from "../components/AuthProvider";
-import ProfileProvider from "../components/ProfileProvider";
-import AdminQueryHandler from "../components/AdminQueryHandler";
-import QuizPrefetchManager from "../components/QuizPrefetchManager";
-import QuizPrefetchTest from "../components/QuizPrefetchTest";
-import { Suspense } from "react";
-import { EXTERNAL_LINKS } from "@/lib/appConfig";
-import Script from "next/script";
-import ApolloDevMessages from "../components/ApolloDevMessages";
-import ConsoleBanner from "../components/ConsoleBanner";
-import BackendReadinessWrapper from "../components/BackendReadinessWrapper";
-import { cookies } from "next/headers";
-import StatusBanner from "../components/StatusBanner";
+import type { Metadata, Viewport } from 'next';
+import Link from 'next/link';
+import './globals.css';
+import '../styles/design-system.scss';
+import '../styles/liquid-glass.scss';
+import Header from '../components/Header';
+import FloatingDarkModeToggle from '../components/FloatingDarkModeToggle';
+import { DarkModeProvider } from '../components/DarkModeContext';
+import AnimatedBackground from '../components/AnimatedBackground';
+import { AccessibilityProvider } from '../components/AccessibilityProvider';
+import ApolloWrapper from '../components/ApolloWrapper';
+import AuthProvider from '../components/AuthProvider';
+import ProfileProvider from '../components/ProfileProvider';
+import AdminQueryHandler from '../components/AdminQueryHandler';
+import QuizPrefetchManager from '../components/QuizPrefetchManager';
+import QuizPrefetchTest from '../components/QuizPrefetchTest';
+import { Suspense } from 'react';
+import { EXTERNAL_LINKS } from '@/lib/appConfig';
+import Script from 'next/script';
+import ApolloDevMessages from '../components/ApolloDevMessages';
+import ConsoleBanner from '../components/ConsoleBanner';
+import BackendReadinessWrapper from '../components/BackendReadinessWrapper';
+import { cookies } from 'next/headers';
+import StatusBanner from '../components/StatusBanner';
 
-export const runtime = "nodejs";
+export const runtime = 'nodejs';
 
 export const metadata: Metadata = {
-  title: "GlassCode Academy - Learn .NET, Next.js, GraphQL, and Laravel",
+  title: 'GlassCode Academy - Learn .NET, Next.js, GraphQL, and Laravel',
   description:
-    "Master .NET, Next.js, GraphQL, and Laravel with step-by-step lessons and interview preparation",
+    'Master .NET, Next.js, GraphQL, and Laravel with step-by-step lessons and interview preparation',
   icons: {
     icon: [
-      { url: "/favicon.svg" },
-      { url: "/favicon-16x16.svg", sizes: "16x16" },
-      { url: "/favicon-32x32.svg", sizes: "32x32" },
+      { url: '/favicon.svg' },
+      { url: '/favicon-16x16.svg', sizes: '16x16' },
+      { url: '/favicon-32x32.svg', sizes: '32x32' },
     ],
-    apple: "/apple-touch-icon.svg",
+    apple: '/apple-touch-icon.svg',
   },
 };
 
 // Lock viewport on mobile to prevent accidental zooming
 export const viewport: Viewport = {
-  width: "device-width",
+  width: 'device-width',
   initialScale: 1,
   maximumScale: 1,
   minimumScale: 1,
   userScalable: false,
-  viewportFit: "cover",
+  viewportFit: 'cover',
 };
 
 export default async function RootLayout({
@@ -56,11 +56,11 @@ export default async function RootLayout({
 }) {
   // SSR theme attributes based on cookie; falls back to light when unknown
   const cookieStore = await cookies();
-  const cookieTheme = cookieStore.get("gc-theme")?.value;
+  const cookieTheme = cookieStore.get('gc-theme')?.value;
   const initialTheme =
-    cookieTheme === "dark" || cookieTheme === "light" ? cookieTheme : "light";
-  const htmlClassName = initialTheme === "dark" ? "dark" : "";
-  const colorScheme = initialTheme === "dark" ? "dark" : "light";
+    cookieTheme === 'dark' || cookieTheme === 'light' ? cookieTheme : 'light';
+  const htmlClassName = initialTheme === 'dark' ? 'dark' : '';
+  const colorScheme = initialTheme === 'dark' ? 'dark' : 'light';
 
   return (
     <html
@@ -233,7 +233,7 @@ export default async function RootLayout({
       </head>
       <body
         suppressHydrationWarning
-        className={"antialiased min-h-screen relative theme-base"}
+        className={'antialiased min-h-screen relative theme-base'}
       >
         <DarkModeProvider>
           <ApolloWrapper>

@@ -1,8 +1,8 @@
-"use client";
+'use client';
 
-import { useState, useEffect, useCallback } from "react";
-import { useRouter } from "next/navigation";
-import type { AdminQuiz, AdminLesson } from "@/types/admin";
+import { useState, useEffect, useCallback } from 'react';
+import { useRouter } from 'next/navigation';
+import type { AdminQuiz, AdminLesson } from '@/types/admin';
 
 export default function EditQuizPage({
   params,
@@ -26,13 +26,13 @@ export default function EditQuizPage({
       const quizData = await quizRes.json();
       setQuiz(quizData as AdminQuiz);
 
-      const lessonsRes = await fetch("/api/lessons-db");
+      const lessonsRes = await fetch('/api/lessons-db');
       const lessonsData = await lessonsRes.json();
       setLessons(lessonsData as AdminLesson[]);
 
       setLoading(false);
     } catch (err) {
-      setError("Failed to fetch data");
+      setError('Failed to fetch data');
       setLoading(false);
       console.error(err);
     }
@@ -47,8 +47,8 @@ export default function EditQuizPage({
         fetchData(p.id);
       })
       .catch((err) => {
-        console.error("Error resolving params", err);
-        setError("Failed to resolve route params");
+        console.error('Error resolving params', err);
+        setError('Failed to resolve route params');
         setLoading(false);
       });
     return () => {
@@ -69,7 +69,7 @@ export default function EditQuizPage({
 
       try {
         choices =
-          typeof quiz.choices === "string"
+          typeof quiz.choices === 'string'
             ? JSON.parse(quiz.choices)
             : quiz.choices;
       } catch {
@@ -78,14 +78,14 @@ export default function EditQuizPage({
 
       try {
         tags =
-          typeof quiz.tags === "string" ? JSON.parse(quiz.tags) : quiz.tags;
+          typeof quiz.tags === 'string' ? JSON.parse(quiz.tags) : quiz.tags;
       } catch {
         tags = quiz.tags;
       }
 
       try {
         sources =
-          typeof quiz.sources === "string"
+          typeof quiz.sources === 'string'
             ? JSON.parse(quiz.sources)
             : quiz.sources;
       } catch {
@@ -93,9 +93,9 @@ export default function EditQuizPage({
       }
 
       const response = await fetch(`/api/LessonQuiz/${quiz.id}`, {
-        method: "PUT",
+        method: 'PUT',
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify({
           question: quiz.question,
@@ -108,7 +108,7 @@ export default function EditQuizPage({
           questionType: quiz.questionType,
           estimatedTime: quiz.estimatedTime,
           correctAnswer:
-            typeof quiz.correctAnswer === "string"
+            typeof quiz.correctAnswer === 'string'
               ? parseInt(quiz.correctAnswer)
               : (quiz.correctAnswer ?? null),
           quizType: quiz.quizType,
@@ -120,13 +120,13 @@ export default function EditQuizPage({
       });
 
       if (response.ok) {
-        router.push("/admin");
+        router.push('/admin');
       } else {
         const errorData = await response.json();
-        setError(errorData.error || "Failed to update quiz");
+        setError(errorData.error || 'Failed to update quiz');
       }
     } catch (err) {
-      setError("Failed to update quiz");
+      setError('Failed to update quiz');
       console.error(err);
     } finally {
       setSaving(false);
@@ -136,16 +136,16 @@ export default function EditQuizPage({
   const handleInputChange = (
     e: React.ChangeEvent<
       HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
-    >,
+    >
   ) => {
     if (!quiz) return;
     const { name, value, type } = e.target;
     const checked =
-      type === "checkbox" ? (e.target as HTMLInputElement).checked : undefined;
+      type === 'checkbox' ? (e.target as HTMLInputElement).checked : undefined;
 
     setQuiz({
       ...quiz,
-      [name]: type === "checkbox" ? checked : value,
+      [name]: type === 'checkbox' ? checked : value,
     } as AdminQuiz);
   };
 
@@ -231,7 +231,7 @@ export default function EditQuizPage({
       <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="mb-8">
           <button
-            onClick={() => router.push("/admin")}
+            onClick={() => router.push('/admin')}
             className="flex items-center text-indigo-600 hover:text-indigo-800"
           >
             <svg
@@ -368,7 +368,7 @@ export default function EditQuizPage({
                   type="number"
                   name="correctAnswer"
                   id="correctAnswer"
-                  value={quiz.correctAnswer || ""}
+                  value={quiz.correctAnswer || ''}
                   onChange={handleInputChange}
                   className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                   placeholder="0-based index of correct choice"
@@ -527,7 +527,7 @@ export default function EditQuizPage({
             <div className="mt-8 flex justify-end space-x-3">
               <button
                 type="button"
-                onClick={() => router.push("/admin")}
+                onClick={() => router.push('/admin')}
                 className="bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
               >
                 Cancel
@@ -537,7 +537,7 @@ export default function EditQuizPage({
                 disabled={saving}
                 className="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50"
               >
-                {saving ? "Saving..." : "Save Changes"}
+                {saving ? 'Saving...' : 'Save Changes'}
               </button>
             </div>
           </form>

@@ -12,33 +12,33 @@ export interface LessonSources {
 
 // Mapping of interview prep modules to their corresponding lesson modules
 export const interviewToLessonMapping: Record<string, string> = {
-  "javascript-questions": "web-fundamentals",
-  "sass-questions": "sass-advanced",
-  "react-questions": "react-fundamentals",
-  "dotnet-questions": "dotnet-fundamentals",
-  "typescript-questions": "nextjs-advanced", // TypeScript is covered in Next.js advanced
-  "system-design-questions": "database-systems", // System design relates to database systems
+  'javascript-questions': 'web-fundamentals',
+  'sass-questions': 'sass-advanced',
+  'react-questions': 'react-fundamentals',
+  'dotnet-questions': 'dotnet-fundamentals',
+  'typescript-questions': 'nextjs-advanced', // TypeScript is covered in Next.js advanced
+  'system-design-questions': 'database-systems', // System design relates to database systems
 };
 
 // Technology mapping for individual interview question pages
 export const techToLessonMapping: Record<string, string> = {
-  javascript: "web-fundamentals",
-  sass: "sass-advanced",
-  react: "react-fundamentals",
-  dotnet: "dotnet-fundamentals",
-  typescript: "nextjs-advanced",
-  nextjs: "nextjs-advanced",
-  graphql: "graphql-advanced",
-  vue: "vue-advanced",
-  testing: "e2e-testing",
-  version: "version-control",
+  javascript: 'web-fundamentals',
+  sass: 'sass-advanced',
+  react: 'react-fundamentals',
+  dotnet: 'dotnet-fundamentals',
+  typescript: 'nextjs-advanced',
+  nextjs: 'nextjs-advanced',
+  graphql: 'graphql-advanced',
+  vue: 'vue-advanced',
+  testing: 'e2e-testing',
+  version: 'version-control',
 };
 
 /**
  * Fetches sources for a given lesson module
  */
 export async function fetchLessonSources(
-  moduleSlug: string,
+  moduleSlug: string
 ): Promise<LessonSources | null> {
   try {
     const response = await fetch(`/api/content/lessons/${moduleSlug}/sources`);
@@ -57,7 +57,7 @@ export async function fetchLessonSources(
  * Gets sources for an interview prep module
  */
 export async function getInterviewPrepSources(
-  interviewModuleId: string,
+  interviewModuleId: string
 ): Promise<LessonSources | null> {
   const lessonModule = interviewToLessonMapping[interviewModuleId];
   if (!lessonModule) {
@@ -70,7 +70,7 @@ export async function getInterviewPrepSources(
  * Gets sources for a technology-specific interview page
  */
 export async function getTechInterviewSources(
-  tech: string,
+  tech: string
 ): Promise<LessonSources | null> {
   const lessonModule = techToLessonMapping[tech];
   if (!lessonModule) {
@@ -83,7 +83,7 @@ export async function getTechInterviewSources(
  * Formats sources for display in UI components
  */
 export function formatSourcesForDisplay(
-  sources: LessonSources | null,
+  sources: LessonSources | null
 ): LessonSource[] {
   if (!sources || !sources.sources) {
     return [];

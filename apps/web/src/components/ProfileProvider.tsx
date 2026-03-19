@@ -1,6 +1,6 @@
-"use client";
+'use client';
 
-import React, { createContext, useContext, useEffect, useState } from "react";
+import React, { createContext, useContext, useEffect, useState } from 'react';
 
 type Profile = {
   displayName?: string;
@@ -23,7 +23,7 @@ const ProfileContext = createContext<ProfileContextType | undefined>(undefined);
 
 export const useProfile = (): ProfileContextType => {
   const ctx = useContext(ProfileContext);
-  if (!ctx) throw new Error("useProfile must be used within ProfileProvider");
+  if (!ctx) throw new Error('useProfile must be used within ProfileProvider');
   return ctx;
 };
 
@@ -36,7 +36,7 @@ export default function ProfileProvider({
 
   useEffect(() => {
     try {
-      const raw = localStorage.getItem("profile-data");
+      const raw = localStorage.getItem('profile-data');
       if (raw) {
         const parsed = JSON.parse(raw) as Profile;
         setProfileState({ ...defaultProfile, ...parsed });
@@ -48,7 +48,7 @@ export default function ProfileProvider({
 
   useEffect(() => {
     try {
-      localStorage.setItem("profile-data", JSON.stringify(profile));
+      localStorage.setItem('profile-data', JSON.stringify(profile));
     } catch {
       // ignore
     }

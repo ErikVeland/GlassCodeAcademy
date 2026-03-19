@@ -46,7 +46,7 @@ $glass-tier-quality: linear-gradient(
 }
 
 .glass-morphism::before {
-  content: "";
+  content: '';
   position: absolute;
   top: 0;
   left: 0;
@@ -205,7 +205,7 @@ $glass-tier-quality: linear-gradient(
 
   // Tier-specific top border accents
   &::after {
-    content: "";
+    content: '';
     position: absolute;
     top: 0;
     left: 0;
@@ -302,7 +302,7 @@ $glass-tier-quality: linear-gradient(
   margin: $spacing-1;
   // Theme-aware text color (light: Gray-800, dark: near-white)
   color: #1f2937;
-  [data-theme="dark"] & {
+  [data-theme='dark'] & {
     color: rgba(255, 255, 255, 0.92);
   }
   @media (prefers-color-scheme: dark) {

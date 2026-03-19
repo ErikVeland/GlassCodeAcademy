@@ -1,10 +1,10 @@
-"use client";
+'use client';
 
-import React from "react";
-import Link from "next/link";
-import "../../styles/design-system.scss";
-import "../../styles/homepage.scss";
-import "../../styles/liquid-glass.scss";
+import React from 'react';
+import Link from 'next/link';
+import '../../styles/design-system.scss';
+import '../../styles/homepage.scss';
+import '../../styles/liquid-glass.scss';
 
 export default function AboutPage() {
   return (

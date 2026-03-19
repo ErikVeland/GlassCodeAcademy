@@ -1,9 +1,9 @@
-"use client";
+'use client';
 
-import { useState, useEffect, useCallback } from "react";
-import { useRouter } from "next/navigation";
-import type { AdminModule, AdminCourse } from "@/types/admin";
-import LoadingScreen from "@/components/LoadingScreen";
+import { useState, useEffect, useCallback } from 'react';
+import { useRouter } from 'next/navigation';
+import type { AdminModule, AdminCourse } from '@/types/admin';
+import LoadingScreen from '@/components/LoadingScreen';
 
 export default function EditModulePage({
   params,
@@ -26,7 +26,7 @@ export default function EditModulePage({
       const moduleData = await moduleRes.json();
       setModule((moduleData?.data ?? moduleData) as AdminModule);
 
-      const coursesRes = await fetch("/api/courses");
+      const coursesRes = await fetch('/api/courses');
       const coursesResult = await coursesRes.json();
       const normalizedCourses = Array.isArray(coursesResult)
         ? coursesResult
@@ -35,7 +35,7 @@ export default function EditModulePage({
 
       setLoading(false);
     } catch (err) {
-      setError("Failed to fetch data");
+      setError('Failed to fetch data');
       setLoading(false);
       console.error(err);
     }
@@ -50,8 +50,8 @@ export default function EditModulePage({
         fetchData(p.id);
       })
       .catch((err) => {
-        console.error("Error resolving params", err);
-        setError("Failed to resolve route params");
+        console.error('Error resolving params', err);
+        setError('Failed to resolve route params');
         setLoading(false);
       });
     return () => {
@@ -67,9 +67,9 @@ export default function EditModulePage({
       setSaving(true);
 
       const response = await fetch(`/api/modules-db/${module.id}`, {
-        method: "PUT",
+        method: 'PUT',
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify({
           title: module.title,
@@ -82,13 +82,13 @@ export default function EditModulePage({
       });
 
       if (response.ok) {
-        router.push("/admin");
+        router.push('/admin');
       } else {
         const errorData = await response.json();
-        setError(errorData.error || "Failed to update module");
+        setError(errorData.error || 'Failed to update module');
       }
     } catch (err) {
-      setError("Failed to update module");
+      setError('Failed to update module');
       console.error(err);
     } finally {
       setSaving(false);
@@ -98,16 +98,16 @@ export default function EditModulePage({
   const handleInputChange = (
     e: React.ChangeEvent<
       HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
-    >,
+    >
   ) => {
     if (!module) return;
     const { name, value, type } = e.target;
     const checked =
-      type === "checkbox" ? (e.target as HTMLInputElement).checked : undefined;
+      type === 'checkbox' ? (e.target as HTMLInputElement).checked : undefined;
 
     setModule({
       ...module,
-      [name]: type === "checkbox" ? checked : value,
+      [name]: type === 'checkbox' ? checked : value,
     } as AdminModule);
   };
 
@@ -158,7 +158,7 @@ export default function EditModulePage({
       <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="mb-8">
           <button
-            onClick={() => router.push("/admin")}
+            onClick={() => router.push('/admin')}
             className="flex items-center text-indigo-600 hover:text-indigo-800"
           >
             <svg
@@ -301,7 +301,7 @@ export default function EditModulePage({
             <div className="mt-8 flex justify-end space-x-3">
               <button
                 type="button"
-                onClick={() => router.push("/admin")}
+                onClick={() => router.push('/admin')}
                 className="bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
               >
                 Cancel
@@ -311,7 +311,7 @@ export default function EditModulePage({
                 disabled={saving}
                 className="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50"
               >
-                {saving ? "Saving..." : "Save Changes"}
+                {saving ? 'Saving...' : 'Save Changes'}
               </button>
             </div>
           </form>

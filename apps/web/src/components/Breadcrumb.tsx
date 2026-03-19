@@ -1,9 +1,9 @@
-"use client";
+'use client';
 
-import React from "react";
-import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { ChevronRightIcon, HomeIcon } from "@heroicons/react/24/outline";
+import React from 'react';
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
+import { ChevronRightIcon, HomeIcon } from '@heroicons/react/24/outline';
 
 interface BreadcrumbItem {
   label: string;
@@ -17,9 +17,9 @@ interface BreadcrumbProps {
   className?: string;
 }
 
-export function Breadcrumb({ items, className = "" }: BreadcrumbProps) {
+export function Breadcrumb({ items, className = '' }: BreadcrumbProps) {
   const pathname = usePathname();
-  const path = pathname ?? "";
+  const path = pathname ?? '';
 
   // Generate breadcrumb items from pathname if not provided
   const breadcrumbItems = items || generateBreadcrumbFromPath(path);
@@ -53,7 +53,7 @@ export function Breadcrumb({ items, className = "" }: BreadcrumbProps) {
               </span>
             ) : (
               <Link
-                href={item.href || "#"}
+                href={item.href || '#'}
                 className="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 transition-colors flex items-center gap-1"
               >
                 {item.icon}
@@ -68,13 +68,13 @@ export function Breadcrumb({ items, className = "" }: BreadcrumbProps) {
 }
 
 function generateBreadcrumbFromPath(pathname: string): BreadcrumbItem[] {
-  const pathSegments = pathname.split("/").filter((segment) => segment !== "");
+  const pathSegments = pathname.split('/').filter((segment) => segment !== '');
   const breadcrumbs: BreadcrumbItem[] = [];
 
   // Always start with home
   breadcrumbs.push({
-    label: "Home",
-    href: "/",
+    label: 'Home',
+    href: '/',
     icon: <HomeIcon className="h-4 w-4" />,
   });
 
@@ -85,7 +85,7 @@ function generateBreadcrumbFromPath(pathname: string): BreadcrumbItem[] {
     return breadcrumbs;
   }
 
-  let currentPath = "";
+  let currentPath = '';
 
   for (let i = 0; i < pathSegments.length; i++) {
     const segment = pathSegments[i];
@@ -93,10 +93,10 @@ function generateBreadcrumbFromPath(pathname: string): BreadcrumbItem[] {
 
     const isLast = i === pathSegments.length - 1;
 
-    if (segment === "modules") {
+    if (segment === 'modules') {
       // Don't add 'modules' as a breadcrumb item (old routing)
       continue;
-    } else if (pathSegments[i - 1] === "modules") {
+    } else if (pathSegments[i - 1] === 'modules') {
       // This is a module slug in old routing (/modules/[moduleSlug])
       breadcrumbs.push({
         label: formatModuleName(segment),
@@ -105,9 +105,9 @@ function generateBreadcrumbFromPath(pathname: string): BreadcrumbItem[] {
       });
     } else if (
       i === 0 &&
-      segment !== "modules" &&
-      segment !== "api" &&
-      segment !== "_next"
+      segment !== 'modules' &&
+      segment !== 'api' &&
+      segment !== '_next'
     ) {
       // This could be a shortSlug in new routing (/[shortSlug])
       // Check if this looks like a module shortSlug (not a system route)
@@ -116,26 +116,26 @@ function generateBreadcrumbFromPath(pathname: string): BreadcrumbItem[] {
         href: isLast ? undefined : `/${segment}`,
         isCurrentPage: isLast,
       });
-    } else if (segment === "lessons") {
+    } else if (segment === 'lessons') {
       breadcrumbs.push({
-        label: "Lessons",
+        label: 'Lessons',
         href: isLast ? undefined : currentPath,
         isCurrentPage: isLast,
       });
-    } else if (segment === "quiz") {
+    } else if (segment === 'quiz') {
       breadcrumbs.push({
-        label: "Assessment",
+        label: 'Assessment',
         href: isLast ? undefined : currentPath,
         isCurrentPage: isLast,
       });
-    } else if (pathSegments[i - 1] === "lessons" && /^\d+$/.test(segment)) {
+    } else if (pathSegments[i - 1] === 'lessons' && /^\d+$/.test(segment)) {
       // This is a lesson number
       breadcrumbs.push({
         label: `Lesson ${segment}`,
         href: isLast ? undefined : currentPath,
         isCurrentPage: isLast,
       });
-    } else if (pathSegments[i - 1] === "question" && /^\d+$/.test(segment)) {
+    } else if (pathSegments[i - 1] === 'question' && /^\d+$/.test(segment)) {
       // This is a question number
       breadcrumbs.push({
         label: `Question ${segment}`,
@@ -157,32 +157,32 @@ function generateBreadcrumbFromPath(pathname: string): BreadcrumbItem[] {
 
 function formatModuleName(slug: string): string {
   // Convert slug to readable name
-  const name = slug.replace(/-/g, " ").replace(/\b\w/g, (l) => l.toUpperCase());
+  const name = slug.replace(/-/g, ' ').replace(/\b\w/g, (l) => l.toUpperCase());
 
   // Handle special cases
   const specialCases: Record<string, string> = {
-    "React Fundamentals": "React",
-    "Dotnet Fundamentals": ".NET Core",
-    "Database Systems": "Database",
-    "Typescript Fundamentals": "TypeScript",
-    "Node Fundamentals": "Node.js",
-    "Laravel Fundamentals": "Laravel",
-    "Nextjs Advanced": "Next.js",
-    "Graphql Advanced": "GraphQL",
-    "Sass Advanced": "Sass/SCSS",
-    "Tailwind Advanced": "Tailwind CSS",
-    "Vue Advanced": "Vue.js",
-    "Testing Fundamentals": "Testing",
-    "E2e Testing": "E2E Testing",
-    "Performance Optimization": "Performance",
-    "Security Fundamentals": "Security",
+    'React Fundamentals': 'React',
+    'Dotnet Fundamentals': '.NET Core',
+    'Database Systems': 'Database',
+    'Typescript Fundamentals': 'TypeScript',
+    'Node Fundamentals': 'Node.js',
+    'Laravel Fundamentals': 'Laravel',
+    'Nextjs Advanced': 'Next.js',
+    'Graphql Advanced': 'GraphQL',
+    'Sass Advanced': 'Sass/SCSS',
+    'Tailwind Advanced': 'Tailwind CSS',
+    'Vue Advanced': 'Vue.js',
+    'Testing Fundamentals': 'Testing',
+    'E2e Testing': 'E2E Testing',
+    'Performance Optimization': 'Performance',
+    'Security Fundamentals': 'Security',
   };
 
   return specialCases[name] || name;
 }
 
 function formatSegmentName(segment: string): string {
-  return segment.replace(/-/g, " ").replace(/\b\w/g, (l) => l.toUpperCase());
+  return segment.replace(/-/g, ' ').replace(/\b\w/g, (l) => l.toUpperCase());
 }
 
 // Specialised breadcrumb components for common patterns
@@ -197,8 +197,8 @@ export function ModuleBreadcrumb({
 }) {
   const items: BreadcrumbItem[] = [
     {
-      label: "Home",
-      href: "/",
+      label: 'Home',
+      href: '/',
       icon: <HomeIcon className="h-4 w-4" />,
     },
     {
@@ -230,8 +230,8 @@ export function ShortSlugModuleBreadcrumb({
 }) {
   const items: BreadcrumbItem[] = [
     {
-      label: "Home",
-      href: "/",
+      label: 'Home',
+      href: '/',
       icon: <HomeIcon className="h-4 w-4" />,
     },
     {
@@ -264,8 +264,8 @@ export function LessonBreadcrumb({
 }) {
   const items: BreadcrumbItem[] = [
     {
-      label: "Home",
-      href: "/",
+      label: 'Home',
+      href: '/',
       icon: <HomeIcon className="h-4 w-4" />,
     },
     {
@@ -273,7 +273,7 @@ export function LessonBreadcrumb({
       href: `/modules/${moduleSlug}`,
     },
     {
-      label: "Lessons",
+      label: 'Lessons',
       href: `/modules/${moduleSlug}/lessons`,
     },
     {
@@ -301,8 +301,8 @@ export function ShortSlugLessonBreadcrumb({
 }) {
   const items: BreadcrumbItem[] = [
     {
-      label: "Home",
-      href: "/",
+      label: 'Home',
+      href: '/',
       icon: <HomeIcon className="h-4 w-4" />,
     },
     {
@@ -310,7 +310,7 @@ export function ShortSlugLessonBreadcrumb({
       href: `/${shortSlug}`,
     },
     {
-      label: "Lessons",
+      label: 'Lessons',
       href: `/${shortSlug}/lessons`,
     },
     {

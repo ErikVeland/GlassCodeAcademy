@@ -7,40 +7,40 @@
 // - Avoid wrapping normal prose
 
 const CODE_KEYWORDS = [
-  "const",
-  "let",
-  "var",
-  "function",
-  "return",
-  "if",
-  "else",
-  "for",
-  "while",
-  "switch",
-  "case",
-  "class",
-  "new",
-  "try",
-  "catch",
-  "finally",
-  "import",
-  "export",
-  "await",
-  "async",
+  'const',
+  'let',
+  'var',
+  'function',
+  'return',
+  'if',
+  'else',
+  'for',
+  'while',
+  'switch',
+  'case',
+  'class',
+  'new',
+  'try',
+  'catch',
+  'finally',
+  'import',
+  'export',
+  'await',
+  'async',
 ];
 
 function looksLikeCodeToken(token: string): boolean {
   const t = token.trim();
   if (!t) return false;
   // Already backticked
-  if ((t.startsWith("`") && t.endsWith("`")) || t.match(/^`.*`$/)) return false;
+  if ((t.startsWith('`') && t.endsWith('`')) || t.match(/^`.*`$/)) return false;
   // Contains typical code punctuation patterns
   const hasCodePunct = /[;{}()=<>+\-/*\[\]]/.test(t);
   const hasArrow = /=>/.test(t);
   const hasDots = /\./.test(t);
   const hasQuotes = /['"]/g.test(t);
   const hasKeywords = CODE_KEYWORDS.some((k) =>
-    new RegExp(`\\b${k}\\b`).test(t),
+    new RegExp(`\\b${k}\\b`).test(t)
   );
   // Consider code if combination suggests code
   const score = [
@@ -54,7 +54,7 @@ function looksLikeCodeToken(token: string): boolean {
 }
 
 export function wrapInlineCode(text: string): string {
-  if (!text || typeof text !== "string") return text;
+  if (!text || typeof text !== 'string') return text;
   // Process segments while preserving any existing backticked parts
   const segments = String(text).split(/(`[^`]+`)/g);
   let anyCodeWrapped = false;
@@ -73,11 +73,11 @@ export function wrapInlineCode(text: string): string {
       const tokens = seg.split(/(\s+)/);
       const normalized = tokens
         .map((tok) => (looksLikeCodeToken(tok) ? `\`${tok.trim()}\`` : tok))
-        .join("");
+        .join('');
       if (normalized !== seg) anyCodeWrapped = true;
       return normalized;
     })
-    .join("");
+    .join('');
   // If nothing was wrapped but overall text looks like code, wrap entire text
   if (!anyCodeWrapped && looksLikeCodeToken(text)) {
     return `\`${text}\``;
@@ -95,34 +95,34 @@ interface ProgrammingQuestion {
   acceptedAnswers?: string[];
   explanation?: string;
   fixedChoiceOrder?: boolean;
-  choiceLabels?: "letters" | "none";
+  choiceLabels?: 'letters' | 'none';
 }
 
 export function normalizeQuestion(input: unknown): ProgrammingQuestion {
   const raw = (input ?? {}) as Record<string, unknown>;
   const questionText =
-    typeof raw.question === "string" ? raw.question.trim() : "";
-  const question = questionText.length > 0 ? questionText : "Untitled question";
+    typeof raw.question === 'string' ? raw.question.trim() : '';
+  const question = questionText.length > 0 ? questionText : 'Untitled question';
 
   const choices = Array.isArray(raw.choices)
     ? (raw.choices as unknown[])
-        .map((c) => (typeof c === "string" ? c.trim() : String(c)))
-        .filter((c) => (c ?? "").length > 0)
+        .map((c) => (typeof c === 'string' ? c.trim() : String(c)))
+        .filter((c) => (c ?? '').length > 0)
     : undefined;
 
   const correctAnswer =
-    typeof (raw as { correctAnswer?: number }).correctAnswer === "number"
+    typeof (raw as { correctAnswer?: number }).correctAnswer === 'number'
       ? (raw as { correctAnswer: number }).correctAnswer
-      : typeof (raw as { correctIndex?: number }).correctIndex === "number"
+      : typeof (raw as { correctIndex?: number }).correctIndex === 'number'
         ? (raw as { correctIndex: number }).correctIndex
         : undefined;
 
   const acceptedAnswers = Array.isArray(
-    (raw as { acceptedAnswers?: unknown[] }).acceptedAnswers,
+    (raw as { acceptedAnswers?: unknown[] }).acceptedAnswers
   )
     ? ((raw as { acceptedAnswers: unknown[] }).acceptedAnswers || [])
-        .map((a) => (typeof a === "string" ? a.trim() : String(a)))
-        .filter((a) => (a ?? "").length > 0)
+        .map((a) => (typeof a === 'string' ? a.trim() : String(a)))
+        .filter((a) => (a ?? '').length > 0)
     : undefined;
 
   return {
@@ -131,18 +131,18 @@ export function normalizeQuestion(input: unknown): ProgrammingQuestion {
     choices,
     correctAnswer,
     acceptedAnswers,
-    type: typeof raw.type === "string" ? (raw.type as string) : undefined,
+    type: typeof raw.type === 'string' ? (raw.type as string) : undefined,
     // Normalize optional flags when present
     fixedChoiceOrder:
       typeof (raw as { fixedChoiceOrder?: unknown }).fixedChoiceOrder ===
-      "boolean"
+      'boolean'
         ? (raw as { fixedChoiceOrder: boolean }).fixedChoiceOrder
         : undefined,
     choiceLabels:
-      typeof (raw as { choiceLabels?: unknown }).choiceLabels === "string"
-        ? (raw as { choiceLabels: string }).choiceLabels === "letters"
-          ? "letters"
-          : "none"
+      typeof (raw as { choiceLabels?: unknown }).choiceLabels === 'string'
+        ? (raw as { choiceLabels: string }).choiceLabels === 'letters'
+          ? 'letters'
+          : 'none'
         : undefined,
   };
 }

@@ -1,6 +1,6 @@
-"use client";
+'use client';
 
-import { useEffect, useState } from "react";
+import { useEffect, useState } from 'react';
 
 interface ProgressRingProps {
   progress: number; // 0-100
@@ -16,10 +16,10 @@ export default function ProgressRing({
   progress,
   size = 120,
   strokeWidth = 8,
-  color = "hsl(var(--primary))",
-  backgroundColor = "hsl(var(--border))",
+  color = 'hsl(var(--primary))',
+  backgroundColor = 'hsl(var(--border))',
   children,
-  className = "",
+  className = '',
 }: ProgressRingProps) {
   const [animatedProgress, setAnimatedProgress] = useState(0);
 

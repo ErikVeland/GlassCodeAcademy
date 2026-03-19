@@ -1,9 +1,9 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-import Link from "next/link";
-import { usePathname } from "next/navigation";
-import "../../styles/mobile-first.scss";
+import { useState } from 'react';
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
+import '../../styles/mobile-first.scss';
 
 export default function AdminLayout({
   children,
@@ -11,30 +11,30 @@ export default function AdminLayout({
   children: React.ReactNode;
 }) {
   const pathname = usePathname();
-  const path = pathname ?? "";
+  const path = pathname ?? '';
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const navigation = [
-    { name: "Dashboard", href: "/admin", current: path === "/admin" },
+    { name: 'Dashboard', href: '/admin', current: path === '/admin' },
     {
-      name: "Modules",
-      href: "/admin/modules",
-      current: path.startsWith("/admin/modules"),
+      name: 'Modules',
+      href: '/admin/modules',
+      current: path.startsWith('/admin/modules'),
     },
     {
-      name: "Lessons",
-      href: "/admin/lessons",
-      current: path.startsWith("/admin/lessons"),
+      name: 'Lessons',
+      href: '/admin/lessons',
+      current: path.startsWith('/admin/lessons'),
     },
     {
-      name: "Quizzes",
-      href: "/admin/quizzes",
-      current: path.startsWith("/admin/quizzes"),
+      name: 'Quizzes',
+      href: '/admin/quizzes',
+      current: path.startsWith('/admin/quizzes'),
     },
     {
-      name: "Users",
-      href: "/admin/users",
-      current: path.startsWith("/admin/users"),
+      name: 'Users',
+      href: '/admin/users',
+      current: path.startsWith('/admin/users'),
     },
   ];
 
@@ -64,7 +64,7 @@ export default function AdminLayout({
 
       {/* Sidebar */}
       <div
-        className={`fixed inset-y-0 left-0 z-40 w-64 bg-surface border-r border-border transform ${sidebarOpen ? "translate-x-0" : "-translate-x-full"} md:translate-x-0 transition-transform duration-300 ease-in-out`}
+        className={`fixed inset-y-0 left-0 z-40 w-64 bg-surface border-r border-border transform ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'} md:translate-x-0 transition-transform duration-300 ease-in-out`}
       >
         <div className="flex items-center justify-center h-16 bg-surface-alt border-b border-border">
           <h1 className="text-xl font-bold text-fg">GlassCode Admin</h1>
@@ -77,8 +77,8 @@ export default function AdminLayout({
                 href={item.href}
                 className={`${
                   item.current
-                    ? "bg-primary text-primary-fg"
-                    : "text-muted hover:bg-surface-alt hover:text-fg"
+                    ? 'bg-primary text-primary-fg'
+                    : 'text-muted hover:bg-surface-alt hover:text-fg'
                 } group flex items-center px-2 py-2 text-base font-medium rounded-md transition-colors`}
                 onClick={() => setSidebarOpen(false)}
               >

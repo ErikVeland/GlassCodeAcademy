@@ -1,24 +1,24 @@
-"use client";
+'use client';
 
-import React from "react";
+import React from 'react';
 
 interface SkeletonLoaderProps {
-  type?: "lesson" | "quiz" | "module" | "text" | "card";
+  type?: 'lesson' | 'quiz' | 'module' | 'text' | 'card';
   count?: number;
 }
 
 const SkeletonLoader: React.FC<SkeletonLoaderProps> = ({
-  type = "text",
+  type = 'text',
   count = 1,
 }) => {
   // Generate shimmer effect with CSS
   const shimmerClasses =
-    "animate-pulse bg-gradient-to-r from-gray-200 via-gray-300 to-gray-200 bg-[length:400%_400%] dark:from-gray-700 dark:via-gray-600 dark:to-gray-700";
+    'animate-pulse bg-gradient-to-r from-gray-200 via-gray-300 to-gray-200 bg-[length:400%_400%] dark:from-gray-700 dark:via-gray-600 dark:to-gray-700';
 
   // Render different skeleton types
   const renderSkeleton = () => {
     switch (type) {
-      case "lesson":
+      case 'lesson':
         return (
           <div className="space-y-4">
             {/* Lesson title */}
@@ -60,7 +60,7 @@ const SkeletonLoader: React.FC<SkeletonLoaderProps> = ({
           </div>
         );
 
-      case "quiz":
+      case 'quiz':
         return (
           <div className="space-y-6">
             {/* Quiz question */}
@@ -97,7 +97,7 @@ const SkeletonLoader: React.FC<SkeletonLoaderProps> = ({
           </div>
         );
 
-      case "module":
+      case 'module':
         return (
           <div className="p-6 bg-white dark:bg-gray-800 rounded-lg shadow">
             <div className="flex items-start space-x-4">
@@ -115,7 +115,7 @@ const SkeletonLoader: React.FC<SkeletonLoaderProps> = ({
           </div>
         );
 
-      case "card":
+      case 'card':
         return (
           <div className="p-4 bg-white dark:bg-gray-800 rounded-lg shadow">
             <div className="h-4 bg-gray-300 dark:bg-gray-600 rounded w-3/4 mb-3"></div>
@@ -125,7 +125,7 @@ const SkeletonLoader: React.FC<SkeletonLoaderProps> = ({
           </div>
         );
 
-      case "text":
+      case 'text':
       default:
         return (
           <div className="space-y-2">

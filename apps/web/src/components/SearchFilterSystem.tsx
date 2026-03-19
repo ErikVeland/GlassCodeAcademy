@@ -1,6 +1,6 @@
-"use client";
+'use client';
 
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect } from 'react';
 
 // Enhanced Search and Filter System that integrates with the 4-tier homepage structure
 interface SearchFilterSystemProps {
@@ -30,14 +30,14 @@ const SearchInput: React.FC<{
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if ((e.metaKey || e.ctrlKey) && e.key === "k") {
+      if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
         e.preventDefault();
         inputRef.current?.focus();
       }
     };
 
-    document.addEventListener("keydown", handleKeyDown);
-    return () => document.removeEventListener("keydown", handleKeyDown);
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
   }, []);
 
   return (
@@ -102,23 +102,23 @@ const SearchFilterSystem: React.FC<SearchFilterSystemProps> = ({
 
   // Quick filter buttons for common searches
   const quickFilters = [
-    { label: "Foundational", type: "tier", value: "foundational", icon: "🏗️" },
-    { label: "Backend", type: "category", value: "backend", icon: "🔧" },
-    { label: "Frontend", type: "category", value: "frontend", icon: "🎨" },
-    { label: "Not Started", type: "status", value: "not-started", icon: "⏳" },
-    { label: "In Progress", type: "status", value: "in-progress", icon: "🔄" },
-    { label: "Completed", type: "status", value: "completed", icon: "✅" },
+    { label: 'Foundational', type: 'tier', value: 'foundational', icon: '🏗️' },
+    { label: 'Backend', type: 'category', value: 'backend', icon: '🔧' },
+    { label: 'Frontend', type: 'category', value: 'frontend', icon: '🎨' },
+    { label: 'Not Started', type: 'status', value: 'not-started', icon: '⏳' },
+    { label: 'In Progress', type: 'status', value: 'in-progress', icon: '🔄' },
+    { label: 'Completed', type: 'status', value: 'completed', icon: '✅' },
   ];
 
   const handleQuickFilter = (type: string, value: string) => {
     switch (type) {
-      case "tier":
+      case 'tier':
         onTierChange(selectedTier === value ? null : value);
         break;
-      case "category":
+      case 'category':
         onCategoryChange(selectedCategory === value ? null : value);
         break;
-      case "status":
+      case 'status':
         onStatusChange(selectedStatus === value ? null : value);
         break;
     }
@@ -126,11 +126,11 @@ const SearchFilterSystem: React.FC<SearchFilterSystemProps> = ({
 
   const isQuickFilterActive = (type: string, value: string) => {
     switch (type) {
-      case "tier":
+      case 'tier':
         return selectedTier === value;
-      case "category":
+      case 'category':
         return selectedCategory === value;
-      case "status":
+      case 'status':
         return selectedStatus === value;
       default:
         return false;
@@ -166,7 +166,7 @@ const SearchFilterSystem: React.FC<SearchFilterSystemProps> = ({
               <button
                 key={`${filter.type}-${filter.value}`}
                 onClick={() => handleQuickFilter(filter.type, filter.value)}
-                className={`glass-filter-tag ${isQuickFilterActive(filter.type, filter.value) ? "active" : ""}`}
+                className={`glass-filter-tag ${isQuickFilterActive(filter.type, filter.value) ? 'active' : ''}`}
                 aria-pressed={isQuickFilterActive(filter.type, filter.value)}
               >
                 <span className="filter-icon mr-1">{filter.icon}</span>
@@ -179,15 +179,15 @@ const SearchFilterSystem: React.FC<SearchFilterSystemProps> = ({
           <div className="advanced-filters-toggle-container ml-auto">
             <button
               onClick={() => setShowAdvancedFilters(!showAdvancedFilters)}
-              className={`glass-filter-tag ${showAdvancedFilters ? "active" : ""} flex items-center`}
+              className={`glass-filter-tag ${showAdvancedFilters ? 'active' : ''} flex items-center`}
               aria-expanded={showAdvancedFilters}
               aria-controls="advanced-filters"
             >
               <span className="toggle-icon mr-1">
-                {showAdvancedFilters ? "▲" : "▼"}
+                {showAdvancedFilters ? '▲' : '▼'}
               </span>
               <span className="toggle-label">
-                {showAdvancedFilters ? "Hide Advanced" : "Show Advanced"}
+                {showAdvancedFilters ? 'Hide Advanced' : 'Show Advanced'}
               </span>
               {hasActiveFilters && (
                 <span className="active-filters-indicator ml-2 bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 px-2 py-0.5 rounded-full text-xs">
@@ -239,7 +239,7 @@ const SearchFilterSystem: React.FC<SearchFilterSystemProps> = ({
               </label>
               <select
                 id="tier-filter"
-                value={selectedTier || ""}
+                value={selectedTier || ''}
                 onChange={(e) => onTierChange(e.target.value || null)}
                 className="w-full px-3 py-2 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
               >
@@ -261,7 +261,7 @@ const SearchFilterSystem: React.FC<SearchFilterSystemProps> = ({
               </label>
               <select
                 id="difficulty-filter"
-                value={selectedDifficulty || ""}
+                value={selectedDifficulty || ''}
                 onChange={(e) => onDifficultyChange(e.target.value || null)}
                 className="w-full px-3 py-2 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
               >
@@ -282,7 +282,7 @@ const SearchFilterSystem: React.FC<SearchFilterSystemProps> = ({
               </label>
               <select
                 id="category-filter"
-                value={selectedCategory || ""}
+                value={selectedCategory || ''}
                 onChange={(e) => onCategoryChange(e.target.value || null)}
                 className="w-full px-3 py-2 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
               >
@@ -309,7 +309,7 @@ const SearchFilterSystem: React.FC<SearchFilterSystemProps> = ({
               </label>
               <select
                 id="status-filter"
-                value={selectedStatus || ""}
+                value={selectedStatus || ''}
                 onChange={(e) => onStatusChange(e.target.value || null)}
                 className="w-full px-3 py-2 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
               >
@@ -324,7 +324,7 @@ const SearchFilterSystem: React.FC<SearchFilterSystemProps> = ({
           {/* Results Summary */}
           <div className="results-summary mt-6 pt-4 border-t border-gray-200 dark:border-gray-700">
             <p className="text-gray-700 dark:text-gray-300 text-left">
-              Showing <span className="font-semibold">{filteredResults}</span>{" "}
+              Showing <span className="font-semibold">{filteredResults}</span>{' '}
               of <span className="font-semibold">{totalResults}</span> modules
             </p>
           </div>

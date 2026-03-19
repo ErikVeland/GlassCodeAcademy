@@ -1,8 +1,8 @@
-"use client";
+'use client';
 
-import React, { useEffect, useState } from "react";
-import ConfettiBurst from "./ConfettiBurst";
-import { useProfile } from "./ProfileProvider";
+import React, { useEffect, useState } from 'react';
+import ConfettiBurst from './ConfettiBurst';
+import { useProfile } from './ProfileProvider';
 
 type CertificateAwardProps = {
   moduleName: string;
@@ -17,7 +17,7 @@ const CertificateAward: React.FC<CertificateAwardProps> = ({
   score,
   total,
   percent,
-  className = "",
+  className = '',
 }) => {
   const { profile } = useProfile();
   const isHighDistinction = percent === 100;
@@ -27,7 +27,7 @@ const CertificateAward: React.FC<CertificateAwardProps> = ({
   const [certificateId] = useState<string>(() => {
     const randomSix = Math.floor(Math.random() * 1_000_000)
       .toString()
-      .padStart(6, "0");
+      .padStart(6, '0');
     return `GC-${randomSix}`;
   });
 
@@ -48,12 +48,12 @@ const CertificateAward: React.FC<CertificateAwardProps> = ({
 
   // Respect system reduced motion preference
   useEffect(() => {
-    if (typeof window === "undefined") return;
-    const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
+    if (typeof window === 'undefined') return;
+    const mq = window.matchMedia('(prefers-reduced-motion: reduce)');
     const updatePref = () => setIsReducedMotion(mq.matches);
     updatePref();
-    mq.addEventListener?.("change", updatePref);
-    return () => mq.removeEventListener?.("change", updatePref);
+    mq.addEventListener?.('change', updatePref);
+    return () => mq.removeEventListener?.('change', updatePref);
   }, []);
 
   return (
@@ -65,7 +65,7 @@ const CertificateAward: React.FC<CertificateAwardProps> = ({
       />
 
       <div
-        className={`relative rounded-2xl p-8 bg-gradient-to-br from-blue-50 via-white to-indigo-50 dark:from-blue-950/40 dark:via-gray-900 dark:to-indigo-900/40 border-4 border-blue-200 dark:border-blue-700 shadow-xl ${isHighDistinction && showLightning ? "badge-hd-award" : ""}`}
+        className={`relative rounded-2xl p-8 bg-gradient-to-br from-blue-50 via-white to-indigo-50 dark:from-blue-950/40 dark:via-gray-900 dark:to-indigo-900/40 border-4 border-blue-200 dark:border-blue-700 shadow-xl ${isHighDistinction && showLightning ? 'badge-hd-award' : ''}`}
       >
         {/* Decorative corner seals */}
         <div className="absolute -top-3 -left-3 h-12 w-12 rounded-full border-4 border-blue-200 dark:border-blue-700 bg-white dark:bg-gray-900" />
@@ -94,16 +94,16 @@ const CertificateAward: React.FC<CertificateAwardProps> = ({
             This certifies that
           </p>
           <p className="text-2xl font-semibold text-blue-700 dark:text-blue-300 certificate-name">
-            {profile.displayName || "You"}
+            {profile.displayName || 'You'}
           </p>
           <p className="text-gray-700 dark:text-gray-300">
             successfully completed the {moduleName} Interview Preparation Quiz
           </p>
           <p className="text-gray-700 dark:text-gray-300">
-            with a score of{" "}
+            with a score of{' '}
             <span className="font-semibold">
               {score}/{total}
-            </span>{" "}
+            </span>{' '}
             ({percent}%).
           </p>
           {isHighDistinction && (
@@ -118,12 +118,12 @@ const CertificateAward: React.FC<CertificateAwardProps> = ({
           <div
             className={`h-20 w-20 rounded-full shadow-lg border-4 flex items-center justify-center ${
               isHighDistinction
-                ? "bg-gradient-to-br from-emerald-400 to-green-600 border-green-300 dark:from-emerald-500 dark:to-green-700 dark:border-green-800"
-                : "bg-gradient-to-br from-green-400 to-emerald-500 border-green-200 dark:from-green-500 dark:to-emerald-600 dark:border-emerald-700"
+                ? 'bg-gradient-to-br from-emerald-400 to-green-600 border-green-300 dark:from-emerald-500 dark:to-green-700 dark:border-green-800'
+                : 'bg-gradient-to-br from-green-400 to-emerald-500 border-green-200 dark:from-green-500 dark:to-emerald-600 dark:border-emerald-700'
             }`}
           >
             <span className="text-white font-bold">
-              {isHighDistinction ? "HD" : "PASS"}
+              {isHighDistinction ? 'HD' : 'PASS'}
             </span>
           </div>
           <div className="text-left">

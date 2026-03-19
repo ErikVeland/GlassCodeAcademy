@@ -1,9 +1,9 @@
-"use client";
+'use client';
 
-import { useState, useEffect } from "react";
-import type { ProgrammingQuestion } from "@/lib/contentRegistry";
-import { notFound, useRouter } from "next/navigation";
-import Link from "next/link";
+import { useState, useEffect } from 'react';
+import type { ProgrammingQuestion } from '@/lib/contentRegistry';
+import { notFound, useRouter } from 'next/navigation';
+import Link from 'next/link';
 
 // For client components in Next.js 15, params are still Promises that need to be awaited
 export default function QuizQuestionPage({
@@ -17,27 +17,27 @@ export default function QuizQuestionPage({
       .split(/(`[^`]+`)/g)
       .filter((p) => p.length > 0);
     // Merge adjacent code parts into a single code element for readability
-    const merged: Array<{ type: "code" | "text"; value: string }> = [];
+    const merged: Array<{ type: 'code' | 'text'; value: string }> = [];
     for (const part of parts) {
       const codeMatch = part.match(/^`([^`]+)`$/);
       if (codeMatch) {
         const val = codeMatch[1];
         const last = merged[merged.length - 1];
-        if (last && last.type === "code") {
+        if (last && last.type === 'code') {
           last.value += ` ${val}`;
         } else {
-          merged.push({ type: "code", value: val });
+          merged.push({ type: 'code', value: val });
         }
       } else {
-        merged.push({ type: "text", value: part });
+        merged.push({ type: 'text', value: part });
       }
     }
     return merged.map((seg, i) =>
-      seg.type === "code" ? (
+      seg.type === 'code' ? (
         <code key={i}>{seg.value}</code>
       ) : (
         <span key={i}>{seg.value}</span>
-      ),
+      )
     );
   };
   const router = useRouter();
@@ -46,10 +46,10 @@ export default function QuizQuestionPage({
     questionId: string;
   } | null>(null);
   const [questionData, setQuestionData] = useState<ProgrammingQuestion | null>(
-    null,
+    null
   );
   const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
-  const [enteredText, setEnteredText] = useState<string>("");
+  const [enteredText, setEnteredText] = useState<string>('');
   const [showExplanation, setShowExplanation] = useState(false);
   const [isCorrect, setIsCorrect] = useState<boolean | null>(null);
   const [loading, setLoading] = useState(true);
@@ -83,7 +83,7 @@ export default function QuizQuestionPage({
         // Load quiz session
         const sessionKey = `quizSession:${shortSlug}`;
         const raw =
-          typeof window !== "undefined"
+          typeof window !== 'undefined'
             ? sessionStorage.getItem(sessionKey)
             : null;
         if (!raw) {
@@ -94,7 +94,7 @@ export default function QuizQuestionPage({
         const session = JSON.parse(raw) as QuizSession;
 
         // DEBUG: Log session data
-        console.log("Quiz Question Page Debug:", {
+        console.log('Quiz Question Page Debug:', {
           sessionKey,
           sessionExists: !!session,
           questionsCount: session?.questions?.length ?? 0,
@@ -103,7 +103,7 @@ export default function QuizQuestionPage({
           sessionQuestions:
             session?.questions?.map((q) => ({
               id: q.id,
-              question: q.question?.substring(0, 50) + "...",
+              question: q.question?.substring(0, 50) + '...',
             })) ?? [],
         });
 
@@ -128,10 +128,10 @@ export default function QuizQuestionPage({
         // Restore previous selection if exists
         const prev = session.answers?.[questionIndex] ?? null;
         if (prev) {
-          if (typeof prev.selectedIndex === "number") {
+          if (typeof prev.selectedIndex === 'number') {
             setSelectedAnswer(prev.selectedIndex);
           }
-          if (typeof prev.enteredText === "string") {
+          if (typeof prev.enteredText === 'string') {
             setEnteredText(prev.enteredText);
           }
           setIsCorrect(prev.correct);
@@ -139,7 +139,7 @@ export default function QuizQuestionPage({
         }
         setLoading(false);
       } catch (error) {
-        console.error("Error resolving params:", error);
+        console.error('Error resolving params:', error);
         notFound();
       }
     };
@@ -173,13 +173,13 @@ export default function QuizQuestionPage({
     let correct = false;
 
     const isOpenEnded =
-      questionData.type === "open-ended" ||
+      questionData.type === 'open-ended' ||
       (questionData.acceptedAnswers ?? []).length > 0;
     if (isOpenEnded) {
       const accepted = (questionData.acceptedAnswers ?? []).map((a: string) =>
-        String(a).trim().toLowerCase(),
+        String(a).trim().toLowerCase()
       );
-      const candidate = String(enteredText || "")
+      const candidate = String(enteredText || '')
         .trim()
         .toLowerCase();
       correct = candidate.length > 0 && accepted.includes(candidate);
@@ -204,7 +204,7 @@ export default function QuizQuestionPage({
       session.answers[qIndex] = payload;
       sessionStorage.setItem(sessionKey, JSON.stringify(session));
     } catch (e) {
-      console.error("Failed to save answer", e);
+      console.error('Failed to save answer', e);
     }
   };
 
@@ -318,9 +318,9 @@ export default function QuizQuestionPage({
             {questionId}
           </span>
           <h1 className="text-xl font-semibold text-fg">
-            {questionData.type === "multiple-choice" && "Multiple Choice"}
-            {questionData.type === "true-false" && "True or False"}
-            {questionData.type === "scenario" && "Scenario-Based"}
+            {questionData.type === 'multiple-choice' && 'Multiple Choice'}
+            {questionData.type === 'true-false' && 'True or False'}
+            {questionData.type === 'scenario' && 'Scenario-Based'}
           </h1>
         </div>
 
@@ -331,7 +331,7 @@ export default function QuizQuestionPage({
         </div>
 
         {/* Answer Input */}
-        {questionData.type === "open-ended" ||
+        {questionData.type === 'open-ended' ||
         (questionData.acceptedAnswers ?? []).length > 0 ? (
           <div className="mb-8">
             <label className="block text-sm font-medium text-muted mb-2">
@@ -353,19 +353,19 @@ export default function QuizQuestionPage({
               (choice: string, index: number) => {
                 const isSelected = selectedAnswer === index;
                 const isCorrectAnswer = index === questionData.correctAnswer;
-                const baseClasses = "radio-option";
+                const baseClasses = 'radio-option';
                 const stateClass = showExplanation
                   ? isCorrectAnswer
-                    ? " is-correct"
+                    ? ' is-correct'
                     : isSelected && !isCorrectAnswer
-                      ? " is-incorrect"
-                      : ""
+                      ? ' is-incorrect'
+                      : ''
                   : isSelected
-                    ? " is-selected"
-                    : "";
+                    ? ' is-selected'
+                    : '';
                 const showLetters =
-                  (questionData as { choiceLabels?: "letters" | "none" })
-                    .choiceLabels === "letters";
+                  (questionData as { choiceLabels?: 'letters' | 'none' })
+                    .choiceLabels === 'letters';
                 const letter = String.fromCharCode(65 + index);
                 return (
                   <label key={index} className={baseClasses + stateClass}>
@@ -393,7 +393,7 @@ export default function QuizQuestionPage({
                     </span>
                   </label>
                 );
-              },
+              }
             )}
           </div>
         )}
@@ -404,17 +404,17 @@ export default function QuizQuestionPage({
             className={`p-4 rounded-lg mb-6 bg-surface-alt border border-border`}
           >
             <div className="flex items-start gap-3">
-              <span className="text-xl">{isCorrect ? "✅" : "❌"}</span>
+              <span className="text-xl">{isCorrect ? '✅' : '❌'}</span>
               <div>
                 <h3
                   className={`font-semibold ${
-                    isCorrect ? "text-primary" : "text-danger"
+                    isCorrect ? 'text-primary' : 'text-danger'
                   }`}
                 >
-                  {isCorrect ? "Correct!" : "Incorrect"}
+                  {isCorrect ? 'Correct!' : 'Incorrect'}
                 </h3>
                 <p className="text-muted mt-2">
-                  {renderInlineCode(questionData.explanation || "")}
+                  {renderInlineCode(questionData.explanation || '')}
                 </p>
               </div>
             </div>
@@ -442,8 +442,8 @@ export default function QuizQuestionPage({
                 disabled={selectedAnswer === null}
                 className={`px-6 py-2 rounded-lg transition-colors flex items-center ${
                   selectedAnswer !== null
-                    ? "bg-primary text-primary-fg hover:opacity-90"
-                    : "bg-surface-alt text-muted cursor-not-allowed"
+                    ? 'bg-primary text-primary-fg hover:opacity-90'
+                    : 'bg-surface-alt text-muted cursor-not-allowed'
                 }`}
               >
                 Submit Answer
@@ -455,8 +455,8 @@ export default function QuizQuestionPage({
                 className="px-6 py-2 bg-primary text-primary-fg rounded-lg hover:opacity-90 transition-colors flex items-center"
               >
                 {questionIndex < totalQuestions - 1
-                  ? "Next Question"
-                  : "View Results"}
+                  ? 'Next Question'
+                  : 'View Results'}
                 <span className="ml-2">→</span>
               </button>
             )}

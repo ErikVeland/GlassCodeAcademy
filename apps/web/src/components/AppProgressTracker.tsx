@@ -1,6 +1,6 @@
-"use client";
+'use client';
 
-import React, { useState } from "react";
+import React, { useState } from 'react';
 import {
   APP_PHASES,
   calculatePhaseProgress,
@@ -12,7 +12,7 @@ import {
   getRecentProgressIncreases,
   type Phase,
   type Goal,
-} from "@/lib/appProgressConfig";
+} from '@/lib/appProgressConfig';
 
 interface ProgressChipProps {
   goal: Goal;
@@ -31,26 +31,26 @@ const ProgressChip: React.FC<ProgressChipProps> = ({
 
   // Calculate gradient colors based on progress
   const getGradientColor = (percentage: number) => {
-    if (percentage < 30) return "from-red-500 to-red-400";
-    if (percentage < 60) return "from-orange-500 to-yellow-400";
-    if (percentage < 80) return "from-yellow-400 to-green-400";
-    return "from-green-500 to-green-400";
+    if (percentage < 30) return 'from-red-500 to-red-400';
+    if (percentage < 60) return 'from-orange-500 to-yellow-400';
+    if (percentage < 80) return 'from-yellow-400 to-green-400';
+    return 'from-green-500 to-green-400';
   };
 
   const getCategoryIcon = (category: string) => {
     switch (category) {
-      case "infrastructure":
-        return "🏗️";
-      case "content":
-        return "📚";
-      case "features":
-        return "✨";
-      case "quality":
-        return "🔧";
-      case "deployment":
-        return "🚀";
+      case 'infrastructure':
+        return '🏗️';
+      case 'content':
+        return '📚';
+      case 'features':
+        return '✨';
+      case 'quality':
+        return '🔧';
+      case 'deployment':
+        return '🚀';
       default:
-        return "📋";
+        return '📋';
     }
   };
 
@@ -145,8 +145,8 @@ const ProgressChip: React.FC<ProgressChipProps> = ({
                 <div
                   className={`w-3 h-3 rounded-full border-2 flex items-center justify-center ${
                     milestone.completed
-                      ? "bg-green-500 border-green-500"
-                      : "border-white/30"
+                      ? 'bg-green-500 border-green-500'
+                      : 'border-white/30'
                   }`}
                 >
                   {milestone.completed && (
@@ -155,7 +155,7 @@ const ProgressChip: React.FC<ProgressChipProps> = ({
                 </div>
                 <span
                   className={`text-xs ${
-                    milestone.completed ? "text-white" : "text-white/60"
+                    milestone.completed ? 'text-white' : 'text-white/60'
                   }`}
                 >
                   {milestone.title}
@@ -219,7 +219,7 @@ const PhaseProgressBar: React.FC<PhaseProgressBarProps> = ({
           <div className="text-xs text-white/60">
             <div className="flex gap-4">
               <span>Goals: {phase.goals.length}</span>
-              <span>Status: {phase.status.replace("-", " ")}</span>
+              <span>Status: {phase.status.replace('-', ' ')}</span>
               {phase.targetDate && (
                 <span>
                   Target: {new Date(phase.targetDate).toLocaleDateString()}
@@ -277,7 +277,7 @@ const AppProgressTracker: React.FC = () => {
                   </div>
                 </div>
                 <div className="text-white/60 text-xs">
-                  {goal.currentProgress - goal.progressIncrease}% →{" "}
+                  {goal.currentProgress - goal.progressIncrease}% →{' '}
                   {goal.currentProgress}%
                 </div>
               </div>

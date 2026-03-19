@@ -1,33 +1,33 @@
-"use client";
+'use client';
 
-import React, { useState } from "react";
-import { useProgressTrackingComplete } from "../hooks/useProgressTrackingComplete";
+import React, { useState } from 'react';
+import { useProgressTrackingComplete } from '../hooks/useProgressTrackingComplete';
 import type {
   ProgressData,
   AchievementData,
-} from "../hooks/useProgressTrackingComplete";
+} from '../hooks/useProgressTrackingComplete';
 
-type AchievementDefinition = Omit<AchievementData, "earnedDate" | "moduleId">;
+type AchievementDefinition = Omit<AchievementData, 'earnedDate' | 'moduleId'>;
 
 // Tier colors matching design system
 const getTierColor = (tier?: string) => {
   const colors: Record<string, string> = {
-    foundational: "from-blue-500 to-cyan-500",
-    core: "from-green-500 to-emerald-500",
-    specialized: "from-purple-500 to-violet-500",
-    quality: "from-orange-500 to-red-500",
+    foundational: 'from-blue-500 to-cyan-500',
+    core: 'from-green-500 to-emerald-500',
+    specialized: 'from-purple-500 to-violet-500',
+    quality: 'from-orange-500 to-red-500',
   };
-  return colors[tier || "foundational"] || "from-gray-400 to-gray-600";
+  return colors[tier || 'foundational'] || 'from-gray-400 to-gray-600';
 };
 
 // Rarity colors according to design documentation
 const getRarityColor = (rarity: string) => {
   const colors: Record<string, string> = {
-    common: "from-gray-400 to-gray-600",
-    uncommon: "from-green-400 to-green-600",
-    rare: "from-blue-400 to-blue-600",
-    epic: "from-purple-400 to-purple-600",
-    legendary: "from-yellow-400 to-orange-500",
+    common: 'from-gray-400 to-gray-600',
+    uncommon: 'from-green-400 to-green-600',
+    rare: 'from-blue-400 to-blue-600',
+    epic: 'from-purple-400 to-purple-600',
+    legendary: 'from-yellow-400 to-orange-500',
   };
   return colors[rarity] || colors.common;
 };
@@ -45,7 +45,7 @@ const ProgressRing: React.FC<{
   strokeWidth = 6,
   showLabel = true,
   label,
-  gradient = "from-blue-500 to-cyan-500",
+  gradient = 'from-blue-500 to-cyan-500',
 }) => {
   const radius = (size - strokeWidth) / 2;
   const circumference = radius * 2 * Math.PI;
@@ -67,7 +67,7 @@ const ProgressRing: React.FC<{
           cx={size / 2}
           cy={size / 2}
           r={radius}
-          stroke={`url(#progressGradient-${gradient.replace(/\s+/g, "-")})`}
+          stroke={`url(#progressGradient-${gradient.replace(/\s+/g, '-')})`}
           strokeWidth={strokeWidth}
           fill="none"
           strokeDasharray={strokeDasharray}
@@ -77,20 +77,20 @@ const ProgressRing: React.FC<{
         />
         <defs>
           {(() => {
-            const parts = (gradient || "").trim().split(/\s+/);
+            const parts = (gradient || '').trim().split(/\s+/);
             const fromPart =
-              parts.find((p) => p.startsWith("from-")) ||
+              parts.find((p) => p.startsWith('from-')) ||
               parts[0] ||
-              "from-blue-500";
+              'from-blue-500';
             const toPart =
-              parts.find((p) => p.startsWith("to-")) ||
+              parts.find((p) => p.startsWith('to-')) ||
               parts[1] ||
-              "to-cyan-500";
-            const fromColor = fromPart.replace("from-", "");
-            const toColor = toPart.replace("to-", "");
+              'to-cyan-500';
+            const fromColor = fromPart.replace('from-', '');
+            const toColor = toPart.replace('to-', '');
             return (
               <linearGradient
-                id={`progressGradient-${gradient.replace(/\s+/g, "-")}`}
+                id={`progressGradient-${gradient.replace(/\s+/g, '-')}`}
                 x1="0%"
                 y1="0%"
                 x2="100%"
@@ -124,13 +124,13 @@ const AchievementCard: React.FC<{
       className={`relative p-4 rounded-xl border-2 transition-all duration-300 transform hover:scale-105 ${
         earned
           ? `bg-gradient-to-br ${achievement.tier ? getTierColor(achievement.tier) : getRarityColor(achievement.rarity)} text-white shadow-lg border-white/20`
-          : "bg-white/10 backdrop-blur-sm border-white/20 opacity-60 hover:opacity-80"
+          : 'bg-white/10 backdrop-blur-sm border-white/20 opacity-60 hover:opacity-80'
       }`}
     >
       <div className="flex items-center space-x-3">
         <div
           className={`text-3xl transition-all duration-300 ${
-            earned ? "grayscale-0 drop-shadow-sm" : "grayscale opacity-50"
+            earned ? 'grayscale-0 drop-shadow-sm' : 'grayscale opacity-50'
           }`}
         >
           {achievement.icon}
@@ -139,7 +139,7 @@ const AchievementCard: React.FC<{
           <div className="flex items-center gap-2 mb-1">
             <h4
               className={`font-semibold text-sm truncate ${
-                earned ? "text-white" : "text-gray-200"
+                earned ? 'text-white' : 'text-gray-200'
               }`}
             >
               {achievement.title}
@@ -147,8 +147,8 @@ const AchievementCard: React.FC<{
             <span
               className={`px-2 py-1 text-xs rounded-full font-medium ${
                 earned
-                  ? "bg-white/20 text-white"
-                  : "bg-gray-500/20 text-gray-300"
+                  ? 'bg-white/20 text-white'
+                  : 'bg-gray-500/20 text-gray-300'
               }`}
             >
               {achievement.rarity}
@@ -156,7 +156,7 @@ const AchievementCard: React.FC<{
           </div>
           <p
             className={`text-xs mb-2 ${
-              earned ? "text-white/90" : "text-gray-300"
+              earned ? 'text-white/90' : 'text-gray-300'
             }`}
           >
             {achievement.description}
@@ -175,7 +175,7 @@ const AchievementCard: React.FC<{
             <div className="flex items-center gap-1 mt-1">
               <span className="text-xs text-white/75">
                 {achievement.tier.charAt(0).toUpperCase() +
-                  achievement.tier.slice(1)}{" "}
+                  achievement.tier.slice(1)}{' '}
                 Tier
               </span>
             </div>
@@ -206,7 +206,7 @@ const AchievementCard: React.FC<{
       <div
         className={`absolute top-2 left-2 w-2 h-2 rounded-full ${
           earned
-            ? "bg-white shadow-sm"
+            ? 'bg-white shadow-sm'
             : `bg-gradient-to-br ${getRarityColor(achievement.rarity)} opacity-60`
         }`}
       />
@@ -303,9 +303,9 @@ export const CompleteProgressTracker: React.FC = () => {
   } = useProgressTrackingComplete();
 
   const [showAllAchievements, setShowAllAchievements] = useState(false);
-  const [filterCategory, setFilterCategory] = useState<string>("all");
-  const [filterTier, setFilterTier] = useState<string>("all");
-  const [importData, setImportData] = useState<string>("");
+  const [filterCategory, setFilterCategory] = useState<string>('all');
+  const [filterTier, setFilterTier] = useState<string>('all');
+  const [importData, setImportData] = useState<string>('');
   const [importResult, setImportResult] = useState<{
     success: boolean;
     message: string;
@@ -319,26 +319,26 @@ export const CompleteProgressTracker: React.FC = () => {
   const earnedAchievementIds = achievements.map((a) => a.id);
   const earnedCount = earnedAchievementIds.length;
   const totalAchievements = Object.keys({
-    "first-lesson": {},
-    "foundation-master": {},
-    "core-developer": {},
+    'first-lesson': {},
+    'foundation-master': {},
+    'core-developer': {},
     specialist: {},
-    "quality-guardian": {},
-    "speed-learner": {},
+    'quality-guardian': {},
+    'speed-learner': {},
     perfectionist: {},
-    "streak-warrior": {},
-    "streak-legend": {},
-    "full-stack": {},
-    "quiz-master": {},
-    "consistent-learner": {},
+    'streak-warrior': {},
+    'streak-legend': {},
+    'full-stack': {},
+    'quiz-master': {},
+    'consistent-learner': {},
   }).length;
 
   // Tier progress calculations
   const tierProgress = {
-    foundational: getTierProgress("foundational"),
-    core: getTierProgress("core"),
-    specialized: getTierProgress("specialized"),
-    quality: getTierProgress("quality"),
+    foundational: getTierProgress('foundational'),
+    core: getTierProgress('core'),
+    specialized: getTierProgress('specialized'),
+    quality: getTierProgress('quality'),
   };
 
   // Tier module counts
@@ -352,10 +352,10 @@ export const CompleteProgressTracker: React.FC = () => {
   // Update tier module counts based on actual progress
   Object.entries(tierModuleCounts).forEach(([tier, counts]) => {
     const tierModules = Object.values(
-      progress as Record<string, ProgressData>,
+      progress as Record<string, ProgressData>
     ).filter((p) => p.tier === tier);
     counts.completed = tierModules.filter(
-      (p) => p.completionStatus === "completed",
+      (p) => p.completionStatus === 'completed'
     ).length;
   });
 
@@ -369,141 +369,141 @@ export const CompleteProgressTracker: React.FC = () => {
 
   // Achievement catalog and filtered list
   const ACHIEVEMENT_CATALOG: Record<string, AchievementDefinition> = {
-    "first-lesson": {
-      id: "first-lesson",
-      title: "First Steps",
-      icon: "👶",
-      description: "Completed your first lesson",
-      category: "velocity",
-      rarity: "common",
-      badgeUrl: "/badges/first-lesson.svg",
+    'first-lesson': {
+      id: 'first-lesson',
+      title: 'First Steps',
+      icon: '👶',
+      description: 'Completed your first lesson',
+      category: 'velocity',
+      rarity: 'common',
+      badgeUrl: '/badges/first-lesson.svg',
       points: 10,
-      unlockCondition: "Complete any lesson",
+      unlockCondition: 'Complete any lesson',
     },
-    "foundation-master": {
-      id: "foundation-master",
-      title: "Foundation Master",
-      icon: "🎓",
-      description: "Master of foundational concepts",
-      category: "completion",
-      rarity: "uncommon",
-      tier: "foundational",
-      badgeUrl: "/badges/foundation-master.svg",
+    'foundation-master': {
+      id: 'foundation-master',
+      title: 'Foundation Master',
+      icon: '🎓',
+      description: 'Master of foundational concepts',
+      category: 'completion',
+      rarity: 'uncommon',
+      tier: 'foundational',
+      badgeUrl: '/badges/foundation-master.svg',
       points: 50,
-      unlockCondition: "Complete Foundational Tier",
+      unlockCondition: 'Complete Foundational Tier',
     },
-    "core-developer": {
-      id: "core-developer",
-      title: "Core Developer",
-      icon: "⚙️",
-      description: "Core technologies specialist",
-      category: "completion",
-      rarity: "uncommon",
-      tier: "core",
-      badgeUrl: "/badges/core-developer.svg",
+    'core-developer': {
+      id: 'core-developer',
+      title: 'Core Developer',
+      icon: '⚙️',
+      description: 'Core technologies specialist',
+      category: 'completion',
+      rarity: 'uncommon',
+      tier: 'core',
+      badgeUrl: '/badges/core-developer.svg',
       points: 100,
-      unlockCondition: "Complete Core Technologies Tier",
+      unlockCondition: 'Complete Core Technologies Tier',
     },
     specialist: {
-      id: "specialist",
-      title: "Specialist",
-      icon: "💎",
-      description: "Advanced skills specialist",
-      category: "completion",
-      rarity: "rare",
-      tier: "specialized",
-      badgeUrl: "/badges/specialist.svg",
+      id: 'specialist',
+      title: 'Specialist',
+      icon: '💎',
+      description: 'Advanced skills specialist',
+      category: 'completion',
+      rarity: 'rare',
+      tier: 'specialized',
+      badgeUrl: '/badges/specialist.svg',
       points: 200,
-      unlockCondition: "Complete Specialised Skills Tier",
+      unlockCondition: 'Complete Specialised Skills Tier',
     },
-    "quality-guardian": {
-      id: "quality-guardian",
-      title: "Quality Guardian",
-      icon: "🛡️",
-      description: "Quality and testing expert",
-      category: "completion",
-      rarity: "epic",
-      tier: "quality",
-      badgeUrl: "/badges/quality-guardian.svg",
+    'quality-guardian': {
+      id: 'quality-guardian',
+      title: 'Quality Guardian',
+      icon: '🛡️',
+      description: 'Quality and testing expert',
+      category: 'completion',
+      rarity: 'epic',
+      tier: 'quality',
+      badgeUrl: '/badges/quality-guardian.svg',
       points: 300,
-      unlockCondition: "Complete Quality & Testing Tier",
+      unlockCondition: 'Complete Quality & Testing Tier',
     },
-    "speed-learner": {
-      id: "speed-learner",
-      title: "Speed Learner",
-      icon: "⚡",
-      description: "Completed 5 lessons in one day",
-      category: "velocity",
-      rarity: "rare",
-      badgeUrl: "/badges/speed-learner.svg",
+    'speed-learner': {
+      id: 'speed-learner',
+      title: 'Speed Learner',
+      icon: '⚡',
+      description: 'Completed 5 lessons in one day',
+      category: 'velocity',
+      rarity: 'rare',
+      badgeUrl: '/badges/speed-learner.svg',
       points: 75,
-      unlockCondition: "5 lessons in one day",
+      unlockCondition: '5 lessons in one day',
     },
     perfectionist: {
-      id: "perfectionist",
-      title: "Perfectionist",
-      icon: "💯",
-      description: "Achieved perfect scores on 10 quizzes",
-      category: "skill",
-      rarity: "epic",
-      badgeUrl: "/badges/perfectionist.svg",
+      id: 'perfectionist',
+      title: 'Perfectionist',
+      icon: '💯',
+      description: 'Achieved perfect scores on 10 quizzes',
+      category: 'skill',
+      rarity: 'epic',
+      badgeUrl: '/badges/perfectionist.svg',
       points: 150,
-      unlockCondition: "100% on 10 quizzes",
+      unlockCondition: '100% on 10 quizzes',
     },
-    "streak-warrior": {
-      id: "streak-warrior",
-      title: "Streak Warrior",
-      icon: "🔥",
-      description: "Maintained a 7-day learning streak",
-      category: "streak",
-      rarity: "epic",
-      badgeUrl: "/badges/streak-warrior.svg",
+    'streak-warrior': {
+      id: 'streak-warrior',
+      title: 'Streak Warrior',
+      icon: '🔥',
+      description: 'Maintained a 7-day learning streak',
+      category: 'streak',
+      rarity: 'epic',
+      badgeUrl: '/badges/streak-warrior.svg',
       points: 100,
-      unlockCondition: "7-day learning streak",
+      unlockCondition: '7-day learning streak',
     },
-    "streak-legend": {
-      id: "streak-legend",
-      title: "Streak Legend",
-      icon: "🌟",
-      description: "Maintained a 30-day learning streak",
-      category: "streak",
-      rarity: "legendary",
-      badgeUrl: "/badges/streak-legend.svg",
+    'streak-legend': {
+      id: 'streak-legend',
+      title: 'Streak Legend',
+      icon: '🌟',
+      description: 'Maintained a 30-day learning streak',
+      category: 'streak',
+      rarity: 'legendary',
+      badgeUrl: '/badges/streak-legend.svg',
       points: 500,
-      unlockCondition: "30-day learning streak",
+      unlockCondition: '30-day learning streak',
     },
-    "full-stack": {
-      id: "full-stack",
-      title: "Full Stack Developer",
-      icon: "🚀",
-      description: "Completed both frontend and backend modules",
-      category: "skill",
-      rarity: "legendary",
-      badgeUrl: "/badges/full-stack.svg",
+    'full-stack': {
+      id: 'full-stack',
+      title: 'Full Stack Developer',
+      icon: '🚀',
+      description: 'Completed both frontend and backend modules',
+      category: 'skill',
+      rarity: 'legendary',
+      badgeUrl: '/badges/full-stack.svg',
       points: 1000,
-      unlockCondition: "Master both frontend and backend",
+      unlockCondition: 'Master both frontend and backend',
     },
-    "quiz-master": {
-      id: "quiz-master",
-      title: "Quiz Master",
-      icon: "🧠",
-      description: "Achieved 90%+ on 20 quizzes",
-      category: "skill",
-      rarity: "epic",
-      badgeUrl: "/badges/quiz-master.svg",
+    'quiz-master': {
+      id: 'quiz-master',
+      title: 'Quiz Master',
+      icon: '🧠',
+      description: 'Achieved 90%+ on 20 quizzes',
+      category: 'skill',
+      rarity: 'epic',
+      badgeUrl: '/badges/quiz-master.svg',
       points: 200,
-      unlockCondition: "90%+ on 20 quizzes",
+      unlockCondition: '90%+ on 20 quizzes',
     },
-    "consistent-learner": {
-      id: "consistent-learner",
-      title: "Consistent Learner",
-      icon: "📅",
-      description: "Studied for 30 consecutive days",
-      category: "streak",
-      rarity: "legendary",
-      badgeUrl: "/badges/consistent-learner.svg",
+    'consistent-learner': {
+      id: 'consistent-learner',
+      title: 'Consistent Learner',
+      icon: '📅',
+      description: 'Studied for 30 consecutive days',
+      category: 'streak',
+      rarity: 'legendary',
+      badgeUrl: '/badges/consistent-learner.svg',
       points: 300,
-      unlockCondition: "30 consecutive days of learning",
+      unlockCondition: '30 consecutive days of learning',
     },
   };
   const filteredAchievements = Object.values(ACHIEVEMENT_CATALOG).filter(
@@ -515,16 +515,16 @@ export const CompleteProgressTracker: React.FC = () => {
         return false;
       }
 
-      if (filterCategory !== "all" && achievement.category !== filterCategory) {
+      if (filterCategory !== 'all' && achievement.category !== filterCategory) {
         return false;
       }
 
-      if (filterTier !== "all" && achievement.tier !== filterTier) {
+      if (filterTier !== 'all' && achievement.tier !== filterTier) {
         return false;
       }
 
       return true;
-    },
+    }
   );
 
   const handleImport = () => {
@@ -532,7 +532,7 @@ export const CompleteProgressTracker: React.FC = () => {
       const result = importProgressData(importData);
       setImportResult(result);
       if (result.success) {
-        setImportData("");
+        setImportData('');
       }
     }
   };
@@ -612,7 +612,7 @@ export const CompleteProgressTracker: React.FC = () => {
         />
         <StatsCard
           title="Avg Score"
-          value={avgScore > 0 ? `${avgScore}%` : "-"}
+          value={avgScore > 0 ? `${avgScore}%` : '-'}
           icon="🎯"
           subtitle="quiz average"
           gradient="from-purple-400 to-purple-600"
@@ -657,9 +657,9 @@ export const CompleteProgressTracker: React.FC = () => {
             </button>
             <button
               onClick={() => {
-                const fileInput = document.createElement("input");
-                fileInput.type = "file";
-                fileInput.accept = ".json";
+                const fileInput = document.createElement('input');
+                fileInput.type = 'file';
+                fileInput.accept = '.json';
                 fileInput.onchange = (e: Event) => {
                   const file = (e.target as HTMLInputElement).files?.[0];
                   if (file) {
@@ -682,7 +682,7 @@ export const CompleteProgressTracker: React.FC = () => {
             {importResult && (
               <div
                 role="status"
-                className={`mt-2 text-sm ${importResult.success ? "text-green-300" : "text-red-300"}`}
+                className={`mt-2 text-sm ${importResult.success ? 'text-green-300' : 'text-red-300'}`}
               >
                 {importResult.message}
               </div>
@@ -708,7 +708,7 @@ export const CompleteProgressTracker: React.FC = () => {
               onClick={() => setShowAllAchievements(!showAllAchievements)}
               className="px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white text-sm font-medium rounded-lg transition-colors duration-200"
             >
-              {showAllAchievements ? "Show Earned Only" : "Show All"}
+              {showAllAchievements ? 'Show Earned Only' : 'Show All'}
             </button>
           </div>
         </div>
@@ -757,7 +757,7 @@ export const CompleteProgressTracker: React.FC = () => {
           {filteredAchievements.map((achievement: AchievementDefinition) => {
             const earned = earnedAchievementIds.includes(achievement.id);
             const earnedData = achievements.find(
-              (a: AchievementData) => a.id === achievement.id,
+              (a: AchievementData) => a.id === achievement.id
             );
 
             return (

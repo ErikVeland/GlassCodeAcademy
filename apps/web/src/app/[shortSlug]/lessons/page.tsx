@@ -1,37 +1,37 @@
-import { Metadata } from "next";
-import { notFound } from "next/navigation";
-import Link from "next/link";
+import { Metadata } from 'next';
+import { notFound } from 'next/navigation';
+import Link from 'next/link';
 import {
   contentRegistry,
   getLessonGroups,
   type Module,
-} from "@/lib/contentRegistry";
-import { getModuleTheme } from "@/lib/moduleThemes";
+} from '@/lib/contentRegistry';
+import { getModuleTheme } from '@/lib/moduleThemes';
 
 interface LessonsPageProps {
   params: Promise<{ shortSlug: string }>;
   searchParams?: Promise<Record<string, string | string[] | undefined>>;
 }
 
-export const dynamic = "force-dynamic";
+export const dynamic = 'force-dynamic';
 
 export async function generateStaticParams() {
   // Align gating with SSG strategy: require ENABLE_BUILD_SSG and non-DB content mode
-  if (process.env.ENABLE_BUILD_SSG !== "true") {
+  if (process.env.ENABLE_BUILD_SSG !== 'true') {
     return [];
   }
-  if ((process.env.GC_CONTENT_MODE || "").toLowerCase() === "db") {
+  if ((process.env.GC_CONTENT_MODE || '').toLowerCase() === 'db') {
     return [];
   }
   const modules = await contentRegistry.getModules();
   const params = await Promise.all(
     modules
-      .filter((m: Module) => m.status === "active")
+      .filter((m: Module) => m.status === 'active')
       .map(async (m: Module) => {
         const shortSlug =
           (await contentRegistry.getShortSlugFromModuleSlug(m.slug)) || m.slug;
         return { shortSlug };
-      }),
+      })
   );
   return params;
 }
@@ -46,14 +46,14 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   if (!currentModule) {
     return {
-      title: "Lessons Not Found",
+      title: 'Lessons Not Found',
     };
   }
 
   return {
     title: `${currentModule.title} Lessons - Fullstack Learning Platform`,
     description: `Learn ${currentModule.title} through structured lessons and practical examples.`,
-    keywords: currentModule.technologies.join(", "),
+    keywords: currentModule.technologies.join(', '),
   };
 }
 
@@ -64,7 +64,7 @@ export default async function LessonsPage({
   const { shortSlug } = await params;
   const sp = (searchParams ? await searchParams : {}) || {};
   const selectedTopic =
-    typeof sp.topic === "string"
+    typeof sp.topic === 'string'
       ? sp.topic
       : Array.isArray(sp.topic)
         ? sp.topic[0]
@@ -78,7 +78,7 @@ export default async function LessonsPage({
   const theme = getModuleTheme(currentModule.slug);
   const lessons = await contentRegistry.getModuleLessons(currentModule.slug);
   const thresholds = await contentRegistry.checkModuleThresholds(
-    currentModule.slug,
+    currentModule.slug
   );
   let lessonGroups = getLessonGroups(currentModule.slug, lessons);
 
@@ -92,7 +92,7 @@ export default async function LessonsPage({
       .filter((group) => group.lessons.length > 0);
   }
 
-  if (!thresholds.lessonsValid && process.env.NODE_ENV === "production") {
+  if (!thresholds.lessonsValid && process.env.NODE_ENV === 'production') {
     notFound();
   }
 
@@ -138,7 +138,7 @@ export default async function LessonsPage({
                 </h1>
                 <p className="text-muted">
                   {lessonGroups.length} lesson group
-                  {lessonGroups.length !== 1 ? "s" : ""} available
+                  {lessonGroups.length !== 1 ? 's' : ''} available
                 </p>
                 {selectedTopic && (
                   <div className="mt-2 flex items-center gap-2">
@@ -200,7 +200,7 @@ export default async function LessonsPage({
                         <div className="mt-4 md:mt-0 md:ml-6 w-full sm:w-auto">
                           <Link
                             href={
-                              currentModule.slug === "programming-fundamentals"
+                              currentModule.slug === 'programming-fundamentals'
                                 ? `/programming/lessons/${lessons.indexOf(group.lessons[0]) + 1}`
                                 : `${currentModule.routes.lessons}/${lessons.indexOf(group.lessons[0]) + 1}`
                             }

@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from "react";
-import { useProgressTracking } from "../hooks/useProgressTracking";
-import { useStreakTracking } from "../hooks/useStreakTracking";
-import { useAchievements } from "../hooks/useAchievements";
-import "./ProgressDashboard.scss";
+import React, { useState, useEffect } from 'react';
+import { useProgressTracking } from '../hooks/useProgressTracking';
+import { useStreakTracking } from '../hooks/useStreakTracking';
+import { useAchievements } from '../hooks/useAchievements';
+import './ProgressDashboard.scss';
 
 interface DashboardStats {
   totalModules: number;
@@ -20,16 +20,16 @@ interface DashboardStats {
 
 interface VisualProgressProps {
   percentage: number;
-  size?: "small" | "medium" | "large";
-  variant?: "circular" | "linear" | "radial";
+  size?: 'small' | 'medium' | 'large';
+  variant?: 'circular' | 'linear' | 'radial';
   showLabel?: boolean;
   animated?: boolean;
 }
 
 const VisualProgress: React.FC<VisualProgressProps> = ({
   percentage,
-  size = "medium",
-  variant = "circular",
+  size = 'medium',
+  variant = 'circular',
   showLabel = true,
   animated = true,
 }) => {
@@ -48,9 +48,9 @@ const VisualProgress: React.FC<VisualProgressProps> = ({
 
   const getSize = () => {
     switch (size) {
-      case "small":
+      case 'small':
         return 60;
-      case "large":
+      case 'large':
         return 120;
       default:
         return 80;
@@ -62,7 +62,7 @@ const VisualProgress: React.FC<VisualProgressProps> = ({
   const strokeDashoffset =
     circumference - (animatedPercentage / 100) * circumference;
 
-  if (variant === "linear") {
+  if (variant === 'linear') {
     return (
       <div className={`progress-linear progress-${size}`}>
         <div className="progress-track">
@@ -71,8 +71,8 @@ const VisualProgress: React.FC<VisualProgressProps> = ({
             style={{
               width: `${animatedPercentage}%`,
               transition: animated
-                ? "width 1.5s cubic-bezier(0.4, 0, 0.2, 1)"
-                : "none",
+                ? 'width 1.5s cubic-bezier(0.4, 0, 0.2, 1)'
+                : 'none',
             }}
           />
         </div>
@@ -83,7 +83,7 @@ const VisualProgress: React.FC<VisualProgressProps> = ({
     );
   }
 
-  if (variant === "radial") {
+  if (variant === 'radial') {
     return (
       <div className={`progress-radial progress-${size}`}>
         <svg width={getSize()} height={getSize()}>
@@ -119,10 +119,10 @@ const VisualProgress: React.FC<VisualProgressProps> = ({
             strokeDashoffset={strokeDashoffset}
             style={{
               transition: animated
-                ? "stroke-dashoffset 1.5s cubic-bezier(0.4, 0, 0.2, 1)"
-                : "none",
-              transform: "rotate(-90deg)",
-              transformOrigin: "50% 50%",
+                ? 'stroke-dashoffset 1.5s cubic-bezier(0.4, 0, 0.2, 1)'
+                : 'none',
+              transform: 'rotate(-90deg)',
+              transformOrigin: '50% 50%',
             }}
           />
         </svg>
@@ -158,10 +158,10 @@ const VisualProgress: React.FC<VisualProgressProps> = ({
           strokeDashoffset={strokeDashoffset}
           style={{
             transition: animated
-              ? "stroke-dashoffset 1.5s cubic-bezier(0.4, 0, 0.2, 1)"
-              : "none",
-            transform: "rotate(-90deg)",
-            transformOrigin: "50% 50%",
+              ? 'stroke-dashoffset 1.5s cubic-bezier(0.4, 0, 0.2, 1)'
+              : 'none',
+            transform: 'rotate(-90deg)',
+            transformOrigin: '50% 50%',
           }}
         />
       </svg>
@@ -175,7 +175,7 @@ const VisualProgress: React.FC<VisualProgressProps> = ({
 };
 
 interface ModuleSummary {
-  completionStatus: "completed" | "in_progress" | "pending";
+  completionStatus: 'completed' | 'in_progress' | 'pending';
   title: string;
 }
 
@@ -184,7 +184,7 @@ const TierProgressCard: React.FC<{
   modules: ModuleSummary[];
 }> = ({ tierName, modules }) => {
   const completedModules = modules.filter(
-    (m) => m.completionStatus === "completed",
+    (m) => m.completionStatus === 'completed'
   ).length;
   const percentage =
     modules.length > 0 ? (completedModules / modules.length) * 100 : 0;
@@ -208,11 +208,11 @@ const TierProgressCard: React.FC<{
           <div
             key={index}
             className={`module-indicator ${
-              module.completionStatus === "completed"
-                ? "completed"
-                : module.completionStatus === "in_progress"
-                  ? "in-progress"
-                  : "pending"
+              module.completionStatus === 'completed'
+                ? 'completed'
+                : module.completionStatus === 'in_progress'
+                  ? 'in-progress'
+                  : 'pending'
             }`}
             title={module.title}
           />
@@ -231,13 +231,13 @@ interface Achievement {
 
 const AchievementBadge: React.FC<{
   achievement: Achievement;
-  size?: "small" | "medium" | "large";
-}> = ({ achievement, size = "medium" }) => {
+  size?: 'small' | 'medium' | 'large';
+}> = ({ achievement, size = 'medium' }) => {
   return (
     <div
-      className={`achievement-badge achievement-${size} ${achievement.earned ? "earned" : "locked"}`}
+      className={`achievement-badge achievement-${size} ${achievement.earned ? 'earned' : 'locked'}`}
     >
-      <div className="badge-icon">{achievement.earned ? "🏆" : "🔒"}</div>
+      <div className="badge-icon">{achievement.earned ? '🏆' : '🔒'}</div>
       <div className="badge-info">
         <h4 className="badge-title">{achievement.title}</h4>
         <p className="badge-description">{achievement.description}</p>
@@ -258,8 +258,8 @@ export const ProgressDashboard: React.FC = () => {
   const { achievements, getRecentAchievements } = useAchievements();
 
   const [activeTab, setActiveTab] = useState<
-    "overview" | "progress" | "achievements" | "streaks"
-  >("overview");
+    'overview' | 'progress' | 'achievements' | 'streaks'
+  >('overview');
   const [stats, setStats] = useState<DashboardStats | null>(null);
 
   useEffect(() => {
@@ -268,34 +268,34 @@ export const ProgressDashboard: React.FC = () => {
 
     const totalModules = Object.keys(allProgress).length;
     const completedModules = Object.values(allProgress).filter(
-      (p) => p.completionStatus === "completed",
+      (p) => p.completionStatus === 'completed'
     ).length;
     const totalLessons = Object.values(allProgress).reduce(
       (sum, p) => sum + p.totalLessons,
-      0,
+      0
     );
     const completedLessons = Object.values(allProgress).reduce(
       (sum, p) => sum + p.lessonsCompleted,
-      0,
+      0
     );
     const totalQuizzes = Object.values(allProgress).filter(
-      (p) => p.quizScore !== null,
+      (p) => p.quizScore !== null
     ).length;
     const passedQuizzes = Object.values(allProgress).filter(
-      (p) => p.quizScore && p.quizScore >= 70,
+      (p) => p.quizScore && p.quizScore >= 70
     ).length;
     const averageQuizScore =
       totalQuizzes > 0
         ? Object.values(allProgress).reduce(
             (sum, p) => sum + (p.quizScore || 0),
-            0,
+            0
           ) / totalQuizzes
         : 0;
     const studyTime = getTotalTimeSpent();
 
     // Simplified tier calculation
-    const currentTier = "foundational"; // This would be calculated based on progress
-    const nextTier = "core"; // This would be calculated based on progress
+    const currentTier = 'foundational'; // This would be calculated based on progress
+    const nextTier = 'core'; // This would be calculated based on progress
 
     setStats({
       totalModules,
@@ -369,33 +369,33 @@ export const ProgressDashboard: React.FC = () => {
 
       <div className="dashboard-tabs">
         <button
-          className={`tab-button ${activeTab === "overview" ? "active" : ""}`}
-          onClick={() => setActiveTab("overview")}
+          className={`tab-button ${activeTab === 'overview' ? 'active' : ''}`}
+          onClick={() => setActiveTab('overview')}
         >
           Overview
         </button>
         <button
-          className={`tab-button ${activeTab === "progress" ? "active" : ""}`}
-          onClick={() => setActiveTab("progress")}
+          className={`tab-button ${activeTab === 'progress' ? 'active' : ''}`}
+          onClick={() => setActiveTab('progress')}
         >
           Module Progress
         </button>
         <button
-          className={`tab-button ${activeTab === "achievements" ? "active" : ""}`}
-          onClick={() => setActiveTab("achievements")}
+          className={`tab-button ${activeTab === 'achievements' ? 'active' : ''}`}
+          onClick={() => setActiveTab('achievements')}
         >
           Achievements
         </button>
         <button
-          className={`tab-button ${activeTab === "streaks" ? "active" : ""}`}
-          onClick={() => setActiveTab("streaks")}
+          className={`tab-button ${activeTab === 'streaks' ? 'active' : ''}`}
+          onClick={() => setActiveTab('streaks')}
         >
           Streaks
         </button>
       </div>
 
       <div className="dashboard-content">
-        {activeTab === "overview" && (
+        {activeTab === 'overview' && (
           <div className="overview-tab">
             <div className="progress-grid">
               <div className="grid-item">
@@ -479,7 +479,7 @@ export const ProgressDashboard: React.FC = () => {
           </div>
         )}
 
-        {activeTab === "progress" && (
+        {activeTab === 'progress' && (
           <div className="progress-tab">
             <div className="tier-progress-grid">
               {/* This would be populated with actual tier data from the registry */}
@@ -494,7 +494,7 @@ export const ProgressDashboard: React.FC = () => {
           </div>
         )}
 
-        {activeTab === "achievements" && (
+        {activeTab === 'achievements' && (
           <div className="achievements-tab">
             <div className="achievements-grid">
               {achievements.map((achievement, index) => (
@@ -504,7 +504,7 @@ export const ProgressDashboard: React.FC = () => {
           </div>
         )}
 
-        {activeTab === "streaks" && (
+        {activeTab === 'streaks' && (
           <div className="streaks-tab">
             <div className="streak-details">
               <div className="streak-overview">
@@ -537,10 +537,10 @@ export const ProgressDashboard: React.FC = () => {
                   {streakData.milestones.map((milestone, index) => (
                     <div
                       key={index}
-                      className={`milestone ${milestone.achieved ? "achieved" : "pending"}`}
+                      className={`milestone ${milestone.achieved ? 'achieved' : 'pending'}`}
                     >
                       <div className="milestone-icon">
-                        {milestone.achieved ? "✅" : "⏳"}
+                        {milestone.achieved ? '✅' : '⏳'}
                       </div>
                       <div className="milestone-info">
                         <h4>{milestone.title}</h4>

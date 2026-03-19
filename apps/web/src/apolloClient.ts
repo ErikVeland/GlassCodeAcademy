@@ -3,28 +3,28 @@ import {
   InMemoryCache,
   HttpLink,
   NormalizedCacheObject,
-} from "@apollo/client";
-import { RetryLink } from "@apollo/client/link/retry";
-import { getGraphQLEndpoint } from "@/lib/urlUtils";
+} from '@apollo/client';
+import { RetryLink } from '@apollo/client/link/retry';
+import { getGraphQLEndpoint } from '@/lib/urlUtils';
 
 // Custom function to determine if we should retry based on error
 const shouldRetry = (error: unknown) => {
   // Narrow the error shape
   const err =
-    error && typeof error === "object"
+    error && typeof error === 'object'
       ? (error as { message?: string; statusCode?: number })
       : undefined;
-  const msg = err?.message ?? "";
+  const msg = err?.message ?? '';
   const code = err?.statusCode;
   // Retry on network errors or server errors that might be due to cold start
   return (
-    msg.includes("Failed to fetch") ||
-    msg.includes("NetworkError") ||
-    msg.includes("ECONNREFUSED") ||
-    msg.includes("timeout") ||
-    msg.includes("502") || // Bad gateway
-    msg.includes("503") || // Service unavailable
-    msg.includes("504") || // Gateway timeout
+    msg.includes('Failed to fetch') ||
+    msg.includes('NetworkError') ||
+    msg.includes('ECONNREFUSED') ||
+    msg.includes('timeout') ||
+    msg.includes('502') || // Bad gateway
+    msg.includes('503') || // Service unavailable
+    msg.includes('504') || // Gateway timeout
     [408, 502, 503, 504].includes(code ?? -1)
   );
 };
@@ -58,7 +58,7 @@ export const createApolloClient = () => {
             signal: controller.signal,
           }).finally(() => clearTimeout(timeoutId));
         },
-      }),
+      })
     ),
     cache: new InMemoryCache({
       // Add cache size limits to prevent memory leaks
@@ -79,8 +79,8 @@ export const createApolloClient = () => {
     }),
     defaultOptions: {
       watchQuery: {
-        errorPolicy: "ignore",
-        fetchPolicy: "cache-first",
+        errorPolicy: 'ignore',
+        fetchPolicy: 'cache-first',
         // Add timeout for queries
         context: {
           fetchOptions: {
@@ -89,8 +89,8 @@ export const createApolloClient = () => {
         },
       },
       query: {
-        errorPolicy: "all", // Changed from 'ignore' to 'all' to handle errors properly
-        fetchPolicy: "cache-first",
+        errorPolicy: 'all', // Changed from 'ignore' to 'all' to handle errors properly
+        fetchPolicy: 'cache-first',
         // Add timeout for queries
         context: {
           fetchOptions: {
@@ -106,7 +106,7 @@ export const createApolloClient = () => {
 let clientSingleton: ApolloClient<NormalizedCacheObject> | null = null;
 
 export function getApolloClient() {
-  if (typeof window === "undefined") {
+  if (typeof window === 'undefined') {
     // Server side - always create a new client
     return createApolloClient();
   }

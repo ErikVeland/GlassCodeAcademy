@@ -1,6 +1,6 @@
-"use client";
+'use client';
 
-import React, { useState } from "react";
+import React, { useState } from 'react';
 
 interface PieChartData {
   label: string;
@@ -19,7 +19,7 @@ export default function PieChart({
   data,
   size = 200,
   strokeWidth = 8,
-  className = "",
+  className = '',
 }: PieChartProps) {
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
   const total = data.reduce((sum, item) => sum + item.value, 0);
@@ -58,7 +58,7 @@ export default function PieChart({
             cy={center}
             r={radius}
             fill="none"
-            stroke={"hsl(var(--border) / 0.3)"}
+            stroke={'hsl(var(--border) / 0.3)'}
             strokeWidth={strokeWidth}
           />
 
@@ -89,8 +89,8 @@ export default function PieChart({
                 className="transition-all duration-300 hover:opacity-90 cursor-pointer"
                 style={{
                   filter: isHovered
-                    ? "drop-shadow(0 0 8px hsl(var(--primary-fg) / 0.5))"
-                    : "none",
+                    ? 'drop-shadow(0 0 8px hsl(var(--primary-fg) / 0.5))'
+                    : 'none',
                   opacity: hoveredIndex !== null && !isHovered ? 0.5 : 1,
                 }}
                 onMouseEnter={() => setHoveredIndex(index)}
@@ -127,7 +127,7 @@ export default function PieChart({
       <div className="flex-1 space-y-3 w-full lg:w-auto">
         {data.map((item, index) => {
           const percentage =
-            total > 0 ? ((item.value / total) * 100).toFixed(1) : "0";
+            total > 0 ? ((item.value / total) * 100).toFixed(1) : '0';
           return (
             <div key={index} className="flex items-center justify-between">
               <div className="flex items-center">

@@ -12,10 +12,20 @@
     "typecheck": "npm run typecheck --workspaces",
     "test": "npm run test --workspaces",
     "start": "npm run start --workspaces",
-    "clean": "rm -rf node_modules apps/*/node_modules"
+    "clean": "rm -rf node_modules apps/*/node_modules",
+    "prepare": "husky || true"
   },
   "devDependencies": {
-    "concurrently": "^8.2.2"
+    "concurrently": "^8.2.2",
+    "eslint": "^9",
+    "husky": "^9.1.7",
+    "lint-staged": "^16.4.0",
+    "prettier": "^3.6.2"
+  },
+  "lint-staged": {
+    "*.{json,md,yml,yaml}": [
+      "prettier --write"
+    ]
   },
   "engines": {
     "node": ">=18.0.0"

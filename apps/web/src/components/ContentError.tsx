@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react';
 
 interface ContentErrorProps {
   message?: string;
@@ -6,7 +6,7 @@ interface ContentErrorProps {
 }
 
 export function ContentError({
-  message = "Failed to load content",
+  message = 'Failed to load content',
   onRetry,
 }: ContentErrorProps) {
   return (

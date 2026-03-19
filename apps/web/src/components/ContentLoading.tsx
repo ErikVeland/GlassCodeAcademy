@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react';
 
 interface ContentLoadingProps {
   message?: string;
@@ -6,7 +6,7 @@ interface ContentLoadingProps {
 }
 
 export function ContentLoading({
-  message = "Initializing content...",
+  message = 'Initializing content...',
   retryCount = 0,
 }: ContentLoadingProps) {
   return (

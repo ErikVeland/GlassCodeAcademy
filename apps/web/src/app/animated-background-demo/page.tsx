@@ -1,20 +1,20 @@
-"use client";
+'use client';
 
-import React, { useState } from "react";
-import Link from "next/link";
-import { ROUTES } from "@/lib/routes";
-import AnimatedBackground from "../../components/AnimatedBackground";
-import EnhancedLoadingComponent from "../../components/EnhancedLoadingComponent";
-import ColorSchemeEditorPopup from "../../components/ColorSchemeEditorPopup";
+import React, { useState } from 'react';
+import Link from 'next/link';
+import { ROUTES } from '@/lib/routes';
+import AnimatedBackground from '../../components/AnimatedBackground';
+import EnhancedLoadingComponent from '../../components/EnhancedLoadingComponent';
+import ColorSchemeEditorPopup from '../../components/ColorSchemeEditorPopup';
 
 export default function AnimatedBackgroundDemo() {
   const [colors, setColors] = useState([
-    "rgba(99, 102, 241, 0.12)", // indigo
-    "rgba(168, 85, 247, 0.12)", // purple
-    "rgba(236, 72, 153, 0.12)", // pink
-    "rgba(16, 185, 129, 0.12)", // green
-    "rgba(245, 158, 11, 0.12)", // yellow
-    "rgba(239, 68, 68, 0.12)", // red
+    'rgba(99, 102, 241, 0.12)', // indigo
+    'rgba(168, 85, 247, 0.12)', // purple
+    'rgba(236, 72, 153, 0.12)', // pink
+    'rgba(16, 185, 129, 0.12)', // green
+    'rgba(245, 158, 11, 0.12)', // yellow
+    'rgba(239, 68, 68, 0.12)', // red
   ]);
 
   const [speed, setSpeed] = useState(25);
@@ -32,69 +32,69 @@ export default function AnimatedBackgroundDemo() {
 
   const presetColors = [
     {
-      name: "Ocean Breeze",
+      name: 'Ocean Breeze',
       colors: [
-        "rgba(59, 130, 246, 0.15)",
-        "rgba(139, 92, 246, 0.15)",
-        "rgba(16, 185, 129, 0.15)",
-        "rgba(56, 189, 248, 0.15)",
-        "rgba(14, 165, 233, 0.15)",
+        'rgba(59, 130, 246, 0.15)',
+        'rgba(139, 92, 246, 0.15)',
+        'rgba(16, 185, 129, 0.15)',
+        'rgba(56, 189, 248, 0.15)',
+        'rgba(14, 165, 233, 0.15)',
       ],
     },
     {
-      name: "Sunset Glow",
+      name: 'Sunset Glow',
       colors: [
-        "rgba(251, 146, 60, 0.15)",
-        "rgba(249, 115, 22, 0.15)",
-        "rgba(236, 72, 153, 0.15)",
-        "rgba(217, 70, 239, 0.15)",
-        "rgba(245, 158, 11, 0.15)",
+        'rgba(251, 146, 60, 0.15)',
+        'rgba(249, 115, 22, 0.15)',
+        'rgba(236, 72, 153, 0.15)',
+        'rgba(217, 70, 239, 0.15)',
+        'rgba(245, 158, 11, 0.15)',
       ],
     },
     {
-      name: "Forest Mist",
+      name: 'Forest Mist',
       colors: [
-        "rgba(16, 185, 129, 0.15)",
-        "rgba(14, 165, 233, 0.15)",
-        "rgba(52, 211, 153, 0.15)",
-        "rgba(45, 212, 191, 0.15)",
-        "rgba(34, 197, 94, 0.15)",
+        'rgba(16, 185, 129, 0.15)',
+        'rgba(14, 165, 233, 0.15)',
+        'rgba(52, 211, 153, 0.15)',
+        'rgba(45, 212, 191, 0.15)',
+        'rgba(34, 197, 94, 0.15)',
       ],
     },
     {
-      name: "Cosmic Nebula",
+      name: 'Cosmic Nebula',
       colors: [
-        "rgba(139, 92, 246, 0.15)",
-        "rgba(168, 85, 247, 0.15)",
-        "rgba(236, 72, 153, 0.15)",
-        "rgba(217, 70, 239, 0.15)",
-        "rgba(99, 102, 241, 0.15)",
+        'rgba(139, 92, 246, 0.15)',
+        'rgba(168, 85, 247, 0.15)',
+        'rgba(236, 72, 153, 0.15)',
+        'rgba(217, 70, 239, 0.15)',
+        'rgba(99, 102, 241, 0.15)',
       ],
     },
     {
-      name: "Full Spectrum",
+      name: 'Full Spectrum',
       colors: [
-        "rgba(99, 102, 241, 0.12)", // indigo (blue)
-        "rgba(168, 85, 247, 0.12)", // purple
-        "rgba(236, 72, 153, 0.12)", // pink
-        "rgba(16, 185, 129, 0.12)", // green
-        "rgba(245, 158, 11, 0.12)", // yellow
-        "rgba(239, 68, 68, 0.12)", // red
-        "rgba(59, 130, 246, 0.12)", // blue
-        "rgba(139, 92, 246, 0.12)", // violet
-        "rgba(251, 146, 60, 0.12)", // orange
-        "rgba(14, 165, 233, 0.12)", // sky blue
+        'rgba(99, 102, 241, 0.12)', // indigo (blue)
+        'rgba(168, 85, 247, 0.12)', // purple
+        'rgba(236, 72, 153, 0.12)', // pink
+        'rgba(16, 185, 129, 0.12)', // green
+        'rgba(245, 158, 11, 0.12)', // yellow
+        'rgba(239, 68, 68, 0.12)', // red
+        'rgba(59, 130, 246, 0.12)', // blue
+        'rgba(139, 92, 246, 0.12)', // violet
+        'rgba(251, 146, 60, 0.12)', // orange
+        'rgba(14, 165, 233, 0.12)', // sky blue
       ],
     },
     {
-      name: "Aurora Borealis",
+      name: 'Aurora Borealis',
       colors: [
-        "rgba(34, 197, 94, 0.15)", // emerald
-        "rgba(59, 130, 246, 0.15)", // blue
-        "rgba(168, 85, 247, 0.15)", // purple
-        "rgba(236, 72, 153, 0.15)", // pink
-        "rgba(14, 165, 233, 0.15)", // sky
-        "rgba(16, 185, 129, 0.15)", // teal
+        'rgba(34, 197, 94, 0.15)', // emerald
+        'rgba(59, 130, 246, 0.15)', // blue
+        'rgba(168, 85, 247, 0.15)', // purple
+        'rgba(236, 72, 153, 0.15)', // pink
+        'rgba(14, 165, 233, 0.15)', // sky
+        'rgba(16, 185, 129, 0.15)', // teal
       ],
     },
   ];
@@ -114,8 +114,8 @@ export default function AnimatedBackgroundDemo() {
 
     try {
       localStorage.setItem(
-        "appBackgroundSettings",
-        JSON.stringify(backgroundSettings),
+        'appBackgroundSettings',
+        JSON.stringify(backgroundSettings)
       );
       setSaveSuccess(true);
 
@@ -124,7 +124,7 @@ export default function AnimatedBackgroundDemo() {
         setSaveSuccess(false);
       }, 3000);
     } catch (error) {
-      console.error("Failed to save background settings:", error);
+      console.error('Failed to save background settings:', error);
     }
   };
 
@@ -263,8 +263,8 @@ export default function AnimatedBackgroundDemo() {
                             />
                             <span className="text-sm text-muted">
                               {respectReducedMotion
-                                ? "Enabled"
-                                : "Disabled (animation forced for demo)"}
+                                ? 'Enabled'
+                                : 'Disabled (animation forced for demo)'}
                             </span>
                           </div>
                         </div>
@@ -361,7 +361,7 @@ export default function AnimatedBackgroundDemo() {
                               onClick={() => applyPreset(preset)}
                               className="relative py-2 px-3 text-sm font-medium rounded-lg border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:text-white transition-all duration-300 overflow-hidden group"
                               style={{
-                                background: "transparent",
+                                background: 'transparent',
                               }}
                               onMouseEnter={(e) => {
                                 const gradientColors = preset.colors.map(
@@ -369,13 +369,13 @@ export default function AnimatedBackgroundDemo() {
                                     const [r, g, b, a] =
                                       color.match(/\d+\.?\d*/g) || [];
                                     return `rgba(${r}, ${g}, ${b}, ${a || 1})`;
-                                  },
+                                  }
                                 );
-                                e.currentTarget.style.background = `linear-gradient(135deg, ${gradientColors.join(", ")})`;
+                                e.currentTarget.style.background = `linear-gradient(135deg, ${gradientColors.join(', ')})`;
                               }}
                               onMouseLeave={(e) => {
                                 e.currentTarget.style.background =
-                                  "transparent";
+                                  'transparent';
                               }}
                               aria-label={`Apply ${preset.name} color preset`}
                             >
@@ -391,7 +391,7 @@ export default function AnimatedBackgroundDemo() {
                                         color.match(/\d+\.?\d*/g) || [];
                                       return `rgba(${r}, ${g}, ${b}, ${a || 1})`;
                                     })
-                                    .join(", ")})`,
+                                    .join(', ')})`,
                                 }}
                               />
                             </button>
@@ -411,7 +411,7 @@ export default function AnimatedBackgroundDemo() {
                             onClick={() => setIsPaused(!isPaused)}
                             className="flex items-center gap-2 px-3 py-2 bg-surface-alt hover:bg-surface rounded-lg transition-colors duration-200 border border-border"
                             aria-label={
-                              isPaused ? "Play animation" : "Pause animation"
+                              isPaused ? 'Play animation' : 'Pause animation'
                             }
                           >
                             {isPaused ? (
@@ -434,7 +434,7 @@ export default function AnimatedBackgroundDemo() {
                               </svg>
                             )}
                             <span className="text-primary-fg text-sm">
-                              {isPaused ? "Play" : "Pause"}
+                              {isPaused ? 'Play' : 'Pause'}
                             </span>
                           </button>
                         </div>
@@ -444,7 +444,7 @@ export default function AnimatedBackgroundDemo() {
                           <div
                             onClick={() => setPreviewIsPaused(!previewIsPaused)}
                             className={`relative w-64 h-40 rounded-lg overflow-hidden border-2 border-border transition-all duration-500 cursor-pointer hover:opacity-90 ${
-                              previewIsPaused ? "opacity-60" : "opacity-100"
+                              previewIsPaused ? 'opacity-60' : 'opacity-100'
                             }`}
                             title="Click to pause/play preview animation"
                           >
@@ -494,8 +494,8 @@ export default function AnimatedBackgroundDemo() {
                                 </div>
                                 <p className="text-[hsl(var(--primary-fg)/0.8)] text-sm font-medium">
                                   {previewIsPaused
-                                    ? "Click to Play"
-                                    : "Click to Pause"}
+                                    ? 'Click to Play'
+                                    : 'Click to Pause'}
                                 </p>
                                 <p className="text-[hsl(var(--primary-fg)/0.6)] text-xs mt-1">
                                   Preview Animation
@@ -517,7 +517,7 @@ export default function AnimatedBackgroundDemo() {
                           {`import AnimatedBackground from '../components/AnimatedBackground';
 
 <AnimatedBackground 
-  colors={${JSON.stringify(colors, null, 2).replace(/\n/g, "\n  ")}}
+  colors={${JSON.stringify(colors, null, 2).replace(/\n/g, '\n  ')}}
   speed={${speed}}
   blur={${blur}}
   opacity={${opacity}}

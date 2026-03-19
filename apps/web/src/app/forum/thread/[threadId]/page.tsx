@@ -1,5 +1,5 @@
-import Link from "next/link";
-import { getApiBaseStrict } from "@/lib/urlUtils";
+import Link from 'next/link';
+import { getApiBaseStrict } from '@/lib/urlUtils';
 
 type User = { id: number; name: string; email?: string };
 type Category = { id: number; name: string; slug?: string };
@@ -19,21 +19,21 @@ type Thread = {
   category?: Category;
 };
 
-export const dynamic = "force-dynamic";
+export const dynamic = 'force-dynamic';
 
 async function fetchThread(
-  threadId: string,
+  threadId: string
 ): Promise<{ thread: Thread | null; posts: Post[] }> {
   const apiBase = (() => {
     try {
       return getApiBaseStrict();
     } catch {
-      return "http://127.0.0.1:8081";
+      return 'http://127.0.0.1:8081';
     }
   })();
   const res = await fetch(
     `${apiBase}/api/forum/threads/${threadId}?page=1&limit=20`,
-    { cache: "no-store" },
+    { cache: 'no-store' }
   );
   if (!res.ok) return { thread: null, posts: [] };
   const json = await res.json();
@@ -105,7 +105,7 @@ export default async function ThreadPage({
             )}
           </div>
           <Link
-            href={`/forum/category/${thread.category?.id ?? ""}`}
+            href={`/forum/category/${thread.category?.id ?? ''}`}
             className="text-sm px-3 py-2 bg-surface-alt border border-border rounded-md hover:opacity-90"
           >
             ← Back to Threads

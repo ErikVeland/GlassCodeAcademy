@@ -1,4 +1,4 @@
-@use "./_breakpoints" as bp;
+@use './_breakpoints' as bp;
 
 // Fluid type helper (example; unused by default)
 @mixin fluid-type($min, $max, $vw-min: 320, $vw-max: 1280) {

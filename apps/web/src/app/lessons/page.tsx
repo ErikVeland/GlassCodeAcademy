@@ -1,9 +1,9 @@
-"use client";
+'use client';
 
-import { useEffect, useState, useRef } from "react";
-import Link from "next/link";
-import { useQuery, gql } from "@apollo/client";
-import EnhancedLoadingComponent from "../../components/EnhancedLoadingComponent";
+import { useEffect, useState, useRef } from 'react';
+import Link from 'next/link';
+import { useQuery, gql } from '@apollo/client';
+import EnhancedLoadingComponent from '../../components/EnhancedLoadingComponent';
 
 type Lesson = {
   id: number;
@@ -57,8 +57,8 @@ export default function LessonsPage() {
         acc[lesson.topic].lessons.push(lesson);
         return acc;
       },
-      {} as Record<string, TopicGroup>,
-    ),
+      {} as Record<string, TopicGroup>
+    )
   );
 
   // If a lesson is selected, find its topic and index
@@ -74,7 +74,7 @@ export default function LessonsPage() {
     currentLessonIndex = selectedIndex;
     // Find the next topic (cycle to first if at end)
     const currentTopicIdx = topicGroups.findIndex(
-      (tg) => tg.topic === selectedTopic,
+      (tg) => tg.topic === selectedTopic
     );
     isLastCategory = currentTopicIdx === topicGroups.length - 1;
     nextCategoryTopic =
@@ -85,12 +85,12 @@ export default function LessonsPage() {
   const isNetworkError = (error: unknown): boolean => {
     if (!error) return false;
     const e = error as { message?: string; networkError?: unknown };
-    const msg = e.message ?? "";
+    const msg = e.message ?? '';
     return (
-      msg.includes("Failed to fetch") ||
-      msg.includes("NetworkError") ||
-      msg.includes("ECONNREFUSED") ||
-      msg.includes("timeout") ||
+      msg.includes('Failed to fetch') ||
+      msg.includes('NetworkError') ||
+      msg.includes('ECONNREFUSED') ||
+      msg.includes('timeout') ||
       !!e.networkError
     );
   };

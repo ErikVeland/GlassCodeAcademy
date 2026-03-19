@@ -24,23 +24,23 @@ $tier-quality-gradient: linear-gradient(135deg, #f59e0b 0%, #ef4444 100%);
 
 // Tier Gradient Mixins
 @mixin tier-gradient($tier) {
-  @if $tier == "foundational" {
+  @if $tier == 'foundational' {
     background: $tier-foundational-gradient;
-  } @else if $tier == "core" {
+  } @else if $tier == 'core' {
     background: $tier-core-gradient;
-  } @else if $tier == "specialized" {
+  } @else if $tier == 'specialized' {
     background: $tier-specialized-gradient;
-  } @else if $tier == "quality" {
+  } @else if $tier == 'quality' {
     background: $tier-quality-gradient;
   }
 }
 
 // Typography Hierarchy
 $font-family-primary:
-  -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue",
+  -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue',
   Arial, sans-serif;
 $font-family-mono:
-  SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New",
+  SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New',
   monospace;
 
 // Responsive Typography using clamp()
@@ -104,15 +104,15 @@ $shadow-xl: 0 12px 24px rgba(0, 0, 0, 0.15);
 
 // Responsive Breakpoint Mixin
 @mixin breakpoint($size) {
-  @if $size == "tablet" {
+  @if $size == 'tablet' {
     @media (min-width: $breakpoint-tablet) {
       @content;
     }
-  } @else if $size == "desktop" {
+  } @else if $size == 'desktop' {
     @media (min-width: $breakpoint-desktop) {
       @content;
     }
-  } @else if $size == "large" {
+  } @else if $size == 'large' {
     @media (min-width: $breakpoint-large) {
       @content;
     }
@@ -134,13 +134,13 @@ $shadow-xl: 0 12px 24px rgba(0, 0, 0, 0.15);
 
 // Tier Color Mixin
 @mixin tier-gradient($tier) {
-  @if $tier == "foundational" {
+  @if $tier == 'foundational' {
     background: $tier-foundational-gradient;
-  } @else if $tier == "core" {
+  } @else if $tier == 'core' {
     background: $tier-core-gradient;
-  } @else if $tier == "specialized" {
+  } @else if $tier == 'specialized' {
     background: $tier-specialized-gradient;
-  } @else if $tier == "quality" {
+  } @else if $tier == 'quality' {
     background: $tier-quality-gradient;
   }
 }
@@ -161,7 +161,7 @@ $shadow-xl: 0 12px 24px rgba(0, 0, 0, 0.15);
     box-shadow: $shadow-lg;
   }
 
-  @include breakpoint("desktop") {
+  @include breakpoint('desktop') {
     &:hover {
       transform: translateY(-6px);
       box-shadow: $shadow-xl;
@@ -260,7 +260,7 @@ body {
   margin: 0 auto;
   align-items: center;
 
-  @include breakpoint("tablet") {
+  @include breakpoint('tablet') {
     grid-template-columns: 1fr 1fr;
     gap: $spacing-2xl;
     padding: $spacing-3xl $spacing-xl;
@@ -270,7 +270,7 @@ body {
     color: white;
     text-align: center;
 
-    @include breakpoint("tablet") {
+    @include breakpoint('tablet') {
       text-align: left;
     }
   }
@@ -301,7 +301,7 @@ body {
     gap: $spacing-xl;
     justify-content: center;
 
-    @include breakpoint("tablet") {
+    @include breakpoint('tablet') {
       justify-content: flex-start;
     }
 
@@ -377,11 +377,11 @@ body {
 .tier-section {
   margin-bottom: $spacing-xl;
 
-  @include breakpoint("tablet") {
+  @include breakpoint('tablet') {
     margin-bottom: 2.5rem;
   }
 
-  @include breakpoint("desktop") {
+  @include breakpoint('desktop') {
     margin-bottom: $spacing-2xl;
   }
 
@@ -393,13 +393,13 @@ body {
     position: relative;
     overflow: hidden;
 
-    @include breakpoint("tablet") {
+    @include breakpoint('tablet') {
       padding: $spacing-xl;
     }
 
     // Glass morphism overlay
     &::before {
-      content: "";
+      content: '';
       position: absolute;
       top: 0;
       left: 0;
@@ -479,12 +479,12 @@ body {
   grid-template-columns: 1fr;
   gap: $spacing-lg;
 
-  @include breakpoint("tablet") {
+  @include breakpoint('tablet') {
     grid-template-columns: repeat(2, 1fr);
     gap: $spacing-xl;
   }
 
-  @include breakpoint("desktop") {
+  @include breakpoint('desktop') {
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
     gap: $spacing-xl;
   }
@@ -506,7 +506,7 @@ body {
   text-decoration: none;
   display: block;
 
-  @include breakpoint("tablet") {
+  @include breakpoint('tablet') {
     padding: $spacing-xl;
     border-radius: $border-radius-xl;
   }
@@ -678,12 +678,12 @@ body {
     grid-template-columns: 1fr;
     gap: $spacing-lg;
 
-    @include breakpoint("tablet") {
+    @include breakpoint('tablet') {
       grid-template-columns: repeat(2, 1fr);
       gap: $spacing-xl;
     }
 
-    @include breakpoint("desktop") {
+    @include breakpoint('desktop') {
       grid-template-columns: repeat(3, 1fr);
     }
   }
@@ -698,7 +698,7 @@ body {
     text-decoration: none;
     display: block;
 
-    @include breakpoint("tablet") {
+    @include breakpoint('tablet') {
       padding: $spacing-xl;
     }
 
@@ -812,7 +812,7 @@ body {
   border-radius: $border-radius-lg;
   backdrop-filter: blur(8px);
 
-  @include breakpoint("mobile-only") {
+  @include breakpoint('mobile-only') {
     flex-direction: column;
     gap: $spacing-md;
     text-align: center;
@@ -993,7 +993,7 @@ html:not(.dark) .search-icon {
 .text-fg {
   color: #1f2937; // Gray-800 in light mode
 }
-[data-theme="dark"] .text-fg {
+[data-theme='dark'] .text-fg {
   color: rgba(255, 255, 255, 0.92); // Near-white in dark mode for contrast
 }
 
@@ -1001,7 +1001,7 @@ html:not(.dark) .search-icon {
 .text-muted {
   color: #4b5563; // Gray-600 in light mode for stronger definition
 }
-[data-theme="dark"] .text-muted {
+[data-theme='dark'] .text-muted {
   color: rgba(255, 255, 255, 0.85); // Muted near-white in dark mode
 }
 
@@ -1009,7 +1009,7 @@ html:not(.dark) .search-icon {
 .bg-surface-alt {
   background: rgba(255, 255, 255, 0.15);
 }
-[data-theme="dark"] .bg-surface-alt {
+[data-theme='dark'] .bg-surface-alt {
   background: rgba(31, 41, 55, 0.35); // Dark surface alt tint
 }
 .sr-only {

@@ -1,8 +1,8 @@
-"use client";
+'use client';
 
-import React from "react";
-import { CompleteProgressTracker } from "../../components/CompleteProgressTracker";
-import BreadcrumbNavigation from "../../components/BreadcrumbNavigation";
+import React from 'react';
+import { CompleteProgressTracker } from '../../components/CompleteProgressTracker';
+import BreadcrumbNavigation from '../../components/BreadcrumbNavigation';
 
 const ProgressPage: React.FC = () => {
   return (
@@ -10,8 +10,8 @@ const ProgressPage: React.FC = () => {
       <div className="container mx-auto px-4 py-8">
         <BreadcrumbNavigation
           items={[
-            { name: "Home", href: "/" },
-            { name: "Progress", href: "/progress" },
+            { name: 'Home', href: '/' },
+            { name: 'Progress', href: '/progress' },
           ]}
         />
 

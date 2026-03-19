@@ -1,5 +1,6 @@
-import BreadcrumbNavigation from "./BreadcrumbNavigation";
-import type { Module, Lesson } from "@/lib/contentRegistry";
+import BreadcrumbNavigation from './BreadcrumbNavigation';
+import type { Module, Lesson } from '@/lib/contentRegistry';
+import MarkdownContent from './MarkdownContent';
 
 interface LessonLayoutProps {
   module: Module;
@@ -36,7 +37,7 @@ export default function LessonLayout({
                   {lesson.title}
                 </h1>
                 <p className="text-gray-600 dark:text-gray-300">
-                  {module.title} • {groupTitle} • Lesson{" "}
+                  {module.title} • {groupTitle} • Lesson{' '}
                   {lesson.order || lessonIndex + 1} of {lessons.length}
                 </p>
               </div>
@@ -76,18 +77,7 @@ export default function LessonLayout({
             <h2 className="text-2xl font-semibold text-gray-900 dark:text-white mb-4">
               Introduction
             </h2>
-            <div className="prose prose-lg dark:prose-invert max-w-none">
-              {lesson.intro
-                .split("\n\n")
-                .map((paragraph: string, index: number) => (
-                  <p
-                    key={index}
-                    className="text-gray-700 dark:text-gray-300 mb-4"
-                  >
-                    {paragraph}
-                  </p>
-                ))}
-            </div>
+            <MarkdownContent content={lesson.intro} />
           </section>
         )}
 
@@ -104,7 +94,7 @@ export default function LessonLayout({
             {lesson.code.explanation && (
               <div className="text-gray-700 dark:text-gray-300">
                 <h3 className="font-semibold mb-2">Explanation:</h3>
-                <p>{lesson.code.explanation}</p>
+                <MarkdownContent content={lesson.code.explanation} />
               </div>
             )}
           </section>
@@ -128,18 +118,18 @@ export default function LessonLayout({
                         {pitfall.mistake || `Pitfall ${index + 1}`}
                       </h3>
                       <p className="text-yellow-700 dark:text-yellow-300 mb-2">
-                        <strong>Solution:</strong>{" "}
+                        <strong>Solution:</strong>{' '}
                         {pitfall.solution ||
-                          "Review best practices and documentation."}
+                          'Review best practices and documentation.'}
                       </p>
                       {pitfall.severity && (
                         <span
                           className={`inline-block px-2 py-1 rounded text-xs font-medium ${
-                            pitfall.severity === "high"
-                              ? "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200"
-                              : pitfall.severity === "medium"
-                                ? "bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200"
-                                : "bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200"
+                            pitfall.severity === 'high'
+                              ? 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200'
+                              : pitfall.severity === 'medium'
+                                ? 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200'
+                                : 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200'
                           }`}
                         >
                           {pitfall.severity} severity
@@ -167,10 +157,13 @@ export default function LessonLayout({
                   <h3 className="font-semibold text-blue-800 dark:text-blue-200 mb-2">
                     {exercise.title || `Exercise ${index + 1}`}
                   </h3>
-                  <p className="text-gray-700 dark:text-gray-300 mb-4">
-                    {exercise.description ||
-                      "Practice the concepts learned above."}
-                  </p>
+                  <MarkdownContent
+                    content={
+                      exercise.description ||
+                      'Practice the concepts learned above.'
+                    }
+                    className="text-gray-700 dark:text-gray-300 mb-4"
+                  />
                   {exercise.checkpoints && exercise.checkpoints.length > 0 && (
                     <ul className="list-disc pl-5 space-y-2 text-gray-700 dark:text-gray-300">
                       {exercise.checkpoints.map((cp: string, i: number) => (

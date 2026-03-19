@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useRef } from "react";
+import { useState, useEffect, useCallback, useRef } from 'react';
 
 // Enhanced interfaces matching design documentation
 export interface ProgressData {
@@ -9,10 +9,10 @@ export interface ProgressData {
   quizScore: number;
   timeSpent: number;
   lastAccessed: string;
-  completionStatus: "not-started" | "in-progress" | "completed";
+  completionStatus: 'not-started' | 'in-progress' | 'completed';
   badges: string[];
   completedTopics: string[];
-  tier: "foundational" | "core" | "specialized" | "quality";
+  tier: 'foundational' | 'core' | 'specialized' | 'quality';
   certificate?: {
     earned: boolean;
     earnedDate: string;
@@ -22,7 +22,7 @@ export interface ProgressData {
   firstAccessed?: string;
   streakDays: number;
   velocity: number; // lessons per day
-  masteryLevel: "beginner" | "intermediate" | "advanced" | "expert";
+  masteryLevel: 'beginner' | 'intermediate' | 'advanced' | 'expert';
 }
 
 export interface StreakData {
@@ -49,9 +49,9 @@ export interface AchievementData {
   title: string;
   icon: string;
   description: string;
-  category: "completion" | "streak" | "skill" | "velocity";
-  rarity: "common" | "uncommon" | "rare" | "epic" | "legendary";
-  tier?: "foundational" | "core" | "specialized" | "quality";
+  category: 'completion' | 'streak' | 'skill' | 'velocity';
+  rarity: 'common' | 'uncommon' | 'rare' | 'epic' | 'legendary';
+  tier?: 'foundational' | 'core' | 'specialized' | 'quality';
   badgeUrl: string;
   earnedDate: string;
   points: number;
@@ -73,215 +73,215 @@ export interface UserStats {
 }
 
 const STORAGE_KEYS = {
-  PROGRESS: "dotnetquiz_progress_complete",
-  STREAK: "dotnetquiz_streak_complete",
-  ACHIEVEMENTS: "dotnetquiz_achievements_complete",
-  USER_STATS: "dotnetquiz_user_stats_complete",
+  PROGRESS: 'dotnetquiz_progress_complete',
+  STREAK: 'dotnetquiz_streak_complete',
+  ACHIEVEMENTS: 'dotnetquiz_achievements_complete',
+  USER_STATS: 'dotnetquiz_user_stats_complete',
 };
 
 // Tier-based module mapping according to design documentation
 const TIER_MODULES: Record<
-  "foundational" | "core" | "specialized" | "quality",
+  'foundational' | 'core' | 'specialized' | 'quality',
   string[]
 > = {
   foundational: [
-    "programming-fundamentals",
-    "web-fundamentals",
-    "version-control",
+    'programming-fundamentals',
+    'web-fundamentals',
+    'version-control',
   ],
   core: [
-    "dotnet",
-    "react",
-    "database-systems",
-    "typescript",
-    "node",
-    "laravel",
+    'dotnet',
+    'react',
+    'database-systems',
+    'typescript',
+    'node',
+    'laravel',
   ],
-  specialized: ["nextjs", "graphql", "sass", "tailwind", "vue"],
+  specialized: ['nextjs', 'graphql', 'sass', 'tailwind', 'vue'],
   quality: [
-    "testing-fundamentals",
-    "e2e-testing",
-    "performance-optimization",
-    "security-fundamentals",
+    'testing-fundamentals',
+    'e2e-testing',
+    'performance-optimization',
+    'security-fundamentals',
   ],
 };
 
 // Enhanced achievement definitions with proper metadata
 const ACHIEVEMENT_DEFINITIONS: Record<
   string,
-  Omit<AchievementData, "earnedDate" | "moduleId">
+  Omit<AchievementData, 'earnedDate' | 'moduleId'>
 > = {
-  "first-lesson": {
-    id: "first-lesson",
-    title: "First Steps",
-    icon: "👶",
-    description: "Completed your first lesson",
-    category: "velocity",
-    rarity: "common",
-    badgeUrl: "/badges/first-lesson.svg",
+  'first-lesson': {
+    id: 'first-lesson',
+    title: 'First Steps',
+    icon: '👶',
+    description: 'Completed your first lesson',
+    category: 'velocity',
+    rarity: 'common',
+    badgeUrl: '/badges/first-lesson.svg',
     points: 10,
-    unlockCondition: "Complete any lesson",
+    unlockCondition: 'Complete any lesson',
   },
-  "foundation-master": {
-    id: "foundation-master",
-    title: "Foundation Master",
-    icon: "🎓",
-    description: "Master of foundational concepts",
-    category: "completion",
-    rarity: "uncommon",
-    tier: "foundational",
-    badgeUrl: "/badges/foundation-master.svg",
+  'foundation-master': {
+    id: 'foundation-master',
+    title: 'Foundation Master',
+    icon: '🎓',
+    description: 'Master of foundational concepts',
+    category: 'completion',
+    rarity: 'uncommon',
+    tier: 'foundational',
+    badgeUrl: '/badges/foundation-master.svg',
     points: 50,
-    unlockCondition: "Complete Foundational Tier",
+    unlockCondition: 'Complete Foundational Tier',
   },
-  "core-developer": {
-    id: "core-developer",
-    title: "Core Developer",
-    icon: "⚙️",
-    description: "Core technologies specialist",
-    category: "completion",
-    rarity: "uncommon",
-    tier: "core",
-    badgeUrl: "/badges/core-developer.svg",
+  'core-developer': {
+    id: 'core-developer',
+    title: 'Core Developer',
+    icon: '⚙️',
+    description: 'Core technologies specialist',
+    category: 'completion',
+    rarity: 'uncommon',
+    tier: 'core',
+    badgeUrl: '/badges/core-developer.svg',
     points: 100,
-    unlockCondition: "Complete Core Technologies Tier",
+    unlockCondition: 'Complete Core Technologies Tier',
   },
   specialist: {
-    id: "specialist",
-    title: "Specialist",
-    icon: "💎",
-    description: "Advanced skills specialist",
-    category: "completion",
-    rarity: "rare",
-    tier: "specialized",
-    badgeUrl: "/badges/specialist.svg",
+    id: 'specialist',
+    title: 'Specialist',
+    icon: '💎',
+    description: 'Advanced skills specialist',
+    category: 'completion',
+    rarity: 'rare',
+    tier: 'specialized',
+    badgeUrl: '/badges/specialist.svg',
     points: 200,
-    unlockCondition: "Complete Specialised Skills Tier",
+    unlockCondition: 'Complete Specialised Skills Tier',
   },
-  "quality-guardian": {
-    id: "quality-guardian",
-    title: "Quality Guardian",
-    icon: "🛡️",
-    description: "Quality and testing expert",
-    category: "completion",
-    rarity: "epic",
-    tier: "quality",
-    badgeUrl: "/badges/quality-guardian.svg",
+  'quality-guardian': {
+    id: 'quality-guardian',
+    title: 'Quality Guardian',
+    icon: '🛡️',
+    description: 'Quality and testing expert',
+    category: 'completion',
+    rarity: 'epic',
+    tier: 'quality',
+    badgeUrl: '/badges/quality-guardian.svg',
     points: 300,
-    unlockCondition: "Complete Quality & Testing Tier",
+    unlockCondition: 'Complete Quality & Testing Tier',
   },
-  "speed-learner": {
-    id: "speed-learner",
-    title: "Speed Learner",
-    icon: "⚡",
-    description: "Completed 5 lessons in one day",
-    category: "velocity",
-    rarity: "rare",
-    badgeUrl: "/badges/speed-learner.svg",
+  'speed-learner': {
+    id: 'speed-learner',
+    title: 'Speed Learner',
+    icon: '⚡',
+    description: 'Completed 5 lessons in one day',
+    category: 'velocity',
+    rarity: 'rare',
+    badgeUrl: '/badges/speed-learner.svg',
     points: 75,
-    unlockCondition: "5 lessons in one day",
+    unlockCondition: '5 lessons in one day',
   },
   perfectionist: {
-    id: "perfectionist",
-    title: "Perfectionist",
-    icon: "💯",
-    description: "Achieved perfect scores on 10 quizzes",
-    category: "skill",
-    rarity: "epic",
-    badgeUrl: "/badges/perfectionist.svg",
+    id: 'perfectionist',
+    title: 'Perfectionist',
+    icon: '💯',
+    description: 'Achieved perfect scores on 10 quizzes',
+    category: 'skill',
+    rarity: 'epic',
+    badgeUrl: '/badges/perfectionist.svg',
     points: 150,
-    unlockCondition: "100% on 10 quizzes",
+    unlockCondition: '100% on 10 quizzes',
   },
-  "streak-warrior": {
-    id: "streak-warrior",
-    title: "Streak Warrior",
-    icon: "🔥",
-    description: "Maintained a 7-day learning streak",
-    category: "streak",
-    rarity: "epic",
-    badgeUrl: "/badges/streak-warrior.svg",
+  'streak-warrior': {
+    id: 'streak-warrior',
+    title: 'Streak Warrior',
+    icon: '🔥',
+    description: 'Maintained a 7-day learning streak',
+    category: 'streak',
+    rarity: 'epic',
+    badgeUrl: '/badges/streak-warrior.svg',
     points: 100,
-    unlockCondition: "7-day learning streak",
+    unlockCondition: '7-day learning streak',
   },
-  "streak-legend": {
-    id: "streak-legend",
-    title: "Streak Legend",
-    icon: "🌟",
-    description: "Maintained a 30-day learning streak",
-    category: "streak",
-    rarity: "legendary",
-    badgeUrl: "/badges/streak-legend.svg",
+  'streak-legend': {
+    id: 'streak-legend',
+    title: 'Streak Legend',
+    icon: '🌟',
+    description: 'Maintained a 30-day learning streak',
+    category: 'streak',
+    rarity: 'legendary',
+    badgeUrl: '/badges/streak-legend.svg',
     points: 500,
-    unlockCondition: "30-day learning streak",
+    unlockCondition: '30-day learning streak',
   },
-  "full-stack": {
-    id: "full-stack",
-    title: "Full Stack Developer",
-    icon: "🚀",
-    description: "Completed both frontend and backend modules",
-    category: "skill",
-    rarity: "legendary",
-    badgeUrl: "/badges/full-stack.svg",
+  'full-stack': {
+    id: 'full-stack',
+    title: 'Full Stack Developer',
+    icon: '🚀',
+    description: 'Completed both frontend and backend modules',
+    category: 'skill',
+    rarity: 'legendary',
+    badgeUrl: '/badges/full-stack.svg',
     points: 1000,
-    unlockCondition: "Master both frontend and backend",
+    unlockCondition: 'Master both frontend and backend',
   },
-  "quiz-master": {
-    id: "quiz-master",
-    title: "Quiz Master",
-    icon: "🧠",
-    description: "Achieved 90%+ on 20 quizzes",
-    category: "skill",
-    rarity: "epic",
-    badgeUrl: "/badges/quiz-master.svg",
+  'quiz-master': {
+    id: 'quiz-master',
+    title: 'Quiz Master',
+    icon: '🧠',
+    description: 'Achieved 90%+ on 20 quizzes',
+    category: 'skill',
+    rarity: 'epic',
+    badgeUrl: '/badges/quiz-master.svg',
     points: 200,
-    unlockCondition: "90%+ on 20 quizzes",
+    unlockCondition: '90%+ on 20 quizzes',
   },
-  "consistent-learner": {
-    id: "consistent-learner",
-    title: "Consistent Learner",
-    icon: "📅",
-    description: "Studied for 30 consecutive days",
-    category: "streak",
-    rarity: "legendary",
-    badgeUrl: "/badges/consistent-learner.svg",
+  'consistent-learner': {
+    id: 'consistent-learner',
+    title: 'Consistent Learner',
+    icon: '📅',
+    description: 'Studied for 30 consecutive days',
+    category: 'streak',
+    rarity: 'legendary',
+    badgeUrl: '/badges/consistent-learner.svg',
     points: 300,
-    unlockCondition: "30 consecutive days of learning",
+    unlockCondition: '30 consecutive days of learning',
   },
 };
 
 // Streak milestones
 const STREAK_MILESTONES = [
   {
-    title: "Beginner",
-    description: "3-day streak",
+    title: 'Beginner',
+    description: '3-day streak',
     threshold: 3,
     achieved: false,
     achievedDate: undefined,
   },
   {
-    title: "Regular",
-    description: "7-day streak",
+    title: 'Regular',
+    description: '7-day streak',
     threshold: 7,
     achieved: false,
     achievedDate: undefined,
   },
   {
-    title: "Dedicated",
-    description: "14-day streak",
+    title: 'Dedicated',
+    description: '14-day streak',
     threshold: 14,
     achieved: false,
     achievedDate: undefined,
   },
   {
-    title: "Committed",
-    description: "30-day streak",
+    title: 'Committed',
+    description: '30-day streak',
     threshold: 30,
     achieved: false,
     achievedDate: undefined,
   },
   {
-    title: "Legend",
-    description: "90-day streak",
+    title: 'Legend',
+    description: '90-day streak',
     threshold: 90,
     achieved: false,
     achievedDate: undefined,
@@ -293,7 +293,7 @@ interface RegistryModule {
   slug: string;
   title?: string;
   order?: number;
-  tier?: "foundational" | "core" | "specialized" | "quality" | string;
+  tier?: 'foundational' | 'core' | 'specialized' | 'quality' | string;
   track?: string;
   routes?: {
     overview?: string;
@@ -310,7 +310,7 @@ interface RegistryResponse {
 }
 
 const fetchJSON = async <T>(url: string): Promise<T> => {
-  const res = await fetch(url, { cache: "no-store" });
+  const res = await fetch(url, { cache: 'no-store' });
   if (!res.ok) throw new Error(`Request failed: ${res.status}`);
   return (await res.json()) as T;
 };
@@ -326,7 +326,7 @@ export const useProgressTrackingComplete = () => {
   const [streak, setStreak] = useState<StreakData>({
     currentStreak: 0,
     longestStreak: 0,
-    lastActiveDate: "",
+    lastActiveDate: '',
     activityDates: [],
     streakHistory: [],
     milestones: STREAK_MILESTONES,
@@ -340,7 +340,7 @@ export const useProgressTrackingComplete = () => {
     highestStreak: 0,
     achievementsUnlocked: 0,
     modulesCompleted: 0,
-    currentTier: "foundational",
+    currentTier: 'foundational',
     learningVelocity: 0,
   });
 
@@ -367,7 +367,7 @@ export const useProgressTrackingComplete = () => {
         setUserStats(JSON.parse(savedUserStats));
       }
     } catch (error) {
-      console.error("Error loading progress data:", error);
+      console.error('Error loading progress data:', error);
     }
   }, []);
 
@@ -377,10 +377,10 @@ export const useProgressTrackingComplete = () => {
     if (registryCacheRef.current) return registryCacheRef.current;
     try {
       registryCacheRef.current = await fetchJSON<RegistryResponse>(
-        "/api/content/registry",
+        '/api/content/registry'
       );
     } catch (err) {
-      console.warn("Content registry fetch failed:", err);
+      console.warn('Content registry fetch failed:', err);
       registryCacheRef.current = { modules: [], tiers: {} };
     }
     return registryCacheRef.current;
@@ -398,7 +398,7 @@ export const useProgressTrackingComplete = () => {
         .filter((m) => m.tier === tierSlug)
         .sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
     },
-    [getRegistryCached],
+    [getRegistryCached]
   );
 
   const getModulesByTrack = useCallback(
@@ -410,29 +410,29 @@ export const useProgressTrackingComplete = () => {
         .filter((m) => m.track === track)
         .sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
     },
-    [getRegistryCached],
+    [getRegistryCached]
   );
 
   const getModuleLessons = useCallback(
     async (moduleSlug: string): Promise<unknown[]> => {
       try {
         const lessons = await fetchJSON<unknown[]>(
-          `/api/content/lessons/${moduleSlug}`,
+          `/api/content/lessons/${moduleSlug}`
         );
         return Array.isArray(lessons) ? lessons : [];
       } catch {
         return [];
       }
     },
-    [],
+    []
   );
 
   const getModuleSlugFromShortSlug = useCallback(
     async (shortSlug: string): Promise<string | null> => {
       const reg = await getRegistryCached();
       const match = reg.modules.find((m) => {
-        const overview = m.routes?.overview || "";
-        const short = overview.startsWith("/") ? overview.slice(1) : overview;
+        const overview = m.routes?.overview || '';
+        const short = overview.startsWith('/') ? overview.slice(1) : overview;
         return (
           short === shortSlug ||
           m.slug === shortSlug ||
@@ -441,30 +441,30 @@ export const useProgressTrackingComplete = () => {
       });
       return match?.slug ?? null;
     },
-    [getRegistryCached],
+    [getRegistryCached]
   );
 
   const getShortSlugFromModuleSlug = useCallback(
     async (moduleSlug: string): Promise<string> => {
       const reg = await getRegistryCached();
       const m = reg.modules.find((mod) => mod.slug === moduleSlug);
-      const overview = m?.routes?.overview || "";
-      const short = overview.startsWith("/") ? overview.slice(1) : overview;
+      const overview = m?.routes?.overview || '';
+      const short = overview.startsWith('/') ? overview.slice(1) : overview;
       return short || moduleSlug;
     },
-    [getRegistryCached],
+    [getRegistryCached]
   );
 
   // Normalize module items into slug list
   const normalizeModuleSlugs = useCallback((items: unknown[]): string[] => {
     return items
       .map((item) => {
-        if (typeof item === "string") return item;
-        if (item && typeof item === "object") {
+        if (typeof item === 'string') return item;
+        if (item && typeof item === 'object') {
           const obj = item as { slug?: string; id?: string };
-          return obj.slug ?? obj.id ?? "";
+          return obj.slug ?? obj.id ?? '';
         }
-        return "";
+        return '';
       })
       .filter((s): s is string => Boolean(s));
   }, []);
@@ -481,19 +481,19 @@ export const useProgressTrackingComplete = () => {
 
         // Default slugs; attempt to read from registry if available
         let tierSlugs: Array<
-          "foundational" | "core" | "specialized" | "quality"
-        > = ["foundational", "core", "specialized", "quality"];
+          'foundational' | 'core' | 'specialized' | 'quality'
+        > = ['foundational', 'core', 'specialized', 'quality'];
 
         try {
           const tiersRecord = await getTiers();
           const candidateSlugs = Object.keys(tiersRecord);
           const validSlugs = candidateSlugs.filter(
             (s) =>
-              s === "foundational" ||
-              s === "core" ||
-              s === "specialized" ||
-              s === "quality",
-          ) as Array<"foundational" | "core" | "specialized" | "quality">;
+              s === 'foundational' ||
+              s === 'core' ||
+              s === 'specialized' ||
+              s === 'quality'
+          ) as Array<'foundational' | 'core' | 'specialized' | 'quality'>;
           if (validSlugs.length) tierSlugs = validSlugs;
         } catch {
           // Keep defaults on failure
@@ -528,8 +528,8 @@ export const useProgressTrackingComplete = () => {
         setLessonCountCache(lessonCounts);
       } catch (err) {
         console.warn(
-          "Content registry not available, using fallback TIER_MODULES:",
-          err,
+          'Content registry not available, using fallback TIER_MODULES:',
+          err
         );
         if (!mounted) return;
         // Fallback to static mapping
@@ -550,15 +550,15 @@ export const useProgressTrackingComplete = () => {
   // Helper: determine tier for a module via registry-backed cache with fallback
   const resolveTierForModule = useCallback(
     async (
-      moduleId: string,
-    ): Promise<"foundational" | "core" | "specialized" | "quality"> => {
+      moduleId: string
+    ): Promise<'foundational' | 'core' | 'specialized' | 'quality'> => {
       const source = Object.keys(tierModuleCache).length
         ? tierModuleCache
         : (TIER_MODULES as Record<string, string[]>);
 
       // First try with the moduleId as-is
       let found = Object.entries(source).find(([, mods]) =>
-        mods.includes(moduleId),
+        mods.includes(moduleId)
       )?.[0];
 
       // If not found, try converting between shortSlug and moduleSlug
@@ -568,7 +568,7 @@ export const useProgressTrackingComplete = () => {
           const moduleSlug = await getModuleSlugFromShortSlug(moduleId);
           if (moduleSlug) {
             found = Object.entries(source).find(([, mods]) =>
-              mods.includes(moduleSlug),
+              mods.includes(moduleSlug)
             )?.[0];
           }
 
@@ -577,22 +577,22 @@ export const useProgressTrackingComplete = () => {
             const shortSlug = await getShortSlugFromModuleSlug(moduleId);
             if (shortSlug) {
               found = Object.entries(source).find(([, mods]) =>
-                mods.includes(shortSlug),
+                mods.includes(shortSlug)
               )?.[0];
             }
           }
         } catch (error) {
-          console.warn("Error resolving tier for module:", moduleId, error);
+          console.warn('Error resolving tier for module:', moduleId, error);
         }
       }
 
-      return (found || "foundational") as
-        | "foundational"
-        | "core"
-        | "specialized"
-        | "quality";
+      return (found || 'foundational') as
+        | 'foundational'
+        | 'core'
+        | 'specialized'
+        | 'quality';
     },
-    [tierModuleCache, getModuleSlugFromShortSlug, getShortSlugFromModuleSlug],
+    [tierModuleCache, getModuleSlugFromShortSlug, getShortSlugFromModuleSlug]
   );
 
   // Save data to localStorage whenever it changes
@@ -600,7 +600,7 @@ export const useProgressTrackingComplete = () => {
     try {
       localStorage.setItem(STORAGE_KEYS.PROGRESS, JSON.stringify(progress));
     } catch (error) {
-      console.error("Error saving progress data:", error);
+      console.error('Error saving progress data:', error);
     }
   }, [progress]);
 
@@ -608,7 +608,7 @@ export const useProgressTrackingComplete = () => {
     try {
       localStorage.setItem(STORAGE_KEYS.STREAK, JSON.stringify(streak));
     } catch (error) {
-      console.error("Error saving streak data:", error);
+      console.error('Error saving streak data:', error);
     }
   }, [streak]);
 
@@ -616,10 +616,10 @@ export const useProgressTrackingComplete = () => {
     try {
       localStorage.setItem(
         STORAGE_KEYS.ACHIEVEMENTS,
-        JSON.stringify(achievements),
+        JSON.stringify(achievements)
       );
     } catch (error) {
-      console.error("Error saving achievements data:", error);
+      console.error('Error saving achievements data:', error);
     }
   }, [achievements]);
 
@@ -627,7 +627,7 @@ export const useProgressTrackingComplete = () => {
     try {
       localStorage.setItem(STORAGE_KEYS.USER_STATS, JSON.stringify(userStats));
     } catch (error) {
-      console.error("Error saving user stats data:", error);
+      console.error('Error saving user stats data:', error);
     }
   }, [userStats]);
 
@@ -636,7 +636,7 @@ export const useProgressTrackingComplete = () => {
     async (moduleId: string): Promise<number> => {
       // Try to get from cache using the provided moduleId (could be shortSlug or moduleSlug)
       let fromCache = lessonCountCache[moduleId];
-      if (typeof fromCache === "number" && fromCache > 0) return fromCache;
+      if (typeof fromCache === 'number' && fromCache > 0) return fromCache;
 
       // If not found, try to convert between shortSlug and moduleSlug
       try {
@@ -644,29 +644,29 @@ export const useProgressTrackingComplete = () => {
         const moduleSlugFromShort = await getModuleSlugFromShortSlug(moduleId);
         if (moduleSlugFromShort && lessonCountCache[moduleSlugFromShort]) {
           fromCache = lessonCountCache[moduleSlugFromShort];
-          if (typeof fromCache === "number" && fromCache > 0) return fromCache;
+          if (typeof fromCache === 'number' && fromCache > 0) return fromCache;
         }
 
         // Try as moduleSlug
         const shortSlugFromModule = await getShortSlugFromModuleSlug(moduleId);
         if (shortSlugFromModule && lessonCountCache[shortSlugFromModule]) {
           fromCache = lessonCountCache[shortSlugFromModule];
-          if (typeof fromCache === "number" && fromCache > 0) return fromCache;
+          if (typeof fromCache === 'number' && fromCache > 0) return fromCache;
         }
       } catch (error) {
         console.warn(
-          "Error converting between shortSlug and moduleSlug:",
-          error,
+          'Error converting between shortSlug and moduleSlug:',
+          error
         );
       }
 
       const tier = (await resolveTierForModule(moduleId)) as
-        | "foundational"
-        | "core"
-        | "specialized"
-        | "quality";
+        | 'foundational'
+        | 'core'
+        | 'specialized'
+        | 'quality';
       const defaultCounts: Record<
-        "foundational" | "core" | "specialized" | "quality",
+        'foundational' | 'core' | 'specialized' | 'quality',
         number
       > = {
         foundational: 12,
@@ -681,14 +681,14 @@ export const useProgressTrackingComplete = () => {
       resolveTierForModule,
       getModuleSlugFromShortSlug,
       getShortSlugFromModuleSlug,
-    ],
+    ]
   );
 
   const updateStreak = useCallback(
     (moduleId: string, lessonsCompleted: number) => {
       const today = new Date().toDateString();
       const yesterday = new Date(
-        Date.now() - 24 * 60 * 60 * 1000,
+        Date.now() - 24 * 60 * 60 * 1000
       ).toDateString();
 
       const updatedStreak = { ...streak };
@@ -725,7 +725,7 @@ export const useProgressTrackingComplete = () => {
 
         updatedStreak.longestStreak = Math.max(
           updatedStreak.longestStreak,
-          updatedStreak.currentStreak,
+          updatedStreak.currentStreak
         );
         updatedStreak.lastActiveDate = today;
         updatedStreak.activityDates = newActivityDates.slice(-365); // Keep last year of data
@@ -744,7 +744,7 @@ export const useProgressTrackingComplete = () => {
         setStreak(updatedStreak);
       }
     },
-    [streak],
+    [streak]
   );
 
   const checkAchievements = useCallback(
@@ -755,7 +755,7 @@ export const useProgressTrackingComplete = () => {
       // Helper function to create achievement
       const createAchievement = (
         id: string,
-        moduleId?: string,
+        moduleId?: string
       ): AchievementData | null => {
         const definition = ACHIEVEMENT_DEFINITIONS[id];
         if (!definition) return null;
@@ -772,12 +772,12 @@ export const useProgressTrackingComplete = () => {
 
       // First lesson achievement
       const firstLessonAchievement = createAchievement(
-        "first-lesson",
-        moduleId,
+        'first-lesson',
+        moduleId
       );
       if (firstLessonAchievement) {
         const hasCompletedLesson = Object.values(progressData).some(
-          (p) => p.lessonsCompleted > 0,
+          (p) => p.lessonsCompleted > 0
         );
         if (hasCompletedLesson) {
           newAchievements.push(firstLessonAchievement);
@@ -786,14 +786,14 @@ export const useProgressTrackingComplete = () => {
 
       // Tier completion achievements
       const foundationMasterAchievement = createAchievement(
-        "foundation-master",
-        moduleId,
+        'foundation-master',
+        moduleId
       );
       if (foundationMasterAchievement) {
         const foundationalModules =
           tierModuleCache.foundational || TIER_MODULES.foundational;
         const foundationCompleted = foundationalModules.every(
-          (mod) => progressData[mod]?.completionStatus === "completed",
+          (mod) => progressData[mod]?.completionStatus === 'completed'
         );
         if (foundationCompleted) {
           newAchievements.push(foundationMasterAchievement);
@@ -801,25 +801,25 @@ export const useProgressTrackingComplete = () => {
       }
 
       const coreDeveloperAchievement = createAchievement(
-        "core-developer",
-        moduleId,
+        'core-developer',
+        moduleId
       );
       if (coreDeveloperAchievement) {
         const coreModules = tierModuleCache.core || TIER_MODULES.core;
         const coreCompleted = coreModules.every(
-          (mod) => progressData[mod]?.completionStatus === "completed",
+          (mod) => progressData[mod]?.completionStatus === 'completed'
         );
         if (coreCompleted) {
           newAchievements.push(coreDeveloperAchievement);
         }
       }
 
-      const specialistAchievement = createAchievement("specialist", moduleId);
+      const specialistAchievement = createAchievement('specialist', moduleId);
       if (specialistAchievement) {
         const specializedModules =
           tierModuleCache.specialized || TIER_MODULES.specialized;
         const specializedCompleted = specializedModules.every(
-          (mod) => progressData[mod]?.completionStatus === "completed",
+          (mod) => progressData[mod]?.completionStatus === 'completed'
         );
         if (specializedCompleted) {
           newAchievements.push(specialistAchievement);
@@ -827,13 +827,13 @@ export const useProgressTrackingComplete = () => {
       }
 
       const qualityGuardianAchievement = createAchievement(
-        "quality-guardian",
-        moduleId,
+        'quality-guardian',
+        moduleId
       );
       if (qualityGuardianAchievement) {
         const qualityModules = tierModuleCache.quality || TIER_MODULES.quality;
         const qualityCompleted = qualityModules.every(
-          (mod) => progressData[mod]?.completionStatus === "completed",
+          (mod) => progressData[mod]?.completionStatus === 'completed'
         );
         if (qualityCompleted) {
           newAchievements.push(qualityGuardianAchievement);
@@ -842,17 +842,17 @@ export const useProgressTrackingComplete = () => {
 
       // Speed learner achievement (5 lessons in one day)
       const speedLearnerAchievement = createAchievement(
-        "speed-learner",
-        moduleId,
+        'speed-learner',
+        moduleId
       );
       if (speedLearnerAchievement) {
         const today = new Date().toDateString();
         const todaysProgress = Object.values(progressData).filter(
-          (p) => new Date(p.lastAccessed).toDateString() === today,
+          (p) => new Date(p.lastAccessed).toDateString() === today
         );
         const lessonsToday = todaysProgress.reduce(
           (sum, p) => sum + p.lessonsCompleted,
-          0,
+          0
         );
 
         if (lessonsToday >= 5) {
@@ -862,12 +862,12 @@ export const useProgressTrackingComplete = () => {
 
       // Perfectionist achievement (100% on 10 quizzes)
       const perfectionistAchievement = createAchievement(
-        "perfectionist",
-        moduleId,
+        'perfectionist',
+        moduleId
       );
       if (perfectionistAchievement) {
         const perfectScores = Object.values(progressData).filter(
-          (p) => p.quizScore === 100,
+          (p) => p.quizScore === 100
         );
         if (perfectScores.length >= 10) {
           newAchievements.push(perfectionistAchievement);
@@ -875,10 +875,10 @@ export const useProgressTrackingComplete = () => {
       }
 
       // Quiz master achievement (90%+ on 20 quizzes)
-      const quizMasterAchievement = createAchievement("quiz-master", moduleId);
+      const quizMasterAchievement = createAchievement('quiz-master', moduleId);
       if (quizMasterAchievement) {
         const highScores = Object.values(progressData).filter(
-          (p) => p.quizScore >= 90,
+          (p) => p.quizScore >= 90
         );
         if (highScores.length >= 20) {
           newAchievements.push(quizMasterAchievement);
@@ -887,54 +887,54 @@ export const useProgressTrackingComplete = () => {
 
       // Streak achievements
       const streakWarriorAchievement = createAchievement(
-        "streak-warrior",
-        moduleId,
+        'streak-warrior',
+        moduleId
       );
       if (streakWarriorAchievement && streak.currentStreak >= 7) {
         newAchievements.push(streakWarriorAchievement);
       }
 
       const streakLegendAchievement = createAchievement(
-        "streak-legend",
-        moduleId,
+        'streak-legend',
+        moduleId
       );
       if (streakLegendAchievement && streak.currentStreak >= 30) {
         newAchievements.push(streakLegendAchievement);
       }
 
       const consistentLearnerAchievement = createAchievement(
-        "consistent-learner",
-        moduleId,
+        'consistent-learner',
+        moduleId
       );
       if (consistentLearnerAchievement && streak.currentStreak >= 30) {
         newAchievements.push(consistentLearnerAchievement);
       }
 
       // Full stack achievement
-      const fullStackAchievement = createAchievement("full-stack", moduleId);
+      const fullStackAchievement = createAchievement('full-stack', moduleId);
       if (fullStackAchievement) {
         // Try registry tracks first, fallback to static lists
         let backendTrackItems: unknown[] = [];
         let frontendTrackItems: unknown[] = [];
         try {
-          backendTrackItems = await getModulesByTrack("backend");
+          backendTrackItems = await getModulesByTrack('backend');
         } catch {
-          backendTrackItems = ["dotnet", "laravel", "database-systems"];
+          backendTrackItems = ['dotnet', 'laravel', 'database-systems'];
         }
         try {
-          frontendTrackItems = await getModulesByTrack("frontend");
+          frontendTrackItems = await getModulesByTrack('frontend');
         } catch {
-          frontendTrackItems = ["react", "nextjs", "vue"];
+          frontendTrackItems = ['react', 'nextjs', 'vue'];
         }
 
         const backendModules = normalizeModuleSlugs(backendTrackItems);
         const frontendModules = normalizeModuleSlugs(frontendTrackItems);
 
         const backendCompleted = backendModules.some(
-          (mod) => progressData[mod]?.completionStatus === "completed",
+          (mod) => progressData[mod]?.completionStatus === 'completed'
         );
         const frontendCompleted = frontendModules.some(
-          (mod) => progressData[mod]?.completionStatus === "completed",
+          (mod) => progressData[mod]?.completionStatus === 'completed'
         );
 
         if (backendCompleted && frontendCompleted) {
@@ -953,21 +953,21 @@ export const useProgressTrackingComplete = () => {
       streak,
       getModulesByTrack,
       normalizeModuleSlugs,
-    ],
+    ]
   );
 
   const updateUserStats = useCallback(
     (progressData: Record<string, ProgressData>) => {
       const totalStudyTime = Object.values(progressData).reduce(
         (sum, p) => sum + p.timeSpent,
-        0,
+        0
       );
       const totalLessonsCompleted = Object.values(progressData).reduce(
         (sum, p) => sum + p.lessonsCompleted,
-        0,
+        0
       );
       const quizzesTaken = Object.values(progressData).filter(
-        (p) => p.quizScore > 0,
+        (p) => p.quizScore > 0
       ).length;
       const quizScores = Object.values(progressData)
         .filter((p) => p.quizScore > 0)
@@ -976,11 +976,11 @@ export const useProgressTrackingComplete = () => {
         quizScores.length > 0
           ? Math.round(
               quizScores.reduce((sum, score) => sum + score, 0) /
-                quizScores.length,
+                quizScores.length
             )
           : 0;
       const modulesCompleted = Object.values(progressData).filter(
-        (p) => p.completionStatus === "completed",
+        (p) => p.completionStatus === 'completed'
       ).length;
 
       // Calculate learning velocity (modules per week)
@@ -991,7 +991,7 @@ export const useProgressTrackingComplete = () => {
       let learningVelocity = 0;
       if (firstAccessDates.length > 0) {
         const earliestDate = new Date(
-          Math.min(...firstAccessDates.map((d) => d.getTime())),
+          Math.min(...firstAccessDates.map((d) => d.getTime()))
         );
         const weeksSinceStart =
           (Date.now() - earliestDate.getTime()) / (7 * 24 * 60 * 60 * 1000);
@@ -1000,27 +1000,27 @@ export const useProgressTrackingComplete = () => {
       }
 
       // Determine current tier based on completion
-      let currentTier: "foundational" | "core" | "specialized" | "quality" =
-        "foundational";
+      let currentTier: 'foundational' | 'core' | 'specialized' | 'quality' =
+        'foundational';
       if (modulesCompleted > 0) {
         const source = Object.keys(tierModuleCache).length
           ? tierModuleCache
           : (TIER_MODULES as Record<string, string[]>);
         const foundationalComplete = (source.foundational || []).every(
-          (mod) => progressData[mod]?.completionStatus === "completed",
+          (mod) => progressData[mod]?.completionStatus === 'completed'
         );
         const coreComplete = (source.core || []).every(
-          (mod) => progressData[mod]?.completionStatus === "completed",
+          (mod) => progressData[mod]?.completionStatus === 'completed'
         );
         const specializedComplete = (source.specialized || []).every(
-          (mod) => progressData[mod]?.completionStatus === "completed",
+          (mod) => progressData[mod]?.completionStatus === 'completed'
         );
         if (specializedComplete) {
-          currentTier = "quality";
+          currentTier = 'quality';
         } else if (coreComplete) {
-          currentTier = "specialized";
+          currentTier = 'specialized';
         } else if (foundationalComplete) {
-          currentTier = "core";
+          currentTier = 'core';
         }
       }
 
@@ -1038,22 +1038,22 @@ export const useProgressTrackingComplete = () => {
 
       setUserStats(updatedStats);
     },
-    [achievements, streak, tierModuleCache],
+    [achievements, streak, tierModuleCache]
   );
 
   const updateProgress = useCallback(
     async (
       moduleId: string,
       dataOrName: string | Partial<ProgressData>,
-      maybeData?: Partial<ProgressData>,
+      maybeData?: Partial<ProgressData>
     ) => {
       const currentTime = new Date().toISOString();
       const data: Partial<ProgressData> =
-        typeof dataOrName === "string"
+        typeof dataOrName === 'string'
           ? (maybeData ?? {})
           : (dataOrName as Partial<ProgressData>);
       const resolvedModuleName =
-        typeof dataOrName === "string"
+        typeof dataOrName === 'string'
           ? dataOrName
           : (progress[moduleId]?.moduleName ?? moduleId);
 
@@ -1071,13 +1071,13 @@ export const useProgressTrackingComplete = () => {
         quizScore: 0,
         timeSpent: 0,
         lastAccessed: currentTime,
-        completionStatus: "not-started",
+        completionStatus: 'not-started',
         badges: [],
         completedTopics: [],
         tier,
         streakDays: 0,
         velocity: 0,
-        masteryLevel: "beginner",
+        masteryLevel: 'beginner',
       };
 
       const currentProgress = progress[moduleId] || defaultProgressData;
@@ -1094,12 +1094,12 @@ export const useProgressTrackingComplete = () => {
         updatedProgress.lessonsCompleted >= updatedProgress.totalLessons &&
         updatedProgress.quizScore >= 70
       ) {
-        updatedProgress.completionStatus = "completed";
+        updatedProgress.completionStatus = 'completed';
       } else if (
         updatedProgress.lessonsCompleted > 0 ||
         updatedProgress.quizScore > 0
       ) {
-        updatedProgress.completionStatus = "in-progress";
+        updatedProgress.completionStatus = 'in-progress';
       }
 
       // Calculate mastery level based on progress
@@ -1110,11 +1110,11 @@ export const useProgressTrackingComplete = () => {
           : 0;
 
       if (progressPercentage >= 90) {
-        updatedProgress.masteryLevel = "expert";
+        updatedProgress.masteryLevel = 'expert';
       } else if (progressPercentage >= 70) {
-        updatedProgress.masteryLevel = "advanced";
+        updatedProgress.masteryLevel = 'advanced';
       } else if (progressPercentage >= 50) {
-        updatedProgress.masteryLevel = "intermediate";
+        updatedProgress.masteryLevel = 'intermediate';
       }
 
       // Update streak and achievements
@@ -1128,7 +1128,7 @@ export const useProgressTrackingComplete = () => {
       // Update streak
       updateStreak(
         moduleId,
-        (data as Partial<ProgressData>).lessonsCompleted || 0,
+        (data as Partial<ProgressData>).lessonsCompleted || 0
       );
 
       // Check for new achievements
@@ -1144,7 +1144,7 @@ export const useProgressTrackingComplete = () => {
       updateStreak,
       checkAchievements,
       updateUserStats,
-    ],
+    ]
   );
 
   const calculateOverallProgress = () => {
@@ -1154,7 +1154,7 @@ export const useProgressTrackingComplete = () => {
     const allModules = Object.values(source).flat();
     const totalModules = allModules.length;
     const completedModules = allModules.filter(
-      (moduleId) => progress[moduleId]?.completionStatus === "completed",
+      (moduleId) => progress[moduleId]?.completionStatus === 'completed'
     ).length;
 
     return totalModules > 0
@@ -1163,14 +1163,14 @@ export const useProgressTrackingComplete = () => {
   };
 
   const getTierProgress = (
-    tier: "foundational" | "core" | "specialized" | "quality",
+    tier: 'foundational' | 'core' | 'specialized' | 'quality'
   ) => {
     const source = Object.keys(tierModuleCache).length
       ? tierModuleCache
       : (TIER_MODULES as Record<string, string[]>);
     const tierModules = source[tier] || [];
     const completedInTier = tierModules.filter(
-      (moduleId) => progress[moduleId]?.completionStatus === "completed",
+      (moduleId) => progress[moduleId]?.completionStatus === 'completed'
     ).length;
 
     return tierModules.length > 0
@@ -1180,7 +1180,7 @@ export const useProgressTrackingComplete = () => {
 
   const getCompletedModulesCount = () => {
     return Object.values(progress).filter(
-      (p) => p.completionStatus === "completed",
+      (p) => p.completionStatus === 'completed'
     ).length;
   };
 
@@ -1194,7 +1194,7 @@ export const useProgressTrackingComplete = () => {
       .map((p) => p.quizScore);
     return scores.length > 0
       ? Math.round(
-          scores.reduce((sum, score) => sum + score, 0) / scores.length,
+          scores.reduce((sum, score) => sum + score, 0) / scores.length
         )
       : 0;
   };
@@ -1203,7 +1203,7 @@ export const useProgressTrackingComplete = () => {
     return [...achievements]
       .sort(
         (a, b) =>
-          new Date(b.earnedDate).getTime() - new Date(a.earnedDate).getTime(),
+          new Date(b.earnedDate).getTime() - new Date(a.earnedDate).getTime()
       )
       .slice(0, count);
   };
@@ -1219,27 +1219,27 @@ export const useProgressTrackingComplete = () => {
   const getStreakStatus = () => {
     if (streak.currentStreak === 0) {
       return {
-        status: "inactive",
-        message: "Start learning to build your streak!",
+        status: 'inactive',
+        message: 'Start learning to build your streak!',
       };
     } else if (streak.currentStreak === 1) {
       return {
-        status: "new",
-        message: "Great start! Keep going tomorrow to build your streak.",
+        status: 'new',
+        message: 'Great start! Keep going tomorrow to build your streak.',
       };
     } else if (streak.currentStreak < 7) {
       return {
-        status: "building",
+        status: 'building',
         message: `${7 - streak.currentStreak} days to reach your next milestone!`,
       };
     } else if (streak.currentStreak < 30) {
       return {
-        status: "strong",
+        status: 'strong',
         message: `🔥 ${streak.currentStreak} day streak! You're on fire!`,
       };
     } else {
       return {
-        status: "legendary",
+        status: 'legendary',
         message: `🌟 ${streak.currentStreak} day streak! You're a learning legend!`,
       };
     }
@@ -1247,16 +1247,16 @@ export const useProgressTrackingComplete = () => {
 
   const getStreakMotivation = () => {
     const messages = [
-      "Consistency is key to mastery!",
+      'Consistency is key to mastery!',
       "Every day you learn, you're building your future!",
-      "Small daily progress leads to big results!",
+      'Small daily progress leads to big results!',
       "Your future self will thank you for today's effort!",
-      "Learning is the best investment in yourself!",
+      'Learning is the best investment in yourself!',
       "Keep going - you're building unstoppable momentum!",
-      "Each lesson brings you closer to your goals!",
-      "Progress, not perfection!",
+      'Each lesson brings you closer to your goals!',
+      'Progress, not perfection!',
       "You're developing skills that will last a lifetime!",
-      "Every expert was once a beginner who kept going!",
+      'Every expert was once a beginner who kept going!',
     ];
     // Deterministic selection based on streak state to avoid SSR/client mismatch
     const seed = (streak.currentStreak || 0) + (streak.longestStreak || 0);
@@ -1271,16 +1271,16 @@ export const useProgressTrackingComplete = () => {
       achievements,
       userStats,
       exportedAt: new Date().toISOString(),
-      version: "2.0",
+      version: '2.0',
     };
 
     const dataStr = JSON.stringify(exportData, null, 2);
-    const dataBlob = new Blob([dataStr], { type: "application/json" });
+    const dataBlob = new Blob([dataStr], { type: 'application/json' });
     const url = URL.createObjectURL(dataBlob);
 
-    const link = document.createElement("a");
+    const link = document.createElement('a');
     link.href = url;
-    link.download = `dotnetquiz-progress-${new Date().toISOString().split("T")[0]}.json`;
+    link.download = `dotnetquiz-progress-${new Date().toISOString().split('T')[0]}.json`;
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -1296,13 +1296,13 @@ export const useProgressTrackingComplete = () => {
       if (importedData.achievements) setAchievements(importedData.achievements);
       if (importedData.userStats) setUserStats(importedData.userStats);
 
-      return { success: true, message: "Progress data imported successfully!" };
+      return { success: true, message: 'Progress data imported successfully!' };
     } catch (error) {
-      console.error("Error importing progress data:", error);
+      console.error('Error importing progress data:', error);
       return {
         success: false,
         message:
-          "Failed to import progress data. Please check the file format.",
+          'Failed to import progress data. Please check the file format.',
       };
     }
   };

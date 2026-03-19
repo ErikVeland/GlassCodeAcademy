@@ -1,11 +1,11 @@
-"use client";
+'use client';
 
-import Link from "next/link";
-import { useState, useRef, useEffect } from "react";
-import { usePathname } from "next/navigation";
-import MobileMenu from "./MobileMenu";
-import ProfileMenu from "./ProfileMenu";
-import { useProgressTracking } from "../hooks/useProgressTracking";
+import Link from 'next/link';
+import { useState, useRef, useEffect } from 'react';
+import { usePathname } from 'next/navigation';
+import MobileMenu from './MobileMenu';
+import ProfileMenu from './ProfileMenu';
+import { useProgressTracking } from '../hooks/useProgressTracking';
 // Removed server-only contentRegistry import to avoid bundling Node APIs in client
 
 // Minimal shape for modules from `/api/content/registry` used in this component
@@ -13,7 +13,7 @@ type RegistryRoutes = { lessons: string; quiz: string; overview?: string };
 interface RegistryModuleFromRegistry {
   slug: string;
   title: string;
-  tier: "foundational" | "core" | "specialized" | "quality";
+  tier: 'foundational' | 'core' | 'specialized' | 'quality';
   routes: RegistryRoutes;
   track?: string;
   category?: string;
@@ -28,14 +28,14 @@ interface NavigationModule {
   lessonsPath: string;
   quizPath: string;
   progress: number;
-  tier: "foundational" | "core" | "specialized" | "quality";
-  category: "backend" | "frontend" | "quality";
+  tier: 'foundational' | 'core' | 'specialized' | 'quality';
+  category: 'backend' | 'frontend' | 'quality';
   icon: string;
   estimatedTime: string;
 }
 
 interface TierGroup {
-  tier: "foundational" | "core" | "specialized" | "quality";
+  tier: 'foundational' | 'core' | 'specialized' | 'quality';
   title: string;
   description: string;
   color: string;
@@ -66,7 +66,7 @@ export default function Header() {
   useEffect(() => {
     const loadRegistryData = async () => {
       try {
-        const res = await fetch("/api/content/registry", { cache: "no-store" });
+        const res = await fetch('/api/content/registry', { cache: 'no-store' });
         if (!res.ok) throw new Error(`Registry API failed: ${res.status}`);
         const registry = await res.json();
         const modules: RegistryModuleFromRegistry[] =
@@ -75,107 +75,107 @@ export default function Header() {
         // Create tier groups with actual module data from registry
         const tierGroupsData: Record<string, TierGroup> = {
           foundational: {
-            tier: "foundational",
-            title: "Foundational",
-            description: "Build essential programming skills",
-            color: "from-blue-500 to-cyan-500",
-            icon: "🏗️",
+            tier: 'foundational',
+            title: 'Foundational',
+            description: 'Build essential programming skills',
+            color: 'from-blue-500 to-cyan-500',
+            icon: '🏗️',
             modules: modules
-              .filter((module) => module.tier === "foundational")
+              .filter((module) => module.tier === 'foundational')
               .map((module) => ({
                 id: module.slug,
                 title: module.title,
                 lessonsPath: module.routes.lessons,
                 quizPath: module.routes.quiz,
                 progress: 0,
-                tier: "foundational" as const,
+                tier: 'foundational' as const,
                 category: (
                   module.track ||
                   module.category ||
-                  "frontend"
-                ).toLowerCase() as "backend" | "frontend" | "quality",
-                icon: module.icon ?? "",
+                  'frontend'
+                ).toLowerCase() as 'backend' | 'frontend' | 'quality',
+                icon: module.icon ?? '',
                 estimatedTime: module.estimatedHours
                   ? `${module.estimatedHours} hours`
-                  : "",
+                  : '',
               })),
           },
           core: {
-            tier: "core",
-            title: "Core Technologies",
-            description: "Master primary development technologies",
-            color: "from-green-500 to-emerald-500",
-            icon: "⚙️",
+            tier: 'core',
+            title: 'Core Technologies',
+            description: 'Master primary development technologies',
+            color: 'from-green-500 to-emerald-500',
+            icon: '⚙️',
             modules: modules
-              .filter((module) => module.tier === "core")
+              .filter((module) => module.tier === 'core')
               .map((module) => ({
                 id: module.slug,
                 title: module.title,
                 lessonsPath: module.routes.lessons,
                 quizPath: module.routes.quiz,
                 progress: 0,
-                tier: "core" as const,
+                tier: 'core' as const,
                 category: (
                   module.track ||
                   module.category ||
-                  "frontend"
-                ).toLowerCase() as "backend" | "frontend" | "quality",
-                icon: module.icon ?? "",
+                  'frontend'
+                ).toLowerCase() as 'backend' | 'frontend' | 'quality',
+                icon: module.icon ?? '',
                 estimatedTime: module.estimatedHours
                   ? `${module.estimatedHours} hours`
-                  : "",
+                  : '',
               })),
           },
           specialized: {
-            tier: "specialized",
-            title: "Specialised Skills",
-            description: "Advanced frameworks and modern practices",
-            color: "from-purple-500 to-violet-500",
-            icon: "💎",
+            tier: 'specialized',
+            title: 'Specialised Skills',
+            description: 'Advanced frameworks and modern practices',
+            color: 'from-purple-500 to-violet-500',
+            icon: '💎',
             modules: modules
-              .filter((module) => module.tier === "specialized")
+              .filter((module) => module.tier === 'specialized')
               .map((module) => ({
                 id: module.slug,
                 title: module.title,
                 lessonsPath: module.routes.lessons,
                 quizPath: module.routes.quiz,
                 progress: 0,
-                tier: "specialized" as const,
+                tier: 'specialized' as const,
                 category: (
                   module.track ||
                   module.category ||
-                  "frontend"
-                ).toLowerCase() as "backend" | "frontend" | "quality",
-                icon: module.icon ?? "",
+                  'frontend'
+                ).toLowerCase() as 'backend' | 'frontend' | 'quality',
+                icon: module.icon ?? '',
                 estimatedTime: module.estimatedHours
                   ? `${module.estimatedHours} hours`
-                  : "",
+                  : '',
               })),
           },
           quality: {
-            tier: "quality",
-            title: "Quality & Testing",
-            description: "Professional quality assurance",
-            color: "from-orange-500 to-red-500",
-            icon: "🛡️",
+            tier: 'quality',
+            title: 'Quality & Testing',
+            description: 'Professional quality assurance',
+            color: 'from-orange-500 to-red-500',
+            icon: '🛡️',
             modules: modules
-              .filter((module) => module.tier === "quality")
+              .filter((module) => module.tier === 'quality')
               .map((module) => ({
                 id: module.slug,
                 title: module.title,
                 lessonsPath: module.routes.lessons,
                 quizPath: module.routes.quiz,
                 progress: 0,
-                tier: "quality" as const,
+                tier: 'quality' as const,
                 category: (
                   module.track ||
                   module.category ||
-                  "frontend"
-                ).toLowerCase() as "backend" | "frontend" | "quality",
-                icon: module.icon ?? "",
+                  'frontend'
+                ).toLowerCase() as 'backend' | 'frontend' | 'quality',
+                icon: module.icon ?? '',
                 estimatedTime: module.estimatedHours
                   ? `${module.estimatedHours} hours`
-                  : "",
+                  : '',
               })),
           },
         };
@@ -188,14 +188,14 @@ export default function Header() {
               progress: getTierProgress(group.tier),
             }));
             return [key, { ...group, modules: enrichedModules }];
-          }),
+          })
         );
 
         setTierGroups(withProgress);
       } catch (error) {
         console.error(
-          "Error loading content registry for header navigation:",
-          error,
+          'Error loading content registry for header navigation:',
+          error
         );
       }
     };
@@ -220,35 +220,35 @@ export default function Header() {
     setActiveDropdown(tier === activeDropdown ? null : tier);
 
     switch (tier) {
-      case "foundational":
+      case 'foundational':
         setIsFoundationalOpen(tier !== activeDropdown);
         break;
-      case "core":
+      case 'core':
         setIsCoreOpen(tier !== activeDropdown);
         break;
-      case "specialized":
+      case 'specialized':
         setIsSpecialisedOpen(tier !== activeDropdown);
         break;
-      case "quality":
+      case 'quality':
         setIsQualityOpen(tier !== activeDropdown);
         break;
-      case "explore":
+      case 'explore':
         setIsExploreOpen(tier !== activeDropdown);
         break;
     }
   };
 
   const handleDropdownKeyDown = (event: React.KeyboardEvent, tier: string) => {
-    if (event.key === "Enter" || event.key === " ") {
+    if (event.key === 'Enter' || event.key === ' ') {
       event.preventDefault();
       handleDropdownToggle(tier);
-    } else if (event.key === "ArrowDown") {
+    } else if (event.key === 'ArrowDown') {
       event.preventDefault();
       handleDropdownToggle(tier);
       // Focus first menu item when dropdown opens
       setTimeout(() => {
         const dropdown = document.querySelector(
-          `[data-tier="${tier}"] [role="menuitem"]`,
+          `[data-tier="${tier}"] [role="menuitem"]`
         ) as HTMLElement;
         dropdown?.focus();
       }, 0);
@@ -315,12 +315,12 @@ export default function Header() {
               data-tier="foundational"
             >
               <button
-                onClick={() => handleDropdownToggle("foundational")}
-                onKeyDown={(e) => handleDropdownKeyDown(e, "foundational")}
+                onClick={() => handleDropdownToggle('foundational')}
+                onKeyDown={(e) => handleDropdownKeyDown(e, 'foundational')}
                 className={`inline-flex items-center px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200 focus:outline-none focus:ring-2 ring-focus ring-offset-2 ring-offset-bg ${
                   isFoundationalOpen
-                    ? "bg-surface-alt text-primary"
-                    : "text-fg hover:bg-surface-alt hover:text-primary"
+                    ? 'bg-surface-alt text-primary'
+                    : 'text-fg hover:bg-surface-alt hover:text-primary'
                 }`}
                 aria-expanded={isFoundationalOpen}
               >
@@ -328,10 +328,10 @@ export default function Header() {
                 <span>Foundation</span>
                 <div className="ml-1 flex items-center">
                   <span className="text-xs bg-primary text-primary-fg px-1.5 py-0.5 rounded-full mr-1">
-                    {getTierProgress("foundational")}%
+                    {getTierProgress('foundational')}%
                   </span>
                   <svg
-                    className={`h-4 w-4 transition-transform duration-200 ${isFoundationalOpen ? "rotate-180" : ""}`}
+                    className={`h-4 w-4 transition-transform duration-200 ${isFoundationalOpen ? 'rotate-180' : ''}`}
                     xmlns="http://www.w3.org/2000/svg"
                     viewBox="0 0 20 20"
                     fill="currentColor"
@@ -364,8 +364,8 @@ export default function Header() {
                               href={module.lessonsPath}
                               className={`${
                                 isActive(module.lessonsPath)
-                                  ? "bg-surface-alt text-primary"
-                                  : "text-muted hover:bg-surface-alt hover:text-primary"
+                                  ? 'bg-surface-alt text-primary'
+                                  : 'text-muted hover:bg-surface-alt hover:text-primary'
                               } inline-flex items-center justify-center w-full px-3 py-2 text-xs font-medium transition-colors duration-150 rounded-lg`}
                               role="menuitem"
                               onClick={closeTierDropdowns}
@@ -377,8 +377,8 @@ export default function Header() {
                               href={module.quizPath}
                               className={`${
                                 isActive(module.quizPath)
-                                  ? "bg-surface-alt text-primary"
-                                  : "text-muted hover:bg-surface-alt hover:text-primary"
+                                  ? 'bg-surface-alt text-primary'
+                                  : 'text-muted hover:bg-surface-alt hover:text-primary'
                               } inline-flex items-center justify-center w-full px-3 py-2 text-xs font-medium transition-colors duration-150 rounded-lg`}
                               role="menuitem"
                               onClick={closeTierDropdowns}
@@ -397,12 +397,12 @@ export default function Header() {
             {/* Core Tier Dropdown */}
             <div className="relative" ref={coreRef} data-tier="core">
               <button
-                onClick={() => handleDropdownToggle("core")}
-                onKeyDown={(e) => handleDropdownKeyDown(e, "core")}
+                onClick={() => handleDropdownToggle('core')}
+                onKeyDown={(e) => handleDropdownKeyDown(e, 'core')}
                 className={`inline-flex items-center px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200 focus:outline-none focus:ring-2 ring-focus ring-offset-2 ring-offset-bg ${
                   isCoreOpen
-                    ? "bg-surface-alt text-primary"
-                    : "text-fg hover:bg-surface-alt hover:text-primary"
+                    ? 'bg-surface-alt text-primary'
+                    : 'text-fg hover:bg-surface-alt hover:text-primary'
                 }`}
                 aria-expanded={isCoreOpen}
               >
@@ -410,10 +410,10 @@ export default function Header() {
                 <span>Core</span>
                 <div className="ml-1 flex items-center">
                   <span className="text-xs bg-primary text-primary-fg px-1.5 py-0.5 rounded-full mr-1">
-                    {getTierProgress("core")}%
+                    {getTierProgress('core')}%
                   </span>
                   <svg
-                    className={`h-4 w-4 transition-transform duration-200 ${isCoreOpen ? "rotate-180" : ""}`}
+                    className={`h-4 w-4 transition-transform duration-200 ${isCoreOpen ? 'rotate-180' : ''}`}
                     xmlns="http://www.w3.org/2000/svg"
                     viewBox="0 0 20 20"
                     fill="currentColor"
@@ -446,8 +446,8 @@ export default function Header() {
                               href={module.lessonsPath}
                               className={`${
                                 isActive(module.lessonsPath)
-                                  ? "bg-surface-alt text-primary"
-                                  : "text-muted hover:bg-surface-alt hover:text-primary"
+                                  ? 'bg-surface-alt text-primary'
+                                  : 'text-muted hover:bg-surface-alt hover:text-primary'
                               } inline-flex items-center justify-center w-full px-3 py-2 text-xs font-medium transition-colors duration-150 rounded-lg`}
                               role="menuitem"
                               onClick={closeTierDropdowns}
@@ -458,8 +458,8 @@ export default function Header() {
                               href={module.quizPath}
                               className={`${
                                 isActive(module.quizPath)
-                                  ? "bg-surface-alt text-primary"
-                                  : "text-muted hover:bg-surface-alt hover:text-primary"
+                                  ? 'bg-surface-alt text-primary'
+                                  : 'text-muted hover:bg-surface-alt hover:text-primary'
                               } inline-flex items-center justify-center w-full px-3 py-2 text-xs font-medium transition-colors duration-150 rounded-lg`}
                               role="menuitem"
                               onClick={closeTierDropdowns}
@@ -482,12 +482,12 @@ export default function Header() {
               data-tier="specialized"
             >
               <button
-                onClick={() => handleDropdownToggle("specialized")}
-                onKeyDown={(e) => handleDropdownKeyDown(e, "specialized")}
+                onClick={() => handleDropdownToggle('specialized')}
+                onKeyDown={(e) => handleDropdownKeyDown(e, 'specialized')}
                 className={`inline-flex items-center px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200 focus:outline-none focus:ring-2 ring-focus ring-offset-2 ring-offset-bg ${
                   isSpecialisedOpen
-                    ? "bg-surface-alt text-primary"
-                    : "text-fg hover:bg-surface-alt hover:text-primary"
+                    ? 'bg-surface-alt text-primary'
+                    : 'text-fg hover:bg-surface-alt hover:text-primary'
                 }`}
                 aria-expanded={isSpecialisedOpen}
               >
@@ -495,10 +495,10 @@ export default function Header() {
                 <span>Specialised</span>
                 <div className="ml-1 flex items-center">
                   <span className="text-xs bg-primary text-primary-fg px-1.5 py-0.5 rounded-full mr-1">
-                    {getTierProgress("specialized")}%
+                    {getTierProgress('specialized')}%
                   </span>
                   <svg
-                    className={`h-4 w-4 transition-transform duration-200 ${isSpecialisedOpen ? "rotate-180" : ""}`}
+                    className={`h-4 w-4 transition-transform duration-200 ${isSpecialisedOpen ? 'rotate-180' : ''}`}
                     xmlns="http://www.w3.org/2000/svg"
                     viewBox="0 0 20 20"
                     fill="currentColor"
@@ -531,8 +531,8 @@ export default function Header() {
                               href={module.lessonsPath}
                               className={`${
                                 isActive(module.lessonsPath)
-                                  ? "bg-surface-alt text-primary"
-                                  : "text-muted hover:bg-surface-alt hover:text-primary"
+                                  ? 'bg-surface-alt text-primary'
+                                  : 'text-muted hover:bg-surface-alt hover:text-primary'
                               } inline-flex items-center justify-center w-full px-3 py-2 text-xs font-medium transition-colors duration-150 rounded-lg`}
                               role="menuitem"
                               onClick={closeTierDropdowns}
@@ -543,8 +543,8 @@ export default function Header() {
                               href={module.quizPath}
                               className={`${
                                 isActive(module.quizPath)
-                                  ? "bg-surface-alt text-primary"
-                                  : "text-muted hover:bg-surface-alt hover:text-primary"
+                                  ? 'bg-surface-alt text-primary'
+                                  : 'text-muted hover:bg-surface-alt hover:text-primary'
                               } inline-flex items-center justify-center w-full px-3 py-2 text-xs font-medium transition-colors duration-150 rounded-lg`}
                               role="menuitem"
                               onClick={closeTierDropdowns}
@@ -563,12 +563,12 @@ export default function Header() {
             {/* Quality Tier Dropdown */}
             <div className="relative" ref={qualityRef} data-tier="quality">
               <button
-                onClick={() => handleDropdownToggle("quality")}
-                onKeyDown={(e) => handleDropdownKeyDown(e, "quality")}
+                onClick={() => handleDropdownToggle('quality')}
+                onKeyDown={(e) => handleDropdownKeyDown(e, 'quality')}
                 className={`inline-flex items-center px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200 focus:outline-none focus:ring-2 ring-focus ring-offset-2 ring-offset-bg ${
                   isQualityOpen
-                    ? "bg-surface-alt text-primary"
-                    : "text-fg hover:bg-surface-alt hover:text-primary"
+                    ? 'bg-surface-alt text-primary'
+                    : 'text-fg hover:bg-surface-alt hover:text-primary'
                 }`}
                 aria-expanded={isQualityOpen}
               >
@@ -576,10 +576,10 @@ export default function Header() {
                 <span>Quality</span>
                 <div className="ml-1 flex items-center">
                   <span className="text-xs bg-primary text-primary-fg px-1.5 py-0.5 rounded-full mr-1">
-                    {getTierProgress("quality")}%
+                    {getTierProgress('quality')}%
                   </span>
                   <svg
-                    className={`h-4 w-4 transition-transform duration-200 ${isQualityOpen ? "rotate-180" : ""}`}
+                    className={`h-4 w-4 transition-transform duration-200 ${isQualityOpen ? 'rotate-180' : ''}`}
                     xmlns="http://www.w3.org/2000/svg"
                     viewBox="0 0 20 20"
                     fill="currentColor"
@@ -612,8 +612,8 @@ export default function Header() {
                               href={module.lessonsPath}
                               className={`${
                                 isActive(module.lessonsPath)
-                                  ? "bg-surface-alt text-primary"
-                                  : "text-muted hover:bg-surface-alt hover:text-primary"
+                                  ? 'bg-surface-alt text-primary'
+                                  : 'text-muted hover:bg-surface-alt hover:text-primary'
                               } inline-flex items-center justify-center w-full px-3 py-2 text-xs font-medium transition-colors duration-150 rounded-lg`}
                               role="menuitem"
                               onClick={closeTierDropdowns}
@@ -624,8 +624,8 @@ export default function Header() {
                               href={module.quizPath}
                               className={`${
                                 isActive(module.quizPath)
-                                  ? "bg-surface-alt text-primary"
-                                  : "text-muted hover:bg-surface-alt hover:text-primary"
+                                  ? 'bg-surface-alt text-primary'
+                                  : 'text-muted hover:bg-surface-alt hover:text-primary'
                               } inline-flex items-center justify-center w-full px-3 py-2 text-xs font-medium transition-colors duration-150 rounded-lg`}
                               role="menuitem"
                               onClick={closeTierDropdowns}
@@ -643,15 +643,15 @@ export default function Header() {
             {/* Explore Dropdown */}
             <div className="relative" ref={exploreRef} data-tier="explore">
               <button
-                onClick={() => handleDropdownToggle("explore")}
-                onKeyDown={(e) => handleDropdownKeyDown(e, "explore")}
-                className={`inline-flex items-center px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200 focus:outline-none focus:ring-2 ring-focus ring-offset-2 ring-offset-bg ${isExploreOpen ? "bg-surface-alt text-primary" : "text-fg hover:bg-surface-alt hover:text-primary"}`}
+                onClick={() => handleDropdownToggle('explore')}
+                onKeyDown={(e) => handleDropdownKeyDown(e, 'explore')}
+                className={`inline-flex items-center px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200 focus:outline-none focus:ring-2 ring-focus ring-offset-2 ring-offset-bg ${isExploreOpen ? 'bg-surface-alt text-primary' : 'text-fg hover:bg-surface-alt hover:text-primary'}`}
                 aria-expanded={isExploreOpen}
               >
                 <span className="mr-1">🧭</span>
                 <span>Explore</span>
                 <svg
-                  className={`ml-1 h-4 w-4 transition-transform duration-200 ${isExploreOpen ? "rotate-180" : ""}`}
+                  className={`ml-1 h-4 w-4 transition-transform duration-200 ${isExploreOpen ? 'rotate-180' : ''}`}
                   xmlns="http://www.w3.org/2000/svg"
                   viewBox="0 0 20 20"
                   fill="currentColor"

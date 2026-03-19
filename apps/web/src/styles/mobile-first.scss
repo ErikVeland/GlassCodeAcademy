@@ -4,8 +4,8 @@
  * This file is additive and does not change existing layout until used.
  */
 
-@use "./_breakpoints" as bp;
-@use "./_mixins" as mx;
+@use './_breakpoints' as bp;
+@use './_mixins' as mx;
 
 /* Visibility helpers */
 .mf-mobile-only {
@@ -84,7 +84,7 @@
 /* Typography helper example (not applied anywhere yet) */
 .mf-heading-large {
   @include mx.fluid-type(1.5rem, 2.5rem);
-  @include bp.respond-up("md") {
+  @include bp.respond-up('md') {
     font-weight: 700;
   }
 }

@@ -1,6 +1,6 @@
-"use client";
+'use client';
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from 'react';
 
 interface ConfettiBurstProps {
   active: boolean;
@@ -19,19 +19,19 @@ export default function ConfettiBurst({
 
   // Respect system reduced motion preference
   useEffect(() => {
-    if (typeof window === "undefined") return;
-    const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
+    if (typeof window === 'undefined') return;
+    const mq = window.matchMedia('(prefers-reduced-motion: reduce)');
     const updatePref = () => setIsReducedMotion(mq.matches);
     updatePref();
-    mq.addEventListener?.("change", updatePref);
-    return () => mq.removeEventListener?.("change", updatePref);
+    mq.addEventListener?.('change', updatePref);
+    return () => mq.removeEventListener?.('change', updatePref);
   }, []);
 
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas || !active || isReducedMotion) return;
 
-    const ctx = canvas.getContext("2d");
+    const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
     const origin = { x: 0, y: 0 };
@@ -42,15 +42,15 @@ export default function ConfettiBurst({
       origin.y = canvas.height + 36; // just below bottom edge
     };
     resize();
-    window.addEventListener("resize", resize);
+    window.addEventListener('resize', resize);
 
     const colors = [
-      "#f87171", // red-400
-      "#60a5fa", // blue-400
-      "#34d399", // green-400
-      "#fbbf24", // amber-400
-      "#c084fc", // purple-400
-      "#fb7185", // rose-400
+      '#f87171', // red-400
+      '#60a5fa', // blue-400
+      '#34d399', // green-400
+      '#fbbf24', // amber-400
+      '#c084fc', // purple-400
+      '#fb7185', // rose-400
     ];
 
     // Single-point fountain emitter: bottom-center, spreading upward with gravity
@@ -89,7 +89,7 @@ export default function ConfettiBurst({
       if (elapsed > durationMs) {
         if (rafRef.current) cancelAnimationFrame(rafRef.current);
         ctx.clearRect(0, 0, canvas.width, canvas.height);
-        window.removeEventListener("resize", resize);
+        window.removeEventListener('resize', resize);
         return;
       }
 
@@ -146,7 +146,7 @@ export default function ConfettiBurst({
 
     return () => {
       if (rafRef.current) cancelAnimationFrame(rafRef.current);
-      window.removeEventListener("resize", resize);
+      window.removeEventListener('resize', resize);
     };
   }, [active, durationMs, isReducedMotion]);
 
@@ -154,7 +154,7 @@ export default function ConfettiBurst({
   if (isReducedMotion) return null;
   return (
     <div
-      className={`pointer-events-none fixed inset-0 z-40 ${active ? "" : "hidden"}`}
+      className={`pointer-events-none fixed inset-0 z-40 ${active ? '' : 'hidden'}`}
     >
       <canvas ref={canvasRef} className="w-full h-full" />
     </div>

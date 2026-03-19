@@ -1,10 +1,10 @@
-"use client";
+'use client';
 
-import { useEffect, useCallback } from "react";
+import { useEffect, useCallback } from 'react';
 
 interface PrefetchOptions {
   enabled?: boolean;
-  priorityOrder?: "tier" | "popularity" | "alphabetical";
+  priorityOrder?: 'tier' | 'popularity' | 'alphabetical';
   maxConcurrent?: number;
   delayBetweenRequests?: number;
 }
@@ -15,14 +15,14 @@ interface PrefetchOptions {
 export function useQuizPrefetch(options: PrefetchOptions = {}) {
   const {
     enabled = true,
-    priorityOrder = "tier",
+    priorityOrder = 'tier',
     maxConcurrent = 3,
     delayBetweenRequests = 1000,
   } = options;
 
   const getModulesByTierPriority = useCallback(async () => {
     try {
-      const res = await fetch("/api/content/registry", { cache: "no-store" });
+      const res = await fetch('/api/content/registry', { cache: 'no-store' });
       if (!res.ok) return [];
       const data = await res.json();
       const modules: Array<{
@@ -32,14 +32,14 @@ export function useQuizPrefetch(options: PrefetchOptions = {}) {
         tier?: string;
       }> = Array.isArray(data?.modules) ? data.modules : [];
 
-      const tierOrder = ["foundational", "core", "specialized", "quality"];
+      const tierOrder = ['foundational', 'core', 'specialized', 'quality'];
       return modules
-        .filter((m) => typeof m.slug === "string")
+        .filter((m) => typeof m.slug === 'string')
         .map((m) => ({
           slug: String(m.slug),
           title: String(m.title || m.slug),
-          order: typeof m.order === "number" ? m.order : 0,
-          tier: String(m.tier || "core"),
+          order: typeof m.order === 'number' ? m.order : 0,
+          tier: String(m.tier || 'core'),
         }))
         .sort((a, b) => {
           const aTierIndex = tierOrder.indexOf(a.tier);
@@ -48,7 +48,7 @@ export function useQuizPrefetch(options: PrefetchOptions = {}) {
           return (a.order || 0) - (b.order || 0);
         });
     } catch (error) {
-      console.error("Error getting modules for prefetch:", error);
+      console.error('Error getting modules for prefetch:', error);
       return [];
     }
   }, []);
@@ -58,20 +58,20 @@ export function useQuizPrefetch(options: PrefetchOptions = {}) {
       // Resolve shortSlug via registry routes or fallback heuristic
       let shortSlug = moduleSlug;
       try {
-        const res = await fetch("/api/content/registry", { cache: "no-store" });
+        const res = await fetch('/api/content/registry', { cache: 'no-store' });
         if (res.ok) {
           const data = await res.json();
           const modules: Array<{
             slug?: string;
             routes?: { overview?: string };
           }> = Array.isArray(data?.modules) ? data.modules : [];
-          const match = modules.find((m) => (m?.slug || "") === moduleSlug);
+          const match = modules.find((m) => (m?.slug || '') === moduleSlug);
           const overview = match?.routes?.overview;
           shortSlug =
-            typeof overview === "string" && overview.trim() !== ""
-              ? overview.replace(/^\/+/, "").split("/")[0]
-              : moduleSlug.includes("-")
-                ? moduleSlug.split("-")[0]
+            typeof overview === 'string' && overview.trim() !== ''
+              ? overview.replace(/^\/+/, '').split('/')[0]
+              : moduleSlug.includes('-')
+                ? moduleSlug.split('-')[0]
                 : moduleSlug;
         }
       } catch {}
@@ -91,7 +91,7 @@ export function useQuizPrefetch(options: PrefetchOptions = {}) {
 
       // Fetch the quiz via API
       const resQuiz = await fetch(`/api/content/quizzes/${shortSlug}`, {
-        cache: "no-store",
+        cache: 'no-store',
       });
       const quiz = resQuiz.ok ? await resQuiz.json() : null;
 
@@ -102,11 +102,11 @@ export function useQuizPrefetch(options: PrefetchOptions = {}) {
           JSON.stringify({
             timestamp: Date.now(),
             data: quiz,
-          }),
+          })
         );
 
         console.log(
-          `[QuizPrefetch] Successfully prefetched quiz for ${moduleSlug} (${quiz.questions.length} questions)`,
+          `[QuizPrefetch] Successfully prefetched quiz for ${moduleSlug} (${quiz.questions.length} questions)`
         );
         return true;
       } else {
@@ -116,7 +116,7 @@ export function useQuizPrefetch(options: PrefetchOptions = {}) {
     } catch (error) {
       console.error(
         `[QuizPrefetch] Error prefetching quiz for ${moduleSlug}:`,
-        error,
+        error
       );
       return false;
     }
@@ -126,7 +126,7 @@ export function useQuizPrefetch(options: PrefetchOptions = {}) {
     if (!enabled) return;
 
     try {
-      console.log("[QuizPrefetch] Starting quiz prefetch process");
+      console.log('[QuizPrefetch] Starting quiz prefetch process');
 
       let modules: Array<{
         slug: string;
@@ -134,10 +134,10 @@ export function useQuizPrefetch(options: PrefetchOptions = {}) {
         order: number;
         tier: string;
       }> = [];
-      if (priorityOrder === "tier") {
+      if (priorityOrder === 'tier') {
         modules = await getModulesByTierPriority();
       } else {
-        const res = await fetch("/api/content/registry", { cache: "no-store" });
+        const res = await fetch('/api/content/registry', { cache: 'no-store' });
         if (res.ok) {
           const data = await res.json();
           const allModules: Array<{
@@ -147,12 +147,12 @@ export function useQuizPrefetch(options: PrefetchOptions = {}) {
             tier?: string;
           }> = Array.isArray(data?.modules) ? data.modules : [];
           modules = allModules
-            .filter((m) => typeof m.slug === "string")
+            .filter((m) => typeof m.slug === 'string')
             .map((m) => ({
               slug: String(m.slug),
               title: String(m.title || m.slug),
-              order: typeof m.order === "number" ? m.order : 0,
-              tier: String(m.tier || "core"),
+              order: typeof m.order === 'number' ? m.order : 0,
+              tier: String(m.tier || 'core'),
             }))
             .sort((a, b) => a.title.localeCompare(b.title));
         }
@@ -162,14 +162,14 @@ export function useQuizPrefetch(options: PrefetchOptions = {}) {
       modules = modules.slice(0, 15);
 
       console.log(
-        `[QuizPrefetch] Will prefetch quizzes for ${modules.length} modules`,
+        `[QuizPrefetch] Will prefetch quizzes for ${modules.length} modules`
       );
 
       // Process in batches to avoid overwhelming the server
       for (let i = 0; i < modules.length; i += maxConcurrent) {
         const batch = modules.slice(i, i + maxConcurrent);
         console.log(
-          `[QuizPrefetch] Processing batch ${Math.floor(i / maxConcurrent) + 1}: ${batch.map((m) => m.slug).join(", ")}`,
+          `[QuizPrefetch] Processing batch ${Math.floor(i / maxConcurrent) + 1}: ${batch.map((m) => m.slug).join(', ')}`
         );
 
         // Fetch all quizzes in the batch concurrently
@@ -179,10 +179,10 @@ export function useQuizPrefetch(options: PrefetchOptions = {}) {
             .catch((error) => {
               console.error(
                 `[QuizPrefetch] Error in batch for ${module.slug}:`,
-                error,
+                error
               );
               return { module: module.slug, success: false };
-            }),
+            })
         );
 
         await Promise.all(promises);
@@ -190,17 +190,17 @@ export function useQuizPrefetch(options: PrefetchOptions = {}) {
         // Add delay between batches
         if (i + maxConcurrent < modules.length) {
           console.log(
-            `[QuizPrefetch] Waiting ${delayBetweenRequests}ms before next batch`,
+            `[QuizPrefetch] Waiting ${delayBetweenRequests}ms before next batch`
           );
           await new Promise((resolve) =>
-            setTimeout(resolve, delayBetweenRequests),
+            setTimeout(resolve, delayBetweenRequests)
           );
         }
       }
 
-      console.log("[QuizPrefetch] Completed quiz prefetch process");
+      console.log('[QuizPrefetch] Completed quiz prefetch process');
     } catch (error) {
-      console.error("[QuizPrefetch] Error in prefetch process:", error);
+      console.error('[QuizPrefetch] Error in prefetch process:', error);
     }
   }, [
     enabled,
@@ -213,7 +213,7 @@ export function useQuizPrefetch(options: PrefetchOptions = {}) {
 
   // Start prefetching when the hook is used
   useEffect(() => {
-    if (enabled && typeof window !== "undefined") {
+    if (enabled && typeof window !== 'undefined') {
       // Add a small delay to avoid blocking initial page load
       const timer = setTimeout(() => {
         prefetchQuizzesByPriority();

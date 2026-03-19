@@ -1,5 +1,5 @@
-import { NextRequest, NextResponse } from "next/server";
-import { getApiBaseStrict } from "@/lib/urlUtils";
+import { NextRequest, NextResponse } from 'next/server';
+import { getApiBaseStrict } from '@/lib/urlUtils';
 
 function safeParseJson(text: string): unknown {
   try {
@@ -10,12 +10,12 @@ function safeParseJson(text: string): unknown {
 }
 
 function isRecord(v: unknown): v is Record<string, unknown> {
-  return typeof v === "object" && v !== null;
+  return typeof v === 'object' && v !== null;
 }
 
 function unwrapData<T = unknown>(value: unknown): T | unknown {
   if (Array.isArray(value)) return value;
-  if (isRecord(value) && "data" in value) {
+  if (isRecord(value) && 'data' in value) {
     const data = (value as { data?: unknown }).data;
     return data as T;
   }
@@ -24,7 +24,7 @@ function unwrapData<T = unknown>(value: unknown): T | unknown {
 
 export async function GET(
   _req: NextRequest,
-  { params }: { params: Promise<{ id: string }> },
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const { id } = await params;
@@ -32,7 +32,7 @@ export async function GET(
       try {
         return getApiBaseStrict();
       } catch {
-        return "http://127.0.0.1:8081";
+        return 'http://127.0.0.1:8081';
       }
     })();
     const backendUrl = `${apiBase}/api/content/quizzes/${id}`;
@@ -40,23 +40,23 @@ export async function GET(
     const parsed = safeParseJson(await res.text());
     const unwrapped = unwrapData(parsed);
     const body =
-      typeof unwrapped === "string" ? unwrapped : JSON.stringify(unwrapped);
+      typeof unwrapped === 'string' ? unwrapped : JSON.stringify(unwrapped);
     return new NextResponse(body, {
       status: res.status,
-      headers: { "Content-Type": "application/json" },
+      headers: { 'Content-Type': 'application/json' },
     });
   } catch (error) {
-    console.error("Proxy GET /api/LessonQuiz/[id] failed:", error);
+    console.error('Proxy GET /api/LessonQuiz/[id] failed:', error);
     return NextResponse.json(
-      { error: "Failed to fetch quiz from backend" },
-      { status: 502 },
+      { error: 'Failed to fetch quiz from backend' },
+      { status: 502 }
     );
   }
 }
 
 export async function PUT(
   req: NextRequest,
-  { params }: { params: Promise<{ id: string }> },
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const body: unknown = await req.json();
@@ -65,39 +65,39 @@ export async function PUT(
       try {
         return getApiBaseStrict();
       } catch {
-        return "http://127.0.0.1:8081";
+        return 'http://127.0.0.1:8081';
       }
     })();
     const backendUrl = `${apiBase}/api/content/quizzes/${id}`;
     const res = await fetch(backendUrl, {
-      method: "PUT",
+      method: 'PUT',
       headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json",
+        'Content-Type': 'application/json',
+        Accept: 'application/json',
         // Forward admin auth headers when present
-        Authorization: req.headers.get("authorization") || "",
-        "X-Admin-Token": req.headers.get("x-admin-token") || "",
+        Authorization: req.headers.get('authorization') || '',
+        'X-Admin-Token': req.headers.get('x-admin-token') || '',
       },
       body: JSON.stringify(body),
     });
     const text = await res.text();
-    const contentType = res.headers.get("content-type") || "application/json";
+    const contentType = res.headers.get('content-type') || 'application/json';
     return new NextResponse(text, {
       status: res.status,
-      headers: { "Content-Type": contentType },
+      headers: { 'Content-Type': contentType },
     });
   } catch (error) {
-    console.error("Proxy PUT /api/LessonQuiz/[id] failed:", error);
+    console.error('Proxy PUT /api/LessonQuiz/[id] failed:', error);
     return NextResponse.json(
-      { error: "Failed to update quiz in backend" },
-      { status: 502 },
+      { error: 'Failed to update quiz in backend' },
+      { status: 502 }
     );
   }
 }
 
 export async function DELETE(
   _req: NextRequest,
-  { params }: { params: Promise<{ id: string }> },
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const { id } = await params;
@@ -105,32 +105,32 @@ export async function DELETE(
       try {
         return getApiBaseStrict();
       } catch {
-        return "http://127.0.0.1:8081";
+        return 'http://127.0.0.1:8081';
       }
     })();
     const backendUrl = `${apiBase}/api/content/quizzes/${id}`;
     const res = await fetch(backendUrl, {
-      method: "DELETE",
+      method: 'DELETE',
       // Forward admin auth headers when present
       headers: {
-        Authorization: _req.headers.get("authorization") || "",
-        "X-Admin-Token": _req.headers.get("x-admin-token") || "",
+        Authorization: _req.headers.get('authorization') || '',
+        'X-Admin-Token': _req.headers.get('x-admin-token') || '',
       },
     });
     const text = await res.text();
-    const contentType = res.headers.get("content-type") || "application/json";
+    const contentType = res.headers.get('content-type') || 'application/json';
     return new NextResponse(text, {
       status: res.status,
-      headers: { "Content-Type": contentType },
+      headers: { 'Content-Type': contentType },
     });
   } catch (error) {
-    console.error("Proxy DELETE /api/LessonQuiz/[id] failed:", error);
+    console.error('Proxy DELETE /api/LessonQuiz/[id] failed:', error);
     return NextResponse.json(
-      { error: "Failed to delete quiz in backend" },
-      { status: 502 },
+      { error: 'Failed to delete quiz in backend' },
+      { status: 502 }
     );
   }
 }
 
-export const runtime = "nodejs";
-export const dynamic = "force-dynamic";
+export const runtime = 'nodejs';
+export const dynamic = 'force-dynamic';

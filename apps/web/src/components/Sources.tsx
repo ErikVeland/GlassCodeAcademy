@@ -1,31 +1,31 @@
-"use client";
+'use client';
 
-import React from "react";
-import { LessonSource } from "../lib/sourcesUtils";
+import React from 'react';
+import { LessonSource } from '../lib/sourcesUtils';
 
 interface SourcesProps {
   sources: LessonSource[];
   title?: string;
   className?: string;
-  variant?: "card" | "inline" | "compact";
+  variant?: 'card' | 'inline' | 'compact';
 }
 
 const Sources: React.FC<SourcesProps> = ({
   sources,
-  title = "Further Reading",
-  className = "",
-  variant = "card",
+  title = 'Further Reading',
+  className = '',
+  variant = 'card',
 }) => {
   if (!sources || sources.length === 0) {
     return null;
   }
 
-  const baseClasses = "sources-container";
+  const baseClasses = 'sources-container';
   const variantClasses = {
-    card: "bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 p-6",
+    card: 'bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 p-6',
     inline:
-      "bg-gray-50/90 dark:bg-gray-700/90 rounded-lg p-4 border border-gray-200 dark:border-gray-600",
-    compact: "bg-transparent",
+      'bg-gray-50/90 dark:bg-gray-700/90 rounded-lg p-4 border border-gray-200 dark:border-gray-600',
+    compact: 'bg-transparent',
   };
 
   return (

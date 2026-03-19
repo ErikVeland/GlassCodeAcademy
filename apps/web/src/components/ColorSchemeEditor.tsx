@@ -1,6 +1,6 @@
-"use client";
+'use client';
 
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback } from 'react';
 
 interface ColorStop {
   id: string;
@@ -17,7 +17,7 @@ interface ColorSchemeEditorProps {
 const ColorSchemeEditor: React.FC<ColorSchemeEditorProps> = ({
   colors,
   onColorsChange,
-  className = "",
+  className = '',
 }) => {
   // Convert colors array to color stops with positions
   const [colorStops, setColorStops] = useState<ColorStop[]>(() => {
@@ -38,7 +38,7 @@ const ColorSchemeEditor: React.FC<ColorSchemeEditorProps> = ({
       onColorsChange(newColors);
       setColorStops(sortedStops);
     },
-    [onColorsChange],
+    [onColorsChange]
   );
 
   // Add a new color stop
@@ -50,7 +50,7 @@ const ColorSchemeEditor: React.FC<ColorSchemeEditorProps> = ({
 
     const newStop: ColorStop = {
       id: `color-${Date.now()}`,
-      color: "rgba(99, 102, 241, 0.12)", // Default indigo
+      color: 'rgba(99, 102, 241, 0.12)', // Default indigo
       position: newPosition,
     };
 
@@ -71,18 +71,18 @@ const ColorSchemeEditor: React.FC<ColorSchemeEditorProps> = ({
         setSelectedStopId(null);
       }
     },
-    [colorStops, selectedStopId, updateColors],
+    [colorStops, selectedStopId, updateColors]
   );
 
   // Update color stop color
   const updateStopColor = useCallback(
     (stopId: string, newColor: string) => {
       const newStops = colorStops.map((stop) =>
-        stop.id === stopId ? { ...stop, color: newColor } : stop,
+        stop.id === stopId ? { ...stop, color: newColor } : stop
       );
       updateColors(newStops);
     },
-    [colorStops, updateColors],
+    [colorStops, updateColors]
   );
 
   // Update color stop position
@@ -90,11 +90,11 @@ const ColorSchemeEditor: React.FC<ColorSchemeEditorProps> = ({
     (stopId: string, newPosition: number) => {
       const clampedPosition = Math.max(0, Math.min(100, newPosition));
       const newStops = colorStops.map((stop) =>
-        stop.id === stopId ? { ...stop, position: clampedPosition } : stop,
+        stop.id === stopId ? { ...stop, position: clampedPosition } : stop
       );
       updateColors(newStops);
     },
-    [colorStops, updateColors],
+    [colorStops, updateColors]
   );
 
   // Generate gradient preview
@@ -102,24 +102,24 @@ const ColorSchemeEditor: React.FC<ColorSchemeEditorProps> = ({
     const sortedStops = [...colorStops].sort((a, b) => a.position - b.position);
     const gradientStops = sortedStops
       .map((stop) => `${stop.color} ${stop.position}%`)
-      .join(", ");
+      .join(', ');
     return `linear-gradient(45deg, ${gradientStops})`;
   }, [colorStops]);
 
   // Predefined color palette
   const colorPalette = [
-    "rgba(99, 102, 241, 0.12)", // indigo
-    "rgba(168, 85, 247, 0.12)", // purple
-    "rgba(236, 72, 153, 0.12)", // pink
-    "rgba(16, 185, 129, 0.12)", // green
-    "rgba(245, 158, 11, 0.12)", // yellow
-    "rgba(239, 68, 68, 0.12)", // red
-    "rgba(59, 130, 246, 0.12)", // blue
-    "rgba(139, 92, 246, 0.12)", // violet
-    "rgba(251, 146, 60, 0.12)", // orange
-    "rgba(14, 165, 233, 0.12)", // sky blue
-    "rgba(192, 132, 252, 0.12)", // light purple
-    "rgba(249, 115, 22, 0.12)", // orange-red
+    'rgba(99, 102, 241, 0.12)', // indigo
+    'rgba(168, 85, 247, 0.12)', // purple
+    'rgba(236, 72, 153, 0.12)', // pink
+    'rgba(16, 185, 129, 0.12)', // green
+    'rgba(245, 158, 11, 0.12)', // yellow
+    'rgba(239, 68, 68, 0.12)', // red
+    'rgba(59, 130, 246, 0.12)', // blue
+    'rgba(139, 92, 246, 0.12)', // violet
+    'rgba(251, 146, 60, 0.12)', // orange
+    'rgba(14, 165, 233, 0.12)', // sky blue
+    'rgba(192, 132, 252, 0.12)', // light purple
+    'rgba(249, 115, 22, 0.12)', // orange-red
   ];
 
   return (
@@ -175,8 +175,8 @@ const ColorSchemeEditor: React.FC<ColorSchemeEditorProps> = ({
               key={stop.id}
               className={`flex items-center gap-3 p-3 rounded-lg border-2 transition-colors duration-200 ${
                 selectedStopId === stop.id
-                  ? "border-blue-500 bg-blue-50 dark:bg-blue-900/20"
-                  : "border-gray-200 dark:border-gray-600 hover:border-gray-300 dark:hover:border-gray-500"
+                  ? 'border-blue-500 bg-blue-50 dark:bg-blue-900/20'
+                  : 'border-gray-200 dark:border-gray-600 hover:border-gray-300 dark:hover:border-gray-500'
               }`}
               onClick={() => setSelectedStopId(stop.id)}
             >
@@ -265,7 +265,7 @@ const ColorSchemeEditor: React.FC<ColorSchemeEditorProps> = ({
           </label>
           <input
             type="text"
-            value={colorStops.find((s) => s.id === selectedStopId)?.color || ""}
+            value={colorStops.find((s) => s.id === selectedStopId)?.color || ''}
             onChange={(e) => updateStopColor(selectedStopId, e.target.value)}
             placeholder="rgba(99, 102, 241, 0.12)"
             className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent"

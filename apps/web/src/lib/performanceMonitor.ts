@@ -1,11 +1,11 @@
-import { onCLS, onINP, onFCP, onLCP, onTTFB } from "web-vitals";
-import type { Metric } from "web-vitals";
-import React from "react";
+import { onCLS, onINP, onFCP, onLCP, onTTFB } from 'web-vitals';
+import type { Metric } from 'web-vitals';
+import React from 'react';
 
 interface WebVitalsMetric {
   name: string;
   value: number;
-  rating: "good" | "needs-improvement" | "poor";
+  rating: 'good' | 'needs-improvement' | 'poor';
   delta: number;
   entries: PerformanceEntry[];
   id: string;
@@ -28,8 +28,8 @@ class PerformanceMonitor {
   constructor(config: Partial<PerformanceConfig> = {}) {
     this.config = {
       enableAnalytics: true,
-      enableConsoleLogging: process.env.NODE_ENV === "development",
-      enableRemoteReporting: process.env.NODE_ENV === "production",
+      enableConsoleLogging: process.env.NODE_ENV === 'development',
+      enableRemoteReporting: process.env.NODE_ENV === 'production',
       sampleRate: 1,
       ...config,
     };
@@ -42,15 +42,15 @@ class PerformanceMonitor {
     if (!this.config.enableAnalytics) return;
 
     // Core Web Vitals
-    onCLS(this.handleMetric.bind(this, "CLS"));
-    onINP(this.handleMetric.bind(this, "INP"));
-    onFCP(this.handleMetric.bind(this, "FCP"));
-    onLCP(this.handleMetric.bind(this, "LCP"));
-    onTTFB(this.handleMetric.bind(this, "TTFB"));
+    onCLS(this.handleMetric.bind(this, 'CLS'));
+    onINP(this.handleMetric.bind(this, 'INP'));
+    onFCP(this.handleMetric.bind(this, 'FCP'));
+    onLCP(this.handleMetric.bind(this, 'LCP'));
+    onTTFB(this.handleMetric.bind(this, 'TTFB'));
   }
 
   private initializeCustomMetrics() {
-    if (typeof window === "undefined") return;
+    if (typeof window === 'undefined') return;
 
     // Resource loading performance
     this.observeResourceTiming();
@@ -73,7 +73,7 @@ class PerformanceMonitor {
       delta: metric.delta,
       entries: metric.entries ?? [],
       id: metric.id,
-      navigationType: metric.navigationType || "navigate",
+      navigationType: metric.navigationType || 'navigate',
     };
 
     this.metrics.set(metricName, webVitalsMetric);
@@ -97,27 +97,27 @@ class PerformanceMonitor {
     const color = this.getConsoleColor(metric.rating);
     console.group(
       `%c${metric.name}: ${metric.value.toFixed(2)}ms`,
-      `color: ${color}; font-weight: bold`,
+      `color: ${color}; font-weight: bold`
     );
     console.log(`Rating: ${metric.rating}`);
     console.log(`Delta: ${metric.delta}`);
     console.log(`Navigation Type: ${metric.navigationType}`);
     if (metric.entries.length > 0) {
-      console.log("Entries:", metric.entries);
+      console.log('Entries:', metric.entries);
     }
     console.groupEnd();
   }
 
   private getConsoleColor(rating: string): string {
     switch (rating) {
-      case "good":
-        return "#22c55e";
-      case "needs-improvement":
-        return "#f59e0b";
-      case "poor":
-        return "#ef4444";
+      case 'good':
+        return '#22c55e';
+      case 'needs-improvement':
+        return '#f59e0b';
+      case 'poor':
+        return '#ef4444';
       default:
-        return "#6b7280";
+        return '#6b7280';
     }
   }
 
@@ -126,9 +126,9 @@ class PerformanceMonitor {
 
     try {
       await fetch(this.config.apiEndpoint, {
-        method: "POST",
+        method: 'POST',
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify({
           metric,
@@ -140,93 +140,93 @@ class PerformanceMonitor {
       });
     } catch (error) {
       if (this.config.enableConsoleLogging) {
-        console.error("Failed to report metric:", error);
+        console.error('Failed to report metric:', error);
       }
     }
   }
 
   private dispatchMetricEvent(metric: WebVitalsMetric) {
-    if (typeof window !== "undefined") {
+    if (typeof window !== 'undefined') {
       window.dispatchEvent(
-        new CustomEvent("web-vitals-metric", {
+        new CustomEvent('web-vitals-metric', {
           detail: metric,
-        }),
+        })
       );
     }
   }
 
   private observeResourceTiming() {
-    if (!("PerformanceObserver" in window)) return;
+    if (!('PerformanceObserver' in window)) return;
 
     const observer = new PerformanceObserver((list) => {
       for (const entry of list.getEntries()) {
-        if (entry.entryType === "resource") {
+        if (entry.entryType === 'resource') {
           this.analyzeResourceTiming(entry as PerformanceResourceTiming);
         }
       }
     });
 
-    observer.observe({ entryTypes: ["resource"] });
-    this.observers.set("resource", observer);
+    observer.observe({ entryTypes: ['resource'] });
+    this.observers.set('resource', observer);
   }
 
   private observeLongTasks() {
-    if (!("PerformanceObserver" in window)) return;
+    if (!('PerformanceObserver' in window)) return;
 
     const observer = new PerformanceObserver((list) => {
       for (const entry of list.getEntries()) {
-        if (entry.entryType === "longtask") {
+        if (entry.entryType === 'longtask') {
           this.handleLongTask(entry);
         }
       }
     });
 
     try {
-      observer.observe({ entryTypes: ["longtask"] });
-      this.observers.set("longtask", observer);
+      observer.observe({ entryTypes: ['longtask'] });
+      this.observers.set('longtask', observer);
     } catch {
       // Long tasks not supported in this browser
     }
   }
 
   private observeLayoutShifts() {
-    if (!("PerformanceObserver" in window)) return;
+    if (!('PerformanceObserver' in window)) return;
 
     const observer = new PerformanceObserver(
       (list: PerformanceObserverEntryList) => {
         for (const entry of list.getEntries()) {
           if (
-            entry.entryType === "layout-shift" &&
+            entry.entryType === 'layout-shift' &&
             !(entry as LayoutShift).hadRecentInput
           ) {
             this.handleLayoutShift(entry);
           }
         }
-      },
+      }
     );
 
     try {
-      observer.observe({ entryTypes: ["layout-shift"] });
-      this.observers.set("layout-shift", observer);
+      observer.observe({ entryTypes: ['layout-shift'] });
+      this.observers.set('layout-shift', observer);
     } catch {
       // Layout shift not supported
     }
   }
 
   private observeFirstInput() {
-    if (!("PerformanceObserver" in window)) return;
+    if (!('PerformanceObserver' in window)) return;
 
     const observer = new PerformanceObserver((list) => {
       for (const entry of list.getEntries()) {
-        if (entry.entryType === "first-input") {
+        if (entry.entryType === 'first-input') {
           this.handleFirstInput(entry);
         }
       }
     });
 
     try {
-      observer.observe({ entryTypes: ["first-input"] });
-      this.observers.set("first-input", observer);
+      observer.observe({ entryTypes: ['first-input'] });
+      this.observers.set('first-input', observer);
     } catch {
       // First input not supported
     }
@@ -239,15 +239,15 @@ class PerformanceMonitor {
       // Slow resource (>1s)
       if (this.config.enableConsoleLogging) {
         console.warn(
-          `Slow resource detected: ${entry.name} took ${loadTime.toFixed(2)}ms`,
+          `Slow resource detected: ${entry.name} took ${loadTime.toFixed(2)}ms`
         );
       }
     }
 
     // Check for render-blocking resources
     if (
-      "renderBlockingStatus" in entry &&
-      entry.renderBlockingStatus === "blocking"
+      'renderBlockingStatus' in entry &&
+      entry.renderBlockingStatus === 'blocking'
     ) {
       if (this.config.enableConsoleLogging) {
         console.warn(`Render-blocking resource: ${entry.name}`);
@@ -264,11 +264,11 @@ class PerformanceMonitor {
       }
 
       // Dispatch event for potential UI indication
-      if (typeof window !== "undefined") {
+      if (typeof window !== 'undefined') {
         window.dispatchEvent(
-          new CustomEvent("long-task-detected", {
+          new CustomEvent('long-task-detected', {
             detail: { duration, startTime: entry.startTime },
-          }),
+          })
         );
       }
     }
@@ -293,10 +293,10 @@ class PerformanceMonitor {
   }
 
   private getSessionId(): string {
-    let sessionId = sessionStorage.getItem("perf-session-id");
+    let sessionId = sessionStorage.getItem('perf-session-id');
     if (!sessionId) {
       sessionId = Math.random().toString(36).substring(2, 15);
-      sessionStorage.setItem("perf-session-id", sessionId);
+      sessionStorage.setItem('perf-session-id', sessionId);
     }
     return sessionId;
   }
@@ -325,8 +325,8 @@ class PerformanceMonitor {
 
   public generatePerformanceReport(): string {
     const metrics = this.getMetrics();
-    let report = "Performance Report\n";
-    report += "==================\n\n";
+    let report = 'Performance Report\n';
+    report += '==================\n\n';
 
     for (const [name, metric] of metrics) {
       report += `${name}:\n`;
@@ -354,16 +354,16 @@ class PerformanceMonitor {
 // Export singleton instance
 export const performanceMonitor = new PerformanceMonitor({
   enableAnalytics: true,
-  enableConsoleLogging: process.env.NODE_ENV === "development",
-  enableRemoteReporting: process.env.NODE_ENV === "production",
+  enableConsoleLogging: process.env.NODE_ENV === 'development',
+  enableRemoteReporting: process.env.NODE_ENV === 'production',
   apiEndpoint: process.env.NEXT_PUBLIC_ANALYTICS_ENDPOINT,
-  sampleRate: parseFloat(process.env.NEXT_PUBLIC_ANALYTICS_SAMPLE_RATE || "1"),
+  sampleRate: parseFloat(process.env.NEXT_PUBLIC_ANALYTICS_SAMPLE_RATE || '1'),
 });
 
 // React hook for using performance metrics
 export function usePerformanceMetrics() {
   const [metrics, setMetrics] = React.useState<Map<string, WebVitalsMetric>>(
-    new Map(),
+    new Map()
   );
 
   React.useEffect(() => {
@@ -373,8 +373,8 @@ export function usePerformanceMetrics() {
 
     // Listen for metric updates
     window.addEventListener(
-      "web-vitals-metric",
-      handleMetricUpdate as EventListener,
+      'web-vitals-metric',
+      handleMetricUpdate as EventListener
     );
 
     // Initial load
@@ -382,8 +382,8 @@ export function usePerformanceMetrics() {
 
     return () => {
       window.removeEventListener(
-        "web-vitals-metric",
-        handleMetricUpdate as EventListener,
+        'web-vitals-metric',
+        handleMetricUpdate as EventListener
       );
     };
   }, []);
@@ -393,7 +393,7 @@ export function usePerformanceMetrics() {
     getMetric: (name: string) => metrics.get(name),
     getAllMetrics: () => Array.from(metrics.values()),
     getPerformanceScore: () => {
-      const coreMetrics = ["CLS", "INP", "LCP"]; // Changed FID to INP as FID is deprecated
+      const coreMetrics = ['CLS', 'INP', 'LCP']; // Changed FID to INP as FID is deprecated
       let total = 0;
       let count = 0;
 
@@ -401,9 +401,9 @@ export function usePerformanceMetrics() {
         const metric = metrics.get(name);
         if (!metric) continue;
         const score =
-          metric.rating === "good"
+          metric.rating === 'good'
             ? 100
-            : metric.rating === "needs-improvement"
+            : metric.rating === 'needs-improvement'
               ? 50
               : 0;
         total += score;

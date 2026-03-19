@@ -1,14 +1,14 @@
-"use client";
+'use client';
 
-import React, { useState } from "react";
-import Link from "next/link";
-import "../../styles/design-system.scss";
-import "../../styles/homepage.scss";
+import React, { useState } from 'react';
+import Link from 'next/link';
+import '../../styles/design-system.scss';
+import '../../styles/homepage.scss';
 import {
   useProgressTracking,
   ProgressData,
-} from "../../hooks/useProgressTracking";
-import { ChartBarIcon, LockClosedIcon } from "@heroicons/react/24/outline";
+} from '../../hooks/useProgressTracking';
+import { ChartBarIcon, LockClosedIcon } from '@heroicons/react/24/outline';
 
 // Interview Preparation Hub - Non-Gamified Educational Structure
 interface InterviewModule {
@@ -16,10 +16,10 @@ interface InterviewModule {
   title: string;
   description: string;
   icon: string;
-  difficulty: "Beginner" | "Intermediate" | "Advanced";
+  difficulty: 'Beginner' | 'Intermediate' | 'Advanced';
   estimatedTime: string;
   questionCount: number;
-  category: "frontend" | "backend" | "database" | "devops" | "general";
+  category: 'frontend' | 'backend' | 'database' | 'devops' | 'general';
   technologies: string[];
   href: string;
   prerequisites: string[];
@@ -38,149 +38,149 @@ interface InterviewTier {
 // Updated tier colors to match homepage
 const interviewTiers: Record<string, InterviewTier> = {
   foundational: {
-    title: "Foundational Interview Prep",
+    title: 'Foundational Interview Prep',
     description:
-      "Master fundamental programming and web development interview questions",
-    color: "from-blue-500 to-cyan-500",
+      'Master fundamental programming and web development interview questions',
+    color: 'from-blue-500 to-cyan-500',
     tierLevel: 1,
-    focusArea: "Programming basics, web fundamentals, algorithms",
+    focusArea: 'Programming basics, web fundamentals, algorithms',
     learningObjectives: [
-      "Master basic programming interview questions",
-      "Understand fundamental web development concepts",
-      "Practice algorithmic thinking and problem solving",
+      'Master basic programming interview questions',
+      'Understand fundamental web development concepts',
+      'Practice algorithmic thinking and problem solving',
     ],
     modules: [
       {
-        id: "javascript-questions",
-        title: "JavaScript Fundamentals",
+        id: 'javascript-questions',
+        title: 'JavaScript Fundamentals',
         description:
-          "ES6+, async/await, closures, prototypes, and core JavaScript concepts",
-        icon: "📜",
-        difficulty: "Beginner",
-        estimatedTime: "45-60 minutes",
+          'ES6+, async/await, closures, prototypes, and core JavaScript concepts',
+        icon: '📜',
+        difficulty: 'Beginner',
+        estimatedTime: '45-60 minutes',
         questionCount: 25,
-        category: "frontend",
-        technologies: ["JavaScript", "ES6+", "Async/Await", "DOM"],
-        href: "/javascript/interview-questions",
+        category: 'frontend',
+        technologies: ['JavaScript', 'ES6+', 'Async/Await', 'DOM'],
+        href: '/javascript/interview-questions',
         prerequisites: [],
       },
       {
-        id: "sass-questions",
-        title: "CSS & SASS",
+        id: 'sass-questions',
+        title: 'CSS & SASS',
         description:
-          "Styling fundamentals, responsive design, and CSS preprocessors",
-        icon: "🎨",
-        difficulty: "Beginner",
-        estimatedTime: "30-45 minutes",
+          'Styling fundamentals, responsive design, and CSS preprocessors',
+        icon: '🎨',
+        difficulty: 'Beginner',
+        estimatedTime: '30-45 minutes',
         questionCount: 18,
-        category: "frontend",
-        technologies: ["CSS3", "SASS", "Responsive Design", "Flexbox"],
-        href: "/sass/interview-questions",
+        category: 'frontend',
+        technologies: ['CSS3', 'SASS', 'Responsive Design', 'Flexbox'],
+        href: '/sass/interview-questions',
         prerequisites: [],
       },
     ],
   },
   core: {
-    title: "Core Technology Interviews",
-    description: "Deep dive into major frameworks and backend technologies",
-    color: "from-green-500 to-emerald-500",
+    title: 'Core Technology Interviews',
+    description: 'Deep dive into major frameworks and backend technologies',
+    color: 'from-green-500 to-emerald-500',
     tierLevel: 2,
-    focusArea: "Framework mastery, backend development, database design",
+    focusArea: 'Framework mastery, backend development, database design',
     learningObjectives: [
-      "Master core framework interview questions",
-      "Understand backend architecture patterns",
-      "Design efficient database solutions",
+      'Master core framework interview questions',
+      'Understand backend architecture patterns',
+      'Design efficient database solutions',
     ],
     modules: [
       {
-        id: "react-questions",
-        title: "React Development",
+        id: 'react-questions',
+        title: 'React Development',
         description:
-          "Components, hooks, state management, and modern React patterns",
-        icon: "⚛️",
-        difficulty: "Intermediate",
-        estimatedTime: "60-75 minutes",
+          'Components, hooks, state management, and modern React patterns',
+        icon: '⚛️',
+        difficulty: 'Intermediate',
+        estimatedTime: '60-75 minutes',
         questionCount: 30,
-        category: "frontend",
-        technologies: ["React", "JSX", "Hooks", "Context API"],
-        href: "/react/interview-questions",
-        prerequisites: ["javascript-questions"],
+        category: 'frontend',
+        technologies: ['React', 'JSX', 'Hooks', 'Context API'],
+        href: '/react/interview-questions',
+        prerequisites: ['javascript-questions'],
       },
       {
-        id: "dotnet-questions",
-        title: ".NET Core & C#",
+        id: 'dotnet-questions',
+        title: '.NET Core & C#',
         description:
-          "C# language features, ASP.NET Core, Entity Framework, and enterprise patterns",
-        icon: "⚡",
-        difficulty: "Intermediate",
-        estimatedTime: "75-90 minutes",
+          'C# language features, ASP.NET Core, Entity Framework, and enterprise patterns',
+        icon: '⚡',
+        difficulty: 'Intermediate',
+        estimatedTime: '75-90 minutes',
         questionCount: 35,
-        category: "backend",
-        technologies: ["C#", "ASP.NET Core", "Entity Framework", "LINQ"],
-        href: "/dotnet/interview-questions",
-        prerequisites: ["javascript-questions"],
+        category: 'backend',
+        technologies: ['C#', 'ASP.NET Core', 'Entity Framework', 'LINQ'],
+        href: '/dotnet/interview-questions',
+        prerequisites: ['javascript-questions'],
       },
     ],
   },
   specialized: {
-    title: "Specialised Interview Topics",
+    title: 'Specialised Interview Topics',
     description:
-      "Advanced frameworks, modern development practices, and emerging technologies",
-    color: "from-purple-500 to-violet-500",
+      'Advanced frameworks, modern development practices, and emerging technologies',
+    color: 'from-purple-500 to-violet-500',
     tierLevel: 3,
-    focusArea: "Advanced frameworks, TypeScript, modern tooling",
+    focusArea: 'Advanced frameworks, TypeScript, modern tooling',
     learningObjectives: [
-      "Master advanced framework concepts",
-      "Understand modern development tooling",
-      "Implement complex architectural patterns",
+      'Master advanced framework concepts',
+      'Understand modern development tooling',
+      'Implement complex architectural patterns',
     ],
     modules: [
       {
-        id: "typescript-questions",
-        title: "TypeScript",
+        id: 'typescript-questions',
+        title: 'TypeScript',
         description:
-          "Type system, interfaces, generics, and advanced TypeScript patterns",
-        icon: "📘",
-        difficulty: "Advanced",
-        estimatedTime: "45-60 minutes",
+          'Type system, interfaces, generics, and advanced TypeScript patterns',
+        icon: '📘',
+        difficulty: 'Advanced',
+        estimatedTime: '45-60 minutes',
         questionCount: 20,
-        category: "frontend",
-        technologies: ["TypeScript", "Generics", "Interfaces", "Type Guards"],
-        href: "/typescript/interview-questions",
-        prerequisites: ["react-questions"],
+        category: 'frontend',
+        technologies: ['TypeScript', 'Generics', 'Interfaces', 'Type Guards'],
+        href: '/typescript/interview-questions',
+        prerequisites: ['react-questions'],
       },
     ],
   },
   expert: {
-    title: "Expert-Level Challenges",
+    title: 'Expert-Level Challenges',
     description:
-      "System design, DevOps practices, and senior-level interview preparation",
-    color: "from-orange-500 to-red-500",
+      'System design, DevOps practices, and senior-level interview preparation',
+    color: 'from-orange-500 to-red-500',
     tierLevel: 4,
-    focusArea: "System design, DevOps, architecture, senior-level concepts",
+    focusArea: 'System design, DevOps, architecture, senior-level concepts',
     learningObjectives: [
-      "Design scalable system architectures",
-      "Master DevOps and deployment strategies",
-      "Lead technical discussions and decisions",
+      'Design scalable system architectures',
+      'Master DevOps and deployment strategies',
+      'Lead technical discussions and decisions',
     ],
     modules: [
       {
-        id: "system-design-questions",
-        title: "System Design",
+        id: 'system-design-questions',
+        title: 'System Design',
         description:
-          "Scalability, architecture patterns, microservices, and distributed systems",
-        icon: "🏗️",
-        difficulty: "Advanced",
-        estimatedTime: "120-180 minutes",
+          'Scalability, architecture patterns, microservices, and distributed systems',
+        icon: '🏗️',
+        difficulty: 'Advanced',
+        estimatedTime: '120-180 minutes',
         questionCount: 15,
-        category: "general",
+        category: 'general',
         technologies: [
-          "Architecture",
-          "Scalability",
-          "Microservices",
-          "Load Balancing",
+          'Architecture',
+          'Scalability',
+          'Microservices',
+          'Load Balancing',
         ],
-        href: "/system-design/interview-questions",
+        href: '/system-design/interview-questions',
         prerequisites: [],
       },
     ],
@@ -194,50 +194,50 @@ const InterviewModuleCard: React.FC<{
   isLocked: boolean;
 }> = ({ module, tierKey, isLocked }) => {
   const tierVariantClass =
-    tierKey === "expert"
-      ? "tier-quality"
-      : tierKey === "foundational"
-        ? "tier-foundational"
-        : tierKey === "core"
-          ? "tier-core"
-          : tierKey === "specialized"
-            ? "tier-specialized"
-            : "";
+    tierKey === 'expert'
+      ? 'tier-quality'
+      : tierKey === 'foundational'
+        ? 'tier-foundational'
+        : tierKey === 'core'
+          ? 'tier-core'
+          : tierKey === 'specialized'
+            ? 'tier-specialized'
+            : '';
 
   const iconTierClass =
-    tierKey === "expert"
-      ? "glass-tier-quality"
-      : tierKey === "foundational"
-        ? "glass-tier-foundational"
-        : tierKey === "core"
-          ? "glass-tier-core"
-          : tierKey === "specialized"
-            ? "glass-tier-specialized"
-            : "";
+    tierKey === 'expert'
+      ? 'glass-tier-quality'
+      : tierKey === 'foundational'
+        ? 'glass-tier-foundational'
+        : tierKey === 'core'
+          ? 'glass-tier-core'
+          : tierKey === 'specialized'
+            ? 'glass-tier-specialized'
+            : '';
 
   const categoryLabel =
     module.category.charAt(0).toUpperCase() + module.category.slice(1);
 
   return (
-    <div className={`module-card-container ${isLocked ? "locked" : ""}`}>
+    <div className={`module-card-container ${isLocked ? 'locked' : ''}`}>
       <Link
-        href={isLocked ? "#" : module.href}
+        href={isLocked ? '#' : module.href}
         aria-label={module.title}
         role="link"
         title={module.title}
-        className={`glass-module-card ${tierVariantClass} group relative ${isLocked ? "opacity-60 cursor-not-allowed" : "cursor-pointer hover:-translate-y-1 hover:shadow-xl active:scale-[0.99] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 ring-focus ring-offset-bg"} rounded-xl overflow-hidden`}
+        className={`glass-module-card ${tierVariantClass} group relative ${isLocked ? 'opacity-60 cursor-not-allowed' : 'cursor-pointer hover:-translate-y-1 hover:shadow-xl active:scale-[0.99] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 ring-focus ring-offset-bg'} rounded-xl overflow-hidden`}
         aria-disabled={isLocked}
       >
         {/* Lock overlay */}
         {isLocked && (
           <div
             className="absolute inset-0 backdrop-blur-sm rounded-xl flex items-center justify-center z-10"
-            style={{ backgroundColor: "hsl(var(--bg) / 0.5)" }}
+            style={{ backgroundColor: 'hsl(var(--bg) / 0.5)' }}
           >
             <div className="text-center">
               <div
                 className="w-10 h-10 rounded-full flex items-center justify-center border border-border shadow-lg mx-auto"
-                style={{ backgroundColor: "hsl(var(--bg) / 0.3)" }}
+                style={{ backgroundColor: 'hsl(var(--bg) / 0.3)' }}
               >
                 <span className="text-3xl">🔒</span>
               </div>
@@ -305,7 +305,7 @@ const InterviewTierSection: React.FC<{
   return (
     <section
       className="tier-section w-full mb-8"
-      data-tier={tierKey === "expert" ? "quality" : tierKey}
+      data-tier={tierKey === 'expert' ? 'quality' : tierKey}
     >
       <div className={`tier-container bg-gradient-to-r ${tier.color}`}>
         <div className="tier-header mb-6">
@@ -349,7 +349,7 @@ const InterviewTierSection: React.FC<{
               prereqs.every((slug) => {
                 const moduleSlug = INTERVIEW_TO_MODULE_SLUG_MAP[slug] || slug;
                 const p = progress[moduleSlug];
-                return p && p.completionStatus === "completed";
+                return p && p.completionStatus === 'completed';
               });
             const isLocked =
               !!lockEnabled && prereqs.length > 0 && !prerequisitesMet;
@@ -371,12 +371,12 @@ const InterviewTierSection: React.FC<{
 };
 
 const INTERVIEW_TO_MODULE_SLUG_MAP: Record<string, string> = {
-  "javascript-questions": "web-fundamentals",
-  "sass-questions": "sass-advanced",
-  "react-questions": "react-fundamentals",
-  "dotnet-questions": "dotnet-fundamentals",
-  "typescript-questions": "typescript-fundamentals",
-  "system-design-questions": "system-design-fundamentals",
+  'javascript-questions': 'web-fundamentals',
+  'sass-questions': 'sass-advanced',
+  'react-questions': 'react-fundamentals',
+  'dotnet-questions': 'dotnet-fundamentals',
+  'typescript-questions': 'typescript-fundamentals',
+  'system-design-questions': 'system-design-fundamentals',
 };
 
 const InterviewPrepPage: React.FC = () => {
@@ -387,10 +387,10 @@ const InterviewPrepPage: React.FC = () => {
   React.useEffect(() => {
     try {
       const stored =
-        typeof window !== "undefined"
-          ? localStorage.getItem("gc.moduleLockEnabled")
+        typeof window !== 'undefined'
+          ? localStorage.getItem('gc.moduleLockEnabled')
           : null;
-      if (stored !== null) setModuleLockEnabled(stored === "true");
+      if (stored !== null) setModuleLockEnabled(stored === 'true');
     } catch {
       // ignore
     }
@@ -400,8 +400,8 @@ const InterviewPrepPage: React.FC = () => {
     setModuleLockEnabled((prev) => {
       const next = !prev;
       try {
-        if (typeof window !== "undefined") {
-          localStorage.setItem("gc.moduleLockEnabled", String(next));
+        if (typeof window !== 'undefined') {
+          localStorage.setItem('gc.moduleLockEnabled', String(next));
         }
       } catch {}
       return next;
@@ -409,10 +409,10 @@ const InterviewPrepPage: React.FC = () => {
   }, []);
   const [selectedTier, setSelectedTier] = useState<string | null>(null);
   const [selectedDifficulty, setSelectedDifficulty] = useState<string | null>(
-    null,
+    null
   );
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
-  const [searchQuery, setSearchQuery] = useState("");
+  const [searchQuery, setSearchQuery] = useState('');
   const { exportProgressData } = useProgressTracking();
 
   // Filter tiers based on selected filters
@@ -428,26 +428,25 @@ const InterviewPrepPage: React.FC = () => {
               .toLowerCase()
               .includes(searchQuery.toLowerCase()) ||
             module.technologies.some((tech) =>
-              tech.toLowerCase().includes(searchQuery.toLowerCase()),
-            ),
+              tech.toLowerCase().includes(searchQuery.toLowerCase())
+            )
         );
       }
 
-      if (selectedTier && selectedTier !== "all" && selectedTier !== tierKey) {
+      if (selectedTier && selectedTier !== 'all' && selectedTier !== tierKey) {
         filteredModules = [];
       }
 
-      if (selectedDifficulty && selectedDifficulty !== "all") {
+      if (selectedDifficulty && selectedDifficulty !== 'all') {
         filteredModules = filteredModules.filter(
           (module) =>
-            module.difficulty.toLowerCase() ===
-            selectedDifficulty.toLowerCase(),
+            module.difficulty.toLowerCase() === selectedDifficulty.toLowerCase()
         );
       }
 
-      if (selectedCategory && selectedCategory !== "all") {
+      if (selectedCategory && selectedCategory !== 'all') {
         filteredModules = filteredModules.filter(
-          (module) => module.category === selectedCategory,
+          (module) => module.category === selectedCategory
         );
       }
 
@@ -457,28 +456,28 @@ const InterviewPrepPage: React.FC = () => {
 
       return acc;
     },
-    {} as Record<string, InterviewTier>,
+    {} as Record<string, InterviewTier>
   );
 
   const totalModules = Object.values(interviewTiers).reduce(
     (sum, tier) => sum + tier.modules.length,
-    0,
+    0
   );
   const totalQuestions = Object.values(interviewTiers).reduce(
     (sum, tier) =>
       sum +
       tier.modules.reduce(
         (tierSum, module) => tierSum + module.questionCount,
-        0,
+        0
       ),
-    0,
+    0
   );
 
   const hasActiveFilters =
     searchQuery || selectedTier || selectedDifficulty || selectedCategory;
 
   const clearFilters = () => {
-    setSearchQuery("");
+    setSearchQuery('');
     setSelectedTier(null);
     setSelectedDifficulty(null);
     setSelectedCategory(null);
@@ -498,13 +497,13 @@ const InterviewPrepPage: React.FC = () => {
                 aria-pressed={moduleLockEnabled}
                 aria-label={
                   moduleLockEnabled
-                    ? "Unlock modules (disable progress gating)"
-                    : "Lock modules (enable progress gating)"
+                    ? 'Unlock modules (disable progress gating)'
+                    : 'Lock modules (enable progress gating)'
                 }
                 title={
                   moduleLockEnabled
-                    ? "Unlock modules (disable progress gating)"
-                    : "Lock modules (enable progress gating)"
+                    ? 'Unlock modules (disable progress gating)'
+                    : 'Lock modules (enable progress gating)'
                 }
               >
                 {moduleLockEnabled ? (
@@ -675,10 +674,10 @@ const InterviewPrepPage: React.FC = () => {
                 <div className="filter-group">
                   <div className="relative">
                     <select
-                      value={selectedTier || "all"}
+                      value={selectedTier || 'all'}
                       onChange={(e) =>
                         setSelectedTier(
-                          e.target.value === "all" ? null : e.target.value,
+                          e.target.value === 'all' ? null : e.target.value
                         )
                       }
                       className="w-full px-3 py-2 pr-10 appearance-none bg-surface border border-border rounded-lg focus:ring-2 ring-focus ring-offset-bg text-fg"
@@ -698,10 +697,10 @@ const InterviewPrepPage: React.FC = () => {
                 <div className="filter-group">
                   <div className="relative">
                     <select
-                      value={selectedDifficulty || "all"}
+                      value={selectedDifficulty || 'all'}
                       onChange={(e) =>
                         setSelectedDifficulty(
-                          e.target.value === "all" ? null : e.target.value,
+                          e.target.value === 'all' ? null : e.target.value
                         )
                       }
                       className="w-full px-3 py-2 pr-10 appearance-none bg-surface border border-border rounded-lg focus:ring-2 ring-focus ring-offset-bg text-fg"
@@ -720,10 +719,10 @@ const InterviewPrepPage: React.FC = () => {
                 <div className="filter-group">
                   <div className="relative">
                     <select
-                      value={selectedCategory || "all"}
+                      value={selectedCategory || 'all'}
                       onChange={(e) =>
                         setSelectedCategory(
-                          e.target.value === "all" ? null : e.target.value,
+                          e.target.value === 'all' ? null : e.target.value
                         )
                       }
                       className="w-full px-3 py-2 pr-10 appearance-none bg-surface border border-border rounded-lg focus:ring-2 ring-focus ring-offset-bg text-fg"
