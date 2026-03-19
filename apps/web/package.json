@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "NODE_OPTIONS=--localstorage-file=/tmp/glasscode-ls.json next dev",
     "build": "NODE_ENV=production node scripts/copy-content.js && NODE_ENV=production node scripts/prepare-next.js && NODE_ENV=production next build",
     "start": "next start",
     "start:next": "if [ -f .next/standalone/server.js ]; then node .next/standalone/server.js; else next start; fi",
@@ -22,13 +22,14 @@
     "bcryptjs": "^3.0.2",
     "critters": "^0.0.23",
     "graphql": "^16.11.0",
-    "next": "15.3.5",
+    "next": "15.3.9",
     "next-auth": "^4.24.11",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-markdown": "^10.1.0",
     "remark-gfm": "^4.0.1",
     "sass": "^1.93.2",
+    "shiki": "^4.0.2",
     "web-vitals": "^5.1.0"
   },
   "devDependencies": {
@@ -42,7 +43,7 @@
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "eslint": "^9",
-    "eslint-config-next": "15.3.5",
+    "eslint-config-next": "^15.3.9",
     "playwright": "^1.38.0",
     "prettier": "^3.6.2",
     "tailwindcss": "^4",

@@ -7,6 +7,7 @@ import {
 import { Metadata } from 'next';
 import BreadcrumbNavigation from '@/components/BreadcrumbNavigation';
 import MarkdownContent from '@/components/MarkdownContent';
+import CodeBlock from '@/components/CodeBlock';
 
 interface LessonPageProps {
   params: Promise<{
@@ -186,44 +187,69 @@ export default async function LessonPage({ params }: LessonPageProps) {
 
         {/* Lesson Header */}
         <header className="mb-8">
-          <div className="glass-morphism p-8 rounded-xl">
-            <div className="flex items-center justify-between mb-4">
-              <div className="flex items-center gap-4">
-                <span className="flex items-center justify-center w-12 h-12 bg-primary text-primary-fg rounded-full text-lg font-bold">
-                  {lesson.order || lessonIndex + 1}
-                </span>
-                <div>
-                  <h1 className="text-3xl font-bold text-fg">{lesson.title}</h1>
-                  <p className="text-fg">
-                    {currentModule.title} • {currentGroupInfo?.group.title} •
-                    Lesson {lesson.order || lessonIndex + 1} of {lessons.length}
-                  </p>
+          <div className="glass-morphism rounded-xl overflow-hidden">
+            {/* Progress bar */}
+            <div className="h-1 bg-border">
+              <div
+                className="h-full bg-primary transition-all"
+                style={{
+                  width: `${Math.round(((lessonIndex + 1) / (lessons.length || 1)) * 100)}%`,
+                }}
+              />
+            </div>
+
+            <div className="p-8">
+              <div className="flex items-start justify-between gap-4 mb-2">
+                <div className="flex items-center gap-4">
+                  <span className="flex items-center justify-center w-12 h-12 bg-primary text-primary-fg rounded-full text-lg font-bold shrink-0">
+                    {lesson.order || lessonIndex + 1}
+                  </span>
+                  <div>
+                    <p className="text-xs text-muted uppercase tracking-widest mb-1">
+                      {currentModule.title}
+                      {currentGroupInfo?.group.title
+                        ? ` · ${currentGroupInfo.group.title}`
+                        : ''}
+                    </p>
+                    <h1 className="text-2xl sm:text-3xl font-bold text-fg leading-tight">
+                      {lesson.title}
+                    </h1>
+                  </div>
+                </div>
+
+                <div className="text-sm text-muted shrink-0 pt-1">
+                  <span className="flex items-center gap-1.5 bg-surface-alt px-3 py-1.5 rounded-full">
+                    <span>🕒</span>
+                    <span>{lesson.estimatedMinutes || 30} min</span>
+                  </span>
                 </div>
               </div>
 
-              <div className="text-sm text-muted">
-                <span className="flex items-center gap-1">
-                  🕒 {lesson.estimatedMinutes || 30} minutes
-                </span>
-              </div>
-            </div>
+              <p className="text-xs text-muted ml-16">
+                Lesson {lesson.order || lessonIndex + 1} of {lessons.length}
+              </p>
 
-            {/* Learning Objectives */}
-            {lesson.objectives && lesson.objectives.length > 0 && (
-              <div className="border-t border-border pt-6">
-                <h2 className="text-lg font-semibold text-fg mb-3">
-                  🎯 Learning Objectives
-                </h2>
-                <ul className="space-y-2">
-                  {lesson.objectives.map((objective: string, index: number) => (
-                    <li key={index} className="flex items-center gap-3">
-                      <span className="text-primary mt-0.5">✓</span>
-                      <span className="text-fg">{objective}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            )}
+              {/* Learning Objectives */}
+              {lesson.objectives && lesson.objectives.length > 0 && (
+                <div className="border-t border-border mt-6 pt-6">
+                  <h2 className="text-sm font-semibold text-muted uppercase tracking-widest mb-3">
+                    Learning Objectives
+                  </h2>
+                  <ul className="grid sm:grid-cols-2 gap-2">
+                    {lesson.objectives.map(
+                      (objective: string, index: number) => (
+                        <li key={index} className="flex items-start gap-2.5">
+                          <span className="text-primary mt-0.5 shrink-0">
+                            ✓
+                          </span>
+                          <span className="text-fg text-sm">{objective}</span>
+                        </li>
+                      )
+                    )}
+                  </ul>
+                </div>
+              )}
+            </div>
           </div>
         </header>
 
@@ -246,15 +272,17 @@ export default async function LessonPage({ params }: LessonPageProps) {
                 💻 Code Example
               </h2>
 
-              <div className="bg-surface rounded-lg p-6 mb-4 overflow-x-auto">
-                <pre className="text-sm text-fg">
-                  <code>{lesson.code.example}</code>
-                </pre>
-              </div>
+              <CodeBlock
+                code={lesson.code.example}
+                languageHint={currentModule.technologies?.[0]}
+                className="mb-4"
+              />
 
               {lesson.code.explanation && (
-                <div className="text-fg">
-                  <h3 className="font-semibold mb-2">Explanation:</h3>
+                <div className="text-fg mt-5 pt-5 border-t border-border">
+                  <h3 className="font-semibold mb-2 text-muted uppercase text-xs tracking-widest">
+                    Explanation
+                  </h3>
                   <MarkdownContent content={lesson.code.explanation} />
                 </div>
               )}
@@ -355,7 +383,7 @@ export default async function LessonPage({ params }: LessonPageProps) {
         </main>
 
         {/* Navigation */}
-        <nav className="mt-12 flex justify-between items-center">
+        <nav className="mt-12 glass-morphism rounded-xl p-4 flex justify-between items-center gap-4">
           <div>
             {isFirstInGroup ? (
               <Link
@@ -364,9 +392,10 @@ export default async function LessonPage({ params }: LessonPageProps) {
                     ? '/programming/lessons'
                     : currentModule.routes.lessons
                 }
-                className="inline-flex items-center px-4 py-2 text-fg hover:text-fg transition-colors"
+                className="inline-flex items-center gap-2 px-4 py-2.5 text-sm text-muted hover:text-fg border border-border rounded-lg hover:bg-surface-alt transition-all"
               >
-                ← Back to Lessons
+                <span>←</span>
+                <span>All Lessons</span>
               </Link>
             ) : (
               <Link
@@ -374,12 +403,17 @@ export default async function LessonPage({ params }: LessonPageProps) {
                   currentModule.slug === 'programming-fundamentals'
                     ? `/programming/lessons/${lessonIndex}`
                     : `${currentModule.routes.lessons}/${lessonIndex}`
-                } // Previous lesson
-                className="inline-flex items-center px-4 py-2 text-fg hover:text-fg transition-colors"
+                }
+                className="inline-flex items-center gap-2 px-4 py-2.5 text-sm text-muted hover:text-fg border border-border rounded-lg hover:bg-surface-alt transition-all"
               >
-                ← Previous Lesson
+                <span>←</span>
+                <span>Previous</span>
               </Link>
             )}
+          </div>
+
+          <div className="text-xs text-muted">
+            {lessonIndex + 1} / {lessons.length}
           </div>
 
           <div>
@@ -391,10 +425,10 @@ export default async function LessonPage({ params }: LessonPageProps) {
                       ? `/programming/lessons/${lessons.indexOf(nextGroup.lessons[0]) + 1}`
                       : `${currentModule.routes.lessons}/${lessons.indexOf(nextGroup.lessons[0]) + 1}`
                   }
-                  className="inline-flex items-center px-4 py-2 bg-primary text-primary-fg rounded-lg hover:opacity-90 transition-colors"
+                  className="inline-flex items-center gap-2 px-4 py-2.5 text-sm bg-primary text-primary-fg rounded-lg hover:opacity-90 transition-all font-medium"
                 >
-                  Next Group: {nextGroup.title}
-                  <span className="ml-2">→</span>
+                  <span>{nextGroup.title}</span>
+                  <span>→</span>
                 </Link>
               ) : (
                 <Link
@@ -403,10 +437,10 @@ export default async function LessonPage({ params }: LessonPageProps) {
                       ? '/programming/quiz'
                       : currentModule.routes.quiz
                   }
-                  className="inline-flex items-center px-4 py-2 bg-success text-primary-fg rounded-lg hover:opacity-90 transition-colors"
+                  className="inline-flex items-center gap-2 px-4 py-2.5 text-sm bg-success text-primary-fg rounded-lg hover:opacity-90 transition-all font-medium"
                 >
-                  Take Assessment
-                  <span className="ml-2">🎯</span>
+                  <span>Take Assessment</span>
+                  <span>🎯</span>
                 </Link>
               )
             ) : (
@@ -415,11 +449,11 @@ export default async function LessonPage({ params }: LessonPageProps) {
                   currentModule.slug === 'programming-fundamentals'
                     ? `/programming/lessons/${lessonIndex + 2}`
                     : `${currentModule.routes.lessons}/${lessonIndex + 2}`
-                } // Next lesson
-                className="inline-flex items-center px-4 py-2 bg-primary text-primary-fg rounded-lg hover:opacity-90 transition-colors"
+                }
+                className="inline-flex items-center gap-2 px-4 py-2.5 text-sm bg-primary text-primary-fg rounded-lg hover:opacity-90 transition-all font-medium"
               >
-                Next Lesson
-                <span className="ml-2">→</span>
+                <span>Next Lesson</span>
+                <span>→</span>
               </Link>
             )}
           </div>

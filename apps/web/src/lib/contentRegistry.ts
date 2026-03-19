@@ -468,10 +468,13 @@ class ContentRegistryLoader {
           const shortSlug =
             (await this.getShortSlugFromModuleSlug(moduleSlug)) || moduleSlug;
 
-          // Check localStorage/sessionStorage caches first
+          // Check localStorage/sessionStorage caches first (browser only)
           try {
             const localKey = `lessons_prefetch_${shortSlug}`;
-            const localRaw = localStorage.getItem(localKey);
+            const localRaw =
+              typeof window !== 'undefined'
+                ? localStorage.getItem(localKey)
+                : null;
             if (localRaw) {
               const { timestamp, data } = JSON.parse(localRaw);
               if (
@@ -647,19 +650,20 @@ class ContentRegistryLoader {
             return lesson;
           });
 
-          // Cache in sessionStorage and localStorage
-          try {
-            sessionStorage.setItem(
-              `prefetch_lessons_${shortSlug}`,
-              JSON.stringify({ timestamp: Date.now(), data: mapped })
-            );
-            localStorage.setItem(
-              `lessons_prefetch_${shortSlug}`,
-              JSON.stringify({ timestamp: Date.now(), data: mapped })
-            );
-          } catch {
-            // Ignore storage errors
-          }
+          // Cache in sessionStorage and localStorage (browser only)
+          if (typeof window !== 'undefined')
+            try {
+              sessionStorage.setItem(
+                `prefetch_lessons_${shortSlug}`,
+                JSON.stringify({ timestamp: Date.now(), data: mapped })
+              );
+              localStorage.setItem(
+                `lessons_prefetch_${shortSlug}`,
+                JSON.stringify({ timestamp: Date.now(), data: mapped })
+              );
+            } catch {
+              // Ignore storage errors
+            }
 
           return mapped;
         }

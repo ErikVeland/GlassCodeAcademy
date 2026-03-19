@@ -29,6 +29,7 @@ class QuizPrefetchService {
   async startPrefetching(
     priorityOrder: 'tier' | 'popularity' | 'alphabetical' = 'tier'
   ) {
+    if (typeof window === 'undefined') return;
     if (this.isPrefetching) {
       console.log('[QuizPrefetchService] Already prefetching, skipping');
       return;
@@ -289,6 +290,7 @@ class QuizPrefetchService {
    * Clear prefetch cache
    */
   clearCache() {
+    if (typeof window === 'undefined') return;
     // Clear all quiz prefetch cache entries
     for (let i = 0; i < localStorage.length; i++) {
       const key = localStorage.key(i);
