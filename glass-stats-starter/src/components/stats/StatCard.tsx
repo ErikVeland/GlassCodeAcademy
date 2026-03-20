@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
-import { ReactNode, cloneElement, isValidElement } from "react";
-import AnimatedCounter from "./AnimatedCounter";
+import { ReactNode, cloneElement, isValidElement } from 'react';
+import AnimatedCounter from './AnimatedCounter';
 
 interface StatCardProps {
   title: string;
@@ -10,7 +10,7 @@ interface StatCardProps {
   description?: string;
   prefix?: string;
   suffix?: string;
-  color?: "blue" | "green" | "purple" | "orange" | "pink" | "indigo";
+  color?: 'blue' | 'green' | 'purple' | 'orange' | 'pink' | 'indigo';
   trend?: {
     value: number;
     isPositive: boolean;
@@ -19,61 +19,61 @@ interface StatCardProps {
 
 const colorClasses = {
   blue: {
-    bg: "from-blue-500 via-cyan-500 to-blue-600",
-    bgDark: "dark:from-blue-400 dark:via-cyan-400 dark:to-blue-500",
-    icon: "text-fg",
-    iconBg: "from-blue-500 to-cyan-500 dark:from-blue-400 dark:to-cyan-400",
-    border: "border-border",
-    shadow: "",
-    glow: "",
+    bg: 'from-blue-500 via-cyan-500 to-blue-600',
+    bgDark: 'dark:from-blue-400 dark:via-cyan-400 dark:to-blue-500',
+    icon: 'text-fg',
+    iconBg: 'from-blue-500 to-cyan-500 dark:from-blue-400 dark:to-cyan-400',
+    border: 'border-border',
+    shadow: '',
+    glow: '',
   },
   green: {
-    bg: "from-green-500 via-emerald-500 to-green-600",
-    bgDark: "dark:from-green-400 dark:via-emerald-400 dark:to-green-500",
-    icon: "text-fg",
+    bg: 'from-green-500 via-emerald-500 to-green-600',
+    bgDark: 'dark:from-green-400 dark:via-emerald-400 dark:to-green-500',
+    icon: 'text-fg',
     iconBg:
-      "from-green-500 to-emerald-500 dark:from-green-400 dark:to-emerald-400",
-    border: "border-border",
-    shadow: "",
-    glow: "",
+      'from-green-500 to-emerald-500 dark:from-green-400 dark:to-emerald-400',
+    border: 'border-border',
+    shadow: '',
+    glow: '',
   },
   purple: {
-    bg: "from-purple-500 via-violet-500 to-purple-600",
-    bgDark: "dark:from-purple-400 dark:via-violet-400 dark:to-purple-500",
-    icon: "text-fg",
+    bg: 'from-purple-500 via-violet-500 to-purple-600',
+    bgDark: 'dark:from-purple-400 dark:via-violet-400 dark:to-purple-500',
+    icon: 'text-fg',
     iconBg:
-      "from-purple-500 to-violet-500 dark:from-purple-400 dark:to-violet-400",
-    border: "border-border",
-    shadow: "",
-    glow: "",
+      'from-purple-500 to-violet-500 dark:from-purple-400 dark:to-violet-400',
+    border: 'border-border',
+    shadow: '',
+    glow: '',
   },
   orange: {
-    bg: "from-orange-500 via-amber-500 to-orange-600",
-    bgDark: "dark:from-orange-400 dark:via-amber-400 dark:to-orange-500",
-    icon: "text-fg",
+    bg: 'from-orange-500 via-amber-500 to-orange-600',
+    bgDark: 'dark:from-orange-400 dark:via-amber-400 dark:to-orange-500',
+    icon: 'text-fg',
     iconBg:
-      "from-orange-500 to-amber-500 dark:from-orange-400 dark:to-amber-400",
-    border: "border-border",
-    shadow: "",
-    glow: "",
+      'from-orange-500 to-amber-500 dark:from-orange-400 dark:to-amber-400',
+    border: 'border-border',
+    shadow: '',
+    glow: '',
   },
   pink: {
-    bg: "from-pink-500 via-rose-500 to-pink-600",
-    bgDark: "dark:from-pink-400 dark:via-rose-400 dark:to-pink-500",
-    icon: "text-fg",
-    iconBg: "from-pink-500 to-rose-500 dark:from-pink-400 dark:to-rose-400",
-    border: "border-border",
-    shadow: "",
-    glow: "",
+    bg: 'from-pink-500 via-rose-500 to-pink-600',
+    bgDark: 'dark:from-pink-400 dark:via-rose-400 dark:to-pink-500',
+    icon: 'text-fg',
+    iconBg: 'from-pink-500 to-rose-500 dark:from-pink-400 dark:to-rose-400',
+    border: 'border-border',
+    shadow: '',
+    glow: '',
   },
   indigo: {
-    bg: "from-indigo-500 via-blue-500 to-indigo-600",
-    bgDark: "dark:from-indigo-400 dark:via-blue-400 dark:to-indigo-500",
-    icon: "text-fg",
-    iconBg: "from-indigo-500 to-blue-500 dark:from-indigo-400 dark:to-blue-400",
-    border: "border-border",
-    shadow: "",
-    glow: "",
+    bg: 'from-indigo-500 via-blue-500 to-indigo-600',
+    bgDark: 'dark:from-indigo-400 dark:via-blue-400 dark:to-indigo-500',
+    icon: 'text-fg',
+    iconBg: 'from-indigo-500 to-blue-500 dark:from-indigo-400 dark:to-blue-400',
+    border: 'border-border',
+    shadow: '',
+    glow: '',
   },
 };
 
@@ -82,9 +82,9 @@ export default function StatCard({
   value,
   icon,
   description,
-  prefix = "",
-  suffix = "",
-  color = "blue",
+  prefix = '',
+  suffix = '',
+  color = 'blue',
   trend,
 }: StatCardProps) {
   const colors = colorClasses[color];
@@ -92,10 +92,10 @@ export default function StatCard({
   let sizedIcon: ReactNode = icon;
   if (isValidElement(icon)) {
     const iconProps = icon.props as Record<string, unknown>;
-    const existingClassName = (iconProps?.className as string) ?? "";
+    const existingClassName = (iconProps?.className as string) ?? '';
     const mergedClassName = `${existingClassName} w-12 h-12`.trim();
     const extraProps: Record<string, unknown> = { className: mergedClassName };
-    if ("size" in iconProps) {
+    if ('size' in iconProps) {
       extraProps.size = 48;
     }
     sizedIcon = cloneElement(icon as React.ReactElement, extraProps);
@@ -148,10 +148,10 @@ export default function StatCard({
                             flex items-center space-x-1 px-3 py-1.5 rounded-full text-xs font-medium
                             backdrop-blur-sm border border-border
                             transition-all duration-300 hover:scale-105
-                            ${trend.isPositive ? "bg-surface-alt text-success" : "bg-surface-alt text-danger"}
+                            ${trend.isPositive ? 'bg-surface-alt text-success' : 'bg-surface-alt text-danger'}
                         `}
           >
-            <span aria-hidden="true">{trend.isPositive ? "↗" : "↘"}</span>
+            <span aria-hidden="true">{trend.isPositive ? '↗' : '↘'}</span>
             <span>{Math.abs(trend.value)}%</span>
           </div>
         </div>

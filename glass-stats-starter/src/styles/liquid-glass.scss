@@ -42,7 +42,7 @@
 }
 
 /* Dark Mode Overrides */
-[data-theme="dark"] {
+[data-theme='dark'] {
   --glass-bg: rgba(0, 0, 0, 0.3);
   --glass-bg-dark: rgba(255, 255, 255, 0.1);
   --glass-border: rgba(255, 255, 255, 0.1);
@@ -96,7 +96,7 @@
 }
 
 /* Apply only in light mode; respects app-selected theme via data-theme */
-html[data-theme="light"] body.theme-base {
+html[data-theme='light'] body.theme-base {
   background:
     radial-gradient(
       1200px 800px at 20% 0%,
@@ -129,7 +129,7 @@ html[data-theme="light"] body.theme-base {
 }
 
 .glass-morphism::before {
-  content: "";
+  content: '';
   position: absolute;
   top: 0;
   left: 0;
@@ -142,31 +142,31 @@ html[data-theme="light"] body.theme-base {
 }
 
 /* Dark mode glass adjustments respecting selected theme */
-[data-theme="dark"] .glass-morphism {
+[data-theme='dark'] .glass-morphism {
   background: var(--glass-bg-dark);
   border-color: var(--glass-border-dark);
   box-shadow: var(--glass-shadow-dark);
 }
 
-[data-theme="dark"] .glass-morphism::before {
+[data-theme='dark'] .glass-morphism::before {
   background: var(--text-overlay-light);
   opacity: 0.05;
 }
 
 /* Light mode glass: stronger surface, dark text, improved contrast */
-html[data-theme="light"] .glass-morphism {
+html[data-theme='light'] .glass-morphism {
   background: rgba(255, 255, 255, 0.92);
   border-color: rgba(31, 41, 55, 0.15);
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
   color: rgb(31 41 55);
 }
 
-html[data-theme="light"] .glass-morphism::before {
+html[data-theme='light'] .glass-morphism::before {
   opacity: 0; /* remove dark overlay to maintain contrast */
 }
 
 /* Light mode glass-card variant */
-html[data-theme="light"] .glass-card {
+html[data-theme='light'] .glass-card {
   background: rgba(255, 255, 255, 0.95);
   border-color: rgba(31, 41, 55, 0.15);
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
@@ -338,7 +338,7 @@ html[data-theme="light"] .glass-card {
     display: none;
   }
 
-  [data-theme="dark"] .glass-morphism {
+  [data-theme='dark'] .glass-morphism {
     background: rgba(0, 0, 0, 0.9);
     border: 2px solid #ffffff;
   }
@@ -428,7 +428,7 @@ html[data-theme="light"] .glass-card {
 }
 
 .glass-module-card::after {
-  content: "";
+  content: '';
   position: absolute;
   top: 0;
   left: 0;
@@ -736,7 +736,7 @@ html[data-theme="light"] .glass-card {
 }
 
 /* Dark theme nav item text color respecting selected theme */
-[data-theme="dark"] .glass-nav-item {
+[data-theme='dark'] .glass-nav-item {
   color: #f3f4f6;
 }
 
@@ -750,7 +750,7 @@ html[data-theme="light"] .glass-card {
 }
 
 /* Dark theme nav item hover respecting selected theme */
-[data-theme="dark"] .glass-nav-item:hover:not(.active) {
+[data-theme='dark'] .glass-nav-item:hover:not(.active) {
   background: rgba(255, 255, 255, 0.05);
 }
 
@@ -780,12 +780,12 @@ html[data-theme="light"] .glass-card {
    ============================== */
 
 /* Preserve tier theming for panes within tier containers */
-html[data-theme="light"] .tier-container .glass-morphism {
+html[data-theme='light'] .tier-container .glass-morphism {
   background: rgba(255, 255, 255, 0.08);
   border-color: rgba(255, 255, 255, 0.24);
   color: #f3f4f6;
 }
-html[data-theme="light"] .tier-container .glass-morphism::before {
+html[data-theme='light'] .tier-container .glass-morphism::before {
   opacity: 0.08;
 }
 
@@ -793,33 +793,33 @@ html[data-theme="light"] .tier-container .glass-morphism::before {
 /* Light theme now uses var(--glass-bg), var(--glass-border), and inherits text color */
 
 /* Ensure the search input has a clearly visible dark grey border in light mode */
-html[data-theme="light"] .glass-search-input {
+html[data-theme='light'] .glass-search-input {
   border-color: #9ca3af !important; /* Tailwind Gray-400 */
 }
 
 /* Make search container and filter chips more defined in light mode via theme border */
-html[data-theme="light"] .glass-search-container,
-html[data-theme="light"] .glass-filter-tag {
+html[data-theme='light'] .glass-search-container,
+html[data-theme='light'] .glass-filter-tag {
   border-color: hsl(var(--border)) !important;
 }
 
 /* Module cards: give chips (rounded badges) a subtle border in light mode */
-html[data-theme="light"] .glass-module-card .rounded-full.bg-surface-alt {
+html[data-theme='light'] .glass-module-card .rounded-full.bg-surface-alt {
   border: 1px solid hsl(var(--border)) !important;
 }
 
 /* Fix for theme consistency on mobile devices */
 @media (max-width: 768px) {
   /* Ensure theme is consistently applied on mobile */
-  html[data-theme="dark"] .glass-morphism,
-  html[data-theme="dark"] .glass-card {
+  html[data-theme='dark'] .glass-morphism,
+  html[data-theme='dark'] .glass-card {
     background: var(--glass-bg-dark) !important;
     border-color: var(--glass-border-dark) !important;
     box-shadow: var(--glass-shadow-dark) !important;
   }
 
-  html[data-theme="light"] .glass-morphism,
-  html[data-theme="light"] .glass-card {
+  html[data-theme='light'] .glass-morphism,
+  html[data-theme='light'] .glass-card {
     background: rgba(255, 255, 255, 0.92) !important;
     border-color: rgba(31, 41, 55, 0.15) !important;
     box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08) !important;
@@ -827,12 +827,12 @@ html[data-theme="light"] .glass-module-card .rounded-full.bg-surface-alt {
   }
 
   /* Ensure theme-specific styles are applied consistently on mobile */
-  [data-theme="dark"] .glass-morphism::before {
+  [data-theme='dark'] .glass-morphism::before {
     background: var(--text-overlay-light);
     opacity: 0.05;
   }
 
-  html[data-theme="light"] .glass-morphism::before {
+  html[data-theme='light'] .glass-morphism::before {
     opacity: 0;
   }
 }

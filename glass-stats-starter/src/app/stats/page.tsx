@@ -1,13 +1,13 @@
-"use client";
+'use client';
 
-import { useEffect } from "react";
-import { useAppStats } from "@/hooks/useAppStats";
-import StatCard from "@/components/stats/StatCard";
-import PieChart from "@/components/stats/PieChart";
-import AppProgressTracker from "@/components/AppProgressTracker";
-import LoadingScreen from "@/components/LoadingScreen";
-import "@/styles/liquid-glass.scss";
-import { capitalizeModuleName } from "@/lib/stats/formatters";
+import { useEffect } from 'react';
+import { useAppStats } from '@/hooks/useAppStats';
+import StatCard from '@/components/stats/StatCard';
+import PieChart from '@/components/stats/PieChart';
+import AppProgressTracker from '@/components/AppProgressTracker';
+import LoadingScreen from '@/components/LoadingScreen';
+import '@/styles/liquid-glass.scss';
+import { capitalizeModuleName } from '@/lib/stats/formatters';
 import {
   AcademicCapIcon,
   BookOpenIcon,
@@ -16,13 +16,13 @@ import {
   FireIcon,
   QuestionMarkCircleIcon,
   SparklesIcon,
-} from "@heroicons/react/24/outline";
+} from '@heroicons/react/24/outline';
 
 export default function StatsPage() {
   const stats = useAppStats();
 
   useEffect(() => {
-    document.title = "GlassStats Starter";
+    document.title = 'GlassStats Starter';
   }, []);
 
   if (stats.isLoading) return <LoadingScreen message="Loading stats..." />;
@@ -89,19 +89,19 @@ export default function StatsPage() {
               <PieChart
                 data={[
                   {
-                    label: "Beginner",
+                    label: 'Beginner',
                     value: stats.difficultyBreakdown.beginner,
-                    color: "#10B981",
+                    color: '#10B981',
                   },
                   {
-                    label: "Intermediate",
+                    label: 'Intermediate',
                     value: stats.difficultyBreakdown.intermediate,
-                    color: "#F59E0B",
+                    color: '#F59E0B',
                   },
                   {
-                    label: "Advanced",
+                    label: 'Advanced',
                     value: stats.difficultyBreakdown.advanced,
-                    color: "#EF4444",
+                    color: '#EF4444',
                   },
                 ]}
                 size={240}
@@ -122,7 +122,7 @@ export default function StatsPage() {
                   className="p-4 rounded-xl border border-border bg-surface-alt"
                   style={{
                     borderLeftColor: module.color,
-                    borderLeftWidth: "4px",
+                    borderLeftWidth: '4px',
                   }}
                 >
                   <div className="font-bold text-fg mb-2 truncate">

@@ -1,10 +1,10 @@
-"use client";
+'use client';
 
-import { useCallback, useEffect, useState } from "react";
-import type { AppStats, BaseStats } from "@/lib/stats/types";
+import { useCallback, useEffect, useState } from 'react';
+import type { AppStats, BaseStats } from '@/lib/stats/types';
 
 async function fetchStats(): Promise<BaseStats> {
-  const res = await fetch("/api/stats", { cache: "no-store" });
+  const res = await fetch('/api/stats', { cache: 'no-store' });
   if (!res.ok) throw new Error(`Stats fetch failed: ${res.status}`);
   const json = (await res.json()) as BaseStats;
   return json;
@@ -34,7 +34,7 @@ export function useAppStats(): AppStats {
       setStats((prev) => ({
         ...prev,
         isLoading: false,
-        error: err instanceof Error ? err.message : "Failed to load stats",
+        error: err instanceof Error ? err.message : 'Failed to load stats',
       }));
     }
   }, []);
