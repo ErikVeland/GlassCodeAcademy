@@ -9,7 +9,7 @@ const sequelize = new Sequelize(
     host: process.env.POSTGRES_HOST || 'localhost',
     port: process.env.POSTGRES_PORT || 5432,
     dialect: 'postgres',
-    logging: console.log,
+    logging: process.env.NODE_ENV === 'production' ? false : console.log,
     define: {
       timestamps: true,
       underscored: true,

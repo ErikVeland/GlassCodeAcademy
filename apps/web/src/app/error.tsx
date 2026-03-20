@@ -25,13 +25,13 @@ export default function Error({
     ) {
       // Start the retry process
       const retryTimer = setTimeout(() => {
-        if (retryCount < 30) {
+        if (retryCount < 5) {
           setRetryCount((prev) => prev + 1);
           reset();
         } else {
           setShouldRetry(false);
         }
-      }, 2000);
+      }, 3000);
 
       return () => clearTimeout(retryTimer);
     }
@@ -48,7 +48,7 @@ export default function Error({
         <div className="w-full max-w-md">
           <EnhancedLoadingComponent
             retryCount={retryCount}
-            maxRetries={30}
+            maxRetries={5}
             error={error}
             onRetry={() => {
               setRetryCount(0);

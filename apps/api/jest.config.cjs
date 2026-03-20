@@ -4,13 +4,13 @@ module.exports = {
   roots: ['<rootDir>', '<rootDir>/src'],
   // Explicitly include tests in __tests__ directory and legacy test locations
   testMatch: [
-    '<rootDir>/tests/**/*.test.js',
-    '<rootDir>/src/tests/**/*.test.js',
-    '<rootDir>/src/__tests__/**/*.test.js'
+    '<rootDir>/tests/**/*.test.{js,ts}',
+    '<rootDir>/src/tests/**/*.test.{js,ts}',
+    '<rootDir>/src/__tests__/**/*.test.{js,ts}'
   ],
   collectCoverageFrom: [
-    'src/**/*.js',
-    '!src/config/*.js',
+    'src/**/*.{js,ts}',
+    '!src/config/*.{js,ts}',
     '!src/models/index.js'
   ],
   coverageDirectory: 'coverage',
@@ -34,8 +34,8 @@ module.exports = {
   moduleNameMapper: {
     '^uuid$': require.resolve('uuid')
   },
-  // Transform ES modules to CommonJS
+  // Transform ES modules and TypeScript to CommonJS
   transform: {
-    '^.+\\.js$': 'babel-jest'
+    '^.+\\.[jt]s$': 'babel-jest'
   }
 };

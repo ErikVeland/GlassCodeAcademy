@@ -30,8 +30,12 @@ export function generateToken(user: UserType): string {
     lastName: user.lastName || '',
   };
 
-  // Use the JWT_SECRET from environment variables or a default value
-  const secret = process.env.JWT_SECRET || 'default_secret_key';
+  const secret = process.env.JWT_SECRET;
+  if (!secret) {
+    throw new Error(
+      'JWT_SECRET environment variable is not set. Refusing to sign tokens with a default key.'
+    );
+  }
 
   // Set token expiration (24 hours)
   const options: jwt.SignOptions = {
@@ -48,7 +52,10 @@ export function generateToken(user: UserType): string {
  */
 export function verifyToken(token: string): JwtPayload | null {
   try {
-    const secret = process.env.JWT_SECRET || 'default_secret_key';
+    const secret = process.env.JWT_SECRET;
+    if (!secret) {
+      return null;
+    }
     const decoded = jwt.verify(token, secret) as JwtPayload;
     return decoded;
   } catch (_error) {

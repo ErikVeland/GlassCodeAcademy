@@ -22,7 +22,7 @@ export default function RegisterPage() {
     setSuccess(null);
 
     try {
-      const response = await fetch(`${getApiBaseStrict()}/auth/register`, {
+      const response = await fetch(`${getApiBaseStrict()}/api/auth/register`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

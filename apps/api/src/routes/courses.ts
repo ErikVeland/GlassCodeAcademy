@@ -22,22 +22,21 @@ export async function registerCourseRoutes(app: FastifyInstance) {
         return { error: 'Invalid limit parameter (must be between 1 and 100)' };
       }
 
-      const courses = await contentService.getAllCourses();
-
-      // Simulate pagination (in a real implementation, this would be done at the database level)
-      const startIndex = (page - 1) * limit;
-      const endIndex = startIndex + limit;
-      const paginatedCourses = courses.slice(startIndex, endIndex);
+      const offset = (page - 1) * limit;
+      const { rows, count } = await contentService.getAllCourses({
+        offset,
+        limit,
+      });
 
       return {
         success: true,
         data: {
-          courses: paginatedCourses,
+          courses: rows,
           pagination: {
             page,
             limit,
-            total: courses.length,
-            pages: Math.ceil(courses.length / limit),
+            total: count,
+            pages: Math.ceil(count / limit),
           },
         },
       };

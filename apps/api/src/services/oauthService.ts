@@ -1,22 +1,8 @@
 import axios from 'axios';
+import bcrypt from 'bcryptjs';
+import { randomBytes } from 'crypto';
 import { generateToken } from './tokenService';
-
-// Define User interface to replace Prisma type
-interface User {
-  id: string;
-  email: string;
-  username: string | null;
-  firstName: string | null;
-  lastName: string | null;
-  role: string;
-  passwordHash: string | null;
-  isActive: boolean;
-  lastLoginAt: Date;
-  oauthProvider: string;
-  oauthId: string;
-  createdAt: Date;
-  updatedAt: Date;
-}
+import { User } from '../models/index.js';
 
 // OAuth provider configurations
 const oauthConfigs: Record<string, any> = {
@@ -108,28 +94,44 @@ export const getUserInfo = async (
   return response.data;
 };
 
-export const createOrUpdateOAuthUser = async (userInfo: any): Promise<User> => {
-  // This is a placeholder implementation
-  // In a real application, you would interact with your Prisma client here
-  // to create or update the user in the database
-  return {
-    id: userInfo.id,
-    email: userInfo.email,
-    username: userInfo.username || null,
-    firstName: userInfo.firstName || userInfo.name?.split(' ')[0] || null,
-    lastName:
-      userInfo.lastName || userInfo.name?.split(' ').slice(1).join(' ') || null,
-    role: 'student',
-    passwordHash: null,
-    isActive: true,
-    lastLoginAt: new Date(),
-    oauthProvider: userInfo.provider,
-    oauthId: userInfo.id,
-    createdAt: new Date(),
-    updatedAt: new Date(),
-  } as User;
+/**
+ * Find or create a user from an OAuth profile.
+ *
+ * OAuth users don't choose a password, so we store a random hash that
+ * cannot be used for credential-based login.
+ */
+export const createOrUpdateOAuthUser = async (userInfo: any) => {
+  const email = userInfo.email;
+  if (!email) {
+    throw new Error('OAuth profile must include an email address');
+  }
+
+  const firstName =
+    userInfo.firstName || userInfo.name?.split(' ')[0] || 'User';
+  const lastName =
+    userInfo.lastName || userInfo.name?.split(' ').slice(1).join(' ') || '';
+
+  // findOrCreate is atomic in Sequelize and avoids race conditions
+  const [user, created] = await (User as any).findOrCreate({
+    where: { email },
+    defaults: {
+      firstName,
+      lastName,
+      // Random hash prevents credential login for OAuth-only accounts
+      passwordHash: await bcrypt.hash(randomBytes(32).toString('hex'), 10),
+      role: 'student',
+      isActive: true,
+    },
+  });
+
+  // If the user already existed, ensure the account is active
+  if (!created && !user.isActive) {
+    await user.update({ isActive: true });
+  }
+
+  return user;
 };
 
-export const generateOAuthToken = (user: User): string => {
+export const generateOAuthToken = (user: any): string => {
   return generateToken(user);
 };

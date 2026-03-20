@@ -35,6 +35,22 @@ export const VersionComparisonSchema = z.object({
   version2: z.string().min(1).max(50),
 });
 
+// Auth schemas
+export const RegisterSchema = z.object({
+  email: z.string().email('Invalid email address').max(255),
+  password: z
+    .string()
+    .min(8, 'Password must be at least 8 characters')
+    .max(128),
+  firstName: z.string().min(1, 'First name is required').max(100),
+  lastName: z.string().min(1, 'Last name is required').max(100),
+});
+
+export const LoginSchema = z.object({
+  email: z.string().email('Invalid email address').max(255),
+  password: z.string().min(1, 'Password is required').max(128),
+});
+
 // Validation utility function
 export function validateParams<T>(schema: z.ZodSchema<T>, data: unknown): T {
   const result = schema.safeParse(data);

@@ -5,6 +5,7 @@ import {
   getPerformanceSummary,
 } from '../utils/monitoring';
 import * as cacheService from '../services/cacheService.js';
+import { sequelize } from '../models/index.js';
 
 interface CacheStats {
   enabled: boolean;
@@ -20,10 +21,26 @@ export async function registerHealthRoutes(app: FastifyInstance) {
   // Basic health check endpoint
   app.get('/api/health', async () => {
     const redisStats = cacheService.getStats() as CacheStats;
-    const status = redisStats.connected ? 'healthy' : 'degraded';
+
+    let dbConnected = false;
+    try {
+      await sequelize.authenticate();
+      dbConnected = true;
+    } catch {
+      // DB is down — will be reflected in the response
+    }
+
+    const status =
+      dbConnected && redisStats.connected
+        ? 'healthy'
+        : dbConnected
+          ? 'degraded'
+          : 'unhealthy';
+
     return {
       status,
       timestamp: new Date().toISOString(),
+      database: { connected: dbConnected },
       redis: {
         enabled: redisStats.enabled,
         connected: redisStats.connected,

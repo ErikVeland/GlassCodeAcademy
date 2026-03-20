@@ -6,7 +6,7 @@ export async function registerStatsRoutes(app: FastifyInstance) {
   app.get('/api/stats/aggregate', async (_request, reply) => {
     try {
       // Fetch all courses with nested modules, lessons, and quizzes
-      const courses = (await contentService.getAllCourses()) as any[];
+      const { rows: courses, count } = await contentService.getAllCourses();
 
       // Initialize counters
       let totalModules = 0;
@@ -52,7 +52,7 @@ export async function registerStatsRoutes(app: FastifyInstance) {
           totalLessons,
           totalQuizzes,
           totalQuestions,
-          totalCourses: courses.length,
+          totalCourses: count,
         },
       };
     } catch (error: any) {

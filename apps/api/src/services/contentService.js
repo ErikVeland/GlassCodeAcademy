@@ -2,9 +2,15 @@ import { Course, Module, Lesson, Quiz } from '../models/index.js';
 
 class ContentService {
   // Course methods
-  async getAllCourses() {
+  /**
+   * @param {object} [options]
+   * @param {number}  [options.offset] - Number of rows to skip (for pagination).
+   * @param {number}  [options.limit]  - Max rows to return.
+   * @returns {Promise<{rows: any[], count: number}>}
+   */
+  async getAllCourses({ offset, limit } = {}) {
     try {
-      return await Course.findAll({
+      const queryOpts = {
         where: { isPublished: true },
         order: [['order', 'ASC']],
         include: [
@@ -12,7 +18,7 @@ class ContentService {
             model: Module,
             as: 'modules',
             required: false,
-            separate: true, // Fix: Use separate query to avoid filtering parent records
+            separate: true,
             where: { isPublished: true },
             order: [['order', 'ASC']],
             include: [
@@ -20,14 +26,20 @@ class ContentService {
                 model: Lesson,
                 as: 'lessons',
                 required: false,
-                separate: true, // Fix: Use separate query
+                separate: true,
                 where: { isPublished: true },
                 order: [['order', 'ASC']],
               },
             ],
           },
         ],
-      });
+      };
+
+      if (typeof offset === 'number') queryOpts.offset = offset;
+      if (typeof limit === 'number') queryOpts.limit = limit;
+
+      // findAndCountAll gives us total count + the paginated rows in one query
+      return await Course.findAndCountAll(queryOpts);
     } catch (error) {
       throw new Error(`Failed to fetch courses: ${error.message}`);
     }

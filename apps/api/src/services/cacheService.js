@@ -90,9 +90,6 @@ initializeRedis();
  * @returns {Promise<any>} Cached value or null if not found
  */
 async function get(key) {
-  console.log(
-    `Cache get: enabled=${REDIS_ENABLED}, connected=${isConnected}, hasClient=${!!redisClient}`
-  );
   if (!REDIS_ENABLED || !isConnected || !redisClient) {
     cacheStats.misses++;
     return null;
@@ -122,9 +119,6 @@ async function get(key) {
  * @returns {Promise<boolean>} Success status
  */
 async function set(key, value, ttl = DEFAULT_TTL) {
-  console.log(
-    `Cache set: enabled=${REDIS_ENABLED}, connected=${isConnected}, hasClient=${!!redisClient}`
-  );
   if (!REDIS_ENABLED || !isConnected || !redisClient) {
     return false;
   }

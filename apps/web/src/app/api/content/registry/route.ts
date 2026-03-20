@@ -368,5 +368,4 @@ export async function GET() {
 }
 
 export const runtime = 'nodejs';
-export const revalidate = 60; // cache registry for 60 seconds to reduce backend pressure
-export const dynamic = 'force-static';
+export const revalidate = 60; // ISR: re-generate at most every 60 seconds

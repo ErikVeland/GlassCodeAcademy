@@ -4,32 +4,37 @@ import {
   register as registerUserService,
   login as loginUserService,
 } from '../services/authService';
+import { generateToken } from '../services/tokenService';
+import {
+  RegisterSchema,
+  LoginSchema,
+  validateParams,
+} from '../utils/validation';
+import { authenticate } from '../middleware/auth';
 
 export async function registerAuthRoutes(app: FastifyInstance) {
   // Register endpoint
   app.post('/api/auth/register', async (request, reply) => {
-    const { email, password, firstName, lastName } = request.body as {
-      email: string;
-      password: string;
-      firstName: string;
-      lastName: string;
-    };
-
     try {
-      // Use the auth service to register the user
-      const result = await registerUserService({
-        email,
-        firstName,
-        lastName,
-        password,
+      const body = validateParams(RegisterSchema, request.body);
+
+      const result: any = await registerUserService({
+        email: body.email,
+        firstName: body.firstName,
+        lastName: body.lastName,
+        password: body.password,
       });
+
+      // Generate a JWT so the client is authenticated immediately
+      const token = generateToken(result.user);
 
       return {
         success: true,
-        data: result,
+        data: { ...result, token },
       };
     } catch (error: any) {
-      reply.code(400);
+      const isValidation = error.message?.startsWith('Validation error');
+      reply.code(isValidation ? 422 : 400);
       return {
         success: false,
         error: {
@@ -41,21 +46,24 @@ export async function registerAuthRoutes(app: FastifyInstance) {
 
   // Login endpoint
   app.post('/api/auth/login', async (request, reply) => {
-    const { email, password } = request.body as {
-      email: string;
-      password: string;
-    };
-
     try {
-      // Use the auth service to login the user
-      const result = await loginUserService({ email, password });
+      const body = validateParams(LoginSchema, request.body);
+
+      const result: any = await loginUserService({
+        email: body.email,
+        password: body.password,
+      });
+
+      // Generate a JWT for the authenticated user
+      const token = generateToken(result.user);
 
       return {
         success: true,
-        data: result,
+        data: { ...result, token },
       };
     } catch (error: any) {
-      reply.code(401);
+      const isValidation = error.message?.startsWith('Validation error');
+      reply.code(isValidation ? 422 : 401);
       return {
         success: false,
         error: {
@@ -65,55 +73,48 @@ export async function registerAuthRoutes(app: FastifyInstance) {
     }
   });
 
-  // Get profile endpoint
-  app.get('/api/auth/me', async (request, reply) => {
-    // @ts-expect-error - Fastify request decoration
-    const userId = request.user?.id;
+  // Get profile endpoint — protected by JWT middleware
+  app.get(
+    '/api/auth/me',
+    { preHandler: [authenticate] },
+    async (request, reply) => {
+      const userId = (request as any).user?.userId;
 
-    if (!userId) {
-      reply.code(401);
-      return {
-        success: false,
-        error: {
-          message: 'Unauthorized',
-        },
-      };
-    }
+      try {
+        const user = await User.findByPk(userId, {
+          attributes: { exclude: ['passwordHash'] },
+          include: [
+            {
+              model: Role,
+              through: { attributes: [] },
+              attributes: ['id', 'name', 'description'],
+            },
+          ],
+        });
 
-    try {
-      const user = await User.findByPk(userId, {
-        attributes: { exclude: ['passwordHash'] },
-        include: [
-          {
-            model: Role,
-            through: { attributes: [] },
-            attributes: ['id', 'name', 'description'],
-          },
-        ],
-      });
+        if (!user) {
+          reply.code(404);
+          return {
+            success: false,
+            error: {
+              message: 'User not found',
+            },
+          };
+        }
 
-      if (!user) {
-        reply.code(404);
+        return {
+          success: true,
+          data: user,
+        };
+      } catch (error: any) {
+        reply.code(500);
         return {
           success: false,
           error: {
-            message: 'User not found',
+            message: error.message || 'Failed to fetch profile',
           },
         };
       }
-
-      return {
-        success: true,
-        data: user,
-      };
-    } catch (error: any) {
-      reply.code(500);
-      return {
-        success: false,
-        error: {
-          message: error.message || 'Failed to fetch profile',
-        },
-      };
     }
-  });
+  );
 }

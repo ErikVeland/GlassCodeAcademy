@@ -88,7 +88,6 @@ export async function buildServer() {
     cache: 10000,
     keyGenerator: (req) =>
       (req.headers['x-forwarded-for'] as string) || req.ip || 'unknown',
-    allowList: (req) => Boolean(req.headers['x-internal-allow']),
     skipOnError: true,
   });
 
@@ -120,7 +119,25 @@ export async function buildServer() {
   return app;
 }
 
+function validateEnv() {
+  const required = [
+    'JWT_SECRET',
+    'POSTGRES_DB',
+    'POSTGRES_USER',
+    'POSTGRES_PASSWORD',
+  ];
+  const missing = required.filter((key) => !process.env[key]);
+  if (missing.length > 0) {
+    throw new Error(
+      `Missing required environment variables: ${missing.join(', ')}. ` +
+        'See .env.example for the full list.'
+    );
+  }
+}
+
 async function start() {
+  validateEnv();
+
   const app = await buildServer();
   const port = Number(process.env.PORT || 8081);
   const host = process.env.HOST || '0.0.0.0';

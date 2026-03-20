@@ -39,7 +39,20 @@ Quiz.belongsTo(Lesson, {
   as: 'lesson',
 });
 
-// User-Role relationships
+// User-Role many-to-many (required for `include: { model: Role, through: ... }`)
+User.belongsToMany(Role, {
+  through: UserRole,
+  foreignKey: 'userId',
+  otherKey: 'roleId',
+});
+
+Role.belongsToMany(User, {
+  through: UserRole,
+  foreignKey: 'roleId',
+  otherKey: 'userId',
+});
+
+// Keep the direct hasMany/belongsTo for querying UserRole rows directly
 User.hasMany(UserRole, {
   foreignKey: 'userId',
   as: 'userRoles',

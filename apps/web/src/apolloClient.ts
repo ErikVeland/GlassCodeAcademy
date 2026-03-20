@@ -79,7 +79,7 @@ export const createApolloClient = () => {
     }),
     defaultOptions: {
       watchQuery: {
-        errorPolicy: 'ignore',
+        errorPolicy: 'all',
         fetchPolicy: 'cache-first',
         // Add timeout for queries
         context: {
