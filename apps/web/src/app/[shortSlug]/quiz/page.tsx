@@ -174,25 +174,10 @@ export default function QuizPage({
       moduleQuiz: typeof quiz,
       moduleThresholds: typeof thresholds
     ) => {
-      console.log('=== initializeQuizData Debug ===');
-      console.log('moduleData:', moduleData);
-      console.log('moduleQuiz:', moduleQuiz);
-      console.log('moduleQuiz?.questions:', moduleQuiz?.questions);
-      console.log(
-        'moduleQuiz?.questions?.length:',
-        moduleQuiz?.questions?.length
-      );
-
       // Add null checks at the beginning
-      if (!moduleData) {
-        console.log('Early return: No module data');
-        return;
-      }
+      if (!moduleData) return;
 
-      if (!moduleQuiz?.questions || moduleQuiz.questions.length === 0) {
-        console.log('Early return: No quiz questions available');
-        return;
-      }
+      if (!moduleQuiz?.questions || moduleQuiz.questions.length === 0) return;
 
       try {
         const targetQuestions =
@@ -201,7 +186,6 @@ export default function QuizPage({
           15;
         const allQuestions = moduleQuiz.questions;
         setPoolCount(allQuestions.length);
-        console.log('Pool count set to:', allQuestions.length);
 
         // Get history from localStorage to avoid recently used questions
         const historyKey = `quiz_history_${moduleData.slug}`;
@@ -221,7 +205,6 @@ export default function QuizPage({
         const shuffled = [...questionsToUse].sort(() => Math.random() - 0.5);
         const effectiveTarget = Math.min(targetQuestions, shuffled.length);
         const selectedQuestions = shuffled.slice(0, effectiveTarget);
-        console.log('Selected questions count:', selectedQuestions.length);
 
         // Randomize choice order for multiple choice questions AND preserve correctAnswer index
         const processedQuestions = selectedQuestions.map(
@@ -303,7 +286,6 @@ export default function QuizPage({
           _sessionSeed: { selectedQuestions: processedQuestions },
         };
 
-        console.log('Setting quizData:', quizOverview);
         setQuizData(quizOverview);
 
         // Store session seed for debugging
@@ -335,7 +317,6 @@ export default function QuizPage({
         const { timestamp } = JSON.parse(cached);
         // Use cache if less than 30 minutes old
         if (Date.now() - timestamp < 30 * 60 * 1000) {
-          console.log(`[QuizPage] Using prefetched quiz for ${moduleSlug}`);
           return true;
         }
       }
@@ -348,9 +329,6 @@ export default function QuizPage({
         const { timestamp } = JSON.parse(sessionCached);
         // Use cache if less than 5 minutes old
         if (Date.now() - timestamp < 5 * 60 * 1000) {
-          console.log(
-            `[QuizPage] Using session prefetched quiz for ${moduleSlug}`
-          );
           return true;
         }
       }
@@ -370,15 +348,12 @@ export default function QuizPage({
       try {
         const resolvedParams = await params;
         const slug = resolvedParams.shortSlug;
-        console.log('=== Quiz Page Debug ===');
-        console.log('Short slug:', slug);
         // Fetch registry and locate the module by shortSlug
         const registry = await fetchJSON<RegistryResponse>(
           '/api/content/registry'
         );
         const mods = Array.isArray(registry?.modules) ? registry.modules : [];
         const moduleDataRaw = findModuleByShortSlug(mods, slug);
-        console.log('Module data:', moduleDataRaw);
         if (!moduleDataRaw) {
           setError('Module not found');
           return;
@@ -388,16 +363,12 @@ export default function QuizPage({
         setCurrentModule(moduleData);
 
         // Check if quiz is prefetched before loading
-        const isPrefetched = await checkPrefetchedQuiz(moduleDataRaw.slug);
-        console.log(
-          `Quiz for ${moduleDataRaw.slug} is ${isPrefetched ? 'prefetched' : 'not prefetched'}`
-        );
+        await checkPrefetchedQuiz(moduleDataRaw.slug);
 
         // Fetch quiz questions
         const moduleQuiz = await fetchJSON<QuizResponse>(
           `/api/content/quizzes/${moduleDataRaw.slug}`
         );
-        console.log('Module quiz:', moduleQuiz);
         setQuiz(moduleQuiz);
 
         // Fetch lessons to compute thresholds (robust to array or { lessons: [] } and HTTP failures)
@@ -431,7 +402,6 @@ export default function QuizPage({
           lessonsCount,
           quizCount
         );
-        console.log('Module thresholds:', computedThresholds);
         setThresholds({
           quizValid: computedThresholds.quizValid,
           lessonsValid: computedThresholds.lessonsValid,

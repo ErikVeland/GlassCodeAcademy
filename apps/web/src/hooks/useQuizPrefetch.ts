@@ -82,12 +82,9 @@ export function useQuizPrefetch(options: PrefetchOptions = {}) {
         const { timestamp } = JSON.parse(cached);
         // Reuse cache if less than 5 minutes old
         if (Date.now() - timestamp < 5 * 60 * 1000) {
-          console.log(`[QuizPrefetch] Using cached quiz for ${moduleSlug}`);
           return true;
         }
       }
-
-      console.log(`[QuizPrefetch] Fetching quiz for ${moduleSlug}`);
 
       // Fetch the quiz via API
       const resQuiz = await fetch(`/api/content/quizzes/${shortSlug}`, {
@@ -105,12 +102,8 @@ export function useQuizPrefetch(options: PrefetchOptions = {}) {
           })
         );
 
-        console.log(
-          `[QuizPrefetch] Successfully prefetched quiz for ${moduleSlug} (${quiz.questions.length} questions)`
-        );
         return true;
       } else {
-        console.log(`[QuizPrefetch] No questions found for ${moduleSlug}`);
         return false;
       }
     } catch (error) {
@@ -126,8 +119,6 @@ export function useQuizPrefetch(options: PrefetchOptions = {}) {
     if (!enabled) return;
 
     try {
-      console.log('[QuizPrefetch] Starting quiz prefetch process');
-
       let modules: Array<{
         slug: string;
         title: string;
@@ -161,16 +152,9 @@ export function useQuizPrefetch(options: PrefetchOptions = {}) {
       // Limit to first 15 modules to avoid overwhelming
       modules = modules.slice(0, 15);
 
-      console.log(
-        `[QuizPrefetch] Will prefetch quizzes for ${modules.length} modules`
-      );
-
       // Process in batches to avoid overwhelming the server
       for (let i = 0; i < modules.length; i += maxConcurrent) {
         const batch = modules.slice(i, i + maxConcurrent);
-        console.log(
-          `[QuizPrefetch] Processing batch ${Math.floor(i / maxConcurrent) + 1}: ${batch.map((m) => m.slug).join(', ')}`
-        );
 
         // Fetch all quizzes in the batch concurrently
         const promises = batch.map((module) =>
@@ -189,16 +173,11 @@ export function useQuizPrefetch(options: PrefetchOptions = {}) {
 
         // Add delay between batches
         if (i + maxConcurrent < modules.length) {
-          console.log(
-            `[QuizPrefetch] Waiting ${delayBetweenRequests}ms before next batch`
-          );
           await new Promise((resolve) =>
             setTimeout(resolve, delayBetweenRequests)
           );
         }
       }
-
-      console.log('[QuizPrefetch] Completed quiz prefetch process');
     } catch (error) {
       console.error('[QuizPrefetch] Error in prefetch process:', error);
     }

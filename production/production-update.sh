@@ -27,9 +27,9 @@ echo_error() {
     echo -e "${RED}[ERROR]${NC} $1"
 }
 
-# Check if running as deploy user or root
-if [[ $EUID -ne 0 ]] && [[ $(whoami) != "deploy" ]]; then
-   echo_error "This script must be run as 'deploy' user or root"
+# Check if running as svc_epstein user or root
+if [[ $EUID -ne 0 ]] && [[ $(whoami) != "svc_epstein" ]]; then
+   echo_error "This script must be run as 'svc_epstein' user or root"
    exit 1
 fi
 
@@ -51,9 +51,9 @@ ls -t | tail -n +$((MAX_BACKUPS+1)) | xargs -r sudo rm -rf
 # Update repository
 echo_step "Updating repository"
 cd $APP_DIR
-sudo -u deploy git fetch origin
+sudo -u svc_epstein git fetch origin
 CURRENT_COMMIT=$(git rev-parse HEAD)
-sudo -u deploy git reset --hard origin/main
+sudo -u svc_epstein git reset --hard origin/main
 
 # Check if there are actual changes
 if [ "$CURRENT_COMMIT" = "$(git rev-parse HEAD)" ]; then
@@ -66,7 +66,7 @@ fi
 # Install/update backend dependencies
 echo_step "Installing backend dependencies"
 cd backend-node
-sudo -u deploy npm ci --only=production
+sudo -u svc_epstein npm ci --only=production
 
 # Run database migrations
 echo_step "Running database migrations"
@@ -75,8 +75,8 @@ npx sequelize-cli db:migrate
 # Build frontend
 echo_step "Building frontend application"
 cd ../glasscode/frontend
-sudo -u deploy npm ci
-sudo -u deploy npm run build
+sudo -u svc_epstein npm ci
+sudo -u svc_epstein npm run build
 
 # Restart services
 echo_step "Restarting services"
@@ -110,7 +110,7 @@ if [ "$HEALTH_CHECK_SUCCESS" = false ]; then
     # Restore from backup
     sudo rm -rf $APP_DIR
     sudo cp -r $BACKUP_PATH $APP_DIR
-    sudo chown -R deploy:deploy $APP_DIR
+    sudo chown -R svc_epstein:svc_epstein $APP_DIR
     
     # Restart services with rolled back version
     cd $APP_DIR/backend-node

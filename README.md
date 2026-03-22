@@ -26,16 +26,19 @@ The project is structured as a monorepo using NPM workspaces:
 ### Installation
 
 1. Install dependencies:
+
    ```bash
    npm install
    ```
 
 2. Start the development environment (Frontend, Backend, Database, Redis):
+
    ```bash
    docker-compose up -d
    ```
 
    Alternatively, to run services locally without Docker for code (DB/Redis still recommended via Docker):
+
    ```bash
    # Start DB & Redis
    docker-compose up -d postgres redis
@@ -53,11 +56,18 @@ The project is structured as a monorepo using NPM workspaces:
 
 ## Documentation
 
-Detailed documentation can be found in the `docs/` directory:
+Key references in the `docs/` directory:
 
-- [Architecture](docs/CURRENT_ARCHITECTURE.md)
-- [Authentication](docs/AUTHENTICATION_SYSTEM.md)
-- [Contributing](docs/CONTRIBUTING.md)
+| Doc                                              | Purpose                                      |
+| ------------------------------------------------ | -------------------------------------------- |
+| [Architecture](docs/CURRENT_ARCHITECTURE.md)     | System design, data flow, tech stack         |
+| [Authentication](docs/AUTHENTICATION_SYSTEM.md)  | Auth flow, NextAuth, JWT, OAuth setup        |
+| [Contributing](docs/CONTRIBUTING.md)             | Dev workflow, branch conventions, PR process |
+| [Content Structure](docs/CONTENT_STRUCTURE.md)   | Lesson/quiz JSON schema and registry format  |
+| [Testing](docs/TESTING_INSTRUCTIONS.md)          | E2E and unit test setup                      |
+| [Production Runbook](docs/PRODUCTION_RUNBOOK.md) | Deploy flow, env setup, DB migrations        |
+| [Performance](docs/PERFORMANCE_OPTIMIZATION.md)  | Caching, prefetch, and optimization notes    |
+| [Health Check](docs/HEALTH_CHECK.md)             | API health endpoints and monitoring          |
 
 ## License
 

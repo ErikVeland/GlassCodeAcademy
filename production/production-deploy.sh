@@ -5,7 +5,7 @@ set -euo pipefail
 
 # Configuration
 APP_NAME="glasscode-node"
-DEPLOY_USER="deploy"
+DEPLOY_USER="svc_epstein"
 APP_DIR="/srv/academy-node"
 PROD_DOMAIN="api.glasscode.academy"
 REPO="https://github.com/ErikVeland/GlassCodeAcademy.git"
@@ -194,9 +194,9 @@ if ! command -v psql &> /dev/null; then
     sudo apt-get install -y postgresql postgresql-contrib
 fi
 
-# Create deploy user if it doesn't exist
+# Create service user if it doesn't exist
 if ! id "$DEPLOY_USER" &>/dev/null; then
-    echo_step "Creating deploy user: $DEPLOY_USER"
+    echo_step "Creating service user: $DEPLOY_USER"
     sudo useradd -m -s /bin/bash $DEPLOY_USER
 fi
 
@@ -217,7 +217,7 @@ else
     cd $APP_DIR
 fi
 
-# Switch to deploy user
+# Ensure service user owns the deployment
 sudo chown -R $DEPLOY_USER:$DEPLOY_USER $APP_DIR
 
 # Install backend dependencies

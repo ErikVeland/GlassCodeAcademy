@@ -183,11 +183,6 @@ export const getAuthOptions = (): NextAuthOptions => {
         // ensure parameters are considered used for linting
         void _code;
         void _metadata;
-        if (process.env.NODE_ENV !== 'production') {
-          // Keep debug minimal; uncomment if deeper debugging is required
-          // if (_metadata.length) console.debug('[next-auth][debug]', _code, ..._metadata);
-          // else console.debug('[next-auth][debug]', _code);
-        }
       },
     },
     callbacks: {

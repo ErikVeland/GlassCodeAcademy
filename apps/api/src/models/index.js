@@ -1,4 +1,3 @@
-import Academy from './academyModel.js';
 import Course from './courseModel.js';
 import Module from './moduleModel.js';
 import Lesson from './lessonModel.js';
@@ -73,21 +72,4 @@ UserRole.belongsTo(Role, {
   as: 'role',
 });
 
-// Export models and initialization function
-const initializeAssociations = () => {
-  // Associations are already defined above
-  // This function is for consistency with existing code patterns
-};
-
-export {
-  Academy,
-  Course,
-  Module,
-  Lesson,
-  Quiz,
-  User,
-  Role,
-  UserRole,
-  sequelize,
-  initializeAssociations,
-};
+export { Course, Module, Lesson, Quiz, User, Role, UserRole, sequelize };

@@ -7,12 +7,12 @@ set -Eeuo pipefail
 #
 # Usage:
 #   ./setup-backend.sh
-#   REMOTE_USER=deploy REMOTE_HOST=1.2.3.4 ./setup-backend.sh
+#   REMOTE_USER=svc_epstein REMOTE_HOST=1.2.3.4 ./setup-backend.sh
 #   REMOTE_HOST=1.2.3.4 API_DOMAIN=api.glasscode.academy CONFIGURE_NGINX=true EMAIL=admin@example.com ./setup-backend.sh
 #   SSH_TARGET=glasscode ./setup-backend.sh    # use local ssh alias
 #
 # Configurable env vars (defaults shown):
-#   REMOTE_USER="${REMOTE_USER:-deploy}"     # SSH user on Linode
+#   REMOTE_USER="${REMOTE_USER:-svc_epstein}"     # SSH user on Linode
 #   REMOTE_HOST="${REMOTE_HOST:-194.195.248.217}" # Linode IP/hostname
 #   SSH_TARGET="${SSH_TARGET:-}"             # If set, uses this alias directly (e.g., 'glasscode')
 #   REMOTE_APP_DIR="${REMOTE_APP_DIR:-/opt/glasscode/backend-node}" # Remote app dir
@@ -32,7 +32,7 @@ set -Eeuo pipefail
 #   JWT_SECRET=your-super-secret-jwt-key
 #   DB_SSL=true|false
 
-REMOTE_USER="${REMOTE_USER:-deploy}"
+REMOTE_USER="${REMOTE_USER:-svc_epstein}"
 REMOTE_HOST="${REMOTE_HOST:-194.195.248.217}"
 SSH_TARGET="${SSH_TARGET:-}"
 if [ -n "$SSH_TARGET" ]; then
