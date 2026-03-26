@@ -2,18 +2,18 @@ name: CI Pipeline
 
 on:
   push:
-    branches: [ main, develop ]
+    branches: [main, develop]
   pull_request:
-    branches: [ main, develop ]
+    branches: [main, develop]
 
 jobs:
-  test:
+  quality-gate:
     runs-on: ubuntu-latest
-    
+
     strategy:
       matrix:
         node-version: [20.x]
-    
+
     services:
       postgres:
         image: postgres:15
@@ -28,7 +28,7 @@ jobs:
           --health-retries 5
         ports:
           - 5432:5432
-      
+
       redis:
         image: redis:7
         options: >-
@@ -40,86 +40,14 @@ jobs:
           - 6379:6379
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v4
-      with:
-        node-version: ${{ matrix.node-version }}
-        cache: npm
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: npm
 
-    - name: Install dependencies
-      run: npm ci
-
-    - name: Run Prettier checks
-      run: |
-        npm -w @glass-code-academy/api run format:check
-        npm -w @glass-code-academy/web run format:check
-
-    - name: Run linting
-      run: |
-        npm -w @glass-code-academy/api run lint
-        npm -w @glass-code-academy/web run lint
-
-    - name: Run type checking
-      run: |
-        npm -w @glass-code-academy/api run typecheck
-        npm -w @glass-code-academy/web run typecheck
-
-    - name: Run tests
-      run: |
-        npm -w @glass-code-academy/api run test
-      env:
-        DATABASE_URL: postgresql://postgres:postgres@localhost:5432/glasscode_test
-        REDIS_HOST: localhost
-        REDIS_PORT: 6379
-        JWT_SECRET: test-secret-key
-
-  # Security scan job
-  security:
-    runs-on: ubuntu-latest
-    needs: test
-    
-    steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
-
-    - name: Run security audit
-      run: |
-        npm -w @glass-code-academy/api audit --audit-level high
-        npm -w @glass-code-academy/web audit --audit-level high
-
-  # Build job
-  build:
-    runs-on: ubuntu-latest
-    needs: [test, security]
-    
-    steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
-
-    - name: Use Node.js 18.x
-      uses: actions/setup-node@v4
-      with:
-        node-version: 20.x
-        cache: npm
-
-    - name: Install dependencies
-      run: npm ci
-
-    - name: Build API
-      run: |
-        npm -w @glass-code-academy/api run build
-
-    - name: Build Frontend
-      run: |
-        npm -w @glass-code-academy/web run build
-
-    - name: Save build artifacts
-      uses: actions/upload-artifact@v4
-      with:
-        name: glasscode-build
-        path: |
-          apps/api/dist/
-          apps/web/.next/
+      - name: Run Unified Quality Gate
+        run: ./scripts/quality_gate.sh

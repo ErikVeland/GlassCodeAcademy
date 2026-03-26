@@ -1,330 +1,100 @@
 #!/usr/bin/env bash
-# production-deploy.sh - Deploy GlassCode Academy Node.js backend to production environment
-
 set -euo pipefail
 
-# Configuration
-APP_NAME="glasscode-node"
-DEPLOY_USER="svc_epstein"
-APP_DIR="/srv/academy-node"
-PROD_DOMAIN="api.glasscode.academy"
-REPO="https://github.com/ErikVeland/GlassCodeAcademy.git"
-NODE_VERSION="18"
-FRONTEND_PORT="3000"
-BACKEND_PORT="8080"
-BACKUP_DIR="/tmp/${APP_NAME}_prod_backup_$(date +%s)"
+REMOTE_HOST="${GLASSCODE_PROD_HOST:-glasscode}"
+REMOTE_USER="${GLASSCODE_PROD_USER:-svc_epstein}"
+REMOTE_PORT="${GLASSCODE_PROD_PORT:-22}"
+SSH_KEY_PATH="${GLASSCODE_PROD_SSH_KEY_PATH:-$HOME/.ssh/id_epstein_prod_ed25519}"
+REMOTE_ROOT="${GLASSCODE_PROD_ROOT:-/home/${REMOTE_USER}/services/academy}"
+REMOTE_WEB_DIR="${GLASSCODE_PROD_WEB_DIR:-${REMOTE_ROOT}/apps/web}"
+REMOTE_API_DIR="${GLASSCODE_PROD_API_DIR:-/opt/glasscode/backend-node}"
+REMOTE_API_SERVICE="${GLASSCODE_PROD_API_SERVICE:-glasscode-node-backend.service}"
+REMOTE_WEB_PM2_NAME="${GLASSCODE_PROD_WEB_PM2_NAME:-glasscode-frontend}"
+REMOTE_CONTENT_DIR="${GLASSCODE_PROD_CONTENT_DIR:-${REMOTE_ROOT}/content}"
 
-# Colors for output
-RED='\033[0;31m'
-GREEN='\033[0;32m'
-YELLOW='\033[1;33m'
-BLUE='\033[0;34m'
-NC='\033[0m' # No Color
-
-echo_step() {
-    echo -e "${GREEN}[STEP]${NC} $1"
-}
-
-echo_warn() {
-    echo -e "${YELLOW}[WARN]${NC} $1"
-}
-
-echo_error() {
-    echo -e "${RED}[ERROR]${NC} $1"
-}
-
-echo_info() {
-    echo -e "${BLUE}[INFO]${NC} $1"
-}
-
-# CLI flags parsing
 DRY_RUN=0
-SKIP_BACKUP=0
-ROLLBACK=0
+SKIP_QUALITY=0
+SKIP_VERIFY=0
+API_ONLY=0
+WEB_ONLY=0
 
 while [[ $# -gt 0 ]]; do
-    case "$1" in
-        --dry-run) DRY_RUN=1; shift;;
-        --skip-backup) SKIP_BACKUP=1; shift;;
-        --rollback) ROLLBACK=1; shift;;
-        --domain) PROD_DOMAIN="$2"; shift 2;;
-        *) echo_warn "Unknown argument: $1"; shift;;
-    esac
+  case "$1" in
+    --dry-run) DRY_RUN=1; shift ;;
+    --skip-quality) SKIP_QUALITY=1; shift ;;
+    --skip-verify) SKIP_VERIFY=1; shift ;;
+    --api-only) API_ONLY=1; shift ;;
+    --web-only) WEB_ONLY=1; shift ;;
+    *) echo "Unknown argument: $1" >&2; exit 1 ;;
+  esac
 done
 
-# Create backup of current version
-create_backup() {
-    if [ $SKIP_BACKUP -eq 1 ]; then
-        echo_warn "Skipping backup creation as requested"
-        return 0
-    fi
-    
-    echo_step "Creating backup of current version to $BACKUP_DIR"
-    
-    if [ $DRY_RUN -eq 1 ]; then
-        echo_info "DRY RUN: Would create backup of $APP_DIR to $BACKUP_DIR"
-        return 0
-    fi
-    
-    mkdir -p "$BACKUP_DIR"
-    if rsync -a "$APP_DIR/" "$BACKUP_DIR/"; then
-        echo_step "Backup created successfully"
+if [[ "$API_ONLY" -eq 1 && "$WEB_ONLY" -eq 1 ]]; then
+  echo "Cannot use --api-only and --web-only together." >&2
+  exit 1
+fi
+
+SSH_OPTS=(-p "$REMOTE_PORT" -o BatchMode=yes -o IdentitiesOnly=yes -o StrictHostKeyChecking=accept-new)
+if [[ -f "$SSH_KEY_PATH" ]]; then
+  SSH_OPTS+=(-i "$SSH_KEY_PATH")
+fi
+
+remote_ssh() {
+  ssh "${SSH_OPTS[@]}" "${REMOTE_USER}@${REMOTE_HOST}" "$@"
+}
+
+remote_rsync() {
+  rsync -az --delete -e "ssh ${SSH_OPTS[*]}" "$@"
+}
+
+if [[ "$SKIP_QUALITY" -ne 1 ]]; then
+  ./scripts/quality_gate.sh
+fi
+
+if [[ "$DRY_RUN" -eq 1 ]]; then
+  echo "DRY RUN: would sync source, rebuild remote services, and verify production."
+  exit 0
+fi
+
+remote_ssh "mkdir -p '${REMOTE_WEB_DIR}' '${REMOTE_API_DIR}' '${REMOTE_CONTENT_DIR}'"
+
+if [[ "$API_ONLY" -ne 1 ]]; then
+  remote_rsync ./apps/web/ "${REMOTE_USER}@${REMOTE_HOST}:${REMOTE_WEB_DIR}/" \
+    --exclude '.next' --exclude 'node_modules'
+  remote_rsync ./content/ "${REMOTE_USER}@${REMOTE_HOST}:${REMOTE_CONTENT_DIR}/"
+fi
+
+if [[ "$WEB_ONLY" -ne 1 ]]; then
+  remote_rsync ./apps/api/ "${REMOTE_USER}@${REMOTE_HOST}:${REMOTE_API_DIR}/" \
+    --exclude 'dist' --exclude 'node_modules'
+fi
+
+remote_ssh "
+  set -euo pipefail
+  export NODE_ENV=production
+
+  if [[ '$WEB_ONLY' -ne 1 ]]; then
+    cd '${REMOTE_API_DIR}'
+    npm ci
+    npm run build
+    sudo systemctl restart '${REMOTE_API_SERVICE}'
+  fi
+
+  if [[ '$API_ONLY' -ne 1 ]]; then
+    cd '${REMOTE_WEB_DIR}'
+    npm ci
+    npm run build
+    if pm2 describe '${REMOTE_WEB_PM2_NAME}' >/dev/null 2>&1; then
+      pm2 restart '${REMOTE_WEB_PM2_NAME}' --update-env
     else
-        echo_error "Failed to create backup"
-        exit 1
+      pm2 start npm --name '${REMOTE_WEB_PM2_NAME}' --cwd '${REMOTE_WEB_DIR}' -- run start:next -- --port 3000
     fi
-}
+    pm2 save
+  fi
+"
 
-# Rollback to previous version
-rollback() {
-    echo_step "Rolling back to previous version..."
-    
-    if [ $DRY_RUN -eq 1 ]; then
-        echo_info "DRY RUN: Would restore from $BACKUP_DIR to $APP_DIR"
-        return 0
-    fi
-    
-    if [ -n "${BACKUP_DIR:-}" ] && [ -d "$BACKUP_DIR" ]; then
-        # Stop services before rollback
-        stop_services
-        
-        # Restore the previous version
-        if rsync -a "$BACKUP_DIR/" "$APP_DIR/"; then
-            echo_step "Rollback completed successfully"
-            
-            # Restart services with rolled back version
-            start_services
-            echo_step "Services restarted with rolled back version"
-        else
-            echo_error "Failed to restore from backup"
-            exit 1
-        fi
-    else
-        echo_error "No backup found, cannot rollback"
-        exit 1
-    fi
-}
-
-# Stop services
-stop_services() {
-    echo_step "Stopping services..."
-    
-    if [ $DRY_RUN -eq 1 ]; then
-        echo_info "DRY RUN: Would stop services"
-        return 0
-    fi
-    
-    # Stop PM2 services if they exist
-    if command -v pm2 &> /dev/null; then
-        pm2 stop ecosystem.config.js 2>/dev/null || true
-        pm2 stop ecosystem.frontend.config.js 2>/dev/null || true
-    fi
-}
-
-# Start services
-start_services() {
-    echo_step "Starting services..."
-    
-    if [ $DRY_RUN -eq 1 ]; then
-        echo_info "DRY RUN: Would start services"
-        return 0
-    fi
-    
-    # Start backend service
-    if [ -f "$APP_DIR/backend-node/ecosystem.config.js" ]; then
-        cd "$APP_DIR/backend-node"
-        pm2 start ecosystem.config.js --env production || pm2 restart ecosystem.config.js --env production
-    fi
-    
-    # Start frontend service
-    if [ -f "$APP_DIR/glasscode/frontend/ecosystem.frontend.config.js" ]; then
-        cd "$APP_DIR/glasscode/frontend"
-        pm2 start ecosystem.frontend.config.js --env production || pm2 restart ecosystem.frontend.config.js --env production
-    fi
-}
-
-# Main function
-main() {
-    if [ $ROLLBACK -eq 1 ]; then
-        rollback
-        return 0
-    fi
-    
-    # Check if running as root
-    if [[ $EUID -eq 0 ]]; then
-       echo_error "This script should not be run as root"
-       exit 1
-    fi
-    
-    # Ensure we're in home directory
-    cd ~
-    
-    echo_step "Starting production deployment of $APP_NAME"
-    
-    # Create backup unless skipped
-    create_backup
-    
-    # Stop services before deployment
-    stop_services
-
-# Install Node.js if not present
-if ! command -v node &> /dev/null; then
-    echo_step "Installing Node.js $NODE_VERSION"
-    curl -fsSL https://deb.nodesource.com/setup_$NODE_VERSION.x | sudo -E bash -
-    sudo apt-get install -y nodejs
-else
-    CURRENT_NODE=$(node -v | cut -d'v' -f2 | cut -d'.' -f1)
-    if [[ $CURRENT_NODE -lt $NODE_VERSION ]]; then
-        echo_step "Upgrading Node.js to $NODE_VERSION"
-        curl -fsSL https://deb.nodesource.com/setup_$NODE_VERSION.x | sudo -E bash -
-        sudo apt-get install -y nodejs
-    fi
+if [[ "$SKIP_VERIFY" -ne 1 ]]; then
+  ./scripts/post_deploy_verify.sh
 fi
 
-# Install PM2 globally if not present
-if ! command -v pm2 &> /dev/null; then
-    echo_step "Installing PM2 process manager"
-    sudo npm install -g pm2
-fi
-
-# Install PostgreSQL if not present
-if ! command -v psql &> /dev/null; then
-    echo_step "Installing PostgreSQL"
-    sudo apt-get update
-    sudo apt-get install -y postgresql postgresql-contrib
-fi
-
-# Create service user if it doesn't exist
-if ! id "$DEPLOY_USER" &>/dev/null; then
-    echo_step "Creating service user: $DEPLOY_USER"
-    sudo useradd -m -s /bin/bash $DEPLOY_USER
-fi
-
-# Create application directory
-echo_step "Setting up application directory"
-sudo mkdir -p $APP_DIR
-sudo chown $DEPLOY_USER:$DEPLOY_USER $APP_DIR
-
-# Clone or update repository
-if [ -d "$APP_DIR/.git" ]; then
-    echo_step "Updating existing repository"
-    cd $APP_DIR
-    git reset --hard HEAD
-    git pull origin main
-else
-    echo_step "Cloning repository"
-    git clone $REPO $APP_DIR
-    cd $APP_DIR
-fi
-
-# Ensure service user owns the deployment
-sudo chown -R $DEPLOY_USER:$DEPLOY_USER $APP_DIR
-
-# Install backend dependencies
-echo_step "Installing backend dependencies"
-cd backend-node
-if [ ! -f "package-lock.json" ]; then
-    echo_warn "package-lock.json not found, generating it with npm install"
-    npm install
-fi
-
-# Try npm ci first, fall back to npm install if it fails
-if ! npm ci --only=production; then
-    echo_warn "npm ci failed, falling back to npm install --only=production"
-    npm install --only=production
-fi
-
-# Create .env file for production
-echo_step "Configuring environment variables"
-cat > .env << EOF
-NODE_ENV=production
-PORT=$BACKEND_PORT
-DB_HOST=localhost
-DB_PORT=5432
-DB_NAME=glasscode_prod
-DB_USER=glasscode_app
-DB_PASS=$(openssl rand -base64 32)
-JWT_SECRET=$(openssl rand -base64 32)
-JWT_EXPIRES_IN=24h
-EOF
-
-# Set up PostgreSQL database
-echo_step "Setting up PostgreSQL database"
-sudo -u postgres psql << EOF
-CREATE USER glasscode_app WITH PASSWORD '$(grep DB_PASS .env | cut -d'=' -f2)';
-CREATE DATABASE glasscode_prod OWNER glasscode_app;
-GRANT ALL PRIVILEGES ON DATABASE glasscode_prod TO glasscode_app;
-EOF
-
-# Run database migrations
-echo_step "Running database migrations"
-npx sequelize-cli db:migrate
-
-# Start backend with PM2
-echo_step "Starting backend service"
-pm2 start ecosystem.config.js --env production || pm2 restart ecosystem.config.js --env production
-
-# Save PM2 configuration
-pm2 save
-
-# Set up PM2 to start on boot
-echo_step "Setting up PM2 startup"
-sudo env PATH=\$PATH:/usr/bin pm2 startup systemd -u $DEPLOY_USER --hp /home/$DEPLOY_USER
-
-# Configure Nginx as reverse proxy
-echo_step "Configuring Nginx reverse proxy"
-sudo apt-get install -y nginx
-
-cat > /etc/nginx/sites-available/$APP_NAME << EOF
-server {
-    listen 80;
-    server_name $PROD_DOMAIN;
-
-    location / {
-        proxy_pass http://localhost:$BACKEND_PORT;
-        proxy_http_version 1.1;
-        proxy_set_header Upgrade \$http_upgrade;
-        proxy_set_header Connection 'upgrade';
-        proxy_set_header Host \$host;
-        proxy_set_header X-Real-IP \$remote_addr;
-        proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;
-        proxy_set_header X-Forwarded-Proto \$scheme;
-        proxy_cache_bypass \$http_upgrade;
-    }
-}
-EOF
-
-# Enable site
-sudo ln -sf /etc/nginx/sites-available/$APP_NAME /etc/nginx/sites-enabled/
-sudo nginx -t && sudo systemctl reload nginx
-
-# Set up SSL with Let's Encrypt
-echo_step "Setting up SSL certificate"
-if ! command -v certbot &> /dev/null; then
-    sudo apt-get install -y certbot python3-certbot-nginx
-fi
-
-sudo certbot --nginx -d $PROD_DOMAIN --non-interactive --agree-tos --email admin@glasscode.academy
-
-# Install frontend dependencies and build
-echo_step "Building frontend application"
-cd ../glasscode/frontend
-npm ci
-npm run build
-
-# Serve frontend with PM2
-echo_step "Starting frontend service"
-pm2 start ecosystem.frontend.config.js --env production || pm2 restart ecosystem.frontend.config.js --env production
-
-# Save PM2 configuration
-pm2 save
-
-echo_step "Production deployment completed successfully!"
-echo_step "Backend API: https://$PROD_DOMAIN"
-echo_step "Frontend: https://glasscode.academy"
-echo_step "Database: glasscode_prod (user: glasscode_app)"
-echo_step "PM2 services are running and configured to start on boot"
-}
-
-# Run main function
-main "$@"
+echo "✅ GlassCode Academy production deployment completed."
