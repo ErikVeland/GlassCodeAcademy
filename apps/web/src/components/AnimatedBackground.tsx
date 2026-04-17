@@ -134,7 +134,7 @@ const AnimatedBackground: React.FC<AnimatedBackgroundProps> = ({
   return (
     <div
       ref={backgroundRef}
-      className={`fixed top-0 left-0 w-full h-full -z-10 ${className}`}
+      className={`pointer-events-none fixed inset-0 z-0 w-full h-full ${className}`}
       aria-hidden="true"
       role="presentation"
     />

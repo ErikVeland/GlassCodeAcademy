@@ -105,7 +105,7 @@ export default function LessonsPage() {
   // If we're loading or have retry attempts, show the enhanced loading component
   if (loading || retryCountRef.current > 0) {
     return (
-      <main className="min-h-screen p-6 bg-gray-50/80 dark:bg-gray-900/80 backdrop-blur-sm text-gray-800 dark:text-gray-100">
+      <main className="page-ambient-panel min-h-screen p-6 text-gray-800 dark:text-gray-100">
         <div className="max-w-2xl mx-auto">
           <EnhancedLoadingComponent
             retryCount={retryCountRef.current}
@@ -124,7 +124,7 @@ export default function LessonsPage() {
   // Only show error if it's not a network error (network errors are handled by retry mechanism)
   if (error && !isNetworkError(error)) {
     return (
-      <main className="min-h-screen p-6 bg-gray-50/80 dark:bg-gray-900/80 backdrop-blur-sm text-gray-800 dark:text-gray-100">
+      <main className="page-ambient-panel min-h-screen p-6 text-gray-800 dark:text-gray-100">
         <div className="max-w-2xl mx-auto bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm rounded-xl shadow-lg p-6 border border-gray-200 dark:border-gray-700">
           <div className="text-red-600 dark:text-red-400">
             Error loading lessons.

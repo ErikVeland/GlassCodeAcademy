@@ -18,7 +18,7 @@ export default function Custom502() {
   }, [retryCount]);
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-4 bg-gray-50 dark:bg-gray-900">
+    <div className="page-ambient min-h-screen flex items-center justify-center p-4">
       <div className="w-full max-w-md">
         <EnhancedLoadingComponent
           retryCount={retryCount}

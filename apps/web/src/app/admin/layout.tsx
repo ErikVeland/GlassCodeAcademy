@@ -39,7 +39,7 @@ export default function AdminLayout({
   ];
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="page-ambient min-h-screen">
       {/* Mobile sidebar toggle */}
       <div className="md:hidden">
         <button

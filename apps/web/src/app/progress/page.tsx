@@ -6,7 +6,7 @@ import BreadcrumbNavigation from '../../components/BreadcrumbNavigation';
 
 const ProgressPage: React.FC = () => {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 to-gray-800 text-white">
+    <div className="page-ambient min-h-screen text-white">
       <div className="container mx-auto px-4 py-8">
         <BreadcrumbNavigation
           items={[

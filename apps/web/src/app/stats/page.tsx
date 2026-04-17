@@ -46,7 +46,7 @@ export default function StatsPage() {
 
   if (stats.error) {
     return (
-      <div className="min-h-screen bg-bg flex items-center justify-center">
+      <div className="page-ambient min-h-screen flex items-center justify-center">
         <div className="glass-card text-danger text-xl">
           Error loading stats: {stats.error}
         </div>
@@ -57,7 +57,7 @@ export default function StatsPage() {
   const totalContent = stats.totalLessons + stats.totalQuestions;
 
   return (
-    <div className="liquid-glass-layout min-h-screen bg-bg overflow-x-hidden">
+    <div className="liquid-glass-layout page-ambient min-h-screen overflow-x-hidden">
       {/* Use scoped liquid-glass gutters; remove Tailwind container/px to avoid conflicts */}
       <div className="liquid-glass-content mx-auto py-8 overflow-x-hidden">
         {/* Header */}

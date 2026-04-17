@@ -44,7 +44,7 @@ export default function GlobalError({
     shouldRetry
   ) {
     return (
-      <div className="min-h-screen flex items-center justify-center p-4 bg-surface">
+      <div className="page-ambient min-h-screen flex items-center justify-center p-4">
         <div className="w-full max-w-md">
           <EnhancedLoadingComponent
             retryCount={retryCount}
@@ -61,8 +61,8 @@ export default function GlobalError({
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-4 bg-surface">
-      <div className="text-center bg-surface-alt p-8 rounded-xl shadow-lg border border-border">
+    <div className="page-ambient min-h-screen flex items-center justify-center p-4">
+      <div className="page-ambient-panel-strong text-center p-8 rounded-xl shadow-lg border border-border">
         <h2 className="text-2xl font-bold text-danger mb-4">
           Something went wrong!
         </h2>

@@ -54,7 +54,7 @@ export default async function CategoryThreadsPage({
   const { threads } = await fetchThreads(categoryId);
 
   return (
-    <div className="liquid-glass-layout min-h-screen bg-bg">
+    <div className="liquid-glass-layout page-ambient min-h-screen">
       <div className="liquid-glass-content mx-auto py-8">
         <div className="mb-6 flex items-center justify-between">
           <h1 className="text-3xl font-bold text-fg">📂 Threads</h1>

@@ -6,7 +6,7 @@ import '../styles/liquid-glass.scss';
 import Header from '../components/Header';
 import FloatingDarkModeToggle from '../components/FloatingDarkModeToggle';
 import { DarkModeProvider } from '../components/DarkModeContext';
-import AnimatedBackground from '../components/AnimatedBackground';
+import GlobalAnimatedBackground from '../components/GlobalAnimatedBackground';
 import { AccessibilityProvider } from '../components/AccessibilityProvider';
 import ApolloWrapper from '../components/ApolloWrapper';
 import AuthProvider from '../components/AuthProvider';
@@ -234,13 +234,14 @@ export default async function RootLayout({
       >
         <DarkModeProvider>
           <ApolloWrapper>
+            <GlobalAnimatedBackground />
             <ConsoleBanner />
             {/* Dev-only Apollo messages moved to client component to avoid server bundle import issues */}
             <ApolloDevMessages />
             <AuthProvider>
               <ProfileProvider>
                 <AccessibilityProvider>
-                  <div className="flex flex-col min-h-screen">
+                  <div className="relative z-10 flex flex-col min-h-screen">
                     <Suspense fallback={null}>
                       <AdminQueryHandler />
                     </Suspense>
@@ -262,7 +263,6 @@ export default async function RootLayout({
                       className="flex-grow w-full sm:max-w-7xl sm:mx-auto px-0 sm:px-6 lg:px-8 py-0 md:py-6 relative"
                       tabIndex={-1}
                     >
-                      <AnimatedBackground />
                       <BackendReadinessWrapper>
                         {children}
                       </BackendReadinessWrapper>

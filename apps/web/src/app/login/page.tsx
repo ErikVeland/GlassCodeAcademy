@@ -100,7 +100,7 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen relative overflow-hidden bg-gradient-to-br from-background to-surface">
+    <div className="page-ambient min-h-screen relative overflow-hidden">
       {/* Decorative, theme-aware background */}
       <div aria-hidden="true" className="pointer-events-none absolute inset-0">
         <div className="absolute -top-32 -left-32 h-80 w-80 rounded-full blur-3xl opacity-20 bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500" />
@@ -120,7 +120,7 @@ export default function LoginPage() {
             Sign in to continue your learning journey
           </p>
         </div>
-        <div className="bg-surface/80 backdrop-blur-lg rounded-2xl border border-border p-6 shadow-xl">
+        <div className="page-ambient-panel-strong rounded-2xl border border-border p-6 shadow-xl">
           <div className="mb-6">
             <h2 className="text-2xl font-semibold text-fg">Sign in</h2>
             <p className="text-muted mt-1">

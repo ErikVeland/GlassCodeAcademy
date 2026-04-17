@@ -76,7 +76,7 @@ export default async function ThreadPage({
 
   if (!thread) {
     return (
-      <div className="liquid-glass-layout min-h-screen bg-bg">
+      <div className="liquid-glass-layout page-ambient min-h-screen">
         <div className="liquid-glass-content mx-auto py-8">
           <div className="glass-card p-6 text-center">
             <p className="text-muted">Thread not found.</p>
@@ -95,7 +95,7 @@ export default async function ThreadPage({
   }
 
   return (
-    <div className="liquid-glass-layout min-h-screen bg-bg">
+    <div className="liquid-glass-layout page-ambient min-h-screen">
       <div className="liquid-glass-content mx-auto py-8">
         <div className="mb-6 flex items-center justify-between">
           <div>

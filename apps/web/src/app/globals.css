@@ -144,6 +144,22 @@ html.theme-transition * {
 @utility bg-danger {
   background-color: hsl(var(--danger));
 }
+
+.page-ambient {
+  background: transparent;
+}
+
+.page-ambient-panel {
+  background-color: hsl(var(--bg) / 0.56);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+}
+
+.page-ambient-panel-strong {
+  background-color: hsl(var(--surface) / 0.82);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+}
 @utility ring-focus {
   --tw-ring-color: hsl(var(--focus-ring));
 }

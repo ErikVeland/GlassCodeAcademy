@@ -37,7 +37,7 @@ export default async function ForumPage() {
   const categories = await fetchCategories();
 
   return (
-    <div className="liquid-glass-layout min-h-screen bg-bg">
+    <div className="liquid-glass-layout page-ambient min-h-screen">
       <div className="liquid-glass-content mx-auto py-8">
         <div className="text-center mb-8">
           <h1 className="text-4xl md:text-5xl font-bold text-fg mb-3">
