@@ -1,9 +1,21 @@
+import 'dotenv/config';
 import Fastify from 'fastify';
 import cors from '@fastify/cors';
 import helmet from '@fastify/helmet';
 import rateLimit from '@fastify/rate-limit';
 import compress from '@fastify/compress';
 import { randomBytes } from 'crypto';
+
+// Map DB credential variables if discrete names are set
+if (!process.env.POSTGRES_DB && process.env.DB_NAME) {
+  process.env.POSTGRES_DB = process.env.DB_NAME;
+}
+if (!process.env.POSTGRES_USER && process.env.DB_USER) {
+  process.env.POSTGRES_USER = process.env.DB_USER;
+}
+if (!process.env.POSTGRES_PASSWORD && process.env.DB_PASSWORD) {
+  process.env.POSTGRES_PASSWORD = process.env.DB_PASSWORD;
+}
 import { registerRegistryRoutes } from './routes/registry';
 import { registerModuleRoutes } from './routes/modules';
 import { registerLessonRoutes } from './routes/lessons';

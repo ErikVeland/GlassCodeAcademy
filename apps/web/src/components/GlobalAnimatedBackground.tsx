@@ -13,16 +13,15 @@ interface BackgroundSettings {
 
 const defaultSettings: BackgroundSettings = {
   colors: [
-    'rgba(99, 102, 241, 0.15)', // indigo - slightly more visible
-    'rgba(168, 85, 247, 0.15)', // purple
-    'rgba(236, 72, 153, 0.15)', // pink
-    'rgba(16, 185, 129, 0.15)', // green
-    'rgba(245, 158, 11, 0.15)', // yellow
-    'rgba(239, 68, 68, 0.15)', // red
+    'rgba(49, 120, 198, 0.14)',
+    'rgba(19, 143, 138, 0.12)',
+    'rgba(110, 69, 216, 0.13)',
+    'rgba(27, 158, 175, 0.1)',
+    'rgba(17, 24, 39, 0.08)',
   ],
-  speed: 25,
-  blur: 55,
-  opacity: 0.8, // slightly more opaque
+  speed: 34,
+  blur: 48,
+  opacity: 0.72,
   respectReducedMotion: false,
 };
 

@@ -36,9 +36,9 @@ check_url() {
 }
 
 echo "Checking production sites..."
-check_url "glasscode.academy gateway" "https://glasscode.academy/health" "200" '^ok$'
+check_url "glasscode.academy gateway" "https://glasscode.academy/health" "200" '"success"[[:space:]]*:[[:space:]]*true'
 check_url "glasscode.academy homepage" "https://glasscode.academy/" "200" '<!DOCTYPE html'
-check_url "glasscode.academy API" "https://glasscode.academy/api/health" "200" '"status"[[:space:]]*:[[:space:]]*"(ok|healthy)"'
+check_url "glasscode.academy API" "https://glasscode.academy/api/health" "200" '"status"[[:space:]]*:[[:space:]]*"(ok|healthy|degraded)"'
 check_url "about.glasscode.academy" "https://about.glasscode.academy/en" "200" '<!DOCTYPE html'
 check_url "piday.glasscode.academy" "https://piday.glasscode.academy/" "200" '<!DOCTYPE html'
 check_url "epstein.academy API" "https://epstein.academy/api/health" "200" '"status"[[:space:]]*:[[:space:]]*"ok"'

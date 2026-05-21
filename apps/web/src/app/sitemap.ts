@@ -77,7 +77,11 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     // Fetch modules using safe loader
     const modules: Module[] = await loadModulesSafe();
     const activeModules = (modules || []).filter(
-      (m) => m && m.status !== 'inactive'
+      (m) =>
+        m &&
+        m.status !== 'inactive' &&
+        m.status !== 'secret' &&
+        m.status !== 'hidden'
     );
 
     const sitemapEntries: MetadataRoute.Sitemap = [];

@@ -15,18 +15,11 @@ interface AnimatedBackgroundProps {
 
 const AnimatedBackground: React.FC<AnimatedBackgroundProps> = ({
   colors = [
-    'rgba(99, 102, 241, 0.12)', // indigo (blue) - .NET
-    'rgba(168, 85, 247, 0.12)', // purple - GraphQL
-    'rgba(236, 72, 153, 0.12)', // pink - Laravel
-    'rgba(16, 185, 129, 0.12)', // green - React, Vue.js
-    'rgba(245, 158, 11, 0.12)', // yellow - SASS
-    'rgba(239, 68, 68, 0.12)', // red - Next.js
-    'rgba(59, 130, 246, 0.12)', // blue - Node.js
-    'rgba(139, 92, 246, 0.12)', // violet - Tailwind CSS
-    'rgba(251, 146, 60, 0.12)', // orange - Testing & QA
-    'rgba(14, 165, 233, 0.12)', // sky blue - TypeScript
-    'rgba(192, 132, 252, 0.12)', // light purple - Databases
-    'rgba(249, 115, 22, 0.12)', // orange-red - additional color for better transition
+    'rgba(49, 120, 198, 0.12)',
+    'rgba(19, 143, 138, 0.1)',
+    'rgba(110, 69, 216, 0.11)',
+    'rgba(27, 158, 175, 0.1)',
+    'rgba(17, 24, 39, 0.07)',
   ],
   speed = 45,
   blur = 55,
@@ -133,11 +126,14 @@ const AnimatedBackground: React.FC<AnimatedBackgroundProps> = ({
 
   return (
     <div
-      ref={backgroundRef}
-      className={`pointer-events-none fixed inset-0 z-0 w-full h-full ${className}`}
+      className={`gc-ambient-background pointer-events-none fixed inset-0 z-0 w-full h-full ${className}`}
       aria-hidden="true"
       role="presentation"
-    />
+    >
+      <div ref={backgroundRef} className="gc-ambient-gradient" />
+      <div className="gc-ambient-lattice" />
+      <div className="gc-ambient-scanline" />
+    </div>
   );
 };
 

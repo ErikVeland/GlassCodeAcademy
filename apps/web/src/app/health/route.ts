@@ -22,8 +22,8 @@ export async function GET() {
   };
 
   try {
-    // If apiBase ends with /api, strip it for the backend origin, then hit /health
-    const backendHealthUrl = apiBase.replace(/\/api$/, '') + '/health';
+    // The backend registers its health check at /api/health
+    const backendHealthUrl = apiBase.replace(/\/api$/, '') + '/api/health';
     const controller = new AbortController();
     const timeout = setTimeout(() => controller.abort(), 1500);
     const res = await fetch(backendHealthUrl, {

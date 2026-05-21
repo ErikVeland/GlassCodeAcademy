@@ -4,6 +4,12 @@ import { useState, useEffect } from 'react';
 import type { ProgrammingQuestion } from '@/lib/contentRegistry';
 import { notFound, useRouter } from 'next/navigation';
 import Link from 'next/link';
+import {
+  ArrowLeftIcon,
+  ArrowRightIcon,
+  CheckCircleIcon,
+  XCircleIcon,
+} from '@heroicons/react/24/outline';
 
 // For client components in Next.js 15, params are still Promises that need to be awaited
 export default function QuizQuestionPage({
@@ -404,7 +410,17 @@ export default function QuizQuestionPage({
             className={`p-4 rounded-lg mb-6 bg-surface-alt border border-border`}
           >
             <div className="flex items-start gap-3">
-              <span className="text-xl">{isCorrect ? '✅' : '❌'}</span>
+              {isCorrect ? (
+                <CheckCircleIcon
+                  className="w-6 h-6 flex-shrink-0 text-primary"
+                  aria-hidden="true"
+                />
+              ) : (
+                <XCircleIcon
+                  className="w-6 h-6 flex-shrink-0 text-danger"
+                  aria-hidden="true"
+                />
+              )}
               <div>
                 <h3
                   className={`font-semibold ${
@@ -429,7 +445,7 @@ export default function QuizQuestionPage({
                 onClick={handlePreviousQuestion}
                 className="px-6 py-2 bg-surface-alt text-fg rounded-lg hover:opacity-90 transition-colors flex items-center"
               >
-                <span className="mr-2">←</span>
+                <ArrowLeftIcon className="mr-2 w-4 h-4" aria-hidden="true" />
                 Previous
               </button>
             )}
@@ -447,7 +463,7 @@ export default function QuizQuestionPage({
                 }`}
               >
                 Submit Answer
-                <span className="ml-2">→</span>
+                <ArrowRightIcon className="ml-2 w-4 h-4" aria-hidden="true" />
               </button>
             ) : (
               <button
@@ -457,7 +473,7 @@ export default function QuizQuestionPage({
                 {questionIndex < totalQuestions - 1
                   ? 'Next Question'
                   : 'View Results'}
-                <span className="ml-2">→</span>
+                <ArrowRightIcon className="ml-2 w-4 h-4" aria-hidden="true" />
               </button>
             )}
           </div>
@@ -470,7 +486,8 @@ export default function QuizQuestionPage({
           href={`/${shortSlug}/quiz`}
           className="inline-flex items-center px-4 py-2 text-muted hover:text-fg transition-colors"
         >
-          ← Back to Quiz Overview
+          <ArrowLeftIcon className="mr-2 w-4 h-4" aria-hidden="true" />
+          Back to Quiz Overview
         </Link>
       </footer>
     </div>

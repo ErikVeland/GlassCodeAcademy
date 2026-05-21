@@ -1,0 +1,104 @@
+{
+  "questions": [
+    {
+      "id": 1,
+      "question": "Which system is primarily responsible for passenger check-in operations, flight weight/balance, and generating printed boarding passes at the airport gates?",
+      "topic": "Domain Lexicon",
+      "difficulty": "Advanced",
+      "choices": [
+        "The PSS Reservation Database (Amadeus Altéa Reservation)",
+        "The Departure Control System (DCS / Amadeus Altéa Departure Control)",
+        "The Next.js Frontend routing controller",
+        "The global distribution system (GDS)"
+      ],
+      "explanation": "The Departure Control System (DCS) is the primary flight operations system that handles passenger check-in, bag drops, weight and balance calculations, and boarding pass generation at the airport. The reservation system (PSS Res) handles bookings and ticketing before travel, while the DCS handles the actual operational travel window.",
+      "industryContext": "In commercial aviation, mastering the separation of PSS Res (bookings) and PSS DCS (airport operations) is critical for Tech Leads. When check-in kiosks fail, the issue is almost always a DCS interface bottleneck rather than a booking locator problem.",
+      "tags": ["DCS", "PSS", "Domain", "advanced"],
+      "questionType": "multiple-choice",
+      "estimatedTime": 90,
+      "correctAnswer": 1,
+      "type": "multiple-choice",
+      "sources": []
+    },
+    {
+      "id": 2,
+      "question": "You ask the Chennai-based offshore team if a seat map selection rewrite is ready for testing, and they respond with a quick 'Yes, it is ready' without further detail. What is the most effective, empathetic way to verify actual progress while maintaining psychological safety?",
+      "topic": "Offshore Leadership",
+      "difficulty": "Advanced",
+      "choices": [
+        "Tell them you do not believe it is done and demand a detailed Jira work log immediately.",
+        "Ask a supportive, open-ended question: 'Can you show me a brief screen-share demo of the seat selection flow and tell me what the trickiest part of handling the Amadeus SOAP payload was?'",
+        "Bypass the developer and complain directly to the onshore TCS account manager.",
+        "Wait silently until the sprint ends to see if the build fails in the staging environment."
+      ],
+      "explanation": "Asking for a quick, supportive visual demo ('Can you show me the flow?') and active technical pairing ('What was the trickiest part?') shifts the dynamic from a dry status report to a collaborative sharing of code. It removes fear of reporting delays and builds real engineering alignment.",
+      "industryContext": "Leading distributed vendor teams requires navigating high time zone pressures and cultural communication styles. High-performing Tech Leads replace binary status questions ('Is X done?') with active verification and engineering collaboration.",
+      "tags": ["Offshore", "Leadership", "Agile", "advanced"],
+      "questionType": "multiple-choice",
+      "estimatedTime": 120,
+      "correctAnswer": 1,
+      "type": "multiple-choice",
+      "sources": []
+    },
+    {
+      "id": 3,
+      "question": "A critical downstream connection to the Amadeus Altéa seat mapping service is timing out, causing airport check-in kiosks to freeze. What architectural pattern should your Fastify API gateway implement to stabilize the front-end client dynamically?",
+      "topic": "API Resilience",
+      "difficulty": "Advanced",
+      "choices": [
+        "An infinite loop retry handler that retries the request indefinitely until Amadeus responds.",
+        "A downstream Circuit Breaker that stops sending requests to Amadeus after a series of failures, instead serving cached fallback aircraft layouts to keep kiosks interactive.",
+        "A front-end window reload command triggered every 10 seconds on the passenger's screen.",
+        "A synchronous direct socket block that freezes the thread until a 200 OK SOAP payload is received."
+      ],
+      "explanation": "A Circuit Breaker monitors downstream API calls. If the failure rate crosses a threshold, it trips the circuit. Instead of overloading a struggling Amadeus service with continuous timeouts, the gateway immediately returns cached or generic aircraft layouts, preventing the user interface from freezing.",
+      "industryContext": "Aviation platforms must operate under strict high-availability SLAs. Implementing circuit breakers, aggressive edge caching (e.g. Redis), and defensive timeouts is standard practice at airlines like Delta, United, and Virgin Australia to protect high-traffic travel gates.",
+      "tags": ["Resilience", "Circuit-Breaker", "Architecture", "advanced"],
+      "questionType": "multiple-choice",
+      "estimatedTime": 90,
+      "correctAnswer": 1,
+      "type": "multiple-choice",
+      "sources": []
+    },
+    {
+      "id": 4,
+      "question": "When registering checked bags for a domestic flight, what security and privacy protocols must the Tech Lead enforce regarding baggage tags and passenger personal data (PII)?",
+      "topic": "Security & Baggage",
+      "difficulty": "Advanced",
+      "choices": [
+        "Allow passengers to check up to 50kg in a single bag, and log raw passport credentials in plaintext Datadog logs for quick debugging.",
+        "Enforce Dangerous Goods safety confirmations, restrict single-bag weights to 32kg for ground handler workplace health, and encrypt sensitive PII passport details before transmission.",
+        "Skip passport verification for domestic connecting routes and save bag allowances locally on un-encrypted browser session storage.",
+        "Delegate all safety declarations and data encryption strictly to third-party luggage belt hardware providers."
+      ],
+      "explanation": "Aviation safety rules (IATA) require explicit dangerous goods declarations before tag issuance. Occupational health laws restrict single checked bags to a maximum of 32kg to protect loaders. Furthermore, passenger PII (like passport details) is highly sensitive and must be encrypted and excluded from standard plain-text logs.",
+      "industryContext": "Data security and physical WHS compliance are non-negotiable in airline operations. Failure to secure passport PII violates international privacy laws (GDPR/APPs), while allowing over-weight bags violates airport ground-handling labor agreements.",
+      "tags": ["Baggage", "PII", "Security", "advanced"],
+      "questionType": "multiple-choice",
+      "estimatedTime": 90,
+      "correctAnswer": 1,
+      "type": "multiple-choice",
+      "sources": []
+    },
+    {
+      "id": 5,
+      "question": "To achieve a seamless, zero-downtime code release for the Virgin Australia check-in application during active flight travel hours, which deployment methodology is best suited?",
+      "topic": "DevOps Deployments",
+      "difficulty": "Advanced",
+      "choices": [
+        "A manual server stop-and-start (maintenance window) scheduled at 9:00 AM on a Friday morning.",
+        "A Blue-Green Deployment using an AWS ECS Application Load Balancer to shift traffic from the stable 'blue' environment to the verified 'green' environment dynamically.",
+        "A direct file transfer protocol (FTP) copy that overwrites live files on the primary production server.",
+        "A single-instance container hot reload that forces all active passenger check-in socket pools to disconnect instantly."
+      ],
+      "explanation": "A Blue-Green Deployment maintains two identical environments: Blue (active production) and Green (new release). By running automated health checks on Green and then dynamically swapping the Load Balancer targets, traffic shifts with zero disruption. If the new release fails, rollback takes seconds by reversing the target weights.",
+      "industryContext": "In continuous delivery, check-in applications are classified as Tier 1 critical services. Modern platforms utilize automated blue-green or canary release pipelines combined with strict pre-flight container testing to guarantee continuous availability for airport gates.",
+      "tags": ["CICD", "DevOps", "Deployments", "advanced"],
+      "questionType": "multiple-choice",
+      "estimatedTime": 90,
+      "correctAnswer": 1,
+      "type": "multiple-choice",
+      "sources": []
+    }
+  ]
+}

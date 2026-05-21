@@ -6,24 +6,24 @@ import { getShortSlugFromModuleSlug } from '@/lib/contentRegistry';
 
 // Icon mapping by canonical module slug
 const iconBySlug: Record<string, string> = {
-  'programming-fundamentals': '💻',
-  'web-fundamentals': '🌐',
-  'version-control': '🔧',
-  'dotnet-fundamentals': '⚙️',
-  'react-fundamentals': '⚛️',
-  'database-systems': '🗄️',
-  'typescript-fundamentals': '📘',
-  'node-fundamentals': '🟢',
-  'laravel-fundamentals': '🧰',
-  'nextjs-advanced': '⏭️',
-  'graphql-advanced': '🔺',
-  'sass-advanced': '🎀',
-  'tailwind-advanced': '🌀',
-  'vue-advanced': '🍃',
-  'testing-fundamentals': '🧪',
-  'e2e-testing': '🧪',
-  'performance-optimization': '⚡',
-  'security-fundamentals': '🔒',
+  'programming-fundamentals': 'DEV',
+  'web-fundamentals': 'WEB',
+  'version-control': 'GIT',
+  'dotnet-fundamentals': '.NET',
+  'react-fundamentals': 'RX',
+  'database-systems': 'SQL',
+  'typescript-fundamentals': 'TS',
+  'node-fundamentals': 'ND',
+  'laravel-fundamentals': 'LV',
+  'nextjs-advanced': 'NX',
+  'graphql-advanced': 'GQL',
+  'sass-advanced': 'SASS',
+  'tailwind-advanced': 'TW',
+  'vue-advanced': 'VU',
+  'testing-fundamentals': 'TST',
+  'e2e-testing': 'E2E',
+  'performance-optimization': 'PERF',
+  'security-fundamentals': 'SEC',
 };
 
 interface DbModule {
@@ -203,7 +203,7 @@ async function synthesizeRegistryFromDatabase() {
         quiz: `/${shortSlug}/quiz`,
       };
 
-      const icon = iconBySlug[moduleSlug] || '📚';
+      const icon = iconBySlug[moduleSlug] || 'GC';
 
       return {
         slug: moduleSlug,
@@ -249,16 +249,7 @@ async function synthesizeRegistryFromDatabase() {
       staticMeta.difficulty.trim() !== ''
         ? staticMeta.difficulty
         : 'Beginner';
-    const icon =
-      typeof (m as { icon?: string }).icon === 'string' &&
-      (m as { icon?: string }).icon &&
-      (m as { icon?: string }).icon !== '📚'
-        ? (m as { icon?: string }).icon!
-        : staticMeta &&
-            typeof staticMeta.icon === 'string' &&
-            staticMeta.icon.trim() !== ''
-          ? staticMeta.icon
-          : iconBySlug[slug] || '📚';
+    const icon = iconBySlug[slug] || 'GC';
 
     // Preserve title/description/order/routes from DB mapping, layer in static fields
     return {
@@ -278,11 +269,16 @@ async function synthesizeRegistryFromDatabase() {
     } as RegistryModuleLight;
   });
 
+  // Filter out any secret or hidden modules from the client list
+  const clientModules = normalizedModules.filter(
+    (m) => m && m.status !== 'secret' && m.status !== 'hidden'
+  );
+
   return {
     version: 'db',
     lastUpdated: new Date().toISOString(),
     tiers: dbTiers,
-    modules: normalizedModules,
+    modules: clientModules,
     globalSettings: {},
   };
 }
@@ -308,10 +304,7 @@ async function synthesizeRegistryFromStaticOnly() {
         lessons: `/${shortSlug}/lessons`,
         quiz: `/${shortSlug}/quiz`,
       };
-      const icon =
-        typeof m.icon === 'string' && m.icon.trim() !== '' && m.icon !== '📚'
-          ? m.icon
-          : iconBySlug[slug] || '📚';
+      const icon = iconBySlug[slug] || 'GC';
       const technologies = Array.isArray(m.technologies) ? m.technologies : [];
       const difficulty =
         typeof m.difficulty === 'string' && m.difficulty.trim() !== ''
@@ -330,9 +323,10 @@ async function synthesizeRegistryFromStaticOnly() {
     })
   );
 
-  // Filter out any unwanted/demo modules
+  // Filter out any unwanted/demo/secret modules
   const filteredModules = normalizedModules.filter(
-    (m) => m.slug !== 'html-basics'
+    (m) =>
+      m.slug !== 'html-basics' && m.status !== 'secret' && m.status !== 'hidden'
   );
 
   return {

@@ -1,0 +1,597 @@
+- generic [active] [ref=e1]:
+    - link "Skip to main content" [ref=e2] [cursor=pointer]:
+        - /url: '#main-content'
+    - generic [ref=e3]:
+        - link "Skip to main content" [ref=e4] [cursor=pointer]:
+            - /url: '#main-content'
+        - banner [ref=e5]:
+            - link "GlassCode Academy Home" [ref=e9] [cursor=pointer]:
+                - /url: /
+                - text: GlassCode Academy
+        - main [ref=e18]:
+            - main [ref=e21]:
+                - generic [ref=e23]:
+                    - button "Unlock modules (disable progress gating)" [pressed] [ref=e25]:
+                        - img [ref=e26]
+                    - generic [ref=e29]:
+                        - generic [ref=e30]:
+                            - heading "Master Modern Web Development" [level=1] [ref=e32]
+                            - paragraph [ref=e33]: Comprehensive learning paths across 18 technology modules with interactive lessons, real-world projects, and interview preparation.
+                            - generic [ref=e34]:
+                                - generic [ref=e35]:
+                                    - generic [ref=e36]: Total Modules
+                                    - generic [ref=e37]: '19'
+                                - generic [ref=e38]:
+                                    - generic [ref=e39]: Completed
+                                    - generic [ref=e40]: '0'
+                                - generic [ref=e41]:
+                                    - generic [ref=e42]: Progress
+                                    - generic [ref=e43]: 0%
+                                - generic [ref=e44]:
+                                    - generic [ref=e45]: Streak
+                                    - generic [ref=e46]: 0 days
+                        - img "Learning path visualization" [ref=e49]:
+                            - generic "Foundational tier" [ref=e51]
+                            - generic "Core technologies tier" [ref=e52]
+                            - generic "Specialised skills tier" [ref=e53]
+                            - generic "Quality and testing tier" [ref=e54]
+                            - generic [ref=e55]: Foundational
+                            - generic [ref=e56]: Core
+                            - generic [ref=e57]: Specialised
+                            - generic [ref=e58]: Quality
+                - generic [ref=e61]:
+                    - generic [ref=e62]:
+                        - heading "🎮 Progress Dashboard" [level=2] [ref=e63]
+                        - button "Collapse dashboard" [ref=e64]: ▲
+                    - generic [ref=e65]:
+                        - generic [ref=e67]:
+                            - generic [ref=e68]:
+                                - generic [ref=e69]: Modules Completed
+                                - generic [ref=e70]: '0'
+                            - generic [ref=e71]: 📚
+                        - generic [ref=e73]:
+                            - generic [ref=e74]:
+                                - generic [ref=e75]: Overall Progress
+                                - generic [ref=e76]: 0%
+                            - generic [ref=e77]: 📊
+                        - generic [ref=e79]:
+                            - generic [ref=e80]:
+                                - generic [ref=e81]: Current Streak
+                                - generic [ref=e82]: 0 days
+                            - generic [ref=e83]: 📅
+                    - generic [ref=e84]:
+                        - generic [ref=e85]:
+                            - heading "🏆 Achievements (0)" [level=3] [ref=e86]
+                            - combobox [ref=e87]:
+                                - option "All Types" [selected]
+                                - option "Completion"
+                                - option "Streak"
+                                - option "Skill"
+                                - option "Velocity"
+                        - generic [ref=e88]:
+                            - generic [ref=e89]: 🎯
+                            - paragraph [ref=e90]: No achievements yet. Keep learning to unlock rewards!
+                - search "Search and filter learning modules" [ref=e93]:
+                    - generic [ref=e95]:
+                        - generic:
+                            - img
+                        - textbox "Search modules, topics, or technologies..." [ref=e96]
+                        - generic:
+                            - generic: ⌘K
+                    - generic [ref=e97]:
+                        - heading "Quick filters" [level=3] [ref=e99]
+                        - generic [ref=e100]:
+                            - generic [ref=e101]:
+                                - button "🏗️ Foundational" [ref=e102] [cursor=pointer]:
+                                    - generic [ref=e103]: 🏗️
+                                    - generic [ref=e104]: Foundational
+                                - button "🔧 Backend" [ref=e105] [cursor=pointer]:
+                                    - generic [ref=e106]: 🔧
+                                    - generic [ref=e107]: Backend
+                                - button "🎨 Frontend" [ref=e108] [cursor=pointer]:
+                                    - generic [ref=e109]: 🎨
+                                    - generic [ref=e110]: Frontend
+                                - button "⏳ Not Started" [ref=e111] [cursor=pointer]:
+                                    - generic [ref=e112]: ⏳
+                                    - generic [ref=e113]: Not Started
+                                - button "🔄 In Progress" [ref=e114] [cursor=pointer]:
+                                    - generic [ref=e115]: 🔄
+                                    - generic [ref=e116]: In Progress
+                                - button "✅ Completed" [ref=e117] [cursor=pointer]:
+                                    - generic [ref=e118]: ✅
+                                    - generic [ref=e119]: Completed
+                            - button "▼ Show Advanced" [ref=e121] [cursor=pointer]:
+                                - generic [ref=e122]: ▼
+                                - generic [ref=e123]: Show Advanced
+                - region "Learning modules organized by tier" [ref=e124]:
+                    - region "Foundational" [ref=e125]:
+                        - generic [ref=e126]:
+                            - generic [ref=e127]:
+                                - generic [ref=e128]:
+                                    - generic [ref=e130]:
+                                        - generic [ref=e132]: '1'
+                                        - generic [ref=e133]:
+                                            - heading "Foundational" [level=2] [ref=e134]
+                                            - paragraph [ref=e135]: Build essential programming skills and concepts
+                                    - generic [ref=e136]:
+                                        - generic [ref=e137]:
+                                            - heading "Focus Area" [level=3] [ref=e138]
+                                            - paragraph [ref=e139]: Programming basics, web fundamentals, version control
+                                        - generic [ref=e140]:
+                                            - generic [ref=e141]: 0%
+                                            - generic [ref=e142]: Complete
+                                            - generic [ref=e143]: 0 of 3 modules
+                                - generic [ref=e144]:
+                                    - heading "Learning Objectives" [level=3] [ref=e145]
+                                    - list [ref=e146]:
+                                        - listitem [ref=e147]:
+                                            - img [ref=e148]
+                                            - generic [ref=e150]: Master basic programming concepts
+                                        - listitem [ref=e151]:
+                                            - img [ref=e152]
+                                            - generic [ref=e154]: Understand web development fundamentals
+                                        - listitem [ref=e155]:
+                                            - img [ref=e156]
+                                            - generic [ref=e158]: Learn version control workflows
+                            - list "Foundational modules" [ref=e159]:
+                                - listitem [ref=e160]:
+                                    - link "Programming Fundamentals Beginner Not Started Variables, data types, control structures, and basic algorithms Logic Algorithms Data Structures" [ref=e162] [cursor=pointer]:
+                                        - /url: /programming
+                                        - generic [ref=e163]:
+                                            - generic [ref=e164]: DEV
+                                            - generic [ref=e165]:
+                                                - heading "Programming Fundamentals" [level=3] [ref=e166]
+                                                - generic [ref=e167]:
+                                                    - generic [ref=e168]: Beginner
+                                                    - generic [ref=e169]: Not Started
+                                        - paragraph [ref=e170]: Variables, data types, control structures, and basic algorithms
+                                        - generic [ref=e171]:
+                                            - generic [ref=e172]: Logic
+                                            - generic [ref=e173]: Algorithms
+                                            - generic [ref=e174]: Data Structures
+                                        - img
+                                - listitem [ref=e175]:
+                                    - link "Prerequisites Required Web Development Basics Beginner Not Started HTML5, CSS3, JavaScript fundamentals, and DOM manipulation HTML5 CSS3 JavaScript +1 more" [disabled] [ref=e177] [cursor=pointer]:
+                                        - /url: '#'
+                                        - generic [ref=e179]:
+                                            - img [ref=e180]
+                                            - paragraph [ref=e182]: Prerequisites Required
+                                        - generic [ref=e183]:
+                                            - generic [ref=e184]: WEB
+                                            - generic [ref=e185]:
+                                                - heading "Web Development Basics" [level=3] [ref=e186]
+                                                - generic [ref=e187]:
+                                                    - generic [ref=e188]: Beginner
+                                                    - generic [ref=e189]: Not Started
+                                        - paragraph [ref=e190]: HTML5, CSS3, JavaScript fundamentals, and DOM manipulation
+                                        - generic [ref=e191]:
+                                            - generic [ref=e192]: HTML5
+                                            - generic [ref=e193]: CSS3
+                                            - generic [ref=e194]: JavaScript
+                                            - generic [ref=e195]: +1 more
+                                - listitem [ref=e196]:
+                                    - link "Version Control with Git Beginner Not Started Git workflows, branching, merging, and collaboration Git GitHub Version Control" [ref=e198] [cursor=pointer]:
+                                        - /url: /version
+                                        - generic [ref=e199]:
+                                            - generic [ref=e200]: GIT
+                                            - generic [ref=e201]:
+                                                - heading "Version Control with Git" [level=3] [ref=e202]
+                                                - generic [ref=e203]:
+                                                    - generic [ref=e204]: Beginner
+                                                    - generic [ref=e205]: Not Started
+                                        - paragraph [ref=e206]: Git workflows, branching, merging, and collaboration
+                                        - generic [ref=e207]:
+                                            - generic [ref=e208]: Git
+                                            - generic [ref=e209]: GitHub
+                                            - generic [ref=e210]: Version Control
+                                        - img
+                    - region "Core Technologies" [ref=e211]:
+                        - generic [ref=e212]:
+                            - generic [ref=e213]:
+                                - generic [ref=e214]:
+                                    - generic [ref=e216]:
+                                        - generic [ref=e218]: '2'
+                                        - generic [ref=e219]:
+                                            - heading "Core Technologies" [level=2] [ref=e220]
+                                            - paragraph [ref=e221]: Master primary development technologies
+                                    - generic [ref=e222]:
+                                        - generic [ref=e223]:
+                                            - heading "Focus Area" [level=3] [ref=e224]
+                                            - paragraph [ref=e225]: Essential technologies (.NET, React, Database, Backend frameworks)
+                                        - generic [ref=e226]:
+                                            - generic [ref=e227]: 0%
+                                            - generic [ref=e228]: Complete
+                                            - generic [ref=e229]: 0 of 6 modules
+                                - generic [ref=e230]:
+                                    - heading "Learning Objectives" [level=3] [ref=e231]
+                                    - list [ref=e232]:
+                                        - listitem [ref=e233]:
+                                            - img [ref=e234]
+                                            - generic [ref=e236]: Master core backend technologies
+                                        - listitem [ref=e237]:
+                                            - img [ref=e238]
+                                            - generic [ref=e240]: Build sophisticated frontend applications
+                                        - listitem [ref=e241]:
+                                            - img [ref=e242]
+                                            - generic [ref=e244]: Design and optimize database systems
+                            - list "Core Technologies modules" [ref=e245]:
+                                - listitem [ref=e246]:
+                                    - link "Prerequisites Required .NET Core Fundamentals Intermediate Not Started C#, ASP.NET Core, Entity Framework, and enterprise patterns C# ASP.NET Core Entity Framework" [disabled] [ref=e248] [cursor=pointer]:
+                                        - /url: '#'
+                                        - generic [ref=e250]:
+                                            - img [ref=e251]
+                                            - paragraph [ref=e253]: Prerequisites Required
+                                        - generic [ref=e254]:
+                                            - generic [ref=e255]: .NET
+                                            - generic [ref=e256]:
+                                                - heading ".NET Core Fundamentals" [level=3] [ref=e257]
+                                                - generic [ref=e258]:
+                                                    - generic [ref=e259]: Intermediate
+                                                    - generic [ref=e260]: Not Started
+                                        - paragraph [ref=e261]: C#, ASP.NET Core, Entity Framework, and enterprise patterns
+                                        - generic [ref=e262]:
+                                            - generic [ref=e263]: C#
+                                            - generic [ref=e264]: ASP.NET Core
+                                            - generic [ref=e265]: Entity Framework
+                                - listitem [ref=e266]:
+                                    - link "Prerequisites Required React Development Intermediate Not Started Components, hooks, state management, and modern patterns React JSX Hooks +1 more" [disabled] [ref=e268] [cursor=pointer]:
+                                        - /url: '#'
+                                        - generic [ref=e270]:
+                                            - img [ref=e271]
+                                            - paragraph [ref=e273]: Prerequisites Required
+                                        - generic [ref=e274]:
+                                            - generic [ref=e275]: RX
+                                            - generic [ref=e276]:
+                                                - heading "React Development" [level=3] [ref=e277]
+                                                - generic [ref=e278]:
+                                                    - generic [ref=e279]: Intermediate
+                                                    - generic [ref=e280]: Not Started
+                                        - paragraph [ref=e281]: Components, hooks, state management, and modern patterns
+                                        - generic [ref=e282]:
+                                            - generic [ref=e283]: React
+                                            - generic [ref=e284]: JSX
+                                            - generic [ref=e285]: Hooks
+                                            - generic [ref=e286]: +1 more
+                                - listitem [ref=e287]:
+                                    - link "Prerequisites Required Database Systems Intermediate Not Started SQL, NoSQL, design patterns, and optimization SQL NoSQL Database Design" [disabled] [ref=e289] [cursor=pointer]:
+                                        - /url: '#'
+                                        - generic [ref=e291]:
+                                            - img [ref=e292]
+                                            - paragraph [ref=e294]: Prerequisites Required
+                                        - generic [ref=e295]:
+                                            - generic [ref=e296]: SQL
+                                            - generic [ref=e297]:
+                                                - heading "Database Systems" [level=3] [ref=e298]
+                                                - generic [ref=e299]:
+                                                    - generic [ref=e300]: Intermediate
+                                                    - generic [ref=e301]: Not Started
+                                        - paragraph [ref=e302]: SQL, NoSQL, design patterns, and optimization
+                                        - generic [ref=e303]:
+                                            - generic [ref=e304]: SQL
+                                            - generic [ref=e305]: NoSQL
+                                            - generic [ref=e306]: Database Design
+                                - listitem [ref=e307]:
+                                    - link "Prerequisites Required TypeScript Development Intermediate Not Started Static typing, advanced types, and modern JavaScript patterns TypeScript JavaScript Static Typing" [disabled] [ref=e309] [cursor=pointer]:
+                                        - /url: '#'
+                                        - generic [ref=e311]:
+                                            - img [ref=e312]
+                                            - paragraph [ref=e314]: Prerequisites Required
+                                        - generic [ref=e315]:
+                                            - generic [ref=e316]: TS
+                                            - generic [ref=e317]:
+                                                - heading "TypeScript Development" [level=3] [ref=e318]
+                                                - generic [ref=e319]:
+                                                    - generic [ref=e320]: Intermediate
+                                                    - generic [ref=e321]: Not Started
+                                        - paragraph [ref=e322]: Static typing, advanced types, and modern JavaScript patterns
+                                        - generic [ref=e323]:
+                                            - generic [ref=e324]: TypeScript
+                                            - generic [ref=e325]: JavaScript
+                                            - generic [ref=e326]: Static Typing
+                                - listitem [ref=e327]:
+                                    - link "Prerequisites Required Node.js Development Intermediate Not Started Server-side JavaScript, APIs, and runtime environments Node.js npm Express" [disabled] [ref=e329] [cursor=pointer]:
+                                        - /url: '#'
+                                        - generic [ref=e331]:
+                                            - img [ref=e332]
+                                            - paragraph [ref=e334]: Prerequisites Required
+                                        - generic [ref=e335]:
+                                            - generic [ref=e336]: ND
+                                            - generic [ref=e337]:
+                                                - heading "Node.js Development" [level=3] [ref=e338]
+                                                - generic [ref=e339]:
+                                                    - generic [ref=e340]: Intermediate
+                                                    - generic [ref=e341]: Not Started
+                                        - paragraph [ref=e342]: Server-side JavaScript, APIs, and runtime environments
+                                        - generic [ref=e343]:
+                                            - generic [ref=e344]: Node.js
+                                            - generic [ref=e345]: npm
+                                            - generic [ref=e346]: Express
+                                - listitem [ref=e347]:
+                                    - link "Prerequisites Required Laravel Framework Intermediate Not Started PHP, Eloquent ORM, and rapid application development PHP Laravel Eloquent ORM" [disabled] [ref=e349] [cursor=pointer]:
+                                        - /url: '#'
+                                        - generic [ref=e351]:
+                                            - img [ref=e352]
+                                            - paragraph [ref=e354]: Prerequisites Required
+                                        - generic [ref=e355]:
+                                            - generic [ref=e356]: LV
+                                            - generic [ref=e357]:
+                                                - heading "Laravel Framework" [level=3] [ref=e358]
+                                                - generic [ref=e359]:
+                                                    - generic [ref=e360]: Intermediate
+                                                    - generic [ref=e361]: Not Started
+                                        - paragraph [ref=e362]: PHP, Eloquent ORM, and rapid application development
+                                        - generic [ref=e363]:
+                                            - generic [ref=e364]: PHP
+                                            - generic [ref=e365]: Laravel
+                                            - generic [ref=e366]: Eloquent ORM
+                    - region "Specialised Skills" [ref=e367]:
+                        - generic [ref=e368]:
+                            - generic [ref=e369]:
+                                - generic [ref=e370]:
+                                    - generic [ref=e372]:
+                                        - generic [ref=e374]: '3'
+                                        - generic [ref=e375]:
+                                            - heading "Specialised Skills" [level=2] [ref=e376]
+                                            - paragraph [ref=e377]: Develop expertise in modern development practices
+                                    - generic [ref=e378]:
+                                        - generic [ref=e379]:
+                                            - heading "Focus Area" [level=3] [ref=e380]
+                                            - paragraph [ref=e381]: Advanced frameworks (Next.js, GraphQL, DevOps)
+                                        - generic [ref=e382]:
+                                            - generic [ref=e383]: 0%
+                                            - generic [ref=e384]: Complete
+                                            - generic [ref=e385]: 0 of 6 modules
+                                - generic [ref=e386]:
+                                    - heading "Learning Objectives" [level=3] [ref=e387]
+                                    - list [ref=e388]:
+                                        - listitem [ref=e389]:
+                                            - img [ref=e390]
+                                            - generic [ref=e392]: Master advanced frontend frameworks
+                                        - listitem [ref=e393]:
+                                            - img [ref=e394]
+                                            - generic [ref=e396]: Build scalable API architectures
+                                        - listitem [ref=e397]:
+                                            - img [ref=e398]
+                                            - generic [ref=e400]: Implement modern DevOps practices
+                            - list "Specialised Skills modules" [ref=e401]:
+                                - listitem [ref=e402]:
+                                    - link "Prerequisites Required Next.js Full-Stack Framework Advanced Not Started Full-stack React framework with SSR and API routes Next.js SSR API Routes" [disabled] [ref=e404] [cursor=pointer]:
+                                        - /url: '#'
+                                        - generic [ref=e406]:
+                                            - img [ref=e407]
+                                            - paragraph [ref=e409]: Prerequisites Required
+                                        - generic [ref=e410]:
+                                            - generic [ref=e411]: NX
+                                            - generic [ref=e412]:
+                                                - heading "Next.js Full-Stack Framework" [level=3] [ref=e413]
+                                                - generic [ref=e414]:
+                                                    - generic [ref=e415]: Advanced
+                                                    - generic [ref=e416]: Not Started
+                                        - paragraph [ref=e417]: Full-stack React framework with SSR and API routes
+                                        - generic [ref=e418]:
+                                            - generic [ref=e419]: Next.js
+                                            - generic [ref=e420]: SSR
+                                            - generic [ref=e421]: API Routes
+                                - listitem [ref=e422]:
+                                    - link "Prerequisites Required GraphQL Development Advanced Not Started Modern API query language with schemas and resolvers GraphQL Schemas Resolvers" [disabled] [ref=e424] [cursor=pointer]:
+                                        - /url: '#'
+                                        - generic [ref=e426]:
+                                            - img [ref=e427]
+                                            - paragraph [ref=e429]: Prerequisites Required
+                                        - generic [ref=e430]:
+                                            - generic [ref=e431]: GQL
+                                            - generic [ref=e432]:
+                                                - heading "GraphQL Development" [level=3] [ref=e433]
+                                                - generic [ref=e434]:
+                                                    - generic [ref=e435]: Advanced
+                                                    - generic [ref=e436]: Not Started
+                                        - paragraph [ref=e437]: Modern API query language with schemas and resolvers
+                                        - generic [ref=e438]:
+                                            - generic [ref=e439]: GraphQL
+                                            - generic [ref=e440]: Schemas
+                                            - generic [ref=e441]: Resolvers
+                                - listitem [ref=e442]:
+                                    - link "Prerequisites Required Sass/SCSS Development Advanced Not Started Advanced CSS preprocessor techniques and methodologies Sass SCSS CSS" [disabled] [ref=e444] [cursor=pointer]:
+                                        - /url: '#'
+                                        - generic [ref=e446]:
+                                            - img [ref=e447]
+                                            - paragraph [ref=e449]: Prerequisites Required
+                                        - generic [ref=e450]:
+                                            - generic [ref=e451]: SASS
+                                            - generic [ref=e452]:
+                                                - heading "Sass/SCSS Development" [level=3] [ref=e453]
+                                                - generic [ref=e454]:
+                                                    - generic [ref=e455]: Advanced
+                                                    - generic [ref=e456]: Not Started
+                                        - paragraph [ref=e457]: Advanced CSS preprocessor techniques and methodologies
+                                        - generic [ref=e458]:
+                                            - generic [ref=e459]: Sass
+                                            - generic [ref=e460]: SCSS
+                                            - generic [ref=e461]: CSS
+                                - listitem [ref=e462]:
+                                    - link "Prerequisites Required Tailwind CSS Framework Advanced Not Started Utility-first CSS framework and design system patterns Tailwind CSS Utility Classes Design Systems" [disabled] [ref=e464] [cursor=pointer]:
+                                        - /url: '#'
+                                        - generic [ref=e466]:
+                                            - img [ref=e467]
+                                            - paragraph [ref=e469]: Prerequisites Required
+                                        - generic [ref=e470]:
+                                            - generic [ref=e471]: TW
+                                            - generic [ref=e472]:
+                                                - heading "Tailwind CSS Framework" [level=3] [ref=e473]
+                                                - generic [ref=e474]:
+                                                    - generic [ref=e475]: Advanced
+                                                    - generic [ref=e476]: Not Started
+                                        - paragraph [ref=e477]: Utility-first CSS framework and design system patterns
+                                        - generic [ref=e478]:
+                                            - generic [ref=e479]: Tailwind CSS
+                                            - generic [ref=e480]: Utility Classes
+                                            - generic [ref=e481]: Design Systems
+                                - listitem [ref=e482]:
+                                    - link "Prerequisites Required Vue.js Framework Advanced Not Started Progressive JavaScript framework for user interfaces Vue.js Vuex Vue Router" [disabled] [ref=e484] [cursor=pointer]:
+                                        - /url: '#'
+                                        - generic [ref=e486]:
+                                            - img [ref=e487]
+                                            - paragraph [ref=e489]: Prerequisites Required
+                                        - generic [ref=e490]:
+                                            - generic [ref=e491]: VU
+                                            - generic [ref=e492]:
+                                                - heading "Vue.js Framework" [level=3] [ref=e493]
+                                                - generic [ref=e494]:
+                                                    - generic [ref=e495]: Advanced
+                                                    - generic [ref=e496]: Not Started
+                                        - paragraph [ref=e497]: Progressive JavaScript framework for user interfaces
+                                        - generic [ref=e498]:
+                                            - generic [ref=e499]: Vue.js
+                                            - generic [ref=e500]: Vuex
+                                            - generic [ref=e501]: Vue Router
+                                - listitem [ref=e502]:
+                                    - link "Virgin Australia Tech Lead Advanced Not Started RPG-style training to master the passenger check-in technical domain, navigate vendor handovers, and lead with empathy and authority. React Node.js Amadeus Altéa +1 more" [ref=e504] [cursor=pointer]:
+                                        - /url: /virgin
+                                        - generic [ref=e505]:
+                                            - generic [ref=e506]: GC
+                                            - generic [ref=e507]:
+                                                - heading "Virgin Australia Tech Lead" [level=3] [ref=e508]
+                                                - generic [ref=e509]:
+                                                    - generic [ref=e510]: Advanced
+                                                    - generic [ref=e511]: Not Started
+                                        - paragraph [ref=e512]: RPG-style training to master the passenger check-in technical domain, navigate vendor handovers, and lead with empathy and authority.
+                                        - generic [ref=e513]:
+                                            - generic [ref=e514]: React
+                                            - generic [ref=e515]: Node.js
+                                            - generic [ref=e516]: Amadeus Altéa
+                                            - generic [ref=e517]: +1 more
+                                        - img
+                    - region "Quality & Testing" [ref=e518]:
+                        - generic [ref=e519]:
+                            - generic [ref=e520]:
+                                - generic [ref=e521]:
+                                    - generic [ref=e523]:
+                                        - generic [ref=e525]: '4'
+                                        - generic [ref=e526]:
+                                            - heading "Quality & Testing" [level=2] [ref=e527]
+                                            - paragraph [ref=e528]: Professional quality assurance capabilities
+                                    - generic [ref=e529]:
+                                        - generic [ref=e530]:
+                                            - heading "Focus Area" [level=3] [ref=e531]
+                                            - paragraph [ref=e532]: Testing, performance, security
+                                        - generic [ref=e533]:
+                                            - generic [ref=e534]: 0%
+                                            - generic [ref=e535]: Complete
+                                            - generic [ref=e536]: 0 of 4 modules
+                                - generic [ref=e537]:
+                                    - heading "Learning Objectives" [level=3] [ref=e538]
+                                    - list [ref=e539]:
+                                        - listitem [ref=e540]:
+                                            - img [ref=e541]
+                                            - generic [ref=e543]: Implement comprehensive testing strategies
+                                        - listitem [ref=e544]:
+                                            - img [ref=e545]
+                                            - generic [ref=e547]: Optimize application performance
+                                        - listitem [ref=e548]:
+                                            - img [ref=e549]
+                                            - generic [ref=e551]: Secure applications with best practices
+                            - list "Quality & Testing modules" [ref=e552]:
+                                - listitem [ref=e553]:
+                                    - link "Prerequisites Required Software Testing Fundamentals Intermediate Not Started Unit testing, integration testing, and TDD practices Unit Testing TDD Integration Testing" [disabled] [ref=e555] [cursor=pointer]:
+                                        - /url: '#'
+                                        - generic [ref=e557]:
+                                            - img [ref=e558]
+                                            - paragraph [ref=e560]: Prerequisites Required
+                                        - generic [ref=e561]:
+                                            - generic [ref=e562]: TST
+                                            - generic [ref=e563]:
+                                                - heading "Software Testing Fundamentals" [level=3] [ref=e564]
+                                                - generic [ref=e565]:
+                                                    - generic [ref=e566]: Intermediate
+                                                    - generic [ref=e567]: Not Started
+                                        - paragraph [ref=e568]: Unit testing, integration testing, and TDD practices
+                                        - generic [ref=e569]:
+                                            - generic [ref=e570]: Unit Testing
+                                            - generic [ref=e571]: TDD
+                                            - generic [ref=e572]: Integration Testing
+                                - listitem [ref=e573]:
+                                    - link "Prerequisites Required End-to-End Testing Advanced Not Started Cypress, Playwright, and automated testing strategies Cypress Playwright E2E Testing" [disabled] [ref=e575] [cursor=pointer]:
+                                        - /url: '#'
+                                        - generic [ref=e577]:
+                                            - img [ref=e578]
+                                            - paragraph [ref=e580]: Prerequisites Required
+                                        - generic [ref=e581]:
+                                            - generic [ref=e582]: E2E
+                                            - generic [ref=e583]:
+                                                - heading "End-to-End Testing" [level=3] [ref=e584]
+                                                - generic [ref=e585]:
+                                                    - generic [ref=e586]: Advanced
+                                                    - generic [ref=e587]: Not Started
+                                        - paragraph [ref=e588]: Cypress, Playwright, and automated testing strategies
+                                        - generic [ref=e589]:
+                                            - generic [ref=e590]: Cypress
+                                            - generic [ref=e591]: Playwright
+                                            - generic [ref=e592]: E2E Testing
+                                - listitem [ref=e593]:
+                                    - link "Prerequisites Required Performance Optimization Advanced Not Started Profiling, monitoring, and optimization techniques Performance Profiling Optimization" [disabled] [ref=e595] [cursor=pointer]:
+                                        - /url: '#'
+                                        - generic [ref=e597]:
+                                            - img [ref=e598]
+                                            - paragraph [ref=e600]: Prerequisites Required
+                                        - generic [ref=e601]:
+                                            - generic [ref=e602]: PERF
+                                            - generic [ref=e603]:
+                                                - heading "Performance Optimization" [level=3] [ref=e604]
+                                                - generic [ref=e605]:
+                                                    - generic [ref=e606]: Advanced
+                                                    - generic [ref=e607]: Not Started
+                                        - paragraph [ref=e608]: Profiling, monitoring, and optimization techniques
+                                        - generic [ref=e609]:
+                                            - generic [ref=e610]: Performance
+                                            - generic [ref=e611]: Profiling
+                                            - generic [ref=e612]: Optimization
+                                - listitem [ref=e613]:
+                                    - link "Prerequisites Required Security Best Practices Advanced Not Started Authentication, authorization, and security patterns Security Authentication Authorization" [disabled] [ref=e615] [cursor=pointer]:
+                                        - /url: '#'
+                                        - generic [ref=e617]:
+                                            - img [ref=e618]
+                                            - paragraph [ref=e620]: Prerequisites Required
+                                        - generic [ref=e621]:
+                                            - generic [ref=e622]: SEC
+                                            - generic [ref=e623]:
+                                                - heading "Security Best Practices" [level=3] [ref=e624]
+                                                - generic [ref=e625]:
+                                                    - generic [ref=e626]: Advanced
+                                                    - generic [ref=e627]: Not Started
+                                        - paragraph [ref=e628]: Authentication, authorization, and security patterns
+                                        - generic [ref=e629]:
+                                            - generic [ref=e630]: Security
+                                            - generic [ref=e631]: Authentication
+                                            - generic [ref=e632]: Authorization
+                - generic [ref=e635]:
+                    - heading "Quick Actions" [level=2] [ref=e636]
+                    - list [ref=e637]:
+                        - listitem [ref=e638] [cursor=pointer]:
+                            - img "Playground icon" [ref=e639]: 🛝
+                            - heading "GraphQL Playground" [level=3] [ref=e640]
+                            - paragraph [ref=e641]: Experiment with queries
+                        - listitem [ref=e642] [cursor=pointer]:
+                            - img "Design icon" [ref=e643]: 🎨
+                            - heading "Design Showcase" [level=3] [ref=e644]
+                            - paragraph [ref=e645]: UI components
+                        - listitem [ref=e646] [cursor=pointer]:
+                            - img "Interview icon" [ref=e647]: 💼
+                            - heading "Interview Prep" [level=3] [ref=e648]
+                            - paragraph [ref=e649]: Practice questions
+                        - listitem [ref=e650]:
+                            - img "Export icon" [ref=e651]: 📥
+                            - heading "Export Progress" [level=3] [ref=e652]
+                            - paragraph [ref=e653]: Download data
+        - 'button "Theme: System (auto)" [ref=e654]':
+            - img [ref=e656]
+        - contentinfo [ref=e658]:
+            - generic [ref=e660]:
+                - generic [ref=e661]:
+                    - link "📊 GlassStats" [ref=e662] [cursor=pointer]:
+                        - /url: /stats
+                    - link "ℹ️ About" [ref=e663] [cursor=pointer]:
+                        - /url: https://about.glasscode.academy/en
+                - paragraph [ref=e664]: © 2026 Glass Academy. All rights reserved.
+    - alert [ref=e665]
+    - button "Open Next.js Dev Tools" [ref=e671] [cursor=pointer]:
+        - img [ref=e672]

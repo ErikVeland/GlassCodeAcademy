@@ -68,20 +68,13 @@
       "difficulty": "Beginner",
       "estimatedHours": 40,
       "category": "programming",
-      "technologies": [
-        "Logic",
-        "Algorithms",
-        "Data Structures"
-      ],
+      "technologies": ["Logic", "Algorithms", "Data Structures"],
       "prerequisites": [],
       "thresholds": {
         "requiredLessons": 12,
         "requiredQuestions": 15
       },
-      "legacySlugs": [
-        "programming-basics",
-        "fundamentals"
-      ],
+      "legacySlugs": ["programming-basics", "fundamentals"],
       "status": "active",
       "metadata": {
         "thresholds": {
@@ -107,23 +100,13 @@
       "difficulty": "Beginner",
       "estimatedHours": 50,
       "category": "web",
-      "technologies": [
-        "HTML5",
-        "CSS3",
-        "JavaScript",
-        "DOM"
-      ],
-      "prerequisites": [
-        "programming-fundamentals"
-      ],
+      "technologies": ["HTML5", "CSS3", "JavaScript", "DOM"],
+      "prerequisites": ["programming-fundamentals"],
       "thresholds": {
         "requiredLessons": 15,
         "requiredQuestions": 11
       },
-      "legacySlugs": [
-        "web-basics",
-        "html-css-js"
-      ],
+      "legacySlugs": ["web-basics", "html-css-js"],
       "status": "active",
       "metadata": {
         "thresholds": {
@@ -149,20 +132,13 @@
       "difficulty": "Beginner",
       "estimatedHours": 20,
       "category": "devops",
-      "technologies": [
-        "Git",
-        "GitHub",
-        "Version Control"
-      ],
+      "technologies": ["Git", "GitHub", "Version Control"],
       "prerequisites": [],
       "thresholds": {
         "requiredLessons": 10,
         "requiredQuestions": 15
       },
-      "legacySlugs": [
-        "git",
-        "version-control-basics"
-      ],
+      "legacySlugs": ["git", "version-control-basics"],
       "status": "active",
       "metadata": {
         "thresholds": {
@@ -188,23 +164,13 @@
       "difficulty": "Intermediate",
       "estimatedHours": 80,
       "category": "backend",
-      "technologies": [
-        "C#",
-        "ASP.NET Core",
-        "Entity Framework"
-      ],
-      "prerequisites": [
-        "programming-fundamentals"
-      ],
+      "technologies": ["C#", "ASP.NET Core", "Entity Framework"],
+      "prerequisites": ["programming-fundamentals"],
       "thresholds": {
         "requiredLessons": 18,
         "requiredQuestions": 25
       },
-      "legacySlugs": [
-        "dotnet",
-        "dot-net",
-        "csharp"
-      ],
+      "legacySlugs": ["dotnet", "dot-net", "csharp"],
       "status": "active",
       "metadata": {
         "thresholds": {
@@ -230,23 +196,13 @@
       "difficulty": "Intermediate",
       "estimatedHours": 60,
       "category": "frontend",
-      "technologies": [
-        "React",
-        "JSX",
-        "Hooks",
-        "State Management"
-      ],
-      "prerequisites": [
-        "web-fundamentals"
-      ],
+      "technologies": ["React", "JSX", "Hooks", "State Management"],
+      "prerequisites": ["web-fundamentals"],
       "thresholds": {
         "requiredLessons": 15,
         "requiredQuestions": 20
       },
-      "legacySlugs": [
-        "react",
-        "reactjs"
-      ],
+      "legacySlugs": ["react", "reactjs"],
       "status": "active",
       "metadata": {
         "thresholds": {
@@ -272,23 +228,13 @@
       "difficulty": "Intermediate",
       "estimatedHours": 70,
       "category": "database",
-      "technologies": [
-        "SQL",
-        "NoSQL",
-        "Database Design"
-      ],
-      "prerequisites": [
-        "programming-fundamentals"
-      ],
+      "technologies": ["SQL", "NoSQL", "Database Design"],
+      "prerequisites": ["programming-fundamentals"],
       "thresholds": {
         "requiredLessons": 16,
         "requiredQuestions": 22
       },
-      "legacySlugs": [
-        "database",
-        "sql",
-        "db"
-      ],
+      "legacySlugs": ["database", "sql", "db"],
       "status": "active",
       "metadata": {
         "thresholds": {
@@ -314,22 +260,13 @@
       "difficulty": "Intermediate",
       "estimatedHours": 50,
       "category": "frontend",
-      "technologies": [
-        "TypeScript",
-        "JavaScript",
-        "Static Typing"
-      ],
-      "prerequisites": [
-        "web-fundamentals"
-      ],
+      "technologies": ["TypeScript", "JavaScript", "Static Typing"],
+      "prerequisites": ["web-fundamentals"],
       "thresholds": {
         "requiredLessons": 14,
         "requiredQuestions": 18
       },
-      "legacySlugs": [
-        "typescript",
-        "ts"
-      ],
+      "legacySlugs": ["typescript", "ts"],
       "status": "active",
       "metadata": {
         "thresholds": {
@@ -355,22 +292,13 @@
       "difficulty": "Intermediate",
       "estimatedHours": 60,
       "category": "backend",
-      "technologies": [
-        "Node.js",
-        "npm",
-        "Express"
-      ],
-      "prerequisites": [
-        "web-fundamentals"
-      ],
+      "technologies": ["Node.js", "npm", "Express"],
+      "prerequisites": ["web-fundamentals"],
       "thresholds": {
         "requiredLessons": 18,
         "requiredQuestions": 20
       },
-      "legacySlugs": [
-        "node",
-        "nodejs"
-      ],
+      "legacySlugs": ["node", "nodejs"],
       "status": "active",
       "metadata": {
         "thresholds": {
@@ -396,23 +324,13 @@
       "difficulty": "Intermediate",
       "estimatedHours": 70,
       "category": "backend",
-      "technologies": [
-        "PHP",
-        "Laravel",
-        "Eloquent ORM"
-      ],
-      "prerequisites": [
-        "programming-fundamentals",
-        "web-fundamentals"
-      ],
+      "technologies": ["PHP", "Laravel", "Eloquent ORM"],
+      "prerequisites": ["programming-fundamentals", "web-fundamentals"],
       "thresholds": {
         "requiredLessons": 18,
         "requiredQuestions": 30
       },
-      "legacySlugs": [
-        "laravel",
-        "php"
-      ],
+      "legacySlugs": ["laravel", "php"],
       "status": "active",
       "metadata": {
         "thresholds": {
@@ -438,22 +356,13 @@
       "difficulty": "Advanced",
       "estimatedHours": 50,
       "category": "frontend",
-      "technologies": [
-        "Next.js",
-        "SSR",
-        "API Routes"
-      ],
-      "prerequisites": [
-        "react-fundamentals"
-      ],
+      "technologies": ["Next.js", "SSR", "API Routes"],
+      "prerequisites": ["react-fundamentals"],
       "thresholds": {
         "requiredLessons": 14,
         "requiredQuestions": 18
       },
-      "legacySlugs": [
-        "nextjs",
-        "next"
-      ],
+      "legacySlugs": ["nextjs", "next"],
       "status": "active",
       "metadata": {
         "thresholds": {
@@ -479,22 +388,13 @@
       "difficulty": "Advanced",
       "estimatedHours": 50,
       "category": "backend",
-      "technologies": [
-        "GraphQL",
-        "Schemas",
-        "Resolvers"
-      ],
-      "prerequisites": [
-        "dotnet-fundamentals"
-      ],
+      "technologies": ["GraphQL", "Schemas", "Resolvers"],
+      "prerequisites": ["dotnet-fundamentals"],
       "thresholds": {
         "requiredLessons": 13,
         "requiredQuestions": 17
       },
-      "legacySlugs": [
-        "graphql",
-        "gql"
-      ],
+      "legacySlugs": ["graphql", "gql"],
       "status": "active",
       "metadata": {
         "thresholds": {
@@ -520,22 +420,13 @@
       "difficulty": "Advanced",
       "estimatedHours": 35,
       "category": "frontend",
-      "technologies": [
-        "Sass",
-        "SCSS",
-        "CSS"
-      ],
-      "prerequisites": [
-        "web-fundamentals"
-      ],
+      "technologies": ["Sass", "SCSS", "CSS"],
+      "prerequisites": ["web-fundamentals"],
       "thresholds": {
         "requiredLessons": 15,
         "requiredQuestions": 15
       },
-      "legacySlugs": [
-        "sass",
-        "scss"
-      ],
+      "legacySlugs": ["sass", "scss"],
       "status": "active",
       "metadata": {
         "thresholds": {
@@ -561,22 +452,13 @@
       "difficulty": "Advanced",
       "estimatedHours": 40,
       "category": "frontend",
-      "technologies": [
-        "Tailwind CSS",
-        "Utility Classes",
-        "Design Systems"
-      ],
-      "prerequisites": [
-        "web-fundamentals"
-      ],
+      "technologies": ["Tailwind CSS", "Utility Classes", "Design Systems"],
+      "prerequisites": ["web-fundamentals"],
       "thresholds": {
         "requiredLessons": 13,
         "requiredQuestions": 16
       },
-      "legacySlugs": [
-        "tailwind",
-        "tailwindcss"
-      ],
+      "legacySlugs": ["tailwind", "tailwindcss"],
       "status": "active",
       "metadata": {
         "thresholds": {
@@ -602,22 +484,13 @@
       "difficulty": "Advanced",
       "estimatedHours": 55,
       "category": "frontend",
-      "technologies": [
-        "Vue.js",
-        "Vuex",
-        "Vue Router"
-      ],
-      "prerequisites": [
-        "web-fundamentals"
-      ],
+      "technologies": ["Vue.js", "Vuex", "Vue Router"],
+      "prerequisites": ["web-fundamentals"],
       "thresholds": {
         "requiredLessons": 14,
         "requiredQuestions": 18
       },
-      "legacySlugs": [
-        "vue",
-        "vuejs"
-      ],
+      "legacySlugs": ["vue", "vuejs"],
       "status": "active",
       "metadata": {
         "thresholds": {
@@ -643,22 +516,13 @@
       "difficulty": "Intermediate",
       "estimatedHours": 50,
       "category": "testing",
-      "technologies": [
-        "Unit Testing",
-        "TDD",
-        "Integration Testing"
-      ],
-      "prerequisites": [
-        "dotnet-fundamentals"
-      ],
+      "technologies": ["Unit Testing", "TDD", "Integration Testing"],
+      "prerequisites": ["dotnet-fundamentals"],
       "thresholds": {
         "requiredLessons": 14,
         "requiredQuestions": 18
       },
-      "legacySlugs": [
-        "testing",
-        "unit-testing"
-      ],
+      "legacySlugs": ["testing", "unit-testing"],
       "status": "active",
       "metadata": {
         "thresholds": {
@@ -684,24 +548,13 @@
       "difficulty": "Advanced",
       "estimatedHours": 40,
       "category": "testing",
-      "technologies": [
-        "Cypress",
-        "Playwright",
-        "E2E Testing"
-      ],
-      "prerequisites": [
-        "react-fundamentals",
-        "testing-fundamentals"
-      ],
+      "technologies": ["Cypress", "Playwright", "E2E Testing"],
+      "prerequisites": ["react-fundamentals", "testing-fundamentals"],
       "thresholds": {
         "requiredLessons": 12,
         "requiredQuestions": 15
       },
-      "legacySlugs": [
-        "e2e",
-        "cypress",
-        "playwright"
-      ],
+      "legacySlugs": ["e2e", "cypress", "playwright"],
       "status": "active",
       "metadata": {
         "thresholds": {
@@ -727,23 +580,13 @@
       "difficulty": "Advanced",
       "estimatedHours": 45,
       "category": "frontend",
-      "technologies": [
-        "Performance",
-        "Profiling",
-        "Optimization"
-      ],
-      "prerequisites": [
-        "react-fundamentals",
-        "nextjs-advanced"
-      ],
+      "technologies": ["Performance", "Profiling", "Optimization"],
+      "prerequisites": ["react-fundamentals", "nextjs-advanced"],
       "thresholds": {
         "requiredLessons": 13,
         "requiredQuestions": 16
       },
-      "legacySlugs": [
-        "performance",
-        "optimization"
-      ],
+      "legacySlugs": ["performance", "optimization"],
       "status": "active",
       "metadata": {
         "thresholds": {
@@ -769,23 +612,13 @@
       "difficulty": "Advanced",
       "estimatedHours": 60,
       "category": "backend",
-      "technologies": [
-        "Security",
-        "Authentication",
-        "Authorization"
-      ],
-      "prerequisites": [
-        "dotnet-fundamentals",
-        "database-systems"
-      ],
+      "technologies": ["Security", "Authentication", "Authorization"],
+      "prerequisites": ["dotnet-fundamentals", "database-systems"],
       "thresholds": {
         "requiredLessons": 15,
         "requiredQuestions": 20
       },
-      "legacySlugs": [
-        "security",
-        "auth"
-      ],
+      "legacySlugs": ["security", "auth"],
       "status": "active",
       "metadata": {
         "thresholds": {
@@ -798,6 +631,38 @@
         "overview": "/modules/security-fundamentals",
         "lessons": "/modules/security-fundamentals/lessons",
         "quiz": "/modules/security-fundamentals/quiz"
+      }
+    },
+    {
+      "slug": "virgin-checkin-lead",
+      "title": "Virgin Australia Tech Lead",
+      "description": "RPG-style training to master the passenger check-in technical domain, navigate vendor handovers, and lead with empathy and authority.",
+      "tier": "specialized",
+      "track": "Frontend",
+      "order": 10,
+      "icon": "✈️",
+      "difficulty": "Advanced",
+      "estimatedHours": 8,
+      "category": "frontend",
+      "technologies": ["React", "Node.js", "Amadeus Altéa", "Team Leadership"],
+      "prerequisites": [],
+      "thresholds": {
+        "requiredLessons": 5,
+        "requiredQuestions": 5
+      },
+      "legacySlugs": ["virgin-checkin", "va-checkin-lead"],
+      "status": "secret",
+      "metadata": {
+        "thresholds": {
+          "minLessons": 5,
+          "minQuizQuestions": 5,
+          "passingScore": 80
+        }
+      },
+      "routes": {
+        "overview": "/modules/virgin-checkin-lead",
+        "lessons": "/modules/virgin-checkin-lead/lessons",
+        "quiz": "/modules/virgin-checkin-lead/quiz"
       }
     }
   ],

@@ -34,24 +34,24 @@ function getShortSlug(moduleSlug: string): string {
 
 // Icon mapping by module slug
 const iconBySlug: Record<string, string> = {
-  'programming-fundamentals': '💻',
-  'web-fundamentals': '🌐',
-  'version-control': '🔧',
-  'dotnet-fundamentals': '⚙️',
-  'react-fundamentals': '⚛️',
-  'database-systems': '🗄️',
-  'typescript-fundamentals': '📘',
-  'node-fundamentals': '🟢',
-  'laravel-fundamentals': '🧰',
-  'nextjs-advanced': '⏭️',
-  'graphql-advanced': '🔺',
-  'sass-advanced': '🎀',
-  'tailwind-advanced': '🌀',
-  'vue-advanced': '🍃',
-  'testing-fundamentals': '🧪',
-  'e2e-testing': '🧪',
-  'performance-optimization': '⚡',
-  'security-fundamentals': '🔒',
+  'programming-fundamentals': 'DEV',
+  'web-fundamentals': 'WEB',
+  'version-control': 'GIT',
+  'dotnet-fundamentals': '.NET',
+  'react-fundamentals': 'RX',
+  'database-systems': 'SQL',
+  'typescript-fundamentals': 'TS',
+  'node-fundamentals': 'ND',
+  'laravel-fundamentals': 'LV',
+  'nextjs-advanced': 'NX',
+  'graphql-advanced': 'GQL',
+  'sass-advanced': 'SASS',
+  'tailwind-advanced': 'TW',
+  'vue-advanced': 'VU',
+  'testing-fundamentals': 'TST',
+  'e2e-testing': 'E2E',
+  'performance-optimization': 'PERF',
+  'security-fundamentals': 'SEC',
 };
 
 interface RawModule {
@@ -102,7 +102,7 @@ function loadRegistryData() {
         const shortSlug = getShortSlug(m.slug);
         return {
           ...m,
-          icon: m.icon || iconBySlug[m.slug] || '📚',
+          icon: iconBySlug[m.slug] || m.icon || 'GC',
           difficulty: m.difficulty || 'Beginner',
           technologies: Array.isArray(m.technologies) ? m.technologies : [],
           tier: typeof m.tier === 'string' && m.tier in tiers ? m.tier : 'core',

@@ -5,7 +5,10 @@ import Link from 'next/link';
 import {
   ArrowRightIcon,
   ChartBarIcon,
+  CheckCircleIcon,
   LockClosedIcon,
+  TrophyIcon,
+  XCircleIcon,
 } from '@heroicons/react/24/outline';
 
 // Removed server-only contentRegistry imports to avoid bundling Node APIs in client
@@ -46,6 +49,7 @@ type Module = {
   technologies: string[];
   prerequisites?: string[];
   order?: number;
+  status?: string;
   routes: { overview: string; lessons: string; quiz: string };
 };
 
@@ -84,6 +88,12 @@ const ModuleCard: React.FC<{
     // Using tier-container gradient variants; removed tierGradientClass
 
     const theme = getModuleTheme(module.slug);
+    const statusLabel =
+      moduleStatus === 'not-started'
+        ? 'Not Started'
+        : moduleStatus === 'in-progress'
+          ? 'In Progress'
+          : 'Completed';
 
     return (
       <div
@@ -94,7 +104,7 @@ const ModuleCard: React.FC<{
             {moduleAchievements.slice(0, 3).map((achievement, index) => (
               <div
                 key={achievement.id}
-                className="w-7 h-7 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-full flex items-center justify-center border-2 border-white shadow-lg"
+                className="achievement-token"
                 title={
                   achievement.moduleId === module.slug
                     ? `For ${module.title}: ${achievement.description}`
@@ -103,19 +113,15 @@ const ModuleCard: React.FC<{
                       : achievement.description
                 }
               >
-                <span className="text-sm text-white font-bold">
-                  {index === 0 ? '🏆' : index === 1 ? '🎖️' : '⭐'}
-                </span>
+                <span>{`A${index + 1}`}</span>
               </div>
             ))}
             {moduleAchievements.length > 3 && (
               <div
-                className="w-7 h-7 bg-white/80 rounded-full flex items-center justify-center border-2 border-white shadow-lg"
+                className="achievement-token achievement-token-more"
                 title={`${moduleAchievements.length - 3} more`}
               >
-                <span className="text-sm text-gray-700 font-bold">
-                  +{moduleAchievements.length - 3}
-                </span>
+                <span>+{moduleAchievements.length - 3}</span>
               </div>
             )}
           </div>
@@ -129,7 +135,8 @@ const ModuleCard: React.FC<{
         >
           {/* Decorative top strip using module brand gradient */}
           <div
-            className={`absolute inset-x-0 top-0 h-[4px] ${theme.strip} z-10 pointer-events-none`}
+            className="module-accent-rail absolute inset-x-0 top-0 z-10 pointer-events-none"
+            style={{ backgroundColor: theme.accent }}
             aria-hidden="true"
           ></div>
 
@@ -137,30 +144,34 @@ const ModuleCard: React.FC<{
           {isLocked && (
             <div className="absolute inset-0 bg-gray-900/50 backdrop-blur-sm rounded-none md:rounded-xl flex items-center justify-center z-5">
               <div className="text-center text-white">
-                <div className="text-3xl mb-2">🔒</div>
+                <LockClosedIcon className="w-8 h-8 mb-3 mx-auto" />
                 <p className="text-sm font-medium">Prerequisites Required</p>
               </div>
             </div>
           )}
 
           <div className="flex items-center gap-3 mb-4">
-            <div className="text-3xl" aria-hidden="true">
-              {module.icon || '💻'}
+            <div
+              className="module-brand-mark"
+              style={
+                {
+                  '--module-accent': theme.accent,
+                } as React.CSSProperties
+              }
+              aria-hidden="true"
+            >
+              {theme.mark || module.icon || 'GC'}
             </div>
             <div className="flex-1">
               <h3 className="text-lg font-semibold text-white mb-1">
                 {module.title}
               </h3>
               <div className="flex items-center gap-2">
-                <span className="px-2 py-1 bg-white/10 text-white rounded-full text-xs">
+                <span className="module-meta-chip">
                   {module.difficulty || 'Beginner'}
                 </span>
-                <span className="px-2 py-1 bg-white/10 text-white rounded-full text-xs">
-                  {moduleStatus === 'not-started'
-                    ? '⏳ Not Started'
-                    : moduleStatus === 'in-progress'
-                      ? '🔄 In Progress'
-                      : '✅ Completed'}
+                <span className={`module-status-badge ${moduleStatus}`}>
+                  {statusLabel}
                 </span>
               </div>
             </div>
@@ -208,7 +219,7 @@ const ModuleCard: React.FC<{
                     title={achievement.description}
                   >
                     <span className="text-xs text-white font-bold">
-                      {index === 0 ? '🏆' : index === 1 ? '🎖️' : '⭐'}
+                      A{index + 1}
                     </span>
                   </div>
                 ))}
@@ -333,12 +344,10 @@ const TierSection: React.FC<{
               <ul className="grid grid-cols-1 md:grid-cols-3 gap-3">
                 {(tier.learningObjectives || []).map((objective, index) => (
                   <li key={index} className="flex items-center gap-2">
-                    <span
-                      className="flex-shrink-0 text-base leading-none"
+                    <CheckCircleIcon
+                      className="tier-objective-check"
                       aria-hidden="true"
-                    >
-                      ✅
-                    </span>
+                    />
                     <span className="text-fg text-left text-sm leading-tight">
                       {objective}
                     </span>
@@ -414,12 +423,10 @@ const TierSection: React.FC<{
             <ul className="grid grid-cols-1 gap-3">
               {(tier.learningObjectives || []).map((objective, index) => (
                 <li key={index} className="flex items-center gap-2">
-                  <span
-                    className="flex-shrink-0 text-base leading-none"
+                  <CheckCircleIcon
+                    className="tier-objective-check"
                     aria-hidden="true"
-                  >
-                    ✅
-                  </span>
+                  />
                   <span className="text-fg text-left text-sm leading-tight">
                     {objective}
                   </span>
@@ -431,7 +438,7 @@ const TierSection: React.FC<{
           {/* Tier completion indicator */}
           {tierProgress === 100 && (
             <div className="mt-8 text-center bg-white/10 p-6 rounded-xl border border-white/20 backdrop-blur-sm">
-              <div className="text-4xl mb-2">🎉</div>
+              <CheckCircleIcon className="w-10 h-10 mx-auto mb-3 text-white" />
               <h3 className="text-xl font-bold text-white mb-2">
                 Tier Complete!
               </h3>
@@ -440,12 +447,15 @@ const TierSection: React.FC<{
               </p>
               {tierKey !== 'quality' && (
                 <button className="px-6 py-2 bg-white/20 text-white rounded-lg hover:bg-white/30 transition-colors backdrop-blur-sm">
-                  → Continue to Next Tier
+                  <span className="inline-flex items-center gap-2">
+                    Continue to Next Tier
+                    <ArrowRightIcon className="w-4 h-4" aria-hidden="true" />
+                  </span>
                 </button>
               )}
               {tierKey === 'quality' && (
                 <div className="mt-4">
-                  <span className="text-3xl block">🏆</span>
+                  <TrophyIcon className="w-9 h-9 mx-auto text-white" />
                   <h4 className="text-lg font-bold text-white mt-1">
                     Full Stack Developer Achieved!
                   </h4>
@@ -536,7 +546,10 @@ const HomePage: React.FC<{ initialRegistryData?: RegistryData | null }> = ({
       if (!res.ok) throw new Error(`Registry API failed: ${res.status}`);
       const registry = await res.json();
       const tiers: Record<string, Tier> = (registry && registry.tiers) || {};
-      const modules: Module[] = (registry && registry.modules) || [];
+      const modulesRaw: Module[] = (registry && registry.modules) || [];
+      const modules = modulesRaw.filter(
+        (m) => m.status !== 'secret' && m.status !== 'hidden'
+      );
 
       // Normalize to ensure client-safe fields
       const normalizedModules: Module[] = (modules || []).map((m) => ({
@@ -571,16 +584,16 @@ const HomePage: React.FC<{ initialRegistryData?: RegistryData | null }> = ({
               (staticReg && staticReg.tiers) || tiers || {};
             const staticModulesRaw: Module[] =
               (staticReg && staticReg.modules) || [];
-            const staticModules: Module[] = (staticModulesRaw || []).map(
-              (m) => ({
+            const staticModules: Module[] = (staticModulesRaw || [])
+              .filter((m) => m.status !== 'secret' && m.status !== 'hidden')
+              .map((m) => ({
                 ...m,
                 tier: m.tier && staticTiers[m.tier] ? m.tier : 'core',
                 technologies: Array.isArray(m.technologies)
                   ? m.technologies
                   : [],
                 difficulty: m.difficulty || 'Beginner',
-              })
-            );
+              }));
 
             const td: Record<string, TierData> = {};
             Object.entries(staticTiers || {}).forEach(([tierKey, tier]) => {
@@ -730,7 +743,7 @@ const HomePage: React.FC<{ initialRegistryData?: RegistryData | null }> = ({
       <div className="liquid-glass-layout">
         <div className="max-w-4xl mx-auto">
           <div className="glass-morphism p-8 rounded-xl text-center">
-            <div className="text-6xl mb-4">🙁</div>
+            <XCircleIcon className="w-14 h-14 mx-auto mb-4 text-danger" />
             <h2 className="text-2xl font-semibold text-gray-900 dark:text-white mb-4">
               Something went wrong
             </h2>
@@ -825,23 +838,23 @@ const HomePage: React.FC<{ initialRegistryData?: RegistryData | null }> = ({
                   </p>
 
                   <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-                    <div className="bg-gradient-to-r from-blue-500 to-cyan-500 text-white p-4 rounded-lg text-center">
+                    <div className="hero-metric-card">
                       <div className="text-sm">Total Modules</div>
                       <div className="text-2xl font-bold">{totalModules}</div>
                     </div>
-                    <div className="bg-gradient-to-r from-green-500 to-emerald-500 text-white p-4 rounded-lg text-center">
+                    <div className="hero-metric-card">
                       <div className="text-sm">Completed</div>
                       <div className="text-2xl font-bold">
                         {completedModules}
                       </div>
                     </div>
-                    <div className="bg-gradient-to-r from-purple-500 to-violet-500 text-white p-4 rounded-lg text-center">
+                    <div className="hero-metric-card">
                       <div className="text-sm">Progress</div>
                       <div className="text-2xl font-bold">
                         {Math.round(overallProgress)}%
                       </div>
                     </div>
-                    <div className="bg-gradient-to-r from-orange-500 to-red-500 text-white p-4 rounded-lg text-center">
+                    <div className="hero-metric-card">
                       <div className="text-sm">Streak</div>
                       <div className="text-2xl font-bold">
                         {streak.currentStreak} days
@@ -862,7 +875,10 @@ const HomePage: React.FC<{ initialRegistryData?: RegistryData | null }> = ({
                             className="bg-gray-50 dark:bg-gray-700 p-3 rounded-lg border border-gray-200 dark:border-gray-600"
                           >
                             <div className="flex items-center">
-                              <span className="text-xl mr-2">🏆</span>
+                              <TrophyIcon
+                                className="w-5 h-5 mr-2 text-primary"
+                                aria-hidden="true"
+                              />
                               <span className="text-gray-700 dark:text-gray-300 flex-1 text-left">
                                 {achievement.description}
                               </span>

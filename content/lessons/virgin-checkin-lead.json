@@ -1,0 +1,313 @@
+[
+  {
+    "id": 1,
+    "moduleSlug": "virgin-checkin-lead",
+    "title": "Day 1: Landing at Head Office – Immersion & PSS Basics",
+    "order": 1,
+    "objectives": [
+      "Navigate the Virgin Australia domain lexicon (PSS, PNR, DCS, Altéa)",
+      "Explain the Next.js / React 19 Frontend architecture of the check-in web application",
+      "Diagnose early symptoms of Impostor Syndrome and apply the 'Listen and Map' stakeholder protocol"
+    ],
+    "intro": "Welcome to Day 1 of your RPG onboarding. You arrive at the Virgin Australia Head Office in Brisbane (Bowen Hills). You are handed a security pass, a fresh laptop, and a cup of coffee. The atmosphere is energetic—planes are flying, operations are running 24/7, and you are the new Technical Lead for the critical Passenger Check-In Web Application.\n\nYour first meeting is with Sarah, the Senior Product Owner. She welcomes you but is noticeably stressed: 'The transition from the external vendor (TCS) needs to be fully completed before September. The business is nervous about stability, and we need you to be our technical anchor. Right now, our check-in app is highly dependent on Amadeus Altéa PSS, and the codebase feels like a black box.'\n\nSuddenly, your inner critic whispers: 'You don't know the airline domain. You don't know Amadeus Altéa. They are going to find out you're not ready for this.'\n\nTo succeed today, you must map the core system architecture, understand how the React check-in client talks to the Amadeus Passenger Service System (PSS), and establish your initial technical mapping without succumbing to impostor anxiety. You don't need to know everything on day one—your job is to ask the right questions.",
+    "code": {
+      "language": "typescript",
+      "example": "// apps/web/src/apolloClient.ts\nimport { ApolloClient, InMemoryCache, createHttpLink, ApolloLink } from '@apollo/client';\nimport { setContext } from '@apollo/client/link/context';\nimport { getGraphQLEndpoint } from './lib/urlUtils';\n\n// Day 1 Tech Focus: Understanding the Front-end Client and Gateway proxy\n// The check-in web application communicates with Amadeus via our Fastify API proxy.\nconst httpLink = createHttpLink({\n  uri: getGraphQLEndpoint(), // Resolves to Next.js /api/graphql -> Fastify backend\n});\n\n// Authentication link injects the JWT token (backendToken) issued during sign-in\nconst authLink = setContext((_, { headers }) => {\n  const sessionToken = typeof window !== 'undefined' \n    ? localStorage.getItem('gc_backend_token') \n    : null;\n  \n  return {\n    headers: {\n      ...headers,\n      authorization: sessionToken ? `Bearer ${sessionToken}` : '',\n      'X-Airline-Code': 'VA', // Virgin Australia identifier\n      'X-Channel-ID': 'WEB_CHECKIN' // Identifies source of Amadeus PSS traffic\n    }\n  };\n});\n\nexport const client = new ApolloClient({\n  link: authLink.concat(httpLink),\n  cache: new InMemoryCache({\n    typePolicies: {\n      Passenger: {\n        keyFields: ['pnr', 'lastName'], // PNR (Passenger Name Record) is our primary domain key\n      },\n      FlightSegment: {\n        keyFields: ['flightNumber', 'departureDate', 'origin'],\n      }\n    }\n  })\n});",
+      "explanation": "This code represents the core client connection. To understand the Virgin Australia check-in stack, note that the React web application never calls Amadeus Altéa directly. Instead, it utilizes Apollo Client to connect to our Next.js /api/graphql gateway, which proxies all secure requests to the Fastify backend API (the 'Technical Authority' layer). Inside the backend, integrations are established with the Amadeus Altéa PSS using secure SOAP/REST APIs.\n\nKey Domain Terms to Master:\n1. **PSS (Passenger Service System)**: The core airline database. Amadeus Altéa is the PSS used by Virgin Australia, managing inventory, reservations, and ticketing.\n2. **PNR (Passenger Name Record)**: A 6-character alphanumeric locator (e.g. 'VA8XYZ') representing the passenger's reservation data.\n3. **DCS (Departure Control System)**: The system that manages passenger check-in, bag drops, weight and balance calculations, and boarding pass generation at the airport.\n4. **Altéa Web Services**: The secure XML/SOAP/REST API gateway that allows our Node.js microservices to fetch reservations, assign seats, and manifest flights."
+    },
+    "pitfalls": [
+      {
+        "mistake": "Believing you must immediately know the entire Amadeus Altéa API catalog",
+        "solution": "Amadeus Altéa is vast. Focus strictly on the core check-in flows: Retrieval by PNR/E-ticket, Seat Map display, Baggage registration, and Boarding Pass generation. Trust that your backend services abstract the SOAP complexity.",
+        "severity": "medium"
+      },
+      {
+        "mistake": "Accepting undocumented legacy terminology without asking for the business definition",
+        "solution": "Build a shared domain glossary on Day 1. If someone says 'We have an issue with the SSRs on the flight,' ask them to clarify (SSR = Special Service Request, e.g., meal preferences or wheelchair assistance). Empathetic questioning builds trust.",
+        "severity": "low"
+      },
+      {
+        "mistake": "Suffering in silence when encountering a technical blocker to avoid appearing incompetent",
+        "solution": "As Tech Lead, model transparency. Use the '15-minute rule': struggle with a problem for 15 minutes, document what you tried, then pull in team members or legacy docs. This reduces anxiety and solves issues faster.",
+        "severity": "high"
+      }
+    ],
+    "exercises": [
+      {
+        "title": "Onboarding RPG Action: Stakeholder Map & Domain Review",
+        "description": "Initialize your Day 1 playbook by mapping the digital ecosystem and documenting your first architectural sketch.",
+        "checkpoints": [
+          "Locate the primary GraphQL endpoint routing in Next.js (/apps/web/src/lib/urlUtils.ts) and verify it correctly references getApiBaseStrict().",
+          "Identify how PNR structures are represented in your schemas. Locate the cache keyFields to ensure proper front-end memoization.",
+          "Set up your Day 1 documentation log outlining the key contacts: Sarah (Product), TCS Lead (Chennai), and the Enterprise Architect (Dave)."
+        ]
+      }
+    ],
+    "next": ["virgin-checkin-lead-lesson-2"],
+    "estimatedMinutes": 45,
+    "difficulty": "Advanced",
+    "tags": ["Domain", "Amadeus", "Apollo", "Architecture", "Leadership"],
+    "sources": [
+      {
+        "title": "Amadeus Altéa Departure Control System Overview",
+        "url": "https://amadeus.com/en/portfolio/airlines/altea-departure-control-system-customer-management"
+      },
+      {
+        "title": "Apollo Client Cache Configuration Guide",
+        "url": "https://www.apollographql.com/docs/react/caching/cache-configuration/"
+      }
+    ],
+    "lastUpdated": "2026-05-20T13:00:00.000Z",
+    "version": "1.0.0"
+  },
+  {
+    "id": 2,
+    "moduleSlug": "virgin-checkin-lead",
+    "title": "Day 2: Navigating the TCS Offshore Dynamic & Timezones",
+    "order": 2,
+    "objectives": [
+      "Structure effective stand-ups and ceremonies across AEST (Brisbane) and IST (India) time zones",
+      "Implement empathetic leadership techniques to overcome passive communication barriers ('yes-man' loops)",
+      "Establish strict governance controls, code review workflows, and a modern Definition of Done (DoD)"
+    ],
+    "intro": "It is Day 2, 10:00 AM AEST (Aussie Eastern Standard Time). You are sitting in a conference room hosting your first virtual Stand-up with the TCS offshore development team in Chennai (where it is currently 5:30 AM IST).\n\nThe connection crackles. You ask Raj, the offshore tech lead, about the progress of the critical seat selection rewrite: 'Is the seat map caching logic ready for our performance testing?'\nRaj replies instantly: 'Yes, sir, we are working on it, it will be completed.'\nYou ask if they encountered any blockers with the Amadeus payload size.\nRaj pauses: 'No blockers, sir. We will deliver.'\n\nYour experience alerts you. In distributed teams, a rapid 'Yes' can sometimes hide deep blockages, time zone fatigue, or fear of reporting bad news. As the Technical Lead, you must build psychological safety, encourage open discussions about bugs, and set a robust, transparent code review standard. You are a partner, not a taskmaster. To bridge the gap, you need to transition from passive acceptance to active, collaborative verification.",
+    "code": {
+      "language": "javascript",
+      "example": "// apps/web/scripts/pr-quality-check.js\n// Day 2 Tech Focus: Automating governance checks to protect the release branch\n// This script runs in the CI/CD pipeline and checks code quality and coverage before human reviews\nconst fs = require('fs');\nconst path = require('path');\nconst execSync = require('child_process').execSync;\n\nfunction verifyPRQuality() {\n  console.log('✈️ Starting Virgin Australia PR Governance Checks...');\n  \n  // 1. Enforce strict lint rules\n  try {\n    console.log('Running linter checks...');\n    execSync('npm run lint', { stdio: 'inherit' });\n  } catch (error) {\n    console.error('❌ PR Failed Linting. Clean code is non-negotiable.');\n    process.exit(1);\n  }\n  \n  // 2. Validate test coverage thresholds on the modified files\n  try {\n    console.log('Verifying test suites...');\n    // In check-in systems, we require minimum 80% coverage on core business logic\n    const testSummary = execSync('npm run test -- --json', { encoding: 'utf8' });\n    const results = JSON.parse(testSummary);\n    \n    if (results.numFailedTests > 0) {\n      console.error(`❌ PR Failed: ${results.numFailedTests} unit tests failed.`);\n      process.exit(1);\n    }\n  } catch (error) {\n    console.warn('⚠️ Warning: Test suite validation could not complete or tests failed. Investigating details...');\n  }\n  \n  console.log('✅ PR Governance checks passed. Code is ready for Technical Lead peer review.');\n}\n\nverifyPRQuality();",
+      "explanation": "This check-in script automates basic checks, which protects your time and ensures you review high-quality code. Empathetic leadership means removing finger-pointing. By letting the automation say 'Your tests failed,' you remain a supportive mentor who reviews architectural structure rather than syntax mistakes.\n\nCore Offshore Rhythm Principles:\n1. **Empathetic Timezones**: Avoid scheduling mandatory 5:00 PM AEST meetings. That is 12:30 PM IST, interrupting active coding blocks in India. Prefer core overlaps between 12:00 PM and 3:00 PM AEST.\n2. **Break the 'Yes-Man' Loop**: Instead of asking 'Is this done?', ask 'Can you show me a demo of the seat selection flow?' or 'What was the trickiest part of handling the Amadeus soap payload?'. This shifts the focus from status reports to technical sharing.\n3. **Definition of Done (DoD)**: A ticket is not done when the dev says 'it runs on my machine.' It is done only when: automated tests pass, code is reviewed by the Tech Lead, deployment scripts are verified, and accessibility compliance is checked."
+    },
+    "pitfalls": [
+      {
+        "mistake": "Assuming that offshore devs understand business context without explanation",
+        "solution": "Always explain the *Why*. Tell the Chennai team: 'This baggage calculator rewrite is critical because check-in queues at Sydney Airport peak at 6:00 AM, and a 200ms lag causes baggage belt backups.' Context sparks engagement.",
+        "severity": "medium"
+      },
+      {
+        "mistake": "Conducting aggressive, critical code reviews that damage developer morale",
+        "solution": "Format comments constructively. Instead of 'This is wrong and inefficient,' write: 'I see what you are doing here! Have we considered caching this flight layout in Redis to avoid hitting Amadeus multiple times? Let's pair on this if you'd like.'",
+        "severity": "high"
+      },
+      {
+        "mistake": "Managing via email or dry Jira updates rather than face-to-face video syncs",
+        "solution": "Use brief, interactive Slack huddles or Teams calls. Turn on your camera, show vulnerability (e.g. 'I struggled with this Amadeus API myself yesterday!'), and create a safe space for remote developers.",
+        "severity": "medium"
+      }
+    ],
+    "exercises": [
+      {
+        "title": "Onboarding RPG Action: Code Review Protocols",
+        "description": "Establish a constructive code review feedback document that will be shared with the offshore team to guide their upcoming sprints.",
+        "checkpoints": [
+          "Create a code review template highlighting three sections: Positive Highlights, Architectural Inquiries, and Non-Negotiable Governance standards.",
+          "Identify how the Fastify backend API handles errors. Ensure there's a custom error wrapper that translates raw SOAP faults into helpful, localized user errors.",
+          "Verify the time zone differences for the next week and adjust sprint planning sessions to fall strictly within the 1:00 PM - 3:00 PM AEST overlap."
+        ]
+      }
+    ],
+    "next": ["virgin-checkin-lead-lesson-3"],
+    "estimatedMinutes": 50,
+    "difficulty": "Advanced",
+    "tags": ["Management", "Offshore", "Governance", "Agile", "Empathy"],
+    "sources": [
+      {
+        "title": "Building Psychological Safety in Distributed Teams",
+        "url": "https://hbr.org/2020/08/how-to-build-psychological-safety-in-a-virtual-team"
+      },
+      {
+        "title": "Google's Code Review Guidelines",
+        "url": "https://google.github.io/eng-practices/review/"
+      }
+    ],
+    "lastUpdated": "2026-05-20T13:00:00.000Z",
+    "version": "1.0.0"
+  },
+  {
+    "id": 3,
+    "moduleSlug": "virgin-checkin-lead",
+    "title": "Day 3: The September Runway – Handover & Stabilization",
+    "order": 3,
+    "objectives": [
+      "Design resilient backend proxy middleware to buffer fragile PSS downstream connections",
+      "Implement advanced application monitoring and observability frameworks (OpenTelemetry / Prometheus)",
+      "Manage critical P1 incidents with methodical composure and maintain authority during high-pressure outages"
+    ],
+    "intro": "Day 3: 07:15 AM AEST. You are barely awake, heading toward your desk, when Sarah runs up to you. Her face is pale.\n'We have a major incident! Melbourne and Sydney domestic check-in kiosks are completely frozen. Passengers cannot select seats. The terminal queues are swelling. Executive leadership is asking for updates every 10 minutes. The TCS team says the Amadeus seat map service is timing out!'\n\nYour heart rate spikes. A heavy wave of impostor syndrome hits: 'You've only been here three days! You can't fix this. They will see you are out of your depth.'\n\nYou take a deep breath. You tell Sarah: 'I am on it. Keep stakeholders updated that we have active eyes on the system. Let's isolate the root cause immediately. We will focus on facts, not panic.'\n\nYou open your terminal. It's time to leverage the platform's telemetry. By looking at the OpenTelemetry logs, you notice that our Fastify API gateway is making blocking, un-cached SOAP requests to Amadeus for every single render of the seat map. When Amadeus gets slow, our gateway sockets pool up and collapse. You need to stabilize the system immediately.",
+    "code": {
+      "language": "typescript",
+      "example": "// apps/api/src/services/contentService.ts (stabilized integration pattern)\nimport Redis from 'ioredis';\nimport { createOTelCounter } from '../utils/monitoring';\n\n// Day 3 Tech Focus: Circuit Breakers and Redis caching for downstream PSS calls\nconst redis = new Redis(process.env.REDIS_URL || 'redis://localhost:6379');\nconst seatMapFailCounter = createOTelCounter('seat_map_amadeus_failures');\n\nexport class ResilientSeatMapService {\n  private static CIRCUIT_BREAKER_OPEN = false;\n  private static LAST_FAILURE_TIME = 0;\n  private static COOLDOWN_MS = 10000; // 10 seconds circuit trip\n\n  static async getSeatMap(flightSegmentId: string): Promise<any> {\n    // 1. Check Circuit status\n    if (this.CIRCUIT_BREAKER_OPEN) {\n      if (Date.now() - this.LAST_FAILURE_TIME > this.COOLDOWN_MS) {\n        console.warn('🔌 Circuit entering half-open state, testing Amadeus...');\n        this.CIRCUIT_BREAKER_OPEN = false;\n      } else {\n        console.error('🔌 Circuit is OPEN. Serving cached fallback seat layout...');\n        return this.getCachedSeatMap(flightSegmentId);\n      }\n    }\n\n    // 2. Query cache first to avoid overloading Amadeus\n    const cachedData = await redis.get(`seatmap:${flightSegmentId}`);\n    if (cachedData) {\n      return JSON.parse(cachedData);\n    }\n\n    // 3. Downstream call with defensive timeout\n    try {\n      const controller = new AbortController();\n      const timeout = setTimeout(() => controller.abort(), 2500); // 2.5s maximum budget\n      \n      const response = await fetch(`${process.env.AMADEUS_API_BASE}/seatmap/${flightSegmentId}`, {\n        signal: controller.signal\n      });\n      clearTimeout(timeout);\n\n      if (!response.ok) throw new Error('Amadeus returned non-200 status');\n      \n      const freshMap = await response.json();\n      \n      // Save in cache with 2-minute TTL (highly dynamic, but buffers concurrent hits)\n      await redis.setex(`seatmap:${flightSegmentId}`, 120, JSON.stringify(freshMap));\n      return freshMap;\n      \n    } catch (error) {\n      // Trip Circuit Breaker and serve fallback\n      this.CIRCUIT_BREAKER_OPEN = true;\n      this.LAST_FAILURE_TIME = Date.now();\n      seatMapFailCounter.add(1, { flight: flightSegmentId });\n      \n      console.error('❌ Amadeus Seatmap connection failed. Tripping circuit.');\n      return this.getCachedSeatMap(flightSegmentId);\n    }\n  }\n\n  private static async getCachedSeatMap(flightId: string): Promise<any> {\n    // Retrieve stale cache if available, or construct standard base physical aircraft configuration\n    const stale = await redis.get(`seatmap:${flightId}`);\n    if (stale) return JSON.parse(stale);\n    \n    // Ultimate fallback to avoid blank screen: return general seat configuration\n    return { fallback: true, rows: 30, configuration: '3-3' };\n  }\n}",
+      "explanation": "This resilient pattern prevents downstreams from crashing your front-end apps. By implementing a **Circuit Breaker** and aggressive **Redis Caching**, you buffer the application from external service failures.\n\nTriage Steps for high-pressure Tech Leads:\n1. **Stop the Bleeding**: Don't try to find the perfect code fix during an outage. Apply a buffer (like serving cached fallbacks or disabling non-critical UI features).\n2. **Isolate the Cause**: Check metrics and logs (Prometheus/Grafana). Look for spike in response times (Latency), errors rate (Errors), or saturation of database connections.\n3. **Communicate Clearly**: Keep stakeholders updated with clear, jargon-free statements: 'We have isolated the latency to the external seat mapping API. We have enabled our circuit-breaker safety buffers to stabilize airport kiosks while we perform a warm reload.'\n4. **Post-Mortem**: Document why it failed, how it was resolved, and the permanent mitigation steps. Own the system's stability."
+    },
+    "pitfalls": [
+      {
+        "mistake": "Letting downstream API errors crash the client's React render context",
+        "solution": "Wrap critical UI cards (like the Seat Map Grid or Boarding Pass Viewer) in React `<ErrorBoundary>` components. A failed seat map should show a friendly 'Choose seat at gate' message, rather than a blank white screen.",
+        "severity": "high"
+      },
+      {
+        "mistake": "Failing to document standard operational procedures (SOP) or runbooks for outages",
+        "solution": "Keep a production runbook in your repo. If a database pool saturates at midnight, the on-call engineer must have a 3-step restart command rather than guessing how to reset PostgreSQL connections.",
+        "severity": "medium"
+      },
+      {
+        "mistake": "Reacting defensively or blaming the vendor (TCS) during executive incident bridges",
+        "solution": "Maintain a calm, objective technical authority. Say: 'We identified a missing cache layer on our SOAP integration, which has been buffered. We are working together with Raj's offshore team to patch this securely today.' Empathy wins.",
+        "severity": "high"
+      }
+    ],
+    "exercises": [
+      {
+        "title": "Onboarding RPG Action: Resilient API Design",
+        "description": "Design a monitoring dashboard layout draft and review your API resiliency layers to handle Amadeus Altéa downtimes.",
+        "checkpoints": [
+          "Verify your backend's Redis cache setup. Ensure the REDIS_HOST variables are correctly configured and have active connection verification on server startup.",
+          "Design a Prometheus alert rule checking for high checkin response latency (>3 seconds over a 2-minute period).",
+          "Identify how React 19's ErrorBoundary captures errors. Create a mock error boundary component that reports client-side trace logs to your telemetry backend."
+        ]
+      }
+    ],
+    "next": ["virgin-checkin-lead-lesson-4"],
+    "estimatedMinutes": 55,
+    "difficulty": "Advanced",
+    "tags": [
+      "Resilience",
+      "Observability",
+      "Redis",
+      "Incident-Management",
+      "NextJS"
+    ],
+    "sources": [
+      {
+        "title": "Designing Resilient Systems with Circuit Breakers",
+        "url": "https://martinfowler.com/bliki/CircuitBreaker.html"
+      },
+      {
+        "title": "OpenTelemetry Documentation for Node.js",
+        "url": "https://opentelemetry.io/docs/languages/js/"
+      }
+    ],
+    "lastUpdated": "2026-05-20T13:00:00.000Z",
+    "version": "1.0.0"
+  },
+  {
+    "id": 4,
+    "moduleSlug": "virgin-checkin-lead",
+    "title": "Day 4: Domain Mastery – Baggage & Boarding Operations",
+    "order": 4,
+    "objectives": [
+      "Translate complex business rules (baggage allowances, dangerous goods) into structured React/Node validation systems",
+      "Implement secure handling protocols for passenger PII and secure document validation (Passport APIs)",
+      "Collaborate effectively with Enterprise Architecture to ensure scalable GraphQL / microservices schema contracts"
+    ],
+    "intro": "Day 4: 02:00 PM AEST. You are participating in a refinement session with Sarah (Product) and Dave, the Enterprise Architect. The business wants to launch a new domestic check-in stream enabling Self-Service Bag Drops (SSBD).\n\nSarah describes the flow: 'When checking in, we must validate the passenger's baggage allowance. If they have a business class fare, they get two 23kg bags. If they are Velocity Gold, they get an extra 23kg bag. Before printing the bag tags, they must check a checkbox confirming they are not carrying dangerous goods (lithium batteries, gas cylinders). We also need to validate passport details for flights connecting to international routes (like Brisbane to Denpasar).'\n\nDave the architect interjects: 'We need to make sure this fits our microservices architecture and doesn't load our core passenger service PNR schema with unstructured baggage details. The GraphQL contract must remain clean.'\n\nAs Tech Lead, you are the bridge. You need to design an API schema that satisfies Dave's strict architectural parameters while providing a fast, interactive experience for the passengers using React. You must write validation logic that enforces safety (Dangerous Goods declarations) and handle sensitive PII (Passport/ID data) securely.",
+    "code": {
+      "language": "javascript",
+      "example": "// apps/api/src/routes/baggage.ts\n// Day 4 Tech Focus: Schema contracts and secure PII handling for baggage registration\nconst express = require('express');\nconst { encryptSensitiveData } = require('../services/cryptoService'); // Compliant PII encryption\n\nconst router = express.Router();\n\nrouter.post('/register-bags', async (req, res) => {\n  const { pnr, passengerId, bags, dangerousGoodsConfirmed, passportData } = req.body;\n\n  // 1. Safety Rule: Strict validation for Dangerous Goods compliance\n  if (!dangerousGoodsConfirmed) {\n    return res.status(400).json({\n      error: 'DANGEROUS_GOODS_DECLARATION_REQUIRED',\n      message: 'Passengers must explicitly declare that they are not carrying hazardous materials.'\n    });\n  }\n\n  // 2. Validate Baggage Allowance Rules based on tier\n  const invalidBags = bags.filter(bag => bag.weight > 32); // Absolute safety limit for ground handler health\n  if (invalidBags.length > 0) {\n    return res.status(400).json({\n      error: 'EXCESSIVE_BAG_WEIGHT',\n      message: 'No single bag can exceed 32kg due to airport workplace health and safety rules.'\n    });\n  }\n\n  try {\n    // 3. Encrypt Sensitive PII (Passport Details) before forwarding to DB or Amadeus log pools\n    let securePassport = null;\n    if (passportData) {\n      securePassport = encryptSensitiveData(JSON.stringify(passportData));\n    }\n\n    // 4. Interface with the PSS Baggage API (abstracted SOAP Altéa check-in call)\n    console.log(`✈️ Registering ${bags.length} bags for PNR ${pnr}...`);\n    \n    // Return success payload matching our unified schema\n    res.status(200).json({\n      success: true,\n      pnr,\n      bagTags: bags.map((bag, i) => `VA-${pnr}-${passengerId}-${i + 1}`),\n      allowanceStatus: 'VERIFIED'\n    });\n  } catch (error) {\n    console.error('Failed to register bags:', error);\n    res.status(500).json({ error: 'PSS_BAGGAGE_REGISTRATION_FAILED' });\n  }\n});\n\nmodule.exports = router;",
+      "explanation": "This Node.js controller handles baggage registration. It translates complex rules (like airport safety limits and baggage declarations) into strict code checks. By securing passenger passport data using compliant cryptographic algorithms, you protect the airline's security. \n\nKey Baggage and Boarding Concepts:\n1. **SSBD (Self-Service Bag Drop)**: Automated kiosks at terminal lobbies where passengers scan their boarding pass, attach printed bag tags, and place bags onto the belt.\n2. **Dangerous Goods (DG) Compliance**: Legal requirement. Downstream bag tag systems are locked until the passenger confirms they do not carry prohibited items.\n3. **PII (Personally Identifiable Information)**: Passports, birth dates, and contact data are strictly governed by PCI/GDPR rules. Tech Leads must ensure these are never logged in plaintext in system logs (like Datadog/Splunk)."
+    },
+    "pitfalls": [
+      {
+        "mistake": "Logging raw passenger passport or contact details in system debug logs",
+        "solution": "Implement a logging middleware that automatically filters out fields like 'passportNumber', 'cvv', or 'phoneNumber' to maintain strict privacy compliance.",
+        "severity": "high"
+      },
+      {
+        "mistake": "Hardcoding baggage weight limits or pricing in the React frontend codebase",
+        "solution": "Always fetch the airline baggage parameters dynamically from the Fastify configuration service. Allowance structures vary between routes, tiers (Velocity Red/Gold/Platinum), and fare classes.",
+        "severity": "medium"
+      },
+      {
+        "mistake": "Overcomplicating front-end validation states, causing a sluggish kiosk UI",
+        "solution": "Perform quick structural checks on the frontend (e.g. checking formatting or missing fields), but let the backend API own the deep business validation rules. This keeps the user interface responsive.",
+        "severity": "medium"
+      }
+    ],
+    "exercises": [
+      {
+        "title": "Onboarding RPG Action: Domain Rules Mapping",
+        "description": "Establish validation schemas that model domestic check-in baggage allowances and dangerous goods confirmations.",
+        "checkpoints": [
+          "Review the Node.js controller rules to ensure baggage weights cannot exceed 32kg (WHS rules).",
+          "Ensure that customer passport data is masked or encrypted before logging. Check apps/api/src/utils/logger.ts or write custom masking functions.",
+          "Verify the React front-end baggage selection form displays clear warning modals when dangerous goods are not declared."
+        ]
+      }
+    ],
+    "next": ["virgin-checkin-lead-lesson-5"],
+    "estimatedMinutes": 45,
+    "difficulty": "Advanced",
+    "tags": ["Baggage", "PII", "Validation", "Security", "Architecture"],
+    "sources": [
+      {
+        "title": "IATA Baggage Standards & Guidelines",
+        "url": "https://www.iata.org/en/programs/ops-infra/baggage/"
+      },
+      {
+        "title": "OWASP Top Ten: Secure Data Handling Practices",
+        "url": "https://owasp.org/www-project-top-ten/"
+      }
+    ],
+    "lastUpdated": "2026-05-20T13:00:00.000Z",
+    "version": "1.0.0"
+  },
+  {
+    "id": 5,
+    "moduleSlug": "virgin-checkin-lead",
+    "title": "Day 5: The Final September Handover & Leadership Graduation",
+    "order": 5,
+    "objectives": [
+      "Configure modern CI/CD deployment pipelines (GitHub Actions/Azure Pipelines) with zero-downtime deployment workflows",
+      "Construct detailed production runbooks and disaster recovery plans for check-in infrastructure",
+      "Synthesize your RPG training, celebrate your onboarding milestones, and own your technical authority"
+    ],
+    "intro": "Day 5: September 1st, 09:00 AM AEST. The day has finally arrived. The TCS transition is complete, the handover documents are signed, and your internal engineering team now owns the Passenger Check-In Web Application.\n\nYou stand at the front of the conference room for the production rollout demo. Sarah, Dave, and the Head of Digital Platforms are sitting in the chairs. You feel a familiar, brief wave of doubt. But then you look at your notes, you think about the resilient circuit-breaker API you designed, the clean stand-up rhythms you established with Chennai, the metrics dashboards you set up, and the deep domain knowledge you acquired.\n\nYou realize: 'I belong here. I built the systems. I support my team, and we are ready.'\n\nYou present the final deployment architecture. You walk the stakeholders through the zero-downtime blue-green deployment pipelines, showing how we can release code without disrupting a single passenger at the check-in gates. You present the Production Operations Runbook. The presentation finishes. The room erupts in applause. The Head of Digital Platforms smiles and says: 'Fantastic work, Technical Lead. Our operations are in safe hands.'\n\nCongratulations! You have completed the RPG Onboarding. You are ready to lead.",
+    "code": {
+      "language": "yaml",
+      "example": "# .github/workflows/deploy-production.yml\n# Day 5 Tech Focus: Establishing clean, automated pipelines for continuous releases\nname: ✈️ Virgin Australia Production Deployment\n\non:\n  push:\n    branches:\n      - main # Production releases strictly from main branch\n\njobs:\n  build-and-validate:\n    runs-on: ubuntu-latest\n    steps:\n      - name: Checkout Codebase\n        uses: actions/checkout@v4\n\n      - name: Setup Node.js Environment\n        uses: actions/setup-node@v4\n        with:\n          node-version: '22'\n          cache: 'npm'\n\n      - name: Install Monorepo Dependencies\n        run: npm ci\n\n      - name: Enforce Strict Code Quality Tests\n        run: npm run lint && npm run typecheck\n\n      - name: Run E2E Integration Suite\n        run: npm run test\n\n  zero-downtime-release:\n    needs: build-and-validate\n    runs-on: ubuntu-latest\n    steps:\n      - name: Deploy to Cloud Provider (AWS ECS / Fargate)\n        run: |\n          echo \"🚀 Triggering Blue-Green Deployment on AWS ECS...\"\n          # 1. Build and push production Docker image\n          # 2. Deploy to ECS green target group\n          # 3. Perform automated health check ping\n          # 4. Swap load balancer weights dynamically to complete handover\n          echo \"✅ Production check-in web application successfully rolled out with ZERO-DOWNTIME.\"",
+      "explanation": "This GitHub Actions pipeline ensures that every release is validated. By automating linting, typechecking, and E2E testing, you remove human error from the deployment process. The blue-green deployment strategy is a cornerstone of modern high-availability engineering. By routing traffic only when the new container is confirmed healthy, you protect airport gates from software outages.\n\nKeys to a Great Handover:\n1. **Zero-Downtime Rollouts**: Check-in web apps must operate 24/7. Deploying code must never drop active sessions or cause kiosk pings to return 500 errors.\n2. **The Production Runbook**: Your team's bible. It lists: how to database restore, where to check Splunk logs, secret key rotations, and contacts for external PSS providers.\n3. **Continuous Mentorship**: As Tech Lead, your legacy is the competence of your team. Share knowledge freely, pair frequently, and establish a culture of learning."
+    },
+    "pitfalls": [
+      {
+        "mistake": "Performing high-risk database migrations or code rollouts during peak morning flight travel",
+        "solution": "Deploy code during off-peak hours (e.g. Tuesdays between 11:00 PM and 1:00 AM AEST) to minimize the impact of any unexpected edge-case bugs.",
+        "severity": "high"
+      },
+      {
+        "mistake": "Neglecting to configure rollback plans in your CI/CD automated scripts",
+        "solution": "Ensure that your ECS or Kubernetes ingress can swap back to the stable 'blue' group within 10 seconds if 'green' health checks fail.",
+        "severity": "high"
+      },
+      {
+        "mistake": "Failing to step back and let your engineering team shine after the vendor transition",
+        "solution": "Empower your senior devs to lead sprint reviews and own specific microservice components. A great tech lead is an enabler, not a bottleneck.",
+        "severity": "medium"
+      }
+    ],
+    "exercises": [
+      {
+        "title": "Onboarding RPG Action: Production Launch Plan",
+        "description": "Construct your production release checklist and prepare your team for the final September transition.",
+        "checkpoints": [
+          "Verify the GitHub Actions workflow checks. Ensure that typecheck and lint checks must pass before pull requests can be merged into main.",
+          "Write a 1-page Production Incident response summary detailing the roles: Commander (You), Communicator (Sarah), and Triagers (Offshore team).",
+          "Conduct a mock 'graduation review' of your onboarding accomplishments. Celebrate your transition from learner to Technical Leader!"
+        ]
+      }
+    ],
+    "next": [],
+    "estimatedMinutes": 60,
+    "difficulty": "Advanced",
+    "tags": ["Deployment", "CICD", "DevOps", "Handover", "Graduation"],
+    "sources": [
+      {
+        "title": "Blue-Green Deployments Explained - Martin Fowler",
+        "url": "https://martinfowler.com/bliki/BlueGreenDeployment.html"
+      },
+      {
+        "title": "Building a Production-Ready Infrastructure Checklist",
+        "url": "https://gruntwork.io/production-ready-infrastructure-checklist/"
+      }
+    ],
+    "lastUpdated": "2026-05-20T13:00:00.000Z",
+    "version": "1.0.0"
+  }
+]
